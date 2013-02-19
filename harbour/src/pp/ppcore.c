@@ -2720,9 +2720,9 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       }
       else if( hb_pp_tokenValueCmp( pToken, "NOSTARTPROC", HB_PP_CMP_DBASE ) )
       {
-         pValue = hb_pp_pragmaGetLogical( pToken->pNext, &fValue );
+         pValue = hb_pp_pragmaGetInt( pToken->pNext, &iValue );
          if( pValue )
-            fError = hb_pp_setCompilerSwitch( pState, "n", fValue );
+            fError = hb_pp_setCompilerSwitch( pState, "n", iValue );
          else
             fError = HB_TRUE;
       }

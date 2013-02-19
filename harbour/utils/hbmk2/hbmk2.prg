@@ -58,6 +58,14 @@
  *
  */
 
+#if __pragma( n ) == 2
+   /* Keeping it tidy */
+   #pragma -w3
+   #pragma -es2
+#else
+   #error Missing required Harbour option: -n2
+#endif
+
 /* Optimizations */
 #pragma -km+
 #pragma -ko+
@@ -11399,7 +11407,8 @@ STATIC FUNCTION FuncNameEncode( cName )
    cResult := ""
    FOR nPos := 1 TO hb_BLen( cName )
       c := hb_BSubStr( cName, nPos, 1 )
-      IF c == "_" .OR. hb_asciiIsAlpha( c ) .OR. ( ! cResult == "" .AND. hb_asciiIsDigit( c ) )
+      IF c == "_" .OR. hb_asciiIsAlpha( c ) .OR. ;
+         hb_asciiIsDigit( c ) /* synced to how Harbour compiler works (see hb_compGenCFunc()). In theory should be: ( ! cResult == "" .AND. hb_asciiIsDigit( c ) ) */
          cResult += c
       ELSE
          cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )
@@ -12835,6 +12844,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
 
    LOCAL hAll := GetListOfFunctionsKnown( hbmk, lGenericFind )
    LOCAL cFunction
+   LOCAL lFound
    LOCAL aLib
    LOCAL tmp, tmp1
 
@@ -12853,16 +12863,20 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
       }
 
    FOR EACH cFunction IN aFunction DESCEND
+      lFound := .F.
       IF ( tmp := hb_HPos( hAll, cFunction ) ) > 0
-         /* Get the function name in original .hbx casing */
-         Eval( bAdd, hb_HKeyAt( hAll, tmp ) )
-         hb_ADel( aFunction, cFunction:__enumIndex(), .T. )
-      ELSEIF lGenericFind
+         Eval( bAdd, hb_HKeyAt( hAll, tmp ) /* Get the function name in original .hbx casing */ )
+         lFound := .T.
+      ENDIF
+      IF lGenericFind
          FOR EACH tmp1 IN hAll
             IF hb_WildMatchI( "*" + cFunction + "*", tmp1:__enumKey() )
                Eval( bAdd, tmp1:__enumKey() )
+               lFound := .T.
             ENDIF
          NEXT
+      ENDIF
+      IF lFound
          hb_ADel( aFunction, cFunction:__enumIndex(), .T. )
       ENDIF
    NEXT
@@ -14165,30 +14179,30 @@ STATIC FUNCTION __hbshell_CanLoadDyn()
       because dynlibs are built against harbour.dll. */
    RETURN hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. hb_Version( HB_VERSION_SHARED )
 
-STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
+STATIC PROCEDURE __hbshell_Err( oError, cCommand )
 
    LOCAL xArg, cMessage
 
    cMessage := I_( "Could not execute:" ) + ";;" + cCommand + ";;"
-   IF oErr:ClassName() == "ERROR"
-      cMessage += oErr:Description
-      IF ! Empty( oErr:Operation )
-         cMessage += " " + oErr:Operation
+   IF oError:ClassName() == "ERROR"
+      cMessage += oError:Description
+      IF ! Empty( oError:Operation )
+         cMessage += " " + oError:Operation
       ENDIF
-      IF HB_ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
+      IF HB_ISARRAY( oError:Args ) .AND. Len( oError:Args ) > 0
          cMessage += ";" + I_( "Arguments:" )
-         FOR EACH xArg IN oErr:Args
+         FOR EACH xArg IN oError:Args
             cMessage += ";" + hb_CStr( xArg )
          NEXT
       ENDIF
-   ELSEIF HB_ISSTRING( oErr )
-      cMessage += oErr
+   ELSEIF HB_ISSTRING( oError )
+      cMessage += oError
    ENDIF
    cMessage += ";;" + ProcName( 2 ) + "(" + hb_ntos( ProcLine( 2 ) ) + ")"
 
    Alert( cMessage )
 
-   Break( oErr )
+   Break( oError )
 
 STATIC PROCEDURE __hbshell_Exec( cCommand )
 
@@ -14215,7 +14229,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
 
    DevPos( s_nRow, s_nCol )
 
-   BEGIN SEQUENCE WITH {| oErr | __hbshell_Err( oErr, cCommand ) }
+   BEGIN SEQUENCE WITH {| oError | __hbshell_Err( oError, cCommand ) }
 
       /* We can use this function as this is a GPL licenced application */
       cHRB := hb_compileFromBuf( cFunc, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-q2", hb_ArrayToParams( aOPTPRG ) )
@@ -14453,7 +14467,7 @@ STATIC FUNCTION __hbshell_TryHeader( cName )
 
    LOCAL lRetVal := .F.
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oError | Break( oError ) }
 
       IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
                                      "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ], ;
@@ -15390,7 +15404,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "*.hbm"              , I_( "collection of options. Can be used to collect common ones into a file and include that into project files. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
       { "*.hbc"              , I_( "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
       { "*.hb"               , I_( "Harbour script" ) }, ;
-      { "*.hrb"              , I_( "Harbour portable binary (aka precompiled script)" ) }, ;
+      { "*.hrb"              , I_( "Harbour portable binary (aka precompiled Harbour script)" ) }, ;
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
@@ -15578,6 +15592,23 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { hb_StrFormat( _HBMK_DIR_TPL, I_( "<depname>" ) )       , I_( "return the header directory where <depname> was detected, or empty if it wasn't." ) }, ;
       { hb_StrFormat( _HBMK_HAS_TPL_LOCAL, I_( "<depname>" ) ) , I_( "when <depname> dependency was detected in a location configured by -depincpathlocal= option" ) } }
 
+#ifndef _HBMK_EMBEDDED_
+   LOCAL aHdr_APIShell := { ;
+      "", ;
+      I_( "Shell API available in Harbour scripts:" ) }
+
+   LOCAL aLst_APIShell := { ;
+      NIL, ;
+      { "hbshell_gtSelect( [<cGT>] ) -> NIL"                , hb_StrFormat( I_( "Switch GT. Default [*]: '%1$s'" ), Lower( __hbshell_gtDefault() ) ) }, ;
+      { "hbshell_include( <cHeader> ) -> <lSuccess>"        , I_( "Load Harbour header." ) }, ;
+      { "hbshell_uninclude( <cHeader> ) -> <lSuccess>"      , I_( "Unload Harbour header." ) }, ;
+      { "hbshell_ext_load( <cPackageName> ) -> <lSuccess>"  , I_( "Load package. Similar to #request PP directive." ) }, ;
+      { "hbshell_ext_unload( <cPackageName> ) -> <lSuccess>", I_( "Unload package." ) }, ;
+      { "hbshell_ext_get_list() -> <aPackages>"             , I_( "List of loaded packages." ) }, ;
+      { "hbshell_DirBase() -> <cBaseDir>"                   , I_( "DirBase() not mapped to script." ) }, ;
+      { "hbshell_ProgName() -> <cPath>"                     , I_( "ProgName() not mapped to script." ) } }
+#endif
+
    LOCAL aHdr_Notes := { ;
       "", ;
       I_( "Notes:" ) }
@@ -15639,6 +15670,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
          AEval( aLst_EnvVar, {| tmp | OutOpt( hbmk, tmp ) } )
          AEval( aHdr_HBC, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_HBC, {| tmp | OutOpt( hbmk, tmp ) } )
+#ifndef _HBMK_EMBEDDED_
+         AEval( aHdr_APIShell, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_APIShell, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+#endif
          /* TODO: Move to separate section from notes:
                   - description
                   - filter and macro syntax, %{}, subprojects
@@ -15666,11 +15701,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
 STATIC PROCEDURE OutHdr( hbmk, cText )
 
-   IF hbmk[ _HBMK_lMarkdown ]
-      cText := ToMarkdown( cText )
-   ENDIF
-
-   OutStd( cText )
+   OutStd( iif( hbmk[ _HBMK_lMarkdown ], ToMarkdown( cText ), cText ) )
 
    RETURN
 
@@ -15679,28 +15710,47 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
    LOCAL nLine
    LOCAL nLines
 
+   hb_default( @nWidth, 23 )
+
    IF Empty( aOpt )
       IF hbmk[ _HBMK_lMarkdown ]
          OutStd( _OUT_EOL )
+         OutStd( _OUT_EOL )
+      ELSE
+         IF nWidth >= 0
+            OutStd( _OUT_EOL )
+         ENDIF
       ENDIF
-      OutStd( _OUT_EOL )
    ELSE
       IF Len( aOpt ) > 1
-         hb_default( @nWidth, 23 )
          IF hbmk[ _HBMK_lMarkdown ]
-            IF nWidth > 0
-               OutStd( " - " + ToMarkdown( aOpt[ 1 ], iif( Empty( aOpt[ 2 ] ), NIL, "strong" ) ) + " " + ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
-            ELSE
+            IF nWidth == 0
                OutStd( ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
+            ELSE
+               OutStd( ;
+                  " - " + ;
+                  ToMarkdown( aOpt[ 1 ], iif( Empty( aOpt[ 2 ] ), NIL, "strong" ) ) + ;
+                  iif( nWidth < 0, ToMarkdown( e"\n" ), " " ) + ;
+                  ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ENDIF
          ELSE
-            aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
-            nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
-                           MLCount( aOpt[ 1 ], nWidth ) )
-            FOR nLine := 1 TO nLines
-               OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
-               OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
-            NEXT
+            IF nWidth >= 0
+               aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
+               nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
+                              MLCount( aOpt[ 1 ], nWidth ) )
+               FOR nLine := 1 TO nLines
+                  OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
+                  OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+               NEXT
+            ELSE
+               nWidth := 8
+               OutStd( _OUT_EOL + Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
+               aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
+               nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth )
+               FOR nLine := 1 TO nLines
+                  OutStd( Space( nWidth ) + RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+               NEXT
+            ENDIF
          ENDIF
       ELSE
          IF hbmk[ _HBMK_lMarkdown ]

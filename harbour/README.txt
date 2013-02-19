@@ -1432,7 +1432,8 @@ TABLE OF CONTENT
    - To run a Harbour script:
        'hbmk2 script.hb [<parameters>]'
 
-   Examples to build and run Harbour portable binary (aka precompiled script):
+   Examples to build and run Harbour portable binary
+   (aka precompiled Harbour script):
 
    - To build:
        'hbmk2 -gh script.hb'
