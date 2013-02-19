@@ -58,12 +58,12 @@
  *
  */
 
-#if __pragma( n ) == 2
+#if __pragma( n ) >= 1
    /* Keeping it tidy */
    #pragma -w3
    #pragma -es2
 #else
-   #error Missing required Harbour option: -n2
+   #error Missing required Harbour option: -n
 #endif
 
 /* Optimizations */
@@ -15626,7 +15626,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       I_( 'Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ) , ;
       I_( "Defaults and feature support may vary by platform/compiler." ) , ;
-      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ) , ;
+      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ) , ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) , ;
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform." ), Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
 
