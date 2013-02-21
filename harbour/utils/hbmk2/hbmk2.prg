@@ -11442,8 +11442,10 @@ STATIC FUNCTION FuncNameEncode( cName )
    cResult := ""
    FOR nPos := 1 TO hb_BLen( cName )
       c := hb_BSubStr( cName, nPos, 1 )
-      IF c == "_" .OR. hb_asciiIsAlpha( c ) .OR. ;
-         hb_asciiIsDigit( c ) /* synced to how Harbour compiler works (see hb_compGenCFunc()). In theory should be: ( ! cResult == "" .AND. hb_asciiIsDigit( c ) ) */
+      /* synced to how Harbour compiler actually works (see hb_compGenCFunc()).
+         Theoretically, it should work like this:
+            iif( cResult == "", HB_ISFIRSTIDCHAR( c ), HB_ISNEXTIDCHAR( c ) ) */
+      IF HB_ISNEXTIDCHAR( c )
          cResult += c
       ELSE
          cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )

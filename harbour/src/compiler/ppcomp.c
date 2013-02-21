@@ -168,12 +168,7 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          case 'n':
          case 'N':
             if( fSet )
-            {
-               if( iValue >= 0 && iValue <= 2 )
-                  HB_COMP_PARAM->iStartProc = iValue;
-               else
-                  fError = HB_TRUE;
-            }
+               fError = HB_TRUE;
             else
                iValue = HB_COMP_PARAM->iStartProc;
             break;

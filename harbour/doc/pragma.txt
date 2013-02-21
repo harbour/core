@@ -50,7 +50,7 @@ This is the list of the supported commands and switches:
   * ESCAPEDSTRINGS      =<On/Off>
   * EXITSEVERITY        =<nLevel>     -es<nLevel>
   * LINENUMBER          =<On/Off>     -l<+/->
-  * NOSTARTPROC         =<nLevel>     -n<nLevel>
+  * NOSTARTPROC         =<nLevel>     -n<nLevel> (read-only)
   * PREPROCESSING       =<On/Off>     -p<+/->
   * SHORTCUT            =<On/Off>     -z<+/->
   * TEXTHIDDEN          =<On/Off>
@@ -76,18 +76,15 @@ preprocessor.
 EXAMPLES
 ========
 
-#pragma NoStartProc=0
-/* #pragma /N- */
+#pragma linenumber=off
+/* #pragma -l */
 
-FUNCTION Test()
-   RETURN NIL
-
-This is the same as calling Harbour with the -n switch in the command line,
+This is the same as calling Harbour with the -l switch in the command line,
 but with the great benefit that if you forgot to pass the switch, it will
 be used anyway because it is included inside the source.
 
 ===========
-Dec 1, 1999
+1999.12.01
 Regards,
 Jose Lalin <dezac@corevia.com>
 

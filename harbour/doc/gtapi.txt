@@ -4,7 +4,7 @@
 
 GT API functions
 ================
-By Bil Simser (Fri, 14 May 1999)
+By Bil Simser (1999.05.14)
 
 Using the gt API requires two steps.
 The gt API interface is kept in gtapi.c. This houses the gt API and
