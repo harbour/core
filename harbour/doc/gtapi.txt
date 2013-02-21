@@ -232,8 +232,6 @@ See as example GTGUI in src/rtl/gtgui/gtgui.c
 It supports only TONE and CLIPBOARD operations.
 GUI libraries can use it or create other GT driver inheriting from
 this one.
-NOTE: src/rtl/gtgui/gtdef.c is a hack which overloads the default
-     Harbour build time GT driver and should not be replicated.
 
 
 gtnul  - base GT driver from which each other inherits.
@@ -304,8 +302,8 @@ gtwvt  - GT driver for MS-Windows. It creates its own GUI window
          for use with GTWVT.
  To let the memory refreshed, I must remind
          everybody that it is a superb work of Peter Rees contributed
-         to xHarbour on 22nd December 2003.
-GTWVG  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
+         to xHarbour on 2003.12.22.
+gtwvg  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
          GTWVG ( WVTGUI in xHarbour ) offers functions and classes to
          present a console application look like a windows one.
          It renderes GUI elements on top of Clipper elements

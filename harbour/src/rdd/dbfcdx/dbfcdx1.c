@@ -6878,7 +6878,7 @@ static HB_ERRCODE hb_cdxGoCold( CDXAREAP pArea )
        * Without changes in locking scheme we can do only one thing which
        * is enough if there is only one index file: lock first index only
        * before SUPER_GOCOLD
-       * Druzus, 05 Oct 2003 10:27:52 CEST
+       * Druzus, 2003.10.05 10:27:52 CEST
        */
 
       while( pTag )

@@ -49,14 +49,19 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 /*
- * The following functions are added Feb 01,2002 by
- *       Alexander Kresin <alex@belacy.belgorod.su>
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
  *
- *  HB_HRBLOAD()
- *  HB_HRBDO()
- *  HB_HRBUNLOAD()
- *  HB_HRBGETFUNSYM()
+ * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su>
+ *    HB_HRBLOAD()
+ *    HB_HRBDO()
+ *    HB_HRBUNLOAD()
+ *    HB_HRBGETFUNSYM()
+ *
+ * See COPYING.txt for licensing terms.
+ *
  */
 
 #include "hbvmint.h"
@@ -642,7 +647,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
 
    hb_hrbInit( pHrbBody, iPCount, pParams );
 
-   /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
+   /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already). */
    if( pHrbBody->lSymStart >= 0 && hb_vmRequestQuery() == 0 )
    {
       hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );

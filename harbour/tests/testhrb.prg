@@ -8,24 +8,26 @@
 
 PROCEDURE Main( x )
 
-   LOCAL pHrb, cExe := "Msg2()", n
+   LOCAL pHrb, cExe := "Msg2()"
 
-   n := iif( x == NIL, 0, Val( x ) )
+   LOCAL n := iif( x == NIL, 0, Val( x ) )
 
    ? "calling Msg ... From exe here !"
    Msg()
    ? "========================="
 
-   //  ? "Loading('exthrb.hrb' )"
-   //  pHrb := hb_hrbLoad("exthrb.hrb" )
+#if 0
+   ? "Loading( 'exthrb.hrb' )"
+   pHrb := hb_hrbLoad( "exthrb.hrb" )
 
-   //  ? "Loading(HB_HRB_BIND_DEFAULT,'exthrb.hrb' )"
-   //  pHrb := hb_hrbLoad(HB_HRB_BIND_DEFAULT,"exthrb.hrb" )
+   ? "Loading( HB_HRB_BIND_DEFAULT, 'exthrb.hrb' )"
+   pHrb := hb_hrbLoad( HB_HRB_BIND_DEFAULT, "exthrb.hrb" )
 
-   //  ? "Loading(HB_HRB_BIND_LOCAL,'exthrb.hrb' )"
-   //  pHrb := hb_hrbLoad(HB_HRB_BIND_LOCAL,"exthrb.hrb" )
+   ? "Loading( HB_HRB_BIND_LOCAL, 'exthrb.hrb' )"
+   pHrb := hb_hrbLoad( HB_HRB_BIND_LOCAL, "exthrb.hrb" )
+#endif
 
-   ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1,"HB_HRB_BIND_LOCAL","HB_HRB_BIND_OVERLOAD" ) ) + ",'exthrb.hrb' )"
+   ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1, "HB_HRB_BIND_LOCAL", "HB_HRB_BIND_OVERLOAD" ) ) + ", 'exthrb.hrb' )"
    pHrb := hb_hrbLoad( n, "exthrb.hrb" )
 
    ? "========================="
@@ -44,7 +46,7 @@ PROCEDURE Main( x )
    Msg() // test unload protection when using OVERLOAD ... then .hrb not anymore unloadable
    ? "========================="
 
-   ?  "END"
+   ? "END"
 
    RETURN
 

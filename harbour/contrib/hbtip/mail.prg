@@ -495,7 +495,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
 
       ELSE
          // nPos := nLinePos + 2
-         /* 04/05/2004 - <maurilio.longo@libero.it>
+         /* 2004.05.04 - <maurilio.longo@libero.it>
             Instead of testing every single line of mail until we find next boundary, if there is a boundary we
             jump to it immediatly, this saves thousands of EOL test and makes splitting of a string fast
          */

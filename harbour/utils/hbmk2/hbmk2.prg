@@ -58,13 +58,9 @@
  *
  */
 
-#if __pragma( n ) >= 1
-   /* Keeping it tidy */
-   #pragma -w3
-   #pragma -es2
-#else
-   #error Missing required Harbour option: -n
-#endif
+/* Keeping it tidy */
+#pragma -w3
+#pragma -es2
 
 /* Optimizations */
 #pragma -km+
@@ -577,10 +573,6 @@ EXTERNAL hbmk_KEYW
 
 #define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
 
-/* NOTE: Security token to protect against plugins accessing our
-         internal structures referenced from context variable */
-STATIC s_cSecToken := NIL
-
 #ifndef _HBMK_EMBEDDED_
 
 /* Request for runner and shell */
@@ -610,27 +602,49 @@ EXTERNAL hb_HKeepOrder
 EXTERNAL hb_FGetAttr
 EXTERNAL hb_FSetAttr
 
-/* For hbshell */
-STATIC s_cDirBase_hbshell
-STATIC s_cProgName_hbshell
-STATIC s_hLibExt := { => }
-STATIC s_hCH := { => }
-STATIC s_hOPTPRG := { => }
-STATIC s_hINCPATH := { => }
-STATIC s_hCHCORE := { => }
-STATIC s_hbmk
-
 #define HB_HISTORY_LEN 500
 #define HB_LINE_LEN    256
 
-STATIC s_nRow
-STATIC s_nCol := 0
-STATIC s_aHistory := {}
-STATIC s_lPreserveHistory := .T.
-STATIC s_lWasLoad := .F.
-STATIC s_lInteractive := .T.
+/* For hbshell */
+#define _HBSH_cDirBase          1
+#define _HBSH_cProgName         2
+#define _HBSH_hLibExt           3
+#define _HBSH_hCH               4
+#define _HBSH_hOPTPRG           5
+#define _HBSH_hINCPATH          6
+#define _HBSH_hCHCORE           7
+#define _HBSH_hbmk              8
+#define _HBSH_nRow              9
+#define _HBSH_nCol              10
+#define _HBSH_aHistory          11
+#define _HBSH_lPreserveHistory  12
+#define _HBSH_lWasLoad          13
+#define _HBSH_lInteractive      14
+#define _HBSH_MAX_              15
 
-PROCEDURE _APPMAIN( ... )
+/* Trick to make it run if compiled without -n/-n1/-n2
+   (or with -n-) option.
+   (typically as scripts and precompiled scripts) */
+/* NOTE: Avoid file wide STATICs to keep this working */
+#if __pragma( n ) < 1
+hbmk_local_entry( hb_ArrayToParams( hb_AParams() ) )
+#endif
+
+#if defined( HBMK_USE_CUSTMAIN ) /* for .hbp build */
+PROCEDURE __hbmk_public_entry( ... ) /* for hbrun builds (or any builds via .hbp) */
+   hbmk_local_entry( ... )
+   RETURN
+#elif defined( HBMK_USE_APPMAIN )
+PROCEDURE _APPMAIN( ... ) /* for GNU Make build (we can't override default entry, so we use this alternate built-in one */
+   hbmk_local_entry( ... )
+   RETURN
+#else
+PROCEDURE __hbmk_fake_entry( ... ) /* for scripts and precompiled scripts with -n/-n1/-n2 option */
+   hbmk_local_entry( ... )
+   RETURN
+#endif
+
+STATIC PROCEDURE hbmk_local_entry( ... )
 
    LOCAL aArgsProc
    LOCAL nResult
@@ -645,22 +659,28 @@ PROCEDURE _APPMAIN( ... )
    LOCAL nTargetPos
    LOCAL lHadTarget
 
+   LOCAL cParam1L
+
    /* for temp debug messages */
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
 
-   /* Expand wildcard project specs */
+   /* Check if we should go into shell mode */
 
+   cParam1L := iif( PCount() >= 1, Lower( hb_PValue( 1 ) ), "" )
    IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
-        hb_PValue( 1 ) == "." .OR. ;
-        HBMK_IS_IN( Lower( hb_FNameExt( hb_PValue( 1 ) ) ), ".hb|.hrb|.dbf" ) ) .AND. ;
-      !( ! Empty( hb_PValue( 1 ) ) .AND. ;
-         ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
-           Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
+        cParam1L == "." .OR. ;
+        hb_FNameExt( cParam1L ) == ".dbf" .OR. ;
+        ( HBMK_IS_IN( hb_FNameExt( cParam1L ), ".hb|.hrb" ) .AND. !( Left( cParam1L, 1 ) == "-" ) ) ) .AND. ;
+      !( ! Empty( cParam1L ) .AND. ;
+         ( Left( cParam1L, 6 ) == "-hbreg" .OR. ;
+           Left( cParam1L, 8 ) == "-hbunreg" ) )
       __hbshell( ... )
       RETURN
    ENDIF
+
+   /* Expand wildcard project specs */
 
    aArgsProc := {}
    FOR EACH tmp IN hb_AParams()
@@ -764,7 +784,7 @@ PROCEDURE _APPMAIN( ... )
       ENDIF
 
       /* Build one target */
-      nResult := hbmk( aArgsTarget, nTargetPos, 1, @lPause, @lExitStr )
+      nResult := __hbmk( aArgsTarget, nTargetPos, 1, @lPause, @lExitStr )
 
       /* Exit on first failure */
       IF nResult != _EXIT_OK
@@ -788,7 +808,7 @@ PROCEDURE _APPMAIN( ... )
 
    RETURN
 
-#endif /* _HBMK_EMBEDDED_ */
+#endif /* ! _HBMK_EMBEDDED_ */
 
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
@@ -1208,7 +1228,7 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
 
    RETURN
 
-FUNCTION hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
+STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
 
    LOCAL hbmk
 
@@ -1388,10 +1408,6 @@ FUNCTION hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
    LOCAL lHBMAINDLLP
 
    LOCAL cStdOutErr
-
-   IF s_cSecToken == NIL
-      s_cSecToken := StrZero( hb_rand32(), 10, 0 )
-   ENDIF
 
    hbmk := hbmk_new()
 
@@ -9295,8 +9311,10 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
 
    LOCAL hbmk
 
-   IF HB_ISHASH( ctx ) .AND. s_cSecToken $ ctx
-      hbmk := ctx[ s_cSecToken ]
+   LOCAL cSecToken := hbmk_SecToken()
+
+   IF HB_ISHASH( ctx ) .AND. cSecToken $ ctx
+      hbmk := ctx[ cSecToken ]
       IF HB_ISARRAY( hbmk ) .AND. Len( hbmk ) == _HBMK_MAX_
          RETURN hbmk
       ENDIF
@@ -9453,45 +9471,62 @@ FUNCTION hbmk_Register_Input_File_Extension( ctx, cExt )
 
    RETURN NIL
 
+STATIC FUNCTION hbmk_SecToken()
+
+   /* NOTE: Security token to protect against plugins accessing our
+            internal structures referenced from context variable */
+   STATIC s_cToken := NIL
+   STATIC s_mutexToken := hb_mutexCreate()
+
+   hb_mutexLock( s_mutexToken )
+
+   IF s_cToken == NIL
+      s_cToken := StrZero( hb_rand32(), 10, 0 )
+   ENDIF
+
+   hb_mutexUnlock( s_mutexToken )
+
+   RETURN s_cToken
+
 /* ; */
 
 STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
    RETURN { ;
-      "cSTATE"       => cState                     , ;
-      "params"       => hbmk[ _HBMK_aPLUGINPars ]  , ;
-      "vars"         => hbmk[ _HBMK_hPLUGINVars ]  , ;
-      "cPLAT"        => hbmk[ _HBMK_cPLAT ]        , ;
-      "cCOMP"        => hbmk[ _HBMK_cCOMP ]        , ;
-      "nCOMPVer"     => hbmk[ _HBMK_nCOMPVer ]     , ;
-      "cCPU"         => hbmk[ _HBMK_cCPU ]         , ;
-      "cBUILD"       => hbmk[ _HBMK_cBUILD ]       , ;
-      "cOUTPUTNAME"  => hbmk[ _HBMK_cPROGNAME ]    , ;
-      "cTARGETNAME"  => hbmk_TARGETNAME( hbmk )    , ;
-      "cTARGETTYPE"  => hbmk_TARGETTYPE( hbmk )    , ;
-      "lREBUILD"     => hbmk[ _HBMK_lREBUILD ]     , ;
-      "lCLEAN"       => hbmk[ _HBMK_lCLEAN ]       , ;
-      "lDEBUG"       => hbmk[ _HBMK_lDEBUG ]       , ;
-      "lMAP"         => hbmk[ _HBMK_lMAP ]         , ;
-      "lSTRIP"       => hbmk[ _HBMK_lSTRIP ]       , ;
-      "lDONTEXEC"    => hbmk[ _HBMK_lDONTEXEC ]    , ;
-      "lIGNOREERROR" => hbmk[ _HBMK_lIGNOREERROR ] , ;
-      "lTRACE"       => hbmk[ _HBMK_lTRACE ]       , ;
-      "lQUIET"       => hbmk[ _HBMK_lQuiet ]       , ;
-      "lINFO"        => hbmk[ _HBMK_lInfo ]        , ;
-      "lBEEP"        => hbmk[ _HBMK_lBEEP ]        , ;
-      "lRUN"         => hbmk[ _HBMK_lRUN ]         , ;
-      "lINC"         => hbmk[ _HBMK_lINC ]         , ;
-      "cCCPATH"      => hbmk[ _HBMK_cCCPATH ]      , ;
-      "cCCPREFIX"    => hbmk[ _HBMK_cCCPREFIX ]    , ;
-      "cCCSUFFIX"    => hbmk[ _HBMK_cCCSUFFIX ]    , ;
-      "cCCEXT"       => hbmk[ _HBMK_cCCEXT ]       , ;
-      "nCmd_Esc"     => hbmk[ _HBMK_nCmd_Esc ]     , ;
-      "nScr_Esc"     => hbmk[ _HBMK_nScr_Esc ]     , ;
-      "nCmd_FNF"     => hbmk[ _HBMK_nCmd_FNF ]     , ;
-      "nScr_FNF"     => hbmk[ _HBMK_nScr_FNF ]     , ;
-      "cWorkDir"     => hbmk[ _HBMK_cWorkDir ]     , ;
-      "nExitCode"    => hbmk[ _HBMK_nExitCode ]    , ;
-      s_cSecToken    => hbmk                       }
+      "cSTATE"        => cState                     , ;
+      "params"        => hbmk[ _HBMK_aPLUGINPars ]  , ;
+      "vars"          => hbmk[ _HBMK_hPLUGINVars ]  , ;
+      "cPLAT"         => hbmk[ _HBMK_cPLAT ]        , ;
+      "cCOMP"         => hbmk[ _HBMK_cCOMP ]        , ;
+      "nCOMPVer"      => hbmk[ _HBMK_nCOMPVer ]     , ;
+      "cCPU"          => hbmk[ _HBMK_cCPU ]         , ;
+      "cBUILD"        => hbmk[ _HBMK_cBUILD ]       , ;
+      "cOUTPUTNAME"   => hbmk[ _HBMK_cPROGNAME ]    , ;
+      "cTARGETNAME"   => hbmk_TARGETNAME( hbmk )    , ;
+      "cTARGETTYPE"   => hbmk_TARGETTYPE( hbmk )    , ;
+      "lREBUILD"      => hbmk[ _HBMK_lREBUILD ]     , ;
+      "lCLEAN"        => hbmk[ _HBMK_lCLEAN ]       , ;
+      "lDEBUG"        => hbmk[ _HBMK_lDEBUG ]       , ;
+      "lMAP"          => hbmk[ _HBMK_lMAP ]         , ;
+      "lSTRIP"        => hbmk[ _HBMK_lSTRIP ]       , ;
+      "lDONTEXEC"     => hbmk[ _HBMK_lDONTEXEC ]    , ;
+      "lIGNOREERROR"  => hbmk[ _HBMK_lIGNOREERROR ] , ;
+      "lTRACE"        => hbmk[ _HBMK_lTRACE ]       , ;
+      "lQUIET"        => hbmk[ _HBMK_lQuiet ]       , ;
+      "lINFO"         => hbmk[ _HBMK_lInfo ]        , ;
+      "lBEEP"         => hbmk[ _HBMK_lBEEP ]        , ;
+      "lRUN"          => hbmk[ _HBMK_lRUN ]         , ;
+      "lINC"          => hbmk[ _HBMK_lINC ]         , ;
+      "cCCPATH"       => hbmk[ _HBMK_cCCPATH ]      , ;
+      "cCCPREFIX"     => hbmk[ _HBMK_cCCPREFIX ]    , ;
+      "cCCSUFFIX"     => hbmk[ _HBMK_cCCSUFFIX ]    , ;
+      "cCCEXT"        => hbmk[ _HBMK_cCCEXT ]       , ;
+      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ;
+      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ;
+      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ;
+      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ;
+      "cWorkDir"      => hbmk[ _HBMK_cWorkDir ]     , ;
+      "nExitCode"     => hbmk[ _HBMK_nExitCode ]    , ;
+      hbmk_SecToken() => hbmk                       }
 
 STATIC FUNCTION PlugIn_ctx_get_state( ctx )
    RETURN ctx[ "cSTATE" ]
@@ -11059,7 +11094,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                            IF lFound
                               aArgs := AClone( hbmk[ _HBMK_aArgs ] )
                               aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
-                              nResult := hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
+                              nResult := __hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
                               IF nResult != 0
                                  RETURN nResult
                               ENDIF
@@ -13367,7 +13402,29 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 #endif
 #define _EXT_ENV_  "HB_EXTENSION"
 
+STATIC FUNCTION hbsh()
+
+   THREAD STATIC t_hbsh := NIL
+
+   IF t_hbsh == NIL
+      t_hbsh := Array( _HBSH_MAX_ )
+      t_hbsh[ _HBSH_hLibExt ]          := { => }
+      t_hbsh[ _HBSH_hCH ]              := { => }
+      t_hbsh[ _HBSH_hOPTPRG ]          := { => }
+      t_hbsh[ _HBSH_hINCPATH ]         := { => }
+      t_hbsh[ _HBSH_hCHCORE ]          := { => }
+      t_hbsh[ _HBSH_nCol ]             := 0
+      t_hbsh[ _HBSH_aHistory ]         := {}
+      t_hbsh[ _HBSH_lPreserveHistory ] := .T.
+      t_hbsh[ _HBSH_lWasLoad ]         := .F.
+      t_hbsh[ _HBSH_lInteractive ]     := .T.
+   ENDIF
+
+   RETURN t_hbsh
+
 STATIC PROCEDURE __hbshell( cFile, ... )
+
+   LOCAL hbsh := hbsh()
 
    LOCAL aExtension := {}
    LOCAL hbmk
@@ -13384,12 +13441,12 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* Save originals */
 
-   s_cDirBase_hbshell := hb_DirBase()
-   s_cProgName_hbshell := hb_ProgName()
+   hbsh[ _HBSH_cDirBase ] := hb_DirBase()
+   hbsh[ _HBSH_cProgName ] := hb_ProgName()
 
    /* Detect Harbour dir layout */
 
-   hbmk := s_hbmk := hbmk_new()
+   hbmk := hbsh[ _HBSH_hbmk ] := hbmk_new()
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
@@ -13443,7 +13500,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       SWITCH cExt
       CASE ".hb"
 
-         s_lInteractive := .F.
+         hbsh[ _HBSH_lInteractive ] := .F.
 
          /* NOTE: Assumptions:
                   - one dynamic lib belongs to one .hbc file (true for dynamic builds in contrib)
@@ -13495,7 +13552,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          ENDIF
 
       CASE ".hrb"
-         s_lInteractive := .F.
+         hbsh[ _HBSH_lInteractive ] := .F.
          __hbshell_ext_init( aExtension )
          hHRB := hb_hrbLoad( cFile )
          hbshell_gtSelect( __hbshell_detect_GT( hHRB ) )
@@ -13610,6 +13667,8 @@ STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
 
 STATIC PROCEDURE __hbshell_ext_static_init()
 
+   LOCAL hbsh := hbsh()
+
    LOCAL tmp
    LOCAL nCount
    LOCAL cName
@@ -13619,7 +13678,7 @@ STATIC PROCEDURE __hbshell_ext_static_init()
       cName := __dynSGetName( tmp )
       IF LEFTEQUAL( cName, "__HBEXTERN__" ) .AND. ;
          ! HBMK_IS_IN( cName, "__HBEXTERN__HBCPAGE__" )
-         s_hLibExt[ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
+         hbsh[ _HBSH_hLibExt ][ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
       ENDIF
    NEXT
 
@@ -13643,6 +13702,8 @@ STATIC PROCEDURE __hbshell_ext_init( aExtension )
          extend header search path accordingly */
 FUNCTION hbshell_ext_load( cName )
 
+   LOCAL hbsh := hbsh()
+
    LOCAL cFileName
    LOCAL hLib
    LOCAL tmp
@@ -13652,29 +13713,29 @@ FUNCTION hbshell_ext_load( cName )
 
    IF ! Empty( cName )
       IF __hbshell_CanLoadDyn()
-         IF !( cName $ s_hLibExt )
+         IF !( cName $ hbsh[ _HBSH_hLibExt ] )
 
-            s_hbmk[ _HBMK_aINCPATH ] := {}
-            s_hbmk[ _HBMK_aCH ] := {}
-            s_hbmk[ _HBMK_aLIBUSER ] := {}
+            hbsh[ _HBSH_hbmk ][ _HBMK_aINCPATH ] := {}
+            hbsh[ _HBSH_hbmk ][ _HBMK_aCH ] := {}
+            hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] := {}
 
-            s_hINCPATH[ cName ] := {}
-            s_hCH[ cName ] := {}
-            s_hOPTPRG[ cName ] := {}
+            hbsh[ _HBSH_hINCPATH ][ cName ] := {}
+            hbsh[ _HBSH_hCH ][ cName ] := {}
+            hbsh[ _HBSH_hOPTPRG ][ cName ] := {}
 
-            IF Empty( cVersion := HBC_Find( s_hbmk, cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
+            IF Empty( cVersion := HBC_Find( hbsh[ _HBSH_hbmk ], cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
                OutErr( hb_StrFormat( I_( "hbshell: Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
             ELSE
-               AEval( s_hbmk[ _HBMK_aINCPATH ], {| tmp | AAdd( s_hINCPATH[ cName ], tmp ) } )
-               AEval( s_hbmk[ _HBMK_aCH ], {| tmp | AAdd( s_hCH[ cName ], tmp ) } )
-               AAddNew( s_hOPTPRG[ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
+               AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aINCPATH ], {| tmp | AAdd( hbsh[ _HBSH_hINCPATH ][ cName ], tmp ) } )
+               AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aCH ], {| tmp | AAdd( hbsh[ _HBSH_hCH ][ cName ], tmp ) } )
+               AAddNew( hbsh[ _HBSH_hOPTPRG ][ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
 
                /* NOTE: Hack. We detect if the .hbc had defined any libs to load.
                         (f.e. there will not be any libs if the .hbc was skipped due
                         to filters)
                   TODO: In the future the .hbc should specify a list of dynamic libs
                         to load, and we should load those, if any. */
-               IF ! Empty( s_hbmk[ _HBMK_aLIBUSER ] )
+               IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] )
                   cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
                   IF Empty( cFileName )
@@ -13684,7 +13745,7 @@ FUNCTION hbshell_ext_load( cName )
                      IF Empty( hLib )
                         OutErr( hb_StrFormat( I_( "hbshell: Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
                      ELSE
-                        s_hLibExt[ cName ] := hLib
+                        hbsh[ _HBSH_hLibExt ][ cName ] := hLib
                         RETURN .T.
                      ENDIF
                   ENDIF
@@ -13700,11 +13761,13 @@ FUNCTION hbshell_ext_load( cName )
 
 FUNCTION hbshell_ext_unload( cName )
 
-   IF cName $ s_hLibExt .AND. s_hLibExt[ cName ] != NIL
-      hb_HDel( s_hINCPATH, cName )
-      hb_HDel( s_hCH, cName )
-      hb_HDel( s_hOPTPRG, cName )
-      hb_HDel( s_hLibExt, cName )
+   LOCAL hbsh := hbsh()
+
+   IF cName $ hbsh[ _HBSH_hLibExt ] .AND. hbsh[ _HBSH_hLibExt ][ cName ] != NIL
+      hb_HDel( hbsh[ _HBSH_hINCPATH ], cName )
+      hb_HDel( hbsh[ _HBSH_hCH ], cName )
+      hb_HDel( hbsh[ _HBSH_hOPTPRG ], cName )
+      hb_HDel( hbsh[ _HBSH_hLibExt ], cName )
       RETURN .T.
    ENDIF
 
@@ -13712,10 +13775,12 @@ FUNCTION hbshell_ext_unload( cName )
 
 FUNCTION hbshell_ext_get_list()
 
-   LOCAL aName := Array( Len( s_hLibExt ) )
+   LOCAL hbsh := hbsh()
+
+   LOCAL aName := Array( Len( hbsh[ _HBSH_hLibExt ] ) )
    LOCAL hLib
 
-   FOR EACH hLib IN s_hLibExt
+   FOR EACH hLib IN hbsh[ _HBSH_hLibExt ]
       aName[ hLib:__enumIndex() ] := iif( Empty( hLib ), Upper( hLib:__enumKey() ), hLib:__enumKey() )
    NEXT
 
@@ -13957,6 +14022,8 @@ STATIC PROCEDURE __hbshell_ProcessStart()
 /* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
 STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
+   LOCAL hbsh := hbsh()
+
    LOCAL GetList
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
@@ -13984,8 +14051,8 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    __hbshell_HistoryLoad()
 
-   AAdd( s_aHistory, PadR( "quit", HB_LINE_LEN ) )
-   nHistIndex := Len( s_aHistory ) + 1
+   AAdd( hbsh[ _HBSH_aHistory ], PadR( "quit", HB_LINE_LEN ) )
+   nHistIndex := Len( hbsh[ _HBSH_aHistory ] ) + 1
 
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
 
@@ -13993,7 +14060,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
 
-   s_nRow := 3
+   hbsh[ _HBSH_nRow ] := 3
 
    __hbshell_Exec( "?? hb_Version()" )
 
@@ -14002,7 +14069,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    IF HB_ISARRAY( aCommand )
       FOR EACH cCommand IN aCommand
          IF HB_ISSTRING( cCommand )
-            AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
+            AAdd( hbsh[ _HBSH_aHistory ], PadR( cCommand, HB_LINE_LEN ) )
             __hbshell_Info( cCommand )
             __hbshell_Exec( cCommand )
          ENDIF
@@ -14036,11 +14103,11 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
                           SC_NORMAL, SC_INSERT ) ) } )
       bKeyUp   := SetKey( K_UP, ;
          {|| iif( nHistIndex > 1, ;
-                  cLine := s_aHistory[ --nHistIndex ], ) } )
+                  cLine := hbsh[ _HBSH_aHistory ][ --nHistIndex ], ) } )
       bKeyDown := SetKey( K_DOWN, ;
-         {|| cLine := iif( nHistIndex < Len( s_aHistory ), ;
-             s_aHistory[ ++nHistIndex ], ;
-             ( nHistIndex := Len( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+         {|| cLine := iif( nHistIndex < Len( hbsh[ _HBSH_aHistory ] ), ;
+             hbsh[ _HBSH_aHistory ][ ++nHistIndex ], ;
+             ( nHistIndex := Len( hbsh[ _HBSH_aHistory ] ) + 1, Space( HB_LINE_LEN ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE, ;
          {|| lResize := .T., hb_keyPut( K_ENTER ) } )
 
@@ -14064,15 +14131,15 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
          LOOP
       ENDIF
 
-      IF Empty( s_aHistory ) .OR. !( ATail( s_aHistory ) == cLine )
-         IF Len( s_aHistory ) < HB_HISTORY_LEN
-            AAdd( s_aHistory, cLine )
+      IF Empty( hbsh[ _HBSH_aHistory ] ) .OR. !( ATail( hbsh[ _HBSH_aHistory ] ) == cLine )
+         IF Len( hbsh[ _HBSH_aHistory ] ) < HB_HISTORY_LEN
+            AAdd( hbsh[ _HBSH_aHistory ], cLine )
          ELSE
-            ADel( s_aHistory, 1 )
-            s_aHistory[ Len( s_aHistory ) ] := cLine
+            ADel( hbsh[ _HBSH_aHistory ], 1 )
+            hbsh[ _HBSH_aHistory ][ Len( hbsh[ _HBSH_aHistory ] ) ] := cLine
          ENDIF
       ENDIF
-      nHistIndex := Len( s_aHistory ) + 1
+      nHistIndex := Len( hbsh[ _HBSH_aHistory ] ) + 1
 
       cCommand := AllTrim( cLine, " " )
       cLine := NIL
@@ -14096,9 +14163,9 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
                __hbshell_Exec( cCommand )
             ENDIF
 
-            IF s_nRow >= MaxRow()
+            IF hbsh[ _HBSH_nRow ] >= MaxRow()
                hb_Scroll( 3, 0, MaxRow(), MaxCol(), 1 )
-               s_nRow := MaxRow() - 1
+               hbsh[ _HBSH_nRow ] := MaxRow() - 1
             ENDIF
          ENDIF
       ENDIF
@@ -14145,6 +14212,8 @@ STATIC FUNCTION __hbshell_GetHidden()
 
 STATIC PROCEDURE __hbshell_Info( cCommand )
 
+   LOCAL hbsh := hbsh()
+
    IF cCommand != NIL
       hb_DispOutAt( 0, 0, "PP: ", "W/N" )
       hb_DispOutAt( 0, 4, PadR( cCommand, MaxCol() - 3 ), "N/R" )
@@ -14166,7 +14235,7 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
                " | # " + Space( 7 ) + "/" + Space( 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ENDIF
-   IF s_lPreserveHistory
+   IF hbsh[ _HBSH_lPreserveHistory ]
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
 
@@ -14206,28 +14275,32 @@ STATIC PROCEDURE __hbshell_Err( oError, cCommand )
 
 STATIC PROCEDURE __hbshell_Exec( cCommand )
 
+   LOCAL hbsh := hbsh()
+
    LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
    LOCAL aOPTPRG := {}
 
-   IF ! Empty( s_hCHCORE )
-      AAdd( aOPTPRG, "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ] )
-      hb_HEval( s_hCHCORE, {| tmp | AAdd( aOPTPRG, "-u+" + tmp ) } )
+   IF ! Empty( hbsh[ _HBSH_hCHCORE ] )
+      AAdd( aOPTPRG, "-i" + hbsh[ _HBSH_hbmk ][ _HBMK_cHB_INSTALL_INC ] )
+      hb_HEval( hbsh[ _HBSH_hCHCORE ], {| tmp | AAdd( aOPTPRG, "-u+" + tmp ) } )
    ENDIF
 
-   hb_HEval( s_hINCPATH, {| cExt |
-                            AEval( s_hINCPATH[ cExt ], {| tmp | AAddNew( aOPTPRG, "-i" + tmp ) } )
-                            AEval( s_hCH[ cExt ]     , {| tmp | AAddNew( aOPTPRG, "-u+" + tmp ) } )
-                            AEval( s_hOPTPRG[ cExt ] , {| tmp | AAddNew( aOPTPRG, tmp ) } )
-                            RETURN NIL
-                         } )
+   hb_HEval( hbsh[ _HBSH_hINCPATH ], ;
+      {| cExt |
+         AEval( hbsh[ _HBSH_hINCPATH ][ cExt ], {| tmp | AAddNew( aOPTPRG, "-i" + tmp ) } )
+         AEval( hbsh[ _HBSH_hCH ][ cExt ]     , {| tmp | AAddNew( aOPTPRG, "-u+" + tmp ) } )
+         AEval( hbsh[ _HBSH_hOPTPRG ][ cExt ] , {| tmp | AAddNew( aOPTPRG, tmp ) } )
+         RETURN NIL
+      } )
 
-   cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() +;
-            "RETURN {||" + hb_eol() +;
-            "   " + cCommand + hb_eol() +;
-            "   RETURN __mvSetBase()" + hb_eol() +;
-            "}" + hb_eol()
+   cFunc := ;
+      "STATIC FUNCTION __HBDOT()" + hb_eol() +;
+      "RETURN {||" + hb_eol() +;
+      "   " + cCommand + hb_eol() +;
+      "   RETURN __mvSetBase()" + hb_eol() +;
+      "}" + hb_eol()
 
-   DevPos( s_nRow, s_nCol )
+   DevPos( hbsh[ _HBSH_nRow ], hbsh[ _HBSH_nCol ] )
 
    BEGIN SEQUENCE WITH {| oError | __hbshell_Err( oError, cCommand ) }
 
@@ -14245,11 +14318,11 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
 
    END /* SEQUENCE */
 
-   s_nRow := Row()
-   s_nCol := Col()
+   hbsh[ _HBSH_nRow ] := Row()
+   hbsh[ _HBSH_nCol ] := Col()
    nRowMin := 3
-   IF s_nRow < nRowMin
-      s_nRow := nRowMin
+   IF hbsh[ _HBSH_nRow ] < nRowMin
+      hbsh[ _HBSH_nRow ] := nRowMin
    ENDIF
 
    __mvSetBase()
@@ -14272,19 +14345,21 @@ EXIT PROCEDURE __hbshell_exit()
 
 STATIC PROCEDURE __hbshell_HistoryLoad()
 
+   LOCAL hbsh := hbsh()
+
    LOCAL cHistory
    LOCAL cLine
 
-   s_lWasLoad := .T.
+   hbsh[ _HBSH_lWasLoad ] := .T.
 
-   IF s_lPreserveHistory
+   IF hbsh[ _HBSH_lPreserveHistory ]
       cHistory := StrTran( MemoRead( __hbshell_ConfigDir() + _FNAME_HISTORY_ ), Chr( 13 ) )
       IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
-         s_lPreserveHistory := .F.
+         hbsh[ _HBSH_lPreserveHistory ] := .F.
       ELSE
          FOR EACH cLine IN hb_ATokens( StrTran( cHistory, Chr( 13 ) ), Chr( 10 ) )
             IF ! Empty( cLine )
-               AAdd( s_aHistory, PadR( cLine, HB_LINE_LEN ) )
+               AAdd( hbsh[ _HBSH_aHistory ], PadR( cLine, HB_LINE_LEN ) )
             ENDIF
          NEXT
       ENDIF
@@ -14294,13 +14369,15 @@ STATIC PROCEDURE __hbshell_HistoryLoad()
 
 STATIC PROCEDURE __hbshell_HistorySave()
 
+   LOCAL hbsh := hbsh()
+
    LOCAL cHistory
    LOCAL cLine
    LOCAL cDir
 
-   IF s_lWasLoad .AND. s_lPreserveHistory
+   IF hbsh[ _HBSH_lWasLoad ] .AND. hbsh[ _HBSH_lPreserveHistory ]
       cHistory := ""
-      FOR EACH cLine IN s_aHistory
+      FOR EACH cLine IN hbsh[ _HBSH_aHistory ]
          IF !( Lower( AllTrim( cLine ) ) == "quit" )
             cHistory += AllTrim( cLine ) + hb_eol()
          ENDIF
@@ -14465,12 +14542,14 @@ STATIC FUNCTION __hbshell_detect_GT( hHRB )
 /* Check if a header is a valid core one */
 STATIC FUNCTION __hbshell_TryHeader( cName )
 
+   LOCAL hbsh := hbsh()
+
    LOCAL lRetVal := .F.
 
    BEGIN SEQUENCE WITH {| oError | Break( oError ) }
 
       IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
-                                     "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ], ;
+                                     "-i" + hbsh[ _HBSH_hbmk ][ _HBMK_cHB_INSTALL_INC ], ;
                                      "-u+" + cName ) )
          lRetVal := .T.
       ENDIF
@@ -14482,10 +14561,12 @@ STATIC FUNCTION __hbshell_TryHeader( cName )
 /* Public hbshell API usable in dot prompt and startup script */
 FUNCTION hbshell_include( cName )
 
+   LOCAL hbsh := hbsh()
+
    cName := Lower( cName )
 
-   IF !( cName $ s_hCHCORE ) .AND. __hbshell_TryHeader( cName )
-      s_hCHCORE[ cName ] := NIL
+   IF !( cName $ hbsh[ _HBSH_hCHCORE ] ) .AND. __hbshell_TryHeader( cName )
+      hbsh[ _HBSH_hCHCORE ][ cName ] := NIL
       RETURN .T.
    ENDIF
 
@@ -14493,10 +14574,12 @@ FUNCTION hbshell_include( cName )
 
 FUNCTION hbshell_uninclude( cName )
 
+   LOCAL hbsh := hbsh()
+
    cName := Lower( cName )
 
-   IF cName $ s_hCHCORE
-      hb_HDel( s_hCHCORE, cName )
+   IF cName $ hbsh[ _HBSH_hCHCORE ]
+      hb_HDel( hbsh[ _HBSH_hCHCORE ], cName )
       RETURN .T.
    ENDIF
 
@@ -14504,16 +14587,24 @@ FUNCTION hbshell_uninclude( cName )
 
 PROCEDURE hbshell_include_list()
 
-   hb_HEval( s_hCHCORE, {| tmp | __hbshell_ToConsole( tmp  ) } )
+   LOCAL hbsh := hbsh()
+
+   hb_HEval( hbsh[ _HBSH_hCHCORE ], {| tmp | __hbshell_ToConsole( tmp ) } )
 
    RETURN
 
 /* Public hbshell API */
 FUNCTION hbshell_DirBase()
-   RETURN hb_UTF8ToStr( s_cDirBase_hbshell )
+
+   LOCAL hbsh := hbsh()
+
+   RETURN hb_UTF8ToStr( hbsh[ _HBSH_cDirBase ] )
 
 FUNCTION hbshell_ProgName()
-   RETURN hb_UTF8ToStr( s_cProgName_hbshell )
+
+   LOCAL hbsh := hbsh()
+
+   RETURN hb_UTF8ToStr( hbsh[ _HBSH_cProgName ] )
 
 FUNCTION hbshell_gtSelect( cGT )
 
@@ -14543,7 +14634,13 @@ STATIC FUNCTION __hbshell_gtDefault()
    RETURN _HBMK_GT_DEF_
 #endif
 
-#endif /* _HBMK_EMBEDDED_ */
+#else
+
+/* public entry for embedded flavor */
+FUNCTION hbmk( ... )
+   RETURN __hbmk( ... )
+
+#endif /* ! _HBMK_EMBEDDED_ */
 
 /* ------------------------------------------------------------- */
 
@@ -15602,6 +15699,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "hbshell_gtSelect( [<cGT>] ) -> NIL"                , hb_StrFormat( I_( "Switch GT. Default [*]: '%1$s'" ), Lower( __hbshell_gtDefault() ) ) }, ;
       { "hbshell_include( <cHeader> ) -> <lSuccess>"        , I_( "Load Harbour header." ) }, ;
       { "hbshell_uninclude( <cHeader> ) -> <lSuccess>"      , I_( "Unload Harbour header." ) }, ;
+      { "hbshell_include_list() -> NIL"                     , I_( "Display list of loaded Harbour header." ) }, ;
       { "hbshell_ext_load( <cPackageName> ) -> <lSuccess>"  , I_( "Load package. Similar to #request PP directive." ) }, ;
       { "hbshell_ext_unload( <cPackageName> ) -> <lSuccess>", I_( "Unload package." ) }, ;
       { "hbshell_ext_get_list() -> <aPackages>"             , I_( "List of loaded packages." ) }, ;

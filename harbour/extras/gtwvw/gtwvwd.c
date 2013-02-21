@@ -1512,14 +1512,14 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_SCREENHEIGHT:
-         /* NOTE 20040618 currently not includes StatusBar and ToolBar, if any.
-          * TODO          I Think it should return ALL window height, incl
-          *               StatusBar and ToolBar
-          *               ie. hb_gt_wvwCalcPixelHeight()
-          * SEEALSO       hb_gt_wvwCalcPixelHeight()
+         /* NOTE 2004.06.18 currently not includes StatusBar and ToolBar, if any.
+          * TODO            I Think it should return ALL window height, incl
+          *                 StatusBar and ToolBar
+          *                 ie. hb_gt_wvwCalcPixelHeight()
+          * SEEALSO         hb_gt_wvwCalcPixelHeight()
           */
 
-         /*NOTE 20040719 screenheight includes linespacing, if any */
+         /*NOTE 2004.07.19 screenheight includes linespacing, if any */
 
 
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_wvw_LineHeight( pWindowData ) * pWindowData->ROWS );
@@ -1548,9 +1548,9 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_DESKTOPHEIGHT:
       {
-         /*NOTE 20040618 currently includes StatusBar and ToolBar, if any.
-            *TODO          Think: should it return chars area only?
-            *SEEALSO       hb_gt_wvwCalcPixelHeight() - usSBHeight - usTBHeight
+         /* NOTE 2004.06.18 currently includes StatusBar and ToolBar, if any.
+          * TODO            Think: should it return chars area only?
+          * SEEALSO         hb_gt_wvwCalcPixelHeight() - usSBHeight - usTBHeight
           */
 
          RECT rDesk = { 0 };
@@ -1575,12 +1575,12 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_DESKTOPROWS:
       {
-         /*NOTE 20040618 currently includes StatusBar and ToolBar, if any.
-            *TODO          I Think it should it return chars area only?
-            *SEEALSO       hb_gt_wvwCalcPixelHeight() - usSBHeight - usTBHeight
+         /* NOTE 2004.06.18 currently includes StatusBar and ToolBar, if any.
+          * TODO            I Think it should it return chars area only?
+          * SEEALSO         hb_gt_wvwCalcPixelHeight() - usSBHeight - usTBHeight
           */
 
-         /*NOTE 20040719 screenheight includes linespacing, if any */
+         /* NOTE 2004.07.19 screenheight includes linespacing, if any */
 
          RECT rDesk = { 0 };
          HWND hDesk;
@@ -2165,7 +2165,7 @@ static void hb_gt_wvwCreateObjects( UINT usWinNum )
 {
    LOGBRUSH lb = { 0 };
 
-   /* 20040921 IMPORTANT:
+   /* 2004.09.21 IMPORTANT:
       All these PENs and BRUSHes creations are temporarily disabled
       because WINDOW #1's CAN'T BE DELETED LATER!
       See also hb_gt_wvwCloseWindow() and gt_Exit()
@@ -2174,7 +2174,7 @@ static void hb_gt_wvwCreateObjects( UINT usWinNum )
       or
       (2) do the creation and deletion only when required
     */
-   /* 20040923 choose #1 of above option */
+   /* 2004.09.23 choose #1 of above option */
    if( usWinNum > 0 )
       return;
 
@@ -2807,7 +2807,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
           * BeginPaint resets the update rectangle - don't move it or nothing is drawn!
           */
 
-         /* 20050625 TODO: MSDN says app should NOT call BeginPaint if GetUpdateRect returns zero */
+         /* 2005.06.25 TODO: MSDN says app should NOT call BeginPaint if GetUpdateRect returns zero */
 
          hdc = BeginPaint( hWnd, &ps );
 
@@ -3468,7 +3468,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             fake an Alt+C
           */
 
-         /* 20040610
+         /* 2004.06.10
             reject if not accepting input (topmost window not on focus) */
          if( ! hb_gt_wvwAcceptingInput() )
          {
@@ -3479,8 +3479,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          }
 
          if( usWinNum == 0 )
-            /* bdj note 20060724:
-               We should put this line here, as per FSG change on 20060626:
+            /* bdj note 2006.07.24:
+               We should put this line here, as per FSG change on 2006.06.26:
                  hb_gtHandleClose()
                However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
                So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
@@ -3498,7 +3498,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          return 0;
 
       case WM_ENTERIDLE:
-         /* FSG - 12/05/2004 - Signal than i'm on idle */
+         /* FSG - 2004.05.12 - Signal than i'm on idle */
          hb_idleState();
          return 0;
 
@@ -5204,7 +5204,7 @@ static void hb_gt_wvwCloseWindow( void ) /*assume s_pWvwData->s_usNumWindows >= 
       if( s_pWvwData->s_sApp->pSymWVW_TIMER )
          KillTimer( pWindowData->hWnd, WVW_ID_BASE_TIMER + s_pWvwData->s_usNumWindows - 1 );
 
-      /* 20040921 IMPORTANT:
+      /* 2004.09.21 IMPORTANT:
          All these PENs and BRUSHes deletions return OK,
          but GDI objects are reported as still in use by Task Manager.
          We now temporarily disable PENs and BRUSHes creation during
@@ -5215,7 +5215,7 @@ static void hb_gt_wvwCloseWindow( void ) /*assume s_pWvwData->s_usNumWindows >= 
          or
          (2) do the creation and deletion only when required
        */
-      /* 20040923 choose #1 of above option
+      /* 2004.09.23 choose #1 of above option
          DeleteObject( ( HPEN   ) pWindowData->penWhite );
          DeleteObject( ( HPEN   ) pWindowData->penWhiteDim );
          DeleteObject( ( HPEN   ) pWindowData->penBlack );
@@ -6502,7 +6502,7 @@ static void DrawTransparentBitmap( HDC hdc, HBITMAP hBitmap, short xStart,
    DeleteDC( hdcCopy );
 }
 
-/* 20060724 Notes:
+/* 2006.07.24 Notes:
    (1) Transparency
    if bTransparent is .t., top-left pixel is used as the transparent color,
 
@@ -6534,7 +6534,7 @@ BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const ch
       if( ! pPic )
          return FALSE;
 
-      /* 20060724 canNOT do it this way:
+      /* 2006.07.24 canNOT do it this way:
          pPic->lpVtbl->get_Width( pPic,&lWidth );
          pPic->lpVtbl->get_Height( pPic,&lHeight );
          iWidth = (int) lWidth;
@@ -7001,7 +7001,7 @@ WVW_DATA * hb_getWvwData( void )
 /*                                                                   */
 
 
-/* 20040713 this function was named WVW_lOpenWindow()
+/* 2004.07.13 this function was named WVW_lOpenWindow()
  *  now it is wvw_nOpenWindow()
  *  it now returns numeric
 
@@ -8507,12 +8507,12 @@ IPicture * rr_LoadPicture( const char * filename, LONG * lwidth, LONG * lheight 
 
 
 /* PENDING decision:
-   20040908 TODO: GTWVT deliberately adds new parm aOffset before nRoundHeight
-               I hate it when doing such thing
+   2004.09.08 TODO: GTWVT deliberately adds new parm aOffset before nRoundHeight
+                    I hate it when doing such thing
  */
 
 
-/* Supporting functions                                              */
+/* Supporting functions */
 
 
 static BITMAPINFO * PackedDibLoad( PTSTR szFileName )

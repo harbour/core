@@ -74,7 +74,7 @@
  *    hb_gt_os2_GetBlink()
  *    hb_gt_os2_SetBlink()
  *
- * Copyright 2000 - 2001 Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2000-2001 Maurilio Longo <maurilio.longo@libero.it>
  *    hb_gt_DispBegin() / hb_gt_DispEnd()
  *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
  *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
@@ -111,7 +111,7 @@
 #define SELTOFLAT( ptr )  ( void * ) ( ( ( ( ( ULONG ) ( ptr ) ) >> 19 ) << 16 ) | ( 0xFFFF & ( ( ULONG ) ( ptr ) ) ) )
 
 #if defined( HB_OS_OS2_GCC )
-   /* 25/03/2000 - maurilio.longo@libero.it
+   /* 2000.03.25 - maurilio.longo@libero.it
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>
 #else
@@ -562,7 +562,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                box drawing chars. (Maurilio Longo - maurilio.longo@libero.it)
     */
 
-   /* 21/08/2001 - <maurilio.longo@libero.it>
+   /* 2001.08.21 - <maurilio.longo@libero.it>
       NOTE: Box drawing characters need page 437 to show correctly, so, in your
             config.sys you need to have a CODEPAGE=x,y statement where x or y
             is equal to 437

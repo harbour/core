@@ -75,8 +75,7 @@ METHOD SetTitle( cTitle ) CLASS THTML
 
 METHOD AddLink( cLinkTo, cLinkName ) CLASS THTML
 
-   ::cBody := ::cBody + ;
-      "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
+   ::cBody += "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
 
    RETURN Self
 
@@ -86,16 +85,15 @@ METHOD AddHead( cDescr ) CLASS THTML
    // ::cBody += ...
    // ???
 
-   ::cBody := ::cBody + ;
-      "<h1>" + cDescr + "</h1>"
+   ::cBody += "<h1>" + cDescr + "</h1>"
 
    RETURN NIL
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 
-   cAlign := iif( cAlign == NIL, "Left", cAlign ) // Added Patrick Mast 2000-06-17
+   hb_default( @cAlign, "Left" )
 
-   ::cBody := ::cBody + ;
+   ::cBody += ;
       "<p align='" + cAlign + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
       "</p>"

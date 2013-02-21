@@ -127,7 +127,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
 
-   /* 09/08/2004 - <maurilio.longo@libero.it>
+   /* 2004.08.09 - <maurilio.longo@libero.it>
                    Setting a fixed width like it is done in the next line of code wich I've
                    commented exploits a bug of current tbrowse, that is, if every column is
                    narrower than tbrowse but the sum of them is wider tbrowse paints

@@ -67,7 +67,7 @@ PROCEDURE Main( ... )
 
    SET CENTURY ON
 
-   // At present time (23/10/2000) DBFCDX is default RDD and DBFNTX is
+   // At present time (2000.10.23) DBFCDX is default RDD and DBFNTX is
    // now DBF (I mean the one able to handle .dbt-s :-))
    rddSetDefault( "DBF" )
 

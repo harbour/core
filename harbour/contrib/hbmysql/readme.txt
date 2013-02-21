@@ -2,9 +2,9 @@
  * $Id$
  */
 
-                +---------------------------------------------------------------+
-                | 2001/November/22 - Harbour MySQL access classes - readme file |
-                +---------------------------------------------------------------+
+                +---------------------------------------------------------+
+                | 2001.11.22 - Harbour MySQL access classes - readme file |
+                +---------------------------------------------------------+
 
 
 This is work in progress, so it has to be fully tested and needs a few more methods to cover MySQL possibilities.

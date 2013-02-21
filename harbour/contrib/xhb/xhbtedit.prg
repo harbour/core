@@ -52,7 +52,7 @@
 
 /*
  *               Pritpal Bedi <pritpal@vouchcac.com>
- *                            28Feb2004
+ *                            2004.02.28
  *
  *   Suppor for Clipper's MemoEdit( ..., nTextBufferRow, nTextBufferCol, nWindowRow, nWindowCol )
  *   Rearrangement of code in logical sections.
@@ -63,7 +63,7 @@
 
 /*
  *
- * Teditor Fix: v3.0beta 2004/04/17
+ * Teditor Fix: v3.0beta 2004.04.17
  * Copyright 2004 Giancarlo Niccolai <antispam /at/ niccolai /dot/ ws>
  *
  * Minimal revision for proper working (expecially with word warping).
@@ -75,7 +75,7 @@
  */
 
 /*
- * Teditor Fix: v2.0 2003-11-17
+ * Teditor Fix: v2.0 2003.11.17
  * Copyright 2003 Lance Owens <servant@gnosis.org>
  *
  * This Revised Version has a completely rewritten edit method key commands, with dynamic line and paragraph reformatting.
@@ -232,7 +232,7 @@ CREATE CLASS XHBEditor
    METHOD  K_Mouse( nKey )
    METHOD  K_Esc()
 
-   // 2006/07/19 - E.F. - Added datas and methods.
+   // 2006.07.19 - E.F. - Added datas and methods.
    VAR     cInsLabel                       // <Insert> label to display at toggle insert
    VAR     lVerticalScroll   INIT .T.      // True if vertical scrolling is active (default)
    VAR     bKeyBlock                       // To process set key codeblock
@@ -249,7 +249,7 @@ CREATE CLASS XHBEditor
 
    METHOD   BrowseText( nPassedKey, lHandleOneKey )
 
-   // 2006/07/25 - E.F. - Internal use only.
+   // 2006.07.25 - E.F. - Internal use only.
 
    METHOD  GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min( ::nWordWrapCol + 1, ::LineLen( nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
    METHOD  IsEmptyLine( nRow )  INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), Empty( ::aText[ nRow ]:cText ), .T. )
@@ -273,7 +273,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    __defaultNIL( @nWndRow, 0 )
    __defaultNIL( @nWndCol, 0 )
 
-   // 2006/JUL/22 - E.F. To avoid run time error.
+   // 2006.07.22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
       Throw( ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
    ENDIF
@@ -286,7 +286,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nOrigCursor := SetCursor()
 
 
-   // 2006/JUL/21 - E.F. To avoid out of boundaries.
+   // 2006.07.21 - E.F. To avoid out of boundaries.
    // Editor window boundaries
    ::nTop    := Min( Max( 0, nTop ), MaxRow() )
    ::nLeft   := Min( Max( 0, nLeft ), MaxCol() )
@@ -298,8 +298,8 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
 
-   // 2006/AUG/18 - E.F. Adjusted nLineLenght in accordance with Clipper's
-   //                    memoedit.
+   // 2006.08.18 - E.F. Adjusted nLineLenght in accordance with Clipper's
+   //                   memoedit.
    IF ! HB_ISNUMERIC( nLineLength )
       nLineLength := ::nNumCols
    ELSE
@@ -344,8 +344,8 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // If memofield was created with Clipper, it needs to have __SoftCR() stripped
 
-   // 2006/JUL/20 - E.F. - We should not replace SoftCR with Chr( 32 ).
-   //                      See Text2Array function for more details.
+   // 2006.07.20 - E.F. - We should not replace SoftCR with Chr( 32 ).
+   //                     See Text2Array function for more details.
    // IF hb_BChar( 141 ) $ cString
    //    acsn := Chr( 32 ) + Chr( 141 ) + Chr( 10 )
    //    cString := StrTran( cString, acsn, " " )
@@ -458,9 +458,9 @@ METHOD RefreshWindow() CLASS XHBEditor
 
    FOR i := 0 TO Min( ::nNumRows - 1, ::LastRow() - 1 )
 
-      // 2006/JUL/23 - E.F. Adjusted to avoid out of bound.
-      //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here,
-      //               because getline return line number in tbrwtext.prg (debug).
+      // 2006.07.23 - E.F. Adjusted to avoid out of bound.
+      //              Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here,
+      //              because getline return line number in tbrwtext.prg (debug).
       hb_DispOutAt( Min( ::nTop + i, ::nBottom ), ::nLeft, ;
          PadR( iif( ::nFirstRow + i <= ::LastRow(), SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), Space( ::nNumCols ) ), ::nNumCols ), ;
          ::LineColor( ::nFirstRow + i ) )
@@ -529,9 +529,9 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
 
       DispBegin()
 
-      // 2006/AUG/02 - E.F.
-      //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
-      //               because getline return line number in tbrwtext.prg (debug).
+      // 2006.08.02 - E.F.
+      //              Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
+      //              because getline return line number in tbrwtext.prg (debug).
       hb_DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
 
       IF lRefreshColSel
@@ -539,7 +539,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
          nFirstCol := Max( ::nTextCol, ::nWndCol )
          nFirstCol := Max( nFirstCol, ::nLeft )
 
-         /* 2006/SEP/20 - E.F. - Fine cursor adjustment. */
+         /* 2006.09.20 - E.F. - Fine cursor adjustment. */
          //       nCol := nFirstCol + ::nColSelStart - 1
          nCol := Max( ::nLeft, nFirstCol + ::nColSelStart - 1 )
 
@@ -572,9 +572,9 @@ METHOD RefreshColumn() CLASS XHBEditor
 
    DispBegin()
 
-   // 2006/AUG/02 - E.F.
-   //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
-   //               because getline return line number in tbrwtext.prg (debug).
+   // 2006.08.02 - E.F.
+   //              Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
+   //              because getline return line number in tbrwtext.prg (debug).
    FOR i := 0 TO Min( ::nNumRows - 1, ::LastRow() - 1 )
       hb_DispOutAt( ::nTop + i, nOCol, SubStr( ::GetLine( ::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
    NEXT
@@ -708,7 +708,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
       ENDIF
 
          /*
-          * 2006/AUG/12 -E.F. Trap Set key only if nKey is NIL.
+          * 2006.08.12 -E.F. Trap Set key only if nKey is NIL.
           */
       IF nPassedKey == NIL
          IF ( ::bKeyBlock := SetKey( nKey ) ) != NIL
@@ -765,7 +765,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
       CASE K_CTRL_B      // Reformat paragraph
          IF ::lEditAllow
             ::ClrTextSelection()
-            ::ReformParagraph() // 2006/JUL/29 -E.F. Added.
+            ::ReformParagraph() // 2006.07.29 -E.F. Added.
          ENDIF
          EXIT
 #else
@@ -937,7 +937,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
                ::ClrTextSelection()
             ENDIF
          ELSE
-            // 2006/JUL/22 - E.F. -  Insert is allowed only in edit mode.
+            // 2006.07.22 - E.F. -  Insert is allowed only in edit mode.
             IF ::lEditAllow
                ::ClrTextSelection()
                ::InsertState( ! ::lInsert )
@@ -979,7 +979,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          IF ::lEditAllow  // Clipper compatibility
             ::K_Bs()
          ELSE
-            // 2006/JUL/22 - E.F. - Clipper backspace in read only is same as left movement.
+            // 2006.07.22 - E.F. - Clipper backspace in read only is same as left movement.
             ::Left()
          ENDIF
          EXIT
@@ -1168,7 +1168,7 @@ METHOD GoTop() CLASS XHBEditor
 METHOD Right() CLASS XHBEditor
 
    IF ::lWordWrap
-      // 2006/07/19 - E.F. Changed max right point to pos cursor to next.
+      // 2006.07.19 - E.F. Changed max right point to pos cursor to next.
       //
       IF ::nCol > ::nWordWrapCol .AND. ::nRow < ::LastRow()
          ::GotoPos( ::nRow + 1, 1, .T. )
@@ -1207,11 +1207,10 @@ METHOD WordRight() CLASS XHBEditor
 
    DispBegin()  // to minimize flicker.
 
-   // 2006/JUL/21 - E.F. Changed to verify empty character instead space.
-   //                    In any circunstancies wordright stop at space.
-   //                    Added verification in not wordwrap mode if reach
-   //                    rightmost position.
-   //
+   // 2006.07.21 - E.F. Changed to verify empty character instead space.
+   //                   In any circunstancies wordright stop at space.
+   //                   Added verification in not wordwrap mode if reach
+   //                   rightmost position.
 
    DO while ::nCol <= nMaxCol .AND. ! Empty( ::GetCol( ::nRow, ::nCol ) )
       ::Right()
@@ -1243,16 +1242,16 @@ METHOD WordRight() CLASS XHBEditor
 
    IF ::lRightScroll
       IF ::lWordWrap
-         // 2006/JUL/21 - E.F. - If cursor reach rightmost position
-         //                      go to the next line.
+         // 2006.07.21 - E.F. - If cursor reach rightmost position
+         //                     go to the next line.
          IF ::nCol > nMaxCol .AND. ::nRow < ::LastRow()
             ::Down()
             ::Home()
             IF Empty( ::GetCol( ::nRow, ::nCol ) )
                ::WordRight()
             ENDIF
-            // 2006/JUL/21 - E.F. - If cursor stop at empty char and it is the
-            //                      last reachable position go back to the previous word.
+            // 2006.07.21 - E.F. - If cursor stop at empty char and it is the
+            //                     last reachable position go back to the previous word.
          ELSEIF ::nCol >= nMaxCol .AND. ::nRow == ::LastRow()
             IF ! Empty( ::GetCol( ::nRow, ::nCol ) )
                ::end()
@@ -1262,7 +1261,7 @@ METHOD WordRight() CLASS XHBEditor
             ::WordRight()
          ENDIF
       ELSE
-         // 2006/JUL/21 - E.F. - If cursor reach rightmost position go to back to prior word.
+         // 2006.07.21 - E.F. - If cursor reach rightmost position go to back to prior word.
          IF ::nCol > nMaxCol
             ::Wordleft()
          ENDIF
@@ -1277,7 +1276,7 @@ METHOD WordRight() CLASS XHBEditor
 
 METHOD End() CLASS XHBEditor
 
-   // 2006/07/19 - E.F. Changed to avoid the cursor out of line.
+   // 2006.07.19 - E.F. Changed to avoid the cursor out of line.
    //
    ::GotoCol( Min( ::LineLen( ::nRow ) + 1, Max( ::nNumCols, ::nWordWrapCol + 1 ) ) )
 
@@ -1291,7 +1290,7 @@ METHOD Left() CLASS XHBEditor
    IF ::nCol == 1
       IF ::lWordWrap
          IF ::nRow > 1
-            // 2006/07/19 E.F. left should be at max in the leftmost column.
+            // 2006.07.19 E.F. left should be at max in the leftmost column.
             //
             ::GotoPos( ::nRow - 1, Max( ::nNumCols, ::nWordWrapCol + 1 ), .T. )
          ENDIF
@@ -1330,8 +1329,8 @@ METHOD WordLeft() CLASS XHBEditor
    ENDIF
 
 
-   // 2006/JUL/21 - E.F. - Changed to verifiy empty char instead space. In any
-   //                      circunstancies wordleft stop at space.
+   // 2006.07.21 - E.F. - Changed to verifiy empty char instead space. In any
+   //                     circunstancies wordleft stop at space.
    //
    DO while ::nCol > 1 .AND. ! Empty( ::GetCol( ::nRow, ::nCol ) )
       ::Left()
@@ -1343,8 +1342,8 @@ METHOD WordLeft() CLASS XHBEditor
       ::Left()
    ENDDO
 
-   // 2006/JUL/24 -E.F. - If cursor stoped at empty char, then
-   //                     go to the next word.
+   // 2006.07.24 -E.F. - If cursor stoped at empty char, then
+   //                    go to the next word.
    IF ! ::lWordWrap .AND. ;
          ::nCol < ::LineLen( ::nRow ) .AND. ;
          Empty( ::GetCol( ::nRow, ::nCol ) )
@@ -1417,7 +1416,7 @@ METHOD K_Ascii( nKey ) CLASS XHBEditor
       RETURN Self
    ENDIF
 
-   // 2006/JUL/22 - E.F. - IF there is no line into memo add a new one.
+   // 2006.07.22 - E.F. - IF there is no line into memo add a new one.
    IF ::LastRow() == 0
       ::AddLine( "", .F. )
    ENDIF
@@ -1475,7 +1474,7 @@ METHOD K_Bs() CLASS XHBEditor
 
          IF ::nRow > 1  .AND. ::nRow <= ::LastRow()
 
-            // 2006/JUL/21 - E.F. - Determine new ::nCol position.
+            // 2006.07.21 - E.F. - Determine new ::nCol position.
             //
             ::nCol := Min( ::LineLen( ::nRow - 1 ) + 1, ::nWordWrapCol )
 
@@ -1499,7 +1498,7 @@ METHOD K_Bs() CLASS XHBEditor
                ::SplitLine( ::nRow )
             ENDIF
 
-            // 2006/JUL/21 - E.F. - Delete the rightmost char and pos the cursor on it.
+            // 2006.07.21 - E.F. - Delete the rightmost char and pos the cursor on it.
             IF ::LineLen( ::nRow ) >= ::nWordWrapCol
                ::aText[ ::nRow ]:cText := SubStr( ::aText[ ::nRow ]:cText, 1, ::LineLen( ::nRow ) - 1 ) + " "
                ::nCol := Min( ::nCol + 1, ::nWordWrapCol + 1 )
@@ -1514,9 +1513,9 @@ METHOD K_Bs() CLASS XHBEditor
          ENDIF
       ENDIF
 
-      // 2006/JUL/19 - E.F.  When backspace reach column 1 and the line is
-      //                     empty and exist next line, we need set linelen to
-      //                     zero and set lSoftCR to true as Clipper does.
+      // 2006.07.19 - E.F.  When backspace reach column 1 and the line is
+      //                    empty and exist next line, we need set linelen to
+      //                    zero and set lSoftCR to true as Clipper does.
       //
       IF ::nCol == 1 .AND. Empty( ::aText[ ::nRow ]:cText ) .AND. ;
             ::nRow + 1 <= ::LastRow()
@@ -1571,8 +1570,8 @@ METHOD K_Del() CLASS XHBEditor
             ::aText[ ::nRow ]:cText += " "
          ENDIF
 
-         // 2006/JUL/21 - E.F. If current line is empty and cursor is in
-         //                    the first column, remove it after del.
+         // 2006.07.21 - E.F. If current line is empty and cursor is in
+         //                   the first column, remove it after del.
          //
          IF ::IsEmptyLine( ::nRow ) .AND. ::nCol == 1
             ::RemoveLine( ::nRow )
@@ -1589,7 +1588,7 @@ METHOD K_Del() CLASS XHBEditor
       ::lChanged := .T.
       nCurRow := ::nRow
       nCurCol := ::nCol
-      // 2006/07/19 - E.F. Merge line only if ::nRow+1 is valid,
+      // 2006.07.19 - E.F. Merge line only if ::nRow+1 is valid,
       //                   to avoid bound error.
       //
       IF ::nRow + 1 <= ::LastRow()
@@ -1672,7 +1671,7 @@ METHOD K_Return() CLASS XHBEditor
 
    IF ::lEditAllow
 
-      // 2006/JUL/24 - E.F. - Fixed <Enter> at insert mode.
+      // 2006.07.24 - E.F. - Fixed <Enter> at insert mode.
 #if 0
       IF ::lInsert
          IF ::nRow == ::LastRow()
@@ -1749,7 +1748,7 @@ METHOD K_Esc() CLASS XHBEditor
       SetCursor( nCursor )
       SetPos( nCurRow, nCurCol )
 
-      // 2006/JUL/21 - E.F - Exit only if "Y" is pressed.
+      // 2006.07.21 - E.F - Exit only if "Y" is pressed.
       //
       ::lExitEdit := ( Upper( hb_keyChar( nKey ) ) == "Y" )
    ENDIF
@@ -1968,8 +1967,8 @@ METHOD GotoCol( nCol ) CLASS XHBEditor
 
    IF nCol >= 1
 
-      // 2006/JUL/21 E.F. - Clipper allow cursor movement to left/right into
-      //                    line, with or without chars.
+      // 2006.07.21 E.F. - Clipper allow cursor movement to left/right into
+      //                   line, with or without chars.
       // Note: ::nWordWrapCol can be different than ::nNumCols if user has
       //       informed nLineLength > 0.
       nCol := Max( 1, Min( nCol, Max( ::nNumCols, ::nWordWrapCol + 1 ) ) )
@@ -2014,8 +2013,8 @@ METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 
    IF nCol >= 1
 
-      // 2006/JUL/21 E.F. - Clipper allow cursor movement to left/right into
-      //                    line, with or without chars.
+      // 2006.07.21 E.F. - Clipper allow cursor movement to left/right into
+      //                   line, with or without chars.
       // Note: ::nWordWrapCol can be different than ::nNumCols if user has
       //       informed nLineLength > 0
       nCol := Max( 1, Min( nCol, Max( ::nNumCols, ::nWordWrapCol + 1 ) ) )
@@ -2167,7 +2166,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
          // Old method was: else split at current cursor position
          // cSplittedLine := Left( cLine, ::nCol - 1 )
 
-         // 2006/07/19 - E.F. - Changed cut point at witdh of line to maintain.
+         // 2006.07.19 - E.F. - Changed cut point at witdh of line to maintain.
          //                     amount of chars same as Clipper.
          //
          // cSplittedLine := Left( cLine, ::nWordWrapCol )
@@ -2181,7 +2180,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
       //
       // GAD
       IF !( Right( cSplittedLine, 1 ) == " " ) .AND. nFirstSpace > 1
-         // 2006/JUL/21 - E.F. - Added condition to not stay out of max columns.
+         // 2006.07.21 - E.F. - Added condition to not stay out of max columns.
          IF Len( cSplittedLine ) < ::nNumCols
             cSplittedLine += " "
          ENDIF
@@ -2196,7 +2195,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
    // I have to recheck if trim is viable here ???
    //
 
-   // 2006/JUL/21 - E.F. Only insert a line in any circunstancies.
+   // 2006.07.21 - E.F. Only insert a line in any circunstancies.
    //
    IF nStartRow + 1 <= ::LastRow()
       IF ::LineLen( nStartRow + 1 ) == 0 .OR. Len( AllTrim( cLine ) ) > 0
@@ -2316,7 +2315,7 @@ METHOD SetPos( nRow, nCol ) CLASS XHBEditor
 
 METHOD InsertState( lInsState ) CLASS XHBEditor
 
-   // 2006/JUL/22 - E.F. - Insert only in edit mode.
+   // 2006.07.22 - E.F. - Insert only in edit mode.
    IF ::lEditAllow .AND. HB_ISLOGICAL( lInsState ) .AND. ::lInsert != lInsState
 
       ::lInsert := lInsState
@@ -2337,7 +2336,7 @@ METHOD InsertState( lInsState ) CLASS XHBEditor
    RETURN Self
 
 //
-// 2006/JUL/15  - E.F. - Display "<insert>" message
+// 2006.07.15  - E.F. - Display "<insert>" message
 //
 
 METHOD DisplayInsert( lInsert ) CLASS XHBEditor
@@ -2564,8 +2563,8 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
 
             IF ::nRowSelEnd == ::LastRow()
                // ::nRowSelEnd := ::LastRow()-1
-               /* 2006/SEP/17 - E.F. - At this point we need add a new line
-                                       to be able to select the last row.
+               /* 2006.09.17 - E.F. - At this point we need add a new line
+                                      to be able to select the last row.
                */
                IF ! Empty( ::aText[ ::nRowSelEnd ]:cText )
                   ::AddLine()
@@ -2713,14 +2712,14 @@ METHOD DelText() CLASS XHBEditor
       RETURN self
    ENDIF
 
-   // 2006/SEP/17 - E.F. - changed to ::top() to avoid cursor out of bound.
+   // 2006.09.17 - E.F. - changed to ::top() to avoid cursor out of bound.
    // ::Gotop()
    ::Top()
 
    ::aText := {}
 
-   // 2006/JUL/22 - E.F. - There is no need to add line here.
-   //                      See K_ASCII() method.
+   // 2006.07.22 - E.F. - There is no need to add line here.
+   //                     See K_ASCII() method.
    // AAdd( ::aText, HBTextLine():New() )
 
    ::lChanged := .T.
@@ -2789,7 +2788,7 @@ METHOD DelTextSelection() CLASS XHBEditor
          ENDIF
 
       ENDIF
-      // 3/03/2008 8:26a.m. added next 4 lines to fix array out of bounds RTL
+      // 2008.03.03 08:26 added next 4 lines to fix array out of bounds RTL
       IF ::nRow > ::LastRow()
          ::Addline( "", .F. )
          ::GoBottom()
@@ -2972,8 +2971,8 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    LOCAL lTokenized := .F.
    LOCAL cSoftCR := __SoftCR()
 
-   // 2005/JUL/19 - E.F. - SoftCR must be removed before convert string to
-   //                      array. It will be treated by HBEditor.
+   // 2005.07.19 - E.F. - SoftCR must be removed before convert string to
+   //                     array. It will be treated by HBEditor.
    IF cSoftCR $ cString
       cString := StrTran( cString, cSoftCR )
    ENDIF
@@ -3022,14 +3021,14 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
                   cLine := SubStr( cLine, nFirstSpace + 1 )
                ELSE
                   cSplittedLine := Left( cLine, nWordWrapCol )
-                  // 2006/07/19 - E.F. Changed cut point of second split.
+                  // 2006.07.19 - E.F. Changed cut point of second split.
                   // cLine := SubStr( cLine, nWordWrapCol + 1 )
                   cLine := SubStr( cLine, Len( cSplittedLine ) + 1 )
                ENDIF
                AAdd( aArray, HBTextLine():New( cSplittedLine, .T. ) )
             ELSE
                // remainder of line is shorter than split point
-               // 2006/JUL/21 - E.F. Only add a new line if cLine is not empty.
+               // 2006.07.21 - E.F. Only add a new line if cLine is not empty.
                //
                IF Len( cLine ) > 0
                   AAdd( aArray, HBTextLine():New( cLine, .F. ) )
@@ -3087,14 +3086,15 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
 
       ELSE
          ::MoveCursor( nKey )
-         /* 02/09/2004 - <maurilio.longo@libero.it>
+#if 0
+         /* 2004-09-02 - <maurilio.longo@libero.it>
                          If I'm on a readonly editor don't call KeyboardHook() because
                          it calls HandleUserKey() which calls Edit() which sees this is
-                         a readonly editor and calls again BrowseText() which..,
+                         a readonly editor and calls again BrowseText() which.. */
          IF ! oSelf:MoveCursor( nKey )
             oSelf:KeyboardHook( nKey )
          ENDIF
-         */
+#endif
       ENDIF
 
       // If I want to handle only one key and then exit...

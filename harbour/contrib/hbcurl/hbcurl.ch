@@ -333,6 +333,11 @@
 #define HB_CURLFTPMETHOD_NOCWD                2  /* no CWD at all */
 #define HB_CURLFTPMETHOD_SINGLECWD            3  /* one CWD to full dir, then work on file */
 
+/* HB_CURLOPT_FTP_CREATE_MISSING_DIRS option */
+#define HB_CURLFTP_CREATE_DIR_NONE            0
+#define HB_CURLFTP_CREATE_DIR                 1
+#define HB_CURLFTP_CREATE_DIR_RETRY           2
+
 /* HB_CURLOPT_RTSP_REQUEST option */
 #define HB_CURL_RTSPREQ_NONE                  0
 #define HB_CURL_RTSPREQ_OPTIONS               1

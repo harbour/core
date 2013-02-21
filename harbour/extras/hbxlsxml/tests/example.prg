@@ -172,9 +172,9 @@ PROCEDURE Main()
    oObj:columnWidth( 13,  80 ) // Valor IPI
 
    xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
-   xDataImp := "22.03.2011"
+   xDataImp := "2011.03.22"
    xTitulo := "RELATORIO PARA DEMONSTRAR XML EXCEL"
-   xPeriodo := "01.02.2011 a 28.02.2011"
+   xPeriodo := "2011.02.01 a 2011.02.28"
    xOrdem  := "DATA DE EMISSAO"
 
    nLinha := 0

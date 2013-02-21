@@ -292,7 +292,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
    /* Check if database is already present in memory slots */
    /*
-      07/11/2008 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
+      2008.11.07 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
       If you need to check if a table exists use hb_FileArrayRdd() function that works in
       similar way of File(), i.e.:
       IF hb_FileArrayRdd( cFullName )

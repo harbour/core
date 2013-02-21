@@ -231,8 +231,8 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
          pusLen = MAX_STR_LEN;
          AdsGetIndexExpr( pArea->hOrdCurrent, pucIndexExpr, &pusLen );
 
-         pusLen = 1024;   /*ADS top/bottom are 1,2 instead of 0,1*/
-         u32RetVal  = AdsGetScope( pArea->hOrdCurrent, ADS_TOP, pucTemp, &pusLen );
+         pusLen = 1024;   /* ADS top/bottom are 1,2 instead of 0,1 */
+         u32RetVal = AdsGetScope( pArea->hOrdCurrent, ADS_TOP, pucTemp, &pusLen );
          pusLen = 1024;
          ulRetFilt = AdsGetScope( pArea->hOrdCurrent, ADS_BOTTOM, pucFilter, &pusLen );
 
@@ -856,7 +856,7 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
  * will return the error 5022 (AE_INVALID_RECORD_NUMBER), invalid record
  * number.
  *
- * Sut 24 Sep 2005 16:24:18 CEST, Druzus
+ * 2005.09.24 16:24:18 CEST, Druzus
  * IMHO such GOTO operation should reposition our RDD to phantom record
  */
    UNSIGNED32 u32RetVal, u32RecNo;
@@ -864,7 +864,7 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
 
    HB_TRACE( HB_TR_DEBUG, ( "adsGoTo(%p, %lu)", pArea, ulRecNo ) );
 
-   /* -----------------7/19/2001 3:04PM-----------------
+   /* -----------------2001.07.19 15:04-----------------
       The following call is a necessary workaround for ace32.dll
       prior to 6.1.  There were bugs where
       AdsGotoRecord() can FAIL to move the record pointer
@@ -872,7 +872,7 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
       A call to AdsGetRecordNum() before it clears the problem.  -BH
       --------------------------------------------------*/
    /*
-    * Thu 25 Aug 2005 11:56:20 CEST, Druzus
+    * 2005.08.25 11:56:20 CEST, Druzus
     * This trick force to resolving pending relations. It means
     * that this ADS clients does not reset pending relation in
     * AdsGotoRecord() and it is resolved later. Similar situation
@@ -2162,7 +2162,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    pField = pArea->area.lpFields + uiIndex - 1;
 
    /* This code was optimized for use ADSFIELD() macro instead */
-   /* AdsGetFieldName() function for speed. ToninhoFwi, 22/07/2003 */
+   /* AdsGetFieldName() function for speed. ToninhoFwi, 2003.07.22 */
 
    switch( pField->uiType )
    {
@@ -2592,7 +2592,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    if( ! uiIndex || uiIndex > pArea->area.uiFieldCount )
       return HB_FAILURE;
 
-   /* -----------------10/30/2003 3:54PM----------------
+   /* -----------------2003.10.30 15:54-----------------
 
       ADS has Implicit Record locking that can mask programming errors.
       Implicit locking can occur the first time a value is written to a
@@ -2627,7 +2627,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    szText = pArea->pRecord;
 
    /* This code was optimized for use ADSFIELD() macro instead */
-   /* AdsGetFieldName() function for speed. ToninhoFwi, 22/07/2003 */
+   /* AdsGetFieldName() function for speed. ToninhoFwi, 2003.07.22 */
 
    switch( pField->uiType )
    {
@@ -2741,7 +2741,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             bTypeError = HB_FALSE;
             nLen = hb_itemGetCLen( pItem );
 
-            /* ToninhoFwi - 09/12/2006 - In the previous code nLen was limited to 0xFFFF
+            /* ToninhoFwi - 2006.12.09 - In the previous code nLen was limited to 0xFFFF
                so, I comment it, because ADS support up to 4Gb in memo/binary/image fields.
                Advantage documentations says that we need use AdsSetBinary in binary/image
                fields. I tested these special fields with AdsSetString() and it works, but
@@ -2976,7 +2976,7 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       So, per field it should be  ( 6 + 4 + 8 + 2 = 20 ):
          uiMaxFieldNameLength + 20
 
-    * 9/19/2006 BH: this is an oversized buffer since most fields don't have
+    * 2006.09.19 BH: this is an oversized buffer since most fields don't have
     * 128-byte names. But the overhead in counting up the bytes is worse than
     * allocating a bigger buffer. We need to make sure it's not too big, though.
     * ADS docs say max # of fields is fnameLen + 10

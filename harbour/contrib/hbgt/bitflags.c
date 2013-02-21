@@ -16,7 +16,7 @@
  * Modification history:
  * ---------------------
  *
- * 8/19/2001 Modifications for Harbour by Brian Hays, also placed in
+ * 2001.08.19 Modifications for Harbour by Brian Hays, also placed in
  * the public domain.
  *
  */

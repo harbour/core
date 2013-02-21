@@ -25,6 +25,12 @@ ifneq ($(HB_HAS_WATT),)
    HB_PRGFLAGS += -DHB_HAS_WATT
 endif
 
+# Not possible to override default entry
+# function cleanly when using plain GNU Make
+# to build, so we're using _APPMAIN(), which
+# is better than MAIN()
+HB_PRGFLAGS += -DHBMK_USE_APPMAIN
+
 HB_PRGFLAGS += -DHBMK_WITH_ALL_EMBEDDED_HEADERS
 
 include $(TOP)$(ROOT)config/bin.mk
