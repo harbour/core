@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Regression tests for the runtime library (main)
+ * Regression tests for the runtime library
  *
- * Copyright 1999-2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,6 @@
 #define TEST_RESULT_COL2_WIDTH  15
 #define TEST_RESULT_COL3_WIDTH  40
 #define TEST_RESULT_COL4_WIDTH  85
-#define TEST_RESULT_COL5_WIDTH  85
 
 THREAD STATIC t_hParams := { => }
 
@@ -77,9 +76,12 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    LOCAL xResult
    LOCAL oError
    LOCAL lPPError
+   LOCAL lRTE
    LOCAL lFailed
 
    LOCAL bOut
+
+   LOCAL cLangOld
 
    IF HB_ISSTRING( cBlock )
       lPPError := .F.
@@ -88,46 +90,59 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       lPPError := .T.
    ENDIF
 
+   cLangOld := hb_langSelect( "EN" ) /* to always have RTEs in one language */
+
    BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
       xResult := Eval( bBlock )
+      lRTE := .F.
    RECOVER USING oError
       xResult := ErrorMessage( oError )
+      lRTE := .T.
    END SEQUENCE
 
-   IF !( ValType( xResult ) == ValType( xResultExpected ) )
-      IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
-         lFailed := !( XToStr( xResult, .F. ) == xResultExpected )
-      ELSE
-         lFailed := .T.
-      ENDIF
+   hb_langSelect( cLangOld )
+
+   IF lRTE
+      lFailed := !( XToStr( xResult, .F. ) == XToStr( xResultExpected, .F. ) )
    ELSE
-      lFailed := !( xResult == xResultExpected )
+      IF !( ValType( xResult ) == ValType( xResultExpected ) )
+         IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
+            lFailed := !( XToStr( xResult, .F. ) == xResultExpected )
+         ELSE
+            lFailed := .T.
+         ENDIF
+      ELSE
+         lFailed := !( xResult == xResultExpected )
+      ENDIF
    ENDIF
 
    IF lFailed .OR. lPPError .OR. hb_HGetDef( t_hParams, "showall", .T. )
       bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
       IF lFailed
-         Eval( bOut, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                     PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-                     PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
-                     hb_eol() +;
-                     Space( 5 ) + "  Result: " + XToStr( xResult, .F. ) +;
-                     hb_eol() +;
-                     Space( 5 ) + "Expected: " + XToStr( xResultExpected, .F. ) +;
-                     hb_eol() )
+         Eval( bOut, ;
+            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
+            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
+            RTrim( cBlock ) + ;
+            hb_eol() + ;
+            Space( 5 ) + "  Result: " + XToStr( xResult, .F. ) + ;
+            hb_eol() + ;
+            Space( 5 ) + "Expected: " + XToStr( xResultExpected, .F. ) + ;
+            hb_eol() )
       ELSE
-         Eval( bOut, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                     PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-                     PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
-                     PadR( XToStr( xResult, .F. ), TEST_RESULT_COL4_WIDTH ) + " | " +;
-                     PadR( XToStr( xResultExpected, .F. ), TEST_RESULT_COL5_WIDTH ) +;
-                     hb_eol() )
+         Eval( bOut, ;
+            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
+            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
+            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
+            PadR( XToStr( xResult, .F. ), TEST_RESULT_COL4_WIDTH ) + " | " + ;
+            XToStr( xResultExpected, .F. ) + ;
+            hb_eol() )
       ENDIF
    ENDIF
 
    RETURN
 
 STATIC FUNCTION ErrorMessage( oError )
+
    LOCAL cMessage := ""
    LOCAL tmp
 
@@ -195,21 +210,26 @@ STATIC FUNCTION ErrorMessage( oError )
 
 STATIC FUNCTION XToStr( xValue, lInString )
 
+   STATIC sc_hReplace := { ;
+      Chr( 0 )  => '" + Chr( 0 ) + "', ;
+      Chr( 7 )  => '" + Chr( 7 ) + "', ;
+      Chr( 8 )  => '" + Chr( 8 ) + "', ;
+      Chr( 9 )  => '" + Chr( 9 ) + "', ;
+      Chr( 10 ) => '" + Chr( 10 ) + "', ;
+      Chr( 11 ) => '" + Chr( 11 ) + "', ;
+      Chr( 12 ) => '" + Chr( 12 ) + "', ;
+      Chr( 13 ) => '" + Chr( 13 ) + "' }
+
    SWITCH ValType( xValue )
-   CASE "C"
-
-      xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
-      xValue := StrTran( xValue, Chr( 9 ), '" + Chr( 9 ) + "' )
-      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
-      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
-      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
-
-      RETURN iif( lInString, xValue, '"' + xValue + '"' )
-
    CASE "N" ; RETURN hb_ntos( xValue )
-   CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD("' + DToS( xValue ) + '")' )
+   CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD( "' + DToS( xValue ) + '" )' )
    CASE "U" ; RETURN "NIL"
-   CASE "M" ; RETURN "M:" + iif( lInString, xValue, '"' + xValue + '"' )
+   CASE "C"
+      xValue := hb_StrReplace( xValue, sc_hReplace )
+      RETURN iif( lInString, xValue, '"' + xValue + '"' )
+   CASE "M"
+      xValue := hb_StrReplace( xValue, sc_hReplace )
+      RETURN "M:" + iif( lInString, xValue, '"' + xValue + '"' )
    ENDSWITCH
 
    RETURN hb_CStr( xValue )

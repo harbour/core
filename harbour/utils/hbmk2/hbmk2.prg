@@ -1585,7 +1585,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          RETURN _EXIT_OK
 #endif
 
-      CASE cParamL == "--version"
+      CASE cParamL == "-version" .OR. ;
+           cParamL == "--version"
 
          ShowHeader( hbmk )
          RETURN _EXIT_OK
@@ -2871,8 +2872,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF ! Empty( tmp )
                   tmp := hb_DirSepToOS( tmp )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-                  IF Lower( cExt ) == ".exe" .AND. hbmk_TARGETTYPE( hbmk ) == "hbexe"
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option value: %1$s. Delete '.exe' extension." ), ParamToString( aParam ) ) )
+                  tmp1 := hbmk_TARGETTYPE( hbmk )
+                  IF ( Lower( cExt ) == ".exe" .AND. tmp1 == "hbexe" ) .OR. ;
+                     ( Lower( cExt ) == ".dll" .AND. HBMK_IS_IN( tmp1, "hbdyn|hbdynvm" ) ) .OR. ;
+                     ( HBMK_IS_IN( Lower( cExt ), ".lib|.a" ) .AND. HBMK_IS_IN( tmp1, "hblib|hbimplib" ) )
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option value: %1$s. Delete '%2$s' extension." ), ParamToString( aParam ), cExt ) )
                   ENDIF
                   DO CASE
                   CASE Empty( cDir )
@@ -15443,7 +15447,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-harbourhelp"       , hb_StrFormat( I_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
       { "-credits"           , I_( "display credits (via Harbour compiler)" ) }, ;
       { "-build"             , I_( "display detailed build information (via Harbour compiler)" ) }, ;
-      { "--version"          , I_( "display version header only" ) } }
+      { "-version|--version" , I_( "display version header only" ) } }
 
    LOCAL aHdr_Exit := { ;
       "", ;

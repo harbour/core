@@ -104,7 +104,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       K_BS, ;
       K_CTRL_BS, ;
       K_TAB, ;
-      K_SH_TAB  }
+      K_SH_TAB }
 
    ::aAsciiKeys := Array( 255 - 31 ) // asc codes greater than space.
    AEval( ::aAsciiKeys, {| c, i | iif( Empty( c ), ::aAsciiKeys[ i ] := i + 31, ) } )

@@ -198,12 +198,14 @@ STATIC PROCEDURE Main_LAST()
    RETURN
 
 STATIC PROCEDURE TEST_BEGIN( cParam )
+
    LOCAL bErrorOld
 
    s_nStartTime := Seconds()
 
-   s_lShowAll := "/ALL" $ Upper( cParam ) .OR. ;
-                 "-ALL" $ Upper( cParam )
+   s_lShowAll := ;
+      "/ALL" $ Upper( cParam ) .OR. ;
+      "-ALL" $ Upper( cParam )
 
    s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
    IF Empty( s_aSkipList )
@@ -236,23 +238,27 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
    /* Feedback */
 
-   OutMsg( s_nFhnd, "---------------------------------------------------------------------------" + hb_eol() +;
-                    "      Version: " + Version() + hb_eol() )
+   OutMsg( s_nFhnd, ;
+      "---------------------------------------------------------------------------" + hb_eol() +;
+      "      Version: " + Version() + hb_eol() )
 #ifdef __HARBOUR__
-   OutMsg( s_nFhnd, "     Compiler: " + hb_Compiler() + hb_eol() )
+   OutMsg( s_nFhnd, ;
+      "     Compiler: " + hb_Compiler() + hb_eol() )
 #endif
-   OutMsg( s_nFhnd, "           OS: " + OS() + hb_eol() +;
-                    "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;
-                    "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + hb_eol() +;
-                    "     Switches: " + cParam + hb_eol() +;
-                    "===========================================================================" + hb_eol() )
+   OutMsg( s_nFhnd, ;
+      "           OS: " + OS() + hb_eol() +;
+      "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;
+      "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + hb_eol() +;
+      "     Switches: " + cParam + hb_eol() +;
+      "===========================================================================" + hb_eol() )
 
-   OutMsg( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
-                    PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
-                    PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
-                    PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
-                    PadR( "Expected", TEST_RESULT_COL5_WIDTH ) + hb_eol() +;
-                    "---------------------------------------------------------------------------" + hb_eol() )
+   OutMsg( s_nFhnd, ;
+      PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
+      PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
+      PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
+      PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
+            "Expected" + hb_eol() +;
+      "---------------------------------------------------------------------------" + hb_eol() )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
@@ -280,7 +286,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    PUBLIC maArray   := { 9898 }
 
 #ifndef __XPP__
-   //rddSetDefault( "DBFCDX" )
+   // rddSetDefault( "DBFCDX" )
 #endif
 
    bErrorOld := ErrorBlock( {| oError | Break( oError ) } )
@@ -330,10 +336,12 @@ FUNCTION TEST_DBFAvail()
    RETURN s_lDBFAvail
 
 PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
+
    LOCAL xResult
    LOCAL oError
    LOCAL bOldError
    LOCAL lPPError
+   LOCAL lRTE
    LOCAL lFailed
    LOCAL lSkipped
 
@@ -359,20 +367,26 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
       BEGIN SEQUENCE
          xResult := Eval( bBlock )
+         lRTE := .F.
       RECOVER USING oError
          xResult := ErrorMessage( oError )
+         lRTE := .T.
       END SEQUENCE
 
       ErrorBlock( bOldError )
 
-      IF !( ValType( xResult ) == ValType( xResultExpected ) )
-         IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
-            lFailed := !( XToStr( xResult ) == xResultExpected )
-         ELSE
-            lFailed := .T.
-         ENDIF
+      IF lRTE
+         lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
       ELSE
-         lFailed := !( xResult == xResultExpected )
+         IF !( ValType( xResult ) == ValType( xResultExpected ) )
+            IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
+               lFailed := !( XToStr( xResult ) == xResultExpected )
+            ELSE
+               lFailed := .T.
+            ENDIF
+         ELSE
+            lFailed := !( xResult == xResultExpected )
+         ENDIF
       ENDIF
 
    ENDIF
@@ -380,25 +394,23 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
 
       IF lFailed
-
-         OutMsg( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                          PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-                          PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
-                          hb_eol() +;
-                          Space( 5 ) + "  Result: " + XToStr( xResult ) +;
-                          hb_eol() +;
-                          Space( 5 ) + "Expected: " + XToStr( xResultExpected ) +;
-                          hb_eol() )
-
+         OutMsg( s_nFhnd, ;
+            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+            RTrim( cBlock ) +;
+            hb_eol() +;
+            Space( 5 ) + "  Result: " + XToStr( xResult ) +;
+            hb_eol() +;
+            Space( 5 ) + "Expected: " + XToStr( xResultExpected ) +;
+            hb_eol() )
       ELSE
-
-         OutMsg( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                          PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-                          PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
-                          PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
-                          PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
-                          hb_eol() )
-
+         OutMsg( s_nFhnd, ;
+            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
+            PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
+            RTrim( XToStr( xResultExpected ) ) +;
+            hb_eol() )
       ENDIF
    ENDIF
 
@@ -424,20 +436,23 @@ STATIC PROCEDURE TEST_END()
 
    s_nEndTime := Seconds()
 
-   OutMsg( s_nFhnd, "===========================================================================" + hb_eol() +;
-                    "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
-                    "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
-                    "                   ----------" + hb_eol() +;
-                    "            Total: " + Str( s_nPass + s_nFail ) +;
-                    " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() +;
-                    hb_eol() )
+   OutMsg( s_nFhnd, ;
+      "===========================================================================" + hb_eol() +;
+      "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
+      "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
+      "                   ----------" + hb_eol() +;
+      "            Total: " + Str( s_nPass + s_nFail ) +;
+      " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() +;
+      hb_eol() )
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Cl*pper." + hb_eol() +;
-                          "Please fix those expected results which are not bugs in CA-Cl*pper itself." + hb_eol() )
+         OutMsg( s_nFhnd, ;
+            "WARNING ! Failures detected using CA-Cl*pper." + hb_eol() +;
+            "Please fix those expected results which are not bugs in CA-Cl*pper itself." + hb_eol() )
       ELSE
-         OutMsg( s_nFhnd, "WARNING ! Failures detected" + hb_eol() )
+         OutMsg( s_nFhnd, ;
+            "WARNING ! Failures detected" + hb_eol() )
       ENDIF
    ENDIF
 
@@ -450,6 +465,7 @@ STATIC PROCEDURE TEST_END()
    RETURN
 
 FUNCTION XToStr( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -476,6 +492,7 @@ FUNCTION XToStr( xValue )
    RETURN ""
 
 FUNCTION XToStrE( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -502,6 +519,7 @@ FUNCTION XToStrE( xValue )
    RETURN ""
 
 FUNCTION XToStrX( xValue )
+
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -543,6 +561,7 @@ FUNCTION XToStrX( xValue )
    RETURN ""
 
 STATIC FUNCTION ErrorMessage( oError )
+
    LOCAL cMessage := ""
    LOCAL tmp
 
@@ -609,6 +628,7 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 STATIC FUNCTION ListToNArray( cString )
+
    LOCAL aArray := {}
    LOCAL nPos
 
@@ -624,6 +644,7 @@ STATIC FUNCTION ListToNArray( cString )
    RETURN aArray
 
 STATIC FUNCTION CMDLGetValue( cCommandLine, cName, cRetVal )
+
    LOCAL tmp, tmp1
 
    IF ( tmp := At( cName, cCommandLine ) ) > 0
@@ -645,6 +666,7 @@ FUNCTION hb_SToD( cDate )
 #ifndef __XPP__
 
 FUNCTION hb_SToD( cDate )
+
    LOCAL cOldDateFormat
    LOCAL dDate
 
