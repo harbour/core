@@ -1888,7 +1888,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" }, ;
          { {|| FindInPath( "icl.exe"  ) }, "icc"    }, ;
          { {|| FindInPath( "xCC.exe"  ) }, "xcc"    }, ;
-         { {|| FindInPath( "dmc.exe"  ) }, "dmc"    }}
+         { {|| FindInPath( "dmc.exe"  ) }, "dmc"    } }
 #endif
       aCOMPSUP := { ;
          "mingw", "msvc", "clang", "bcc", "watcom", "icc", "pocc", "xcc", ;
@@ -7739,7 +7739,7 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
       "x86"  => { "pentium", "X86LH"  , "_VX_SIMPENTIUM", "simpentium/SIMPENTIUM" }, ;
       "arm"  => { "arm"    , "ARMV7LS", "_VX_ARMARCH7"  , "arm/ARMARCH7"          }, ;
       "mips" => { "mips"   , ""       , ""              , ""                      }, ;
-      "ppc"  => { "ppc"    , ""       , ""              , ""                      }}
+      "ppc"  => { "ppc"    , ""       , ""              , ""                      } }
 
    IF hbmk[ _HBMK_cCPU ] $ aTable
       IF Empty( hbmk[ _HBMK_cCCSUFFIX ] )
@@ -15346,24 +15346,23 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
    LOCAL aLst_Opt_Basic := { ;
       NIL, ;
       { "-o<outname>"        , I_( "output file name" ) }, ;
-      { "-l<libname>"        , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of libname). Do not add core Harbour libraries, they are automatically added as needed." ) }, ;
+      { "-l<libname>"        , I_( "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of the name). Do not add core Harbour libraries, they are automatically added as needed. If <libname> starts with a '-' character, the library will be removed from the list of libraries at link time." ) }, ;
       { "-L<libpath>"        , I_( "additional path to search for libraries" ) }, ;
       { "-i<p>|-incpath=<p>" , I_( "additional path to search for headers" ) }, ;
       { "-static|-shared"    , I_( "link with static/shared libs" ) }, ;
-      { "-mt|-st"            , I_( "link with multi/single-thread Harbour VM" ) }, ;
       { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) }, ;
       { "-inc[-]"            , I_( "enable/disable incremental build mode (default: disabled)" ) }, ;
       { "-hbexe"             , I_( "create executable (default)" ) }, ;
       { "-hblib"             , I_( "create static library" ) }, ;
       { "-hbdyn"             , I_( "create dynamic library (without linked Harbour VM)" ) }, ;
-      { "-hbdynvm"           , I_( "create dynamic library" ) }, ;
-      { "-hbimplib"          , I_( "create import library" ) }}
+      { "-hbdynvm"           , I_( "create dynamic library" ) } }
 
    LOCAL aLst_Opt_Help := { ;
       { "-help|--help"       , I_( "long help" ) } }
 
    LOCAL aLst_Opt_Long := { ;
       NIL, ;
+      { "-mt|-st"            , I_( "link with multi/single-thread Harbour VM" ) }, ;
       { "-gui|-std"          , I_( "create GUI/console executable" ) }, ;
       { "-main=<mainfunc>"   , I_( "override the name of starting function/procedure" ) }, ;
       { "-request=<func>"    , I_( "force function/procedure to be linked" ) }, ;
@@ -15434,6 +15433,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-rebuildall"        , I_( "rebuild with sub-projects (in incremental build mode)" ) }, ;
       { "-clean"             , I_( "clean (in incremental build mode)" ) }, ;
       { "-workdir=<dir>"     , hb_StrFormat( I_( e"working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) }, ;
+      NIL, ;
+      { "-hbcontainer"       , I_( "virtual target, it doesn't create anything. Useful for creating an .hbp with the sole purpose of referencing subprojects" ) }, ;
+      { "-hbimplib"          , I_( "create import library (Windows only)" ) }, ;
       NIL, ;
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) }, ;
       { "-lng=<languages>"   , hb_StrFormat( I_( e"list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) }, ;
@@ -15675,7 +15677,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "stop=[<msg>]"      , I_( "stop the build. Display <msg>, if specified." ) }, ;
       { "sources="          , I_( "add space separated list of files as input files" ) }, ;
       { "headers="          , I_( "add space separated list of .ch format headers as standard header" ) }, ;
-      { "libs="             , I_( "add space separated list of libraries" ) }, ;
+      { "libs="             , I_( "add space separated list of libraries (see more at -l option)" ) }, ;
       { "frameworks="       , I_( "add space separated list of frameworks (Darwin only)" ) }, ;
       { "requests="         , I_( "add space separated list of symbols to force link to the target" ) }, ;
       { "syslibs="          , I_( "add space separated list of libraries as system libraries (before regular libraries)" ) }, ;
