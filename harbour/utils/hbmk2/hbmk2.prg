@@ -338,6 +338,12 @@ EXTERNAL hbmk_KEYW
 #define _CHR_EOL                Chr( 10 ) /* used when consuming text files */
 #define _FIL_EOL                Chr( 10 ) /* used when creating source files */
 
+#ifdef HB_LEGACY_LEVEL4
+   #define _HBMK_PLUGIN_APIVER  2
+#else
+   #define _HBMK_PLUGIN_APIVER  3
+#endif
+
 #define _HBMK_IMPLIB_NOTFOUND   -1
 #define _HBMK_IMPLIB_OK         0
 #define _HBMK_IMPLIB_FAILED     1
@@ -9330,11 +9336,14 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
 /* Public functions accessible for plugins */
 
+#ifdef HB_LEGACY_LEVEL4
+FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN hbmk_FuncNameEncode( ... )
+#endif
+
 FUNCTION hbmk_FindInPath( ... )       ; RETURN FindInPath( ... )
 FUNCTION hbmk_PathSepToForward( ... ) ; RETURN PathSepToForward( ... )
 FUNCTION hbmk_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
-FUNCTION hbmk_FNameEscape( ... )      ; RETURN FNameEscape( ... )
-FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN FuncNameEncode( ... )
+FUNCTION hbmk_FuncNameEncode( ... )   ; RETURN FuncNameEncode( ... )
 FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
 FUNCTION hbmk_ArrayToList( array, cSeparator )
@@ -9342,14 +9351,18 @@ FUNCTION hbmk_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
 
-   hb_default( @cSeparator, " " )
+   IF HB_ISARRAY( array )
+      hb_default( @cSeparator, " " )
 
-   FOR tmp := 1 TO Len( array )
-      cString += array[ tmp ]
-      IF tmp < Len( array )
-         cString += cSeparator
-      ENDIF
-   NEXT
+      FOR tmp := 1 TO Len( array )
+         IF HB_ISSTRING( array[ tmp ] )
+            cString += array[ tmp ]
+         ENDIF
+         IF tmp < Len( array )
+            cString += cSeparator
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN cString
 
@@ -9367,6 +9380,29 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
    ENDIF
 
    RETURN NIL
+
+FUNCTION hbmk_FNameEscape( ctx, cFileName )
+
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+
+   LOCAL nEscapeMode := hbmk[ _HBMK_nCmd_Esc ]
+   LOCAL nFNNotation := hbmk[ _HBMK_nCmd_FNF ]
+
+#ifdef HB_LEGACY_LEVEL4
+   IF hbmk == NIL .AND. HB_ISSTRING( ctx ) .AND. PCount() == 3 /* legacy calling mode */
+
+      IF HB_ISSTRING( hb_AParams()[ 1 ] ) .AND. ;
+         HB_ISNUMERIC( hb_AParams()[ 2 ] ) .AND. ;
+         HB_ISNUMERIC( hb_AParams()[ 3 ] )
+
+         cFileName   := hb_AParams()[ 1 ]
+         nEscapeMode := hb_AParams()[ 2 ]
+         nFNNotation := hb_AParams()[ 3 ]
+      ENDIF
+   ENDIF
+#endif
+
+   RETURN FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
 FUNCTION hbmk_OutStdRaw( ctx, ... )
 
@@ -9402,7 +9438,7 @@ FUNCTION hbmk_Macro( ctx, cString )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk != NIL
+   IF hbmk != NIL .AND. HB_ISSTRING( cString )
       RETURN MacroProc( hbmk, cString )
    ENDIF
 
@@ -9428,12 +9464,12 @@ FUNCTION hbmk_OutErr( ctx, cText )
 
    RETURN NIL
 
-FUNCTION hbmk_PathSepToTarget( ctx, ... )
+FUNCTION hbmk_PathSepToTarget( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk != NIL
-      RETURN PathSepToTarget( hbmk, ... )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
+      RETURN PathSepToTarget( hbmk, cFileName )
    ENDIF
 
    RETURN ""
@@ -9539,6 +9575,7 @@ STATIC FUNCTION hbmk_SecToken()
 
 STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
    RETURN { ;
+      "apiver"        => _HBMK_PLUGIN_APIVER        , ;
       "cSTATE"        => cState                     , ;
       "params"        => hbmk[ _HBMK_aPLUGINPars ]  , ;
       "vars"          => hbmk[ _HBMK_hPLUGINVars ]  , ;
@@ -9567,10 +9604,10 @@ STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
       "cCCPREFIX"     => hbmk[ _HBMK_cCCPREFIX ]    , ;
       "cCCSUFFIX"     => hbmk[ _HBMK_cCCSUFFIX ]    , ;
       "cCCEXT"        => hbmk[ _HBMK_cCCEXT ]       , ;
-      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ;
-      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ;
-      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ;
-      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ;
+      "nCmd_Esc"      => hbmk[ _HBMK_nCmd_Esc ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
+      "nScr_Esc"      => hbmk[ _HBMK_nScr_Esc ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
+      "nCmd_FNF"      => hbmk[ _HBMK_nCmd_FNF ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
+      "nScr_FNF"      => hbmk[ _HBMK_nScr_FNF ]     , ; /* deprecated with HB_LEGACY_LEVEL4 */
       "cWorkDir"      => hbmk[ _HBMK_cWorkDir ]     , ;
       "nExitCode"     => hbmk[ _HBMK_nExitCode ]    , ;
       hbmk_SecToken() => hbmk                       }
@@ -9672,65 +9709,68 @@ STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
    LOCAL cExt
    LOCAL aExt
 
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   #if defined( __PLATFORM__WINDOWS ) .OR. ;
-       defined( __PLATFORM__DOS ) .OR. ;
-       defined( __PLATFORM__OS2 )
-      hb_default( @aExtDef, { ".exe" } )
-   #else
-      hb_default( @aExtDef, { cExt } )
-   #endif
-   aExt := { cExt }
-   IF Empty( cExt )
-      FOR EACH cExt IN aExtDef
-         IF AScan( aExt, {| tmp | hb_FileMatch( tmp, cExt ) } ) == 0
-            AAdd( aExt, cExt )
-         ENDIF
-      NEXT
-   ENDIF
+   IF HB_ISSTRING( cFileName )
 
-   FOR EACH cExt IN aExt
-      /* Check original filename (in supplied path or current dir) */
-      IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
-         RETURN cFileName
-      ENDIF
-   NEXT
-
-   IF Empty( cDir )
-      /* Check in the dir of this executable. */
-      IF ! Empty( cDir := hb_DirBase() )
-         FOR EACH cExt IN aExt
-            IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
-               RETURN cFileName
+      hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+         hb_default( @aExtDef, { ".exe" } )
+      #else
+         hb_default( @aExtDef, { cExt } )
+      #endif
+      aExt := { cExt }
+      IF Empty( cExt )
+         FOR EACH cExt IN aExtDef
+            IF AScan( aExt, {| tmp | hb_FileMatch( tmp, cExt ) } ) == 0
+               AAdd( aExt, cExt )
             ENDIF
          NEXT
-      ENDIF
-
-      IF ! HB_ISSTRING( xPath ) .AND. ;
-         ! HB_ISARRAY( xPath )
-         xPath := GetEnv( "PATH" )
-      ENDIF
-
-      IF HB_ISSTRING( xPath )
-         #if defined( __PLATFORM__WINDOWS ) .OR. ;
-             defined( __PLATFORM__DOS ) .OR. ;
-             defined( __PLATFORM__OS2 )
-            xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
-         #else
-            xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
-         #endif
       ENDIF
 
       FOR EACH cExt IN aExt
-         /* Check in the PATH. */
-         FOR EACH cDir IN xPath
-            IF ! Empty( cDir := StrStripQuote( cDir ) )
-               IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( cDir ), cName, cExt ) )
+         /* Check original filename (in supplied path or current dir) */
+         IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
+            RETURN cFileName
+         ENDIF
+      NEXT
+
+      IF Empty( cDir )
+         /* Check in the dir of this executable. */
+         IF ! Empty( cDir := hb_DirBase() )
+            FOR EACH cExt IN aExt
+               IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
                   RETURN cFileName
                ENDIF
-            ENDIF
+            NEXT
+         ENDIF
+
+         IF ! HB_ISSTRING( xPath ) .AND. ;
+            ! HB_ISARRAY( xPath )
+            xPath := GetEnv( "PATH" )
+         ENDIF
+
+         IF HB_ISSTRING( xPath )
+            #if defined( __PLATFORM__WINDOWS ) .OR. ;
+                defined( __PLATFORM__DOS ) .OR. ;
+                defined( __PLATFORM__OS2 )
+               xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
+            #else
+               xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
+            #endif
+         ENDIF
+
+         FOR EACH cExt IN aExt
+            /* Check in the PATH. */
+            FOR EACH cDir IN xPath
+               IF ! Empty( cDir := StrStripQuote( cDir ) )
+                  IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( cDir ), cName, cExt ) )
+                     RETURN cFileName
+                  ENDIF
+               ENDIF
+            NEXT
          NEXT
-      NEXT
+      ENDIF
    ENDIF
 
    RETURN NIL
@@ -10032,7 +10072,7 @@ STATIC FUNCTION PathSepCount( cPath )
    RETURN nCount
 
 STATIC FUNCTION PathSepToForward( cFileName )
-   RETURN StrTran( cFileName, "\", "/" )
+   RETURN iif( HB_ISSTRING( cFileName ), StrTran( cFileName, "\", "/" ), "" )
 
 STATIC FUNCTION hbmk_hb_DirSepToOS( cFileName, nStart )
    RETURN iif( nStart == NIL, StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() ), ;
@@ -10157,10 +10197,10 @@ STATIC FUNCTION FNameDirExtSet( cFileName, cDirNew, cExtNew )
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 
-   IF cDirNew != NIL
+   IF HB_ISSTRING( cDirNew )
       cDir := cDirNew
    ENDIF
-   IF cExtNew != NIL
+   IF HB_ISSTRING( cExtNew )
       cExt := cExtNew
    ENDIF
 
@@ -10985,6 +11025,9 @@ STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
       AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0
 
 STATIC FUNCTION StrStripQuote( cString )
+
+   hb_default( @cString, "" )
+
    RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"', ;
                SubStr( cString, 2, Len( cString ) - 2 ), ;
                cString )
@@ -11485,21 +11528,24 @@ STATIC FUNCTION IsValidHarbourID( cName )
 
 STATIC FUNCTION FuncNameEncode( cName )
 
-   LOCAL cResult, c
+   LOCAL cResult := ""
+
+   LOCAL c
    LOCAL nPos
 
-   cResult := ""
-   FOR nPos := 1 TO hb_BLen( cName )
-      c := hb_BSubStr( cName, nPos, 1 )
-      /* synced to how Harbour compiler actually works (see hb_compGenCFunc()).
-         Theoretically, it should work like this:
-            iif( cResult == "", HB_ISFIRSTIDCHAR( c ), HB_ISNEXTIDCHAR( c ) ) */
-      IF HB_ISNEXTIDCHAR( c )
-         cResult += c
-      ELSE
-         cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )
-      ENDIF
-   NEXT
+   IF HB_ISSTRING( cName )
+      FOR nPos := 1 TO hb_BLen( cName )
+         c := hb_BSubStr( cName, nPos, 1 )
+         /* synced to how Harbour compiler actually works (see hb_compGenCFunc()).
+            Theoretically, it should work like this:
+               iif( cResult == "", HB_ISFIRSTIDCHAR( c ), HB_ISNEXTIDCHAR( c ) ) */
+         IF HB_ISNEXTIDCHAR( c )
+            cResult += c
+         ELSE
+            cResult += "x" + Lower( hb_NumToHex( Asc( c ), 2 ) )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN cResult
 
@@ -15780,6 +15826,72 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "hbshell_ProgName() -> <cPath>"                     , I_( "ProgName() not mapped to script." ) } }
 #endif
 
+   LOCAL aHdr_APIPlugin := { ;
+      "", ;
+      { "", I_( e"Plugin API:\n('hbmk' is the context variable received by the plugin entry function)" ) } }
+
+   LOCAL aLst_APIPlugin := { ;
+      NIL, ;
+      { "hbmk_Register_Input_File_Extension( hbmk, cExt ) -> NIL"                     , I_( "Register input file extension to be passed to plugin (by default all unknown file extensions are passed to Harbour compiler)." ) }, ;
+      { "hbmk_AddInput_PRG( hbmk, cFileName ) -> NIL"                                 , I_( "Add a Harbour input file to the project." ) }, ;
+      { "hbmk_AddInput_C( hbmk, cFileName ) -> NIL"                                   , I_( "Add a C input file to the project." ) }, ;
+      { "hbmk_AddInput_CPP( hbmk, cFileName ) -> NIL"                                 , I_( "Add a C++ input file to the project." ) }, ;
+      { "hbmk_AddInput_RC( hbmk, cFileName ) -> NIL"                                  , I_( "Add a Windows resource input file to the project." ) }, ;
+      { "hbmk_AddInput_OBJ( hbmk, cFileName ) -> NIL"                                 , I_( "Add a binary object file to the project." ) }, ;
+      { "hbmk_AddInput_INSTFILE( hbmk, cFileName, [<cGroup>] ) -> NIL"                , I_( "Add a file to be installed, with an optional -instpath= group name." ) }, ;
+      { "hbmk_OutStd( hbmk, cText ) -> NIL"                                           , I_( "Output text to stdout." ) }, ;
+      { "hbmk_OutErr( hbmk, cText ) -> NIL"                                           , I_( "Output text to stderr." ) }, ;
+      { "hbmk_OutStdRaw( hbmk, ... ) -> NIL"                                          , I_( "Output text to stdout without any formatting." ) }, ;
+      { "hbmk_OutErrRaw( hbmk, ... ) -> NIL"                                          , I_( "Output text to stderr without any formatting." ) }, ;
+      { "hbmk_Macro( hbmk, <cMacro> ) -> <cResult>"                                   , hb_StrFormat( I_( "Evaluate %1$s macro expression." ), _SELF_NAME_ ) }, ;
+      { "hbmk_FNameEscape( hbmk, cFileName ) -> <cFileName>"                          , I_( "Escape/quote filename for using it as external command parameter." ) }, ;
+      { "hbmk_PathSepToTarget( hbmk, cFileName ) -> <cFileName>"                      , I_( "Convert filename to the format required for the target toolchain." ) }, ;
+      { "hbmk_PathSepToForward( <cPath> ) -> <cPath>"                                 , I_( "Convert filename to have forward slash directory separators." ) }, ;
+      { "hbmk_PathFromWorkdirToCWD( hbmk ) -> <cRelativePath>"                        , I_( "Return relative path of -workdir= value from current working directory." ) }, ;
+      { "hbmk_FindInPath( <cFileName>, [<xPath>], [<aExtDef>] ) -> <cFNFound> | NIL"  , I_( "Find file in <xPath> (array or pathsep delimited string are accepted) with list of <aExtDef> alternate extensions. Returns filename if found and NIL if not." ) }, ;
+      { "hbmk_FNameDirExtSet( <cFileName>, [<cDirNew>], [<cExtNew>] ) -> <cFileName>" , I_( "Change directory and/or extension in filename." ) }, ;
+      { "hbmk_FuncNameEncode( <cFuncName> ) -> <cFuncNameEncoded>"                    , I_( "Encode function name according to Harbour compiler rules for forming HB_FUNC() function names in C code." ) }, ;
+      { "hbmk_StrStripQuote( cString ) -> <cString>"                                  , I_( "Strip double quote enclosure from a string." ) }, ;
+      { "hbmk_ArrayToList( <aList>, [<cSeparator>] ) -> <cList>"                      , I_( "Convert array of strings to a string. Default separator is a single space." ) } }
+
+   LOCAL aHdr_PluginVars := { ;
+      "", ;
+      { "", I_( e"Plugin variables:\n('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)" ) } }
+
+   LOCAL aLst_PluginVars := { ;
+      NIL, ;
+      { '"apiver"'       , I_( "API version as an integer" ) }, ;
+      { '"cSTATE"'       , I_( "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'" ) }, ;
+      { '"params"'       , I_( "array of parameters passed to plugins via -pflag=/pi= options or having an extension registered via hbmk_Register_Input_File_Extension()" ) }, ;
+      { '"vars"'         , I_( "hash of plugin custom variables. Common to all plugins, writable" ) }, ;
+      { '"cPLAT"'        , I_( "-plat value" ) }, ;
+      { '"cCOMP"'        , I_( "-comp value" ) }, ;
+      { '"nCOMPVer"'     , I_( "see HB_COMPILER_VER envvar" ) }, ;
+      { '"cCPU"'         , I_( "-cpu value" ) }, ;
+      { '"cBUILD"'       , I_( "-build= value" ) }, ;
+      { '"cOUTPUTNAME"'  , I_( "-o value" ) }, ;
+      { '"cTARGETNAME"'  , I_( "see ${hb_targetname} macro" ) }, ;
+      { '"cTARGETTYPE"'  , I_( "see ${hb_targettype} macro" ) }, ;
+      { '"lREBUILD"'     , I_( "-rebuild option status" ) }, ;
+      { '"lCLEAN"'       , I_( "-clean option status" ) }, ;
+      { '"lDEBUG"'       , I_( "-debug option status" ) }, ;
+      { '"lMAP"'         , I_( "-map option status" ) }, ;
+      { '"lSTRIP"'       , I_( "-strip option status" ) }, ;
+      { '"lDONTEXEC"'    , I_( "-traceonly option status" ) }, ;
+      { '"lIGNOREERROR"' , I_( "-ignore option status" ) }, ;
+      { '"lTRACE"'       , I_( "-trace options status" ) }, ;
+      { '"lQUIET"'       , I_( "-q option status" ) }, ;
+      { '"lINFO"'        , I_( "-info option status" ) }, ;
+      { '"lBEEP"'        , I_( "-beep option status" ) }, ;
+      { '"lRUN"'         , I_( "-run option status" ) }, ;
+      { '"lINC"'         , I_( "-inc option status" ) }, ;
+      { '"cCCPATH"'      , I_( "see HB_CCPATH envvar" ) }, ;
+      { '"cCCPREFIX"'    , I_( "see HB_CCPREFIX envvar" ) }, ;
+      { '"cCCSUFFIX"'    , I_( "see HB_CCSUFFIX envvar" ) }, ;
+      { '"cCCEXT"'       , I_( "see HB_CCEXT envvar" ) }, ;
+      { '"cWorkDir"'     , I_( "-workdir= value" ) }, ;
+      { '"nExitCode"'    , I_( "Current exit code" ) } }
+
    LOCAL aHdr_Notes := { ;
       "", ;
       I_( "Notes:" ) }
@@ -15827,6 +15939,14 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
    LOCAL aLst_Desc := { ;
       NIL, ;
       cDesc }
+
+   LOCAL aHdr_License := { ;
+      "", ;
+      I_( "License:" ) }
+
+   LOCAL aLst_License := { ;
+      NIL, ;
+      LicenseString() }
 
    LOCAL aHdr_Auth := { ;
       "", ;
@@ -15919,16 +16039,16 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
          AEval( aLst_EnvVar, {| tmp | OutOpt( hbmk, tmp ) } )
          AEval( aHdr_HBC, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_HBC, {| tmp | OutOpt( hbmk, tmp ) } )
+         AEval( aHdr_APIPlugin, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_APIPlugin, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+         AEval( aHdr_PluginVars, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_PluginVars, {| tmp | OutOpt( hbmk, tmp ) } )
 #ifndef _HBMK_EMBEDDED_
          AEval( aHdr_APIShell, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_APIShell, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
 #endif
          /* TODO: Move to separate section from notes:
                   - filter and macro syntax, %{}, subprojects
-                  - build plugins: entry function, variables, API calls, callbacks/statuses
-                      "init"
-                      "pre_all", "pre_prg", "pre_res", "pre_c", "pre_link", "pre_lib", "pre_cleanup"
-                      "post_build", "post_all"
                   - shell plugins
           */
       ENDIF
@@ -15946,6 +16066,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       AEval( aLst_Notes, {| tmp | OutNote( hbmk, tmp ) } )
       AEval( aHdr_Supp, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       AEval( aLst_Supp, {| tmp | OutOpt( hbmk, tmp, 11 ) } )
+      IF lLong
+         AEval( aHdr_License, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_License, {| tmp | OutNote( hbmk, tmp, "  " ) } )
+      ENDIF
       AEval( aHdr_Auth, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
       AEval( aLst_Auth, {| tmp | OutOpt( hbmk, tmp, 50 ) } )
    ELSE
@@ -15964,6 +16088,7 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
 
    LOCAL nLine
    LOCAL nLines
+   LOCAL cOpt
 
    hb_default( @nWidth, 23 )
 
@@ -15998,12 +16123,13 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
                   OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
                NEXT
             ELSE
-               nWidth := 8
-               OutStd( _OUT_EOL + Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
-               aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
-               nLines := MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth )
-               FOR nLine := 1 TO nLines
-                  OutStd( Space( nWidth ) + RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+               OutStd( _OUT_EOL )
+               FOR EACH nWidth, cOpt IN { 2, 8 }, aOpt
+                  cOpt := StrTran( cOpt, e"\n", hb_eol() )
+                  nLines := MLCount( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth )
+                  FOR nLine := 1 TO nLines
+                     OutStd( Space( nWidth ) + RTrim( MemoLine( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+                  NEXT
                NEXT
             ENDIF
          ENDIF
@@ -16022,7 +16148,6 @@ STATIC PROCEDURE OutNote( hbmk, cText, cPrefix )
 
    LOCAL nLine
    LOCAL nLines
-   LOCAL tmp
 
    IF Empty( cText )
       IF hbmk[ _HBMK_lMarkdown ]
@@ -16037,14 +16162,12 @@ STATIC PROCEDURE OutNote( hbmk, cText, cPrefix )
          cText := StrTran( cText, e"\n", hb_eol() )
          nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ) )
          FOR nLine := 1 TO nLines
-            IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) )
-               IF nLine == 1
-                  OutStd( cPrefix )
-               ELSE
-                  OutStd( Space( Len( cPrefix ) ) )
-               ENDIF
-               OutStd( tmp + _OUT_EOL )
+            IF nLine == 1
+               OutStd( cPrefix )
+            ELSE
+               OutStd( Space( Len( cPrefix ) ) )
             ENDIF
+            OutStd( RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) + _OUT_EOL )
          NEXT
       ENDIF
    ENDIF
@@ -16111,9 +16234,11 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
 
    RETURN
 
-STATIC PROCEDURE ShowLicense()
+STATIC FUNCTION ShowLicense()
+   RETURN OutStd( LicenseString() )
 
-#pragma __cstream | OutStd( %s )
+STATIC FUNCTION LicenseString()
+#pragma __cstream | RETURN %s
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -16143,5 +16268,3 @@ License extensions:
     Creative Commons Attribution-ShareAlike 3.0:
     http://creativecommons.org/licenses/by-sa/3.0/
 #pragma __endtext
-
-   RETURN
