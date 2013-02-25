@@ -83,7 +83,7 @@
       defined( HB_OS_SUNOS ) || defined( HB_OS_DARWIN ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_CYGWIN )  || \
-      ( defined( __DJGPP__ ) && \
+      defined( HB_OS_MINIX ) || ( defined( __DJGPP__ ) && \
         ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) )
 #  define HB_HAS_DLFCN
 #endif

@@ -8,14 +8,11 @@ else
    HB_CMP := clang
 endif
 
-HB_BUILD_SHARED := no
-HB_BUILD_DYN := no
-
 OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
 
-## HB_DYN_COPT := -DHB_DYNLIB -fPIC
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
@@ -25,6 +22,7 @@ else
 endif
 CC_OUT := -o
 
+CFLAGS += -D_NETBSD_SOURCE=1
 CFLAGS += -I. -I$(HB_HOST_INC)
 
 ifneq ($(HB_BUILD_WARN),no)

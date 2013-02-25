@@ -920,13 +920,13 @@ ifeq ($(HB_COMPILER),)
       endif
    else
    ifeq ($(HB_PLATFORM),minix)
-      HB_COMP_PATH := $(call find_in_path,gcc)
+      HB_COMP_PATH := $(call find_in_path,clang)
       ifneq ($(HB_COMP_PATH),)
-         HB_COMPILER := gcc
+         HB_COMPILER := clang
       else
-         HB_COMP_PATH := $(call find_in_path,cc)
+         HB_COMP_PATH := $(call find_in_path,gcc)
          ifneq ($(HB_COMP_PATH),)
-            HB_COMPILER := ack
+            HB_COMPILER := gcc
          endif
       endif
    endif

@@ -10,18 +10,18 @@ ifeq ($(HB_CMP),)
    endif
 endif
 
-HB_BUILD_SHARED := no
-HB_BUILD_DYN := no
-
 OBJ_EXT := .o
 LIB_PREF := lib
 LIB_EXT := .a
+
+HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 CC_IN := -c
 CC_OUT := -o
 
-CFLAGS += -D_MINIX=1 -D_POSIX_SOURCE=1 -I. -I$(HB_HOST_INC)
+CFLAGS += -D_NETBSD_SOURCE=1
+CFLAGS += -I. -I$(HB_HOST_INC)
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall

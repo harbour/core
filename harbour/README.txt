@@ -219,10 +219,12 @@ TABLE OF CONTENT
    on Minix hosts
    --------------
 
-      Install GNU make and the GNU compiler/binutils toolchain from
-      the Minix pkgsrc repository; for details see
+      Install GNU make from the Minix pkgsrc repository; for details see
 
       http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages
+
+      Optionally, GCC may also be installed if you wish to use that instead
+      of Clang, the Minix system compiler.
 
    on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts
    ----------------------------------------------
@@ -564,7 +566,7 @@ TABLE OF CONTENT
    android  - Android
    vxworks  - VxWorks
    symbian  - Symbian OS (experimental)
-   minix    - Minix 3 (tested on 3.1.8; earlier releases probably will not work)
+   minix    - Minix 3 (tested on 3.2.1; earlier releases will not work)
    aix      - IBM AIX
    win      - MS Windows (all flavors)
               (see 'LINKS' section for Win9x requirements)
@@ -624,9 +626,8 @@ TABLE OF CONTENT
 
    minix
    -----
-   gcc      - GNU C
    clang    - Clang
-   ack      - Amsterdam Compiler Kit (does not work yet)
+   gcc      - GNU C
 
    aix
    ---
@@ -1582,9 +1583,8 @@ TABLE OF CONTENT
      x | hpux           | wce/mingw             | x86
      x | hpux           | win/mingw             | x86
      x | hpux           | dos/djgpp             | x86
-       | minix          | minix/gcc             | x86
        | minix          | minix/clang           | x86
-       | minix          | minix/ack             | x86
+       | minix          | minix/gcc             | x86
        | aix            | aix/gcc               | (CPU cross-builds possible: ppc, ppc64)
        | sunos          | sunos/gcc             | (CPU cross-builds possible)
        | sunos          | sunos/sunpro          | (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)

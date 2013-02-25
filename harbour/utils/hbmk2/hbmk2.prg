@@ -1799,7 +1799,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hbmk[ _HBMK_cPLAT ] == "aix"
          aCOMPSUP := { "gcc", "icc" }
       CASE hbmk[ _HBMK_cPLAT ] == "minix"
-         aCOMPSUP := { "gcc", "clang", "ack" }
+         aCOMPSUP := { "clang", "gcc" }
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
@@ -3966,8 +3966,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_HAS_C9X" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "minix"
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_MINIX=1" )
-            AAdd( hbmk[ _HBMK_aOPTC ], "-D_POSIX_SOURCE=1" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_NETBSD_SOURCE=1" )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -15339,7 +15338,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "vxworks" , "gcc, diab" }, ;
       { "symbian" , "gcc" }, ;
       { "cygwin"  , "gcc" }, ;
-      { "minix"   , "gcc, clang, ack" }, ;
+      { "minix"   , "clang, gcc" }, ;
       { "aix"     , "gcc" }, ;
       { "sunos"   , "gcc, sunpro" } }
 

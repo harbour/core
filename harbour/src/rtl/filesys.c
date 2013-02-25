@@ -319,6 +319,10 @@
    #define ftruncate64        ftruncate
    #define pread64            pread
    #define pwrite64(f,b,s,o)  pwrite(f,(void*)b,s,o)
+#elif defined( HB_OS_MINIX )
+   /* hack for functions missing from the Minix C library */
+   #define fdatasync          fsync
+   #define ftruncate64        ftruncate
 #endif
 
 #if UINT_MAX == USHRT_MAX
