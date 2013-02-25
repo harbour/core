@@ -141,8 +141,8 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
-   pFileName->szPath = 
-   pFileName->szName = 
+   pFileName->szPath =
+   pFileName->szName =
    pFileName->szExtension =
    pFileName->szDrive = NULL;
 

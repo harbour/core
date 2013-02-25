@@ -528,7 +528,7 @@ msgstr "control y análisis de encabezado de código fuente (en el modo de compi
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n-lng=en,hu-HU,de"
 msgstr "lista de idiomas a ser reemplazados en %1$s macros en archivos .pot/.po y nombres de archivos y salida .hbl/.po. Lista separada por comas:\n-lng=en,hu-HU,de"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1393,7 +1393,7 @@ msgstr "salida de información de la compilación de Harbour. La salida es en fo
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK_WITH_<d>"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
 msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
 
 #: hbmk2.prg:11512 hbmk2.prg:12970

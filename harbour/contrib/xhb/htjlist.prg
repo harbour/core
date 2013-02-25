@@ -8,22 +8,15 @@
  *     (see the website/jList dir for an example)
  *
  *     Uses list.js and resize.js (heavily modified) found at
- *     developer.Netscape.com
+ *     developer.netscape.com
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * The exception is that if you link the Harbour Runtime Library (HRL)
- * and/or the Harbour Virtual Machine (HVM) with other files to produce
- * an executable, this does not by itself cause the resulting executable
- * to be covered by the GNU General Public License. Your use of that
- * executable is in no way restricted on account of linking the HRL
- * and/or HVM code into it.
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,9 +24,33 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -44,7 +61,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Porting this library to Harbour
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 
@@ -139,7 +156,7 @@ METHOD New( name, lOpen, width, height, bgColor, ;
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
    cStr += ""       // Space( 10 )
-   cStr += name + [.SetFont("<font face='] + FONT + "' size=" + hb_ntos( fntSize ) + "' color='" + fntColor + ['>","</font>");] + CRLF()
+   cStr += name + '.SetFont("<font face=' + "'" + FONT + "' size=" + hb_ntos( fntSize ) + "' color='" + fntColor + "'" + '>","</font>");' + CRLF()
 
    ::nItems++
    AAdd( ::aScript, cStr )
@@ -183,18 +200,18 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 
 METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
-   LOCAL cStr := ""
+   LOCAL cStr
 
    __defaultNIL( @name, ::cCurrentNode )
    __defaultNIL( @FONT, ::font )
    __defaultNIL( @fntColor, ::fontColor )
    __defaultNIL( @fntSize, ::Size )
 
-   cStr += name + [.SetFont("<font ] + ;
+   cStr := name + '.SetFont("<font ' + ;
       " face= '" + font + "' " + ;
       " size= " + hb_ntos( fntSize ) + "'" + ;
       " color= '" + fntColor + "' " + ;
-      [ > ","</font>");] + CRLF()
+      ' > ","</font>");' + CRLF()
 
    AAdd( ::aScript, cStr )
 
@@ -208,13 +225,13 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
 METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
-   LOCAL cStr := ""
+   LOCAL cStr
    LOCAL cUrl
 
    __defaultNIL( @name, "o" )
    __defaultNIL( @url, "" )
-   cUrl := [<a href='] + url + "'>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr += ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
+   cUrl := "<a href='" + url + "'>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
+   cStr := ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
    AAdd( ::aScript, cStr )
 
@@ -228,14 +245,14 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
 METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
 
-   LOCAL cStr := ""
+   LOCAL cStr
    LOCAL cUrl
 
    __defaultNIL( @name, "o" )
    __defaultNIL( @url, "" )
    __defaultNIL( @img, "webpage.jpg" )
    cUrl := "<a href='" + url + "'><img src='" + img + "' border=0 align=absmiddle>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr += ::cCurrentNode + '.addItem( "' + curl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
+   cStr := ::cCurrentNode + '.addItem( "' + curl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
    AAdd( ::aScript, cStr )
 
@@ -243,10 +260,10 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
 
 METHOD EndNode( name, caption ) CLASS TJSList
 
-   LOCAL cStr := ""
+   LOCAL cStr
 
    ::cCurrentNode := ::cMainNode
-   cStr           += ::cMainNode + ".addList( " + name + ", '<b>" + caption + "</b>' );" + CRLF()
+   cStr           := ::cMainNode + ".addList( " + name + ", '<b>" + caption + "</b>' );" + CRLF()
 
    ::nItems++
    AAdd( ::aScript, cStr )
@@ -286,7 +303,7 @@ METHOD Build( xPos, yPos ) CLASS TJSList
 #endif
 
    FOR i := 0 TO ::nItems
-      cStr += '<div id="' + ::cMainNode + 'Item' + hb_ntos( i ) + '" name="' + ::cMainNode + 'Item' + hb_ntos( i ) + '"></div>' + CRLF()
+      cStr += '<div id="' + ::cMainNode + "Item" + hb_ntos( i ) + '" name="' + ::cMainNode + "Item" + hb_ntos( i ) + '"></div>' + CRLF()
    NEXT
    cStr += "</body></html>" + CRLF()
 

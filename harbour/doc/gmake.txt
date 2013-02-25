@@ -136,7 +136,7 @@ system. To check this, type "make -v"; you should see
 Then, you must set a couple of environment variables that indicate
 your platform and compiler.
 
-For gcc on Win95/WinNT with the Cygwin library:
+For gcc on Windows with the Cygwin library:
   Notes: The CYGWIN environment variable must include "noglob" in order
          to avoid having Harbour or programs created with Harbour expand
          wildcard command line arguments (this is checked at run-time!)
@@ -144,11 +144,11 @@ For gcc on Win95/WinNT with the Cygwin library:
   HB_COMPILER       gcc
   CYGWIN            noglob
 
-For gcc on Win95/WinNT with the MinGW library:
+For gcc on Windows with the MinGW library:
   HB_PLATFORM       win
   HB_COMPILER       mingw
 
-For MSVC on Win95/WinNT:
+For MSVC on Windows:
   Notes: gnu make is case sensitive!  If your editor converts
          harbour.c to HARBOUR.C when it saves the file, then gnu make
          _will_not_work.

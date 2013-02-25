@@ -32,7 +32,7 @@
 # example:
 #	'A'-'Z':	*|0x20	1
 #	makes all output chars lower
-# 
+#
 # Harbour program is looking for this file in $HB_CHARMAP,
 # $HB_ROOT/etc/harbour/hb-charmap.def, /etc/harbour/hb-charmap.def
 # terminal name is taken from 'HB_TERM' or 'TERM' environment variable

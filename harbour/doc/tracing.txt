@@ -14,7 +14,7 @@ TRACING
 Harbour implements tracing by adding calls to the following macro in
 the C code:
 
-  HB_TRACE(level, ("printf-style parameters", arg1, arg2));
+  HB_TRACE( level, ( "printf-style parameters", arg1, arg2 ) );
 
 The level specified for the HB_TRACE call affects harbour in two ways:
 compilation time and run time.
@@ -90,7 +90,7 @@ HB_TR_LEVEL_WARNING             they have no performance effect; only
                                 effect, since the code was compiled with
                                 a lower tracing level.
 
-For example, I compile Harbour on WinNT with gcc (mingw), so I
+For example, I compile Harbour on Windows with gcc (mingw), so I
 usually set the HB_USER_CFLAGS environment variable like this:
 
   export HB_USER_CFLAGS='-DHB_TR_LEVEL=HB_TR_INFO'
@@ -122,7 +122,7 @@ to compile a regular Harbour application, the app will output LOTS of
 tracing information to stderr.  If you are using a sensible command
 shell (such as bash) you can redirect stderr to a file like this:
 
-  my_app 2>trace.txt
+  my_app 2> trace.txt
 
 
 REDIRECTION
@@ -194,5 +194,5 @@ query and set the trace level. From C code:
 
 There are wrapper functions callable from Clipper code:
 
-  current_state := hb_traceState( [new_state] )
-  current_level := hb_traceLevel( [new_level] )
+  current_state := hb_traceState( [<new_state>] )
+  current_level := hb_traceLevel( [<new_level>] )

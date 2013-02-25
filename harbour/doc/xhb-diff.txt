@@ -2060,8 +2060,8 @@ using known from xBase++ zero space. In xBase++ each thread can
 move his work area to zero space using:
    DbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
 Then this work area can be attached by other thread using:
-   DbRequest( [<cAlias>], [<lFreeArea>], ; 
-              [<@bAreaBlock>], [<lWait>] ) --> lSuccess 
+   DbRequest( [<cAlias>], [<lFreeArea>], ;
+              [<@bAreaBlock>], [<lWait>] ) --> lSuccess
 In Harbour above functions are available in XPP emulation library.
 There are also core Harbour functions giving this functionality:
    hb_dbDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>

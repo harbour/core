@@ -528,7 +528,7 @@ msgstr "controla a análise de cabeçalhos (no modo de compilação incremental)
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n-lng=en,hu-HU,de"
 msgstr "lista de idiomas à serem substituidos nas macros %1$s nos arquivos .pot/.po e nos nomes de arquivos de saída .hbl/.po. Lista separada por vírgula:\n-lng=en,hu-HU,de"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1318,7 +1318,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group."
+msgid "copy target to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group."
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1393,7 +1393,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK_WITH_<d>"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
 msgstr ""
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
@@ -1408,7 +1408,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times."
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
 msgstr ""
 
 #: hbmk2.prg:11633

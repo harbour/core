@@ -30,7 +30,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
- * See doc/license.txt for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  * www - http://harbour-project.org
  *

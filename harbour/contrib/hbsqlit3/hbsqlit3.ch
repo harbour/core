@@ -47,8 +47,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See doc/license.txt for licensing terms.
- *
  */
 
 #ifndef HBSQLIT3_CH_
@@ -64,9 +62,9 @@
 #define SQLITE3_TEXT                       SQLITE_TEXT
 #define SQLITE_BLOB                        4
 #define SQLITE_NULL                        5
-                                           
+
 #define SQLITE_OK                          0   /* Successful result */
-/* Beginning-of-Error-Codes */             
+/* Beginning-of-Error-Codes */
 #define SQLITE_ERROR                       1   /* SQL error or missing database */
 #define SQLITE_INTERNAL                    2   /* NOT USED. Internal logic error in SQLite */
 #define SQLITE_PERM                        3   /* Access permission denied */
@@ -149,8 +147,8 @@
 #define SQLITE_DROP_VTABLE                 30  /* Table Name      Module Name     */
 #define SQLITE_FUNCTION                    31  /* NULL            Function Name   */
 #define SQLITE_SAVEPOINT                   32  /* Operation       Savepoint Name  */
-                                           
-/* Authorizer Return Codes */              
+
+/* Authorizer Return Codes */
 #define SQLITE_DENY                        1   /* Abort the SQL statement with an error */
 #define SQLITE_IGNORE                      2   /* Don't allow access, but don't generate an error */
 

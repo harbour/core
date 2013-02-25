@@ -15,8 +15,6 @@
  * Placed in the public domain
  */
 
-#xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
-
 PROCEDURE Main()
 
    LOCAL oFrom
@@ -143,11 +141,14 @@ FUNCTION New( cFileName, cMode, nBlock )
 
    LOCAL self := QSelf()                        // Get self
 
+   hb_default( @cMode, "R" )
+   hb_default( @nBlock, 4096 )
+
    ::nLine     := 0
    ::lEoF      := .F.
    ::cBlock    := ""
    ::cFileName := cFileName
-   ::cMode     := Default( cMode, "R" )
+   ::cMode     := cMode
 
    IF ::cMode == "R"
       ::hFile := FOpen( cFileName )
@@ -162,7 +163,7 @@ FUNCTION New( cFileName, cMode, nBlock )
       ::lEoF := .T.
       ? "Error ", ::nError
    ENDIF
-   ::nBlockSize := Default( nBlock, 4096 )
+   ::nBlockSize := nBlock
 
    RETURN self
 
@@ -268,8 +269,9 @@ FUNCTION WriteLn( xTxt, lCRLF )
    ELSEIF !( ::cMode == "W" )
       ? "File ", ::cFileName, " not opened for writing"
    ELSE
+      hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )                  // Convert to string
-      IF Default( lCRLF, .T. )
+      IF lCRLF
          cBlock += hb_eol()
       ENDIF
       FWrite( ::hFile, cBlock, Len( cBlock ) )

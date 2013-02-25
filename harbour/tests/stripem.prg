@@ -5,8 +5,6 @@
 #include "fileio.ch"
 #include "hbclass.ch"
 
-#xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
-
 //
 // The Harbour stripping command
 //
@@ -30,8 +28,8 @@ PROCEDURE Main( cFrom, cTo )
    LOCAL oTo
    LOCAL cOut
 
-   cFrom := Default( cFrom, __FILE__ )
-   cTo   := Default( cTo,   "strip.out" )
+   hb_default( @cFrom, __FILE__ )
+   hb_default( @cTo, "strip.out" )
 
    oFrom := TTextFile()
 // ? hb_ValToExp(  __objGetMethodList( oFrom ) )
@@ -89,11 +87,14 @@ END CLASS
 
 METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
+   hb_default( @cMode, "R" )
+   hb_default( @nBlock, 4096 )
+
    ::nLine     := 0
    ::lEoF      := .F.
    ::cBlock    := ""
    ::cFileName := cFileName
-   ::cMode     := Default( cMode, "R" )
+   ::cMode     := cMode
 
    IF ::cMode == "R"
       ::hFile := FOpen( cFileName )
@@ -108,7 +109,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
       ::lEoF := .T.
       ? "Error ", ::nError
    ENDIF
-   ::nBlockSize := Default( nBlock, 4096 )
+   ::nBlockSize := nBlock
 
    RETURN self
 
@@ -197,8 +198,9 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
    ELSEIF !( ::cMode == "W" )
       ? "File ", ::cFileName, " not opened for writing"
    ELSE
+      hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )              // Convert to string
-      IF Default( lCRLF, .T. )
+      IF lCRLF
          cBlock += hb_eol()
       ENDIF
       FWrite( ::hFile, cBlock, Len( cBlock ) )

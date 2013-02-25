@@ -28,7 +28,7 @@ endif
 # Not possible to override default entry
 # function cleanly when using plain GNU Make
 # to build, so we're using _APPMAIN(), which
-# is better than MAIN()
+# is better than Main()
 HB_PRGFLAGS += -DHBMK_USE_APPMAIN
 
 HB_PRGFLAGS += -DHBMK_WITH_ALL_EMBEDDED_HEADERS

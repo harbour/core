@@ -1426,70 +1426,15 @@ TABLE OF CONTENT
        which will automatically be used, so you don't have to
        make any extra steps here.
 
-   Examples to start with Harbour:
+   It's recommended (but not required) to put hbmk2 into the PATH
+   (f.e. by using 'set PATH=C:\harbour\bin;%PATH%' on Windows).
 
-   - To run the interactive shell ('dot' prompt):
-       'hbmk2 .'
-   - To run a Harbour script:
-       'hbmk2 script.hb [<parameters>]'
+   Then run:
+      hbmk2 -help
+   or
+      hbmk2 -longhelp > hbmk2.txt
 
-   Examples to build and run Harbour portable binary
-   (aka precompiled Harbour script):
-
-   - To build:
-       'hbmk2 -gh script.hb'
-   - To run result of above:
-       'hbmk2 script.hrb [<parameters>]'
-
-     NOTE: .hb and .hrb scripts are started in UTF-8 mode.
-
-   Examples to build a Harbour application:
-
-   - To build one simple .prg:
-       'hbmk2 hello.prg'
-   - To build multiple .prg sources into one application:
-       'hbmk2 mymain.prg client.prg'
-   - To build an application using a project file:
-       'hbmk2 myapp.hbp'
-   - To build an application using incremental mode:
-       'hbmk2 myapp.hbp -inc'
-   - To build an application which uses a contrib package or
-     3rd party (addon) package that provides an .hbc file:
-       'hbmk2 myapp.prg hbct.hbc'
-   - To build an application which uses a raw library:
-       'hbmk2 myapp.prg -lmylib -L<path_to_mylib>'
-   - To build an application which uses Windows resources:
-       'hbmk2 mymain.prg client.prg myres.rc'
-   - To build an application which links against Harbour dynamic libraries:
-       'hbmk2 -shared hello.prg'
-   - To build an application out of all .prg and .c sources residing
-     in 'source' subdir:
-       'hbmk2 -omyapp src/*.prg src/*.c'
-
-   Examples to build a Harbour static library:
-
-   - To build library 'mylib' from sources:
-       'hbmk2 mylibsrc.prg -omylib -hblib'
-   - To build library 'mylib' from sources using incremental mode:
-       'hbmk2 mylibsrc.prg -omylib -hblib -inc'
-
-   NOTES: - Most of the above features can be combined. F.e. to use
-            incremental build in any of the above commands, just add
-            '-inc' switch.
-          - List all available options:
-            'hbmk2 -help'
-            Besides the ones listed, you can use all regular Harbour
-            compiler command line options, f.e.:
-               '-l', '-b', '-n', '-w3' (etc...)
-          - To make it easier to work with Harbour, it's recommended to
-            put Harbour binary directory into the PATH:
-               set PATH=C:\harbour\bin;%PATH% (on Windows)
-            (this is not a requirement though)
-          - You can access hbmk2 using absolute or relative paths, and
-            it will work equally well:
-               'C:\hb\bin\hbmk2 hello.prg'
-          - GNU Make, MSYS, or any other extra tool is *not* needed
-            to build a Harbour application with above methods.
+   You will find examples in the help.
 
 
 12. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
