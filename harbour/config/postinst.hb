@@ -11,7 +11,7 @@
  * See COPYING.txt for licensing terms.
  */
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 

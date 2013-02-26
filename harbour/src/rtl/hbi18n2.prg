@@ -66,7 +66,7 @@
 
 #define LEFTEQUAL( l, r )  ( Left( l, Len( r ) ) == r )
 
-STATIC FUNCTION __I18N_fileName( cFileName )
+STATIC FUNCTION __i18n_fileName( cFileName )
 
    IF Set( _SET_DEFEXTENSIONS )
       cFileName := hb_FNameExtSetDef( cFileName, ".pot" )
@@ -74,11 +74,11 @@ STATIC FUNCTION __I18N_fileName( cFileName )
 
    RETURN cFileName
 
-STATIC FUNCTION __I18N_strEncode( cStr )
+STATIC FUNCTION __i18n_strEncode( cStr )
 
    RETURN SubStr( hb_StrToExp( cStr, .T. ), 2 )
 
-STATIC FUNCTION __I18N_strDecode( cLine, cValue, lCont )
+STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
 
    LOCAL lRet := .F.
    LOCAL cText
@@ -106,9 +106,9 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    LOCAL lCont
    LOCAL hFile
 
-   __I18N_fileName( @cFile )
+   __i18n_fileName( @cFile )
    hFile := FOpen( cFile, FO_READ )
-   IF hFile == -1
+   IF hFile == F_ERROR
       cErrorMsg := "cannot open file: " + cFile
       RETURN NIL
    ENDIF
@@ -265,7 +265,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
          IF ( nMode != _I18N_CONTEXT .AND. ;
             nMode != _I18N_MSGID .AND. ;
             nMode != _I18N_MSGSTR ) .OR. ;
-            ! __I18N_strDecode( cLine, @cValue, @lCont )
+            ! __i18n_strDecode( cLine, @cValue, @lCont )
             cErrorMsg := "unrecognized line"
             EXIT
          ENDIF
@@ -343,7 +343,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
       cPOT += cFlg
       IF ! aItem[ _I18N_CONTEXT ] == ""
          cPOT += "msgctxt "
-         cPOT += __I18N_strEncode( aItem[ _I18N_CONTEXT ] )
+         cPOT += __i18n_strEncode( aItem[ _I18N_CONTEXT ] )
          cPOT += cEol
       ENDIF
       FOR EACH msg IN aItem[ _I18N_MSGID ]
@@ -354,7 +354,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
          ELSE
             cPOT += "msgid_plural" + hb_ntos( msg:__enumIndex() - 1 ) + " "
          ENDIF
-         cPOT += __I18N_strEncode( msg )
+         cPOT += __i18n_strEncode( msg )
          cPOT += cEol
       NEXT
       lPlural := aItem[ _I18N_PLURAL ] .OR. Len( aItem[ _I18N_MSGSTR ] ) > 1
@@ -364,14 +364,14 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
          ELSE
             cPOT += "msgstr "
          ENDIF
-         cPOT += __I18N_strEncode( msg )
+         cPOT += __i18n_strEncode( msg )
          cPOT += cEol
       NEXT
    NEXT
 
-   __I18N_fileName( @cFile )
+   __i18n_fileName( @cFile )
    hFile := FCreate( cFile )
-   IF hFile == -1
+   IF hFile == F_ERROR
       cErrorMsg := "cannot create translation file: " + cFile
    ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )
       cErrorMsg := "cannot write to file: " + cFile
@@ -560,34 +560,34 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, cErrorMsg )
          "#" + cEol
       FOR EACH context IN hI18N[ "CONTEXT" ]
          msgctxt := iif( context:__enumKey() == "", NIL, ;
-            "msgctxt " + __I18N_strEncode( context:__enumKey() ) + cEol )
+            "msgctxt " + __i18n_strEncode( context:__enumKey() ) + cEol )
          FOR EACH trans IN context
             cPOT += cEol + cFlg
             IF msgctxt != NIL
                cPOT += msgctxt
             ENDIF
             cPOT += "msgid "
-            cPOT += __I18N_strEncode( trans:__enumKey() )
+            cPOT += __i18n_strEncode( trans:__enumKey() )
             cPOT += cEol
             IF HB_ISARRAY( trans )
                FOR EACH msgstr IN trans
                   cPOT += "msgstr["
                   cPOT += hb_ntos( msgstr:__enumIndex() - 1 )
                   cPOT += "] "
-                  cPOT += __I18N_strEncode( msgstr )
+                  cPOT += __i18n_strEncode( msgstr )
                   cPOT += cEol
                NEXT
             ELSE
                cPOT += "msgstr "
-               cPOT += __I18N_strEncode( trans )
+               cPOT += __i18n_strEncode( trans )
                cPOT += cEol
             ENDIF
          NEXT
       NEXT
 
-      __I18N_fileName( @cFile )
+      __i18n_fileName( @cFile )
       hFile := FCreate( cFile )
-      IF hFile == -1
+      IF hFile == F_ERROR
          cErrorMsg := "cannot create translation file: " + cFile
          lRet := .F.
       ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )

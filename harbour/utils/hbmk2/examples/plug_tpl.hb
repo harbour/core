@@ -5,7 +5,7 @@
 /*
  * hbmk2 plugin example
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
          PUBLIC, PRIVATE and STATIC variables. Also do not use
          temporary disk files with non-random names. [vszakats] */
 
-#pragma warninglevel=3
+#pragma -w3
 
 #if defined( __HBSCRIPT__HBMK_PLUGIN )
 
@@ -65,7 +65,8 @@ FUNCTION hbmk_plugin_tpl( hbmk )
 
 PROCEDURE Main()
 
-   ? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?
 
    RETURN
 

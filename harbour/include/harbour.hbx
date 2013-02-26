@@ -1490,6 +1490,7 @@ DYNAMIC __TextSave
 DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __vmItemID
+DYNAMIC __vmNoInternals
 DYNAMIC __Wait
 DYNAMIC __wapi_GetACP
 DYNAMIC __wapi_GetOEMCP

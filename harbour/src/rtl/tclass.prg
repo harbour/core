@@ -74,7 +74,7 @@
 /* NOTE: This .prg is also used by the debugger subsystem,
          therefore we need this switch to avoid an infinite
          loop when launching it. [vszakats] */
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 /* Harbour Class HBClass to build classes */
 

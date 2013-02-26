@@ -25,11 +25,11 @@ PROCEDURE Main()
    oTo   := TTextFile():New( "hello.out", "W" )
 
    ? "What's in oFrom"
-   ? hb_ValToExp(  { oFrom, __objGetMethodList( oFrom ) } )
+   ? hb_ValToExp( { oFrom, __objGetMethodList( oFrom ) } )
 
    ?
    ? "What's in oFrom:TEmpty"
-   ? hb_ValToExp(  { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
+   ? hb_ValToExp( { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
 
    ?
    ? "Let's call Run() from TEmpty : "

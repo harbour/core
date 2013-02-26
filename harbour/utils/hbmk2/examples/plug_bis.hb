@@ -5,7 +5,7 @@
 /*
  * hbmk2 plugin script, implementing support for bison
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@
  *
  */
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 
@@ -120,8 +120,8 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
                   cCommand := hbmk[ "vars" ][ "cBIS_BIN" ] + ;
                      " -d -p hb_comp" + ;
-                     " -o " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cDst ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] ) + ;
-                     " " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cSrc ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] )
+                     " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) ) + ;
+                     " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) )
 
                   IF hbmk[ "lTRACE" ]
                      IF ! hbmk[ "lQUIET" ]
@@ -187,7 +187,8 @@ STATIC FUNCTION tool_detect( hbmk, cName )
 
 PROCEDURE Main()
 
-   ? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?
 
    RETURN
 

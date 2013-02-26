@@ -51,11 +51,11 @@
  */
 
 /*
- * A simple RDD which uses HB_F*() functions from MISC library
+ * A simple RDD which uses hb_F*() functions from MISC library
  * to access CSV files. It allow to open an CSV file and navigate
- * using SKIP()/GOTO()/GOTOP()/GOBOTTOM() functions using
+ * using Skip()/Goto()/GoTop()/GoBottom() functions using
  * Bof()/Eof()/RecNo()/LastRec() to check current state.
- * HB_F*() functions does not support single field access and allow
+ * hb_F*() functions does not support single field access and allow
  * to read only the whole line. This RDD also. I only added one
  * virtual field which exist in all tables open by this RDD called
  * LINE which contains the current .csv file line.
@@ -77,8 +77,8 @@ STATIC FUNCTION FCM_INIT( nRDD )
 
    LOCAL aRData := Array( 10 )
 
-   /* Set in our private RDD ITEM the array with HB_F*() work are numbers */
-   AFill( aRData, -1 )
+   /* Set in our private RDD ITEM the array with hb_F*() work are numbers */
+   AFill( aRData, F_ERROR )
    USRRDD_RDDDATA( nRDD, aRData )
 
    RETURN HB_SUCCESS
@@ -96,7 +96,7 @@ STATIC FUNCTION FCM_NEW( pWA )
 
    /*
     * Set in our private AREA item the array with slot number and
-    * BOF/EOF flags. There is no BOF support in HB_F* function so
+    * BOF/EOF flags. There is no BOF support in hb_F* function so
     * we have to emulate it and there is no phantom record so we
     * cannot return EOF flag directly.
     */
@@ -135,7 +135,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
    aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    aWData := USRRDD_AREADATA( nWA )
-   nSlot := AScan( aRData, -1 )
+   nSlot := AScan( aRData, F_ERROR )
 
    IF nSlot == 0
       oError := ErrorNew()
@@ -150,7 +150,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
    hb_FSelect( nSlot )
    nHandle := hb_FUse( aOpenInfo[ UR_OI_NAME ], nMode )
-   IF nHandle == -1
+   IF nHandle == F_ERROR
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1001
@@ -193,7 +193,7 @@ STATIC FUNCTION FCM_CLOSE( nWA )
       hb_FSelect( nSlot )
       hb_FUse()
       aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
-      aRData[ nSlot ] := -1
+      aRData[ nSlot ] := F_ERROR
    ENDIF
 
    RETURN UR_SUPER_CLOSE( nWA )
@@ -226,7 +226,7 @@ STATIC FUNCTION FCM_GOTO( nWA, nRecord )
       hb_FGoTop()
       aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
    ELSE
-      hb_FSkip( 0 ) /* Clear the EOF flag inside HB_F* engin
+      hb_FSkip( 0 ) /* Clear the EOF flag inside hb_F* engin
                      - it's not done automatically in hb_FGoBottom() :-( */
       hb_FGoto( nRecord )
       aWData[ 2 ] := hb_FRecNo() == 0
@@ -256,7 +256,7 @@ STATIC FUNCTION FCM_GOBOTTOM( nWA )
    IF hb_FLastRec() == 0
       aWData[ 2 ] := aWData[ 3 ] := .T.
    ELSE
-      hb_FSkip( 0 ) /* Clear the EOF flag inside HB_F* engin
+      hb_FSkip( 0 ) /* Clear the EOF flag inside hb_F* engin
                      - it's not done automatically in hb_FGoBottom() :-( */
       hb_FGoBottom()
       aWData[ 2 ] := aWData[ 3 ] := .F.

@@ -299,7 +299,9 @@ METHOD Open() CLASS TODBC
 
       // Allocates and executes the statement
       SQLAllocStmt( ::hDbc, @::hStmt )
-      nRet := SQLExecDirect( ::hStmt, ::cSQL )
+      IF ( nRet := SQLExecDirect( ::hStmt, ::cSQL ) ) != SQL_SUCCESS
+         EXIT
+      ENDIF
 
       // Get result information about fields and stores it
       // on Fields collection

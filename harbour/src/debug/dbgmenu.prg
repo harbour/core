@@ -50,7 +50,7 @@
  *
  */
 
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 #xcommand MENU [<oMenu>] => [ <oMenu> := ] HBDbMenu():New()
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;

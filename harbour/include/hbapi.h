@@ -1156,6 +1156,7 @@ extern void *   hb_i18n_alloc( void * cargo );
 
 extern HB_EXPORT void         hb_vmSetLinkedMain( const char * szMain );
 extern HB_EXPORT void         hb_vmSetDefaultGT( const char * szGtName );
+extern HB_EXPORT HB_BOOL      hb_vmInternalsEnabled( void );
 
 extern HB_EXPORT PHB_FUNC     hb_vmProcAddress( const char * szFuncName );
 

@@ -55,7 +55,7 @@
  *
  */
 
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output

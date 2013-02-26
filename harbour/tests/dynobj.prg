@@ -18,7 +18,7 @@ PROCEDURE Main()
    LOCAL oForm := TForm():New()
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    /* Let's add an inline at run-time. Should already be possible */
 
@@ -28,7 +28,7 @@ PROCEDURE Main()
       {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "What is the Form area ?"
    ? oForm:CalcArea()
@@ -38,7 +38,7 @@ PROCEDURE Main()
    __objAddMethod( oForm, "Smile", @Smile() )
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Smile please "
    oForm:Smile()
@@ -46,7 +46,7 @@ PROCEDURE Main()
    Pause()
 
    ? "Data items before"
-   ? hb_ValToExp(  oForm )
+   ? hb_ValToExp( oForm )
 
    ? "Let's add an additional data item"
 
@@ -55,7 +55,7 @@ PROCEDURE Main()
    oForm:cHelp := "This is a real tricky test"
 
    ? "Data items after"
-   ? hb_ValToExp(  oForm )
+   ? hb_ValToExp( oForm )
 
    Pause()
 
@@ -75,31 +75,31 @@ PROCEDURE Main()
    ? oForm:CalcArea()
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete CalcArea"
    __objDelInline( oForm, "CalcArea" )
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete Smile"
    __objDelMethod( oForm, "Smile" )
 
    ? "What methods are in the class :"
-   ? hb_ValToExp(  __objGetMethodList( oForm ) )
+   ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    Pause()
 
    ? "Data items before"
-   ? hb_ValToExp(  oForm )
+   ? hb_ValToExp( oForm )
 
    ? "Let's delete cHelp"
 
    __objDelData( oForm, "cHelp" )
 
    ? "Data items after"
-   ? hb_ValToExp(  oForm )
+   ? hb_ValToExp( oForm )
 
 /* oForm:cHelp := "Please crash" */
 
@@ -107,24 +107,24 @@ PROCEDURE Main()
 
 FUNCTION TForm()
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := HBClass():New( "TFORM" )    // starts a new class definition
+   IF s_oClass == NIL
+      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
-      oClass:AddData( "cText" )           // define this class objects datas
-      oClass:AddData( "nTop" )
-      oClass:AddData( "nLeft" )
-      oClass:AddData( "nBottom" )
-      oClass:AddData( "nRight" )
+      s_oClass:AddData( "cText" )           // define this class objects datas
+      s_oClass:AddData( "nTop" )
+      s_oClass:AddData( "nLeft" )
+      s_oClass:AddData( "nBottom" )
+      s_oClass:AddData( "nRight" )
 
-      oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddInline( "Show", {| self | ::cText } )
+      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
+      s_oClass:AddInline( "Show", {| self | ::cText } )
 
-      oClass:Create()                     // builds this class
+      s_oClass:Create()                     // builds this class
    ENDIF
 
-   RETURN oClass:Instance()                  // builds an object of this class
+   RETURN s_oClass:Instance()                  // builds an object of this class
 
 STATIC FUNCTION New()
 

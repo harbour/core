@@ -10,7 +10,7 @@ PROCEDURE Main()
 
    RETURN
 
-#pragma BEGINDUMP
+#pragma begindump
 
 #include "hbapi.h"
 
@@ -19,7 +19,7 @@ HB_FUNC( C_FUNC )
    hb_retc( "returned from C_FUNC()\n" );
 }
 
-#pragma ENDDUMP
+#pragma enddump
 
 FUNCTION EndDumpTest()
    RETURN "End Dump Test"

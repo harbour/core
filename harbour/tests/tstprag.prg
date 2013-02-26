@@ -43,13 +43,13 @@ PROCEDURE Main()
 #pragma /Z-
 /* or #pragma Shortcut=Off */
 
-#pragma Exitseverity=0
-#pragma Exitseverity=1
-#pragma Exitseverity(0)
-#pragma Exitseverity( 1 )
-#pragma Exitseverity( 0 )
-#pragma Exitseverity= 2
-#pragma Exitseverity= 1
+#pragma ExitSeverity=0
+#pragma ExitSeverity=1
+#pragma ExitSeverity(0)
+#pragma ExitSeverity( 1 )
+#pragma ExitSeverity( 0 )
+#pragma ExitSeverity= 2
+#pragma ExitSeverity= 1
 
 /* Pragmas with bad values will cause an error  */
 #pragma WarningLevel=8

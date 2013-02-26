@@ -50,7 +50,7 @@
  *
  */
 
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 #include "box.ch"
 #include "setcurs.ch"

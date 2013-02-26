@@ -102,7 +102,7 @@ METHOD AddPara( cPara, cAlign ) CLASS THTML
 
 METHOD Generate() CLASS THTML
 
-   ::cContent :=                                                           ;
+   ::cContent := ;
       "<html><head>"                                          + hb_eol() + ;
       "<title>" + ::cTitle + "</title>"                       + hb_eol() + ;
       "<body link='" + ::cLinkColor + "' " +                               ;
@@ -114,7 +114,7 @@ METHOD Generate() CLASS THTML
 
 METHOD ShowResult() CLASS THTML
 
-   OutStd(                                                                  ;
+   OutStd( ;
 ;//      "HTTP/1.0 200 OK"                                     + hb_eol() + ;
       "CONTENT-TYPE: TEXT/HTML"                     + hb_eol() + hb_eol() + ;
       ::cContent )

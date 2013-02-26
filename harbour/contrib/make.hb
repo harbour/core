@@ -27,7 +27,7 @@
  *
  */
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 

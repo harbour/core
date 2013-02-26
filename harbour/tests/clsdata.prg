@@ -16,20 +16,20 @@ PROCEDURE Main()
 
 FUNCTION TBaseObject()
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := HBClass():New( "TBaseObject" )
-      oClass:AddData( "Data1" )
-      oClass:AddClassData( "ClassData1" )
-      oClass:AddMethod( "NewBase", @NewBase() )
-      oClass:AddMethod( "Test", @Test() )
-      oClass:AddMethod( "Method1", @Method1Base() )
-      oClass:AddMethod( "Method2", @Method2Base() )
-      oClass:Create()
+   IF s_oClass == NIL
+      s_oClass := HBClass():New( "TBaseObject" )
+      s_oClass:AddData( "Data1" )
+      s_oClass:AddClassData( "ClassData1" )
+      s_oClass:AddMethod( "NewBase", @NewBase() )
+      s_oClass:AddMethod( "Test", @Test() )
+      s_oClass:AddMethod( "Method1", @Method1Base() )
+      s_oClass:AddMethod( "Method2", @Method2Base() )
+      s_oClass:Create()
    ENDIF
 
-   RETURN oClass:Instance()
+   RETURN s_oClass:Instance()
 
 STATIC FUNCTION NewBase()
 
@@ -69,19 +69,19 @@ STATIC FUNCTION Method2Base()
 
 FUNCTION HBObject()
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := HBClass():New( "HBObject", "TBaseObject" )
-      oClass:AddData( "Data2" )
-      oClass:AddClassData( "ClassData2" )
-      oClass:AddMethod( "New", @New() )
-      oClass:AddMethod( "Method1", @Method1() )
-      oClass:AddMethod( "Method2", @Method2() )
-      oClass:Create()
+   IF s_oClass == NIL
+      s_oClass := HBClass():New( "HBObject", "TBaseObject" )
+      s_oClass:AddData( "Data2" )
+      s_oClass:AddClassData( "ClassData2" )
+      s_oClass:AddMethod( "New", @New() )
+      s_oClass:AddMethod( "Method1", @Method1() )
+      s_oClass:AddMethod( "Method2", @Method2() )
+      s_oClass:Create()
    ENDIF
 
-   RETURN oClass:Instance()
+   RETURN s_oClass:Instance()
 
 STATIC FUNCTION New()
 

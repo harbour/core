@@ -51,7 +51,7 @@
  *
  */
 
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"

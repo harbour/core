@@ -54,7 +54,7 @@
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
 
-#pragma DEBUGINFO=OFF
+#pragma -b-
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"

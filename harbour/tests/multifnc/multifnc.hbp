@@ -2,8 +2,9 @@
 # $Id$
 #
 
+# Testing dirty function overload
 -ldflag={allgcc}-Wl,--allow-multiple-definition
--ldflag={allmsvc|allpocc|xcc}/force:multiple
+-ldflag={allmsvc|allpocc|xcc|watcom}/force:multiple
 
 t0.prg
 t1.prg

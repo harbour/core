@@ -99,7 +99,7 @@ msgstr "Figyelem: Hibás -gt érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgid "Filters are accepted in each .hbc line and most options.\nFilters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
 msgstr "A szűrők az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\nSzűrő formátum: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Szűrők kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
 
 #: hbmk2.prg:4128 hbmk2.prg:5633 hbmk2.prg:6212
@@ -689,7 +689,7 @@ msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levő 
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
+msgid "Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. Standard output of the command will be used as the value. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
 msgstr ""
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120

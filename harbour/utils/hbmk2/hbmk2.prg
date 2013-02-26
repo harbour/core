@@ -641,7 +641,7 @@ PROCEDURE __hbmk_public_entry( ... )
 
    RETURN
 #elif defined( HBMK_USE_APPMAIN )
-/* for GNU Make build (we can't override default entry, so we use this alternate built-in one */
+/* for GNU Make build (we cannot override default entry, so we use this alternate built-in one */
 PROCEDURE _APPMAIN( ... )
 
    hbmk_local_entry( ... )
@@ -7481,7 +7481,7 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
    STATIC sc_aWarning := { ;
       "-Wl,--allow-multiple-definition", ; /* gcc */
       "muldefs", ; /* ld '-z muldefs' */
-      "force:multiple", ; /* msvc, pocc, watcom */
+      "force:multiple", ; /* msvc, pocc, watcom, xcc */
       "w-dup" , ; /* bcc */
       "w-dpl" } /* bcc (for libs) */
 
@@ -7534,7 +7534,7 @@ STATIC FUNCTION CheckParamLibPath( hbmk, cPath )
    ENDIF
 
    /* check against Harbour core lib directory in its legacy
-      (non multi-compiler/platform) location. It's even more
+      (non multi-compiler/platform) location. It is even more
       dangerous than above. */
    IF ! hbmk[ _HBMK_lSysLoc ] .AND. ;
       hb_FileMatch( cPath, hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "lib" ) )
@@ -9314,7 +9314,8 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
       ENDIF
 
       IF ! Empty( hrb )
-         IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
+         hbmk[ _HBMK_hPLUGINVars ][ cFileName ] := { => }
+         IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init", hbmk[ _HBMK_hPLUGINVars ][ cFileName ] ) )
             /* Do not call plugin any further if initialization returned error */
             IF hbmk[ _HBMK_lInfo ]
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Initializing plugin: %1$s" ), cFileName ) )
@@ -9573,12 +9574,12 @@ STATIC FUNCTION hbmk_SecToken()
 
 /* ; */
 
-STATIC FUNCTION PlugIn_make_ctx( hbmk, cState )
+STATIC FUNCTION PlugIn_make_ctx( hbmk, cState, hVars )
    RETURN { ;
       "apiver"        => _HBMK_PLUGIN_APIVER        , ;
       "cSTATE"        => cState                     , ;
       "params"        => hbmk[ _HBMK_aPLUGINPars ]  , ;
-      "vars"          => hbmk[ _HBMK_hPLUGINVars ]  , ;
+      "vars"          => hVars                      , ;
       "cPLAT"         => hbmk[ _HBMK_cPLAT ]        , ;
       "cCOMP"         => hbmk[ _HBMK_cCOMP ]        , ;
       "nCOMPVer"      => hbmk[ _HBMK_nCOMPVer ]     , ;
@@ -9645,14 +9646,12 @@ STATIC FUNCTION PlugIn_Execute_All( hbmk, cState )
    LOCAL ctx
    LOCAL lSuccess := .T.
 
-   IF ! Empty( hbmk[ _HBMK_hPLUGINHRB ] )
-      ctx := PlugIn_make_ctx( hbmk, cState )
-      FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
-         IF ! PlugIn_call_low( hbmk, hrb:__enumKey(), hrb, ctx )
-            lSuccess := .F.
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH hrb IN hbmk[ _HBMK_hPLUGINHRB ]
+      ctx := PlugIn_make_ctx( hbmk, cState, hbmk[ _HBMK_hPLUGINVars ][ hrb:__enumKey() ] )
+      IF ! PlugIn_call_low( hbmk, hrb:__enumKey(), hrb, ctx )
+         lSuccess := .F.
+      ENDIF
+   NEXT
 
    RETURN lSuccess
 
@@ -10306,7 +10305,7 @@ STATIC FUNCTION AutoConfPathList( lCWD, lForDocOutput )
 
    LOCAL aPath := {}
 
-   /* It will form the output so that it doesn't contain
+   /* It will form the output so that it does not contain
       configuration specific (potentially sensitive)
       information by using generic term. */
    hb_default( @lForDocOutput, .F. )
@@ -13697,7 +13696,7 @@ STATIC FUNCTION __hbshell_ConfigDir( lForDocOutput )
 
    LOCAL cDir
 
-   /* It will form the output so that it doesn't contain
+   /* It will form the output so that it does not contain
       configuration specific (potentially sensitive)
       information by using generic term. */
    hb_default( @lForDocOutput, .F. )
@@ -13814,7 +13813,7 @@ FUNCTION hbshell_ext_load( cName )
    LOCAL cHBC
    LOCAL cVersion
 
-   IF ! Empty( cName )
+   IF HB_ISSTRING( cName ) .AND. ! Empty( cName )
       IF __hbshell_CanLoadDyn()
          IF !( cName $ hbsh[ _HBSH_hLibExt ] )
 
@@ -13866,7 +13865,7 @@ FUNCTION hbshell_ext_unload( cName )
 
    LOCAL hbsh := hbsh()
 
-   IF cName $ hbsh[ _HBSH_hLibExt ] .AND. hbsh[ _HBSH_hLibExt ][ cName ] != NIL
+   IF HB_ISSTRING( cName ) .AND. cName $ hbsh[ _HBSH_hLibExt ] .AND. hbsh[ _HBSH_hLibExt ][ cName ] != NIL
       hb_HDel( hbsh[ _HBSH_hINCPATH ], cName )
       hb_HDel( hbsh[ _HBSH_hCH ], cName )
       hb_HDel( hbsh[ _HBSH_hOPTPRG ], cName )
@@ -14665,11 +14664,14 @@ FUNCTION hbshell_include( cName )
 
    LOCAL hbsh := hbsh()
 
-   cName := Lower( cName )
+   IF HB_ISSTRING( cName )
 
-   IF !( cName $ hbsh[ _HBSH_hCHCORE ] ) .AND. __hbshell_TryHeader( cName )
-      hbsh[ _HBSH_hCHCORE ][ cName ] := NIL
-      RETURN .T.
+      cName := Lower( cName )
+
+      IF !( cName $ hbsh[ _HBSH_hCHCORE ] ) .AND. __hbshell_TryHeader( cName )
+         hbsh[ _HBSH_hCHCORE ][ cName ] := NIL
+         RETURN .T.
+      ENDIF
    ENDIF
 
    RETURN .F.
@@ -14678,11 +14680,14 @@ FUNCTION hbshell_uninclude( cName )
 
    LOCAL hbsh := hbsh()
 
-   cName := Lower( cName )
+   IF HB_ISSTRING( cName )
 
-   IF cName $ hbsh[ _HBSH_hCHCORE ]
-      hb_HDel( hbsh[ _HBSH_hCHCORE ], cName )
-      RETURN .T.
+      cName := Lower( cName )
+
+      IF cName $ hbsh[ _HBSH_hCHCORE ]
+         hb_HDel( hbsh[ _HBSH_hCHCORE ], cName )
+         RETURN .T.
+      ENDIF
    ENDIF
 
    RETURN .F.
@@ -15443,7 +15448,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
-      { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) }, ;
+      { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (not supported by some platforms/compilers). On Windows, it is implemented by generating and linking a resource file." ) }, ;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
@@ -15481,7 +15486,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-clean"             , I_( "clean (in incremental build mode)" ) }, ;
       { "-workdir=<dir>"     , hb_StrFormat( I_( e"working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) }, ;
       NIL, ;
-      { "-hbcontainer"       , I_( "virtual target, it doesn't create anything. Useful for creating an .hbp with the sole purpose of referencing subprojects" ) }, ;
+      { "-hbcontainer"       , I_( "virtual target, it does not create anything. Useful for creating an .hbp with the sole purpose of referencing sub-projects" ) }, ;
       { "-hbimplib"          , I_( "create import library (Windows only)" ) }, ;
       NIL, ;
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) }, ;
@@ -15615,7 +15620,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    LOCAL aLst_File := { ;
       NIL, ;
-      { "*.hbp"              , I_( "project file. Can contain command line options, expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
+      { "*.hbp"              , I_( "project file. Can contain command line options, expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line. Each .hbp file reference will be executed as a sub-project." ) }, ;
       { "*.hbm"              , I_( "collection of options. Can be used to collect common ones into a file and include that into project files. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
       { "*.hbc"              , I_( "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
       { "*.hb"               , I_( "Harbour script" ) }, ;
@@ -15669,7 +15674,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "${hb_first}"          , I_( "Name of source file that holds the entry function (without directory and extension)" ) }, ;
       { "${hb_outputdir}"      , I_( "Directory of the output" ) }, ;
       { "${hb_outputname}"     , I_( "Name of the output (without extension)" ) }, ;
-      { "${hb_level}"          , I_( "Subproject recursion level" ) }, ;
+      { "${hb_level}"          , I_( "Sub-project recursion level" ) }, ;
       { "${<depname>}"         , I_( "Returns the header directory of dependency <depname>, or '1' if it is not detected" ) }, ;
       { "${<envvar>}"          , I_( "Returns the value of the environment variable <envvar>" ) } }
 
@@ -15804,7 +15809,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
    LOCAL aLst_PredBuild := { ;
       NIL, ;
       { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )       , I_( "when <depname> dependency was detected" ) }, ;
-      { hb_StrFormat( _HBMK_DIR_TPL, I_( "<depname>" ) )       , I_( "return the header directory where <depname> was detected, or empty if it wasn't." ) }, ;
+      { hb_StrFormat( _HBMK_DIR_TPL, I_( "<depname>" ) )       , I_( "return the header directory where <depname> was detected, or empty if it was not." ) }, ;
       { hb_StrFormat( _HBMK_HAS_TPL_LOCAL, I_( "<depname>" ) ) , I_( "when <depname> dependency was detected in a location configured by -depincpathlocal= option" ) } }
 
 #ifndef _HBMK_EMBEDDED_
@@ -15848,7 +15853,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "hbmk_PathSepToTarget( hbmk, cFileName ) -> <cFileName>"                      , I_( "Convert filename to the format required for the target toolchain." ) }, ;
       { "hbmk_PathSepToForward( <cPath> ) -> <cPath>"                                 , I_( "Convert filename to have forward slash directory separators." ) }, ;
       { "hbmk_PathFromWorkdirToCWD( hbmk ) -> <cRelativePath>"                        , I_( "Return relative path of -workdir= value from current working directory." ) }, ;
-      { "hbmk_FindInPath( <cFileName>, [<xPath>], [<aExtDef>] ) -> <cFNFound> | NIL"  , I_( "Find file in <xPath> (array or pathsep delimited string are accepted) with list of <aExtDef> alternate extensions. Returns filename if found and NIL if not." ) }, ;
+      { "hbmk_FindInPath( <cFileName>, [<xPath>], [<aExtDef>] ) -> <cFNFound> | NIL"  , I_( "Find file in <xPath> (array or pathsep delimited string are accepted) with list of <aExtDef> alternate extensions (defaults to executable binaries). Returns filename if found and NIL if not." ) }, ;
       { "hbmk_FNameDirExtSet( <cFileName>, [<cDirNew>], [<cExtNew>] ) -> <cFileName>" , I_( "Change directory and/or extension in filename." ) }, ;
       { "hbmk_FuncNameEncode( <cFuncName> ) -> <cFuncNameEncoded>"                    , I_( "Encode function name according to Harbour compiler rules for forming HB_FUNC() function names in C code." ) }, ;
       { "hbmk_StrStripQuote( cString ) -> <cString>"                                  , I_( "Strip double quote enclosure from a string." ) }, ;
@@ -15863,7 +15868,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { '"apiver"'       , I_( "API version as an integer" ) }, ;
       { '"cSTATE"'       , I_( "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'" ) }, ;
       { '"params"'       , I_( "array of parameters passed to plugins via -pflag=/pi= options or having an extension registered via hbmk_Register_Input_File_Extension()" ) }, ;
-      { '"vars"'         , I_( "hash of plugin custom variables. Common to all plugins, writable" ) }, ;
+      { '"vars"'         , I_( "hash of plugin custom variables. Writable, local to each plugin" ) }, ;
       { '"cPLAT"'        , I_( "-plat value" ) }, ;
       { '"cCOMP"'        , I_( "-comp value" ) }, ;
       { '"nCOMPVer"'     , I_( "see HB_COMPILER_VER envvar" ) }, ;
@@ -15904,9 +15909,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       I_( e"Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)" ), ;
       hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory." ), _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ), ;
-      I_( e"Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ), ;
+      I_( e"Filters are accepted in each .hbc line and most options.\nFilters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ), ;
       I_( "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
-      I_( 'Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
+      I_( e"Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. Standard output of the command will be used as the value. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"." ), ;
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ), ;
       I_( "Defaults and feature support may vary by platform/compiler." ), ;
       hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
@@ -15933,8 +15938,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       e"and other required tools and call them appropriately. " + ;
       e"%1$s allows to extend the types of supported source files via plugins.\n" + ;
       e"Besides building executables, %1$s is able to run Harbour scripts directly, " + ;
-      e"and it also features an integrated shell prompt." + ;
-      e"" ), _SELF_NAME_ )
+      e"and it also features an integrated shell prompt." ), _SELF_NAME_ )
 
    LOCAL aLst_Desc := { ;
       NIL, ;
@@ -16047,10 +16051,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
          AEval( aHdr_APIShell, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_APIShell, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
 #endif
-         /* TODO: Move to separate section from notes:
-                  - filter and macro syntax, %{}, subprojects
-                  - shell plugins
-          */
+         /* TODO: %{}, shell plugins */
       ENDIF
       AEval( aHdr_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       AEval( aLst_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, -1 ) } )

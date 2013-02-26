@@ -226,6 +226,8 @@ static PHB_DYNS s_pDynsDbgEntry = NULL;   /* Cached __DBGENTRY symbol */
 static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
 #endif
 
+static HB_BOOL s_fInternalsEnabled = HB_TRUE;
+
 #if defined( HB_MT_VM )
 static int volatile hb_vmThreadRequest = 0;
 static void hb_vmRequestTest( void );
@@ -8918,6 +8920,11 @@ HB_BOOL hb_vmIsReady( void )
 #endif
 }
 
+HB_BOOL hb_vmInternalsEnabled( void )
+{
+   return s_fInternalsEnabled;
+}
+
 PHB_CODEPAGE hb_vmCDP( void )
 {
    HB_STACK_TLS_PRELOAD
@@ -11845,23 +11852,34 @@ HB_FUNC( __DBGINVOKEDEBUG )
 {
    HB_STACK_TLS_PRELOAD
 
+   if( hb_vmInternalsEnabled() )
+   {
 #ifndef HB_NO_DEBUG
-   HB_BOOL * pfRequest = hb_stackDebugRequest();
+      HB_BOOL * pfRequest = hb_stackDebugRequest();
 
-   hb_retl( *pfRequest );
-   *pfRequest = hb_parl( 1 );
+      hb_retl( *pfRequest );
+      *pfRequest = hb_parl( 1 );
 #else
-   hb_retl( HB_FALSE );
+      hb_retl( HB_FALSE );
 #endif
+   }
+   else
+      hb_retl( HB_FALSE );
 }
 
 /* $Doc$
  * $FuncName$     <aStat> __dbgvmVarSList()
- * $Description$  Return the statics array. Please aClone before assignments
+ * $Description$  Return the statics array. Please AClone() before assignments
  * $End$ */
 HB_FUNC( __DBGVMVARSLIST )
 {
-   hb_itemReturnRelease( hb_vmStaticsArray() );
+   if( hb_vmInternalsEnabled() )
+      hb_itemReturnRelease( hb_vmStaticsArray() );
+   else
+   {
+      HB_STACK_TLS_PRELOAD
+      hb_reta( 0 );
+   }
 }
 
 /* $Doc$
@@ -11871,7 +11889,11 @@ HB_FUNC( __DBGVMVARSLIST )
 HB_FUNC( __DBGVMVARSLEN )
 {
    HB_STACK_TLS_PRELOAD
-   hb_retnint( hb_vmStaticsCount() );
+
+   if( hb_vmInternalsEnabled() )
+      hb_retnint( hb_vmStaticsCount() );
+   else
+      hb_retnint( 0 );
 }
 
 /* $Doc$
@@ -11880,7 +11902,8 @@ HB_FUNC( __DBGVMVARSLEN )
  * $End$ */
 HB_FUNC( __DBGVMVARSGET )
 {
-   hb_itemReturn( hb_dbg_vmVarSGet( hb_param( 1, HB_IT_ARRAY ), hb_parni( 2 ) ) );
+   if( hb_vmInternalsEnabled() )
+      hb_itemReturn( hb_dbg_vmVarSGet( hb_param( 1, HB_IT_ARRAY ), hb_parni( 2 ) ) );
 }
 
 /* $Doc$
@@ -11889,17 +11912,23 @@ HB_FUNC( __DBGVMVARSGET )
  * $End$ */
 HB_FUNC( __DBGVMVARSSET )
 {
-   PHB_ITEM pStaticsBase = hb_param( 1, HB_IT_ARRAY );
-   PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
+   if( hb_vmInternalsEnabled() )
+   {
+      PHB_ITEM pStaticsBase = hb_param( 1, HB_IT_ARRAY );
+      PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
 
-   if( pStaticsBase && pItem )
-      hb_arraySet( pStaticsBase, hb_parni( 2 ), pItem );
+      if( pStaticsBase && pItem )
+         hb_arraySet( pStaticsBase, hb_parni( 2 ), pItem );
+   }
 }
 
 HB_FUNC( __DBGPROCLEVEL )
 {
-   HB_STACK_TLS_PRELOAD
-   hb_retnl( hb_dbg_ProcLevel() - 1 );   /* Don't count self */
+   if( hb_vmInternalsEnabled() )
+   {
+      HB_STACK_TLS_PRELOAD
+      hb_retnl( hb_dbg_ProcLevel() - 1 );   /* Don't count self */
+   }
 }
 
 /*
@@ -11933,26 +11962,38 @@ PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset )
  * $End$ */
 HB_FUNC( __DBGVMVARGLIST )
 {
+   if( hb_vmInternalsEnabled() )
+   {
 #if 0
-   PHB_ITEM pGlobals = hb_itemClone( &s_aGlobals );
+      PHB_ITEM pGlobals = hb_itemClone( &s_aGlobals );
 #else
-   PHB_ITEM pGlobals = hb_itemArrayNew( 0 );
+      PHB_ITEM pGlobals = hb_itemArrayNew( 0 );
 #endif
 
-   hb_itemReturnRelease( pGlobals );
+      hb_itemReturnRelease( pGlobals );
+   }
+   else
+   {
+      HB_STACK_TLS_PRELOAD
+      hb_reta( 0 );
+   }
 }
 
 HB_FUNC( __DBGVMVARGGET )
 {
-   hb_itemReturn( hb_dbg_vmVarGGet( hb_parni( 1 ), hb_parni( 2 ) ) );
+   if( hb_vmInternalsEnabled() )
+      hb_itemReturn( hb_dbg_vmVarGGet( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 
 HB_FUNC( __DBGVMVARGSET )
 {
 #if 0
-   PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
-   if( pItem )
-      hb_arraySet( &s_aGlobals, hb_parni( 1 ) + hb_parni( 2 ), pItem );
+   if( hb_vmInternalsEnabled() )
+   {
+      PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
+      if( pItem )
+         hb_arraySet( &s_aGlobals, hb_parni( 1 ) + hb_parni( 2 ), pItem );
+   }
 #endif
 }
 
@@ -12104,6 +12145,11 @@ HB_FUNC( __QUITCANCEL )
          }
       }
    }
+}
+
+HB_FUNC( __VMNOINTERNALS )
+{
+   s_fInternalsEnabled = HB_FALSE;
 }
 
 HB_FUNC( __VMITEMID )

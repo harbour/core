@@ -2051,7 +2051,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
    LOCAL cLine := ""
 
    DO WHILE oSelf:aText[ nRow ]:lSoftCR
-      cLine := cline + oSelf:aText[ nRow ]:cText
+      cLine += oSelf:aText[ nRow ]:cText
       // I don't need to increment nRow since I'm removing lines, ie line n is
       // a different line each time I add it to cLine
       oSelf:RemoveLine( nRow )
@@ -2150,7 +2150,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
 
       // Split line at fist space before current position
       //
-      DO WHILE nFirstSpace > 1 .AND. !( cLine[ nFirstSpace ] == " " )
+      DO WHILE nFirstSpace > 1 .AND. !( SubStr( cLine, nFirstSpace, 1 ) == " " )
          nFirstSpace--
       ENDDO
 

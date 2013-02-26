@@ -14,12 +14,12 @@
  * Placed in the public domain
  */
 
-#pragma warninglevel=1
-
 PROCEDURE Main()
 
    LOCAL oForm   := TForm():New()
    LOCAL nNumber := 15
+
+   HB_SYMBOL_UNUSED( nNumber )
 
    ? oForm:ClassName()
    oForm:Show()
@@ -27,37 +27,36 @@ PROCEDURE Main()
 
    ? "-OBJECT additions-"
    ? "What is in oForm ? "
-   ? hb_ValToExp(  oForm:Transfer() )
+   ? hb_ValToExp( oForm:Transfer() )
 
-   ? "Does transfer exists ? ", __objHasMsg   ( oForm, "Transfer" )
-   ? "Is   transfer DATA   ? ", __objHasData  ( oForm, "Transfer" )
+   ? "Does transfer exists ? ", __objHasMsg(    oForm, "Transfer" )
+   ? "Is   transfer DATA   ? ", __objHasData(   oForm, "Transfer" )
    ? "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" )
-   ? "Does nLeft    exists ? ", __objHasMsg   ( oForm, "nLeft"    )
-   ? "Is   nLeft    DATA   ? ", __objHasData  ( oForm, "nLeft"    )
+   ? "Does nLeft    exists ? ", __objHasMsg(    oForm, "nLeft"    )
+   ? "Is   nLeft    DATA   ? ", __objHasData(   oForm, "nLeft"    )
    ? "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    )
-   ? "Does unknown  exists ? ", __objHasMsg   ( oForm, "Unknown"  )
-   ? "Is   unknown  DATA   ? ", __objHasData  ( oForm, "Unknown"  )
+   ? "Does unknown  exists ? ", __objHasMsg(    oForm, "Unknown"  )
+   ? "Is   unknown  DATA   ? ", __objHasData(   oForm, "Unknown"  )
    ? "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  )
 
    ? "Set nLeft to 50 and nRight to 100"
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
-   ? hb_ValToExp(  oForm:Transfer() )
+   ? hb_ValToExp( oForm:Transfer() )
 
    Pause()
 
-
    ? "-DEBUG Functions-"
    ? "-Statics-"
-   ? hb_ValToExp(  __dbgVMVarSList() )
+   ? hb_ValToExp( __dbgVMVarSList() )
 
    ? "-Global Stack-"
-   ? hb_ValToExp(  __dbgVMStkGList() )
+   ? hb_ValToExp( __dbgVMStkGList() )
 
    ? "-Local Stack-"
-   ? hb_ValToExp(  __dbgVMStkLList() )
+   ? hb_ValToExp( __dbgVMStkLList() )
 
    ? "-Parameters-"
-   ? hb_ValToExp(  __dbgVMParLList() )
+   ? hb_ValToExp( __dbgVMParLList() )
 
    Pause()
 
@@ -76,25 +75,32 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
    LOCAL xParam
    LOCAL xStack
 
+   HB_SYMBOL_UNUSED( cWhat )
+   HB_SYMBOL_UNUSED( nNumber )
+
+   HB_SYMBOL_UNUSED( nParam )
+   HB_SYMBOL_UNUSED( cParam )
+   HB_SYMBOL_UNUSED( uParam )
+
    ?
    ? "-Second procedure-"
    ?
 
    ? "-Statics-"
-   ? hb_ValToExp(  __dbgVMVarSList() )
+   ? hb_ValToExp( __dbgVMVarSList() )
    ?
 
    ? "-Global Stack- Len=", __dbgVMStkGCount()
-   ? hb_ValToExp(  __dbgVMStkGList() )
+   ? hb_ValToExp( __dbgVMStkGList() )
    ?
 
    ? "-Local Stack- Len=", __dbgVMStkLCount()
-   ? hb_ValToExp(  xStack := __dbgVMStkLList() )
+   ? hb_ValToExp( xStack := __dbgVMStkLList() )
    ?
 
    ? "-Parameters-"
-   ? hb_ValToExp(  xParam := __dbgVMParLList() )
-   IF xParam[ xStack[ 7 ] ] == "Hello"
+   ? hb_ValToExp( xParam := __dbgVMParLList() )
+   IF ! Empty( xStack ) .AND. xParam[ xStack[ 7 ] ] == "Hello"
       ? ":-)"
    ENDIF
 
@@ -110,27 +116,27 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
 
 FUNCTION TForm()
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := HBClass():New( "TFORM" )    // starts a new class definition
+   IF s_oClass == NIL
+      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
-      oClass:AddData( "cName" )           // define this class objects datas
-      oClass:AddData( "nTop" )
-      oClass:AddData( "nLeft" )
-      oClass:AddData( "nBottom" )
-      oClass:AddData( "nRight" )
+      s_oClass:AddData( "cName" )           // define this class objects datas
+      s_oClass:AddData( "nTop" )
+      s_oClass:AddData( "nLeft" )
+      s_oClass:AddData( "nBottom" )
+      s_oClass:AddData( "nRight" )
 
-      oClass:AddVirtual( "aExcept" )      // Export exceptions
+      s_oClass:AddVirtual( "aExcept" )      // Export exceptions
 
-      oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddMethod( "Show", @Show() )
-      oClass:AddMethod( "Transfer", @Transfer() )
+      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
+      s_oClass:AddMethod( "Show", @Show() )
+      s_oClass:AddMethod( "Transfer", @Transfer() )
 
-      oClass:Create()                     // builds this class
+      s_oClass:Create()                     // builds this class
    ENDIF
 
-   RETURN oClass:Instance()                  // builds an object of this class
+   RETURN s_oClass:Instance()                  // builds an object of this class
 
 
 /* $Doc$
@@ -223,21 +229,19 @@ STATIC FUNCTION Show()
 // oTarget:Transfer( DbObject->Memo )
 //
 
-STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
+STATIC FUNCTION Transfer( ... )
 
    LOCAL self   := QSelf()
    LOCAL aParam := __dbgVMParLList()
    LOCAL nLen   := PCount()
    LOCAL xRet
    LOCAL xData
-   LOCAL n
 
    IF nLen == 0
       xRet := __objGetValueList( self, ::aExcept() )
    ELSE
-      FOR n := 1 TO nLen
+      FOR EACH xData IN aParam
 
-         xData := aParam[ n ]
          IF HB_ISARRAY( xData )
 
             IF HB_ISARRAY( xData[ 1 ] )         // 2D array passed
@@ -249,7 +253,7 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
          ELSEIF HB_ISOBJECT( xData )            // Object passed
             xRet := ::Transfer( xData:Transfer() )
          ELSEIF !( ValType( xData ) == "U" )
-            ? "TRANSFER: Incorrect argument(", n, ") ", xData
+            ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ") ", xData
          ENDIF
 
       NEXT

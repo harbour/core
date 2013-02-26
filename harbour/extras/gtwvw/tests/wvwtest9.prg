@@ -674,7 +674,7 @@ FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL lNeedStabilize
 
    // if we can't handle non topmost window we must return right away
-   // if nWinNum != wvw_nNumWindows()-1 ; return ; endif
+   // IF nWinNum != wvw_nNumWindows() - 1 ; RETURN ; ENDIF
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 
@@ -719,7 +719,7 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL lNeedStabilize
 
    // if we can't handle non topmost window we must return right away
-   // if nWinNum != wvw_nNumWindows()-1 ; return ; endif
+   // IF nWinNum != wvw_nNumWindows() - 1 ; RETURN ; ENDIF
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 
@@ -758,10 +758,10 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 /**
 20040704 notes:
 
-0 <= nPage <= (nMax - nMin + 1)
+0 <= nPage <= ( nMax - nMin + 1 )
 nPage :: pagesize
 
-nMin <= nPos <= (nMax - Max(nPage-1, 0))
+nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
 **/
 
 STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )

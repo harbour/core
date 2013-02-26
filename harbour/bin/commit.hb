@@ -29,7 +29,7 @@
 #define _CONFIGFIL_ ".hbcommit"
 #define _CONFIGENV_ "HBCOMMIT_USER"
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 

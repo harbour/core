@@ -190,7 +190,7 @@ METHOD Create( nAttr ) CLASS TCgiFile
    nSuccess := FCreate( ::Name, nAttr )
    ::Handle := nSuccess
 
-   RETURN nSuccess != -1
+   RETURN nSuccess != F_ERROR
 
 /*
 **   ::Size() --> nFileSize
@@ -278,7 +278,7 @@ METHOD Readline( nSize ) CLASS TCgiFile
    RETURN ::Buffer
 
 /*
-**   ::ReadByte() --> nByte  or  -1 if unsuccessfull
+**   ::ReadByte() --> nByte or -1 if unsuccessfull
 */
 
 METHOD ReadByte() CLASS TCgiFile
@@ -304,7 +304,7 @@ METHOD ReadInt() CLASS TCgiFile
    RETURN iif( nBytes > 0, Bin2I( cBuff ), -1 )
 
 /*
-**   ::ReadLong() --> nLong  or -1 if unsuccessfull
+**   ::ReadLong() --> nLong or -1 if unsuccessfull
 */
 
 METHOD ReadLong() CLASS TCgiFile

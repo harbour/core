@@ -55,9 +55,9 @@ PROCEDURE Main()
    ? "To the power 3   : ", hb_ValToStr( o:x )
 
    ? "Global stack"
-   ? hb_ValToExp(  __dbgVMStkGList() )
+   ? hb_ValToExp( __dbgVMStkGList() )
    ? "Statics"
-   ? hb_ValToExp(  __dbgVMVarSList() )
+   ? hb_ValToExp( __dbgVMVarSList() )
 
    RETURN
 

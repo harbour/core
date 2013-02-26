@@ -57,19 +57,19 @@ PROCEDURE Main()
 
 FUNCTION TValue
 
-   STATIC oClass
+   STATIC s_oClass
 
-   IF oClass == NIL
-      oClass := HBClass():New( "TValue" )
+   IF s_oClass == NIL
+      s_oClass := HBClass():New( "TValue" )
 
-      oClass:AddData( "cVal" )
-      oClass:AddMethod( "New",        @New() )         // New Method
+      s_oClass:AddData( "cVal" )
+      s_oClass:AddMethod( "New", @New() ) // New() Method
 
-      oClass:Create()
+      s_oClass:Create()
 
    ENDIF
 
-   RETURN oClass:Instance()
+   RETURN s_oClass:Instance()
 
 STATIC FUNCTION New()
 
