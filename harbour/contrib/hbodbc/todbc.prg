@@ -169,8 +169,8 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    hb_default( @lCache, .T. )
 
-   ::cODBCStr  := cODBCStr
-   ::lCacheRS  := lCache
+   ::cODBCStr := cODBCStr
+   ::lCacheRS := lCache
 
    // Allocates SQL Environment
    IF ( nRet := SQLAllocEnv( @::hEnv ) ) != SQL_SUCCESS
@@ -178,7 +178,7 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
       RETURN NIL
    ENDIF
 
-   SQLAllocConnect( ::hEnv, @::hDbc )                   // Allocates SQL Connection
+   SQLAllocConnect( ::hEnv, @::hDbc )  // Allocates SQL Connection
 
    IF HB_ISSTRING( cUserName )
 
@@ -467,7 +467,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
          EXIT
 
       CASE SQL_FETCH_ABSOLUTE
-         IF nOffset  > ::nRecCount .OR. nOffset < 1  // TODO: Should we go to the first/last row if out of bounds?
+         IF nOffset > ::nRecCount .OR. nOffset < 1  // TODO: Should we go to the first/last row if out of bounds?
             nResult := SQL_ERROR
          ELSE
             nResult := SQL_SUCCESS

@@ -673,6 +673,10 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    LOCAL cParam1L
 
+   #if ! __pragma( b )
+      __vmNoInternals() /* disable access to VM internals */
+   #endif
+
    /* for temp debug messages */
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" )

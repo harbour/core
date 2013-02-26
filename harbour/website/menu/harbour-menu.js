@@ -6,7 +6,7 @@ stm_aix("p0i2","p0i0",[2,"","","",20]);
 stm_aix("p0i3","p0i1",[2,"","about.png","about.png",38,65,0,"/about.html","_self","","","","",0,0,0,"","",-1,-1]);
 stm_bp("p1",[1,4,0,-3,2,0,0,0,100,"",-2,"",-2,50,0,0,"#999999","#E6EFF9","",3,1,1,"#b0c4d7"]);
 stm_aix("p1i0","p0i0",[0," About Harbour ","","",-1,-1,0,"/about.html","_self","","","","",0,0,0,"","",0,0,0,0,1,"#E6EFF9",1,"#FFFFFF",0,"","",3,3,1,1,"#E6EFF9","#CCCCCC","#000000","#000000","bold 8pt Verdana","bold 8pt Verdana"]);
-stm_aix("p1i1","p1i0",[0," License ","","",-1,-1,0,"/license.html"]);
+stm_aix("p1i1","p1i0",[0," License ","","",-1,-1,0,"http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/COPYING.txt"]);
 stm_ep();
 stm_aix("p0i4","p0i2",[]);
 stm_aix("p0i5","p0i1",[2,"","documentation.png","documentation.png",90,65,0,"/doc/harbour.html","_self","","","","",0,0,0,"","",-1,-1,0,0,1,"#E6EFF9",1,"#FFD602"]);

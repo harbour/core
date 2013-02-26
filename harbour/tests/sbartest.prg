@@ -41,9 +41,9 @@ FUNCTION InitScrlBar()
    CLS
    SetBlink( .F. )
 #ifdef __HARBOUR__
-   @  0,  0, 24, 79 BOX Replicate( hb_UTF8ToStrBox( "▓" ), 9 ) COLOR "GR+/W*"
+   @  0,  0, MaxRow(), MaxCol() BOX Replicate( hb_UTF8ToStrBox( "▓" ), 9 ) COLOR "GR+/W*"
 #else
-   @  0,  0, 24, 79 BOX Replicate( Chr( 178 ), 9 ) COLOR "GR+/W*"
+   @  0,  0, MaxRow(), MaxCol() BOX Replicate( Chr( 178 ), 9 ) COLOR "GR+/W*"
 #endif
    @  4, 28 SAY "            Directory            " COLOR "W+/B"
    @  5, 28, 15, 60 BOX B_THIN + " " COLOR "W/W*"
@@ -66,9 +66,9 @@ FUNCTION InitScrlBar()
 
    i := AChoice( 6, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
 
-   @ 23, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
+   @ MaxRow() - 1, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
    SET COLOR TO
-   @ 24, 0
+   @ MaxRow(), 0
 
    RETURN 0
 

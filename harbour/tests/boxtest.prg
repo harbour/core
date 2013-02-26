@@ -6,8 +6,8 @@ PROCEDURE Main()
 
    CLS
 
-   @ 0, 0, 15, 50 BOX "         " COLOR "W+/B"
-   MESSAGE( '@ 0, 0, 15, 50 BOX "         " COLOR "W+/B"' )
+   @ 0, 0, 15, MaxCol() BOX "         " COLOR "W+/B"
+   MESSAGE( '@ 0, 0, 15, MaxCol() BOX "         " COLOR "W+/B"' )
 
    __Box( 1, 1, 5, 7 )
    MESSAGE( '__Box( 1, 1, 5, 7 )' )
@@ -25,7 +25,7 @@ PROCEDURE Main()
 
 PROCEDURE MESSAGE( cText )
 
-   @ 16, 0 CLEAR TO 16, 79
+   @ 16, 0 CLEAR TO 16, MaxCol()
    @ 16, 0 SAY cText
    OutStd( Chr( 7 ) )
    Inkey( 0 )

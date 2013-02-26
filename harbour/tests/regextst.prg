@@ -13,7 +13,7 @@ PROCEDURE Main()
    LOCAL pCompiled
    LOCAL cRegex
    LOCAL cSentence
-   LOCAL nRow, oErr
+   LOCAL nRow
    LOCAL aMatch, cMatch
 
    LOCAL GetList := {}
@@ -36,14 +36,13 @@ PROCEDURE Main()
       READ
       IF LastKey() != K_ESC
 
-         @ 12, 5 CLEAR TO 24, 79
+         @ 12, 5 CLEAR TO MaxRow(), MaxCol()
 
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-            pCompiled := hb_regexComp( RTrim( cRegex ) )
-         RECOVER USING oErr
+         pCompiled := hb_regexComp( RTrim( cRegex ) )
+         IF Empty( pCompiled )
             @ 12, 5 SAY "Invalid REGEX expression"
             LOOP
-         END SEQUENCE
+         ENDIF
 
          aMatch := hb_regex( pCompiled, RTrim( cSentence ) )
          IF aMatch != NIL

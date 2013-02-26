@@ -83,8 +83,8 @@ PROCEDURE Main()
       nRow++
    ENDIF
 
-   cStr := "Test for RegexAtx"
-   @ nRow, 5 SAY "RegexAtx test; scanning '" + cStr + "' by 'Reg(.x)'"
+   cStr := "Test for RegexAtX()"
+   @ nRow, 5 SAY "RegexAtX() test; scanning '" + cStr + "' by 'Reg(.x)'"
    nRow++
    aMatch := hb_regexAtX( "Reg(.x)", cStr )
    IF Empty( aMatch )
@@ -100,7 +100,7 @@ PROCEDURE Main()
    ENDIF
 
    @ nRow, 1
-   @ 24, 25 SAY "Press a key to continue"
+   @ MaxRow(), 25 SAY "Press a key to continue"
    Inkey( 0 )
 
    RETURN

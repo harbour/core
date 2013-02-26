@@ -6,20 +6,18 @@
 
 PROCEDURE Main()
 
+   LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
+
    LOCAL aOrders
    LOCAL nOp
-   LOCAL dsFunctions
-
    LOCAL i
-
-   dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
    SET COLOR TO "W+/B"
    CLS
 
    DO WHILE .T.
 
-      @  0,  0 SAY PadC( "- TODBC Demonstration -", 80 ) COLOR "B/W"
+      @  0,  0 SAY PadC( "- TODBC Demonstration -", MaxCol() + 1 ) COLOR "B/W"
 
       dsFunctions:SetSQL( "SELECT * FROM test" )
       dsFunctions:Open()
@@ -28,10 +26,8 @@ PROCEDURE Main()
 
       aOrders := {}
       FOR i := 1 TO Len( dsFunctions:Fields )
-
-         AAdd( aOrders, dsFunctions:Fields[ i ] :FieldName )
+         AAdd( aOrders, dsFunctions:Fields[ i ]:FieldName )
          @ i + 3, 25 PROMPT PadC( "ORDER BY " + aOrders[ i ], 30 )
-
       NEXT
 
       MENU TO nOp
@@ -45,33 +41,27 @@ PROCEDURE Main()
       dsFunctions:SetSQL( "SELECT * FROM test ORDER BY " + aOrders[ nOp ] )
       dsFunctions:Open()
 
-      FOR i := 11 TO 24
-         @ i, 0 SAY Replicate( " ", 80 )
-      NEXT
-
-      @ 10, 0 TO 10, 79
-      @ 24, 0 TO 24, 79
-      @ 12, 0 TO 12, 79
-      @ 11, 0 SAY ""
-
-      @ 11, 2         SAY "Statement:"     COLOR "GR+/B"
-      @ 11, Col() + 1 SAY dsFunctions:cSQL
-
       @ 14, 5 SAY " " + ;
-         PadR( dsFunctions:FieldByName( "First" ):FieldName, 3 ) + "   " + ;
-         PadR( dsFunctions:FieldByName( "Last" ):FieldName, 15 ) + "   " + ;
-         PadR( dsFunctions:FieldByName( "Street" ):FieldName, 2 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "First" ):FieldName, 10 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "Last" ):FieldName, 10 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "Street" ):FieldName, 25 ) + "   " + ;
          PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
          COLOR "B/W"
 
+      dsFunctions:Skip() /* TOFIX: To avoid first record to return NILs. bug in TODBC? */
+
       DO WHILE ! dsFunctions:Eof()
          ? "      " + ;
-            PadR( dsFunctions:FieldByName( "First" ):Value, 3 ), "|", ;
-            PadR( dsFunctions:FieldByName( "Last" ):Value, 15 ), "|", ;
-            PadR( dsFunctions:FieldByName( "Street" ):Value, 2 ), "|", ;
+            PadR( dsFunctions:FieldByName( "First" ):Value, 10 ), "|", ;
+            PadR( dsFunctions:FieldByName( "Last" ):Value, 10 ), "|", ;
+            PadR( dsFunctions:FieldByName( "Street" ):Value, 25 ), "|", ;
             PadR( dsFunctions:FieldByName( "City" ):Value, 40 )
          dsFunctions:Skip()
       ENDDO
+
+      @ MaxRow(), 0
+      @ MaxRow(), 1         SAY "Statement:" COLOR "GR+/B"
+      @ MaxRow(), Col() + 1 SAY dsFunctions:cSQL
 
       dsFunctions:Close()
 

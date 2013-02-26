@@ -26,14 +26,14 @@ PROCEDURE Main()
    @ MaxRow() - 1,  2 SAY "Y:"
    @ MaxRow() - 1, 10 SAY "X:"
 
-   @ nR,  2 SAY "Mouse Type    : "
+   @ nR,  2 SAY "Mouse Type    :"
 
    @ nR, 18 SAY "Mouse System"
 
    @ MaxRow() - 2, 68 TO MaxRow(), MaxCol() DOUBLE
    @ MaxRow() - 1, 70 SAY "Exit"
 
-   @ 10,  2 SAY " -- Checkings --  "
+   @ 10,  2 SAY " -- Checkings --"
    @ 11,  2 SAY "Window Boundaries :"
    @ 12,  2 SAY "Press/Release But.:"
    @ 13,  2 SAY "Double Click Left :"
@@ -43,7 +43,7 @@ PROCEDURE Main()
 
    TEST2( nR, nC )
 
-   @ 24, 0 SAY ""
+   SetPos( MaxRow(), 0 )
 
    SET CURSOR ON
    ?
@@ -100,7 +100,6 @@ PROCEDURE TEST1()
       ENDIF
    ENDDO
 
-
    @ MaxRow() - 3, 25 SAY "Move the cursor until the LEFT side  "
 
    DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
@@ -112,7 +111,6 @@ PROCEDURE TEST1()
          CHECKEXIT()
       ENDIF
    ENDDO
-
 
    @ MaxRow() - 3, 25 SAY "Move the cursor until the RIGHT side "
 
@@ -137,17 +135,18 @@ PROCEDURE TEST2( nR, nC )
 
    LOCAL cSkip := "", nKey, nPress := 0
 
-   @ nR +  0, nC SAY  "+---------|---------+"
-   @ nR +  1, nC SAY  "| +===+ +===+ +===+ |"
-   @ nR +  2, nC SAY  "| |   | |   | |   | |"
-   @ nR +  3, nC SAY  "| |   | |   | |   | |"
-   @ nR +  4, nC SAY  "| +===+ +===+ +===+ |"
-   @ nR +  6, nC SAY  "|  Up    Up    Up   |"
-   @ nR +  7, nC SAY  "|                   |"
-   @ nR +  8, nC SAY  "|                   |"
-   @ nR +  9, nC SAY  "|           Harbour |"
-   @ nR + 10, nC SAY  "|            mouse  |"
-   @ nR + 11, nC SAY  "+-------------------+"
+   @ nR +  0, nC SAY "+---------|---------+"
+   @ nR +  1, nC SAY "| +===+ +===+ +===+ |"
+   @ nR +  2, nC SAY "| |   | |   | |   | |"
+   @ nR +  3, nC SAY "| |   | |   | |   | |"
+   @ nR +  4, nC SAY "| +===+ +===+ +===+ |"
+   @ nR +  5, nC SAY "|                   |"
+   @ nR +  6, nC SAY "|  Up    Up    Up   |"
+   @ nR +  7, nC SAY "|                   |"
+   @ nR +  8, nC SAY "|                   |"
+   @ nR +  9, nC SAY "|           Harbour |"
+   @ nR + 10, nC SAY "|            mouse  |"
+   @ nR + 11, nC SAY "+-------------------+"
 
    Set( _SET_EVENTMASK, INKEY_ALL )
 
@@ -220,7 +219,7 @@ PROCEDURE TEST2( nR, nC )
          @ 14, 22 SAY "Pass"
 
       OTHERWISE
-         @ MaxRow(), 20 SAY "A keyboard key was pressed: "
+         @ MaxRow(), 20 SAY "A keyboard key was pressed:"
          @ MaxRow(), 48 SAY nKey
 #ifdef __HARBOUR__
          @ MaxRow(), 58 SAY hb_keyChar( nKey )
