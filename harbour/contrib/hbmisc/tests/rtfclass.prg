@@ -84,7 +84,7 @@ METHOD write( csource ) CLASS TRtf
       { "-u"  , "\ulnone "       } } /* turn underline off */
 
    hb_FUse( csource )  // open source file
-   WHILE ! hb_FEof()   // read the file line by line
+   WHILE ! hb_FAtEof()  // read the file line by line
       cline := hb_FReadLn() + "\par"
       y     := Len( cline )
       FOR nchar := 1 TO y

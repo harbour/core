@@ -2,9 +2,7 @@
  * $Id$
  */
 
-/*
-    Demo of ADS Connection handling and Data Dictionaries
-*/
+/* Demo of ADS Connection handling and Data Dictionaries */
 
 #require "rddads"
 

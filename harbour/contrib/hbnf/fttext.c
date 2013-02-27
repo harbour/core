@@ -216,7 +216,7 @@ HB_FUNC( FT_FUSE )
       int attr = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE );
 
       ft_text->handles[ ft_text->area ] = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) attr );
-      if( ft_text->handles[ ft_text->area ] <= 0 )
+      if( ft_text->handles[ ft_text->area ] == FS_ERROR )
          ft_text->error[ ft_text->area ] = hb_fsError();
       ft_text->offset[ ft_text->area ]   = 0;
       ft_text->recno[ ft_text->area ]    = 1;
@@ -442,7 +442,7 @@ static long _ft_skip( long iRecs )
 
             /* read a chunk */
             iBytesRead =
-               hb_fsRead(  ft_text->handles[ ft_text->area ], cBuff, BUFFSIZE );
+               hb_fsRead( ft_text->handles[ ft_text->area ], cBuff, BUFFSIZE );
 
             if( ! iBytesRead )
             {

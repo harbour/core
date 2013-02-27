@@ -224,13 +224,13 @@ STATIC FUNCTION FCM_GOTO( nWA, nRecord )
       aWData[ 2 ] := aWData[ 3 ] := .T.
    ELSEIF nRecord == 1
       hb_FGoTop()
-      aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
+      aWData[ 2 ] := aWData[ 3 ] := hb_FAtEof()
    ELSE
       hb_FSkip( 0 ) /* Clear the EOF flag inside hb_F* engin
                      - it's not done automatically in hb_FGoBottom() :-( */
       hb_FGoto( nRecord )
       aWData[ 2 ] := hb_FRecNo() == 0
-      aWData[ 3 ] := hb_FEof()
+      aWData[ 3 ] := hb_FAtEof()
    ENDIF
 
    RETURN HB_SUCCESS
@@ -244,7 +244,7 @@ STATIC FUNCTION FCM_GOTOP( nWA )
 
    hb_FSelect( aWData[ 1 ] )
    hb_FGoTop()
-   aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
+   aWData[ 2 ] := aWData[ 3 ] := hb_FAtEof()
 
    RETURN HB_SUCCESS
 
@@ -281,11 +281,11 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
       IF nRecords < 0 .AND. hb_FRecNo() <= -nRecords
          hb_FGoTop()
          aWData[ 2 ] := .T.
-         aWData[ 3 ] := hb_FEof()
+         aWData[ 3 ] := hb_FAtEof()
       ELSEIF nRecords != 0
          hb_FSkip( nRecords )
          aWData[ 2 ] := .F.
-         aWData[ 3 ] := hb_FEof()
+         aWData[ 3 ] := hb_FAtEof()
       ENDIF
    ENDIF
 

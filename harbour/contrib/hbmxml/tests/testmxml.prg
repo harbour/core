@@ -51,7 +51,7 @@ PROCEDURE Main( cFileArg )
     */
 
    IF Empty( cFileArg )
-      OutErr( "Usage: textmxml filename.xml" + hb_eol() )
+      OutErr( hb_StrFormat( "Usage: %1$s filename.xml", hb_ProgName() ) + hb_eol() )
       ErrorLevel( 1 )
       QUIT
    ENDIF

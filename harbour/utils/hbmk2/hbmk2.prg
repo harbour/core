@@ -45,7 +45,7 @@
  *   - gcc and *nix configuration elements
  *   - bash script with similar purpose for gcc family
  *   - entry point override method and detection code for gcc
- *   - rtlink/blinker link script parsers
+ *   - RTLink/Blinker/ExoSpace link script parsers
  *   - original POTMerge(), LoadPOTFilesAsHash(), GenHBL() and AutoTrans()
  *   - optimized header time scan algorithm
  *   - shell core runner logic
@@ -1357,6 +1357,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cOpt_Sign
    LOCAL cOpt_SignID
    LOCAL cOpt_SignPass
+   LOCAL aParamPROGNAME
 
    LOCAL cCommand
    LOCAL aCommand
@@ -2385,7 +2386,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cParam := hb_FNameExtSet( cParam, ".hbm" )
          ENDIF
          IF !( Lower( hb_FNameExt( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
-            rtlnk_process( hbmk, MemoRead( hb_DirSepToOS( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
+            rtlnk_process( hbmk, MemoRead( hb_DirSepToOS( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ], @hbmk[ _HBMK_aLIBPATH ] )
             IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
                hb_default( @hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_aOBJUSER ][ 1 ] )
             ENDIF
@@ -2901,12 +2902,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF ! Empty( tmp )
                   tmp := hb_DirSepToOS( tmp )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
-                  tmp1 := hbmk_TARGETTYPE( hbmk )
-                  IF ( Lower( cExt ) == ".exe" .AND. tmp1 == "hbexe" ) .OR. ;
-                     ( Lower( cExt ) == ".dll" .AND. HBMK_IS_IN( tmp1, "hbdyn|hbdynvm" ) ) .OR. ;
-                     ( HBMK_IS_IN( Lower( cExt ), ".lib|.a" ) .AND. HBMK_IS_IN( tmp1, "hblib|hbimplib" ) )
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option value: %1$s. Delete '%2$s' extension." ), ParamToString( aParam ), cExt ) )
-                  ENDIF
                   DO CASE
                   CASE Empty( cDir )
                      tmp := hb_PathNormalize( PathMakeAbsolute( tmp, aParam[ _PAR_cFileName ] ) )
@@ -2915,16 +2910,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         hbmk[ _HBMK_cPROGDIR ] := cDir
                      ENDIF
                      hbmk[ _HBMK_cPROGNAME ] := hb_FNameNameExt( tmp )
+                     aParamPROGNAME := AClone( aParam )
                   CASE ! Empty( cDir ) .AND. Empty( cName ) .AND. Empty( cExt )
                      hbmk[ _HBMK_cPROGDIR ] := hb_PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
                   OTHERWISE /* ! Empty( cDir ) .AND. !( Empty( cName ) .AND. Empty( cExt ) ) */
                      hbmk[ _HBMK_cPROGDIR ] := hb_PathNormalize( PathMakeAbsolute( cDir, aParam[ _PAR_cFileName ] ) )
                      hbmk[ _HBMK_cPROGNAME ] := hb_FNameNameExt( tmp )
+                     aParamPROGNAME := AClone( aParam )
                   ENDCASE
                ENDIF
             ELSE
                hbmk[ _HBMK_cPROGDIR ] := NIL
                hbmk[ _HBMK_cPROGNAME ] := NIL
+               aParamPROGNAME := NIL
             ENDIF
          ENDIF
 
@@ -3650,6 +3648,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aRESSRC ] ) + Len( hbmk[ _HBMK_aRESCMP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0 .AND. ! hbmk[ _HBMK_lContainer ]
       IF hbmk[ _HBMK_lInfo ]
          _hbmk_OutErr( hbmk, I_( "Warning: No source files were specified." ) )
+      ENDIF
+   ENDIF
+
+   IF hbmk[ _HBMK_cPROGNAME ] != NIL
+      cExt := hb_FNameExt( hbmk[ _HBMK_cPROGNAME ] )
+      tmp1 := hbmk_TARGETTYPE( hbmk )
+      IF ( Lower( cExt ) == ".exe" .AND. tmp1 == "hbexe" ) .OR. ;
+         ( Lower( cExt ) == ".dll" .AND. HBMK_IS_IN( tmp1, "hbdyn|hbdynvm" ) ) .OR. ;
+         ( HBMK_IS_IN( Lower( cExt ), ".lib|.a" ) .AND. HBMK_IS_IN( tmp1, "hblib|hbimplib" ) )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable output filename: %1$s. Delete '%2$s' extension." ), iif( aParamPROGNAME != NIL, ParamToString( aParamPROGNAME ), hbmk[ _HBMK_cPROGNAME ] ), cExt ) )
       ENDIF
    ENDIF
 
@@ -9390,24 +9398,17 @@ FUNCTION hbmk_FNameEscape( ctx, cFileName )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   LOCAL nEscapeMode := hbmk[ _HBMK_nCmd_Esc ]
-   LOCAL nFNNotation := hbmk[ _HBMK_nCmd_FNF ]
-
+   IF hbmk == NIL
 #ifdef HB_LEGACY_LEVEL4
-   IF hbmk == NIL .AND. HB_ISSTRING( ctx ) .AND. PCount() == 3 /* legacy calling mode */
-
-      IF HB_ISSTRING( hb_AParams()[ 1 ] ) .AND. ;
-         HB_ISNUMERIC( hb_AParams()[ 2 ] ) .AND. ;
-         HB_ISNUMERIC( hb_AParams()[ 3 ] )
-
-         cFileName   := hb_AParams()[ 1 ]
-         nEscapeMode := hb_AParams()[ 2 ]
-         nFNNotation := hb_AParams()[ 3 ]
+      /* legacy calling mode */
+      IF HB_ISSTRING( ctx )
+         RETURN FNameEscape( ctx, cFileName, iif( PCount() >= 3, hb_AParams()[ 3 ], NIL ) )
       ENDIF
-   ENDIF
 #endif
+      RETURN NIL
+   ENDIF
 
-   RETURN FNameEscape( cFileName, nEscapeMode, nFNNotation )
+   RETURN FNameEscape( cFileName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] )
 
 FUNCTION hbmk_OutStdRaw( ctx, ... )
 
@@ -9429,26 +9430,6 @@ FUNCTION hbmk_OutErrRaw( ctx, ... )
 
    RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
-FUNCTION hbmk_PathFromWorkdirToCWD( ctx )
-
-   LOCAL hbmk := ctx_to_hbmk( ctx )
-
-   IF hbmk != NIL
-      RETURN hb_DirSepAdd( hb_PathRelativize( hb_PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
-   ENDIF
-
-   RETURN ""
-
-FUNCTION hbmk_Macro( ctx, cString )
-
-   LOCAL hbmk := ctx_to_hbmk( ctx )
-
-   IF hbmk != NIL .AND. HB_ISSTRING( cString )
-      RETURN MacroProc( hbmk, cString )
-   ENDIF
-
-   RETURN ""
-
 FUNCTION hbmk_OutStd( ctx, cText )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
@@ -9468,6 +9449,26 @@ FUNCTION hbmk_OutErr( ctx, cText )
    ENDIF
 
    RETURN NIL
+
+FUNCTION hbmk_PathFromWorkdirToCWD( ctx )
+
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+
+   IF hbmk != NIL .AND. HB_ISSTRING( hbmk[ _HBMK_cWorkDir ] )
+      RETURN hb_DirSepAdd( hb_PathRelativize( hb_PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
+   ENDIF
+
+   RETURN ""
+
+FUNCTION hbmk_Macro( ctx, cString )
+
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+
+   IF hbmk != NIL .AND. HB_ISSTRING( cString )
+      RETURN MacroProc( hbmk, cString )
+   ENDIF
+
+   RETURN ""
 
 FUNCTION hbmk_PathSepToTarget( ctx, cFileName )
 
@@ -10208,6 +10209,14 @@ STATIC FUNCTION FNameDirExtSet( cFileName, cDirNew, cExtNew )
    ENDIF
 
    RETURN hb_FNameMerge( cDir, cName, cExt )
+
+STATIC FUNCTION FNameDirName( cFileName )
+
+   LOCAL cDir, cName
+
+   hb_FNameSplit( cFileName, @cDir, @cName )
+
+   RETURN hb_FNameMerge( cDir, cName )
 
 STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
 
@@ -11891,7 +11900,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    ENDIF
 
    cFileName := hb_FNameMerge( cPath, cFile, ".lnk" )
-   /* it is blinker extension, look for .lnk file in paths
+   /* it is Blinker extension, look for .lnk file in paths
     * specified by LIB envvar
     */
    IF ! hb_FileExists( cFileName ) .AND. ;
@@ -11935,8 +11944,8 @@ STATIC FUNCTION rtlnk_tokens( cLine )
 
    RETURN hb_ATokens( StrTran( cLine, ",", " , " ) )
 
-STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
-                               aPrevFiles )
+STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
+                               aLibList, aLibPath, aPrevFiles )
 
    LOCAL cLine, cWord
    LOCAL nMode
@@ -11954,7 +11963,10 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
             IF LEFTEQUAL( cWord, "#" )
                EXIT
             ELSEIF nMode == RTLNK_MODE_OUT
-               cFileOut := cWord
+               cFileOut := hb_DirSepToOS( cWord )
+               IF Lower( hb_FNameExt( cFileOut ) ) == ".exe"
+                  cFileOut := FNameDirName( cFileOut )
+               ENDIF
                nMode := RTLNK_MODE_FILENEXT
             ELSEIF nMode == RTLNK_MODE_FILE
                IF !( cWord == "," )
@@ -11965,7 +11977,10 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                ENDIF
             ELSEIF nMode == RTLNK_MODE_LIB
                IF !( cWord == "," )
-                  AAdd( aLibList, hb_DirSepToOS( cWord ) )
+                  AAdd( aLibList, hb_FNameName( hb_DirSepToOS( cWord ) ) )
+                  IF ! Empty( hb_FNameDir( hb_DirSepToOS( cWord ) ) )
+                     AAddNew( aLibPath, hb_FNameDir( hb_DirSepToOS( cWord ) ) )
+                  ENDIF
                   nMode := RTLNK_MODE_LIBNEXT
                ENDIF
             ELSEIF nMode == RTLNK_MODE_SKIP
@@ -11987,7 +12002,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot open file: %1$s" ), cWord ) )
                   RETURN .F.
                ENDIF
-               IF ! rtlnk_process( hbmk, cCommands, @cFileOut, @aFileList, @aLibList, aPrevFiles )
+               IF ! rtlnk_process( hbmk, cCommands, @cFileOut, @aFileList, @aLibList, @aLibPath, aPrevFiles )
                   RETURN .F.
                ENDIF
             ELSE
@@ -12004,9 +12019,9 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                          LEFTEQUAL( "REFER", cWord ) .OR. ;
                          LEFTEQUAL( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
-                  /* blinker extension */
+                  /* Blinker extension */
                   ELSEIF LEFTEQUAL( "BLINKER", cWord )
-                     /* skip blinker commands */
+                     /* skip Blinker commands */
                      EXIT
                   ELSEIF LEFTEQUAL( "ECHO", cWord )
                      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
@@ -12017,7 +12032,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
                   ELSEIF LEFTEQUAL( "NOBELL", cWord )
                      hbmk[ _HBMK_lBEEP ] := .F.
                      EXIT
-                  ELSE /* TODO: add other blinker commands */
+                  ELSE /* TODO: add other Blinker commands */
                   ENDIF
                ENDIF
             ENDIF
@@ -16006,8 +16021,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    LOCAL aLst_ExampleLib := { ;
       NIL, ;
-      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( I_( "%1$s mylibsrc.prg -omylib -hblib" ), _SELF_NAME_ ) }, ;
-      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( I_( "%1$s mylibsrc.prg -omylib -hblib -inc" ), _SELF_NAME_ ) } }
+      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( I_( "%1$s -hblib mylibsrc.prg -omylib" ), _SELF_NAME_ ) }, ;
+      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( I_( "%1$s -hblib mylibsrc.prg -omylib -inc" ), _SELF_NAME_ ) } }
 
    // ;
 

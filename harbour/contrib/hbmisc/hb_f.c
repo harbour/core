@@ -83,18 +83,9 @@ HB_FUNC( HB_FUSE )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
-   PHB_ITEM arg1_it = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM arg2_it = hb_param( 2, HB_IT_NUMERIC );
-   int      open_flags;
-
-   if( arg1_it )
+   if( HB_ISCHAR( 1 ) )
    {
-      if( arg2_it )
-         open_flags = hb_parni( 2 );
-      else
-         open_flags = 0;
-
-      ft_text->handles[ ft_text->area ]  = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) open_flags );
+      ft_text->handles[ ft_text->area ]  = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) hb_parnidef( 2, FO_READ ) );
       ft_text->offset[ ft_text->area ]   = 0;
       ft_text->recno[ ft_text->area ]    = 1;
       ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_END );
@@ -115,14 +106,12 @@ HB_FUNC( HB_FUSE )
    }
 }
 
-
 HB_FUNC( HB_FRECNO )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
    hb_retnl( ft_text->recno[ ft_text->area ] );
 }
-
 
 static long hb_hbfskip( PFT_TEXT ft_text, char * buffer, HB_SIZE bufsize, int recs )
 {
@@ -242,12 +231,16 @@ HB_FUNC( HB_FREADLN )
    hb_xfree( buffer );
 }
 
-HB_FUNC( HB_FEOF )
+HB_FUNC( HB_FATEOF )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
    hb_retl( ft_text->isEof[ ft_text->area ] );
 }
+
+#if defined( HB_LEGACY_LEVEL4 )
+HB_FUNC_TRANSLATE( HB_FEOF, HB_FATEOF )
+#endif
 
 HB_FUNC( HB_FGOTO )
 {
@@ -365,10 +358,15 @@ HB_FUNC( HB_FSELECT )
    hb_retni( ft_text->area + 1 );
 
    if( HB_ISNUM( 1 ) )
-      ft_text->area = hb_parni( 1 ) - 1;
+   {
+      int area = hb_parni( 1 );
+
+      if( area >= 1 && area <= TEXT_WORKAREAS )
+         ft_text->area = area - 1;
+   }
 }
 
-HB_FUNC( HB_FINFO )                     /* used for debugging */
+HB_FUNC( HB_FINFO )  /* used for debugging */
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
@@ -378,7 +376,7 @@ HB_FUNC( HB_FINFO )                     /* used for debugging */
    hb_storvni( ft_text->recno[ ft_text->area ], -1, 3 );
    hb_storvnint( ft_text->offset[ ft_text->area ], -1, 4 );
    hb_storvnint( ft_text->lastbyte[ ft_text->area ], -1, 5 );
-   hb_storvl(  ft_text->isEof[ ft_text->area ], -1, 6 );
+   hb_storvl( ft_text->isEof[ ft_text->area ], -1, 6 );
 }
 
 /* ------------------------------------------------

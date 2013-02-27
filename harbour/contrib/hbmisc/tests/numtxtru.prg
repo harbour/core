@@ -4,6 +4,8 @@
 
 #require "hbmisc"
 
+#include "inkey.ch"
+
 REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main()
@@ -36,7 +38,7 @@ PROCEDURE Test( cLang )
          ? nTemp
       ENDIF
       IF nTemp % 10000 == 0
-         IF Inkey() == 27
+         IF Inkey() == K_ESC
             EXIT
          ENDIF
       ENDIF

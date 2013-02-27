@@ -96,7 +96,8 @@ DYNAMIC FileFindSize
 DYNAMIC FileFindTime
 DYNAMIC hbmisc_DaysInMonth
 DYNAMIC hb_DynaCall1
-DYNAMIC hb_FEof
+DYNAMIC hb_FAtEof
+DYNAMIC HB_FEof
 DYNAMIC hb_FGoBottom
 DYNAMIC hb_FGoto
 DYNAMIC hb_FGoTop

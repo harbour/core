@@ -4,10 +4,12 @@
 
 #require "hbnf"
 
+#include "fileio.ch"
+
 PROCEDURE Main()
 
    // open a text file here
-   IF ft_FUse( __FILE__, 0 ) > 1
+   IF ft_FUse( __FILE__, FO_READ ) > 1
 
       DO WHILE ! ft_FEof()
          ? "line " + Str( ft_FRecNo(), 2 ) + " " + ft_FReadLn()
@@ -38,7 +40,7 @@ STATIC PROCEDURE my_goto( n_go )
 
    ft_FGoto( n_go )
    ?
-   ? "after ft_FGoto(" + hb_ntos( n_go ) + ")"
+   ? "after ft_FGoto( " + hb_ntos( n_go ) + " )"
    ? "line " + hb_ntos( ft_FRecNo() ) + " is " + LTrim( ft_FReadLn() )
 
    RETURN
