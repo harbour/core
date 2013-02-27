@@ -12,8 +12,8 @@
  */
 
 /* Build with:
-      hbmk2 -hbdyn testdyn.c -otest_x86
-      hbmk2 -hbdyn testdyn.c -otest_x64
+      hbmk2 -hbdyn dyn.c -otest_x86
+      hbmk2 -hbdyn dyn.c -otest_x64
  */
 
 #include "hbapi.h"

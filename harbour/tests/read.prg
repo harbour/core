@@ -4,6 +4,8 @@
 
 // Harbour Get System sample
 
+#include "inkey.ch"
+
 PROCEDURE Main()
 
    LOCAL cName   := "Harbour     "
@@ -13,10 +15,10 @@ PROCEDURE Main()
 
    LOCAL GetList := {}
 
-   SET COLOR TO GR +/ B, W +/ BG
+   SET COLOR TO GR+/B, W+/BG
    CLS
 
-   SET KEY -1 TO ShowVar()
+   SET KEY K_F2 TO ShowVar()
 
    @ 2, 2 SAY "Enter your name  :" GET cName PICTURE "@K!"
    @ 4, 2 SAY "Enter your wish  :" GET cWish
@@ -24,7 +26,7 @@ PROCEDURE Main()
    @ 8, 2 SAY "Object Data      :" GET GetList[ 1 ]:Picture
 
    FOR Counter := 1 TO Len( acVars[ 1 ] )
-      @ Row() + 2, 2 SAY "Array Element[1][" + Str( Counter, 1 ) + "]: " GET acVars[ 1 ][ Counter ]
+      @ Row() + 2, 2 SAY "Array Element[ 1 ][ " + Str( Counter, 1 ) + " ]: " GET acVars[ 1 ][ Counter ]
    NEXT
 
    READ
