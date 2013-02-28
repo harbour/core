@@ -6,8 +6,6 @@
 
 #include "hbclass.ch"
 
-// ;
-
 PROCEDURE Main()
 
    LOCAL o := TTest():New( "one", "two" )
@@ -32,8 +30,6 @@ CREATE CLASS TTest INHERIT TParent
 
 ENDCLASS
 
-// ;
-
 METHOD New( One, Two ) CLASS TTest
 
    ::super:New()
@@ -53,12 +49,8 @@ CREATE CLASS TParent
 
 ENDCLASS
 
-// ;
-
 METHOD New() CLASS TParent
 
    ? "TParent:New()"
 
    RETURN Self
-
-// ;

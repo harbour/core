@@ -53,7 +53,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    hb_SetTermCP( cTermCP,, lBoxChar )
 
    ? OS(), Version(), Date(), Time()
-   ? hb_gtVersion(), hb_gtVersion( 1 )
+   ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )
    ? "Host codpage: " + cHostCP + ", terminal codepage: " + cTermCP
    ?
 

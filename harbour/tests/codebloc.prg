@@ -2,7 +2,11 @@
  * $Id$
  */
 
-// codeblocks test
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
+// codeblock tests
 
 PROCEDURE Main()
 

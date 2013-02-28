@@ -291,9 +291,9 @@ HB_FUNC_EXTERN( NETNAME );
 HB_FUNC( XHB_NETNAME )
 {
    if( hb_parni( 1 ) == 1 )
-      HB_FUNC_EXEC( HB_USERNAME )
+      HB_FUNC_EXEC( HB_USERNAME );
    else
-      HB_FUNC_EXEC( NETNAME )
+      HB_FUNC_EXEC( NETNAME );
 }
 
 HB_FUNC_EXTERN( HB_MEMOWRIT );
@@ -302,9 +302,9 @@ HB_FUNC_EXTERN( MEMOWRIT );
 HB_FUNC( XHB_MEMOWRIT )
 {
    if( HB_ISLOG( 3 ) && ! hb_parl( 3 ) )
-      HB_FUNC_EXEC( HB_MEMOWRIT )
+      HB_FUNC_EXEC( HB_MEMOWRIT );
    else
-      HB_FUNC_EXEC( MEMOWRIT )
+      HB_FUNC_EXEC( MEMOWRIT );
 }
 
 #if ! defined( HB_LEGACY_LEVEL4 )

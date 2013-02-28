@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// see also exthrb.prg
+// see also hrbext.prg
 
 #include "hbhrb.ch"
 
@@ -17,18 +17,18 @@ PROCEDURE Main( x )
    ? "========================="
 
 #if 0
-   ? "Loading( 'exthrb.hrb' )"
-   pHrb := hb_hrbLoad( "exthrb.hrb" )
+   ? "Loading( 'hrbext.hrb' )"
+   pHrb := hb_hrbLoad( "hrbext.hrb" )
 
-   ? "Loading( HB_HRB_BIND_DEFAULT, 'exthrb.hrb' )"
-   pHrb := hb_hrbLoad( HB_HRB_BIND_DEFAULT, "exthrb.hrb" )
+   ? "Loading( HB_HRB_BIND_DEFAULT, 'hrbext.hrb' )"
+   pHrb := hb_hrbLoad( HB_HRB_BIND_DEFAULT, "hrbext.hrb" )
 
-   ? "Loading( HB_HRB_BIND_LOCAL, 'exthrb.hrb' )"
-   pHrb := hb_hrbLoad( HB_HRB_BIND_LOCAL, "exthrb.hrb" )
+   ? "Loading( HB_HRB_BIND_LOCAL, 'hrbext.hrb' )"
+   pHrb := hb_hrbLoad( HB_HRB_BIND_LOCAL, "hrbext.hrb" )
 #endif
 
-   ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1, "HB_HRB_BIND_LOCAL", "HB_HRB_BIND_OVERLOAD" ) ) + ", 'exthrb.hrb' )"
-   pHrb := hb_hrbLoad( n, "exthrb.hrb" )
+   ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1, "HB_HRB_BIND_LOCAL", "HB_HRB_BIND_OVERLOAD" ) ) + ", 'hrbext.hrb' )"
+   pHrb := hb_hrbLoad( n, "hrbext.hrb" )
 
    ? "========================="
 

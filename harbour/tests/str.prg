@@ -10,7 +10,7 @@ PROCEDURE Main()
    __Accept( "Pause before running again with SET FIXED ON: " )
    ? "Running with SET FIXED ON:"
    ?
-   Set( _SET_FIXED, "ON" )
+   Set( _SET_FIXED, .T. )
    test()
 
    RETURN

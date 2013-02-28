@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
       ? "You are using a non graphics capable gt:"
-      ? hb_gtVersion()
+      ? "GT" + hb_gtVersion()
       QUIT
    ENDIF
 
@@ -33,7 +33,7 @@ PROCEDURE Main()
    nFontHeight := hb_gtInfo( HB_GTI_FONTSIZE )
    nFontWidth := hb_gtInfo( HB_GTI_FONTWIDTH )
 
-   cWelcome := "Welcome to the World of Harbour multiplatform Graphics!" + " (" + hb_gtVersion( 0 ) + ")"
+   cWelcome := "Welcome to the World of Harbour multiplatform Graphics!" + " (GT" + hb_gtVersion() + ")"
 
    SetColor( "n/w" )
    @ 0, 0 SAY Space( MaxCol() + 1 )

@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 REQUEST _DBF
 
 PROCEDURE Main()
@@ -210,12 +214,13 @@ PROCEDURE Main()
    Inkey( 0 )
    CLS
 
-   ? 'dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;'
-   ? '                      { "Age",        "N",  3, 0 }, ;'
-   ? '                      { "Date",       "D",  8, 0 }, ;'
-   ? '                      { "Rate",       "N",  6, 2 }, ;'
-   ? '                      { "Memo",       "M", 10, 0 }, ;'
-   ? '                      { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
+   ? 'dbCreate( "newrdd", { ;'
+   ? '   { "First_Name", "C", 20, 0 }, ;'
+   ? '   { "Age",        "N",  3, 0 }, ;'
+   ? '   { "Date",       "D",  8, 0 }, ;'
+   ? '   { "Rate",       "N",  6, 2 }, ;'
+   ? '   { "Memo",       "M", 10, 0 }, ;'
+   ? '   { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
    dbCreate( "newrdd", { ;
       { "First_Name", "C", 20, 0 }, ;

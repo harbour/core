@@ -12,42 +12,46 @@
  */
 
 /*
- * Menu Navigation  - Right and Left arrows keys, ESC to exit
- * After some Right or Left arrows preses
- * in Harbour app all menu items are highlighted
- * an no way to understand which  element is current,
- * with clipper app all is ok.
+ * Menu Navigation - <Right> and <Left> arrow keys, <Esc> to exit
+ * After some <Right> or <Left> arrow preses
  */
 #include "inkey.ch"
 #include "achoice.ch"
 
 MEMVAR p_lHiLiTest
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    // NIL, empty, numeric, and "not handled" - items
    // must be inaccesible and invisible
-   LOCAL aMenu1 := { " --Visky--", "", "not handled" }
+   LOCAL aMenu1 := { " --Wisky--", "", "not handled" }
    LOCAL aMenu2 := { " --Vodka--", " --Water--", NIL, "not handled" }
    LOCAL aMenu3 := { " --Grapa--", 33, "not handled" }
-
-   // for AC_NOITEM mode test
+   // for AC_NOITEM mode tests
    LOCAL aMenu4 := { "", "not handled" }
-
+   LOCAL aMenu5 := { " --Absnt--", "disabled1", "disabled2" }
+   LOCAL aEnab5 := { .F., .F., .F. }
 
    LOCAL lExit := .F.
    LOCAL nCounter := 1
    LOCAL nKeyPressed
 
-   // set to True for items (de)highlighting
-   // algoritm in clipper
+   // set to .T. for items (de)highlighting
+   // algoritm in Clipper
    PUBLIC p_lHiLiTest := .F.
 
-
    SetColor( "W+/N, BG+/B, , , W/N" )
-   cls
-   @ 2, 1 SAY " --Visky--   --Vodka--   --Grapa--"
-   @ 3, 14 SAY "--Water--"
+   CLS
+   @ 2,  1 SAY aMenu1[ 1 ]
+   @ 2, 13 SAY aMenu2[ 1 ]
+   @ 2, 25 SAY aMenu3[ 1 ]
+   @ 2, 37 SAY aMenu4[ 1 ]
+   @ 2, 49 SAY aMenu5[ 1 ]
+   @ 3, 13 SAY aMenu2[ 2 ]
    DO WHILE ! lExit
 
       DO CASE
@@ -58,19 +62,20 @@ PROCEDURE Main()
       CASE nCounter == 3
          AChoice( 2, 25, 3, 35, aMenu3, .T. )
       CASE nCounter == 4
-         // User function cUF2() fill screen with exclamation marks
-         // in clipper it does not get called in AC_NOITEM mode
+         // TOFIX: User function cUF2() fill screen with exclamation marks
+         //        in Clipper it does not get called in AC_NOITEM mode
          AChoice( 2, 37, 3, 47, aMenu4, .T., "cUF2" )
-
+      CASE nCounter == 5
+         AChoice( 2, 49, 4, 59, aMenu5, aEnab5, "cUF2" )
       ENDCASE
 
       nKeyPressed := LastKey()
       IF nKeyPressed == K_ESC
          lExit := .T.
       ELSEIF nKeyPressed == K_RIGHT
-         nCounter := iif( nCounter == 4, 1, nCounter + 1 )
+         nCounter := iif( nCounter == 5, 1, nCounter + 1 )
       ELSEIF nKeyPressed == K_LEFT
-         nCounter := iif( nCounter == 1, 4, nCounter - 1 )
+         nCounter := iif( nCounter == 1, 5, nCounter - 1 )
       ENDIF
 
    ENDDO

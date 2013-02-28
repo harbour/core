@@ -11,8 +11,6 @@
  *
  */
 
-#include "inkey.ch"
-
 PROCEDURE Main( xBlink )
 
    LOCAL bg, fg, n
@@ -20,36 +18,18 @@ PROCEDURE Main( xBlink )
    CLS
    ?
    ? OS(), Version(), Date(), Time()
-   ? hb_gtVersion(), hb_gtVersion( 1 )
+   ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )
    ?
-   Inkey( 0 )
+
    SetBlink( Empty( xBlink ) )
    FOR bg := 0 TO 15
       FOR fg := 0 TO 15
          n := bg * 16 + fg
-         @ 5 + bg, 5 + fg * 4 SAY "[" + NUM2HEX( n ) + "]" COLOR NToColor( n )
+         @ 5 + bg, 5 + fg * 4 SAY "[" + hb_NumToHex( n, 2 ) + "]" COLOR hb_NToColor( n )
       NEXT
    NEXT
    ?
    ?
-   WHILE Inkey( 0 ) != K_ENTER
-   ENDDO
+   Inkey( 0 )
 
    RETURN
-
-STATIC FUNCTION NToColor( nClr )
-
-   RETURN LTrim( Str( Int( nClr % 16 ), 2 ) ) + "/" + ;
-      LTrim( Str( Int( nClr / 16 ), 2 ) )
-
-STATIC FUNCTION NUM2HEX( nVal )
-
-   LOCAL cHex := "", i, n
-
-   FOR i := 1 TO 2
-      n := nVal % 16
-      cHex := Chr( n + iif( n > 9, 55, 48 ) ) + cHex
-      nVal := Int( nVal / 16 )
-   NEXT
-
-   RETURN cHex

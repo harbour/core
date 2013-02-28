@@ -2,18 +2,7 @@
  * $Id$
  */
 
-// ====================================================================
-//
-//     Released to Public Domain.
-//
-//     Functions: Procedure test()
-//                Function cUserFunction()
-//
-//        Tables: use vendor exclusive
-//
-//     Reformatted by Click! 1.10 on Aug-13-1997 at 11:39 pm
-//
-// ====================================================================
+// Released to Public Domain.
 
 #include "achoice.ch"
 #include "inkey.ch"
@@ -21,12 +10,6 @@
 #ifndef __HARBOUR__
 #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
-
-// --------------------------------------------------------------------
-//
-//     Procedure test()
-//
-// --------------------------------------------------------------------
 
 PROCEDURE Main()
 
@@ -192,11 +175,7 @@ PROCEDURE Main()
 
    RETURN
 
-// --------------------------------------------------------------------
 //
-//     Function cUserFunction()
-//
-// --------------------------------------------------------------------
 
 FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
 

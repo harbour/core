@@ -9,10 +9,11 @@
 PROCEDURE Main()
 
    LOCAL i
-   LOCAL cStr := ""
+   LOCAL cStr
 
-   USE "test" NEW
+   USE test NEW
 
+   cStr := ""
    FOR i := 1 TO 100
       cStr += Str( i ) + " " + xToStr( dbInfo( i ) ) + hb_eol()
    NEXT
@@ -26,9 +27,9 @@ PROCEDURE Main()
    cStr += Str( 1000 ) + " " + xToStr( dbInfo( 1000 ) ) + hb_eol()
 
 #ifdef __HARBOUR__
-   MemoWrit( "dbihb.txt", cStr )
+   MemoWrit( "dbi_hb.txt", cStr )
 #else
-   MemoWrit( "dbicl.txt", cStr )
+   MemoWrit( "dbi_cl.txt", cStr )
 #endif
 
    ? dbRecordInfo( 1 )
@@ -44,22 +45,27 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION xToStr( xValue )
+FUNCTION xToStr( xValue )
 
-   SWITCH ValType( xValue )
-   CASE "N"
-      RETURN Str( xValue )
-   CASE "D"
-      RETURN DToC( xValue )
-   CASE "C"
-   CASE "M"
+   LOCAL cType := ValType( xValue )
+
+   DO CASE
+   CASE cType == "C" .OR. cType == "M"
       RETURN xValue
-   CASE "L"
+   CASE cType == "N"
+      RETURN hb_ntos( xValue )
+   CASE cType == "D"
+      RETURN DToC( xValue )
+   CASE cType == "L"
       RETURN iif( xValue, ".T.", ".F." )
-   CASE "A"
-      RETURN "A" + hb_ntos( Len( xValue ) )
-   CASE "U"
+   CASE cType == "U"
       RETURN "NIL"
-   ENDSWITCH
+   CASE cType == "A"
+      RETURN "{.}"
+   CASE cType == "B"
+      RETURN "{|| }"
+   CASE cType == "O"
+      RETURN "[O]"
+   ENDCASE
 
-   RETURN ""
+   RETURN xValue

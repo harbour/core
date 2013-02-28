@@ -51,7 +51,7 @@ proc main()
    inkey( 0 )
 
    /* display infomration aboout used OS, harbour version and GT driver */
-   alert( OS() + ";" + Version() + ";" + hb_gtVersion() )
+   alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
 
    /* database test */
    hb_FNameSplit( hb_argv( 0 ), @cPath, @cName, @cExt, @cDrive )

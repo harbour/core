@@ -3,8 +3,12 @@
  */
 
 //
-// Array test AIns / ADel / ASize / AFill
+// Array test AIns() / ADel() / ASize() / AFill()
 //
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main()
 
@@ -15,44 +19,44 @@ PROCEDURE Main()
    aFirst := AClone( { 1, 2, 4 } )
    AIns( aFirst, 3 )
    aFirst[ 3 ] := "3"
-   ?? "Testing aIns .. "
+   ?? "Testing AIns() ... "
    aDump( aFirst )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
-   ?? "Testing aSize .. "
+   ?? "Testing ASize() ... "
    aDump( aSecond )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
    AIns( aSecond, 3 )
    aSecond[ 3 ] := "3"
-   ?? "Testing aSize + aIns .. "
+   ?? "Testing ASize() + AIns() ... "
    aDump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
-   ?? "Testing aDel .. "
+   ?? "Testing ADel() ... "
    aDump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
    ASize( aSecond, Len( aSecond ) - 1 )
-   ?? "Testing aSize + aDel .. "
+   ?? "Testing ASize() + ADel() ... "
    aDump( aSecond )
 
    AFill( aSecond, "!" )
-   ?? "Testing aFill .. "
+   ?? "Testing AFill() ... "
    aDump( aSecond )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3 )
-   ?? "Testing aFill with start .. "
+   ?? "Testing AFill() with start ... "
    aDump( aMore )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3, 2 )
-   ?? "Testing aFill with start and count .. "
+   ?? "Testing AFill() with start and count ... "
    aDump( aMore )
 
    aMore := { { 1, 2 }, { 3, 4 } }
@@ -61,7 +65,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION aDump( aShow )
+PROCEDURE aDump( aShow )
 
    LOCAL n
 
@@ -74,13 +78,13 @@ FUNCTION aDump( aShow )
       ?? "]= "
       ?? ValType( aShow[ n ] )
       ?? ":"
-      IF ValType( aShow[ n ] ) == "A"             /* Iterate array         */
-         ?? hb_eol()
+      IF HB_ISARRAY( aShow[ n ] ) /* Iterate array */
+         ?
          ?? "["
          aDump( aShow[ n ] )
          ?? "]"
       ELSE
-         ?? aShow[ n ]
+         ?? iif( HB_ISNUMERIC( aShow[ n ] ), hb_ntos( aShow[ n ] ), aShow[ n ] )
       ENDIF
 
       IF n != Len( aShow )
@@ -88,6 +92,6 @@ FUNCTION aDump( aShow )
       ENDIF
 
    NEXT
-   ?? hb_eol()
+   ?
 
-   RETURN NIL
+   RETURN

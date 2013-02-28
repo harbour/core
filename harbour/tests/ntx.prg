@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    LOCAL i := 0
@@ -70,5 +74,9 @@ PROCEDURE Main()
    ENDDO
 
    USE
+
+   hb_dbDrop( "test1.ntx" )
+   hb_dbDrop( "test2.ntx" )
+   hb_dbDrop( "test3.ntx" )
 
    RETURN

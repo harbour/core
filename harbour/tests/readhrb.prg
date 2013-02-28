@@ -43,8 +43,7 @@ STATIC s_aScopes := { ;
    { HB_FS_LOCAL     , "HB_FS_LOCAL" }, ;
    { HB_FS_DYNCODE   , "HB_FS_DYNCODE" }, ;
    { HB_FS_DEFERRED  , "HB_FS_DEFERRED" }, ;
-   { HB_FS_FRAME     , "HB_FS_FRAME" } ;
-}
+   { HB_FS_FRAME     , "HB_FS_FRAME" } }
 
 PROCEDURE Main( cFrom )
 
@@ -62,11 +61,9 @@ PROCEDURE Main( cFrom )
    Set( _SET_ALTERNATE, "readhrb.out" )
    Set( _SET_ALTERNATE, .T. )
 
-   IF cFrom == NIL
-      cFrom := "default.hrb"
-   ELSE
-      cFrom := hb_FNameExtSetDef( cFrom, ".hrb" )
-   ENDIF
+   hb_default( @cFrom, "default" )
+
+   cFrom := hb_FNameExtSetDef( cFrom, ".hrb" )
 
    hFile := FOpen( cFrom )
    IF hFile == F_ERROR

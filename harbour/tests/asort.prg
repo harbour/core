@@ -14,19 +14,18 @@ PROCEDURE Main()
    LOCAL b := { 10 }
    LOCAL c := { 2, .T., "B", NIL, { 1 }, {|| b }, oError, Date(), 1, .F., "A", NIL, Date() - 1, { 0 }, {|| a }, oError }
 
+   ? "Original...:", aDump( a )
+   ? "ASort......:", aDump( ASort( AClone( a ) ) )
+   ? "ASort.block:", aDump( ASort( AClone( a ), , , {| x, y | x < y } ) )
    ?
+   ? "Original...:", aDump( b )
+   ? "ASort......:", aDump( ASort( AClone( b ) ) )
+   ? "ASort.block:", aDump( ASort( AClone( b ), , , {| x, y | x < y } ) )
    ?
-   ? "Original.....:", aDump( a )
-   ? "Asort.c......:", aDump( ASort( AClone( a ) ) )
-   ? "Asort.c.block:", aDump( ASort( AClone( a ), , , {| x, y | x < y } ) )
+   ? "Original...:", aDump( c )
+   ? "ASort......:", aDump( ASort( AClone( c ) ) )
+   ? "ASort.block:", aDump( ASort( AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
    ?
-   ? "Original.....:", aDump( b )
-   ? "Asort.c......:", aDump( ASort( AClone( b ) ) )
-   ? "Asort.c.block:", aDump( ASort( AClone( b ), , , {| x, y | x < y } ) )
-   ?
-   ? "Original.....:", aDump( c )
-   ? "Asort.c......:", aDump( ASort( AClone( c ) ) )
-   ? "Asort.c.block:", aDump( ASort( AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
 
    RETURN
 

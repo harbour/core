@@ -160,16 +160,14 @@ FUNCTION ReferParam()
    PassByValue( {| lEnd | ;
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
-   // Clipper & xHarbour it's .T.
-   // In Harbour it is .F.
+   // Clipper & Harbour it's .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 
    PassByRef( {| lEnd | ;
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
-   // Clipper & xHarbour it's .T.
-   // In Harbour it is .F.
+   // Clipper & Harbour it's .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 

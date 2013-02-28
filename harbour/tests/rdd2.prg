@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 #include "directry.ch"
 #include "ord.ch"
 
@@ -13,7 +17,6 @@
 
 #ifdef WITH_ADS
 #include "ads.ch"
-
 EXTERNAL _ADS
 #endif
 
@@ -40,7 +43,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
       "sombrero grande ridiculo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
 
    DO CASE
-
    CASE Empty( cRDDType )
 
       NotifyUser( "Usage: TESTRDD2 RDDTYPE [ADSMODE]" + hb_eol() + ;
@@ -166,15 +168,15 @@ PROCEDURE Main( cRDDType, cAdsMode )
    // TEST: LastRec()
 
    IF ! LastRec() == MAX_TEST_RECS
-      NotifyUser( "DbAppend and/or LastRec failed" )
+      NotifyUser( "dbAppend() and/or LastRec() failed" )
    ENDIF
 
-   // TEST: DbGoBotom()/GO BOTTOM
+   // TEST: dbGoBottom()/GO BOTTOM
 
    GO BOTTOM
 
    IF ! RecNo() == MAX_TEST_RECS
-      NotifyUser( "DbGoBottom failed" )
+      NotifyUser( "dbGoBottom() failed" )
    ENDIF
 
    // TEST: dbGoTop()/GO TOP
@@ -182,7 +184,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    GO TOP
 
    IF ! RecNo() == 1
-      NotifyUser( "DbGoTop failed" )
+      NotifyUser( "dbGoTop() failed" )
    ENDIF
 
    // Now check each and every record for accuracy

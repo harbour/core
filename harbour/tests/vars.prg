@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 MEMVAR i
 
 PROCEDURE Main( Param1 )

@@ -3,6 +3,7 @@
  */
 
 /* Test Seconds() */
+
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>

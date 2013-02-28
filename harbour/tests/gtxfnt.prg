@@ -14,7 +14,9 @@
 #include "hbgtinfo.ch"
 
 #if ! defined( __HBSCRIPT__HBSHELL )
-REQUEST HB_GT_XWC_DEFAULT
+   #if defined( __PLATFORM__UNIX )
+      REQUEST HB_GT_XWC_DEFAULT
+   #endif
 #endif
 
 proc main()
@@ -37,7 +39,7 @@ proc main()
    next
 
    n := 2
-   ? hb_gtVersion( 0 ), hb_gtVersion( 1 )
+   ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )
    hb_gtInfo( HB_GTI_FONTATTRIBUTE, HB_GTI_FONTA_FIXMETRIC + ;
               HB_GTI_FONTA_CLRBKG + HB_GTI_FONTA_DRAWBOX )
    while n == 2

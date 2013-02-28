@@ -8,13 +8,19 @@
 
 PROCEDURE Main()
 
-   LOCAL o := Test()
+   LOCAL o
 
-   o:Another( "Hello" ) // "Another" message is not defined for Class Test, but
+   CLS
+
+   o := Test()
+
+   // "Another" message is not defined for Class Test, but
    // it will invoke ON ERROR MyErrorManager() method
+   o:Another( "Hello" )
 
-   o:Another := 5  // Notice how __GetMessage() shows a underscored message
+   // Notice how __GetMessage() shows a underscored message
    // as we are setting a DATA value.
+   o:Another := 5
 
    RETURN
 

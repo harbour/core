@@ -998,8 +998,8 @@ msgstr "crear librería estática"
 
 #: hbmk2.prg:7851 hbmk2.prg:11512 hbmk2.prg:12970
 #, c-format
-msgid "create dynamic library"
-msgstr "crear librería dinámica"
+msgid "create dynamic library (with linked Harbour VM)"
+msgstr "crear librería dinámica (con enlace a Harbour VM)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format

@@ -9,10 +9,10 @@ PROCEDURE Main()
    REPLACE Age WITH 1
    ? FIELD->Age
 
-// REPLACE 1->Age WITH 2 // Todo: complete support in harbour.y - AliasAddInt()
-// ? FIELD->Age
+   REPLACE 1->Age WITH 2
+   ? FIELD->Age
 
-// REPLACE 1.5->Age WITH 3 // Will produce "Invalid alias expression"
+// REPLACE 1.5->Age WITH 3  // RTE: "Invalid alias expression"
 // ? FIELD->Age
 
    REPLACE TEST->Age WITH 4
@@ -26,11 +26,11 @@ PROCEDURE Main()
 
    dbCloseArea()
 
-   SELE 2
+   SELECT 2
 
    USE test
 
-// ? ( "0" )->FIRST
+// ? ( "0" )->FIRST  // RTE
    ? ( "B" )->FIRST
    ? ( "2" )->FIRST
    ? 2->FIRST
@@ -38,7 +38,7 @@ PROCEDURE Main()
 
    Inkey( 0 )
 
-// ? ( "0" )->FIRST
+// ? ( "0" )->FIRST  // RTE
    ? Select()
    ? Select( 1 )
    ? Select( 2 )
@@ -77,8 +77,8 @@ PROCEDURE Main()
 
    ? ""  , dbSelectArea()     , Select()
    ? ""  , dbSelectArea( NIL ), Select()
-   ? ""  , dbSelectArea( "" ) , Select()
-   ? " " , dbSelectArea( " " ), Select()
+// ? ""  , dbSelectArea( "" ) , Select()  // RTE
+// ? " " , dbSelectArea( " " ), Select()  // RTE
    ? "0" , dbSelectArea( "0" ), Select()
    ? "1" , dbSelectArea( "1" ), Select()
    ? "2" , dbSelectArea( "2" ), Select()
@@ -93,9 +93,9 @@ PROCEDURE Main()
    ? "I" , dbSelectArea( "I" ), Select()
    ? "J" , dbSelectArea( "J" ), Select()
    ? "K" , dbSelectArea( "K" ), Select()
-   ? "L" , dbSelectArea( "L" ), Select()
+// ? "L" , dbSelectArea( "L" ), Select()  // RTE
    ? "M" , dbSelectArea( "M" ), Select()
-   ? "Z" , dbSelectArea( "Z" ), Select()
-   ? "AA", dbSelectArea( "AA" ), Select()
+// ? "Z" , dbSelectArea( "Z" ), Select()  // RTE
+// ? "AA", dbSelectArea( "AA" ), Select()  // RTE
 
    RETURN

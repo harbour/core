@@ -312,7 +312,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
              * decide what to do with them. We can leave it as is or we can
              * try to overload one symbol so both will point to the same
              * function. For .prg code such overloading will work but not
-             * for C code which makes sth like: HB_FUNC_EXEC( funcname )
+             * for C code which makes sth like: HB_FUNC_EXEC( funcname );
              * In such case we cannot do anything - we cannot even detect
              * such situation. In some cases even linker cannot detect it
              * because C compiler can make autoinlining or some bindings

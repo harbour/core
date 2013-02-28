@@ -2,12 +2,16 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
-   TestIt( "*.*" )
-   TestIt( "\" )
-   TestIt( "..\" )
-   TestIt( "..\*.*" )
+   TestIt( hb_osFileMask() )
+   TestIt( hb_ps() )
+   TestIt( ".." + hb_ps() )
+   TestIt( ".." + hb_ps() + hb_osFileMask() )
 
    RETURN
 
@@ -20,10 +24,10 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a4
    LOCAL a5
 
-// In order to account for documented behavour, this call will ensure
-// that ADir() returns the same length array in both cases.
-// ie: ADir( cSpec ) could return a different length array than
-// ADir( cSpec,,,,,{} )
+   // In order to account for documented behavour, this call will ensure
+   // that ADir() returns the same length array in both cases.
+   // ie: ADir( cSpec ) could return a different length array than
+   // ADir( cSpec, , , , , {} )
 
    a := ADir( cSpec, , , , , {} )
 

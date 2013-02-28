@@ -16,8 +16,11 @@ PROCEDURE Main()
    RETURN
 
 STATIC PROCEDURE StrDump( s )
+
    LOCAL tmp
+
    FOR EACH tmp IN s
       ? Asc( tmp )
    NEXT
+
    RETURN

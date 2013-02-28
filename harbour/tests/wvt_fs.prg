@@ -22,12 +22,12 @@ PROCEDURE Main()
       QUIT
    ENDIF
 
-   ? "GT" + hb_gtVersion( 0 ) + " test"
+   ? "GT" + hb_gtVersion() + " test"
 
    ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. ), "we should be on full screen"
    WAIT
    ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .F. ), "we should be windowed"
-   ?  hb_gtInfo( HB_GTI_ALTENTER, .T. ), "Alt+Enter is now enabled, try it"
+   ?  hb_gtInfo( HB_GTI_ALTENTER, .T. ), "<Alt+Enter> is now enabled, try it"
    DO WHILE Inkey( 0 ) != K_ESC
       ? Row()
    ENDDO

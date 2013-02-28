@@ -4,6 +4,10 @@
 
 // Testing Harbour statics variables management
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 STATIC s_z := "First"
 
 PROCEDURE Main()

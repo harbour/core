@@ -21,7 +21,9 @@ REQUEST _ADS
 
 PROCEDURE Main()
 
-   LOCAL aCampos := { { "Codigo", "C", 6, 0 }, { "Nombre", "C", 35, 0 } }
+   LOCAL aCampos := { ;
+      { "Codigo", "C",  6, 0 }, ;
+      { "Nombre", "C", 35, 0 } }
 
    LOCAL n := 0, h := Array( NFILES )
 

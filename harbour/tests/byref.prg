@@ -15,7 +15,6 @@ PROCEDURE Main()
    ref1( @x )
    ? " In main after ref1 x=", x
 
-
    ? "Managing STATIC variables by reference"
    ? "In main before ref1 s=", s_x
    ref1( @s_x )

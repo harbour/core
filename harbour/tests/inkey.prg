@@ -9,7 +9,7 @@
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 
    Modularization and display improvements by
-   Alejandro de Garate <alex_degarate@hotmail.com>
+   Alejandro de Garate <alex_degarate hotmail com>
 */
 
 #include "inkey.ch"

@@ -1542,22 +1542,23 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          ProcEnvOption( SubStr( cParam, 6 ) )
 
-      CASE cParamL == "-help" .OR. ;
-           cParamL == "--help"
+      CASE cParamL == "-help" .OR. cParamL == "--help" .OR. ;
+           cParamL == "-h" .OR. ;
+           cParamL == "-?"
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T. )
          RETURN _EXIT_HELP
 
-      CASE cParamL == "-longhelp" .OR. ;
-           cParamL == "--longhelp"
+      CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
+           cParamL == "-hh" .OR. ;
+           cParamL == "-??"
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
          RETURN _EXIT_HELP
 
-      CASE cParamL == "-longhelpmd" .OR. ;
-           cParamL == "--longhelpmd"
+      CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
 
          hbmk[ _HBMK_lMarkdown ] := .T.
 
@@ -1612,13 +1613,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            cParamL == "--version"
 
          ShowHeader( hbmk )
-         RETURN _EXIT_OK
-
-      CASE cParamL == "-license" .OR. ;
-           cParamL == "--license"
-
-         ShowHeader( hbmk )
-         ShowLicense( hbmk )
          RETURN _EXIT_OK
 
       ENDCASE
@@ -9402,7 +9396,7 @@ FUNCTION hbmk_FNameEscape( ctx, cFileName )
 #ifdef HB_LEGACY_LEVEL4
       /* legacy calling mode */
       IF HB_ISSTRING( ctx )
-         RETURN FNameEscape( ctx, cFileName, iif( PCount() >= 3, hb_AParams()[ 3 ], NIL ) )
+         RETURN FNameEscape( ctx, cFileName, hb_PValue( 3 ) )
       ENDIF
 #endif
       RETURN NIL
@@ -14162,7 +14156,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    hbshell_gtSelect()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
-      OutErr( hb_StrFormat( I_( "hbshell: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
+      OutErr( hb_StrFormat( I_( "hbshell: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion() ) + _OUT_EOL )
       RETURN
    ENDIF
 
@@ -14751,7 +14745,7 @@ FUNCTION hbshell_gtSelect( cGT )
 
    hb_default( @cGT, __hbshell_gtDefault() )
 
-   IF !( "GT" + hb_gtVersion( 0 ) == cGT )
+   IF !( "GT" + hb_gtVersion() == Upper( cGT ) )
       hb_gtSelect( hb_gtCreate( cGT ) )
       hb_SetTermCP( hb_cdpTerm() )
       IF ! hbsh[ _HBSH_lClipperComp ]
@@ -15379,7 +15373,7 @@ STATIC FUNCTION ExitCodeStr( nResult )
 
    RETURN hb_StrFormat( I_( "unknown: %1$d" ), nResult )
 
-STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
+STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aHdr_Syntax := { ;
       I_( "Syntax:" ), ;
@@ -15426,10 +15420,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-hbexe"             , I_( "create executable (default)" ) }, ;
       { "-hblib"             , I_( "create static library" ) }, ;
       { "-hbdyn"             , I_( "create dynamic library (without linked Harbour VM)" ) }, ;
-      { "-hbdynvm"           , I_( "create dynamic library" ) } }
+      { "-hbdynvm"           , I_( "create dynamic library (with linked Harbour VM)" ) } }
 
    LOCAL aLst_Opt_Help := { ;
-      { "-help|--help"       , I_( "long help" ) } }
+      { "-help"              , I_( "more help" ) } }
 
    LOCAL aLst_Opt_Long := { ;
       NIL, ;
@@ -15580,10 +15574,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-longhelp"          , I_( "long help" ) }, ;
       { "-longhelpmd"        , I_( "long help in Markdown format" ) }, ;
       { "-harbourhelp"       , hb_StrFormat( I_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
-      { "-credits"           , I_( "display Harbour compiler credits" ) }, ;
-      { "-build"             , I_( "display detailed build information (via Harbour compiler)" ) }, ;
-      { "-license|--license" , I_( "display the license" ) }, ;
-      { "-version|--version" , I_( "display version header only" ) } }
+      { "-credits"           , I_( "Harbour compiler credits" ) }, ;
+      { "-build"             , I_( "Harbour compiler build information" ) }, ;
+      { "-version"           , I_( "display version header only" ) } }
 
    LOCAL aHdr_Exit := { ;
       "", ;
@@ -15954,10 +15947,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       e"the majority of build tasks via short and simple project files (options). " + ;
       e"%1$s supports pure -non-Harbour- C/C++/Objective C projects as well. " + ;
       e"In order to achieve above goals, %1$s will autodetect Harbour, C compiler " + ;
-      e"and other required tools and call them appropriately. " + ;
+      e"and other required tools, then configure and call them appropriately. " + ;
       e"%1$s allows to extend the types of supported source files via plugins.\n" + ;
       e"Besides building executables, %1$s is able to run Harbour scripts directly, " + ;
-      e"and it also features an integrated shell prompt." ), _SELF_NAME_ )
+      e"and it also features an interactive shell prompt." ), _SELF_NAME_ )
 
    LOCAL aLst_Desc := { ;
       NIL, ;
@@ -16026,7 +16019,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    // ;
 
-   hb_default( @lFull, .F. )
+   hb_default( @lMore, .F. )
    hb_default( @lLong, .F. )
 
 #ifndef _HBMK_EMBEDDED_
@@ -16037,13 +16030,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
    AAdd( aLst_File, { _EXT_FILE_, hb_StrFormat( I_( "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s" ), _EXT_FILE_ALT, _EXT_FILE_ALT_OS, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
 #endif
    AEval( aHdr_Syntax, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-   IF lFull
+   IF lMore
       AEval( aHdr_Desc, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
       AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
    ENDIF
    AEval( aHdr_Opt, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
    AEval( aLst_Opt_Basic, {| tmp | OutOpt( hbmk, tmp ) } )
-   IF lFull
+   IF lMore
       AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
       AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
       AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
@@ -16253,9 +16246,6 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    NEXT
 
    RETURN
-
-STATIC FUNCTION ShowLicense()
-   RETURN OutStd( LicenseString() )
 
 STATIC FUNCTION LicenseString()
 #pragma __cstream | RETURN %s

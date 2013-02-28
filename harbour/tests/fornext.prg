@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// Testing Harbour For Next loops
+// Testing Harbour FOR NEXT loops
 //
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org

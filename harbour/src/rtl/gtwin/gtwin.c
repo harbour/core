@@ -1862,6 +1862,10 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
          break;
 
+      case HB_GTI_FONTSEL:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         break;
+
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {

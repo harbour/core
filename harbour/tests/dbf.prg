@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    LOCAL nI, aStruct := { ;

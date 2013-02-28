@@ -260,7 +260,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__
-   ? hb_gtVersion( 1 ), hb_gtVersion()
+   ? hb_gtVersion( 1 ), "GT" + hb_gtVersion()
    ? "Host codpage: " + hb_cdpSelect() + ", terminal codepage: " + cTermCP
 #endif
    ? "@ - interrupt, keycodes checking: "
@@ -289,7 +289,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ELSEIF k == K_CTRL_END
          IF Alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
             s := hb_TSToStr( hb_DateTime() ) + hb_eol() + ;
-               "Harbour " + hb_gtVersion() + " clipboard test" + hb_eol()
+               "Harbour GT" + hb_gtVersion() + " clipboard test" + hb_eol()
             ? "New clipboard text: [" + s + "]"
             hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
          ENDIF

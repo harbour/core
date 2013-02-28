@@ -3,7 +3,7 @@
  */
 
 // Testing Harbour file io features
-// using freadstr instead of fread
+// using FReadStr() instead of FRead()
 
 PROCEDURE Main()
 

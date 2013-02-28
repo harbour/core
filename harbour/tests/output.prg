@@ -2,18 +2,23 @@
  * $Id$
  */
 
-// Testing Harbour device management.
+// Testing Harbour device management
+
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
-   OutStd( hb_eol(),  "Testing Harbour device management on", Date() )
-   SET ALTERNATE TO OUTPUT_A ADDITIVE
+   OutStd( hb_eol(), "Testing Harbour device management on", Date() )
+   SET ALTERNATE TO output_a ADDITIVE
    Set( _SET_EXTRAFILE, "output_e.ext", .F. )
-   SET PRINTER TO OUTPUT_P
+   SET PRINTER TO output_p
    SET MARGIN TO 5
    QOut( "SCREEN, EXTRA, NOT ALTERNATE, NOT PRINTER" )
    @ 5, 5 SAY "SCREEN, NOT EXTRA, NOT ALTERNATE NOT PRINTER"

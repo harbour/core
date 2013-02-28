@@ -21,7 +21,7 @@
 #define USER               "sysdba"
 #define PASSWORD           "masterkey"
 #define DATABASE           "127.0.0.1:d:\\fontes\\lixo\\test.gdb"
-#define ERREXIT( status, rc ) { isc_print_status( status ); return rc; }
+#define ERREXIT( status, rc )  { isc_print_status( status ); return rc; }
 #define MAX_BUFFER         1024
 
 int execute( char * exec_str );
@@ -31,31 +31,31 @@ int qclose( void );
 char * getdata( int pos );
 
 
-isc_db_handle     db       = NULL;
-int               dialect  = 1;
-XSQLDA ISC_FAR *  sqlda;
-isc_stmt_handle   stmt     = NULL;
-isc_tr_handle     trans    = NULL;
+isc_db_handle db = NULL;
+int dialect      = 1;
+XSQLDA ISC_FAR * sqlda;
+isc_stmt_handle  stmt  = NULL;
+isc_tr_handle    trans = NULL;
 
 int main()
 {
-   char  dpb[ 48 ];
-   int   i = 0, len;
-   long  status[ 20 ];
+   char dpb[ 48 ];
+   int  i = 0, len;
+   long status[ 20 ];
 
-   dpb[ i++ ]  = isc_dpb_version1;
+   dpb[ i++ ] = isc_dpb_version1;
 
-   dpb[ i++ ]  = isc_dpb_user_name;
-   len         = strlen( USER );
-   dpb[ i++ ]  = ( char ) len;
+   dpb[ i++ ] = isc_dpb_user_name;
+   len        = strlen( USER );
+   dpb[ i++ ] = ( char ) len;
    strncpy( &( dpb[ i ] ), USER, len );
-   i           += len;
+   i += len;
 
-   dpb[ i++ ]  = isc_dpb_password;
-   len         = strlen( PASSWORD );
-   dpb[ i++ ]  = len;
+   dpb[ i++ ] = isc_dpb_password;
+   len        = strlen( PASSWORD );
+   dpb[ i++ ] = len;
    strncpy( &( dpb[ i ] ), PASSWORD, len );
-   i           += len;
+   i += len;
 
    if( isc_attach_database( status, 0, DATABASE, &db, i, dpb ) )
       ERREXIT( status, 1 );
@@ -80,8 +80,8 @@ int main()
 
 int execute( char * exec_str )
 {
-   isc_tr_handle  trans = NULL;
-   long           status[ 20 ];
+   isc_tr_handle trans = NULL;
+   long          status[ 20 ];
 
    if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       ERREXIT( status, 1 );
@@ -97,10 +97,10 @@ int execute( char * exec_str )
 
 int query( char * sel_str )
 {
-   ISC_STATUS  status[ 20 ];
-   XSQLVAR *   var;
+   ISC_STATUS status[ 20 ];
+   XSQLVAR *  var;
 
-   int         n, i, dtype;
+   int n, i, dtype;
 
    if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       ERREXIT( status, 1 );
@@ -141,18 +141,18 @@ int query( char * sel_str )
       switch( dtype )
       {
          case SQL_VARYING:
-            var->sqltype   = SQL_TEXT;
-            var->sqldata   = ( char * ) malloc( sizeof( char ) * var->sqllen + 2 );
+            var->sqltype = SQL_TEXT;
+            var->sqldata = ( char * ) malloc( sizeof( char ) * var->sqllen + 2 );
             break;
          case SQL_TEXT:
-            var->sqldata   = ( char * ) malloc( sizeof( char ) * var->sqllen + 2 );
+            var->sqldata = ( char * ) malloc( sizeof( char ) * var->sqllen + 2 );
             break;
          case SQL_LONG:
-            var->sqltype   = SQL_LONG;
-            var->sqldata   = ( char * ) malloc( sizeof( long ) );
+            var->sqltype = SQL_LONG;
+            var->sqldata = ( char * ) malloc( sizeof( long ) );
             break;
          default:
-            var->sqldata   = ( char * ) malloc( sizeof( char ) * var->sqllen );
+            var->sqldata = ( char * ) malloc( sizeof( char ) * var->sqllen );
             break;
       }
       if( var->sqltype & 1 )
@@ -184,8 +184,8 @@ int query( char * sel_str )
 
 int fetch( void )
 {
-   long  fetch_stat;
-   long  status[ 20 ];
+   long fetch_stat;
+   long status[ 20 ];
 
    fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
@@ -214,22 +214,22 @@ int qclose( void )
 
 char * getdata( int pos )
 {
-   short       dtype;
-   char        data[ MAX_BUFFER ], * p;
-   char        blob_s[ 20 ], date_s[ 25 ];
-   short       len;
-   long        status[ 20 ];
+   short dtype;
+   char  data[ MAX_BUFFER ], * p;
+   char  blob_s[ 20 ], date_s[ 25 ];
+   short len;
+   long  status[ 20 ];
 
-   struct tm   times;
-   ISC_QUAD    bid;
-   XSQLVAR *   var;
+   struct tm times;
+   ISC_QUAD  bid;
+   XSQLVAR * var;
 
    if( ( pos + 1 ) > sqlda->sqln )
       return "error";
 
-   var   = sqlda->sqlvar;
+   var = sqlda->sqlvar;
 
-   var   += pos;
+   var += pos;
 
    dtype = var->sqltype & ~1;
    p     = data;
@@ -240,10 +240,10 @@ char * getdata( int pos )
       {
          case SQL_TEXT:
          case SQL_VARYING:
-            len   = var->sqllen;
+            len = var->sqllen;
             break;
          case SQL_SHORT:
-            len   = 6;
+            len = 6;
             if( var->sqlscale > 0 )
                len += var->sqlscale;
             break;
@@ -258,19 +258,19 @@ char * getdata( int pos )
                len += var->sqlscale;
             break;
          case SQL_FLOAT:
-            len   = 15;
+            len = 15;
             break;
          case SQL_DOUBLE:
-            len   = 24;
+            len = 24;
             break;
          case SQL_TIMESTAMP:
-            len   = 24;
+            len = 24;
             break;
          case SQL_TYPE_DATE:
-            len   = 10;
+            len = 10;
             break;
          case SQL_TYPE_TIME:
-            len   = 13;
+            len = 13;
             break;
          case SQL_BLOB:
          case SQL_ARRAY:
@@ -299,9 +299,9 @@ char * getdata( int pos )
          case SQL_LONG:
          case SQL_INT64:
          {
-            ISC_INT64   value       = 0;
-            short       field_width = 0;
-            short       dscale;
+            ISC_INT64 value       = 0;
+            short     field_width = 0;
+            short     dscale;
 
             switch( dtype )
             {
@@ -321,8 +321,8 @@ char * getdata( int pos )
             dscale = var->sqlscale;
             if( dscale < 0 )
             {
-               ISC_INT64   tens;
-               short       i;
+               ISC_INT64 tens;
+               short     i;
 
                tens = 1;
                for( i = 0; i > dscale; i-- )

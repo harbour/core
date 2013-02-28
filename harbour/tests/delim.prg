@@ -3,8 +3,8 @@
  * $Id$
  */
 
-   // Test program for COPY TO DELIMITED and APPEND FROM DELIMITED
-   // Note: Only COPY TO DELIMITED is fully implemented at this time...
+// Test program for COPY TO DELIMITED and APPEND FROM DELIMITED
+
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-04-18 by David G. Holm <dholm@jsd-llc.com>
@@ -19,7 +19,7 @@ PROCEDURE Main()
    COPY TO test1 DELIMITED
 
    // Copy only address fields for records with salary over 50,000.
-   COPY FIELD first, last, street, city, state, zip TO test2 delimited FOR _field->salary > 50000
+   COPY FIELD first, last, street, city, state, zip TO test2 DELIMITED FOR _field->salary > 50000
 
    // Only copy record 3.
    COPY RECORD 3 TO test3 DELIMITED
@@ -40,7 +40,7 @@ PROCEDURE Main()
    // Copy the last 10 records again.
    GO BOTTOM
    SKIP -9
-   COPY TO test6 delimited WHILE ! Eof()
+   COPY TO test6 DELIMITED WHILE ! Eof()
 
    // Copy only some of the last 10 records.
    GO BOTTOM
@@ -48,7 +48,7 @@ PROCEDURE Main()
    COPY REST TO test7 DELIMITED FOR _field->married
 
    // Try to append from a file that we know does not exist.
-   DELETE file test8.txt
-   APPEND FROM test8 delimited
+   DELETE FILE test8.txt
+   APPEND FROM test8 DELIMITED
 
    RETURN

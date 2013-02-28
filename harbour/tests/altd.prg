@@ -7,7 +7,9 @@
 
 PROCEDURE Main()
 
-   AltD( 1 )   // Enables the debugger. Press F5 to go
+   CLS
+
+   AltD( 1 )   // Enables the debugger. Press <F5> to go
 
    Alert( "debugger enabled" )
 

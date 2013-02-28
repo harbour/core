@@ -958,7 +958,9 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
    ENDIF
 
    IF FONT != NIL .OR. clr != NIL .OR. size != NIL .OR. style != NIL
-      //    cStr +=" Font" +valtype(font)+"color"+valtype(clr)+"size"+valtype(size)+"style"+valtype(style)
+#if 0
+      cStr += " Font" + ValType( font ) + "color" + ValType( clr ) + "size" + ValType( size ) + "style" + ValType( style )
+#endif
       cStr += " <font " + CRLF()
 
       IF FONT != NIL

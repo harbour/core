@@ -1594,7 +1594,7 @@ typedef HB_U32 HB_FATTR;
    #define HB_EXTERN_   extern
 #endif
 
-#define HB_FUNC_EXEC( funcname )   HB_FUN_##funcname();
+#define HB_FUNC_EXEC( funcname )   HB_FUN_##funcname()
 #define HB_FUNC( funcname )        HB_EXTERN_C_ HB_EXPORT HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_EXTERN( funcname ) HB_EXTERN_C_ HB_EXTERN_ HARBOUR HB_EXPORT HB_FUN_##funcname ( void )
 #define HB_FUNC_STATIC( funcname ) static HARBOUR HB_FUN_##funcname ( void )

@@ -4,6 +4,10 @@
 
 // Testing Harbour Error system
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    LOCAL n

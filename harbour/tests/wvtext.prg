@@ -43,8 +43,8 @@ PROCEDURE Main()
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )
    hb_gtInfo( HB_GTI_FONTSIZE , nHeight )
-   hb_gtInfo( HB_GTI_WINTITLE , "GT-Test (Resizable by Font)" )
-   hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow alt-enter for full screen
+   hb_gtInfo( HB_GTI_WINTITLE , "GT-Test (Resizable by FONT)" )
+   hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow <Alt-Enter> for full screen
    SetCursor( SC_NONE )
 
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
@@ -96,7 +96,7 @@ PROCEDURE Main()
             @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
             @ MaxRow() / 2, 0     SAY Space( MaxCol() )
             @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-            @ MaxRow() / 2, 2     SAY "SetMode( 99 , 999 )  ESC-Cancels"
+            @ MaxRow() / 2, 2     SAY "SetMode( 99, 999 )  <Esc>-Cancels"
             @ MaxRow() / 2, 11 GET nModeRows PICTURE "99" RANGE 10, 99
             @ MaxRow() / 2, 16 GET nModeCols PICTURE "999" RANGE 20, 300
             READ
@@ -312,8 +312,8 @@ STATIC PROCEDURE DispScreen()
 
    hb_DispOutAt( 8, 0, PadC( "MODE: " + hb_ntos( MaxRow() + 1 ) + " Rows and " + hb_ntos( nMaxCol ) + " Columns", nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F2 MarkCopy    Toggle >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F3 Resizable   Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZABLE ), "ON ", "Off" ), nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F4 Closable    Toggle > " + iif( hb_gtInfo( HB_GTI_CLOSABLE ), "ON ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, PadC( "< F3 Resizable   Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZABLE ), "On ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, PadC( "< F4 Closable    Toggle > " + iif( hb_gtInfo( HB_GTI_CLOSABLE ), "On ", "Off" ), nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F5 Palette L   Repeat >    ", nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F6 Palette D   Repeat >    ", nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F7 Palette By Index R >    ", nMaxCol ), cColor )
@@ -322,7 +322,7 @@ STATIC PROCEDURE DispScreen()
    hb_DispOutAt( ++nRow, 0, PadC( "<    Click X Button     >    ", nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F9 Resize Mode Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, "ROWS", "FONT" ), nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F10 Open New Window   >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F11 Alt-Enter  Toggle > " + iif( hb_gtInfo( HB_GTI_ALTENTER ), "ON ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, PadC( "< F11 Alt-Enter  Toggle > " + iif( hb_gtInfo( HB_GTI_ALTENTER ), "On ", "Off" ), nMaxCol ), cColor )
    hb_DispOutAt( ++nRow, 0, PadC( "< F12 Change Font Test  > " + hb_gtInfo( HB_GTI_FONTNAME ) + " " + hb_ntos( hb_gtInfo( HB_GTI_FONTWIDTH ) ) + "x" + hb_ntos( hb_gtInfo( HB_GTI_FONTSIZE ) ), nMaxCol ), cColor )
 
    hb_DispOutAt( MaxRow(), 0, Space( MaxCol() + 1 ), "N/G*" )
@@ -397,7 +397,7 @@ PROCEDURE thFunc()
    s_nZy += 20
 
    /* allocate own GT driver */
-   hb_gtReload( hb_gtVersion( 0 ) )
+   hb_gtReload( hb_gtVersion() )
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
    IF ( s_nBrowser % 2 ) != 0

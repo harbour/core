@@ -4,6 +4,10 @@
 
 #include "simpleio.ch"
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 PROCEDURE Main()
 
    ? OS(), Version()

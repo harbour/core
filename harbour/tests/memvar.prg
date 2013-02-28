@@ -4,6 +4,10 @@
 
 // Basic test for memvars handling
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 MEMVAR MEMVAR
 MEMVAR memvar1
 MEMVAR memvar2

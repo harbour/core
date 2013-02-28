@@ -15,7 +15,7 @@
 proc main()
    local cFile := "_tst"
 
-   if ! dbExists( cFile )
+   if ! hb_dbExists( cFile )
       dbCreate( cFile, { { "F", "C", 10, 0 } } )
       use _tst exclusive
       while LastRec() < 100

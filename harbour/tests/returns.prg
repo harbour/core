@@ -18,18 +18,18 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Two( n )
+PROCEDURE Two( n )
 
    DO CASE
    CASE n == 1
       ? "n == 1"
-      RETURN NIL
+      RETURN
 
    CASE n == 2
       ? "n == 2"
-      RETURN NIL
+      RETURN
    ENDCASE
 
    ? "This message should not been seen"
 
-   RETURN NIL
+   RETURN

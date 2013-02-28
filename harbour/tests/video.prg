@@ -9,8 +9,6 @@
  *
  * Redirect the output of this program to a file.
  *
- * ie: vidtest > results
- *
  */
 
 /* UTF-8 */
@@ -117,8 +115,9 @@ STATIC FUNCTION WindowBounce()
    LOCAL nStart
    LOCAL nEnd
    LOCAL i
-   LOCAL aCol    := { "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
-                      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
+   LOCAL aCol := { ;
+      "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
+      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
 
    // initialise boxes
    FOR i := 1 TO nBoxes
@@ -154,10 +153,10 @@ STATIC FUNCTION WindowBounce()
          x[ i ] += dx[ i ]
          y[ i ] += dy[ i ]
          IF x[ i ] <= 0 .OR. x[ i ] + 6 >= MaxRow()
-            dx[ i ] := - dx[ i ]
+            dx[ i ] := -dx[ i ]
          ENDIF
          IF y[ i ] <= 0 .OR. y[ i ] + 12 >= MaxCol()
-            dy[ i ] := - dy[ i ]
+            dy[ i ] := -dy[ i ]
          ENDIF
       NEXT
 
@@ -183,10 +182,11 @@ STATIC FUNCTION ColourBoxes()
    LOCAL nStart
    LOCAL nEnd
    LOCAL i
-   LOCAL nDir    := 1
-   LOCAL nDepth  := 0
-   LOCAL aCol    := { "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
-                      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
+   LOCAL nDir := 1
+   LOCAL nDepth := 0
+   LOCAL aCol := { ;
+      "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
+      "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
 
    nStart := hb_SecondsCPU()
    // display boxes to screen

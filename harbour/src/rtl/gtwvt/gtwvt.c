@@ -2525,6 +2525,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->fontAttribute = hb_itemGetNI( pInfo->pNewVal ) & HB_GTI_FONTA_CTRLCHARS;
          break;
 
+      case HB_GTI_FONTSEL:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         break;
+
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );

@@ -2,16 +2,22 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
+REQUEST DBFCDX
+
 PROCEDURE Main()
 
    LOCAL aRdd := rddList()
-   LOCAL aStruct := { { "CHARACTER", "C", 25, 0 }, ;
-                      { "NUMERIC",   "N",  8, 0 }, ;
-                      { "DOUBLE",    "N",  8, 2 }, ;
-                      { "DATE",      "D",  8, 0 }, ;
-                      { "LOGICAL",   "L",  1, 0 } }
 
-   REQUEST DBFCDX
+   LOCAL aStruct := { ;
+      { "CHARACTER", "C", 25, 0 }, ;
+      { "NUMERIC",   "N",  8, 0 }, ;
+      { "DOUBLE",    "N",  8, 2 }, ;
+      { "DATE",      "D",  8, 0 }, ;
+      { "LOGICAL",   "L",  1, 0 } }
 
    SET EXCLUSIVE OFF
 
