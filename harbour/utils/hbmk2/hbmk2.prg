@@ -10438,6 +10438,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       cLineOri := cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ), cFileName ) )
 
+      #define _PAR_NEW_HBC()  _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() )
+
       DO CASE
       CASE Lower( Left( cLine, Len( "skip="         ) ) ) == "skip="         ; cLine := SubStr( cLine, Len( "skip="         ) + 1 )
 
@@ -10551,11 +10553,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ELSE
                cItem := hb_DirSepToOS( cItem )
                IF Left( cItem, 1 ) == "-"
-                  IF CheckParamLib( hbmk, SubStr( cItem, 2 ), .T., _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+                  IF CheckParamLib( hbmk, SubStr( cItem, 2 ), .T., _PAR_NEW_HBC() )
                      AAddNewNotEmpty( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cItem, 2 ) )
                   ENDIF
                ELSE
-                  IF CheckParamLib( hbmk, cItem, .T., _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+                  IF CheckParamLib( hbmk, cItem, .T., _PAR_NEW_HBC() )
                      IF _IS_AUTOLIBSYSPRE( cItem )
                         AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
                      ELSE
@@ -10649,7 +10651,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      AAddNew( hbmk[ _HBMK_aLIBPATH ], cItem )
                   ENDIF
                ELSE
-                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) ) ) )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW_HBC() ) ) )
                ENDIF
             ENDIF
          NEXT
@@ -10661,7 +10663,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                IF CheckParamInc( hbmk, cItem )
                   AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( hb_DirSepToOS( cItem ), hb_FNameDir( cFileName ) ) ) ) )
                ELSE
-                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) ) ) )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW_HBC() ) ) )
                ENDIF
             ENDIF
          NEXT
@@ -10720,22 +10722,22 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "ldflags="      ) ) ) == "ldflags="      ; cLine := SubStr( cLine, Len( "ldflags="      ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTL ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTL ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW_HBC(), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "ldflags+="     ) ) ) == "ldflags+="     ; cLine := SubStr( cLine, Len( "ldflags+="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTLPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTLPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW_HBC(), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "dflags="       ) ) ) == "dflags="       ; cLine := SubStr( cLine, Len( "dflags="       ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTD ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTD ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW_HBC(), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "dflags+="      ) ) ) == "dflags+="      ; cLine := SubStr( cLine, Len( "dflags+="      ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTDPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTDPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW_HBC(), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "pflags="       ) ) ) == "pflags="       ; cLine := SubStr( cLine, Len( "pflags="       ) + 1 )
@@ -10755,21 +10757,21 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lGUI ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lGUI ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "mt="           ) ) ) == "mt="           ; cLine := SubStr( cLine, Len( "mt="           ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lMT ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lMT ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "pic="          ) ) ) == "pic="          ; cLine := SubStr( cLine, Len( "pic="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lPIC ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lPIC ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "shareddef="    ) ) ) == "shareddef="    ; cLine := SubStr( cLine, Len( "shareddef="    ) + 1 )
@@ -10777,84 +10779,84 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             DO CASE
             CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
             CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lSHARED ] := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
-            OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+            OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
             ENDCASE
          ENDIF
       CASE Lower( Left( cLine, Len( "shared="       ) ) ) == "shared="       ; cLine := SubStr( cLine, Len( "shared="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lSHARED ] := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "fullstatic="   ) ) ) == "fullstatic="   ; cLine := SubStr( cLine, Len( "fullstatic="   ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lSHARED ] := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lSHARED ] := .F. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "debug="        ) ) ) == "debug="        ; cLine := SubStr( cLine, Len( "debug="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lDEBUG ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lDEBUG ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "optim="        ) ) ) == "optim="        ; cLine := SubStr( cLine, Len( "optim="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lOPTIM ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lOPTIM ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "nulrdd="       ) ) ) == "nulrdd="       ; cLine := SubStr( cLine, Len( "nulrdd="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lNULRDD ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lNULRDD ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "nodefgt="      ) ) ) == "nodefgt="      ; cLine := SubStr( cLine, Len( "nodefgt="      ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_aLIBCOREGT ] := {}
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_aLIBCOREGT ] := hbmk[ _HBMK_aLIBCOREGTDEF ]
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "map="          ) ) ) == "map="          ; cLine := SubStr( cLine, Len( "map="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lMAP ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lMAP ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "hbcppmm="      ) ) ) == "hbcppmm="      ; cLine := SubStr( cLine, Len( "hbcppmm="      ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lHBCPPMM ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "implib="       ) ) ) == "implib="       ; cLine := SubStr( cLine, Len( "implib="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lIMPLIB ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lIMPLIB ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "winuni="       ) ) ) == "winuni="       ; cLine := SubStr( cLine, Len( "winuni="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lWINUNI ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lWINUNI ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "strip="        ) ) ) == "strip="        ; cLine := SubStr( cLine, Len( "strip="        ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lSTRIP ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lSTRIP ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "cpp="          ) ) ) == "cpp="          ; cLine := SubStr( cLine, Len( "cpp="          ) + 1 )
@@ -10862,7 +10864,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE ValueIsT( cLine )       ; hbmk[ _HBMK_lCPP ] := .T.
          CASE ValueIsF( cLine )       ; hbmk[ _HBMK_lCPP ] := .F.
          CASE Lower( cLine ) == "def" ; hbmk[ _HBMK_lCPP ] := NIL
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "warn="         ) ) ) == "warn="         ; cLine := SubStr( cLine, Len( "warn="         ) + 1 )
@@ -10872,14 +10874,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE Lower( cLine ) == "low"  ; hbmk[ _HBMK_nWARN ] := _WARN_LOW
          CASE Lower( cLine ) == "max"  ; hbmk[ _HBMK_nWARN ] := _WARN_MAX
          CASE Lower( cLine ) == "def"  ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "safe="         ) ) ) == "safe="         ; cLine := SubStr( cLine, Len( "safe="         ) + 1 )
          DO CASE
          CASE ValueIsT( cLine )        ; hbmk[ _HBMK_lSAFE ] := .T.
          CASE ValueIsF( cLine )        ; hbmk[ _HBMK_lSAFE ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "compr="        ) ) ) == "compr="        ; cLine := SubStr( cLine, Len( "compr="        ) + 1 )
@@ -10891,7 +10893,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 #endif
          CASE Lower( cLine ) == "min" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
          CASE Lower( cLine ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "head="         ) ) ) == "head="         ; cLine := SubStr( cLine, Len( "head="         ) + 1 )
@@ -10900,21 +10902,21 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          CASE Lower( cLine ) == "full"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
          CASE Lower( cLine ) == "native"  ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
          CASE Lower( cLine ) == "dep"     ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "run="          ) ) ) == "run="          ; cLine := SubStr( cLine, Len( "run="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lRUN ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lRUN ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "inc="          ) ) ) == "inc="          ; cLine := SubStr( cLine, Len( "inc="          ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lINC ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lINC ] := .F.
-         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
+         OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
       CASE Lower( Left( cLine, Len( "plugins="      ) ) ) == "plugins="      ; cLine := SubStr( cLine, Len( "plugins="      ) + 1 )
@@ -15664,7 +15666,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_Opt_Self := { ;
       NIL, ;
       { "hbrun*|*hbrun" , I_( "mode script runner / interactive shell" ) }, ;
-      { "hbrund"        , I_( "mode script runner in debug mode / interactive shell" ) }, ;
+      { "hbrund|hbrun*d", I_( "mode script runner in debug mode / interactive shell" ) }, ;
       { "harbour"       , I_( "mode -hbraw (emulate -raw- Harbour compiler)" ) }, ;
       { "clipper"       , I_( "mode -hbcmp (emulate Clipper compiler)" ) }, ;
       { "rtlink"        , I_( "mode -rtlink (emulate Clipper linker)" ) }, ;
