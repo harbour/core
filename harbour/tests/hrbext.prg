@@ -11,5 +11,4 @@ FUNCTION Msg()
    RETURN .T.
 
 FUNCTION msg2()
-
    RETURN Msg()

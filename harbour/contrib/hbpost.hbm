@@ -13,20 +13,7 @@
 -prgflag=-i-
 #-prgflag=-u+hbstrict.ch
 
-# It is also supported by official mingw 4.4.x and mingw64 4.4.x,
-# but not supported by mingw tdm 4.4.x, so I only enable it on or
-# above 4.5.0.
-{win&allmingw&HB_COMP_VER>'44'}-ldflag=-Wl,--nxcompat
-{win&allmingw&HB_COMP_VER>'44'}-ldflag=-Wl,--dynamicbase
-{win&allmingw&HB_COMP_VER>'44'}-dflag=-Wl,--nxcompat
-{win&allmingw&HB_COMP_VER>'44'}-dflag=-Wl,--dynamicbase
-
-# MSVS 2005 SP1 also supports it, but we only enable it for 2008 and upper.
-{win&allmsvc&HB_COMP_VER>'1400'}-ldflag=-nxcompat
-{win&allmsvc&HB_COMP_VER>'1400'}-ldflag=-dynamicbase
-{win&allmsvc&HB_COMP_VER>'1400'}-ldflag=-fixed:no
-{win&allmsvc&HB_COMP_VER>'1400'}-dflag=-nxcompat
-{win&allmsvc&HB_COMP_VER>'1400'}-dflag=-dynamicbase
+-safe
 
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows
