@@ -54,8 +54,7 @@
 
 proc main()
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    /* connect to the server */
    ? "CONNECTING..."

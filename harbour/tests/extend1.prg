@@ -10,7 +10,7 @@ PROCEDURE Main()
 
    LOCAL uVar
 
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? "Testing Harbour Extended system:"
    ? "================================"

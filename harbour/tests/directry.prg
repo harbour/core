@@ -18,7 +18,7 @@ PROCEDURE Main( filespec, attribs, cshort )
 // aDir := ASort( Directory( filespec, attribs, lShort ),,, {| x, y | Upper( x[ F_NAME ] ) < Upper( y[ F_NAME ] ) } )
    aDir := Directory( filespec, attribs, lShort )
 
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    FOR x := 1 TO Len( aDir )
       ? ;

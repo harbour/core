@@ -704,12 +704,11 @@
    $DESCRIPTION$
       HB_VALTOSTR can be used to convert any scalar value to a string.
    $EXAMPLES$
-      SET DATE ANSI
-      SET CENTURY ON
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
       ? hb_ValToStr( 4 ) == "         4"
       ? hb_ValToStr( 4.0 / 2 ) == "         2.00"
       ? hb_ValToStr( "String" ) == "String"
-      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "2001.01.01"
+      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "2001-01-01"
       ? hb_ValToStr( NIL ) == "NIL"
       ? hb_ValToStr( .F. ) == ".F."
       ? hb_ValToStr( .T. ) == ".T."

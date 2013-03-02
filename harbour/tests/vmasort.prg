@@ -22,8 +22,7 @@ PROCEDURE Main( nPass )
    aTest := aMkArray( nPass )
    aOrig := AClone( aTest )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? "Original.....:", aDump( aOrig )
    ? "asort.c......:", aDump( ASort( aTest ) )

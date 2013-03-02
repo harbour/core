@@ -217,7 +217,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
    cRet := ""
    nRetLen := 0
-   /* 2004/05/04 - <maurilio.longo@libero.it>
+   /* 2004-05-04 - <maurilio.longo@libero.it>
       Instead of receiving a single char at a time until after we have the full mail, let's receive as
       much as we can and stop when we reach EOM (end of mail :)) sequence. This way is _a lot_ faster
    */
@@ -229,7 +229,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
       cRet += Left( cBuffer, nRead )
 
-      /* 2005/11/24 - <maurilio.longo@libero.it>
+      /* 2005-11-24 - <maurilio.longo@libero.it>
                       "- Len( cEOM )" to be sure to always find a full EOM,
                       otherwise if response breaks EOM in two, it will never
                       be found

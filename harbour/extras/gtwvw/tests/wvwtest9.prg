@@ -173,8 +173,7 @@ PROCEDURE Main()
 
    Set( _SET_EVENTMASK, INKEY_ALL )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SET SCOREBOARD OFF
    // wvw_SetPaintRefresh( 0 )
    wvw_SetVertCaret( .T. )

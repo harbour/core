@@ -162,8 +162,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
 #endif
    local nMT, cExclude, lScale, cParam, cMemTests, lSyntax, i, j
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    lSyntax := lScale := .f.
    cMemTests := "030 031 023 025 027 041 042 044 053 054 019 022 032 033 055 056 "

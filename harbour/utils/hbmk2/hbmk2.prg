@@ -679,7 +679,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    /* for temp debug messages */
 
-   Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    /* Check if we should go into shell mode */
 
@@ -1729,7 +1729,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_CPLR   , ;
       aLIB_BASE_3      , ;
       aLIB_BASE_3_MT   , ;
-      { cLIB_BASE_PCRE } , ;
+      { cLIB_BASE_PCRE }, ;
       { cLIB_BASE_ZLIB } } )
 
    hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] = <major><minor>[.<revision>] */
@@ -1872,8 +1872,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
       aCOMPDET := { ;
-         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-",, "wce" } , ;
-         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-",, "wce" } , ;
+         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-",, "wce" }, ;
+         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-",, "wce" }, ;
          { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "gcc",,, "cygwin" }, ;
          { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" }, ; /* tdragon DWARF-2 build */
          { {|| FindInPath( "x86_64-pc-mingw32-gcc"   ) }, "mingw64" }, ; /* Equation Solution build */
@@ -1882,7 +1882,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" }, ; /* mingw-w64 build */
          { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ) }, "mingw" }, ;
          { {|| iif( Empty( GetEnv( "WATCOM" ) ), ;
-                    NIL , ;
+                    NIL, ;
                     FindInPath( "wcc386" ) ) }, "watcom" }, ;
          { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" }, ;
          { {|| FindInPath( "armasm.exe" ) }, "msvcarm" }, ;
@@ -1917,9 +1917,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" }, ;
          { {|| FindInPath( "armasm.exe" ) }, "msvcarm" }, ;
          { {|| FindInPath( "pocc.exe"   ) }, "poccarm" }, ;
-         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } , ;
-         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } , ;
-         { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } , ;
+         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" }, ;
+         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" }, ;
+         { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" }, ;
          { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCSUFFIX ] ), ;
                FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] ), ;
                NIL ) }, "mingwarm" } }
@@ -7520,7 +7520,7 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
       "-Wl,--allow-multiple-definition", ; /* gcc */
       "muldefs", ; /* ld '-z muldefs' */
       "force:multiple", ; /* msvc, pocc, watcom, xcc */
-      "w-dup" , ; /* bcc */
+      "w-dup", ; /* bcc */
       "w-dpl" } /* bcc (for libs) */
 
    IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
@@ -8363,95 +8363,95 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
 
                IF t_hExclStd == NIL
                   t_hExclStd := { ;
-                     "assert.h"       => NIL , ; /* Standard C */
-                     "ctype.h"        => NIL , ;
-                     "errno.h"        => NIL , ;
-                     "float.h"        => NIL , ;
-                     "limits.h"       => NIL , ;
-                     "locale.h"       => NIL , ;
-                     "math.h"         => NIL , ;
-                     "setjmp.h"       => NIL , ;
-                     "signal.h"       => NIL , ;
-                     "stdarg.h"       => NIL , ;
-                     "stddef.h"       => NIL , ;
-                     "stdio.h"        => NIL , ;
-                     "stdlib.h"       => NIL , ;
-                     "string.h"       => NIL , ;
-                     "time.h"         => NIL , ;
-                     "iso646.h"       => NIL , ; /* ISO C NA1 */
-                     "wchar.h"        => NIL , ;
-                     "wctype.h"       => NIL , ;
-                     "complex.h"      => NIL , ; /* ISO C C99 */
-                     "fenv.h"         => NIL , ;
-                     "inttypes.h"     => NIL , ;
-                     "stdbool.h"      => NIL , ;
-                     "stdint.h"       => NIL , ;
-                     "tgmath.h"       => NIL , ;
-                     "unistd.h"       => NIL , ; /* Standard C POSIX */
-                     "aio.h"          => NIL , ;
-                     "arpa/inet.h"    => NIL , ;
-                     "cpio.h"         => NIL , ;
-                     "dirent.h"       => NIL , ;
-                     "dlfcn.h"        => NIL , ;
-                     "fcntl.h"        => NIL , ;
-                     "fmtmsg.h"       => NIL , ;
-                     "fnmatch.h"      => NIL , ;
-                     "ftw.h"          => NIL , ;
-                     "glob.h"         => NIL , ;
-                     "grp.h"          => NIL , ;
-                     "iconv.h"        => NIL , ;
-                     "langinfo.h"     => NIL , ;
-                     "libgen.h"       => NIL , ;
-                     "monetary.h"     => NIL , ;
-                     "mqueue.h"       => NIL , ;
-                     "ndbm.h"         => NIL , ;
-                     "net/if.h"       => NIL , ;
-                     "netdb.h"        => NIL , ;
-                     "netinet/in.h"   => NIL , ;
-                     "netinet/tcp.h"  => NIL , ;
-                     "nl_types.h"     => NIL , ;
-                     "poll.h"         => NIL , ;
-                     "pthread.h"      => NIL , ;
-                     "pwd.h"          => NIL , ;
-                     "regex.h"        => NIL , ;
-                     "sched.h"        => NIL , ;
-                     "search.h"       => NIL , ;
-                     "semaphore.h"    => NIL , ;
-                     "spawn.h"        => NIL , ;
-                     "strings.h"      => NIL , ;
-                     "stropts.h"      => NIL , ;
-                     "sys/ipc.h"      => NIL , ;
-                     "sys/mman.h"     => NIL , ;
-                     "sys/msg.h"      => NIL , ;
-                     "sys/resource.h" => NIL , ;
-                     "sys/select.h"   => NIL , ;
-                     "sys/sem.h"      => NIL , ;
-                     "sys/shm.h"      => NIL , ;
-                     "sys/socket.h"   => NIL , ;
-                     "sys/stat.h"     => NIL , ;
-                     "sys/statvfs.h"  => NIL , ;
-                     "sys/time.h"     => NIL , ;
-                     "sys/times.h"    => NIL , ;
-                     "sys/types.h"    => NIL , ;
-                     "sys/uio.h"      => NIL , ;
-                     "sys/un.h"       => NIL , ;
-                     "sys/utsname.h"  => NIL , ;
-                     "sys/wait.h"     => NIL , ;
-                     "syslog.h"       => NIL , ;
-                     "tar.h"          => NIL , ;
-                     "termios.h"      => NIL , ;
-                     "trace.h"        => NIL , ;
-                     "ulimit.h"       => NIL , ;
-                     "unistd.h"       => NIL , ;
-                     "utime.h"        => NIL , ;
-                     "utmpx.h"        => NIL , ;
-                     "wordexp.h"      => NIL , ;
-                     "windows.h"      => NIL , ; /* OS (win) */
-                     "winspool.h"     => NIL , ;
-                     "shellapi.h"     => NIL , ;
-                     "ole2.h"         => NIL , ;
-                     "dos.h"          => NIL , ; /* OS (dos) */
-                     "os2.h"          => NIL }   /* OS (os2) */
+                     "assert.h"       => NIL, ; /* Standard C */
+                     "ctype.h"        => NIL, ;
+                     "errno.h"        => NIL, ;
+                     "float.h"        => NIL, ;
+                     "limits.h"       => NIL, ;
+                     "locale.h"       => NIL, ;
+                     "math.h"         => NIL, ;
+                     "setjmp.h"       => NIL, ;
+                     "signal.h"       => NIL, ;
+                     "stdarg.h"       => NIL, ;
+                     "stddef.h"       => NIL, ;
+                     "stdio.h"        => NIL, ;
+                     "stdlib.h"       => NIL, ;
+                     "string.h"       => NIL, ;
+                     "time.h"         => NIL, ;
+                     "iso646.h"       => NIL, ; /* ISO C NA1 */
+                     "wchar.h"        => NIL, ;
+                     "wctype.h"       => NIL, ;
+                     "complex.h"      => NIL, ; /* ISO C C99 */
+                     "fenv.h"         => NIL, ;
+                     "inttypes.h"     => NIL, ;
+                     "stdbool.h"      => NIL, ;
+                     "stdint.h"       => NIL, ;
+                     "tgmath.h"       => NIL, ;
+                     "unistd.h"       => NIL, ; /* Standard C POSIX */
+                     "aio.h"          => NIL, ;
+                     "arpa/inet.h"    => NIL, ;
+                     "cpio.h"         => NIL, ;
+                     "dirent.h"       => NIL, ;
+                     "dlfcn.h"        => NIL, ;
+                     "fcntl.h"        => NIL, ;
+                     "fmtmsg.h"       => NIL, ;
+                     "fnmatch.h"      => NIL, ;
+                     "ftw.h"          => NIL, ;
+                     "glob.h"         => NIL, ;
+                     "grp.h"          => NIL, ;
+                     "iconv.h"        => NIL, ;
+                     "langinfo.h"     => NIL, ;
+                     "libgen.h"       => NIL, ;
+                     "monetary.h"     => NIL, ;
+                     "mqueue.h"       => NIL, ;
+                     "ndbm.h"         => NIL, ;
+                     "net/if.h"       => NIL, ;
+                     "netdb.h"        => NIL, ;
+                     "netinet/in.h"   => NIL, ;
+                     "netinet/tcp.h"  => NIL, ;
+                     "nl_types.h"     => NIL, ;
+                     "poll.h"         => NIL, ;
+                     "pthread.h"      => NIL, ;
+                     "pwd.h"          => NIL, ;
+                     "regex.h"        => NIL, ;
+                     "sched.h"        => NIL, ;
+                     "search.h"       => NIL, ;
+                     "semaphore.h"    => NIL, ;
+                     "spawn.h"        => NIL, ;
+                     "strings.h"      => NIL, ;
+                     "stropts.h"      => NIL, ;
+                     "sys/ipc.h"      => NIL, ;
+                     "sys/mman.h"     => NIL, ;
+                     "sys/msg.h"      => NIL, ;
+                     "sys/resource.h" => NIL, ;
+                     "sys/select.h"   => NIL, ;
+                     "sys/sem.h"      => NIL, ;
+                     "sys/shm.h"      => NIL, ;
+                     "sys/socket.h"   => NIL, ;
+                     "sys/stat.h"     => NIL, ;
+                     "sys/statvfs.h"  => NIL, ;
+                     "sys/time.h"     => NIL, ;
+                     "sys/times.h"    => NIL, ;
+                     "sys/types.h"    => NIL, ;
+                     "sys/uio.h"      => NIL, ;
+                     "sys/un.h"       => NIL, ;
+                     "sys/utsname.h"  => NIL, ;
+                     "sys/wait.h"     => NIL, ;
+                     "syslog.h"       => NIL, ;
+                     "tar.h"          => NIL, ;
+                     "termios.h"      => NIL, ;
+                     "trace.h"        => NIL, ;
+                     "ulimit.h"       => NIL, ;
+                     "unistd.h"       => NIL, ;
+                     "utime.h"        => NIL, ;
+                     "utmpx.h"        => NIL, ;
+                     "wordexp.h"      => NIL, ;
+                     "windows.h"      => NIL, ; /* OS (win) */
+                     "winspool.h"     => NIL, ;
+                     "shellapi.h"     => NIL, ;
+                     "ole2.h"         => NIL, ;
+                     "dos.h"          => NIL, ; /* OS (dos) */
+                     "os2.h"          => NIL }  /* OS (os2) */
                ENDIF
 
                IF StrTran( Lower( cHeader ), "\", "/" ) $ t_hExclStd
@@ -11139,7 +11139,7 @@ STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
 STATIC FUNCTION hbmk_builtin_List()
 
    STATIC s_hHBM_BuiltIn := { ;
-      _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" => {|| hbmk_builtin_File_hb_pkg_dynlib() } , ;
+      _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" => {|| hbmk_builtin_File_hb_pkg_dynlib() }, ;
       _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" => {|| hbmk_builtin_File_hb_pkg_install() } }
 
    RETURN s_hHBM_BuiltIn
@@ -13995,8 +13995,8 @@ STATIC FUNCTION __plugin_ext()
 FUNCTION __hbshell_plugin()
    RETURN { ;
       "id"   => "ext", ;
-      "init" => {| hConIO | __init( hConIO ) } , ;
-      "exit" => {| context | HB_SYMBOL_UNUSED( context ) } , ;
+      "init" => {| hConIO | __init( hConIO ) }, ;
+      "exit" => {| context | HB_SYMBOL_UNUSED( context ) }, ;
       "cmd"  => {| context, cCommand | __command( context, cCommand ) } }
 
 STATIC FUNCTION __init( hConIO )
@@ -14096,7 +14096,7 @@ STATIC FUNCTION __hbshell_plugins()
 STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
 
    LOCAL hConIO := { ;
-      "displine"  => {| c | __hbshell_ToConsole( c ) } , ;
+      "displine"  => {| c | __hbshell_ToConsole( c ) }, ;
       "gethidden" => {|| __hbshell_GetHidden() } }
 
    LOCAL plugin
@@ -14641,56 +14641,56 @@ STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
    a full-screen CUI ("interactive") app */
 STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
    RETURN { ;
-      "COL"              => NIL , ;
-      "DISPBEGIN"        => NIL , ;
-      "DISPBOX"          => NIL , ;
-      "DISPCOUNT"        => NIL , ;
-      "DISPEND"          => NIL , ;
-      "DISPOUT"          => NIL , ;
-      "DISPOUTAT"        => NIL , ;
-      "HB_CLRAREA"       => NIL , ;
-      "HB_DISPBOX"       => NIL , ;
-      "HB_DISPOUTAT"     => NIL , ;
-      "HB_DISPOUTATBOX"  => NIL , ;
-      "HB_KEYCLEAR"      => NIL , ;
-      "HB_KEYINS"        => NIL , ;
-      "HB_KEYLAST"       => NIL , ;
-      "HB_KEYNEXT"       => NIL , ;
-      "HB_KEYPUT"        => NIL , ;
-      "HB_KEYSETLAST"    => NIL , ;
-      "HB_KEYSTD"        => NIL , ;
-      "HB_MGETBOUNDS"    => NIL , ;
-      "HB_MMIDDLEDOWN"   => NIL , ;
-      "HB_SCRMAXCOL"     => NIL , ;
-      "HB_SCRMAXROW"     => NIL , ;
-      "HB_SCROLL"        => NIL , ;
-      "HB_SHADOW"        => NIL , ;
-      "INKEY"            => NIL , ;
-      "LASTKEY"          => NIL , ;
-      "MAXCOL"           => NIL , ;
-      "MAXROW"           => NIL , ;
-      "MCOL"             => NIL , ;
-      "MDBLCLK"          => NIL , ;
-      "MHIDE"            => NIL , ;
-      "MLEFTDOWN"        => NIL , ;
-      "MPRESENT"         => NIL , ;
-      "MRESTSTATE"       => NIL , ;
-      "MRIGHTDOWN"       => NIL , ;
-      "MROW"             => NIL , ;
-      "MSAVESTATE"       => NIL , ;
-      "MSETBOUNDS"       => NIL , ;
-      "MSETCURSOR"       => NIL , ;
-      "MSETPOS"          => NIL , ;
-      "MSHOW"            => NIL , ;
-      "NEXTKEY"          => NIL , ;
-      "RESTSCREEN"       => NIL , ;
-      "ROW"              => NIL , ;
-      "SAVESCREEN"       => NIL , ;
-      "SCROLL"           => NIL , ;
-      "SETCOLOR"         => NIL , ;
-      "SETCURSOR"        => NIL , ;
-      "SETMODE"          => NIL , ;
-      "SETPOS"           => NIL , ;
+      "COL"              => NIL, ;
+      "DISPBEGIN"        => NIL, ;
+      "DISPBOX"          => NIL, ;
+      "DISPCOUNT"        => NIL, ;
+      "DISPEND"          => NIL, ;
+      "DISPOUT"          => NIL, ;
+      "DISPOUTAT"        => NIL, ;
+      "HB_CLRAREA"       => NIL, ;
+      "HB_DISPBOX"       => NIL, ;
+      "HB_DISPOUTAT"     => NIL, ;
+      "HB_DISPOUTATBOX"  => NIL, ;
+      "HB_KEYCLEAR"      => NIL, ;
+      "HB_KEYINS"        => NIL, ;
+      "HB_KEYLAST"       => NIL, ;
+      "HB_KEYNEXT"       => NIL, ;
+      "HB_KEYPUT"        => NIL, ;
+      "HB_KEYSETLAST"    => NIL, ;
+      "HB_KEYSTD"        => NIL, ;
+      "HB_MGETBOUNDS"    => NIL, ;
+      "HB_MMIDDLEDOWN"   => NIL, ;
+      "HB_SCRMAXCOL"     => NIL, ;
+      "HB_SCRMAXROW"     => NIL, ;
+      "HB_SCROLL"        => NIL, ;
+      "HB_SHADOW"        => NIL, ;
+      "INKEY"            => NIL, ;
+      "LASTKEY"          => NIL, ;
+      "MAXCOL"           => NIL, ;
+      "MAXROW"           => NIL, ;
+      "MCOL"             => NIL, ;
+      "MDBLCLK"          => NIL, ;
+      "MHIDE"            => NIL, ;
+      "MLEFTDOWN"        => NIL, ;
+      "MPRESENT"         => NIL, ;
+      "MRESTSTATE"       => NIL, ;
+      "MRIGHTDOWN"       => NIL, ;
+      "MROW"             => NIL, ;
+      "MSAVESTATE"       => NIL, ;
+      "MSETBOUNDS"       => NIL, ;
+      "MSETCURSOR"       => NIL, ;
+      "MSETPOS"          => NIL, ;
+      "MSHOW"            => NIL, ;
+      "NEXTKEY"          => NIL, ;
+      "RESTSCREEN"       => NIL, ;
+      "ROW"              => NIL, ;
+      "SAVESCREEN"       => NIL, ;
+      "SCROLL"           => NIL, ;
+      "SETCOLOR"         => NIL, ;
+      "SETCURSOR"        => NIL, ;
+      "SETMODE"          => NIL, ;
+      "SETPOS"           => NIL, ;
       "SETPOSBS"         => NIL }
 
 STATIC FUNCTION __hbshell_detect_CUI_extern_negative()
@@ -15745,7 +15745,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
-      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) } , ;
+      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) }, ;
       { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm", hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of installing targets and related package files to standard locations (in the style of Harbour contribs)." ), _SELF_NAME_ ) } }
 
    LOCAL aHdr_Macro := { ;
@@ -16033,7 +16033,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ), ;
       I_( "Defaults and feature support may vary by platform/compiler." ), ;
       hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
-      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ) , ;
+      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ), ;
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform." ), Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
 

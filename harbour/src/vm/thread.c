@@ -267,7 +267,7 @@ void hb_threadReleaseCPU( void )
 
 #elif defined( HB_OS_OS2 )
 
-   /* 2000.11.23 - maurilio.longo@libero.it
+   /* 2000-11-23 - maurilio.longo@libero.it
       Minimum time slice under OS/2 is 32 milliseconds, passed 1 will be rounded to 32 and
       will give a chance to threads of lower priority to get executed.
       Passing 0 causes current thread to give up its time slice only if there are threads of

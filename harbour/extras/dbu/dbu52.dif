@@ -1,6 +1,6 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2012-05-02 16:47:37.000000000 +0200
++++ dbu52pat/dbu.prg	2013-03-02 02:00:25.000000000 +0100
 @@ -9,6 +9,10 @@
  *
  */
@@ -12,13 +12,12 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
  PROCEDURE Dbu( param1, param2, param3 )
     
     PUBLIC n_files,keystroke,lkey,frame,sframe,cur_dir,more_up,more_down,;
-@@ -60,6 +64,15 @@
+@@ -60,6 +64,14 @@
     SAVE SCREEN                                   && the screen you save...
     SET SCOREBOARD OFF                            && who's keeping score, anyhow
     SET KEY 28 TO                                 && some folks need help
 +
-+   SET DATE ANSI
-+   SET CENTURY ON
++   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 +
 +   IF "-utf" $ Lower( hb_cmdLine() )
 +      hb_cdpSelect( "UTF8EX" )
@@ -28,7 +27,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        * make it pretty
-@@ -100,10 +113,10 @@
+@@ -100,10 +112,10 @@
     * system constants
     more_up = CHR(24)                             && visual up arrow
     more_down = CHR(25)                           && visual down arrow
@@ -43,7 +42,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * global variables
     STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
-@@ -250,7 +263,7 @@
+@@ -250,7 +262,7 @@
     @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
     "F7        F8       "
     show_keys()
@@ -52,7 +51,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     error_msg(view_err)
     
     * when to bubble up
-@@ -346,14 +359,14 @@
+@@ -346,14 +358,14 @@
     help_title[22] = "REPLACE"
     
     * arrays for file names in default directory
@@ -71,7 +70,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     * default to set view
     local_func = 0                                && local menu
-@@ -370,7 +383,7 @@
+@@ -370,7 +382,7 @@
        
        DO CASE
           
@@ -80,7 +79,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           * file extension entered
           IF .NOT. FILE(com_line)
              * file must exist
-@@ -378,13 +391,13 @@
+@@ -378,13 +390,13 @@
              
           ENDIF
           
@@ -98,7 +97,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           
        OTHERWISE
           * file not found..ignore command line
-@@ -395,7 +408,7 @@
+@@ -395,7 +407,7 @@
        IF .NOT. EMPTY(com_line)
           * command line file exists
           
@@ -107,7 +106,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              * assume a valid .VEW file
              view_file = com_line
              set_from(.F.)                        && restore view
-@@ -616,8 +629,8 @@
+@@ -616,8 +628,8 @@
              @ 0,0 SAY " F1        F2        F3        F4        " +;
              "F5        F6        F7        F8       "
              show_keys()
@@ -118,7 +117,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              
              * accept command entry
              run_com = enter_rc(M->com_line,24,7,127,"@KS73",M->color1)
-@@ -646,18 +659,18 @@
+@@ -646,18 +658,18 @@
           @ 3,0 CLEAR
           
           * rebuild directory arrays..must keep current
@@ -141,7 +140,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
           cur_area = 0                            && re-draw view screen
           sysfunc = 0                             && back to the main view screen
           
-@@ -736,10 +749,10 @@
+@@ -736,10 +748,10 @@
        nPos  := AT( ";", cPath )
  
        // Account for backslash in path

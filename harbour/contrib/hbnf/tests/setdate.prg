@@ -6,8 +6,7 @@
 
 PROCEDURE Main( cDate )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    cDate := iif( cDate == NIL, DToS( Date() ), cDate )
    ? "Setting date to: " + cDate  + "... "

@@ -58,8 +58,7 @@ PROCEDURE Main()
    nRight  := 70
    cColor  := "W+/R,G+/BR,RG+/B,BG+/G,N/GR,GR+/BG,B/GR*"
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    // enable mouse events in CL53/Harbour
 #ifdef _SET_EVENTMASK

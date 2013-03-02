@@ -5,7 +5,7 @@
 /*
  * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
- * Date......: 1993.03.31
+ * Date......: 1993-03-31
  *
  * This is an original work by Dave Pearson and is placed in the public
  * domain.
@@ -16,7 +16,7 @@
  * Modification history:
  * ---------------------
  *
- * 2001.08.19 Modifications for Harbour by Brian Hays, also placed in
+ * 2001-08-19 Modifications for Harbour by Brian Hays, also placed in
  * the public domain.
  *
  */

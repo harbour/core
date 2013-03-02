@@ -74,7 +74,7 @@ PROCEDURE __OutDebug( ... )
  *
  * return a string containing a dump of a variable
  *
- * 2006.09.24
+ * 2006-09-24
  * - Added recursion limit
  * - Added front function with limited parameters and removed support for TAssociative Array
 */

@@ -67,7 +67,7 @@
 
    #include "hb_io.h"
 
-   /* 2004.03.25 - <maurilio.longo@libero.it>
+   /* 2004-03-25 - <maurilio.longo@libero.it>
       not needed anymore as of GCC 3.2.2 */
 
    #include <pwd.h>

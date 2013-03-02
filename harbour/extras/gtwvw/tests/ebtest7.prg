@@ -94,9 +94,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   SET CENTURY ON
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SetMode( 4, 54 )   // a small window
    SetColor( "N/W" )
    wvw_SetFont( 0, "Courier New", 16, - 7 )

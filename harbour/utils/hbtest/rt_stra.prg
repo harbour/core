@@ -485,7 +485,7 @@ PROCEDURE New_STRINGS()
    HBTEST hb_ValToStr( 4 )                     IS "         4"
    HBTEST hb_ValToStr( 4.0 / 2 )               IS "         2.00"
    HBTEST hb_ValToStr( "String" )              IS "String"
-   HBTEST hb_ValToStr( hb_SToD( "20010101" ) ) IS "2001.01.01"
+   HBTEST hb_ValToStr( hb_SToD( "20010101" ) ) IS "2001-01-01"
    HBTEST hb_ValToStr( NIL )                   IS "NIL"
    HBTEST hb_ValToStr( .F. )                   IS ".F."
    HBTEST hb_ValToStr( .T. )                   IS ".T."

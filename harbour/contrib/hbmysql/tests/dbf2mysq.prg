@@ -65,9 +65,9 @@ PROCEDURE Main( ... )
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
 
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   // At present time (2000.10.23) DBFCDX is default RDD and DBFNTX is
+   // At present time (2000-10-23) DBFCDX is default RDD and DBFNTX is
    // now DBF (I mean the one able to handle .dbt-s :-))
    rddSetDefault( "DBF" )
 

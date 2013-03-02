@@ -9,7 +9,7 @@
  * gtwvw draw functions
  * GTWVW is initially created based on:
  *
- * =Id: gtwvt.c,v 1.60 2004/01/26 08:14:07 vouchcac Exp =
+ * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
  *
  * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console

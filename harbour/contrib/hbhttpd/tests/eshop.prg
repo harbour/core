@@ -42,10 +42,9 @@ PROCEDURE Main()
       FErase( ".uhttpd.stop" )
    ENDIF
 
-   rddSetDefault( "DBFCDX" )
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
+   rddSetDefault( "DBFCDX" )
 
    IF ! hb_dbExists( "users.dbf" )
       hb_dbDrop( "users.cdx" )

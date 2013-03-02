@@ -4,7 +4,7 @@
 
 GT API functions
 ================
-By Bil Simser (1999.05.14)
+By Bil Simser (1999-05-14)
 
 Using the gt API requires two steps.
 The gt API interface is kept in gtapi.c. This houses the gt API and
@@ -302,7 +302,7 @@ gtwvt  - GT driver for MS-Windows. It creates its own GUI window
          for use with GTWVT.
  To let the memory refreshed, I must remind
          everybody that it is a superb work of Peter Rees contributed
-         to xHarbour on 2003.12.22.
+         to xHarbour on 2003-12-22.
 gtwvg  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
          GTWVG ( WVTGUI in xHarbour ) offers functions and classes to
          present a console application look like a windows one.

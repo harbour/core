@@ -10,8 +10,7 @@ REQUEST ADORDD
 
 PROCEDURE Main()
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    USE ( hb_DirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
 

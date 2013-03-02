@@ -3,7 +3,7 @@
  */
 
                 +---------------------------------------------------------+
-                | 2001.11.22 - Harbour MySQL access classes - readme file |
+                | 2001-11-22 - Harbour MySQL access classes - readme file |
                 +---------------------------------------------------------+
 
 

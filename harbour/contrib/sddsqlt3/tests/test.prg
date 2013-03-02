@@ -19,9 +19,9 @@ PROCEDURE Main()
    hb_SDDSQLITE3_Register()
 #endif
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    rddSetDefault( "SQLMIX" )
-   SET DATE ANSI
-   SET CENTURY ON
 
    AEval( rddList(), {| X | QOut( X ) } )
 

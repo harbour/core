@@ -89,8 +89,7 @@ PROCEDURE Main( cLang )
       "SToD( ansi date)    Returns Clipper date      ", ;
       "Week( dDate, lSWN ) Returns numbef of week    ", }
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    IF HB_ISSTRING( cLang )
       hb_langSelect( cLang )
@@ -224,8 +223,8 @@ FUNCTION bomtest()
 
    DO WHILE c
       @ 5, 10 SAY "BoM(dDate) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), BoM()"
-      @ 7, 10 SAY "should return 2002/10/01. Test it, Insert a date"
+      @ 6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoM()"
+      @ 7, 10 SAY "should return 2002-10-01. Test it, Insert a date"
       @ 9, 10 GET dDate
 
       SET CONFIRM ON
@@ -269,8 +268,8 @@ FUNCTION boqtest()
    DO WHILE c
       @ 5, 10 SAY "BoQ(dDate) returns the date of the first day of the"
       @ 6, 10 SAY "quarter in which dDate is situated. If dDate is"
-      @ 7, 10 SAY "2002/10/15 (that's in yyyy/mm/dd), BoQ() should return"
-      @ 8, 10 SAY "2002/09/01. Test it, Insert a date"
+      @ 7, 10 SAY "2002-10-15 (that's in yyyy-mm-dd), BoQ() should return"
+      @ 8, 10 SAY "2002-09-01. Test it, Insert a date"
 
       @ 9, 10 GET dDate
 
@@ -314,8 +313,8 @@ FUNCTION boytest()
 
    DO WHILE c
       @ 5, 10 SAY "BoY(dDate) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), BoY()"
-      @ 7, 10 SAY "should return 2002/01/01. Test it, Insert a date"
+      @ 6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoY()"
+      @ 7, 10 SAY "should return 2002-01-01. Test it, Insert a date"
       @ 9, 10 GET dDate
 
       SET CONFIRM ON

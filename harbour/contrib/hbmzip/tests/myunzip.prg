@@ -66,8 +66,7 @@ PROCEDURE Main( ... )
    hb_SetTermCP( hb_cdpTerm() )
    Set( _SET_OSCODEPAGE, hb_cdpOS() )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    aWild := { ... }
    IF Len( aWild ) < 1

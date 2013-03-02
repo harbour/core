@@ -111,7 +111,7 @@
 #define SELTOFLAT( ptr )  ( void * ) ( ( ( ( ( ULONG ) ( ptr ) ) >> 19 ) << 16 ) | ( 0xFFFF & ( ( ULONG ) ( ptr ) ) ) )
 
 #if defined( HB_OS_OS2_GCC )
-   /* 2000.03.25 - maurilio.longo@libero.it
+   /* 2000-03-25 - maurilio.longo@libero.it
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>
 #else
@@ -562,7 +562,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                box drawing chars. (Maurilio Longo - maurilio.longo@libero.it)
     */
 
-   /* 2001.08.21 - <maurilio.longo@libero.it>
+   /* 2001-08-21 - <maurilio.longo@libero.it>
       NOTE: Box drawing characters need page 437 to show correctly, so, in your
             config.sys you need to have a CODEPAGE=x,y statement where x or y
             is equal to 437

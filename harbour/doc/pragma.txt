@@ -84,7 +84,7 @@ but with the great benefit that if you forgot to pass the switch, it will
 be used anyway because it is included inside the source.
 
 ===========
-1999.12.01
+1999-12-01
 Regards,
 Jose Lalin <dezac@corevia.com>
 

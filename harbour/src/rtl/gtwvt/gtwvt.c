@@ -1864,11 +1864,11 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_ENTERIDLE:
-         /* FSG - 2004.05.12 - Signal than i'm on idle */
+         /* FSG - 2004-05-12 - Signal than i'm on idle */
          hb_idleState();
          return 0;
 
-      /* Pritpal Bedi - 2008.06.06 */
+      /* Pritpal Bedi - 2008-06-06 */
       case WM_ACTIVATE:
          hb_gt_wvt_AddCharToInputQueue( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_K_LOSTFOCUS : HB_K_GOTFOCUS ) );
          return 0;

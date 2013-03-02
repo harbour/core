@@ -12,8 +12,7 @@ PROCEDURE Main()
       { "Invoice 3", Date() + 1, 0, .T. } }, aSave
    LOCAL nErrorCode := 0
 
-   SET DATE ANSI
-   SET CENTURY OFF /* TOFIX: RTEs with ON */
+   Set( _SET_DATEFORMAT, "yy-mm-dd" ) /* TOFIX: RTEs with "yyyy-mm-dd" */
 
    ft_SaveArr( aArray, "invoice.dat", @nErrorCode )
    IF nErrorCode == 0

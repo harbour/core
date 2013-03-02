@@ -8,8 +8,7 @@ PROCEDURE Main( cZip, ... )
 
    LOCAL a, b, c
 
-   SET DATE TO ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? hb_ZipFile( cZip, hb_AParams() )
 

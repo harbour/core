@@ -56,7 +56,7 @@
 #include "rt_vars.ch"
 
 PROCEDURE Main_DATE()
-   LOCAL cDate := "1999/11/25"
+   LOCAL cDate := "1999-11-25"
 
    /* Year() */
 
@@ -165,10 +165,10 @@ PROCEDURE Main_DATE()
    HBTEST DToC(100)                       IS "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:N:100 F:S"
    HBTEST DToC("")                        IS "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:C: F:S"
 #ifdef __HARBOUR__
-   HBTEST DToC(@sdDate)                   IS "1984.03.25"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST DToC(@sdDate)                   IS "1984-03-25"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   HBTEST DToC(sdDate)                    IS "1984.03.25"
-   HBTEST DToC(sdDateE)                   IS "    .  .  "
+   HBTEST DToC(sdDate)                    IS "1984-03-25"
+   HBTEST DToC(sdDateE)                   IS "    -  -  "
 
    /* CToD() */
 
@@ -176,10 +176,10 @@ PROCEDURE Main_DATE()
    HBTEST CToD(100)                       IS "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:N:100 F:S"
    HBTEST CToD("")                        IS hb_SToD("        ")
 #ifdef __HARBOUR__
-   HBTEST CToD(@cDate)                    IS hb_SToD("19991125")  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999/11/25 F:S" */
+   HBTEST CToD(@cDate)                    IS hb_SToD("19991125")  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999-11-25 F:S" */
 #endif
    HBTEST CToD(cDate)                     IS hb_SToD("19991125")
-   HBTEST CToD("1999/11/25/10")           IS hb_SToD("19991125")
+   HBTEST CToD("1999-11-25/10")           IS hb_SToD("19991125")
 
    /* DToS() */
 

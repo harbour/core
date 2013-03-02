@@ -31,8 +31,7 @@ STATIC FUNCTION TestIt( cSpec )
 
    a := ADir( cSpec, , , , , {} )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    a1 := Array( a )
    a2 := Array( a )

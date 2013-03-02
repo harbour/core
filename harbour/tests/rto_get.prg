@@ -104,8 +104,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
       cArg04 := ""
    ENDIF
 
-   SET DATE ANSI
-   SET CENTURY OFF
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    // ;
 
@@ -1832,23 +1831,14 @@ FUNCTION hb_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION hb_SToD( cDate )
-   LOCAL cOldDateFormat
-   LOCAL dDate
+FUNCTION hb_SToD( s )
 
-   IF ValType( cDate ) == "C" .AND. ! Empty( cDate )
-      cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
+   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
 
-      dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
-                     SubStr( cDate, 5, 2 ) + "/" +;
-                     SubStr( cDate, 7, 2 ) )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   Set( _SET_DATEFORMAT, cDf )
 
-      Set( _SET_DATEFORMAT, cOldDateFormat )
-   ELSE
-      dDate := CToD( "" )
-   ENDIF
-
-   RETURN dDate
+   RETURN dt
 
 #endif
 #endif

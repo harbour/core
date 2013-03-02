@@ -302,21 +302,21 @@ MISCELLANEOUS
      reported of lost input characters.
      Many Thanks to Peter Rees.
 
-2005/06/19
+2005-06-19
  * gtwvw.c
    + wvw_xbShow() to show/hide scrollbar, code by Julio Cesar Cantillo Molina.
 
-2005/04/27
+2005-04-27
  * hbgtwvw.h
  * gtwvw.c
    + hb_wvw_gtSetLastMenuEvent()
    + wvw_SetLastMenuEvent() callable from .prg
 
-2005/04/18:
+2005-04-18:
  * gtwvw.c
    ! hb_wvw_gtSetFont() gave wrong return value when it failed.
 
-2005/04/07:
+2005-04-07:
  * gtwvw.c
    ! bugfix:: gt_Puts(): truncate a too long string in case of MainCoord Mode.
 
@@ -333,7 +333,7 @@ MISCELLANEOUS
     + HB_MSC_STARTUP, to write initialization of MSVC the current way
     )
 
-2005/02/24:
+2005-02-24:
   * contrib/gtwvw/hbgtwvw.h
   * contrib/gtwvw/gtwvw.c
     * changes to enable compilation with DigitalMars C++ (aka
@@ -341,12 +341,12 @@ MISCELLANEOUS
       by Symantec some time ago and enjoy further development
       from DigitalMars. It is another speedy compiler for xHarbour.
 
-2005/02/22:
+2005-02-22:
  Changes by Andi Jahja:
  * gtwvw.c
    * initialization in var declaration, to avoid warnings.
 
-2005/02/20:
+2005-02-20:
  Changes by Andi Jahja:
  * gtwvw.c
    + #include <conio.h> for WATCOMC compiler
@@ -358,40 +358,40 @@ MISCELLANEOUS
  * hbgtwvw.h:
    * changes required by some C compilers
 
-2005/01/14
+2005-01-14
   + contrib/gtwvw/samples/cbtest1.prg
   + contrib/gtwvw/samples/cbtest2.prg
     * Samples on how to use GTWVW combobox.
 
- 2005/01/13:
+ 2005-01-13:
  * gtwvw.c
    + wvw_cbIsDropped() new function
    ! hb_wvw_gtCBProc(): Handle ALT-F4 to avoid GPF if it is pressed when CB on focus
 
- 2005/01/13:
+ 2005-01-13:
  * gtwvw.c
     ! Fixed a hidden bug:
       HB_GT_FUNC( mouse_SetPos ) was using X for row, and Y for col (!).
 
- 2005/01/12:
+ 2005-01-12:
  * gtwvw.c
  * hbgtwvw.h
    * Many type castings by Andi Jahja to allow GTWVW to be compiled in
      MSVC/OW/PellesC/XCC/MinGW32. Thanks!!!
 
- 2004/12/31:
+ 2004-12-31:
  * gtwvw.c
-   Sync with =Id: gtwvt.c,v 1.140 2004/12/28 20:32:33 ptsarenko Exp =
+   Sync with =Id: gtwvt.c,v 1.140 2004-12-28 20:32:33 ptsarenko Exp =
     * use CF_OEMTEXT parameter for clipboard functions for OEM charsets
       by Pavel Tsarenko.
 
- 2004/12/23:
+ 2004-12-23:
  * gtwvw.c
    ! HB_FUNC( WVW_SETICON ) should pass hb_parc(3) instead of hb_parcx(3) to
      hb_wvw_gtSetWindowIcon() in order to allow proper NULL checking there.
      (hb_parcx(3) never returns NULL, even if param 3 is NIL.
 
- 2004/12/22:
+ 2004-12-22:
  Combobox (dropdown listbox) is introduced.
  This feature is accessible throug the WVW_CB* functions.
  (See IMPORTANT NOTES below regarding wvw_cbAddString() and wvw_CBSetCurSel())
@@ -423,13 +423,13 @@ MISCELLANEOUS
  TODO:
  Create a sample of how to integrate combobox into regular GET system.
 
- 2004/11/25:
+ 2004-11-25:
  Synchronizing with:
- =Id: hbgtwvt.h,v 1.32 2004/11/23 17:04:20 lf_sfnet Exp =
- =Id: gtwvt.c,v 1.138 2004/11/25 01:54:13 guerra000 Exp =
- =Id: wvtutils.c,v 1.19 2004/11/23 17:04:23 lf_sfnet Exp =
+ =Id: hbgtwvt.h,v 1.32 2004-11-23 17:04:20 lf_sfnet Exp =
+ =Id: gtwvt.c,v 1.138 2004-11-25 01:54:13 guerra000 Exp =
+ =Id: wvtutils.c,v 1.19 2004-11-23 17:04:23 lf_sfnet Exp =
  (wvtcore.c is not changed since last sync:
- =Id: wvtcore.c,v 1.10 2004/08/30 14:10:20 vouchcac Exp =
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
  )
 
  ------------------
@@ -452,16 +452,16 @@ MISCELLANEOUS
    * wvw_SetIcon() added one optional parm
 
 
- 2004/11/23:
+ 2004-11-23:
  * gtwvw.c:
    + HB_GT_FUNC( gt_ProcessMessages )
 
- 2004/11/23:
+ 2004-11-23:
  * gtwvw.c:
    * FlashWindowEx is replaced with FlashWindow to make gtwvw
      work in Win95
 
- 2004/11/14:
+ 2004-11-14:
  * hbgtwvw.h
    * WIN_DATA:
      + int iLSpaceColor;  /* line space color */
@@ -473,13 +473,13 @@ MISCELLANEOUS
 
 /**************************** BETA1-3 published at this point **/
 
- 2004/11/01:
+ 2004-11-01:
  * gtwvw.c
    ! wvw_DrawLabelObj(): bottom point +1, right point +1
 
- 2004/10/26:
+ 2004-10-26:
  Synchronizing with:
- =Id: gtwvt.c,v 1.135 2004/10/24 09:43:45 oh1 Exp =
+ =Id: gtwvt.c,v 1.135 2004-10-24 09:43:45 oh1 Exp =
 
  * gtwvw.c
    * blank char for screen ' ' --> hb_ctGetClearB()
@@ -489,11 +489,11 @@ MISCELLANEOUS
    See gtwin about what they should do.
 
 /****************************************************************
- * Release Date: 2004/10/25 (CVS contrib)
- * Prev Release: 2004/09/26
+ * Release Date: 2004-10-25 (CVS contrib)
+ * Prev Release: 2004-09-26
  ****************************************************************/
 
- 2004/10/25:
+ 2004-10-25:
  * hbgtwvw.h
    * lpwAlign() and nCopyAnsiToWideChar() are now static
  * gtwvw.c
@@ -504,13 +504,13 @@ MISCELLANEOUS
    This is to get rid of warnings in mingw32 as reported by Lorenzo Fiorini.
 
 
- 2004/10/18:
+ 2004-10-18:
  Synchronizing with:  (Beta1-2)
- =Id: hbgtwvt.h,v 1.31 2004/09/28 03:25:07 vouchcac Exp =
- =Id: gtwvt.c,v 1.133 2004/09/28 03:25:17 vouchcac Exp =
- =Id: wvtutils.c,v 1.18 2004/09/28 03:25:18 vouchcac Exp =
+ =Id: hbgtwvt.h,v 1.31 2004-09-28 03:25:07 vouchcac Exp =
+ =Id: gtwvt.c,v 1.133 2004-09-28 03:25:17 vouchcac Exp =
+ =Id: wvtutils.c,v 1.18 2004-09-28 03:25:18 vouchcac Exp =
  (wvtcore.c is not changed since last sync:
- =Id: wvtcore.c,v 1.10 2004/08/30 14:10:20 vouchcac Exp =
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
  )
 
  ------------------
@@ -526,14 +526,14 @@ MISCELLANEOUS
    + HB_FUNC( WVW_CREATEDIALOGMODAL )
 
 
- 2004/10/14:
+ 2004-10-14:
  * gtwvw.c:
    ! wvw_pbEnable(): after wvw_pbEnable(..., ..., .f.) focus should be
      set to parent window, otherwise no input is accepted. Fixed.
      Thanks to Fabio for reporting it.
 
 
- 2004/09/30:
+ 2004-09-30:
  * gtwvw.c:
    * wvw_tbAddButton() new parm lMap3Dcolors
      This is to support transparent toolbar button
@@ -541,8 +541,8 @@ MISCELLANEOUS
 
 
 /****************************************************************
- * Release Date: 2004/09/26
- * Prev Release: 2004/07/25
+ * Release Date: 2004-09-26
+ * Prev Release: 2004-07-25
  ****************************************************************/
 
 Contents
@@ -772,9 +772,9 @@ WVW_Draw* functions.
 
 ======================================================================
  Synchronizing with: (xHarbour Beta1-1 aka 0.99.1)
- =Id: hbgtwvt.h,v 1.30 2004/09/15 03:52:49 bdj Exp =
- =Id: gtwvt.c,v 1.132 2004/09/21 04:04:58 peterrees Exp =
- =Id: wvtutils.c,v 1.17 2004/09/15 03:52:49 bdj Exp =
+ =Id: hbgtwvt.h,v 1.30 2004-09-15 03:52:49 bdj Exp =
+ =Id: gtwvt.c,v 1.132 2004-09-21 04:04:58 peterrees Exp =
+ =Id: wvtutils.c,v 1.17 2004-09-15 03:52:49 bdj Exp =
  (wvtcore.c is not changed since last sync)
 ======================================================================
 
@@ -798,11 +798,11 @@ WVW_Draw* functions.
 
 ======================================================================
  Synchronizing with:
- =Id: gtwvt.c,v 1.127 2004/08/31 12:57:28 vouchcac Exp =
- =Id: wvtcore.c,v 1.10 2004/08/30 14:10:20 vouchcac Exp =
- =Id: wvtutils.c,v 1.13 2004/08/30 14:10:20 vouchcac Exp =
+ =Id: gtwvt.c,v 1.127 2004-08-31 12:57:28 vouchcac Exp =
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
+ =Id: wvtutils.c,v 1.13 2004-08-30 14:10:20 vouchcac Exp =
  Changelog:
- =Id: ChangeLog,v 1.3412 2004/09/06 20:01:01 druzus Exp =
+ =Id: ChangeLog,v 1.3412 2004-09-06 20:01:01 druzus Exp =
  Last Entry:
  2004-09-06 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 ======================================================================

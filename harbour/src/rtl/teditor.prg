@@ -695,7 +695,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             nKey := nPassedKey
          ENDIF
 
-         // 2002.09.03 - maurilio.longo@libero.it
+         // 2002-09-03 - maurilio.longo@libero.it
          // NOTE: I think this code should only be present on classes derived from TEditor which is
          //       a low level "editing engine".. For now I leave it here...
          IF ( bKeyBlock := SetKey( nKey ) ) != NIL

@@ -21,8 +21,7 @@ PROCEDURE Main()
 
    rddSetDefault( "SQLMIX" )
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    AEval( rddList(), {| X | QOut( X ) } )
 

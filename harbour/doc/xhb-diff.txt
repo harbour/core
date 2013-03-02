@@ -1178,7 +1178,7 @@ decoding above format. In VFP and xHarbour when date part is missed then
 it's set by default to: 1899-12-30 so this code:
       { ^ 12:00 }
 gives the same results as:
-      { ^ 1899/12/30 12:00 }
+      { ^ 1899-12-30 12:00 }
 Harbour does not set any default date value when timestamp constant contains
 only time part.
 Harbour supports VFP syntax only in Compiler. It's not supported in
@@ -2767,7 +2767,7 @@ The tests below were done using AMD Phenom(tm) 8450 Triple-Core Processor
 
 Here are results for ST mode:
 
-   2009.07.28 20:48:12 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 20:48:12 Linux 2.6.25.20-0.4-pae i686
    Harbour 2.0.0beta2 (Rev. 11910) GNU C 4.4 (32-bit) x86
    THREADS: 0
    N_LOOPS: 1000000
@@ -2833,7 +2833,7 @@ Here are results for ST mode:
    [ total application time: ]....................................20.27
    [ total real time: ]...........................................20.51
 
-   2009.07.28 20:48:46 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 20:48:46 Linux 2.6.25.20-0.4-pae i686
    xHarbour build 1.2.1 Intl. (SimpLex) (Rev. 6517) GNU C 4.4 (32 bit) ?
    THREADS: 0
    N_LOOPS: 1000000
@@ -2901,7 +2901,7 @@ Here are results for ST mode:
 
 And here are results for MT mode:
 
-   2009.07.28 20:52:43 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 20:52:43 Linux 2.6.25.20-0.4-pae i686
    Harbour 2.0.0beta2 (Rev. 11910) (MT) GNU C 4.4 (32-bit) x86
    THREADS: 0
    N_LOOPS: 1000000
@@ -2967,7 +2967,7 @@ And here are results for MT mode:
    [ total application time: ]....................................23.10
    [ total real time: ]...........................................23.78
 
-   2009.07.28 20:53:24 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 20:53:24 Linux 2.6.25.20-0.4-pae i686
    xHarbour build 1.2.1 Intl. (SimpLex) (Rev. 6517) (MT) GNU C 4.4 (32 bit) ?
    THREADS: 0
    N_LOOPS: 1000000
@@ -3041,7 +3041,7 @@ Recently I've repeated above tests on the same Hardware but using 64-bit
 Linux kernels and 64bit Harbour builds and here the difference is even
 bigger. Here are results for ST mode:
 
-   2009.10.27 13:24:41 Linux 2.6.31.3-1-desktop x86_64
+   2009-10-27 13:24:41 Linux 2.6.31.3-1-desktop x86_64
    Harbour 2.0.0beta3 (Rev. 12776) GNU C 4.4 (64-bit) x86-64
    THREADS: 0
    N_LOOPS: 1000000
@@ -3107,7 +3107,7 @@ bigger. Here are results for ST mode:
    [ total application time: ]....................................15.60
    [ total real time: ]...........................................15.61
 
-   2009.10.27 13:25:10 Linux 2.6.31.3-1-desktop x86_64
+   2009-10-27 13:25:10 Linux 2.6.31.3-1-desktop x86_64
    xHarbour build 1.2.1 Intl. (SimpLex) (Rev. 6629) GNU C 4.4 (64 bit) ?
    THREADS: 0
    N_LOOPS: 1000000
@@ -3183,7 +3183,7 @@ used for shared ones so xHarbour cannot use them by default.
 
 The last test we can make is scalability in real multi CPU environment.
 
-   2009.07.28 21:07:56 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 21:07:56 Linux 2.6.25.20-0.4-pae i686
    Harbour 2.0.0beta2 (Rev. 11910) (MT)+ GNU C 4.4 (32-bit) x86
    THREADS: 2
    N_LOOPS: 1000000
@@ -3252,7 +3252,7 @@ The last test we can make is scalability in real multi CPU environment.
    [ total real time: ]...........................................77.52
 
 
-   2009.07.28 21:11:44 Linux 2.6.25.20-0.4-pae i686
+   2009-07-28 21:11:44 Linux 2.6.25.20-0.4-pae i686
    xHarbour build 1.2.1 Intl. (SimpLex) (Rev. 6517) (MT)+ GNU C 4.4 (32 bit) ?
    THREADS: 2
    N_LOOPS: 1000000

@@ -229,7 +229,7 @@
 #endif
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
-/* 2004.08.27 - <maurilio.longo@libero.it>
+/* 2004-08-27 - <maurilio.longo@libero.it>
                 HB_FS_GETDRIVE() should return a number in the range 0..25 ('A'..'Z')
                 HB_FS_SETDRIVE() should accept a number inside same range.
 

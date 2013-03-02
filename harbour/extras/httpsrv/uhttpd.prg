@@ -12,7 +12,7 @@
  *
  * Credits:
  *    Based on first version posted from Mindaugas Kavaliauskas on
- *    developers NG on 2008.12.15 whom give my thanks to have
+ *    developers NG on 2008-12-15 whom give my thanks to have
  *    shared initial work.
  *                                                          Francesco.
  *

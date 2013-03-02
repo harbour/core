@@ -12,6 +12,8 @@ PROCEDURE Main()
 
    LOCAL nI, aArray
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    rddSetDefault( "DBF" )
 
    SET EXCLUSIVE OFF

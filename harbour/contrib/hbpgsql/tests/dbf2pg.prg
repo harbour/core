@@ -80,8 +80,7 @@ PROCEDURE Main( ... )
    LOCAL lUseTrans := .F.
    LOCAL cPath := "public"
 
-   SET CENTURY ON
-   SET DATE ANSI
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SET DELETE ON
 
    rddSetDefault( "DBFDBT" )

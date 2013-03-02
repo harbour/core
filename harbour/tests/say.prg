@@ -6,6 +6,8 @@
 
 PROCEDURE Main()
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    CLS
    SET CENTURY ON
    @ 2, 39 TO 7, 39 DOUBLE

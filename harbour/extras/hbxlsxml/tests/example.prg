@@ -65,7 +65,7 @@ PROCEDURE Main()
    LOCAL xOrdem
    LOCAL oObj
 
-   SET DATE ANSI
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    oXml := ExcelWriterXML():New( xarquivo )
    oXml:setOverwriteFile( .T. )
@@ -172,9 +172,9 @@ PROCEDURE Main()
    oObj:columnWidth( 13,  80 ) // Valor IPI
 
    xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
-   xDataImp := "2011.03.22"
+   xDataImp := "2011-03-22"
    xTitulo := "RELATORIO PARA DEMONSTRAR XML EXCEL"
-   xPeriodo := "2011.02.01 a 2011.02.28"
+   xPeriodo := "2011-02-01 a 2011-02-28"
    xOrdem  := "DATA DE EMISSAO"
 
    nLinha := 0

@@ -6,7 +6,7 @@
  * This example demonstrates how to work with some features of the native Win32
  * API. The following function displays a dialog created with an external
  * resource editor (Pelles C)
- * 2010/06/10 - 00:16:41 - [vailtom]
+ * 2010-06-10 - 00:16:41 - [vailtom]
  */
 
 #require "hbwin"

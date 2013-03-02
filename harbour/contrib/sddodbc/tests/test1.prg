@@ -17,9 +17,9 @@ PROCEDURE Main()
    hb_SDDODBC_Register()
 #endif
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    rddSetDefault( "SQLMIX" )
-   SET DATE ANSI
-   SET CENTURY ON
    ? "Connect:", rddInfo( RDDI_CONNECT, { "ODBC", "DBQ=" + hb_DirBase() + "..\..\hbodbc\tests\test.mdb;Driver={Microsoft Access Driver (*.mdb)}" } )
    ? "Use:", dbUseArea( .T., , "select * from test", "test" )
    ? "Alias:", Alias()

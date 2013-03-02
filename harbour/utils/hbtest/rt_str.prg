@@ -666,7 +666,7 @@ PROCEDURE Main_STR()
    HBTEST Pad(100000, 8, "-")                IS "100000--"
    HBTEST Pad(-100000, 8, "-")               IS "-100000-"
    HBTEST Pad(5000000000, 15)                IS "5000000000     "
-   HBTEST Pad(hb_SToD("19840325"), 12)       IS "1984.03.25  "
+   HBTEST Pad(hb_SToD("19840325"), 12)       IS "1984-03-25  "
    HBTEST Pad(Year(hb_SToD("19840325")), 5)  IS "1984 "
    HBTEST Pad(Day(hb_SToD("19840325")), 5)   IS "25   "
 #ifdef __HARBOUR__
@@ -693,7 +693,7 @@ PROCEDURE Main_STR()
    HBTEST PadR(100000, 8)                    IS "100000  "
    HBTEST PadR(100000, 8, "-")               IS "100000--"
    HBTEST PadR(-100000, 8, "-")              IS "-100000-"
-   HBTEST PadR(hb_SToD("19840325"), 12)      IS "1984.03.25  "
+   HBTEST PadR(hb_SToD("19840325"), 12)      IS "1984-03-25  "
    HBTEST PadR(Year(hb_SToD("19840325")), 5) IS "1984 "
    HBTEST PadR(Day(hb_SToD("19840325")), 5)  IS "25   "
 #ifdef __HARBOUR__
@@ -720,7 +720,7 @@ PROCEDURE Main_STR()
    HBTEST PadL(100000, 8)                    IS "  100000"
    HBTEST PadL(100000, 8, "-")               IS "--100000"
    HBTEST PadL(-100000, 8, "-")              IS "--100000"
-   HBTEST PadL(hb_SToD("19840325"), 12)      IS "  1984.03.25"
+   HBTEST PadL(hb_SToD("19840325"), 12)      IS "  1984-03-25"
    HBTEST PadL(Year(hb_SToD("19840325")), 5) IS " 1984"
    HBTEST PadL(Day(hb_SToD("19840325")), 5)  IS "   25"
 #ifdef __HARBOUR__
@@ -747,7 +747,7 @@ PROCEDURE Main_STR()
    HBTEST PadC(100000, 8)                    IS " 100000 "
    HBTEST PadC(100000, 8, "-")               IS "-100000-"
    HBTEST PadC(-100000, 8, "-")              IS "-100000-"
-   HBTEST PadC(hb_SToD("19840325"), 12)      IS " 1984.03.25 "
+   HBTEST PadC(hb_SToD("19840325"), 12)      IS " 1984-03-25 "
    HBTEST PadC(Year(hb_SToD("19840325")), 5) IS "1984 "
    HBTEST PadC(Day(hb_SToD("19840325")), 5)  IS " 25  "
 #ifdef __HARBOUR__

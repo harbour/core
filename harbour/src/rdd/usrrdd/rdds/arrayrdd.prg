@@ -292,7 +292,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
    /* Check if database is already present in memory slots */
    /*
-      2008.11.07 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
+      2008-11-07 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
       If you need to check if a table exists use hb_FileArrayRdd() function that works in
       similar way of File(), i.e.:
       IF hb_FileArrayRdd( cFullName )
@@ -1758,8 +1758,8 @@ STATIC FUNCTION EmptyValue( cType, nLen, nDec )
 /**
  * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
  * Author .........: Francesco Saverio Giudice
- * Date of creation: 1991/01/25
- * Last revision ..: 2006/01/24 1.13 - rewritten for xHarbour and renamed in hb_Decode()
+ * Date of creation: 1991-01-25
+ * Last revision ..: 2006-01-24 1.13 - rewritten for xHarbour and renamed in hb_Decode()
  *
  *                   Decode a value from a list.
  */

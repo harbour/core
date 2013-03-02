@@ -35,7 +35,7 @@
 
       // date input
       dDate := hb_SToD()
-      @ 4, 10 GET cDate                    // input 1991/07/04
+      @ 4, 10 GET cDate                    // input 1991-07-04
       READ
       nWkNum := ft_WoY( dDate )            // result: 27
 
@@ -74,7 +74,7 @@
 
       // date input
       dDate := hb_SToD()
-      @ 4, 10 GET cDate                     // input 1991/07/04
+      @ 4, 10 GET cDate                     // input 1991-07-04
       READ
       nDayNum := ft_DoY( dDate )            // result: 185
 

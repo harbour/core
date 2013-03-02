@@ -13,8 +13,7 @@ PROCEDURE Main()
    LOCAL i
    LOCAL dDate := Date()
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    FOR i := 7 TO 49 STEP 7
       CheckDate( dDate )

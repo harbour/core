@@ -88,8 +88,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVG" )
 #endif
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 

@@ -59,7 +59,7 @@ PROCEDURE Main_TRANS()
    LOCAL cOldDate  := Set( _SET_DATEFORMAT )
    local cOldFixed := Set( _SET_FIXED )
    local cOldDecim := Set( _SET_DECIMALS )
-   local dt
+   local dt, df
 
    /* Transform() */
 
@@ -112,10 +112,10 @@ PROCEDURE Main_TRANS()
    HBTEST Transform( Val("100.20"), NIL )              IS "100.20"
 #endif
    HBTEST Transform( Val("100.20"), 100 )              IS "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:N:100.20;N:100 F:S"
-   HBTEST Transform( sdDate, "" )                      IS "1984.03.25"
-   HBTEST Transform( sdDate, "@" )                     IS "1984.03.25"
+   HBTEST Transform( sdDate, "" )                      IS "1984-03-25"
+   HBTEST Transform( sdDate, "@" )                     IS "1984-03-25"
 #ifndef __XPP__
-   HBTEST Transform( sdDate, NIL )                     IS "1984.03.25"
+   HBTEST Transform( sdDate, NIL )                     IS "1984-03-25"
 #endif
    HBTEST Transform( sdDate, 100 )                     IS "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:D:0d19840325;N:100 F:S"
    HBTEST Transform( .T., "" )                         IS "T"
@@ -187,41 +187,49 @@ PROCEDURE Main_TRANS()
    HBTEST Transform( .F.       , "@R Y"     )          IS "N"
    HBTEST Transform( .T.       , "@R X!"    )          IS "X!T"
 
-   HBTEST Transform( hb_SToD("20000101") , "@B"         ) IS "2000.01.01"
-   HBTEST Transform( hb_SToD("19901214") , "99/99/9999" ) IS "1990.12.14"
-   HBTEST Transform( hb_SToD("19901202") , "99.99.9999" ) IS "1990.12.02"
-   HBTEST Transform( hb_SToD("")         , "99/99/9999" ) IS "    .  .  "
-   HBTEST Transform( hb_SToD("19901202") , "99/99/99"   ) IS "1990.12.02"
-   HBTEST Transform( hb_SToD("19901214") , "99-99-99"   ) IS "1990.12.14"
-   HBTEST Transform( hb_SToD("20040430") , "99.99.99"   ) IS "2004.04.30"
-   HBTEST Transform( hb_SToD("")         , "99/99/99"   ) IS "    .  .  "
-   HBTEST Transform( hb_SToD("19920101") , "THISWRNG"   ) IS "1992.01.01"
-   HBTEST Transform( hb_SToD("19350605") , "999/99/9"   ) IS "1935.06.05"
-   HBTEST Transform( hb_SToD("19101112") , "9#-9#/##"   ) IS "1910.11.12"
-   HBTEST Transform( hb_SToD("19920101") , ""           ) IS "1992.01.01"
-   HBTEST Transform( hb_SToD("19920101") , "DO THIS "   ) IS "1992.01.01"
-   HBTEST Transform( hb_SToD("19920102") , "@E"         ) IS "02.01.1992"  /* Bug in CA-Cl*pper, it returns: "2.91901.02" */
+   HBTEST Transform( hb_SToD("20000101") , "@B"         ) IS "2000-01-01"
+   HBTEST Transform( hb_SToD("19901214") , "99/99/9999" ) IS "1990-12-14"
+   HBTEST Transform( hb_SToD("19901202") , "99.99.9999" ) IS "1990-12-02"
+   HBTEST Transform( hb_SToD("")         , "99/99/9999" ) IS "    -  -  "
+   HBTEST Transform( hb_SToD("19901202") , "99/99/99"   ) IS "1990-12-02"
+   HBTEST Transform( hb_SToD("19901214") , "99-99-99"   ) IS "1990-12-14"
+   HBTEST Transform( hb_SToD("20040430") , "99.99.99"   ) IS "2004-04-30"
+   HBTEST Transform( hb_SToD("")         , "99/99/99"   ) IS "    -  -  "
+   HBTEST Transform( hb_SToD("19920101") , "THISWRNG"   ) IS "1992-01-01"
+   HBTEST Transform( hb_SToD("19350605") , "999/99/9"   ) IS "1935-06-05"
+   HBTEST Transform( hb_SToD("19101112") , "9#-9#/##"   ) IS "1910-11-12"
+   HBTEST Transform( hb_SToD("19920101") , ""           ) IS "1992-01-01"
+   HBTEST Transform( hb_SToD("19920101") , "DO THIS "   ) IS "1992-01-01"
+   HBTEST Transform( hb_SToD("19920102") , "@E"         ) IS "02-01-1992"  /* Bug in CA-Cl*pper, it returns: "2-91901-02" */
+   HBTEST Transform( 1234                , "@D 9999"    ) IS "    -12-34"
+   HBTEST Transform( 1234                , "@BD 9999"   ) IS "-12-34    "
+   df := Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
    HBTEST Transform( 1234                , "@D 9999"    ) IS "1234.00.0 "
    HBTEST Transform( 1234                , "@BD 9999"   ) IS "1234.00.0 "
+   Set( _SET_DATEFORMAT, df )
 
    SET CENTURY OFF
 
-   HBTEST Transform( hb_SToD("20000101") , "@B"         ) IS "00.01.01"
-   HBTEST Transform( hb_SToD("19901214") , "99/99/9999" ) IS "90.12.14"
-   HBTEST Transform( hb_SToD("19901202") , "99.99.9999" ) IS "90.12.02"
-   HBTEST Transform( hb_SToD("")         , "99/99/9999" ) IS "  .  .  "
-   HBTEST Transform( hb_SToD("19901202") , "99/99/99"   ) IS "90.12.02"
-   HBTEST Transform( hb_SToD("19901214") , "99-99-99"   ) IS "90.12.14"
-   HBTEST Transform( hb_SToD("20040430") , "99.99.99"   ) IS "04.04.30"
-   HBTEST Transform( hb_SToD("")         , "99/99/99"   ) IS "  .  .  "
-   HBTEST Transform( hb_SToD("19920101") , "THISWRNG"   ) IS "92.01.01"
-   HBTEST Transform( hb_SToD("19350605") , "999/99/9"   ) IS "35.06.05"
-   HBTEST Transform( hb_SToD("19101112") , "9#-9#/##"   ) IS "10.11.12"
-   HBTEST Transform( hb_SToD("19920101") , ""           ) IS "92.01.01"
-   HBTEST Transform( hb_SToD("19920101") , "DO THIS "   ) IS "92.01.01"
-   HBTEST Transform( hb_SToD("19920102") , "@E"         ) IS "02.01.92"   /* Bug in CA-Cl*pper, it returns: "01.92.02" */
+   HBTEST Transform( hb_SToD("20000101") , "@B"         ) IS "00-01-01"
+   HBTEST Transform( hb_SToD("19901214") , "99/99/9999" ) IS "90-12-14"
+   HBTEST Transform( hb_SToD("19901202") , "99.99.9999" ) IS "90-12-02"
+   HBTEST Transform( hb_SToD("")         , "99/99/9999" ) IS "  -  -  "
+   HBTEST Transform( hb_SToD("19901202") , "99/99/99"   ) IS "90-12-02"
+   HBTEST Transform( hb_SToD("19901214") , "99-99-99"   ) IS "90-12-14"
+   HBTEST Transform( hb_SToD("20040430") , "99.99.99"   ) IS "04-04-30"
+   HBTEST Transform( hb_SToD("")         , "99/99/99"   ) IS "  -  -  "
+   HBTEST Transform( hb_SToD("19920101") , "THISWRNG"   ) IS "92-01-01"
+   HBTEST Transform( hb_SToD("19350605") , "999/99/9"   ) IS "35-06-05"
+   HBTEST Transform( hb_SToD("19101112") , "9#-9#/##"   ) IS "10-11-12"
+   HBTEST Transform( hb_SToD("19920101") , ""           ) IS "92-01-01"
+   HBTEST Transform( hb_SToD("19920101") , "DO THIS "   ) IS "92-01-01"
+   HBTEST Transform( hb_SToD("19920102") , "@E"         ) IS "02-01-92"   /* Bug in CA-Cl*pper, it returns: "01-92-02" */
+   HBTEST Transform( 1234                , "@D 9999"    ) IS "  -12-34"
+   HBTEST Transform( 1234                , "@BD 9999"   ) IS "-12-34  "
+   df := Set( _SET_DATEFORMAT, "yy.mm.dd" )
    HBTEST Transform( 1234                , "@D 9999"    ) IS "**.**.* "
    HBTEST Transform( 1234                , "@BD 9999"   ) IS "**.**.* "
+   Set( _SET_DATEFORMAT, df )
 
    SET CENTURY ON
 
@@ -387,27 +395,27 @@ PROCEDURE Main_TRANS()
    HBTEST Transform("  H", "@Z" )                      IS "   "
    HBTEST Transform("  H", "@ZB" )                     IS "   "
    HBTEST Transform("  H", "@!" )                      IS "  H"
-   HBTEST Transform("19840325", "@D" )                 IS "1984.32."
-   HBTEST Transform("19840325", "@DE" )                IS "4.81932."
-   HBTEST Transform("1984032598765", "@DE" )           IS "4.81932.98"
+   HBTEST Transform("19840325", "@D" )                 IS "1984-32-"
+   HBTEST Transform("19840325", "@DE" )                IS "4-81932-"
+   HBTEST Transform("1984032598765", "@DE" )           IS "4-81932-98"
 
    SET CENTURY ON
-   HBTEST Transform("19840325", "@D" )                 IS "1984.32."
-   HBTEST Transform("19840325", "@DE" )                IS "4.81932."
-   HBTEST Transform("1984032598765", "@DE" )           IS "4.81932.98"
+   HBTEST Transform("19840325", "@D" )                 IS "1984-32-"
+   HBTEST Transform("19840325", "@DE" )                IS "4-81932-"
+   HBTEST Transform("1984032598765", "@DE" )           IS "4-81932-98"
    SET CENTURY OFF
 
-   HBTEST Transform("19840325", "@D" )                 IS "19.40.25"
-   HBTEST Transform("19840325", "@DE" )                IS "40.19.25"
-   HBTEST Transform("1984032598765", "@DE" )           IS "40.19.25"
+   HBTEST Transform("19840325", "@D" )                 IS "19-40-25"
+   HBTEST Transform("19840325", "@DE" )                IS "40-19-25"
+   HBTEST Transform("1984032598765", "@DE" )           IS "40-19-25"
    HBTEST Transform("1", "@D" )                        IS "1"
-   HBTEST Transform("19840325", "@D" )                 IS "19.40.25"
-   HBTEST Transform("19840325", "@DR" )                IS "19.84.03"
-   HBTEST Transform("ABCDEFG", "@D" )                  IS "AB.DE.G"
-   HBTEST Transform("abcdefg", "@D !!")                IS "ab.de.g"
-   HBTEST Transform("abcdefg", "@D!")                  IS "AB.DE.G"
-   HBTEST Transform("ABCDEFG", "@DB" )                 IS "AB.DE.G"
-   HBTEST Transform("  CDEFG", "@DB" )                 IS ".DE.G  "
+   HBTEST Transform("19840325", "@D" )                 IS "19-40-25"
+   HBTEST Transform("19840325", "@DR" )                IS "19-84-03"
+   HBTEST Transform("ABCDEFG", "@D" )                  IS "AB-DE-G"
+   HBTEST Transform("abcdefg", "@D !!")                IS "ab-de-g"
+   HBTEST Transform("abcdefg", "@D!")                  IS "AB-DE-G"
+   HBTEST Transform("ABCDEFG", "@DB" )                 IS "AB-DE-G"
+   HBTEST Transform("  CDEFG", "@DB" )                 IS "-DE-G  "
    HBTEST Transform("ABCDEFG", "@DBZ" )                IS "       "
 #ifdef __CLIPPER__
    /* CA-Cl*pper do not check result size and always exchanges
@@ -428,17 +436,17 @@ PROCEDURE Main_TRANS()
    HBTEST Transform(",", "@E" )                        IS "."
    HBTEST Transform("..", "@E" )                       IS ","+Chr(0)+""
    HBTEST Transform(",,", "@E" )                       IS ".."
-   HBTEST Transform(",.,", "@E" )                      IS ",,."
-   HBTEST Transform(".,.", "@E" )                      IS ""+Chr(0)+".."
-   HBTEST Transform("OPI", "@E ." )                    IS ""+Chr(0)+",."
-   HBTEST Transform("JKL", "@E ," )                    IS ""+Chr(0)+"P."
-   HBTEST Transform("OPI", "@ER ." )                   IS "I .OP.  "
-   HBTEST Transform("JKL", "@ER ," )                   IS "L .JK.  "
-   HBTEST Transform("OPI", "@ER" )                     IS "I .OP.  "
-   HBTEST Transform("JKL", "@ER" )                     IS "L .JK.  "
+   HBTEST Transform(",.,", "@E" )                      IS ",,-"
+   HBTEST Transform(".,.", "@E" )                      IS ""+Chr(0)+".-"
+   HBTEST Transform("OPI", "@E ." )                    IS ""+Chr(0)+",-"
+   HBTEST Transform("JKL", "@E ," )                    IS ""+Chr(0)+"P-"
+   HBTEST Transform("OPI", "@ER ." )                   IS "I -OP-  "
+   HBTEST Transform("JKL", "@ER ," )                   IS "L -JK-  "
+   HBTEST Transform("OPI", "@ER" )                     IS "I -OP-  "
+   HBTEST Transform("JKL", "@ER" )                     IS "L -JK-  "
 #endif
-   HBTEST Transform(CToD(""), "@DB")                   IS ".  .    "
-   HBTEST Transform(CToD(""), "@DBR uiuijk")           IS ".. . .    "
+   HBTEST Transform(CToD(""), "@DB")                   IS "-  -    "
+   HBTEST Transform(CToD(""), "@DBR uiuijk")           IS "-- - -    "
    HBTEST Transform(100, "@B $99999")                  IS "$  100"
    HBTEST Transform(10, "@BZ $99999")                  IS "$   10"
    HBTEST Transform(10, "@BX $99999")                  IS "$   10"
@@ -449,9 +457,9 @@ PROCEDURE Main_TRANS()
    HBTEST Transform(0, "@B(ZX $99999")                 IS "      "
 
 #ifndef __XPP__
-   HBTEST Transform(sdDate, NIL)                       IS "84.03.25"
+   HBTEST Transform(sdDate, NIL)                       IS "84-03-25"
 #endif
-   HBTEST Transform(sdDate, "")                        IS "84.03.25"
+   HBTEST Transform(sdDate, "")                        IS "84-03-25"
    HBTEST Transform(sdDate, "@Z")                      IS "        "
 
    Set( _SET_DATEFORMAT, "DD/MMM/YYYY" )

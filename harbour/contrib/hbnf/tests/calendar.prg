@@ -10,8 +10,7 @@ PROCEDURE Main()
 
    LOCAL aRet
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    SetColor( "w+/b" )
    CLS

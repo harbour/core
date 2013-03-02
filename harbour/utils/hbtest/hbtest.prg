@@ -230,8 +230,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 #ifdef __HARBOUR__
    hb_langSelect( "en" )
 #endif
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    SET EXACT OFF
 
    FErase( "NOT_HERE.$$$" )
@@ -665,24 +664,14 @@ FUNCTION hb_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION hb_SToD( cDate )
+FUNCTION hb_SToD( s )
 
-   LOCAL cOldDateFormat
-   LOCAL dDate
+   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
 
-   IF ValType( cDate ) == "C" .AND. ! Empty( cDate )
-      cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   Set( _SET_DATEFORMAT, cDf )
 
-      dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
-                     SubStr( cDate, 5, 2 ) + "/" +;
-                     SubStr( cDate, 7, 2 ) )
-
-      Set( _SET_DATEFORMAT, cOldDateFormat )
-   ELSE
-      dDate := CToD( "" )
-   ENDIF
-
-   RETURN dDate
+   RETURN dt
 
 #endif
 #endif

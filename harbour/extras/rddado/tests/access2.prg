@@ -12,8 +12,7 @@ REQUEST ADORDD
 
 PROCEDURE Main()
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    dbCreate( "test2.mdb;table1", { ;
       { "FIRST",   "C", 10, 0 }, ;

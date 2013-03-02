@@ -147,9 +147,9 @@
    $DESCRIPTION$
       This function returns the last day of a given month date.
    $EXAMPLES$
-      SET DATE ANSI
-      ? EoM( hb_SToD( "20000101" ) ) // -> "2000.01.31"
-      ? EoM( hb_SToD( "20000201" ) ) // -> "2000.02.29"
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? EoM( hb_SToD( "20000101" ) ) // -> "2000-01-31"
+      ? EoM( hb_SToD( "20000201" ) ) // -> "2000-02-29"
    $STATUS$
       R
    $COMPLIANCE$
@@ -179,9 +179,9 @@
    $DESCRIPTION$
       This function returns the first day of a given month date.
    $EXAMPLES$
-      SET DATE ANSI
-      ? BoM( hb_SToD( "20000125" ) ) // -> "2000.01.01"
-      ? BoM( hb_SToD( "20000224" ) ) // -> "2000.02.01"
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? BoM( hb_SToD( "20000125" ) ) // -> "2000-01-01"
+      ? BoM( hb_SToD( "20000224" ) ) // -> "2000-02-01"
    $STATUS$
       R
    $COMPLIANCE$
@@ -276,9 +276,9 @@
    $DESCRIPTION$
       This function returns the last date of a given year date.
    $EXAMPLES$
-      SET DATE ANSI
-      ? EoY( hb_SToD( "20000101" ) ) // -> "2000.12.31"
-      ? EoY( hb_SToD( "20010101" ) ) // -> "2001.12.31"
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? EoY( hb_SToD( "20000101" ) ) // -> "2000-12-31"
+      ? EoY( hb_SToD( "20010101" ) ) // -> "2001-12-31"
    $STATUS$
       R
    $COMPLIANCE$
@@ -308,9 +308,9 @@
    $DESCRIPTION$
       This function returns the first date of a given year date.
    $EXAMPLES$
-      SET DATE ANSI
-      ? BoY( hb_SToD( "20000125" ) ) // -> "2000.01.01"
-      ? BoY( hb_SToD( "20010224" ) ) // -> "2001.01.01"
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? BoY( hb_SToD( "20000125" ) ) // -> "2000-01-01"
+      ? BoY( hb_SToD( "20010224" ) ) // -> "2001-01-01"
    $STATUS$
       R
    $COMPLIANCE$

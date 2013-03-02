@@ -24,8 +24,7 @@ PROCEDURE Main( cCmdLine )
 
    LOCAL nMaxRow
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aOptions[ i ] := { {}, {}, {} } } )
 

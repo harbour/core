@@ -135,7 +135,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    IF ::ExistUdf()
       /* Keep calling user function until it returns 0
-         2004.08.05 - <maurilio.longo@libero.it>
+         2004-08-05 - <maurilio.longo@libero.it>
                       Clipper 5.2 MemoEdit() treats a NIL as ME_DEFAULT
       */
       DO WHILE AScan( { ME_DEFAULT, NIL }, nUdfReturn := ::CallUdf( ME_INIT ) ) == 0
@@ -179,7 +179,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
          Eval( ::bKeyBlock, ::ProcName, ::ProcLine, ReadVar() )
 
-         /* 2006.09.15 - E.F. - After SetKey() is executed, if exist nextkey,
+         /* 2006-09-15 - E.F. - After SetKey() is executed, if exist nextkey,
           *                     I need trap this nextkey to memoedit process
           *                     <nKey> first and the <nNextKey> on the next loop.
           */
@@ -191,7 +191,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
       ENDIF
 
-      /* 2005.10.24 - <maurilio.longo@libero.it>
+      /* 2005-10-24 - <maurilio.longo@libero.it>
                       Taken from clipper norton guide:
 
                         The user function: <cUserFunction>, a user-defined function
@@ -289,7 +289,7 @@ METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
 
 METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
 
-   /* 2004.08.05 - <maurilio.longo@libero.it>
+   /* 2004-08-05 - <maurilio.longo@libero.it>
                    A little trick to be able to handle a nUdfReturn with value of NIL
                    like it had a value of ME_DEFAULT
    */
@@ -361,7 +361,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
 
    OTHERWISE            // ME_UNKEY (1 TO 31)
 
-      /* 2006.08.02 - E.F. - (NG) Process requested action corresponding to
+      /* 2006-08-02 - E.F. - (NG) Process requested action corresponding to
        *                     key value.
        */
       nKey := nUdfReturn
@@ -425,7 +425,7 @@ FUNCTION xhb_MemoEdit( ;
    __defaultNIL( @nRight, MaxCol() )
    __defaultNIL( @lEditMode, .T. )
    __defaultNIL( @nLineLength, NIL )
-   /* 2005.10.24 - <maurilio.longo@libero.it>
+   /* 2005-10-24 - <maurilio.longo@libero.it>
                    NG says 4, but clipper 5.2e inserts 3 spaces when pressing K_TAB
    */
    __defaultNIL( @nTabSize, 3 )
@@ -434,7 +434,7 @@ FUNCTION xhb_MemoEdit( ;
    __defaultNIL( @nWindowRow, 0 )
    __defaultNIL( @nWindowColumn, nTextBuffColumn )
 
-   // 2006.07.22 - E.F. Check argument types.
+   // 2006-07-22 - E.F. Check argument types.
    //
    IF ! HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
       Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
@@ -477,7 +477,7 @@ FUNCTION xhb_MemoEdit( ;
    ENDIF
 
 
-   // 2006.07.22 - E.F. To avoid run time error.
+   // 2006-07-22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
       Throw( ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
    ENDIF
@@ -486,7 +486,7 @@ FUNCTION xhb_MemoEdit( ;
       xUDF := NIL
    ENDIF
 
-   /* 2005.10.24 - <maurilio.longo@libero.it>
+   /* 2005-10-24 - <maurilio.longo@libero.it>
                    Clipper MemoEdit() converts Tabs into spaces
    */
    oEd := xhb_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ), ;
@@ -505,7 +505,7 @@ FUNCTION xhb_MemoEdit( ;
    oEd:MemoInit( xUDF )
    oEd:RefreshWindow()
 
-   // 2006.08.06 - E.F. Clipper's  <cUserFunction> in .T. or. F. is samething.
+   // 2006-08-06 - E.F. Clipper's  <cUserFunction> in .T. or. F. is samething.
    //
    IF ! HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
 
@@ -516,7 +516,7 @@ FUNCTION xhb_MemoEdit( ;
       ENDIF
 
    ELSE
-      // 2006.07.24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
+      // 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
       //                     so we have to repos the cursor at bottom of memoedit
       //                     screen after that.
       SetPos( Min( nBottom, MaxRow() ), 0 )

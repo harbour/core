@@ -90,7 +90,7 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       lPPError := .T.
    ENDIF
 
-   cLangOld := hb_langSelect( "EN" ) /* to always have RTEs in one language */
+   cLangOld := hb_langSelect( "en" ) /* to always have RTEs in one language */
 
    BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
       xResult := Eval( bBlock )

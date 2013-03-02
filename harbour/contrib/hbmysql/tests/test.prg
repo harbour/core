@@ -59,7 +59,7 @@ PROCEDURE Main( cArg )
    LOCAL oServer, oQuery2, oRow, aStru
    LOCAL oQuery
 
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    oServer := TMySQLServer():New( "localhost", "root", "" )
    IF oServer:NetErr()
