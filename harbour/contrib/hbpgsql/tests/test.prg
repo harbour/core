@@ -83,7 +83,7 @@ PROCEDURE Main()
    PQexec( conn, "begin" )
 
    ? ( x := lo_import( conn, __FILE__ ) )
-   ? lo_export( conn, x, "test.new" )
+   ? lo_export( conn, x, hb_FNameExtSet( __FILE__, ".new" ) )
    ? lo_unlink( conn, x )
 
    PQexec( conn, "commit" )

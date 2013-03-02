@@ -6,10 +6,12 @@
 
 #include "fileio.ch"
 
-PROCEDURE Main()
+PROCEDURE Main( cFile )
+
+   hb_default( @cFile, __FILE__ )
 
    // open a text file here
-   IF ft_FUse( __FILE__, FO_READ ) > 1
+   IF ft_FUse( cFile, FO_READ ) > 1
 
       DO WHILE ! ft_FEof()
          ? "line " + Str( ft_FRecNo(), 2 ) + " " + ft_FReadLn()

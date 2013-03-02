@@ -13697,8 +13697,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
                   - dynamic libs will reference and automatically load all their dependencies
                     (true on all systems so far)
                   - this tool is located in well known place inside the Harbour dir tree.
-                  - contribs/addons are located in well-known place inside the Harbour dir tree
-                  - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
+                  - contribs/add-ons are located in well-known place inside the Harbour dir tree
+                  - 3rd party add-ons can be loaded, too if they are installed into the Harbour dir tree
                     and built the same way as contribs.
                   - dynamic libs are installed into bin dir.
                     (this is not true on *nix, there they are in lib dir, and it is a problem
@@ -14815,6 +14815,7 @@ FUNCTION hbshell_Clipper()
    hb_gtInfo( HB_GTI_COMPATBUFFER, .T. )
    hb_gtInfo( HB_GTI_BOXCP, "EN" )
    hb_langSelect( "en" )
+   Set( _SET_DATEFORMAT, "mm/dd/yy" )
 
    RETURN NIL
 
@@ -16033,7 +16034,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ), ;
       I_( "Defaults and feature support may vary by platform/compiler." ), ;
       hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
-      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
+      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ), ;
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform." ), Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
 

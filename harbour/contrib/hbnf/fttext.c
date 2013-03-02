@@ -135,12 +135,12 @@
      Some sample Clipper code which would use these functions is listed
      below.  It will print out the contents of this file.
 
-              ft_fuse( "text.c" )
-              DO WHILE ! ft_feof()
-                 ? ft_freadln()
-                 ft_fskip()
+              ft_FUse( "text.c" )
+              DO WHILE ! ft_FEof()
+                 ? ft_FReadLn()
+                 ft_FSkip()
               ENDDO
-              ft_fuse()
+              ft_FUse()
 
  */
 
@@ -186,7 +186,7 @@ static void s_ft_text_init( void * cargo )
 static HB_TSD_NEW( s_ft_text, sizeof( FT_TEXT ), s_ft_text_init, NULL );
 
 /* routines internal to this module */
-static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len );
+static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len );
 static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len );
 static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen );
 static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen );
@@ -380,11 +380,11 @@ static long _ft_skip( long iRecs )
          do
          {
             /* get count of chars in this line */
-            iByteCount = _findeol( cPtr, iBytesRemaining );
+            iByteCount = _findeol( cPtr, iBytesRemaining, NULL );
 
             if( iByteCount > 0 && iByteCount != iBytesRemaining )
             {
-               /* found a CRLF, iByteCount points to first char of next
+               /* found an EOL, iByteCount points to first char of next
                   record */
                iBytesRemaining -= iByteCount;
                fpOffset        += iByteCount;
@@ -398,7 +398,7 @@ static long _ft_skip( long iRecs )
             else
             {
 
-               /* no more CRLFs in this buffer, or CRLF is last
+               /* no more EOLs in this buffer, or EOL is last
                   chars in the buffer */
 
                /* check for EOF */
@@ -414,7 +414,7 @@ static long _ft_skip( long iRecs )
                else
                {
                   /* buffer was full, so probably not EOF, but maybe
-                     CRLF straddled end of buffer, so back up pointer a bit
+                     EOL straddled end of buffer, so back up pointer a bit
                      before doing the next read */
                   fpOffset        = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_RELATIVE ) - 1;
                   iBytesRemaining = 0;
@@ -470,7 +470,7 @@ static long _ft_skip( long iRecs )
 
                if( iByteCount > 0 )
                {
-                  /* found a CRLF, iByteCount points to first char of next
+                  /* found an EOL, iByteCount points to first char of next
                      record */
                   iBytesRemaining -= iByteCount;
                   ft_text->offset[ ft_text->area ] -= iByteCount;
@@ -483,7 +483,7 @@ static long _ft_skip( long iRecs )
                }
                else
                {
-                  /* no more CRLFs in this buffer so we're either at
+                  /* no more EOLs in this buffer so we're either at
                      BOF or record crosses buffer boundary */
                   /* check for BOF */
                   if( iBytesRead != BUFFSIZE )
@@ -523,6 +523,7 @@ HB_FUNC( FT_FREADLN )
 
    HB_ISIZ iByteCount;
    HB_ISIZ iBytesRead;
+   HB_ISIZ eol_len;
    char *  cPtr = ( char * ) hb_xgrab( BUFFSIZE );
 
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
@@ -533,10 +534,9 @@ HB_FUNC( FT_FREADLN )
    if( ! iBytesRead )
       ft_text->error[ ft_text->area ] = hb_fsError();
 
-   iByteCount = _findeol( cPtr, iBytesRead );
-
+   iByteCount = _findeol( cPtr, iBytesRead, &eol_len );
    if( iByteCount )
-      hb_retclen( cPtr, iByteCount - 2 );
+      hb_retclen( cPtr, iByteCount - eol_len );
    else
       hb_retclen( cPtr, iBytesRead );
 
@@ -644,10 +644,10 @@ HB_FUNC( FT_FAPPEND )
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
    iRead = hb_fsRead( ft_text->handles[ ft_text->area ], buff, BUFFSIZE );   /* now read in a big glob */
 
-   /* determine if CRLF pair exists, if not, add one */
+   /* determine if EOL exists, if not, add one */
 
    /* get count of chars in this line */
-   iByteCount = _findeol( buff, iRead );
+   iByteCount = _findeol( buff, iRead, NULL );
    if( iByteCount == 0 )
       hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_END );
    else
@@ -701,7 +701,7 @@ HB_FUNC( FT_FWRITELN )
 
    if( bInsert )
    {
-      /* insert mode, insert the length of new string + crlf */
+      /* insert mode, insert the length of new string + EOL */
       err = _ins_buff( ft_text, iDataLen + 2 );
 
       if( ! err )
@@ -722,7 +722,7 @@ HB_FUNC( FT_FWRITELN )
       do
       {
          iRead = hb_fsRead( ft_text->handles[ ft_text->area ], buffer, BUFFSIZE );
-         iEOL  = _findeol( buffer, iRead );
+         iEOL  = _findeol( buffer, iRead, NULL );
          if( iEOL == 0 )
          {
             iLineLen += iRead;
@@ -825,26 +825,34 @@ HB_FUNC( FT_FGOTO )
 
 /*----------------------------------------------------------------------
    In-line assembler routine to parse a buffer
-   for a CRLF pair
+   for an EOL
 
    Returns count to first character _after_ next
-   CRLF pair (beginning of next line).  Current line
-   will contain the trailing CRLF.  1Ah and trailing
+   EOL (beginning of next line).  Current line
+   will contain the trailing EOL.  1Ah and trailing
    LFs will be ignored (included in count).
 
-   If no CRLF found return is zero.  (could mean EOF or
+   If no EOL found return is zero.  (could mean EOF or
    line is longer than buffer end)
  */
-static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len )
+static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
 {
    HB_ISIZ tmp;
 
    for( tmp = 0; tmp < buf_len; tmp++ )
    {
-      if( buf[ tmp ] == FT_CHR_CR && buf[ tmp + 1 ] == FT_CHR_LF )
+      if( tmp < buf_len - 1 && buf[ tmp ] == FT_CHR_CR && buf[ tmp + 1 ] == FT_CHR_LF )
+      {
+         if( eol_len )
+            *eol_len = 2;
          return tmp + 2;
+      }
       else if( buf[ tmp ] == FT_CHR_LF )
+      {
+         if( eol_len )
+            *eol_len = 1;
          return tmp + 1;
+      }
    }
 
    return 0;
@@ -852,13 +860,13 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len )
 
 /*----------------------------------------------------------------------
    In-line assembler routine to parse a buffer
-   for a CRLF pair
+   for a EOL
 
    buf pointer points at beginning of search (end
     of the buffer), all searches are conducted
    backwards, returns No. of characters betw.
    initial position and first character _after_
-   the preceding CRLF pair (beginning of line).
+   the preceding EOL (beginning of line).
  */
 static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
 {
@@ -1059,7 +1067,7 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 }
 
 /*--------------------------------------------------------------------------*/
-/* writes a line of data to the file, including the terminating CRLF */
+/* writes a line of data to the file, including the terminating EOL */
 static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen )
 {
    int err = 0;
@@ -1079,8 +1087,8 @@ static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen 
 
 static HB_BOOL _writeeol( HB_FHANDLE fhnd )
 {
-   const char * crlf = hb_conNewLine();
-   HB_SIZE      len  = strlen( crlf );
+   const char * eol = hb_conNewLine();
+   HB_SIZE      len = strlen( eol );
 
-   return hb_fsWriteLarge( fhnd, crlf, len ) == len;
+   return hb_fsWriteLarge( fhnd, eol, len ) == len;
 }

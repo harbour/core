@@ -1686,7 +1686,7 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
    {
       LPCTSTR lpFileName;
       LPTSTR lpFree;
-      DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
+      DWORD dwFlags = 0;
 
       lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
 
@@ -1696,8 +1696,10 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR ulAttr )
          dwFlags |= FILE_ATTRIBUTE_HIDDEN;
       if( ulAttr & HB_FA_SYSTEM )
          dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-      if( ulAttr & HB_FA_NORMAL )
-         dwFlags |= FILE_ATTRIBUTE_NORMAL;
+      if( ulAttr & HB_FA_ARCHIVE )
+         dwFlags |= FILE_ATTRIBUTE_ARCHIVE;
+      if( dwFlags == 0 )
+         dwFlags = FILE_ATTRIBUTE_NORMAL;
       fResult = SetFileAttributes( lpFileName, dwFlags ) != 0;
       hb_fsSetIOError( fResult, 0 );
 

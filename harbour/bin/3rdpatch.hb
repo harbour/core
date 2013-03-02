@@ -220,9 +220,9 @@
 #include "directry.ch"
 
 #if defined( _TRACE )
-#  define TRACE( str )    OutStd( "T: " + str + hb_eol() )
+   #define TRACE( str )   OutStd( "T: " + str + hb_eol() )
 #else
-#  define TRACE( str )
+   #define TRACE( str )
 #endif
 
 #define ONEARG_KW   2        /* one-arg line keyword */
@@ -239,16 +239,15 @@ STATIC s_cTempDir := NIL
 STATIC s_nErrors := 0        /* error indicator */
 STATIC s_cSourceRoot := NIL  /* top directory of the newly-unpacked source tree */
 
-STATIC s_aTools := {             ;
-   "patch"  => NIL,              ;
-   "diff"   => NIL,              ;
-   "curl"   => NIL,              ;
-   "tar"    => NIL,              ;
-   "gzip"   => NIL,              ;
-   "bzip2"  => NIL,              ;
-   "xz"     => NIL,              ;
-   "unzip"  => NIL               ;
-}
+STATIC s_aTools := { ;
+   "patch"  => NIL, ;
+   "diff"   => NIL, ;
+   "curl"   => NIL, ;
+   "tar"    => NIL, ;
+   "gzip"   => NIL, ;
+   "bzip2"  => NIL, ;
+   "xz"     => NIL, ;
+   "unzip"  => NIL }
 
 PROCEDURE Main( ... )
 

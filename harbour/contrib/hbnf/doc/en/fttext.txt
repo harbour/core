@@ -35,7 +35,7 @@
 
    $DESCRIPTION$
       The FT_F*() file functions are for reading text files, that is,
-      files where each line (record) is delimited by a CRLF pair.
+      files where each line (record) is delimited by a CRLF/LF.
 
       Each file is opened in its own "workarea", similar to the concept
       use by dbf files.  As provided, a maximum of 10 files (in 10
@@ -133,7 +133,7 @@
       This function moves the record pointer to the first record
       in the currently selected text file workarea.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       ft_FUse( "text.c" )      // open text file
@@ -209,7 +209,7 @@
       This function returns the current record number of the file open
       in the currently selected text file workarea.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       ft_FUse( "text.c" )      // open text file
@@ -252,7 +252,7 @@
 
       If a read error occurs ^ft_FError()^n will contain the error code.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // read last line
@@ -295,7 +295,7 @@
 
       If a read error occurs ^ft_FError()^n will contain the error code.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // display each record of a text file
@@ -333,7 +333,7 @@
    $DESCRIPTION$
       This function returns a line of text read from the file in the
       currently selected text file workarea.  Text lines are delimited
-      with a CRLF pair.  The record pointer is not moved.
+      with a CRLF/LF.  The record pointer is not moved.
 
       Currently the maximum record size is 4096 characters.  You may
       increase the maximum record size by changing the value of ^b#define
@@ -343,7 +343,7 @@
 
       If a read error occurs ^ft_FError()^n will contain the error code.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // display each record of a text file
@@ -384,7 +384,7 @@
    $DESCRIPTION$
       This function deletes one or several lines of text from the file
       in the currently selected text file workarea.  Text lines are
-      delimited with a CRLF pair.  The record pointer is not moved,
+      delimited with a CRLF/LF.  The record pointer is not moved,
       unless the deleted lines occur at the end of the file, in which
       case ^bft_fRecno()^n will equal ^bft_fLastRe()^n and ^bft_fEOF()^n
       will be set to TRUE.
@@ -422,11 +422,11 @@
    $DESCRIPTION$
       This function inserts a line of text in the file in the currently
       selected text file workarea.  Text lines are delimited with a
-      CRLF pair.
+      CRLF/LF.
 
       The record pointer is not moved.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
       Each line inserted with this function will be empty.
 
    $EXAMPLES$
@@ -463,19 +463,19 @@
    $DESCRIPTION$
       This function appends a line of text to the file in the currently
       selected text file workarea.  Text lines are delimited with a
-      CRLF pair.  The record pointer is moved to the last appended
+      CRLF/LF.  The record pointer is moved to the last appended
       record.
 
       Multiple lines may be appended with one call to ft_FAppend().
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
       Each line appended with this function will be empty.
 
-      NOTE:  Occasionally a text file may contain a non-CRLF terminated
+      NOTE:  Occasionally a text file may contain a non-CRLF/LF terminated
       line, at the end of the file ("stragglers").  This function assumes
       these stragglers to be the last line of the file, and begins
       appending the new lines after this line.  In other words, if the
-      last line in the text file is not terminated with a CRLF pair prior
+      last line in the text file is not terminated with a CRLF/LF prior
       to calling ft_FAppend(), the function will terminate that last line
       before appending any new lines.
 
@@ -521,7 +521,7 @@
    $DESCRIPTION$
       This function writes a line of text to the file in the currently
       selected text file workarea.  Text lines are delimited with a
-      CRLF pair.  The record pointer is not moved.
+      CRLF/LF.  The record pointer is not moved.
 
       The contents of the current record are updated to reflect the new
       new line written, unless the Insert option is selected.
@@ -530,7 +530,7 @@
       if in overstrike mode, else inserting a new line (same as
       ft_FInsert()).
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // write a line of text to a file
@@ -570,7 +570,7 @@
    $DESCRIPTION$
       This function returns the number of the last record in a text file.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       ft_FUse( "text.c" )
@@ -601,7 +601,7 @@
    $DESCRIPTION$
       This function is similar to the CLIPPER Eof() function.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       ft_FUse( "fttext.c" )
@@ -636,7 +636,7 @@
    $DESCRIPTION$
       This function is similar to the CLIPPER Bof() function.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       ft_FUse( "fttext.c" )
@@ -685,7 +685,7 @@
       large and the current record is a high number, you may see some
       delay as ft_FGoto(0) skips through the file.
 
-      A text file "record" is a line of text terminated by a CRLF pair.
+      A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // read 5th line of text from file
