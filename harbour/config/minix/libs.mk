@@ -6,7 +6,7 @@ SYSLIBPATHS := /usr/lib /usr/pkg/lib
 
 ifneq ($(HB_LINKING_RTL),)
    ifeq ($(HB_LIBNAME_CURSES),)
-      HB_LIBNAME_CURSES := ncurses
+      HB_LIBNAME_CURSES := curses
    endif
    ifneq ($(HB_HAS_CURSES),)
       SYSLIBS += $(HB_LIBNAME_CURSES)

@@ -67,7 +67,9 @@
 #  define _XOPEN_SOURCE_EXTENDED
 #endif
 #include <curses.h>
-#if defined( HB_OS_SUNOS ) || defined( __PDCURSES__ )
+#if defined( HB_OS_SUNOS ) || \
+    defined( __PDCURSES__ ) || \
+    defined( HB_OS_MINIX )
 #  include <term.h>
 #endif
 #if defined( HB_HAS_GPM )
