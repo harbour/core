@@ -132,10 +132,15 @@ static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
 #endif
 }
 
+#ifndef LOAD_LIBRARY_SEARCH_SYSTEM32
+#define LOAD_LIBRARY_SEARCH_SYSTEM32  0x00000800
+#endif
+
 HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
 {
    TCHAR * pLibPath = hbwapi_FileNameAtSystemDir( pFileName );
 
+   /* TODO: Replace flag with LOAD_LIBRARY_SEARCH_SYSTEM32 in the future [vszakats] */
    HMODULE h = LoadLibraryEx( pLibPath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
 
    hb_xfree( pLibPath );

@@ -60,11 +60,11 @@ static HB_LANG s_lang_en =
    {
       /* Identification */
 
-      "EN",                        /* ID */
+      "en",                        /* ISO ID (2 chars) */
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */
@@ -151,7 +151,7 @@ static HB_LANG s_lang_en =
       "Lock required",
       "Write not allowed",
       "Append lock failed",
-      "Lock failure",
+      "Lock Failure",
       "",
       "",
       "",
@@ -164,7 +164,7 @@ static HB_LANG s_lang_en =
 
       /* Internal error names */
 
-      "Unrecoverable error %lu: ",
+      "Unrecoverable error %d: ",
       "Error recovery failure",
       "No ERRORBLOCK() for error",
       "Too many recursive error handler calls",
@@ -191,7 +191,9 @@ static HB_LANG s_lang_en =
       "hb_xrealloc requested to resize to zero bytes",
       "hb_xalloc requested to allocate zero bytes",
 
-      "YYYY/MM/DD",
+      /* Texts */
+
+      "YYYY/MM/DD", /* NOTE: Use YYYY for year, MM for month and DD for days. */
       "Y",
       "N"
    }
