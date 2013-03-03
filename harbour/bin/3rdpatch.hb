@@ -35,7 +35,7 @@
  *   The number of arguments taken depends on the keyword itself.
  *
  * The keywords themselves are case sensitive (only upper case keywords are
- * recognized). The arguments are case senstive as well.
+ * recognized). The arguments are case sensitive as well.
  *
  * Currently recognized keywords and their arguments are as follows:
  *
