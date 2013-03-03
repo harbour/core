@@ -30,7 +30,7 @@ PROCEDURE Main()
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
             cPO := ;
                "/*" + hb_eol() + ;
-               " * $Id$" + hb_eol() + ;
+               " * $" + "Id" + "$" + hb_eol() + ;
                " */" + hb_eol() + ;
               hb_eol()
             cPO += Item( "", Meta() )

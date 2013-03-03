@@ -1177,9 +1177,6 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
       ENDIF
    ENDIF
 
-   /* Make a copy to hbmk structure so that we can use it in deeper
-      functions. The only reason I kept the local version is to
-      keep above code parts easier to read. [vszakats] */
    hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_DirSepDel( hb_DirSepToOS( hbmk[ _HBMK_cHB_INSTALL_BIN ] ) )
    hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_DirSepDel( hb_DirSepToOS( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) )
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := hb_DirSepDel( hb_DirSepToOS( hbmk[ _HBMK_cHB_INSTALL_LI3 ] ) )
