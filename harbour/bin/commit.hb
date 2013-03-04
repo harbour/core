@@ -87,7 +87,7 @@ PROCEDURE Main()
 
    cLog := MemoRead( cLogName )
    cOldLang := hb_cdpSelect( "EN" )
-   cHit := hb_AtX( "\n[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9] UTC[\-+][0-9][0-9][0-9][0-9] ", cLog )
+   cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
    IF Empty( cHit )
       cHit := ""
    ENDIF

@@ -581,7 +581,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL tmp
 
    LOCAL cCommand
-   LOCAL cRegex := "[[:space:]]_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+   LOCAL cRegex := "[\s]_?HB_FUN_([A-Z0-9_]*)[\s]"
 
    /* NOTE: non-gcc extractor configs don't support dynamic libs as input. */
    DO CASE
@@ -593,7 +593,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
       ELSE
          cCommand := "podump -symbols {I}"
       ENDIF
-      cRegex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+      cRegex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[\s]"
    CASE GetEnv( "HB_COMPILER" ) == "watcom"
       cCommand := "wlib {I}"
    CASE GetEnv( "HB_COMPILER" ) == "bcc"
@@ -649,12 +649,12 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    hDynamic := { => }
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )
          NEXT
       ENDIF
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( "[\s]" + _HB_FUNC_EXCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, tmp[ 2 ] )
          NEXT

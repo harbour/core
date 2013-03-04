@@ -863,9 +863,9 @@ HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nErro
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
    hb_retni( SQL_ERROR );
-   hb_storc( "", 4 );
+   hb_storc( NULL, 4 );
    hb_stornl( 0, 5 );
-   hb_storc( "", 6 );
+   hb_storc( NULL, 6 );
 #endif
 }
 

@@ -5249,7 +5249,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          int x = wnd->iNewPosX, y = wnd->iNewPosY;
 
-/*
+#if 0
          if( wnd->window )
          {
             XWindowAttributes wndAttr;
@@ -5271,7 +5271,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
             }
          }
-*/
+#endif
+
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 2 );

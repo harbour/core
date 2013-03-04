@@ -847,7 +847,7 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
             *eol_len = 2;
          return tmp + 2;
       }
-      else if( buf[ tmp ] == FT_CHR_LF )
+      else if( buf[ tmp ] == FT_CHR_LF || buf[ tmp ] == FT_CHR_CR )
       {
          if( eol_len )
             *eol_len = 1;

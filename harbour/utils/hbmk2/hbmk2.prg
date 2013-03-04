@@ -193,6 +193,7 @@ EXTERNAL hbmk_KEYW
 #define _SELF_NAME_             "hbmk2"
 
 #define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+#define R_( x )                 ( x ) /* marking for regexps */
 
 #define _TARG_PLAT              1
 #define _TARG_COMP              2
@@ -294,8 +295,8 @@ EXTERNAL hbmk_KEYW
 
 #define _HBMK_TARGENAME_ADHOC   ".adhoc."
 
-#define _HBMK_REGEX_INCLUDE     '(^|;)[[:blank:]]*#[[:blank:]]*(incl|inclu|includ|include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|['`].+?'"+')'
-#define _HBMK_REGEX_REQUIRE     '(^|;)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')'
+#define _HBMK_REGEX_INCLUDE     R_( '(?:^|;)[ \t]*#[ \t]*(?:incl|inclu|includ|include|import)[ \t]*(\".+?\"' + "|<.+?>|['`].+?')" )
+#define _HBMK_REGEX_REQUIRE     R_( '(?:^|;)[ \t]*#[ \t]*require[ \t]*(\".+?\"' + "|'.+?')" )
 
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
@@ -3872,7 +3873,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       #define _HBLIB_FULLPATH( cName ) ( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + hb_ps() + cLibLibPrefix + cName + cLibLibExt )
 
-      cLibHBX_Regex := "[[:space:]]_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+      cLibHBX_Regex := R_( "[\s]_?HB_FUN_([A-Z0-9_]*)[\s]" )
 
       DO CASE
       /* GCC family */
@@ -4043,7 +4044,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm"
          cOpt_LibHBX := "-g" + iif( hbmk[ _HBMK_cPLAT ] == "darwin", "", " --defined-only -C" ) + " {LI}"
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
-            cLibHBX_Regex := "[[:space:]]T" + cLibHBX_Regex
+            cLibHBX_Regex := R_( "[\s]T" ) + cLibHBX_Regex
          ENDIF
          IF l_lLIBGROUPING .AND. HBMK_ISPLAT( "linux|beos|qnx|android|vxworks|cygwin|bsd" )
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--start-group {LL} {LB} {LF} -Wl,--end-group" )
@@ -4739,7 +4740,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_LibHBX := "{LI}"
          IF HBMK_ISPLAT( "linux|dos|os2" )
             /* register callconv (-6r, -5r) puts an underscore after names */
-            cLibHBX_Regex := "[[:space:]]_?HB_FUN_([A-Z0-9_]*)_[[:space:]]"
+            cLibHBX_Regex := R_( "[\s]_?HB_FUN_([A-Z0-9_]*)_[\s]" )
          ENDIF
          IF HBMK_ISPLAT( "win|os2" )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
@@ -5032,7 +5033,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC := "-nologo -c"
          cBin_LibHBX := "dumpbin.exe"
          cOpt_LibHBX := "-symbols {LI}"
-         cLibHBX_Regex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+         cLibHBX_Regex := R_( "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[\s]" )
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cPLAT ] == "wce"
                IF hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400
@@ -5218,7 +5219,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_pocc( hbmk, cBin_Lib + " {ID} -out:{OL}", cSourceDLL, cTargetLib, cFlags ) }
          cBin_LibHBX := "podump.exe"
          cOpt_LibHBX := "-symbols {LI}"
-         cLibHBX_Regex := "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[[:space:]]"
+         cLibHBX_Regex := R_( "SECT[0-9A-Z][0-9A-Z ].*[Ee]xternal.*_?HB_FUN_([A-Z0-9_]*)[\s]" )
          IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDIF
@@ -8365,7 +8366,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                                       NIL /* lNewLine */, NIL, ;
                                       NIL /* nGetMatch */, ;
                                       .T. /* lOnlyMatch */ )
-            cHeader := ATail( tmp ) /* Last group in match marker */
+            cHeader := tmp[ 2 ]
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
@@ -8494,7 +8495,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                                          NIL /* lNewLine */, NIL, ;
                                          NIL /* nGetMatch */, ;
                                          .T. /* lOnlyMatch */ )
-               cHeader := ATail( tmp ) /* Last group in match marker */
+               cHeader := tmp[ 2 ]
                cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
                hbmk[ _HBMK_hAUTOHBCFOUND ][ "." + cHeader ] := hb_FNameExtSet( cHeader, ".hbc" )
             NEXT
@@ -13182,7 +13183,7 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
 
    LOCAL cOldCP := hb_cdpSelect( "EN" )
 
-   IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z_][A-Z_0-9]*)", .T., .T. ) )
+   IF ! Empty( pRegex := hb_regexComp( R_( "HB_FUN_([A-Z_][A-Z_0-9]*)" ), .T., .T. ) )
       FOR EACH cLine IN hb_ATokens( StrTran( cString, Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
          IF AScan( sc_aException, {| tmp | tmp $ Lower( cLine ) } ) == 0
             FOR EACH tmp IN hb_regexAll( pRegex, cLine,,,,, .T. )
@@ -13247,8 +13248,8 @@ STATIC PROCEDURE GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll, cName )
    IF ! Empty( cFile := hb_MemoRead( cFileName ) )
 
       FOR EACH cFilter IN { ;
-         "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
-         "ANNOUNCE ([a-zA-Z0-9_]*)$" }
+         R_( "^DYNAMIC ([a-zA-Z0-9_]*)$" ), ;
+         R_( "ANNOUNCE ([a-zA-Z0-9_]*)$" ) }
 
          IF ! Empty( pRegex := hb_regexComp( cFilter, .T., .T. ) )
             FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
@@ -13347,17 +13348,17 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    hDynamic := { => }
 
    IF ! Empty( cFile := MemoRead( cInputName ) )
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( R_( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)" ), .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )
          NEXT
       ENDIF
-      IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( R_( "[\s]" + _HB_FUNC_EXCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)" ), .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aExclude, tmp[ 2 ] )
          NEXT
       ENDIF
-      IF ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+      IF ! Empty( pRegex := hb_regexComp( R_( "^DYNAMIC ([a-zA-Z0-9_]*)$" ), .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             hDynamic[ Upper( tmp[ 2 ] ) ] := tmp[ 2 ]
          NEXT
@@ -13864,7 +13865,7 @@ STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
                                    NIL /* lNewLine */, NIL, ;
                                    NIL /* nGetMatch */, ;
                                    .T. /* lOnlyMatch */ )
-         AAdd( aExtension, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
+         AAdd( aExtension, SubStr( tmp[ 2 ], 2, Len( tmp[ 2 ] ) - 2 ) )
       NEXT
    ENDIF
 

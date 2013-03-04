@@ -14,12 +14,6 @@
 #include "hbgtinfo.ch"
 #include "hbgfx.ch"
 
-#if defined( __PLATFORM__WINDOWS )
-   REQUEST HB_GT_WVT_DEFAULT
-#elif defined( __PLATFORM__UNIX )
-   REQUEST HB_GT_XWC_DEFAULT
-#endif
-
 PROCEDURE Main()
 
    LOCAL nRed, nGreen, nBlue
@@ -30,11 +24,17 @@ PROCEDURE Main()
 #  elif defined( __PLATFORM__UNIX )
       hbshell_gtSelect( "GTXWC" )
 #  endif
+#else
+#  if defined( __PLATFORM__WINDOWS )
+     REQUEST HB_GT_WVT_DEFAULT
+#  elif defined( __PLATFORM__UNIX )
+     REQUEST HB_GT_XWC_DEFAULT
+#  endif
 #endif
 
-   ? hb_gtVersion()
+   ? "GT" + hb_gtVersion()
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
-      ? "You are using a non graphics capable gt:"
+      ? "You are using a non graphics capable gt"
       QUIT
    ENDIF
 
@@ -89,4 +89,4 @@ PROCEDURE Main()
                      hb_gtInfo( HB_GTI_SCREENWIDTH ) - 1, nGreen )
    WAIT
 
-RETURN
+   RETURN

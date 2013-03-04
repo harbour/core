@@ -473,7 +473,7 @@ HB_FUNC( HB_FGETDATETIME )
    {
       if( HB_ISBYREF( 3 ) )
       {
-         hb_storc( "", 3 );
+         hb_storc( NULL, 3 );
          hb_stordl( 0, 2 );
       }
       else
