@@ -902,9 +902,15 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /* ********** Graphics API ********** */
 
+#define hb_gfx_cord( t, l, b, r, tmp )    \
+               do { \
+                     if( l > r ) { tmp = r; r = l; l = tmp; } \
+                     if( t > b ) { tmp = b; b = t; t = tmp; } \
+               } while( 0 )
+
 static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
-   int iRet = 1;
+   int iRet = 1, iTmp;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
@@ -942,6 +948,7 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
          break;
 
       case HB_GFX_SETCLIP:
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          al_set_clip( s_bmp, iLeft, iTop, iRight, iBottom );
          s_CLIP.iTop    = iTop;
          s_CLIP.iLeft   = iLeft;
@@ -973,10 +980,12 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
          else
             al_draw_line( s_bmp, iLeft, iTop, iRight, iBottom, iColor );
          al_release_bitmap( s_bmp );
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          GT_UPD_GFXRECT( iTop, iLeft, iBottom, iRight );
          break;
 
       case HB_GFX_RECT:
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          al_acquire_bitmap( s_bmp );
          al_draw_rect( s_bmp, iLeft, iTop, iRight, iBottom, iColor );
          al_release_bitmap( s_bmp );
@@ -984,6 +993,7 @@ static int hb_gt_alleg_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft
          break;
 
       case HB_GFX_FILLEDRECT:
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          al_acquire_bitmap( s_bmp );
          al_draw_rect_fill( s_bmp, iLeft, iTop, iRight, iBottom, iColor );
          al_release_bitmap( s_bmp );

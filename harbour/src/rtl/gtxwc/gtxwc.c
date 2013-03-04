@@ -3135,6 +3135,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 #ifdef XWC_DEBUG
          printf( "Event: CreateNotify\r\n" ); fflush( stdout );
 #endif
+         wnd->iNewPosX = evt->xcreatewindow.x;
+         wnd->iNewPosY = evt->xcreatewindow.y;
          break;
 
       case MappingNotify:
@@ -3167,8 +3169,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 #ifdef XWC_DEBUG
          printf( "Event: ConfigureNotify\r\n" ); fflush( stdout );
 #endif
-         wnd->newWidth  = evt->xconfigure.width;
-         wnd->newHeight = evt->xconfigure.height;
+         wnd->iNewPosX   = evt->xconfigure.x;
+         wnd->iNewPosY   = evt->xconfigure.y;
+         wnd->newWidth   = evt->xconfigure.width;
+         wnd->newHeight  = evt->xconfigure.height;
          wnd->fWinResize = HB_TRUE;
          break;
 
@@ -4594,6 +4598,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
                               wnd->fontWidth * wnd->cols,
                               wnd->fontHeight * wnd->rows,
                               0, blackColor, blackColor );
+      XSelectInput( wnd->dpy, wnd->window, XWC_STD_MASK );
       wnd->gc = XCreateGC( wnd->dpy, wnd->window, 0, NULL );
 
       /* Line width 2 */
@@ -4622,7 +4627,6 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    /* Request WM to deliver destroy event */
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );
 
-   XSelectInput( wnd->dpy, wnd->window, XWC_STD_MASK );
 #ifdef X_HAVE_UTF8_STRING
    wnd->im = XOpenIM( wnd->dpy, NULL, NULL, NULL );
    if( wnd->im )
@@ -5243,26 +5247,31 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
       {
-         int x = 0, y = 0;
+         int x = wnd->iNewPosX, y = wnd->iNewPosY;
 
+/*
          if( wnd->window )
          {
             XWindowAttributes wndAttr;
             if( XGetWindowAttributes( wnd->dpy, wnd->window, &wndAttr ) )
             {
-               if( iType == HB_GTI_SETPOS_ROWCOL )
-               {
-                  x = wndAttr.y / wnd->fontHeight;
-                  y = wndAttr.x / wnd->fontWidth;
-               }
-               else
+               Window wndChild;
+               if( ! XTranslateCoordinates( wnd->dpy, wnd->window, wndAttr.root,
+                                            wndAttr.x, wndAttr.y, &x, &y,
+                                            &wndChild ) )
                {
                   x = wndAttr.x;
                   y = wndAttr.y;
                }
+               if( iType == HB_GTI_SETPOS_ROWCOL )
+               {
+                  iVal = x;
+                  x = y / wnd->fontHeight;
+                  y = iVal / wnd->fontWidth;
+               }
             }
          }
-
+*/
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 2 );
@@ -5288,9 +5297,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( iType == HB_GTI_SETPOS_ROWCOL )
          {
-            int c = y;
+            iVal = y;
             y = x * wnd->fontHeight;
-            x = c * wnd->fontWidth;
+            x = iVal * wnd->fontWidth;
          }
          if( wnd->window )
          {
@@ -5361,10 +5370,16 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    return HB_TRUE;
 }
 
+#define hb_gfx_cord( t, l, b, r, tmp )    \
+               do { \
+                     if( l > r ) { tmp = r; r = l; l = tmp; } \
+                     if( t > b ) { tmp = b; b = t; t = tmp; } \
+               } while( 0 )
+
 static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PXWND_DEF wnd;
-   int iRet = 1;
+   int iRet = 1, iTmp;
    XColor color;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
@@ -5445,10 +5460,12 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          XDrawLine( wnd->dpy, wnd->drw, wnd->gc,
                     iLeft, iTop, iRight, iBottom );
          HB_XWC_XLIB_UNLOCK();
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case HB_GFX_RECT:
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawRectangle( wnd->dpy, wnd->drw, wnd->gc,
@@ -5458,6 +5475,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          break;
 
       case HB_GFX_FILLEDRECT:
+         hb_gfx_cord( iTop, iLeft, iBottom, iRight, iTmp );
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
@@ -5467,42 +5485,56 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          break;
 
       case HB_GFX_CIRCLE:
+         iTop -= iBottom;
+         iLeft -= iBottom;
+         iBottom <<= 1;
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
-                   iLeft, iTop, iBottom, iBottom, 0, 360*64 );
+                   iLeft, iTop, iBottom, iBottom, 0, 360 * 64 );
          HB_XWC_XLIB_UNLOCK();
-         hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop,
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
       case HB_GFX_FILLEDCIRCLE:
+         iTop -= iBottom;
+         iLeft -= iBottom;
+         iBottom <<= 1;
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
-                   iLeft, iTop, iBottom, iBottom, 0, 360*64 );
+                   iLeft, iTop, iBottom, iBottom, 0, 360 * 64 );
          HB_XWC_XLIB_UNLOCK();
-         hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop,
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
       case HB_GFX_ELLIPSE:
+         iTop -= iBottom;
+         iLeft -= iRight;
+         iBottom <<= 1;
+         iRight <<= 1;
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
-                   iLeft, iTop, iRight, iBottom, 0, 360*64 );
+                   iLeft, iTop, iRight, iBottom, 0, 360 * 64 );
          HB_XWC_XLIB_UNLOCK();
-         hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop,
                                        iLeft + iRight, iTop + iBottom );
          break;
 
       case HB_GFX_FILLEDELLIPSE:
+         iTop -= iBottom;
+         iLeft -= iRight;
+         iBottom <<= 1;
+         iRight <<= 1;
          HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
-                   iLeft, iTop, iRight, iBottom, 0, 360*64 );
+                   iLeft, iTop, iRight, iBottom, 0, 360 * 64 );
          HB_XWC_XLIB_UNLOCK();
-         hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop,
                                        iLeft + iRight, iTop + iBottom );
          break;
 

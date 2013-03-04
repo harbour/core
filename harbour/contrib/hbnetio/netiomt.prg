@@ -62,8 +62,8 @@
 #include "error.ch"
 
 FUNCTION netio_MTServer( nPort, cIfAddr, cRootDir, xRPC, ;
-      cPasswd, nCompressLevel, nStrategy, ;
-      sSrvFunc )
+                         cPasswd, nCompressLevel, nStrategy, ;
+                         sSrvFunc )
 
    LOCAL pListenSocket, lRPC
    LOCAL oError
@@ -89,8 +89,8 @@ FUNCTION netio_MTServer( nPort, cIfAddr, cRootDir, xRPC, ;
       pListenSocket := netio_Listen( nPort, cIfAddr, cRootDir, lRPC )
       IF ! Empty( pListenSocket )
          hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ;
-            xRPC, sSrvFunc, ;
-            cPasswd, nCompressLevel, nStrategy ) )
+                                          xRPC, sSrvFunc, ;
+                                          cPasswd, nCompressLevel, nStrategy ) )
       ENDIF
    ELSE
       oError := ErrorNew()

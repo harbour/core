@@ -41,6 +41,7 @@ DYNAMIC netio_RPC
 DYNAMIC netio_RPCFilter
 DYNAMIC netio_Server
 DYNAMIC netio_ServerStop
+DYNAMIC netio_ServerTimeOut
 DYNAMIC netio_SrvSendData
 DYNAMIC netio_SrvSendItem
 DYNAMIC netio_SrvStatus

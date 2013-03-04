@@ -146,6 +146,7 @@ Server side functions:
    NETIO_RPCFILTER( <pConnectionSocket>,
                     <sFuncSym> | <hValue> | NIL ) -> NIL
    NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+   NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
    NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>],
                    [<xRPC> | <sFuncSym> | <hValue>],
                    [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],

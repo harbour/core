@@ -19,6 +19,7 @@
  *       NETIO_SERVER( <pConnectionSocket> ) -> NIL
  *       NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
  *                                              -> NIL
+ *       NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
  *       NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
  *                                              -> <lPrev>
  *       NETIO_RPCFILTER( <pConnectionSocket>,
@@ -85,6 +86,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbthread.h"
+#include "hbdate.h"
 #include "netio.h"
 
 
@@ -107,6 +109,7 @@ typedef struct _HB_CONSRV
    PHB_FILE       fileTable[ NETIO_FILES_MAX ];
    int            filesCount;
    int            firstFree;
+   int            timeout;
    HB_BOOL        stop;
    HB_BOOL        rpc;
    HB_BOOL        login;
@@ -346,6 +349,7 @@ static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOO
 
    conn->sd = connsd;
    conn->rpc = rpc;
+   conn->timeout = -1;
    if( szRootPath )
    {
       hb_strncpy( conn->rootPath, szRootPath, sizeof( conn->rootPath ) - 1 );
@@ -358,7 +362,10 @@ static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOO
 static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
+   HB_MAXUINT end_timer;
    long lRead = 0, l;
+
+   end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
 
    while( lRead < len && ! conn->stop )
    {
@@ -369,7 +376,8 @@ static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
       if( l <= 0 )
       {
          if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-             hb_vmRequestQuery() != 0 )
+             hb_vmRequestQuery() != 0 ||
+             ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
             break;
       }
       else
@@ -557,6 +565,20 @@ HB_FUNC( NETIO_SERVERSTOP )
       PHB_CONSRV conn = s_consrvParam( 1 );
       if( conn )
          conn->stop = fStop;
+   }
+}
+
+/* NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+ */
+HB_FUNC( NETIO_SERVERTIMEOUT )
+{
+   PHB_CONSRV conn = s_consrvParam( 1 );
+
+   if( conn )
+   {
+      hb_retni( conn->timeout );
+      if( HB_ISNUM( 2 ) )
+         conn->timeout = hb_parni( 2 );
    }
 }
 
