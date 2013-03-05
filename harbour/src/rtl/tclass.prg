@@ -181,14 +181,14 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    ELSEIF Empty( xSuper )
       ::asSuper := {}
    ELSEIF HB_ISSTRING( xSuper )
-      ::asSuper := { __dynSN2Sym( xSuper ) }
+      ::asSuper := { __dynsN2Sym( xSuper ) }
    ELSEIF HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
          IF HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
          ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
-            AAdd( ::asSuper, __dynSN2Sym( i ) )
+            AAdd( ::asSuper, __dynsN2Sym( i ) )
          ENDIF
       NEXT
    ENDIF

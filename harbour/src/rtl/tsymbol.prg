@@ -69,7 +69,7 @@ ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
 
-   ::nSym := __dynSN2Sym( cSymName )
+   ::nSym := __dynsN2Sym( cSymName )
 
    RETURN Self
 

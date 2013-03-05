@@ -366,7 +366,7 @@
    #xtranslate WildMatch( [<x,...>] )          => hb_WildMatch( <x> )
    #xtranslate hb_bitIsSet( [<x,...>] )        => hb_bitTest( <x> )
    #xtranslate hb_DeserialNext( <x> )          => hb_Deserialize( <x> )
-   #xtranslate hb_FuncPtr( <x> )               => __dynSN2Sym( <x> )
+   #xtranslate hb_FuncPtr( <x> )               => __dynsN2Sym( <x> )
 
    #xtranslate HexToNum( [<c,...>] )           => hb_HexToNum( <c> )
    #xtranslate NumToHex( [<n,...>] )           => hb_NumToHex( <n> )

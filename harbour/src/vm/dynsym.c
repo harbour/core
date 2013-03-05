@@ -688,7 +688,9 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
       if( pDynSym )
       {
          HB_DYNSYM_LOCK();
-         if( ! hb_dynsymPos( pDynSym->pSymbol->szName, &uiPos ) )
+         if( hb_dynsymPos( pDynSym->pSymbol->szName, &uiPos ) )
+            ++uiPos;
+         else
             uiPos = 0;
          HB_DYNSYM_UNLOCK();
       }

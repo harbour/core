@@ -704,10 +704,6 @@ TABLE OF CONTENT
                                  You have to use path format native to your shell.
                                  F.e. to specify C:\dir on Windows, with Cygwin
                                  you should use /cygdrive/c/dir, with MSYS /c/dir.
-                                 It's also possible to use following macros:
-                                    {hb_plat} - Target platform
-                                    {hb_comp} - Target compiler
-                                    {hb_cpu}  - Target CPU
 
    - HB_USER_PRGFLAGS            User Harbour compiler options
    - HB_USER_CFLAGS              User C compiler options

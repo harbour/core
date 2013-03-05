@@ -266,7 +266,12 @@ FUNCTION hb_DirSepDel( cDir )
    RETURN cDir
 
 FUNCTION hb_DirSepToOS( cFileName )
-   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+
+   IF HB_ISSTRING( cDir )
+      RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+   ENDIF
+
+   RETURN ""
 
 FUNCTION hb_DirBuild( cDir )
 

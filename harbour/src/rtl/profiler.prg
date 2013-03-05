@@ -252,7 +252,7 @@ METHOD ignoreSymbol( cSymbol ) CLASS HBProfile
 METHOD gatherFunctions() CLASS HBProfile
 
    LOCAL lProfile  := __SetProfiler( .F. )
-   LOCAL nSymCount := __dynSCount()
+   LOCAL nSymCount := __dynsCount()
    LOCAL cName
    LOCAL n
 
@@ -262,12 +262,12 @@ METHOD gatherFunctions() CLASS HBProfile
    FOR n := 1 TO nSymCount
 
       // Is the symbol a function?
-      IF __dynSIsFun( n )
+      IF __dynsIsFun( n )
 
          // If we're not ignoring the symbol...
-         IF ! ::ignoreSymbol( cName := __dynSGetName( n ) )
+         IF ! ::ignoreSymbol( cName := __dynsGetName( n ) )
             // Yes, it is, add it to the profile.
-            AAdd( ::aProfile, HBProfileFunction():new( cName, __dynSGetPRF( n ) ) )
+            AAdd( ::aProfile, HBProfileFunction():new( cName, __dynsGetPrf( n ) ) )
          ENDIF
 
       ENDIF

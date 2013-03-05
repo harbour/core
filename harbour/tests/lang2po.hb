@@ -21,9 +21,9 @@ PROCEDURE Main()
    LOCAL cName
    LOCAL cPO
 
-   nCount := __dynSCount()
+   nCount := __dynsCount()
    FOR tmp := 1 TO nCount
-      cName := __dynSGetName( tmp )
+      cName := __dynsGetName( tmp )
       IF LEFTEQUAL( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;

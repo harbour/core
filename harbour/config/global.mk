@@ -1727,23 +1727,9 @@ else
       endif
       endif
       endif
-
-      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
-   else
-      # TOFIX: HB_INSTALL_PREFIX will have to be duplicated internally to avoid
-      #        recursive operation here.
-
-      # Handle simple macros in value
-      HB_INSTALL_PREFIX := $(subst {hb_plat},$(HB_PLATFORM),$(HB_INSTALL_PREFIX))
-      HB_INSTALL_PREFIX := $(subst {hb_comp},$(HB_COMPILER),$(HB_INSTALL_PREFIX))
-      HB_INSTALL_PREFIX := $(subst {hb_cpu},$(HB_CPU),$(HB_INSTALL_PREFIX))
-      ifneq ($(HB_SRC_ROOTPATH),)
-         HB_INSTALL_PREFIX := $(subst {hb_top},$(HB_SRC_ROOTPATH),$(HB_INSTALL_PREFIX))
-      else
-         HB_INSTALL_PREFIX := $(subst {hb_top},$(realpath $(TOP)$(ROOT)),$(HB_INSTALL_PREFIX))
-      endif
-      HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
    endif
+
+   HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
 endif
 
 export HB_INSTALL_PREFIX

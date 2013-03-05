@@ -260,7 +260,6 @@ EXTERNAL hbmk_KEYW
 #define _FNF_FWDSLASHCYGWIN     2
 #define _FNF_FWDSLASHMSYS       3
 
-#define _MACRO_NO_PREFIX        ""
 #define _MACRO_NORM_PREFIX      "$"
 #define _MACRO_LATE_PREFIX      "%"
 #define _MACRO_PREFIX_ALL       ( _MACRO_NORM_PREFIX + _MACRO_LATE_PREFIX )
@@ -1080,7 +1079,7 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, lIgnoreEnvVar )
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
       hbmk[ _HBMK_cHB_INSTALL_INC ] := ""
    ELSE
-      hbmk[ _HBMK_cHB_INSTALL_PFX ] := MacroProc( hbmk, hb_DirSepToOS( GetEnv( _HBMK_ENV_INSTALL_PFX ) ), NIL, _MACRO_NO_PREFIX )
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := hb_DirSepToOS( GetEnv( _HBMK_ENV_INSTALL_PFX ) )
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_DirSepToOS( GetEnv( "HB_INSTALL_BIN" ) )
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_DirSepToOS( GetEnv( "HB_INSTALL_LIB" ) )
       hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_DirSepToOS( GetEnv( "HB_INSTALL_INC" ) )
@@ -10794,6 +10793,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
             ENDCASE
          ENDIF
+
       CASE Lower( Left( cLine, Len( "shared="       ) ) ) == "shared="       ; cLine := SubStr( cLine, Len( "shared="       ) + 1 )
          DO CASE
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lSHARED ] := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F.
@@ -13879,9 +13879,9 @@ STATIC PROCEDURE __hbshell_ext_static_init()
    LOCAL nCount
    LOCAL cName
 
-   nCount := __dynSCount()
+   nCount := __dynsCount()
    FOR tmp := 1 TO nCount
-      cName := __dynSGetName( tmp )
+      cName := __dynsGetName( tmp )
       IF LEFTEQUAL( cName, "__HBEXTERN__" ) .AND. ;
          ! HBMK_IS_IN( cName, "__HBEXTERN__HBCPAGE__" )
          hbsh[ _HBSH_hLibExt ][ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
@@ -15553,7 +15553,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-safe[-]"           , I_( e"enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
       { "-compr=<lev>"       , I_( e"compress executable/dynamic lib (needs UPX tool)\n<lev> can be: yes, no, min, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
-      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
+      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (not supported by some platforms/compilers). On Windows, it is implemented by generating and linking a resource file." ) }, ;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
