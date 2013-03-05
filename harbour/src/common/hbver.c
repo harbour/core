@@ -787,6 +787,10 @@ char * hb_verCompiler( void )
 
    iVerMajor = __OPENCC__;
    iVerMinor = __OPENCC_MINOR__;
+#if __OPENCC_PATCHLEVEL__ - 0 <= 0
+   #undef __OPENCC_PATCHLEVEL__
+   #define __OPENCC_PATCHLEVEL__ 0
+#endif
    iVerPatch = __OPENCC_PATCHLEVEL__;
 
 #elif defined( _MSC_VER )
