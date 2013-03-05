@@ -26,5 +26,4 @@ FUNCTION ft_AddWkDy( dStart, nDys )
 
    RETURN iif( nDc == 7, ;
       ( nDys - 1 )        % 5 + 7 * Int( ( nDys - 1 )        / 5 ) + 2, ;
-      ( nDys + nDc - 2 )  % 5 + 7 * Int( ( nDys + nDc - 2 )  / 5 ) + 2  - nDc ;
-      )
+      ( nDys + nDc - 2 )  % 5 + 7 * Int( ( nDys + nDc - 2 )  / 5 ) + 2  - nDc )

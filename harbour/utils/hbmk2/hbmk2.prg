@@ -15673,6 +15673,22 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-build"             , I_( "Harbour compiler build information" ) }, ;
       { "-version"           , I_( "display version header only" ) } }
 
+   /* Internal option descriptions intentionally not marked as translatable */
+   LOCAL aHdr_Opt_Internal := { ;
+      "", ;
+      "Options below are internal/developer ones (compatibility not guaranteed):" }
+
+   /* Internal option descriptions intentionally not marked as translatable */
+   LOCAL aLst_Opt_Internal := { ;
+      NIL, ;
+      { "-debugtime"         , "measure time spent on the build" }, ;
+      { "-debuginc"          , "display internals of incremental build" }, ;
+      { "-debugstub"         , "display content of all internally generated source files" }, ;
+      { "-debugi18n"         , "display internals on translation file generation" }, ;
+      { "-debugdepd"         , "display internals of dependency detection" }, ;
+      { "-debugpars"         , "display all input parameters in processing order" }, ;
+      { "-debugrte"          , "generate a runtime error" } }
+
    LOCAL aHdr_Opt_Self := { ;
       "", ;
       { "", hb_StrFormat( I_( "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:" ), _SELF_NAME_ ) } }
@@ -16180,6 +16196,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
       AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
       AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
+      IF lLong
+         AEval( aHdr_Opt_Internal, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_Opt_Internal, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
       AEval( aHdr_Opt_Self, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       AEval( aLst_Opt_Self, {| tmp | OutOpt( hbmk, tmp ) } )
       AEval( aHdr_File, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )

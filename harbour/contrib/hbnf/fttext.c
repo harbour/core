@@ -855,6 +855,9 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
       }
    }
 
+   if( eol_len )
+      *eol_len = 0;
+
    return 0;
 }
 

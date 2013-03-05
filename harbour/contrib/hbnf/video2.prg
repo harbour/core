@@ -52,24 +52,18 @@
 
 FUNCTION ft_CLS( nTop, nLeft, nBottom, nRight, nColor )
 
-   IF ! HB_ISNUMERIC( nColor )
-      nColor := 0
-   ENDIF
+   hb_default( @nColor, 0 )
 
    RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, nColor )
 
 FUNCTION ft_VidStr( nRow, nCol, cString, nColor )
 
-   IF ! HB_ISNUMERIC( nColor )
-      nColor := 0
-   ENDIF
+   hb_default( @nColor, 0 )
 
    RETURN hb_DispOutAt( nRow, nCol, cString, nColor )
 
 FUNCTION ft_WrtChr( nRow, nCol, cChar, nColor )
 
-   IF ! HB_ISNUMERIC( nColor )
-      nColor := 0
-   ENDIF
+   hb_default( @nColor, 0 )
 
    RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )

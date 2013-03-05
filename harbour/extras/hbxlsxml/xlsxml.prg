@@ -113,21 +113,17 @@ METHOD ExcelWriterXML:new( fileName )
 
 METHOD ExcelWriterXML:setOverwriteFile( overwrite )
 
-   IF HB_ISLOGICAL( overwrite )
-      ::overwriteFile := overwrite
-   ELSE
-      ::overwriteFile := .F.
-   ENDIF
+   hb_default( @overwrite, .F. )
+
+   ::overwriteFile := overwrite
 
    RETURN NIL
 
 METHOD ExcelWriterXML:showErrorSheet( show )
 
-   IF HB_ISLOGICAL( show )
-      ::lShowErrorSheet := show
-   ELSE
-      ::lShowErrorSheet := .T.
-   ENDIF
+   hb_default( @show, .T. )
+
+   ::lShowErrorSheet := show
 
    RETURN NIL
 

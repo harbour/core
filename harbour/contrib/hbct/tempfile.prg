@@ -57,6 +57,10 @@ FUNCTION TempFile( cDir, cExt, nAttr )
    LOCAL cName
    LOCAL fhnd
 
+   IF HB_ISSTRING( cDir )
+      cDir := hb_DirSepAdd( cDir )
+   ENDIF
+
    IF HB_ISSTRING( cExt ) .AND. !( Left( cExt, 1 ) == "." )
       cExt := "." + cExt
    ENDIF
