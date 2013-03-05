@@ -267,7 +267,7 @@ FUNCTION hb_DirSepDel( cDir )
 
 FUNCTION hb_DirSepToOS( cFileName )
 
-   IF HB_ISSTRING( cDir )
+   IF HB_ISSTRING( cFileName )
       RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
    ENDIF
 
