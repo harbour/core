@@ -138,8 +138,8 @@ static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir, HB_B
    {
 #  if defined( __DJGPP__ )
       /* convert '/' to '\' */
-      char * pszDelim;
-      while( ( pszDelim = strchr( pszName, '/' ) ) != NULL )
+      char * pszDelim = pszName;
+      while( ( pszDelim = strchr( pszDelim, '/' ) ) != NULL )
          *pszDelim = '\\';
 #  endif
       if( ! hb_fsDirExists( pszTempDir ) )
@@ -161,7 +161,16 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
       pszName[ 0 ] = '\0';
 
       if( pszDir && pszDir[ 0 ] != '\0' )
+      {
          hb_strncpy( pszName, pszDir, HB_PATH_MAX - 1 );
+         iLen = ( int ) strlen( pszName );
+         if( pszName[ iLen - 1 ] != HB_OS_PATH_DELIM_CHR &&
+             iLen < HB_PATH_MAX - 1 )
+         {
+            pszName[ iLen ] = HB_OS_PATH_DELIM_CHR;
+            pszName[ iLen + 1 ] = '\0';
+         }
+      }
       else
          hb_fsTempDir( pszName );
 
@@ -295,8 +304,8 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
       {
 #  if defined( __DJGPP__ )
          /* convert '/' to '\' */
-         char * pszDelim;
-         while( ( pszDelim = strchr( pTmpBuffer, '/' ) ) != NULL )
+         char * pszDelim = pTmpBuffer;
+         while( ( pszDelim = strchr( pszDelim, '/' ) ) != NULL )
             *pszDelim = '\\';
 #  endif
          hb_osStrDecode2( pTmpBuffer, pszBuffer, HB_PATH_MAX - 1 );
