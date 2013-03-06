@@ -121,8 +121,10 @@ ENDCLASS
 METHOD New( cBody, oEncoder ) CLASS TIPMail
 
    // Set header fileds to non-sensitive
-   ::hHeaders := hb_HSetCaseMatch( { => }, .F. )
+   ::hHeaders := { => }
    ::aAttachments := {}
+
+   hb_HCaseMatch( ::hHeaders, .F. )
 
    IF ValType( oEncoder ) $ "CO"
       ::setEncoder( oEncoder )
@@ -390,7 +392,8 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    ENDIF
 
    IF Len( ::hHeaders ) > 0
-      ::hHeaders := hb_HSetCaseMatch( { => }, .F. )
+      ::hHeaders := { => }
+      hb_HCaseMatch( ::hHeaders, .F. )
    ENDIF
 
    IF Len( ::aReceived ) > 0

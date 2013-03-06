@@ -16,7 +16,7 @@ PROCEDURE Main()
 
    /* build the Google query */
    hQUery := { => }
-   hb_HSetCaseMatch( hQuery, .F. )
+   hb_HCaseMatch( hQuery, .F. )
 
    hQuery[ "q" ]    := "Harbour"
    hQuery[ "hl" ]   := "en"

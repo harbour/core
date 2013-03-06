@@ -57,7 +57,6 @@
 
 #define CRLF ( Chr( 13 ) + Chr( 10 ) )
 #xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-#define HB_IHASH()   hb_HSetCaseMatch( { => }, .F. )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
@@ -138,7 +137,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    LOCAL cUri
 
    // Prevents case matching
-   hb_HSetCaseMatch( hUrl, .F. )
+   hb_HCaseMatch( hUrl, .F. )
 
    cTemp := cUrl
    cUri  := ""
@@ -248,18 +247,18 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ENDIF
 
    // Assemble hash
-   hb_HSet( hUrl, "SCHEME"  , cProto    )
-   hb_HSet( hUrl, "HOST"    , cHost     )
-   hb_HSet( hUrl, "PORT"    , nPort     )
-   hb_HSet( hUrl, "USER"    , cUser     )
-   hb_HSet( hUrl, "PASS"    , cPass     )
-   hb_HSet( hUrl, "PATH"    , cPath     )
-   hb_HSet( hUrl, "QUERY"   , cQuery    )
-   hb_HSet( hUrl, "FRAGMENT", cFragment )
-   hb_HSet( hUrl, "URI"     , cURI      )
+   hUrl[ "SCHEME" ]   := cProto
+   hUrl[ "HOST" ]     := cHost
+   hUrl[ "PORT" ]     := nPort
+   hUrl[ "USER" ]     := cUser
+   hUrl[ "PASS" ]     := cPass
+   hUrl[ "PATH" ]     := cPath
+   hUrl[ "QUERY" ]    := cQuery
+   hUrl[ "FRAGMENT" ] := cFragment
+   hUrl[ "URI" ]      := cURI
 
    // Prevents externals to add something else to this Hash
-   hb_HSetAutoAdd( hUrl, .F. )
+   hb_HAutoAdd( hUrl, .F. )
 
    RETURN hUrl
 

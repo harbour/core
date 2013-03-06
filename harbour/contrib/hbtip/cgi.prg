@@ -423,7 +423,7 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    IF ! Empty( xVal ) .AND. ! Empty( cKey )
       IF hb_HHasKey( xVal, cKey )
-         cVal := hb_HGet( xVal, cKey )
+         cVal := xVal[ cKey ]
          hb_HDel( xVal, cKey )
       ENDIF
    ENDIF
@@ -458,7 +458,7 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
       IF Empty( cKey )
          cVal := xVal
       ELSEIF hb_HHasKey( xVal, cKey )
-         cVal := hb_HGet( xVal, cKey )
+         cVal := xVal[ cKey ]
          IF Empty( lScan )
             hb_HDel( xVal, cKey )
          ENDIF
@@ -495,7 +495,7 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
    IF ! Empty( xVal ) .AND. ! Empty( cKey )
       IF hb_HHasKey( xVal, cKey )
-         cVal := hb_HGet( xVal, cKey )
+         cVal := xVal[ cKey ]
          hb_HDel( xVal, cKey )
       ENDIF
    ENDIF

@@ -139,7 +139,6 @@ REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
 #define HRB_ACTIVATE_CACHE   .F.   // if .T. caching of HRB modules will be enabled. (NOTE: changes of files will not be loaded until server is active)
 
 #define CR_LF    ( Chr( 13 ) + Chr( 10 ) )
-#define HB_IHASH()   hb_HSetCaseMatch( { => }, .F. )
 
 #ifdef __PLATFORM__WINDOWS
 REQUEST HB_GT_WVT_DEFAULT
@@ -246,7 +245,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    // TOCHECK: now not force case insensitive
-   // hb_HSetCaseMatch( s_hScriptAliases, .F. )
+   // hb_HCaseMatch( s_hScriptAliases, .F. )
 
    // ----------------- Line command parameters checking ----------------------
 
@@ -334,7 +333,7 @@ PROCEDURE Main( ... )
    // i.e. we can have /info or /Info that will be different unless lScriptAliasMixedCase will be .F.
    FOR EACH xVal IN hDefault[ "SCRIPTALIASES" ]
       IF HB_ISSTRING( xVal )
-         hb_HSet( s_hScriptAliases, iif( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ), xVal )
+         s_hScriptAliases[ iif( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ) ] := xVal
       ENDIF
    NEXT
 
@@ -342,7 +341,7 @@ PROCEDURE Main( ... )
    // i.e. we can have /info or /Info that will be different
    FOR EACH xVal IN hDefault[ "ALIASES" ]
       IF HB_ISSTRING( xVal )
-         hb_HSet( s_hAliases, xVal:__enumKey(), xVal )
+         s_hAliases[ xVal:__enumKey() ] := xVal
       ENDIF
    NEXT
 
@@ -916,8 +915,8 @@ STATIC FUNCTION ProcessConnection()
 
             // hb_ToOutDebug( "cRequest -- BEGIN --\n\r%s\n\rcRequest -- END --\n\r", cRequest )
 
-            _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
-            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); _HTTP_RESPONSE := HB_IHASH()
+            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
+            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
             m_cPost := NIL
             t_cResult     := ""
             // t_aHeader     := {}
@@ -1065,8 +1064,8 @@ STATIC FUNCTION ServiceConnection()
 
             // hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            _SERVER := HB_IHASH(); _GET := HB_IHASH(); _POST := HB_IHASH(); _COOKIE := HB_IHASH()
-            _SESSION := HB_IHASH(); _REQUEST := HB_IHASH(); _HTTP_REQUEST := HB_IHASH(); _HTTP_RESPONSE := HB_IHASH()
+            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
+            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
             m_cPost := NIL
             t_cResult     := ""
             // t_aHeader     := {}
@@ -1202,12 +1201,12 @@ STATIC FUNCTION ParseRequest( cRequest )
    // Load _HTTP_REQUEST
    FOR EACH cReq IN aRequest
       IF cReq:__enumIndex() == 1 // GET request
-         hb_HSet( _HTTP_REQUEST, "HTTP Request", cReq )
+         _HTTP_REQUEST[ "HTTP Request" ] := cReq
       ELSEIF Empty( cReq )
          EXIT
       ELSE
          aVal := uhttpd_split( ":", cReq, 1 )
-         hb_HSet( _HTTP_REQUEST, aVal[ 1 ], iif( Len( aVal ) == 2, AllTrim( aVal[ 2 ] ), NIL ) )
+         _HTTP_REQUEST[ aVal[ 1 ] ] := iif( Len( aVal ) == 2, AllTrim( aVal[ 2 ] ), NIL )
       ENDIF
    NEXT
 
@@ -1666,15 +1665,15 @@ PROCEDURE uhttpd_SetHeader( cType, cValue )
    // // Needed from SetCookie()
    // __defaultNIL( @lReplace, .T. )
 
-   hb_HSet( _HTTP_RESPONSE, cType, cValue )
+   _HTTP_RESPONSE[ cType ] := cValue
 
-   /*
+#if 0
    IF lReplace .AND. ( nI := AScan( t_aHeader, {| x | Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
       t_aHeader[ nI, 2 ] := cValue
    ELSE
       AAdd( t_aHeader, { cType, cValue } )
    ENDIF
-   */
+#endif
 
    RETURN
 
@@ -2288,31 +2287,25 @@ STATIC FUNCTION ParseIni( cConfig )
 
    // Define here what attributes we can have in ini config file and their defaults
    // Please add all keys in uppercase. hDefaults is Case Insensitive
-   hDefault := hb_HSetCaseMatch( ;
-   { ;
-     "MAIN"     => { ;
-                     "PORT"                 => LISTEN_PORT              ,;
-                     "APPLICATION_ROOT"     => EXE_Path()               ,;
-                     "DOCUMENT_ROOT"        => EXE_Path() + hb_ps() + "home"     ,;
-                     "SHOW_INDEXES"         => .F.                      ,;
-                     "SCRIPTALIASMIXEDCASE" => .T.                      ,;
-                     "SESSIONPATH"          => EXE_Path() + hb_ps() + "sessions" ,;
-                     "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     ,;
-                     "CONSOLE-ROWS"         => MaxRow() + 1             ,;
-                     "CONSOLE-COLS"         => MaxCol() + 1              ;
-                   },;
-     "LOGFILES" => { ;
-                     "ACCESS"               => FILE_ACCESS_LOG          ,;
-                     "ERROR"                => FILE_ERROR_LOG            ;
-                   },;
-     "THREADS"  => { ;
-                     "MAX_WAIT"             => THREAD_MAX_WAIT          ,;
-                     "START_NUM"            => START_RUNNING_THREADS    ,;
-                     "MAX_NUM"              => MAX_RUNNING_THREADS       ;
-                   },;
-     "SCRIPTALIASES"  => { => } ,;
-     "ALIASES"        => { => }  ;
-   }, .F. )
+   hDefault := { ;
+      "MAIN"           => { "PORT"                 => LISTEN_PORT              , ;
+                            "APPLICATION_ROOT"     => EXE_Path()               , ;
+                            "DOCUMENT_ROOT"        => EXE_Path() + hb_ps() + "home", ;
+                            "SHOW_INDEXES"         => .F.                      , ;
+                            "SCRIPTALIASMIXEDCASE" => .T.                      , ;
+                            "SESSIONPATH"          => EXE_Path() + hb_ps() + "sessions" , ;
+                            "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     , ;
+                            "CONSOLE-ROWS"         => MaxRow() + 1             , ;
+                            "CONSOLE-COLS"         => MaxCol() + 1             }, ;
+      "LOGFILES"       => { "ACCESS"               => FILE_ACCESS_LOG          , ;
+                            "ERROR"                => FILE_ERROR_LOG           }, ;
+      "THREADS"        => { "MAX_WAIT"             => THREAD_MAX_WAIT          , ;
+                            "START_NUM"            => START_RUNNING_THREADS    , ;
+                            "MAX_NUM"              => MAX_RUNNING_THREADS      }, ;
+      "SCRIPTALIASES"  => { => } , ;
+      "ALIASES"        => { => } }
+
+   hb_HCaseMatch( hDefault, .F. )
 
    // hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
 
@@ -2434,7 +2427,7 @@ STATIC FUNCTION FileUnAlias( cScript )
    // Checking if the request contains a Script Alias
    IF hb_HHasKey( s_hScriptAliases, cScript )
       // in this case I have to substitute the alias with the real file name
-      cFileName := hb_HGet( s_hScriptAliases, cScript )
+      cFileName := s_hScriptAliases[ cScript ]
 
       // substitute macros
       cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
@@ -2724,7 +2717,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
             IF HRB_ACTIVATE_CACHE
                // caching modules
                IF ! hb_HHasKey( s_hHRBModules, cFileName )
-                  hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
+                  s_hHRBModules[ cFileName ] := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
                ENDIF
                cHRBBody := s_hHRBModules[ cFileName ]
             ENDIF
@@ -2884,3 +2877,11 @@ STATIC FUNCTION UHTTPD_UTCOFFSET()
    RETURN iif( nOffset < 0, "-", "+" ) + ;
       StrZero( nOffset / 3600, 2, 0 ) + ;
       StrZero( ( nOffset % 3600 ) / 60, 2, 0 )
+
+STATIC FUNCTION HB_HASHI()
+
+   LOCAL h := { => }
+
+   hb_HCaseMatch( h, .F. )
+
+   RETURN h

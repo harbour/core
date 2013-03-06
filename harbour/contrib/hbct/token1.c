@@ -110,7 +110,7 @@ static void do_token1( int iSwitch )
       case DO_TOKEN1_NUMTOKEN:
       case DO_TOKEN1_TOKENLOWER:
       case DO_TOKEN1_TOKENUPPER:
-         iParamCheck = ( HB_ISCHAR( 1 ) );
+         iParamCheck = HB_ISCHAR( 1 );
          break;
    }
 
@@ -156,7 +156,7 @@ static void do_token1( int iSwitch )
       }
       else
       {
-         if( HB_ISNUM( 4 ) )
+         if( HB_ISNUM( 4 ) ) /* HB_EXTENSION for ATTOKEN()/TOKENLOWER()/TOKENUPPER() */
             nSkip = hb_parns( 4 );
          else
             nSkip = HB_SIZE_MAX;
@@ -164,7 +164,7 @@ static void do_token1( int iSwitch )
       if( nSkip == 0 )
          nSkip = HB_SIZE_MAX;
 
-      /* prepare return value for TOKENUPPER/TOKENLOWER */
+      /* prepare return value for TOKENUPPER()/TOKENLOWER() */
       if( iSwitch == DO_TOKEN1_TOKENLOWER || iSwitch == DO_TOKEN1_TOKENUPPER )
       {
          if( sStrLen == 0 )
@@ -222,12 +222,12 @@ static void do_token1( int iSwitch )
                   char cRet;
 
                   hb_retc_null();
-                  if( HB_ISBYREF( 5 ) )
+                  if( HB_ISBYREF( 5 ) ) /* HB_EXTENSION */
                   {
                      cRet = ( char ) ct_token->iPreSeparator;
                      hb_storclen( &cRet, ( ct_token->iPreSeparator != -1 ? 1 : 0 ), 5 );
                   }
-                  if( HB_ISBYREF( 6 ) )
+                  if( HB_ISBYREF( 6 ) ) /* HB_EXTENSION */
                   {
                      cRet = ( char ) ct_token->iPostSeparator;
                      hb_storclen( &cRet, ( ct_token->iPostSeparator != -1 ? 1 : 0 ), 6 );
@@ -330,12 +330,12 @@ static void do_token1( int iSwitch )
             else
                hb_retc_null();
 
-            if( HB_ISBYREF( 5 ) )
+            if( HB_ISBYREF( 5 ) ) /* HB_EXTENSION */
             {
                cRet = ( char ) ct_token->iPreSeparator;
                hb_storclen( &cRet, ( ct_token->iPreSeparator != -1 ? 1 : 0 ), 5 );
             }
-            if( HB_ISBYREF( 6 ) )
+            if( HB_ISBYREF( 6 ) ) /* HB_EXTENSION */
             {
                cRet = ( char ) ct_token->iPostSeparator;
                hb_storclen( &cRet, ( ct_token->iPostSeparator != -1 ? 1 : 0 ), 6 );
@@ -378,12 +378,12 @@ static void do_token1( int iSwitch )
             int iArgErrorMode = ct_getargerrormode();
             char cRet;
 
-            if( HB_ISBYREF( 5 ) )
+            if( HB_ISBYREF( 5 ) ) /* HB_EXTENSION */
             {
                cRet = ( char ) ct_token->iPreSeparator;
                hb_storclen( &cRet, ( ct_token->iPreSeparator != -1 ? 1 : 0 ), 5 );
             }
-            if( HB_ISBYREF( 6 ) )
+            if( HB_ISBYREF( 6 ) ) /* HB_EXTENSION */
             {
                cRet = ( char ) ct_token->iPostSeparator;
                hb_storclen( &cRet, ( ct_token->iPostSeparator != -1 ? 1 : 0 ), 6 );

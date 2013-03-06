@@ -10,9 +10,14 @@
 
 PROCEDURE Main()
 
-   MEMVAR ptestvar
+   MEMVAR m_testvar
 
    LOCAL testvar
+
+#ifdef _SET_EVENTMASK
+   Set( _SET_EVENTMASK, INKEY_ALL )
+   MSetCursor( .T. )
+#endif
 
    SET KEY K_F8 TO RECURSE()
 
@@ -44,9 +49,9 @@ PROCEDURE Main()
    @  6, 10 SAY "Testing with MEMVAR parameter"
    @  7, 10 SAY "Press F8 to recurse into MENU TO"
 
-   MENU TO ptestvar
+   MENU TO m_testvar
 
-   @  9, 10 SAY "Your Choice = " + hb_ntos( ptestvar )
+   @  9, 10 SAY "Your Choice = " + hb_ntos( m_testvar )
 
    RETURN
 
@@ -56,7 +61,7 @@ PROCEDURE RECURSE()
 
    SET KEY K_F8 TO
 
-   @  6, 10 SAY "                                "
+   @  6, 10 SAY Space( Len( "Press F8 to recurse into MENU TO" ) )
 
    @  1, 50 PROMPT "Menu Item 1" MESSAGE "Menu Message 1"
    @  2, 50 PROMPT "Menu Item 2" MESSAGE "Menu Message 2"

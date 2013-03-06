@@ -85,6 +85,8 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    hb_default( @lEditable, .T. )
 
+   __dbgSetGo( __Dbg():pInfo )
+
    /* create list of object messages */
    aMessages := oObject:classSel()
    ASort( aMessages,,, {| x, y | PadR( x, 64 ) <= PadR( y, 64 ) } )

@@ -24,6 +24,7 @@
  */
 
 #include "box.ch"
+#include "color.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
@@ -70,7 +71,9 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
-      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
+      cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
+      cColorHigh := StrTran( StrTran( ;
+         iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
          iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
    ENDIF
 
@@ -135,7 +138,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
-      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
+      cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
+      cColorHigh := StrTran( StrTran( ;
+         iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
          iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
    ENDIF
 

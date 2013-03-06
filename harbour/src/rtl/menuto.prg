@@ -68,6 +68,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
    LOCAL cColor
    LOCAL cColorSelect
    LOCAL cColorNormal
+#ifndef HB_CLP_STRICT
+   LOCAL nHiLited
+#endif
 
    // Detect if a memvar was passed
    lDeclared := ! __mvExist( cVariable )
@@ -86,7 +89,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
    ELSE
 
-      t_nPointer ++
+      t_nPointer++
       nPointer := t_nPointer
 
       nArrLen := Len( t_aLevel[ nPointer - 1 ] )
@@ -102,6 +105,10 @@ FUNCTION __MenuTo( bBlock, cVariable )
       ENDIF
 
       //
+
+#ifndef HB_CLP_STRICT
+      nHiLited := 0
+#endif
 
       nSaveCursor := SetCursor( iif( Set( _SET_INTENSITY ), SC_NONE, NIL ) )
       cSaveReadVar := ReadVar( hb_asciiUpper( cVariable ) )
@@ -148,12 +155,20 @@ FUNCTION __MenuTo( bBlock, cVariable )
             cColorSelect := cColorNormal
          ENDIF
 
-         // highlight the prompt
-         DispOutAt( ;
-            t_aLevel[ nPointer - 1, n, 1 ], ;
-            t_aLevel[ nPointer - 1, n, 2 ], ;
-            t_aLevel[ nPointer - 1, n, 3 ], ;
-            cColorSelect )
+#ifndef HB_CLP_STRICT
+         // avoid flicker
+         IF nHiLited != n
+            nHiLited := n
+#endif
+            // highlight the prompt
+            DispOutAt( ;
+               t_aLevel[ nPointer - 1, n, 1 ], ;
+               t_aLevel[ nPointer - 1, n, 2 ], ;
+               t_aLevel[ nPointer - 1, n, 3 ], ;
+               cColorSelect )
+#ifndef HB_CLP_STRICT
+         ENDIF
+#endif
 
          IF lExit
             EXIT
@@ -193,6 +208,8 @@ FUNCTION __MenuTo( bBlock, cVariable )
                MRow(), MCol() ) ) > 0
                n := nMouseClik
             ENDIF
+            /* QUESTION: Clipper does this, but shouldn't we only
+                         exit when HitTest() was successful? */
             IF nKey == K_LDBLCLK
                lExit := .T.
             ENDIF
@@ -238,11 +255,19 @@ FUNCTION __MenuTo( bBlock, cVariable )
          ENDSWITCH
 
          IF n != 0
-            DispOutAt( ;
-               t_aLevel[ nPointer - 1, q, 1 ], ;
-               t_aLevel[ nPointer - 1, q, 2 ], ;
-               t_aLevel[ nPointer - 1, q, 3 ], ;
-               cColorNormal )
+#ifndef HB_CLP_STRICT
+            // avoid flicker
+            IF nHiLited != n
+               nHiLited := 0
+#endif
+               DispOutAt( ;
+                  t_aLevel[ nPointer - 1, q, 1 ], ;
+                  t_aLevel[ nPointer - 1, q, 2 ], ;
+                  t_aLevel[ nPointer - 1, q, 3 ], ;
+                  cColorNormal )
+#ifndef HB_CLP_STRICT
+            ENDIF
+#endif
          ENDIF
 
       ENDDO

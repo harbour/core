@@ -40,22 +40,22 @@ PROCEDURE Main( ... )
 
          DO CASE
          CASE cPar == "txt"
-            // cText := hb_HGet( hParams, cPar )
+            // cText := hParams[ cPar ]
 
          CASE cPar == "img"
-            cImg := hb_HGet( hParams, cPar )
+            cImg := hParams[ cPar ]
 
          CASE cPar == "photo"
-            cPhoto := hb_HGet( hParams, cPar )
+            cPhoto := hParams[ cPar ]
 
          CASE cPar == "width"
-            nWidth := Val( hb_HGet( hParams, cPar ) )
+            nWidth := Val( hParams[ cPar ] )
 
          CASE cPar == "height"
-            nHeight := Val( hb_HGet( hParams, cPar ) )
+            nHeight := Val( hParams[ cPar ] )
 
          CASE cPar == "pt"
-            nPt := Val( hb_HGet( hParams, cPar ) )
+            nPt := Val( hParams[ cPar ] )
 
          ENDCASE
       NEXT

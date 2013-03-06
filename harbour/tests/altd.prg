@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// Testing AltD()
+// Testing AltD() and Alert() coloring
 // Notice you have to compile it using /b
 
 PROCEDURE Main()
@@ -11,10 +11,12 @@ PROCEDURE Main()
 
    AltD( 1 )   // Enables the debugger. Press <F5> to go
 
-   Alert( "debugger enabled" )
+   Alert( "debugger enabled",, "GR+/B" )
 
    AltD()      // Invokes the debugger
 
-   Alert( "debugger invoked" )
+   Alert( "debugger invoked",, "GR+" )
+
+   Alert( "finished",, "GR+/B,W+/R" )
 
    RETURN

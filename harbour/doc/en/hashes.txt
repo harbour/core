@@ -841,8 +841,7 @@
    $RETURNS$
       The previous value of the 'case match' flag
    $DESCRIPTION$
-      This function is equivalent to hb_HSetCaseMatch() but it returns
-      the old flag value rather than the hash table
+      This function returns the old flag value
    $EXAMPLES$
       LOCAL hsTable, lFlag
       hsTable := { "one" => 1, "two" => 2 }
@@ -857,7 +856,6 @@
    $FILES$
 
    $SEEALSO$
-      hb_HSetCaseMatch()
    $END$
  */
 
@@ -898,7 +896,6 @@
    $FILES$
 
    $SEEALSO$
-      hb_HSetBinary()
    $END$
  */
 
@@ -939,7 +936,6 @@
    $FILES$
 
    $SEEALSO$
-      hb_HSetAutoAdd()
    $END$
  */
 
@@ -1010,125 +1006,5 @@
 
    $SEEALSO$
       TODO: locate and list those methods that use this feature
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      hb_HSetAutoAdd()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Hash table
-   $ONELINER$
-      Sets the 'auto add' flag for the hash table
-   $SYNTAX$
-      hb_HSetAutoAdd( <hsTable>, [<lFlag>] ) -> <hsTable>
-   $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
-
-      <lFlag> a logical value indicating to turn on or off
-      the 'auto add' flag of the hash table
-   $RETURNS$
-      The hash table
-   $DESCRIPTION$
-      This function is equivalent to hb_HAutoAdd() but it returns
-      the passed hash table rather than the old flag value
-   $EXAMPLES$
-      LOCAL hsTable
-      // turn 'auto add' on for a new hash table
-      hsTable := hb_HSetAutoAdd( { "one" => 1, "two" => 2 }, .T. )
-   $STATUS$
-      R
-   $COMPLIANCE$
-      H
-   $PLATFORMS$
-
-   $FILES$
-
-   $SEEALSO$
-      hb_HAutoAdd(),hb_HSetBinary(),hb_HSetCaseMatch()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      hb_HSetCaseMatch()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Hash table
-   $ONELINER$
-      Sets the 'case match' flag for the hash table
-   $SYNTAX$
-      hb_HSetCaseMatch( <hsTable>, [<lFlag>] ) -> <hsTable>
-   $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
-
-      <lFlag> a logical value indicating to turn on or off
-      the 'case match' flag of the hash table
-   $RETURNS$
-      The hash table
-   $DESCRIPTION$
-      This function is equivalent to hb_HCaseMatch() but it returns
-      the passed hash table rather than the old flag value
-   $EXAMPLES$
-      LOCAL hsTable
-      // turn 'case match' on for a new hash table
-      hsTable := hb_HSetCaseMatch( { "one" => 1, "two" => 2 }, .T. )
-   $STATUS$
-      R
-   $COMPLIANCE$
-      H
-   $PLATFORMS$
-
-   $FILES$
-
-   $SEEALSO$
-      hb_HCaseMatch(),hb_HSetAutoAdd(),hb_HSetBinary()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      hb_HSetBinary()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Hash table
-   $ONELINER$
-      Sets the 'binary' flag for the hash table
-   $SYNTAX$
-      hb_HSetBinary( <hsTable>, [<lFlag>] ) -> <hsTable>
-   $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
-
-      <lFlag> a logical value indicating to turn on or off
-      the 'binary' flag of the hash table
-   $RETURNS$
-      The hash table
-   $DESCRIPTION$
-      This function is equivalent to hb_HBinary() but it returns
-      the passed hash table rather than the old flag value
-   $EXAMPLES$
-      LOCAL hsTable
-      // turn 'binary' on for a new hash table
-      hsTable := hb_HSetBinary( { "one" => 1, "two" => 2 }, .T. )
-   $STATUS$
-      R
-   $COMPLIANCE$
-      H
-   $PLATFORMS$
-
-   $FILES$
-
-   $SEEALSO$
-      hb_HBinary(),hb_HSetAutoAdd(),hb_HSetCaseMatch()
    $END$
  */

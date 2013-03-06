@@ -1297,7 +1297,7 @@ STATIC FUNCTION __ParseAttr( parser )
    LOCAL nStart, nEnd
    LOCAL lIsQuoted := .F.
 
-   hb_HSetCaseMatch( hHash, .F. )
+   hb_HCaseMatch( hHash, .F. )
 
    DO WHILE ! ( cChr := P_NEXT( parser ) ) == ""
 
@@ -1727,7 +1727,7 @@ STATIC PROCEDURE _Init_Html_TagTypes
 
    t_hTagTypes := { => }
 
-   hb_HSetCaseMatch( t_hTagTypes, .F. )
+   hb_HCaseMatch( t_hTagTypes, .F. )
 
    t_hTagTypes[ "_root_"     ] := { NIL                         ,         ( CM_INLINE )                                       }
    t_hTagTypes[ "_text_"     ] := { NIL                         ,         ( CM_INLINE )                                       }

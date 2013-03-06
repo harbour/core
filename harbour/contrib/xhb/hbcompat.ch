@@ -190,12 +190,14 @@
    #xtranslate hb_HMerge( [<x,...>] )          => HMerge( <x> )
    #xtranslate hb_HEval( [<x,...>] )           => HEval( <x> )
    #xtranslate hb_HScan( [<x,...>] )           => HScan( <x> )
-   #xtranslate hb_HSetCaseMatch( [<x,...>] )   => HSetCaseMatch( <x> )
    #xtranslate hb_HCaseMatch( [<x,...>] )      => HGetCaseMatch( <x> )
-   #xtranslate hb_HSetAutoAdd( [<x,...>] )     => HSetAutoAdd( <x> )
    #xtranslate hb_HAutoAdd( [<x,...>] )        => HGetAutoAdd( <x> )
    #xtranslate hb_HAllocate( [<x,...>] )       => HAllocate( <x> )
    #xtranslate hb_HDefault( [<x,...>] )        => HDefault( <x> )
+   #if defined( HB_LEGACY_LEVEL5 )
+   #xtranslate hb_HSetCaseMatch( [<x,...>] )   => HSetCaseMatch( <x> )
+   #xtranslate hb_HSetAutoAdd( [<x,...>] )     => HSetAutoAdd( <x> )
+   #endif
 
    /* Inet functions */
    #xtranslate hb_inetInit( [<x,...>] )                => inetInit( <x> )
@@ -488,9 +490,9 @@
    #xtranslate HMerge( [<x,...>] )         => hb_HMerge( <x> )
    #xtranslate HEval( [<x,...>] )          => hb_HEval( <x> )
    #xtranslate HScan( [<x,...>] )          => hb_HScan( <x> )
-   #xtranslate HSetCaseMatch( [<x,...>] )  => hb_HSetCaseMatch( <x> )
+   #xtranslate HSetCaseMatch( <x>[, <z>] ) => ( hb_HCaseMatch( <x>[, <z>] ), <x> )
    #xtranslate HGetCaseMatch( [<x,...>] )  => hb_HCaseMatch( <x> )
-   #xtranslate HSetAutoAdd( [<x,...>] )    => hb_HSetAutoAdd( <x> )
+   #xtranslate HSetAutoAdd( <x>[, <z>] )   => ( hb_HAutoAdd( <x>[, <z>] ), <x> )
    #xtranslate HGetAutoAdd( [<x,...>] )    => hb_HAutoAdd( <x> )
    #xtranslate HAllocate( [<x,...>] )      => hb_HAllocate( <x> )
    #xtranslate HDefault( [<x,...>] )       => hb_HDefault( <x> )
