@@ -118,7 +118,8 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
    ENDIF
 
-   QOut( PadR( aDirEntry[ F_NAME ], 15 ) + ;
+   QOut( ;
+      PadR( aDirEntry[ F_NAME ], 15 ) + ;
       Str( nRecCount, 12 ) + "    " + ;
       DToC( dLastUpdate ) + ;
       Str( aDirEntry[ F_SIZE ], 12 ) )
@@ -132,10 +133,11 @@ STATIC PROCEDURE PutNormal( aDirEntry )
 
    hb_FNameSplit( aDirEntry[ F_NAME ], NIL, @cName, @cExt )
 
-   /* strict DOS like formatting, it does not play well with long file names
-    * which do not stick to 8.3 MS-DOS convention
-    */
-   QOut( PadR( cName, 8 ) + " " + ;
+   /* strict MS-DOS like formatting, it does not play well with long
+      file names which do not stick to 8.3 MS-DOS convention */
+
+   QOut( ;
+      PadR( cName, 8 ) + " " + ;
       PadR( SubStr( cExt, 2 ), 3 ) + " " + ;
       Str( aDirEntry[ F_SIZE ], 8 ) + "  " + ;
       DToC( aDirEntry[ F_DATE ] ) )

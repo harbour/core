@@ -91,7 +91,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Base de données   Nb d'enreg   Date j-m-ae    Taille",
+      "Base de données   Nb d'enreg   Date j-m-ae     Taille",
       "Voulez-vous d'autres échantillons?",
       "No. de pages",
       "** Total intermédiaire **",

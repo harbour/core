@@ -91,7 +91,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Gegevens Bestanden # Regels Laatste Aanpassing Grootte",
+      "Gegevens Bestanden# Regels     Laatste Aanp.   Grootte",
       "Wilt u meer voorbeelden?",
       "Pagina Nr.",
       "** Subtotaal **",

@@ -91,7 +91,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "File di dati      # Record     Ultima Mod.  Dimens.",
+      "File di dati      # Record     Ultima Mod.     Dimens.",
       "Vuoi altri esempi?",
       "Pagina Nr.",
       "** Subtotale **",

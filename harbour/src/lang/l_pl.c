@@ -91,7 +91,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Baza danych       #Rekordów    Uaktualniona Rozmiar",
+      "Baza danych       # Rekordów   Uaktualniona    Rozmiar",
       "Więcej przykładów?",
       "Strona",
       "** Subtotal **",

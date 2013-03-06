@@ -92,7 +92,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Databáza          # Záznamy    Aktualizácia Veľkosť",
+      "Databáza          # Záznamy    Aktualizácia    Veľkosť",
       "Chcete viac príkladov?",
       "Strana",
       "** Medzisúčet **",

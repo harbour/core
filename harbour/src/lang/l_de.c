@@ -92,7 +92,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Datenbank Dateien    Anz. Sätze    Letzte Änderung     Größe",
+      "Datenbank Dateien Anz. Sätze   Letzte Änderung Größe",
       "Möchten Sie mehr Beispiele?",
       "Anz. Seiten",
       "** Zwischensumme **",

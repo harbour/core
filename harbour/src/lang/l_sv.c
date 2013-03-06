@@ -91,7 +91,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Databasfiler   Antal poster    Uppdaterad   Storlek",
+      "Databasfiler      Antal poster Uppdaterad      Storlek",
       "Vill du ha fler prover?",
       "Sida nr",
       "** Subtotal **",
