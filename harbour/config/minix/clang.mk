@@ -53,4 +53,11 @@ LDFLAGS += $(LIBPATHS)
 AR := $(HB_CCPREFIX)ar
 AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
 
+DY := $(CC)
+DFLAGS += -shared $(LIBPATHS)
+DY_OUT := -o$(subst x,x, )
+DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
+
+DY_RULE = $(DY) $(DFLAGS) -Wl,-soname,$(DYN_NAME_CPT) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
+
 include $(TOP)$(ROOT)config/rules.mk
