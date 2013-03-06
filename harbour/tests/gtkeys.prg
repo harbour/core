@@ -249,7 +249,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    hb_cdpSelect( cHostCP )
    hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
 #else
-#ifdef INKEY_ALL
+#ifdef _SET_EVENTMASK
    Set( _SET_EVENTMASK, INKEY_ALL )
 #endif
 #endif
