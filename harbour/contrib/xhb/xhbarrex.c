@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    xHarbour compatible ASIZEALLOC(), ALENALLOC() function
+ *    xHarbour compatible ASizeAlloc(), ALenAlloc() function
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -4,8 +4,7 @@
 
 /*
  * xHarbour Project source code:
- *
- * ClassEx.ch Class Extension
+ * Class Extension
  *
  * Copyright 2002 Francesco Saverio Giudice [info@fsgiudice.com]
  * www - http://www.xharbour.org

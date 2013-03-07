@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 string function:  CHARSPREAD()
+ *   CT3 string function:  CharSpread()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -5,20 +5,20 @@
 /*
  * Harbour Project source code:
  *   CT3 trigonometric functions
- *     - PI()
- *     - SIN()
- *     - COS()
- *     - TAN()
- *     - COT()
- *     - ASIN()
- *     - ACOS()
- *     - ATAN()
- *     - SINH()
- *     - COSH()
- *     - TANH()
- *     - ATN2()
- *     - RTOD()
- *     - DTOR()
+ *     - Pi()
+ *     - Sin()
+ *     - Cos()
+ *     - Tan()
+ *     - Cot()
+ *     - Asin()
+ *     - Acos()
+ *     - Atan()
+ *     - Sinh()
+ *     - Cosh()
+ *     - Tanh()
+ *     - Atn2()
+ *     - RToD()
+ *     - DToR()
  *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *

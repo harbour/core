@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   NF functions: FT_SETATTR(), FT_REVATTR(), FT_REVCHR()
+ *   NF functions: ft_SetAttr(), ft_RevAttr(), ft_RevChr()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2012 Viktor Szakats (harbour syenar.net)

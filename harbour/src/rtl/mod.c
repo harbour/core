@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * MOD() function
+ * Mod() function
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ROUND(), INT() functions
+ * Round(), Int() functions
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://harbour-project.org

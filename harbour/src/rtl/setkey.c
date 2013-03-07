@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SETKEY() and related functions
+ * SetKey() and related functions
  *
  * Copyright 1999 April White <april@users.sourceforge.net>
  * www - http://harbour-project.org

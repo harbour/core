@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   JUSTLEFT() and JUSTRIGHT() CT3 string functions
+ *   JustLeft() and JustRight() CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

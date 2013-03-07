@@ -55,10 +55,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    DOSERROR()
- *    __ERRINHANDLER()
- *    __ERRRT_BASE()
- *    __ERRRT_SBASE()
+ *    DosError()
+ *    __errInHandler()
+ *    __errRT_BASE()
+ *    __errRT_SBASE()
  *    hb_errLaunch()
  *    hb_errLaunchSubst()
  *    hb_errGetFlags()

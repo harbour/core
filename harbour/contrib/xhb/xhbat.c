@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ATSKIPSTRINGS(), ATI() functions
+ * AtSkipStrings(), AtI() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)

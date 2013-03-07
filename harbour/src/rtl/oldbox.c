@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __BOX(), __BOXS(), __BOXD() undocumented box drawing functions
+ * __Box(), __BoxS(), __BoxD() undocumented box drawing functions
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org

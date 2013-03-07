@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __ATCLEAR(), __CLEAR() undocumented functions
+ * __AtClear(), __Clear() undocumented functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

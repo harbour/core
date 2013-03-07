@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_RAND32() function
+ * hb_rand32() function
  *
  * Copyright 2011 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

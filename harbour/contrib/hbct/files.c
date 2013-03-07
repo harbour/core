@@ -6,15 +6,15 @@
  * Harbour Project source code:
  *   CT3 files functions
  *
- * SETFATTR()
+ * SetFattr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *
- * SETFDATI(), FILESMAX(), FILEDELETE()
+ * SetFDaTi(), FileSMax(), FileDelete()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
  *
- * FILESEEK(), FILESIZE(), FILEATTR(), FILETIME(), FILEDATE()
- * FILEMOVE(), FILESMAX(),
- * DELETEFILE(), RENAMEFILE()
+ * FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
+ * FileMove(), FileSMax(),
+ * DeleteFile(), RenameFile()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

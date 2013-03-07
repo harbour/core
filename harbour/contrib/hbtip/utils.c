@@ -56,7 +56,7 @@
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    hb_strAtI()
- *    TIP_TIMESTAMP() rework
+ *    tip_TimeStamp() rework
  *    cleanup
  *
  * See COPYING.txt for licensing terms.

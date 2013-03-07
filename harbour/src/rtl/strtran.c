@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * STRTRAN function
+ * StrTran() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *

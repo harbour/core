@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SECONDSCPU() FlagShip compatible function
+ * SecondsCPU() FlagShip compatible function
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://harbour-project.org

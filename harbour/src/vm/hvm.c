@@ -59,8 +59,8 @@
  *    hb_vmPushDoubleConst()
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    __DBGVMVARSGET()
- *    __DBGVMVARSLIST()
+ *    __dbgVMVarSGet()
+ *    __dbgVMVarSList()
  *
  * See COPYING.txt for licensing terms.
  *

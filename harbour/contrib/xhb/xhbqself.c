@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    xHarbour compatible HB_QSELF() function
+ *    xHarbour compatible hb_QSelf() function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    serial communication functions
+ *    Serial communication functions
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

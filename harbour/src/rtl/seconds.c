@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * SECONDS() function
+ * Seconds() function
  *
- * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl> (HB_SECONDSCPU())
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl> (hb_SecondsCPU())
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
  *

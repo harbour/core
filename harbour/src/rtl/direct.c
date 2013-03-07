@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DIRECTORY() function
+ * Directory() function
  *
  * Copyright 1999 Leslee Griffith <les.griffith@vantagesystems.ca>
  * www - http://harbour-project.org

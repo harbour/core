@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * DBF2TXT() function
+ * Dbf2Text() function
  *
  * Copyright 1999 Andi Jahja <andij@aonlippo.co.id>
  * www - http://www.xharbour.org

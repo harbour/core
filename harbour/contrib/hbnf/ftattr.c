@@ -13,7 +13,7 @@
  * ---------------------
  *
  *     Rev 1.2   03 Oct 1992 14:35:14   GLENN
- *  Ted Means made modifications to support use of dispBegin()/dispEnd().
+ *  Ted Means made modifications to support use of DispBegin()/DispEnd().
  *
  *     Rev 1.1   15 Aug 1991 23:07:58   GLENN
  *  Forest Belt proofread/edited/cleaned up doc

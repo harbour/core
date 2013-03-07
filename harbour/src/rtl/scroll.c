@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SCROLL() function
+ * Scroll() function
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://harbour-project.org

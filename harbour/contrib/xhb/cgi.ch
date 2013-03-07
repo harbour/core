@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * cgi.ch common includes for cgi lib
+ * common includes for cgi lib
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   ATADJUST() CT3 string function
+ *   AtAdjust() CT3 string function
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

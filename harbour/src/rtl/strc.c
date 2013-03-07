@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- * HB_STRDECODESCAPE() - decode string with \ escape sequences
- * HB_STRCDECODE() - decode string using C compiler rules
+ * hb_StrDecodEscape() - decode string with \ escape sequences
+ * hb_StrCDecode() - decode string using C compiler rules
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

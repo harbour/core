@@ -56,7 +56,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    HB_F_EOF()
+ *    hb_F_Eof()
  *
  * See COPYING.txt for licensing terms.
  *

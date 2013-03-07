@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * STUFF() function
+ * Stuff() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>

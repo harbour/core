@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * NOSNOW(), SETMODE(), ISCOLOR() functions
+ * NoSnow(), SetMode(), IsColor() functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
- *    SETMODE()
+ *    SetMode()
  *
  * See COPYING.txt for licensing terms.
  *

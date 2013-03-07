@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Miscellaneous functions: - XTOC()
+ *   CT3 Miscellaneous functions: - XToC()
  *
  * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://harbour-project.org

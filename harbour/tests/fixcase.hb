@@ -16,6 +16,10 @@
  *
  */
 
+#pragma -w3
+#pragma -km+
+#pragma -ko+
+
 #include "directry.ch"
 #include "simpleio.ch"
 
@@ -34,9 +38,6 @@ PROCEDURE Main( cFile )
       ".o"    =>, ;
       ".js"   =>, ;
       ".dif"  =>, ;
-      ".c"    =>, ;
-      ".h"    =>, ;
-      ".api"  =>, ;
       ".exe"  =>, ;
       ".y"    =>, ;
       ".yyc"  =>, ;
@@ -62,6 +63,11 @@ PROCEDURE Main( cFile )
       ".png"  =>, ;
       ".sq3"  =>, ;
       ".tif"  => }
+
+   LOCAL hPartial := { ;
+      ".c"    =>, ;
+      ".h"    =>, ;
+      ".api"  => }
 
    LOCAL hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
@@ -109,30 +115,43 @@ PROCEDURE Main( cFile )
    ELSE
       FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
          cExt := hb_FNameExt( aFile[ F_NAME ] )
-         IF ! Empty( hb_FNameExt( aFile[ F_NAME ] ) ) .AND. ;
-            !( hb_FNameExt( aFile[ F_NAME ] ) $ hExtExceptions ) .AND. ;
+         IF ! Empty( cExt ) .AND. ;
+            !( cExt $ hExtExceptions ) .AND. ;
             !( hb_FNameNameExt( aFile[ F_NAME ] ) $ hFileExceptions ) .AND. ;
             AScan( aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
-            ProcFile( hAll, aFile[ F_NAME ] )
+            ProcFile( hAll, aFile[ F_NAME ], cExt $ hPartial )
          ENDIF
       NEXT
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE ProcFile( hAll, cFileName )
+STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
 
    LOCAL cLog := MemoRead( cFileName )
-   LOCAL cHit
-   LOCAL tmp
-
-   LOCAL nPos
-   LOCAL cName
 
    LOCAL a
    LOCAL cProper
 
+   LOCAL cRest
+   LOCAL nPartial
+
    LOCAL nChanged := 0
+
+   hb_default( @lPartial, .F. )
+
+   IF lPartial
+      IF ( nPartial := At( "See COPYING.txt for licensing terms.", cLog ) ) > 0
+      ELSEIF ( nPartial := At( "If you do not wish that, delete this exception notice.", cLog ) ) > 0
+      ELSE
+         nPartial := 300
+      ENDIF
+      /* arbitrary size limit */
+      cRest := SubStr( cLog, nPartial )
+      cLog := Left( cLog, nPartial - 1 )
+   ELSE
+      cRest := ""
+   ENDIF
 
    FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
@@ -149,7 +168,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName )
 
    IF nChanged > 0
       ? cFileName, "changed: ", nChanged
-      hb_MemoWrit( cFileName, cLog )
+      hb_MemoWrit( cFileName, cLog + cRest )
    ENDIF
 
    RETURN

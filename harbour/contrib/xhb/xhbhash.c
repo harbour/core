@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * xhb compatibility wrappers.
+ * xhb compatibility wrappers
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

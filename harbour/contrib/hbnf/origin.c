@@ -13,7 +13,7 @@
  * ---------------------
  *
  *    Rev 1.1   09 Nov 1992 22:35:52   GLENN
- * Function was inadvertently named origin() instead of ft_origin() when
+ * Function was inadvertently named origin() instead of ft_Origin() when
  * it went from an .asm to a .c file.  Renamed it back to ft_origin().
  *
  *    Rev 1.0   03 Oct 1992 02:13:54   GLENN

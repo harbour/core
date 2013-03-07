@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Calling function from dynamic library (HB_DYNCALL())
+ * Calling function from dynamic library (hb_DynCall())
  *
  * Copyright 2009-2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   NF function: FT_SHADOW()
+ *   NF function: ft_Shadow()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

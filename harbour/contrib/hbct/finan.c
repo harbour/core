@@ -7,9 +7,9 @@
  *   CT3 Financial functions
  *     - PV()
  *     - FV()
- *     - PAYMENT()
- *     - PERIODS()
- *     - RATE()
+ *     - Payment()
+ *     - Periods()
+ *     - Rate()
  *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *

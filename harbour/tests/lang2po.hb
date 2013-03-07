@@ -10,6 +10,10 @@
  *
  */
 
+#pragma -w3
+#pragma -km+
+#pragma -ko+
+
 #include "hblang.ch"
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )

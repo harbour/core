@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBRENAME() Harbour extension.
+ * dbRename() Harbour extension.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

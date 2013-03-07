@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_PVALUE() function
+ * hb_PValue() function
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org

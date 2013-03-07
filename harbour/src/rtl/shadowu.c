@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBGSHADOW() function
+ * DbgShadow() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

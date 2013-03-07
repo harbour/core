@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBEXISTS() Harbour extension.
+ * dbExists() Harbour extension.
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

@@ -55,10 +55,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2012 Viktor Szakats (harbour syenar.net)
- *    HB_KEYPUT()
+ *    hb_keyPut()
  *
  * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl>
- *    HB_SETLASTKEY(), HB_KEYCHAR(), HB_KEYSTD()
+ *    hb_keySetLast(), hb_keyChar(), hb_keyStd()
  *
  * See COPYING.txt for licensing terms.
  *

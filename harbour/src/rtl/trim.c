@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * *TRIM() functions
+ * *Trim() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

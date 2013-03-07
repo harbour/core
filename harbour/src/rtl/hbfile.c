@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_FILEEXISTS() function
+ * hb_FileExists() function
  *
  * Copyright 2007 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

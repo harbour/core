@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- *    HB_NUMTOHEX()
- *    HB_HEXTONUM()
+ *    hb_NumToHex()
+ *    hb_HexToNum()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

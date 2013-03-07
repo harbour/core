@@ -55,15 +55,15 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_conOutAlt(), hb_conOutDev(), DEVOUT(), hb_conDevPos(),
- *    DEVPOS(), __EJECT(),
- *    hb_conOut(), hb_conOutErr(), OUTERR(),
- *    hb_conOutStd(), OUTSTD(), PCOL(), PROW(),
- *    SETPRC(), and hb_conInit()
+ *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
+ *    DevPos(), __Eject(),
+ *    hb_conOut(), hb_conOutErr(), OutErr(),
+ *    hb_conOutStd(), OutStd(), PCol(), PRow(),
+ *    SetPRC(), and hb_conInit()
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    hb_conNewLine()
- *    DISPOUTAT()
+ *    DispOutAt()
  *
  * See COPYING.txt for licensing terms.
  *

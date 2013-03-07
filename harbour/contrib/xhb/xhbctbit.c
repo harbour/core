@@ -4,12 +4,13 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Number and bit manipulation functions: - NUMANDX()
- *                                              - NUMORX()
- *                                              - NUMXORX()
- *                                              - NUMNOTX()
- *                                              - NUMROLX()
- *                                              - NUMMIRRX()
+ *   CT3 Number and bit manipulation functions:
+ *      NumAndX()
+ *      NumOrX()
+ *      NumXorX()
+ *      NumNotX()
+ *      NumRolX()
+ *      NumMirrX()
  *
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://www.harbour-project.org

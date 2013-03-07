@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_STRREPLACE()
+ * hb_StrReplace()
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

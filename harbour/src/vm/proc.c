@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * PROCNAME(), PROCLINE() and PROCFILE() functions
+ * ProcName(), ProcLine() and ProcFile() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org
@@ -55,10 +55,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    PROCFILE()
+ *    ProcFile()
  *
  * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
- *    Adding the MethodName() just calling Procname()
+ *    Adding the MethodName() just calling ProcName()
  *    Special treatment in case of Object and Eval (only for methodname)
  *    skipping block and adding (b) before the method name
  *

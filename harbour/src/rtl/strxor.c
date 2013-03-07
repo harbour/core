@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_STRXOR()
+ * hb_StrXor()
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://harbour-project.org

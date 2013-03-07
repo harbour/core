@@ -10,13 +10,17 @@
  *
  */
 
+#pragma -w3
+#pragma -km+
+#pragma -ko+
+
 #include "hblang.ch"
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
 PROCEDURE Main()
 
-   LOCAL tmp, tmp1
+   LOCAL tmp
    LOCAL nCount
    LOCAL cName
    LOCAL cPO
@@ -28,9 +32,9 @@ PROCEDURE Main()
       DToC( Date() ) + ;
       Str( 999999999999, 12 ) + '"' + hb_eol()
 
-   nCount := __dynSCount()
+   nCount := __dynsCount()
    FOR tmp := 1 TO nCount
-      cName := __dynSGetName( tmp )
+      cName := __dynsGetName( tmp )
       IF LEFTEQUAL( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;

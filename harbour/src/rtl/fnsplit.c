@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_FNAMESPLIT(), HB_FNAMEMERGE() functions
+ * hb_FNameSplit(), hb_FNameMerge() functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

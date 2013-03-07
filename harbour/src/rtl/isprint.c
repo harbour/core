@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ISPRINTER() function
+ * IsPrinter() function
  *
  * Copyright 1999-2007 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

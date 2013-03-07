@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    USERSMAX() -> <nMaxUsers> (1024)
+ *    UsersMax() -> <nMaxUsers> (1024)
  * FlagShip compatible functions
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>

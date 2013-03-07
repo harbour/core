@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN() functions
+ * Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin() functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Manuel Ruiz <mrt@joca.es>

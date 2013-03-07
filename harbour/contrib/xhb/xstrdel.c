@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * STRDEL() function
+ * StrDel() function
  *
  * Copyright 2003 Walter Negro <anegro@overnet.com.ar>
  * www - http://www.xharbour.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * BREAK() function
+ * Break() function
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * BIN2U(), W2BIN(), U2BIN() functions
+ * Bin2U(), W2Bin(), U2Bin() functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)

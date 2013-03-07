@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code FlagShip compatible functions:
- * STRPEEK(cStr,nPos)->nASC, STRPOKE(cStr,nPos,nASCval)->cStr
+ * StrPeek(cStr,nPos)->nASC, StrPoke(cStr,nPos,nASCval)->cStr
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org

@@ -4,20 +4,20 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Date & Time functions, part II: - ADDMONTH()
- *                                       - CTODOW()
- *                                       - CTOMONTH()
- *                                       - DAYSINMONTH()
- *                                       - DAYSTOMONTH()
+ *   CT3 Date & Time functions, part II: - AddMonth()
+ *                                       - CToDoW()
+ *                                       - CToMonth()
+ *                                       - DaysInMonth()
+ *                                       - DaysToMonth()
  *                                       - DMY()
- *                                       - DOY()
- *                                       - ISLEAP()
- *                                       - LASTDAYOM()
+ *                                       - DoY()
+ *                                       - IsLeap()
+ *                                       - LastDayOM()
  *                                       - MDY()
- *                                       - NTOCDOW()
- *                                       - NTOCMONTH()
- *                                       - QUARTER()
- *                                       - WEEK()
+ *                                       - NToCDoW()
+ *                                       - NToCMonth()
+ *                                       - Quarter()
+ *                                       - Week()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://harbour-project.org

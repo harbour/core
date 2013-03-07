@@ -5,12 +5,12 @@
 /*
  * Harbour Project source code:
  *
- * FPARSE()
- * FPARSEEX()
- * FPARSELINE()
- * FLINECOUNT()
- * FCHARCOUNT()
- * FWORDCOUNT()
+ * FParse()
+ * FParseEx()
+ * FParseLine()
+ * FLineCount()
+ * FCharCount()
+ * FWordCount()
  *
  * Copyright 2004 Andi Jahja <xharbour@cbn.net.id>
  * www - http://harbour-project.org

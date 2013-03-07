@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Set Status functions: - SETLASTKEY()
+ *   CT3 Set Status functions: - SetLastKey()
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://www.xharbour.org

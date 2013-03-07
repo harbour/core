@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * IS*() string functions
+ * Is*() string functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

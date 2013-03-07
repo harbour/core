@@ -16,7 +16,7 @@
  * VolSerial()   - Ready.
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- * NUMDISKL()
+ * NumDiskL()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
  * TrueName()

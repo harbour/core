@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    __ACCEPTSTR()
+ *    __AcceptStr()
  *
  * See COPYING.txt for licensing terms.
  *

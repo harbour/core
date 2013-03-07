@@ -3,7 +3,8 @@
  */
 
 /*
- * HB_STRFORMAT()/hb_strFormat() functions.
+ * Harbour Project source code:
+ * hb_StrFormat() functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://harbour-project.org

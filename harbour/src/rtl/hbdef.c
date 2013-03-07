@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_DEFAULT() and __DEFAULTNIL() functions
+ * hb_default() and __defaultNIL() functions
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

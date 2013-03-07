@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hb_fsLink*(), HB_FLINK*() functions
+ * hb_fsLink*(), hb_FLink*() functions
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

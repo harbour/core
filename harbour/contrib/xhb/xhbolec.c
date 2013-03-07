@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility calls (OLE).
+ * Compatibility calls (OLE)
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -20,8 +20,8 @@
  * Major overhaul by Steve Larsen to fix several bugs/quirkiness,
  * add some requested features, clean up source for readability.
  *
- * -  Added ft_fError() test
- * -  Added ft_fBOF() test
+ * -  Added ft_FError() test
+ * -  Added ft_FBof() test
  * -  Provided protected mode compatibility
  * -  Increased buffer to 4k, added logic to allow lines longer than
  *    the buffer size.
@@ -53,8 +53,8 @@
  *
  *    NOTE: these functions allocate and deallocate virtual memory on an
  *    "as-needed" basis.  If your application makes heavy and frequent use
- *    of those functions that perform a lot of buffering (ft_fInsert(),
- *    ft_fDelete() and ft_fWrite()), you might consider modifying the memory
+ *    of those functions that perform a lot of buffering (ft_FInsert(),
+ *    ft_FDelete() and ft_fWrite()), you might consider modifying the memory
  *    management scheme used herein, that is, allocate the required buffers
  *    only once upon the first call to these functions, then recycle them.
  * -  Added the ability to specify file open mode.
@@ -66,7 +66,7 @@
  * -  Provided checking for the possibility that the file might be terminated
  *    with ^Z (1Ah), if so, ignoring it (providing consistency with non-^Z
  *    terminated files).  This only occurs on the last record of a file.
- * -  Eliminated a potential problem if one were to issue an ft_fUse() prior
+ * -  Eliminated a potential problem if one were to issue an ft_FUse() prior
  *    actually opening any files.
  * -  Replaced the original C parsing logic to determine the end-of-line (CRLF)
  *    with an optimized assembler routine.  This bypassed a significant
@@ -80,25 +80,25 @@
  * -  Function changes/additions (refer to the individual doc headers for
  *    details):
  *
- *    FT_FSELECT( [ <nArea > ] )               -> nArea
- *    FT_FUSE(    [ <cFile>  ][, <nMode>   ] ) -> nHandle | NIL
- *    FT_FWRITELN(  <cData>   [, <lInsert> ] ) -> NIL
- *    FT_FINSERT( [ <nLines> ] )               -> NIL
- *    FT_FDELETE( [ <nLines> ] )               -> NIL
- *    FT_FAPPEND( [ <nLines> ] )               -> NIL
+ *    ft_FSelect( [ <nArea > ] )               -> nArea
+ *    ft_FUse(    [ <cFile>  ][, <nMode>   ] ) -> nHandle | NIL
+ *    ft_FWriteLn(  <cData>   [, <lInsert> ] ) -> NIL
+ *    ft_FInsert( [ <nLines> ] )               -> NIL
+ *    ft_FDelete( [ <nLines> ] )               -> NIL
+ *    ft_FAppend( [ <nLines> ] )               -> NIL
  *
  *    Internal Steve Larsen revisions:
  *
- *     12/07/91  Original rework
- *     02/13/92  Fixed _findeol(), FT_FREADLN() and FT_FGOBOT() to
- *               better handle files with CRLF, LF, ^Z or nothing
- *               at the EOF.  Previously, under some conditions the
- *               last record was chopped by a character, depending
- *               on the last character(s).
- *     05/02/92  Fixed buffering and VMM allocation problem with
- *               FT_FGOBOT().
- *     08/26/92  Correcting problem when appending blank lines to an
- *               empty file (ft_fAppend() and ft_fWriteLn()).
+ *     1991-12-07  Original rework
+ *     1992-02-13  Fixed _findeol(), ft_FReadLn() and ft_FGoBot() to
+ *                 better handle files with CRLF, LF, ^Z or nothing
+ *                 at the EOF.  Previously, under some conditions the
+ *                 last record was chopped by a character, depending
+ *                 on the last character(s).
+ *     1992-05-02  Fixed buffering and VMM allocation problem with
+ *                 ft_FGoBot().
+ *     1992-08-26  Correcting problem when appending blank lines to an
+ *                 empty file (ft_FAppend() and ft_FWriteLn()).
  *
  *
  *    Rev 1.4   17 Aug 1991 15:31:08   GLENN
@@ -113,7 +113,7 @@
  *    Rev 1.1   29 Apr 1991 08:00:26   GLENN
  * ft_flastrec() -- name was longer than 10 characters so linkers couldn't
  * find the symbol.  Just hacked off the last "c" so it is really
- * ft_flastre().  Sorry, folks.  -- Glenn
+ * ft_FLastRe().  Sorry, folks.  -- Glenn
  *
  *    Rev 1.0   01 Apr 1991 01:02:48   GLENN
  * Nanforum Toolkit

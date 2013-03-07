@@ -5,11 +5,11 @@
 /*
  * Harbour Project source code:
  *   CT3 string functions
- *     - CHARSUB()  (Harbour extension)
- *     - CHARSHL()  (Harbour extension)
- *     - CHARSHR()  (Harbour extension)
- *     - CHARRLL()  (Harbour extension)
- *     - CHARRLR()  (Harbour extension)
+ *     - CharSub()  (Harbour extension)
+ *     - CharShl()  (Harbour extension)
+ *     - CharShr()  (Harbour extension)
+ *     - CharRll()  (Harbour extension)
+ *     - CharRlr()  (Harbour extension)
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

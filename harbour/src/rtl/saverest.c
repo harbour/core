@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SAVESCREEN(), RESTSCREEN() functions
+ * SaveScreen(), RestScreen() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

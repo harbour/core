@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * PADR() function
+ * PadR() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>

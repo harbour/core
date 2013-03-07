@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_ASCII*() functions
+ *    hb_ascii*() functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

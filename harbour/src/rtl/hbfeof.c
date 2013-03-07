@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_FEOF()
+ * hb_FEof()
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  * www - http://harbour-project.org

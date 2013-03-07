@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 function: SETRC()
+ *   CT3 function: SetRC()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

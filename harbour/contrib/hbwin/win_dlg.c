@@ -7,10 +7,10 @@
  * Windows dialogs
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
- *    WIN_PRINTDLGDC()
+ *    win_PrintDlgDC()
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    WIN_GETOPENFILENAME(), WIN_GETSAVEFILENAME()
+ *    win_GetOpenFileName(), win_GetSaveFileName()
  *
  * www - http://harbour-project.org
  *

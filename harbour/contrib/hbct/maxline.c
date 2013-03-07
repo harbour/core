@@ -4,9 +4,8 @@
 
 /*
  * xHarbour Project source code:
- *   CT3 numeric functions
+ *   MaxLine()
  *
- * MAXLINE()
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
  * www - http://www.xharbour.org
  *

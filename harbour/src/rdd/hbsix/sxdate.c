@@ -8,8 +8,8 @@
  *          hb_sxDtoP()
  *          hb_sxPtoD()
  *
- *          SX_DTOP()
- *          SX_PTOD()
+ *          sx_DToP()
+ *          sx_PToD()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

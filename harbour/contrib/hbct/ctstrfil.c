@@ -5,8 +5,8 @@
 /*
  * xHarbour Project source code:
  * Functions:
- * SETFCREATE(), CSETSAFETY(), STRFILE(), FILESTR(), SCREENFILE()
- * SCREENFILE(), FILESCREEN()
+ * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()
+ * ScreenFile(), FileScreen()
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org

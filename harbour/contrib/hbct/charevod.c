@@ -5,8 +5,8 @@
 /*
  * Harbour Project source code:
  *   CT3 string functions
- *     - CHAREVEN()
- *     - CHARODD()
+ *     - CharEven()
+ *     - CharOdd()
  *
  * Copyright 2000-2001 Viktor Szakats (harbour syenar.net)
  *

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * NUMBUTTONS(), SETMOUSE() Xbase++ compatible functions.
+ * NumButtons(), SetMouse() Xbase++ compatible functions.
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * hb_tabexpand() and hb_readline() functions
+ * hb_TabExpand() and hb_ReadLine() functions
  *
  * Copyright 2004 Marcelo Lombardo - lombardo@uol.com.br
  * http://www.xharbour.org

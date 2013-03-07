@@ -154,7 +154,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
          ENDIF
          cObjs += "{'" + cClass + "',"
          IF ! cInd == ""
-            cObjs += "{" + hb_strShrink( cInd ) + "}"
+            cObjs += "{" + hb_StrShrink( cInd ) + "}"
          ENDIF
          cObjs += "}"
       ENDIF

@@ -68,22 +68,22 @@
  *    __objSendMsg()
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    __CLASSNEW()
- *    __CLASSINSTANCE()
- *    __CLASSADD()
- *    __CLASSNAME()
- *    __CLASSSEL() (based on hb___msgClsSel())
+ *    __classNew()
+ *    __classInstance()
+ *    __classAdd()
+ *    __className()
+ *    __classSel() (based on hb___msgClsSel())
  *
  * Copyright 1999 Janica Lubos <janica@fornax.elf.stuba.sk>
  *    hb_clsDictRealloc()
  *
- * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <cakiral@altern.org
+ * Copyright 2000-2007 JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <cakiral@altern.org
  *    Multiple inheritence fully implemented
  *    Forwarding, delegating
  *    Data initialisation & Autoinit for Bool and Numeric
  *    Scoping : Protected / exported
  *
- * Copyright 2000 ( 08/2000-> ) JF. Lefebvre <jfl@mafact.com>
+ * Copyright 2008- JF. Lefebvre <jfl@mafact.com>
  *    hb_clsDictRealloc()   New version
  *    Now support of shared and not shared class data
  *    Multiple datas declaration fully supported
@@ -97,14 +97,14 @@
  *    To Many enhancement and correction to give a full list :-)
  *    Improved class(y) compatibility
  *    Improved TopClass compatibility
- *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default HBObject)
+ *    __CLS_PAR00() (Allow the creation of class wich not autoinherit of the default HBObject())
  *    Adding HB_CLS_ENFORCERO FLAG to disable Write access to RO VAR
  *    outside of Constructors /!\ Could be related to some incompatibility
- *    Added hb_objGetRealClsName to keep a full class tree ( for 99% cases )
+ *    Added hb_objGetRealClsName to keep a full class tree (for 99% cases)
  *    Fixed hb_clsIsParent
  *
  *
- *    hb_objGetMthd() & __CLSADDMSG modified to translate the followings operators
+ *    hb_objGetMthd() & __clsAddMsg() modified to translate the followings operators
  *
  "+"     = __OpPlus
  "-"     = __OpMinus

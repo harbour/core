@@ -6,9 +6,9 @@
  * Harbour Project source code:
  *
  *   CT3 Numeric functions - PART 1
- *     - CELSIUS()
- *     - FAHRENHEIT()
- *     - INFINITY()
+ *     - Celsius()
+ *     - Fahrenheit()
+ *     - Infinity()
  *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * SAYDOWN(), SAYSPREAD(), SAYMOVEIN(), SCREENSTR(), STRSCREEN()
+ * SayDown(), SaySpread(), SayMoveIn(), ScreenStr(), StrScreen()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

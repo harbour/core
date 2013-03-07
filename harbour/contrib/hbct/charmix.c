@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CHARMIX() CT3 function
+ *   CharMix() CT3 function
  *
  * Initial code: Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_NTOS() function
+ * hb_ntos() function
  *
  * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

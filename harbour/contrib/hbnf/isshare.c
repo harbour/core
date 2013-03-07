@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code
- * FT_ISSHARE() function
+ * ft_IsShare() function
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   POSCHAR(), POSDEL(), POSINS() and POSREPL() CT3 functions
+ *   PosChar(), PosDel(), PosIns() and PosRepl() CT3 functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

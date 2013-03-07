@@ -10,6 +10,10 @@
  *
  */
 
+#pragma -w3
+#pragma -km+
+#pragma -ko+
+
 #include "directry.ch"
 #include "simpleio.ch"
 

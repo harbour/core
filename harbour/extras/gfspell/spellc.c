@@ -6,7 +6,7 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
-#define abs( a )  ( ( ( a ) > 0 ) ? ( a ) : -( a ) )
+#define HB_ABS( a )  ( ( ( a ) > 0 ) ? ( a ) : -( a ) )
 
 static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
@@ -157,7 +157,7 @@ HB_FUNC( SP_RATE )
    const char * cWord   = hb_parc( 2 );
    HB_ISIZ      nWord   = hb_parclen( 2 );
    HB_ISIZ      nMinLen = HB_MIN( nFound, nWord );
-   HB_ISIZ      x       = abs( nFound - nWord );
+   HB_ISIZ      x       = HB_ABS( nFound - nWord );
    HB_ISIZ      lim     = HB_MIN( nMinLen, 5 );
    char *       cRating = hb_strdup( "nZZ" );
 

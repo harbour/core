@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SHA1 Harbour wrappers.
+ * SHA1 Harbour wrappers
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

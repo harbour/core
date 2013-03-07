@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    constant values for CT3 serial communication COM_*() functions
+ *    constant values for CT3 serial communication com_*() functions
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

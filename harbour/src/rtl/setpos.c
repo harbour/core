@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SETPOS(), ROW(), COL() functions
+ * SetPos(), Row(), Col() functions
  *
  * Copyright 1999 Bil Simser <bsimser@home.com>
  * www - http://harbour-project.org
@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    SETPOS()
+ *    SetPos()
  *
  * See COPYING.txt for licensing terms.
  *

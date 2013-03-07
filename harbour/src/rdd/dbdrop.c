@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBDROP() Harbour extension.
+ * dbDrop() Harbour extension.
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Number and bit manipulation functions: - MANTISSA()
- *                                              - EXPONENT()
+ *   CT3 Number and bit manipulation functions: - Mantissa()
+ *                                              - Exponent()
  *
  * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://harbour-project.org

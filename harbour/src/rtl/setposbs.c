@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SETPOSBS() function
+ * SetPosBS() function
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

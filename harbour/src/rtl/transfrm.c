@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TRANSFORM() function
+ * Transform() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999 Eddie Runia <eddie@runia.com>

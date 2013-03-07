@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TONE() function
+ * Tone() function
  *
  * Copyright 1999 Chen Kedem <niki@synel.co.il>
  * www - http://harbour-project.org

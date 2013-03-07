@@ -8,27 +8,27 @@
  *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is server code giving the following .prg functions:
- *       NETIO_LISTEN( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
+ *       netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
  *                                              -> <pListenSocket> | NIL
- *       NETIO_ACCEPT( <pListenSocket>, [<nTimeOut>],
+ *       netio_Accept( <pListenSocket>, [<nTimeOut>],
  *                     [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *                                              -> <pConnectionSocket> | NIL
- *       NETIO_COMPRESS( <pConnectionSocket>,
+ *       netio_Compress( <pConnectionSocket>,
  *                       [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *                                              -> NIL
- *       NETIO_SERVER( <pConnectionSocket> ) -> NIL
- *       NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
+ *       netio_Server( <pConnectionSocket> ) -> NIL
+ *       netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
  *                                              -> NIL
- *       NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
- *       NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
+ *       netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+ *       netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
  *                                              -> <lPrev>
- *       NETIO_RPCFILTER( <pConnectionSocket>,
+ *       netio_RPCFilter( <pConnectionSocket>,
  *                        <sFuncSym> | <hValue> | NIL ) -> NIL
  *
- *       NETIO_SRVSTATUS( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
- *       NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> )
+ *       netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+ *       netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
  *             -> <lSent>
- *       NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> )
+ *       netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
  *             -> <lSent>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

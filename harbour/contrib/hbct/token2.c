@@ -5,14 +5,14 @@
 /*
  * Harbour Project source code:
  *   CT3 string functions
- *     - TOKENINIT()
- *     - TOKENEXIT()
- *     - TOKENNEXT()
- *     - TOKENNUM()
- *     - TOKENAT()
- *     - SAVETOKEN()
- *     - RESTTOKEN()
- *     - TOKENEND()
+ *     - TokenInit()
+ *     - TokenExit()
+ *     - TokenNext()
+ *     - TokenNum()
+ *     - TokenAt()
+ *     - SaveToken()
+ *     - RestToken()
+ *     - TokenEnd()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

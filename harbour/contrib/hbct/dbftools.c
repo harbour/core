@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * dbf structure related functions:
  *
- *    FIELDSIZE(), FIELDDECI(), FIELDNUM(), DBFSIZE()
+ *    FieldSize(), FieldDeci(), FieldNum(), DbfSize()
  *
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org

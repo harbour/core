@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hb_SCRMAXROW(), hb_SCRMAXCOL() functions
+ * hb_ScrMaxRow(), hb_ScrMaxCol() functions
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_STRTOEXP() function - convert string to valid macrocompiler expression
+ * hb_StrToExp() function - convert string to valid macrocompiler expression
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

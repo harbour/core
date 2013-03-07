@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility calls (OS version support).
+ * Compatibility calls (OS version support)
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

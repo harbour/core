@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    xHarbour compatible HB_ENUMINDEX() internal FOR EACH function
+ *    xHarbour compatible hb_enumIndex() internal FOR EACH function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

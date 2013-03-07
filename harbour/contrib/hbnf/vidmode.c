@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code
- * FT_GETMODE()/FT_SETMODE() functions
+ * ft_GetMode()/ft_SetMode() functions
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://harbour-project.org

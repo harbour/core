@@ -55,17 +55,17 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    DAY()
- *    MONTH()
- *    YEAR()
- *    DOW()
+ *    Day()
+ *    Month()
+ *    Year()
+ *    DoW()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    CTOD()
- *    DATE()
+ *    CToD()
+ *    Date()
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    HB_STOD()
+ *    hb_SToD()
  *
  * See COPYING.txt for licensing terms.
  *

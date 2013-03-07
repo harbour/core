@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * WORD() function
+ * Word() function
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

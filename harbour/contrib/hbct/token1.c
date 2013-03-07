@@ -5,12 +5,12 @@
 /*
  * Harbour Project source code:
  *   CT3 string functions
- *     - TOKEN()
- *     - NUMTOKEN()
- *     - ATTOKEN()
- *     - TOKENLOWER()
- *     - TOKENUPPER()
- *     - TOKENSEP()
+ *     - Token()
+ *     - NumToken()
+ *     - AtToken()
+ *     - TokenLower()
+ *     - TokenUpper()
+ *     - TokenSep()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

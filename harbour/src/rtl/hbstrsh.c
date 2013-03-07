@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_STRSHRINK() function
+ * hb_StrShrink() function
  *
  * Copyright 2007-2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

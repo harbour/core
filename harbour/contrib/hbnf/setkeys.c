@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_SETKEYS()
+ * ft_SetKeys()
  *
  * Copyright 1999-2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

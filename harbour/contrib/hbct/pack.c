@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * CT3 CHARPACK() and CHARUNPACK() functions.
+ * CT3 CharPack() and CharUnpack() functions.
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
  * www - http://www.xharbour.org

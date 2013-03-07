@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * xhb compatibility functions HSETPARTITION()/HGETPARTITION()
+ * xhb compatibility functions HSetPartition()/HGetPartition()
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * Copyright 2003 Giancarlo Niccolai

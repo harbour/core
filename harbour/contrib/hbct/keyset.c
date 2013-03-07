@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Printer functions: - KSETINS()
- *                          - KSETCAPS()
- *                          - KSETNUM()
- *                          - KSETSCROLL()
+ *   CT3 Printer functions: - KSetIns()
+ *                          - KSetCaps()
+ *                          - KSetNum()
+ *                          - KSetScroll()
  *
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://harbour-project.org

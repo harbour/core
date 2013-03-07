@@ -8,8 +8,8 @@
  *          hb_sxEnCrypt()
  *          hb_sxDeCrypt()
  *
- *          SX_ENCRYPT()
- *          SX_DECRYPT()
+ *          sx_Encrypt()
+ *          sx_Decrypt()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

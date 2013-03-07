@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- *    EXECNAME( [ <lFullPath> ] ) -> <cName>
- *    EXECPIDNUM() -> <nPID>
+ *    ExecName( [ <lFullPath> ] ) -> <cName>
+ *    ExecPIDNum() -> <nPID>
  * FlagShip compatible functions
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>

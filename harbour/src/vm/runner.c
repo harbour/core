@@ -55,10 +55,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su>
- *    HB_HRBLOAD()
- *    HB_HRBDO()
- *    HB_HRBUNLOAD()
- *    HB_HRBGETFUNSYM()
+ *    hb_hrbLoad()
+ *    hb_hrbDo()
+ *    hb_hrbUnload()
+ *    hb_hrbGetFunSym()
  *
  * See COPYING.txt for licensing terms.
  *

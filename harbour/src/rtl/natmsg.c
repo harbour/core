@@ -55,8 +55,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    __NATSORTVER()
- *    __NATMSGVER()
+ *    __natSortVer()
+ *    __natMsgVer()
  *
  * See COPYING.txt for licensing terms.
  *

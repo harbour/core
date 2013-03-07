@@ -8,7 +8,6 @@
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  * www - http://www.xharbour.org
- * SEE ALSO COPYRIGHT NOTICE FOR ZLIB BELOW.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

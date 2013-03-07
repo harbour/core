@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * memo line functions: MEMOLINE(), MLCOUNT(), MLPOS(), MLCTOPOS(), MPOSTOLC()
+ * memo line functions: MemoLine(), MLCount(), MLPos(), MLCToPos(), MPosToLC()
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * XHB_SAVESCREEN(), XHB_RESTSCREEN() functions
+ * xhb_SaveScreen(), xhb_RestScreen() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

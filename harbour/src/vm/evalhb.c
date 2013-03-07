@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * EVAL() function
+ * Eval() function
  *
  * Copyright 1999-2001 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org

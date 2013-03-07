@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * SAVECURSOR(), RESTCURSOR()
+ * SaveCursor(), RestCursor()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

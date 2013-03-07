@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    xHarbour compatible __MVSYMBOLINFO() function
+ *    xHarbour compatible __mvSymbolInfo() function
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *   CT3 Date & Time functions:
- *       WAITPERIOD(), TIMEVALID(), SETTIME(), SETDATE()
+ *       WaitPeriod(), TimeValid(), SetTime(), SetDate()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

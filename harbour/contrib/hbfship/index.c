@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- *    INDEXCOUNT() -> <nIndexCount>
- *    INDEXNAMES() -> <acIndexNames>
+ *    IndexCount() -> <nIndexCount>
+ *    IndexNames() -> <acIndexNames>
  * FlagShip compatible functions
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 string function WORDREPL()
+ *   CT3 string function WordRepl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

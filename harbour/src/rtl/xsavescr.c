@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __XSAVESCREEN()/__XRESTSCREEN() functions
+ * __XSaveScreen()/__XRestScreen() functions
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://harbour-project.org

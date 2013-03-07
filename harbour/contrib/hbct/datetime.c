@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Date & Time functions: - BOM() / EOM()
- *                              - BOQ() / EOQ()
- *                              - BOY() / EOY()
- *                              - WOM()
+ *   CT3 Date & Time functions: - BoM() / EoM()
+ *                              - BoQ() / EoQ()
+ *                              - BoY() / EoY()
+ *                              - WoM()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://harbour-project.org
@@ -58,7 +58,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *   Wom()
+ *   WoM()
  *
  * See COPYING.txt for licensing terms.
  *

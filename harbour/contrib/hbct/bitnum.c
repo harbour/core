@@ -5,9 +5,9 @@
 /*
  * Harbour Project source code:
  *    CT3 Number and bit manipulation functions:
- *       NUMAND(), NUMOR(), NUMXOR(), NUMNOT(), NUMHIGH(), NUMLOW()
- *       NUMROL(), NUMMIRR(), CLEARBIT(), SETBIT(), ISBIT(),
- *       INTNEG(), INTPOS()
+ *       NumAnd(), NumOr(), NumXor(), NumNot(), NumHigh(), NumLow()
+ *       NumRol(), NumMirr(), ClearBit(), SetBit(), IsBit(),
+ *       IntNeg(), IntPos()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

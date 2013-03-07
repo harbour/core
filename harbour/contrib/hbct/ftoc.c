@@ -4,8 +4,8 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Number and bit manipulation functions: - FTOC()
- *                                              - CTOF()
+ *   CT3 Number and bit manipulation functions: - FToC()
+ *                                              - CToF()
  *
  * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://harbour-project.org

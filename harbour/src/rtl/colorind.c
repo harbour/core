@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_COLORINDEX() function
+ * hb_ColorIndex() function
  *
  * Copyright 1999-2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

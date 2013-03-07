@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    CT3 Number and bit manipulation functions:
- *       CTOBIT(), BITTOC()
+ *       CToBit(), BitToC()
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

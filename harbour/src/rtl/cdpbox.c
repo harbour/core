@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_UTF8TOSTRBOX()
+ *    hb_UTF8ToStrBox()
  *
  * Copyright 2009-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2012 Viktor Szakats (harbour syenar.net)

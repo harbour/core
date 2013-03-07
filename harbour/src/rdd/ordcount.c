@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ORDCOUNT() function
+ * ordCount() function
  *
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

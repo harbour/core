@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * MEMOTRAN() function
+ * MemoTran() function
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org

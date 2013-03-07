@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_releaseCPU()
+ *    hb_ReleaseCPU()
  *
  * See COPYING.txt for licensing terms.
  *

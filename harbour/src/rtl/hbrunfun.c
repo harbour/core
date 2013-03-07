@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_RUN()
+ *    hb_run()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

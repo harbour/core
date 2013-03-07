@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FILESTATS() function
+ * FileStats() function
  *
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai [dot] ws>
  *

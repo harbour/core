@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    CT3 Number and bit manipulation functions:
- *       ENVPARAM()
+ *       EnvParam()
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -5,11 +5,11 @@
 /*
  * Harbour Project source code:
  *   CT3 string functions
- *     - CHARADD()
- *     - CHARAND()
- *     - CHARNOT()
- *     - CHAROR()
- *     - CHARXOR()
+ *     - CharAdd()
+ *     - CharAnd()
+ *     - CharNot()
+ *     - CharOr()
+ *     - CharXor()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

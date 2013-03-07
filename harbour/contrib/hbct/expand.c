@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 string function:  EXPAND()
+ *   CT3 string function:  Expand()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

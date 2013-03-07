@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    SIX compatible function:
- *          Sx_FNameParser()
+ *          sx_FNameParser()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * LENNUM() compatibility function from the SAMPLES directory of Clipper.
+ * LenNum() compatibility function from the SAMPLES directory of Clipper.
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FIELDDECI() FlagShip compatible function
+ * FieldDeci() FlagShip compatible function
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus@acn.waw.pl>
  * www - http://harbour-project.org

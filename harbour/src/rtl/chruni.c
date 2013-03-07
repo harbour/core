@@ -5,8 +5,8 @@
 /*
  * Harbour Project source code:
  * Binary and unicode string functions:
- *    HB_UCHAR(), HB_UCODE(), HB_ULEN(), HB_UPEEK(), HB_UPOKE()
- *    HB_BCHAR(), HB_BCODE(), HB_BLEN(), HB_BPEEK(), HB_BPOKE()
+ *    hb_UChar(), hb_UCode(), hb_ULen(), hb_UPeek(), hb_UPoke()
+ *    hb_BChar(), hb_BCode(), hb_BLen(), hb_BPeek(), hb_BPoke()
  *
  * Copyright 2012 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  * www - http://harbour-project.org

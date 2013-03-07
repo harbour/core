@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_ATI() function
+ * hb_AtI() function
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 1999-2009 Viktor Szakats (harbour syenar.net)

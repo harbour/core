@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __COPYFILE() function
+ * __CopyFile() function
  *
  * Copyright 1999 Andi Jahja <andij@aonlippo.co.id>
  * www - http://harbour-project.org

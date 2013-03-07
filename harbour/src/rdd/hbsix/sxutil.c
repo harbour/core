@@ -5,10 +5,10 @@
 /*
  * Harbour Project source code:
  *    SIX compatible function:
- *          Sx_SlimFast()
- *          Sx_WildMatch()
- *          Sx_Version()
- *          Sx_Error()
+ *          sx_SlimFast()
+ *          sx_WildMatch()
+ *          sx_Version()
+ *          sx_Error()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

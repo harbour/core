@@ -5,8 +5,8 @@
 /*
  * Harbour Project source code:
  * CT3 video function:
- *    INVERTATTR(), COLORTON(), NTOCOLOR(),
- *    ENHANCED(), STANDARD(), UNSELECTED()
+ *    InvertAttr(), ColorToN(), NToColor(),
+ *    Enhanced(), Standard(), Unselected()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

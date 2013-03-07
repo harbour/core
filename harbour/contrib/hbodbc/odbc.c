@@ -56,20 +56,17 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
- *    SQLNUMRESULTCOLS()
- *    SQLDESCRIBECOL()
+ *    SQLNumResultCols()
+ *    SQLDescribeCol()
  *
  * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
- *    SQLGETINFO()
- *    SQLSETCONNECTOPTION()
- *    SQLSETSTMTOPTION()
- *    SQLGETCONNECTOPTION()
- *    SQLGETSTMTOPTION()
- *    SQLCOMMIT()
- *    SQLROLLBACK()
- *    SQLCOLATTRIBUTE()
- *    SQLBINDOUTPARAM()
- *    SQLMORERESULTS()
+ *    SQLGetInfo()
+ *    SQLSetStmtAttr()
+ *    SQLGetStmtAttr()
+ *    SQLCommit()
+ *    SQLRollback()
+ *    SQLColAttribute()
+ *    SQLMoreResults()
  *
  * See COPYING.txt for licensing terms.
  */

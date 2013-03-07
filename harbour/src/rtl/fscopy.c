@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hb_fsCopy(), HB_FCOPY() functions
+ * hb_fsCopy(), hb_FCopy() functions
  *
  * Copyright 1991-2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 BLANK function
+ *   CT3 Blank() function
  *
  * Copyright 2009 Pavel Tsarenko <tpe2@mail.ru>
  * http://www.xharbour.org

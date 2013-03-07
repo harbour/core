@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_SHADOW(), HB_CLRAREA() functions
+ * hb_Shadow(), hb_ClrArea() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   TABEXPAND(), TABPACK() CT3 string functions
+ *   TabExpand(), TabPack() CT3 string functions
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

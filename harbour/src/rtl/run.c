@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __RUN function
+ * __Run() function
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org

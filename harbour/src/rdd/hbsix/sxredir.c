@@ -5,9 +5,9 @@
 /*
  * Harbour Project source code:
  *    SIX compatible function:
- *          Sx_FindRec()
- *          Sx_ClearOrder()
- *          Sx_SetTrig()
+ *          sx_FindRec()
+ *          sx_ClearOrder()
+ *          sx_SetTrig()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

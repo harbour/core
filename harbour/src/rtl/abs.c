@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ABS() function
+ * Abs() function
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://harbour-project.org

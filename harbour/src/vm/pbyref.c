@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_PARAMBYREF()
+ *    hb_PIsByRef()
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

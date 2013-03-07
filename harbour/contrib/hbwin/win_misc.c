@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
- *    WIN_SYSREFRESH()
+ *    win_SysRefresh()
  *
  * See COPYING.txt for licensing terms.
  *

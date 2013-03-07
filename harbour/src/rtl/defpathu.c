@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DEFPATH() function
+ * DefPath() function
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org

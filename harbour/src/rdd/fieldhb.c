@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FIELDLEN(), FIELDDEC(), FIELDTYPE() Harbour extensions.
+ * FieldLen(), FieldDec(), FieldType() Harbour extensions.
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_LIBEXT(), HB_LIBPREFIX()
+ * hb_libExt(), hb_libPrefix()
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

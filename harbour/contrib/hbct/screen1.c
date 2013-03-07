@@ -6,12 +6,12 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * SCREENATTR(), SCREENMIX(), SAYSCREEN(),
- * CLEARWIN(), INVERTWIN(), UNTEXTWIN(), CHARWIN(), COLORWIN(), COLORREPL()
+ * ScreenAttr(), ScreenMix(), SayScreen(),
+ * ClearWin(), InvertWin(), UnTextWin(), CharWin(), ColorWin(), ColorRepl()
  *
  *   and Harbour extension:
  *
- * SCREENTEXT()
+ * ScreenText()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DIRCHANGE(), MAKEDIR(), DIRREMOVE(), ISDISK(), DISKCHANGE(), DISKNAME() functions
+ * DirChange(), MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName() functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

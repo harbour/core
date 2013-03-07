@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * xhb compatibility wrappers.
+ * xhb compatibility wrappers
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

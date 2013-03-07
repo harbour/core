@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FILE() function
+ * File() function
  *
  * Copyright 1999-2002 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

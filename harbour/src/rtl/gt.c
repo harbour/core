@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DISPBEGIN(), DISPEND(), DISPCOUNT() functions
+ * DispBegin(), DispEnd(), DispCount() functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

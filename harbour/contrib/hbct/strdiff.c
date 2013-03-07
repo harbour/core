@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   STRDIFF() CT3 string function
+ *   StrDiff() CT3 string function
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_FTEMPCREATE() function
+ * hb_FTempCreate() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  * Copyright 2000-2010 Viktor Szakats (harbour syenar.net)

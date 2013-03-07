@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   ATREPL() CT3 string function
+ *   AtRepl() CT3 string function
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

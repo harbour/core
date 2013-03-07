@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   RANGEREM() and RANGEREPL() CT3 string functions
+ *   RangeRem() and RangeRepl() CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

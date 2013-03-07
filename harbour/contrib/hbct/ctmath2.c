@@ -6,11 +6,11 @@
  * Harbour Project source code:
  *
  *   CT3 mathematical functions
- *     - FLOOR()
- *     - CEILING()
- *     - SIGN()
- *     - LOG10()
- *     - FACT()
+ *     - Floor()
+ *     - Ceiling()
+ *     - Sign()
+ *     - Log10()
+ *     - Fact()
  *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *

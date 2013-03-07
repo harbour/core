@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_BIT*() functions
+ *    hb_bit*() functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

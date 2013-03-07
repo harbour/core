@@ -8,29 +8,29 @@
  *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is client code with
- *       NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>],
+ *       netio_Connect( [<cServer>], [<nPort>], [<nTimeOut>],
  *                      [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
  *             -> <lOK>
  *    function which register alternative RDD IO API, sets server
  *    address and port and connection timeout parameter.
  *    Then it tries to connect to the server and returns .T. on success.
  *    This code also provides the following .prg functions:
- *       NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
- *       NETIO_DECODE( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>],
+ *       netio_Disconnect( [<cServer>], [<nPort>] ) -> <lOK>
+ *       netio_Decode( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>],
  *                     [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
  *             -> <lDecoded>
- *       NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
- *       NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
- *       NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
- *       NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+ *       netio_ProcExists( <cProcName> ) -> <lExists>
+ *       netio_ProcExec( <cProcName> [, <params,...>] ) -> <lSent>
+ *       netio_ProcExecW( <cProcName> [, <params,...>] ) -> <lExecuted>
+ *       netio_FuncExec( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
  *
- *       NETIO_OPENDATASTREAM( <cStreamFuncName> [, <params,...>] )
+ *       netio_OpenDataStream( <cStreamFuncName> [, <params,...>] )
  *             -> <nStreamID>
- *       NETIO_OPENITEMSTREAM( <cStreamFuncName> [, <params,...>] )
+ *       netio_OpenItemStream( <cStreamFuncName> [, <params,...>] )
  *             -> <nStreamID>
- *       NETIO_CLOSESTREAM( <nStreamID>, [<cServer>], [<nPort>] )
+ *       netio_CloseStream( <nStreamID>, [<cServer>], [<nPort>] )
  *             -> <lOK>
- *       NETIO_GETDATA( <nStreamID>, [<cServer>], [<nPort>] )
+ *       netio_GetData( <nStreamID>, [<cServer>], [<nPort>] )
  *             -> <aData> | <cData> | NIL
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
