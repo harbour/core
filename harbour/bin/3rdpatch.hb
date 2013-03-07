@@ -321,7 +321,7 @@ PROCEDURE Main( ... )
       IF ! Empty( aRegexMatch := hb_regex( hRegexTake1Line, cMemoLine ) )
          /* Process one-arg keywords */
          IF aRegexMatch[ ONEARG_KW ] == "DIFF"
-            cDiffFile := iif( Empty( AllTrim( aRegexMatch[ ONEARG_ARG ] ) ), NIL,         ;
+            cDiffFile := iif( Empty( AllTrim( aRegexMatch[ ONEARG_ARG ] ) ), NIL, ;
                AllTrim( aRegexMatch[ ONEARG_ARG ] ) )
          ELSEIF aRegexMatch[ ONEARG_KW ] == "URL"
             cArchiveURL := AllTrim( aRegexMatch[ ONEARG_ARG ] )
@@ -332,7 +332,7 @@ PROCEDURE Main( ... )
          IF aRegexMatch[ TWOARG_KW ] == "MAP"
             /* Do not allow implicit destination with non-flat source spec */
             IF Empty( aRegexMatch[ TWOARG_ARG1 ] ) .AND. "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_StrFormat( "E: Non-flat source spec with implicit " +           ;
+               OutStd( hb_StrFormat( "E: Non-flat source spec with implicit " + ;
                   "destination, offending line %d:%s:", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -340,7 +340,7 @@ PROCEDURE Main( ... )
             ENDIF
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
-               OutStd( hb_StrFormat( "E: Non-flat destination, offending line %d:%s",     ;
+               OutStd( hb_StrFormat( "E: Non-flat destination, offending line %d:%s", ;
                   nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -352,9 +352,9 @@ PROCEDURE Main( ... )
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", hb_ps() )
             ENDIF
             /* The destination argument must fit in the 8+3 scheme */
-            IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
-                  Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
-               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending " +       ;
+            IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR. ;
+               Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
+               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending " + ;
                   "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
@@ -367,15 +367,15 @@ PROCEDURE Main( ... )
              */
             AAdd( s_aChangeMap, {                                                         ;
                iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                                  ;
-               aRegexMatch[ TWOARG_ARG2 ],                                          ;
-               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]             ;
+               aRegexMatch[ TWOARG_ARG2 ],                                                ;
+               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]                   ;
                } )
             /* If this is the first MAP entry, treat the original part as the
              * source tree root indicator */
             IF Len( s_aChangeMap ) == 1
                cTopIndicator := s_aChangeMap[ 1 ][ FN_ORIG ]
                IF "/" $ cTopIndicator
-                  OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, offending " +  ;
+                  OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, offending " + ;
                      "line %d:%s", nMemoLine, hb_eol() ) )
                   OutStd( aRegexMatch[ 1 ] + hb_eol() )
                   ErrorLevel( 2 )
@@ -450,7 +450,8 @@ PROCEDURE Main( ... )
          s_nErrors++
       ELSE
          /* Create the `pristine tree' */
-         hb_FCopy( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ),                      ;
+         hb_FCopy( ;
+            CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ), ;
             CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
          /* Munch the file, applying the appropriate xforms */
@@ -460,12 +461,14 @@ PROCEDURE Main( ... )
           * otherwise, duplicate the pristine tree */
 
          IF lRediff
-            hb_FCopy( aOneMap[ FN_HB ],                                                   ;
+            hb_FCopy( ;
+               aOneMap[ FN_HB ], ;
                CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
 
          ELSE
             /* Copy it to `our tree' */
-            hb_FCopy( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ), ;
+            hb_FCopy( ;
+               CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ), ;
                CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
          ENDIF
 
@@ -476,8 +479,8 @@ PROCEDURE Main( ... )
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
          cCommand := hb_StrFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
-            s_aTools[ "patch" ],                                                 ;
-            CombinePath( s_cTempDir, cThisComponent ),                           ;
+            s_aTools[ "patch" ],                                                          ;
+            CombinePath( s_cTempDir, cThisComponent ),                                    ;
             CombinePath( cCWD, cDiffFile ) )
          TRACE( "Running " + cCommand )
          nRunResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
@@ -489,7 +492,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Re-create the diff */
-      cCommand := hb_StrFormat( "%s -urN %s %s",                                          ;
+      cCommand := hb_StrFormat( "%s -urN %s %s", ;
          s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
@@ -688,8 +691,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
                                     NIL,                                                  ;
                                     Left( cFileName, Len( cFileName ) -                   ;
                                        Len( cMatchedPattern ) ) +                         ;
-                                       aActionMap[ cPattern ][ "ExtractedFile" ]          ;
-                                  )
+                                       aActionMap[ cPattern ][ "ExtractedFile" ] )
             cArchiver := aActionMap[ cPattern ][ "Archiver" ]
             cArchiverArgs := aActionMap[ cPattern ][ "ArchiverArgs" ]
             EXIT
@@ -698,7 +700,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    NEXT
 
    IF cArchiver == NIL
-      OutStd( "E: Can not find archiver for `" +                                          ;
+      OutStd( "E: Can not find archiver for `" + ;
          hb_FNameNameExt( cArchiveURL ) + "'" + hb_eol() )
       RETURN .F.
    ENDIF
@@ -708,7 +710,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `curl' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_StrFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                     ;
+   cCommand := hb_StrFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ], ;
       CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
    TRACE( "Running " + cCommand )
    nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
@@ -724,7 +726,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
          OutStd( "E: Required `" + cExtractor + "' was not found" + hb_eol() )
          RETURN .F.
       ENDIF
-      cCommand := hb_StrFormat( "%s " + cExtractorArgs + " %s",                           ;
+      cCommand := hb_StrFormat( "%s " + cExtractorArgs + " %s", ;
          cExtractor, CombinePath( s_cTempDir, cFileName ) )
       TRACE( "Running " + cCommand )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
@@ -742,7 +744,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       OutStd( "E: Required `" + cArchiver + "' was not found" + hb_eol() )
       RETURN .F.
    ENDIF
-   cCommand := hb_StrFormat( "%s " + cArchiverArgs + " %s",                               ;
+   cCommand := hb_StrFormat( "%s " + cArchiverArgs + " %s", ;
       cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
    TRACE( "Running " + cCommand )
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
@@ -834,12 +836,12 @@ STATIC FUNCTION hb_FileTran( cFileName )
 
       /* Local-style includes */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-         Chr( 34 ) + cChangeFrom + Chr( 34 ),                ;
-         Chr( 34 ) + cChangeTo + Chr( 34 ) )
+         '"' + cChangeFrom + '"',                                                         ;
+         '"' + cChangeTo + '"' )
 
       /* System-style include */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-         "<" + cChangeFrom + ">",                            ;
+         "<" + cChangeFrom + ">",                                                         ;
          "<" + cChangeTo + ">" )
 
    NEXT
@@ -849,10 +851,10 @@ STATIC FUNCTION hb_FileTran( cFileName )
 STATIC FUNCTION FNameEscape( cFileName )
 
 #if defined( __PLATFORM__UNIX )
-   RETURN cFileName
-#else
-   RETURN Chr( 34 ) + cFileName + Chr( 34 )
+   cFileName := '"' + cFileName + '"'
 #endif
+
+   RETURN cFileName
 
 /*
  * vim: ts=3 expandtab ft=clipper

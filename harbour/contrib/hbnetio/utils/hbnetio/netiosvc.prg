@@ -44,7 +44,7 @@ PROCEDURE WinMain( ... )
    CASE "-i"
    CASE "-install"
 
-      IF win_serviceInstall( _SERVICE_NAME, "Harbour NetIO Service", Chr( 34 ) + hb_ProgName() + Chr( 34 ) + " -service", WIN_SERVICE_AUTO_START )
+      IF win_serviceInstall( _SERVICE_NAME, "Harbour NetIO Service", '"' + hb_ProgName() + '"' + " -service", WIN_SERVICE_AUTO_START )
          OutStd( "Service has been successfully installed" + hb_eol() )
       ELSE
          nError := wapi_GetLastError()

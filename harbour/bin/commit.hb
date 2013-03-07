@@ -211,9 +211,11 @@ STATIC FUNCTION Shell()
    RETURN cShell
 
 STATIC FUNCTION CmdEscape( cCmd )
+
 #if defined( __PLATFORM__UNIX )
-   cCmd := Chr( 34 ) + cCmd + Chr( 34 )
+   cCmd := '"' + cCmd + '"'
 #endif
+
    RETURN cCmd
 
 STATIC FUNCTION Changes( cVCS )

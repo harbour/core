@@ -77,7 +77,7 @@ PROCEDURE Main()
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
-   ? "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ? "    Value of cStr is: " + '"' + cStr + '"'
    ?
    FOR ni := 1 TO NumToken( cStr, ".!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".!", ni, 1 ) + '")'

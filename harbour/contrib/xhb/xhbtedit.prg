@@ -344,12 +344,12 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // If memofield was created with Clipper, it needs to have __SoftCR() stripped
 
-   // 2006-07-20 - E.F. - We should not replace SoftCR with Chr( 32 ).
+   // 2006-07-20 - E.F. - We should not replace SoftCR with " " (space)
    //                     See Text2Array function for more details.
    // IF hb_BChar( 141 ) $ cString
-   //    acsn := Chr( 32 ) + Chr( 141 ) + Chr( 10 )
+   //    acsn := " " + hb_BChar( 141 ) + Chr( 10 )
    //    cString := StrTran( cString, acsn, " " )
-   //    acsn := Chr( 141 ) + Chr( 10 )
+   //    acsn := hb_BChar( 141 ) + Chr( 10 )
    //    cString := StrTran( cString, acsn, " " )
    // ENDIF
 
@@ -1518,7 +1518,7 @@ METHOD K_Bs() CLASS XHBEditor
       //                    zero and set lSoftCR to true as Clipper does.
       //
       IF ::nCol == 1 .AND. Empty( ::aText[ ::nRow ]:cText ) .AND. ;
-            ::nRow + 1 <= ::LastRow()
+         ::nRow + 1 <= ::LastRow()
 
          ::aText[ ::nRow ]:cText := ""
          ::aText[ ::nRow ]:lSoftCR := .T.
@@ -2073,7 +2073,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
    LOCAL cLine := ""
 
    // V@
-   DO WHILE nRow <= oSelf:LastRow() .AND.  HB_ISLOGICAL( oSelf:aText[ nRow ]:lSoftCR ) .AND. oSelf:aText[ nRow ]:lSoftCR
+   DO WHILE nRow <= oSelf:LastRow() .AND. HB_ISLOGICAL( oSelf:aText[ nRow ]:lSoftCR ) .AND. oSelf:aText[ nRow ]:lSoftCR
       cLine += oSelf:aText[ nRow ]:cText
       oSelf:RemoveLine( nRow )
       IF oSelf:LastRow() <= 0 // V@
@@ -2374,19 +2374,19 @@ METHOD DisplayInsert( lInsert ) CLASS XHBEditor
 
 METHOD GetText( lSoftCr ) CLASS XHBEditor
 
-   LOCAL cString := "", cSoft := ""
-   LOCAL cEOL := hb_eol()
-
-   __defaultNIL( @lSoftCr, .F. )
+   LOCAL cString := ""
+   LOCAL cSoftCR
+   LOCAL cEOL
 
    IF ::LastRow() > 0
 
-      IF lSoftCr
-         cSoft := __SoftCR()
-      ENDIF
+      __defaultNIL( @lSoftCr, .F. )
+
+      cSoftCR := iif( lSoftCr, __SoftCR(), "" )
+      cEOL := hb_eol()
 
       IF ::lWordWrap
-         AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, cSoft, cEOL ) }, , ::LastRow() - 1 )
+         AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, cSoftCR, cEOL ) }, , ::LastRow() - 1 )
       ELSE
          AEval( ::aText, {| cItem | cString += cItem:cText + cEOL }, , ::LastRow() - 1 )
       ENDIF
@@ -2405,21 +2405,19 @@ METHOD GetText( lSoftCr ) CLASS XHBEditor
 METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
 
    LOCAL cString := ""
-   LOCAL cSoft := ""
+   LOCAL cSoftCR
    LOCAL cEOL := hb_eol()
    LOCAL nRowSelStart
    LOCAL nRowSelEnd
    LOCAL nI
 
-   __defaultNIL( @lSoftCr, .F. )
-
    IF ! ::lSelActive
       RETURN cString
    ENDIF
 
-   IF lSoftCr
-      cSoft := __SoftCR()
-   ENDIF
+   __defaultNIL( @lSoftCr, .F. )
+
+   cSoftCR := iif( lSoftCr, __SoftCR(), "" )
 
    IF ::nRowSelStart > 0 .AND. ::nRowSelEnd > 0
 
@@ -2432,12 +2430,12 @@ METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
       ENDIF
 
       FOR nI := nRowSelStart TO nRowSelEnd
-         cString += ::aText[ nI ]:cText + iif( ::lWordWrap .AND. ::aText[ nI ]:lSoftCR, cSoft, cEOL )
+         cString += ::aText[ nI ]:cText + iif( ::lWordWrap .AND. ::aText[ nI ]:lSoftCR, cSoftCR, cEOL )
       NEXT
    ENDIF
 
    IF ::nColSelStart > 0 .AND. ::nColSelEnd > 0
-      cString += SubStr( ::aText[ ::nRow ]:cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1 ) + iif( ::lWordWrap .AND. ::aText[ ::nRow ]:lSoftCR, cSoft, cEOL )
+      cString += SubStr( ::aText[ ::nRow ]:cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1 ) + iif( ::lWordWrap .AND. ::aText[ ::nRow ]:lSoftCR, cSoftCR, cEOL )
    ENDIF
 
    RETURN cString
@@ -2874,8 +2872,6 @@ METHOD GetTextIndex() CLASS XHBEditor
 
    RETURN nPos
 
-
-
 METHOD LoadText( cString ) CLASS XHBEditor
 
    ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
@@ -2969,14 +2965,12 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    LOCAL cSplittedLine
    LOCAL nTokPos := 0
    LOCAL lTokenized := .F.
-   LOCAL cSoftCR := __SoftCR()
 
    // 2005-07-19 - E.F. - SoftCR must be removed before convert string to
    //                     array. It will be treated by HBEditor.
-   IF cSoftCR $ cString
-      cString := StrTran( cString, cSoftCR )
+   IF __SoftCR() $ cString
+      cString := StrTran( cString, __SoftCR() )
    ENDIF
-
 
    aArray  := {}
 
@@ -3107,4 +3101,4 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
    RETURN NIL
 
 STATIC FUNCTION __SoftCR()
-   RETURN Chr( 141 ) + Chr( 10 ) /* TOFIX: Won't work in UTF-8 mode */
+   RETURN hb_BChar( 141 ) + Chr( 10 ) /* TOFIX: Won't work in UTF-8 mode */

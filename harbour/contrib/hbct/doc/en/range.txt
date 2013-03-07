@@ -19,8 +19,8 @@
       TODO: add documentation
    $EXAMPLES$
       ? RangeRem( "0", "9", "year2002.dbf" ) // "year.dbf", remove all digits
-      ? RangeRem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to Chr(255)
-                                             // and from Chr(0) to "0"
+      ? RangeRem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to hb_BChar( 255 )
+                                             // and from Chr( 0 ) to "0"
       ? RangeRem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
    $STATUS$
       Started
@@ -53,8 +53,8 @@
       TODO: add documentation
    $EXAMPLES$
       ? RangeRepl( "0", "9", "year2002.dbf", "?" ) // "year????.dbf", replace all digits
-      ? RangeRepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to Chr(255)
-                                                   // and from Chr(0) to "0"
+      ? RangeRepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to hb_BChar( 255 )
+                                                   // and from Chr( 0 ) to "0"
       ? RangeRepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
    $STATUS$
       Started

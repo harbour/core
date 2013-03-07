@@ -66,7 +66,7 @@ PROCEDURE Main()
 
    ? "Begin test of AfterAtNum()"
    ?
-   ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ? "  Value of cStr is: " + '"' + cStr + '"'
    ?
 
    // Some simple tests

@@ -391,8 +391,8 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
    RETURN hb_processRun( cCommand, ... )
 
-STATIC FUNCTION FNameEscape( cFN )
-   RETURN Chr( 34 ) + cFN + Chr( 34 )
+STATIC FUNCTION FNameEscape( cFileName )
+   RETURN '"' + cFileName + '"'
 
 /* Like hb_FCopy(), but accepts dir as target and can set attributes */
 STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )

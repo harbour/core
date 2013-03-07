@@ -28,9 +28,9 @@
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
-      ? CharAdd( "012345678", Chr( 1 ) ) // --> "123456789"
-      ? CharAdd( "123456789", Chr( 255 ) ) // --> "012345678"
-      ? CharAdd( "0000", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "0123"
+      ? CharAdd( "012345678", hb_BChar( 1 ) ) // --> "123456789"
+      ? CharAdd( "123456789", hb_BChar( 255 ) ) // --> "012345678"
+      ? CharAdd( "0000", hb_BChar( 0 ) + hb_BChar( 1 ) + hb_BChar( 2 ) + hb_BChar( 3 ) ) // --> "0123"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -75,8 +75,8 @@
       character of <cString2>.
    $EXAMPLES$
       // clear the LSB
-      ? CharAnd( "012345678", Chr( 254 ) ) // --> "002244668"
-      ? CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) // --> "002044648"
+      ? CharAnd( "012345678", hb_BChar( 254 ) ) // --> "002244668"
+      ? CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) // --> "002044648"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -117,7 +117,8 @@
       stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
+      ? CharNot( hb_BChar(  85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar(   1 ) )
+      // -->     hb_BChar( 170 ) + hb_BChar( 127 ) + hb_BChar(  85 ) + hb_BChar( 254 )
       ? CharNot( CharNot( "This is a test!" ) ) // --> "This is a test!"
    $STATUS$
       Ready
@@ -163,8 +164,8 @@
       character of <cString2>.
    $EXAMPLES$
       // set the LSB
-      ? CharOr( "012345678", Chr( 1 ) ) // --> "113355779"
-      ? CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) // --> "133357779"
+      ? CharOr( "012345678", hb_BChar( 1 ) ) // --> "113355779"
+      ? CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) // --> "133357779"
    $STATUS$
       Ready
    $COMPLIANCE$

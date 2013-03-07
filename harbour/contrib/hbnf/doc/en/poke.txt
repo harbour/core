@@ -25,12 +25,9 @@
       Use this function if you have a need to change the value at a specific
       memory location.  The function will write the specified byte to the
       specified address.  The value must be passed as a numeric; if the byte
-      you wish to use is stored as a character, use the Asc() function
+      you wish to use is stored as a character, use the hb_BCode() function
       to convert it.
-
-      This function was written for version 5.1 of MicroSoft C.  You may
-      have to modify the source code to use another compiler.
    $EXAMPLES$
-      ft_Poke( 0, 1047, 64 )  // Turn CapsLock on
+      ft_Poke( 0, 0x417, 0x40 )  // Turn CapsLock on (MS-DOS)
    $END$
  */

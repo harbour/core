@@ -12,7 +12,7 @@
    $SYNTAX$
       ft_BitClr( <cByte>, <nBitPos> ) -> cByte
    $ARGUMENTS$
-      <cByte> is a character from Chr(0) to Chr(255).
+      <cByte> is a character from hb_BChar( 0 ) to hb_BChar( 255 ).
 
       <nBitPos> is a number from 0 to 7 conforming to standard
       right-to-left bit numbering convention and representing the
@@ -29,10 +29,10 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      // This code would clear bit 4 in a byte represented by Chr( 115 ):
+      // This code would clear bit 4 in a byte represented by hb_BChar( 115 ):
 
-      cNewByte := ft_BitClr( Chr( 115 ), 4 )
-      ? Asc( cNewbyte )         // result: 99
+      cNewByte := ft_BitClr( hb_BChar( 115 ), 4 )
+      ? hb_BCode( cNewbyte )    // result: 99
       ? cNewByte                // result: "c"
 
       // This code would clear bit 5 in the byte represented by letter "A":

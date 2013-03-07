@@ -12,11 +12,11 @@
    $SYNTAX$
       ft_ByteNot( <cByte> ) -> cNewByte
    $ARGUMENTS$
-      <cByte> is a character from Chr(0) to Chr(255).
-      May be passed in Chr() form, as character literal, or
-      as expression evaluating to Chr() value.
+      <cByte> is a character from hb_BChar( 0 ) to hb_BChar( 255 ).
+      May be passed in hb_BChar() form, as character literals, or as expressions
+      evaluating to character values.
    $RETURNS$
-      Returns resulting byte, in Chr() form.  If parameters are faulty,
+      Returns resulting byte, as a string.  If parameters are faulty,
       returns NIL.
    $DESCRIPTION$
       Can be used for bitwise byte manipulation.  In effect, this is a
@@ -27,10 +27,10 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      // This code performs a bitwise NOT on byte represented by Chr( 32 ):
+      // This code performs a bitwise NOT on byte represented by hb_BChar( 32 ):
 
-      cNewByte := ft_ByteNot( Chr( 32 ) )
-      ? Asc( cNewByte )     // result: 223
+      cNewByte := ft_ByteNot( hb_BChar( 32 ) )
+      ? hb_BCode( cNewByte )     // result: 223
    $SEEALSO$
       ft_ByteOr() ft_ByteXor() ft_ByteNeg() ft_ByteAnd()
    $END$

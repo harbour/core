@@ -28,9 +28,9 @@
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
-      ? CharSub( "012345678", Chr( 1 ) ) // --> "/01234567"
-      ? CharSub( "123456789", Chr( 255 ) ) // --> "23456789:"
-      ? CharSub( "9999", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "9876"
+      ? CharSub( "012345678", hb_BChar( 1 ) ) // --> "/01234567"
+      ? CharSub( "123456789", hb_BChar( 255 ) ) // --> "23456789:"
+      ? CharSub( "9999", hb_BChar( 0 ) + hb_BChar( 1 ) + hb_BChar( 2 ) + hb_BChar( 3 ) ) // --> "9876"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -73,9 +73,10 @@
       stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? CharShl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
-                 Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
-      // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
+      ? CharShl( hb_BChar(   1 ) + hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(   8 ) + ;
+                 hb_BChar(  16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 )
+      // -->     hb_BChar(   8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar(  64 ) + ;
+      //         hb_BChar( 128 ) + hb_BChar(  0 ) + hb_BChar(  0 ) + hb_BChar(   0 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -118,8 +119,10 @@
       stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
-      // --> Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
+      ? CharShr( hb_BChar(  1 ) + hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(   8 ) + ;
+                 hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 )
+      // -->     hb_BChar(  0 ) + hb_BChar(  0 ) + hb_BChar(  0 ) + hb_BChar(   1 ) + ;
+      //         hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(  8 ) + hb_BChar(  16 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -162,8 +165,10 @@
       stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
-      // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
+      ? CharRll( hb_BChar(   1 ) + hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(   8 ) + ;
+                 hb_BChar(  16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 )
+      // -->     hb_BChar(   8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar(  64 ) + ;
+      //         hb_BChar( 128 ) + hb_BChar(  1 ) + hb_BChar(  2 ) + hb_BChar(   4 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -206,8 +211,10 @@
       stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
-      // --> Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
+      ? CharRlr( hb_BChar(  1 ) + hb_BChar(  2 ) + hb_BChar(   4 ) + hb_BChar(   8 ) + ;
+                 hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar(  64 ) + hb_BChar( 128 ), 3 )
+      // -->     hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ) + hb_BChar(   1 ) + ;
+      //         hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(   8 ) + hb_BChar(  16 )
    $STATUS$
       Ready
    $COMPLIANCE$

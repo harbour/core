@@ -65,7 +65,7 @@ Martin Vogel <vogel@inttec.de>
 + Sinh()       hyperbolic sine
 
 * TabPack()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string,
-* TabExpand()  the tab character and the Chr(141)[soft line feed] behaviour
+* TabExpand()  the tab character and the Chr( 141 )[soft line feed] behaviour
 
 + Tanh()       hyperbolic tangent
 

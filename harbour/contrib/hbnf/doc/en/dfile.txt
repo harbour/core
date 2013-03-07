@@ -40,10 +40,12 @@
       This is the smallest you should make the buffer.  For normal use,
       4096 bytes is recommended
    $EXAMPLES$
+      #include "inkey.ch"
+
       @ 4, 9 TO 11, 71
 
       ft_DFSetup( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
-         "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+         { "A", "a", "B", "b", K_F3 }, .T., 5, 132, 4096 )
 
       cKey := ft_DispFile()
 
@@ -71,10 +73,12 @@
    $DESCRIPTION$
       Closes the file opened by ft_DFSetup()
    $EXAMPLES$
+      #include "inkey.ch"
+
       @ 4, 9 TO 11, 71
 
       ft_DFSetup( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
-         "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+         { "A", "a", "B", "b", K_F3 }, .T., 5, 132, 4096 )
 
       cKey := ft_DispFile()
 

@@ -13,9 +13,9 @@
       ft_EscCode( <cASCII> )  -> <cPrinterFormat>
    $ARGUMENTS$
       <cASCII> is the ASCII representation of the printer control
-      codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
+      codes in Lotus 123 format (e.g. "\027E" for hb_BChar( 27 ) + "E")
 
-      "\nnn" will be converted to Chr(nnn)
+      "\nnn" will be converted to hb_BChar( nnn )
       "\\" will be converted to "\"
    $RETURNS$
       The binary version of an ASCII coded printer setup string.
@@ -27,7 +27,7 @@
    $EXAMPLES$
       cSetup := "\015"         // default = Epson compressed print
       UserInput( @cSetup )     // Let user modify setup code
-      SET DEVICE TO PRINT      // get ready to print
+      SET DEVICE TO PRINTER    // get ready to print
       ?? ft_EscCode( cSetup )  // Output the converted code
    $END$
  */

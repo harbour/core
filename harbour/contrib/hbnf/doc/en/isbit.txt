@@ -12,7 +12,7 @@
    $SYNTAX$
       ft_IsBit( <cByte>, <nBitPos> ) -> lResult
    $ARGUMENTS$
-      <cByte> is a character from Chr(0) to Chr(255)
+      <cByte> is a character from hb_BChar( 0 ) to hb_BChar( 255 ).
 
       <nBitPos> is a number from 0 to 7 conforming to standard right-to-left
                 bit-numbering convention and representing the position of the
@@ -22,17 +22,17 @@
        invalid parameters.
    $DESCRIPTION$
       Tests for status of any selected bit in the byte passed as a parameter.
-      Byte must be presented in Chr() form, as a literal constant, or as the
-      one-byte character result of an expression.
+      Byte must be presented in hb_BChar() form, as a literal constant, or as
+      the one-byte character result of an expression.
 
       This function is presented to illustrate that bit-wise operations
-      are possible with Clipper code.  For greater speed, write .c or
-      .asm versions and use the Clipper Extend system.
+      are possible with Clipper code.  For greater speed, write .c versions
+      and use the Clipper Extend system.
    $EXAMPLES$
       // This code tests whether bit 3 is set in the byte represented by
-      // Chr( 107 ):
+      // hb_BChar( 107 ):
 
-      lBitflag := ft_IsBit( Chr( 107 ), 3 )
+      lBitflag := ft_IsBit( hb_BChar( 107 ), 3 )
       ? lBitflag                  // result: .T.
 
       // This code tests whether bit 5 is set in the byte represented by ASCII

@@ -259,7 +259,7 @@
 
       There is a third parameter (optional), <lWriteEof>, (not found in
       CA-Cl*pper) which let to programmer change the default behavior of
-      - always - to write the EOF character, Chr(26) as in CA-Cl*pper.
+      - always - to write the EOF character, Chr( 26 ) as in CA-Cl*pper.
 
       MemoWrit() function is used together with MemoRead() and MemoEdit()
       to save to disk text from several sources that was edited, searched,

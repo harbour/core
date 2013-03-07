@@ -23,11 +23,8 @@
       Use this function if you have a need to examine a specific memory
       location.  The function will return the byte at the specified
       address as a numeric value.  If you need this value as a character,
-      use the Chr() function to convert it.
-
-      This function was written for version 5.1 of MicroSoft C.  You may
-      have to modify the source code to use another compiler.
+      use the hb_BChar() function to convert it.
    $EXAMPLES$
-      LOCAL nVMode := ft_Peek( 0, 1097 )  // Get the current video mode
+      LOCAL nVMode := ft_Peek( 0, 0x449 )  // Get the current video mode (MS-DOS)
    $END$
  */

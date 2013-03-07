@@ -42,7 +42,8 @@ PROCEDURE Main()
 
    hb_gtInfo( HB_GTI_WINTITLE, "Cross-GT, multiplatform graphics demo" )
 
-   PutFrame( nFontHeight / 2, ;
+   PutFrame( ;
+      nFontHeight / 2, ;
       MaxCol() / 2 * nFontWidth - Len( cWelcome ) / 2 * nFontWidth - nFontWidth, ;
       nFontHeight * 2 + nFontHeight / 2, ;
       nFontWidth + MaxCol() / 2 * nFontWidth + Len( cWelcome ) / 2 * nFontWidth, ;

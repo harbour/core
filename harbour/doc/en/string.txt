@@ -946,7 +946,7 @@
       as normal and graphics character codes.
    $EXAMPLES$
       ? Chr( 32 )
-      ? Chr( 215 )
+      ? Chr( 65 )
    $STATUS$
       R
    $COMPLIANCE$

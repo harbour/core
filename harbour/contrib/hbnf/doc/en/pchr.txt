@@ -74,17 +74,19 @@
           /USA              Select USA international char set
 
    $EXAMPLES$
+      SET PRINTER ON
       cSetUp := "27,116,1"
-      SET PRINT ON
-      ? ft_PChr( cSetUp )        // -> (Chr(27)+Chr(116)+Chr(1))
-                                           <select Epson char. graphics>
+      ? ft_PChr( cSetUp )        // -> hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 )
+                                 //     <select Epson char. graphics>
 
-      ? ft_PChr( '27,"x",0' )    // -> (Chr(27)+Chr(120)+Chr(0))
-                                        <Epson draft mode>
+      ? ft_PChr( '27,"x",0' )    // -> hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 0 )
+                                 //     <Epson draft mode>
 
-      ? ft_PChr( '&1B,"E"'  )    // -> (Chr(27)+Chr(69))   <HP reset>
+      ? ft_PChr( '&1B,"E"'  )    // -> hb_BChar( 27 ) + hb_BChar( 69 )
+                                 //     <HP reset>
 
-      ? ft_PChr( "/ELITE,/NLQ" ) // -> (Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
+      ? ft_PChr( "/ELITE,/NLQ" ) // -> hb_BChar( 27 ) + hb_BChar( 77 ) + ;
+                                 //    hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 )
                                  //     <Epson elite & near letter quality>
    $SEEALSO$
 

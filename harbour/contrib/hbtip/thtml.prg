@@ -1338,7 +1338,7 @@ STATIC FUNCTION __ParseAttr( parser )
          parser:p_pos --
          EXIT
 
-      CASE Chr( 34 )
+      CASE '"'
       CASE "'"
          lIsQuoted := .T.
          parser:p_end := parser:p_pos

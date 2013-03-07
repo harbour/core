@@ -21,10 +21,11 @@
                                 default is the string returned by
                                 hb_eol()
       <cTabChar|nTabChar>       character indicating a tab stop,
-                                default is Chr(9)
+                                default is Chr( 9 )
       <lIgnore141>              .T., if the soft-CR used by MemoEdit()
                                 should be ignored as a newline indicator,
-                                default is .F. (functions uses Chr(141))
+                                default is .F.
+                                (functions uses hb_BChar( 141 ))
    $RETURNS$
 
    $DESCRIPTION$
@@ -65,10 +66,11 @@
                                 default is the string returned by
                                 hb_eol()
       <cTabChar|nTabChar>       character indicating a tab stop,
-                                default is Chr(9)
+                                default is Chr( 9 )
       <lIgnore141>              .T., if the soft-CR used by MemoEdit()
                                 should be ignored as a newline indicator,
-                                default is .F. (functions uses Chr(141))
+                                default is .F.
+                                (functions uses hb_BChar( 141 ))
    $RETURNS$
 
    $DESCRIPTION$

@@ -53,7 +53,7 @@
                   a more appropriate test display.
 
           [4]  cFillChar  is the character (for desktop background only)
-                  Default is Chr(177) "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
+                  Default is "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 
 
       <lClrMode>   .T.  use colour palette
@@ -63,7 +63,7 @@
 
       <cTestChr>  2 Byte character string for colour test display
 
-                  Default is the Chr(254)+Chr(254)  "■■"
+                  Default is "■■"
 
    $RETURNS$
       An array identical to the one passed, with new selected colours
@@ -77,7 +77,6 @@
    $EXAMPLES$
       LOCAL aClrs   := {}
       LOCAL lColour := IsColor()
-      LOCAL cChr    := Chr( 254 ) + Chr( 254 )
 
       SET SCOREBOARD OFF
       SetBlink( .F. )       // Allow bright backgrounds
@@ -96,6 +95,6 @@
          { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B"      }, ;
          { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A"      } }
 
-      aClrs := ft_ClrSel( aClrs, lColour, cChr )
+      aClrs := ft_ClrSel( aClrs, lColour )
    $END$
  */

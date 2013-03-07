@@ -12,11 +12,11 @@
    $SYNTAX$
       ft_ByteAnd( <cByte1>, <cByte2> ) -> cByte
    $ARGUMENTS$
-      <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
-      May be passed in Chr() form, as character literals, or as expressions
-      evaluating to Chr() values.
+      <cByte1> and <cByte2> are characters from hb_BChar( 0 ) to hb_BChar( 255 ).
+      May be passed in hb_BChar() form, as character literals, or as expressions
+      evaluating to character values.
    $RETURNS$
-      Returns resulting byte, in Chr() form.  If parameters are faulty,
+      Returns resulting byte, as a string.  If parameters are faulty,
       returns NIL.
    $DESCRIPTION$
       Can be used for any bit-wise masking operation.  In effect, this is a
@@ -27,12 +27,12 @@
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
       // This code would mask out the high nibble (four most significant bits)
-      // of the byte represented by Chr(123) and leave the low nibble bits as in
-      // the parameter byte.
+      // of the byte represented by hb_BChar( 123 ) and leave the low nibble
+      // bits as in the parameter byte.
 
-      cNewbyte := ft_ByteAnd( Chr( 123 ), Chr( 15 ) )
-      ? Asc( cNewByte )  // result: 11
-      ? cNewByte         // result: non-printable character
+      cNewbyte := ft_ByteAnd( hb_BChar( 123 ), hb_BChar( 15 ) )
+      ? hb_BCode( cNewByte )     // result: 11
+      ? cNewByte                 // result: non-printable character
    $SEEALSO$
       ft_ByteOr() ft_ByteXor() ft_ByteNot() ft_ByteNeg()
    $END$

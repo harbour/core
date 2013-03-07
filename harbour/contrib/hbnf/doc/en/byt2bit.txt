@@ -28,13 +28,13 @@
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
       // These three code lines perform a bitwise AND on bytes with values of
-      // Chr( 20 ) and Chr( 36 ), and deliver the result as a string in binary (bit)
-      // format.
+      // hb_BChar( 20 ) and hb_BChar( 36 ), and deliver the result as a string
+      // in binary (bit) format.
 
-      ? ft_Byt2Bit( Chr( 20 ) )         // byte1: '0001 0100'
-      ? ft_Byt2Bit( Chr( 36 ) )         // byte2: '0010 0100'
+      ? ft_Byt2Bit( hb_BChar( 20 ) )    // byte1: '0001 0100'
+      ? ft_Byt2Bit( hb_BChar( 36 ) )    // byte2: '0010 0100'
 
-      ? ft_Byt2Bit( ft_ByteAnd( Chr( 20 ), Chr( 36 ) ) )
+      ? ft_Byt2Bit( ft_ByteAnd( hb_BChar( 20 ), hb_BChar( 36 ) ) )
       // result: '0000 0100'
    $SEEALSO$
       ft_Byt2Hex()

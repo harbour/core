@@ -352,13 +352,12 @@
    $EXAMPLES$
       REQUEST HB_CODEPAGE_HU852
       PROCEDURE Main()
-         LOCAL cTxt := Chr( 71 ) + " > " + Chr( 144 ) + " is"
-         ? hb_cdpSelect()                 // EN
-         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .F.
-         ? hb_cdpSelect( "HU852" )        // EN
-         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .T.
-         ? hb_cdpSelect( "EN" )           // HU852
-         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .F.
+         hb_cdpSelect( "EN" )
+         ? hb_cdpSelect()
+         ? hb_UTF8ToStr( "É < G is" ), hb_BChar( 144 ) < "G"  // É > G is .F.
+         hb_cdpSelect( "HU852" )
+         ? hb_cdpSelect()
+         ? hb_UTF8ToStr( "É < G is" ), hb_BChar( 144 ) < "G"  // É > G is .T.
          RETURN
    $STATUS$
       R
@@ -414,7 +413,7 @@
       REQUEST HB_CODEPAGE_DE
       REQUEST HB_CODEPAGE_DEWIN
       PROCEDURE Main()
-         LOCAL cTxt := "A" + Chr( 142 ) + "BC"
+         LOCAL cTxt := "A" + hb_BChar( 142 ) + "BC"
          ? "German CP-850 text:", cTxt
          ? "German Windows-1252 text:", hb_Translate( cTxt, "DE850", "DEWIN" )
          RETURN
