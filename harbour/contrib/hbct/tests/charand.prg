@@ -63,11 +63,10 @@ PROCEDURE Main()
    ? "Begin test of CharAnd()"
    ?
 
-   // simple tests
    ? "Simple tests:"
 
-   ? '  CharAnd("012345678", Chr(254)) == "002244668" ? --> "' + CharAnd( "012345678", Chr( 254 ) ) + '"'
-   ? '  CharAnd("012345678", Chr(254)+Chr(252)) == "002044648" ? --> "' + CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
+   ? '  CharAnd( "012345678", Chr( 254 ) ) == "002244668" ? --> "' + CharAnd( "012345678", Chr( 254 ) ) + '"'
+   ? '  CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648" ? --> "' + CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
 
    ? "End test of CharAnd()"
    ?

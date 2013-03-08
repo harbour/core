@@ -464,7 +464,7 @@ HB_FUNC( WIN_PRINTFILERAW )
    hb_retni( iResult );
 }
 
-/* Positions for WIN_PRINTERLIST() array */
+/* Positions for win_PrinterList() array */
 
 #define HB_WINPRN_NAME    1
 #define HB_WINPRN_PORT    2

@@ -65,23 +65,22 @@ PROCEDURE Main()
    ? "Begin test of TokenLower()"
    ?
 
-   // Some simple tests
    ? "  Simple tests:"
-   ? '   TokenLower("Hello, World, here I am!")       == "hello, world, here i am!" ?'
-   ? '                                                -> "' + TokenLower( "Hello, World, here I am!" ) + '"'
-   ? '   TokenLower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?'
-   ? '                                                -> "' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
-   ? '   TokenLower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?'
-   ? '                                                -> "' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
-   ? '   TokenLower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?'
-   ? '                                                -> "' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
+   ? '   TokenLower( "Hello, World, here I am!" )         == "hello, world, here i am!" ?'
+   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!" ) + '"'
+   ? '   TokenLower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!" ?'
+   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
+   ? '   TokenLower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!" ?'
+   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
+   ? '   TokenLower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!" ?'
+   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
    ?
 
    ? '  Lowercase the tokens in the string "' + cStr + '"'
-   ? '            with CSetRef(.T.) and "@"'
+   ? '            with CSetRef( .T. ) and "@"'
    CSetRef( .T. )
    ?
-   ? '    --> return value of TokenLower(@cStr): ', TokenLower( @cStr )
+   ? '    --> return value of TokenLower( @cStr ): ', TokenLower( @cStr )
    ? '    --> cStr is now: "' + cStr + '"'
 
    ?

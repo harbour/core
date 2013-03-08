@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * WIN_SETDEFAULTPRINTER()
+ * win_printerSetDefault()
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net) (based on MS sample code)
  * www - http://harbour-project.org

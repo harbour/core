@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-/* NOTE: The Clipper NG states that WORD() will only work when used
+/* NOTE: The Clipper NG states that Word() will only work when used
          in CALL commands parameter list, otherwise it will return
          NIL, in Harbour it will work anywhere. */
 

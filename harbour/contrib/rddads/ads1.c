@@ -1383,9 +1383,9 @@ static HB_ERRCODE adsSkipFilter( ADSAREAP pArea, HB_LONG lUpDown )
 
    HB_TRACE( HB_TR_DEBUG, ( "adsSkipFilter(%p, %ld)", pArea, lUpDown ) );
 
-   lUpDown = ( lUpDown < 0  ? -1 : 1 );
+   lUpDown = ( lUpDown < 0 ? -1 : 1 );
 
-   /* remember if we are here after SLEF_GOTOP() */
+   /* remember if we are here after SELF_GOTOP() */
    fBottom = pArea->area.fBottom;
 
    /*

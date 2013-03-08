@@ -66,7 +66,7 @@ HB_FUNC( SCROLL )
    int iBottom;
    int iRight;
 
-   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
+   /* Enforce limits of (0,0) to (MaxRow(),MaxCol()) */
 
    iTop = hb_parni( 1 ); /* Defaults to zero on bad type */
    if( iTop < 0 )
@@ -122,7 +122,7 @@ HB_FUNC( HB_SCROLL )
    int iColor;
    int iChar;
 
-   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
+   /* Enforce limits of (0,0) to (MaxRow(),MaxCol()) */
 
    iTop = hb_parni( 1 ); /* Defaults to zero on bad type */
    if( iTop < 0 )

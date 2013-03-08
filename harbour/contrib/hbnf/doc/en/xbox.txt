@@ -65,7 +65,7 @@
    $EXAMPLES$
       // The following displays a two-line box with default settings:
 
-      ft_XBox( ,,,,,,, "This is a test", "of the XBOX() function" )
+      ft_XBox( ,,,,,,, "This is a test", "of the ft_XBox() function" )
 
       // The following uses all optional parameters and displays a three-line
       // box.  The box is left-justified with a double border.  It has a yellow

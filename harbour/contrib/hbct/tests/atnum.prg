@@ -69,40 +69,37 @@ PROCEDURE Main()
    ? "  Value of cStr is: " + '"' + cStr + '"'
    ?
 
-   // Some simple tests
    ? "  Simple tests:"
-   ? '  AtNum("..",cStr)     should be 18,'
-   ? '                          and is ', AtNum( "..", cStr )
-   ? '  AtNum("..",cStr,2)   should be 8,'
-   ? '                          and is ', AtNum( "..", cStr, 2 )
-   ? '  AtNum("..",cStr,2,2) should be 13,'
-   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
+   ? '  AtNum( "..", cStr )       should be 18,'
+   ? '                               and is ', AtNum( "..", cStr )
+   ? '  AtNum( "..", cStr, 2 )    should be 8,'
+   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '  AtNum( "..", cStr, 2, 2 ) should be 13,'
+   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
    ?
 
-   // Tests with CSetAtMupa(.T.)
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
-   ? '  AtNum("..",cStr)     should be 18,'
-   ? '                          and is ', AtNum( "..", cStr )
-   ? '  AtNum("..",cStr,2)   should be 2,'
-   ? '                          and is ', AtNum( "..", cStr, 2 )
-   ? '  AtNum("..",cStr,2,2) should be 9,'
-   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
+   ? '  AtNum( "..", cStr )       should be 18,'
+   ? '                               and is ', AtNum( "..", cStr )
+   ? '  AtNum( "..", cStr, 2 )    should be 2,'
+   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '  AtNum( "..", cStr, 2, 2 ) should be 9,'
+   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
 
-   // Tests mit SetAtLike(1)
    ? "  SetAtLike tests"
-   ? '  Setting SetAtLike(CT_SETATLIKE_WILDCARD, ".")'
+   ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
-   ? '  AtNum("..",cStr) should be 23,'
-   ? '                      and is ', AtNum( "..", cStr )
-   ? '  AtNum("..",cStr,2,2) should be 5,'
-   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
-   ? '  AtNum("..",cStr,2,10) should be 13,'
-   ? '                           and is ', AtNum( "..", cStr, 2, 10 )
+   ? '  AtNum( "..", cStr )        should be 23,'
+   ? '                                and is ', AtNum( "..", cStr )
+   ? '  AtNum( "..", cStr, 2, 2 )  should be 5,'
+   ? '                                and is ', AtNum( "..", cStr, 2, 2 )
+   ? '  AtNum( "..", cStr, 2, 10 ) should be 13,'
+   ? '                                and is ', AtNum( "..", cStr, 2, 10 )
    ?
 
    ? "End test of AtNum()"

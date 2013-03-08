@@ -100,11 +100,11 @@ void hb_random_seed( HB_I32 seed )
 }
 
 /*
- * HB_RANDOM
+ * hb_Random
  *
- * HB_RANDOM() --> returns a real value n so that 0 <= n < 1
- * HB_RANDOM( x ) --> returns a real number n so that 0 <= n < x
- * HB_RANDOM( x, y ) --> Returns a real number n so that x <= n < y
+ * hb_Random() --> returns a real value n so that 0 <= n < 1
+ * hb_Random( x ) --> returns a real number n so that 0 <= n < x
+ * hb_Random( x, y ) --> Returns a real number n so that x <= n < y
  */
 HB_FUNC( HB_RANDOM )
 {
@@ -129,11 +129,11 @@ HB_FUNC( HB_RANDOM )
 }
 
 /*
- * HB_RANDOMINT
+ * hb_RandomInt
  *
- * HB_RANDOMINT() --> returns 0 or 1, evenly distributed
- * HB_RANDOMINT( N ) --> returns an integer between 1 and N (inclusive)
- * HB_RANDOMINT( x, y ) --> Returns an integer number between x and y (inclusive)
+ * hb_RandomInt() --> returns 0 or 1, evenly distributed
+ * hb_RandomInt( N ) --> returns an integer between 1 and N (inclusive)
+ * hb_RandomInt( x, y ) --> Returns an integer number between x and y (inclusive)
  * The integer returned is of the longest type available
  */
 HB_FUNC( HB_RANDOMINT )

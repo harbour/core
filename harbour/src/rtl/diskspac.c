@@ -50,7 +50,7 @@
  *
  */
 
-/* NOTE: DISKSPACE() supports larger disks than 2GB. CA-Cl*pper will always
+/* NOTE: DiskSpace() supports larger disks than 2GB. CA-Cl*pper will always
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
 

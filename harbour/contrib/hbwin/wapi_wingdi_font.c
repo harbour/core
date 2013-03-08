@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows API function WAPI_ADDFONTMEMRESOURCEEX() (wingdi.h) (alpha)
+ * Windows API function font load/unload (wingdi.h)
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

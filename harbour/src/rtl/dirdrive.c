@@ -82,7 +82,7 @@ HB_FUNC( DIRCHANGE )
 }
 
 /* NOTE: Clipper 5.3 NG incorrectly states that the name of this function is
-         DIRMAKE(), in reality it's not. */
+         DirMake(), in reality it's not. */
 
 HB_FUNC_TRANSLATE( MAKEDIR, HB_DIRCREATE )
 HB_FUNC_TRANSLATE( DIRREMOVE, HB_DIRDELETE )

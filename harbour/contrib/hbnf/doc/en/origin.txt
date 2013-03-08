@@ -24,8 +24,6 @@
       This function enables you to learn the name and source location
       of the currently executing file, so that you may take whatever
       action you need to.
-
-      Requires DOS v3.xx and above.
    $EXAMPLES$
       cMyFile := ft_Origin()
 
@@ -34,6 +32,5 @@
          QUIT
       ENDIF
    $SEEALSO$
-      FT_WHEREIS() FT_TREE()
    $END$
  */

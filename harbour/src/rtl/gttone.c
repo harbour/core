@@ -254,8 +254,8 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
       hb_gt_w9xTone( dFrequency, dDuration );
    else
 #endif
-      /* If Windows NT or NT2k, use wNtTone, which redirects TONE() to
-         WIN API Beep() function */
+      /* If Windows NT or NT2k, use wNtTone, which redirects Tone() to
+         Windows API Beep() function */
       hb_gt_wNtTone( dFrequency, dDuration );
 }
 

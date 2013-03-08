@@ -5,18 +5,18 @@
 /*
  * Harbour Project source code:
  *   Test CT3 TRIGONOMETRIC functions - PART 1
- *   - PI
- *   - SIN
- *   - COS
- *   - TAN
- *   - COT
- *   - ASIN
- *   - ACOS
- *   - ATAN
- *   - ATN2
- *   - SINH
- *   - COSH
- *   - TANH
+ *   - Pi()
+ *   - Sin()
+ *   - Cos()
+ *   - Tan()
+ *   - Cot()
+ *   - Asin()
+ *   - Acos()
+ *   - Atan()
+ *   - Atn2()
+ *   - Sinh()
+ *   - Cosh()
+ *   - Tanh()
  * Copyright 2001   Alejandro de garate  <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *

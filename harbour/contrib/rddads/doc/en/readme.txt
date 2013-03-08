@@ -94,7 +94,7 @@
       filter is optimized or not. COMIX users can use:
 
             FUNCTION rlOptLevel()
-               RETURN dbOrderInfo(DBOI_OPTLEVEL)
+               RETURN dbOrderInfo( DBOI_OPTLEVEL )
 
       This returns the Clipper/COMIX values (not ADS-defined values) because
       this is an RDD call, not just a wrapper to the ADS call, which uses different numbers).
@@ -129,7 +129,7 @@
           /* The above codeblock will be called approximately
                every 2 seconds while indexing.
                The codeblock can return .T. to abort.   */
-          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
+          INDEX ON FIRST + LAST + LABEL1 + LABEL2 TAG First
           AdsClrCallback()
           RETURN
 
@@ -157,7 +157,7 @@
 
       One problem with this scenario is that index key counting
       functions that are supposed to give an accurate count respecting
-      the filter (e.g. dbOrderInfo(DBOI_KEYCOUNT) will return the values the
+      the filter (e.g. dbOrderInfo( DBOI_KEYCOUNT ) will return the values the
       Server knows about, so the counts may be inaccurate.
 
       3) When setting a relation, the expression must be one that can be

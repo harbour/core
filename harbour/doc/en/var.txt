@@ -19,7 +19,7 @@
  *    Documentation for: __mvExist()
  *
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    Documentation for: HB_ISBYREF()
+ *    Documentation for: hb_PIsByRef()
  *
  * See COPYING.txt for licensing terms.
  *
@@ -137,10 +137,10 @@
       PROCEDURE Main()
          PRIVATE mPrivate
 
-         mPrivate := "PRIVATE from MAIN()"
-         ? mPrivate     //PRIVATE from MAIN()
+         mPrivate := "PRIVATE from Main()"
+         ? mPrivate     //PRIVATE from Main()
          Test()
-         ? mPrivate     //PRIVATE from MAIN()
+         ? mPrivate     //PRIVATE from Main()
 
          RETURN
 

@@ -52,7 +52,7 @@
 
 #include "hbapi.h"
 
-/* NOTE: SLEEP() may collide with other implementations with the
+/* NOTE: Sleep() may collide with other implementations with the
          same name (in FlagsShip, CLIP) which also expects parameter
          differently. [vszakats] */
 HB_FUNC( SLEEP )

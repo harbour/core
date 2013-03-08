@@ -63,15 +63,14 @@ PROCEDURE Main()
    ? "Begin test of StrDiff()"
    ?
 
-   // simple tests
    ? "Simple tests:"
 
-   ? '  StrDiff("ABC", "ADC") == 3 ?  -> ', StrDiff( "ABC", "ADC" )
-   ? '  StrDiff("ABC", "AEC") == 3 ?  -> ', StrDiff( "ABC", "AEC" )
-   ? '  StrDiff("CBA", "ABC") == 6 ?  -> ', StrDiff( "CBA", "ABC" )
-   ? '  StrDiff("ABC", "AXBC") == 1 ? -> ', StrDiff( "ABC", "AXBC" )
-   ? '  StrDiff("AXBC", "ABC") == 6 ? -> ', StrDiff( "AXBC", "ABC" )
-   ? '  StrDiff("AXBC", "ADC") == 9 ? -> ', StrDiff( "AXBC", "ADC" )
+   ? '  StrDiff( "ABC", "ADC" ) == 3 ?  -> ', StrDiff( "ABC", "ADC" )
+   ? '  StrDiff( "ABC", "AEC" ) == 3 ?  -> ', StrDiff( "ABC", "AEC" )
+   ? '  StrDiff( "CBA", "ABC" ) == 6 ?  -> ', StrDiff( "CBA", "ABC" )
+   ? '  StrDiff( "ABC", "AXBC" ) == 1 ? -> ', StrDiff( "ABC", "AXBC" )
+   ? '  StrDiff( "AXBC", "ABC" ) == 6 ? -> ', StrDiff( "AXBC", "ABC" )
+   ? '  StrDiff( "AXBC", "ADC" ) == 9 ? -> ', StrDiff( "AXBC", "ADC" )
 
    ? "End test of StrDiff()"
    ?

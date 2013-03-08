@@ -145,7 +145,7 @@ static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 
 #endif
 
-/* return FERROR() code */
+/* return FError() code */
 HB_ERRCODE hb_fsGetFError( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFError()" ) );
@@ -169,7 +169,7 @@ HB_ERRCODE hb_fsOsError( void )
    return hb_stackIOErrors()->uiOsErrorLast;
 }
 
-/* set FERROR() code */
+/* set FError() code */
 void hb_fsSetFError( HB_ERRCODE uiError )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsSetFError(%u)", uiError ) );

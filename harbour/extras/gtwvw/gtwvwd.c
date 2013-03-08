@@ -80,7 +80,7 @@
  * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
  *         Standard xplatform GT Info system,
  *         Graphical object system and event system.
- *         GTINFO() And GTO_* implementation.
+ *         hb_gtInfo() And GTO_* implementation.
  *
  * (C) 2004 Mauricio Abre <maurifull@datafull.com>
  *         Cross-GT, multiplatform Graphics API

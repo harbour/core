@@ -27,10 +27,10 @@
       Caveat: Some function calls are converted by the preprocessor
       into other function calls. You cannot have these types of
       functions in a macro compiled string as they never exist at
-      runtime. FT_LINKED will correctly tell you that they are invalid.
+      runtime. ft_Linked() will correctly tell you that they are invalid.
 
       For instance: there is no function called SORT() in any of the
-      Nantucket LIBraries, but it is a valid CLIPPER command because the
+      Nantucket Libraries, but it is a valid CLIPPER command because the
       preprocessor will convert it to other function calls.
 
 

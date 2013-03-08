@@ -54,7 +54,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETINIT
+      hb_inetInit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -90,7 +90,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_INETCLEANUP
+      hb_inetCleanup()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -123,7 +123,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCREATE
+      hb_inetCreate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -138,7 +138,7 @@
       An INET socket
    $DESCRIPTION$
       Creates the raw data of the socket, that can be passed to a asynchronous
-      connection function (hb_InetConnect or hb_InetConnectIP). This will prevent the
+      connection function (hb_inetConnect() or hb_inetConnectIP()). This will prevent the
       connection function from allocating some data that could be never used in
       certain cases, i.e. an asynchronously detected timeout.
    $EXAMPLES$
@@ -160,7 +160,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCLOSE
+      hb_inetClose()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -205,7 +205,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETFD
+      hb_inetFD()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -241,7 +241,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSTATUS
+      hb_inetstatus()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -275,7 +275,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETERRORCODE
+      hb_inetErrorCode()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -313,7 +313,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETERRORDESC
+      hb_inetErrorDesc()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -349,7 +349,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_INETCLEARERROR
+      hb_inetClearError()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -381,7 +381,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCOUNT
+      hb_inetCount()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -416,7 +416,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETADDRESS
+      hb_inetAddress()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -454,7 +454,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETPORT
+      hb_inetPort()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -489,7 +489,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETTIMEOUT
+      hb_inetTimeout()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -525,7 +525,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_INETCLEARTIMEOUT
+      hb_inetClearTimeout()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -558,7 +558,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETTIMELIMIT
+      hb_inetTimeLimit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -594,7 +594,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_INETCLEARTIMELIMIT
+      hb_inetClearTimeLimit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -626,7 +626,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETPERIODCALLBACK
+      hb_inetPeriodCallback()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -665,7 +665,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_INETCLEARPERIODCALLBACK
+      hb_inetClearPeriodCallback()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -697,7 +697,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETGETSNDBUFSIZE
+      hb_inetGetSndBufSize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -731,7 +731,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETGETRCVBUFSIZE
+      hb_inetGetRcvBufSize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -765,7 +765,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSETSNDBUFSIZE
+      hb_inetSetSndBufSize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -801,7 +801,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSETRCVBUFSIZE
+      hb_inetSetRcvBufSize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -837,7 +837,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETRECV
+      hb_inetRecv()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -866,7 +866,7 @@
       received until premature end of communications are returned.
 
       Notice that there is no guarantee that all the available bytes will be
-      read before the function returns, in fact, hb_InetRecv returns as soon it
+      read before the function returns, in fact, hb_inetRecv() returns as soon it
       is able to fill cString with one or more bytes. To block the current
       process until the whole cString is filled (or nAmount bytes are read),
       use the hb_inetRecvAll().
@@ -889,7 +889,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETRECVALL
+      hb_inetRecvAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -909,7 +909,7 @@
       The number of the characters read from the socket. Might be
       less than nAmount on premature socket closing or on network error.
    $DESCRIPTION$
-      This function works exactly as hb_InetRecv except that it
+      This function works exactly as hb_inetRecv() except that it
       blocks until nAmount bytes are read, if nAmount is given, or
       cString is filled for its whole length.
    $EXAMPLES$
@@ -931,7 +931,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETRECVLINE
+      hb_inetRecvLine()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -995,7 +995,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETRECVENDBLOCK
+      hb_inetRecvEndblock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1017,7 +1017,7 @@
    $RETURNS$
       Block read
    $DESCRIPTION$
-      This function operates exactly the same way as hb_InetRecvLine, but
+      This function operates exactly the same way as hb_inetRecvLine(), but
       the "record termination" is customizable through the cBlock parameter.
       If not given, this parameter defaults to the CRLF sequence.
       Provided by: Marcelo Lombardo
@@ -1040,7 +1040,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETDATAREADY
+      hb_inetDataReady()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1071,7 +1071,7 @@
       The next hb_inetRecv() function will read all the available data (up to the
       required length) without blocking.
 
-      On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
+      On error, hb_inetErrorCode() and hb_inetErrorDesc() can be use to determine what kind
       of error happened.
    $EXAMPLES$
 
@@ -1092,7 +1092,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSEND
+      hb_inetSend()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1143,7 +1143,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSENDALL
+      hb_inetSendAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1182,7 +1182,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETGETHOSTS
+      hb_inetGetHosts()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1231,7 +1231,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETGETALIAS
+      hb_inetGetAlias()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1270,7 +1270,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETSERVER
+      hb_inetServer()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1290,7 +1290,7 @@
    $DESCRIPTION$
       Creates a server that can accept connections from client on a certain port.
 
-      If the computer on which hb_InetServer is called has more than one logical
+      If the computer on which hb_inetServer() is called has more than one logical
       interface (e.g. one network card, one loopback and one PPP address),
       cBindAddr can be specified to select only one of these interfaces to accept
       connections for this process. This is useful when a server is present on
@@ -1328,7 +1328,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETACCEPT
+      hb_inetAccept()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1342,7 +1342,7 @@
    $RETURNS$
       <socket> a socket previously created  / opened
    $DESCRIPTION$
-      Waits until a connection is available on a socket created with hb_InetServer,
+      Waits until a connection is available on a socket created with hb_inetServer(),
       returns a socket that can be used to communicate with the incoming client.
 
       On error, NIL is returned and error code sets in the passed SOCKET.
@@ -1367,7 +1367,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCONNECT
+      hb_inetConnect()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1393,21 +1393,21 @@
       quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
       "www.xharbour.org"), using the desired port.
 
-      hb_InetConnect uses "gethostbyname" C system call to
+      hb_inetConnect() uses "gethostbyname" C system call to
       find the network address of the specified server; this means that
       this call is an hybrid function doing both a DNS scan and a TCP/IP
-      connection. hb_InetConnect is not thread safe, and the
-      program must take care that two hb_InetConnect functions are never
+      connection. hb_inetConnect() is not thread safe, and the
+      program must take care that two hb_inetConnect() functions are never
       called at the same moment from two different threads (or that
-      hb_InetGetHosts is not called in the same moment as an hb_InetConnect).
+      hb_inetGetHosts() is not called in the same moment as an hb_inetConnect()).
 
       The second version of this function accepts a pre-built socket
       as a parameter. This allows to kill asyncronously a thread waiting
-      for hb_InetConnect to connect, and then cleaning up the leftover
+      for hb_inetConnect() to connect, and then cleaning up the leftover
       socket data. Also, it is possible to give timeout to the given SOCKET,
       but this timeout will be used only in the connection phase, after that
-      the network address resolution is completed. Use GetHosts() and
-      hb_InetConnectIP for a finer timeout control.
+      the network address resolution is completed. Use hb_inetGetHosts() and
+      hb_inetConnectIP() for a finer timeout control.
       On error, the error of the returned socket is set. The error could
       be due to unavailable name resolving service, host name not valid,
       host address not reachable and host reachable but port not open.
@@ -1430,7 +1430,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCONNECTIP
+      hb_inetConnectIP()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1454,13 +1454,13 @@
    $DESCRIPTION$
       Connects to a remote server described by cAddress, that can be specified
       only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
-      This version of hb_InetConnect does not use gethostbyname, and thus is thread
-      safe and can be used in combination with hb_InetGetHosts to have a finer
+      This version of hb_inetConnect() does not use gethostbyname, and thus is thread
+      safe and can be used in combination with hb_inetGetHosts() to have a finer
       timeout control while connecting to a server, and a finer error control.
 
       The second version of this function accepts a pre-built socket
       as a parameter. This allows to kill asyncronously a thread waiting
-      for hb_InetConnectIP to connect, and then cleaning up the leftover
+      for hb_inetConnectIP() to connect, and then cleaning up the leftover
       socket data. Also, it is possible to give timeout at the given SOCKET.
 
       On error, the error of the returned socket is set.
@@ -1483,7 +1483,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETDGRAM
+      hb_inetDGram()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1528,7 +1528,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETDGRAMBIND
+      hb_inetDGramBind()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1576,7 +1576,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETDGRAMSEND
+      hb_inetDGramSend()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1637,7 +1637,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETDGRAMRECV
+      hb_inetDGramRecv()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1681,7 +1681,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETCRLF
+      hb_inetCRLF()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1715,7 +1715,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_INETISSOCKET
+      hb_inetIsSocket()
    $CATEGORY$
       API
    $SUBCATEGORY$

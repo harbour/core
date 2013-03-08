@@ -58,7 +58,7 @@
  * that associative array indexes are equal to regular hash indexes
  * so we do not need any translation between them and Harbour users
  * can use regular hash array functions for associative array indexes,
- * i.e. instead of using HAAGETKEYAT() they can use HB_HKEYAT().
+ * i.e. instead of using haAGetKeyAt() they can use hb_HKeyAt().
  */
 
 #include "hbapi.h"
@@ -85,7 +85,7 @@ static HB_BOOL s_isHashAA( PHB_ITEM pHash )
    return ( hb_hashGetFlags( pHash ) & HB_HASH_KEEPORDER ) != 0;
 }
 
-/* HAAGETKEYAT( <hValue>, <nPos> ) -> <value> */
+/* haAGetKeyAt( <hValue>, <nPos> ) -> <value> */
 HB_FUNC( HAAGETKEYAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -105,7 +105,7 @@ HB_FUNC( HAAGETKEYAT )
    }
 }
 
-/* HAAGETVALUEAT( <hValue>, <nPos> ) -> <value> */
+/* haAGetValueAt( <hValue>, <nPos> ) -> <value> */
 HB_FUNC( HAAGETVALUEAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -125,7 +125,7 @@ HB_FUNC( HAAGETVALUEAT )
    }
 }
 
-/* HAASETVALUEAT( <hValue>, <nPos>, <value> ) -> NIL */
+/* haASetValueAt( <hValue>, <nPos>, <value> ) -> NIL */
 HB_FUNC( HAASETVALUEAT )
 {
    PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
@@ -146,7 +146,7 @@ HB_FUNC( HAASETVALUEAT )
    }
 }
 
-/* HAADELAT( <hValue>, <nPos> ) -> NIL */
+/* haADelAt( <hValue>, <nPos> ) -> NIL */
 HB_FUNC( HAADELAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -160,7 +160,7 @@ HB_FUNC( HAADELAT )
       s_errRT_hashBound();
 }
 
-/* HAAGETPOS( <hValue>, <xKey> ) -> <nPos> */
+/* haAGetPos( <hValue>, <xKey> ) -> <nPos> */
 HB_FUNC( HAAGETPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -178,7 +178,7 @@ HB_FUNC( HAAGETPOS )
    }
 }
 
-/* HAAGETREALPOS( <hValue>, <nPos> ) -> <nRealPos> */
+/* haAGetRealPos( <hValue>, <nPos> ) -> <nRealPos> */
 HB_FUNC( HAAGETREALPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -194,7 +194,7 @@ HB_FUNC( HAAGETREALPOS )
       s_errRT_hashArg();
 }
 
-/* HGETVAAPOS( <hValue> ) -> <aOrder> */
+/* HGetVAAPos( <hValue> ) -> <aOrder> */
 HB_FUNC( HGETVAAPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -212,7 +212,7 @@ HB_FUNC( HGETVAAPOS )
       s_errRT_hashArg();
 }
 
-/* HSETAACOMPATIBILITY( <hValue>, <lAACompat> ) -> <lDone> */
+/* HSetAACompatibility( <hValue>, <lAACompat> ) -> <lDone> */
 HB_FUNC( HSETAACOMPATIBILITY )
 {
    PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
@@ -235,7 +235,7 @@ HB_FUNC( HSETAACOMPATIBILITY )
       s_errRT_hashArg();
 }
 
-/* HGETAACOMPATIBILITY( <hValue> ) -> <lAACompat> */
+/* HGetAACompatibility( <hValue> ) -> <lAACompat> */
 HB_FUNC( HGETAACOMPATIBILITY )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );

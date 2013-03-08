@@ -5,8 +5,8 @@
 /*
  * Harbour Project source code:
  *   CT3 function test for
- *     - EXPONENT
- *     - MANTISSA
+ *     - Exponent()
+ *     - Mantissa()
  *
  * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  * www - http://harbour-project.org
@@ -69,12 +69,10 @@ PROCEDURE Main()
       ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
-   // The call to Str( Infinity(.T.) ), generate a GPF.
-   // ?? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
-   // ?? Str( Infinity( .T. ) )
+   ? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
 
-   ?? "       Infinity(.T.): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
-   ? Str( Exponent( Infinity( .T. ) ), 4 )
+   ? "       Infinity( .T. ): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
+   ?? Str( Exponent( Infinity( .T. ) ), 4 )
 
    ctexit()
 

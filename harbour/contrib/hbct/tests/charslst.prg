@@ -63,10 +63,9 @@ PROCEDURE Main()
    ? "Begin test of CharSList()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharSList("Hello World !") == " !HWdelor" ? -> "' + CharSList( "Hello World !" ) + '"'
-   ? '  CharSList(NIL) == "" ? -> "' + CharSList( NIL ) + '"'
+   ? '  CharSList( "Hello World !" ) == " !HWdelor" ? -> "' + CharSList( "Hello World !" ) + '"'
+   ? '  CharSList( NIL ) == "" ? -> "' + CharSList( NIL ) + '"'
 
    ? "End test of CharSList()"
    ?

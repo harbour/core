@@ -68,12 +68,11 @@ PROCEDURE Main()
    ? "Begin test of AtToken()"
    ?
 
-   // Some simple tests
    ? "  Simple tests:"
-   ? '    AtToken("Hello, World!") == 8 ? ---------> ' + Str( AtToken( "Hello, World!" ) )
-   ? '    AtToken("Hello, World!",,2) == 8 ? ------> ' + Str( AtToken( "Hello, World!",, 2 ) )
-   ? '    AtToken("Hello, World!",,2,1) == 7 ? ----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
-   ? '    AtToken("Hello, World!"," ",2,1) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
+   ? '    AtToken( "Hello, World!" ) == 8 ? ------------> ' + Str( AtToken( "Hello, World!" ) )
+   ? '    AtToken( "Hello, World!",, 2 ) == 8 ? --------> ' + Str( AtToken( "Hello, World!",, 2 ) )
+   ? '    AtToken( "Hello, World!",, 2, 1 ) == 7 ? -----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
+   ? '    AtToken( "Hello, World!", " ", 2, 1 ) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'

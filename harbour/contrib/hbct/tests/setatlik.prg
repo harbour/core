@@ -72,7 +72,7 @@ PROCEDURE Main()
    ? "  Default wildcard character should be '?', is................", cWildcard
    SetAtLike( , "#" )
    SetAtLike( , @cWildcard )
-   ? "  Setting wildcard to '#' and calling SetAtLike(,@cWildcard)"
+   ? "  Setting wildcard to '#' and calling SetAtLike( , @cWildcard )"
    ? "    should yield '#' for cWildcard, does......................", cWildcard
    ? "End test of SetAtLike()"
    ?

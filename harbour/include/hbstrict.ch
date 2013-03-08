@@ -54,6 +54,6 @@
 #define HB_STRICT_CH_
 
 /* force compiler error */
-#translate IF( <x>, <y>, <z> ) => IIF()
+#translate if( <x>, <y>, <z> ) => iif()
 
 #endif /* HB_STRICT_CH_ */

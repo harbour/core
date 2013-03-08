@@ -5,11 +5,11 @@
 /*
  * Harbour Project source code:
  *   Test CT3 math functions
- *   - FLOOR
- *   - CEILING
- *   - LOG10
- *   - SIGN
- *   - FACT
+ *   - Floor()
+ *   - Ceiling()
+ *   - Log10()
+ *   - Sign()
+ *   - Fact()
  * Copyright 2001   Alejandro de Garate  <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *
@@ -167,9 +167,9 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE WAIT4
+PROCEDURE WAIT4()
 
-   ? "  PRESS ANY KEY"
+   ? "  Press any key"
    Inkey( 0 )
    CLS
 

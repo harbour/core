@@ -98,7 +98,7 @@ HB_IOERRORS, * PHB_IOERRORS;
 typedef struct
 {
    const char *   szDefaultRDD;     /* default RDD */
-   HB_BOOL        fNetError;        /* current NETERR() flag */
+   HB_BOOL        fNetError;        /* current NetErr() flag */
 
    void **        waList;           /* Allocated WorkAreas */
    HB_USHORT      uiWaMax;          /* Number of allocated WA */

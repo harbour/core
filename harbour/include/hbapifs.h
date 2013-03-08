@@ -184,8 +184,8 @@ extern HB_EXPORT HB_SIZE    hb_fsPipeIsData  ( HB_FHANDLE hPipeHandle, HB_SIZE n
 extern HB_EXPORT HB_SIZE    hb_fsPipeRead    ( HB_FHANDLE hPipeHandle, void * buffer, HB_SIZE nSize, HB_MAXINT nTimeOut );
 extern HB_EXPORT int        hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle );
 extern HB_EXPORT HB_FHANDLE hb_fsGetOsHandle ( HB_FHANDLE hFileHandle );
-extern HB_EXPORT HB_ERRCODE hb_fsGetFError   ( void ); /* get FERROR() flag */
-extern HB_EXPORT void       hb_fsSetFError   ( HB_ERRCODE uiError ); /* set FERROR() flag */
+extern HB_EXPORT HB_ERRCODE hb_fsGetFError   ( void ); /* get FError() flag */
+extern HB_EXPORT void       hb_fsSetFError   ( HB_ERRCODE uiError ); /* set FError() flag */
 extern HB_EXPORT HB_BOOL    hb_fsNameExists  ( const char * pszFileName ); /* check if a name exists in the filesystem (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsFileExists  ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsDirExists   ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */

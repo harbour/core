@@ -63,10 +63,10 @@ PROCEDURE Main()
    ? "Begin test of ValPos()"
    ?
 
-   ? '  ValPos("1234x56789") == 9    ? --> ' + Str( ValPos( "1234x56789" ) )
-   ? '  ValPos("1234x56789",1) == 1  ? --> ' + Str( ValPos( "1234x56789", 1 ) )
-   ? '  ValPos("1234x56789",11) == 0 ? --> ' + Str( ValPos( "1234x56789", 11 ) )
-   ? '  ValPos("1234x56789",5) == 0  ? --> ' + Str( ValPos( "1234x56789", 5 ) )
+   ? '  ValPos( "1234x56789" ) == 9     ? --> ' + Str( ValPos( "1234x56789" ) )
+   ? '  ValPos( "1234x56789", 1 ) == 1  ? --> ' + Str( ValPos( "1234x56789", 1 ) )
+   ? '  ValPos( "1234x56789", 11 ) == 0 ? --> ' + Str( ValPos( "1234x56789", 11 ) )
+   ? '  ValPos( "1234x56789", 5 ) == 0  ? --> ' + Str( ValPos( "1234x56789", 5 ) )
 
    ?
    ? "End test of ValPos()"

@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
- *    INT()
+ *    Int()
  *
  * Copyright 2003 Vicente Aranzana <varanzana@gruposp.com>
  * hb_numRound()
@@ -97,7 +97,7 @@ HB_FUNC( ROUND )
       int iDec = hb_parni( 2 );
 
 #ifdef HB_CLP_STRICT
-      /* In CA-Cl*pper ROUND() always returns double item, what in some
+      /* In CA-Cl*pper Round() always returns double item, what in some
        * applications may be important due to different formatting rules
        * when SET FIXED is ON [druzus]
        */

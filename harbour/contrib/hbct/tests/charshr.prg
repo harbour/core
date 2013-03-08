@@ -67,18 +67,16 @@ PROCEDURE Main()
    ? "Begin test of CharShr()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharShr(Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+'
-   ? '           Chr(64)+Chr(128), 3) == '
-   ? '  Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16) ? -->'
+   ? '  CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) =='
+   ? '           Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 1 ) + Chr(  2 ) + Chr(  4 ) + Chr(  8 ) + Chr(  16 ) ? -->'
 
-   ? '  '
+   ? '           '
    cStr := CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
-      ?? "Chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
+      ?? "Chr( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
       IF ni < Len( cStr )
-         ?? "+"
+         ?? " + "
       ENDIF
    NEXT
    ?

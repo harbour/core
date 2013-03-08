@@ -15,7 +15,7 @@
       None
    $RETURNS$
       NIL .... but optionally places Total of calculation in active
-               Get variable using oGet:VARPUT()
+               Get variable using oGet:varPut()
    $DESCRIPTION$
       PopAdder() gives you an adding machine inside your Clipper 5.2
       application. It has the basic functions add, subtract, multiply,
@@ -49,7 +49,7 @@
 
       3.) To Quit the Adder just press <ESC>. To return your Total
           to the application press <F10>. The adder will place the
-          Total in the active GET variable using oGet:VarPut(). The
+          Total in the active GET variable using oGet:varPut(). The
           adder will only return a Total to a numerical GET!
 
       4.) There are many support functions that you might find
@@ -59,19 +59,16 @@
           size of the adder. Many are worth at least a little
           time studying.
 
-      5.) To make FT_Adder a Hot key from inside your application
+      5.) To make ft_Adder() a Hot key from inside your application
           at the beginning of your application add the line:
 
-                 SET KEY K_ALT_A  TO FT_Adder
+                 SET KEY K_ALT_A TO ft_Adder()
 
           This will make <ALT-A> a key "Hot" and permit you to
           Pop - Up the adder from anywhere in the application.
 
-      6.) If you use FT_Inkey(), you can even have active hotkeys
+      6.) If you use ft_SInkey(), you can even have active hotkeys
           in an Inkey().
-
-
-
 
    $EXAMPLES$
 

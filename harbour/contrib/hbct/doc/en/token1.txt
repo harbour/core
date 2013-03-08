@@ -18,7 +18,7 @@
                          in <cString>
                          Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) +
                                   Chr( 26 ) + hb_BChar( 138 ) + hb_BChar( 141 ) +
-                                  " ,.;:!\?/\\<>()#&%+-*"
+                                  Chr( 32 ) + ",.;:!\?/\\<>()#&%+-*"
       [<nTokenCount>]    specifies the count of the token whose
                          position should be calculated
                          Default: last token
@@ -75,7 +75,7 @@
                          in <cString>
                          Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) +
                                   Chr( 26 ) + hb_BChar( 138 ) + hb_BChar( 141 ) +
-                                  " ,.;:!\?/\\<>()#&%+-*"
+                                  Chr( 32 ) + ",.;:!\?/\\<>()#&%+-*"
       [<nTokenCount>]    specifies the count of the token that
                          should be extracted
                          Default: last token
@@ -167,7 +167,7 @@
                         in <cString>
                          Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) +
                                   Chr( 26 ) + hb_BChar( 138 ) + hb_BChar( 141 ) +
-                                  " ,.;:!\?/\\<>()#&%+-*"
+                                  Chr( 32 ) + ",.;:!\?/\\<>()#&%+-*"
       [<nTokenCount>]   specifies the number of tokens that
                         should be processed
                         Default: all tokens
@@ -223,7 +223,7 @@
                         in <cString>
                          Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) + Chr( 13 ) +
                                   Chr( 26 ) + hb_BChar( 138 ) + hb_BChar( 141 ) +
-                                  " ,.;:!\?/\\<>()#&%+-*"
+                                  Chr( 32 ) + ",.;:!\?/\\<>()#&%+-*"
       [<nTokenCount>]   specifies the number of tokens that
                         should be processed
                         Default: all tokens

@@ -5,11 +5,11 @@
 /*
  * Harbour Project source code:
  *   CT3 Financial functions
- *     - PV
- *     - FV
- *     - PAYMENT
- *     - PERIODS
- *     - RATE
+ *     - PV()
+ *     - FV()
+ *     - Payment()
+ *     - Periods()
+ *     - Rate()
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *

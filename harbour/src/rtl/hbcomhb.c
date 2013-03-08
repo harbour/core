@@ -51,32 +51,32 @@
  */
 
 /*
- * HB_COMCLOSE( nPort )  --> lSuccess
- * HB_COMDISCARDCHAR( nPort, nChar | cChar ) --> lSuccess
- * HB_COMERRORCHAR( nPort, nChar | cChar ) --> lSuccess
- * HB_COMFLOWCHARS( nPort, nXONchar | cXONchar, nXOFFchar | cXOFFchar ) --> lSuccess
- * HB_COMFLOWCONTROL( nPort, @nOldFlow [, nNewFlow] ) --> lSuccess
- * HB_COMFLOWSET( nPort, nFlow ) --> lSuccess
- * HB_COMFLUSH( nPort, [ nType = HB_COM_IOFLUSH ] ) --> lSuccess
- * HB_COMGETDEVICE( nPort )  --> cDeviceName
- * HB_COMGETDEVICEHANDLE( nPort )  --> nHandle | F_ERROR
- * HB_COMGETERROR( nPort ) --> nError
- * HB_COMGETOSERROR( nPort ) --> nError
- * HB_COMINIT( nPort, nBaud, cParity, nSize, nStop ) --> lSuccess
- * HB_COMINPUTCOUNT( nPort ) --> nCount
- * HB_COMINPUTSTATE( nPort ) --> nState
- * HB_COMLASTNUM() --> nLastPortNumber
- * HB_COMLSR( nPort, @nValue ) --> lSuccess
- * HB_COMMCR( nPort, @nValue, nClear, nSet ) --> lSuccess
- * HB_COMMSR( nPort, @nValue ) --> lSuccess
- * HB_COMOPEN( nPort ) --> lSuccess
- * HB_COMOUTPUTCOUNT( nPort ) --> nCount
- * HB_COMOUTPUTSTATE( nPort ) --> nState
- * HB_COMSENDBREAK( nPort, [ nDuration = 50 ] ) --> lSuccess
- * HB_COMSETDEVICE( nPort, cDeviceName ) --> lSuccess
- * HB_COMSETERROR( nPort, nError ) --> NIL
- * HB_COMRECV( nPort, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesRecv
- * HB_COMSEND( nPort, cBuffer, [ nLen = LEN( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesSent
+ * hb_comClose( nPort )  --> lSuccess
+ * hb_comDiscardChar( nPort, nChar | cChar ) --> lSuccess
+ * hb_comErrorChar( nPort, nChar | cChar ) --> lSuccess
+ * hb_comFlowChars( nPort, nXONchar | cXONchar, nXOFFchar | cXOFFchar ) --> lSuccess
+ * hb_comFlowControl( nPort, @nOldFlow [, nNewFlow] ) --> lSuccess
+ * hb_comFlowSet( nPort, nFlow ) --> lSuccess
+ * hb_comFlush( nPort, [ nType = HB_COM_IOFLUSH ] ) --> lSuccess
+ * hb_comGetDevice( nPort )  --> cDeviceName
+ * hb_comGetDeviceHandle( nPort )  --> nHandle | F_ERROR
+ * hb_comGetError( nPort ) --> nError
+ * hb_comGetOSError( nPort ) --> nError
+ * hb_comInit( nPort, nBaud, cParity, nSize, nStop ) --> lSuccess
+ * hb_comInputCount( nPort ) --> nCount
+ * hb_comInputState( nPort ) --> nState
+ * hb_comLastNum() --> nLastPortNumber
+ * hb_comLSR( nPort, @nValue ) --> lSuccess
+ * hb_comMCR( nPort, @nValue, nClear, nSet ) --> lSuccess
+ * hb_comMSR( nPort, @nValue ) --> lSuccess
+ * hb_comOpen( nPort ) --> lSuccess
+ * hb_comOutputCount( nPort ) --> nCount
+ * hb_comOutputState( nPort ) --> nState
+ * hb_comSendBreak( nPort, [ nDuration = 50 ] ) --> lSuccess
+ * hb_comSetDevice( nPort, cDeviceName ) --> lSuccess
+ * hb_comSetError( nPort, nError ) --> NIL
+ * hb_comRecv( nPort, @cBuffer, [ nLen = Len( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesRecv
+ * hb_comSend( nPort, cBuffer, [ nLen = Len( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesSent
  */
 
 #include "hbapiitm.h"

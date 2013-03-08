@@ -538,7 +538,7 @@ HB_FUNC( _FT_DFINIT )
       if( dispc->vseg != NULL )
          hb_xfree( dispc->vseg );
    }
-   else                                                     /* get parameters               */
+   else                                                     /* get parameters            */
    {
       dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle               */
       j = hb_parni( 6 );                                    /* starting line value       */

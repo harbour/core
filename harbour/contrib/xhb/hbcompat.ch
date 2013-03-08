@@ -505,7 +505,7 @@
    #xtranslate haAGetPos( [<x,...>] )      => hb_HPos( <x> )
    #xtranslate haAGetRealPos( <x>, <y> )   => iif( HB_ISNUMERIC( <y> ) .AND. <y> >= 1 .AND. ;
                                                    Int( <y> ) <= Len( <x> ), Int( <y> ), 0 )
-   #xtranslate HGetVaaPos( <x> )           => {| h | ;;
+   #xtranslate HGetVAAPos( <x> )           => {| h | ;;
                                                 LOCAL a := Array( Len( h ), v ;;
                                                 FOR EACH v IN a ;;
                                                    v := v:__enumIndex() ;;

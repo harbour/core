@@ -63,10 +63,9 @@ PROCEDURE Main()
    ? "Begin test of WordSwap()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  WordSwap("1234567890")      == "3412785690" ? --> "' + WordSwap( "1234567890" )     + '"'
-   ? '  WordSwap("1234567890", .T.) == "4321876590" ? --> "' + WordSwap( "1234567890", .T. ) + '"'
+   ? '  WordSwap( "1234567890" )      == "3412785690" ? --> "' + WordSwap( "1234567890" )     + '"'
+   ? '  WordSwap( "1234567890", .T. ) == "4321876590" ? --> "' + WordSwap( "1234567890", .T. ) + '"'
    ?
 
    ? "End test of WordSwap()"

@@ -1221,34 +1221,6 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      AdsConnect60(),ADSUSEDICTIONARY()
-   $END$
- */
-
-/* $DOC$
-   $NAME$
-      ADSUSEDICTIONARY()*
-   $CATEGORY$
-      Advantage Database RDD
-   $ONELINER$
-      This function has been REMOVED.  It specified usage of a datadictionary connection
-   $SYNTAX$
-      None
-   $ARGUMENTS$
-      None
-   $RETURNS$
-      None
-   $DESCRIPTION$
-      This function no longer exists.  See the Data Dictionary topic
-   $STATUS$
-      R
-   $COMPLIANCE$
-      Harbour extension
-   $PLATFORMS$
-      Windows, Linux
-   $FILES$
-
-   $SEEALSO$
       AdsConnect60()
    $END$
  */
@@ -1277,7 +1249,7 @@
    $EXAMPLES$
       IF AdsConnect60( "harbour.add", 7 /* All types of connection */, "ADSSYS", "", )
          // Add one user
-         AdsDDCreateUser( , "Luiz", "papael", "This is luiz User" )
+         AdsDDCreateUser( , "Luiz", "papael", "This is Luiz user" )
       ENDIF
    $STATUS$
       R

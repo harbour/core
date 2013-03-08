@@ -56,7 +56,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
-/* NOTE: DO() as a function is a Harbour extension. [vszakats] */
+/* NOTE: Do() as a function is a Harbour extension. [vszakats] */
 
 /* NOTE: use hb_stackItemFromBase( uiParam ) instead of
  *       hb_param( uiParam, HB_IT_ANY ) to keep references to

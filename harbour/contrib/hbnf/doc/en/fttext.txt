@@ -47,10 +47,10 @@
       #include "fileio.ch"
 
       // open a text file for reading
-      ft_FUse( "text.txt" )
+      ft_FUse( "test.txt" )
 
       // open a text file for reading and writing
-      ft_FUse( "text.txt", FO_READWRITE + FO_SHARED )
+      ft_FUse( "test.txt", FO_READWRITE + FO_SHARED )
 
       // close file
       ft_FUse()
@@ -136,7 +136,7 @@
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
-      ft_FUse( "text.c" )      // open text file
+      ft_FUse( "test.txt" )      // open text file
 
       DO WHILE ! ft_FEof()
 
@@ -179,9 +179,9 @@
       among others.
 
    $EXAMPLES$
-      IF ft_FUse( "text.c" ) < 0     // open text file
+      IF ft_FUse( "test.txt" ) < 0     // open text file
          err := ft_FError()
-         ? "Error opening file 'text.c', error code (" + ;
+         ? "Error opening file 'test.txt', error code (" + ;
             hb_ntos( err ) + ")"
       ENDIF
    $SEEALSO$
@@ -212,7 +212,7 @@
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
-      ft_FUse( "text.c" )      // open text file
+      ft_FUse( "test.txt" )      // open text file
 
       DO WHILE ! ft_FEof()
 
@@ -250,13 +250,13 @@
       This function moves the record pointer to the last record of the
       file in the currently selected text file workarea.
 
-      If a read error occurs ^ft_FError()^n will contain the error code.
+      If a read error occurs ^bft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // read last line
-      ft_FUse( "text.c" )
+      ft_FUse( "test.txt" )
 
       ft_FGoBot()
 
@@ -300,7 +300,7 @@
    $EXAMPLES$
       // display each record of a text file
 
-      ft_FUse( "text.c" )
+      ft_FUse( "test.txt" )
 
       DO WHILE ! ft_FEof()
 
@@ -348,7 +348,7 @@
    $EXAMPLES$
       // display each record of a text file
 
-      ft_FUse( "text.c" )
+      ft_FUse( "test.txt" )
 
       DO WHILE ! ft_FEof()
 
@@ -379,14 +379,14 @@
       If ^b<nLines>^n is omitted, the current record is deleted only.
 
    $RETURNS$
-      TRUE if successful, otherwise check ^ft_FError()^n for error code.
+      TRUE if successful, otherwise check ^bft_FError()^n for error code.
 
    $DESCRIPTION$
       This function deletes one or several lines of text from the file
       in the currently selected text file workarea.  Text lines are
       delimited with a CRLF/LF.  The record pointer is not moved,
       unless the deleted lines occur at the end of the file, in which
-      case ^bft_fRecno()^n will equal ^bft_fLastRe()^n and ^bft_fEOF()^n
+      case ^bft_FRecNo()^n will equal ^bft_FLastRe()^n and ^bft_FEof()^n
       will be set to TRUE.
 
    $EXAMPLES$
@@ -537,7 +537,7 @@
 
       ft_FUse( "config.sys" )
 
-      DO WHILE Upper( ft_FReadLn() ) != "FILES=" .AND. ! F_FEOF()
+      DO WHILE !( Left( Upper( ft_FReadLn() ), Len( "FILES=" ) ) == "FILES=" ) .AND. ! ft_FEof()
 
          ft_FSkip()
 
@@ -573,7 +573,7 @@
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
-      ft_FUse( "text.c" )
+      ft_FUse( "test.txt" )
 
       ? ft_FLastRe()
    $SEEALSO$
@@ -604,7 +604,7 @@
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
-      ft_FUse( "fttext.c" )
+      ft_FUse( "test.txt" )
 
       ? ft_FEof()        // .F.
 
@@ -634,12 +634,12 @@
       the currently selected text file, otherwise .F.
 
    $DESCRIPTION$
-      This function is similar to the CLIPPER Bof() function.
+      This function is similar to the Clipper Bof() function.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
-      ft_FUse( "fttext.c" )
+      ft_FUse( "test.txt" )
 
       ft_FGoTop()
 
@@ -649,7 +649,7 @@
 
       ? ft_FBof()        // .T.
    $SEEALSO$
-      ft_FSkip() FT_EOF() FT_GOTOP()
+      ft_FSkip() ft_FEof() ft_FGoTop()
    $END$
  */
 
@@ -683,14 +683,14 @@
       internally goes to the top of the file, then skips down the
       required number of records.  Hence if your file is relatively
       large and the current record is a high number, you may see some
-      delay as ft_FGoto(0) skips through the file.
+      delay as ft_FGoto( 0 ) skips through the file.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
 
    $EXAMPLES$
       // read 5th line of text from file
 
-      ft_FUse( "fttext.c" )
+      ft_FUse( "test.txt" )
 
       ft_FGoto( 5 )
 

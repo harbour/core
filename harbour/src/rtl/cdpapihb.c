@@ -544,8 +544,8 @@ HB_FUNC( HB_UTF8LEN )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* none of numeric parameters in STRTRAN() (4-th and 5-th) refers to
+/* none of numeric parameters in StrTran() (4-th and 5-th) refers to
  * character position in string so we do not need to create new
- * HB_UTF8STRTRAN() but we can safely use normal STRTRAN() function
+ * hb_utf8StrTran() but we can safely use normal StrTran() function
  */
 HB_FUNC_TRANSLATE( HB_UTF8STRTRAN, STRTRAN )

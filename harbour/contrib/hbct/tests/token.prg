@@ -70,12 +70,11 @@ PROCEDURE Main()
    ? "Begin test of Token()"
    ?
 
-   // Some simple tests
    ? "  Simple tests:"
-   ? '    Token("Hello, World!") == "World" ? -----------> "' + Token( "Hello, World!" ) + '"'
-   ? '    Token("Hello, World!",,2,1) == "" ? -----------> "' + Token( "Hello, World!",, 2, 1 ) + '"'
-   ? '    Token("Hello, World!",",",2,1) == " World!" ? -> "' + Token( "Hello, World!", ",", 2, 1 ) + '"'
-   ? '    Token("Hello, World!"," ",2,1) == "World!" ? --> "' + Token( "Hello, World!", " ", 2, 1 ) + '"'
+   ? '    Token( "Hello, World!" )            == "World" ? ---> "' + Token( "Hello, World!" ) + '"'
+   ? '    Token( "Hello, World!",, 2, 1 )     == "" ? --------> "' + Token( "Hello, World!",, 2, 1 ) + '"'
+   ? '    Token( "Hello, World!", ",", 2, 1 ) == " World!" ? -> "' + Token( "Hello, World!", ",", 2, 1 ) + '"'
+   ? '    Token( "Hello, World!", " ", 2, 1 ) == "World!" ? --> "' + Token( "Hello, World!", " ", 2, 1 ) + '"'
    ?
 
    ? '  Tokenizing the string "' + cStr + '"'

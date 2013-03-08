@@ -280,6 +280,8 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_SPECDIR_CONTRIB   "contrib"
 #define _HBMK_SPECDIR_ADDONS    "addons"
 
+#define _HBMK_SIGN_TIMEURL      "http://timestamp.verisign.com/scripts/timstamp.dll"
+
 #define _HBMK_HBEXTREQ          "__HBEXTREQ__"
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
@@ -3826,6 +3828,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          {FC}     flags for C compiler (user + automatic)
          {FL}     flags for linker (user + automatic)
          {FS}     flags for code sign tool
+         {UT}     url for timestamp (code sign tool)
          {OW}     working dir (when in -inc mode)
          {OD}     output dir
          {OO}     output object (when in -hbcmp mode)
@@ -7386,11 +7389,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          /* Setup code signing for host platform */
 
          IF HBMK_ISPLAT( "win|wce" )
-            /* Requires MS Windows SDK */
-            cBin_Sign := "signtool.exe"
-            cOpt_Sign := "sign {FS} -f {ID} -p {PW} -t http://timestamp.verisign.com/scripts/timstamp.dll {OB}"
-            IF AScan( hbmk[ _HBMK_aOPTS ], {| tmp | HBMK_IS_IN( Lower( tmp ), "-v|/v" ) } ) == 0
-               AAdd( hbmk[ _HBMK_aOPTS ], "-q" )
+            IF ( cBin_Sign := FindInPath( "signtool.exe" ) ) != NIL /* in MS Windows SDK */
+               cOpt_Sign := "sign {FS} -f {ID} -p {PW} -t {UT} {OB}"
+               IF AScan( hbmk[ _HBMK_aOPTS ], {| tmp | HBMK_IS_IN( Lower( tmp ), "-v|/v" ) } ) == 0
+                  AAdd( hbmk[ _HBMK_aOPTS ], "-q" )
+               ENDIF
+            ELSEIF ( cBin_Sign := FindInPath( "posign.exe" ) ) != NIL /* in Pelles C 7.0 or newer */
+               cBin_Sign := "posign.exe"
+               cOpt_Sign := "{FS} -pfx:{ID} -pwd:{PW} -timeurl:{UT} {OB}"
             ENDIF
          ENDIF
 
@@ -7407,6 +7413,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             hReplace := { ;
                "{FS}" => ArrayToList( hbmk[ _HBMK_aOPTS ] ), ;
+               "{UT}" => _HBMK_SIGN_TIMEURL, ;
                "{ID}" => cOpt_SignID, ;
                "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
                "{PW}" => cOpt_SignPass }
@@ -15557,7 +15564,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (not supported by some platforms/compilers). On Windows, it is implemented by generating and linking a resource file." ) }, ;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
-      { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) }, ;
+      { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected." ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied." ) }, ;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies." ) }, ;

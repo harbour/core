@@ -63,11 +63,10 @@ PROCEDURE Main()
    ? "Begin test of CharEven()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharEven(" 1 2 3 4 5") == "12345" ? --> "' + CharEven( " 1 2 3 4 5" ) + '"'
-   ? '  CharEven(" 1 2 3 4 ")  == "1234"  ? --> "' + CharEven( " 1 2 3 4 " )  + '"'
-   ? '  CharEven(" ")          == ""      ? --> "' + CharEven( " " )          + '"'
+   ? '  CharEven( " 1 2 3 4 5" ) == "12345" ? --> "' + CharEven( " 1 2 3 4 5" ) + '"'
+   ? '  CharEven( " 1 2 3 4 " )  == "1234"  ? --> "' + CharEven( " 1 2 3 4 " )  + '"'
+   ? '  CharEven( " " )          == ""      ? --> "' + CharEven( " " )          + '"'
 
    ? "End test of CharEven()"
    ?

@@ -121,7 +121,7 @@ typedef struct
    PHB_ERROR_INFO errorHandler;
    PHB_ITEM       errorBlock;
    int            iLaunchCount;
-   int            uiErrorDOS;    /* The value of DOSERROR() */
+   int            uiErrorDOS;    /* The value of DosError() */
 } HB_ERRDATA, * PHB_ERRDATA;
 
 static void hb_errorDataRelease( void * Cargo )
@@ -554,10 +554,10 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
       if( pErrData->iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
-      /* Launch the error handler: "lResult := EVAL( ErrorBlock(), oError )" */
+      /* Launch the error handler: "lResult := Eval( ErrorBlock(), oError )" */
       pErrData->iLaunchCount++;
 
-      /* set DOSERROR() to last OS error code */
+      /* set DosError() to last OS error code */
       pErrData->uiErrorDOS = ( int ) hb_errGetOsCode( pError );
 
       /* Add one try to the counter. */
@@ -648,10 +648,10 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( pErrData->iLaunchCount == HB_ERROR_LAUNCH_MAX )
          hb_errInternal( HB_EI_ERRTOOMANY, NULL, NULL, NULL );
 
-      /* Launch the error handler: "xResult := EVAL( ErrorBlock(), oError )" */
+      /* Launch the error handler: "xResult := Eval( ErrorBlock(), oError )" */
       pErrData->iLaunchCount++;
 
-      /* set DOSERROR() to last OS error code */
+      /* set DosError() to last OS error code */
       pErrData->uiErrorDOS = ( int ) hb_errGetOsCode( pError );
 
       /* Add one try to the counter. */

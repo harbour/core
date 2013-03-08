@@ -484,7 +484,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    RETURN
 
-STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
+STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    LOCAL cStdOut
    LOCAL cDir
@@ -500,7 +500,9 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
 
    IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
 
-      hb_jsonDecode( cStdOut, @hInfo )
+      IF hb_jsonDecode( cStdOut, @hInfo ) == 0
+         OutStd( "! Warning: Received invalid result from 'hbmk2 --hbinfo'" + hb_eol() )
+      ENDIF
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( hInfo, "targettype" )
       hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( hInfo, "outputname" )
@@ -520,9 +522,11 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
                "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
          ENDIF
       NEXT
+   ELSE
+      OutStd( hb_StrFormat( "! Warning: 'hbmk2 --hbinfo' failed with exit code %1$d", nErrorLevel ) + hb_eol() )
    ENDIF
 
-   RETURN nErrorLevel
+   RETURN
 
 STATIC FUNCTION hbmk2_hbinfo_getitem( hInfo, cItem )
    RETURN iif( HB_ISHASH( hInfo ), hb_HGetDef( hInfo, cItem, "" ), "" )

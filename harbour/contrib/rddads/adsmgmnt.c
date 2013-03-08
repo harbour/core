@@ -469,7 +469,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 }
 
 /* NOTE: For a newer edition of this function, which also returns locktype
-         info, see ADSMGGETOPENTABLES2(). */
+         info, see AdsMgGetOpenTables2(). */
 HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
 {
    UNSIGNED16 usArrayLen = ( UNSIGNED16 ) hb_parnidef( 1, 300 );

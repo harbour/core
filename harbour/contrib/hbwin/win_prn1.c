@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
- * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,22 +48,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/*
-   WIN_PRN() was designed to make it easy to emulate Clipper Dot Matrix printing.
-   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
-   Even though "Mapping Mode" for WIN_PRN() is WIN_MM_TEXT, ::SetFont() accepts the
-   nWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
-   6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
-   If you do not like this then inherit from the class and override anything you want
-
-   Simple example
-
-   TODO: Colour printing
-         etc....
-
-   Peter Rees 21 January 2004 <peter@rees.co.nz>
  */
 
 #include "hbwin.h"

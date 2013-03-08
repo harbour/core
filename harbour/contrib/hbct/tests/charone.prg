@@ -63,13 +63,12 @@ PROCEDURE Main()
    ? "Begin test of CharOne()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharOne("112333a123")      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
-   ? '  CharOne("122333a123")      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
-   ? '  CharOne("A  B  CCCD")      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
-   ? '  CharOne(" ", "A  B  A  B") == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
-   ? '  CharOne("o", "122oooB12o") == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
+   ? '  CharOne( "112333a123" )      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
+   ? '  CharOne( "122333a123" )      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
+   ? '  CharOne( "A  B  CCCD" )      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
+   ? '  CharOne( " ", "A  B  A  B" ) == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
+   ? '  CharOne( "o", "122oooB12o" ) == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
    ?
 
    ? "End test of CharOne()"

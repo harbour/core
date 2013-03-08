@@ -105,7 +105,7 @@ HB_FUNC( HB_STRING2POINTER )
 
 /* xHarbour really returns:
  *       hb_retc( hb_cmdargARGVN( 0 ) );
- * probably typo - replicated here by HB_PROGNAME()
+ * probably typo - replicated here by hb_ProgName()
  */
 HB_FUNC_TRANSLATE( HB_CMDARGARGV, HB_PROGNAME )
 

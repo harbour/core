@@ -63,7 +63,7 @@
    $STATUS$
       R
    $COMPLIANCE$
-      Harbour extension similar to FT_ONIDLE() function available
+      Harbour extension similar to ft_OnTick() function available
       in NanForum library.
    $PLATFORMS$
       All

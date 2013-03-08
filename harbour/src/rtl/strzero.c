@@ -116,7 +116,7 @@ HB_FUNC( STRZERO )
       }
       else
 #ifdef HB_CLP_STRICT
-         /* NOTE: In CA-Cl*pper STRZERO() is written in Clipper, and will call
+         /* NOTE: In CA-Cl*pper StrZero() is written in Clipper, and will call
                   STR() to do the job, the error (if any) will also be thrown
                   by STR().  [vszakats] */
          hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", HB_ERR_ARGS_BASEPARAMS );

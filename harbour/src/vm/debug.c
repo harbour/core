@@ -60,15 +60,15 @@
 
 /* Existing debug functions
  * from debug.c:
- *    __DBGVMSTKGCOUNT()
- *    __DBGVMSTKGLIST()
- *    __DBGVMSTKLCOUNT()
- *    __DBGVMSTKLLIST()
- *    __DBGVMLOCALLIST()
- *    __DBGVMPARLLIST()
+ *    __dbgVMStkGCount()
+ *    __dbgVMStkGList()
+ *    __dbgVMStkLCount()
+ *    __dbgVMStkLList()
+ *    __dbgVMLocalList()
+ *    __dbgVMParLList()
  * for locals:
- *    __DBGVMVARLGET()              (debugger.prg)
- *    __DBGVMVARLSET()              (debugger.prg)
+ *    __dbgVMVarLGet()              (debugger.prg)
+ *    __dbgVMVarLSet()              (debugger.prg)
  *    hb_dbg_vmVarLGet(int,int)     (dbgentry.c)
  *
  * form classes.c:
@@ -76,26 +76,26 @@
  *
  * form hvm.c
  * general:
- *    __DBGINVOKEDEBUG()            (debugger.prg)
- *    __DBGPROCLEVEL()              (debugger.prg)
+ *    __dbgInvokeDebug()            (debugger.prg)
+ *    __dbgProcLevel()              (debugger.prg)
  *    hb_dbg_InvokeDebug(HB_BOOL)   (dbgentry.c)
  *    hb_dbg_ProcLevel()            (dbgentry.c)
  *    hb_dbg_SetEntry(*ENTRY_FUNC)  (dbgentry.c)
  * for statics:
- *    __DBGVMVARSLIST()
- *    __DBGVMVARSLEN()
- *    __DBGVMVARSGET()              (debugger.prg)
- *    __DBGVMVARSSET()              (debugger.prg)
+ *    __dbgVMVarSList()
+ *    __dbgVMVarSLen()
+ *    __dbgVMVarSGet()              (debugger.prg)
+ *    __dbgVMVarSSet()              (debugger.prg)
  *    hb_dbg_vmVarSGet(PHB_ITEM,int)(dbgentry.c)
  * for globals (unused):
- *    __DBGVMVARGLIST()
- *    __DBGVMVARGGET()              (debugger.prg)
- *    __DBGVMVARGSET()              (debugger.prg)
+ *    __dbgVMVarGList()
+ *    __dbgVMVarGGet()              (debugger.prg)
+ *    __dbgVMVarGSet()              (debugger.prg)
  *    hb_dbg_vmVarGCount()          (dbgentry.c)
  *    hb_dbg_vmVarGGet(int,int)     (dbgentry.c)
  *
  *
- * Information from HVM send to debugger by __DBGENTRY()
+ * Information from HVM send to debugger by __dbgEntry()
  *    HB_DBG_MODULENAME, cName
  *    HB_DBG_STATICNAME, nBase,  nIndex, cName
  *    HB_DBG_LOCALNAME,  nIndex, cName
@@ -132,7 +132,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> __dbgvmStkGCount()
+ * $FuncName$     <nVars> __dbgVMStkGCount()
  * $Description$  Returns the length of the global stack
  * $End$ */
 HB_FUNC( __DBGVMSTKGCOUNT )
@@ -144,7 +144,7 @@ HB_FUNC( __DBGVMSTKGCOUNT )
 }
 
 /* $Doc$
- * $FuncName$     <aStack> __dbgvmStkGList()
+ * $FuncName$     <aStack> __dbgVMStkGList()
  * $Description$  Returns the global stack
  * $End$ */
 HB_FUNC( __DBGVMSTKGLIST )
@@ -192,7 +192,7 @@ static HB_ISIZ hb_stackLen( int iLevel )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> __dbgvmStkLCount( <nProcLevel> )
+ * $FuncName$     <nVars> __dbgVMStkLCount( <nProcLevel> )
  * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
 HB_FUNC( __DBGVMSTKLCOUNT )
@@ -204,7 +204,7 @@ HB_FUNC( __DBGVMSTKLCOUNT )
 }
 
 /* $Doc$
- * $FuncName$     <aStack> __dbgvmStkLList()
+ * $FuncName$     <aStack> __dbgVMStkLList()
  * $Description$  Returns the stack of the calling function
  *                "[<symbol>]"  Means symbol.
  *

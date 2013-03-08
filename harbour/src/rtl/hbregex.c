@@ -490,7 +490,7 @@ HB_FUNC( HB_REGEX )
 
 /* Returns just .T. if match found or .F. otherwise. */
 /* NOTE: Deprecated compatibility function.
-         Please use HB_REGEXLIKE() and HB_REGEXHAS() instead. */
+         Please use hb_regexLike() and hb_regexHas() instead. */
 
 #if defined( HB_LEGACY_LEVEL4 )
 
@@ -526,10 +526,10 @@ HB_FUNC( HB_REGEXATX )
 }
 
 /* 2005-12-16 - Francesco Saverio Giudice
-   HB_RegExAll( cRegex, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, lOnlyMatch ) -> aAllRegexMatches
+   hb_regexAll( cRegex, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, lOnlyMatch ) -> aAllRegexMatches
 
    This function return all matches from a Regex search.
-   It is a mix from hb_RegEx() and hb_RegExAtX()
+   It is a mix from hb_regex() and hb_regexAtX()
 
    PARAMETERS:
     cRegex         - Regex pattern string or precompiled Regex

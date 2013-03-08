@@ -68,7 +68,6 @@ PROCEDURE Main()
    ? "Begin test of TokenSep()"
    ?
 
-   // Some simple tests
    ? '  Tokenizing the string "' + cStr + '"'
    ? '    with skip width == 1 and ".,!" as tokenizer list:'
    ?

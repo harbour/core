@@ -8,7 +8,7 @@
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)
  * Copyright 2010 Xavi <jarabal/at/gmail.com>
- * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,7 @@
 #define BI_PNG           5
 #endif
 
-/* Functions for loading & printing bitmaps */
+/* Functions for loading and printing bitmaps */
 
 int hbwin_bitmapType( const void * pImgBuf, HB_SIZE size )
 {

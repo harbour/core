@@ -50,18 +50,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    IS_VARBYREF()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"

@@ -87,7 +87,7 @@ HB_FUNC( MOD )
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", HB_ERR_ARGS_BASEPARAMS );
 
-         /* In CA-Cl*pper MOD() function ignores substitution result
+         /* In CA-Cl*pper Mod() function ignores substitution result
           * and return original numeric item keeping its internal
           * representation: integer or double, size and number of
           * decimal places, it can be seen in code like:

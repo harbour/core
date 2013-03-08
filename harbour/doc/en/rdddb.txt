@@ -7,9 +7,9 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    DB*() documentation
- *    ORD*() documentation
- *    RDD*() documentation
+ *    db*() documentation
+ *    ord*() documentation
+ *    rdd*() documentation
  *
  * See COPYING.txt for licensing terms.
  *
@@ -1243,7 +1243,7 @@
       work area. The default value of <lNewArea> is a logical false (.F.).
       If used, <cDriver> is the name of the database driver associated with
       the file <cName> that is opened. The default for this will be the
-      value of DBSETDRlVER().
+      value of dbSetDriver().
 
       IF used, <xcAlias> contains the alias name for that work area, If not
       specified, the root name of the database specified in <cName> will be

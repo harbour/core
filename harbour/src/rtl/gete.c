@@ -104,7 +104,7 @@ HB_FUNC( GETENV )
 /* NOTE: Undocumented Clipper function. [vszakats] */
 HB_FUNC_TRANSLATE( GETE, GETENV )
 
-/* NOTE: Harbour extended version of GETENV(). The 2nd parameter
+/* NOTE: Harbour extended version of GetEnv(). The 2nd parameter
          can be used to specify a default value, returned if the
          requested envvar doesn't exist.
          [vszakats] */

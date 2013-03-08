@@ -413,7 +413,7 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_CDP_ISCUSTOM(cdp)        ( ( ( cdp )->type & HB_CDP_TYPE_CUSTOM ) != 0 )
 /* codepage use character indexes instead of bytes ones */
 #define HB_CDP_ISCHARIDX(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARIDX ) != 0 )
-/* CHR(), ASC() and similar functions operates on Unicode values instead of bytes */
+/* Chr(), Asc() and similar functions operates on Unicode values instead of bytes */
 #define HB_CDP_ISCHARUNI(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARUNI ) != 0 )
 /* codepage uses UTF-8 encoding */
 #define HB_CDP_ISUTF8(cdp)          ( ( ( cdp )->type & HB_CDP_TYPE_UTF8 ) != 0 )

@@ -63,11 +63,10 @@ PROCEDURE Main()
    ? "Begin test of CharOr()"
    ?
 
-   // simple tests
    ? "Simple tests:"
 
-   ? '  CharOr("012345678", Chr(1)) == "113355779" ? --> "' + CharOr( "012345678", Chr( 1 ) ) + '"'
-   ? '  CharOr("012345678", Chr(1)+Chr(3)) == "133357779" ? --> "' + CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) + '"'
+   ? '  CharOr( "012345678", Chr( 1 ) ) == "113355779" ? --> "' + CharOr( "012345678", Chr( 1 ) ) + '"'
+   ? '  CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) == "133357779" ? --> "' + CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) + '"'
 
    ? "End test of CharOr()"
    ?

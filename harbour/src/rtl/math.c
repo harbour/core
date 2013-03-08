@@ -635,7 +635,7 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
 /*
  * ************************************************************
  * Harbour Math functions Part V:
- * EXP(), LOG(), SQRT()
+ * Exp(), Log(), Sqrt()
  * ************************************************************
  */
 

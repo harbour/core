@@ -63,9 +63,9 @@ PROCEDURE Main()
    ? "Begin test of AscPos()"
    ?
 
-   ? '  AscPos("0123456789") == 57   ? --> ' + Str( AscPos( "0123456789" ) )
-   ? '  AscPos("0123456789",1) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
-   ? '  AscPos("0123456789",11) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
+   ? '  AscPos( "0123456789" ) == 57    ? --> ' + Str( AscPos( "0123456789" ) )
+   ? '  AscPos( "0123456789", 1 ) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
+   ? '  AscPos( "0123456789", 11 ) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
 
    ?
    ? "End test of AscPos()"

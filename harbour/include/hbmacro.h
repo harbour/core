@@ -69,7 +69,7 @@ HB_EXTERN_BEGIN
 #define HB_MACRO_GEN_PUSH     1   /* generate PUSH pcodes */
 #define HB_MACRO_GEN_POP      2   /* generate POP pcodes */
 #define HB_MACRO_GEN_ALIASED  4   /* force aliased variable */
-#define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from TYPE() function) */
+#define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from Type() function) */
 #define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
 #define HB_MACRO_GEN_LIST     32  /* generate push operation for every comma separated expressions */
 #define HB_MACRO_GEN_REFER    64  /* generate PUSH pcodes for reference to given expression */
@@ -83,7 +83,7 @@ HB_EXTERN_BEGIN
  */
 #define HB_MACRO_CONT         1   /* everything is OK so far */
 #define HB_MACRO_TOO_COMPLEX  2   /* compiled expression is too complex */
-#define HB_MACRO_UDF          4   /* code uses UDF function (info used by TYPE function) */
+#define HB_MACRO_UDF          4   /* code uses UDF function (info used by Type() function) */
 #define HB_MACRO_UNKN_SYM     8   /* requested symbol was not found in runtime symbol table */
 #define HB_MACRO_UNKN_VAR     16  /* requested variable doesn't exist */
 

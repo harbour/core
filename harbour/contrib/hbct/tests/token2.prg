@@ -82,24 +82,24 @@ PROCEDURE Main()
 
    // Some simple tests with global token environment
    ? '  Incremental tokenizing the string "' + cStr1 + '"'
-   ? '    TokenInit(@cStr1, ",", 1) == .T. ? ----> ' + LToC( TokenInit( @cStr1, ",", 1 ) )
-   ? '    TokenNum() == 6 ? ---------------------> ' + Str( TokenNum() )
-   ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
+   ? '    TokenInit( @cStr1, ",", 1 ) == .T. ? ----> ' + LToC( TokenInit( @cStr1, ",", 1 ) )
+   ? '    TokenNum() == 6 ? -----------------------> ' + Str( TokenNum() )
+   ? '      TokenEnd() ? --------------------------> ' + LToC( TokenEnd() )
    WHILE ! TokenEnd()
-      ? '      TokenNext(@cStr1)  ------------------> "' + TokenNext( @cStr1 ) + '"'
-      ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
+      ? '      TokenNext(@cStr1)  -----------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      TokenEnd() ? -----------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
-   ? '    rewind with TokenInit() == .T. ? ------> ' + LToC( TokenInit() )
-   ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
+   ? '    rewind with TokenInit() == .T. ? --------> ' + LToC( TokenInit() )
+   ? '      TokenEnd() ? --------------------------> ' + LToC( TokenEnd() )
    WHILE ! TokenEnd()
-      ? '      TokenNext(@cStr1)  ------------------> "' + TokenNext( @cStr1 ) + '"'
-      ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
+      ? '      TokenNext( @cStr1 ) ----------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      TokenEnd() ? -----------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
    ? '    access tokens directly with tokennext'
-   ? '      TokenNext(@cStr1,2) == "BB" ? -------> "' + TokenNext( @cStr1, 2 ) + '"'
-   ? '      TokenNext(@cStr1,4) == "DDDD" ? -----> "' + TokenNext( @cStr1, 4 ) + '"'
+   ? '      TokenNext( @cStr1, 2 ) == "BB" ? ------> "' + TokenNext( @cStr1, 2 ) + '"'
+   ? '      TokenNext( @cStr1, 4 ) == "DDDD" ? ----> "' + TokenNext( @cStr1, 4 ) + '"'
    ?
 
    ? "...Press any key..."
@@ -111,7 +111,7 @@ PROCEDURE Main()
    ? '    rewind with TokenInit() == .T. ? ------> ' + LToC( TokenInit() )
    ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
    WHILE ! TokenEnd()
-      ? '      TokenNext(@cStr3)  ------------------> "' + TokenNext( @cStr3 ) + '"'
+      ? '      TokenNext( @cStr3 ) ------------------> "' + TokenNext( @cStr3 ) + '"'
       ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?

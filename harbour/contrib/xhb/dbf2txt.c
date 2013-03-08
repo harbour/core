@@ -266,11 +266,12 @@ HB_FUNC( DBF2TEXT )
       if( nCount != -1 )
          nCount--;
 
-      /* DBSKIP() */
+      /* dbSkip() */
       SELF_SKIP( pArea, 1 );
    }
 
    /* Writing EOF */
-   hb_fsWriteLarge( handle, "\x1A", 1 );
+   if( hb_setGetEOF() )
+      hb_fsWriteLarge( handle, "\032", 1 );
    hb_itemRelease( pTmp );
 }

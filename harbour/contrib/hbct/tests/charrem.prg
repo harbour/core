@@ -63,10 +63,9 @@ PROCEDURE Main()
    ? "Begin test of CharRem()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharRem(" ", " 1  2  ") == "12"   ? ---> "' + CharRem( " ", " 1  2  " ) + '"'
-   ? '  CharRem("3y", "xyz123") == "xz12" ? ---> "' + CharRem( "3y", "xyz123" ) + '"'
+   ? '  CharRem( " ", " 1  2  " ) == "12"   ? ---> "' + CharRem( " ", " 1  2  " ) + '"'
+   ? '  CharRem( "3y", "xyz123" ) == "xz12" ? ---> "' + CharRem( "3y", "xyz123" ) + '"'
    ?
 
    ? "End test of CharRem()"

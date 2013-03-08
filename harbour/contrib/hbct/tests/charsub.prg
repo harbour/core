@@ -63,12 +63,11 @@ PROCEDURE Main()
    ? "Begin test of CharSub()"
    ?
 
-   // simple tests
    ? "Simple tests:"
-   ? '  CharAdd("123456789", Chr(1)) == "012345678" ? -> "' + CharSub( "123456789", Chr( 1 ) ) + '"'
-   ? '  CharAdd("123456789", Chr(1)+Chr(2)) == "002244668" ? -> "' + CharSub( "123456789", Chr( 1 ) + Chr( 2 ) ) + '"'
-   ? '  CharAdd("012345678", Chr(255)) == "123456789" ? -> "' + CharSub( "012345678", Chr( 255 ) ) + '"'
-   ? '  CharAdd("012345678", Chr(255)+Chr(254)) == "133557799" ? -> "' + CharSub( "012345678", Chr( 255 ) + Chr( 254 ) ) + '"'
+   ? '  CharAdd( "123456789", Chr( 1 ) ) == "012345678" ? -> "' + CharSub( "123456789", Chr( 1 ) ) + '"'
+   ? '  CharAdd( "123456789", Chr( 1 ) + Chr( 2 ) ) == "002244668" ? -> "' + CharSub( "123456789", Chr( 1 ) + Chr( 2 ) ) + '"'
+   ? '  CharAdd( "012345678", Chr( 255 ) ) == "123456789" ? -> "' + CharSub( "012345678", Chr( 255 ) ) + '"'
+   ? '  CharAdd( "012345678", Chr( 255 ) + Chr( 254 ) ) == "133557799" ? -> "' + CharSub( "012345678", Chr( 255 ) + Chr( 254 ) ) + '"'
 
    ? "End test of CharSub()"
    ?

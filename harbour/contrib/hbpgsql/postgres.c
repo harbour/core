@@ -512,7 +512,7 @@ HB_FUNC( PQGETLENGTH )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* PQMETADATA() positions for array returned */
+/* PQmetadata() positions for array returned */
 #define HBPG_META_FIELDNAME  1
 #define HBPG_META_FIELDTYPE  2
 #define HBPG_META_FIELDLEN   3

@@ -131,19 +131,6 @@
  *
  */
 
-/*
-     Some sample Clipper code which would use these functions is listed
-     below.  It will print out the contents of this file.
-
-              ft_FUse( "text.c" )
-              DO WHILE ! ft_FEof()
-                 ? ft_FReadLn()
-                 ft_FSkip()
-              ENDDO
-              ft_FUse()
-
- */
-
 /* up this number if you need more than 10 text file areas */
 #define TEXT_WORKAREAS  10
 /* raise or lower this number for best performance on your system
@@ -154,12 +141,6 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbstack.h"
-
-/* MSC compiler switch */
-#if defined( _MSC_VER )
-#pragma warning( disable : 4035 )
-#pragma warning( disable : 4704 )
-#endif
 
 typedef struct
 {

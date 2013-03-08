@@ -113,10 +113,6 @@ access of different SQL databases. Every SQL server (MySQL, PostgreSQL, etc.)
 has a corresponding SDD. SDD driver implements a specific part of data
 exchange interface between SQLBASE and SQL server.
 
-   A few additional functions are also implemented, ex. HB_SQLCONNECT().
-Usualy these functions are just a shorter version of corresponding rddInfo()
-call.
-
 
 
 3. Modifying database

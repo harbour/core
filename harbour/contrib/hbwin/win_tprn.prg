@@ -63,7 +63,7 @@
    TODO: Colour printing
          etc....
 
-   Peter Rees 21 January 2004 <peter@rees.co.nz>
+   Peter Rees 2004-01-21 <peter@rees.co.nz>
 */
 
 #include "hbclass.ch"
