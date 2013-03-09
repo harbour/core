@@ -17,7 +17,7 @@ PROCEDURE Main( cFile )
 
    oFile:Open()
    IF oFile:Error()
-      ? oFile:ErrorMsg( "FileRead: " )
+      ? oFile:ErrorMsg( "FileRead:" )
    ELSE
       DO WHILE oFile:MoreToRead()
          ? oFile:ReadLine()

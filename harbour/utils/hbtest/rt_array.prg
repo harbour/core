@@ -62,11 +62,11 @@ PROCEDURE Main_ARRAY()
 #ifndef __XPP__
    HBTEST ACopy()                         IS NIL
 #endif
-   HBTEST ACopy({}, "C")                  IS NIL
-   HBTEST ACopy("C", {})                  IS NIL
-   HBTEST ACopy({}, {})                   IS "{.[0].}"
-   HBTEST ACopy({}, ErrorNew())           IS "ERROR Object"
-   HBTEST ACopy(ErrorNew(), {})           IS "{.[0].}"
+   HBTEST ACopy( {}, "C" )                IS NIL
+   HBTEST ACopy( "C", {} )                IS NIL
+   HBTEST ACopy( {}, {} )                 IS "{.[0].}"
+   HBTEST ACopy( {}, ErrorNew() )         IS "ERROR Object"
+   HBTEST ACopy( ErrorNew(), {} )         IS "{.[0].}"
 #ifndef __XPP__
    HBTEST AClone()                        IS NIL
 #endif
@@ -88,13 +88,13 @@ PROCEDURE Main_ARRAY()
    HBTEST AScan( {} )                     IS 0
 #endif
    HBTEST AScan( {}, "" )                 IS 0
-   HBTEST AScan( ErrorNew(), "NOT_FOUND") IS 0
+   HBTEST AScan( ErrorNew(), "NOT_FOUND" ) IS 0
 #ifndef __XPP__
    HBTEST ASort()                         IS NIL
 #endif
-   HBTEST ASort(10)                       IS NIL
-   HBTEST ASort({})                       IS "{.[0].}"
-   HBTEST ASort(ErrorNew())               IS NIL
+   HBTEST ASort( 10 )                     IS NIL
+   HBTEST ASort( {} )                     IS "{.[0].}"
+   HBTEST ASort( ErrorNew() )             IS NIL
 #ifdef HB_CLP_STRICT
 #ifndef __XPP__
    HBTEST AFill()                         IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL "
@@ -220,72 +220,72 @@ PROCEDURE Main_ARRAY()
 
    /* AFill() */
 
-   HBTEST TAStr(AFill(TANew(),"X")       ) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",NIL,-2)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",NIL, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X",NIL, 3)) IS "XXX......."
-   HBTEST TAStr(AFill(TANew(),"X",NIL,20)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  0)   ) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  0,-2)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  0, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X",  0, 3)) IS "XXX......."
-   HBTEST TAStr(AFill(TANew(),"X",  0,20)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  1)   ) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  1,-2)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  1, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X",  1, 3)) IS "XXX......."
-   HBTEST TAStr(AFill(TANew(),"X",  1,20)) IS "XXXXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  3)   ) IS "..XXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X",  3,-2)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X",  3, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X",  3, 3)) IS "..XXX....."
-   HBTEST TAStr(AFill(TANew(),"X",  3,20)) IS "..XXXXXXXX"
-   HBTEST TAStr(AFill(TANew(),"X", -1)   ) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", -1,-2)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", -1, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", -1, 3)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", -1,20)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", 21)   ) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", 21,-2)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", 21, 0)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", 21, 3)) IS ".........."
-   HBTEST TAStr(AFill(TANew(),"X", 21,20)) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X" )          ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X", NIL, -2 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X", NIL,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X", NIL,  3 ) ) IS "XXX......."
+   HBTEST TAStr( AFill( TANew(), "X", NIL, 20 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   0 )     ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   0, -2 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   0,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",   0,  3 ) ) IS "XXX......."
+   HBTEST TAStr( AFill( TANew(), "X",   0, 20 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   1 )     ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   1, -2 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   1,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",   1,  3 ) ) IS "XXX......."
+   HBTEST TAStr( AFill( TANew(), "X",   1, 20 ) ) IS "XXXXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   3 )     ) IS "..XXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",   3, -2 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",   3,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",   3,  3 ) ) IS "..XXX....."
+   HBTEST TAStr( AFill( TANew(), "X",   3, 20 ) ) IS "..XXXXXXXX"
+   HBTEST TAStr( AFill( TANew(), "X",  -1 )     ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  -1, -2 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  -1,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  -1,  3 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  -1, 20 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  21 )     ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  21, -2 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  21,  0 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  21,  3 ) ) IS ".........."
+   HBTEST TAStr( AFill( TANew(), "X",  21, 20 ) ) IS ".........."
 
    /* ACopy() */
 
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1        )) IS "ABCDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  0    )) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3    )) IS "ABC......."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1, 20    )) IS "ABCDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3        )) IS "CDEFGHIJ.."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  0    )) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3    )) IS "CDE......."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3, 20    )) IS "CDEFGHIJ.."
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21        )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  0    )) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3    )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21, 20    )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,NIL,  1)) IS "ABCDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  0,  1)) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  0)) IS "ABC......."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  2)) IS ".ABC......"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  8)) IS ".......ABC"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3, 20)) IS ".........A"  /* Strange in CA-Cl*pper, it should return: ".........." */
-   HBTEST TAStr(ACopy(TARng(),TANew(),  1, 20,  1)) IS "ABCDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,NIL,  3)) IS "..CDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  0,  3)) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  0)) IS "CDE......."
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  2)) IS ".CDE......"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  8)) IS ".......CDE"
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3, 20)) IS ".........C"  /* Strange in CA-Cl*pper, it should return: ".........." */
-   HBTEST TAStr(ACopy(TARng(),TANew(),  3, 20,  3)) IS "..CDEFGHIJ"
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,NIL, 21)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  0, 21)) IS ".........."
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  0)) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  2)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".J........", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  8)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".......J..", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3, 20)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
-   HBTEST TAStr(ACopy(TARng(),TANew(), 21, 20, 21)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1          ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   0     ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   3     ) ) IS "ABC......."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,  20     ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3          ) ) IS "CDEFGHIJ.."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   0     ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   3     ) ) IS "CDE......."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,  20     ) ) IS "CDEFGHIJ.."
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21          ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   0     ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   3     ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,  20     ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1, NIL,  1 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   0,  1 ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   3,  0 ) ) IS "ABC......."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   3,  2 ) ) IS ".ABC......"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   3,  8 ) ) IS ".......ABC"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,   3, 20 ) ) IS ".........A"  /* Strange in CA-Cl*pper, it should return: ".........." */
+   HBTEST TAStr( ACopy( TARng(), TANew(),  1,  20,  1 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3, NIL,  3 ) ) IS "..CDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   0,  3 ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   3,  0 ) ) IS "CDE......."
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   3,  2 ) ) IS ".CDE......"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   3,  8 ) ) IS ".......CDE"
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,   3, 20 ) ) IS ".........C"  /* Strange in CA-Cl*pper, it should return: ".........." */
+   HBTEST TAStr( ACopy( TARng(), TANew(),  3,  20,  3 ) ) IS "..CDEFGHIJ"
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21, NIL, 21 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   0, 21 ) ) IS ".........."
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   3,  0 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   3,  2 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".J........", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   3,  8 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".......J..", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,   3, 20 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr( ACopy( TARng(), TANew(), 21,  20, 21 ) ) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
 
    /* ASort() */
 
@@ -293,64 +293,64 @@ PROCEDURE Main_ARRAY()
       sorting algorithms. Anyhow the results pattern should match.
       [vszakats] */
 #ifdef __HARBOUR__
-   HBTEST TAStr(ASort(TARRv(),,,{||NIL})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||hb_SToD()})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"0"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"1"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"2"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"a"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"A"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||""}))  IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"z"})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||.T.})) IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||.F.})) IS "FEIDGCHBJA"
-   HBTEST TAStr(ASort(TARRv(),,,{||2}))   IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||1}))   IS "DCBAEFIHGJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||0}))   IS "FEIDGCHBJA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "FEIDGCHBJA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "DCBAEFIHGJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "FEIDGCHBJA"
 #else
-   HBTEST TAStr(ASort(TARRv(),,,{||NIL})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||hb_SToD()})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"0"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"1"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"2"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"a"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"A"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||""}))  IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||"z"})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||.T.})) IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||.F.})) IS "DCEABJIHFG"
-   HBTEST TAStr(ASort(TARRv(),,,{||2}))   IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||1}))   IS "IHGFEDCBAJ"
-   HBTEST TAStr(ASort(TARRv(),,,{||0}))   IS "DCEABJIHFG"
+   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "DCEABJIHFG"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "IHGFEDCBAJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "DCEABJIHFG"
 #endif
-   HBTEST TAStr(ASort(TARRv()))           IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),NIL,NIL))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),NIL, -2))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),NIL,  0))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),NIL,  3))   IS "HIJGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(),NIL, 20))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(), -5    ))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), -5, -2))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), -5,  0))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), -5,  3))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), -5, 20))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(),  0    ))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),  0, -2))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),  0,  0))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),  0,  3))   IS "HIJGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(),  0, 20))   IS "ABCDEFGHIJ"
-   HBTEST TAStr(ASort(TARRv(),  5    ))   IS "JIHGABCDEF"
+   HBTEST TAStr( ASort( TARRv() ) )           IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(), NIL, NIL ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(), NIL,  -2 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(), NIL,   0 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(), NIL,   3 ) ) IS "HIJGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(), NIL,  20 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),  -5      ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  -5,  -2 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  -5,   0 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  -5,   3 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  -5,  20 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),   0      ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),   0,  -2 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),   0,   0 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),   0,   3 ) ) IS "HIJGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),   0,  20 ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),   5      ) ) IS "JIHGABCDEF"
 #ifdef __HARBOUR__
-   HBTEST TAStr(ASort(TARRv(),  5, -2))   IS "JIHGABCDEF"  /* CA-Cl*pper will crash or GPF on that line. */
+   HBTEST TAStr( ASort( TARRv(),   5,  -2 ) ) IS "JIHGABCDEF"  /* CA-Cl*pper will crash or GPF on that line. */
 #endif
-   HBTEST TAStr(ASort(TARRv(),  5,  0))   IS "JIHGABCDEF"
-   HBTEST TAStr(ASort(TARRv(),  5,  3))   IS "JIHGDEFCBA"
-   HBTEST TAStr(ASort(TARRv(),  5, 20))   IS "JIHGABCDEF"
-   HBTEST TAStr(ASort(TARRv(), 20    ))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), 20, -2))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), 20,  0))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), 20,  3))   IS "JIHGFEDCBA"
-   HBTEST TAStr(ASort(TARRv(), 20, 20))   IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),   5,   0 ) ) IS "JIHGABCDEF"
+   HBTEST TAStr( ASort( TARRv(),   5,   3 ) ) IS "JIHGDEFCBA"
+   HBTEST TAStr( ASort( TARRv(),   5,  20 ) ) IS "JIHGABCDEF"
+   HBTEST TAStr( ASort( TARRv(),  20      ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  20,  -2 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  20,   0 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  20,   3 ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),  20,  20 ) ) IS "JIHGFEDCBA"
 
    /* AScan() */
 
@@ -361,8 +361,8 @@ PROCEDURE Main_ARRAY()
 #endif
    HBTEST AScan( "A", "A" )               IS 0
    HBTEST AScan( "A", {|| .F. } )         IS 0
-   HBTEST AScan( {1,2,3}, {|| NIL } )     IS 0
-   HBTEST AScan( saAllTypes, scString   ) IS 1
+   HBTEST AScan( { 1, 2, 3 }, {|| NIL } ) IS 0
+   HBTEST AScan( saAllTypes, scString )   IS 1
 #ifdef __HARBOUR__
    HBTEST AScan( @saAllTypes, scString )  IS 1  /* Bug in CA-Cl*pper, it will return 0 */
    HBTEST AScan( saAllTypes, @scString )  IS 1  /* Bug in CA-Cl*pper, it will return 0 */
@@ -427,6 +427,7 @@ STATIC FUNCTION TASOSM2()
    RETURN cString + Str( Len( aArray ) ) + XToStrX( aArray )
 
 STATIC FUNCTION TANew( cChar, nLen )
+
    LOCAL aArray
    LOCAL tmp
 
@@ -449,6 +450,7 @@ STATIC FUNCTION TANew( cChar, nLen )
    RETURN aArray
 
 STATIC FUNCTION TARng( nLen )
+
    LOCAL aArray
    LOCAL tmp
 
@@ -465,6 +467,7 @@ STATIC FUNCTION TARng( nLen )
    RETURN aArray
 
 STATIC FUNCTION TARRv( nLen )
+
    LOCAL aArray
    LOCAL tmp
 
@@ -481,6 +484,7 @@ STATIC FUNCTION TARRv( nLen )
    RETURN aArray
 
 STATIC FUNCTION TAStr( aArray )
+
    LOCAL cString := ""
    LOCAL tmp
    LOCAL nLen := Len( aArray )

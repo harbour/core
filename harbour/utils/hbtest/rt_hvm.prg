@@ -257,135 +257,135 @@ PROCEDURE Main_HVM()
 
    /* <= */
 
-   HBTEST 2                   <= 1                   IS .F.
-   HBTEST 1                   <= 2                   IS .T.
-   HBTEST 2.0                 <= 2                   IS .T.
-   HBTEST 2                   <= 2.0                 IS .T.
-   HBTEST 2.5                 <= 3.7                 IS .T.
-   HBTEST 3.7                 <= 2.5                 IS .F.
-   HBTEST 10                  <= 10.50               IS .T.
-   HBTEST .F.                 <= .F.                 IS .T.
-   HBTEST .T.                 <= .F.                 IS .F.
-   HBTEST .F.                 <= .T.                 IS .T.
-   HBTEST hb_SToD("")         <= hb_SToD("")         IS .T.
-   HBTEST hb_SToD("")         <= hb_SToD("19800101") IS .T.
-   HBTEST hb_SToD("19800101") <= hb_SToD("")         IS .F.
-   HBTEST ""                  <= "AAA"               IS .T.
-   HBTEST "AAA"               <= ""                  IS .T.
-   HBTEST "AAA"               <= "AA"                IS .T.
-   HBTEST "AAA"               <= Chr(255)            IS .T.
-   HBTEST Chr(150)            <= Chr(255)            IS .T.
-   HBTEST "A"                 <= "a"                 IS .T.
-   HBTEST "A"                 <= "Z"                 IS .T.
-   HBTEST "Z"                 <= " "                 IS .F.
-   HBTEST Chr(0)              <= " "                 IS .T.
-   HBTEST "Hallo"             <= "Hello"             IS .T.
-   HBTEST "Hello"             <= "Hello"             IS .T.
-   HBTEST "Hell"              <= "Hello"             IS .T.
-   HBTEST "Hellow"            <= "Hello"             IS .T.
-   HBTEST "J"                 <= "Hello"             IS .F.
-   HBTEST ""                  <= "Hello"             IS .T.
-   HBTEST "J"                 <= ""                  IS .T.
-   HBTEST ""                  <= ""                  IS .T.
+   HBTEST 2                     <= 1                     IS .F.
+   HBTEST 1                     <= 2                     IS .T.
+   HBTEST 2.0                   <= 2                     IS .T.
+   HBTEST 2                     <= 2.0                   IS .T.
+   HBTEST 2.5                   <= 3.7                   IS .T.
+   HBTEST 3.7                   <= 2.5                   IS .F.
+   HBTEST 10                    <= 10.50                 IS .T.
+   HBTEST .F.                   <= .F.                   IS .T.
+   HBTEST .T.                   <= .F.                   IS .F.
+   HBTEST .F.                   <= .T.                   IS .T.
+   HBTEST hb_SToD( "" )         <= hb_SToD( "" )         IS .T.
+   HBTEST hb_SToD( "" )         <= hb_SToD( "19800101" ) IS .T.
+   HBTEST hb_SToD( "19800101" ) <= hb_SToD( "" )         IS .F.
+   HBTEST ""                    <= "AAA"                 IS .T.
+   HBTEST "AAA"                 <= ""                    IS .T.
+   HBTEST "AAA"                 <= "AA"                  IS .T.
+   HBTEST "AAA"                 <= Chr( 255 )            IS .T.
+   HBTEST Chr( 150 )            <= Chr( 255 )            IS .T.
+   HBTEST "A"                   <= "a"                   IS .T.
+   HBTEST "A"                   <= "Z"                   IS .T.
+   HBTEST "Z"                   <= " "                   IS .F.
+   HBTEST Chr( 0 )              <= " "                   IS .T.
+   HBTEST "Hallo"               <= "Hello"               IS .T.
+   HBTEST "Hello"               <= "Hello"               IS .T.
+   HBTEST "Hell"                <= "Hello"               IS .T.
+   HBTEST "Hellow"              <= "Hello"               IS .T.
+   HBTEST "J"                   <= "Hello"               IS .F.
+   HBTEST ""                    <= "Hello"               IS .T.
+   HBTEST "J"                   <= ""                    IS .T.
+   HBTEST ""                    <= ""                    IS .T.
 
    /* < */
 
-   HBTEST 2                   <  1                   IS .F.
-   HBTEST 1                   <  2                   IS .T.
-   HBTEST 2.0                 <  2                   IS .F.
-   HBTEST 2                   <  2.0                 IS .F.
-   HBTEST 2.5                 <  3.7                 IS .T.
-   HBTEST 3.7                 <  2.5                 IS .F.
-   HBTEST 10.50               <  10                  IS .F.
-   HBTEST .F.                 <  .F.                 IS .F.
-   HBTEST .T.                 <  .F.                 IS .F.
-   HBTEST .F.                 <  .T.                 IS .T.
-   HBTEST hb_SToD("")         <  hb_SToD("")         IS .F.
-   HBTEST hb_SToD("")         <  hb_SToD("19800101") IS .T.
-   HBTEST hb_SToD("19800101") <  hb_SToD("")         IS .F.
-   HBTEST ""                  <  "AAA"               IS .T.
-   HBTEST "AAA"               <  ""                  IS .F.
-   HBTEST "AAA"               <  "AA"                IS .F.
-   HBTEST "AAA"               <  Chr(255)            IS .T.
-   HBTEST Chr(150)            <  Chr(255)            IS .T.
-   HBTEST "A"                 <  "a"                 IS .T.
-   HBTEST "A"                 <  "Z"                 IS .T.
-   HBTEST "Z"                 <  "A"                 IS .F.
-   HBTEST Chr(0)              <  " "                 IS .T.
-   HBTEST "Hallo"             <  "Hello"             IS .T.
-   HBTEST "Hello"             <  "Hello"             IS .F.
-   HBTEST "Hell"              <  "Hello"             IS .T.
-   HBTEST "Hellow"            <  "Hello"             IS .F.
-   HBTEST "J"                 <  "Hello"             IS .F.
-   HBTEST ""                  <  "Hello"             IS .T.
-   HBTEST "J"                 <  ""                  IS .F.
-   HBTEST ""                  <  ""                  IS .F.
+   HBTEST 2                     <  1                     IS .F.
+   HBTEST 1                     <  2                     IS .T.
+   HBTEST 2.0                   <  2                     IS .F.
+   HBTEST 2                     <  2.0                   IS .F.
+   HBTEST 2.5                   <  3.7                   IS .T.
+   HBTEST 3.7                   <  2.5                   IS .F.
+   HBTEST 10.50                 <  10                    IS .F.
+   HBTEST .F.                   <  .F.                   IS .F.
+   HBTEST .T.                   <  .F.                   IS .F.
+   HBTEST .F.                   <  .T.                   IS .T.
+   HBTEST hb_SToD( "" )         <  hb_SToD( "" )         IS .F.
+   HBTEST hb_SToD( "" )         <  hb_SToD( "19800101" ) IS .T.
+   HBTEST hb_SToD( "19800101" ) <  hb_SToD( "" )         IS .F.
+   HBTEST ""                    <  "AAA"                 IS .T.
+   HBTEST "AAA"                 <  ""                    IS .F.
+   HBTEST "AAA"                 <  "AA"                  IS .F.
+   HBTEST "AAA"                 <  Chr( 255 )            IS .T.
+   HBTEST Chr( 150 )            <  Chr( 255 )            IS .T.
+   HBTEST "A"                   <  "a"                   IS .T.
+   HBTEST "A"                   <  "Z"                   IS .T.
+   HBTEST "Z"                   <  "A"                   IS .F.
+   HBTEST Chr( 0 )              <  " "                   IS .T.
+   HBTEST "Hallo"               <  "Hello"               IS .T.
+   HBTEST "Hello"               <  "Hello"               IS .F.
+   HBTEST "Hell"                <  "Hello"               IS .T.
+   HBTEST "Hellow"              <  "Hello"               IS .F.
+   HBTEST "J"                   <  "Hello"               IS .F.
+   HBTEST ""                    <  "Hello"               IS .T.
+   HBTEST "J"                   <  ""                    IS .F.
+   HBTEST ""                    <  ""                    IS .F.
 
    /* >= */
 
-   HBTEST 2                   >= 1                   IS .T.
-   HBTEST 1                   >= 2                   IS .F.
-   HBTEST 2.0                 >= 2                   IS .T.
-   HBTEST 2                   >= 2.0                 IS .T.
-   HBTEST 2.5                 >= 3.7                 IS .F.
-   HBTEST 3.7                 >= 2.5                 IS .T.
-   HBTEST 10.50               >= 10                  IS .T.
-   HBTEST .F.                 >= .F.                 IS .T.
-   HBTEST .T.                 >= .F.                 IS .T.
-   HBTEST .F.                 >= .T.                 IS .F.
-   HBTEST hb_SToD("")         >= hb_SToD("")         IS .T.
-   HBTEST hb_SToD("")         >= hb_SToD("19800101") IS .F.
-   HBTEST hb_SToD("19800101") >= hb_SToD("")         IS .T.
-   HBTEST ""                  >= "AAA"               IS .F.
-   HBTEST "AAA"               >= ""                  IS .T.
-   HBTEST "AAA"               >= "AA"                IS .T.
-   HBTEST "AAA"               >= Chr(255)            IS .F.
-   HBTEST Chr(150)            >= Chr(255)            IS .F.
-   HBTEST "A"                 >= "a"                 IS .F.
-   HBTEST "A"                 >= "Z"                 IS .F.
-   HBTEST "Z"                 >= "A"                 IS .T.
-   HBTEST Chr(0)              >= " "                 IS .F.
-   HBTEST "Hallo"             >= "Hello"             IS .F.
-   HBTEST "Hello"             >= "Hello"             IS .T.
-   HBTEST "Hell"              >= "Hello"             IS .F.
-   HBTEST "Hellow"            >= "Hello"             IS .T.
-   HBTEST "J"                 >= "Hello"             IS .T.
-   HBTEST ""                  >= "Hello"             IS .F.
-   HBTEST "J"                 >= ""                  IS .T.
-   HBTEST ""                  >= ""                  IS .T.
+   HBTEST 2                     >= 1                     IS .T.
+   HBTEST 1                     >= 2                     IS .F.
+   HBTEST 2.0                   >= 2                     IS .T.
+   HBTEST 2                     >= 2.0                   IS .T.
+   HBTEST 2.5                   >= 3.7                   IS .F.
+   HBTEST 3.7                   >= 2.5                   IS .T.
+   HBTEST 10.50                 >= 10                    IS .T.
+   HBTEST .F.                   >= .F.                   IS .T.
+   HBTEST .T.                   >= .F.                   IS .T.
+   HBTEST .F.                   >= .T.                   IS .F.
+   HBTEST hb_SToD( "" )         >= hb_SToD( "" )         IS .T.
+   HBTEST hb_SToD( "" )         >= hb_SToD( "19800101" ) IS .F.
+   HBTEST hb_SToD( "19800101" ) >= hb_SToD( "" )         IS .T.
+   HBTEST ""                    >= "AAA"                 IS .F.
+   HBTEST "AAA"                 >= ""                    IS .T.
+   HBTEST "AAA"                 >= "AA"                  IS .T.
+   HBTEST "AAA"                 >= Chr( 255 )            IS .F.
+   HBTEST Chr( 150 )            >= Chr( 255 )            IS .F.
+   HBTEST "A"                   >= "a"                   IS .F.
+   HBTEST "A"                   >= "Z"                   IS .F.
+   HBTEST "Z"                   >= "A"                   IS .T.
+   HBTEST Chr( 0 )              >= " "                   IS .F.
+   HBTEST "Hallo"               >= "Hello"               IS .F.
+   HBTEST "Hello"               >= "Hello"               IS .T.
+   HBTEST "Hell"                >= "Hello"               IS .F.
+   HBTEST "Hellow"              >= "Hello"               IS .T.
+   HBTEST "J"                   >= "Hello"               IS .T.
+   HBTEST ""                    >= "Hello"               IS .F.
+   HBTEST "J"                   >= ""                    IS .T.
+   HBTEST ""                    >= ""                    IS .T.
 
    /* > */
 
-   HBTEST 2                   >  1                   IS .T.
-   HBTEST 1                   >  2                   IS .F.
-   HBTEST 2.0                 >  2                   IS .F.
-   HBTEST 2                   >  2.0                 IS .F.
-   HBTEST 2.5                 >  3.7                 IS .F.
-   HBTEST 3.7                 >  2.5                 IS .T.
-   HBTEST 10.50               >  10                  IS .T.
-   HBTEST .F.                 >  .F.                 IS .F.
-   HBTEST .T.                 >  .F.                 IS .T.
-   HBTEST .F.                 >  .T.                 IS .F.
-   HBTEST hb_SToD("")         >  hb_SToD("")         IS .F.
-   HBTEST hb_SToD("")         >  hb_SToD("19800101") IS .F.
-   HBTEST hb_SToD("19800101") >  hb_SToD("")         IS .T.
-   HBTEST ""                  >  "AAA"               IS .F.
-   HBTEST "AAA"               >  ""                  IS .F.
-   HBTEST "AAA"               >  "AA"                IS .F.
-   HBTEST "AAA"               >  Chr(255)            IS .F.
-   HBTEST Chr(150)            >  Chr(255)            IS .F.
-   HBTEST "A"                 >  "a"                 IS .F.
-   HBTEST "A"                 >  "Z"                 IS .F.
-   HBTEST "Z"                 >  "A"                 IS .T.
-   HBTEST Chr(0)              >  " "                 IS .F.
-   HBTEST "Hallo"             >  "Hello"             IS .F.
-   HBTEST "Hello"             >  "Hello"             IS .F.
-   HBTEST "Hell"              >  "Hello"             IS .F.
-   HBTEST "Hellow"            >  "Hello"             IS .F.
-   HBTEST "J"                 >  "Hello"             IS .T.
-   HBTEST ""                  >  "Hello"             IS .F.
-   HBTEST "J"                 >  ""                  IS .F.
-   HBTEST ""                  >  ""                  IS .F.
+   HBTEST 2                     >  1                     IS .T.
+   HBTEST 1                     >  2                     IS .F.
+   HBTEST 2.0                   >  2                     IS .F.
+   HBTEST 2                     >  2.0                   IS .F.
+   HBTEST 2.5                   >  3.7                   IS .F.
+   HBTEST 3.7                   >  2.5                   IS .T.
+   HBTEST 10.50                 >  10                    IS .T.
+   HBTEST .F.                   >  .F.                   IS .F.
+   HBTEST .T.                   >  .F.                   IS .T.
+   HBTEST .F.                   >  .T.                   IS .F.
+   HBTEST hb_SToD( "" )         >  hb_SToD( "" )         IS .F.
+   HBTEST hb_SToD( "" )         >  hb_SToD( "19800101" ) IS .F.
+   HBTEST hb_SToD( "19800101" ) >  hb_SToD( "" )         IS .T.
+   HBTEST ""                    >  "AAA"                 IS .F.
+   HBTEST "AAA"                 >  ""                    IS .F.
+   HBTEST "AAA"                 >  "AA"                  IS .F.
+   HBTEST "AAA"                 >  Chr( 255 )            IS .F.
+   HBTEST Chr( 150 )            >  Chr( 255 )            IS .F.
+   HBTEST "A"                   >  "a"                   IS .F.
+   HBTEST "A"                   >  "Z"                   IS .F.
+   HBTEST "Z"                   >  "A"                   IS .T.
+   HBTEST Chr( 0 )              >  " "                   IS .F.
+   HBTEST "Hallo"               >  "Hello"               IS .F.
+   HBTEST "Hello"               >  "Hello"               IS .F.
+   HBTEST "Hell"                >  "Hello"               IS .F.
+   HBTEST "Hellow"              >  "Hello"               IS .F.
+   HBTEST "J"                   >  "Hello"               IS .T.
+   HBTEST ""                    >  "Hello"               IS .F.
+   HBTEST "J"                   >  ""                    IS .F.
+   HBTEST ""                    >  ""                    IS .F.
 
    /* =, == */
 

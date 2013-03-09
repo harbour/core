@@ -3,10 +3,7 @@
  */
 
 /*
- * $Doc$
- * $Description$  Debug function tests.
- *                Based on classes.prg
- * $End$
+ * Debug function tests
  *
  * Written by Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
@@ -109,10 +106,7 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
    RETURN NIL
 
 
-/* $Doc$
- * $FuncName$     <oForm> TForm()
- * $Description$  Returns TForm object
- * $End$ */
+/* TForm() -> <oTForm> */
 
 FUNCTION TForm()
 
@@ -139,11 +133,6 @@ FUNCTION TForm()
    RETURN s_oClass:Instance()                  // builds an object of this class
 
 
-/* $Doc$
- * $FuncName$     <oForm> TForm:New()
- * $Description$  Constructor
- * $End$ */
-
 STATIC FUNCTION New()
 
    LOCAL Self := QSelf()
@@ -154,12 +143,6 @@ STATIC FUNCTION New()
    ::nRight  := 40
 
    RETURN Self
-
-
-/* $Doc$
- * $FuncName$     TForm:Show()
- * $Description$  Show a form
- * $End$ */
 
 STATIC FUNCTION Show()
 

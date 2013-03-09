@@ -56,6 +56,7 @@
 #require "hbct"
 #else
 #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_BChar( <n> ) Chr( <n> )
 #endif
 
 PROCEDURE Main()
@@ -68,13 +69,13 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharRll( Chr( 1 ) + Chr(  2 ) + Chr(  4 ) + Chr(  8 ) + Chr(  16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) =='
-   ? '           Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr(  1 ) + Chr(  2 ) + Chr(   4 ) ? -->'
+   ? '  CharRll( hb_BChar( 1 ) + hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(  8 ) + hb_BChar(  16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 ) =='
+   ? '           hb_BChar( 8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ) + hb_BChar(  1 ) + hb_BChar(  2 ) + hb_BChar(   4 ) ? -->'
 
    ? '          '
-   cStr := CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+   cStr := CharRll( hb_BChar( 1 ) + hb_BChar( 2 ) + hb_BChar( 4 ) + hb_BChar( 8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
-      ?? "Chr( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
+      ?? "hb_BChar( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
       IF ni < Len( cStr )
          ?? " + "
       ENDIF

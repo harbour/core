@@ -52,63 +52,48 @@
 
 #include "hboo.ch"
 
-/* $Doc$
- * $FuncName$     <cOut> ToChar( <xTxt>, [cSeparator], [lDebug] )
- * $Description$  Convert to character
- * $Arguments$    <xTxt>       : Item to write
- *                [cSeparator] : Separator for arrays
- *                [lDebug]     : .T. -> Write debug output
+/*
+ * Convert to character
+ *
+ * ToChar( <xTxt>, [cSeparator], [lDebug] ) --> <cOut>
+ *   <xTxt>       : Item to write
+ *   [cSeparator] : Separator for arrays
+ *   [lDebug]     : .T. -> Write debug output
  *
  * In DEBUG mode :
  *
  * It will show the xItem according to the following format :
  *
  * <num>                        Numerical
- * dd/mm/yyyy                   Date
+ * yyyy-mm-dd                   Date
  * "<chr>"                      Character
  * {<el1>, <el2>, ...}          Array
  * NIL                          NIL
  * .T. / .F.                    Boolean
  * <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ... }
  *                              Object
- *
- *
- * $End$ */
+ */
 
 FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
-   LOCAL cValTxt
    LOCAL cOut
    LOCAL n
    LOCAL nLen
    LOCAL aData
 
    hb_default( @cSeparator, " " )
-   hb_default( @lDebug,     .F. )
+   hb_default( @lDebug, .F. )
 
-   cValTxt    := ValType( xTxt )
+   SWITCH ValType( xTxt )
+   CASE "C"
+   CASE "M" ; RETURN iif( lDebug, '"' + xTxt + '"', xTxt )
+   CASE "N" ; RETURN hb_ntos( xTxt )
+   CASE "U" ; RETURN iif( lDebug, "NIL", "" )
+   CASE "D" ; RETURN hb_DToC( xTxt, "yyyy-mm-dd" )
+   CASE "L" ; RETURN iif( lDebug, iif( xTxt, ".T.", ".F." ), iif( xTxt, "True", "False" ) )
+   CASE "B" ; RETURN iif( lDebug, "Block", Eval( xTxt ) )
 
-   DO CASE
-   CASE cValTxt == "C" .OR. cValTxt == "M"       // Character
-      cOut := iif( lDebug, '"' + xTxt + '"', xTxt )
-
-   CASE cValTxt == "N"                         // Numeric
-      cOut := hb_ntos( xTxt )
-
-   CASE cValTxt == "U"                         // Nothing to write
-      cOut := iif( lDebug, "NIL", "" )
-
-   CASE cValTxt == "D"                         // Date
-      cOut := Transform( xTxt, "" )
-
-   CASE cValTxt == "L"                         // Logical
-      IF lDebug
-         cOut := iif( xTxt, ".T.", ".F." )
-      ELSE
-         cOut := iif( xTxt, "True", "False" )
-      ENDIF
-
-   CASE cValTxt == "A"                         // Array
+   CASE "A"
       IF lDebug
          cOut := "{"
       ELSE
@@ -124,15 +109,9 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
       IF lDebug
          cOut += "}"
       ENDIF
+      EXIT
 
-   CASE cValTxt == "B"                         // Codeblock
-      IF lDebug
-         cOut := "Block"
-      ELSE
-         cOut := Eval( xTxt )
-      ENDIF
-
-   CASE cValTxt == "O"                         // Object
+   CASE "O"
       IF lDebug
          cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
          aData := __objGetValueList( xTxt )
@@ -148,17 +127,14 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
       ELSE
          cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN cOut
 
-//
-// <xItem> Debug( <xItem> )
-//
 // Non-volatile debugging function showing contents of xItem and returing
 // passed argument.
-//
 
 FUNCTION Debug( xItem )
 

@@ -54,6 +54,8 @@
 
 #ifdef __HARBOUR__
 #require "hbct"
+#else
+#define hb_BChar( <n> ) Chr( <n> )
 #endif
 
 PROCEDURE Main()
@@ -68,8 +70,8 @@ PROCEDURE Main()
    ? "Simple tests:"
    ? '  TabExpand( "-" + Chr( 9 ) + "!" )            == "-       !" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!" )            + '"'
    ? '  TabExpand( "----" + Chr( 9 ) + "!" )         == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!" )         + '"'
-   ? '  TabExpand( "-" + Chr( 9) + "!",, "+" )       == "-+++++++!" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
-   ? '  TabExpand( "-" + Chr( 9) + "!", 4 )          == "-   !"     ? -> "' + TabExpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
+   ? '  TabExpand( "-" + Chr( 9 ) + "!",, "+" )      == "-+++++++!" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
+   ? '  TabExpand( "-" + Chr( 9 ) + "!", 4 )         == "-   !"     ? -> "' + TabExpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
    ? '  TabExpand( "----" + Chr( 9 ) + "!", 8 )      == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8 )      + '"'
    ? '  TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) == "----++++!" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) + '"'
    ?
@@ -131,10 +133,10 @@ PROCEDURE Main()
    ?
 
 #if 0
-   ? "Test with a MEMOEDITed string:"
+   ? "Test with a MemoEdit()-ed string:"
    ? "  Now, a MemoEdit() will start. Please type a text, use tab characters"
    ? "  and make sure, you make use of soft and hard returns !"
-   ? "  ...press any key to start the memoedit now..."
+   ? "  ...press any key to start the MemoEdit() now..."
    ?
    Inkey( 0 )
    CLS
@@ -143,7 +145,7 @@ PROCEDURE Main()
    CLS
    ? "  Now printing the expanded text using a tab length of 4 and soft CRs"
    cStr1 := TabExpand( cStr, 4, "+",,, .F. )
-   cStr1 := StrTran( cStr, Chr( 141 ), hb_eol() )
+   cStr1 := StrTran( cStr, hb_BChar( 141 ), hb_eol() )
 
    FOR ni := 1 TO MLCount( cStr1, 59, 4, .T. )
       ? "  " + Str( ni ) + ": " + MemoLine( cStr1, 59, ni, 4, .T. )

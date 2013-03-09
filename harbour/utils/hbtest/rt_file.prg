@@ -61,6 +61,7 @@
          rearrange them. */
 
 PROCEDURE Main_FILE()
+
    LOCAL cFileName := "$$FILEIO.TMP"
    LOCAL nFlags
 
@@ -72,146 +73,146 @@ PROCEDURE Main_FILE()
    nFlags := FC_NORMAL
    fhnd := FCreate( cFileName, nFlags )
 
-   HBTEST FError()                                                 IS 0
-   HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )               IS "E: 0      R: 12"
-   HBTEST TESTFIER( FWrite( fhnd, "(123" + Chr(0) + "4567890)" ) ) IS "E: 0      R: 13"
+   HBTEST FError()                                                   IS 0
+   HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
+   HBTEST TESTFIER( FWrite( fhnd, "(123" + Chr( 0 ) + "4567890)" ) ) IS "E: 0      R: 13"
 #ifndef __XPP__
-   HBTEST TESTFIER( FSeek( fhnd ) )                                IS "E: 0      R: 0"
+   HBTEST TESTFIER( FSeek( fhnd ) )                                  IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FSeek( fhnd, 5 ) )                             IS "E: 0      R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_SET ) )                    IS "E: 25     R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -10, FS_SET ) )                   IS "E: 25     R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -100, FS_SET ) )                  IS "E: 25     R: 5"
-   HBTEST TESTFIER( FWrite( fhnd, "!" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 1 ) )                             IS "E: 0      R: 1"
-   HBTEST TESTFIER( FWrite( fhnd, "A" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 2, FS_SET ) )                     IS "E: 0      R: 2"
-   HBTEST TESTFIER( FWrite( fhnd, "B" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_RELATIVE ) )                IS "E: 0      R: 6"
-   HBTEST TESTFIER( FWrite( fhnd, "C" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_RELATIVE ) )               IS "E: 0      R: 6"
-   HBTEST TESTFIER( FWrite( fhnd, "D" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                     IS "E: 0      R: 28"
-   HBTEST TESTFIER( FWrite( fhnd, "E" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_END ) )                    IS "E: 0      R: 28"
-   HBTEST TESTFIER( FWrite( fhnd, "F" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS "E: 0      R: 0"
+   HBTEST TESTFIER( FSeek( fhnd, 5 ) )                               IS "E: 0      R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_SET ) )                      IS "E: 25     R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -10, FS_SET ) )                     IS "E: 25     R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -100, FS_SET ) )                    IS "E: 25     R: 5"
+   HBTEST TESTFIER( FWrite( fhnd, "!" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 1 ) )                               IS "E: 0      R: 1"
+   HBTEST TESTFIER( FWrite( fhnd, "A" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 2, FS_SET ) )                       IS "E: 0      R: 2"
+   HBTEST TESTFIER( FWrite( fhnd, "B" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_RELATIVE ) )                  IS "E: 0      R: 6"
+   HBTEST TESTFIER( FWrite( fhnd, "C" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_RELATIVE ) )                 IS "E: 0      R: 6"
+   HBTEST TESTFIER( FWrite( fhnd, "D" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                       IS "E: 0      R: 28"
+   HBTEST TESTFIER( FWrite( fhnd, "E" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_END ) )                      IS "E: 0      R: 28"
+   HBTEST TESTFIER( FWrite( fhnd, "F" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS "E: 0      R: 0"
 #ifndef __XPP__
-   HBTEST TESTFIER( FRead( fhnd, mnLongP ) )                       IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, mnLongP ) )                         IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                   IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                     IS "E: 0      R: 0"
 #ifndef __XPP__
-   HBTEST TESTFIER( FRead( fhnd, cBuff4 ) )                        IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, cBuff4 ) )                          IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, cBuff4, 2 ) )                     IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, cBuff4, 2 ) )                       IS "E: 0      R: 0"
 #ifdef __CLIPPER__
-// HBTEST TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )    IS "E: 0      R: 0"
+// HBTEST TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )      IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 1000 ) )                 IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 3 ) )                    IS 'E: 0      R: 3'
-   HBTEST TESTFIER( FRead( fhnd, @cBuff100, 100 ) )                IS 'E: 0      R: 26'
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FReadStr( fhnd, 4 ) )                          IS 'E: 0      R: ">AB3"'
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FReadStr( fhnd, 100 ) )                        IS 'E: 0      R: ">AB34!D7890<(123"'
-   HBTEST TESTFIER( FSeek( fhnd, 1, FS_RELATIVE ) )                IS 'E: 0      R: 30'
-   HBTEST TESTFIER( FReadStr( fhnd, 2 ) )                          IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                    IS 'E: 0      R: 25'
-   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                          IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                         IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                     IS 'E: 0      R: 29'
-   HBTEST TESTFIER( FWrite( fhnd, "_-_-_-_-_-_-_" ) )              IS 'E: 0      R: 13'
-   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                    IS 'E: 0      R: 38'
-   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                          IS 'E: 0      R: "-"'
-   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                         IS 'E: 0      R: "_-_"'
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                     IS 'E: 0      R: 45'
-   HBTEST TESTFIER( FWrite( fhnd, "V" ) )                          IS 'E: 0      R: 1'
-   HBTEST TESTFIER( FSeek( fhnd, -3, FS_END ) )                    IS 'E: 0      R: 43'
-   HBTEST TESTFIER( FWrite( fhnd, "W" ) )                          IS 'E: 0      R: 1'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 1000 ) )                   IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 3 ) )                      IS 'E: 0      R: 3'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff100, 100 ) )                  IS 'E: 0      R: 26'
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FReadStr( fhnd, 4 ) )                            IS 'E: 0      R: ">AB3"'
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FReadStr( fhnd, 100 ) )                          IS 'E: 0      R: ">AB34!D7890<(123"'
+   HBTEST TESTFIER( FSeek( fhnd, 1, FS_RELATIVE ) )                  IS 'E: 0      R: 30'
+   HBTEST TESTFIER( FReadStr( fhnd, 2 ) )                            IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                      IS 'E: 0      R: 25'
+   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                            IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                           IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                       IS 'E: 0      R: 29'
+   HBTEST TESTFIER( FWrite( fhnd, "_-_-_-_-_-_-_" ) )                IS 'E: 0      R: 13'
+   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                      IS 'E: 0      R: 38'
+   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                            IS 'E: 0      R: "-"'
+   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                           IS 'E: 0      R: "_-_"'
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                       IS 'E: 0      R: 45'
+   HBTEST TESTFIER( FWrite( fhnd, "V" ) )                            IS 'E: 0      R: 1'
+   HBTEST TESTFIER( FSeek( fhnd, -3, FS_END ) )                      IS 'E: 0      R: 43'
+   HBTEST TESTFIER( FWrite( fhnd, "W" ) )                            IS 'E: 0      R: 1'
 #ifndef __XPP__
-   HBTEST TESTFIER( FClose() )                                     IS 'E: 0      R: .F.'
+   HBTEST TESTFIER( FClose() )                                       IS 'E: 0      R: .F.'
 #endif
-   HBTEST TESTFIER( FClose( fhnd ) )                               IS 'E: 0      R: .T.'
-   HBTEST TESTFIER( FClose( fhnd ) )                               IS 'E: 6      R: .F.'
-   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                     IS 'E: 2      R: -1'
-   HBTEST TESTFIER( FErase( 1 ) )                                  IS 'E: 3      R: -1'
-   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                     IS 'E: 2      R: -1'
-   HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )               IS 'E: 2      R: -1'
-   HBTEST TESTFIER( FOpen( "NOT_HERE.$$$" ) )                      IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FClose( fhnd ) )                                 IS 'E: 0      R: .T.'
+   HBTEST TESTFIER( FClose( fhnd ) )                                 IS 'E: 6      R: .F.'
+   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                       IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FErase( 1 ) )                                    IS 'E: 3      R: -1'
+   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                       IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )                 IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FOpen( "NOT_HERE.$$$" ) )                        IS 'E: 2      R: -1'
 
    nFlags := FO_READWRITE
    fhnd := FOpen( cFileName, nFlags )
 
-   HBTEST FError()                                                 IS 0
-   HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )               IS "E: 0      R: 12"
-   HBTEST TESTFIER( FWrite( fhnd, "(123" + Chr(0) + "4567890)" ) ) IS "E: 0      R: 13"
+   HBTEST FError()                                                   IS 0
+   HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
+   HBTEST TESTFIER( FWrite( fhnd, "(123" + Chr( 0 ) + "4567890)" ) ) IS "E: 0      R: 13"
 #ifndef __XPP__
-   HBTEST TESTFIER( FSeek( fhnd ) )                                IS "E: 0      R: 0"
+   HBTEST TESTFIER( FSeek( fhnd ) )                                  IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FSeek( fhnd, 5 ) )                             IS "E: 0      R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_SET ) )                    IS "E: 25     R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -10, FS_SET ) )                   IS "E: 25     R: 5"
-   HBTEST TESTFIER( FSeek( fhnd, -100, FS_SET ) )                  IS "E: 25     R: 5"
-   HBTEST TESTFIER( FWrite( fhnd, "!" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 1 ) )                             IS "E: 0      R: 1"
-   HBTEST TESTFIER( FWrite( fhnd, "A" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 2, FS_SET ) )                     IS "E: 0      R: 2"
-   HBTEST TESTFIER( FWrite( fhnd, "B" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_RELATIVE ) )                IS "E: 0      R: 6"
-   HBTEST TESTFIER( FWrite( fhnd, "C" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_RELATIVE ) )               IS "E: 0      R: 6"
-   HBTEST TESTFIER( FWrite( fhnd, "D" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                     IS "E: 0      R: 49"
-   HBTEST TESTFIER( FWrite( fhnd, "E" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, -1, FS_END ) )                    IS "E: 0      R: 49"
-   HBTEST TESTFIER( FWrite( fhnd, "F" ) )                          IS "E: 0      R: 1"
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS "E: 0      R: 0"
+   HBTEST TESTFIER( FSeek( fhnd, 5 ) )                               IS "E: 0      R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_SET ) )                      IS "E: 25     R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -10, FS_SET ) )                     IS "E: 25     R: 5"
+   HBTEST TESTFIER( FSeek( fhnd, -100, FS_SET ) )                    IS "E: 25     R: 5"
+   HBTEST TESTFIER( FWrite( fhnd, "!" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 1 ) )                               IS "E: 0      R: 1"
+   HBTEST TESTFIER( FWrite( fhnd, "A" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 2, FS_SET ) )                       IS "E: 0      R: 2"
+   HBTEST TESTFIER( FWrite( fhnd, "B" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_RELATIVE ) )                  IS "E: 0      R: 6"
+   HBTEST TESTFIER( FWrite( fhnd, "C" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_RELATIVE ) )                 IS "E: 0      R: 6"
+   HBTEST TESTFIER( FWrite( fhnd, "D" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                       IS "E: 0      R: 49"
+   HBTEST TESTFIER( FWrite( fhnd, "E" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, -1, FS_END ) )                      IS "E: 0      R: 49"
+   HBTEST TESTFIER( FWrite( fhnd, "F" ) )                            IS "E: 0      R: 1"
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS "E: 0      R: 0"
 #ifndef __XPP__
-   HBTEST TESTFIER( FRead( fhnd, mnLongP ) )                       IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, mnLongP ) )                         IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                   IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, @mnLongP, 2 ) )                     IS "E: 0      R: 0"
 #ifndef __XPP__
-   HBTEST TESTFIER( FRead( fhnd, cBuff4 ) )                        IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, cBuff4 ) )                          IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, cBuff4, 2 ) )                     IS "E: 0      R: 0"
+   HBTEST TESTFIER( FRead( fhnd, cBuff4, 2 ) )                       IS "E: 0      R: 0"
 #ifdef __CLIPPER__
-// HBTEST TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )    IS "E: 0      R: 0"
+// HBTEST TESTFIER( FRead( fhnd, @cBuff4, Len( cBuff4 ) + 1 ) )      IS "E: 0      R: 0"
 #endif
-   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 1000 ) )                 IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 3 ) )                    IS 'E: 0      R: 3'
-   HBTEST TESTFIER( FRead( fhnd, @cBuff100, 100 ) )                IS 'E: 0      R: 47'
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FReadStr( fhnd, 4 ) )                          IS 'E: 0      R: ">AB3"'
-   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                             IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FReadStr( fhnd, 100 ) )                        IS 'E: 0      R: ">AB34!D7890<(123"'
-   HBTEST TESTFIER( FSeek( fhnd, 1, FS_RELATIVE ) )                IS 'E: 0      R: 51'
-   HBTEST TESTFIER( FReadStr( fhnd, 2 ) )                          IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                    IS 'E: 0      R: 46'
-   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                          IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                         IS 'E: 0      R: ""'
-   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                     IS 'E: 0      R: 50'
-   HBTEST TESTFIER( FWrite( fhnd, "_-_-_-_-_-_-_" ) )              IS 'E: 0      R: 13'
-   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                    IS 'E: 0      R: 59'
-   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                          IS 'E: 0      R: "-"'
-   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                         IS 'E: 0      R: "_-_"'
-   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                     IS 'E: 0      R: 66'
-   HBTEST TESTFIER( FWrite( fhnd, "V" ) )                          IS 'E: 0      R: 1'
-   HBTEST TESTFIER( FSeek( fhnd, -3, FS_END ) )                    IS 'E: 0      R: 64'
-   HBTEST TESTFIER( FWrite( fhnd, "W" ) )                          IS 'E: 0      R: 1'
-   HBTEST TESTFIER( FWrite( fhnd, "" ) )                           IS 'E: 0      R: 0'
-   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                     IS 'E: 0      R: 65'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 1000 ) )                   IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff4, 3 ) )                      IS 'E: 0      R: 3'
+   HBTEST TESTFIER( FRead( fhnd, @cBuff100, 100 ) )                  IS 'E: 0      R: 47'
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FReadStr( fhnd, 4 ) )                            IS 'E: 0      R: ">AB3"'
+   HBTEST TESTFIER( FSeek( fhnd, 0 ) )                               IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FReadStr( fhnd, 100 ) )                          IS 'E: 0      R: ">AB34!D7890<(123"'
+   HBTEST TESTFIER( FSeek( fhnd, 1, FS_RELATIVE ) )                  IS 'E: 0      R: 51'
+   HBTEST TESTFIER( FReadStr( fhnd, 2 ) )                            IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                      IS 'E: 0      R: 46'
+   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                            IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                           IS 'E: 0      R: ""'
+   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                       IS 'E: 0      R: 50'
+   HBTEST TESTFIER( FWrite( fhnd, "_-_-_-_-_-_-_" ) )                IS 'E: 0      R: 13'
+   HBTEST TESTFIER( FSeek( fhnd, -4, FS_END ) )                      IS 'E: 0      R: 59'
+   HBTEST TESTFIER( FReadStr( fhnd, 1 ) )                            IS 'E: 0      R: "-"'
+   HBTEST TESTFIER( FReadStr( fhnd, 20 ) )                           IS 'E: 0      R: "_-_"'
+   HBTEST TESTFIER( FSeek( fhnd, 3, FS_END ) )                       IS 'E: 0      R: 66'
+   HBTEST TESTFIER( FWrite( fhnd, "V" ) )                            IS 'E: 0      R: 1'
+   HBTEST TESTFIER( FSeek( fhnd, -3, FS_END ) )                      IS 'E: 0      R: 64'
+   HBTEST TESTFIER( FWrite( fhnd, "W" ) )                            IS 'E: 0      R: 1'
+   HBTEST TESTFIER( FWrite( fhnd, "" ) )                             IS 'E: 0      R: 0'
+   HBTEST TESTFIER( FSeek( fhnd, 0, FS_END ) )                       IS 'E: 0      R: 65'
 #ifndef __XPP__
-   HBTEST TESTFIER( FClose() )                                     IS 'E: 0      R: .F.'
+   HBTEST TESTFIER( FClose() )                                       IS 'E: 0      R: .F.'
 #endif
-   HBTEST TESTFIER( FClose( fhnd ) )                               IS 'E: 0      R: .T.'
-   HBTEST TESTFIER( FClose( fhnd ) )                               IS 'E: 6      R: .F.'
-   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                     IS 'E: 2      R: -1'
-   HBTEST TESTFIER( FErase( 1 ) )                                  IS 'E: 3      R: -1'
-   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                     IS 'E: 2      R: -1'
-   HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )               IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FClose( fhnd ) )                                 IS 'E: 0      R: .T.'
+   HBTEST TESTFIER( FClose( fhnd ) )                                 IS 'E: 6      R: .F.'
+   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                       IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FErase( 1 ) )                                    IS 'E: 3      R: -1'
+   HBTEST TESTFIER( FErase( "NOT_HERE.$$$" ) )                       IS 'E: 2      R: -1'
+   HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )                 IS 'E: 2      R: -1'
 
-   HBTEST TESTFIER( File( cFileName ) )                            IS "E: 2      R: .T."
-   HBTEST TESTFIER( File( "NOT_HERE.$$$" ) )                       IS "E: 2      R: .F."
+   HBTEST TESTFIER( File( cFileName ) )                              IS "E: 2      R: .T."
+   HBTEST TESTFIER( File( "NOT_HERE.$$$" ) )                         IS "E: 2      R: .F."
 
    FErase( "$$FILEIO.TMP" )
 

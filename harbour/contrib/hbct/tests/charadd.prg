@@ -54,6 +54,8 @@
 
 #ifdef __HARBOUR__
 #require "hbct"
+#else
+#define hb_BChar( <n> ) Chr( <n> )
 #endif
 
 PROCEDURE Main()
@@ -64,10 +66,10 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharAdd( "012345678", Chr( 1 ) ) == "123456789" ? -> "' + CharAdd( "012345678", Chr( 1 ) ) + '"'
-   ? '  CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) == "133557799" ? -> "' + CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) + '"'
-   ? '  CharAdd( "123456789", Chr( 255 ) ) == "012345678" ? -> "' + CharAdd( "123456789", Chr( 255 ) ) + '"'
-   ? '  CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) == "002244668" ? -> "' + CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 1 ) ) == "123456789" ? -> "' + CharAdd( "012345678", hb_BChar( 1 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 1 ) + hb_BChar( 2 ) ) == "133557799" ? -> "' + CharAdd( "012345678", hb_BChar( 1 ) + hb_BChar( 2 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 255 ) ) == "012345678" ? -> "' + CharAdd( "123456789", hb_BChar( 255 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 255 ) + hb_BChar( 254 ) ) == "002244668" ? -> "' + CharAdd( "123456789", hb_BChar( 255 ) + hb_BChar( 254 ) ) + '"'
 
    ? "End test of CharAdd()"
    ?

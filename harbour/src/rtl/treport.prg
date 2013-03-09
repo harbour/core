@@ -1146,7 +1146,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 *
 *     1. The expression is empty if:
 *         a. Passed pointer is equal to 65535
-*         b. Character following character pointed to by pointer is Chr(0)
+*         b. Character following character pointed to by pointer is Chr( 0 )
 *
 */
 
@@ -1284,7 +1284,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 *  Notes:
 *     1. The Header or Contents expressions are empty if:
 *        a. Passed pointer is equal to 65535
-*        b. Character following character pointed to by pointer is Chr(0)
+*        b. Character following character pointed to by pointer is Chr( 0 )
 *
 */
 

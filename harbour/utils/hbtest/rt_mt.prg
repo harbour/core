@@ -70,6 +70,7 @@ PROCEDURE Main_MT()
 
 #ifdef __HARBOUR__
 FUNCTION DO_MTTES1()
+
    LOCAL aThreads, aResults, i, nDigit, nSum, nExpected
    LOCAL mtxJobs, mtxResults
 
@@ -99,7 +100,7 @@ FUNCTION DO_MTTES1()
    NEXT
    nSum := Round( nSum, 2 )
    nExpected := Round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
-   if Round( nSum - nExpected, 2 ) == 0
+   IF Round( nSum - nExpected, 2 ) == 0
       RETURN "OK"
    ENDIF
 
@@ -107,6 +108,7 @@ FUNCTION DO_MTTES1()
                  " expected: " + hb_ntos( nExpected )
 
 PROCEDURE thFunc( mtxJobs, mtxResults )
+
    LOCAL xJob, xResult
 
    WHILE .T.

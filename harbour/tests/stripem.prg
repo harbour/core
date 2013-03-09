@@ -29,14 +29,10 @@ PROCEDURE Main( cFrom, cTo )
    LOCAL cOut
 
    hb_default( @cFrom, __FILE__ )
-   hb_default( @cTo, "strip.out" )
+   hb_default( @cTo, hb_FNameExtSet( __FILE__, ".out" ) )
 
-   oFrom := TTextFile()
-// ? hb_ValToExp( __objGetMethodList( oFrom ) )
-   oFrom:New( cFrom, "R" )
-   oTo   := TTextFile()
-// ? hb_ValToExp( __objGetMethodList( oTo ) )
-   oTo:New( cTo, "W" )
+   oFrom := TTextFile():New( cFrom, "R" )
+   oTo   := TTextFile():New( cTo, "W" )
 
    DO WHILE ! oFrom:Eof()
       cOut := oFrom:Run()

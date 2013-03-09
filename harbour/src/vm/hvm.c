@@ -11867,10 +11867,9 @@ HB_FUNC( __DBGINVOKEDEBUG )
       hb_retl( HB_FALSE );
 }
 
-/* $Doc$
- * $FuncName$     <aStat> __dbgvmVarSList()
- * $Description$  Return the statics array. Please AClone() before assignments
- * $End$ */
+/* Return the statics array. Please AClone() before assignments
+ * __dbgVMVarSList() --> <aStat>
+ */
 HB_FUNC( __DBGVMVARSLIST )
 {
    if( hb_vmInternalsEnabled() )
@@ -11882,10 +11881,9 @@ HB_FUNC( __DBGVMVARSLIST )
    }
 }
 
-/* $Doc$
- * $FuncName$     <nStatics> __dbgvmVarSLen()
- * $Description$  Return the statics array length.
- * $End$ */
+/* Return the statics array length.
+ * __dbgVMVarSLen() --> <nStatics>
+ */
 HB_FUNC( __DBGVMVARSLEN )
 {
    HB_STACK_TLS_PRELOAD
@@ -11896,20 +11894,19 @@ HB_FUNC( __DBGVMVARSLEN )
       hb_retnint( 0 );
 }
 
-/* $Doc$
- * $FuncName$     <xStat> __dbgvmVarSGet(<nStatic>)
- * $Description$  Return a specified statics
- * $End$ */
+/* Return a specified statics
+ * __dbgVMVarSGet( <nStatic> ) --> <xStat>
+ */
 HB_FUNC( __DBGVMVARSGET )
 {
    if( hb_vmInternalsEnabled() )
       hb_itemReturn( hb_dbg_vmVarSGet( hb_param( 1, HB_IT_ARRAY ), hb_parni( 2 ) ) );
 }
 
-/* $Doc$
- * $FuncName$     __dbgvmVarSSet(<nStatic>,<uValue>)
- * $Description$  Sets the value of a specified statics
- * $End$ */
+/*
+ * Sets the value of a specified statics
+ * __dbgVMVarSSet( <nStatic>, <uValue> ) --> NIL
+ */
 HB_FUNC( __DBGVMVARSSET )
 {
    if( hb_vmInternalsEnabled() )
@@ -11956,10 +11953,10 @@ PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset )
 #endif
 }
 
-/* $Doc$
- * $FuncName$     <aStat> __dbgvmVarGList()
- * $Description$  Return a clone of the globals array.
- * $End$ */
+/*
+ * Return a clone of the globals array.
+ * __dbgVMVarGList() --> <aStat>
+ */
 HB_FUNC( __DBGVMVARGLIST )
 {
    if( hb_vmInternalsEnabled() )
@@ -12058,10 +12055,10 @@ void hb_vmUpdateAllocator( PHB_ALLOCUPDT_FUNC pFunc, int iCount )
 
 /* ------------------------------------------------------------------------ */
 
-/* $Doc$
- * $FuncName$     __SETPROFILER( <lOnOff> ) --> <lOldValue>
- * $Description$  Turns on | off the profiler activity
- * $End$ */
+/*
+ * Turns on | off the profiler activity
+ * __SetProfiler( <lOnOff> ) --> <lOldValue>
+ */
 HB_FUNC( __SETPROFILER )
 {
    HB_STACK_TLS_PRELOAD
@@ -12104,10 +12101,10 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    }
 }
 
-/* $Doc$
- * $FuncName$     __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
- * $Description$  Turns on | off tracing of PRG-level function and method calls
- * $End$ */
+/*
+ * Turns on | off tracing of PRG-level function and method calls
+ * __TracePrgCalls( <lOnOff> ) --> <lOldValue>
+ */
 HB_FUNC( __TRACEPRGCALLS )
 {
    HB_STACK_TLS_PRELOAD

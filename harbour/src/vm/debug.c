@@ -105,11 +105,10 @@
  *    HB_DBG_VMQUIT
  */
 
-
-/* $Doc$
- * $FuncName$     AddToArray( <pItem>, <pReturn>, <uiPos> )
- * $Description$  Add <pItem> to array <pReturn> at pos <uiPos>
- * $End$ */
+/*
+ * Add <pItem> to array <pReturn> at pos <uiPos>
+ * AddToArray( <pItem>, <pReturn>, <uiPos> )
+ */
 static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
 {
    HB_TRACE( HB_TR_DEBUG, ( "AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, nPos ) );
@@ -131,10 +130,10 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
       hb_itemArrayPut( pReturn, nPos, pItem );
 }
 
-/* $Doc$
- * $FuncName$     <nVars> __dbgVMStkGCount()
- * $Description$  Returns the length of the global stack
- * $End$ */
+/*
+ * Returns the length of the global stack
+ * __dbgVMStkGCount() --> <nVars>
+ */
 HB_FUNC( __DBGVMSTKGCOUNT )
 {
    if( hb_vmInternalsEnabled() )
@@ -143,10 +142,10 @@ HB_FUNC( __DBGVMSTKGCOUNT )
       hb_retns( 0 );
 }
 
-/* $Doc$
- * $FuncName$     <aStack> __dbgVMStkGList()
- * $Description$  Returns the global stack
- * $End$ */
+/*
+ * Returns the global stack
+ * __dbgVMStkGList() --> <aStack>
+ */
 HB_FUNC( __DBGVMSTKGLIST )
 {
    if( hb_vmInternalsEnabled() )
@@ -166,10 +165,10 @@ HB_FUNC( __DBGVMSTKGLIST )
       hb_reta( 0 );
 }
 
-/* $Doc$
- * $FuncName$     <nVars> hb_stackLen( <nProcLevel> )
- * $Description$  Returns params plus locals amount of the nProcLevel function
- * $End$ */
+/*
+ * Returns params plus locals amount of the nProcLevel function
+ * hb_stackLen( <nProcLevel> ) --> <nVars>
+ */
 static HB_ISIZ hb_stackLen( int iLevel )
 {
    HB_ISIZ nBaseOffset, nPrevOffset, nLen;
@@ -191,10 +190,10 @@ static HB_ISIZ hb_stackLen( int iLevel )
    return nLen;
 }
 
-/* $Doc$
- * $FuncName$     <nVars> __dbgVMStkLCount( <nProcLevel> )
- * $Description$  Returns params plus locals amount of the nProcLevel function
- * $End$ */
+/*
+ * Returns params plus locals amount of the nProcLevel function
+ * __dbgVMStkLCount( <nProcLevel> ) --> <nVars>
+ */
 HB_FUNC( __DBGVMSTKLCOUNT )
 {
    if( hb_vmInternalsEnabled() )
@@ -203,17 +202,17 @@ HB_FUNC( __DBGVMSTKLCOUNT )
       hb_retns( 0 );
 }
 
-/* $Doc$
- * $FuncName$     <aStack> __dbgVMStkLList()
- * $Description$  Returns the stack of the calling function
- *                "[<symbol>]"  Means symbol.
+/*
+ * Returns the stack of the calling function
+ * "[<symbol>]"  Means symbol.
  *
- *                [1]        Symbol of current function
- *                [2]        Self | NIL
- *                [3 .. x]   Parameters
- *                [x+1 .. y] Locals
- *                [y+1 ..]   Pushed data
- * $End$ */
+ * [1]        Symbol of current function
+ * [2]        Self | NIL
+ * [3 .. x]   Parameters
+ * [x+1 .. y] Locals
+ * [y+1 ..]   Pushed data
+ * __dbgVMStkLList() --> <aStack>
+ */
 HB_FUNC( __DBGVMSTKLLIST )
 {
    if( hb_vmInternalsEnabled() )

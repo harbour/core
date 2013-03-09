@@ -56,6 +56,7 @@
 #require "hbct"
 #else
 #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_BChar( <n> ) Chr( <n> )
 #endif
 
 PROCEDURE Main()
@@ -69,13 +70,13 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  CharNot( Chr(  85 ) + Chr( 128 ) + Chr( 170 ) + Chr(   1 ) ) =='
-   ? '           Chr( 170 ) + Chr( 127 ) + Chr(  85 ) + Chr( 254 ) ? -->'
+   ? '  CharNot( hb_BChar(  85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar(   1 ) ) =='
+   ? '           hb_BChar( 170 ) + hb_BChar( 127 ) + hb_BChar(  85 ) + hb_BChar( 254 ) ? -->'
 
    ? '          '
-   cStr := CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
+   cStr := CharNot( hb_BChar( 85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar( 1 ) )
    FOR ni := 1 TO Len( cStr )
-      ?? "Chr( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
+      ?? "hb_BChar( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
       IF ni < Len( cStr )
          ?? " + "
       ENDIF

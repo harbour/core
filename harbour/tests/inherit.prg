@@ -21,8 +21,8 @@ PROCEDURE Main()
    LOCAL oTo
    LOCAL cOut
 
-   oFrom := TOnTop()   :New( "hello.prg", "R" )
-   oTo   := TTextFile():New( "hello.out", "W" )
+   oFrom := TOnTop()   :New( __FILE__, "R" )
+   oTo   := TTextFile():New( hb_FNameExtSet( __FILE__, ".out" ), "W" )
 
    ? "What's in oFrom"
    ? hb_ValToExp( { oFrom, __objGetMethodList( oFrom ) } )
@@ -32,7 +32,7 @@ PROCEDURE Main()
    ? hb_ValToExp( { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
 
    ?
-   ? "Let's call Run() from TEmpty : "
+   ? "Let's call Run() from TEmpty:"
    oFrom:TEmpty:Run()
 
    ?

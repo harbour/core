@@ -2,19 +2,21 @@
  * $Id$
  */
 
+#require "hbmisc"
+
 PROCEDURE Main( cFile )
 
    LOCAL cText
    LOCAL lEdit := .T.
 
    IF cFile == NIL
-      cFile := "sample.txt"
+      cFile := __FILE__
       lEdit := .F.
    ENDIF
 
    cText := MemoRead( cFile )
    cText := MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
-   MemoWrit( "output.txt", cText )
+   MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
 
    RETURN
 

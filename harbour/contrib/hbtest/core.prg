@@ -212,6 +212,8 @@ STATIC FUNCTION XToStr( xValue, lInString )
 
    STATIC sc_hReplace := { ;
       Chr( 0 )  => '" + Chr( 0 ) + "', ;
+      Chr( 1 )  => '" + Chr( 1 ) + "', ;
+      Chr( 2 )  => '" + Chr( 2 ) + "', ;
       Chr( 7 )  => '" + Chr( 7 ) + "', ;
       Chr( 8 )  => '" + Chr( 8 ) + "', ;
       Chr( 9 )  => '" + Chr( 9 ) + "', ;

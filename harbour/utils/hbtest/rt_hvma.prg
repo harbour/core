@@ -56,6 +56,7 @@
 #include "rt_vars.ch"
 
 PROCEDURE Main_HVMA()
+
    LOCAL nA, nB, nC
 
    // NOTE: These are compiler tests.
@@ -189,7 +190,7 @@ PROCEDURE Main_HVMA()
    HBTEST --nA                            IS 1
    HBTEST nA                              IS 1
 
-/* These will generate warnings and errors with Harbour */
+   /* These will generate warnings and errors with Harbour */
 #ifndef __HARBOUR__
    HBTEST { 1, 2 }[ ( 2, 1 ) ]++          IS 1
    HBTEST ++{ 1, 2 }[ ( 2, 1 ) ]          IS 2
@@ -208,17 +209,17 @@ PROCEDURE Main_HVMA()
 
    /* */
 
-   HBTEST -Month(sdDate)                  IS -3
-   HBTEST Str(-(Month(sdDate)))           IS "        -3"
-   HBTEST Str(-(Val("10")))               IS "       -10"
-   HBTEST Str(-(Val("100000")))           IS "   -100000"
-   HBTEST Str(-(Val("20.876")))           IS "       -20.876"
-   HBTEST -(0)                            IS 0
-   HBTEST -(10)                           IS -10
-   HBTEST -(10.505)                       IS -10.505
-   HBTEST -(100000)                       IS -100000
-   HBTEST -(-10)                          IS 10
-   HBTEST -("1")                          IS "E 1 BASE 1080 Argument error (-) OS:0 #:0 A:1:C:1 F:S"
+   HBTEST -Month( sdDate )                IS -3
+   HBTEST Str( -( Month( sdDate ) ) )     IS "        -3"
+   HBTEST Str( -( Val( "10" ) ) )         IS "       -10"
+   HBTEST Str( -( Val( "100000" ) ) )     IS "   -100000"
+   HBTEST Str( -( Val( "20.876" ) ) )     IS "       -20.876"
+   HBTEST -( 0 )                          IS 0
+   HBTEST -( 10 )                         IS -10
+   HBTEST -( 10.505 )                     IS -10.505
+   HBTEST -( 100000 )                     IS -100000
+   HBTEST -( -10 )                        IS 10
+   HBTEST -( "1" )                        IS "E 1 BASE 1080 Argument error (-) OS:0 #:0 A:1:C:1 F:S"
 
    HBTEST "AA" $ 1                        IS "E 1 BASE 1109 Argument error ($) OS:0 #:0 A:2:C:AA;N:1 F:S"
    HBTEST scString $ 1                    IS "E 1 BASE 1109 Argument error ($) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
@@ -230,9 +231,9 @@ PROCEDURE Main_HVMA()
    HBTEST !   "X" $ "XE"                  IS .F.
    HBTEST ! ( "X" $ "XE" )                IS .F.
    HBTEST     "X" $ "XE"                  IS .T.
-   HBTEST     "X" $ Chr(0) + "X"          IS .T.
-   HBTEST ( "X" ) $ Chr(0) + "X"          IS .T.
-   HBTEST scString $ Chr(0) + scString    IS .T.
+   HBTEST     "X" $ Chr( 0 ) + "X"        IS .T.
+   HBTEST ( "X" ) $ Chr( 0 ) + "X"        IS .T.
+   HBTEST scString $ Chr( 0 ) + scString  IS .T.
 
    HBTEST scStringE $ scStringE           IS .F.
    HBTEST scStringE $ "bcde"              IS .F.
@@ -270,14 +271,14 @@ PROCEDURE Main_HVMA()
    HBTEST .T. .AND. 1                     IS 1
    HBTEST .T. .AND. 1.567                 IS 1.567
    HBTEST .T. .AND. scString              IS "HELLO"
-   HBTEST .T. .AND. hb_SToD("")           IS hb_SToD("        ")
+   HBTEST .T. .AND. hb_SToD( "" )         IS hb_SToD( "        " )
    HBTEST .T. .AND. NIL                   IS NIL
    HBTEST .T. .AND. {}                    IS "{.[0].}"
    HBTEST .T. .AND. {|| NIL }             IS "{||...}"
    HBTEST .F. .AND. 1                     IS .F.
    HBTEST .F. .AND. 1.567                 IS .F.
    HBTEST .F. .AND. scString              IS .F.
-   HBTEST .F. .AND. hb_SToD("")           IS .F.
+   HBTEST .F. .AND. hb_SToD( "" )         IS .F.
    HBTEST .F. .AND. NIL                   IS .F.
    HBTEST .F. .AND. {}                    IS .F.
    HBTEST .F. .AND. {|| NIL }             IS .F.
@@ -310,14 +311,14 @@ PROCEDURE Main_HVMA()
    HBTEST .T. .AND. 1                     IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;N:1 F:S"
    HBTEST .T. .AND. 1.567                 IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;N:1.567 F:S"
    HBTEST .T. .AND. scString              IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;C:HELLO F:S"
-   HBTEST .T. .AND. hb_SToD("")           IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;D:0d00000000 F:S"
+   HBTEST .T. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;D:0d00000000 F:S"
    HBTEST .T. .AND. NIL                   IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;U:NIL F:S"
    HBTEST .T. .AND. {}                    IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;A:{.[0].} F:S"
    HBTEST .T. .AND. {|| NIL }             IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;B:{||...} F:S"
    HBTEST .F. .AND. 1                     IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;N:1 F:S"
    HBTEST .F. .AND. 1.567                 IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;N:1.567 F:S"
    HBTEST .F. .AND. scString              IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;C:HELLO F:S"
-   HBTEST .F. .AND. hb_SToD("")           IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;D:0d00000000 F:S"
+   HBTEST .F. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;D:0d00000000 F:S"
    HBTEST .F. .AND. NIL                   IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;U:NIL F:S"
    HBTEST .F. .AND. {}                    IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;A:{.[0].} F:S"
    HBTEST .F. .AND. {|| NIL }             IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;B:{||...} F:S"
@@ -360,9 +361,9 @@ PROCEDURE Main_HVMA()
 
    HBTEST mxNotHere                       IS "E 14 BASE 1003 Variable does not exist (MXNOTHERE) OS:0 #:1 F:R"  /* Bug in CA-Cl*pper, it does not initialize 'TRIES' in error object giving strange results */
 #ifdef __HARBOUR__
-   HBTEST __mvGet("MXUNDECL")             IS "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R"
+   HBTEST __mvGet( "MXUNDECL" )           IS "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R"
 #endif
-   mxNotHere ="MXUNDECL"
+   mxNotHere := "MXUNDECL"
    HBTEST &mxNotHere.                     IS "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R"
 
 #ifndef __HARBOUR__
@@ -391,7 +392,7 @@ PROCEDURE Main_HVMA()
    HBTEST (NIL)->NOFIELD                  IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:U:NIL;C:NOFIELD F:S"
    HBTEST (2)->NOFIELD                    IS "E 14 BASE 1003 Variable does not exist (NOFIELD) OS:0 #:1 F:R"
    HBTEST (2.5)->NOFIELD                  IS "E 14 BASE 1003 Variable does not exist (NOFIELD) OS:0 #:1 F:R"
-   HBTEST (hb_SToD(""))->NOFIELD          IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:D:0d00000000;C:NOFIELD F:S"
+   HBTEST (hb_SToD( "" ))->NOFIELD        IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:D:0d00000000;C:NOFIELD F:S"
    HBTEST (ErrorNew())->NOFIELD           IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:O:ERROR Object;C:NOFIELD F:S"
 
 #ifndef __XPP__
@@ -399,126 +400,126 @@ PROCEDURE Main_HVMA()
    /* disable Harbour extended optimizations to test correct RTE message */
    #pragma -ko-
 #endif
-   HBTEST ("NOTHERE")->(Eof())            IS .T.
+   HBTEST ("NOTHERE")->( Eof() )          IS .T.
 #ifdef __HARBOUR__
    #pragma -ko+
 #endif
-   HBTEST (mcString)->(Eof())             IS .T.
-   HBTEST ({})->(Eof())                   IS .T.
-   HBTEST ({|| NIL })->(Eof())            IS .T.
-   HBTEST (.T.)->(Eof())                  IS .T.
-   HBTEST (.F.)->(Eof())                  IS .T.
-   HBTEST (NIL)->(Eof())                  IS .T.
-   HBTEST (2)->(Eof())                    IS .T.
-   HBTEST (2.5)->(Eof())                  IS .T.
-   HBTEST (hb_SToD(""))->(Eof())          IS .T.
-   HBTEST (ErrorNew())->(Eof())           IS .T.
+   HBTEST (mcString)->( Eof() )           IS .T.
+   HBTEST ({})->( Eof() )                 IS .T.
+   HBTEST ({|| NIL })->( Eof() )          IS .T.
+   HBTEST (.T.)->( Eof() )                IS .T.
+   HBTEST (.F.)->( Eof() )                IS .T.
+   HBTEST (NIL)->( Eof() )                IS .T.
+   HBTEST (2)->( Eof() )                  IS .T.
+   HBTEST (2.5)->( Eof() )                IS .T.
+   HBTEST (hb_SToD( "" ))->( Eof() )      IS .T.
+   HBTEST (ErrorNew())->( Eof() )         IS .T.
 #endif
 
    HBTEST NOTHERE->NOFIELD                IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->("NOFIELD")            IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(mcString)             IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->({})                   IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->({|| NIL })            IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(.T.)                  IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(.F.)                  IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(NIL)                  IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(1)                    IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(1.5)                  IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(hb_SToD(""))          IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
-   HBTEST NOTHERE->(ErrorNew())           IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( "NOFIELD" )          IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( mcString )           IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( {} )                 IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( {|| NIL } )          IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( .T. )                IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( .F. )                IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( NIL )                IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( 1 )                  IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( 1.5 )                IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( hb_SToD( "" ) )      IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
+   HBTEST NOTHERE->( ErrorNew() )         IS "E 15 BASE 1002 Alias does not exist (NOTHERE) OS:0 #:1 F:R"
 
    HBTEST 200->NOFIELD                    IS "E 14 BASE 1003 Variable does not exist (NOFIELD) OS:0 #:1 F:R"
-   HBTEST 200->("NOFIELD")                IS "NOFIELD"
-   HBTEST 200->(mcString)                 IS "HELLO"
-   HBTEST 200->({})                       IS "{.[0].}"
-   HBTEST 200->({|| NIL })                IS "{||...}"
-   HBTEST 200->(.T.)                      IS .T.
-   HBTEST 200->(.F.)                      IS .F.
-   HBTEST 200->(NIL)                      IS NIL
-   HBTEST 200->(1)                        IS 1
-   HBTEST 200->(1.5)                      IS 1.5
-   HBTEST 200->(hb_SToD(""))              IS hb_SToD("        ")
-   HBTEST 200->(ErrorNew())               IS "ERROR Object"
+   HBTEST 200->( "NOFIELD" )              IS "NOFIELD"
+   HBTEST 200->( mcString )               IS "HELLO"
+   HBTEST 200->( {} )                     IS "{.[0].}"
+   HBTEST 200->( {|| NIL } )              IS "{||...}"
+   HBTEST 200->( .T. )                    IS .T.
+   HBTEST 200->( .F. )                    IS .F.
+   HBTEST 200->( NIL )                    IS NIL
+   HBTEST 200->( 1 )                      IS 1
+   HBTEST 200->( 1.5 )                    IS 1.5
+   HBTEST 200->( hb_SToD( "" ) )          IS hb_SToD( "        " )
+   HBTEST 200->( ErrorNew() )             IS "ERROR Object"
 
    HBTEST soObject:hello                  IS "E 13 BASE 1004 No exported method (HELLO) OS:0 #:0 A:1:O:ERROR Object F:S"
    HBTEST soObject:hello := 1             IS "E 16 BASE 1005 No exported variable (HELLO) OS:0 #:0 A:2:O:ERROR Object;N:1 F:S"
 
    /* Len() */
 
-   HBTEST Len( NIL )                      IS "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:U:NIL F:S"
-   HBTEST Len( 123 )                      IS "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:N:123 F:S"
-   HBTEST Len( "" )                       IS 0
-   HBTEST Len( "123" )                    IS 3
-   HBTEST Len( "123"+Chr(0)+"456 " )      IS 8
+   HBTEST Len( NIL )                       IS "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Len( 123 )                       IS "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:N:123 F:S"
+   HBTEST Len( "" )                        IS 0
+   HBTEST Len( "123" )                     IS 3
+   HBTEST Len( "123" + Chr( 0 ) + "456 " ) IS 8
    IF TEST_DBFAvail()
-   HBTEST Len( w_TEST->TYPE_C )           IS 15
-   HBTEST Len( w_TEST->TYPE_C_E )         IS 15
-   HBTEST Len( w_TEST->TYPE_M )           IS 11
-   HBTEST Len( w_TEST->TYPE_M_E )         IS 0
+   HBTEST Len( w_TEST->TYPE_C )            IS 15
+   HBTEST Len( w_TEST->TYPE_C_E )          IS 15
+   HBTEST Len( w_TEST->TYPE_M )            IS 11
+   HBTEST Len( w_TEST->TYPE_M_E )          IS 0
    ENDIF
-   HBTEST Len( saArray )                  IS 1
+   HBTEST Len( saArray )                   IS 1
 #ifdef __HARBOUR__
-   HBTEST Len( ErrorNew() )               IS 12
-   HBTEST Len( Space( 1000000 ) )         IS 1000000
+   HBTEST Len( ErrorNew() )                IS 12
+   HBTEST Len( Space( 1000000 ) )          IS 1000000
 #else
-   HBTEST Len( ErrorNew() )               IS 7
-   HBTEST Len( Space( 40000 ) )           IS 40000
+   HBTEST Len( ErrorNew() )                IS 7
+   HBTEST Len( Space( 40000 ) )            IS 40000
 #endif
 
    /* Empty() */
 
 #ifdef __HARBOUR__
-   HBTEST Empty( @scString              ) IS .F.  /* Bug in CA-Cl*pper, it will return .T. */
-   HBTEST Empty( @scStringE             ) IS .T.
-   HBTEST Empty( @snIntP                ) IS .F.  /* Bug in CA-Cl*pper, it will return .T. */
-   HBTEST Empty( @snIntZ                ) IS .T.
+   HBTEST Empty( @scString                        ) IS .F.  /* Bug in CA-Cl*pper, it will return .T. */
+   HBTEST Empty( @scStringE                       ) IS .T.
+   HBTEST Empty( @snIntP                          ) IS .F.  /* Bug in CA-Cl*pper, it will return .T. */
+   HBTEST Empty( @snIntZ                          ) IS .T.
 #endif
-   HBTEST Empty( "Hallo"                ) IS .F.
-   HBTEST Empty( ""                     ) IS .T.
-   HBTEST Empty( "  "                   ) IS .T.
-   HBTEST Empty( " "+Chr(0)             ) IS .F.
-   HBTEST Empty( " "+Chr(13)+Chr(9)     ) IS .T.
-   HBTEST Empty( "  A"                  ) IS .F.
-   HBTEST Empty( " x "                  ) IS .F.
-   HBTEST Empty( " x"+Chr(0)            ) IS .F.
-   HBTEST Empty( " "+Chr(13)+"x"+Chr(9) ) IS .F.
+   HBTEST Empty( "Hallo"                          ) IS .F.
+   HBTEST Empty( ""                               ) IS .T.
+   HBTEST Empty( "  "                             ) IS .T.
+   HBTEST Empty( " " + Chr( 0 )                   ) IS .F.
+   HBTEST Empty( " " + Chr( 13 ) + Chr( 9 )       ) IS .T.
+   HBTEST Empty( "  A"                            ) IS .F.
+   HBTEST Empty( " x "                            ) IS .F.
+   HBTEST Empty( " x" + Chr( 0 )                  ) IS .F.
+   HBTEST Empty( " " + Chr( 13 ) + "x" + Chr( 9 ) ) IS .F.
    IF TEST_DBFAvail()
-   HBTEST Empty( w_TEST->TYPE_C         ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_C_E       ) IS .T.
-   HBTEST Empty( w_TEST->TYPE_D         ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_D_E       ) IS .T.
-   HBTEST Empty( w_TEST->TYPE_M         ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_M_E       ) IS .T.
-   HBTEST Empty( w_TEST->TYPE_N_I       ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_N_IE      ) IS .T.
-   HBTEST Empty( w_TEST->TYPE_N_D       ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_N_DE      ) IS .T.
-   HBTEST Empty( w_TEST->TYPE_L         ) IS .F.
-   HBTEST Empty( w_TEST->TYPE_L_E       ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_C                   ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_C_E                 ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_D                   ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_D_E                 ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_M                   ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_M_E                 ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_N_I                 ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_N_IE                ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_N_D                 ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_N_DE                ) IS .T.
+   HBTEST Empty( w_TEST->TYPE_L                   ) IS .F.
+   HBTEST Empty( w_TEST->TYPE_L_E                 ) IS .T.
    ENDIF
-   HBTEST Empty( 0                      ) IS .T.
-   HBTEST Empty( -0                     ) IS .T.
-   HBTEST Empty( 0.0                    ) IS .T.
-   HBTEST Empty( 70000-70000            ) IS .T.
-   HBTEST Empty( 1.5 * 1.5 - 2.25       ) IS .T.
-   HBTEST Empty( 10                     ) IS .F.
-   HBTEST Empty( 10.0                   ) IS .F.
-   HBTEST Empty( 70000+70000            ) IS .F.
-   HBTEST Empty( 1.5 * 1.5 * 2.25       ) IS .F.
-   HBTEST Empty( hb_SToD( "18241010" )  ) IS .F.
-   HBTEST Empty( hb_SToD( "18250231" )  ) IS .T.
-   HBTEST Empty( hb_SToD( "99999999" )  ) IS .T.
-   HBTEST Empty( hb_SToD( "        " )  ) IS .T.
-   HBTEST Empty( hb_SToD( "" )          ) IS .T.
-   HBTEST Empty( .T.                    ) IS .F.
-   HBTEST Empty( .F.                    ) IS .T.
-   HBTEST Empty( NIL                    ) IS .T.
-   HBTEST Empty( { 1 }                  ) IS .F.
-   HBTEST Empty( {}                     ) IS .T.
-   HBTEST Empty( { 0 }                  ) IS .F.
-   HBTEST Empty( {| x | x + x }         ) IS .F.
-   HBTEST Empty( ErrorNew()             ) IS .F.
+   HBTEST Empty( 0                                ) IS .T.
+   HBTEST Empty( -0                               ) IS .T.
+   HBTEST Empty( 0.0                              ) IS .T.
+   HBTEST Empty( 70000-70000                      ) IS .T.
+   HBTEST Empty( 1.5 * 1.5 - 2.25                 ) IS .T.
+   HBTEST Empty( 10                               ) IS .F.
+   HBTEST Empty( 10.0                             ) IS .F.
+   HBTEST Empty( 70000+70000                      ) IS .F.
+   HBTEST Empty( 1.5 * 1.5 * 2.25                 ) IS .F.
+   HBTEST Empty( hb_SToD( "18241010" )            ) IS .F.
+   HBTEST Empty( hb_SToD( "18250231" )            ) IS .T.
+   HBTEST Empty( hb_SToD( "99999999" )            ) IS .T.
+   HBTEST Empty( hb_SToD( "        " )            ) IS .T.
+   HBTEST Empty( hb_SToD( "" )                    ) IS .T.
+   HBTEST Empty( .T.                              ) IS .F.
+   HBTEST Empty( .F.                              ) IS .T.
+   HBTEST Empty( NIL                              ) IS .T.
+   HBTEST Empty( { 1 }                            ) IS .F.
+   HBTEST Empty( {}                               ) IS .T.
+   HBTEST Empty( { 0 }                            ) IS .F.
+   HBTEST Empty( {| x | x + x }                   ) IS .F.
+   HBTEST Empty( ErrorNew()                       ) IS .F.
 
    /* Some number width handling tests */
 
@@ -582,59 +583,59 @@ PROCEDURE Main_HVMA()
    HBTEST RTSTR( -500000000000000000000000 )      IS " 20 ********************"
    HBTEST RTSTR( -5000000000000000000000000 )     IS " 20 ********************"
 
-   HBTEST ( nA := 50000000                      , RTSTR( -nA )) IS " 10  -50000000"
-   HBTEST ( nA := 50000000.0                    , RTSTR( -nA )) IS " 12  -50000000.0"
-   HBTEST ( nA := 99999999                      , RTSTR( -nA )) IS " 10  -99999999"
-   HBTEST ( nA := 99999999.9                    , RTSTR( -nA )) IS " 12  -99999999.9"
-   HBTEST ( nA := 100000000                     , RTSTR( -nA )) IS " 10 -100000000"
-   HBTEST ( nA := 100000000.0                   , RTSTR( -nA )) IS " 12 -100000000.0"
-   HBTEST ( nA := 500000000                     , RTSTR( -nA )) IS " 10 -500000000"
-   HBTEST ( nA := 999999999                     , RTSTR( -nA )) IS " 10 -999999999"
-   HBTEST ( nA := 999999999.99                  , RTSTR( -nA )) IS " 23           -999999999.99"
-   HBTEST ( nA := 1000000000                    , RTSTR( -nA )) IS " 20          -1000000000"
-   HBTEST ( nA := 1000000000.0                  , RTSTR( -nA )) IS " 22          -1000000000.0"
-   HBTEST ( nA := 1000000000.00                 , RTSTR( -nA )) IS " 23          -1000000000.00"
-   HBTEST ( nA := 1000000000.99                 , RTSTR( -nA )) IS " 23          -1000000000.99"
-   HBTEST ( nA := 4000000000                    , RTSTR( -nA )) IS " 20          -4000000000"
-   HBTEST ( nA := 5000000000                    , RTSTR( -nA )) IS " 20          -5000000000"
-   HBTEST ( nA := 50000000000                   , RTSTR( -nA )) IS " 20         -50000000000"
-   HBTEST ( nA := 500000000000                  , RTSTR( -nA )) IS " 20        -500000000000"
-   HBTEST ( nA := 5000000000000                 , RTSTR( -nA )) IS " 20       -5000000000000"
-   HBTEST ( nA := 50000000000000                , RTSTR( -nA )) IS " 20      -50000000000000"
-   HBTEST ( nA := 500000000000000               , RTSTR( -nA )) IS " 20     -500000000000000"
-   HBTEST ( nA := 5000000000000000              , RTSTR( -nA )) IS " 20    -5000000000000000"
-   HBTEST ( nA := 50000000000000000             , RTSTR( -nA )) IS " 20   -50000000000000000"
-   HBTEST ( nA := 500000000000000000            , RTSTR( -nA )) IS " 20  -500000000000000000"
-   HBTEST ( nA := 5000000000000000000           , RTSTR( -nA )) IS " 20 -5000000000000000000"
-   HBTEST ( nA := 50000000000000000000          , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 500000000000000000000         , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 5000000000000000000000        , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 50000000000000000000000       , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 500000000000000000000000      , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 5000000000000000000000000     , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := 5000000000000000000000000.0   , RTSTR( -nA )) IS " 22 **********************"
-   HBTEST ( nA := -50000000                     , RTSTR( -nA )) IS " 10   50000000"
-   HBTEST ( nA := -50000000.0                   , RTSTR( -nA )) IS " 12   50000000.0"
-   HBTEST ( nA := -500000000                    , RTSTR( -nA )) IS " 10  500000000"
-   HBTEST ( nA := -999999999                    , RTSTR( -nA )) IS " 10  999999999"
-   HBTEST ( nA := -1000000000                   , RTSTR( -nA )) IS " 10 1000000000"
-   HBTEST ( nA := -4000000000                   , RTSTR( -nA )) IS " 10 4000000000"
-   HBTEST ( nA := -5000000000                   , RTSTR( -nA )) IS " 10 5000000000"
-   HBTEST ( nA := -50000000000                  , RTSTR( -nA )) IS " 20          50000000000"
-   HBTEST ( nA := -500000000000                 , RTSTR( -nA )) IS " 20         500000000000"
-   HBTEST ( nA := -5000000000000                , RTSTR( -nA )) IS " 20        5000000000000"
-   HBTEST ( nA := -50000000000000               , RTSTR( -nA )) IS " 20       50000000000000"
-   HBTEST ( nA := -500000000000000              , RTSTR( -nA )) IS " 20      500000000000000"
-   HBTEST ( nA := -5000000000000000             , RTSTR( -nA )) IS " 20     5000000000000000"
-   HBTEST ( nA := -50000000000000000            , RTSTR( -nA )) IS " 20    50000000000000000"
-   HBTEST ( nA := -500000000000000000           , RTSTR( -nA )) IS " 20   500000000000000000"
-   HBTEST ( nA := -5000000000000000000          , RTSTR( -nA )) IS " 20  5000000000000000000"
-   HBTEST ( nA := -50000000000000000000         , RTSTR( -nA )) IS " 20 50000000000000000000"
-   HBTEST ( nA := -500000000000000000000        , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := -5000000000000000000000       , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := -50000000000000000000000      , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := -500000000000000000000000     , RTSTR( -nA )) IS " 20 ********************"
-   HBTEST ( nA := -5000000000000000000000000    , RTSTR( -nA )) IS " 20 ********************"
+   HBTEST ( nA := 50000000                      , RTSTR( -nA ) ) IS " 10  -50000000"
+   HBTEST ( nA := 50000000.0                    , RTSTR( -nA ) ) IS " 12  -50000000.0"
+   HBTEST ( nA := 99999999                      , RTSTR( -nA ) ) IS " 10  -99999999"
+   HBTEST ( nA := 99999999.9                    , RTSTR( -nA ) ) IS " 12  -99999999.9"
+   HBTEST ( nA := 100000000                     , RTSTR( -nA ) ) IS " 10 -100000000"
+   HBTEST ( nA := 100000000.0                   , RTSTR( -nA ) ) IS " 12 -100000000.0"
+   HBTEST ( nA := 500000000                     , RTSTR( -nA ) ) IS " 10 -500000000"
+   HBTEST ( nA := 999999999                     , RTSTR( -nA ) ) IS " 10 -999999999"
+   HBTEST ( nA := 999999999.99                  , RTSTR( -nA ) ) IS " 23           -999999999.99"
+   HBTEST ( nA := 1000000000                    , RTSTR( -nA ) ) IS " 20          -1000000000"
+   HBTEST ( nA := 1000000000.0                  , RTSTR( -nA ) ) IS " 22          -1000000000.0"
+   HBTEST ( nA := 1000000000.00                 , RTSTR( -nA ) ) IS " 23          -1000000000.00"
+   HBTEST ( nA := 1000000000.99                 , RTSTR( -nA ) ) IS " 23          -1000000000.99"
+   HBTEST ( nA := 4000000000                    , RTSTR( -nA ) ) IS " 20          -4000000000"
+   HBTEST ( nA := 5000000000                    , RTSTR( -nA ) ) IS " 20          -5000000000"
+   HBTEST ( nA := 50000000000                   , RTSTR( -nA ) ) IS " 20         -50000000000"
+   HBTEST ( nA := 500000000000                  , RTSTR( -nA ) ) IS " 20        -500000000000"
+   HBTEST ( nA := 5000000000000                 , RTSTR( -nA ) ) IS " 20       -5000000000000"
+   HBTEST ( nA := 50000000000000                , RTSTR( -nA ) ) IS " 20      -50000000000000"
+   HBTEST ( nA := 500000000000000               , RTSTR( -nA ) ) IS " 20     -500000000000000"
+   HBTEST ( nA := 5000000000000000              , RTSTR( -nA ) ) IS " 20    -5000000000000000"
+   HBTEST ( nA := 50000000000000000             , RTSTR( -nA ) ) IS " 20   -50000000000000000"
+   HBTEST ( nA := 500000000000000000            , RTSTR( -nA ) ) IS " 20  -500000000000000000"
+   HBTEST ( nA := 5000000000000000000           , RTSTR( -nA ) ) IS " 20 -5000000000000000000"
+   HBTEST ( nA := 50000000000000000000          , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 500000000000000000000         , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 5000000000000000000000        , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 50000000000000000000000       , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 500000000000000000000000      , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 5000000000000000000000000     , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := 5000000000000000000000000.0   , RTSTR( -nA ) ) IS " 22 **********************"
+   HBTEST ( nA := -50000000                     , RTSTR( -nA ) ) IS " 10   50000000"
+   HBTEST ( nA := -50000000.0                   , RTSTR( -nA ) ) IS " 12   50000000.0"
+   HBTEST ( nA := -500000000                    , RTSTR( -nA ) ) IS " 10  500000000"
+   HBTEST ( nA := -999999999                    , RTSTR( -nA ) ) IS " 10  999999999"
+   HBTEST ( nA := -1000000000                   , RTSTR( -nA ) ) IS " 10 1000000000"
+   HBTEST ( nA := -4000000000                   , RTSTR( -nA ) ) IS " 10 4000000000"
+   HBTEST ( nA := -5000000000                   , RTSTR( -nA ) ) IS " 10 5000000000"
+   HBTEST ( nA := -50000000000                  , RTSTR( -nA ) ) IS " 20          50000000000"
+   HBTEST ( nA := -500000000000                 , RTSTR( -nA ) ) IS " 20         500000000000"
+   HBTEST ( nA := -5000000000000                , RTSTR( -nA ) ) IS " 20        5000000000000"
+   HBTEST ( nA := -50000000000000               , RTSTR( -nA ) ) IS " 20       50000000000000"
+   HBTEST ( nA := -500000000000000              , RTSTR( -nA ) ) IS " 20      500000000000000"
+   HBTEST ( nA := -5000000000000000             , RTSTR( -nA ) ) IS " 20     5000000000000000"
+   HBTEST ( nA := -50000000000000000            , RTSTR( -nA ) ) IS " 20    50000000000000000"
+   HBTEST ( nA := -500000000000000000           , RTSTR( -nA ) ) IS " 20   500000000000000000"
+   HBTEST ( nA := -5000000000000000000          , RTSTR( -nA ) ) IS " 20  5000000000000000000"
+   HBTEST ( nA := -50000000000000000000         , RTSTR( -nA ) ) IS " 20 50000000000000000000"
+   HBTEST ( nA := -500000000000000000000        , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := -5000000000000000000000       , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := -50000000000000000000000      , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := -500000000000000000000000     , RTSTR( -nA ) ) IS " 20 ********************"
+   HBTEST ( nA := -5000000000000000000000000    , RTSTR( -nA ) ) IS " 20 ********************"
 
    RETURN
 

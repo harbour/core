@@ -63,6 +63,7 @@
 #endif
 
 PROCEDURE Main_MISC()
+
    LOCAL oError
 #ifdef __HARBOUR__
    LOCAL cEOL
@@ -356,53 +357,53 @@ PROCEDURE Main_MISC()
 #endif
    /* "Samples" function tests (AMPM(), Days(), ElapTime(), ... ) */
 
-   HBTEST AMPM( "" )                      IS "12 am"
-   HBTEST AMPM( "HELLO" )                 IS "12LLO am"
-   HBTEST AMPM( " 0:23:45" )              IS "12:23:45 am"
-   HBTEST AMPM( "00:23:45" )              IS "12:23:45 am"
-   HBTEST AMPM( " 5:23:45" )              IS " 5:23:45 am"
-   HBTEST AMPM( "05:23:45" )              IS "05:23:45 am"
-   HBTEST AMPM( "12:23:45" )              IS "12:23:45 pm"
-   HBTEST AMPM( "20:23:45" )              IS " 8:23:45 pm"
-   HBTEST AMPM( "24:23:45" )              IS "12:23:45 am"
-   HBTEST AMPM( "25:23:45" )              IS "13:23:45 pm"
-   HBTEST AMPM( "2" )                     IS "2 am"
-   HBTEST AMPM( "02:23" )                 IS "02:23 am"
-   HBTEST AMPM( "02:23:45.10" )           IS "02:23:45.10 am"
+   HBTEST AMPM( "" )                         IS "12 am"
+   HBTEST AMPM( "HELLO" )                    IS "12LLO am"
+   HBTEST AMPM( " 0:23:45" )                 IS "12:23:45 am"
+   HBTEST AMPM( "00:23:45" )                 IS "12:23:45 am"
+   HBTEST AMPM( " 5:23:45" )                 IS " 5:23:45 am"
+   HBTEST AMPM( "05:23:45" )                 IS "05:23:45 am"
+   HBTEST AMPM( "12:23:45" )                 IS "12:23:45 pm"
+   HBTEST AMPM( "20:23:45" )                 IS " 8:23:45 pm"
+   HBTEST AMPM( "24:23:45" )                 IS "12:23:45 am"
+   HBTEST AMPM( "25:23:45" )                 IS "13:23:45 pm"
+   HBTEST AMPM( "2" )                        IS "2 am"
+   HBTEST AMPM( "02:23" )                    IS "02:23 am"
+   HBTEST AMPM( "02:23:45.10" )              IS "02:23:45.10 am"
 
-   HBTEST Days( 100000 )                  IS 1
+   HBTEST Days( 100000 )                     IS 1
 
-   HBTEST ElapTime("23:12:34","12:34:57") IS "13:22:23"
-   HBTEST ElapTime("12:34:57","23:12:34") IS "10:37:37"
+   HBTEST ElapTime( "23:12:34", "12:34:57" ) IS "13:22:23"
+   HBTEST ElapTime( "12:34:57", "23:12:34" ) IS "10:37:37"
 
-   HBTEST LenNum( 10 )                    IS 2
-   HBTEST LenNum( 10.9 )                  IS 4
-   HBTEST LenNum( 10.90 )                 IS 5
+   HBTEST LenNum( 10 )                       IS 2
+   HBTEST LenNum( 10.9 )                     IS 4
+   HBTEST LenNum( 10.90 )                    IS 5
 
-   HBTEST Secs("23:12:34")                IS 83554
-   HBTEST Secs("12:34:57")                IS 45297
+   HBTEST Secs( "23:12:34" )                 IS 83554
+   HBTEST Secs( "12:34:57" )                 IS 45297
 
-   HBTEST TString(1000)                   IS "00:16:40"
+   HBTEST TString( 1000 )                    IS "00:16:40"
 
 #ifndef __XPP__
-   HBTEST SoundEx()                       IS "0000"
-   HBTEST SoundEx( 10 )                   IS "0000"
-   HBTEST SoundEx( @scString )            IS "H400"
-   HBTEST SoundEx( "" )                   IS "0000"
-   HBTEST SoundEx( "Hm" )                 IS "H500"
-   HBTEST SoundEx( "Smith" )              IS "S530"
-   HBTEST SoundEx( "Harbour" )            IS "H616"
-   HBTEST SoundEx( "HARBOUR" )            IS "H616"
-   HBTEST SoundEx( "Harpour" )            IS "H616"
-   HBTEST SoundEx( "Hello" )              IS "H400"
-   HBTEST SoundEx( "Aardwaark" )          IS "A636"
-   HBTEST SoundEx( "Ardwark" )            IS "A636"
-   HBTEST SoundEx( "Bold" )               IS "B430"
-   HBTEST SoundEx( "Cold" )               IS "C430"
-   HBTEST SoundEx( "Colt" )               IS "C430"
-   HBTEST SoundEx( "C"+Chr(0)+"olt" )     IS "C430"
-   HBTEST SoundEx( "µ†AêÇ" )              IS "A000"
-   HBTEST SoundEx( "12345" )              IS "0000"
+   HBTEST SoundEx()                          IS "0000"
+   HBTEST SoundEx( 10 )                      IS "0000"
+   HBTEST SoundEx( @scString )               IS "H400"
+   HBTEST SoundEx( "" )                      IS "0000"
+   HBTEST SoundEx( "Hm" )                    IS "H500"
+   HBTEST SoundEx( "Smith" )                 IS "S530"
+   HBTEST SoundEx( "Harbour" )               IS "H616"
+   HBTEST SoundEx( "HARBOUR" )               IS "H616"
+   HBTEST SoundEx( "Harpour" )               IS "H616"
+   HBTEST SoundEx( "Hello" )                 IS "H400"
+   HBTEST SoundEx( "Aardwaark" )             IS "A636"
+   HBTEST SoundEx( "Ardwark" )               IS "A636"
+   HBTEST SoundEx( "Bold" )                  IS "B430"
+   HBTEST SoundEx( "Cold" )                  IS "C430"
+   HBTEST SoundEx( "Colt" )                  IS "C430"
+   HBTEST SoundEx( "C" + Chr( 0 ) + "olt" )  IS "C430"
+   HBTEST SoundEx( "µ†AêÇ" )                 IS "A000"
+   HBTEST SoundEx( "12345" )                 IS "0000"
 #endif
 
    /* NATION functions (do not exist in 5.2e US) */
@@ -412,34 +413,34 @@ PROCEDURE Main_MISC()
       /* NOTE: Use the identical internal versions if Harbour
                was compiled without C5.x undocumented features.
                [vszakats] */
-      #xtranslate NationMsg([<x,...>])  => __natMsg(<x>)
-      #xtranslate IsAffirm([<x,...>])   => __natIsAffirm(<x>)
-      #xtranslate IsNegative([<x,...>]) => __natIsNegative(<x>)
+      #xtranslate NationMsg( [<x,...>] )  => __natMsg( <x> )
+      #xtranslate IsAffirm( [<x,...>] )   => __natIsAffirm( <x> )
+      #xtranslate IsNegative( [<x,...>] ) => __natIsNegative( <x> )
    #endif
 #endif
 
 #ifndef __XPP__
    HBTEST NationMsg()                     IS "Invalid argument"
 #endif
-   HBTEST NationMsg("A")                  IS ""
-   HBTEST NationMsg(-1)                   IS ""  /* CA-Cl*pper bug: 5.3 may return trash. */
-   HBTEST NationMsg(0)                    IS ""
-   HBTEST NationMsg(1)                    IS "Database Files    # Records    Last Update     Size"
-   HBTEST NationMsg(2)                    IS "Do you want more samples?"
-   HBTEST NationMsg(3)                    IS "Page No."
-   HBTEST NationMsg(4)                    IS "** Subtotal **"
-   HBTEST NationMsg(5)                    IS "* Subsubtotal *"
-   HBTEST NationMsg(6)                    IS "*** Total ***"
-   HBTEST NationMsg(7)                    IS "Ins"
-   HBTEST NationMsg(8)                    IS "   "
-   HBTEST NationMsg(9)                    IS "Invalid date"
-   HBTEST NationMsg(10)                   IS "Range: "
-   HBTEST NationMsg(11)                   IS " - "
-   HBTEST NationMsg(12)                   IS "Y/N"
-   HBTEST NationMsg(13)                   IS "INVALID EXPRESSION"
-   HBTEST NationMsg(14)                   IS ""  /* Bug in CA-Cl*pper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
+   HBTEST NationMsg( "A" )                IS ""
+   HBTEST NationMsg( -1 )                 IS ""  /* CA-Cl*pper bug: 5.3 may return trash. */
+   HBTEST NationMsg( 0 )                  IS ""
+   HBTEST NationMsg( 1 )                  IS "Database Files    # Records    Last Update     Size"
+   HBTEST NationMsg( 2 )                  IS "Do you want more samples?"
+   HBTEST NationMsg( 3 )                  IS "Page No."
+   HBTEST NationMsg( 4 )                  IS "** Subtotal **"
+   HBTEST NationMsg( 5 )                  IS "* Subsubtotal *"
+   HBTEST NationMsg( 6 )                  IS "*** Total ***"
+   HBTEST NationMsg( 7 )                  IS "Ins"
+   HBTEST NationMsg( 8 )                  IS "   "
+   HBTEST NationMsg( 9 )                  IS "Invalid date"
+   HBTEST NationMsg( 10 )                 IS "Range: "
+   HBTEST NationMsg( 11 )                 IS " - "
+   HBTEST NationMsg( 12 )                 IS "Y/N"
+   HBTEST NationMsg( 13 )                 IS "INVALID EXPRESSION"
+   HBTEST NationMsg( 14 )                 IS ""  /* Bug in CA-Cl*pper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
 #ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
-   HBTEST NationMsg(200)                  IS ""  /* Bug in CA-Cl*pper, it will return "74?" or other trash */
+   HBTEST NationMsg( 200 )                IS ""  /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
 
 #ifndef __XPP__
@@ -447,40 +448,40 @@ PROCEDURE Main_MISC()
 /* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
    HBTEST IsAffirm()                      IS .F.
-   HBTEST IsAffirm(.F.)                   IS .F.
-   HBTEST IsAffirm(.T.)                   IS .F.
-   HBTEST IsAffirm(0)                     IS .F.
-   HBTEST IsAffirm(1)                     IS .F.
+   HBTEST IsAffirm( .F. )                 IS .F.
+   HBTEST IsAffirm( .T. )                 IS .F.
+   HBTEST IsAffirm( 0 )                   IS .F.
+   HBTEST IsAffirm( 1 )                   IS .F.
 #endif
-   HBTEST IsAffirm("")                    IS .F.
-   HBTEST IsAffirm("I")                   IS .F.
-   HBTEST IsAffirm("y")                   IS .T.
-   HBTEST IsAffirm("Y")                   IS .T.
-   HBTEST IsAffirm("yes")                 IS .T.
-   HBTEST IsAffirm("YES")                 IS .T.
-   HBTEST IsAffirm("n")                   IS .F.
-   HBTEST IsAffirm("N")                   IS .F.
-   HBTEST IsAffirm("no")                  IS .F.
-   HBTEST IsAffirm("NO")                  IS .F.
+   HBTEST IsAffirm( "" )                  IS .F.
+   HBTEST IsAffirm( "I" )                 IS .F.
+   HBTEST IsAffirm( "y" )                 IS .T.
+   HBTEST IsAffirm( "Y" )                 IS .T.
+   HBTEST IsAffirm( "yes" )               IS .T.
+   HBTEST IsAffirm( "YES" )               IS .T.
+   HBTEST IsAffirm( "n" )                 IS .F.
+   HBTEST IsAffirm( "N" )                 IS .F.
+   HBTEST IsAffirm( "no" )                IS .F.
+   HBTEST IsAffirm( "NO" )                IS .F.
 
 /* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
    HBTEST IsNegative()                    IS .F.
-   HBTEST IsNegative(.F.)                 IS .F.
-   HBTEST IsNegative(.T.)                 IS .F.
-   HBTEST IsNegative(0)                   IS .F.
-   HBTEST IsNegative(1)                   IS .F.
+   HBTEST IsNegative( .F. )               IS .F.
+   HBTEST IsNegative( .T. )               IS .F.
+   HBTEST IsNegative( 0 )                 IS .F.
+   HBTEST IsNegative( 1 )                 IS .F.
 #endif
-   HBTEST IsNegative("")                  IS .F.
-   HBTEST IsNegative("I")                 IS .F.
-   HBTEST IsNegative("y")                 IS .F.
-   HBTEST IsNegative("Y")                 IS .F.
-   HBTEST IsNegative("yes")               IS .F.
-   HBTEST IsNegative("YES")               IS .F.
-   HBTEST IsNegative("n")                 IS .T.
-   HBTEST IsNegative("N")                 IS .T.
-   HBTEST IsNegative("no")                IS .T.
-   HBTEST IsNegative("NO")                IS .T.
+   HBTEST IsNegative( "" )                IS .F.
+   HBTEST IsNegative( "I" )               IS .F.
+   HBTEST IsNegative( "y" )               IS .F.
+   HBTEST IsNegative( "Y" )               IS .F.
+   HBTEST IsNegative( "yes" )             IS .F.
+   HBTEST IsNegative( "YES" )             IS .F.
+   HBTEST IsNegative( "n" )               IS .T.
+   HBTEST IsNegative( "N" )               IS .T.
+   HBTEST IsNegative( "no" )              IS .T.
+   HBTEST IsNegative( "NO" )              IS .T.
 
 #endif /* __XPP__ */
 
@@ -532,8 +533,8 @@ PROCEDURE Main_MISC()
    HBTEST Eval( NIL )                     IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST Eval( 1 )                       IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S"
    HBTEST Eval( @sbBlock )                IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:B:{||...} F:S"  /* CA-Cl*pper returns "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:{||...} F:S" */
-   HBTEST Eval( {| p1 | p1 },"A","B")     IS "A"
-   HBTEST Eval( {| p1, p2 | p1 + p2 },"A","B") IS "AB"
+   HBTEST Eval( {| p1 | p1 }, "A", "B" )  IS "A"
+   HBTEST Eval( {| p1, p2 | p1 + p2 }, "A", "B" ) IS "AB"
 #ifdef __HARBOUR__
    HBTEST Eval( {| p1, p2, p3 | HB_SYMBOL_UNUSED( p2 ), HB_SYMBOL_UNUSED( p3 ), p1 }, "A", "B" ) IS "A"
 #else
@@ -559,9 +560,9 @@ PROCEDURE Main_MISC()
    /* hb_SToD() */
 
    /* For these tests in CA-Cl*pper 5.2e the following native hb_SToD() has
-      been used ( not the emulated one written in Clipper ):
+      been used (not the emulated one written in Clipper):
 
-      CLIPPER hb_SToD( void
+      CLIPPER hb_SToD( void )
       {
          // The length check is a fix to avoid buggy behaviour of _retds()
          _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
@@ -570,118 +571,118 @@ PROCEDURE Main_MISC()
 
 #ifndef RT_NO_C
 #ifndef __XPP__
-   HBTEST hb_SToD()                       IS hb_SToD("        ")
+   HBTEST hb_SToD()                       IS hb_SToD( "        " )
 #endif
-   HBTEST hb_SToD(1)                      IS hb_SToD("        ")
-   HBTEST hb_SToD(NIL)                    IS hb_SToD("        ")
-   HBTEST hb_SToD("")                     IS hb_SToD("        ")
-   HBTEST hb_SToD("        ")             IS hb_SToD("        ")
-   HBTEST hb_SToD("       ")              IS hb_SToD("        ")
-   HBTEST hb_SToD("         ")            IS hb_SToD("        ")
-   HBTEST hb_SToD(" 1234567")             IS hb_SToD("        ")
-   HBTEST hb_SToD("1999    ")             IS hb_SToD("        ")
-   HBTEST hb_SToD("99999999")             IS hb_SToD("        ")
-   HBTEST hb_SToD("99990101")             IS hb_SToD("99990101")
-   HBTEST hb_SToD("19991301")             IS hb_SToD("        ")
-   HBTEST hb_SToD("19991241")             IS hb_SToD("        ")
-   HBTEST hb_SToD("01000101")             IS hb_SToD("01000101")
-   HBTEST hb_SToD("29991231")             IS hb_SToD("29991231")
-   HBTEST hb_SToD("19990905")             IS hb_SToD("19990905")
-   HBTEST hb_SToD(" 9990905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("  990905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("   90905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("    0905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("     905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("      05")             IS hb_SToD("        ")
-   HBTEST hb_SToD("1 990905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("19 90905")             IS hb_SToD("17490905")
-   HBTEST hb_SToD("199 0905")             IS hb_SToD("19740905")
-   HBTEST hb_SToD("1999 905")             IS hb_SToD("        ")
-   HBTEST hb_SToD("19990 05")             IS hb_SToD("        ")
-   HBTEST hb_SToD("199909 5")             IS hb_SToD("        ")
-   HBTEST hb_SToD("1999090 ")             IS hb_SToD("        ")
-   HBTEST hb_SToD("1999 9 5")             IS hb_SToD("        ")
-   HBTEST hb_SToD("1999090" + Chr(0))     IS hb_SToD("        ")
+   HBTEST hb_SToD( 1 )                    IS hb_SToD( "        " )
+   HBTEST hb_SToD( NIL )                  IS hb_SToD( "        " )
+   HBTEST hb_SToD( "" )                   IS hb_SToD( "        " )
+   HBTEST hb_SToD( "        " )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "       " )            IS hb_SToD( "        " )
+   HBTEST hb_SToD( "         " )          IS hb_SToD( "        " )
+   HBTEST hb_SToD( " 1234567" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "1999    " )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "99999999" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "99990101" )           IS hb_SToD( "99990101" )
+   HBTEST hb_SToD( "19991301" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "19991241" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "01000101" )           IS hb_SToD( "01000101" )
+   HBTEST hb_SToD( "29991231" )           IS hb_SToD( "29991231" )
+   HBTEST hb_SToD( "19990905" )           IS hb_SToD( "19990905" )
+   HBTEST hb_SToD( " 9990905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "  990905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "   90905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "    0905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "     905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "      05" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "1 990905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "19 90905" )           IS hb_SToD( "17490905" )
+   HBTEST hb_SToD( "199 0905" )           IS hb_SToD( "19740905" )
+   HBTEST hb_SToD( "1999 905" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "19990 05" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "199909 5" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "1999090 " )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "1999 9 5" )           IS hb_SToD( "        " )
+   HBTEST hb_SToD( "1999090" + Chr( 0 ) ) IS hb_SToD( "        " )
 #endif
 
    /* Descend() */
 
 #ifndef __CLIPPER__ /* Bug in CA-Cl*pper, it returns undefined trash */
 #ifndef __XPP__ /* Compiler time error */
-   HBTEST Descend()                       IS NIL
+   HBTEST Descend()                            IS NIL
 #endif
 #endif
-   HBTEST Descend( NIL )                  IS NIL
-   HBTEST Descend( { "A", "B" } )         IS NIL
+   HBTEST Descend( NIL )                       IS NIL
+   HBTEST Descend( { "A", "B" } )              IS NIL
 #ifdef __HARBOUR__
-   HBTEST Descend( @scString )            IS "∏ª¥¥±"  /* Bug in CA-Cl*pper, it will return NIL */
+   HBTEST Descend( @scString )                 IS "∏ª¥¥±"  /* Bug in CA-Cl*pper, it will return NIL */
 #endif
-   HBTEST Descend( scString )              IS "∏ª¥¥±"
-   HBTEST Descend( scString )              IS "∏ª¥¥±"
-   HBTEST Descend( Descend( scString ) )   IS "HELLO"
-   HBTEST Descend( .F. )                   IS .T.
-   HBTEST Descend( .T. )                   IS .F.
-   HBTEST Descend( 0 )                     IS 0.00
-   HBTEST Descend( 1 )                     IS -1.00
-   HBTEST Descend( -1 )                    IS 1.00
-   HBTEST Descend( Descend( 256 ) )        IS 256.00
-   HBTEST Descend( 2.0 )                   IS -2.00
-   HBTEST Descend( 2.5 )                   IS -2.50
-   HBTEST Descend( -100.35 )               IS 100.35
-   HBTEST Str(Descend( -740.354 ))         IS "       740.35"
-   HBTEST Str(Descend( -740.359 ))         IS "       740.36"
-   HBTEST Str(Descend( -740.354 ), 15, 5)  IS "      740.35400"
-   HBTEST Str(Descend( -740.359 ), 15, 5)  IS "      740.35900"
-   HBTEST Descend( 100000 )                IS -100000.00
-   HBTEST Descend( -100000 )               IS 100000.00
-   HBTEST Descend( "" )                    IS ""
-   HBTEST Descend( Chr(0) )                IS ""+Chr(0)+""
-   HBTEST Descend( Chr(0) + "Hello" )      IS ""+Chr(0)+"∏õîîë"
-   HBTEST Descend( "Hello"+Chr(0)+"wo" )   IS "∏õîîë"+Chr(0)+"âë"
-   HBTEST Descend( hb_SToD( "" ) )         IS 5231808
-   HBTEST Descend( hb_SToD( "01000101" ) ) IS 3474223
-   HBTEST Descend( hb_SToD( "19801220" ) ) IS 2787214
+   HBTEST Descend( scString )                  IS "∏ª¥¥±"
+   HBTEST Descend( scString )                  IS "∏ª¥¥±"
+   HBTEST Descend( Descend( scString ) )       IS "HELLO"
+   HBTEST Descend( .F. )                       IS .T.
+   HBTEST Descend( .T. )                       IS .F.
+   HBTEST Descend( 0 )                         IS 0.00
+   HBTEST Descend( 1 )                         IS -1.00
+   HBTEST Descend( -1 )                        IS 1.00
+   HBTEST Descend( Descend( 256 ) )            IS 256.00
+   HBTEST Descend( 2.0 )                       IS -2.00
+   HBTEST Descend( 2.5 )                       IS -2.50
+   HBTEST Descend( -100.35 )                   IS 100.35
+   HBTEST Str( Descend( -740.354 ) )           IS "       740.35"
+   HBTEST Str( Descend( -740.359 ) )           IS "       740.36"
+   HBTEST Str( Descend( -740.354 ), 15, 5 )    IS "      740.35400"
+   HBTEST Str( Descend( -740.359 ), 15, 5 )    IS "      740.35900"
+   HBTEST Descend( 100000 )                    IS -100000.00
+   HBTEST Descend( -100000 )                   IS 100000.00
+   HBTEST Descend( "" )                        IS ""
+   HBTEST Descend( Chr( 0 ) )                  IS Chr( 0 )
+   HBTEST Descend( Chr( 0 ) + "Hello" )        IS Chr( 0 ) + "∏õîîë"
+   HBTEST Descend( "Hello" + Chr( 0 ) + "wo" ) IS "∏õîîë" + Chr( 0 ) + "âë"
+   HBTEST Descend( hb_SToD( "" ) )             IS 5231808
+   HBTEST Descend( hb_SToD( "01000101" ) )     IS 3474223
+   HBTEST Descend( hb_SToD( "19801220" ) )     IS 2787214
 
 #ifdef __HARBOUR__
 
    /* hb_ColorIndex() */
 
-   HBTEST hb_ColorIndex()                   IS ""
-   HBTEST hb_ColorIndex("", -1)             IS ""
-   HBTEST hb_ColorIndex("", 0)              IS ""
-   HBTEST hb_ColorIndex("W/R", -1)          IS ""
-   HBTEST hb_ColorIndex("W/R", 0)           IS "W/R"
-   HBTEST hb_ColorIndex("W/R", 1)           IS ""
-   HBTEST hb_ColorIndex("W/R", 2)           IS ""
-   HBTEST hb_ColorIndex("W/R,GR/0", 0)      IS "W/R"
-   HBTEST hb_ColorIndex("W/R,GR/0", 1)      IS "GR/0"
-   HBTEST hb_ColorIndex("W/R,GR/0", 2)      IS ""
-   HBTEST hb_ColorIndex("W/R,GR/0", 3)      IS ""
-   HBTEST hb_ColorIndex("W/R, GR/0", 0)     IS "W/R"
-   HBTEST hb_ColorIndex("W/R, GR/0", 1)     IS "GR/0"
-   HBTEST hb_ColorIndex("W/R, GR/0", 2)     IS ""
-   HBTEST hb_ColorIndex("W/R, GR/0", 3)     IS ""
-   HBTEST hb_ColorIndex("W/R,GR/0 ", 0)     IS "W/R"
-   HBTEST hb_ColorIndex("W/R,GR/0 ", 1)     IS "GR/0"
-   HBTEST hb_ColorIndex("W/R,GR/0 ", 2)     IS ""
-   HBTEST hb_ColorIndex("W/R, GR/0 ", 0)    IS "W/R"
-   HBTEST hb_ColorIndex("W/R, GR/0 ", 1)    IS "GR/0"
-   HBTEST hb_ColorIndex("W/R, GR/0 ", 2)    IS ""
-   HBTEST hb_ColorIndex("W/R, GR/0 ,", 0)   IS "W/R"
-   HBTEST hb_ColorIndex("W/R, GR/0 ,", 1)   IS "GR/0"
-   HBTEST hb_ColorIndex("W/R, GR/0 ,", 2)   IS ""
-   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 0)  IS "W/R"
-   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 1)  IS "GR/0"
-   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 2)  IS ""
-   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 0) IS "W/R"
-   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 1) IS "GR/0"
-   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 2) IS ""
-   HBTEST hb_ColorIndex(" W/R ,   ,", 1)    IS ""
-   HBTEST hb_ColorIndex(" W/R ,,", 1)       IS ""
-   HBTEST hb_ColorIndex(",,", 0)            IS ""
-   HBTEST hb_ColorIndex(",,", 1)            IS ""
-   HBTEST hb_ColorIndex(",,", 2)            IS ""
-   HBTEST hb_ColorIndex(",  ,", 2)          IS ""
+   HBTEST hb_ColorIndex()                     IS ""
+   HBTEST hb_ColorIndex( "", -1 )             IS ""
+   HBTEST hb_ColorIndex( "", 0 )              IS ""
+   HBTEST hb_ColorIndex( "W/R", -1 )          IS ""
+   HBTEST hb_ColorIndex( "W/R", 0 )           IS "W/R"
+   HBTEST hb_ColorIndex( "W/R", 1 )           IS ""
+   HBTEST hb_ColorIndex( "W/R", 2 )           IS ""
+   HBTEST hb_ColorIndex( "W/R,GR/0", 0 )      IS "W/R"
+   HBTEST hb_ColorIndex( "W/R,GR/0", 1 )      IS "GR/0"
+   HBTEST hb_ColorIndex( "W/R,GR/0", 2 )      IS ""
+   HBTEST hb_ColorIndex( "W/R,GR/0", 3 )      IS ""
+   HBTEST hb_ColorIndex( "W/R, GR/0", 0 )     IS "W/R"
+   HBTEST hb_ColorIndex( "W/R, GR/0", 1 )     IS "GR/0"
+   HBTEST hb_ColorIndex( "W/R, GR/0", 2 )     IS ""
+   HBTEST hb_ColorIndex( "W/R, GR/0", 3 )     IS ""
+   HBTEST hb_ColorIndex( "W/R,GR/0 ", 0 )     IS "W/R"
+   HBTEST hb_ColorIndex( "W/R,GR/0 ", 1 )     IS "GR/0"
+   HBTEST hb_ColorIndex( "W/R,GR/0 ", 2 )     IS ""
+   HBTEST hb_ColorIndex( "W/R, GR/0 ", 0 )    IS "W/R"
+   HBTEST hb_ColorIndex( "W/R, GR/0 ", 1 )    IS "GR/0"
+   HBTEST hb_ColorIndex( "W/R, GR/0 ", 2 )    IS ""
+   HBTEST hb_ColorIndex( "W/R, GR/0 ,", 0 )   IS "W/R"
+   HBTEST hb_ColorIndex( "W/R, GR/0 ,", 1 )   IS "GR/0"
+   HBTEST hb_ColorIndex( "W/R, GR/0 ,", 2 )   IS ""
+   HBTEST hb_ColorIndex( " W/R, GR/0 ,", 0 )  IS "W/R"
+   HBTEST hb_ColorIndex( " W/R, GR/0 ,", 1 )  IS "GR/0"
+   HBTEST hb_ColorIndex( " W/R, GR/0 ,", 2 )  IS ""
+   HBTEST hb_ColorIndex( " W/R , GR/0 ,", 0 ) IS "W/R"
+   HBTEST hb_ColorIndex( " W/R , GR/0 ,", 1 ) IS "GR/0"
+   HBTEST hb_ColorIndex( " W/R , GR/0 ,", 2 ) IS ""
+   HBTEST hb_ColorIndex( " W/R ,   ,", 1 )    IS ""
+   HBTEST hb_ColorIndex( " W/R ,,", 1 )       IS ""
+   HBTEST hb_ColorIndex( ",,", 0 )            IS ""
+   HBTEST hb_ColorIndex( ",,", 1 )            IS ""
+   HBTEST hb_ColorIndex( ",,", 2 )            IS ""
+   HBTEST hb_ColorIndex( ",  ,", 2 )          IS ""
 
 #endif
 
@@ -712,108 +713,108 @@ PROCEDURE Main_MISC()
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   HBTEST Bin2I()                         IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2I()                          IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   HBTEST Bin2I(100)                      IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
-   HBTEST Bin2I("")                       IS 0  /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2I( 100 )                     IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2I( "" )                      IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   HBTEST Bin2I("AB")                     IS 16961
-   HBTEST Bin2I("BA")                     IS 16706
-   HBTEST Bin2I(Chr(255))                 IS 255
-   HBTEST Bin2I(Chr(255)+Chr(255))        IS -1
-   HBTEST Bin2I(Chr(0))                   IS 0
-   HBTEST Bin2I(Chr(0)+Chr(0))            IS 0
-   HBTEST Bin2I("A")                      IS 65
-   HBTEST Bin2I("ABC")                    IS 16961
+   HBTEST Bin2I( "AB" )                    IS 16961
+   HBTEST Bin2I( "BA" )                    IS 16706
+   HBTEST Bin2I( Chr( 255 ) )              IS 255
+   HBTEST Bin2I( Chr( 255 ) + Chr( 255 ) ) IS -1
+   HBTEST Bin2I( Chr( 0 ) )                IS 0
+   HBTEST Bin2I( Chr( 0 ) + Chr( 0 ) )     IS 0
+   HBTEST Bin2I( "A" )                     IS 65
+   HBTEST Bin2I( "ABC" )                   IS 16961
 
    /* Bin2W() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   HBTEST Bin2W()                         IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2W()                          IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   HBTEST Bin2W(100)                      IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
-   HBTEST Bin2W("")                       IS 0  /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2W( 100 )                     IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2W( "" )                      IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   HBTEST Bin2W("AB")                     IS 16961
-   HBTEST Bin2W("BA")                     IS 16706
-   HBTEST Bin2W(Chr(255))                 IS 255
-   HBTEST Bin2W(Chr(255)+Chr(255))        IS 65535
-   HBTEST Bin2W(Chr(0))                   IS 0
-   HBTEST Bin2W(Chr(0)+Chr(0))            IS 0
-   HBTEST Bin2W("A")                      IS 65
-   HBTEST Bin2W("ABC")                    IS 16961
+   HBTEST Bin2W( "AB" )                    IS 16961
+   HBTEST Bin2W( "BA" )                    IS 16706
+   HBTEST Bin2W( Chr( 255 ) )              IS 255
+   HBTEST Bin2W( Chr( 255 ) + Chr( 255 ) ) IS 65535
+   HBTEST Bin2W( Chr( 0 ) )                IS 0
+   HBTEST Bin2W( Chr( 0 ) + Chr( 0 ) )     IS 0
+   HBTEST Bin2W( "A" )                     IS 65
+   HBTEST Bin2W( "ABC" )                   IS 16961
 
    /* Bin2L() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   HBTEST Bin2L()                                    IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2L()                                                    IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   HBTEST Bin2L(100)                                 IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
-   HBTEST Bin2L("")                                  IS 0  /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2L( 100 )                                               IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2L( "" )                                                IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   HBTEST Bin2L("ABCD")                              IS 1145258561
-   HBTEST Bin2L("DCBA")                              IS 1094861636
+   HBTEST Bin2L( "ABCD" )                                            IS 1145258561
+   HBTEST Bin2L( "DCBA" )                                            IS 1094861636
 #ifndef __CLIPPER__
-   HBTEST Bin2L(Chr(255))                            IS 255  /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2L( Chr( 255 ) )                                        IS 255  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   HBTEST Bin2L(Chr(255)+Chr(255)+Chr(255))          IS 16777215
-   HBTEST Bin2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) IS -1
-   HBTEST Bin2L(Chr(0)+Chr(0)+Chr(0))                IS 0
-   HBTEST Bin2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         IS 0
-   HBTEST Bin2L("ABC")                               IS 4407873
-   HBTEST Bin2L("ABCDE")                             IS 1145258561
+   HBTEST Bin2L( Chr( 255 ) + Chr( 255 ) + Chr( 255 ) )              IS 16777215
+   HBTEST Bin2L( Chr( 255 ) + Chr( 255 ) + Chr( 255 ) + Chr( 255 ) ) IS -1
+   HBTEST Bin2L( Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )                    IS 0
+   HBTEST Bin2L( Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )         IS 0
+   HBTEST Bin2L( "ABC" )                                             IS 4407873
+   HBTEST Bin2L( "ABCDE" )                                           IS 1145258561
 
    /* I2Bin() */
 
 #ifndef __XPP__
-   HBTEST I2Bin()                         IS ""+Chr(0)+""+Chr(0)+""
+   HBTEST I2Bin()                         IS Chr( 0 ) + Chr( 0 )
 #endif
-   HBTEST I2Bin(""     )                  IS ""+Chr(0)+""+Chr(0)+""
-   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
-   HBTEST I2Bin(16961  )                  IS "AB"
-   HBTEST I2Bin(16706  )                  IS "BA"
-   HBTEST I2Bin(255    )                  IS "ˇ"+Chr(0)+""
-   HBTEST I2Bin(-1     )                  IS "ˇˇ"
-   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
-   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
-   HBTEST I2Bin(65     )                  IS "A"+Chr(0)+""
-   HBTEST I2Bin(16961  )                  IS "AB"
+   HBTEST I2Bin( ""    )                  IS Chr( 0 ) + Chr( 0 )
+   HBTEST I2Bin( 0     )                  IS Chr( 0 ) + Chr( 0 )
+   HBTEST I2Bin( 16961 )                  IS "AB"
+   HBTEST I2Bin( 16706 )                  IS "BA"
+   HBTEST I2Bin( 255   )                  IS "ˇ" + Chr( 0 )
+   HBTEST I2Bin( -1    )                  IS "ˇˇ"
+   HBTEST I2Bin( 0     )                  IS Chr( 0 ) + Chr( 0 )
+   HBTEST I2Bin( 1     )                  IS Chr( 1 ) + Chr( 0 )
+   HBTEST I2Bin( 65    )                  IS "A" + Chr( 0 )
+   HBTEST I2Bin( 16961 )                  IS "AB"
 
    /* L2Bin() */
 
 #ifndef __XPP__
-   HBTEST L2Bin()                         IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
+   HBTEST L2Bin()                         IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
 #endif
-   HBTEST L2Bin("")                       IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
-   HBTEST L2Bin(0          )              IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
-   HBTEST L2Bin(1145258561 )              IS "ABCD"
-   HBTEST L2Bin(1094861636 )              IS "DCBA"
-   HBTEST L2Bin(255        )              IS "ˇ"+Chr(0)+""+Chr(0)+""+Chr(0)+""
-   HBTEST L2Bin(16777215   )              IS "ˇˇˇ"+Chr(0)+""
-   HBTEST L2Bin(-1         )              IS Chr(255)+Chr(255)+Chr(255)+Chr(255)
-   HBTEST L2Bin(0          )              IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
-   HBTEST L2Bin(0          )              IS Chr(0)+Chr(0)+Chr(0)+Chr(0)
-   HBTEST L2Bin(4407873    )              IS "ABC"+Chr(0)+""
-   HBTEST L2Bin(1145258561 )              IS "ABCD"
+   HBTEST L2Bin( ""         )             IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 0          )             IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 1145258561 )             IS "ABCD"
+   HBTEST L2Bin( 1094861636 )             IS "DCBA"
+   HBTEST L2Bin( 255        )             IS "ˇ" + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 16777215   )             IS "ˇˇˇ" + Chr( 0 )
+   HBTEST L2Bin( -1         )             IS Chr( 255 ) + Chr( 255 ) + Chr( 255 ) + Chr( 255 )
+   HBTEST L2Bin( 0          )             IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 1          )             IS Chr( 1 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 4407873    )             IS "ABC" + Chr( 0 )
+   HBTEST L2Bin( 1145258561 )             IS "ABCD"
 
 #ifndef __XPP__
 
    /* __CopyFile() */
 
-   FClose(FCreate("$$COPYFR.TMP"))
+   FClose( FCreate( "$$COPYFR.TMP" ) )
 
    /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
             failure. */
 
-   HBTEST __CopyFile("$$COPYFR.TMP")                 IS "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP "
-   HBTEST __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") IS NIL
-   HBTEST __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") IS "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR"
-   HBTEST __CopyFile("$$COPYFR.TMP", BADFNAME())     IS "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR"
+   HBTEST __CopyFile( "$$COPYFR.TMP" )                 IS "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP "
+   HBTEST __CopyFile( "$$COPYFR.TMP", "$$COPYTO.TMP" ) IS NIL
+   HBTEST __CopyFile( "NOT_HERE.$$$", "$$COPYTO.TMP" ) IS "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR"
+   HBTEST __CopyFile( "$$COPYFR.TMP", BADFNAME() )     IS "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR"
 
-   FErase("$$COPYFR.TMP")
-   FErase("$$COPYTO.TMP")
+   FErase( "$$COPYFR.TMP" )
+   FErase( "$$COPYTO.TMP" )
 
 #endif /* __XPP__ */
 
@@ -841,60 +842,61 @@ PROCEDURE Main_MISC()
 
    #define SO Chr( 141 )
    #define NU Chr( 0 )
+   #define HT Chr( 9 )
    #define LF Chr( 10 )
    #define CR Chr( 13 )
 
    /* HardCR() */
 
 #ifndef __XPP__
-   HBTEST HardCR()                                                      IS ""
+   HBTEST HardCR()                                              IS ""
 #endif
-   HBTEST HardCR(NIL)                                                   IS ""
-   HBTEST HardCR(100)                                                   IS ""
+   HBTEST HardCR( NIL )                                         IS ""
+   HBTEST HardCR( 100 )                                         IS ""
 #ifdef __HARBOUR__
-   HBTEST HardCR(@scString)                                             IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
+   HBTEST HardCR( @scString )                                   IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
 #endif
-   HBTEST HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        IS "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"
-   HBTEST HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           IS "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"+Chr(0)+""
+   HBTEST HardCR( "H"+SO+LF+"P"+SO+LF+"W"+SO+"M" )              IS "H" + Chr( 13 ) + Chr( 10 ) + "P" + Chr( 13 ) + Chr( 10 ) + "W" + Chr( 141 ) + "M"
+   HBTEST HardCR( "H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU ) IS "H" + Chr( 0 ) + "B" + Chr( 13 ) + Chr( 10 ) + Chr( 0 ) + "P" + Chr( 13 ) + Chr( 10 ) + "W" + Chr( 141 ) + "M" + Chr( 0 )
 
    /* MemoTran() */
 
 #ifndef __XPP__
-   HBTEST MemoTran()                                                    IS ""
+   HBTEST MemoTran()                                                         IS ""
 #endif
-   HBTEST MemoTran(NIL)                                                 IS ""
-   HBTEST MemoTran(100)                                                 IS ""
-   HBTEST MemoTran(100,"1","2")                                         IS ""
+   HBTEST MemoTran( NIL )                                                    IS ""
+   HBTEST MemoTran( 100 )                                                    IS ""
+   HBTEST MemoTran( 100, "1", "2" )                                          IS ""
 #ifdef __HARBOUR__
-   HBTEST MemoTran(@scString)                                           IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
+   HBTEST MemoTran( @scString )                                              IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
 #endif
-   HBTEST MemoTran("H"+SO+LF+"P"+CR+LF+"M")                              IS "H P;M"
-   HBTEST MemoTran("H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I")                IS "H"+Chr(0)+"O P;M"+Chr(0)+"I"
-   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)             IS "M"+Chr(13)+"s;w"+Chr(141)+"w h"+Chr(13)+""
-   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222") IS "M"+Chr(13)+"s1w"+Chr(141)+"w2h"+Chr(13)+""
-   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")       IS "M"+Chr(13)+"s"+Chr(0)+"w"+Chr(141)+"w"+Chr(0)+"h"+Chr(13)+""
+   HBTEST MemoTran( "H"+SO+LF+"P"+CR+LF+"M" )                                IS "H P;M"
+   HBTEST MemoTran( "H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I" )                  IS "H" + Chr( 0 ) + "O P;M" + Chr( 0 ) + "I"
+   HBTEST MemoTran( "M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR )               IS "M" + Chr( 13 ) + "s;w" + Chr( 141 ) + "w h" + Chr( 13 )
+   HBTEST MemoTran( "M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR, "111", "222" ) IS "M" + Chr( 13 ) + "s1w" + Chr( 141 ) + "w2h" + Chr( 13 )
+   HBTEST MemoTran( "M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR, "", "" )       IS "M" + Chr( 13 ) + "s" + Chr( 0 ) + "w" + Chr( 141 ) + "w" + Chr( 0 ) + "h" + Chr( 13 )
 
    /* MEMOWRITE()/MemoRead() */
 
 #ifndef __XPP__
-   HBTEST MemoWrit()                         IS .F.
-   HBTEST MemoWrit("$$MEMOFI.TMP")           IS .F.
+   HBTEST MemoWrit()                            IS .F.
+   HBTEST MemoWrit( "$$MEMOFI.TMP" )            IS .F.
 #endif
-   HBTEST MemoWrit("$$MEMOFI.TMP","")        IS .T.
-   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""
-   HBTEST MemoWrit("$$MEMOFI.TMP",scStringZ) IS .T.
-   HBTEST MemoRead("$$MEMOFI.TMP")           IS "A"+Chr(0)+"B"
-   HBTEST MemoWrit("$$MEMOFI.TMP",Chr(26))   IS .T.
-   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""+Chr(26)+""
-   HBTEST MemoWrit("$$MEMOFI.TMP",scStringW) IS .T.
-   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""+Chr(13)+""+Chr(10)+Chr(141)+Chr(10)+""+Chr(9)+""
-   HBTEST MemoWrit(BADFNAME2()   ,scStringZ) IS .F.
+   HBTEST MemoWrit( "$$MEMOFI.TMP", "" )        IS .T.
+   HBTEST MemoRead( "$$MEMOFI.TMP" )            IS ""
+   HBTEST MemoWrit( "$$MEMOFI.TMP", scStringZ ) IS .T.
+   HBTEST MemoRead( "$$MEMOFI.TMP" )            IS "A" + Chr( 0 ) + "B"
+   HBTEST MemoWrit( "$$MEMOFI.TMP", Chr( 26 ) ) IS .T.
+   HBTEST MemoRead( "$$MEMOFI.TMP" )            IS Chr( 26 )
+   HBTEST MemoWrit( "$$MEMOFI.TMP", scStringW ) IS .T.
+   HBTEST MemoRead( "$$MEMOFI.TMP" )            IS Chr( 13 ) + Chr( 10 ) + Chr( 141 ) + Chr( 10 ) + Chr( 9 )
+   HBTEST MemoWrit( BADFNAME2()   , scStringZ ) IS .F.
 #ifndef __XPP__
-   HBTEST MemoRead()                         IS ""
+   HBTEST MemoRead()                            IS ""
 #endif
-   HBTEST MemoRead( BADFNAME2() )            IS ""
+   HBTEST MemoRead( BADFNAME2() )               IS ""
 
-   FErase("$$MEMOFI.TMP")
+   FErase( "$$MEMOFI.TMP" )
 
 #ifdef __HARBOUR__
 
@@ -1016,24 +1018,24 @@ PROCEDURE Main_MISC()
    /* MLCToPos() */
 
 #ifdef __HARBOUR__
-   cEOL := Set( _SET_EOL, Chr(13) + Chr( 10 ) )
+   cEOL := Set( _SET_EOL, Chr( 13 ) + Chr( 10 ) )
 #endif
 
    HBTEST MLCToPos( 'A message from me', 10, 2, 0 )                                IS 11
    HBTEST MLCToPos( 'A message from me', 5, 2, 0, 4, .F. )                         IS  6
-   HBTEST MLCToPos( 'A'+Chr(9)+'message'+Chr(9)+'from'+Chr(9)+'me', 10, 2, 0, 8 )  IS  3
+   HBTEST MLCToPos( 'A' + HT + 'message' + HT + 'from' + HT + 'me', 10, 2, 0, 8 )  IS  3
    HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 5, 3, 0 )                  IS 10
    HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0 )                  IS 10
    HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0,, .F. )            IS  9
    HBTEST MLCToPos( 'A message from our me', 9, 2, 0 )                             IS 11
    HBTEST MLCToPos( 'A message  from our me', 9, 2, 0 )                            IS 11
-   HBTEST MLCToPos( 'A message'+Chr(9)+'from me', 10, 2, 0 )                       IS 11
+   HBTEST MLCToPos( 'A message' + Chr( 9 ) + 'from me', 10, 2, 0 )                 IS 11
    HBTEST MLCToPos( 'A message from me', 9, 2, 0,, .F. )                           IS 10
    HBTEST MLCToPos( 'A message  from me', 9, 2, 0,, .F. )                          IS 10
-   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0 )                     IS  3
-   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0 )                      IS  3
-   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0,, .F. )               IS 11
-   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0,, .F. )                IS 10
+   HBTEST MLCToPos( 'A message' + Chr( 141 ) + 'from me', 10, 2, 0 )               IS  3
+   HBTEST MLCToPos( 'A message' + Chr( 141 ) + 'from me', 9, 2, 0 )                IS  3
+   HBTEST MLCToPos( 'A message' + Chr( 141 ) + 'from me', 10, 2, 0,, .F. )         IS 11
+   HBTEST MLCToPos( 'A message' + Chr( 141 ) + 'from me', 9, 2, 0,, .F. )          IS 10
    HBTEST MLCToPos( ' message from me', 10, 1, 0 )                                 IS  1
    HBTEST MLCToPos( ' message from me', 10, 1, 8 )                                 IS  9
    HBTEST MLCToPos( ' message from me', 10, 1, 9 )                                 IS 10
@@ -1046,21 +1048,21 @@ PROCEDURE Main_MISC()
    HBTEST MLCToPos( ' message from me', 10, 1, 10,, .F. )                          IS 11
    HBTEST MLCToPos( ' message from me', 10, 1, 11,, .F. )                          IS 12
    HBTEST MLCToPos( ' message from me', 10, 1, 360,, .F. )                         IS 17
-   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .T. )                 IS  9
-   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .F. )                 IS  9
-   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 2, 11 )                       IS 17
-   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .T. )                 IS 13
-   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .F. )                 IS 13
-   HBTEST MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .F. ) IS  1
-   HBTEST MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .T. ) IS  1
-   HBTEST MLCToPos( 'A '+Chr(13)+Chr(10)+'message from me', 9, 2, 0 )              IS  5
-   HBTEST MLCToPos( 'A '+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )             IS 13
-   HBTEST MLCToPos( 'A'+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )              IS 12
-   HBTEST MLCToPos( 'A'+Chr(141)+'message from me', 9, 2, 0 )                      IS 11
-   HBTEST MLCToPos( 'A'+Chr(13)+'message from me', 9, 2, 0 )                       IS 11
-   HBTEST MLCToPos( 'A'+Chr(10)+'message from me', 9, 2, 0 )                       IS 11
-   HBTEST MLCToPos( 'A '+Chr(13)+'message from me', 9, 2, 0 )                      IS  3
-   HBTEST MLCToPos( 'A '+Chr(10)+'message from me', 9, 2, 0 )                      IS  3
+   HBTEST MLCToPos( ' message' + Chr( 9 ) + 'from me', 10, 1, 11,, .T. )           IS  9
+   HBTEST MLCToPos( ' message' + Chr( 9 ) + 'from me', 10, 1, 11,, .F. )           IS  9
+   HBTEST MLCToPos( ' message' + Chr( 9 ) + 'from me', 10, 2, 11 )                 IS 17
+   HBTEST MLCToPos( ' message' + Chr( 9 ) + 'from me', 10, 1, 15,, .T. )           IS 13
+   HBTEST MLCToPos( ' message' + Chr( 9 ) + 'from me', 10, 1, 15,, .F. )           IS 13
+   HBTEST MLCToPos( CR + LF + ' message' + HT + 'from me', 10, 1, 15,, .F. )       IS  1
+   HBTEST MLCToPos( CR + LF + ' message' + HT + 'from me', 10, 1, 15,, .T. )       IS  1
+   HBTEST MLCToPos( 'A ' + Chr( 13 ) + Chr( 10 ) + 'message from me', 9, 2, 0 )    IS  5
+   HBTEST MLCToPos( 'A ' + Chr( 141 ) + Chr( 10 ) + 'message from me', 9, 2, 0 )   IS 13
+   HBTEST MLCToPos( 'A' + Chr( 141 ) + Chr( 10 ) + 'message from me', 9, 2, 0 )    IS 12
+   HBTEST MLCToPos( 'A' + Chr( 141 ) + 'message from me', 9, 2, 0 )                IS 11
+   HBTEST MLCToPos( 'A' + Chr( 13 ) + 'message from me', 9, 2, 0 )                 IS 11
+   HBTEST MLCToPos( 'A' + Chr( 10 ) + 'message from me', 9, 2, 0 )                 IS 11
+   HBTEST MLCToPos( 'A ' + Chr( 13 ) + 'message from me', 9, 2, 0 )                IS  3
+   HBTEST MLCToPos( 'A ' + Chr( 10 ) + 'message from me', 9, 2, 0 )                IS  3
    HBTEST MLCToPos( 'A message from me', 10, 7, 0 )                                IS 18
    HBTEST MLCToPos( , , ,  )                                                       IS  1
    HBTEST MLCToPos( , .T., ,  )                                                    IS  1
@@ -1074,6 +1076,7 @@ PROCEDURE Main_MISC()
 #ifdef __HARBOUR__
 
 PROCEDURE Main_OPOVERL()
+
    LOCAL oString := HB_TString()
 
    oString:cValue := "Hello"
@@ -1149,6 +1152,7 @@ STATIC FUNCTION HB_TString()
 #endif
 
 STATIC FUNCTION TFORNEXT( xFrom, xTo, xStep )
+
    LOCAL tmp
 
    IF xStep == NIL
@@ -1162,6 +1166,7 @@ STATIC FUNCTION TFORNEXT( xFrom, xTo, xStep )
    RETURN tmp
 
 STATIC FUNCTION TFORNEXTX( xFrom, xTo, xStep )
+
    LOCAL tmp
    LOCAL cResult := ""
    LOCAL bFrom := {|| cResult += "F", xFrom }
@@ -1179,6 +1184,7 @@ STATIC FUNCTION TFORNEXTX( xFrom, xTo, xStep )
    RETURN cResult
 
 STATIC FUNCTION TFORNEXTXF( xFrom, xTo, xStep )
+
    LOCAL tmp := -9999
    LOCAL cResult := ""
    LOCAL bFrom := {|| cResult += "F" + LTrim( Str( tmp ) ), xFrom }
@@ -1200,15 +1206,17 @@ STATIC FUNCTION TFORNEXTXF( xFrom, xTo, xStep )
 /* NOTE: cDrive is not tested because it's platform dependent. */
 
 STATIC FUNCTION TESTFNAME( cFull )
+
    LOCAL cPath, cName, cExt, cDrive
 
    hb_FNameSplit( RTrim( cFull ), @cPath, @cName, @cExt, @cDrive )
 
-   RETURN hb_FNameMerge( cPath, cName, cExt ) + ";" + ;
-          cPath + ";" +;
-          cName + ";" +;
-          cExt + ";" +;
-          ""
+   RETURN ;
+      hb_FNameMerge( cPath, cName, cExt ) + ";" + ;
+      cPath + ";" +;
+      cName + ";" +;
+      cExt + ";" +;
+      ""
 
 #endif
 

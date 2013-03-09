@@ -61,7 +61,9 @@
 MEMVAR objHolder, cDtorResult
 
 PROCEDURE Main_CLASS()
+
    LOCAL oValue, aRef
+
    PRIVATE objHolder, cDtorResult
 
 #ifdef __HARBOUR__
@@ -70,7 +72,7 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(0)
+   oValue := DTORCLASS():NEW( 0 )
    HBTEST oValue:type                     IS 0
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
@@ -78,7 +80,7 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(1)
+   oValue := DTORCLASS():NEW( 1 )
    HBTEST oValue:type                     IS 1
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
@@ -86,7 +88,7 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(2)
+   oValue := DTORCLASS():NEW( 2 )
    HBTEST oValue:type                     IS 2
    HBTEST oValue := NIL                   IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
    HBTEST objHolder                       IS NIL
@@ -94,11 +96,11 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(3)
+   oValue := DTORCLASS():NEW( 3 )
    HBTEST oValue:type                     IS 3
    HBTEST oValue := NIL                   IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
-   HBTEST ValType(objHolder)              IS "A"
-   HBTEST Len(objHolder)                  IS 0
+   HBTEST ValType( objHolder )            IS "A"
+   HBTEST Len( objHolder )                IS 0
    HBTEST cDtorResult                     IS "Reference to self in private memvar."
 
 
@@ -106,10 +108,10 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(0)
+   oValue := DTORCLASS():NEW( 0 )
    HBTEST oValue:type                     IS 0
    /* create cross reference */
-   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[ 2 ] := aRef; aRef := NIL
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
@@ -119,10 +121,10 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(1)
+   oValue := DTORCLASS():NEW( 1 )
    HBTEST oValue:type                     IS 1
    /* create cross reference */
-   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[ 2 ] := aRef; aRef := NIL
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
@@ -132,10 +134,10 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(2)
+   oValue := DTORCLASS():NEW( 2 )
    HBTEST oValue:type                     IS 2
    /* create cross reference */
-   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[ 2 ] := aRef; aRef := NIL
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
@@ -145,16 +147,16 @@ PROCEDURE Main_CLASS()
 
    HBTEST cDtorResult := ""               IS ""
    HBTEST objHolder := NIL                IS NIL
-   oValue := DTORCLASS():NEW(3)
+   oValue := DTORCLASS():NEW( 3 )
    HBTEST oValue:type                     IS 3
    /* create cross reference */
-   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[ 2 ] := aRef; aRef := NIL
    HBTEST oValue := NIL                   IS NIL
    HBTEST objHolder                       IS NIL
    HBTEST cDtorResult                     IS ""
    HBTEST hb_gcAll()                      IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
-   HBTEST ValType(objHolder)              IS "A"
-   HBTEST Len(objHolder)                  IS 0
+   HBTEST ValType( objHolder )            IS "A"
+   HBTEST Len( objHolder )                IS 0
    HBTEST cDtorResult                     IS "Reference to self in private memvar."
 
 
@@ -1092,6 +1094,7 @@ PROCEDURE Main_CLASS()
 #ifdef __HARBOUR__
 
 STATIC FUNCTION INSTANCE_DATA( oValue )
+
    LOCAL cData, i
 
    cData := "[" + hb_ntos( Len( oValue ) ) + "]:"

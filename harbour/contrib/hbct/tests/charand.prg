@@ -54,6 +54,8 @@
 
 #ifdef __HARBOUR__
 #require "hbct"
+#else
+#define hb_BChar( <n> ) Chr( <n> )
 #endif
 
 PROCEDURE Main()
@@ -65,8 +67,8 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  CharAnd( "012345678", Chr( 254 ) ) == "002244668" ? --> "' + CharAnd( "012345678", Chr( 254 ) ) + '"'
-   ? '  CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648" ? --> "' + CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
+   ? '  CharAnd( "012345678", hb_BChar( 254 ) ) == "002244668" ? --> "' + CharAnd( "012345678", hb_BChar( 254 ) ) + '"'
+   ? '  CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) == "002044648" ? --> "' + CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) + '"'
 
    ? "End test of CharAnd()"
    ?
