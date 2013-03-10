@@ -124,7 +124,7 @@ static void do_charone( int iSwitch )
             break;
 
          case DO_CHARONE_WORDONE:
-            if( sStrLen > 3 && sDeleteSetLen >= 2 )
+            if( sStrLen > 3 && ( pcDeleteSet == NULL || sDeleteSetLen >= 2 ) )
             {
                const char * pcSub;
                char * pcRet;

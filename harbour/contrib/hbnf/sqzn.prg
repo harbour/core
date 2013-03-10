@@ -27,7 +27,7 @@ FUNCTION ft_Sqzn( nValue, nSize, nDecimals )
    __defaultNIL( @nSize, 10 )
    __defaultNIL( @nDecimals, 0 )
 
-   nValue      := nValue * ( 10 ** nDecimals )
+   nValue      := nValue * ( 10 ^ nDecimals )
    nSize       := iif( ( nSize / 2 ) != Int( nSize / 2 ), nSize + 1, nSize )
    tmpstr      := Str( Abs( nValue ), nSize )
    tmpstr      := StrTran( tmpstr, " ", "0" )

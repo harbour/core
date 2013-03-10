@@ -38,7 +38,7 @@ PROCEDURE test()
 
    ?? "3: "
    ?? a % b
-   ?? a ** b
+   ?? a ^ b
    ?
 
    c := a * b
@@ -70,7 +70,7 @@ PROCEDURE test()
    FOR nI := 1 TO 20
       ?
       ?? Str( 6 + nI ) + ": "
-      ?? 10 ** nI + ( 1.02 * 1.02 )
+      ?? 10 ^ nI + ( 1.02 * 1.02 )
    NEXT
    ?
 

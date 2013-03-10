@@ -75,7 +75,7 @@ METHOD new( nValue, nDec ) CLASS Money
    hb_default( @nValue, 0 )
 
    ::nDec := nDec
-   ::nMul := Int( 10 ** nDec )
+   ::nMul := Int( 10 ^ nDec )
    ::Set( nValue )
 
    RETURN Self

@@ -65,7 +65,7 @@ PROCEDURE TESTBOX( cMode )
    @ 0, 3 SAY cMode
    @ MaxRow(), 3 SAY " Press a key "
 
-   @ 8, 0 SAY Replicate( "         ", 20 )
+   @ 8, 0 SAY Replicate( Chr( 25 ) /* LOW-ASCII "↓" */ + "         ", 20 )
    @ 9, 0 SAY Replicate( "0123456789", 20 )
 
    FOR nRow := 0 TO MaxRow()

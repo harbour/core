@@ -25,12 +25,12 @@ PROCEDURE Main()
 
    HBTEST AscPos( "0123456789" )     IS 57
    HBTEST AscPos( "0123456789", 1 )  IS 48
-   HBTEST AscPos( "0123456789", 11 ) IS 0  // <nPosition> to large !
+   HBTEST AscPos( "0123456789", 11 ) IS 0  // <nPosition> too large !
 
    HBTEST ValPos( "1234x56789" )     IS 9
    HBTEST ValPos( "1234x56789", 1 )  IS 1
-   HBTEST ValPos( "1234x56789", 11 ) IS 0  // <nPosition> to large !
-   HBTEST ValPos( "1234x56789", 5 )  IS 0   // "x" is not a digit !
+   HBTEST ValPos( "1234x56789", 11 ) IS 0  // <nPosition> too large !
+   HBTEST ValPos( "1234x56789", 5 )  IS 0  // "x" is not a digit !
 
    HBTEST AfterAtNum( "..", "..This..is..a..test!" )       IS "test!"
    HBTEST AfterAtNum( "..", "..This..is..a..test!", 2 )    IS "is..a..test!"

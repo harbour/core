@@ -428,7 +428,7 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
       IF lDecSet                         // Decimal set
          IF nDecDigit < nMaxDeci         // Check how many decimals are allowed
             nDecDigit := ++nDecDigit
-            nNumTotal := nNumTotal + nNum / ( 10 ** nDecDigit )
+            nNumTotal := nNumTotal + nNum / ( 10 ^ nDecDigit )
          ENDIF
       ELSE
          nNumTotal := nNumTotal * 10 + nNum
@@ -1065,7 +1065,8 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
       cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR. ;
          "E" $ cStrToStuff .OR. "+" $ cStrToStuff .OR. "-" $ cStrToStuff ;
          .OR. "X" $ cStrToStuff .OR. "*" $ cStrToStuff .OR. ;
-         "" $ cStrToStuff .OR. "/" $ cStrToStuff .OR. "=" $ cStrToStuff, ;
+         Chr( 4 ) /* LOW-ASCII "♦" */ $ cStrToStuff .OR. ;
+         "/" $ cStrToStuff .OR. "=" $ cStrToStuff, ;
          Len( cStrToStuff ) - 1, Len( cStrToStuff ) + 1 ) )
 
       IF cStrToStuff == " " .OR. cStrToStuff == "0"

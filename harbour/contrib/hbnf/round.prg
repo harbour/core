@@ -38,7 +38,7 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
    __defaultNIL( @nRoundToAmount, 2 )
    __defaultNIL( @cRoundType, NEAREST_DECIMAL )
    __defaultNIL( @cRoundDirection, ROUND_NORMAL )
-   __defaultNIL( @nAcceptableError, 1 / ( nRoundToAmount ** 2 ) )
+   __defaultNIL( @nAcceptableError, 1 / ( nRoundToAmount ^ 2 ) )
 
    // Are We Rounding to the Nearest Whole
    // Number or to Zero Decimal Places??
@@ -50,7 +50,7 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       IF Left( cRoundType, 1 ) == NEAREST_DECIMAL
 
          // Yes, Convert to Nearest Fraction
-         nRoundToAmount := 10 ** nRoundToAmount
+         nRoundToAmount := 10 ^ nRoundToAmount
 
       ENDIF
 

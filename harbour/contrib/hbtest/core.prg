@@ -53,8 +53,8 @@
 #include "error.ch"
 
 #define TEST_RESULT_COL1_WIDTH  1
-#define TEST_RESULT_COL2_WIDTH  15
-#define TEST_RESULT_COL3_WIDTH  40
+#define TEST_RESULT_COL2_WIDTH  11
+#define TEST_RESULT_COL3_WIDTH  44
 #define TEST_RESULT_COL4_WIDTH  85
 
 THREAD STATIC t_hParams := { => }
@@ -210,28 +210,51 @@ STATIC FUNCTION ErrorMessage( oError )
 
 STATIC FUNCTION XToStr( xValue, lInString )
 
-   STATIC sc_hReplace := { ;
-      Chr( 0 )  => '" + Chr( 0 ) + "', ;
-      Chr( 1 )  => '" + Chr( 1 ) + "', ;
-      Chr( 2 )  => '" + Chr( 2 ) + "', ;
-      Chr( 7 )  => '" + Chr( 7 ) + "', ;
-      Chr( 8 )  => '" + Chr( 8 ) + "', ;
-      Chr( 9 )  => '" + Chr( 9 ) + "', ;
-      Chr( 10 ) => '" + Chr( 10 ) + "', ;
-      Chr( 11 ) => '" + Chr( 11 ) + "', ;
-      Chr( 12 ) => '" + Chr( 12 ) + "', ;
-      Chr( 13 ) => '" + Chr( 13 ) + "' }
-
    SWITCH ValType( xValue )
    CASE "N" ; RETURN hb_ntos( xValue )
    CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD( "' + DToS( xValue ) + '" )' )
    CASE "U" ; RETURN "NIL"
    CASE "C"
-      xValue := hb_StrReplace( xValue, sc_hReplace )
+      xValue := __StrToExp( xValue )
       RETURN iif( lInString, xValue, '"' + xValue + '"' )
    CASE "M"
-      xValue := hb_StrReplace( xValue, sc_hReplace )
+      xValue := __StrToExp( xValue )
       RETURN "M:" + iif( lInString, xValue, '"' + xValue + '"' )
    ENDSWITCH
 
    RETURN hb_CStr( xValue )
+
+STATIC FUNCTION __StrToExp( cStr )
+
+   LOCAL cResult := ""
+
+   LOCAL nLen, nPos
+   LOCAL nByte, cByte
+
+   nLen := hb_BLen( cStr )
+   FOR nPos := 1 TO nLen
+      cByte := hb_BSubStr( cStr, nPos, 1 )
+      nByte := hb_BCode( cByte )
+      IF ! __ByteIsDisplayable( nByte ) .OR. cByte == '"'
+         cResult += "\" + __ByteToOctal( nByte )
+      ELSE
+         cResult += cByte
+      ENDIF
+   NEXT
+
+   RETURN cResult
+
+STATIC FUNCTION __ByteIsDisplayable( nByte )
+   RETURN nByte >= 32 .AND. nByte < 128
+
+STATIC FUNCTION __ByteToOctal( nValue )
+
+   LOCAL cResult := ""
+   LOCAL nExp
+
+   FOR nExp := 2 TO 0 STEP -1
+      cResult += SubStr( "01234567", Int( nValue / ( 8 ^ nExp ) ) + 1, 1 )
+      nValue %= 8 ^ nExp
+   NEXT
+
+   RETURN cResult

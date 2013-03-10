@@ -203,13 +203,26 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
    s_nStartTime := Seconds()
 
-   s_lShowAll := ;
-      "/ALL" $ Upper( cParam ) .OR. ;
-      "-ALL" $ Upper( cParam )
+   /* Set up the initial state */
 
-   s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "/SKIP:", "" ) )
+#ifdef __HARBOUR__
+   hb_cdpSelect( "EN" )
+   hb_langSelect( "en" )
+#endif
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   SET EXACT OFF
+
+   FErase( "NOT_HERE.$$$" )
+
+   /* Options */
+
+   s_lShowAll := ;
+      "/all" $ Lower( cParam ) .OR. ;
+      "-all" $ Lower( cParam )
+
+   s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "/skip:", "" ) )
    IF Empty( s_aSkipList )
-      s_aSkipList := ListToNArray( CMDLGetValue( Upper( cParam ), "-SKIP:", "" ) )
+      s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "-skip:", "" ) )
    ENDIF
 
    /* Detect presence of shortcutting optimization */
@@ -225,16 +238,6 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    s_nPass := 0
    s_nFail := 0
 
-   /* Set up the initial state */
-
-#ifdef __HARBOUR__
-   hb_langSelect( "en" )
-#endif
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET EXACT OFF
-
-   FErase( "NOT_HERE.$$$" )
-
    /* Feedback */
 
    OutMsg( s_nFhnd, ;
@@ -247,7 +250,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    OutMsg( s_nFhnd, ;
       "           OS: " + OS() + hb_eol() +;
       "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;
-      "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + hb_eol() +;
+      "Shortcut opt.: " + iif( s_lShortcut, "On", "Off" ) + hb_eol() +;
       "     Switches: " + cParam + hb_eol() +;
       "===========================================================================" + hb_eol() )
 

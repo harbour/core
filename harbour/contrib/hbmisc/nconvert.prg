@@ -148,7 +148,7 @@ FUNCTION BinToDec( cString )
    LOCAL nLen := Len( cNewString )
 
    FOR nX := 1 TO nLen
-      nNumber += ( At( SubStr( cNewString, nX, 1 ), "01" ) - 1 ) * ( 2 ** ( nLen - nX ) )
+      nNumber += ( At( SubStr( cNewString, nX, 1 ), "01" ) - 1 ) * ( 2 ^ ( nLen - nX ) )
    NEXT
 
    RETURN nNumber
@@ -160,7 +160,7 @@ FUNCTION OctalToDec( cString )
    LOCAL nLen := Len( cNewString )
 
    FOR nX := 1 TO nLen
-      nNumber += ( At( SubStr( cNewString, nX, 1 ), "01234567" ) - 1 ) * ( 8 ** ( nLen - nX ) )
+      nNumber += ( At( SubStr( cNewString, nX, 1 ), "01234567" ) - 1 ) * ( 8 ^ ( nLen - nX ) )
    NEXT
 
    RETURN nNumber
@@ -172,7 +172,7 @@ FUNCTION HexaToDec( cString )
    LOCAL nLen := Len( cNewString )
 
    FOR nX := 1 TO nLen
-      nNumber += ( At( SubStr( cNewString, nX, 1 ), "0123456789ABCDEF" ) - 1 ) * ( 16 ** ( nLen - nX ) )
+      nNumber += ( At( SubStr( cNewString, nX, 1 ), "0123456789ABCDEF" ) - 1 ) * ( 16 ^ ( nLen - nX ) )
    NEXT
 
    RETURN nNumber

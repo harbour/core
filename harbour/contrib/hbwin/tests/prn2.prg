@@ -34,10 +34,19 @@ PROCEDURE Main()
 
 STATIC PROCEDURE PrnTest( cPrinter, cFileName )
 
+   LOCAL lDelete
+
    IF Empty( cFileName )
-      hb_MemoWrit( cFileName := "_hbtest.prn", "Hello World!" + Chr( 12 ) )
+      hb_MemoWrit( cFileName := hb_FNameExtSet( __FILE__, ".prn" ), "Hello World!" + Chr( 12 ) )
+      lDelete := .T.
+   ELSE
+      lDelete := .F.
    ENDIF
 
    Alert( "win_PrintFileRaw() returned: " + hb_ntos( win_PrintFileRaw( cPrinter, cFileName, "testing raw printing" ) ) )
+
+   IF lDelete
+      FErase( cFileName )
+   ENDIF
 
    RETURN

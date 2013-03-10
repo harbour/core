@@ -402,8 +402,8 @@ PROCEDURE Main_MISC()
    HBTEST SoundEx( "Cold" )                  IS "C430"
    HBTEST SoundEx( "Colt" )                  IS "C430"
    HBTEST SoundEx( "C" + Chr( 0 ) + "olt" )  IS "C430"
-   HBTEST SoundEx( "µ†AêÇ" )                 IS "A000"
    HBTEST SoundEx( "12345" )                 IS "0000"
+   HBTEST SoundEx( Chr( 181 ) + Chr( 160 ) + "A" + Chr( 144 ) + Chr( 130 ) ) IS "A000"
 #endif
 
    /* NATION functions (do not exist in 5.2e US) */
@@ -615,10 +615,11 @@ PROCEDURE Main_MISC()
    HBTEST Descend( NIL )                       IS NIL
    HBTEST Descend( { "A", "B" } )              IS NIL
 #ifdef __HARBOUR__
-   HBTEST Descend( @scString )                 IS "∏ª¥¥±"  /* Bug in CA-Cl*pper, it will return NIL */
+   HBTEST Descend( @scString )                 IS Chr( 184 ) + Chr( 187 ) + Chr( 180 ) + Chr( 180 ) + Chr( 177 )  /* Bug in CA-Cl*pper, it will return NIL */
+
 #endif
-   HBTEST Descend( scString )                  IS "∏ª¥¥±"
-   HBTEST Descend( scString )                  IS "∏ª¥¥±"
+   HBTEST Descend( scString )                  IS Chr( 184 ) + Chr( 187 ) + Chr( 180 ) + Chr( 180 ) + Chr( 177 )
+   HBTEST Descend( scString )                  IS Chr( 184 ) + Chr( 187 ) + Chr( 180 ) + Chr( 180 ) + Chr( 177 )
    HBTEST Descend( Descend( scString ) )       IS "HELLO"
    HBTEST Descend( .F. )                       IS .T.
    HBTEST Descend( .T. )                       IS .F.
@@ -637,8 +638,8 @@ PROCEDURE Main_MISC()
    HBTEST Descend( -100000 )                   IS 100000.00
    HBTEST Descend( "" )                        IS ""
    HBTEST Descend( Chr( 0 ) )                  IS Chr( 0 )
-   HBTEST Descend( Chr( 0 ) + "Hello" )        IS Chr( 0 ) + "∏õîîë"
-   HBTEST Descend( "Hello" + Chr( 0 ) + "wo" ) IS "∏õîîë" + Chr( 0 ) + "âë"
+   HBTEST Descend( Chr( 0 ) + "Hello" )        IS Chr( 0 ) + Chr( 184 ) + Chr( 155 ) + Chr( 148 ) + Chr( 148 ) + Chr( 145 )
+   HBTEST Descend( "Hello" + Chr( 0 ) + "wo" ) IS Chr( 184 ) + Chr( 155 ) + Chr( 148 ) + Chr( 148 ) + Chr( 145 ) + Chr( 0 ) + Chr( 137 ) + Chr( 145 )
    HBTEST Descend( hb_SToD( "" ) )             IS 5231808
    HBTEST Descend( hb_SToD( "01000101" ) )     IS 3474223
    HBTEST Descend( hb_SToD( "19801220" ) )     IS 2787214
@@ -775,8 +776,8 @@ PROCEDURE Main_MISC()
    HBTEST I2Bin( 0     )                  IS Chr( 0 ) + Chr( 0 )
    HBTEST I2Bin( 16961 )                  IS "AB"
    HBTEST I2Bin( 16706 )                  IS "BA"
-   HBTEST I2Bin( 255   )                  IS "ˇ" + Chr( 0 )
-   HBTEST I2Bin( -1    )                  IS "ˇˇ"
+   HBTEST I2Bin( 255   )                  IS Chr( 255 ) + Chr( 0 )
+   HBTEST I2Bin( -1    )                  IS Chr( 255 ) + Chr( 255 )
    HBTEST I2Bin( 0     )                  IS Chr( 0 ) + Chr( 0 )
    HBTEST I2Bin( 1     )                  IS Chr( 1 ) + Chr( 0 )
    HBTEST I2Bin( 65    )                  IS "A" + Chr( 0 )
@@ -791,8 +792,8 @@ PROCEDURE Main_MISC()
    HBTEST L2Bin( 0          )             IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
    HBTEST L2Bin( 1145258561 )             IS "ABCD"
    HBTEST L2Bin( 1094861636 )             IS "DCBA"
-   HBTEST L2Bin( 255        )             IS "ˇ" + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
-   HBTEST L2Bin( 16777215   )             IS "ˇˇˇ" + Chr( 0 )
+   HBTEST L2Bin( 255        )             IS Chr( 255 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+   HBTEST L2Bin( 16777215   )             IS Chr( 255 ) + Chr( 255 ) + Chr( 255 ) + Chr( 0 )
    HBTEST L2Bin( -1         )             IS Chr( 255 ) + Chr( 255 ) + Chr( 255 ) + Chr( 255 )
    HBTEST L2Bin( 0          )             IS Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
    HBTEST L2Bin( 1          )             IS Chr( 1 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
@@ -876,7 +877,7 @@ PROCEDURE Main_MISC()
    HBTEST MemoTran( "M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR, "111", "222" ) IS "M" + Chr( 13 ) + "s1w" + Chr( 141 ) + "w2h" + Chr( 13 )
    HBTEST MemoTran( "M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR, "", "" )       IS "M" + Chr( 13 ) + "s" + Chr( 0 ) + "w" + Chr( 141 ) + "w" + Chr( 0 ) + "h" + Chr( 13 )
 
-   /* MEMOWRITE()/MemoRead() */
+   /* MemoWrit()/MemoRead() */
 
 #ifndef __XPP__
    HBTEST MemoWrit()                            IS .F.
@@ -1102,8 +1103,8 @@ PROCEDURE Main_OPOVERL()
    HBTEST oString .AND. "TST"       IS "Hello AND TST"
    HBTEST oString .OR. "TST"        IS "Hello OR TST"
    ENDIF
-   HBTEST .NOT. oString             IS "∏õîîë"
-   HBTEST !oString                  IS "∏õîîë"
+   HBTEST .NOT. oString             IS Chr( 184 ) + Chr( 155 ) + Chr( 148 ) + Chr( 148 ) + Chr( 145 )
+   HBTEST ! oString                 IS Chr( 184 ) + Chr( 155 ) + Chr( 148 ) + Chr( 148 ) + Chr( 145 )
    HBTEST oString++                 IS "HB_TSTRING Object"
    HBTEST oString:cValue            IS "Hello "
    HBTEST oString--                 IS "HB_TSTRING Object"

@@ -187,9 +187,9 @@ PROCEDURE Main_STR()
    HBTEST Chr( NIL )                      IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST Chr( "A" )                      IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:A F:S"
    HBTEST Chr( "ADDDDDD" )                IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:ADDDDDD F:S"
-   HBTEST Chr( -10000000.0 )              IS "€"
-   HBTEST Chr( -100000 )                  IS "`"
-   HBTEST Chr( -65 )                      IS "¿"
+   HBTEST Chr( -10000000.0 )              IS Chr( 128 )
+   HBTEST Chr( -100000 )                  IS Chr( 96 )
+   HBTEST Chr( -65 )                      IS Chr( 191 )
    HBTEST Chr( snIntP1 )                  IS "A"
 #ifdef __HARBOUR__
    HBTEST Chr( @snIntP1 )                 IS "A"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:U:65 F:S" */
@@ -206,19 +206,19 @@ PROCEDURE Main_STR()
    HBTEST Chr( 66.4 )                     IS "B"
    HBTEST Chr( 66.5 )                     IS "B"
    HBTEST Chr( 66.6 )                     IS "B"
-   HBTEST Chr( 255 )                      IS "ÿ"
+   HBTEST Chr( 255 )                      IS Chr( 255 ) /* somewhat pointless test ;) */
    HBTEST Chr( 256 )                      IS ""        /* Due to a bug in CA-Cl*pper compiler optimizer. It should return Chr( 0 ) */
    HBTEST Chr( 256.0 )                    IS Chr( 0 )
    HBTEST Chr( 256.1 )                    IS Chr( 0 )
    HBTEST Chr( ( 256 ) )                  IS Chr( 0 )  /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
-   HBTEST Chr( 257 )                      IS ""
+   HBTEST Chr( 257 )                      IS Chr( 1 )
    HBTEST Chr( ( 512 ) )                  IS Chr( 0 )  /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
-   HBTEST Chr( 1023 )                     IS "ÿ"
+   HBTEST Chr( 1023 )                     IS Chr( 255 )
    HBTEST Chr( ( 1024 ) )                 IS Chr( 0 )  /* Double paranthesis should be used here to avoid the optimizer of the CA-Cl*pper compiler */
-   HBTEST Chr( 1025 )                     IS ""
-   HBTEST Chr( 1000 )                     IS "è"
-   HBTEST Chr( 100000 )                   IS " "
-   HBTEST Chr( 100000.0 )                 IS " "
+   HBTEST Chr( 1025 )                     IS Chr( 1 )
+   HBTEST Chr( 1000 )                     IS Chr( 232 )
+   HBTEST Chr( 100000 )                   IS Chr( 160 )
+   HBTEST Chr( 100000.0 )                 IS Chr( 160 )
 #ifdef __HARBOUR__
    /* enable Harbour extensions and test correct results results */
    #pragma -kh+
@@ -229,19 +229,19 @@ PROCEDURE Main_STR()
    HBTEST Chr( 66.4 )                     IS "B"
    HBTEST Chr( 66.5 )                     IS "B"
    HBTEST Chr( 66.6 )                     IS "B"
-   HBTEST Chr( 255 )                      IS "ÿ"
+   HBTEST Chr( 255 )                      IS Chr( 255 )
    HBTEST Chr( 256 )                      IS Chr( 0 )
    HBTEST Chr( 256.0 )                    IS Chr( 0 )
    HBTEST Chr( 256.1 )                    IS Chr( 0 )
    HBTEST Chr( ( 256 ) )                  IS Chr( 0 )
-   HBTEST Chr( 257 )                      IS ""
+   HBTEST Chr( 257 )                      IS Chr( 1 )
    HBTEST Chr( ( 512 ) )                  IS Chr( 0 )
-   HBTEST Chr( 1023 )                     IS "ÿ"
+   HBTEST Chr( 1023 )                     IS Chr( 255 )
    HBTEST Chr( ( 1024 ) )                 IS Chr( 0 )
-   HBTEST Chr( 1025 )                     IS ""
-   HBTEST Chr( 1000 )                     IS "è"
-   HBTEST Chr( 100000 )                   IS " "
-   HBTEST Chr( 100000.0 )                 IS " "
+   HBTEST Chr( 1025 )                     IS Chr( 1 )
+   HBTEST Chr( 1000 )                     IS Chr( 232 )
+   HBTEST Chr( 100000 )                   IS Chr( 160 )
+   HBTEST Chr( 100000.0 )                 IS Chr( 160 )
 #endif
 
    /* Asc() */
@@ -325,8 +325,8 @@ PROCEDURE Main_STR()
    HBTEST IsUpper( "K" )                  IS .T.
    HBTEST IsUpper( "Z" )                  IS .T.
    HBTEST IsUpper( "z" )                  IS .F.
-   HBTEST IsUpper( "™" )                  IS .F.
-   HBTEST IsUpper( "”" )                  IS .F.
+   HBTEST IsUpper( Chr( 153 ) )           IS .F.
+   HBTEST IsUpper( Chr( 148 ) )           IS .F.
 
    /* IsLower() */
 
@@ -345,8 +345,8 @@ PROCEDURE Main_STR()
    HBTEST IsLower( "K" )                  IS .F.
    HBTEST IsLower( "Z" )                  IS .F.
    HBTEST IsLower( "z" )                  IS .T.
-   HBTEST IsLower( "™" )                  IS .F.
-   HBTEST IsLower( "”" )                  IS .F.
+   HBTEST IsLower( Chr( 153 ) )           IS .F.
+   HBTEST IsLower( Chr( 148 ) )           IS .F.
 
    /* AllTrim() */
 
@@ -478,8 +478,8 @@ PROCEDURE Main_STR()
    HBTEST Upper( "AazazA" )                IS "AAZAZA"
    HBTEST Upper( "Aaz" + Chr( 0 ) + "zA" ) IS "AAZ" + Chr( 0 ) + "ZA"
    HBTEST Upper( "z" )                     IS "Z"
-   HBTEST Upper( " µ" )                    IS " µ"
-   HBTEST Upper( "H rbor 8-) µ" )          IS "H RBOR 8-) µ"
+   HBTEST Upper( Chr( 160 ) + Chr( 181 ) ) IS Chr( 160 ) + Chr( 181 )
+   HBTEST Upper( "H" + Chr( 160 ) + "rbor 8-) " + Chr( 181 ) ) IS "H" + Chr( 160 ) + "RBOR 8-) " + Chr( 181 )
 
    /* Lower() */
 
@@ -497,8 +497,8 @@ PROCEDURE Main_STR()
    HBTEST Lower( "AazazA" )                IS "aazaza"
    HBTEST Lower( "Aaz" + Chr( 0 ) + "zA" ) IS "aaz" + Chr( 0 ) + "za"
    HBTEST Lower( "z" )                     IS "z"
-   HBTEST Lower( " µ" )                    IS " µ"
-   HBTEST Lower( "H rbor 8-) µ" )          IS "h rbor 8-) µ"
+   HBTEST Lower( Chr( 160 ) + Chr( 181 ) ) IS Chr( 160 ) + Chr( 181 )
+   HBTEST Lower( "H" + Chr( 160 ) + "rbor 8-) " + Chr( 181 ) ) IS "h" + Chr( 160 ) + "rbor 8-) " + Chr( 181 )
 
    /* At() */
 

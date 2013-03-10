@@ -55,23 +55,23 @@
 /*
  * Convert to character
  *
- * ToChar( <xTxt>, [cSeparator], [lDebug] ) --> <cOut>
- *   <xTxt>       : Item to write
- *   [cSeparator] : Separator for arrays
- *   [lDebug]     : .T. -> Write debug output
+ * ToChar( <xValue>, [<cSeparator>], [<lDebug>] ) --> <cOut>
+ *   <xValue>     : Item to write
+ *   <cSeparator> : Separator for arrays
+ *   <lDebug>     : .T. -> Write debug output
  *
- * In DEBUG mode :
+ * In <lDebug> mode:
  *
- * It will show the xItem according to the following format :
+ * It will show the xItem according to the following format:
  *
- * <num>                        Numerical
- * yyyy-mm-dd                   Date
- * "<chr>"                      Character
- * {<el1>, <el2>, ...}          Array
- * NIL                          NIL
- * .T. / .F.                    Boolean
- * <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ... }
- *                              Object
+ * Numerical  <num>
+ * Date       yyyy-mm-dd
+ * Character  "<chr>"
+ * Array      {<el1>, <el2>, ...}
+ * NIL        NIL
+ * Logical    .T. / .F.
+ * Object     <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ...}
+ *
  */
 
 FUNCTION ToChar( xTxt, cSeparator, lDebug )
@@ -94,10 +94,9 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
    CASE "B" ; RETURN iif( lDebug, "Block", Eval( xTxt ) )
 
    CASE "A"
+      cOut := ""
       IF lDebug
-         cOut := "{"
-      ELSE
-         cOut := ""
+         cOut += "{"
       ENDIF
       nLen := Len( xTxt )
       FOR n := 1 TO nLen                     // For each item : Recurse !
