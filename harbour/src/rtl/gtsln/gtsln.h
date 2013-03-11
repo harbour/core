@@ -118,7 +118,7 @@
 
 #define HB_SLN_IS_CHAR( slch )             ( ( slch ).wchars[ 0 ] != 0 )
 
-#else /* !defined( HB_SLN_UTF8 ) */
+#else /* ! defined( HB_SLN_UTF8 ) */
 
 #if SLANG_VERSION < 10400
     typedef unsigned short SLsmg_Char_Type;

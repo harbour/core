@@ -2338,10 +2338,10 @@ HB_SIZE hb_cdpnDup2Upper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize,
 {
    HB_SIZE nMax = HB_MIN( nSize, nBuffLen ), n;
 
-   if( !cdp )
+   if( ! cdp )
       for( n = 0; n < nMax; n++ )
          pBuffer[ n ] = HB_TOUPPER( pszText[ n ] );
-   else if( !HB_CDP_ISCUSTOM( cdp ) || !cdp->wcharUpper )
+   else if( ! HB_CDP_ISCUSTOM( cdp ) || ! cdp->wcharUpper )
       for( n = 0; n < nMax; n++ )
          pBuffer[ n ] = ( char ) cdp->upper[ ( HB_UCHAR ) pszText[ n ] ];
    else

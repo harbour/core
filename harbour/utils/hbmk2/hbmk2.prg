@@ -529,8 +529,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_lSysLoc           154
 #define _HBMK_lDumpInfo         155
 #define _HBMK_lMarkdown         156
+#define _HBMK_lShellMode        157
 
-#define _HBMK_MAX_              156
+#define _HBMK_MAX_              157
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -913,9 +914,11 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
 #endif
 
-STATIC FUNCTION hbmk_new()
+STATIC FUNCTION hbmk_new( lShellMode )
 
    LOCAL hbmk[ _HBMK_MAX_ ]
+
+   hbmk[ _HBMK_lShellMode ] := lShellMode
 
    hbmk[ _HBMK_cBUILD ] := ""
 
@@ -1437,7 +1440,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    LOCAL cStdOutErr
 
-   hbmk := hbmk_new()
+   hbmk := hbmk_new( .F. )
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -1548,16 +1551,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ProcEnvOption( SubStr( cParam, 6 ) )
 
       CASE cParamL == "-help" .OR. cParamL == "--help" .OR. ;
-           cParamL == "-h" .OR. ;
-           cParamL == "-?"
+           cParamL == "-h" .OR. cParamL == "-?"
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T. )
          RETURN _EXIT_HELP
 
       CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
-           cParamL == "-hh" .OR. ;
-           cParamL == "-??"
+           cParamL == "-hh" .OR. cParamL == "-??"
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
@@ -13634,6 +13635,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL aOPTPRG
    LOCAL hHRB
    LOCAL cVersion
+   LOCAL cParamL
 
    /* get this before doing anything else */
    LOCAL lDebug := ;
@@ -13655,9 +13657,47 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbsh[ _HBSH_cDirBase ] := hb_DirBase()
    hbsh[ _HBSH_cProgName ] := hb_ProgName()
 
+   /* Init */
+
+   hbmk := hbsh[ _HBSH_hbmk ] := hbmk_new( .T. )
+
+   /* Help */
+
+   IF HB_ISSTRING( cFile )
+
+      cParamL := Lower( cFile )
+
+      DO CASE
+      CASE cParamL == "-help" .OR. cParamL == "--help" .OR. ;
+           cParamL == "-h" .OR. cParamL == "-?"
+
+         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T. )
+         RETURN
+
+      CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
+           cParamL == "-hh" .OR. cParamL == "-??"
+
+         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T., .T. )
+         RETURN
+
+      CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
+
+         hbmk[ _HBMK_lMarkdown ] := .T.
+
+         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T., .T. )
+         RETURN
+
+      ENDCASE
+   ENDIF
+
    /* Detect Harbour dir layout */
 
-   hbmk := hbsh[ _HBSH_hbmk ] := hbmk_new()
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
@@ -14712,7 +14752,9 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
       "SETCURSOR"        => NIL, ;
       "SETMODE"          => NIL, ;
       "SETPOS"           => NIL, ;
-      "SETPOSBS"         => NIL }
+      "SETPOSBS"         => NIL, ;
+      "__ACCEPT"         => NIL, ;
+      "__WAIT"           => NIL }
 
 STATIC FUNCTION __hbshell_detect_CUI_extern_negative()
    RETURN { ;
@@ -15411,9 +15453,16 @@ STATIC PROCEDURE ShowHeader( hbmk )
    LOCAL cTrsText
    LOCAL cTrsTextI
 
-   cText := ;
-      "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
-      "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
+   IF hbmk[ _HBMK_lShellMode ]
+      cText := ;
+         "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
+         "Copyright (c) 2007-2013, Viktor Szakáts" + e"\n" + ;
+         "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
+   ELSE
+      cText := ;
+         "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
+         "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
+   ENDIF
 
    IF hbmk[ _HBMK_lMarkdown ]
       hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
@@ -15481,6 +15530,11 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       I_( "Syntax:" ), ;
       "", ;
       hb_StrFormat( I_( "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ) }
+
+   LOCAL aHdr_Syntax_Shell := { ;
+      I_( "Syntax:" ), ;
+      "", ;
+      hb_StrFormat( I_( "  %1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [parameters[s]]" ), hb_FNameName( hb_ProgName() ) ) }
 
    LOCAL aHdr_Supp := { ;
       NIL, ;
@@ -15632,7 +15686,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aHdr_Opt_LongCmd := { ;
       "", ;
-      I_( "Options below are available on command line only:" ) }
+      I_( "Options below are available on command line:" ) }
 
    LOCAL aLst_Opt_LongCmd := { ;
       NIL, ;
@@ -15681,6 +15735,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-credits"           , I_( "Harbour compiler credits" ) }, ;
       { "-build"             , I_( "Harbour compiler build information" ) }, ;
       { "-version"           , I_( "display version header only" ) } }
+
+   LOCAL aLst_Opt_LongCmd_Shell := { ;
+      NIL, ;
+      { "-help"              , I_( "this help" ) }, ;
+      { "-longhelp"          , I_( "long help" ) }, ;
+      { "-longhelpmd"        , I_( "long help in Markdown format" ) } }
 
    /* Internal option descriptions intentionally not marked as translatable */
    LOCAL aHdr_Opt_Internal := { ;
@@ -15770,6 +15830,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { _HBMK_ENV_INSTALL_PFX, I_( "override Harbour base installation directory" ) }, ;
       { "HB_INSTALL_ADDONS"  , I_( "override Harbour base add-ons directory" ) } }
 
+   LOCAL aLst_EnvVar_Shell := { ;
+      NIL }
+
    LOCAL aHdr_File := { ;
       "", ;
       I_( "Files:" ) }
@@ -15779,13 +15842,16 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "*.hbp"              , I_( "project file. Can contain command line options, expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line. Each .hbp file reference will be executed as a sub-project." ) }, ;
       { "*.hbm"              , I_( "collection of options. Can be used to collect common ones into a file and include that into project files. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
       { "*.hbc"              , I_( "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
-      { "*.hb"               , I_( "Harbour script" ) }, ;
-      { "*.hrb"              , I_( "Harbour portable binary (aka precompiled Harbour script)" ) }, ;
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
       { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) }, ;
       { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm", hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of installing targets and related package files to standard locations (in the style of Harbour contribs)." ), _SELF_NAME_ ) } }
+
+   LOCAL aLst_File_Shell := { ;
+      NIL, ;
+      { "*.hb"               , I_( "Harbour script" ) }, ;
+      { "*.hrb"              , I_( "Harbour portable binary (aka precompiled Harbour script)" ) } }
 
    LOCAL aHdr_Macro := { ;
       "", ;
@@ -15952,11 +16018,14 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_PredSource := { ;
       NIL, ;
-      { _HBMK_SHELL                                          , I_( "when a Harbour source file is run as a shell script" ) }, ;
       { _HBMK_PLUGIN                                         , hb_StrFormat( I_( "when an .hb script is compiled as %1$s plugin" ), _SELF_NAME_ ) }, ;
       { _HBMK_HBEXTREQ                                       , I_( "when an .hbx source file is present in a project (available in Harbour sources)" ) }, ;
       { hb_StrFormat( _HBMK_HAS_TPL_HBC, I_( "<hbcname>" ) ) , I_( "when <hbcname>.hbc package is linked to the target. The value is the version= value from the .hbc file, converted to a decimal number, which is '1', if not specified. (available in Harbour sources)" ) }, ;
-      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )     , I_( "when <depname> dependency was detected (available in C sources)" ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )     , I_( "when <depname> dependency was detected (available in C sources)" ) } }
+
+   LOCAL aLst_PredSource_Shell := { ;
+      NIL, ;
+      { _HBMK_SHELL                                          , I_( "when a Harbour source file is run as a shell script" ) }, ;
       { "<standard Harbour>"                                 , I_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..." ) } }
 
    LOCAL aHdr_PredBuild := { ;
@@ -16060,21 +16129,60 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_Notes := { ;
       NIL, ;
-      I_( e"<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ), ;
-      I_( "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used." ), ;
+      I_( e"<script> can be:\n  <@script> or <script.hbm>: command line options in file\n" + ;
+         e"  <script.hbp>: command line options in file, it also marks a new target " + ;
+         e"if specified on the command line\n" + ;
+         e"  <script.hbc>: package configuration file" ), ;
+      I_( "Source filename without extension will load the .hbp file, if such .hbp " + ;
+         e"file exists in current directory. If not, .prg extension will be used." ), ;
       I_( "Multiple -l, -L, -i and <script> parameters are accepted." ), ;
-      I_( e"Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)" ), ;
-      hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory." ), _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
-      hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ), ;
-      I_( e"Filters are accepted in each .hbc line and most options.\nFilters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ), ;
-      I_( "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
-      I_( e"Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. Standard output of the command will be used as the value. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"." ), ;
-      I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ), ;
+      I_( e"Regular Harbour compiler options are also accepted as is.\n" + ;
+         e"(see them with -harbourhelp option)" ), ;
+      hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. " + ;
+         e"On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are " + ;
+         e"checked (in that order) before the %2$s directory." ), ;
+         _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
+      hb_StrFormat( I_( "%1$s make script in current directory is always processed " + ;
+         e"if it exists." ), _HBMK_AUTOHBM_NAME ), ;
+      I_( e"Filters are accepted in each .hbc line and most options.\nFilters can " + ;
+         e"be combined using '&' (and), '|' (or) operators, negated by '!' operator " + ;
+         e"and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, " + ;
+         e"{(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, " + ;
+         e"-stop{!allwin}" ), ;
+      I_( "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, " + ;
+         "instfiles=, instpaths=, echo=) and corresponding command line parameters " + ;
+         "will accept macro variables. libpaths= also accepts %{hb_name} which " + ;
+         "translates to the name of the .hbc file under search." ), ;
+      I_( e"Options accepting macro variables also support command substitution. " + ;
+         e"Enclose command inside ``, and, if the command contains space, also " + ;
+         e"enclose in double quotes. Standard output of the command will be used " + ;
+         e"as the value. F.e. \"-cflag=`wx-config --cflags`\", or " + ;
+         e"ldflags={unix&gcc}\"`wx-config --libs`\"." ), ;
+      I_( "Libraries and object files built with/for CA-Cl*pper will not work with " + ;
+         "any supported platform/compiler." ), ;
       I_( "Defaults and feature support may vary by platform/compiler." ), ;
-      hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
-      hb_StrFormat( I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%1$s', unless full-screen CUI calls are detected, when '%2$s' [*] is automatically selected." ), Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
-      I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ), ;
-      hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform." ), Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
+      hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS " + ;
+         "(on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
+      I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) }
+
+   LOCAL aLst_Notes_Shell := { ;
+      NIL, ;
+      hb_StrFormat( I_( "%1$s file passed as first parameter will be run as Harbour script. " + ;
+         "If the filename contains no path components, it will be searched in current working " + ;
+         "directory and in PATH. If not extension is given, .hb and .hrb extensions are " + ;
+         "searched, in that order. .dbf file will be opened automatically in shared mode and " + ;
+         "interactive Harbour shell launched. " + ;
+         "Non-standard extensions will be autodetected for source and precompiled script types. " + ;
+         "Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default " + ;
+         "core header 'hb.ch' is automatically #included. The default date format is the " + ;
+         "ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls " + ;
+         "are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)." ), ;
+         iif( hbmk[ _HBMK_lShellMode ], I_( ".hb, .prg, .hrb or .dbf" ), I_( ".hb, .hrb or .dbf" ) ), ;
+         Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
+      I_( "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard." ), ;
+      hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration " + ;
+         "dependent. This help was generated on '%1$s' host platform." ), ;
+         Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
 
    LOCAL aHdr_Desc := { ;
       "", ;
@@ -16094,12 +16202,21 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       e"In order to achieve above goals, %1$s will autodetect Harbour, C compiler " + ;
       e"and other required tools, then configure and call them appropriately. " + ;
       e"%1$s allows to extend the types of supported source files via plugins.\n" + ;
-      e"Besides building executables, %1$s is able to run Harbour scripts directly, " + ;
-      e"and it also features an interactive shell prompt." ), _SELF_NAME_ )
+      e"Besides building executables, %1$s is able to run Harbour scripts (both " + ;
+      e"source and precompiled) directly, and it also features an interactive " + ;
+      e"shell prompt." ), _SELF_NAME_ )
 
    LOCAL aLst_Desc := { ;
       NIL, ;
       cDesc }
+
+   LOCAL cDesc_Shell := hb_StrFormat( I_( ;
+      e"%1$s is able to run Harbour scripts (both source and precompiled), " + ;
+      e"and it also features an interactive shell prompt." ), hb_FNameName( hb_ProgName() ) )
+
+   LOCAL aLst_Desc_Shell := { ;
+      NIL, ;
+      cDesc_Shell }
 
    LOCAL aHdr_License := { ;
       "", ;
@@ -16175,12 +16292,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    hb_default( @lLong, .F. )
 
 #ifndef _HBMK_EMBEDDED_
-   AAdd( aLst_EnvVar, { _EXT_ENV_       , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
-   AAdd( aLst_EnvVar, { _HBSH_ENV_DEBUG , I_( "enable script debugging if set to any non-empty value" ) } )
-   AAdd( aLst_File, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
-   AAdd( aLst_File, { "shell plugins"     , hb_StrFormat( I_( ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
-   AAdd( aLst_File, { _FNAME_HISTORY_     , hb_StrFormat( I_( "stores command history for interactive Harbour shell. Resides in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
-   AAdd( aLst_File, { _EXT_FILE_          , hb_StrFormat( I_( "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s" ), _EXT_FILE_ALT, _EXT_FILE_ALT_OS, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
+   AAdd( aLst_EnvVar_Shell, { _EXT_ENV_       , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
+   AAdd( aLst_EnvVar_Shell, { _HBSH_ENV_DEBUG , I_( "enable script debugging if set to any non-empty value" ) } )
+   AAdd( aLst_File_Shell, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
+   AAdd( aLst_File_Shell, { "shell plugins"     , hb_StrFormat( I_( ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
+   AAdd( aLst_File_Shell, { _FNAME_HISTORY_     , hb_StrFormat( I_( "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s" ), _HISTORY_DISABLE_LINE, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
+   AAdd( aLst_File_Shell, { _EXT_FILE_          , hb_StrFormat( I_( "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s" ), _EXT_FILE_ALT, _EXT_FILE_ALT_OS, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
 #endif
 
 #if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
@@ -16194,42 +16311,79 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    #endif
 #endif
 
-   AEval( aHdr_Syntax, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+   IF hbmk[ _HBMK_lShellMode ]
+      AEval( aHdr_Syntax_Shell, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+   ELSE
+      AEval( aHdr_Syntax, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+   ENDIF
    IF lMore
       AEval( aHdr_Desc, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
-   ENDIF
-   AEval( aHdr_Opt, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-   AEval( aLst_Opt_Basic, {| tmp | OutOpt( hbmk, tmp ) } )
-   IF lMore
-      AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
-      AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
-      IF lLong
-         AEval( aHdr_Opt_Internal, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-         AEval( aLst_Opt_Internal, {| tmp | OutOpt( hbmk, tmp ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_Desc, {| tmp | OutNote( hbmk, tmp, "  " ) } )
+      ELSE
+         AEval( aLst_Desc_Shell, {| tmp | OutNote( hbmk, tmp, "  " ) } )
       ENDIF
-      AEval( aHdr_Opt_Self, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_Opt_Self, {| tmp | OutOpt( hbmk, tmp ) } )
+   ENDIF
+   IF ! hbmk[ _HBMK_lShellMode ]
+      AEval( aHdr_Opt, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+      AEval( aLst_Opt_Basic, {| tmp | OutOpt( hbmk, tmp ) } )
+   ENDIF
+   IF lMore
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_Opt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
+      AEval( aHdr_Opt_LongCmd, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_Opt_LongCmd, {| tmp | OutOpt( hbmk, tmp ) } )
+      ELSE
+         AEval( aLst_Opt_LongCmd_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
+      IF ! hbmk[ _HBMK_lShellMode ]
+         IF lLong
+            AEval( aHdr_Opt_Internal, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+            AEval( aLst_Opt_Internal, {| tmp | OutOpt( hbmk, tmp ) } )
+         ENDIF
+         AEval( aHdr_Opt_Self, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_Opt_Self, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
       AEval( aHdr_File, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_File, {| tmp | OutOpt( hbmk, tmp ) } )
-      AEval( aHdr_Macro, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Macro, {| tmp | OutOpt( hbmk, tmp ) } )
-      AEval( aHdr_Filter, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Filter, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_File, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
+      AEval( aLst_File_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aHdr_Macro, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_Macro, {| tmp | OutOpt( hbmk, tmp ) } )
+         AEval( aHdr_Filter, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_Filter, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      ENDIF
       AEval( aHdr_PredSource, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
-      AEval( aHdr_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      ELSE
+         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+      ENDIF
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aHdr_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      ENDIF
       IF lLong
          AEval( aHdr_EnvVar, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-         AEval( aLst_EnvVar, {| tmp | OutOpt( hbmk, tmp ) } )
-         AEval( aHdr_HBC, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-         AEval( aLst_HBC, {| tmp | OutOpt( hbmk, tmp ) } )
-         AEval( aHdr_APIPlugin, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-         AEval( aLst_APIPlugin, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
-         AEval( aHdr_PluginVars, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-         AEval( aLst_PluginVars, {| tmp | OutOpt( hbmk, tmp ) } )
+         IF ! hbmk[ _HBMK_lShellMode ]
+            AEval( aLst_EnvVar, {| tmp | OutOpt( hbmk, tmp ) } )
+         ENDIF
+         IF Len( aLst_EnvVar_Shell ) > 1
+            AEval( aLst_EnvVar_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
+         ENDIF
+         IF ! hbmk[ _HBMK_lShellMode ]
+            AEval( aHdr_HBC, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+            AEval( aLst_HBC, {| tmp | OutOpt( hbmk, tmp ) } )
+            AEval( aHdr_APIPlugin, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+            AEval( aLst_APIPlugin, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+            AEval( aHdr_PluginVars, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+            AEval( aLst_PluginVars, {| tmp | OutOpt( hbmk, tmp ) } )
+         ENDIF
 #ifndef _HBMK_EMBEDDED_
          AEval( aHdr_APIShell, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_APIShell, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
@@ -16238,20 +16392,27 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
                   - shell plugins
           */
       ENDIF
-      AEval( aHdr_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
-      AEval( aHdr_ExampleHRB, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_ExampleHRB, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
-      AEval( aHdr_ExampleApp, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_ExampleApp, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
-      AEval( aHdr_ExampleLib, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_ExampleLib, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
-      AEval( aHdr_Exit, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Exit, {| tmp | OutOpt( hbmk, tmp, 8 ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aHdr_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_ExampleBasic, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+         AEval( aHdr_ExampleHRB, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_ExampleHRB, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+         AEval( aHdr_ExampleApp, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_ExampleApp, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+         AEval( aHdr_ExampleLib, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_ExampleLib, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
+         AEval( aHdr_Exit, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
+         AEval( aLst_Exit, {| tmp | OutOpt( hbmk, tmp, 8 ) } )
+      ENDIF
       AEval( aHdr_Notes, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-      AEval( aLst_Notes, {| tmp | OutNote( hbmk, tmp ) } )
-      AEval( aHdr_Supp, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-      AEval( aLst_Supp, {| tmp | OutOpt( hbmk, tmp, 11 ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aLst_Notes, {| tmp | OutNote( hbmk, tmp ) } )
+      ENDIF
+      AEval( aLst_Notes_Shell, {| tmp | OutNote( hbmk, tmp ) } )
+      IF ! hbmk[ _HBMK_lShellMode ]
+         AEval( aHdr_Supp, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+         AEval( aLst_Supp, {| tmp | OutOpt( hbmk, tmp, 11 ) } )
+      ENDIF
       IF lLong
          IF Len( aLst_Config ) > 1
             AEval( aHdr_Config, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )

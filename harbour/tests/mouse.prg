@@ -50,14 +50,14 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION MUPDATE()
+STATIC FUNCTION MUPDATE()
 
    @ MaxRow() - 1,  4 SAY MRow() PICTURE "9999"
    @ MaxRow() - 1, 12 SAY MCol() PICTURE "9999"
 
    RETURN 0
 
-FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
+STATIC FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
 
    LOCAL lInside := .F.
 
@@ -71,7 +71,7 @@ FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
 
 // First test: Check the boundaries of the main window
 
-PROCEDURE TEST1()
+STATIC PROCEDURE TEST1()
 
    LOCAL nKey
 
@@ -131,7 +131,7 @@ PROCEDURE TEST1()
 
 // Second test: check the button pressing
 
-PROCEDURE TEST2( nR, nC )
+STATIC PROCEDURE TEST2( nR, nC )
 
    LOCAL cSkip := "", nKey, nPress := 0
 
@@ -244,7 +244,7 @@ PROCEDURE TEST2( nR, nC )
 
    RETURN
 
-PROCEDURE CHECKEXIT()
+STATIC PROCEDURE CHECKEXIT()
 
    IF ! MINRECT( MaxRow() - 2, MaxCol() - 11, MaxRow(), MaxCol() )
       RETURN

@@ -215,11 +215,16 @@ STATIC FUNCTION XToStr( xValue, lInString )
    CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD( "' + DToS( xValue ) + '" )' )
    CASE "U" ; RETURN "NIL"
    CASE "C"
-      xValue := __StrToExp( xValue )
-      RETURN iif( lInString, xValue, '"' + xValue + '"' )
    CASE "M"
       xValue := __StrToExp( xValue )
-      RETURN "M:" + iif( lInString, xValue, '"' + xValue + '"' )
+      RETURN iif( lInString, xValue, '"' + xValue + '"' )
+   CASE "A"
+   CASE "H"
+   CASE "O"
+      IF ! lInString
+         RETURN hb_ValToExp( xValue, .T. )
+      ENDIF
+      EXIT
    ENDSWITCH
 
    RETURN hb_CStr( xValue )
@@ -229,14 +234,13 @@ STATIC FUNCTION __StrToExp( cStr )
    LOCAL cResult := ""
 
    LOCAL nLen, nPos
-   LOCAL nByte, cByte
+   LOCAL cByte
 
    nLen := hb_BLen( cStr )
    FOR nPos := 1 TO nLen
       cByte := hb_BSubStr( cStr, nPos, 1 )
-      nByte := hb_BCode( cByte )
-      IF ! __ByteIsDisplayable( nByte ) .OR. cByte == '"'
-         cResult += "\" + __ByteToOctal( nByte )
+      IF ! __ByteIsDisplayable( cByte ) .OR. cByte == '"'
+         cResult += "\" + __ByteEscape( hb_BCode( cByte ) )
       ELSE
          cResult += cByte
       ENDIF
@@ -244,17 +248,24 @@ STATIC FUNCTION __StrToExp( cStr )
 
    RETURN cResult
 
-STATIC FUNCTION __ByteIsDisplayable( nByte )
-   RETURN nByte >= 32 .AND. nByte < 128
+STATIC FUNCTION __ByteIsDisplayable( cByte )
+   RETURN ;
+      hb_BCode( cByte ) >= 32 .AND. ;
+      hb_BCode( cByte ) < 128
 
-STATIC FUNCTION __ByteToOctal( nValue )
+STATIC FUNCTION __ByteEscape( nByte )
 
-   LOCAL cResult := ""
+   LOCAL cResult
    LOCAL nExp
 
-   FOR nExp := 2 TO 0 STEP -1
-      cResult += SubStr( "01234567", Int( nValue / ( 8 ^ nExp ) ) + 1, 1 )
-      nValue %= 8 ^ nExp
-   NEXT
+   IF nByte == 0
+      RETURN "0"
+   ELSE
+      cResult := ""
+      FOR nExp := 2 TO 0 STEP -1
+         cResult += SubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
+         nByte %= 8 ^ nExp
+      NEXT
+   ENDIF
 
    RETURN cResult

@@ -96,7 +96,9 @@ REQUEST __HB_EXTERN__
 
 #if defined( HBMK_HAS_HBGD )
 // adding GD support
-REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
+REQUEST GDChart
+REQUEST GDImage
+REQUEST GDImageCHAR
 #  define APP_GD_SUPPORT "_GD"
 #  stdout "Lib GD support enabled"
 #else
@@ -286,11 +288,11 @@ PROCEDURE Main( ... )
          nCmdConsoleCols := Val( hb_PValue( i++ ) )
 
       CASE cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
-         help()
+         Help()
          RETURN
 
       OTHERWISE
-         help()
+         Help()
          RETURN
       ENDCASE
    ENDDO

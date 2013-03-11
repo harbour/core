@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * SQL_SPRINTF() function
+ * sql_sprintf() function
  *
  * Copyright 2008 Xavi <jarabal/at/gmail.com>
  *
@@ -149,36 +149,36 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
 /**
  * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
  * ------------------------------------------------------------------------
- *                      cRes := Sql_sprintf( cFrm, ... )
+ *                      cRes := sql_sprintf( cFrm, ... )
  *
  * Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
  * Integer & Floating point converters with Width and Precision for NUMERIC & STRING
  * a,A converters Hexadecimal floating point format. Thanks Rafa.
- *  ? Sql_sprintf( "Phi = %A", (1 + 5**0.5) / 2 ) // Phi = 0X1,9E3779B97F4A8P+0
+ *  ? sql_sprintf( "Phi = %A", ( 1 + 5 ^ 0.5 ) / 2 ) // Phi = 0X1,9E3779B97F4A8P+0
  * %m$,*m$ Index & Indirect arguments C99. Thanks Viktor.
- *  ? Sql_sprintf( "Phi = %2$0*3$.*1$f", 4, (1 + 5**0.5) / 2, 7 ) // Phi = 01.6180
+ *  ? sql_sprintf( "Phi = %2$0*3$.*1$f", 4, ( 1 + 5 ^ 0.5 ) / 2, 7 ) // Phi = 01.6180
  *
  * s converter for format Harbour data types.
  *    NUMERIC with FIXED DECIMALS = n | n.d   STRING = String's ANSI\C
  *    DATE = HB_SET_DATEFORMAT      DATETIME = HB_SET_DATEFORMAT hh:mm:ss
  *     New Internal Modifier {}. Thanks Mindaugas.
- *     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.fff pp}
- *     {DD/MM/YYYY} = Only Date | { hh:mm:ss.fff pp} = Only Time
- *        ? Sql_sprintf( "%s", Date() )                   // 16/06/08
- *        ? Sql_sprintf( "%s", HB_DateTime() )            // 16/06/08 04:11:21.531
- *        ? Sql_sprintf( "%{YYYYMMDD}s", HB_DateTime() )  // 20080616
- *        ? Sql_sprintf( "%{ hh:mm pp}s", HB_DateTime() ) // 04:11 AM
+ *     Date and Time Format separate by first space {YYYY-MM-DD hh:mm:ss.fff pp}
+ *     {YYYY-MM-DD} = Only Date | { hh:mm:ss.fff pp} = Only Time
+ *        ? sql_sprintf( "%s", Date() )                   // 2008-06-16
+ *        ? sql_sprintf( "%s", hb_DateTime() )            // 2008-06-16 04:11:21.531
+ *        ? sql_sprintf( "%{YYYYMMDD}s", hb_DateTime() )  // 20080616
+ *        ? sql_sprintf( "%{ hh:mm pp}s", hb_DateTime() ) // 04:11 AM
  *    LOGICAL = TRUE | FALSE        %d converter for LOGICAL = 1 | 0
  *     Accepts Internal Modifier TRUE and FALSE Format separate by first comma
  *     {T .T.,F .F.} = TRUE & FALSE | {ON} = Only TRUE | {,OFF} = Only FALSE
- *        ? Sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
- *        ? Sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
+ *        ? sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
+ *        ? sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
  *
  * New t,T converter for format ANSI SQL types.
  *    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI\\SQL'
  *     Print DEFAULT if 0 length STRING for T converter
  *    DATE = 'YYYY-MM-DD' DATETIME = 'YYYY-MM-DD HH:MM:SS'
- *     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.fff pp}
+ *     Accepts Internal Modifier like s converter {YYYY-MM-DD hh:mm:ss.fff pp}
  *     Print DEFAULT if the DATE, DATETIME is EMPTY for T converter or print
  *           DK_EMPTYDATE, DK_EMPTYDATETIME for t converter
  *    LOGICAL = TRUE | FALSE        Accepts Internal Modifier like s {ON,OFF}

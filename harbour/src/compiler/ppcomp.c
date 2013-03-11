@@ -279,12 +279,12 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             case 'j':
             case 'J':
                iFlag = HB_COMPFLAG_OPTJUMP;
-               iValue = !iValue;
+               iValue = ! iValue;
                break;
             case 'm':
             case 'M':
                iFlag = HB_COMPFLAG_MACROTEXT;
-               iValue = !iValue;
+               iValue = ! iValue;
                break;
             case 'd':
             case 'D':

@@ -231,7 +231,7 @@ typedef __int64 LONG_PTR;
  */
 #define WVW_DEFAULT_MAX_BMCACHE   20
 
-/* Como as descricoes sao grandes, precisei aumetar isso - Peluffo - 26/10/2007
+/* Como as descricoes sao grandes, precisei aumetar isso - Peluffo - 2007-10-26
    #define WVW_TB_LABELMAXLENGTH 40
  */
 #define WVW_TB_LABELMAXLENGTH     100

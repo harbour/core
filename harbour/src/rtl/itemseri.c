@@ -1667,7 +1667,7 @@ PHB_ITEM hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pnSize )
    const HB_UCHAR * pBuffer = ( const HB_UCHAR * ) *pBufferPtr;
    PHB_ITEM pItem = NULL;
 
-   if( !pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &pRef ) )
+   if( ! pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &pRef ) )
    {
       pItem = hb_itemNew( NULL );
       hb_deserializeItem( pItem, NULL, NULL, pBuffer, 0, pRef );
@@ -1684,7 +1684,7 @@ PHB_ITEM hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pnSize,
    const HB_UCHAR * pBuffer = ( const HB_UCHAR * ) *pBufferPtr;
    PHB_ITEM pItem = NULL;
 
-   if( !pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &pRef ) )
+   if( ! pnSize || hb_deserializeTest( ( const HB_UCHAR ** ) pBufferPtr, pnSize, 0, &pRef ) )
    {
       pItem = hb_itemNew( NULL );
       hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer, 0, pRef );

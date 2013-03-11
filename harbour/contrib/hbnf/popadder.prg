@@ -890,7 +890,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL cVarType := ValType( xVarVal )
    LOCAL nVarLen  := ;
       iif( cVarType == "C", Len( xVarVal ), ;
-      iif( cVarType == "D", 8, ;
+      iif( cVarType == "D", 10, ;
       iif( cVarType == "L", 1, ;
       iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
    LOCAL nOldLastKey := LastKey()
@@ -937,7 +937,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
       oNewGet:Picture := cPict
    ELSE                                  // Else setup default pictures
       IF HB_ISDATE( xVarVal )
-         oNewGet:Picture   := "99/99/99"
+         oNewGet:Picture   := "9999-99-99"
       ELSEIF HB_ISLOGICAL( xVarVal )
          oNewGet:Picture   := "Y"
       ELSEIF HB_ISNUMERIC( xVarVal )

@@ -714,7 +714,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 #if defined( HB_OS_WIN_CE )
                pWVT->FixedFont = HB_FALSE;
 #else
-               pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+               pWVT->FixedFont = ! pWVT->Win9X && pWVT->fontWidth >= 0 &&
                            ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
                            ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
@@ -1895,7 +1895,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                pWVT->bAlreadySizing = HB_TRUE;
             else if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_FONT )
             {
-               if( !pWVT->bAlreadySizing )
+               if( ! pWVT->bAlreadySizing )
                   hb_gt_wvt_FitSize( pWVT );
             }
             else

@@ -46,6 +46,5 @@ PROCEDURE Main()
 
 // Like NG's sample
 
-FUNCTION LastMonday( dDate )
-
+STATIC FUNCTION LastMonday( dDate )
    RETURN dDate - DoW( dDate ) + 2

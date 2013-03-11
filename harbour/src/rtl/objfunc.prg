@@ -93,8 +93,8 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
 
    LOCAL aInfo
    LOCAL aData
-   LOCAL n
-   LOCAL nLen
+   LOCAL cName
+   LOCAL nFirst
 
    IF ! HB_ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
@@ -103,28 +103,22 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    hb_default( @lDataMethod, .T. )
    hb_default( @nClasstype, HB_MSGLISTALL )
 
-   aInfo := ASort( oObject:ClassSel( nClassType ) )
+   aInfo := oObject:ClassSel( nClassType )
    aData := {}
-   n     := 1
-   nLen  := Len( aInfo )
+   nFirst := AScan( aInfo, {| n | Left( n, 1 ) == "_" } )
 
-   DO WHILE n <= nLen .AND. !( SubStr( aInfo[ n ], 1, 1 ) == "_" )
+   FOR EACH cName IN aInfo
 
-      /* If in range and no set function found yet
-         (set functions begin with a leading underscore). */
+      /* Set functions begin with a leading underscore */
+      IF !( Left( cName, 1 ) == "_" )
 
-      // If found -> DATA
-      //     else    METHOD
-
-      /* Find position of matching set function in array with all symbols */
-
-      IF ( AScan( aInfo, {| tmp | tmp == ( "_" + aInfo[ n ] ) }, n + 1 ) != 0 ) == lDataMethod
-         AAdd( aData, aInfo[ n ] )
+         /* Find position of matching set function in array with all symbols */
+         /* If found: DATA, else: METHOD */
+         IF ( AScan( aInfo, {| tmp | tmp == ( "_" + cName ) }, nFirst ) != 0 ) == lDataMethod
+            AAdd( aData, cName )
+         ENDIF
       ENDIF
-
-      n++
-
-   ENDDO
+   NEXT
 
    RETURN aData
 

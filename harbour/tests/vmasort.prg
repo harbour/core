@@ -51,7 +51,7 @@ STATIC FUNCTION aMkArray( nPass )
 
    RETURN aData
 
-FUNCTION aDump( a )
+STATIC FUNCTION aDump( a )
 
    LOCAL cStr := ""
    LOCAL n := Len( a )
@@ -63,7 +63,7 @@ FUNCTION aDump( a )
 
    RETURN cStr
 
-FUNCTION xToStr( xValue )
+STATIC FUNCTION xToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

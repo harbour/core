@@ -15,6 +15,8 @@ PROCEDURE Main( cVidMode )
    LOCAL lColour
    LOCAL aClrs
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    __defaultNIL( @cVidMode, "" )
 
    NoSnow( ( "NOSNOW" $ Upper( cVidMode ) ) )

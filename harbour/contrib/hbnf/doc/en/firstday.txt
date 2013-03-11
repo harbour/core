@@ -23,8 +23,8 @@
       supplied.
    $EXAMPLES$
       dDate := hb_SToD( "19900915" )
-      ? ft_FDay( dDate )             // 09/01/90
-      ? ft_FDay()                    // 03/01/91  (current month)
+      ? ft_FDay( dDate )             // 1990-09-01
+      ? ft_FDay()                    // 1991-03-01  (current month)
    $SEEALSO$
       ft_LDay()
    $END$

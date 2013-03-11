@@ -317,7 +317,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
       SetColor( aClr[ 2 ] )
       hb_DispOutAt( 22, 53, "  199.95" )
       SetColor( aClr[ 5 ] )
-      hb_DispOutAt( 23, 53, "09/15/91" )
+      hb_DispOutAt( 23, 53, DToC( 0d19910915 ) )
       EXIT
 
    CASE "W"    // Alert windows

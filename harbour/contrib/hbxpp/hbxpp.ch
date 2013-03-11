@@ -65,7 +65,7 @@
 
 #if ! defined( XPP_OP_OVERLOAD_OFF )
    #pragma -ks+
-   REQUEST XPP_OP_OVERLOAD
+   REQUEST xpp_op_Overload
 #endif
 
 #xtranslate IsPrinter( [<x>] )     => hb_IsPrinter( <x> )

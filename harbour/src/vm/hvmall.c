@@ -92,7 +92,7 @@
 #        else
             static HB_TLS_ATTR PHB_STACK hb_stack_ptr = NULL;
 #        endif
-#     elif !defined( hb_stack_ptr_get )
+#     elif ! defined( hb_stack_ptr_get )
          static HB_TLS_KEY hb_stack_key;
 #     endif
 #  else

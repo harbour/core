@@ -155,7 +155,7 @@ HB_EXTERN_END
       defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_ANDROID ) ) && \
-   ! defined( HB_OS_DARWIN_5 ) && !defined( HB_HAS_LOCALTIME_R )
+   ! defined( HB_OS_DARWIN_5 ) && ! defined( HB_HAS_LOCALTIME_R )
 #  define HB_HAS_LOCALTIME_R
 #endif
 

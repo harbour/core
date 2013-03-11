@@ -1454,7 +1454,7 @@ static LPTAGINFO hb_ntxTagNew( LPNTXINDEX pIndex,
    pTag->pKeyItem = pKeyExpr;
    pTag->pForItem = pForExpr;
    pTag->AscendKey = fAscendKey;
-   pTag->fUsrDescend = !pTag->AscendKey;
+   pTag->fUsrDescend = ! pTag->AscendKey;
    pTag->UniqueKey = fUnique;
    pTag->Custom = fCustom;
    pTag->MultiKey = fCustom && DBFAREA_DATA( &pIndex->Owner->dbfarea )->fMultiKey;
@@ -5396,7 +5396,7 @@ static HB_ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
          }
       }
 
-      fDirectRead = ! hb_setGetStrictRead() && /* !pArea->dbfarea.area.lpdbRelations && */
+      fDirectRead = ! hb_setGetStrictRead() && /* ! pArea->dbfarea.area.lpdbRelations && */
                     ( ! pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||
                       ( pArea->lpCurTag == NULL && ! fUseFilter ) );
 
@@ -5873,7 +5873,7 @@ static HB_ERRCODE hb_ntxFlush( NTXAREAP pArea )
          LPNTXINDEX pIndex = pArea->lpIndexes;
          while( pIndex )
          {
-            if( pIndex->fFlush /* && !pIndex->Temporary */ )
+            if( pIndex->fFlush /* && ! pIndex->Temporary */ )
             {
                hb_fileCommit( pIndex->DiskFile );
                pIndex->fFlush = HB_FALSE;
@@ -5952,7 +5952,7 @@ static HB_ERRCODE hb_ntxGoCold( NTXAREAP pArea )
                      if( hb_ntxValCompare( pTag, pKey->key, pTag->KeyLength,
                           pTag->HotKeyInfo->key, pTag->KeyLength, HB_TRUE ) == 0 )
                      {
-                        if( pTag->HotFor ? fAdd : !fAdd )
+                        if( pTag->HotFor ? fAdd : ! fAdd )
                            fAdd = fDel = HB_FALSE;
                         else
                            fDel = ! fAdd;
@@ -6440,7 +6440,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    else
    {
       PHB_FILE pFile;
-      HB_BOOL bRetry, fOld, fShared = pArea->dbfarea.fShared && !fTemporary && !fExclusive;
+      HB_BOOL bRetry, fOld, fShared = pArea->dbfarea.fShared && ! fTemporary && ! fExclusive;
       HB_USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
       PHB_ITEM pError = NULL;
 

@@ -155,7 +155,7 @@ VERSION INFO
 
 This document is written when GTWVW version info is as follows.
 
-Latest Update: 2004/10/25
+Latest Update: 2004-10-25
 
 Latest Sync with:
 

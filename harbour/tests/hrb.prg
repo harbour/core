@@ -6,11 +6,16 @@
 
 #include "hbhrb.ch"
 
-PROCEDURE Main( x )
+PROCEDURE Main( n )
 
-   LOCAL pHrb, cExe := "Msg2()"
+   LOCAL pHrb
+   LOCAL cExe := "Msg2()"
 
-   LOCAL n := iif( x == NIL, 0, Val( x ) )
+   n := iif( n == NIL, 0, Val( n ) )
+
+   IF ! hb_FileExists( "hrbext.hrb" )
+      hb_run( "harbour hrbext.prg -gh" )
+   ENDIF
 
    ? "calling Msg ... From exe here !"
    Msg()
@@ -27,22 +32,22 @@ PROCEDURE Main( x )
    pHrb := hb_hrbLoad( HB_HRB_BIND_LOCAL, "hrbext.hrb" )
 #endif
 
-   ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1, "HB_HRB_BIND_LOCAL", "HB_HRB_BIND_OVERLOAD" ) ) + ", 'hrbext.hrb' )"
+   ? "Loading( " + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1, "HB_HRB_BIND_LOCAL", "HB_HRB_BIND_OVERLOAD" ) ) + ", 'hrbext.hrb' )"
    pHrb := hb_hrbLoad( n, "hrbext.hrb" )
 
    ? "========================="
 
-   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From hrb"
    Msg()
    ? "========================="
 
-   ? "calling Msg ... DEFAULT=From exe, LOCAL=From HRB, OVERLOAD=From HRB"
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From hrb, OVERLOAD=From hrb"
    &cExe  //
    ? "========================="
 
    hb_hrbUnload( pHrb ) // should do nothing in case of OVERLOAD
 
-   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From hrb"
    Msg() // test unload protection when using OVERLOAD ... then .hrb not anymore unloadable
    ? "========================="
 
@@ -52,6 +57,6 @@ PROCEDURE Main( x )
 
 FUNCTION Msg()
 
-   ? "Function called from Exe"
+   ? "Function called from .exe"
 
    RETURN .T.

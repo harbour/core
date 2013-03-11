@@ -111,7 +111,7 @@ read the source code :-).
 //example: saved := wvw_nSetCurWindow(0)
 //         ? "This will be displayed in Main Window"
 //         wvw_nSetCurWindow(saved)
-//notes: makes sense only if !s_bMainCoordMode
+//notes: makes sense only if ! s_bMainCoordMode
 //
 
 //wvw_nRowOfs( [nWinNum] )
@@ -615,11 +615,11 @@ PART-2: WINDOW DEPENDENT (additional nWinNum parameter)
   which window to direct your output to.
 
   nWinNum parameter passed as NIL will be translated by gtwvw into :
-    if !MainCoordMode
+    IF ! MainCoordMode
        Current Window
-    else
+    ELSE
        Topmost Window
-    endif
+    ENDIF
 
 //
 

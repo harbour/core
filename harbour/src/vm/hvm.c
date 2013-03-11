@@ -177,7 +177,7 @@ static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* 
 static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
 static void    hb_vmPushHBLong( HB_MAXINT nNumber ); /* pushes a HB_MAXINT number onto the stack */
-#if !defined( HB_LONG_LONG_OFF )
+#if ! defined( HB_LONG_LONG_OFF )
    static void hb_vmPushLongLongConst( HB_LONGLONG lNumber );  /* Pushes a long long constant (pcode) */
 #endif
 #if HB_VMINT_MAX >= INT32_MAX
@@ -5830,11 +5830,12 @@ void hb_vmProc( HB_USHORT uiParams )
       ulClock = ( HB_ULONG ) clock();
 #endif
 
-   /* Poll the console keyboard
-   #if !defined( HB_GUI )
+   /* Poll the console keyboard */
+#if 0
+   #if ! defined( HB_GUI )
       hb_inkeyPoll();
    #endif
-   */
+#endif
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    HB_VM_FUNCUNREF( pSym );
@@ -5891,11 +5892,12 @@ void hb_vmDo( HB_USHORT uiParams )
       ulClock = ( HB_ULONG ) clock();
 #endif
 
-   /* Poll the console keyboard
-   #if !defined( HB_GUI )
+   /* Poll the console keyboard */
+#if 0
+   #if ! defined( HB_GUI )
       hb_inkeyPoll();
    #endif
-   */
+#endif
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
@@ -5981,11 +5983,12 @@ void hb_vmSend( HB_USHORT uiParams )
       ulClock = ( HB_ULONG ) clock();
 #endif
 
-   /* Poll the console keyboard
-   #if !defined( HB_GUI )
+   /* Poll the console keyboard */
+#if 0
+   #if ! defined( HB_GUI )
       hb_inkeyPoll();
    #endif
-   */
+#endif
 
    pSym = hb_stackNewFrame( &sStackState, uiParams )->item.asSymbol.value;
    pSelf = hb_stackSelfItem();   /* NIL, OBJECT or BLOCK */
@@ -8133,7 +8136,7 @@ static void hb_vmDoInitFunctions( HB_BOOL fClipInit )
 
             if( scope == HB_FS_INIT &&
                 ( strcmp( ( pLastSymbols->pModuleSymbols + ui )->szName,
-                          "CLIPINIT$" ) == 0 ? fClipInit : !fClipInit ) )
+                          "CLIPINIT$" ) == 0 ? fClipInit : ! fClipInit ) )
             {
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();

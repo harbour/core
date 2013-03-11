@@ -253,17 +253,17 @@
 #  define socklen_t int
 #endif
 
-#if !defined( INET_ADDRSTRLEN )
+#if ! defined( INET_ADDRSTRLEN )
 #  define INET_ADDRSTRLEN  16
 #endif
 
-#if defined( HB_OS_DOS ) && !defined( SHUT_RD )
+#if defined( HB_OS_DOS ) && ! defined( SHUT_RD )
 #  define SHUT_RD       0
 #  define SHUT_WR       1
 #  define SHUT_RDWR     2
 #endif
 
-#if defined( __WATCOMC__ ) && defined( HB_OS_LINUX ) && !defined( IP_ADD_MEMBERSHIP )
+#if defined( __WATCOMC__ ) && defined( HB_OS_LINUX ) && ! defined( IP_ADD_MEMBERSHIP )
    /* it's missed in OpenWatcom 1.8 Linux header files :-( */
 #  define IP_ADD_MEMBERSHIP   35
    struct ip_mreq
@@ -816,7 +816,7 @@ static HB_CRITICAL_NEW( s_sockMtx );
 static int s_iSessions;
 
 
-#if defined( HB_HAS_INET6 ) && !defined( HB_HAS_INET6_ADDR_CONST ) && \
+#if defined( HB_HAS_INET6 ) && ! defined( HB_HAS_INET6_ADDR_CONST ) && \
     defined( IN6ADDR_ANY_INIT )
    static const struct in6_addr s_in6addr_any = IN6ADDR_ANY_INIT;
 #endif
@@ -1318,7 +1318,7 @@ static void hb_socketSetOsError( int err )
       case NO_DATA:
 #endif
 #if defined( NO_ADDRESS ) && \
-    ( !defined( NO_DATA ) || NO_ADDRESS != NO_DATA )
+    ( ! defined( NO_DATA ) || NO_ADDRESS != NO_DATA )
       case NO_ADDRESS:
 #endif
          uiErr = HB_SOCKET_ERR_NODATA;
@@ -1471,7 +1471,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
    fd_set rfds;
    int iResult, iError;
 
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
@@ -1525,7 +1525,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
    fd_set wfds;
    int iResult, iError;
 
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
@@ -1583,7 +1583,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #endif
    int iResult, iError;
    socklen_t len;
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
@@ -1644,7 +1644,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #endif
       break;
    }
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
    if( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) )
    {
       len = sizeof( iError );
@@ -1702,7 +1702,7 @@ HB_BOOL hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen,
    memset( &sa, 0, sizeof( sa ) );
    sa.sin_family = AF_INET;
    sa.sin_port = htons( ( HB_U16 ) iPort );
-   if( !szAddr || !*szAddr )
+   if( ! szAddr || ! *szAddr )
    {
       sa.sin_addr.s_addr = htonl( INADDR_ANY );
       *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
@@ -1747,7 +1747,7 @@ HB_BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
    memset( &sa, 0, sizeof( sa ) );
    sa.sin6_family = AF_INET6;
    sa.sin6_port = htons( ( HB_U16 ) iPort );
-   if( !szAddr || !*szAddr )
+   if( ! szAddr || ! *szAddr )
    {
 #if defined( HB_HAS_INET6_ADDR_CONST )
       memcpy( &sa.sin6_addr, &in6addr_any, sizeof( struct in6_addr ) );
@@ -2484,7 +2484,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
       HB_BOOL fBlocked;
       long flags;
       fBlocked = ( ret & O_NONBLOCK ) == 0;
-      if( fBlocking ? !fBlocked : fBlocked )
+      if( fBlocking ? ! fBlocked : fBlocked )
       {
          if( fBlocking )
             flags = ret & ~O_NONBLOCK;
@@ -3546,4 +3546,4 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 
    return pArray;
 }
-#endif /* !HB_SOCKET_OFF */
+#endif /* ! HB_SOCKET_OFF */

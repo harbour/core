@@ -1437,7 +1437,7 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
                   {
                      errCode = SELF_EOF( pArea, &fEof );
                      if( errCode == HB_SUCCESS )
-                        pArea->fFound = !fEof;
+                        pArea->fFound = ! fEof;
                   }
                }
             }

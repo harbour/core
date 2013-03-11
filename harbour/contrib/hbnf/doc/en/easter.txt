@@ -24,6 +24,6 @@
       This function can be useful in calender type programs that indicate
       when holidays occur.
    $EXAMPLES$
-      dEdate := ft_Easter( 1990 )     // returns 04/15/1990
+      dEdate := ft_Easter( 1990 )     // returns 1990-04-15
    $END$
  */

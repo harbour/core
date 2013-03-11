@@ -6,9 +6,15 @@
 
 FUNCTION Msg()
 
-   ? "Function called from HRB file"
+   ? "Function called from .hrb"
 
    RETURN .T.
 
-FUNCTION msg2()
+FUNCTION Msg2()
    RETURN Msg()
+
+INIT PROCEDURE MsgInit()
+
+   ? "INIT PROCEDURE in .hrb"
+
+   RETURN

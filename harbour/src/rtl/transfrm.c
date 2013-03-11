@@ -899,7 +899,7 @@ HB_FUNC( TRANSFORM )
          nResultPos = 0;
          szResult = ( char * ) hb_xgrab( nPicLen + 2 );
 
-         for( ; ( nPicLen || ! bDone ) && !bExit ; nResultPos++, szPic++, nPicLen-- )
+         for( ; ( nPicLen || ! bDone ) && ! bExit; nResultPos++, szPic++, nPicLen-- )
          {
             if( nPicLen )
                cPic = *szPic;

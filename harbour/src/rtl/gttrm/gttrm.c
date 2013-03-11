@@ -1700,7 +1700,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
       buff[ 0 ] = 0x1b;
       buff[ 1 ] = '[';
 
-      acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) && !pTerm->fUTF8 ? 1 : 0;
+      acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) && ! pTerm->fUTF8 ? 1 : 0;
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
       bold  = iAttr & 0x08 ? 1 : 0;

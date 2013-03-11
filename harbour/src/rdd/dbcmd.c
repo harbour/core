@@ -354,7 +354,7 @@ HB_FUNC( DBCREATE )
    pStruct = hb_param( 2, HB_IT_ARRAY );
    szDriver = hb_parc( 3 );
    fKeepOpen = HB_ISLOG( 4 );
-   fCurrArea = fKeepOpen && !hb_parl( 4 );
+   fCurrArea = fKeepOpen && ! hb_parl( 4 );
    szAlias = hb_parc( 5 );
    pDelim = hb_param( 6, HB_IT_ANY );
    szCpId = hb_parc( 7 );
@@ -481,7 +481,7 @@ HB_FUNC( __DBOPENSDF )
    pStruct = hb_param( 2, HB_IT_ARRAY );
    szDriver = hb_parc( 3 );
    fKeepOpen = HB_ISLOG( 4 );
-   fCurrArea = fKeepOpen && !hb_parl( 4 );
+   fCurrArea = fKeepOpen && ! hb_parl( 4 );
    szAlias = hb_parc( 5 );
    pDelim = hb_param( 6, HB_IT_ANY );
    szCpId = hb_parc( 7 );
@@ -901,7 +901,7 @@ HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
          hb_parl( 1 ) ? 0 : ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber(),
-         hb_parc( 4 ), HB_ISLOG( 5 ) ? hb_parl( 5 ) : !hb_setGetExclusive(),
+         hb_parc( 4 ), HB_ISLOG( 5 ) ? hb_parl( 5 ) : ! hb_setGetExclusive(),
          hb_parl( 6 ), hb_parc( 7 ), hb_parnl( 8 ), NULL, NULL ) == HB_SUCCESS );
 }
 
@@ -1246,7 +1246,7 @@ HB_FUNC( ORDCONDSET )
           lpdbOrdCondInfo->fUseFilter )
          lpdbOrdCondInfo->fAll = HB_FALSE;
 
-      lpdbOrdCondInfo->fActive = !lpdbOrdCondInfo->fAll ||
+      lpdbOrdCondInfo->fActive = ! lpdbOrdCondInfo->fAll ||
                lpdbOrdCondInfo->abFor || lpdbOrdCondInfo->itmCobFor ||
                lpdbOrdCondInfo->abWhile || lpdbOrdCondInfo->itmCobWhile ||
                lpdbOrdCondInfo->fNoOptimize || lpdbOrdCondInfo->itmCobEval ||

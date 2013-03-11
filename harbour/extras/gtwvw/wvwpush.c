@@ -262,25 +262,19 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    if( ! phiCodeBlock || pcd == NULL || pcd->bBusy )
    {
 
-      /*
-         if (!HB_ISBLOCK(3))
-         {
+#if 0
+      if( ! HB_ISBLOCK( 3 ) )
          MessageBox( NULL, TEXT( "Codeblock Expected" ),
                      pData->szAppName, MB_ICONERROR );
-         }
 
-         if (pcd==NULL)
-         {
+      if( pcd == NULL )
          MessageBox( NULL, TEXT( "Control Data not Found" ),
                      pData->szAppName, MB_ICONERROR );
-         }
 
-         if (pcd->bBusy)
-         {
+      if( pcd->bBusy )
          MessageBox( NULL, TEXT( "Codeblock is busy" ),
                      pData->szAppName, MB_ICONERROR );
-         }
-       */
+#endif
 
       hb_retl( FALSE );
       return;

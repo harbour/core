@@ -78,8 +78,8 @@
 
 /* NOTE: VxWorks supports dlopen() functionality only in shared
          executables. [vszakats] */
-#if !defined( HB_HAS_DLFCN ) && \
-    ( ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || \
+#if ! defined( HB_HAS_DLFCN ) && \
+    ( ( defined( HB_OS_LINUX ) && ! defined( __WATCOMC__ ) ) || \
       defined( HB_OS_SUNOS ) || defined( HB_OS_DARWIN ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_CYGWIN )  || \

@@ -188,8 +188,8 @@ CREATE CLASS win_Prn
    VAR fCharWidth       INIT 0      HIDDEN
    VAR BitmapsOk        INIT .F.
    VAR NumColors        INIT 1
-   VAR fDuplexType      INIT 0      HIDDEN               // WIN_DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
-   VAR fPrintQuality    INIT 0      HIDDEN               // WIN_DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
+   VAR fDuplexType      INIT 0      HIDDEN
+   VAR fPrintQuality    INIT 0      HIDDEN
    VAR fNewDuplexType   INIT 0      HIDDEN
    VAR fNewPrintQuality INIT 0      HIDDEN
    VAR fOldLandScape    INIT .F.    HIDDEN

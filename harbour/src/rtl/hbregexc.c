@@ -174,7 +174,7 @@ HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE nLen, HB_
    HB_BOOL fMatch;
 
    fMatch = ( s_reg_exec )( pRegEx, szString, nLen, 1, aMatches ) > 0;
-   return fMatch && ( !fFull ||
+   return fMatch && ( ! fFull ||
             ( HB_REGMATCH_SO( aMatches, 0 ) == 0 &&
               HB_REGMATCH_EO( aMatches, 0 ) == ( int ) nLen ) );
 }

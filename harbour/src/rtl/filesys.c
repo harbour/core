@@ -126,7 +126,7 @@
 #if ( defined( __DMC__ ) || defined( __BORLANDC__ ) || \
       defined( __IBMCPP__ ) || defined( _MSC_VER ) || \
       defined( __MINGW32__ ) || defined( __WATCOMC__ ) ) && \
-      !defined( HB_OS_UNIX ) && !defined( HB_OS_WIN_CE )
+      ! defined( HB_OS_UNIX ) && ! defined( HB_OS_WIN_CE )
    #include <sys/stat.h>
    #include <fcntl.h>
    #include <process.h>
@@ -144,7 +144,7 @@
    #if defined( _MSC_VER ) || defined( __MINGW32__ ) || defined( __DMC__ )
       #include <sys/locking.h>
       #define ftruncate _chsize
-      #if defined( __MINGW32__ ) && !defined( _LK_UNLCK )
+      #if defined( __MINGW32__ ) && ! defined( _LK_UNLCK )
          #define _LK_UNLCK _LK_UNLOCK
       #endif
    #else
@@ -192,18 +192,18 @@
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
-   #if !defined( INVALID_SET_FILE_POINTER ) && \
+   #if ! defined( INVALID_SET_FILE_POINTER ) && \
        ( defined( __DMC__ ) || defined( _MSC_VER ) || defined( __LCC__ ) )
       #define INVALID_SET_FILE_POINTER ( ( DWORD ) -1 )
    #endif
-   #if !defined( INVALID_FILE_ATTRIBUTES )
+   #if ! defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
    #endif
    #if defined( HB_OS_WIN_64 )
-      #if !defined( HB_WIN_IOREAD_LIMIT )
+      #if ! defined( HB_WIN_IOREAD_LIMIT )
          #define HB_WIN_IOREAD_LIMIT      HB_U32_MAX
       #endif
-      #if !defined( HB_WIN_IOWRITE_LIMIT )
+      #if ! defined( HB_WIN_IOWRITE_LIMIT )
          #define HB_WIN_IOWRITE_LIMIT     HB_U32_MAX
       #endif
    #endif
@@ -798,10 +798,10 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
          hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
 #  endif
 }
-#elif defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
 {
    fResult = pipe( hPipe ) == 0;
-   if( !fResult )
+   if( ! fResult )
       hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
 }
 #else
@@ -906,7 +906,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
                               end_timer > hb_dateMilliSeconds() ) ) &&
           hb_vmRequestQuery() == 0 );
 
-   if( !fResult )
+   if( ! fResult )
       nToRead = ( HB_SIZE ) -1;
    else if( dwAvail > 0 )
       nToRead = ( ( HB_SIZE ) dwAvail < nBufferSize ) ? dwAvail : nBufferSize;
@@ -936,18 +936,18 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
                               end_timer > hb_dateMilliSeconds() ) ) &&
           hb_vmRequestQuery() == 0 );
 
-   if( !fResult )
+   if( ! fResult )
       nToRead = ( HB_SIZE ) -1;
    else if( avail.cbpipe > 0 )
       nToRead = ( ( HB_SIZE ) avail.cbpipe < nBufferSize ) ? avail.cbpipe :
                                                              nBufferSize;
 }
-#elif defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN )
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
    struct timeval tv;
    fd_set rfds;
    int iResult;
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
 #else
    tv.tv_sec = ( long ) nTimeOut / 1000;
@@ -961,7 +961,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
       else
       {
          tv.tv_sec = ( long ) nTimeOut / 1000;
@@ -979,7 +979,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
           hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
           hb_vmRequestQuery() != 0 )
          break;
-#if !defined( HB_HAS_SELECT_TIMER )
+#if ! defined( HB_HAS_SELECT_TIMER )
       else if( nTimeOut > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
@@ -997,7 +997,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
 }
 #else
 {
-#  if !defined( HB_OS_DOS )
+#  if ! defined( HB_OS_DOS )
       int iTODO; /* TODO: for given platform */
 #  endif
    HB_SYMBOL_UNUSED( hPipeHandle );
@@ -1276,7 +1276,7 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
    return iRet;
 }
 #elif ( defined( _MSC_VER ) || defined( __MINGW32__ ) || defined( __DMC__ ) ) && \
-      !defined( HB_OS_WIN_CE )
+      ! defined( HB_OS_WIN_CE )
 {
    int iRet = -1;
 
@@ -3876,7 +3876,7 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
       fResult = HB_FALSE;
    }
    hb_fsSetIOError( fResult, 0 );
-   fResult = !fResult || curPos == endPos;
+   fResult = ! fResult || curPos == endPos;
 }
 #else
    fResult = eof( hFileHandle ) != 0;

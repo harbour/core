@@ -147,7 +147,7 @@ PROCEDURE Main()
 
 #ifdef HB_COMPAT_C53
 
-FUNCTION DefProc( oBrowse, nKey )
+STATIC FUNCTION DefProc( oBrowse, nKey )
 
    IF nKey == K_TAB
       hb_DispOutAt( 0, 0, Time() )

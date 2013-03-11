@@ -62,8 +62,8 @@
 #include "hbinit.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_UNIX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ > 1290 ) && \
-    !defined( HB_OS_SYMBIAN ) /* || defined( __DJGPP__ ) */
+#if defined( HB_OS_UNIX ) && ( ! defined( __WATCOMC__ ) || __WATCOMC__ > 1290 ) && \
+    ! defined( HB_OS_SYMBIAN ) /* || defined( __DJGPP__ ) */
 #  if defined( HB_OS_VXWORKS )
 #     if ! defined( HB_HAS_SIOLIB )
 #        define HB_HAS_SIOLIB
@@ -116,7 +116,7 @@ typedef struct
 {
 #if defined( HB_HAS_TERMIOS )
    HB_FHANDLE     fd;
-#  if !defined( HB_OS_UNIX )
+#  if ! defined( HB_OS_UNIX )
    HB_MAXINT      rdtimeout;
 #  endif
 #elif defined( HB_OS_WIN )
@@ -2019,7 +2019,7 @@ int hb_comClose( int iPort )
       fResult = CloseHandle( pCom->hComm );
       pCom->hComm = INVALID_HANDLE_VALUE;
       pCom->status &= ~HB_COM_OPEN;
-      hb_comSetOsError( pCom, !fResult );
+      hb_comSetOsError( pCom, ! fResult );
       hb_vmLock();
    }
 

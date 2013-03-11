@@ -2,16 +2,16 @@
  * $Id$
  */
 
-REQUEST __PP_STDRULES
+REQUEST __pp_StdRules
 
 PROCEDURE Main()
 
    LOCAL cString, l_pp
    LOCAL i, j, aScript
 
-   CLS
-
    l_pp := __pp_Init()
+
+   CLS
 
    ? "Testing Harbour run-time preprocessing"
    ? "======================================"
@@ -50,33 +50,30 @@ PROCEDURE Main()
    ? __pp_Process( l_pp, cString )
    ?
 
-   ? "Press <Enter>..."
-   __Accept( "" )
+   WAIT "Press any key..."
 
    CLS
 
-   aScript := { 'cMyDatabase := "dontknow.dbf"', ;
-                'USE (cMyDatabase)', ;
-                'GO TOP', ;
-                '', ;
-                '? MYFIELD, YOURFIELD', ;
-                '', ;
-                'WAIT "Press <Enter> key..."', ;
-                '', ;
-                'CLOSE ALL' }
+   aScript := { ;
+      'cMyDatabase := "dontknow.dbf"', ;
+      'USE ( cMyDatabase )', ;
+      'GO TOP', ;
+      '', ;
+      '? MYFIELD, YOURFIELD', ;
+      '', ;
+      'WAIT "Press any key..."', ;
+      '', ;
+      'CLOSE ALL' }
 
    FOR j := 1 TO 2
       ? iif( j == 1, "Before", "After" ) + " __pp_Process()"
       ? "==================="
       ?
       FOR i := 1 TO Len( aScript )
-
          ? iif( j == 1, aScript[ i ], __pp_Process( l_pp, aScript[ i ] ) )
-
       NEXT
       ?
-      ? "Press <Enter> key..."
-      __Accept( "" )
+      WAIT "Press any key..."
       CLS
    NEXT
 

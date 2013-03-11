@@ -30,7 +30,7 @@
       dDate  := hb_SToD( "19910101" )
       nWkNum := ft_WoY( dDate )            // result:  1
 
-      // presume DOS date to be 01/06/91
+      // presume DOS date to be 1991-01-06
       nWkNum := ft_WoY( Date() )           // result:  2
 
       // date input
@@ -69,7 +69,7 @@
       dDate  := hb_SToD( "19910101" )
       nDayNum := ft_DoY( dDate )            // result:  1
 
-      // presume DOS date to be 01/06/91
+      // presume DOS date to be 1991-01-06
       nDayNum := ft_DoY( Date() )           // result:  6
 
       // date input

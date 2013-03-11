@@ -76,10 +76,10 @@
    #include "hbwinuni.h"
 #endif
 
-#if ( defined( HB_OS_LINUX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
+#if ( defined( HB_OS_LINUX ) && ( ! defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
     defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
 #  define HB_HAS_MKSTEMP
-#  if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || defined( HB_OS_DARWIN )
+#  if ( defined( HB_OS_BSD ) && ! defined( __NetBSD__ ) ) || defined( HB_OS_DARWIN )
 #     define HB_HAS_MKSTEMPS
 #  elif defined( HB_OS_LINUX ) && \
         ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \

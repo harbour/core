@@ -11,11 +11,11 @@ PROCEDURE Main()
       ? i
 
       IF i == 4 .AND. .T.
-         __Accept( "" )
+         Inkey( 0 )
          ? i
          i := 9
          ? i
-         __Accept( "" )
+         Inkey( 0 )
       ENDIF
 
    NEXT

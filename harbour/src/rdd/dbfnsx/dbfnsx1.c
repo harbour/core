@@ -1705,7 +1705,7 @@ static LPTAGINFO hb_nsxTagNew( LPNSXINDEX pIndex, const char * szTagName,
    pTag->pKeyItem = pKeyExpr;
    pTag->pForItem = pForExpr;
    pTag->AscendKey = fAscendKey;
-   pTag->fUsrDescend = !pTag->AscendKey;
+   pTag->fUsrDescend = ! pTag->AscendKey;
    pTag->UniqueKey = fUnique;
    pTag->Custom = fCustom;
    pTag->MultiKey = fCustom && DBFAREA_DATA( &pIndex->pArea->dbfarea )->fMultiKey;
@@ -2554,7 +2554,7 @@ static LPPAGEINFO hb_nsxPageBottomMove( LPTAGINFO pTag, HB_ULONG ulPage )
       {
          hb_nsxTagSetPageStack( pTag, pPage, pPage->uiKeys -
                                              ( pPage->uiKeys == 0 ? 0 : 1 ) );
-         if( pPage->uiKeys == 0 && pTag->stackLevel > 1 && !pTag->pIndex->pArea->pSort )
+         if( pPage->uiKeys == 0 && pTag->stackLevel > 1 && ! pTag->pIndex->pArea->pSort )
          {
             hb_nsxPageRelease( pTag, pPage );
             hb_nsxCorruptError( pTag->pIndex );
@@ -5892,7 +5892,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
          }
       }
 
-      fDirectRead = ! hb_setGetStrictRead() && /* !pArea->dbfarea.area.lpdbRelations && */
+      fDirectRead = ! hb_setGetStrictRead() && /* ! pArea->dbfarea.area.lpdbRelations && */
                     ( ! pArea->dbfarea.area.lpdbOrdCondInfo || pArea->dbfarea.area.lpdbOrdCondInfo->fAll ||
                       ( pArea->lpCurTag == NULL && ! fUseFilter ) );
 
@@ -6851,7 +6851,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    else
    {
       PHB_FILE pFile;
-      HB_BOOL bRetry, fShared = pArea->dbfarea.fShared && !fTemporary && !fExclusive;
+      HB_BOOL bRetry, fShared = pArea->dbfarea.fShared && ! fTemporary && ! fExclusive;
       HB_USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
       PHB_ITEM pError = NULL;
 
@@ -6960,7 +6960,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
                            szFor, pForExp,
                            fAscend, pOrderInfo->fUnique, fCustom );
       pTag->Template = hb_nsxIsTemplateFunc( pTag->KeyExpr );
-      pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && !pArea->dbfarea.area.lpdbOrdCondInfo->fAll );
+      pTag->Partial = ( pArea->dbfarea.area.lpdbOrdCondInfo && ! pArea->dbfarea.area.lpdbOrdCondInfo->fAll );
 
       if( fNewFile )
       {

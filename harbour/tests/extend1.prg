@@ -2,9 +2,12 @@
  * $Id$
  */
 
-// Testing Harbour Extended system.
-//
-// NOTE: compile extend1.prg and extend2.c and link both files
+/*
+ * Testing Clipper Extended system.
+ *
+ * NOTE: build together with extend2.c
+ *       In Harbour use command 'hbmk2 extend1.hbp'
+ */
 
 PROCEDURE Main()
 
@@ -37,7 +40,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Strings:"
    ? "========"
@@ -70,7 +73,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Logicals:"
    ? "========="
@@ -101,21 +104,21 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Dates: (SET CENTURY ON)"
    ? "======================="
    ?
-   ? '  _pards() and _retds() with Date1( CToD( "01/01/2000" ) ) =>', Date1( CToD( "01/01/2000" ) )
-   ? '  _pards() and retds() with Date2( { CToD( "01/01/2000" ) } ) =>', Date2( { CToD( "01/01/2000" ) } )
-   uVar := CToD( "01/01/2000" )
-   ? '  uVar := CToD( "01/01/2000" )'
-   Date3( @uVar, CToD( "12/31/1999" ) )
-   ? '  _stords() with Date3( @uVar, CToD( "12/31/1999" ) ) => ', uVar
-   uVar := { CToD( "01/01/2000" ) }
-   ? '  uVar := { CToD( "01/01/2000" ) }'
-   Date4( uVar, CToD( "12/31/1999" ) )
-   ? '  _stords() with Date4( uVar, CToD( "12/31/1999" ) ) => ', uVar[ 1 ]
+   ? '  _pards() and _retds() with Date1( CToD( "2000-01-01" ) ) =>', Date1( CToD( "2000-01-01" ) )
+   ? '  _pards() and retds() with Date2( { CToD( "2000-01-01" ) } ) =>', Date2( { CToD( "2000-01-01" ) } )
+   uVar := CToD( "2000-01-01" )
+   ? '  uVar := CToD( "2000-01-01" )'
+   Date3( @uVar, CToD( "1999-12-31" ) )
+   ? '  _stords() with Date3( @uVar, CToD( "1999-12-31" ) ) => ', uVar
+   uVar := { CToD( "2000-01-01" ) }
+   ? '  uVar := { CToD( "2000-01-01" ) }'
+   Date4( uVar, CToD( "1999-12-31" ) )
+   ? '  _stords() with Date4( uVar, CToD( "1999-12-31" ) ) => ', uVar[ 1 ]
    ?
    ?
    ?
@@ -132,7 +135,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Numbers:"
    ? "========"
@@ -171,7 +174,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Nil:"
    ? "===="
@@ -198,7 +201,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Arrays:"
    ? "======="
@@ -225,7 +228,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Parameters info:"
    ? "================"
@@ -252,7 +255,7 @@ PROCEDURE Main()
    ?
    ?
 
-   __Accept( "Press return to continue..." )
+   WAIT "Press any key to continue..."
 
    ? "Undocumented features:"
    ? "======================"

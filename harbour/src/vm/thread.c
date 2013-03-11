@@ -124,7 +124,7 @@
 #endif
 
 
-#if !defined( HB_MT_VM )
+#if ! defined( HB_MT_VM )
    /* nothing */
 #else
    static volatile HB_BOOL s_fThreadInit = HB_FALSE;
@@ -157,11 +157,11 @@
    static HB_RAWCRITICAL_T s_mutexlst_mtx;
    static void hb_threadCriticalInit( HB_CRITICAL_T * critical )
    {
-      if( !s_fThreadInit )
+      if( ! s_fThreadInit )
          hb_threadInit();
 
       HB_CRITICAL_LOCK( s_init_mtx );
-      if( !critical->fInit )
+      if( ! critical->fInit )
       {
          HB_CRITICAL_INIT( critical->critical.value );
          critical->fInit = HB_TRUE;
@@ -181,14 +181,14 @@
       static HB_RAWCOND_T s_thread_cond;
       static void hb_threadCondInit( HB_COND_T * cond )
       {
-         if( !s_fThreadInit )
+         if( ! s_fThreadInit )
             hb_threadInit();
 
          HB_CRITICAL_LOCK( s_init_mtx );
-         if( !cond->fInit )
+         if( ! cond->fInit )
          {
             HB_COND_INIT( cond->cond.value );
-#     if !defined( HB_COND_OS_SUPPORT )
+#     if ! defined( HB_COND_OS_SUPPORT )
             HB_CRITICAL_INIT( cond->critical.value );
             cond->waiters = 0;
 #     endif
@@ -467,7 +467,7 @@ static HB_BOOL _hb_thread_cond_wait( HB_COND_T * cond, HB_RAWCRITICAL_T * critic
    {
       static PULONG s_pThID = NULL;
 
-      if( !s_pThID )
+      if( ! s_pThID )
       {
          DosAllocThreadLocalMemory( 1, &s_pThID );
          *s_pThID = 0;

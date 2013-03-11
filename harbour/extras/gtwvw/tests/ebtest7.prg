@@ -234,7 +234,7 @@ FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel,
       mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "999,999,999.99" )
       mbText := {|| Transform( mxValue, mcPict ) }
    CASE mcVarType == "D"
-      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "99/99/9999" )
+      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "9999-99-99" )
       mbText := {|| DToC( mxValue ) }
    OTHERWISE
       // unsupported valtype
@@ -582,7 +582,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    IF mcvaltype == "N"
       Mask := GetNumMask( mcpict, mcvaltype )
    ELSEIF mcvaltype == "D"
-      Mask := mcpict // "99/99/9999"
+      Mask := mcpict // "9999-99-99"
    ELSE
       Mask := mcpict
    ENDIF

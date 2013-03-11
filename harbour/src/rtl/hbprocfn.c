@@ -74,7 +74,7 @@ HB_FUNC( HB_PROCESSOPEN )
        ( pStdErr || HB_ISNIL( 4 ) ) &&
        ( HB_ISLOG( 5 ) || HB_ISNIL( 5 ) ) &&
        ( HB_ISBYREF( 6 ) || HB_ISNIL( 6 ) ) &&
-       ( !pStdIn || ( pStdIn != pStdOut && pStdIn != pStdErr ) ) )
+       ( ! pStdIn || ( pStdIn != pStdOut && pStdIn != pStdErr ) ) )
    {
       phStdIn  = pStdIn  ? &hStdIn  : NULL;
       phStdOut = pStdOut ? &hStdOut : NULL;

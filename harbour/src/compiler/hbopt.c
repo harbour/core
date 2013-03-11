@@ -349,7 +349,7 @@ static HB_OPT_FUNC( hb_p_duplicate )
                {
                   HB_ISIZ nJump;
                   if( pFunc->pCode[ nNewPos + 1 ] != pFunc->pCode[ nPCodePos + 1 ] )
-                     fNot = !fNot;
+                     fNot = ! fNot;
                   nJump = fNot ? 4 : HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 2 ] );
                   nOffset += nJump + 1;
                   nNewPos = nPCodePos + 1 + nOffset;
@@ -505,7 +505,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 
          case HB_P_JUMPFALSEFAR:
             nNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
-            if( nNewPos == nPCodePos + 4 && ( !fLine ||
+            if( nNewPos == nPCodePos + 4 && ( ! fLine ||
                 ( pFunc->pCode[ nNewPos ] == HB_P_LINE &&
                   pFunc->pCode[ nPCodePos + nOffset + 4 ] == HB_P_LINE ) ) )
             {
@@ -516,7 +516,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 
          case HB_P_JUMPTRUEFAR:
             nNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
-            if( nNewPos == nPCodePos + 4 && ( !fLine ||
+            if( nNewPos == nPCodePos + 4 && ( ! fLine ||
                 ( pFunc->pCode[ nNewPos ] == HB_P_LINE &&
                   pFunc->pCode[ nPCodePos + nOffset + 4 ] == HB_P_LINE ) ) )
             {
@@ -566,7 +566,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
       if( pFunc->pCode[ nNewPos ] == HB_P_JUMPFAR )
       {
          nOffset += HB_PCODE_MKINT24( &pFunc->pCode[ nNewPos + 1 ] );
-         if( !fLine || pFunc->pCode[ nPCodePos + nOffset ] == HB_P_LINE )
+         if( ! fLine || pFunc->pCode[ nPCodePos + nOffset ] == HB_P_LINE )
             HB_PUT_LE_UINT24( pAddr, nOffset );
       }
    }
@@ -1351,15 +1351,15 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_O
                  pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR ) &&
                  ! ( nPos > 0 && pFunc->pCode[ nLastPos ] == HB_P_PUSHNIL );
 
-      if( !fCheck && ( pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
-                       pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
-                       pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
-                       pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT ) )
+      if( ! fCheck && ( pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
+                        pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
+                        pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
+                        pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT ) )
       {
          fCheck = HB_TRUE;
       }
 
-      if( !fCheck && pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF )
+      if( ! fCheck && pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF )
       {
          HB_SIZE nPosNext = nPos + hb_compPCodeSize( pFunc, nPos );
          HB_BYTE bCodeNext = pFunc->pCode[ nPosNext ];

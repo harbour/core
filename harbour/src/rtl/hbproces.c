@@ -268,10 +268,10 @@ static int hb_fsProcessExec( const char * pszFilename,
                              NULL,           /* lpCurrentDirectory */
                              NULL,           /* lpStartupInfo */
                              NULL );         /* lpProcessInformation */
-   hb_fsSetIOError( !fError, 0 );
-   if( !fError )
+   hb_fsSetIOError( ! fError, 0 );
+   if( ! fError )
    {
-      hb_fsSetIOError( !fError, 0 );
+      hb_fsSetIOError( ! fError, 0 );
       iResult = 0;
    }
    hb_vmLock();
@@ -308,7 +308,7 @@ static int hb_fsProcessExec( const char * pszFilename,
       iStdErr = dup( 2 );
       dup2( hStderr, 2 );
    }
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
    {
       pid_t pid = fork();
       if( pid == 0 )
@@ -707,11 +707,11 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
       dwResult = WaitForSingleObject( hProc, fWait ? INFINITE : 0 );
       if( dwResult == WAIT_OBJECT_0 )
       {
-         fError = !GetExitCodeProcess( hProc, &dwResult );
-         iRetStatus = !fError ? ( int ) dwResult : -2;
+         fError = ! GetExitCodeProcess( hProc, &dwResult );
+         iRetStatus = ! fError ? ( int ) dwResult : -2;
       }
-      hb_fsSetIOError( !fError, 0 );
-      if( !fError )
+      hb_fsSetIOError( ! fError, 0 );
+      if( ! fError )
          CloseHandle( hProc );
       hb_vmLock();
    }
@@ -821,7 +821,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
-#elif ( defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN ) ) || \
+#elif ( defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN ) ) || \
       ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 {
    pid_t pid = ( pid_t ) hProcess;
@@ -1072,7 +1072,7 @@ int hb_fsProcessRun( const char * pszFilename,
 
       CloseHandle( ( HANDLE ) hb_fsGetOsHandle( hProcess ) );
 
-#elif defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN )
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 
       fd_set rfds, wfds, *prfds, *pwfds;
       HB_FHANDLE fdMax;

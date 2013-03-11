@@ -70,8 +70,8 @@
 #command ? <list,...>   =>  ?? Chr( 13 ) + Chr( 10 ) ; ?? <list>
 #command ?? <list,...>  =>  OutErr( <list> )
 
-REQUEST HARDCR
-REQUEST MEMOWRIT
+REQUEST HardCR
+REQUEST MemoWrit
 
 STATIC s_bFixCorrupt
 STATIC s_cErrFooter  := " "

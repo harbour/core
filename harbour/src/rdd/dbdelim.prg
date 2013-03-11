@@ -56,7 +56,7 @@
  *
  */
 
-REQUEST DELIM
+REQUEST Delim
 
 FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRecord, lRest, cCodePage )
 

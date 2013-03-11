@@ -116,7 +116,7 @@ typedef struct HB_GARBAGE_
 
 #define HB_GC_PTR( p )        ( ( PHB_GARBAGE ) ( ( HB_BYTE * ) ( p ) - HB_GARBAGE_SIZE ) )
 
-#endif /* !defined( HB_GC_PTR ) */
+#endif /* ! defined( HB_GC_PTR ) */
 
 #define HB_BLOCK_PTR( p )       ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_GARBAGE_SIZE ) )
 

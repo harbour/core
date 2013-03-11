@@ -55,18 +55,18 @@ METHOD ref( p1, p2, p3, p4, p5, p6, p7 ) CLASS OleObjServer
 
 CREATE CLASS timerCls
 
-   MESSAGE date EXTERN date
-   MESSAGE time EXTERN time
-   MESSAGE now  EXTERN hb_datetime
+   MESSAGE date     EXTERN Date()
+   MESSAGE time     EXTERN Time()
+   MESSAGE now      EXTERN hb_DateTime()
 
 ENDCLASS
 
 CREATE CLASS infoCls
 
-   MESSAGE os           EXTERN os
-   MESSAGE ver          EXTERN version
-   MESSAGE compiler     EXTERN hb_compiler
-   MESSAGE build        EXTERN hb_builddate
+   MESSAGE os       EXTERN OS()
+   MESSAGE ver      EXTERN Version()
+   MESSAGE compiler EXTERN hb_Compiler()
+   MESSAGE build    EXTERN hb_BuildDate()
 
 ENDCLASS
 

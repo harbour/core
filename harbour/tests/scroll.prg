@@ -68,6 +68,6 @@ PROCEDURE Main()
 FUNCTION pause()
 
    SetPos( MaxRow() - 2, 0 )
-   __Accept( "pause: " )
+   WAIT "pause:"
 
    RETURN NIL

@@ -417,7 +417,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
          pFile = hb_fileNew( hFile, fShared, fReadonly, device, inode, HB_TRUE );
          if( pFile->hFile != hFile )
          {
-            if( pFile->hFileRO == FS_ERROR && !fReadonly && pFile->readonly )
+            if( pFile->hFileRO == FS_ERROR && ! fReadonly && pFile->readonly )
             {
                pFile->hFileRO = pFile->hFile;
                pFile->hFile = hFile;

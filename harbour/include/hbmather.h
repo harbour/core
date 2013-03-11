@@ -87,12 +87,12 @@ HB_EXTERN_BEGIN
    #define matherr _matherr
    #define exception _exception
 #elif defined( __DJGPP__ )
-   #if !defined( __cplusplus )
+   #if ! defined( __cplusplus )
       #define HB_MATH_HANDLER
    #endif
 #endif
 
-#if !defined( HB_MATH_HANDLER ) && \
+#if ! defined( HB_MATH_HANDLER ) && \
     ( defined( __GNUC__ ) || defined( HB_OS_UNIX ) )
    #define HB_MATH_ERRNO
 #endif

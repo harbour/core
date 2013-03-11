@@ -108,7 +108,7 @@
 
 #endif
 
-#if !defined( MAXGETHOSTNAME ) && ( defined( HB_OS_UNIX ) || \
+#if ! defined( MAXGETHOSTNAME ) && ( defined( HB_OS_UNIX ) || \
       ( ( defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) ) && \
         defined( __GNUC__ ) ) )
    #define MAXGETHOSTNAME 256      /* should be enough for a host name */

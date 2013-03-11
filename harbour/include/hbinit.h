@@ -62,9 +62,9 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 #define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
 
 /* By default in all C++ builds use static vars initialization as startup code */
-#if defined( __cplusplus ) && !defined( HB_STATIC_STARTUP ) && \
-    !defined( HB_PRAGMA_STARTUP ) && !defined( HB_GNUC_STARTUP ) && \
-    !defined( HB_INITSEG_STARTUP ) && !defined( HB_DATASEG_STARTUP )
+#if defined( __cplusplus ) && ! defined( HB_STATIC_STARTUP ) && \
+    ! defined( HB_PRAGMA_STARTUP ) && ! defined( HB_GNUC_STARTUP ) && \
+    ! defined( HB_INITSEG_STARTUP ) && ! defined( HB_DATASEG_STARTUP )
    #define HB_STATIC_STARTUP
 #endif
 
@@ -207,7 +207,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       defined( __BORLANDC__ ) || defined( __LCC__ ) || \
       defined( __POCC__ ) || defined( __XCC__ )
 
-   #if !defined( HB_PRAGMA_STARTUP )
+   #if ! defined( HB_PRAGMA_STARTUP )
       #define HB_PRAGMA_STARTUP
    #endif
 

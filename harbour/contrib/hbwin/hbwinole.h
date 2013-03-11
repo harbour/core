@@ -68,7 +68,7 @@
  * BCC when used with -P (C++ mode) switch.
  */
 /*
-#if defined( __cplusplus ) && !defined( CINTERFACE )
+#if defined( __cplusplus ) && ! defined( CINTERFACE )
    #define CINTERFACE 1
 #endif
 */

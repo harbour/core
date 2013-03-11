@@ -263,7 +263,7 @@ static HB_BOOL hb_regex( int iRequest )
       return HB_FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         ( !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
+                         ( ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
    if( ! pRegEx )
       return HB_FALSE;

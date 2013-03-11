@@ -83,7 +83,7 @@
                                 HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_RIGHT_SB || \
                                 HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_RIGHT_CB || \
                                 ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_SEND && \
-                                  (t)->spaces == 0 && !HB_PP_LEX_SELF(t) ) )
+                                  (t)->spaces == 0 && ! HB_PP_LEX_SELF(t) ) )
 
 #define LOOKUP           0
 #define OPERATOR        -2
@@ -400,8 +400,8 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
          if( pMonth && HB_PP_TOKEN_TYPE( pMonth->type ) == HB_PP_TOKEN_NUMBER &&
              pMonth->pNext && HB_PP_TOKEN_TYPE( pYear->pNext->type ) ==
                               HB_PP_TOKEN_TYPE( pMonth->pNext->type ) &&
-             !hb_compStrToNum( pMonth->value, pMonth->len, &lMonth, &dNumber,
-                               &iDec, &iWidth ) )
+             ! hb_compStrToNum( pMonth->value, pMonth->len, &lMonth, &dNumber,
+                                &iDec, &iWidth ) )
          {
             pDay = pMonth->pNext->pNext;
             if( pDay && HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_NUMBER &&
@@ -1152,7 +1152,7 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                               hb_strnicmp( "WHILE", pToken->pNext->value,
                                            pToken->pNext->len ) == 0 &&
                         /* check if it's not DO while [WITH <args>] */
-                        !HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) &&
+                        ! HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) &&
                         ( HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) != HB_PP_TOKEN_KEYWORD ||
                           pToken->pNext->pNext->len != 4 ||
                           hb_stricmp( "WITH", pToken->pNext->pNext->value ) != 0 ) )

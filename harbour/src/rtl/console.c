@@ -98,7 +98,7 @@
 #  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
-#if defined( HB_OS_UNIX ) && !defined( HB_EOL_CRLF )
+#if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
    static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
    static const int  s_iCrLfLen = 1;
 #else

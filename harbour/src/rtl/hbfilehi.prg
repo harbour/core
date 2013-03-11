@@ -252,14 +252,14 @@ FUNCTION hb_DirSepDel( cDir )
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
          !( cDir == hb_ps() + hb_ps() )
 
-         cDir := hb_StrShrink( cDir, 1 )
+         cDir := hb_StrShrink( cDir )
       ENDDO
    ELSE
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
          !( cDir == hb_ps() + hb_ps() ) .AND. ;
          !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
 
-         cDir := hb_StrShrink( cDir, 1 )
+         cDir := hb_StrShrink( cDir )
       ENDDO
    ENDIF
 

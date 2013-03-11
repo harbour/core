@@ -64,7 +64,7 @@
 /* workaround for some missing C99 math macros in SunOS GCC
  * used in C++ mode
  */
-#if !defined( __C99FEATURES__ ) && defined( __GNUC__ ) && defined( __sun__ )
+#if ! defined( __C99FEATURES__ ) && defined( __GNUC__ ) && defined( __sun__ )
 #  define __C99FEATURES__
 #endif
 
@@ -83,7 +83,7 @@
 #endif
 
 
-#if defined( HB_LONG_DOUBLE_OFF ) && !defined( __NO_LONGDOUBLE__ )
+#if defined( HB_LONG_DOUBLE_OFF ) && ! defined( __NO_LONGDOUBLE__ )
 #  define __NO_LONGDOUBLE__
 #endif
 
@@ -154,7 +154,7 @@
                                          ( isinf( d ) < 0 ? _HB_NUM_NINF : \
                                            _HB_NUM_PINF ) ) ); \
                               } while( 0 )
-#  if !defined( __NO_LONGDOUBLE__ ) && !defined( HB_OS_SUNOS )
+#  if ! defined( __NO_LONGDOUBLE__ ) && ! defined( HB_OS_SUNOS )
 #     define HB_NUMTYPEL( v, d ) do { \
                                     v = ( finitel( d ) ? 0 : \
                                           ( isnanl( d ) ? _HB_NUM_NAN : \
@@ -179,7 +179,7 @@
                                           ( _isnan( d ) ? _HB_NUM_NAN : \
                                               _HB_NUM_PINF ) ); \
                                  } while( 0 )
-#     if !defined( __NO_LONGDOUBLE__ )
+#     if ! defined( __NO_LONGDOUBLE__ )
 #        define HB_NUMTYPEL( v, d ) do { \
                                        v = ( _finitel( d ) ? 0 : \
                                              ( _isnanl( d ) ? _HB_NUM_NAN : \
@@ -218,7 +218,7 @@
 
 #endif
 
-#if !defined( HB_NUMTYPEL )
+#if ! defined( HB_NUMTYPEL )
 #  define HB_NUMTYPEL( v, d ) HB_NUMTYPE( v, d )
 #endif
 

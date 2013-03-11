@@ -533,7 +533,7 @@ HB_FUNC( HB_HSCAN )
             {
                if( HB_IS_DATETIME( pItem ) &&
                    pItem->item.asDateTime.julian == pValue->item.asDateTime.julian &&
-                   ( !fExact || pItem->item.asDateTime.time == pValue->item.asDateTime.time ) )
+                   ( ! fExact || pItem->item.asDateTime.time == pValue->item.asDateTime.time ) )
                {
                   fFound = HB_TRUE;
                   break;

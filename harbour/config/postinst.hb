@@ -124,8 +124,7 @@ PROCEDURE Main( ... )
          IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
             FOR EACH tmp IN { ;
                "src/main/harbour.1", ;
-               "src/pp/hbpp.1", ;
-               "contrib/hbrun/hbrun.1" }
+               "src/pp/hbpp.1" }
                mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
             NEXT
          ELSE

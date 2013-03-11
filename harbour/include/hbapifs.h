@@ -197,14 +197,14 @@ extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* re
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
-#if defined( HB_OS_UNIX ) && !defined( HB_USE_SHARELOCKS_OFF )
+#if defined( HB_OS_UNIX ) && ! defined( HB_USE_SHARELOCKS_OFF )
 #  define HB_USE_SHARELOCKS
 #  define HB_SHARELOCK_POS          0x7fffffffUL
 #  define HB_SHARELOCK_SIZE         0x1UL
 #  if defined( HB_USE_BSDLOCKS_OFF )
 #     undef HB_USE_BSDLOCKS
 #  elif defined( HB_OS_LINUX ) && \
-        !defined( __WATCOMC__ ) && !defined( HB_USE_BSDLOCKS )
+        ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
       /* default usage of BSD locks in *BSD systems for emulating
        * MS-DOS/Windows DENY_* flags has been disabled because tests
        * on FreeBSD 6.2 and OS X shows that this implementation

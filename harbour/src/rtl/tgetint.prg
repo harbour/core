@@ -50,8 +50,8 @@
  *
  */
 
-REQUEST HB_PVALUE
-REQUEST PCOUNT
+REQUEST hb_PValue
+REQUEST PCount
 
 FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 

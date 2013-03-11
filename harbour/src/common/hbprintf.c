@@ -728,7 +728,7 @@ static int _hb_strnlen( const char * str, int len )
 static size_t put_str( char *buffer, size_t bufsize, size_t size,
                        const _x_str str, int flags, int width, int precision )
 {
-   if( !str )
+   if( ! str )
       str = "(null)";
    if( precision < 0 )
       precision = ( int ) strlen( str );
@@ -768,7 +768,7 @@ static size_t put_wstr( char *buffer, size_t bufsize, size_t size,
                         const _x_wstr wstr, int flags, int width,
                         int precision )
 {
-   if( !wstr )
+   if( ! wstr )
    {
       const _x_wchar wstr_null[] = { '(', 'n', 'u', 'l', 'l', ')', 0 };
       wstr = wstr_null;
@@ -1421,7 +1421,7 @@ int hb_vsnprintf( char * buffer, size_t nSize, const char * format, va_list argl
    #define _HB_SNPRINTF_ADD_EOS
 #elif defined( _MSC_VER ) && _MSC_VER >= 1400
    result = _vsnprintf_s( buffer, nSize, _TRUNCATE, format, arglist );
-#elif ( defined( _MSC_VER ) || defined( __DMC__ ) ) && !defined( __XCC__ )
+#elif ( defined( _MSC_VER ) || defined( __DMC__ ) ) && ! defined( __XCC__ )
    result = _vsnprintf( buffer, nSize, format, arglist );
    #define _HB_SNPRINTF_ADD_EOS
 #elif defined( __WATCOMC__ ) && __WATCOMC__ < 1200

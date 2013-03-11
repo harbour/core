@@ -7,7 +7,7 @@ PROCEDURE Main()
    ? "Running with SET FIXED OFF (the default setting):"
    ?
    test()
-   __Accept( "Pause before running again with SET FIXED ON: " )
+   WAIT "Pause before running again with SET FIXED ON:"
    ? "Running with SET FIXED ON:"
    ?
    Set( _SET_FIXED, .T. )

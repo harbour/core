@@ -683,7 +683,7 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, HB_BOOL fEncrypt
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfTableCrypt(%p,%p,%d)", pArea, pPasswd, fEncrypt ) );
 
    if( ! pArea->fReadonly && ! pArea->fShared &&
-       fEncrypt ? ! pArea->fTableEncrypted && !pArea->fHasMemo :
+       fEncrypt ? ! pArea->fTableEncrypted && ! pArea->fHasMemo :
                     pArea->fTableEncrypted )
    {
       HB_ULONG ulRecords, ulRecNo;
@@ -1860,7 +1860,7 @@ static HB_ERRCODE hb_dbfAppend( DBFAREAP pArea, HB_BOOL bUnLockAll )
    pArea->ulRecNo = pArea->ulRecCount;
    pArea->fDeleted = pArea->area.fBof = pArea->area.fEof =
    pArea->area.fFound = HB_FALSE;
-   pArea->fEncrypted = pArea->pCryptKey != NULL && !pArea->fHasMemo;
+   pArea->fEncrypted = pArea->pCryptKey != NULL && ! pArea->fHasMemo;
 
    if( pArea->fShared )
    {
@@ -5146,7 +5146,7 @@ static HB_ERRCODE hb_dbfRawLock( DBFAREAP pArea, HB_USHORT uiAction, HB_ULONG ul
                for( ;; )
                {
                   fLck = hb_fileLock( pArea->pDataFile, nPos, 1, FL_LOCK | FLX_WAIT );
-                  /* TODO: call special error handler (LOCKHANDLER) if !fLck */
+                  /* TODO: call special error handler (LOCKHANDLER) if ! fLck */
                   if( fLck )
                      break;
                   hb_releaseCPU();

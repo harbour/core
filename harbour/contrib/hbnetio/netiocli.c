@@ -735,7 +735,7 @@ static const char * s_fileDecode( const char * pszFilename,
          pszFilename += 2;
          pth = strchr( pszFilename, '/' );
          psz = strchr( pszFilename, '\\' );
-         if( !pth || ( psz && psz < pth ) )
+         if( ! pth || ( psz && psz < pth ) )
          {
             pth = psz;
             if( ! pth )

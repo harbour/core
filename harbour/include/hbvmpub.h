@@ -136,16 +136,16 @@ struct _HB_SYMB;
    typedef struct _HB_DYNS
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-#  if !defined( HB_MT_VM )
+#  if ! defined( HB_MT_VM )
       void *    pMemvar;          /* memvar pointer ( publics & privates ) */
       HB_USHORT uiArea;           /* Workarea number */
-#  endif /* !HB_MT_VM */
+#  endif /* ! HB_MT_VM */
       HB_USHORT uiSymNum;         /* dynamic symbol number */
-#  if !defined( HB_NO_PROFILER )
+#  if ! defined( HB_NO_PROFILER )
       HB_ULONG  ulCalls;          /* profiler support */
       HB_ULONG  ulTime;           /* profiler support */
       HB_ULONG  ulRecurse;        /* profiler support */
-#  endif /* !HB_NO_PROFILER */
+#  endif /* ! HB_NO_PROFILER */
    } HB_DYNS, * PHB_DYNS;
 
    /* pCode dynamic function - HRB */
@@ -155,7 +155,7 @@ struct _HB_SYMB;
       struct _HB_SYMB * pSymbols;/* module symbol table */
    } HB_PCODEFUNC, * PHB_PCODEFUNC;
 
-#else /* !_HB_API_INTERNAL_ */
+#else /* ! _HB_API_INTERNAL_ */
 
 #  undef _HB_API_MACROS_
 #  undef _HB_STACK_MACROS_
@@ -194,7 +194,7 @@ struct _HB_SYMB;
    typedef void *  PHB_DYNS;
 #endif
 
-#endif /* !_HB_API_INTERNAL_ */
+#endif /* ! _HB_API_INTERNAL_ */
 
 /* symbol support structure */
 typedef struct _HB_SYMB

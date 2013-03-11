@@ -148,13 +148,13 @@ static HB_CDP_CMP_FUNC( UTF8_cmp )
    iRet = 0;
    for( ;; )
    {
-      if( !HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
+      if( ! HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
       {
          if( fExact && HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
             iRet = 1;
          break;
       }
-      if( !HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+      if( ! HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
       {
          iRet = -1;
          break;
@@ -200,13 +200,13 @@ static HB_CDP_CMP_FUNC( UTF8_cmpi )
 
    for( ;; )
    {
-      if( !HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
+      if( ! HB_CDPCHAR_GET( cdp, szSecond, nLenSecond, &nPos2, &wc2 ) )
       {
          if( fExact && HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
             iRet = 1;
          break;
       }
-      if( !HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
+      if( ! HB_CDPCHAR_GET( cdp, szFirst, nLenFirst, &nPos1, &wc1 ) )
       {
          iRet = -1;
          break;

@@ -853,7 +853,7 @@ static int hb_gt_def_PutTextW( PHB_GT pGT, int iRow, int iCol, int iColor, const
    {
       do
       {
-         if( !HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
+         if( ! HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
             break;
          ++iCol;
       }
@@ -2043,7 +2043,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                {
                   if( ulCurrWidth <= ulDefWidth )
                      ulSpace1 = ulMsg;
-                  else if( ulCurrWidth <= ulMaxWidth && !ulSpace2 )
+                  else if( ulCurrWidth <= ulMaxWidth && ! ulSpace2 )
                      ulSpace2 = ulMsg;
                }
                szMsgDsp[ ulDst++ ] = szMessageW[ ulMsg ];

@@ -993,7 +993,7 @@ static void hb_clsDefineSuperClass( PCLASS pClass, HB_USHORT uiSuperCls, HB_BOOL
 
    pSprCls = s_pClasses[ uiSuperCls ];
 
-   if( !hb_clsHasParentClass( pClass, uiSuperCls ) )
+   if( ! hb_clsHasParentClass( pClass, uiSuperCls ) )
    {
       if( fNew )
       {
@@ -5124,7 +5124,7 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
    HB_SIZE nLimit, nLen, nCount, nSize, nIndex, nOffset;
    HB_USHORT uiClass, uiSuperClasses;
 
-   if( !pObject || !HB_IS_OBJECT( pObject ) )
+   if( ! pObject || ! HB_IS_OBJECT( pObject ) )
       return NULL;
 
    uiClass = pObject->item.asArray.value->uiClass;
@@ -5189,11 +5189,11 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
             if( pInfo->uiStatus < uiStatus )
             {
                pItem = hb_arrayGetItemPtr( pObject, nIndex );
-               if( !pItem || ( pInfo->uiStatus == 0 && HB_IS_NIL( pItem ) ) )
+               if( ! pItem || ( pInfo->uiStatus == 0 && HB_IS_NIL( pItem ) ) )
                   uiStatus = 3;
                else
                {
-                  if( !pInfo->pMethod )
+                  if( ! pInfo->pMethod )
                      ++nSize;
                   pInfo->pMethod = pMethod;
                   pInfo->uiClass = uiClass;
@@ -5266,7 +5266,7 @@ static void hb_objSetIVars( PHB_ITEM pObject, PHB_ITEM pArray )
          PHB_ITEM pNewVal = hb_arrayGetItemPtr( pValue, 2 );
          HB_USHORT uiSuper = uiClass;
 
-         if( !pVarSym )
+         if( ! pVarSym )
          {
             const char * pszClass = strchr( pszMethod, ':' );
             if( pszClass )
@@ -5327,7 +5327,7 @@ HB_FUNC( __OBJSETIVARS )
          pObject = pNewObj = hb_clsInst( hb_clsFindClass( hb_itemGetCPtr( pObject ), NULL ) );
       else if( HB_IS_SYMBOL( pObject ) )
          pObject = pNewObj = hb_clsInst( hb_clsFindClassByFunc( hb_itemGetSymbol( pObject ) ) );
-      else if( !HB_IS_OBJECT( pObject ) )
+      else if( ! HB_IS_OBJECT( pObject ) )
          pObject = NULL;
 
       hb_objSetIVars( pObject, pArray );

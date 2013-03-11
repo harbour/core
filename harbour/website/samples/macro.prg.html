@@ -67,7 +67,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TValue
+FUNCTION TValue()
 
    STATIC s_oClass
 
@@ -138,10 +138,10 @@ STATIC PROCEDURE TEST_Type()
    v2 := "UDF_STATIC"
    ? "Test for Type('UDF_STATIC') - should be 'U': ", Type( v2 )
 
-   v1a := "UDF:=1"
-   ? "Test for Type('UDF:=1')        - should be 'N': ", Type( v1a )
-   v2a := "UDF_STATIC:=1"
-   ? "Test for Type('UDF_STATIC:=1') - should be 'N': ", Type( v2a )
+   v1a := "UDF := 1"
+   ? "Test for Type('UDF := 1')        - should be 'N': ", Type( v1a )
+   v2a := "UDF_STATIC := 1"
+   ? "Test for Type('UDF_STATIC := 1') - should be 'N': ", Type( v2a )
 
    ? "=== after the assignment ==="
    v1 := "UDF"

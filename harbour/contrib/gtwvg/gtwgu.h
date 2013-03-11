@@ -152,76 +152,79 @@ HB_EXTERN_BEGIN
 /*-*/
 
 #if defined( __DMC__ )
-   #if (_WIN32_IE >= 0x0300)
-      #if !defined( ICC_BAR_CLASSES )
+   #if ( _WIN32_IE >= 0x0300 )
+      #if ! defined( ICC_BAR_CLASSES )
          #define ICC_BAR_CLASSES    0x00000004
       #endif
-      #if !defined( COLOR16 )
+      #if ! defined( COLOR16 )
          typedef USHORT COLOR16;
       #endif
-      #if !defined( TRIVERTEX )
-         typedef struct _TRIVERTEX {
+      #if ! defined( TRIVERTEX )
+         typedef struct _TRIVERTEX
+         {
             LONG    x;
             LONG    y;
             COLOR16 Red;
             COLOR16 Green;
             COLOR16 Blue;
             COLOR16 Alpha;
-            }TRIVERTEX,*PTRIVERTEX,*LPTRIVERTEX;
+            } TRIVERTEX, * PTRIVERTEX, * LPTRIVERTEX;
       #endif
-      #if !defined( INITCOMMONCONTROLSEX )
-         typedef struct tagINITCOMMONCONTROLSEX {
+      #if ! defined( INITCOMMONCONTROLSEX )
+         typedef struct tagINITCOMMONCONTROLSEX
+         {
              DWORD dwSize;             /* size of this structure */
              DWORD dwICC;              /* flags indicating which classes to be initialized */
-         } INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
+         } INITCOMMONCONTROLSEX, * LPINITCOMMONCONTROLSEX;
       #endif
-      #if !defined( InitCommonControlsEx )
-         WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx(LPINITCOMMONCONTROLSEX);
+      #if ! defined( InitCommonControlsEx )
+         WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx( LPINITCOMMONCONTROLSEX );
       #endif
    #endif
 
-   typedef struct _GRADIENT_RECT {
+   typedef struct _GRADIENT_RECT
+   {
        ULONG UpperLeft;
        ULONG LowerRight;
-   } GRADIENT_RECT,*PGRADIENT_RECT,*LPGRADIENT_RECT;
+   } GRADIENT_RECT, * PGRADIENT_RECT, * LPGRADIENT_RECT;
 
    #ifndef TTM_SETTIPBKCOLOR
-      #define TTM_SETTIPBKCOLOR     (WM_USER + 19)
+      #define TTM_SETTIPBKCOLOR     ( WM_USER + 19 )
    #endif
    #ifndef TTM_SETTIPTEXTCOLOR
-      #define TTM_SETTIPTEXTCOLOR   (WM_USER + 20)
+      #define TTM_SETTIPTEXTCOLOR   ( WM_USER + 20 )
    #endif
    #ifndef TTM_GETTIPBKCOLOR
-      #define TTM_GETTIPBKCOLOR     (WM_USER + 22)
+      #define TTM_GETTIPBKCOLOR     ( WM_USER + 22 )
    #endif
    #ifndef TTM_GETTIPTEXTCOLOR
-      #define TTM_GETTIPTEXTCOLOR   (WM_USER + 23)
+      #define TTM_GETTIPTEXTCOLOR   ( WM_USER + 23 )
    #endif
    #ifndef TTM_SETMAXTIPWIDTH
-      #define TTM_SETMAXTIPWIDTH    (WM_USER + 24)
+      #define TTM_SETMAXTIPWIDTH    ( WM_USER + 24 )
    #endif
    #ifndef TTM_GETMAXTIPWIDTH
-      #define TTM_GETMAXTIPWIDTH    (WM_USER + 25)
+      #define TTM_GETMAXTIPWIDTH    ( WM_USER + 25 )
    #endif
    #ifndef TTM_SETMARGIN
-      #define TTM_SETMARGIN         (WM_USER + 26)
+      #define TTM_SETMARGIN         ( WM_USER + 26 )
    #endif
 
 #endif
 
 #if defined( __BORLANDC__ ) && ( __BORLANDC__ == 0x0550 )
    #ifdef __cplusplus
-      extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }
+      extern "C" { STDAPI OleLoadPicture( LPSTREAM, LONG, BOOL, REFIID, PVOID * ); }
    #else
       #if ! defined( HB_OS_WIN_CE )
-         STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
+         STDAPI OleLoadPicture( LPSTREAM, LONG, BOOL, REFIID, PVOID * );
       #endif
    #endif
 #endif
 
 /*-*/
 
-typedef BOOL ( WINAPI *wvtGradientFill )     (
+typedef BOOL ( WINAPI * wvtGradientFill )     (
                       HDC        hdc,
                       PTRIVERTEX pVertex,
                       ULONG      dwNumVertex,
@@ -229,7 +232,7 @@ typedef BOOL ( WINAPI *wvtGradientFill )     (
                       ULONG      dwNumMesh,
                       ULONG      dwMode      );
 
-typedef BOOL ( WINAPI *wvtSetLayeredWindowAttributes )(
+typedef BOOL ( WINAPI * wvtSetLayeredWindowAttributes )(
                       HWND       hwnd,
                       COLORREF   crKey,
                       BYTE       bAlpha,
@@ -286,7 +289,7 @@ typedef struct
 
    PHB_CODEPAGE hostCDP;                    /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                      /* Host/HVM CodePage for unicode input translations */
-#if !defined( UNICODE )
+#if ! defined( UNICODE )
    BYTE     keyTransTbl[ 256 ];
    BYTE     chrTransTbl[ 256 ];
 #endif
@@ -342,7 +345,7 @@ typedef struct
 /*-*/
 
 #ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
+   #define INVALID_FILE_SIZE ( DWORD ) 0xFFFFFFFF
 #endif
 
 #ifndef CC_ANYCOLOR
@@ -350,7 +353,7 @@ typedef struct
 #endif
 
 #ifndef IDC_HAND
-   #define IDC_HAND MAKEINTRESOURCE(32649)
+   #define IDC_HAND MAKEINTRESOURCE( 32649 )
 #endif
 
 #ifndef GRADIENT_FILL_RECT_H
@@ -358,7 +361,7 @@ typedef struct
 #endif
 
 #ifndef GCLP_HCURSOR
-   #define GCLP_HCURSOR (-12)
+   #define GCLP_HCURSOR ( -12 )
 #endif
 
 /*-*/
@@ -392,7 +395,7 @@ typedef enum
 /*-*/
 
 /* xHarbour compatible definitions */
-#if !defined( K_SH_LEFT )
+#if ! defined( K_SH_LEFT )
 #define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
 #define K_SH_UP             K_UP     /* Shift-Up    == Up    */
 #define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
@@ -413,15 +416,15 @@ typedef enum
 
 /*-*/
 #if 0
-extern HB_BOOL  wvt_Array2Rect(PHB_ITEM aRect, RECT *rc );
-extern PHB_ITEM wvt_Rect2Array( RECT *rc  );
-extern HB_BOOL  wvt_Array2Point(PHB_ITEM aPoint, POINT *pt );
-extern PHB_ITEM wvt_Point2Array( POINT *pt  );
-extern HB_BOOL  wvt_Array2Size(PHB_ITEM aSize, SIZE *siz );
-extern PHB_ITEM wvt_Size2Array( SIZE *siz  );
-extern void     wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect );
-extern void     wvt_Point2ArrayEx( POINT *pt  , PHB_ITEM aPoint);
-extern void     wvt_Size2ArrayEx( SIZE *siz ,PHB_ITEM aSize );
+extern HB_BOOL  wvt_Array2Rect( PHB_ITEM aRect, RECT * rc );
+extern PHB_ITEM wvt_Rect2Array( RECT * rc );
+extern HB_BOOL  wvt_Array2Point( PHB_ITEM aPoint, POINT * pt );
+extern PHB_ITEM wvt_Point2Array( POINT * pt );
+extern HB_BOOL  wvt_Array2Size( PHB_ITEM aSize, SIZE * siz );
+extern PHB_ITEM wvt_Size2Array( SIZE * siz );
+extern void     wvt_Rect2ArrayEx( RECT * rc, PHB_ITEM aRect );
+extern void     wvt_Point2ArrayEx( POINT * pt, PHB_ITEM aPoint);
+extern void     wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize );
 #endif
 
 HB_EXTERN_END

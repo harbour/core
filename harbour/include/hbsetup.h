@@ -515,7 +515,7 @@
  * Extern "C" detection
  */
 
-#if defined( __cplusplus ) && !defined( __IBMCPP__ )
+#if defined( __cplusplus ) && ! defined( __IBMCPP__ )
    #define HB_EXTERN_C        extern "C"
    #define HB_EXTERN_BEGIN    extern "C" {
    #define HB_EXTERN_END      }
@@ -544,17 +544,17 @@
    #define HB_NORETURN_ATTR
 #  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
-      !defined( __ICC ) && !defined( __clang__ ) && \
-      !defined( __PCC__ ) && \
-      !defined( HB_OS_ANDROID ) && \
-      !defined( HB_NO_FLATTEN )
+      ! defined( __ICC ) && ! defined( __clang__ ) && \
+      ! defined( __PCC__ ) && \
+      ! defined( HB_OS_ANDROID ) && \
+      ! defined( HB_NO_FLATTEN )
    #define HB_FLATTEN_ATTR \
                      __attribute__ (( flatten ))
 #  else
    #define HB_FLATTEN_ATTR
 #  endif
 #  if ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
-      !defined( __ICC ) && !defined( __OPENCC__ )
+      ! defined( __ICC ) && ! defined( __OPENCC__ )
    #define HB_ALLOC_SIZE_ATTR( _nParam ) \
                      __attribute__ (( alloc_size (_nParam)))
    #define HB_HOT_ATTR \

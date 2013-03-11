@@ -129,10 +129,10 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
          ENDIF
       ELSE
          cVal := "{"
-         IF !lRaw .AND. v == "O"
+         IF ! lRaw .AND. v == "O"
             FOR EACH tmp IN __objGetIVars( xVal )
-               cVal += iif( tmp:__enumIndex() == 1, "{'", ", {'" ) + ;
-                       tmp[ 1 ] + "', " + ;
+               cVal += iif( tmp:__enumIndex() == 1, '{"', ', {"' ) + ;
+                       tmp[ 1 ] + '", ' + ;
                        s_valToExp( tmp[ 2 ], lRaw, ;
                                    cInd + hb_ntos( tmp:__enumIndex() ) + ",2", ;
                                    hRefs, @cRefs, @cObjs ) + "}"
@@ -152,7 +152,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
          ELSE
             cObjs += ","
          ENDIF
-         cObjs += "{'" + cClass + "',"
+         cObjs += '{"' + cClass + '",'
          IF ! cInd == ""
             cObjs += "{" + hb_StrShrink( cInd ) + "}"
          ENDIF

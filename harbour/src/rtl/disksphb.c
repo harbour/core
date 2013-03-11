@@ -116,7 +116,7 @@ HB_FUNC( HB_DISKSPACE )
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
          HB_BOOL fResult;
 
-#if !defined( HB_OS_WIN_CE ) && !defined( HB_OS_WIN_64 )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( HB_OS_WIN_64 )
          /* NOTE: We need to call this function dynamically to maintain support
                   Win95 first edition. It was introduced in Win95B (aka OSR2) [vszakats] */
          typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
@@ -177,7 +177,7 @@ HB_FUNC( HB_DISKSPACE )
 #endif
          {
 #if defined( _MSC_VER ) || defined( __LCC__ ) || \
-    ( defined( __GNUC__ ) && !defined( __RSXNT__ ) )
+    ( defined( __GNUC__ ) && ! defined( __RSXNT__ ) )
 
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
                                     ( double ) (v).HighPart * \

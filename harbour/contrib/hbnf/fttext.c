@@ -648,7 +648,7 @@ HB_FUNC( FT_FAPPEND )
       ft_text->recno[ ft_text->area ]++;
       ft_text->offset[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_RELATIVE );
 #if 0
-      no_lines--;  /* !Harbour FIX! */
+      no_lines--;  /* Harbour FIX */
 #endif
    }
 

@@ -1471,7 +1471,7 @@ STATIC FUNCTION AR_LOCATE( nWA, lContinue )
    ENDIF
    IF bWhile == NIL
       bLocate := {|| ! Eval( bFor ) }
-      IF !lContinue .AND. aScopeInfo[ UR_SI_NEXT ] == NIL .AND. aScopeInfo[ UR_SI_RECORD ] == NIL .AND. !aScopeInfo[ UR_SI_REST ]
+      IF ! lContinue .AND. aScopeInfo[ UR_SI_NEXT ] == NIL .AND. aScopeInfo[ UR_SI_RECORD ] == NIL .AND. ! aScopeInfo[ UR_SI_REST ]
          AR_GOTOP( nWA )
       ENDIF
    ELSE

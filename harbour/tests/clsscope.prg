@@ -486,7 +486,7 @@ RETURN self
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 =========================================================================
 
- 09/16/06 23:17:33 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
+ 2006-09-16 23:17:33 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 
  Class Access:
        hVar:=  cls1
@@ -751,7 +751,7 @@ RETURN self
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 =========================================================================
 
- 09/16/06 23:18:59 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
+ 2006-09-16 23:18:59 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 
  Class Access:
        hVar:=  cls1

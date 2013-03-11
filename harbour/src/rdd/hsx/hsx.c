@@ -1286,7 +1286,7 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
    else if( ! szText || ! szSub )
       iResult = HSX_BADPARMS;
    else if( nSub > nLen || nSub == 0 )
-      /* !nSub -> do not accept empty substrings as $ operator at runtime */
+      /* ! nSub -> do not accept empty substrings as $ operator at runtime */
       iResult = HSX_SUCCESSFALSE;
    else
    {

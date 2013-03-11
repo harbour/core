@@ -8,7 +8,7 @@
 #include "clipper.ch"
 #endif
 
-MEMVAR MEMVAR
+MEMVAR memvar
 MEMVAR memvar1
 MEMVAR memvar2
 MEMVAR memvar3
@@ -40,21 +40,21 @@ PROCEDURE Main()
    HB_SYMBOL_UNUSED( main )
 
    Test1()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test2()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test3()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test4()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test5()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test6()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test7( "value1", 2, .T. )
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test8()
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
    Test9()
 
    RETURN
@@ -307,7 +307,7 @@ PROCEDURE Test8()
    ? "In Test8 after UsePriv"
    ? "Private1 : ", private1
 
-   __Accept( "press Enter..." )
+   WAIT "press any key..."
 
    ? "In Test8 before UsePriv with reference"
    ? "Private1 : ", private1

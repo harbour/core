@@ -4025,13 +4025,13 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
             return HB_FAILURE;
          }
          pArea->bMemoType = ( HB_BYTE ) hb_itemGetNI( pItem );
-/*
-         if( !pArea->bMemoType )
+#if 0
+         if( ! pArea->bMemoType )
          {
             pArea->bMemoType = DB_MEMO_FPT;
             pArea->uiMemoVersion = DB_MEMOVER_FLEX;
          }
- */
+#endif
          if( pArea->bMemoType != DB_MEMO_DBT &&
              pArea->bMemoType != DB_MEMO_FPT &&
              pArea->bMemoType != DB_MEMO_SMT )

@@ -1174,8 +1174,8 @@
       <nEpoch> Base Century.
    $DESCRIPTION$
       This command sets the base year value for dates that have only two
-      digits. The default setting is 1900. Dates between 01/01/0100 and
-      12/31/2999 are fully supported.
+      digits. The default setting is 1900. Dates between 0100-01-01 and
+      2999-12-31 are fully supported.
    $EXAMPLES$
       SET EPOCH TO 2000
    $STATUS$

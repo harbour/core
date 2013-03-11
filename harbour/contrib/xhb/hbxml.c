@@ -2342,7 +2342,7 @@ HB_FUNC( HBXML_NODE_TO_STRING )
    out.u.vPtr = ( void * ) sgs;
 
    if( mxml_node_write( &out, pNode, iStyle ) == MXML_STATUS_OK )
-      hb_retclen_buffer( mxml_sgs_extract( sgs ), sgs->length );
+      hb_retclen( mxml_sgs_extract( sgs ), sgs->length );
 
    mxml_sgs_destroy( sgs );
 }

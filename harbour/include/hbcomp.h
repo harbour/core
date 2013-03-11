@@ -253,7 +253,7 @@ extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PHB_HFUNC );
 #define hb_compWarnMeaningless( p, x )
 #define hb_compErrorMacro( p, x )
 
-#elif !defined( HB_COMMON_SUPPORT )
+#elif ! defined( HB_COMMON_SUPPORT )
 
 #define HB_GEN_FUNC1( func, p1 )          hb_compGen##func( p1, HB_COMP_PARAM )
 #define HB_GEN_FUNC2( func, p1,p2 )       hb_compGen##func( p1, p2, HB_COMP_PARAM )

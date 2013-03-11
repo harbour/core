@@ -4,7 +4,7 @@
 
 // Testing SET
 
-REQUEST dbfntx
+REQUEST DBFNTX
 
 PROCEDURE Main()
 

@@ -3,184 +3,191 @@
  */
 
 /*
- * Testing CLIPPER Extended system.
+ * Testing Clipper Extended system.
  *
- * NOTE: compile extend1.prg and extend2.c and link both files
+ * NOTE: build together with extend1.prg
+ *       In Harbour use command 'hbmk2 extend1.hbp'
  */
 
 #include <string.h>
 #include "extend.api"
 
-#ifdef __HARBOUR__
+#if defined(__HARBOUR__)
+   #include "hbapi.h"
    #include "hbundoc.api"
+   #define CLIPFUN( funcname )              HB_FUNC( funcname )
+   #define CLIPFUNL( funcname, funcshort )  HB_FUNC( funcname )
+#elif defined(__CLIPPER__)
+   #define CLIPFUN( funcname )              CLIPPER funcname ( void )
+   #define CLIPFUNL( funcname, funcshort )  CLIPPER funcshort ( void )
 #endif
 
-CLIPPER HB_STRINGS1()
+CLIPFUN( STRINGS1 )
 {
    _retc( _parc( 1 ) );
 }
 
-CLIPPER HB_STRINGS2()
+CLIPFUN( STRINGS2 )
 {
    _retc( _parc( 1, 1 ) );
 }
 
-CLIPPER HB_STRINGS3()
+CLIPFUN( STRINGS3 )
 {
    _retclen( _parc( 1 ), _parnl( 2 ) );
 }
 
-CLIPPER HB_STRINGS4()
+CLIPFUN( STRINGS4 )
 {
    _retni( _parclen( 1 ) );
 }
 
-CLIPPER HB_STRINGS5()
+CLIPFUN( STRINGS5 )
 {
    _storc( _parc( 2 ), 1 );
 }
 
-CLIPPER HB_STRINGS6()
+CLIPFUN( STRINGS6 )
 {
    _storclen( _parc( 2 ), _parnl( 3 ), 1 );
 }
 
-CLIPPER HB_STRINGS7()
+CLIPFUN( STRINGS7 )
 {
    _storc( _parc( 2 ), 1, 1 );
 }
 
-CLIPPER HB_STRINGS8()
+CLIPFUN( STRINGS8 )
 {
    _storclen( _parc( 2 ), _parnl( 3 ), 1, 1 );
 }
 
-CLIPPER HB_LOGICAL1()
+CLIPFUN( LOGICAL1 )
 {
    _retl( _parl( 1 ) );
 }
 
-CLIPPER HB_LOGICAL2()
+CLIPFUN( LOGICAL2 )
 {
    _retl( _parl( 1, 1 ) );
 }
 
-CLIPPER HB_LOGICAL3()
+CLIPFUN( LOGICAL3 )
 {
    _storl( _parl( 2 ), 1 );
 }
 
-CLIPPER HB_LOGICAL4()
+CLIPFUN( LOGICAL4 )
 {
    _storl( _parl( 2 ), 1, 1 );
 }
 
-CLIPPER HB_DATE1()
+CLIPFUN( DATE1 )
 {
    _retds( _pards( 1 ) );
 }
 
-CLIPPER HB_DATE2()
+CLIPFUN( DATE2 )
 {
    _retds( _pards( 1, 1 ) );
 }
 
-CLIPPER HB_DATE3()
+CLIPFUN( DATE3 )
 {
    _stords( _pards( 2 ), 1 );
 }
 
-CLIPPER HB_DATE4()
+CLIPFUN( DATE4 )
 {
    _stords( _pards( 2 ), 1, 1 );
 }
 
-CLIPPER HB_INT1()
+CLIPFUN( INT1 )
 {
    _retni( _parni( 1 ) );
 }
 
-CLIPPER HB_INT2()
+CLIPFUN( INT2 )
 {
    _retni( _parni( 1, 1 ) );
 }
 
-CLIPPER HB_INT3()
+CLIPFUN( INT3 )
 {
    _storni( _parni( 2 ), 1 );
 }
 
-CLIPPER HB_INT4()
+CLIPFUN( INT4 )
 {
    _storni( _parni( 2 ), 1, 1 );
 }
 
-CLIPPER HB_LONG1()
+CLIPFUN( LONG1 )
 {
    _retnl( _parnl( 1 ) );
 }
 
-CLIPPER HB_LONG2()
+CLIPFUN( LONG2 )
 {
    _retnl( _parnl( 1, 1 ) );
 }
 
-CLIPPER HB_LONG3()
+CLIPFUN( LONG3 )
 {
    _stornl( _parnl( 2 ), 1 );
 }
 
-CLIPPER HB_LONG4()
+CLIPFUN( LONG4 )
 {
    _stornl( _parnl( 2 ), 1, 1 );
 }
 
-CLIPPER HB_DOUBLE1()
+CLIPFUN( DOUBLE1 )
 {
    _retnd( _parnd( 1 ) );
 }
 
-CLIPPER HB_DOUBLE2()
+CLIPFUN( DOUBLE2 )
 {
    _retnd( _parnd( 1, 1 ) );
 }
 
-CLIPPER HB_DOUBLE3()
+CLIPFUN( DOUBLE3 )
 {
    _stornd( _parnd( 2 ), 1 );
 }
 
-CLIPPER HB_DOUBLE4()
+CLIPFUN( DOUBLE4 )
 {
    _stornd( _parnd( 2 ), 1, 1 );
 }
 
-CLIPPER HB_NIL1()
+CLIPFUN( NIL1 )
 {
    _ret();
 }
 
-CLIPPER HB_ARRAYS1()
+CLIPFUN( ARRAYS1 )
 {
    _reta( _parnl( 1 ) );
 }
 
-CLIPPER HB_ARRAYS2()
+CLIPFUN( ARRAYS2 )
 {
    _retnl( _parinfa( 1, _parni( 2 ) ) );
 }
 
-CLIPPER HB_PARAMS1()
+CLIPFUN( PARAMS1 )
 {
    _retni( _pcount() );
 }
 
-CLIPPER HB_PARAMS2()
+CLIPFUN( PARAMS2 )
 {
    _retni( _parinfo( _parni( 4 ) ) );
 }
 
-CLIPPER HB_UNDOC2()
+CLIPFUN( UNDOC2 )
 {
    char szText[ 25 ];
 
@@ -190,13 +197,13 @@ CLIPPER HB_UNDOC2()
    _retc( szText );
 }
 
-CLIPPER HB_UNDOC3()
+CLIPFUN( UNDOC3 )
 {
    _retc( "Hello word" );
    _retnl( _parclen( -1 ) );
 }
 
-CLIPPER HB_UNDOC4()
+CLIPFUN( UNDOC4 )
 {
    char szText[ 25 ];
 
@@ -206,79 +213,79 @@ CLIPPER HB_UNDOC4()
    _retds( szText );
 }
 
-CLIPPER HB_UNDOC5()
+CLIPFUN( UNDOC5 )
 {
    _retl( _parl( 1 ) );
    _retl( _parl( -1 ) - 1 );
 }
 
-CLIPPER HB_UNDOC6()
+CLIPFUN( UNDOC6 )
 {
    _retnd( _parnd( 1 ) );
    _retnd( _parnd( -1 ) - 1234567 );
 }
 
-CLIPPER HB_UNDOC7()
+CLIPFUN( UNDOC7 )
 {
    _retni( _parni( 1 ) );
    _retni( _parni( -1 ) / 10 );
 }
 
-CLIPPER HB_UNDOC8()
+CLIPFUN( UNDOC8 )
 {
    _retnl( _parnl( 1 ) );
    _retnl( _parnl( -1 ) * 10 );
 }
 
-CLIPPER HB_UNDOC9()
+CLIPFUN( UNDOC9 )
 {
    _reta( _parni( 1 ) );
    _retnl( _parinfa( -1, 0 ) );
 }
 
-CLIPPER HB_UNDOC10()
+CLIPFUN( UNDOC10 )
 {
-   _retc( "CLIPPER power!!!" );
+   _retc( "Clipper power!!!" );
    _retni( _parinfo( -1 ) );
 }
 
-CLIPPER HB_UNDOC11()
+CLIPFUN( UNDOC11 )
 {
    _retc( _parc( 1 ) );
-   _storc( "CLIPPER power!!!", -1 );
+   _storc( "Clipper power!!!", -1 );
 }
 
-CLIPPER HB_UNDOC12()
+CLIPFUN( UNDOC12 )
 {
    _retc( _parc( 1 ) );
-   _storclen( "CLIPPER power!!!", _parni( 2 ), -1 );
+   _storclen( "Clipper power!!!", _parni( 2 ), -1 );
 }
 
-CLIPPER HB_UNDOC13()
+CLIPFUN( UNDOC13 )
 {
    _retds( _pards( 1 ) );
    _stords( "20010101", -1 );
 }
 
-CLIPPER HB_UNDOC14()
+CLIPFUN( UNDOC14 )
 {
    _retl( _parl( 1 ) );
    _storl( 0, -1 );
 }
 
-CLIPPER HB_UNDOC15()
+CLIPFUN( UNDOC15 )
 {
    _retni( _parni( 1 ) );
    _storni( 4321, -1 );
 }
 
-CLIPPER HB_UNDOC16()
+CLIPFUN( UNDOC16 )
 {
    _retnl( _parnl( 1 ) );
    _stornl( 987654321, -1 );
 }
 
-CLIPPER HB_UNDOC17()
+CLIPFUN( UNDOC17 )
 {
    _retnd( _parnd( 1 ) );
    _stornd( 9876543.21, -1 );

@@ -1388,7 +1388,7 @@ API
   because we will have to reduce functionality (supported date range)
   to reach it. In Clipper STOD(DTOS()) is not revertible, it is
   revertible in [x]Harbour for the whole supported in string
-  conversion range: 0000/01/01 : 9999/01/01.
+  conversion range: 0000-01-01 : 9999-01-01.
 - Fixed possible GPF in CTOD when badly formated date is given.
 - Optimized hb_dateEncode().
 - Fixed RT error number in hb_vmAddInt() for negative values to be

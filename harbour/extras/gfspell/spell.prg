@@ -1090,7 +1090,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    // Create the dictionary file
    //
 
-   // ADDED - 02/08/96 - JAMES
+   // ADDED - 1996-02-08 - JAMES
    IF t_nHandle != F_ERROR                // Is dictionary already open?
       FClose( t_nHandle )                 // Yes, close it
       t_nHandle := F_ERROR

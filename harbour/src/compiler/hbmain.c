@@ -850,7 +850,7 @@ PHB_HVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos,
 
       pOutBlock = pFunc;
       pFunc = pFunc->pOwner;
-      if( !pFunc && !fGlobal )
+      if( ! pFunc && ! fGlobal )
       {
          /* instead of making this trick with pGlobal switching it will be
           * much cleaner to set pOwner in each compiled function to first
@@ -2847,7 +2847,7 @@ void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL ) /* generates t
       }
    }
 
-   if( !pVar )
+   if( ! pVar )
    {
       /* undeclared variable */
       /* field cannot be passed by the reference - assume the memvar */

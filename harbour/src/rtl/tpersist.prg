@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-REQUEST ARRAY
+REQUEST Array
 
 CREATE CLASS HBPersistent
 

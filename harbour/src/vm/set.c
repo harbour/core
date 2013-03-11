@@ -317,7 +317,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    if( ! szFileName )
       return;
 
-   /* Open the file either in append (bAppend) or truncate mode (!bAppend), but
+   /* Open the file either in append (bAppend) or truncate mode (! bAppend), but
       always use binary mode */
 
    /* QUESTION: What sharing mode does Clipper use ? [vszakats] */

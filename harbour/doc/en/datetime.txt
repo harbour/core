@@ -153,7 +153,8 @@
       improper character string is passed to the function, an empty date
       value will be returned.
    $EXAMPLES$
-      ? CToD( "12/21/00" )
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? CToD( "2000-12-21" )
    $STATUS$
       R
    $COMPLIANCE$

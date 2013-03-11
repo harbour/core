@@ -74,9 +74,9 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
          #define HB_CP_PUT_FUNC     NULL
          #define HB_CP_LEN_FUNC     NULL
       #endif
-      #if !defined( HB_CP_UPPER_FUNC ) && \
-          !defined( HB_CP_LOWER_FUNC ) && \
-          !defined( HB_CP_FLAG_FUNC )
+      #if ! defined( HB_CP_UPPER_FUNC ) && \
+          ! defined( HB_CP_LOWER_FUNC ) && \
+          ! defined( HB_CP_FLAG_FUNC )
          #define HB_CP_UPPER_FUNC   NULL
          #define HB_CP_LOWER_FUNC   NULL
          #define HB_CP_FLAGS_FUNC   NULL

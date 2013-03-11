@@ -35,7 +35,6 @@ PROCEDURE Main()
    ?
    Inkey( 0 )
 
-
    ? "========================================================"
    ? "Testing passing by reference"
    ? "before loop: ENUM=", enum
@@ -124,7 +123,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE TESTbreak( v )
+STATIC PROCEDURE TESTbreak( v )
 
    IF LEFTEQUAL( v, "2" ) .OR. LEFTEQUAL( v, "d" )
       ? "issuing break"
@@ -133,7 +132,7 @@ PROCEDURE TESTbreak( v )
 
    RETURN
 
-PROCEDURE TESTBYREF( enum )
+STATIC PROCEDURE TESTBYREF( enum )
 
    ? "start of testBYREF ENUM=", enum
    FOR EACH enum IN { 1, 2, 3 }

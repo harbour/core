@@ -505,7 +505,7 @@ static PHB_I18N_TRANS hb_i18n_deserialize( PHB_ITEM pItem )
          if( pTable )
          {
             pI18N = hb_i18n_initialize( pTable );
-            if( !pI18N )
+            if( ! pI18N )
                hb_itemRelease( pTable );
          }
       }

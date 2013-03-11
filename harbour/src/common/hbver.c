@@ -384,8 +384,8 @@ char * hb_verPlatform( void )
 
                if( osVer.dwMajorVersion == 6 )
                {
-#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
-    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
+    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
                   OSVERSIONINFOEX osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
@@ -422,8 +422,8 @@ char * hb_verPlatform( void )
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
                {
-#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
-    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
+    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
                   OSVERSIONINFOEX osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );

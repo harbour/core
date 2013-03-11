@@ -197,7 +197,7 @@
 
 /* Basic types */
 #define HB_FALSE 0
-#define HB_TRUE  (!0)
+#define HB_TRUE  ( ! 0 )
 
 typedef int                 HB_BOOL;
 typedef signed char         HB_SCHAR;
@@ -356,7 +356,7 @@ typedef HB_UCHAR            HB_U8;
    #undef FALSE
    #define FALSE  0
    #undef TRUE
-   #define TRUE   (!0)
+   #define TRUE   ( ! 0 )
 
    #undef UINT                            /* varies with platform */
    typedef HB_UINT UINT;

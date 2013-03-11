@@ -153,27 +153,27 @@ HB_EXTERN_BEGIN
    #endif
 #endif
 
-#if !defined( GetEnvironmentVariable )
+#if ! defined( GetEnvironmentVariable )
    DWORD WINAPI GetEnvironmentVariableW( LPCWSTR name, LPWSTR value, DWORD size );
    #define GetEnvironmentVariable GetEnvironmentVariableW
 #endif
-#if !defined( SetEnvironmentVariable )
+#if ! defined( SetEnvironmentVariable )
    BOOL WINAPI SetEnvironmentVariableW( LPCWSTR name, LPCWSTR value );
    #define SetEnvironmentVariable SetEnvironmentVariableW
 #endif
-#if !defined( SetCurrentDirectory )
+#if ! defined( SetCurrentDirectory )
    BOOL WINAPI SetCurrentDirectoryW( LPCWSTR dirname );
    #define SetCurrentDirectory SetCurrentDirectoryW
 #endif
-#if !defined( GetCurrentDirectory )
+#if ! defined( GetCurrentDirectory )
    DWORD WINAPI GetCurrentDirectoryW( DWORD len, LPWSTR buffer );
    #define GetCurrentDirectory GetCurrentDirectoryW
 #endif
-#if !defined( GetComputerName )
+#if ! defined( GetComputerName )
    BOOL WINAPI GetComputerNameW( LPWSTR buffer, LPDWORD len );
    #define GetComputerName GetComputerNameW
 #endif
-#if !defined( GetUserName )
+#if ! defined( GetUserName )
    BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len );
    #define GetUserName GetUserNameW
 #endif

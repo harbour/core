@@ -155,7 +155,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
 
    FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
-         cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ], 1 ) ) + "("
+         cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
             !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
             !( Upper( cProper ) == "INT(" )          /* interacts with SQL statements */
@@ -165,6 +165,17 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
          ENDIF
       ENDIF
    NEXT
+
+   IF !( "hbclass.ch" $ cFileName )
+      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cLog,,,,, .T. )
+         cProper := ProperCase( hAll, a[ 2 ] )
+         IF !( cProper == a[ 2 ] )
+            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
+            ? cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|"
+            nChanged++
+         ENDIF
+      NEXT
+   ENDIF
 
    IF nChanged > 0
       ? cFileName, "changed: ", nChanged

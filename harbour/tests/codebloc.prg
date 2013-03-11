@@ -85,13 +85,13 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION MyEval( bCodeBlock )
+STATIC FUNCTION MyEval( bCodeBlock )
 
    LOCAL D := "this is another variable"
 
    RETURN Eval( bCodeBlock, " from ", "MyEval Function" )
 
-PROCEDURE OtherTest( cblock )
+STATIC PROCEDURE OtherTest( cblock )
 
    LOCAL cb
 
@@ -101,7 +101,7 @@ PROCEDURE OtherTest( cblock )
 
    RETURN
 
-PROCEDURE AnotherTest( cb, a )
+STATIC PROCEDURE AnotherTest( cb, a )
 
    OutStd( Eval( cb, a ) )
    OutStd( hb_eol() )
@@ -110,7 +110,7 @@ PROCEDURE AnotherTest( cb, a )
 
    RETURN
 
-FUNCTION DetachLocal( x, y )
+STATIC FUNCTION DetachLocal( x, y )
 
    // NOTE! this should work
    LOCAL z := x + y
@@ -118,7 +118,7 @@ FUNCTION DetachLocal( x, y )
 
    RETURN cb
 
-PROCEDURE BugToFix()
+STATIC PROCEDURE BugToFix()
 
    LOCAL b, a := {|| a + b }
 
@@ -127,6 +127,5 @@ PROCEDURE BugToFix()
 
    RETURN
 
-FUNCTION RetBlock()
-
+STATIC FUNCTION RetBlock()
    RETURN {| x | x * x }

@@ -40,7 +40,7 @@ PROCEDURE Main()
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
    ? hb_ValToExp( oForm:Transfer() )
 
-   Pause()
+   Inkey( 0 )
 
    ? "-DEBUG Functions-"
    ? "-Statics-"
@@ -55,17 +55,13 @@ PROCEDURE Main()
    ? "-Parameters-"
    ? hb_ValToExp( __dbgVMParLList() )
 
-   Pause()
+   Inkey( 0 )
 
    FuncSecond( 241, "Hello" )
 
    RETURN
 
-FUNCTION Pause()
-
-   RETURN __Accept( "" )
-
-FUNCTION FuncSecond( nParam, cParam, uParam )
+STATIC FUNCTION FuncSecond( nParam, cParam, uParam )
 
    LOCAL cWhat   := "Something"
    LOCAL nNumber := 2
@@ -101,14 +97,13 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
       ? ":-)"
    ENDIF
 
-   Pause()
+   Inkey( 0 )
 
    RETURN NIL
 
-
 /* TForm() -> <oTForm> */
 
-FUNCTION TForm()
+STATIC FUNCTION TForm()
 
    STATIC s_oClass
 

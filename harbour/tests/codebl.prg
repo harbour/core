@@ -55,7 +55,7 @@ STATIC FUNCTION myout( nExpected, nGot )
 
 //
 
-PROCEDURE GetArray( a )
+STATIC PROCEDURE GetArray( a )
 
    LOCAL i
 
@@ -70,7 +70,7 @@ PROCEDURE GetArray( a )
 
    RETURN
 
-PROCEDURE PrintArray( a )
+STATIC PROCEDURE PrintArray( a )
 
    LOCAL i
 
@@ -85,7 +85,7 @@ PROCEDURE PrintArray( a )
 
 //
 
-FUNCTION DetachWithRefer()
+STATIC FUNCTION DetachWithRefer()
 
    LOCAL nTest
    LOCAL bBlock1 := MakeBlock()
@@ -96,13 +96,13 @@ FUNCTION DetachWithRefer()
 
    RETURN NIL
 
-FUNCTION MakeBlock()
+STATIC FUNCTION MakeBlock()
 
    LOCAL nTest
 
    RETURN {|| DoThing( @nTest ), QOut( nTest ) }
 
-FUNCTION DoThing( n )
+STATIC FUNCTION DoThing( n )
 
    n := 42
 
@@ -110,7 +110,7 @@ FUNCTION DoThing( n )
 
 //
 
-FUNCTION DetachToStatic( n )
+STATIC FUNCTION DetachToStatic( n )
 
    s_cbStatic := {| x | n + x }
 
@@ -118,7 +118,7 @@ FUNCTION DetachToStatic( n )
 
 //
 
-FUNCTION ReferParam()
+STATIC FUNCTION ReferParam()
 
    LOCAL bResult
 
@@ -186,5 +186,4 @@ STATIC FUNCTION SetByRef( lVar )
    RETURN NIL
 
 STATIC FUNCTION GetBlock( lVar )
-
    RETURN {|| lVar }

@@ -116,7 +116,7 @@ Standard C preprocessor instructions defined by ANSI (ISO/IEC 9899:1990)
 
 #                   ##                  #define             #elif
 #else               #endif              #error              #if
-#if !defined        #if defined         #ifdef              #ifndef
+#if ! defined       #if defined         #ifdef              #ifndef
 #include            #line               #pragma             #undef
 __DATE__            __FILE__            __LINE__            __STDC__
 __TIME__

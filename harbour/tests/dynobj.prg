@@ -159,6 +159,6 @@ STATIC FUNCTION BigSmile()
 
 FUNCTION Pause()
 
-   __Accept( "Pause :" )
+   WAIT "Pause:"
 
    RETURN NIL

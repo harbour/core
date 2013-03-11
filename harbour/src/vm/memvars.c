@@ -1176,7 +1176,7 @@ HB_FUNC( __MVRELEASE )
       const char * pszMask;
 
       pszMask = hb_memvarGetMask( 1 );
-      bIncludeVar = ( pszMask[ 0 ] == '*' && !pszMask[ 1 ] ) ||
+      bIncludeVar = ( pszMask[ 0 ] == '*' && ! pszMask[ 1 ] ) ||
                     iCount < 2 || hb_parl( 2 );
       hb_memvarReleaseWithMask( pszMask, bIncludeVar );
    }

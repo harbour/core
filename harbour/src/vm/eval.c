@@ -428,7 +428,7 @@ HB_FUNC( HB_EXECFROMARRAY )
 
       if( iPCount == 1 )
       {
-         if( HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
+         if( HB_IS_ARRAY( pParam ) && ! HB_IS_OBJECT( pParam ) )
          {
             pArray = pParam;
             pItem = hb_arrayGetItemPtr( pArray, 1 );

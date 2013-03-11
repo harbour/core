@@ -351,7 +351,7 @@ PROCEDURE hb_GTSYS()
 
 //
 
-FUNCTION SetPalette( nMode )
+STATIC FUNCTION SetPalette( nMode )
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
 
@@ -374,7 +374,7 @@ FUNCTION SetPalette( nMode )
 
 //
 
-FUNCTION SetPaletteIndex()
+STATIC FUNCTION SetPaletteIndex()
 
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
    DispScreen()
@@ -383,7 +383,7 @@ FUNCTION SetPaletteIndex()
 
 //
 
-PROCEDURE thFunc()
+STATIC PROCEDURE thFunc()
 
    STATIC s_nBrowser := 0
    STATIC s_nZx := 0
@@ -572,7 +572,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
 //
 
-FUNCTION ChgPalette( lFocus )
+STATIC FUNCTION ChgPalette( lFocus )
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
    LOCAL cSaveScreen := SaveScreen( 0, 0, MaxRow(), MaxCol() )

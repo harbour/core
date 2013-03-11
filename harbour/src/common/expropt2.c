@@ -2127,7 +2127,7 @@ HB_BOOL hb_compExprReduceLEN( PHB_EXPR pSelf, HB_COMP_DECL )
    PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    /* TOFIX: do not optimize when array/hash args have user expressions */
-   if( ( pArg->ExprType == HB_ET_STRING && !HB_SUPPORT_USERCP ) ||
+   if( ( pArg->ExprType == HB_ET_STRING && ! HB_SUPPORT_USERCP ) ||
        pArg->ExprType == HB_ET_ARRAY ||
        pArg->ExprType == HB_ET_HASH )
    {
