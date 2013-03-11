@@ -98,7 +98,7 @@ REQUEST __HB_EXTERN__
 // adding GD support
 REQUEST GDChart
 REQUEST GDImage
-REQUEST GDImageCHAR
+REQUEST GDImageChar
 #  define APP_GD_SUPPORT "_GD"
 #  stdout "Lib GD support enabled"
 #else
@@ -2810,50 +2810,50 @@ STATIC FUNCTION LoadMimeTypes()
    // TODO: load mime types from file
 
    RETURN { ;
-      "css"  =>  "text/css", ;
-      "htm"  =>  "text/html", ;
-      "html" =>  "text/html", ;
-      "txt"  =>  "text/plain", ;
-      "text" =>  "text/plain", ;
-      "asc"  =>  "text/plain", ;
-      "c"    =>  "text/plain", ;
-      "h"    =>  "text/plain", ;
-      "cpp"  =>  "text/plain", ;
-      "hpp"  =>  "text/plain", ;
-      "log"  =>  "text/plain", ;
-      "rtf"  =>  "text/rtf", ;
-      "xml"  =>  "text/xml", ;
-      "xsl"  =>  "text/xsl", ;
-      "bmp"  =>  "image/bmp", ;
-      "gif"  =>  "image/gif", ;
-      "jpg"  =>  "image/jpeg", ;
-      "jpe"  =>  "image/jpeg", ;
-      "jpeg" =>  "image/jpeg", ;
-      "png"  =>  "image/png", ;
-      "tif"  =>  "image/tiff", ;
-      "tiff" =>  "image/tiff", ;
-      "djv"  =>  "image/vnd.djvu", ;
-      "djvu" =>  "image/vnd.djvu", ;
-      "ico"  =>  "image/x-icon", ;
-      "xls"  =>  "application/excel", ;
-      "doc"  =>  "application/msword", ;
-      "pdf"  =>  "application/pdf", ;
-      "ps"   =>  "application/postscript", ;
-      "eps"  =>  "application/postscript", ;
-      "ppt"  =>  "application/powerpoint", ;
-      "bz2"  =>  "application/x-bzip2", ;
-      "gz"   =>  "application/x-gzip", ;
-      "tgz"  =>  "application/x-gtar", ;
-      "js"   =>  "application/x-javascript", ;
-      "tar"  =>  "application/x-tar", ;
-      "tex"  =>  "application/x-tex", ;
-      "zip"  =>  "application/zip", ;
-      "midi" =>  "audio/midi", ;
-      "mp3"  =>  "audio/mpeg", ;
-      "wav"  =>  "audio/x-wav", ;
-      "qt"   =>  "video/quicktime", ;
-      "mov"  =>  "video/quicktime", ;
-      "avi"  =>  "video/x-msvideo" }
+      "css"  => "text/css", ;
+      "htm"  => "text/html", ;
+      "html" => "text/html", ;
+      "txt"  => "text/plain", ;
+      "text" => "text/plain", ;
+      "asc"  => "text/plain", ;
+      "c"    => "text/plain", ;
+      "h"    => "text/plain", ;
+      "cpp"  => "text/plain", ;
+      "hpp"  => "text/plain", ;
+      "log"  => "text/plain", ;
+      "rtf"  => "text/rtf", ;
+      "xml"  => "text/xml", ;
+      "xsl"  => "text/xsl", ;
+      "bmp"  => "image/bmp", ;
+      "gif"  => "image/gif", ;
+      "jpg"  => "image/jpeg", ;
+      "jpe"  => "image/jpeg", ;
+      "jpeg" => "image/jpeg", ;
+      "png"  => "image/png", ;
+      "tif"  => "image/tiff", ;
+      "tiff" => "image/tiff", ;
+      "djv"  => "image/vnd.djvu", ;
+      "djvu" => "image/vnd.djvu", ;
+      "ico"  => "image/x-icon", ;
+      "xls"  => "application/excel", ;
+      "doc"  => "application/msword", ;
+      "pdf"  => "application/pdf", ;
+      "ps"   => "application/postscript", ;
+      "eps"  => "application/postscript", ;
+      "ppt"  => "application/powerpoint", ;
+      "bz2"  => "application/x-bzip2", ;
+      "gz"   => "application/x-gzip", ;
+      "tgz"  => "application/x-gtar", ;
+      "js"   => "application/x-javascript", ;
+      "tar"  => "application/x-tar", ;
+      "tex"  => "application/x-tex", ;
+      "zip"  => "application/zip", ;
+      "midi" => "audio/midi", ;
+      "mp3"  => "audio/mpeg", ;
+      "wav"  => "audio/x-wav", ;
+      "qt"   => "video/quicktime", ;
+      "mov"  => "video/quicktime", ;
+      "avi"  => "video/x-msvideo" }
 
 STATIC FUNCTION GT_notifier( nEvent, xParams )
 

@@ -27,7 +27,7 @@
                 to the display, default (.F.).
 
       <lShowHelp> is an optional logical variable. If true, uses
-                  FT_XBOX() to display  a four line help message
+                  ft_XBox() to display  a four line help message
                   if the F1 key is pressed, default (.F.).
 
    $RETURNS$
@@ -51,7 +51,7 @@
       [7]      Numeric Julian day.
       [8]      Current time in time format.
 
-      WARNING: FT_CALENDAR() uses FT_SHADOW() and FT_XBOX()
+      WARNING: ft_Calendar() uses ft_Shadow() and ft_XBox()
                from the Nanforum Toolkit!
 
    $EXAMPLES$

@@ -56,6 +56,7 @@
 #include "hbapierr.h"
 #include "hbapicdp.h"
 #include "hbapifs.h"
+#include "hbset.h"
 #include "hbvm.h"
 
 /* Escaping delimited strings. Need to be cleaned/optimized/improved */
