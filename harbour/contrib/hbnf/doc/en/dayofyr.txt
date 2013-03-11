@@ -45,18 +45,18 @@
    $EXAMPLES$
       aDateInfo := ft_DayOfYr( hb_SToD( "19910331" ) )
       ? aDateInfo[ 1 ]        // 1991090    (90th day of year 1991)
-      ? aDateInfo[ 2 ]        // 01/01/91
-      ? aDateInfo[ 3 ]        // 12/31/91
+      ? aDateInfo[ 2 ]        // 1991-01-01
+      ? aDateInfo[ 3 ]        // 1991-12-31
 
       aDateInfo := ft_DayOfYr( , 90 )    // assume current date is 3/31/91
-      ? aDateInfo[ 1 ]        // 03/31/91    (90th day of year)
-      ? aDateInfo[ 2 ]        // 01/01/91
-      ? aDateInfo[ 3 ]        // 12/31/91
+      ? aDateInfo[ 1 ]        // 1991-03-31    (90th day of year)
+      ? aDateInfo[ 2 ]        // 1991-01-01
+      ? aDateInfo[ 3 ]        // 1991-12-31
 
       aDateInfo := ft_DayOfYr( , 90, .T. )
-      ? aDateInfo[ 1 ]        // 03/29/91    (90th day of accounting year)
-      ? aDateInfo[ 2 ]        // 12/30/90    (1st day of accounting year)
-      ? aDateInfo[ 3 ]        // 12/28/91    (last day of accounting year)
+      ? aDateInfo[ 1 ]        // 1991-03-29    (90th day of accounting year)
+      ? aDateInfo[ 2 ]        // 1990-12-30    (1st day of accounting year)
+      ? aDateInfo[ 3 ]        // 1991-12-28    (last day of accounting year)
    $SEEALSO$
       ft_DateCnfg()
    $END$

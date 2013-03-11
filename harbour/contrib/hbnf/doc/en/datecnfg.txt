@@ -58,12 +58,15 @@
       // Configure library date functions to begin year on
       //  July 1st.
 
-      ft_DateCnfg( "07/01/80" )    // year is insignificant
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ft_DateCnfg( "1980-07-01" )    // year is insignificant
 
       // Examples of return values:
 
-      //  System date format: American            aArray[1]    aArray[2]
+      //                                          aArray[1]    aArray[2]
+      //  System date format: American
 
+      SET DATE TO AMERICAN
       aArray := ft_DateCnfg()                //  "1980.01.01"     1 (Sun.)
       aArray := ft_DateCnfg( "07/01/80" )    //  "1980.07.01"     1 (Sun.)
       aArray := ft_DateCnfg( "07/01/80", 2 ) //  "1980.07.01"     2 (Mon.)
@@ -71,6 +74,7 @@
 
       //  System date format: British
 
+      SET DATE TO BRITISH
       aArray := ft_DateCnfg( "01/07/80", 2 ) //  "1980.07.01"     2 (Mon.)
    $SEEALSO$
       ft_AcctAdj()

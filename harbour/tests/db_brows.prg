@@ -92,6 +92,7 @@ PROCEDURE Main( filename )
       ? "", "db_brows filename"
       QUIT
    ENDIF
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    USE ( filename )
    DO WHILE vybkey != 0
       vybkey := DBFLIST( , 3, 1, 76, 20, filename )

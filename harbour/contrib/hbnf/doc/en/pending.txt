@@ -10,8 +10,8 @@
    $ONELINER$
       Display same-line pending messages after a wait.
    $SYNTAX$
-      FT_PENDING ( <cMsg>, [ <nRow> ], [ <nCol> ], ;
-                        [ <nWait> ], [ <cColor> ] ) -> NIL
+      ft_Pending( <cMsg>, [ <nRow> ], [ <nCol> ], ;
+                         [ <nWait> ], [ <cColor> ] ) -> NIL
    $ARGUMENTS$
       <cMsg> is the message string to display.
 

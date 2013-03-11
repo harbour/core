@@ -38,14 +38,14 @@
       // beginning of year is January 1st.
       aDateInfo := ft_Year( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  1990
-      ? aDateInfo[ 2 ]   //  01/01/90     beginning of year
-      ? aDateInfo[ 3 ]   //  12/31/90     end of year
+      ? aDateInfo[ 2 ]   //  1990-01-01   beginning of year
+      ? aDateInfo[ 3 ]   //  1990-12-31   end of year
 
       // get info about current year (1991).
       aDateInfo := ft_Year()
       ? aDateInfo[ 1 ]   //  1991
-      ? aDateInfo[ 2 ]   //  01/01/91   beginning of year
-      ? aDateInfo[ 3 ]   //  12/31/91   end of year
+      ? aDateInfo[ 2 ]   //  1991-01-01   beginning of year
+      ? aDateInfo[ 3 ]   //  1991-12-31   end of year
    $SEEALSO$
       ft_DateCnfg() ft_Week() ft_Month() ft_Qtr()
    $END$

@@ -10,8 +10,8 @@
    $ONELINER$
       Display date/time calendar, find a date, return calendar data.
    $SYNTAX$
-      FT_CALENDAR ( [ <nRow> ], [ <nCol> ], [ <cColor> ], [ <lShadow> ] ,
-                    [ <lShowHelp> ] ) -> aRetVal
+      ft_Calendar( [ <nRow> ], [ <nCol> ], [ <cColor> ], [ <lShadow> ] ,
+                   [ <lShowHelp> ] ) -> aRetVal
    $ARGUMENTS$
       <nRow> is an optional screen row for calendar display,
              default row 1.
@@ -27,7 +27,7 @@
                 to the display, default (.F.).
 
       <lShowHelp> is an optional logical variable. If true, uses
-                  FT_XBOX to display  a four line help message
+                  FT_XBOX() to display  a four line help message
                   if the F1 key is pressed, default (.F.).
 
    $RETURNS$
@@ -51,14 +51,12 @@
       [7]      Numeric Julian day.
       [8]      Current time in time format.
 
-      WARNING: FT_CALENDAR uses FT_SHADOW and FT_XBOX
+      WARNING: FT_CALENDAR() uses FT_SHADOW() and FT_XBOX()
                from the Nanforum Toolkit!
 
    $EXAMPLES$
-      LOCAL aRetVal[ 8 ]
-      CLS
-      aRetVal := ft_Calendar( 10, 40, "W+/RB", .T., .T. )
-      ? aRetVal[ 1 ]      // Result: 04/20/91
+      LOCAL aRetVal := ft_Calendar( 10, 40, "W+/RB", .T., .T. )
+      ? aRetVal[ 1 ]      // Result: 1991-04-20
       ? aRetVal[ 2 ]      // Result:   4
       ? aRetVal[ 3 ]      // Result:  20
       ? aRetVal[ 4 ]      // Result:  1991

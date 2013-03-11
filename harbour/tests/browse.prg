@@ -15,6 +15,8 @@ PROCEDURE Main()
    MSetCursor( .T. )
 #endif
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    CLS
 
    USE test
