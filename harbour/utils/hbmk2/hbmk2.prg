@@ -2610,14 +2610,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          hbmk[ _HBMK_lINC ] := .T.
          IF nLevel == 1
             hbmk[ _HBMK_lREBUILD ] := .T.
-            IncPointlessPair( hbmk, @aParamINC, aParam, cParamL, "-rebuild" )
+            PointlessPairWarning( hbmk, @aParamINC, aParam, cParamL, "-rebuild" )
          ENDIF
 
       CASE cParamL == "-rebuildall"
 
          hbmk[ _HBMK_lINC ] := .T.
          hbmk[ _HBMK_lREBUILD ] := .T.
-         IncPointlessPair( hbmk, @aParamINC, aParam, cParamL, "-rebuildall" )
+         PointlessPairWarning( hbmk, @aParamINC, aParam, cParamL, "-rebuildall" )
 
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]   := .T.
       CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]      := .T.
@@ -2626,7 +2626,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]      := .F. ; LegacyWarning( hbmk, aParam, "-minipo-" ) /* Compatibility */
 #endif
       CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]         := .T. ; hbmk[ _HBMK_lCLEAN ] := .T.
-      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]         := .T. ; IncPointlessPair( hbmk, @aParamINC, aParam, cParamL, "-inc" )
+      CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]         := .T. ; PointlessPairWarning( hbmk, @aParamINC, aParam, cParamL, "-inc" )
       CASE cParamL == "-inc-"            ; hbmk[ _HBMK_lINC ]         := .F. ; aParamINC := NIL
 #ifdef HB_LEGACY_LEVEL4
       CASE cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]         := .F. ; LegacyWarning( hbmk, aParam, "-inc-" ) /* Compatibility */
@@ -7547,7 +7547,7 @@ STATIC PROCEDURE ProcEnvOption( cValue )
 
    RETURN
 
-STATIC PROCEDURE IncPointlessPair( hbmk, /* @ */ aParam1, aParam2, cParam2L, cOption )
+STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L, cOption )
 
    IF aParam1 != NIL .AND. ;  /* there was a previous option */
       aParam1[ _PAR_cFileName ] == aParam2[ _PAR_cFileName ] .AND. ;  /* same location */
@@ -15809,7 +15809,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-debugrte"          , "generate a runtime error" } }
 
    LOCAL aHdr_Opt_Self := { ;
-      "", ;
+      NIL, ;
       { "", hb_StrFormat( I_( "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:" ), _SELF_NAME_ ) } }
 
    LOCAL aLst_Opt_Self := { ;
@@ -15944,19 +15944,19 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "${hb_status}"         , I_( "Harbour version status" ) }, ;
       { "${hb_revision}"       , I_( "Harbour revision" ) }, ;
       { "${hb_host_plat}"      , I_( "Harbour host platform" ) }, ;
-      { "${hb_host_plat_unix}" , I_( "Returns '1' if Harbour host platform is *nix compatible" ) }, ;
+      { "${hb_host_plat_unix}" , I_( "returns '1' if Harbour host platform is *nix compatible" ) }, ;
       { "${hb_bin}"            , I_( "Harbour binary directory" ) }, ;
       { "${hb_lib}"            , I_( "Harbour static library directory" ) }, ;
       { "${hb_lib3rd}"         , I_( "Harbour 3rd party static library directory" ) }, ;
       { "${hb_dyn}"            , I_( "Harbour dynamic library directory" ) }, ;
       { "${hb_inc}"            , I_( "Harbour header directory" ) }, ;
       { "${hb_addons}"         , I_( "Harbour add-ons base directory" ) }, ;
-      { "${hb_first}"          , I_( "Name of source file that holds the entry function (without directory and extension)" ) }, ;
-      { "${hb_outputdir}"      , I_( "Directory of the output" ) }, ;
-      { "${hb_outputname}"     , I_( "Name of the output (without extension)" ) }, ;
-      { "${hb_level}"          , I_( "Sub-project recursion level" ) }, ;
-      { "${<depname>}"         , I_( "Returns the header directory of dependency <depname>, or '1' if it is not detected" ) }, ;
-      { "${<envvar>}"          , I_( "Returns the value of the environment variable <envvar>" ) } }
+      { "${hb_first}"          , I_( "name of source file that holds the entry function (without directory and extension)" ) }, ;
+      { "${hb_outputdir}"      , I_( "directory of the output" ) }, ;
+      { "${hb_outputname}"     , I_( "name of the output (without extension)" ) }, ;
+      { "${hb_level}"          , I_( "sub-project recursion level" ) }, ;
+      { "${<depname>}"         , I_( "returns the header directory of dependency <depname>, or '1' if it is not detected" ) }, ;
+      { "${<envvar>}"          , I_( "returns the value of the environment variable <envvar>" ) } }
 
    LOCAL aHdr_Filter := { ;
       "", ;
@@ -16350,8 +16350,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    hb_default( @lLong, .F. )
 
 #ifndef _HBMK_EMBEDDED_
-   AAdd( aLst_EnvVar_Shell, { _EXT_ENV_       , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
-   AAdd( aLst_EnvVar_Shell, { _HBSH_ENV_DEBUG , I_( "enable script debugging if set to any non-empty value" ) } )
+   AAdd( aLst_EnvVar_Shell, { _EXT_ENV_           , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
+   AAdd( aLst_EnvVar_Shell, { _HBSH_ENV_DEBUG     , I_( "enable script debugging if set to any non-empty value" ) } )
    AAdd( aLst_File_Shell, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
    AAdd( aLst_File_Shell, { "shell plugins"     , hb_StrFormat( I_( ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
    AAdd( aLst_File_Shell, { _FNAME_HISTORY_     , hb_StrFormat( I_( "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s" ), _HISTORY_DISABLE_LINE, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
@@ -16413,18 +16413,18 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          AEval( aHdr_Macro, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
          AEval( aLst_Macro, {| tmp | OutOpt( hbmk, tmp ) } )
          AEval( aHdr_Filter, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-         AEval( aLst_Filter, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+         AEval( aLst_Filter, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       AEval( aHdr_PredSource, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
-         AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
-         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+         AEval( aLst_PredSource, {| tmp | OutOpt( hbmk, tmp ) } )
+         AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       ELSE
          AEval( aLst_PredSource_Shell, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       IF ! hbmk[ _HBMK_lShellMode ]
          AEval( aHdr_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
-         AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+         AEval( aLst_PredBuild, {| tmp | OutOpt( hbmk, tmp ) } )
       ENDIF
       IF lLong
          AEval( aHdr_EnvVar, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
@@ -16460,7 +16460,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          AEval( aHdr_ExampleLib, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
          AEval( aLst_ExampleLib, {| tmp | OutOpt( hbmk, tmp, -1 ) } )
          AEval( aHdr_Exit, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
-         AEval( aLst_Exit, {| tmp | OutOpt( hbmk, tmp, 10 ) } )
+         AEval( aLst_Exit, {| tmp | OutOpt( hbmk, tmp, 11 ) } )
       ENDIF
       AEval( aHdr_Notes, {| tmp | OutHdr( hbmk, tmp + _OUT_EOL ) } )
       IF ! hbmk[ _HBMK_lShellMode ]
@@ -16499,7 +16499,7 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
    LOCAL nLines
    LOCAL cOpt
 
-   hb_default( @nWidth, 23 )
+   hb_default( @nWidth, 22 )
 
    IF Empty( aOpt )
       IF hbmk[ _HBMK_lMarkdown ]
@@ -16523,7 +16523,7 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
                   ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ENDIF
          ELSE
-            IF nWidth >= 0
+            IF ( nWidth > 0 .AND. Len( aOpt[ 1 ] ) + 2 + 1 < nWidth ) .OR. nWidth == 0
                aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
                nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
                               MLCount( aOpt[ 1 ], nWidth ) )
@@ -16532,8 +16532,10 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
                   OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
                NEXT
             ELSE
-               OutStd( _OUT_EOL )
-               FOR EACH nWidth, cOpt IN { 2, 8 }, aOpt
+               IF nWidth < 0
+                  OutStd( _OUT_EOL )
+               ENDIF
+               FOR EACH nWidth, cOpt IN { 2, iif( nWidth > 0, nWidth, 8 ) }, aOpt
                   cOpt := StrTran( cOpt, e"\n", hb_eol() )
                   nLines := MLCount( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth )
                   FOR nLine := 1 TO nLines
