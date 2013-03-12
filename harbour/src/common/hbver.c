@@ -1019,11 +1019,6 @@ char * hb_verCompiler( void )
       iVerPatch = __SUNPRO_CC & 0xf;
    #endif
 
-#elif defined( __ACK__ )
-
-   pszName = "Amsterdam Compiler Kit";
-   iVerMajor = iVerMinor = iVerPatch = iVerMicro = 0;
-
 #else
 
    pszName = ( char * ) NULL;
