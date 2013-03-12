@@ -2617,7 +2617,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          hbmk[ _HBMK_lINC ] := .T.
          hbmk[ _HBMK_lREBUILD ] := .T.
-         PointlessPairWarning( hbmk, @aParamINC, aParam, cParamL, "-rebuildall" )
 
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]   := .T.
       CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]      := .T.
