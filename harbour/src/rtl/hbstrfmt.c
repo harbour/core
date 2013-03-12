@@ -241,7 +241,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
             int   iSize, iExtra;
 
             fSign = 0;
-            if( HB_IS_NUMERIC( pItem ) )
+            if( pItem && HB_IS_NUMERIC( pItem ) )
             {
                iSize = sizeof( HB_MAXINT ) * 3 + 1;
                pStr2 = pStr = ( char * ) hb_xgrab( iSize + 1 );
@@ -260,7 +260,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                   pStr2++;
                }
             }
-            else if( HB_IS_LOGICAL( pItem ) )
+            else if( pItem && HB_IS_LOGICAL( pItem ) )
             {
                iSize = 1;
                if( hb_itemGetL( pItem ) )
@@ -351,7 +351,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
             const char * pStr2;
             int   iSize, iExtra, iD;
 
-            if( HB_IS_NUMERIC( pItem ) )
+            if( pItem && HB_IS_NUMERIC( pItem ) )
             {
                hb_itemGetNLen( pItem, &iSize, &iD );
 

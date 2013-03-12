@@ -88,8 +88,8 @@ msgstr "Compilador C detectado '%1$s' saltado porque requiere librerías del nú
 
 #: hbmk2.prg:1691 hbmk2.prg:2291 hbmk2.prg:2463
 #, c-format
-msgid "Warning: Invalid -main value ignored: %1$s"
-msgstr "Advertencia: Opción -main no válida, se ignora: %1$s"
+msgid "Warning: Invalid -main= value ignored: %1$s"
+msgstr "Advertencia: Opción -main= no válida, se ignora: %1$s"
 
 #: hbmk2.prg:1295 hbmk2.prg:1667 hbmk2.prg:1750
 #, c-format
@@ -133,7 +133,7 @@ msgstr "Procesando script local: %1$s"
 
 #: hbmk2.prg:4127 hbmk2.prg:5633 hbmk2.prg:6212
 #, c-format
-msgid "Warning: C/C++ compiler script could not be created, continuing in command line."
+msgid "Warning: C/C++ compiler script could not be created, continuing in command-line."
 msgstr "Advertencia: Script para compilador C/C++ no puede ser creado, continuando en la línea de comandos."
 
 #: hbmk2.prg:4457 hbmk2.prg:6002 hbmk2.prg:6599
@@ -168,7 +168,7 @@ msgstr "Las opciones también se pueden especificar en la variable de entorno %1
 
 #: hbmk2.prg:4378 hbmk2.prg:5916 hbmk2.prg:6484 hbmk2.prg:6513
 #, c-format
-msgid "Warning: Dynamic lib link script could not be created, continuing in command line."
+msgid "Warning: Dynamic lib link script could not be created, continuing in command-line."
 msgstr "Advertencia: Script para enlace de librería dinámica no puede ser creado, continuando en la línea de comandos."
 
 #: hbmk2.prg:4240 hbmk2.prg:5758 hbmk2.prg:6337
@@ -188,7 +188,7 @@ msgstr "Script para enlace de librería dinámica:"
 
 #: hbmk2.prg:4290 hbmk2.prg:5819 hbmk2.prg:6400
 #, c-format
-msgid "Warning: Link script could not be created, continuing in command line."
+msgid "Warning: Link script could not be created, continuing in command-line."
 msgstr "Advertencia: Script de enlace no puede ser creado, continuando en la línea de comandos."
 
 #: hbmk2.prg:4298 hbmk2.prg:5827 hbmk2.prg:6408
@@ -258,7 +258,7 @@ msgstr "Creando librería dinámica... %1$s"
 
 #: hbmk2.prg:3991 hbmk2.prg:5469 hbmk2.prg:6042
 #, c-format
-msgid "Warning: Resource compiler script could not be created, continuing in command line."
+msgid "Warning: Resource compiler script could not be created, continuing in command-line."
 msgstr "Advertencia: Script para compilador de Recursos no puede ser creado, continuando en la línea de comandos."
 
 #: hbmk2.prg:3772 hbmk2.prg:5106 hbmk2.prg:5623
@@ -293,7 +293,7 @@ msgstr "Advertencia: No se puede eliminar destino existente '%1$s'."
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command-line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 msgstr "Algunas opciones del archivo .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) y sus correspondientes parámetros de línea de comando aceptan las siguientes macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= tambien acepta %{hb_name} que se traduce en el nombre del archivo. hbc bajo búsqueda."
 
 #: hbmk2.prg:4258 hbmk2.prg:5785 hbmk2.prg:6364
@@ -378,7 +378,7 @@ msgstr "%1$s hace script en el directorio actual siempre se procesa, si existe."
 
 #: hbmk2.prg:4439 hbmk2.prg:5984 hbmk2.prg:6581
 #, c-format
-msgid "Warning: Lib script could not be created, continuing in command line."
+msgid "Warning: Lib script could not be created, continuing in command-line."
 msgstr "Advertencia: Script para creación de librería no puede ser creado, continuando en la línea de comandos."
 
 #: hbmk2.prg:4396 hbmk2.prg:5934 hbmk2.prg:6531
@@ -483,7 +483,7 @@ msgstr "para después de la creación de los archivos objeto\ncrear un enlace/co
 
 #: hbmk2.prg:7960
 #, c-format
-msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file."
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n  <script.hbc>: package configuration file."
 msgstr "<script> puede ser: <@script>, <script.hbm> o <script.hbp>: opciones de línea de comandos en el archivo,también marca un nuevo objetivo, si se especifica en el <script.hbc> de línea de comandos  n: archivo de configuración del paquete."
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1308,7 +1308,7 @@ msgstr "Error: Falta dependencia: %1$s"
 
 #: hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file"
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n  <script.hbc>: package configuration file"
 msgstr "<script> puede ser:\n <@script> o <script.hbm>: comandos de opciones de línea en el archivo\n <script.hbp>: comandos de opciones de línea en el archivo, también marca un nuevo destino si se especifica en la línea de comandos\n <script.hbc>: archivo de configuración de paquetes"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1468,8 +1468,8 @@ msgstr "Destino(s) actualizados"
 
 #: hbmk2.prg:2471
 #, c-format
-msgid "Warning: Invalid -request value ignored: %1$s"
-msgstr "Advertencia: -request no válido, valor ignorado: %1$s"
+msgid "Warning: Invalid -request= value ignored: %1$s"
+msgstr "Advertencia: -request= no válido, valor ignorado: %1$s"
 
 #: hbmk2.prg:6843
 #, c-format

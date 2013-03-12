@@ -85,7 +85,13 @@ extern void BZ2_bz__AssertH__fail ( int errcode );
 
 #else
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void bz_internal_error ( int errcode );
+#ifdef __cplusplus
+}
+#endif
 #define AssertH(cond,errcode) \
    { if (!(cond)) bz_internal_error ( errcode ); }
 #define AssertD(cond,msg)                do { } while (0)

@@ -63,7 +63,7 @@
 #include "hbver.h"
 
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
-    defined( __MINGW32__ ) || defined( __DMC__ ) || \
+    defined( __MINGW32__ ) || defined( __DMC__ ) || defined( __TINYC__ ) || \
     ( defined( _MSC_VER ) && _MSC_VER >= 1600 ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \

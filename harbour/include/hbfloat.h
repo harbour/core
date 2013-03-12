@@ -68,6 +68,10 @@
 #  define __C99FEATURES__
 #endif
 
+#if defined( __TINYC__ )
+   #define __NO_ISOCEXT
+#endif
+
 #include "hbapi.h"
 
 #if defined( __DJGPP__ )

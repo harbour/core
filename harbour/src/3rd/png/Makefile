@@ -28,7 +28,7 @@ C_SOURCES := \
    pngwtran.c \
    pngwutil.c \
 
-ifeq ($(filter $(HB_COMPILER),poccarm xcc),)
+ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
 
    _DET_DSP_NAME := libpng
    _DET_VAR_INC_ := HB_INC_PNG

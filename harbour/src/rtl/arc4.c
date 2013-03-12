@@ -63,8 +63,10 @@
 #endif
 
 #if defined( HB_OS_WIN )
-#  include <wincrypt.h>
-#  include <process.h>
+#  if ! defined( __TINYC__ )
+#     include <wincrypt.h>
+#     include <process.h>
+#  endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
 #  include <sys/types.h>
 #  include <process.h>
@@ -169,9 +171,9 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 
    return ( HB_ISIZ ) numread;
 }
-#endif /* ! HB_OS_WIN */
+#endif /* HB_OS_UNIX */
 
-#if defined( HB_OS_WIN ) && ! defined( __DMC__ )
+#if defined( HB_OS_WIN ) && ! defined( __DMC__ ) && ! defined( __TINYC__ )
 
 #define TRY_SEED_MS_CRYPTOAPI
 static int arc4_seed_win32( void )

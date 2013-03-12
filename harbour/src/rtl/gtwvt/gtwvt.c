@@ -121,6 +121,15 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #  define HB_GTWVT_LONG_PTR     LONG_PTR
 #endif
 
+#if defined( __TINYC__ )
+   #undef GetWindowLongPtr
+   #define GetWindowLongPtr     GetWindowLong
+   #undef SetWindowLongPtr
+   #define SetWindowLongPtr     SetWindowLong
+   #undef HB_GTWVT_LONG_PTR
+   #define HB_GTWVT_LONG_PTR    LONG
+#endif
+
 #ifndef WS_OVERLAPPEDWINDOW
    #define WS_OVERLAPPEDWINDOW  ( WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX )
 #endif
@@ -129,15 +138,15 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #define _WVT_WS_NORESIZE        ( WS_OVERLAPPEDWINDOW & ~( WS_THICKFRAME ) )
 #define _WVT_WS_MAXED           ( WS_OVERLAPPEDWINDOW & ~( WS_MAXIMIZEBOX ) )
 
-/*
- * Left for testing to someone with multi monitor workspace on older platforms
+/* Left for testing to someone with multi monitor workspace on older platforms */
+#if 0
 #ifndef NO_MULTIMON
-#if WINVER < 0x0500
-#define COMPILE_MULTIMON_STUBS
-#include <multimon.h>
+   #if WINVER < 0x0500
+      #define COMPILE_MULTIMON_STUBS
+      #include <multimon.h>
+   #endif
 #endif
 #endif
-*/
 
 static PHB_GTWVT s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int       s_wvtCount = 0;

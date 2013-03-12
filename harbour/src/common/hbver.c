@@ -940,6 +940,14 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
+#elif defined( __TINYC__ )
+
+   pszName = "Tiny C Compiler";
+
+   iVerMajor = __TINYC__ / 100;
+   iVerMinor = ( __TINYC__ % 100 ) / 10;
+   iVerPatch = ( __TINYC__ % 100 ) % 10;
+
 #elif defined( __PCC__ )
 
    pszName = "Portable C Compiler";

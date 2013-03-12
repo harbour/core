@@ -85,7 +85,9 @@
 #  endif
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
-#  include <tlhelp32.h>
+#  if ! defined( __TINYC__ )
+#     include <tlhelp32.h>
+#  endif
 #  if defined( HB_OS_WIN_CE )
 #     include "hbwince.h"
 #  endif
@@ -103,7 +105,7 @@
    static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( __TINYC__ )
 
 static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
@@ -525,7 +527,7 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( __TINYC__ )
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_winExceptionHandler );
       HB_SYMBOL_UNUSED( ef );

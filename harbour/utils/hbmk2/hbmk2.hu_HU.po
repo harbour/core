@@ -4,12 +4,12 @@
 
 #: hbmk2.prg:3992 hbmk2.prg:5469 hbmk2.prg:6042
 #, c-format
-msgid "Warning: Resource compiler script could not be created, continuing in command line."
+msgid "Warning: Resource compiler script could not be created, continuing in command-line."
 msgstr "Figyelem: Erőforrás fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:4379 hbmk2.prg:5916 hbmk2.prg:6484 hbmk2.prg:6513
 #, c-format
-msgid "Warning: Dynamic lib link script could not be created, continuing in command line."
+msgid "Warning: Dynamic lib link script could not be created, continuing in command-line."
 msgstr "Figyelem: Dinamikus függvénykönyvtár parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -104,7 +104,7 @@ msgstr "A szűrők az egyes .hbc sorokban használhatók és számos opció eset
 
 #: hbmk2.prg:4128 hbmk2.prg:5633 hbmk2.prg:6212
 #, c-format
-msgid "Warning: C/C++ compiler script could not be created, continuing in command line."
+msgid "Warning: C/C++ compiler script could not be created, continuing in command-line."
 msgstr "Figyelem: C/C++ fordító parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -189,8 +189,8 @@ msgstr "Hiba: %1$s"
 
 #: hbmk2.prg:1692 hbmk2.prg:2291 hbmk2.prg:2463
 #, c-format
-msgid "Warning: Invalid -main value ignored: %1$s"
-msgstr "Figyelem: Hibás -main érték figyelmen kívül hagyva: %1$s"
+msgid "Warning: Invalid -main= value ignored: %1$s"
+msgstr "Figyelem: Hibás -main= érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:4610
 #, c-format
@@ -394,7 +394,7 @@ msgstr ""
 
 #: hbmk2.prg:7959
 #, c-format
-msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file."
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n  <script.hbc>: package configuration file."
 msgstr ""
 
 #: hbmk2.prg:1105 hbmk2.prg:1450 hbmk2.prg:1561
@@ -589,12 +589,12 @@ msgstr "C fordító optimalizálási szintjét állítja (alapértelmezés: be)"
 
 #: hbmk2.prg:4291 hbmk2.prg:5819 hbmk2.prg:6400
 #, c-format
-msgid "Warning: Link script could not be created, continuing in command line."
+msgid "Warning: Link script could not be created, continuing in command-line."
 msgstr "Figyelem: Szerkesztő parancsállománya ne hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:4440 hbmk2.prg:5984 hbmk2.prg:6581
 #, c-format
-msgid "Warning: Lib script could not be created, continuing in command line."
+msgid "Warning: Lib script could not be created, continuing in command-line."
 msgstr "Figyelem: Statikus függvénykönyvtár létrehozás parancsállománya nem hozható létre, folytatás parancssorban."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -984,7 +984,7 @@ msgstr "GUI/konzol alkalmazás létrehozása"
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command-line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 msgstr "A legtöbb .hbc opcióban és parancssori megfelelőikben (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) használhatók makró változókat. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1304,7 +1304,7 @@ msgstr ""
 
 #: hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file"
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n  <script.hbc>: package configuration file"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1464,7 +1464,7 @@ msgstr ""
 
 #: hbmk2.prg:2471
 #, c-format
-msgid "Warning: Invalid -request value ignored: %1$s"
+msgid "Warning: Invalid -request= value ignored: %1$s"
 msgstr ""
 
 #: hbmk2.prg:6843
