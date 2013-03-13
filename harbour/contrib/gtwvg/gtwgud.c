@@ -889,7 +889,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
-            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_GOTFOCUS );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
             return 0;
          }
@@ -902,7 +901,6 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
-            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_LOSTFOCUS );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
             return 0;
          }
@@ -1051,7 +1049,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
             if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
             {
-               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
+               hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );
             }
             return 0;
          }
