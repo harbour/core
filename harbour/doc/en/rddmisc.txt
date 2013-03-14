@@ -40,16 +40,16 @@
       <nFields> Number od fields in a database or work area
    $DESCRIPTION$
       This function will fill a series of arrays with field
-      names, field types, field lenghts, and number of field
+      names, field types, field lengths, and number of field
       decimal positions for the currently selected or designed
       database. Each array parallels the different descriptors
       of a file's structure. The first array will consist of the
       names of the fields in the current work area. All other arrays
-      are optional and will be filled with the corrensponding data.
+      are optional and will be filled with the corresponding data.
       This function will return zero if no parameters are specified
-      or if no database is avaliable in the current work area. Otherwise,
-      the number of fields or the lenght of the shortest array argument,
-      witchever is smaller, will be returned.
+      or if no database is available in the current work area. Otherwise,
+      the number of fields or the length of the shortest array argument,
+      whichever is smaller, will be returned.
 
       AFields() is a compatibility function, it is superseded by
       dbStruct() which returns one multidimensional array.
@@ -147,24 +147,26 @@
    $SUBCATEGORY$
       Database
    $ONELINER$
-      Test for the beggining-of-file condition
+      Test for the beginning-of-file condition
    $SYNTAX$
       Bof() --> <lBegin>
    $RETURNS$
       Bof() Logical true (.T.) or false (.F.)
    $DESCRIPTION$
-      This function determines if the beggining of the file marker has been
+      This function determines if the beginning of the file marker has been
       reached. If so, the function will return a logical true (.T.); otherwise,
       a logical false (.F.) will be returned.
       By default, Bof() will apply to the currently selected database unless
       the function is preceded by an alias
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
+         ? "Is Bof()", Bof()
          dbGoTop()
-         ? "Is Eof()", Eof()
-         dbGoBottom()
-         ? "Is Eof()", Eof()
+         While !Bof()
+            dbSkip(-1)
+         ENDDO
+         ? "Is Bof()", Bof()
          USE
          RETURN
    $STATUS$
@@ -198,7 +200,7 @@
       current work area. This operation also updates any index file in
       use at the time of this operation. In addition, this command removes
       all items within an associated memo file.
-      In a network enviroment, any file that is about to be ZAPped must
+      In a network environment, any file that is about to be ZAPped must
       be used exclusively.
    $EXAMPLES$
       USE tests NEW INDEX tests
@@ -231,9 +233,9 @@
    $RETURNS$
       Deleted() return a logical true (.T.) or false (.F.).
    $DESCRIPTION$
-      This function returns a logical true (.T.) is the current record in the
-      selected or designated work area ha ben marked for deletion. If not, the
-      function will return a logical false (.F.).
+      This function returns a logical true (.T.) if the current record in the
+      selected or designated work area has been marked for deletion. If not,
+      the function will return a logical false (.F.).
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
@@ -274,13 +276,16 @@
    $DESCRIPTION$
       This function determines if the end-of-file marker has been reached.
       If it has, the function will return a logical true (.T.); otherwise
-      a logical false (.F.) will be returnd
+      a logical false (.F.) will be returned
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          dbGoTop()
          ? "Is Eof()", Eof()
          dbGoBottom()
+         WHILE ! Eof()
+            dbSkip()
+         ENDDO
          ? "Is Eof()", Eof()
          USE
          RETURN
@@ -351,7 +356,7 @@
    $DESCRIPTION$
       This function returns the value of the field at the <nField>th location
       in the selected or designed work area. If the value in <nField> does not
-      correspond to n avaliable field position in this work area, the function
+      correspond to n available field position in this work area, the function
       will return a NIL data type.
    $EXAMPLES$
       PROCEDURE Main()
@@ -432,8 +437,8 @@
    $DESCRIPTION$
       This function return the ordinal position of the specified field <cField>
       in the current or aliased work areaIf there isn't field under the name
-      of <cField> or of no database is open in the selected work area, the func-
-      tion will return a 0.
+      of <cField> or of no database is open in the selected work area, the
+      function will return a 0.
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
@@ -471,7 +476,7 @@
    $RETURNS$
       <ValueAssigned> Any expression
    $DESCRIPTION$
-      This function assings the value in <expAssing> to the <nField>th
+      This function assigns the value in <expAssing> to the <nField>th
       field in the current or designated work area. If the operation is
       successful, the return value of the function will be the same value
       assigned to the specified field. If the operation is not successful,
@@ -505,7 +510,7 @@
    $SYNTAX$
       FLock() --> lSuccess
    $RETURNS$
-      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
+      <lSuccess> A true (.T.) value, if the lock was successful; otherwise
       false (.F.)
    $DESCRIPTION$
       This function returns a logical true (.T.) if a file lock is
@@ -548,7 +553,7 @@
       <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
    $DESCRIPTION$
       This function is used to test if the previous SEEK, LOCATE, CONTINUE,
-      or FIND operation was successful. Each wrk area has its own Found()
+      or FIND operation was successful. Each work area has its own Found()
       flag, so that a Found() condition may be tested in unselected work
       areas by using an alias.
    $EXAMPLES$
@@ -624,7 +629,7 @@
    $DESCRIPTION$
       This function returns the number of records present in the database
       in the selected or designated work area. If no records are present
-      the value of this function will be 0. Additionaly, if no database is
+      the value of this function will be 0. Additionally, if no database is
       in use in the selected or designated work area, this function will
       return a 0 value as well.
    $EXAMPLES$
@@ -703,7 +708,7 @@
       function.
    $DESCRIPTION$
       This function return a logical true (.T.) is a USE, APPEND BLANK, or
-      a USE...EXCLUSIVE command is issue and fails in a network enviroment.
+      a USE...EXCLUSIVE command is issue and fails in a network environment.
       In the case of USE and USE...EXCLUSIVE commands, a NetErr() value
       of .T. would be returned if another node of the network has the
       exclusive use of a file. And the case of the APPEND BLANK command,
@@ -711,7 +716,7 @@
       is locked by another node or the value of LastRec() has been advanced
       The value of NetErr() may be changed via the value of <lNewError>.
       This allow the run-time error-handling system to control the way
-      certains errors are handled.
+      certain errors are handled.
    $EXAMPLES$
       USE test NEW INDEX test
       IF ! NetErr()
@@ -752,7 +757,7 @@
       CRIPTION$*
       This function returns the number of records present in the database
       in the selected or designated work area. If no records are present
-      the value of this function will be 0. Additionaly, if no database is
+      the value of this function will be 0. Additionally, if no database is
       in use in the selected or designated work area, this function will
       return a 0 value as well.
    $EXAMPLES$
@@ -791,7 +796,7 @@
       RecNo() The record number or identity
    $DESCRIPTION$
       This function returns the position of the record pointer in the
-      currently selected ot designated work area.
+      currently selected of designated work area.
 
       If the database file is empty and if the RDD is the traditional .dbf
       file, the value of this function will be 1.
@@ -830,7 +835,7 @@
    $RETURNS$
       <nBytes> The record size.
    $DESCRIPTION$
-      This function returns the number os bytes used by a single record
+      This function returns the number of bytes used by a single record
       in the currently selected or designated database file. If no database
       is in use in this work area, the return value from this function
       will be 0.
@@ -876,7 +881,7 @@
       is currently locked.
       A record that is locked remains locked until another RLock() is issued
       or until an UNLOCK command is executed.
-      On a Network enviroment the follow command need that the record is
+      On a Network environment the follow command need that the record is
       locked:
 
       @...GET
@@ -1005,7 +1010,7 @@
    $DESCRIPTION$
       This command removes records that were marked for deletion from the
       currently selected database. This command does not pack the contents
-      of a memo field; those files must be packed via low-level fuctions.
+      of a memo field; those files must be packed via low-level functions.
 
       All open index files will be automatically reindexed once PACK command
       has completed its operation. On completion, the record pointer is placed

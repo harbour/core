@@ -111,7 +111,21 @@ HB_FUNC( SAYDOWN )
    hb_retc_null();
 }
 
-HB_FUNC( SAYSPREAD ) /* TODO: Unicode support */
+static HB_WCHAR * ct_TextToWChar( const char * szText, int * piLen )
+{
+   HB_WCHAR wc;
+   PHB_CODEPAGE cdp = hb_gtHostCP();
+   HB_SIZE nIndex = 0, nI = 0;
+   HB_WCHAR * pwc = ( HB_WCHAR * ) hb_xgrab( *piLen * sizeof( HB_WCHAR ) );
+
+   while( HB_CDPCHAR_GET( cdp, szText, *piLen, &nIndex, &wc ) )
+      pwc[ nI ++ ] = wc;
+   *piLen = nI;
+
+   return pwc;
+}
+
+HB_FUNC( SAYSPREAD )
 {
    HB_SIZE nLen = hb_parclen( 1 );
 
@@ -138,6 +152,8 @@ HB_FUNC( SAYSPREAD ) /* TODO: Unicode support */
 
          int iColor = hb_gtGetCurrColor();
 
+         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
+
          nPos = nLen >> 1;
          nLen = nLen & 1;
          if( ! nLen )
@@ -150,7 +166,7 @@ HB_FUNC( SAYSPREAD ) /* TODO: Unicode support */
          do
          {
             for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ nPos + ul ] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwc[ nPos + ul ] );
             nLen += 2;
             if( lDelay )
             {
@@ -162,13 +178,14 @@ HB_FUNC( SAYSPREAD ) /* TODO: Unicode support */
          while( nPos-- && iCol-- );
          /* CT3 does not respect iCol in the above condition */
          hb_gtEndWrite();
+         hb_xfree( pwc );
       }
    }
 
    hb_retc_null();
 }
 
-HB_FUNC( SAYMOVEIN ) /* TODO: Unicode support */
+HB_FUNC( SAYMOVEIN )
 {
    int iLen = ( int ) hb_parclen( 1 );
 
@@ -196,11 +213,14 @@ HB_FUNC( SAYMOVEIN ) /* TODO: Unicode support */
 
          int iColor = hb_gtGetCurrColor();
 
+         HB_WCHAR * pwc = ct_TextToWChar( szText, &iLen );
+         HB_WCHAR * pText = pwc;
+
          iNewCol = iCol + iLen;
          if( fBack )
             iCol += iLen - 1;
          else
-            szText += iLen - 1;
+            pText += iLen - 1;
          nChars = 1;
 
          hb_gtBeginWrite();
@@ -211,15 +231,15 @@ HB_FUNC( SAYMOVEIN ) /* TODO: Unicode support */
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < nChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ ul ] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pText[ ul ] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < nChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ ul ] );
-               --szText;
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pText[ ul ] );
+               --pText;
             }
             if( ( int ) nChars + iCol <= iMaxCol )
                ++nChars;
@@ -234,6 +254,7 @@ HB_FUNC( SAYMOVEIN ) /* TODO: Unicode support */
          while( --iLen );
          hb_gtSetPos( iRow, iNewCol );
          hb_gtEndWrite();
+         hb_xfree( pwc );
       }
    }
 
