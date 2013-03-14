@@ -1840,7 +1840,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
    Causes any pending database operation to abort and return at its
    earliest opportunity.
 
-   sqlite3_interrupt( db ) -> Nil
+   sqlite3_interrupt( db ) -> NIL
  */
 
 HB_FUNC( SQLITE3_INTERRUPT )

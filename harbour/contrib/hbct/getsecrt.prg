@@ -54,6 +54,7 @@
  */
 
 #include "getexit.ch"
+#include "setcurs.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
@@ -68,7 +69,7 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
    hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
-   IF xPrompt != Nil
+   IF xPrompt != NIL
       DevOut( xPrompt )
       nRow := Row()
       nCol := Col() + 1
@@ -128,7 +129,9 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
          ENDIF
 
          DO WHILE oGet:exitState == GE_NOEXIT
+            SetCursor( iif( ReadStats( 17 /* SNSVCURSOR */ ) == SC_NONE, SC_NORMAL, ReadStats( 17 /* SNSVCURSOR */ ) ) )
             nKey := Inkey( 0 )
+            SetCursor( SC_NONE )
             IF ( bKeyBlock := SetKey( nKey ) ) != NIL
                lHide := .F.
                Eval( bKeyBlock, ;

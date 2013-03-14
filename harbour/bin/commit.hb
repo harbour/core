@@ -159,6 +159,9 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
       FOR EACH cLine IN aChanges
          IF ! Empty( cLine ) .AND. SubStr( cLine, 3, 1 ) == " "
             cStart := Left( cLine, 1 )
+            IF Empty( Left( cLine, 1 ) )
+               cStart := SubStr( cLine, 2, 1 )
+            ENDIF
             SWITCH cStart
             CASE " "
             CASE "?"
@@ -188,7 +191,6 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
    ENDCASE
 
    RETURN aNew
-
 
 STATIC FUNCTION Shell()
 

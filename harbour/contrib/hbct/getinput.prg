@@ -64,7 +64,7 @@ FUNCTION GetInput( xVar, nRow, nCol, lSay, xPrompt )
    hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
-   IF xPrompt != Nil
+   IF xPrompt != NIL
       DevOut( xPrompt )
       nRow := Row()
       nCol := Col() + 1

@@ -163,8 +163,8 @@
          USE test NEW
          ? "Is Bof()", Bof()
          dbGoTop()
-         While !Bof()
-            dbSkip(-1)
+         WHILE ! Bof()
+            dbSkip( -1 )
          ENDDO
          ? "Is Bof()", Bof()
          USE
