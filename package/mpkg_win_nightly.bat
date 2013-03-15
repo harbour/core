@@ -1,11 +1,7 @@
-@rem
-@rem $Id$
-@rem
-
 @echo off
 
 rem ---------------------------------------------------------------
-rem Copyright 2010 Viktor Szakats (harbour syenar.net)
+rem Copyright 2010-2013 Viktor Szakats (harbour syenar.net)
 rem See COPYING.txt for licensing terms.
 rem ---------------------------------------------------------------
 
@@ -40,10 +36,12 @@ set _HB_DIR_TOOL=%~dp0tool\
 
 echo ! Downloading Harbour sources...
 
-if exist harbour rd /q /s harbour
-%_HB_DIR_TOOL%svn\bin\svn export http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+if exist core-master rd /q /s core-master
+%_HB_DIR_TOOL%wget --no-check-certificate https://github.com/harbour/core/archive/master.zip
 if errorlevel 1 goto _EXIT
-cd harbour
+
+%_HB_DIR_TOOL%unzip master.
+cd core-master
 
 echo ! Setting up generic build parameters...
 

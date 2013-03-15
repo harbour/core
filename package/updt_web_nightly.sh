@@ -1,10 +1,7 @@
 #!/bin/sh
-#
-# $Id$
-#
 
 # ---------------------------------------------------------------
-# Copyright 2012 Viktor Szakats (harbour syenar.net)
+# Copyright 2012-2013 Viktor Szakats (harbour syenar.net)
 # See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
@@ -53,7 +50,8 @@ cd _hb_web_src
 
 echo Downloading sources...
 
-svn export -q --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/website
+wget https://github.com/harbour/website/archive/master.tar.gz
+tar -zxvf master.tar.gz
 
 echo Updating website...
 
@@ -63,7 +61,7 @@ if [ -d $destdir ]
 then
    echo Copying site to sf.net web area...
 
-   rsync -r website/* $destdir
+   rsync -r website-master/* $destdir
 else
    if [ "$HB_SFNET_WEB_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
