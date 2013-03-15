@@ -343,7 +343,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
-  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development Timeline.url"       "InternetShortcut" "URL" "http://sourceforge.net/apps/trac/harbour-project/timeline"
+  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development Timeline.url"       "InternetShortcut" "URL" "https://github.com/harbour/core/commits/master"
 
 SectionEnd
 
