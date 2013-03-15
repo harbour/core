@@ -1,0 +1,123 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBSQLIT3__
+#define __HBEXTERN_CH__HBSQLIT3__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBSQLIT3__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBSQLIT3__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBSQLIT3__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_sqlite3_errstr_short
+DYNAMIC hdbcSQLTConnection
+DYNAMIC hdbcSQLTDatabaseMetaData
+DYNAMIC hdbcSQLTPreparedStatement
+DYNAMIC hdbcSQLTResultSet
+DYNAMIC hdbcSQLTResultSetMetaData
+DYNAMIC hdbcSQLTStatement
+DYNAMIC sqlite3_backup_finish
+DYNAMIC sqlite3_backup_init
+DYNAMIC sqlite3_backup_pagecount
+DYNAMIC sqlite3_backup_remaining
+DYNAMIC sqlite3_backup_step
+DYNAMIC sqlite3_bind_blob
+DYNAMIC sqlite3_bind_double
+DYNAMIC sqlite3_bind_int
+DYNAMIC sqlite3_bind_int64
+DYNAMIC sqlite3_bind_null
+DYNAMIC sqlite3_bind_parameter_count
+DYNAMIC sqlite3_bind_parameter_index
+DYNAMIC sqlite3_bind_parameter_name
+DYNAMIC sqlite3_bind_text
+DYNAMIC sqlite3_bind_zeroblob
+DYNAMIC sqlite3_blob_bytes
+DYNAMIC sqlite3_blob_close
+DYNAMIC sqlite3_blob_open
+DYNAMIC sqlite3_blob_read
+DYNAMIC sqlite3_blob_reopen
+DYNAMIC sqlite3_blob_write
+DYNAMIC sqlite3_buff_to_file
+DYNAMIC sqlite3_busy_handler
+DYNAMIC sqlite3_busy_timeout
+DYNAMIC sqlite3_changes
+DYNAMIC sqlite3_clear_bindings
+DYNAMIC sqlite3_column_blob
+DYNAMIC sqlite3_column_bytes
+DYNAMIC sqlite3_column_count
+DYNAMIC sqlite3_column_database_name
+DYNAMIC sqlite3_column_decltype
+DYNAMIC sqlite3_column_double
+DYNAMIC sqlite3_column_int
+DYNAMIC sqlite3_column_int64
+DYNAMIC sqlite3_column_name
+DYNAMIC sqlite3_column_origin_name
+DYNAMIC sqlite3_column_table_name
+DYNAMIC sqlite3_column_text
+DYNAMIC sqlite3_column_type
+DYNAMIC sqlite3_commit_hook
+DYNAMIC sqlite3_compileoption_get
+DYNAMIC sqlite3_compileoption_used
+DYNAMIC sqlite3_complete
+DYNAMIC sqlite3_create_function
+DYNAMIC sqlite3_db_status
+DYNAMIC sqlite3_enable_load_extension
+DYNAMIC sqlite3_enable_shared_cache
+DYNAMIC sqlite3_errcode
+DYNAMIC sqlite3_errmsg
+DYNAMIC sqlite3_errstr
+DYNAMIC sqlite3_exec
+DYNAMIC sqlite3_extended_errcode
+DYNAMIC sqlite3_extended_result_codes
+DYNAMIC sqlite3_file_to_buff
+DYNAMIC sqlite3_finalize
+DYNAMIC sqlite3_get_autocommit
+DYNAMIC sqlite3_get_table
+DYNAMIC sqlite3_initialize
+DYNAMIC sqlite3_interrupt
+DYNAMIC sqlite3_last_insert_rowid
+DYNAMIC sqlite3_libversion
+DYNAMIC sqlite3_libversion_number
+DYNAMIC sqlite3_limit
+DYNAMIC sqlite3_memory_highwater
+DYNAMIC sqlite3_memory_used
+DYNAMIC sqlite3_open
+DYNAMIC sqlite3_open_v2
+DYNAMIC sqlite3_prepare
+DYNAMIC sqlite3_profile
+DYNAMIC sqlite3_progress_handler
+DYNAMIC sqlite3_reset
+DYNAMIC sqlite3_reset_auto_extension
+DYNAMIC sqlite3_rollback_hook
+DYNAMIC sqlite3_set_authorizer
+DYNAMIC sqlite3_shutdown
+DYNAMIC sqlite3_sleep
+DYNAMIC sqlite3_sourceid
+DYNAMIC sqlite3_sql
+DYNAMIC sqlite3_status
+DYNAMIC sqlite3_step
+DYNAMIC sqlite3_stmt_readonly
+DYNAMIC sqlite3_stmt_status
+DYNAMIC sqlite3_table_column_metadata
+DYNAMIC sqlite3_temp_directory
+DYNAMIC sqlite3_threadsafe
+DYNAMIC sqlite3_total_changes
+DYNAMIC sqlite3_trace
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBSQLIT3__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

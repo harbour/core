@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=mysql:mysql.h
+-depcontrol=mysql:no{HB_BUILD_3RDEXT='no'}
+-depcontrol=mysql:${HB_WITH_MYSQL}
+-depincpath=mysql:/usr/include/mysql
+-depincpath=mysql:/usr/local/include/mysql
+-depincpath=mysql:/opt/local/include/mysql5/mysql
+-depimplibs=mysql:../lib/opt/libmySQL.dll
+-depimplibs=mysql:../lib/libmySQL.dll
+
+${hb_name}.hbx
+
+mysql.c
+
+tmysql.prg
+tsqlbrw.prg

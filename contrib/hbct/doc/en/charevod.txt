@@ -1,0 +1,67 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CharEven()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Returns the characters on the even positions in a string
+   $SYNTAX$
+      CharEven( <cString> ) --> cEvenString
+   $ARGUMENTS$
+      <cString>      processed string
+   $RETURNS$
+      <cEvenString>  a string containing all character from even positions
+                     in <cString>
+   $DESCRIPTION$
+      The CharEven() function looks for the characters on the even positions
+      in a given string, collects them and returns them as a string.
+   $EXAMPLES$
+      ? CharEven( " H E L L O !" ) // -> "HELLO!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharEven() is compatible with CT3's CharEven().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharOdd()  CharMix()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharOdd()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Returns the characters on the odd positions in a string
+   $SYNTAX$
+      CharOdd( <cString> ) --> cOddString
+   $ARGUMENTS$
+      <cString>      processed string
+   $RETURNS$
+      <cOddString>  a string containing all character from odd positions
+                    in <cString>
+   $DESCRIPTION$
+      The CharOdd() function looks for the characters on the odd positions
+      in a given string, collects them and returns them as a string.
+   $EXAMPLES$
+      ? CharOdd( "H E L L O ! " ) // -> "HELLO!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharOdd() is compatible with CT3's CharOdd().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharEven()  CharMix()
+   $END$
+ */

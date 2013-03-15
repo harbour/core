@@ -1,0 +1,82 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    Documentation for: SetMode()
+ *
+ * See COPYING.txt for licensing terms.
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SetMode()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Change the video mode to a specified number of rows and columns
+   $SYNTAX$
+      SetMode( <nRows>, <nCols> ) --> lSuccess
+   $ARGUMENTS$
+      <nRows> is the number of rows for the video mode to set.
+
+      <nCols> is the number of columns for the video mode to set.
+   $RETURNS$
+      SetMode() returns true if the video mode change was successful;
+      otherwise, it returns false.
+   $DESCRIPTION$
+      SetMode() is a function that change the video mode depend on the
+      video card and monitor combination, to match the number of rows and
+      columns specified.
+      Note that there are only a real few combination or rows/cols pairs
+      that produce the video mode change.
+      The followings are availables for GTDOS:
+
+      <table>
+         12 rows x 40 columns   12 rows x 80 columns
+         25 rows x 40 columns   25 rows x 80 columns
+         28 rows x 40 columns   28 rows x 80 columns
+         50 rows x 40 columns   43 rows x 80 columns
+                                50 rows x 80 columns
+      </table>
+
+      The follow modes are available to Windows
+
+      <table>
+         25 rows x 40 columns   25 rows x 80 columns
+         50 rows x 40 columns   43 rows x 80 columns
+         50 rows x 80 columns
+      </table>
+
+      Some modes only are availables for color and/or VGA monitors.
+      Any change produced on the screen size is updated in the values
+      returned by MaxRow() and MaxCol().
+   $EXAMPLES$
+      // The first example change to a 12 lines of display mode:
+      IF SetMode( 12, 40 )
+         ? "Hey man are you blind ?"
+      ELSE
+         ? "Mom bring me my glasses!"
+      ENDIF
+
+      // Next example change to a 50 lines mode:
+      IF SetMode( 50, 80 )
+         ? "This wonderful mode was successfully set"
+      ELSE
+         ? "Wait. this monitor are not made in rubber !"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Some of these modes are not availables in CA-Cl*pper
+   $PLATFORMS$
+      DOS,Win
+   $SEEALSO$
+      MaxCol(),MaxRow()
+   $END$
+ */

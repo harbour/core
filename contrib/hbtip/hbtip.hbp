@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_targetname}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_targetname}
+
+-w3 -es2
+
+${hb_name}.hbx
+
+encurlc.c
+utils.c
+
+cgi.prg
+client.prg
+credent.prg
+encb64.prg
+encoder.prg
+encqp.prg
+encurl.prg
+ftpcli.prg
+httpcli.prg
+log.prg
+mail.prg
+popcli.prg
+sendmail.prg
+sessid.prg
+smtpcli.prg
+thtml.prg
+url.prg
+
+-env:HB_DYNBIND_OPENSSL=yes
+hbssl.hbc

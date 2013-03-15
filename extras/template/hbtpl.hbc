@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+description=Harbour library project template
+
+incpaths=.
+headers=${hb_name}.ch
+libpaths=lib/${hb_plat}/${hb_comp}
+
+libs=${hb_name}
+
+# NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
+# libs=lib3rd

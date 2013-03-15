@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+incpaths=.
+libpaths=lib/${hb_plat}/${hb_comp}
+
+libs=${hb_name}
+
+libs=hbxpp.hbc

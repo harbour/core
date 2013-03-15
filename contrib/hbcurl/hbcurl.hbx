@@ -1,0 +1,50 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBCURL__
+#define __HBEXTERN_CH__HBCURL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCURL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBCURL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCURL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC curl_easy_cleanup
+DYNAMIC curl_easy_dl_buff_get
+DYNAMIC curl_easy_duplicate
+DYNAMIC curl_easy_escape
+DYNAMIC curl_easy_getinfo
+DYNAMIC curl_easy_init
+DYNAMIC curl_easy_pause
+DYNAMIC curl_easy_perform
+DYNAMIC curl_easy_recv
+DYNAMIC curl_easy_reset
+DYNAMIC curl_easy_send
+DYNAMIC curl_easy_setopt
+DYNAMIC curl_easy_strerror
+DYNAMIC curl_easy_unescape
+DYNAMIC curl_escape
+DYNAMIC curl_getdate
+DYNAMIC curl_global_cleanup
+DYNAMIC curl_global_init
+DYNAMIC curl_unescape
+DYNAMIC curl_version
+DYNAMIC curl_version_info
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCURL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

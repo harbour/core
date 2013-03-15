@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-w3 -es2
+
+${hb_name}.hbx
+
+core.prg
+widgets.prg
+log.prg
+
+-env:HB_DYNBIND_OPENSSL=yes
+hbssl.hbc

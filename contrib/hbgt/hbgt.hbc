@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+description=GT library
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

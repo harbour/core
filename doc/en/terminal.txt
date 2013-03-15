@@ -1,0 +1,892 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ *    Documentation for: hb_ColorIndex()
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    Documentation for: __Wait(), __Input()
+ *
+ * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: Alert(), __NoNoAlert(), OutStd(), OutErr(),
+ *                       __XSaveScreen(), SAVE SCREEN, __XRestScreen(),
+ *                       RESTORE SCREEN, __TextSave(), __TextRestore()
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    Documentation for: DevOutPict()
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: EJECT,MaxRow(),MaxCol(),Row(),Col(),PRow(),PCol()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __XSaveScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Save whole screen image and coordinate to an internal buffer
+   $SYNTAX$
+      __XSaveScreen()
+   $ARGUMENTS$
+      none.
+   $DESCRIPTION$
+      __XSaveScreen() save the image of the whole screen into an internal
+      buffer, it also save current cursor position. The information could
+      later be restored by __XRestScreen(). Each call to __XSaveScreen()
+      overwrite the internal buffer.
+
+      SAVE SCREEN command is preprocessed into __XSaveScreen() function
+      during compile time. Note that SAVE SCREEN TO is preprocessed into
+      SaveScreen() function.
+
+      __XSaveScreen() is a compatibility function, it is superseded by
+      SaveScreen() which allow you to save part or all the screen into a
+      variable.
+   $EXAMPLES$
+      // save the screen, display list of files than restore the screen
+      SAVE SCREEN
+      DIR *.*
+      WAIT
+      RESTORE SCREEN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(GT)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      RESTORE SCREEN,RestScreen(),SaveScreen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SAVE SCREEN
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Save whole screen image and coordinate to an internal buffer
+   $SYNTAX$
+      SAVE SCREEN
+   $ARGUMENTS$
+      none.
+   $DESCRIPTION$
+      SAVE SCREEN save the image of the whole screen into an internal
+      buffer, it also save current cursor position. The information could
+      later be restored by REST SCREEN. Each call to SAVE SCREEN
+      overwrite the internal buffer.
+
+      SAVE SCREEN command is preprocessed into __XSaveScreen() function
+      during compile time. Note that SAVE SCREEN TO is preprocessed into
+      SaveScreen() function.
+   $EXAMPLES$
+      // save the screen, display list of files than restore the screen
+      SAVE SCREEN
+      DIR *.*
+      WAIT
+      RESTORE SCREEN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(GT)
+   $SEEALSO$
+      RESTORE SCREEN,__XRestScreen(),__XSaveScreen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __XRestScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Restore screen image and coordinate from an internal buffer
+   $SYNTAX$
+      __XRestScreen()
+   $ARGUMENTS$
+      none.
+   $DESCRIPTION$
+      __XRestScreen() restore saved image of the whole screen from an
+      internal buffer that was saved by __XSaveScreen(), it also restore
+      cursor position. After a call to __XRestScreen() the internal buffer
+      is cleared.
+
+      RESTORE SCREEN command is preprocessed into __XRestScreen() function
+      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+      into RestScreen() function.
+
+      __XRestScreen() is a compatibility function, it is superseded by
+      RestScreen() which allow you to restore the screen from a variable.
+   $EXAMPLES$
+      // save the screen, display list of files than restore the screen
+      SAVE SCREEN
+      DIR *.*
+      WAIT
+      RESTORE SCREEN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(GT)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      RESTORE SCREEN
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Restore screen image and coordinate from an internal buffer
+   $SYNTAX$
+      RESTORE SCREEN
+   $ARGUMENTS$
+      none.
+   $DESCRIPTION$
+      Rest Screen restore saved image of the whole screen from an
+      internal buffer that was saved by Save Screen, it also restore
+      cursor position. After a call to Rest Screen the internal buffer
+      is cleared.
+
+      RESTORE SCREEN command is preprocessed into __XRestScreen() function
+      during compile time. Note that RESTORE SCREEN FROM is preprocessed
+      into RestScreen() function.
+   $EXAMPLES$
+      // save the screen, display list of files than restore the screen
+      SAVE SCREEN
+      DIR *.*
+      WAIT
+      RESTORE SCREEN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(GT)
+   $SEEALSO$
+      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Alert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Display a dialog box with a message
+   $SYNTAX$
+      Alert( <xMessage>, [<aOptions>], [<cColorNorm>], [<nDelay>] ) --> nChoice or NIL
+   $ARGUMENTS$
+      <xMessage> Message to display in the dialog box. <xMessage> can be
+      of any Harbour type.
+      If <xMessage> is an array of Character strings, each element would
+      be displayed in a new line. If <xMessage> is a Character
+      string, you could split the message to several lines by placing
+      a semicolon (;) in the desired places.
+
+      <aOptions> Array with available response. Each element should be
+      Character string. If omitted, default is { "Ok" }.
+
+      <cColorNorm> Color string to paint the dialog box with.
+      If omitted, default color is "W+/R".
+
+      <nDelay> Number of seconds to wait to user response before abort.
+      Default value is 0, that wait forever.
+   $RETURNS$
+      Alert() return Numeric value representing option number chosen.
+
+      If ESC was pressed, return value is zero.
+
+      The return value is NIL
+      if Alert() is called with no parameters, or if <xMessage> type is
+      not Character and HB_CLP_STRICT option was used. If <nDelay> seconds
+      had passed without user response, the return value is 1.
+   $DESCRIPTION$
+      Alert() display simple dialog box on screen and let the user select
+      one option. The user can move the highlight bar using arrow keys or
+      TAB key. To select an option the user can press ENTER, SPACE or the
+      first letter of the option.
+
+      If the program is executed with the //NOALERT command line switch,
+      nothing is displayed and it simply returns NIL. This switch could
+      be overridden with __NoNoAlert().
+
+      If the GT system is linked in, Alert() display the message using
+      the full screen I/O system, if not, the information is printed to
+      the standard output using OutStd().
+   $EXAMPLES$
+      LOCAL cMessage, aOptions, nChoice
+
+      // harmless message
+      cMessage := "Major Database Corruption Detected!;" +  ;
+                  "(deadline in few hours);;"             +  ;
+                  "where DO you want to go today?"
+
+      // define response option
+      aOptions := { "Ok", "www.jobs.com", "Oops" }
+
+      // show message and let end user select panic level
+      nChoice := Alert( cMessage, aOptions )
+      DO CASE
+      CASE nChoice == 0
+         // do nothing, blame it on some one else
+      CASE nChoice == 1
+         ? "Please call home and tell them you're gonn'a be late"
+      CASE nChoice == 2
+         // make sure your resume is up to date
+      CASE nChoice == 3
+         ? "Oops mode is not working in this version"
+      ENDCASE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is sensitive to HB_CLP_STRICT settings during the
+      compilation of src/rtl/alert.prg
+
+      <b>defined</b>: <xMessage> accept Character values only and return
+      NIL if other types are passed.
+
+      <b>undefined</b>: <xMessage> could be any type, and internally
+      converted to Character string. If type is Array, multi-line message
+      is displayed.
+
+      <b>defined</b>: Only the first four valid <aOptions> are taken.
+
+      <b>undefined</b>: <aOptions> could contain as many as needed options.
+
+      If HB_COMPAT_C53 was define during compilation of
+      src/rtl/alert.prg the Left-Mouse button could be used to select
+      an option.
+
+      The interpretation of the //NOALERT command line switch is done only
+      if HB_CLP_UNDOC was define during compilation of src/rtl/alert.prg
+
+      <cColorNorm> is a Harbour extension, or at least un-documented
+      in Clipper 5.2 NG.
+
+      <nDelay> is a Harbour extension.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      @...PROMPT,MENU TO,OutStd(),__NoNoAlert()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __NoNoAlert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Override //NOALERT command line switch
+   $SYNTAX$
+      __NoNoAlert()
+   $ARGUMENTS$
+      This function takes no arguments.
+   $DESCRIPTION$
+      The //NOALERT command line switch cause Clipper to ignore calls to
+      the Alert() function, this function override this behavior
+      and always display Alert() dialog box.
+   $EXAMPLES$
+      // make sure alert are been displayed
+      __NoNoAlert()
+   $STATUS$
+      R
+   $FILES$
+      Library is core
+   $COMPLIANCE$
+      C52U
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_eol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Returns the newline character(s) to use with the current OS
+   $SYNTAX$
+      hb_eol() --> cString
+   $RETURNS$
+      <cString> A character string containing the character or characters
+      required to move the screen cursor or print head to the start of a
+      new line.
+   $DESCRIPTION$
+      Returns a character string containing the character or characters
+      required to move the screen cursor or print head to the start of a
+      new line for the operating system that the program is running on
+      (or thinks it is running on, if an OS emulator is being used).
+
+      Under HB_OS_UNIX operating system the return value is the
+      Line-Feed character (0x0a, Chr( 10 ) ); with other operating systems
+      (like DOS) the return value is the Carriage-Return plus Line-Feed
+      characters (0x0d 0x0a, Chr( 13 ) + Chr( 10 )).
+   $EXAMPLES$
+      // Get the newline character(s) for the current OS.
+      OutStd( "Hello World!" + hb_eol() )
+      ? ValType( hb_eol() ) == "C"
+      ? Len( hb_eol() ) <= 2
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      OS(),OutStd(),OutErr()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_ColorIndex()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Extract one color from a full colorspec string.
+   $SYNTAX$
+      hb_ColorIndex( <cColorSpec>, <nIndex> ) --> <cColor>
+   $ARGUMENTS$
+      <cColorSpec> is a color list
+
+      <nIndex> is the position of the color item to be extracted, the
+      first position is the zero.
+   $RETURNS$
+      The selected color string, or if anything goes wrong, an empty
+      string.
+   $DESCRIPTION$
+      CA-Cl*pper has a color spec string, which has more than one
+      color in it, separated with commas.
+
+      This function will extract
+      a given item from this list. You may use the manifest constants
+      defined in color.ch to identify and extract common colors.
+   $EXAMPLES$
+      ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ColorSelect()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DevOutPict()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Displays a value to a device using a picture template
+   $SYNTAX$
+      DevOutPict( <xExp>, <cPicture>, [<cColorString>] )
+   $ARGUMENTS$
+      <xExp> is any valid expression.
+
+      <cPicture> is any picture transformation that Transform() can use.
+
+      <cColorString> is an optional string that specifies a screen color to
+      use in place of the default color when the output goes to the screen.
+   $DESCRIPTION$
+      Outputs any expression using a picture transformation instead of
+      using the default transformation for the type of expression.
+   $EXAMPLES$
+      // Output a negative dollar amount using debit notation.
+      DevOutPict( -1.25, "@D$ 99,999.99 ) // -> $(     1.25)
+   $STATUS$
+      R
+   $COMPLIANCE$
+      DevOutPict() is mostly CA-Cl*pper compliant. Any differences are due
+      to enhancements in the Harbour Transform() over CA-Cl*pper.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      DevOut(),Transform()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __Input()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Stops application
+   $SYNTAX$
+      __Input( <cMessage> ) --> <cString>
+   $ARGUMENTS$
+      <cMessage> is any valid expression.
+   $RETURNS$
+      <cString> input value macroed
+   $DESCRIPTION$
+      This function waits for a console input and returns macroed
+      expression entered.
+   $STATUS$
+      S
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __Wait(),__Accept()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __TextSave()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Internal
+   $ONELINER$
+      Redirect console output to printer or file and save old settings
+   $SYNTAX$
+      __TextSave( <cFile> )
+   $ARGUMENTS$
+      <cFile> is either "PRINTER" (note the uppercase) in which console
+      output is SET to PRINTER, or a name of a text file with a default
+      ".txt" extension, that is used to redirect console output.
+   $DESCRIPTION$
+      __TextSave() is used in the preprocessing of the TEXT TO command to
+      redirect the console output while saving old settings that can be
+      restored later by __TextRestore().
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C52U
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __TextRestore()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Internal
+   $ONELINER$
+      Restore console output settings as saved by __TextSave()
+   $SYNTAX$
+      __TextRestore()
+   $ARGUMENTS$
+      none.
+   $DESCRIPTION$
+      __TextRestore() is used in the preprocessing of the TEXT TO command
+      to restore console output settings that were previously saved by
+      __TextSave().
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C52U
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __Wait()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Stops the application until a key is pressed.
+   $SYNTAX$
+      __Wait( <cMessage> ) --> <cKey>
+   $ARGUMENTS$
+      <cMessage> is a string.
+   $RETURNS$
+      Pressed key.
+   $DESCRIPTION$
+      This function stops the application until a key is pressed. The key
+      must be in the range 32..255. Control keys are not processed.
+   $EXAMPLES$
+      // Wait for a key stroke
+      __Wait( "Press a key to continue" )
+      //
+      DO WHILE !( cKey == "Q" )
+         cKey := __Wait( "Press 'Q' to continue" )
+      ENDDO
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __Accept(),__Input()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      OutStd()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Write a list of values to the standard output device
+   $SYNTAX$
+      OutStd( <xExp,...> )
+   $ARGUMENTS$
+      <xExp,...> is a list of expressions to display. Expressions are any
+      mixture of Harbour data types.
+   $DESCRIPTION$
+      OutStd() write one or more values into the standard output device.
+      Character and Memo values are printed as is, Dates are printed
+      according to the SET DATE FORMAT, Numeric values are converted to
+      strings, Logical values are printed as .T. or .F., NIL are printed
+      as NIL, values of any other kind are printed as empty string. There
+      is one space separating each two values. Note that Numeric value can
+      take varying length when converted into string depending on its
+      source (see Str() for detail).
+
+      OutStd() is similar to QQOut() with the different that QQOut() send
+      its output to the Harbour console stream, which can or can not be
+      redirected according with the screen driver, and OutStd() send its
+      output to the standard output device (STDOUT) and can be redirected.
+   $EXAMPLES$
+      OutStd( "Hello" )            // Result: Hello
+
+      OutStd( 1, .T., NIL, "A" )
+      OutStd( "B" )                // Result:          1 .T. NIL AB
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutErr(),QOut(),QQOut(),Str()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      OutErr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Write a list of values to the standard error device
+   $SYNTAX$
+      OutErr( <xExp,...> )
+   $ARGUMENTS$
+      <xExp,...> is a list of expressions to display. Expressions are any
+      mixture of Harbour data types.
+   $DESCRIPTION$
+      OutErr() write one or more values into the standard error device.
+      Character and Memo values are printed as is, Dates are printed
+      according to the SET DATE FORMAT, Numeric values are converted to
+      strings, Logical values are printed as .T. or .F., NIL are printed
+      as NIL, values of any other kind are printed as empty string. There
+      is one space separating each two values. Note that Numeric value can
+      take varying length when converted into string depending on its
+      source (see Str() for detail).
+
+      There is an undocumented CA-Cl*pper command line switch //STDERR
+      which can set the file handle to write output from OutErr(). If not
+      specified the default STDERR is used, //STDERR or //STDERR:0 set
+      OutErr() to output to the same file handle as OutStd(), //STDERR:n
+      set output to file handle n. Like other undocumented features this
+      switch is available only if src/rtl/console.c was compiled with
+      the HB_CLP_UNDOC flag.
+   $EXAMPLES$
+      // write error log information
+      OutErr( Date(), Time(), "Core meltdown detected" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutStd(),QOut(),QQOut(),Str()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      EJECT
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Printer
+   $ONELINER$
+      Issue an command to advance the printer to the top of the form
+   $SYNTAX$
+      EJECT
+   $ARGUMENTS$
+      None
+   $DESCRIPTION$
+      This command issue an form-feed command to the printer. If the printer
+      is not properly hooked up to the computer,an error will not be
+      generated and the command will be ignored.
+
+      Once completed,the values of PRow() and PCol(),the row and column
+      indicators to the printer,will be set to 0. Their values,however,may
+      be manipulated before or after ussuing an EJECT by using the DevPos()
+      function.
+
+      On compile time this command is translated into __Eject() function.
+   $EXAMPLES$
+      USE Clientes NEW
+      SET DEVICE TO PRINTER
+      CurPos := 0
+      WHILE ! Eof()
+         ? Clientes->nome, Clientes->endereco
+         Curpos++
+         IF Curpos > 59
+            Curpos := 0
+            EJECT
+         ENDIF
+      ENDDO
+      SET DEVICE TO SCREEN
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      DevPos(),SET PRINTER,PRow(),PCol()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Col()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Returns the current screen column position
+   $SYNTAX$
+      Col()  --> nPosition
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      <nPosition>  Current column position
+   $DESCRIPTION$
+      This function returns the current cursor column position. The value
+      for this function can range between 0 and MaxCol().
+   $EXAMPLES$
+      ? Col()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Row(),MaxRow(),MaxCol()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Row()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Returns the current screen row position
+   $SYNTAX$
+      Row()  --> nPosition
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      <nPosition>  Current screen row position
+   $DESCRIPTION$
+      This function returns the current cursor row location. The value
+      for this function can range between 0 and MaxCol().
+   $EXAMPLES$
+      ? Row()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Col(),MaxRow(),MaxCol()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MaxCol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Returns the maximun number of columns in the current video mode
+   $SYNTAX$
+      MaxCol()  --> nPosition
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      <nPosition>  The maximun number of columns possible in current video
+      mode
+   $DESCRIPTION$
+      This function returns the current cursor column position. The value
+      for this function can range between 0 and MaxCol().
+   $EXAMPLES$
+      ? MaxCol()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      Linux(GT),OS2(GT),Win(GT)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Row(),MaxRow(),Col()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MaxRow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Returns the current screen row position
+   $SYNTAX$
+      MaxRow()  --> nPosition
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      <nPosition>  The maximun number of rows possible in current video
+      mode
+   $DESCRIPTION$
+      This function returns the current cursor row location. The value
+      for this function can range between 0 and MaxCol().
+   $EXAMPLES$
+      ? MaxRow()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      Linux(GT),OS2(GT),Win(GT)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Col(),Row(),MaxCol()
+   $END$
+ */

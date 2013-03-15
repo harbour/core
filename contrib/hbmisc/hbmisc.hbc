@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+description=Misc function collection
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

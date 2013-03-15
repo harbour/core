@@ -1,0 +1,41 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__RDDADO__
+#define __HBEXTERN_CH__RDDADO__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADO__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__RDDADO__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADO__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC ADORDD
+DYNAMIC ADORDD_GETFUNCTABLE
+DYNAMIC hb_adoRddGetCatalog
+DYNAMIC hb_adoRddGetConnection
+DYNAMIC hb_adoRddGetRecordSet
+DYNAMIC hb_adoSetEngine
+DYNAMIC hb_adoSetLocateFor
+DYNAMIC hb_adoSetPassword
+DYNAMIC hb_adoSetQuery
+DYNAMIC hb_adoSetServer
+DYNAMIC hb_adoSetTable
+DYNAMIC hb_adoSetUser
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDADO__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

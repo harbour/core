@@ -1,0 +1,42 @@
+/*
+ * $Id$
+ */
+
+How to create and tag a new release
+===================================
+By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+
+
+1. Make full update of your local CVS copy with:
+    cvs -z3 update -A -P -d -R harbour
+   with the above unused empty directories will be removed
+   from your repository copy.
+   Please check if all your files are unmodified. You can redirect
+   stdout output from cvs command to a file to see if all files are
+   exactly the same.
+2. Update files which contain harbour release number. Now these are:
+    harbour.spec
+    include/hbver.h
+3. Set proper release date in NEWS (found as doc/oldnews.txt) and
+   if necessary update release informations. Also add the exact
+   tag name to this file, for example "tag: build46".
+4. Update ChangeLog.txt and commit your modifications.
+5. Update hbver.h with ChangeLog.txt file ID and your last entry ID.
+6. Tag the CVS tree with the new release tag:
+    cvs tag -t -F -D <local_daytime_or_other_with_TZ_info> <newtag>
+   for example:
+    cvs tag -t -F -D "2006-05-29 16:00" build46
+   With the above you can also "re-tag" already set tag so be careful
+   and use re-tag repository _only_ if it's really necessary.
+
+
+With properly tagged CVS any one who wants to create Harbour release
+binaries should make:
+    cvs -z3 co -r <reltag> harbour
+for example:
+    cvs -z3 co -r "build46" harbour
+to be sure that local repository copy is exactly the same as the one
+tagged as new release. The first commit after cvs tagging should also
+change the version number and ChangeLog IDs in harbour.spec and
+include/hbver.h for easier locating possible mistakes when release
+binaries are created.

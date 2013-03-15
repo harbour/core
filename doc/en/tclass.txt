@@ -1,0 +1,75 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
+ *    Documentation
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HBClass()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Classes
+   $ONELINER$
+      HBClass() is used in the creation of all classes
+   $SYNTAX$
+      oClass := HBClass():New("TMyClass")
+
+        -or-
+
+      HBClass() is usually accessed by defining a class with the commands
+      defined in hbclass.h:
+
+        CLASS HBGetList    // Calls HBClass() to create the HBGetList class
+           ...
+        ENDCLASS
+   $ARGUMENTS$
+
+   $RETURNS$
+      An instance of the HBClass Class. This special object's :New()
+      method can then create the classes you define.
+   $DESCRIPTION$
+      HBClass is a class that ...
+      The class methods are as follows:
+
+        New()                 Create a new instance of the class
+   $EXAMPLES$
+      FUNCTION TestObject()
+         LOCAL oObject
+
+         oObject := HBClass():New( "TMyClass" )
+         oObject:End()
+
+         RETURN NIL
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Object Oriented syntax in Harbour is compatible with CA-Cl*pper.
+
+      However CA-Cl*pper only allowed creation of objects from a few standard
+      classes, and did not let the programmer create new classes.
+
+      In Harbour, you can create your own classes--complete with
+      Methods, Instance Variables, Class Variables and Inheritance.
+      Entire applications can be designed and coded in Object Oriented
+      style.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objHasData(),Object Oriented Programming,CLASS
+   $END$
+ */

@@ -1,0 +1,1127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Harbour Project - News</title>
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="menu/stmenu.js"></script>
+<style type="text/css">
+<!--
+li {
+	padding-left: 5px;
+	list-style-position: inside;
+/*	list-style-image: url(images/button-green.jpg); */
+	list-style-image: url(images/button-ok.jpg);
+	margin-right:1px;
+	font-size: 9px;
+}
+ul {
+	text-decoration: none;
+	padding:0;
+	margin:0;
+	list-style-type: none;
+}
+-->
+</style>
+</head>
+<body>
+<table width="740" border="0" align="center" cellpadding="0" cellspacing="1" bordercolor="#000000">
+  <tr>
+    <td valign="top" bgcolor="#000000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="229" valign="top" background="images/header_03.png" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="6%"><img src="images/header_01.jpg" width="287" height="164" /></td>
+                <td width="94%"><img src="images/header_02.jpg" width="448" height="164" /></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td background="images/menu-bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+              <tr>
+                <td width="95%" height="65" valign="top" background="images/menu-bg2.png"><script type="text/javascript" src="menu/harbour-menu.js"></script></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+             <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr valign="bottom">
+                   <td width="2%"   height="26" class="tabela_box_trans_TL"><a name="top" id="top"></a></td>
+                   <td width="96%"  height="26" class="title">Harbour News</td>
+                   <td width="2%"   height="26" class="tabela_box_trans_TR">&nbsp;</td>
+                   </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top">This page gives you some of the main changes introduced in recent versions of Harbour project.  To view the latest ChangeLog.txt <a href="changelog.html" class="blue_link">click here</a> or download lastest stable release of Harbour <a href="http://sourceforge.net/project/showfiles.php?group_id=681" class="blue_link">here</a>.</td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td ><a name="20091223" id="200808102232"></a></td>
+                  <td valign="top"><hr /></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top"><span class="title_text">Harbour Mailing Lists address change</span>
+                    <ul>
+                      <li><span class="title_date"><font>                        June  3, 2010</font></span><span class="title"><br />
+                        <br />
+                        </span>Thanking Phil Barnett for providing the Harbour community a great mailing list
+                          for so many years, today, due to server problems, I've migrated the mailing
+                          lists to Google Groups in agreement with Phil and Harbour admins.<br />
+                          <br />
+Please make sure to revise your subscription settings, because digest, nomail
+options and readable name were lost along the migration.</li>
+                      </ul></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top">&nbsp;</td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td ><a name="20091222" id="20080810223"></a></td>
+                   <td valign="top"><hr /></td>
+                   <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td valign="top" >&nbsp;</td>
+                  <td valign="top"><font size="2" class="title_text">Release of 2.0.0</font>
+                     <ul>
+                        <li><span class="title_date"><font>December 22, 2009</font></span><font><span class="title"><br />
+                           <br />
+                           </span>After 16 months of intensive development the final version 2.0.0 is finally released. There are many highlights and news in this new release, check out some details and download your copy free today.<span class="title"><br />
+                           <br />
+                           </span></font><span class="title">General</span></li>
+                        <li>Build configuration changes:<br />
+                        <code class="code_on_news">&nbsp;&nbsp;&nbsp;PRG_USR             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt; HB_USER_PRGFLAGS<br />
+                        &nbsp;&nbsp;&nbsp;C_USR               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt; HB_USER_CFLAGS<br />
+                           &nbsp;&nbsp;&nbsp;L_USR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               -&gt; HB_USER_LDFLAGS<br />
+                           &nbsp;&nbsp;&nbsp;A_USR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;               -&gt; HB_USER_AFLAGS<br />
+                           &nbsp;&nbsp;&nbsp;MK_USR              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt; HB_USER_MAKEFLAGS<br />
+                           &nbsp;&nbsp;&nbsp;HB_ARCHITECTURE     -&gt; HB_PLATFORM<br />
+                           &nbsp;&nbsp;&nbsp;HB_PLATFORM=w32     -&gt; HB_PLATFORM=win<br />
+                           &nbsp;&nbsp;&nbsp;CCPATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;              -&gt; HB_CCPREFIX<br />
+                           &nbsp;&nbsp;&nbsp;CCPREFIX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            -&gt; HB_CCPATH                           </code></li>
+                        <li>GNU-make system revised to give optimal support -j&lt;n&gt; multi-threaded parallel builds, which can dramatically
+                           increase build speed in multi-core/multi-CPU systems.</li>
+                        <li>Some constants renamed:
+                           <br />
+                           <code class="code_on_news">
+                              &nbsp;&nbsp;HB_WINCE          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; HB_OS_WIN_CE<br />
+                              &nbsp;&nbsp;HB_OS_WIN_32_USED -&gt; HB_OS_WIN_USED<br />
+                              &nbsp;&nbsp;HB_OS_WIN_32      &nbsp;&nbsp;&nbsp;&nbsp; -&gt; HB_OS_WIN</code></li>
+                        <li> Cleaned references of '32' in context of Windows and
+                           Windows API.</li>
+                        <li>New macro names introduced:<br /><code class="code_on_news">
+                           &nbsp;&nbsp;SUCCESS -&gt; HB_SUCCESS<br />
+                           &nbsp;&nbsp;FAILURE -&gt; HB_FAILURE<br />
+                           &nbsp;&nbsp;ERRCODE -&gt; HB_ERRCODE<br /></code>
+                           (old ones still work for compatibility, but please
+                           switch your code to use the new ones)</li>
+                        <li> Fixed dynamic library creation on Solaris OSes.</li>
+                        <li>hbrun will now open .dbf files when passed on the command line.<br />
+                           </li>
+                        <li> Added web-server written in Harbour: uHTTPD<br />
+                           </li>
+                        <li> POCC WinCE builds are now supported.<br />
+                           </li>
+                        <li> Open Watcom 1.8 (RC3) compiler is now supported.<br />
+                           </li>
+                        <li> Removed HB_LEGACY_LEVEL support.<br />
+                           </li>
+                        <li> #define HB_FM_WIN32_ALLOC renamed to HB_FM_WIN_ALLOC.<br />
+                           </li>
+                        <li> Protected incompatible changes with HB_LEGACY_LEVEL2.<br />
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_SUCCESS<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   HB_FAILURE <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_ERRCODE<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_WINCE<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HB_OS_WIN_32*<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; __RDDGETTEMPALIAS()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; __HRB*()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; some class functions,
+                           <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                           Harbour -go option<br />
+                           <br />
+                           These features are still available, and will be removed
+                           in next major version (Harbour 1.2). To test your code for
+                           compatibility, you can turn it off manually by #defining
+                           HB_LEGACY_OFF. (HB_USER_CFLAGS=-DHB_LEGACY_OFF)<br />
+                           <br />
+                        </li>
+                        <li> New Harbour Project homepage, thanks for Vailton Renato.<br />
+                           </li>
+                        <li> GNU Make system now supports parallel builds.
+                           (needs GNU Make newer than 3.79.1)<br />
+                           </li>
+                        <li> GNU Make system allows to install in Harbour source tree on all platforms.<br />
+                           </li>
+                        <li> GNU Make system for bcc and msvc options synced with non-GNU build methods.<br />
+                           </li>
+                        <li> GNU Make system no longer needs -r parameter.<br />
+                           </li>
+                        <li> GNU Make system will now generate hbfm and hbfmmt lib for all compilers.
+                           Added few more similar unification cleanups.<br />
+                           </li>
+                        <li> Implemented .dll generation for msvc, msvc64, bcc and watcom when using
+                           GNU Make system.<br />
+                           </li>
+                        <li> Added support for Open Watcom 1.8 (it's recommended over 1.7).<br />
+                           </li>
+                        <li> Added support for import lib generation when using GNU Make with msvc and vcc.
+                           Enable it with 'set HB_DIR_IMPLIB=yes' plus set HB_DIR_* envvars.<br />
+                           </li>
+                        <li> -mtune=pentiumpro optimization is now default for mingw/cygwin.<br />
+                           </li>
+                        <li> Cleaned new mingw 4.3.3 warnings.<br />
+                           </li>
+                        <li> Certain features will require Windows NT or upper when building Harbour on Windows, so this is now a requirement for a proper build.<br />
+                           </li>
+                        <li> hb-mkslib.sh renamed to hb-mkdyn.sh. Old name stil works, but it's
+                           now deprecated.<br />
+                           </li>
+                        <li> x64 msvc compiler got a distinct HB_COMPILER value: msvc64.<br />
+                           </li>
+                        <li> msvcce compiler made compatible with older MSVC/WinCE versions.<br />
+                           </li>
+                        <li> Added support for Intel(R) C++ compiler (icc) on Linux and Windows.<br />
+                           </li>
+                        <li> Added new README.txt giving a quick describing of the build
+                           process on all supported platforms and compilers.<br />
+                           </li>
+                        <li> Several steps to make the build process simpler and requiring the
+                           less amount of preparation.<br />
+                           </li>
+                        <li> Fixed missing watcom support for HB_USER_LDFLAGS.<br />
+                           </li>
+                        <li> Added support for MSVC IA64 mode. (untested)<br />
+                           </li>
+                        <li> Added support for HB_CONTRIBLIBS=no to disable building of all contribs.<br />
+                           </li>
+                        <li> Added ability to generate Windows installer and .zip distribution file.<br />
+                           </li>
+                        <li> Fully transitioned to GNU Make system for all compilers.<br />
+                           Now msvc, msvcce and bcc builds need GNU Make, see README.txt for more
+                           information. &quot;non-GNU&quot; make systems got deleted from the source tree.</li>
+                        <li> Cygwin renamed from gcc to cygwin. (NOTE: Cygwin doesn't work since
+                           some versions, and support may be removed in the future.)<br />
+                           </li>
+                        <li> Fixed #pragma -k? options to be case-insensitive.<br />
+                           </li>
+                        <li> Explicitly bind system libraries with harbour shared library.
+                           RPM/DEB packages should automatically detect these dependencies.<br />
+                           </li>
+                        <li> Warning cleanup (minors) for Intel compiler.<br />
+                           </li>
+                        <li> Pelles C workarounds for compiler bugs.<br />
+                           </li>
+                        <li> Added support for extended definition files in Harbour compiler
+                           switches: -u+&lt;file&gt;<br />
+                           </li>
+                        <li> Fixed memory leak when repeated -u[&lt;file&gt;] options are used.</li>
+                        </ul>
+<span class="title"><br />
+Core</span>
+<ul>
+                        <li> Added MT (Multi thread) support.<br />
+                           </li>
+                        <li> Added complete i18n support with API and tool to compile .po
+                           files (hbi18n).<br />
+                           </li>
+                        <li> Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.<br />
+                           </li>
+                        <li> Fixed to not use C RTL CP dependent character functions
+                           in Harbour code. (IsLower(), toupper(), etc) added new macros instead.<br />
+                           </li>
+                        <li> __natIsNegative() and __NATISAFFIRM() are now using
+                           CP sensitive case conversion.<br />
+                           </li>
+                        <li> Added hb_charIsUpper()/hb_charIsLower() APIs.<br />
+                           </li>
+                        <li> CurDrive() and DISKNAME() fixed for systems that don't support
+                           drive letters.<br />
+                           </li>
+                        <li> Xbase++ compatible TBrowse()/TBColumn()/Get() related methods
+                           moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().<br />
+                           </li>
+                        <li> Fixed potential GPF in hb_RAScan().<br />
+                           </li>
+                        <li> Debugger improvements and fixes.<br />
+                           </li>
+                        <li> Most Harbour level code prepared for MT.<br />
+                           </li>
+                        <li> Fixed few potential GPFs in RDDNTX, RDDCDX code.<br />
+                           </li>
+                        <li> Added own hb_snprintf() implementation.<br />
+                           </li>
+                        <li> Fixed HB_VERSION( HB_VERSION_BUILD_DATE )<br />
+                           </li>
+                        <li> Added hbuddall library holding all core supplied user RDDs.<br />
+                           </li>
+                        <li> Fixed to successfully build all user RDD examples.<br />
+                           </li>
+                        <li> Fixed dbCreate() behaviour in arrayrdd user RDD.<br />
+                           </li>
+                        <li> Added new LOGRDD user RDD.<br />
+                           </li>
+                        <li> Added DBFNSX RDD.<br />
+                           </li>
+                        <li> Fixed FWRITE() potential GPF and security hole.<br />
+                           </li>
+                        <li> Added __FILE__ support for .prg code.<br />
+                           </li>
+                        <li> Added:<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_MilliSeconds()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FTempCreateEx( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrDecodEscape( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrCDecode( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrXor( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_ProgName() -&gt; &lt;cProgramNameWithPath&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_DispOutAtBox() similar to hb_DispOutAt() but for drawing chars.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FGetAttr( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FSetAttr( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FSetDateTime( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;], [&lt;nMilliSec&gt;] ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FGetDateTime()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_WildMatchI() like hb_WildMatch() but case-insentitive.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_cdpSelect() same as hb_SetCodepage() (please upgrade to new function name).<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_cdpUniID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_gtInfo( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_DirBase() -&gt; &lt;cBaseDirectory&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_dbCreateTemp()/DBCREATETEMP() to create temporary tables.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_MMIDDLEDOWN/MMiddleDown() new Harbour function.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dbInfo( DBI_ISTEMPORARY )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_Version( HB_VERSION_BUILD_PLAT )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_Version( HB_VERSION_BUILD_COMP )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrFormat() C-like string formatting function
+                           (also as C level API named hb_StrFormat())<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_SetEnv( &lt;cEnvName&gt;, [&lt;cNewVal&gt;] [, &lt;lOsCP&gt;] ) -&gt; &lt;lOK&gt; (also as C level API named hb_setenv())<br />
+                           <br />
+                           </li>
+                        <li> Fixed UNSELECTED color updating in SetColor().<br />
+                           </li>
+                        <li> GTWVT, GTWIN HB_GTI_CODEPAGE support.<br />
+                           </li>
+                        <li> GTWVT now supports drawing chars even if the selected codepage
+                           doesn't support them.<br />
+                           </li>
+                        <li> GTWVT HB_GTI_BOXCP support.<br />
+                           </li>
+                        <li> GTWVT disabled K_MM*DOWN non-Clipper (and other GT) compatible mouse
+                           events.<br />
+                           </li>
+                        <li> Fixed TBROWSE(), TPOPUP() to display drawing chars properly.<br />
+                           </li>
+                        <li> Fixed DISKSPACE() and HB_DISKSPACE() to return proper values
+                           on Darwin.<br />
+                           </li>
+                        <li> Fixed DIRECTORY() when called with &quot;V&quot; (label) parameter (on Windows).<br />
+                           </li>
+                        <li> New HB_SIZEOFARRAY() macro.<br />
+                           </li>
+                        <li> Added C APIs:<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_charIsDigit(), hb_charIsAlpha(), hb_charIsLower(), hb_charIsUpper()<br />
+                           </li>
+                        <li> Added support to specify OS codepage:<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;
+                           &nbsp;Set( _SET_OSCODEPAGE[, &lt;cCPID&gt; ] ) -&gt; &lt;cOldCPID&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C level: hb_setGetOSCODEPAGE()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conversion is done automatically in existing functions.<br />
+                           </li>
+                        <li> Added hb_osDecode(), hb_osEncode() C APIs.<br />
+                        </li>
+                        <li> hb_GetEnv() extended with 3rd parameter to control OS codepage
+                           conversion (on by default).<br />
+                           </li>
+                        <li> Added CPU dump support for AMD64/x64.<br />
+                           </li>
+                        <li> Added module listing on GPF for x86 and x64.<br />
+                           </li>
+                        <li> GTXWC potential GPF fixed.<br />
+                           </li>
+                        <li> Added process handling:<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_processOpen()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;
+hb_processValue()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_processClose()<br />
+                           </li>
+                        <li> Added HB_GTI_BOXCP to control box drawing CP for GTs.<br />
+                           </li>
+                        <li> Using Heap instead of Local memory when HB_FM_WIN32_ALLOC is set.<br />
+                           </li>
+                        <li> Added __objHasMsgAssigned( object, &quot;msgName&quot; )<br />
+                           </li>
+                        <li> File find API fixes for OS/2.<br />
+                           </li>
+                        <li> DBOI_BAGNAME made compatible for RDDCDX, RDDNSX.<br />
+                           </li>
+                        <li> Added Intel C compiler and Wine detection.<br />
+                           </li>
+                        <li> Codepage fixes and cleanups (BGMIK).<br />
+                           </li>
+                        <li> Fixed cursor handling in TEDITOR/MemoEdit().<br />
+                           </li>
+                        <li> Now GTXWC generates HB_K_RESIZE on resize.<br />
+                           </li>
+                        <li> GTWIN fixed HB_GTI_KBDSHIFTS handling.<br />
+                           </li>
+                        <li> GTWVT added 'layered window' support (always enabled, except when in Terminal mode).<br />
+                           </li>
+                        <li> GTWVT fixed not to generate RTE if class is already been registered.<br />
+                           </li>
+                        <li> GTXWC added support for HB_GTI_PALETTE, HB_GTI_FONTSEL,HB_GTI_CLOSABLE, HB_GTI_RESIZABLE.<br />
+                           </li>
+                        <li> GTTRM added support for HB_GTI_PALETTE.<br />
+                           </li>
+                        <li> New compiler expression optimizations, and some fixes for rare cases.<br />
+                           </li>
+                        <li> Some compiler optimizations are now enabled using new -ko switch.<br />
+                           </li>
+                        <li> Added array preallocation on AAdd().<br />
+                           </li>
+                        <li> Optimization to string reallocation.<br />
+                           </li>
+                        <li> Added detection of unused variable assigments. Code cleaned
+                           in all Harbour for such warnings.<br />
+                           </li>
+                        <li> Fixed possible problem with _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE.<br />
+                           </li>
+                        <li> __HRB*() functions marked as compatibility, please update your
+                           code to use HB_HRB*().<br />
+                           </li>
+                        <li> __RDDGETTEMPALIAS() marked as compatibility, please update your code to use hb_rddGetTempAlias().<br />
+                           </li>
+                        <li> Added hb_spFileExists() a more efficient version of hb_spFile().<br />
+                           </li>
+                        <li>Modified Harbour code to use the new API.<br />
+                           </li>
+                        <li> HSX index MT support.<br />
+                           </li>
+                        <li> Fixed potentially uninitialized internal HB_GT_INFO structure.<br />
+                           </li>
+                        <li> Using more efficient hb_fsFileExists() instead of hb_fsFile() in core.<br />
+                           </li>
+                        <li> Added char * hb_cmdargARGVN( int argc ).<br />
+                           </li>
+                        <li> HB_PROCNAME() support for symbol evaluation.<br />
+                           </li>
+                        <li> HB_SYMBOL_UNUSED() moved to std.ch. NOTE: This macro is no longer
+                           present in common.ch so if you're overriding std.ch, make sure to add
+                           this macro to your header file.<br />
+                           </li>
+                        <li> Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin(), Bin2U(), W2Bin(), U2Bin() functions rewritten in a more efficient way. Previous pure GPL
+                           license changed to standard Harbour license (including exception).<br />
+                           </li>
+                        <li> Fixed Ukrainian localization files.<br />
+                           </li>
+                        <li> Using local implementation of hb_snprintf() for all C level code.<br />
+                           </li>
+                        <li> Fixed localized date format for RU, UA, IT, BE, BG, NL, SL.<br />
+                           </li>
+                        <li> Added __FILE__ and __LINE__ predefined dynamic PP macros.<br />
+                           </li>
+                        <li> Added Windows 7 and Server 2008 R2 version detection.<br />
+                           </li>
+                        <li> Replaced old hbmk.bat, hbmk bash script and Harbour Make tool with
+                           portable make tool written in Harbour: hbmk. This tool can create<br />
+                           a Harbour executable on any platforms using minimal effort. It autodetects
+                           OS and compiler environment. Support script and parameter files,
+                           can act as a linker, C compiler, Harbour compiler, static and dynamic
+                           library creator, resource compiler (on Windows).
+                           Core features are
+                           completed on all major platforms. Some non-mainstream features and
+                           platforms may be completed later. All existing features of hbmk
+                           bash script (for gcc) and of hbmk.bat are supported in this new tool,
+                           and much more. Replaced Win/DOS specific .bat files with portable
+                           .hbp and .hbm files.<br />
+                           </li>
+                        <li> Added all missing non-multibyte codepages.<br />
+                           </li>
+                        <li> ListBox() doesn't modify _SET_EXACT settings anymore in :Find*() methods.<br />
+                           </li>
+                        <li> HVM pcode evaluation speed improvement.<br />
+                           </li>
+                        <li> Fixed _SET_EXACT handling in core.<br />
+                           </li>
+                        <li> hb_gtInfo( HB_GTI_PALLETE ) now uses zero based color indexes in Core (GTWVT, GTXWC). This creates a small incompatibility with older
+                           version. Also notice that GTWVG still uses 1-based indexes for
+                           compatibility.<br />
+                           </li>
+                        <li> Fixed very old bug showing wrong default status for -n option on
+                           Harbour help screen.<br />
+                           </li>
+                        <li> Added support for reading FoxPro .mem files - Clipper compatibility.<br />
+                           </li>
+                        <li> Fixed very old bug which disabled writing to .mem files stringslonger then 32Kb.<br />
+                           </li>
+                        <li> hbrun now accepts .dbf file as paramater, which it will open after startup.<br />
+                           </li>
+                        <li> hbrun now accepts -v option which makes it display its own version after startup.<br />
+                           </li>
+                        <li> Borland C++ compiler is now called 'bcc' instead of 'bcc32'. Please update your system.<br />
+                           </li>
+                        <li> Removed almost all DOS/WIN specific build/make batch files.<br />
+                           </li>
+                        <li> Fixed __M[V]CLEAR()/ __M[V]RESTORE() to be exactly Clipper compatible
+                           and do not release PUBLIC GetList value.<br />
+                           </li>
+                        <li> bcc compiler in GNU Make now supports older Windows NT with limited
+                           command line length.<br />
+                           </li>
+                        <li> Removed support for following compilers:
+                           dos/bcc16, dos/rsx32, win/dmc, win/rsxnt, os2/icc, win/icc (IBM).<br />
+                           </li>
+                        <li> Fixed static variables indexes in the generated PCODE when static variables are declared inside extended codeblocks - in some cases<br />
+                           wrong PCODE was generated.<br />
+                           </li>
+                        <li> Fixed initialization PCODE for thread static variables declared inside extended codeblocks.<br />
+                           </li>
+                        <li> Fixed modulename generated for debugger to always contain function name part for extended codeblock declared as file wide static variables. In such case &quot;(_INITSTATICS)&quot; is used as function name. Without it debugger does not register entering such codeblocks and<br />
+                           GPFs.<br />
+                           </li>
+                        <li> Added support for automatic adding 1-st function with the same name
+                           as compiled .prg file if some code statements are used before 1-st
+                           function/procedure declared explicitly in .prg file. Such mode can
+                           be enabled by -n2 new harbour compiler switch. This switch is used<br />
+                           by default by new hbmk tool.<br />
+                           </li>
+                        <li> speedtst updated to work with CA-Cl*pper.<br />
+                           </li>
+                        <li> Added protection against pushing new private variable on HVM stack
+                           if such private variable is already created by the same function.<br />
+                           Clipper also has such protection.<br />
+                           </li>
+                        <li> Respect HB_START_PROCEDURE in all builds if such public
+                           function/procedure exists.<br />
+                           </li>
+                        <li> Disabled HB_MSC_STARTUP in C++ MSVC builds.<br />
+                           </li>
+                        <li> Forbid some usage of __clsModMsg() and unblock some othersIt should make some xHarbour users using OVERRIDE METHOD happy<br />
+                           but please remember it's still undocumented and unsupportedfunctionality - use for your own risk.<br />
+                           </li>
+                        <li> Fixed typo in hb_inetDataReady() - the second parameter (timeout) was ignored.<br />
+                           </li>
+                        <li> Changed the NOT operator precedence - it should be bigger then logical .and./.or. operators in #if expressions.<br />
+                           </li>
+                        <li> Fixed hb_regexMatch(). Now the HAS/LIKE mode can be controlled by 5th logical parameter (was 3rd), so 3rd parameter is solely<br />
+                           controlling case-sensitivity as indicated in the documentation. Users are recommended to use hb_regexHas() and HB_REGEXLIKE()<br />
+                           functions as unambiguous alternatives, which work equally
+                           well on all Harbour versions. hb_regexMatch() is now deprecated,
+                           but kept for compatibility.<br />
+                           </li>
+                        <li> AChoice() fixed to redisplay itself when exiting with &lt;Esc&gt; or
+                           equivalent.</li>
+                        </ul>
+<span class="title"><br />
+Contrib</span>
+<ul>
+   <li> hbblat new Blat interface class for Windows
+      (Contributed by Francesco Saverio Giudice).<br />
+      </li>
+   <li> hbmzip fixed GPF in hb_zipDeleteFile() when file has comment.<br />
+      </li>
+   <li> hbmzip fixed handling attributes in hb_zipFileCreate().<br />
+      </li>
+   <li> hbmzip fixed timestamps stored in .zip files.<br />
+      </li>
+   <li> hbmzip added HB_ZIPSTOREFILEHANDLE(),
+      hb_unzipExtractCurrentFileToHandle() functions.<br />
+      </li>
+   <li> hbwin win_regRead()/GetRegistry() got new parameter to supply
+      a default value when the entry isn't found.<br />
+      </li>
+   <li> hbtip FTP handling fixed some accidental typos.<br />
+      </li>
+   <li> hbtip new MIME types.<br />
+      </li>
+   <li> hbtip fixes and optimization to HB_BASE64().<br />
+      </li>
+   <li> rddads now autodetects version 9.10.<br />
+      </li>
+   <li> hbct XToC(), FToC() and CTOF() fixed to be properly multiplatform.<br />
+      </li>
+   <li> hbct unbuffered drawing speed improvement in windowing code.<br />
+      </li>
+   <li> hbct DirName() fixed.<br />
+      </li>
+   <li> hbct other fixes.<br />
+      </li>
+   <li> hbct FileSeek(), FileAttr(), FileSize(), FileDate() now MT compatible.<br />
+      </li>
+   <li> hbct added support for thread local current window pointer in CT Windows.<br />
+      </li>
+   <li> hbwin made steps towards creating a unified Windows API wrapper layer.<br />
+      </li>
+   <li> Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
+      to contribs.<br />
+      </li>
+   <li> hbct windowing extended with new low level API, better shadow
+      handling.<br />
+      </li>
+   <li> gtwvg lots of improvements.<br />
+      </li>
+   <li> gtwvg Xbase++ compatible UI objects.<br />
+      </li>
+   <li> hbw32 library renamed to hbwin.<br />
+      </li>
+   <li> hbwin added WIN_ABORTDOC(), win_RunDetached(), WIN_SHELLEXECUTE(),
+      win_LoadResource().<br />
+      </li>
+   <li> dbu patch now adds SET DATE ANSI and SET CENTURY ON.<br />
+      </li>
+   <li> hbwin win_MulDiv(), win_Rectangle(), win_SetBkMode() extended to
+      accept handles passed using alternate methods.<br />
+      </li>
+   <li> hbwin function names changed as below: <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      W32_REGPATHSPLIT()            -&gt; win_regPathSplit()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; W32_REGREAD()                 -&gt; win_regRead()<br />
+&nbsp;&nbsp;&nbsp;&nbsp; W32_REGWRITE()                -&gt; win_regWrite()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCREATEKEYEX()        -&gt; win_regCreateKeyEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGOPENKEYEX()          -&gt; win_regOpenKeyEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGQUERYVALUEEX()       -&gt; win_regQueryValueEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGSETVALUEEX()         -&gt; win_regSetValueEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCLOSEKEY()           -&gt; win_regCloseKey()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ARC()                   -&gt; win_Arc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_BITMAPSOK()             -&gt; win_BitmapsOK()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEDC()              -&gt; win_CreateDC()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEFONT()            -&gt; win_CreateFont()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DELETEDC()              -&gt; win_DeleteDC()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DRAWBITMAP()            -&gt; win_DrawBitmap()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ELLIPSE()               -&gt; win_Ellipse()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDDOC()                -&gt; win_EndDoc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDPAGE()               -&gt; win_EndPage()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENUMFONTS()             -&gt; win_EnumFonts()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_FILLRECT()              -&gt; win_FillRect()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETCHARSIZE()           -&gt; win_GetCharSize()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETDEVICECAPS()         -&gt; win_GetDeviceCaps()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETEXEFILENAME()        -&gt; WIN_GETEXEFILENAME()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETPRINTERFONTNAME()    -&gt; win_GetPrinterFontName()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETTEXTSIZE()           -&gt; win_GetTextSize()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_LINETO()                -&gt; win_LineTo()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_LOADBITMAPFILE()        -&gt; win_LoadBitmapFile()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_MULDIV()                -&gt; win_MulDiv()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_OS_ISWIN9X()            -&gt; WIN_OS_ISWIN9X()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_RECTANGLE()             -&gt; win_Rectangle()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETBKMODE()             -&gt; win_SetBkMode()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETCOLOR()              -&gt; win_SetColor()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETDOCUMENTPROPERTIES() -&gt; win_SetDocumentProperties()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETMAPMODE()            -&gt; win_SetMapMode()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETPEN()                -&gt; win_SetPen()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTDOC()              -&gt; win_StartDoc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTPAGE()             -&gt; win_StartPage()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_TEXTOUT()               -&gt; win_TextOut()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32PRN class                -&gt; WIN_PRN class<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32BMP class                -&gt; WIN_BMP class&nbsp;&nbsp;</li>
+   <li>hbct GPF and wrong RTE messages fixed in:
+      CharAdd(), CharSub(), CharAnd(), CharOr(), CharXor()<br />
+      </li>
+   <li> hbct string optimizations in thrown RTEs.<br />
+      </li>
+   <li> hbziparc fixed &lt;acFiles&gt; behavior if the parameter is not passed.<br />
+      </li>
+   <li> hbhpdf added HPDF_VERSION_TEXT() to replace former macro
+      with the same name.<br />
+      </li>
+   <li> hbhpdf fixed HPDF_SETINFODATEATTR() function.<br />
+      </li>
+   <li> Added experimental terminal server written in Harbour. Find it
+      in /examples.<br />
+      </li>
+   <li> hbgt now properly checks for package version and includes
+      feature accordingly.<br />
+      </li>
+   <li> hbwin added WAPI_GETCOMMANDLINE(), win_GetCommandLineParam(),
+      wapi_GetLastError(), wapi_SetLastError(), wapi_SetErrorMode().<br />
+      </li>
+   <li> hbwhat removed from contrib list and moved to examples instead.<br />
+      </li>
+   <li> xhb OVERRIDE / EXTEND CLASS emulation in xhbcls.ch header. (this feature is there to help xhb compatibility, but can break<br />
+      inheritance scheme and internal class definitions in both
+      compilers)<br />
+      </li>
+   <li> xhb added DBF2TXT() with critical fixes.<br />
+      </li>
+   <li> xhb added HB_REGEXREPLACE().<br />
+      </li>
+   <li> hbwin WINPORTWRITE() GPF when wrong parameter type is passed.<br />
+      </li>
+   <li> Added Darwin/MacPorts support for following contribs:
+      gtalleg, hbmysql, hbpgsql, sddmy, sddpg, hbfimage.</li>
+   <li> hbtpathy now builds on Darwin.</li>
+   <li> xhb disabled dangerous bitop compatibility macros in hbcompat.ch.
+      Enable them with #define XHB_BITOP. Or even better to change code
+      to use HB_BIT*() functions natively.</li>
+   </ul>
+<span class="title"><br />
+Known build issues</span>
+<ul>
+   <li> Windows 64-bit builds may generate a large amount of type
+      conversion warnings. This is currently normal and will be
+      addressed in a future version.</li>
+   <li>Contrib hbfimage won't currently compile on Linux/Darwin
+      systems. This will be addressed in a future version.<br />
+      </li>
+   <li> Contrib hbsqlit3 will not embed foreign sqlite3 library code
+      for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
+      For these compilers you will have to supply sqlite3 library
+      yourself. For other compilers, some warnings are expected and
+      normal in this non-Harbour code.<br />
+   </li>
+   <li> Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
+      won't work.<br />
+   </li>
+   <li> Using Pelles C 6.00.6 in 64-bit mode, there will be
+      missing symbols at link time due to bugs in Pelles C.<br />
+   </li>
+   <li> gtalleg contrib may not compile on all platforms/compilers.<br />
+      </li>
+   <li> hbssl won't work with watcom on win platform due to OpenSSL
+      header compatibility problems. </li>
+   </ul>
+<span><br /><a href="http://sourceforge.net/project/showfiles.php?group_id=681" class="blue_link">To download the Harbour v2.0.0 today, please visit our downloads page.</a></span></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td >&nbsp;</td>
+                   <td align="right"><div align="right"><a href="#top" title="Go top"><img src="images/arrow_up.gif" width="7" height="7" border="0" /></a></div></td>
+                   <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td ><a name="20090517" id="2008081022"></a></td>
+                   <td valign="top"><hr /></td>
+                   <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                     <tr>
+                        <td width="78%" valign="top"><span class="title_text">SourceForge Community Choice Awards!</span><ul>
+                          <li><span class="title_date"><font>May 17, 2009</font></span><font><span class="title"><br />
+                                  <br />
+                            General<br />
+                          </span></font></li>
+                          <li><font> The SourceForge.net, one of the largest repositories of open source applications in the world, organizes every year a vote for the community choose the best projects. It is the SourceForge.net Community Choice Awards. Indication of projects begins on May 6 and will end on 29th. The finalists will be known in June and the list of winners must leave at the end of July at <a href="http://en.oreilly.com/oscon2009" class="blue_link">OSCON</a> event. <br />
+                                <br />
+                            Get involved! Nominate us for the 2009 Community Choice Awards <a href="http://sourceforge.net/community/cca09/nominate/?project_name=Harbour&amp;project_url=http://sourceforge.net/projects/harbour-project/" class="blue_link">here</a>.</font></li>
+                        </ul></td>
+                        <td width="22%" valign="top"><a href="http://sourceforge.net/community/cca09/nominate/?project_name=Harbour&amp;project_url=http://sourceforge.net/projects/harbour-project/"><img src="images/cca_nominate.png" width="151" height="137" border="0" /></a></td>
+                      </tr>
+                    </table></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td align="right"><div align="right"><a href="#top" title="Go top"><img src="images/arrow_up.gif" width="7" height="7" border="0" /></a></div></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td ><a name="20090215" id="20080810222"></a></td>
+                  <td valign="top"><hr /></td>
+                  <td >&nbsp;</td>
+                </tr>
+
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top"><span class="title_text">New website released!</span>
+                      <ul>
+                        <li><span class="title_date"><font>February 15, 2009</font></span><font><span class="title"><br />
+                                <br />
+                          General<br />
+                        </span></font></li>
+                        <li><font>Released the new layout for our site. <br />
+                          This includes details about the project, several examples and will soon include some tutorials.</font></li>
+                      </ul></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td align="right"><div align="right"><a href="#top" title="Go top"><img src="images/arrow_up.gif" width="7" height="7" border="0" /></a></div></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td ><a name="20080917" id="200808102"></a></td>
+                  <td valign="top"><hr /></td>
+                  <td >&nbsp;</td>
+                </tr>
+
+                <tr>
+                  <td >&nbsp;</td>
+                  <td valign="top"><span class="title_text">Released 1.0.1</span>
+                    <ul>
+                      <li><span class="title_date"><font>September 17, 2008</font></span><font><span class="title"><br />
+                              <br />
+                        General<br />
+                      </span></li>
+                      <li>Build configuration changes:<br />
+                        - PRG_USR             -&gt; HB_USER_PRGFLAGS<br />
+                        - C_USR               -&gt; HB_USER_CFLAGS<br />
+                        - L_USR               -&gt; HB_USER_LDFLAGS<br />
+                        - A_USR               -&gt; HB_USER_AFLAGS<br />
+                        - MK_USR              -&gt; HB_USER_MAKEFLAGS<br />
+                        - HB_ARCHITECTURE=w32 -&gt; HB_ARCHITECTURE=win<br />
+                        </li>
+                      <li> GNU-make system revised to give optimal support -j&lt;n&gt;
+                        multi-threaded parallel builds, which can dramatically
+                        increase build speed in multi-core/multi-CPU systems.<br />
+                        </li>
+                      <li> HB_WINCE          -&gt; HB_OS_WIN_CE<br />
+                        </li>
+                      <li> HB_OS_WIN_32_USED -&gt; HB_OS_WIN_USED<br />
+                        </li>
+                      <li> HB_OS_WIN_32      -&gt; HB_OS_WIN<br />
+                        </li>
+                      <li> Cleaned references of '32' in context of Windows and
+                        Windows API.<br />
+                        </li>
+                      <li> New macro names introduced:<br />
+                                                - SUCCESS -&gt; HB_SUCCESS<br />
+                        - FAILURE -&gt; HB_FAILURE<br />
+                        - ERRCODE -&gt; HB_ERRCODE<br />
+                        (old ones still work for compatibility, but please<br />
+                        switch your code to use the new ones)<br />
+                        </li>
+                      <li> Fixed dynamic library creation on Solaris OSes.<br />
+                        </li>
+                      <li> hbrun will now open .dbf files when passed on the command line.<br />
+                        </li>
+                      <li> Added web-server written in Harbour: uHTTPD<br />
+                        </li>
+                      <li> POCC WinCE builds are now supported.<br />
+                         </li>
+                      <li>Open Watcom 1.8 (RC3) compiler is now supported.<br />
+                        </li>
+                      <li> Removed HB_LEGACY_LEVEL support.<br />
+                        </li>
+                      <li> #define HB_FM_WIN32_ALLOC renamed to HB_FM_WIN_ALLOC.<br />
+                        </li>
+                      <li><span> Protected incompatible changes with HB_LEGACY_LEVEL2.<br />
+                        (HB_SUCCESS, HB_FAILURE, HB_ERRCODE, HB_WINCE, HB_OS_WIN_32*,
+                        __RDDGETTEMPALIAS(), __HRB*())<br />
+                        These features are still available, and will be removed
+                        in next major version (Harbour 1.2). To test your code for
+                        compatibility, you can turn it off manually by #defining
+                        HB_LEGACY_OFF. (HB_USER_CFLAGS=-DHB_LEGACY_OFF)</span><br />
+                      </li>
+                      </ul>
+                    <span class="title"><br />
+                      Core</span>
+                    <ul>
+                      <li> Added MT (Multi thread) support.<br />
+                        </li>
+                      <li> Added complete i18n support with API and tool to compile .po
+                        files (hbi18n).<br />
+                        </li>
+                      <li> Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.<br />
+                        </li>
+                      <li> Fixed to not use C RTL CP dependent character functions in Harbour code. (IsLower(), toupper(), etc). Added new macros instead.<br />
+                        </li>
+                      <li> __natIsNegative() and __NATISAFFIRM() are now using
+                        CP sensitive case conversion.<br />
+                        </li>
+                      <li> Added hb_charIsUpper()/hb_charIsLower() APIs.<br />
+                        </li>
+                      <li> CurDrive() and DISKNAME() fixed for systems that don't support
+                        drive letters.<br />
+                        </li>
+                      <li> Xbase++ compatible TBrowse()/TBColumn()/Get() related methods<br />
+                        moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().<br />
+                        </li>
+                      <li> Fixed potential GPF in hb_RAScan().<br />
+                        </li>
+                      <li> Debugger improvements and fixes.<br />
+                        </li>
+                      <li> Most Harbour level code prepared for MT.<br />
+                        </li>
+                      <li> Fixed few potential GPFs in RDDNTX, RDDCDX code.<br />
+                        </li>
+                      <li> Added own hb_snprintf() implementation.<br />
+                        </li>
+                      <li> Fixed HB_VERSION( HB_VERSION_BUILD_DATE )<br />
+                        </li>
+                      <li>- dded hbuddall library holding all core supplied user RDDs.<br />
+                        </li>
+                      <li> Fixed to successfully build all user RDD examples.<br />
+                        </li>
+                      <li> Fixed dbCreate() behaviour in arrayrdd user RDD.<br />
+                        </li>
+                      <li> Added new LOGRDD user RDD.<br />
+                        </li>
+                      <li> Added DBFNSX RDD.<br />
+                        </li>
+                      <li> Fixed FWRITE() potential GPF and security hole.<br />
+                        </li>
+                      <li> Added __FILE__ support for .prg code.<br />
+                        </li>
+                      <li> Added:<br />
+                        - hb_MilliSeconds()<br />
+                        - hb_FTempCreateEx( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
+                        - hb_StrDecodEscape( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
+                        - hb_StrCDecode( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
+                        - hb_StrXor( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
+                        - hb_ProgName() -&gt; &lt;cProgramNameWithPath&gt;<br />
+                        - hb_DispOutAtBox() similar to hb_DispOutAt() but for drawing chars.<br />
+                        - hb_FGetAttr( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_FSetAttr( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_FSetDateTime( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;] ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_WildMatchI() like hb_WildMatch() but case-insentitive.<br />
+                        - hb_cdpSelect() same as hb_SetCodepage() (please upgrade to new function name).<br />
+                        - hb_cdpUniID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
+                        - hb_gtInfo( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
+                        </li>
+                      <li>Fixed UNSELECTED color updating in SetColor().<br />
+                        </li>
+                      <li> GTWVT, GTWIN HB_GTI_CODEPAGE support.<br />
+                        </li>
+                      <li> GTWVT now supports drawing chars even if the selected codepage doesn't support them.<br />
+                        </li>
+                      <li> GTWVT HB_GTI_BOXCP support.<br />
+                        </li>
+                      <li> Fixed TBROWSE() to display drawing chars properly.<br />
+                        </li>
+                      <li> Fixed DISKSPACE() and HB_DISKSPACE() to return proper values
+                        on Darwin.<br />
+                        </li>
+                      <li> Fixed DIRECTORY() when called with &quot;V&quot; (label) parameter (on Windows).<br />
+                        </li>
+                      <li> New HB_SIZEOFARRAY() macro.<br />
+                        </li>
+                      <li> Added C APIs:
+                        hb_charIsDigit(), hb_charIsAlpha(), hb_charIsLower(), hb_charIsUpper()<br />
+                        </li>
+                      <li> Added support to specify OS codepage:<br />
+                        Set( _SET_OSCODEPAGE[, &lt;cCPID&gt; ] ) -&gt; &lt;cOldCPID&gt;<br />
+                        C level: hb_setGetOSCODEPAGE()<br />
+                        Conversion is done automatically in existing functions.<br />
+                        </li>
+                      <li> Added hb_osDecode(), hb_osEncode() C APIs.<br />
+                        </li>
+                      <li> hb_GetEnv() extended with 3rd parameter to control OS codepage conversion (on by default).<br />
+                        </li>
+                      <li> Added CPU dump support for AMD64/x64.<br />
+                        </li>
+                      <li> Added module listing on GPF for x86 and x64.<br />
+                        </li>
+                      <li> GTXWC potential GPF fixed.<br />
+                        </li>
+                      <li> Added process handling:
+                        hb_processOpen(), hb_processValue(), hb_processClose()<br />
+                        </li>
+                      <li> Added HB_GTI_BOXCP to control box drawing CP for GTs.<br />
+                        </li>
+                      <li> Using Heap instead of Local memory when HB_FM_WIN32_ALLOC is set.<br />
+                        </li>
+                      <li> Added __objHasMsgAssigned( object, &quot;msgName&quot; )<br />
+                        </li>
+                      <li> File find API fixes for OS/2.<br />
+                        </li>
+                      <li> DBOI_BAGNAME made compatible for RDDCDX, RDDNSX.<br />
+                        </li>
+                      <li> Added Intel C compiler and Wine detection.<br />
+                        </li>
+                      <li> Codepage fixes and cleanups (BGMIK).<br />
+                        </li>
+                      <li> Fixed cursor handling in TEDITOR/MemoEdit().<br />
+                        </li>
+                      <li> Now GTXWC generates HB_K_RESIZE on resize.<br />
+                        </li>
+                      <li> GTWIN fixed HB_GTI_KBDSHIFTS handling.<br />
+                        </li>
+                      <li> GTWVT added 'layered window' support (always enabled, except
+                        when in Terminal mode).<br />
+                        </li>
+                      <li> New compiler expression optimizations, and some fixes for rare
+                        cases.<br />
+                        </li>
+                      <li> Some compiler optimizations are now enabled using new -ko switch.<br />
+                        </li>
+                      <li> Added array preallocation on AAdd().<br />
+                        </li>
+                      <li> Optimization to string reallocation.<br />
+                        </li>
+                      <li> Added detection of unused variable assigments. Code cleaned
+                        in all Harbour for such warnings.<br />
+                        </li>
+                      <li> Fixed possible problem with _SET_PRINTFILE, _SET_DEFAULT, _SET_EXTRAFILE.<br />
+                        </li>
+                      <li> __HRB*() functions marked as compatibility, please update your
+                        code to use HB_HRB*().<br />
+                        </li>
+                      <li> __RDDGETTEMPALIAS() marked as compatibility, please update your
+                        code to use hb_rddGetTempAlias().</li>
+                      </ul>
+                      <br />
+                      <font><span class="title">Contrib</span></font>
+                      <ul>
+                      <li>hbmzip fixed GPF in hb_zipDeleteFile() when file has comment.<br />
+                        </li>
+                      <li> hbmzip fixed handling attributes in hb_zipFileCreate().<br />
+                         </li>
+                      <li>hbmzip fixed timestamps stored in .zip files.<br />
+                        </li>
+                      <li> hbmzip added HB_ZIPSTOREFILEHANDLE(),hb_unzipExtractCurrentFileToHandle() functions.<br />
+                        </li>
+                      <li> hbwin win_regRead()/GetRegistry() got new parameter to supply
+                        a default value when the entry isn't found.<br />
+                        </li>
+                      <li> hbtip FTP handling fixed some accidental typos.<br />
+                        </li>
+                      <li> hbtip new MIME types.<br />
+                        </li>
+                      <li> hbtip fixes and optimization to HB_BASE64().<br />
+                        </li>
+                      <li> rddads now autodetects version 9.10.<br />
+                        </li>
+                      <li> hbct XToC(), FToC() and CTOF() fixed to be properly multiplatform.<br />
+                        </li>
+                      <li> hbct unbuffered drawing speed improvement in windowing code.<br />
+                         </li>
+                      <li>hbct DirName() fixed.<br />
+                        </li>
+                      <li> hbct other fixes.<br />
+                        </li>
+                      <li> Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
+                        to contribs.<br />
+                        </li>
+                      <li> hbct windowing extended with new low level API, better shadow
+                        handling.<br />
+                        </li>
+                      <li> gtwvg improvements. Xbase++ compatible UI objects.<br />
+                        </li>
+                      <li> hbw32 library renamed to hbwin.<br />
+                        </li>
+                      <li> hbwin added WIN_ABORTDOC(), win_RunDetached(), WIN_SHELLEXECUTE(),
+                        win_LoadResource().<br />
+                        </li>
+                      <li> dbu patch now adds SET DATE ANSI and SET CENTURY ON.<br />
+                        </li>
+                      <li> hbwin win_MulDiv(), win_Rectangle(), win_SetBkMode() extended to
+                        accept handles passed using alternate methods.<br />
+                        </li>
+                      <li> hbwin function names changed as below:<br />
+                        - W32_REGPATHSPLIT()            -&gt; win_regPathSplit()<br />
+                        - W32_REGREAD()                 -&gt; win_regRead()<br />
+                        - W32_REGWRITE()                -&gt; win_regWrite()<br />
+                        - WIN32_REGCREATEKEYEX()        -&gt; win_regCreateKeyEx()<br />
+                        - WIN32_REGOPENKEYEX()          -&gt; win_regOpenKeyEx()<br />
+                        - WIN32_REGQUERYVALUEEX()       -&gt; win_regQueryValueEx()<br />
+                        - WIN32_REGSETVALUEEX()         -&gt; win_regSetValueEx()<br />
+                        - WIN32_REGCLOSEKEY()           -&gt; win_regCloseKey()<br />
+                        - WIN32_ARC()                   -&gt; win_Arc()<br />
+                        - WIN32_BITMAPSOK()             -&gt; win_BitmapsOK()<br />
+                        - WIN32_CREATEDC()              -&gt; win_CreateDC()<br />
+                        - WIN32_CREATEFONT()            -&gt; win_CreateFont()<br />
+                        - WIN32_DELETEDC()              -&gt; win_DeleteDC()<br />
+                        - WIN32_DRAWBITMAP()            -&gt; win_DrawBitmap()<br />
+                        - WIN32_ELLIPSE()               -&gt; win_Ellipse()<br />
+                        - WIN32_ENDDOC()                -&gt; win_EndDoc()<br />
+                        - WIN32_ENDPAGE()               -&gt; win_EndPage()<br />
+                        - WIN32_ENUMFONTS()             -&gt; win_EnumFonts()<br />
+                        - WIN32_FILLRECT()              -&gt; win_FillRect()<br />
+                        - WIN32_GETCHARSIZE()           -&gt; win_GetCharSize()<br />
+                        - WIN32_GETDEVICECAPS()         -&gt; win_GetDeviceCaps()<br />
+                        - WIN32_GETEXEFILENAME()        -&gt; WIN_GETEXEFILENAME()<br />
+                        - WIN32_GETPRINTERFONTNAME()    -&gt; win_GetPrinterFontName()<br />
+                        - WIN32_GETTEXTSIZE()           -&gt; win_GetTextSize()<br />
+                        - WIN32_LINETO()                -&gt; win_LineTo()<br />
+                        - WIN32_LOADBITMAPFILE()        -&gt; win_LoadBitmapFile()<br />
+                        - WIN32_MULDIV()                -&gt; win_MulDiv()<br />
+                        - WIN32_OS_ISWIN9X()            -&gt; WIN_OS_ISWIN9X()<br />
+                        - WIN32_RECTANGLE()             -&gt; win_Rectangle()<br />
+                        - WIN32_SETBKMODE()             -&gt; win_SetBkMode()<br />
+                        - WIN32_SETCOLOR()              -&gt; win_SetColor()<br />
+                        - WIN32_SETDOCUMENTPROPERTIES() -&gt; win_SetDocumentProperties()<br />
+                        - WIN32_SETMAPMODE()            -&gt; win_SetMapMode()<br />
+                        - WIN32_SETPEN()                -&gt; win_SetPen()<br />
+                        - WIN32_STARTDOC()              -&gt; win_StartDoc()<br />
+                        - WIN32_STARTPAGE()             -&gt; win_StartPage()<br />
+                        - WIN32_TEXTOUT()               -&gt; win_TextOut()<br />
+                        - WIN32PRN class                -&gt; WIN_PRN class<br />
+                        - WIN32BMP class                -&gt; WIN_BMP class<br />
+                        </li>
+                      <li> hbct GPF and wrong RTE message fixed in:
+                        CharAdd(), CharSub(), CharAnd(), CharOr(), CharXor()<br />
+                        </li>
+                      <li> hbct string optimizations in thrown RTEs.<br />
+                        </li>
+                      <li> hbziparc fixed &lt;acFiles&gt; behavior if the parameter is not passed.<br />
+                        </li>
+                      <li> hbhpdf added HPDF_VERSION_TEXT() to replace former macro with the same name.</li>
+                      <li> hbhpdf fixed HPDF_SETINFODATEATTR() function.<br />
+                      </li>
+                      </ul><font><span class="title"><br />
+                      Known build issues</span></font>
+                      <ul>
+                      <li> Windows 64-bit builds may generate a large amount of type
+                        conversion warnings. This is currently normal and will be
+                        addressed in a future version.</li>
+                      <li> Contrib hbsqlit3 will not embed foreign sqlite3 library code
+                        for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems.
+                        For these compilers you will have to supply sqlite3 library
+                        yourself. For other compilers, some warnings are expected and
+                        normal in this non-Harbour code.</li>
+                      <li> Using Pelles C 5.00.1 in 64-bit mode, HB_INET*() functions
+                        won't work.<br />
+                        </li>
+                      <li> gtalleg, hbwhat contrib may not compile on all platforms/compilers.<br />
+                        </li>
+                      <li> hbcurl won't build when using DMC and libcurl 7.19.0.
+                        Earlier versions build okay.</li>
+                      </ul></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                  <td >&nbsp;</td>
+                  <td align="right"><div align="right"><a href="#top" title="Go top"><img src="images/arrow_up.gif" width="7" height="7" border="0" /></a></div></td>
+                  <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td >&nbsp;</td>
+                   <td valign="top"><hr /></td>
+                   <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td >&nbsp;</td>
+                   <td valign="top"><span class="title_text">Looking for more news? </span><br />
+                      <span class="title_date"><a href="news1.html" class="blue_link">Click here for   news archive...</a></span></td>
+                   <td >&nbsp;</td>
+                </tr>
+                <tr>
+                   <td >&nbsp;</td>
+                   <td valign="top">&nbsp;</td>
+                   <td >&nbsp;</td>
+                </tr>
+                </table></td>
+          </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" background="images/footer.gif"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="33%" class="footer"><a href="/" class="whitelink">Copyright © 1999-<script type="text/javascript">copyright_year()</script> The Harbour Project.</a></td>
+            <td width="33%" class="footer"><div align="center"><a href="legalnotes.html" class="whitelink">Terms of Service</a> | <a href="contact.html" class="whitelink">Contact Us</a></div></td>
+            <td width="33%" class="footer"><div align="right">Design
+              by <a href="mailto: vailtom@gmail.com" class="whitelink">Vailton Renato</a> </div>
+                <div align="right"></div></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

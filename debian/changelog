@@ -1,0 +1,64 @@
+harbour (3.2.0-1) unstable; urgency=low
+
+  * 3.2.0-1
+
+ -- Viktor Szakats <harbour___@syenar.net>  Wed, 25 Apr 2012 14:04:00 +0200
+
+harbour (3.1.0-1) unstable; urgency=low
+
+  * 3.1.0-1
+  * removed HB_BUILD_DEBUG=yes
+  * use 'dh_prep' instead of deprecated 'dh_clean -k'
+
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Wed, 07 Dec 2011 08:34:30 +0200
+
+harbour (3.0.0-1) unstable; urgency=low
+
+  * 3.0.0-1
+
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Sun, 17 Jul 2011 22:00:00 +0100
+
+harbour (2.0.0-1) unstable; urgency=low
+
+  * 2.0.0-1
+
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Tue, 22 Dec 2009 18:54:00 +0200
+
+harbour (2.0.0beta3-1) unstable; urgency=low
+
+  * 2.0.0beta3-1
+
+ -- Przemyslaw Czerpak <druzus@priv.onet.pl>  Mon, 12 Oct 2009 01:02:03 +0200
+
+harbour (2.0.0beta1-1) unstable; urgency=low
+
+  * 2.0.0beta1-1
+
+ -- Viktor Szakats <harbour___@syenar.net>  Wed, 10 Jun 2009 16:40:15 +0200
+
+harbour (1.0.1-1) unstable; urgency=low
+
+  * Please see NEWS
+
+ -- Viktor Szakats <harbour___@syenar.net>  Tue, 16 Sep 2008 14:54:38 +0200
+
+harbour (1.0.0-1) unstable; urgency=low
+
+  * Lot of new stuff see changelog
+
+ -- guy.roussin <guy.roussin@teledetection.fr>  Mon, 28 Jul 2008 15:40:38 +0200
+
+harbour (0.45.0-0.1) unstable; urgency=low
+
+  * NMU
+  * New upstream release.
+  * Bump to Standards-Version 3.6.2.
+  * Drop gcc-3.3 build-dep.
+
+ -- Clint Adams <schizo@debian.org>  Thu, 18 May 2006 14:43:11 -0400
+
+harbour (0.44-1) unstable; urgency=low
+
+  * Initial Release (closes: Bug#251486).
+
+ -- Luis Mayoral <mayoral@linuxadicto.org>  Sun, 05 Sep 2004 14:33:19 +0200

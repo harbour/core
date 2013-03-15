@@ -1,0 +1,859 @@
+/*
+ * $Id$
+ */
+
+/*
+ * whatsnew.txt
+ * This doc used to contain what's new in GTWVW since the last release.
+ * Now it serves as a change log. Any changes to GTWVW should be listed
+ * in this doc.
+ *
+ * NOTES:
+ * Dates in this doc are dates of changes, not CVS commit dates.
+ * For some reasons the date of changes are sometimes [largely] different
+ * with the date of commiting to CVS.
+ *
+ * Budyanto Dj. <budyanto@centrin.net.id>
+ */
+
+2007-09-21 23:30 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+    ! WM_HSCROLL and WM_VSCROLL should be controlled by bTopMost || s_bAllowNonTop,
+      not by hb_wvw_gtAcceptingInput(). This may cause problem if WVW_SETFOCUS interferes.
+      Fixed.
+    ! wvw_ebCreate() :: do NOT use ES_OEMCONVERT by default
+
+2007-05-29 09:45 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/samples/wvwtest9.prg
+    Replace some typo wvt_* with wvw_*.
+
+2007-05-25 23:00 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  + contrib/gtwvw/samples/ebtest7.prg
+    * sample on how to organize editboxes in commands similar to @..GET
+      This sample uses some code from Minigui for masking input in editbox.
+  * contrib/gtwvw/doc/whatsnew.txt
+    * note this change
+
+2007-05-24 10:00 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/hbgtwvw.h
+    + uiBusy in control_data to keep track on how many times a codeblock
+      is executed recursively.
+    + some constants for EDITBOX
+
+  * contrib/gtwvw/gtwvw.c
+    ! Fix wrong handling of HB_ITEM causing memory leak, for the following functions:
+      HB_FUNC( WVW_CLIENTTOSCREEN )
+      HB_FUNC( WVW_GETXYFROMROWCOL )
+      HB_FUNC( WVW_GETROWCOLFROMXY )
+      HB_FUNC( WVW_GETFONTINFO )
+      HB_FUNC( WVW_GETPALETTE )
+      HB_FUNC( WVW_SAVESCREEN )
+      HB_FUNC( WVW_GETCURSORPOS )
+      HB_FUNC( WVW_GETPAINTRECT )
+      HB_FUNC( WVW_XBINFO )
+      HB_FUNC( WIN_GETCLIENTRECT )
+      Thanks to Pritpal Bedi for noticing these errors.
+
+    + support native EDITBOX
+      wvw_ebCreate()
+      wvw_ebDestroy()
+      wvw_ebSetFocus()
+      wvw_ebIsFocused()
+      wvw_ebEnable()
+      wvw_ebEditable()
+      wvw_ebSetCodeblock()
+      wvw_ebSetFont()
+      wvw_ebIsMultiline()
+      wvw_ebGetText()
+      wvw_ebSetText()
+      wvw_ebGetSel()
+      wvw_ebSetSel()
+      Note that SETKEY is still in effect during editbox editing,
+      thus this editbox is expected to be able to replace standard @..GET
+      (or MemoLine() if it is multiline editbox).
+      I have also tested that a proper editbox callback can be written to
+      handle masked input as in @...GET..PICTURE..
+
+    + wvw_pbIsFocused()
+
+    + wvw_AllowNonTopEvent()
+      To set whether control's codeblock is allowed to be executed from
+      non topmost window.
+      (default is FALSE, the old behaviour)
+
+    + wvw_RecurseCBlock()
+      To set whether control's codeblock is allowed to do recursive action.
+      (default is FALSE, the old behaviour)
+
+  * contrib/gtwvw/doc/whatsnew.txt
+    * notes on changes applied.
+
+
+2006-07-25 18:15 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/hbgtwvw.h
+  * contrib/gtwvw/gtwvw.c
+    * Revert Fransesco's last change, restore the old behaviour of ALT+C.
+      This is a temporary solution until hb_gtHandleClose() is fixed.
+      Fransesco, I hope you don't mind.
+    * hb_wvw_gtDrawImage()
+      Rewritten. Now supports displaying transparent image if
+      bTransp parameter is TRUE.
+    * hb_wvw_gtRenderPicture()
+      Modified to support displaying transparent image if
+      bTransp parameter is TRUE.
+    * HB_FUNC( WVW_DRAWIMAGE )
+      Added lTransp optional parameter.
+      Supports displaying images with proportional height/width ratio.
+    + .prg callable wvw_SetMaxBMCache()
+      This is to get/set maximum number of bitmap cache for WVW_DRAWIMAGE.
+    + .prg callable wvw_NumBMCache()
+      This is to get current number of bitmap cached by WVW_DRAWIMAGE.
+  * contrib/gtwvw/doc/whatsnew.txt
+    * notes about this change.
+  + contrib/gtwvw/samples/drawimg.prg
+  + contrib/gtwvw/samples/wutil.prg
+  + contrib/gtwvw/samples/wutil.ch
+    * A sample about this new feature.
+
+    Notes on wvw_DrawImage()
+    /*
+       (1) Transparency
+       if bTransparent is .t., top-left pixel is used as the transparent color,
+
+       (2) Image dimension
+       if nBottom is NIL, then image height will be proportional to original image.
+       if nRight  is NIL, then image width will be proportional to original image.
+       if nBottom and nRight are BOTH NIL then original image dimension is used
+
+       (3) Caching
+       This function will now CACHE the image.
+       See also wvw_SetMaxBMCache() and wvw_NumBMCache()
+     */
+
+
+2006-06-16 23:20 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+    * Added the long forgotten sixth parameter of wvw_DrawBoxRaised().
+
+2006-01-19 23:25 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+  * contrib/gtwvw/doc/whatsnew.txt
+  * contrib/wvtgui/wvtcore.c
+    ! Fixed resources leak in wv*_drawline() and wv*_drawoutline().
+      Reported and tested by Lajos Mihalffy on gtwvw.
+
+2005-10-31 23:55 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+    * wvw_pbCreate() now support bitmap on buttons.
+    ! wvw_pbSetFocus() and wvw_cbSetFocus() was always returning .f., fixed.
+
+2005-10-19 18:00 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/hbgtwvw.h
+    + include "hbstack.h"
+
+  * contrib/gtwvw/gtwvw.c
+    + #define HB_NO_DEFAULT_API_MACROS
+    ! replace &HB_VM_STACK.Return with hb_stackReturnItem()
+
+
+2005-10-18 09:55 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+    ! Typo fixed in gt_VertLine() causing incorrect DispBox() in MainCoord mode
+  * contrib/gtwvw/doc/whatsnew.txt
+    * change recorded
+
+2005-10-06 09:20 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/hbgtwvw.h
+  * contrib/gtwvw/gtwvw.c
+    ! Fixed all callback calls to use hb_vmPushState()/hb_vmPopState().
+    * Applying the proper codeblock handling, as suggested by Przemek.
+      As a side effect, I rename GLOBAL_DATA member cbFunc/cbFuncModal
+      into pcbFunc/pcbFuncModal. They now store pointer to codeblock,
+      not the codeblock itself.
+      The same thing with CONTROL_DATA's hiCodeBlock --> phiCodeBlock.
+
+=========================================================================
+2005-08-30 23:45 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id> :: BEGIN
+
+=============
+MAXIMIZE MODE
+=============
+   Gtwvw now allows its`windows to be in MAXIMIZED mode.
+   Please notice, however, that there are some things need to be addressed when
+   implementing this mode.
+
+   To implement this mode, app should have a special callback function WVW_SIZE.
+   This function is called by Gtwvw AFTER a window size is changed, as when the
+   window is maximized or restored.
+
+   See the sample prog doc/maximize.prg on how to apply a simple WVW_SIZE function.
+
+   Some new/modified supporting functions in this area of interest:
+
+   + wvw_UnreachedBr( [nWinNum], [nBottomPixels], [nRightPixels] )
+     get unreached pixels below MaxRow() to nBottomPixels
+     and on the right of maxcols() to nRightPixels.
+
+   + wvw_MaxMaxRow() : returns maximum possible MaxRow()
+
+   + wvw_MaxMaxCol() : returns maximum possible MaxCol()
+
+   * wvw_Maximize()
+     ! This function now really maximizes the window, provided
+       user has the WVW_SIZE function.
+       (This is different with gtwvt's WVT_MAXIMIZE which really does a RESTORE).
+
+   + wvw_Restore()
+     * Restores a window
+
+   + wvw_EnableMaximize()
+     * Enables the Maximize/Restore button.
+
+
+==================
+WINDOW POSITIONING
+==================
+
+   Some new functions regarding window positioning:
+
+   + wvw_SetDefCentreWindow() to change default CentreWindow setting.
+     CentreWindow==.t. will cause subsequent opened windows be centered vertically and horizontally.
+
+   + wvw_SetDefHCentreWindow() to change default HCentreWindow setting.
+     HCentreWindow==.t. will cause subsequent opened windows be centered horizontally.
+
+   + wvw_SetDefVCentreWindow() to change default VCentreWindow setting.
+     VCentreWindow==.t. will cause subsequent opened windows be centered vertically.
+
+   * wvw_XReposWindow() now has an optional param lAnchored (default is .t.).
+     If it's .f. then subwindows will be positioned according to each CentreWindow setting.
+
+   /*
+   DefCentreWindow, DefHCentreWindow, DefVCentreWindow are default setting used when opening a new subwindow.
+   if DefCentreWindow == .t.
+      newly open subwindow will be placed centered both vertically and horizontally in respect to Main Window
+   else
+      if DefHCentreWindow == .t.
+         newly open subwindow will be horizontally centered in respect to Main Window
+      endif
+      if DefVCentreWindow == .t.
+         newly open subwindow will be vertically centered in respect to Main Window
+      endif
+   endif
+   */
+
+
+=========
+SCROLLBAR
+=========
+
+   Some changes regarding scrollbar:
+   ! fix problem of missed WM_LBUTTONUP causing "sticky" scrollbar
+   ! if "sticky" scrollbar still occurs, WM_CHAR will stop it
+   ! etc.
+
+   + wvw_xbInfo( [nWinNum], XBid )
+     return an array {nMin, nMax, nPageSize, nPos, nTrackPos } of scrollbar XBid
+     return an empty array {} if invalid parameter passed.
+
+   * WM_RBUTTON* on scrollbar is now disabled.
+
+
+========
+COMBOBOX
+========
+
+   * all arrow keys are now passed to parent window,
+     regardless of Ctrl, Alt, and Shift states.
+     (only in WVW_CB_KBD_CLIPPER)
+
+
+=============
+MISCELLANEOUS
+=============
+
+   * wvw_DrawLabelObj() added aOffset optional parm
+
+   * gtWndProc handles unreached area "better"
+     will repaint it on MaxCol()/MaxRow() event
+
+   * WM_CLOSE on Main Window is now followed by K_ESC,
+     thus in a case where SetCancel() is .f. an app can still handle this event.
+
+2005-08-30 23:45 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id> :: END
+=========================================================================
+
+2005-08-01 23:15 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+  * contrib/gtwvw/gtwvw.c
+  * source/rtl/gtwvt/gtwvt.c
+    ! Fix resource leak in gtResetWindowSize(). A severe bug for Win98.
+
+2005-07-22 14:20 UTC-0300 Luiz Rafael Culik<culikr at uol.com.br>
+  * source/rtl/gtwvt/gtwvt.c
+    contrib/gtwvw/gtwvt.c
+    contrib/wvtwin/wvtcore.c
+    contrib/wvtwin/wvtutils.c
+    ! all Windows structures like RECT/POINT/LOGFONT/LOGBRUSH now are initialized to an empty structure.
+
+2005-06-30 23:10 UTC+0700 Budyanto Dj. <budyanto@centrin.net.id>
+ * contrib/gtwvw/gtwvw.c
+   ! Fix calculation of iNextPos in hb_wvw_gtAddCharToInputQueue()
+     and hb_wvw_gtGetCharFromInputQueue(). Resolves problem
+     reported of lost input characters.
+     Many Thanks to Peter Rees.
+
+2005-06-19
+ * gtwvw.c
+   + wvw_xbShow() to show/hide scrollbar, code by Julio Cesar Cantillo Molina.
+
+2005-04-27
+ * hbgtwvw.h
+ * gtwvw.c
+   + hb_wvw_gtSetLastMenuEvent()
+   + wvw_SetLastMenuEvent() callable from .prg
+
+2005-04-18:
+ * gtwvw.c
+   ! hb_wvw_gtSetFont() gave wrong return value when it failed.
+
+2005-04-07:
+ * gtwvw.c
+   ! bugfix:: gt_Puts(): truncate a too long string in case of MainCoord Mode.
+
+2005-03-31 04:10 UTC+0700 Andi Jahja <xharbour@cbn.net.id>
+  * contrib/gtwvw/hbgtwvw.h
+    ! minor modification for __DMC__
+
+2005-02-27 21:10 UTC+0700 Andi Jahja <xharbour@cbn.net.id>
+  * contrib/gtwvw/gtwvw.c
+    * some files i overlooked for the recent changes
+    (
+    * move initialization for __DMC__ to hbinit.h
+    + HB_CPP_STARTUP, to write initialization of CPP the common way
+    + HB_MSC_STARTUP, to write initialization of MSVC the current way
+    )
+
+2005-02-24:
+  * contrib/gtwvw/hbgtwvw.h
+  * contrib/gtwvw/gtwvw.c
+    * changes to enable compilation with DigitalMars C++ (aka
+      Symantec C++ : http://www.digitalmars.com). Was abandoned
+      by Symantec some time ago and enjoy further development
+      from DigitalMars. It is another speedy compiler for xHarbour.
+
+2005-02-22:
+ Changes by Andi Jahja:
+ * gtwvw.c
+   * initialization in var declaration, to avoid warnings.
+
+2005-02-20:
+ Changes by Andi Jahja:
+ * gtwvw.c
+   + #include <conio.h> for WATCOMC compiler
+   - PackedDibGetColorTablePtr  , unused function
+   - PackedDibGetColorTableEntry, unused function
+   - gt_xPutch, unused function
+   * hb_Inp9x, hb_Outp9x: XCC, WATCOMC, MINGW32 compiler support
+   * gt_Tone: WATCOMC, MINGW32 compiler support
+ * hbgtwvw.h:
+   * changes required by some C compilers
+
+2005-01-14
+  + contrib/gtwvw/samples/cbtest1.prg
+  + contrib/gtwvw/samples/cbtest2.prg
+    * Samples on how to use GTWVW combobox.
+
+ 2005-01-13:
+ * gtwvw.c
+   + wvw_cbIsDropped() new function
+   ! hb_wvw_gtCBProc(): Handle ALT-F4 to avoid GPF if it is pressed when CB on focus
+
+ 2005-01-13:
+ * gtwvw.c
+    ! Fixed a hidden bug:
+      HB_GT_FUNC( mouse_SetPos ) was using X for row, and Y for col (!).
+
+ 2005-01-12:
+ * gtwvw.c
+ * hbgtwvw.h
+   * Many type castings by Andi Jahja to allow GTWVW to be compiled in
+     MSVC/OW/PellesC/XCC/MinGW32. Thanks!!!
+
+ 2004-12-31:
+ * gtwvw.c
+   Sync with =Id: gtwvt.c,v 1.140 2004-12-28 20:32:33 ptsarenko Exp =
+    * use CF_OEMTEXT parameter for clipboard functions for OEM charsets
+      by Pavel Tsarenko.
+
+ 2004-12-23:
+ * gtwvw.c
+   ! HB_FUNC( WVW_SETICON ) should pass hb_parc(3) instead of hb_parcx(3) to
+     hb_wvw_gtSetWindowIcon() in order to allow proper NULL checking there.
+     (hb_parcx(3) never returns NULL, even if param 3 is NIL.
+
+ 2004-12-22:
+ Combobox (dropdown listbox) is introduced.
+ This feature is accessible throug the WVW_CB* functions.
+ (See IMPORTANT NOTES below regarding wvw_cbAddString() and wvw_CBSetCurSel())
+
+ Side Effects:
+ * WVW_ID_BASE_PUSHBUTTON is now 64000 (was 65000).
+   It means we may not have Menu Id >= 64000 now.
+
+ New .prg callable Functions: (combobox functions):
+ + wvw_cbCreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
+                            nReserved, nKbdType, aOffset)
+ + wvw_cbDestroy( [nWinNum], nCBid )
+ + wvw_cbSetFocus( [nWinNum], nComboId )
+ + wvw_cbIsFocused( [nWinNum], nComboId )
+ + wvw_cbEnable( [nWinNum], nComboId, [lEnable] )
+ + wvw_cbSetCodeblock( [nWinNum], nCBid, bBlock )
+ + wvw_cbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+                            lItalic, lUnderline, lStrikeout
+ + wvw_cbSetIndex( [nWinNum], nCBid, nIndex )
+ + wvw_cbGetIndex( [nWinNum], nCBid )
+ + wvw_cbFindString( [nWinNum], nCBid, cString )
+ + wvw_cbGetCurText( [nWinNum], nCBid )
+
+ IMPORTANT NOTICE:
+ * wvw_cbAddString() and wvw_CBSetCurSel() are NOT part of the above WVW_CB* functions family.
+   These two functions are adopted from gtwvt (long time ago), and I keep these names to
+   keep gtwvw's "historical links" to gtwvt unbroken.
+
+ TODO:
+ Create a sample of how to integrate combobox into regular GET system.
+
+ 2004-11-25:
+ Synchronizing with:
+ =Id: hbgtwvt.h,v 1.32 2004-11-23 17:04:20 lf_sfnet Exp =
+ =Id: gtwvt.c,v 1.138 2004-11-25 01:54:13 guerra000 Exp =
+ =Id: wvtutils.c,v 1.19 2004-11-23 17:04:23 lf_sfnet Exp =
+ (wvtcore.c is not changed since last sync:
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
+ )
+
+ ------------------
+ Summary of changes
+ ------------------
+ Applying the following change from gtwvt by Lorenzo Fiorini:
+ * hbgtwvw.ch
+ * wvtutils.c
+ * gtwvt.c
+   * added support for named icons in the resources
+
+ -------
+ Details
+ -------
+ * hbgtwvw.ch
+   * change in hb_wvw_gtSetWindowIcon() prototype (added lpicon parm)
+
+ * gtwvw.c
+   * hb_wvw_gtSetWindowIcon() added one optional parm
+   * wvw_SetIcon() added one optional parm
+
+
+ 2004-11-23:
+ * gtwvw.c:
+   + HB_GT_FUNC( gt_ProcessMessages )
+
+ 2004-11-23:
+ * gtwvw.c:
+   * FlashWindowEx is replaced with FlashWindow to make gtwvw
+     work in Win95
+
+ 2004-11-14:
+ * hbgtwvw.h
+   * WIN_DATA:
+     + int iLSpaceColor;  /* line space color */
+ * gtwvw.c:
+   + static int  s_iDefLSpaceColor = -1;
+   * hb_wvw_gtFillLineSpace(): use pWindowData->iLSpaceColor, or not
+   + wvw_SetDefLSpaceColor()
+   + wvw_SetLSpaceColor()
+
+/**************************** BETA1-3 published at this point **/
+
+ 2004-11-01:
+ * gtwvw.c
+   ! wvw_DrawLabelObj(): bottom point +1, right point +1
+
+ 2004-10-26:
+ Synchronizing with:
+ =Id: gtwvt.c,v 1.135 2004-10-24 09:43:45 oh1 Exp =
+
+ * gtwvw.c
+   * blank char for screen ' ' --> hb_ctGetClearB()
+   + GTI_VIEWMAXWIDTH
+   + GTI_VIEWMAXHEIGHT
+   These don't seem to be correctly implemented.
+   See gtwin about what they should do.
+
+/****************************************************************
+ * Release Date: 2004-10-25 (CVS contrib)
+ * Prev Release: 2004-09-26
+ ****************************************************************/
+
+ 2004-10-25:
+ * hbgtwvw.h
+   * lpwAlign() and nCopyAnsiToWideChar() are now static
+ * gtwvw.c
+   * lpwAlign() and nCopyAnsiToWideChar() are now static
+   + some #define by Lorenzo Fiorini
+   - some unused functions and variables
+   - some castings
+   This is to get rid of warnings in mingw32 as reported by Lorenzo Fiorini.
+
+
+ 2004-10-18:
+ Synchronizing with:  (Beta1-2)
+ =Id: hbgtwvt.h,v 1.31 2004-09-28 03:25:07 vouchcac Exp =
+ =Id: gtwvt.c,v 1.133 2004-09-28 03:25:17 vouchcac Exp =
+ =Id: wvtutils.c,v 1.18 2004-09-28 03:25:18 vouchcac Exp =
+ (wvtcore.c is not changed since last sync:
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
+ )
+
+ ------------------
+ Summary of changes
+ ------------------
+
+ Adopting Modal Dialog, original work of Pritpal Bedi in gtwvt.
+ Like Modeless Dialog, this is attached to Main Window (by default).
+ There is an option, however, to attach it to other window by specifying
+ the window's handle.
+
+ * gtwvw.c
+   + HB_FUNC( WVW_CREATEDIALOGMODAL )
+
+
+ 2004-10-14:
+ * gtwvw.c:
+   ! wvw_pbEnable(): after wvw_pbEnable(..., ..., .f.) focus should be
+     set to parent window, otherwise no input is accepted. Fixed.
+     Thanks to Fabio for reporting it.
+
+
+ 2004-09-30:
+ * gtwvw.c:
+   * wvw_tbAddButton() new parm lMap3Dcolors
+     This is to support transparent toolbar button
+     (applicable to 256 color bitmap only).
+
+
+/****************************************************************
+ * Release Date: 2004-09-26
+ * Prev Release: 2004-07-25
+ ****************************************************************/
+
+Contents
+
+- WARNING: Your program may need to change!
+
+- New Native Controls
+  = Push Buttons
+  = Progress Bar
+
+- New Callback Functions
+
+- New/Revised Functions
+
+- Bugfix and Enhancements
+
+- Adopted (and Adapted) Features from GTWVT
+
+- Epilogue
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   WARNING: Your program may need to change!                       */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+-------------------
+wvw_DrawRoundRect()
+-------------------
+
+If you use this function, you may need to make a change:
+
+Previously:
+
+wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
+                   nRoundHeight, nRoundWidth )
+
+Now:
+
+wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
+                   aOffset, ; <-- new optional parm following GTWVT's
+                   nRoundHeight, nRoundWidth )
+
+
+----------------------------------------
+Toolbar, Menu Command Id vs Push Buttons
+----------------------------------------
+
+This release introduces native push buttons. Internally pushbuttons use
+command id 65000 and above. Therefore, do NOT use menu/toolbar commands
+with id >= 65000.
+
+You are further recommended not to use high numbered id (say >= 40000),
+because future GTWVW may need that for its internal use.
+
+
+-------------------------------
+wvw_SetPen() and wvw_SetBrush()
+-------------------------------
+
+First parameter of wvw_SetPen() and wvw_SetBrush() are nWinNum.
+This is still true in current release. However, it is now ignored,
+because now the same PENs and BRUSHes are now used by all window.
+There is no more specific PENs and BRUSHes for specific window.
+
+I have to do this change, because previous release of GTWVW causes
+GDI leak because of this PENs and BRUSHes stuff...
+
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   New Native Controls                                             */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+------------
+Push Buttons
+------------
+
+You can now create pushbutton very easily. Simply define where do you
+want it to sit, and what action do you want it to do when it's clicked
+by means of a codeblock.
+
+In previous version, we had to use wvwmouse.prg to simulate pushbuttons
+using wvw_DrawBoxRaised(). We also had to handle 'OnMouseHover', 'OnMouseOut',
+'OnPressed', etc, to simulate the pressed/released state of the button.
+By using native push buttons, we don't have to worry about all that anymore.
+Windows will take care about it.
+
+If we are using Windows XP style, pushbuttons will automatically behave
+as they should in Windows XP: round shaped, hot when mouse hovers, etc.
+
+Push button functions are prefixed with wvw_pb*, for example:
+wvw_pbCreate()
+wvw_pbDestroy()
+wvw_pbSetFont()
+etc
+
+------------
+Progress Bar
+------------
+
+Progress Bar is one of the simplest controls. Gtwvw now uses native
+progress bar. It is a preferred method instead of the simulated one
+using wvw_DrawProgressBar().
+
+Progress bar functions are prefixed with wvw_pg*, for example:
+wvw_pgCreate()
+wvw_pgDestroy()
+wvw_pgSetRange()
+wvw_pgSetPos()
+etc.
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   New Callback Functions                                          */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+----------------
+WVW_INPUTFOCUS()
+----------------
+
+If exists, this function is called by GTWVW whenever input occurs on
+non topmost window. (Currently GTWVW allows only topmost window, that
+is the last window opened, to accept input.)
+
+For example, assume your program is displaying Main Window and another
+window. If at this point the user click the Main Window and select
+some menu item, GTWVW will reject to handle this event because Main
+Window is not currently topmost.
+
+Typically GTWVW will produce an asterisk sound and flash the topmost
+window to tell user which window is expecting input.
+
+In current GTWVW, prior to do that GTWVW will call WVW_INPUTFOCUS()
+function, if exists, and inspect its return value. If it returns .t.,
+then GTWVW do nothing, assuming the event has been handled properly
+by WVW_INPUTFOCUS().
+
+If no WVW_INPUTFOCUS() exists, or if it returns .f., GTWVW will do
+the usual response: asterisk sound and flashing window.
+
+See inpfocus.prg sample program demonstrating this feature.
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   New/Revised Functions                                           */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
++ wvw_SetWinStyle(): get/set window style
+
+* wvw_DrawBoxRecessed(): optional parm lTight can now be passed as aOffset
+
++ wvw_NoStartupSubWindow(): disable/enabling displaying window when we open it.
+                            (this is the adaptation of Main Window's
+                             ANNOUNCE NOSTARTUPWINDOW
+                             adopted from GTWVT)
+
++ wvw_ShowWindow(): show/hide a window.
+
+* wvw_nOpenWindow(): has new optional parms allowing prg to define prefered
+                     window style and parent window.
+
++ wvw_NoClose(): disable CLOSE 'X' button
+
+! wvw_sbAddPart(): now more accurate when measuring expected panel width.
+
++ wvw_tbIndex2Cmd(): convert toolbar button's index to command id.
++ wvw_tbCmd2Index(): and vice versa.
+
++ WVW_PB* : pushbutton functions
+
++ WVW_PG* : progress bar functions
+
+- wvw_DeleteObject(): removed as GTWVT's. See also win_DeleteObject()
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   Bugfix and Enhancements                                         */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+---------------
+Windows 98's DC
+---------------
+
+Thanks to Anatole Kolotovkin who reported this bug in Win98, where
+GDI objects are display incorrectly after opening some 5 windows or
+more. (In WinXP this bug doesn't occur.)
+
+This bug has now been fixed in current release.
+
+
+--------
+GDI Leak
+--------
+
+Some GDI objects (PENs and BRUSHes) mysteriously persist, even after
+the objects are successfully deleted.
+
+This has now been fixed. But as a side effect, GTWVW does not support
+specific window's PENs and BRUSHes anymore. PENs and BRUSHes are now
+application-wide.
+
+
+-------------------------------
+Other bugfixes and enhancements
+-------------------------------
+
+There are also many other minor bugfixes and enhancements.
+Some of the enhancements are additional aOffset parameter to
+WVW_Draw* functions.
+
+
+/*-------------------------------------------------------------------*/
+/*                                                                   */
+/*   Adopted (and Adapted) Features from GTWVT                       */
+/*                                                                   */
+/*-------------------------------------------------------------------*/
+
+======================================================================
+ Synchronizing with: (xHarbour Beta1-1 aka 0.99.1)
+ =Id: hbgtwvt.h,v 1.30 2004-09-15 03:52:49 bdj Exp =
+ =Id: gtwvt.c,v 1.132 2004-09-21 04:04:58 peterrees Exp =
+ =Id: wvtutils.c,v 1.17 2004-09-15 03:52:49 bdj Exp =
+ (wvtcore.c is not changed since last sync)
+======================================================================
+
+ ------------------
+ Summary of changes
+ ------------------
+
+ * handling of ANSI to OEM conversion (and vice versa)
+ * new gt_info() set/get: GTI_MOUSESTATUS and GTI_FONTNAME
+ ! fix handling of codeblock as wndproc of DlgProcMLess
+ ! fix inkey code for K_SH_BS
+ * some changes in defaults:
+     * font height: 20 (was 12)
+     * font width : 10 (was 8)
+     * font face  : Courier New (was Terminal)
+ * some castings
+
+ These are based on revisions by Lorenzo Fiorini, Peter Rees, Paul Tucker
+ and myself in GTWVT.
+
+
+======================================================================
+ Synchronizing with:
+ =Id: gtwvt.c,v 1.127 2004-08-31 12:57:28 vouchcac Exp =
+ =Id: wvtcore.c,v 1.10 2004-08-30 14:10:20 vouchcac Exp =
+ =Id: wvtutils.c,v 1.13 2004-08-30 14:10:20 vouchcac Exp =
+ Changelog:
+ =Id: ChangeLog,v 1.3412 2004-09-06 20:01:01 druzus Exp =
+ Last Entry:
+ 2004-09-06 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+======================================================================
+
+ -----------------------------------
+ APPLIED CHANGES ADOPTED FROM GTWVT:
+ -----------------------------------
+ + Support Modeless Dialog (attached to Main Window).
+   This is adopted from original work of Pritpal Bedi on GTWVT.
+ ! Bugfix in Clipboard function, copied from the fix by Pritpal Bedi on GTWVT.
+ + some new GTI_ functions, adopted from Lorenzo Fiorini's work on GTWVT.
+ + gt_gfxPrimitive() function, adopted from original work of Mauricio Abre
+   on GTWVT
+ ! Improvement in internal point to char conversion, adopted from
+   Peter Rees' work on GTWVT
+ * If app has ANNOUNCE HB_NOSTARTUPWINDOW Main Window is not displayed
+   until after the app ready and call wvw_ShowWindow(0).
+   This may result in a better visual effect as opposed to watching
+   the window resized or prepared during window initialization.
+   (Some app may also choose to never show the Main Window.)
+   This is adopted from original idea of Pritpal Bedi on GTWVT.
+ + New Function wvw_NoStartupSubWindow() to get similar feature on subwindows.
+   If this feature is used, app must call wvw_ShowWindow([nWinNum], 1)
+   or simply wvw_ShowWindow([nWinNum]) to display the previously opened
+   window.
+ * Some castings and optimizations.
+ * Some changes in some EXPORTed C functions.
+   (All .prg / HB_FUNC functions are not affected)
+ * aOffset parameter to more primitive GUI drawing functions
+   (following the changes on GTWVT by Pritpal Bedi)
+
+   *****************************************************************
+   WARNING!!!
+   wvw_DrawRoundRect() parameter is shifted because of insertion of
+   a new parameter aOffset.
+   *****************************************************************
+
+ * Some changes to Tooltip functions
+   (adopted from Pritpal Bedi's work on GTWVT)
+
+ + New .prg / HB_FUNC functions: (adopted from Pritpal Bedi's on GTWVT)
+   + HB_FUNC( WVW_UPDATEWINDOW )
+   + HB_FUNC( WVW_DRAWCOLORRECT ) (similar to WVW_FillRectangle)
+   + DlgModeless functions
+   + many WIN_* functions, general window API wrapper functions
+
+ - Removed .prg / HB_FUNC functions:
+   - wvw_DeleteObject()
+     (following GTWVT. Use win_DeleteObject() instead)
+
+ -----------------------------------------------
+ CHANGES ON GTWVT THAT ARE NOT ADOPTED ON GTWVW:
+ -----------------------------------------------
+ * "second layer of GUI"

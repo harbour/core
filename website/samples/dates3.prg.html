@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
+
+<script type="syntaxhighlighter" class="brush: harbour; light: true"><![CDATA[
+
+// Testing Harbour date management
+
+PROCEDURE Main()
+
+   LOCAL dDate, i
+
+   Set( _SET_DATEFORMAT, "dd/mm/yyyy" )
+   dDate := hb_SToD( "19990525" )
+
+   ? dDate, DoW( dDate )
+
+   ? LastMonday( dDate )
+
+   dDate += 3
+   ? dDate, DoW( dDate )
+
+   dDate += 4
+   ? dDate, DoW( dDate )
+
+   Set( _SET_DATEFORMAT, "mm/dd/yyyy" )
+   dDate := hb_SToD( "19990525" )
+
+   ? dDate, DoW( dDate )
+
+   ? LastMonday( dDate )
+
+   dDate += 3
+   ? dDate, DoW( dDate )
+
+   dDate += 4
+   ? dDate, DoW( dDate )
+
+   ?
+   dDate := Date()
+   FOR i := 1 TO 7
+      ? dDate, DoW( dDate )
+      dDate++
+   NEXT
+   ? hb_SToD(), DoW( hb_SToD() )
+
+   RETURN
+
+// Like NG's sample
+
+STATIC FUNCTION LastMonday( dDate )
+   RETURN dDate - DoW( dDate ) + 2
+
+]]></script>
+
+</body>
+</html>

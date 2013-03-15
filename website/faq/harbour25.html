@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>What is CVS and how do I use it?</title>
+</head>
+<body text="#000000" bgcolor="#ffffff">
+
+<a href="harbour.html"><em>Frequently Asked Questions about Harbour</em></a>
+ <b>:</b> <a href="harbour20.html"><em>Helping develop Harbour</em></a>
+ <b>:</b> <em>What is CVS and how do I use it?</em><br />
+<b>Previous:</b> <a href="harbour24.html"><em>Where can I find the source?</em></a><br />
+<b>Next:</b> <a href="harbour26.html"><em>How do I build Harbour?</em></a>
+
+
+<hr noshade>
+  <h2><a name="25"></a>3.5. What is CVS and how do I use it?<a name="WhatIsCVS"></a></h2>
+<p>Before proceeding you should probably have a good read of the <a href="http://www.cvshome.org/docs/blandy.html">introduction to CVS by Jim Blandy</a>. Reading this document should save you a lot of confusion later
+on.</p>
+<p>To use the CVS server you first need to get a copy of the CVS client
+software for your operating system:</p>
+<p>
+<ul>
+<li>Microsoft Windows
+<p>See <a href="http://www.cyclic.com/cvs/windows.html">http://www.cyclic.com/cvs/windows.html</a> for more details.</p>
+
+
+</li>
+<li>DOS 16bit/32bit
+<p>See the DOS section at <a href="http://www.cyclic.com/cvs/other.html">http://www.cyclic.com/cvs/other.html</a>.</p>
+
+</li>
+<li>GNU/Linux
+<p>Many GNU/Linux distributions come with the cvs client packaged as part of
+the distribution. If you don't have it installed check your install CDs or
+check the ftp site for the distribution in question.</p>
+
+
+</li>
+<li>OS/2
+<ul>
+<li><a href="http://www.cyclic.com/cvs/os2.html">http://www.cyclic.com/cvs/os2.html</a></li>
+<li><a href="ftp://ftp.leo.org/pub/comp/os/os2/leo/gnu/devtools/cvs110.zip">ftp://ftp.leo.org/pub/comp/os/os2/leo/gnu/devtools/cvs110.zip</a></li>
+</ul>
+
+
+
+</li>
+<li>Macintosh
+<p>See <a href="http://www.cyclic.com/cvs/mac.html">http://www.cyclic.com/cvs/mac.html</a> for more details.</p>
+
+
+</li>
+<li>Other
+<p>If you are building Harbour with an operating system not listed then please
+contact the FAQ maintainer with full details so that this list can be
+updated.</p>
+
+</li>
+</ul>
+</p>
+<p>Once you have got your CVS client installed you can gain anonymous access to
+the Harbour CVS server. Depending on platform, the first thing you need to
+do is set the <code>CVSROOT</code> environment variable to:</p>
+<p>
+<blockquote><code>
+<pre>
+:pserver:anonymous@cvs.sourceforge.net:/cvsroot/harbour-project
+</pre>
+</code></blockquote>
+</p>
+<p>In addition to the above some environments might require extra information.
+For example, the DOS, Windows and OS/2 CVS clients need to be given two
+extra environment variables, <code>HOMEDRIVE</code> and <code>HOMEPATH</code>. These two
+environment variables tell the CVS client where the source will live
+locally. For example, if your Harbour development directory is at
+S:\FREESOFT\HARBOUR you'd set:</p>
+<p>
+<blockquote><code>
+<pre>
+SET HOMEDRIVE=S
+SET HOMEPATH=\FREESOFT\HARBOUR\
+</pre>
+</code></blockquote>
+</p>
+<p>Users of the Windows client have reported that the <code>HOMEPATH</code> environment
+variable must start with and finish with a directory separator. Users of the
+DOS client have reported that the <code>HOMEDRIVE</code> environment variable must
+end with a colon.</p>
+<p>Ensure that your harbour directory is created and change into it. Then run:</p>
+<p>
+<blockquote><code>
+<pre>
+cvs login
+</pre>
+</code></blockquote>
+</p>
+<p>and press enter when prompted for a password. Now run:</p>
+<p>
+<blockquote><code>
+<pre>
+cvs extract -P harbour
+</pre>
+</code></blockquote>
+</p>
+<p>to get a copy of the Harbour CVS repository (users of the DOS client have
+reported that it doesn't have the <code>extract</code> command and that the
+<code>checkout</code> command should be used instead, I'm also told that the cvs
+client on GNU/Linux requires that you use <code>checkout</code>).</p>
+<p><b>Note</b>: The CVS commands and directories are case sensitive: <code>harbour</code>
+must be in all lower case (also note that on <a href="http://www.sourceforge.net/">SourceForge</a> Harbour is known as
+"harbour-project").</p>
+<p>Later, when you want to get changes from the CVS, you can do one of two
+things:</p>
+<p>
+<ul>
+<li>Repeat the <code>extract</code> command from your Harbour directory.</li>
+<li>From your Harbour directory run '<code>cvs update</code>'.</li>
+</ul>
+</p>
+<p>If you have problems after reading the above please consider reading the
+<a href="http://www.cvshome.org/docs/blandy.html">CVS introduction</a> and also the documentation for the CVS client you've
+installed. If, after reading both those documents, you are still having
+problems you should drop a polite message into the
+<a href="harbour35.html#DevMailList">developer's mailing list</a> detailing your platform, environment, all
+the steps you performed and the exact nature of the problem.</p>
+
+ <hr noshade>
+<a href="harbour.html"><em>Frequently Asked Questions about Harbour</em></a>
+ <b>:</b> <a href="harbour20.html"><em>Helping develop Harbour</em></a>
+ <b>:</b> <em>What is CVS and how do I use it?</em><br />
+<b>Previous:</b> <a href="harbour24.html"><em>Where can I find the source?</em></a><br />
+<b>Next:</b> <a href="harbour26.html"><em>How do I build Harbour?</em></a>
+
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+# Some popular and portable Harbour contribs
+hbcs=hbct hbmzip
+
+# Some platform specific ones
+{allwin}hbcs=hbwin
+{unix}hbcs=hbunix

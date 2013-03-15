@@ -1,0 +1,217 @@
+/*
+ * $Id$
+ */
+
+INTRODUCTION
+============
+
+This file explains the philosophy for the GNU-make based build system
+for Harbour, and gives instructions on how to use it.
+
+
+PHILOSOPHY
+==========
+
+This build system is based on GNU-make, the idea being that GNU-make
+is freely available for every platform you can dream up, and it is
+usually more powerful than any native make.
+
+Each directory in the project contains one makefile, called Makefile,
+which lists the data (file names, directory names, etc.) that is used
+to determine how to bring every target up to date within that
+directory. There are no rules in the Makefiles, to keep them
+platform-independent. The rules themselves are included from the
+"appropriate" configuration file.
+
+For example, the following was the Makefile for an early version
+of the VM library:
+
+--  Cut here  ---------------------------------------
+#
+# $Id$
+#
+
+ROOT := ../../
+
+C_SOURCES := \
+        dynsym.c \
+        hvm.c \
+        initsymb.c \
+
+LIB := vm
+
+include $(TOP)$(ROOT)config/lib.mk
+--  Cut here  ---------------------------------------
+
+What this means is:
+
+* The root of the source directory is in ../../; that is where the
+  config/ directory lives, with all the real rules to make the
+  targets.
+* The only sources in this directory are C sources (three files).
+* The library name is "vm". This will be translated to a real file
+  name depending on the rules file: "libvm.a" on Unix, "vm.lib" on
+  Windows.
+* The final line includes the rules file. In this case, we include a
+  set of rules to build a library.
+
+Let's look at another Makefile, this one for the Harbour compiler:
+
+--  Cut here  ---------------------------------------
+#
+# $Id$
+#
+
+ROOT := ../../
+
+YACC_SOURCE := harbour.y
+
+LEX_SOURCE := harbour.l
+
+C_SOURCES := \
+        genobj32.c \
+
+C_MAIN=harbour.c
+
+include $(TOP)$(ROOT)config/bin.mk
+--  Cut here  ---------------------------------------
+
+Notice how we now have other kinds of source files: yacc sources and
+lex sources. Also, since this is a Makefile for a stand-alone
+executable, we indicate the name for the file containing the "main"
+function, which also defines the executable name. The rules included
+in this Makefile are those appropriate to build a stand-alone binary.
+
+One final Makefile, this one from the source directory:
+
+#
+# $Id$
+#
+
+--  Cut here  ---------------------------------------
+ROOT := ../
+
+DIRS := \
+        compiler \
+        hbpp \
+        rtl \
+        vm \
+        rdd \
+        tools \
+
+include $(TOP)$(ROOT)config/dir.mk
+--  Cut here  ---------------------------------------
+
+This Makefile is used to traverse the subdirectories hanging from the
+current directory. It simply lists all the subdirectories to be
+traversed.
+
+Now. let's take a look at the rules themselves. They all live in the
+config/ directory, with the following structure:
+
+  config/: The generic configuration files.
+  config/win: Configuration files for Windows platforms.
+
+
+Finally, you will notice one thing: the build system compiles
+everything into a subdirectory (for example, win/gcc for Windows
+files compiled with gcc). This has two advantages:
+
+1. It allows you to compile for multiple platforms/compilers at the
+   same time.
+2. It creates all temporary, object, binary, intermediate, etc. files
+   in the subdirectory; cleaning up is very easy.
+
+
+USAGE
+=====
+
+To use the system, you need to install GNU-make 3.81 or later on your
+system. To check this, type "make -v"; you should see
+
+  GNU Make 3.81
+  Copyright (C) 2006  Free Software Foundation, Inc.
+  ...
+
+Then, you must set a couple of environment variables that indicate
+your platform and compiler.
+
+For gcc on Windows with the Cygwin library:
+  Notes: The CYGWIN environment variable must include "noglob" in order
+         to avoid having Harbour or programs created with Harbour expand
+         wildcard command line arguments (this is checked at run-time!)
+  HB_PLATFORM       win
+  HB_COMPILER       gcc
+  CYGWIN            noglob
+
+For gcc on Windows with the MinGW library:
+  HB_PLATFORM       win
+  HB_COMPILER       mingw
+
+For MSVC on Windows:
+  Notes: gnu make is case sensitive!  If your editor converts
+         harbour.c to HARBOUR.C when it saves the file, then gnu make
+         _will_not_work.
+         If you have MAKE_MODE in your dos environment, make sure it is
+         not set to unix
+
+         For best results, also set:
+  HB_PLATFORM       win
+  HB_COMPILER       msvc
+
+For GCC on BSD:
+  HB_PLATFORM       bsd
+  HB_COMPILER       gcc
+  Notes:
+    1)  You have to have bison and gmake installed in order to build
+        Harbour for BSD. The file doc/howtobsd.txt gives an overview
+        of what is required.
+
+For GCC on Linux:
+  HB_PLATFORM       linux
+  HB_COMPILER       gcc
+  Notes:
+    1)  If you want to take advantage of compiler cache programs
+        (such as http://ccaache.samba.org), you may set environment
+        variable HB_CCACHE with the value containing the name of program.
+
+For GCC on OS/2 for VIO mode:
+  Note: You must point C_INCLUDE_PATH to the EMX include directory and
+        you must also point LIBRARY_PATH to the EMX library directory.
+  HB_PLATFORM       os2
+  HB_COMPILER       gcc
+
+For Borland C++
+  HB_PLATFORM       win
+  HB_COMPILER       bcc
+
+For DJGPP (GCC port for MS-DOS)
+  HB_PLATFORM       dos
+  HB_COMPILER       djgpp
+
+For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
+  HB_PLATFORM       dos
+  HB_COMPILER       watcom
+
+The most used targets are these:
+
+* all: Same as typing "make" without arguments. It will usually try to
+  compile and link the obvious target in the directory.
+
+* clean: Clean up everything made by make.
+
+* install: Install stuff into the appropriate directories.
+
+
+NOTES
+=====
+
+See README.txt about details.
+
+
+You can build and/or run any program in tests/working by using hbmk2
+and hbrun. For example, 'hbmk2 scroll.prg -run' will build the scroll.prg
+program and then run it. 'hbrun scroll.prg' will run the program as
+a script. You can also pass parameters to the program. For example,
+'hbrun readfile.prg harbour.ini' will rebuild the readfile.prg program
+and run it with 'harbour.ini' as a command line parameter.

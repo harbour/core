@@ -1,0 +1,63 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBMYSQL__
+#define __HBEXTERN_CH__HBMYSQL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMYSQL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBMYSQL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMYSQL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC mysql_affected_rows
+DYNAMIC mysql_commit
+DYNAMIC mysql_data_seek
+DYNAMIC mysql_errno
+DYNAMIC mysql_error
+DYNAMIC mysql_escape_string
+DYNAMIC mysql_escape_string_from_file
+DYNAMIC mysql_fetch_field
+DYNAMIC mysql_fetch_row
+DYNAMIC mysql_field_count
+DYNAMIC mysql_field_seek
+DYNAMIC mysql_get_host_info
+DYNAMIC mysql_get_server_info
+DYNAMIC mysql_get_server_version
+DYNAMIC mysql_insert_id
+DYNAMIC mysql_list_dbs
+DYNAMIC mysql_list_fields
+DYNAMIC mysql_list_tables
+DYNAMIC mysql_num_fields
+DYNAMIC mysql_num_rows
+DYNAMIC mysql_ping
+DYNAMIC mysql_query
+DYNAMIC mysql_real_connect
+DYNAMIC mysql_real_escape_string
+DYNAMIC mysql_rollback
+DYNAMIC mysql_select_db
+DYNAMIC mysql_store_result
+DYNAMIC mysql_use_result
+DYNAMIC TBColumnSQL
+DYNAMIC TBrowseSQL
+DYNAMIC TMySQLQuery
+DYNAMIC TMySQLRow
+DYNAMIC TMySQLServer
+DYNAMIC TMySQLTable
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMYSQL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

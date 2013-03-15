@@ -1,0 +1,430 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: hb_langName(), hb_langSelect()
+ *
+ * Copyright 2004 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: hb_langErrMsg(),hb_langMessage(),hb_cdpSelect(),
+ *                       hb_Translate()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langErrMsg()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Description of an error code using current language
+   $SYNTAX$
+      hb_langErrMsg( <nErrorCode> ) --> cErrorMessage
+   $ARGUMENTS$
+      <nErrorCode> is one of the generic error codes (EG_...) defined
+      in error.ch
+   $RETURNS$
+      hb_langErrMsg() return the error message string represented by
+      the code <nErrorCode>.
+   $DESCRIPTION$
+      This function return the error message associated with an error
+      code using the current language selected.
+   $EXAMPLES$
+      #include "error.ch"
+      REQUEST HB_LANG_ES
+      PROCEDURE Main()
+         // English: Argument error
+         ? "English:", hb_langErrMsg( EG_ARG )
+         hb_langSelect( "es" )
+         // Spanish: Error de argumento
+         ? "Spanish:", hb_langErrMsg( EG_ARG )
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Header is error.ch
+   $SEEALSO$
+      hb_langSelect(),NationMsg()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langMessage()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Returns international strings messages and errors
+   $SYNTAX$
+      hb_langMessage( <nMsg>[, <cLangID>] ) --> cMessage
+   $ARGUMENTS$
+      <nMsg>    is the message number to get.
+      <cLangID> is an optional language module ID. Uses the currently
+                selected language module, if not specified.
+   $RETURNS$
+      hb_langMessage() return the text associated with the code <nMsg>.
+   $DESCRIPTION$
+      hb_langMessage() is similar to NationMsg() but give access to the
+      whole list of language messages: Day and month names, generic error
+      messages, internal errors, and others...
+
+      Use the header file hblang.ch for a list of base values for <nMsg>.
+   $EXAMPLES$
+      #include "hblang.ch"
+      REQUEST HB_LANG_ES
+      PROCEDURE Main()
+         // English: Monday
+         ? "English:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
+         hb_langSelect( "es" )
+         // Spanish: Lunes
+         ? "Spanish:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
+         ? "English:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1, "en" )
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Header is hblang.ch
+   $SEEALSO$
+      hb_langSelect(),NationMsg(),REQUEST
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langName()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Return the name of the language module
+   $SYNTAX$
+      hb_langName( [<cLangID>] ) --> cLangName
+   $ARGUMENTS$
+      <cLangID> is an optional language module ID. Uses the currently
+                selected language module, if not specified.
+   $RETURNS$
+      <cLangName>  Name of the language module
+   $DESCRIPTION$
+      This function return the name of the language module in use or
+      specified.
+   $EXAMPLES$
+      REQUEST HB_LANG_PT
+      REQUEST HB_LANG_RO
+      REQUEST HB_LANG_ES
+      REQUEST HB_LANG_HU
+      PROCEDURE Main()
+         ? hb_langName( "hu" )
+         ? hb_langName( "<non-existent>" )
+         hb_langSelect( "pt" )       // Default language is now Portuguese
+         ? CDoW( Date() )            // Segunda-feira
+         ? "Current language is ", hb_langName()             // Portuguese
+         ? "Old language id selected is ", hb_langSelect()   // PT
+         hb_langSelect( "ro" )       // Default language is now Romanian
+         ? CMonth( Date() )          // Mai
+         ? "Old language id selected is ", hb_langSelect()   // RO
+         hb_langSelect( "es" )       // Default language is now Spanish
+         ? "Current language is ", hb_langName()              // Spanish
+         ? CMonth( Date() )          // Mayo
+         ? CDoW( Date() )            // Lunes
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+   $SEEALSO$
+      hb_langSelect(),NationMsg()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langSelect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Select a specific nation message module
+   $SYNTAX$
+      hb_langSelect( [<cNewLang>][, <cCodepage>] ) --> cOldLang
+   $ARGUMENTS$
+      <cNewLang>  The optional ID of the language module.
+      Possible values for <cNewLang> are below as defined in the
+      Lang library, sorted by language.
+      <cCodepage>  Optional codepage ID into which the language
+      module strings are automatically converted by Harbour.
+
+      <table>
+      Language              <cNewLang>
+
+      Basque                eu
+      Belorussian           be
+      Bulgarian             bg
+      Catalan               ca
+      Chinese Simplified    zh_sim
+      Chinese Traditional   zh_tra
+      Croatian              hr
+      Czech                 cs
+      Dutch                 nl
+      Esperanto             eo
+      French                fr
+      Galician              gl
+      German                de
+      Greek                 el
+      Hebrew                he
+      Hungarian             hu
+      Icelandic             is
+      Indonesian            id
+      Italian               it
+      Korean                ko
+      Lithuanian            lt
+      Polish                pl
+      Portuguese            pt
+      Romanian              ro
+      Russian               ru
+      Serbian (cyrillic)    sr_cyr
+      Serbian (latin)       sr_lat
+      Slovak                sk
+      Slovenian             sl
+      Spanish               es
+      Swedish               sv
+      Turkish               tr
+      Ukrainian             uk
+      </table>
+   $RETURNS$
+      <cOldLang>   The old language indentifier
+   $DESCRIPTION$
+      This function set a default language module for date/month names,
+      internal warnigs, NatMsg messages and internal errors. When a
+      Lang ID is selected all messages will be output with the current
+      language selected until another one is selected or the program ends.
+      The default language is English (cLang == "EN").
+
+      NOTE: You must REQUEST every language module you intend to use.
+      For example: to use the Russian RU866 language you must add the
+      following to your program: REQUEST HB_LANG_RU866
+   $EXAMPLES$
+      REQUEST HB_LANG_PT
+      REQUEST HB_LANG_RO
+      REQUEST HB_LANG_ES
+      PROCEDURE Main()
+         hb_langSelect( "pt" )       // Default language is now Portuguese
+         ? CDoW( Date() )            // Segunda-feira
+         ? "Old language id selected is ", hb_langSelect()   // PT
+         hb_langSelect( "ro" )       // Default language is now Romanian
+         ? CMonth( Date() )          // Mai
+         ? "Old language id selected is ", hb_langSelect()   // RO
+         hb_langSelect( "es" )       // Default language is now Spanish
+         ? CMonth( Date() )          // Mayo
+         ? CDoW( Date() )            // Lunes
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+   $SEEALSO$
+      hb_langName(),hb_cdpSelect(),NationMsg(),REQUEST
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_cdpSelect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Select the active code page by language ID
+   $SYNTAX$
+      hb_cdpSelect( [<cNewLang>] ) --> cOldLang
+   $ARGUMENTS$
+      <cNewLang>  The optional ID of the language module.
+      Possible values for <cNewLang> are below as defined in the
+      Codepage library, sorted by language.
+
+      <table>
+      Language              Codepage       <cNewLang>
+
+      Bulgarian             866            BG866
+      Bulgarian             ISO-8859-5     BGISO
+      Bulgarian             MIK            BGMIK
+      Bulgarian             Windows-1251   BGWIN
+      Croatian              437            HR437
+      Croatian              852            HR852
+      Croatian              Windows-1250   HR1250
+      Czech                 852            CS852
+      Czech                 ISO-8859-2     CSISO
+      Czech                 KAM            CSKAM
+      Czech                 Windoes-1250   CSWIN
+      English               437            EN
+      French                850            FR
+      German                850            DE
+      German                ISO-8859-1     DEWIN
+      Greek                 737            EL
+      Greek                 Windows-1253   ELWIN
+      Hungarian (ntxhu852)  852            HU852
+      Hungarian (sixhu852)  852            HU852S
+      Hungarian (ntxhu852)  ISO-8859-2     HUISO
+      Hungarian (sixhu852)  ISO-8859-2     HUISOS
+      Hungarian (ntxhu852)  Windows-1250   HUWIN
+      Hungarian (sixhu852)  Windows-1250   HUWINS
+      Italian               437            IT437
+      Italian               850            IT850
+      Italian               ISO-8859-1b    ITISB
+      Italian               ISO-8859-1     ITISO
+      Lithuanian            Windows-1257   LT
+      Polish                852            PL852
+      Polish                ISO-8859-2     PLISO
+      Polish                Mazowia        PLMAZ
+      Polish                Windows-1250   PLWIN
+      Portuguese            850            PT850
+      Portuguese            ISO-8859-1     PTISO
+      Russian               866            RU866
+      Russian               KOI-8          RUKOI8
+      Russian               Windows-1251   RU1251
+      Serbian               Windows-1251   SRWIN
+      Slovak                852            SK852
+      Slovak                ISO-8859-2     SKISO
+      Slovak                Kamenicky      SKKAM
+      Slovak                Windows-1250   SKWIN
+      Slovenian             437            SL437
+      Slovenian             852            SL852
+      Slovenian             ISO-8859-2     SLISO
+      Slovenian             Windows-1250   SLWIN
+      Spanish               850            ES
+      Spanish               ISO-8859-1     ESWIN
+      Spanish Modern        ISO-8859-1     ESMWIN
+      Swedish               850            SV850
+      Swedish (Clipper)     437            SVCLIP
+      Swedish               ISO-8859-1     SVWIN
+      Turkish               857            TR857
+      Turkish               Windows-1254   TRWIN
+      Ukrainian             866            UA866
+      Ukrainian             KOI-8U         UAKOI8
+      Ukrainian             Windows-1251   UA1251
+      </table>
+   $RETURNS$
+      <cOldLang>   The old language indentifier
+   $DESCRIPTION$
+      hb_cdpSelect() set the active code page use by Harbour for
+      sorting and comparing strings. The default code page use ASCII
+      order (cLang == "EN").
+
+      NOTE: You must REQUEST every code page module you intend to use.
+      For example: to use the Russian RU866 code page you must add the
+      following to your program: REQUEST HB_CODEPAGE_RU866
+   $EXAMPLES$
+      REQUEST HB_CODEPAGE_HU852
+      PROCEDURE Main()
+         hb_cdpSelect( "EN" )
+         ? hb_cdpSelect()
+         ? hb_UTF8ToStr( "É < G is" ), hb_BChar( 144 ) < "G"  // É > G is .F.
+         hb_cdpSelect( "HU852" )
+         ? hb_cdpSelect()
+         ? hb_UTF8ToStr( "É < G is" ), hb_BChar( 144 ) < "G"  // É > G is .T.
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is a Harbour Extension.
+   $PLATFORMS$
+      All
+   $FILES$
+   $SEEALSO$
+      hb_langName(),hb_langSelect(),hb_Translate(),NationMsg(),REQUEST
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_Translate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+      Translate a string from one code page to the other
+   $SYNTAX$
+      hb_Translate( <cSrcText>, [<cPageFrom>], [<cPageTo>] ) --> cDstText
+   $ARGUMENTS$
+      <cSrcText> Is the source string to translate.
+
+      <cPageFrom> Is the optional character code page ID of the source
+      string. If not specified, the default code page is used.
+
+      <cPageTo> Is the optional character code page ID of the destination
+      string. If not specified, the default code page is used.
+   $RETURNS$
+      hb_Translate() return destination string converted from the source
+      string.
+   $DESCRIPTION$
+      hb_Translate() try to convert a source string from one code page
+      into the other. If a code page ID is not recognized, or not linked
+      in, the default code page is used. hb_Translate() is used usually
+      to convert between the Dos and the Windows code pages of the same
+      language.
+
+      NOTE: If the source code page and target code page does not have
+      the same number of characters, a translation can not be done and
+      the destination string is a copy of the source string.
+
+      NOTE: You must REQUEST every code page module you intend to use.
+      For example: to use the Russian RU866 code page you must add the
+      following to your program: REQUEST HB_CODEPAGE_RU866
+   $EXAMPLES$
+      REQUEST HB_CODEPAGE_DE
+      REQUEST HB_CODEPAGE_DEWIN
+      PROCEDURE Main()
+         LOCAL cTxt := "A" + hb_BChar( 142 ) + "BC"
+         ? "German CP-850 text:", cTxt
+         ? "German Windows-1252 text:", hb_Translate( cTxt, "DE850", "DEWIN" )
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is a Harbour Extension.
+   $PLATFORMS$
+      All
+   $FILES$
+   $SEEALSO$
+      hb_langSelect(),hb_cdpSelect(),NationMsg(),REQUEST
+   $END$
+ */

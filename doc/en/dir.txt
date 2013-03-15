@@ -1,0 +1,206 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __Dir(), DIR, ADir()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __Dir()*
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Display listings of files
+   $SYNTAX$
+      __Dir( [<cFileMask>] ) --> NIL
+   $ARGUMENTS$
+      <cFileMask> File mask to include in the function return. It could
+      contain path and standard wildcard characters as supported by your
+      OS (like * and ?). If <cFileMask> contains no path, then SET DEFAULT
+      path is used to display files in the mask.
+   $RETURNS$
+      __Dir() always returns NIL.
+   $DESCRIPTION$
+      If no <cFileMask> is given, __Dir() displays information about all
+      *.dbf in the SET DEFAULT path. This information contains: file name,
+      number of records, last update date and the size of each file.
+
+      If <cFileMask> is given, __Dir() list all files that match the mask
+      with the following details: Name, Extension, Size, Date.
+
+      DIR command is preprocessed into __Dir() function during compile
+      time.
+
+      __Dir() is a compatibility function, it is superseded by Directory()
+      which return all the information in a multidimensional array.
+   $EXAMPLES$
+      __Dir()      // information for all DBF files in current directory
+
+      __Dir( "*.dbf" )         // list all DBF file in current directory
+
+      // list all PRG files in Harbour Run-Time library
+      // for MS-DOS compatible operating systems
+      __Dir( "src\rtl\*.prg" )
+
+      // list all files in the public section on a Unix like machine
+      __Dir( "/pub" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(LFN)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ADir(),Directory(),SET DEFAULT,DIR
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      DIR
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Display listings of files
+   $SYNTAX$
+      DIR [<cFileMask>]
+   $ARGUMENTS$
+      <cFileMask> File mask to include in the function return. It could
+      contain path and standard wildcard characters as supported by your
+      OS (like * and ?). If <cFileMask> contains no path, then SET DEFAULT
+      path is used to display files in the mask.
+   $DESCRIPTION$
+      If no <cFileMask> is given, __Dir() display information about all
+      *.dbf in the SET DEFAULT path, this information contain: file name,
+      number of records, last update date and the size of each file.
+
+      If <cFileMask> is given, __Dir() list all files that match the mask
+      with the following details: Name, Extension, Size, Date.
+
+      DIR command is preprocessed into __Dir() function during compile
+      time.
+
+      __Dir() is a compatibility function, it is superseded by Directory()
+      which returns all the information in a multidimensional array.
+   $EXAMPLES$
+      DIR          // information for all DBF files in current directory
+
+      dir   "*.dbf"          // list all DBF file in current directory
+
+      // list all PRG files in Harbour Run-Time library
+      // for MS-DOS compatible operating systems
+      Dir "src\rtl\*.prg"
+
+      // list all files in the public section on a Unix like machine
+      Dir  "/pub"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(LFN)
+   $SEEALSO$
+      ADir(),Directory(),SET DEFAULT,__Dir()*
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ADir()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Fill pre-defined arrays with file/directory information
+   $SYNTAX$
+      ADir( [<cFileMask>], [<aName>], [<aSize>], [<aDate>],
+            [<aTime>], [<aAttr>] ) --> nDirEnries
+   $ARGUMENTS$
+      <cFileMask> File mask to include in the function return. It could
+      contain path and standard wildcard characters as supported by your
+      OS (like * and ?). If you omit <cFileMask> or if <cFileMask> contains
+      no path, then the path from SET DEFAULT is used.
+
+      <aName> Array to fill with file name of files that meet <cFileMask>.
+      Each element is a Character string and include the file name and
+      extension without the path. The name is the long file name as
+      reported by the OS and not necessarily the 8.3 uppercase name.
+
+      <aSize> Array to fill with file size of files that meet <cFileMask>.
+      Each element is a Numeric integer for the file size in Bytes.
+      Directories are always zero in size.
+
+      <aDate> Array to fill with file last modification date of files that
+      meet <cFileMask>. Each element is of type Date.
+
+      <aTime> Array to fill with file last modification time of files that
+      meet <cFileMask>. Each element is a Character string in the format
+      HH:mm:ss.
+
+      <aAttr> Array to fill with attribute of files that meet <cFileMask>.
+      Each element is a Character string, see Directory() for information
+      about attribute values. If you pass array to <aAttr>, the function
+      is going to return files with normal, hidden, system and directory
+      attributes. If <aAttr> is not specified or with type other than
+      Array, only files with normal attribute would return.
+   $RETURNS$
+      ADir() return the number of file entries that meet <cFileMask>
+   $DESCRIPTION$
+      ADir() return the number of files and/or directories that match
+      a specified skeleton, it also fill a series of given arrays with
+      the name, size, date, time and attribute of those files. The passed
+      arrays should pre-initialized to the proper size, see example below.
+      In order to include hidden, system or directories <aAttr> must be
+      specified.
+
+      ADir() is a compatibility function, it is superseded by Directory()
+      which returns all the information in a multidimensional array.
+   $EXAMPLES$
+      LOCAL aName, aSize, aDate, aTime, aAttr, nLen, i
+      nLen := ADir( "*.jpg" )     // Number of JPG files in this directory
+      IF nLen > 0
+         aName := Array( nLen )   // make room to store the information
+         aSize := Array( nLen )
+         aDate := Array( nLen )
+         aTime := Array( nLen )
+         aAttr := Array( nLen )
+         ADir( "*.prg", aName, aSize, aDate, aTime, aAttr )
+         FOR i := 1 TO nLen
+             ? aName[ i ], aSize[ i ], aDate[ i ], aTime[ i ], aAttr[ i ]
+         NEXT
+      ELSE
+         ? "This directory is clean from smut"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      <aName> is going to be filled with long file name and not necessarily
+      the 8.3 uppercase name.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Array(),Directory(),SET DEFAULT
+   $END$
+ */

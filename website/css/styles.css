@@ -1,0 +1,205 @@
+@charset "utf-8";
+/* CSS Document */
+
+body,td,th {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+body {
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	background-color: #333333;
+}
+.header1 {
+	color: #bc0000;
+	/* font-weight: bolder; */
+	font-size: 20px;
+}
+.text_under {
+	text-decoration: underline;
+}
+.footer {
+	color: #FFFFFF;
+	font-size: 8px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.title {
+	color: #bc0000;
+	font-weight: bolder;
+	font-size: 14px;
+}
+.title_blue {
+	color: #06639d;
+	font-weight: bolder;
+	font-size: 14px;
+}
+.title_text {
+	color: #000000;
+	font-weight: bolder;
+	font-style: italic;
+}
+.title_date {
+	color: #666666;
+	font-style: italic;
+}
+.sample_subtitle{
+	color: #bc0000;
+	font-weight: bold;
+}
+.sample_link_missing{
+	color: #666666;
+}
+.sample_linkback {
+	color: #000000;
+	text-decoration: none;
+	font-style: italic;
+	font-size: 9px;
+}
+.black_link {
+	color: #000000;
+}
+.blue_link {
+	color: #0099FF;
+	text-decoration: none;
+}
+.read_more {
+	font-style: italic;
+	font-size: 9px;
+}
+a:hover {
+	color: #FF0000;
+}
+a:active {
+	color: #FF0000;
+}
+
+.tabela_box_trans_TL { width: 6px; height: 6px; background-image: url('/images/table-azul-top-left.gif');     background-position: 0 0;             background-repeat: no-repeat; }
+.tabela_box_trans_TR { width: 6px; height: 6px; background-image: url('/images/table-azul-top-right.gif');    background-position: top right;       background-repeat: no-repeat; }
+.tabela_box_trans_BR { width: 6px; height: 6px; background-image: url('/images/table-azul-bottom-right.gif'); background-position: bottom right;    background-repeat: no-repeat; }
+.tabela_box_trans_BL { width: 6px; height: 6px; background-image: url('/images/table-azul-bottom-left.gif');  background-position: bottom left;     background-repeat: no-repeat; }
+
+/*
+ * From xDevStudio export HTML tool...
+ */
+.any1-activedot 		{ color: #800080; }
+.any1-comment 			{ color: #008080; }
+.any1-constant 			{ color: #800080; }
+.any1-escapeampersand 	{ color: #00FF00; font-weight: bold; }
+.any1-function 			{ color: #808000; }
+.any1-identifier 		{ color: #000000; }
+.any1-number			{ color: #FF0000; }
+.any1-preprocessor 		{ }
+.any1-reservedword 		{ color: #800000; }
+.any1-space 			{ }
+.any1-string 			{ color: #0000FF; }
+.any1-symbol 			{ }
+.any1-variable 			{ color: #808000; }
+
+.pagina_titulo {
+	color: #0066CC;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.pagina_titulo_non_captalize {
+	color: #0066CC;
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.pagina_subtitulo {
+	color: #990000;
+	font-weight: bold;
+}
+.titulo_citacao {
+	color: #0066FF;
+	font-style: italic;
+}
+.texto_subtitulo {
+	color: #0066CC;
+	font-weight: bold;
+	font-style: italic;
+}
+.texto_subtitulo_maiusculo {
+	color: #0066CC;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+.redbox {
+	margin: 3px;
+	/* padding: 3px; */
+	/* background-color: #FF0000; */
+	color: #bc0000;
+	font-style: italic;
+}
+.crew_country {
+	color: #BC0000;
+	font-weight: bolder;
+}
+.crew_person_name {
+	color: #1C69B7;
+	font-weight: bolder;
+}
+.crew_mail {
+	color: #0099FF;
+	text-decoration: none;
+}
+.crew_country_link {
+	color: #0066FF;
+	text-decoration: none;
+}
+.crew_aphalist_link {
+	color: #000066;
+	text-decoration: none;
+}
+.crew_page_top {
+	width: 7px;
+	background-image: url(/images/arrow_up.gif);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+}
+.whitelink {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.source_code{
+	font-size: 10pt;
+	font-family: "Courier New", Courier, monospace;
+}
+.news_category {
+	color: #BC0000;
+	font-weight: bolder;
+}
+.news_item {
+	padding-left: 15px;
+	background-image: url(/images/button-ok.jpg);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+.news_info {
+	padding-left: 15px;
+	background-image: url(/images/button-info.jpg);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+.news_warn {
+	padding-left: 15px;
+	background-image: url(/images/button-yellow.jpg);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+.news_error {
+	padding-left: 15px;
+	background-image: url(/images/button-red.jpg);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}
+.news_fixed {
+	padding-left: 15px;
+	background-image: url(/images/button-green.jpg);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+}

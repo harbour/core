@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-gtalleg.hbm
-
--stop{!msvc}
-
--cflag=-DALLEGRO_STATICLINK

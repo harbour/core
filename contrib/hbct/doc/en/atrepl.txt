@@ -1,0 +1,63 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      AtRepl()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Search and replace sequences in a string
+   $SYNTAX$
+      AtRepl( <cStringToMatch>, <cString>, <cReplacement>, [<nCounter>],
+              [<lMode>], [<nIgnore>] ) --> cString
+   $ARGUMENTS$
+      <cStringToMatch>   is the substring searched for in <cString>
+      <cString>          is the processed string
+      <cReplacement>     is the replacement for sequences found
+      [<nCounter>]       specifies the number of replacements
+                         Default: last occurence
+      [<lMode>]          if set to .T., only the <nCounter>th sequence
+                         of <cStringToMatch> will be replaced, else
+                         all sequences will be replaced.
+                         Default: .F.
+      [<nIgnore>])       specifies how many characters in <cString> from
+                         the beginning should be ignored by the function
+                         Default: 0
+   $RETURNS$
+      <cString>
+   $DESCRIPTION$
+      The AtRepl() function searches and replaces sequences in a string.
+      First, the function ignores the first <nIgnore> characters of <cString>.
+      Then, if <lMode> is set to .T., it searches for the <nCounter>th
+      occurence of <cStringToMatch> in <cString>. If successful, the
+      sequence will be replaced with <cReplacement>.
+      If <lMode> is set to .F., the same search is performed, but EVERY
+      occurence of <cStringToMatch> till the <nCounter>th (inclusive) will
+      be replaced with <cReplacement>. Note that, in this case,
+      the replacements are performed even if the <nCounter>th occurence
+      does not exist.
+      By using the CSetAtMupa() switch you can decide whether the
+      function restarts searching after a found sequence of after
+      the first character of that sequence.
+      The function allows the use of wildcards in <cStringToMatch>
+      and looks for the settings of SetAtLike().
+   $EXAMPLES$
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx" )    // --> "xxDxxDxx"
+      ? AtRepl( "ABC", "ABCDABC", "ZYXW" )      // --> "ZYXWDZYXW"
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) // --> "xxDxxDABC"
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. )  // --> "ABCDxxDABC"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      AtRepl() is compatible with CT3's AtRepl().
+      Note the new, 6th parameter !
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CSetAtMupa()   SetAtLike()
+   $END$
+ */

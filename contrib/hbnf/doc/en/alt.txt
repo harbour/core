@@ -1,0 +1,30 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Alt()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine status of the Alt key
+   $SYNTAX$
+      ft_Alt() -> lValue
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      .T. if Alt key is pressed, .F. if otherwise.
+   $DESCRIPTION$
+      This function is useful for times you need to know whether or not the
+      Alt key is pressed, such as during a MemoEdit().
+   $EXAMPLES$
+      IF ft_Alt()
+         @ 24, 0 SAY "Alt"
+      ELSE
+         @ 24, 0 SAY "   "
+      ENDIF
+   $SEEALSO$
+      ft_CapLock() ft_Ctrl() ft_NumLock() ft_PrtScr() ft_Shift()
+   $END$
+ */

@@ -1,0 +1,76 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      AscPos()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      ASCII value of a character at a certain position
+   $SYNTAX$
+      AscPos( <cString>, [<nPosition>] ) --> nAsciiValue
+   $ARGUMENTS$
+      <cString>      is the processed string
+      [<nPosition>]  is an optional position within <cString>
+                     Default: last position in <cString>
+   $RETURNS$
+      <nAsciiValue>  the ASCII value of the character at the specified
+                     position
+   $DESCRIPTION$
+      The AscPos() function returns the ASCII value of the character that
+      can be found at the position <nPosition> in <cString>. If <nPosition>
+      is larger than the length of <cString>, 0 is returned.
+   $EXAMPLES$
+      ? AscPos( "0123456789" ) // --> 57
+      ? AscPos( "0123456789", 1 ) // --> 48
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      AscPos() is compatible with CT3's AscPos().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      ValPos()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ValPos()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Numerical value of a character at a certain position
+   $SYNTAX$
+      ValPos( <cString>, [<nPosition>] ) --> nDigitValue
+   $ARGUMENTS$
+      <cString>      is the processed string
+      [<nPosition>]  is an optional position within <cString>
+                     Default: last position in <cString>
+   $RETURNS$
+      <nDigitValue>  the numerical value of the character at the specified
+                     position
+   $DESCRIPTION$
+      The ValPos() function returns the numerical value of the character that
+      can be found at the position <nPosition> in <cString>. If no digit
+      can be found at this position or if <nPosition>
+      is larger than the length of <cString>, 0 is returned.
+   $EXAMPLES$
+      ? ValPos( "1234x56789" ) // --> 9
+      ? ValPos( "1234x56789", 1 ) // --> 1
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ValPos() is compatible with CT3's ValPos().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      AscPos()
+   $END$
+ */

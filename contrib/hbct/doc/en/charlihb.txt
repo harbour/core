@@ -1,0 +1,74 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CharSList()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Generates a sorted list of all characters in a string
+   $SYNTAX$
+      CharSList( [<cString>] ) -> cSortedCharacterList
+   $ARGUMENTS$
+      [<cString>]       is the string for whom the function generates a
+                        sorted list of all characters
+                        Default: "" (empty string)
+   $RETURNS$
+      <cSortedCharacterList>  a sorted list of the characters in <cString>
+   $DESCRIPTION$
+      The CharList() function generates a sorted list of those characters that
+      are contained in <cString>. This list can contain each character
+      only once, so that its maximum length is 256. The function
+      gives the same result as CharSort(CharList(<cString>))
+   $EXAMPLES$
+      ? CharSList( "Hello World !" ) // --> " !HWdelor"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharSList() is only available in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharNoList(),CharList(),CharHist()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharHist()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Generates a character histogram of a string
+   $SYNTAX$
+      CharHist( [<cString>] ) -> aCharacterCount
+   $ARGUMENTS$
+      [<cString>]       is the string for whom the function generates a
+                        character histogram
+                        Default: "" (empty string)
+   $RETURNS$
+      <aCharacterCount> an array with 256 elements where the nth element
+                        contains the count of character #(n-1) in cString
+   $DESCRIPTION$
+      The CharHist() function generates a character histogram of those
+      characters that are contained in <cString>. This histogram is stored
+      in an 256-element array where the nth element contains the count
+      of ASCII character #(n-1) in <cString>.
+   $EXAMPLES$
+      ? CharHist( "Hello World !" )[ 109 ] // --> 3  // Chr( 108 ) == "l"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharHist() is only available in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharList(),CharNoList(),CharSList()
+   $END$
+ */

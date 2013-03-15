@@ -1,0 +1,1443 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    Documentation for: Set(), __SetCentury()
+ *
+ * Copyright 1999 April White <april@users.sourceforge.net>
+ *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
+ *                       hb_SetKeyCheck(), SET KEY
+ *
+ * Copyright 1999 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __SetFunction(), SET FUNCTION
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    Documentation for: SetTypeahead()
+ *    Documentation for: __XHelp()
+ *
+ * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
+ *    Documentation for: SET PATH,SET INTENSITY,SET ALTERNATE
+ *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
+ *    Documentation for: SET EPOCH,SET PRINTER,SET FIXED
+ *    Documentation for: SET BELL
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __SetCentury()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Set the Current Century
+   $SYNTAX$
+      __SetCentury([<lFlag> | <cOnOff> ] ) --> lPreviousValue
+   $ARGUMENTS$
+      optional <lFlag> or <cOnOff> (not case sensitive)
+              .T. or "ON" to enable the century setting (4-digit years)
+              .F. or "OFF" to disable the century setting (2-digit years)
+   $RETURNS$
+      Either the current or previous century setting as a logical value
+   $FILES$
+      Library is core
+   $COMPLIANCE$
+      C
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Set()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Changes or evaluated environmental settings
+   $SYNTAX$
+      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+   $ARGUMENTS$
+      <nSet> Set Number
+
+      <xNewSetting> Any expression to assign a value to the setting
+
+      <xOption> Logical expression
+
+                <nSet>            <xNewSetting>          <xOption>
+
+              _SET_ALTERNATE   <lFlag> | <cOnOff>
+
+                   If enabled, QOut() and QQOut() write to the screen and to
+                   a file, provided that a file has been opened or created
+                   with _SET_ALTFILE. If disabled, which is the default,
+                   QOut() and QQOut() only write to the screen (and/or to
+                   the PRINTFILE). Defaults to disabled.
+
+              _SET_ALTFILE     <cFileName>             <lAdditive>
+
+                   When set, creates or opens file to write QOut() and
+                   QQOut() output to. If <lAdditive> is TRUE and the file
+                   already exists, the file is opened and positioned at end
+                   of file. Otherwise, the file is created. If a file is
+                   already opened, it is closed before the new file is
+                   opened or created (even if it is the same file). The
+                   default file extension is ".txt". There is no default
+                   file name. Call with an empty string to close the file.
+
+              _SET_AUTOPEN     <lFlag> | <cOnOff>
+
+                   TODO: Document
+
+              _SET_AUTORDER    <lFlag> | <cOnOff>
+
+                   TODO: Document
+
+              _SET_AUTOSHARE   <lFlag> | <cOnOff>
+
+                   TODO: Document
+
+              _SET_BELL        <lFlag> | <cOnOff>
+
+                   When enabled, the bell sounds when the last position of
+                   a GET is reached and/or when a GET validation fails.
+                   Disabled by default.
+
+              _SET_CANCEL      <lFlag> | <cOnOff>
+
+                   When enabled, which is the default, pressing Alt+C or
+                   Ctrl+Break terminates the program. When disabled, both
+                   keystrokes can be read by Inkey(). Note: SET KEY has
+                   precedence over SET CANCEL.
+
+              _SET_COLOR       <cColorSet>
+
+                   Sets the current color scheme, using color pairs in the
+                   sequence "<standard>,<enhanced>,<border>,<background>,
+                   <unselected>". Each color pair uses the format
+                   "<foreground>/<background>". The color codes are space
+                   or "N" for black, "B" for blue, "G" for green, "BG" for
+                   Cyan, "R" for red, "RB" for magenta, "GR" for brown, "W"
+                   for white, "N+" for gray, "B+" for bright blue, "G+" for
+                   bright green, "BG+" for bright cyan, "R+" for bright red,
+                   "RB+" for bright magenta, "GR+" for yellow, and "W+" for
+                   bright white. Special codes are "I" for inverse video,
+                   "U" for underline on a monochrome monitor (blue on a
+                   color monitor), and "X" for blank. The default color is
+                   "W/N,N/W,N,N,N/W".
+
+              _SET_CONFIRM     <lFlag> | <cOnOff>
+
+                   If enabled, an exit key must be pressed to leave a GET.
+                   If disabled, which is the default, typing past the end
+                   will leave a GET.
+
+              _SET_CONSOLE     <lFlag> | <cOnOff>
+
+                   If enabled, which is the default, all screen output goes
+                   to the screen. When disabled, screen output is suppressed
+                   (Note: This setting does not affect OutStd() or OutErr()).
+
+              _SET_CURSOR      <nCursorType>
+
+                   If enabled, which is the default, the cursor is displayed
+                   on screen. If disabled, the screen cursor is hidden.
+
+              _SET_DATEFORMAT  <cDateFormat>
+
+                   Sets the default date format for display, date input, and
+                   date conversion. Defaults to American ("mm/dd/yy"). Other
+                   formats include ANSI ("yy.mm.dd"), British ("dd/mm/yy"),
+                   French ("dd/mm/yy"), German ("dd.mm.yy"), Italian
+                   ("dd-mm-yy"), Japan ("yy/mm/dd"), and USA ("mm-dd-yy").
+                   SET CENTURY modifies the date format. SET CENTURY ON
+                   replaces the "y"s with "YYYY". SET CENTURY OFF replaces
+                   the "y"s with "YY".
+
+              _SET_DEBUG       <lStatus>
+
+                   When set to .T., pressing Alt+D activates the debugger.
+                   When set to .F., which is the default, Alt+D can be read
+                   by Inkey(). (Also affected by AltD(1) and AltD(0))
+
+              _SET_DECIMALS    <nNumberOfDecimals>
+
+                   Sets the number of decimal digits to use when displaying
+                   printing numeric values when SET FIXED is ON. Defaults to
+                   2. If SET FIXED is OFF, then SET DECIMALS is only used to
+                   determine the number of decimal digits to use after using
+                   Exp(), Log(), Sqrt(), or division. Other math operations
+                   may adjust the number of decimal digits that the result
+                   will display. Note: This never affects the precision of
+                   a number. Only the display format is affected.
+
+              _SET_DEFAULT     <cDefaultDirectory>
+
+                   Sets the default directory in which to open, create and
+                   check for files. Defaults to current directory (blank).
+
+              _SET_DELETED     <lFlag> | <cOnOff>
+
+                   If enabled, deleted records will be processed. If
+                   disabled, which is the default, deleted records will
+                   be ignored.
+
+              _SET_DELIMCHARS  <cDelimiters>
+
+                   Sets the GET delimiter characters. Defaults to "::".
+
+              _SET_DELIMITERS  <lFlag> | <cOnOff>
+
+                   If enabled, GETs are delimited on screen. If disabled,
+                   which is the default, no GET delimiters are used.
+
+              _SET_DEVICE      <cDeviceName>
+
+                   Selects the output device for DevOut(). When set to
+                   "PRINTER", all output is sent to the printer device or
+                   file set by _SET_PRINTFILE. When set to anything else,
+                   all output is sent to the screen. Defaults to "SCREEN".
+
+              _SET_EOF         <lFlag> | <cOnOff>
+
+                   Defaults to FALSE on UN*X, but defaults to TRUE on
+                   everything else. If set to FALSE, then Chr( 26 ) does not
+                   get written when using COPY TO DELIMITED, COPY TO SDF,
+                   or when closing any of the various text files that are
+                   created using various SET values.
+                   [This is a Harbour extension]
+
+              _SET_EPOCH       <nYear>
+
+                   Determines how to handle the conversion of 2-digit years
+                   to 4 digit years. When a 2-digit year is greater than or
+                   equal to the year part of the epoch, the century part of
+                   the epoch is added to the year. When a 2-digit year is
+                   less than the year part of the epoch, the century part
+                   of the epoch is incremented and added to the year. The
+                   default epoch is 1900, which converts all 2-digit years
+                   to 19xx. Example: If the epoch is set to 1950, 2-digit
+                   years in the range from 50 to 99 get converted to 19xx
+                   and 2-digit years in the range 00 to 49 get converted
+                   to 20xx.
+
+              _SET_ESCAPE      <lFlag> | <cOnOff>
+
+                   When enabled, which is the default, pressing Esc will
+                   exit a READ. When disabled, pressing Esc during a READ
+                   is ignored, unless the Esc key has been assigned to a
+                   function using SET KEY.
+
+              _SET_EVENTMASK   <nEventCodes>
+
+                   Determines which events Inkey() will respond to.
+                   INKEY_MOVE allows mouse movement events. INKEY_LDOWN
+                   allows the left mouse button down click. INKEY_LUP
+                   allows the left mouse button up click. INKEY_RDOWN
+                   allows the right mouse button down click. INKEY_RUP
+                   allows the right mouse button up clock. INKEY_KEYBOARD
+                   allows keyboard keystrokes. INKEY_ALL allows all of the
+                   preceding events. Events may be combined (e.g., using
+                   INKEY_LDOWN + INKEY_RUP will allow left mouse button
+                   down clicks and right mouse button up clicks). The
+                   default is INKEY_KEYBOARD.
+
+              _SET_EXACT       <lFlag> | <cOnOff>
+
+                   When enabled, all string comparisons other than "=="
+                   exclude trailing spaces when checking for equality.
+                   When disabled, which is the default, all string
+                   comparisons other than "==" treat two strings as
+                   equal if the right hand string is "" or if the right
+                   hand string is shorter than or the same length as the
+                   left hand string and all of the characters in the right
+                   hand string match the corresponding characters in the
+                   left hand string.
+
+              _SET_EXCLUSIVE   <lFlag> | <cOnOff>
+
+                   When enabled, which is the default, all database files
+                   are opened in exclusive mode. When disabled, all
+                   database files are opened in shared mode. Note: The
+                   EXCLUSIVE and SHARED clauses of the USE command can be
+                   used to override this setting.
+
+              _SET_EXIT        <lFlag> | <cOnOff>
+
+                   Toggles the use of Uparrow and Dnarrow as READ exit keys.
+                   Specifying true (.T.) enables them as exit keys, and
+                   false (.F.) disables them. Used internally by the
+                   ReadExit() function.
+
+              _SET_EXTRA       <lFlag> | <cOnOff>
+
+                   QUESTION: What is this for?
+                   It does not affect _SET_EXTRAFILE in CA-Cl*pper!
+
+              _SET_EXTRAFILE   <cFileName>             <lAdditive>
+
+                   When set, creates or opens file to write QOut() and
+                   QQOut() output to. If <lAdditive> is TRUE and the file
+                   already exists, the file is opened and positioned at end
+                   of file. Otherwise, the file is created. If a file is
+                   already opened, it is closed before the new file is
+                   opened or created (even if it is the same file). The
+                   default file extension is ".prn". There is no default
+                   file name. Call with an empty string to close the file.
+
+              _SET_FIXED       <lFlag> | <cOnOff>
+
+                   When enabled, all numeric values will be displayed
+                   and printed with the number of decimal digits set
+                   by SET DECIMALS, unless a PICTURE clause is used.
+                   When disabled, which is the default, the number
+                   of decimal digits that are displayed depends upon
+                   a variety of factors. See _SET_DECIMALS for more.
+
+              _SET_INSERT      <lFlag> | <cOnOff>
+
+                   When enabled, characters typed in a GET or MEMOEDIT
+                   are inserted. When disabled, which is the default,
+                   characters typed in a GET or MEMOEDIT overwrite.
+                   Note: This setting can also be toggled between on and
+                   off by pressing the Insert key during a GET or MEMOEDIT.
+
+              _SET_INTENSITY   <lFlag> | <cOnOff>
+
+                   When enabled, which is the default, GETs and PROMPTs
+                   are displayed using the enhanced color setting. When
+                   disabled, GETs and PROMPTs are displayed using the
+                   standard color setting.
+
+              _SET_LANGUAGE    <cLanguageID>
+
+                   Specifies the language to be used for Harbour messages.
+                   [This is a Harbour extension]
+
+              _SET_MARGIN      <nColumns>
+
+                   Sets the left margin for all printed output. The default
+                   value is 0. Note: PCol() reflects the printer's column
+                   position including the margin (e.g., SET MARGIN TO 5
+                   followed by DevPos(5, 10) makes PCol() return 15).
+
+              _SET_MBLOCKSIZE <nMemoBlockSize>
+
+                   TODO: Document
+
+              _SET_MCENTER     <lFlag> | <cOnOff>
+
+                   If enabled, display PROMPTs centered on the MESSAGE row.
+                   If disabled, which is the default, display PROMPTS at
+                   column position 0 on the MESSAGE row.
+
+              _SET_MESSAGE     <nRow>
+
+                   If set to 0, which is the default, PROMPTs are always
+                   suppressed. Otherwise, PROMPTs are displayed on the
+                   set row. Note: It is not possible to display prompts
+                   on the top-most screen row, because row 0 is reserved
+                   for the SCOREBOARD, if enabled.
+
+              _SET_MFILEEXT    <cMemoFileExt>
+
+                   TODO: Document
+
+              _SET_OPTIMIZE    <lFlag> | <cOnOff>
+
+                   TODO: Document
+
+              _SET_PATH        <cDirectories>
+
+                   Specifies a path of directories to search through to
+                   locate a file that can't be located in the DEFAULT
+                   directory. Defaults to no path (""). Directories must
+                   be separated by a semicolon (e.g., "C:\data;C:\more").
+
+              _SET_PRINTER     <lFlag> | <cOnOff>
+
+                   If enabled, QOut() and QQOut() write to the screen and to
+                   a file, provided that a file has been opened or created
+                   with _SET_ALTFILE. If disabled, which is the default,
+                   QOut() and QQOut() only write to the screen (and/or to
+                   the ALTFILE).
+
+              _SET_PRINTFILE   <cFileName>             <lAdditive>
+
+                   When set, creates or opens file to write QOut(), QQOut()
+                   and DevOut() output to. If <lAdditive> is TRUE and the
+                   file already exists, the file is opened and positioned
+                   at end of file. Otherwise, the file is created. If a
+                   file is already opened, it is closed before the new file
+                   is opened or created (even if it is the same file). The
+                   default file extension is ".prn". The default file name
+                   is "PRN", which maps to the default printer device. Call
+                   with an empty string to close the file.
+
+              _SET_SCOREBOARD  <lFlag> | <cOnOff>
+
+                   When enabled, which is the default, READ and MEMOEDIT
+                   display status messages on screen row 0. When disabled,
+                   READ and MEMOEDIT status messages are suppressed.
+
+              _SET_SCROLLBREAK <lFlag> | <cOnOff>
+
+                   QUESTION: What is this flag for?
+
+              _SET_SOFTSEEK    <lFlag> | <cOnOff>
+
+                   When enabled, a SEEK that fails will position the record
+                   pointer to the first key that is higher than the sought
+                   after key or to LastRec() + 1 if there is no higher key.
+                   When disabled, which is the default, a SEEK that fails
+                   will position the record pointer to LastRec()+1.
+
+              _SET_STRICTREAD  <lFlag> | <cOnOff>
+
+                   TODO: Document
+
+              _SET_TYPEAHEAD   <nKeyStrokes>
+
+                   Sets the size of the keyboard typeahead buffer. Defaults
+                   to 50. The minimum is 16 and the maximum is 4096.
+
+              _SET_UNIQUE      <lFlag> | <cOnOff>
+
+                   When enabled, indexes are not allowed to have duplicate
+                   keys. When disabled, indexes are allowed duplicate keys.
+
+              _SET_VIDEOMODE   <nValue>
+
+                   TODO: Document
+
+              _SET_WRAP        <lFlag> | <cOnOff>
+
+                   When enabled, lightbar menus can be navigated from the
+                   last position to the first and from the first position
+                   to the last. When disabled, which is the default, there
+                   is a hard stop at the first and last positions.
+   $RETURNS$
+      Set() The current or previous setting
+   $FILES$
+      Library is core
+   $COMPLIANCE$
+      C
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __SetFunction()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Assign a character string to a function key
+   $SYNTAX$
+      __SetFunction( <nFunctionKey>, [<cString>] ) --> NIL
+   $ARGUMENTS$
+      <nFunctionKey> is a number in the range 1..40 that represent the
+      function key to be assigned.
+
+      <cString> is a character string to set. If <cString> is not
+      specified, the function key is going to be set to NIL releasing by
+      that any previous __SetFunction() or SetKey() for that function.
+   $RETURNS$
+      __SetFunction() always return NIL.
+   $DESCRIPTION$
+      __SetFunction() assign a character string with a function key, when
+      this function key is pressed, the keyboard is stuffed with this
+      character string. __SetFunction() has the effect of clearing any
+      SetKey() previously set to the same function number and vice versa.
+
+      <table>
+      nFunctionKey    Key to be set
+
+         1 .. 12      F1 .. F12
+        13 .. 20      Shift-F3 .. Shift-F10
+        21 .. 30      Ctrl-F1 .. Ctrl-F10
+        31 .. 40      Alt-F1 .. Alt-F10
+      </table>
+
+      SET FUNCTION command is preprocessed into __SetFunction() function
+      during compile time.
+   $EXAMPLES$
+      // Set F1 with a string
+      CLS
+      __SetFunction( 1, "I Am Lazy" + Chr( 13 ) )
+      cTest := Space( 20 )
+      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+      READ
+      ? cTest
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
+      11 and 12 to represent Shift-F1 and Shift-F2.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Inkey(),SetKey(),__Keyboard(),SET KEY
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET FUNCTION
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Assign a character string to a function key
+   $SYNTAX$
+      SET FUNCTION <nFunctionKey> TO [<cString>]
+   $ARGUMENTS$
+      <nFunctionKey> is a number in the range 1..40 that represent the
+      function key to be assigned.
+
+      <cString> is a character string to set. If <cString> is not
+      specified, the function key is going to be set to NIL releasing by
+      that any previous Set Function or SetKey() for that function.
+   $DESCRIPTION$
+      Set Function assign a character string with a function key, when
+      this function key is pressed, the keyboard is stuffed with this
+      character string. Set Function has the effect of clearing any
+      SetKey() previously set to the same function number and vice versa.
+
+      <table>
+      nFunctionKey    Key to be set
+
+         1 .. 12      F1 .. F12
+        13 .. 20      Shift-F3 .. Shift-F10
+        21 .. 30      Ctrl-F1 .. Ctrl-F10
+        31 .. 40      Alt-F1 .. Alt-F10
+      </table>
+
+      SET FUNCTION command is preprocessed into __SetFunction() function
+      during compile time.
+   $EXAMPLES$
+      // Set F1 with a string
+      CLS
+      SET FUNCTION 1 TO "I Am Lazy" + Chr( 13 )
+      cTest := Space( 20 )
+      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+      READ
+      ? cTest
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
+      11 and 12 to represent Shift-F1 and Shift-F2.
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Inkey(),SetKey(),__Keyboard()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SetKey()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Assign an action block to a key
+   $SYNTAX$
+      SetKey( <anKey> [, <bAction> [, <bCondition> ] ] )
+   $ARGUMENTS$
+      <anKey> is either a numeric key value, or an array of such values
+
+      <bAction> is an optional code-block to be assigned
+
+      <bCondition> is an optional condition code-block
+   $RETURNS$
+      Current assigned action-block
+   $DESCRIPTION$
+      The SetKey() function returns the current code-block assigned to a
+      key when called with only the key value.  If the action block (and
+      optionally the condition block) are passed, the current block is
+      returned, and the new code block and condition block are stored.
+      A group of keys may be assigned the same code block/condition block
+      by using an array of key values in place on the first parameter.
+   $EXAMPLES$
+      LOCAL bOldF10 := SetKey( K_F10, {|| Yahoo() } )
+      ... // some other processing
+      SetKey( K_F10, bOldF10 )
+      ... // some other processing
+      bBlock := SetKey( K_SPACE )
+      IF bBlock != NIL ...
+
+      // make F10 exit current get, but only if in a get - ignores other
+      // wait-states such as menus, achoices, etc...
+      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
+       {|| GetActive() != NIL } )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      SetKey() is mostly CA-Cl*pper compliant. The only difference is the
+      addition of the condition code-block parameter, allowing set-keys to
+      be conditionally turned off or on.  This condition-block cannot be
+      returned once set - see SetKeyGet()
+   $FILES$
+      Library is core
+   $SEEALSO$
+      hb_SetKeySave()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_SetKeyGet()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Determine a set-key code block and condition-block
+   $SYNTAX$
+      hb_SetKeyGet( <nKey> [, <bConditionByRef> ] )
+   $ARGUMENTS$
+      <anKey> is an numeric key value
+
+      <bConditionByRef> is an optional return-parameter
+   $RETURNS$
+      Current assigned action-block
+   $DESCRIPTION$
+      The hb_SetKeyGet() function returns the current code-block assigned to
+      a key, and optionally assigns the condition-block to the
+      return-parameter
+   $EXAMPLES$
+      LOCAL bOldF10, bOldF10Cond
+      bOldF10 := hb_SetKeyGet( K_F10, @bOldF10Cond )
+      ... // some other processing
+      SetKey( K_F10, bOldF10, bOldF10Cond )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SetKey(),hb_SetKeySave(),hb_SetKeyCheck()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_SetKeySave()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Returns a copy of internal set-key list, optionally overwriting
+   $SYNTAX$
+      hb_SetKeySave( [ <OldKeys> ] )
+   $ARGUMENTS$
+      <OldKeys> is an optional set-key list from a previous call to
+      hb_SetKeySave(), or NIL to clear current set-key list
+   $RETURNS$
+      Current set-key list
+   $DESCRIPTION$
+      hb_SetKeySave() is designed to act like the Set() function which
+      returns the current state of an environment setting, and optionally
+      assigning a new value.  In this case, the "environment setting" is the
+      internal set-key list, and the optional new value is either a value
+      returned from a previous call to SetKeySave() - to restore that list,
+      or the value of NIL to clear the current list.
+   $EXAMPLES$
+      LOCAL aKeys := hb_SetKeySave( NIL )  // removes all current set=keys
+      ... // some other processing
+      hb_SetKeySave( aKeys )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SetKey()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_SetKeyCheck()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Events
+   $ONELINER$
+      Implements common hot-key activation code
+   $SYNTAX$
+      hb_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
+   $ARGUMENTS$
+      <nKey> is a numeric key value to be tested code-block, if executed
+
+      <p1>..<p3> are optional parameters that will be passed to the code-block
+   $RETURNS$
+      True if there is a hot-key associated with <nKey> and it was executed;
+      otherwise False
+      If there is a hot-key association (before checking any condition):
+      - if there is a condition-block, it is passed one parameter - <nKey>
+      - when the hot-key code-block is called, it is passed 1 to 4 parameters,
+      depending on the parameters passed to hb_SetKeyCheck().  Any
+      parameters so passed are directly passed to the code-block, with an
+      additional parameter being <nKey>
+   $DESCRIPTION$
+      hb_SetKeyCheck() is intended as a common interface to the SetKey()
+      functionality for such functions as AChoice(), dbEdit(), MemoEdit(),
+      ACCEPT, INPUT, READ, and WAIT
+   $EXAMPLES$
+      // within ReadModal()
+      IF hb_SetKeyCheck( K_ALT_X, GetActive() )
+         ... // some other processing
+      ENDIF
+      // within TBrowse handler
+      CASE hb_SetKeyCheck( nInkey, oTBrowse )
+         RETURN
+      CASE nInKey == K_ESC
+         ... // some other processing
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SetKey(),hb_SetKeySave()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET KEY
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Assign an action block to a key
+   $SYNTAX$
+      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
+   $ARGUMENTS$
+      <anKey> is either a numeric key value, or an array of such values
+
+      <bAction> is an optional code-block to be assigned
+
+      <bCondition> is an optional condition code-block
+   $DESCRIPTION$
+      The Set Key Command function is translated to the SetKey() function
+      witch returns the current code-block assigned to a
+      key when called with only the key value.  If the action block (and
+      optionally the condition block) are passed, the current block is
+      returned, and the new code block and condition block are stored.
+      A group of keys may be assigned the same code block/condition block
+      by using an array of key values in place on the first parameter.
+   $EXAMPLES$
+      LOCAL bOldF10 := SetKey( K_F10, {|| Yahoo() } )
+      ... // some other processing
+      SET KEY K_F10 TO bOldF10
+      ... // some other processing
+      bBlock := SetKey( K_SPACE )
+      IF bBlock != NIL ...
+
+         // make F10 exit current get, but only if in a get - ignores other
+         // wait-states such as menus, achoices, etc...
+         SetKey( K_F10, {|| GetActive():State := GE_WRITE }, ;
+            {|| GetActive() != NIL } )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      SET KEY is mostly CA-Cl*pper compliant. The only difference is the
+      addition of the condition code-block parameter, allowing set-keys to
+      be conditionally turned off or on.  This condition-block cannot be
+      returned once set - see SetKeyGet()
+   $SEEALSO$
+      hb_SetKeySave()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SetTypeahead()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Sets the typeahead buffer to given size.
+   $SYNTAX$
+      SetTypeahead( <nSize> ) --> <nPreviousSize>
+   $ARGUMENTS$
+      <nSize> is a valid typeahead size.
+   $RETURNS$
+      <nPreviousSize> The previous state of _SET_TYPEAHEAD
+   $DESCRIPTION$
+      This function sets the typeahead buffer to a valid given size as is
+      Set( _SET_TYPEAHEAD ) where used.
+   $EXAMPLES$
+      // Sets typeahead to 12
+      SetTypeahead( 12 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __Accept(),__Input()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __XHelp()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Internal
+   $ONELINER$
+      Determines whether a HELP() user defined function exists.
+   $SYNTAX$
+      __XHelp() --> <xValue>
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      This function returns aleatory values.
+   $DESCRIPTION$
+      This is an internal undocumented CA-Cl*pper function, which will
+      try to call the user defined function HELP() if it is defined
+      in the current application. This is the default SetKey() handler
+      for the F1 key.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C52U
+   $FILES$
+      Library is core
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET DEFAULT
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Establishes the Harbour search drive and directory.
+   $SYNTAX$
+      SET DEFAULT TO [<cPath>]
+   $ARGUMENTS$
+      <cPath> Drive and/or path.
+   $DESCRIPTION$
+      This command changes the drive and directory used for reading and
+      writing database,index,memory, and alternate files. Specifying no
+      parameters with this command will default the operation to the
+      current logged drive and directory.
+   $EXAMPLES$
+      SET DEFAULT TO C:\temp
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET PATH,CurDir(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET WRAP
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle wrapping the PROMPTs in a menu.
+   $SYNTAX$
+      SET WRAP on | OFF | (<lWrap>
+   $ARGUMENTS$
+      <lWrap> Logical expression for toggle
+   $DESCRIPTION$
+      This command toggles the highlighted bars in a @...PROMPT command
+      to wrap around in a bottom-to-top and top-to-bottom manner. If the
+      value of the logical expression <lWrap> is a logical false (.F.),
+      the wrapping mode is set OFF; otherwise,it is set ON.
+   $EXAMPLES$
+      See tests/menutest.prg
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      @...PROMPT,MENU TO
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET MESSAGE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Establishes a message row for @...PROMPT command
+   $SYNTAX$
+      SET MESSAGE TO [<nRow> [CENTER]]
+   $ARGUMENTS$
+      <nRow> Row number to display the message
+   $DESCRIPTION$
+      This command is designed to work in conjunction with the MENU TO and
+      @...PROMPT commands. With this command, a row number between 0 and
+      MaxRow() may be specified in <nRow>. This establishes the row on
+      witch any message associated with an @...PROMPT command will appear.
+
+      If the value of <nRow> is 0, all messages will be suppressed.
+      All messaged will be left-justifies unless the CENTER clause is
+      used. In this case, the individual messages in each @...PROMPT command
+      will be centered at the designated row (unless <nRow> is 0). All
+      messages are independent; therefore, the screen area is cleared out
+      by the centered message will vary based on the length of each
+      individual message.
+
+      Specifying no parameters with this command set the row value to 0,
+      witch suppresses all messages output.
+      The British spelling of CENTRE is also supported.
+   $EXAMPLES$
+      See tests/menutest.prg
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      Set(),SET WRAP,@...PROMPT,MENU TO
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET PATH
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Specifies a search path for opening files
+   $SYNTAX$
+      SET PATH TO [<cPath>]
+   $ARGUMENTS$
+      <cPath> Search path for files
+   $DESCRIPTION$
+      This command specifies the search path for files required by most
+      commands and functions not found in the current drive and directory.
+      This pertains primarily, but not exclusively, to databases, indexes,
+      and memo files, as well as to memory, labels and reports files. The
+      search hierarchy is: 1 Current drive and directory, 2 The SET DEFAULT
+      path; 3 The SET PATH path.
+   $EXAMPLES$
+      SET PATH TO C:\harbour\test
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DEFAULT,CurDir(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET INTENSITY
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggles the enhanced display of PROMPT's and GETs.
+   $SYNTAX$
+      SET INTENSITY  ON | off | (<lInte>)
+   $ARGUMENTS$
+      <lInte> Logical expression for toggle command
+   $DESCRIPTION$
+      This command set the field input color and @...PROMPT menu color
+      to either highlighted (inverse video) or normal color. The default
+      condition is ON (highlighted).
+   $EXAMPLES$
+      SET INTENSITY ON
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      @...GET,@...PROMPT,@...SAY,Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET ALTERNATE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle and echos output to an alternate file
+   $SYNTAX$
+      SET ALTERNATE to <cFile> [ADDITIVE]
+      SET ALTERNATE  on | OFF | (<lAlter>)
+   $ARGUMENTS$
+      <cFile> Name of alternate file.
+
+      <lAlter> Logical expression for toggle
+   $DESCRIPTION$
+      This command toggles and output console information to the alternate
+      file <cFile>, provided that the command is toggled on or the condition
+      <lAlter> is set to a logical true (.T.). If <cFile> does not has a
+      file extension, .txt will be assumed. The file name may optionally
+      have a drive letter and/or directory path. If none is specified, the
+      current drive and directory will be used.
+      If the ALTERNATE file is created but no ALTERNATE ON command is
+      issued, nothing will be echoed to the file.
+      If ADDITIVE clause is used, then the information will be appended
+      to the existing alternate file. Otherwise, a new file will be created
+      with the specified name (or an existing one will be overwritten) and
+      the information will be appended to the file. The default is to create
+      a new file.
+      A SET ALTERNATE TO command will close the alternate file
+   $EXAMPLES$
+      SET ALTERNATE TO test.txt
+      SET ALTERNATE ON
+      ? 'Harbour'
+      ? "is"
+      ? "Power"
+      SET ALTERNATE TO
+      SET ALTERNATE OFF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      CLOSE,SET PRINTER,SET CONSOLE,Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET CENTURY
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle the century digits in all dates display
+   $SYNTAX$
+      SET CENTURY on | OFF | (<lCent>)
+   $ARGUMENTS$
+      <lCent> Logical expression for toggle
+   $DESCRIPTION$
+      This command allows the input and display of dates with the century
+      prefix. It will be in the standart MM/DD/YYYY format unless specified
+      by the SET DATE command or Set() function. If <lCent> is a logical
+      true (.T.), the command will be set on; otherwise, the command will
+      be set off
+   $EXAMPLES$
+      SET CENTURY ON
+      ? Date()
+      SET CENTURY OFF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET DATE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Assigns a date format or chooses a predefined date data set.
+   $SYNTAX$
+      SET DATE FORMAT [TO] <cFormat>
+
+      SET DATE [TO] [ANSI / BRITISH / FRENCH / GERMAN / ITALIAN / JAPAN / USA / AMERICAN]
+   $ARGUMENTS$
+      <cFormat> Keyword for date format
+   $DESCRIPTION$
+      This command sets the date format for function display purposes.
+      If specified, <cFormat> may be a customized date format in which the
+      letters d, m and y may be used to design a date format. The default
+      is an AMERICAN date format; specifying no parameters will set the
+      date format to AMERICAN. Below is a table of the various predefined
+      dates formats.
+
+      <table>
+       Syntax         Date Format
+       ANSI           yy.mm.dd
+       BRITISH        dd/mm/yy
+       FRENCH         dd/mm/yy
+       GERMAN         dd.mm.yy
+       ITALIAN        dd-mm-yy
+       JAPAN          yy.mm.dd
+       USA            mm-dd-yy
+       AMERICAN       mm/dd/yy
+      </table>
+   $EXAMPLES$
+      SET DATE JAPAN
+      ? Date()
+      SET DATE GERMAN
+      ? Date()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET EPOCH
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Specify a base year for interpreting dates
+   $SYNTAX$
+      SET EPOCH TO <nEpoch>
+   $ARGUMENTS$
+      <nEpoch> Base Century.
+   $DESCRIPTION$
+      This command sets the base year value for dates that have only two
+      digits. The default setting is 1900. Dates between 0100-01-01 and
+      2999-12-31 are fully supported.
+   $EXAMPLES$
+      SET EPOCH TO 2000
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DATE,SET CENTURY,CToD(),Date(),DToC(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET FIXED
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Set the number of decimal position to be displayed
+   $SYNTAX$
+      SET FIXED on | OFF | (<lFixed>)
+   $ARGUMENTS$
+      <lFixed> Logical expression for toggle
+   $DESCRIPTION$
+      This command activates a system wide fixed placement of decimals
+      places shown for all numeric outputs. If the value of <lFixed> is
+      a logical true (.T.), FIXED will be turned ON; otherwise it will be
+      turned OFF.
+
+      When SET DECIMALS OFF is used, the following rules apply to the number
+      of decimal placed displayed.
+
+      <table>
+       Addition         Same as operand with the greatest number of decimal digits
+       Subtraction      Same as operand with the greatest number of decimal digits
+       Multiplication   Sum of operand decimal digits
+       Division         Determined by SET DECIMAL TO
+       Exponential      Determined by SET DECIMAL TO
+       Log()            Determined by SET DECIMAL TO
+       Exp()            Determined by SET DECIMAL TO
+       Sqrt()           Determined by SET DECIMAL TO
+       Val()            Determined by SET DECIMAL TO
+      </table>
+   $EXAMPLES$
+      SET FIXED ON
+      ? 25141251 / 362
+      SET FIXED OFF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DECIMALS,Exp(),Log(),Sqrt(),Val(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET PRINTER
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggles the printer and controls the printer device
+   $SYNTAX$
+      SET PRINTER on | OFF
+      SET PRINTER (<lPrinter>)
+      SET PRINTER TO [<cPrinter>] [ADDITIVE]
+   $ARGUMENTS$
+      <lPrinter>   Logical condition by which to toggle the printer
+
+      <cPrinter> A device name or an alternate name
+   $DESCRIPTION$
+      This command can direct all output that is not controlled by the
+      @...SAY command and the DevPos() and DevOut() functions to the
+      printer. If specified,the condition <lPrinter> toggles the printer
+      ON if a logical true (.T.) and OFF if a logical false (.F.). If no
+      argument is specified in the command, the alternate file (if one
+      is open) is closed, or the device is reselected and the PRINTER
+      option is turned OFF.
+
+      If a device is specified in <cPrinter>, the output will be directed
+      to that device instead of to the PRINTER. A specified device may be
+      a literal string or a variable, as long as the variable is enclosed
+      in parentheses. For a network, do not use a trailing colon when
+      redirecting to a device.
+
+      If an alternate file is specified, <cPrinter> becomes the name of a
+      file that will contain the output. If no file extension is specified
+      an extension of .prn will be defaulted to.
+
+      If the ADDITIVE clause is specified, the information will be appended
+      to the end of the specified output file. Otherwise, a new file will
+      be created with the specified name (or an existing file will first
+      be cleared) and the information will then be appended to the file.
+      The default is to create a new file.
+   $EXAMPLES$
+      SET PRINTER ON
+      SET PRINTER TO LPT1
+      ? 25141251 / 362
+      SET PRINTER .F.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DEVICE, SET CONSOLE, DevOut(), Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET CONSOLE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle the console display
+   $SYNTAX$
+      SET CONSOLE ON | off | (<lConsole>)
+   $ARGUMENTS$
+      <lConsole> Logical expression for toggle command
+   $DESCRIPTION$
+      This command turns the screen display either off or on for all
+      screens display other then direct output via the @...SAY commands
+      or the <-> DevOut() function.
+
+      If <lConsole> is a logical true (.T.),the console will be turned
+      ON; otherwise, the console will be turned off.
+   $EXAMPLES$
+      SET CONSOLE ON
+      ? Date()
+      SET CONSOLE OFF
+      ? Date()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET DEVICE,Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET DECIMALS
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle the console display
+   $SYNTAX$
+      SET DECIMALS TO [<nDecimal>]
+   $ARGUMENTS$
+      <nDecimal> Number of decimals places
+   $DESCRIPTION$
+      This command establishes the number of decimal places that Harbour
+      will display in mathematical calculations, functions, memory variables,
+      and fields. Issuing no parameter with this command will the default
+      number of decimals to 0. For decimals to be seen, the SET FIXED ON
+      command must be activated.
+   $EXAMPLES$
+      SET FIXED ON
+      ? 25141251 / 362
+      SET DECIMALS TO 10
+      ? 214514.214 / 6325
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      SET FIXED,Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET DEVICE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Directs all @...SAY output to a device.
+   $SYNTAX$
+      SET DEVICE TO [printer | SCREEN ]
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      This command determines whether the output from the @...SAY command
+      and the DevPos() and DevOut() function will be displayed on the
+      printer.
+
+      When the device is set to the PRINTER,the SET MARGIN value adjusts
+      the position of the column values accordingly. Also, an automatic
+      page eject will be issued when the current printhead position is
+      less than the last printed row. Finally, if used in conjunction with
+      the @...GET commands, the values for the GETs will all be ignored.
+   $EXAMPLES$
+      SET DEVICE TO SCREEN
+      ? 25141251 / 362
+      SET DEVICE TO PRINTER
+      SET PRINTER TO LPT1
+      ? 214514.214 / 6325
+      SET PRINTER OFF
+      SET DEVICE TO SCREEN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      @...SAY,SET PRINTER,SetPRC(),Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      SET BELL
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Toggle the bell to sound once a GET has been completed.
+   $SYNTAX$
+      SET BELL on | OFF | (<lBell>)
+   $ARGUMENTS$
+      <lBell> Logical expression for toggle command
+   $DESCRIPTION$
+      This command toggles the bell to sound whenever a character is
+      entered into the last character position of a GET, or if an invalid
+      data type is entered into a GET.
+
+      If <lBell> is a logical true (.T.), the bell will be turned
+      ON; otherwise, the bell will be turned off.
+   $EXAMPLES$
+      SET BELL ON
+      cDummy := Space( 20 )
+      @ 3, 2 GET cDummy
+      READ
+      SET BELL OFF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      Set()
+   $END$
+ */

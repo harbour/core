@@ -1,0 +1,70 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      RangeRem()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove characters within a certain ASCII range from a string
+   $SYNTAX$
+      RangeRem( <cChar1|nChar1>, <cChar2|nChar2>, <cString> ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+      ? RangeRem( "0", "9", "year2002.dbf" ) // "year.dbf", remove all digits
+      ? RangeRem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to hb_BChar( 255 )
+                                             // and from Chr( 0 ) to "0"
+      ? RangeRem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      RangeRem() is compatible with CT3's RangeRem().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      RangeRepl()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      RANGEREPL
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace characters within a certain ASCII range from a string
+   $SYNTAX$
+      RangeRepl( <cChar1|nChar1>, <cChar2|nChar2>,
+                 <[@]cString>, <cReplacementChar|nReplacementChar> ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+      ? RangeRepl( "0", "9", "year2002.dbf", "?" ) // "year????.dbf", replace all digits
+      ? RangeRepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to hb_BChar( 255 )
+                                                   // and from Chr( 0 ) to "0"
+      ? RangeRepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      RangeRepl() is compatible with CT3's RangeRepl().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      RangeRem()
+   $END$
+ */

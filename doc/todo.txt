@@ -1,0 +1,101 @@
+/*
+ * $Id$
+ */
+
+=======================================================================
+
+                  Harbour TODO list
+
+=======================================================================
+Tasks for after v.1 release:
+----------------------------
+
+Assign to: Ryszard
+Detail...: SQLRDD.
+Status...: Working on it.
+
+***
+
+Assign to: <nobody>
+Detail...: Add support for virtual file handles and registering some
+           meta handles so it will be possible to make:
+              h := FOpen( "gzip:/tmp/myarchive.gz", FO_WRITE )
+              FWrite( h, cData )
+              FClose( h )
+           or:
+              h := FOpen( "tcp:some.host:port", FO_WRITE )
+              ...
+           or:
+              h := FOpen( "|lpr -PLaserJet", FO_WRITE )
+              ...
+           or:
+              h := FOpen( "gunzip /tmp/myarchive.gz|", FO_READ )
+              ...
+           etc.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Define multi platform platform API for GTs which can mix
+           graphics objects with standard text output. Now it's
+           possible in GTXWC, GTWVT and GTALLEG. This I will discuss
+           yet also with Harbour developers.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add support for remotely controlled GUI objects so we will
+           be able to create GUI programs with GTNET.
+Status...: Open.
+
+***
+
+Assign to: <nobody>
+Detail...: Add NETRDD - meta RDD which will allow transport layer
+           between client application and server application with any
+           other chosen RDD driver. Idea similar to GTNET but for RDD
+           drivers - it's sth like ADS does.
+Status...: Open.
+
+***
+
+Assign to: Przemek
+Detail...: Extended HB_IT_POINTER. In practice we can give them the
+           same functionality as for objects and use them for fast
+           creation objects at C level. We can also add HB_VALTYPE()
+           function which will return the extended type name, f.e.
+           "WINDOW", "FONT", "SOCKET" or anything what 3-rd party
+           programmers may want to use. It will greatly simplify
+           writing some libraries.
+Status...: Open.
+
+***
+
+Assign to: Jean-Francois Lefebvre (JFL)
+Detail...: The following need to be added to the OO system:
+           Class Method, Multiple Constructor, Class init Support.
+Status...: Open.
+
+***
+
+Assign to: Ryszard
+Detail...: Real strong typing in the compiler.
+Status...: Open.
+
+***
+
+=======================================================================
+
+                  Harbour TOFIX list
+
+=======================================================================
+
+Assign to: Przemek
+Detail...: Clean RDD code to be safe for return from RT errors
+Status...: Open.
+
+***
+
+=======================================================================

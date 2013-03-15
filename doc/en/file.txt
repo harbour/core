@@ -1,0 +1,1170 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __TypeFile(), TYPE
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: FOpen(), FClose(), FWrite(), FSeek(), FRead(), File(),
+ *                       FReadStr(), FRename(), FError(), RENAME, ERASE, CurDir(),
+ *                       DirMake(), DirChange(), IsDisk(), DirRemove(), DiskChange()
+ *
+ * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
+ *    Documentation for: hb_FEof()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FOpen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Open a file.
+   $SYNTAX$
+      FOpen( <cFile>, [<nMode>] ) --> nHandle
+   $ARGUMENTS$
+      <cFile> Name of file to open.
+
+      <nMode> File open mode.
+   $RETURNS$
+      <nHandle> A file handle.
+   $DESCRIPTION$
+      This function opens a file expressed as <cFile> and returns a
+      file handle to be used with other low-level file functions. The
+      value of <nMode> represents the status of the file to be opened;
+      the default value is 0. The file open modes are as follows:
+
+      <table>
+       nMode   fileio.ch      Meaning
+
+       0       FO_READ        Read only
+       1       FO_WRITE       Write only
+       2       FO_READWRITE   Read/write
+       16      FO_EXCLUSIVE   Exclusive read only
+       32      FO_DENYWRITE   Prevent others from writing
+       48      FO_DENYREAD    Deny read only
+       64      FO_DENYNONE    Not deny, Let to others Read / Write
+       64      FO_SHARED      same as FO_DENYNONE
+      </table>
+
+      If there is an error in opening a file, a -1 will be returned by
+      the function. Files handles may be in the range of 0 to 65535. The
+      status of the SET DEFAULT TO and SET PATH TO commands has no effect
+      on this function. Directory names and paths must be specified along
+      with the file that is to be opened.
+
+      If an error has occurred, see the returns values from FError() for
+      possible reasons for the error.
+   $EXAMPLES$
+      #include "fileio.ch"
+      IF ( nH := FOpen( "x.txt", FO_READWRITE + FO_DENYNONE ) ) == F_ERROR
+         ? "File can't be opened"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+      Header  is fileio.ch
+   $SEEALSO$
+      FCreate(),FError(),FClose()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Creates a file.
+   $SYNTAX$
+      FCreate( <cFile>, [<nAttribute>] ) --> nHandle
+   $ARGUMENTS$
+      <cFile> is the name of the file to create.
+
+      <nAttribute> Numeric code for the file attributes.
+   $RETURNS$
+      <nHandle>  Numeric file handle to be used in other operations.
+   $DESCRIPTION$
+      This function creates a new file with a filename of <cFile>. The
+      default value of <nAttribute> is 0 and is used to set the
+      attribute byte for the file being created by this function.
+      The return value will be a file handle that is associated
+      with the new file. This number will be between zero to 65,535,
+      inclusive. If an error occurs, the return value of this function
+      will be -1.
+
+      If the file <cFile> already exists, the existing file will be
+      truncated to a file length of 0 bytes.
+
+      If specified, the following table shows the value for <nAttribute>
+      and their related meaning to the file <cFile> being created by
+      this function.
+
+      <table>
+       <nAttribute>   fileio.ch     Meaning
+
+       0              FC_NORMAL     Normal/Default,Read/Write
+       1              FC_READONLY   Read-only file attribute is set
+       2              FC_HIDDEN     Hidden,Excluded from normal DIR search
+       4              FC_SYSTEM     Create,Excluded from normal DIR search
+      </table>
+   $EXAMPLES$
+      #include "fileio.ch"
+      IF ( nh := FCreate( "test.txt" ) ) == F_ERROR
+          ? "Cannot create file"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+      Header is fileio.ch
+   $SEEALSO$
+      FClose(),FOpen(),FWrite(),FRead(),FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FRead()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Reads a specified number of bytes from a file.
+   $SYNTAX$
+      FRead( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
+   $ARGUMENTS$
+      <nHandle>     File handle
+
+      <cBuffer>  Character expression passed by reference.
+
+      <nBytes>      Number of bytes to read.
+   $RETURNS$
+      <nBytes> the number of bytes successfully read from the file.
+      <nHandle>
+   $DESCRIPTION$
+      This function reads the characters from a file whose file handle
+      is <nHandle> into a character memory variable expressed as <cBuffer>.
+      The function returns the number of bytes successfully read into
+      <cBuffer>.
+
+      The value of <nHandle> is obtained from either a call to the FOpen()
+      or the FCreate() function.
+
+      The <cBuffer> expression is passed by reference and must be defined
+      before this function is called. It also must be at least the same
+      length as <nBytes>.
+
+      <nBytes> is the number of bytes to read, starting at the current
+      file pointer position. If this function is successful in reading
+      the characters from the file, the length of <cBuffer> or the number
+      of bytes specified in <nBytes> will be the value returned. The current
+      file pointer advances the number of bytes read with each successive
+      read. The return value is the number of bytes successfully read
+      from the file. If a 0 is returned, or if the number of
+      bytes read matches neither the length of <cBuffer> nor the specified
+      value in <nBytes> an end-of-file condition has been reached.
+   $EXAMPLES$
+      #include "fileio.ch"
+      cBuffer := Space( 500 )
+      IF ( nH := FOpen( "x.txt" ) ) == F_ERROR
+         FRead( nH, @cBuffer, 500 )
+         ? cbuffer
+      ENDIF
+      FClose( nH )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2W(),FError(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FWrite()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Writes characters to a file.
+   $SYNTAX$
+      FWrite( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
+   $ARGUMENTS$
+      <nHandle>  File handle number.
+
+      <cBuffer>  Character expression to be written.
+
+      <nBytes>   The number of bytes to write.
+   $RETURNS$
+      <nBytesWritten> the number of bytes successfully written.
+   $DESCRIPTION$
+      This function writes the contents of <cBuffer> to the file designated
+      by its file handle <nHandle>. If used, <nBytes> is the number of
+      bytes in <cBuffer> to write.
+
+      The returned value is the number of bytes successfully written to the
+      file. If the returned value is 0, an error has occurred (unless
+      this is intended). A successful write occurs when the number returned
+      by FWrite() is equal to either Len( <cBuffer> ) or <nBytes>.
+
+      The value of <cBuffer> is the string or variable to be written to the
+      open file <nHandle>.
+
+      The value of <nBytes> is the number of bytes to write out to the file.
+      The disk write begins with the current file position in <nHandle>. If
+      this variable is not used, the entire contents of <cBuffer> is written
+      to the file.
+      To truncate a file, a call of FWrite( nHandle, "", 0 ) is needed.
+   $EXAMPLES$
+      nHandle := FCreate( "x.txt" )
+      FOR X := 1 TO 10
+         FWrite( nHandle, Str( x ) )
+      NEXT
+      FClose( nHandle )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      FClose(), FCreate(), FError(), FOpen(), I2Bin(), L2Bin()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FError()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Reports the error status of low-level file functions
+   $SYNTAX$
+      FError() --> <nErrorCode>
+   $RETURNS$
+      <nErrorCode> Value of the OS error last encountered by a
+      low-level file function.
+
+      FError() Return Values
+
+      <table>
+       Error          Meaning
+
+       0              Successful
+       2              File not found
+       3              Path not found
+       4              Too many files open
+       5              Access denied
+       6              Invalid handle
+       8              Insufficient memory
+       15             Invalid drive specified
+       19             Attempted to write to a write-protected disk
+       21             Drive not ready
+       23             Data CRC error
+       29             Write fault
+       30             Read fault
+       32             Sharing violation
+       33             Lock Violation
+      </table>
+   $DESCRIPTION$
+      After every low-level file function,this function will return
+      a value that provides additional information on the status of
+      the last low-level file functions's performance. If the FError()
+      function returns a 0, no error was detected. Below is a table
+      of possibles values returned by the FError() function.
+   $EXAMPLES$
+      #include "fileio.ch"
+      nHandle := FCreate( "temp.txt", FC_NORMAL )
+      IF FError() != 0
+         ? "Cannot create file, OS error ", FError()
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      FClose(),FErase(),FOpen(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FClose()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Closes an open file
+   $SYNTAX$
+      FClose( <nHandle> ) --> <lSuccess>
+   $ARGUMENTS$
+      <nHandle> File handle
+   $RETURNS$
+      <lSuccess>  Logical TRUE (.T.) or FALSE (.F.)
+   $DESCRIPTION$
+      This function closes an open file with a file handle
+      of <nHandle> and writes the associated buffers to the
+      disk. The <nHandle> value is derived from the FCreate()
+      or FOpen() function.
+   $EXAMPLES$
+      #include "fileio.ch"
+      nHandle := FOpen( "x.txt" )
+      ? FSeek( nHandle, 0, FS_END )
+      FClose( nHandle )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      FOpen(),FCreate(),FRead(),FWrite(),FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FErase()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Erase a file from disk
+   $SYNTAX$
+      FErase( <cFile> ) --> nSuccess
+   $ARGUMENTS$
+      <cFile> Name of file to erase.
+   $RETURNS$
+      <nSuccess> 0 if successful, -1 if not
+   $DESCRIPTION$
+      This function deletes the file specified in <cFile> from the disk.
+      No extensions are assumed. The drive and path my be included in
+      <cFile>; neither the SET DEFAULT not the SET PATH command controls
+      the performance of this function. If the drive or path is not used,
+      the function will look for the file only on the currently selected
+      directory on the logged drive.
+
+      If the function is able to successfully delete the file from the
+      disk, the value of the function will be 0; otherwise a -1 will
+      be returned. If not successfull, additional information may be
+      obtained by calling the FError() function.
+
+      Note: Any file to be removed by FErase() must still be closed.
+
+   $EXAMPLES$
+      #include "fileio.ch"
+      IF FErase( "test.txt" ) != F_ERROR
+         ? "File successfully erased"
+      ELSE
+         ? "File can not be deleted"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      FError(),FRename()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FRename()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Renames a file
+   $SYNTAX$
+      FRename( <cOldFile>, <cNewFile> ) --> nSuccess
+   $ARGUMENTS$
+      <cOldFile> Old filename to be changed
+
+      <cNewFile> New filename
+   $RETURNS$
+      <nSuccess> If successful, a 0 will be returned otherwise,
+      a -1 will be returned.
+   $DESCRIPTION$
+      This function renames the specified file <cOldFile> to <cNewFile>.
+      A filename and/or directory name may be specified for either para-
+      meter. However, if a path is supplied as part of <cNewFile> and
+      this path is different from either the path specified in <cOldFile>
+      or (if none is used) the current drive and directory, the function
+      will not execute successfully.
+
+      Neither parameter is subject to the control of the SET PATH TO or
+      SET DEFAULT TO commands. In attempting to locate the file to be
+      renamed, this function will search the default drive and directory
+      or the drive and path specified in <cOldFile>. It will not search
+      directories named by the SET PATH TO and SET DEFAULT TO commands
+      or by the PATH environment variable.
+
+      If the file specified in <cNewFile> exists or the file is open,
+      the function will be unable to rename the file. If the function
+      is unable to complete its operation,it will return a value of -1.
+      If it is able to rename the file, the return value for the function
+      will be 0. A call to FError() function will give additional infor-
+      mation about any error found.
+   $EXAMPLES$
+      #include "fileio.ch"
+      nResult := FRename( "x.txt", "x1.txt" )
+      IF nResult == F_ERROR
+         ? "File could not be renamed."
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ERASE,FErase(),FError(),File(),RENAME
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FSeek()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Positions the file pointer in a file.
+   $SYNTAX$
+      FSeek( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
+   $ARGUMENTS$
+      <nHandle> File handle.
+
+      <nOffset> The number of bytes to move.
+
+      <nOrigin> The relative position in the file.
+   $RETURNS$
+      <nPosition> the current position relative to begin-of-file
+   $DESCRIPTION$
+      This function sets the file pointer in the file whose file
+      handle is <nHandle> and moves the file pointer by <expN2> bytes
+      from the file position designated by <nOrigin>. The returned value
+      is the relative position of the file pointer to the beginning-of-file
+      marker once the operation has been completed.
+
+      <nHandle> is the file handle number. It is obtained from the FOpen()
+      or FCreate() function.
+
+      The value of <nOffSet> is the number of bytes to move the file pointer
+      from the position determined by <nOrigin>. The value of <nOffset> may
+      be a negative number, suggesting backward movement.
+
+      The value of <nOrigin> designates the starting point from which the
+      file pointer should he moved, as shown in the following table:
+
+      <table>
+       <nOrigin>   fileio.ch     File position
+
+       0           FS_SET        Beginning of file
+       1           FS_RELATIVE   Current file pointer position
+       2           FS_END        End of file
+      </table>
+
+      If a value is not provided for <nOrigin>, it defaults to 0 and
+      moves the file pointer from the beginning of the file.
+   $EXAMPLES$
+      // here is a function that read one text line from an open file
+
+      // nH = file handle obtained from FOpen()
+      // cB = a string buffer passed-by-reference to hold the result
+      // nMaxLine = maximum number of bytes to read
+
+      FUNCTION FREADln( nH, cB, nMaxLine )
+         LOCAL cLine, nSavePos, nEol, nNumRead
+         cLine := Space( nMaxLine )
+         cB := ""
+         nSavePos := FSeek( nH, 0, FS_RELATIVE )
+         nNumRead := FRead( nH, @cLine, nMaxLine )
+         IF ( nEol := At( hb_eol(), SubStr( cLine, 1, nNumRead ) ) ) == 0
+            cB := cLine
+         ELSE
+            cB := SubStr( cLine, 1, nEol - 1 )
+            FSeek( nH, nSavePos + nEol + 1, FS_SET )
+         ENDIF
+         RETURN nNumRead != 0
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+      Header is fileio.ch
+   $SEEALSO$
+      FCreate(),FError(),FOpen(),FRead(),FReadStr(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      File()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Tests for the existence of File(s)
+   $SYNTAX$
+      File( <cFileSpec> ) --> lExists
+   $ARGUMENTS$
+      <cFileSpec> Filename skeleton or file name to find.
+   $RETURNS$
+      <lExists> a logical true (.T.) if the file exists or logical
+      false (.F.).
+   $DESCRIPTION$
+      This function return a logical true (.T.) if the given filename
+      <cFileSpec> exist.
+
+      Filename skeletons symbols may be used in the filename in <cFileSpec>,
+      as may the drive and/or path name. If a path is not explicitly
+      specified, File() will look for the file in the SET DEFAULT path,
+      then in each SET PATH path, until the file is found or there are
+      no more paths to search. The PATH environment variable is never
+      searched and the current drive/directory is only searched if
+      SET DEFAULT is blank.
+   $EXAMPLES$
+      ? File( "C:\harbour\doc\compiler.txt" )
+      ? File( "C:/harbour/doc/subcodes.txt" )
+   $STATUS$
+      S (wild card support is missing)
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SET DEFAULT,SET PATH,Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FReadStr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Reads a string from a file.
+   $SYNTAX$
+      FReadStr(<nHandle>, <nBytes>) --> cString
+   $ARGUMENTS$
+      <nHandle> File handle number.
+
+      <nBytes>  Number of bytes to read.
+   $RETURNS$
+      <cString> an character expression
+   $DESCRIPTION$
+      This function returns a character string of <nBytes> bytes from a
+      file whose file handle is <nHandle>.
+
+      The value of the file handle <nHandle> is obtained from either the
+      FOpen() or FCreate() functions.
+
+      The value of <nBytes> is the number of bytes to read from the file.
+      The returned string will be the number of characters specified in
+      <nBytes> or the number of bytes read before an end-of-file charac-
+      ter (ASCII 26) is found.
+
+      NOTE  This function is similar to the FRead() function, except that
+      it will not read binary characters that may he required as part of
+      a header of a file construct. Characters Such as Chr( 0 ) and Chr( 26 )
+      may keep this function from performing its intended operation. In this
+      event, the FRead() function should he used in place of the FReadStr()
+      function.
+   $EXAMPLES$
+      #include "fileio.ch"
+      IF ( nH := FOpen( "x.txt" ) ) != F_ERROR
+         cStr := FReadStr( nH, 100 )
+         ? cStr
+         FClose( nH )
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2W(),FError(),FRead(),FSeek()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      RENAME
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Changes the name of a specified file
+   $SYNTAX$
+      RENAME <cOldFile> TO <cNewFile>
+   $ARGUMENTS$
+      <cOldFile> Old filename
+
+      <cNewFile> New Filename
+   $DESCRIPTION$
+      This command changes the name of <cOldFile> to <cNewFile>. Both
+      <cOldFile> and <cNewFile> must include a file extension. This command
+      if not affected by the SET PATH TO or SET DEFAULT TO commands;drive
+      and directory designates must be specified if either file is in a
+      directory other then the default drive and directory.
+
+      If <cNewFile> id currently open or if it previously exists, this
+      command will not perform the desired operation.
+   $EXAMPLES$
+      RENAME hello.txt TO hello.old
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      CurDir(),ERASE,File(),FErase(),FRename()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      ERASE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Remove a file from disk
+   $SYNTAX$
+      ERASE <xcFile>
+   $ARGUMENTS$
+      <xcFile> Name of file to remove
+   $DESCRIPTION$
+      This command removes a file from the disk. The use of a drive,directo-
+      ry, and wild-card skeleton operator is allowed for the root of the
+      filename. The file extension is required. The SET DEFAULT and SET PATH
+      commands do not affect this command.
+
+      The file must be considered closed by the operating system before it
+      may be deleted.
+   $EXAMPLES$
+      ERASE C:\temp\read.txt
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      CurDir(), File(), FErase(), DELETE FILE
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      DELETE FILE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Remove a file from disk
+   $SYNTAX$
+      DELETE FILE <xcFile>
+   $ARGUMENTS$
+      <xcFile> Name of file to remove
+   $DESCRIPTION$
+      This command removes a file from the disk. The use of a drive,directo-
+      ry,and wild-card skeleton operator is allowed for the root of the
+      filename. The file extension is required. The SET DEFAULT and SET PATH
+      commands do not affect this command.
+
+      The file must be considered closed by the operating system before it
+      may be deleted.
+   $EXAMPLES$
+      DELETE FILE C:\temp\read.txt
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      CurDir(), File(), FErase(), ERASE
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __TypeFile()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+      Show the content of a file on the console and/or printer
+   $SYNTAX$
+      __TypeFile( <cFile>, [<lPrint>] ) --> NIL
+   $ARGUMENTS$
+      <cFile> is a name of the file to display. If the file have an
+      extension, it must be specified (there is no default value).
+
+      <lPrint> is an optional logical value that specifies whether the
+      output should go only to the screen (.F.) or to both the screen and
+      printer (.T.), the default is (.F.).
+   $RETURNS$
+      __TypeFile() always return NIL.
+   $DESCRIPTION$
+      __TypeFile() function type the content of a text file on the screen
+      with an option to send this information also to the printer. The
+      file is displayed as is without any headings or formatting.
+
+      If <cFile> contain no path, __TypeFile() try to find the file first
+      in the SET DEFAULT directory and then in search all of the SET PATH
+      directories. If <cFile> can not be found a run-time error occur.
+
+      Use SET CONSOLE OFF to suppress screen output.
+      You can pause the output using Ctrl-S, press any key to resume.
+
+      __TypeFile() function is used in the preprocessing of the TYPE
+      command.
+   $EXAMPLES$
+      The following examples assume a file name mytext.dat exist in all
+      specified paths, a run-time error would displayed if it does not
+
+      // display mytext.dat file on screen
+      __TypeFile( "mytext.dat" )
+
+      // display mytext.dat file on screen and printer
+      __TypeFile( "mytext.dat", .T. )
+
+      // display mytext.dat file on printer only
+      SET CONSOLE OFF
+      __TypeFile( "mytext.dat", .T. )
+      SET CONSOLE ON
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      TYPE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Show the content of a file on the console, printer or file
+   $SYNTAX$
+      TYPE <xcFile> [TO PRINTER] [TO FILE <xcDestFile>]
+   $ARGUMENTS$
+      <xcFile> is a name of the file to display. If the file have an
+      extension, it must be specified (there is no default value).
+      It can be specified as literal file name or as a character
+      expression enclosed in parentheses.
+
+      TO PRINTER is an optional keyword that specifies that the output
+      should go to both the screen and printer.
+
+      TO FILE <xcDestFile> copy the source <xcFile> also to a file. If no
+      extension is given (.txt) is added to the output file name.
+      <xcDestFile> can be specified as literal file name or as a character
+      expression enclosed in parentheses.
+   $DESCRIPTION$
+      TYPE command type the content of a text file on the screen
+      with an option to send this information also to the printer or to
+      an alternate file. The file is displayed as is without any headings
+      or formatting.
+
+      If <xcFile> contain no path, TYPE try to find the file first in the
+      SET DEFAULT directory and then in search all of the SET PATH
+      directories. If <xcFile> can not be found a run-time error occur.
+
+      If <xcDestFile> contain no path it is created in the SET DEFAULT
+      directory.
+
+      Use SET CONSOLE OFF to suppress screen output.
+      You can pause the output using Ctrl-S, press any key to resume.
+   $EXAMPLES$
+      The following examples assume a file name mytext.dat exist in all
+      specified paths, a run-time error would displayed if it does not
+
+      // display mytext.dat file on screen
+      TYPE mytext.dat
+
+      // display mytext.dat file on screen and printer
+      TYPE mytext.dat TO PRINTER
+
+      // display mytext.dat file on printer only
+      SET CONSOLE OFF
+      TYPE mytext.dat TO PRINTER
+      SET CONSOLE ON
+
+      // display mytext.dat file on screen and into a file myreport.txt
+      TYPE mytext.dat TO FILE MyReport
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TypeFile()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      CurDir()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Returns the current OS directory name.
+   $SYNTAX$
+      CurDir( [<cDrive>] )  --> cPath
+   $ARGUMENTS$
+      <cDrive> OS drive letter
+   $RETURNS$
+      <cPath> Name of directory
+   $DESCRIPTION$
+      This function yields the name of the current OS directory on a
+      specified drive. If <cDrive> is not specified, the currently logged
+      drive will be used.
+
+      This function should not return the leading and trailing
+      (back)slashes.
+
+      If an error has been detected by the function, or the current OS
+      directory is the root, the value of the function will be a NULL
+      byte.
+   $EXAMPLES$
+      ? CurDir()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      File()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      COPY FILE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Copies a file.
+   $SYNTAX$
+      COPY FILE <cfile> TO <cfile1>
+   $ARGUMENTS$
+      <cFile>   Filename of source file
+      <cFile1>  Filename of target file
+   $DESCRIPTION$
+      This command makes an exact copy of <cFile> and names it <cFile1>.
+      Both files must have the file extension included; the drive and the
+      directory names must also be specified if they are different from
+      the default drive and/or director. <cFile1> also can refer to a OS
+      device (e.g. LPT1). This command does not observe the SET PATH TO or
+      SET DEFAULT TO settings.
+   $EXAMPLES$
+      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
+      COPY FILE C:\harbour\tests\adirtest.prg TO LPT1
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      ERASE,RENAME,FRename(),FErase()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_FEof()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Check for end-of-file.
+   $SYNTAX$
+      hb_FEof( <nHandle> ) --> lIsEof
+   $ARGUMENTS$
+      <nHandle> The handle of an open file.
+   $RETURNS$
+      <lIsEof> .T. if the file handle is at end-of-file, otherwise .F.
+   $DESCRIPTION$
+      This function checks an open file handle to see if it is at EOF.
+
+      If the file handle is missing, not numeric, or not open, then this
+      function returns .T. and sets the value returned by FError() to -1
+      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
+   $EXAMPLES$
+      nH := FOpen( "file.txt" )
+      ? FReadStr( nH, 80 )
+      IF hb_FEof( nH )
+         ? "End-of-file reached."
+      ELSE
+         ? FReadStr( nH, 80 )
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DirRemove()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Attempt to remove an directory
+   $SYNTAX$
+      DirRemove( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want to remove.
+   $RETURNS$
+      <nError> 0 if directory was successfully removed, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to remove the specified directory in <cDirectory>
+      If this function fails, it will return the last OS error code number.
+      See FError() function for the description of the error.
+   $EXAMPLES$
+      cDir := ".\backup"
+      IF DirRemove( cDir ) == 0
+         ? "Remove of directory", cDir, "was successfull"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is CA-Cl*pper 5.3 compliant
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      MakeDir(), DirChange(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DirChange()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Changes the directory
+   $SYNTAX$
+      DirChange( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want do change into.
+   $RETURNS$
+      <nError> 0 if directory was successfully changed, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to change the current directory to the one
+      specified in <cDirectory>. If this function fails, it will return
+      the last OS error code number. See FError() function for the
+      description of the error.
+   $EXAMPLES$
+      IF DirChange( "\temp" ) == 0
+         ? "Change to diretory was successfull"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is CA-Cl*pper 5.3 compliant
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MakeDir()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Create a new directory
+   $SYNTAX$
+      MakeDir( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want to create.
+   $RETURNS$
+      <nError> 0 if directory was successfully created, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to create a new directory with the name contained
+      in <cDirectory>. If this function fails, it will return the last OS
+      error code number. See FError() function for the description of the
+      error
+   $EXAMPLES$
+      cDir := "temp"
+      IF MakeDir( cDir ) == 0
+         ? "Directory", cDir, "successfully created"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is CA-Cl*pper 5.3 compliant
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      DirChange(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsDisk()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Verify if a drive is ready
+   $SYNTAX$
+      IsDisk( <cDrive> ) --> lSuccess
+   $ARGUMENTS$
+      <cDrive>  An valid Drive letter
+   $RETURNS$
+      <lSuccess>  .T. is the drive is ready, otherwise .F.
+   $DESCRIPTION$
+      This function attempts to access a drive. If the access to the drive
+      was successfull, it will return true (.T.), otherwise false(.F.). This
+      function is usefull for backup function, so you can determine if the
+      drive that will receive the backup data is ready or not.
+   $EXAMPLES$
+      IF IsDisk( "A" )
+         ? "Drive is ready "
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is CA-Cl*pper 5.3 compliant
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      DirChange(), MakeDir(), DirRemove(), DiskChange(), DiskName()
+   $END$
+ */

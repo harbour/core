@@ -1,0 +1,88 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE := 1
+
+ifeq ($(DH_VERBOSE),1)
+   export HB_BUILD_VERBOSE := yes
+endif
+
+export HB_INSTALL_PKG_ROOT := $(CURDIR)/debian/harbour
+export HB_INSTALL_BIN := $(HB_INSTALL_PKG_ROOT)/usr/bin
+export HB_INSTALL_LIB := $(HB_INSTALL_PKG_ROOT)/usr/lib/harbour
+export HB_INSTALL_DYN := $(HB_INSTALL_LIB)
+export HB_INSTALL_INC := $(HB_INSTALL_PKG_ROOT)/usr/include/harbour
+export HB_INSTALL_DOC := $(HB_INSTALL_PKG_ROOT)/usr/share/doc/harbour
+export HB_INSTALL_MAN := $(HB_INSTALL_PKG_ROOT)/usr/share/man
+export HB_INSTALL_ETC := $(HB_INSTALL_PKG_ROOT)/etc/harbour
+export HB_INSTALL_CONTRIB := $(HB_INSTALL_PKG_ROOT)/usr/share/harbour/contrib
+
+ifeq ($(LD_LIBRARY_PATH),)
+   export LD_LIBRARY_PATH := $(HB_INSTALL_DYN)
+else
+   export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(HB_INSTALL_DYN)
+endif
+
+export HB_SYSLOC := yes
+export HB_BUILD_PKG := no
+export HB_BUILD_SHARED := yes
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+   export HB_BUILD_OPTIM := no
+endif
+
+build: build-stamp
+
+build-stamp:
+	dh_testdir
+
+	$(MAKE)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	-$(MAKE) clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	$(MAKE) install
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+	dh_installman
+	dh_link
+	dh_strip --dbg-package=harbour-dbg
+	dh_compress
+	dh_fixperms
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

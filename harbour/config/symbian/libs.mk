@@ -1,6 +1,0 @@
-#
-# $Id$
-#
-
-SYSLIBPATHS :=
-SYSLIBS +=

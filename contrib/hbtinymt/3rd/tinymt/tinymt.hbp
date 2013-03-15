@@ -1,0 +1,29 @@
+#
+# $Id: expat.hbp 16466 2011-03-11 00:28:04Z vszakats $
+#
+
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-hbx=
+
+-warn=low
+-pic
+
+tinymt32.c
+tinymt64.c
+
+# ORIGIN http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/
+# VER    1.0.2
+# URL    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/TinyMT-src-1.0.2.zip
+# DIFF   tinymt.dif
+#
+# MAP    LICENSE.txt          LICENSE.txt
+# MAP    tinymt/tinymt32.c    tinymt32.c
+# MAP    tinymt/tinymt64.c    tinymt64.c
+# MAP    tinymt/tinymt32.h    tinymt32.h
+# MAP    tinymt/tinymt64.h    tinymt64.h

@@ -1,0 +1,112 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * Compatibility header file for undocumented C API functions
+ *
+ * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+
+/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+
+#ifndef HB_UNDOC_API_
+#define HB_UNDOC_API_
+
+#include "clipdefs.h"
+#include "hbapifs.h"
+
+/* Undocumented CA-Cl*pper Extend API */
+
+#define _reta           hb_reta
+#define _pcount         hb_pcount
+
+/* Undocumented CA-Cl*pper _cEval...() functions */
+
+#define _cEval0         hb_evalBlock0
+#define _cEval1         hb_evalBlock1
+
+/* Undocumented CA-Cl*pper misc functions */
+
+#define _getGrip        hb_gcGripGet
+#define _getDrop        hb_gcGripDrop
+
+/* Undocumented CA-Cl*pper TSupport API */
+
+#define _tchdir         hb_fsChDir
+#define _tchdrv         hb_fsChDrv
+#define _tclose         hb_fsClose
+#define _tcommit        hb_fsCommit
+#define _tcreat         hb_fsCreate
+#define _tctemp(p,a,b)  hb_fsCreateTemp( p, ( BYTE * ) "", a, b )
+#define _tcurdir        hb_fsCurDir
+#define _tcurdrv        hb_fsCurDrv
+#define _tdevraw        hb_fsSetDevMode
+#define _terror         hb_fsError
+#define _tisdevice      hb_fsIsDevice
+#define _tisdrv         hb_fsIsDrv
+#define _tlock          hb_fsLock
+#define _tlseek         hb_fsSeek
+#define _tmkdir         hb_fsMkDir
+#define _topen          hb_fsOpen
+#define _tread          hb_fsRead
+#define _trename        hb_fsRename
+#define _trmdir         hb_fsRmDir
+#define _tunlink        hb_fsDelete
+#define _twrite         hb_fsWrite
+#define _txopen         hb_fsExtOpen
+
+/* Undocumented CA-Cl*pper support functions */
+
+#define _bset           memset
+#define _bmove          memmove
+#define _bcopy          memcpy
+#define _lcopy          memcpy
+#define _ncopyuc        hb_strncpyUpper
+#define _ncopylc        hb_strncpyLower
+#define _bcmp           memcmp
+#define _bscan(p,cnt,c) memchr( p, c, cnt )
+
+#endif /* HB_UNDOC_API_ */

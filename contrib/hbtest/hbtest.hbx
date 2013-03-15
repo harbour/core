@@ -1,0 +1,31 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBTEST__
+#define __HBEXTERN_CH__HBTEST__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBTEST__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hbtest_Call
+DYNAMIC hbtest_Setup
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

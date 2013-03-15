@@ -1,0 +1,93 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      RemAll()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the left and right of a string
+   $SYNTAX$
+      RemAll( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      RemAll() is compatible with CT3's RemAll().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      RemLeft(),RemRight()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      RemLeft()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the left of a string
+   $SYNTAX$
+      RemLeft( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      RemLeft() is compatible with CT3's RemLeft().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      RemAll(),RemRight()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      RemRight()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the right of a string
+   $SYNTAX$
+      RemRight( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      RemRight() is compatible with CT3's RemRight().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      RemAll(),RemLeft()
+   $END$
+ */

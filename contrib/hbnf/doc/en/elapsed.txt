@@ -1,0 +1,45 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Elapsed()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Return elapsed time between two days and/or times
+   $SYNTAX$
+      ft_Elapsed([ <dStart> ], [ <dEnd> ], ;
+                 <cTimeStart>, <cTimeEnd>) -> aTimedata
+   $ARGUMENTS$
+      <dStart> is any valid date in any date format. Defaults to Date().
+
+      <dEnd> is any valid date in any date format. Defaults to Date().
+
+      <cTimeStart> is a valid Time string of the format 'hh:mm:ss' where
+      hh is hours in 24-hour format.
+
+      <cTimeEnd> is a valid Time string of the format 'hh:mm:ss' where
+      hh is hours in 24-hour format.
+   $RETURNS$
+      A two-dimensional array containing elapsed time data.
+   $DESCRIPTION$
+      ft_Elapsed() calculates the elapsed time between two Date/Time events.
+
+      It returns an array which contains the following data:
+
+      aRetVal[ 1, 1 ]  Integer Days      aRetVal[ 1, 2 ] Total Days    (nn.nnnn)
+      aRetVal[ 2, 1 ]  Integer Hours     aRetVal[ 2, 2 ] Total Hours   (nn.nnnn)
+      aRetVal[ 3, 1 ]  Integer Minutes   aRetVal[ 3, 2 ] Total Minutes (nn.nnnn)
+      aRetVal[ 4, 1 ]  Integer Seconds   aRetVal[ 4, 2 ] Total Seconds (nn)
+   $EXAMPLES$
+      ft_Elapsed( hb_SToD( "19901128" ), hb_SToD( "19901130" ), "08:00:00", "12:10:30" )
+
+      // will return:
+      ? aRetVal[ 1, 1 ] // ->  2 ( Days )        aRetVal[ 1, 2 ] ->    2.1740  Days
+      ? aRetVal[ 2, 1 ] // ->  4 ( Hours )       aRetVal[ 2, 2 ] ->   52.1750  Hours
+      ? aRetVal[ 3, 1 ] // -> 10 ( Minutes )     aRetVal[ 3, 2 ] -> 3130.5000  Minutes
+      ? aRetVal[ 4, 1 ] // -> 30 ( Seconds )     aRetVal[ 4, 2 ] -> 187830     Seconds
+   $END$
+ */

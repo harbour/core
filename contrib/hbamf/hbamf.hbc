@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+description=AMF file format handling
+
+incpaths=.
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

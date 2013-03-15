@@ -1,0 +1,183 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      BoM()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _M_onth
+   $SYNTAX$
+      BoM( [<dDate>] ) -> dDateBeginOfMonth
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BoM() is compatible with CT3's BoM().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      EoM(),BoQ(),EoQ(),BoY(),EoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      EoM()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _M_onth
+   $SYNTAX$
+      EoM( [<dDate>] ) -> dDateEndOfMonth
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EoM() is compatible with CT3's EoM().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BoM(),BoQ(),EoQ(),BoY(),EoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      BoQ()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _Q_uarter
+   $SYNTAX$
+      BoQ( [<dDate>] ) -> dDateBeginOfQuarter
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BoQ() is compatible with CT3's BoQ().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BoM(),EoM(),EoQ(),BoY(),EoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      EoQ()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _Q_uarter
+   $SYNTAX$
+      EoQ( [<dDate>] ) -> dDateEndOfQuarter
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EoQ() is compatible with CT3's EoQ().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BoM(),EoM(),BoQ(),BoY(),EoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      BoY()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _Y_ear
+   $SYNTAX$
+      BoY( [<dDate>] ) -> dDateBeginOfYear
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BoY() is compatible with CT3's BoY().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BoM(),EoM(),BoQ(),EoQ(),EoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      EoY()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _Y_ear
+   $SYNTAX$
+      EoY( [<dDate>] ) -> dDateEndOfYear
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EoY() is compatible with CT3's EoY().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BoM(),EoM(),BoQ(),EoQ(),BoY()
+   $END$
+ */

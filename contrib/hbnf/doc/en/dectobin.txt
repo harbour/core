@@ -1,0 +1,25 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Dec2Bin()
+   $CATEGORY$
+      Conversion
+   $ONELINER$
+      Convert decimal to binary
+   $SYNTAX$
+      ft_Dec2Bin( <nNum> ) -> cBinaryNumber
+   $ARGUMENTS$
+      <nNum> is the numeric expression to be converted.
+   $RETURNS$
+      A character string representing <nNum> in binary format.
+   $DESCRIPTION$
+      This function can be used in conjunction with any bit-wise
+      operations.
+   $EXAMPLES$
+      ? ft_Dec2Bin( 255 )         // "11111111"
+      ? ft_Dec2Bin( 2 )           // "00000010"
+   $END$
+ */

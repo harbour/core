@@ -1,0 +1,169 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      Floor()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Rounds down a number to the next integer
+   $SYNTAX$
+      Floor( <nNumber> ) -> nDownRoundedNumber
+   $ARGUMENTS$
+      <nNumber>             number to round down
+   $RETURNS$
+      <nDownRoundedNumber>  the rounded number
+   $DESCRIPTION$
+      The function Floor() determines the biggest integer that is smaller
+      than <nNumber>.
+   $EXAMPLES$
+      ? Floor( 1.1 )  // --> 1.0
+      ? Floor( -1.1 ) // --> -2.0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      Floor() is compatible with CT3's Floor().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      Ceiling()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      Ceiling()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Rounds up a number to the next integer
+   $SYNTAX$
+      Ceiling( <nNumber> ) -> nUpRoundedNumber
+   $ARGUMENTS$
+      <nNumber>             number to round up
+   $RETURNS$
+      <nUpRoundedNumber>    the rounded number
+   $DESCRIPTION$
+      The function Ceiling() determines the smallest integer that is bigger
+      than <nNumber>.
+   $EXAMPLES$
+      ? Ceiling( 1.1 )  // --> 2.0
+      ? Ceiling( -1.1 ) // --> -1.0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      Ceiling() is compatible with CT3's Ceiling().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      Floor()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      Sign()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Sign of a number
+   $SYNTAX$
+      Sign( <nNumber> ) -> nSign
+   $ARGUMENTS$
+      <nNumber>             a number
+   $RETURNS$
+      <nSign>               sign of <nNumber>
+   $DESCRIPTION$
+      The function Sign() determines the sign of <nNumber>.
+      If <nNumber> is > 0, then Sign(<nNumber>) returns 1
+      If <nNumber> is < 0, then Sign(<nNumber>) returns -1
+      If <nNumber> is == 0, then Sign(<nNumber>) returns 0
+   $EXAMPLES$
+      ? Sign( 1.1 )   // --> 1
+      ? Sign( -1.1 )  // --> -1
+      ? Sign( 0.0 )   // --> 0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      Sign() is compatible with CT3's Sign().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      Log10()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Decadic logarithm of a number
+   $SYNTAX$
+      Log10( <nNumber> ) -> nLogarithm
+   $ARGUMENTS$
+      <nNumber>             number to logarithm
+   $RETURNS$
+      <nLogarithm>          decadic logarithm of <nNumber>
+   $DESCRIPTION$
+      The function Log10() calculates the decadic logarithm of <nNumber>,
+      i.e. 10^<nLogarithm> == <nNumber>.
+   $EXAMPLES$
+      ? Log10( 10.0 )         // --> 1.0
+      ? Log10( Sqrt( 10.0 ) ) // --> 0.5
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      Log10() is compatible with CT3's Log10().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      Fact()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Calculates faculty
+   $SYNTAX$
+      Fact( <nNumber> ) -> nFaculty
+   $ARGUMENTS$
+      <nNumber>          number between 0 and 21
+   $RETURNS$
+      <nFaculty>         the faculty of <nNumber>
+   $DESCRIPTION$
+      The function Fact() calculates the faculty to the integer given in
+      <nNumber>. The faculty is defined as n! = 1*2*...*n and is often
+      used in statistics. Note, that faculties above 21 are too big
+      so that the function must return a -1.
+   $EXAMPLES$
+      ? Fact( 0 ) // --> 1
+      ? Fact( 1 ) // --> 1
+      ? Fact( 4 ) // --> 24
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      Fact() is compatible with CT3's Fact().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

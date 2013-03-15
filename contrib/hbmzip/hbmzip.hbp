@@ -1,0 +1,39 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+# localtime_r, gmtime_r
+-c=gnu90
+
+# component named libzip also has a header
+# named zip.h, so we look for unzip.h to detect minizip
+-depkeyhead=minizip:unzip.h
+-depcontrol=minizip:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=minizip:${HB_WITH_MINIZIP}
+-depincpath=minizip:/usr/include
+-depincpath=minizip:/usr/local/include
+-depincpathlocal=minizip:3rd/minizip
+-depfinish=minizip
+
+# This is a dependency of minizip
+-depkeyhead=zlib:zlib.h
+-depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=zlib:${HB_WITH_ZLIB}
+-depincpath=zlib:/usr/include
+-depincpath=zlib:/usr/local/include
+-depincpath=zlib:/boot/develop/headers/3rdparty
+-depincpathlocal=zlib:../../src/3rd/zlib
+
+${hb_name}.hbx
+
+mzip.c
+mziperr.prg
+
+3rd/minizip/minizip.hbc{HBMK_HAS_MINIZIP_LOCAL}

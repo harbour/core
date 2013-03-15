@@ -1,0 +1,243 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBNF__
+#define __HBEXTERN_CH__HBNF__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNF__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBNF__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNF__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC ft_AAddition
+DYNAMIC ft_AAvg
+DYNAMIC ft_AcctAdj
+DYNAMIC ft_AcctMonth
+DYNAMIC ft_AcctQtr
+DYNAMIC ft_AcctWeek
+DYNAMIC ft_AcctYear
+DYNAMIC ft_Adapter
+DYNAMIC ft_Adder
+DYNAMIC ft_AddWkDy
+DYNAMIC ft_ADesSort
+DYNAMIC ft_AEMaxLen
+DYNAMIC ft_AEMinLen
+DYNAMIC ft_Alt
+DYNAMIC ft_AMedian
+DYNAMIC ft_ANoMatches
+DYNAMIC ft_ArEdit
+DYNAMIC ft_ASum
+DYNAMIC ft_At2
+DYNAMIC ft_BitClr
+DYNAMIC ft_BitSet
+DYNAMIC ft_Blink
+DYNAMIC ft_BrwsWhl
+DYNAMIC ft_Byt2Bit
+DYNAMIC ft_Byt2Hex
+DYNAMIC ft_ByteAnd
+DYNAMIC ft_ByteNeg
+DYNAMIC ft_ByteNot
+DYNAMIC ft_ByteOr
+DYNAMIC ft_ByteXor
+DYNAMIC ft_Calendar
+DYNAMIC ft_CapLock
+DYNAMIC ft_ChDir
+DYNAMIC ft_Civ2Mil
+DYNAMIC ft_ClrSel
+DYNAMIC ft_CLS
+DYNAMIC ft_Color2N
+DYNAMIC ft_Ctrl
+DYNAMIC ft_D2E
+DYNAMIC ft_DateCnfg
+DYNAMIC ft_DayOfYr
+DYNAMIC ft_DayToBoW
+DYNAMIC ft_Dec2Bin
+DYNAMIC ft_Default
+DYNAMIC ft_Descend
+DYNAMIC ft_DFClose
+DYNAMIC ft_DFSetup
+DYNAMIC ft_DispFile
+DYNAMIC ft_DispMsg
+DYNAMIC ft_DosVer
+DYNAMIC ft_DoY
+DYNAMIC ft_DskFree
+DYNAMIC ft_DskSize
+DYNAMIC ft_E2D
+DYNAMIC ft_Easter
+DYNAMIC ft_ElapMin
+DYNAMIC ft_Elapsed
+DYNAMIC ft_ElTime
+DYNAMIC ft_EscCode
+DYNAMIC ft_FAppend
+DYNAMIC ft_FBof
+DYNAMIC ft_FDay
+DYNAMIC ft_FDelete
+DYNAMIC ft_FEof
+DYNAMIC ft_FError
+DYNAMIC ft_FGoBot
+DYNAMIC ft_FGoto
+DYNAMIC ft_FGoTop
+DYNAMIC ft_Fill
+DYNAMIC ft_FindITh
+DYNAMIC ft_FInsert
+DYNAMIC ft_FLastRe
+DYNAMIC ft_FlopTst
+DYNAMIC ft_FOffset
+DYNAMIC ft_FReadLn
+DYNAMIC ft_FRecNo
+DYNAMIC ft_FSelect
+DYNAMIC ft_FSkip
+DYNAMIC ft_FUse
+DYNAMIC ft_FWriteL
+DYNAMIC ft_FWriteLn
+DYNAMIC ft_GCD
+DYNAMIC ft_GetE
+DYNAMIC ft_GetMode
+DYNAMIC ft_GetVCur
+DYNAMIC ft_GetVPg
+DYNAMIC ft_Hex2Dec
+DYNAMIC ft_IAmIdle
+DYNAMIC ft_Idle
+DYNAMIC ft_inp
+DYNAMIC ft_int86
+DYNAMIC ft_InvClr
+DYNAMIC ft_IsBit
+DYNAMIC ft_IsBitOn
+DYNAMIC ft_IsPrint
+DYNAMIC ft_IsShare
+DYNAMIC ft_LastKey
+DYNAMIC ft_LDay
+DYNAMIC ft_Linked
+DYNAMIC ft_MAdd
+DYNAMIC ft_MButPrs
+DYNAMIC ft_MButRel
+DYNAMIC ft_MCOnOff
+DYNAMIC ft_MCursor
+DYNAMIC ft_MDblClk
+DYNAMIC ft_MDefCrs
+DYNAMIC ft_Menu1
+DYNAMIC ft_Menu2
+DYNAMIC ft_MenuTo
+DYNAMIC ft_Metaph
+DYNAMIC ft_MGetCoord
+DYNAMIC ft_MGetPage
+DYNAMIC ft_MGetPos
+DYNAMIC ft_MGetSens
+DYNAMIC ft_MGetX
+DYNAMIC ft_MGetY
+DYNAMIC ft_MHideCrs
+DYNAMIC ft_Mil2Civ
+DYNAMIC ft_Mil2Min
+DYNAMIC ft_Min2Dhm
+DYNAMIC ft_Min2Mil
+DYNAMIC ft_MInit
+DYNAMIC ft_MInRegion
+DYNAMIC ft_MkDir
+DYNAMIC ft_MMickeys
+DYNAMIC ft_Month
+DYNAMIC ft_MReset
+DYNAMIC ft_MSetCoord
+DYNAMIC ft_MSetPage
+DYNAMIC ft_MSetPos
+DYNAMIC ft_MSetSens
+DYNAMIC ft_MShowCrs
+DYNAMIC ft_MVersion
+DYNAMIC ft_MXLimit
+DYNAMIC ft_MYLimit
+DYNAMIC ft_N2Color
+DYNAMIC ft_NetPV
+DYNAMIC ft_NoOccur
+DYNAMIC ft_NToW
+DYNAMIC ft_NumLock
+DYNAMIC ft_NWLStat
+DYNAMIC ft_NWSemClose
+DYNAMIC ft_NWSemEx
+DYNAMIC ft_NWSemLock
+DYNAMIC ft_NWSemOpen
+DYNAMIC ft_NWSemSig
+DYNAMIC ft_NWSemUnlock
+DYNAMIC ft_NWSemWait
+DYNAMIC ft_NWUID
+DYNAMIC ft_OnTick
+DYNAMIC ft_Origin
+DYNAMIC ft_outp
+DYNAMIC ft_PChr
+DYNAMIC ft_Peek
+DYNAMIC ft_Pegs
+DYNAMIC ft_Pending
+DYNAMIC ft_PickDay
+DYNAMIC ft_Poke
+DYNAMIC ft_PopVid
+DYNAMIC ft_Prompt
+DYNAMIC ft_Proper
+DYNAMIC ft_PrtScr
+DYNAMIC ft_PushVid
+DYNAMIC ft_PutKey
+DYNAMIC ft_Qtr
+DYNAMIC ft_Rand1
+DYNAMIC ft_RAt2
+DYNAMIC ft_Reboot
+DYNAMIC ft_RestArr
+DYNAMIC ft_RestAtt
+DYNAMIC ft_RestSets
+DYNAMIC ft_RevAttr
+DYNAMIC ft_RevChr
+DYNAMIC ft_RgnStack
+DYNAMIC ft_RmDir
+DYNAMIC ft_Round
+DYNAMIC ft_RstRgn
+DYNAMIC ft_SaveArr
+DYNAMIC ft_SaveAtt
+DYNAMIC ft_SaveSets
+DYNAMIC ft_SavRgn
+DYNAMIC ft_ScanCode
+DYNAMIC ft_SetAttr
+DYNAMIC ft_SetCentury
+DYNAMIC ft_SetDate
+DYNAMIC ft_SetKeys
+DYNAMIC ft_SetMode
+DYNAMIC ft_SetRate
+DYNAMIC ft_SetTime
+DYNAMIC ft_SetVcur
+DYNAMIC ft_SetVpg
+DYNAMIC ft_Shadow
+DYNAMIC ft_Shift
+DYNAMIC ft_SInkey
+DYNAMIC ft_Sleep
+DYNAMIC ft_Sqzn
+DYNAMIC ft_SToD
+DYNAMIC ft_Sys2Mil
+DYNAMIC ft_SysMem
+DYNAMIC ft_TempFil
+DYNAMIC ft_Unsqzn
+DYNAMIC ft_VidStr
+DYNAMIC ft_Week
+DYNAMIC ft_Workdays
+DYNAMIC ft_WoY
+DYNAMIC ft_WrtChr
+DYNAMIC ft_XBox
+DYNAMIC ft_XToY
+DYNAMIC ft_Year
+DYNAMIC _ft_DFClos
+DYNAMIC _ft_DFInit
+DYNAMIC _ft_MSetSensitive
+DYNAMIC _ft_NWKStat
+DYNAMIC _ft_TempFil
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNF__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

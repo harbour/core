@@ -1,0 +1,165 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CSetRef()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Determine return value of reference sensitive CT3 string functions
+   $SYNTAX$
+      CSetRef( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+      [<lNewSwitch>]  .T. -> suppress return value
+                      .F. -> do not suppress return value
+   $RETURNS$
+      lOldSwitch      old (if lNewSwitch is a logical value) or
+                      current state of the switch
+   $DESCRIPTION$
+      Within the CT3 functions, the following functions do not
+      change the length of a string passed as parameter while
+      transforming this string:
+
+      AddAscii()   Blank()       CharAdd()
+      CharAnd()    CharMirr()    CharNot()
+      CharOr()     CharRelRep()  CharRepl()
+      CharSort()   CharSwap()    CharXor()
+      Crypt()      JustLeft()    JustRight()
+      PosChar()    PosRepl()     RangeRepl()
+      ReplAll()    ReplLeft()    ReplRight()
+      TokenLower() TokenUpper()  WordRepl()
+      WordSwap()
+
+      Thus, these functions allow to pass the string by reference [@] to
+      the function so that it may not be necessary to return the transformed
+      string. By calling CSETREF (.T.), the above mentioned functions return
+      the value .F. instead of the transformed string if the string is
+      passed by reference to the function.
+      The switch is turned off (.F.) by default.
+
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is fully CT3 compatible.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      AddAscii()   Blank()       CharAdd()
+      CharAnd()    CharMirr()    CharNot()
+      CharOr()     CharRelRep()  CharRepl()
+      CharSort()   CharSwap()    CharXor()
+      Crypt()      JustLeft()    JustRight()
+      PosChar()    PosRepl()     RangeRepl()
+      ReplAll()    ReplLeft()    ReplRight()
+      TokenLower() TokenUpper()  WordRepl()
+      WordSwap()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CSetAtMupa()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Determine "multi-pass" behaviour in some string functions
+   $SYNTAX$
+      CSetAtMupa( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+      [<lNewSwitch>]  .T. -> turn "multi-pass" on
+                      .F. -> turn "multi-pass" off
+   $RETURNS$
+      lOldSwitch      old (if lNewSwitch is a logical value) or
+                      current state of the switch
+   $DESCRIPTION$
+      CSETATMUPA determines how the following CT3 string functions
+
+      AtNum()       AfterAtNum()  BeforAtNum()
+      AtRepl()      NumAt()       AtAdjust()
+      WordToChar()  WordRepl()
+
+      perform their work. See the respective function documentation for a
+      further description how the switch influences these functions.
+
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is fully CT3 compatible.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      AtNum()       AfterAtNum()  BeforAtNum()
+      AtRepl()      NumAt()       AtAdjust()
+      WordToChar()  WordRepl()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      SetAtLike()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Determine scan behaviour in some string functions
+   $SYNTAX$
+      SETATLIKE ([<nMode>] [, <[@]cWildcard>]) --> nOldMode
+   $ARGUMENTS$
+      [<nMode>]   CT_SETATLIKE_EXACT    -> characters are compared exactly
+                  CT_SETATLIKE_WILDCARD -> characters are compared using
+                                           a wildcard character
+                  The default value is CT_SETATLIKE_EXACT.
+      [<[@]cWildcard>]  determines the character that is subsequently used
+                        as a wildcard character for substring scanning.
+                        The default value is "?".
+                        NEW: If this parameter is passed by reference [@],
+                        the current wildcard character is stored in
+                        <cWildcard>.
+   $RETURNS$
+      nOldMode          old (if nMode is a numeric value) or
+                        current state of the switch
+   $DESCRIPTION$
+      In the following CT3 functions, strings are compared on a character
+      base:
+
+      AtAdjust()    AtNum()    AfterAtNum()
+      BEFOREAtNum() AtRepl()   NumAt()
+      StrDiff()
+
+      With the SETATLIKE function, one can determine when characters are
+      considered to match within these functions. If CT_SETATLIKE_WILDCARD
+      is set (e.g. "?"), then "?" matches every other character.
+
+      <nMode> can be one of the following values that are defined
+      in ct.ch
+
+      Definition            | Value
+      ----------------------|------
+      CT_SETATLIKE_EXACT    |   0
+      CT_SETATLIKE_WILDCARD |   1
+
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is fully CT3 compatible, but allows to pass the
+      second parameter by reference so that the current wildcard character
+      can be determined.
+   $PLATFORMS$
+      All
+   $FILES$
+      Header is ct.ch, library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

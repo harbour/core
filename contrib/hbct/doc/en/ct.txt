@@ -1,0 +1,71 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ctinit()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Initializes the CT3 library
+   $SYNTAX$
+      ctinit() -> lInitialized
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      lInitialized     .T. if the function has been correctly initialized
+   $DESCRIPTION$
+      The ctinit() function initializes the CT3 library.
+      Identical code is declared as INIT FUNCTION, thus should be executed
+      automatically at the beginning of the application, but it is a good
+      idea to call it once again explicitly somewhere at the beginning of
+      your program to check the initialization.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ctinit() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ctexit()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Uninitializes the CT3 library
+   $SYNTAX$
+      ctexit() -> nil
+   $ARGUMENTS$
+      none
+   $RETURNS$
+      nil
+   $DESCRIPTION$
+      The ctexit() function uninitializes the CT3 library.
+      Identical code is declared as EXIT FUNCTION, thus should be executed
+      automatically at the end of the application, but it is a good idea
+      to call it explicitly somewhere at the end of your program to make
+      sure that the deinitialization takes place.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ctexit() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

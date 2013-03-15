@@ -1,0 +1,86 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project - http://www.harbour-project.org
+ * xHarbour Project - http://www.xharbour.org
+ *
+ * Please left here information about any modifications to original
+ * ZLIB files. It will make upgrading ZLIB library much more easier
+ * and safer in the future.
+ *
+ *
+ * Use this format for the entry headers:
+ * YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+ * For example:
+ * 2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+ *
+ */
+
+2009-08-12 23:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/zutil.c
+    * use #pragma warning to pacify OpenWatcom warnings
+
+2009-07-16 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/trees.c
+    * cleaned casting
+
+2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/hbzlib/zconf.h
+     + Setting ZLIB_DLL if HB_DYNLIB is defined.
+
+2008-05-28 18:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/zutil.c
+  * harbour/source/hbzlib/gzio.c
+  * harbour/source/hbzlib/zutil.h
+  * harbour/source/hbzlib/zconf.h
+    * use _WINCE macro instead of _WIN32_WCE to detect WinCE builds
+      defining _WIN32_WCE interacts with header files and should be
+      left for user to specify exact WinCE version
+
+2008-02-18 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * adler32.c
+  * compress.c
+  * crc32.c
+  * deflate.c
+  * gzio.c
+  * inftrees.c
+  * inflate.c
+  * infback.c
+  * inffast.c
+  * trees.c
+  * uncompr.c
+  * zutil.c
+    * changed old-style function declaration to standard C ones for
+      C++ compilers which do not support old-style function declaration
+
+  * infback
+  * inffast
+  * inflate.c
+  * inftrees.c
+    * changed variable name from 'this' to 'self'. 'this' is reserved
+      name in C++
+
+  * deflate.c
+  * inftrees.c
+    * added extern to copyright string declaration to avoid strpipping by
+      C++ compilers
+
+  * crc32.c
+    * added #define NOBYFOUR to disable code which may not be
+      properly compiled on some platforms
+
+  * deflate.c
+    * replaced if() statement with #if to pacify warnings in some
+      C++ compilers
+    * replace if (hash_head) hash_head = 0; used to pacify warning with
+      (void)(hash_head); because the first version can cause other warning
+      in some C compilers and pacified orther warning with bflush variable
+      in the same way
+
+  * gzio.c
+    * use dummy strerror() declaration in WinCE
+
+  * zconf.h
+    * added defines for better WinCE detection

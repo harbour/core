@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+#-stop{win&!allgcc&!watcom}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-w3 -es2
+
+-depkeyhead=tinymt:tinymt32.h
+-depcontrol=tinymt:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=tinymt:${HB_WITH_TINYMT}
+-depincpath=tinymt:/usr/include
+-depincpathlocal=tinymt:3rd/tinymt
+-depfinish=tinymt
+
+${hb_name}.hbx
+
+core32.c
+core64.c
+
+3rd/tinymt/tinymt.hbc{HBMK_HAS_TINYMT_LOCAL}

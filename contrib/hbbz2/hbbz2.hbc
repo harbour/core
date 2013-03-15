@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+description=bz2 wrapper (compression)
+
+incpaths=.
+
+headers=${hb_name}.ch
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=3rd/bz2/bz2.hbc

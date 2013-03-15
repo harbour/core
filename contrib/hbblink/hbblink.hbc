@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+description=Blinker compatibility
+
+incpaths=.
+
+headers=${hb_name}.ch
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

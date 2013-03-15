@@ -1,0 +1,46 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_ANoMatches()
+   $CATEGORY$
+      Array
+   $ONELINER$
+      Find the number of array elements meeting a condition
+   $SYNTAX$
+      ft_ANoMatches( <aArray>, <bCompareBlock> ;
+                     [, <nStartIndex> [, <nEndIndex> ] ] ) -> nNoOfMatches
+   $ARGUMENTS$
+      <aArray> is the array to be searched
+
+      <bCompareBlock> is a code block containing the expression for
+      the array elements to be tested with.  Each element is passed
+      as a parameter to the block.  If the block returns .T., the
+      number of matches will be incremented by one.
+
+      <nStartIndex> is the first array item to include in the search,
+      defaults to first element.
+
+      <nEndIndex> is the last array element to include in the search,
+      defaults to all elements.
+   $RETURNS$
+      The number of elements that cause the code block to return .T.
+   $DESCRIPTION$
+      This function returns the number of array elements that, when passed
+      to the supplied code block, cause that code block to return a .T. value.
+   $EXAMPLES$
+      // Search the Entire Array
+      ft_ANoMatches( aTries, {| x | x <= 100 } )
+
+      // Search from the 5th Element On
+      ft_ANoMatches( aCodes, {| x | Upper( x ) == cCurrentCode }, 5 )
+
+      // Search the 1st 10 Elements
+      ft_ANoMatches( aDates, {| x | IS_BETWEEN( Date() - 7, x, Date() + 7 ) }, 10 )
+
+      // Search Elements 5-10
+      ft_ANoMatches( aNames, {| x | x <= cLastGoodName }, 5, 10 )
+   $END$
+ */

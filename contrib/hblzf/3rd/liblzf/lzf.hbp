@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-hbx=
+
+-warn=low
+-cpp=no
+-pic
+
+# See lzfP.h for more
+-cflag=-DVERY_FAST=1
+-cflag=-DAVOID_ERRNO=1{wce}
+
+lzf_c.c
+lzf_d.c
+
+# ORIGIN http://liblzf.plan9.de
+# VER    3.6
+# URL    http://dist.schmorp.de/liblzf/liblzf-3.6.tar.gz
+# DIFF   liblzf.dif
+#
+# MAP    LICENSE
+# MAP    Changes
+# MAP    README
+# MAP    crc32.h
+# MAP    lzf.h
+# MAP    lzf_c.c
+# MAP    lzf_d.c
+# MAP    lzfP.h

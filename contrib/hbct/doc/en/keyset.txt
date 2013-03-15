@@ -1,0 +1,123 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      KSetIns()
+   $CATEGORY$
+      CT3 switch and state functions
+   $ONELINER$
+
+   $SYNTAX$
+      KSetIns( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      KSetCaps()
+   $CATEGORY$
+      CT3 switch and state functions
+   $ONELINER$
+
+   $SYNTAX$
+      KSetCaps( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      KSetNum()
+   $CATEGORY$
+      CT3 switch and state functions
+   $ONELINER$
+
+   $SYNTAX$
+      KSetNum( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      KSetScroll()
+   $CATEGORY$
+      CT3 switch and state functions
+   $ONELINER$
+
+   $SYNTAX$
+      KSetScroll( [<lNewSwitch>] ) -> lOldSwitch
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

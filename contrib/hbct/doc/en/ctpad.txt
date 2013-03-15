@@ -1,0 +1,63 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      PadLeft()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Fills string to a certain length on the left
+   $SYNTAX$
+      PadLeft( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PadLeft() is compatible with CT3's PadLeft().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      PadRight()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      PadRight()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Fills string to a certain length on the right
+   $SYNTAX$
+      PadRight( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PadRight() is compatible with CT3's PadRight().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      PadLeft()
+   $END$
+ */

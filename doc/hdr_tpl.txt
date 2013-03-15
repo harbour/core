@@ -1,0 +1,189 @@
+/*
+ * $Id$
+ */
+
+/* NOTE: - Please use these template for your new files, replace parts
+           between curly braces {} with the appropriate text.
+         - You can find a history at the end of the file. */
+
+FILE HEADER TEMPLATE
+====================
+
+/*
+ * Harbour Project source code:
+ * {one-liner description about the purpose of this source file}
+ *
+ * Copyright 2010 {list of individual authors and e-mail addresses}
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+
+FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
+===============================================================
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2010 {name} <{e-mail address}>
+ *    {function or subsystem name}
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+FUNCTION HEADER TEMPLATE
+========================
+
+/* $DOC$
+   $NAME$
+       StartHere()
+   $CATEGORY$
+
+   $SUBCATEGORY$
+
+   $ONELINER$
+
+   $SYNTAX$
+
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+
+   $COMPLIANCE$
+
+   $PLATFORMS$
+
+   $VERSION$
+
+   $FILES$
+
+   $SEEALSO$
+       Comma separated list of references
+   $END$
+ */
+
+HEADER EXAMPLES
+===============
+
+/* $DOC$
+   $NAME$
+       IsLeapYr()
+   $CATEGORY$
+       Date functions
+   $ONELINER$
+       Test if a date falls in a leap year.
+   $SYNTAX$
+       IsLeapYr( [<dDate>] ) --> <lIsLeap>
+   $ARGUMENTS$
+       <dDate> is an optional date. If not supplied is defaults to the
+       value returned from Date().
+   $RETURNS$
+       .T. if <dDate> falls in a leap year, .F. if not.
+   $DESCRIPTION$
+       IsLeapYr() can be used to check if a given year is a leap year.
+   $EXAMPLES$
+       /* Check if it's a leap year. */
+
+       IF IsLeapYr()
+          ? "One extra day before you get paid this Feb!!"
+       ELSE
+          ? "A normal year"
+       ENDIF
+   $STATUS$
+       C
+   $COMPLIANCE$
+       IsLeapYr() works exactly like CA-Cl*pper's IsLeapYr(), if your
+       CA-Cl*pper doesn't have such a function you're probably in a
+       different universe from the author of this function.
+   $PLATFORMS$
+       All
+   $FILES$
+
+   $SEEALSO$
+       Date(), IsWeekend(), IsHarbourFinished(), IsApocalypse(), SET DATE
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+       Function
+   $NAME$
+       hb_dateEncStr()
+   $CATEGORY$
+       C level API
+   $SUBCATEGORY$
+       Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+       C Prototype
+
+       #include <hbdate.h>
+       long hb_dateEncStr( char * szDate )
+   $ARGUMENTS$
+       <szDate>
+   $RETURNS$
+       <lResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+       R
+   $COMPLIANCE$
+       NA
+   $FILES$
+   $PLATFORMS$
+       All
+   $VERSION$
+       1.0
+   $SEEALSO$
+
+   $END$
+ */

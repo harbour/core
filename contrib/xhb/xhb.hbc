@@ -1,0 +1,17 @@
+#
+# $Id$
+#
+
+description=xHarbour compatibility
+
+incpaths=.
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+# xhb has these as part of core, so we're adding them to emulate it.
+# They are not needed to use xhb lib itself.
+libs=hbct.hbc
+libs=hbtip.hbc
+libs=hbwin.hbc
+libs=hbfship.hbc
+libs=hbxpp.hbc

@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+description=Cups wrapper (*nix printing)
+
+incpaths=.
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+{unix}libs=cups
+{os2}libs=libcups pthread

@@ -1,5 +1,0 @@
-/*
- * $Id$
- */
-
-#include "hbapi.h"

@@ -1,0 +1,30 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Ctrl()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine status of the Ctrl key
+   $SYNTAX$
+      ft_Ctrl() -> lValue
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      .T. if Ctrl key is pressed, .F. if otherwise.
+   $DESCRIPTION$
+      This function is useful for times you need to know whether or not
+      the Ctrl key is pressed, such as during a MemoEdit().
+   $EXAMPLES$
+      IF ft_Ctrl()
+         @ 24, 0 SAY "Ctrl"
+      ELSE
+         @ 24, 0 SAY "    "
+      ENDIF
+   $SEEALSO$
+      ft_CapLock() ft_NumLock() ft_PrtScr() ft_Shift() ft_Alt()
+   $END$
+ */

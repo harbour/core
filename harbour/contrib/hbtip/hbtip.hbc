@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-description=TCP/IP-specific communication protocol functions
-
-incpaths=.
-
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

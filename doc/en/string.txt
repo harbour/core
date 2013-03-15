@@ -1,0 +1,1564 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    Documentation for: Descend()
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    Documentation for: IsAlpha(), IsDigit(), IsUpper(), IsLower(), LTrim(),
+ *                       At(), hb_At(),RAt(), hb_RAt(), Left(), Right(),
+ *                       SubStr(), Upper(), Lower(), Asc(), Chr(), PadC(),
+ *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), Space(),
+ *                       Replicate(), Val(), Transform(), StrTran()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsAlpha()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Checks if leftmost character in a string is an alphabetic character
+   $SYNTAX$
+      IsAlpha( <cString> ) --> lAlpha
+   $ARGUMENTS$
+      <cString> Any character string
+   $RETURNS$
+      lAlpha Logical true (.T.) or false (.F.).
+   $DESCRIPTION$
+      This function return a logical true (.T.) if the first character
+      in <cString> is an alphabetic character. If not, the function will
+      return a logical false (.F.).
+   $EXAMPLES$
+      ? 'IsAlpha( "hello" ) = ', IsAlpha( "hello" )
+      ? 'IsAlpha( "12345" ) = ', IsAlpha( "12345" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      IsDigit(),IsLower(),IsUpper(),Lower(),Upper()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsDigit()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Checks if leftmost character is a digit character
+   $SYNTAX$
+      IsDigit( <cString> ) --> lDigit
+   $ARGUMENTS$
+      <cString> Any character string
+   $RETURNS$
+      lDigit Logical true (.T.) or false (.F.).
+   $DESCRIPTION$
+      This function takes the character string <cString> and checks to
+      see if the leftmost character is a digit, from 1 to 9. If so, the
+      function will return a logical true (.T.); otherwise, it will
+      return a logical false (.F.).
+   $EXAMPLES$
+      ? IsDigit( "12345" )      // .T.
+      ? IsDigit( "abcde" )      // .F.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      IsAlpha(),IsLower(),IsUpper(),Lower(),Upper()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsUpper()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Checks if leftmost character is an uppercased letter.
+   $SYNTAX$
+      IsUpper( <cString> ) --> lUpper
+   $ARGUMENTS$
+      <cString> Any character string
+   $RETURNS$
+      lUpper Logical true (.T.) or false (.F.).
+   $DESCRIPTION$
+      This function checks to see if the leftmost character
+      if <cString> is a uppercased letter. If so, the
+      function will return a logical true (.T.); otherwise, it will
+      return a logical false (.F.).
+   $EXAMPLES$
+      ? IsUpper( "Abcde" )    // .T.
+      ? IsUpper( "abcde" )    // .F.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      IsAlpha(),IsLower(),IsDigit(),Lower(),Upper()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsLower()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Checks if leftmost character is an lowercased letter.
+   $SYNTAX$
+      IsLower( <cString> ) --> lLower
+   $ARGUMENTS$
+      <cString> Any character string
+   $RETURNS$
+      lLower Logical true (.T.) or false (.F.).
+   $DESCRIPTION$
+      This function takes the character string <cString> and checks to
+      see if the leftmost character is a lowercased letter. If so, the
+      function will return a logical true (.T.); otherwise, it will
+      return a logical false (.F.).
+   $EXAMPLES$
+      ? IsLower( "ABCde" )      // .F.
+      ? IsLower( "aBCde" )      // .T.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      IsAlpha(),IsDigit(),IsUpper(),Lower(),Upper()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      LTrim()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Removes leading spaces from a string
+   $SYNTAX$
+      LTrim( <cString> ) --> cReturn
+   $ARGUMENTS$
+      <cString>  Character expression with leading spaces
+   $RETURNS$
+      LTrim() returns a copy of the original string with leading spaces
+      removed.
+   $DESCRIPTION$
+      This function trims the leading space blank
+   $EXAMPLES$
+      ? LTrim( "HELLO     " )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Trim(),RTrim(),AllTrim()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      At()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Locates the position of a substring in a main string.
+   $SYNTAX$
+      At( <cSearch>, <cString> ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+   $RETURNS$
+      At() return the starting position of the first occurrence of the
+      substring in the main string
+   $DESCRIPTION$
+      This function searches the string <cString> for the characters in
+      the first string <cSearch>. If the substring is not contained within
+      the second expression, the function will return 0.
+   $EXAMPLES$
+      ? 'At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( At( "cde", "abcdefgfedcba" ) )    // 3
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_At()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Locates the position of a substring in a main string.
+   $SYNTAX$
+      hb_At( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+
+      <nStart> First position to search in cString, by default 1
+
+      <nEnd> End position to search, by default cString length
+   $RETURNS$
+      hb_At() return the starting position of the first occurrence of the
+      substring in the main string
+   $DESCRIPTION$
+      This function searches the string <cString> for the characters in
+      the first string <cSearch>. If the substring is not contained within
+      the second expression, the function will return 0. The third and fourth
+      parameters lets you indicate a starting and end offset to search in.
+   $EXAMPLES$
+      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( hb_At( "cde", "abcdefgfedcba" ) )       // 3
+      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( hb_At( "cde", "abcdefgfedcba", 4 ) )    // 0
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is sensitive to HB_CLP_STRICT settings during build.
+
+      <nStart> and <nEnd> are Harbour extensions and do not exist if
+      HB_CLP_STRICT is defined. In that case, the whole string is searched.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      hb_RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RAt()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Searches for last occurrence a substring of a string.
+   $SYNTAX$
+      RAt( <cSearch>, <cString> ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+   $RETURNS$
+      RAt() return the location of beginning position of last occurrence
+      a substring of a string.
+   $DESCRIPTION$
+      This function searches for last occurrence a <cSearch> in <cString>.
+      If the function is unable to find any occurrence of <cSearch> in
+      <cString>, the return value is 0.
+   $EXAMPLES$
+      ? 'RAt( "cde", "abcdefgfcdeedcba" ) = ' + ;
+         hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
+      ? 'RAt( "cdr", "abcdefgfedcba" ) = ' + ;
+         hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      At(), SubStr(), Right(), hb_RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_RAt()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Searches for last occurrence a substring of a string.
+   $SYNTAX$
+      hb_RAt( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+
+      <nStart> First position to search in cString, by default 1.
+
+      <nEnd> End position to search, by default cString length
+   $RETURNS$
+      hb_RAt() return the location of beginning position of last occurrence
+      a substring of a string.
+   $DESCRIPTION$
+      This function searches for last occurrence a <cSearch> in <cString>.
+      If the function is unable to find any occurrence of <cSearch> in
+      <cString>, the return value is 0. 3rd and 4th parameters define
+      inclusive range for 2nd parameter on which operation is performed.
+      If 3rd and 4th parameters is not specified, then hb_RAt() is equal
+      to RAt().
+   $EXAMPLES$
+      LOCAL cString
+      LOCAL cSearch
+      LOCAL i, y, r, nLen
+
+      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ', ;
+         hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
+
+      cString := "acdefcdeedcb"
+      cSearch := "cde"
+      nLen := Len( cString )
+      FOR y := 1 TO nLen
+         FOR i := 1 TO nLen
+            r := hb_RAt( cSearch, cString, y, i )
+            IF r != 0
+            ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
+               hb_ntos( r )
+            ENDIF
+         NEXT
+      NEXT
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      hb_At(), SubStr(), Right(), RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Left()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Extract the leftmost substring of a character expression
+   $SYNTAX$
+      Left( <cString>, <nLen> ) --> cReturn
+   $ARGUMENTS$
+      <cString> Main character to be parsed
+
+      <nLen> Number of bytes to return beginning at the leftmost position
+   $RETURNS$
+      <cReturn>  Substring of evaluation
+   $DESCRIPTION$
+      This functions returns the leftmost <nLen> characters of <cString>.
+      It is equivalent to the following expression:
+
+      SubStr( <cString>, 1, <nLen> )
+   $EXAMPLES$
+      ? Left( "HELLO HARBOUR", 5 )    // HELLO
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SubStr(),Right(),At(),RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Right()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Extract the rightmost substring of a character expression
+   $SYNTAX$
+      Right( <cString>, <nLen> ) --> cReturn
+   $ARGUMENTS$
+      <cString> Character expression to be parsed
+
+      <nLen> Number of bytes to return beginning at the rightmost position
+   $RETURNS$
+      <cReturn>  Substring of evaluation
+   $DESCRIPTION$
+      This functions returns the rightmost <nLen> characters of <cString>.
+      It is equivalent to the following expressions:
+
+      SubStr( <cString>,  - <nLen> )
+
+      SubStr( <cString>, Len( <cString> ) - <nLen> + 1, <nLen> )
+   $EXAMPLES$
+      ? Right( "HELLO HARBOUR", 5 )     // RBOUR
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      SubStr(),Left(),At(),RAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SubStr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Returns a substring from a main string
+   $SYNTAX$
+      SubStr( <cString>, <nStart>, [<nLen>] ) --> cReturn
+   $ARGUMENTS$
+      <cString> Character expression to be parsed
+
+      <nStart> Start position
+
+      <nLen> Number of characters to return
+   $RETURNS$
+      <cReturn> Substring of evaluation
+   $DESCRIPTION$
+      This functions returns a character string formed from <cString>,
+      starting at the position of <nStart> and continuing on for a
+      length of <nLen> characters. If <nLen> is not specified, the value
+      will be all remaining characters from the position of <nStart>.
+
+      The value of <nStart> may be negative. If it is, the direction of
+      operation is reversed from a default of left-to-right to right-to-left
+      for the number of characters specified in <nStart>. If the number of
+      characters from <nStart> to the end of the string is less than <nLen>
+      the rest are ignored.
+   $EXAMPLES$
+      ? SubStr( "HELLO HARBOUR" ,  7, 4 )      // HARB
+      ? SubStr( "HELLO HARBOUR" , -3, 3 )      // OUR
+      ? SubStr( "HELLO HARBOUR" ,  7    )      // HARBOUR
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Left(),At(),Right()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Str()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Convert a numeric expression to a character string.
+   $SYNTAX$
+      Str( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
+   $ARGUMENTS$
+      <nNumber> is the numeric expression to be converted to a character
+      string.
+
+      <nLength> is the length of the character string to return, including
+      decimal digits, decimal point, and sign.
+
+      <nDecimals> is the number of decimal places to return.
+   $RETURNS$
+      Str() returns <nNumber> formatted as a character string.  If the
+      optional length and decimal arguments are not specified, Str()
+      returns the character string according to the following rules:
+
+      Results of Str() with No Optional Arguments
+
+      <table>
+      Expression               Return Value Length
+
+      Field Variable           Field length plus decimals
+      Expressions/constants    Minimum of 10 digits plus decimals
+      Val()                    Minimum of 3 digits
+      Month()/Day()            3 digits
+      Year()                   5 digits
+      RecNo()                  7 digits
+      </table>
+   $DESCRIPTION$
+      Str() is a numeric conversion function that converts numeric values
+      to character strings. It is commonly used to concatenate numeric
+      values to character strings. Str() has applications displaying
+      numbers, creating codes such as part numbers from numeric values,
+      and creating index keys that combine numeric and character data.
+
+      Str() is like Transform(), which formats numeric values as character
+      strings using a mask instead of length and decimal specifications.
+
+      The inverse of Str() is Val(), which converts character numbers to
+      numerics.
+
+      *  If <nLength> is less than the number of whole number digits in
+         <nNumber>, Str() returns asterisks instead of the number.
+
+      *  If <nLength> is less than the number of decimal digits
+         required for the decimal portion of the returned string, Harbour
+         rounds the number to the available number of decimal places.
+
+      *  If <nLength> is specified but <nDecimals> is omitted (no
+         decimal places), the return value is rounded to an integer.
+   $EXAMPLES$
+      ? Str( 10, 6, 2 ) // " 10.00"
+      ? Str( -10, 8, 2 ) // "  -10.00"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      StrZero(),Transform(),Val()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      StrZero()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Convert a numeric expression to a character string, zero padded.
+   $SYNTAX$
+      StrZero( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
+   $ARGUMENTS$
+      <nNumber> is the numeric expression to be converted to a character
+      string.
+
+      <nLength> is the length of the character string to return, including
+      decimal digits, decimal point, and sign.
+
+      <nDecimals> is the number of decimal places to return.
+   $RETURNS$
+      StrZero() returns <nNumber> formatted as a character string.  If the
+      optional length and decimal arguments are not specified, StrZero()
+      returns the character string according to the following rules:
+
+      Results of StrZero() with No Optional Arguments
+
+      <table>
+      Expression               Return Value Length
+
+      Field Variable           Field length plus decimals
+      Expressions/constants    Minimum of 10 digits plus decimals
+      Val()                    Minimum of 3 digits
+      Month()/Day()            3 digits
+      Year()                   5 digits
+      RecNo()                  7 digits
+      </table>
+   $DESCRIPTION$
+      StrZero() is a numeric conversion function that converts numeric
+      values to character strings. It is commonly used to concatenate
+      numeric values to character strings. StrZero() has applications
+      displaying numbers, creating codes such as part numbers from numeric
+      values, and creating index keys that combine numeric and character
+      data.
+
+      StrZero() is like Transform(), which formats numeric values as
+      character strings using a mask instead of length and decimal
+      specifications.
+
+      The inverse of StrZero() is Val(), which converts character numbers
+      to numerics.
+
+      *  If <nLength> is less than the number of whole number digits in
+         <nNumber>, Str() returns asterisks instead of the number.
+
+      *  If <nLength> is less than the number of decimal digits
+         required for the decimal portion of the returned string, Harbour
+         rounds the number to the available number of decimal places.
+
+      *  If <nLength> is specified but <nDecimals> is omitted (no
+         decimal places), the return value is rounded to an integer.
+
+      The StrZero() function was part of the CA-Cl*pper samples.
+   $EXAMPLES$
+      ? StrZero( 10, 6, 2 ) // "010.00"
+      ? StrZero( -10, 8, 2 ) // "-0010.00"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Str()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_ValToStr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Converts any scalar type to a string.
+   $SYNTAX$
+      hb_ValToStr( <xValue> ) --> cString
+   $ARGUMENTS$
+      <xValue> is any scalar argument.
+   $RETURNS$
+      <cString> A string representation of <xValue> using default
+      conversions.
+   $DESCRIPTION$
+      HB_VALTOSTR can be used to convert any scalar value to a string.
+   $EXAMPLES$
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? hb_ValToStr( 4 ) == "         4"
+      ? hb_ValToStr( 4.0 / 2 ) == "         2.00"
+      ? hb_ValToStr( "String" ) == "String"
+      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "2001-01-01"
+      ? hb_ValToStr( NIL ) == "NIL"
+      ? hb_ValToStr( .F. ) == ".F."
+      ? hb_ValToStr( .T. ) == ".T."
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Str()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Len()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Variable management
+   $ONELINER$
+      Returns size of a string or size of an array.
+   $SYNTAX$
+      Len( <cString> | <aArray> ) --> <nLength>
+   $ARGUMENTS$
+      <acString> is a character string or the array to check.
+   $RETURNS$
+      The length of the string or the number of elements that contains
+      an array.
+   $DESCRIPTION$
+      This function returns the string length or the size of an array or the
+      size of a hash table. If it is used with a multidimensional array it
+      returns the size of the first dimension.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL cName
+
+         ? Len( "Harbour" )          // --> 7
+         ? Len( { "One", "Two" } )   // --> 2
+
+         cName := ""
+         ACCEPT "Enter your name: " TO cName
+         ? Len( cName )
+
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Empty(),RTrim(),LTrim(),AAdd(),ASize()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Empty()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Variable management
+   $ONELINER$
+      Checks if the passed argument is empty.
+   $SYNTAX$
+      Empty( <xExp> ) --> lIsEmpty
+   $ARGUMENTS$
+      <xExp> is any valid expression.
+   $RETURNS$
+      A logical value. It is true (.T.) if the passed argument is empty
+      otherwise it is false (.F.).
+   $DESCRIPTION$
+      This function checks if an expression has empty value and returns a
+      logical indicating whether it the expression is empty or not.
+   $EXAMPLES$
+      PROCEDURE Main()
+         ? Empty( "I'm not empty" ) // .F.
+         ? Empty( NIL )             // .T.
+         ? Empty( 0 )               // .T.
+         ? Empty( .F. )             // .T.
+         ? Empty( "" )              // .T.
+         ? Empty( 1 )               // .F.
+         ? Empty( .T. )             // .F.
+         ? Empty( "smile" )         // .F.
+         ? Empty( Date() )          // .F.
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Len()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Descend()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Inverts an expression of string, logical, date or numeric type.
+   $SYNTAX$
+      Descend( <xExp> ) --> xExpInverted
+   $ARGUMENTS$
+      <xExp> is any valid expression.
+   $RETURNS$
+      Inverted value of the same type as passed.
+   $DESCRIPTION$
+      This function converts an expression in his inverted form. It is
+      useful to build descending indexes.
+   $EXAMPLES$
+      // Seek for Smith in a descending index
+      dbSeek( Descend( "SMITH" ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      INDEX, SEEK
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Lower()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Universally lowercases a character string expression.
+   $SYNTAX$
+      Lower( <cString> ) --> cLowerString
+   $ARGUMENTS$
+      <cString> Any character expression.
+   $RETURNS$
+      <cLowerString> Lowercased value of <cString>
+   $DESCRIPTION$
+      This function converts any character expression passes as <cString>
+      to its lowercased representation. Any non alphabetic character withing
+      <cString> will remain unchanged.
+   $EXAMPLES$
+      ? Lower( "HARBOUR" )      // harbour
+      ? Lower( "Hello All" )    // hello all
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Upper(),IsLower(),IsUpper()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Upper()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Converts a character expression to uppercase format
+   $SYNTAX$
+      Upper( <cString> ) --> cUpperString
+   $ARGUMENTS$
+      <cString> Any character expression.
+   $RETURNS$
+      <cUpperString> Uppercased value of <cString>
+   $DESCRIPTION$
+      This function converts all alpha characters in <cString> to upper
+      case values and returns that formatted character expression.
+   $EXAMPLES$
+      ? Upper( "harbour" )       // HARBOUR
+      ? Upper( "Harbour" )       // HARBOUR
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Lower(),IsUpper(),IsLower()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Chr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Converts an ASCII value to it character value
+   $SYNTAX$
+      Chr( <nAsciiNum> )  --> cReturn
+   $ARGUMENTS$
+      <nAsciiNum> Any ASCII character code.
+   $RETURNS$
+      <cReturn> Character expression of that ASCII value
+   $DESCRIPTION$
+      This function returns the ASCII character code for <nAsciiNum>. The
+      number expressed must be an integer value within the range of 0 to
+      255 inclusive. The Chr() function will send the character returned
+      to whatever device is presently set.
+
+      The Chr() function may be used for printing special codes as well
+      as normal and graphics character codes.
+   $EXAMPLES$
+      ? Chr( 32 )
+      ? Chr( 65 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Asc(), Inkey()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Asc()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Returns the ASCII value of a character
+   $SYNTAX$
+      Asc( <cCharacter> ) --> nAscNumber
+   $ARGUMENTS$
+      <cCharacter> Any character expression
+   $RETURNS$
+      <nAscNumber> ASCII value
+   $DESCRIPTION$
+      This function return the ASCII value of the leftmost character of
+      any character expression passed as <cCharacter>.
+   $EXAMPLES$
+      ? Asc( "A" )
+      ? Asc( "¹" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Chr()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      PadC()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Centers an expression for a given width
+   $SYNTAX$
+      PadC( <xVal>, <nWidth>, <cFill> )  --> cString
+   $ARGUMENTS$
+      <xVal> A Number, Character or Date value to pad
+
+      <nWidth> Width of output string
+
+      <cFill> Character to fill in the string
+   $RETURNS$
+      <cString> The Center string of <xVal>
+   $DESCRIPTION$
+      This function takes an date, number or character expression <xVal>
+      and attempt to center the expression within a string of a given width
+      expressed as <nWidth>. The default character used to pad either side
+      of <xVal> will be a blank space. This character may be explicitly
+      specified the value of <cFill>.
+
+      If the length of <xVal> is longer then <nWidth>, this function will
+      truncate the string <xVal> from the leftmost side to the length of
+      <nWidth>.
+   $EXAMPLES$
+      ? PadC( "Harbour", 20 )
+      ? PadC( 34.5142, 20 )
+      ? PadC( Date(), 35 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AllTrim(),PadL(),PadR()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      PadL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Left-justifies an expression for a given width
+   $SYNTAX$
+      PadL( <xVal>, <nWidth>, <cFill> )  --> cString
+   $ARGUMENTS$
+      <xVal> An number,Character or date to pad
+
+      <nWidth> Width of output string
+
+      <cFill> Character to fill in the string
+   $RETURNS$
+      <cString> The left-justifies string of <xVal>
+   $DESCRIPTION$
+      This function takes an date,number,or character expression <xVal>
+      and attempt to left-justify it within a string of a given width
+      expressed as <nWidth>. The default character used to pad left side
+      of <xVal> will be an blank space; however, this character may be
+      explicitly specified the value of <cFill>.
+
+      If the length of <xVal> is longer then <nWidth>, this function will
+      truncate the string <xVal> from the leftmost side to the length of
+      <nWidth>.
+   $EXAMPLES$
+      ? PadL( "Harbour", 20 )
+      ? PadL( 34.5142, 20 )
+      ? PadL( Date(), 35 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AllTrim(),PadC(),PadR()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      PadR()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Right-justifies an expression for a given width
+   $SYNTAX$
+      PadR( <xVal>, <nWidth>, <cFill> ) --> cString
+   $ARGUMENTS$
+      <xVal> A Number, Character or Date value to pad
+
+      <nWidth> Width of output string
+
+      <cFill> Character to fill in the string
+   $RETURNS$
+      <cString> The right-justifies string of <xVal>
+   $DESCRIPTION$
+      This function takes an date,number,or character expression <xVal>
+      and attempt to right-justify it within a string of a given width
+      expressed as <nWidth>. The default character used to pad right side
+      of <xVal> will be an blank space; however, this character may be
+      explicitly specified the value of <cFill>.
+
+      If the length of <xVal> is longer then <nWidth>, this function will
+      truncate the string <xVal> from the leftmost side to the length of
+      <nWidth>.
+   $EXAMPLES$
+      ? PadR( "Harbour", 20 )
+      ? PadR( 34.5142, 20 )
+      ? PadR( Date(), 35 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AllTrim(),PadC(),PadL()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      AllTrim()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Removes leading and trailing blank spaces from a string
+   $SYNTAX$
+      AllTrim( <cString> ) --> cExpression
+   $ARGUMENTS$
+      <cString> Any character string
+   $RETURNS$
+      <cExpression> An string will all blank spaces removed from <cString>
+   $DESCRIPTION$
+      This function returns the string <cExpression> will all leading and
+      trailing blank spaces removed.
+   $EXAMPLES$
+      ? AllTrim( "HELLO HARBOUR" )
+      ? AllTrim( "     HELLO HARBOUR" )
+      ? AllTrim( "HELLO HARBOUR     " )
+      ? AllTrim( "     HELLO HARBOUR     " )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      LTrim(),RTrim(),Trim()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RTrim()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Remove trailing spaces from a string.
+   $SYNTAX$
+      RTrim( <cExpression> ) --> cString
+   $ARGUMENTS$
+      <cExpression> Any character expression
+   $RETURNS$
+      <cString> A formatted string with out any blank spaced.
+   $DESCRIPTION$
+      This function returns the value of <cString> with any trailing blank
+      removed.
+
+      This function is identical to RTrim() and the opposite of LTrim().
+      Together with LTrim(), this function equated to the AllTrim()
+      function.
+   $EXAMPLES$
+      ? RTrim( "HELLO" )              //  "HELLO"
+      ? RTrim( "" )                   //  ""
+      ? RTrim( "UA   " )              //  "UA"
+      ? RTrim( "   UA" )              //  "   UA"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AllTrim(),LTrim(),Trim()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Trim()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Remove trailing spaces from a string.
+   $SYNTAX$
+      Trim( <cExpression> )   --> cString
+   $ARGUMENTS$
+      <cExpression> Any character expression
+   $RETURNS$
+      <cString> A formatted string with out any blank spaced.
+   $DESCRIPTION$
+      This function returns the value of <cString> with any trailing blank
+      removed.
+
+      This function is identical to RTrim() and the opposite of LTrim().
+      Together with LTrim(), this function equated to the AllTrim()
+      function.
+   $EXAMPLES$
+      ? Trim( "HELLO" )     //  "HELLO"
+      ? Trim( "" )          //   ""
+      ? Trim( "UA   " )     //   "UA"
+      ? Trim( "   UA" )     //   "   UA"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      RTrim(),LTrim(),AllTrim()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Replicate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Repeats a single character expression
+   $SYNTAX$
+      Replicate( <cString>, <nSize> )  --> cReplicateString
+   $ARGUMENTS$
+      <cString> Character string to be replicated
+
+      <nSize> Number of times to replicate <cString>
+   $RETURNS$
+      <cReplicateString> A character expression contain the <cString>
+      fill character.
+   $DESCRIPTION$
+      This function returns a string composed of <nSize> repetitions of
+      <cString>. The length of the character string returned by this
+      function is limited to the memory available.
+
+      A value of 0 for <nSize> will return a NULL string.
+   $EXAMPLES$
+      ? Replicate( "a", 10 )      // aaaaaaaaaa
+      ? Replicate( "b", 100000 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Space(),PadC(),PadL(),PadR()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Space()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Returns a string of blank spaces
+   $SYNTAX$
+      Space( <nSize> ) --> cString
+   $ARGUMENTS$
+      <nSize> The length of the string
+   $RETURNS$
+      <cString> A string containing blank spaces
+   $DESCRIPTION$
+      This function returns a string consisting of <nSize> blank spaces.
+      If the value of <nSize> is 0, a NULL string ( "" ) will be returned.
+
+      This function is useful to declare the length of a character memory
+      variable.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL cBigString
+         LOCAL cFirst
+         LOCAL cString := Space( 20 )  // Create an character memory variable
+                                       // with length 20
+         ? Len( cString )      // 20
+         cBigString := Space( 100000 ) // create a memory variable with 100000
+                                       // blank spaces
+         ? Len( cBigString )
+         USE tests NEW
+         cFirst := MakeEmpty( 1 )
+         ? Len( cFirst )
+         RETURN
+
+      FUNCTION MakeEmpty( xField )
+         LOCAL nRecord
+         LOCAL xRetValue
+
+         IF ! Empty( Alias() )
+            nRecord := RecNo()
+            dbGoto( 0 )
+            IF ValType( xField ) == "C"
+               xField := AScan( dbStruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
+            ELSE
+               DEFAULT xField TO 0
+               IF xField < 1 .OR. xField > FCount()
+                  xfield := 0
+               ENDIF
+            ENDIF
+            IF !( xfield == 0 )
+               xRetvalue := FieldGet( xfield )
+            ENDIF
+            dbGoto( nrecord )
+         ENDIF
+         RETURN xRetvalue
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is core
+   $SEEALSO$
+      PadC(),PadL(),PadR(),Replicate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Val()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Convert a number from a character type to numeric
+   $SYNTAX$
+      Val( <cNumber> ) --> nNumber
+   $ARGUMENTS$
+      <cNumber> Any valid character string of numbers.
+   $RETURNS$
+      <nNumber> The numeric value of <cNumber>
+   $DESCRIPTION$
+      This function converts any number previously defined as an character
+      expression <cNumber> into a numeric expression.
+
+      This functions is the oppose of the Str() function.
+   $EXAMPLES$
+      ? Val( "31421" ) // 31421
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Str(),Transform()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      StrTran()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Translate substring value with a main string
+   $SYNTAX$
+      StrTran( <cString>, <cLocString>, [<cRepString>], [<nPos>],
+               [<nOccurrences>] ) --> cReturn
+   $ARGUMENTS$
+      <cString>     The main string to search
+
+      <cLocString>  The string to locate in the main string
+
+      <cRepString>  The string to replace the <cLocString>
+
+      <nPos>        The first occurrence to be replaced
+
+      <nOccurrences> Number of occurrence to replace
+   $RETURNS$
+      <cReturn>  Formated string
+   $DESCRIPTION$
+      This function searches for any occurrence of <cLocString> in <cString>
+      and replaces it with <cRepString>. If <cRepString> is not specified, a
+      NULL byte will replace <cLocString>.
+
+      If <nPos> is used, its value defines the first occurrence to be
+      replaced. The default value is 1. Additionally, if used, the value of
+      <nOccurrences> tell the function how many occurrences of <cLocString>
+      in <cString> are to the replaced. The default of <nOccurrences> is
+      all occurrences.
+   $EXAMPLES$
+      ? StrTran( "Harbour  Power", "  ", " " )   // Harbour Power
+      // Harbour Power The future  of  xBase
+      ? StrTran( "Harbour  Power  The Future  of  xBase", "  ", " " , , 2 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Libraty is rtl
+   $SEEALSO$
+      SubStr(),At()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Transform()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Formats a value based on a specific picture template.
+   $SYNTAX$
+      Transform( <xExpression>, <cTemplate> )  --> cFormatted
+   $ARGUMENTS$
+      <xExpression> Any expression to be formated.
+
+      <cTemplate> Character string with picture template
+   $RETURNS$
+      <cFormatted> Formatted expression in character format
+   $DESCRIPTION$
+      This function returns <xExpression> in the format of the picture
+      expression passed to the function as <cTemplate>.
+
+      Their are two components that can make up <cTemplate> : a function
+      string and a template string. Function strings are those functions
+      that globally tell what the format of <xExpression> should be. These
+      functions are represented by a single character precede by the
+      @ symbol.
+
+      There are a couple of rules to follow when using function strings
+      and template strings:
+
+       - First, a single space must fall between the function template
+         and the template string if they are used in conjunction with
+         one another.
+
+       - Second, if both components make up the value of <cTemplate>, the
+         function string must precede the template string. Otherwise, the
+         function string may appear with out the template string and
+         vice versa.
+
+      The table below shows the possible function strings available with
+      the Transform() function.
+
+      <table>
+      @B   Left justify the string within the format.
+      @C   Issue a CR after format is numbers are positive.
+      @D   Put dates in SET DATE format.
+      @E   Put dates in BRITISH format.
+      @L   Make a zero padded string out of the number.
+      @R   Insert non template characters.
+      @X   Issue a DB after format is numbers are negative.
+      @Z   Display any zero as blank spaces.
+      @(   Quotes around negative numbers
+      @!   Convert alpha characters to uppercased format.
+      </table>
+
+      The second part of <cTemplate> consists of the format string. Each
+      character in the string may be formatted based on using the follow
+      characters as template markers for the string.
+
+      <table>
+      A,N,X,9,#   Any data type
+      L           Shows logical as "T" or "F"
+      Y           Shows logical as "Y" or "N"
+      !           Convert to uppercase
+      $           Dollar sing in place of leading spaces in numeric expression
+      *           Asterisks in place of leading spaces in numeric expression
+      ,           Commas position
+      .           Decimal point position
+      </table>
+   $EXAMPLES$
+      LOCAL cString := "This is harbour"
+      LOCAL nNumber := 9923.34
+      LOCAL nNumber1 := -95842.00
+      LOCAL lValue := .T.
+      LOCAL dDate := Date()
+      ? "working with String"
+      ? "Current String is", cString
+      ? "All uppercased", Transform( cString, "@!" )
+      ? "Date is", ddate
+      ? "Date is ", Transform( ddate, "@D" )
+      ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
+      ? Transform( 0      , "@L 9999"     )  //  "0000"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      The @L function template is a FoxPro/Xbase++ Extension
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      @...SAY,DevOutPict()
+   $END$
+ */

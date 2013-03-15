@@ -1,0 +1,146 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CharOnly()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Intersectional set of two strings based on characters
+   $SYNTAX$
+      CharOnly( <cThisCharactersOnly>, <cString> ) -> cReducedString
+   $ARGUMENTS$
+      <cThisCharactersOnly>   specifies the characters that must not be
+                              deleted in <cString>.
+      <cString>               is the string that should be processed
+   $RETURNS$
+      <cReducedString>        A string with all characters deleted but those
+                              specified in <cThisCharactersOnly>.
+   $DESCRIPTION$
+      The CharOnly() function calculates the intersectional set of two
+      strings. To do this, it deletes all characters from <cString> that
+      do not appear in <cThisCharacterOnly>.
+   $EXAMPLES$
+      ? CharOnly( "0123456789", "0211 - 38 99 77" )  //  "0211389977"
+      ? CharOnly( "0123456789", "0211/ 389 977" )    //  "0211389977"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharOnly() is compatible with CT3's CharOnly().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharRem()   WordOnly()   WordRem()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      WordOnly()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Intersectional set of two strings based on double characters
+   $SYNTAX$
+      WordOnly( <cThisDoubleCharactersOnly>, <cString> ) -> cReducedString
+   $ARGUMENTS$
+      <cThisDoubleCharactersOnly> specifies the double characters that must
+                                  not be deleted in <cString>.
+      <cString>                   is the string that should be processed
+   $RETURNS$
+      <cReducedString>        A string with all double characters deleted
+                              but those specified in <cThisCharactersOnly>.
+   $DESCRIPTION$
+      The WordOnly() function calculates the intersectional set of two
+      strings based on double characters. To do this, it deletes all double
+      characters from <cString> that do not appear in <cThisDoubleCharacterOnly>.
+   $EXAMPLES$
+      ? WordOnly( "AABBCCDD", "XXAAYYBBZZ" )  // "AABB"
+      ? WordOnly( "AABBCCDD", "XAAYYYBBZZ" )  // "BB"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      WordOnly() is compatible with CT3's WordOnly().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharOnly()   CharRem()   WordRem()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharRem()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Removes characters from a string
+   $SYNTAX$
+      CharRem( <cDeleteThisCharacters>, <cString> ) -> cReducedString
+   $ARGUMENTS$
+      <cDeleteThisCharacters>   specifies the characters that should
+                                be deleted in <cString>
+      <cString>)                is the string that should be processed
+   $RETURNS$
+      <cReducedString>          is a string where the characters specified
+                                in <cDeleteThisCharacters> are deleted
+   $DESCRIPTION$
+      The CharRem() function deletes the characters specified in
+      <cDeleteThisCharacters> from <cString>.
+   $EXAMPLES$
+      ? CharRem( " ", " 1  2  " )   // "12"
+      ? CharRem( "3y", "xyz123" )   // "xz12"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharRem() is compatible with CT3's CharRem().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharOnly()   WordOnly()   WordRem()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      WordRem()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Removes characters from a string
+   $SYNTAX$
+      WordRem( <cDeleteThisDoubleCharacters>, <cString> ) -> cReducedString
+   $ARGUMENTS$
+      <cDeleteThisDoubleCharacters>   specifies the double characters that
+                                      should be deleted in <cString>
+      <cString>)                      is the string that should be processed
+   $RETURNS$
+      <cReducedString>          is a string where the double characters
+                                specified in <cDeleteThisDoubleCharacters>
+                                are deleted
+   $DESCRIPTION$
+      The WordRem() function deletes the double characters specified in
+      <cDeleteThisDoubleCharacters> from <cString>.
+   $EXAMPLES$
+      ? WordRem( "abcd", "0ab1cd" )   // "0ab1"
+      ? WordRem( "abcd", "ab0cd1" )   // "0cd1"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      WordRem() is a new function available only in Harbour's CT3.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharOnly()   CharRem()   WordRem()
+   $END$
+ */

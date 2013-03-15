@@ -1,0 +1,169 @@
+#
+# $Id$
+#
+
+#=============================================================================
+# Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>,
+# See COPYING.txt for licensing terms.
+#=============================================================================
+# Table Syntax:
+# <:> terminal[|terminal|terminal...] <space> comment
+#     <space> inchar <:>        <space> outchar <space> modus
+#     <space> inchar-inchar <:> <space> outchar <space> modus
+#     @include
+# where:
+#     inchar  = decim/hex/alpha equivalent for input  char
+#     outchar = decim/hex/alpha equivalent for output char (* same as inchar)
+#     modus   = 0 default is: 1 for ?/??/say output, 2 for box output
+#               1: standard, 2: alternate, 3: protect, 4: alternate-protect,
+#               5: acsc chars
+#     include = name of terminal to include character translation
+#
+# outchar can conatin:
+#     * = inchar
+# and operators:
+#     + = add, - = sub, | = or, & = and, ^ = xor
+#
+# values:
+#     [0-9]+		= decim value
+#     0x[0-9A-Fa-f]+	= hex value
+#     '[.]+'		= alpha value
+#
+# example:
+#	'A'-'Z':	*|0x20	1
+#	makes all output chars lower
+#
+# Harbour program is looking for this file in $HB_CHARMAP,
+# $HB_ROOT/etc/harbour/hb-charmap.def, /etc/harbour/hb-charmap.def
+# terminal name is taken from 'HB_TERM' or 'TERM' environment variable
+# if terminal name contains '/' character then is divided to subsections
+# by this char and then each of them is included f.e.:
+#   export HB_TERM=linux/acsc/maz2iso
+# means that sections :linux, :acsc, :maz2iso will be loaded
+# remember that first subsection name (linux) will be used for terminfo
+# initialization
+#
+# default:
+#    0-127:	*	1
+#  128-255:	*	0
+#
+#-----------------------------------------------------------------------------
+:linux|fslinux|console|vt100|vt102|vt320 = Linux system console and VT terms
+    0-31:       '.'     1
+    127:        '.'     1
+    04:         '`'     5	# ACS_DIAMOND
+    16:         '+'     5	# ACS_RARROW
+    17:         ','     5	# ACS_LARROW
+    24:         '-'     5	# ACS_UARROW
+    25:         '.'     5	# ACS_DARROW
+    26:         '+'     5	# ACS_RARROW
+    27:         ','     5	# ACS_LARROW
+    30:         '-'     5	# ACS_UARROW
+    31:         '.'     5	# ACS_DARROW
+    128-255:    *       2
+    155:        '.'     1
+# @acsc          # include acsc section
+# @maz2iso       # include maz2iso section
+
+:xterm|xterm-color|rxvt|teraterm = xterm terms
+    0-31:       '.'     1
+    127-159:    '.'     1
+ @acsc          # include acsc section
+
+:tterm = Teraterm modified terminal
+    0-31:       '.'     1
+    127:        '.'     1
+    155:        '.'     1
+    04:         '#'     1
+    16:         '>'     1
+    17:         '<'     1
+    30:         '^'     1
+    31:         'v'     1
+    24:         '^'     1
+    25:         'v'     1
+    26:         '>'     1
+    27:         '<'     1
+
+:screen = screen terminal
+    0-31:       '.'     1
+    127-159:    '.'     1
+ @acsc          # include acsc section
+
+:acsc = display semigraphics chars as ACSC ones
+    04:         '`'     5	# ACS_DIAMOND
+    16:         '+'     5	# ACS_RARROW
+    17:         ','     5	# ACS_LARROW
+    24:         '-'     5	# ACS_UARROW
+    25:         '.'     5	# ACS_DARROW
+    26:         '+'     5	# ACS_RARROW
+    27:         ','     5	# ACS_LARROW
+    30:         '-'     5	# ACS_UARROW
+    31:         '.'     5	# ACS_DARROW
+    176:        104     5	# ACS_BOARD
+    177:         97     5	# ACS_CKBOARD
+    178:         48     5	# ACS_BLOCK
+    179:        120     5	# ACS_VLINE
+    180:        117     5	# ACS_RTEE
+    181:        117     5	# ACS_RTEE
+    182:        117     5	# ACS_RTEE
+    183:        107     5	# ACS_URCORNER
+    184:        107     5	# ACS_URCORNER
+    185:        117     5	# ACS_RTEE
+    186:        120     5	# ACS_VLINE
+    187:        107     5	# ACS_URCORNER
+    188:        106     5	# ACS_LRCORNER
+    189:        106     5	# ACS_LRCORNER
+    190:        106     5	# ACS_LRCORNER
+    191:        107     5	# ACS_URCORNER
+    192:        109     5	# ACS_LLCORNER
+    193:        118     5	# ACS_BTEE
+    194:        119     5	# ACS_TTEE
+    195:        116     5	# ACS_LTEE
+    196:        113     5	# ACS_HLINE
+    197:        110     5	# ACS_PLUS
+    198:        116     5	# ACS_LTEE
+    199:        116     5	# ACS_LTEE
+    200:        109     5	# ACS_LLCORNER
+    201:        108     5	# ACS_ULCORNER
+    202:        118     5	# ACS_BTEE
+    203:        119     5	# ACS_TTEE
+    204:        116     5	# ACS_LTEE
+    205:        113     5	# ACS_HLINE
+    206:        110     5	# ACS_PLUS
+    207:        118     5	# ACS_BTEE
+    208:        118     5	# ACS_BTEE
+    209:        119     5	# ACS_TTEE
+    210:        119     5	# ACS_TTEE
+    211:        109     5	# ACS_LLCORNER
+    212:        109     5	# ACS_LLCORNER
+    213:        108     5	# ACS_ULCORNER
+    214:        108     5	# ACS_ULCORNER
+    215:        110     5	# ACS_PLUS
+    216:        110     5	# ACS_PLUS
+    217:        106     5	# ACS_LRCORNER
+    218:        108     5	# ACS_ULCORNER
+#    219:         96     5	# ACS_DIAMOND
+#    220:         96     5	# ACS_DIAMOND
+#    221:         96     5	# ACS_DIAMOND
+#    222:         96     5	# ACS_DIAMOND
+#    223:         96     5	# ACS_DIAMOND
+
+:maz2iso = mazovia to ISO-8859-2 translation
+    143:        161     1
+    149:        198     1
+    144:        202     1
+    156:        163     1
+    165:        209     1
+    163:        211     1
+    152:        166     1
+    160:        172     1
+    161:        175     1
+    134:        177     1
+    141:        230     1
+    145:        234     1
+    146:        179     1
+    164:        241     1
+    162:        243     1
+    158:        182     1
+    166:        188     1
+    167:        191     1

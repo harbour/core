@@ -1,0 +1,410 @@
+diff -u rlori/rlback.prg rlpat/rlback.prg
+--- rlori/rlback.prg	1996-05-20 05:31:00.000000000 +0200
++++ rlpat/rlback.prg	2009-06-10 08:24:18.000000000 +0200
+@@ -312,10 +312,10 @@
+    sub_hdr_offset, page_width_offset, lns_per_page_offset, left_mrgn_offset,;
+    right_mgrn_offset, col_count_offset, dbl_space_offset,;
+    summary_rpt_offset, pe_offset, plnpg_peap_pebp_offset, plus_byte,;
+-   frm_pagehdr, frm_grpexpr, frm_subexpr, frm_grphdr, frm_subhdr,;
+-   frm_pagewidth, frm_linespage, frm_leftmarg, frm_rightmarg,;
+-   frm_colcount, frm_dblspaced, frm_summary, frm_pe, frm_pebp, frm_peap,;
+-   frm_plainpage
++   frm_pagehd, frm_grpexp, frm_subexp, frm_grphdr, frm_subhdr,;
++   frm_pagewi, frm_linesp, frm_leftma, frm_rightm,;
++   frm_colcou, frm_dblspa, frm_summar, frm_pe, frm_pebp, frm_peap,;
++   frm_plainp
+ 
+ i          = 0
+ handle     = 0
+@@ -379,22 +379,22 @@
+ 
+ 
+ ** Default report values **
+-frm_pagehdr   = SPACE(240)
+-frm_grpexpr   = SPACE(200)
+-frm_subexpr   = SPACE(200)
++frm_pagehd   = SPACE(240)
++frm_grpexp   = SPACE(200)
++frm_subexp   = SPACE(200)
+ frm_grphdr    = SPACE(50)
+ frm_subhdr    = SPACE(50)
+-frm_pagewidth = 80
+-frm_linespage = 58
+-frm_leftmarg  = 8
+-frm_rightmarg = 0
+-frm_colcount  = 0
+-frm_dblspaced = "N"
+-frm_summary   = "N"
++frm_pagewi = 80
++frm_linesp = 58
++frm_leftma  = 8
++frm_rightm = 0
++frm_colcou  = 0
++frm_dblspa = "N"
++frm_summar   = "N"
+ frm_pe        = "N"
+ frm_pebp      = "Y"
+ frm_peap      = "N"
+-frm_plainpage = "N"
++frm_plainp = "N"
+ 
+ 
+ ** Initialize transfer dbf creation arrays **
+@@ -508,21 +508,21 @@
+       params_buff  = SUBSTR(file_buff, params_offset, size_params_buff)
+ 
+       ** Extract Numerics **
+-      frm_pagewidth = WORD_2_NUM(SUBSTR(params_buff,page_width_offset,2))
+-      frm_linespage = WORD_2_NUM(SUBSTR(params_buff,lns_per_page_offset,2))
+-      frm_leftmarg  = WORD_2_NUM(SUBSTR(params_buff,left_mrgn_offset,2))
+-      frm_rightmarg = WORD_2_NUM(SUBSTR(params_buff,right_mgrn_offset,2))
+-      frm_colcount  = WORD_2_NUM(SUBSTR(params_buff,col_count_offset,2))
++      frm_pagewi = WORD_2_NUM(SUBSTR(params_buff,page_width_offset,2))
++      frm_linesp = WORD_2_NUM(SUBSTR(params_buff,lns_per_page_offset,2))
++      frm_leftma  = WORD_2_NUM(SUBSTR(params_buff,left_mrgn_offset,2))
++      frm_rightm = WORD_2_NUM(SUBSTR(params_buff,right_mgrn_offset,2))
++      frm_colcou  = WORD_2_NUM(SUBSTR(params_buff,col_count_offset,2))
+ 
+       ** Extract characters **
+-      frm_dblspaced = SUBSTR(params_buff, dbl_space_offset, 1)
+-      frm_summary   = SUBSTR(params_buff, summary_rpt_offset, 1)
++      frm_dblspa = SUBSTR(params_buff, dbl_space_offset, 1)
++      frm_summar   = SUBSTR(params_buff, summary_rpt_offset, 1)
+       frm_pe        = SUBSTR(params_buff, pe_offset, 1)
+ 
+       ** Process packed 'plus byte' **
+       plus_byte = ASC(SUBSTR(params_buff, plnpg_peap_pebp_offset, 1))
+       IF INT( plus_byte / 4 ) = 1
+-         frm_plainpage = "Y"
++         frm_plainp = "Y"
+          plus_byte = plus_byte - 4
+       ENDIF
+       IF INT( plus_byte / 2 ) = 1
+@@ -538,15 +538,15 @@
+ 
+       ** Page Heading, Report Title **
+       pointer = WORD_2_NUM(SUBSTR(params_buff, page_hdr_offset, 2))
+-      frm_pagehdr = GET_EXPR(pointer)
++      frm_pagehd = GET_EXPR(pointer)
+ 
+       ** Grouping expression **
+       pointer = WORD_2_NUM(SUBSTR(params_buff, grp_expr_offset, 2))
+-      frm_grpexpr = GET_EXPR(pointer)
++      frm_grpexp = GET_EXPR(pointer)
+ 
+       ** Sub-grouping expression **
+       pointer = WORD_2_NUM(SUBSTR(params_buff, sub_expr_offset, 2))
+-      frm_subexpr = GET_EXPR(pointer)
++      frm_subexp = GET_EXPR(pointer)
+ 
+       ** Group header **
+       pointer = WORD_2_NUM(SUBSTR(params_buff, grp_hdr_offset, 2))
+@@ -562,7 +562,7 @@
+ 
+       fld_offset = 12      && dBASE skips first 12 byte fields block.
+       USE &dbf_file
+-      FOR i = 1 to frm_colcount
++      FOR i = 1 to frm_colcou
+ 
+          ** APPEND and REPLACEs happen in GET_FIELD() **
+          fld_offset = GET_FIELD(fld_offset)
+@@ -790,10 +790,10 @@
+    next_free_offset, last_expr, expr_count
+ 
+ PRIVATE report_size, report_image, status, expr_count, i, j, write_count,;
+-   frm_pagehdr, frm_grpexpr, frm_subexpr, frm_grphdr, frm_subhdr,;
+-   frm_pagewidth, frm_linespage, frm_leftmarg, frm_rightmarg,;
+-   frm_colcount, frm_dblspaced, frm_summary, frm_pe, frm_pebp, frm_peap,;
+-   frm_plainpage
++   frm_pagehd, frm_grpexp, frm_subexp, frm_grphdr, frm_subhdr,;
++   frm_pagewi, frm_linesp, frm_leftma, frm_rightm,;
++   frm_colcou, frm_dblspa, frm_summar, frm_pe, frm_pebp, frm_peap,;
++   frm_plainp
+ 
+ report_size  = 1990              && size of report file.
+ report_image = ""
+@@ -847,19 +847,19 @@
+    IF file_error = 0
+ 
+       ** Write Page Heading info **
+-      page_hdr_num = WRITE_EXPR(frm_pagehdr, .T.)
++      page_hdr_num = WRITE_EXPR(frm_pagehd, .T.)
+ 
+       ** WRITE ok? **
+       IF page_hdr_num != -1
+ 
+          ** Write Grouping expression info **
+-         grp_expr_num = WRITE_EXPR(frm_grpexpr, .T.)
++         grp_expr_num = WRITE_EXPR(frm_grpexp, .T.)
+ 
+          ** WRITE ok? **
+          IF grp_expr_num != -1
+ 
+             ** Write Sub-grouping expression info **
+-            sub_expr_num = WRITE_EXPR(frm_subexpr, .T.)
++            sub_expr_num = WRITE_EXPR(frm_subexp, .T.)
+ 
+             ** WRITE ok? **
+             IF sub_expr_num != -1
+@@ -891,7 +891,7 @@
+ 
+             IF i == j .AND. LEN( TRIM( contents ) ) == 0
+                status := .T.
+-               frm_colcount--
++               frm_colcou--
+             ELSE
+                status := WRITE_FIELD()
+             ENDIF
+@@ -1179,7 +1179,7 @@
+ plus_byte   = 0
+ 
+ ** Calculate plus byte **
+-IF frm_plainpage = "Y"
++IF frm_plainp = "Y"
+    plus_byte = plus_byte + 4
+ ENDIF
+ IF frm_peap = "Y"
+@@ -1195,13 +1195,13 @@
+                 NUM_2_WORD(sub_expr_num) +;
+                 NUM_2_WORD(grp_hdr_num) +;
+                 NUM_2_WORD(sub_hdr_num) +;
+-                NUM_2_WORD(frm_pagewidth) +;
+-                NUM_2_WORD(frm_linespage) +;
+-                NUM_2_WORD(frm_leftmarg) +;
+-                NUM_2_WORD(frm_rightmarg) +;
+-                NUM_2_WORD(frm_colcount) +;
+-                frm_dblspaced +;
+-                frm_summary +;
++                NUM_2_WORD(frm_pagewi) +;
++                NUM_2_WORD(frm_linesp) +;
++                NUM_2_WORD(frm_leftma) +;
++                NUM_2_WORD(frm_rightm) +;
++                NUM_2_WORD(frm_colcou) +;
++                frm_dblspa +;
++                frm_summar +;
+                 frm_pe +;
+                 CHR(plus_byte)
+ write_len = LEN(write_item)
+@@ -1296,7 +1296,7 @@
+ 
+ ** NO extension **
+ IF AT(".", file) = 0
+-   file = TRIM(file) + ".DBF"
++   file = TRIM(file) + ".dbf"
+ ENDIF
+ 
+ ** Calculate record_size, field_count and data_offset **
+diff -u rlori/rldialg.prg rlpat/rldialg.prg
+--- rlori/rldialg.prg	1996-05-20 05:31:00.000000000 +0200
++++ rlpat/rldialg.prg	2009-06-12 14:48:45.000000000 +0200
+@@ -187,7 +187,7 @@
+ 			KEYBOARD CHR(k)
+ 		ENDIF
+ 		
+-		filename = jenter_rc(filename, wt + 3, wl + 7, 64, "@K!S20")
++		filename = jenter_rc(filename, wt + 3, wl + 7, 64, "@KS20")
+ 
+ 		SET CURSOR ON
+ 		READ
+diff -u rlori/rlfront.prg rlpat/rlfront.prg
+--- rlori/rlfront.prg	1996-05-20 05:31:00.000000000 +0200
++++ rlpat/rlfront.prg	2009-06-10 08:23:53.000000000 +0200
+@@ -158,9 +158,9 @@
+ 		CASE rl_choice == 1
+ 
+ 			// Select REPORT FORM
+-			DECLARE files[adir("*.FRM") + 1]
++			DECLARE files[adir("*.frm") + 1]
+ 			afill(files,"")
+-			adir("*.FRM", files)
++			adir("*.frm", files)
+ 
+ 			IF multibox(7, 17, 7, 5, file_box) = 0      // <esc> or cancel?
+ 				LOOP
+@@ -172,9 +172,9 @@
+ 		CASE rl_choice == 2
+ 
+ 			// Select LABEL FORM
+-			DECLARE files[adir("*.LBL") + 1]
++			DECLARE files[adir("*.lbl") + 1]
+ 			afill(files,"")
+-			adir("*.LBL", files)
++			adir("*.lbl", files)
+ 
+ 			IF multibox(7, 17, 7, 5, file_box) = 0      // <esc> or cancel?
+ 				LOOP
+@@ -828,10 +828,10 @@
+ 
+ // translate semicolons into lines and stuff array
+ fstart_pos = 1
+-phdr_lines[1] = XLATE(frm_pagehdr, ";", 60)
+-phdr_lines[2] = XLATE(frm_pagehdr, ";", 60)
+-phdr_lines[3] = XLATE(frm_pagehdr, ";", 60)
+-phdr_lines[4] = XLATE(frm_pagehdr, ";", 60)
++phdr_lines[1] = XLATE(frm_pagehd, ";", 60)
++phdr_lines[2] = XLATE(frm_pagehd, ";", 60)
++phdr_lines[3] = XLATE(frm_pagehd, ";", 60)
++phdr_lines[4] = XLATE(frm_pagehd, ";", 60)
+ 
+ // initalize contents header array
+ afill(chdr_lines, SPACE(65), 1, 24*4)
+@@ -861,14 +861,14 @@
+ NEXT
+ 	
+ // pad the group/subgroup area, if necessary
+-frm_grpexpr  = frm_grpexpr + SPACE(200 - LEN(frm_grpexpr))
++frm_grpexp  = frm_grpexp + SPACE(200 - LEN(frm_grpexp))
+ frm_grphdr   = frm_grphdr  + SPACE( 50 - LEN(frm_grphdr ))
+-frm_subexpr  = frm_subexpr + SPACE(200 - LEN(frm_subexpr))
++frm_subexp  = frm_subexp + SPACE(200 - LEN(frm_subexp))
+ frm_subhdr   = frm_subhdr  + SPACE( 50 - LEN(frm_subhdr ))
+ 
+ // modifying old file
+ GO TOP
+-IF frm_colcount != 0    
++IF frm_colcou != 0    
+ 
+ 	m_contents = form_dbf->contents
+ 	m_width    = form_dbf->width
+@@ -877,12 +877,12 @@
+ 
+ ***** 03/29/88
+ * originally:
+-*   total_fields   = frm_colcount
++*   total_fields   = frm_colcou
+ * fix:
+-	TOTAL_FIELDS = int(FRM_COLCOUNT)
++	TOTAL_FIELDS = int(FRM_COLCOU)
+ 
+ 
+-ELSE    // modifying new file, frm_colcount == 0
++ELSE    // modifying new file, frm_colcou == 0
+ 
+ 	m_contents = SPACE(254)
+ 	m_width    = 10
+@@ -990,7 +990,7 @@
+ //
+ lNonBlank := .F.
+ 
+-frm_pagehdr := ""      
++frm_pagehd := ""      
+ 
+ FOR i = 4 TO 2 STEP -1
+ 
+@@ -999,24 +999,24 @@
+ 
+    // once a nonblank is encountered, prefix all but the first
+    // entry with a semi-colon
+-   frm_pagehdr := IIF( lNonBlank, ";", "" ) + TRIM( phdr_lines[ i ] ) + ;
+-	  frm_pagehdr
++   frm_pagehd := IIF( lNonBlank, ";", "" ) + TRIM( phdr_lines[ i ] ) + ;
++	  frm_pagehd
+ 
+ NEXT i
+ 
+-frm_pagehdr = TRIM( phdr_lines[ i ] ) + frm_pagehdr
++frm_pagehd = TRIM( phdr_lines[ i ] ) + frm_pagehd
+ 
+ // strip of spaces in the group/subgroup areas
+-frm_grpexpr  = TRIM(frm_grpexpr)
++frm_grpexp  = TRIM(frm_grpexp)
+ frm_grphdr   = TRIM(frm_grphdr)
+-frm_subexpr  = TRIM(frm_subexpr)
++frm_subexp  = TRIM(frm_subexp)
+ frm_subhdr   = TRIM(frm_subhdr)
+ 
+ // save if updated and 'No' was not selected
+ IF my_update .AND. !no_save_flag
+ 
+ 	*  set number of fields
+-	frm_colcount = MAX(total_fields, frm_colcount)
++	frm_colcou = MAX(total_fields, frm_colcou)
+ 
+    SAVE ALL LIKE frm_* TO &form_mem
+ 	
+@@ -1281,7 +1281,7 @@
+ 
+ 	* increment field count variables
+ 	total_fields = total_fields + 1
+-	frm_colcount = frm_colcount + 1
++	frm_colcou = frm_colcou + 1
+ 
+ 	* initialize new field
+ 	m_contents = SPACE(254)
+@@ -1411,7 +1411,7 @@
+ 
+ 	IF total_fields > 1
+ 		total_fields = total_fields - 1
+-		frm_colcount = frm_colcount - 1
++		frm_colcou = frm_colcou - 1
+ 	ENDIF
+ 
+ 	* get the new data
+@@ -1532,7 +1532,7 @@
+ LOCAL bValidHeader := { | cString | ! ( ";" $ cString ) }
+ // this represents the minimum constraint --  calculation should account for
+ // column widths
+-LOCAL bValidRMargin := { | nExp | nExp < frm_pagewidth .AND. nExp >= 0 }
++LOCAL bValidRMargin := { | nExp | nExp < frm_pagewi .AND. nExp >= 0 }
+ 
+ LOCAL nHeaderIndex
+ 
+@@ -1554,21 +1554,21 @@
+ 
+ NEXT nHeaderIndex
+ 	
+-@ 12,42 GET frm_pagewidth PICTURE "999"
+-@ 13,42 GET frm_leftmarg  PICTURE "999"
++@ 12,42 GET frm_pagewi PICTURE "999"
++@ 13,42 GET frm_leftma  PICTURE "999"
+ 
+ 
+-@ 14,42 GET frm_rightmarg PICTURE "999" VALID VCondition( bValidRMargin, ;
++@ 14,42 GET frm_rightm PICTURE "999" VALID VCondition( bValidRMargin, ;
+    "Invalid right margin -- must be between 0 and " + ;
+-   ltrim( str( frm_pagewidth - 1 ) ) )
++   ltrim( str( frm_pagewi - 1 ) ) )
+ 
+ 
+-@ 15,42 GET frm_linespage PICTURE "999"
+-@ 16,42 GET frm_dblspaced PICTURE "!"
++@ 15,42 GET frm_linesp PICTURE "999"
++@ 16,42 GET frm_dblspa PICTURE "!"
+ 			
+ @ 20,49 GET frm_pebp      PICTURE "!"
+ @ 21,49 GET frm_peap      PICTURE "!"
+-@ 22,49 GET frm_plainpage PICTURE "!"
++@ 22,49 GET frm_plainp PICTURE "!"
+ 			
+ READ
+ 
+@@ -1630,13 +1630,13 @@
+ 
+ SET KEY -2 TO   // disable this option
+ 
+-@ 06,25 GET frm_grpexpr PICTURE "@S50"
++@ 06,25 GET frm_grpexp PICTURE "@S50"
+ @ 07,25 GET frm_grphdr
+ 
+-@ 11,23 GET frm_summary PICTURE "!"
++@ 11,23 GET frm_summar PICTURE "!"
+ @ 12,23 GET frm_pe PICTURE "!"
+ 
+-@ 18,25 GET frm_subexpr PICTURE "@S50"
++@ 18,25 GET frm_subexp PICTURE "@S50"
+ @ 19,25 GET frm_subhdr
+ 
+ READ    
+@@ -1913,10 +1913,10 @@
+ 
+ IF AT(".", fname) == 0
+ 	IF type == "L"
+-		open = TRIM(fname) + ".LBL"
++		open = TRIM(fname) + ".lbl"
+ 	ENDIF
+ 	IF type == "R"
+-		open = TRIM(fname) + ".FRM"
++		open = TRIM(fname) + ".frm"
+ 	ENDIF
+ ELSE
+ 	open = TRIM(fname)

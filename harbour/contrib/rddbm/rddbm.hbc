@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-
-description=Bitmap Filter RDD
-
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

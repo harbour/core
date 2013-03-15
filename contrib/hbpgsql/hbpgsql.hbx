@@ -1,0 +1,99 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBPGSQL__
+#define __HBEXTERN_CH__HBPGSQL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBPGSQL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBPGSQL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBPGSQL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_PQCopyFromWA
+DYNAMIC lo_export
+DYNAMIC lo_import
+DYNAMIC lo_unlink
+DYNAMIC PQbinaryTuples
+DYNAMIC PQcancel
+DYNAMIC PQclientEncoding
+DYNAMIC PQcmdStatus
+DYNAMIC PQcmdTuples
+DYNAMIC PQconnectdb
+DYNAMIC PQconsumeInput
+DYNAMIC PQdb
+DYNAMIC PQerrorMessage
+DYNAMIC PQescapeBytea
+DYNAMIC PQescapeByteaConn
+DYNAMIC PQescapeString
+DYNAMIC PQexec
+DYNAMIC PQexecParams
+DYNAMIC PQexecPrepared
+DYNAMIC PQfcount
+DYNAMIC PQflush
+DYNAMIC PQfmod
+DYNAMIC PQfname
+DYNAMIC PQfnumber
+DYNAMIC PQfsize
+DYNAMIC PQftable
+DYNAMIC PQftype
+DYNAMIC PQgetCancel
+DYNAMIC PQgetisnull
+DYNAMIC PQgetlength
+DYNAMIC PQgetResult
+DYNAMIC PQgetvalue
+DYNAMIC PQhost
+DYNAMIC PQisBusy
+DYNAMIC PQisnonblocking
+DYNAMIC PQlastrec
+DYNAMIC PQmetadata
+DYNAMIC PQnfields
+DYNAMIC PQntuples
+DYNAMIC PQoidStatus
+DYNAMIC PQoidValue
+DYNAMIC PQoptions
+DYNAMIC PQpass
+DYNAMIC PQport
+DYNAMIC PQprepare
+DYNAMIC PQprotocolVersion
+DYNAMIC PQputCopyData
+DYNAMIC PQputCopyEnd
+DYNAMIC PQrequestCancel
+DYNAMIC PQreset
+DYNAMIC PQresult2array
+DYNAMIC PQresultErrorMessage
+DYNAMIC PQresultStatus
+DYNAMIC PQsendQuery
+DYNAMIC PQserverVersion
+DYNAMIC PQsetClientEncoding
+DYNAMIC PQsetdbLogin
+DYNAMIC PQsetErrorVerbosity
+DYNAMIC PQsetnonblocking
+DYNAMIC PQstatus
+DYNAMIC PQtrace
+DYNAMIC PQtracecreate
+DYNAMIC PQtransactionStatus
+DYNAMIC PQtty
+DYNAMIC PQunescapeBytea
+DYNAMIC PQuntrace
+DYNAMIC PQuser
+DYNAMIC TPQQuery
+DYNAMIC TPQRow
+DYNAMIC TPQServer
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBPGSQL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

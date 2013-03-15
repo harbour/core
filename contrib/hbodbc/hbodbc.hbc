@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+description=ODBC wrapper (SQL/db)
+
+incpaths=.
+
+headers=sql.ch
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+{win}libs=odbc32
+{unix&!darwin}libs=odbc
+{unix&darwin}libs=iodbc

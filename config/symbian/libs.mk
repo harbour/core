@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+SYSLIBPATHS :=
+SYSLIBS +=

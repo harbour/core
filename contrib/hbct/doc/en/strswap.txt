@@ -1,0 +1,33 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      StrSwap()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Swap the contents of two strings
+   $SYNTAX$
+      StrSwap( <[@]cString1>, <[@]cString2> ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      StrSwap() is compatible with CT3's StrSwap().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

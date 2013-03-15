@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+{!allwin|!x86}skip=yes
+
+incpaths=.
+libpaths=lib/${hb_plat}/${hb_comp}
+
+gt=${hb_name}
+gui=yes

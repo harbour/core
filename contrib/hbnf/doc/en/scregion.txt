@@ -1,0 +1,158 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_SavRgn()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Save a screen region for later display
+   $SYNTAX$
+      ft_SavRgn( <nTop>, <nLeft>, <nBottom>, <nRight> ) -> cScreen
+   $ARGUMENTS$
+      <nTop>, <nLeft>, <nBottom>, and <nRight> define the portion of the
+      screen to save.  Allowable values are 0 through 255.
+   $RETURNS$
+      ft_SavRgn() returns the saved screen region and its coordinates
+      as a character string.
+   $DESCRIPTION$
+      ft_SavRgn() is similar to Clipper's SaveScreen(), but it saves the
+      screen coordinates as well as the display information.  The saved
+      area can be restored by passing the returned string to ft_RstRgn().
+
+      Note that the strings returned from ft_SavRgn() and Clipper's
+      SaveScreen() are not interchangeable.  A screen region saved with
+      with ft_SavRgn() must be restored using ft_RstRgn().
+
+      ft_SavRgn() calls Clipper's SaveScreen().  Refer to the Clipper
+      documentation for more information regarding this function.
+   $EXAMPLES$
+      // The following example uses ft_SavRgn() and ft_RstRgn() to save
+      // and restore a portion of the screen.
+
+      @ 0, 0, 24, 79 BOX "111111111"          // fill the screen with 1's
+      cScreen := ft_SavRgn( 10, 10, 20, 30 )  // save a region
+      @ 0, 0, 24, 79 BOX "222222222"          // fill the screen with 2's
+      ft_RstRgn( cScreen )                    // restore the 1's region
+   $SEEALSO$
+      ft_RstRgn() ft_RgnStack()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_RstRgn()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Restore region of the screen saved with ft_SavRgn()
+   $SYNTAX$
+      ft_RstRgn( <cScreen>, [ <nTop> ], [ <nLeft> ] ) -> NIL
+   $ARGUMENTS$
+      <cScreen> is a screen region previously returned from ft_SavRgn().
+
+      <nTop> and <nLeft> are optional parameters that define a new location
+      for the upper left corner of the screen area contained in <cScreen>.
+      Allowable values are 0 through 255.
+   $RETURNS$
+      ft_RstRgn() returns NIL.
+   $DESCRIPTION$
+      ft_RstRgn() restores a screen region previously saved with
+      ft_SavRgn().  Calling ft_RstRgn() with <cScreen> as the only
+      parameter will restore the saved region to its original location.
+      <nTop> and <nLeft> may be used to define a new location for the
+      upper left corner of the saved region.
+
+      <nTop> and <nLeft> are dependent upon each other. You may not
+      specify one without the other.
+
+      ft_RstRgn() calls Clipper's RestScreen().  Refer to the Clipper
+      documentation for more information regarding this function.
+   $EXAMPLES$
+      // The following example uses ft_RstRgn() to restore a saved portion
+      // of the screen to different locations.
+
+      @ 0, 0, 24, 79 BOX "111111111"         // fill the screen with 1's
+      cScreen := ft_SavRgn( 10, 10, 20, 30 ) // save a region
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      ft_RstRgn( cScreen )                   // restore the 1's region
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      ft_RstRgn( cScreen, 15, 15 )           // restore to a different location
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      ft_RstRgn( cScreen, 20, 60 )           // restore to a different location
+   $SEEALSO$
+      ft_SavRgn() ft_RgnStack()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_RgnStack()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Push or pop a saved screen region on or off the stack
+   $SYNTAX$
+      ft_RgnStack( <cAction>, [ <nTop> ], [ <nLeft> ], [ <nBottom> ],
+         [ <nRight> ] ) -> NIL
+   $ARGUMENTS$
+      <cAction> determines what action ft_RgnStack() will take.  The
+      allowable values for this parameter are "push", "pop", and "pop all".
+      If the function is called with any other string as the first parameter
+      no action is performed.
+
+      <cAction> with a value of "push" will push a saved screen region onto
+      the stack.  A value of "pop" will restore the most recently pushed
+      screen region.  "pop all" tells the function to restore all screen
+      images which are currently on the stack.
+
+      The use of <nTop>, <nLeft>, <nBottom>, and <nRight> depends on the
+      <cAction> parameter.  If <cAction> is "push", the next four parameters
+      define the screen region to save.  If <cAction> is "pop" or "pop all"
+      the following four parameters are ignored.
+   $RETURNS$
+      ft_RgnStack() returns NIL.
+   $DESCRIPTION$
+      ft_RgnStack() allows multiple screens to be saved and restored from
+      a stack.  The stack is implemented with Clipper static array that is
+      visible only to ft_RgnStack().
+
+      The purpose of ft_RgnStack() is to allow multiple screen regions to be
+      managed without the need to remember the original coordinates or to
+      create variables for each one.
+
+      When called with "push", ft_RgnStack() places the saved screen area
+      at the end of the static array.  The array size is incremented by one
+      to accommodate the new screen area.
+
+      When called with "pop", the function restores the screen image stored
+      in the last element of the array, and the array size is decremented by
+      one.  If "pop all" is specified, all the saved screens are restored
+      until the array is empty.
+
+      ft_RgnStack() calls ft_SavRgn() and ft_RstRgn().  Refer to the
+      documentation for these two functions for more information.
+   $EXAMPLES$
+      // The following example uses ft_RgnStack() to save and restore various
+      // sections of the screen.
+
+      @ 0, 0, 24, 79 BOX "111111111"             // fill the screen with 1's
+      ft_RgnStack( "push", 10,  5, 15, 15 )      // push a region
+      @ 0, 0, 24, 79 BOX "222222222"             // fill the screen with 2's
+      ft_RgnStack( "push", 10, 20, 15, 30 )      // push a region
+      @ 0, 0, 24, 79 BOX "333333333"             // fill the screen with 3's
+      ft_RgnStack( "push", 10, 35, 15, 45 )      // push a region
+      @ 0, 0, 24, 79 BOX "444444444"             // fill the screen with 4's
+      ft_RgnStack( "push", 10, 50, 15, 60 )      // push a region
+      @ 0, 0, 24, 79 BOX "555555555"             // fill the screen with 5's
+      ft_RgnStack( "push", 10, 65, 15, 75 )      // push a region
+      CLEAR
+      ft_RgnStack( "pop" )        // restore the 5's region
+      ft_RgnStack( "pop" )        // restore the 4's region
+      ft_RgnStack( "pop all" )    // restore the 3's, 2's and 1's regions
+   $SEEALSO$
+      ft_SavRgn() ft_RstRgn()
+   $END$
+ */

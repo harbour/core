@@ -1,0 +1,347 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemOpen()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Open or create a NetWare semaphore
+   $SYNTAX$
+      ft_NWSemOpen( <cName>, <nInitVal>, <@nHandle>, <@nOpenCnt> ) -> nRc
+   $ARGUMENTS$
+      <cName> is the semaphore name, maximum length is 127 characters.
+
+      <nInitVal> is the initial value for the semaphore.  It must start
+      as a positive number, to a maximum of 127.
+
+      <@nHandle> is the semaphore handle.  THIS MUST BE PASSED BY
+      REFERENCE!  On exit, <nHandle> will contain a numeric value that
+      refers to the opened semaphore.  You will need it to pass to
+      other semaphore functions!  PASS IT BY REFERENCE!
+
+      <@nOpenCnt> is the number of stations that have opened the
+      semaphore.  THIS MUST BE PASSED BY REFERENCE! On exit, <nOpenCnt>
+      will contain a numeric value.
+   $RETURNS$
+      nRc, a numeric result code, as follows:
+
+            0 - success
+          254 - Invalid semaphore name length
+          255 - Invalid semaphore value
+
+      <nHandle> will contain the semaphore handle, and
+      <nOpenCnt> will contain the number of stations that have opened
+      the semaphore.
+   $DESCRIPTION$
+      A semaphore is simply a label that indirectly controls network
+      activity.  There is a semaphore name, which can be up to 127
+      characters, and an associated value, which can range from 0 to
+      127.
+
+      A semaphore can be used for many things, but is most often used
+      to limit the number of users in an application, and to control
+      access to a network resource.
+
+      A semaphore essentially allows you to place locks on resources
+      other than files.
+
+      An application begins the process by calling ft_NWSemOpen().
+      If the semaphore doesn't exist, NetWare will create it.
+      ft_NWSemOpen() returns a handle that is used in other semaphore
+      calls.
+
+      Applications use ft_NWSemWait() to wait for a semaphore to
+      become available.  ft_NWSemWait() decrements the semaphore's
+      value by 1.  If the value > 0, then the application should
+      be allowed to access the semaphore's resource.  If the value
+      goes negative, then the application is placed in a queue.
+      How long your app is in the queue is determined by how you
+      set the timeout parameter.  If you can't get the resource in
+      the time you allot, you're let out of the queue and the
+      value increments by 1 again.
+
+      When an application finishes with a semaphore, it should
+      call ft_NWSemSig() to increment the value, and then
+      ft_NWSemClose() to close the semaphore.  When the semaphore's
+      open count goes to 0, NetWare deletes it.
+
+      ft_NWSemEx() can be used to examine the value and open count
+      without affecting them.
+
+      For an interesting discussion on the operating system aspects
+      of semaphores, check "Operating Systems Design and Implementation"
+      by A. Tanenbaum, page 60.  For more details on NetWare's
+      semaphore facilities, refer to Charles Rose's "Programmer's
+      Guide to NetWare".  The "Programmer's Guide" will make an
+      excellent companion guide to the source code for all NetWare
+      functions in the Nanforum Toolkit.
+   $EXAMPLES$
+      LOCAL nInitVal, nRc, nHandle, nOpenCnt
+
+      nInitVal := 2
+      nRc      := ft_NWSemOpen( "Semaphore Test", nInitVal, ;
+                                @nHandle, @nOpenCnt )
+
+      IF nRc != 0
+         ? "Error: " + Str( nRc )
+         QUIT
+      ENDIF
+   $SEEALSO$
+      ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemEx()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Examine a NetWare semaphore's value and open count
+   $SYNTAX$
+      ft_NWSemEx( <nHandle>, <@nValue>, <@nOpenCnt> ) -> nRc
+   $ARGUMENTS$
+      <nHandle> is the semaphore handle, returned from a previous call
+      to ft_NWSemOpen().
+
+      <@nValue> will get the current semaphore value.  THIS NUMERIC
+      ARGUMENT MUST BE PASSED BY REFERENCE!
+
+      <@nOpenCnt> will get the current number of workstations
+      that have opened the semaphore.  THIS NUMERIC ARGUMENT MUST BE
+      PASSED BY REFERENCE!
+   $RETURNS$
+      nRc, a numeric, as follows:
+
+            0 - success
+          255 - invalid semaphore handle
+
+      In addition, nValue will be set to the semaphore's current value,
+      and nOpenCnt will be set to the number of stations that have
+      opened the semaphore.
+   $DESCRIPTION$
+      See the description for ft_NWSemOpen().
+   $EXAMPLES$
+      nInitVal := 2
+      nHandle  := 0
+      nOpenCnt := 0
+
+      ft_NWSemOpen( "Semaphore Test", nInitVal, @nHandle, @nOpenCnt )
+
+      nRc := ft_NWSemWait( nHandle )
+      IF nRc == 254
+         ? "All slots for this resource are currently in use"
+         QUIT
+      ENDIF
+
+      ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
+      ? "Semaphore test -> Open at [" + ;
+         hb_ntos( nOpenCnt ) + ;
+         "] stations, value is [" + ;
+         hb_ntos( nValue ) + "]"
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemWait()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Wait on a NetWare semaphore (decrement)
+   $SYNTAX$
+      ft_NWSemWait( <nHandle> [, nTimeout ] ) -> nRc
+   $ARGUMENTS$
+      <nHandle> is the semaphore handle, returned from a previous call
+      to ft_NWSemOpen().
+
+      <nTimeOut> is an optional parameter telling how long you wish to
+      wait on this semaphore.  This is a numeric indicating the number
+      of clock ticks (approx 1/18 sec ) to wait.  A zero (the default)
+      means "don't wait."
+   $RETURNS$
+      nRc, a numeric, as follows:
+
+            0 - success
+          254 - timeout failure
+          255 - invalid semaphore handle
+   $DESCRIPTION$
+      See the description for the ft_NWSemOpen() function.
+   $EXAMPLES$
+      ft_NWSemOpen( "Semaphore Test", nInitVal, @nHandle, @nOpenCnt )
+
+      nRc := ft_NWSemWait( nHandle )
+      IF nRc == 254
+         ? "All slots for this resource are currently in use"
+         QUIT
+      ENDIF
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemEx() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemSig()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Signal a NetWare semaphore (increment)
+   $SYNTAX$
+      ft_NWSemSig( nHandle ) -> nRc
+   $ARGUMENTS$
+      <nHandle> is the semaphore handle, returned from a previous call
+      to ft_NWSemOpen().
+   $RETURNS$
+      nRc, a numeric, as follows
+
+           0 - success
+           1 - semaphore overflow ( value > 127 )
+         255 - invalid semaphore handle
+   $DESCRIPTION$
+      Use ft_NWSemSig() when your app has finished with the resource
+      locked by a semaphore.  This will increase the value (thus
+      making a slot available to another app).
+
+      For more information, see the description under ft_NWSemOpen().
+   $EXAMPLES$
+      ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemClose() ft_NWSemLock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemClose()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Close a NetWare semaphore
+   $SYNTAX$
+      ft_NWSemClose( <nHandle> )  -> nRc
+   $ARGUMENTS$
+      <nHandle> is the semaphore handle, returned from a previous call
+      to ft_NWSemOpen().
+   $RETURNS$
+      nRc, a numeric, as follows:
+
+             0 - success
+           255 - invalid semaphore handle
+   $DESCRIPTION$
+      Call ft_NWSemClose() when the app is finished.  This decrements
+      the open count for the semaphore.  If the open count hits zero,
+      the semaphore is deleted by NetWare.
+   $EXAMPLES$
+      ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemLock()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      Perform a semaphore "lock"
+   $SYNTAX$
+      FT_NWSEMLOCK ( <cSemaphore>, <@nHandle> ) -> lRet
+   $ARGUMENTS$
+      <cSemaphore> is the name of a semaphore you want to "lock."
+      <nHandle> is the semaphore's handle, if you get the lock.
+      THIS MUST BE PASSED BY REFERENCE!
+   $RETURNS$
+      lRet == .T. if you get the lock, .T. if you don't.
+      If the lock succeeds, <nHandle> will contain the semaphore
+      handle.  If it fails, the value of <nHandle> is undefined.
+
+   $DESCRIPTION$
+      ft_NWSemLock() uses the Nanforum Toolkit's NetWare Semaphore API
+      functions in order to provide a general purpose "lock" you can use in
+      a NetWare environment.
+
+      An interesting byproduct of NetWare's semaphore functions is
+      the "open count" which tells you how many connections have this
+      semaphore open.  This is different from the semaphore's _value_,
+      which is set when the semaphore is opened and changed with
+      Signal() and wait().
+
+      The point of semaphores is that you don't care how many users
+      are using the resource; you merely wait on a semaphore until
+      the resource becomes available or you give up.  When you're done,
+      you signal it and off you go.
+
+      Back to the open count.  ft_NWSemLock() opens the semaphore
+      as named in <cSemaphore>.  After it is opened, the open count
+      is checked.  If it is anything other than 1, that means someone
+      else has it (or you failed in your open) so the semaphore is
+      closed and the "lock" is refused.  If the value is 1, then your
+      app is that 1 station so the "lock" is granted.
+
+      You can use a semaphore lock to control access to anything
+      that Clipper's RLock() and FLock() can't help you with, such
+      as text files written with the low level file i/o functions,
+      etc.
+   $EXAMPLES$
+      LOCAL nHandle := 0
+      IF ft_NWSemLock( "error.log", @nHandle )
+         // Note, you aren't actually LOCKING this file, you are
+         // just locking a semaphore by the same name.  As long as
+         // all apps that might be using this file are cooperating
+         // with the same kind of semaphore lock, you can effectively
+         // control access to the file.
+      ELSE
+         ? "Couldn't lock file."
+      ENDIF
+      // Processing, then:
+      ft_NWSemUnlock( nHandle )
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemUnlock()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NWSemUnlock()
+   $CATEGORY$
+      NetWare
+   $ONELINER$
+      "Unlock" a semaphore locked by ft_NWSemLock()
+   $SYNTAX$
+      ft_NWSemUnlock( <nHandle> ) -> lRet
+   $ARGUMENTS$
+      <nHandle> is the semaphore handle returned from ft_NWSemLock()
+   $RETURNS$
+      lRet == .T. if you successfully unlock the semaphore, .F. if
+      you don't.  If this call fails, it could be that you're passing
+      an invalid semaphore handle.
+   $DESCRIPTION$
+      This call unlocks a semaphore prevsiously locked via ft_NWSemLock().
+      It is important that you get a valid semaphore handle from
+      ft_NWSemLock() before you use this call.  Make sure when you call
+      ft_NWSemLock() that you pass a numeric parameter in for the handle
+      BY REFERENCE.
+   $EXAMPLES$
+      LOCAL nHandle := 0
+      IF ft_NWSemLock( "error.log", @nHandle )
+         // Note, you aren't actually LOCKING this file, you are
+         // just locking a semaphore by the same name.  As long as
+         // all apps that might be using this file are cooperating
+         // with the same kind of semaphore lock, you can effectively
+         // control access to the file.
+      ELSE
+         ? "Couldn't lock file."
+      ENDIF
+      // Processing, then:
+      ft_NWSemUnlock( nHandle )
+   $SEEALSO$
+      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
+   $END$
+ */

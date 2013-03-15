@@ -1,0 +1,71 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Calendar()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Display date/time calendar, find a date, return calendar data.
+   $SYNTAX$
+      ft_Calendar( [ <nRow> ], [ <nCol> ], [ <cColor> ], [ <lShadow> ] ,
+                   [ <lShowHelp> ] ) -> aRetVal
+   $ARGUMENTS$
+      <nRow> is an optional screen row for calendar display,
+             default row 1.
+
+      <nCol> is an optional screen col for calendar display,
+             default col 63.
+
+      <cColor> is an optional color string for displayed messages,
+               default is bright white text over green background.
+
+      <lShadow> is an optional logical variable. If true (.T.),
+                it uses ft_Shadow() to add a transparent shadow
+                to the display, default (.F.).
+
+      <lShowHelp> is an optional logical variable. If true, uses
+                  ft_XBox() to display  a four line help message
+                  if the F1 key is pressed, default (.F.).
+
+   $RETURNS$
+      aRetVal  is an 8 element array containing date, month, day, year,
+               month (in character format), day of the week, julian day
+               and current time.
+
+   $DESCRIPTION$
+      ft_Calendar() simply displays today's date, time and julian
+      day in a two line display with an optional box shadow. Cursor keys may
+      be used to page through the calendar by day, week, month or year
+      increments. Returns an 8 element array of calendar data:
+
+      Element  Value
+      [1]      Date in current date format.
+      [2]      Numeric month number.
+      [3]      Numeric day number.
+      [4]      Numeric year number.
+      [5]      Month in character format.
+      [6]      Day of the week in character format.
+      [7]      Numeric Julian day.
+      [8]      Current time in time format.
+
+      WARNING: ft_Calendar() uses ft_Shadow() and ft_XBox()
+               from the Nanforum Toolkit!
+
+   $EXAMPLES$
+      LOCAL aRetVal := ft_Calendar( 10, 40, "W+/RB", .T., .T. )
+      ? aRetVal[ 1 ]      // Result: 1991-04-20
+      ? aRetVal[ 2 ]      // Result:   4
+      ? aRetVal[ 3 ]      // Result:  20
+      ? aRetVal[ 4 ]      // Result:  1991
+      ? aRetVal[ 5 ]      // Result: April
+      ? aRetVal[ 6 ]      // Result: Saturday
+      ? aRetVal[ 7 ]      // Result:        110
+      ? aRetVal[ 8 ]      // Result: 12:45:20
+   $SEEALSO$
+      ft_DayOfYr()
+
+   $END$
+ */

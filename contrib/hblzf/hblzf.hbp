@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=lzf:lzf.h
+-depcontrol=lzf:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=lzf:${HB_WITH_LZF}
+-depincpath=lzf:/usr/include
+-depincpathlocal=lzf:3rd/liblzf
+-depfinish=lzf
+
+${hb_name}.hbx
+
+core.c
+
+3rd/liblzf/lzf.hbc{HBMK_HAS_LZF_LOCAL}

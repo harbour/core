@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+incpaths=.
+headers=${hb_name}.ch
+libpaths=lib/${hb_plat}/${hb_comp}
+
+libs=${hb_name}

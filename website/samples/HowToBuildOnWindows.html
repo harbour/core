@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Harbour Project - Samples -&gt; How to Build on Windows</title>
+<link href="/css/styles.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/menu/stmenu.js"></script>
+</head>
+<body>
+<table width="740" border="0" align="center" cellpadding="0" cellspacing="1" bordercolor="#000000">
+  <tr>
+    <td valign="top" bgcolor="#000000"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="229" valign="top" background="/images/header_03.png" bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="6%"><img src="/images/header_01.jpg" width="287" height="164" /></td>
+                <td width="94%"><img src="/images/header_02.jpg" width="453" height="164" /></td>
+              </tr>
+            </table></td>
+          </tr>
+          <tr>
+            <td background="/images/menu-bg.gif"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+              <tr>
+                <td width="95%" height="65" valign="top" background="/images/menu-bg2.png"><script type="text/javascript" src="/menu/harbour-menu.js"></script></td>
+                <td width="5%" height="65" valign="middle">&nbsp;</td>
+              </tr>
+            </table></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+
+          <tr>
+            <td><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr valign="bottom">
+                <td width="2%" class="tabela_box_trans_TL">&nbsp;</td>
+                <td colspan="2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                <td width="96%"  height="26" valign="bottom" class="title"> <p>How to Build on Windows</p>                  </td>
+                    <td width="1%" rowspan="2" align="center" valign="middle"><a href="/samples.html"><img src="/images/more-samples.png" width="60" height="60" border="0" /></a></td>
+                  </tr>
+                  <tr>
+                    <td width="99%" valign="top">In the BIN folder where your Harbor was installed, is the file HBMK.BAT. This batch file will help you compile your applications in a Microsoft.</td>
+                    </tr>
+                </table></td>
+                </tr>
+
+              <tr>
+                <td >&nbsp;</td>
+                <td width="96%" valign="top"><p>&quot;hbmk&quot; tries to produce an executable from your .prg file. It's a simple
+                    equivalent of cl.bat from the CA-Clipper distribution.</p>
+                  <p>All these scripts accept command line switches:<br />
+                    <code><span class="any1-preprocessor" style="FONT: 10pt Courier New">-o&lt;outputfilename&gt; &nbsp;&nbsp;# output file name
+                          <br />
+                  -static &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with static Harbour libs
+                  <br />
+                  -fullstatic &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with all static libs
+                  <br />
+                  -shared &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # link with shared libs (default)
+                  <br />
+                  -mt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with multi-thread libs
+                  <br />
+                  -gt&lt;hbgt&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with &lt;hbgt&gt; GT driver, can be repeated to  <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;                  # link with more GTs. The first one will be<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></code><code><span class="any1-preprocessor" style="FONT: 10pt Courier New"># the default at runtime <br />
+                    -xbgtk &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with xbgtk library (xBase GTK+ interface) <br />
+                    -hwgui &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with HWGUI library (GTK+ interface) <br />
+                    -l&lt;libname&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with &lt;libname&gt; library <br />
+                    -L&lt;libpath&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# additional path to search for libraries <br />
+                    -fmstat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# link with the memory statistics lib <br />
+                    -nofmstat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# do not link with the memory statistics lib (default) <br />
+                    -[no]strip &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# strip (no strip) binaries <br />
+                    -main=&lt;main_func&gt; &nbsp;&nbsp;&nbsp;# set the name of main program function/procedure. <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                    # if not set then 'MAIN' is used or if it doesn't  <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # exist the name of first public function/procedure  <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # in first linked object module (link)</span></code>
+<p>Link options work only with &quot;hblnk&quot; and &quot;hbmk&quot; and have no effect
+                    in &quot;hbcc&quot; and &quot;hbcmp&quot;.
+                    Other options are passed to Harbour/C compiler/linker.</p>
+                  An example compile/link session looks like:
+                  <br />
+                  <span class="source_code">---------------------------------------------------------------------------------------druzus@uran:~/tmp$ cat foo.prg
+                  <br />
+                  <code><span style="FONT: 10pt Courier New"><span class="any1-reservedword">function</span><span class="any1-space"> </span><span class="any1-variable">main</span><span class="any1-symbol">()<br />
+? </span><span class="any1-string">&quot;Hello, World!&quot;<br />
+ </span><span class="any1-reservedword">return</span><span class="any1-space"> nil</span></span></code></span>
+                  <pre class="source_code">druzus@uran:~/tmp$ <strong>hbcmp</strong> foo
+Harbour Compiler Alpha build 46.2 (Flex)
+Copyright 1999-2006, http://harbour-project.org/
+Compiling 'foo.prg'...
+Lines 5, Functions/Procedures 2
+Generating C source output to 'foo.c'... Done.</pre>
+                  <pre class="source_code">druzus@uran:~/tmp$ <strong>hblnk</strong> foo.o<br />druzus@uran:~/tmp$ <strong>strip</strong> foo<br /><span class="source_code">druzus@uran:~/tmp$ ls -l foo
+-rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 </span><span class="any1-escapeampersand">foo</span><span class="source_code">
+</span>---------------------------------------------------------------------------------------</pre>
+
+                  <p>or using hbmk only:<br />
+                    <span class="source_code">---------------------------------------------------------------------------------------<br />
+                      druzus@uran:~/tmp</SPAN>$ cat foo.prg <br />
+                      <code><span style="FONT: 10pt Courier New"><span class="any1-reservedword">function</span> <span class="any1-variable">main</span><span class="any1-symbol">()<br />
+? </span><span class="any1-string">&quot;Hello, World!&quot;<br />
+</span><span class="any1-reservedword">return</span><span class="any1-space"> nil</span></span></code><br />
+<br />
+druzus@uran:~/tmp$ <strong>hbmk</strong> foo<br />
+Harbour Compiler Alpha build 46.2 (Flex)
+<br />
+Copyright 1999-2006, http://harbour-project.org/<br />
+Compiling 'foo.prg'...
+<br />
+Lines 5, Functions/Procedures 2<br />
+Generating C source output to 'foo.c'... Done.<br />
+<br />
+ druzus@uran:~/tmp$ ls -l foo<br />
+ -rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46<SPAN class=any1-space> </span><span class="any1-escapeampersand">foo</span><span class="source_code"><br />
+ ---------------------------------------------------------------------------------------</span><br />
+                  <br />
+                  You will find additional wonderful tools: /usr/bin/hbrun<br />
+                    You can run clipper/xbase compatible source files with it
+                    if you only put in their first line: #!/usr/bin/hbrun</p>
+                  <p>For example:<br />
+                    ----------------------------------------------------------------------<br />
+                    <span class="source_code">druzus@uran:~/tmp$ cat foo.prg<br />
+                    #!/usr/bin/hbrun<br />
+                    <code><span style="FONT: 10pt Courier New"><span class="any1-reservedword">function</span> <span class="any1-variable">main</span><span class="any1-symbol">()<br />
+? </span><span class="any1-string">&quot;Hello, World!, This is a script !!! :-)&quot;<br />
+</span><span class="any1-reservedword">return</span><span class="any1-space"> nil</span></span></code></span></p>
+                  <p class="source_code">druzus@uran:~/tmp$ <strong>chmod</strong> +x foo.prg<br />
+                    druzus@uran:~/tmp$ <strong>./foo.prg</strong></p>
+                  <p class="source_code">Hello, World!, This is a script !!! :-)</p>
+                  <p class="source_code">druzus@uran:~/tmp$</p>
+                  <p>I hope you will find this information useful,<br />
+                    Przemyslaw Czerpak (druzus/at/priv.onet.pl)<br />
+                  </p>                  </td>
+                <td width="2%" >&nbsp;</td>
+              </tr>
+
+
+
+
+
+
+
+            </table></td>
+          </tr>
+
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" background="/images/footer.gif"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="33%" class="footer"><a href="/" class="whitelink">Copyright © 1999-<script type="text/javascript">copyright_year()</script> The Harbour Project.</a></td>
+            <td width="33%" class="footer"><div align="center"><a href="/legalnotes.html" class="whitelink">Terms of Service</a> | <a href="/contact.html" class="whitelink">Contact Us</a></div></td>
+            <td width="33%" class="footer"><div align="right">Design
+              by <a href="mailto: vailtom@gmail.com" class="whitelink">Vailton Renato</a> </div>
+                <div align="right"></div></td>
+          </tr>
+        </table></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

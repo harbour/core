@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+hbnetio.hbc
+-mt
+
+-w3 -es2

@@ -1,0 +1,35 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_SInkey()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Replacement for Inkey() that tests for SET KEY procedures
+   $SYNTAX$
+      ft_SInkey( [ <nWaitTime> ] ) -> nKey
+   $ARGUMENTS$
+      <nWaitTime> is the number of seconds to wait.  If zero,
+      ft_SInkey() will wait indefinitely for a keypress.  If not
+      passed, ft_SInkey() does not wait for a keypress.  If NIL,
+      it is treated the same as 0.
+   $RETURNS$
+      The Inkey() value of the key pressed.
+   $DESCRIPTION$
+      ft_SInkey() is similar to the function provided by Nantucket in
+      keyboard.prg, with one significant difference: you can pass NIL
+      to Inkey(), which will be treated as a zero (i.e., wait indefinitely
+      for keypress).  Therefore, it is necessary to differentiate between
+      an explicit NIL and one that is a result of a formal parameter NOT
+      being received.
+
+      ft_SInkey() differs from the standard Inkey() in that it will
+      respond to any keys set with SET KEY TO or SetKey().
+   $EXAMPLES$
+      SetKey( K_F1, {| n, l, r | HELP( n, l, r ) } )
+      nKey := ft_SInkey( 0 )       // HELP() will be called if F1 pressed
+   $END$
+ */

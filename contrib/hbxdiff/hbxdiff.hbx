@@ -1,0 +1,43 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBXDIFF__
+#define __HBEXTERN_CH__HBXDIFF__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBXDIFF__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC xdl_bdiff
+DYNAMIC xdl_bdiff_tgsize
+DYNAMIC xdl_bpatch
+DYNAMIC xdl_diff
+DYNAMIC xdl_init_mmfile
+DYNAMIC xdl_mmfile_cmp
+DYNAMIC xdl_mmfile_compact
+DYNAMIC xdl_mmfile_iscompact
+DYNAMIC xdl_mmfile_size
+DYNAMIC xdl_patch
+DYNAMIC xdl_rabdiff
+DYNAMIC xdl_read_mmfile
+DYNAMIC xdl_seek_mmfile
+DYNAMIC xdl_write_mmfile
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

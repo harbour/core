@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+description=GTWVG (an extension of GTWVT, win-only)
+
+skip={!win}
+
+incpaths=.
+
+headers=hbgtwvg.ch wvgparts.ch wvtwin.ch
+
+gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+libs=hbwin.hbc
+
+gui=yes
+mt=yes

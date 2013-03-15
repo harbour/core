@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+${hb_name}.hbx
+
+ziparc.prg
+
+hbmzip.hbc

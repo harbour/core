@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-depkeyhead=minilzo:minilzo.h
+-depcontrol=minilzo:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=minilzo:${HB_WITH_MINILZO}
+-depincpath=minilzo:/usr/include
+-depincpathlocal=minilzo:3rd/minilzo
+-depfinish=minilzo
+
+${hb_name}.hbx
+
+core.c
+
+3rd/minilzo/minilzo.hbc{HBMK_HAS_MINILZO_LOCAL}

@@ -1,0 +1,66 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_GetE()
+   $CATEGORY$
+      Environment
+   $ONELINER$
+      Return the entire current environment
+   $SYNTAX$
+      ft_GetE( [ @<xReceiveVar> ] ) -> nNumStrings
+   $ARGUMENTS$
+      <xReceiveVar> is the variable to receive the environment data.
+
+      <xReceiveVar> can be a character type variable, in which case
+      the function will place all environment strings in the variable
+      separated by carriage return/line feeds (Chr( 13 ) + Chr( 10 )).
+
+      <xReceiveVar> can be an array type, in which case the function
+      will place each string in an array element.  The array MUST be
+      declared with the proper number of elements prior to passing it
+      to the function.  This can be done by calling ft_GetE() without
+      parameters first to get the number of strings in the environment.
+
+      Note that the argument MUST be passed by reference. Since arrays
+      are by nature passed by reference, the "@" symbol is optional when
+      passing an array.
+
+      If no argument is passed, ft_GetE() merely returns the number
+      of strings in the environment.
+   $RETURNS$
+      ft_GetE() returns the total number of strings found in the
+      current program's environment.
+   $DESCRIPTION$
+      This function stores ALL of the current program's environment
+      variables in either a block of text lines or in an array.  It is
+      useful for looking at the entire environment at once, or recording
+      a snapshot of it to a file for later inspection, such as when a
+      program error occurs.  If the value of ONE SPECIFIC variable is
+      desired, use Clipper's built-in GetE() function.
+   $EXAMPLES$
+      // Get the environment in text form and browse it:
+
+      cEnvBlock   := ""
+      nNumStrings := ft_GetE( @cEnvBlock )
+      @ 0, 0 TO MaxRow() - 1, MaxCol()
+      @ MaxRow(), 0 SAY 'Browse strings, press ESC to exit...'
+      MemoWrit( cEnvBlock, 1, 1, MaxRow() - 2, MaxCol() - 1, .F. )
+
+      // Get the environment in text form and write it to a file:
+
+      cEnvBlock := ""
+      ft_GetE( @cEnvBlock )
+      MemoWrit( "environ.txt", cEnvBlock )
+
+      // Get the environment in Array form:
+
+      aEnvArray := Array( ft_GetE() )
+      ft_GetE( aEnvArray )
+      ? aEnvArray[ 1 ]       // "COMSPEC=C:\command.com"
+      ? aEnvArray[ 2 ]       // "PATH=C:\;C:\util;C:\harbour"
+      ... etc ...
+   $END$
+ */

@@ -1,0 +1,66 @@
+#
+# $Id$
+#
+
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=low
+-cpp=no
+-pic
+
+-cflag=-DHAVE_HBCONFIG_H
+
+xadler32.c
+xalloc.c
+xbdiff.c
+xbpatchi.c
+xdiffi.c
+xemit.c
+xmerge3.c
+xmissing.c
+xpatchi.c
+xprepare.c
+xrabdiff.c
+xrabply.c
+xutils.c
+xversion.c
+
+# ORIGIN http://www.xmailserver.org/xdiff-lib.html
+# VER    0.23
+# URL    http://www.xmailserver.org/libxdiff-0.23.tar.gz
+# DIFF   libxdiff.dif
+#
+# MAP    AUTHORS
+# MAP    COPYING
+# MAP    winconfig.h
+# MAP    man/xdiff.txt       xdiff.txt
+# MAP    xdiff/xadler32.c    xadler32.c
+# MAP    xdiff/xadler32.h    xadler32.h
+# MAP    xdiff/xalloc.c      xalloc.c
+# MAP    xdiff/xbdiff.c      xbdiff.c
+# MAP    xdiff/xbdiff.h      xbdiff.h
+# MAP    xdiff/xbpatchi.c    xbpatchi.c
+# MAP    xdiff/xdiff.h       xdiff.h
+# MAP    xdiff/xdiffi.c      xdiffi.c
+# MAP    xdiff/xdiffi.h      xdiffi.h
+# MAP    xdiff/xemit.c       xemit.c
+# MAP    xdiff/xemit.h       xemit.h
+# MAP    xdiff/xinclude.h    xinclude.h
+# MAP    xdiff/xmacros.h     xmacros.h
+# MAP    xdiff/xmerge3.c     xmerge3.c
+# MAP    xdiff/xmissing.c    xmissing.c
+# MAP    xdiff/xmissing.h    xmissing.h
+# MAP    xdiff/xpatchi.c     xpatchi.c
+# MAP    xdiff/xprepare.c    xprepare.c
+# MAP    xdiff/xprepare.h    xprepare.h
+# MAP    xdiff/xrabdiff.c    xrabdiff.c
+# MAP    xdiff/xrabply.c     xrabply.c
+# MAP    xdiff/xtypes.h      xtypes.h
+# MAP    xdiff/xutils.c      xutils.c
+# MAP    xdiff/xutils.h      xutils.h
+# MAP    xdiff/xversion.c    xversion.c

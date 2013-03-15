@@ -1,0 +1,81 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_At2()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Find position of the nth occurrence of a substring
+   $SYNTAX$
+      ft_At2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
+   $ARGUMENTS$
+      <cSearch> is the character substring to search for.
+
+      <cTarget> is the character string to search.
+
+      <nOccurs> is the occurrence of cSearch to look for,
+                 defaults to 1.
+
+      <lCaseSens> is a logical value denoting case sensitivity.
+                 If .F., then search is NOT sensitive to case,
+                 defaults to .T.
+   $RETURNS$
+      The position of the nth occurrence of a substring
+   $DESCRIPTION$
+      This function will find the nth occurrence of a substring
+      within a string.
+   $EXAMPLES$
+      cSearch := "t"
+      cTarget := "This is the day that the Lord has made."
+
+      ft_At2( cSearch, cTarget )            // Returns ( 9 )
+
+      ft_At2( cSearch, cTarget, 2 )         // Returns ( 17 )
+
+      ft_At2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
+   $SEEALSO$
+      ft_FindITh(), ft_RAt2()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_RAt2()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Find position of the reversed nth occurrence of a substring
+   $SYNTAX$
+      ft_RAt2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
+   $ARGUMENTS$
+      <cSearch> is the character substring to search for.
+
+      <cTarget> is the character string to search.
+
+      <nOccurs> is the occurrence of cSearch to look for,
+                 defaults to 1.
+
+      <lCaseSens> is a logical value denoting case sensitivity.
+                 If .F., then search is NOT sensitive to case,
+                 defaults to .T.
+   $RETURNS$
+      The position of the nth occurrence of a reversed substring
+   $DESCRIPTION$
+      This function will find the nth occurrence of a reversed
+      substring within a string.
+   $EXAMPLES$
+      cSearch := "t"
+      cTarget := "This is the day that the Lord has made."
+
+      ft_RAt2( cSearch, cTarget )           // Returns ( 22 )
+
+      ft_RAt2( cSearch, cTarget, 2 )        // Returns ( 20 )
+
+      ft_RAt2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
+   $SEEALSO$
+      ft_FindITh(), ft_At2()
+   $END$
+ */

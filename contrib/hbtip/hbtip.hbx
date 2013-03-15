@@ -1,0 +1,80 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBTIP__
+#define __HBEXTERN_CH__HBTIP__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTIP__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBTIP__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTIP__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC ANSIToHtml
+DYNAMIC hb_MailAssemble
+DYNAMIC hb_SendMail
+DYNAMIC hb_SetMimeType
+DYNAMIC HtmlToANSI
+DYNAMIC HtmlToOEM
+DYNAMIC OEMToHtml
+DYNAMIC THtmlCleanup
+DYNAMIC THtmlDocument
+DYNAMIC THtmlInit
+DYNAMIC THtmlIsValid
+DYNAMIC THtmlIterator
+DYNAMIC THtmlIteratorRegex
+DYNAMIC THtmlIteratorScan
+DYNAMIC THtmlNode
+DYNAMIC THtmlTagType
+DYNAMIC TIPCgi
+DYNAMIC TIPClient
+DYNAMIC TIPClientFTP
+DYNAMIC TIPClientHTTP
+DYNAMIC TIPClientPOP
+DYNAMIC TIPClientSMTP
+DYNAMIC TIPCredentials
+DYNAMIC TIPEncoder
+DYNAMIC TIPEncoderBase64
+DYNAMIC TIPEncoderQP
+DYNAMIC TIPEncoderUrl
+DYNAMIC TIPLog
+DYNAMIC TIPMail
+DYNAMIC tip_Base64Encode
+DYNAMIC tip_CheckSID
+DYNAMIC tip_CRLF
+DYNAMIC tip_DateToGMT
+DYNAMIC tip_FileMimeType
+DYNAMIC tip_GenerateSID
+DYNAMIC tip_GetEncoder
+DYNAMIC tip_GetNameEmail
+DYNAMIC tip_GetRawEmail
+DYNAMIC tip_HtmlSpecialChars
+DYNAMIC tip_HtmlToStr
+DYNAMIC tip_JSONSpecialChars
+DYNAMIC tip_MimeType
+DYNAMIC tip_QPDecode
+DYNAMIC tip_QPEncode
+DYNAMIC tip_SSL
+DYNAMIC tip_StrToHtml
+DYNAMIC tip_TimeStamp
+DYNAMIC tip_URLDecode
+DYNAMIC tip_URLEncode
+DYNAMIC TUrl
+DYNAMIC __tip_PStrCompI
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTIP__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

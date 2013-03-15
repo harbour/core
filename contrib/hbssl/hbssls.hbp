@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+hbssl.hbm
+
+-hbx=
+
+-stop{!allwin|hbdyn}
+
+{allwin}-cflag=-DHB_OPENSSL_STATIC

@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_ScanCode()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Wait for keypress and return keyboard scan code
+   $SYNTAX$
+      ft_ScanCode() -> cCode
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      A two-character string, corresponding to the keyboard scan code.
+   $DESCRIPTION$
+      ft_ScanCode() enables you to distinguish the different scancodes
+      of similar keys (such as Grey minus versus regular minus), thus
+      increasing the number of keys your input routine can recognize.
+
+      It works like Inkey(), in that it waits for a key to be pressed.
+      The scan code consists of two bytes, which are returned as a
+      two-character string.
+
+      For example, calling ft_ScanCode() and pressing the Grey-minus
+      key will return a two character string:
+
+             hb_BChar( 45 ) + hb_BChar( 74 )
+
+      LastKey() is not updated by ft_ScanCode(), so don't try to
+      test LastKey() to see what was pressed during an ft_ScanCode()
+      call.  Simply assign the return value to a variable and test
+      that (see the test driver below).
+
+      *  This was adapted from a short C routine posted by John Kaster on
+         NANFORUM.  It was written in Clipper to help demonstrate the
+         FT_INT86 function of the Nanforum Toolkit.
+
+      This program requires ft_int86().
+   $EXAMPLES$
+      cKey := ft_ScanCode()
+
+      // <grey-> returns:  hb_BChar( 45 ) + hb_BChar( 74 )
+      // <->     returns:  hb_BChar( 45 ) + hb_BChar( 12 )
+      // <grey+> returns:  hb_BChar( 43 ) + hb_BChar( 78 )
+      // <+>     returns:  hb_BChar( 43 ) + hb_BChar( 13 )
+   $END$
+ */

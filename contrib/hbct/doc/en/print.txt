@@ -1,0 +1,63 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      PrintStat()
+   $CATEGORY$
+      CT3 printer functions
+   $ONELINER$
+
+   $SYNTAX$
+      PrintStat( [<nPrinter>] ) -> nState
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      PrintReady()
+   $CATEGORY$
+      CT3 printer functions
+   $ONELINER$
+
+   $SYNTAX$
+      PrintReady( [<nPrinter>] ) -> lPrinterReady
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

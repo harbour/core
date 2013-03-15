@@ -1,0 +1,41 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_SetTime()
+   $CATEGORY$
+      DOS/BIOS
+   $ONELINER$
+      Set the DOS system time
+   $SYNTAX$
+      ft_SetTime( <cTime> ) -> <lResult>
+   $ARGUMENTS$
+      <cTime> is a string in the form <hh:mm:ss> that you want to set
+      the current DOS system time to.
+
+      Use 24-hour time.  It is up to you to send in a valid time.  If
+      DOS doesn't think it is valid, it won't reset the time anyway.
+   $RETURNS$
+      <lResult> is simply the result of ft_int86(), passed back
+      to your program.
+
+   $DESCRIPTION$
+      ft_SetTime() uses NANFOR.LIB's ft_int86() function to invoke
+      the DOS Set Time service (Interrupt 33, service 45).
+
+   $EXAMPLES$
+      // The following program takes a time string from the command line and sets
+      // the DOS system time:
+
+      PROCEDURE Main( cTime )
+
+         cTime := iif( cTime == NIL, Time(), cTime )
+         ? "Setting time to: " + cTime  + "... "
+         ft_SetTime( cTime )
+         ? "Time is now: " + Time()
+
+         RETURN
+   $END$
+ */

@@ -1,0 +1,30 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_GCD()
+   $CATEGORY$
+      Math
+   $ONELINER$
+      Calculate greatest common divisor of two numbers
+   $SYNTAX$
+      ft_GCD( <nNumber1>, <nNumber2> ) -> nGCD
+   $ARGUMENTS$
+      <nNumber1> is the first number to find the GCD of.
+
+      <nNumber2> is the second number to find the GCD of.
+   $RETURNS$
+      The greatest common divisor of the 2 numbers, or 0 if either is 0.
+   $DESCRIPTION$
+      This function calculates the greatest common divisor between 2 numbers,
+      i.e., the largest number that will divide into both numbers evenly.  It
+      will return zero (0) if either number is zero.
+   $EXAMPLES$
+      ? ft_GCD( 10, 15 )                  // Result: 5
+      ? ft_GCD( 108, 54 )                 // Result: 54
+      ? ft_GCD( 102, 54 )                 // Result: 6
+      ? ft_GCD( 111, 17 )                 // Result: 1
+   $END$
+ */

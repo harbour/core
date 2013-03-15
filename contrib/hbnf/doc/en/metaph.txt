@@ -1,0 +1,36 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Metaph()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Convert a character string to MetaPhone format
+   $SYNTAX$
+      ft_Metaph( <cName> [, <nSize> ] ) -> cMetaPhone
+   $ARGUMENTS$
+      <cName> is the character string to convert
+
+      <nSize> is the length of the character string to be returned.
+              If not specified the default length is 4 bytes.
+   $RETURNS$
+      A phonetically spelled character string
+   $DESCRIPTION$
+      This function is a character function use to index and search for
+      sound-alike or phonetic matches.  It is an alternative to
+      the SoundEx() function, and addresses some basic pronunciation
+      rules, by looking at surrounding letters to determine how parts of
+      the string are pronounced.  ft_Metaph() will group sound-alikes
+      together, and forgive shortcomings in spelling ability.
+   $EXAMPLES$
+      USE persons
+      INDEX ON ft_Metaph( LastName ) TO lastname
+      SEEK ft_Metaph( "Philmore" )
+      ? Found(), LastName             // Result: .T. Philmore
+      SEEK ft_Metaph( "Fillmore" )
+      ? Found(), LastName             // Result: .T. Philmore
+   $END$
+ */

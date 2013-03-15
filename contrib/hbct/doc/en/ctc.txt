@@ -1,0 +1,106 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CSetArgErr()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Sets argument error behaviour
+   $SYNTAX$
+      CSetArgErr( [<nNewMode>] ) -> <nOldMode>
+   $ARGUMENTS$
+      [<nNewMode>]   New argument error throwing mode
+   $RETURNS$
+      <nOldMode>     The current or old argument error throwing mode.
+   $DESCRIPTION$
+      All CT3 functions are very compliant in their reaction to wrong
+      parameters. By using the CSetArgErr() function, you can make the
+      library throw an error with the severity <nNewMode>. It is then
+      up to the error handler to substitute the return value.
+      <nNewMode> can be one of the severity modes defined in ct.ch:
+           CT_ARGERR_WHOCARES      corresponds to ES_WHOCARES
+           CT_ARGERR_WARNING       corresponds to ES_WARNING
+           CT_ARGERR_ERROR         corresponds to ES_ERROR
+           CT_ARGERR_CATASTROPHIC  corresponds to ES_CATASTROPHIC
+           CT_ARGERR_IGNORE
+      The last is the default behaviour and switches any argument error
+      throwing off.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CSetArgErr() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ctcinit()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Initializes the CT3 library, C part
+   $SYNTAX$
+      ctcinit() -> lInitialized
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      lInitialized     .T. if the function has been correctly initialized
+   $DESCRIPTION$
+      The ctcinit() function initializes the C source part of the CT3
+      library. Do not call this function directly.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ctcinit() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      ctinit(),ctexit()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ctcexit()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Uninitializes the CT3 library, C part
+   $SYNTAX$
+      ctcexit() -> NIL
+   $ARGUMENTS$
+      none
+   $RETURNS$
+      nil
+   $DESCRIPTION$
+      The ctcexit() function uninitializes the C part of the CT3 library.
+      Do not call this function directly.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ctcexit() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      ctinit(),ctexit()
+   $END$
+ */

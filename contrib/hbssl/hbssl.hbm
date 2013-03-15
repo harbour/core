@@ -1,0 +1,58 @@
+#
+# $Id$
+#
+
+-stop{wce}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+-workdir=${hb_work}/${hb_plat}/${hb_comp}/${hb_targetname}
+
+-w3 -es2
+
+-depkeyhead=openssl:openssl/ssl.h
+-depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
+-depcontrol=openssl:${HB_WITH_OPENSSL}
+-depincpath=openssl:/usr/include
+-depincpath=openssl:/usr/local/include
+-depincpath=openssl:/usr/local/ssl/include
+-depincpath=openssl:/boot/common/include
+-depincpath=openssl:/usr/pkg/include
+-depfinish=openssl
+
+{darwin}-cflag=-DOPENSSL_NO_SHA256
+{darwin}-cflag=-DOPENSSL_NO_SHA512
+{darwin}-cflag=-DOPENSSL_NO_CAMELLIA
+{darwin}-cflag=-DOPENSSL_NO_SEED
+{darwin}-cflag=-DOPENSSL_NO_DGRAM
+{darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
+
+# Patent expires in 2010/2011
+-cflag=-DOPENSSL_NO_IDEA
+
+# to suppress Apple's deprecation warnings that apply to
+# the complete OpenSSL API, starting with OS X Lion 10.7
+-cflag={allgcc&darwin}-Wno-deprecated
+
+# For _fileno() in openssl/applink.c
+-c=gnu90
+
+hbssl.hbx
+
+ssl_hb.c
+bio.c
+err.c
+evp.c
+evpciph.c
+evpenc.c
+evpmd.c
+evppkey.c
+pem.c
+rand.c
+ssl.c
+sslciph.c
+sslctx.c
+sslsess.c
+x509.c

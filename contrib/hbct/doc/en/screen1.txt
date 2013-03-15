@@ -1,0 +1,339 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ScreenAttr()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      ScreenAttr( [<nRow>],[<nColumn>] ) -> <nAttr>
+   $ARGUMENTS$
+      <nRow>     Designates the line from which to determine the attribute.
+                 The default is the cursor line.
+
+      <nColumn>  Designates the column from which to determine the
+                 attribute.  The default is the cursor column.
+
+   $RETURNS$
+      ScreenAttr() returns the attribute at the designated position.
+
+   $DESCRIPTION$
+      ScreenAttr() returns the current screen attribute at <nRow> and
+      <nColumn>.  You can query targeted attributes this way and save them
+      to use later, or process them later with InvertAttr().
+
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ScreenMix()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      ScreenMix( <cCharString>, <cAttributeString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      SayScreen()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      SayScreen( <cString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
+   $ARGUMENTS$
+      <cString> - the string to output. Although undocumented, can be NIL.
+      <nRow> - row number, defaults to cursor row.
+      <nCol> - column number, defaults to cursor column.
+   $RETURNS$
+      Returns an empty string.
+   $DESCRIPTION$
+      Outputs a string at specified coordinates without changing character
+      attributes.
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      ScreenMix()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      InvertWin()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      InvertWin() is compatible with CT3's InvertWin().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      UnTextWin()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      UnTextWin( <nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
+                 <cReplacementCharacter|nReplacementCharacter>,
+                 [<cInitialCharacter|nInitialCharacter>],
+                 [<cEndCharacter|nEndCharacter>] ) --> cNull
+   $ARGUMENTS$
+      <nTopLine>  Designates the line for the upper-left corner of the
+        area.
+      <nLeftColumn>  Designates the column for the upper-left corner of
+        the area.
+      <nBottomLine>  Designates the line for the bottom-right corner of
+        the area.
+      <nRightColumn>  Designates the line for the bottom-right column of
+        the area.
+      <cReplacementCharacter|nReplacementCharacter>  Replaces each
+        character within the window, with the exception of those within the
+        range of <cInitialCharacter|nInitialCharacter> and
+      <cEndCharacter|nEndCharacter>.
+      <cInitialCharacter|nInitialCharacter>  Designates the beginning of
+        the bracketed area.  The character can be number in the range of 0 to
+        255, or the character string type.  The default value is 176.
+      <cEndCharacter|nEndCharacter>  Designates the end of the bracketed
+        area.  The character can be number in the range of 0 to 255 or the
+        character string type.  The default value is 223.
+   $RETURNS$
+      Returns a null string.
+   $DESCRIPTION$
+      Replaces an area of characters from a region of the screen
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharWin()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      CharWin( <nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
+               [<cOldChar|nOldChar>] ) --> <cEmptyString>
+   $ARGUMENTS$
+      <nTop> - top row number, default 0
+      <nLeft> - left column number, default 0
+      <nBottom> - top row number, default MaxRow()
+      <nRight> - right column number, default MaxCol()
+      <cNewChar|nNewChar> - new character for the screen area,
+            as a numeric value in the range of 0 to
+            255 or as a character string, default value is the CLEARB.
+      <cOldChar|nOldChar> - character to exchange. Specify the parameter
+            as a numeric in the range of 0 to 255
+            or as a character string.  The default is to exchange all characters.
+   $RETURNS$
+      Returns an empty string.
+   $DESCRIPTION$
+      Exchanges particular characters in a screen area.
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ColorWin()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      ColorWin( [<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
+                [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
+   $ARGUMENTS$
+      <nTopLine>  Designates the topmost line to begin processing.  The
+        default is the cursor line.
+      <nLeftCol>  Designates the leftmost column to begin processing.  The
+        default is the cursor column.
+      <nBottomLine>  Designates the bottommost line that is processed.
+        The default is the last screen line or window line.
+      <nRightCol>  Designates the rightmost column to clear.  The default
+        is the right screen border or window border.
+      <cNewAttr|nNewAttr>  Designates the new attribute to replace the old
+        one.  The default is the standard attribute CLEARA.
+      <cOldAttr|nOldAttr>  Designates the old character to exchange.  The
+        default is "exchange all attributes".
+   $RETURNS$
+      Returns an empty string.
+   $DESCRIPTION$
+      Exchanges particular attributes in a screen area
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ScreenText()
+   $CATEGORY$
+      CT video functions (Harbour extension)
+   $ONELINER$
+
+   $SYNTAX$
+      ScreenText( <nTop>, <nLeft>, <nBottom>, <nRight> )
+   $ARGUMENTS$
+      <nTop> - top row number, default 0
+      <nLeft> - left column number, default 0
+      <nBottom> - top row number, default MaxRow()
+      <nRight> - right column number, default MaxCol()
+   $RETURNS$
+      Returns string with characters taken from given screen region.
+   $DESCRIPTION$
+      Returns string with characters taken from given screen region.
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ColorRepl()
+   $CATEGORY$
+      CT3 video functions
+   $ONELINER$
+
+   $SYNTAX$
+      ColorRepl( [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
+   $ARGUMENTS$
+      <cNewAttr|nNewAttr>  Designates the new attribute.  The default is
+        CLEARA.
+      <cOldAttr|InOldAttr>  Designates the old attribute to exchange.  The
+        default is all existing attributes.
+   $RETURNS$
+      Returns an empty string.
+   $DESCRIPTION$
+      Exchanges particular screen attributes
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+
+   $END$
+ */

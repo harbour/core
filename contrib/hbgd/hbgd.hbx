@@ -1,0 +1,142 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBGD__
+#define __HBEXTERN_CH__HBGD__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBGD__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBGD__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBGD__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC GDBar
+DYNAMIC GDBarCode
+DYNAMIC GDChart
+DYNAMIC gdFontCacheSetup
+DYNAMIC gdFontCacheShutdown
+DYNAMIC gdFontGetGiant
+DYNAMIC gdFontGetHeight
+DYNAMIC gdFontGetLarge
+DYNAMIC gdFontGetMediumBold
+DYNAMIC gdFontGetSmall
+DYNAMIC gdFontGetTiny
+DYNAMIC gdFontGetWidth
+DYNAMIC GDImage
+DYNAMIC gdImageAlpha
+DYNAMIC gdImageAlphaBlending
+DYNAMIC gdImageArc
+DYNAMIC gdImageBlue
+DYNAMIC gdImageBoundsSafe
+DYNAMIC gdImageChar
+DYNAMIC gdImageCharUp
+DYNAMIC gdImageCircle
+DYNAMIC gdImageColorAllocate
+DYNAMIC gdImageColorAllocateAlpha
+DYNAMIC gdImageColorClosest
+DYNAMIC gdImageColorClosestAlpha
+DYNAMIC gdImageColorClosestHWB
+DYNAMIC gdImageColorDeallocate
+DYNAMIC gdImageColorExact
+DYNAMIC gdImageColorResolve
+DYNAMIC gdImageColorResolveAlpha
+DYNAMIC gdImageColorsTotal
+DYNAMIC gdImageColorTransparent
+DYNAMIC gdImageCompare
+DYNAMIC gdImageCopy
+DYNAMIC gdImageCopyMerge
+DYNAMIC gdImageCopyMergeGray
+DYNAMIC gdImageCopyResampled
+DYNAMIC gdImageCopyResized
+DYNAMIC gdImageCopyRotated
+DYNAMIC gdImageCreate
+DYNAMIC gdImageCreateFromGD
+DYNAMIC gdImageCreateFromGif
+DYNAMIC gdImageCreateFromJpeg
+DYNAMIC gdImageCreateFromPng
+DYNAMIC gdImageCreateFromWBmp
+DYNAMIC gdImageCreatePalette
+DYNAMIC gdImageCreatePaletteFromTrueColor
+DYNAMIC gdImageCreateTrueColor
+DYNAMIC gdImageDashedLine
+DYNAMIC gdImageDestroy
+DYNAMIC gdImageEllipse
+DYNAMIC gdImageFill
+DYNAMIC gdImageFilledArc
+DYNAMIC gdImageFilledCircle
+DYNAMIC gdImageFilledEllipse
+DYNAMIC gdImageFilledPolygon
+DYNAMIC gdImageFilledRectangle
+DYNAMIC gdImageFillToBorder
+DYNAMIC gdImageFromFile
+DYNAMIC gdImageFTHeight
+DYNAMIC gdImageFTSize
+DYNAMIC gdImageFTWidth
+DYNAMIC gdImageGD
+DYNAMIC gdImageGetClip
+DYNAMIC gdImageGetInterlaced
+DYNAMIC gdImageGetPixel
+DYNAMIC gdImageGetThickness
+DYNAMIC gdImageGetTransparent
+DYNAMIC gdImageGif
+DYNAMIC gdImageGifAnimAdd
+DYNAMIC gdImageGifAnimBegin
+DYNAMIC gdImageGifAnimEnd
+DYNAMIC gdImageGreen
+DYNAMIC gdImageInterlace
+DYNAMIC gdImageJpeg
+DYNAMIC gdImageLine
+DYNAMIC gdImageOpenPolygon
+DYNAMIC gdImagePaletteCopy
+DYNAMIC gdImagePalettePixel
+DYNAMIC gdImagePng
+DYNAMIC gdImagePolygon
+DYNAMIC gdImageRectangle
+DYNAMIC gdImageRed
+DYNAMIC gdImageSaveAlpha
+DYNAMIC gdImageSetAntiAliased
+DYNAMIC gdImageSetAntiAliasedDontBlend
+DYNAMIC gdImageSetBrush
+DYNAMIC gdImageSetClip
+DYNAMIC gdImageSetPixel
+DYNAMIC gdImageSetStyle
+DYNAMIC gdImageSetThickness
+DYNAMIC gdImageSetTile
+DYNAMIC gdImageSharpen
+DYNAMIC gdImageSquareToCircle
+DYNAMIC gdImageString
+DYNAMIC gdImageStringFT
+DYNAMIC gdImageStringFTCircle
+DYNAMIC gdImageStringFTEx
+DYNAMIC gdImageStringUp
+DYNAMIC gdImageSX
+DYNAMIC gdImageSY
+DYNAMIC gdImageToFile
+DYNAMIC gdImageToHandle
+DYNAMIC gdImageToString
+DYNAMIC gdImageTrueColor
+DYNAMIC gdImageTrueColorPixel
+DYNAMIC gdImageTrueColorToPalette
+DYNAMIC gdImageWBmp
+DYNAMIC gdTrueColor
+DYNAMIC gdTrueColorAlpha
+DYNAMIC gdVersion
+DYNAMIC gdVersionNumber
+DYNAMIC hb_gd_Version
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBGD__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

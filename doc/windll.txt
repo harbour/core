@@ -1,0 +1,88 @@
+/*
+ * $Id$
+ */
+
+Windows DLLs with Harbour code
+==============================
+
+Programs created with Clipper or Harbour are traditionally a
+monolithic EXE containing all executable code.  This includes
+the Virtual Machine (VM) and the RunTime Library (RTL) as well as
+your own code.  Running under Windows with Harbour, you
+can now also create and use Windows DLLs that contain PRG code.
+
+Harbour supports Windows DLLs in 3 ways.
+
+  1) Self-contained DLLs containing functions from any platform.
+     (These are not what we call a "harbour.dll", although they may
+     be named that. The DLL entry points are different.)
+     These have the VM/RTL inside them and can be used by any other
+     Windows program. You can create a .lib for static linking,
+     or use GetProcAddress as in any standard Windows DLL.
+     Calling Harbour/Prg functions directly is limited to
+     those that take no parameters unless you include C functions
+     in the DLL that take parameters and then call the PRG-level
+     code.
+
+     To do static linking, do this to create the .lib:
+        implib harbour.lib harbour.dll
+     For the Borland C platform, use that library and import32.lib
+     and cw32.lib from Borland, and you are ready to go.
+
+
+  2) PCode EXEs using a Harbour.dll
+
+     A Harbour.dll is designed to be called from a Harbour app.
+     A pcode EXE is a small Harbour executable that does not contain the
+     VM/RTL. To execute its functions, it must load and access a
+     Harbour.dll.
+     If you want dynamic linking, then use this to execute a Harbour
+     dynamically loaded pcode DLL function or procedure:
+        HB_DllDo( <cFuncName> [,<params...>] ) --> [<uResult>]
+
+     This lets you have all your common code in a DLL, and have lots
+     of small EXEs that use it.  Realize however that, even though this
+     may be a nice way to manage your code, each EXE may
+     load its own image of the Harbour.dll into memory at runtime.
+     In terms of Windows memory, there may not be a benefit to using pcode
+     EXEs over monolithic EXEs. But it may be a worthwhile maintenance
+     benefit to have lots of replaceable small exes.
+
+  3) PCode DLLs used from traditional EXEs
+     A pcode DLL does not contain the VM/RTL.
+     It is a library of Harbour-compiled PRG code that uses the VM/RTL
+     of the EXE that calls it.  This has the benefit of having
+     replaceable modules in DLLs that don't necessarily require updating
+     your EXE.
+
+
+The following is clipped from a msg by Antonio Linares to the Harbour
+developer list explaining some of the details:
+
+Please notice that there are three different Windows DLL entry points:
+   + src/vm/
+   * maindll.c     Windows self-contained DLL entry point
+   * maindllh.c    Windows Harbour DLL entry point  (harbour.dll)
+   * maindllp.c    Windows pcode DLL entry point and VM/RTL routing functions
+
+   >    * maindll.c     Windows self-contained DLL entry point
+   To produce Harbour code, as DLLs, that may be used
+   from other programming languages applications (as VB,
+   Delphi, C++, etc...)
+
+   >    * maindllh.c    Windows Harbour DLL entry point  (harbour.dll)
+   To produce Harbour.dll, to be just used from small pcode Harbour EXEs
+
+   >    * maindllp.c    Windows pcode DLL entry point and VM/RTL routing
+   To produce small pcode DLLs, to be used just from Harbour EXE apps.
+   maindllp.c is the entry point for the Harbour pcode DLLs. pcode DLLs
+   are quite small DLLs, that just contain pcode and/or C (using extend
+   api) functions.
+
+   mainwin.c is the entry point for Windows EXEs, not for DLLs.
+
+   You may use maindll.c, maindllh.c or maindllp.c based on
+   your needs.
+
+   If you are looking to build a Harbour.dll, then you must use
+   maindllh.c

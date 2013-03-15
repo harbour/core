@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+description=RDDSQL MySQL backend
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+{unix}libs=mysqlclient
+{darwin}libpaths=/opt/local/lib/mysql5/mysql
+{win|dos}libs=libmysql
+{os2}libs=mysqlclient
+
+libs=rddsql.hbc

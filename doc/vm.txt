@@ -1,0 +1,315 @@
+/*
+ * $Id$
+ */
+
+The Harbour virtual machine (VM)
+
+Question :
+
+  If a VM description is desirable, how should it be structured? (I
+propose plain text, with two main sections: VM description, Opcodes. The
+"Opcodes" section would describe every opcode: mnemonic, code, operands,
+description. I think I can maintain this section.)
+
+Answer :
+
+The VM is formed by the main execution loop and several subsystems, each of
+which could be theoretically replaced, supposing that you respect the
+interface of each subsystem.
+
+The main execution loop is defined in the C function named VirtualMachine(),
+which receives two parameters: the pcode instructions to execute and the
+local symbol table (a portion of the OBJs (static) symbol table) used by
+that pcode: (please review hbpcode.h for the currently implemented pcode
+opcodes)
+
+VM( pcode, local symbols )
+
+The VM may invoke the VM (itself) again. This lets the Clipper language
+access Clipper functions and methods and external C language functions again
+and again. The VM organizes these multiple accesses in an ordered and
+fully controlled way, and implements services to access these multiple
+execution levels (ProcName(), ProcLine(), debugging, and stack variables
+access).
+
+The VM subsystems are continuously used by the main execution loop. Let's
+review these VM subsystems:
+
+The startup: Controls the initialization of the different VM subsystems.
+It is invoked at the beginning of the application. It also controls the
+exiting of the application.
+
+The stack: The VM does not use the stack of the computer directly, it uses
+instead its own stack for manipulating values (parameters, returned values,
+and symbols) as a hardware stack does.
+
+The static symbol table: Created by the compiler at compile time (and
+grouped by the linker on OBJs), this subsystem is responsible for an
+immediate access to functions location and it is highly related to the
+dynamic symbol table at runtime. It contains many duplicated symbols that
+will be optimized by the dynamic symbol table.
+
+The dynamic symbol table: Dynamically generated from the startup subsystem
+at the beginning of the application. It organizes in an efficient way the
+static symbol table creating an alphabetical index that allows a dicotomic
+search of symbols. This subsystem is responsible for quick access to symbols
+(functions, variables, fields and workareas aliases).
+
+The static and public variables: Responsible for storing public and static
+variables.
+
+The memory: Responsible for allocating, reallocating, locking, unlocking and
+freeing memory.
+
+The extend system: Defines the interface (_parc(), ..., _retc() ) from low
+level (C language) to high level (Clipper language). This subsystem is
+responsible for connecting in a proper way C language functions to the
+entire application.
+
+Multidimensional arrays: This subsystem allows the creation of arrays, and
+the services to manipulate these arrays in all ways. The arrays are
+extensively used by the Clipper language and also they are the foundation of
+the Objects (Objects are just arrays related to a specific Class).
+
+The Objects engine: Responsible for the creation of Classes and Objects. It
+also defines the way to access a specific Class method to be invoked by the
+VM and provides all kind of Classes information that may be requested at
+runtime.
+
+The macro subsystem: it implements a reduced compiler that may be used at
+runtime to generate pcode to be used by the application. In fact it is a
+portion of the harbour yacc specifications.
+
+The workareas subsystem: Responsible for databases management. It defines
+the locations where the used workareas will be stored and provides all the
+functions to access those workareas. It also implements the interface to the
+replaceable database drivers.
+
+Question :
+
+  Will Harbour opcodes mimic the Clipper ones? (will there be a 1:1
+relation between them?) If so, are Clipper opcodes described somewhere?
+
+Answer:
+
+                   Clipper language pcode opcodes
+    DEFINE        NAME             VALOR     BYTES
+    #define       NOP              0x00      1
+    #define       PUSHC            0x01      3 + literal
+    #define       PUSHN            0x05      3
+    #define       POPF             0x06      3
+    #define       POPM             0x07      3
+    #define       POPQF            0x08      3
+    #define       PUSHA            0x09      3
+    #define       PUSHF            0x0A      3
+    #define       PUSHM            0x0B      3
+    #define       PUSHMR           0x0C      3
+    #define       PUSHP            0x0D      3
+    #define       PUSHQF           0x0E      3
+    #define       PUSHV            0x0F      3
+    #define       SFRAME           0x10      3
+    #define       SINIT            0x11      3
+    #define       SYMBOL           0x12      3
+    #define       SYMF             0x13      3
+    #define       BEGIN_SEQ        0x19      3
+    #define       JDBG             0x1A      3
+    #define       JF               0x1B      3
+    #define       JFPT             0x1C      3
+    #define       JISW             0x1D      3
+    #define       JMP              0x1E      3
+    #define       JNEI             0x1F      3
+    #define       JT               0x20      3
+    #define       JTPF             0x21      3
+    #define       PUSHBL           0x23      3
+    #define       ARRAYATI         0x24      3
+    #define       ARRAYPUTI        0x25      3
+    #define       CALL             0x26      3
+    #define       DO               0x27      3
+    #define       FRAME            0x28      3
+    #define       FUNC             0x29      3
+    #define       LINE             0x2A      3
+    #define       MAKEA            0x2B      3
+    #define       MAKELA           0x2C      3
+    #define       PARAMS           0x2D      3
+    #define       POPFL            0x2E      3
+    #define       POPL             0x2F      3
+    #define       POPS             0x30      3
+    #define       PRIVATES         0x31      3
+    #define       PUBLICS          0x33      3
+    #define       PUSHFL           0x34      3
+    #define       PUSHFLR          0x35      3
+    #define       PUSHI            0x36      3
+    #define       PUSHL            0x37      3
+    #define       PUSHLR           0x38      3
+    #define       PUSHS            0x39      3
+    #define       PUSHSR           0x3A      3
+    #define       PUSHW            0x3B      3
+    #define       SEND             0x3C      3
+    #define       XBLOCK           0x3D      3
+    #define       MPOPF            0x4A      5
+    #define       MPOPM            0x4B      5
+    #define       MPOPQF           0x4C      5
+    #define       MPUSHA           0x4D      5
+    #define       MPUSHF           0x4E      5
+    #define       MPUSHM           0x4F      5
+    #define       MPUSHMR          0x50      5
+    #define       MPUSHP           0x51      5
+    #define       MPUSHQF          0x52      5
+    #define       MPUSHV           0x53      5
+    #define       MSYMBOL          0x54      5
+    #define       MSYMF            0x55      5
+    #define       ABS              0x56      1
+    #define       AND              0x57      1
+    #define       ARRAYAT          0x58      1
+    #define       ARRAYPUT         0x59      1
+    #define       BREAK            0x5A      1
+    #define       DEC              0x5B      1
+    #define       DIVIDE           0x5C      1
+    #define       DOOP             0x5D      1
+    #define       EEQ              0x5E      1
+    #define       ENDBLOCK         0x5F      1
+    #define       ENDPROC          0x60      1
+    #define       END_SEQ          0x61      1
+    #define       EQ               0x62      1
+    #define       EVENTS           0x63      1
+    #define       FALSE            0x64      1
+    #define       GE               0x65      1
+    #define       GT               0x66      1
+    #define       INC              0x67      1
+    #define       LE               0x68      1
+    #define       LT               0x69      1
+    #define       MINUS            0x6A      1
+    #define       MULT             0x6B      1
+    #define       NE               0x6C      1
+    #define       NEGATE           0x6E      1
+    #define       NOP2             0x6F      1
+    #define       NOT              0x70      1
+    #define       NULL             0x71      1
+    #define       ONE1             0x72      1
+    #define       OR               0x73      1
+    #define       PCOUNT           0x74      1
+    #define       PLUS             0x75      1
+    #define       POP              0x76      1
+    #define       PUSHRV           0x77      1
+    #define       QSELF            0x78      1
+    #define       SAVE_RET         0x79      1
+    #define       TRUE             0x7A      1
+    #define       UNDEF            0x7B      1
+    #define       ZER0             0x7C      1
+    #define       ZZBLOCK          0x7D      1
+    #define       AXPRIN           0x7E      1
+    #define       AXPROUT          0x7F      1
+    #define       BOF              0x80      1
+    #define       DELETED          0x81      1
+    #define       EOF              0x82      1
+    #define       FCOUNT           0x83      1
+    #define       FIELDNAME        0x84      1
+    #define       FLOCK            0x85      1
+    #define       FOUND            0x86      1
+    #define       FSELECT0         0x87      1
+    #define       FSELECT1         0x88      1
+    #define       LASTREC          0x89      1
+    #define       LOCK             0x8A      1
+    #define       RECNO            0x8B      1
+    #define       BNAMES           0x8C      1
+    #define       LNAMES           0x8D      1
+    #define       SNAMES           0x8E      1
+    #define       SRCNAME          0x8F      1
+    #define       TYPE             0x90      1
+    #define       WAVE             0x91      1
+    #define       WAVEA            0x92      1
+    #define       WAVEF            0x93      1
+    #define       WAVEL            0x94      1
+    #define       WAVEP            0x95      1
+    #define       WAVEPOP          0x96      1
+    #define       WAVEPOPF         0x97      1
+    #define       WAVEPOPQ         0x98      1
+    #define       WAVEQ            0x99      1
+    #define       WSYMBOL          0x9A      1
+    #define       AADD             0x9B      1
+    #define       ASC              0x9C      1
+    #define       AT               0x9D      1
+    #define       CDOW             0x9E      1
+    #define       CHR              0x9F      1
+    #define       CMONTH           0xA0      1
+    #define       CTOD             0xA1      1
+    #define       DATE             0xA2      1
+    #define       DAY              0xA3      1
+    #define       DOW              0xA4      1
+    #define       DTOC             0xA5      1
+    #define       DTOS             0xA6      1
+    #define       EMPTY            0xA7      1
+    #define       QEXP             0xA8      1
+    #define       EXPON            0xA9      1
+    #define       INSTR            0xAA      1
+    #define       INT              0xAB      1
+    #define       LEFT             0xAC      1
+    #define       LEN              0xAD      1
+    #define       LOGQ             0xAE      1
+    #define       LOWER            0xAF      1
+    #define       LTRIM            0xB0      1
+    #define       MAX              0xB1      1
+    #define       MIN              0xB2      1
+    #define       MODULUS          0xB3      1
+    #define       MONTH            0xB4      1
+    #define       REPLICATE        0xB5      1
+    #define       ROUND            0xB6      1
+    #define       SECONDS          0xB7      1
+    #define       SPACE            0xB8      1
+    #define       QSQRT            0xB9      1
+    #define       STR1             0xBA      1
+    #define       STR2             0xBB      1
+    #define       STR3             0xBC      1
+    #define       SUB2             0xBD      1
+    #define       SUB3             0xBE      1
+    #define       TIME             0xBF      1
+    #define       TRIM             0xC0      1
+    #define       UPPER            0xC1      1
+    #define       VAL              0xC2      1
+    #define       VALTYPE          0xC3      1
+    #define       WORD             0xC4      1
+    #define       YEAR             0xC5      1
+    #define       TRANS            0xC6      1
+    #define       COL              0xC7      1
+    #define       DEVPOS           0xC8      1
+    #define       INKEY0           0xC9      1
+    #define       INKEY1           0xCA      1
+    #define       PCOL             0xCB      1
+    #define       PROW             0xCC      1
+    #define       ROW              0xCD      1
+    #define       SETPOS           0xCE      1
+    #define       SETPOSBS         0xCF      1
+
+Harbour will not implement all of them as we want to provide the highest
+freedom to programers to extend and modify Harbour as needed. In example:
+Clipper language uses opcodes for: Row(), Col(), Upper(), Space(),
+Replicate(), Inkey(), Year(), Month(), etc... where we may just call a
+standard C function, that uses the standard extend system and that may be
+easily modified. So Harbour will use much less opcodes than the Clipper
+language. This will also help to have a simpler and easier to maintain
+compiler and VM.
+
+Question :
+
+  I see that, for example, Harbour has an opcode named "PUSHWORD"(06),
+while Valkyre calls it "PUSHW"(3B): Different names, different codes.
+Isn't it desirable that Harbour pCode be binary-compatible with Clipper? I
+mean, by doing so, Harbour VM could interpret Clipper pCode and
+vice-versa.
+
+Answer :
+
+Harbour opcodes are defined in hbpcode.h. We are trying to use very easy to
+remember mnemonics, so PUSHWORD seems easier than PUSHW. The opcodes values
+are meaningless as they are just used by a C language switch sentence (in
+fact there is a powerful optimization which is to use the pcode opcodes
+themselves as an index to a VM functions pointers array, so VM execution
+speed may increase. Clipper uses it).
+
+We are not fully implementing the Clipper language OBJs model (i.e. to
+provide identifiers names length higher than 10 chars) so Harbour OBJs will
+not be supported by Clipper and viceversa.
+
+sorry for such a long message :-)
+
+Antonio

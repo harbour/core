@@ -1,0 +1,34 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      WordToChar()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace double with single characters
+   $SYNTAX$
+      WordToChar( <cDoubleCharacterSearchString>, <cString>,
+                  <cSingleCharacterReplaceString> ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      WordToChar() is compatible with CT3's WordToChar().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CSetAtMupa(),CharRepl(),WordRepl()
+   $END$
+ */

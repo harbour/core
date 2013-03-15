@@ -1,0 +1,113 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBCAIRO__
+#define __HBEXTERN_CH__HBCAIRO__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCAIRO__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBCAIRO__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCAIRO__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC cairo_append_path
+DYNAMIC cairo_arc
+DYNAMIC cairo_arc_negative
+DYNAMIC cairo_clip
+DYNAMIC cairo_clip_extents
+DYNAMIC cairo_clip_preserve
+DYNAMIC cairo_close_path
+DYNAMIC cairo_copy_page
+DYNAMIC cairo_copy_path
+DYNAMIC cairo_copy_path_flat
+DYNAMIC cairo_create
+DYNAMIC cairo_curve_to
+DYNAMIC cairo_destroy
+DYNAMIC cairo_fill
+DYNAMIC cairo_fill_preserve
+DYNAMIC cairo_font_extents
+DYNAMIC cairo_get_current_point
+DYNAMIC cairo_get_dash
+DYNAMIC cairo_get_font_matrix
+DYNAMIC cairo_get_line_width
+DYNAMIC cairo_get_matrix
+DYNAMIC cairo_has_current_point
+DYNAMIC cairo_identity_matrix
+DYNAMIC cairo_image_surface_create
+DYNAMIC cairo_image_surface_create_from_png
+DYNAMIC cairo_in_fill
+DYNAMIC cairo_in_stroke
+DYNAMIC cairo_line_to
+DYNAMIC cairo_move_to
+DYNAMIC cairo_new_path
+DYNAMIC cairo_paint
+DYNAMIC cairo_paint_with_alpha
+DYNAMIC cairo_path_destroy
+DYNAMIC cairo_path_extents
+DYNAMIC cairo_path_iterator_create
+DYNAMIC cairo_path_iterator_destroy
+DYNAMIC cairo_path_iterator_get_points
+DYNAMIC cairo_path_iterator_next
+DYNAMIC cairo_path_iterator_set_points
+DYNAMIC cairo_pdf_surface_create
+DYNAMIC cairo_pdf_surface_set_size
+DYNAMIC cairo_ps_surface_create
+DYNAMIC cairo_ps_surface_get_eps
+DYNAMIC cairo_ps_surface_set_eps
+DYNAMIC cairo_ps_surface_set_size
+DYNAMIC cairo_rectangle
+DYNAMIC cairo_rel_curve_to
+DYNAMIC cairo_rel_line_to
+DYNAMIC cairo_rel_move_to
+DYNAMIC cairo_reset_clip
+DYNAMIC cairo_restore
+DYNAMIC cairo_rotate
+DYNAMIC cairo_save
+DYNAMIC cairo_scale
+DYNAMIC cairo_select_font_face
+DYNAMIC cairo_set_dash
+DYNAMIC cairo_set_fill_rule
+DYNAMIC cairo_set_font_matrix
+DYNAMIC cairo_set_font_size
+DYNAMIC cairo_set_line_cap
+DYNAMIC cairo_set_line_join
+DYNAMIC cairo_set_line_width
+DYNAMIC cairo_set_matrix
+DYNAMIC cairo_set_miter_limit
+DYNAMIC cairo_set_operator
+DYNAMIC cairo_set_source_rgb
+DYNAMIC cairo_set_source_rgba
+DYNAMIC cairo_set_tolerance
+DYNAMIC cairo_show_page
+DYNAMIC cairo_show_text
+DYNAMIC cairo_status
+DYNAMIC cairo_status_to_string
+DYNAMIC cairo_stroke
+DYNAMIC cairo_stroke_extents
+DYNAMIC cairo_stroke_preserve
+DYNAMIC cairo_surface_destroy
+DYNAMIC cairo_surface_status
+DYNAMIC cairo_surface_write_to_png
+DYNAMIC cairo_text_extents
+DYNAMIC cairo_text_path
+DYNAMIC cairo_transform
+DYNAMIC cairo_translate
+DYNAMIC cairo_version
+DYNAMIC cairo_version_string
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCAIRO__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

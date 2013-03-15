@@ -1,0 +1,64 @@
+/*
+ * $Id$
+ */
+
+/* ---------------------------------------------------------------
+   Copyright 2011 Viktor Szakats (harbour syenar.net)
+   See COPYING.txt for licensing terms.
+   ---------------------------------------------------------------
+ */
+
+#include "hbver.h"
+
+#define HB_MACRO2STRING( macro )       HB_MACRO2STRING_( macro )
+#define HB_MACRO2STRING_( macro )      #macro
+
+#define HB_VER_PRODUCTVERSION          HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
+#define HB_VER_PRODUCTVERSION_STR      HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE ) HB_VER_STATUS "\0"
+#define HB_VER_FILEVERSION             HB_VER_PRODUCTVERSION
+#define HB_VER_FILEVERSION_STR         HB_VER_PRODUCTVERSION_STR
+
+#define HB_NAME                        "Harbour\0"
+#define HB_COPYRIGHT                   "Copyright \xA9 1999-2013 (see application banner)\0"
+
+/* Version info */
+
+#include <winver.h>
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    HB_VER_FILEVERSION
+PRODUCTVERSION HB_VER_PRODUCTVERSION
+FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+FILEFLAGS      0
+FILEOS         VOS__WINDOWS32
+FILETYPE       VFT_APP
+BEGIN
+   BLOCK "StringFileInfo"
+   BEGIN
+      /* LANGUAGE: US English ENCODING: Windows-1250 (0x04E2) */
+      BLOCK "040904B0"
+      BEGIN
+         VALUE "Comments",         "See COPYING.txt for licensing terms.\0"
+         VALUE "CompanyName",      HB_NAME
+         VALUE "FileDescription",  HB_NAME
+         VALUE "FileVersion",      HB_VER_FILEVERSION_STR
+         VALUE "LegalCopyright",   HB_COPYRIGHT
+         VALUE "ProductName",      HB_NAME
+         VALUE "ProductVersion",   HB_VER_PRODUCTVERSION_STR
+      END
+   END
+
+   BLOCK "VarFileInfo"
+   BEGIN
+      /* LANGUAGE: US English ENCODING: UNICODE (0x4B0) */
+      VALUE "Translation", 0x409, 0x4B0
+   END
+END
+
+/* Preparation for manifest */
+
+/* Not using predefined Windows macros here, because some C compilers
+   will fail badly with their own definitions (f.e. pocc) and/or their
+   own Windows headers. [vszakats] */
+#define __HB_CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#define __HB_RT_MANIFEST                        24

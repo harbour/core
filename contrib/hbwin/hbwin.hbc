@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+description=Windows specific functions (win-only)
+
+skip={!allwin}
+
+incpaths=.
+
+headers=${hb_name}.ch
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=png
+{wce}libs=sms CellCore

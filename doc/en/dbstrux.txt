@@ -1,0 +1,710 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __dbCopyStruct(), COPY STRUCTURE, __dbCopyXStruct(),
+ *                       COPY STRUCTURE EXTENDED, __dbCreate(), CREATE,
+ *                       CREATE FROM, __FLedit(), __dbStructFilter()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __dbCopyStruct()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Create a new database based on current database structure
+   $SYNTAX$
+      __dbCopyStruct( <cFileName>, [<aFieldList>] )
+   $ARGUMENTS$
+      <cFileName> is the name of the new database file to create. (.dbf)
+      is the default extension if none is given.
+
+      <aFieldList> is an array where each element is a field name.
+      Names could be specified as uppercase or lowercase.
+   $DESCRIPTION$
+      __dbCopyStruct() create a new empty database file with a structure
+      that is based on the currently open database in this work-area. If
+      <aFieldList> is empty, the newly created file would have the same
+      structure as the currently open database. Else, the new file would
+      contain only fields that exactly match <aFieldList>.
+
+      __dbCopyStruct() can be use to create a sub-set of the currently
+      open database, based on a given field list.
+
+      COPY STRUCTURE command is preprocessed into __dbCopyStruct()
+      function during compile time.
+   $EXAMPLES$
+      // Create a new file that contain the same structure
+      USE TEST
+      __dbCopyStruct( "mycopy.dbf" )
+
+      // Create a new file that contain part of the original structure
+      LOCAL aList
+      USE TEST
+      aList := { "NAME" }
+      __dbCopyStruct( "onlyname.dbf", aList )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      COPY STRUCTURE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Create a new database based on current database structure
+   $SYNTAX$
+      COPY STRUCTURE TO <xcFileName> [FIELDS <field,...>]
+   $ARGUMENTS$
+      <b>TO <xcFileName></b> is the name of the new database file to
+      create. (.dbf) is the default extension if none is given. It can be
+      specified as a literal file name or as a character expression
+      enclosed in parentheses.
+
+      <b>FIELDS <field,...></b> is an optional list of field names to copy
+      from the currently open database in the specified order, the default
+      is all fields. Names could be specified as uppercase or lowercase.
+   $DESCRIPTION$
+      COPY STRUCTURE create a new empty database file with a structure
+      that is based on the currently open database in this work-area.
+
+      COPY STRUCTURE can be use to create a sub-set of the currently
+      open database, based on a given field list.
+
+      COPY STRUCTURE command is preprocessed into __dbCopyStruct()
+      function during compile time.
+   $EXAMPLES$
+      // Create a new file that contains the same structure
+      USE TEST
+      COPY STRUCTURE TO MyCopy
+
+      // Create a new file that contains part of the original structure
+      USE TEST
+      COPY STRUCTURE TO SomePart FIELDS name, address
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __dbCopyXStruct()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Copy current database structure into a definition file
+   $SYNTAX$
+      __dbCopyXStruct( <cFileName> ) --> lSuccess
+   $ARGUMENTS$
+      <cFileName> is the name of target definition file to create. (.dbf)
+      is the default extension if none is given.
+   $RETURNS$
+      __dbCopyXStruct() returns .F. if no database is USED in the current
+      work-area, .T. on success, or a run-time error if the file create
+      operation had failed.
+   $DESCRIPTION$
+      __dbCopyXStruct() create a new database named <cFileName> with a
+      pre-defined structure (also called "structure extended file"):
+
+       <table>
+       Field name   Type   Length   Decimals
+
+       FIELD_NAME   C      10       0
+       FIELD_TYPE   C      1        0
+       FIELD_LEN    N      3        0
+       FIELD_DEC    N      3        0
+       </table>
+
+      Each record in the new file contains information about one field in
+      the original file. CREATE FROM could be used to create a database
+      from the structure extended file.
+
+      For prehistoric compatibility reasons, Character fields which are
+      longer than 255 characters are treated in a special way by writing
+      part of the length in the FIELD_DEC according to the following
+      formula (this is done internally):
+
+      <fixed>
+      FIELD->FIELD_DEC := Int( nLength / 256 )
+      FIELD->FIELD_LEN := ( nLength % 256 )
+      </fixed>
+
+      Later if you want to calculate the length of a field you can use
+      the following formula:
+
+      <fixed>
+      nLength := iif( FIELD->FIELD_TYPE == "C", ;
+                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
+                      FIELD->FIELD_LEN )
+      </fixed>
+
+      COPY STRUCTURE EXTENDED command is preprocessed into
+      __dbCopyXStruct() function during compile time.
+   $EXAMPLES$
+      // Open a database, then copy its structure to a new file,
+      // Open the new file and list all its records
+      USE Test
+      __dbCopyXStruct( "TestStru" )
+      USE TestStru
+      LIST
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      COPY STRUCTURE EXTENDED
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Copy current database structure into a definition file
+   $SYNTAX$
+      COPY STRUCTURE EXTENDED TO <xcFileName>
+   $ARGUMENTS$
+      <xcFileName> The name of the target definition file to
+      create. (.dbf) is the default extension if none is given. It can be
+      specified as a literal file name or as a character expression
+      enclosed in parentheses.
+   $DESCRIPTION$
+      COPY STRUCTURE EXTENDED create a new database named <cFileName> with
+      a pre-defined structure (also called "structure extended file"):
+
+       <table>
+       Field name   Type   Length   Decimals
+
+       FIELD_NAME   C      10       0
+       FIELD_TYPE   C      1        0
+       FIELD_LEN    N      3        0
+       FIELD_DEC    N      3        0
+       </table>
+
+      Each record in the new file contains information about one field in
+      the original file. CREATE FROM could be used to create a database
+      from the structure extended file.
+
+      For prehistoric compatibility reasons, Character fields which are
+      longer than 255 characters are treated in a special way by writing
+      part of the length in the FIELD_DEC according to the following
+      formula (this is done internally):
+
+      <fixed>
+      FIELD->FIELD_DEC := Int( nLength / 256 )
+      FIELD->FIELD_LEN := ( nLength % 256 )
+      </fixed>
+
+      Later if you want to calculate the length of a field you can use
+      the following formula:
+
+      <fixed>
+      nLength := iif( FIELD->FIELD_TYPE == "C", ;
+                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
+                      FIELD->FIELD_LEN )
+      </fixed>
+
+      COPY STRUCTURE EXTENDED command is preprocessed into
+      __dbCopyXStruct() function during compile time.
+   $EXAMPLES$
+      // Open a database, then copy its structure to a new file,
+      // Open the new file and list all its records
+      USE Test
+      COPY STRUCTURE EXTENDED TO TestStru
+      USE TestStru
+      LIST
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      COPY STRUCTURE,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __dbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Create structure extended file or use one to create new file
+   $SYNTAX$
+      __dbCreate( <cFileName>, [<cFileFrom>], [<cRDDName>], [<lNew>], [<cAlias>] ) --> lUsed
+   $ARGUMENTS$
+      <cFileName> is the target file name to create and then open. (.dbf)
+      is the default extension if none is given.
+
+      <cFileFrom> is an optional structure extended file name from which
+      the target file <cFileName> is going to be built. If omitted, a new
+      empty structure extended file with the name <cFileName> is created
+      and opened in the current work-area.
+
+      <cRDDName> is RDD name to create target with. If omitted, the
+      default RDD is used.
+
+      <lNew> is an optional logical expression, (.T.) opens the target file
+      name <cFileName> in the next available unused work-area and makes
+      it the current work-area. (.F.) opens the target file in the current
+      work-area. Default value is (.F.). The value of <lNew> is ignored if
+      <cFileFrom> is not specified.
+
+      <cAlias> is an optional alias to USE the target file with. If not
+      specified, alias is based on the root name of <cFileName>.
+   $RETURNS$
+      __dbCreate() returns (.T.) if there is database USED in the
+      current work-area (this might be the newly selected work-area), or
+      (.F.) if there is no database USED. Note that on success a (.T.)
+      would be returned, but on failure you probably end up with a
+      run-time error and not a (.F.) value.
+   $DESCRIPTION$
+      __dbCreate() works in two modes depending on the value of <cFileFrom>:
+
+      <b>1)</b> If <cFileFrom> is empty or not specified a new empty
+      structure extended file with the name <cFileName> is created and
+      then opened in the current work-area (<lNew> is ignored). The new
+      file has the following structure:
+
+       <table>
+       Field name   Type   Length   Decimals
+
+       FIELD_NAME   C      10       0
+       FIELD_TYPE   C      1        0
+       FIELD_LEN    N      3        0
+       FIELD_DEC    N      3        0
+       </table>
+
+      The CREATE command is preprocessed into the __dbCopyStruct() function
+      during compile time and uses this mode.
+
+      <b>2)</b> If <cFileFrom> is specified, it is opened and assumed to
+      be a structure extended file where each record contains at least the
+      following fields (in no particular order): FIELD_NAME, FIELD_TYPE,
+      FIELD_LEN and FIELD_DEC. Any other field is ignored. From this
+      information the file <cFileName> is then created and opened in the
+      current or new work-area (according to <lNew>), if this is a new
+      work-area it becomes the current.
+
+      For prehistoric compatibility reasons, structure extended file
+      Character fields which are longer than 255 characters should be
+      treated in a special way by writing part of the length in the
+      FIELD_DEC according to the following formula:
+
+      <fixed>
+      FIELD->FIELD_DEC := Int( nLength / 256 )
+      FIELD->FIELD_LEN := ( nLength % 256 )
+      </fixed>
+
+      CREATE FROM command is preprocessed into __dbCopyStruct() function
+      during compile time and use this mode.
+   $EXAMPLES$
+      // CREATE a new structure extended file, append some records and
+      // then CREATE FROM this file a new database file
+
+      __dbCreate( "template" )
+      dbAppend()
+      FIELD->FIELD_NAME := "CHANNEL"
+      FIELD->FIELD_TYPE := "N"
+      FIELD->FIELD_LEN  := 2
+      FIELD->FIELD_DEC  := 0
+      dbAppend()
+      FIELD->FIELD_NAME := "PROGRAM"
+      FIELD->FIELD_TYPE := "C"
+      FIELD->FIELD_LEN  := 20
+      FIELD->FIELD_DEC  := 0
+      dbAppend()
+      FIELD->FIELD_NAME := "REVIEW"
+      FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
+      FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
+      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
+      dbCloseArea()
+      __dbCreate( "TV_Guide", "template" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      CREATE
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Create empty structure extended file
+   $SYNTAX$
+      CREATE <xcFileName> [VIA <xcRDDName>] [ALIAS <xcAlias>]
+   $ARGUMENTS$
+      <xcFileName> is the target file name to create and then open. (.dbf)
+      is the default extension if none is given. It can be specified as
+      literal file name or as a character expression enclosed in
+      parentheses.
+
+      <b>VIA <xcRDDName></b> is RDD name to create target with. If omitted,
+      the default RDD is used. It can be specified as literal name or as a
+      character expression enclosed in parentheses.
+
+      <b>ALIAS <xcAlias></b> is an optional alias to USE the target file
+      with. If not specified, alias is based on the root name of
+      <xcFileName>.
+   $DESCRIPTION$
+      CREATE a new empty structure extended file with the name <cFileName>
+      and then open it in the current work-area. The new file has the
+      following structure:
+
+       <table>
+       Field name   Type   Length   Decimals
+
+       FIELD_NAME   C      10       0
+       FIELD_TYPE   C      1        0
+       FIELD_LEN    N      3        0
+       FIELD_DEC    N      3        0
+       </table>
+
+      CREATE command is preprocessed into __dbCopyStruct() function during
+      compile time and use this mode.
+   $EXAMPLES$
+      // CREATE a new structure extended file, append some records and
+      // then CREATE FROM this file a new database file
+
+      CREATE template
+      APPEND BLANK
+      FIELD->FIELD_NAME := "CHANNEL"
+      FIELD->FIELD_TYPE := "N"
+      FIELD->FIELD_LEN  := 2
+      FIELD->FIELD_DEC  := 0
+      APPEND BLANK
+      FIELD->FIELD_NAME := "PROGRAM"
+      FIELD->FIELD_TYPE := "C"
+      FIELD->FIELD_LEN  := 20
+      FIELD->FIELD_DEC  := 0
+      APPEND BLANK
+      FIELD->FIELD_NAME := "REVIEW"
+      FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
+      FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
+      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
+      CLOSE
+      CREATE TV_Guide FROM template
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      CREATE FROM
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Create new database file from a structure extended file
+   $SYNTAX$
+      CREATE <xcFileName> FROM <xcFileFrom> [VIA <xcRDDName>] [NEW] [ALIAS <xcAlias>]
+   $ARGUMENTS$
+      <xcFileName> is the target file name to create and then open. (.dbf)
+      is the default extension if none is given. It can be specified as
+      literal file name or as a character expression enclosed in
+      parentheses.
+
+      <b>FROM <xcFileFrom></b> is a structure extended file name from
+      which the target file <xcFileName> is going to be built. It can be
+      specified as literal file name or as a character expression enclosed
+      in parentheses.
+
+      <b>VIA <xcRDDName></b> is RDD name to create target with. If omitted,
+      the default RDD is used. It can be specified as literal name or as a
+      character expression enclosed in parentheses.
+
+      <b>NEW</b> open the target file name <xcFileName> in the next
+      available unused work-area and making it the current work-area. If
+      omitted open the target file in current work-area.
+
+      <b>ALIAS <xcAlias></b> is an optional alias to USE the target file
+      with. If not specified, alias is based on the root name of
+      <xcFileName>.
+   $DESCRIPTION$
+      CREATE FROM open a structure extended file <xcFileFrom> where each
+      record contain at least the following fields (in no particular
+      order): FIELD_NAME, FIELD_TYPE, FIELD_LEN and FIELD_DEC. Any other
+      field is ignored. From this information the file <xcFileName> is
+      then created and opened in the current or new work-area (according to
+      the NEW clause), if this is a new work-area it becomes the current.
+
+      For prehistoric compatibility reasons, structure extended file
+      Character fields which are longer than 255 characters should be
+      treated in a special way by writing part of the length in the
+      FIELD_DEC according to the following formula:
+
+      <fixed>
+      FIELD->FIELD_DEC := Int( nLength / 256 )
+      FIELD->FIELD_LEN := ( nLength % 256 )
+      </fixed>
+
+      CREATE FROM command is preprocessed into __dbCopyStruct() function
+      during compile time and uses this mode.
+   $EXAMPLES$
+      See example in the CREATE command
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __FLedit()*
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Filter a database structure array
+   $SYNTAX$
+      __FLedit( <aStruct>, [<aFieldList>] ) --> aStructFiltered
+   $ARGUMENTS$
+      <aStruct> is a multidimensional array with database fields
+      structure, which is usually the output from dbStruct(), where each
+      array element has the following structure:
+
+       <table>
+       Position   Description    dbstruct.ch
+
+       1          cFieldName     DBS_NAME
+       2          cFieldType     DBS_TYPE
+       3          nFieldLength   DBS_LEN
+       4          nDecimals      DBS_DEC
+       </table>
+
+      <aFieldList> is an array where each element is a field name.
+      Names could be specified as uppercase or lowercase.
+   $RETURNS$
+      __FLedit() return a new multidimensional array where each element is
+      in the same structure as the original <aStruct>, but the array is
+      built according to the list of fields in <aFieldList>. If
+      <aFieldList> is empty, __FLedit() return reference to the original
+      <aStruct> array.
+   $DESCRIPTION$
+      __FLedit() can be use to create a sub-set of a database structure,
+      based on a given field list.
+
+      Note that field names in <aStruct> MUST be specified in uppercase
+      or else no match would found.
+
+      SET EXACT has no effect on the return value.
+
+      __FLedit() is a compatibility function and it is synonym for
+      __dbStructFilter() which does exactly the same.
+   $EXAMPLES$
+      LOCAL aStruct, aList, aRet
+      aStruct := { { "CODE",  "N",  4, 0 }, ;
+                   { "NAME",  "C", 10, 0 }, ;
+                   { "PHONE", "C", 13, 0 }, ;
+                   { "IQ",    "N",  3, 0 } }
+      aList := { "IQ", "NAME" }
+      aRet := __FLedit( aStruct, aList )
+                        // { { "IQ", "N", 3, 0 }, { "NAME", "C", 10, 0 } }
+
+      aRet := __FLedit( aStruct, {} )
+      ? aRet == aStruct // .T.
+
+      aList := { "iq", "NOTEXIST" }
+      aRet := __FLedit( aStruct, aList )
+                        // { { "IQ", "N", 3, 0 } }
+
+      aList := { "NOTEXIST" }
+      aRet := __FLedit( aStruct, aList )   // {}
+
+
+      // Create a new file that contain part of the original structure
+      LOCAL aStruct, aList, aRet
+      USE TEST
+      aStruct := dbStruct()
+      aList := { "NAME" }
+      dbCreate( "onlyname.dbf", __FLedit( aStruct, aList ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      CA-Cl*pper has internal undocumented function named __FLedit(),
+      in Harbour we name it __dbStructFilter(). The new name gives a better
+      description of what this function does. In Harbour __FLedit() simply
+      calls __dbStructFilter() and therefor the latter is the recommended
+      function to use.
+
+      This function is only visible if src/rdd/dbstrux.prg was compiled
+      with the HB_CLP_UNDOC flag.
+   $PLATFORMS$
+      All
+   $FILES$
+      Header file is dbstruct.ch
+      Library is rdd
+   $SEEALSO$
+      dbCreate(),dbStruct(),__dbCopyStruct(),__dbStructFilter()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __dbStructFilter()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Filter a database structure array
+   $SYNTAX$
+      __dbStructFilter( <aStruct>, [<aFieldList>] ) --> aStructFiltered
+   $ARGUMENTS$
+      <aStruct> is a multidimensional array with database fields
+      structure, which is usually the output from dbStruct(), where each
+      array element has the following structure:
+
+       <table>
+       Position   Description    dbstruct.ch
+
+       1          cFieldName     DBS_NAME
+       2          cFieldType     DBS_TYPE
+       3          nFieldLength   DBS_LEN
+       4          nDecimals      DBS_DEC
+       </table>
+
+      <aFieldList> is an array where each element is a field name.
+      Names could be specified as uppercase or lowercase.
+   $RETURNS$
+      __dbStructFilter() return a new multidimensional array where each
+      element is in the same structure as the original <aStruct>, but the
+      array is built according to the list of fields in <aFieldList>. If
+      <aFieldList> is empty, __dbStructFilter() return reference to the
+      original <aStruct> array.
+   $DESCRIPTION$
+      __dbStructFilter() can be use to create a sub-set of a database
+      structure, based on a given field list.
+
+      Note that field names in <aStruct> MUST be specified in uppercase
+      or else no match would be found.
+
+      SET EXACT has no effect on the return value.
+   $EXAMPLES$
+      LOCAL aStruct, aList, aRet
+      aStruct := { ;
+         { "CODE",  "N",  4, 0 }, ;
+         { "NAME",  "C", 10, 0 }, ;
+         { "PHONE", "C", 13, 0 }, ;
+         { "IQ",    "N",  3, 0 } }
+      aList := { "IQ", "NAME" }
+      aRet := __dbStructFilter( aStruct, aList )
+                        // { { "IQ", "N", 3, 0 }, { "NAME", "C", 10, 0 } }
+
+      aRet := __dbStructFilter( aStruct, {} )
+      ? aRet == aStruct // .T.
+
+      aList := { "iq", "NOTEXIST" }
+      aRet := __dbStructFilter( aStruct, aList )
+                        // { { "IQ", "N", 3, 0 } }
+
+      aList := { "NOTEXIST" }
+      aRet := __dbStructFilter( aStruct, aList )   // {}
+
+
+      // Create a new file that contain part of the original structure
+      LOCAL aStruct, aList, aRet
+      USE TEST
+      aStruct := dbStruct()
+      aList := { "NAME" }
+      dbCreate( "onlyname.dbf", __dbStructFilter( aStruct, aList ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      __dbStructFilter() is a Harbour extension. CA-Cl*pper has an internal
+      undocumented function named __FLedit() that does exactly the same
+      thing. The new name gives a better description of what this function does.
+   $PLATFORMS$
+      All
+   $FILES$
+      Header file is dbstruct.ch
+      Library is rdd
+   $SEEALSO$
+      dbCreate(),dbStruct(),__dbCopyStruct(),__FLedit()*
+   $END$
+ */

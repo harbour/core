@@ -1,0 +1,45 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_NumLock()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Return status of NumLock key
+   $SYNTAX$
+      ft_NumLock( [ <lNewSetting> ] ) -> lCurrentSetting
+   $ARGUMENTS$
+      <lNewSetting> is optional and if supplied is the new setting
+      for the CapLock key.  Specify .T. to turn CapLock on, or .F. to
+      turn it off.
+   $RETURNS$
+      lValue is .T. if NumLock is set, .F. if it isn't set.  The value
+      returned represents the setting in effect prior to any changes that
+      might by made by <lNewSetting>.
+   $DESCRIPTION$
+      This function is useful if you need to know or set the status of the
+      NumLock key for some reason.
+   $EXAMPLES$
+      IF ft_NumLock()
+         ? "NumLock is active"
+      ENDIF
+
+      // Another one, slightly strange, courtesy of Glenn Scott:
+
+      #include "inkey.ch"
+
+      FUNCTION numBlink()
+         LOCAL lOldNum := ft_NumLock()
+
+         DO WHILE Inkey( 0.5 ) != K_ESC
+            ft_NumLock( ! ft_NumLock() )
+         ENDDO
+
+         RETURN ft_NumLock( lOldNum )
+   $SEEALSO$
+      ft_CapLock() ft_Ctrl() ft_PrtScr() ft_Shift() ft_Alt()
+   $END$
+ */

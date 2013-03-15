@@ -1,0 +1,325 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      AMonths()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Returns an array with the months names.
+   $SYNTAX$
+      AMonths()  --> aMonths
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <aMonths> The array which holds the months names.
+   $DESCRIPTION$
+      This function returns an array with all the months names in the
+      selected current language.
+   $EXAMPLES$
+      aMonths := AMonths()
+      ? aMonths[ 1 ] // -> January
+      ? aMonths[ 1 ] // -> Enero (if the selected language is Spanish)
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      ADays()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ADays()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Returns an array with the days names.
+   $SYNTAX$
+      ADays()  --> aDays
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <aDays>   The array which holds the days names.
+   $DESCRIPTION$
+      This function returns an array with all the days names in the
+      selected current language.
+   $EXAMPLES$
+      aDays := ADays()
+      ? aDays[ 1 ] // -> Sunday
+      ? aDays[ 1 ] // -> Domingo (if the selected language is Spanish)
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      ADays()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      IsLeapYear()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Checks if the given date is a leap year.
+   $SYNTAX$
+      IsLeapYear( <dDate> )  --> lTrueOrFalse
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <lTrueOrFalse>  A logical that indicates if the date year is leap
+   $DESCRIPTION$
+      This function returns true if the given date is a leap year and
+      false if isn't.
+   $EXAMPLES$
+      ? IsLeapYear( hb_SToD( "20000101" ) ) // -> .T.
+      ? IsLeapYear( hb_SToD( "20010101" ) ) // -> .F.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      DaysInMonth()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      DaysInMonth()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the days in a month.
+   $SYNTAX$
+      DaysInMonth( <dDate> )  --> nDays
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <nDays>   The number of days of the month.
+   $DESCRIPTION$
+      This function returns the number of days of the given date month.
+   $EXAMPLES$
+      ? DaysInMonth( hb_SToD( "20000101" ) ) // -> 31
+      ? DaysInMonth( hb_SToD( "20000201" ) ) // -> 29
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      IsLeapYear()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      EoM()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the last day in a month.
+   $SYNTAX$
+      EoM( <dDate> )  --> dEOM
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <dEOM>    The last day in the month.
+   $DESCRIPTION$
+      This function returns the last day of a given month date.
+   $EXAMPLES$
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? EoM( hb_SToD( "20000101" ) ) // -> "2000-01-31"
+      ? EoM( hb_SToD( "20000201" ) ) // -> "2000-02-29"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      BoM(),WoM()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      BoM()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the first day in a month.
+   $SYNTAX$
+      BoM( <dDate> )  --> dBOM
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <dBOM>    The first day in the month.
+   $DESCRIPTION$
+      This function returns the first day of a given month date.
+   $EXAMPLES$
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? BoM( hb_SToD( "20000125" ) ) // -> "2000-01-01"
+      ? BoM( hb_SToD( "20000224" ) ) // -> "2000-02-01"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      EoM(),WoM()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      DoY()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the day number of the year.
+   $SYNTAX$
+      DoY( <dDate> )  --> nDay
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <nDay>    The day number
+   $DESCRIPTION$
+      This function returns the day number of the year for a given date.
+   $EXAMPLES$
+      ? DoY( hb_SToD( "20000131" ) ) // -> 31
+      ? DoY( hb_SToD( "20000220" ) ) // -> 51
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      WoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      WoY()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the week number of the year.
+   $SYNTAX$
+      WoY( <dDate>, <lIso> )  --> nWeek
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <nWeek>   The week number
+      <lIso>    Flag that indicates if <nWeek> is in ISO format.
+   $DESCRIPTION$
+      This function returns the week number of the year for a given date.
+      It returns the week number in ISO format ( range 0 - 52, by default
+      or passing TRUE as second parameter) or 1 - 52 if lIso is FALSE.
+   $EXAMPLES$
+      ? WoY( hb_SToD( "20000131" ) ) // -> 3
+      ? WoY( hb_SToD( "20000131" ), .F. ) // -> 4
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      DoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      EoY()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the last date of the year.
+   $SYNTAX$
+      EoY( <dDate> )  --> dEOY
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <dEOY>    The last date of the year.
+   $DESCRIPTION$
+      This function returns the last date of a given year date.
+   $EXAMPLES$
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? EoY( hb_SToD( "20000101" ) ) // -> "2000-12-31"
+      ? EoY( hb_SToD( "20010101" ) ) // -> "2001-12-31"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      BoY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      BoY()
+   $CATEGORY$
+      Date
+   $ONELINER$
+      Gets the first date of the year.
+   $SYNTAX$
+      BoY( <dDate> )  --> dBOY
+   $ARGUMENTS$
+      <dDate>   A valid date.
+   $RETURNS$
+      <dBOY>    The first day in the year.
+   $DESCRIPTION$
+      This function returns the first date of a given year date.
+   $EXAMPLES$
+      Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+      ? BoY( hb_SToD( "20000125" ) ) // -> "2000-01-01"
+      ? BoY( hb_SToD( "20010224" ) ) // -> "2001-01-01"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is new in Harbour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbmisc
+   $SEEALSO$
+      EoY()
+   $END$
+ */

@@ -1,0 +1,97 @@
+.TH HARBOUR 1
+
+.SH NAME
+harbour \- Harbour compiler
+
+.SH SYNOPSIS
+\fBharbour\fP \fB<file[s][.prg]|@file>\fP \fB[options]\fP
+
+.SH DESCRIPTION
+\fBharbour\fP is a CA-Cl*pper compatible compiler for multiple platforms.
+
+.SH OPTIONS
+.IP "\fB-a\fP" 10
+Automatic memvar declaration
+.IP "\fB-b\fP" 10
+Debug info
+.IP "\fB-build\fP" 10
+display detailed version info
+.IP "\fB-credits\fP" 10
+display credits
+.IP "\fB-d<id>[=<val>]\fP" 10
+#define <id>
+.IP "\fB-es[<level>]\fP" 10
+set exit severity
+.IP "\fB-g<type>\fP" 10
+output type generated is <type> (see below)
+.IP "\fB-gc[<type>]\fP" 10
+output type: C source (.c) (default)
+.IP
+<type>: 0=compact (default) 1=normal 2=verbose
+.IP
+3=generate real C code instead of PCODE
+.IP "\fB-gh\fP" 10
+output type: Harbour Portable Object (.hrb)
+.IP "\fB-gd[.<destext>]\fP" 10
+generate dependencies list into (.d) file
+.IP "\fB-ge[<mode>]\fP" 10
+error output <mode>: 0=Clipper (default) 1=IDE friendly
+.IP "\fB-i<path>\fP" 10
+#include file search path
+.IP "\fB-i[-|+]\fP" 10
+disable/enable support for INCLUDE envvar
+.IP "\fB-j[<file>]\fP" 10
+generate i18n gettex file (.pot)
+.IP "\fB-k\fP" 10
+compilation mode (type -k? for more data)
+.IP "\fB-l\fP" 10
+suppress line number information
+.IP "\fB-m\fP" 10
+compile module only
+.IP "\fB-n[<type>]\fP" 10
+no implicit starting procedure (default)
+.IP
+<type>: 0=no implicit starting procedure
+.IP
+1=no starting procedure at all
+.IP
+2=add starting procedure if necessary
+.IP "\fB-o<path>\fP" 10
+object file drive and/or path
+.IP "\fB-p[<path>]\fP" 10
+generate pre-processed output (.ppo) file
+.IP "\fB-p+\fP" 10
+generate pre-processor trace (.ppt) file
+.IP "\fB-q\fP" 10
+quiet
+.IP "\fB-q0\fP" 10
+quiet and don't display program header
+.IP "\fB-q2\fP" 10
+disable all output messages
+.IP "\fB-r=<max>\fP" 10
+set maximum number of preprocessor iterations
+.IP "\fB-s[m]\fP" 10
+syntax check only [minimal for dependencies list]
+.IP "\fB-u[<file>]\fP" 10
+use command def set in <file> (or none)
+.IP "\fB-u+<file>\fP" 10
+add command def set from <file>
+.IP "\fB-undef:<id>\fP" 10
+#undef <id>
+.IP "\fB-v\fP" 10
+variables are assumed M->
+.IP "\fB-w[<level>]\fP" 10
+set warning level number (0..3, default 1)
+.IP "\fB-x[<prefix>]\fP" 10
+set symbol init function name prefix (for .c only)
+.IP "\fB-z\fP" 10
+suppress shortcutting (.and. & .or.)
+.IP "\fB@<file>\fP" 10
+compile list of modules in <file>
+
+.SH AUTHOR
+
+Author of harbour: The Harbour team (http://harbour-project.org)
+
+This manual page was written by Luis Mayoral <mayoral@linuxadicto.org>,
+for the Debian GNU/Linux system (but may be used by others).

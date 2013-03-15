@@ -1,0 +1,858 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MInit()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Initialize the mouse driver, vars and return status of mouse
+   $SYNTAX$
+      ft_MInit() -> lMouseStatus
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      An logical representing the mouse status (.F. == mouse not installed)
+   $DESCRIPTION$
+      Initializes the mouse drive, associated variables and returns mouse
+      status. It checks to see if the mouse has been previously initialized
+      and if so it does not reinitialize. The row and column limits of mouse
+      movement is set to the maximum for the current video mode.
+      Use ft_MShowCrs() to display the mouse cursor.
+   $EXAMPLES$
+      IF ! ft_MInit()
+         ? "No mouse driver is installed"
+      ENDIF
+   $SEEALSO$
+      ft_MReset()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MMickeys()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mickeys
+   $SYNTAX$
+      ft_MMickeys( @<nX>, @<nY> ) -> NIL
+   $ARGUMENTS$
+      <nX> is a variable that will receive the vertical mickey count.
+
+      <nY> is a variable that will receive the horizontal mickey count.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      <nX> and <nY> must be passed by reference to receive
+      the mouse position in Mickeys.
+   $EXAMPLES$
+      ft_MMickeys( @nX, @nY )
+      ? nX
+      ? nY
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MDblClk()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Return true if a double click was detected
+   $SYNTAX$
+      ft_MDblClk( [ <nClick> [, <nButton> [, <nInterval> [, <nRow> [, <nCol>;
+                  [, <nTime> ] ] ] ] ] ] ) -> lIsDoubleClk
+   $ARGUMENTS$
+      <nClick> is a numeric value.  If it is zero ft_MDblClk() will not
+               check for the first press but rather will simply wait the
+               specified period for a single press. This is useful if this
+               routine is called from one which in turn responded to a button
+               press. If it is not present or not equal to 0, then ft_MDblClk()
+               will wait for two presses of the specified button.
+
+      <nButton> is the mouse button number
+                 0 - Left   Button
+                 1 - Right  Button
+                 2 - Middle Button [if applicable]
+
+      <nInterval> is the interval to wait for the first click if requested
+             and the time to wait for the second. If not present then defaults
+             to 0.5 second.
+
+      <nRow> is the row number for the mouse cursor location for a double click
+             to be valid. If not present then the current position is taken as
+             the valid location.
+
+      <nCol> is the column number for the mouse cursor location for a double
+             click to be valid. If not present, then the current position is
+             taken as the valid location.
+
+      <nTime> is an optional start time for the waiting period for the first
+             click (of either one or two requested). If not given then the
+             time is set at entry into this routine. This is useful when this
+             routine is called from another routine which was called in
+             response to a mouse click but needs to know if a double click
+             has occurred
+   $RETURNS$
+      .T. if a double click was detected.
+   $DESCRIPTION$
+      This is a mouse meta function that checks for the presence
+      of a double click.
+   $EXAMPLES$
+      IF FT_MISREGION( 10, 10, 11, 20 ) .AND. ;
+         ft_MDblClk( 0, 1,, ft_MGetX(), ft_MGetY() ) // double click, right button
+                                                     // at current location with
+                                                     // default interval
+
+         MnuItem1()
+      ENDIF
+   $SEEALSO$
+      ft_MButPrs() ft_MButRel()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MCOnOff()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Turn mouse cursur off if in specified region
+   $SYNTAX$
+      ft_MCOnOff( <nTop>, <nLeft>, <nBottom>, <nRight> )
+   $ARGUMENTS$
+      <nTop>, <nLeft> <nBottom> <nRight> are the four corners of the
+            screen region in row and column coordinates.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function tells the mouse driver to hide the cursor if it is in
+      the given region. The driver hides the cursor by decrementing the cursor
+      flag. A call to FT_MSHOWCRS is required to turn the cursor back on.
+      Calling FT_MSHOWCRS also disables this function.
+
+      See FT_MSHOWCRS for a discussion of the cursor display flag.
+   $EXAMPLES$
+      ft_MCOnOff( 10, 10, 11, 20 )
+   $SEEALSO$
+      ft_MShowCrs() ft_MHideCrs() ft_MXLimit() ft_MYLimit() ft_MInRegion()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MInRegion()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Test if the mouse cursor is in the passed region
+   $SYNTAX$
+      ft_MInRegion( <nT>, <nL>, <nB>, <nR> ) -> lInRegion
+   $ARGUMENTS$
+      <nT>, <nL> <nB> <nR> are the four corners of the screen region.
+   $RETURNS$
+      .T. if mouse is in specified region.
+   $DESCRIPTION$
+      This function will check to see if the mouse cursor is
+      within the confines of the specified region.
+   $EXAMPLES$
+      IF ft_MInRegion( 10, 10, 11, 20 )
+         nChoice := 1
+      ENDIF
+   $SEEALSO$
+      ft_MXLimit() ft_MYLimit() ft_MInRegion()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MSetSens()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set the mouse sensitivity parameters
+   $SYNTAX$
+      ft_MSetSens( <nHoriz>, <nVert>, <nDouble> ) -> NIL
+   $ARGUMENTS$
+      <nHoriz>  is the sensitivity of the mouse on the horizontal axis. This
+                value is the integer percentage of highest sensitivity and
+                thus has a range of 1 to 100. The default value is 50 and at
+                this setting about 3.2 inches of mouse movement will move
+                the mouse cursor across the screen. If NIL, the current
+                value is used.
+      <nVert>   is the relative sensitivity of the mouse on the vertical axis.
+                The value is an integer percentage of the highest sensitivity
+                and thus has a range of 1 to 100. The default value is 50 and
+                requires about 2 inches of mouse movement will move from top
+                to bottom of the screen.If NIL, the current value is used.
+      <nDouble> is the relative sensitivity of the mouse to doubling the ratio
+                of cursor movement to mouse movement. The default
+                value is 50. If NIL, the current value is used.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function allows one to control the mouse movement sensitivity. The
+      first two arguments control the amount of movement necessary to move
+      the cursor a given amount. The values are the percentage of full
+      sensitivity and the default values after installing the mouse driver
+      is 50 which represents approximately 3.2 inches of horizontal
+      and 2 inches of vertical mouse movement to cover the entire screen.
+      A value of 100 requires about 0.9 inches of horizontal mouse movement to
+      cover the screen from one side to the other.
+
+      The third argument changes the threshold above which the mouse moves at
+      twice the normal speed. The value is a percentage of full sensitivity
+      with the default (50) providing doubling at 64 mickeys per second.
+
+      NOTE: These values are NOT restored after resetting the mouse driver/
+      hardware. A well behaved application should reset them to the
+      original value upon exiting.
+
+      NOTE: The above description is counter to all of the documentation
+      I have available. However, it does not work the way it is documented
+      with Microsoft drivers versions 6.16, 6.24, 7.04 and 8.20. The above
+      movement values are documented to be the number of mickeys per 8
+      pixels and the double speed value as the number mickeys per second
+      required to double the speed. Each of these values should range from 1
+      to 32K but the driver forces a maximum of 100. Also the documentation
+      states that resetting the mouse will reset these values. This is not
+      the case.
+
+
+   $EXAMPLES$
+      ft_MSetSens( 75, 75, 50 )     // a little less mouse movement necessary.
+   $SEEALSO$
+      ft_MGetSens()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetSens()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get the mouse sensitivity parameters
+   $SYNTAX$
+      ft_MGetSens( <@nHoriz>, <@nVert>, <@nDouble> ) -> NIL
+   $ARGUMENTS$
+      <nHoriz>  is the percentage of maximum horizontal sensitivity. PASSED
+                BY REFERENCE.
+      <nVert>   is the percentage of maximum vertical sensitivity. PASSED BY
+                REFERENCE.
+      <nDouble> is the percentage of maximum sensitivity for doubling the
+                mouse cursor's speed on the screen. PASSED BY REFERENCE.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function returns the current values of the mouse movement
+      sensitivity parameters. The first two arguments control the amount of
+      movement necessary to move the cursor a given amount. The third argument
+      determines the threshold above which the mouse moves at twice the normal
+      speed. For further discussion of these values see ft_MSetSens()
+   $EXAMPLES$
+      ft_MGetSens( @nHoriz, @nVert, @nDouble )
+   $SEEALSO$
+      ft_MSetSens()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MVersion()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get the mouse driver version
+   $SYNTAX$
+      ft_MVersion( <@nMinor>, <@nType>, <@nIRQ>  ) -> <nMajor>
+   $ARGUMENTS$
+      <nMinor>  is the Minor version number. PASSED BY REFERENCE.
+      <nType>   is the Mouse type. PASSED BY REFERENCE.
+                    1 = Bus Mouse
+                    2 = Serial Mouse
+                    3 = InPort Mouse
+                    4 = PS/2 Mouse
+                    5 = HP Mouse
+      <nIRQ>    is the IRQ number used for the mouse. PASSED BY REFERENCE.
+                    0 = PS/2
+                    2,3,4,5 or 7 = IRQ number
+   $RETURNS$
+      <nMajor> which is the major version number of the mouse driver.
+   $DESCRIPTION$
+      This function returns the current values of the mouse driver version
+      number and type. The major version would be 6 and the minor version
+      would be 10 if the driver were version 6.10. The mouse type and IRQ
+      numbers are also returned.
+
+      NOTE: It appears that the values reported when one starts the mouse
+      driver actually have the minor version in hexadecimal! Thus on bootup
+      my screen showed 6.24 but this routine returned 30 for the minor version
+      number!
+   $EXAMPLES$
+      nMajor := ft_MVersion( @nMinor )
+      IF ( nMajor + nMinor / 100 ) < 7.2
+         ? "Sorry mouse driver version too old"
+         RETURN
+      ENDIF
+   $SEEALSO$
+      ft_MSetSens()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MSetPage()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set the display page for the mouse pointer
+   $SYNTAX$
+      ft_MSetPage( <@nPage> ) -> NIL
+   $ARGUMENTS$
+      <nPage> is the desired display page.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function sets the display page for the mouse cursor. The valid
+      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      for changing the current video page
+   $EXAMPLES$
+      ft_MSetPage( 1 )  // Sets the mouse cursor to page 1
+   $SEEALSO$
+      ft_MGetPage()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetPage()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get the display page for the mouse pointer
+   $SYNTAX$
+      ft_MGetPage() -> <nPage>
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <nPage>  is the display page on which the mouse is currently being
+           displayed
+   $DESCRIPTION$
+      This function gets the display page for the mouse cursor. The valid
+      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      for changing the current video page
+   $EXAMPLES$
+      nPage := ft_MGetPage( )  // Gets the mouse cursor display page
+   $SEEALSO$
+      ft_MSetPage()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MReset()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Reset mouse driver and return status of mouse
+   $SYNTAX$
+      ft_MReset() -> nMouseStatus
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      An integer representing the mouse status (0 == mouse not installed)
+   $DESCRIPTION$
+      Resets the mouse driver and returns mouse status. Use ft_MShowCrs()
+      to display the mouse cursor. The mouse is set to allow it to cover the
+      complete screen (as defined by MaxCol() and MaxRow()). This is necessary
+      because at least some versions of the mouse drivers do not operate
+      according to the documentation when confronted with a 43 or 50 line
+      screen.
+
+      Normally, ft_MInit() should be used to initialize the mouse since it
+      will not reinitialize if already done.
+   $EXAMPLES$
+      IF Empty( ft_MReset() )
+         ? "No mouse driver is installed"
+      ENDIF
+   $SEEALSO$
+      ft_MInit() ft_MShowCrs()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MCursor()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set the mouse cursor
+   $SYNTAX$
+      ft_MCursor( [ <lState> ] ) -> lCursorState
+   $ARGUMENTS$
+      <lState> is a logical indicating whether to set the mouse cursor on.
+               .T. - set mouse cursor on
+               .F. - set mouse cursor off
+               If omitted, no change is made to cursor state
+   $RETURNS$
+      A logical indicating the previous mouse cursor state.
+   $DESCRIPTION$
+      This function works like most Clipper state functions.  If no value
+      is sent to ft_MCursor() it will return the state of the mouse cursor.
+   $EXAMPLES$
+      IF ! ft_MCursor()
+         ft_MCursor( .T. )
+      ENDIF
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MShowCrs()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Increment internal cursor flag and display mouse cursor
+   $SYNTAX$
+      ft_MShowCrs() -> NIL
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Displays the mouse cursor. Make sure to turn the mouse cursor off
+      when redrawing screens.  The mouse cursor dutifully saves the screen
+      under it, so if you draw over the mouse cursor it will create a "hole"
+      in your screen when you move the mouse cursor.
+
+      Note: A call to ft_MHideCrs() decrements a mouse driver variable
+      which indicates whether the cursor is shown. The cursor is visible
+      only when the variable = 0. Thus multiple calls to ft_MHideCrs()
+      require an equal number of calls to ft_MShowCrs() before the cursor
+      will again be visible. Once the variable is 0 calls to ft_MShowCrs()
+      does not increment the variable above 0.
+   $EXAMPLES$
+      IF Empty( ft_MReset() )
+         ft_MShowCrs()
+      ENDIF
+   $SEEALSO$
+      ft_MHideCrs() ft_MCOnOff()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MHideCrs()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Decrement internal mouse cursor flag and hide mouse cursor
+   $SYNTAX$
+      ft_MHideCrs() -> NIL
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Hides the mouse cursor. Make sure to turn the mouse cursor off when
+      redrawing screens.  The mouse cursor dutifully saves the screen
+      under it, so if you draw over the mouse cursor it will create a
+      "hole" in your screen when you move the mouse cursor.
+
+      Note: A call to ft_MHideCrs() decrements a mouse driver variable
+      which indicates whether the cursor is shown. The cursor is visible
+      only when the variable = 0. Thus multiple calls to ft_MHideCrs()
+      require an equal number of calls to ft_MShowCrs() before the cursor
+      will again be visible. Once the variable is 0 calls to ft_MShowCrs()
+      does not increment the varaible above 0.
+   $EXAMPLES$
+      ft_MHideCrs()
+      @ 10, 10 TO 20, 20
+      ft_MShowCrs()
+   $SEEALSO$
+      ft_MShowCrs() ft_MCOnOff()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetPos()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mouse cursor position and button status
+   $SYNTAX$
+      ft_MGetPos( @<nX>, @<nY> ) -> nButtonStatus
+   $ARGUMENTS$
+      <nX> is a variable that will receive the mouse X position in virtual
+      screen coordinates.  It must be passed by reference.
+
+      <nY> is a variable that will receive the mouse Y position in virtual
+      screen coordinates.  It must be passed by reference.
+   $RETURNS$
+      an integer representing button status
+
+            - 0 for no button pressed
+            - 1 for left pressed
+            - 2 for right pressed
+            - 3 for left and right pressed
+            - 4 for middle pressed
+            - 5 for left and middle pressed
+            - 6 for right and middle pressed
+            - 7 for all three buttons pressed
+   $DESCRIPTION$
+      Loads cursor position into x and y coordinates passed by reference and
+      returns the button status. The coordinate system in text mode has
+      eight virtual coordinates per character cell. Thus x=16 means that you
+      are in the Row 2. The values returned by this routine when in text mode
+      and with mouse driver versions 6 and above are multiples of 8. We have
+      experience with drivers prior to that version
+   $EXAMPLES$
+      LOCAL nX, nY
+      LOCAL nButton := ft_MGetPos( @nX, @nY )
+      ? "Mouse Row    :", nX
+      ? "Mouse Column :", nY
+      ? "Button Status:", nButton
+   $SEEALSO$
+      ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetX()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mouse cursor row position
+   $SYNTAX$
+      ft_MGetX() -> nRowPos
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      <nRowPos> which is the row position of mouse in virtual screen
+                coordinates.
+   $DESCRIPTION$
+      Retrieves mouse's row position in virtual screen coordinates. The
+      values returned are multiples of 8 when in text mode and with at least
+      Microsoft drivers 6 and above.
+   $EXAMPLES$
+      ? ft_MGetX()
+   $SEEALSO$
+      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetY()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mouse cursor column position
+   $SYNTAX$
+      ft_MGetY() -> nColPos
+   $ARGUMENTS$
+      NONE
+   $RETURNS$
+      <nColPos> Column position of mouse in virtual screen coordinates
+   $DESCRIPTION$
+      Retrieves mouse's column position in virtual screen coordinates. The
+      values returned are multiples of 8 when in text mode and with at least
+      Microsoft drivers 6 and above.
+   $EXAMPLES$
+      ? ft_MGetY()
+   $SEEALSO$
+      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetX()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MSetPos()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Position the mouse cursor using virtual screen coordinates
+   $SYNTAX$
+      ft_MSetPos( <nX>, <nY> ) -> NIL
+   $ARGUMENTS$
+      <nX> is the desired mouse row.
+
+      <nY> is the desired mouse column.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Positions mouse cursor on screen. The virtual coordinate system in text
+      mode has eight virtual coordinates per character cell. Thus x=16 means
+      that you are in the Row 2.
+   $EXAMPLES$
+      ft_MSetPos( 10, 20 )     // position mouse cursor at row 10, col 20
+                               // in virtual screen coordinates
+   $SEEALSO$
+      ft_MGetPos() ft_MGetCoord() ft_MSetCoord() ft_MGetX() ft_MGetY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MSetCoord()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Position the mouse cursor using text screen coordinates
+   $SYNTAX$
+      ft_MSetPos( <nX>, <nY> ) -> NIL
+   $ARGUMENTS$
+      <nX> is the desired mouse row.
+
+      <nY> is the desired mouse column.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Positions mouse cursor on screen using text (normal row and column)
+      coordinates.
+   $EXAMPLES$
+      ft_MSetCoord( 10, 20 )     // position mouse cursor at row 10, col 20
+                                 // in text screen coordinates
+   $SEEALSO$
+      ft_MGetPos() ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MXLimit()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set vertical bounds of mouse using virtual screen coord.
+   $SYNTAX$
+      ft_MXLimit( <nX1>, <nX2> ) -> NIL
+   $ARGUMENTS$
+      <nX1> is the top row limit.
+
+      <nX2> is the bottom row limit.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Set maximum vertical bounds of mouse using virtual screen coordinates.
+   $EXAMPLES$
+      ft_MXLimit( 10, 20 )
+   $SEEALSO$
+      ft_MYLimit() ft_MInRegion()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MYLimit()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set horiz. bounds of mouse using virtual screen coordinates
+   $SYNTAX$
+      ft_MYLimit( <nY1>, <nY2> ) -> NIL
+   $ARGUMENTS$
+      <nY1> is the left column limit.
+
+      <nY2> is the right column limit.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Set maximum horizontal bounds of mouse using virtual screen coordinates.
+   $EXAMPLES$
+      ft_MYLimit( 10, 20 )
+   $SEEALSO$
+      ft_MXLimit() ft_MInRegion()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MButPrs()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Retrieve button press status
+   $SYNTAX$
+      ft_MButPrs( <nButton> [, @nButPrs [, @nX [, @nY] ] ] ) -> nButStatus
+   $ARGUMENTS$
+      <nButton> is the mouse button number:
+
+                 0 - Left   Button
+                 1 - Right  Button
+                 2 - Middle Button [if applicable]
+
+      <nButPrs> is the number of times the specified button was pressed
+                since the last call to this routine. PASSED BY REFERENCE.
+      <nX> is the X position of the cursor when the last press occurred.
+                PASSED BY REFERENCE.
+      <nY> is the Y position of the cursor when the last press occurred.
+                PASSED BY REFERENCE.
+
+   $RETURNS$
+      An integer representing the button status:
+
+                 0 - no buttons pressed
+                 1 - left button pressed
+                 2 - right button pressed
+                 3 - left and right pressed
+                 4 - middle pressed
+                 5 - left and middle pressed
+                 6 - middle and right buttons pressed
+                 7 - all 3 buttons pressed
+   $DESCRIPTION$
+      Retrieves the mouse button status and the position of the cursor when
+      a button was last pressed.
+   $EXAMPLES$
+      IF Empty( ft_MButPrs( 1 ) )
+         ? "No Item selected"
+      ENDIF
+   $SEEALSO$
+      ft_MButRel() ft_MDblClk()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MButRel()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mouse button release information
+   $SYNTAX$
+      ft_MButRel( nButton [, @nButRel [, @nX [, @nY] ] ]) -> nBStat
+   $ARGUMENTS$
+      <nButton> is the mouse button number
+                0 - Left   Button
+                1 - Right  Button
+                2 - Middle Button [if applicable]
+
+      <nButRel> is the number of times the specified button was released
+                since the last call to this routine. PASSED BY REFERENCE.
+
+      <nX> is the X position of the cursor when the last release occurred.
+                PASSED BY REFERENCE.
+
+      <nY> is the Y position of the cursor when the last release occurred.
+                PASSED BY REFERENCE.
+   $RETURNS$
+      <nBStat>  - an integer representing button release status
+                  0 - None
+                  1 - Left
+                  2 - Right
+                  3 - Middle
+   $DESCRIPTION$
+      This function returns the release status of the mouse buttons and the
+      coordinates of the last release.
+   $EXAMPLES$
+      IF ft_MButRel( 0 ) == 1
+         ? "Left button released"
+      ENDIF
+   $SEEALSO$
+      ft_MButPrs() ft_MDblClk()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MDefCrs()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Define the mouse cursor
+   $SYNTAX$
+      ft_MDefCrs( <nCrsType>, <nScrMask>, <nCrsMask> ) -> NIL
+   $ARGUMENTS$
+      <nCrsType> is the cursor type. A value of 0 indicates the software cursor
+                 (the default) and a value of 1 indicates the hardware cursor.
+
+      <nScrMask> is the screen mask for the software cursor or the first scan
+                 line of the hardware cursor. See the description for more
+                 information.
+
+      <nCrsMask> is the cursor mask for the software cursor of the last scan
+                 line of the hardware cursor. See the description for more
+                 information.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      In text mode the mouse cursor can either be a software generated or
+      the actual hardware cursor. This routine allows one choose between them.
+      The software cursor is the default and its effect on the character it
+      covers is determined by the screen mask and the cursor mask. Both of
+      these masks are 16 bit values (which in Clipper are passed as standard
+      numerical values). The 16 bit masks are arranged in a manner identical
+      to the way information is stored for each character cell on the screen.
+      The low order 8 bits represent the actual character displayed while the
+      high order bits represent the display atributes such as blinking,
+      intensity and forground and background colors. The mask is represented in
+      the diagram below:
+
+      Bit:     │15    │14      12│11       │10       8│7       0│
+      Function:│blink │background│intensity│foreground│character│
+
+      Blinking and high intensity are on when the bit is 1. The background and
+      foreground indicate which colors are used for each. The software mouse
+      cursor uses these two values by taking the mask from the screen cell it
+      is on and performing a logical AND on each bit with the screen mask
+      value. The result is then logically XOR'ed with the cursor mask value.
+      Thus to keep the character the same but invert the foreground and
+      background colors the following values would be used:
+
+      Bit:     │15    │14      12│11       │10       8│7       0│
+      Function:│blink │background│intensity│foreground│character│
+      screen:  │  0   │   111    │    0    │   111    │11111111 │ =30719
+      cursor:  │  0   │   111    │    0    │   111    │00000000 │ =30464
+
+      The hardware cursor is the text cursor provided by the video board. One
+      specifies the range of scan lines which are on using <nScrMask> and
+      <nCrsMask>. The range of values is dependant upon the type of monitor.
+      The first scan line is 0.
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_MGetCoord()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Get mouse cursor position (text coord.) and button status
+   $SYNTAX$
+      ft_MGetPos( @<nX>, @<nY> ) -> nButtonStatus
+   $ARGUMENTS$
+      <nX> is a variable that will receive the mouse X position in text
+      screen coordinates.  It must be passed by reference.
+
+      <nY> is a variable that will receive the mouse Y position in text
+      screen coordinates.  It must be passed by reference.
+   $RETURNS$
+      an integer representing button status
+
+            - 0 for no button pressed
+            - 1 for left pressed
+            - 2 for right pressed
+            - 3 for left and right pressed
+            - 4 for middle pressed
+            - 5 for left and middle pressed
+            - 6 for right and middle pressed
+            - 7 for all three buttons pressed
+   $DESCRIPTION$
+      Loads cursor position into x and y coordinates passed by reference and
+      returns the button status.
+   $EXAMPLES$
+      LOCAL nX, nY
+      LOCAL nButton := ft_MGetCoord( @nX, @nY )
+      ? "Mouse Row    :", nX
+      ? "Mouse Column :", nY
+      ? "Button Status:", nButton
+   $SEEALSO$
+      ft_MGetPos() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+   $END$
+ */

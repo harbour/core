@@ -1,0 +1,31 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_Blink()
+   $CATEGORY$
+      Menus/Prompts
+   $ONELINER$
+      Display a blinking message on the screen
+   $SYNTAX$
+      ft_Blink( <cMsg>, [ <nRow> ], [ <nCol> ] ) -> NIL
+   $ARGUMENTS$
+      <cMsg> is the string to blink.
+
+      <nRow> is an optional screen row for @...SAY, default current.
+
+      <nCol> is an optional screen col for @...say, default current.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      A quick way to blink a msg on screen in the CURRENT colors.
+      Restores colors on return.
+   $EXAMPLES$
+      ft_Blink( "WAIT", 5, 10 )   // Blinks "WAIT" in current colors @ 5,10
+
+      @ 5, 10 SAY "WAIT - Printing Report"
+      ft_Blink( "..." )           //  Blink "..." after wait message...
+   $END$
+ */

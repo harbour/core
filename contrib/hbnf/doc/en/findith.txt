@@ -1,0 +1,38 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_FindITh()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Find the "ith" occurrence of a substring within a string
+   $SYNTAX$
+      ft_FindITh( <cCheckFor>, <cCheckIn>, <nWhichOccurrence> ;
+                  [, <lIgnoreCase> ] ) -> <nStringPosition>
+   $ARGUMENTS$
+      <cCheckFor> is the string to search for.
+
+      <cCheckIn> is the string to search.
+
+      <nWhichOccurrence> is the number of the occurrence to find.
+
+      <lIgnoreCase> is a logical indicating if the search is to be case
+         sensitive.  The default is no case sensitivity (.F.).
+   $RETURNS$
+      The position in the string cCheckIn of the ith occurrence of cCheckFor.
+   $DESCRIPTION$
+      This function finds the position in a string of the "ith" time another
+      string appears in it.
+   $EXAMPLES$
+      // Find the Position in cMemoString of
+      // the 10th Occurrence of "the", case
+      // insensitive
+
+      nNextPosition := ft_FindITh( "the", cMemoString, 10 )
+   $SEEALSO$
+      ft_At2()
+   $END$
+ */

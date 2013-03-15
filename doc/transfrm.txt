@@ -1,0 +1,77 @@
+/*
+ * $Id$
+ */
+
+Addendum Clipper documentation. Original transform docs are too limited :
+
+/* TODO: Make a real document out of this */
+
+NUMBERS
+
+The following functions mean something :
+
+@X      DB after negative numbers
+@(      Quotes around negative numbers
+@)      Quotes around negative numbers without leading spaces
+@B      Left justified
+@C      CR after positive numbers
+@E      Exchange . and , (Not in US/UK manual, does work !)
+@Z      Return spaces if value is 0
+
+New addition :
+@0      Make a zero padded string out of the number.
+@L      Same of previous.
+
+The following templates mean something to numbers :
+9       Digit
+#       Digit
+.       Dot
+$       Pad left with $
+*       Pad left with *
+,       Comma   (Real pathetic. Just like Clipper)
+
+The following bugs have been fixed : (Just like Xbase++ did !)
+@(   Does not give incorrect results when it should overflow
+@D   Ignored. So it should be !
+
+The default string is not properly formatted :
+Decimals issue currently being debated. Besides it is a STR problem.
+
+LOGICALS
+
+The following functions mean something :
+
+@R      Show remainder
+
+The following templates mean something :
+
+Y       Y/N
+#       T/F (Also isn't the NG)
+L       T/F
+
+STRINGS
+
+The following functions mean something :
+@!      Upper case
+@R      Show remainder
+
+The following templates mean something :
+!       Upper
+# 9     Digit
+A N X   Text
+
+DATES
+
+Uses SET DATE FORMAT
+Uses SET CENTURY
+
+The following functions mean something :
+@E      Use British date format
+        /* QUESTION :
+                Clipper appears to reverse the MM and DD parts of the
+                date, regardless of SET DATE FORMAT, because if the
+                date format is British, using @E displays the date in
+                American. Harbour always treats @E as British.
+
+                So is Harbour's behaviour a bug fix or a bug?
+        */

@@ -1,0 +1,45 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      AtAdjust()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Adjusts a sequence within a string to a specified position
+   $SYNTAX$
+      AtAdjust( <cStringToMatch>, <cString>, <nAdjustPosition>,
+                [<nCounter>], [<nIgnore>],
+                [<nFillChar|cFillChar>] ) -> cString
+   $ARGUMENTS$
+      <cStringToMatch>        is the sequence to be adjusted within <cString>
+      <cString>               is the string that contains <cStringToMatch>
+      <nAdjustPosition>       specifies the position to that <cStringToMatch>
+                              will be adjusted
+      [<nCounter>]            specifies which occurence of <cStringToMatch>
+                              in <cString> is to be adjusted
+                              Default: last occurence
+      [<nIgnore>]             specifies how many characters should be omitted
+                              in the scan
+      [<nFillChar|cFillChar>] specifies the character that is used for the
+                              adjustment
+   $RETURNS$
+      cString                 the changed string
+   $DESCRIPTION$
+      <TODO: add a description, some examples and tests here>
+   $EXAMPLES$
+
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      AtAdjust() works like CT3's AtAdjust()
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      SetAtLike(),CSetAtMupa()
+   $END$
+ */

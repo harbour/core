@@ -1,0 +1,45 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_AEMinLen()
+   $CATEGORY$
+      Array
+   $ONELINER$
+      Find shortest element within an array
+   $SYNTAX$
+      ft_AEMinLen( <aArray> [, <nDimension> [, <nStart> [, <nCount> ] ] ] )
+                 -> nMinlen
+   $ARGUMENTS$
+      <aArray> is the array containing the elements to be measured.
+
+      <nDimension> is the array dimension to be measured,
+                 defaults to first dimension.
+
+      <nStart> is the starting array element to include,
+                 defaults to first array element.
+
+      <nCount> is the number of array elements to process from
+                 from <nStart>, defaults to remaining elements
+                 in array.
+   $RETURNS$
+      The length of the shortest size element of an array.
+   $DESCRIPTION$
+      This function will measure each element of an array
+      dimension and return the shortest element.
+   $EXAMPLES$
+      ft_AEMinLen( aArray )          // Measure the 1st dimension of an Array
+
+      ft_AEMinLen( aArray, 2 )       // Measure the 2nd dimension of an Array
+
+      ft_AEMinLen( aArray, 2, , 9 )  // Measure Elements 1-9 of 2nd dimension
+
+      ft_AEMinLen( aArray, 3, 5, 9 ) // Measure Elements 5-9 of 3rd dimension
+
+      ft_AEMinLen( aArray, 3, 5 )    // Measure Elements 5 to end of 3rd dimension
+   $SEEALSO$
+      ft_AEMaxLen()
+   $END$
+ */

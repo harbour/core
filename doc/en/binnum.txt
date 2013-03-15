@@ -1,0 +1,484 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: Bin2W(), Bin2I(), Bin2L(), Bin2U(), I2Bin(), W2Bin(),
+ *                       L2Bin(), U2Bin()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Bin2W()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert unsigned short encoded bytes into Harbour numeric
+   $SYNTAX$
+      Bin2W( <cBuffer> ) --> nNumber
+   $ARGUMENTS$
+      <cBuffer> is a character string that contain 16 bit encoded unsigned
+      short integer (least significant byte first). The first two bytes
+      are taken into account, the rest if any are ignored.
+   $RETURNS$
+      Bin2W() return numeric integer (or 0 if <cBuffer> is not a string).
+   $DESCRIPTION$
+      Bin2W() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. Bin2W() take two bytes of encoded
+      16 bit unsigned short integer and convert it into standard Harbour
+      numeric value.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      Bin2W() is the opposite of W2Bin()
+   $EXAMPLES$
+      // Show header length of a DBF
+      #include "fileio.ch"
+      PROCEDURE Main()
+         LOCAL nHandle, cBuffer := Space( 2 )
+         nHandle := FOpen( "test.dbf" )
+         IF nHandle != F_ERROR
+            FSeek( nHandle, 8 )
+            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+            ? "Length of DBF header in bytes:", Bin2W( cBuffer )
+            FClose( nHandle )
+         ELSE
+            ? "Can not open file"
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2U(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Bin2I()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert signed short encoded bytes into Harbour numeric
+   $SYNTAX$
+      Bin2I( <cBuffer> ) --> nNumber
+   $ARGUMENTS$
+      <cBuffer> is a character string that contain 16 bit encoded signed
+      short integer (least significant byte first). The first two bytes
+      are taken into account, the rest if any are ignored.
+   $RETURNS$
+      Bin2I() return numeric integer (or 0 if <cBuffer> is not a string).
+   $DESCRIPTION$
+      Bin2I() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. Bin2I() take two bytes of encoded
+      16 bit signed short integer and convert it into standard Harbour
+      numeric value.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      Bin2I() is the opposite of I2Bin()
+   $EXAMPLES$
+      // Show DBF last update date
+      #include "fileio.ch"
+      PROCEDURE Main()
+         LOCAL nHandle, cYear, cMonth, cDay
+         nHandle := FOpen( "test.dbf" )
+         IF nHandle != F_ERROR
+            FSeek( nHandle, 1 )
+            cYear := cMonth := cDay := " "
+            FRead( nHandle, @cYear , hb_BLen( cYear ) )
+            FRead( nHandle, @cMonth, hb_BLen( cMonth ) )
+            FRead( nHandle, @cDay  , hb_BLen( cDay ) )
+            ? "Last update:", Bin2I( cYear ), Bin2I( cMonth ), Bin2I( cDay )
+            FClose( nHandle )
+         ELSE
+            ? "Can not open file"
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Bin2L()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert signed long encoded bytes into Harbour numeric
+   $SYNTAX$
+      Bin2L( <cBuffer> ) --> nNumber
+   $ARGUMENTS$
+      <cBuffer> is a character string that contain 32 bit encoded signed
+      long integer (least significant byte first). The first four bytes
+      are taken into account, the rest if any are ignored.
+   $RETURNS$
+      Bin2L() return numeric integer (or 0 if <cBuffer> is not a string).
+   $DESCRIPTION$
+      Bin2L() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. Bin2L() take four bytes of encoded
+      32 bit signed long integer and convert it into standard Harbour
+      numeric value.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      Bin2L() is the opposite of L2Bin()
+   $EXAMPLES$
+      // Show number of records in DBF
+      #include "fileio.ch"
+      PROCEDURE Main()
+         LOCAL nHandle, cBuffer := Space( 4 )
+         nHandle := FOpen( "test.dbf" )
+         IF nHandle != F_ERROR
+            FSeek( nHandle, 4 )
+            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+            ? "Number of records in file:", Bin2L( cBuffer )
+            FClose( nHandle )
+         ELSE
+            ? "Can not open file"
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Bin2U()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert unsigned long encoded bytes into Harbour numeric
+   $SYNTAX$
+      Bin2U( <cBuffer> ) --> nNumber
+   $ARGUMENTS$
+      <cBuffer> is a character string that contain 32 bit encoded unsigned
+      long integer (least significant byte first). The first four bytes
+      are taken into account, the rest if any are ignored.
+   $RETURNS$
+      Bin2U() return numeric integer (or 0 if <cBuffer> is not a string).
+   $DESCRIPTION$
+      Bin2U() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. Bin2U() take four bytes of encoded
+      32 bit unsigned long integer and convert it into standard Harbour
+      numeric value.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      Bin2U() is the opposite of U2Bin()
+   $EXAMPLES$
+      // Show number of records in DBF
+      #include "fileio.ch"
+      PROCEDURE Main()
+         LOCAL nHandle, cBuffer := Space( 4 )
+         nHandle := FOpen( "test.dbf" )
+         IF nHandle != F_ERROR
+            FSeek( nHandle, 4 )
+            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+            ? "Number of records in file:", Bin2U( cBuffer )
+            FClose( nHandle )
+         ELSE
+            ? "Can not open file"
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      XPP
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      I2Bin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert Harbour numeric into signed short encoded bytes
+   $SYNTAX$
+      I2Bin( <nNumber> ) --> cBuffer
+   $ARGUMENTS$
+      <nNumber> is a numeric value to convert (decimal digits are ignored).
+   $RETURNS$
+      I2Bin() return two bytes character string that contain 16 bit
+      encoded signed short integer (least significant byte first).
+   $DESCRIPTION$
+      I2Bin() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. I2Bin() take a numeric integer
+      value and convert it into two bytes of encoded 16 bit signed short
+      integer.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      I2Bin() is the opposite of Bin2I()
+   $EXAMPLES$
+      // Update DBF "last update" date
+      #include "fileio.ch"
+      PROCEDURE Main()
+         LOCAL nHandle, cYear, cMonth, cDay
+         USE test
+         ? "Original update date is:", LUpdate()
+         CLOSE
+         nHandle := FOpen( "test.dbf", FO_READWRITE )
+         IF nHandle != F_ERROR
+            FSeek( nHandle, 1 )
+            cYear  := I2Bin( 68 )
+            cMonth := I2Bin(  8 )
+            cDay   := I2Bin(  1 )
+            FWrite( nHandle, cYear , 1 )   // write only the first byte
+            FWrite( nHandle, cMonth, 1 )
+            FWrite( nHandle, cDay  , 1 )
+            FClose( nHandle )
+            USE test
+            ? "New update date is:", LUpdate()
+            CLOSE
+         ELSE
+            ? "Can not open file"
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),L2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      W2Bin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert Harbour numeric into unsigned short encoded bytes
+   $SYNTAX$
+      W2Bin( <nNumber> ) --> cBuffer
+   $ARGUMENTS$
+      <nNumber> is a numeric value to convert (decimal digits are ignored).
+   $RETURNS$
+      W2Bin() return two bytes character string that contain 16 bit
+      encoded unsigned short integer (least significant byte first).
+   $DESCRIPTION$
+      W2Bin() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. W2Bin() take a numeric integer
+      value and convert it into two bytes of encoded 16 bit unsigned short
+      integer.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      W2Bin() is the opposite of Bin2W()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      XPP
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),Word(),U2Bin(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      L2Bin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert Harbour numeric into signed long encoded bytes
+   $SYNTAX$
+      L2Bin( <nNumber> ) --> cBuffer
+   $ARGUMENTS$
+      <nNumber> is a numeric value to convert (decimal digits are ignored).
+   $RETURNS$
+      L2Bin() return four bytes character string that contain 32 bit
+      encoded signed long integer (least significant byte first).
+   $DESCRIPTION$
+      L2Bin() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. L2Bin() take a numeric integer
+      value and convert it into four bytes of encoded 32 bit signed long
+      integer.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      L2Bin() is the opposite of Bin2L()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      U2Bin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Convert Harbour numeric into unsigned long encoded bytes
+   $SYNTAX$
+      U2Bin( <nNumber> ) --> cBuffer
+   $ARGUMENTS$
+      <nNumber> is a numeric value to convert (decimal digits are ignored).
+   $RETURNS$
+      U2Bin() return four bytes character string that contain 32 bit
+      encoded unsigned long integer (least significant byte first).
+   $DESCRIPTION$
+      U2Bin() is one of the low level binary conversion functions, those
+      functions convert between Harbour numeric and a character
+      representation of numeric value. U2Bin() take a numeric integer
+      value and convert it into four bytes of encoded 32 bit unsigned long
+      integer.
+
+      You might ask what is the need for such functions, well, first of
+      all it allow you to read/write information from/to a binary file
+      (like extracting information from DBF header), it is also a useful
+      way to share information from source other than Harbour (C for
+      instance).
+
+      U2Bin() is the opposite of Bin2U()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      XPP
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),FWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      Word()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Conversion
+   $ONELINER$
+      Converts double to integer values.
+   $SYNTAX$
+      Word( <nDouble> ) --> <nInteger>
+   $ARGUMENTS$
+      <nDouble> is a numeric double value.
+   $RETURNS$
+      Word() return an integer in the range +-32767
+   $DESCRIPTION$
+      This function converts double values to integers to use
+      within the CALL command
+   $STATUS$
+      R
+   $COMPLIANCE$
+      The CA-Cl*pper NG states that Word() will only work when used in CALL
+      commands parameter list, otherwise it will return NIL, in Harbour
+      it will work anywhere.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      CALL
+   $END$
+ */

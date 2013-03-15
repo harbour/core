@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
+
+<script type="syntaxhighlighter" class="brush: harbour; light: true"><![CDATA[
+
+//
+// This program shells to OS
+//
+// Written by Eddie Runia <eddie@runia.com>
+// www - http://harbour-project.org
+//
+// Placed in the public domain
+//
+
+PROCEDURE Main()
+
+   LOCAL cShell
+
+#if defined( __PLATFORM__UNIX )
+   cShell := GetEnv( "SHELL" )
+#else
+   cShell := GetEnv( "COMSPEC" )
+#endif
+
+   ? "About to shell to OS.."
+   ! ( cShell )
+   ? "Hey, I am back !"
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

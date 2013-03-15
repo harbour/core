@@ -1,0 +1,34 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBLZF__
+#define __HBEXTERN_CH__HBLZF__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBLZF__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBLZF__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBLZF__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_lzf_compress
+DYNAMIC hb_lzf_compressbound
+DYNAMIC hb_lzf_decompress
+DYNAMIC hb_lzf_optimized_for_speed
+DYNAMIC hb_lzf_version
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBLZF__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

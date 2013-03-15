@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+rddsql.hbc
+
+-depkeyhead=sqlite3:sqlite3.h
+-depcontrol=sqlite3:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=sqlite3:${HB_WITH_SQLITE3}
+-depincpath=sqlite3:/usr/include
+-depincpath=sqlite3:/boot/common/include
+-depincpathlocal=sqlite3:../3rd/sqlite3
+-depfinish=sqlite3
+
+${hb_name}.hbx
+
+core.c
+
+../3rd/sqlite3/sqlite3.hbc{HBMK_HAS_SQLITE3_LOCAL}

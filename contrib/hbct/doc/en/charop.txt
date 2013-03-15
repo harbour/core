@@ -1,0 +1,228 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      CharAdd()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Adds corresponding ASCII value of two strings
+   $SYNTAX$
+      CharAdd( <[@]cString1>, <cString2> ) --> cAddString
+   $ARGUMENTS$
+      <[@]cString1>   first string
+      <cString2>      second string
+   $RETURNS$
+      <cAddString>    string with added ASCII values
+   $DESCRIPTION$
+      The CharAdd() function constructs a new string from the two strings
+      passed as parameters. To do this, it adds the ASCII values of the
+      corresponding characters of both strings and places a character in
+      the resulting string whose ASCII value equals to that sum (modulo 256).
+      If the first string is passed by reference, the resulting string is
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
+      the return value can be omitted.
+      If <cString2> is shorter than <cString1> and the last character of
+      <cString2> has been processed, the function restarts with the first
+      character of <cString2>.
+   $EXAMPLES$
+      ? CharAdd( "012345678", hb_BChar( 1 ) ) // --> "123456789"
+      ? CharAdd( "123456789", hb_BChar( 255 ) ) // --> "012345678"
+      ? CharAdd( "0000", hb_BChar( 0 ) + hb_BChar( 1 ) + hb_BChar( 2 ) + hb_BChar( 3 ) ) // --> "0123"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharAdd() is compatible with CT3's CharAdd().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharSub()   CharAnd()   CharNot()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharAnd()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Combine corresponding ASCII value of two strings with bitwise AND
+   $SYNTAX$
+      CharAnd( <[@]cString1>, <cString2> ) --> cAndString
+   $ARGUMENTS$
+      <[@]cString1>   first string
+      <cString2>      second string
+   $RETURNS$
+      <cAndString>    string with bitwise AND combined ASCII values
+   $DESCRIPTION$
+      The CharAnd() function constructs a new string from the two strings
+      passed as parameters. To do this, it combines the ASCII values of the
+      corresponding characters of both strings with a bitwise AND-operation
+      and places a character in the resulting string whose ASCII value
+      equals to the result of that operation.
+      If the first string is passed by reference, the resulting string is
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
+      the return value can be omitted.
+      If <cString2> is shorter than <cString1> and the last character of
+      <cString2> has been processed, the function restarts with the first
+      character of <cString2>.
+   $EXAMPLES$
+      // clear the LSB
+      ? CharAnd( "012345678", hb_BChar( 254 ) ) // --> "002244668"
+      ? CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) // --> "002044648"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharAnd() is compatible with CT3's CharAnd().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharAdd()   CharSub()   CharNot()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharNot()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Process each character in a string with bitwise NOT operation
+   $SYNTAX$
+      CharNot( <[@]cString> ) --> cNotString
+   $ARGUMENTS$
+      <[@]cString>    string to be processed
+   $RETURNS$
+      <cNotString>    string with bitwise negated characters
+   $DESCRIPTION$
+      The CharNot() function constructs a new string from the string
+      passed as parameter. To do this, it performs a bitwise NOT operation
+      to the characters of the string and places a character in
+      the resulting string whose ASCII value equals to the result of that
+      operation. It can be easily seen that the resulting ASCII-value equals
+      255 minus input ASCII value.
+      If the string is passed by reference, the resulting string is
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
+      the return value can be omitted.
+   $EXAMPLES$
+      ? CharNot( hb_BChar(  85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar(   1 ) )
+      // -->     hb_BChar( 170 ) + hb_BChar( 127 ) + hb_BChar(  85 ) + hb_BChar( 254 )
+      ? CharNot( CharNot( "This is a test!" ) ) // --> "This is a test!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharNot() is compatible with CT3's CharNot().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharOr()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Combine corresponding ASCII value of two strings with bitwise OR
+   $SYNTAX$
+      CharOr( <[@]cString1>, <cString2> ) --> cOrString
+   $ARGUMENTS$
+      <[@]cString1>   first string
+      <cString2>      second string
+   $RETURNS$
+      <cOrString>     string with bitwise OR combined ASCII values
+   $DESCRIPTION$
+      The CharOr() function constructs a new string from the two strings
+      passed as parameters. To do this, it combines the ASCII values of the
+      corresponding characters of both strings with a bitwise OR-operation
+      and places a character in the resulting string whose ASCII value
+      equals to the result of that operation.
+      If the first string is passed by reference, the resulting string is
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
+      the return value can be omitted.
+      If <cString2> is shorter than <cString1> and the last character of
+      <cString2> has been processed, the function restarts with the first
+      character of <cString2>.
+   $EXAMPLES$
+      // set the LSB
+      ? CharOr( "012345678", hb_BChar( 1 ) ) // --> "113355779"
+      ? CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) // --> "133357779"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharOr() is compatible with CT3's CharOr().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharAdd()   CharSub()   CharNot()
+      CharAnd()   CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CharXor()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Combine corresponding ASCII value of two strings with bitwise XOR
+   $SYNTAX$
+      CharXor( <[@]cString1>, <cString2> ) --> cXOrString
+   $ARGUMENTS$
+      <[@]cString1>   first string
+      <cString2>      second string
+   $RETURNS$
+      <cXOrString>    string with bitwise XOR combined ASCII values
+   $DESCRIPTION$
+      The CharXor() function constructs a new string from the two strings
+      passed as parameters. To do this, it combines the ASCII values of the
+      corresponding characters of both strings with a bitwise XOR-operation
+      and places a character in the resulting string whose ASCII value
+      equals to the result of that operation.
+      If the first string is passed by reference, the resulting string is
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
+      the return value can be omitted.
+      If <cString2> is shorter than <cString1> and the last character of
+      <cString2> has been processed, the function restarts with the first
+      character of <cString2>.
+   $EXAMPLES$
+      // easy encryption
+      ? CharXor( "This is top secret !", "My Password" ) // --> <encrypted sentence>
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CharXor() is compatible with CT3's CharXor().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CharAdd()   CharSub()   CharNot()
+      CharAnd()   CharOr()    CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
+   $END$
+ */

@@ -1,0 +1,52 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_DskSize()
+   $CATEGORY$
+      DOS/BIOS
+   $ONELINER$
+      Return the maximum capacity of a fixed disk
+   $SYNTAX$
+      ft_DskSize( [ <cDrive> ] ) -> nMaxCapacity
+   $ARGUMENTS$
+      <cDrive> is the fixed disk to query. If no drive is sent, the
+      operation will be performed on the default drive. Send without
+      the ":".
+   $RETURNS$
+      An integer representing the maximum disk capacity in bytes.
+   $DESCRIPTION$
+      Function utilizing ft_int86() to return Maximum Disk Size.
+      Uses ft_int86() through the internal function _ftDiskInfo().
+   $EXAMPLES$
+      ? ft_DskSize()      // Maximum capacity for default drive
+      ? ft_DskSize( "D" ) // Maximum capacity for Drive D:
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_DskFree()
+   $CATEGORY$
+      DOS/BIOS
+   $ONELINER$
+      Return the amount of available disk space
+   $SYNTAX$
+      ft_DskFree( [ <cDrive> ] ) -> nSpaceAvail
+   $ARGUMENTS$
+      <cDrive> is the fixed disk to query. If no parameter is passed
+      the operation will be performed on the default drive.  Do not
+      include the ":".
+   $RETURNS$
+      Integer representing the available disk space in bytes.
+   $DESCRIPTION$
+      Function to return the available space on the passed
+      drive letter or the default drive if no drive is passed.
+
+      Uses ft_int86() through the internal function _ftDiskInfo().
+   $EXAMPLES$
+      ? ft_DskFree()  // Returns free space on default drive.
+   $END$
+ */

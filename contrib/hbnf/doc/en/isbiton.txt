@@ -1,0 +1,34 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_IsBitOn()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Determine the state of individual bits in a number
+   $SYNTAX$
+      ft_IsBitOn( <nNumber>, <nBit> ) -> lResult
+   $ARGUMENTS$
+      <nNumber> is an integer for which a bit state needs to be checked.
+
+      <nBit> is a number from 0 to 15 that indicates which bit to test.
+   $RETURNS$
+      .T. if the specified bit was on., .F. if off.
+   $DESCRIPTION$
+      This function is useful when dealing with binary integers.  It will
+      come in very handy if you use the ft_int86() function, because the
+      CPU flags are returned as a series of bits.  Using this function, you
+      can determine the state of each CPU flag.
+   $EXAMPLES$
+      IF ft_IsBitOn( nCPUFlags, 0 )
+         ? "The carry flag was set."
+      ENDIF
+
+      IF ft_IsBitOn( nCPUFlags, 7 )
+         ? "The sign flag was set."
+      ENDIF
+   $END$
+ */

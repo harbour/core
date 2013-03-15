@@ -1,0 +1,123 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      NToC()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      NToC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CToN()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CToN()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      CToN( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      NToC()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      BitToC()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      BitToC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CToBit()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CToBit()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      CToBit( <cBitString>, <cBitPattern> ) -> <nWord>
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      BitToC()
+   $END$
+ */

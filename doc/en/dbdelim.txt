@@ -1,0 +1,85 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
+ *    Documentation for: __dbDelim()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __dbDelim()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Copies the contents of a database to a delimited text file or
+      appends the contents of a delimited text file to a database.
+   $SYNTAX$
+      __dbDelim( <lExport>, <xcFile>, [<xcDelim>], [<aFields>],
+      [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], <lRest>  )
+   $ARGUMENTS$
+      <lExport> If set to .T., copies records to a delimited file.
+      If set to .F., append records from a delimited file.
+
+      <xcFile> The name of the text file to copy to or append from.
+      If a file extension is not specified, ".txt" is used by default.
+
+      <xcDelim> Either the character to use as the character field
+      delimiter (only the first character is used). or "BLANK" (not case
+      sensitive), which eliminates the character field delimiters and
+      sets the field separator to a single space instead of a comma.
+
+      <aFields> An aray of field names to limit the processint to. If
+      not specified, or if empty, then all fields are processed.
+
+      <bFor> An optional code block containing a FOR expression that
+      will reduce the number of records to be processed.
+
+      <bWhile> An optional code block containing a WHILE expression
+      that will reduce the number of records to be processed.
+
+      <nNext> If present, but nRecord is not present, specifies to
+      process this number of records, starting with the current record.
+      A value of 0 means to process no records.
+
+      <nRecord> If present, specifies the only record to process. A
+      value of 0 means to process no records. Overrides <nNext> and <lRest>.
+
+      <lRest> If <lExport> is .T., then if <lRest> is set to .T. and there are no
+      <nRecord>, <nNext>, or <bWhile> arguments, processes all records from
+      current to last.
+   $DESCRIPTION$
+      __dbDelim() copies all or selected contents of a database table
+      to an SDF text file or appends all or selected contents of an SDF
+      text file to a database table.
+   $EXAMPLES$
+      // Copy delinquent accounts into a delimited text file.
+      USE ACCOUNTS NEW
+      COPY TO overdue DELIMITED FOR ! Empty( accounts->duedate ) ;
+         .AND. Date() - accounts->duedate > 30
+      // Import new customer records.
+      USE CUSTOMER NEW
+      APPEND FROM customer DELIMITED
+   $STATUS$
+      S
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+
+   $SEEALSO$
+      __dbSDF(), APPEND FROM, COPY TO
+   $END$
+ */

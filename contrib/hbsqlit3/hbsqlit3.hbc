@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+description=SQLite3 wrapper (SQL)
+
+incpaths=.
+
+headers=${hb_name}.ch
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=../3rd/sqlite3/sqlite3.hbc

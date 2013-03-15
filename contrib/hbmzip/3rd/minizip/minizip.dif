@@ -1,0 +1,576 @@
+diff -u minizip.orig\crypt.h minizip\crypt.h
+--- minizip.orig\crypt.h	Sun Oct 25 22:49:58 2009
++++ minizip\crypt.h	Fri Jun 08 16:12:21 2012
+@@ -32,12 +32,14 @@
+ /***********************************************************************
+  * Return the next byte in the pseudo-random sequence
+  */
+-static int decrypt_byte(unsigned long* pkeys, const unsigned long* pcrc_32_tab)
++static int decrypt_byte(unsigned long* pkeys, const z_crc_t* pcrc_32_tab)
+ {
+     unsigned temp;  /* POTENTIAL BUG:  temp*(temp^1) may overflow in an
+                      * unpredictable manner on 16-bit systems; not a problem
+                      * with any known compiler so far, though */
+ 
++    (void) pcrc_32_tab;
++
+     temp = ((unsigned)(*(pkeys+2)) & 0xffff) | 2;
+     return (int)(((temp * (temp ^ 1)) >> 8) & 0xff);
+ }
+@@ -45,7 +47,7 @@
+ /***********************************************************************
+  * Update the encryption keys with the next byte of plain text
+  */
+-static int update_keys(unsigned long* pkeys,const unsigned long* pcrc_32_tab,int c)
++static int update_keys(unsigned long* pkeys,const z_crc_t* pcrc_32_tab,int c)
+ {
+     (*(pkeys+0)) = CRC32((*(pkeys+0)), c);
+     (*(pkeys+1)) += (*(pkeys+0)) & 0xff;
+@@ -62,7 +64,7 @@
+  * Initialize the encryption keys and the random header according to
+  * the given password.
+  */
+-static void init_keys(const char* passwd,unsigned long* pkeys,const unsigned long* pcrc_32_tab)
++static void init_keys(const char* passwd,unsigned long* pkeys,const z_crc_t* pcrc_32_tab)
+ {
+     *(pkeys+0) = 305419896L;
+     *(pkeys+1) = 591751049L;
+@@ -91,7 +93,7 @@
+                      unsigned char* buf,      /* where to write header */
+                      int bufSize,
+                      unsigned long* pkeys,
+-                     const unsigned long* pcrc_32_tab,
++                     const z_crc_t* pcrc_32_tab,
+                      unsigned long crcForCrypting)
+ {
+     int n;                       /* index in random header */
+diff -u minizip.orig\ioapi.c minizip\ioapi.c
+--- minizip.orig\ioapi.c	Sat Jan 21 12:58:44 2012
++++ minizip\ioapi.c	Wed Feb 08 00:33:29 2012
+@@ -27,6 +27,7 @@
+ 
+ 
+ #include "ioapi.h"
++#include "hbapifs.h"
+ 
+ voidpf call_zopen64 (const zlib_filefunc64_32_def* pfilefunc,const void*filename,int mode)
+ {
+@@ -96,6 +97,9 @@
+ {
+     FILE* file = NULL;
+     const char* mode_fopen = NULL;
++
++    (void) opaque;
++
+     if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
+         mode_fopen = "rb";
+     else
+@@ -106,7 +110,7 @@
+         mode_fopen = "wb";
+ 
+     if ((filename!=NULL) && (mode_fopen != NULL))
+-        file = fopen(filename, mode_fopen);
++        file = hb_fopen(filename, mode_fopen);
+     return file;
+ }
+ 
+@@ -114,6 +118,9 @@
+ {
+     FILE* file = NULL;
+     const char* mode_fopen = NULL;
++
++    (void) opaque;
++
+     if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER)==ZLIB_FILEFUNC_MODE_READ)
+         mode_fopen = "rb";
+     else
+@@ -132,6 +139,9 @@
+ static uLong ZCALLBACK fread_file_func (voidpf opaque, voidpf stream, void* buf, uLong size)
+ {
+     uLong ret;
++
++    (void) opaque;
++
+     ret = (uLong)fread(buf, 1, (size_t)size, (FILE *)stream);
+     return ret;
+ }
+@@ -139,6 +149,9 @@
+ static uLong ZCALLBACK fwrite_file_func (voidpf opaque, voidpf stream, const void* buf, uLong size)
+ {
+     uLong ret;
++
++    (void) opaque;
++
+     ret = (uLong)fwrite(buf, 1, (size_t)size, (FILE *)stream);
+     return ret;
+ }
+@@ -146,6 +159,9 @@
+ static long ZCALLBACK ftell_file_func (voidpf opaque, voidpf stream)
+ {
+     long ret;
++
++    (void) opaque;
++
+     ret = ftell((FILE *)stream);
+     return ret;
+ }
+@@ -154,14 +170,20 @@
+ static ZPOS64_T ZCALLBACK ftell64_file_func (voidpf opaque, voidpf stream)
+ {
+     ZPOS64_T ret;
++
++    (void) opaque;
++
+     ret = FTELLO_FUNC((FILE *)stream);
+     return ret;
+ }
+ 
+ static long ZCALLBACK fseek_file_func (voidpf  opaque, voidpf stream, uLong offset, int origin)
+ {
+-    int fseek_origin=0;
++    int fseek_origin;
+     long ret;
++
++    (void) opaque;
++
+     switch (origin)
+     {
+     case ZLIB_FILEFUNC_SEEK_CUR :
+@@ -183,8 +205,11 @@
+ 
+ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T offset, int origin)
+ {
+-    int fseek_origin=0;
++    int fseek_origin;
+     long ret;
++
++    (void) opaque;
++
+     switch (origin)
+     {
+     case ZLIB_FILEFUNC_SEEK_CUR :
+@@ -210,6 +235,9 @@
+ static int ZCALLBACK fclose_file_func (voidpf opaque, voidpf stream)
+ {
+     int ret;
++
++    (void) opaque;
++
+     ret = fclose((FILE *)stream);
+     return ret;
+ }
+@@ -217,12 +245,14 @@
+ static int ZCALLBACK ferror_file_func (voidpf opaque, voidpf stream)
+ {
+     int ret;
++
++    (void) opaque;
++
+     ret = ferror((FILE *)stream);
+     return ret;
+ }
+ 
+-void fill_fopen_filefunc (pzlib_filefunc_def)
+-  zlib_filefunc_def* pzlib_filefunc_def;
++void fill_fopen_filefunc (zlib_filefunc_def* pzlib_filefunc_def)
+ {
+     pzlib_filefunc_def->zopen_file = fopen_file_func;
+     pzlib_filefunc_def->zread_file = fread_file_func;
+diff -u minizip.orig\ioapi.h minizip\ioapi.h
+--- minizip.orig\ioapi.h	Mon Jan 16 19:51:30 2012
++++ minizip\ioapi.h	Wed Feb 08 00:39:52 2012
+@@ -21,30 +21,58 @@
+ #ifndef _ZLIBIOAPI64_H
+ #define _ZLIBIOAPI64_H
+ 
+-#if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(__APPLE__))
+-
+-  // Linux needs this to support file operation on files larger then 4+GB
+-  // But might need better if/def to select just the platforms that needs them.
+-
+-        #ifndef __USE_FILE_OFFSET64
+-                #define __USE_FILE_OFFSET64
+-        #endif
+-        #ifndef __USE_LARGEFILE64
+-                #define __USE_LARGEFILE64
+-        #endif
+-        #ifndef _LARGEFILE64_SOURCE
+-                #define _LARGEFILE64_SOURCE
+-        #endif
+-        #ifndef _FILE_OFFSET_BIT
+-                #define _FILE_OFFSET_BIT 64
+-        #endif
+-
++#if !(defined(_WIN32) || defined(WIN32)) && \
++    !(defined(__MSDOS__) || defined(MSDOS)) && \
++    !(defined(OS_2) || defined(__OS2__) || defined(OS2)) && \
++    !defined(__WATCOMC__)
++
++  /* Linux needs this to support file operation on files larger then 4+GB
++   * on 32bit platforms
++   * But might need better if/def to select just the platforms that needs them.
++   */
++   #ifndef _LARGEFILE_SOURCE
++      #define _LARGEFILE_SOURCE
++   #endif
++   #ifndef _LARGEFILE64_SOURCE
++      #define _LARGEFILE64_SOURCE
++   #endif
++   #ifndef _FILE_OFFSET_BITS
++      #define _FILE_OFFSET_BITS 64
++   #endif
+ #endif
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include "zlib.h"
+ 
++#include "hbsetup.h"
++
++#if defined( HB_OS_VXWORKS ) && defined( _STD_USING_INT_TYPES )
++   /* NOTE: Hack to avoid collision between stdint.h and types/vxTypes.h. [vszakats] */
++   #ifndef __BIT_TYPES_DEFINED__
++   #define __BIT_TYPES_DEFINED__
++   #endif
++   #ifndef _SYS_INT_TYPES_H
++   #define _SYS_INT_TYPES_H
++   #endif
++#endif
++
++#if defined( __BORLANDC__ ) || \
++    defined( __WATCOMC__ ) || \
++    defined( __MINGW32CE__ ) || \
++    defined( __DMC__ ) || \
++    defined( HB_OS_VXWORKS ) || \
++    defined( HB_OS_BSD ) || \
++    defined( HB_OS_DARWIN ) || \
++    defined( HB_OS_BEOS ) || \
++    defined( HB_OS_DOS ) || \
++    defined( HB_OS_OS2 ) || \
++    defined( HB_OS_CYGWIN ) || \
++    defined( HB_OS_MINIX ) || \
++    defined( HB_OS_ANDROID )
++#  define USE_FILE32API
++#endif
++
+ #if defined(USE_FILE32API)
+ #define fopen64 fopen
+ #define ftello64 ftell
+@@ -186,8 +214,8 @@
+ 
+ #define ZREAD64(filefunc,filestream,buf,size)     ((*((filefunc).zfile_func64.zread_file))   ((filefunc).zfile_func64.opaque,filestream,buf,size))
+ #define ZWRITE64(filefunc,filestream,buf,size)    ((*((filefunc).zfile_func64.zwrite_file))  ((filefunc).zfile_func64.opaque,filestream,buf,size))
+-//#define ZTELL64(filefunc,filestream)            ((*((filefunc).ztell64_file)) ((filefunc).opaque,filestream))
+-//#define ZSEEK64(filefunc,filestream,pos,mode)   ((*((filefunc).zseek64_file)) ((filefunc).opaque,filestream,pos,mode))
++/*#define ZTELL64(filefunc,filestream)            ((*((filefunc).ztell64_file)) ((filefunc).opaque,filestream))*/
++/*#define ZSEEK64(filefunc,filestream,pos,mode)   ((*((filefunc).zseek64_file)) ((filefunc).opaque,filestream,pos,mode))*/
+ #define ZCLOSE64(filefunc,filestream)             ((*((filefunc).zfile_func64.zclose_file))  ((filefunc).zfile_func64.opaque,filestream))
+ #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
+ 
+diff -u minizip.orig\unzip.c minizip\unzip.c
+--- minizip.orig\unzip.c	Sat Jan 21 12:49:30 2012
++++ minizip\unzip.c	Fri Jun 08 16:24:24 2012
+@@ -68,13 +68,21 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
++/*
+ #ifndef NOUNCRYPT
+         #define NOUNCRYPT
+ #endif
++*/
+ 
+ #include "zlib.h"
+ #include "unzip.h"
+ 
++#if ZLIB_VERNUM < 0x1270
++#  define z_crc_t unsigned long
++#endif
++
++#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
++
+ #ifdef STDC
+ #  include <stddef.h>
+ #  include <string.h>
+@@ -109,10 +117,10 @@
+ #endif
+ 
+ #ifndef ALLOC
+-# define ALLOC(size) (malloc(size))
++# define ALLOC(size) hb_xgrab(size)
+ #endif
+ #ifndef TRYFREE
+-# define TRYFREE(p) {if (p) free(p);}
++# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
+ #endif
+ 
+ #define SIZECENTRALDIRITEM (0x2e)
+@@ -188,7 +196,7 @@
+ 
+ #    ifndef NOUNCRYPT
+     unsigned long keys[3];     /* keys defining the pseudo-random sequence */
+-    const unsigned long* pcrc_32_tab;
++    const z_crc_t* pcrc_32_tab;
+ #    endif
+ } unz64_s;
+ 
+@@ -1090,19 +1098,14 @@
+ 
+         if (lSeek!=0)
+         {
+-            if (ZSEEK64(s->z_filefunc, s->filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)==0)
+-                lSeek=0;
+-            else
++            if (ZSEEK64(s->z_filefunc, s->filestream,lSeek,ZLIB_FILEFUNC_SEEK_CUR)!=0)
+                 err=UNZ_ERRNO;
+         }
+ 
+         if ((file_info.size_file_comment>0) && (commentBufferSize>0))
+             if (ZREAD64(s->z_filefunc, s->filestream,szComment,uSizeRead)!=uSizeRead)
+                 err=UNZ_ERRNO;
+-        lSeek+=file_info.size_file_comment - uSizeRead;
+     }
+-    else
+-        lSeek+=file_info.size_file_comment;
+ 
+ 
+     if ((err==UNZ_OK) && (pfile_info!=NULL))
+@@ -1177,7 +1180,7 @@
+ */
+ extern int ZEXPORT unzGoToFirstFile (unzFile file)
+ {
+-    int err=UNZ_OK;
++    int err;
+     unz64_s* s;
+     if (file==NULL)
+         return UNZ_PARAMERROR;
+@@ -1472,7 +1475,7 @@
+ extern int ZEXPORT unzOpenCurrentFile3 (unzFile file, int* method,
+                                             int* level, int raw, const char* password)
+ {
+-    int err=UNZ_OK;
++    int err;
+     uInt iSizeVar;
+     unz64_s* s;
+     file_in_zip64_read_info_s* pfile_in_zip_read_info;
+@@ -1529,6 +1532,7 @@
+         }
+     }
+ 
++#if 0
+     if ((s->cur_file_info.compression_method!=0) &&
+ /* #ifdef HAVE_BZIP2 */
+         (s->cur_file_info.compression_method!=Z_BZIP2ED) &&
+@@ -1536,6 +1540,7 @@
+         (s->cur_file_info.compression_method!=Z_DEFLATED))
+ 
+         err=UNZ_BADZIPFILE;
++#endif
+ 
+     pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
+     pfile_in_zip_read_info->crc32=0;
+diff -u minizip.orig\zip.c minizip\zip.c
+--- minizip.orig\zip.c	Sat Feb 04 11:14:12 2012
++++ minizip\zip.c	Fri Jun 08 16:25:00 2012
+@@ -29,16 +29,24 @@
+ #include "zlib.h"
+ #include "zip.h"
+ 
++#if ZLIB_VERNUM < 0x1270
++#  define z_crc_t unsigned long
++#endif
++
++#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
++
+ #ifdef STDC
+ #  include <stddef.h>
+ #  include <string.h>
+ #  include <stdlib.h>
+ #endif
++/*
+ #ifdef NO_ERRNO_H
+     extern int errno;
+ #else
+ #   include <errno.h>
+ #endif
++*/
+ 
+ 
+ #ifndef local
+@@ -59,10 +76,10 @@
+ #endif
+ 
+ #ifndef ALLOC
+-# define ALLOC(size) (malloc(size))
++# define ALLOC(size) hb_xgrab(size)
+ #endif
+ #ifndef TRYFREE
+-# define TRYFREE(p) {if (p) free(p);}
++# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
+ #endif
+ 
+ /*
+@@ -157,7 +174,7 @@
+     ZPOS64_T totalUncompressedData;
+ #ifndef NOCRYPT
+     unsigned long keys[3];     /* keys defining the pseudo-random sequence */
+-    const unsigned long* pcrc_32_tab;
++    const z_crc_t* pcrc_32_tab;
+     int crypt_header_size;
+ #endif
+ } curfile64_info;
+@@ -186,6 +203,12 @@
+ #include "crypt.h"
+ #endif
+ 
++/* Forward definitions */
++local linkedlist_datablock_internal* allocate_new_datablock( void );
++local void free_datablock( linkedlist_datablock_internal* ldi );
++local void init_linkedlist( linkedlist_data* ll );
++local int add_data_in_datablock( linkedlist_data* ll, const void* buf, uLong len );
++
+ local linkedlist_datablock_internal* allocate_new_datablock()
+ {
+     linkedlist_datablock_internal* ldi;
+@@ -1034,10 +1057,10 @@
+       // Remember position of Zip64 extended info for the local file header. (needed when we update size after done with file)
+       zi->ci.pos_zip64extrainfo = ZTELL64(zi->z_filefunc,zi->filestream);
+ 
+-      err = zip64local_putValue(&zi->z_filefunc, zi->filestream, (short)HeaderID,2);
+-      err = zip64local_putValue(&zi->z_filefunc, zi->filestream, (short)DataSize,2);
++      zip64local_putValue(&zi->z_filefunc, zi->filestream, (short)HeaderID,2);
++      zip64local_putValue(&zi->z_filefunc, zi->filestream, (short)DataSize,2);
+ 
+-      err = zip64local_putValue(&zi->z_filefunc, zi->filestream, (ZPOS64_T)UncompressedSize,8);
++      zip64local_putValue(&zi->z_filefunc, zi->filestream, (ZPOS64_T)UncompressedSize,8);
+       err = zip64local_putValue(&zi->z_filefunc, zi->filestream, (ZPOS64_T)CompressedSize,8);
+   }
+ 
+@@ -1064,7 +1087,7 @@
+     uInt size_filename;
+     uInt size_comment;
+     uInt i;
+-    int err = ZIP_OK;
++    int err;
+ 
+ #    ifdef NOCRYPT
+     (crcForCrypting);
+@@ -1370,7 +1393,7 @@
+         uInt i;
+         int t;
+         for (i=0;i<zi->ci.pos_in_buffered_data;i++)
+-            zi->ci.buffered_data[i] = zencode(zi->ci.keys, zi->ci.pcrc_32_tab, zi->ci.buffered_data[i],t);
++            zi->ci.buffered_data[i] = (Byte) zencode(zi->ci.keys, zi->ci.pcrc_32_tab, zi->ci.buffered_data[i],t);
+ #endif
+     }
+ 
+@@ -1471,12 +1494,13 @@
+           {
+               uLong uTotalOutBefore = zi->ci.stream.total_out;
+               err=deflate(&zi->ci.stream,  Z_NO_FLUSH);
++/*
+               if(uTotalOutBefore > zi->ci.stream.total_out)
+               {
+                 int bBreak = 0;
+                 bBreak++;
+               }
+-
++*/
+               zi->ci.pos_in_buffered_data += (uInt)(zi->ci.stream.total_out - uTotalOutBefore) ;
+           }
+           else
+@@ -1534,8 +1558,7 @@
+                                 uLong uTotalOutBefore;
+                                 if (zi->ci.stream.avail_out == 0)
+                                 {
+-                                        if (zip64FlushWriteBuffer(zi) == ZIP_ERRNO)
+-                                                err = ZIP_ERRNO;
++                                        zip64FlushWriteBuffer(zi);
+                                         zi->ci.stream.avail_out = (uInt)Z_BUFSIZE;
+                                         zi->ci.stream.next_out = zi->ci.buffered_data;
+                                 }
+@@ -1649,7 +1672,7 @@
+ 
+     if(datasize > 0)
+     {
+-      char* p = NULL;
++      char* p;
+ 
+       if((uLong)(datasize + 4) > zi->ci.size_centralExtraFree)
+       {
+@@ -1680,7 +1703,9 @@
+       if(zi->ci.pos_local_header >= 0xffffffff)
+       {
+         zip64local_putValue_inmemory(p, zi->ci.pos_local_header, 8);
++/*
+         p += 8;
++*/
+       }
+ 
+       // Update how much extra free space we got in the memory buffer
+@@ -1697,7 +1722,7 @@
+     if (err==ZIP_OK)
+         err = add_data_in_datablock(&zi->central_dir, zi->ci.central_header, (uLong)zi->ci.size_centralheader);
+ 
+-    free(zi->ci.central_header);
++    TRYFREE(zi->ci.central_header);
+ 
+     if (err==ZIP_OK)
+     {
+@@ -1754,7 +1779,7 @@
+ 
+ int Write_Zip64EndOfCentralDirectoryLocator(zip64_internal* zi, ZPOS64_T zip64eocd_pos_inzip)
+ {
+-  int err = ZIP_OK;
++  int err;
+   ZPOS64_T pos = zip64eocd_pos_inzip - zi->add_position_when_writting_offset;
+ 
+   err = zip64local_putValue(&zi->z_filefunc,zi->filestream,(uLong)ZIP64ENDLOCHEADERMAGIC,4);
+@@ -1776,7 +1801,7 @@
+ 
+ int Write_Zip64EndOfCentralDirectoryRecord(zip64_internal* zi, uLong size_centraldir, ZPOS64_T centraldir_pos_inzip)
+ {
+-  int err = ZIP_OK;
++  int err;
+ 
+   uLong Zip64DataSize = 44;
+ 
+@@ -1815,7 +1840,7 @@
+ }
+ int Write_EndOfCentralDirectoryRecord(zip64_internal* zi, uLong size_centraldir, ZPOS64_T centraldir_pos_inzip)
+ {
+-  int err = ZIP_OK;
++  int err;
+ 
+   /*signature*/
+   err = zip64local_putValue(&zi->z_filefunc,zi->filestream,(uLong)ENDHEADERMAGIC,4);
+@@ -1863,7 +1888,7 @@
+ 
+ int Write_GlobalComment(zip64_internal* zi, const char* global_comment)
+ {
+-  int err = ZIP_OK;
++  int err;
+   uInt size_global_comment = 0;
+ 
+   if(global_comment != NULL)
+@@ -1957,7 +1982,7 @@
+   short header;
+   short dataSize;
+ 
+-  int retVal = ZIP_OK;
++  int retVal;
+ 
+   if(pData == NULL || *dataLen < 4)
+     return ZIP_PARAMERROR;
+diff -u minizip.orig\zip.h minizip\zip.h
+--- minizip.orig\zip.h	Mon Feb 15 04:58:22 2010
++++ minizip\zip.h	Wed Feb 08 00:31:09 2012
+@@ -44,7 +44,7 @@
+ extern "C" {
+ #endif
+ 
+-//#define HAVE_BZIP2
++/*#define HAVE_BZIP2*/
+ 
+ #ifndef _ZLIB_H
+ #include "zlib.h"

@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+description=OpenSSL wrapper (encryption)
+
+incpaths=.
+
+headers=${hb_name}.ch
+
+skip={dos}
+
+{!HB_DYNBIND_OPENSSL&!(HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
+
+{!HB_DYNBIND_OPENSSL&unix}libs=ssl crypto
+{!HB_DYNBIND_OPENSSL&os2}libs=libssl_s libcrypto_s
+{!HB_DYNBIND_OPENSSL&!(HB_STATIC_OPENSSL&!hbdyn)&win}libs=ssleay32 libeay32
+{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&win&!allmingw}libs=ssleay32 libeay32
+{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&allmingw}libs=ssl crypto
+{!HB_DYNBIND_OPENSSL& (HB_STATIC_OPENSSL&!hbdyn)&allwin}libs=crypt32

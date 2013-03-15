@@ -1,0 +1,17 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+${hb_name}.hbx
+
+bmdbfx.c
+bmdbfcdx.prg
+bmdbfnsx.prg
+bmdbfntx.prg

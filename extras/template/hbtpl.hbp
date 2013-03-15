@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+# Project build file
+
+-hblib
+-inc
+
+-olib/${hb_plat}/${hb_comp}/${hb_name}
+
+-w3 -es2
+
+# NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
+# -depkeyhead=lib3rd:lib3rd.h
+# -depcontrol=lib3rd:${HB_WITH_LIB3RD}
+# -depincpath=lib3rd:/usr/include
+# -depincpath=lib3rd:/boot/common/include
+# -depimplibs=lib3rd:../dll/lib3rd.dll
+# -depimplibd=lib3rd:lib3rd
+# -depfinish=lib3rd
+
+core.prg
+corec.c
+
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
+$hb_pkg_dynlib.hbm
+$hb_pkg_install.hbm
+
+# NOTE: Uncomment if you want to link against a dynamic Harbour contrib lib
+#       (hbct in this example)
+# {hbdyn&hb_dynsuffix}-env:_HB_DYNSUFF=${hb_dynsuffix}
+# {hbdyn&!hb_dynsuffix}-env:_HB_DYNSUFF=_dll
+# {hbdyn}-request=__HBEXTERN__HBCT__
+# {hbdyn}hbct.hbc

@@ -1,0 +1,35 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+rddsql.hbc
+
+-stop{dos|os2|wce}
+
+-depkeyhead=ocilib:ocilib.h
+-depcontrol=ocilib:no{HB_BUILD_3RDEXT='no'}
+-depcontrol=ocilib:${HB_WITH_OCILIB}
+-depincpath=ocilib:/usr/include
+-depincpath=ocilib:/usr/local/include
+-depimplibs=ocilib:../lib32/ociliba.dll{win&x86}
+-depimplibs=ocilib:../lib32/ocilibm.dll{win&x86}
+-depimplibs=ocilib:../lib32/ocilibw.dll{win&x86}
+-depimplibs=ocilib:../lib64/ociliba.dll{win&x86_64}
+-depimplibs=ocilib:../lib64/ocilibm.dll{win&x86_64}
+-depimplibs=ocilib:../lib64/ocilibw.dll{win&x86_64}
+
+# Using prebuilt static libs with MinGW
+-cflag=-DOCI_API=_stdcall{mingw}
+# Required to link against generated implib
+-cflag=-DOCI_API=_stdcall{bcc}
+
+${hb_name}.hbx
+
+core.c

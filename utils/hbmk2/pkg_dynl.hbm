@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+# dynamic lib creation settings
+{hbdyn}-shared
+{hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/
+{hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
+{hbdyn&!hb_dynsuffix}-implib=${hb_outputname}_dll
+{hbdyn&unix&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
+{hbdyn&unix&!darwin&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
+{hbdyn&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
+{hbdyn&(allwin|cygwin)}-lhbmaindllp
+{hbdyn}-depimplib-
+
+"{hbdyn&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
+"{hbdyn&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
+"{hbdyn&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
+"{hbdyn&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+"{hbdyn&sunos}-dflag=-Wl,-h,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+
+# output name tweaks for dynamic libs
+# NOTE: We're altering previously set output name value here
+{hbdyn&unix&!darwin&!cygwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
+{hbdyn&unix&darwin}-o${hb_outputname}.${hb_major}.${hb_minor}.${hb_release}${hb_dynext}
+{hbdyn&unix&cygwin}-o${hb_outputname}${hb_dynext}
+{hbdyn&!unix&allwin}-o${hb_outputname}-${hb_major}${hb_minor}${hb_dynsuffix}
+{hbdyn&!unix&!allwin}-o${hb_outputname}${hb_dynsuffix}
+
+# output dir
+{hbdyn}-obin/${hb_plat}/${hb_comp}${hb_build}/

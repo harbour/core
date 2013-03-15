@@ -1,9 +1,0 @@
-#
-# $Id$
-#
-
-EXPORT DllGetClassObject   = '_DllGetClassObject@12'  PRIVATE
-EXPORT DllCanUnloadNow     = '_DllCanUnloadNow@0'     PRIVATE
-EXPORT DllRegisterServer   = '_DllRegisterServer@0'   PRIVATE
-EXPORT DllUnregisterServer = '_DllUnregisterServer@0' PRIVATE
-EXPORT DllMain             = '_DllMain@12'

@@ -1,0 +1,801 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
+ *    Documentation for: __objHasData(), __objHasMethod(), __objGetMsgList(),
+ *                       __objGetMethodList(), __objGetValueList(),
+ *                       __objSetValueList(), __objAddMethod(),
+ *                       __objAddInline(), __objAddData(), __objModMethod(),
+ *                       __objModInline(), __objDelMethod(), __objDelInline(),
+ *                       __objDelData(), __objDerivedFrom()
+ *
+ * See COPYING.txt for licensing terms.
+ *
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objHasData()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Determine whether a symbol exist in object as VAR
+   $SYNTAX$
+      __objHasData( <oObject>, <cSymbol> ) --> lExist
+   $ARGUMENTS$
+      <oObject> is an object to scan.
+
+      <cSymbol> is the name of the symbol to look for.
+   $RETURNS$
+      __objHasData() return .T. if the given <cSymbol> exist as VAR
+      (instance variable) in object <oObject), .F. if it does not exist.
+   $DESCRIPTION$
+      __objHasData() is a low level class support function that let you
+      find out if a symbol is an instance variable in a given object.
+   $EXAMPLES$
+      oB := TBrowseNew( 0, 0, 24, 79 )
+      ? __objHasData( oB, "nLeft" )      // this should return .T.
+      ? __objHasData( oB, "lBugFree" )   // hopefully this should be .F.
+      ? __objHasData( oB, "Left" )       // .F. since this is a METHOD
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objGetMethodList(),__objGetMsgList(),__objHasMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objHasMethod()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Determine whether a symbol exist in object as METHOD
+   $SYNTAX$
+      __objHasMethod( <oObject>, <cSymbol> ) --> lExist
+   $ARGUMENTS$
+      <oObject> is an object to scan.
+
+      <cSymbol> is the name of the symbol to look for.
+   $RETURNS$
+      __objHasMethod() return .T. if the given <cSymbol> exist as METHOD
+      (class function) in object <oObject), .F. if it does not exist.
+   $DESCRIPTION$
+      __objHasMethod() is a low level class support function that let you
+      find out if a symbol is a class function in a given object.
+   $EXAMPLES$
+      oB := TBrowseNew( 0, 0, 24, 79 )
+      ? __objHasMethod( oB, "nLeft" )      // .F. since this is a VAR
+      ? __objHasMethod( oB, "FixBugs" )    // hopefully this should be .F.
+      ? __objHasMethod( oB, "Left" )       // this should return .T.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objGetMethodList(),__objGetMsgList(),__objHasData()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objGetMsgList()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Return names of all VAR or METHOD for a given object
+   $SYNTAX$
+      __objGetMsgList( <oObject>, [<lData>], [nClassType] ) --> aNames
+   $ARGUMENTS$
+      <oObject> is an object to scan.
+
+      <lData> is an optional logical value that specifies the information
+      to return. A value of .T. instruct the function to return list of
+      all VAR names, .F. return list of all METHOD names. Default value
+      is .T.
+
+      <nClassType> is on optional numeric code for selecting which class
+      type to return. Default value is HB_MSGLISTALL, returning the whole
+      list.
+   $RETURNS$
+      __objGetMsgList() return an array of character stings with all VAR
+      names or all METHOD names for a given object. __objGetMsgList()
+      would return an empty array {} if the given object does not contain
+      the requested information.
+   $DESCRIPTION$
+      __objGetMsgList() is a low level class support function that let you
+      find all instance variable or method names for a given object.
+
+      If specified, the following table shows the values for <nClassType>
+      that allow you to distinguish between VAR and CLASS VAR:
+
+      table>
+      hboo.ch           Value   Meaning
+
+      HB_MSGLISTALL     0       All types
+      HB_MSGLISTCLASS   1       CLASS VAR only
+      HB_MSGLISTPURE    2       VAR only
+      /table>
+
+      VAR are instance variable usable within each object from a class,
+      where each object has its own VARs.
+
+      CLASS VAR are shared by all objects from a Class, so the changed
+      value within Object1 will be reflected when accessing the CLASS VAR
+      from Object2.
+   $EXAMPLES$
+      // show information about TBrowse class
+      oB := TBrowseNew( 0, 0, 24, 79 )
+      aData      := __objGetMsgList( oB, .T. )
+      aClassData := __objGetMsgList( oB, .T., HB_MSGLISTCLASS )
+      aMethod    := __objGetMsgList( oB, .F. )
+      FOR i := 1 TO Len( aData )
+         ? "VAR name:", aData[ i ]
+      NEXT
+      FOR i := 1 TO Len( aClassData )
+         ? "CLASS VAR name:", aClassData[ i ]
+      NEXT
+      FOR i := 1 TO Len( aMethod )
+         ? "METHOD name:", aMethod[ i ]
+      NEXT
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Header file is hboo.ch
+      Library is core
+   $SEEALSO$
+      __objGetMethodList(),__objGetValueList(),__objHasData(),__objHasMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objGetMethodList()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Return names of all METHOD for a given object
+   $SYNTAX$
+      __objGetMethodList( <oObject> ) --> aMethodNames
+   $ARGUMENTS$
+      <oObject> is an object to scan.
+   $RETURNS$
+      __objGetMethodList() return an array of character stings with all
+      METHOD names for a given object. __objGetMethodList() would return
+      an empty array {} if the given object does not contain any METHOD.
+   $DESCRIPTION$
+      __objGetMethodList() is a low level class support function that let
+      you find all class functions names for a given object.
+      It is equivalent to __objGetMsgList( oObject, .F. ).
+   $EXAMPLES$
+      // show information about TBrowse class
+      oB := TBrowseNew( 0, 0, 24, 79 )
+      aMethod := __objGetMethodList( oB )
+      FOR i := 1 TO Len( aMethod )
+         ? "METHOD name:", aMethod[ i ]
+      NEXT
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objGetMsgList(),__objGetValueList(),__objHasData(),__objHasMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objGetValueList()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Return an array of VAR names and values for a given object
+   $SYNTAX$
+      __objGetValueList( <oObject>, [<aExcept>] ) --> aData
+   $ARGUMENTS$
+      <oObject> is an object to scan.
+
+      <aExcept> is an optional array with VAR names you want to exclude
+      from the scan.
+   $RETURNS$
+      __objGetValueList() return a 2D array that contain pairs of a VAR
+      symbol name and the value of VAR. __objGetValueList() would return
+      an empty array {} if the given object does not contain the requested
+      information.
+   $DESCRIPTION$
+      __objGetValueList() is a low level class support function that
+      return an array with VAR names and value, each array element is a
+      pair of: aData[ i, HB_OO_DATA_SYMBOL ] contain the symbol name
+               aData[ i, HB_OO_DATA_VALUE  ] contain the value of DATA
+   $EXAMPLES$
+      // show information about TBrowse class
+      oB := TBrowseNew( 0, 0, 24, 79 )
+      aData := __objGetValueList( oB )
+      FOR i := 1 TO Len( aData )
+         ? "VAR name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
+            "   value=", aData[ i, HB_OO_DATA_VALUE  ]
+      NEXT
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Header file is hboo.ch
+      Library is core
+   $SEEALSO$
+      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__objSetValueList()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objSetValueList()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Set object with an array of VAR names and values
+   $SYNTAX$
+      __objSetValueList( <oObject>, <aData> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is an object to set.
+
+      <aData> is a 2D array with a pair of instance variables and values
+      for setting those variable.
+   $RETURNS$
+      __objSetValueList() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objSetValueList() is a low level class support function that let
+      you set a group of instance variables with values. each array
+      element in <aData> is a pair of:
+      aData[ i, HB_OO_DATA_SYMBOL ] which contain the variable name to set
+      aData[ i, HB_OO_DATA_VALUE  ] contain the new variable value.
+   $EXAMPLES$
+      // set some TBrowse instance variable
+      oB := TBrowse():New()
+      aData := Array( 4, 2 )
+      aData[ 1, HB_OO_DATA_SYMBOL ] = "nTop"
+      aData[ 1, HB_OO_DATA_VALUE  ] = 1
+      aData[ 2, HB_OO_DATA_SYMBOL ] = "nLeft"
+      aData[ 2, HB_OO_DATA_VALUE  ] = 10
+      aData[ 3, HB_OO_DATA_SYMBOL ] = "nBottom"
+      aData[ 3, HB_OO_DATA_VALUE  ] = 20
+      aData[ 4, HB_OO_DATA_SYMBOL ] = "nRight"
+      aData[ 4, HB_OO_DATA_VALUE  ] = 70
+      __objSetValueList( oB, aData )
+      ? oB:nTop      // 1
+      ? oB:nLeft     // 10
+      ? oB:nBottom   // 20
+      ? oB:nRight    // 70
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Header file is hboo.ch
+      Library is core
+   $SEEALSO$
+      __objGetValueList()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objAddMethod()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Add a METHOD to an already existing class
+   $SYNTAX$
+      __objAddMethod( <oObject>, <cMethodName>, <nFuncPtr> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cMethodName> is the symbol name of the new METHOD to add.
+
+      <nFuncPtr> is a pointer to a function to associate with the method.
+   $RETURNS$
+      __objAddMethod() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objAddMethod() is a low level class support function that add a
+      new METHOD to an object. <oObject> is unchanged if a symbol with the
+      name <cMethodName> already exist in <oObject>.
+
+      Note that <nFuncPtr> is a special pointer to a function that was
+      created using the @ operator, see example below.
+   $EXAMPLES$
+      // create a new THappy class and add a Smile method
+      oHappy := HBClass():New( "THappy" )
+      __objAddMethod( oHappy, "Smile", @MySmile() )
+      ? oHappy:Smile( 1 )       // :)
+      ? oHappy:Smile( 2 )       // ;)
+      ? oHappy:Smile( 3 )       // *SMILE*
+
+      STATIC FUNCTION MySmile( nType )
+         LOCAL cSmile
+         DO CASE
+         CASE nType == 1
+            cSmile := ":)"
+         CASE nType == 2
+            cSmile := ";)"
+         CASE nType == 3
+            cSmile := "*SMILE*"
+         ENDCASE
+         RETURN cSmile
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddInline(),__objAddData(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objAddInline()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Add an INLINE to an already existing class
+   $SYNTAX$
+      __objAddInline( <oObject>, <cInlineName>, <bInline> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cInlineName> is the symbol name of the new INLINE to add.
+
+      <bInline> is a code block to associate with the INLINE method.
+   $RETURNS$
+      __objAddInline() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objAddInline() is a low level class support function that add a
+      new INLINE method to an object. <oObject> is unchanged if a symbol
+      with the name <cInlineName> already exist in <oObject>.
+   $EXAMPLES$
+      // create a new THappy class and add a Smile INLINE method
+      oHappy  := HBClass():New( "THappy" )
+      bInline := {| nType | { ":)", ";)", "*SMILE*" }[ nType ] }
+      __objAddInline( oHappy, "Smile", bInline )
+      ? oHappy:Smile( 1 )       // :)
+      ? oHappy:Smile( 2 )       // ;)
+      ? oHappy:Smile( 3 )       // *SMILE*
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddData(),__objAddMethod(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objAddData()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Add a VAR to an already existing class
+   $SYNTAX$
+      __objAddData( <oObject>, <cDataName> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cDataName> is the symbol name of the new VAR to add.
+   $RETURNS$
+      __objAddData() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objAddData() is a low level class support function that add a new
+      VAR to an object. <oObject> is unchanged if a symbol with the name
+      <cDataName> already exist in <oObject>.
+   $EXAMPLES$
+      // create a new THappy class and add a lHappy VAR
+      oHappy  := HBClass():New( "THappy" )
+      __objAddData( oHappy, "lHappy" )
+      oHappy:lHappy := .T.
+      IF oHappy:lHappy
+         ? "Happy, Happy, Joy, Joy !!!"
+      ELSE
+         ? ":(..."
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objModMethod()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Modify (replace) a METHOD in an already existing class
+   $SYNTAX$
+      __objModMethod( <oObject>, <cMethodName>, <nFuncPtr> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cMethodName> is the symbol name of the METHOD to modify.
+
+      <nFuncPtr> is a pointer to a new function to associate with the
+      method.
+   $RETURNS$
+      __objModMethod() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objModMethod() is a low level class support function that modify
+      a METHOD in an object and replace it with a new function. <oObject>
+      is unchanged if a symbol with the name <cMethodName> does not exist
+      in <oObject>. __objModMethod() is used in inheritance mechanism.
+
+      Note that <nFuncPtr> is a special pointer to a function that was
+      created using the @ operator, see example below.
+   $EXAMPLES$
+      // create a new THappy class and add a Smile method
+      oHappy := HBClass():New( "THappy" )
+      __objAddMethod( oHappy, "Smile", @MySmile() )
+      ? oHappy:Smile( 1 )       // :)
+      ? oHappy:Smile( 2 )       // ;)
+      // replace Smile method with a new function
+      __objAddMethod( oHappy, "Smile", @YourSmile() )
+      ? oHappy:Smile( 1 )       // *SMILE*
+      ? oHappy:Smile( 2 )       // *WINK*
+
+      STATIC FUNCTION MySmile( nType )
+         LOCAL cSmile
+         DO CASE
+         CASE nType == 1
+            cSmile := ":)"
+         CASE nType == 2
+            cSmile := ";)"
+         ENDCASE
+         RETURN cSmile
+
+      STATIC FUNCTION YourSmile( nType )
+         LOCAL cSmile
+         DO CASE
+         CASE nType == 1
+            cSmile := "*SMILE*"
+         CASE nType == 2
+            cSmile := "*WINK*"
+         ENDCASE
+         RETURN cSmile
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddMethod(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objModInline()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Modify (replace) an INLINE method in an already existing class
+   $SYNTAX$
+      __objModInline( <oObject>, <cInlineName>, <bInline> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cInlineName> is the symbol name of the INLINE method to modify.
+
+      <bInline> is a new code block to associate with the INLINE method.
+   $RETURNS$
+      __objModInline() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objModInline() is a low level class support function that modify
+      an INLINE method in an object and replace it with a new code block.
+      <oObject> is unchanged if a symbol with the name <cInlineName> does
+      not exist in <oObject>. __objModInline() is used in inheritance
+      mechanism.
+   $EXAMPLES$
+      // create a new THappy class and add a Smile INLINE method
+      oHappy  := HBClass():New( "THappy" )
+      bMyInline   := {| nType | { ":)", ";)" }[ nType ] }
+      bYourInline := {| nType | { "*SMILE*", "*WINK*" }[ nType ] }
+      __objAddInline( oHappy, "Smile", bMyInline )
+      ? oHappy:Smile( 1 )       // :)
+      ? oHappy:Smile( 2 )       // ;)
+      // replace Smile inline method with a new code block
+      __objModInline( oHappy, "Smile", bYourInline )
+      ? oHappy:Smile( 1 )       // *SMILE*
+      ? oHappy:Smile( 2 )       // *WINK*
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddInline(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objDelMethod()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Delete a METHOD  from class
+   $SYNTAX$
+      __objDelMethod( <oObject>, <cSymbol> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cSymbol> is the symbol name of METHOD or INLINE method to be
+      deleted (removed) from the object.
+   $RETURNS$
+      __objDelMethod() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objDelMethod() is a low level class support function that deletes
+      (removes) a METHOD or an INLINE method from an object. <oObject> is
+      unchanged if a symbol with the name <cSymbol> does not exist in
+      <oObject>.
+
+      __objDelInline() is exactly the same as __objDelMethod().
+   $EXAMPLES$
+      // create a new THappy class and add a Smile method
+      oHappy := HBClass():New( "THappy" )
+      __objAddMethod( oHappy, "Smile", @MySmile() )
+      ? __objHasMethod( oHappy, "Smile" )    // .T.
+      // remove Smile method
+      __objDelMethod( oHappy, "Smile" )
+      ? __objHasMethod( oHappy, "Smile" )    // .F.
+
+      STATIC FUNCTION MySmile( nType )
+         LOCAL cSmile
+         DO CASE
+         CASE nType == 1
+            cSmile := ":)"
+         CASE nType == 2
+            cSmile := ";)"
+         ENDCASE
+         RETURN cSmile
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objDelInline()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Delete a METHOD INLINE from class
+   $SYNTAX$
+      __objDelInline( <oObject>, <cSymbol> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cSymbol> is the symbol name of METHOD or INLINE method to be
+      deleted (removed) from the object.
+   $RETURNS$
+      __objDelInMethod() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objDelInMethod() is a low level class support function that delete
+      (remove) a METHOD or an INLINE method from an object. <oObject> is
+      unchanged if a symbol with the name <cSymbol> does not exist in
+      <oObject>.
+   $EXAMPLES$
+      // create a new THappy class and add a Smile method
+      oHappy := HBClass():New( "THappy" )
+      __objAddMethod( oHappy, "Smile", @MySmile() )
+      ? __objHasMethod( oHappy, "Smile" )    // .T.
+      // remove Smile method
+      __objDelInMethod( oHappy, "Smile" )
+      ? __objHasMethod( oHappy, "Smile" )    // .F.
+
+      STATIC FUNCTION MySmile( nType )
+         LOCAL cSmile
+         DO CASE
+         CASE nType == 1
+            cSmile := ":)"
+         CASE nType == 2
+            cSmile := ";)"
+         ENDCASE
+         RETURN cSmile
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objDelData()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Delete a VAR (instance variable) from class
+   $SYNTAX$
+      __objDelMethod( <oObject>, <cDataName> ) --> oObject
+   $ARGUMENTS$
+      <oObject> is the object to work on.
+
+      <cDataName> is the symbol name of VAR to be deleted (removed) from
+      the object.
+   $RETURNS$
+      __objDelData() return a reference to <oObject>.
+   $DESCRIPTION$
+      __objDelData() is a low level class support function that delete
+      (remove) a VAR from an object. <oObject> is unchanged if a symbol
+      with the name <cDataName> does not exist in <oObject>.
+   $EXAMPLES$
+      // create a new THappy class and add a lHappy VAR
+      oHappy  := HBClass():New( "THappy" )
+      __objAddData( oHappy, "lHappy" )
+      ? __objHasData( oHappy, "lHappy" )    // .T.
+      // remove lHappy VAR
+      __objDelData( oHappy, "lHappy" )
+      ? __objHasData( oHappy, "lHappy" )    // .F.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objAddData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __objDerivedFrom()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Objects
+   $ONELINER$
+      Determine whether a class is derived from another class
+   $SYNTAX$
+      __objDerivedFrom( <oObject>, <xSuper> ) --> lIsParent
+   $ARGUMENTS$
+      <oObject> is the object to check.
+
+      <xSuper> is the object that may be a parent. <xSuper> can be either
+      an Object or a Character string with the class name.
+   $RETURNS$
+      __objDerivedFrom() return a logical TRUE (.T.) if <oObject> is
+      derived from <xSuper>.
+   $DESCRIPTION$
+      __objDerivedFrom() is a low level class support function that check
+      is one class is a super class of the other, or in other words, does
+      class <oObject> a child or descendant of <xSuper>.
+   $EXAMPLES$
+      // Create three classes and check their relations
+
+      #include "hbclass.ch"
+      PROCEDURE Main()
+         LOCAL oSuper, oObject, oDress
+         oSuper  := TMood():New()
+         oObject := THappy():New()
+         oDress  := TShirt():New()
+         ? __objDerivedFrom( oObject, oSuper )    // .T.
+         ? __objDerivedFrom( oSuper, oObject )    // .F.
+         ? __objDerivedFrom( oObject, oDress )    // .F.
+         RETURN
+
+      CREATE CLASS TMood
+         METHOD New() INLINE Self
+      ENDCLASS
+
+      CREATE CLASS THappy FROM TMood
+         METHOD Smile() INLINE QOut( "*smile*" )
+      ENDCLASS
+
+      CREATE CLASS TShirt
+         VAR Color
+         VAR Size
+         METHOD New() INLINE Self
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      __objHasData(),__objHasMethod()
+   $END$
+ */

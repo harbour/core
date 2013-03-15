@@ -1,0 +1,48 @@
+diff -urN liblzf.orig/lzf_c.c liblzf/lzf_c.c
+--- liblzf.orig/lzf_c.c	2011-06-12 13:27:46.566657457 +0200
++++ liblzf/lzf_c.c	2011-06-12 13:27:46.566657457 +0200
+@@ -120,7 +120,7 @@
+    * special workaround for it.
+    */
+ #if defined (WIN32) && defined (_M_X64)
+-  unsigned _int64 off; /* workaround for missing POSIX compliance */
++  unsigned __int64 off; /* workaround for missing POSIX compliance */
+ #else
+   unsigned long off;
+ #endif
+diff -urN liblzf.orig/lzf.h liblzf/lzf.h
+--- liblzf.orig/lzf.h	2011-06-12 13:27:46.564657718 +0200
++++ liblzf/lzf.h	2011-06-12 13:27:46.564657718 +0200
+@@ -37,6 +37,10 @@
+ #ifndef LZF_H
+ #define LZF_H
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ /***********************************************************************
+ **
+ **	lzf -- an extremely fast/free compression/decompression-method
+@@ -96,5 +100,9 @@
+ lzf_decompress (const void *const in_data,  unsigned int in_len,
+                 void             *out_data, unsigned int out_len);
+ 
++#ifdef __cplusplus
++}
++#endif /* __cplusplus */
++
+ #endif
+ 
+diff -urN liblzf.orig/lzfP.h liblzf/lzfP.h
+--- liblzf.orig/lzfP.h	2011-06-12 13:27:46.568657801 +0200
++++ liblzf/lzfP.h	2011-06-12 13:27:46.568657801 +0200
+@@ -141,7 +141,7 @@
+ #endif
+ 
+ #ifndef LZF_USE_OFFSETS
+-# if defined (WIN32)
++# if defined (WIN32) || defined(_WIN32)
+ #  define LZF_USE_OFFSETS defined(_M_X64)
+ # else
+ #  if __cplusplus > 199711L

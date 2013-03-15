@@ -1,0 +1,123 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      PosChar()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace character at a certain position within a string
+   $SYNTAX$
+      PosChar( <[@]cString>, <cCharacter|nCharacter>, [<nPosition>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PosChar() is compatible with CT3's PosChar().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      PosDel(),PosIns(),PosRepl(),CSetRef()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      PosDel()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Delete characters at a certain position within a string
+   $SYNTAX$
+      PosDel( <cString>, [<nStartPosition>], <nLength> ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PosDel() is compatible with CT3's PosDel().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      PosChar(),PosIns(),PosRepl()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      PosIns()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Insert characters at a certain position within a string
+   $SYNTAX$
+      PosIns( <cString>, <cInsert>, [<nPosition>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PosIns() is compatible with CT3's PosIns().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      POSCHAR,PosDel(),PosRepl()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      PosRepl()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace characters at a certain position within a string
+   $SYNTAX$
+      PosRepl( <[@]cString>, <cReplacement>, [<nStartPosition>] ) -> cString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      PosRepl() is compatible with CT3's PosRepl().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      PosChar(),PosDel(),PosIns(),CSetRef()
+   $END$
+ */

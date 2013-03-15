@@ -1,0 +1,144 @@
+/*
+ * $Id$
+ */
+
+The Harbour implementation of codeblocks.
+Ryszard Glab <rglab@imid.med.pl>
+
+
+Compilation of a codeblock.
+  During compile time the codeblock is stored in the following form:
+- the header
+- the stream of pcode bytes
+
+  The header stores information about referenced local variables.
++0: the pcode byte for _PUSHBLOCK
++1: the number of bytes that defines a codeblock
++3: number of codeblock parameters (declared between || in a codeblock)
++5: number of used local variables declared in procedure/function where
+    the codeblock is created
++7: the list of procedure/function local variables positions on the eval
+    stack of procedure/function. Every local variable used in a codeblock
+    occupies 2 bytes in this list. When nested codeblocks are used then this
+    list is created for the outermost codeblock only.
++x:  The stream of pcode bytes follows the header.
++y: the pcode byte for _ENDBLOCK
+
+
+Creation of a codeblock.
+  When HB_P_PUSHBLOCK opcode is executed then the HB_ITEM structure is created
+and placed on the eval stack. The type of item is IT_BLOCK. The value of this
+item is a pointer to HB_CODEBLOCK structure. Additionally this item stores the
+base of static variables defined for the current function/procedure - this
+is used during a codeblock evaluation when the evaluation is called from a code
+from other PRG module. Also the number of expected parameters is stored.
+
+  The HB_CODEBLOCK structure stores a pointer to the pcodes stream that is
+executed during a codeblock evaluation. It stores also the pointer to a table
+with local variables references. Values of all local variables defined in a
+procedure and used in a codeblock are replaced with a reference to a
+value stored in a global memory variables pool. This allows the correct access
+to detached local variables in a codeblock returned from this function (either
+directly in RETURN statement or indirectly by assigning it to a static or
+memvar variable. This automatic and unconditional replace is required because
+there is no safe method to find if a codeblock will be accessed from an outside
+of a function where it is created.
+
+  When nested codeblocks are  used then only the outermost codeblock creates
+the table - all inner codeblock uses this table. The first element of this
+table contains a reference counter for this table. It allows to share the table
+between nested codeblock - the table is deleted if there is no more references
+to it. This is caused by the fact that a inner codeblock can be created during
+evaluation of outer codeblock when local variables don't exist like in this
+example:
+
+PROCEDUE Main()
+   PRIVATE foo, bar
+
+   Test()
+   Eval( foo )
+   Eval( bar )
+
+PROCEDURE Test()
+   LOCAL a := "FOO", b := "BAR"
+
+   foo := {|| a + ( bar := Eval( {|| b } ) ) }
+
+   RETURN
+
+
+Evaluation of a codeblock.
+  Parameters passed to a codeblock are placed on the eval stack before a
+codeblock evaluation. They are accessed just like usual function
+parameters.  When a codeblock parameter is referenced then its position on the
+eval stack is used.  When a procedure local variable is referenced then the
+index into the table of local variables positions (copied from the header) is
+used.  The negative value is used as an index to distinguish it from the
+reference to a codeblock parameter.
+
+
+Incompatbility with the Clipper.
+
+1) Detached locals passed by reference
+  There is a little difference between the handling of variables passed by
+the reference in a codeblock.
+The following code explains it (thanks to David G. Holm)
+
+PROCEDURE Main()
+   LOCAL nTest
+   LOCAL bBlock1 := MakeBlock()
+   LOCAL bBlock2 := {|| DoThing( @nTest ), QOut( "From Main: ", nTest ) }
+
+   Eval( bBlock1 )
+   Eval( bBlock2 )
+
+   RETURN
+
+FUNCTION MakeBlock()
+   LOCAL nTest
+   RETURN {|| DoThing( @nTest ), QOut( "From MakeBlock: ", nTest ) }
+
+FUNCTION DoThing( n )
+
+   n := 42
+
+   RETURN NIL
+
+
+  In Clipper it produces:
+From MakeBlock: NIL
+From Main: 42
+
+  In Harbour it produces (it is the correct output, IMHO)
+From MakeBlock: 42
+From Main: 42
+
+2) Scope of undeclared variables
+ Consider the following code:
+
+PROCEDURE Main()
+   LOCAL cb
+   cb := Detach()
+   ? Eval( cb, 10 )
+   RETURN
+
+FUNCTION Detach()
+   LOCAL b := {| x | x + a }
+   LOCAL a := 0
+   RETURN b
+
+  In Clipper the 'a' variable in a codeblock has the *local* scope however in
+Harbour the 'a' variable has the *private* scope. As a result, in Clipper
+this code will print 10 and in Harbour it will raise 'argument error' in
+'+' operation.
+  This will be true also when the 'a' variable will be declared as PRIVATE
+
+PROCEDURE Main()
+   LOCAL cb
+   PRIVATE a
+   cb := Detach()
+   ? Eval( cb, 10 )
+   RETURN
+
+The above code also prints 10 in Clipper (even if compiled with -a or -v
+switches)

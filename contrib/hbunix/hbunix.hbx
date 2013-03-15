@@ -1,0 +1,43 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBUNIX__
+#define __HBEXTERN_CH__HBUNIX__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBUNIX__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC posix_chdir
+DYNAMIC posix_errno
+DYNAMIC posix_getegid
+DYNAMIC posix_geteuid
+DYNAMIC posix_getgid
+DYNAMIC posix_getpid
+DYNAMIC posix_getuid
+DYNAMIC posix_setegid
+DYNAMIC posix_seteuid
+DYNAMIC posix_setgid
+DYNAMIC posix_setuid
+DYNAMIC posix_sleep
+DYNAMIC unix_chroot
+DYNAMIC unix_daemon
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBUNIX__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

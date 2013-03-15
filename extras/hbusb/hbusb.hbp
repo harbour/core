@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-olib/${hb_plat}/${hb_comp}/${hb_name}
+
+-w3 -es2
+
+-depkeyhead=libusb:libusb.h
+-depcontrol=libusb:${HB_WITH_LIBUSB}
+-depincpath=libusb:/usr/include
+-depincpath=libusb:/boot/common/include
+-depimplibs=libusb:../../MS32/dll/libusb-1.0.dll{win&x86}
+-depimplibs=libusb:../../MS64/dll/libusb-1.0.dll{win&x86_64}
+-depimplibd=libusb:libusb-1
+
+core.c
+
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
+{hbdyn}${hb_name}.hbc
+$hb_pkg_dynlib.hbm
+$hb_pkg_install.hbm

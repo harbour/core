@@ -1,0 +1,33 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_SetCentury()
+   $CATEGORY$
+      Environment
+   $ONELINER$
+      Check/Set the CENTURY Setting
+   $SYNTAX$
+      ft_SetCentury( [ <lNewSetState> ] ) -> <lOldState>
+   $ARGUMENTS$
+      lNewSetState - Boolean to Set CENTURY
+                       .F. - Toggle CENTURY off
+                       .T. - Toggle CENTURY on
+                       If not specified, leave CENTURY as is
+   $RETURNS$
+      The state of the CENTURY setting upon entry to the routine
+   $DESCRIPTION$
+      This function returns the state (ON/OFF, TRUE/FALSE) of the CENTURY
+      and optionally sets it ON or OFF.
+   $EXAMPLES$
+      lOldState := ft_SetCentury()       // Get current CENTURY Setting
+
+      lOldState := ft_SetCentury( .T. )  // Get the current CENTURY Setting
+                                         // and turn it on (set it to TRUE)
+
+      lOldState := ft_SetCentury( .F. )  // Get the current CENTURY Setting
+                                         // and turn it off (set it to FALSE)
+   $END$
+ */

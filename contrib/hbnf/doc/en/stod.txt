@@ -1,0 +1,26 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_SToD()
+   $CATEGORY$
+      Conversion
+   $ONELINER$
+      Convert a date string to a Clipper date data type
+   $SYNTAX$
+      ft_SToD( <cDateStr> ) -> dDateType
+   $ARGUMENTS$
+      <cDateStr> is a Clipper string in the format "CCYYMMDD".
+   $RETURNS$
+      A Clipper date type.
+   $DESCRIPTION$
+      This function allows the programmer to hard code a date into the
+      program without knowing what the current date type is.  This
+      function is the converse of the Clipper DToS() function.
+   $EXAMPLES$
+      LOCAL dMyDate
+      dMyDate := ft_SToD( "19901127" )
+   $END$
+ */

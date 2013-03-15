@@ -1,0 +1,39 @@
+Source: harbour
+Section: devel
+Priority: optional
+Maintainer: Luis Mayoral <mayoral@linuxadicto.org>
+Build-Depends: debhelper (>= 5.0.0), libjpeg62-dev, libpcre3-dev,
+ libpng12-dev, zlib1g-dev, libsqlite3-dev, liballegro4.2-dev, libbz2-dev,
+ libcairo2-dev, libcups2-dev, libexpat1-dev, libfreeimage-dev,
+ libcurl4-openssl-dev | libcurl4-gnutls-dev, firebird2.0-dev | firebird2.1-dev,
+ libgd2-noxpm-dev | libgd2-xpm-dev, libmagic-dev, libmysqlclient-dev,
+ unixodbc-dev, libpq-dev, libssl-dev,
+ libslang2-dev, libncurses5-dev | libncursesw5-dev, libslang2-dev, libx11-dev
+Standards-Version: 3.6.2
+
+Package: harbour
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Compiler for the xBase superset language often referred to as Clipper
+ Harbour is a free software compiler for the xBase superset language
+ often referred to as Clipper (the language that is implemented by the
+ compiler CA-Cl*pper).
+ .
+ Harbour is a cross platform compiler and is known to compile and run on
+ MS-DOS, MS Windows, OS/2 and GNU/Linux, *BSD systems, Mac OS X, HP-UX and
+ other *nixes
+ .
+ The main advantage Harbour has over other Clipper compilers is that it
+ is free software. Harbour also attempts to remove some of the limits
+ imposed by the base implementation but the extent of this will depend on
+ your chosen platform.
+
+Package: harbour-dbg
+Architecture: any
+Depends: harbour (=${binary:Version}), ${misc:Depends}
+Description: Debugging symbols for Harbour
+ Harbour is a free software compiler for the xBase superset language
+ often referred to as Clipper (the language that is implemented by the
+ compiler CA-Cl*pper).
+ .
+ This package contains debugging symbols for the libraries and the utilities.

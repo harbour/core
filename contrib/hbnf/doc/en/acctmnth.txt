@@ -1,0 +1,57 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_AcctMonth()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Return accounting month data
+   $SYNTAX$
+      ft_AcctMonth( [ <dGivenDate> ], [ <nMonthNum> ] ) -> aDateInfo
+   $ARGUMENTS$
+      <dGivenDate> is any valid date in any date format.  Defaults
+      to current system date if not supplied.
+
+      <nMonthNum> is a number from 1 to 12 signifying a month.
+      Defaults to current month if not supplied.
+   $RETURNS$
+      A three element array containing the following data:
+
+         aDateInfo[ 1 ] - The year and month as a character string "YYYYMM"
+         aDateInfo[ 2 ] - The beginning date of the accounting month
+         aDateInfo[ 3 ] - The ending date of the accounting month
+   $DESCRIPTION$
+      ft_AcctMonth() creates an array containing data about the
+      accounting month containing the given date.
+
+      An accounting period has the following characteristics:
+
+      If the first week of the period contains 4 or more 'work'
+      days, it is included in the period; otherwise, the first
+      week was included in the prior period.
+
+      If the last week of the period contains 4 or more 'work'
+      days it is included in the period; otherwise, the last week
+      is included in the next period.  This results in 13 week
+      'quarters' and 4 or 5 week 'months'.  Every 5 or 6 years, a
+      'quarter' will contain 14 weeks and the year will contain 53
+      weeks.
+   $EXAMPLES$
+      // get info about accounting month containing 9/15/90
+      aDateInfo := ft_AcctMonth( hb_SToD( "19900915" ) )
+      ? aDateInfo[ 1 ]   //  199009       (9th month)
+      ? aDateInfo[ 2 ]   //  1990-09-02   beginning of month 9
+      ? aDateInfo[ 3 ]   //  1990-09-29   end of month 9
+
+      // get info about accounting month 5 in year containing 9/15/90
+      aDateInfo := ft_AcctMonth( hb_SToD( "19900915" ), 5 )
+      ? aDateInfo[ 1 ]   //  199005
+      ? aDateInfo[ 2 ]   //  1989-04-29   beginning of month 5
+      ? aDateInfo[ 3 ]   //  1990-06-02   end of month 5
+   $SEEALSO$
+      ft_DateCnfg() ft_AcctWeek() ft_AcctQtr() ft_AcctYear()
+   $END$
+ */

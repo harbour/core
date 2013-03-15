@@ -1,0 +1,46 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBTINYMT__
+#define __HBEXTERN_CH__HBTINYMT__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTINYMT__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBTINYMT__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTINYMT__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC tinymt32_generate_32double
+DYNAMIC tinymt32_generate_float
+DYNAMIC tinymt32_generate_float01
+DYNAMIC tinymt32_generate_float12
+DYNAMIC tinymt32_generate_floatOC
+DYNAMIC tinymt32_generate_floatOO
+DYNAMIC tinymt32_generate_uint32
+DYNAMIC tinymt32_init
+DYNAMIC tinymt32_init_by_array
+DYNAMIC tinymt64_generate_double
+DYNAMIC tinymt64_generate_double01
+DYNAMIC tinymt64_generate_double12
+DYNAMIC tinymt64_generate_doubleOC
+DYNAMIC tinymt64_generate_doubleOO
+DYNAMIC tinymt64_generate_uint64
+DYNAMIC tinymt64_init
+DYNAMIC tinymt64_init_by_array
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTINYMT__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

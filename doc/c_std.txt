@@ -1,0 +1,294 @@
+/*
+ * $Id$
+ */
+
++++Date last modified: 05-Jul-1997
+
+
+Standard C functions defined by ANSI (ISO/IEC 9899:1990)
+
+abort()             abs()               acos()              asctime()
+asin()              assert()            atan()              atan2()
+atexit()            atof()              atoi()              atol()
+bsearch()           calloc()            ceil()              clearerr()
+clock()             cos()               cosh()              ctime()
+difftime()          div()               exit()              exp()
+fabs()              fclose()            feof()              ferror()
+fflush()            fgetc()             fgetpos()           fgets()
+floor()             fmod()              fopen()             fprintf()
+fputc()             fputs()             fread()             free()
+freopen()           frexp()             fscanf()            fseek()
+fsetpos()           ftell()             fwrite()            getc()
+getchar()           getenv()            gets()              gmtime()
+isalnum()           isalpha()           iscntrl()           isdigit()
+isgraph()           islower()           isprint()           ispunct()
+isspace()           isupper()           isxdigit()          labs()
+ldexp()             ldiv()              localeconv()        localtime()
+log()               log10()             longjmp()           malloc()
+mblen()             mbstowcs()          mbtowc()            memchr()
+memcmp()            memcpy()            memmove()           memset()
+mktime()            modf()              perror()            pow()
+printf()            putc()              putchar()           puts()
+qsort()             raise()             rand()              realloc()
+remove()            rename()            rewind()            scanf()
+setbuf()            setjmp()            setlocale()         setvbuf()
+signal()            sin()               sinh()              sprintf()
+sqrt()              srand()             sscanf()            strcat()
+strchr()            strcmp()            strcoll()           strcpy()
+strcspn()           strerror()          strftime()          strlen()
+strncat()           strncmp()           strncpy()           strpbrk()
+strrchr()           strspn()            strstr()            strtod()
+strtok()            strtol()            strtoul()           strxfrm()
+system()            tan()               tanh()              time()
+tmpfile()           tmpnam()            tolower()           toupper()
+ungetc()            va_arg()            va_end()            va_start()
+vfprintf()          vprintf()           vsprintf()          wcstombs()
+wctomb()
+
+
+
+Additional C numeric functions defined by NCEG
+
+feclearexcepts()    fegetenv()          fegetexcept()       fegetprec()
+fegetround()        feprocentry()       feprocexit()        feraiseexcept()
+fesetenv()          fesetexcept()       fesetprec()         fesetround()
+fetestexcept()
+
+
+
+Additional C functions defined by Posix.1
+
+access()            alarm()             cfgetispeed()       cfgetospeed()
+cfsetispeed()       cfsetospeed()       chdir()             chmod()
+chown()             close()             closedir()          creat()
+ctermid()           cuserid()           dup()               dup2()
+execl()             execle()            execlp()            execv()
+execve()            execvp()            _exit()             fcntl()
+fdopen()            fileno()            fork()              fpathconf()
+fstat()             getcwd()            getegid()           geteuid()
+getgid()            getgrgid()          getgrnam()          getgroups()
+getlogin()          getpgrp()           getpid()            getppid()
+getpwnam()          getpwuid()          getuid()            kill()
+link()              lseek()             mkdir()             mkfifo()
+open()              opendir()           pause()             pipe()
+read()              readdir()           rewinddir()         rmdir()
+setgid()            setpgid()           setsid()            setuid()
+sigaction()         sigaddset()         sigemptyset()       sigfillset()
+sigismember()       siglongjmp()        sigpending()        sigprocmask()
+sigsetjmp()         sigsuspend()        sleep()             stat()
+sysconf()           tcdrain()           tcflow()            tcflush()
+tcgetattr()         tcgetpgrp()         tcsendbreak()       tcsetattr()
+tcsetpgrp()         times()             ttyname()           tzset()
+umask()             uname()             unlink()            utime()
+wait()              waitpid()           write()
+
+
+
+Standard functions added by the draft C++ standard
+
+terminate()         unexpected()
+
+
+
+Standard C keywords and operators defined by ANSI (ISO/IEC 9899:1990)
+
+!                   !=                  %                   %=
+&                   &&                  &=                  ()
+*                   *=                  +                   ++
++=                  ,                   -                   --
+-=                  ->                  .                   /
+/=                  <                   <<                  <<=
+>                   >>                  >>=                 ?:
+[]                  ^                   ^=                  |
+|=                  ||                  ~                   auto
+break               case                char                const
+continue            default             do                  double
+else                enum                extern              float
+for                 goto                if                  int
+long                register            return              short
+signed              sizeof              static              struct
+switch              typedef             union               unsigned
+void                volatile            while
+
+
+
+Standard C preprocessor instructions defined by ANSI (ISO/IEC 9899:1990)
+
+#                   ##                  #define             #elif
+#else               #endif              #error              #if
+#if ! defined       #if defined         #ifdef              #ifndef
+#include            #line               #pragma             #undef
+__DATE__            __FILE__            __LINE__            __STDC__
+__TIME__
+
+
+
+Standard C trigraph sequences defined by ANSI (ISO/IEC 9899:1990)
+
+??= means #         ??( means [         ??/ means \         ??) means ]
+??' means ^         ??< means {         ??! means |         ??> means }
+??- means ~
+
+
+
+Standard ANSI C character constant escape sequences
+
+\a                      Alert                   ASCII BEL (Ctrl-G)
+\b                      Backspace               ASCII BS  (Ctrl-H)
+\f                      Form feed               ASCII FF  (Ctrl-L)
+\n                      New line                ASCII NL  (Ctrl-J)
+\r                      Carriage return         ASCII CR  (Ctrl-M)
+\t                      Horizontal tab          ASCII TAB (Ctrl-I)
+\v                      Vertical tab            ASCII VT  (Ctrl-K)
+\\                      Literal backslash
+\'                      Literal apostrophe
+\"                      Literal quotation mark
+\?                      Literal Question mark
+\<1-3 octal digits>     Char value in octal
+\x<1-2 hex digits>      Char value in hex
+
+
+
+Standard keywords and operators added by the draft C++ standard
+
+->*                 .*                  ::                  asm
+catch               class               delete              delete[]
+friend              inline              new                 operator
+private             protected           public              template
+this                throw               try                 virtual
+
+
+
+Standard C macros defined by ANSI (ISO/IEC 9899:1990)
+
+BUFSIZ              CHAR_BIT            CHAR_MAX            CHAR_MIN
+CLOCKS_PER_SEC      DBL_DIG             DBL_EPSILON         DBL_MANT_DIG
+DBL_MAX             DBL_MAX_10_EXP      DBL_MAX_EXP         DBL_MIN
+DBL_MIN_10_EXP      DBL_MIN_EXP         EDOM                EOF
+ERANGE              EXIT_FAILURE        EXIT_SUCCESS        FILENAME_MAX
+FLT_DIG             FLT_EPSILON         FLT_MANT_DIG        FLT_MAX
+FLT_MAX_10_EXP      FLT_MAX_EXP FLT_MIN FLT_MIN_10_EXP      FLT_MIN_EXP
+FLT_RADIX           FLT_ROUNDS          FOPEN_MAX           HUGE_VAL INT_MAX
+INT_MIN             _IOFBF              _IOLBF              _IONBF
+L_tmpnam            LC_ALL              LC_COLLATE          LC_CTYPE
+LC_MONETARY         LC_NUMERIC          LC_TIME             LDBL_DIG
+LDBL_EPSILON        LDBL_MANT_DIG       LDBL_MAX            LDBL_MAX_10_EXP
+LDBL_MAX_EXP        LDBL_MIN            LDBL_MIN_10_EXP     LDBL_MIN_EXP
+LONG_MAX            LONG_MIN            MB_CUR_MAX          MB_LEN_MAX
+NDEBUG              NULL                RAND_MAX            SCHAR_MAX
+SCHAR_MIN           SEEK_CUR            SEEK_END            SEEK_SET
+SHRT_MAX            SHRT_MIN            SIG_DFL             SIG_ERR
+SIG_IGN             SIBGABRT            SIGFPE              SIGILL
+SIGINT              SIGSEGV             SIGTERM             TMP_MAX
+UCHAR_MAX           UINT_MAX            ULONG_MAX           USHRT_MAX
+offsetof()
+
+
+
+Additional C numeric macros defined by NCEG
+
+FE_ALL_EXCEPT       FE_DBLPREC          FE_DIVBYZERO        FE_DOWNWARD
+FE_FLTPREC          FE_INEXACT          FE_INVALID          FE_LDBLPREC
+FE_OVERFLOW         FE_TONEAREST        FE_TOWARDZERO       FE_UNDERFLOW
+FE_UPWARD           fpclassify()        FP_INFINITE         FP_NANQ
+FP_NANS             FP_NORMAL           FP_SUBNORMAL        FP_ZERO
+INFINITY            isfinite()          isnan()             isnormal()
+NAN                 NANS                __FPCE_IEEE__       __FPCE__
+
+
+
+Additional C macros defined in Posix.1
+
+ARG_MAX             B0                  B50                 B75
+B110                B134                B150                B200
+B300                B600                B1200               B1800
+B2400               B4800               B9600               B19200
+B38400              BRKINT              CHILD_MAX           CLK_TCK
+CLOCAL              CREAD               CS5                 CS6
+CS7                 CS8                 CSIZE               CSTOPB
+E2BIG               EACCESS             EAGAIN              EBADF
+EBUSY               ECHILD              ECHO                ECHOE
+ECHOK               ECHONL              EDEADLK             EEXIST
+EFAULT              EFBIG               EINTR               EINVAL
+EIO                 EISDIR              EMFILE              EMLINK
+ENAMETOOLONG        ENFILE              ENODEV              ENOENT
+ENOEXEC             ENOLCK              ENOMEM              ENOSPC
+ENOTDIR             ENOTEMPTY           ENOTTY              ENXIO
+EPERM               EPIPE               EROFS               ESPIPE
+ESRCH               EXDEV               FD_CLOEXEC          F_DUPFD
+F_GETFD             F_GETFL             F_GETLK             F_OK
+F_RDLCK             F_SETFD             F_SETFL             F_SETLK
+F_SETLKW            F_UNLCK             F_WRLCK             HUPCL
+ICANON              ICRNL               IEXTEN              IGNBRK
+IGNCR               IGNPAR              IGNLCR              INPCK
+ISIG                ISTRIP              IXOFF               IXON
+LDBL_DIG            LDBL_EPSILON        LDBL_MANT_DIG       LDBL_MAX
+LDBL_MAX_10_EXP     LDBL_MAX_EXP        LDBL_MIN            LDBL_MIN_10_EXP
+LDBL_MIN_EXP        LINK_MAX            L_ctermid           MAX_CANON
+MAX_INPUT           NAME_MAX            NCCS                NGROUPS_MAX
+NOFLSH              OPEN_MAX            OPOST               O_ACCMODE
+O_APPEND            O_CREAT             O_EXCL              O_NOCTTY
+O_NONBLOCK          O_RDONLY            O_RDWR              O_TRUNC
+O_WRONLY            PARENB              PARMRK              PARODD
+PATH_MAX            PIPE_BUF            R_OK                SA_NOCLDSTOP
+SIGARLM             SIGCHLD             SIGCONT             SIGHUP
+SIGKILL             SIGPIPE             SIGQUIT             SIGSTOP
+SIGTSTP             SIGTTIN             SIGTTOU             SIGUSR1
+SIGUSR2             SIG_BLOCK           SIG_SETMASK         SIG_UNBLOCK
+SSIZE_MAX           STDERR_FILENO       STDIN_FILENO        STDOUT_FILENO
+STREAM_MAX          S_IRGRP             S_IROTH             S_IRUSR
+S_IRWXG             S_IRWXO             S_IRWXU             S_ISBLK
+S_ISCHR             S_ISDIR             S_ISFIFO            S_ISGID
+S_ISREGSUID         S_IWGRP             S_IWOTH             S_IWUSR
+S_IXGRP             S_IXOTH             S_IXUSR             TCIFLUSH
+TCIOFF              TCIOFLUSH           TCION               TCOFLUSH
+TCOFF               TCOON               TCSADRAIN           TCSAFLUSH
+TCSANOW             TOSTOP              TZNAME_MAX          VEOF
+VEOL                VERASE              VINTR               VKILL
+VMIN                VQUIT               VSTART              VSTOP
+VSUSP               VTIME               WEXITSTATUS         WIFEXITED
+WIFSIGNALED         WIFSTOPPED          WNOHANG             WSTOPSIG
+WTERMSIG            WUNTRACED           W_OK                X_OK
+_PC_MAX_CANON       _PC_MAX_INPUT       _PC_NAME_MAX        _PC_NO_TRUNC
+_PC_PATH_MAX        _PC_PIPE_BUF        _PC_VDISABLE        _POSIX_ARG_MAX
+_POSIX_CHILD_MAX    _POSIX_JOB_CONTROL  _POSIX_LINK_MAX     _POSIX_MAX_CANON
+_POSIX_MAX_INPUT    _POSIX_NAME_MAX     _POSIX_NGROUPS_MAX  _POSIX_NO_TRUNC
+_POSIX_OPEN_MAX     _POSIX_PATH_MAX     _POSIX_SAVED_IDS    _POSIX_SSIZE_MAX
+_POSIX_STREAM_MAX   _POSIX_TZNAME_MAX   _POSIX_VDISABLE     _POSIX_VERSION
+_SC_ARG_MAX         _SC_CHILD_MAX       _SC_CLK_TCK         _SC_JOB_CONTROL
+_SC_NGROUPS_MAX     _SC_OPEN_MAX        _SC_SAVED_IDS       _SC_STREAM_MAX
+_SC_TZNAME_MAX      _SC_VERSION
+
+_PC_CHOWN_RESTRICTED
+_POSIX_CHOWN_RESTRICTED
+
+
+
+Standard C defined data types in ANSI (ISO/IEC 9899:1990)
+
+clock_t             div_t               FILE                fpos_t
+jmp_buf             struct lconv        ldiv_t              ptrdiff_t
+sig_atomic_t        size_t              time_t              struct tm
+va_list             wchar_t
+
+
+
+Additional C data types defined by NCEG
+
+fenv_t              fexcept_t
+
+
+
+Additional C data types defined in Posix.1
+
+cc_t                dev_t               DIR                 gid_t
+ino_t               mode_t              nlink_t             off_t
+pid_t               struct passwd       sigjmp_buf          sigset_t
+sigaction           speed_t             ssize_t             struct stat
+tcflag_t            struct termios      uid_t               struct utsname
+
+
+
+Standard C global variables in ANSI (ISO/IEC 9899:1990)
+
+errno               stderr              stdin               stdout

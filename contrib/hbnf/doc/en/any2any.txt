@@ -1,0 +1,36 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_XToY()
+   $CATEGORY$
+      Conversion
+   $ONELINER$
+      Convert from any data type to any other data type
+   $SYNTAX$
+      ft_XToY( <xValueToConvert>, <cTypeToConvertTo> ;
+               [, <lWantYesNo> ] ) -> xResult
+   $ARGUMENTS$
+      <xValueToConvert> is the value to convert.
+
+      <cTypeToConvertTo> is the type of value to convert to
+      ("C","D","L","N","A" or "B").
+
+      <lWantYesNo> is a logical to signal if 'Y' or 'N' is to be returned
+      if Converting a logical, otherwise '.T.' or '.F.' will be returned
+      for logicals.
+   $RETURNS$
+      The original value converted to the new type.
+   $DESCRIPTION$
+      This function converts a value of character, date, numeric, logical,
+      array or code block type to any of the other type.  While it is
+      guaranteed to return a value of the correct type, that value may not
+      be meaningful (i.e., converting from a code block returns an Empty()
+      value of the desired type).
+   $EXAMPLES$
+      nNumericValue := ft_XToY( cInputValue, "N" )
+      IF ft_XToY( nInputValue, "L" )
+   $END$
+ */

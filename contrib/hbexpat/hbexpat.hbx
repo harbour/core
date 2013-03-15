@@ -1,0 +1,82 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBEXPAT__
+#define __HBEXTERN_CH__HBEXPAT__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBEXPAT__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBEXPAT__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBEXPAT__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_XML_ExpatVersionInfo
+DYNAMIC hb_XML_get_unicode_table
+DYNAMIC XML_DefaultCurrent
+DYNAMIC XML_ErrorString
+DYNAMIC XML_ExpatVersion
+DYNAMIC XML_ExpatVersionInfo
+DYNAMIC XML_GetBase
+DYNAMIC XML_GetCurrentByteCount
+DYNAMIC XML_GetCurrentByteIndex
+DYNAMIC XML_GetCurrentColumnNumber
+DYNAMIC XML_GetCurrentLineNumber
+DYNAMIC XML_GetErrorCode
+DYNAMIC XML_GetIdAttributeIndex
+DYNAMIC XML_GetParsingStatus
+DYNAMIC XML_GetSpecifiedAttributeCount
+DYNAMIC XML_GetUserData
+DYNAMIC XML_Parse
+DYNAMIC XML_ParserCreate
+DYNAMIC XML_ParserFree
+DYNAMIC XML_ParserReset
+DYNAMIC XML_ResumeParser
+DYNAMIC XML_SetAttlistDeclHandler
+DYNAMIC XML_SetBase
+DYNAMIC XML_SetCdataSectionHandler
+DYNAMIC XML_SetCharacterDataHandler
+DYNAMIC XML_SetCommentHandler
+DYNAMIC XML_SetDefaultHandler
+DYNAMIC XML_SetDefaultHandlerExpand
+DYNAMIC XML_SetElementHandler
+DYNAMIC XML_SetEncoding
+DYNAMIC XML_SetEndCdataSectionHandler
+DYNAMIC XML_SetEndDoctypeDeclHandler
+DYNAMIC XML_SetEndElementHandler
+DYNAMIC XML_SetEndNamespaceDeclHandler
+DYNAMIC XML_SetEntityDeclHandler
+DYNAMIC XML_SetHashSalt
+DYNAMIC XML_SetNamespaceDeclHandler
+DYNAMIC XML_SetNotationDeclHandler
+DYNAMIC XML_SetNotStandaloneHandler
+DYNAMIC XML_SetParamEntityParsing
+DYNAMIC XML_SetProcessingInstructionHandler
+DYNAMIC XML_SetReturnNSTriplet
+DYNAMIC XML_SetSkippedEntityHandler
+DYNAMIC XML_SetStartCdataSectionHandler
+DYNAMIC XML_SetStartDoctypeDeclHandler
+DYNAMIC XML_SetStartElementHandler
+DYNAMIC XML_SetStartNamespaceDeclHandler
+DYNAMIC XML_SetUnknownEncodingHandler
+DYNAMIC XML_SetUserData
+DYNAMIC XML_SetXMLDeclHandler
+DYNAMIC XML_StopParser
+DYNAMIC XML_UseForeignDTD
+DYNAMIC __hb_XML_CdpU16Map
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBEXPAT__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

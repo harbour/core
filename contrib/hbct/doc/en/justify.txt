@@ -1,0 +1,63 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      JustLeft()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Move characters from the beginning to the end of a string
+   $SYNTAX$
+      JustLeft( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      JustLeft() is compatible with CT3's JustLeft().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      JustRight()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      JustRight()
+   $CATEGORY$
+      Harbour Tools string functions
+   $ONELINER$
+      Move characters from the end to the beginning of a string
+   $SYNTAX$
+      JustRight( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      JustRight() is compatible with CT3's JustRight().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      JustLeft()
+   $END$
+ */

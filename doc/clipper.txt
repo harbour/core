@@ -1,0 +1,166 @@
+/*
+ * $Id$
+ */
+
+This document attempts to describe the features separating Harbour from
+CA-Cl*pper.
+
+/* TODO: @FunPointer(), and all other Harbour extensions. */
+
+Harbour Macro Compiler
+----------------------
+The Harbour Macro Compiler offers 2 additional layers of functionality
+controlled by means of hb_SetMacro()* function, not available in CA-Cl*pper.
+
+hb_SetMacro( HB_SM_HARBOUR, .T. ) will enable macro compilation and
+evaluation of complex expressions not supported by CA-Cl*pper like:
+
+ - exp++, exp--, var += exp, (exp), etc..
+ - Nested codeblocks.
+ - Expressions longer then 254 characters.
+
+hb_SetMacro( HB_SM_XBASE, .T. ) will enable macro compilation and
+evaluation of comma separated lists in all contexts where lists are
+acceptable by CA-Cl*pper*, including:
+
+  - { &cMacro } // Literal array elements list.
+  - SomeArray[ &cMacro ] // Array index list.
+  - SomeFun( &cMacro ) // Arguments list.
+  - ( &cMacro ) // parenthesized list expression.
+
+*CA-Cl*pper only supports list macros within codeblocks context.
+
+Both these extra layers are activated by default.
+
+* See also -k Compiler switch.
+
+LIST Command
+------------
+
+LIST &cMacro
+
+LIST in CA-Cl*pper [superficially] supports macros of lists expressions.
+No error will be produced, and all expressions in the list will be
+evaluated, but *only* the *last* expression will be displayed. This is
+not documented in either the LIST Command or the Macro Operator
+descriptions, but is the de-facto behavior in all CA-Cl*pper 5.x versions.
+
+Harbour instead will not only evaluate all of the expressions in
+such list macro, but will also display all such values. This default
+behavior may be disabled with hb_SetMacro( HB_SM_XBASE, .F. )*
+
+* See also -k Compiler switch.
+
+INIT/EXIT and startup procedures
+--------------------------------
+
+In CA-Cl*pper the startup procedure is always the first procedure/function
+of the main module, even if such symbol is an INIT or EXIT symbol. In
+such case the program will never execute the "main" symbol. In Harbour
+the first *non* INIT/EXIT symbol, will be executed as the main symbol
+after all INIT procedures have been executed.
+
+FOR EACH statement
+------------------
+Harbour has support enumeration loop with the following syntax:
+
+   FOR EACH var1 [,var255] IN expr1 [,expr255] [DESCEND]
+      [EXIT]
+      [LOOP]
+      ...
+   NEXT
+
+Note:
+   - expr can be a string or an array
+   - enumerator variable 'var<n>' stores a reference to the element of
+     an array or a string specified by 'expr<n>' thus assigments to the
+     enumerator changes the value of given array element
+   - after the loop the controlling variable(s) store the value which
+     they had before entering the loop
+   - the enumeraqtor variable supports the following properties
+     :__enumindex - the loop counter for variable
+     :__enumbase  - the value that is being traversed
+     :__enumvalue - the value of variable
+
+
+for example:
+   a := 'A'
+   b := 'B'
+   FOR EACH a, b IN { 1, 2, 3, 4 }, "abcd"
+      ? a, b   //prints: 1 a
+               //        2 b
+               //        3 c
+               //        4 d
+   NEXT
+   ? a, b   //prints: A B
+
+   // you can use EXIT statement inside the loop
+   FOR EACH a IN { 1, 2, 3, 4 }
+      IF a:__enumindex == 3
+         ? a
+         EXIT
+      ENDIF
+   NEXT
+
+   arr := { 1, 2, 3 }
+   str := "abc"
+   FOR EACH a, b IN arr, str
+      a *= 2
+      str := Upper( str )
+   NEXT
+   // now 'arr' stores { 2, 4, 6 }
+   // howerer 'str' still stores "abc"
+
+Notice the difference:
+   FOR EACH a IN someValue
+      ? a:__enumindex   //prints current value of the index
+      ? (a):__enumindex //sends '__enumindex' message to the current value
+   NEXT
+
+
+WITH OBJECT
+-----------
+Harbour supports the following statement:
+
+   WITH OBJECT expression
+      ...
+   ENDWITH
+
+   Inside this WITH OBJECT/END enclosure you can use the simplified
+   form of sending messages to the object. You can use the syntax
+   :message( [params] )
+   :property
+   to send messages to the object specified by 'expression'
+
+for example:
+   WITH OBJECT myobj:a[ 1 ]:myitem
+      :message( 1 )
+      :value := 9
+   ENDWITH
+
+   The above code is equivalent to:
+   myobj:a[ 1 ]:myitem:message( 1 )
+   myobj:a[ 1 ]:myitem:value := 9
+
+   Inside WITH OBJECT/END you can access (or even assign a new object)
+   using a special reserved property :__withobject
+
+       The runtime error will be generated at the time of message
+       sending (or property access/assign) if <objexpression>
+       is not a value of type object.
+
+for example:
+   CREATE CLASS foo
+      VAR name INIT 'FOO'
+   ENDCLASS
+
+   CREATE CLASS bar
+      VAR name INIT 'BAR'
+   ENDCLASS
+
+   WITH OBJECT foo():new()
+      ? :name                 //prints 'FOO'
+      ? :__withobject:name    //also prints 'FOO'
+      ? :__withobject := bar():new()
+      ? :name                 //prints 'BAR'
+   ENDWITH

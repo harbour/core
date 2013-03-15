@@ -1,0 +1,82 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      FToC()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      FToC( <nFloatingPointNumber> ) --> cFloatingPointNumber
+
+   $ARGUMENTS$
+      <nFloatingPointNumber> Designate any Harbour number.
+
+   $RETURNS$
+      FToC() return a string with the size of DOUBLE.
+      ATTENTION: different implementations or platforms of Harbour, they
+      could produce different format in the string returned by FToC().
+
+   $DESCRIPTION$
+      Harbour internal numbers in Floating Point are stored in data type
+      DOUBLE. FToC() returns these bits as an string. In this way,
+      numbers con be saved more compactly.
+
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CToF(), XToC()
+   $END$
+ */
+
+/* $DOC$
+   $NAME$
+      CToF()
+   $CATEGORY$
+      CT3 number and bit manipulation functions
+   $ONELINER$
+
+   $SYNTAX$
+      CToF( <cFloatingPointNumber> ) --> nFloatingPointNumber
+
+   $ARGUMENTS$
+      <cFloatingPointNumber> Designate a string that contains a Harbour
+      number in flotaing point format.
+      ATTENTION: different implementations or platforms of Harbour, they
+      could produce different format in the string returned by FToC().
+
+   $RETURNS$
+      CToF() return the floating point number that corresponds to the
+      string passed.
+
+   $DESCRIPTION$
+      Character strings created with FToC() or XToC() are convert into
+      Harbour floating point number
+
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      FToC(), XToC()
+   $END$
+ */

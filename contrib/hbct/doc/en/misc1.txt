@@ -1,0 +1,49 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      XToC()
+   $CATEGORY$
+      CT3 miscellaneous functions
+   $ONELINER$
+
+   $SYNTAX$
+      XToC( <expValue> ) --> cValue
+
+   $ARGUMENTS$
+      <expValue> Designate an expression of some of the following data
+      type: NUMBER, CHARACTER, DATE, LOGICAL.
+
+   $RETURNS$
+      XToC() return a string with the representation of data type of
+      expValue.
+
+   $DESCRIPTION$
+      Each data type always returns a string with a particular fixed length:
+
+      -----------------------------------------------------------
+      Data Type    Result Length      Similar function
+      -----------------------------------------------------------
+      Numeric      sizeof( DOUBLE )   FToC()
+      Logical      1
+      Date         8                  DToS()
+      String       Unchanged
+      -----------------------------------------------------------
+
+      TODO: add documentation
+   $EXAMPLES$
+
+   $STATUS$
+      Started
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is hbct.
+   $SEEALSO$
+      CToF(), FToC()
+   $END$
+ */

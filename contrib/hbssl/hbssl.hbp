@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+# Keep them at top
+-depimplibs=openssl:../out32dll/libeay32.dll
+-depimplibs=openssl:../out32dll/ssleay32.dll
+-depimplibs=openssl:../dll/libeay32.dll
+-depimplibs=openssl:../dll/ssleay32.dll
+-depimplibs=openssl:../libeay32.dll
+-depimplibs=openssl:../ssleay32.dll
+
+hbssl.hbm
+
+{allwin&HBMK_HAS_OPENSSL}-cflag=-I${HB_WITH_OPENSSL}/../inc32
+
+-iflag={bcc}-a
+
+hbssls.hbp

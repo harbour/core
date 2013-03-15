@@ -1,0 +1,25 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{wce}
+
+-depkeyhead=bzip2:bzlib.h
+-depcontrol=bzip2:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=bzip2:${HB_WITH_BZIP2}
+-depincpath=bzip2:/usr/include
+-depincpathlocal=bzip2:3rd/bz2
+-depfinish=bzip2
+
+${hb_name}.hbx
+
+core.c
+
+3rd/bz2/bz2.hbc{HBMK_HAS_BZIP2_LOCAL}

@@ -1,0 +1,92 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBBLINK__
+#define __HBEXTERN_CH__HBBLINK__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBLINK__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBBLINK__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBLINK__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC BliCpuRel
+DYNAMIC BliDbgHan
+DYNAMIC BliDemDte
+DYNAMIC BliDemDteBas
+DYNAMIC BliDemMin
+DYNAMIC BliDisFrg
+DYNAMIC BliErrNum
+DYNAMIC BliErrPrm
+DYNAMIC BliErrPrmBas
+DYNAMIC BliFunCal
+DYNAMIC BliFunHan
+DYNAMIC BliLibFre
+DYNAMIC BliLibLib
+DYNAMIC BliLibOvr
+DYNAMIC BliLstFrg
+DYNAMIC BliMemAvl
+DYNAMIC BliMemBlk
+DYNAMIC BliMemPak
+DYNAMIC BliMemSiz
+DYNAMIC BliMemUse
+DYNAMIC BliMgrSts
+DYNAMIC BliOvlClr
+DYNAMIC BliOvlOps
+DYNAMIC BliOvlRes
+DYNAMIC BliOvlSiz
+DYNAMIC BliOvlSus
+DYNAMIC BliPtrDec
+DYNAMIC BliPtrInc
+DYNAMIC BliSerNum
+DYNAMIC BliSerNumBas
+DYNAMIC BliStrFrg
+DYNAMIC BliVerNum
+DYNAMIC hb_BliDemDte
+DYNAMIC hb_BliDemMin
+DYNAMIC hb_BliVerNum
+DYNAMIC SwpAddEnv
+DYNAMIC SwpAddStr
+DYNAMIC SwpAddStrBas
+DYNAMIC SwpCurDir
+DYNAMIC SwpDisMsg
+DYNAMIC SwpEms320
+DYNAMIC SwpErrLev
+DYNAMIC SwpErrMaj
+DYNAMIC SwpErrMin
+DYNAMIC SwpFreEms
+DYNAMIC SwpFreXms
+DYNAMIC SwpGetKey
+DYNAMIC SwpGetPid
+DYNAMIC SwpGetStr
+DYNAMIC SwpKeyBrd
+DYNAMIC SwpKeyBrdBas
+DYNAMIC SwpKeyClr
+DYNAMIC SwpNobOot
+DYNAMIC SwpRunCmd
+DYNAMIC SwpSetEnv
+DYNAMIC SwpSetPid
+DYNAMIC SwpSetPidBas
+DYNAMIC SwpSetStr
+DYNAMIC SwpSetStrBas
+DYNAMIC SwpUseEms
+DYNAMIC SwpUseUmb
+DYNAMIC SwpUseXms
+DYNAMIC SwpVidMde
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBLINK__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

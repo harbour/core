@@ -1,0 +1,94 @@
+/*
+ * $Id$
+ */
+
+/* $DOC$
+   $NAME$
+      ft_PChr()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Convert printer control codes
+   $SYNTAX$
+      ft_PChr( <cString> )  ->  <cPrinterFormat>
+   $ARGUMENTS$
+      <cString> is the representation of the printer control codes in
+      text, numeric, hexadecimal, Epson command format, or any combination
+      separated by commas.
+   $RETURNS$
+      A character string of printer control codes.
+   $DESCRIPTION$
+      This function is useful for allowing the user to enter printer
+      control codes in text (enclosed in double quotes), numeric,
+      hexadecimal, or Epson commands preceded by a slash and returns
+      the printer control code equivalent.
+
+      NOTES"
+
+        - Combinations of text, numbers, hex, and commands must be
+           separated by commas ("A",27,&1B,/RESET).
+        - Text must be enclosed in double quotes ("x").
+        - Hexadecimal must be preceded by an ampersand (&1B).
+        - Epson commands, listed below, must be preceded by a forward
+           slash (/RESET).
+
+        Epson commands: (slash commands are specific to the Epson)
+
+          Job Control:
+
+          /RESET or /INIT   Reset or initialize the printer
+          /BELL  or /BEEP   Cause the printer's speaker to beep (not HS)
+          /CAN              Clear print buffers (not MX)
+          /SLOW             Set low speed mode (not CR, HS, MX)
+          /FAST             Cancel low speed mode (not CR, HS, MX)
+          /ONE              Select Unidirectional mode
+          /TWO              Select Directional mode
+          /ON               Activate printer
+          /OFF              Turn off printer
+
+          /FF or /EJECT     Form Feed
+
+          Page Control:
+
+          /1/6              Set 6 lines per inch
+          /1/8              Set 8 lines per inch
+          /SKIP             Set Skip perforation ON
+          /SKIPOFF          Set Skip perforation OFF
+
+          Font Selection and Manipulation:
+
+          /ITALIC           Select italic char. set  (only FX86, EX, LX,
+                                                          no LQ-1500, SX)
+          /GRAPHIC          Select graphic char. set (only FX86, EX, LX,
+                                                          no LQ-1500, SX)
+          /ROMAN            Choose Roman font
+          /SANS             Choose Sans Serif font
+          /DRAFT            Choose draft
+          /NLQ              Choose near letter quality
+          /PICA             Choose 10 chars per inch
+          /ELITE            Choose 12 chars per inch
+          /COND or /SI      Choose 15 chars per inch
+          /EMPH             Turn emphasize on
+          /EMPHOFF          Turn emphasize off
+          /SPANISH          Select spanish international char set
+          /USA              Select USA international char set
+
+   $EXAMPLES$
+      SET PRINTER ON
+      cSetUp := "27,116,1"
+      ? ft_PChr( cSetUp )        // -> hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 )
+                                 //     <select Epson char. graphics>
+
+      ? ft_PChr( '27,"x",0' )    // -> hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 0 )
+                                 //     <Epson draft mode>
+
+      ? ft_PChr( '&1B,"E"'  )    // -> hb_BChar( 27 ) + hb_BChar( 69 )
+                                 //     <HP reset>
+
+      ? ft_PChr( "/ELITE,/NLQ" ) // -> hb_BChar( 27 ) + hb_BChar( 77 ) + ;
+                                 //    hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 )
+                                 //     <Epson elite & near letter quality>
+   $SEEALSO$
+
+   $END$
+ */
