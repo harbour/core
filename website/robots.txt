@@ -1,5 +1,0 @@
-# Last Updated:  2010-10-13 15:34:00
-
-User-agent: ia_archiver
-Disallow: /photos/victorszakats.jpg
-Disallow: /photos/victorszakats2.jpg
