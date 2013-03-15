@@ -367,7 +367,7 @@ static HB_BOOL hb_regex( int iRequest )
             int      iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
             int      iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
             HB_BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if HB_TRUE returns only matches and sub-matches, not positions */
-            HB_SIZE  nOffset   = 0;
+            HB_SIZE  nOffset    = 0;
             int      iCount     = 0;
             int      iSO, iEO;
 
