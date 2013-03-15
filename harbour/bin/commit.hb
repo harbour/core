@@ -169,6 +169,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
                EXIT
             CASE "M"
             CASE "R"
+            CASE "T"
             CASE "U"
                cStart := "*"
                EXIT
