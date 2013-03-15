@@ -458,7 +458,7 @@ TABLE OF CONTENT
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         $ sudo apt-get install bash subversion git gcc binutils fakeroot debhelper valgrind upx uncrustify
+         $ sudo apt-get install bash git gcc binutils fakeroot debhelper valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -497,7 +497,7 @@ TABLE OF CONTENT
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         bash subversion git gcc make glibc-devel rpm valgrind upx uncrustify
+         bash git gcc make glibc-devel rpm valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -534,7 +534,7 @@ TABLE OF CONTENT
    OpenSolaris
    -----------
 
-      - $ pkg install SUNWsvn SUNWgit SUNWgcc SUNWgmake
+      - $ pkg install SUNWgit SUNWgcc SUNWgmake
 
    FreeBSD
    -------
@@ -1286,20 +1286,18 @@ TABLE OF CONTENT
 
       1.) Harbour live source repository
 
-          You'll need Subversion (SVN) version control software installed
-          on your system, and issue this command:
-             svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+          You'll need Git version control software installed on your system,
+          and issue this command:
+             git clone https://github.com/harbour/core.git
 
           You can get subsequent updates using this command:
-             svn update
+             git pull
 
-      2.) Harbour unstable sources (updated once a day from live source repository)
+      2.) Harbour unstable sources
 
           Download source archive from any of these links and unpack:
-             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly-src.zip/download
-             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.gz/download
-             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.bz2/download
-             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.xz/download
+             https://github.com/harbour/core/archive/master.zip
+             https://github.com/harbour/core/archive/master.tar.gz
 
       3.) Harbour unstable binaries (updated once a day from live source repository)
 
@@ -1680,10 +1678,9 @@ TABLE OF CONTENT
 
    Tools:
 
-      Subversion (Version Control System) [multiplatform, free, open-source]
-         http://subversion.tigris.org/
       Git (Version Control System) [multiplatform, free, open-source]
          http://git-scm.com/
+         https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git (Windows binaries)
       GNU Bison (grammer paser generator) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm
@@ -1740,10 +1737,12 @@ TABLE OF CONTENT
 
       Netiquette Guidelines
          http://tools.ietf.org/html/rfc1855
-      Subversion book [free]
-         http://svnbook.red-bean.com/
+      Setting up Git:
+         https://help.github.com/articles/set-up-git
       Git book [free]
          http://git-scm.com/book
+      Git crash course for Subversion users:
+         http://git.or.cz/course/svn.html
 
 
 14. HOW TO PARTICIPATE
@@ -1754,14 +1753,14 @@ TABLE OF CONTENT
    - You can give feedback/suggestions to developers on available
      channels.
    - You can submit patches or source code on above channels.
-     Patches are accepted in 'svn diff' (or 'diff -u') format,
+     Patches are accepted in 'git diff' (or 'diff -u') format,
      created from root directory of the repository sandbox.
      Zip your patch file before attaching it. Use the extension '.zip'.
      Always use the same coding/formatting style as you find in
      the files you're patching. The easiest way to achieve this
      is to use these commands to format your sources:
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <.c/.h filename>
-        $ <harbour_dir>/bin/hbformat <.prg/.ch/.hb filename>
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
+        $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
    - Text editor setting for Harbour files
      - Encoding is either 7-bit ASCII or UTF-8.
      - Always add spaces, never tabs
@@ -1785,26 +1784,17 @@ TABLE OF CONTENT
    Homepage:
       http://harbour-project.org/
 
-   SourceForge Page:
-      http://sourceforge.net/projects/harbour-project/
-
    Harbour Users' Mailing List (English language):
-      http://groups.google.com/group/harbour-users/
+      https://groups.google.com/group/harbour-users/
 
    Harbour Development Mailing List (English language):
-      http://groups.google.com/group/harbour-devel/
+      https://groups.google.com/group/harbour-devel/
 
-   Development Timeline:
-      http://sourceforge.net/apps/trac/harbour-project/timeline/
+   Source code:
+      https://github.com/harbour/core
 
-   Bug Tracker:
-      http://sourceforge.net/tracker/?group_id=681
-
-   Source Repository Browser:
-      http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
-
-   Source Repository Checkout (anonymous) [needs Subversion]:
-      svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+   Issue Tracker:
+      https://github.com/harbour/core/issues
 
    CA-Cl*pper 5.3 online documentation:
       http://x-hacker.org/ng/53guide/
@@ -1814,9 +1804,9 @@ TABLE OF CONTENT
 
    Particularly:
       Comparing Harbour to xHarbour:
-         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/doc/xhb-diff.txt
+         https://raw.github.com/harbour/core/master/harbour/doc/xhb-diff.txt
       ChangeLog:
-         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog.txt
+         https://raw.github.com/harbour/core/master/harbour/ChangeLog.txt
 
 
 [ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)
