@@ -1800,9 +1800,9 @@ TABLE OF CONTENT
 
    Particularly:
       Comparing Harbour to xHarbour:
-         https://raw.github.com/harbour/core/master/harbour/doc/xhb-diff.txt
+         https://raw.github.com/harbour/core/master/doc/xhb-diff.txt
       ChangeLog:
-         https://raw.github.com/harbour/core/master/harbour/ChangeLog.txt
+         https://raw.github.com/harbour/core/master/ChangeLog.txt
 
 
 [ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)
