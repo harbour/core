@@ -355,8 +355,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
                " * and is covered by the same license as Harbour PP\n"
                " */\n\n" );
 
-      if( iSVNID )
-         fprintf( fout, "\n#define HB_VER_REVID             %d\n", iSVNID );
+      fprintf( fout, "\n#define HB_VER_REVID             %d\n", iSVNID );
 
       if( szChangeLogID )
       {
@@ -611,19 +610,10 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          }
          *piSVNID = szFrom ? ( int ) hb_strValInt( szFrom, &iLen ) : 0;
 
-         if( *piSVNID )
-         {
-            hb_pp_addDefine( pState, "HB_VER_REVID", szFrom );
+         hb_pp_addDefine( pState, "HB_VER_REVID", szFrom ? szFrom : "0" );
 #ifdef HB_LEGACY_LEVEL4
-            hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom );
+         hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom ? szFrom : "0" );
 #endif
-         }
-         else
-         {
-            if( iQuiet < 2 )
-               fprintf( stderr, "Unrecognized Id entry in the %s file.\n", pszFileName );
-            iResult = 1;
-         }
       }
    }
 
