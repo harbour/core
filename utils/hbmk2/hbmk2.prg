@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2)
  *
@@ -530,8 +526,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_lDumpInfo         155
 #define _HBMK_lMarkdown         156
 #define _HBMK_lShellMode        157
+#define _HBMK_bOut              158
 
-#define _HBMK_MAX_              157
+#define _HBMK_MAX_              158
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1019,6 +1016,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
 
    hbmk[ _HBMK_lDumpInfo ] := .F.
    hbmk[ _HBMK_lMarkdown ] := .F.
+   hbmk[ _HBMK_bOut ] := {| cText | OutStd( cText ) }
 
    RETURN hbmk
 
@@ -1563,6 +1561,22 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
+         RETURN _EXIT_HELP
+
+      CASE cParamL == "-viewhelp" .OR. cParamL == "--viewhelp" .OR. ;
+           cParamL == "-hhh" .OR. cParamL == "-???"
+
+         tmp := hb_FTempCreateEx( @tmp1, , , ".txt" )
+         hbmk[ _HBMK_bOut ] := {| cText | FWrite( tmp, StrTran( cText, e"\n", hb_eol() ) ) }
+
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T., .T. )
+
+         FClose( tmp )
+         hb_run( LaunchCommand( tmp1 ) )
+         hb_idleSleep( 1 )
+         FErase( tmp1 )
+
          RETURN _EXIT_HELP
 
       CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
@@ -7495,26 +7509,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       IF Empty( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
          cCommand := "." + hb_ps() + hbmk[ _HBMK_cPROGNAME ]
       ENDIF
-      #if defined( __PLATFORM__WINDOWS )
-         IF hbmk[ _HBMK_lGUI ]
-            IF hb_osIsWinNT()
-               cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
-            ELSE
-               cCommand := "start " + cCommand
-            ENDIF
-         ENDIF
-      #elif defined( __PLATFORM__OS2 )
-         IF hbmk[ _HBMK_lGUI ]
-            cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
-         ENDIF
-      #elif defined( __PLATFORM__DARWIN )
+      #if defined( __PLATFORM__DARWIN )
          IF hbmk[ _HBMK_lGUI ]
             /* TOFIX: Find a way to pass arbitrary options to an .app. */
             l_aOPTRUN := {}
-            cCommand := "open " + FNameEscape( cCommand + ".app", _ESC_NIX )
          ENDIF
       #endif
-      cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )
+      cCommand := AllTrim( LaunchCommand( cCommand ) + " " + ArrayToList( l_aOPTRUN ) )
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
             _hbmk_OutStd( hbmk, I_( "Running executable:" ) )
@@ -7527,6 +7528,22 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 
    RETURN hbmk[ _HBMK_nExitCode ]
+
+STATIC FUNCTION LaunchCommand( cCommand )
+
+#if defined( __PLATFORM__WINDOWS )
+   IF hb_osIsWinNT()
+      cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
+   ELSE
+      cCommand := "start " + cCommand
+   ENDIF
+#elif defined( __PLATFORM__OS2 )
+   cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
+#elif defined( __PLATFORM__DARWIN )
+   cCommand := "open " + FNameEscape( cCommand + ".app", _ESC_NIX )
+#endif
+
+   RETURN cCommand
 
 STATIC PROCEDURE ProcEnvOption( cValue )
 
@@ -13682,7 +13699,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL hbmk
    LOCAL cHBC
    LOCAL cExt
-   LOCAL tmp
+   LOCAL tmp, tmp1
    LOCAL aOPTPRG
    LOCAL hHRB
    LOCAL cVersion
@@ -13733,6 +13750,22 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
+         RETURN
+
+      CASE cParamL == "-viewhelp" .OR. cParamL == "--viewhelp" .OR. ;
+           cParamL == "-hhh" .OR. cParamL == "-???"
+
+         tmp := hb_FTempCreateEx( @tmp1, , , ".txt" )
+         hbmk[ _HBMK_bOut ] := {| cText | FWrite( tmp, StrTran( cText, e"\n", hb_eol() ) ) }
+
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T., .T. )
+
+         FClose( tmp )
+         hb_run( LaunchCommand( tmp1 ) )
+         hb_idleSleep( 1 )
+         FErase( tmp1 )
+
          RETURN
 
       CASE cParamL == "-longhelpmd" .OR. cParamL == "--longhelpmd"
@@ -15521,7 +15554,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    ELSE
       cText := StrTran( cText, e"\n", _OUT_EOL )
    ENDIF
-   OutStd( cText )
+   Eval( hbmk[ _HBMK_bOut ], cText )
 
    cText := "http://harbour-project.org/"
    IF hbmk[ _HBMK_lMarkdown ]
@@ -15529,7 +15562,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    ELSE
       cText += _OUT_EOL
    ENDIF
-   OutStd( cText )
+   Eval( hbmk[ _HBMK_bOut ], cText )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
       !( hbmk[ _HBMK_cUILNG ] == "en-GB" ) .AND. ;
@@ -15543,11 +15576,11 @@ STATIC PROCEDURE ShowHeader( hbmk )
          ELSE
             cText := StrTran( cText, e"\n", _OUT_EOL )
          ENDIF
-         OutStd( cText )
+         Eval( hbmk[ _HBMK_bOut ], cText )
       ENDIF
    ENDIF
 
-   OutStd( _OUT_EOL )
+   Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
 
    RETURN
 
@@ -15780,6 +15813,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-lang=<lang>"       , I_( "override default language. <lang> is an ISO language code." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
       { "-shl"               , I_( "show sub-project level in output lines" ) }, ;
+      { "-viewhelp"          , I_( "long help in text viewer" ) }, ;
       { "-longhelp"          , I_( "long help" ) }, ;
       { "-longhelpmd"        , I_( "long help in Markdown format" ) }, ;
       { "-harbourhelp"       , hb_StrFormat( I_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
@@ -15790,6 +15824,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_Opt_LongCmd_Shell := { ;
       NIL, ;
       { "-help"              , I_( "this help" ) }, ;
+      { "-viewhelp"          , I_( "long help in text viewer" ) }, ;
       { "-longhelp"          , I_( "long help" ) }, ;
       { "-longhelpmd"        , I_( "long help in Markdown format" ) } }
 
@@ -16490,7 +16525,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
 STATIC PROCEDURE OutHdr( hbmk, cText )
 
-   OutStd( iif( hbmk[ _HBMK_lMarkdown ], ToMarkdown( cText ), cText ) )
+   Eval( hbmk[ _HBMK_bOut ], iif( hbmk[ _HBMK_lMarkdown ], ToMarkdown( cText ), cText ) )
 
    RETURN
 
@@ -16504,20 +16539,20 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
 
    IF Empty( aOpt )
       IF hbmk[ _HBMK_lMarkdown ]
-         OutStd( _OUT_EOL )
-         OutStd( _OUT_EOL )
+         Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
+         Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
       ELSE
          IF nWidth >= 0
-            OutStd( _OUT_EOL )
+            Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
          ENDIF
       ENDIF
    ELSE
       IF Len( aOpt ) > 1
          IF hbmk[ _HBMK_lMarkdown ]
             IF nWidth == 0
-               OutStd( ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
+               Eval( hbmk[ _HBMK_bOut ], ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ELSE
-               OutStd( ;
+               Eval( hbmk[ _HBMK_bOut ], ;
                   " - " + ;
                   ToMarkdown( aOpt[ 1 ], iif( Empty( aOpt[ 2 ] ), NIL, "strong" ) ) + ;
                   iif( nWidth < 0, ToMarkdown( e"\n" ), " " ) + ;
@@ -16529,27 +16564,27 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
                nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
                               MLCount( aOpt[ 1 ], nWidth ) )
                FOR nLine := 1 TO nLines
-                  OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
-                  OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+                  Eval( hbmk[ _HBMK_bOut ], PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
+                  Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
                NEXT
             ELSE
                IF nWidth < 0
-                  OutStd( _OUT_EOL )
+                  Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
                ENDIF
                FOR EACH nWidth, cOpt IN { 2, iif( nWidth > 0, nWidth, 8 ) }, aOpt
                   cOpt := StrTran( cOpt, e"\n", hb_eol() )
                   nLines := MLCount( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth )
                   FOR nLine := 1 TO nLines
-                     OutStd( Space( nWidth ) + RTrim( MemoLine( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
+                     Eval( hbmk[ _HBMK_bOut ], Space( nWidth ) + RTrim( MemoLine( cOpt, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
                   NEXT
                NEXT
             ENDIF
          ENDIF
       ELSE
          IF hbmk[ _HBMK_lMarkdown ]
-            OutStd( " - " + ToMarkdown( aOpt[ 1 ], "strong" ) + _OUT_EOL )
+            Eval( hbmk[ _HBMK_bOut ], " - " + ToMarkdown( aOpt[ 1 ], "strong" ) + _OUT_EOL )
          ELSE
-            OutStd( Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
+            Eval( hbmk[ _HBMK_bOut ], Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
          ENDIF
       ENDIF
    ENDIF
@@ -16563,23 +16598,23 @@ STATIC PROCEDURE OutNote( hbmk, cText, cPrefix )
 
    IF Empty( cText )
       IF hbmk[ _HBMK_lMarkdown ]
-         OutStd( _OUT_EOL )
+         Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
       ENDIF
-      OutStd( _OUT_EOL )
+      Eval( hbmk[ _HBMK_bOut ], _OUT_EOL )
    ELSE
       hb_default( @cPrefix, "  - " )
       IF hbmk[ _HBMK_lMarkdown ]
-         OutStd( cPrefix + ToMarkdown( cText ) + _OUT_EOL )
+         Eval( hbmk[ _HBMK_bOut ], cPrefix + ToMarkdown( cText ) + _OUT_EOL )
       ELSE
          cText := StrTran( cText, e"\n", hb_eol() )
          nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ) )
          FOR nLine := 1 TO nLines
             IF nLine == 1
-               OutStd( cPrefix )
+               Eval( hbmk[ _HBMK_bOut ], cPrefix )
             ELSE
-               OutStd( Space( Len( cPrefix ) ) )
+               Eval( hbmk[ _HBMK_bOut ], Space( Len( cPrefix ) ) )
             ENDIF
-            OutStd( RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) + _OUT_EOL )
+            Eval( hbmk[ _HBMK_bOut ], RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - Len( cPrefix ), nLine ) ) + _OUT_EOL )
          NEXT
       ENDIF
    ENDIF

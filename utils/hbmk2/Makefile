@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk

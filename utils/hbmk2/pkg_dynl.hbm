@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 # dynamic lib creation settings
 {hbdyn}-shared
 {hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/
