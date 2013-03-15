@@ -109,10 +109,6 @@ STATIC FUNCTION VCSDetect()
    DO CASE
    CASE hb_DirExists( ".svn" ) ; RETURN "svn"
    CASE hb_DirExists( ".git" ) ; RETURN "git"
-   /* to make it work in an unmodified GIT repo. Ideally, all
-      files/dirs should be moved one dir up, removing the top
-      'harbour' directory. */
-   CASE hb_DirExists( ".." + hb_ps() + ".git" ) ; RETURN "git"
    ENDCASE
 
    RETURN ""
