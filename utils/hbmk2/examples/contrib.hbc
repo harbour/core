@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 # Some popular and portable Harbour contribs
 hbcs=hbct hbmzip
 

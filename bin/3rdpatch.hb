@@ -1,7 +1,4 @@
 #!/usr/bin/hbmk2
-/*
- * $Id$
- */
 
 /*
  * 3rdpatch - a tool to help update 3rd party components while keeping local fixes

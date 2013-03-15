@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Test file to check the preprocessor.
  *
  * Usage:

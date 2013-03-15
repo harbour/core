@@ -32,12 +32,7 @@ PROCEDURE Main()
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
-            cPO := ;
-               "/*" + hb_eol() + ;
-               " * $" + "Id" + "$" + hb_eol() + ;
-               " */" + hb_eol() + ;
-              hb_eol()
-            cPO += Item( "", Meta() )
+            cPO := Item( "", Meta() )
             /* TODO: do something with the metadata (position 0 to 5) */
             FOR tmp1 := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
                IF ! Empty( hb_langMessage( tmp1, "en" ) )

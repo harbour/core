@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 proc main()
 ? OS(), VERSION(), DATE(), TIME()

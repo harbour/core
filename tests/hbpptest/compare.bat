@@ -1,7 +1,4 @@
 @echo off
-rem
-rem $Id$
-rem
 
 copy pp_test.prg _pp_hb.prg
 copy pp_test.prg _pp_c5x.prg

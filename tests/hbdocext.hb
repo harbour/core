@@ -23,10 +23,7 @@ PROCEDURE Main()
    LOCAL cFile
    LOCAL cDst
 
-   LOCAL cHdr := ;
-      "/*" + hb_eol() + ;
-      " * $" + "Id" + "$" + hb_eol() + ;
-      " */" + hb_eol()
+   LOCAL cHdr := ""
 
    FOR EACH aFile IN Directory( hb_osFileMask() )
       cFile := __hbdoc_ToSource( __hbdoc_FromSource( MemoRead( aFile[ F_NAME ] ) ) )

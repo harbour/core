@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for using the same work area in different
  *    threads. Please note that this program also works when compiled

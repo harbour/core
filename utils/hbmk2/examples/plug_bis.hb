@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * hbmk2 plugin script, implementing support for bison
  *
  * Copyright 2011-2013 Viktor Szakats (harbour syenar.net)

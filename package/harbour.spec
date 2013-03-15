@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 # ---------------------------------------------------------------
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>,
 # Dave Pearson <davep@davep.org>

@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 REQUEST DBTCDX
 REQUEST FPTCDX

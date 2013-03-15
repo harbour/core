@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 REQUEST RLCDX
 

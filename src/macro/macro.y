@@ -5,10 +5,6 @@
 
 %{
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Macro compiler YACC rules and actions
  *

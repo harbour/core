@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 proc main2()
 ? "main2", procfile("main2"), procfile(@main2())

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for using independent console window in
  *    different thread. It needs GT driver which supports such functionality.

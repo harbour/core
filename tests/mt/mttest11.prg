@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for asynchronous screen updating without
  *    breaking foreground screen operations.

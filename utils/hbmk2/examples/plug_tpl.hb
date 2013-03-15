@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * hbmk2 plugin example
  *
  * Copyright 2010-2013 Viktor Szakats (harbour syenar.net)

@@ -133,10 +133,6 @@ proc main()
 
    cResult := ;
       "/*" + hb_eol() + ;
-      " * $Id$" + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "/*" + hb_eol() + ;
       " * Harbour Project source code:" + hb_eol() + ;
       " *    BIG5 <-> UCS16 conversion tables" + hb_eol() + ;
       " *    code generated automatically by tests/big5_gen.prg" + hb_eol() + ;

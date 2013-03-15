@@ -4,10 +4,6 @@
 %name-prefix = "hb_comp_yy"
 %{
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Compiler YACC rules and actions
  *

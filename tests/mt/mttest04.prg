@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for modifying simple variable by different
  *    threads with and without protection and also complex variables

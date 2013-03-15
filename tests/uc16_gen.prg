@@ -167,10 +167,6 @@ proc main()
 
    cResult := ;
       "/*" + hb_eol() + ;
-      " * $Id$" + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "/*" + hb_eol() + ;
       " * Harbour Project source code:" + hb_eol() + ;
       " *    Unicode character tables" + hb_eol() + ;
       " *    code generated automatically by tests/uc_gen.prg" + hb_eol() + ;

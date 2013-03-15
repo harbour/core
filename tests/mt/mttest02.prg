@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for using QUIT commands and ALWAYS statements
  *    execution. Child thread uses QUIT before main one.

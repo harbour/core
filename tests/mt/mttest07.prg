@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for using mutexes to send/receive
  *    messages between threads to synchronize divided jobs between
