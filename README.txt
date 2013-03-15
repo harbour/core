@@ -1786,10 +1786,10 @@ TABLE OF CONTENT
    Harbour Development Mailing List (English language):
       https://groups.google.com/group/harbour-devel/
 
-   Source code:
+   Source:
       https://github.com/harbour/core
 
-   Issue Tracker:
+   Issues:
       https://github.com/harbour/core/issues
 
    CA-Cl*pper 5.3 online documentation:
