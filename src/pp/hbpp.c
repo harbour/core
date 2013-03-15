@@ -326,7 +326,7 @@ static char * hb_pp_escapeString( char * szString )
    return szResult;
 }
 
-static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeLogID, char * szLastEntry )
+static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeLogID, char * szLastEntry )
 {
    int iResult = 0;
    char * pszEnv;
@@ -355,7 +355,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
                " * and is covered by the same license as Harbour PP\n"
                " */\n\n" );
 
-      fprintf( fout, "\n#define HB_VER_REVID             %d\n", iSVNID );
+      fprintf( fout, "\n#define HB_VER_REVID             %d\n", iRevID );
 
       if( szChangeLogID )
       {
@@ -440,7 +440,7 @@ static char * hb_fsFileFind( const char * pszFileMask )
 }
 
 static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
-                                 int iQuiet, int * piSVNID,
+                                 int iQuiet, int * piRevID,
                                  char ** pszChangeLogID, char ** pszLastEntry )
 {
    char * pszFree = NULL;
@@ -578,6 +578,8 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
       }
       else
       {
+         char szRevID[ 11 ];
+
          *szLine = '"';
          hb_strncpy( szLine + 1, szLog, sizeof( szLine ) - 3 );
          iLen = ( int ) strlen( szLine );
@@ -608,11 +610,29 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
             else
                szFrom = NULL;
          }
-         *piSVNID = szFrom ? ( int ) hb_strValInt( szFrom, &iLen ) : 0;
 
-         hb_pp_addDefine( pState, "HB_VER_REVID", szFrom ? szFrom : "0" );
+         if( strlen( szLog ) >= 16 )
+         {
+            szRevID[ 0 ] = szLog[ 2 ];
+            szRevID[ 1 ] = szLog[ 3 ];
+            szRevID[ 2 ] = szLog[ 5 ];
+            szRevID[ 3 ] = szLog[ 6 ];
+            szRevID[ 4 ] = szLog[ 8 ];
+            szRevID[ 5 ] = szLog[ 9 ];
+            szRevID[ 6 ] = szLog[ 11 ];
+            szRevID[ 7 ] = szLog[ 12 ];
+            szRevID[ 8 ] = szLog[ 14 ];
+            szRevID[ 9 ] = szLog[ 15 ];
+            szRevID[ 10 ] = '\0';
+         }
+         else
+            szRevID[ 0 ] = '\0';
+
+         *piRevID = ( int ) hb_strValInt( szRevID, &iLen );
+
+         hb_pp_addDefine( pState, "HB_VER_REVID", hb_strdup( szRevID ) );
 #ifdef HB_LEGACY_LEVEL4
-         hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom ? szFrom : "0" );
+         hb_pp_addDefine( pState, "HB_VER_SVNID", hb_strdup( szRevID ) );
 #endif
       }
    }
@@ -649,7 +669,7 @@ int main( int argc, char * argv[] )
    char * szStdCh = NULL, * szLogFile = NULL, * szInclude;
    HB_BOOL fWrite = HB_FALSE, fChgLog = HB_FALSE;
    char * szChangeLogID = NULL, * szLastEntry = NULL;
-   int iSVNID = 0, iResult = 0, iQuiet = 0, i;
+   int iRevID = 0, iResult = 0, iQuiet = 0, i;
    char * szPPRuleFuncName = NULL;
    PHB_PP_STATE pState;
 
@@ -799,13 +819,13 @@ int main( int argc, char * argv[] )
 
          if( fChgLog )
             iResult = hb_pp_parseChangelog( pState, szLogFile, iQuiet,
-                                            &iSVNID, &szChangeLogID, &szLastEntry );
+                                            &iRevID, &szChangeLogID, &szLastEntry );
 
          if( iResult == 0 )
             iResult = hb_pp_preprocesfile( pState, szRuleFile, szPPRuleFuncName );
 
          if( iResult == 0 && szVerFile )
-            iResult = hb_pp_generateVerInfo( szVerFile, iSVNID,
+            iResult = hb_pp_generateVerInfo( szVerFile, iRevID,
                                              szChangeLogID, szLastEntry );
          if( iResult == 0 && hb_pp_errorCount( pState ) > 0 )
             iResult = 1;
