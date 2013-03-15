@@ -58,12 +58,14 @@ PROCEDURE Main()
    LOCAL alpha, bravo, charlie, k
    LOCAL F8Active := .T.
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    CLS
 
-   @ 2, 2 SAY "Press F10 to popup alert box of current get, not active if empty"
-   @ 3, 2 SAY "Press F9 to disable all setkeys, except F9 to restore (uses SetKeySave())"
-   @ 4, 2 SAY "Press F8 to test setkey w/ array, SetKeyCheck(), and SetKeyGet()"
-   @ 5, 2 SAY "Press F7 to active/deactive F8"
+   @ 2, 2 SAY "Press <F10> to popup alert box of current get, not active if empty"
+   @ 3, 2 SAY "Press <F9> to disable all setkeys, except <F9> to restore (uses hb_SetKeySave())"
+   @ 4, 2 SAY "Press <F8> to test setkey w/ array, hb_SetKeyCheck(), and hb_SetKeyGet()"
+   @ 5, 2 SAY "Press <F7> to active/deactive <F8>"
 
    alpha   := "alpha    "
    bravo   := 123
@@ -74,7 +76,7 @@ PROCEDURE Main()
    @ 12, 10 GET charlie
 
    SetKey( K_F10, {|| Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
-      {|| ! Empty( GetActive():VarGet() ) } )  /* :buffer */
+      {|| ! Empty( GetActive():varGet() ) } )
    SetKey( K_F9, {|| k := hb_SetKeySave( NIL ), ;
       SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
    SetKey( K_F8, {|| SubMain() }, {|| F8Active } )
@@ -89,11 +91,12 @@ STATIC PROCEDURE SubMain()
 
    LOCAL n
    LOCAL bF8Action, bF8Active
+   LOCAL aKeyArray := { hb_keyCode( "1" ), hb_keyCode( "2" ), hb_keyCode( "4" ), hb_keyCode( "5" ) }
 
    bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
    SetKey( K_F8, NIL )
 
-   hb_SetKeyArray( { 49, 50, 52, 53 }, {| x | QOut( hb_keyChar( x ) ) } )
+   hb_SetKeyArray( aKeyArray, {| x | QOut( hb_keyChar( x ) ) } )
    DO WHILE ( n := Inkey( 0 ) ) != K_ESC
       IF hb_SetKeyCheck( n, ProcName(), ProcLine(), ReadVar() )
          ?? " hit hot"
@@ -103,20 +106,7 @@ STATIC PROCEDURE SubMain()
       ENDIF
    ENDDO
 
-   hb_SetKeyArray( { 49, 50, 52, 53 }, NIL )
+   hb_SetKeyArray( aKeyArray, NIL )
    SetKey( K_F8, bF8Action, bF8Active )
-
-   RETURN
-
-PROCEDURE Help( cProc, nLine, cVar )
-
-   LOCAL nX := Col(), nY := Row()
-
-   @ 19, 19 SAY "Pcount: " ; ?? PCount()
-   @ 20, 10 SAY "Proc  : " ; ?? cProc
-   @ 21, 10 SAY "Line  : " ; ?? nLine
-   @ 22, 10 SAY "Var   : " ; ?? cVar
-
-   SetPos( nX, nY )
 
    RETURN
