@@ -172,29 +172,6 @@ by David G. Holm
    changes.txt and then copy them into ChangeLog.txt between the update
    and the commit.
 
-1.6 How to add SVN ID to new files
-==================================
-by Maurilio Longo
-
-Add these three lines to the top of your source file:
-
-/*
- * $Id$
- */
-
-As soon as you commit your file, SVN ID string will be expanded
-by SVN client to full length.
-
-IMPORTANT 2: Run these commands and commit:
-  svn propset svn:keywords "Author Date Id Revision" <filename>
-  svn propset svn:eol-style native <filename>
-
-IMPORTANT 3: Use operating system (or tool) specific quote
-             characters instead of double quotes shown in above
-             example. Some UI SVN tools may not require putting
-             the value in quote at all, *nix systems require
-             quoting only for space characters, etc.
-
 
 [ Copyright (c) 1999-2012 Viktor Szakats (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
