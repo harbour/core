@@ -1742,7 +1742,7 @@ ifeq ($(HB_INIT_DONE),)
                $(info ! === WARNING: Locally modified source code ===)
             endif
             _tmp := $(shell git rev-parse --short HEAD)
-            $(info ! GIT-REVISION: $(_tmp))
+            $(info ! GIT_REVISION: $(_tmp))
          endif
       endif
    endif
