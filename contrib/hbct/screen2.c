@@ -107,16 +107,16 @@ HB_FUNC( SAYDOWN )
    hb_retc_null();
 }
 
-static HB_WCHAR * ct_TextToWChar( const char * szText, int * piLen )
+static HB_WCHAR * ct_TextToWChar( const char * szText, HB_SIZE * pnLen )
 {
    HB_WCHAR wc;
    PHB_CODEPAGE cdp = hb_gtHostCP();
    HB_SIZE nIndex = 0, nI = 0;
-   HB_WCHAR * pwc = ( HB_WCHAR * ) hb_xgrab( *piLen * sizeof( HB_WCHAR ) );
+   HB_WCHAR * pwc = ( HB_WCHAR * ) hb_xgrab( *pnLen * sizeof( HB_WCHAR ) );
 
-   while( HB_CDPCHAR_GET( cdp, szText, *piLen, &nIndex, &wc ) )
+   while( HB_CDPCHAR_GET( cdp, szText, *pnLen, &nIndex, &wc ) )
       pwc[ nI ++ ] = wc;
-   *piLen = nI;
+   *pnLen = nI;
 
    return pwc;
 }
@@ -145,10 +145,9 @@ HB_FUNC( SAYSPREAD )
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
          const char * szText = hb_parc( 1 );
+         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
 
          int iColor = hb_gtGetCurrColor();
-
-         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
 
          nPos = nLen >> 1;
          nLen = nLen & 1;
@@ -183,9 +182,9 @@ HB_FUNC( SAYSPREAD )
 
 HB_FUNC( SAYMOVEIN )
 {
-   int iLen = ( int ) hb_parclen( 1 );
+   HB_SIZE nLen = hb_parclen( 1 );
 
-   if( iLen )
+   if( nLen )
    {
       HB_SIZE nChars, ul;
       int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
@@ -206,17 +205,16 @@ HB_FUNC( SAYMOVEIN )
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
          const char * szText = hb_parc( 1 );
+         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
+         HB_WCHAR * pText = pwc;
 
          int iColor = hb_gtGetCurrColor();
 
-         HB_WCHAR * pwc = ct_TextToWChar( szText, &iLen );
-         HB_WCHAR * pText = pwc;
-
-         iNewCol = iCol + iLen;
+         iNewCol = iCol + nLen;
          if( fBack )
-            iCol += iLen - 1;
+            iCol += nLen - 1;
          else
-            pText += iLen - 1;
+            pText += nLen - 1;
          nChars = 1;
 
          hb_gtBeginWrite();
@@ -247,7 +245,7 @@ HB_FUNC( SAYMOVEIN )
                hb_gtBeginWrite();
             }
          }
-         while( --iLen );
+         while( --nLen );
          hb_gtSetPos( iRow, iNewCol );
          hb_gtEndWrite();
          hb_xfree( pwc );
@@ -437,7 +435,8 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
 HB_FUNC( __HBCT_DSPTIME )
 {
    int iRow, iCol;
-   int iColor, iLen;
+   int iColor;
+   HB_SIZE nLen;
    char szTime[ 10 ];
 
    iRow = hb_parni( 1 );
@@ -454,17 +453,17 @@ HB_FUNC( __HBCT_DSPTIME )
       iColor = hb_gtGetClearColor();
 
    hb_dateTimeStr( szTime );
-   iLen = 8;
+   nLen = 8;
 
    if( hb_parl( 3 ) )
-      iLen -= 3;
+      nLen -= 3;
 
    if( hb_parl( 5 ) )
    {
       int iHour = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
 
       if( hb_parl( 6 ) )
-         szTime[ iLen++ ] = iHour >= 12 ? 'p' : 'a';
+         szTime[ nLen++ ] = iHour >= 12 ? 'p' : 'a';
       if( iHour > 12 )
          iHour -= 12;
       else if( iHour == 0 )
@@ -476,5 +475,5 @@ HB_FUNC( __HBCT_DSPTIME )
    if( szTime[ 0 ] == '0' )
       szTime[ 0 ] = ' ';
 
-   hb_gtPutText( iRow, iCol, szTime, iLen, iColor );
+   hb_gtPutText( iRow, iCol, szTime, nLen, iColor );
 }
