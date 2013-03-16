@@ -60,7 +60,7 @@
       on screen in a specified color attribute.  This function is useful
       for constructing screens with a lot of text or repetitive screen prints
       where speed is important.  It is faster and requires less memory than
-      ft_VidStr().  A working example is contained in clrtable.prg.
+      ft_VidStr().
    $EXAMPLES$
       FOR nX := 1 TO MaxRow()
          FOR nY := 1 TO MaxCol()

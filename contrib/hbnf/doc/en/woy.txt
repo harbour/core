@@ -77,8 +77,5 @@
 
       // last day of year
       nDayNum := ft_DoY( hb_SToD( "19911231" ) ) // result: 365
-
-      // For a demonstration of this function, compile and link the
-      // program woy.prg in the Nanforum Toolkit source code.
    $END$
  */

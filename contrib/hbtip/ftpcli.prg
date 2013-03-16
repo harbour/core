@@ -73,7 +73,6 @@
    Cleaned unused variables.
 
    2007-09-08 21:34 UTC+0100 Patrick Mast <patrick/dot/mast/at/xharbour.com>
-   * source\tip\ftpcln.prg
      * Formatting
      + METHOD StartCleanLogFile()
        Starts a clean log file, overwriting current logfile.

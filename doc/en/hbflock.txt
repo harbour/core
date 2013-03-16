@@ -44,7 +44,7 @@
       r  an error has occurred or the lock has been obtained) by
       g Ox0200 to the above values.
    $EXAMPLES$
-      refer to tfl.prg
+      refer to tests/tflock.prg
    $STATUS$
       R
    $COMPLIANCE$
@@ -94,7 +94,7 @@
 
       <nBytes> is the length of the region to be unlocked in bytes.
    $EXAMPLES$
-      refer to tfl.prg
+      refer to tests/tflock.prg
    $STATUS$
       R
    $COMPLIANCE$

@@ -1,12 +1,9 @@
 
-
-February 2004
+2004-02
 I.Q. David Arturo Macias Corona
 
 Modifications
 
-
-tmysql.prg Program *****************************************
 
 Class TMySQLRow ---------------------------------------------
 - DATA new TMySQLRow:aOriValue
@@ -236,8 +233,6 @@ Class TMySQLTable -------------------------------------------
   = Based in TMySQLTable:lFieldAsData, is updated DATA element of TMySQLTable
   corresponding to field name
 
-
-Program tsqlbrw.prg ************************************
 
 - Skipper()
   Modification of movement control in order to apply new definitions of

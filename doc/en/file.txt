@@ -952,8 +952,8 @@
       device (e.g. LPT1). This command does not observe the SET PATH TO or
       SET DEFAULT TO settings.
    $EXAMPLES$
-      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
-      COPY FILE C:\harbour\tests\adirtest.prg TO LPT1
+      COPY FILE C:\harbour\tests\adir.prg TO C:\temp\adir.prg
+      COPY FILE C:\harbour\tests\adir.prg TO LPT1
    $STATUS$
       R
    $COMPLIANCE$

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Commit preparer
  *
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

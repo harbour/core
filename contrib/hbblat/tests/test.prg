@@ -84,7 +84,7 @@ PROCEDURE Main()
    oBlat:lRequestReturnReceipt   := .T.
 
    oBlat:cAttachTextFiles        := "f_subjct.txt"
-   oBlat:aAttachTextFiles        := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
+   oBlat:aAttachTextFiles        := { __FILE__, "blatcmd.prg", "f_ps.txt" }
    oBlat:cAttachListTextFile     := "f_listtx.txt"
 
    oBlat:cLogFile                := "log.txt"

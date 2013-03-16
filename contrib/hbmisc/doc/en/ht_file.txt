@@ -7,11 +7,11 @@
    $ONELINER$
       Change the Current Directory
    $SYNTAX$
-      CD(<cDir>) --> lSuccess
+      CD( <cDir> ) --> lSuccess
    $ARGUMENTS$
       <cDir> DIR TO BE CHANGED
    $RETURNS$
-      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+      <lSucess> .T. IF SUCCESSFUL; otherwise .F.
    $DESCRIPTION$
       CHANGE THE CURRENT DIRECTORY
    $EXAMPLES$
@@ -21,7 +21,7 @@
          RETURN .F.
       ENDIF
    $FILES$
-      Header is Fileio.ch
+      Header is fileio.ch
    $SEEALSO$
       MD(),RD()
    $END$
@@ -35,13 +35,13 @@
    $ONELINER$
       Creates a Directory
    $SYNTAX$
-      MD(<cDir>) -> <lSucess>
+      MD( <cDir> ) -> <lSucess>
    $ARGUMENTS$
       <cDir> DIRECTORY TO BE CREATED
    $RETURNS$
-      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+      <lSucess> .T. IF SUCCESSFUL; otherwise .F.
    $DESCRIPTION$
-      CREATE A  DIRECTORY
+      CREATE A DIRECTORY
    $EXAMPLES$
       IF MD( "OLA" )
          RETURN .T.
@@ -49,7 +49,7 @@
          RETURN .F.
       ENDIF
    $FILES$
-      Header is Fileio.ch
+      Header is fileio.ch
    $SEEALSO$
       CD(),MD()
    $END$
@@ -63,13 +63,13 @@
    $ONELINER$
       Remove a Directory
    $SYNTAX$
-      RD(<cDir>) --> <lSucess>
+      RD( <cDir> ) --> <lSucess>
    $ARGUMENTS$
       <cDir> DIR TO BE DELETED
    $RETURNS$
-      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+      <lSucess> .T. IF SUCCESSFUL; otherwise .F.
    $DESCRIPTION$
-      REMOVE A  DIRECTORY
+      REMOVE A DIRECTORY
    $EXAMPLES$
       IF RD( "OLA" )
          RETURN .T.
@@ -77,7 +77,7 @@
          RETURN .F.
       ENDIF
    $FILES$
-      Header is Fileio.ch
+      Header is fileio.ch
    $SEEALSO$
       CD(),MD()
    $END$

@@ -108,7 +108,7 @@ PROCEDURE Main( filename )
 //
 //     Function DBFLIST()
 //
-//     Called from ( db_brows.prg )   1 - PROCEDURE Main()
+//     Called from   1 - PROCEDURE Main()
 //
 // --------------------------------------------------------------------
 
@@ -450,7 +450,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 //
 //     Function FLDCOUNT()
 //
-//     Called from ( db_brows.prg )   6 - function dbflist()
+//     Called from   6 - function dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -477,7 +477,7 @@ FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 //
 //     Function VIVNAMES()
 //
-//     Called from ( db_brows.prg )   3 - function dbflist()
+//     Called from   3 - function dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -513,7 +513,7 @@ FUNCTION VIVNAMES( mslist )
 //
 //     Function WNDVIVOD()
 //
-//     Called from ( db_brows.prg )   8 - function dbflist()
+//     Called from   8 - function dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -546,7 +546,7 @@ FUNCTION WNDVIVOD( mslist )
 //
 //     Static Procedure VIVSTR()
 //
-//     Called from ( db_brows.prg )   5 - function dbflist()
+//     Called from   5 - function dbflist()
 //                                    1 - function wndvivod()
 //
 // --------------------------------------------------------------------
@@ -596,7 +596,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
 //
 //     Function FLDSTR()
 //
-//     Called from ( db_brows.prg )   1 - function dbflist()
+//     Called from   1 - function dbflist()
 //                                    1 - function fldcount()
 //                                    1 - function vivnames()
 //                                    3 - static procedure vivstr()
@@ -651,7 +651,7 @@ FUNCTION FLDSTR( mslist, numf )
 //
 //     Function InitList()
 //
-//     Called from ( db_brows.prg )   1 - PROCEDURE Main()
+//     Called from   1 - PROCEDURE Main()
 //                                    1 - function dbflist()
 //
 // --------------------------------------------------------------------
@@ -685,7 +685,7 @@ FUNCTION InitList
 //
 //     Function Defpict()
 //
-//     Called from ( db_brows.prg )   1 - function dbflist()
+//     Called from   1 - function dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -709,7 +709,7 @@ FUNCTION Defpict( mslist, i, maxlen )
 //
 //     Function NUM_STR()
 //
-//     Called from ( db_brows.prg )   1 - function defpict()
+//     Called from   1 - function defpict()
 //
 // --------------------------------------------------------------------
 

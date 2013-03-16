@@ -903,7 +903,7 @@
       value of the logical expression <lWrap> is a logical false (.F.),
       the wrapping mode is set OFF; otherwise,it is set ON.
    $EXAMPLES$
-      See tests/menutest.prg
+      See tests/menuto.prg
    $STATUS$
       R
    $COMPLIANCE$
@@ -946,7 +946,7 @@
       witch suppresses all messages output.
       The British spelling of CENTRE is also supported.
    $EXAMPLES$
-      See tests/menutest.prg
+      See tests/menuto.prg
    $STATUS$
       R
    $COMPLIANCE$

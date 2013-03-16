@@ -167,7 +167,7 @@
 
       DispCell( nColumn, cColor )  Displays a single cell
    $EXAMPLES$
-      See tests/testbrw.prg
+      See tests/tbrowse.prg
    $STATUS$
       S
    $COMPLIANCE$

@@ -2,7 +2,7 @@
 The Clipper OBJ and pcode model (GNU|Open|Clipper project)
 ==========================================================
 
-Let's consider the following Clipper sample Test.prg:
+Let's consider the following Clipper sample test.prg:
 
 
 FUNCTION Main()
@@ -27,12 +27,12 @@ void MAIN( void )
 }
 
 
-Basically, Test.prg source code has been converted into a sequence
+Basically, test.prg source code has been converted into a sequence
 of pcode bytes contained in the array pcode[] = { ... }.  All our MAIN()
 function does is invoke, at run-time, a Clipper VirtualMachine() that will
 process those pcode bytes.
 
-Let's review the Test.prg pcode structure in more detail:
+Let's review the test.prg pcode structure in more detail:
 
 0000 (2A) LINE 0                    2A 00 00
 0003 (2A) LINE 3                    2A 03 00

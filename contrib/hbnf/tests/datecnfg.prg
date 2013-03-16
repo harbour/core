@@ -55,8 +55,8 @@ PROCEDURE Main()
 #if 0
    aTemp      := ft_DateCnfg( "1980-01-03", 1 )  // Date string in user's format.
 #endif
-   cFY_Start  := aTemp[ 1 ]                      // See ft_DateCnfg() in ft_date0.prg
-   nDOW_Start := ATEMP[ 2 ]                      // FOR PARAMETERS.
+   cFY_Start  := aTemp[ 1 ]                      // See ft_DateCnfg()
+   nDOW_Start := aTemp[ 2 ]                      // for parameters.
    dDate      := Date() - 500
 
    CLS
