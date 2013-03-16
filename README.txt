@@ -1285,7 +1285,7 @@ TABLE OF CONTENT
 
           You'll need Git version control software installed on your system,
           and issue this command:
-             git clone https://github.com/harbour/core.git
+             git clone https://github.com/harbour/core.git harbour
 
           You can get subsequent updates using this command:
              git pull

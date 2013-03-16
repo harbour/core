@@ -535,11 +535,11 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
                szTo = strchr( szFrom, '$' );
                if( szTo )
                {
-                  /* Is it tarball SVN package? */
+                  /* Is it tarball source package? */
                   if( szTo == szFrom )
                   {
                      /* we do not have revision number :-( */
-                     hb_strncpy( szId, "unknown -1 (SVN tarball without keyword expanding)", sizeof( szId ) - 1 );
+                     hb_strncpy( szId, "unknown -1 (source tarball without keyword expanding)", sizeof( szId ) - 1 );
                   }
                   else if( szTo - szFrom > 3 && szTo[ -1 ] == ' ' &&
                            szFrom[ 0 ] == ':' && szFrom[ 1 ] == ' ' )
