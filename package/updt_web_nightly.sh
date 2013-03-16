@@ -50,8 +50,8 @@ cd _hb_web_src
 
 echo Downloading sources...
 
-wget -nv https://github.com/harbour/website/archive/master.tar.gz
-tar -zxvf website-master.tar.gz
+curl -O -L -s https://github.com/harbour/website/archive/master.tar.gz
+tar -zxvf master.tar.gz
 
 echo Updating website...
 
