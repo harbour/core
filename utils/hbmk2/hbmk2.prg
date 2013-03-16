@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Harbour Make (alias hbmk/hbmk2)
+ * Harbour Make (alias hbmk/hbmk2/hbrun)
  *
  * Copyright 1999-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

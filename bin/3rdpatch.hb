@@ -4,7 +4,7 @@
  * 3rdpatch - a tool to help update 3rd party components while keeping local fixes
  *
  * Copyright 2010, 2011 Tamas TEVESZ
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  * 1. CONFIGURATION
  * ----------------

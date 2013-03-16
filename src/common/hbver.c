@@ -1075,7 +1075,7 @@ char * hb_verHarbour( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_verHarbour()" ) );
 
    pszVersion = ( char * ) hb_xgrab( 80 );
-   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (Rev. %d)",
+   hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (r%d)",
                 HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS,
                 hb_verRevision() );
 
