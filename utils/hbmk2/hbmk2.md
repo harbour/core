@@ -215,7 +215,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
 
 
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
- - **hbrund|hbrun\*d** mode script runner in debug mode / interactive shell
+ - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
  - **harbour** mode \-hbraw \(emulate \-raw\- Harbour compiler\)
  - **clipper** mode \-hbcmp \(emulate Clipper compiler\)
  - **rtlink** mode \-rtlink \(emulate Clipper linker\)
@@ -642,6 +642,7 @@ Notes:
 \(see them with \-harbourhelp option\)
   - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - hbmk\.hbm make script in current directory is always processed if it exists\.
+  - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
   - Filters are accepted in each \.hbc line and most options\.  
 Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by '\!' operator and grouped by parentheses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Most \.hbc lines \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) and corresponding command\-line parameters will accept macro variables\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.

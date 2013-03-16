@@ -15865,7 +15865,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_Opt_Self := { ;
       NIL, ;
       { "hbrun*|*hbrun" , I_( "mode script runner / interactive shell" ) }, ;
-      { "hbrund|hbrun*d", I_( "mode script runner in debug mode / interactive shell" ) }, ;
+      { "hbrund|hbrun*d", I_( "mode script runner / interactive shell in debug mode" ) }, ;
       { "harbour"       , I_( "mode -hbraw (emulate -raw- Harbour compiler)" ) }, ;
       { "clipper"       , I_( "mode -hbcmp (emulate Clipper compiler)" ) }, ;
       { "rtlink"        , I_( "mode -rtlink (emulate Clipper linker)" ) }, ;
@@ -16252,6 +16252,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed " + ;
          e"if it exists." ), _HBMK_AUTOHBM_NAME ), ;
+      I_( "Using forwards slashes is recommended in option values as directory separator, " + ;
+         e"but backslashes are also equally accepted." ), ;
       I_( e"Filters are accepted in each .hbc line and most options.\nFilters can " + ;
          e"be combined using '&' (and), '|' (or) operators, negated by '!' operator " + ;
          e"and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, " + ;
