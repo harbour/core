@@ -1742,13 +1742,15 @@ ifeq ($(HB_INIT_DONE),)
 #        endif
 #        $(info ! REVISION: $(_tmp))
 #     endif
-      ifneq ($(call find_in_path,git),)
-         _tmp := $(shell git diff --name-only)
-         ifneq ($(_tmp),)
-            $(info ! === WARNING: Locally modified source code ===)
+      ifneq ($(wildcard .git),)
+         ifneq ($(call find_in_path,git),)
+            _tmp := $(shell git diff --name-only --quiet)
+            ifneq ($(_tmp),)
+               $(info ! === WARNING: Locally modified source code ===)
+            endif
+            _tmp := $(shell git rev-parse --short HEAD)
+            $(info ! GIT-REVISION: $(_tmp))
          endif
-         _tmp := $(shell git rev-parse --short HEAD)
-         $(info ! REVISION: $(_tmp))
       endif
    endif
 endif
