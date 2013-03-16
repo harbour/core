@@ -1587,6 +1587,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ShowHelp( hbmk, .T., .T. )
          RETURN _EXIT_HELP
 
+      CASE cParamL == "-longhelpmdsh" .OR. cParamL == "--longhelpmdsh"
+
+         hbmk[ _HBMK_lMarkdown ] := .T.
+         hbmk[ _HBMK_lShellMode ] := .T.
+
+         ShowHeader( hbmk )
+         ShowHelp( hbmk, .T., .T. )
+         RETURN _EXIT_HELP
+
       CASE Left( cParamL, 8 ) == "-find"
 
          find_harbour_function( hbmk, aArgs, cParam )
