@@ -411,7 +411,6 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    local cDef
 
    cDef := ;
-      '/*' + EOL + ' * $Id' + '$' + EOL + ' */' + EOL + EOL + ;
       '/*' + EOL + ;
       ' * Harbour Project source code:' + EOL + ;
       ' * National Collation Support Module ($1)' + EOL + ;
