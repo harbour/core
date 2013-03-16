@@ -16350,8 +16350,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleBasic := { ;
       NIL, ;
-      { I_( "To run the interactive shell ('dot' prompt)" ) , hb_StrFormat( I_( "%1$s ." ), _SELF_NAME_ ) }, ;
-      { I_( "To run a Harbour script" )                     , hb_StrFormat( I_( "%1$s myscript.hb [<parameters>]" ), _SELF_NAME_ ) } }
+      { I_( "To run the interactive shell ('dot' prompt)" ) , hb_StrFormat( I_( "$ %1$s ." ), _SELF_NAME_ ) }, ;
+      { I_( "To run a Harbour script" )                     , hb_StrFormat( I_( "$ %1$s myscript.hb [<parameters>]" ), _SELF_NAME_ ) } }
 
    LOCAL aHdr_ExampleHRB := { ;
       "", ;
@@ -16359,8 +16359,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleHRB := { ;
       NIL, ;
-      { I_( "To build" )                 , hb_StrFormat( I_( "%1$s -gh myscript.hb" ), _SELF_NAME_ ) }, ;
-      { I_( "To run result of above" )   , hb_StrFormat( I_( "%1$s myscript.hrb [<parameters>]" ), _SELF_NAME_ ) } }
+      { I_( "To build" )                 , hb_StrFormat( I_( "$ %1$s -gh myscript.hb" ), _SELF_NAME_ ) }, ;
+      { I_( "To run result of above" )   , hb_StrFormat( I_( "$ %1$s myscript.hrb [<parameters>]" ), _SELF_NAME_ ) } }
 
    LOCAL aHdr_ExampleApp := { ;
       "", ;
@@ -16368,15 +16368,15 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleApp := { ;
       NIL, ;
-      { I_( "To build one simple .prg" )                                                          , hb_StrFormat( I_( "%1$s hello.prg" ), _SELF_NAME_ ) }, ;
-      { I_( "To build multiple .prg sources into one application in incremental mode" )           , hb_StrFormat( I_( "%1$s mymain.prg myfuncs.prg -inc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application using a project file" )                                      , hb_StrFormat( I_( "%1$s myapp.hbp" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application using incremental mode" )                                    , hb_StrFormat( I_( "%1$s myapp.hbp -inc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file" ), hb_StrFormat( I_( "%1$s myapp.prg hbct.hbc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a raw library" )                                  , hb_StrFormat( I_( "%1$s myapp.prg -lmylib -L<path_to_mylib>" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a Windows resource" )                             , hb_StrFormat( I_( "%1$s mymain.prg myres.rc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which links against Harbour dynamic libraries" )             , hb_StrFormat( I_( "%1$s -shared myapp.prg" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application out of all .prg and .c sources residing in 'source' subdir" ), hb_StrFormat( I_( "%1$s -omyapp src/*.prg src/*.c" ), _SELF_NAME_ ) } }
+      { I_( "To build one simple .prg" )                                                          , hb_StrFormat( I_( "$ %1$s hello.prg" ), _SELF_NAME_ ) }, ;
+      { I_( "To build multiple .prg sources into one application in incremental mode" )           , hb_StrFormat( I_( "$ %1$s mymain.prg myfuncs.prg -inc" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application using a project file" )                                      , hb_StrFormat( I_( "$ %1$s myapp.hbp" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application using incremental mode" )                                    , hb_StrFormat( I_( "$ %1$s myapp.hbp -inc" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file" ), hb_StrFormat( I_( "$ %1$s myapp.prg hbct.hbc" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a raw library" )                                  , hb_StrFormat( I_( "$ %1$s myapp.prg -lmylib -L<path_to_mylib>" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a Windows resource" )                             , hb_StrFormat( I_( "$ %1$s mymain.prg myres.rc" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application which links against Harbour dynamic libraries" )             , hb_StrFormat( I_( "$ %1$s -shared myapp.prg" ), _SELF_NAME_ ) }, ;
+      { I_( "To build an application out of all .prg and .c sources residing in 'source' subdir" ), hb_StrFormat( I_( "$ %1$s -omyapp src/*.prg src/*.c" ), _SELF_NAME_ ) } }
 
    LOCAL aHdr_ExampleLib := { ;
       "", ;
@@ -16384,8 +16384,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleLib := { ;
       NIL, ;
-      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( I_( "%1$s -hblib mylibsrc.prg -omylib" ), _SELF_NAME_ ) }, ;
-      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( I_( "%1$s -hblib mylibsrc.prg -omylib -inc" ), _SELF_NAME_ ) } }
+      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( I_( "$ %1$s -hblib mylibsrc.prg -omylib" ), _SELF_NAME_ ) }, ;
+      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( I_( "$ %1$s -hblib mylibsrc.prg -omylib -inc" ), _SELF_NAME_ ) } }
 
    LOCAL aHdr_Config := { ;
       "", ;

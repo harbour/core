@@ -565,50 +565,50 @@ Examples to start with hbmk2:
 
 
  - **To run the interactive shell \('dot' prompt\)**  
-hbmk2 \.
+$ hbmk2 \.
  - **To run a Harbour script**  
-hbmk2 myscript\.hb \[&lt;parameters&gt;\]
+$ hbmk2 myscript\.hb \[&lt;parameters&gt;\]
 
 
 Examples to build and run Harbour portable binary \(aka precompiled Harbour script\):
 
 
  - **To build**  
-hbmk2 \-gh myscript\.hb
+$ hbmk2 \-gh myscript\.hb
  - **To run result of above**  
-hbmk2 myscript\.hrb \[&lt;parameters&gt;\]
+$ hbmk2 myscript\.hrb \[&lt;parameters&gt;\]
 
 
 Examples to build a Harbour application:
 
 
  - **To build one simple \.prg**  
-hbmk2 hello\.prg
+$ hbmk2 hello\.prg
  - **To build multiple \.prg sources into one application in incremental mode**  
-hbmk2 mymain\.prg myfuncs\.prg \-inc
+$ hbmk2 mymain\.prg myfuncs\.prg \-inc
  - **To build an application using a project file**  
-hbmk2 myapp\.hbp
+$ hbmk2 myapp\.hbp
  - **To build an application using incremental mode**  
-hbmk2 myapp\.hbp \-inc
+$ hbmk2 myapp\.hbp \-inc
  - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
-hbmk2 myapp\.prg hbct\.hbc
+$ hbmk2 myapp\.prg hbct\.hbc
  - **To build an application which uses a raw library**  
-hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
+$ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
  - **To build an application which uses a Windows resource**  
-hbmk2 mymain\.prg myres\.rc
+$ hbmk2 mymain\.prg myres\.rc
  - **To build an application which links against Harbour dynamic libraries**  
-hbmk2 \-shared myapp\.prg
+$ hbmk2 \-shared myapp\.prg
  - **To build an application out of all \.prg and \.c sources residing in 'source' subdir**  
-hbmk2 \-omyapp src/\*\.prg src/\*\.c
+$ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
 
 Examples to build a Harbour static library:
 
 
  - **To build library 'mylib' from sources**  
-hbmk2 \-hblib mylibsrc\.prg \-omylib
+$ hbmk2 \-hblib mylibsrc\.prg \-omylib
  - **To build library 'mylib' from sources using incremental mode**  
-hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
+$ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Exit codes \("errorlevels"\):  
 
