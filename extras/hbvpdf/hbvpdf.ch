@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifndef HBVPDF_CH
 #define HBVPDF_CH

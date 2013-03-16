@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 include $(TOP)$(ROOT)config/instsh.mk
 

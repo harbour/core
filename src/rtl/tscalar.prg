@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Harbour implementation of Class(y) Scalar classes
  *

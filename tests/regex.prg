@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test for regular expression functions
 // Giancarlo Niccolai
 

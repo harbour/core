@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Serial communication port API wrapper functions
  *

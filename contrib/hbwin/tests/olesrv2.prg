@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for OLE server using hash array with
  *    strict item order (associative hash array) to define OLE objects

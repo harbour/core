@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Editing and Forms Class for HTMLLIB
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Memvar (PRIVATE/PUBLIC) runtime support
  *

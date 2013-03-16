@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Header file so MSVC can use ole in C mode while compile in C++ mode
  *

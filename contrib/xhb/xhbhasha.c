@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    xHarbour Hash with Associative Array compatibility functions
  *

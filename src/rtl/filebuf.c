@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    functions to access files with shared handles and locks
  *    (buffers in the future)

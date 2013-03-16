@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 // ; Pushing Harbour to the line length limit.
 // ; Donated to the public domain by

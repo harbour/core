@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * DOS Ukrainian (RUSCII) cp1125 <-> Unicode conversion table
  *

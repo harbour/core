@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * POSIX function wrappers to get/set user and group IDs
  *

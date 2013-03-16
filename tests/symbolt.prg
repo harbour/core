@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Class(y) Class Symbol documentation is located at:
 // http://www.clipx.net/ng/classy/ngdebc.php
 

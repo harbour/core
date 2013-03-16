@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Steven Tyrakowski
  * CIS ID....: ?
  *

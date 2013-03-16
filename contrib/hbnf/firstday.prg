@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Jeff Bryant
  * CIS ID....: ?
  *

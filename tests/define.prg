@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifndef TEST
 #warning Warning: This sample must be tested using /dTEST compiler flag

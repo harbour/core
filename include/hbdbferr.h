@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * DBF error codes
  *

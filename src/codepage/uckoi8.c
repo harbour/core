@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * KOI8 <-> Unicode conversion table
  *

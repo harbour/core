@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* VERY IMPORTANT: Don't use this query as sample, they are used for stress tests !!! */
 
 #require "hbfbird"

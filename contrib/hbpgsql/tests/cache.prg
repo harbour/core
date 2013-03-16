@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This samples show how to use dbf to cache postgres records.
  */
 

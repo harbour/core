@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Debugging functions for LOCAL, STATIC variables and the stack
  *

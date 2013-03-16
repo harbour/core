@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 C_OBJS := $(C_SOURCES:.c=$(OBJ_EXT)) $(CPP_SOURCES:.cpp=$(OBJ_EXT)) $(OBJC_SOURCES:.m=$(OBJ_EXT))
 S_OBJS := $(S_SOURCES:.s=$(OBJ_EXT)) $(SX_SOURCES:.sx=$(OBJ_EXT))

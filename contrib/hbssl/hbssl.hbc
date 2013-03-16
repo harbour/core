@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=OpenSSL wrapper (encryption)
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * [S|G]ETKX[LAT|TAB] CA-T*ols functions (USE IT AT YOUR OWN RISK)
  *

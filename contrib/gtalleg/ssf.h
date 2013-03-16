@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *
  * This file was conceived while I was developing an allegro based gt
  * (gtAlleg) for xHarbour, so it is brought under the same license terms.

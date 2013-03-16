@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Basic test for memvars handling
 
 #ifndef __HARBOUR__

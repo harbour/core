@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    BIG5 <-> UCS16 conversion tables
  *    code generated automatically by tests/big5_gen.prg

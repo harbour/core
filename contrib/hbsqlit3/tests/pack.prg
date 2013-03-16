@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQLite3 Demo
  *
  * Copyright 2007 P.Chornyj <myorg63@mail.ru>

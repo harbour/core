@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for OLE server which works like
  *    xHarbour.com OLE servers described at

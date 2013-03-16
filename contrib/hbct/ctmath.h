@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   CA-T*ols for Harbour, Math header file
  *

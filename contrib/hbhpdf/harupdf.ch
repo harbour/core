@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour level header for hbhpdf/libharu Library.
  *
  * Copyright 2008 {list of individual authors and e-mail addresses}

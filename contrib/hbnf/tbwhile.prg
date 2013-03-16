@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Jim Orlowski
  * CIS ID....: ?
  *

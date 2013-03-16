@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    TBrowse Demonstration with GUI Elements
  *
  *    This protocol can be clubbed with pure console implementation

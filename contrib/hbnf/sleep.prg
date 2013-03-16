@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Leo Letendre
  * CIS ID....: 73607,233
  *

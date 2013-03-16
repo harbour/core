@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * NEXTSTEP <-> Unicode conversion table
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * AMPM() compatibility function from the SAMPLES directory of Clipper.
  *

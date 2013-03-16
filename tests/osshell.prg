@@ -1,7 +1,4 @@
 //NOTEST             // It is very frustrating if this one is auto-tested
-/*
- * $Id$
- */
 
 //
 // This program shells to OS

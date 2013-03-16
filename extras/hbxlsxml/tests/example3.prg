@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  *    HiPer-SEEK / CFTS compatible library
  *    Cfts*() functions

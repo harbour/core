@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Keith A. Wire (docs included)
  * CIS ID....: 73760,2427
  *

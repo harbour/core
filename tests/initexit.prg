@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour INIT and EXIT functions and initialization
 // of static variables
 

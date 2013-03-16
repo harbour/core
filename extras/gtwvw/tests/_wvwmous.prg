@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
   Pseudo mouse object in GTWVW GUI
   copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 

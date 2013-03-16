@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * xpp_TBrowseDB(), dbSkipper() functions for Xbase++
  *

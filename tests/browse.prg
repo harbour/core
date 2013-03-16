@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Browse()
 
 #include "inkey.ch"

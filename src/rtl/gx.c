@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * NoSnow(), SetMode(), IsColor() functions
  *

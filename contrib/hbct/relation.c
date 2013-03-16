@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   CharRelA() and CharRelRep() CT3 string functions
  *

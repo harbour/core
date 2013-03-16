@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 // Testing Harbour duplicate variable definition detection
 

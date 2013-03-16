@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour AND OR operators
 
 PROCEDURE Main()

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * TIPCgi Class oriented cgi protocol
  *

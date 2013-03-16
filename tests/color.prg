@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // This program demonstrates that SetColor() works with
 // Set( _SET_COLOR ) and also that the internal representation

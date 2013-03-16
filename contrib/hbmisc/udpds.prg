@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This module demonstrates a simple UDP Discovery Server
  *
  * If you run some service on the network (ex., netio) you need to

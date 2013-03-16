@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: David Richardson
  * CIS ID....: 72271,53
  *

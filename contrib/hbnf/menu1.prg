@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Paul Ferrara
  * CIS ID....: 76702,556
  *

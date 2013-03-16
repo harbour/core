@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * RPC demo module for hbnetio server.
  *    Usage: 'hbnetio -rpc=rpcdemo.hb'
  *

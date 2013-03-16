@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Copies the contents of a database to an SDF text file.
  * Appends the contents of an SDF text file to a database.

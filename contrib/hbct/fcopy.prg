@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   CT3 file functions:
  *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()

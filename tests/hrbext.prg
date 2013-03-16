@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // see also hrb.prg
 
 FUNCTION Msg()

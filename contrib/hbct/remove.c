@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   RemAll(), RemLeft() and RemRight() CT3 string functions
  *

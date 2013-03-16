@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: ?
  *

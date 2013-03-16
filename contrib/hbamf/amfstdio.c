@@ -1,14 +1,9 @@
-/*
- * $Id$
- */
-
 /*******
  *
  *  by Ilina Stoilkovska <anili100/at/gmail.com> 2011
  *     Aleksander Czajczynski <hb/at/fki.pl> 2012
  *
  *  Reading AMFIO data from standard input pipe
- *
  *
  ********/
 

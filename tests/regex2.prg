@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test for regular expression functions
 // This allows to use a fine tune regex to use them in programs
 // Giancarlo Niccolai

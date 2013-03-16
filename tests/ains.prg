@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // Array test AIns() / ADel() / ASize() / AFill()
 //

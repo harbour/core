@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * __Box(), __BoxS(), __BoxD() undocumented box drawing functions
  *

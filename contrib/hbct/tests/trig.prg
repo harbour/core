@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   Test CT3 TRIGONOMETRIC functions - PART 1
  *   - Pi()

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    xHarbour compatible WITH OBJECT internal functions
  *

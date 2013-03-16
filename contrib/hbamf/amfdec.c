@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /*******
  *
  *  by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012

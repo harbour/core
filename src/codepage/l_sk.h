@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Przemyslaw Czerpak <druzus / at / priv.onet.pl> */
 /* Viktor Szakats (harbour syenar.net) */
 

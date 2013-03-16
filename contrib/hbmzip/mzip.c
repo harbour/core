@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Wrapper functions for minizip library
  *    Some higher level zip archive functions

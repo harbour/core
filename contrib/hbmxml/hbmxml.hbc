@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=minixml wrapper (XML parser/generator)
 

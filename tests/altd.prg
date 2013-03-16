@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing AltD() and Alert() coloring
 // Notice you have to compile it using /b
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Portable ARC4 PRNG, based on arc4random.c from Libevent.
  * Harbour adaptation Copyright 2011 Tamas TEVESZ <ice@extreme.hu>
  */

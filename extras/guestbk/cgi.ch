@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #define CGI_SERVER_SOFTWARE     1
 #define CGI_SERVER_NAME         2

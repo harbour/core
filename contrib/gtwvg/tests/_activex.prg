@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 

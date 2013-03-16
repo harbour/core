@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Class HBPersistent test
 
 #include "hbclass.ch"

@@ -1,6 +1,3 @@
-;
-; $Id$
-;
 
 EXPORTS
 DllGetClassObject    = DllGetClassObject@12     PRIVATE

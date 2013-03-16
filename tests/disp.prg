@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test program for SetPos(), DispOut(), ?, and ??  Clipper compatibility
 // The results should be identical between Harbour with the GT API and
 // Clipper. Inkey() is used to pause the display at certain points to make

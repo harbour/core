@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Mindaugas Kavaliauskas <dbtopas@dbtopas.lt> */
 
 #define HB_CP_UPPER     "AĄBCČDEĘĖFGHIĮYJKLMNOPQRSŠTUŲŪVWXZŽ"

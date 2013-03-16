@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  */

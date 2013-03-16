@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Misc FoxPro functions (feel free to expand/fix it as you like)
  *

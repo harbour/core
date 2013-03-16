@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing of multiple arguments
 //
 // Written by Eddie Runia <eddie@runia.com>

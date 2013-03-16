@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * HBTextLine Class (used by HBEditor class)
  *

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /******************************************
  * TIP test
  * FTP Advanced operations Test

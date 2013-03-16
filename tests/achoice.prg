@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Released to Public Domain.
 
 #include "achoice.ch"

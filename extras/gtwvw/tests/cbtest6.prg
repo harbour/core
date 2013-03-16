@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2005 Budyanto Dj. <budyanto@centrin.net.id>
 
    This is an example on how to integrate GTWVW's combobox into

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // while loop test
 
 PROCEDURE Main()

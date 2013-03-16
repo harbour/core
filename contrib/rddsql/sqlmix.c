@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQL MIX (Memory Index) Database Driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *     Generates Javascript and DHTML list menus
  *     (see the website/jList dir for an example)

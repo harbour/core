@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # Enable dynamic loading with:
 #    -env:HB_DYNLOAD_RDDADS=yes

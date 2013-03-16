@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Testing Clipper Extended system.
  *
  * NOTE: build together with extend1.prg

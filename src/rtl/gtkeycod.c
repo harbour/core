@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    hb_gt_dos_keyCodeTranslate()
  *          function used by DOS, WIN and OS2 ports of few GTs which use

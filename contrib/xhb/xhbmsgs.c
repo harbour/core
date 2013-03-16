@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    xHarbour compatible messages used in overloaded scalar classes
  *

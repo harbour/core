@@ -1,3 +1,4 @@
+
 #if defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 )
 ICON 1 DISCARDABLE "../../package/harb_os2.ico"
 #else

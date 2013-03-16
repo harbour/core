@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Dave Adams
  * CIS ID....: ?
  *

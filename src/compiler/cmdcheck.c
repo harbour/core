@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Compiler command line and HARBOURCMD/CLIPPERCMD checking
  *

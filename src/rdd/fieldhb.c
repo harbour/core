@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * FieldLen(), FieldDec(), FieldType() Harbour extensions.
  *

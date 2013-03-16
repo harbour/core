@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * hb_TabExpand() and hb_ReadLine() functions
  *

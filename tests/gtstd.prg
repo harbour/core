@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* gtstd test */
 
 #ifndef __HARBOUR__

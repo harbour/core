@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour FOR NEXT loops
 //
 // Written by Eddie Runia <eddie@runia.com>

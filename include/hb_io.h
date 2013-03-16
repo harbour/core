@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * A platform indpendent include file to include unistd.h and/or io.h
  *

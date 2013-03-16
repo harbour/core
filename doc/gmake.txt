@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 INTRODUCTION
 ============
@@ -27,9 +24,6 @@ For example, the following was the Makefile for an early version
 of the VM library:
 
 --  Cut here  ---------------------------------------
-#
-# $Id$
-#
 
 ROOT := ../../
 
@@ -58,9 +52,6 @@ What this means is:
 Let's look at another Makefile, this one for the Harbour compiler:
 
 --  Cut here  ---------------------------------------
-#
-# $Id$
-#
 
 ROOT := ../../
 
@@ -84,9 +75,6 @@ in this Makefile are those appropriate to build a stand-alone binary.
 
 One final Makefile, this one from the source directory:
 
-#
-# $Id$
-#
 
 --  Cut here  ---------------------------------------
 ROOT := ../

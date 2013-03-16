@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
  ¨2THE HARBOUR PROJECT LICENSE¨1
 ¨3 ===========================

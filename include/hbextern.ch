@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * The declarations for all harbour defined functions/procedures.
  * (Compatibility header)

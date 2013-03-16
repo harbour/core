@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * OEM <-> ANSI string conversion functions (Windows specific, Xbase++ ext.)
  *

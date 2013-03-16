@@ -1,5 +1,2 @@
-/*
- * $Id$
- */
 
 #include "hbmath.ch"

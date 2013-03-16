@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Compiler Harbour Portable Object (.hrb) generation
  *

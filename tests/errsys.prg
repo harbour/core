@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour Error system
 
 #ifndef __HARBOUR__

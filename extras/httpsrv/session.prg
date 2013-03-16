@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    uHTTPD (Micro HTTP server) session functions
  *

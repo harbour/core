@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   CT3 Printer functions: - KSetIns()
  *                          - KSetCaps()

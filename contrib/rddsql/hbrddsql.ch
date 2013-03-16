@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQL Database Driver include file
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* NOTE: Redirect STDERR to a file to see the verbose output. */
 
 #require "hbcurl"

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * ISO-8859-13 <-> Unicode conversion table
  *

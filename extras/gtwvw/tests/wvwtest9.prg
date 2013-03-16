@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 //
 //                      Test/Demo Program for

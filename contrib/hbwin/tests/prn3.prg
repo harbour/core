@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)

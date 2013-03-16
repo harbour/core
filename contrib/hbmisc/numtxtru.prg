@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Functions to convert a number and date to East Slavic (Russian,
  * Ukrainian and Belorussian) text

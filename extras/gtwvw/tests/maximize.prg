@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    sample on using Maximize Mode in gtwvw.
    budyanto@centrin.net.id
  */

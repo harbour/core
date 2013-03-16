@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test program for box and line drawing functions.
 /* Harbour Project source code
    http://harbour-project.org/

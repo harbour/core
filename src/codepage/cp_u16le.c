@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    example of Harbour codepage using UTF-16 little endian encoding
  *

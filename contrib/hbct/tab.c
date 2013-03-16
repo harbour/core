@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   TabExpand(), TabPack() CT3 string functions
  *

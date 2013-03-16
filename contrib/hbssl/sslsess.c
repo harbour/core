@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * OpenSSL API (SSL_SESSION) - Harbour interface.
  *

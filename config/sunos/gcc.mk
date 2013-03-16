@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 ifeq ($(HB_CMP),)
    ifeq ($(HB_BUILD_MODE),cpp)

@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # How to run yacc.
 YACC := bison

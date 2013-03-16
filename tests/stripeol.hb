@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Strips spaces at EOL text files.
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)

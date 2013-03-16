@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * Versatile logging system - Logger sending log message to e-mail
  *

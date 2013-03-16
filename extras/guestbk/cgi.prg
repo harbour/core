@@ -1,25 +1,21 @@
 /*
- * $Id$
+ *
+ * Harbour Test of a CGI/HTML-Generator class.
+ *
+ * 1999-05-30  First implementation.
+ *
+ *             Tips: - Use ShowResults to make dynamic html (to test dynamic
+ *                     results, put the exe file on CGI-BIN dir or equivalent);
+ *                   - Use SaveToFile to make static html page
+ *
+ * 1999-05-31  Initial CGI functionality.
+ * 1999-06-01  Translated %nn to correct chars.
+ * 1999-06-02  Dynamic TAG matching routines (inspired on Delphi).
+ *             First attempt to convert Delphi's ISAPI dll of WebSites'
+ *             Function List
+ * 1999-07-29  Changed QOut() calls to OutStd() calls.
+ *
  */
-
-/*
-*
-*  Harbour Test of a CGI/HTML-Generator class.
-*
-*  1999-05-30  First implementation.
-*
-*              Tips: - Use ShowResults to make dynamic html (to test dynamic
-*                      results, put the exe file on CGI-BIN dir or equivalent);
-*                    - Use SaveToFile to make static html page
-*
-*  1999-05-31  Initial CGI functionality.
-*  1999-06-01  Translated %nn to correct chars.
-*  1999-06-02  Dynamic TAG matching routines (inspired on Delphi).
-*              First attempt to convert Delphi's ISAPI dll of WebSites'
-*              Function List
-*  1999-07-29  Changed QOut() calls to OutStd() calls.
-*
-**/
 
 #include "fileio.ch"
 #include "hbclass.ch"

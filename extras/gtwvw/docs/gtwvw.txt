@@ -1,9 +1,4 @@
 /*
- * $Id$
- */
-
-/*
- * gtwvw.txt
  * General Descriptions of GTWVW
  * Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  */

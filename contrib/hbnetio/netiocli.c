@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration code for alternative RDD IO API which uses own
  *    very simple TCP/IP file server with RPC support

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * libcurl 'easy' API - Harbour interface.
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    CT3 serial communication functions not directly operating on
  *    serial devices

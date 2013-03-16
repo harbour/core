@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>

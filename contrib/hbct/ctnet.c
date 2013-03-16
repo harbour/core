@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * CT3 NET functions to PC-LAN/MS-NET.
  *

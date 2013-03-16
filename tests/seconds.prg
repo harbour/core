@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Test Seconds() */
 
 /* Harbour Project source code

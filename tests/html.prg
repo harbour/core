@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /**
  *
  *  Harbour Test of a HTML-Generator class.

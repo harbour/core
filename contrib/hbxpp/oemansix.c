@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * XPP compatible OEM <-> ANSI string conversion functions
  *

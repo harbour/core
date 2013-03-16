@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Terry Hackett
  * CIS ID....: 76662,2035
  *

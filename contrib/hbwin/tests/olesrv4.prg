@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for OLE server returning to client
  *    HVM objects as OLE object. It's also test for parameters

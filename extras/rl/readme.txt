@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 1.) Copy the full content of /SOURCE/RL from your original
     CA-Cl*pper installation to this directory.

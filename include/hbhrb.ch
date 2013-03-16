@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Header file for dynmaic PCODE modules (HRB) options
  *

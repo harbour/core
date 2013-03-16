@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 #pragma TracePragmas=On
 #pragma ExitSeverity=1

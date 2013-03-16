@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for alternative RDD IO API, RPC and
  *    asynchronous data streams in NETIO

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   Test CT3 Numeric functions - PART 1
  *   - Celsius()

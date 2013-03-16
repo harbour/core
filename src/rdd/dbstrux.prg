@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * __dbCopyStruct(), __dbCopyXStruct(), __dbCreate() functions
  *

@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifdef __XHARBOUR__
 #define OTHERWISE DEFAULT

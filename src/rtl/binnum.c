@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin() functions
  *

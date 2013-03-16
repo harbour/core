@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    xHarbour compatible WIN32PRN class which inherits from WIN_PRN class
  *    hiding some differences between Harbour and xHarbour

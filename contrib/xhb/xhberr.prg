@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * xHarbour default error handler and error functions:
  *    xhb_ErrorSys(), __BreakBlock(), __ErrorBlock(),

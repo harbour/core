@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Managing variables by reference
 
 PROCEDURE Main()

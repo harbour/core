@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: David Husnian
  * CIS ID....: ?
  *

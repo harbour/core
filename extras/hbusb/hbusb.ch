@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifndef HBUSB_CH
 #define HBUSB_CH

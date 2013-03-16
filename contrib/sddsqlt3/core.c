@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQLite3 Database Driver
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)

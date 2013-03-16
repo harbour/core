@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing a static function call
 
 PROCEDURE Main()

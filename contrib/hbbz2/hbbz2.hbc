@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=bz2 wrapper (compression)
 

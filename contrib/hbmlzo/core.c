@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    hbmLZO (miniLZO functions wrapper).
  *    miniLZO -- mini subset of the LZO real-time data compression library

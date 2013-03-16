@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Author....: Joseph D. Booth
 // Copyright.: (C)1993, Joseph D. Booth, All Rights Reserved
 //

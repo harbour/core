@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * MySQL Database Driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>

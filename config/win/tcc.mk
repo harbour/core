@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 HB_BUILD_SHARED := no
 

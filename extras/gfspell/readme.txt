@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Grumpfish Speller library port for Harbour.
 

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Typical welcome message
 
 PROCEDURE Main()

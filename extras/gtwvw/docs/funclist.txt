@@ -1,9 +1,4 @@
 /*
- * $Id$
- */
-
-/*
- * funclist.txt
  * List (and Description) of GTWVW .prg Callable Functions.
  * Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  */

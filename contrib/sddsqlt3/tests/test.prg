@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #require "rddsql"
 #require "sddsqlt3"

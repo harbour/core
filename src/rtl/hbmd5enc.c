@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    PRG functions for MD5 encryption/decryption using
  *    CFB (cipher feedback) mode

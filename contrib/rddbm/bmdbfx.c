@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Alternative BMDBF* implementation which respects RDD inheritance
  *    scheme and gives similar functionality and PRG functions as modified

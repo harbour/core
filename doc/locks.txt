@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Locking schemes used with DBF files.
 Przemyslaw Czerpak (druzus/at/poczta.onet.pl)

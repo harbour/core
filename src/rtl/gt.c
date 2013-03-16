@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * DispBegin(), DispEnd(), DispCount() functions
  *

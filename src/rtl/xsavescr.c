@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * __XSaveScreen()/__XRestScreen() functions
  *

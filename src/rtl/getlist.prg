@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * GET system active getlist handler for default HBGETLIST/GETSYS/READVAR
  *

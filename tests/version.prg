@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Testing the Version() function */
 
 /* Harbour Project source code

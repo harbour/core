@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour device management.
 
 #include "box.ch"

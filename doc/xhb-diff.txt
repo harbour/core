@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 This text describes most important differences between Harbour and xHarbour
 with some references to Clipper and other compatible compilers like xBase++,

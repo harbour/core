@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    XWindow Console
  * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>

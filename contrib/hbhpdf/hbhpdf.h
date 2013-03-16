@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  * hbhpdf header
  *

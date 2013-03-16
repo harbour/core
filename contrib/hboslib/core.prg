@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * OSLib emulation for Harbour
  *    http://www.davep.org/clipper/OSLib/

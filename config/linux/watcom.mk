@@ -1,8 +1,3 @@
-#
-# $Id$
-#
-
-# GNU Make file for Open Watcom C/C++ compiler
 
 OBJ_EXT := .o
 LIB_PREF :=

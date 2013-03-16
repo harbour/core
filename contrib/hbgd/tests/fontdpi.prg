@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * GD graphic library.
  * graphic font DPI demo
  *

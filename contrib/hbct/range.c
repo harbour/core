@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   RangeRem() and RangeRepl() CT3 string functions
  *

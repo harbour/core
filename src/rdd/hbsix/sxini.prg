@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    SIX compatible functions:
  *          _sx_IniInit()

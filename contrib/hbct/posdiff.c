@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   PosDiff() and PosEqual() CT3 string functions
  *

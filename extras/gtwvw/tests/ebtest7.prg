@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
   copyright (c) Budyanto Dj. <budyanto@centrin.net.id>
 
   Editbox demo

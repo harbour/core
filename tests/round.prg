@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour rounding
 
 /* Harbour Project source code

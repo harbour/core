@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // Function Array syntax test
 //

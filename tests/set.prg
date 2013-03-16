@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing SET
 
 REQUEST DBFNTX

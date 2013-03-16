@@ -1,11 +1,7 @@
-/*
- * $Id$
- */
-
 /*******
  *
  *  by Aleksander Czajczynski <hb/at/fki.pl> 2011
- **
+ *
  *  Some class support functions for AMF3 (de)serialization
  *
  ********/

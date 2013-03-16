@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    This is prog0.prg modified in a quick and dirty fashion to convert

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour ProcName() and ProcLine()
 
 PROCEDURE Main()

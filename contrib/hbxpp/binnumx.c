@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Bin2U(), W2Bin(), U2Bin() functions
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *
  * Copyright 2011 Tamas TEVESZ <ice@extreme.hu>

@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 The Harbour virtual machine (VM)
 

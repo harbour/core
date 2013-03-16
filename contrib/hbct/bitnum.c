@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    CT3 Number and bit manipulation functions:
  *       NumAnd(), NumOr(), NumXor(), NumNot(), NumHigh(), NumLow()

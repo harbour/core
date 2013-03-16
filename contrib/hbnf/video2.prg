@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * ft_CLS(), ft_VidStr(), ft_WrtChr()
  *

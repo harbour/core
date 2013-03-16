@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    ZLIB compression for Harbour hb_inet*() connections
  *

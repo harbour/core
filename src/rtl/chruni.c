@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Binary and unicode string functions:
  *    hb_UChar(), hb_UCode(), hb_ULen(), hb_UPeek(), hb_UPoke()

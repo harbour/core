@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    IsFunction( <cName> ) -> <lExists>
  * FlagShip compatible function

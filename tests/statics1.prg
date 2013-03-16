@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Statics overlapped!
 //
 // Compile statics1.prg, statics2.prg and link both files

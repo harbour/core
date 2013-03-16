@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Video subsystem for Windows compilers ver.2
  * Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>

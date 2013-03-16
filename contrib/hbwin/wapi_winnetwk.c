@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Windows API functions (winnetwk.h - mpr.dll)
  *

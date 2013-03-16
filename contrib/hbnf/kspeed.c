@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: James R. Zack
  * CIS ID....: 75410,1567
  *

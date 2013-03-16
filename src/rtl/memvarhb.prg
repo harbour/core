@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * MEMVAR save/restore functions with >10 long variable name support.
  *

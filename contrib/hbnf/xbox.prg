@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Don Opperthauser
  * CIS ID....: ?
  *

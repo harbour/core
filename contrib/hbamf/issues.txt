@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 * amf3enc.c
 * amf3dec.c

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Check alignment dependent lang item(s)
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)

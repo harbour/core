@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 
 This folder contains compression related files including:

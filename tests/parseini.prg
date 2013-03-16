@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /**
  * Test for Ini file reading/writing
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code
  * This file contains source for first ODBC routines.
  *

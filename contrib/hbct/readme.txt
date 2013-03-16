@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 CA-T**ls Compatible Library for Harbour
 =======================================

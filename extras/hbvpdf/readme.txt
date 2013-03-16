@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Welcome to _pure_ Clipper Pdf Library!
 

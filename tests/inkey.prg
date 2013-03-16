@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Testing Harbour keyboard input. */
 
 /* Harbour Project source code

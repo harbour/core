@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *
  * Rewritten from C: Viktor Szakats (harbour syenar.net)

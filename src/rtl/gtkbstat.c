@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Low level keyboard shift state functions common to some GT drivers
  *

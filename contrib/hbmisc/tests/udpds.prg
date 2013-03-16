@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This module demonstrates a simple UDP Discovery Server
  */
 

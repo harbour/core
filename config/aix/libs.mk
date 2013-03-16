@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # When compiling and linking with -pthread, the library search path should
 # include -L/usr/lib/threads at the beginning of the path.

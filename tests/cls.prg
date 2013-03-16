@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour classes ON ERROR feature
 
 #include "hbclass.ch"

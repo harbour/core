@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  *    Wvt*Classes Demonstration
  *
  *    This protocol can be clubbed with pure console implementation

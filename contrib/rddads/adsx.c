@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * ADS memory index driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>

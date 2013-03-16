@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Harbour Get system sample
 
 #include "inkey.ch"

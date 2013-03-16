@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 ifeq ($(HB_BUILD_MODE),cpp)
    ifneq ($(findstring clang$(subst x, ,x)version$(subst x, ,x)1,$(shell clang --version)),)

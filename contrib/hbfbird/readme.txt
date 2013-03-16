@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 README 2003-12-23 - Harbour Low Level api for Firebird and Interbase RDBMS
 

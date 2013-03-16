@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * TBrowse() CA-Cl*pper 5.3 functions
  *

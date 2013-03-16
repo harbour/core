@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * SMS library. EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES.
  *

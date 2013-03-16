@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Converts lang modules to standard .po files
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)

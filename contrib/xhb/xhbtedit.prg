@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Editor Class (base for MemoEdit(), debugger, etc.)
  *

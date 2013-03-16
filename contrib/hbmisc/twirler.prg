@@ -1,12 +1,8 @@
-/*
- * $Id$
- */
-
-// New libmisc twirler class
 /* Harbour Project source code
+   New libmisc twirler class
    http://harbour-project.org/
-   Donated to the public domain on 2001-03-15 by David G. Holm <dholm@jsd-llc.com>
-*/
+   Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com>
+ */
 
 #include "hbclass.ch"
 

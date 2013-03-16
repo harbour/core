@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for instance variables casting and allocating
  *    in multiinherited classes

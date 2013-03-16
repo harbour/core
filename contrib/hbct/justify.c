@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   JustLeft() and JustRight() CT3 string functions
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    common file with all HVM functions for compilers which can improve
  *    speed automatically inlining functions

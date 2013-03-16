@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Known bugs:
    ----------
    1) It requires files separated with CR/LF pairs

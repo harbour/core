@@ -1,4 +1,3 @@
-
 /* TOFIX: Compiles fine with Clipper, fails with Harbour */
 
 PROCEDURE Main()

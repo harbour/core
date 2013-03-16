@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Test TBrowse :rowPos for compiler in Clipper and Harbour */
 
 #include "inkey.ch"

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Ted Means (with much gratitude to Robert DiFalco)
  * CIS ID....: 73067,3332
  *

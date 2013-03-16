@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * OpenSSL API (SSL) - Harbour extensions
  *

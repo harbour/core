@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * DataBase Function Mapped to 10 Characters length
  *

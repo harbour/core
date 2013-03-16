@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 ifneq ($(HB_SHELL),sh)
    MK_OS := $(subst /,\,$(MK))

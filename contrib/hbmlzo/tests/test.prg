@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #require "hbmlzo"
 #require "hbbz2"

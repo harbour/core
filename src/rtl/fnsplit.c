@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * hb_FNameSplit(), hb_FNameMerge() functions
  *

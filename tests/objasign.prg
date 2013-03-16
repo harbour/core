@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // Object Array syntax test
 //

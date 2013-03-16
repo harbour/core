@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * FreeImage graphic library low level (client api) interface code.
  *

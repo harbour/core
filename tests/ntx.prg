@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"

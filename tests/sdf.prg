@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 // Test program for COPY TO SDF and APPEND FROM SDF
 // Note: Only COPY TO SDF is fully implemented at this time...

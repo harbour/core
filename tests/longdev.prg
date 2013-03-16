@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour long string handling with device output
 
 /* Harbour Project source code

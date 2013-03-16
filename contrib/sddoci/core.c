@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Oracle (via OCILIB) Database Driver
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    Mapping of gtwvt functions and their coresponding ones in gtwvw.

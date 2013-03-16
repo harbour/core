@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # TODO: No autodetection
 

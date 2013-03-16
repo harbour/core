@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #include "hbgtinfo.ch"
 #include "inkey.ch"

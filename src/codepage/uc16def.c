@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Unicode character tables
  *    code generated automatically by tests/uc_gen.prg

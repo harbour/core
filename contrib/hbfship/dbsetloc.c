@@ -1,10 +1,6 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
- *    DBSETLOCATE[BLOCK]( <bFor> ) -> <lSet>
+ *    dbSetLocate[Block]( <bFor> ) -> <lSet>
  * FlagShip compatible functions
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>

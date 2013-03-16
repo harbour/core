@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Koch Flake -- for testing gdImage*Polygon()
  */
 

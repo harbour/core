@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Reimplementation of xhb .zip functions. EXPERIMENTAL CODE. USE AT YOUR OWN RISK. NO GUARANTEES.
  *

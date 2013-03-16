@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 /* This work is licensed under the Creative Commons Attribution-ShareAlike
    License. To view a copy of this license, visit

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *

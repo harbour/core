@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: David Barrett
  * CIS ID....: 72037,105
  *

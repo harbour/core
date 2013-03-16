@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   Program to test functions to mimic Clipper Tools III date and time functions.
  *   (C) Alan Secker 2002 <alansecker@globalnet.co.uk>

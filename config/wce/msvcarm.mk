@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 OBJ_EXT := .obj
 LIB_PREF :=

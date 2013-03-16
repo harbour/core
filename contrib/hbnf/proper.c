@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Robert DiFalco and Glenn Scott
  * CIS ID....: 71610,1705
  *

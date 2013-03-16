@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing multiple returns into a function
 
 PROCEDURE Main()

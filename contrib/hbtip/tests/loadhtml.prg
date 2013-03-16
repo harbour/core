@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Sends a query to Google and displays the Links from the response HTML page
  */
 

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* test of pass by reference @ */
 
 PROCEDURE Main()

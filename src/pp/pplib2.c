@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    .prg interface to preprocessor
  *    __pp_StdRules() function

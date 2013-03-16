@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * ProcName(), ProcLine() and ProcFile() functions
  *

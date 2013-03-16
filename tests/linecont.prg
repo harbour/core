@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 PROCEDURE Main()
 LOCAL a, b

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Function naming casing fixer
  *
  * The script takes proper casing from .hbx files

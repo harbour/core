@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // quick exit test
 
 PROCEDURE Main()

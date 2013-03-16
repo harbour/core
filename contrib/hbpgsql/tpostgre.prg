@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * PostgreSQL RDBMS low level (client api) interface code.
  *

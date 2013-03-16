@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour date management
 
 PROCEDURE Main()

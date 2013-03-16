@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Eric Splaver
  * CIS ID....: ?
  *

@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifdef __HARBOUR__
 #require "hbct"

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This example demonstrates operator overloading for
  * creating a HTML document.
  */

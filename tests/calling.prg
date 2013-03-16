@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Calling different PRG functions
 
 PROCEDURE Main()

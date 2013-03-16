@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    code to generate C source with conversion tables between BIG5 and UCS16
  *    using data defined by Unicode, Inc. in BIG5.TXT

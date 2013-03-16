@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMInit := .F.

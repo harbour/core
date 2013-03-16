@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Strip multiple HB_P_LINE PCODEs which can appear after dead code
  * and dummy jumps elimination

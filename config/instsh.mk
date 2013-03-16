@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 INSTALL_RULE :=
 

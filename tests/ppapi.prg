@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 REQUEST __pp_StdRules
 

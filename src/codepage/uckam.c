@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Czech and Slovak Kamenicky <-> Unicode conversion table
  *

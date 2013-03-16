@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code
  * ft_GetMode()/ft_SetMode() functions
  *

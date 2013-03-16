@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * ScrollBar class test
  *
  * Harbour Project source code

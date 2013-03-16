@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Demo program to show how to make use of WVW_INPUTFOCUS feature
  * of GTWVW
  *

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* TEST FOR USING VARIABLE NUMBER OF PARAMETERS */
 
 MEMVAR m_iLoop

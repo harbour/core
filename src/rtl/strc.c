@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * hb_StrDecodEscape() - decode string with \ escape sequences
  * hb_StrCDecode() - decode string using C compiler rules

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Test program for Mini-XML, a small XML-like file parsing library.
  *
  * Copyright 2003-2011 by Michael R Sweet.

@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 FUNCTION __pdf_fontsdat()
 

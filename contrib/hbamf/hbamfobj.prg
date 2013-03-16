@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /*******
 *
 *  Ilina Stoilkovska <anili100/at/gmail.com> 2011

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Functions deprecated from core Harbour by HB_LEGACY_LEVELn
  *   but kept in xHarbour, so they are made available here as well.

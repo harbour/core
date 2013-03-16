@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // see also hrbext.prg
 
 #include "hbhrb.ch"

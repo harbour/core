@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * Functions:
  * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()

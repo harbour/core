@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 ROOT := ../
 
 DOC_FILES := \

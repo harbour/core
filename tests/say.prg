@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Tests @ SAY with and without PICTURE clauses
 
 PROCEDURE Main()

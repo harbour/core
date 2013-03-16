@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // This file is OK to have warnings.
 #ifdef __HARBOUR__
    #pragma -es0

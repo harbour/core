@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 incpaths=.
 headers=${hb_name}.ch

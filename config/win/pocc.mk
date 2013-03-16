@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # GNU Make file for Pelles ISO C Compiler
 

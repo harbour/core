@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour compatibility header for
  * other Clipper compatible languages
  *

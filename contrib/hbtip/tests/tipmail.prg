@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /******************************************
  * TIP test
  * Mail - reading and writing multipart mails

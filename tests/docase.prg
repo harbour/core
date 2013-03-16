@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour DO CASE
 
 PROCEDURE Main()

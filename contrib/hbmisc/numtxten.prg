@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // ; Author: "Michael Mozina" <et@snowcrest.net>
 // ; Donated to the Public Domain.
 

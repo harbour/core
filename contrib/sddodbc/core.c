@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * ODBC Database Driver
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>

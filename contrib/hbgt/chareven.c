@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * GT CLIPPER STANDARD HEADER
  *
  * Author....: Andy M Leighton

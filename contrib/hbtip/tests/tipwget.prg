@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /*****************************************************
  * TEST of TIP libs (for higher level URI interface)
  *

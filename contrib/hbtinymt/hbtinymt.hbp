@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 #-stop{win&!allgcc&!watcom}
 

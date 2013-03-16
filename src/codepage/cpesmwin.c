@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * National Collation Support Module (ESMWIN - Modern Spanish)
  * (COMPATIBILITY - Use ESWIN or ESISO instead.)

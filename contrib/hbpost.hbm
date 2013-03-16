@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # These are mandatory inside Harbour repository, they will always
 # override project options.

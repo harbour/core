@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * hmac_sha1.h
  *
  * Version 1.0.0

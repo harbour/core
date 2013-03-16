@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Paul Ferrara, ColumbuSoft
  * CIS ID....: 76702,556
  *

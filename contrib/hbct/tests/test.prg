@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #require "hbct"
 #require "hbtest"

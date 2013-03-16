@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 /* Please note the following comments we may use everywhere
    NOTE: Notes

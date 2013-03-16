@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 To run samples:
 

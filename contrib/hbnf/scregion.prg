@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: David A. Richardson
  * CIS ID....: ?
  *

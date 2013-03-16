@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Turbo Boyer-Moore (Crochemore) string search
  *    Based on this code:

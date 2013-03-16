@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Pete Dionisopoulos <pete_westg@yahoo.gr> */
 
 #define HB_CP_UPPER     "Α~ΆΒΓΔΕ~ΈΖΗ~ΉΘΙ~ΊΚΛΜΝΞΟ~ΌΠΡΣΣΤΥ~ΎΦΧΨΩ~Ώ"

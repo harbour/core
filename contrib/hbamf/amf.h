@@ -1,14 +1,8 @@
-/*
- * $Id$
- */
-
 /*******
- *
- *  amf.h
  *
  *  Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  amf.h - AMF3 headers
+ *  AMF3 headers
  *
  *  Based on a AmFast C library for Python by Dave Thompson
  *

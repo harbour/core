@@ -1,15 +1,11 @@
 /*
- * $Id$
- */
-
-/*
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    DB*() documentation
- *    ORD*() documentation
- *    RDD*() documentation
+ *    db*() documentation
+ *    ord*() documentation
+ *    rdd*() documentation
  *
  * See COPYING.txt for licensing terms.
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    CP950 <-> UCS16 conversion tables
  *    code generated automatically by tests/cp950gen.prg

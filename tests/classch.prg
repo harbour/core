@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour hbclass.ch commands
 
 #include "hbclass.ch"

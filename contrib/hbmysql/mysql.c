@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * MySQL DBMS low level (client api) interface code.
  *

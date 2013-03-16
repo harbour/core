@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  */

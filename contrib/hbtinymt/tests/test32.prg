@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Test program for HBTINYMT library
  * Andi Jahja
  */

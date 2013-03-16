@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   PadLeft() and PadRight() CT3 string functions
  *

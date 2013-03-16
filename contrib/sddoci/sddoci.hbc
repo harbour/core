@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=RDDSQL OCILib (Oracle SQL) backend
 

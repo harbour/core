@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * JUS I.B1.003 (Cyrillic script variant of ISO-646-YU for Serbian and Macedonian language)
  * <-> Unicode conversion table

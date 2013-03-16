@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Blat v2.6.2 w/GSS encryption (build : Feb 25 2007 12:06:19)
 

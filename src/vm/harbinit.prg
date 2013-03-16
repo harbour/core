@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Main Harbour VM initialization function __HBVMInit()
  *

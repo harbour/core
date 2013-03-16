@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Copies the contents of a database to a delimited text file.
  * Appends the contents of a delimited text file to a database.

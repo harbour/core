@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * DirChange(), MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName() functions
  *

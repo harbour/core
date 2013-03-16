@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour statics variables management
 
 #ifndef __HARBOUR__

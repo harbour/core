@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQLite3 Demo. Using sqlite3_set_authorizer()
  *
  * Copyright 2009 P.Chornyj <myorg63@mail.ru>

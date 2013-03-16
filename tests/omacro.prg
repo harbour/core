@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This file tests support for passing object methods and vars
  * using macro syntax
  */

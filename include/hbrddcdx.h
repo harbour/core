@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * DBFCDX RDD (ver.2)
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>

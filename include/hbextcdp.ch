@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * All HB_CODEPAGE_* externals.
  * (Compatibility header)

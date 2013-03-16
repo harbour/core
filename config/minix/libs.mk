@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 SYSLIBPATHS := /usr/lib /usr/pkg/lib
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Paul Tucker
  * Email.....: <ptucker@sympatico.ca>
  *

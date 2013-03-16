@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour file io features
 // using FReadStr() instead of FRead()
 

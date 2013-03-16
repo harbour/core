@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Tests for stringify match markers
 // Preproces  and compile only
 PROCEDURE Main()

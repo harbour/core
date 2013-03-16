@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #require "hbzebra"
 #require "hbcairo"

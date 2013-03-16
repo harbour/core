@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    demonstration/test code for using more then one console window.
  *    It needs GT driver which supports such functionality, i.e.

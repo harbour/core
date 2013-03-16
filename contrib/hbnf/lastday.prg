@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Mike Schinkel
  * CIS ID....: ?
  *

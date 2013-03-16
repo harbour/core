@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * memo line functions: MemoLine(), MLCount(), MLPos(), MLCToPos(), MPosToLC()
  *

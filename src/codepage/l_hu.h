@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Viktor Szakats (harbour syenar.net) */
 
 /* NOTE: Ä/ä have been added to work like sixhu852.obj

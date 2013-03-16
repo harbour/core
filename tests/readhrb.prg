@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * This program will read the .hrb file and show its content
  *
  * readhrb <hrb file>

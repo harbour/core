@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    UsersMax() -> <nMaxUsers> (1024)
  * FlagShip compatible functions

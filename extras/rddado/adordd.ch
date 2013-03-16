@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * ADORDD - RDD to automatically manage Microsoft ADO
  *

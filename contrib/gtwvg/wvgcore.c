@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>

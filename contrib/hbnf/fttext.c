@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Brice de Ganahl and Steve Larsen
  * CIS ID....: 76370,1532
  *

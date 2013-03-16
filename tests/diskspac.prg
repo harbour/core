@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    This program demonstrates that the 4 diskspace related functions work
    correctly for disks of any size.
 

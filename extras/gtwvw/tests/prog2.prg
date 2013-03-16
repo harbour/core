@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    To present prettier displays we may want to use pseudo-GUI objects.

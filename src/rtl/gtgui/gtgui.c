@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Mini GT for GUI programs.
  *    Now it supports only low level TONE and CLIPBOARD code for Windows

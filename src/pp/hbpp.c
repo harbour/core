@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    preprocessor static rules generator.
  *    It creates .c file with tables for defines/[x]translates/[x]commands

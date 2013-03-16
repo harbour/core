@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour IF ELSEIF ELSE ENDIF
 
 PROCEDURE Main()

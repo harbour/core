@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    IsBegSeq() -> <lResult>
  * FlagShip compatible function

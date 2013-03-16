@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test for DECLARE statement
 
 #include "hbclass.ch"

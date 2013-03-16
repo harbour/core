@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 INIT PROCEDURE Init()
 

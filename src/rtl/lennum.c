@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * LenNum() compatibility function from the SAMPLES directory of Clipper.
  *

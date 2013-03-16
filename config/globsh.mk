@@ -1,7 +1,3 @@
-#
-# $Id$
-#
-
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (harbour syenar.net) (rework)
 # See COPYING.txt for licensing terms.

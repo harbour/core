@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Harbour library project template
 ================================

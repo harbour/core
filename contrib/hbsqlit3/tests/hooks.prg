@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * SQLite3 Demo. Using sqlite3_commit_hook(), sqlite3_rollback_hook()
  *
  * Copyright 2009 P.Chornyj <myorg63@mail.ru>

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
  * See COPYING.txt for licensing terms.
  */

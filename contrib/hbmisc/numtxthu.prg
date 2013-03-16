@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * NumToTxtHU() function to convert a number to Hungarian text
  *

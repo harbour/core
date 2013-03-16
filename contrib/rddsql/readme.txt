@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
                     Simple SQL Interface for Harbour
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * sha1.c
  *
  * Originally witten by Steve Reid <steve@edmweb.com>

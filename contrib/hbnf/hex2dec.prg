@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Robert A. DiFalco
  * CIS ID....: ?
  *

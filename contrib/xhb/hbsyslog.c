@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Event logging system
  */
 

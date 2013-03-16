@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Compatibility functions from the SAMPLES directory of Clipper.
  *

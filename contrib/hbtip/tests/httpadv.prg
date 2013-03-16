@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /******************************************
  * TIP test
  * HTTP Advanced operations Test

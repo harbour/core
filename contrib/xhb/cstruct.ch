@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  *
  * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>

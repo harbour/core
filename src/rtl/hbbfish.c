@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    This code implements BlowFish algorithm designed by Bruce Schneier.
  *    The description of BlowFish algorithm can be found at:

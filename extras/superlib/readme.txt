@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 1.) Download original sources of SuperLib 3.5 from this page:
        http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm

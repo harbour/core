@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * FieldGetArr() and FieldPutArr() FlagShip compatible function
  *

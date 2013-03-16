@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Dynamic library handling functions (Xbase++ compatible)
  *

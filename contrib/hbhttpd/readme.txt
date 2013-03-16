@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 Date: Fri, 12 Jun 2009 19:47:37 +0300
 From: Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>

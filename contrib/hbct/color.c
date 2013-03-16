@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * CT3 video function:
  *    InvertAttr(), ColorToN(), NToColor(),

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * MySQL DBMS classes.
  * These classes try to emulate clipper dbXXXX functions on a SQL query

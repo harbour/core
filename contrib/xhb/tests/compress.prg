@@ -1,11 +1,8 @@
-/*
- * $Id$
- */
-
-// ****************************************************
+//
 // Demo of realtime string compression
 //
 // Giancarlo Niccolai
+//
 
 #require "xhb"
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Harbour common FileSys API (accessed from standalone utilities and the RTL)
  *

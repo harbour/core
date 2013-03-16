@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Mitja Podgornik <Mitja.Podgornik@zgs.gov.si> */
 /* Vlado Miholic <Vladimir.Miholic@sk.hinet.hr> */
 

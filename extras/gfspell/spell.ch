@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #define COMMON_WORDS                 1
 #define CACHE_WORDS                  2

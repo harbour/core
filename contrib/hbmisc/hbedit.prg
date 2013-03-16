@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #include "inkey.ch"
 #include "setcurs.ch"

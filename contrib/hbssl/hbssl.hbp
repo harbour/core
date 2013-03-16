@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # Keep them at top
 -depimplibs=openssl:../out32dll/libeay32.dll

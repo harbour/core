@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Clayton Neff
  * CIS ID....:
  *

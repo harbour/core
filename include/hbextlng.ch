@@ -1,8 +1,4 @@
 /*
- * $Id$
-*/
-
-/*
  * Harbour Project source code:
  * All HB_LANG_* externals.
  * (Compatibility header)

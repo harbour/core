@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Harbour Extended Features Demo
 // Pritpal Bedi <pritpal@vouchcac.com>
 

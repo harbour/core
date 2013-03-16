@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * The Internet Protocol / TCP support (xhb compatibility header)
  *

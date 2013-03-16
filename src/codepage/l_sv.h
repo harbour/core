@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Klas Engwall <klas dot engwall at engwall dot com> */
 
 /* NOTE: Following collations contains extra characters

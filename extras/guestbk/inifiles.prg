@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #include "fileio.ch"
 #include "hbclass.ch"

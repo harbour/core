@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * MySQL DBMS defines
  * These defines are clipper code level equivalent of mysql.h and mysql_com.h

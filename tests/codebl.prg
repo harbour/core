@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 STATIC s_cbStatic
 

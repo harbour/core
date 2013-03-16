@@ -1,8 +1,5 @@
-/*
- * $Id$
- */
 
-+++Date last modified: 05-Jul-1997
++++Date last modified: 1997-07-05
 
 
 Standard C functions defined by ANSI (ISO/IEC 9899:1990)

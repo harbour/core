@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * sha.h
  *
  * Originally taken from the public domain SHA1 implementation

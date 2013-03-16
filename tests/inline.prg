@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // Test of inline function
 //

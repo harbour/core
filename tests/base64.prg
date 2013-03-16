@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* RFC4648 test vectors for base64 */
 
 #include "simpleio.ch"

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   PosChar(), PosDel(), PosIns() and PosRepl() CT3 functions
  *

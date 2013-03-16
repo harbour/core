@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 --------------------------------------
 Short description of Harbour functions
@@ -15,7 +12,7 @@ Short description of Harbour functions
                     AMF supports references, so this example a1 value will be serialized correctly.
                       a1 := { NIL }
                       a2 := { a1 }
-                      a1[1] := a2
+                      a1[ 1 ] := a2
 
    symConvOut     - function symbol for outbound conversion
                     Acts recursively, so if xVal is array,

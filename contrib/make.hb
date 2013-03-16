@@ -1,7 +1,4 @@
 #!/usr/bin/hbrun --hb:gtcgi
-/*
- * $Id$
- */
 
 /*
  * Harbour Project source code:

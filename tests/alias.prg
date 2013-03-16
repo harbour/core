@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 // It is used to check if pcode is generated correctly for aliased expressions
 // (you must check it visually :)

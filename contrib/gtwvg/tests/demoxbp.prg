@@ -1,14 +1,10 @@
-/*
- * $Id$
- */
-
 //                                EnOnkar
 //                          ( The Lord is ONE )
 //                                   .
 //            Xbase++ Compatible XbpDialog() based Application
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              08Dec2008
+//                              2008-12-08
 
 #require "gtwvg"
 

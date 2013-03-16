@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   PosAlpha(), PosLower(), PosRange() and PosUpper() CT3 string functions
  *

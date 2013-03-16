@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // directory test
 
 #include "directry.ch"

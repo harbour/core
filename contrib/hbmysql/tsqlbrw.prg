@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * MySQL TBrowse
  * A TBrowse on a MySQL Table / query

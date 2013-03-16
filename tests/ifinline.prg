@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Testing Harbour If inline */
 
 PROCEDURE Main()

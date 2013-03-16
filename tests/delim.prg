@@ -1,7 +1,4 @@
 //NOTEST
-/*
- * $Id$
- */
 
 // Test program for COPY TO DELIMITED and APPEND FROM DELIMITED
 

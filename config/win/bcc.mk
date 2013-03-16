@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # GNU Make file for Borland/CodeGear/Embarcadero C/C++ 32-bit (4.x-)
 

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    compile and link this file together with wutil.prg
 
    This is a sample of how to display an image file (.bmp,.gif,.jpg)

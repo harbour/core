@@ -1,9 +1,4 @@
 /*
- * $Id$
- */
-
-/*
- * whatsnew.txt
  * This doc used to contain what's new in GTWVW since the last release.
  * Now it serves as a change log. Any changes to GTWVW should be listed
  * in this doc.

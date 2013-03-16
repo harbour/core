@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Test program for DevPos() and DevOut() Clipper compatibility
 // The result is either devtestc.prn or devtesth.prn, depending upon
 // which compiler created the program. Both files should be 263,444

@@ -1,8 +1,3 @@
-/*
- * $Id$
- */
-
-/* UTF-8 */
 
 #require "hbcairo"
 

@@ -1,7 +1,4 @@
 /*
- * $Id$
- */
-/*
  * xHarbour Project source code:
  *   CT3 GET/READ Functions
  *

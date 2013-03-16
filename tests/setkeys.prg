@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code
  * This file contains the Harbour function(s) that maintain the list
  * of set-keys (hot-keys).

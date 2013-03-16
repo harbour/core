@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * hb_StrToExp() function - convert string to valid macrocompiler expression
  *

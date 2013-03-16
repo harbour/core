@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // releasing arrays test
 
 PROCEDURE Main()

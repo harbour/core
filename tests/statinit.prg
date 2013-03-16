@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // ; Donated to the public domain by
 //   Viktor Szakats (harbour syenar.net)
 

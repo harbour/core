@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* test file locking */
 
 #include "fileio.ch"

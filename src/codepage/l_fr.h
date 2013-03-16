@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Viktor Szakats (harbour syenar.net) */
 
 #define HB_CP_UPPER     "A~Á~À~Â~ÄBCDE~É~È~Ê~ËFGHI~Í~Ì~Î~ÏJKLMNO~Ó~Ò~Ô~ÖPQRSTU~Ú~Ù~Û~ÜVWXYZ"

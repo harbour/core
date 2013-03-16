@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * NumButtons(), SetMouse() Xbase++ compatible functions.
  *

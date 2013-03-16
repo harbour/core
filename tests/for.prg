@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Testing Harbour For Next loops for Clipper compatibility
 
 // ; Donated to the public domain by

@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 # GCC with OMF object format.
 #

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour rtfclass demo
  * notes : - raw enough but it works
            - rtf is assumed to have association

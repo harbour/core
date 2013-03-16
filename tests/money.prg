@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //
 // Sample class Money with overloading of arythmetical operations
 //

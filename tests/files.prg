@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // This test was written by Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
 //                                             <tecnico.sireinsa@ctv.es>
 // and is placed into the public domain.

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Download an file from an ftp server
  */
 

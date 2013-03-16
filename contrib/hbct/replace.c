@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   ReplAll(), ReplLeft() and ReplRight() CT3 string functions
  *

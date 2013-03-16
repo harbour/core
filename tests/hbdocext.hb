@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * HBDOC extractor from source
  *
  * Copyright 2010 Viktor Szakats (harbour syenar.net)

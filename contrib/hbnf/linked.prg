@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Brian Loesgen
  * CIS ID....: 74326,1174
  *

@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Harbour multidimensional arrays support
 
 PROCEDURE Main()

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Debug function tests
  *
  * Written by Eddie Runia <eddie@runia.com>

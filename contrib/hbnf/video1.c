@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   NF functions: ft_SetAttr(), ft_RevAttr(), ft_RevChr()
  *

@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * JUS I.B1.002 / ISO-646-YU / YUSCII / CROSCII / SLOSCII <-> Unicode conversion table
  *

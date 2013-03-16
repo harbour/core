@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    platform independent task system. It's used when when OS does not
  *    support threads

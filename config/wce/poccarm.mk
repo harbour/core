@@ -1,8 +1,3 @@
-#
-# $Id$
-#
-
-# GNU Make file for Pelles ISO C Compiler for WinCE
 
 OBJ_EXT := .obj
 LIB_PREF :=

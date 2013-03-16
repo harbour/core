@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * GT Graphics definitions (HB_GFX_*)
  *

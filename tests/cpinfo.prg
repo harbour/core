@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Simple program to generate information for Harbour CP module definition.
  *    Compile it with Clipper and link with given national sorting module

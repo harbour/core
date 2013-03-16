@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *

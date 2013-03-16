@@ -1,10 +1,6 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
- * BZIP2 header file
+ *    BZIP2 header file
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

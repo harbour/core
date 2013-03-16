@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=TCP/IP-specific communication protocol functions
 

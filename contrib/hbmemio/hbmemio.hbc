@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=MEMIO file I/O for RDDs
 

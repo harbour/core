@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *   CT3 Date & Time functions: - BoM() / EoM()
  *                              - BoQ() / EoQ()

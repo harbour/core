@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 description=libxdiff wrapper (diffing)
 

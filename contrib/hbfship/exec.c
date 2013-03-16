@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    ExecName( [ <lFullPath> ] ) -> <cName>
  *    ExecPIDNum() -> <nPID>

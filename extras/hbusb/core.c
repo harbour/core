@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* TODO: change raw pointers to GC collected ones? */
 
 #include "hbapi.h"

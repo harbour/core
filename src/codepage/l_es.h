@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 /* Antonio Linares <alinares@fivetechsoft.com> */
 
 #define HB_CP_UPPER     "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ"

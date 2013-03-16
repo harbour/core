@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 /*
  * Harbour Project source code:

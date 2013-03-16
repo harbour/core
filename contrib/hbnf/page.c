@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code
  * ft_GetVPg()/ft_SetVpg() functions
  *

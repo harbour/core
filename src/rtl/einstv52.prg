@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  *    Undocumented CA-Cl*pper function used to validate
  *    instance variable type in assign messages.

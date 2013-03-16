@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * xHarbour Project source code:
  * Bulgarian MIK <--> Unicode conversion table
  *

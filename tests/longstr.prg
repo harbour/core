@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //

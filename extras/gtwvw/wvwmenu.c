@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>

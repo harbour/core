@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    Simplest demo program to show the difference of MainCoord Mode and

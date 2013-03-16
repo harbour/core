@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Harbour Project source code:
  * Windows pcode DLL entry point and VM/RTL routing functions
  *

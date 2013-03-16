@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // testing recursive calls
 
 PROCEDURE Main()

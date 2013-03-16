@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 stop={!hbdynvm}Warning: Target must be '-hbdynvm' when using '${hb_self}'. Process stopped.
 

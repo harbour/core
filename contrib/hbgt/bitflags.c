@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
  * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
  * Date......: 1993-03-31

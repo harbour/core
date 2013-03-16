@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 //                   GTWVT Console GUI Interface
 //
 //               Pritpal Bedi <bedipritpal@hotmail.com>

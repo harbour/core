@@ -1,8 +1,4 @@
 /*
- * $Id$
- */
-
-/*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    This is a simple Clipper program runs simple GET and BROWSE dialogs

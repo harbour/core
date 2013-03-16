@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 // Using Harbour Class HBClass
 
 PROCEDURE Main()

@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 hbcups provides access to the CUPS printing library.
 
