@@ -818,8 +818,8 @@ msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre ser proces
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
-msgstr "gera um arquivo .ch com informações do repositório local. SVN, CVS, Git, Mercurial, Bazaar, Fossil e Monotone estão entre as ferramentas atualmente suportadas. O arquivo gerado conterá a diretriva _HBMK_VCS_TYPE_ com o nome do VCS detectado e _HBMK_VCS_ID_ com o unique ID do repositório local"
+msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
+msgstr "gera um arquivo .ch com informações do repositório local. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone estão entre as ferramentas atualmente suportadas. O arquivo gerado conterá a diretriva _HBMK_VCS_TYPE_ com o nome do VCS detectado e _HBMK_VCS_ID_ com o unique ID do repositório local"
 
 #: hbmk2.prg:5805 hbmk2.prg:8785 hbmk2.prg:9362
 #, c-format

@@ -1,5 +1,5 @@
 /*
- * Strips svn headers from source files
+ * Strips VCS id headers from source files
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

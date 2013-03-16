@@ -819,8 +819,8 @@ msgstr "hozzon létre egy .ch fejlécet időpont adatokkal. Generált fejléc _H
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
-msgstr "hozzon létre egy .ch fejlécet a helyi források verziókövető (VCS) adatbázisbeli adataival. SVN, CVS, Git, Mercurial, Bazaar, Fossil és Monotone támogatottak. Generált fejléc _HBMK_VCS_TYPE_ makrója adja vissza a VCS típusát, míg _HBMK_VCS_ID_ az aktuális állapot egyedi azonosítóját"
+msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
+msgstr "hozzon létre egy .ch fejlécet a helyi források verziókövető (VCS) adatbázisbeli adataival. Git, SVN, Mercurial, Bazaar, Fossil, CVS és Monotone támogatottak. Generált fejléc _HBMK_VCS_TYPE_ makrója adja vissza a VCS típusát, míg _HBMK_VCS_ID_ az aktuális állapot egyedi azonosítóját"
 
 #: hbmk2.prg:6846 hbmk2.prg:10111 hbmk2.prg:10837
 #, c-format

@@ -818,8 +818,8 @@ msgstr "archivo de opciones %1$s en directorio de %2$s siempre es procesado si e
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
-msgstr "genera archivo .ch con información de repositorio local. SVN, CVS, Git, Mercurial, Bazaar, Fossil y Monotone están actualmente soportadas. Archivo de cabecera generado contendrá macro _HBMK_VCS_TYPE_ con en nombre de VCS detectado y _HBMK_VCS_ID_ con ID único del repositorio local"
+msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
+msgstr "genera archivo .ch con información de repositorio local. Git, SVN, Mercurial, Bazaar, Fossil, CVS y Monotone están actualmente soportadas. Archivo de cabecera generado contendrá macro _HBMK_VCS_TYPE_ con en nombre de VCS detectado y _HBMK_VCS_ID_ con ID único del repositorio local"
 
 #: hbmk2.prg:5805 hbmk2.prg:8785 hbmk2.prg:9362
 #, c-format

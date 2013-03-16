@@ -1735,13 +1735,6 @@ ifeq ($(HB_INIT_DONE),)
       $(info ! HB_INSTALL_PREFIX automatically set to: $(HB_INSTALL_PREFIX))
    endif
    ifeq ($(ROOT),./)
-#     ifneq ($(call find_in_path,svnversion),)
-#        _tmp := $(shell svnversion .)
-#        ifneq ($(findstring M,$(_tmp)),)
-#           $(info ! === WARNING: Locally modified source code ===)
-#        endif
-#        $(info ! REVISION: $(_tmp))
-#     endif
       ifneq ($(wildcard .git),)
          ifneq ($(call find_in_path,git),)
             _tmp := $(shell git diff --name-only --quiet)
