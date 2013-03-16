@@ -50,8 +50,8 @@ cd _hb_web_src
 
 echo Downloading sources...
 
-wget https://github.com/harbour/website/archive/master.tar.gz
-tar -zxvf master.tar.gz
+wget -nv https://github.com/harbour/website/archive/master.tar.gz
+tar -zxvf website-master.tar.gz
 
 echo Updating website...
 
@@ -67,7 +67,7 @@ else
    then
       echo Uploading site to sf.net web area...
       desthost=",harbour-project@web.sourceforge.net:"
-      rsync -zr -e "ssh -i $HB_SFNET_WEB_PRIVATE_KEY" website/* $HB_SFNET_USER$desthost$destdir
+      rsync -zr -e "ssh -i $HB_SFNET_WEB_PRIVATE_KEY" website-master/* $HB_SFNET_USER$desthost$destdir
    fi
 fi
 

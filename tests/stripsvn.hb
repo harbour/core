@@ -57,7 +57,8 @@ PROCEDURE Main()
 
       cExt := hb_FNameExt( aFile[ F_NAME ] )
 
-      IF "|" + cExt + "|" $ "|.c|.hb|.prg|.hbm|.hbp|.hbc|.ini|.bat|.sh|.vbs|.def"
+      IF Empty( cExt ) .OR. ;
+         "|" + cExt + "|" $ "|.c|.h|.hb|.prg|.hbm|.hbp|.hbc|.ini|.bat|.sh|.vbs|.def|.api|.ch|.txt|.mk|"
 
          tmp := MemoRead( aFile[ F_NAME ] )
          tmp := StrTran( tmp, cHdr1 )
@@ -68,10 +69,13 @@ PROCEDURE Main()
          tmp := StrTran( tmp, cHdr6 )
          tmp := StrTran( tmp, cHdr7 )
 
-         IF Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "//" .OR. ;
-            Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "/*" .OR. ;
-            Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + ";"
-            tmp := SubStr( tmp, Len( hb_eol() ) + 1 )
+         IF ! "|" + cExt + "|" $ "|.hbm|.hbp|.hbc|.txt|"
+            IF Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "//" .OR. ;
+               Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "/*" .OR. ;
+               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + ";" .OR. ;
+               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + "#"
+               tmp := SubStr( tmp, Len( hb_eol() ) + 1 )
+            ENDIF
          ENDIF
 
          hb_MemoWrit( aFile[ F_NAME ], tmp )
