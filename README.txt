@@ -1420,12 +1420,8 @@ TABLE OF CONTENT
    It's recommended (but not required) to put hbmk2 into the PATH
    (f.e. by using 'set PATH=C:\harbour\bin;%PATH%' on Windows).
 
-   Then run:
-      hbmk2 -help
-   or
-      hbmk2 -longhelp > hbmk2.txt
-
-   You will find examples in the help.
+   Then see hbmk2 documentation, with examples:
+      https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md
 
 
 12. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
@@ -1797,13 +1793,17 @@ TABLE OF CONTENT
       http://x-hacker.org/ng/53guide/
 
    Miscellaneous documents:
-      /doc subdirectory under this directory.
+      https://github.com/harbour/core/tree/master/doc
 
    Particularly:
       Comparing Harbour to xHarbour:
          https://github.com/harbour/core/raw/master/doc/xhb-diff.txt
       ChangeLog:
          https://github.com/harbour/core/raw/master/ChangeLog.txt
+      hbmk2 documentation:
+         https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md
+      hbrun documentation:
+         https://github.com/harbour/core/blob/master/contrib/hbrun/hbrun.md
 
 
 [ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)
