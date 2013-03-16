@@ -15585,7 +15585,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN hb_StrFormat( "%d.%d.%d%s (Rev. %d)", ;
+   RETURN hb_StrFormat( "%d.%d.%d%s (r%d)", ;
       hb_Version( HB_VERSION_MAJOR ), ;
       hb_Version( HB_VERSION_MINOR ), ;
       hb_Version( HB_VERSION_RELEASE ), ;
