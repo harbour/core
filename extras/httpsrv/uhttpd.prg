@@ -2871,6 +2871,6 @@ STATIC FUNCTION HB_HASHI()
 
    RETURN h
 
-SET PROCEDURE TO "cgifunc.prg"
-SET PROCEDURE TO "cookie.prg"
-SET PROCEDURE TO "session.prg"
+SET PROCEDURE TO "_cgifunc.prg"
+SET PROCEDURE TO "_cookie.prg"
+SET PROCEDURE TO "_session.prg"

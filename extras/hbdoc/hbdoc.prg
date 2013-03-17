@@ -1152,8 +1152,8 @@ FUNCTION Filename( cFile, cFormat, nLength )
 
    RETURN cResult
 
-SET PROCEDURE TO "tmplates.prg"
-SET PROCEDURE TO "genbase.prg"
-SET PROCEDURE TO "gentxt.prg"
-SET PROCEDURE TO "genhtml.prg"
-SET PROCEDURE TO "genxml.prg"
+SET PROCEDURE TO "_tmplates.prg"
+SET PROCEDURE TO "_genbase.prg"
+SET PROCEDURE TO "_gentxt.prg"
+SET PROCEDURE TO "_genhtml.prg"
+SET PROCEDURE TO "_genxml.prg"
