@@ -183,11 +183,11 @@ HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_RGBA )
 
       hb_retni( cairo_pattern_get_color_stop_rgba( pPattern, hb_parni( 2 ), &dOffset, &dRed, &dGreen, &dBlue, &dAlpha ) );
 
-      if ( HB_ISBYREF( 3 ) ) hb_stord( dOffset, 3 );
-      if ( HB_ISBYREF( 4 ) ) hb_stord( dRed, 4 );
-      if ( HB_ISBYREF( 5 ) ) hb_stord( dGreen, 5 );
-      if ( HB_ISBYREF( 6 ) ) hb_stord( dBlue, 6 );
-      if ( HB_ISBYREF( 7 ) ) hb_stord( dAlpha, 7 );
+      hb_stord( dOffset, 3 );
+      hb_stord( dRed, 4 );
+      hb_stord( dGreen, 5 );
+      hb_stord( dBlue, 6 );
+      hb_stord( dAlpha, 7 );
    }
    else
       hb_retni( -1 );
@@ -224,10 +224,10 @@ HB_FUNC( CAIRO_PATTERN_GET_RGBA )
 
       hb_retni( cairo_pattern_get_rgba( pPattern, &dRed, &dGreen, &dBlue, &dAlpha ) );
 
-      if ( HB_ISBYREF( 2 ) ) hb_stord( dRed, 2 );
-      if ( HB_ISBYREF( 3 ) ) hb_stord( dGreen, 3 );
-      if ( HB_ISBYREF( 4 ) ) hb_stord( dBlue, 4 );
-      if ( HB_ISBYREF( 5 ) ) hb_stord( dAlpha, 5 );
+      hb_stord( dRed, 2 );
+      hb_stord( dGreen, 3 );
+      hb_stord( dBlue, 4 );
+      hb_stord( dAlpha, 5 );
    }
    else
       hb_retni( -1 );
@@ -286,10 +286,10 @@ HB_FUNC( CAIRO_PATTERN_GET_LINEAR_POINTS )
 
       hb_retni( cairo_pattern_get_linear_points( pPattern, &dX0, &dY0, &dX1, &dY1 ) );
 
-      if ( HB_ISBYREF( 2 ) ) hb_stord( dX0, 2 );
-      if ( HB_ISBYREF( 3 ) ) hb_stord( dY0, 3 );
-      if ( HB_ISBYREF( 4 ) ) hb_stord( dX1, 4 );
-      if ( HB_ISBYREF( 5 ) ) hb_stord( dY1, 5 );
+      hb_stord( dX0, 2 );
+      hb_stord( dY0, 3 );
+      hb_stord( dX1, 4 );
+      hb_stord( dY1, 5 );
    }
    else
       hb_retni( -1 );
@@ -322,12 +322,12 @@ HB_FUNC( CAIRO_PATTERN_GET_RADIAL_CIRCLES )
 
       hb_retni( cairo_pattern_get_radial_points( pPattern, &dX0, &dY0, &dR0, &dX1, &dY1, &dR1 ) );
 
-      if ( HB_ISBYREF( 2 ) ) hb_stord( dX0, 2 );
-      if ( HB_ISBYREF( 3 ) ) hb_stord( dY0, 3 );
-      if ( HB_ISBYREF( 4 ) ) hb_stord( dR0, 4 );
-      if ( HB_ISBYREF( 5 ) ) hb_stord( dX1, 5 );
-      if ( HB_ISBYREF( 6 ) ) hb_stord( dY1, 6 );
-      if ( HB_ISBYREF( 7 ) ) hb_stord( dR1, 7 );
+      hb_stord( dX0, 2 );
+      hb_stord( dY0, 3 );
+      hb_stord( dR0, 4 );
+      hb_stord( dX1, 5 );
+      hb_stord( dY1, 6 );
+      hb_stord( dR1, 7 );
    }
    else
       hb_retni( -1 );

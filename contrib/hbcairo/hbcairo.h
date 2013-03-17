@@ -71,6 +71,11 @@ extern HB_EXPORT PHB_ITEM           hb_cairoPathItemPut( PHB_ITEM pItem, cairo_p
 extern HB_EXPORT cairo_path_t *     hb_cairo_path_param( int iParam );
 extern HB_EXPORT void               hb_cairo_path_ret( cairo_path_t * pPath );
 
+extern HB_EXPORT cairo_pattern_t *  hb_cairoPatternItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM           hb_cairoPatternItemPut( PHB_ITEM pItem, cairo_pattern_t * pPattern );
+extern HB_EXPORT cairo_pattern_t *  hb_cairo_pattern_param( int iParam );
+extern HB_EXPORT void               hb_cairo_pattern_ret( cairo_pattern_t * pPattern );
+
 HB_EXTERN_END
 
 #endif /* HB_CAIRO_H_ */
