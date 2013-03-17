@@ -50,7 +50,7 @@ cd _hb_web_src
 
 echo Downloading sources...
 
-curl -O -L -s https://github.com/harbour/website/archive/master.tar.gz
+curl -O -L -s https://github.com/harbour/harbour.github.com/archive/master.tar.gz
 tar -zxvf master.tar.gz
 
 echo Updating website...
@@ -61,13 +61,13 @@ if [ -d $destdir ]
 then
    echo Copying site to sf.net web area...
 
-   rsync -r website-master/* $destdir
+   rsync -r harbour.github.com-master/* $destdir
 else
    if [ "$HB_SFNET_WEB_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
       echo Uploading site to sf.net web area...
       desthost=",harbour-project@web.sourceforge.net:"
-      rsync -zr -e "ssh -i $HB_SFNET_WEB_PRIVATE_KEY" website-master/* $HB_SFNET_USER$desthost$destdir
+      rsync -zr -e "ssh -i $HB_SFNET_WEB_PRIVATE_KEY" harbour.github.com-master/* $HB_SFNET_USER$desthost$destdir
    fi
 fi
 
