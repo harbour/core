@@ -50,11 +50,11 @@
 #include "hbcairo.h"
 
 
-#ifdef CAIRO_HAS_IMAGE_SURFACE
-
 HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE )
 {
+#ifdef CAIRO_HAS_IMAGE_SURFACE
    hb_cairo_surface_ret( cairo_image_surface_create( ( cairo_format_t ) hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
+#else
+   hb_retptr( NULL );
+#endif
 }
-
-#endif /* CAIRO_HAS_IMAGE_SURFACE */
