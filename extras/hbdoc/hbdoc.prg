@@ -94,6 +94,7 @@ done - validate sources against these templates
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbver.ch"
 
 #include "hbdoc.ch"
 
@@ -216,7 +217,7 @@ PROCEDURE Main( ... )
       {;
          p_hsSwitches[ "basedir" ] + "doc", ;
          p_hsSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
-         iif( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "source", NIL ), ;
+         iif( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "src", NIL ), ;
          iif( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
       {| c | iif( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
@@ -420,26 +421,18 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
 
 STATIC FUNCTION ProcessFile( cFile, aContent )
 
-   LOCAL aHandle := { 0, 0 } // file handle and position
+   LOCAL aHandle := { F_ERROR, 0 } // file handle and position
    LOCAL cSectionName
    LOCAL cVersion
    LOCAL o
    LOCAL nOldContentLen := Len( aContent )
 
    IF ( aHandle[ 1 ] := FOpen( cFile ) ) == F_ERROR
-      OutErr( "error: could not open " + cFile + ", " + hb_ntos( Abs( aHandle[ 1 ] ) ) + hb_eol() )
+      OutErr( "error: could not open " + cFile + ", " + hb_ntos( aHandle[ 1 ] ) + hb_eol() )
       RETURN .F.
    ENDIF
 
-   IF ! FReadLn( @aHandle, "" ) // assume first line is ID comment prefix
-      // ~ FClose( aHandle[ 1 ] )
-      // ~ RETURN .F.
-   ENDIF
-
-   IF ! FReadLn( @aHandle, @cVersion ) // assume second line is ID
-      // ~ FClose( aHandle[ 1 ] )
-      // ~ RETURN .F.
-   ENDIF
+   cVersion := ""
 
    o := Entry():New( "Template" )
 
@@ -647,8 +640,8 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
             DO WHILE ( nPosition := FSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( @aHandle, @cBuffer )
                // TOFIX: this assumes that every line starts with " *"
                cBuffer := RTrim( SubStr( cBuffer, 3 ) )
-               IF Left( LTrim( cBuffer ), 1 ) == p_hsSwitches[ "DELIMITER" ] ;
-                  .AND. Right( cBuffer, 1 ) == p_hsSwitches[ "DELIMITER" ]
+               IF Left( LTrim( cBuffer ), 1 ) == p_hsSwitches[ "DELIMITER" ] .AND. ;
+                  Right( cBuffer, 1 ) == p_hsSwitches[ "DELIMITER" ]
                   FSeek( aHandle[ 1 ], nPosition, FS_SET )
                   aHandle[ 2 ]-- // decrement the line number when rewinding the file
                   EXIT
@@ -709,7 +702,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
 
 STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
-   LOCAL aHandle := { 0, 0 }
+   LOCAL aHandle := { F_ERROR, 0 }
    LOCAL cBuffer
    LOCAL lCloseFile := .F.
    LOCAL xResult
@@ -912,7 +905,12 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour " )
+   RETURN hb_StrFormat( "%d.%d.%d%s (r%d)", ;
+      hb_Version( HB_VERSION_MAJOR ), ;
+      hb_Version( HB_VERSION_MINOR ), ;
+      hb_Version( HB_VERSION_RELEASE ), ;
+      hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_REVISION ) )
 
 PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
@@ -1153,3 +1151,9 @@ FUNCTION Filename( cFile, cFormat, nLength )
    ENDIF
 
    RETURN cResult
+
+SET PROCEDURE TO "tmplates.prg"
+SET PROCEDURE TO "genbase.prg"
+SET PROCEDURE TO "gentxt.prg"
+SET PROCEDURE TO "genhtml.prg"
+SET PROCEDURE TO "genxml.prg"

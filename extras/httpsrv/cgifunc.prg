@@ -451,17 +451,6 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
 
    RETURN cNewTime
 
-FUNCTION uhttpd_TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
-
-   LOCAL aRetVal
-
-   __defaultNIL( @dDateEnd, Date() )
-   __defaultNIL( @cTimeEnd, Time() )
-
-   aRetVal := ft_Elapsed( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
-
-   RETURN aRetVal[ 4, 2 ]
-
 FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
 
    LOCAL cHtml

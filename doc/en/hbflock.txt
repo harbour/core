@@ -50,7 +50,7 @@
    $COMPLIANCE$
       H
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -100,7 +100,7 @@
    $COMPLIANCE$
       H
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$

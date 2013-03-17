@@ -3,10 +3,9 @@
 
 -mt -gui
 
+-gtwvt
+
 uhttpd.prg
-cgifunc.prg
-cookie.prg
-session.prg
 
 hbwin.hbc
 hbnf.hbc

@@ -326,7 +326,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -390,7 +390,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -519,7 +519,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -1292,7 +1292,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -1364,7 +1364,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -1454,7 +1454,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(64K)
+      All
    $FILES$
       Libraty is rtl
    $SEEALSO$

@@ -261,7 +261,6 @@
 
       Following are active keys that handled by __MenuTo():
 
-
       <table>
        key            Meaning
 
@@ -278,7 +277,7 @@
        First letter   Select next menu with the same first letter,
        |              return this item position.
       </table>
-      upon exit the cursor is placed at MaxRow()-1, 0
+      upon exit the cursor is placed at MaxRow() - 1, 0
       __MenuTo() can be nested without loosing the previous prompts.
 
       MENU TO command is preprocessed into __MenuTo() function during
@@ -329,7 +328,7 @@
       a PRIVATE variable with the name <cVariable> would be created to
       hold the result.
    $DESCRIPTION$
-      Menu To() invoked the menu define by previous __AtPrompt() call
+      MENU TO invoked the menu define by previous __AtPrompt() call
       and display a highlight bar that the user can move to select an
       option from the menu. If <cVariable> does not exist or not visible,
       a PRIVATE variable named <cVariable> is created and hold the current
@@ -346,26 +345,26 @@
       highlighted, if the user press Down arrow while on the last item,
       the first item is highlighted.
 
-      Following are active keys that handled by Menu To:
+      Following are active keys that handled by MENU TO:
 
       <table>
-       key              Meaning
+       key            Meaning
 
-       Up             - Move to previous item
-       Down           - Move to next item
-       Left           - Move to previous item
-       Right          - Move to next item
-       Home           - Move to the first item
-       End            - Move to the last item
-       Page-Up        - Select menu item, return position
-       Page-Down      - Select menu item, return position
-       Enter          - Select menu item, return position
-       Esc            - Abort selection, return 0
-       First letter   - Select next menu with the same first letter,
+       Up             Move to previous item
+       Down           Move to next item
+       Left           Move to previous item
+       Right          Move to next item
+       Home           Move to the first item
+       End            Move to the last item
+       Page-Up        Select menu item, return position
+       Page-Down      Select menu item, return position
+       Enter          Select menu item, return position
+       Esc            Abort selection, return 0
+       First letter   Select next menu with the same first letter,
        |              return this item position.
       </table>
-      upon exit the cursor is placed at MaxRow()-1, 0
-      Menu To can be nested without loosing the previous prompts.
+      upon exit the cursor is placed at MaxRow() - 1, 0
+      MENU TO can be nested without loosing the previous prompts.
 
       MENU TO command is preprocessed into __MenuTo() function during
       compile time.

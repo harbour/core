@@ -154,7 +154,7 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
    IF ! Empty( cEntry )
       cResult := iif( hb_eol() $ cEntry, hb_eol() + cEntry, cEntry )
       FOR idx := 1 TO Len( p_aConversionList ) STEP 2
-         cResult := StrTran( cResult, Chr( p_aConversionList[ idx ] ), "&" + p_aConversionList[ idx + 1 ] + ";" )
+         cResult := StrTran( cResult, p_aConversionList[ idx ], "&" + p_aConversionList[ idx + 1 ] + ";" )
       NEXT
       cEntry := cResult
 

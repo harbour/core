@@ -316,7 +316,6 @@ PROCEDURE init_Templates()
    PUBLIC p_aPlatforms := { ;
       { "",          "" }, ;
       { "All",       "This is available on all platforms" }, ;
-      { "All(64K)",  "This is available on all platforms though some platforms have a string length limit of 64KB" }, ;
       { "All(GT)",   "This part of the GT API and supported only by some platforms." }, ;
       { "All(LFN)",  "This is available on all platforms." + hb_eol() + ;
                      "If long file names are available Harbour will use/display the first 15 characters " +;
@@ -325,15 +324,15 @@ PROCEDURE init_Templates()
       { "OS2(GT)",   "Under OS/2 the number of columns avaliable depends of the current Terminal screen size." }, ;
       { "Win(GT)",   "Under Windows, the return value of MaxRow() function is only affected if called after an SetMode() function" }, ;
       { "BSD",       "This is available on the BSD platform" }, ;
-      { "DARWIN",    "This is available on the DARWIN platform" }, ;
+      { "DARWIN",    "This is available on the Darwin platform" }, ;
       { "DOS",       "This is available on the MS-DOS platform" }, ;
       { "HPUX",      "This is available on the HPUX platform" }, ;
-      { "LINUX",     "This is available on the LINUX platform" }, ;
+      { "LINUX",     "This is available on the Linux platform" }, ;
       { "OS2",       "This is available on the OS/2 platform" }, ;
-      { "SUNOS",     "This is available on the SUNOS platform" }, ;
+      { "SUNOS",     "This is available on the SunOS platform" }, ;
       { "Unix",      "This is available on the Unix platform(s)" }, ;
-      { "Win",       "This is available on the MS-Windows platform(s)" }, ;
-      { "WinCE",     "This is available on the MS-Windows-CE platform" } ;
+      { "Win",       "This is available on the Windows platform(s)" }, ;
+      { "WinCE",     "This is available on the Windows CE platform" } ;
    }
 
    PUBLIC p_aStatus := { ;
@@ -344,10 +343,10 @@ PROCEDURE init_Templates()
    }
 
    PUBLIC p_aConversionList := { ;
-      38, "amp", ;
-      34, "quot", ;
-      60, "lt", ;
-      62, "gt" ;
+      "&", "amp", ;
+      '"', "quot", ;
+      "<", "lt", ;
+      ">", "gt" ;
    }
 
    RETURN

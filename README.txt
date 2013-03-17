@@ -1804,6 +1804,8 @@ TABLE OF CONTENT
          https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md
       hbrun documentation:
          https://github.com/harbour/core/blob/master/contrib/hbrun/hbrun.md
+      Wikipedia:
+         https://en.wikipedia.org/wiki/Harbour_compiler
 
 
 [ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)

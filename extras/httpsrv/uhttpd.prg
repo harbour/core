@@ -58,7 +58,6 @@
  *
  * More description to come.
  *
- *
  */
 
 /*
@@ -74,6 +73,10 @@
       - fix binding to address
 
 */
+
+#require "hbnf"
+#require "hbwin"
+#require "hbgd"
 
 // remove comment to activate hb_ToOutDebug()
 // #define DEBUG_ACTIVE
@@ -95,19 +98,19 @@ REQUEST __HB_EXTERN__
 REQUEST GDChart
 REQUEST GDImage
 REQUEST GDImageChar
-#  define APP_GD_SUPPORT "_GD"
-#  stdout "Lib GD support enabled"
+   #define APP_GD_SUPPORT "_GD"
+   #stdout "Lib GD support enabled"
 #else
-#  define APP_GD_SUPPORT ""
-#  stdout "Lib GD support disabled"
+   #define APP_GD_SUPPORT ""
+   #stdout "Lib GD support disabled"
 #endif
 
 #ifdef FIXED_THREADS
-#  define APP_DT_SUPPORT "_FIXED_THREADS"
-#  stdout "Fixed # of threads"
+   #define APP_DT_SUPPORT "_FIXED_THREADS"
+   #stdout "Fixed # of threads"
 #else
-#  define APP_DT_SUPPORT ""
-#  stdout "Dynamic # of threads"
+   #define APP_DT_SUPPORT ""
+   #stdout "Dynamic # of threads"
 #endif
 
 #define APP_NAME      "uhttpd"
@@ -138,19 +141,7 @@ REQUEST GDImageChar
 
 #define CR_LF    ( Chr( 13 ) + Chr( 10 ) )
 
-#ifdef __PLATFORM__WINDOWS
-REQUEST HB_GT_WVT_DEFAULT
-REQUEST HB_GT_WIN
-REQUEST HB_GT_NUL
-#else
-REQUEST HB_GT_TRM_DEFAULT
-REQUEST HB_GT_NUL
-#endif
-
 #define THREAD_GT hb_gtVersion()
-
-// dynamic call for HRB support
-DYNAMIC HRBMAIN
 
 STATIC s_lQuitRequest := .F.
 
@@ -214,6 +205,12 @@ PROCEDURE Main( ... )
    LOCAL nConsoleRows, nConsoleCols
    LOCAL nCmdConsoleRows, nCmdConsoleCols
 
+#if defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+   #endif
+#endif
+
    IF ! hb_mtvm()
       ? "I need multhread support. Please, recompile me!"
       WAIT
@@ -231,7 +228,7 @@ PROCEDURE Main( ... )
 
    // defaults not changeble via ini file
    lStop                := .F.
-   cConfig              := EXE_Path() + hb_ps() + APP_NAME + ".ini"
+   cConfig              := hb_DirBase() + APP_NAME + ".ini"
    lConsole             := .T.
    nStartServiceThreads := START_SERVICE_THREADS
 
@@ -400,6 +397,9 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF HB_ISSTRING( cApplicationRoot )
+      IF Empty( cApplicationRoot )
+         cApplicationRoot := "." + hb_ps()
+      ENDIF
       cI := cApplicationRoot
       IF hb_DirExists( cI )
          IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
@@ -2179,7 +2179,7 @@ STATIC PROCEDURE Help()
    ? "-c       | --config         Configuration file         (default: " + APP_NAME + ".ini)"
    ? "                            It is possibile to define file path"
    ? "-a       | --approot        Application root directory (default: <curdir>)"
-   ? "-d       | --docroot        Document root directory    (default: <curdir>\home)"
+   ? "-d       | --docroot        Document root directory    (default: <curdir>/home)"
    ? "-i       | --indexes        Allow directory view       (default: no)"
    ? "-s       | --stop           Stop webserver"
    ? "-ts      | --start-threads  Define starting threads    (default: " + hb_ntos( START_RUNNING_THREADS ) + ")"
@@ -2205,19 +2205,6 @@ STATIC PROCEDURE SysSettings()
    // rddSetDefault( "DBFCDX" )
 
    RETURN
-
-STATIC FUNCTION Exe_Path()
-
-   LOCAL cPath := hb_argv( 0 )
-   LOCAL nPos  := RAt( hb_ps(), cPath )
-
-   IF nPos == 0
-      cPath := ""
-   ELSE
-      cPath := SubStr( cPath, 1, nPos - 1 )
-   ENDIF
-
-   RETURN cPath
 
 STATIC PROCEDURE Progress( /*@*/ nProgress )
 
@@ -2286,19 +2273,19 @@ STATIC FUNCTION ParseIni( cConfig )
    // Define here what attributes we can have in ini config file and their defaults
    // Please add all keys in uppercase. hDefaults is Case Insensitive
    hDefault := { ;
-      "MAIN"           => { "PORT"                 => LISTEN_PORT              , ;
-                            "APPLICATION_ROOT"     => EXE_Path()               , ;
-                            "DOCUMENT_ROOT"        => EXE_Path() + hb_ps() + "home", ;
-                            "SHOW_INDEXES"         => .F.                      , ;
-                            "SCRIPTALIASMIXEDCASE" => .T.                      , ;
-                            "SESSIONPATH"          => EXE_Path() + hb_ps() + "sessions" , ;
-                            "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY     , ;
-                            "CONSOLE-ROWS"         => MaxRow() + 1             , ;
+      "MAIN"           => { "PORT"                 => LISTEN_PORT               , ;
+                            "APPLICATION_ROOT"     => hb_DirBase()              , ;
+                            "DOCUMENT_ROOT"        => hb_DirBase() + "home"     , ;
+                            "SHOW_INDEXES"         => .F.                       , ;
+                            "SCRIPTALIASMIXEDCASE" => .T.                       , ;
+                            "SESSIONPATH"          => hb_DirBase() + "sessions" , ;
+                            "DIRECTORYINDEX"       => DIRECTORYINDEX_ARRAY      , ;
+                            "CONSOLE-ROWS"         => MaxRow() + 1              , ;
                             "CONSOLE-COLS"         => MaxCol() + 1             }, ;
-      "LOGFILES"       => { "ACCESS"               => FILE_ACCESS_LOG          , ;
+      "LOGFILES"       => { "ACCESS"               => FILE_ACCESS_LOG           , ;
                             "ERROR"                => FILE_ERROR_LOG           }, ;
-      "THREADS"        => { "MAX_WAIT"             => THREAD_MAX_WAIT          , ;
-                            "START_NUM"            => START_RUNNING_THREADS    , ;
+      "THREADS"        => { "MAX_WAIT"             => THREAD_MAX_WAIT           , ;
+                            "START_NUM"            => START_RUNNING_THREADS     , ;
                             "MAX_NUM"              => MAX_RUNNING_THREADS      }, ;
       "SCRIPTALIASES"  => { => } , ;
       "ALIASES"        => { => } }
@@ -2365,7 +2352,7 @@ STATIC FUNCTION ParseIni( cConfig )
                            CASE cKey == "DOCUMENT_ROOT"
                               IF ! Empty( cVal )
                                  // After will change APP_DIR macro with application dir
-                                 // xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                 // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
                            CASE cKey == "SCRIPTALIASMIXEDCASE"
@@ -2373,7 +2360,7 @@ STATIC FUNCTION ParseIni( cConfig )
                            CASE cKey == "SESSIONPATH"
                               IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
-                                 // xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                 // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
                            CASE cKey == "DIRECTORYINDEX"
@@ -2567,7 +2554,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
       cCallstack           + cNewLine + ;
       Replicate( "*", 70 ) + cNewLine
 
-   uhttpd_WriteToLogFile( cString, Exe_Path() + "\error.log" )
+   uhttpd_WriteToLogFile( cString, hb_DirBase() + "error.log" )
 
    ErrorLevel( 1 )
    QUIT
@@ -2727,7 +2714,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
                // Change dir to document root
                DirChange( s_cDocumentRoot )
 
-               xResult := HRBMAIN()
+               xResult := hb_hrbDo( pHRB )
 
 #ifdef DEBUG_ACTIVE
                hb_ToOutDebug( "Handler_HrbScript(): cFileName = %s,\n\rcCurPath = %s,\n\rs_cDocumentRoot = %s,\n\rpHRB = %s,\n\rxResult = %s\n\r", ;
@@ -2883,3 +2870,7 @@ STATIC FUNCTION HB_HASHI()
    hb_HCaseMatch( h, .F. )
 
    RETURN h
+
+SET PROCEDURE TO "cgifunc.prg"
+SET PROCEDURE TO "cookie.prg"
+SET PROCEDURE TO "session.prg"

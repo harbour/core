@@ -116,14 +116,18 @@ METHOD NewFile() CLASS GenerateHTML
 
    ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
    ::OpenTag( "meta", "http-equiv", "content-type", "content", "text/html; charset=UTF-8" )
+   ::CloseTag( "meta" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
+   ::CloseTag( "meta" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
+   ::CloseTag( "meta" )
 
    IF ::lCreateStyleDocument
       ::lCreateStyleDocument := .F.
       ::RecreateStyleDocument( STYLEFILE )
    ENDIF
    ::OpenTag( "link", "rel", "stylesheet", "type", "text/css", "href", STYLEFILE )
+   ::CloseTag( "link" )
 
    ::CloseTag( "head" )
    ::OpenTag( "body" )
@@ -231,7 +235,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
          ::OpenTag( "pre", iif( cTagClass != NIL, "class", ), cTagClass )
          DO WHILE Len( cEntry ) > 0
             IF Lower( cField ) + "|" $ "examples|tests|"
-               ::Append( SubStr( Parse( @cEntry, hb_eol() ), 7 ), "" )
+               ::Append( SubStr( Parse( @cEntry, hb_eol() ), 5 ), "" )
             ELSE
                ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             ENDIF
@@ -300,7 +304,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
       aFormat := p_aConversionList
       FOR idx := 1 TO Len( aFormat ) STEP 2
-         cResult := StrTran( cResult, Chr( aFormat[ idx ] ), "&" + aFormat[ idx + 1 ] + ";" )
+         cResult := StrTran( cResult, aFormat[ idx ], "&" + aFormat[ idx + 1 ] + ";" )
       NEXT
 
       aFormat := hb_ATokens( cFormat, "," )
