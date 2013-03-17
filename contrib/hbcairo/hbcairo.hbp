@@ -29,4 +29,5 @@ ps.c
 surface.c
 text.c
 transfor.c
+pattern.c
 util.c
