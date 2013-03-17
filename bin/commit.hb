@@ -51,12 +51,16 @@ PROCEDURE Main()
 
    // ;
 
-   IF ! Empty( GetEnv( _CONFIGENV_ ) )
-      cMyName := GetEnv( _CONFIGENV_ )
-   ELSEIF hb_FileExists( _CONFIGFIL_ )
-      cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
+   IF cVCS == "git"
+      cMyName := GitUser()
    ELSE
-      cMyName := "Firstname Lastname (me domain.net)"
+      IF ! Empty( GetEnv( _CONFIGENV_ ) )
+         cMyName := GetEnv( _CONFIGENV_ )
+      ELSEIF hb_FileExists( _CONFIGFIL_ )
+         cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
+      ELSE
+         cMyName := "Firstname Lastname (me domain.net)"
+      ENDIF
    ENDIF
 
    nOffset := hb_UTCOffset()
@@ -223,3 +227,15 @@ STATIC FUNCTION Changes( cVCS )
    ENDCASE
 
    RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )
+
+STATIC FUNCTION GitUser()
+
+   LOCAL cName := ""
+   LOCAL cEMail := ""
+
+   hb_processRun( Shell() + " " + CmdEscape( "git config user.name" ),, @cName )
+   hb_processRun( Shell() + " " + CmdEscape( "git config user.email" ),, @cEMail )
+
+   RETURN hb_StrFormat( "%s (%s)", ;
+      AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ), "" ) ), ;
+      StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ), "" ) ), "@", " " ) )
