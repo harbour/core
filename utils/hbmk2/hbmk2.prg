@@ -10438,7 +10438,9 @@ STATIC FUNCTION EnvNotation( cEnvName )
    RETURN "$" + cEnvName
 #endif
 
-STATIC FUNCTION AutoConfPathList( lCWD, lForDocOutput )
+#define SELF_NAME() iif( hbmk[ _HBMK_lShellMode ], iif( hb_FNameName( hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hb_ProgName() ) ), _SELF_NAME_ )
+
+STATIC FUNCTION AutoConfPathList( hbmk, lCWD, lForDocOutput )
 
    LOCAL aPath := {}
 
@@ -10463,8 +10465,8 @@ STATIC FUNCTION AutoConfPathList( lCWD, lForDocOutput )
 #if defined( __PLATFORM__UNIX )
    AAdd( aPath, "/etc/harbour" )
    IF lForDocOutput
-      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), _SELF_NAME_ ) + hb_ps() + "../etc/harbour" )
-      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), _SELF_NAME_ ) + hb_ps() + "../etc" )
+      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), SELF_NAME() ) + hb_ps() + "../etc/harbour" )
+      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), SELF_NAME() ) + hb_ps() + "../etc" )
    ELSE
       AAdd( aPath, hb_DirSepAdd( hb_DirBase() ) + "../etc/harbour" )
       AAdd( aPath, hb_DirSepAdd( hb_DirBase() ) + "../etc" )
@@ -10472,7 +10474,7 @@ STATIC FUNCTION AutoConfPathList( lCWD, lForDocOutput )
 #endif
 
    IF lForDocOutput
-      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), _SELF_NAME_ ) )
+      AAdd( aPath, hb_StrFormat( I_( "<%1$s directory>" ), SELF_NAME() ) )
    ELSE
       AAdd( aPath, hb_DirBase() )
    ENDIF
@@ -10484,7 +10486,7 @@ STATIC PROCEDURE HBC_ProcessAuto( hbmk )
    LOCAL cDir
    LOCAL cFileName
 
-   FOR EACH cDir IN AutoConfPathList( .F. )
+   FOR EACH cDir IN AutoConfPathList( hbmk, .F. )
       IF hb_FileExists( cFileName := ( hb_PathNormalize( hb_DirSepAdd( cDir ) ) + _HBMK_AUTOHBC_NAME ) )
          IF ! hbmk[ _HBMK_lQuiet ]
             _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
@@ -14354,12 +14356,12 @@ STATIC PROCEDURE __hbshell_plugins_unload( plugins )
 
 #define _HBMK_AUTOSHELL_NAME "hbstart.hb"
 
-STATIC PROCEDURE __hbshell_ProcessStart()
+STATIC PROCEDURE __hbshell_ProcessStart( hbmk )
 
    LOCAL cDir
    LOCAL cFileName
 
-   FOR EACH cDir IN AutoConfPathList( .T. )
+   FOR EACH cDir IN AutoConfPathList( hbmk, .T. )
       IF hb_FileExists( cFileName := ( hb_PathNormalize( hb_DirSepAdd( cDir ) ) + _HBMK_AUTOSHELL_NAME ) )
          __hbshell_Exec( hb_MemoRead( cFileName ) )
          EXIT
@@ -14413,7 +14415,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    __hbshell_Exec( "?? hb_Version()" )
 
-   __hbshell_ProcessStart()
+   __hbshell_ProcessStart( hbsh[ _HBSH_hbmk ] )
 
    IF HB_ISARRAY( aCommand )
       FOR EACH cCommand IN aCommand
@@ -15629,10 +15631,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       "", ;
       hb_StrFormat( I_( "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ) }
 
+   LOCAL cShell := iif( hb_FNameName( hb_ProgName() ) == _SELF_NAME_, "hbrun", hb_FNameName( hb_ProgName() ) )
+
    LOCAL aHdr_Syntax_Shell := { ;
       I_( "Syntax:" ), ;
       "", ;
-      hb_StrFormat( I_( "  %1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [parameters[s]]" ), hb_FNameName( hb_ProgName() ) ) }
+      hb_StrFormat( I_( "  %1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [parameters[s]]" ), cShell ) }
 
    LOCAL aHdr_Supp := { ;
       NIL, ;
@@ -15951,7 +15955,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
                                    "Use different syntax than command-line and .hbp/.hbm files. Lines beginning " + ;
                                    "with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
-      { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
+      { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( hbmk, .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
       { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) }, ;
       { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm", hb_StrFormat( I_( "special .hbm file embedded inside %1$s. It manages the details of installing targets and related package files to standard locations (in the style of Harbour contribs)." ), _SELF_NAME_ ) } }
@@ -16322,7 +16326,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL cDesc_Shell := hb_StrFormat( I_( ;
       e"%1$s is able to run Harbour scripts (both source and precompiled), " + ;
-      e"and it also features an interactive shell prompt." ), hb_FNameName( hb_ProgName() ) )
+      e"and it also features an interactive shell prompt." ), cShell )
 
    LOCAL aLst_Desc_Shell := { ;
       NIL, ;
@@ -16404,7 +16408,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 #ifndef _HBMK_EMBEDDED_
    AAdd( aLst_EnvVar_Shell, { _EXT_ENV_           , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
    AAdd( aLst_EnvVar_Shell, { _HBSH_ENV_DEBUG     , I_( "enable script debugging if set to any non-empty value" ) } )
-   AAdd( aLst_File_Shell, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
+   AAdd( aLst_File_Shell, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( hbmk, .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
    AAdd( aLst_File_Shell, { "shell plugins"     , hb_StrFormat( I_( ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
    AAdd( aLst_File_Shell, { _FNAME_HISTORY_     , hb_StrFormat( I_( "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s" ), _HISTORY_DISABLE_LINE, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
    AAdd( aLst_File_Shell, { _EXT_FILE_          , hb_StrFormat( I_( "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s" ), _EXT_FILE_ALT, _EXT_FILE_ALT_OS, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
