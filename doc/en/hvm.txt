@@ -40,8 +40,8 @@
       executed function if no arguments are passed. Otherwise it returns
       the name of the function or procedure at <nLevel>.
    $EXAMPLES$
-      This test will show the functions and procedures in stack.
-      before executing it.
+      // This test will show the functions and procedures in stack.
+      // before executing it.
       PROCEDURE Main()
          LOCAL n := 1
          DO WHILE ! Empty( ProcName( n ) )

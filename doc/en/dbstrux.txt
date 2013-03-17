@@ -572,10 +572,11 @@
       __dbStructFilter() which does exactly the same.
    $EXAMPLES$
       LOCAL aStruct, aList, aRet
-      aStruct := { { "CODE",  "N",  4, 0 }, ;
-                   { "NAME",  "C", 10, 0 }, ;
-                   { "PHONE", "C", 13, 0 }, ;
-                   { "IQ",    "N",  3, 0 } }
+      aStruct := { ;
+         { "CODE",  "N",  4, 0 }, ;
+         { "NAME",  "C", 10, 0 }, ;
+         { "PHONE", "C", 13, 0 }, ;
+         { "IQ",    "N",  3, 0 } }
       aList := { "IQ", "NAME" }
       aRet := __FLedit( aStruct, aList )
                         // { { "IQ", "N", 3, 0 }, { "NAME", "C", 10, 0 } }
