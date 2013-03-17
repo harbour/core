@@ -1674,6 +1674,9 @@ TABLE OF CONTENT
       Git (Version Control System) [multiplatform, free, open-source]
          http://git-scm.com/
          https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git (Windows binaries)
+      GitHub Client [multiplatform, free]
+         http://windows.github.com/
+         http://mac.github.com/
       GNU Bison (grammer paser generator) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm
