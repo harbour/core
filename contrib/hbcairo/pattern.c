@@ -312,7 +312,7 @@ HB_FUNC( CAIRO_PATTERN_GET_RADIAL_CIRCLES )
       double dY1;
       double dR1;
 
-      hb_retni( cairo_pattern_get_radial_points( pPattern, &dX0, &dY0, &dR0, &dX1, &dY1, &dR1 ) );
+      hb_retni( cairo_pattern_get_radial_circles( pPattern, &dX0, &dY0, &dR0, &dX1, &dY1, &dR1 ) );
 
       hb_stornd( dX0, 2 );
       hb_stornd( dY0, 3 );
