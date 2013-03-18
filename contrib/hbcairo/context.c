@@ -57,7 +57,7 @@ HB_FUNC( CAIRO_CLIP )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_clip( pCairo  );
+      cairo_clip( pCairo );
 }
 
 
@@ -85,7 +85,7 @@ HB_FUNC( CAIRO_CLIP_PRESERVE )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_clip_preserve( pCairo  );
+      cairo_clip_preserve( pCairo );
 }
 
 
@@ -94,7 +94,7 @@ HB_FUNC( CAIRO_COPY_PAGE )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_copy_page( pCairo  );
+      cairo_copy_page( pCairo );
 }
 
 
@@ -112,7 +112,7 @@ HB_FUNC( CAIRO_FILL )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_fill( pCairo  );
+      cairo_fill( pCairo );
 }
 
 
@@ -137,7 +137,7 @@ HB_FUNC( CAIRO_GET_DASH )
 
       iCount  = cairo_get_dash_count( pCairo );
       pDashes = ( double * ) hb_xgrab( iCount * sizeof( double ) );
-      cairo_get_dash( pCairo, pDashes, &dOffset  );
+      cairo_get_dash( pCairo, pDashes, &dOffset );
       hb_stornd( dOffset, 3 );
 
       pItem = hb_itemArrayNew( ( HB_SIZE ) iCount );
@@ -201,7 +201,7 @@ HB_FUNC( CAIRO_RESET_CLIP )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_reset_clip( pCairo  );
+      cairo_reset_clip( pCairo );
 }
 
 

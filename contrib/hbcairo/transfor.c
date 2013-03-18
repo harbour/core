@@ -78,7 +78,7 @@ HB_FUNC( CAIRO_IDENTITY_MATRIX )
    cairo_t * pCairo = hb_cairo_param( 1 );
 
    if( pCairo )
-      cairo_identity_matrix( pCairo  );
+      cairo_identity_matrix( pCairo );
 }
 
 
