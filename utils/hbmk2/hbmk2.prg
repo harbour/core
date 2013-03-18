@@ -3100,6 +3100,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
 
+      /* NOTE: Keep this before the "-i" check. */
+      CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            AAdd( hbmk[ _HBMK_aICON ], hb_PathNormalize( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      /* NOTE: Keep this after the "-icon=" check. */
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
            Len( cParamL ) > 2 .AND. !( cParamL == "-i-" )
 
@@ -3115,13 +3124,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                ENDIF
             NEXT
-         ENDIF
-
-      CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
-
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aICON ], hb_PathNormalize( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ) ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-manifest=" ) ) == "-manifest="
