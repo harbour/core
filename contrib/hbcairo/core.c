@@ -155,6 +155,15 @@ PHB_ITEM hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface )
 }
 
 
+void hb_cairoSurfaceStor( cairo_surface_t * pSurface, int iParam )
+{
+   cairo_surface_t ** ppSurface = ( cairo_surface_t ** ) hb_gcAllocate( sizeof( cairo_surface_t * ), &s_gcSurfaceFuncs );
+
+   *ppSurface = pSurface;
+   hb_storptrGC( ppSurface, iParam );
+}
+
+
 cairo_surface_t * hb_cairo_surface_param( int iParam )
 {
    cairo_surface_t ** ppSurface = ( cairo_surface_t ** ) hb_parptrGC( &s_gcSurfaceFuncs, iParam );
