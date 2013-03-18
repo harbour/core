@@ -70,8 +70,7 @@
    $ONELINER$
       Unlocks part or all of any file
    $SYNTAX$
-      hb_FUnlock( <nHandle>, <nOffset>, <nBytes> )  --> <lSuccess>
-
+      hb_FUnlock( <nHandle>, <nOffset>, <nBytes> ) --> <lSuccess>
    $ARGUMENTS$
       <nHandle>  Dos file handle
 

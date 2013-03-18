@@ -64,7 +64,7 @@
    $ONELINER$
       Changes or evaluated environmental settings
    $SYNTAX$
-      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
+      Set( <nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
    $ARGUMENTS$
       <nSet> Set Number
 
@@ -747,7 +747,7 @@
    $ONELINER$
       Assign an action block to a key
    $SYNTAX$
-      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
+      SET KEY <anKey> TO <bAction>] [WHEN <bCondition>]
    $ARGUMENTS$
       <anKey> is either a numeric key value, or an array of such values
 
@@ -894,7 +894,7 @@
    $ONELINER$
       Toggle wrapping the PROMPTs in a menu.
    $SYNTAX$
-      SET WRAP on | OFF | (<lWrap>
+      SET WRAP on | OFF | ( <lWrap> )
    $ARGUMENTS$
       <lWrap> Logical expression for toggle
    $DESCRIPTION$
@@ -1001,7 +1001,7 @@
    $ONELINER$
       Toggles the enhanced display of PROMPT's and GETs.
    $SYNTAX$
-      SET INTENSITY  ON | off | (<lInte>)
+      SET INTENSITY ON | off | ( <lInte> )
    $ARGUMENTS$
       <lInte> Logical expression for toggle command
    $DESCRIPTION$
@@ -1031,8 +1031,8 @@
    $ONELINER$
       Toggle and echos output to an alternate file
    $SYNTAX$
-      SET ALTERNATE to <cFile> [ADDITIVE]
-      SET ALTERNATE  on | OFF | (<lAlter>)
+      SET ALTERNATE TO <cFile> [ADDITIVE]
+      SET ALTERNATE on | OFF | ( <lAlter> )
    $ARGUMENTS$
       <cFile> Name of alternate file.
 
@@ -1081,7 +1081,7 @@
    $ONELINER$
       Toggle the century digits in all dates display
    $SYNTAX$
-      SET CENTURY on | OFF | (<lCent>)
+      SET CENTURY on | OFF | ( <lCent> )
    $ARGUMENTS$
       <lCent> Logical expression for toggle
    $DESCRIPTION$
@@ -1195,7 +1195,7 @@
    $ONELINER$
       Set the number of decimal position to be displayed
    $SYNTAX$
-      SET FIXED on | OFF | (<lFixed>)
+      SET FIXED on | OFF | ( <lFixed> )
    $ARGUMENTS$
       <lFixed> Logical expression for toggle
    $DESCRIPTION$
@@ -1244,7 +1244,7 @@
       Toggles the printer and controls the printer device
    $SYNTAX$
       SET PRINTER on | OFF
-      SET PRINTER (<lPrinter>)
+      SET PRINTER ( <lPrinter> )
       SET PRINTER TO [<cPrinter>] [ADDITIVE]
    $ARGUMENTS$
       <lPrinter>   Logical condition by which to toggle the printer
@@ -1300,7 +1300,7 @@
    $ONELINER$
       Toggle the console display
    $SYNTAX$
-      SET CONSOLE ON | off | (<lConsole>)
+      SET CONSOLE ON | off | ( <lConsole> )
    $ARGUMENTS$
       <lConsole> Logical expression for toggle command
    $DESCRIPTION$
@@ -1413,7 +1413,7 @@
    $ONELINER$
       Toggle the bell to sound once a GET has been completed.
    $SYNTAX$
-      SET BELL on | OFF | (<lBell>)
+      SET BELL on | OFF | ( <lBell> )
    $ARGUMENTS$
       <lBell> Logical expression for toggle command
    $DESCRIPTION$

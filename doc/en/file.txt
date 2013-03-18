@@ -605,7 +605,7 @@
    $ONELINER$
       Reads a string from a file.
    $SYNTAX$
-      FReadStr(<nHandle>, <nBytes>) --> cString
+      FReadStr( <nHandle>, <nBytes> ) --> cString
    $ARGUMENTS$
       <nHandle> File handle number.
 
@@ -897,7 +897,7 @@
    $ONELINER$
       Returns the current OS directory name.
    $SYNTAX$
-      CurDir( [<cDrive>] )  --> cPath
+      CurDir( [<cDrive>] ) --> cPath
    $ARGUMENTS$
       <cDrive> OS drive letter
    $RETURNS$

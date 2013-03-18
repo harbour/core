@@ -21,7 +21,7 @@
    $ONELINER$
       Converts a date to the day of week
    $SYNTAX$
-      CDoW(<dDate>)  --> cDay
+      CDoW( <dDate> ) --> cDay
    $ARGUMENTS$
       <dDate>  Any date expression.
    $RETURNS$
@@ -61,7 +61,7 @@
    $ONELINER$
       Return the name of the month.
    $SYNTAX$
-      CMonth(<dDate>)  --> cMonth
+      CMonth( <dDate> ) --> cMonth
    $ARGUMENTS$
       <dDate>  Any date expression.
    $RETURNS$
@@ -136,7 +136,7 @@
    $ONELINER$
       Converts a character string to a date expression
    $SYNTAX$
-      CToD(<cDateString>)  --> dDate
+      CToD( <cDateString> ) --> dDate
    $ARGUMENTS$
       <cDateString> A character date in format 'mm/dd/yy'
    $RETURNS$
@@ -176,7 +176,7 @@
    $ONELINER$
       Return the numeric day of the month.
    $SYNTAX$
-      Day(<cDate>) --> nMonth
+      Day( <cDate> ) --> nMonth
    $ARGUMENTS$
       <cDate> Any valid date expression.
    $RETURNS$
@@ -212,7 +212,7 @@
    $ONELINER$
       Convert elapsed seconds into days
    $SYNTAX$
-      Days(<nSecs> ) --> nDay
+      Days( <nSecs> ) --> nDay
    $ARGUMENTS$
       <nSecs> The number of seconds
    $RETURNS$
@@ -248,7 +248,7 @@
    $ONELINER$
       Value for the day of week.
    $SYNTAX$
-      DoW(<dDate>) --> nDay
+      DoW( <dDate> ) --> nDay
    $ARGUMENTS$
       <dDate>  Any valid date expression
    $RETURNS$
@@ -284,7 +284,7 @@
    $ONELINER$
       Date to character conversion
    $SYNTAX$
-      DToC(<dDateString>)  --> cDate
+      DToC( <dDateString> ) --> cDate
    $ARGUMENTS$
       <dDateString> Any date
    $RETURNS$
@@ -322,7 +322,7 @@
    $ONELINER$
       Date to string conversion
    $SYNTAX$
-      DToS(<dDateString>)  --> cDate
+      DToS( <dDateString> ) --> cDate
    $ARGUMENTS$
       <dDateString> Any date
    $RETURNS$
@@ -358,7 +358,7 @@
    $ONELINER$
       Calculates elapted time.
    $SYNTAX$
-      ElapTime(<cStartTime>,<cEndTime>) --> cDiference
+      ElapTime( <cStartTime>, <cEndTime> ) --> cDiference
    $ARGUMENTS$
       <cStartTime> Start in time as a string format
       <cEndTime>   End time as a string format
@@ -402,7 +402,7 @@
    $ONELINER$
       Converts a date expression to a month value
    $SYNTAX$
-      Month(<dDate>) --> nMonth
+      Month( <dDate> ) --> nMonth
    $ARGUMENTS$
       <dDate> Any valid date expression
    $RETURNS$
@@ -548,7 +548,7 @@
    $ONELINER$
       Converts the year portion of a date into a numeric value
    $SYNTAX$
-      Year(<cDate>) --> nYear
+      Year( <cDate> ) --> nYear
    $ARGUMENTS$
       <dDate> Any valid date expression
    $RETURNS$

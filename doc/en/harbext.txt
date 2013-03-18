@@ -43,11 +43,11 @@
 
               See hbmemory.ch
 
-      * Transform()  --> new function in format string
+      * Transform() --> new function in format string
 
               @0      Make a zero padded string out of the number.
 
-      * SToD()  --> dDate
+      * SToD() --> dDate
 
               New function that converts a yyyymmdd string to a Date value.
 

@@ -927,7 +927,7 @@
    $ONELINER$
       Converts an ASCII value to it character value
    $SYNTAX$
-      Chr( <nAsciiNum> )  --> cReturn
+      Chr( <nAsciiNum> ) --> cReturn
    $ARGUMENTS$
       <nAsciiNum> Any ASCII character code.
    $RETURNS$
@@ -1004,7 +1004,7 @@
    $ONELINER$
       Centers an expression for a given width
    $SYNTAX$
-      PadC( <xVal>, <nWidth>, <cFill> )  --> cString
+      PadC( <xVal>, <nWidth>, <cFill> ) --> cString
    $ARGUMENTS$
       <xVal> A Number, Character or Date value to pad
 
@@ -1052,7 +1052,7 @@
    $ONELINER$
       Left-justifies an expression for a given width
    $SYNTAX$
-      PadL( <xVal>, <nWidth>, <cFill> )  --> cString
+      PadL( <xVal>, <nWidth>, <cFill> ) --> cString
    $ARGUMENTS$
       <xVal> An number,Character or date to pad
 
@@ -1228,7 +1228,7 @@
    $ONELINER$
       Remove trailing spaces from a string.
    $SYNTAX$
-      Trim( <cExpression> )   --> cString
+      Trim( <cExpression> ) --> cString
    $ARGUMENTS$
       <cExpression> Any character expression
    $RETURNS$
@@ -1270,7 +1270,7 @@
    $ONELINER$
       Repeats a single character expression
    $SYNTAX$
-      Replicate( <cString>, <nSize> )  --> cReplicateString
+      Replicate( <cString>, <nSize> ) --> cReplicateString
    $ARGUMENTS$
       <cString> Character string to be replicated
 
@@ -1474,7 +1474,7 @@
    $ONELINER$
       Formats a value based on a specific picture template.
    $SYNTAX$
-      Transform( <xExpression>, <cTemplate> )  --> cFormatted
+      Transform( <xExpression>, <cTemplate> ) --> cFormatted
    $ARGUMENTS$
       <xExpression> Any expression to be formated.
 

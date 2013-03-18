@@ -73,7 +73,7 @@
    $ONELINER$
       Dynamically add an element to an array
    $SYNTAX$
-      AAdd(<aArray>[, <xValue>]) --> Value
+      AAdd( <aArray>[, <xValue>] ) --> Value
    $ARGUMENTS$
       <aArray> The name of an array
 
@@ -119,7 +119,7 @@
    $ONELINER$
       Adjust the size of an array
    $SYNTAX$
-      ASize(<aArray>, <nLen>) --> aTarget
+      ASize( <aArray>, <nLen> ) --> aTarget
    $ARGUMENTS$
       <aArray> Name of array to be dynamically altered
 
@@ -241,7 +241,7 @@
    $ONELINER$
       Delete an element form an array.
    $SYNTAX$
-      ADel(<aArray>, <nPos>) --> aTarget
+      ADel( <aArray>, <nPos> ) --> aTarget
    $ARGUMENTS$
       <aArray> Name of array from which an element is to be removed.
 
@@ -299,7 +299,7 @@
       element to be filled and the array elements will continue to be
       filled for <nCount> positions. If Not specified, the value of
       <nStart> will be 1, and the value of <nCount> will be the value
-      of Len(<aArray>); thus, all subscript positions in the array
+      of Len( <aArray> ); thus, all subscript positions in the array
       <aArray> will be filled with the value of <xValue>.
 
       This function will work on only a single dimension of <aArray>.
@@ -389,7 +389,7 @@
    $ONELINER$
       Evaluates the subscript element of an array
    $SYNTAX$
-      AEval(<aArray>, <bBlock>, [<nStart>], [<nCount>]) --> aArray
+      AEval( <aArray>, <bBlock>, [<nStart>], [<nCount>] ) --> aArray
    $ARGUMENTS$
       <aArray> Is the array to be evaluated.
 
@@ -505,7 +505,7 @@
    $ONELINER$
       Duplicate a  multidimensional array
    $SYNTAX$
-      AClone(<aSource>) --> aDuplicate
+      AClone( <aSource> ) --> aDuplicate
    $ARGUMENTS$
       <aSource> Name of the array to be cloned.
    $RETURNS$

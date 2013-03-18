@@ -26,7 +26,7 @@
    $ONELINER$
       Return the absolute value of a number.
    $SYNTAX$
-      Abs(<nNumber>) --> <nAbsNumber>
+      Abs( <nNumber> ) --> <nAbsNumber>
    $ARGUMENTS$
       <nNumber> Any number.
    $RETURNS$
@@ -181,7 +181,7 @@
    $ONELINER$
       Returns the maximum of two numbers or dates.
    $SYNTAX$
-      Max( <xValue>, <xValue1> )  --> <xMax>
+      Max( <xValue>, <xValue1> ) --> <xMax>
    $ARGUMENTS$
       <xValue>  Any date or numeric value.
 
@@ -223,7 +223,7 @@
    $ONELINER$
       Determines the minumum of two numbers or dates.
    $SYNTAX$
-      Min( <xValue>, <xValue1> )  --> <xMin>
+      Min( <xValue>, <xValue1> ) --> <xMin>
    $ARGUMENTS$
       <xValue>  Any date or numeric value.
 

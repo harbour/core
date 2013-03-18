@@ -49,7 +49,7 @@
    $ONELINER$
       Returns the HARBOUR Version or the Harbour/Compiler Version.
    $SYNTAX$
-      Version()  --> <cReturn>
+      Version() --> <cReturn>
    $ARGUMENTS$
       None
    $RETURNS$
@@ -83,7 +83,7 @@
    $ONELINER$
       Obtains a system environmental setting.
    $SYNTAX$
-      GetEnv( <cEnviroment> )  --> <cReturn>
+      GetEnv( <cEnviroment> ) --> <cReturn>
    $ARGUMENTS$
       <cEnviroment> Enviromental variable to obtain.
    $RETURNS$
@@ -124,7 +124,7 @@
    $ONELINER$
       Obtains a system environmental setting.
    $SYNTAX$
-      GetE( <cEnviroment> )  --> <cReturn>
+      GetE( <cEnviroment> ) --> <cReturn>
    $ARGUMENTS$
       <cEnviroment> Enviromental variable to obtain.
    $RETURNS$
@@ -167,18 +167,11 @@
    $ONELINER$
       Obtains a system environmental setting.
    $SYNTAX$
-      hb_GetEnv(<cEnviroment>, [<cDefaultValue>], [<lApplyCodepage>] )  --> <cReturn>
+      hb_GetEnv( <cEnviroment>, [<cDefaultValue>] ) --> <cReturn>
    $ARGUMENTS$
       <cEnviroment> Enviromental variable to obtain.
 
       <cDefaultValue> Optional value to return if <cEnvironment> is not found.
-
-      <lApplyCodepage> optional logical parameter specifing whether to
-       apply automatic codepage conversion (to the codepage
-       specified by Set( _SET_OSCODEPAGE ) on the obtained value.
-       The default is .T.  Note that if the default value is passed and the environment
-       value is not found, this codepage conversion is not performed against
-       the returned default value
    $RETURNS$
       <cReturn>     Value of the environment variable or <cDefaultValue> or an empty string.
    $DESCRIPTION$

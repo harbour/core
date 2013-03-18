@@ -23,7 +23,7 @@
    $ONELINER$
       Fills referenced arrays with database field information
    $SYNTAX$
-      AFields(<aNames>[,<aTypes>][,<aLen>][,<aDecs>]) --> <nFields>
+      AFields( <aNames>, [<aTypes>], [<aLen>], [<aDecs>] ) --> <nFields>
    $ARGUMENTS$
       <aNames>  Array of field names
 
@@ -344,7 +344,7 @@
    $ONELINER$
       Obtains the value  of a specified field
    $SYNTAX$
-      FieldGet(<nField>) --> ValueField
+      FieldGet( <nField> ) --> ValueField
    $ARGUMENTS$
       <nField> Is the numeric field position
    $RETURNS$
@@ -383,7 +383,7 @@
    $ONELINER$
       Return the name of a field at a numeric field location.
    $SYNTAX$
-      FIELDNAME/FIELD(<nPosition>) --> cFieldName
+      FieldName()/Field( <nPosition> ) --> cFieldName
    $ARGUMENTS$
       <nPosition> Field order in the database.
    $RETURNS$
@@ -425,7 +425,7 @@
    $ONELINER$
       Return the ordinal position of a field.
    $SYNTAX$
-      FieldPos(<cFieldName>) --> nFieldPos
+      FieldPos( <cFieldName> ) --> nFieldPos
    $ARGUMENTS$
       <cFieldName> Name of a field.
    $RETURNS$
@@ -464,7 +464,7 @@
    $ONELINER$
       Set the value of a field variable
    $SYNTAX$
-      FieldPut(<nField>, <expAssign>) --> ValueAssigned
+      FieldPut( <nField>, <expAssign> ) --> ValueAssigned
    $ARGUMENTS$
       <nField> The field numeric position
 

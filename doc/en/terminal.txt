@@ -757,7 +757,7 @@
    $ONELINER$
       Returns the current screen column position
    $SYNTAX$
-      Col()  --> nPosition
+      Col() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -792,7 +792,7 @@
    $ONELINER$
       Returns the current screen row position
    $SYNTAX$
-      Row()  --> nPosition
+      Row() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -827,7 +827,7 @@
    $ONELINER$
       Returns the maximun number of columns in the current video mode
    $SYNTAX$
-      MaxCol()  --> nPosition
+      MaxCol() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -863,7 +863,7 @@
    $ONELINER$
       Returns the current screen row position
    $SYNTAX$
-      MaxRow()  --> nPosition
+      MaxRow() --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$

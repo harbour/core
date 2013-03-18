@@ -427,7 +427,7 @@
    $ONELINER$
       Determine if a given name is a PUBLIC or PRIVATE memory variable
    $SYNTAX$
-      __mvExist( <cVarName> )  --> <lVariableExist>
+      __mvExist( <cVarName> ) --> <lVariableExist>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable to check
    $RETURNS$
@@ -468,7 +468,7 @@
    $ONELINER$
       This function returns value of memory variable
    $SYNTAX$
-      __mvGet( <cVarName> )  --> <xVar>
+      __mvGet( <cVarName> ) --> <xVar>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable
    $RETURNS$
@@ -506,7 +506,7 @@
    $ONELINER$
       This function set the value of memory variable
    $SYNTAX$
-      __mvGet( <cVarName> [, <xValue>] )  --> <xValue>
+      __mvGet( <cVarName> [, <xValue>] ) --> <xValue>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable
       <xValue>   - a value of any type that will be set - if it is not

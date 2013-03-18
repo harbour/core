@@ -21,7 +21,7 @@
    $ONELINER$
       Allows selection of an element from an array
    $SYNTAX$
-      AChoice(<nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>]) --> nPosition
+      AChoice( <nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>] ) --> nPosition
    $ARGUMENTS$
       <nTop>           - topmost row used to display array (default 0)
 

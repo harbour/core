@@ -594,7 +594,7 @@
    $ONELINER$
       Position the record pointer to a specific location.
    $SYNTAX$
-      dbGoto(<xRecordNumber>)
+      dbGoto( <xRecordNumber> )
    $ARGUMENTS$
       <xRecordNumber> Record number or unique identity
    $DESCRIPTION$
@@ -853,7 +853,7 @@
    $ONELINER$
       Searches for a value based on an active index.
    $SYNTAX$
-      dbSeek(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
+      dbSeek( <expKey>, [<lSoftSeek>], [<lFindLast>] ) --> lFound
    $ARGUMENTS$
       <expKey> Any expression
 
@@ -927,7 +927,7 @@
    $ONELINER$
       Change to another work area
    $SYNTAX$
-      dbSelectArea(<xArea>) -
+      dbSelectArea( <xArea> ) -
    $ARGUMENTS$
       <xArea> Alias or work area
    $DESCRIPTION$
@@ -1054,7 +1054,7 @@
    $ONELINER$
       Establishes a filter condition for a work area.
    $SYNTAX$
-      dbSetFilter(<bCondition>, [<cCondition>])
+      dbSetFilter( <bCondition>, [<cCondition>] )
    $ARGUMENTS$
       <bCondition> Code block expression for filtered evaluation.
 

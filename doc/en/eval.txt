@@ -21,7 +21,7 @@
    $ONELINER$
       Evaluate a code block
    $SYNTAX$
-      Eval( <bBlock> [, <xVal> [,...]])  --> xExpression
+      Eval( <bBlock> [, <xVal> [,...] ] ) --> xExpression
    $ARGUMENTS$
       <bBlock>   Code block expression to be evaluated
 

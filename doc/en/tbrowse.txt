@@ -9,7 +9,7 @@
    $ONELINER$
       Create a Browse Object
    $CONSTRUCTOR$
-      TBrowseNew(<nTop>,<nLeft>,<nBottom>,<nRight>)   --> <oBrowse>
+      TBrowseNew( <nTop>, <nLeft>, <nBottom>, <nRight> ) --> <oBrowse>
    $ARGUMENTS$
       <nTop>    Top Row
 
@@ -192,7 +192,7 @@
    $ONELINER$
       Get an optionaly Set an new Code block associated to a inkey value
    $SYNTAX$
-      SetKey(<nKey>[,<bBlock>]) --> bOldBlock
+      SetKey( <nKey>[, <bBlock>] ) --> bOldBlock
    $ARGUMENTS$
       <nKey> An valid inkey Code
 
@@ -256,7 +256,7 @@
    $ONELINER$
       Evaluates an code block associated with an specific key
    $SYNTAX$
-      ApplyKey(<nKey>) --> nResult
+      ApplyKey( <nKey> ) --> nResult
    $ARGUMENTS$
       <nKey>      An valid Inkey code
    $RETURNS$

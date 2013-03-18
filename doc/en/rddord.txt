@@ -3,9 +3,9 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    DB*() documentation
- *    ORD*() documentation
- *    RDD*() documentation
+ *    db*() documentation
+ *    ord*() documentation
+ *    rdd*() documentation
  *
  * See COPYING.txt for licensing terms.
  *
@@ -66,7 +66,7 @@
    $ONELINER$
       Returns the Order Bag Name.
    $SYNTAX$
-      ordBagName(<nOrder> | <cOrderName>) --> cOrderBagName
+      ordBagName( <nOrder> | <cOrderName> ) --> cOrderBagName
    $ARGUMENTS$
       <nOrder> A numeric value representing the Order bag number.
 
@@ -165,8 +165,8 @@
    $ONELINER$
       Create an Order in an Order Bag
    $SYNTAX$
-      ordCreate(<cOrderBagName>,[<cOrderName>], <cExpKey>,
-      [<bExpKey>], [<lUnique>])
+      ordCreate( <cOrderBagName>,[<cOrderName>], <cExpKey>,
+      [<bExpKey>], [<lUnique>] )
    $ARGUMENTS$
       <cOrderBagName>  Name of the file that contains one or more Orders.
 
@@ -236,7 +236,7 @@
    $ONELINER$
       Remove an Order from an Order Bag
    $SYNTAX$
-      ordDestroy(<cOrderName> [, <cOrderBagName> ])
+      ordDestroy( <cOrderName> [, <cOrderBagName> ] )
    $ARGUMENTS$
       <cOrderName> Name of the order to remove
 
@@ -282,8 +282,7 @@
    $ONELINER$
       Return the FOR expression of an Order
    $SYNTAX$
-      ordFor(<xOrder>[, <cOrderBagName>]) --> cForExp
-
+      ordFor( <xOrder>[, <cOrderBagName>] ) --> cForExp
    $ARGUMENTS$
       <xOrder>  It the name of the target order,or the numeric position
       of the order.
@@ -332,7 +331,7 @@
    $ONELINER$
       Return the key expression of an Order
    $SYNTAX$
-      ordKey(<cOrderName> | <nOrder> [, <cOrderBagName>]) --> cExpKey
+      ordKey( <cOrderName> | <nOrder> [, <cOrderBagName>] ) --> cExpKey
    $ARGUMENTS$
       <xOrder>  It the name of the target order,or the numeric position
       of the order.
@@ -418,7 +417,7 @@
    $ONELINER$
       Yields the key expression of a specified index file.
    $SYNTAX$
-      IndexKey(<nOrder>) --> <cIndexKey>
+      IndexKey( <nOrder> ) --> <cIndexKey>
    $ARGUMENTS$
       <nOrder>  Index order number
    $RETURNS$
