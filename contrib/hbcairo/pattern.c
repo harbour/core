@@ -75,6 +75,7 @@ static const HB_GC_FUNCS s_gcPatternFuncs =
 cairo_pattern_t * hb_cairoPatternItemGet( PHB_ITEM pItem )
 {
    cairo_pattern_t ** ppPattern = ( cairo_pattern_t ** ) hb_itemGetPtrGC( pItem, &s_gcPatternFuncs );
+
    return ppPattern ? *ppPattern : NULL;
 }
 
@@ -124,7 +125,7 @@ HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGB )
 {
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
       cairo_pattern_add_color_stop_rgb( pPattern, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
 }
 
@@ -133,7 +134,7 @@ HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGBA )
 {
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
       cairo_pattern_add_color_stop_rgba( pPattern, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
 }
 
@@ -143,7 +144,7 @@ HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_COUNT )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
       int iCount;
 
@@ -164,7 +165,7 @@ HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_RGBA )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
       double dOffset;
       double dRed;
@@ -206,7 +207,7 @@ HB_FUNC( CAIRO_PATTERN_GET_RGBA )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
       double dRed;
       double dGreen;
@@ -240,9 +241,9 @@ HB_FUNC( CAIRO_PATTERN_GET_SURFACE )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
-      cairo_surface_t *pSurface;
+      cairo_surface_t * pSurface;
 
       hb_retni( cairo_pattern_get_surface( pPattern, &pSurface ) );
 
@@ -268,7 +269,7 @@ HB_FUNC( CAIRO_PATTERN_GET_LINEAR_POINTS )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
       double dX0;
       double dY0;
@@ -302,7 +303,7 @@ HB_FUNC( CAIRO_PATTERN_GET_RADIAL_CIRCLES )
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE( 1, 4, 0 )
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
+   if( pPattern )
    {
       double dX0;
       double dY0;
@@ -333,11 +334,8 @@ HB_FUNC( CAIRO_PATTERN_STATUS )
 {
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
 
-   if ( pPattern )
-   {
+   if( pPattern )
       hb_retni( cairo_pattern_status( pPattern ) );
-   }
    else
       hb_retni( -1 );
 }
-

@@ -150,7 +150,6 @@ HB_FUNC( CAIRO_GET_DASH )
 }
 
 
-
 HB_FUNC( CAIRO_GET_LINE_WIDTH )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -391,7 +390,7 @@ HB_FUNC( CAIRO_PUSH_GROUP )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
 
-   if ( pCairo )
+   if( pCairo )
       cairo_push_group( pCairo );
 }
 
@@ -400,7 +399,7 @@ HB_FUNC( CAIRO_POP_GROUP_TO_SOURCE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
 
-   if ( pCairo )
+   if( pCairo )
       cairo_pop_group_to_source( pCairo );
 }
 
@@ -419,6 +418,6 @@ HB_FUNC( CAIRO_SET_SOURCE )
    cairo_t * pCairo = hb_cairo_param( 1 );
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 2 );
 
-   if ( pCairo )
+   if( pCairo )
       cairo_set_source( pCairo, pPattern );
 }
