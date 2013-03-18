@@ -1674,6 +1674,7 @@ TABLE OF CONTENT
       Git (Version Control System) [multiplatform, free, open-source]
          http://git-scm.com/
          https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git (Windows binaries)
+         You'll need Git 1.7 or upper for Harbour.
       GitHub Client [multiplatform, free]
          http://windows.github.com/
          http://mac.github.com/
