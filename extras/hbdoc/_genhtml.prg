@@ -7,7 +7,6 @@
  *
  * Portions of this project are based on hbdoc
  *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
- *    Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

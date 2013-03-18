@@ -215,7 +215,6 @@ PROCEDURE Main( ... )
    aContent := {}
    AEval( ;
       {;
-         p_hsSwitches[ "basedir" ] + "doc", ;
          p_hsSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
          iif( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "src", NIL ), ;
          iif( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
@@ -276,8 +275,7 @@ PROCEDURE Main( ... )
             NEXT
 
             FOR idx := 1 TO Len( aContent )
-               IF Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
-               ELSE
+               IF !( Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
                   oDocument:AddEntry( aContent[ idx ] )
                ENDIF
             NEXT

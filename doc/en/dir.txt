@@ -100,14 +100,14 @@
    $EXAMPLES$
       DIR          // information for all DBF files in current directory
 
-      dir   "*.dbf"          // list all DBF file in current directory
+      DIR "*.dbf"          // list all DBF file in current directory
 
       // list all PRG files in Harbour Run-Time library
       // for MS-DOS compatible operating systems
-      Dir "src\rtl\*.prg"
+      DIR "src\rtl\*.prg"
 
       // list all files in the public section on a Unix like machine
-      Dir  "/pub"
+      DIR "/pub"
    $STATUS$
       R
    $COMPLIANCE$
@@ -184,7 +184,7 @@
          aAttr := Array( nLen )
          ADir( "*.prg", aName, aSize, aDate, aTime, aAttr )
          FOR i := 1 TO nLen
-             ? aName[ i ], aSize[ i ], aDate[ i ], aTime[ i ], aAttr[ i ]
+            ? aName[ i ], aSize[ i ], aDate[ i ], aTime[ i ], aAttr[ i ]
          NEXT
       ELSE
          ? "This directory is clean from smut"
