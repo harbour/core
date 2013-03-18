@@ -88,15 +88,6 @@ PHB_ITEM hb_cairoPatternItemPut( PHB_ITEM pItem, cairo_pattern_t * pPattern )
 }
 
 
-void hb_cairoPatternStor( cairo_pattern_t * pPattern, int iParam )
-{
-   cairo_pattern_t ** ppPattern = ( cairo_pattern_t ** ) hb_gcAllocate( sizeof( cairo_pattern_t * ), &s_gcPatternFuncs );
-
-   *ppPattern = pPattern;
-   hb_storptrGC( ppPattern, iParam );
-}
-
-
 cairo_pattern_t * hb_cairo_pattern_param( int iParam )
 {
    cairo_pattern_t ** ppPattern = ( cairo_pattern_t ** ) hb_parptrGC( &s_gcPatternFuncs, iParam );
@@ -255,7 +246,7 @@ HB_FUNC( CAIRO_PATTERN_GET_SURFACE )
 
       hb_retni( cairo_pattern_get_surface( pPattern, &pSurface ) );
 
-      hb_cairoPatternStor( pSurface, 2 );
+      hb_cairoSurfaceStor( pSurface, 2 );
    }
    else
       hb_retni( -1 );

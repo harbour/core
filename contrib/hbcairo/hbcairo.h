@@ -63,6 +63,7 @@ extern HB_EXPORT void               hb_cairo_ret( cairo_t * );
 
 extern HB_EXPORT cairo_surface_t *  hb_cairoSurfaceItemGet( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM           hb_cairoSurfaceItemPut( PHB_ITEM pItem, cairo_surface_t * pSurface );
+extern HB_EXPORT void               hb_cairoSurfaceStor( cairo_surface_t * pSurface, int iParam );
 extern HB_EXPORT cairo_surface_t *  hb_cairo_surface_param( int iParam );
 extern HB_EXPORT void               hb_cairo_surface_ret( cairo_surface_t * pSurface );
 
