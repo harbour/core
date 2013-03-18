@@ -249,59 +249,9 @@
 
       NOTE:   </par>
 
-      If you want a 100% compatible runtime libraries then
-      you have to define HARBOUR_STRICT_CLIPPER_COMPATIBILITY. This
-      option should be defined in the file include/hbsetup.h (in fact this
-      option is placed in a comment by default - you need to remove the
-      /* */ characters only). This change has to be done before invoking
-      the make utility.
-
-
-      <b>Handling of undeclared variables  </b> </par>
-      ================================   </par>
-
-      When a value is assigned to an undeclared variable and the '-v'
-      command line option is not used, then the CA-Cl*pper compiler assumes
-      that the variable is a PRIVATE or a PUBLIC variable and generates
-      POPM (pop memvar) opcode.
-
-      When the value of an undeclared variable is accessed and the '-v'
-      command line option is not used, the CA-Cl*pper compiler generates PUSHV
-      (push variable) opcode that determines the type of variable at runtime.
-      If a field with the requested name exists in the current workarea then
-      its value is used. If there is no field then a PRIVATE or a PUBLIC
-      variable is used (if exists).
-
-      The Harbour compiler generates an opcode to determine the type of
-      variable at runtime (POPVARIABLE or PUSHVARIABLE) in both cases
-      (assignment and access).
-
-      The difference can be checked by the following code:
-
-      <fixed>
-      PROCEDURE Main()
-         PRIVATE myname
-
-         dbCreate( "TEST", { { "MYNAME", "C", 10, 0} } )
-         USE test NEW
-         SELECT test
-         APPEND BLANK
-
-         FIELD->myname  := "FIELD"
-         MEMVAR->myname := "MEMVAR"
-
-         myname := myname + " assigned"
-
-         // In CA-Cl*pper: "FIELD",  In Harbour: "FIELD assigned"
-         ? FIELD->myname
-
-         // In CA-Cl*pper: "MEMVAR assigned", In Harbour: "MEMVAR"
-         ? MEMVAR->myname
-
-         USE
-
-         RETURN
-      </fixed>
+      If you want a 100% compatible runtime libraries then you have
+      to define HB_CLP_STRICT, using 'HB_USER_CFLAGS=-DHB_CLP_STRICT',
+      then rebuild.
 
       <b>Passing an undeclared variable by the reference </b>  </par>
       ===============================================   </par>
@@ -316,11 +266,10 @@
       is the same in CA-Cl*pper and in Harbour - only the generated opcodes
       are different.
 
-
       Handling of object messages   </par>
       ===========================   </par>
 
-        The HARBOUR_STRICT_CLIPPER_COMPATIBILITY setting determines
+      The HB_CLP_STRICT setting determines
       the way chained send messages are handled.
 
       For example, the following code:

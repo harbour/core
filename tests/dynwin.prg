@@ -47,8 +47,8 @@ PROCEDURE Main()
 
    ? "MsgBox:", hb_DynCall( { "MessageBoxA", "user32.dll", HB_DYN_CALLCONV_STDCALL }, 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
-   IF hb_FileExists( "libcurl.dll" )
-      hLib := hb_libLoad( "libcurl.dll" )
+   hLib := hb_libLoad( "libcurl.dll" )
+   IF ! Empty( hLib )
       ? hb_DynCall( { "curl_version", hLib, HB_DYN_CTYPE_CHAR_PTR } )
       hb_libFree( hLib )
       ? hb_DynCall( { "curl_version", "libcurl.dll", HB_DYN_CTYPE_CHAR_PTR } )
