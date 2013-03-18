@@ -40,6 +40,6 @@ PROCEDURE Main()
    ? "=="
 
    a := "hello world!"       ; ? ">", a, hb_DynCall( { "TESTST", cFileName, hb_bitOr( HB_DYN_CTYPE_CHAR_PTR , HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW ), hb_bitOr( HB_DYN_CTYPE_CHAR_PTR, HB_DYN_ENC_RAW ) }, a )
-// a := "hello world!"       ; ? ">", a, hb_dynCallFoxPro( "DECLARE STRING TESTST IN " + cFileName + " STRING", a )
+// a := "hello world!"       ; ? ">", a, hb_DynCallFoxPro( "DECLARE STRING TESTST IN " + cFileName + " STRING", a )
 
    RETURN

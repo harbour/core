@@ -14,9 +14,9 @@
       - next scan all variables if these memory blocks are still referenced.
 
       Notice that only arrays, objects and codeblocks are collected because
-      these are the only datatypes that can cause self-references (a[1]:=a)
-      or circular references (a[1]:=b; b[1]:=c; c[1]:=a) that cannot be
-      properly deallocated by simple reference counting.
+      these are the only datatypes that can cause self-references ( a[ 1 ] := a )
+      or circular references ( a[ 1 ] := b; b[ 1 ] := c; c[ 1 ] := a ) that
+      cannot be properly deallocated by simple reference counting.
 
       Since all variables in harbour are stored inside some available tables
       (the eval stack, memvars table and array of static variables) then checking
@@ -155,7 +155,7 @@
    $ONELINER$
       Releases the memory that was allocated with hb_gcAlloc().
    $SYNTAX$
-      void hb_gcFree( void *pMemoryPtr );
+      void hb_gcFree( void * pMemoryPtr );
    $ARGUMENTS$
       <pMemoryPtr> The pointer to memory for release. This memory
         pointer have to be allocated with hb_gcAlloc() function.
