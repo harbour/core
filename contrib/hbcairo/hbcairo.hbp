@@ -1,4 +1,3 @@
-
 -hblib
 -inc
 
@@ -23,11 +22,11 @@ context.c
 core.c
 image.c
 paths.c
+pattern.c
 pdf.c
 png.c
 ps.c
 surface.c
 text.c
 transfor.c
-pattern.c
 util.c
