@@ -12232,6 +12232,7 @@ HB_LANG_REQUEST( HB_LANG_DEFAULT )
 HB_EXTERN_BEGIN
 extern void HB_FORCE_LINK_MAIN( void );
 HB_EXTERN_END
+extern void _hb_forceLinkMain( void );
 void _hb_forceLinkMain()
 {
    HB_FORCE_LINK_MAIN();
