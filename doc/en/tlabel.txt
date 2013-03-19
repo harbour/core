@@ -62,7 +62,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         LABEL FORM EE
+         LABEL FORM test.lbl
          USE
          RETURN
    $STATUS$
