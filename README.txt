@@ -1793,6 +1793,11 @@ TABLE OF CONTENT
    Issues:
       https://github.com/harbour/core/issues
 
+   Following commits:
+      Web: https://github.com/harbour/core/commits/master
+      RSS: https://github.com/harbour/core/commits/master.atom
+      Twitter: https://twitter.com/harbourdev
+
    CA-Cl*pper 5.3 online documentation:
       http://x-hacker.org/ng/53guide/
 
