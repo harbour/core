@@ -288,24 +288,23 @@ PROCEDURE Main( ... )
 
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */
-                  cSH_Script := ;
-                     '#!/bin/sh' + Chr( 10 ) + ;
-                     'if [ "\$1" = "--extract" ]; then' + Chr( 10 ) + ;
-                     '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 ) + ;
-                     '   exit' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'if [ \`id -u\` != 0 ]; then' + Chr( 10 ) + ;
-                     '   echo "This package has to be installed from root account."' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'echo "Do you want to install Harbour (y/n)"' + Chr( 10 ) + ;
-                     'read ASK' + Chr( 10 ) + ;
-                     'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 ) + ;
-                     'exit \$?' + Chr( 10 ) + ;
-                     'HB_INST_EOF' + Chr( 10 )
+                  cSH_Script := '#!/bin/sh' + Chr( 10 )
+                  cSH_Script += 'if [ "\$1" = "--extract" ]; then' + Chr( 10 )
+                  cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 )
+                  cSH_Script += '   exit' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += 'if [ \`id -u\` != 0 ]; then' + Chr( 10 )
+                  cSH_Script += '   echo "This package has to be installed from root account."' + Chr( 10 )
+                  cSH_Script += '   exit 1' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += 'echo "Do you want to install Harbour (y/n)"' + Chr( 10 )
+                  cSH_Script += 'read ASK' + Chr( 10 )
+                  cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 )
+                  cSH_Script += '   exit 1' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
+                  cSH_Script += 'exit \$?' + Chr( 10 )
+                  cSH_Script += 'HB_INST_EOF' + Chr( 10 )
 
                   hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
 
@@ -685,23 +684,17 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
    cExtern := ""
-
    IF Empty( aInclude ) .AND. ;
       Empty( aExclude )
-
-      cExtern += ;
-         cLine + ;
-         " * NOTE: You can add manual override which functions to include or" + hb_eol() + ;
-         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol() + ;
-         cHelp
+      cExtern += cLine
+      cExtern += " * NOTE: You can add manual override which functions to include or" + hb_eol()
+      cExtern += " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol()
+      cExtern += cHelp
    ELSE
-
-      cExtern += ;
-         cLine + ;
-         " * NOTE: Following comments are control commands for the generator." + hb_eol() + ;
-         " *       Do not edit them unless you know what you are doing." + hb_eol() + ;
-         cHelp
-
+      cExtern += cLine
+      cExtern += " * NOTE: Following comments are control commands for the generator." + hb_eol()
+      cExtern += " *       Do not edit them unless you know what you are doing." + hb_eol()
+      cExtern += cHelp
       IF ! Empty( aInclude )
          cExtern += hb_eol()
          FOR EACH tmp IN aInclude
@@ -715,26 +708,23 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
          NEXT
       ENDIF
    ENDIF
-
-   cExtern += ;
-      hb_eol() + ;
-      cLine + ;
-      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol() + ;
-      " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol() + ;
-      "   ANNOUNCE " + cSelfName + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol()
-
+   cExtern += hb_eol()
+   cExtern += cLine
+   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol()
+   cExtern += " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol()
+   cExtern += " */" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
+   cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
    IF Empty( aInclude )
       aExtern := aFuncList
    ELSE
@@ -752,13 +742,11 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
          cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT
-
-   cExtern += ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#endif" + hb_eol()
 
    RETURN hb_MemoWrit( cOutputName, cExtern )

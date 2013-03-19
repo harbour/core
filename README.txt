@@ -1639,7 +1639,6 @@ TABLE OF CONTENT
       HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
          http://www.openssl.org/
          http://www.openssl.org/related/binaries.html
-         http://wiki.opensslfoundation.com/
       HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
          http://www.pcre.org/
       HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]

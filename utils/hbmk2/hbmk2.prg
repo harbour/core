@@ -13479,23 +13479,17 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
    cExtern := ""
-
    IF Empty( aInclude ) .AND. ;
       Empty( aExclude )
-
-      cExtern += ;
-         cLine + ;
-         " * NOTE: You can add manual override which functions to include or" + hb_eol() + ;
-         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol() + ;
-         cHelp
+      cExtern += cLine
+      cExtern += " * NOTE: You can add manual override which functions to include or" + hb_eol()
+      cExtern += " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol()
+      cExtern += cHelp
    ELSE
-
-      cExtern += ;
-         cLine + ;
-         " * NOTE: Following comments are control commands for the generator." + hb_eol() + ;
-         " *       Do not edit them unless you know what you are doing." + hb_eol() + ;
-         cHelp
-
+      cExtern += cLine
+      cExtern += " * NOTE: Following comments are control commands for the generator." + hb_eol()
+      cExtern += " *       Do not edit them unless you know what you are doing." + hb_eol()
+      cExtern += cHelp
       IF ! Empty( aInclude )
          cExtern += hb_eol()
          FOR EACH tmp IN aInclude
@@ -13509,26 +13503,23 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
          NEXT
       ENDIF
    ENDIF
-
-   cExtern += ;
-      hb_eol() + ;
-      cLine + ;
-      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol() + ;
-      " *          Regenerate using " + _SELF_NAME_ + " '-hbx=' option." + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol() + ;
-      "   ANNOUNCE " + cSelfName + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol()
-
+   cExtern += hb_eol()
+   cExtern += cLine
+   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol()
+   cExtern += " *          Regenerate using " + _SELF_NAME_ + " '-hbx=' option." + hb_eol()
+   cExtern += " */" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
+   cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
    IF Empty( aInclude )
       aExtern := aFuncList
    ELSE
@@ -13546,14 +13537,12 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
          cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT
-
-   cExtern += ;
-      hb_eol() + ;
-      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#endif" + hb_eol()
 
    /* Do not touch the file if the content is unchanged */
    IF hb_MemoRead( cOutputName ) == cExtern
