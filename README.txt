@@ -1302,6 +1302,14 @@ TABLE OF CONTENT
              http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download
              http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download
 
+      4.) Follow commits using any of these facilities
+
+          Web:      https://github.com/harbour/core/commits/master
+          RSS:      https://github.com/harbour/core/commits/master.atom
+          Twitter:  https://twitter.com/harbourdev
+          E-mail:   https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits-git
+          Mac app:  https://itunes.apple.com/us/app/committed/id560767719
+          Mac tool: https://github.com/marcocampana/git-notifier
 
 10. TROUBLESHOOTING
 ===================
@@ -1793,11 +1801,6 @@ TABLE OF CONTENT
 
    Issues:
       https://github.com/harbour/core/issues
-
-   Following commits:
-      Web: https://github.com/harbour/core/commits/master
-      RSS: https://github.com/harbour/core/commits/master.atom
-      Twitter: https://twitter.com/harbourdev
 
    CA-Cl*pper 5.3 online documentation:
       http://x-hacker.org/ng/53guide/
