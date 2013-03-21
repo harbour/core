@@ -148,7 +148,7 @@ METHOD Generate() CLASS THTML
          cFile := Space( IF_BUFFER )
          DO WHILE ( nPos := FRead( hFile, @cFile, IF_BUFFER ) ) > 0
 
-            cFile := Left( cFile, nPos )
+            cFile := hb_BLeft( cFile, nPos )
             cRes += cFile
             cFile := Space( IF_BUFFER )
 
@@ -167,7 +167,7 @@ METHOD Generate() CLASS THTML
          ENDDO
 
          /* TODO: Clear remaining (not matched) tags */
-         /*
+#if 0
          cRes := ""
          FOR i := 1 TO Len( ::cContent )
             IF SubStr( ::cContent, i, 1 ) == "<" .AND. ;
@@ -181,7 +181,7 @@ METHOD Generate() CLASS THTML
          NEXT
 
          ::cContent := cRes
-         */
+#endif
 
       ENDIF
    ENDIF

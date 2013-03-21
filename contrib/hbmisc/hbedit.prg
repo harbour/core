@@ -476,13 +476,12 @@ STATIC FUNCTION EditorSave( oEdit )
    ENDIF
 
    nHandle := FCreate( cFile, FC_NORMAL )
-   IF nHandle > 0
+   IF nHandle != F_ERROR
       FWrite( nHandle, EditorGetText( oEdit ) )
-
       FClose( nHandle )
    ENDIF
 
-   RETURN nHandle > 0
+   RETURN nHandle != F_ERROR
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 

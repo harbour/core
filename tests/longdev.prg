@@ -16,8 +16,8 @@ PROCEDURE Main()
       cLong += cLong
    NEXT
 
-   // Write the long string to file long_str.prn
-   SET PRINTER TO long_str
+   // Write the long string to file longdev.prn
+   SET PRINTER TO longdev
    SET DEVICE TO PRINTER
    DevOut( cLong )
    SET PRINTER OFF
@@ -30,7 +30,7 @@ PROCEDURE Main()
    ? "The copy of the long string is", iif( cLong == cBuffer, "equal", "not equal" ), "to the long string"
 
    // Read the string back in and compare it to the original.
-   nHandle := FOpen( "long_str.prn" )
+   nHandle := FOpen( "longdev.prn" )
    cBuffer := FReadStr( nHandle, 90000 )
    ? "Original:", Len( cLong )
    ? "From file:", Len( cBuffer )

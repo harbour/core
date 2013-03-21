@@ -385,12 +385,12 @@ STATIC PROCEDURE OpenLogFile( nWA )
       ELSE
          nHandle := FCreate( cFileName )
          /* Close and reopen in shared mode */
-         IF FError() == 0 .AND. nHandle > 0
+         IF FError() == 0 .AND. nHandle != F_ERROR
             FClose( nHandle )
             nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
          ENDIF
       ENDIF
-      IF FError() == 0 .AND. nHandle > 0
+      IF FError() == 0 .AND. nHandle != F_ERROR
          /* Move to end of file */
          FSeek( nHandle, 0, FS_END )
       ELSE

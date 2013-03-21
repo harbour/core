@@ -531,11 +531,11 @@ FUNCTION pdfClose()
       hb_ntos( t_aReport[ DOCLEN ] ) + CRLF + ;
       "%%EOF" + CRLF
    FWrite( t_aReport[ HANDLE ], cTemp )
-/*
+#if 0
    IF t_aReport[ OPTIMIZE ]
       pdfOptimize( ) coming !
    ENDIF
-*/
+#endif
    FClose( t_aReport[ HANDLE ] )
 
    t_aReport := nil

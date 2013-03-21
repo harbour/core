@@ -168,11 +168,11 @@ METHOD Open( nMode ) CLASS TCgiFile
 
    __defaultNIL( @nMode, FO_EXCLUSIVE )
    ::Handle := FOpen( ::Name, nMode )
-   IF ::Handle > 0
+   IF ::Handle != F_ERROR
       ::Size()
    ENDIF
 
-   RETURN ::Handle > 0
+   RETURN ::Handle != F_ERROR
 
 /*
 **   ::Create( [<nAttrib>] ) --> lSuccess

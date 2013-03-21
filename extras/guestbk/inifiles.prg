@@ -26,7 +26,7 @@ END CLASS
 
 METHOD New( cFileName ) CLASS TIniFile
 
-   LOCAL Done, hFile, cFile, cLine, cIdent, nPos
+   LOCAL lDone, hFile, cFile, cLine, cIdent, nPos
    LOCAL CurrArray
 
    IF Empty( cFileName )
@@ -46,10 +46,10 @@ METHOD New( cFileName ) CLASS TIniFile
       ENDIF
 
       cLine := ""
-      Done := .F.
-      DO WHILE ! Done
+      lDone := .F.
+      DO WHILE ! lDone
          cFile := Space( 256 )
-         Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
+         lDone := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
          cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
 

@@ -438,6 +438,7 @@ METHOD ReadAuxPort( cLocalFile ) CLASS TIPClientFTP
    ENDIF
    IF ! Empty( cLocalFile )
       nFile := FCreate( cLocalFile )
+      /* TOFIX: missing error checking on nFile */
    ENDIF
    cRet := ::super:Read( 512 )
    DO WHILE cRet != NIL .AND. Len( cRet ) > 0

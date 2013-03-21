@@ -592,7 +592,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
       // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-      IF nHandle > 0
+      IF nHandle != F_ERROR
          FSeek( nHandle, 0, FS_END )
          FWrite( nHandle, cString )
          FWrite( nHandle, CRLF )

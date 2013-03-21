@@ -292,7 +292,7 @@
    $ONELINER$
       Add an New Column to an TBrowse Object
    $SYNTAX$
-      AddColumn(oCol) --> Self
+      AddColumn( <oCol> ) --> Self
    $ARGUMENTS$
       <oCol>  Is an TbColumn object
    $RETURNS$

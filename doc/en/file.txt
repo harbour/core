@@ -65,7 +65,7 @@
       possible reasons for the error.
    $EXAMPLES$
       #include "fileio.ch"
-      IF ( nH := FOpen( "x.txt", FO_READWRITE + FO_DENYNONE ) ) == F_ERROR
+      IF ( nH := FOpen( "test.txt", FO_READWRITE + FO_DENYNONE ) ) == F_ERROR
          ? "File can't be opened"
       ENDIF
    $STATUS$
@@ -187,7 +187,7 @@
    $EXAMPLES$
       #include "fileio.ch"
       cBuffer := Space( 500 )
-      IF ( nH := FOpen( "x.txt" ) ) == F_ERROR
+      IF ( nH := FOpen( "test.txt" ) ) == F_ERROR
          FRead( nH, @cBuffer, 500 )
          ? cbuffer
       ENDIF
@@ -245,7 +245,7 @@
       to the file.
       To truncate a file, a call of FWrite( nHandle, "", 0 ) is needed.
    $EXAMPLES$
-      nHandle := FCreate( "x.txt" )
+      nHandle := FCreate( "test.txt" )
       FOR X := 1 TO 10
          FWrite( nHandle, Str( x ) )
       NEXT
@@ -309,7 +309,7 @@
       of possibles values returned by the FError() function.
    $EXAMPLES$
       #include "fileio.ch"
-      nHandle := FCreate( "temp.txt", FC_NORMAL )
+      nHandle := FCreate( "test.txt", FC_NORMAL )
       IF FError() != 0
          ? "Cannot create file, OS error ", FError()
       ENDIF
@@ -348,7 +348,7 @@
       or FOpen() function.
    $EXAMPLES$
       #include "fileio.ch"
-      nHandle := FOpen( "x.txt" )
+      nHandle := FOpen( "test.txt" )
       ? FSeek( nHandle, 0, FS_END )
       FClose( nHandle )
    $STATUS$
@@ -396,7 +396,7 @@
 
    $EXAMPLES$
       #include "fileio.ch"
-      IF FErase( "test.txt" ) != F_ERROR
+      IF FErase( "test.txt" ) == 0
          ? "File successfully erased"
       ELSE
          ? "File can not be deleted"
@@ -455,8 +455,8 @@
       mation about any error found.
    $EXAMPLES$
       #include "fileio.ch"
-      nResult := FRename( "x.txt", "x1.txt" )
-      IF nResult == F_ERROR
+      nResult := FRename( "test.txt", "test1.txt" )
+      IF nResult != 0
          ? "File could not be renamed."
       ENDIF
    $STATUS$
@@ -632,7 +632,7 @@
       function.
    $EXAMPLES$
       #include "fileio.ch"
-      IF ( nH := FOpen( "x.txt" ) ) != F_ERROR
+      IF ( nH := FOpen( "test.txt" ) ) != F_ERROR
          cStr := FReadStr( nH, 100 )
          ? cStr
          FClose( nH )
@@ -677,7 +677,7 @@
       If <cNewFile> id currently open or if it previously exists, this
       command will not perform the desired operation.
    $EXAMPLES$
-      RENAME hello.txt TO hello.old
+      RENAME test.txt TO test.old
    $STATUS$
       R
    $COMPLIANCE$
@@ -875,7 +875,7 @@
       SET CONSOLE ON
 
       // display mytext.dat file on screen and into a file myreport.txt
-      TYPE mytext.dat TO FILE MyReport
+      TYPE mytext.dat TO FILE myreport
    $STATUS$
       R
    $COMPLIANCE$
@@ -987,7 +987,7 @@
       function returns .T. and sets the value returned by FError() to -1
       (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
    $EXAMPLES$
-      nH := FOpen( "file.txt" )
+      nH := FOpen( "test.txt" )
       ? FReadStr( nH, 80 )
       IF hb_FEof( nH )
          ? "End-of-file reached."
