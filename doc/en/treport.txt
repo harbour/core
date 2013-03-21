@@ -90,7 +90,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         REPORT FORM EE
+         REPORT FORM test.frm
          USE
          RETURN
    $STATUS$

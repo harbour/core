@@ -21,7 +21,7 @@
    $ONELINER$
       Extracts the next key code from the Harbour keyboard buffer.
    $SYNTAX$
-      Inkey( [<nTimeout>] [,<nEvents>] ) --> nKey
+      Inkey( [<nTimeout>] [, <nEvents>] ) --> nKey
    $ARGUMENTS$
       <nTimeout> is an optional timeout value in seconds, with a granularity
       of 1/10th of a second. If omitted, Inkey() returns immediately. If set
@@ -120,7 +120,7 @@
    $SUBCATEGORY$
       User interface
    $ONELINER$
-      DO NOT CALL THIS FUNCTION DIRECTLY!
+      Use hb_keyPut() instead
    $SYNTAX$
       KEYBOARD <cString>
       CLEAR TYPEAHEAD
@@ -226,7 +226,7 @@
             EXIT
          ELSE
             IF nKey != 0
-               cChar := Chr( nKey )
+               cChar := hb_keyChar( nKey )
             ENDIF
          ENDIF
       ENDDO

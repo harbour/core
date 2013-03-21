@@ -1014,6 +1014,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_aINCPATH ] := {}
    hbmk[ _HBMK_aLIBPATH ] := {}
 
+   hbmk[ _HBMK_lSysLoc ] := .F.
    hbmk[ _HBMK_lDumpInfo ] := .F.
    hbmk[ _HBMK_lMarkdown ] := .F.
    hbmk[ _HBMK_bOut ] := {| cText | OutStd( cText ) }
@@ -1253,6 +1254,22 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
       hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB
       hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS
    ENDIF
+
+   #if defined( __PLATFORM__UNIX )
+      /* Detect system locations to enable shared library option by default */
+      IF hbmk[ _HBMK_cPLAT ] == "beos"
+         hbmk[ _HBMK_lSysLoc ] := ;
+            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
+            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
+            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
+            AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+      ELSE
+         hbmk[ _HBMK_lSysLoc ] := ;
+            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
+            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
+            AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+      ENDIF
+   #endif
 
    RETURN
 
@@ -1979,27 +1996,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
          RETURN _EXIT_FAILHBDETECT
       ENDIF
-
-      #if defined( __PLATFORM__UNIX )
-         /* Detect system locations to enable shared library option by default */
-         IF hbmk[ _HBMK_cPLAT ] == "beos"
-            hbmk[ _HBMK_lSysLoc ] := ;
-               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
-               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
-               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
-               AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
-         ELSE
-            hbmk[ _HBMK_lSysLoc ] := ;
-               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
-               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
-               AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
-         ENDIF
-      #else
-         hbmk[ _HBMK_lSysLoc ] := .F.
-      #endif
    ELSE
-      hbmk[ _HBMK_lSysLoc ] := .F.
-
       hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
@@ -3100,6 +3097,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
 
+      /* NOTE: Keep this before the "-i" check. */
+      CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            AAdd( hbmk[ _HBMK_aICON ], hb_PathNormalize( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ) ) )
+         ENDIF
+
+      /* NOTE: Keep this after the "-icon=" check. */
       CASE Left( cParamL, 2 ) == "-i" .AND. ;
            Len( cParamL ) > 2 .AND. !( cParamL == "-i-" )
 
@@ -3115,13 +3121,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                ENDIF
             NEXT
-         ENDIF
-
-      CASE Left( cParamL, Len( "-icon=" ) ) == "-icon="
-
-         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-icon=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cParam )
-            AAdd( hbmk[ _HBMK_aICON ], hb_PathNormalize( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ) ) )
          ENDIF
 
       CASE Left( cParamL, Len( "-manifest=" ) ) == "-manifest="
@@ -13477,17 +13476,23 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
    cExtern := ""
+
    IF Empty( aInclude ) .AND. ;
       Empty( aExclude )
-      cExtern += cLine
-      cExtern += " * NOTE: You can add manual override which functions to include or" + hb_eol()
-      cExtern += " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol()
-      cExtern += cHelp
+
+      cExtern += ;
+         cLine + ;
+         " * NOTE: You can add manual override which functions to include or" + hb_eol() + ;
+         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol() + ;
+         cHelp
    ELSE
-      cExtern += cLine
-      cExtern += " * NOTE: Following comments are control commands for the generator." + hb_eol()
-      cExtern += " *       Do not edit them unless you know what you are doing." + hb_eol()
-      cExtern += cHelp
+
+      cExtern += ;
+         cLine + ;
+         " * NOTE: Following comments are control commands for the generator." + hb_eol() + ;
+         " *       Do not edit them unless you know what you are doing." + hb_eol() + ;
+         cHelp
+
       IF ! Empty( aInclude )
          cExtern += hb_eol()
          FOR EACH tmp IN aInclude
@@ -13501,23 +13506,26 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
          NEXT
       ENDIF
    ENDIF
-   cExtern += hb_eol()
-   cExtern += cLine
-   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol()
-   cExtern += " *          Regenerate using " + _SELF_NAME_ + " '-hbx=' option." + hb_eol()
-   cExtern += " */" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
-   cExtern += "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
-   cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
-   cExtern += "#endif" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
-   cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
-   cExtern += "#endif" + hb_eol()
-   cExtern += hb_eol()
+
+   cExtern += ;
+      hb_eol() + ;
+      cLine + ;
+      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol() + ;
+      " *          Regenerate using " + _SELF_NAME_ + " '-hbx=' option." + hb_eol() + ;
+      " */" + hb_eol() + ;
+      hb_eol() + ;
+      "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
+      "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
+      hb_eol() + ;
+      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol() + ;
+      "   ANNOUNCE " + cSelfName + hb_eol() + ;
+      "#endif" + hb_eol() + ;
+      hb_eol() + ;
+      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
+      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
+      "#endif" + hb_eol() + ;
+      hb_eol()
+
    IF Empty( aInclude )
       aExtern := aFuncList
    ELSE
@@ -13535,12 +13543,14 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
          cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT
-   cExtern += hb_eol()
-   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
-   cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
-   cExtern += "#endif" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#endif" + hb_eol()
+
+   cExtern += ;
+      hb_eol() + ;
+      "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
+      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
+      "#endif" + hb_eol() + ;
+      hb_eol() + ;
+      "#endif" + hb_eol()
 
    /* Do not touch the file if the content is unchanged */
    IF hb_MemoRead( cOutputName ) == cExtern

@@ -33,7 +33,7 @@ by Viktor Szakats
  3) Resolve any conflicts
  4) Run 'hbrun bin/commit' to create new ChangeLog.txt entry
     with timestamp and list of modified files
- 5) Edit ChangeLog.txt with a text editor (do not use Notepad.exe)
+ 5) Edit ChangeLog.txt with a text editor (do not use notepad.exe)
  6) Copy the last ChangeLog.txt entry to the clipboard
     If it's a single atomic change, it's better to copy only
     the description itself without the entry header and list

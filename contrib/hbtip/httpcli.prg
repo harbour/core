@@ -70,6 +70,7 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD Get( cQuery )
    METHOD Post( xPostData, cQuery )
    METHOD Put( xPostData, cQuery )
+   METHOD Delete( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
    METHOD UseBasicAuth()      INLINE   ::cAuthMode := "Basic"
@@ -122,6 +123,10 @@ METHOD Post( xPostData, cQuery ) CLASS TIPClientHTTP
 METHOD Put( xPostData, cQuery ) CLASS TIPClientHTTP
 
    RETURN ::postByVerb( xPostData, cQuery, "PUT" )
+
+METHOD Delete( xPostData, cQuery ) CLASS TIPClientHTTP
+
+   RETURN ::postByVerb( xPostData, cQuery, "DELETE" )
 
 METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
 
