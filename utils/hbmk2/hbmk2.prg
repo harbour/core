@@ -13725,6 +13725,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL hHRB
    LOCAL cVersion
    LOCAL cParamL
+   LOCAL cFileOri
 
    /* get this before doing anything else */
    LOCAL lDebug := ;
@@ -13841,9 +13842,12 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       cFile := hb_DirSepToOS( cFile )
    ENDIF
 
-   IF !( cFile == "." ) .AND. ;
-      ! Empty( hb_FNameName( cFile ) ) .AND. ;
-      ! Empty( cFile := FindInPath( cFile,, { ".hb", ".hrb" } ) )
+   IF cFile == "." .OR. Empty( hb_FNameName( cFile ) )
+
+      __hbshell_ext_init( aExtension )
+      __hbshell_prompt( hb_AParams() )
+
+   ELSEIF ! Empty( cFile := FindInPath( cFileOri := cFile,, { ".hb", ".hrb" } ) )
 
       cExt := Lower( hb_FNameExt( cFile ) )
 
@@ -13925,8 +13929,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          EXIT
       ENDSWITCH
    ELSE
-      __hbshell_ext_init( aExtension )
-      __hbshell_prompt( hb_AParams() )
+      OutErr( hb_StrFormat( I_( "hbshell: Cannot find script '%1$s'" ), cFileOri ) + _OUT_EOL )
    ENDIF
 
    RETURN
