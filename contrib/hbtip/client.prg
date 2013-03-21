@@ -477,7 +477,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
       ENDIF
       IF nFout == NIL
          nFout := FCreate( cFile, nMode )
-         IF nFout < 0
+         IF nFout == F_ERROR
             ::nStatus := 0
             RETURN .F.
          ENDIF
@@ -517,7 +517,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    ::nWrite  := 0
    ::nStatus := 0
    nFin := FOpen( cFile, FO_READ )
-   IF nFin < 0
+   IF nFin == F_ERROR
       RETURN .F.
    ENDIF
    nSize := FSeek( nFin, 0, FS_END )
