@@ -113,7 +113,7 @@ FUNCTION Sp_Add( cWord )
       ELSE
          nAuxHandle := FCreate( AUXILIARY_DICTIONARY )
       ENDIF
-      IF nAuxHandle >= 0
+      IF nAuxHandle != F_ERROR
 
          FSeek( nAuxHandle, 0, FS_END )                 // Bottom of the file
          nWritten := FWrite( nAuxHandle, cWord + CRLF ) // Write word into file
@@ -326,7 +326,7 @@ FUNCTION Sp_LoadAux( cFile )
       ENDIF
       Sp_GetSet( 5, cFile )
 
-      IF x > 0
+      IF x != F_ERROR
          nSize := FSeek( x, 0, FS_END )
          IF nSize < MAX_STRING
             cStr := Space( nSize )

@@ -150,7 +150,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
    ENDIF
 
    ::Handle := FOpen( cFile, nMode )
-   IF ::Handle <= 0
+   IF ::Handle == F_ERROR
       Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
    ENDIF
 
@@ -221,7 +221,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
       __defaultNIL( @nMode, FO_READWRITE )
 
       ::Handle := FOpen( cFile, nMode )
-      IF ::Handle <= 0
+      IF ::Handle == F_ERROR
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
       ENDIF
 
@@ -231,7 +231,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
       __defaultNIL( @nMode, FC_NORMAL )
 
       ::Handle := FCreate( cFile, nMode )
-      IF ::Handle <= 0
+      IF ::Handle == F_ERROR
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + Str( FError() ), hb_AParams() ) )
       ENDIF
 
