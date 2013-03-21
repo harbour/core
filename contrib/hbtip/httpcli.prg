@@ -117,15 +117,12 @@ METHOD Get( cQuery ) CLASS TIPClientHTTP
    RETURN .F.
 
 METHOD Post( xPostData, cQuery ) CLASS TIPClientHTTP
-
    RETURN ::postByVerb( xPostData, cQuery, "POST" )
 
 METHOD Put( xPostData, cQuery ) CLASS TIPClientHTTP
-
    RETURN ::postByVerb( xPostData, cQuery, "PUT" )
 
 METHOD Delete( xPostData, cQuery ) CLASS TIPClientHTTP
-
    RETURN ::postByVerb( xPostData, cQuery, "DELETE" )
 
 METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
