@@ -351,19 +351,19 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
                " * and is covered by the same license as Harbour PP\n"
                " */\n\n" );
 
-      fprintf( fout, "\n#define HB_VER_REVID             %d\n", iRevID );
+      fprintf( fout, "#define HB_VER_REVID             %d\n", iRevID );
 
       if( szChangeLogID )
       {
          pszEscaped = hb_pp_escapeString( szChangeLogID );
-         fprintf( fout, "\n#define HB_VER_CHLID             \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_VER_CHLID             \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }
 
       if( szLastEntry )
       {
          pszEscaped = hb_pp_escapeString( szLastEntry );
-         fprintf( fout, "\n#define HB_VER_LENTRY            \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_VER_LENTRY            \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }
 
@@ -371,7 +371,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_HB_USER_CFLAGS    \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_VER_HB_USER_CFLAGS    \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -380,7 +380,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_HB_USER_LDFLAGS   \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_VER_HB_USER_LDFLAGS   \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -389,7 +389,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_VER_HB_USER_PRGFLAGS  \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_VER_HB_USER_PRGFLAGS  \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -398,7 +398,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_PLATFORM              \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_PLATFORM              \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -407,7 +407,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       if( pszEnv )
       {
          pszEscaped = hb_pp_escapeString( pszEnv );
-         fprintf( fout, "\n#define HB_COMPILER              \"%s\"\n", pszEscaped );
+         fprintf( fout, "#define HB_COMPILER              \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
@@ -590,22 +590,6 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          szLine[ ++iLen ] = '\0';
          hb_pp_addDefine( pState, "HB_VER_CHLID", szLine );
          *pszChangeLogID = hb_strdup( szId );
-
-         szFrom = strchr( szLine, ' ' );
-         if( szFrom )
-         {
-            while( *szFrom == ' ' )
-               ++szFrom;
-            iLen = 0;
-            if( *szFrom == '-' )
-               ++iLen;
-            while( HB_PP_ISDIGIT( szFrom[ iLen ] ) )
-               ++iLen;
-            if( iLen && szFrom[ iLen ] == ' ' )
-               szFrom[ iLen ] = '\0';
-            else
-               szFrom = NULL;
-         }
 
          if( strlen( szLog ) >= 16 )
          {
