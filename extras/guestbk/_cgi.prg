@@ -124,7 +124,9 @@ METHOD AddPara( cPara, cAlign ) CLASS THTML
 METHOD Generate() CLASS THTML
 
    LOCAL cFile, i, hFile, nPos, cRes := ""
+#if 0
    LOCAL lFlag := .F.
+#endif
 
    // Is this a meta file or hand generated script?
    IF Empty( ::cHTMLFile )
@@ -208,13 +210,13 @@ METHOD SaveToFile( cFile ) CLASS THTML
 
 METHOD ProcessCGI() CLASS THTML
 
-   LOCAL cQuery := ""
-   LOCAL cBuff  := ""
-   LOCAL nBuff  := 0
+   LOCAL cQuery
+   LOCAL cBuff := ""
+   LOCAL nBuff := 0
    LOCAL i
 
    IF Empty( ::aCGIContents )
-      ::aCGIContents := {               ;
+      ::aCGIContents := { ;
          GetEnv( "SERVER_SOFTWARE"   ), ;
          GetEnv( "SERVER_NAME"       ), ;
          GetEnv( "GATEWAY_INTERFACE" ), ;
@@ -234,8 +236,7 @@ METHOD ProcessCGI() CLASS THTML
          GetEnv( "AUTH_TYPE"         ), ;
          GetEnv( "CONTENT_TYPE"      ), ;
          GetEnv( "CONTENT_LENGTH"    ), ;
-         GetEnv( "ANNOTATION_SERVER" )  ;
-         }
+         GetEnv( "ANNOTATION_SERVER" ) }
 
       cQuery := ::GetCGIParam( CGI_QUERY_STRING )
 
@@ -247,8 +248,8 @@ METHOD ProcessCGI() CLASS THTML
 
             IF i > Len( cQuery ) .OR. SubStr( cQuery, i, 1 ) == "&"
 
-               AAdd( ::aQueryFields, ;
-                  { SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
+               AAdd( ::aQueryFields, { ;
+                  SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
                   StrTran( SubStr( cBuff, At( "=", cBuff ) + 1, ;
                   Len( cBuff ) - At( "=", cBuff ) + 1 ), "+", " " ) } )
                cBuff := ""
@@ -264,11 +265,8 @@ METHOD ProcessCGI() CLASS THTML
                   nBuff--
                ENDIF
             ENDIF
-
          NEXT
-
       ENDIF
-
    ENDIF
 
    RETURN Self

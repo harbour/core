@@ -1,4 +1,8 @@
 
+-w3 -es2
+
+-nulrdd
+
+-gtcgi
+
 guestbk.prg
-inifiles.prg
-cgi.prg

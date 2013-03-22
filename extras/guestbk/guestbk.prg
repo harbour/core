@@ -51,7 +51,6 @@ PROCEDURE Main()
 
    LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
    LOCAL oHTML := THtml():New()
-   LOCAL aEntr := {}
    LOCAL cOddColor, cEvenColor
    LOCAL cCode, i, j, l, cField, nEntry, cColor
    LOCAL aEntries, aLine, cLine
@@ -155,3 +154,6 @@ PROCEDURE Main()
    ENDIF
 
    RETURN
+
+SET PROCEDURE TO "_cgi.prg"
+SET PROCEDURE TO "_inifile.prg"
