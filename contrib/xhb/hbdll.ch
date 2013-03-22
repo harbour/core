@@ -57,9 +57,6 @@
 #define DC_RETVAL_MATH4        0x0100      // Return value in ST
 #define DC_RETVAL_MATH8        0x0200      // Return value in ST
 
-// Avoid xHarbour code when included by dllcall.c
-#if defined( __PLATFORM__WINDOWS )
-
 #include "cstruct.ch"
 #include "wintypes.ch"
 
@@ -139,5 +136,4 @@
        END ;;
     RETURN DllExecuteCall( t_cTemplate [, <ArgName>] [, <ArgNameN>] )
 
-#endif
 #endif
