@@ -1309,6 +1309,11 @@ TABLE OF CONTENT
           Mac app:  https://itunes.apple.com/us/app/committed/id560767719
           Mac tool: https://github.com/marcocampana/git-notifier
 
+      5.) Build status and details
+
+          https://travis-ci.org/harbour/core
+
+
 10. TROUBLESHOOTING
 ===================
 
