@@ -204,7 +204,9 @@ PROCEDURE netiosrv_Main( lUI, ... )
          netiosrv[ _NETIOSRV_lRPC ] := .T.
       CASE Lower( cParam ) == "--version"
          RETURN
-      CASE Lower( cParam ) == "-help" .OR. ;
+      CASE Lower( cParam ) == "-?" .OR. ;
+           Lower( cParam ) == "-h" .OR. ;
+           Lower( cParam ) == "-help" .OR. ;
            Lower( cParam ) == "--help"
          HB_Usage()
          RETURN
@@ -871,16 +873,19 @@ STATIC PROCEDURE HB_Usage()
    OutStd( hb_StrFormat( "                        Default: %1$d", _NETIOMGM_PORT_DEF )                                 , hb_eol() )
    OutStd(               "  -adminiface=<ipaddr>  accept manegement connections on IPv4 interface <ipaddress>"         , hb_eol() )
    OutStd( hb_StrFormat( "                        Default: %1$s", _NETIOMGM_IPV4_DEF )                                 , hb_eol() )
-   OutStd(               "  -adminpass=<passwd>   set remote management password"                                      , hb_eol() )
+   OutStd(               "  -adminpass=<passwd>   set remote management password and enable management server"         , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   #if defined( __PLATFORM__WINDOWS )
+   #if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    OutStd(               "  -i                    install as service (requires admin rights)"                          , hb_eol() )
    OutStd(               "  -u                    uninstall service (requires admin rights)"                           , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
    #endif
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
-   OutStd(               "  -help|--help          this help"                                                           , hb_eol() )
+   OutStd(               "  -?|-h|-help|--help    this help"                                                           , hb_eol() )
 
    RETURN
+
+SET PROCEDURE TO "_console.prg"
+SET PROCEDURE TO "netiomgm.hb"
