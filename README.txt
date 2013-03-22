@@ -470,7 +470,6 @@ TABLE OF CONTENT
       for contrib/hbcups lib:    $ sudo apt-get install libcups2-dev
       for contrib/hbcurl lib:    $ sudo apt-get install libcurl4-openssl-dev OR
                                  $ sudo apt-get install libcurl4-gnutls-dev
-      for contrib/hbexpat lib:   $ sudo apt-get install libexpat1-dev
       for contrib/hbfbird lib:   $ sudo apt-get install firebird2.1-dev OR
                                  $ sudo apt-get install libfirebird2.0-dev
       for contrib/hbfimage lib:  $ sudo apt-get install libfreeimage-dev
@@ -508,7 +507,6 @@ TABLE OF CONTENT
       for contrib/hbcairo lib:   cairo-devel
       for contrib/hbcups lib:    libcups2-devel
       for contrib/hbcurl lib:    curl-devel
-      for contrib/hbexpat lib:   libexpat-devel
       for contrib/hbfbird lib:   firebird-devel
       for contrib/hbfimage lib:  freeimage-devel
       for contrib/hbgd lib:      gd-devel
