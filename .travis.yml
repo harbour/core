@@ -1,7 +1,6 @@
 language: c
 compiler:
  - gcc
- - clang
 script: make
 before_install:
  - sudo apt-get install -qq libmagic-dev
