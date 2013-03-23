@@ -487,6 +487,7 @@ TABLE OF CONTENT
       for zlib support:          $ sudo apt-get install zlib1g-dev
       for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
       for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev
+      for contrib/hbexpat lib:   $ sudo apt-get install libexpat1-dev
 
    Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
    --------------------------------------------------------------

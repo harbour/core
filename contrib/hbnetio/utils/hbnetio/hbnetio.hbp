@@ -8,7 +8,7 @@ hbnetio.hbc
 
 hbnetio.prg
 
-netiosvc.prg{win}
+_winsvc.prg{win}
 -main=WinMain{win}
 hbwin.hbc{win}
 
