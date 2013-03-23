@@ -1,4 +1,6 @@
+# hbmk2 build option defaults for this directory
 
 hbtpl.hbc
+hbtest.hbc
 
 -w3 -es2
