@@ -7,6 +7,8 @@ hbnetio.hbc
 -o${hb_name}
 
 hbnetio.prg
+_console.prg
+netiomgm.hb
 
 _winsvc.prg{win}
 -main=WinMain{win}

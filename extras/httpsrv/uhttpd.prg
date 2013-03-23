@@ -2871,6 +2871,8 @@ STATIC FUNCTION HB_HASHI()
 
    RETURN h
 
+#if defined( __HBSCRIPT__HBSHELL )
 SET PROCEDURE TO "_cgifunc.prg"
 SET PROCEDURE TO "_cookie.prg"
 SET PROCEDURE TO "_session.prg"
+#endif

@@ -887,5 +887,7 @@ STATIC PROCEDURE HB_Usage()
 
    RETURN
 
+#if defined( __HBSCRIPT__HBSHELL )
 SET PROCEDURE TO "_console.prg"
 SET PROCEDURE TO "netiomgm.hb"
+#endif

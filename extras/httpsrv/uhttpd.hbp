@@ -6,6 +6,9 @@
 -gtwvt
 
 uhttpd.prg
+_cgifunc.prg
+_cookie.prg
+_session.prg
 
 hbwin.hbc
 hbnf.hbc
