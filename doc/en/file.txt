@@ -43,16 +43,16 @@
       the default value is 0. The file open modes are as follows:
 
       <table>
-       nMode   fileio.ch      Meaning
+       nMode          Meaning
 
-       0       FO_READ        Read only
-       1       FO_WRITE       Write only
-       2       FO_READWRITE   Read/write
-       16      FO_EXCLUSIVE   Exclusive read only
-       32      FO_DENYWRITE   Prevent others from writing
-       48      FO_DENYREAD    Deny read only
-       64      FO_DENYNONE    Not deny, Let to others Read / Write
-       64      FO_SHARED      same as FO_DENYNONE
+       FO_READ        Read only
+       FO_WRITE       Write only
+       FO_READWRITE   Read/write
+       FO_EXCLUSIVE   Exclusive read only
+       FO_DENYWRITE   Prevent others from writing
+       FO_DENYREAD    Deny read only
+       FO_DENYNONE    Not deny, Let to others Read / Write
+       FO_SHARED      same as FO_DENYNONE
       </table>
 
       If there is an error in opening a file, a F_ERROR will be returned by
@@ -74,7 +74,7 @@
       C
    $FILES$
       Library is core
-      Header  is fileio.ch
+      Header is fileio.ch
    $SEEALSO$
       FCreate(), FError(), FClose()
    $END$
@@ -116,12 +116,12 @@
       this function.
 
       <table>
-       <nAttribute>   fileio.ch     Meaning
+       <nAttribute>  Meaning
 
-       0              FC_NORMAL     Normal/Default, Read/Write
-       1              FC_READONLY   Read-only file attribute is set
-       2              FC_HIDDEN     Hidden, Excluded from normal DIR search
-       4              FC_SYSTEM     Create, Excluded from normal DIR search
+       FC_NORMAL     Normal/Default, Read/Write
+       FC_READONLY   Read-only file attribute is set
+       FC_HIDDEN     Hidden, Excluded from normal DIR search
+       FC_SYSTEM     Create, Excluded from normal DIR search
       </table>
    $EXAMPLES$
       #include "fileio.ch"
@@ -509,11 +509,11 @@
       file pointer should he moved, as shown in the following table:
 
       <table>
-       <nOrigin>   fileio.ch     File position
+       <nOrigin>     File position
 
-       0           FS_SET        Beginning of file
-       1           FS_RELATIVE   Current file pointer position
-       2           FS_END        End of file
+       FS_SET        Beginning of file
+       FS_RELATIVE   Current file pointer position
+       FS_END        End of file
       </table>
 
       If a value is not provided for <nOrigin>, it defaults to 0 and

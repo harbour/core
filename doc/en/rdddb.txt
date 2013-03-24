@@ -459,7 +459,7 @@
       This function is not CA-Cl*pper compliant
    $FILES$
       Library is rdd
-      Header  is dbstruct.ch
+      Header is dbstruct.ch
    $SEEALSO$
       AFields()*, dbStruct()
    $END$
@@ -1121,7 +1121,7 @@
       C
    $FILES$
       Library is rdd
-      Header  is dbstruct.ch
+      Header is dbstruct.ch
    $SEEALSO$
       AFields()*
    $END$

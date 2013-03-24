@@ -152,11 +152,11 @@
       ---------------------------   </par>
 
       <table>
-       dbedit.ch    Value   Meaning
+       dbedit.ch    Meaning
 
-       DE_ABORT     0       Abort dbEdit().
-       DE_CONT      1       Continue dbEdit() as is.
-       DE_REFRESH   2       Force reread/redisplay of all data rows.
+       DE_ABORT     Abort dbEdit().
+       DE_CONT      Continue dbEdit() as is.
+       DE_REFRESH   Force reread/redisplay of all data rows.
       </table>
 
       The user function is called once in each of the following cases:

@@ -129,11 +129,11 @@
       that allow you to distinguish between VAR and CLASS VAR:
 
       table>
-      hboo.ch           Value   Meaning
+      hboo.ch           Meaning
 
-      HB_MSGLISTALL     0       All types
-      HB_MSGLISTCLASS   1       CLASS VAR only
-      HB_MSGLISTPURE    2       VAR only
+      HB_MSGLISTALL     All types
+      HB_MSGLISTCLASS   CLASS VAR only
+      HB_MSGLISTPURE    VAR only
       /table>
 
       VAR are instance variable usable within each object from a class,
@@ -350,16 +350,14 @@
       ? oHappy:Smile( 3 )       // *SMILE*
 
       STATIC FUNCTION MySmile( nType )
-         LOCAL cSmile
-         DO CASE
-         CASE nType == 1
-            cSmile := ":)"
-         CASE nType == 2
-            cSmile := ";)"
-         CASE nType == 3
-            cSmile := "*SMILE*"
-         ENDCASE
-         RETURN cSmile
+         IF HB_ISNUMERIC( nType )
+            SWITCH nType
+            CASE 1 ; RETURN ":)"
+            CASE 2 ; RETURN ";)"
+            CASE 3 ; RETURN "*SMILE*"
+            ENDCASE
+         ENDIF
+         RETURN NIL
    $STATUS$
       R
    $COMPLIANCE$
@@ -398,7 +396,7 @@
       with the name <cInlineName> already exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a Smile INLINE method
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       bInline := {| nType | { ":)", ";)", "*SMILE*" }[ nType ] }
       __objAddInline( oHappy, "Smile", bInline )
       ? oHappy:Smile( 1 )       // :)
@@ -440,7 +438,7 @@
       <cDataName> already exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a lHappy VAR
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       __objAddData( oHappy, "lHappy" )
       oHappy:lHappy := .T.
       IF oHappy:lHappy
@@ -559,7 +557,7 @@
       mechanism.
    $EXAMPLES$
       // create a new THappy class and add a Smile INLINE method
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       bMyInline   := {| nType | { ":)", ";)" }[ nType ] }
       bYourInline := {| nType | { "*SMILE*", "*WINK*" }[ nType ] }
       __objAddInline( oHappy, "Smile", bMyInline )
@@ -716,7 +714,7 @@
       with the name <cDataName> does not exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a lHappy VAR
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       __objAddData( oHappy, "lHappy" )
       ? __objHasData( oHappy, "lHappy" )    // .T.
       // remove lHappy VAR

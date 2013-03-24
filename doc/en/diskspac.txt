@@ -39,7 +39,7 @@
    $EXAMPLES$
       ? "You can use : " + hb_ntos( DiskSpace() ) + " bytes "
 
-      Note: See tests/diskspac.prg for another example
+      // NOTE: See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$
@@ -101,7 +101,7 @@
       ? "You can use : " + hb_ntos( hb_DiskSpace() ) + " bytes " +;
         "Out of a total of " + hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
 
-      Note: See tests/diskspac.prg for another example
+      // NOTE: See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$
