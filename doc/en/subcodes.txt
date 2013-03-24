@@ -329,7 +329,7 @@
    $DESCRIPTION$
       The specified argument is not a string.
    $EXAMPLES$
-      RTRIM, TRIM
+      RTrim(), Trim()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -349,7 +349,7 @@
    $DESCRIPTION$
       The specified argument is not a string.
    $EXAMPLES$
-      LTRIM
+      LTrim()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -369,7 +369,7 @@
    $DESCRIPTION$
       The first argument passed to a function is not a string.
    $EXAMPLES$
-      UPPER
+      Upper()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -389,7 +389,7 @@
    $DESCRIPTION$
       The first argument passed to a function is not a string.
    $EXAMPLES$
-      LOWER
+      Lower()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -409,7 +409,7 @@
    $DESCRIPTION$
       The specified argument is not a numeric value.
    $EXAMPLES$
-      CHR
+      Chr()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -429,7 +429,7 @@
    $DESCRIPTION$
       The arguments passed to a function are of incorrect type.
    $EXAMPLES$
-      SPACE
+      Space()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -449,7 +449,7 @@
    $DESCRIPTION$
       The arguments passed to a function are of incorrect type.
    $EXAMPLES$
-      REPLICATE
+      Replicate()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -469,7 +469,7 @@
    $DESCRIPTION$
       The specified argument is not a string.
    $EXAMPLES$
-      ASC
+      Asc()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -489,7 +489,7 @@
    $DESCRIPTION$
       The specified argument is not a string.
    $EXAMPLES$
-      AT
+      At()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -510,8 +510,6 @@
       The arguments of '$' operator are not a strings.
    $EXAMPLES$
 
-   $$
-
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -531,7 +529,7 @@
    $DESCRIPTION$
       The first argument passed to a function is not a string.
    $EXAMPLES$
-      SUBSTR
+      SubStr()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -551,7 +549,7 @@
    $DESCRIPTION$
       The passed argument is neither a string nor an array.
    $EXAMPLES$
-      LEN
+      Len()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -572,7 +570,7 @@
       The argument (or arguments) passed to a function are of incorrect
       type
    $EXAMPLES$
-      YEAR
+      Year()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -593,7 +591,7 @@
       The argument (or arguments) passed to a function are of incorrect
       type
    $EXAMPLES$
-      MONTH
+      Month()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -614,7 +612,7 @@
       The argument (or arguments) passed to a function are of incorrect
       type
    $EXAMPLES$
-      DAY
+      Day()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -635,7 +633,7 @@
       The argument (or arguments) passed to a function are of incorrect
       type
    $EXAMPLES$
-      DOW
+      DoW()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -656,7 +654,7 @@
       The argument (or arguments) passed to a function are of incorrect
       type
    $EXAMPLES$
-      CMONTH
+      CMonth()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -677,7 +675,7 @@
       The argument (or arguments) passed to a function is of incorrect
       type
    $EXAMPLES$
-      CDOW
+      CDoW()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -698,7 +696,7 @@
       The argument (or arguments) passed to a function is of incorrect
       type
    $EXAMPLES$
-      DTOS
+      DToS()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -719,7 +717,7 @@
       The argument (or arguments) passed to a function is of incorrect
       type
    $EXAMPLES$
-      TRANSFORM
+      Transform()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -739,7 +737,7 @@
    $DESCRIPTION$
       The first argument is not a string.
    $EXAMPLES$
-      LEFT
+      Left()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -759,7 +757,7 @@
    $DESCRIPTION$
       The first arguments passed to a function is not a string.
    $EXAMPLES$
-      STRTRAN
+      StrTran()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -837,7 +835,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      MOD
+      Mod()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -858,7 +856,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      ABS
+      Abs()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -879,7 +877,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      INT
+      INT()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -900,7 +898,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      MIN
+      Min()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -921,7 +919,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      MAX
+      Max()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -942,7 +940,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      ROUND
+      Round()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -963,7 +961,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      LOG
+      Log()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -984,7 +982,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      EXP
+      Exp()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1005,7 +1003,7 @@
       The argument (or arguments) passed to a function is not an numeric
       value
    $EXAMPLES$
-      SQRT
+      Sqrt()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1026,7 +1024,7 @@
       The argument (or arguments) passed to a function is not a string
       value
    $EXAMPLES$
-      VAL
+      Val()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1047,7 +1045,7 @@
       The argument (or arguments) passed to a function is not a numeric
       value
    $EXAMPLES$
-      STR
+      Str()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1067,7 +1065,7 @@
    $DESCRIPTION$
       Passed Run time errors was not strings with filenames to copy/
    $EXAMPLES$
-      __COPYFILE
+      __CopyFile()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1088,7 +1086,7 @@
       An error has occurred during the attempt to open, create or write
       during copy operation
    $EXAMPLES$
-      __COPYFILE
+      __CopyFile()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1109,7 +1107,7 @@
       The first argument is not an array or/and the second argument
       is not a code block
    $EXAMPLES$
-      AEVAL
+      AEval()
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -1153,7 +1151,7 @@
       The passed argument is not an object. Only data of type OBJECT
       can be cloned by this function
    $EXAMPLES$
-      OCLONE
+      OCLONE()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1174,7 +1172,7 @@
       Passed argument is not a name of defined class or specified class
       doesn't have a super class
    $EXAMPLES$
-      __INSTSUPER
+      __INSTSUPER()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1194,7 +1192,7 @@
    $DESCRIPTION$
       Passed argument is not a name of defined class
    $EXAMPLES$
-      __INSTSUPER
+      __INSTSUPER()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1215,7 +1213,7 @@
       The attempt to modify a data member of a class was made.
       Only INLINE and METHOD can be modified
    $EXAMPLES$
-      CLASSMOD
+      __CLASSMOD()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1236,7 +1234,7 @@
       Either the first argument was not an object or the second argument
       wasn't a string.
    $EXAMPLES$
-      ISMESSAGE, OSEND
+      ISMESSAGE(), OSEND()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1257,7 +1255,7 @@
       The passed arguments are causing conflict in handling of the request.
       There is no point in waiting forever for no input events!
    $EXAMPLES$
-      INKEY
+      Inkey()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1278,7 +1276,7 @@
       The passed argument(s) is not a string. It should be a string with
       a variable name or an one-dimensional array of strings.
    $EXAMPLES$
-      __MVPRIVATE, __MVPUBLIC
+      __mvPrivate(), __mvPublic()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1294,12 +1292,12 @@
    $CATEGORY$
       Run time errors
    $ONELINER$
-      Incorrect argument passed to __MVGET function
+      Incorrect argument passed to __mvGet() function
    $DESCRIPTION$
-      __MVGET function expects only one argument: a string with a name
+      __mvGet() function expects only one argument: a string with a name
       of variable. The value of this variable will be returned.
    $EXAMPLES$
-      __MVGET
+      __mvGet()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1315,12 +1313,12 @@
    $CATEGORY$
       Run time errors
    $ONELINER$
-      Incorrect argument passed to __MVPUT function
+      Incorrect argument passed to __mvPut() function
    $DESCRIPTION$
-      __MVPUT function expects at least one argument: a string with a name
+      __mvPut() function expects at least one argument: a string with a name
       of variable. The value of this variable will be set.
    $EXAMPLES$
-      __MVPUT
+      __mvPut()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1342,7 +1340,7 @@
       The number of requested argument is greater then the number of
       passed arguments.
    $EXAMPLES$
-      PVALUE
+      hb_PValue()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1363,7 +1361,7 @@
       The first argument is not a string with function/procedure name
       that should be called.
    $EXAMPLES$
-      DO
+      Do()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1383,7 +1381,7 @@
    $DESCRIPTION$
       One passed argument is not of the required type.
    $EXAMPLES$
-      __OBJ*()
+      __obj*()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1405,7 +1403,7 @@
       A symbol should be modified or deleted from a class, but the symbol
       doesn't exist.
    $EXAMPLES$
-      __OBJ*()
+      __obj*()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1425,7 +1423,7 @@
    $DESCRIPTION$
       A symbol should be added to a class, but the symbol already exists.
    $EXAMPLES$
-      __OBJ*()
+      __obj*()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1445,7 +1443,7 @@
    $DESCRIPTION$
       The second arguments passed to a function is not a string.
    $EXAMPLES$
-      ISLEAPYEAR
+      IsLeapYear()
    $COMPLIANCE$
       H
    $SEEALSO$
@@ -1465,7 +1463,7 @@
    $DESCRIPTION$
       The specified file cannot be created due some OS error.
    $EXAMPLES$
-      SET, SET ALTERNATE TO
+      Set(), SET ALTERNATE TO
    $COMPLIANCE$
       C
    $SEEALSO$

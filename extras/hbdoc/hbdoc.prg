@@ -173,7 +173,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          DO CASE
-         CASE cArgName == "-source" ;           p_hsSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
+         CASE cArgName == "-source" ; p_hsSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
          CASE cArgName == "-format"
             IF arg == "" .OR. hb_AScan( p_hsSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )

@@ -32,6 +32,7 @@ PROCEDURE Main( cFile )
       ".7z"   =>, ;
       ".exe"  =>, ;
       ".o"    =>, ;
+      ".obj"  =>, ;
       ".js"   =>, ;
       ".dif"  =>, ;
       ".exe"  =>, ;

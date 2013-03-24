@@ -97,7 +97,7 @@ REQUEST __HB_EXTERN__
 // adding GD support
 REQUEST GDChart
 REQUEST GDImage
-REQUEST GDImageChar
+REQUEST gdImageChar
    #define APP_GD_SUPPORT "_GD"
    #stdout "Lib GD support enabled"
 #else

@@ -152,7 +152,6 @@ METHOD IsField( c, nType ) CLASS Entry
          lResult := .F.
       ELSEIF nType != NIL .AND. hb_bitAnd( self:Group[ idx ], nType ) != nType
          lResult := .F.
-      ELSE
       ENDIF
    ENDIF
 
@@ -351,7 +350,6 @@ PROCEDURE init_Templates()
 
    RETURN
 
-
 PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
 
    LOCAL o := Entry():New()
@@ -372,9 +370,11 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
          ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
          !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
 
-         // ~ IF nFrom != nTo
-         // ~    ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
-         // ~ ENDIF
+#if 0
+         IF nFrom != nTo
+            ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
+         ENDIF
+#endif
 
          o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
 
