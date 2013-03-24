@@ -45,7 +45,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      DOS,Win,OS2
+      DOS, Win, OS2
    $FILES$
       Library is core
       Header is fileio.ch
@@ -107,7 +107,7 @@
    $COMPLIANCE$
       H
    $PLATFORMS$
-      DOS,Win,OS2,Unix
+      DOS, Win, OS2, Unix
    $FILES$
       Library is core
       Header is fileio.ch

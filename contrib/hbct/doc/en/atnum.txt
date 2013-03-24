@@ -47,7 +47,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      AtNum(),BeforAtNum(),CSetAtMupa(),SetAtLike()
+      AtNum(), BeforAtNum(), CSetAtMupa(), SetAtLike()
    $END$
  */
 

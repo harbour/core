@@ -67,7 +67,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ctinit(),ctexit()
+      ctinit(), ctexit()
    $END$
  */
 
@@ -98,6 +98,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ctinit(),ctexit()
+      ctinit(), ctexit()
    $END$
  */

@@ -576,7 +576,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      __mvGet(),__mvPut()
+      __mvGet(), __mvPut()
    $FILES$
       Library is core
    $END$
@@ -631,7 +631,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Eval(),FieldWBlock(),MemVarBlock()
+      Eval(), FieldWBlock(), MemVarBlock()
    $END$
  */
 
@@ -694,7 +694,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Eval(),FieldBlock(),MemVarBlock()
+      Eval(), FieldBlock(), MemVarBlock()
    $END$
  */
 

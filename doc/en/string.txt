@@ -7,7 +7,7 @@
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: IsAlpha(), IsDigit(), IsUpper(), IsLower(), LTrim(),
- *                       At(), hb_At(),RAt(), hb_RAt(), Left(), Right(),
+ *                       At(), hb_At(), RAt(), hb_RAt(), Left(), Right(),
  *                       SubStr(), Upper(), Lower(), Asc(), Chr(), PadC(),
  *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), Space(),
  *                       Replicate(), Val(), Transform(), StrTran()
@@ -49,7 +49,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsDigit(),IsLower(),IsUpper(),Lower(),Upper()
+      IsDigit(), IsLower(), IsUpper(), Lower(), Upper()
    $END$
  */
 
@@ -87,7 +87,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsAlpha(),IsLower(),IsUpper(),Lower(),Upper()
+      IsAlpha(), IsLower(), IsUpper(), Lower(), Upper()
    $END$
  */
 
@@ -125,7 +125,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsAlpha(),IsLower(),IsDigit(),Lower(),Upper()
+      IsAlpha(), IsLower(), IsDigit(), Lower(), Upper()
    $END$
  */
 
@@ -163,7 +163,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsAlpha(),IsDigit(),IsUpper(),Lower(),Upper()
+      IsAlpha(), IsDigit(), IsUpper(), Lower(), Upper()
    $END$
  */
 
@@ -198,7 +198,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Trim(),RTrim(),AllTrim()
+      Trim(), RTrim(), AllTrim()
    $END$
  */
 
@@ -433,7 +433,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SubStr(),Right(),At(),RAt()
+      SubStr(), Right(), At(), RAt()
    $END$
  */
 
@@ -474,7 +474,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SubStr(),Left(),At(),RAt()
+      SubStr(), Left(), At(), RAt()
    $END$
  */
 
@@ -523,7 +523,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Left(),At(),Right()
+      Left(), At(), Right()
    $END$
  */
 
@@ -597,7 +597,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      StrZero(),Transform(),Val()
+      StrZero(), Transform(), Val()
    $END$
  */
 
@@ -760,7 +760,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Empty(),RTrim(),LTrim(),AAdd(),ASize()
+      Empty(), RTrim(), LTrim(), AAdd(), ASize()
    $END$
  */
 
@@ -875,7 +875,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Upper(),IsLower(),IsUpper()
+      Upper(), IsLower(), IsUpper()
    $END$
  */
 
@@ -911,7 +911,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Lower(),IsUpper(),IsLower()
+      Lower(), IsUpper(), IsLower()
    $END$
  */
 
@@ -1036,7 +1036,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AllTrim(),PadL(),PadR()
+      AllTrim(), PadL(), PadR()
    $END$
  */
 
@@ -1054,7 +1054,7 @@
    $SYNTAX$
       PadL( <xVal>, <nWidth>, <cFill> ) --> cString
    $ARGUMENTS$
-      <xVal> An number,Character or date to pad
+      <xVal> An number, Character or date to pad
 
       <nWidth> Width of output string
 
@@ -1062,7 +1062,7 @@
    $RETURNS$
       <cString> The left-justifies string of <xVal>
    $DESCRIPTION$
-      This function takes an date,number,or character expression <xVal>
+      This function takes an date, number, or character expression <xVal>
       and attempt to left-justify it within a string of a given width
       expressed as <nWidth>. The default character used to pad left side
       of <xVal> will be an blank space; however, this character may be
@@ -1084,7 +1084,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AllTrim(),PadC(),PadR()
+      AllTrim(), PadC(), PadR()
    $END$
  */
 
@@ -1110,7 +1110,7 @@
    $RETURNS$
       <cString> The right-justifies string of <xVal>
    $DESCRIPTION$
-      This function takes an date,number,or character expression <xVal>
+      This function takes an date, number, or character expression <xVal>
       and attempt to right-justify it within a string of a given width
       expressed as <nWidth>. The default character used to pad right side
       of <xVal> will be an blank space; however, this character may be
@@ -1132,7 +1132,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AllTrim(),PadC(),PadL()
+      AllTrim(), PadC(), PadL()
    $END$
  */
 
@@ -1170,7 +1170,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      LTrim(),RTrim(),Trim()
+      LTrim(), RTrim(), Trim()
    $END$
  */
 
@@ -1212,7 +1212,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AllTrim(),LTrim(),Trim()
+      AllTrim(), LTrim(), Trim()
    $END$
  */
 
@@ -1254,7 +1254,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      RTrim(),LTrim(),AllTrim()
+      RTrim(), LTrim(), AllTrim()
    $END$
  */
 
@@ -1296,7 +1296,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Space(),PadC(),PadL(),PadR()
+      Space(), PadC(), PadL(), PadR()
    $END$
  */
 
@@ -1368,7 +1368,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      PadC(),PadL(),PadR(),Replicate()
+      PadC(), PadL(), PadR(), Replicate()
    $END$
  */
 
@@ -1405,7 +1405,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Str(),Transform()
+      Str(), Transform()
    $END$
  */
 
@@ -1458,7 +1458,7 @@
    $FILES$
       Libraty is rtl
    $SEEALSO$
-      SubStr(),At()
+      SubStr(), At()
    $END$
  */
 
@@ -1555,6 +1555,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      @...SAY,DevOutPict()
+      @...SAY, DevOutPict()
    $END$
  */

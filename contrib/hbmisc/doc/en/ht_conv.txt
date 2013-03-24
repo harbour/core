@@ -11,13 +11,13 @@
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
-      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.
+      <cNr> .T. IF THE STRING IS BYNARY, otherwise .F.
    $DESCRIPTION$
       check if the passed string is a bynary number or not
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsDec(),IsHexa()
+      IsOctal(), IsDec(), IsHexa()
    $END$
  */
 
@@ -39,7 +39,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsBin(),IsDec(),IsHexa()
+      IsBin(), IsDec(), IsHexa()
    $END$
  */
 
@@ -61,7 +61,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsBin(),IsHexa()
+      IsOctal(), IsBin(), IsHexa()
    $END$
  */
 
@@ -83,7 +83,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsDec(),IsBin()
+      IsOctal(), IsDec(), IsBin()
    $END$
  */
 
@@ -106,7 +106,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToHexa(),DecToOctal()
+      DecToHexa(), DecToOctal()
    $END$
  */
 
@@ -129,7 +129,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToHexa(),DecToBin()
+      DecToHexa(), DecToBin()
    $END$
  */
 
@@ -152,7 +152,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToBin(),DecToOctal()
+      DecToBin(), DecToOctal()
    $END$
  */
 
@@ -175,7 +175,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      OctalToDec(),HexaToDec()
+      OctalToDec(), HexaToDec()
    $END$
  */
 
@@ -198,7 +198,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      BinToDec(),HexaToDec()
+      BinToDec(), HexaToDec()
    $END$
  */
 
@@ -221,6 +221,6 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      OctalToDec(),BinToDec()
+      OctalToDec(), BinToDec()
    $END$
  */

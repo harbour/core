@@ -172,7 +172,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Eof(),Found(),LastRec()
+      Eof(), Found(), LastRec()
    $END$
  */
 
@@ -207,7 +207,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      DELETE,PACK,USE
+      DELETE, PACK, USE
    $END$
  */
 
@@ -292,7 +292,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Bof(),Found(),LastRec()
+      Bof(), Found(), LastRec()
    $END$
  */
 
@@ -328,7 +328,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FieldName(),Type()
+      FieldName(), Type()
    $END$
  */
 
@@ -409,7 +409,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbStruct(),FCount(),Len(),ValType()
+      dbStruct(), FCount(), Len(), ValType()
    $END$
  */
 
@@ -448,7 +448,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FieldGet(),FieldPut()
+      FieldGet(), FieldPut()
    $END$
  */
 
@@ -603,7 +603,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DiskSpace(),LastRec(),RecSize()
+      DiskSpace(), LastRec(), RecSize()
    $END$
  */
 
@@ -680,7 +680,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FieldName(),LastRec(),RecSize()
+      FieldName(), LastRec(), RecSize()
    $END$
  */
 
@@ -729,7 +729,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FLock(),RLock()
+      FLock(), RLock()
    $END$
  */
 
@@ -769,7 +769,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Eof(),LastRec(),RecNo(),dbGoBottom()
+      Eof(), LastRec(), RecNo(), dbGoBottom()
    $END$
  */
 
@@ -809,7 +809,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbGoto(),dbGoTop(),dbGoBottom(),LastRec(),Eof(),Bof()
+      dbGoto(), dbGoTop(), dbGoBottom(), LastRec(), Eof(), Bof()
    $END$
  */
 
@@ -848,7 +848,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DiskSpace(),FieldName(),Header(),LastRec()
+      DiskSpace(), FieldName(), Header(), LastRec()
    $END$
  */
 

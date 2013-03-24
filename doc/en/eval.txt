@@ -35,7 +35,7 @@
       returns its evaluated value. If their are multiple expressions within
       the code block, the last expression will be value of this function.
 
-      If the code block requires parameters to be passed to it,they are
+      If the code block requires parameters to be passed to it, they are
       specified in the parameter list <xVal> and following. Each parameter
       is separated by a comma within the expression list.
    $EXAMPLES$
@@ -57,6 +57,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AEval(),dbEval()
+      AEval(), dbEval()
    $END$
  */

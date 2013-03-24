@@ -6,7 +6,7 @@
  *    Documentation for: hb_langName(), hb_langSelect()
  *
  * Copyright 2004 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: hb_langErrMsg(),hb_langMessage(),hb_cdpSelect(),
+ *    Documentation for: hb_langErrMsg(), hb_langMessage(), hb_cdpSelect(),
  *                       hb_Translate()
  *
  * See COPYING.txt for licensing terms.
@@ -54,7 +54,7 @@
    $FILES$
       Header is error.ch
    $SEEALSO$
-      hb_langSelect(),NationMsg()
+      hb_langSelect(), NationMsg()
    $END$
  */
 
@@ -103,7 +103,7 @@
    $FILES$
       Header is hblang.ch
    $SEEALSO$
-      hb_langSelect(),NationMsg(),REQUEST
+      hb_langSelect(), NationMsg(), REQUEST
    $END$
  */
 
@@ -156,7 +156,7 @@
       All
    $FILES$
    $SEEALSO$
-      hb_langSelect(),NationMsg()
+      hb_langSelect(), NationMsg()
    $END$
  */
 
@@ -252,7 +252,7 @@
       All
    $FILES$
    $SEEALSO$
-      hb_langName(),hb_cdpSelect(),NationMsg(),REQUEST
+      hb_langName(), hb_cdpSelect(), NationMsg(), REQUEST
    $END$
  */
 
@@ -363,7 +363,7 @@
       All
    $FILES$
    $SEEALSO$
-      hb_langName(),hb_langSelect(),hb_Translate(),NationMsg(),REQUEST
+      hb_langName(), hb_langSelect(), hb_Translate(), NationMsg(), REQUEST
    $END$
  */
 
@@ -421,6 +421,6 @@
       All
    $FILES$
    $SEEALSO$
-      hb_langSelect(),hb_cdpSelect(),NationMsg(),REQUEST
+      hb_langSelect(), hb_cdpSelect(), NationMsg(), REQUEST
    $END$
  */

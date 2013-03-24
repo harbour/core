@@ -21,14 +21,14 @@
    $ONELINER$
       HBClass() is used in the creation of all classes
    $SYNTAX$
-      oClass := HBClass():New("TMyClass")
+      oClass := HBClass():New( "TMyClass" )
 
         -or-
 
       HBClass() is usually accessed by defining a class with the commands
-      defined in hbclass.h:
+      defined in hbclass.ch:
 
-        CLASS HBGetList    // Calls HBClass() to create the HBGetList class
+        CREATE CLASS HBGetList    // Calls HBClass() to create the HBGetList class
            ...
         ENDCLASS
    $ARGUMENTS$
@@ -66,6 +66,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objHasData(),Object Oriented Programming,CLASS
+      __objHasData(), Object Oriented Programming, CLASS
    $END$
  */

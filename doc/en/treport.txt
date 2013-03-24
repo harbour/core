@@ -85,7 +85,7 @@
       groups, subgroups, and grand total information. The detailed title
       item information will be ignored.
 
-      If the NOCONSOLE clause is specified,output to the console will be
+      If the NOCONSOLE clause is specified, output to the console will be
       turned off while this command is being executed.
    $EXAMPLES$
       PROCEDURE Main()

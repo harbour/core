@@ -30,7 +30,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      WordSwap(),CSetRef()
+      WordSwap(), CSetRef()
    $END$
  */
 
@@ -71,6 +71,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharSwap(),CSetRef()
+      CharSwap(), CSetRef()
    $END$
  */

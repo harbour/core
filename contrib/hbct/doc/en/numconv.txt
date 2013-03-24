@@ -7,7 +7,7 @@
    $ONELINER$
 
    $SYNTAX$
-      NToC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
+      NToC( <xNumber>[, <nBase>][, <nLength>][, <cPadChar>] ) -> <cNumber>
    $ARGUMENTS$
 
    $RETURNS$
@@ -37,7 +37,7 @@
    $ONELINER$
 
    $SYNTAX$
-      CToN( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
+      CToN( <xNumber>[, <nBase>][, <lMode>] ) -> <nNumber>
    $ARGUMENTS$
 
    $RETURNS$
@@ -67,7 +67,7 @@
    $ONELINER$
 
    $SYNTAX$
-      BitToC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
+      BitToC( <nInteger>, <cBitPattern>[, <lMode>] ) -> <cBitString>
    $ARGUMENTS$
 
    $RETURNS$

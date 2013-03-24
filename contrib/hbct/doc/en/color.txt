@@ -139,7 +139,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Standard(),Unselected()
+      Standard(), Unselected()
    $END$
  */
 
@@ -169,7 +169,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Enhanced(),Unselected()
+      Enhanced(), Unselected()
    $END$
  */
 
@@ -199,6 +199,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Enhanced(),Standard()
+      Enhanced(), Standard()
    $END$
  */

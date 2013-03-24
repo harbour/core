@@ -17,7 +17,7 @@
  *    Documentation for: DevOutPict()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: EJECT,MaxRow(),MaxCol(),Row(),Col(),PRow(),PCol()
+ *    Documentation for: EJECT, MaxRow(), MaxCol(), Row(), Col(), PRow(), PCol()
  *
  * See COPYING.txt for licensing terms.
  *
@@ -66,7 +66,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      RESTORE SCREEN,RestScreen(),SaveScreen()
+      RESTORE SCREEN, RestScreen(), SaveScreen()
    $END$
  */
 
@@ -107,7 +107,7 @@
    $PLATFORMS$
       All(GT)
    $SEEALSO$
-      RESTORE SCREEN,__XRestScreen(),__XSaveScreen()
+      RESTORE SCREEN, __XRestScreen(), __XSaveScreen()
    $END$
  */
 
@@ -153,7 +153,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
+      __XRestScreen(), SAVE SCREEN, __XSaveScreen()
    $END$
  */
 
@@ -194,7 +194,7 @@
    $PLATFORMS$
       All(GT)
    $SEEALSO$
-      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
+      __XRestScreen(), SAVE SCREEN, __XSaveScreen()
    $END$
  */
 
@@ -303,7 +303,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      @...PROMPT,MENU TO,OutStd(),__NoNoAlert()
+      @...PROMPT, MENU TO, OutStd(), __NoNoAlert()
    $END$
  */
 
@@ -379,7 +379,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      OS(),OutStd(),OutErr()
+      OS(), OutStd(), OutErr()
    $END$
  */
 
@@ -458,7 +458,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      DevOut(),Transform()
+      DevOut(), Transform()
    $END$
  */
 
@@ -489,7 +489,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __Wait(),__Accept()
+      __Wait(), __Accept()
    $END$
  */
 
@@ -523,7 +523,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
+      Set(), SET ALTERNATE, SET PRINTER, TEXT, __TextRestore()
    $END$
  */
 
@@ -555,7 +555,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
+      Set(), SET ALTERNATE, SET PRINTER, TEXT, __TextSave()
    $END$
  */
 
@@ -593,7 +593,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __Accept(),__Input()
+      __Accept(), __Input()
    $END$
  */
 
@@ -641,7 +641,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutErr(),QOut(),QQOut(),Str()
+      ?, ??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutErr(), QOut(), QQOut(), Str()
    $END$
  */
 
@@ -690,7 +690,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutStd(),QOut(),QQOut(),Str()
+      ?, ??, DevOut(), DevOutPict(), DispOut(), DispOutAt(), OutStd(), QOut(), QQOut(), Str()
    $END$
  */
 
@@ -711,11 +711,11 @@
       None
    $DESCRIPTION$
       This command issue an form-feed command to the printer. If the printer
-      is not properly hooked up to the computer,an error will not be
+      is not properly hooked up to the computer, an error will not be
       generated and the command will be ignored.
 
-      Once completed,the values of PRow() and PCol(),the row and column
-      indicators to the printer,will be set to 0. Their values,however,may
+      Once completed, the values of PRow() and PCol(), the row and column
+      indicators to the printer, will be set to 0. Their values, however, may
       be manipulated before or after ussuing an EJECT by using the DevPos()
       function.
 
@@ -741,7 +741,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      DevPos(),SET PRINTER,PRow(),PCol()
+      DevPos(), SET PRINTER, PRow(), PCol()
    $END$
  */
 
@@ -776,7 +776,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Row(),MaxRow(),MaxCol()
+      Row(), MaxRow(), MaxCol()
    $END$
  */
 
@@ -811,7 +811,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Col(),MaxRow(),MaxCol()
+      Col(), MaxRow(), MaxCol()
    $END$
  */
 
@@ -843,11 +843,11 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT),OS2(GT),Win(GT)
+      Linux(GT), OS2(GT), Win(GT)
    $FILES$
       Library is core
    $SEEALSO$
-      Row(),MaxRow(),Col()
+      Row(), MaxRow(), Col()
    $END$
  */
 
@@ -879,10 +879,10 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT),OS2(GT),Win(GT)
+      Linux(GT), OS2(GT), Win(GT)
    $FILES$
       Library is core
    $SEEALSO$
-      Col(),Row(),MaxCol()
+      Col(), Row(), MaxCol()
    $END$
  */

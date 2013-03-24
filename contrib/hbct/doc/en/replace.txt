@@ -25,7 +25,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ReplLeft(),ReplRight()
+      ReplLeft(), ReplRight()
    $END$
  */
 
@@ -55,7 +55,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ReplAll(),ReplRight()
+      ReplAll(), ReplRight()
    $END$
  */
 
@@ -85,6 +85,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ReplAll(),ReplLeft()
+      ReplAll(), ReplLeft()
    $END$
  */

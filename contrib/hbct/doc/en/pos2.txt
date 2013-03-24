@@ -25,7 +25,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PosDel(),PosIns(),PosRepl(),CSetRef()
+      PosDel(), PosIns(), PosRepl(), CSetRef()
    $END$
  */
 
@@ -55,7 +55,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PosChar(),PosIns(),PosRepl()
+      PosChar(), PosIns(), PosRepl()
    $END$
  */
 
@@ -85,7 +85,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      POSCHAR,PosDel(),PosRepl()
+      POSCHAR, PosDel(), PosRepl()
    $END$
  */
 
@@ -115,6 +115,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PosChar(),PosDel(),PosIns(),CSetRef()
+      PosChar(), PosDel(), PosIns(), CSetRef()
    $END$
  */

@@ -22,7 +22,7 @@
       <oBrowse>  An new Browse Object
    $DESCRIPTION$
       This function set up a browsing window at top-left coordinates of
-      <nTop>,<nLeft> to bottom-right coordinates of <nBottom>,<nRight>.
+      <nTop>, <nLeft> to bottom-right coordinates of <nBottom>, <nRight>.
       To browse Database files use TBrowseDB() function insted.
    $DATANOLINK$
       :aColumns       Array to hold all browse columns
@@ -178,7 +178,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      TBrowseNew(),TBColumnNew()
+      TBrowseNew(), TBColumnNew()
    $END$
  */
 
@@ -225,7 +225,7 @@
       K_ESC          {| oB, nKey | -1 }
       </table>
 
-      The keys handlers can be queried,added and replace an removed from
+      The keys handlers can be queried, added and replace an removed from
       the internal keyboard dictionary. See the example.
 
       oTb:SetKey( K_TAB, {| oTb, nKey | -1 } )
@@ -267,7 +267,7 @@
       Value    Meaning
       -1       User request for the browse lost input focus
       0        Code block associated with <nkey> was evaluated
-      1        Unable to locate <nKey> in the dictionary,Key was not processed
+      1        Unable to locate <nKey> in the dictionary, Key was not processed
       </table>
    $DESCRIPTION$
       This method evaluate an code block associated with <nkey> that is

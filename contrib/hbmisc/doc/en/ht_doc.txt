@@ -21,7 +21,7 @@
          WriteTitle(<cTitle>) Write the file title   </par>
          WritePar(<cPar>)     Writes a paragraph   </par>
          WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
-         WriteLink(<cLink>,<cName>)  Write a link to another topic   </par>
+         WriteLink(<cLink>, <cName>)  Write a link to another topic   </par>
          WriteText(<cText>)   Write any text   </par>
    $EXAMPLES$
       PROCEDURE Main()
@@ -67,7 +67,7 @@
       The class methods are as follows:   </par>
          New(<cFile>)          Create a new instance of the TOs2 class   </par>
          Close()               Close the created file   </par>
-         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+         WriteTitle(<cTopic>, <cTitle>)  Write the file title   </par>
          WritePar(<cPar>)      Write a paragraph   </par>
          WriteParBold(<cPar>)  Same as WritePar(), but the text is bold   </par>
          WriteLink(<cLink>)    Write a link to another topic   </par>
@@ -117,7 +117,7 @@
       The class methods are as follows:   </par>
          New(<cFile>)         Create an instance of the TNortonGuide class   </par>
          Close()              Close the created file   </par>
-         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+         WriteTitle(<cTopic>, <cTitle>)  Write the file title   </par>
          WritePar(<cPar>)     Write a paragraph   </par>
          WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
          WriteLink(<cLink>)   Write a link to another topic   </par>
@@ -142,7 +142,7 @@
    $PLATFORMS$
       ALL   </par>
    $SEEALSO$
-      TTroff(),TRtf(),THtml(),TOs2()
+      TTroff(), TRtf(), THtml(), TOs2()
    $END$
  */
 
@@ -165,7 +165,7 @@
       The class methods are as follows:   </par>
          New(<cFile>)         Create a new instance of the TRtf class   </par>
          Close()              Close the create file   </par>
-         WriteTitle(<cTopic>,<cTitle>)  Write the file title   </par>
+         WriteTitle(<cTopic>, <cTitle>)  Write the file title   </par>
          WritePar(<cPar>)     Write a paragraph   </par>
          WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
          WriteLink(<cLink>)   Write a link to another topic   </par>
@@ -216,7 +216,7 @@
       The class methods are as follows:   </par>
          New(<cFile>)         Create a new instance of the THtml class
          Close()              Close the created file   </par>
-         WriteTitle(<cTopic>,<cTitle>) Write the file title   </par>
+         WriteTitle(<cTopic>, <cTitle>) Write the file title   </par>
          WritePar(<cPar>)     Write a paragraph   </par>
          WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
          WriteLink(<cLink>)   Write a link to another topic   </par>

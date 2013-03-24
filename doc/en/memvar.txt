@@ -11,7 +11,7 @@
    $ONELINER$
       Declares a list of database field names.
    $SYNTAX$
-      FIELD <xField> [,<xFieldn...>  [in <cDatabase>]
+      FIELD <xField> [, <xFieldn...> [IN <cDatabase>]
    $ARGUMENTS$
       <xField>    A valid field name
 
@@ -46,7 +46,7 @@
    $FILES$
       None.
    $SEEALSO$
-      MEMVAR,PRIVATE,PUBLIC,STATIC
+      MEMVAR, PRIVATE, PUBLIC, STATIC
    $END$
  */
 
@@ -70,8 +70,8 @@
    $DESCRIPTION$
       This command created a LOCAL memory variable or array. The name
       of either is specified in <xVar>. If more then one variable is being
-      initialized with the LOCAL command,separate each entry with a comma.
-      If a variable or an array is to be assingned a start-up value,that
+      initialized with the LOCAL command, separate each entry with a comma.
+      If a variable or an array is to be assingned a start-up value, that
       expression may be specified in <xInit> and folling. Is Strong type
       compile mode is used, the Compiler will check if the value recived
       matchs the type specified in <xType>.
@@ -110,7 +110,7 @@
    $FILES$
       None
    $SEEALSO$
-      FIELD,PRIVATE,PUBLIC,STATIC,MEMVAR
+      FIELD, PRIVATE, PUBLIC, STATIC, MEMVAR
    $END$
  */
 
@@ -138,7 +138,7 @@
       expansions are not affected by this command.
 
       The MEMVAR declaration must apear before any executable commands;it
-      is similat to the LOCAL,STATIC,FIELD,PARAMETERS,FUNCTION, and
+      is similat to the LOCAL, STATIC, FIELD, PARAMETERS, FUNCTION, and
       PROCEDURE commands statements.
    $EXAMPLES$
       MEMVAR y AS NUMERIC
@@ -165,6 +165,6 @@
    $FILES$
       None.
    $SEEALSO$
-      LOCAL,STATIC,FIELD,PRIVATE,PUBLIC
+      LOCAL, STATIC, FIELD, PRIVATE, PUBLIC
    $END$
  */

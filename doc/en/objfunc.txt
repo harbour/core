@@ -49,7 +49,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -88,7 +88,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasData()
+      __objGetMethodList(), __objGetMsgList(), __objHasData()
    $END$
  */
 
@@ -165,7 +165,7 @@
       Header file is hboo.ch
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMethodList(), __objGetValueList(), __objHasData(), __objHasMethod()
    $END$
  */
 
@@ -206,7 +206,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMsgList(),__objGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMsgList(), __objGetValueList(), __objHasData(), __objHasMethod()
    $END$
  */
 
@@ -254,7 +254,7 @@
       Header file is hboo.ch
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__objSetValueList()
+      __objGetMethodList(), __objGetMsgList(), __objHasData(), __objHasMethod(), __objSetValueList()
    $END$
  */
 
@@ -367,7 +367,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddData(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
+      __objAddInline(), __objAddData(), __objDelMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModMethod()
    $END$
  */
 
@@ -411,7 +411,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddData(),__objAddMethod(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
+      __objAddData(), __objAddMethod(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod() , __objModInline()
    $END$
  */
 
@@ -455,7 +455,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+      __objAddInline(), __objAddMethod(), __objDelData(), __objGetMsgList(), __objGetValueList(), __objHasData(), __objSetValueList()
    $END$
  */
 
@@ -526,7 +526,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddMethod(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddMethod(), __objDelMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -576,7 +576,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddInline(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -632,7 +632,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(), __objAddMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModInline(), __objModMethod()
    $END$
  */
 
@@ -686,7 +686,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(), __objAddMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModInline(), __objModMethod()
    $END$
  */
 
@@ -729,7 +729,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+      __objAddData(), __objGetMsgList(), __objGetValueList(), __objHasData(), __objSetValueList()
    $END$
  */
 
@@ -792,6 +792,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objHasData(),__objHasMethod()
+      __objHasData(), __objHasMethod()
    $END$
  */

@@ -61,7 +61,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+      COPY STRUCTURE, COPY STRUCTURE EXTENDED, dbCreate(), dbStruct(), __dbCopyXStruct(), __dbCreate(), __dbStructFilter()
    $END$
  */
 
@@ -111,7 +111,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+      COPY STRUCTURE EXTENDED, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCopyXStruct(), __dbCreate(), __dbStructFilter()
    $END$
  */
 
@@ -189,7 +189,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCreate()
+      COPY STRUCTURE, COPY STRUCTURE EXTENDED, CREATE, CREATE FROM, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCreate()
    $END$
  */
 
@@ -263,7 +263,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE, CREATE, CREATE FROM, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCopyXStruct(), __dbCreate()
    $END$
  */
 
@@ -377,7 +377,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct()
+      COPY STRUCTURE, COPY STRUCTURE EXTENDED, CREATE, CREATE FROM, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCopyXStruct()
    $END$
  */
 
@@ -452,7 +452,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE, COPY STRUCTURE EXTENDED, CREATE FROM, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCopyXStruct(), __dbCreate()
    $END$
  */
 
@@ -520,7 +520,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE, COPY STRUCTURE EXTENDED, CREATE, dbCreate(), dbStruct(), __dbCopyStruct(), __dbCopyXStruct(), __dbCreate()
    $END$
  */
 
@@ -615,7 +615,7 @@
       Header file is dbstruct.ch
       Library is rdd
    $SEEALSO$
-      dbCreate(),dbStruct(),__dbCopyStruct(),__dbStructFilter()
+      dbCreate(), dbStruct(), __dbCopyStruct(), __dbStructFilter()
    $END$
  */
 
@@ -702,6 +702,6 @@
       Header file is dbstruct.ch
       Library is rdd
    $SEEALSO$
-      dbCreate(),dbStruct(),__dbCopyStruct(),__FLedit()*
+      dbCreate(), dbStruct(), __dbCopyStruct(), __FLedit()*
    $END$
  */

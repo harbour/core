@@ -21,7 +21,7 @@
    $ONELINER$
       Define a Class for Object Oriented Programming
    $SYNTAX$
-      [CREATE] CLASS <ClassName> [ <FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ]  [STATIC]
+      [CREATE] CLASS <ClassName> [ <FROM, INHERIT> <SuperClass1> [, <SuperClassN>] ] [STATIC]
    $ARGUMENTS$
       <ClassName>  Name of the class to define. By tradition, Harbour
                    classes start with "T" to avoid collisions with user-
@@ -83,7 +83,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      HBClass(),Object Oriented Programming,VAR,METHOD
+      HBClass(), Object Oriented Programming, VAR, METHOD
    $END$
  */
 
@@ -99,7 +99,7 @@
    $ONELINER$
       Alternate syntax for VAR: instance variable for the objects.
    $SYNTAX$
-      VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+      VAR <DataName1> [, <DataNameN>] [ AS <type> ] [ INIT <uValue> ]
       [[EXPORTED | VISIBLE] | [PROTECTED] | [HIDDEN]] [READONLY | RO]
    $ARGUMENTS$
       <DataName1>  Name of the VAR
@@ -164,7 +164,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Object Oriented Programming,CLASS,METHOD,CLASS VAR,VAR
+      Object Oriented Programming, CLASS, METHOD, CLASS VAR, VAR
    $END$
  */
 
@@ -180,7 +180,7 @@
    $ONELINER$
       Define a CLASS VAR variable for a class (NOT for an Object!)
    $SYNTAX$
-      CLASS VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+      CLASS VAR <DataName1> [, <DataNameN>] [ AS <type> ] [ INIT <uValue> ]
    $ARGUMENTS$
       <DataName1>  Name of the VAR
 
@@ -213,7 +213,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Object Oriented Programming,CLASS,METHOD,VAR
+      Object Oriented Programming, CLASS, METHOD, VAR
    $END$
  */
 
@@ -322,7 +322,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      HBClass(),Object Oriented Programming,VAR,CLASS
+      HBClass(), Object Oriented Programming, VAR, CLASS
    $END$
  */
 
@@ -378,7 +378,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      METHOD,VAR,CLASS,Object Oriented Programming
+      METHOD, VAR, CLASS, Object Oriented Programming
    $END$
  */
 
@@ -413,7 +413,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Object Oriented Programming,ON ERROR,CLASS,METHOD,VAR
+      Object Oriented Programming, ON ERROR, CLASS, METHOD, VAR
    $END$
  */
 
@@ -449,7 +449,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Object Oriented Programming,ERROR HANDLER,CLASS,METHOD,VAR
+      Object Oriented Programming, ERROR HANDLER, CLASS, METHOD, VAR
    $END$
  */
 
@@ -482,6 +482,6 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Object Oriented Programming,CLASS,METHOD,VAR
+      Object Oriented Programming, CLASS, METHOD, VAR
    $END$
  */

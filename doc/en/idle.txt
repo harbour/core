@@ -28,7 +28,7 @@
       For signaling the idle state from C code see the hb_idleState()
       API function.
    $SEEALSO$
-      hb_idleAdd(),hb_idleDel()
+      hb_idleAdd(), hb_idleDel()
    $END$
  */
 
@@ -65,7 +65,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_idleDel(),hb_idleState()
+      hb_idleDel(), hb_idleState()
    $END$
  */
 
@@ -106,7 +106,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_idleAdd(),hb_idleState()
+      hb_idleAdd(), hb_idleState()
    $END$
  */
 
@@ -151,7 +151,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_idleAdd(),hb_idleDel()
+      hb_idleAdd(), hb_idleDel()
    $END$
  */
 
@@ -191,6 +191,6 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_idleAdd(),hb_idleDel(),hb_idleState()
+      hb_idleAdd(), hb_idleDel(), hb_idleState()
    $END$
  */

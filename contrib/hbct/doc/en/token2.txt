@@ -77,7 +77,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Token(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
+      Token(), TokenExit(), TokenNext(), TokenNum(), TokenAt(), SaveToken(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -113,7 +113,7 @@
       Note that <cString> does not have to be the same used in TokenInit(),
       so that one can do a "correlational tokenization", i.e. tokenize a string
       as if it was another! E.G. using TokenInit() with the string
-      "AA,BBB" but calling TokenNext() with "CCCEE" would
+      "AA, BBB" but calling TokenNext() with "CCCEE" would
       give first "CC" and then "EE" (because "CCCEE" is not long enough).
    $EXAMPLES$
       // default behavhiour
@@ -134,7 +134,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
+      TokenInit(), TokenExit(), TokenNum(), TokenAt(), SaveToken(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -169,7 +169,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
+      TokenInit(), TokenExit(), TokenNext(), TokenAt(), SaveToken(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -211,7 +211,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken()
+      TokenInit(), TokenExit(), TokenNext(), TokenNum(), TokenAt(), SaveToken(), RestToken()
    $END$
  */
 
@@ -249,7 +249,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
+      TokenInit(), TokenNext(), TokenNum(), TokenAt(), SaveToken(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -304,7 +304,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),SaveToken(),RestToken(),TokenEnd()
+      TokenInit(), TokenExit(), TokenNext(), TokenNum(), SaveToken(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -337,7 +337,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),RestToken(),TokenEnd()
+      TokenInit(), TokenExit(), TokenNext(), TokenNum(), TokenAt(), RestToken(), TokenEnd()
    $END$
  */
 
@@ -370,6 +370,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),TokenEnd()
+      TokenInit(), TokenExit(), TokenNext(), TokenNum(), TokenAt(), SaveToken(), TokenEnd()
    $END$
  */

@@ -51,7 +51,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      HardCR(),StrTran()
+      HardCR(), StrTran()
    $END$
  */
 
@@ -84,7 +84,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      MemoTran(),StrTran()
+      MemoTran(), StrTran()
    $END$
  */
 
@@ -150,7 +150,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      MemoEdit(),MemoWrit(),REPLACE,hb_MemoRead()
+      MemoEdit(), MemoWrit(), REPLACE, hb_MemoRead()
    $END$
  */
 
@@ -220,7 +220,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      MemoEdit(),hb_MemoWrit(),REPLACE,MemoRead()
+      MemoEdit(), hb_MemoWrit(), REPLACE, MemoRead()
    $END$
  */
 
@@ -281,7 +281,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      MemoEdit(),MemoRead(),hb_MemoWrit()
+      MemoEdit(), MemoRead(), hb_MemoWrit()
    $END$
  */
 
@@ -355,6 +355,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      MemoEdit(),MemoRead(),hb_MemoWrit()
+      MemoEdit(), MemoRead(), hb_MemoWrit()
    $END$
  */

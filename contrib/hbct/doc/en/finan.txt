@@ -44,7 +44,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),Payment(),Periods(),Rate()
+      PV(), Payment(), Periods(), Rate()
    $END$
  */
 
@@ -92,7 +92,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      FV(),Payment(),Periods(),Rate()
+      FV(), Payment(), Periods(), Rate()
    $END$
  */
 
@@ -138,7 +138,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),FV(),Periods(),Rate()
+      PV(), FV(), Periods(), Rate()
    $END$
  */
 
@@ -189,7 +189,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),FV(),Payment(),Rate()
+      PV(), FV(), Payment(), Rate()
    $END$
  */
 
@@ -232,6 +232,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),FV(),Payment(),Periods()
+      PV(), FV(), Payment(), Periods()
    $END$
  */

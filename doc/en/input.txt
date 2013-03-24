@@ -149,7 +149,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CLEAR TYPEAHEAD,KEYBOARD
+      CLEAR TYPEAHEAD, KEYBOARD
    $END$
  */
 
@@ -188,7 +188,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      KEYBOARD,CLEAR TYPEAHEAD,Inkey()
+      KEYBOARD, CLEAR TYPEAHEAD, Inkey()
    $END$
  */
 
@@ -240,7 +240,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Inkey(),LastKey()
+      Inkey(), LastKey()
    $END$
  */
 
@@ -285,7 +285,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Inkey(),LastKey()
+      Inkey(), LastKey()
    $END$
  */
 
@@ -310,7 +310,7 @@
 
       The number of characters that can be stuffed into the keyboard
       buffer is controlled by the SET TYPEAHEAD command and may range
-      from 0 to 32,622, with each character being in the ASCII
+      from 0 to 32622, with each character being in the ASCII
       range of 0 to 255.
 
       None of the extended keys may be stuffed into the keyboard buffer.
@@ -329,7 +329,7 @@
    $COMPLIANCE$
       KEYBOARD is compliant with CA-Cl*pper 5.3
    $SEEALSO$
-      CLEAR TYPEAHEAD,__Keyboard()
+      CLEAR TYPEAHEAD, __Keyboard()
    $END$
  */
 
@@ -384,7 +384,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      @...GET,Inkey(),LastKey(),READ,ReadExit(),Updated()
+      @...GET, Inkey(), LastKey(), READ, ReadExit(), Updated()
    $END$
  */
 

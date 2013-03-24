@@ -57,7 +57,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AAdd(),ADel(),AFill(),AIns()
+      AAdd(), ADel(), AFill(), AIns()
    $END$
  */
 
@@ -103,7 +103,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AIns(),ASize()
+      AIns(), ASize()
    $END$
  */
 
@@ -146,7 +146,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AAdd(),ADel(),AFill(),AIns()
+      AAdd(), ADel(), AFill(), AIns()
    $END$
  */
 
@@ -181,7 +181,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Len(),Array(),ASize(),AAdd()
+      Len(), Array(), ASize(), AAdd()
    $END$
  */
 
@@ -225,7 +225,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AAdd(),ACopy(),ADel(),AEval(),AFill(),ASize()
+      AAdd(), ACopy(), ADel(), AEval(), AFill(), ASize()
    $END$
  */
 
@@ -254,7 +254,7 @@
       given subscript position <nPos> will move up one position in the
       array. In other words, what was formerly the sixth subscript position
       will become the fifth subscript position. The length of the array
-      <aArray> will remain unchanged,as the last element in the array will
+      <aArray> will remain unchanged, as the last element in the array will
       become a NIL data type.
    $EXAMPLES$
       LOCAL aArray := { "Harbour", "is", "Power" }
@@ -266,7 +266,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ACopy(),AIns(),AFill()
+      ACopy(), AIns(), AFill()
    $END$
  */
 
@@ -316,7 +316,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AAdd(),AEval(),dbStruct(),Directory()
+      AAdd(), AEval(), dbStruct(), Directory()
    $END$
  */
 
@@ -422,7 +422,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Eval(),dbEval()
+      Eval(), dbEval()
    $END$
  */
 
@@ -461,7 +461,7 @@
       <nCount> is the number of elements to be copied from <aSource>;
       the default is the entire array.
 
-      <nTargetPos> is the subscript number in the target array,<aTarget>,
+      <nTargetPos> is the subscript number in the target array, <aTarget>,
        to which array elements are to be copied; the default is 1
 
       This function will copy all data types in <aSource> to <aTarget>.
@@ -489,7 +489,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AClone(),ADel(),AEval(),AFill(),AIns(),ASort()
+      AClone(), ADel(), AEval(), AFill(), AIns(), ASort()
    $END$
  */
 
@@ -519,11 +519,11 @@
    $EXAMPLES$
       LOCAL aOne, aTwo
       aOne := { "Harbour", " is ", "POWER" }
-      aTwo := AClone( aOne )       // Result: aTwo is {"Harbour"," is ","POWER"}
+      aTwo := AClone( aOne )       // Result: aTwo is { "Harbour", " is ", "POWER" }
       aOne[ 1 ] := "The Harbour Compiler"
       // Result:
       // aOne is { "The Harbour Compiler", " is ", "POWER" }
-      // aTwo is { "Harbour"," is ","POWER" }
+      // aTwo is { "Harbour", " is ", "POWER" }
    $STATUS$
       R
    $COMPLIANCE$
@@ -531,7 +531,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ACopy(),ADel(),AIns(),ASize()
+      ACopy(), ADel(), AIns(), ASize()
    $END$
  */
 
@@ -597,6 +597,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AScan(),Eval(),SORT
+      AScan(), Eval(), SORT
    $END$
  */

@@ -193,7 +193,7 @@
       Header files are dbedit.ch, inkey.ch
       Library is core
    $SEEALSO$
-      @...SAY,Browse(),TBrowse class,Transform()
+      @...SAY, Browse(), TBrowse class, Transform()
    $END$
  */
 
@@ -270,7 +270,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      dbEdit()*,TBrowse class
+      dbEdit()*, TBrowse class
    $END$
  */
 
@@ -314,7 +314,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Browse(),TBColumn class,TBrowse class,TBrowseNew()
+      Browse(), TBColumn class, TBrowse class, TBrowseNew()
    $END$
  */
 
@@ -358,6 +358,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      dbSkip(),SKIP
+      dbSkip(), SKIP
    $END$
  */

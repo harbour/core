@@ -44,7 +44,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsNegative(),NationMsg()
+      IsNegative(), NationMsg()
    $END$
  */
 
@@ -81,7 +81,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsAffirm(),NationMsg()
+      IsAffirm(), NationMsg()
    $END$
  */
 
@@ -119,6 +119,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      IsAffirm(),IsNegative()
+      IsAffirm(), IsNegative()
    $END$
  */

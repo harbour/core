@@ -62,7 +62,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ADir(),Directory(),SET DEFAULT,DIR
+      ADir(), Directory(), SET DEFAULT, DIR
    $END$
  */
 
@@ -115,7 +115,7 @@
    $PLATFORMS$
       All(LFN)
    $SEEALSO$
-      ADir(),Directory(),SET DEFAULT,__Dir()*
+      ADir(), Directory(), SET DEFAULT, __Dir()*
    $END$
  */
 
@@ -197,6 +197,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Array(),Directory(),SET DEFAULT
+      Array(), Directory(), SET DEFAULT
    $END$
  */

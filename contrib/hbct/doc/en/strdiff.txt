@@ -31,9 +31,9 @@
       work on most systems. If this simple check fails, -1 is returned.
 
       Also, be aware that there can be an overflow when the penalty points are summed up: Assuming that the
-      number of transformation operations is in the order of Max(Len(cString1),Len(cString2)), the penalty point
+      number of transformation operations is in the order of Max(Len(cString1), Len(cString2)), the penalty point
       sum, that is internally stored in an "int" variable, is in the order of
-      (Max(Len(cString1),Len(cString2))*Max(nReplacementPenalty,nDeletionPenalty,nInsertionPentaly).
+      (Max(Len(cString1), Len(cString2))*Max(nReplacementPenalty, nDeletionPenalty, nInsertionPentaly).
       The StrDiff() does not do an overflow check due to time performance reasons. Future versions of StrDiff()
       could use a type different to "int" to store the penalty point sum to save memory or to avoid overflows.
 

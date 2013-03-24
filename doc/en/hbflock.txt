@@ -54,7 +54,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      hb_FUnlock(),FOpen(),FCreate(),FError(),FClose()
+      hb_FUnlock(), FOpen(), FCreate(), FError(), FClose()
    $END$
  */
 
@@ -103,6 +103,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      hb_FLock(),FOpen(),FCreate(),FError(),FClose()
+      hb_FLock(), FOpen(), FCreate(), FError(), FClose()
    $END$
  */

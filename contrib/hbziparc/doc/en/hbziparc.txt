@@ -180,7 +180,7 @@
    $ONELINER$
       Create a zip file
    $SYNTAX$
-      hb_ZipFileByTDSpan( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
+      hb_ZipFileByTDSpan( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
       <bBlock>, <lOverWrite>, <cPassword>, <iSize>, <lWithPath>, <lWithDrive>,
       <pFileProgress>) --> lCompress
    $ARGUMENTS$
@@ -418,7 +418,7 @@
       will evaluate bBlock. Parameters of bBlock are cFile and nPos.
 
       If <lOverWrite> is used, it toggles to overwrite or not the existing
-      file. Default is to overwrite the file,otherwise if <lOverWrite> is false
+      file. Default is to overwrite the file, otherwise if <lOverWrite> is false
       the new files are added to the <cFile>.
 
       If <cPassword> is used, all files that are added to the archive are encrypted
