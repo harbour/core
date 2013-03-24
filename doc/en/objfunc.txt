@@ -355,7 +355,7 @@
             CASE 1 ; RETURN ":)"
             CASE 2 ; RETURN ";)"
             CASE 3 ; RETURN "*SMILE*"
-            ENDCASE
+            ENDSWITCH
          ENDIF
          RETURN NIL
    $STATUS$
