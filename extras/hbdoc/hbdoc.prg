@@ -463,8 +463,8 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    o:type_ := cType
    o:sourcefile_ := cSourceFile
    o:sourcefileversion_ := cVersion
-   o:Template := "?TEMPLATE?"
    o:Name := "?NAME?"
+   o:SetTemplate( "Function" )
 
    DO WHILE FReadSection( aHandle, @cSectionName, @cSection, @o )
 
@@ -504,7 +504,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
                IF ( idxCategory := AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
                   AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
                ENDIF
 
             CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
@@ -512,12 +512,12 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                IF idxCategory <= 0 .OR. o:Category == ""
 
                   AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
 
                ELSEIF ( idxSubCategory := AScan( p_aCategories[ idxCategory ][ 2 ], {| c | c != NIL .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
 
                   AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
 
                ENDIF
 
@@ -528,7 +528,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                      Lower( cSection ) == "none." )
 
                AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
-               lAccepted := .F.
+               // lAccepted := .F.
 
             CASE ! o:IsConstraint( cSectionName, cSection )
 
@@ -555,15 +555,13 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    ENDDO
 
    IF lAccepted
-      lAccepted := o:IsComplete( @cSource )
-      IF ! lAccepted
+      IF ! o:IsComplete( @cSource )
          AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
-         lAccepted := .F.
+         // lAccepted := .F.
       ENDIF
    ENDIF
 
    IF ! lAccepted
-
    ELSEIF o:Template == "Function" .AND. ( ;
                      Empty( o:Returns ) .OR. ;
                      Lower( o:Returns ) == "nil" .OR. ;
@@ -602,15 +600,14 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
       IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) // .AND. idxSubCategory == -1
          idxSubCategory := o:SubcategoryIndex( o:Category, "" )
-         IF idxSubCategory == -1
-            idxSubCategory := 1
-         ENDIF
       ENDIF
 
-      IF ! HB_ISARRAY( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] )
-         p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] := {}
+      IF idxCategory > 0 .AND. idxSubCategory > 0
+         IF ! HB_ISARRAY( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] )
+            p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] := {}
+         ENDIF
+         AAdd( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ], o )
       ENDIF
-      AAdd( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ], o )
 
    ENDIF
 
@@ -893,9 +890,9 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
          ENDIF
       OTHERWISE
          DO CASE
-         CASE nMode == 1         ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
-         CASE nMode == 2         ; OutStd( iif( n > 1, ", ", "" ) + xLine )
-         OTHERWISE               ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
+         CASE nMode == 1 ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
+         CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
+         OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
          ENDCASE
       ENDCASE
    ENDIF

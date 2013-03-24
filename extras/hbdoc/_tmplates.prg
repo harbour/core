@@ -228,10 +228,11 @@ METHOD FieldName( cField ) CLASS Entry
    RETURN self:Fields[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
 
 METHOD CategoryIndex( cCategory ) CLASS Entry
-   RETURN AScan( p_aCategories, {| a | a[ 1 ] == cCategory } )
+   RETURN AScan( p_aCategories, {| a | HB_ISARRAY( a ) .AND. Len( a ) >= 1 .AND. a[ 1 ] == cCategory } )
 
 METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
-   RETURN hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
+   RETURN ::CategoryIndex( cCategory ) >= 1 .AND. ;
+      hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
 
 PROCEDURE init_Templates()
 
