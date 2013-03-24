@@ -820,10 +820,9 @@ FUNCTION Decode( cType, hsBlock, cKey )
       IF ( idx := AScan( p_aCompliance, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aCompliance[ idx ][ 2 ]
       ELSE
-         RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
+         RETURN cCode
       ENDIF
       DO CASE
-      CASE Empty( cCode ) ;      RETURN cCode
       CASE cCode == "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
       CASE cCode == "C(array)" ; RETURN "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements"
       CASE cCode == "C(menu)" ;  RETURN "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements"
@@ -832,7 +831,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
       CASE cCode == "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
       CASE cCode == "H" ;        RETURN "This is Harbour specific"
       CASE cCode == "NA" ;       RETURN "Not applicable"
-      OTHERWISE ;                RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
+      OTHERWISE ;                RETURN cCode
       ENDCASE
 
    CASE cType == "NAME"
