@@ -1,5 +1,7 @@
 
 /* $DOC$
+   $TEMPLATE$
+      Document
    $NAME$
       ADS Overview
    $CATEGORY$
