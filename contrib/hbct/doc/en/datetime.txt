@@ -25,7 +25,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      EoM(),BoQ(),EoQ(),BoY(),EoY()
+      EoM(), BoQ(), EoQ(), BoY(), EoY()
    $END$
  */
 
@@ -55,7 +55,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      BoM(),BoQ(),EoQ(),BoY(),EoY()
+      BoM(), BoQ(), EoQ(), BoY(), EoY()
    $END$
  */
 
@@ -85,7 +85,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      BoM(),EoM(),EoQ(),BoY(),EoY()
+      BoM(), EoM(), EoQ(), BoY(), EoY()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      BoM(),EoM(),BoQ(),BoY(),EoY()
+      BoM(), EoM(), BoQ(), BoY(), EoY()
    $END$
  */
 
@@ -145,7 +145,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      BoM(),EoM(),BoQ(),EoQ(),EoY()
+      BoM(), EoM(), BoQ(), EoQ(), EoY()
    $END$
  */
 
@@ -175,6 +175,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      BoM(),EoM(),BoQ(),EoQ(),BoY()
+      BoM(), EoM(), BoQ(), EoQ(), BoY()
    $END$
  */

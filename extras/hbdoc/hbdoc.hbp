@@ -9,6 +9,11 @@
 -gtcgi
 
 hbdoc.prg
+_genbase.prg
+_genhtml.prg
+_gentxt.prg
+_genxml.prg
+_tmplates.prg
 
 # NOTE: hbdoc doesn't work from other locations than
 #       the current one, so we don't install it yet.

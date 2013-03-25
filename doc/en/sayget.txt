@@ -11,9 +11,9 @@
    $ONELINER$
       Creates a GET object and displays it to the screen
    $SYNTAX$
-      @ <nRow>,<nCol> [SAY <cSay> [PICTURE <cSayPict>] COLOR <cSayColor> ]
+      @ <nRow>, <nCol> [SAY <cSay> [PICTURE <cSayPict>] COLOR <cSayColor> ]
       GET <xVar> [PICTURE <cGetPict>] [WHEN <lWhen>] [COLOR <cGetColor>]
-      [VALID <lValid> / RANGE <xStart>,<xEnd>]
+      [VALID <lValid> / RANGE <xStart>, <xEnd>]
    $ARGUMENTS$
       <nRow>      The row coordinate.
 
@@ -45,7 +45,7 @@
       at row, column coordinate <nRow>, <nCol>.
 
       If the SAY clause is used <cSay> will be displayed starting at
-      <nRow>,<nCol>, with the field variable <xVar> displayed at Row(),
+      <nRow>, <nCol>, with the field variable <xVar> displayed at Row(),
       Col()+ 1. If <cSayPicr>, the picture template for the SAY expression
       <cSay>, is used, all formatting rules contained will apply See the
       TRANSFORM I function for further information.
@@ -54,11 +54,11 @@
       used for the GET object and all formatting rules will apply. See
       the table below for GET formatting rules.
 
-      If the WHEN clause is specified,when <lWhen> evaluates to a logical
+      If the WHEN clause is specified, when <lWhen> evaluates to a logical
       true (.T.) condition, the GET object will he activated otherwise the
       GET object will be skipped and no information will be obtained via
       the screen. The name of a user-defined function returning a logical
-      true (.T.) or false ( F.) or a code block may be ,specified in <lWhen>
+      true (.T.) or false ( F.) or a code block may be, specified in <lWhen>
       This clause not activated until a READ command or ReadModal()
       function call is issued.
 
@@ -74,7 +74,7 @@
 
       If the RANGE clause is specified instead of the VALID clause, the
       two inclusive range values for <xVar> must be specified in <xStart>
-      and <xEnd>. Id <xVar> is a date data type,<xStart> and <xEnd> must
+      and <xEnd>. Id <xVar> is a date data type, <xStart> and <xEnd> must
       also be date data types; if <xVar> is a numeric data type <xStart>
       and <xEnd> must also be numeric data types. If a value fails the
       RANGE test ,a message of OUT OF RANGE will appear in the SCOREBOARD
@@ -143,7 +143,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      @...SAY,READ,Transform()
+      @...SAY, READ, Transform()
    $END$
  */
 
@@ -159,7 +159,7 @@
    $ONELINER$
       Displays data at specified coordinates of the current device.
    $SYNTAX$
-      @ <nRow>,<nCol> SAY <xValue> [ PICTURE <cPict> ] [COLOR <cColor>]
+      @ <nRow>, <nCol> SAY <xValue> [ PICTURE <cPict> ] [COLOR <cColor>]
    $ARGUMENTS$
       <nRow>     Row coordinate
 
@@ -195,6 +195,6 @@
    $FILES$
 
    $SEEALSO$
-      @...GET,SET DEVICE,Transform()
+      @...GET, SET DEVICE, Transform()
    $END$
  */

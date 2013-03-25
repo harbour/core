@@ -7,13 +7,13 @@ rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem REQUIREMENTS FOR BUILD MACHINE:
-rem   - Online 24/7 (reliable)
+rem   - online 24/7 (reliable)
 rem   - Windows XP or higher (server preferred)
-rem   - 8GB disk space
+rem   - 8GB free disk space
 rem   - downstream internet traffic 100MB per day
 rem   - upstream internet traffic 100MB per day
 rem   - 1-5hours CPU time per day
-rem   - Multicore CPU recommended
+rem   - multicore CPU recommended
 rem   - admin rights for MSVC setup
 rem   - admin rights for Scheduled Task setup
 rem   - remote admin (via RDC or VNC protocol, RDC preferred)

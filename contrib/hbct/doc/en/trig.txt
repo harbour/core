@@ -30,7 +30,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR()
    $END$
  */
 
@@ -65,7 +65,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -100,7 +100,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -136,7 +136,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -171,7 +171,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -207,7 +207,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -243,7 +243,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -277,7 +277,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -318,7 +318,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Sinh(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -354,7 +354,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Cosh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -390,7 +390,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Tanh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -422,7 +422,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), RToD(), DToR(), Pi()
    $END$
  */
 
@@ -455,7 +455,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), DToR(), Pi()
    $END$
  */
 
@@ -487,6 +487,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
+      Sin(), Cos(), Tan(), Cot(), Asin(), Acos(), Atan(), Atn2(), Sinh(), Cosh(), Tanh(), RToD(), Pi()
    $END$
  */

@@ -25,7 +25,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      RemLeft(),RemRight()
+      RemLeft(), RemRight()
    $END$
  */
 
@@ -55,7 +55,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      RemAll(),RemRight()
+      RemAll(), RemRight()
    $END$
  */
 
@@ -85,6 +85,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      RemAll(),RemLeft()
+      RemAll(), RemLeft()
    $END$
  */

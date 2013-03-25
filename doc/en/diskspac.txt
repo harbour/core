@@ -39,13 +39,13 @@
    $EXAMPLES$
       ? "You can use : " + hb_ntos( DiskSpace() ) + " bytes "
 
-      Note: See tests/diskspac.prg for another example
+      // NOTE: See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$
       C
    $PLATFORMS$
-      DOS,Win,OS2
+      DOS, Win, OS2
    $FILES$
       Library is core
       Header is fileio.ch
@@ -101,13 +101,13 @@
       ? "You can use : " + hb_ntos( hb_DiskSpace() ) + " bytes " +;
         "Out of a total of " + hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
 
-      Note: See tests/diskspac.prg for another example
+      // NOTE: See tests/diskspac.prg for another example
    $STATUS$
       R
    $COMPLIANCE$
       H
    $PLATFORMS$
-      DOS,Win,OS2,Unix
+      DOS, Win, OS2, Unix
    $FILES$
       Library is core
       Header is fileio.ch

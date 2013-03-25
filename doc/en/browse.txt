@@ -152,11 +152,11 @@
       ---------------------------   </par>
 
       <table>
-       dbedit.ch    Value   Meaning
+       dbedit.ch    Meaning
 
-       DE_ABORT     0       Abort dbEdit().
-       DE_CONT      1       Continue dbEdit() as is.
-       DE_REFRESH   2       Force reread/redisplay of all data rows.
+       DE_ABORT     Abort dbEdit().
+       DE_CONT      Continue dbEdit() as is.
+       DE_REFRESH   Force reread/redisplay of all data rows.
       </table>
 
       The user function is called once in each of the following cases:
@@ -193,7 +193,7 @@
       Header files are dbedit.ch, inkey.ch
       Library is core
    $SEEALSO$
-      @...SAY,Browse(),TBrowse class,Transform()
+      @...SAY, Browse(), TBrowse class, Transform()
    $END$
  */
 
@@ -270,7 +270,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      dbEdit()*,TBrowse class
+      dbEdit()*, TBrowse class
    $END$
  */
 
@@ -314,7 +314,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Browse(),TBColumn class,TBrowse class,TBrowseNew()
+      Browse(), TBColumn class, TBrowse class, TBrowseNew()
    $END$
  */
 
@@ -358,6 +358,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      dbSkip(),SKIP
+      dbSkip(), SKIP
    $END$
  */

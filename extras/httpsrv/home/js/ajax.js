@@ -254,4 +254,3 @@ function ShowProgress()
     a.style.display="none";
   } // if
 } // ShowProgress
-

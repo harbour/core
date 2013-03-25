@@ -128,7 +128,7 @@
       This function add a new record to the end of the database
       in the selected or aliased work area. All fields in that
       database will be given empty data values - character fields
-      will be filled with blank spaces,date fields with CToD('//'),
+      will be filled with blank spaces, date fields with CToD('//'),
       numeric fields with 0, logical fields with .F., and memo fields
       with NULL bytes. The header of the database is not updated until
       the record is flushed from the buffer and the contents are
@@ -160,7 +160,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUnlock(),dbUnlockAll()
+      dbUnlock(), dbUnlockAll()
    $END$
  */
 
@@ -197,7 +197,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbSetFilter(),dbFilter()
+      dbSetFilter(), dbFilter()
    $END$
  */
 
@@ -236,7 +236,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUseArea(),dbCloseArea()
+      dbUseArea(), dbCloseArea()
    $END$
  */
 
@@ -270,7 +270,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUseArea(),dbCloseAll()
+      dbUseArea(), dbCloseAll()
    $END$
  */
 
@@ -288,7 +288,7 @@
    $SYNTAX$
       dbCommit()
    $DESCRIPTION$
-      This function updates all of the information for a give,selected,
+      This function updates all of the information for a give, selected,
       or active workarea. This operation includes all database and index
       buffers for that work area only. This function does not update all
       open work areas.
@@ -316,7 +316,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbCloseAll(),dbCommitAll(),dbUnlock()
+      dbCloseAll(), dbCommitAll(), dbUnlock()
    $END$
  */
 
@@ -335,7 +335,7 @@
       dbCommit()
    $DESCRIPTION$
       This function performs a hard-disk write for all work areas.
-      Before the disk write is performed,all buffers are flushed.
+      Before the disk write is performed, all buffers are flushed.
       open work areas.
    $EXAMPLES$
       PROCEDURE Main()
@@ -366,7 +366,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbCloseAll(),dbCommit(),dbUnlock()
+      dbCloseAll(), dbCommit(), dbUnlock()
    $END$
  */
 
@@ -421,7 +421,7 @@
 
       The dbCreate( ) function does not use the decimal field to
       calculate the length of a character held longer than 256. Values
-      up to the maximum length of a character field (which is 65,519 bytes)
+      up to the maximum length of a character field (which is 65519 bytes)
       are stored directly in the database in the length attribute if that
       database was created via this function. However, a file containing
       fields longer than 256 bytes is not compatible with any interpreter.
@@ -459,9 +459,9 @@
       This function is not CA-Cl*pper compliant
    $FILES$
       Library is rdd
-      Header  is dbstruct.ch
+      Header is dbstruct.ch
    $SEEALSO$
-      AFields()*,dbStruct()
+      AFields()*, dbStruct()
    $END$
  */
 
@@ -541,7 +541,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbRelation(),dbRSelect()
+      dbRelation(), dbRSelect()
    $END$
  */
 
@@ -578,7 +578,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Bof(),Eof(),dbSkip(),dbSeek(),dbGoTop()
+      Bof(), Eof(), dbSkip(), dbSeek(), dbGoTop()
    $END$
  */
 
@@ -605,7 +605,7 @@
 
       The parameter <xRecordNumber> may be something other than a record
       number. In some data formats, for example, the value of <xRecordNumber>
-      is a unique primary key while in other formats,<xRecordNumber> could
+      is a unique primary key while in other formats, <xRecordNumber> could
       be an array offset if the data set was an array.
 
       Issuing a dbGoto(RecNo()) call in a network enviroment will refresh
@@ -628,7 +628,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Bof(),Eof(),dbGoTop(),dbGoBottom(),dbSeek(),dbSkip()
+      Bof(), Eof(), dbGoTop(), dbGoBottom(), dbSeek(), dbSkip()
    $END$
  */
 
@@ -665,7 +665,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Bof(),Eof(),dbSkip(),dbSeek(),dbGoBottom()
+      Bof(), Eof(), dbSkip(), dbSeek(), dbGoBottom()
    $END$
  */
 
@@ -750,7 +750,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUnlock(),dbUnlockAll(),FLock(),RLock()
+      dbUnlock(), dbUnlockAll(), FLock(), RLock()
    $END$
  */
 
@@ -796,7 +796,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      RLock(),dbRLock(),dbRUnlock()
+      RLock(), dbRLock(), dbRUnlock()
    $END$
  */
 
@@ -837,7 +837,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      RLock(),dbRLock(),dbRLockList()
+      RLock(), dbRLock(), dbRLockList()
    $END$
  */
 
@@ -880,7 +880,7 @@
       false if there is an item in the index key with a greater value than
       the key expression <expKey>; at this point the record pointer will
       position itself on that record. However, if there is no greater key
-      in the index,Eof() will return a logical true (.T.) value. If
+      in the index, Eof() will return a logical true (.T.) value. If
       <lSoftSeek> is not passed, the function will look to the internal
       status of SOFTSEEK before performing the operation. The default of
       <lSoftSeek> is a logical false (.F.)
@@ -911,7 +911,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbGoBottom(),dbGoTop(),dbSkip(),Eof(),Bof(),Found()
+      dbGoBottom(), dbGoTop(), dbSkip(), Eof(), Bof(), Found()
    $END$
  */
 
@@ -933,7 +933,7 @@
    $DESCRIPTION$
       This function moves the Harbour internal primary focus to the work
       area designated by <xArea>. If <xArea> is numeric, then it will
-      select the numeric work area; if <xArea> is character,then it will
+      select the numeric work area; if <xArea> is character, then it will
       select the work area with the alias name.
 
       dbSelectArea(0) will select the next avaliable and unused work area.
@@ -960,7 +960,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUseArea(),Select()
+      dbUseArea(), Select()
    $END$
  */
 
@@ -986,7 +986,7 @@
       selected work area. The default will be "DBFNTX". If specified,
       <cDriver> contains the name of the database driver that should be
       used to activate and manage the work area. If the specified driver is
-      not avaliable,this function will have no effect.
+      not avaliable, this function will have no effect.
    $EXAMPLES$
       dbSetDriver( "ADS" )
    $STATUS$
@@ -1038,7 +1038,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      Bof(),dbGoBottom(),dbGoTop(),dbSeek(),Eof()
+      Bof(), dbGoBottom(), dbGoTop(), dbSeek(), Eof()
    $END$
  */
 
@@ -1063,9 +1063,9 @@
       This function masks a database so that only those records that meet
       the condition prescribed by the expression in the code block
       <bCondition> and literally expressed as <cCondition> are visible.
-      If <cCondition> is not passed to this function,then the dbFilter()
+      If <cCondition> is not passed to this function, then the dbFilter()
       function will return an empty string showing no filter in that work
-      area which in fact,would be not correct.
+      area which in fact, would be not correct.
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
@@ -1078,7 +1078,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbFilter(),dbClearFilter()
+      dbFilter(), dbClearFilter()
    $END$
  */
 
@@ -1099,7 +1099,7 @@
       dbStruct() returns an array pointer to database structure
    $DESCRIPTION$
       This function returns a multidimensional array. This array has array
-      pointers to other arrays,each of which contains the characteristic
+      pointers to other arrays, each of which contains the characteristic
       of a field in the active work area. The lenght of this array is based
       in the number of fields in that particular work area. In other words,
       Len(dbStruct()) is equal to the value obtained from FCount().
@@ -1121,7 +1121,7 @@
       C
    $FILES$
       Library is rdd
-      Header  is dbstruct.ch
+      Header is dbstruct.ch
    $SEEALSO$
       AFields()*
    $END$
@@ -1162,7 +1162,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUnlockAll(),FLock(),RLock()
+      dbUnlockAll(), FLock(), RLock()
    $END$
  */
 
@@ -1202,7 +1202,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbUnlock(),FLock(),RLock()
+      dbUnlock(), FLock(), RLock()
    $END$
  */
 
@@ -1264,6 +1264,6 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbCloseArea(),dbSetDriver(),Select(),Set()
+      dbCloseArea(), dbSetDriver(), Select(), Set()
    $END$
  */

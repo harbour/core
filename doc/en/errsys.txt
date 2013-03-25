@@ -37,6 +37,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ErrorBlock(),Error class
+      ErrorBlock(), Error class
    $END$
  */

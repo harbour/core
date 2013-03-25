@@ -50,7 +50,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      IndexExt(),ordBagName()
+      IndexExt(), ordBagName()
    $END$
  */
 
@@ -98,7 +98,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      IndexOrd(),ordBagExt(),Alias()
+      IndexOrd(), ordBagExt(), Alias()
    $END$
  */
 
@@ -220,7 +220,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      dbCreateIndex(),ordName(),ordSetFocus()
+      dbCreateIndex(), ordName(), ordSetFocus()
    $END$
  */
 
@@ -284,7 +284,7 @@
    $SYNTAX$
       ordFor( <xOrder>[, <cOrderBagName>] ) --> cForExp
    $ARGUMENTS$
-      <xOrder>  It the name of the target order,or the numeric position
+      <xOrder>  It the name of the target order, or the numeric position
       of the order.
 
       <cOrderBagName> Name of the order bag.
@@ -294,7 +294,7 @@
    $DESCRIPTION$
       This function returns a character string that is the expression for
       the FOR condition for the specified order. The order may be specified
-      if <xOrder> is the name of the order.However,<xOrder> may be an
+      if <xOrder> is the name of the order.However, <xOrder> may be an
       numeric which represent the position in the order list of the desired
       Order.
    $EXAMPLES$
@@ -315,7 +315,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ordKey(),ordCreate(),ordName(),ordNumber()
+      ordKey(), ordCreate(), ordName(), ordNumber()
    $END$
  */
 
@@ -333,7 +333,7 @@
    $SYNTAX$
       ordKey( <cOrderName> | <nOrder> [, <cOrderBagName>] ) --> cExpKey
    $ARGUMENTS$
-      <xOrder>  It the name of the target order,or the numeric position
+      <xOrder>  It the name of the target order, or the numeric position
       of the order.
 
       <cOrderBagName> Name of the order bag.
@@ -362,7 +362,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ordFor(),ordName(),ordNumber(),ordKey()
+      ordFor(), ordName(), ordNumber(), ordKey()
    $END$
  */
 
@@ -401,7 +401,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      IndexKey(),IndexOrd()
+      IndexKey(), IndexOrd()
    $END$
  */
 
@@ -468,7 +468,7 @@
       The IndexOrd() function returns the numeric position of the current
       controlling index in the selected or designated work area.
       A returned value of 0 indicated that no active index is controlling
-      the database,which therefore is in the natural order.
+      the database, which therefore is in the natural order.
    $EXAMPLES$
       USE tests NEW INDEX test1
       IF IndexOrd() > 0

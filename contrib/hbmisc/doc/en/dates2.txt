@@ -156,7 +156,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      BoM(),WoM()
+      BoM(), WoM()
    $END$
  */
 
@@ -188,7 +188,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      EoM(),WoM()
+      EoM(), WoM()
    $END$
  */
 

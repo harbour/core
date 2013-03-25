@@ -152,7 +152,6 @@ METHOD IsField( c, nType ) CLASS Entry
          lResult := .F.
       ELSEIF nType != NIL .AND. hb_bitAnd( self:Group[ idx ], nType ) != nType
          lResult := .F.
-      ELSE
       ENDIF
    ENDIF
 
@@ -229,10 +228,11 @@ METHOD FieldName( cField ) CLASS Entry
    RETURN self:Fields[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
 
 METHOD CategoryIndex( cCategory ) CLASS Entry
-   RETURN AScan( p_aCategories, {| a | a[ 1 ] == cCategory } )
+   RETURN AScan( p_aCategories, {| a | HB_ISARRAY( a ) .AND. Len( a ) >= 1 .AND. a[ 1 ] == cCategory } )
 
 METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
-   RETURN hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
+   RETURN ::CategoryIndex( cCategory ) >= 1 .AND. ;
+      hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
 
 PROCEDURE init_Templates()
 
@@ -351,7 +351,6 @@ PROCEDURE init_Templates()
 
    RETURN
 
-
 PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
 
    LOCAL o := Entry():New()
@@ -372,9 +371,11 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
          ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
          !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
 
-         // ~ IF nFrom != nTo
-         // ~    ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
-         // ~ ENDIF
+#if 0
+         IF nFrom != nTo
+            ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
+         ENDIF
+#endif
 
          o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
 

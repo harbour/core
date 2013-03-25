@@ -92,7 +92,7 @@
       See hb_gcAll() for explanation of how to call this function from your
       harbour code.
    $SEEALSO$
-      hb_gcAlloc(),hb_gcFree(),hb_gcCollectAll(),hb_gcItemRef(),hb_gcAll(),hb_idleState()
+      hb_gcAlloc(), hb_gcFree(), hb_gcCollectAll(), hb_gcItemRef(), hb_gcAll(), hb_idleState()
    $END$
  */
 
@@ -204,7 +204,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_gcAlloc(),hb_gcFree()
+      hb_gcAlloc(), hb_gcFree()
    $END$
  */
 
@@ -246,7 +246,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      hb_gcAlloc(),hb_gcFree()
+      hb_gcAlloc(), hb_gcFree()
    $END$
  */
 

@@ -23,7 +23,7 @@
    $FILES$
       Header is fileio.ch
    $SEEALSO$
-      MD(),RD()
+      MD(), RD()
    $END$
  */
 
@@ -51,7 +51,7 @@
    $FILES$
       Header is fileio.ch
    $SEEALSO$
-      CD(),MD()
+      CD(), MD()
    $END$
  */
 
@@ -79,6 +79,6 @@
    $FILES$
       Header is fileio.ch
    $SEEALSO$
-      CD(),MD()
+      CD(), MD()
    $END$
  */

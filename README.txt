@@ -9,30 +9,30 @@ WELCOME TO HARBOUR
    UI and database backends, its own make system and a large
    collection of libraries and interfaces to many popular APIs.
 
-                                       http://harbour-project.org/
+   <http://harbour-project.org/>
 
 TABLE OF CONTENT
 ================
 
-0.  GUARANTEES AND LIABILITY
-1.  HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
-2.  HOW TO DO A PARTIAL [RE]BUILD
-3.  HOW TO CREATE DISTRIBUTABLE PACKAGES
-4.  HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
-5.  SUPPORTED PLATFORMS AND C COMPILERS
-6.  OPTIONS AVAILABLE WHEN BUILDING HARBOUR
-7.  DEBUGGING OPTIONS
-8.  EXAMPLES
-9.  HOW TO GET HARBOUR
-10. TROUBLESHOOTING
-11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
-12. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
-13. LINKS TO EXTERNAL COMPONENTS
-14. HOW TO PARTICIPATE
-15. FOR MORE INFORMATION
+1.  GUARANTEES AND LIABILITY
+2.  HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
+3.  HOW TO DO A PARTIAL [RE]BUILD
+4.  HOW TO CREATE DISTRIBUTABLE PACKAGES
+5.  HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
+6.  SUPPORTED PLATFORMS AND C COMPILERS
+7.  OPTIONS AVAILABLE WHEN BUILDING HARBOUR
+8.  DEBUGGING OPTIONS
+9.  EXAMPLES
+10. HOW TO GET HARBOUR
+11. TROUBLESHOOTING
+12. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+13. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
+14. LINKS TO EXTERNAL COMPONENTS
+15. HOW TO PARTICIPATE
+16. FOR MORE INFORMATION
 
 
-0. GUARANTEES AND LIABILITY
+1. GUARANTEES AND LIABILITY
 ===========================
 
    This document and all other parts of Harbour are distributed in the
@@ -49,7 +49,7 @@ TABLE OF CONTENT
    of the project.
 
 
-1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
+2. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 ===============================================
 
    ==========================================================================
@@ -245,7 +245,7 @@ TABLE OF CONTENT
          your $PATH.
 
 
-2. HOW TO DO A PARTIAL [RE]BUILD
+3. HOW TO DO A PARTIAL [RE]BUILD
 ================================
 
    If you want to [re]build only a specific part of Harbour, like
@@ -264,7 +264,7 @@ TABLE OF CONTENT
       ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [custom hbmk2 options]
 
 
-3. HOW TO CREATE DISTRIBUTABLE PACKAGES
+4. HOW TO CREATE DISTRIBUTABLE PACKAGES
 =======================================
 
    Source .tgz on *nixes
@@ -345,7 +345,7 @@ TABLE OF CONTENT
             steps before calling the script.
 
 
-4. HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
+5. HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
 =================================================
 
    Certain Harbour parts (typically contrib packages) depend on 3rd
@@ -487,6 +487,7 @@ TABLE OF CONTENT
       for zlib support:          $ sudo apt-get install zlib1g-dev
       for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
       for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev
+      for contrib/hbexpat lib:   $ sudo apt-get install libexpat1-dev
 
    Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
    --------------------------------------------------------------
@@ -546,7 +547,7 @@ TABLE OF CONTENT
       $ make clean
 
 
-5. SUPPORTED PLATFORMS AND C COMPILERS
+6. SUPPORTED PLATFORMS AND C COMPILERS
 ======================================
 
    You can override target platform autodetection with these HB_PLATFORM values:
@@ -676,7 +677,7 @@ TABLE OF CONTENT
    watcom   - Open Watcom C/C++
 
 
-6. OPTIONS AVAILABLE WHEN BUILDING HARBOUR
+7. OPTIONS AVAILABLE WHEN BUILDING HARBOUR
 ==========================================
 
    You can fine-tune Harbour builds with below listed
@@ -821,7 +822,7 @@ TABLE OF CONTENT
    executables are required for a cross-build process to succeed.
 
 
-7. DEBUGGING OPTIONS
+8. DEBUGGING OPTIONS
 ====================
 
    Tracing
@@ -856,7 +857,7 @@ TABLE OF CONTENT
          HB_USER_LIBS=cg32
 
 
-8. EXAMPLES
+9. EXAMPLES
 ===========
 
    for Windows (x86, 32-bit) hosts
@@ -1229,7 +1230,7 @@ TABLE OF CONTENT
       ---
 
    for Darwin (OS X) hosts
-   ---------------------------
+   -----------------------
 
       --- To create "Universal" binaries, compatible with pre-Snow Leopard PowerPC and Intel systems
       export HB_USER_LDFLAGS="-arch i386 -arch ppc"
@@ -1253,8 +1254,8 @@ TABLE OF CONTENT
       gmake OR make HB_PLATFORM=wce
       ---
 
-9. HOW TO GET HARBOUR
-=====================
+10. HOW TO GET HARBOUR
+======================
 
    Stable versions
    ---------------
@@ -1314,7 +1315,7 @@ TABLE OF CONTENT
           https://travis-ci.org/harbour/core
 
 
-10. TROUBLESHOOTING
+11. TROUBLESHOOTING
 ===================
 
    Always evaluate these points before reporting an issue on the developers'
@@ -1408,7 +1409,7 @@ TABLE OF CONTENT
        functions against CT3 library, etc.)
 
 
-11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+12. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
 ======================================================
 
    For all platforms you'll need two things:
@@ -1435,7 +1436,7 @@ TABLE OF CONTENT
       https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md
 
 
-12. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
+13. BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
 =============================================================================
 
  &nbsp;| host<br />plat | target<br />plat/comp | target<br />cpu
@@ -1552,7 +1553,7 @@ TABLE OF CONTENT
      *nix / POSIX shell
 
 
-13. LINKS TO EXTERNAL COMPONENTS
+14. LINKS TO EXTERNAL COMPONENTS
 ================================
 
    C/C++ Compilers/Shells:
@@ -1754,18 +1755,20 @@ TABLE OF CONTENT
          http://git.or.cz/course/svn.html
 
 
-14. HOW TO PARTICIPATE
+15. HOW TO PARTICIPATE
 ======================
 
    There are several ways to help making Harbour better:
 
    - You can give feedback/suggestions to developers on available
      channels.
-   - You can submit patches or source code on above channels.
-     Patches are accepted in 'git diff' (or 'diff -u') format,
-     created from root directory of the repository sandbox.
-     Zip your patch file before attaching it. Use the extension '.zip'.
-     Always use the same coding/formatting style as you find in
+   - Submit a change:
+     1. Fork Harbour
+     2. Create a branch (git checkout -b my_mod)
+     3. Commit your changes (git commit -am "Added my feature")
+     4. Push to the branch (git push origin my_mod)
+     5. Open a Pull Request
+   - Always use the same coding/formatting style as you find in
      the files you're patching. The easiest way to achieve this
      is to use these commands to format your sources:
         $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
@@ -1787,7 +1790,7 @@ TABLE OF CONTENT
      various environments, etc.
 
 
-15. FOR MORE INFORMATION
+16. FOR MORE INFORMATION
 ========================
 
    Homepage:
@@ -1824,7 +1827,7 @@ TABLE OF CONTENT
          https://en.wikipedia.org/wiki/Harbour_compiler
 
 
-[ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)
+[ Copyright (c) 2009-2013 Viktor Szakáts (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING.txt. ]

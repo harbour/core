@@ -173,7 +173,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          DO CASE
-         CASE cArgName == "-source" ;           p_hsSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
+         CASE cArgName == "-source" ; p_hsSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
          CASE cArgName == "-format"
             IF arg == "" .OR. hb_AScan( p_hsSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )
@@ -463,8 +463,8 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    o:type_ := cType
    o:sourcefile_ := cSourceFile
    o:sourcefileversion_ := cVersion
-   o:Template := "?TEMPLATE?"
    o:Name := "?NAME?"
+   o:SetTemplate( "Function" )
 
    DO WHILE FReadSection( aHandle, @cSectionName, @cSection, @o )
 
@@ -504,7 +504,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
                IF ( idxCategory := AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
                   AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
                ENDIF
 
             CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
@@ -512,12 +512,12 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                IF idxCategory <= 0 .OR. o:Category == ""
 
                   AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
 
                ELSEIF ( idxSubCategory := AScan( p_aCategories[ idxCategory ][ 2 ], {| c | c != NIL .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
 
                   AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
-                  lAccepted := .F.
+                  // lAccepted := .F.
 
                ENDIF
 
@@ -528,7 +528,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                      Lower( cSection ) == "none." )
 
                AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
-               lAccepted := .F.
+               // lAccepted := .F.
 
             CASE ! o:IsConstraint( cSectionName, cSection )
 
@@ -555,15 +555,13 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    ENDDO
 
    IF lAccepted
-      lAccepted := o:IsComplete( @cSource )
-      IF ! lAccepted
+      IF ! o:IsComplete( @cSource )
          AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
-         lAccepted := .F.
+         // lAccepted := .F.
       ENDIF
    ENDIF
 
    IF ! lAccepted
-
    ELSEIF o:Template == "Function" .AND. ( ;
                      Empty( o:Returns ) .OR. ;
                      Lower( o:Returns ) == "nil" .OR. ;
@@ -602,15 +600,14 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
       IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) // .AND. idxSubCategory == -1
          idxSubCategory := o:SubcategoryIndex( o:Category, "" )
-         IF idxSubCategory == -1
-            idxSubCategory := 1
-         ENDIF
       ENDIF
 
-      IF ! HB_ISARRAY( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] )
-         p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] := {}
+      IF idxCategory > 0 .AND. idxSubCategory > 0
+         IF ! HB_ISARRAY( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] )
+            p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ] := {}
+         ENDIF
+         AAdd( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ], o )
       ENDIF
-      AAdd( p_aCategories[ idxCategory ][ 3 ][ idxSubCategory ], o )
 
    ENDIF
 
@@ -823,10 +820,9 @@ FUNCTION Decode( cType, hsBlock, cKey )
       IF ( idx := AScan( p_aCompliance, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aCompliance[ idx ][ 2 ]
       ELSE
-         RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
+         RETURN cCode
       ENDIF
       DO CASE
-      CASE Empty( cCode ) ;      RETURN cCode
       CASE cCode == "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
       CASE cCode == "C(array)" ; RETURN "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements"
       CASE cCode == "C(menu)" ;  RETURN "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements"
@@ -835,7 +831,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
       CASE cCode == "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
       CASE cCode == "H" ;        RETURN "This is Harbour specific"
       CASE cCode == "NA" ;       RETURN "Not applicable"
-      OTHERWISE ;                RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"
+      OTHERWISE ;                RETURN cCode
       ENDCASE
 
    CASE cType == "NAME"
@@ -893,9 +889,9 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
          ENDIF
       OTHERWISE
          DO CASE
-         CASE nMode == 1         ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
-         CASE nMode == 2         ; OutStd( iif( n > 1, ", ", "" ) + xLine )
-         OTHERWISE               ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
+         CASE nMode == 1 ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
+         CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
+         OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
          ENDCASE
       ENDCASE
    ENDIF
@@ -1150,8 +1146,10 @@ FUNCTION Filename( cFile, cFormat, nLength )
 
    RETURN cResult
 
+#if defined( __HBSCRIPT__HBSHELL )
 SET PROCEDURE TO "_tmplates.prg"
 SET PROCEDURE TO "_genbase.prg"
 SET PROCEDURE TO "_gentxt.prg"
 SET PROCEDURE TO "_genhtml.prg"
 SET PROCEDURE TO "_genxml.prg"
+#endif

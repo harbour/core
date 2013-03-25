@@ -3,8 +3,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: Abs(),Exp(),Log(),Int(),Max()
- *    Min(),Sqrt(),Round()
+ *    Documentation for: Abs(), Exp(), Log(), Int(), Max()
+ *    Min(), Sqrt(), Round()
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *           Author: Martin Vogel <vogel@inttec.de>
  *    Documentation for API
@@ -128,7 +128,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Round(),StrZero()
+      Round(), StrZero()
    $END$
  */
 
@@ -340,7 +340,7 @@
    $ONELINER$
       Rounds off a numeric expression.
    $SYNTAX$
-      Round( <nNumber>,<nPlace> ) --> <nResult>
+      Round( <nNumber>, <nPlace> ) --> <nResult>
    $ARGUMENTS$
       <nNumber> Any numeric value.
 
@@ -365,7 +365,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Int(),Str(),Val(),SET FIXED
+      Int(), Str(), Val(), SET FIXED
    $END$
  */
 

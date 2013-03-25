@@ -3,7 +3,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lanin <dezac@corevia.com>
- *    Documentation for: ProcLine(),ProcFile(),ProcName()
+ *    Documentation for: ProcLine(), ProcFile(), ProcName()
  *
  * Copyright 1999 Eddie Ruina
  *   Documentation for: __dbgVMVarLGet()
@@ -55,7 +55,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ProcLine(),ProcFile()
+      ProcLine(), ProcFile()
    $END$
  */
 
@@ -93,7 +93,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ProcName(),ProcFile()
+      ProcName(), ProcFile()
    $END$
  */
 
@@ -130,7 +130,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ProcName(),ProcLine()
+      ProcName(), ProcLine()
    $END$
  */
 
@@ -306,7 +306,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __XHelp(),SET KEY,SetKey()
+      __XHelp(), SET KEY, SetKey()
    $END$
  */
 

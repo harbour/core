@@ -292,7 +292,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Chr(),SET BELL
+      Chr(), SET BELL
    $END$
  */
 

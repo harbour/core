@@ -7,7 +7,7 @@
    $ONELINER$
 
    $SYNTAX$
-      ScreenAttr( [<nRow>],[<nColumn>] ) -> <nAttr>
+      ScreenAttr( [<nRow>], [<nColumn>] ) -> <nAttr>
    $ARGUMENTS$
       <nRow>     Designates the line from which to determine the attribute.
                  The default is the cursor line.

@@ -16285,6 +16285,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          e"enclose in double quotes. Standard output of the command will be used " + ;
          e"as the value. F.e. \"-cflag=`wx-config --cflags`\", or " + ;
          e"ldflags={unix&gcc}\"`wx-config --libs`\"." ), ;
+      I_( "When multiple target type selection options (-hblib, -hbdyn, etc.) are specified, " + ;
+         "the first one will be significant, the rest will be silently ignored." ), ;
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with " + ;
          "any supported platform/compiler." ), ;
       I_( "Defaults and feature support may vary by platform/compiler." ), ;

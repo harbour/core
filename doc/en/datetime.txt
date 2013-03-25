@@ -3,8 +3,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: CDoW(),CMonth(),Date(),CToD(),Day(),Days()
- *    DoW(),DToS(),DToC(),ElapTime(),Month(),Seconds(),Secs(),Time(),Year()
+ *    Documentation for: CDoW(), CMonth(), Date(), CToD(), Day(), Days()
+ *    DoW(), DToS(), DToC(), ElapTime(), Month(), Seconds(), Secs(), Time(), Year()
  * See COPYING.txt for licensing terms.
  *
  */
@@ -45,7 +45,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Day(),DoW(),Date(),CMonth()
+      Day(), DoW(), Date(), CMonth()
    $END$
  */
 
@@ -67,7 +67,7 @@
    $RETURNS$
       <cMonth>  The current month name
    $DESCRIPTION$
-      This function returns the name of the month (January,February,etc.)
+      This function returns the name of the month (January, February, etc.)
       from a date expression <dDate> passed to it.
       If a NULL date is passed to the function, the value of the function
       will be a NULL byte.
@@ -85,7 +85,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CDoW(),Date(),Month(),Year(),DoW(),DToC()
+      CDoW(), Date(), Month(), Year(), DoW(), DToC()
    $END$
  */
 
@@ -120,7 +120,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CToD(),DToS(),DToC(),Day(),Month(),CMonth()
+      CToD(), DToS(), DToC(), Day(), Month(), CMonth()
    $END$
  */
 
@@ -138,7 +138,7 @@
    $SYNTAX$
       CToD( <cDateString> ) --> dDate
    $ARGUMENTS$
-      <cDateString> A character date in format 'mm/dd/yy'
+      <cDateString> A character date in format "mm/dd/yy"
    $RETURNS$
       <dDate> A date expression
    $DESCRIPTION$
@@ -160,7 +160,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SET DATE,Date(),DToS()
+      SET DATE, Date(), DToS()
    $END$
  */
 
@@ -196,7 +196,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CToD(),DToS(),DToC(),Date(),Month(),CMonth()
+      CToD(), DToS(), DToC(), Date(), Month(), CMonth()
    $END$
  */
 
@@ -232,7 +232,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Seconds(),Secs(),ElapTime()
+      Seconds(), Secs(), ElapTime()
    $END$
  */
 
@@ -268,7 +268,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      DToC(),CDoW(),Date(),DToS(),Day()
+      DToC(), CDoW(), Date(), DToS(), Day()
    $END$
  */
 
@@ -306,7 +306,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SET DATE,Date(),DToS()
+      SET DATE, Date(), DToS()
    $END$
  */
 
@@ -342,7 +342,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      DToC(),Date(),DToS()
+      DToC(), Date(), DToS()
    $END$
  */
 
@@ -386,7 +386,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Secs(),Seconds(),Time(),Day()
+      Secs(), Seconds(), Time(), Day()
    $END$
  */
 
@@ -410,7 +410,7 @@
        0 to 12
    $DESCRIPTION$
       This function returns a number that represents the month of a given
-      date expression <dDate>. If a NULL date (CToD('')) is passed to the
+      date expression <dDate>. If a NULL date (CToD( "" )) is passed to the
       function, the value of the function will be 0.
    $EXAMPLES$
       ? Month( Date() )
@@ -423,7 +423,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CDoW(),DoW(),Year(),CMonth()
+      CDoW(), DoW(), Year(), CMonth()
    $END$
  */
 
@@ -497,7 +497,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Seconds(),ElapTime(),Time()
+      Seconds(), ElapTime(), Time()
    $END$
  */
 
@@ -532,7 +532,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Date(),Seconds()
+      Date(), Seconds()
    $END$
  */
 
@@ -571,6 +571,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Day(),Month()
+      Day(), Month()
    $END$
  */

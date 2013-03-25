@@ -43,19 +43,19 @@
       the default value is 0. The file open modes are as follows:
 
       <table>
-       nMode   fileio.ch      Meaning
+       nMode          Meaning
 
-       0       FO_READ        Read only
-       1       FO_WRITE       Write only
-       2       FO_READWRITE   Read/write
-       16      FO_EXCLUSIVE   Exclusive read only
-       32      FO_DENYWRITE   Prevent others from writing
-       48      FO_DENYREAD    Deny read only
-       64      FO_DENYNONE    Not deny, Let to others Read / Write
-       64      FO_SHARED      same as FO_DENYNONE
+       FO_READ        Read only
+       FO_WRITE       Write only
+       FO_READWRITE   Read/write
+       FO_EXCLUSIVE   Exclusive read only
+       FO_DENYWRITE   Prevent others from writing
+       FO_DENYREAD    Deny read only
+       FO_DENYNONE    Not deny, Let to others Read / Write
+       FO_SHARED      same as FO_DENYNONE
       </table>
 
-      If there is an error in opening a file, a -1 will be returned by
+      If there is an error in opening a file, a F_ERROR will be returned by
       the function. Files handles may be in the range of 0 to 65535. The
       status of the SET DEFAULT TO and SET PATH TO commands has no effect
       on this function. Directory names and paths must be specified along
@@ -74,9 +74,9 @@
       C
    $FILES$
       Library is core
-      Header  is fileio.ch
+      Header is fileio.ch
    $SEEALSO$
-      FCreate(),FError(),FClose()
+      FCreate(), FError(), FClose()
    $END$
  */
 
@@ -104,9 +104,9 @@
       default value of <nAttribute> is 0 and is used to set the
       attribute byte for the file being created by this function.
       The return value will be a file handle that is associated
-      with the new file. This number will be between zero to 65,535,
+      with the new file. This number will be between zero to 65535,
       inclusive. If an error occurs, the return value of this function
-      will be -1.
+      will be F_ERROR.
 
       If the file <cFile> already exists, the existing file will be
       truncated to a file length of 0 bytes.
@@ -116,12 +116,12 @@
       this function.
 
       <table>
-       <nAttribute>   fileio.ch     Meaning
+       <nAttribute>  Meaning
 
-       0              FC_NORMAL     Normal/Default,Read/Write
-       1              FC_READONLY   Read-only file attribute is set
-       2              FC_HIDDEN     Hidden,Excluded from normal DIR search
-       4              FC_SYSTEM     Create,Excluded from normal DIR search
+       FC_NORMAL     Normal/Default, Read/Write
+       FC_READONLY   Read-only file attribute is set
+       FC_HIDDEN     Hidden, Excluded from normal DIR search
+       FC_SYSTEM     Create, Excluded from normal DIR search
       </table>
    $EXAMPLES$
       #include "fileio.ch"
@@ -136,7 +136,7 @@
       Library is core
       Header is fileio.ch
    $SEEALSO$
-      FClose(),FOpen(),FWrite(),FRead(),FError()
+      FClose(), FOpen(), FWrite(), FRead(), FError()
    $END$
  */
 
@@ -201,7 +201,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Bin2I(),Bin2L(),Bin2W(),FError(),FWrite()
+      Bin2I(), Bin2L(), Bin2W(), FError(), FWrite()
    $END$
  */
 
@@ -302,7 +302,7 @@
        33             Lock Violation
       </table>
    $DESCRIPTION$
-      After every low-level file function,this function will return
+      After every low-level file function, this function will return
       a value that provides additional information on the status of
       the last low-level file functions's performance. If the FError()
       function returns a 0, no error was detected. Below is a table
@@ -320,7 +320,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      FClose(),FErase(),FOpen(),FWrite()
+      FClose(), FErase(), FOpen(), FWrite()
    $END$
  */
 
@@ -358,7 +358,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      FOpen(),FCreate(),FRead(),FWrite(),FError()
+      FOpen(), FCreate(), FRead(), FWrite(), FError()
    $END$
  */
 
@@ -408,7 +408,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      FError(),FRename()
+      FError(), FRename()
    $END$
  */
 
@@ -449,7 +449,7 @@
 
       If the file specified in <cNewFile> exists or the file is open,
       the function will be unable to rename the file. If the function
-      is unable to complete its operation,it will return a value of -1.
+      is unable to complete its operation, it will return a value of -1.
       If it is able to rename the file, the return value for the function
       will be 0. A call to FError() function will give additional infor-
       mation about any error found.
@@ -466,7 +466,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      ERASE,FErase(),FError(),File(),RENAME
+      ERASE, FErase(), FError(), File(), RENAME
    $END$
  */
 
@@ -509,11 +509,11 @@
       file pointer should he moved, as shown in the following table:
 
       <table>
-       <nOrigin>   fileio.ch     File position
+       <nOrigin>     File position
 
-       0           FS_SET        Beginning of file
-       1           FS_RELATIVE   Current file pointer position
-       2           FS_END        End of file
+       FS_SET        Beginning of file
+       FS_RELATIVE   Current file pointer position
+       FS_END        End of file
       </table>
 
       If a value is not provided for <nOrigin>, it defaults to 0 and
@@ -525,16 +525,16 @@
       // cB = a string buffer passed-by-reference to hold the result
       // nMaxLine = maximum number of bytes to read
 
-      FUNCTION FREADln( nH, cB, nMaxLine )
+      FUNCTION FReadLn( nH, cB, nMaxLine )
          LOCAL cLine, nSavePos, nEol, nNumRead
          cLine := Space( nMaxLine )
          cB := ""
          nSavePos := FSeek( nH, 0, FS_RELATIVE )
          nNumRead := FRead( nH, @cLine, nMaxLine )
-         IF ( nEol := At( hb_eol(), SubStr( cLine, 1, nNumRead ) ) ) == 0
+         IF ( nEol := hb_BAt( hb_eol(), hb_BSubStr( cLine, 1, nNumRead ) ) ) == 0
             cB := cLine
          ELSE
-            cB := SubStr( cLine, 1, nEol - 1 )
+            cB := hb_BSubStr( cLine, 1, nEol - 1 )
             FSeek( nH, nSavePos + nEol + 1, FS_SET )
          ENDIF
          RETURN nNumRead != 0
@@ -546,7 +546,7 @@
       Library is core
       Header is fileio.ch
    $SEEALSO$
-      FCreate(),FError(),FOpen(),FRead(),FReadStr(),FWrite()
+      FCreate(), FError(), FOpen(), FRead(), FReadStr(), FWrite()
    $END$
  */
 
@@ -589,7 +589,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SET DEFAULT,SET PATH,Set()
+      SET DEFAULT, SET PATH, Set()
    $END$
  */
 
@@ -646,7 +646,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Bin2I(),Bin2L(),Bin2W(),FError(),FRead(),FSeek()
+      Bin2I(), Bin2L(), Bin2W(), FError(), FRead(), FSeek()
    $END$
  */
 
@@ -685,7 +685,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      CurDir(),ERASE,File(),FErase(),FRename()
+      CurDir(), ERASE, File(), FErase(), FRename()
    $END$
  */
 
@@ -705,7 +705,7 @@
    $ARGUMENTS$
       <xcFile> Name of file to remove
    $DESCRIPTION$
-      This command removes a file from the disk. The use of a drive,directo-
+      This command removes a file from the disk. The use of a drive, directo-
       ry, and wild-card skeleton operator is allowed for the root of the
       filename. The file extension is required. The SET DEFAULT and SET PATH
       commands do not affect this command.
@@ -739,8 +739,8 @@
    $ARGUMENTS$
       <xcFile> Name of file to remove
    $DESCRIPTION$
-      This command removes a file from the disk. The use of a drive,directo-
-      ry,and wild-card skeleton operator is allowed for the root of the
+      This command removes a file from the disk. The use of a drive, directo-
+      ry, and wild-card skeleton operator is allowed for the root of the
       filename. The file extension is required. The SET DEFAULT and SET PATH
       commands do not affect this command.
 
@@ -814,7 +814,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
+      COPY FILE, SET DEFAULT, SET PATH, SET PRINTER, TYPE
    $END$
  */
 
@@ -881,7 +881,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TypeFile()
+      COPY FILE, SET DEFAULT, SET PATH, SET PRINTER, __TypeFile()
    $END$
  */
 
@@ -959,7 +959,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      ERASE,RENAME,FRename(),FErase()
+      ERASE, RENAME, FRename(), FErase()
    $END$
  */
 
@@ -985,7 +985,7 @@
 
       If the file handle is missing, not numeric, or not open, then this
       function returns .T. and sets the value returned by FError() to -1
-      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
+      (F_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
    $EXAMPLES$
       nH := FOpen( "test.txt" )
       ? FReadStr( nH, 80 )

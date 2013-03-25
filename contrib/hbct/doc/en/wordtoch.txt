@@ -26,6 +26,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CSetAtMupa(),CharRepl(),WordRepl()
+      CSetAtMupa(), CharRepl(), WordRepl()
    $END$
  */

@@ -60,6 +60,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
+      @...GET, @...PROMPT, MENU TO, READ, SET KEY, __AtPrompt(), __MenuTo()
    $END$
  */

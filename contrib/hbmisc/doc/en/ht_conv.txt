@@ -7,17 +7,17 @@
    $ONELINER$
       Check if the value is a Binary  Number
    $SYNTAX$
-      IsBin(<cN>) -><cNr>
+      IsBin( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
-      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.
+      <cNr> .T. IF THE STRING IS BYNARY, otherwise .F.
    $DESCRIPTION$
       check if the passed string is a bynary number or not
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsDec(),IsHexa()
+      IsOctal(), IsDec(), IsHexa()
    $END$
  */
 
@@ -29,7 +29,7 @@
    $ONELINER$
       Check if the value is a Octal  Number
    $SYNTAX$
-      IsOctal(<cN>) -><cNr>
+      IsOctal( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -39,7 +39,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsBin(),IsDec(),IsHexa()
+      IsBin(), IsDec(), IsHexa()
    $END$
  */
 
@@ -51,7 +51,7 @@
    $ONELINER$
       Check if the value is a Decimal  Number
    $SYNTAX$
-      IsDec(<cN>) -><cNr>
+      IsDec( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -61,7 +61,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsBin(),IsHexa()
+      IsOctal(), IsBin(), IsHexa()
    $END$
  */
 
@@ -73,7 +73,7 @@
    $ONELINER$
       Check if the value is a Hexal  Number
    $SYNTAX$
-      IsHexa(<cN>) -><cNr>
+      IsHexa( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -83,7 +83,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      IsOctal(),IsDec(),IsBin()
+      IsOctal(), IsDec(), IsBin()
    $END$
  */
 
@@ -95,7 +95,7 @@
    $ONELINER$
       Converts a Decimal Value to Binary
    $SYNTAX$
-      DecToBin(<cN>) -><cNr>
+      DecToBin( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -106,7 +106,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToHexa(),DecToOctal()
+      DecToHexa(), DecToOctal()
    $END$
  */
 
@@ -118,7 +118,7 @@
    $ONELINER$
       Converts a Decimal Value to Octal
    $SYNTAX$
-      DecToOctal(<cN>) -><cNr>
+      DecToOctal( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -129,7 +129,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToHexa(),DecToBin()
+      DecToHexa(), DecToBin()
    $END$
  */
 
@@ -141,7 +141,7 @@
    $ONELINER$
       Converts a Decimal Value to Hexa
    $SYNTAX$
-      DecToHexa(<cN>) -><cNr>
+      DecToHexa( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -152,7 +152,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      DecToBin(),DecToOctal()
+      DecToBin(), DecToOctal()
    $END$
  */
 
@@ -164,7 +164,7 @@
    $ONELINER$
       Converts a Binary Value to Decimal
    $SYNTAX$
-      BinToDec(<cN>) -><cNr>
+      BinToDec( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -175,7 +175,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      OctalToDec(),HexaToDec()
+      OctalToDec(), HexaToDec()
    $END$
  */
 
@@ -187,7 +187,7 @@
    $ONELINER$
       Converts a Octal Value to Decimal
    $SYNTAX$
-      OctalToDec(<cN>) -><cNr>
+      OctalToDec( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -198,7 +198,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      BinToDec(),HexaToDec()
+      BinToDec(), HexaToDec()
    $END$
  */
 
@@ -210,7 +210,7 @@
    $ONELINER$
       Converts a Hexa Value to Decimal
    $SYNTAX$
-      HexaToDec(<cN>) -><cNr>
+      HexaToDec( <cN> ) --> <cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -221,6 +221,6 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      OctalToDec(),BinToDec()
+      OctalToDec(), BinToDec()
    $END$
  */

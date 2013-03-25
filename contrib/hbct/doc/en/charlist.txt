@@ -30,7 +30,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharNoList(),CharSList(),CharHist()
+      CharNoList(), CharSList(), CharHist()
    $END$
  */
 
@@ -65,6 +65,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharList(),CharSList(),CharHist()
+      CharList(), CharSList(), CharHist()
    $END$
  */

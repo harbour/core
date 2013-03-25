@@ -155,5 +155,7 @@ PROCEDURE Main()
 
    RETURN
 
+#if defined( __HBSCRIPT__HBSHELL )
 SET PROCEDURE TO "_cgi.prg"
 SET PROCEDURE TO "_inifile.prg"
+#endif

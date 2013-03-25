@@ -97,7 +97,7 @@ REQUEST __HB_EXTERN__
 // adding GD support
 REQUEST GDChart
 REQUEST GDImage
-REQUEST GDImageChar
+REQUEST gdImageChar
    #define APP_GD_SUPPORT "_GD"
    #stdout "Lib GD support enabled"
 #else
@@ -2871,6 +2871,8 @@ STATIC FUNCTION HB_HASHI()
 
    RETURN h
 
+#if defined( __HBSCRIPT__HBSHELL )
 SET PROCEDURE TO "_cgifunc.prg"
 SET PROCEDURE TO "_cookie.prg"
 SET PROCEDURE TO "_session.prg"
+#endif

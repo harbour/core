@@ -49,7 +49,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -88,7 +88,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasData()
+      __objGetMethodList(), __objGetMsgList(), __objHasData()
    $END$
  */
 
@@ -129,11 +129,11 @@
       that allow you to distinguish between VAR and CLASS VAR:
 
       table>
-      hboo.ch           Value   Meaning
+      hboo.ch           Meaning
 
-      HB_MSGLISTALL     0       All types
-      HB_MSGLISTCLASS   1       CLASS VAR only
-      HB_MSGLISTPURE    2       VAR only
+      HB_MSGLISTALL     All types
+      HB_MSGLISTCLASS   CLASS VAR only
+      HB_MSGLISTPURE    VAR only
       /table>
 
       VAR are instance variable usable within each object from a class,
@@ -165,7 +165,7 @@
       Header file is hboo.ch
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMethodList(), __objGetValueList(), __objHasData(), __objHasMethod()
    $END$
  */
 
@@ -206,7 +206,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objGetMsgList(),__objGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMsgList(), __objGetValueList(), __objHasData(), __objHasMethod()
    $END$
  */
 
@@ -254,7 +254,7 @@
       Header file is hboo.ch
       Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__objSetValueList()
+      __objGetMethodList(), __objGetMsgList(), __objHasData(), __objHasMethod(), __objSetValueList()
    $END$
  */
 
@@ -350,16 +350,14 @@
       ? oHappy:Smile( 3 )       // *SMILE*
 
       STATIC FUNCTION MySmile( nType )
-         LOCAL cSmile
-         DO CASE
-         CASE nType == 1
-            cSmile := ":)"
-         CASE nType == 2
-            cSmile := ";)"
-         CASE nType == 3
-            cSmile := "*SMILE*"
-         ENDCASE
-         RETURN cSmile
+         IF HB_ISNUMERIC( nType )
+            SWITCH nType
+            CASE 1 ; RETURN ":)"
+            CASE 2 ; RETURN ";)"
+            CASE 3 ; RETURN "*SMILE*"
+            ENDSWITCH
+         ENDIF
+         RETURN NIL
    $STATUS$
       R
    $COMPLIANCE$
@@ -367,7 +365,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddData(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
+      __objAddInline(), __objAddData(), __objDelMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModMethod()
    $END$
  */
 
@@ -398,7 +396,7 @@
       with the name <cInlineName> already exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a Smile INLINE method
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       bInline := {| nType | { ":)", ";)", "*SMILE*" }[ nType ] }
       __objAddInline( oHappy, "Smile", bInline )
       ? oHappy:Smile( 1 )       // :)
@@ -411,7 +409,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddData(),__objAddMethod(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
+      __objAddData(), __objAddMethod(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod() , __objModInline()
    $END$
  */
 
@@ -440,7 +438,7 @@
       <cDataName> already exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a lHappy VAR
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       __objAddData( oHappy, "lHappy" )
       oHappy:lHappy := .T.
       IF oHappy:lHappy
@@ -455,7 +453,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+      __objAddInline(), __objAddMethod(), __objDelData(), __objGetMsgList(), __objGetValueList(), __objHasData(), __objSetValueList()
    $END$
  */
 
@@ -526,7 +524,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddMethod(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddMethod(), __objDelMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -559,7 +557,7 @@
       mechanism.
    $EXAMPLES$
       // create a new THappy class and add a Smile INLINE method
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       bMyInline   := {| nType | { ":)", ";)" }[ nType ] }
       bYourInline := {| nType | { "*SMILE*", "*WINK*" }[ nType ] }
       __objAddInline( oHappy, "Smile", bMyInline )
@@ -576,7 +574,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddInline(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod()
    $END$
  */
 
@@ -632,7 +630,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(), __objAddMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModInline(), __objModMethod()
    $END$
  */
 
@@ -686,7 +684,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(), __objAddMethod(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModInline(), __objModMethod()
    $END$
  */
 
@@ -716,7 +714,7 @@
       with the name <cDataName> does not exist in <oObject>.
    $EXAMPLES$
       // create a new THappy class and add a lHappy VAR
-      oHappy  := HBClass():New( "THappy" )
+      oHappy := HBClass():New( "THappy" )
       __objAddData( oHappy, "lHappy" )
       ? __objHasData( oHappy, "lHappy" )    // .T.
       // remove lHappy VAR
@@ -729,7 +727,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
+      __objAddData(), __objGetMsgList(), __objGetValueList(), __objHasData(), __objSetValueList()
    $END$
  */
 
@@ -792,6 +790,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objHasData(),__objHasMethod()
+      __objHasData(), __objHasMethod()
    $END$
  */

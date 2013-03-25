@@ -155,7 +155,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      SetDate(),TimeValid()
+      SetDate(), TimeValid()
    $END$
  */
 

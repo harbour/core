@@ -17,10 +17,10 @@
  *    Documentation for: __XHelp()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
- *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
- *    Documentation for: SET PATH,SET INTENSITY,SET ALTERNATE
- *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
- *    Documentation for: SET EPOCH,SET PRINTER,SET FIXED
+ *    Documentation for: SET WRAP, SET DEFAULT, SET MESSAGE
+ *    Documentation for: SET PATH, SET INTENSITY, SET ALTERNATE
+ *    Documentation for: SET CENTURY, SET DATE, SET CONSOLE
+ *    Documentation for: SET EPOCH, SET PRINTER, SET FIXED
  *    Documentation for: SET BELL
  * See COPYING.txt for licensing terms.
  *
@@ -121,7 +121,7 @@
               _SET_COLOR       <cColorSet>
 
                    Sets the current color scheme, using color pairs in the
-                   sequence "<standard>,<enhanced>,<border>,<background>,
+                   sequence "<standard>, <enhanced>, <border>, <background>,
                    <unselected>". Each color pair uses the format
                    "<foreground>/<background>". The color codes are space
                    or "N" for black, "B" for blue, "G" for green, "BG" for
@@ -490,7 +490,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Inkey(),SetKey(),__Keyboard(),SET KEY
+      Inkey(), SetKey(), __Keyboard(), SET KEY
    $END$
  */
 
@@ -547,7 +547,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      Inkey(),SetKey(),__Keyboard()
+      Inkey(), SetKey(), __Keyboard()
    $END$
  */
 
@@ -640,7 +640,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SetKey(),hb_SetKeySave(),hb_SetKeyCheck()
+      SetKey(), hb_SetKeySave(), hb_SetKeyCheck()
    $END$
  */
 
@@ -731,7 +731,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      SetKey(),hb_SetKeySave()
+      SetKey(), hb_SetKeySave()
    $END$
  */
 
@@ -816,7 +816,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __Accept(),__Input()
+      __Accept(), __Input()
    $END$
  */
 
@@ -868,7 +868,7 @@
       <cPath> Drive and/or path.
    $DESCRIPTION$
       This command changes the drive and directory used for reading and
-      writing database,index,memory, and alternate files. Specifying no
+      writing database, index, memory, and alternate files. Specifying no
       parameters with this command will default the operation to the
       current logged drive and directory.
    $EXAMPLES$
@@ -878,7 +878,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET PATH,CurDir(),Set()
+      SET PATH, CurDir(), Set()
    $END$
  */
 
@@ -901,7 +901,7 @@
       This command toggles the highlighted bars in a @...PROMPT command
       to wrap around in a bottom-to-top and top-to-bottom manner. If the
       value of the logical expression <lWrap> is a logical false (.F.),
-      the wrapping mode is set OFF; otherwise,it is set ON.
+      the wrapping mode is set OFF; otherwise, it is set ON.
    $EXAMPLES$
       See tests/menuto.prg
    $STATUS$
@@ -909,7 +909,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...PROMPT,MENU TO
+      @...PROMPT, MENU TO
    $END$
  */
 
@@ -952,7 +952,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      Set(),SET WRAP,@...PROMPT,MENU TO
+      Set(), SET WRAP, @...PROMPT, MENU TO
    $END$
  */
 
@@ -985,7 +985,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DEFAULT,CurDir(),Set()
+      SET DEFAULT, CurDir(), Set()
    $END$
  */
 
@@ -1015,7 +1015,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...GET,@...PROMPT,@...SAY,Set()
+      @...GET,@...PROMPT,@...SAY, Set()
    $END$
  */
 
@@ -1065,7 +1065,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CLOSE,SET PRINTER,SET CONSOLE,Set()
+      CLOSE, SET PRINTER, SET CONSOLE, Set()
    $END$
  */
 
@@ -1099,7 +1099,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
+      SET DATE, SET EPOCH, CToD(), Date(), DToC(), Set()
    $END$
  */
 
@@ -1149,7 +1149,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
+      SET DATE, SET EPOCH, CToD(), Date(), DToC(), Set()
    $END$
  */
 
@@ -1179,7 +1179,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET CENTURY,CToD(),Date(),DToC(),Set()
+      SET DATE, SET CENTURY, CToD(), Date(), DToC(), Set()
    $END$
  */
 
@@ -1227,7 +1227,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DECIMALS,Exp(),Log(),Sqrt(),Val(),Set()
+      SET DECIMALS, Exp(), Log(), Sqrt(), Val(), Set()
    $END$
  */
 
@@ -1253,7 +1253,7 @@
    $DESCRIPTION$
       This command can direct all output that is not controlled by the
       @...SAY command and the DevPos() and DevOut() functions to the
-      printer. If specified,the condition <lPrinter> toggles the printer
+      printer. If specified, the condition <lPrinter> toggles the printer
       ON if a logical true (.T.) and OFF if a logical false (.F.). If no
       argument is specified in the command, the alternate file (if one
       is open) is closed, or the device is reselected and the PRINTER
@@ -1308,7 +1308,7 @@
       screens display other then direct output via the @...SAY commands
       or the <-> DevOut() function.
 
-      If <lConsole> is a logical true (.T.),the console will be turned
+      If <lConsole> is a logical true (.T.), the console will be turned
       ON; otherwise, the console will be turned off.
    $EXAMPLES$
       SET CONSOLE ON
@@ -1320,7 +1320,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DEVICE,Set()
+      SET DEVICE, Set()
    $END$
  */
 
@@ -1355,7 +1355,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET FIXED,Set()
+      SET FIXED, Set()
    $END$
  */
 
@@ -1379,7 +1379,7 @@
       and the DevPos() and DevOut() function will be displayed on the
       printer.
 
-      When the device is set to the PRINTER,the SET MARGIN value adjusts
+      When the device is set to the PRINTER, the SET MARGIN value adjusts
       the position of the column values accordingly. Also, an automatic
       page eject will be issued when the current printhead position is
       less than the last printed row. Finally, if used in conjunction with
@@ -1397,7 +1397,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...SAY,SET PRINTER,SetPRC(),Set()
+      @...SAY, SET PRINTER, SetPRC(), Set()
    $END$
  */
 

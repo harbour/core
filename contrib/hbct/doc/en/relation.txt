@@ -58,6 +58,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharRelA(),CSetRef()
+      CharRelA(), CSetRef()
    $END$
  */

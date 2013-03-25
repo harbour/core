@@ -43,7 +43,7 @@
       include NEXT <expN> (number of records to be displayed, where <expN>
       is the number of records), RECORD <expN> (a specific record to be
       printed), REST (all records starting from the current record
-      position,and ALL (all records). The default is ALL.
+      position, and ALL (all records). The default is ALL.
 
       Both logical expression may work ill conjunction with one another
       where <bFor> is the logical expression for the FOR condition (for
@@ -53,7 +53,7 @@
 
       If the SAMPLE clause is specified, test labels will be generated.
 
-      If the NOCONSOLE clause is specified,the console will be turned off
+      If the NOCONSOLE clause is specified, the console will be turned off
       while this command is being executed.
 
       This command follows the search criteria outlined in the SET PATH TO
