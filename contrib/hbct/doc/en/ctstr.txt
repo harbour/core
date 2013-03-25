@@ -137,12 +137,10 @@
       is set (e.g. "?"), then "?" matches every other character.
 
       <nMode> can be one of the following values that are defined
-      in ct.ch
+      in ct.ch:
 
-      Definition            | Value
-      ----------------------|------
-      CT_SETATLIKE_EXACT    |   0
-      CT_SETATLIKE_WILDCARD |   1
+      CT_SETATLIKE_EXACT
+      CT_SETATLIKE_WILDCARD
 
    $EXAMPLES$
 
