@@ -1444,12 +1444,12 @@ Windows (unified):
 
 ### Follow commits using any of these facilities
 
-* Web:      <https://github.com/harbour/core/commits/master>
-* RSS:      <https://github.com/harbour/core/commits/master.atom>
-* Twitter:  <https://twitter.com/harbourdev>
-* E-mail:   <https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits>
-* Mac app:  <https://itunes.apple.com/us/app/committed/id560767719>
-* Mac tool: <https://github.com/marcocampana/git-notifier>
+* [Web](https://github.com/harbour/core/commits/master)
+* [RSS](https://github.com/harbour/core/commits/master.atom)
+* [Twitter](https://twitter.com/harbourdev)
+* [E-mail](https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits)
+* [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
+* [Mac tool](https://github.com/marcocampana/git-notifier)
 
 
 # TROUBLESHOOTING
