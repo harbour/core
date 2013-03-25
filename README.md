@@ -1581,8 +1581,7 @@ For all platforms you'll need two things:
 It's recommended to put hbmk2 into the PATH
 (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
 
-Then see hbmk2 documentation, with examples:
-   [hbmk2.md](utils/hbmk2/hbmk2.md)
+Then see hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md)
 
 
 # BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
@@ -1970,21 +1969,14 @@ There are several ways to help making Harbour better:
   * CA-Cl*pper 5.3 online documentation:
       <http://x-hacker.org/ng/53guide/>
 
-  * Miscellaneous documents:
-      <https://github.com/harbour/core/tree/master/doc>
-      [docs](doc/)
+  * Miscellaneous [documents](doc/)
 
   * Particularly:
      * Comparing Harbour to xHarbour:
-         <https://github.com/harbour/core/raw/master/doc/xhb-diff.txt>
-         [xhb-diff.txt](doc/xhb-diff.txt)
-     * ChangeLog:
-         <https://github.com/harbour/core/raw/master/ChangeLog.txt>
-         [ChangeLog.txt](ChangeLog.txt)
-     * hbmk2 documentation:
-         [hbmk2.md](utils/hbmk2/hbmk2.md)
-     * hbrun documentation:
-         [hbrun.md](contrib/hbrun/hbrun.md)
+         [xhb-diff.txt](doc/xhb-diff.txt?raw=true)
+     * [ChangeLog](ChangeLog.txt?raw=true)
+     * hbmk2 [documentation](utils/hbmk2/hbmk2.md)
+     * hbrun [documentation](contrib/hbrun/hbrun.md)
      * Wikipedia:
          <https://en.wikipedia.org/wiki/Harbour_compiler>
 
