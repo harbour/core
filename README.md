@@ -1351,8 +1351,6 @@ export WATCOM="/opt/lng/watcom"
 export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
 export PATH="${WATCOM}/binl:$PATH"
 export HB_BUILD_3RDEXT=no
-#
-export HB_INSTALL_PREFIX="$(pwd)/hb-os2/watcom"
 make "$@"
 ```
 
@@ -1698,8 +1696,8 @@ Supported shells per host platforms:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
         * <http://sourceforge.net/projects/mingwbuilds/> (unofficial, recommended)
-        * <http://tdm-gcc.tdragon.net/, http://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
-        * <http://www.mingw.org/, http://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
+        * <http://tdm-gcc.tdragon.net/>, <http://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
+        * <http://www.mingw.org/>, <http://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
         * <http://mingw-w64.sourceforge.net/>, <http://sourceforge.net/projects/mingw-w64/> (official 64-bit, MSYS home)
         * <http://nuwen.net/mingw.html> (unofficial)
      * MinGW CEGCC [win, *nix, free, open-source]
