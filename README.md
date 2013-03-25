@@ -26,7 +26,7 @@ collection of libraries and interfaces to many popular APIs.
 13. [BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX](#build-host-platformshell---target-platformcompiler-compatibility-matrix)
 14. [LINKS TO EXTERNAL COMPONENTS](#links-to-external-components)
 15. [HOW TO PARTICIPATE](#how-to-participate)
-16. [FOR MORE INFORMATION](#for-more-information)
+16. [MORE INFORMATION](#more-information)
 
 ---
 
@@ -1949,23 +1949,13 @@ There are several ways to help making Harbour better:
   various environments, etc.
 
 
-# FOR MORE INFORMATION
+# MORE INFORMATION
 
-  * Homepage:
-      <http://harbour-project.org/>
-
-  * Harbour Users' Mailing List (English language):
-      <https://groups.google.com/group/harbour-users/>
-
-  * Harbour Development Mailing List (English language):
-      <https://groups.google.com/group/harbour-devel/>
-
-  * Source:
-      <https://github.com/harbour/core>
-
-  * Issues:
-      <https://github.com/harbour/core/issues>
-
+  * [Homepage](http://harbour-project.org/)
+  * Harbour [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
+  * Harbour [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
+  * [Source](https://github.com/harbour/core)
+  * [Issues](https://github.com/harbour/core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
      * [hbrun documentation](contrib/hbrun/hbrun.md)
