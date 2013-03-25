@@ -1578,8 +1578,7 @@ Then see hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md)
 
 # BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
 
- &nbsp;| host     | target            | target
-       | platform | platform/compiler | cpu
+ &nbsp;| host<br />platform | target< br/>platform/compiler | target cpu
  :---- | :------- | :---------------- | :---------------------------------------
        | win      | win/bcc           | x86
        | win      | win/bcc64         | x86-64
