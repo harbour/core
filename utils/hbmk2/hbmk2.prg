@@ -2280,6 +2280,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" )
 
          DO CASE
+         CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.8" + hb_osFileMask() ) .OR. ;
+              File( hb_FNameDir( cPath_CompC ) + "x86_64-w64-mingw32-gcc-4.8" + hb_osFileMask() )
+            hbmk[ _HBMK_nCOMPVer ] := 48
          CASE File( hb_FNameDir( cPath_CompC ) + "mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "i686-w64-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
               File( hb_FNameDir( cPath_CompC ) + "x86_64-pc-mingw32-gcc-4.7" + hb_osFileMask() ) .OR. ;
@@ -5517,7 +5522,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl, -Xdynamic" )
          ENDIF
          IF hbmk[ _HBMK_lSHARED ]
-            /* TOFIX: .so is referred by its full link time search path,
+            /* TOFIX: .so is referred by its full link-time search path,
                       there is even a backslash present in the dir formed by
                       the linker */
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl, -Xdynamic" )
@@ -10629,7 +10634,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                        hb_FNameExt( cItemL ) == ".hh" .OR. ;
                        hb_FNameExt( cItemL ) == ".mm" .OR. ;
                        Empty( hb_FNameExt( cItemL ) )
-                     /* ignore C/C++/Objective C headers */
+                     /* ignore C/C++/Objective-C headers */
                   OTHERWISE
                      AAddNew( hbmk[ _HBMK_aCH ], tmp )
                   ENDCASE
@@ -15686,7 +15691,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-L<libpath>"        , I_( "additional path to search for libraries" ) }, ;
       { "-i<p>|-incpath=<p>" , I_( "additional path to search for headers" ) }, ;
       { "-static|-shared"    , I_( "link with static/shared libs" ) }, ;
-      { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) }, ;
+      { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time" ) }, ;
       { "-inc[-]"            , I_( "enable/disable incremental build mode (default: disabled)" ) }, ;
       { "-hbexe"             , I_( "create executable (default)" ) }, ;
       { "-hblib"             , I_( "create static library" ) }, ;
@@ -15873,7 +15878,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-debugi18n"         , "display internals on translation file generation" }, ;
       { "-debugdepd"         , "display internals of dependency detection" }, ;
       { "-debugpars"         , "display all input parameters in processing order" }, ;
-      { "-debugrte"          , "generate a runtime error" } }
+      { "-debugrte"          , "generate a run-time error" } }
 
    LOCAL aHdr_Opt_Self := { ;
       NIL, ;
@@ -16321,13 +16326,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       e"%1$s is an integrated and portable build tool, making it possible to " + ;
       e"create various types of executable binaries (executable, dynamic library, " + ;
       e"static library, Harbour portable binary) out of multiple types of source " + ;
-      e"files (C, C++, Objective C, Harbour, gettext translations, Windows " + ;
+      e"files (C, C++, Objective-C, Harbour, gettext translations, Windows " + ;
       e"resources). 'Integrated' means that a single %1$s project file can " + ;
       e"control all or most aspects of the build process. 'Portable' means that " + ;
       e"a single %1$s project file can control the build on all supported OS " + ;
       e"platforms and across all supported C compilers. It also aims to cover " + ;
       e"the majority of build tasks via short and simple project files (options). " + ;
-      e"%1$s supports pure -non-Harbour- C/C++/Objective C projects as well. " + ;
+      e"%1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. " + ;
       e"In order to achieve above goals, %1$s will autodetect Harbour, C compiler " + ;
       e"and other required tools, then configure and call them appropriately. " + ;
       e"%1$s allows to extend the types of supported source files via plugins.\n" + ;

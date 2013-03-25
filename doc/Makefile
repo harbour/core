@@ -17,7 +17,6 @@ DOC_FILES := \
    hdr_tpl.txt \
    howtorel.txt \
    howtorep.txt \
-   inet.txt \
    locks.txt \
    oldnews.txt \
    pcode.txt \
