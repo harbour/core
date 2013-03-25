@@ -1747,13 +1747,8 @@ Supported shells per host platforms:
      * HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
         * <http://www.bzip.org/>
      * HB_WITH_CAIRO - Cairo [multiplatform, open-source]
-        * <http://www.gtk.org/download-windows.html>
-
-        Direct links, look for these components on page above:
-
-        * <http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/cairo-dev_1.8.8-2_win32.zip>
-        * <http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/cairo_1.8.8-2_win32.zip>
-        * <http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/libpng_1.2.39-1_win32.zip>
+        * <http://www.gtk.org/download/win32.php><br />
+        Look for these components on page above: cairo-dev_*_win32.zip, cairo_*_win32.zip, libpng_*_win32.zip
      * HB_WITH_CUPS - libcups (printing) [*nix, free, open-source]
         * <http://www.cups.org/>
      * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
