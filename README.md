@@ -1969,14 +1969,13 @@ There are several ways to help making Harbour better:
   * CA-Cl*pper 5.3 online documentation:
       <http://x-hacker.org/ng/53guide/>
 
-  * Miscellaneous [documents](doc/)
-
-  * Particularly:
+  * Documents:
+     * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
+     * [hbrun documentation](contrib/hbrun/hbrun.md)
+     * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing Harbour to xHarbour:
          [xhb-diff.txt](doc/xhb-diff.txt?raw=true)
-     * [ChangeLog](ChangeLog.txt?raw=true)
-     * hbmk2 [documentation](utils/hbmk2/hbmk2.md)
-     * hbrun [documentation](contrib/hbrun/hbrun.md)
+     * Miscellaneous [documents](doc/)
      * Wikipedia:
          <https://en.wikipedia.org/wiki/Harbour_compiler>
 
