@@ -74,8 +74,7 @@ Platform specific prerequisites:
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in all Harbour packages, so you don't have to do
    anything.
-   If you want to get it separately, you can find it here:
-      <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
+   If you want to get it separately, you can find it [here](http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/)
    Unpack it to your PATH or Harbour source root directory,
    and run it as `mingw32-make`.
 
@@ -227,8 +226,7 @@ You should see 'Hello world!' on screen.
 
 ## on Minix hosts
 
-Install GNU make from the Minix pkgsrc repository; for details see
-<http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages>
+Install GNU make from the Minix pkgsrc repository; for details see [here](http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages)
 
 Optionally, GCC may also be installed if you wish to use that instead
 of Clang, the Minix system compiler.
@@ -443,8 +441,7 @@ NOTES:
 
 ## Darwin (OS X)
 
-1. Install Homebrew, follow their instructions:
-   <http://mxcl.github.com/homebrew/>
+1. Install Homebrew, follow their [instructions](http://mxcl.github.com/homebrew/)
 2. Install packages:
 
         $ brew install pcre slang cairo freeimage libgd mysql postgresql
@@ -533,8 +530,7 @@ NOTES:
         Fedora, CentOS: $ sudo yum install <pkg>
         Mandriva:       $ sudo urpmi <pkg>
 
-  * Check this link for more:
-      <http://distrowatch.com/dwres.php?resource=package-management>
+  * Check [this](http://distrowatch.com/dwres.php?resource=package-management) for more
   * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
       above packages with `-32bit` appended to their names, f.e. `slang-devel-32bit`
 
@@ -1457,10 +1453,6 @@ Windows (unified):
 * Mac app:  <https://itunes.apple.com/us/app/committed/id560767719>
 * Mac tool: <https://github.com/marcocampana/git-notifier>
 
-### Build status and details
-
-<https://travis-ci.org/harbour/core>
-
 
 # TROUBLESHOOTING
 
@@ -1903,14 +1895,10 @@ Supported shells per host platforms:
 
 * Documentation:
 
-     * Netiquette Guidelines
-        * <http://tools.ietf.org/html/rfc1855>
-     * Setting up Git:
-        * <https://help.github.com/articles/set-up-git>
-     * Git book [free]
-        * <http://git-scm.com/book>
-     * Git crash course for Subversion users:
-        * <http://git.or.cz/course/svn.html>
+     * [Netiquette Guidelines](http://tools.ietf.org/html/rfc1855)
+     * [Setting up Git](https://help.github.com/articles/set-up-git)
+     * [Git book](http://git-scm.com/book) [free]
+     * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
 
 
 # HOW TO PARTICIPATE
@@ -1940,7 +1928,7 @@ There are several ways to help making Harbour better:
   - Always keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100KB),
-  use this free service: <http://dropcanvas.com>
+  use this [free service](http://dropcanvas.com)
 - Given a good history of valuable contributions, you can get
   write access to the source repository.
 - Of course there is more into Harbour contribution than writing
@@ -1968,6 +1956,5 @@ There are several ways to help making Harbour better:
 
 
 Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
-Licensed under Creative Commons Attribution-ShareAlike 3.0:<br />
-<http://creativecommons.org/licenses/by-sa/3.0/><br />
+Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
 See [COPYING](COPYING.txt).
