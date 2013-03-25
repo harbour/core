@@ -951,7 +951,8 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2012 for Windows x86-64 (requires preceding build for native target)
+rem MSVC 2012 for Windows x86-64
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
 win-make
 ```
@@ -963,7 +964,8 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2010 (Professional or above) and Windows SDK 7.1 for Windows x86-64 (requires preceding build for native target)
+rem MSVC 2010 (Professional or above) and Windows SDK 7.1 for Windows x86-64
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
 win-make
 ```
@@ -975,7 +977,8 @@ win-make
 ```
 
 ```batchfile
-rem Windows SDK 7 for Windows x86-64 (requires preceding build for native target)
+rem Windows SDK 7 for Windows x86-64
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\bin\vcvarsx86_amd64.bat"
 win-make
 ```
@@ -994,19 +997,22 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2008 (Standard or above) for Windows x86-64 (requires preceding build for native target)
+rem MSVC 2008 (Standard or above) for Windows x86-64
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_amd64
 win-make
 ```
 
 ```batchfile
-rem MSVC 2008 (Team Suite) for Windows IA-64 Itanium (requires preceding build for native target)
+rem MSVC 2008 (Team Suite) for Windows IA-64 Itanium
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
 win-make
 ```
 
 ```batchfile
-rem MSVC 2008 for Windows CE ARM (requires preceding build for native target)
+rem MSVC 2008 for Windows CE ARM
+rem (requires preceding build for native target)
 set INCLUDE=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\ce\include;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Include\Armv4i
 set LIB=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\ce\lib\armv4i;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Lib\ARMV4I
 set PATH=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\ce\bin\x86_arm;%ProgramFiles%\Microsoft Visual Studio 9.0\Common7\IDE;%PATH%
@@ -1020,7 +1026,8 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2005 for Windows CE ARM (requires preceding build for native target)
+rem MSVC 2005 for Windows CE ARM
+rem (requires preceding build for native target)
 set INCLUDE=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\include;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Include\Armv4i
 set LIB=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\lib\armv4i;%ProgramFiles%\Windows Mobile 5.0 SDK R2\PocketPC\Lib\ARMV4I
 set PATH=%ProgramFiles%\Microsoft Visual Studio 8\VC\ce\bin\x86_arm;%ProgramFiles%\Microsoft Visual Studio 8\Common7\IDE;%PATH%
@@ -1046,13 +1053,15 @@ sh -c make
 ```
 
 ```batchfile
-rem MinGW GCC for Windows x86-64 (requires preceding build for native target)
+rem MinGW GCC for Windows x86-64
+rem (requires preceding build for native target)
 set PATH=C:\mingw64\bin;%PATH%
 win-make
 ```
 
 ```batchfile
-rem MinGW GCC for Windows CE ARM (requires Cygwin + preceding build for native target)
+rem MinGW GCC for Windows CE ARM
+rem (requires Cygwin + preceding build for native target)
 set PATH=C:\mingwce\opt\mingw32ce\bin;C:\cygwin\bin;%PATH%
 rem optional:
 set CYGWIN=nodosfilewarning
@@ -1066,7 +1075,8 @@ win-make
 ```
 
 ```batchfile
-rem Intel(R) C++ for Windows IA-64 Itanium (requires preceding build for native target)
+rem Intel(R) C++ for Windows IA-64 Itanium
+rem (requires preceding build for native target)
 call "%ProgramFiles%\Intel\Compiler\C++\10.1.025\Itanium\Bin\iclvars.bat"
 win-make
 ```
@@ -1086,7 +1096,8 @@ win-make
 ```
 
 ```batchfile
-rem Pelles C for Windows x86-64 (requires preceding build for native target)
+rem Pelles C for Windows x86-64
+rem (requires preceding build for native target)
 set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
 set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
 set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
@@ -1094,7 +1105,8 @@ win-make
 ```
 
 ```batchfile
-rem Pelles C for Windows CE ARM (requires preceding build for native target)
+rem Pelles C for Windows CE ARM
+rem (requires preceding build for native target)
 set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
 set INCLUDE=%ProgramFiles%\PellesC\Include\WinCE;%ProgramFiles%\PellesC\Include;%INCLUDE%
 set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
@@ -1127,7 +1139,8 @@ win-make
 ```
 
 ```batchfile
-rem Open Watcom C/C++ for OS/2 (requires preceding build for Windows target)
+rem Open Watcom C/C++ for OS/2
+rem (requires preceding build for Windows target)
 SET WATCOM=C:\watcom
 SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
 SET BEGINLIBPATH=%WATCOM%\BINP\DLL
@@ -1137,7 +1150,8 @@ win-make
 ```
 
 ```batchfile
-rem Open Watcom C/C++ for Linux (requires preceding build for Windows target)
+rem Open Watcom C/C++ for Linux
+rem (requires preceding build for Windows target)
 SET WATCOM=C:\watcom
 SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
 SET EDPATH=%WATCOM%\EDDAT
@@ -1146,14 +1160,16 @@ win-make
 ```
 
 ```batchfile
-rem VxWorks GCC x86 (requires preceding build for Windows target)
+rem VxWorks GCC x86
+rem (requires preceding build for Windows target)
 wrenv -p vxworks-6.8
 set HB_COMPILER=gcc
 win-make
 ```
 
 ```batchfile
-rem VxWorks GCC ARM (requires preceding build for Windows target)
+rem VxWorks GCC ARM
+rem (requires preceding build for Windows target)
 wrenv -p vxworks-6.8
 set HB_COMPILER=gcc
 set HB_CPU=arm
@@ -1162,14 +1178,16 @@ win-make
 ```
 
 ```batchfile
-rem VxWorks Wind River Compiler x86 (requires preceding build for Windows target)
+rem VxWorks Wind River Compiler x86
+rem (requires preceding build for Windows target)
 wrenv -p vxworks-6.8
 set HB_COMPILER=diab
 win-make
 ```
 
 ```batchfile
-rem Symbian OS (requires preceding build for Windows target)
+rem Symbian OS
+rem (requires preceding build for Windows target)
 set PATH=C:\Symbian\CSL Arm Toolchain\bin;%PATH%
 set HB_PLATFORM=symbian
 set HB_COMPILER=gcc
@@ -1223,7 +1241,8 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2012 for Windows x86-64 (requires preceding build for native target)
+rem MSVC 2012 for Windows x86-64
+rem (requires preceding build for native target)
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
 win-make
 ```
@@ -1265,7 +1284,8 @@ win-make
 ```
 
 ```batchfile
-rem MSVC 2008 (Team Suite) for Windows IA-64 Itanium (requires preceding build for native target)
+rem MSVC 2008 (Team Suite) for Windows IA-64 Itanium
+rem (requires preceding build for native target)
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
 win-make
 ```
@@ -1329,7 +1349,8 @@ os2-make
 ## for Linux hosts
 
 ```bash
-# Open Watcom C/C++ for OS/2 (requires preceding build for Linux target)
+# Open Watcom C/C++ for OS/2
+# (requires preceding build for Linux target)
 export WATCOM="/opt/lng/watcom"
 export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
 export PATH="${WATCOM}/binl:$PATH"
