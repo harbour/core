@@ -1578,114 +1578,115 @@ For all platforms you'll need two things:
     which will automatically be used, so you don't have to
     make any extra steps here.
 
-It's recommended (but not required) to put hbmk2 into the PATH
+It's recommended to put hbmk2 into the PATH
 (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
 
 Then see hbmk2 documentation, with examples:
-   <https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md>
+   [hbmk2.md](utils/hbmk2/hbmk2.md)
 
 
 # BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
 
- &nbsp;| host<br />plat | target<br />plat/comp | target<br />cpu
- :---- | :------------- | :-------------------- | :---------------------------------------
-       | win            | win/bcc               | x86
-       | win            | win/bcc64             | x86-64
-       | win            | win/gcc               | x86
-       | win            | win/global            | x86
-       | win            | win/icc               | x86
-       | win            | win/icc64             | x86-64 (not supported yet)
-       | win            | win/iccia64           | ia64
-       | win            | win/mingw             | x86
-       | win            | win/mingw64           | x86-64
-       | win            | win/msvc              | x86
-       | win            | win/msvc64            | x86-64
-       | win            | win/msvcia64          | ia64
-       | win            | win/pocc              | x86
-       | win            | win/pocc64            | x86-64
-       | win            | win/watcom            | x86
-       | win            | win/xcc               | x86
-     x | win            | wce/mingwarm          | arm
-     x | win            | wce/mingw             | x86   (not fully supported yet)
-     x | win            | wce/poccarm           | arm
-     x | win            | wce/msvcarm           | arm
-     x | win            | wce/msvcmips          | mips  (not supported yet)
-     x | win            | wce/msvcsh            | sh    (not supported yet)
-     x | win            | wce/msvc              | x86   (not supported yet)
-     x | win            | dos/djgpp             | x86   (on Windows x86 hosts only)
-     x | win            | dos/watcom            | x86
-     x | win            | os2/watcom            | x86
-     x | win            | linux/watcom          | x86
-     x | win            | android/gcc           | x86
-     x | win            | android/gccarm        | arm
-     x | win            | vxworks/gcc           | (CPU cross-builds possible: x86, arm, mips, ppc)
-     x | win            | vxworks/diab          | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
-     x | win            | symbian/gcc           | arm
-     x | win            | cygwin/gcc            | x86
-       | dos            | dos/djgpp             | x86
-       | dos            | dos/watcom            | x86
-     x | dos            | win/watcom            | x86
-     x | dos            | os2/watcom            | x86
-     x | dos            | linux/watcom          | x86
-       | os2            | os2/gcc               | x86
-       | os2            | os2/watcom            | x86
-     x | os2            | win/watcom            | x86
-     x | os2            | dos/watcom            | x86
-     x | os2            | linux/watcom          | x86
-       | linux          | linux/gcc             | (CPU cross-builds possible)
-       | linux          | linux/clang           | (CPU cross-builds possible)
-       | linux          | linux/icc             | (CPU cross-builds possible: x86, x86-64, ia64)
-       | linux          | linux/sunpro          | (CPU cross-builds possible: x86, x86-64)
-       | linux          | linux/open64          | (CPU cross-builds possible: x86-64, ia64, ...)
-     x | linux          | wce/mingwarm          | arm
-     x | linux          | wce/mingw             | x86
-     x | linux          | win/mingw             | x86
-     x | linux          | win/mingw64           | x86-64
-     x | linux          | win/watcom            | x86
-     x | linux          | win/bcc               | x86 (requires WINE)
-     x | linux          | win/bcc64             | x86-64 (requires WINE)
-     x | linux          | os2/watcom            | x86
-     x | linux          | dos/watcom            | x86
-     x | linux          | dos/djgpp             | x86
-     x | linux          | android/gcc           | x86
-     x | linux          | android/gccarm        | arm
-     x | linux          | vxworks/gcc           | (CPU cross-builds possible: x86, arm, mips, ppc)
-     x | linux          | vxworks/diab          | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
-       | bsd            | bsd/gcc               | (CPU cross-builds possible)
-       | bsd            | bsd/clang             | (CPU cross-builds possible)
-       | bsd            | bsd/pcc               | (experimental)
-     x | bsd            | wce/mingwarm          | arm
-     x | bsd            | wce/mingw             | x86
-     x | bsd            | win/mingw             | x86
-     x | bsd            | dos/djgpp             | x86
-       | darwin         | darwin/clang          | (CPU cross-builds possible: x86, x86-64, unibin)
-       | darwin         | darwin/gcc            | (CPU cross-builds possible: x86, x86-64, ppc, ppc64, unibin)
-       | darwin         | darwin/icc            | (CPU cross-builds possible: x86, x86-64)
-     x | darwin         | wce/mingwarm          | arm
-     x | darwin         | wce/mingw             | x86
-     x | darwin         | win/mingw             | x86
-     x | darwin         | win/mingw64           | x86-64
-     x | darwin         | dos/djgpp             | x86
-     x | darwin         | android/gcc           | x86
-     x | darwin         | android/gccarm        | arm
-       | hpux           | hpux/gcc              | (CPU cross-builds possible)
-       | qnx            | qnx/gcc               | (CPU cross-builds possible - no tested)
-       | beos           | beos/gcc              | x86
-     x | hpux           | wce/mingwarm          | arm
-     x | hpux           | wce/mingw             | x86
-     x | hpux           | win/mingw             | x86
-     x | hpux           | dos/djgpp             | x86
-       | minix          | minix/clang           | x86
-       | minix          | minix/gcc             | x86
-       | aix            | aix/gcc               | (CPU cross-builds possible: ppc, ppc64)
-       | sunos          | sunos/gcc             | (CPU cross-builds possible)
-       | sunos          | sunos/sunpro          | (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
-     x | sunos          | wce/mingwarm          | arm
-     x | sunos          | wce/mingw             | x86
-     x | sunos          | win/mingw             | x86
-     x | sunos          | dos/djgpp             | x86
-     x | sunos          | vxworks/gcc           | (CPU cross-builds possible: x86, arm, mips, ppc)
-     x | sunos          | vxworks/diab          | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
+ &nbsp;| host     | target            | target
+       | platform | platform/compiler | cpu
+ :---- | :------- | :---------------- | :---------------------------------------
+       | win      | win/bcc           | x86
+       | win      | win/bcc64         | x86-64
+       | win      | win/gcc           | x86
+       | win      | win/global        | x86
+       | win      | win/icc           | x86
+       | win      | win/icc64         | x86-64 (not supported yet)
+       | win      | win/iccia64       | ia64
+       | win      | win/mingw         | x86
+       | win      | win/mingw64       | x86-64
+       | win      | win/msvc          | x86
+       | win      | win/msvc64        | x86-64
+       | win      | win/msvcia64      | ia64
+       | win      | win/pocc          | x86
+       | win      | win/pocc64        | x86-64
+       | win      | win/watcom        | x86
+       | win      | win/xcc           | x86
+     x | win      | wce/mingwarm      | arm
+     x | win      | wce/mingw         | x86   (not fully supported yet)
+     x | win      | wce/poccarm       | arm
+     x | win      | wce/msvcarm       | arm
+     x | win      | wce/msvcmips      | mips  (not supported yet)
+     x | win      | wce/msvcsh        | sh    (not supported yet)
+     x | win      | wce/msvc          | x86   (not supported yet)
+     x | win      | dos/djgpp         | x86   (on Windows x86 hosts only)
+     x | win      | dos/watcom        | x86
+     x | win      | os2/watcom        | x86
+     x | win      | linux/watcom      | x86
+     x | win      | android/gcc       | x86
+     x | win      | android/gccarm    | arm
+     x | win      | vxworks/gcc       | (CPU cross-builds possible: x86, arm, mips, ppc)
+     x | win      | vxworks/diab      | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
+     x | win      | symbian/gcc       | arm
+     x | win      | cygwin/gcc        | x86
+       | dos      | dos/djgpp         | x86
+       | dos      | dos/watcom        | x86
+     x | dos      | win/watcom        | x86
+     x | dos      | os2/watcom        | x86
+     x | dos      | linux/watcom      | x86
+       | os2      | os2/gcc           | x86
+       | os2      | os2/watcom        | x86
+     x | os2      | win/watcom        | x86
+     x | os2      | dos/watcom        | x86
+     x | os2      | linux/watcom      | x86
+       | linux    | linux/gcc         | (CPU cross-builds possible)
+       | linux    | linux/clang       | (CPU cross-builds possible)
+       | linux    | linux/icc         | (CPU cross-builds possible: x86, x86-64, ia64)
+       | linux    | linux/sunpro      | (CPU cross-builds possible: x86, x86-64)
+       | linux    | linux/open64      | (CPU cross-builds possible: x86-64, ia64, ...)
+     x | linux    | wce/mingwarm      | arm
+     x | linux    | wce/mingw         | x86
+     x | linux    | win/mingw         | x86
+     x | linux    | win/mingw64       | x86-64
+     x | linux    | win/watcom        | x86
+     x | linux    | win/bcc           | x86 (requires WINE)
+     x | linux    | win/bcc64         | x86-64 (requires WINE)
+     x | linux    | os2/watcom        | x86
+     x | linux    | dos/watcom        | x86
+     x | linux    | dos/djgpp         | x86
+     x | linux    | android/gcc       | x86
+     x | linux    | android/gccarm    | arm
+     x | linux    | vxworks/gcc       | (CPU cross-builds possible: x86, arm, mips, ppc)
+     x | linux    | vxworks/diab      | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
+       | bsd      | bsd/gcc           | (CPU cross-builds possible)
+       | bsd      | bsd/clang         | (CPU cross-builds possible)
+       | bsd      | bsd/pcc           | (experimental)
+     x | bsd      | wce/mingwarm      | arm
+     x | bsd      | wce/mingw         | x86
+     x | bsd      | win/mingw         | x86
+     x | bsd      | dos/djgpp         | x86
+       | darwin   | darwin/clang      | (CPU cross-builds possible: x86, x86-64, unibin)
+       | darwin   | darwin/gcc        | (CPU cross-builds possible: x86, x86-64, ppc, ppc64, unibin)
+       | darwin   | darwin/icc        | (CPU cross-builds possible: x86, x86-64)
+     x | darwin   | wce/mingwarm      | arm
+     x | darwin   | wce/mingw         | x86
+     x | darwin   | win/mingw         | x86
+     x | darwin   | win/mingw64       | x86-64
+     x | darwin   | dos/djgpp         | x86
+     x | darwin   | android/gcc       | x86
+     x | darwin   | android/gccarm    | arm
+       | hpux     | hpux/gcc          | (CPU cross-builds possible)
+       | qnx      | qnx/gcc           | (CPU cross-builds possible - no tested)
+       | beos     | beos/gcc          | x86
+     x | hpux     | wce/mingwarm      | arm
+     x | hpux     | wce/mingw         | x86
+     x | hpux     | win/mingw         | x86
+     x | hpux     | dos/djgpp         | x86
+       | minix    | minix/clang       | x86
+       | minix    | minix/gcc         | x86
+       | aix      | aix/gcc           | (CPU cross-builds possible: ppc, ppc64)
+       | sunos    | sunos/gcc         | (CPU cross-builds possible)
+       | sunos    | sunos/sunpro      | (CPU cross-builds possible: x86, x86-64, sparc32, sparc64)
+     x | sunos    | wce/mingwarm      | arm
+     x | sunos    | wce/mingw         | x86
+     x | sunos    | win/mingw         | x86
+     x | sunos    | dos/djgpp         | x86
+     x | sunos    | vxworks/gcc       | (CPU cross-builds possible: x86, arm, mips, ppc)
+     x | sunos    | vxworks/diab      | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
 
 > Leading 'x' marks cross-platform scenarios.
 
@@ -1971,16 +1972,19 @@ There are several ways to help making Harbour better:
 
   * Miscellaneous documents:
       <https://github.com/harbour/core/tree/master/doc>
+      [docs](doc/)
 
   * Particularly:
      * Comparing Harbour to xHarbour:
          <https://github.com/harbour/core/raw/master/doc/xhb-diff.txt>
+         [xhb-diff.txt](doc/xhb-diff.txt)
      * ChangeLog:
          <https://github.com/harbour/core/raw/master/ChangeLog.txt>
+         [ChangeLog.txt](ChangeLog.txt)
      * hbmk2 documentation:
-         <https://github.com/harbour/core/blob/master/utils/hbmk2/hbmk2.md>
+         [hbmk2.md](utils/hbmk2/hbmk2.md)
      * hbrun documentation:
-         <https://github.com/harbour/core/blob/master/contrib/hbrun/hbrun.md>
+         [hbrun.md](contrib/hbrun/hbrun.md)
      * Wikipedia:
          <https://en.wikipedia.org/wiki/Harbour_compiler>
 
@@ -1988,4 +1992,4 @@ There are several ways to help making Harbour better:
 Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
 Licensed under Creative Commons Attribution-ShareAlike 3.0:<br />
 <http://creativecommons.org/licenses/by-sa/3.0/><br />
-See [COPYING](COPYING.txt).
+See [COPYING](COPYING.txt)
