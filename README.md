@@ -1857,14 +1857,14 @@ Supported shells per host platforms:
          * <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download>
          * <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download>
          * `cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make`
-          <br />(included in Harbour as win-make.exe)
+          <br />(included in Harbour as [win-make.exe](win-make.exe))
 
         MS-DOS binary + source:
 
          * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/>
          * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
          * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
-          <br />(included in Harbour as dos-make.exe)
+          <br />(included in Harbour as [dos-make.exe](dos-make.exe))
 
         OS/2 binary + source:
 
@@ -1872,7 +1872,7 @@ Supported shells per host platforms:
          * <http://www.os2site.com/sw/dev/make/make-3.81-r3-bin-static.zip>
          * <http://www.os2site.com/sw/dev/make/make-3.81-r3.zip>
          * <http://www.os2site.com/sw/dev/make/make-3.81-r2.zip>
-          <br />(included in Harbour as os2-make.exe)
+          <br />(included in Harbour as [os2-make.exe](os2-make.exe))
      * GNU core utils (mkdir, rm, cp, echo)
 
         MS-DOS binary + source:
@@ -1884,13 +1884,13 @@ Supported shells per host platforms:
          * <ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
          * <ftp://ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip>
          * <ftp://ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
-          <br />(included in Harbour as dosmkdir.exe, dosrm.exe, doscp.exe, dosecho.exe)
+          <br />(included in Harbour as [dosmkdir.exe](config/dosmkdir.exe), [dosrm.exe](config/dosrm.exe), [doscp.exe](config/doscp.exe), [dosecho.exe](config/dosecho.exe))
 
         OS/2 binary:
 
          * <http://os2ports.smedley.info/index.php?page=build-environment>
          * <http://download.smedley.info/buildenv_20071022.zip>
-          <br />(included in Harbour as os2mkdir.exe, os2rm.exe, os2cp.exe)
+          <br />(included in Harbour as [os2mkdir.exe](config/os2mkdir.exe), [os2rm.exe](config/os2rm.exe), [os2cp.exe](config/os2cp.exe))
 
 * Documentation:
 
@@ -1939,8 +1939,8 @@ There are several ways to help making Harbour better:
 # MORE INFORMATION
 
   * [Homepage](http://harbour-project.org/)
-  * Harbour [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
-  * Harbour [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
+  * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
+  * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source](https://github.com/harbour/core)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
