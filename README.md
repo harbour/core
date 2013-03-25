@@ -1984,4 +1984,4 @@ There are several ways to help making Harbour better:
 Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
 Licensed under Creative Commons Attribution-ShareAlike 3.0:<br />
 <http://creativecommons.org/licenses/by-sa/3.0/><br />
-See [COPYING](COPYING.txt)
+See [COPYING](COPYING.txt).
