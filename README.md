@@ -7,8 +7,6 @@ a compiler and runtime libraries with multiple UI and database
 backends, its own make system and a large collection of libraries
 and interfaces to many popular APIs.
 
-<http://harbour-project.org/>
-
 # Table of Content
 
 1. [Guarantees and Liability](#guarantees-and-liability)
@@ -66,7 +64,7 @@ There are several ways to help making Harbour better:
         $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
 
 - Text editor setting for Harbour files
-  - Encoding is either 7-bit ASCII or UTF-8.
+  - Encoding is either 7-bit ASCII or UTF-8 (no BOM)
   - Always use spaces, never tabs
   - Remove trailing spaces from lines
   - Always keep one (not zero or multiple) newline at the end of file
@@ -309,7 +307,7 @@ You should see 'Hello world!' on screen.
 
 ## on Minix hosts
 
-Install GNU make from the Minix pkgsrc repository; for details see [here](http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages)
+Install GNU make from the Minix pkgsrc repository; for details see [here](http://wiki.minix3.org/en/UsersGuide/InstallingBinaryPackages).
 
 Optionally, GCC may also be installed if you wish to use that instead
 of Clang, the Minix system compiler.
@@ -693,10 +691,9 @@ sensitive.
 
      Create Harbour dynamic libraries. Default: `yes`
 
-   - `HB_BUILD_CONTRIB_DYN=yes`
+   - `HB_BUILD_CONTRIB_DYN=no`
 
-     Create contrib dynamic libraries. Default: `no`,
-     except Windows platform, where it's `yes`.
+     Create contrib dynamic libraries. Default: `yes`
 
    - `HB_BUILD_SHARED=yes`
 

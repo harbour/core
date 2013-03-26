@@ -13723,7 +13723,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    LOCAL aExtension := {}
    LOCAL hbmk
-   LOCAL cHBC
    LOCAL cExt
    LOCAL tmp, tmp1
    LOCAL aOPTPRG
@@ -13812,7 +13811,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
-         OutErr( StrTran( I_( e"hbshell: Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), e"\n", hb_eol() ) + _OUT_EOL )
+         _hbmk_OutErr( I_( e"Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ) )
       ENDIF
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -13897,9 +13896,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          ENDIF
 
          FOR EACH tmp IN aExtension
-            IF Empty( cVersion := HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) ) )
-               OutErr( hb_StrFormat( I_( "hbshell: Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
-            ELSE
+            IF ! Empty( cVersion := HBC_Find( hbmk, hb_FNameExtSet( tmp, ".hbc" ) ) )
                AAddNew( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
          NEXT
@@ -13934,7 +13931,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          EXIT
       ENDSWITCH
    ELSE
-      OutErr( hb_StrFormat( I_( "hbshell: Cannot find script '%1$s'" ), cFileOri ) + _OUT_EOL )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Cannot find script '%1$s'" ), cFileOri ) )
    ENDIF
 
    RETURN
@@ -14092,7 +14089,7 @@ FUNCTION hbshell_ext_load( cName )
             hbsh[ _HBSH_hOPTPRG ][ cName ] := {}
 
             IF Empty( cVersion := HBC_Find( hbsh[ _HBSH_hbmk ], cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
-               OutErr( hb_StrFormat( I_( "hbshell: Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+               _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) )
             ELSE
                AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aINCPATH ], {| tmp | AAdd( hbsh[ _HBSH_hINCPATH ][ cName ], tmp ) } )
                AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aCH ], {| tmp | AAdd( hbsh[ _HBSH_hCH ][ cName ], tmp ) } )
@@ -14107,11 +14104,11 @@ FUNCTION hbshell_ext_load( cName )
                   cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
                   IF Empty( cFileName )
-                     OutErr( hb_StrFormat( I_( "hbshell: '%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
+                     _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) )
                   ELSE
                      hLib := hb_libLoad( cFileName )
                      IF Empty( hLib )
-                        OutErr( hb_StrFormat( I_( "hbshell: Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
+                        _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) )
                      ELSE
                         hbsh[ _HBSH_hLibExt ][ cName ] := hLib
                         RETURN .T.
@@ -14121,7 +14118,7 @@ FUNCTION hbshell_ext_load( cName )
             ENDIF
          ENDIF
       ELSE
-         OutErr( hb_StrFormat( I_( "hbshell: Cannot load '%1$s'. Requires -shared %2$s build." ), cName, hb_FNameName( hbshell_ProgName() ) ) + _OUT_EOL )
+         _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Cannot load '%1$s'. Requires -shared %2$s build." ), cName, hb_FNameName( hbshell_ProgName() ) ) )
       ENDIF
    ENDIF
 
@@ -14269,6 +14266,8 @@ STATIC FUNCTION __hbshell_plugins()
 
 STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
 
+   LOCAL hbsh := hbsh()
+
    LOCAL hConIO := { ;
       "displine"  => {| c | __hbshell_ToConsole( c ) }, ;
       "gethidden" => {|| __hbshell_GetHidden() } }
@@ -14297,7 +14296,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
             ENDIF
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
-            OutErr( StrTran( hb_StrFormat( I_( e"hbshell: Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ), e"\n", hb_eol() ) + _OUT_EOL )
+            _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( e"Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) )
          END /* SEQUENCE */
       ENDIF
 
@@ -14409,7 +14408,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    hbshell_gtSelect()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
-      OutErr( hb_StrFormat( I_( "hbshell: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion() ) + _OUT_EOL )
+      _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion() ) )
       RETURN
    ENDIF
 
@@ -16667,18 +16666,21 @@ STATIC PROCEDURE _hbmk_OutStd( hbmk, cText )
    LOCAL nLines
    LOCAL nWidth
    LOCAL cPrefix
+   LOCAL cSelf
    LOCAL tmp
 
    IF hbmk[ _HBMK_lDumpInfo ]
       RETURN
    ENDIF
 
+   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
+
    IF hbmk[ _HBMK_lShowLevel ]
-      nWidth := Len( _SELF_NAME_ ) + 5
-      cPrefix := hb_StrFormat( _SELF_NAME_ + " #%1$d:", hbmk[ _HBMK_nLevel ] )
+      nWidth := Len( cSelf ) + 5
+      cPrefix := hb_StrFormat( cSelf + " #%1$d:", hbmk[ _HBMK_nLevel ] )
    ELSE
-      nWidth := Len( _SELF_NAME_ ) + 2
-      cPrefix := _SELF_NAME_ + ":"
+      nWidth := Len( cSelf ) + 2
+      cPrefix := cSelf + ":"
    ENDIF
 
    cText := StrTran( cText, e"\n", hb_eol() )
@@ -16697,18 +16699,21 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    LOCAL nLines
    LOCAL nWidth
    LOCAL cPrefix
+   LOCAL cSelf
    LOCAL tmp
 
    IF hbmk[ _HBMK_lDumpInfo ]
       RETURN
    ENDIF
 
+   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
+
    IF hbmk[ _HBMK_lShowLevel ]
-      nWidth := Len( _SELF_NAME_ ) + 5
-      cPrefix := hb_StrFormat( _SELF_NAME_ + " #%1$d:", hbmk[ _HBMK_nLevel ] )
+      nWidth := Len( cSelf ) + 5
+      cPrefix := hb_StrFormat( cSelf + " #%1$d:", hbmk[ _HBMK_nLevel ] )
    ELSE
-      nWidth := Len( _SELF_NAME_ ) + 2
-      cPrefix := _SELF_NAME_ + ":"
+      nWidth := Len( cSelf ) + 2
+      cPrefix := cSelf + ":"
    ENDIF
 
    cText := StrTran( cText, e"\n", hb_eol() )
