@@ -260,8 +260,8 @@ TABLE OF CONTENT
 
    If you want to rebuild one specific contrib package, use this:
 
-      cd contrib/<name>
-      ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [custom hbmk2 options]
+      cd contrib
+      hbmk2 make.hb <name> [clean] [custom hbmk2 options]
 
 
 4. HOW TO CREATE DISTRIBUTABLE PACKAGES

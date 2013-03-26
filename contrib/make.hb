@@ -118,6 +118,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    LOCAL tmp1
 
    LOCAL lCustom
+   LOCAL cCustomDir
 
    /* Processing cmdline options */
 
@@ -167,6 +168,14 @@ PROCEDURE Standalone( aParams, hProjectList )
    hProjectReqList := { => }
    hb_HKeepOrder( hProjectReqList, .T. )
 
+   IF hb_DirExists( AllTrim( cOptionsUser ) )
+      cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
+      cOptionsUser := ""
+      lCustom := .F.
+      s_cHome += "../"
+      s_cRoot += "../"
+   ENDIF
+
    IF ! lCustom
       /* Find out which projects are in current dir, these will be our primary targets */
       FOR EACH tmp IN hProjectList
@@ -191,6 +200,10 @@ PROCEDURE Standalone( aParams, hProjectList )
    /* Start building */
 
    build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, .T. )
+
+   IF ! Empty( cCustomDir )
+      hb_cwd( cCustomDir )
+   ENDIF
 
    RETURN
 
