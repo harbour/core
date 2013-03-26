@@ -1,4 +1,4 @@
-# WELCOME TO HARBOUR
+# Welcome to Harbour
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -9,47 +9,142 @@ and interfaces to many popular APIs.
 
 <http://harbour-project.org/>
 
-# TABLE OF CONTENT
+# Table of Content
 
-1. [GUARANTEES AND LIABILITY](#guarantees-and-liability)
-2. [HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE](#how-to-build-and-install-harbour-from-source)
-3. [HOW TO DO A PARTIAL [RE]BUILD](#how-to-do-a-partial-rebuild)
-4. [HOW TO CREATE DISTRIBUTABLE PACKAGES](#how-to-create-distributable-packages)
-5. [HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD](#how-to-enable-optional-components-before-build)
-6. [SUPPORTED PLATFORMS AND C COMPILERS](#supported-platforms-and-c-compilers)
-7. [OPTIONS AVAILABLE WHEN BUILDING HARBOUR](#options-available-when-building-harbour)
-8. [DEBUGGING OPTIONS](#debugging-options)
-9. [BUILD EXAMPLES](#build-examples)
-10. [HOW TO GET HARBOUR](#how-to-get-harbour)
-11. [TROUBLESHOOTING](#troubleshooting)
-12. [QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS](#quick-start-to-build-your-own-harbour-applications)
-13. [BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX](#build-host-platformshell---target-platformcompiler-compatibility-matrix)
-14. [LINKS TO EXTERNAL COMPONENTS](#links-to-external-components)
-15. [HOW TO PARTICIPATE](#how-to-participate)
-16. [MORE INFORMATION](#more-information)
+1. [Guarantees and Liability](#guarantees-and-liability)
+2. [How to Participate](#how-to-participate)
+3. [How to Get](#how-to-get)
+4. [How to Build](#how-to-build)
+5. [How to Do a Partial Build](#how-to-do-a-partial-build)
+6. [How to Create Distributable Packages](#how-to-create-distributable-packages)
+7. [How to Enable Optional Components](#how-to-enable-optional-components)
+8. [Build Options](#build-options)
+9. [Build Examples](#build-examples)
+10. [Build Your Own Harbour App](#build-your-own-harbour-app)
+11. [Debugging Options](#debugging-options)
+12. [Troubleshooting](#troubleshooting)
+13. [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
+14. [Platform Matrix](#platform-matrix)
+15. [External links](#external-links)
+16. [Harbour Links](#harbour-links)
 
 ---
 
-# GUARANTEES AND LIABILITY
+# Guarantees and Liability
 
    This document and all other parts of Harbour are distributed in the
    hope they will be useful, but there is NO GUARANTEE that they are
    complete, accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see COPYING.txt.
+   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
    If you think you can make Harbour better, start to contribute.
-   See this section: [HOW TO PARTICIPATE](#how-to-participate)
+   See [How to Participate](#how-to-participate).
 
    The information this document is subject to change without notice
    and does not represent any future commitment by the participants
    of the project.
 
 
-# HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
+# How to Participate
 
-> NOTE: Before reporting a problem to developers, make sure to read the
-> [TROUBLESHOOTING](#troubleshooting) section in this document and try the suggestions
+There are several ways to help making Harbour better:
+
+- You can give feedback/suggestions to developers on available
+  channels, see [Harbour Links](#harbour-links).
+- Submit a change:
+  1. Fork Harbour
+  2. Create a branch: `git checkout -b my_mod`
+  3. Commit your changes: `git commit -am "Added my feature"`
+  4. Push to the branch: `git push origin my_mod`
+  5. Open a Pull Request
+- Always use the same coding/formatting style as you find in
+  the files you're patching. The easiest way to achieve this
+  is to use these commands to format your sources:
+
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
+        $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
+
+- Text editor setting for Harbour files
+  - Encoding is either 7-bit ASCII or UTF-8.
+  - Always use spaces, never tabs
+  - Remove trailing spaces from lines
+  - Always keep one (not zero or multiple) newline at the end of file
+  - Use platform native newline (CRLF or LF)
+- In the rare case you need to send something large (> 100KB),
+  use this [free service](http://dropcanvas.com)
+- Of course there is more into Harbour contribution than writing
+  code, so you're welcome to do so in other areas like documentation,
+  helping fellow users, giving input on decisions, testing in
+  various environments, volunteering in administration tasks, etc.
+
+
+# How to Get
+
+## Stable versions
+
+### Harbour stable binary download
+
+Download binary archive from this page and unpack or install:
+
+* <http://sourceforge.net/projects/harbour-project/files/><br />
+(choose the highest version number)
+
+### Harbour stable source download
+
+Download source archive from this page and unpack:
+
+* <http://sourceforge.net/projects/harbour-project/files/source/><br />
+(choose the highest version number)
+
+
+## Unstable versions
+
+> WARNING: Recommended for users contributing to Harbour development,
+>          following the development mailing list, commits and reading
+>          [ChangeLog.txt](ChangeLog.txt?raw=true).
+
+### Harbour live source repository
+
+You'll need Git version control software installed on your system,
+and issue this command:
+
+    git clone https://github.com/harbour/core.git harbour
+
+You can get subsequent updates using this command:
+
+    git pull
+
+### Harbour unstable sources
+
+Download source archive from any of these links and unpack:
+
+* <https://github.com/harbour/core/archive/master.zip>
+* <https://github.com/harbour/core/archive/master.tar.gz>
+
+### Harbour unstable binaries (updated once a day from live source repository)
+
+[![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
+
+Windows (unified):
+
+* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download><br />
+* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download>
+
+### Follow commits using any of these facilities
+
+* [Web](https://github.com/harbour/core/commits/master)
+* [RSS](https://github.com/harbour/core/commits/master.atom)
+* [Twitter](https://twitter.com/harbourdev)
+* [E-mail](https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits)
+* [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
+* [Mac tool](https://github.com/marcocampana/git-notifier)
+
+
+# How to Build
+
+> Before reporting a problem to developers, make sure to read
+> [Troubleshooting](#troubleshooting) and try the suggestions
 > you find there.
 
 For all platforms you'll need:
@@ -70,7 +165,7 @@ Platform specific prerequisites:
    your setup. It's also highly discouraged to keep multiple copies
    of the same compiler, or different versions of the same compiler
    in PATH at the same time. For the list of supported compilers,
-   look up [SUPPORTED PLATFORMS AND C COMPILERS](#supported-platforms-and-c-compilers) section.
+   look up [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers).
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in all Harbour packages, so you don't have to do
    anything.
@@ -92,8 +187,8 @@ You should see 'Hello world!' on screen.
 
 ## on Windows hosts with POSIX shells (MSYS/Cygwin)
 
-> You can also use these shells to build Harbour on Windows.
-> Generally it's recommended to use native shell though.
+> Though you can use these alternative shells to build Harbour on Windows,
+> it's generally recommended to use the native one.
 
 To build:
 
@@ -107,21 +202,16 @@ To test it, type:
 
 You should see 'Hello world!' on screen.
 
-> NOTE: When building for Borland C++ make sure that GNU Make
->       is executed when typing 'make', Borland Make has the same name.
+> When building for Borland C++ make sure that GNU Make
+> is executed when typing 'make', Borland Make has the same name.
 
 ## on MS-DOS hosts (possible cross-build targets: Windows, OS/2, Linux)
 
-1. Make sure to have your C compiler of choice properly installed
-   (in PATH).
-2. You need to get GNU Make. We recommend this link:
-      <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
-   Unpack it to your PATH or Harbour source root directory.
-   You can also use included copy named dos-make.exe instead.
+Make sure to have your C compiler of choice properly installed in PATH.
 
 To build:
 
-    > make [install]
+    > dos-make [install]
 
 To test it, type:
 
@@ -133,16 +223,9 @@ To test it, type:
 
 ## on OS/2 hosts (possible cross-build targets: MS-DOS, OS/2, Linux)
 
-1. You need to get GNU Make. If you use OS/2 host, 3.81r3 or upper
-   version is required. We recommend this link:
-      <ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
-   If you use other host, refer to other platform instructions in
-   this section.
-   You can also use included copy named os2-make.exe instead.
-
 To build:
 
-    > make [install]
+    > os2-make [install]
 
 To test it, type:
 
@@ -183,14 +266,14 @@ To test it, type:
 
 You should see 'Hello world!' on screen.
 
-> NOTE: You can override default (host) architecture by adding
->       values below to `HB_USER_CFLAGS`, `HB_USER_LDFLAGS` envvars,
->       you can use multiple values:<br />
->      <br />
->      Intel 32-bit: `-arch i386`<br />
->      Intel 64-bit: `-arch x86_64`<br />
->      PPC 32-bit:   `-arch ppc`<br />
->      PPC 64-bit:   `-arch ppc64`
+> You can override default (host) architecture by adding
+> values below to `HB_USER_CFLAGS`, `HB_USER_LDFLAGS` envvars,
+> you can use multiple values:<br />
+> <br />
+> Intel 32-bit: `-arch i386`<br />
+> Intel 64-bit: `-arch x86_64`<br />
+> PPC 32-bit:   `-arch ppc`<br />
+> PPC 64-bit:   `-arch ppc64`
 
 ## on FreeBSD hosts
 
@@ -231,7 +314,7 @@ Install GNU make from the Minix pkgsrc repository; for details see [here](http:/
 Optionally, GCC may also be installed if you wish to use that instead
 of Clang, the Minix system compiler.
 
-## on BSD/HP-UX/Solaris/BeOS/Haiku/QNX/*nix hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
+## on other *nix hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
 To build:
 
@@ -249,38 +332,38 @@ To test it, type:
 
 You should see 'Hello world!' on screen.
 
-> NOTE for sunpro on Solaris:
->    If you have any GNU binutils stuff installed, do make sure
->    `/usr/ccs/bin` (the location of the native Sun C compilation
->    system tools) come *before* the GNU binutils components in
->    your `$PATH`.
+> For sunpro on Solaris:<br />
+> If you have any GNU binutils stuff installed, do make sure
+> `/usr/ccs/bin` (the location of the native Sun C compilation
+> system tools) come *before* the GNU binutils components in
+> your `$PATH`.
 
 
-# HOW TO DO A PARTIAL [RE]BUILD
+# How to Do a Partial Build
 
-If you want to [re]build only a specific part of Harbour, like
+If you want to build only a specific part of Harbour, like
 one core library or all core libraries, or all contrib packages,
 you have to do everything the same way as for a full build, the
 only difference is that you first have to go into the specific
-source directory you want to [re]build. When starting GNU Make,
-all components under that dir will be [re]built:
+source directory you want to build. When starting GNU Make,
+all components under that dir will be built:
 
     cd src/rtl
     <make> [clean] [install]
 
 If you want to rebuild one specific contrib package, use this:
 
-    cd contrib/<name>
-    ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [custom hbmk2 options]
+    cd contrib
+    hbmk2 make.hb <name> [clean] [custom hbmk2 options]
 
 
-# HOW TO CREATE DISTRIBUTABLE PACKAGES
+# How to Create Distributable Packages
 
-## Source .tgz on *nixes
+## Source .tgz on *nix
 
     $ package/mpkg_src.sh
 
-## Binary .tgz on *nixes
+## Binary .tgz on *nix
 
     $ export HB_BUILD_PKG=yes
     $ make clean install
@@ -325,32 +408,32 @@ You can fine-tune the build with these options:
 
     $ package/mpkg_rpm_wce.sh
 
-## Binary .zip + .exe on Windows for all targets (except Linux)
+## Binary .zip & .exe on Windows for all targets (except Linux)
 
     $ set HB_DIR_NSIS=%ProgramFiles%\NSIS\
     $ set HB_DIR_ZIP=C:\info-zip\
     $ set HB_BUILD_PKG=yes
 
-Then run build as usual with 'clean install' options.
-See: [HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE](#how-to-build-and-install-harbour-from-source)
+Then run build as usual with `clean install` options.
+See: [How to Build](#how-to-build)
 
 ## Binary .zip on MS-DOS for all targets (except Linux)
 
     $ set HB_DIR_ZIP=C:\info-zip\
     $ set HB_BUILD_PKG=yes
 
-Then run build as usual with 'clean install' options.
-See: [HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE](#how-to-build-and-install-harbour-from-source)
+Then run build as usual with `clean install` options.
+See: [How to Build](#how-to-build)
 
-## Unified .7z + .exe installer for Windows
+## Unified .7z & .exe installer for Windows
 
     $ package\winuni\mpkg_win_uni.bat
 
-> NOTE: Carefully read in-file instructions and do the necessary
->       steps before calling the script.
+> Carefully read in-file instructions and do the necessary
+> steps before calling the script.
 
 
-# HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
+# How to Enable Optional Components
 
 Certain Harbour parts (typically contrib packages) depend on 3rd
 party components. To make these Harbour parts built, you need
@@ -431,17 +514,17 @@ advanced users only):
     HB_STATIC_CURL=yes
     HB_STATIC_OPENSSL=yes
 
-NOTES:
-
-   * You need to use native path format to your shell/OS.
-   * Spaces in directory names aren't currently supported.
-     (You can use 8.3 name alias on Windows platform, though)
-   * Don't put directory names inside double quotes.
-   * Use absolute paths.
+> NOTES:
+>
+>    * You need to use native path format to your shell/OS.
+>    * Spaces in directory names aren't currently supported.
+>      (You can use 8.3 name alias on Windows platform, though)
+>    * Don't put directory names inside double quotes.
+>    * Use absolute paths.
 
 ## Darwin (OS X)
 
-1. Install Homebrew, follow their [instructions](http://mxcl.github.com/homebrew/)
+1. Install [Homebrew](http://mxcl.github.com/homebrew/)
 2. Install packages:
 
         $ brew install pcre slang cairo freeimage libgd mysql postgresql
@@ -522,17 +605,17 @@ You'll need these packages to compile certain contribs and optional Harbour feat
                                  unixODBC-devel
       for contrib/hbpgsql lib:   postgresql-devel
 
-NOTES:
-
-   * You can use following commands on different distros to install packages:
-
-        openSUSE:       $ sudo zypper install <pkg>
-        Fedora, CentOS: $ sudo yum install <pkg>
-        Mandriva:       $ sudo urpmi <pkg>
-
-  * Check [this](http://distrowatch.com/dwres.php?resource=package-management) for more
-  * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
-      above packages with `-32bit` appended to their names, f.e. `slang-devel-32bit`
+> NOTES:
+>
+>    * You can use following commands on different distros to install packages:
+>
+>         openSUSE:       $ sudo zypper install <pkg>
+>         Fedora, CentOS: $ sudo yum install <pkg>
+>         Mandriva:       $ sudo urpmi <pkg>
+>
+>   * Check [this](http://distrowatch.com/dwres.php?resource=package-management) for more
+>   * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
+>       above packages with `-32bit` appended to their names, f.e. `slang-devel-32bit`
 
 ## OpenSolaris
 
@@ -552,119 +635,7 @@ get the correct permissions:
     $ make clean
 
 
-# SUPPORTED PLATFORMS AND C COMPILERS
-
-## You can override target platform autodetection with these `HB_PLATFORM` values:
-
-* linux    - Linux
-* darwin   - OS X
-* bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
-* beos     - BeOS / Haiku
-* hpux     - HP-UX
-* sunos    - Sun Solaris / OpenSolaris
-* qnx      - QNX
-* android  - Android
-* vxworks  - VxWorks
-* symbian  - Symbian OS (experimental)
-* minix    - Minix 3 (tested on 3.2.1; earlier releases will not work)
-* aix      - IBM AIX
-* win      - MS Windows (all flavors)
-           (see [LINKS](#links) section for Win9x requirements)
-* wce      - MS Windows CE
-* dos      - MS-DOS (32-bit protected mode only)
-           (MS-DOS compatible systems also work, like dosemu)
-* os2      - OS/2 Warp 4 / eComStation
-
-## You can override C compiler autodetection with these `HB_COMPILER` values:
-
-### linux
-* gcc      - GNU C
-* clang    - Clang
-* watcom   - Open Watcom C/C++
-* icc      - Intel(R) C/C++
-* sunpro   - Sun Studio C/C++
-* open64   - Open64 C/C++
-
-### darwin
-* gcc      - GNU C
-* clang    - Clang
-* icc      - Intel(R) C/C++
-
-### bsd
-* gcc      - GNU C
-* clang    - Clang
-* pcc      - Portable C Compiler (experimental)
-
-### hpux
-* gcc      - GNU C
-
-### beos
-* gcc      - GNU C
-
-### qnx
-* gcc      - GNU C
-
-### android
-* gcc      - GNU C x86
-* gccarm   - GNU C ARM
-
-### vxworks
-* gcc      - GNU C
-* diab     - Wind River Compiler
-
-### symbian
-* gcc      - GNU C
-
-### minix
-* clang    - Clang
-* gcc      - GNU C
-
-### aix
-* gcc      - GNU C
-
-### cygwin
-* gcc      - GNU C
-
-### sunos
-* gcc      - GNU C
-* sunpro   - Sun Studio C/C++
-
-### win
-* mingw    - MinGW GNU C 3.4.2 and above
-* mingw64  - MinGW GNU C x86-64
-* msvc     - Microsoft Visual C++
-* msvc64   - Microsoft Visual C++ x86-64
-* msvcia64 - Microsoft Visual C++ IA-64 (Itanium)
-
-### win (partial support, some features may be missing)
-
-* clang    - Clang
-* watcom   - Open Watcom C/C++
-* bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
-* bcc64    - Embarcadero C++ 6.5 and above
-* icc      - Intel(R) C/C++
-* iccia64  - Intel(R) C/C++ IA-64 (Itanium)
-* pocc     - Pelles C 4.5 and above
-* pocc64   - Pelles C x86-64 5.0 and above
-* xcc      - Pelles C for xhb
-
-### wce
-* mingw    - MinGW GNU C x86
-* mingwarm - MinGW GNU C ARM (CEGCC 0.55 and above)
-* msvcarm  - Microsoft Visual C++ ARM
-* poccarm  - Pelles C ARM 5.0 and above
-
-### dos
-* djgpp    - Delorie GNU C
-* watcom   - Open Watcom C/C++
-
-### os2
-* gcc      - EMX GNU C 3.3.5 or lower
-* gccomf   - EMX GNU C 3.3.5 or upper
-* watcom   - Open Watcom C/C++
-
-
-# OPTIONS AVAILABLE WHEN BUILDING HARBOUR
+# Build Options
 
 You can fine-tune Harbour builds with below listed
 environment variables. You can add most of these via the
@@ -700,8 +671,8 @@ sensitive.
    - `HB_PLATFORM`             Override platform autodetection
    - `HB_COMPILER`             Override C compiler autodetection
 
-     See this section for possible values:
-     [SUPPORTED PLATFORMS AND C COMPILERS](#supported-platforms-and-c-compilers)
+     See this for possible values:
+     [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
      See also: `HB_CC*` settings.
 
 ## Special
@@ -716,7 +687,7 @@ sensitive.
    - `HB_BUILD_PKG=yes`
 
      Create release package. Default: `no`
-     Requires 'clean install' in root source dir.
+     Requires `clean install` in root source dir.
 
    - `HB_BUILD_DYN=no`
 
@@ -871,7 +842,7 @@ build on x86 hosts, or Linux MIPS build on x86 host, etc.
 Point this envvar to the directory where native Harbour executables
 for your host platform can be found:
 
-      HB_HOST_BIN=<HARBOUR_NATIVE_BUILD_DIR>\bin
+      HB_HOST_BIN=<harbour_native_build_dir>\bin
 
 If you leave this value empty, the make system will try to autodetect it,
 so in practice all you have to do is to create a native build first (no
@@ -880,54 +851,9 @@ manually, it may be useful to know that harbour, hbpp and hbmk2
 executables are required for a cross-build process to succeed.
 
 
-# DEBUGGING OPTIONS
+# Build Examples
 
-## Tracing
-
-Build Harbour with:
-
-    HB_BUILD_DEBUG=yes
-
-Run app with:
-
-    HB_TR_LEVEL=debug
-    # to override default stderr output:
-    HB_TR_OUTPUT=<filename>
-    # to enable additional system specific logging output,
-    # OutputDebugString() on Windows, syslog() on *nix systems:
-    HB_TR_SYSOUT=yes
-
-## Memory statistics/tracking
-
-Build Harbour with:
-
-    HB_USER_CFLAGS=-DHB_FM_STATISTICS
-
-## Valgrind (on linux and darwin targets)
-
-Build Harbour with:
-
-    HB_BUILD_DEBUG=yes
-
-Build app with:
-
-    $ hbmk2 myapp -debug
-
-Run app with:
-
-    $ valgrind --tool=memcheck --leak-check=yes --num-callers=16 -v ./myapp 2> myapp.log
-
-## CodeGuard (on win/bcc target only)
-
-Build Harbour with:
-
-    HB_USER_CFLAGS=-vG
-    HB_USER_LIBS=cg32
-
-
-# BUILD EXAMPLES
-
-## for Windows (x86, 32-bit) hosts
+## on Windows 32-bit hosts
 
 > NOTES:
 >
@@ -1216,7 +1142,7 @@ set HB_WITH_OPENSSL=C:\openssl\inc32
 set HB_WITH_PGSQL=C:\pgsql\include
 ```
 
-## for Windows x64 (x86-64) hosts
+## on Windows x86-64 (64-bit) hosts
 
 Same as 32-bit Windows, but, you'll have to change `%ProgramFiles%` to
 `%ProgramFiles(x86)%` for 32-bit and mixed tools, you can build for
@@ -1286,7 +1212,7 @@ call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
 win-make
 ```
 
-## for MS-DOS hosts
+## on MS-DOS hosts
 
 ```batchfile
 rem Delorie GNU C
@@ -1315,7 +1241,7 @@ set HB_WITH_PGSQL=C:\PGSQL-~1.3\include
 set HB_WITH_WATT=C:\WATT\inc
 ```
 
-## for OS/2 hosts
+## on OS/2 hosts
 
 ```batchfile
 rem GCC 3.3.4 and GCC 3.3.5
@@ -1342,7 +1268,7 @@ SET BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
 os2-make
 ```
 
-## for Linux hosts
+## on Linux hosts
 
 ```bash
 # Open Watcom C/C++ for OS/2
@@ -1363,7 +1289,7 @@ export HB_BUILD_3RDEXT=no
 make
 ```
 
-## for Darwin (OS X) hosts
+## on Darwin (OS X) hosts
 
 ```bash
 # To create "Universal" binaries, compatible with pre-Snow Leopard PowerPC and Intel systems
@@ -1373,7 +1299,7 @@ export HB_COMPILER=gcc
 make
 ```
 
-## for *nix hosts in general
+## on *nix hosts in general
 
 ```bash
 # GCC
@@ -1390,69 +1316,86 @@ make
 [g]make HB_PLATFORM=wce
 ```
 
-# HOW TO GET HARBOUR
 
-## Stable versions
+# Build Your Own Harbour App
 
-### Harbour stable binary download
+For all platforms you'll need two things:
 
-Download binary archive from this page and unpack or install:
+* Harbour binaries
 
-* <http://sourceforge.net/projects/harbour-project/files/><br />
-(choose highest version number)
+    Either a Harbour binary distribution or a local Harbour
+    build will be okay. If you're reading this text, it's
+    very likely you have one of these already.
 
-### Harbour stable source download
+* Supported ANSI C compiler
 
-Download source archive from this page and unpack:
+    Your compiler of choice has to be placed in the PATH
+    (and configured appropriately according to instructions).
+    If you use official Harbour binary distribution on Windows,
+    you already have MinGW compiler embedded in the installation,
+    which will automatically be used, so you don't have to
+    make any extra steps here.
 
-* <http://sourceforge.net/projects/harbour-project/files/source/><br />
-(choose highest version number)
+Use hbmk2 to build your app from source. It's recommended to put
+it in the PATH (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
 
-
-## Unstable versions
-
-> WARNING: Recommended for users contributing to Harbour development,
->          following the development mailing list, commits and reading
->          ChangeLog.txt.
-
-### Harbour live source repository
-
-You'll need Git version control software installed on your system,
-and issue this command:
-
-    git clone https://github.com/harbour/core.git harbour
-
-You can get subsequent updates using this command:
-
-    git pull
-
-### Harbour unstable sources
-
-Download source archive from any of these links and unpack:
-
-* <https://github.com/harbour/core/archive/master.zip>
-* <https://github.com/harbour/core/archive/master.tar.gz>
-
-### Harbour unstable binaries (updated once a day from live source repository)
-
-[![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
-
-Windows (unified):
-
-* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download><br />
-* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download>
-
-### Follow commits using any of these facilities
-
-* [Web](https://github.com/harbour/core/commits/master)
-* [RSS](https://github.com/harbour/core/commits/master.atom)
-* [Twitter](https://twitter.com/harbourdev)
-* [E-mail](https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits)
-* [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
-* [Mac tool](https://github.com/marcocampana/git-notifier)
+See hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md).
 
 
-# TROUBLESHOOTING
+# Debugging Options
+
+## Tracing
+
+Build Harbour with:
+
+    HB_BUILD_DEBUG=yes
+
+Run app with:
+
+    HB_TR_LEVEL=debug
+    # to override default stderr output:
+    HB_TR_OUTPUT=<filename>
+    # to enable additional system specific logging output,
+    # OutputDebugString() on Windows, syslog() on *nix systems:
+    HB_TR_SYSOUT=yes
+
+## Memory statistics/tracking
+
+Build Harbour with:
+
+    HB_USER_CFLAGS=-DHB_FM_STATISTICS
+
+## Valgrind (on linux and darwin targets)
+
+Build Harbour with:
+
+    HB_BUILD_DEBUG=yes
+
+Build app with:
+
+    $ hbmk2 myapp -debug
+
+Run app with:
+
+    $ valgrind --tool=memcheck --leak-check=yes --num-callers=16 -v ./myapp 2> myapp.log
+
+## CodeGuard (on win/bcc target only)
+
+Build Harbour with:
+
+    HB_USER_CFLAGS=-vG
+    HB_USER_LIBS=cg32
+
+## Harbour Debugger
+
+Build app with:
+
+    $ hbmk2 myapp -b
+
+Press \<Alt+D\> in the app.
+
+
+# Troubleshooting
 
 Always evaluate these points before reporting an issue on the developers'
 mailing list.
@@ -1461,8 +1404,8 @@ mailing list.
 2.  Make sure to do a 'make clean' before doing a build after refreshing
     the sources.
 3.  If that still fails, make sure to install fresh source tree in a new
-    local directory and start over. See [HOW TO GET HARBOUR](#how-to-get-harbour)
-    section for instructions to get the source.
+    local directory and start over. See [How to Get](#how-to-get)
+    for instructions to get the source.
     In case you installed Harbour into system locations (this used to be
     the case with some *nix users, albeit mostly completely unnecessarily
     or wrongly - f.e. for unstable versions), you will need to remember
@@ -1500,10 +1443,9 @@ mailing list.
         set HB_DIR_*=
         set HB_LEX=
 
-7.  Remove any Harbour build settings documented in [OPTIONS AVAILABLE WHEN
-    BUILDING HARBOUR](#options-available-when-building-harbour) section.
-8.  Try to do no or only small modifications at once to command examples
-    included in [BUILD EXAMPLES](#build-examples) section of this document.
+7.  Remove any Harbour build settings documented in [Build Options](#build-options).
+8.  Try to do no or only small modifications at once to examples
+    included in [Build Examples](#build-examples).
     If it doesn't work, fall back to documented examples _as is_.
 9.  If everything fails and you are to report a build problem to Harbour
     developers, make sure to include your OS version/language/CPU architecture,
@@ -1549,32 +1491,119 @@ mailing list.
     functions against CT3 library, etc.)
 
 
-# QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS
+# Supported Platforms and C Compilers
 
-For all platforms you'll need two things:
+## You can override target platform autodetection with these `HB_PLATFORM` values:
 
-* Harbour binaries
+* linux    - Linux
+* darwin   - OS X
+* bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
+* beos     - BeOS / Haiku
+* hpux     - HP-UX
+* sunos    - Sun Solaris / OpenSolaris
+* qnx      - QNX
+* android  - Android
+* vxworks  - VxWorks
+* symbian  - Symbian OS (experimental)
+* minix    - Minix 3 (tested on 3.2.1; earlier releases will not work)
+* aix      - IBM AIX
+* win      - MS Windows (all flavors)
+             (see [External links](#external-links) for Win9x requirements)
+* wce      - MS Windows CE
+* dos      - MS-DOS (32-bit protected mode only)
+             (MS-DOS compatible systems also work, like dosemu)
+* os2      - OS/2 Warp 4 / eComStation
 
-    Either a Harbour binary distribution or a local Harbour
-    build will be okay. If you're reading this text, it's
-    very likely you have one of these already.
+## You can override C compiler autodetection with these `HB_COMPILER` values:
 
-* Supported ANSI C compiler
+### linux
+* gcc      - GNU C
+* clang    - Clang
+* watcom   - Open Watcom C/C++
+* icc      - Intel(R) C/C++
+* sunpro   - Sun Studio C/C++
+* open64   - Open64 C/C++
 
-    Your compiler of choice has to be placed in the PATH
-    (and configured appropriately according to instructions).
-    If you use official Harbour binary distribution on Windows,
-    you already have MinGW compiler embedded in the installation,
-    which will automatically be used, so you don't have to
-    make any extra steps here.
+### darwin
+* gcc      - GNU C
+* clang    - Clang
+* icc      - Intel(R) C/C++
 
-It's recommended to put hbmk2 into the PATH
-(f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
+### bsd
+* gcc      - GNU C
+* clang    - Clang
+* pcc      - Portable C Compiler (experimental)
 
-Then see hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md)
+### hpux
+* gcc      - GNU C
+
+### beos
+* gcc      - GNU C
+
+### qnx
+* gcc      - GNU C
+
+### android
+* gcc      - GNU C x86
+* gccarm   - GNU C ARM
+
+### vxworks
+* gcc      - GNU C
+* diab     - Wind River Compiler
+
+### symbian
+* gcc      - GNU C
+
+### minix
+* clang    - Clang
+* gcc      - GNU C
+
+### aix
+* gcc      - GNU C
+
+### cygwin
+* gcc      - GNU C
+
+### sunos
+* gcc      - GNU C
+* sunpro   - Sun Studio C/C++
+
+### win
+* mingw    - MinGW GNU C 3.4.2 and above
+* mingw64  - MinGW GNU C x86-64
+* msvc     - Microsoft Visual C++
+* msvc64   - Microsoft Visual C++ x86-64
+* msvcia64 - Microsoft Visual C++ IA-64 (Itanium)
+
+### win (partial support, some features may be missing)
+
+* clang    - Clang
+* watcom   - Open Watcom C/C++
+* bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
+* bcc64    - Embarcadero C++ 6.5 and above
+* icc      - Intel(R) C/C++
+* iccia64  - Intel(R) C/C++ IA-64 (Itanium)
+* pocc     - Pelles C 4.5 and above
+* pocc64   - Pelles C x86-64 5.0 and above
+* xcc      - Pelles C for xhb
+
+### wce
+* mingw    - MinGW GNU C x86
+* mingwarm - MinGW GNU C ARM (CEGCC 0.55 and above)
+* msvcarm  - Microsoft Visual C++ ARM
+* poccarm  - Pelles C ARM 5.0 and above
+
+### dos
+* djgpp    - Delorie GNU C
+* watcom   - Open Watcom C/C++
+
+### os2
+* gcc      - EMX GNU C 3.3.5 or lower
+* gccomf   - EMX GNU C 3.3.5 or upper
+* watcom   - Open Watcom C/C++
 
 
-# BUILD HOST-PLATFORM/SHELL - TARGET-PLATFORM/COMPILER COMPATIBILITY MATRIX
+# Platform Matrix
 
  &nbsp;| host<br />platform | target<br />platform/compiler | target cpu
  :---- | :------- | :---------------- | :---------------------------------------
@@ -1690,7 +1719,7 @@ Supported shells per host platforms:
 * *nix / POSIX shell
 
 
-# LINKS TO EXTERNAL COMPONENTS
+# External links
 
 * C/C++ Compilers/Shells:
 
@@ -1859,12 +1888,11 @@ Supported shells per host platforms:
          * <ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
           <br />(included in Harbour as [dos-make.exe](dos-make.exe))
 
-        OS/2 binary + source:
+        OS/2 binary + source (3.81r3 or upper):
 
+         * <ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
          * <http://www.os2site.com/sw/dev/make/index.html>
-         * <http://www.os2site.com/sw/dev/make/make-3.81-r3-bin-static.zip>
          * <http://www.os2site.com/sw/dev/make/make-3.81-r3.zip>
-         * <http://www.os2site.com/sw/dev/make/make-3.81-r2.zip>
           <br />(included in Harbour as [os2-make.exe](os2-make.exe))
      * GNU core utils (mkdir, rm, cp, echo)
 
@@ -1893,43 +1921,7 @@ Supported shells per host platforms:
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
 
 
-# HOW TO PARTICIPATE
-
-There are several ways to help making Harbour better:
-
-- You can give feedback/suggestions to developers on available
-  channels.
-- Submit a change:
-  1. Fork Harbour
-  2. Create a branch (git checkout -b my_mod)
-  3. Commit your changes (git commit -am "Added my feature")
-  4. Push to the branch (git push origin my_mod)
-  5. Open a Pull Request
-- Always use the same coding/formatting style as you find in
-  the files you're patching. The easiest way to achieve this
-  is to use these commands to format your sources:
-
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
-        $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
-
-- Text editor setting for Harbour files
-  - Encoding is either 7-bit ASCII or UTF-8.
-  - Always add spaces, never tabs
-  - Never convert spaces to tabs
-  - Remove trailing spaces from lines
-  - Always keep one (not zero or multiple) newline at the end of file
-  - Use platform native newline (CRLF or LF)
-- In the rare case you need to send something large (> 100KB),
-  use this [free service](http://dropcanvas.com)
-- Given a good history of valuable contributions, you can get
-  write access to the source repository.
-- Of course there is more into Harbour contribution than writing
-  code, so you're welcome to do so in other areas like documentation,
-  helping fellow users, giving input on decisions, testing in
-  various environments, etc.
-
-
-# MORE INFORMATION
+# Harbour Links
 
   * [Homepage](http://harbour-project.org/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
@@ -1947,6 +1939,6 @@ There are several ways to help making Harbour better:
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
 
-Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
+This document Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
 Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
 See [COPYING](COPYING.txt).
