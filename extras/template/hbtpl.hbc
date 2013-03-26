@@ -2,6 +2,8 @@
 description=Harbour library project template
 
 incpaths=.
+# NOTE: Uncomment if you store headers in this alternate subdirectory
+# incpaths=include
 headers=${hb_name}.ch
 libpaths=lib/${hb_plat}/${hb_comp}
 
