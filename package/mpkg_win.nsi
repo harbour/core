@@ -5,7 +5,7 @@
 ; Harbour Nullsoft installer script (for Windows/MS-DOS)
 ; [ Do not try to use this script directly. It won't work. ]
 ;
-; See README.txt for further information.
+; See README.md for further information.
 ; ---------------------------------------------------------------
 
   SetCompressor /solid lzma
@@ -15,7 +15,7 @@
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
-  !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.txt"
+  !define MUI_FINISHPAGE_SHOWREADME 'notepad.exe "$\"$INSTDIR\README.md$\""'
   !define MUI_ICON "harb_win.ico"
   !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
@@ -74,7 +74,7 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING.txt"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\README.txt"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\README.md"
   ; Let it work also for MS-DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"
 

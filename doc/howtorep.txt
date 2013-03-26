@@ -15,7 +15,7 @@ Content
 =========================================================
 by Viktor Szakats
 
- 1) Read the Harbour README.txt, monitor the development mailing list,
+ 1) Read the Harbour README.md, monitor the development mailing list,
     consult with the developers, make contributions. This way your chances
     are high to get a R/W access to the repository.
  2) Before uploading anything you'll need push permission for the

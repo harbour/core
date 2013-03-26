@@ -194,7 +194,7 @@ The most used targets are these:
 NOTES
 =====
 
-See README.txt about details.
+See README.md about details.
 
 
 You can build and/or run any program in tests/working by using hbmk2

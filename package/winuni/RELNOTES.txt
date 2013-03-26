@@ -5,7 +5,7 @@ releases are available for download on sourceforge.net:
 
    http://sourceforge.net/projects/harbour-project/files/
 
-Make sure to check README.txt "QUICK START" section and visit
+Make sure to check README.md "QUICK START" section and visit
 our user mailing list at:
 
    http://groups.google.com/group/harbour-users/
@@ -84,7 +84,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - hbnetio finalized.
 - hbqt cleanups and improvements, QT 4.6 support.
 - hbide (early development stage).
-- Documentation enhancements: README.txt and doc/xhb-diff.txt.
+- Documentation enhancements: README.md and doc/xhb-diff.txt.
 - hbmk2 got support to convert xMate, hbmake and xbuild make files to .hbp
   format.
 - Added hbsms contrib library (to send SMS text messages in multiplatform way).
@@ -186,7 +186,7 @@ Changes since previous (2.0.0beta1 20090609) release:
 - MS-DOS support tested and required fixes applied
 - embedded compilers moved to 'comp' subdir
 - support for latest MinGW x64 and MSVS 2010 compilers
-- extended README.txt with new examples and app build quick guide
+- extended README.md with new examples and app build quick guide
 - icon for installer and hbrun tool
 - hbxbp and hbqt enhancements
 - hbwin refinements and better compatibility
