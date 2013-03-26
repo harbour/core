@@ -305,13 +305,13 @@ DYNAMIC SSL_pending
 DYNAMIC SSL_read
 DYNAMIC SSL_renegotiate
 DYNAMIC SSL_rstate_string
-DYNAMIC SSL_RSTATE_STRING_LONG
+DYNAMIC SSL_rstate_string_long
 DYNAMIC SSL_SESSION_cmp
 DYNAMIC SSL_SESSION_get_time
 DYNAMIC SSL_SESSION_get_timeout
 DYNAMIC SSL_SESSION_hash
 DYNAMIC SSL_SESSION_new
-DYNAMIC SSL_session_reused
+DYNAMIC SSL_SESSION_reused
 DYNAMIC SSL_SESSION_set_time
 DYNAMIC SSL_SESSION_set_timeout
 DYNAMIC SSL_set_accept_state
@@ -332,8 +332,8 @@ DYNAMIC SSL_set_verify_result
 DYNAMIC SSL_set_wfd
 DYNAMIC SSL_shutdown
 DYNAMIC SSL_state
-DYNAMIC ssl_state_string
-DYNAMIC ssl_state_string_long
+DYNAMIC SSL_state_string
+DYNAMIC SSL_state_string_long
 DYNAMIC SSL_total_renegotiations
 DYNAMIC SSL_use_certificate
 DYNAMIC SSL_use_certificate_ASN1
