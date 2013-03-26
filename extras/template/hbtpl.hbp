@@ -16,6 +16,9 @@
 # -depimplibd=lib3rd:lib3rd
 # -depfinish=lib3rd
 
+# NOTE: Uncomment if you store headers in this alternate subdirectory
+# -iinclude
+
 core.prg
 corec.c
 
