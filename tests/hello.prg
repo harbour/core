@@ -2,6 +2,6 @@
 
 PROCEDURE Main()
 
-   ? "Hello world!"
+   ? "Hello, world!"
 
    RETURN

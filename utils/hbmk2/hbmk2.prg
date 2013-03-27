@@ -13680,8 +13680,6 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
 #ifndef _HBMK_EMBEDDED_
 
-#define _HBSH_ENV_DEBUG  "HBSHELL_DEBUG"
-
 #define _EXT_FILE_NORMAL "hb_extension"
 #define _EXT_FILE_MSDOS  "hb_ext.ini"
 
@@ -13733,7 +13731,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* get this before doing anything else */
    LOCAL lDebug := ;
-      ! Empty( GetEnv( _HBSH_ENV_DEBUG ) ) .OR. ;
+      hb_argCheck( "debug" ) .OR. ;
       Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 1 ) == "d"
 
    #if ! __pragma( b )
@@ -13811,7 +13809,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
-         _hbmk_OutErr( I_( e"Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ) )
+         _hbmk_OutErr( hbmk, I_( e"Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ) )
       ENDIF
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -15858,6 +15856,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_Opt_LongCmd_Shell := { ;
       NIL, ;
+      { "--hb:debug"         , I_( "enable script debugging" ) }, ;
+      NIL, ;
       { "-help"              , I_( "this help" ) }, ;
       { "-viewhelp"          , I_( "long help in text viewer" ) }, ;
       { "-longhelp"          , I_( "long help" ) }, ;
@@ -16426,7 +16426,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
 #ifndef _HBMK_EMBEDDED_
    AAdd( aLst_EnvVar_Shell, { _EXT_ENV_           , I_( "space separated list of extensions to load in interactive Harbour shell" ) } )
-   AAdd( aLst_EnvVar_Shell, { _HBSH_ENV_DEBUG     , I_( "enable script debugging if set to any non-empty value" ) } )
    AAdd( aLst_File_Shell, { _HBMK_AUTOSHELL_NAME, hb_StrFormat( I_( "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( hbmk, .T., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) } )
    AAdd( aLst_File_Shell, { "shell plugins"     , hb_StrFormat( I_( ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s" ), __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
    AAdd( aLst_File_Shell, { _FNAME_HISTORY_     , hb_StrFormat( I_( "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s" ), _HISTORY_DISABLE_LINE, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )

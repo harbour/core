@@ -64,14 +64,14 @@ There are several ways to help making Harbour better:
         $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
 
 - Text editor setting for Harbour files
-  - Encoding is either 7-bit ASCII or UTF-8 (no BOM)
+  - Encoding is either 7-bit ASCII or UTF-8 (without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark))
   - Always use spaces, never tabs
   - Remove trailing spaces from lines
   - Always keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100KB),
   use this [free service](http://dropcanvas.com)
-- Of course there is more into Harbour contribution than writing
+- Of course, there is more into Harbour contribution than writing
   code, so you're welcome to do so in other areas like documentation,
   helping fellow users, giving input on decisions, testing in
   various environments, volunteering in administration tasks, etc.
@@ -181,7 +181,7 @@ To test it, type:
     > ..\bin\hbmk2 hello.prg
     > hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 ## on Windows hosts with POSIX shells (MSYS/Cygwin)
 
@@ -198,10 +198,10 @@ To test it, type:
     > ..\bin\hbmk2 hello.prg
     > hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 > When building for Borland C++ make sure that GNU Make
-> is executed when typing 'make', Borland Make has the same name.
+> is executed when typing ``make``, Borland Make has the same name.
 
 ## on MS-DOS hosts (possible cross-build targets: Windows, OS/2, Linux)
 
@@ -217,7 +217,7 @@ To test it, type:
     > ..\bin\hbmk2 hello.prg
     > hello
 
- You should see 'Hello world!' on screen.
+ You should see ``Hello, world!`` on screen.
 
 ## on OS/2 hosts (possible cross-build targets: MS-DOS, OS/2, Linux)
 
@@ -231,7 +231,7 @@ To test it, type:
     > ..\bin\hbmk2 hello.prg
     > hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 ## on Linux hosts (possible cross-build targets: Windows, Windows CE, MS-DOS, OS/2)
 
@@ -245,7 +245,7 @@ To test it, type:
     $ hbmk2 hello.prg
     $ ./hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 ## on Darwin (OS X) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
@@ -262,7 +262,7 @@ To test it, type:
     $ hbmk2 hello.prg
     $ ./hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 > You can override default (host) architecture by adding
 > values below to `HB_USER_CFLAGS`, `HB_USER_LDFLAGS` envvars,
@@ -303,7 +303,7 @@ To test it, type:
     $ hbmk2 hello.prg
     $ ./hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 ## on Minix hosts
 
@@ -328,7 +328,7 @@ To test it, type:
     $ hbmk2 hello.prg
     $ ./hello
 
-You should see 'Hello world!' on screen.
+You should see ``Hello, world!`` on screen.
 
 > For sunpro on Solaris:<br />
 > If you have any GNU binutils stuff installed, do make sure
@@ -433,10 +433,10 @@ See: [How to Build](#how-to-build)
 
 # How to Enable Optional Components
 
-Certain Harbour parts (typically contrib packages) depend on 3rd
-party components. To make these Harbour parts built, you need
-to tell Harbour where to find the headers for these 3rd party
-components.
+Certain Harbour parts &ndash; typically contrib packages &ndash;
+depend on 3rd party components. To make these Harbour parts built,
+you need to tell Harbour where to find the headers for these 3rd
+party components.
 
 On *nix systems most of these 3rd party components will
 automatically be picked up if installed on well-known standard
@@ -450,7 +450,7 @@ on *nix which aren't available through official package managers
 (f.e. ADS Client).
 
 Note that Harbour is tuned to use 3rd party binary packages in their
-default, unmodified ("vanilla") install layout created by their
+default, unmodified &ndash; *vanilla* &ndash; install layout created by their
 official/mainstream install kits. If you manually move, rename,
 delete or add files under the 3rd party packages' root directory,
 the default Harbour build process (especially Windows implib
@@ -504,8 +504,8 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
-Certain contribs can be instructed (when using .hbc files) to link
-against static build of their 3rd party lib dependencies (for
+Certain contribs can be instructed &ndash; when using .hbc files &ndash;
+to link against static build of their 3rd party lib dependencies (for
 advanced users only):
 
     HB_STATIC_ALLEGRO=yes
@@ -516,7 +516,7 @@ advanced users only):
 >
 >    * You need to use native path format to your shell/OS.
 >    * Spaces in directory names aren't currently supported.
->      (You can use 8.3 name alias on Windows platform, though)
+>      You can use 8.3 name alias on Windows platform, though.
 >    * Don't put directory names inside double quotes.
 >    * Use absolute paths.
 
@@ -531,7 +531,7 @@ advanced users only):
 ## Linux (generic)
 
 ### For contrib/rddads lib:
-   Download and install 'Advantage Client Engine API for Linux' package
+   Download and install *Advantage Client Engine API for Linux* package
    (f.e. `aceapi-10.00.0.3.tar.gz`)
 
 ### For contrib/hbhpdf lib, if you don't wish to use locally hosted version:
@@ -642,6 +642,7 @@ All of these settings are optional and all settings are case
 sensitive.
 
 ## General
+
    - `HB_INSTALL_PREFIX`
 
      Target root directory to install Harbour files.
@@ -651,7 +652,7 @@ sensitive.
      It's always set to `./pkg/<arch>/<comp>` when
      `HB_BUILD_PKG` is set to `yes`. On non-*nix systems,
      you must set it to a valid directory when using
-     'install'. Use absolute paths only. For a peace of
+     ``install``. Use absolute paths only. For a peace of
      mind, avoid using spaces and quotes in the name.
      You have to use path format native to your shell.
      F.e. to specify `C:\dir` on Windows, with Cygwin
@@ -674,13 +675,15 @@ sensitive.
      See also: `HB_CC*` settings.
 
 ## Special
+
    - `HB_BUILD_NAME=[<name>]`
 
      Create named build. This allows to keep multiple builds in parallel for any
      given platform/compiler. F.e. debug / release.
-     NOTE: In current implementation it's appended to compiler directory name, so
-     all filesystem/platform name rules and limits apply. (Back)slashes will be
-     stripped from the name though.
+
+     > In current implementation it's appended to compiler directory name, so
+     > all filesystem/platform name rules and limits apply. (Back)slashes will be
+     > stripped from the name though.
 
    - `HB_BUILD_PKG=yes`
 
@@ -726,7 +729,7 @@ sensitive.
    - `HB_BUILD_NOGPLLIB=yes`
 
      Disable components dependent on GPL 3rd party code,
-     to allow Harbour for commercial (closed-source)
+     to allow Harbour for commercial (closed source)
      projects. Default: `no`
 
    - `HB_BUILD_3RDEXT=no`
@@ -736,10 +739,10 @@ sensitive.
 
    - `HB_BUILD_CONTRIBS=no [<l>]`
 
-     Don't build any (or space separated `<l>` list of)
+     Don't build any, or space separated `<l>` list of,
      contrib packages. Please note it won't prevent
      building packages which are dependencies of other
-     (enabled) packages.
+     &ndash; enabled &ndash; packages.
 
    - `HB_BUILD_CONTRIBS=[<l>]`
 
@@ -772,18 +775,18 @@ sensitive.
 
      Copy import libraries created for external .dll
      dependencies to the library install directory in
-     'install' build phase. Default: `yes`
-     (for Windows/OS/2 targets only. Please note
+     ``install`` build phase. Default: `yes`
+     For Windows/OS/2 targets only. Please note
      that this feature doesn't work with all possible
      binary distributions of 3rd party packages.
      We test only the official/mainstream ones. Also
      note that the generated implibs will require .dlls
-     compatible with the ones used at build time.)
+     compatible with the ones used at build time.
 
    - `HB_INSTALL_3RDDYN=yes`
 
      Copy dynamic libraries of external .dll dependencies
-     to the dynamic library directory in 'install' build
+     to the dynamic library directory in ``install`` build
      phase. Default: no
 
    - `HB_SRC_ROOTPATH=<dir>`
@@ -825,7 +828,7 @@ sensitive.
 
      Used with gcc compiler family to specify
      compiler/linker tool name suffix
-     (usually version number).
+     &ndash; usually version number.
 
 ## Cross-building
 
@@ -843,7 +846,7 @@ for your host platform can be found:
 
 If you leave this value empty, the make system will try to autodetect it,
 so in practice all you have to do is to create a native build first (no
-'install' required), then create the cross-build. If you set this value
+``install`` required), then create the cross-build. If you set this value
 manually, it may be useful to know that harbour, hbpp and hbmk2
 executables are required for a cross-build process to succeed.
 
@@ -858,10 +861,10 @@ executables are required for a cross-build process to succeed.
 >   line.
 > - Naturally, you'll need to adapt dirs to valid ones on your system.
 >   Don't use spaces in dirs.
-> - You can use additional `clean`, `install' or `clean install`
->   (without quotes) make parameters depending on what you want to do.
+> - You can use additional `clean`, `install` or `clean install`
+>   make parameters depending on what you want to do.
 > - To redirect all output to a log file, append this after the make
->   command: `> log.txt 2>&1` (without quotes)
+>   command: `> log.txt 2>&1`
 
 ```batchfile
 rem MSVC 2012
@@ -1327,7 +1330,7 @@ For all platforms you'll need two things:
 * Supported ANSI C compiler
 
     Your compiler of choice has to be placed in the PATH
-    (and configured appropriately according to instructions).
+    &ndash; and configured appropriately according to instructions.
     If you use official Harbour binary distribution on Windows,
     you already have MinGW compiler embedded in the installation,
     which will automatically be used, so you don't have to
@@ -1387,9 +1390,13 @@ Build Harbour with:
 
 Build app with:
 
-    $ hbmk2 myapp -b
+    $ hbmk2 myapp -b -run
 
-Press \<Alt+D\> in the app.
+or run script with:
+
+    $ hbrun myapp --hb:debug
+
+Press `<Alt+D>` in the app.
 
 
 # Troubleshooting
@@ -1398,7 +1405,7 @@ Always evaluate these points before reporting an issue on the developers'
 mailing list.
 
 1.  Make sure to have carefully read this document.
-2.  Make sure to do a 'make clean' before doing a build after refreshing
+2.  Make sure to do a ``make clean`` before doing a build after refreshing
     the sources.
 3.  If that still fails, make sure to install fresh source tree in a new
     local directory and start over. See [How to Get](#how-to-get)
@@ -1447,11 +1454,11 @@ mailing list.
 9.  If everything fails and you are to report a build problem to Harbour
     developers, make sure to include your OS version/language/CPU architecture,
     Harbour revision, C compiler name/release and version, environment
-    variables and verbose log output containing _both stderr and stdout in
-    one combined stream_ (use `make > log.txt 2>&1`). Enable verbose
+    variables and verbose log output containing **both stderr and stdout in
+    one combined stream** (use `make > log.txt 2>&1`). Enable verbose
     mode using `HB_BUILD_VERBOSE=yes`.
     Complete log output is rarely necessary, but always make sure to include
-    the top of the output (lines starting with '!') and the area where
+    the top of the output (lines starting with ``!``) and the area where
     problematic behavior occurred _first_. Make sure to not only include
     a link failure or a make tool failure, as it's most of the time not
     enough information. Compress your log using zip if it is larger
@@ -1460,15 +1467,15 @@ mailing list.
 10. Do not alter the directory layout and files in Harbour and 3rd party
     packages.
 11. If you are to report a build problem with a Harbour application,
-    all of the above points apply, plus make sure to use '-trace'
+    all of the above points apply, plus make sure to use ``-trace``
     command line option when running hbmk2 and redirect the result to
-    a file (see above how).
+    a file &ndash; see above how.
     It's good idea to first remove all manual references to Harbour
     core components from makefiles and custom environment. F.e. it's
     commom mistake to add C compiler header and/or lib dirs, Harbour core
     header and/or lib dirs, built-in constants to makefiles or environment.
     No such thing is necessary as all of these are automatically handled
-    by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
+    by hbmk2. IOW start simple and don't be overbusy with *fine-tuning*
     your configuration. If you need to, the problem is most probably
     elsewhere. It's also good idea to try with Harbour nightly binary or
     official stable release first.
@@ -1702,7 +1709,7 @@ mailing list.
      x | sunos    | vxworks/gcc       | (CPU cross-builds possible: x86, arm, mips, ppc)
      x | sunos    | vxworks/diab      | (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
 
-> Leading 'x' marks cross-platform scenarios.
+> Leading **x** marks cross-platform scenarios.
 
 Supported shells per host platforms:
 
@@ -1923,7 +1930,7 @@ Supported shells per host platforms:
   * [Homepage](http://harbour-project.org/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
-  * [Source](https://github.com/harbour/core)
+  * [Source code](https://github.com/harbour/core)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
