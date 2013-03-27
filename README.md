@@ -1804,7 +1804,7 @@ Supported shells per host platforms:
      * HB_WITH_LZF - lzf library (RT data compression) [multiplatform, free, open-source]
         * <http://liblzf.plan9.de/>
      * HB_WITH_MINILZO - miniLZO library (RT data compression) [multiplatform, free, open-source]
-        * <http://www.oberhumer.com/opensource/minilzo/>
+        * <http://www.oberhumer.com/opensource/lzo/>
      * HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
         * <http://www.winimage.com/zLibDll/minizip.html>
      * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
@@ -1838,8 +1838,8 @@ Supported shells per host platforms:
         * <http://www.xmailserver.org/xdiff-lib.html>
 
      * Windows 95 Winsock2 [win, free, closed-source]
-        * Information: <http://support.microsoft.com/kb/182108/EN-US/>
-        * Direct link: <http://download.microsoft.com/download/0/e/0/0e05231b-6bd1-4def-a216-c656fbd22b4e/w95ws2setup.exe>
+        * Information: Microsoft KB182108 - "Availability of Windows Sockets 2.0 for Windows 95"
+        * Search for: `w95ws2setup.exe`
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
         * <http://go.microsoft.com/fwlink/?LinkId=14851>
@@ -1895,8 +1895,7 @@ Supported shells per host platforms:
         OS/2 binary + source (3.81r3 or upper):
 
          * <ftp://hobbes.nmsu.edu/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
-         * <http://www.os2site.com/sw/dev/make/index.html>
-         * <http://www.os2site.com/sw/dev/make/make-3.81-r3.zip>
+         * <ftp://hobbes.nmsu.edu/pub/os2/dev/util/>
           <br />(included in Harbour as [os2-make.exe](os2-make.exe))
      * GNU core utils (mkdir, rm, cp, echo)
 
