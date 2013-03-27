@@ -13893,11 +13893,13 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             AAdd( aOPTPRG, "-b" )
          ENDIF
 
+         hbmk[ _HBMK_lDumpInfo ] := .T.  /* trick to suppress output from HBC_Find() call */
          FOR EACH tmp IN aExtension
             IF ! Empty( cVersion := HBC_Find( hbmk, hb_FNameExtSet( tmp, ".hbc" ) ) )
                AAddNew( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
          NEXT
+         hbmk[ _HBMK_lDumpInfo ] := .F.
 
          FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
             AAdd( aOPTPRG, "-i" + tmp )

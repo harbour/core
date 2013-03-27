@@ -1,5 +1,2 @@
-#
-# $Id: expat.hbc 16154 2011-01-30 23:09:11Z vszakats $
-#
 
 libs=${hb_name}

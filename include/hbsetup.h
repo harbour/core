@@ -388,8 +388,11 @@
 #endif
 
 #ifndef HB_OS_QNX
-   #if defined( __QNX__ )
+   #if defined( __QNX__ ) || defined( __QNXNTO__ )
       #define HB_OS_QNX
+      #if defined( __QNXNTO__ ) /* TOFIX */
+         #define HB_OS_QNX_BB10
+      #endif
    #endif
 #endif
 

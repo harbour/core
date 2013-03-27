@@ -943,6 +943,14 @@ ifeq ($(HB_COMPILER),)
             HB_COMPILER := gcc
          endif
       endif
+   else
+   ifeq ($(HB_PLATFORM),qnx)
+      HB_COMP_PATH := $(call find_in_path,ntox86-gcc)
+      ifneq ($(HB_COMP_PATH),)
+         HB_COMPILER := gcc
+         HB_CCPREFIX := ntox86-
+      endif
+   endif
    endif
    endif
    endif

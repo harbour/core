@@ -98,9 +98,10 @@ Download source archive from this page and unpack:
 
 ## Unstable versions
 
-> WARNING: Recommended for users contributing to Harbour development,
->          following the development mailing list, commits and reading
->          [ChangeLog.txt](ChangeLog.txt?raw=true).
+> WARNING:
+> Recommended for users contributing to Harbour development,
+> following the development mailing list, commits and reading
+> [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
 
@@ -433,10 +434,10 @@ See: [How to Build](#how-to-build)
 
 # How to Enable Optional Components
 
-Certain Harbour parts &ndash; typically contrib packages &ndash;
-depend on 3rd party components. To make these Harbour parts built,
-you need to tell Harbour where to find the headers for these 3rd
-party components.
+Certain Harbour parts&mdash;typically contrib packages&mdash;depend
+on 3rd party components. To make these Harbour parts built,you need
+to tell Harbour where to find the headers for these 3rd party
+components.
 
 On *nix systems most of these 3rd party components will
 automatically be picked up if installed on well-known standard
@@ -450,7 +451,7 @@ on *nix which aren't available through official package managers
 (f.e. ADS Client).
 
 Note that Harbour is tuned to use 3rd party binary packages in their
-default, unmodified &ndash; *vanilla* &ndash; install layout created by their
+default, unmodified&mdash;"vanilla"&mdash;install layout created by their
 official/mainstream install kits. If you manually move, rename,
 delete or add files under the 3rd party packages' root directory,
 the default Harbour build process (especially Windows implib
@@ -504,8 +505,8 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
-Certain contribs can be instructed &ndash; when using .hbc files &ndash;
-to link against static build of their 3rd party lib dependencies (for
+Certain contribs can be instructed&mdash;when using .hbc files&mdash;to
+link against static build of their 3rd party lib dependencies (for
 advanced users only):
 
     HB_STATIC_ALLEGRO=yes
@@ -516,7 +517,7 @@ advanced users only):
 >
 >    * You need to use native path format to your shell/OS.
 >    * Spaces in directory names aren't currently supported.
->      You can use 8.3 name alias on Windows platform, though.
+>      You *can* use 8.3 name alias on Windows platform, though.
 >    * Don't put directory names inside double quotes.
 >    * Use absolute paths.
 
@@ -741,8 +742,8 @@ sensitive.
 
      Don't build any, or space separated `<l>` list of,
      contrib packages. Please note it won't prevent
-     building packages which are dependencies of other
-     &ndash; enabled &ndash; packages.
+     building packages which are dependencies of
+     other&mdash;enabled&mdash;packages.
 
    - `HB_BUILD_CONTRIBS=[<l>]`
 
@@ -827,8 +828,8 @@ sensitive.
    - `HB_CCSUFFIX=[<suffix>]`
 
      Used with gcc compiler family to specify
-     compiler/linker tool name suffix
-     &ndash; usually version number.
+     compiler/linker tool name suffix&mdash;usually
+     version number.
 
 ## Cross-building
 
@@ -1302,7 +1303,6 @@ make
 ## on *nix hosts in general
 
 ```bash
-# GCC
 [g]make
 ```
 
@@ -1329,8 +1329,8 @@ For all platforms you'll need two things:
 
 * Supported ANSI C compiler
 
-    Your compiler of choice has to be placed in the PATH
-    &ndash; and configured appropriately according to instructions.
+    Your compiler of choice has to be placed in the PATH&mdash;and
+    configured appropriately according to instructions.
     If you use official Harbour binary distribution on Windows,
     you already have MinGW compiler embedded in the installation,
     which will automatically be used, so you don't have to
@@ -1422,10 +1422,10 @@ mailing list.
     versions when building Harbour. The surest way to achieve this is to
     leave only C compiler directory in PATH:
 
-        set PATH=C:\<compilerdir>
+        set PATH=C:\<c_compiler_bin_dir>
 
-    If you use Harbour official binary distro on Windows, even above is
-    unnecessary and not recommended.
+    > If you use Harbour official binary distro on Windows, even above is
+    > unnecessary and not recommended.
 6.  Remove all old, unnecessary environment variables (for both Harbour
     and C compiler) from your environment. Also remove any custom settings
     for your C compiler.
@@ -1435,11 +1435,11 @@ mailing list.
     not even used by Harbour build process and hbmk2.
     You should delete them:
 
-        set HB_DIR=<Harbour root dir>
-        set HB_PATH=<Harbour root dir>
-        set HRB_DIR=<Some Harbour dir>
-        set INCLUDE=<Harbour include dir>
-        set LIB=<Harbour lib dir>
+        set HB_DIR=<harbour_dir>
+        set HB_PATH=<harbour_dir>
+        set HRB_DIR=<some_harbour_dir>
+        set INCLUDE=<harbour_include_dir>
+        set LIB=<harbour_lib_dir>
         set HB_GT_LIB=
         set HB_*_INSTALL=
         set HB_INSTALL_???=
@@ -1469,7 +1469,7 @@ mailing list.
 11. If you are to report a build problem with a Harbour application,
     all of the above points apply, plus make sure to use ``-trace``
     command line option when running hbmk2 and redirect the result to
-    a file &ndash; see above how.
+    a file (see above how).
     It's good idea to first remove all manual references to Harbour
     core components from makefiles and custom environment. F.e. it's
     commom mistake to add C compiler header and/or lib dirs, Harbour core
