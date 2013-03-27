@@ -1838,8 +1838,8 @@ Supported shells per host platforms:
         * <http://www.xmailserver.org/xdiff-lib.html>
 
      * Windows 95 Winsock2 [win, free, closed-source]
-        * Information: Microsoft KB182108 - "Availability of Windows Sockets 2.0 for Windows 95"
-        * Search for: `w95ws2setup.exe`
+        * Information: Microsoft KB182108 "Availability of Windows Sockets 2.0 for Windows 95"
+        * Search for `w95ws2setup.exe`
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
         * <http://go.microsoft.com/fwlink/?LinkId=14851>
