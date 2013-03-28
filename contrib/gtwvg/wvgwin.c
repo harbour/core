@@ -1,8 +1,4 @@
 /*
- * $Id: wvgwin.c 18716 2012-12-03 13:52:22Z vszakats $
- */
-
-/*
  * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *

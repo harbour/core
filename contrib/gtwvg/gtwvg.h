@@ -1,8 +1,4 @@
 /*
- * $Id: gtwvg.h 18909 2013-03-11 11:14:16Z vszakats $
- */
-
-/*
  * Harbour Project source code:
  * Header File for Video subsystem for Windows using GUI windows instead of Console
  * Copyright 2003 Peter Rees <peter@rees.co.nz>

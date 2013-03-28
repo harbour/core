@@ -1,8 +1,4 @@
 /*
- * $Id: wvgcore.c 18716 2012-12-03 13:52:22Z vszakats $
- */
-
-/*
  * Harbour Project source code:
  *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
