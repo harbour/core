@@ -1,4 +1,8 @@
 /*
+ * $Id: wvgcore.c 18716 2012-12-03 13:52:22Z vszakats $
+ */
+
+/*
  * Harbour Project source code:
  *
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -198,84 +202,56 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
    return ( IPicture * ) iPicture;
 }
 
-HB_BOOL hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
+HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPicture, BOOL bDoNotScale )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    LONG    lWidth, lHeight;
-   int     x, y, xe, ye;
-   int     c   = x1;
-   int     r   = y1;
-   int     dc  = wd;
-   int     dr  = ht;
-   int     tor = 0;
-   int     toc = 0;
+   int     xe, ye, iWd = 0, iHt = 0;
    HRGN    hrgn1;
-   POINT   lpp;
+   POINT   lpp     = { 0, 0 };
    HB_BOOL bResult = HB_FALSE;
+   HDC     hdc     = _s->hdc;
 
    if( iPicture )
    {
       HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & lWidth );
       HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & lHeight );
 
-      if( dc == 0 )
-         dc = ( int ) ( ( float ) dr * lWidth / lHeight );
-      if( dr == 0 )
-         dr = ( int ) ( ( float ) dc * lHeight / lWidth );
-      if( tor == 0 )
-         tor = dr;
-      if( toc == 0 )
-         toc = dc;
-
-      x  = c;
-      y  = r;
-      xe = c + toc - 1;
-      ye = r + tor - 1;
-
-      GetViewportOrgEx( _s->hdc, &lpp );
-
-      hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
-      SelectClipRgn( _s->hdc, hrgn1 );
-
-      while( x < xe )
+      if( bDoNotScale )
       {
-         while( y < ye )
-         {
-            HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) _s->hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
-            y += dr;
-         }
-         y  = r;
-         x += dc;
+         iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+         iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         x  += abs( ( iWd - wd ) / 2 );
+         y  += abs( ( iHt - ht ) / 2 );
+         wd  = iWd;
+         ht  = iHt;
       }
+      xe = x + wd - 1;
+      ye = y + ht - 1;
 
-      SelectClipRgn( _s->hdc, NULL );
+      GetViewportOrgEx( hdc, &lpp );
+
+      hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
+      SelectClipRgn( hdc, hrgn1 );
+
+      HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, NULL );
+
+      SelectClipRgn( hdc, NULL );
       DeleteObject( hrgn1 );
 
       if( _s->bGui )
       {
-         x  = c;
-         y  = r;
-         xe = c + toc - 1;
-         ye = r + tor - 1;
+         hdc = _s->hGuiDC;
 
-         GetViewportOrgEx( _s->hGuiDC, &lpp );
+         GetViewportOrgEx( hdc, &lpp );
 
-         hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
-         SelectClipRgn( _s->hGuiDC, hrgn1 );
+         hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
+         SelectClipRgn( hdc, hrgn1 );
 
-         while( x < xe )
-         {
-            while( y < ye )
-            {
-               HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) _s->hGuiDC, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
-               y += dr;
-            }
-            y  = r;
-            x += dc;
-         }
+         HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, NULL );
 
-         SelectClipRgn( _s->hGuiDC, NULL );
+         SelectClipRgn( hdc, NULL );
          DeleteObject( hrgn1 );
       }
 
@@ -525,7 +501,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
    return lReturn;
 }
 
-HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR lpImage )
+HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage, BOOL bDoNotScale )
 {
 #if ! defined( HB_OS_WIN_CE )
    HGLOBAL hGlobal;
@@ -533,19 +509,12 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR lpIma
    DWORD   nFileSize;
    DWORD   nReadByte;
    LONG    lWidth, lHeight;
-   int     x, y, xe, ye;
-   int     c   = x1;
-   int     r   = y1;
-   int     dc  = wd;
-   int     dr  = ht;
-   int     tor = 0;
-   int     toc = 0;
+   int     xe, ye, iWd = 0, iHt = 0;
    HRGN    hrgn1;
    POINT   lpp     = { 0, 0 };
    HB_BOOL bResult = HB_FALSE;
 
-   hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING,
-                       FILE_ATTRIBUTE_NORMAL, NULL );
+   hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 
    if( hFile != INVALID_HANDLE_VALUE )
    {
@@ -571,36 +540,24 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR lpIma
                   HB_VTBL( iPicture )->get_Width( HB_THIS_( iPicture ) & lWidth );
                   HB_VTBL( iPicture )->get_Height( HB_THIS_( iPicture ) & lHeight );
 
-                  if( dc == 0 )
-                     dc = ( int ) ( ( float ) dr * lWidth / lHeight );
-                  if( dr == 0 )
-                     dr = ( int ) ( ( float ) dc * lHeight / lWidth );
-                  if( tor == 0 )
-                     tor = dr;
-                  if( toc == 0 )
-                     toc = dc;
-
-                  x  = c;
-                  y  = r;
-                  xe = c + toc - 1;
-                  ye = r + tor - 1;
+                  if( bDoNotScale )
+                  {
+                     iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+                     iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+                     x  += abs( ( iWd - wd ) / 2 );
+                     y  += abs( ( iHt - ht ) / 2 );
+                     wd  = iWd;
+                     ht  = iHt;
+                  }
+                  xe = x + wd - 1;
+                  ye = y + ht - 1;
 
                   GetViewportOrgEx( hdc, &lpp );
 
-                  hrgn1 = CreateRectRgn( c + lpp.x, r + lpp.y, xe + lpp.x, ye + lpp.y );
+                  hrgn1 = CreateRectRgn( lpp.x + x, lpp.y + y, lpp.x + xe, lpp.y + ye );
                   SelectClipRgn( hdc, hrgn1 );
 
-                  while( x < xe )
-                  {
-                     while( y < ye )
-                     {
-                        HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, dc, dr, 0,
-                                                     lHeight, lWidth, -lHeight, NULL );
-                        y += dr;
-                     }
-                     y  = r;
-                     x += dc;
-                  }
+                  HB_VTBL( iPicture )->Render( HB_THIS_( iPicture ) hdc, x, y, wd, ht, 0, lHeight, lWidth, -lHeight, NULL );
 
                   SelectClipRgn( hdc, NULL );
                   DeleteObject( hrgn1 );
@@ -1046,7 +1003,7 @@ HB_FUNC( WVT_DRAWBOXGROUPRAISED )
 }
 
 /*
- *    Wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff )
+ *    Wvt_DrawImage( nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, aPxlOff, lDoNotScale )
  */
 HB_FUNC( WVT_DRAWIMAGE )
 {
@@ -1065,16 +1022,16 @@ HB_FUNC( WVT_DRAWIMAGE )
    iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
    if( HB_ISNUM( 5 ) )
-      hb_wvt_gtRenderPicture( iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, _s->pGUI->iPicture[ hb_parni( 5 ) - 1 ] );
+      hb_wvt_gtRenderPicture( iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, _s->pGUI->iPicture[ hb_parni( 5 ) - 1 ], hb_parl( 7 ) );
    else
    {
       void * hImage;
-      hb_wvt_DrawImage( _s->hdc, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ) );
+      hb_wvt_DrawImage( _s->hdc, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ), hb_parl( 7 ) );
       hb_strfree( hImage );
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
-         hb_wvt_DrawImage( _s->hGuiDC, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ) );
+         hb_wvt_DrawImage( _s->hGuiDC, iLeft, iTop, ( iRight - iLeft ) + 1, ( iBottom - iTop ) + 1, HB_PARSTR( 5, &hImage, NULL ), hb_parl( 7 ) );
          hb_strfree( hImage );
       }
       #endif
@@ -1768,16 +1725,16 @@ HB_FUNC( WVT_DRAWBUTTON )
       if( HB_ISNUM( 6 ) )
       {
          IPicture * iPicture = _s->pGUI->iPicture[ hb_parni( 6 ) - 1 ];
-         hb_wvt_gtRenderPicture( iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture );
+         hb_wvt_gtRenderPicture( iLeft + 4, iTop + 4, iImageWidth, iImageHeight, iPicture, FALSE );
       }
       else
       {
          void * hImage;
-         hb_wvt_DrawImage( _s->hdc, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ) );
+         hb_wvt_DrawImage( _s->hdc, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ), FALSE );
          hb_strfree( hImage );
          if( _s->bGui )
          {
-            hb_wvt_DrawImage( _s->hGuiDC, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ) );
+            hb_wvt_DrawImage( _s->hGuiDC, iLeft + 4, iTop + 4, iImageWidth, iImageHeight, HB_PARSTR( 6, &hImage, NULL ), FALSE );
             hb_strfree( hImage );
          }
       }
@@ -1856,7 +1813,7 @@ HB_FUNC( WVT_DRAWSTATUSBAR )
 }
 
 /*
- *  Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff ) -> lOk
+ *  Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aPxlOff, lDoNotScale ) -> lOk
  *  nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right }
  */
 HB_FUNC( WVT_DRAWPICTURE )
@@ -1880,7 +1837,7 @@ HB_FUNC( WVT_DRAWPICTURE )
          iBottom = xy.y - 1 + hb_parvni( 6, 3 );
          iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-         hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, _s->pGUI->iPicture[ iSlot ] ) );
+         hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, _s->pGUI->iPicture[ iSlot ], hb_parl( 7 ) ) );
       }
    }
 #endif
@@ -2671,12 +2628,12 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    if( bImage )
    {
       void * hImage;
-      hb_wvt_DrawImage( _s->hdc, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ) );
+      hb_wvt_DrawImage( _s->hdc, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ), FALSE );
       hb_strfree( hImage );
       #if defined( __SETGUI__ )
       if( _s->bGui )
       {
-         hb_wvt_DrawImage( _s->hGuiDC, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ) );
+         hb_wvt_DrawImage( _s->hGuiDC, rc.left, rc.top, rc.right - rc.left + 1, rc.bottom - rc.top + 1, HB_PARSTR( 9, &hImage, NULL ), FALSE );
          hb_strfree( hImage );
       }
       #endif
