@@ -2,8 +2,8 @@
  * Harbour Project source code:
  * Language Support Module (pt)
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
  * Copyright 2000 Felipe Coury <fcoury@creation.com.br> (small fixes, internal error names)
+ * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

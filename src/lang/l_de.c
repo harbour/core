@@ -2,8 +2,7 @@
  * Harbour Project source code:
  * Language Support Module (de)
  *
- * Copyright 1999 {list of individual authors and e-mail addresses}
- * modified 2003 Guenther Steiner <byte-one@aon.at>
+ * Copyright 1999 Guenther Steiner <byte-one@aon.at>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

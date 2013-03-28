@@ -2,7 +2,6 @@
  * Harbour Project source code:
  * Language Support Module (is)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
  * www - http://harbour-project.org
  *

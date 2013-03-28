@@ -32,7 +32,8 @@ PROCEDURE Main()
             /* TODO: do something with the metadata (position 0 to 5) */
             FOR tmp1 := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
                IF ! Empty( hb_langMessage( tmp1, "en" ) )
-                  cPO += Item( hb_langMessage( tmp1, "en" ), hb_langMessage( tmp1, cName ) )
+                  cPO += Item( hb_langMessage( tmp1, "en" ), ;
+                     iif( hb_langMessage( tmp1, "en" ) == hb_langMessage( tmp1, cName ), "", hb_langMessage( tmp1, cName ) ) )
                ENDIF
             NEXT
             hb_MemoWrit( Lower( hb_FNameName( cName ) ) + ".po", hb_StrShrink( cPO, Len( hb_eol() ) ) )
