@@ -1922,6 +1922,9 @@ Supported shells per host platforms:
      * [Setting up Git](https://help.github.com/articles/set-up-git)
      * [Git book](http://git-scm.com/book) [free]
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
+     * Using gettext (.po files)
+       * <http://help.transifex.com/features/formats.html#po-files>
+       * <http://www.heiner-eichmann.de/autotools/using_gettext.html>
 
 
 # Harbour Links
