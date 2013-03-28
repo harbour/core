@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Language Support Module (he)
  *
- * Copyright 2000 Chen Kedem <niki@synel.co.il> (Hebrew)
+ * Copyright 2000 Chen Kedem <niki@synel.co.il>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

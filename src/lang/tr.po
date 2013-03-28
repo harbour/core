@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "Ocak"
+
+#, c-format
+msgid "February"
+msgstr "Şubat"
+
+#, c-format
+msgid "March"
+msgstr "Mart"
+
+#, c-format
+msgid "April"
+msgstr "Nisan"
+
+#, c-format
+msgid "May"
+msgstr "Mayıs"
+
+#, c-format
+msgid "June"
+msgstr "Haziran"
+
+#, c-format
+msgid "July"
+msgstr "Temmuz"
+
+#, c-format
+msgid "August"
+msgstr "Ağustos"
+
+#, c-format
+msgid "September"
+msgstr "Eylül"
+
+#, c-format
+msgid "October"
+msgstr "Ekim"
+
+#, c-format
+msgid "November"
+msgstr "Kasım"
+
+#, c-format
+msgid "December"
+msgstr "Aralık"
+
+#, c-format
+msgid "Sunday"
+msgstr "Pazar"
+
+#, c-format
+msgid "Monday"
+msgstr "Pazartesi"
+
+#, c-format
+msgid "Tuesday"
+msgstr "Salı"
+
+#, c-format
+msgid "Wednesday"
+msgstr "Çarşamba"
+
+#, c-format
+msgid "Thursday"
+msgstr "Perşembe"
+
+#, c-format
+msgid "Friday"
+msgstr "Cuma"
+
+#, c-format
+msgid "Saturday"
+msgstr "Cumartesi"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr "Database Dosyası  # Kayıt      Son Güncelleme  Boyut"
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr "Daha örnek ister misiniz?"
+
+#, c-format
+msgid "Page No."
+msgstr "Sayfa No."
+
+#, c-format
+msgid "** Subtotal **"
+msgstr "** Alttoplam **"
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr "* Altalttoplam *"
+
+#, c-format
+msgid "*** Total ***"
+msgstr "*** Toplam ***"
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr "Geçersiz Tarih"
+
+#, c-format
+msgid "Range: "
+msgstr "Sınır: "
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr "E/H"
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr "GEÇERSİZ İFADE"
+
+#, c-format
+msgid "Unknown error"
+msgstr "Bilinmeyen hata"
+
+#, c-format
+msgid "Argument error"
+msgstr "Argüman hatası"
+
+#, c-format
+msgid "Bound error"
+msgstr "Sınır hatası"
+
+#, c-format
+msgid "String overflow"
+msgstr "Katar taşma"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Sayısal taşma"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Sıfır Bölücü"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Sayısal hata"
+
+#, c-format
+msgid "Syntax error"
+msgstr "İmlâ hatası"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "İşlem çok karmaşık"
+
+#, c-format
+msgid "Memory low"
+msgstr "Hafıza yetersiz"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Tanımlanmamış fonksiyon"
+
+#, c-format
+msgid "No exported method"
+msgstr "Eksport metodu yok"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Değişken yok"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Alyas yok"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Eksport değişkeni yok"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr "Alyasta geçersiz karakter"
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Alyas zaten kullanımda"
+
+#, c-format
+msgid "Create error"
+msgstr "Oluşturma hatası"
+
+#, c-format
+msgid "Open error"
+msgstr "Açma hatası"
+
+#, c-format
+msgid "Close error"
+msgstr "Kapatma hatası"
+
+#, c-format
+msgid "Read error"
+msgstr "Okuma hatası"
+
+#, c-format
+msgid "Write error"
+msgstr "Yazma hatası"
+
+#, c-format
+msgid "Print error"
+msgstr "Print hatası"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Desteklenmeyen işlem"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Sınır aşıldı"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Bozukluk var"
+
+#, c-format
+msgid "Data type error"
+msgstr "Data tip hatası"
+
+#, c-format
+msgid "Data width error"
+msgstr "Data boyut hatası"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Çalışma alanı kullanımda değil"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Çalışma alanı indeksli değil"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Exclusive gerekiyor"
+
+#, c-format
+msgid "Lock required"
+msgstr "Kilit gerekiyor"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Yazma izni yok"
+
+#, c-format
+msgid "Append lock failed"
+msgstr "Append kilidi kurulamadı"
+
+#, c-format
+msgid "Lock Failure"
+msgstr "Kilit kurulamadı"
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr "array erişim"
+
+#, c-format
+msgid "array assign"
+msgstr "array atama"
+
+#, c-format
+msgid "array dimension"
+msgstr "array boyut"
+
+#, c-format
+msgid "not an array"
+msgstr "array değil"
+
+#, c-format
+msgid "conditional"
+msgstr "şart"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr "Kurtarılamaz hata%d: "
+
+#, c-format
+msgid "Error recovery failure"
+msgstr "Hata kurtarma başarısız"
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr "Hata için ERRORBLOCK() yok"
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr "Çok fazla içiçe hata tutucu çağrısı"
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr "RDD geçersiz veya yüklemenedi"
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr "%s için geçersiz metot tipi"
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr "hb_xgrab hafıza atayamadı"
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr "hb_xrealloc NULL pointer tarafından çağrıldı"
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr "hb_xrealloc geçersiz bir pointer tarafından çağrıldı"
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr "hb_xrealloc tekrar hafıza atayamadı"
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr "hb_xfree geçersiz bir pointer tarafından çağrıldı"
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr "hb_xfree NULL pointer tarafından çağrıldı"
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr "Başlama prosedürü bulunamdı : '%s'"
+
+#, c-format
+msgid "No starting procedure"
+msgstr "Başlama prosedürü yok"
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr "Desteklenmeyen VP işlem kodu"
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr "%s için sembol maddesi lâzım"
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr "%s için geçersiz sembol tipi"
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr "%s için kodblok lazım"
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr "%s için stack pop edilirken yanlış madde tipi"
+
+#, c-format
+msgid "Stack underflow"
+msgstr "Stack taşması"
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr "%s içinde bir madde kendi üstüne kopyalanmak istendi"
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr "%s hafıza değişkeni olarak geçersiz sembol maddesi aktarıldı"
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr "Hafıza buffer taşması"
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr "hb_xgrab sıfır bayt ataması istendi"
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr "hb_xrealloc sıfır bayta boyutlandırmak istendi"
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr "hb_xalloc sıfır bayt ataması istendi"
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr "DD.MM.YYYY"
+
+#, c-format
+msgid "Y"
+msgstr "E"
+
+#, c-format
+msgid "N"
+msgstr "H"

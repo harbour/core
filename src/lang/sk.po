@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "január"
+
+#, c-format
+msgid "February"
+msgstr "február"
+
+#, c-format
+msgid "March"
+msgstr "marec"
+
+#, c-format
+msgid "April"
+msgstr "apríl"
+
+#, c-format
+msgid "May"
+msgstr "máj"
+
+#, c-format
+msgid "June"
+msgstr "jún"
+
+#, c-format
+msgid "July"
+msgstr "júl"
+
+#, c-format
+msgid "August"
+msgstr "august"
+
+#, c-format
+msgid "September"
+msgstr "september"
+
+#, c-format
+msgid "October"
+msgstr "október"
+
+#, c-format
+msgid "November"
+msgstr "november"
+
+#, c-format
+msgid "December"
+msgstr "december"
+
+#, c-format
+msgid "Sunday"
+msgstr "nedeľa"
+
+#, c-format
+msgid "Monday"
+msgstr "pondelok"
+
+#, c-format
+msgid "Tuesday"
+msgstr "utorok"
+
+#, c-format
+msgid "Wednesday"
+msgstr "streda"
+
+#, c-format
+msgid "Thursday"
+msgstr "štvrtok"
+
+#, c-format
+msgid "Friday"
+msgstr "piatok"
+
+#, c-format
+msgid "Saturday"
+msgstr "sobota"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr "Databáza          # Záznamy    Aktualizácia    Veľkosť"
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr "Chcete viac príkladov?"
+
+#, c-format
+msgid "Page No."
+msgstr "Strana"
+
+#, c-format
+msgid "** Subtotal **"
+msgstr "** Medzisúčet **"
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr "* Medzimedzisúčet *"
+
+#, c-format
+msgid "*** Total ***"
+msgstr "*** Súčet ***"
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr "Chybný dátum"
+
+#, c-format
+msgid "Range: "
+msgstr "Rozsah: "
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr "A/N"
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr "CHYBNÝ VÝRAZ"
+
+#, c-format
+msgid "Unknown error"
+msgstr "Neznáma chyba"
+
+#, c-format
+msgid "Argument error"
+msgstr "Chyba argumentu"
+
+#, c-format
+msgid "Bound error"
+msgstr "Chyba medzí"
+
+#, c-format
+msgid "String overflow"
+msgstr "Preplnenie reťazca"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Preplnenie čísla"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Delenie nulou"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Numerická chyba"
+
+#, c-format
+msgid "Syntax error"
+msgstr "Syntaktická chyba"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "Operácia príliš komplexná"
+
+#, c-format
+msgid "Memory low"
+msgstr "Nedostatok pamäte"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Nedefinovaná funkcia"
+
+#, c-format
+msgid "No exported method"
+msgstr "Neznáma metóda"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Premenná neexistuje"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Oblasť neexistuje"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Neznáma premenná"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr "Nepovolené znaky v oblasti"
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Oblasť je už použitá"
+
+#, c-format
+msgid "Create error"
+msgstr "Chyba vytvorenia"
+
+#, c-format
+msgid "Open error"
+msgstr "Chyba otvorenia"
+
+#, c-format
+msgid "Close error"
+msgstr "Chyba zatvorenia"
+
+#, c-format
+msgid "Read error"
+msgstr "Chyba čítania"
+
+#, c-format
+msgid "Write error"
+msgstr "Chyba zápisu"
+
+#, c-format
+msgid "Print error"
+msgstr "Chyba tlače"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Nepodporovaná operácia"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Prekročený limit"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Index poškodený"
+
+#, c-format
+msgid "Data type error"
+msgstr "Chyba typu dát"
+
+#, c-format
+msgid "Data width error"
+msgstr "Chyba dĺžky dát"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Nepoužitá pracovná oblasť"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Nezoradená pracovná oblasť"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Nutný výhradný prístup"
+
+#, c-format
+msgid "Lock required"
+msgstr "Uzamknutie nutné"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Zapis nebol povolený"
+
+#, c-format
+msgid "Append lock failed"
+msgstr "Zlyhanie uzamknutia pri pridávaní"
+
+#, c-format
+msgid "Lock Failure"
+msgstr "Zlyhanie uzamknutia"
+
+#, c-format
+msgid "Object destructor failure"
+msgstr "Chyba object deštruktora"
+
+#, c-format
+msgid "array access"
+msgstr "prístup k poľu"
+
+#, c-format
+msgid "array assign"
+msgstr "priradenie k poľu"
+
+#, c-format
+msgid "array dimension"
+msgstr "zmena dimenze poľa"
+
+#, c-format
+msgid "not an array"
+msgstr "nie je to pole"
+
+#, c-format
+msgid "conditional"
+msgstr "podmienka"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr "Neidentifikovateľná chyba %d: "
+
+#, c-format
+msgid "Error recovery failure"
+msgstr "Zlyhanie identifikácie chyby"
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr "Žiadny ERRORBLOCK() pre túto chybu"
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr "Príliš veľa rekurzívnych error handler volaní"
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr "RDD je neplatný alebo zlyhalo jeho otvorenie"
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr "Neplatný typ metódy od %s"
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr "hb_xgrab nemôže alkovať pamäť"
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr "hb_xrealloc volaný s NULL pointrom"
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr "hb_xrealloc volaný s neplatným pointrom"
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr "hb_xrealloc nemôže realokovať pamäť"
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr "hb_xfree volaný s neplatným pointrom"
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr "hb_xfree volaný s NULL pointrom"
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr "Nenájdená štartovacia procedúra : '%s'"
+
+#, c-format
+msgid "No starting procedure"
+msgstr "Štartovacia procedúra neurčená"
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr "Nepodporovaný VM opcode"
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr "Symbolová položka očakávaná pre %s"
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr "Neplatný typ symbolu pre self pre %s"
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr "Codeblock očakávaný od %s"
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr "Nesprávny typ položky v zásobníku čítaného z %s"
+
+#, c-format
+msgid "Stack underflow"
+msgstr "Podtečenie zásobníka"
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr "Pokus o prekopírovanie položky na samú seba v %s"
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr "Neplatná symbolová položka vyhodnotená ako memvar %s"
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr "Pretečenie pamäťového bufra"
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr "hb_xgrab požiadal o alokáciu nula bytov"
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr "hb_xrealloc požiadal zmenšenie na nula bytov"
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr "hb_xalloc požiadal o alokáciu nula bytov"
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr "DD.MM.YYYY"
+
+#, c-format
+msgid "Y"
+msgstr "A"
+
+#, c-format
+msgid "N"
+msgstr ""

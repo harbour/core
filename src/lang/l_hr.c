@@ -3,7 +3,7 @@
  * Language Support Module (hr)
  *
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
- * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr> (Croatien)
+ * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr>
  * Copyright 2012 Alen Uzelac <alen.uzelac@gmail.com>
  * www - http://harbour-project.org
  *

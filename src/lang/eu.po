@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "Urtarrila"
+
+#, c-format
+msgid "February"
+msgstr "Otsaila"
+
+#, c-format
+msgid "March"
+msgstr "Martxoa"
+
+#, c-format
+msgid "April"
+msgstr "Apirila"
+
+#, c-format
+msgid "May"
+msgstr "Maitza"
+
+#, c-format
+msgid "June"
+msgstr "Ekaina"
+
+#, c-format
+msgid "July"
+msgstr "Uztaila"
+
+#, c-format
+msgid "August"
+msgstr "Abuztua"
+
+#, c-format
+msgid "September"
+msgstr "Iraila"
+
+#, c-format
+msgid "October"
+msgstr "Urria"
+
+#, c-format
+msgid "November"
+msgstr "Azaroa"
+
+#, c-format
+msgid "December"
+msgstr "Abendua"
+
+#, c-format
+msgid "Sunday"
+msgstr "Igandea"
+
+#, c-format
+msgid "Monday"
+msgstr "Astelehena"
+
+#, c-format
+msgid "Tuesday"
+msgstr "Asteartea"
+
+#, c-format
+msgid "Wednesday"
+msgstr "Asteazkena"
+
+#, c-format
+msgid "Thursday"
+msgstr "Osteguna"
+
+#, c-format
+msgid "Friday"
+msgstr "Ostirala"
+
+#, c-format
+msgid "Saturday"
+msgstr "Larunbata"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr ""
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr ""
+
+#, c-format
+msgid "Page No."
+msgstr ""
+
+#, c-format
+msgid "** Subtotal **"
+msgstr ""
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr ""
+
+#, c-format
+msgid "*** Total ***"
+msgstr ""
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr ""
+
+#, c-format
+msgid "Range: "
+msgstr ""
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr ""
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr ""
+
+#, c-format
+msgid "Unknown error"
+msgstr "Errore ezezaguna"
+
+#, c-format
+msgid "Argument error"
+msgstr "Argumentu-errore"
+
+#, c-format
+msgid "Bound error"
+msgstr "Maila-errore"
+
+#, c-format
+msgid "String overflow"
+msgstr "Kate-gainezkatze"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Zenbaki-gainezkatze"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Zero-zatiketa"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Zenbaki-errore"
+
+#, c-format
+msgid "Syntax error"
+msgstr "Sintaxi-errore"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "Eragiketa konplexuegia"
+
+#, c-format
+msgid "Memory low"
+msgstr "Memoria gutxi"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Funtzio-definitugabea"
+
+#, c-format
+msgid "No exported method"
+msgstr "Modu-esportagabea"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Aldagai-ezezaguna"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Aldagai-"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Alias-okerra"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr ""
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Alias-bikoiztua"
+
+#, c-format
+msgid "Create error"
+msgstr "Sortze-errore"
+
+#, c-format
+msgid "Open error"
+msgstr "Irekitze-errore"
+
+#, c-format
+msgid "Close error"
+msgstr "Itxiera-errore"
+
+#, c-format
+msgid "Read error"
+msgstr "Irrakurketa-errore"
+
+#, c-format
+msgid "Write error"
+msgstr "Idazketa-errore"
+
+#, c-format
+msgid "Print error"
+msgstr "Imprimaketa-errore"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Onartugabeko eragiketa"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Muga gainditua"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Indize-hondaketa igarria"
+
+#, c-format
+msgid "Data type error"
+msgstr "Datu-mota okerra"
+
+#, c-format
+msgid "Data width error"
+msgstr "Datu-zabalera luzeegia"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Laneko area erabili gabea"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Laneko area ez indexatua"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Modu-esklusiboa behar da"
+
+#, c-format
+msgid "Lock required"
+msgstr "Blokeoa behar da"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Idazkera-debekatua"
+
+#, c-format
+msgid "Append lock failed"
+msgstr "Erregistro eransketan blokeo errorea"
+
+#, c-format
+msgid "Lock Failure"
+msgstr "Blokeo-errore"
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr "taula-atzipena"
+
+#, c-format
+msgid "array assign"
+msgstr "yaula-esleipen"
+
+#, c-format
+msgid "array dimension"
+msgstr ""
+
+#, c-format
+msgid "not an array"
+msgstr "ez da taula"
+
+#, c-format
+msgid "conditional"
+msgstr "baldintza-sententzia"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr ""
+
+#, c-format
+msgid "Error recovery failure"
+msgstr ""
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr ""
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr ""
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr ""
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr ""
+
+#, c-format
+msgid "No starting procedure"
+msgstr ""
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr ""
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr ""
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr ""
+
+#, c-format
+msgid "Stack underflow"
+msgstr ""
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr ""
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr "DD/MM/YYYY"
+
+#, c-format
+msgid "Y"
+msgstr "E"
+
+#, c-format
+msgid "N"
+msgstr ""

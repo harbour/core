@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr ""
+
+#, c-format
+msgid "February"
+msgstr ""
+
+#, c-format
+msgid "March"
+msgstr ""
+
+#, c-format
+msgid "April"
+msgstr ""
+
+#, c-format
+msgid "May"
+msgstr ""
+
+#, c-format
+msgid "June"
+msgstr ""
+
+#, c-format
+msgid "July"
+msgstr ""
+
+#, c-format
+msgid "August"
+msgstr ""
+
+#, c-format
+msgid "September"
+msgstr ""
+
+#, c-format
+msgid "October"
+msgstr ""
+
+#, c-format
+msgid "November"
+msgstr ""
+
+#, c-format
+msgid "December"
+msgstr ""
+
+#, c-format
+msgid "Sunday"
+msgstr ""
+
+#, c-format
+msgid "Monday"
+msgstr ""
+
+#, c-format
+msgid "Tuesday"
+msgstr ""
+
+#, c-format
+msgid "Wednesday"
+msgstr ""
+
+#, c-format
+msgid "Thursday"
+msgstr ""
+
+#, c-format
+msgid "Friday"
+msgstr ""
+
+#, c-format
+msgid "Saturday"
+msgstr ""
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr ""
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr ""
+
+#, c-format
+msgid "Page No."
+msgstr ""
+
+#, c-format
+msgid "** Subtotal **"
+msgstr ""
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr ""
+
+#, c-format
+msgid "*** Total ***"
+msgstr ""
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr ""
+
+#, c-format
+msgid "Range: "
+msgstr ""
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr ""
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr ""
+
+#, c-format
+msgid "Unknown error"
+msgstr ""
+
+#, c-format
+msgid "Argument error"
+msgstr ""
+
+#, c-format
+msgid "Bound error"
+msgstr ""
+
+#, c-format
+msgid "String overflow"
+msgstr ""
+
+#, c-format
+msgid "Numeric overflow"
+msgstr ""
+
+#, c-format
+msgid "Zero divisor"
+msgstr ""
+
+#, c-format
+msgid "Numeric error"
+msgstr ""
+
+#, c-format
+msgid "Syntax error"
+msgstr ""
+
+#, c-format
+msgid "Operation too complex"
+msgstr ""
+
+#, c-format
+msgid "Memory low"
+msgstr ""
+
+#, c-format
+msgid "Undefined function"
+msgstr ""
+
+#, c-format
+msgid "No exported method"
+msgstr ""
+
+#, c-format
+msgid "Variable does not exist"
+msgstr ""
+
+#, c-format
+msgid "Alias does not exist"
+msgstr ""
+
+#, c-format
+msgid "No exported variable"
+msgstr ""
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr ""
+
+#, c-format
+msgid "Alias already in use"
+msgstr ""
+
+#, c-format
+msgid "Create error"
+msgstr ""
+
+#, c-format
+msgid "Open error"
+msgstr ""
+
+#, c-format
+msgid "Close error"
+msgstr ""
+
+#, c-format
+msgid "Read error"
+msgstr ""
+
+#, c-format
+msgid "Write error"
+msgstr ""
+
+#, c-format
+msgid "Print error"
+msgstr ""
+
+#, c-format
+msgid "Operation not supported"
+msgstr ""
+
+#, c-format
+msgid "Limit exceeded"
+msgstr ""
+
+#, c-format
+msgid "Corruption detected"
+msgstr ""
+
+#, c-format
+msgid "Data type error"
+msgstr ""
+
+#, c-format
+msgid "Data width error"
+msgstr ""
+
+#, c-format
+msgid "Workarea not in use"
+msgstr ""
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr ""
+
+#, c-format
+msgid "Exclusive required"
+msgstr ""
+
+#, c-format
+msgid "Lock required"
+msgstr ""
+
+#, c-format
+msgid "Write not allowed"
+msgstr ""
+
+#, c-format
+msgid "Append lock failed"
+msgstr ""
+
+#, c-format
+msgid "Lock Failure"
+msgstr ""
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr ""
+
+#, c-format
+msgid "array assign"
+msgstr ""
+
+#, c-format
+msgid "array dimension"
+msgstr ""
+
+#, c-format
+msgid "not an array"
+msgstr ""
+
+#, c-format
+msgid "conditional"
+msgstr ""
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr ""
+
+#, c-format
+msgid "Error recovery failure"
+msgstr ""
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr ""
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr ""
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr ""
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr ""
+
+#, c-format
+msgid "No starting procedure"
+msgstr ""
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr ""
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr ""
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr ""
+
+#, c-format
+msgid "Stack underflow"
+msgstr ""
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr ""
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr ""
+
+#, c-format
+msgid "Y"
+msgstr ""
+
+#, c-format
+msgid "N"
+msgstr ""

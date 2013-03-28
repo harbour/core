@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Language Support Module (zh_tra)
  *
- * Copyright 1999-2001 dongming <dongming@km169.net>/<freexbase@yahoo.com.cn>
+ * Copyright 1999-2001 dongming <dongming@km169.net>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

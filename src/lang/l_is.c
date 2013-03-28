@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Language Support Module (is)
  *
- * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
+ * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "Gennaio"
+
+#, c-format
+msgid "February"
+msgstr "Febbraio"
+
+#, c-format
+msgid "March"
+msgstr "Marzo"
+
+#, c-format
+msgid "April"
+msgstr "Aprile"
+
+#, c-format
+msgid "May"
+msgstr "Maggio"
+
+#, c-format
+msgid "June"
+msgstr "Giugno"
+
+#, c-format
+msgid "July"
+msgstr "Luglio"
+
+#, c-format
+msgid "August"
+msgstr "Agosto"
+
+#, c-format
+msgid "September"
+msgstr "Settembre"
+
+#, c-format
+msgid "October"
+msgstr "Ottobre"
+
+#, c-format
+msgid "November"
+msgstr "Novembre"
+
+#, c-format
+msgid "December"
+msgstr "Dicembre"
+
+#, c-format
+msgid "Sunday"
+msgstr "Domenica"
+
+#, c-format
+msgid "Monday"
+msgstr "Lunedì"
+
+#, c-format
+msgid "Tuesday"
+msgstr "Martedì"
+
+#, c-format
+msgid "Wednesday"
+msgstr "Mercoledì"
+
+#, c-format
+msgid "Thursday"
+msgstr "Giovedì"
+
+#, c-format
+msgid "Friday"
+msgstr "Venerdì"
+
+#, c-format
+msgid "Saturday"
+msgstr "Sabato"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr "File di dati      # Record     Ultima Mod.     Dimens."
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr "Vuoi altri esempi?"
+
+#, c-format
+msgid "Page No."
+msgstr "Pagina Nr."
+
+#, c-format
+msgid "** Subtotal **"
+msgstr "** Subtotale **"
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr "* Subsubtotale *"
+
+#, c-format
+msgid "*** Total ***"
+msgstr "*** Totale ***"
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr "Data non valida"
+
+#, c-format
+msgid "Range: "
+msgstr "Intervallo: "
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr ""
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr "ESPRESSIONE NON VALIDA"
+
+#, c-format
+msgid "Unknown error"
+msgstr "Errore sconosciuto"
+
+#, c-format
+msgid "Argument error"
+msgstr "Parametro errato"
+
+#, c-format
+msgid "Bound error"
+msgstr "Limiti superati"
+
+#, c-format
+msgid "String overflow"
+msgstr "Stringa troppo lunga (overflow)"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Numero troppo grande (overflow)"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Divisione per zero"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Errore numerico"
+
+#, c-format
+msgid "Syntax error"
+msgstr "Errore sintattico"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "Formula troppo complessa"
+
+#, c-format
+msgid "Memory low"
+msgstr "Memoria scarsa"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Funzione non definita"
+
+#, c-format
+msgid "No exported method"
+msgstr "Metodo non disponibile"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Variabile inesistente"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Alias inesistente"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Variabile non disponibile"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr "Caratteri non ammissibili in un Alias"
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Alias già in uso"
+
+#, c-format
+msgid "Create error"
+msgstr "Errore nella creazione"
+
+#, c-format
+msgid "Open error"
+msgstr "Errore in apertura"
+
+#, c-format
+msgid "Close error"
+msgstr "Errore in chiusura"
+
+#, c-format
+msgid "Read error"
+msgstr "Errore in lettura"
+
+#, c-format
+msgid "Write error"
+msgstr "Errore in scrittura"
+
+#, c-format
+msgid "Print error"
+msgstr "Errore in stampa"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Operazione non supportata"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Limite superato"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Riscontrata corruzione"
+
+#, c-format
+msgid "Data type error"
+msgstr "Errore nel tipo dei dati"
+
+#, c-format
+msgid "Data width error"
+msgstr "Errore nella dimensione dei dati"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Workarea non in use"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Workarea non indicizzata"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Richiede l'uso esclusivo"
+
+#, c-format
+msgid "Lock required"
+msgstr "Richiede un Lock"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Scrittura non consentita"
+
+#, c-format
+msgid "Append lock failed"
+msgstr "Append Lock fallito"
+
+#, c-format
+msgid "Lock Failure"
+msgstr "Lock fallito"
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr "accesso all'array"
+
+#, c-format
+msgid "array assign"
+msgstr "assegnazione all'array"
+
+#, c-format
+msgid "array dimension"
+msgstr "dimensione dell'array"
+
+#, c-format
+msgid "not an array"
+msgstr "non é un array"
+
+#, c-format
+msgid "conditional"
+msgstr "condizionale"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr "Errore irrecuperabile %d: "
+
+#, c-format
+msgid "Error recovery failure"
+msgstr "Recupero dell'errore non riuscito"
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr "Manca ERRORBLOCK() per l'errore"
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr "Troppe chiamate ricorsive al gestore d'errore"
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr "RDD non valido o caricamento non riuscito"
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr "Metodo non valido per %s"
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr "hb_xgrab non riesce a riservare memoria"
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr "hb_xrealloc chiamato con un puntatore nullo"
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr "hb_xrealloc chiamato con un puntatore non valido"
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr "hb_xrealloc non riesce a modificare la dimensione della memoria riservata"
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr "hb_xfree chiamato con un puntatore non valido"
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr "hb_xfree chiamato con un puntatore nullo"
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr "Non trovo la procedura iniziale: '%s'"
+
+#, c-format
+msgid "No starting procedure"
+msgstr "Manca una procedura iniziale"
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr "VM opcode non supportato"
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr "Symbol item atteso per %s"
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr ""
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr "Codeblock atteso per %s"
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr ""
+
+#, c-format
+msgid "Stack underflow"
+msgstr ""
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr ""
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr ""
+
+#, c-format
+msgid "Y"
+msgstr "S"
+
+#, c-format
+msgid "N"
+msgstr ""

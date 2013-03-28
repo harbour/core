@@ -3,7 +3,7 @@
  * Language Support Module (sk)
  *
  * Copyright 2012 Jaroslav Janík <jarojanik@hotmail.com>
- * Copyright 2008, 2012 Gyula Bartal <gybartal@gmail.com> (from CSWIN)
+ * Copyright 2008, 2012 Gyula Bartal <gybartal@gmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

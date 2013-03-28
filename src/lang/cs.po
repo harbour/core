@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: a b <a.b@c.d>\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "leden"
+
+#, c-format
+msgid "February"
+msgstr "únor"
+
+#, c-format
+msgid "March"
+msgstr "březen"
+
+#, c-format
+msgid "April"
+msgstr "duben"
+
+#, c-format
+msgid "May"
+msgstr "květen"
+
+#, c-format
+msgid "June"
+msgstr "červen"
+
+#, c-format
+msgid "July"
+msgstr "červenec"
+
+#, c-format
+msgid "August"
+msgstr "srpen"
+
+#, c-format
+msgid "September"
+msgstr "září"
+
+#, c-format
+msgid "October"
+msgstr "říjen"
+
+#, c-format
+msgid "November"
+msgstr "listopad"
+
+#, c-format
+msgid "December"
+msgstr "prosinec"
+
+#, c-format
+msgid "Sunday"
+msgstr "neděle"
+
+#, c-format
+msgid "Monday"
+msgstr "pondělí"
+
+#, c-format
+msgid "Tuesday"
+msgstr "úterý"
+
+#, c-format
+msgid "Wednesday"
+msgstr "středa"
+
+#, c-format
+msgid "Thursday"
+msgstr "čtvrtek"
+
+#, c-format
+msgid "Friday"
+msgstr "pátek"
+
+#, c-format
+msgid "Saturday"
+msgstr "sobota"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr "Databáze          # Záznamů    Aktualizace     Velikost"
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr "Chcete více příkladů?"
+
+#, c-format
+msgid "Page No."
+msgstr "Strana"
+
+#, c-format
+msgid "** Subtotal **"
+msgstr ""
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr ""
+
+#, c-format
+msgid "*** Total ***"
+msgstr ""
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr "Chybné datum"
+
+#, c-format
+msgid "Range: "
+msgstr "Rozsah: "
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr "A/N"
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr "CHYBNÝ VÝRAZ"
+
+#, c-format
+msgid "Unknown error"
+msgstr "Neznámá chyba"
+
+#, c-format
+msgid "Argument error"
+msgstr "Chyba argumentu"
+
+#, c-format
+msgid "Bound error"
+msgstr "Chyba mezí"
+
+#, c-format
+msgid "String overflow"
+msgstr "Přetečení řetězce"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Přetečení čísla"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Dělení nulou"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Numerická chyba"
+
+#, c-format
+msgid "Syntax error"
+msgstr "Chyba syntaxe"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "Operace příliš komplexní"
+
+#, c-format
+msgid "Memory low"
+msgstr "Nedostatek paměti"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Nedefinovaná funkce"
+
+#, c-format
+msgid "No exported method"
+msgstr "Neznámá metoda"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Proměnná neexistuje"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Alias neexistuje"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Neznámá proměnná"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr "Nepovolené znaky v aliasu"
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Alias již použit"
+
+#, c-format
+msgid "Create error"
+msgstr "Chyba vytvoření"
+
+#, c-format
+msgid "Open error"
+msgstr "Chyba otevření"
+
+#, c-format
+msgid "Close error"
+msgstr "Chyba zavření"
+
+#, c-format
+msgid "Read error"
+msgstr "Chyba čtení"
+
+#, c-format
+msgid "Write error"
+msgstr "Chyba zápisu"
+
+#, c-format
+msgid "Print error"
+msgstr "Chyba tisku"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Operace není podporována"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Překročen limit"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Index poškozen"
+
+#, c-format
+msgid "Data type error"
+msgstr "Typ dat se neshoduje"
+
+#, c-format
+msgid "Data width error"
+msgstr "Chyba šířky dat"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Pracovní oblast není použita"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Není otevřen index"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Požadováno uzamknutí"
+
+#, c-format
+msgid "Lock required"
+msgstr "Zámek při přidání záznamu selhal"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Zámek selhal"
+
+#, c-format
+msgid "Append lock failed"
+msgstr ""
+
+#, c-format
+msgid "Lock Failure"
+msgstr ""
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr "přístup k poli"
+
+#, c-format
+msgid "array assign"
+msgstr "přiřazení pole"
+
+#, c-format
+msgid "array dimension"
+msgstr "změna dimenze pole"
+
+#, c-format
+msgid "not an array"
+msgstr "není pole"
+
+#, c-format
+msgid "conditional"
+msgstr "podmínka"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr ""
+
+#, c-format
+msgid "Error recovery failure"
+msgstr ""
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr ""
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr ""
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr ""
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr ""
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr ""
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr ""
+
+#, c-format
+msgid "No starting procedure"
+msgstr ""
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr ""
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr ""
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr ""
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr ""
+
+#, c-format
+msgid "Stack underflow"
+msgstr ""
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr ""
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr ""
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr ""
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr ""
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr ""
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr "DD.MM.YYYY"
+
+#, c-format
+msgid "Y"
+msgstr "A"
+
+#, c-format
+msgid "N"
+msgstr ""

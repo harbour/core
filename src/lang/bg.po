@@ -1,0 +1,416 @@
+#, c-format
+msgid ""
+msgstr ""
+"Project-Id-Version: harbour\n"
+"Report-Msgid-Bugs-To: https://groups.google.com/group/harbour-devel/\n"
+"POT-Creation-Date: 2013-03-28 15:58+0100\n"
+"PO-Revision-Date: 2013-03-28 15:58+0100\n"
+"Last-Translator: Viktor Szakats (harbour syenar.net)\n"
+"Language-Team: a b <a.b@c.d>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-format
+msgid "January"
+msgstr "Януари"
+
+#, c-format
+msgid "February"
+msgstr "Февруари"
+
+#, c-format
+msgid "March"
+msgstr "Март"
+
+#, c-format
+msgid "April"
+msgstr "Април"
+
+#, c-format
+msgid "May"
+msgstr "Май"
+
+#, c-format
+msgid "June"
+msgstr "Юни"
+
+#, c-format
+msgid "July"
+msgstr "Юли"
+
+#, c-format
+msgid "August"
+msgstr "Август"
+
+#, c-format
+msgid "September"
+msgstr "Септември"
+
+#, c-format
+msgid "October"
+msgstr "Октомври"
+
+#, c-format
+msgid "November"
+msgstr "Ноември"
+
+#, c-format
+msgid "December"
+msgstr "Декември"
+
+#, c-format
+msgid "Sunday"
+msgstr "Неделя"
+
+#, c-format
+msgid "Monday"
+msgstr "Понеделник"
+
+#, c-format
+msgid "Tuesday"
+msgstr "Вторник"
+
+#, c-format
+msgid "Wednesday"
+msgstr "Сряда"
+
+#, c-format
+msgid "Thursday"
+msgstr "Четвъртък"
+
+#, c-format
+msgid "Friday"
+msgstr "Петък"
+
+#, c-format
+msgid "Saturday"
+msgstr "Събота"
+
+#, c-format
+msgid "Database Files    # Records    Last Update     Size"
+msgstr "Файлове           # Записи     Последно обнов. Големина"
+
+#, c-format
+msgid "Do you want more samples?"
+msgstr "Искате ли още примери?"
+
+#, c-format
+msgid "Page No."
+msgstr "Стр. No."
+
+#, c-format
+msgid "** Subtotal **"
+msgstr "** Межд. сума **"
+
+#, c-format
+msgid "* Subsubtotal *"
+msgstr "* Межд. сума *"
+
+#, c-format
+msgid "*** Total ***"
+msgstr "*** Общо ***"
+
+#, c-format
+msgid "Ins"
+msgstr ""
+
+#, c-format
+msgid "Invalid date"
+msgstr "Некоректна дата"
+
+#, c-format
+msgid "Range: "
+msgstr "Диапазон: "
+
+#, c-format
+msgid " - "
+msgstr ""
+
+#, c-format
+msgid "Y/N"
+msgstr ""
+
+#, c-format
+msgid "INVALID EXPRESSION"
+msgstr "НЕКОРЕКТЕН ИЗРАЗ"
+
+#, c-format
+msgid "Unknown error"
+msgstr "Непозната грешка"
+
+#, c-format
+msgid "Argument error"
+msgstr "Грешка в параметър"
+
+#, c-format
+msgid "Bound error"
+msgstr "Грешка в гранични стойности"
+
+#, c-format
+msgid "String overflow"
+msgstr "Препълване на стринг"
+
+#, c-format
+msgid "Numeric overflow"
+msgstr "Числово препълване"
+
+#, c-format
+msgid "Zero divisor"
+msgstr "Деление на нула"
+
+#, c-format
+msgid "Numeric error"
+msgstr "Числова грешка"
+
+#, c-format
+msgid "Syntax error"
+msgstr "Синтактична грешка"
+
+#, c-format
+msgid "Operation too complex"
+msgstr "Много сложна операция"
+
+#, c-format
+msgid "Memory low"
+msgstr "Недостиг на памет"
+
+#, c-format
+msgid "Undefined function"
+msgstr "Недефинирана функция"
+
+#, c-format
+msgid "No exported method"
+msgstr "Няма експортиран метод"
+
+#, c-format
+msgid "Variable does not exist"
+msgstr "Променливата не съществува"
+
+#, c-format
+msgid "Alias does not exist"
+msgstr "Псевдонима не съществува"
+
+#, c-format
+msgid "No exported variable"
+msgstr "Няма експортирана променлива"
+
+#, c-format
+msgid "Illegal characters in alias"
+msgstr "Непозволени символи в псевдоним"
+
+#, c-format
+msgid "Alias already in use"
+msgstr "Псевдонима вече се използва"
+
+#, c-format
+msgid "Create error"
+msgstr "Грешка при създаване"
+
+#, c-format
+msgid "Open error"
+msgstr "Грешка при отваряне"
+
+#, c-format
+msgid "Close error"
+msgstr "Грешка при затваряне"
+
+#, c-format
+msgid "Read error"
+msgstr "Грешка при четене"
+
+#, c-format
+msgid "Write error"
+msgstr "Грешка при запис"
+
+#, c-format
+msgid "Print error"
+msgstr "Грешка при печат"
+
+#, c-format
+msgid "Operation not supported"
+msgstr "Операцията не се подържа"
+
+#, c-format
+msgid "Limit exceeded"
+msgstr "Надхвърлено ограничение"
+
+#, c-format
+msgid "Corruption detected"
+msgstr "Открита повреда"
+
+#, c-format
+msgid "Data type error"
+msgstr "Грешка в тип данни"
+
+#, c-format
+msgid "Data width error"
+msgstr "Грешка в размер на данни"
+
+#, c-format
+msgid "Workarea not in use"
+msgstr "Работната област не е в употреба"
+
+#, c-format
+msgid "Workarea not indexed"
+msgstr "Работната област не е индексирана"
+
+#, c-format
+msgid "Exclusive required"
+msgstr "Изисква се Exclusive"
+
+#, c-format
+msgid "Lock required"
+msgstr "Изисква се заключване"
+
+#, c-format
+msgid "Write not allowed"
+msgstr "Запис не е позволен"
+
+#, c-format
+msgid "Append lock failed"
+msgstr "Append lock се провали"
+
+#, c-format
+msgid "Lock Failure"
+msgstr "Неуспешно заключване"
+
+#, c-format
+msgid "Object destructor failure"
+msgstr ""
+
+#, c-format
+msgid "array access"
+msgstr "достъп до масив"
+
+#, c-format
+msgid "array assign"
+msgstr "присвояване на масив"
+
+#, c-format
+msgid "array dimension"
+msgstr "размерност на масив"
+
+#, c-format
+msgid "not an array"
+msgstr "не е масив"
+
+#, c-format
+msgid "conditional"
+msgstr "условен"
+
+#, c-format
+msgid "Unrecoverable error %d: "
+msgstr "Непоправима грешка %d: "
+
+#, c-format
+msgid "Error recovery failure"
+msgstr "Неуспешно поправяне на грешка"
+
+#, c-format
+msgid "No ERRORBLOCK() for error"
+msgstr "Няма ERRORBLOCK() за грешка"
+
+#, c-format
+msgid "Too many recursive error handler calls"
+msgstr "Прекалено много рекурсивни извиквания на прихващач на грешки"
+
+#, c-format
+msgid "RDD invalid or failed to load"
+msgstr "RDD невалиден или неуспешно зареждане"
+
+#, c-format
+msgid "Invalid method type from %s"
+msgstr "Невалиден тип метод от %s"
+
+#, c-format
+msgid "hb_xgrab can't allocate memory"
+msgstr "hb_xgrab не може да задели памет"
+
+#, c-format
+msgid "hb_xrealloc called with a NULL pointer"
+msgstr "hb_xrealloc извикана с NULL указател"
+
+#, c-format
+msgid "hb_xrealloc called with an invalid pointer"
+msgstr "hb_xrealloc извикана с невалиден указател"
+
+#, c-format
+msgid "hb_xrealloc can't reallocate memory"
+msgstr "hb_xrealloc не може да задели памет"
+
+#, c-format
+msgid "hb_xfree called with an invalid pointer"
+msgstr "hb_xfree извикана с невалиден указател"
+
+#, c-format
+msgid "hb_xfree called with a NULL pointer"
+msgstr "hb_xfree извикана с NULL указател"
+
+#, c-format
+msgid "Can't locate the starting procedure: '%s'"
+msgstr "Не може да определи началната процедура: '%s'"
+
+#, c-format
+msgid "No starting procedure"
+msgstr "Няма начална процедура"
+
+#, c-format
+msgid "Unsupported VM opcode"
+msgstr "Неподържан VM opcode"
+
+#, c-format
+msgid "Symbol item expected from %s"
+msgstr "Символен артикул очакван от %s"
+
+#, c-format
+msgid "Invalid symbol type for self from %s"
+msgstr "Невалиден символен тип за self от %s"
+
+#, c-format
+msgid "Codeblock expected from %s"
+msgstr "Codeblock очакван от %s"
+
+#, c-format
+msgid "Incorrect item type on the stack trying to pop from %s"
+msgstr "Некоректен тип в стека опит за извличане от %s"
+
+#, c-format
+msgid "Stack underflow"
+msgstr "Празен стек"
+
+#, c-format
+msgid "An item was going to be copied to itself from %s"
+msgstr "Опит за копиране на обект в себе си от %s"
+
+#, c-format
+msgid "Invalid symbol item passed as memvar %s"
+msgstr "невалиден символен обект изпратен като memvar %s"
+
+#, c-format
+msgid "Memory buffer overflow"
+msgstr "Препълване на буфер в паметта"
+
+#, c-format
+msgid "hb_xgrab requested to allocate zero bytes"
+msgstr "hb_xgrab заявено да задели нула байта"
+
+#, c-format
+msgid "hb_xrealloc requested to resize to zero bytes"
+msgstr "hb_xrealloc заявено да промени големината на нула байта"
+
+#, c-format
+msgid "hb_xalloc requested to allocate zero bytes"
+msgstr "hb_xalloc заявено да задели нула байта"
+
+#, c-format
+msgid "YYYY/MM/DD"
+msgstr "DD.MM.YYYY"
+
+#, c-format
+msgid "Y"
+msgstr ""
+
+#, c-format
+msgid "N"
+msgstr ""
