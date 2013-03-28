@@ -25,6 +25,8 @@ lib/win/
 # misc build files
 obj
 .hbmk/
+*.hbr
+*.def
 
 # misc junk
 .DS_Store
@@ -42,3 +44,6 @@ obj
 
 # packages
 /pkg/
+
+# not hosted contribs
+/addons/
