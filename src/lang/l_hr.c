@@ -2,9 +2,9 @@
  * Harbour Project source code:
  * Language Support Module (hr)
  *
- * Copyright 2000 Davor Siklic <siki@msoft.cz>
- * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr>
  * Copyright 2012 Alen Uzelac <alen.uzelac@gmail.com>
+ * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr>
+ * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
