@@ -63,7 +63,9 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
    SetCancel( .F. )
 
-   netclictx := Eval( netclictrl[ "init" ], hConIO, cIP, nPort, cPassword )
+   netclictx := Eval( netclictrl[ "init" ], hConIO, { ;
+      "--netio.addr=" + cIP + ":" + hb_ntos( nPort ), ;
+      "--netio.pass=" + cPassword } )
    IF ! Empty( netclictx )
       netcliID := netclictrl[ "id" ]
    ENDIF

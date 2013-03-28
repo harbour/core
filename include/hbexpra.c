@@ -156,6 +156,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                szMessage = "__ENUMBASE";
             else if( iLen == 10 && memcmp( "KEY", szMessage, 3 ) == 0 )
                szMessage = "__ENUMKEY";
+            else if( iLen == 13 && memcmp( "ISLAST", szMessage, 6 ) == 0 )
+               szMessage = "__ENUMISLAST";
             else
                szMessage = NULL;
 

@@ -8710,10 +8710,11 @@ static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr )
    {
       const char * szMessage = pExpr->value.asMessage.szMessage + 6;
 
-      if( strcmp( "INDEX", szMessage ) == 0 ||
-          strcmp( "KEY",   szMessage ) == 0 ||
-          strcmp( "BASE",  szMessage ) == 0 ||
-          strcmp( "VALUE", szMessage ) == 0 )
+      if( strcmp( "INDEX",  szMessage ) == 0 ||
+          strcmp( "KEY",    szMessage ) == 0 ||
+          strcmp( "BASE",   szMessage ) == 0 ||
+          strcmp( "VALUE",  szMessage ) == 0 ||
+          strcmp( "ISLAST", szMessage ) == 0 )
       {
          if( ! hb_compForEachVarError( HB_COMP_PARAM, pExpr->value.asMessage.pObject->value.asSymbol.name ) )
             pExpr->value.asMessage.pObject->ExprType = HB_ET_VARREF;

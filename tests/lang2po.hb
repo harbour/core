@@ -42,14 +42,52 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Meta()
-   RETURN ;
-      "Project-Id-Version: Harbour\n" + ;
-      "MIME-Version: 1.0\n" + ;
-      "Content-Transfer-Encoding: 8bit\n" + ;
-      "Content-Type: text/plain; charset=UTF-8\n"
+STATIC FUNCTION Meta()
 
-FUNCTION Item( cEN, cTrs )
+   LOCAL cISO_TimeStamp := ISO_TimeStamp()
+
+   LOCAL hMeta
+   LOCAL cMeta
+
+   LOCAL meta
+
+   /* NOTE: workaround for Harbour not retaining definition order of hash literals */
+   hMeta := { => }
+   hb_HKeepOrder( hMeta, .T. )
+   hMeta[ "Project-Id-Version:"        ] := "harbour"
+   hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
+   hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
+   hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
+   hMeta[ "Last-Translator:"           ] := "a b <a.b@c.d>"
+   hMeta[ "Language-Team:"             ] := "a b <a.b@c.d>"
+   hMeta[ "MIME-Version:"              ] := "1.0"
+   hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"
+   hMeta[ "Content-Transfer-Encoding:" ] := "8bit"
+
+   cMeta := '"' + e"\n"
+   FOR EACH meta IN hMeta
+      cMeta += ;
+         '"' + ;
+         meta:__enumKey() + ;
+         " " + ;
+         meta + ;
+         "\n" + ;
+         iif( meta:__enumIsLast(), "", '"' + e"\n" )
+   NEXT
+
+   RETURN cMeta
+
+STATIC FUNCTION ISO_TimeStamp()
+
+   LOCAL nOffset := hb_UTCOffset()
+
+   RETURN hb_StrFormat( "%1$s%2$s%3$02d%4$02d", ;
+      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+      iif( nOffset < 0, "-", "+" ), ;
+      Int( nOffset / 3600 ), ;
+      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
+
+STATIC FUNCTION Item( cEN, cTrs )
    RETURN hb_StrFormat( ;
       "#, c-format" + hb_eol() + ;
       'msgid "%1$s"' + hb_eol() + ;
