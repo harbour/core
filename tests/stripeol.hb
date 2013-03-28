@@ -31,7 +31,7 @@ FUNCTION __stripeol( cFile )
 
    FOR EACH cLine IN hb_ATokens( StrTran( StrTran( cFile, Chr( 13 ) ), Chr( 9 ), " " ), Chr( 10 ) )
       cOK += RTrim( cLine )
-      IF cLine:__enumIndex() < Len( cLine:__enumBase )
+      IF ! cLine:__enumIsLast()
          cOK += hb_eol()
       ENDIF
    NEXT

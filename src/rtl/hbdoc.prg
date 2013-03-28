@@ -321,7 +321,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
                ENDIF
                IF nEmpty < 2
                   cOK += cLine
-                  IF cLine:__enumIndex() < Len( cLine:__enumBase() )
+                  IF ! cLine:__enumIsLast()
                      cOK += hb_eol()
                   ENDIF
                ENDIF

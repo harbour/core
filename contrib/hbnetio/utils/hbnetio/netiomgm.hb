@@ -307,7 +307,7 @@ STATIC FUNCTION XToStrX( xValue )
 
       FOR EACH tmp IN xValue
          cRetVal += XToStrX( tmp )
-         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+         IF ! tmp:__enumIsLast()
             cRetVal += ", "
          ENDIF
       NEXT
@@ -320,7 +320,7 @@ STATIC FUNCTION XToStrX( xValue )
 
       FOR EACH tmp IN xValue
          cRetVal += tmp:__enumKey() + " => " + XToStrX( tmp )
-         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+         IF ! tmp:__enumIsLast()
             cRetVal += ", "
          ENDIF
       NEXT
