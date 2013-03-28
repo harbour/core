@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-03\-16 12:52\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-03\-26 01:47\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 
@@ -9,7 +9,7 @@ Syntax:
 Description:  
 
 
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
+  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
   
 Options:  
@@ -20,7 +20,7 @@ Options:
  - **\-L&lt;libpath&gt;** additional path to search for libraries
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** additional path to search for headers
  - **\-static|\-shared** link with static/shared libs
- - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at runtime
+ - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
  - **\-inc\[\-\]** enable/disable incremental build mode \(default: disabled\)
  - **\-hbexe** create executable \(default\)
  - **\-hblib** create static library
@@ -208,7 +208,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\-debugi18n** display internals on translation file generation
  - **\-debugdepd** display internals of dependency detection
  - **\-debugpars** display all input parameters in processing order
- - **\-debugrte** generate a runtime error
+ - **\-debugrte** generate a run\-time error
 
 
 You can sym\-link/copy/rename hbmk2 to the following names to alter default mode of operation:
@@ -216,7 +216,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
 
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
  - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
- - **harbour** mode \-hbraw \(emulate \-raw\- Harbour compiler\)
+ - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
  - **clipper** mode \-hbcmp \(emulate Clipper compiler\)
  - **rtlink** mode \-rtlink \(emulate Clipper linker\)
  - **exospace** mode \-rtlink \(emulate Clipper linker\)
@@ -380,7 +380,6 @@ Environment variables:
 
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
- - **HBSHELL\_DEBUG** enable script debugging if set to any non\-empty value
   
 \.hbc directives \(they should be written in separate lines\):  
 
@@ -523,7 +522,7 @@ Plugin variables:
  - **"lSTRIP"** \-strip option status
  - **"lDONTEXEC"** \-traceonly option status
  - **"lIGNOREERROR"** \-ignore option status
- - **"lTRACE"** \-trace options status
+ - **"lTRACE"** \-trace option status
  - **"lQUIET"** \-q option status
  - **"lINFO"** \-info option status
  - **"lBEEP"** \-beep option status
@@ -567,7 +566,7 @@ Examples to start with hbmk2:
  - **To run the interactive shell \('dot' prompt\)**  
 $ hbmk2 \.
  - **To run a Harbour script**  
-$ hbmk2 myscript\.hb \[&lt;parameters&gt;\]
+$ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 
 
 Examples to build and run Harbour portable binary \(aka precompiled Harbour script\):
@@ -576,7 +575,7 @@ Examples to build and run Harbour portable binary \(aka precompiled Harbour scri
  - **To build**  
 $ hbmk2 \-gh myscript\.hb
  - **To run result of above**  
-$ hbmk2 myscript\.hrb \[&lt;parameters&gt;\]
+$ hbmk2 myscript\.hrb \[&lt;parameter\[s\]&gt;\]
 
 
 Examples to build a Harbour application:
@@ -647,6 +646,7 @@ Notes:
 Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by '\!' operator and grouped by parentheses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Most \.hbc lines \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) and corresponding command\-line parameters will accept macro variables\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.
   - Options accepting macro variables also support command substitution\. Enclose command inside \`\`, and, if the command contains space, also enclose in double quotes\. Standard output of the command will be used as the value\. F\.e\. "\-cflag=\`wx\-config \-\-cflags\`", or ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
+  - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Defaults and feature support may vary by platform/compiler\.
   - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.

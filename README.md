@@ -434,7 +434,7 @@ See: [How to Build](#how-to-build)
 
 # How to Enable Optional Components
 
-Certain Harbour parts&mdash;typically contrib packages&mdash;depend
+Certain Harbour parts &ndash; typically contrib packages &ndash; depend
 on 3rd party components. To make these Harbour parts built,you need
 to tell Harbour where to find the headers for these 3rd party
 components.
@@ -451,7 +451,7 @@ on *nix which aren't available through official package managers
 (f.e. ADS Client).
 
 Note that Harbour is tuned to use 3rd party binary packages in their
-default, unmodified&mdash;"vanilla"&mdash;install layout created by their
+default, unmodified &ndash; "vanilla" &ndash; install layout created by their
 official/mainstream install kits. If you manually move, rename,
 delete or add files under the 3rd party packages' root directory,
 the default Harbour build process (especially Windows implib
@@ -505,7 +505,7 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
-Certain contribs can be instructed&mdash;when using .hbc files&mdash;to
+Certain contribs can be instructed &ndash; when using .hbc files &ndash; to
 link against static build of their 3rd party lib dependencies (for
 advanced users only):
 
@@ -743,7 +743,7 @@ sensitive.
      Don't build any, or space separated `<l>` list of,
      contrib packages. Please note it won't prevent
      building packages which are dependencies of
-     other&mdash;enabled&mdash;packages.
+     other &ndash; enabled &ndash; packages.
 
    - `HB_BUILD_CONTRIBS=[<l>]`
 
@@ -828,7 +828,7 @@ sensitive.
    - `HB_CCSUFFIX=[<suffix>]`
 
      Used with gcc compiler family to specify
-     compiler/linker tool name suffix&mdash;usually
+     compiler/linker tool name suffix &ndash; usually
      version number.
 
 ## Cross-building
@@ -1329,7 +1329,7 @@ For all platforms you'll need two things:
 
 * Supported ANSI C compiler
 
-    Your compiler of choice has to be placed in the PATH&mdash;and
+    Your compiler of choice has to be placed in the PATH &ndash; and
     configured appropriately according to instructions.
     If you use official Harbour binary distribution on Windows,
     you already have MinGW compiler embedded in the installation,

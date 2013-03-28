@@ -15653,7 +15653,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aHdr_Syntax_Shell := { ;
       I_( "Syntax:" ), ;
       "", ;
-      hb_StrFormat( I_( "  %1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [parameters[s]]" ), cShell ) }
+      hb_StrFormat( I_( "  %1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [%2$s]" ), cShell, I_( "<parameter[s]>" ) ) }
 
    LOCAL aHdr_Supp := { ;
       NIL, ;
@@ -15889,21 +15889,21 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       NIL, ;
       { "hbrun*|*hbrun" , I_( "mode script runner / interactive shell" ) }, ;
       { "hbrund|hbrun*d", I_( "mode script runner / interactive shell in debug mode" ) }, ;
-      { "harbour"       , I_( "mode -hbraw (emulate -raw- Harbour compiler)" ) }, ;
-      { "clipper"       , I_( "mode -hbcmp (emulate Clipper compiler)" ) }, ;
-      { "rtlink"        , I_( "mode -rtlink (emulate Clipper linker)" ) }, ;
-      { "exospace"      , I_( "mode -rtlink (emulate Clipper linker)" ) }, ;
-      { "blinker"       , I_( "mode -rtlink (emulate Clipper linker)" ) }, ;
-      { "*10"           , I_( "option -hb10" ) }, ;
-      { "*20"           , I_( "option -hb20" ) }, ;
-      { "*30"           , I_( "option -hb30" ) }, ;
-      { "x*"            , I_( "option -xhb" ) }, ;
-      { "hbcmp*|*hbcmp" , I_( "mode -hbcmp (emulate Harbour compiler producing a binary object)" ) }, ;
-      { "hbcc*|*hbcc"   , I_( "mode -hbcc (emulate C compiler)" ) }, ;
-      { "hblnk*|*hblnk" , I_( "mode -hblnk (emulate C linker)" ) }, ;
-      { "hbexe*|*hbexe" , I_( "mode -hbexe" ) }, ;
-      { "hblib*|*hblib" , I_( "mode -hblib" ) }, ;
-      { "hbdyn*|*hbdyn" , I_( "mode -hbdyn" ) } }
+      { "harbour"       , hb_StrFormat( I_( "mode %1$s (emulate - raw - Harbour compiler)" ), "-hbraw" ) }, ;
+      { "clipper"       , hb_StrFormat( I_( "mode %1$s (emulate Clipper compiler)" ), "-hbcmp" ) }, ;
+      { "rtlink"        , hb_StrFormat( I_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
+      { "exospace"      , hb_StrFormat( I_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
+      { "blinker"       , hb_StrFormat( I_( "mode %1$s (emulate Clipper linker)" ), "-rtlink" ) }, ;
+      { "*10"           , hb_StrFormat( I_( "option %1$s" ), "-hb10" ) }, ;
+      { "*20"           , hb_StrFormat( I_( "option %1$s" ), "-hb20" ) }, ;
+      { "*30"           , hb_StrFormat( I_( "option %1$s" ), "-hb30" ) }, ;
+      { "x*"            , hb_StrFormat( I_( "option %1$s" ), "-xhb" ) }, ;
+      { "hbcmp*|*hbcmp" , hb_StrFormat( I_( "mode %1$s (emulate Harbour compiler producing a binary object)" ), "-hbcmp" ) }, ;
+      { "hbcc*|*hbcc"   , hb_StrFormat( I_( "mode %1$s (emulate C compiler)" ), "-hbcc" ) }, ;
+      { "hblnk*|*hblnk" , hb_StrFormat( I_( "mode %1$s (emulate C linker)" ), "-hblnk" ) }, ;
+      { "hbexe*|*hbexe" , hb_StrFormat( I_( "mode %1$s" ), "-hbexe" ) }, ;
+      { "hblib*|*hblib" , hb_StrFormat( I_( "mode %1$s" ), "-hblib" ) }, ;
+      { "hbdyn*|*hbdyn" , hb_StrFormat( I_( "mode %1$s" ), "-hbdyn" ) } }
 
    LOCAL aHdr_Exit := { ;
       "", ;
@@ -15934,13 +15934,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_EnvVar := { ;
       NIL, ;
       { _HBMK_ENV_NAME       , I_( "accepts any options as if they were passed in the beginning of the command-line" ) }, ;
-      { "HB_PLATFORM"        , I_( "accepts same values as -plat= option" ) }, ;
-      { "HB_COMPILER"        , I_( "accepts same values as -comp= option" ) }, ;
-      { "HB_CPU"             , I_( "accepts same values as -cpu= option" ) }, ;
-      { "HB_BUILD_NAME"      , I_( "accepts same values as -build= option" ) }, ;
-      { "HB_LANG"            , I_( "accepts same values as -lang= option" ) }, ;
-      { "HB_USER_LIBS"       , I_( "accepts same values (space separated) as -l option" ) }, ;
-      { "HB_USER_LIBPATHS"   , I_( "accepts same values (space separated) as -L option" ) }, ;
+      { "HB_PLATFORM"        , hb_StrFormat( I_( "accepts same values as %1$s option" ), "-plat="  ) }, ;
+      { "HB_COMPILER"        , hb_StrFormat( I_( "accepts same values as %1$s option" ), "-comp="  ) }, ;
+      { "HB_CPU"             , hb_StrFormat( I_( "accepts same values as %1$s option" ), "-cpu="   ) }, ;
+      { "HB_BUILD_NAME"      , hb_StrFormat( I_( "accepts same values as %1$s option" ), "-build=" ) }, ;
+      { "HB_LANG"            , hb_StrFormat( I_( "accepts same values as %1$s option" ), "-lang="  ) }, ;
+      { "HB_USER_LIBS"       , hb_StrFormat( I_( "accepts same values (space separated) as %1$s option" ), "-l" ) }, ;
+      { "HB_USER_LIBPATHS"   , hb_StrFormat( I_( "accepts same values (space separated) as %1$s option" ), "-L" ) }, ;
       { "HB_USER_PRGFLAGS"   , I_( "options to be passed to Harbour compiler (before command-line options)" ) }, ;
       { "HB_USER_CFLAGS"     , I_( "options to be passed to C compiler (before command-line options)" ) }, ;
       { "HB_USER_RESFLAGS"   , I_( "options to be passed to resource compiler (before command-line options) (Windows only)" ) }, ;
@@ -16087,55 +16087,55 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "requests="         , I_( "add space separated list of symbols to force link to the target" ) }, ;
       { "syslibs="          , I_( "add space separated list of libraries as system libraries (before regular libraries)" ) }, ;
       { "hbcs="             , I_( "embed space separated list of .hbc files. Names without the extension is accepted. These references are processed in place." ) }, ;
-      { "autohbcs="         , I_( "space separated list of values as in -autohbc= option" ) }, ;
+      { "autohbcs="         , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-autohbc=" ) }, ;
       { "libpaths="         , I_( "space separated list of additional library paths" ) }, ;
       { "incpaths="         , I_( "add space separated list of additional header paths (for both Harbour and C)" ) }, ;
-      { "instfiles="        , I_( "space separated list of values as in -instfile= option" ) }, ;
-      { "instpaths="        , I_( "space separated list of values as in -instpath= option" ) }, ;
-      { "prgflags="         , I_( "space separated list of values as in -prgflag= option" ) }, ;
-      { "cflags="           , I_( "space separated list of values as in -cflag= option" ) }, ;
-      { "resflags="         , I_( "space separated list of values as in -resflag= option" ) }, ;
-      { "ldflags="          , I_( "space separated list of values as in -ldflag= option" ) }, ;
-      { "ldflags+="         , I_( "space separated list of values as in -ldflag+= option" ) }, ;
-      { "dflags="           , I_( "space separated list of values as in -dflag= option" ) }, ;
-      { "dflags+="          , I_( "space separated list of values as in -dflag+= option" ) }, ;
-      { "pflags="           , I_( "space separated list of values as in -pflag= option" ) }, ;
-      { "psources="         , I_( "space separated list of values as in -pi= option" ) }, ;
-      { "gui=<bool>"        , I_( "'yes' = -gui, 'no' = -std option" ) }, ;
-      { "mt=<bool>"         , I_( "'yes' = -mt, 'no' = -st option" ) }, ;
-      { "pic=<bool>"        , I_( "'yes' = -pic, 'no' = -pic- option" ) }, ;
-      { "shared=<bool>"     , I_( "'yes' = -shared, 'no' = -static option" ) }, ;
+      { "instfiles="        , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-instfile=" ) }, ;
+      { "instpaths="        , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-instpath=" ) }, ;
+      { "prgflags="         , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-prgflag="  ) }, ;
+      { "cflags="           , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-cflag="    ) }, ;
+      { "resflags="         , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-resflag="  ) }, ;
+      { "ldflags="          , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-ldflag="   ) }, ;
+      { "ldflags+="         , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-ldflag+="  ) }, ;
+      { "dflags="           , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-dflag="    ) }, ;
+      { "dflags+="          , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-dflag+="   ) }, ;
+      { "pflags="           , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-pflag="    ) }, ;
+      { "psources="         , hb_StrFormat( I_( "space separated list of values as in %1$s option" ), "-pi="       ) }, ;
+      { "gui=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-gui"       ,"-std"      ) }, ;
+      { "mt=<bool>"         , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-mt"        ,"-st"       ) }, ;
+      { "pic=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-pic"       ,"-pic-"     ) }, ;
+      { "shared=<bool>"     , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-shared"    ,"-static"   ) }, ;
       { "shareddef=<bool>"  , I_( "similar to shared=, but works only if shared/static mode was not set before" ) }, ;
-      { "fullstatic=<bool>" , I_( "'yes' = -fullstatic, 'no' = -static option" ) }, ;
-      { "debug=<bool>"      , I_( "'yes' = -debug, 'no' = -debug- option" ) }, ;
-      { "optim="            , I_( "'yes' = -optim, 'no' = -optim- option" ) }, ;
-      { "nulrdd=<bool>"     , I_( "'yes' = -nulrdd, 'no' = -nulrdd- option" ) }, ;
-      { "nodefgt=<bool>"    , I_( "'yes' = -nodefgt, 'no' = -nodefgt- option" ) }, ;
-      { "map=<bool>"        , I_( "'yes' = -map, 'no' = -map- option" ) }, ;
-      { "hbcppmm=<bool>"    , I_( "'yes' = -hbcpmm, 'no' = -hbcpmm- option" ) }, ;
-      { "implib=<bool>"     , I_( "'yes' = -implib, 'no' = -implib- option" ) }, ;
-      { "winuni=<bool>"     , I_( "'yes' = -winuni, 'no' = -winuni- option" ) }, ;
-      { "strip=<bool>"      , I_( "'yes' = -strip, 'no' = -strip- option" ) }, ;
-      { "run=<bool>"        , I_( "'yes' = -run, 'no' = -run- option" ) }, ;
-      { "inc=<bool>"        , I_( "'yes' = -inc, 'no' = -inc- option" ) }, ;
-      { "safe=<bool>"       , I_( "'yes' = -safe, 'no' = -safe- option" ) }, ;
-      { "cpp="              , I_( "same as -cpp= option" ) }, ;
-      { "warn="             , I_( "same as -warn= option" ) }, ;
-      { "compr="            , I_( "same as -compr= option" ) }, ;
-      { "head="             , I_( "same as -head= option" ) }, ;
+      { "fullstatic=<bool>" , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-fullstatic","-static"   ) }, ;
+      { "debug=<bool>"      , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-debug"     ,"-debug-"   ) }, ;
+      { "optim="            , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-optim"     ,"-optim-"   ) }, ;
+      { "nulrdd=<bool>"     , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-nulrdd"    ,"-nulrdd-"  ) }, ;
+      { "nodefgt=<bool>"    , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-nodefgt"   ,"-nodefgt-" ) }, ;
+      { "map=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-map"       ,"-map-"     ) }, ;
+      { "hbcppmm=<bool>"    , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-hbcpmm"    ,"-hbcpmm-"  ) }, ;
+      { "implib=<bool>"     , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-implib"    ,"-implib-"  ) }, ;
+      { "winuni=<bool>"     , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-winuni"    ,"-winuni-"  ) }, ;
+      { "strip=<bool>"      , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-strip"     ,"-strip-"   ) }, ;
+      { "run=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-run"       ,"-run-"     ) }, ;
+      { "inc=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-inc"       ,"-inc-"     ) }, ;
+      { "safe=<bool>"       , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-safe"      ,"-safe-"    ) }, ;
+      { "cpp="              , hb_StrFormat( I_( "same as %1$s option" ), "-cpp="             ) }, ;
+      { "warn="             , hb_StrFormat( I_( "same as %1$s option" ), "-warn="            ) }, ;
+      { "compr="            , hb_StrFormat( I_( "same as %1$s option" ), "-compr="           ) }, ;
+      { "head="             , hb_StrFormat( I_( "same as %1$s option" ), "-head="            ) }, ;
       { "plugins="          , hb_StrFormat( I_( "space separated list of %1$s plugins to load" ), _SELF_NAME_ ) }, ;
-      { "gt=<name>"         , I_( "same as -gt<name> option" ) }, ;
+      { "gt=<name>"         , hb_StrFormat( I_( "same as %1$s option" ), "-gt<name>"         ) }, ;
       { "gtdef=<name>"      , I_( "set the default GT to be used" ) }, ;
-      { "env="              , I_( "same as -env: option" ) }, ;
-      { "deppkgname="       , I_( "same as -deppkgname= option" ) }, ;
-      { "depkeyhead="       , I_( "same as -depkeyhead= option" ) }, ;
-      { "depoptional="      , I_( "same as -depoptional= option" ) }, ;
-      { "depcontrol="       , I_( "same as -depcontrol= option" ) }, ;
-      { "depincroot="       , I_( "same as -depincroot= option" ) }, ;
-      { "depincpath="       , I_( "same as -depincpath= option" ) }, ;
-      { "depincpathlocal="  , I_( "same as -depincpathlocal= option" ) }, ;
-      { "depimplibs="       , I_( "same as -depimplibs= option" ) }, ;
-      { "depimplibd="       , I_( "same as -depimplibd= option" ) }, ;
+      { "env="              , hb_StrFormat( I_( "same as %1$s option" ), "-env:"             ) }, ;
+      { "deppkgname="       , hb_StrFormat( I_( "same as %1$s option" ), "-deppkgname="      ) }, ;
+      { "depkeyhead="       , hb_StrFormat( I_( "same as %1$s option" ), "-depkeyhead="      ) }, ;
+      { "depoptional="      , hb_StrFormat( I_( "same as %1$s option" ), "-depoptional="     ) }, ;
+      { "depcontrol="       , hb_StrFormat( I_( "same as %1$s option" ), "-depcontrol="      ) }, ;
+      { "depincroot="       , hb_StrFormat( I_( "same as %1$s option" ), "-depincroot="      ) }, ;
+      { "depincpath="       , hb_StrFormat( I_( "same as %1$s option" ), "-depincpath="      ) }, ;
+      { "depincpathlocal="  , hb_StrFormat( I_( "same as %1$s option" ), "-depincpathlocal=" ) }, ;
+      { "depimplibs="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibs="      ) }, ;
+      { "depimplibd="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibd="      ) }, ;
       { "name="             , I_( "package name" ) }, ;
       { "description="      , I_( "package description" ) }, ;
       { "version=<x.y.z>"   , I_( "package version number, where x,y,z >= 0 <= 255. Defaults to 0.0.1, if not specified." ) }, ;
@@ -16226,32 +16226,32 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { '"cSTATE"'       , I_( "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'" ) }, ;
       { '"params"'       , I_( "array of parameters passed to plugins via -pflag=/pi= options or having an extension registered via hbmk_Register_Input_File_Extension()" ) }, ;
       { '"vars"'         , I_( "hash of plugin custom variables. Writable, local to each plugin" ) }, ;
-      { '"cPLAT"'        , I_( "-plat value" ) }, ;
-      { '"cCOMP"'        , I_( "-comp value" ) }, ;
-      { '"nCOMPVer"'     , I_( "see HB_COMPILER_VER envvar" ) }, ;
-      { '"cCPU"'         , I_( "-cpu value" ) }, ;
-      { '"cBUILD"'       , I_( "-build= value" ) }, ;
-      { '"cOUTPUTNAME"'  , I_( "-o value" ) }, ;
-      { '"cTARGETNAME"'  , I_( "see ${hb_targetname} macro" ) }, ;
-      { '"cTARGETTYPE"'  , I_( "see ${hb_targettype} macro" ) }, ;
-      { '"lREBUILD"'     , I_( "-rebuild option status" ) }, ;
-      { '"lCLEAN"'       , I_( "-clean option status" ) }, ;
-      { '"lDEBUG"'       , I_( "-debug option status" ) }, ;
-      { '"lMAP"'         , I_( "-map option status" ) }, ;
-      { '"lSTRIP"'       , I_( "-strip option status" ) }, ;
-      { '"lDONTEXEC"'    , I_( "-traceonly option status" ) }, ;
-      { '"lIGNOREERROR"' , I_( "-ignore option status" ) }, ;
-      { '"lTRACE"'       , I_( "-trace options status" ) }, ;
-      { '"lQUIET"'       , I_( "-q option status" ) }, ;
-      { '"lINFO"'        , I_( "-info option status" ) }, ;
-      { '"lBEEP"'        , I_( "-beep option status" ) }, ;
-      { '"lRUN"'         , I_( "-run option status" ) }, ;
-      { '"lINC"'         , I_( "-inc option status" ) }, ;
-      { '"cCCPATH"'      , I_( "see HB_CCPATH envvar" ) }, ;
-      { '"cCCPREFIX"'    , I_( "see HB_CCPREFIX envvar" ) }, ;
-      { '"cCCSUFFIX"'    , I_( "see HB_CCSUFFIX envvar" ) }, ;
-      { '"cCCEXT"'       , I_( "see HB_CCEXT envvar" ) }, ;
-      { '"cWorkDir"'     , I_( "-workdir= value" ) }, ;
+      { '"cPLAT"'        , hb_StrFormat( I_( "%1$s value" ), "-plat" ) }, ;
+      { '"cCOMP"'        , hb_StrFormat( I_( "%1$s value" ), "-comp" ) }, ;
+      { '"nCOMPVer"'     , hb_StrFormat( I_( "see %1$s envvar" ), "HB_COMPILER_VER" ) }, ;
+      { '"cCPU"'         , hb_StrFormat( I_( "%1$s value" ), "-cpu" )    }, ;
+      { '"cBUILD"'       , hb_StrFormat( I_( "%1$s value" ), "-build=" ) }, ;
+      { '"cOUTPUTNAME"'  , hb_StrFormat( I_( "%1$s value" ), "-o" )      }, ;
+      { '"cTARGETNAME"'  , hb_StrFormat( I_( "see %1$s macro" ), "${hb_targetname}" ) }, ;
+      { '"cTARGETTYPE"'  , hb_StrFormat( I_( "see %1$s macro" ), "${hb_targettype}" ) }, ;
+      { '"lREBUILD"'     , hb_StrFormat( I_( "%1$s option status" ), "-rebuild" )   }, ;
+      { '"lCLEAN"'       , hb_StrFormat( I_( "%1$s option status" ), "-clean" )     }, ;
+      { '"lDEBUG"'       , hb_StrFormat( I_( "%1$s option status" ), "-debug" )     }, ;
+      { '"lMAP"'         , hb_StrFormat( I_( "%1$s option status" ), "-map" )       }, ;
+      { '"lSTRIP"'       , hb_StrFormat( I_( "%1$s option status" ), "-strip" )     }, ;
+      { '"lDONTEXEC"'    , hb_StrFormat( I_( "%1$s option status" ), "-traceonly" ) }, ;
+      { '"lIGNOREERROR"' , hb_StrFormat( I_( "%1$s option status" ), "-ignore" )    }, ;
+      { '"lTRACE"'       , hb_StrFormat( I_( "%1$s option status" ), "-trace" )     }, ;
+      { '"lQUIET"'       , hb_StrFormat( I_( "%1$s option status" ), "-q" )         }, ;
+      { '"lINFO"'        , hb_StrFormat( I_( "%1$s option status" ), "-info" )      }, ;
+      { '"lBEEP"'        , hb_StrFormat( I_( "%1$s option status" ), "-beep" )      }, ;
+      { '"lRUN"'         , hb_StrFormat( I_( "%1$s option status" ), "-run" )       }, ;
+      { '"lINC"'         , hb_StrFormat( I_( "%1$s option status" ), "-inc" )       }, ;
+      { '"cCCPATH"'      , hb_StrFormat( I_( "see %1$s envvar" ), "HB_CCPATH" )   }, ;
+      { '"cCCPREFIX"'    , hb_StrFormat( I_( "see %1$s envvar" ), "HB_CCPREFIX" ) }, ;
+      { '"cCCSUFFIX"'    , hb_StrFormat( I_( "see %1$s envvar" ), "HB_CCSUFFIX" ) }, ;
+      { '"cCCEXT"'       , hb_StrFormat( I_( "see %1$s envvar" ), "HB_CCEXT" )    }, ;
+      { '"cWorkDir"'     , hb_StrFormat( I_( "%1$s value" ), "-workdir=" ) }, ;
       { '"nExitCode"'    , I_( "Current exit code" ) } }
 
    LOCAL aHdr_Notes := { ;
@@ -16377,8 +16377,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleBasic := { ;
       NIL, ;
-      { I_( "To run the interactive shell ('dot' prompt)" ) , hb_StrFormat( I_( "$ %1$s ." ), _SELF_NAME_ ) }, ;
-      { I_( "To run a Harbour script" )                     , hb_StrFormat( I_( "$ %1$s myscript.hb [<parameters>]" ), _SELF_NAME_ ) } }
+      { I_( "To run the interactive shell ('dot' prompt)" ) , hb_StrFormat( "$ %1$s .", _SELF_NAME_ ) }, ;
+      { I_( "To run a Harbour script" )                     , hb_StrFormat( "$ %1$s myscript.hb [%2$s]", _SELF_NAME_, I_( "<parameter[s]>" ) ) } }
 
    LOCAL aHdr_ExampleHRB := { ;
       "", ;
@@ -16386,8 +16386,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleHRB := { ;
       NIL, ;
-      { I_( "To build" )                 , hb_StrFormat( I_( "$ %1$s -gh myscript.hb" ), _SELF_NAME_ ) }, ;
-      { I_( "To run result of above" )   , hb_StrFormat( I_( "$ %1$s myscript.hrb [<parameters>]" ), _SELF_NAME_ ) } }
+      { I_( "To build" )                 , hb_StrFormat( "$ %1$s -gh myscript.hb", _SELF_NAME_ ) }, ;
+      { I_( "To run result of above" )   , hb_StrFormat( "$ %1$s myscript.hrb [%2$s]", _SELF_NAME_, I_( "<parameter[s]>" ) ) } }
 
    LOCAL aHdr_ExampleApp := { ;
       "", ;
@@ -16395,15 +16395,15 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleApp := { ;
       NIL, ;
-      { I_( "To build one simple .prg" )                                                          , hb_StrFormat( I_( "$ %1$s hello.prg" ), _SELF_NAME_ ) }, ;
-      { I_( "To build multiple .prg sources into one application in incremental mode" )           , hb_StrFormat( I_( "$ %1$s mymain.prg myfuncs.prg -inc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application using a project file" )                                      , hb_StrFormat( I_( "$ %1$s myapp.hbp" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application using incremental mode" )                                    , hb_StrFormat( I_( "$ %1$s myapp.hbp -inc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file" ), hb_StrFormat( I_( "$ %1$s myapp.prg hbct.hbc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a raw library" )                                  , hb_StrFormat( I_( "$ %1$s myapp.prg -lmylib -L<path_to_mylib>" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which uses a Windows resource" )                             , hb_StrFormat( I_( "$ %1$s mymain.prg myres.rc" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application which links against Harbour dynamic libraries" )             , hb_StrFormat( I_( "$ %1$s -shared myapp.prg" ), _SELF_NAME_ ) }, ;
-      { I_( "To build an application out of all .prg and .c sources residing in 'source' subdir" ), hb_StrFormat( I_( "$ %1$s -omyapp src/*.prg src/*.c" ), _SELF_NAME_ ) } }
+      { I_( "To build one simple .prg" )                                                          , hb_StrFormat( "$ %1$s hello.prg", _SELF_NAME_ ) }, ;
+      { I_( "To build multiple .prg sources into one application in incremental mode" )           , hb_StrFormat( "$ %1$s mymain.prg myfuncs.prg -inc", _SELF_NAME_ ) }, ;
+      { I_( "To build an application using a project file" )                                      , hb_StrFormat( "$ %1$s myapp.hbp", _SELF_NAME_ ) }, ;
+      { I_( "To build an application using incremental mode" )                                    , hb_StrFormat( "$ %1$s myapp.hbp -inc", _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file" ), hb_StrFormat( "$ %1$s myapp.prg hbct.hbc", _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a raw library" )                                  , hb_StrFormat( "$ %1$s myapp.prg -lmylib -L<path_to_mylib>", _SELF_NAME_ ) }, ;
+      { I_( "To build an application which uses a Windows resource" )                             , hb_StrFormat( "$ %1$s mymain.prg myres.rc", _SELF_NAME_ ) }, ;
+      { I_( "To build an application which links against Harbour dynamic libraries" )             , hb_StrFormat( "$ %1$s -shared myapp.prg", _SELF_NAME_ ) }, ;
+      { I_( "To build an application out of all .prg and .c sources residing in 'source' subdir" ), hb_StrFormat( "$ %1$s -omyapp src/*.prg src/*.c", _SELF_NAME_ ) } }
 
    LOCAL aHdr_ExampleLib := { ;
       "", ;
@@ -16411,8 +16411,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_ExampleLib := { ;
       NIL, ;
-      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( I_( "$ %1$s -hblib mylibsrc.prg -omylib" ), _SELF_NAME_ ) }, ;
-      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( I_( "$ %1$s -hblib mylibsrc.prg -omylib -inc" ), _SELF_NAME_ ) } }
+      { I_( "To build library 'mylib' from sources" )                        , hb_StrFormat( "$ %1$s -hblib mylibsrc.prg -omylib", _SELF_NAME_ ) }, ;
+      { I_( "To build library 'mylib' from sources using incremental mode" ) , hb_StrFormat( "$ %1$s -hblib mylibsrc.prg -omylib -inc", _SELF_NAME_ ) } }
 
    LOCAL aHdr_Config := { ;
       "", ;

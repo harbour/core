@@ -1,11 +1,11 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-16 12:52\)  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-26 01:47\)  
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 
 Syntax:  
   
-  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[parameters\[s\]\]  
+  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
 Description:  
 
@@ -13,6 +13,9 @@ Description:
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
   
 Options below are available on command\-line:  
+
+
+ - **\-\-hb:debug** enable script debugging
 
 
  - **\-help** this help
@@ -41,7 +44,6 @@ Environment variables:
 
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
- - **HBSHELL\_DEBUG** enable script debugging if set to any non\-empty value
   
 Shell API available in Harbour scripts:  
 
