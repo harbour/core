@@ -2,9 +2,8 @@ Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-28 03:24\)
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
-Traducción \(es\_ES\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
-Sintáxis:  
+Syntax:  
   
   hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
@@ -21,7 +20,7 @@ Options below are available on command\-line:
 
  - **\-help** this help
  - **\-viewhelp** long help in text viewer
- - **\-longhelp** ayuda detallada
+ - **\-longhelp** long help
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
   
 Files:  
@@ -70,7 +69,7 @@ DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 ProgName\(\) not mapped to script\.
   
-Notas:  
+Notes:  
 
 
   - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.

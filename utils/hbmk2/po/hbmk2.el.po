@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 23:32+0000\n"
+"PO-Revision-Date: 2013-03-29 23:33+0000\n"
 "Last-Translator: Pete_wg <pete_westg@yahoo.gr>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -1958,7 +1958,7 @@ msgid ""
 "instfiles=, instpaths=, echo=) and corresponding command-line parameters "
 "will accept macro variables. libpaths= also accepts %{hb_name} which "
 "translates to the name of the .hbc file under search."
-msgstr "Οι περισσότερες  .hbc γραμμές (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) και οι αντίστοιχες παράμετροι γραμμής-εντολής  αποδέχονται μεταβλητές macro. Η libpaths= επίσης αποδέχεται %{hb_name} που μεταφράζεται στο όνομα του διερευνόμενου .hbc αρχείου "
+msgstr "Οι περισσότερες  .hbc γραμμές (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) και οι αντίστοιχες παράμετροι γραμμής-εντολής  αποδέχονται μεταβλητές macro. Η libpaths= επίσης αποδέχεται %{hb_name} που μεταφράζεται στο όνομα του υπο διερεύνηση .hbc αρχείου "
 
 #: hbmk2.prg:15980
 #, c-format

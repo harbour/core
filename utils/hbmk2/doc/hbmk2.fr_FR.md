@@ -41,8 +41,8 @@ Options:
  - **\-cpp\[\-\]** force C\+\+/C mode
  - **\-cpp=&lt;value&gt;** select C\+\+ mode\. Allowed values are: def, yes, no
  - **\-map\[\-\]** create \(or not\) a map file
- - **\-implib\[\-\]** Créer \(ou non\) une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\)\. Le nom aura un suffixe ajouté\.
- - **\-implib=&lt;output&gt;** créer une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\) Nom de &lt;output&gt; \(par défaut: identique à la destination\)
+ - **\-implib\[\-\]** create \(or not\) an import library \(in \-hbdyn/\-hbexe mode\)\. The name will have a postfix added\.
+ - **\-implib=&lt;output&gt;** create import library \(in \-hbdyn/\-hbexe mode\) name to &lt;output&gt; \(default: same as output\)
  - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(no strip\) binaries
  - **\-trace\[\-\]** show commands executed
@@ -61,7 +61,7 @@ Options:
  - **\-compr=&lt;lev&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;lev&gt; can be: yes, no, min, max
  - **\-run\[\-\]** run/do not run output executable
- - **\-vcshead=&lt;file&gt;** générer un fichier d'entête \.ch avec l'information du dépot local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge\. L'entête générée définira la constante du préprocesseur \_HBMK\_VCS\_TYPE\_ avec le nom de VCS détecté et \_HBMK\_VCS\_ID\_ avec l'ID unique du dépot local\. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision\.
+ - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
@@ -93,7 +93,7 @@ Options:
  - **\-runflag=&lt;f&gt;** pass single flag to output executable when \-run option is used
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
  - **\-ldflag\+=&lt;f&gt;** pass single raw option to linker \(executable\) after the library list\. Use with caution\.
- - **\-dflag\+=&lt;f&gt;** Passer une seule option bas\-niveau à l'éditeur de liens \(bibliothèque dynamique\) après la liste de la bibliothèque\. A utiliser avec prudence\.
+ - **\-dflag\+=&lt;f&gt;** pass single raw option to linker \(dynamic library\) after the library list\. Use with caution\.
  - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
  - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\)
@@ -211,7 +211,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\-debugrte** generate a run\-time error
 
 
-Vous pouvez créer un lien symbolique/copier/renommer hbmk2 pour les noms suivants pour modifier le mode de fonctionnement par défaut:
+You can sym\-link/copy/rename hbmk2 to the following names to alter default mode of operation:
 
 
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
@@ -239,7 +239,7 @@ Files:
  - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
- - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;Répertoire hbmk2&gt;
+ - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 directory&gt;
  - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
  - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing targets and related package files to standard locations \(in the style of Harbour contribs\)\.
@@ -247,7 +247,7 @@ Files:
 
  - **\*\.hb** Harbour script
  - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;Répertoire hbmk2&gt;
+ - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 directory&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
@@ -328,7 +328,7 @@ Filters \(you can combine and/or negate them\):
  - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
  - **\{xhb\}** xhb mode \(see \-xhb option\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** filter will pass if &lt;file&gt; or &lt;dir&gt; name exists on disk\.
- - **\{MACRO\}** le filtre sera passé si la valeur de $\{MACRO\} n'est ni vide, ni égale à '0 'ou' non '\(insensible à la casse\)
+ - **\{MACRO\}** filter will pass if $\{MACRO\} value is not empty and not equal to '0' or 'no' \(case insensitive\)
  - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&gt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is larger than &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&lt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is smaller than &lt;value&gt; \(case insensitive\)\.
@@ -352,7 +352,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected
  - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
- - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** lorsque la dépendance &lt;depname&gt; a été détectée dans un emplacement configuré par \-depincpathlocal=option
+ - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** when &lt;depname&gt; dependency was detected in a location configured by \-depincpathlocal= option
   
 Environment variables:  
 
@@ -426,25 +426,25 @@ Environment variables:
  - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
  - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
  - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
- - **cpp=** identique à l'option \-cpp=
- - **warn=** identique à l'option \-warn=
- - **compr=** identique à l'option \-compr=
- - **head=** identique à l'option \-head=
+ - **cpp=** same as \-cpp= option
+ - **warn=** same as \-warn= option
+ - **compr=** same as \-compr= option
+ - **head=** same as \-head= option
  - **plugins=** space separated list of hbmk2 plugins to load
- - **gt=&lt;name&gt;** identique à l'option \-gt&lt;name&gt;
+ - **gt=&lt;name&gt;** same as \-gt&lt;name&gt; option
  - **gtdef=&lt;name&gt;** set the default GT to be used
- - **env=** identique à l'option \-env:
- - **deppkgname=** identique à l'option \-deppkgname=
- - **depkeyhead=** identique à l'option \-depkeyhead=
- - **depoptional=** identique à l'option \-depoptional=
- - **depcontrol=** identique à l'option \-depcontrol=
- - **depincroot=** identique à l'option \-depincroot=
- - **depincpath=** identique à l'option \-depincpath=
- - **depincpathlocal=** identique à l'option \-depincpathlocal=
- - **depimplibs=** identique à l'option \-depimplibs=
- - **depimplibd=** identique à l'option \-depimplibd=
+ - **env=** same as \-env: option
+ - **deppkgname=** same as \-deppkgname= option
+ - **depkeyhead=** same as \-depkeyhead= option
+ - **depoptional=** same as \-depoptional= option
+ - **depcontrol=** same as \-depcontrol= option
+ - **depincroot=** same as \-depincroot= option
+ - **depincpath=** same as \-depincpath= option
+ - **depincpathlocal=** same as \-depincpathlocal= option
+ - **depimplibs=** same as \-depimplibs= option
+ - **depimplibd=** same as \-depimplibd= option
  - **name=** package name
- - **description=** description du paquet
+ - **description=** package description
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
  - **keywords=** space separated list of keywords
  - **licences=** space separated list of licenses
@@ -533,7 +533,7 @@ Plugin variables:
  - **"cCCSUFFIX"** see HB\_CCSUFFIX envvar
  - **"cCCEXT"** see HB\_CCEXT envvar
  - **"cWorkDir"** \-workdir= value
- - **"nExitCode"** Code de sortie actuel
+ - **"nExitCode"** Current exit code
   
 Shell API available in Harbour scripts:  
 
@@ -626,7 +626,7 @@ Exit codes \("errorlevels"\):
  - **20** plugin initialization
  - **30** too deep nesting
  - **50** stop requested
- - **&lt;other&gt;** quand l'option \-run est utilisée, le code de sortie est le même que celui retourné par l'exécutable cible
+ - **&lt;other&gt;** when \-run option is used, the exit code will be the one returned by the target executable
   
 Notes:  
 

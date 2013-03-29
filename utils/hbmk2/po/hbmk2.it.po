@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 23:31+0000\n"
+"PO-Revision-Date: 2013-03-29 23:36+0000\n"
 "Last-Translator: mlacecilia <m.lacecilia@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -815,7 +815,7 @@ msgstr "Attenzione: impossibile creare la cartella per la libreri di import '%1$
 #: hbmk2.prg:7629
 #, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
-msgstr "Attenzione: Opzione di basso livello pericolosa e non consigliata: %1$s"
+msgstr "Attenzione: Opzione di basso livello pericolosa e sconsigliata: %1$s"
 
 #: hbmk2.prg:8091
 #, c-format
@@ -2402,7 +2402,7 @@ msgstr "nidificazione troppo profonda"
 #: hbmk2.prg:15627
 #, c-format
 msgid "unknown platform"
-msgstr "Piattaforma sconosciuta"
+msgstr "piattaforma sconosciuta"
 
 #: hbmk2.prg:15637
 #, c-format

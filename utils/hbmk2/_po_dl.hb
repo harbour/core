@@ -18,7 +18,7 @@ PROCEDURE Main( cLogin )
 
    FClose( hb_FTempCreateEx( @cTemp ) )
 
-   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_DirBase() + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
 
       ? cLang
 
@@ -26,7 +26,7 @@ PROCEDURE Main( cLogin )
          cLogin, cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
-         hb_MemoWrit( hb_DirSepToOS( "po/hbmk2." + cLang + ".po" ), StrTran( json[ "content" ], e"\n", hb_eol() ) )
+         hb_MemoWrit( hb_DirSepToOS( hb_DirBase() + "po/hbmk2." + cLang + ".po" ), StrTran( json[ "content" ], e"\n", hb_eol() ) )
       ELSE
          ? "error"
       ENDIF

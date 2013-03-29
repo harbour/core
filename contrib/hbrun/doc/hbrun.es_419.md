@@ -2,9 +2,8 @@ Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-28 03:24\)
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
-Traducción \(es\_419\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
-Sintáxis:  
+Syntax:  
   
   hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
@@ -19,12 +18,12 @@ Options below are available on command\-line:
  - **\-\-hb:debug** enable script debugging
 
 
- - **\-help** esta ayuda
+ - **\-help** this help
  - **\-viewhelp** long help in text viewer
- - **\-longhelp** ayuda detallada
+ - **\-longhelp** long help
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
   
-Archivos:  
+Files:  
 
 
  - **\*\.hb** Harbour script
@@ -35,13 +34,13 @@ Archivos:
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Constantes predefinidas en fuentes\.
+Predefined constants in sources:
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
   
-Variables de entorno  
+Environment variables:  
 
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
@@ -70,14 +69,14 @@ DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 ProgName\(\) not mapped to script\.
   
-Notas:  
+Notes:  
 
 
   - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
-Licencia:  
+License:  
 
 
   This program is free software; you can redistribute it and/or modify  
@@ -110,7 +109,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Autor:  
+Author:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 

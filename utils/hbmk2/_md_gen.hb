@@ -17,19 +17,19 @@ PROCEDURE Main()
    LOCAL file
    LOCAL cLang
 
-   FOR EACH file IN Directory( hb_DirSepToOS( "po/*.po" ) )
+   FOR EACH file IN Directory( hb_DirBase() + hb_DirSepToOS( "po/*.po" ) )
       hb_run( hb_StrFormat( "hbi18n -q -g -o%1$s %2$s", ;
          hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
-         hb_DirSepToOS( "po/" + file[ F_NAME ] ) ) )
+         hb_DirSepToOS( hb_DirBase() + "po/" + file[ F_NAME ] ) ) )
    NEXT
 
-   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
-      ? file := "doc/hbmk2." + cLang + ".md"
-      hb_run( hb_DirSepToOS( hb_StrFormat( "hbrun hbmk2.prg -lang=%1$s -longhelpmd > %2$s", cLang, file ) ) )
+   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_DirBase() + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+      ? file := hb_DirBase() + "doc/hbmk2." + cLang + ".md"
+      hb_run( hb_DirSepToOS( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmd > %3$s", hb_DirBase() + "hbmk2.prg", cLang, file ) ) )
       hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )
 
-      ? file := "../../contrib/hbrun/doc/hbrun." + cLang + ".md"
-      hb_run( hb_DirSepToOS( hb_StrFormat( "hbrun hbmk2.prg -lang=%1$s -longhelpmdsh > %2$s", cLang, file ) ) )
+      ? file := hb_DirBase() + "../../contrib/hbrun/doc/hbrun." + cLang + ".md"
+      hb_run( hb_DirSepToOS( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmdsh > %3$s", hb_DirBase() + "hbmk2.prg", cLang, file ) ) )
       hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )
    NEXT
 
