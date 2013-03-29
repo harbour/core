@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 11:20+0000\n"
+"PO-Revision-Date: 2013-03-29 11:39+0000\n"
 "Last-Translator: Pete_wg <pete_westg@yahoo.gr>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/projects/p/harbour/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: hbmk2.prg:10481 hbmk2.prg:13969
 #, c-format
 msgid "<%1$s directory>"
-msgstr "<%1$s ?????????>"
+msgstr "<%1$s κατάλογος>"
 
 #: hbmk2.prg:10520
 #, c-format
@@ -42,7 +42,7 @@ msgstr ""
 #: hbmk2.prg:820
 #, c-format
 msgid "Exit code: %1$d: %2$s"
-msgstr "??????? ??????: %1$d: %2$s"
+msgstr "Κωδικός εξόδου: %1$d: %2$s"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -142,7 +142,7 @@ msgstr ""
 msgid ""
 "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line "
 "%4$d and %5$d."
-msgstr "???????: ?????? ??? ?????? ????? ??? ????????  %1$s ??? %2$s ??? '%3$s' ???uu? %4$d ??? %5$d."
+msgstr "Προσοχή: Άσκοπη από κοινού χρήση των επιλογών  %1$s και %2$s στο '%3$s' γραμμή %4$d και %5$d."
 
 #: hbmk2.prg:2144
 #, c-format
@@ -156,21 +156,21 @@ msgstr ""
 msgid ""
 "create import library (in -hbdyn/-hbexe mode) name to <output> (default: "
 "same as output)"
-msgstr "??u??????? ???u???? ß?ß???????? ????????? (in -hbdyn/-hbexe mode)  ??? <output> (??????????: ???? u? ?? output)"
+msgstr "δημιουργία ονόματος βιβλιοθήκης εισαγωγής (in -hbdyn/-hbexe mode)  στο <output> (Προεπιλογή: ίδιο με το output)"
 
 #: hbmk2.prg:15804
 #, c-format
 msgid ""
 "create (or not) an import library (in -hbdyn/-hbexe mode). The name will "
 "have a postfix added."
-msgstr "??u??????? (? ???) ß?ß???????? ????????? (in -hbdyn/-hbexe mode). ?? ???u? ?? ???????? ?????u?."
+msgstr "δημιουργία (ή όχι) βιβλιοθήκης εισαγωγής (in -hbdyn/-hbexe mode). Το όνομα θα περιέχει επίθεμα."
 
 #: hbmk2.prg:15804
 #, c-format
 msgid ""
 "pass single raw option to linker (dynamic library) after the library list. "
 "Use with caution."
-msgstr "?????u? ???????? ????? ?????????????? ??? ???????/linker (????u??? ß?ß???????) u??? ?? ????? ß?ß????????. ?????u???????? ?? u? ???????!"
+msgstr "πέρασμα επιλογής χωρίς προεπεξεργασία στο συνδέτη/linker (δυναμική βιβλιοθήκη) μετά τη λίστα βιβλιοθηκών. Χρησιμοποιήστε το με προσοχή!"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -198,28 +198,28 @@ msgstr ""
 msgid ""
 "You can sym-link/copy/rename %1$s to the following names to alter default "
 "mode of operation:"
-msgstr "??????? ?? ?????????/???????????/u?????u????? %1$s ??? ???????? ???u??? ??? ???????? ??? ?????????u??? ??????????:"
+msgstr "Μορείτε να συνδέσετε/αντιγράψετε/μετονομάσετε %1$s στα ακόλουθα ονόματα για αλλάξετε την προεπιλεγμένη λειτουργία:"
 
 #: hbmk2.prg:15928
 #, c-format
 msgid ""
 "when -run option is used, the exit code will be the one returned by the "
 "target executable"
-msgstr ""
+msgstr "όταν γίνει χρήση της επιλογής -run, κωδικός εξόδου θα είναι αυτός που θα επιστραφεί από το δημιουργημένο εκτελέσιμο."
 
 #: hbmk2.prg:16072
 #, c-format
 msgid ""
 "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no'"
 " (case insensitive)"
-msgstr ""
+msgstr "το φίλτρο θα περάσει αν η τιμή ${MACRO} δεν είναι άδεια και όχι ίση με '0' ή 'no' (πεζά/κεφαλαία: αδιάφορο)"
 
 #: hbmk2.prg:16170
 #, c-format
 msgid ""
 "when <depname> dependency was detected in a location configured by "
 "-depincpathlocal= option"
-msgstr ""
+msgstr "οταν η  <depname>  εξάρτηση ανιχνεύτηκε σε μια θέση που ορίστηκε από την επιλογή -depincpathlocal="
 
 #: hbmk2.prg:16301
 #, c-format
@@ -233,7 +233,7 @@ msgstr ""
 msgid ""
 "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not "
 "needed to run %1$s."
-msgstr ""
+msgstr "Δεν χρειάζεστε το GNU Make ή κάποιο άλλο make μεταγλωττιστή C και το MSYS (σε Windows)  για να εκτελέσετε το  %1$s."
 
 #: hbmk2.prg:1996
 #, c-format
@@ -258,7 +258,7 @@ msgstr ""
 msgid ""
 "Warning: Ignoring explicitly specified core library directory: %1$s (in "
 "option %2$s)"
-msgstr ""
+msgstr "Warning: Ignoring explicitly specified core library directory: %1$s (in option %2$s)"
 
 #: hbmk2.prg:3101 hbmk2.prg:3125
 #, c-format
@@ -2421,12 +2421,12 @@ msgstr ""
 #: hbmk2.prg:16144
 #, c-format
 msgid "package description"
-msgstr "????????? ???????"
+msgstr "περιγραφή πακέτου"
 
 #: hbmk2.prg:16255
 #, c-format
 msgid "Current exit code"
-msgstr "?????? ??????? ??????"
+msgstr "Τρέχων κωδικός εξόδου"
 
 #: hbmk2.prg:16144 hbmk2.prg:16144 hbmk2.prg:16144 hbmk2.prg:16144
 #: hbmk2.prg:16144 hbmk2.prg:16144 hbmk2.prg:16144 hbmk2.prg:16144
@@ -2434,7 +2434,7 @@ msgstr "?????? ??????? ??????"
 #: hbmk2.prg:16144 hbmk2.prg:16144 hbmk2.prg:16144
 #, c-format
 msgid "same as %1$s option"
-msgstr "?u??? u? ??? ??????? %1$s"
+msgstr "όμοιο με την επιλογή %1$s"
 
 #: hbmk2.prg:15649 hbmk2.prg:15656
 #, c-format
