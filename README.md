@@ -1933,6 +1933,7 @@ Supported shells per host platforms:
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)
+  * [Translation](https://www.transifex.com/projects/p/harbour/)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
