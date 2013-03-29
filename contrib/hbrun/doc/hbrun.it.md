@@ -3,11 +3,11 @@ Copyright \(c\) 2007\-2013, Viktor Szakáts
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 
-Syntax:  
+Sintassi:  
   
   hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
-Description:  
+Descrizione:  
 
 
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
@@ -18,7 +18,7 @@ Options below are available on command\-line:
  - **\-\-hb:debug** enable script debugging
 
 
- - **\-help** this help
+ - **\-help** questo aiuto
  - **\-viewhelp** long help in text viewer
  - **\-longhelp** long help
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
@@ -26,7 +26,7 @@ Options below are available on command\-line:
 Files:  
 
 
- - **\*\.hb** Harbour script
+ - **\*\.hb** Script di Harbour
  - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun cartella&gt;
  - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: %APPDATA%\\\.harbour\\
@@ -40,7 +40,7 @@ Predefined constants in sources:
  - **\_\_HBSCRIPT\_\_HBSHELL** quando un file sorgente Harbour è eseguito come uno script di shell
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, ecc\.\.\.
   
-Environment variables:  
+Variabili d'ambiente:  
 
 
  - **HB\_EXTENSION** lista di estensioni separate da spazio da caricare nella shell interattiva di Harbour
@@ -69,14 +69,14 @@ DirBase\(\) non mappata allo script
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 ProgName\(\) not mapped to script\.
   
-Notes:  
+Note:  
 
 
   - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Puoi usare i tasti &lt;Alt\+V&gt; nella shell interativa di Harbour per incollare il testo dalla clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
-License:  
+Licenza:  
 
 
   This program is free software; you can redistribute it and/or modify  
@@ -109,7 +109,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Autore:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 

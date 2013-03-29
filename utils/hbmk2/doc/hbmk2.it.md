@@ -2,17 +2,17 @@ Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-03\-28 03:24\)
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 
-Syntax:  
+Sintassi:  
   
   hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
-Description:  
+Descrizione:  
 
 
   hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
   
-Options:  
+Opzioni:  
 
 
  - **\-o&lt;outname&gt;** output file name
@@ -32,7 +32,7 @@ Options:
  - **\-gui|\-std** create GUI/console executable
  - **\-main=&lt;mainfunc&gt;** override the name of starting function/procedure
  - **\-request=&lt;func&gt;** force function/procedure to be linked
- - **\-fullstatic** link with all static libs
+ - **\-fullstatic** linkare con una libreria statica
  - **\-pic\[\-\]** create position independent object code \(always enabled in \-hbdyn/\-hbdynvm modes\)
  - **\-\[full|fix\]shared** create shared Harbour binaries without/with absolute dir reference to Harbour library \(default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise\) \(fix/full option in \*nix only\)
  - **\-nulrdd\[\-\]** link with nulrdd
@@ -70,9 +70,9 @@ Options:
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copy target to install path even if it is up to date
- - **\-depimplib\[\-\]** abilita \(o disabilita\) la generazione della libreria d'importazione per i sorgenti della libreria di'importazione specificata nelle opzioni \-deimpslib= \(default: si\)
+ - **\-depimplib\[\-\]** abilita \(o disabilita\) la generazione della libreria d'importazione per i sorgenti della libreria d'importazione specificata nelle opzioni \-deimpslib= \(default: si\)
  - **\-stop\[=&lt;text&gt;\]** stop without doing anything and display &lt;text&gt; if specified
- - **\-echo=&lt;text&gt;** echo text on screen
+ - **\-echo=&lt;text&gt;** visualizzazione del testo sullo schermo
  - **\-pause** force waiting for a key on exit in case of failure \(with alternate GTs only\)
  - **\-exitstr** show error result as human readable text on exit
  - **\-info** turn on informational messages
@@ -221,16 +221,16 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **rtlink** mode \-rtlink \(emulate Clipper linker\)
  - **exospace** mode \-rtlink \(emulate Clipper linker\)
  - **blinker** mode \-rtlink \(emulate Clipper linker\)
- - **\*10** option \-hb10
- - **\*20** option \-hb20
- - **\*30** option \-hb30
- - **x\*** option \-xhb
+ - **\*10** opzione \-hb10
+ - **\*20** opzione \-hb20
+ - **\*30** opzione \-hb30
+ - **x\*** opzione \-xhb
  - **hbcmp\*|\*hbcmp** mode \-hbcmp \(emulate Harbour compiler producing a binary object\)
  - **hbcc\*|\*hbcc** mode \-hbcc \(emulate C compiler\)
  - **hblnk\*|\*hblnk** mode \-hblnk \(emulate C linker\)
- - **hbexe\*|\*hbexe** mode \-hbexe
- - **hblib\*|\*hblib** mode \-hblib
- - **hbdyn\*|\*hbdyn** mode \-hbdyn
+ - **hbexe\*|\*hbexe** modo \-hbexe
+ - **hblib\*|\*hblib** modo \-hblib
+ - **hbdyn\*|\*hbdyn** modo \-hbdyn
   
 Files:  
 
@@ -245,7 +245,7 @@ Files:
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
- - **\*\.hb** Harbour script
+ - **\*\.hb** Script di Harbour
  - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 cartella&gt;
  - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: %APPDATA%\\\.harbour\\
@@ -264,11 +264,11 @@ Macro variables:
  - **$\{hb\_tempdir\}** OS directory for temporary files
  - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
  - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
- - **$\{hb\_plat\}** selected platform
- - **$\{hb\_comp\}** selected C compiler
- - **$\{hb\_comp\_ver\}** C compiler version
+ - **$\{hb\_plat\}** piattaforma selezionata
+ - **$\{hb\_comp\}** Compilatore C selezionato
+ - **$\{hb\_comp\_ver\}** Versione del compilatore C
  - **$\{hb\_build\}** build name
- - **$\{hb\_cpu\}** selected CPU
+ - **$\{hb\_cpu\}** CPU selezionata
  - **$\{hb\_work\}** nome di default della cartella di lavoro
  - **$\{hb\_workdynsub\}** default workdir subdirectory for dynamic library targets
  - **$\{hb\_dynprefix\}** dynamic library prefix
@@ -280,7 +280,7 @@ Macro variables:
  - **$\{hb\_minor\}** numero secondario di versione Harbour
  - **$\{hb\_release\}** numero di versione di rilascio di Harbour
  - **$\{hb\_status\}** Harbour version status
- - **$\{hb\_revision\}** Harbour revision
+ - **$\{hb\_revision\}** Revisione di Harbour
  - **$\{hb\_host\_plat\}** Harbour host platform
  - **$\{hb\_host\_plat\_unix\}** returns '1' if Harbour host platform is \*nix compatible
  - **$\{hb\_bin\}** cartella dei file binari Harbour
@@ -290,7 +290,7 @@ Macro variables:
  - **$\{hb\_inc\}** cartella degli header Harbour
  - **$\{hb\_addons\}** cartella base degli add\-ons Harbour
  - **$\{hb\_first\}** name of source file that holds the entry function \(without directory and extension\)
- - **$\{hb\_outputdir\}** directory of the output
+ - **$\{hb\_outputdir\}** directory dell'output
  - **$\{hb\_outputname\}** nome dell'output \(senza estensione\)
  - **$\{hb\_level\}** livello di recursione del sub\-progetto
  - **$\{&lt;depname&gt;\}** returns the header directory of dependency &lt;depname&gt;, or '1' if it is not detected
@@ -301,7 +301,7 @@ Filters \(you can combine and/or negate them\):
 
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
- - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
+ - **\{&lt;cpu&gt;\}** CPU di destinazione\. Dove &lt;cpu&gt; può essere una tra i seguenti: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
  - **\{mt\}** l'eseguibile è multi\-threaded \(vedi l'opzione \-mt\)
  - **\{st\}** target is single\-threaded \(see \-st option\)
@@ -354,7 +354,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
  - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** when &lt;depname&gt; dependency was detected in a location configured by \-depincpathlocal= option
   
-Environment variables:  
+Variabili d'ambiente:  
 
 
  - **HBMK\_OPTIONS** accepts any options as if they were passed in the beginning of the command\-line
@@ -443,10 +443,10 @@ Environment variables:
  - **depincpathlocal=** come l'opzione \-depincpathlocal=
  - **depimplibs=** come l'opzione \-depimplibs=
  - **depimplibd=** come l'opzione \-depimplibd=
- - **name=** package name
+ - **name=** Nome del pacchetto
  - **description=** descrizione del pacchetto
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
- - **keywords=** space separated list of keywords
+ - **keywords=** lista di parole chiave separate da spazio
  - **licences=** space separated list of licenses
  - **repository=** lista di riferimenti, separati da spazio, ai repository sorgenti
 
@@ -460,9 +460,9 @@ Register input file extension to be passed to plugin \(by default all unknown fi
  - **hbmk\_AddInput\_PRG\( hbmk, cFileName \) \-&gt; NIL**  
 Aggiunge al progetto un file Harbour di input
  - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
-Add a C input file to the project\.
+Aggiungere in input un file \.C al progetto\.
  - **hbmk\_AddInput\_CPP\( hbmk, cFileName \) \-&gt; NIL**  
-Add a C\+\+ input file to the project\.
+Aggiungere al progetto un file C\+\+ in input\.
  - **hbmk\_AddInput\_RC\( hbmk, cFileName \) \-&gt; NIL**  
 Aggiunge al progetto un file di risorsa di input
  - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
@@ -612,23 +612,23 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
 Exit codes \("errorlevels"\):  
 
 
- - **0** no error
- - **1** unknown platform
- - **2** unknown compiler
+ - **0** Nessun errore
+ - **1** Piattaforma sconosciuta
+ - **2** compilatore sconosciuto
  - **3** failed Harbour detection
  - **5** failed stub creation
  - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
  - **7** failed in final assembly \(linker or library manager\)
  - **8** unsupported
  - **9** failed to create working directory
- - **19** help
+ - **19** aiuto
  - **10** dependency missing or disabled
  - **20** plugin initialization
- - **30** too deep nesting
+ - **30** nidificazione troppo profonda
  - **50** stop requested
  - **&lt;other&gt;** when \-run option is used, the exit code will be the one returned by the target executable
   
-Notes:  
+Note:  
 
 
   - &lt;script&gt; can be:  
@@ -654,7 +654,7 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
 
 
   - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Puoi usare i tasti &lt;Alt\+V&gt; nella shell interativa di Harbour per incollare il testo dalla clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 
 
@@ -679,7 +679,7 @@ Supported &lt;compiler&gt; values for each supported &lt;platform&gt; value:
  - **aix** gcc
  - **sunos** gcc, sunpro
   
-License:  
+Licenza:  
 
 
   This program is free software; you can redistribute it and/or modify  
@@ -712,7 +712,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Autore:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 

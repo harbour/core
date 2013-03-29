@@ -2,11 +2,12 @@
 # 
 # Translators:
 # Giovanni Di Maria <calimero22@yahoo.it>, 2013.
+#  <m.lacecilia@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 22:14+0000\n"
-"Last-Translator: calimero22 <calimero22@yahoo.it>\n"
+"PO-Revision-Date: 2013-03-29 23:31+0000\n"
+"Last-Translator: mlacecilia <m.lacecilia@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "Codice d'uscita: %1$d: %2$s"
 msgid ""
 "enable (or disable) import library generation for import library sources "
 "specified in -depimplibs= options (default: yes)"
-msgstr "abilita (o disabilita) la generazione della libreria d'importazione per i sorgenti della libreria di'importazione specificata nelle opzioni -deimpslib= (default: si)"
+msgstr "abilita (o disabilita) la generazione della libreria d'importazione per i sorgenti della libreria d'importazione specificata nelle opzioni -deimpslib= (default: si)"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -377,7 +378,7 @@ msgstr ""
 msgid ""
 "You can use key <Alt+V> in interactive Harbour shell to paste text from the "
 "clipboard."
-msgstr ""
+msgstr "Puoi usare i tasti <Alt+V> nella shell interativa di Harbour per incollare il testo dalla clipboard."
 
 #: hbmk2.prg:15906
 #, c-format
@@ -502,7 +503,7 @@ msgstr ""
 #: hbmk2.prg:3692
 #, c-format
 msgid "Warning: No source files were specified."
-msgstr ""
+msgstr "Attenzione: Non è stato specificato alcun file sorgente."
 
 #: hbmk2.prg:2351
 #, c-format
@@ -597,7 +598,7 @@ msgstr ""
 #: hbmk2.prg:3506 hbmk2.prg:10652 hbmk2.prg:10705 hbmk2.prg:10743
 #, c-format
 msgid "Warning: Cannot find %1$s (referenced from %2$s)"
-msgstr ""
+msgstr "Attenzione: Non posso trovare %1$s (referenziato da %2$s)"
 
 #: hbmk2.prg:3728
 #, c-format
@@ -824,7 +825,7 @@ msgstr ""
 #: hbmk2.prg:11367
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
-msgstr ""
+msgstr "Attenzione: riferimento progetto (%1$s) ignorato. File non trovato."
 
 #: hbmk2.prg:13232
 #, c-format
@@ -1157,7 +1158,7 @@ msgstr ""
 #, c-format
 msgid ""
 "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
-msgstr ""
+msgstr "CPU di destinazione. Dove <cpu> può essere una tra i seguenti: x86, x86_64, ia64, arm, mips, sh"
 
 #: hbmk2.prg:16217
 #, c-format
@@ -1199,7 +1200,7 @@ msgstr ""
 #: hbmk2.prg:6732
 #, c-format
 msgid "Compiling C++..."
-msgstr ""
+msgstr "Compilazione C++ in corso..."
 
 #: hbmk2.prg:7484
 #, c-format
@@ -1341,7 +1342,7 @@ msgstr ""
 #: hbmk2.prg:11509
 #, c-format
 msgid "Warning: Error in filter expression: '%1$s'"
-msgstr ""
+msgstr "Attensione: Errore nell'espressione filtro: '%1$s'"
 
 #: hbmk2.prg:12257
 #, c-format
@@ -1514,7 +1515,7 @@ msgstr ""
 #: hbmk2.prg:9020
 #, c-format
 msgid "Error: Missing dependencies: %1$s"
-msgstr ""
+msgstr "Errore: dipendenze omesse: %1$s"
 
 #: hbmk2.prg:6850 hbmk2.prg:6874 hbmk2.prg:8210
 #, c-format
@@ -1544,12 +1545,12 @@ msgstr ""
 #: hbmk2.prg:9028
 #, c-format
 msgid "Warning: Missing dependencies: %1$s"
-msgstr ""
+msgstr "Attensione: dipendenza omessa: %1$s"
 
 #: hbmk2.prg:7955
 #, c-format
 msgid "Created symbolic link %1$s to %2$s"
-msgstr ""
+msgstr "Creato collegamento simbolico  %1$s verso %2$s"
 
 #: hbmk2.prg:8982
 #, c-format
@@ -1559,7 +1560,7 @@ msgstr ""
 #: hbmk2.prg:9030
 #, c-format
 msgid "Warning: Missing dependency: %1$s"
-msgstr ""
+msgstr "Attenzione: dipendenza omessa: %1$s"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -1569,7 +1570,7 @@ msgstr ""
 #: hbmk2.prg:10655 hbmk2.prg:10708 hbmk2.prg:11323 hbmk2.prg:11334
 #, c-format
 msgid "Warning: Cannot nest deeper in %1$s"
-msgstr ""
+msgstr "Attenzione: non si può nidificare più in profondità in %1$s"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -1714,7 +1715,7 @@ msgstr ""
 #: hbmk2.prg:12404
 #, c-format
 msgid "Warning: %1$s"
-msgstr ""
+msgstr "Attenzione: %1$s"
 
 #: hbmk2.prg:12432
 #, c-format
@@ -1793,12 +1794,12 @@ msgstr ""
 #: hbmk2.prg:9442
 #, c-format
 msgid "(compiled)"
-msgstr ""
+msgstr "(compilato)"
 
 #: hbmk2.prg:9447
 #, c-format
 msgid "(source)"
-msgstr ""
+msgstr "(sorgente)"
 
 #: hbmk2.prg:9566 hbmk2.prg:9576
 #, c-format
@@ -2148,7 +2149,7 @@ msgstr ""
 #: hbmk2.prg:15804
 #, c-format
 msgid "link with all static libs"
-msgstr ""
+msgstr "linkare con una libreria statica"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -2238,12 +2239,12 @@ msgstr ""
 #: hbmk2.prg:15626
 #, c-format
 msgid "no error"
-msgstr ""
+msgstr "Nessun errore"
 
 #: hbmk2.prg:15642
 #, c-format
 msgid "unknown: %1$d"
-msgstr ""
+msgstr "Sconosciuto: %1$d"
 
 #: hbmk2.prg:15633
 #, c-format
@@ -2263,7 +2264,7 @@ msgstr ""
 #: hbmk2.prg:15684
 #, c-format
 msgid "Options:"
-msgstr ""
+msgstr "Opzioni:"
 
 #: hbmk2.prg:16390
 #, c-format
@@ -2283,12 +2284,12 @@ msgstr ""
 #: hbmk2.prg:13206
 #, c-format
 msgid "(installed)"
-msgstr ""
+msgstr "(installato)"
 
 #: hbmk2.prg:13206
 #, c-format
 msgid "(not installed)"
-msgstr ""
+msgstr "(non installato)"
 
 #: hbmk2.prg:13244
 #, c-format
@@ -2366,22 +2367,22 @@ msgstr ""
 #: hbmk2.prg:14559
 #, c-format
 msgid "Enter password:"
-msgstr ""
+msgstr "Inserire la password:"
 
 #: hbmk2.prg:14628
 #, c-format
 msgid "Arguments:"
-msgstr ""
+msgstr "Argomenti:"
 
 #: hbmk2.prg:14676
 #, c-format
 msgid "Syntax error."
-msgstr ""
+msgstr "Errore di sintassi."
 
 #: hbmk2.prg:14621
 #, c-format
 msgid "Could not execute:"
-msgstr ""
+msgstr "Non si può eseguire:"
 
 #: hbmk2.prg:15698
 #, c-format
@@ -2391,17 +2392,17 @@ msgstr ""
 #: hbmk2.prg:15628
 #, c-format
 msgid "unknown compiler"
-msgstr ""
+msgstr "compilatore sconosciuto"
 
 #: hbmk2.prg:15638
 #, c-format
 msgid "too deep nesting"
-msgstr ""
+msgstr "nidificazione troppo profonda"
 
 #: hbmk2.prg:15627
 #, c-format
 msgid "unknown platform"
-msgstr ""
+msgstr "Piattaforma sconosciuta"
 
 #: hbmk2.prg:15637
 #, c-format
@@ -2439,17 +2440,17 @@ msgstr "come l'opzione %1$s"
 #: hbmk2.prg:15649 hbmk2.prg:15656
 #, c-format
 msgid "Syntax:"
-msgstr ""
+msgstr "Sintassi:"
 
 #: hbmk2.prg:15635
 #, c-format
 msgid "help"
-msgstr ""
+msgstr "aiuto"
 
 #: hbmk2.prg:16434
 #, c-format
 msgid "MS-DOS"
-msgstr ""
+msgstr "MS-DOS"
 
 #: hbmk2.prg:15962
 #, c-format
@@ -2459,7 +2460,7 @@ msgstr ""
 #: hbmk2.prg:16259
 #, c-format
 msgid "Notes:"
-msgstr ""
+msgstr "Note:"
 
 #: hbmk2.prg:15928
 #, c-format
@@ -2469,7 +2470,7 @@ msgstr ""
 #: hbmk2.prg:16366
 #, c-format
 msgid "Author:"
-msgstr ""
+msgstr "Autore:"
 
 #: hbmk2.prg:15157 hbmk2.prg:15286 hbmk2.prg:15435
 #, c-format
@@ -2584,7 +2585,7 @@ msgstr ""
 #: hbmk2.prg:16144
 #, c-format
 msgid "package name"
-msgstr ""
+msgstr "Nome del pacchetto"
 
 #: hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255
 #: hbmk2.prg:16255 hbmk2.prg:16255
@@ -2606,7 +2607,7 @@ msgstr ""
 #: hbmk2.prg:16324
 #, c-format
 msgid "Description:"
-msgstr ""
+msgstr "Descrizione:"
 
 #: hbmk2.prg:16188
 #, c-format
@@ -2616,7 +2617,7 @@ msgstr ""
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a C++ input file to the project."
-msgstr ""
+msgstr "Aggiungere al progetto un file C++ in input."
 
 #: hbmk2.prg:16175
 #, c-format
@@ -2636,7 +2637,7 @@ msgstr ""
 #: hbmk2.prg:16144
 #, c-format
 msgid "space separated list of keywords"
-msgstr ""
+msgstr "lista di parole chiave separate da spazio"
 
 #: hbmk2.prg:16144
 #, c-format
@@ -2665,7 +2666,7 @@ msgstr ""
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a C input file to the project."
-msgstr ""
+msgstr "Aggiungere in input un file .C al progetto."
 
 #: hbmk2.prg:15804
 #, c-format
@@ -2752,7 +2753,7 @@ msgstr ""
 #: hbmk2.prg:15866
 #, c-format
 msgid "this help"
-msgstr ""
+msgstr "questo aiuto"
 
 #: hbmk2.prg:15857
 #, c-format
@@ -2772,17 +2773,17 @@ msgstr ""
 #: hbmk2.prg:15985
 #, c-format
 msgid "Harbour script"
-msgstr ""
+msgstr "Script di Harbour"
 
 #: hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906
 #, c-format
 msgid "option %1$s"
-msgstr ""
+msgstr "opzione %1$s"
 
 #: hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906
 #, c-format
 msgid "mode %1$s"
-msgstr ""
+msgstr "modo %1$s"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -2792,12 +2793,12 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "selected CPU"
-msgstr ""
+msgstr "CPU selezionata"
 
 #: hbmk2.prg:16358
 #, c-format
 msgid "License:"
-msgstr ""
+msgstr "Licenza:"
 
 #: hbmk2.prg:15857
 #, c-format
@@ -2948,12 +2949,12 @@ msgstr ""
 #: hbmk2.prg:16320
 #, c-format
 msgid ".hb, .prg, .hrb or .dbf"
-msgstr ""
+msgstr ".hb, .prg, .hrb or .dbf"
 
 #: hbmk2.prg:16320
 #, c-format
 msgid ".hb, .hrb or .dbf"
-msgstr ""
+msgstr ".hb, .hrb or .dbf"
 
 #: hbmk2.prg:16390
 #, c-format
@@ -2963,7 +2964,7 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "directory of the output"
-msgstr ""
+msgstr "directory dell'output"
 
 #: hbmk2.prg:16381
 #, c-format
@@ -2983,12 +2984,12 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "Harbour revision"
-msgstr ""
+msgstr "Revisione di Harbour"
 
 #: hbmk2.prg:16032
 #, c-format
 msgid "selected C compiler"
-msgstr ""
+msgstr "Compilatore C selezionato"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -3018,7 +3019,7 @@ msgstr ""
 #: hbmk2.prg:15804
 #, c-format
 msgid "echo text on screen"
-msgstr ""
+msgstr "visualizzazione del testo sullo schermo"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -3028,7 +3029,7 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "C compiler version"
-msgstr ""
+msgstr "Versione del compilatore C"
 
 #: hbmk2.prg:15866
 #, c-format
@@ -3038,12 +3039,12 @@ msgstr ""
 #: hbmk2.prg:15932
 #, c-format
 msgid "Environment variables:"
-msgstr ""
+msgstr "Variabili d'ambiente:"
 
 #: hbmk2.prg:16032
 #, c-format
 msgid "selected platform"
-msgstr ""
+msgstr "piattaforma selezionata"
 
 #: hbmk2.prg:15857
 #, c-format

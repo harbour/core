@@ -19,12 +19,12 @@ Options below are available on command\-line:
  - **\-\-hb:debug** enable script debugging
 
 
- - **\-help** this help
+ - **\-help** esta ayuda
  - **\-viewhelp** long help in text viewer
  - **\-longhelp** ayuda detallada
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
   
-Files:  
+Archivos:  
 
 
  - **\*\.hb** Harbour script
@@ -35,13 +35,13 @@ Files:
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Predefined constants in sources:
+Constantes predefinidas en fuentes\.
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
   
-Environment variables:  
+Variables de entorno  
 
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
@@ -77,7 +77,7 @@ Notas:
   - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
-License:  
+Licencia:  
 
 
   This program is free software; you can redistribute it and/or modify  
@@ -110,7 +110,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Autor:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 
