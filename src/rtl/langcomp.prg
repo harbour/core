@@ -183,7 +183,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
    LOCAL cLangHb := ""
 
    IF HB_ISSTRING( cLangStd )
-      SWITCH Lower( cLangStd )
+      SWITCH Lower( StrTran( cLangStd, "_", "-" ) )
       CASE "af-za"      ; EXIT
       CASE "af"         ; EXIT
       CASE "ar-ae"      ; EXIT
