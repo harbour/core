@@ -364,14 +364,14 @@ HB_FUNC( WVG_GETCLIENTRECT )
 }
 
 /*
- *    Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage ) in Pixels
+ *    Win_DrawImage( hdc, nLeft, nTop, nWidth, nHeight, cImage, lDoNotScale ) in Pixels
  */
 HB_FUNC( WVG_DRAWIMAGE )
 {
    void * hImage;
 
    hb_retl( hb_wvt_DrawImage( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ),
-                              hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ) ) );
+                              hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ), hb_parl( 7 ) ) );
    hb_strfree( hImage );
 }
 
