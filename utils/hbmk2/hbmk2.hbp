@@ -20,7 +20,7 @@ hbmk2.prg
 
 -lhbpmcom{dos}
 
-hbmk2.%{hb_lng}.po
+po/hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
 -lng=el_GR,es_PE,hu_HU,it_IT,pt_BR
 
