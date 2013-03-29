@@ -575,10 +575,10 @@ extern HB_EXPORT POINT         hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )
 extern HB_EXPORT IPicture *    hb_wvt_gtLoadPicture( LPCTSTR image );
 extern HB_EXPORT IPicture *    hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section );
-extern HB_EXPORT HB_BOOL       hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture, BOOL bDoNotScale );
+extern HB_EXPORT HB_BOOL       hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture, HB_BOOL bDoNotScale );
 extern HB_EXPORT HB_BOOL       hb_wvt_gtDestroyPicture( IPicture * iPicture );
 #endif
-extern HB_EXPORT HB_BOOL       hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR image, BOOL bDoNotScale );
+extern HB_EXPORT HB_BOOL       hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, LPCTSTR image, HB_BOOL bDoNotScale );
 extern HB_EXPORT void          hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 extern HB_EXPORT void          hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 

@@ -198,7 +198,7 @@ IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
    return ( IPicture * ) iPicture;
 }
 
-HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPicture, BOOL bDoNotScale )
+HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPicture, HB_BOOL bDoNotScale )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
@@ -497,7 +497,7 @@ BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
    return lReturn;
 }
 
-HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage, BOOL bDoNotScale )
+HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage, HB_BOOL bDoNotScale )
 {
 #if ! defined( HB_OS_WIN_CE )
    HGLOBAL hGlobal;
