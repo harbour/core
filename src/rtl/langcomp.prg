@@ -242,6 +242,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "en-zw"
       CASE "en"         ; cLangHb := "en" ; EXIT
       CASE "eo"         ; cLangHb := "eo" ; EXIT
+      CASE "es-419"
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"

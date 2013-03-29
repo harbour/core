@@ -4,6 +4,8 @@
  * Copyright 2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
+ * Requires: Harbour in PATH
+ *
  */
 
 #pragma -w3
@@ -21,7 +23,7 @@ PROCEDURE Main()
          hb_DirSepToOS( "po/" + file[ F_NAME ] ) ) )
    NEXT
 
-   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z_,]*)", hb_MemoRead( "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
       ? file := "doc/hbmk2." + cLang + ".md"
       hb_run( hb_DirSepToOS( hb_StrFormat( "hbrun hbmk2.prg -lang=%1$s -longhelpmd > %2$s", cLang, file ) ) )
       hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )

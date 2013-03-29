@@ -77,7 +77,7 @@ Megjegyzések:
   - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
-License:  
+Licenc \(angolul\):  
 
 
   This program is free software; you can redistribute it and/or modify  

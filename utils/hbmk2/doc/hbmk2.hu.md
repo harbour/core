@@ -448,7 +448,7 @@ Environment variables:
  - **description=** package description
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
  - **keywords=** space separated list of keywords
- - **licences=** space separated list of licenses
+ - **licences=** licencek szóközzel elválasztott listája
  - **repository=** space separated list of source repository references
 
 
@@ -679,7 +679,7 @@ Az egyes &lt;platform&gt; értékekhez tartozó &lt;compiler&gt; értékek a kö
  - **aix** gcc
  - **sunos** gcc, sunpro
   
-License:  
+Licenc \(angolul\):  
 
 
   This program is free software; you can redistribute it and/or modify  

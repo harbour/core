@@ -15,7 +15,7 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
 Options:  
 
 
- - **\-o&lt;outname&gt;** output file name
+ - **\-o&lt;outname&gt;** όνομα αρχείου εξόδου
  - **\-l&lt;libname&gt;** link with &lt;libname&gt; library\. &lt;libname&gt; should be without path, extension and 'lib' prefix \(unless part of the name\)\. Do not add core Harbour libraries, they are automatically added as needed\. If &lt;libname&gt; starts with a '\-' character, the library will be removed from the list of libraries at link time\.
  - **\-L&lt;libpath&gt;** πρόσθετο μονοπάτι για αναζήτηση βιβλιοθηκών
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** πρόσθετο μονοπάτι για αναζήτηση headers
@@ -23,7 +23,7 @@ Options:
  - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
  - **\-inc\[\-\]** enable/disable incremental build mode \(default: disabled\)
  - **\-hbexe** create executable \(default\)
- - **\-hblib** create static library
+ - **\-hblib** δημιουργία στατικής βιβλιοθήκης
  - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
  - **\-hbdynvm** create dynamic library \(with linked Harbour VM\)
 
