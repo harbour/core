@@ -1471,7 +1471,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    hbmk[ _HBMK_lPause ] := lPause
    hbmk[ _HBMK_nLevel ] := nLevel
 
-   SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+   SetUILang( hbmk, GetUILang() )
 
    IF Empty( aArgs )
       ShowHeader( hbmk )
@@ -1540,7 +1540,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := StrTran( hb_DirSepToOS( SubStr( cParam, 8 ) ), hb_ps() )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
       CASE Left( cParamL, 8 )  == "-credits"   ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
-      CASE Left( cParamL, 6 )  == "-lang="     ; SetUILang( hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) )
+      CASE Left( cParamL, 6 )  == "-lang="     ; SetUILang( hbmk, SubStr( cParam, 7 ) )
       CASE Left( cParamL, 4 )  == "-shl"       ; hbmk[ _HBMK_lShowLevel ] := .T.
       CASE Left( cParamL, 7 )  == "-width="
 
@@ -13748,10 +13748,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       ENDIF
    #endif
 
-   /* Set CP and language */
-
-   SetUILang( GetUILang() )
-
    /* Save originals */
 
    hbsh[ _HBSH_cDirBase ] := hb_DirBase()
@@ -13760,6 +13756,10 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    /* Init */
 
    hbmk := hbsh[ _HBSH_hbmk ] := hbmk_new( .T. )
+
+   /* Set CP and language */
+
+   SetUILang( hbmk, GetUILang() )
 
    /* Help */
 
@@ -13771,7 +13771,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE cParamL == "-help" .OR. cParamL == "--help" .OR. ;
            cParamL == "-h" .OR. cParamL == "-?"
 
-         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T. )
          RETURN
@@ -13779,7 +13779,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE cParamL == "-longhelp" .OR. cParamL == "--longhelp" .OR. ;
            cParamL == "-hh" .OR. cParamL == "-??"
 
-         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
          RETURN
@@ -13804,7 +13804,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          hbmk[ _HBMK_lMarkdown ] := .T.
 
-         SetUILang( hbmk[ _HBMK_cUILNG ] := GetUILang() )
+         SetUILang( hbmk, GetUILang() )
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
          RETURN
@@ -15479,9 +15479,13 @@ STATIC FUNCTION GetUILang()
 
    RETURN StrTran( cLNG, "_", "-" )
 
-STATIC PROCEDURE SetUILang( cUILNG )
+STATIC PROCEDURE SetUILang( hbmk, cUILNG )
 
-   LOCAL tmp
+   LOCAL aLang
+   LOCAL cLang
+   LOCAL cFileName
+   LOCAL cFile
+   LOCAL aFile
 
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
@@ -15495,21 +15499,35 @@ STATIC PROCEDURE SetUILang( cUILNG )
    /* Configure language */
    IF cUILNG == "en"
       hb_i18n_Set( NIL )
-      hb_langSelect( cUILNG )
+      hb_langSelect( hbmk[ _HBMK_cUILNG ] := cUILNG )
    ELSE
-      tmp := ;
-         hb_DirSepAdd( hb_DirBase() ) + ;
-         _SELF_NAME_ + ;
-         "." + ;
-         StrTran( cUILNG, "-", "_" ) + ;
-         ".hbl"
-      IF hb_i18n_Check( tmp := hb_MemoRead( tmp ) )
-         hb_i18n_Set( hb_i18n_RestoreTable( tmp ) )
-         hb_langSelect( cUILNG )
-      ELSE
-         hb_i18n_Set( NIL )
-         hb_langSelect( "en" )
-      ENDIF
+      aLang := AAddNew( { cUILNG }, Left( cUILNG, 2 ) )
+      AAdd( aLang, Left( cUILNG, 2 ) + "*" )
+      FOR EACH cLang IN aLang
+         #define _LANG_TO_HBL( cLang )  hb_DirSepAdd( hb_DirBase() ) + _SELF_NAME_ + "." + StrTran( cLang, "-", "_" ) + ".hbl"
+         IF "*" $ cLang
+            IF Empty( aFile := Directory( _LANG_TO_HBL( cLang ) ) )
+               cFileName := NIL
+            ELSE
+               cFileName := aFile[ 1 ][ F_NAME ]
+               cLang := StrTran( SubStr( hb_FNameExt( hb_FNameName( cFileName ) ), 2 ), "_", "-" )
+            ENDIF
+         ELSE
+            cFileName := _LANG_TO_HBL( cLang )
+         ENDIF
+         IF ! Empty( cFileName ) .AND. ;
+            hb_i18n_Check( cFile := hb_MemoRead( cFileName ) )
+            hb_i18n_Set( hb_i18n_RestoreTable( cFile ) )
+            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+               hb_langSelect( hbmk[ _HBMK_cUILNG ] := cLang )
+            END /* SEQUENCE */
+            EXIT
+         ELSEIF cLang:__enumIsLast()
+            hb_i18n_Set( NIL )
+            hb_langSelect( hbmk[ _HBMK_cUILNG ] := "en" )
+            EXIT
+         ENDIF
+      NEXT
    ENDIF
 
    RETURN
@@ -15600,9 +15618,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    ENDIF
    Eval( hbmk[ _HBMK_bOut ], cText )
 
-   IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
-      !( hbmk[ _HBMK_cUILNG ] == "en-GB" ) .AND. ;
-      !( hbmk[ _HBMK_cUILNG ] == "en-US" )
+   IF !( Lower( Left( hbmk[ _HBMK_cUILNG ], 2 ) ) == "en" )
       cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" )
       cTrsTextI := I_( cTrsText )
       IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )
