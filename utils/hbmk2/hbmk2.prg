@@ -15509,6 +15509,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
             IF Empty( aFile := Directory( _LANG_TO_HBL( cLang ) ) )
                cFileName := NIL
             ELSE
+               ASort( aFile,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
                cFileName := aFile[ 1 ][ F_NAME ]
                cLang := StrTran( SubStr( hb_FNameExt( hb_FNameName( cFileName ) ), 2 ), "_", "-" )
             ENDIF
