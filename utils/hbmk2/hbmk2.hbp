@@ -22,7 +22,7 @@ hbmk2.prg
 
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
--lng=es_PE,hu_HU,pt_BR
+-lng=el_GR,es_PE,hu_HU,it_IT,pt_BR
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs
