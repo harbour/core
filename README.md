@@ -1936,8 +1936,8 @@ Supported shells per host platforms:
   * [Translation](https://www.transifex.com/projects/p/harbour/)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
-     * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
-     * [hbrun documentation](contrib/hbrun/hbrun.md)
+     * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
+     * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
