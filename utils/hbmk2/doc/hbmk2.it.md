@@ -125,7 +125,7 @@ Opzioni:
 
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; is the name of the dependency\. &lt;n&gt; name of the package dependency\. Can be specified multiple times\.
  - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; is the name of the dependency\. &lt;h&gt; is the key header \(\.h\) of the package dependency\. Multiple alternative headers can be specified\.
- - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; is the name of the dependency\. &lt;f&gt; can be 'yes' or 'no', specifies whether the dependency is optional\. Default: no
+ - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; è il nome della dipendenza\. &lt;f&gt; può essere 'yes' o 'no', specifica se la dipendenza è opzionale\. Default: no
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; is the name of the dependency\. &lt;v&gt; is a value that controls how detection is done\. Accepted values: no, yes, force, nolocal, local\. Default: content of environment variable HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; is the name of the dependency\. Set &lt;r&gt; as root directory for paths specified in \-depincpath options\.
  - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list\.
@@ -139,7 +139,7 @@ Opzioni:
  - **\-pi=&lt;filename&gt;** pass input file to plugins
  - **\-pflag=&lt;f&gt;** pass single flag to plugins
   
-Options below are available on command\-line:  
+Opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
  - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate targets\.
@@ -218,7 +218,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
  - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
  - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
- - **clipper** mode \-hbcmp \(emulate Clipper compiler\)
+ - **clipper** modo \-hbcmp \(emulazione compilatore Clipper\)
  - **rtlink** modo \-rtlink \(emulazione linker di Clipper\)
  - **exospace** modo \-rtlink \(emulazione linker di Clipper\)
  - **blinker** modo \-rtlink \(emulazione linker di Clipper\)
@@ -271,7 +271,7 @@ Macro variables:
  - **$\{hb\_build\}** build name
  - **$\{hb\_cpu\}** CPU selezionata
  - **$\{hb\_work\}** nome di default della cartella di lavoro
- - **$\{hb\_workdynsub\}** default workdir subdirectory for dynamic library targets
+ - **$\{hb\_workdynsub\}** sottocartella di lavoro di default per la libreria dinamica di destinazione
  - **$\{hb\_dynprefix\}** prefisso della libreria dinamica
  - **$\{hb\_dynsuffix\}** suffisso della libreria dinamica
  - **$\{hb\_dynext\}** estensione della libreria dinamica
@@ -283,7 +283,7 @@ Macro variables:
  - **$\{hb\_status\}** Harbour version status
  - **$\{hb\_revision\}** Revisione di Harbour
  - **$\{hb\_host\_plat\}** Harbour host platform
- - **$\{hb\_host\_plat\_unix\}** returns '1' if Harbour host platform is \*nix compatible
+ - **$\{hb\_host\_plat\_unix\}** ritorna "1" se la piattaforma host Harbour è \*nix compatibile
  - **$\{hb\_bin\}** cartella dei file binari Harbour
  - **$\{hb\_lib\}** Cartella di Harbour della libreria statica
  - **$\{hb\_lib3rd\}** Harbour 3rd party static library directory
@@ -295,7 +295,7 @@ Macro variables:
  - **$\{hb\_outputname\}** nome dell'output \(senza estensione\)
  - **$\{hb\_level\}** livello di recursione del sub\-progetto
  - **$\{&lt;depname&gt;\}** restituisce la directory di intestazione della dipendenza &lt;depname&gt; , o '1 ', se essa non viene rilevata
- - **$\{&lt;envvar&gt;\}** returns the value of the environment variable &lt;envvar&gt;
+ - **$\{&lt;envvar&gt;\}** ritorna il valore della variabile d'ambiente &lt;envvar&gt;
   
 Filters \(you can combine and/or negate them\):  
 
@@ -314,7 +314,7 @@ Filters \(you can combine and/or negate them\):
  - **\{static\}** static build \(see \-static and related options\)
  - **\{lngcpp\}** forced C\+\+ mode \(see \-cpp option\)
  - **\{lngc\}** forced C mode \(see \-cpp\- option\)
- - **\{winuni\}** Windows UNICODE \(WIDE\) mode \(see \-winuni option\)
+ - **\{winuni\}** Modo Windows UNICODE \(WIDE\) \(vedere l'opzione \-winuni\)
  - **\{winansi\}** Windows ANSI mode \(see \-winuni\- option\)
  - **\{unix\}** target platform is \*nix compatible \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** la piattaforma di destinazione è compatibile con Windows \(win, wce\)
@@ -364,8 +364,8 @@ Variabili d'ambiente:
  - **HB\_CPU** accepts same values as \-cpu= option
  - **HB\_BUILD\_NAME** accepts same values as \-build= option
  - **HB\_LANG** accepts same values as \-lang= option
- - **HB\_USER\_LIBS** accepts same values \(space separated\) as \-l option
- - **HB\_USER\_LIBPATHS** accepts same values \(space separated\) as \-L option
+ - **HB\_USER\_LIBS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-l
+ - **HB\_USER\_LIBPATHS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-L
  - **HB\_USER\_PRGFLAGS** options to be passed to Harbour compiler \(before command\-line options\)
  - **HB\_USER\_CFLAGS** opzioni da passare al compilatore C \(prima delle opzioni nella riga di comando\)
  - **HB\_USER\_RESFLAGS** opzioni da passare al compilatore di risorse \(prima delle opzioni nella riga di comando\) \(solo Windows\)
@@ -392,7 +392,7 @@ Variabili d'ambiente:
  - **headers=** add space separated list of \.ch format headers as standard header
  - **libs=** add space separated list of libraries \(see more at \-l option\)
  - **frameworks=** aggiunge una lista di strutture separate da spazio \(solo Darwin\)
- - **requests=** add space separated list of symbols to force link to the target
+ - **requests=** aggiungere una lista di simboli separati da uno spazio per forzare il link al target
  - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
  - **hbcs=** embed space separated list of \.hbc files\. Names without the extension is accepted\. These references are processed in place\.
  - **autohbcs=** lista di valori separati da spazio come nell'opzione \-autohbc=
@@ -607,7 +607,7 @@ Esempi per la compilazione di una libreria statica Harbour:
 
  - **To build library 'mylib' from sources**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **To build library 'mylib' from sources using incremental mode**  
+ - **Per compilare la libreria 'mylib' dai sorgenti usando il modo incrementale**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Exit codes \("errorlevels"\):  

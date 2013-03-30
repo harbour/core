@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 13:57+0000\n"
+"PO-Revision-Date: 2013-03-30 15:45+0000\n"
 "Last-Translator: hbtest <harbour@syenar.net>\n"
 "Language-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\n"
 "MIME-Version: 1.0\n"
@@ -716,8 +716,8 @@ msgstr "Encontrado archivo .def con el mismo nombre, cayendo de nuevo a usar és
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr "Configure nivel de advertencia (warnings) del compilador C\n<lev> puede ser: max, yes, low, no, def (default: yes)"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -730,8 +730,8 @@ msgstr "crea enlace simbólico apuntando a <output> (<link> se asocia a <output>
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
-msgstr "comprime executable/librería dinamica (necesita UPX)\n<lev> puede ser: yes, no, min, max"
+"<level> can be: yes, no, min, max"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 15:10+0000\n"
+"PO-Revision-Date: 2013-03-30 16:00+0000\n"
 "Last-Translator: jujuland <alain.aupeix@wanadoo.fr>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/harbour/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -328,7 +328,7 @@ msgstr ""
 msgid ""
 "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line "
 "%4$d and %5$d."
-msgstr "Attention: Utilisation simultanée et inutile des options %1$s et %2$s dans '%3$s', ligne %4$d et %5$d."
+msgstr "Avertissement: Utilisation simultanée et inutile des options %1$s et %2$s dans '%3$s', ligne %4$d et %5$d."
 
 #: utils/hbmk2/hbmk2.prg:2152
 #, c-format
@@ -626,7 +626,7 @@ msgid ""
 "name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local "
 "repository. If no VCS system is detected, a sequential number will be rolled"
 " automatically on each build."
-msgstr "générer un fichier d'en-tête .ch avec l'information du dépôt local. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge. L'entête générée définira la constante du préprocesseur _HBMK_VCS_TYPE_ avec le nom de VCS détecté et _HBMK_VCS_ID_ avec l'ID unique du dépot local. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision."
+msgstr "générer un fichier d'en-tête .ch avec l'information du dépôt local. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge. L'entête générée définira la constante du préprocesseur _HBMK_VCS_TYPE_ avec le nom de VCS détecté et _HBMK_VCS_ID_ avec l'ID unique du dépôt local. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision."
 
 #: utils/hbmk2/hbmk2.prg:3070
 #, c-format
@@ -654,7 +654,7 @@ msgstr ""
 msgid ""
 "Warning: Code signing skipped, because no supported code signing tool could "
 "be found."
-msgstr "Attention: signature du code ignorée, car aucun outil de signature de code n'a pu être trouvé."
+msgstr "Avertissement: signature du code ignorée, car aucun outil de signature de code n'a pu être trouvé."
 
 #: utils/hbmk2/hbmk2.prg:6832
 #, c-format
@@ -682,14 +682,14 @@ msgstr "Trouvé un fichier .lib OMF avec le même nom, impossible de l'utiliser 
 msgid ""
 "Error: Creating import libraries is not supported for this platform or "
 "compiler."
-msgstr "Erreur: La création de librairie d'importation n'est pas supportée par cette plateforme ou ce compilateur."
+msgstr "Erreur: La création de librairie d'importation n'est pas supportée par cette plate-forme ou ce compilateur."
 
 #: utils/hbmk2/hbmk2.prg:10766
 #, c-format
 msgid ""
 "Warning: Ignoring explicitly specified core library directory: %1$s (in "
 "directive %2$s)"
-msgstr "Attention: Non prise en compte du répertoire des librairies de base spécifié explicitement: %1$s (dans la directive %2$s)"
+msgstr "Avertissement: Non prise en compte du répertoire des librairies de base spécifié explicitement: %1$s (dans la directive %2$s)"
 
 #: utils/hbmk2/hbmk2.prg:10778
 #, c-format
@@ -716,8 +716,8 @@ msgstr "Trouvé un fichier .def avec le même nom, impossible de l'utiliser au l
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr "définir le niveau de warning du compilateur C\n<lev> peut être: max, oui, bas, no, def (par défaut: oui)"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -730,7 +730,7 @@ msgstr "créer un lien symbolique vers <output> (<link> est considéré relatif 
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
+"<level> can be: yes, no, min, max"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
@@ -946,7 +946,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:3441
 #, c-format
 msgid "Warning: Unknown dependency name: %1$s"
-msgstr "Attention: nom de dépendance inconnu: %1$s"
+msgstr "Avertissement: nom de dépendance inconnu: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:15931 utils/hbmk2/hbmk2.prg:15931
 #: utils/hbmk2/hbmk2.prg:15931

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 13:57+0000\n"
+"PO-Revision-Date: 2013-03-30 15:45+0000\n"
 "Last-Translator: hbtest <harbour@syenar.net>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/harbour/language/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -716,7 +716,7 @@ msgstr ""
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
+"<level> can be: max, yes, low, no, def (default: yes)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
@@ -730,8 +730,8 @@ msgstr ""
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
-msgstr "tömörítse a végeredményt (UPX szükséges)\n<lev> lehet: yes, no, min, max"
+"<level> can be: yes, no, min, max"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format

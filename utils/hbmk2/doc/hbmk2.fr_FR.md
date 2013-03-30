@@ -61,7 +61,7 @@ Options:
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** run/do not run output executable
- - **\-vcshead=&lt;file&gt;** générer un fichier d'en\-tête \.ch avec l'information du dépôt local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge\. L'entête générée définira la constante du préprocesseur \_HBMK\_VCS\_TYPE\_ avec le nom de VCS détecté et \_HBMK\_VCS\_ID\_ avec l'ID unique du dépot local\. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision\.
+ - **\-vcshead=&lt;file&gt;** générer un fichier d'en\-tête \.ch avec l'information du dépôt local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge\. L'entête générée définira la constante du préprocesseur \_HBMK\_VCS\_TYPE\_ avec le nom de VCS détecté et \_HBMK\_VCS\_ID\_ avec l'ID unique du dépôt local\. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision\.
  - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)

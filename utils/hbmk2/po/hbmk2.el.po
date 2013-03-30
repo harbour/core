@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 13:57+0000\n"
-"Last-Translator: hbtest <harbour@syenar.net>\n"
+"PO-Revision-Date: 2013-03-30 17:52+0000\n"
+"Last-Translator: Pete_wg <pete_westg@yahoo.gr>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,7 +291,7 @@ msgstr "επιστρέφει την τιμή της μεταβλητής περ�
 #: utils/hbmk2/hbmk2.prg:15931
 #, c-format
 msgid "mode script runner / interactive shell in debug mode"
-msgstr ""
+msgstr "μοντέλο εκτέλεσης σεναρίων / διαλογικό shell με λειτουργία αποσφαλμάτωσης"
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
@@ -716,8 +716,8 @@ msgstr "Βρέθηκε .def αρχείο με το ίδιο όνομα, θα χ�
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr "ορισμός επίπεδου ειδοποιήσεων του μεταγλωττιστή C ⏎ το <lev> μπορεί να είναι: max, yes, low, no, def  (προεπιλογή: yes)"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -730,7 +730,7 @@ msgstr "δημιουργία συμβολικού δεσμού να δείχνε
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
+"<level> can be: yes, no, min, max"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
@@ -878,35 +878,35 @@ msgstr "προσομοίωσε σε Clipper συμβατή τη συμπεριφ
 msgid ""
 "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, "
 "djgpp, gccomf, clang, open64, pcc)"
-msgstr ""
+msgstr "ο στοχευμένος μεταγλωττιστής C cανή στην οικογένεια gcc (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
 
 #: utils/hbmk2/hbmk2.prg:16189
 #, c-format
 msgid ""
 "Predefined constants in build files (they are available after "
 "'-depfinish=<depname>' / 'depfinish=<depname>'):"
-msgstr ""
+msgstr "Προκαθορισμένες σταθερές κατασκευαστικά αρχεία (είναι διαθέσιμες μετά από  '-depfinish=<depname>' / 'depfinish=<depname>'):"
 
 #: utils/hbmk2/hbmk2.prg:16242
 #, c-format
 msgid ""
 "Encode function name according to Harbour compiler rules for forming "
 "HB_FUNC() function names in C code."
-msgstr ""
+msgstr "Κωδικοποίηση ονόματος συνάρτησης σύμφωνα με τους κανόνες Harbour περί μορφοποίησης ονόματων HB_FUNC() συναρτήσεων σε κώδικα C ."
 
 #: utils/hbmk2/hbmk2.prg:16326
 #, c-format
 msgid ""
 "Libraries and object files built with/for CA-Cl*pper will not work with any "
 "supported platform/compiler."
-msgstr ""
+msgstr "Βιβλιοθήκες και object αρχεία δημιουργημένα με/για τον CA-Cl*pper δεν θα λειτουργήσουν με κανέναν υποστηριζόμενο μεταγλωττιστή/πλατφόρμα."
 
 #: utils/hbmk2/hbmk2.prg:16431
 #, c-format
 msgid ""
 "To build an application which uses a contrib package or 3rd party (add-on) "
 "package that ships with an .hbc file"
-msgstr ""
+msgstr "Για κατασκευή μιάς εφαρμογής που χρησιμοποιεί πακέτα contrib ή πακέτα 3rd party (πρόσθετα) που συμπεριλαμβάνουν ένα .hbc αρχείο"
 
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
@@ -1042,7 +1042,7 @@ msgstr "Το %1$s μπορεί να εκτελεί σενάρια Harbour  (πη
 msgid ""
 "array of parameters passed to plugins via -pflag=/pi= options or having an "
 "extension registered via hbmk_Register_Input_File_Extension()"
-msgstr ""
+msgstr "πίνακας παραμέτρων που θα περαστούν στα plugins μέσω των επιλογών -pflag=/pi= ή που έχουν μία κατάληξη καταχωρημένη μέσω της συνάρτησης hbmk_Register_Input_File_Extension()"
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -1056,14 +1056,14 @@ msgstr "λίστα των γλωσσών προς αντικατάσταση σ�
 msgid ""
 "collection of options. Can be used to collect common ones into a file and "
 "include that into project files. Uses same format as .hbp files."
-msgstr ""
+msgstr "συλλογή επιλογών. Μπορεί να χρησιμοποιηθεί για συγκέντρωση κοινών επιλογών μέσα σε ένα αρχείο το οποίο θα συμπεριληφθεί μέσα σε αρχεία έργου. Η μορφή που χρησιμοποιεί ή ίδια με τα .hbp αρχεία."
 
 #: utils/hbmk2/hbmk2.prg:16280
 #, c-format
 msgid ""
 "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', "
 "'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
-msgstr ""
+msgstr "δήλωση  επίκλισης. Μπορεί να είναι: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
 
 #: utils/hbmk2/hbmk2.prg:16326
 #, c-format
@@ -2288,7 +2288,7 @@ msgstr "Μετατροπή ονόματοςαρχείου στην απαιτο�
 #, c-format
 msgid ""
 "Return relative path of -workdir= value from current working directory."
-msgstr ""
+msgstr "Επιστροφή σχετικού μονοπατιού της τιμής του -workdir= από το τρέχοντα κατάλογο εργασίας."
 
 #: utils/hbmk2/hbmk2.prg:16242
 #, c-format
@@ -2453,7 +2453,7 @@ msgstr "Τρέχων κωδικός εξόδου"
 #: utils/hbmk2/hbmk2.prg:16169
 #, c-format
 msgid "same as %1$s option"
-msgstr "όμοιο με την επιλογή %1$s"
+msgstr "όμοιο με την επιλογή %1$s "
 
 #: utils/hbmk2/hbmk2.prg:15660
 #, c-format

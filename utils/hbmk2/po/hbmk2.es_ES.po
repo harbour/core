@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 15:29+0000\n"
+"PO-Revision-Date: 2013-03-30 17:41+0000\n"
 "Last-Translator: oscarhdezsz <oscar.hernandez.suarez@gmail.com>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr "Advertencia: Opción disponible sólo cuando se utiliza el compilador Ha
 #, c-format
 msgid ""
 "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr ""
+msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en la línea de comando."
 
 #: utils/hbmk2/hbmk2.prg:7763
 #, c-format
@@ -187,12 +187,12 @@ msgstr "Error: No se puede crear archivo temporal unificado .po."
 #: utils/hbmk2/hbmk2.prg:13236
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
-msgstr ""
+msgstr "Sugerencia: Añade la opción '%1$s' para las funciones que faltan: %2$s"
 
 #: utils/hbmk2/hbmk2.prg:14129
 #, c-format
 msgid "Cannot load '%1$s'. Requires -shared %2$s build."
-msgstr ""
+msgstr "No se puede cargar '%1$s'. Es necesario crear -shared %2$s."
 
 #: utils/hbmk2/hbmk2.prg:15657
 #, c-format
@@ -282,7 +282,7 @@ msgstr "establecer el ancho de salida a <n> caracteres (0=sin límite)."
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
 msgid "register Harbour Script (.hb) with %1$s (Windows only)"
-msgstr ""
+msgstr "registrar Harbour Script (.hb) con %1$s (solo en Windows)"
 
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
@@ -307,7 +307,7 @@ msgstr "acepta los mismos valores (separados por espacios) que la opción %1$s"
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "returns '1' if Harbour host platform is *nix compatible"
-msgstr ""
+msgstr "devuelve '1' si la plataforma anfitriona es compatible *nix."
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
@@ -413,7 +413,7 @@ msgstr "el filtro se pasará si el valor de ${MACRO} no está vacio y no es igua
 msgid ""
 "when <depname> dependency was detected in a location configured by "
 "-depincpathlocal= option"
-msgstr "cuando la dependencia <depname> fue detectada en la localización configurada por la opción -decincpathlocal="
+msgstr "cuando la dependencia <depname> se detectó en la localización configurada por la opción -decincpathlocal="
 
 #: utils/hbmk2/hbmk2.prg:16326
 #, c-format
@@ -427,7 +427,7 @@ msgstr "las opciones regulares de compilador Harbour también son aceptadas.\n(V
 msgid ""
 "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not "
 "needed to run %1$s."
-msgstr ""
+msgstr "No es necesario para ejecutar %1$s la herramienta GNU Make o cualquier otra utilidad 'make' específica de un compilador C o de MSYS (en Windows)."
 
 #: utils/hbmk2/hbmk2.prg:2507
 #, c-format
@@ -717,8 +717,8 @@ msgstr "Encontrado archivo .def con el mismo nombre, cayendo de nuevo a usar és
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr "Configure nivel de advertencia (warnings) del compilador C\n<lev> puede ser: max, yes, low, no, def (default: yes)"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -731,8 +731,8 @@ msgstr "crea enlace simbólico apuntando a <output> (<link> se asocia a <output>
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
-msgstr "comprime executable/librería dinamica (necesita UPX)\n<lev> puede ser: yes, no, min, max"
+"<level> can be: yes, no, min, max"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -968,7 +968,7 @@ msgstr "Error: Compilador no válido o desconocido: %1$s"
 #: utils/hbmk2/hbmk2.prg:5826
 #, c-format
 msgid "Triggered by #require directive: %1$s"
-msgstr ""
+msgstr "Causado por la directiva #require: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:2365
 #, c-format
@@ -1008,7 +1008,7 @@ msgstr "Construyendo sub-proyecto (nivel %1$d): %2$s"
 #: utils/hbmk2/hbmk2.prg:5828
 #, c-format
 msgid "Triggered by '%1$s' header: %2$s"
-msgstr ""
+msgstr "Causado por la cabecera '%1$s': %2$s"
 
 #: utils/hbmk2/hbmk2.prg:2182
 #, c-format
@@ -1944,7 +1944,7 @@ msgid ""
 "sign executable with <key> (Windows and Darwin only). On Windows "
 "signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles "
 "C 7), in that order, both autodetected."
-msgstr ""
+msgstr "firma del ejecutable con <key> (solo en Windows y Darwin). En Windows se usa signtool.exe (incluido en MS Windows SDK) o posign.exe (incluido en Pelles C 7), por ese orden, se detectan ambos automaticamente."
 
 #: utils/hbmk2/hbmk2.prg:16459
 #, c-format
@@ -2169,12 +2169,12 @@ msgstr "Cargando proyecto xbp (xbuild): %1$s"
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
 msgid "enable Harbour 3.0.x compatibility mode"
-msgstr ""
+msgstr "activar modo de compatibilidad con Harbour 3.0.x"
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
 msgid "create import library (Windows only)"
-msgstr ""
+msgstr "crear librería de importación (solo en Windows)"
 
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
@@ -2194,7 +2194,7 @@ msgstr "activa el modo de compatibilidad Harbour 2.0.x"
 #: utils/hbmk2/hbmk2.prg:15659
 #, c-format
 msgid "failed to create working directory"
-msgstr ""
+msgstr "error al crear el directorio de trabajo"
 
 #: utils/hbmk2/hbmk2.prg:14419
 #, c-format
@@ -2332,12 +2332,12 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:13214
 #, c-format
 msgid "(installed)"
-msgstr ""
+msgstr "(instalado)"
 
 #: utils/hbmk2/hbmk2.prg:13214
 #, c-format
 msgid "(not installed)"
-msgstr ""
+msgstr "(no instalado)"
 
 #: utils/hbmk2/hbmk2.prg:13252
 #, c-format
@@ -2382,22 +2382,22 @@ msgstr "Tambien acepta Opciones de macros sustitución de comandos. Incluya coma
 #: utils/hbmk2/hbmk2.prg:14567
 #, c-format
 msgid "Enter password:"
-msgstr ""
+msgstr "Introduce la contraseña:"
 
 #: utils/hbmk2/hbmk2.prg:14636
 #, c-format
 msgid "Arguments:"
-msgstr ""
+msgstr "Argumentos:"
 
 #: utils/hbmk2/hbmk2.prg:14684
 #, c-format
 msgid "Syntax error."
-msgstr ""
+msgstr "Error de sintaxis."
 
 #: utils/hbmk2/hbmk2.prg:14629
 #, c-format
 msgid "Could not execute:"
-msgstr ""
+msgstr "No se puede ejecutar:"
 
 #: utils/hbmk2/hbmk2.prg:15723
 #, c-format
@@ -2412,7 +2412,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:15652
 #, c-format
 msgid "unknown platform"
-msgstr ""
+msgstr "plataforma desconocida"
 
 #: utils/hbmk2/hbmk2.prg:15662
 #, c-format
@@ -2422,7 +2422,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:15653
 #, c-format
 msgid "unknown compiler"
-msgstr ""
+msgstr "compilador desconocido"
 
 #: utils/hbmk2/hbmk2.prg:15655
 #, c-format
@@ -2459,7 +2459,7 @@ msgstr "el mismo que la opción %1$s"
 #: utils/hbmk2/hbmk2.prg:15660
 #, c-format
 msgid "help"
-msgstr ""
+msgstr "ayuda"
 
 #: utils/hbmk2/hbmk2.prg:15674 utils/hbmk2/hbmk2.prg:15681
 #, c-format
@@ -2469,12 +2469,12 @@ msgstr "Sintáxis:"
 #: utils/hbmk2/hbmk2.prg:16459
 #, c-format
 msgid "MS-DOS"
-msgstr ""
+msgstr "MS-DOS"
 
 #: utils/hbmk2/hbmk2.prg:15987
 #, c-format
 msgid "Files:"
-msgstr ""
+msgstr "Ficheros:"
 
 #: utils/hbmk2/hbmk2.prg:16284
 #, c-format
@@ -2484,12 +2484,12 @@ msgstr "Notas:"
 #: utils/hbmk2/hbmk2.prg:15953
 #, c-format
 msgid "<other>"
-msgstr ""
+msgstr "<other>"
 
 #: utils/hbmk2/hbmk2.prg:16391
 #, c-format
 msgid "Author:"
-msgstr ""
+msgstr "Autor:"
 
 #: utils/hbmk2/hbmk2.prg:15165 utils/hbmk2/hbmk2.prg:15294
 #: utils/hbmk2/hbmk2.prg:15443
@@ -2568,41 +2568,41 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16195 utils/hbmk2/hbmk2.prg:16195
 #, c-format
 msgid "<depname>"
-msgstr ""
+msgstr "<depname>"
 
 #: utils/hbmk2/hbmk2.prg:16180
 #, c-format
 msgid "<hbcname>"
-msgstr ""
+msgstr "<hbcname>"
 
 #: utils/hbmk2/hbmk2.prg:16169
 #, c-format
 msgid "package name"
-msgstr ""
+msgstr "nombre del paquete"
 
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #, c-format
 msgid "%1$s value"
-msgstr ""
+msgstr "valor de %1$s"
 
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #: utils/hbmk2/hbmk2.prg:16280
 #, c-format
 msgid "see %1$s envvar"
-msgstr ""
+msgstr "ver la variable de entorno %1$s"
 
 #: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
 #, c-format
 msgid "see %1$s macro"
-msgstr ""
+msgstr "ver la macro %1$s"
 
 #: utils/hbmk2/hbmk2.prg:16349
 #, c-format
 msgid "Description:"
-msgstr ""
+msgstr "Descripción:"
 
 #: utils/hbmk2/hbmk2.prg:15654
 #, c-format
@@ -2732,7 +2732,7 @@ msgstr "convierte proyecto hbmake en un archivo .hbp"
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "Harbour 3rd party static library directory"
-msgstr ""
+msgstr "Directorio de las librerías estáticas de terceros de Harbour "
 
 #: utils/hbmk2/hbmk2.prg:15931
 #, c-format
@@ -2757,7 +2757,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16061
 #, c-format
 msgid "Filters (you can combine and/or negate them):"
-msgstr ""
+msgstr "Filtros (puedes combinarlos y/o negarlos):"
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
@@ -2884,7 +2884,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16383
 #, c-format
 msgid "License:"
-msgstr ""
+msgstr "Licencia:"
 
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
@@ -2909,21 +2909,21 @@ msgstr "activar (o desactivar) procesamiento de %1$s en el directorio actual (po
 #, c-format
 msgid ""
 "options to be passed to linker (executable) (before command-line options)"
-msgstr ""
+msgstr "opciones para ser enviadas al enlazador (ejecutable) (antes de las opciones de la linea de comando)"
 
 #: utils/hbmk2/hbmk2.prg:15980
 #, c-format
 msgid ""
 "options to be passed to linker (dynamic library) (before command-line "
 "options)"
-msgstr ""
+msgstr "opciones para ser enviadas al enlazador (librería dinámica) (antes de las opciones de la linea de comando)"
 
 #: utils/hbmk2/hbmk2.prg:15980
 #, c-format
 msgid ""
 "options to be passed to linker (static library) (before command-line "
 "options)"
-msgstr ""
+msgstr "opciones para ser enviadas al enlazador (librería estática) (antes de las opciones de la linea de comando)"
 
 #: utils/hbmk2/hbmk2.prg:15980
 #, c-format
@@ -3057,12 +3057,12 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16345
 #, c-format
 msgid ".hb, .prg, .hrb or .dbf"
-msgstr ""
+msgstr ".hb, .prg, .hrb o .dbf"
 
 #: utils/hbmk2/hbmk2.prg:16345
 #, c-format
 msgid ".hb, .hrb or .dbf"
-msgstr ""
+msgstr ".hb, .hrb o .dbf"
 
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
@@ -3102,7 +3102,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "dynamic library prefix"
-msgstr ""
+msgstr "prefijo de la librería dinámica"
 
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
@@ -3112,7 +3112,7 @@ msgstr "aceptar flags primas del enlazador"
 #: utils/hbmk2/hbmk2.prg:15957
 #, c-format
 msgid "Environment variables:"
-msgstr ""
+msgstr "Variables de entorno:"
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -3132,7 +3132,7 @@ msgstr "mostrar comandos ejecutados"
 #: utils/hbmk2/hbmk2.prg:16014
 #, c-format
 msgid "Macro variables:"
-msgstr ""
+msgstr "Variables de macro:"
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -3147,12 +3147,12 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "C compiler version"
-msgstr ""
+msgstr "versión del compilador C"
 
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "dynamic library suffix"
-msgstr ""
+msgstr "sufijo de la librería dinámica"
 
 #: utils/hbmk2/hbmk2.prg:15891
 #, c-format
@@ -3220,7 +3220,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16195
 #, c-format
 msgid "when <depname> dependency was detected"
-msgstr ""
+msgstr "cuando la dependencia <depname> se detectó"
 
 #: utils/hbmk2/hbmk2.prg:16440
 #, c-format

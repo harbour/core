@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 13:57+0000\n"
-"Last-Translator: hbtest <harbour@syenar.net>\n"
+"PO-Revision-Date: 2013-03-30 16:14+0000\n"
+"Last-Translator: calimero22 <calimero22@yahoo.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,7 @@ msgstr "Codice d'uscita: %1$d: %2$s"
 #, c-format
 msgid ""
 "Warning: Option available only when using embedded Harbour compiler: %1$s"
-msgstr ""
+msgstr "Attenzione: opzione disponibile solo quando si usa il compilatore Harbour integrato: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:7604
 #, c-format
@@ -77,7 +77,7 @@ msgstr ""
 msgid ""
 "Hint: Install package %3$s and add option '%1$s' for missing function(s): "
 "%2$s"
-msgstr ""
+msgstr "Suggerimento: Installare il pacchetto %3$s e aggiungere l'opzione '%1$s'  per l'omessa funzione(i): %2$s"
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -166,7 +166,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:7961
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
-msgstr ""
+msgstr "Errore: Impossibile creare il collegamento simbolico %1$s su %2$s"
 
 #: utils/hbmk2/hbmk2.prg:8007
 #, c-format
@@ -178,7 +178,7 @@ msgstr ""
 msgid ""
 "Error: Executing plugin: %1$s at %3$s(%4$d)\n"
 "'%2$s'"
-msgstr ""
+msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)⏎ '%2$s'"
 
 #: utils/hbmk2/hbmk2.prg:12237
 #, c-format
@@ -188,7 +188,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:13236
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
-msgstr ""
+msgstr "Suggerimento: aggiungere l'opzione  '%1$s' per la funzione(i) mancante: %2$s"
 
 #: utils/hbmk2/hbmk2.prg:14129
 #, c-format
@@ -288,7 +288,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "returns the value of the environment variable <envvar>"
-msgstr ""
+msgstr "ritorna il valore della variabile d'ambiente <envvar>"
 
 #: utils/hbmk2/hbmk2.prg:15931
 #, c-format
@@ -303,17 +303,17 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:15980 utils/hbmk2/hbmk2.prg:15980
 #, c-format
 msgid "accepts same values (space separated) as %1$s option"
-msgstr ""
+msgstr "accetta gli stessi valori (separati da uno spazio) come l'opzione  %1$s"
 
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "returns '1' if Harbour host platform is *nix compatible"
-msgstr ""
+msgstr "ritorna \"1\" se la piattaforma host Harbour è *nix compatibile"
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
 msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
-msgstr ""
+msgstr "Modo Windows UNICODE (WIDE) (vedere l'opzione -winuni)"
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
@@ -553,12 +553,12 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16057
 #, c-format
 msgid "default workdir subdirectory for dynamic library targets"
-msgstr ""
+msgstr "sottocartella di lavoro di default per la libreria dinamica di destinazione"
 
 #: utils/hbmk2/hbmk2.prg:16169
 #, c-format
 msgid "add space separated list of symbols to force link to the target"
-msgstr ""
+msgstr "aggiungere una lista di simboli separati da uno spazio per forzare il link al target"
 
 #: utils/hbmk2/hbmk2.prg:16097
 #, c-format
@@ -603,7 +603,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16440
 #, c-format
 msgid "To build library 'mylib' from sources using incremental mode"
-msgstr ""
+msgstr "Per compilare la libreria 'mylib' dai sorgenti usando il modo incrementale"
 
 #: utils/hbmk2/hbmk2.prg:2180
 #, c-format
@@ -718,8 +718,8 @@ msgstr ""
 #, c-format
 msgid ""
 "set C compiler warning level\n"
-"<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr "seleziona il livello di avviso del compilatore C. <lev> può essere: max, yes, low, no, def (default: yes)"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
 #, c-format
@@ -732,7 +732,7 @@ msgstr ""
 #, c-format
 msgid ""
 "compress executable/dynamic lib (needs UPX tool)\n"
-"<lev> can be: yes, no, min, max"
+"<level> can be: yes, no, min, max"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15829
@@ -923,7 +923,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:15931
 #, c-format
 msgid "mode %1$s (emulate Clipper compiler)"
-msgstr ""
+msgstr "modo %1$s (emulazione compilatore Clipper)"
 
 #: utils/hbmk2/hbmk2.prg:5945
 #, c-format
@@ -1004,7 +1004,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:1683
 #, c-format
 msgid "Building sub-project (level %1$d): %2$s"
-msgstr ""
+msgstr "Compilazione del sotto-progetto (livello %1$d): %2$s"
 
 #: utils/hbmk2/hbmk2.prg:5828
 #, c-format
@@ -1023,7 +1023,7 @@ msgstr ""
 msgid ""
 "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies "
 "whether the dependency is optional. Default: no"
-msgstr ""
+msgstr "<d> è il nome della dipendenza. <f> può essere 'yes' o 'no', specifica se la dipendenza è opzionale. Default: no"
 
 #: utils/hbmk2/hbmk2.prg:16005
 #, c-format
@@ -1162,7 +1162,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:2900
 #, c-format
 msgid "Warning: Invalid -request= value ignored: %1$s"
-msgstr ""
+msgstr "Attenzione: Non valido  -request= value ignorato: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:3700
 #, c-format
@@ -1237,7 +1237,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:8105
 #, c-format
 msgid "Warning: Copying %1$s to %2$s failed with %3$d."
-msgstr ""
+msgstr "Attenzione: Copia di %1$s su %2$s fallita con %3$d."
 
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format
@@ -1320,7 +1320,7 @@ msgstr "Compilazione risorse in corso..."
 #: utils/hbmk2/hbmk2.prg:11042
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
-msgstr ""
+msgstr "Attenzione: Plugin non trovato: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:3512 utils/hbmk2/hbmk2.prg:5831
 #: utils/hbmk2/hbmk2.prg:14100
@@ -1586,17 +1586,17 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:8985
 #, c-format
 msgid "Dependency '%1$s' found: %2$s%3$s%4$s%5$s"
-msgstr ""
+msgstr "Dipendenza '%1$s' trovata: %2$s%3$s%4$s%5$s"
 
 #: utils/hbmk2/hbmk2.prg:9020
 #, c-format
 msgid "Warning: Missing optional dependencies: %1$s"
-msgstr ""
+msgstr "Attensione: dipendenze opzionali omesse: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:9022
 #, c-format
 msgid "Warning: Missing optional dependency: %1$s"
-msgstr ""
+msgstr "Attensione: dipendenza opzionale omessa: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:11517
 #, c-format
@@ -2723,7 +2723,7 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:15833
 #, c-format
 msgid "Options below are available on command-line:"
-msgstr ""
+msgstr "Opzioni riportate di seguito sono disponibili da riga di comando:"
 
 #: utils/hbmk2/hbmk2.prg:15882
 #, c-format

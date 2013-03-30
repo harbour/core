@@ -13,7 +13,7 @@ Descrizione:
 
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
   
-Options below are available on command\-line:  
+Opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
  - **\-\-hb:debug** enable script debugging

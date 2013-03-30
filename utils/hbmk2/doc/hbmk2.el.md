@@ -212,7 +212,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 
 
  - **hbrun\*|\*hbrun** μοντέλο εκτέλεσης σεναρίων / διαλογικό shell
- - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
+ - **hbrund|hbrun\*d** μοντέλο εκτέλεσης σεναρίων / διαλογικό shell με λειτουργία αποσφαλμάτωσης
  - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
  - **clipper** μοντέλο \-hbcmp \(προσομοίωση μεταγλωττιστή Clipper\)
  - **rtlink** μοντέλο \-rtlink \(προσομοίωση Clipper linker\)
@@ -233,7 +233,7 @@ Files:
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
- - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
+ - **\*\.hbm** συλλογή επιλογών\. Μπορεί να χρησιμοποιηθεί για συγκέντρωση κοινών επιλογών μέσα σε ένα αρχείο το οποίο θα συμπεριληφθεί μέσα σε αρχεία έργου\. Η μορφή που χρησιμοποιεί ή ίδια με τα \.hbp αρχεία\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
@@ -314,7 +314,7 @@ Filters \(you can combine and/or negate them\):
  - **\{winansi\}** μοντέλο Windows ANSI \(δες επιλογή \-winuni\-\)
  - **\{unix\}** η παλτφόρμα\-στόχος είναι  \*nix συμβατή \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** η πλατφόρμα\-στόχος είναι Windows συμβατή \(win, wce\)
- - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
+ - **\{allgcc\}** ο στοχευμένος μεταγλωττιστής C cανή στην οικογένεια gcc \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
  - **\{allmingw\}** ο μεταγλωττιστής C είναι mingw\* \(mingw, mingw64, mingwarm\)
  - **\{allmsvc\}** ο στοχευμένος μεταγλωττιστής C είναι msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
  - **\{allbcc\}** ο στοχευμένος μεταγλωττιστής C είναι bcc\* \(bcc, bcc64\)
@@ -344,7 +344,7 @@ Predefined constants in sources:
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
 
 
-Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Προκαθορισμένες σταθερές κατασκευαστικά αρχεία \(είναι διαθέσιμες μετά από  '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected
@@ -423,23 +423,23 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
  - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
  - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
- - **cpp=** όμοιο με την επιλογή \-cpp=
- - **warn=** όμοιο με την επιλογή \-warn=
- - **compr=** όμοιο με την επιλογή \-compr=
- - **head=** όμοιο με την επιλογή \-head=
+ - **cpp=** όμοιο με την επιλογή \-cpp= 
+ - **warn=** όμοιο με την επιλογή \-warn= 
+ - **compr=** όμοιο με την επιλογή \-compr= 
+ - **head=** όμοιο με την επιλογή \-head= 
  - **plugins=** space separated list of hbmk2 plugins to load
- - **gt=&lt;name&gt;** όμοιο με την επιλογή \-gt&lt;name&gt;
+ - **gt=&lt;name&gt;** όμοιο με την επιλογή \-gt&lt;name&gt; 
  - **gtdef=&lt;name&gt;** set the default GT to be used
- - **env=** όμοιο με την επιλογή \-env:
- - **deppkgname=** όμοιο με την επιλογή \-deppkgname=
- - **depkeyhead=** όμοιο με την επιλογή \-depkeyhead=
- - **depoptional=** όμοιο με την επιλογή \-depoptional=
- - **depcontrol=** όμοιο με την επιλογή \-depcontrol=
- - **depincroot=** όμοιο με την επιλογή \-depincroot=
- - **depincpath=** όμοιο με την επιλογή \-depincpath=
- - **depincpathlocal=** όμοιο με την επιλογή \-depincpathlocal=
- - **depimplibs=** όμοιο με την επιλογή \-depimplibs=
- - **depimplibd=** όμοιο με την επιλογή \-depimplibd=
+ - **env=** όμοιο με την επιλογή \-env: 
+ - **deppkgname=** όμοιο με την επιλογή \-deppkgname= 
+ - **depkeyhead=** όμοιο με την επιλογή \-depkeyhead= 
+ - **depoptional=** όμοιο με την επιλογή \-depoptional= 
+ - **depcontrol=** όμοιο με την επιλογή \-depcontrol= 
+ - **depincroot=** όμοιο με την επιλογή \-depincroot= 
+ - **depincpath=** όμοιο με την επιλογή \-depincpath= 
+ - **depincpathlocal=** όμοιο με την επιλογή \-depincpathlocal= 
+ - **depimplibs=** όμοιο με την επιλογή \-depimplibs= 
+ - **depimplibd=** όμοιο με την επιλογή \-depimplibd= 
  - **name=** package name
  - **description=** περιγραφή πακέτου
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
@@ -483,13 +483,13 @@ Evaluate hbmk2 macro expression\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Μετατροπή του ονόματος αρχείου ωστε να έχει  εμπρός κάθετο / ως διαχωρστή\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
-Return relative path of \-workdir= value from current working directory\.
+Επιστροφή σχετικού μονοπατιού της τιμής του \-workdir= από το τρέχοντα κατάλογο εργασίας\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
 Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 Change directory and/or extension in filename\.
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
-Encode function name according to Harbour compiler rules for forming HB\_FUNC\(\) function names in C code\.
+Κωδικοποίηση ονόματος συνάρτησης σύμφωνα με τους κανόνες Harbour περί μορφοποίησης ονόματων HB\_FUNC\(\) συναρτήσεων σε κώδικα C \.
  - **hbmk\_StrStripQuote\( cString \) \-&gt; &lt;cString&gt;**  
 Strip double quote enclosure from a string\.
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
@@ -501,8 +501,8 @@ Plugin variables:
 
 
  - **"apiver"** API version as an integer
- - **"cSTATE"** callback state\. Can be: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
- - **"params"** array of parameters passed to plugins via \-pflag=/pi= options or having an extension registered via hbmk\_Register\_Input\_File\_Extension\(\)
+ - **"cSTATE"** δήλωση  επίκλισης\. Μπορεί να είναι: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
+ - **"params"** πίνακας παραμέτρων που θα περαστούν στα plugins μέσω των επιλογών \-pflag=/pi= ή που έχουν μία κατάληξη καταχωρημένη μέσω της συνάρτησης hbmk\_Register\_Input\_File\_Extension\(\)
  - **"vars"** Κατακερματισμός \-hash\- των ιδιαίτερων μεταβλητών plugin\. Εγγράψιμο, τοπικά σε κάθε plugin
  - **"cPLAT"** \-plat value
  - **"cCOMP"** \-comp value
@@ -586,7 +586,7 @@ $ hbmk2 mymain\.prg myfuncs\.prg \-inc
 $ hbmk2 myapp\.hbp
  - **To build an application using incremental mode**  
 $ hbmk2 myapp\.hbp \-inc
- - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
+ - **Για κατασκευή μιάς εφαρμογής που χρησιμοποιεί πακέτα contrib ή πακέτα 3rd party \(πρόσθετα\) που συμπεριλαμβάνουν ένα \.hbc αρχείο**  
 $ hbmk2 myapp\.prg hbct\.hbc
  - **To build an application which uses a raw library**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
@@ -643,7 +643,7 @@ Notes:
   - Οι περισσότερες  \.hbc γραμμές \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) και οι αντίστοιχες παράμετροι γραμμής\-εντολής  αποδέχονται μεταβλητές macro\. Η libpaths= επίσης αποδέχεται %\{hb\_name\} που μεταφράζεται στο όνομα του υπο διερεύνηση \.hbc αρχείου 
   - Options accepting macro variables also support command substitution\. Enclose command inside \`\`, and, if the command contains space, also enclose in double quotes\. Standard output of the command will be used as the value\. F\.e\. "\-cflag=\`wx\-config \-\-cflags\`", or ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
-  - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
+  - Βιβλιοθήκες και object αρχεία δημιουργημένα με/για τον CA\-Cl\*pper δεν θα λειτουργήσουν με κανέναν υποστηριζόμενο μεταγλωττιστή/πλατφόρμα\.
   - Η υποστήρξη προεπιλογών και χαρακτηριστικών μπορεί να διαφέρει ανάλογα με την πλατφόρμα/μεταγλωττιστή\.
   - Δεν χρειάζεστε το GNU Make ή κάποιο άλλο make μεταγλωττιστή C και το MSYS \(σε Windows\)  για να εκτελέσετε το  hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
