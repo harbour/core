@@ -6,7 +6,7 @@ Translation \(pt\_BR\): Vailton Renato &lt;vailtom@gmail\.com&gt;
 
 Sintaxe:  
   
-  hbrun &lt;arquivo \[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opção&gt; \[&lt;parameter\[s\]&gt;\]  
+  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
 Descrições:  
 
@@ -38,7 +38,7 @@ Files:
 Predefined constants in sources:
 
 
- - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
+ - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rudando como "shell script"
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
   
 Environment variables:  

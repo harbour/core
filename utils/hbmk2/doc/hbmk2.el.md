@@ -48,12 +48,12 @@ Options:
  - **\-trace\[\-\]** show commands executed
  - **\-beep\[\-\]** enable \(or disable\) single beep on successful exit, double beep on failure
  - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
- - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
+ - **\-hbcppmm\[\-\]** αντικαθιστά τις πρότυπες  C\+\+ συναρτήσεις διαχείρησης μνήμης με εκείνες του Harbour
  - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
  - **\-nohblib\[\-\]** μη χρήση στατικών βιβλιοθηκών πυρήνα Harbour κατά τη διασύνδεση
  - **\-nodefgt\[\-\]** μη σύνδεση προεπιλεγμένων GTs \(ισχύει σε  \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
- - **\-nomiscsyslib\[\-\]** do not add extra list of system libraries to default library list
+ - **\-nomiscsyslib\[\-\]** μη προσθέτετε επιπλέον λιστα βιβλιοθηκών συστήματος στην προκαθορισμένη λιστα βιβλιοθηκών
  - **\-traceonly** show commands to be executed, but do not execute them
  - **\-warn=&lt;lev&gt;** ορισμός επίπεδου ειδοποιήσεων του μεταγλωττιστή C ⏎ το &lt;lev&gt; μπορεί να είναι: max, yes, low, no, def  \(προεπιλογή: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
@@ -66,7 +66,7 @@ Options:
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
- - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; as password when signing executable \(Windows and Darwin only\)
+ - **\-signpw=&lt;pw&gt;** χρήση &lt;pw&gt; ως συνθηματικού κατά την σήμανση του εκτελέσιμου \(μόνο σε Windows και Darwin\)
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** αντιγραφή στόχου στο κατάλογο εγκατάστασης έστω κια είναι ενημερωμένο
@@ -137,7 +137,7 @@ Options:
  - **\-pi=&lt;filename&gt;** πέρασμα του αρχείου εισόδου στα plugins
  - **\-pflag=&lt;f&gt;** απλό πέρασμα σημαίας \-flag\- στα plugins
   
-Options below are available on command\-line:  
+Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:  
 
 
  - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate targets\.
@@ -147,8 +147,7 @@ Options below are available on command\-line:
  - **\-hbraw** stop after running Harbour compiler
  - **\-hbcmp|\-clipper** stop after creating the object files  
 create link/copy hbmk2 to hbcmp/clipper for the same effect
- - **\-hbcc** accept raw C flags  
-create link/copy hbmk2 to hbcc for the same effect
+ - **\-hbcc** αποδοχή raw C flags⏎ δημιουργία link/copy hbmk2 στο hbcc για όμοιο αποτέλεσμα
  - **\-hblnk** αποδοχή ανεπεξέργαστων flags συνδέτη
  - **\-autohbm\[\-\]** ενεργοποίηση \(ή απενεργοποίηση\) επεξεργασίας του hbmk\.hbm στο τρέχοντα κατάλογο \(προεπιλογή: yes\)
  - **\-hb10** enable Harbour 1\.0\.x compatibility mode
@@ -256,7 +255,7 @@ Macro variables:
  - **$\{hb\_root\}** κατάλογος του hbmk2
  - **$\{hb\_dir\}** directory of the filename it is used in
  - **$\{hb\_dirname\}** top directory of the filename it is used in
- - **$\{hb\_name\}** name of the filename it is used in \(without directory and extension\)
+ - **$\{hb\_name\}** όνομα αρχείου που είναι σύνηθες \(χωρίς κατάλογο και κατάληξη\)
  - **$\{hb\_self\}** full filename it is used in
  - **$\{hb\_curdir\}** current working directory
  - **$\{hb\_tempdir\}** Κατάλογος Λ\.Σ\. για προσωρινα αρχεία
@@ -299,7 +298,7 @@ Filters \(you can combine and/or negate them\):
 
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
- - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
+ - **\{&lt;cpu&gt;\}** σκοπούμενη CPU\. Οπου &lt;cpu&gt; μπορεί να είναι κάτι από : x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
  - **\{mt\}** target is multi\-threaded \(see \-mt option\)
  - **\{st\}** target is single\-threaded \(see \-st option\)
@@ -363,16 +362,16 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **HB\_LANG** accepts same values as \-lang= option
  - **HB\_USER\_LIBS** δέχεται τις ίδιες τιμές \(χωρισμένες με κενό\)  όπως και η επιλογή \-l 
  - **HB\_USER\_LIBPATHS** δέχεται τις ίδιες τιμές \(χωρισμένες με κενό\)  όπως και η επιλογή \-L 
- - **HB\_USER\_PRGFLAGS** options to be passed to Harbour compiler \(before command\-line options\)
- - **HB\_USER\_CFLAGS** options to be passed to C compiler \(before command\-line options\)
+ - **HB\_USER\_PRGFLAGS** επιλογές που θα περαστούν στον μεταγλωττιστή Harbour \(πρίν από επιλογές γραμμής\-εντολών\)
+ - **HB\_USER\_CFLAGS** επιλογές που θα περαστούν στον μεταγλωττιστή C \(πρίν από επιλογές γραμμής\-εντολών\)
  - **HB\_USER\_RESFLAGS** options to be passed to resource compiler \(before command\-line options\) \(Windows only\)
  - **HB\_USER\_LDFLAGS** επιλογής που θα περαστούν στον συνδέτη \(εκτελέσιμου\) \(πρίν τις επιλογές της γραμμής\-εντολών\)
  - **HB\_USER\_DFLAGS** options to be passed to linker \(dynamic library\) \(before command\-line options\)
  - **HB\_USER\_AFLAGS** options to be passed to linker \(static library\) \(before command\-line options\)
  - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
- - **HB\_CCPATH** override C compiler executable directory \(gcc compiler families only\)
- - **HB\_CCPREFIX** override C compiler executable prefix \(gcc compiler families only\)
- - **HB\_CCSUFFIX** override C compiler executable suffix \(gcc compiler families only\)
+ - **HB\_CCPATH** επικάλυψη του καταλόγου μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
+ - **HB\_CCPREFIX** επικάλυψη του προθέματος μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
+ - **HB\_CCSUFFIX** επικάλυψη του επιθέματος μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
  - **HB\_INSTALL\_PREFIX** override Harbour base installation directory
  - **HB\_INSTALL\_ADDONS** override Harbour base add\-ons directory
 
@@ -383,10 +382,10 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
 
  - **echo=&lt;msg&gt;** display &lt;msg&gt;
- - **skip=\[&lt;msg&gt;\]** skip processing the rest of the \.hbc file\. Display &lt;msg&gt;, if specified\.
+ - **skip=\[&lt;msg&gt;\]** παράλειψη επεξεργασίας του υπόλοιπου \.hbc αρχείου\. Εμφάνιση &lt;msg&gt;, αν οριστεί\.
  - **stop=\[&lt;msg&gt;\]** stop the build\. Display &lt;msg&gt;, if specified\.
  - **sources=** add space separated list of files as input files
- - **headers=** add space separated list of \.ch format headers as standard header
+ - **headers=** προσθήκη διαχωρισμένης με κενό λίστας από headers μορφής \.ch  ως πρότυπο header
  - **libs=** προσθέστε λίστα βιβλιοθηκών διαχωρισμένων με κενό \(δες περισσότερα  στην \-l επιλογή\)
  - **frameworks=** add space separated list of frameworks \(Darwin only\)
  - **requests=** προσθέστε διαχωρισμένη με κενό λίστα συμβόλων που θα διασυνδεθούν  υποχρεωτικά στο στόχο
@@ -478,11 +477,11 @@ Output text to stderr without any formatting\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Evaluate hbmk2 macro expression\.
  - **hbmk\_FNameEscape\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
-Escape/quote filename for using it as external command parameter\.
+Οριοθετημενο με Escape ή εισαγωγικά  ονομααρχείου για να χρησιμοποιηθεί ως παραμέτρος εξωτερικής εντολή\.
  - **hbmk\_PathSepToTarget\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
-Convert filename to the format required for the target toolchain\.
+Μετατροπή ονόματοςαρχείου στην απαιτούμενη μορφή για την σκοπούμενη εργαλειογραμμή
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
-Convert filename to have forward slash directory separators\.
+Μετατροπή του ονόματος αρχείου ωστε να έχει  εμπρός κάθετο / ως διαχωρστή\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Return relative path of \-workdir= value from current working directory\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
@@ -504,7 +503,7 @@ Plugin variables:
  - **"apiver"** API version as an integer
  - **"cSTATE"** callback state\. Can be: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
  - **"params"** array of parameters passed to plugins via \-pflag=/pi= options or having an extension registered via hbmk\_Register\_Input\_File\_Extension\(\)
- - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
+ - **"vars"** Κατακερματισμός \-hash\- των ιδιαίτερων μεταβλητών plugin\. Εγγράψιμο, τοπικά σε κάθε plugin
  - **"cPLAT"** \-plat value
  - **"cCOMP"** \-comp value
  - **"nCOMPVer"** see HB\_COMPILER\_VER envvar
@@ -604,7 +603,7 @@ $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
  - **To build library 'mylib' from sources**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **To build library 'mylib' from sources using incremental mode**  
+ - **Για κατασκευή της βιβλιοθήκης 'mylib' από πηγαίο κώδικα με επαυξητικό "incremental" τρόπο**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Κωδικοί εξόδου \("errorlevels"\):  
@@ -645,7 +644,7 @@ Notes:
   - Options accepting macro variables also support command substitution\. Enclose command inside \`\`, and, if the command contains space, also enclose in double quotes\. Standard output of the command will be used as the value\. F\.e\. "\-cflag=\`wx\-config \-\-cflags\`", or ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
-  - Defaults and feature support may vary by platform/compiler\.
+  - Η υποστήρξη προεπιλογών και χαρακτηριστικών μπορεί να διαφέρει ανάλογα με την πλατφόρμα/μεταγλωττιστή\.
   - Δεν χρειάζεστε το GNU Make ή κάποιο άλλο make μεταγλωττιστή C και το MSYS \(σε Windows\)  για να εκτελέσετε το  hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 

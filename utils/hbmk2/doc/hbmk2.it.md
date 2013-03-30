@@ -51,7 +51,7 @@ Opzioni:
  - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
  - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
- - **\-nohblib\[\-\]** do not use static core Harbour libraries when linking
+ - **\-nohblib\[\-\]** non si devono usare librerie statiche principali di Harbour durante il linking
  - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
  - **\-nomiscsyslib\[\-\]** non aggiungere un'ulteriore elenco di librerie di sistema alla lista della libreria di default
@@ -189,7 +189,7 @@ Special value:
  \- bld: use original build settings \(default on \*nix\)
  - **\-build=&lt;name&gt;** specificare un nome di compilazione
  - **\-lang=&lt;lang&gt;** override default language\. &lt;lang&gt; is an ISO language code\.
- - **\-width=&lt;n&gt;** set output width to &lt;n&gt; characters \(0=unlimited\)\.
+ - **\-width=&lt;n&gt;** imposta la larghezza dell'output a &lt;n&gt; caratteri \(0=illimitato\)
  - **\-shl** show sub\-project level in output lines
  - **\-viewhelp** Help esteso nel visualizzatore di testo
  - **\-longhelp** aiuto esteso
@@ -316,7 +316,7 @@ Filters \(you can combine and/or negate them\):
  - **\{winuni\}** Windows UNICODE \(WIDE\) mode \(see \-winuni option\)
  - **\{winansi\}** Windows ANSI mode \(see \-winuni\- option\)
  - **\{unix\}** target platform is \*nix compatible \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
- - **\{allwin\}** target platform is Windows compatible \(win, wce\)
+ - **\{allwin\}** la piattaforma di destinazione è compatibile con Windows \(win, wce\)
  - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
  - **\{allmingw\}** target C compiler is mingw\* \(mingw, mingw64, mingwarm\)
  - **\{allmsvc\}** target C compiler is msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
@@ -352,7 +352,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
  - **HBMK\_HAS\_&lt;depname&gt;** quando la dipendenza &lt;depname&gt; è stata rilevata
  - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
- - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** when &lt;depname&gt; dependency was detected in a location configured by \-depincpathlocal= option
+ - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** quando la dipendenza &lt;depname&gt; è stata rilevata nella locazione configurata da \-depincpathlocal= opzione
   
 Variabili d'ambiente:  
 

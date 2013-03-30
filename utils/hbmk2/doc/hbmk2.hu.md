@@ -5,7 +5,7 @@ Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor
 
 Használat:  
   
-  hbmk2 \[kapcsolók\] \[&lt;parancsállomány\[s\]&gt;\] &lt;forrás\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Description:  
 

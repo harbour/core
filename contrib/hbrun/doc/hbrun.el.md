@@ -5,14 +5,14 @@ Copyright \(c\) 2003\-2007, Przemysław Czerpak
 
 Syntax:  
   
-hbrun &lt;αρχείο\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;επιλογή&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
+  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
   
 Description:  
 
 
   Το hbrun μπορεί να εκτελεί σενάρια Harbour  \(πηγαία ή προκατασκευασμένα\), και προσφέρει επίσης ένα διαλογικό περιβάλλον\.
   
-Options below are available on command\-line:  
+Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:  
 
 
  - **\-\-hb:debug** Ενεργοποίηση αποσφαλμάτωσης script
