@@ -15756,9 +15756,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) }, ;
       { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) }, ;
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
-      { "-warn=<lev>"        , I_( e"set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
+      { "-warn=<level>"      , I_( e"set C compiler warning level\n<level> can be: max, yes, low, no, def (default: yes)" ) }, ;
       { "-safe[-]"           , I_( e"enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
-      { "-compr=<lev>"       , I_( e"compress executable/dynamic lib (needs UPX tool)\n<lev> can be: yes, no, min, max" ) }, ;
+      { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
