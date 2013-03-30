@@ -28,7 +28,7 @@ PROCEDURE Main( cLogin )
 
    ? "saving locally"
 
-   cContent := StrTran( ;
+   cContent := ;
       '#, c-format' + hb_eol() + ;
       'msgid ""' + hb_eol() + ;
       'msgstr ""' + hb_eol() + ;
@@ -37,13 +37,13 @@ PROCEDURE Main( cLogin )
       '"MIME-Version: 1.0\n"' + hb_eol() + ;
       '"Content-Type: text/plain; charset=UTF-8\n"' + hb_eol() + ;
       '"Content-Transfer-Encoding: 8bit\n"' + hb_eol() + hb_eol() + ;
-      hb_MemoRead( cTemp ), hb_eol(), e"\n" )
+      hb_MemoRead( cTemp )
 
    hb_MemoWrit( hb_DirSepToOS( hb_DirBase() + "po/hbmk2.en.po" ), cContent )
 
    ? "uploading"
 
-   hb_MemoWrit( cTemp, hb_jsonEncode( { "content" => cContent } ) )
+   hb_MemoWrit( cTemp, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
    hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
