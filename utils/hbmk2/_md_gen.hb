@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    FOR EACH file IN Directory( hb_DirBase() + hb_DirSepToOS( "po/*.po" ) )
       hb_run( hb_StrFormat( "hbi18n -q -g -o%1$s %2$s", ;
-         hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
+         hb_DirBase() + hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
          hb_DirSepToOS( hb_DirBase() + "po/" + file[ F_NAME ] ) ) )
    NEXT
 
@@ -33,6 +33,6 @@ PROCEDURE Main()
       hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )
    NEXT
 
-   AEval( Directory( "*.hbl" ), {| tmp | FErase( tmp[ F_NAME ] ) } )
+   AEval( Directory( hb_DirBase() + "*.hbl" ), {| tmp | FErase( hb_DirBase() + tmp[ F_NAME ] ) } )
 
    RETURN
