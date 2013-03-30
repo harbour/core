@@ -16,6 +16,10 @@ PROCEDURE Main( cLogin )
    LOCAL cLang
    LOCAL cTemp
 
+   IF Empty( cLogin )
+      cLogin := GetEnv( "HB_TRANSIFEX_LOGIN" )  /* Format: username:password */
+   ENDIF
+
    FClose( hb_FTempCreateEx( @cTemp ) )
 
    FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_DirBase() + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
@@ -30,9 +34,9 @@ PROCEDURE Main( cLogin )
       ELSE
          ? "error"
       ENDIF
-
-      FErase( cTemp )
    NEXT
+
+   FErase( cTemp )
 
    RETURN
 

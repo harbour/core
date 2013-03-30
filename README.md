@@ -1,4 +1,4 @@
-# Welcome to Harbour
+# Welcome to Harbour [![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -101,9 +101,11 @@ Download source archive from this page and unpack:
 ## Unstable versions
 
 > WARNING:
-> Recommended for users contributing to Harbour development,
-> following the development mailing list, commits and reading
-> [ChangeLog.txt](ChangeLog.txt?raw=true).
+> Recommended
+> [for](https://groups.google.com/forum/#!msg/harbour-users/2fwUzdKwpKA/32nI4WhZLfYJ)
+> [users](https://groups.google.com/forum/#!msg/harbour-users/Ro99f8S6my0/KvfjhCx_jE4J)
+> contributing to Harbour development, following the development mailing list,
+> commits and reading [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
 
@@ -124,8 +126,6 @@ Download source archive from any of these links and unpack:
 * <https://github.com/harbour/core/archive/master.tar.gz>
 
 ### Harbour unstable binaries (updated once a day from live source repository)
-
-[![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
 
 Windows (unified):
 
@@ -1435,20 +1435,6 @@ mailing list.
     Follows some environment variable settings which are commonly believed
     by users to be useful, but which in reality are either not needed or
     not even used by Harbour build process and hbmk2.
-    You should delete them:
-
-        set HB_DIR=<harbour_dir>
-        set HB_PATH=<harbour_dir>
-        set HRB_DIR=<some_harbour_dir>
-        set INCLUDE=<harbour_include_dir>
-        set LIB=<harbour_lib_dir>
-        set HB_GT_LIB=
-        set HB_*_INSTALL=
-        set HB_INSTALL_???=
-        set HB_INC_*=
-        set HB_DIR_*=
-        set HB_LEX=
-
 7.  Remove any Harbour build settings documented in [Build Options](#build-options).
 8.  Try to do no or only small modifications at once to examples
     included in [Build Examples](#build-examples).
