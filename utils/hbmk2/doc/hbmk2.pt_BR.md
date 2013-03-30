@@ -65,7 +65,7 @@ Opções
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
- - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
+ - **\-manifest=&lt;file&gt;** incorporar arquivo manifest  &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
  - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; as password when signing executable \(Windows and Darwin only\)
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
@@ -184,7 +184,7 @@ criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo
 
 
  - **\-plat=&lt;platform&gt;** override default target platform \(default: automatic\)
- - **\-cpu=&lt;cpu&gt;** override default target CPU \(default: automatic\) \(EXPERIMENTAL\)
+ - **\-cpu=&lt;cpu&gt;** substituir o destino da  CPU  padrão \(padrão: automática\) \(EXPERIMENTAL\)
  - **\-comp=&lt;compiler&gt;** override C compiler autodetection  
 Special value:  
  \- bld: use original build settings \(default on \*nix\)
@@ -271,7 +271,7 @@ Macro variables:
  - **$\{hb\_build\}** build name
  - **$\{hb\_cpu\}** selected CPU
  - **$\{hb\_work\}** default base workdir name
- - **$\{hb\_workdynsub\}** default workdir subdirectory for dynamic library targets
+ - **$\{hb\_workdynsub\}** subdiretório padrão de trabalho para bibliotecas dinâmicas 
  - **$\{hb\_dynprefix\}** dynamic library prefix
  - **$\{hb\_dynsuffix\}** dynamic library suffix
  - **$\{hb\_dynext\}** dynamic library extension
@@ -320,7 +320,7 @@ Filters \(you can combine and/or negate them\):
  - **\{allwin\}** plataforma alvo é compátivel com Windows \(win, wce\)
  - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
  - **\{allmingw\}** compilador alvo C  é  mingw\* \(mingw, mingw64, mingwarm\)
- - **\{allmsvc\}** target C compiler is msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
+ - **\{allmsvc\}** compilador C alvo é  msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
  - **\{allbcc\}** compilador alvo C é bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** target C compiler is pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** target C compiler is icc\* \(icc, iccia64\)
@@ -341,7 +341,7 @@ Predefined constants in sources:
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
  - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
  - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected \(available in C sources\)
+ - **HBMK\_HAS\_&lt;depname&gt;** quando &lt;depname&gt; dependência foi detectada \(disponível nos fontes C\)
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
@@ -382,7 +382,7 @@ Environment variables:
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
   
-\.hbc directives \(they should be written in separate lines\):  
+diretivas \.hbc \(devem ser escritas em linhas separadas\):  
 
 
  - **echo=&lt;msg&gt;** display &lt;msg&gt;
@@ -390,7 +390,7 @@ Environment variables:
  - **stop=\[&lt;msg&gt;\]** stop the build\. Display &lt;msg&gt;, if specified\.
  - **sources=** add space separated list of files as input files
  - **headers=** add space separated list of \.ch format headers as standard header
- - **libs=** add space separated list of libraries \(see more at \-l option\)
+ - **libs=** adicione espaços para separar a lista de bibliotecas \(veja mais opções em \-l\)
  - **frameworks=** add space separated list of frameworks \(Darwin only\)
  - **requests=** add space separated list of symbols to force link to the target
  - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
@@ -607,7 +607,7 @@ Examples to build a Harbour static library:
 
  - **To build library 'mylib' from sources**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **To build library 'mylib' from sources using incremental mode**  
+ - **para gerar a biblioteca  'mylib' dos fontes usando o modo incremental**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Exit codes \("errorlevels"\):  
@@ -618,7 +618,7 @@ Exit codes \("errorlevels"\):
  - **2** unknown compiler
  - **3** failed Harbour detection
  - **5** failed stub creation
- - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
+ - **6** Falha na compilação  \(Harbour, compilador C , compilador Recursos "RC"\)
  - **7** Falha na montagem final \(linker ou  gerenciador de bibliotecas\)
  - **8** unsupported
  - **9** Falhou na criação do diretório de trabalho
@@ -648,7 +648,7 @@ Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&g
   - Opções aceitando macros também suportam linhas de comando\. Neste caso basta rodeiar o comando dentro de \`\`, e, se o comando contiver espaço, também adicione aspas duplas\. i\.e\. "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
-  - Defaults and feature support may vary by platform/compiler\.
+  - Padrões e especificações suportadas podem variar de acordo com plataforma/compilador\.
   - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
