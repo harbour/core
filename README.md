@@ -75,8 +75,8 @@ There are several ways to help making Harbour better:
   code, so you're welcome to do so in other areas like documentation,
   helping fellow users, giving input on decisions, testing in
   various environments, volunteering in administration tasks, etc.
-- User interface translation:<br />
-  [![Translation Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
+- Participate in localization:<br />
+  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
 
 # How to Get
@@ -1921,7 +1921,7 @@ Supported shells per host platforms:
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)
-  * [Translation](https://www.transifex.com/projects/p/harbour/)
+  * [Localization](https://www.transifex.com/projects/p/harbour/)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
