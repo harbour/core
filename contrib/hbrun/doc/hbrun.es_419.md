@@ -8,7 +8,7 @@ Sintáxis:
   
   hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
   
-Description:  
+Descripción:  
 
 
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
@@ -16,7 +16,7 @@ Description:
 Options below are available on command\-line:  
 
 
- - **\-\-hb:debug** enable script debugging
+ - **\-\-hb:debug** activa depuración de script
 
 
  - **\-help** esta ayuda
@@ -27,8 +27,8 @@ Options below are available on command\-line:
 Archivos:  
 
 
- - **\*\.hb** Harbour script
- - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
+ - **\*\.hb** script Harbour
+ - **\*\.hrb** Binario portable Harbour \(aka script precompilado Harbour\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun directory&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
@@ -54,15 +54,15 @@ Switch GT\. Default \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Enable Clipper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Load Harbour header\.
+Cargar cabecera Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Unload Harbour header\.
+Descargar cabecera Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Display list of loaded Harbour header\.
+Muestra lista de cabecera Harbour cargada\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Load package\. Similar to \#request PP directive\.
+Carga paquete\. Similar a la directiva PP \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Unload package\.
+Descargar paquete\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 23:02+0000\n"
+"PO-Revision-Date: 2013-03-30 01:29+0000\n"
 "Last-Translator: pemedina <pablo.medina@sysadminonline.com>\n"
 "Language-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr "activar (o desactivar) la generación de Bibliotecas de Importación par
 msgid ""
 "virtual target, it does not create anything. Useful for creating an .hbp "
 "with the sole purpose of referencing sub-projects"
-msgstr ""
+msgstr "destino virtual, no crea nada. Útil para crear un .hbp con el solo propósito de referenciar sub-proyectos"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -77,7 +77,7 @@ msgstr ""
 msgid ""
 "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, "
 "vxworks, symbian, linux, darwin, cygwin, minix, aix)"
-msgstr ""
+msgstr "plataforma destino es compatible *nix (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
 
 #: hbmk2.prg:16144
 #, c-format
@@ -205,7 +205,7 @@ msgstr ""
 msgid ""
 "when -run option is used, the exit code will be the one returned by the "
 "target executable"
-msgstr ""
+msgstr "cuando la opción -run es utilizada, el código de salida será el retornado por el ejecutable destino"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -789,12 +789,12 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "target platform is Windows compatible (win, wce)"
-msgstr ""
+msgstr "plataforma destino es compatible con Windows (win, wce)"
 
 #: hbmk2.prg:16072
 #, c-format
 msgid "target C compiler is mingw* (mingw, mingw64, mingwarm)"
-msgstr ""
+msgstr "compilador C destino es mingw* (mingw, mingw64, mingwarm)"
 
 #: hbmk2.prg:2499
 #, c-format
@@ -909,12 +909,12 @@ msgstr ""
 #: hbmk2.prg:15985
 #, c-format
 msgid "Harbour portable binary (aka precompiled Harbour script)"
-msgstr ""
+msgstr "Binario portable Harbour (aka script precompilado Harbour)"
 
 #: hbmk2.prg:16072
 #, c-format
 msgid "filter will pass if <file> or <dir> name exists on disk."
-msgstr ""
+msgstr "el filtro pasará si el nombre de <file> o <dir> existe en disco."
 
 #: hbmk2.prg:16032
 #, c-format
@@ -924,7 +924,7 @@ msgstr ""
 #: hbmk2.prg:16144
 #, c-format
 msgid "add space separated list of symbols to force link to the target"
-msgstr ""
+msgstr "agrega lista de símbolos separados por espacio para forzar el enlace al objetivo."
 
 #: hbmk2.prg:16072
 #, c-format
@@ -934,7 +934,7 @@ msgstr ""
 #: hbmk2.prg:16076
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
-msgstr ""
+msgstr "directivas .hbc (deben ser escritas en líneas separadas):"
 
 #: hbmk2.prg:16144
 #, c-format
@@ -1157,7 +1157,7 @@ msgstr ""
 #, c-format
 msgid ""
 "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
-msgstr ""
+msgstr "CPU destino. Donde  <cpu> puede ser uno de: x86, x86_64, ia64, arm, mips, sh"
 
 #: hbmk2.prg:16217
 #, c-format
@@ -1219,7 +1219,7 @@ msgstr "Ejecutando aplicativo:"
 #: hbmk2.prg:6949
 #, c-format
 msgid "Target up to date: %1$s"
-msgstr "Meta actualizada: %1$s"
+msgstr "Destino actualizado: %1$s"
 
 #: hbmk2.prg:7511
 #, c-format
@@ -1574,7 +1574,7 @@ msgstr "Advertencia: No se puede anidar más profundo en %1$s"
 #: hbmk2.prg:16072
 #, c-format
 msgid "target C compiler is bcc* (bcc, bcc64)"
-msgstr ""
+msgstr "compilador C destino es bcc* (bcc, bcc64)"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -1862,7 +1862,7 @@ msgstr "Blinker ECHO: %1$s"
 #: hbmk2.prg:12802
 #, c-format
 msgid "VCS version command:"
-msgstr "VCS versión comando"
+msgstr "comando de versión VCS"
 
 #: hbmk2.prg:15804
 #, c-format
@@ -2047,7 +2047,7 @@ msgstr "activa el modo de compatibilidad Harbour 2.0.x"
 #: hbmk2.prg:16072
 #, c-format
 msgid "console target (see -console option)"
-msgstr ""
+msgstr "consola destino (vea opción -console)"
 
 #: hbmk2.prg:15698
 #, c-format
@@ -2449,7 +2449,7 @@ msgstr "ayuda"
 #: hbmk2.prg:16434
 #, c-format
 msgid "MS-DOS"
-msgstr ""
+msgstr "MS-DOS"
 
 #: hbmk2.prg:15962
 #, c-format
@@ -2495,7 +2495,7 @@ msgstr "  %1$s [opciones] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.p
 msgid ""
 "Create Harbour header (in .hbx format) with all external symbols. Empty "
 "parameter will disable it."
-msgstr ""
+msgstr "Crear cabecera Harbour (en formato .hbx ) con todos los símbolos externos. Un parámetro vacío lo deshabilita."
 
 #: hbmk2.prg:15804
 #, c-format
@@ -2531,7 +2531,7 @@ msgstr ""
 msgid ""
 "target type. Where <targettype> is any of the values returned by macro "
 "variable ${hb_targettype}."
-msgstr ""
+msgstr "tipo destino, Donde <targettype> es cualquiera de los valores retornados por la macro variable ${hb_targettype}."
 
 #: hbmk2.prg:16221
 #, c-format
@@ -2552,7 +2552,7 @@ msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la 
 msgid ""
 "override C compiler version autodetection (gcc and msvc compiler families "
 "only). Format: <15><00>[.<00>] = <major><minor>[.<revision>]"
-msgstr ""
+msgstr "supercede la autodetección de versión de compilador C (solo familias gcc y msvc) . Formato: <15><00>[.<00>] = <major><minor>[.<revision>]"
 
 #: hbmk2.prg:15980
 #, c-format
@@ -2564,49 +2564,49 @@ msgstr ""
 #: hbmk2.prg:16188
 #, c-format
 msgid "Unload package."
-msgstr ""
+msgstr "Descargar paquete."
 
 #: hbmk2.prg:16144
 #, c-format
 msgid "display <msg>"
-msgstr ""
+msgstr "mostrar <msg>"
 
 #: hbmk2.prg:16155 hbmk2.prg:16170 hbmk2.prg:16170 hbmk2.prg:16170
 #, c-format
 msgid "<depname>"
-msgstr ""
+msgstr "<depname>"
 
 #: hbmk2.prg:16155
 #, c-format
 msgid "<hbcname>"
-msgstr ""
+msgstr "<hbcname>"
 
 #: hbmk2.prg:16144
 #, c-format
 msgid "package name"
-msgstr ""
+msgstr "Nombre de paquete"
 
 #: hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255
 #: hbmk2.prg:16255 hbmk2.prg:16255
 #, c-format
 msgid "%1$s value"
-msgstr ""
+msgstr "valor %1$s"
 
 #: hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255 hbmk2.prg:16255
 #: hbmk2.prg:16255
 #, c-format
 msgid "see %1$s envvar"
-msgstr ""
+msgstr "ver envvar  %1$s"
 
 #: hbmk2.prg:16255 hbmk2.prg:16255
 #, c-format
 msgid "see %1$s macro"
-msgstr ""
+msgstr "ver macro %1$s"
 
 #: hbmk2.prg:16324
 #, c-format
 msgid "Description:"
-msgstr ""
+msgstr "Descripción:"
 
 #: hbmk2.prg:16188
 #, c-format
@@ -2616,7 +2616,7 @@ msgstr ""
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a C++ input file to the project."
-msgstr ""
+msgstr "Agregar un archivo C++ al proyecto."
 
 #: hbmk2.prg:16175
 #, c-format
@@ -2626,7 +2626,7 @@ msgstr ""
 #: hbmk2.prg:16188
 #, c-format
 msgid "Display list of loaded Harbour header."
-msgstr ""
+msgstr "Muestra lista de cabecera Harbour cargada."
 
 #: hbmk2.prg:16148
 #, c-format
@@ -2665,7 +2665,7 @@ msgstr "Para construir librería 'mylib' desde las fuentes"
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a C input file to the project."
-msgstr ""
+msgstr "Agregar un archivo C al proyecto."
 
 #: hbmk2.prg:15804
 #, c-format
@@ -2772,17 +2772,17 @@ msgstr "ayuda detallada"
 #: hbmk2.prg:15985
 #, c-format
 msgid "Harbour script"
-msgstr ""
+msgstr "script Harbour"
 
 #: hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906
 #, c-format
 msgid "option %1$s"
-msgstr ""
+msgstr "opción %1$s"
 
 #: hbmk2.prg:15906 hbmk2.prg:15906 hbmk2.prg:15906
 #, c-format
 msgid "mode %1$s"
-msgstr ""
+msgstr "modo %1$s"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -2792,7 +2792,7 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "selected CPU"
-msgstr ""
+msgstr "CPU seleccionada"
 
 #: hbmk2.prg:16358
 #, c-format
@@ -2856,7 +2856,7 @@ msgstr ""
 msgid ""
 "target C compiler. Where <compiler> can be any value accepted by -comp= "
 "option."
-msgstr ""
+msgstr "compilador C destino.  Donde <compiler> puede ser cualquier valor aceptado por la opción -comp= ."
 
 #: hbmk2.prg:16072
 #, c-format
@@ -2883,7 +2883,7 @@ msgstr ""
 msgid ""
 "target platform. Where <platform> can be any value accepted by -plat= "
 "option."
-msgstr ""
+msgstr "plataforma destino.  Donde <platform> puede ser cualquier valor aceptado por la opción -plat= ."
 
 #: hbmk2.prg:16144
 #, c-format
@@ -2902,13 +2902,13 @@ msgstr ""
 #, c-format
 msgid ""
 "Convert array of strings to a string. Default separator is a single space."
-msgstr ""
+msgstr "Convertir array de cadenas  a cadena. El separador por defecto es un espacio simple."
 
 #: hbmk2.prg:16301
 #, c-format
 msgid ""
 ". (dot) passed as first parameter will enter the interactive Harbour shell."
-msgstr ""
+msgstr ". (punto) pasado como primer parámetro activará la consola interactiva Harbour."
 
 #: hbmk2.prg:16342
 #, c-format
@@ -2923,27 +2923,27 @@ msgstr ""
 #: hbmk2.prg:16255
 #, c-format
 msgid "%1$s option status"
-msgstr ""
+msgstr "estado de opción %1$s"
 
 #: hbmk2.prg:16188
 #, c-format
 msgid "Unload Harbour header."
-msgstr ""
+msgstr "Descargar cabecera Harbour."
 
 #: hbmk2.prg:16188
 #, c-format
 msgid "Load Harbour header."
-msgstr ""
+msgstr "Cargar cabecera Harbour."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Output text to stdout."
-msgstr ""
+msgstr "Texto de salida a stdout."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Output text to stderr."
-msgstr ""
+msgstr "Texto de salida a stderr."
 
 #: hbmk2.prg:16320
 #, c-format
@@ -2958,7 +2958,7 @@ msgstr ".hb, .hrb o .dbf"
 #: hbmk2.prg:16390
 #, c-format
 msgid "To run result of above"
-msgstr ""
+msgstr "Para ejecutar el resultado de mas arriba"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -2968,7 +2968,7 @@ msgstr "directorio de salida"
 #: hbmk2.prg:16381
 #, c-format
 msgid "To run a Harbour script"
-msgstr ""
+msgstr "Para ejecutar un script Harbour"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -2978,7 +2978,7 @@ msgstr ""
 #: hbmk2.prg:16032
 #, c-format
 msgid "Harbour version status"
-msgstr ""
+msgstr "estado de versión Harbour"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -3018,7 +3018,7 @@ msgstr "mostrar comandos ejecutados"
 #: hbmk2.prg:15804
 #, c-format
 msgid "echo text on screen"
-msgstr "eco de texto en la pantalla"
+msgstr "Muestra texto en la pantalla"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -3033,7 +3033,7 @@ msgstr "versión de compilador C"
 #: hbmk2.prg:15866
 #, c-format
 msgid "enable script debugging"
-msgstr ""
+msgstr "activa depuración de script"
 
 #: hbmk2.prg:15932
 #, c-format
@@ -3068,7 +3068,7 @@ msgstr "utilizar un nombre de build especifico"
 #: hbmk2.prg:16406
 #, c-format
 msgid "To build an application using incremental mode"
-msgstr ""
+msgstr "Para construir una aplicación usando el modo incremental"
 
 #: hbmk2.prg:16381
 #, c-format
@@ -3118,7 +3118,7 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "target is single-threaded (see -st option)"
-msgstr ""
+msgstr "destino es single-threaded (vea opción -st)"
 
 #: hbmk2.prg:16032
 #, c-format
@@ -3128,7 +3128,7 @@ msgstr ""
 #: hbmk2.prg:16036
 #, c-format
 msgid "Filters (you can combine and/or negate them):"
-msgstr ""
+msgstr "Filtros (puede combinar y/o negarlos):"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -3143,7 +3143,7 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "target C compiler is icc* (icc, iccia64)"
-msgstr ""
+msgstr "compilador C destino es icc* (icc, iccia64)"
 
 #: hbmk2.prg:16144
 #, c-format
@@ -3153,42 +3153,42 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "target is multi-threaded (see -mt option)"
-msgstr ""
+msgstr "destino es multi-threaded (vea opción -mt)"
 
 #: hbmk2.prg:16144
 #, c-format
 msgid "stop the build. Display <msg>, if specified."
-msgstr ""
+msgstr "detiene la construcción. Muestra <msg>, si está especificado."
 
 #: hbmk2.prg:16155
 #, c-format
 msgid "when an .hb script is compiled as %1$s plugin"
-msgstr ""
+msgstr "cuando un script .hb es compilado como plugin  %1$s"
 
 #: hbmk2.prg:16188
 #, c-format
 msgid "Load package. Similar to #request PP directive."
-msgstr ""
+msgstr "Carga paquete. Similar a la directiva PP #request."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a binary object file to the project."
-msgstr ""
+msgstr "Agregar un archivo binario objeto al proyecto."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Output text to stdout without any formatting."
-msgstr ""
+msgstr "Enviar texto a stdout sin ningún formato."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Output text to stderr without any formatting."
-msgstr ""
+msgstr "Enviar texto a stderr sin ningún formato."
 
 #: hbmk2.prg:16217
 #, c-format
 msgid "Change directory and/or extension in filename."
-msgstr ""
+msgstr "Cambiar directorio y/o extensión en nombre de archivo."
 
 #: hbmk2.prg:16217
 #, c-format
@@ -3198,7 +3198,7 @@ msgstr ""
 #: hbmk2.prg:16217
 #, c-format
 msgid "Add a Harbour input file to the project."
-msgstr ""
+msgstr "Agregar un archivo Harbour al proyecto."
 
 #: hbmk2.prg:16301
 #, c-format
@@ -3247,7 +3247,7 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "target C compiler is pocc* (pocc, pocc64, poccarm)"
-msgstr ""
+msgstr "compilador C destino es pocc* (pocc, pocc64, poccarm)"
 
 #: hbmk2.prg:16072
 #, c-format
@@ -3389,7 +3389,7 @@ msgstr ""
 #: hbmk2.prg:16072
 #, c-format
 msgid "GUI target (see -gui option)"
-msgstr ""
+msgstr "GUI destino (vea opción -gui)"
 
 #: hbmk2.prg:16144
 #, c-format
