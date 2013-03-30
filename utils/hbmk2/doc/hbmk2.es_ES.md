@@ -56,11 +56,11 @@ Opciones:
  - **\-nolibgrouping\[\-\]** desactivar agrupamiento de LIBs en compiladores basados en gcc\.
  - **\-nomiscsyslib\[\-\]** no agregue lista adicional de librerías del sistema a lista de librerías por defecto
  - **\-traceonly** mostrar comandos a ser ejecutados, pero no ejecutarlos
- - **\-warn=&lt;lev&gt;** Configure nivel de advertencia \(warnings\) del compilador C  
-&lt;lev&gt; puede ser: max, yes, low, no, def \(default: yes\)
+ - **\-warn=&lt;level&gt;** set C compiler warning level  
+&lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
- - **\-compr=&lt;lev&gt;** comprime executable/librería dinamica \(necesita UPX\)  
-&lt;lev&gt; puede ser: yes, no, min, max
+ - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
+&lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** ejecutar/no ejecutar aplicativo generado\.
  - **\-vcshead=&lt;file&gt;** generar archivo de cabecera \.ch con información del repositorio local\. Actualmente están soportados Git, SVN, Mercurial, Bazaar, Fossil, CVS y Monotone\. El archivo de cabecera definirá la constante de preprocesador \_HBMK\_VCS\_TYPE\_ con el nombre del VCS detectado, y \_HBMK\_VCS\_ID\_ con el ID único del repositorio local\. Si no se detecta un VCS, un número secuencial será incrementado cada vez que se construya\.
  - **\-tshead=&lt;file&gt;** generar archivo de cabecera \.ch con información de fecha/hora\. Cabecera generado definirá macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ con fecha/hora de creación de archivo\.
@@ -212,7 +212,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\-debugrte** generate a run\-time error
 
 
-You can sym\-link/copy/rename hbmk2 to the following names to alter default mode of operation:
+Puedes crear un enlace simbólico/copiar/renombrar hbmk2 a los siguientes nombres para cambiar el modo de ejecución por defecto:
 
 
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
@@ -353,7 +353,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected
  - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
- - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** when &lt;depname&gt; dependency was detected in a location configured by \-depincpathlocal= option
+ - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** cuando la dependencia &lt;depname&gt; fue detectada en la localización configurada por la opción \-decincpathlocal=
   
 Environment variables:  
 

@@ -43,7 +43,7 @@ Options:
  - **\-map\[\-\]** create \(or not\) a map file
  - **\-implib\[\-\]** Créer \(ou non\) une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\)\. Le nom aura un suffixe ajouté\.
  - **\-implib=&lt;output&gt;** créer une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\) Nom de &lt;output&gt; \(par défaut: identique à la destination\)
- - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
+ - **\-ln=&lt;link&gt;** créer un lien symbolique vers &lt;output&gt; \(&lt;link&gt; est considéré relatif par rapport à &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(no strip\) binaries
  - **\-trace\[\-\]** show commands executed
  - **\-beep\[\-\]** enable \(or disable\) single beep on successful exit, double beep on failure
@@ -55,13 +55,13 @@ Options:
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
  - **\-nomiscsyslib\[\-\]** do not add extra list of system libraries to default library list
  - **\-traceonly** show commands to be executed, but do not execute them
- - **\-warn=&lt;lev&gt;** set C compiler warning level  
-&lt;lev&gt; can be: max, yes, low, no, def \(default: yes\)
+ - **\-warn=&lt;level&gt;** set C compiler warning level  
+&lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
- - **\-compr=&lt;lev&gt;** compress executable/dynamic lib \(needs UPX tool\)  
-&lt;lev&gt; can be: yes, no, min, max
+ - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
+&lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** run/do not run output executable
- - **\-vcshead=&lt;file&gt;** générer un fichier d'entête \.ch avec l'information du dépot local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge\. L'entête générée définira la constante du préprocesseur \_HBMK\_VCS\_TYPE\_ avec le nom de VCS détecté et \_HBMK\_VCS\_ID\_ avec l'ID unique du dépot local\. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision\.
+ - **\-vcshead=&lt;file&gt;** générer un fichier d'en\-tête \.ch avec l'information du dépôt local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS et Monotone sont actuellement pris en charge\. L'entête générée définira la constante du préprocesseur \_HBMK\_VCS\_TYPE\_ avec le nom de VCS détecté et \_HBMK\_VCS\_ID\_ avec l'ID unique du dépot local\. Si aucun système VCS n'est détecté, un numéro séquentiel sera automatiquement affecté à ​​chaque révision\.
  - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
@@ -92,7 +92,7 @@ Options:
  - **\-signflag=&lt;f&gt;** pass single flag to code sign command
  - **\-runflag=&lt;f&gt;** pass single flag to output executable when \-run option is used
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
- - **\-ldflag\+=&lt;f&gt;** pass single raw option to linker \(executable\) after the library list\. Use with caution\.
+ - **\-ldflag\+=&lt;f&gt;** Passer une seule option bas\-niveau à l'éditeur de liens \(exécutable\) après la liste des librairies\. A utiliser avec prudence\.
  - **\-dflag\+=&lt;f&gt;** Passer une seule option bas\-niveau à l'éditeur de liens \(bibliothèque dynamique\) après la liste de la bibliothèque\. A utiliser avec prudence\.
  - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
@@ -214,13 +214,13 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 Vous pouvez créer un lien symbolique/copier/renommer hbmk2 pour les noms suivants pour modifier le mode de fonctionnement par défaut:
 
 
- - **hbrun\*|\*hbrun** mode script runner / interactive shell
+ - **hbrun\*|\*hbrun** mode lancement de script/script interactif
  - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
  - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
- - **clipper** mode \-hbcmp \(emulate Clipper compiler\)
- - **rtlink** mode \-rtlink \(emulate Clipper linker\)
- - **exospace** mode \-rtlink \(emulate Clipper linker\)
- - **blinker** mode \-rtlink \(emulate Clipper linker\)
+ - **clipper** mode \-hbcmp \(émule le compilateur Clipper\)
+ - **rtlink** mode \-rtlink \(émule l'éditeur de lien de Clipper\)
+ - **exospace** mode \-rtlink \(émule l'éditeur de lien de Clipper\)
+ - **blinker** mode \-rtlink \(émule l'éditeur de lien de Clipper\)
  - **\*10** option \-hb10
  - **\*20** option \-hb20
  - **\*30** option \-hb30
@@ -261,7 +261,7 @@ Macro variables:
  - **$\{hb\_name\}** name of the filename it is used in \(without directory and extension\)
  - **$\{hb\_self\}** full filename it is used in
  - **$\{hb\_curdir\}** current working directory
- - **$\{hb\_tempdir\}** OS directory for temporary files
+ - **$\{hb\_tempdir\}** Répertoire système pour les fichiers temporaires
  - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
  - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** selected platform
@@ -284,14 +284,14 @@ Macro variables:
  - **$\{hb\_host\_plat\}** Harbour host platform
  - **$\{hb\_host\_plat\_unix\}** returns '1' if Harbour host platform is \*nix compatible
  - **$\{hb\_bin\}** Harbour binary directory
- - **$\{hb\_lib\}** Harbour static library directory
+ - **$\{hb\_lib\}** Répertoire des librairies statiques
  - **$\{hb\_lib3rd\}** Harbour 3rd party static library directory
- - **$\{hb\_dyn\}** Harbour dynamic library directory
+ - **$\{hb\_dyn\}** Répertoire des librairies dynamiques Harbour
  - **$\{hb\_inc\}** Harbour header directory
  - **$\{hb\_addons\}** Harbour add\-ons base directory
  - **$\{hb\_first\}** name of source file that holds the entry function \(without directory and extension\)
  - **$\{hb\_outputdir\}** directory of the output
- - **$\{hb\_outputname\}** name of the output \(without extension\)
+ - **$\{hb\_outputname\}** nom de la destination \(sans extension\)
  - **$\{hb\_level\}** sub\-project recursion level
  - **$\{&lt;depname&gt;\}** returns the header directory of dependency &lt;depname&gt;, or '1' if it is not detected
  - **$\{&lt;envvar&gt;\}** returns the value of the environment variable &lt;envvar&gt;
@@ -649,12 +649,12 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Defaults and feature support may vary by platform/compiler\.
-  - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
+  - GNU Make ou tout outil make spécifique à un compilateur C et MSYS \(sous Windows\) ne sont pas nécessaires pour exécuter hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
   - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Vous pouvez utiliser &lt;Alt\+V&gt; clé dans un shell interactif Harbour pour coller du texte à partir du presse\-papiers\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 
 

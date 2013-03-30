@@ -43,7 +43,7 @@ Opções
  - **\-cpp=&lt;value&gt;** selecione modo C\+\+\.Os Valores permitidos são: def, yes, no
  - **\-map\[\-\]** criar \(ou não\) o arquivo map
  - **\-implib\[\-\]** create \(or not\) an import library \(in \-hbdyn/\-hbexe mode\)\. The name will have a postfix added\.
- - **\-implib=&lt;output&gt;** create import library \(in \-hbdyn/\-hbexe mode\) name to &lt;output&gt; \(default: same as output\)
+ - **\-implib=&lt;output&gt;** Criar biblioteca importação \(no modo \-hbdyn/\-hbexe\)  nomeado para  &lt;output&gt; \(padrão:com o mesmo\)
  - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(ou não\) arquivos binários
  - **\-trace\[\-\]** exibir os comandos executados
@@ -56,11 +56,11 @@ Opções
  - **\-nolibgrouping\[\-\]** desativar agrupamento de LIBs em compiladores baseados no gcc\.
  - **\-nomiscsyslib\[\-\]** não adicione bibliotecas extras do sistema à lista padrão de bibliotecas
  - **\-traceonly** exibir os comandos à serem executados, mas não execute\-os
- - **\-warn=&lt;lev&gt;** define o nível de avisos \(warnings\) do compilador C  
-&lt;lev&gt; pode ser: max, yes, low, no, def \(padrão: yes\)
+ - **\-warn=&lt;level&gt;** set C compiler warning level  
+&lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
- - **\-compr=&lt;lev&gt;** comprime o executável/biblioteca dinânica \(necessita de UPX\)  
-&lt;lev&gt; pode ser: yes, no, min, max
+ - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
+&lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
@@ -328,8 +328,8 @@ Filters \(you can combine and/or negate them\):
  - **\{hb20\}** Harbour 2\.0\.x compatibility mode \(see \-hb20 option\)
  - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
  - **\{xhb\}** xhb mode \(see \-xhb option\)
- - **\{hb\_ispath='&lt;file|dir&gt;'\}** o filtro será passado no arquivo &lt;file&gt; ou  &lt;dir&gt; diretório se existir no disco\.
- - **\{MACRO\}** filter will pass if $\{MACRO\} value is not empty and not equal to '0' or 'no' \(case insensitive\)
+ - **\{hb\_ispath='&lt;file|dir&gt;'\}** passará pelo filtro se o nome do arquivo  &lt;file&gt; ou  &lt;dir&gt; diretório existir no disco\.
+ - **\{MACRO\}** passará pelo filtro se o valor $\{MACRO\} não for vazio e não for igual a zero '0' ou 'no' \(maiúsculas e minúsculas "case insensitive"\)
  - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&gt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is larger than &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&lt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is smaller than &lt;value&gt; \(case insensitive\)\.
@@ -388,16 +388,16 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **echo=&lt;msg&gt;** display &lt;msg&gt;
  - **skip=\[&lt;msg&gt;\]** skip processing the rest of the \.hbc file\. Display &lt;msg&gt;, if specified\.
  - **stop=\[&lt;msg&gt;\]** stop the build\. Display &lt;msg&gt;, if specified\.
- - **sources=** add space separated list of files as input files
- - **headers=** add space separated list of \.ch format headers as standard header
- - **libs=** adicione espaços para separar a lista de bibliotecas \(veja mais opções em \-l\)
- - **frameworks=** add space separated list of frameworks \(Darwin only\)
- - **requests=** add space separated list of symbols to force link to the target
- - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
+ - **sources=** adicione espaços para separar a lista de arquivos de entrada
+ - **headers=** adicionar lista separada por espaços de arquivos "\.ch"  tipo  "headers"
+ - **libs=** adicionar lista separada por espaços de bibliotecas \(veja mais opções em \-l\)
+ - **frameworks=** adicione espaços para separar a lista de "frameworks"  \(somente para Darwin\)
+ - **requests=** adicionar lista separada por espaços de simbolos para forçar a linkedição
+ - **syslibs=** adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema \(antes bibliotecas regulares\)
  - **hbcs=** embed space separated list of \.hbc files\. Names without the extension is accepted\. These references are processed in place\.
  - **autohbcs=** space separated list of values as in \-autohbc= option
- - **libpaths=** space separated list of additional library paths
- - **incpaths=** add space separated list of additional header paths \(for both Harbour and C\)
+ - **libpaths=** espaço separa a lista de locais de bibliotecas adicionais
+ - **incpaths=** adicionar lista separada por espaços dos locais adicionais dos "header"  \(para ambos Harbour e  C \)
  - **instfiles=** space separated list of values as in \-instfile= option
  - **instpaths=** space separated list of values as in \-instpath= option
  - **prgflags=** space separated list of values as in \-prgflag= option
@@ -627,7 +627,7 @@ Exit codes \("errorlevels"\):
  - **20** inicialização de plugin 
  - **30** too deep nesting
  - **50** stop requested
- - **&lt;other&gt;** when \-run option is used, the exit code will be the one returned by the target executable
+ - **&lt;other&gt;** quando a opção \-run for usada, o código de saida  será o código devolvido pelo executável de destino
   
 Notas:  
 
@@ -649,7 +649,7 @@ Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&g
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Padrões e especificações suportadas podem variar de acordo com plataforma/compilador\.
-  - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
+  - não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS \(no Windows\) para rodar hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
