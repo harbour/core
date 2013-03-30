@@ -1,10 +1,11 @@
 /*
- * Downloads .po files from Transifex translating site
+ * Downloads .po files from Transifex localization site
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * Requires: curl (built with SSL)
+ * Reference: http://help.transifex.com/features/api/api-v2.1.html
  *
  */
 
@@ -26,7 +27,9 @@ PROCEDURE Main( cLogin )
 
       ? cLang
 
-      hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X GET https://www.transifex.com/api/2/project/harbour/resource/hbmk2/translation/%2$s/ > %3$s", ;
+      hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X " + ;
+         "GET https://www.transifex.com/api/2/project/harbour/resource/hbmk2/translation/%2$s/ " + ;
+         "-o %3$s", ;
          cLogin, cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
