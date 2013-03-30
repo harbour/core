@@ -23,6 +23,7 @@ lib/wce/
 lib/win/
 
 # misc build files
+bin/*/
 obj
 .hbmk/
 *.hbr
