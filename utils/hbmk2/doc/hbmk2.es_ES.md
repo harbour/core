@@ -21,7 +21,7 @@ Opciones:
  - **\-L&lt;libpath&gt;** PATH adicional para buscar librerías
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** rutass adicionales para buscar para cabeceras
  - **\-static|\-shared** enlazar con librerías estáticas/compartidas
- - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
+ - **\-gt&lt;name&gt;** enlazar con el controlador GT GT&lt;name&gt;, se puede repetir para enlazar más GTs\. El primero de ellos será el GT por defecto en tiempo de ejecución\.
  - **\-inc\[\-\]** habilita modo de compilación incremental
  - **\-hbexe** crea ejecutable \(por defecto\)
  - **\-hblib** crear librería estática
@@ -67,7 +67,7 @@ Opciones:
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** incrustar manifiesto &lt;file&gt; en ejecutable/lib dinámica \(sólo Windows\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
- - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; as password when signing executable \(Windows and Darwin only\)
+ - **\-signpw=&lt;pw&gt;** utilice &lt;pw&gt; como contraseña cuando firme el ejecutable \(sólo Windows y Darwin\)
  - **\-instfile=&lt;g:file&gt;** anadir &lt;archivo&gt; a la lista de archivos que desea copiar a la ruta especificada por la opción \-instpath\. &lt;g&gt; es un grupo opcional de copia \(distingue mayúsculas y minúsculas\), debe haber al menos dos caracteres\. En caso de que no se especifica &lt;archivo&gt;, la lista de archivos en ese grupo se vaciará\.
  - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copia destino a ruta de instalación incluso si está actualizado
@@ -139,7 +139,7 @@ Opciones:
  - **\-pi=&lt;filename&gt;** pasar archivo de entrada a plugins
  - **\-pflag=&lt;f&gt;** pasar solo bandera para plugins
   
-Options below are available on command\-line:  
+Las siguientes opciones están disponibles en línea de comandos:  
 
 
  - **\-target=&lt;script&gt;** especifica un nuevo destino de construcción\. &lt;script&gt; puede ser \.prg \(o sin extensión\) o \.hbp archivo\. Tenga en cuenta que los archivos \.hbp son automáticamente considerados como destinos separados\.
@@ -237,7 +237,7 @@ Files:
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
- - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
+ - **\*\.hbm** colección de opciones\. Puede ser utilizada para recoger opciones por defecto en un archivo e incluirlo dentro de un archivo de proyecto\. Utiliza el mismo formato que los archivos \.hbp\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
@@ -302,7 +302,7 @@ Filters \(you can combine and/or negate them\):
 
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
- - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
+ - **\{&lt;cpu&gt;\}** CPU destino\. &lt;cpu&gt; puede ser una de: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
  - **\{mt\}** target is multi\-threaded \(see \-mt option\)
  - **\{st\}** target is single\-threaded \(see \-st option\)
@@ -312,16 +312,16 @@ Filters \(you can combine and/or negate them\):
  - **\{nodebug\}** La depuración a nivel C está desactivada \(ver la opción \-debug\-\)
  - **\{shared\}** shared build \(see \-shared and related options\)
  - **\{static\}** static build \(see \-static and related options\)
- - **\{lngcpp\}** forced C\+\+ mode \(see \-cpp option\)
- - **\{lngc\}** forced C mode \(see \-cpp\- option\)
+ - **\{lngcpp\}** modo C\+\+ forzado \(ver la opción \-cpp\)
+ - **\{lngc\}** modo C forzado \(ver la opción \-cpp\-\)
  - **\{winuni\}** Modo UNICODE \(WIDE\) de Windows \(ver la opción \-winuni\)
- - **\{winansi\}** Windows ANSI mode \(see \-winuni\- option\)
+ - **\{winansi\}** modo ANSI de Windows \(ver la opción \-winuni\-\)
  - **\{unix\}** target platform is \*nix compatible \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** la plataforma de destino es compatible con Windows \(win, wce\)
- - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
+ - **\{allgcc\}** el compilador de C de destino pertenece a la familia gcc \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
  - **\{allmingw\}** el compilador de C de destino es mingw\* \(mingw, mingw64, mingwarm\)
  - **\{allmsvc\}** el compilador de C de destino es msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
- - **\{allbcc\}** target C compiler is bcc\* \(bcc, bcc64\)
+ - **\{allbcc\}** el compilador de C de destino es bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** target C compiler is pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** target C compiler is icc\* \(icc, iccia64\)
  - **\{hb10\}** Harbour 1\.0\.x compatibility mode \(see \-hb10 option\)
@@ -359,15 +359,15 @@ Environment variables:
 
 
  - **HBMK\_OPTIONS** accepts any options as if they were passed in the beginning of the command\-line
- - **HB\_PLATFORM** accepts same values as \-plat= option
- - **HB\_COMPILER** accepts same values as \-comp= option
- - **HB\_CPU** accepts same values as \-cpu= option
- - **HB\_BUILD\_NAME** accepts same values as \-build= option
- - **HB\_LANG** accepts same values as \-lang= option
+ - **HB\_PLATFORM** admite los mismos valores que la opción \-plat=
+ - **HB\_COMPILER** admite los mismos valores que la opción \-comp=
+ - **HB\_CPU** admite los mismos valores que la opción \-cpu=
+ - **HB\_BUILD\_NAME** admite los mismos valores que la opción \-build=
+ - **HB\_LANG** admite los mismos valores que la opción \-lang=
  - **HB\_USER\_LIBS** acepta los mismos valores \(separados por espacios\) que la opción \-l
  - **HB\_USER\_LIBPATHS** acepta los mismos valores \(separados por espacios\) que la opción \-L
- - **HB\_USER\_PRGFLAGS** options to be passed to Harbour compiler \(before command\-line options\)
- - **HB\_USER\_CFLAGS** options to be passed to C compiler \(before command\-line options\)
+ - **HB\_USER\_PRGFLAGS** opciones para pasar al compilador Harbour \(antes de las opciones de línea de comandos\)
+ - **HB\_USER\_CFLAGS** opciones para pasar al compilador de C \(antes de las opciones de línea de comandos\)
  - **HB\_USER\_RESFLAGS** options to be passed to resource compiler \(before command\-line options\) \(Windows only\)
  - **HB\_USER\_LDFLAGS** options to be passed to linker \(executable\) \(before command\-line options\)
  - **HB\_USER\_DFLAGS** options to be passed to linker \(dynamic library\) \(before command\-line options\)
@@ -469,7 +469,7 @@ Add a Windows resource input file to the project\.
  - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
 Add a binary object file to the project\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, cFileName, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
-Add a file to be installed, with an optional \-instpath= group name\.
+Añadir un archivo para instalar, con un nombre de grupo \-instpath= opcional\.
  - **hbmk\_OutStd\( hbmk, cText \) \-&gt; NIL**  
 Output text to stdout\.
  - **hbmk\_OutErr\( hbmk, cText \) \-&gt; NIL**  
@@ -481,13 +481,13 @@ Output text to stderr without any formatting\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Evaluate hbmk2 macro expression\.
  - **hbmk\_FNameEscape\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
-Escape/quote filename for using it as external command parameter\.
+El nombre de archivo tiene que estar entrecomillado para usarlo como parámetro de comando externo\.
  - **hbmk\_PathSepToTarget\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
 Convert filename to the format required for the target toolchain\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Convert filename to have forward slash directory separators\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
-Return relative path of \-workdir= value from current working directory\.
+Devolver la ruta relativa al valor de \-workdir= para el directorio de trabajo actual\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
 Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
@@ -506,7 +506,7 @@ Plugin variables:
 
  - **"apiver"** API version as an integer
  - **"cSTATE"** callback state\. Can be: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
- - **"params"** array of parameters passed to plugins via \-pflag=/pi= options or having an extension registered via hbmk\_Register\_Input\_File\_Extension\(\)
+ - **"params"** matriz de parámetros pasada al plugin vía opción \-pflag=/pi= o que tenga una extensión registrada vía hbmk\_Register\_Input\_File\_Extension\(\)
  - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
  - **"cPLAT"** \-plat value
  - **"cCOMP"** \-comp value
@@ -556,9 +556,9 @@ Unload package\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) not mapped to script\.
 
 
 Examples to start with hbmk2:
@@ -590,7 +590,7 @@ $ hbmk2 mymain\.prg myfuncs\.prg \-inc
 $ hbmk2 myapp\.hbp
  - **To build an application using incremental mode**  
 $ hbmk2 myapp\.hbp \-inc
- - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
+ - **Para construir una aplicación que utilice un paquete de contribuciones o de terceros que incorporen un archivo \.hbc**  
 $ hbmk2 myapp\.prg hbct\.hbc
  - **To build an application which uses a raw library**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
@@ -607,7 +607,7 @@ Examples to build a Harbour static library:
 
  - **To build library 'mylib' from sources**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **To build library 'mylib' from sources using incremental mode**  
+ - **Construir la biblioteca 'mylib' desde el código fuente usando el modo incremental**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Exit codes \("errorlevels"\):  
@@ -648,7 +648,7 @@ Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&
   - Most \.hbc lines \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) and corresponding command\-line parameters will accept macro variables\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.
   - Tambien acepta Opciones de macros sustitución de comandos\. Incluya comando dentro de \`\`, y, si el comando contiene espacios, también entre comillas dobles\. F\.e\. "\-cflag==\`wx\-config \-cflags\`", o ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
-  - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
+  - Bibliotecas y archivos objeto construidos con/para CA\-Cl\*pper no funcionarán con ningún compilador/plataforma soportados\.
   - Defaults and feature support may vary by platform/compiler\.
   - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.

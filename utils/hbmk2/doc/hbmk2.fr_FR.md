@@ -555,9 +555,9 @@ Unload package\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) not mapped to script\.
 
 
 Examples to start with hbmk2:

@@ -6,7 +6,7 @@ Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor
 
 Használat:  
   
-  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
+  hbrun &lt;fájl\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;kapcsoló&gt; \[&lt;parameter\[s\]&gt;\]  
   
 Description:  
 
@@ -19,12 +19,12 @@ Options below are available on command\-line:
  - **\-\-hb:debug** enable script debugging
 
 
- - **\-help** this help
+ - **\-help** ez a súgó
  - **\-viewhelp** long help in text viewer
  - **\-longhelp** teljes súgó
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
   
-Files:  
+Fájlok:  
 
 
  - **\*\.hb** Harbour script
@@ -39,7 +39,7 @@ Predefined constants in sources:
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, stb\.
   
 Environment variables:  
 
@@ -66,9 +66,9 @@ Unload package\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) not mapped to script\.
   
 Megjegyzések:  
 
@@ -110,7 +110,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Szerző:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 

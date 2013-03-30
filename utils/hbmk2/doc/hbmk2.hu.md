@@ -5,7 +5,7 @@ Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor
 
 Használat:  
   
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[kapcsolók\] \[&lt;szkript\[ek\]&gt;\] &lt;források\[ok\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Description:  
 
@@ -233,7 +233,7 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **hblib\*|\*hblib** mode \-hblib
  - **hbdyn\*|\*hbdyn** mode \-hbdyn
   
-Files:  
+Fájlok:  
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
@@ -253,7 +253,7 @@ Files:
  - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
   
-Macro variables:  
+Makró változók:  
 
 
  - **$\{hb\_root\}** directory of hbmk2
@@ -265,11 +265,11 @@ Macro variables:
  - **$\{hb\_tempdir\}** OS directory for temporary files
  - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
  - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
- - **$\{hb\_plat\}** selected platform
+ - **$\{hb\_plat\}** kiválasztott platform
  - **$\{hb\_comp\}** selected C compiler
  - **$\{hb\_comp\_ver\}** C compiler version
  - **$\{hb\_build\}** build name
- - **$\{hb\_cpu\}** selected CPU
+ - **$\{hb\_cpu\}** kiválasztott CPU
  - **$\{hb\_work\}** default base workdir name
  - **$\{hb\_workdynsub\}** default workdir subdirectory for dynamic library targets
  - **$\{hb\_dynprefix\}** dynamic library prefix
@@ -345,7 +345,7 @@ Predefined constants in sources:
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, stb\.
 
 
 Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
@@ -427,23 +427,23 @@ Environment variables:
  - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
  - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
  - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
- - **cpp=** ugyanaz mint \-cpp= kapcsoló
- - **warn=** ugyanaz mint \-warn= kapcsoló
- - **compr=** ugyanaz mint \-compr= kapcsoló
- - **head=** ugyanaz mint \-head= kapcsoló
+ - **cpp=** ugyanaz, mint \-cpp= kapcsoló
+ - **warn=** ugyanaz, mint \-warn= kapcsoló
+ - **compr=** ugyanaz, mint \-compr= kapcsoló
+ - **head=** ugyanaz, mint \-head= kapcsoló
  - **plugins=** space separated list of hbmk2 plugins to load
- - **gt=&lt;name&gt;** ugyanaz mint \-gt&lt;name&gt; kapcsoló
+ - **gt=&lt;name&gt;** ugyanaz, mint \-gt&lt;name&gt; kapcsoló
  - **gtdef=&lt;name&gt;** set the default GT to be used
- - **env=** ugyanaz mint \-env: kapcsoló
- - **deppkgname=** ugyanaz mint \-deppkgname= kapcsoló
- - **depkeyhead=** ugyanaz mint \-depkeyhead= kapcsoló
- - **depoptional=** ugyanaz mint \-depoptional= kapcsoló
- - **depcontrol=** ugyanaz mint \-depcontrol= kapcsoló
- - **depincroot=** ugyanaz mint \-depincroot= kapcsoló
- - **depincpath=** ugyanaz mint \-depincpath= kapcsoló
- - **depincpathlocal=** ugyanaz mint \-depincpathlocal= kapcsoló
- - **depimplibs=** ugyanaz mint \-depimplibs= kapcsoló
- - **depimplibd=** ugyanaz mint \-depimplibd= kapcsoló
+ - **env=** ugyanaz, mint \-env: kapcsoló
+ - **deppkgname=** ugyanaz, mint \-deppkgname= kapcsoló
+ - **depkeyhead=** ugyanaz, mint \-depkeyhead= kapcsoló
+ - **depoptional=** ugyanaz, mint \-depoptional= kapcsoló
+ - **depcontrol=** ugyanaz, mint \-depcontrol= kapcsoló
+ - **depincroot=** ugyanaz, mint \-depincroot= kapcsoló
+ - **depincpath=** ugyanaz, mint \-depincpath= kapcsoló
+ - **depincpathlocal=** ugyanaz, mint \-depincpathlocal= kapcsoló
+ - **depimplibs=** ugyanaz, mint \-depimplibs= kapcsoló
+ - **depimplibd=** ugyanaz, mint \-depimplibd= kapcsoló
  - **name=** package name
  - **description=** package description
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
@@ -556,9 +556,9 @@ Unload package\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) not mapped to script\.
 
 
 Examples to start with hbmk2:
@@ -614,20 +614,20 @@ Exit codes \("errorlevels"\):
 
 
  - **0** no error
- - **1** unknown platform
- - **2** unknown compiler
+ - **1** ismeretlen platform
+ - **2** ismeretlen fordítóprogram
  - **3** failed Harbour detection
  - **5** failed stub creation
  - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
  - **7** failed in final assembly \(linker or library manager\)
  - **8** unsupported
  - **9** failed to create working directory
- - **19** help
+ - **19** súgó
  - **10** dependency missing or disabled
- - **20** plugin initialization
- - **30** too deep nesting
+ - **20** beépülő\-modul inicializáció
+ - **30** túl mély rekurzió
  - **50** stop requested
- - **&lt;other&gt;** when \-run option is used, the exit code will be the one returned by the target executable
+ - **&lt;egyéb&gt;** when \-run option is used, the exit code will be the one returned by the target executable
   
 Megjegyzések:  
 
@@ -712,7 +712,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Szerző:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 
