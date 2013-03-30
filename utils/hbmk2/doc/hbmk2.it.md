@@ -323,10 +323,10 @@ Filters \(you can combine and/or negate them\):
  - **\{allbcc\}** target C compiler is bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** il compilatore dell'eseguibile C è pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** il compilatore dell'eseguibile C è icc\* \(icc, iccia64\)
- - **\{hb10\}** modalità di comaptibilità Harbour 1\.0\.x \( vedi l'opzione \-hb10\)
- - **\{hb20\}** modalità di comaptibilità Harbour 2\.0\.x \( vedi l'opzione \-hb20\)
- - **\{hb30\}** modalità di comaptibilità Harbour 3\.0\.x \( vedi l'opzione \-hb30\)
- - **\{xhb\}** modalità xhb \( vedi l'opzione \-xhb\)
+ - **\{hb10\}** modalità di comaptibilità Harbour 1\.0\.x \(vedi l'opzione \-hb10\)
+ - **\{hb20\}** modalità di comaptibilità Harbour 2\.0\.x \(vedi l'opzione \-hb20\)
+ - **\{hb30\}** modalità di comaptibilità Harbour 3\.0\.x \(vedi l'opzione \-hb30\)
+ - **\{xhb\}** modalità xhb \(vedi l'opzione \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** filter will pass if &lt;file&gt; or &lt;dir&gt; name exists on disk\.
  - **\{MACRO\}** filter will pass if $\{MACRO\} value is not empty and not equal to '0' or 'no' \(case insensitive\)
  - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.

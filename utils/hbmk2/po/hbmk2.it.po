@@ -2,12 +2,13 @@
 # 
 # Translators:
 # Giovanni Di Maria <calimero22@yahoo.it>, 2013.
+#  <harbour@syenar.net>, 2013.
 #  <m.lacecilia@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-29 23:36+0000\n"
-"Last-Translator: mlacecilia <m.lacecilia@gmail.com>\n"
+"PO-Revision-Date: 2013-03-30 00:14+0000\n"
+"Last-Translator: hbtest <harbour@syenar.net>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3253,17 +3254,17 @@ msgstr "il compilatore dell'eseguibile C è pocc* (pocc, pocc64, poccarm)"
 #: hbmk2.prg:16072
 #, c-format
 msgid "Harbour 1.0.x compatibility mode (see -hb10 option)"
-msgstr "modalità di comaptibilità Harbour 1.0.x ( vedi l'opzione -hb10)"
+msgstr "modalità di comaptibilità Harbour 1.0.x (vedi l'opzione -hb10)"
 
 #: hbmk2.prg:16072
 #, c-format
 msgid "Harbour 2.0.x compatibility mode (see -hb20 option)"
-msgstr "modalità di comaptibilità Harbour 2.0.x ( vedi l'opzione -hb20)"
+msgstr "modalità di comaptibilità Harbour 2.0.x (vedi l'opzione -hb20)"
 
 #: hbmk2.prg:16072
 #, c-format
 msgid "Harbour 3.0.x compatibility mode (see -hb30 option)"
-msgstr "modalità di comaptibilità Harbour 3.0.x ( vedi l'opzione -hb30)"
+msgstr "modalità di comaptibilità Harbour 3.0.x (vedi l'opzione -hb30)"
 
 #: hbmk2.prg:16144
 #, c-format
@@ -3385,7 +3386,7 @@ msgstr "nome completo del file utilizzato"
 #: hbmk2.prg:16072
 #, c-format
 msgid "xhb mode (see -xhb option)"
-msgstr "modalità xhb ( vedi l'opzione -xhb)"
+msgstr "modalità xhb (vedi l'opzione -xhb)"
 
 #: hbmk2.prg:16072
 #, c-format
