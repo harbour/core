@@ -2,6 +2,7 @@ Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-28 03:24\)
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
+Traduzione \(it\): \(inserisci qui il tuo nome\)  
 
 Sintassi:  
   
@@ -19,9 +20,9 @@ Options below are available on command\-line:
 
 
  - **\-help** questo aiuto
- - **\-viewhelp** long help in text viewer
- - **\-longhelp** long help
- - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
+ - **\-viewhelp** Help esteso nel visualizzatore di testo
+ - **\-longhelp** aiuto esteso
+ - **\-longhelpmd** Help esteso in formato [Markdown](http://daringfireball.net/projects/markdown/)
   
 Files:  
 
@@ -57,7 +58,7 @@ Load Harbour header\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Unload Harbour header\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Display list of loaded Harbour header\.
+Visualizza l'elenco di intestazione di Harbour caricato\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carica un pacchetto\. Simile alla direttiva PP \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  

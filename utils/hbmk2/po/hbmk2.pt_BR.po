@@ -1,11 +1,12 @@
 # 
 # Translators:
+# Sami Laham <sami@laham.com.br>, 2013.
 # SAMI lAHAM <sami@laham.com.br>, 2013.
 # SAMI LAHAM <sami@laham.com.br>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 03:20+0000\n"
+"PO-Revision-Date: 2013-03-30 05:19+0000\n"
 "Last-Translator: SAMI <sami@laham.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +134,7 @@ msgstr ""
 msgid ""
 "when <depname> dependency was detected in a location configured by "
 "-depincpathlocal= option"
-msgstr ""
+msgstr "quando dependência <depname> foi detectada em um local configurado pela opção -depincpathlocal"
 
 #: hbmk2.prg:16326
 #, c-format
@@ -913,7 +914,7 @@ msgstr "adicione espaços para separar a lista de bibliotecas (veja mais opçõe
 #: hbmk2.prg:16180
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
-msgstr "quando <depname> dependência foi detectada (disponível nos fontes C)"
+msgstr "quando dependência <depname> foi detectada (disponível nos fontes C )"
 
 #: hbmk2.prg:16242
 #, c-format
@@ -973,7 +974,7 @@ msgstr ""
 #: hbmk2.prg:7748
 #, c-format
 msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
-msgstr ""
+msgstr "Atenção: Parâmetro não suportável: %1$s. Use no lugar a opção  '%2$s'."
 
 #: hbmk2.prg:8111
 #, c-format
@@ -1008,7 +1009,7 @@ msgstr ""
 #: hbmk2.prg:15980
 #, c-format
 msgid "options to be passed to C compiler (before command-line options)"
-msgstr ""
+msgstr "opções a serem passados ​​para o compilador C (antes da linha de comando)"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -1880,7 +1881,7 @@ msgid ""
 "ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI "
 "calls are detected, when '%3$s' [*] is automatically selected (except for "
 "INIT PROCEDUREs)."
-msgstr ""
+msgstr "%1$s arquivo passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb  serão pesquisados nessa ordem. arquivos  .dbf  serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Nota, para Scripts Harbour, a pagina de códigos  \"codepage\" será em  UTF-8 por padrão. O nucleo padrão de cabeçalhos 'hb.ch' será automaticamente incluido. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é  '%2$s' , a menos que as chamadasCUI de tela cheia seja detectadas, quando  '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\" )."
 
 #: hbmk2.prg:15829
 #, c-format
@@ -1904,7 +1905,7 @@ msgid ""
 "when <hbcname>.hbc package is linked to the target. The value is the "
 "version= value from the .hbc file, converted to a decimal number, which is "
 "'1', if not specified. (available in Harbour sources)"
-msgstr ""
+msgstr "quando o pacote <hbcname>.hbc está linkado ao alvo. O valor  \"version=\" é igual ao da versão do arquivo .hbc, convertido para numero decimal que é  '1', se não especificado. (disponível nos fontes do Harbour)"
 
 #: hbmk2.prg:16326
 #, c-format
@@ -2420,7 +2421,7 @@ msgstr ""
 msgid ""
 "when an .hbx source file is present in a project (available in Harbour "
 "sources)"
-msgstr ""
+msgstr "quando um arquivo  .hbx está presente em um projeto (disponível nos fontes do Harbour) "
 
 #: hbmk2.prg:15651
 #, c-format

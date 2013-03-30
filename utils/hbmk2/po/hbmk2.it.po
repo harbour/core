@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 00:14+0000\n"
-"Last-Translator: hbtest <harbour@syenar.net>\n"
+"PO-Revision-Date: 2013-03-30 09:37+0000\n"
+"Last-Translator: calimero22 <calimero22@yahoo.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +257,7 @@ msgstr ""
 msgid ""
 "set C compiler warning level\n"
 "<lev> can be: max, yes, low, no, def (default: yes)"
-msgstr ""
+msgstr "seleziona il livello di avviso del compilatore C. <lev> può essere: max, yes, low, no, def (default: yes)"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -297,7 +297,7 @@ msgstr "Puoi usare i tasti <Alt+V> nella shell interativa di Harbour per incolla
 #: hbmk2.prg:16057
 #, c-format
 msgid "Harbour dynamic library directory"
-msgstr ""
+msgstr "Cartella di Harbour della libreria dinamica"
 
 #: hbmk2.prg:2147
 #, c-format
@@ -337,12 +337,12 @@ msgstr "Attenzione: nome della dipendenza sconosciuto: %1$s"
 #: hbmk2.prg:15931 hbmk2.prg:15931 hbmk2.prg:15931
 #, c-format
 msgid "mode %1$s (emulate Clipper linker)"
-msgstr ""
+msgstr "modo %1$s (emulazione linker di Clipper)"
 
 #: hbmk2.prg:16057
 #, c-format
 msgid "Harbour static library directory"
-msgstr ""
+msgstr "Cartella di Harbour della libreria statica"
 
 #: hbmk2.prg:2188
 #, c-format
@@ -467,7 +467,7 @@ msgstr ""
 #: hbmk2.prg:8030
 #, c-format
 msgid "Warning: No import library source was specified"
-msgstr ""
+msgstr "Attenzione: Non è stato specificata alcuna libreria sorgente di importazione"
 
 #: hbmk2.prg:8019
 #, c-format
@@ -487,7 +487,7 @@ msgstr ""
 #: hbmk2.prg:1821
 #, c-format
 msgid "Autodetected platform: %1$s"
-msgstr ""
+msgstr "Piattaforma rilevata: %1$s"
 
 #: hbmk2.prg:1677
 #, c-format
@@ -614,7 +614,7 @@ msgstr ""
 #: hbmk2.prg:15829
 #, c-format
 msgid "show error result as human readable text on exit"
-msgstr ""
+msgstr "mostra gli errori all'uscita come testo leggibile"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -809,12 +809,12 @@ msgstr ""
 #: hbmk2.prg:15723
 #, c-format
 msgid "enable/disable incremental build mode (default: disabled)"
-msgstr ""
+msgstr "abilita/disabilita la compilazione incrementale (default: disabilitata)"
 
 #: hbmk2.prg:15829
 #, c-format
 msgid "stop without doing anything and display <text> if specified"
-msgstr ""
+msgstr "stop senza alcuna azione e visualizzazione di <text> se specificato"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -904,7 +904,7 @@ msgstr ""
 #: hbmk2.prg:16101
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
-msgstr ""
+msgstr ".hbc direttive (essi dovrebbero essere scritte in righe separate):"
 
 #: hbmk2.prg:16169
 #, c-format
@@ -994,7 +994,7 @@ msgstr ""
 #: hbmk2.prg:15829
 #, c-format
 msgid "do not add extra list of system libraries to default library list"
-msgstr ""
+msgstr "non aggiungere un'ulteriore elenco di librerie di sistema alla lista della libreria di default"
 
 #: hbmk2.prg:15685
 #, c-format
@@ -1009,7 +1009,7 @@ msgstr ""
 #: hbmk2.prg:15980
 #, c-format
 msgid "options to be passed to C compiler (before command-line options)"
-msgstr ""
+msgstr "opzioni da passare al compilatore C (prima delle opzioni nella riga di comando)"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -1084,7 +1084,7 @@ msgstr ""
 #: hbmk2.prg:2176
 #, c-format
 msgid "Autodetected C compiler: %1$s"
-msgstr ""
+msgstr "Compilatore C rilevato: %1$s"
 
 #: hbmk2.prg:3303 hbmk2.prg:3526 hbmk2.prg:11042
 #, c-format
@@ -1109,7 +1109,7 @@ msgstr ""
 #: hbmk2.prg:5911
 #, c-format
 msgid "Compiling Harbour sources..."
-msgstr ""
+msgstr "Compilazione dei sorgenti Harbour in corso..."
 
 #: hbmk2.prg:5907
 #, c-format
@@ -1174,7 +1174,7 @@ msgstr ""
 #: hbmk2.prg:6603
 #, c-format
 msgid "Compiling resources..."
-msgstr ""
+msgstr "Compilazione risorse in corso..."
 
 #: hbmk2.prg:2180
 #, c-format
@@ -1222,12 +1222,12 @@ msgstr ""
 #: hbmk2.prg:10812
 #, c-format
 msgid "%1$s"
-msgstr ""
+msgstr "%1$s"
 
 #: hbmk2.prg:6738
 #, c-format
 msgid "Compiling..."
-msgstr ""
+msgstr "Compilazione in corso..."
 
 #: hbmk2.prg:6802
 #, c-format
@@ -1396,7 +1396,7 @@ msgstr ""
 #: hbmk2.prg:15623
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
-msgstr ""
+msgstr "Traduzione (%1$s): (inserisci qui il tuo nome)"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -1436,7 +1436,7 @@ msgstr ""
 #: hbmk2.prg:15882
 #, c-format
 msgid "output Harbour dynamic library directory"
-msgstr ""
+msgstr "cartella di output di Harbour della libreria dinamica"
 
 #: hbmk2.prg:9474
 #, c-format
@@ -1451,7 +1451,7 @@ msgstr ""
 #: hbmk2.prg:9030
 #, c-format
 msgid "Error: Missing dependency: %1$s"
-msgstr ""
+msgstr "Errore: Dipendenze omesse: %1$s"
 
 #: hbmk2.prg:16280
 #, c-format
@@ -1964,7 +1964,7 @@ msgstr "Attenzione: %1$s"
 #: hbmk2.prg:12440
 #, c-format
 msgid "Error: %1$s"
-msgstr ""
+msgstr "Errore: %1$s"
 
 #: hbmk2.prg:12171
 #, c-format
@@ -1974,7 +1974,7 @@ msgstr ""
 #: hbmk2.prg:12354
 #, c-format
 msgid "Created .hbl file '%1$s'"
-msgstr ""
+msgstr "File .hbl creato '%1$s'"
 
 #: hbmk2.prg:16005
 #, c-format
@@ -1994,7 +1994,7 @@ msgid ""
 "they are automatically added as needed. If <libname> starts with a '-' "
 "character, the library will be removed from the list of libraries at link "
 "time."
-msgstr ""
+msgstr "Il link con la libreria <libname>. <libname> dovrebbe essere senza percorso, estensione e prefisso 'lib' (a meno che non faccia parte del nome). Non aggiungere librerie Harbour di base, esse vengono aggiunte automaticamente, se necessario. Se <libname> inizia con il carattere '-', la libreria verrà rimossa dalla lista delle librerie durante la fase del link."
 
 #: hbmk2.prg:16326
 #, c-format
@@ -2185,7 +2185,7 @@ msgstr ""
 #: hbmk2.prg:15829
 #, c-format
 msgid "suppress all screen messages"
-msgstr ""
+msgstr "elimina tutti i messaggi sullo schermo"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -2215,12 +2215,12 @@ msgstr ""
 #: hbmk2.prg:15882 hbmk2.prg:15891
 #, c-format
 msgid "long help in text viewer"
-msgstr ""
+msgstr "Help esteso nel visualizzatore di testo"
 
 #: hbmk2.prg:15882 hbmk2.prg:15891
 #, c-format
 msgid "long help in Markdown format"
-msgstr ""
+msgstr "Help esteso in formato Markdown"
 
 #: hbmk2.prg:15882
 #, c-format
@@ -2259,7 +2259,7 @@ msgstr ""
 msgid ""
 "options to be passed to resource compiler (before command-line options) "
 "(Windows only)"
-msgstr ""
+msgstr "opzioni da passare al compilatore di risorse (prima delle opzioni nella riga di comando) (solo Windows)"
 
 #: hbmk2.prg:16005
 #, c-format
@@ -2287,7 +2287,7 @@ msgstr ""
 msgid ""
 "returns the header directory of dependency <depname>, or '1' if it is not "
 "detected"
-msgstr ""
+msgstr "restituisce la directory di intestazione della dipendenza <depname> , o '1 ', se essa non viene rilevata"
 
 #: hbmk2.prg:16169
 #, c-format
@@ -2335,7 +2335,7 @@ msgstr ""
 #, c-format
 msgid ""
 "enable (or disable) single beep on successful exit, double beep on failure"
-msgstr ""
+msgstr "attiva (o disattiva) un beep singolo in caso di successo in uscita, doppio beep in caso di errore"
 
 #: hbmk2.prg:15882
 #, c-format
@@ -2436,12 +2436,12 @@ msgstr "Sconosciuto: %1$d"
 #: hbmk2.prg:15658
 #, c-format
 msgid "unsupported"
-msgstr ""
+msgstr "non sopportato"
 
 #: hbmk2.prg:15664
 #, c-format
 msgid "stop requested"
-msgstr ""
+msgstr "richiesta di stop"
 
 #: hbmk2.prg:15681 hbmk2.prg:16406 hbmk2.prg:16415
 #, c-format
@@ -2456,7 +2456,7 @@ msgstr "Opzioni:"
 #: hbmk2.prg:15882 hbmk2.prg:15891
 #, c-format
 msgid "long help"
-msgstr ""
+msgstr "aiuto esteso"
 
 #: hbmk2.prg:13210
 #, c-format
@@ -2561,7 +2561,7 @@ msgstr ""
 #: hbmk2.prg:15723
 #, c-format
 msgid "output file name"
-msgstr ""
+msgstr "nome del file di output"
 
 #: hbmk2.prg:16169
 #, c-format
@@ -2584,7 +2584,7 @@ msgstr "come l'opzione %1$s"
 #: hbmk2.prg:15726
 #, c-format
 msgid "more help"
-msgstr ""
+msgstr "più aiuto"
 
 #: hbmk2.prg:15882
 #, c-format
@@ -2648,7 +2648,7 @@ msgstr "Autore:"
 #: hbmk2.prg:15165 hbmk2.prg:15294 hbmk2.prg:15443
 #, c-format
 msgid "Saving as .hbp file: %1$s"
-msgstr ""
+msgstr "Memorizzazione come file .hbp %1$s"
 
 #: hbmk2.prg:15829
 #, c-format
@@ -2669,7 +2669,7 @@ msgstr ""
 msgid ""
 "Create Harbour header (in .hbx format) with all external symbols. Empty "
 "parameter will disable it."
-msgstr ""
+msgstr "Creare l'intestazione Harbour (in formato. HBX), con tutti i simboli esterni. Il parametro vuoto lo disattiva."
 
 #: hbmk2.prg:15829
 #, c-format
@@ -2753,7 +2753,7 @@ msgstr ""
 #: hbmk2.prg:16213
 #, c-format
 msgid "Display list of loaded Harbour header."
-msgstr ""
+msgstr "Visualizza l'elenco di intestazione di Harbour caricato."
 
 #: hbmk2.prg:16173
 #, c-format
@@ -2782,7 +2782,7 @@ msgstr ""
 #: hbmk2.prg:16195
 #, c-format
 msgid "when <depname> dependency was detected"
-msgstr ""
+msgstr "quando la dipendenza <depname> è stata rilevata"
 
 #: hbmk2.prg:16440
 #, c-format
@@ -2812,7 +2812,7 @@ msgstr ""
 #: hbmk2.prg:16280
 #, c-format
 msgid "%1$s option status"
-msgstr ""
+msgstr "%1$s stato dell'opzione"
 
 #: hbmk2.prg:16213
 #, c-format
@@ -2827,12 +2827,12 @@ msgstr ""
 #: hbmk2.prg:16242
 #, c-format
 msgid "Output text to stdout."
-msgstr ""
+msgstr "Invio del testo su stdout."
 
 #: hbmk2.prg:16242
 #, c-format
 msgid "Output text to stderr."
-msgstr ""
+msgstr "Invio del testo su stderr"
 
 #: hbmk2.prg:16415
 #, c-format
@@ -2887,7 +2887,7 @@ msgstr "piattaforma selezionata"
 #: hbmk2.prg:16057
 #, c-format
 msgid "dynamic library prefix"
-msgstr ""
+msgstr "prefisso della libreria dinamica"
 
 #: hbmk2.prg:15882
 #, c-format
@@ -2907,12 +2907,12 @@ msgstr ""
 #: hbmk2.prg:15829
 #, c-format
 msgid "force C++/C mode"
-msgstr ""
+msgstr "forza il modo C++/C"
 
 #: hbmk2.prg:15829
 #, c-format
 msgid "show commands executed"
-msgstr ""
+msgstr "mostra comandi eseguiti"
 
 #: hbmk2.prg:16014
 #, c-format
@@ -2937,7 +2937,7 @@ msgstr "Versione del compilatore C"
 #: hbmk2.prg:16057
 #, c-format
 msgid "dynamic library suffix"
-msgstr ""
+msgstr "suffisso della libreria dinamica"
 
 #: hbmk2.prg:15891
 #, c-format
@@ -2952,7 +2952,7 @@ msgstr ""
 #: hbmk2.prg:15882
 #, c-format
 msgid "specify a build name"
-msgstr ""
+msgstr "specificare un nome di compilazione"
 
 #: hbmk2.prg:16431
 #, c-format
@@ -2977,7 +2977,7 @@ msgstr ""
 #: hbmk2.prg:16435
 #, c-format
 msgid "Examples to build a Harbour static library:"
-msgstr ""
+msgstr "Esempi per la compilazione di una libreria statica Harbour:"
 
 #: hbmk2.prg:15833
 #, c-format

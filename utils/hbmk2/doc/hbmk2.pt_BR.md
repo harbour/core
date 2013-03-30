@@ -339,9 +339,9 @@ Predefined constants in sources:
 
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
- - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;depname&gt;** quando &lt;depname&gt; dependência foi detectada \(disponível nos fontes C\)
+ - **\_\_HBEXTREQ\_\_** quando um arquivo  \.hbx está presente em um projeto \(disponível nos fontes do Harbour\) 
+ - **HBMK\_HAS\_&lt;hbcname&gt;** quando o pacote &lt;hbcname&gt;\.hbc está linkado ao alvo\. O valor  "version=" é igual ao da versão do arquivo \.hbc, convertido para numero decimal que é  '1', se não especificado\. \(disponível nos fontes do Harbour\)
+ - **HBMK\_HAS\_&lt;depname&gt;** quando dependência &lt;depname&gt; foi detectada \(disponível nos fontes C \)
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
@@ -353,7 +353,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected
  - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
- - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** when &lt;depname&gt; dependency was detected in a location configured by \-depincpathlocal= option
+ - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** quando dependência &lt;depname&gt; foi detectada em um local configurado pela opção \-depincpathlocal
   
 Environment variables:  
 
@@ -367,7 +367,7 @@ Environment variables:
  - **HB\_USER\_LIBS** aceita os mesmos valores \(separados por espaços\) como opção \-l 
  - **HB\_USER\_LIBPATHS** aceita os mesmos valores \(separados por espaços\) como opção \-L 
  - **HB\_USER\_PRGFLAGS** opções a serem passados ​​para o compilador Harbour  \(antes da linha de comando\)
- - **HB\_USER\_CFLAGS** options to be passed to C compiler \(before command\-line options\)
+ - **HB\_USER\_CFLAGS** opções a serem passados ​​para o compilador C \(antes da linha de comando\)
  - **HB\_USER\_RESFLAGS** options to be passed to resource compiler \(before command\-line options\) \(Windows only\)
  - **HB\_USER\_LDFLAGS** options to be passed to linker \(executable\) \(before command\-line options\)
  - **HB\_USER\_DFLAGS** options to be passed to linker \(dynamic library\) \(before command\-line options\)
@@ -653,7 +653,7 @@ Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&g
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - \.hb, \.hrb or \.dbf arquivo passado como primeiro parâmetro irá rodar como Script Harbour\. Se o nome do arquivo não contiver componentes do "path", ele será procurado no diretório de trabalho atual e no "PATH"\.Se não é dada extensão, \.hb e \.hrb  serão pesquisados nessa ordem\. arquivos  \.dbf  serão abertos no modo compartilhado "shared" e o "shell" interativo Harbour será lançado\. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré\-compilados\. Nota, para Scripts Harbour, a pagina de códigos  "codepage" será em  UTF\-8 por padrão\. O nucleo padrão de cabeçalhos 'hb\.ch' será automaticamente incluido\. O formato da data será "aaaa\-mm\-dd" padrão "ISO"\. O Gt padrão é  'gtcgi' , a menos que as chamadasCUI de tela cheia seja detectadas, quando  'gtwin' \[\*\] será automaticamente selecionado \(exeto para "INIT PROCEDUREs" \)\.
   - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 

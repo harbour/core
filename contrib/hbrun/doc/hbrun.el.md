@@ -5,12 +5,12 @@ Copyright \(c\) 2003\-2007, Przemysław Czerpak
 
 Syntax:  
   
-  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
+hbrun &lt;αρχείο\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;επιλογή&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
   
 Description:  
 
 
-  hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
+  Το hbrun μπορεί να εκτελεί σενάρια Harbour  \(πηγαία ή προκατασκευασμένα\), και προσφέρει επίσης ένα διαλογικό περιβάλλον\.
   
 Options below are available on command\-line:  
 
@@ -18,16 +18,16 @@ Options below are available on command\-line:
  - **\-\-hb:debug** Ενεργοποίηση αποσφαλμάτωσης script
 
 
- - **\-help** this help
- - **\-viewhelp** long help in text viewer
+ - **\-help** η παρούσα βοήθεια
+ - **\-viewhelp** εκτεταμένη βοήθεια σε προβολή κειμένου
  - **\-longhelp** long help
- - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
+ - **\-longhelpmd** εκτεταμένη βοήθεια σε μορφή [Markdown](http://daringfireball.net/projects/markdown/)
   
 Files:  
 
 
- - **\*\.hb** Harbour script
- - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
+ - **\*\.hb** Σενάριο Harbour
+ - **\*\.hrb** Μεταφέρσιμο δυαδικό Harbour \(γνωστό και ως προκατασκευασμένο σενάριο\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun κατάλογος&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
@@ -76,7 +76,7 @@ Notes:
   - Μπορεί να χρησιμοποιηθεί ο συνδυασμός πλήκτρων &lt;Alt\+V&gt; στο διαδραστικό shell του Harbour για επικόληση από το πρόχειρο\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
-License:  
+Αδεια:  
 
 
   This program is free software; you can redistribute it and/or modify  
