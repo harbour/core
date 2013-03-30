@@ -16209,8 +16209,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hbshell_ext_load( <cPackageName> ) -> <lSuccess>"  , I_( "Load package. Similar to #request PP directive." ) }, ;
       { "hbshell_ext_unload( <cPackageName> ) -> <lSuccess>", I_( "Unload package." ) }, ;
       { "hbshell_ext_get_list() -> <aPackages>"             , I_( "List of loaded packages." ) }, ;
-      { "hbshell_DirBase() -> <cBaseDir>"                   , I_( "DirBase() not mapped to script." ) }, ;
-      { "hbshell_ProgName() -> <cPath>"                     , I_( "ProgName() not mapped to script." ) } }
+      { "hbshell_DirBase() -> <cBaseDir>"                   , I_( "hb_DirBase() not mapped to script." ) }, ;
+      { "hbshell_ProgName() -> <cPath>"                     , I_( "hb_ProgName() not mapped to script." ) } }
 #endif
 
    LOCAL aHdr_APIPlugin := { ;
