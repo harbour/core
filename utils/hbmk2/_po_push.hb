@@ -24,7 +24,7 @@ PROCEDURE Main( cLogin )
 
    ? "generating pot"
 
-   hb_run( hb_StrFormat( "harbour -q0 hbmk2.prg -j%1$s -i%2$s -s", cTemp, hb_DirSepToOS( hb_DirBase() + "../../include" )) )
+   hb_run( hb_StrFormat( "harbour -q0 %1$s -j%2$s -i%3$s -s", hb_DirBase() + "hbmk2.prg", cTemp, hb_DirSepToOS( hb_DirBase() + "../../include" )) )
 
    ? "saving locally"
 

@@ -43,6 +43,7 @@ ChangeLog.txt ident
 *.xml     text
 *.xsl     text
 *.y       text
+*.yml     text
 *.yyc     text
 *.yyh     text
 
