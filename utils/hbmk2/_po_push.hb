@@ -31,9 +31,13 @@ PROCEDURE Main( cLogin )
    FClose( hb_FTempCreateEx( @cTemp, , , ".pot" ) )
    FClose( hb_FTempCreateEx( @cTemp2 ) )
 
-   ? "generating pot"
+   ? "generating .pot"
 
    hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", cMain, cTemp ) )
+
+   ? "sorting .pot"
+
+   POT_Sort( cTemp )
 
    ? "saving locally"
 
@@ -78,3 +82,17 @@ STATIC FUNCTION GetJSON( cString )
    cString := Left( cString, RAt( "}", cString ) )
 
    RETURN cString
+
+STATIC FUNCTION POT_Sort( cFileName )
+
+   LOCAL aTrans
+   LOCAL cErrorMsg
+
+   IF ( aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg ) ) != NIL .AND. ;
+      __i18n_potArraySave( cFileName, __i18n_potArraySort( aTrans ), @cErrorMsg )
+      RETURN .T.
+   ENDIF
+
+   ? cErrorMsg
+
+   RETURN .F.

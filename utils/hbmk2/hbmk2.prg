@@ -15896,21 +15896,19 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-longhelp"          , I_( "long help" ) }, ;
       { "-longhelpmd"        , I_( "long help in Markdown format" ) } }
 
-   /* Internal option descriptions intentionally not marked as translatable */
    LOCAL aHdr_Opt_Internal := { ;
       "", ;
-      "Options below are internal/developer ones (compatibility not guaranteed):" }
+      I_( "Options below are internal/developer ones (compatibility not guaranteed):" ) }
 
-   /* Internal option descriptions intentionally not marked as translatable */
    LOCAL aLst_Opt_Internal := { ;
       NIL, ;
-      { "-debugtime"         , "measure time spent on the build" }, ;
-      { "-debuginc"          , "display internals of incremental build" }, ;
-      { "-debugstub"         , "display content of all internally generated source files" }, ;
-      { "-debugi18n"         , "display internals on translation file generation" }, ;
-      { "-debugdepd"         , "display internals of dependency detection" }, ;
-      { "-debugpars"         , "display all input parameters in processing order" }, ;
-      { "-debugrte"          , "generate a run-time error" } }
+      { "-debugtime"         , I_( "measure time spent on the build" ) }, ;
+      { "-debuginc"          , I_( "display internals of incremental build" ) }, ;
+      { "-debugstub"         , I_( "display content of all internally generated source files" ) }, ;
+      { "-debugi18n"         , I_( "display internals on translation file generation" ) }, ;
+      { "-debugdepd"         , I_( "display internals of dependency detection" ) }, ;
+      { "-debugpars"         , I_( "display all input parameters in processing order" ) }, ;
+      { "-debugrte"          , I_( "generate a run-time error" ) } }
 
    LOCAL aHdr_Opt_Self := { ;
       NIL, ;
