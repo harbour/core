@@ -1,12 +1,13 @@
 # 
 # Translators:
+#  <harbour@syenar.net>, 2013.
 # Sami Laham <sami@laham.com.br>, 2013.
 # SAMI lAHAM <sami@laham.com.br>, 2013.
 # SAMI LAHAM <sami@laham.com.br>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-31 12:45+0000\n"
+"PO-Revision-Date: 2013-03-31 12:57+0000\n"
 "Last-Translator: SAMI <sami@laham.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -1818,7 +1819,7 @@ msgstr "Blinker ECHO: %1$s"
 #: utils/hbmk2/hbmk2.prg:12810
 #, c-format
 msgid "VCS version command:"
-msgstr ""
+msgstr "VCS versão de comando:"
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
@@ -2042,17 +2043,17 @@ msgstr "Carregando projeto xhp (xMate): %1$s"
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "rebuild (in incremental build mode)"
-msgstr ""
+msgstr "recriar  (em modo incremental)"
 
 #: utils/hbmk2/hbmk2.prg:12483 utils/hbmk2/hbmk2.prg:12680
 #, c-format
 msgid "Import library creation command:"
-msgstr ""
+msgstr "comando de criação de bibliotecas de importação:"
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "force function/procedure to be linked"
-msgstr ""
+msgstr "forçar a linkagem da  função/procedure "
 
 #: utils/hbmk2/hbmk2.prg:15888
 #, c-format
@@ -2112,7 +2113,7 @@ msgstr "falhou na detecção Harbour"
 #: utils/hbmk2/hbmk2.prg:15667
 #, c-format
 msgid "dependency missing or disabled"
-msgstr ""
+msgstr "dependência em falta ou desativada"
 
 #: utils/hbmk2/hbmk2.prg:15729
 #, c-format
@@ -2925,12 +2926,12 @@ msgstr "%1$s valor"
 #: utils/hbmk2/hbmk2.prg:16286
 #, c-format
 msgid "see %1$s envvar"
-msgstr ""
+msgstr "veja %1$s envvar"
 
 #: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
 #, c-format
 msgid "see %1$s macro"
-msgstr ""
+msgstr "veja %1$s macro"
 
 #: utils/hbmk2/hbmk2.prg:16355
 #, c-format
@@ -2945,12 +2946,12 @@ msgstr "hb_DirBase() não mapeado para script."
 #: utils/hbmk2/hbmk2.prg:16206
 #, c-format
 msgid "Shell API available in Harbour scripts:"
-msgstr ""
+msgstr "Shell API disponível nos scripts em  Harbour :"
 
 #: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "Display list of loaded Harbour header."
-msgstr ""
+msgstr "Mostra a lista de cabeçalhos Harbour carregados."
 
 #: utils/hbmk2/hbmk2.prg:16179
 #, c-format
@@ -2978,12 +2979,12 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "'yes' = %1$s, 'no' = %2$s option"
-msgstr ""
+msgstr "opções 'yes' = %1$s, 'no' = %2$s"
 
 #: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Add a C++ input file to the project."
-msgstr ""
+msgstr "Adicionar um arquivo de entrada C++ ao projeto. "
 
 #: utils/hbmk2/hbmk2.prg:16201
 #, c-format
@@ -3128,7 +3129,7 @@ msgstr "diretório de saída"
 #: utils/hbmk2/hbmk2.prg:16412
 #, c-format
 msgid "To run a Harbour script"
-msgstr " Para executar un script Harbour"
+msgstr "Para executar un script Harbour"
 
 #: utils/hbmk2/hbmk2.prg:16063
 #, c-format
@@ -3198,7 +3199,7 @@ msgstr "ecoa texto na tela"
 #: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "directory of %1$s"
-msgstr "directório de  %1$s"
+msgstr "directório de %1$s"
 
 #: utils/hbmk2/hbmk2.prg:16063
 #, c-format
@@ -3414,7 +3415,7 @@ msgstr "nome completo que é usado em"
 #: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "xhb mode (see -xhb option)"
-msgstr "modo xhb  (veja opção -xhb)"
+msgstr "modo xhb (veja opção -xhb)"
 
 #: utils/hbmk2/hbmk2.prg:16103
 #, c-format

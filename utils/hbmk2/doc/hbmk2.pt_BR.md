@@ -32,7 +32,7 @@ Opções
  - **\-mt|\-st** linkar com suporte multi ou single\-thread na HVM
  - **\-gui|\-std** criar um executável GUI/console
  - **\-main=&lt;mainfunc&gt;** sobrescreva o nome da função/procedimento inicial
- - **\-request=&lt;func&gt;** force function/procedure to be linked
+ - **\-request=&lt;func&gt;** forçar a linkagem da  função/procedure 
  - **\-fullstatic** linkar com todas as bibliotecas estáticas
  - **\-pic\[\-\]** create position independent object code \(always enabled in \-hbdyn/\-hbdynvm modes\)
  - **\-\[full|fix\]shared** criar binário que faça uso da biblioteca compartilhada do Harbour com referência absoluta \(ou não\) \(padrão: 'fullshared' quando Harbour é instalado no local do sistema, caso contrário será 'fixshared'\) \(fix/full é somente para \*nix\)
@@ -101,7 +101,7 @@ Opções
  - **\-jobs=&lt;n&gt;** dispara &lt;n&gt; threads de compilação \(apenas plataformas multiprocessadas\)
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
- - **\-rebuild** rebuild \(in incremental build mode\)
+ - **\-rebuild** recriar  \(em modo incremental\)
  - **\-rebuildall** recriar com os sub\-projetos \(em modo incremental\)
  - **\-clean** compilação limpa \(em modo de compilação incremental\)
  - **\-workdir=&lt;dir&gt;** working directory  
@@ -257,7 +257,7 @@ Arquivos:
 Variáveis macro:  
 
 
- - **$\{hb\_root\}** directório de  hbmk2
+ - **$\{hb\_root\}** directório de hbmk2
  - **$\{hb\_dir\}** directory of the filename it is used in
  - **$\{hb\_dirname\}** diretório raiz do nome de arquivo é usado em
  - **$\{hb\_name\}** nomeie o nome de arquivo ele é usado \(sem diretório e extensão\)
@@ -328,7 +328,7 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{hb10\}** Harbour 1\.0\.x compatibility mode \(see \-hb10 option\)
  - **\{hb20\}** Harbour 2\.0\.x compatibility mode \(see \-hb20 option\)
  - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
- - **\{xhb\}** modo xhb  \(veja opção \-xhb\)
+ - **\{xhb\}** modo xhb \(veja opção \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** passará pelo filtro se o nome do arquivo  &lt;file&gt; ou  &lt;dir&gt; diretório existir no disco\.
  - **\{MACRO\}** passará pelo filtro se o valor $\{MACRO\} não for vazio e não for igual a zero '0' ou 'no' \(maiúsculas e minúsculas "case insensitive"\)
  - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
@@ -410,24 +410,24 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **dflags\+=** space separated list of values as in \-dflag\+= option
  - **pflags=** space separated list of values as in \-pflag= option
  - **psources=** space separated list of values as in \-pi= option
- - **gui=&lt;bool&gt;** 'yes' = \-gui, 'no' = \-std option
- - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st option
- - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- option
- - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static option
+ - **gui=&lt;bool&gt;** opções 'yes' = \-gui, 'no' = \-std
+ - **mt=&lt;bool&gt;** opções 'yes' = \-mt, 'no' = \-st
+ - **pic=&lt;bool&gt;** opções 'yes' = \-pic, 'no' = \-pic\-
+ - **shared=&lt;bool&gt;** opções 'yes' = \-shared, 'no' = \-static
  - **shareddef=&lt;bool&gt;** similar to shared=, but works only if shared/static mode was not set before
- - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static option
- - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- option
- - **optim=** 'yes' = \-optim, 'no' = \-optim\- option
- - **nulrdd=&lt;bool&gt;** 'yes' = \-nulrdd, 'no' = \-nulrdd\- option
- - **nodefgt=&lt;bool&gt;** 'yes' = \-nodefgt, 'no' = \-nodefgt\- option
- - **map=&lt;bool&gt;** 'yes' = \-map, 'no' = \-map\- option
- - **hbcppmm=&lt;bool&gt;** 'yes' = \-hbcpmm, 'no' = \-hbcpmm\- option
- - **implib=&lt;bool&gt;** 'yes' = \-implib, 'no' = \-implib\- option
- - **winuni=&lt;bool&gt;** 'yes' = \-winuni, 'no' = \-winuni\- option
- - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- option
- - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
- - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
- - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
+ - **fullstatic=&lt;bool&gt;** opções 'yes' = \-fullstatic, 'no' = \-static
+ - **debug=&lt;bool&gt;** opções 'yes' = \-debug, 'no' = \-debug\-
+ - **optim=** opções 'yes' = \-optim, 'no' = \-optim\-
+ - **nulrdd=&lt;bool&gt;** opções 'yes' = \-nulrdd, 'no' = \-nulrdd\-
+ - **nodefgt=&lt;bool&gt;** opções 'yes' = \-nodefgt, 'no' = \-nodefgt\-
+ - **map=&lt;bool&gt;** opções 'yes' = \-map, 'no' = \-map\-
+ - **hbcppmm=&lt;bool&gt;** opções 'yes' = \-hbcpmm, 'no' = \-hbcpmm\-
+ - **implib=&lt;bool&gt;** opções 'yes' = \-implib, 'no' = \-implib\-
+ - **winuni=&lt;bool&gt;** opções 'yes' = \-winuni, 'no' = \-winuni\-
+ - **strip=&lt;bool&gt;** opções 'yes' = \-strip, 'no' = \-strip\-
+ - **run=&lt;bool&gt;** opções 'yes' = \-run, 'no' = \-run\-
+ - **inc=&lt;bool&gt;** opções 'yes' = \-inc, 'no' = \-inc\-
+ - **safe=&lt;bool&gt;** opções 'yes' = \-safe, 'no' = \-safe\-
  - **cpp=** mesmo que \-cpp= opções
  - **warn=** mesmo que \-warn= opções
  - **compr=** mesmo que \-compr= opções
@@ -464,7 +464,7 @@ Add a Harbour input file to the project\.
  - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
 Adicionar um arquivo de entrada C ao projeto\. 
  - **hbmk\_AddInput\_CPP\( hbmk, cFileName \) \-&gt; NIL**  
-Add a C\+\+ input file to the project\.
+Adicionar um arquivo de entrada C\+\+ ao projeto\. 
  - **hbmk\_AddInput\_RC\( hbmk, cFileName \) \-&gt; NIL**  
 Add a Windows resource input file to the project\.
  - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
@@ -511,12 +511,12 @@ Plugin variables:
  - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
  - **"cPLAT"** \-plat valor
  - **"cCOMP"** \-comp valor
- - **"nCOMPVer"** see HB\_COMPILER\_VER envvar
+ - **"nCOMPVer"** veja HB\_COMPILER\_VER envvar
  - **"cCPU"** \-cpu valor
  - **"cBUILD"** \-build= valor
  - **"cOUTPUTNAME"** \-o valor
- - **"cTARGETNAME"** see $\{hb\_targetname\} macro
- - **"cTARGETTYPE"** see $\{hb\_targettype\} macro
+ - **"cTARGETNAME"** veja $\{hb\_targetname\} macro
+ - **"cTARGETTYPE"** veja $\{hb\_targettype\} macro
  - **"lREBUILD"** \-rebuild opções de status
  - **"lCLEAN"** \-clean opções de status
  - **"lDEBUG"** \-debug opções de status
@@ -530,14 +530,14 @@ Plugin variables:
  - **"lBEEP"** \-beep opções de status
  - **"lRUN"** \-run opções de status
  - **"lINC"** \-inc opções de status
- - **"cCCPATH"** see HB\_CCPATH envvar
- - **"cCCPREFIX"** see HB\_CCPREFIX envvar
- - **"cCCSUFFIX"** see HB\_CCSUFFIX envvar
- - **"cCCEXT"** see HB\_CCEXT envvar
+ - **"cCCPATH"** veja HB\_CCPATH envvar
+ - **"cCCPREFIX"** veja HB\_CCPREFIX envvar
+ - **"cCCSUFFIX"** veja HB\_CCSUFFIX envvar
+ - **"cCCEXT"** veja HB\_CCEXT envvar
  - **"cWorkDir"** \-workdir= valor
  - **"nExitCode"** Código de saída atual
   
-Shell API available in Harbour scripts:  
+Shell API disponível nos scripts em  Harbour :  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -549,7 +549,7 @@ Carregar cabeçalho "header"  Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar cabeçalho "header"  Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Display list of loaded Harbour header\.
+Mostra a lista de cabeçalhos Harbour carregados\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Load package\. Similar to \#request PP directive\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -567,7 +567,7 @@ Exemplos ta iniciar com  hbmk2:
 
  - **Para rodar o "shell" interativo  \(interpretador de comandos\)**  
 $ hbmk2 \.
- - ** Para executar un script Harbour**  
+ - **Para executar un script Harbour**  
 $ hbmk2 myscript\.hb \[&lt;parâmetro\[s\]&gt;\]
 
 
@@ -624,7 +624,7 @@ Códigos de saída \("errorlevels"\):
  - **8** não suportado
  - **9** Falhou na criação do diretório de trabalho
  - **19** ajuda
- - **10** dependency missing or disabled
+ - **10** dependência em falta ou desativada
  - **20** inicialização de plugin 
  - **30**  aninhamento muito profundo
  - **50** solicitação de parada

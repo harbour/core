@@ -46,7 +46,7 @@ Variáveis ​​de ambiente:
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
   
-Shell API available in Harbour scripts:  
+Shell API disponível nos scripts em  Harbour :  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -58,7 +58,7 @@ Carregar cabeçalho "header"  Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar cabeçalho "header"  Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Display list of loaded Harbour header\.
+Mostra a lista de cabeçalhos Harbour carregados\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Load package\. Similar to \#request PP directive\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
