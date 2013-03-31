@@ -69,8 +69,8 @@ Opciones:
  - **\-sign=&lt;key&gt;** firma del ejecutable con &lt;key&gt; \(solo en Windows y Darwin\)\. En Windows se usa signtool\.exe \(incluido en MS Windows SDK\) o posign\.exe \(incluido en Pelles C 7\), por ese orden, se detectan ambos automaticamente\.
  - **\-signpw=&lt;pw&gt;** utilice &lt;pw&gt; como contraseña cuando firme el ejecutable \(sólo Windows y Darwin\)
  - **\-instfile=&lt;g:file&gt;** anadir &lt;archivo&gt; a la lista de archivos que desea copiar a la ruta especificada por la opción \-instpath\. &lt;g&gt; es un grupo opcional de copia \(distingue mayúsculas y minúsculas\), debe haber al menos dos caracteres\. En caso de que no se especifica &lt;archivo&gt;, la lista de archivos en ese grupo se vaciará\.
- - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
- - **\-instforce\[\-\]** copia destino a ruta de instalación incluso si está actualizado
+ - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
+ - **\-instforce\[\-\]** copy target file\(s\) to install path even if already up to date
  - **\-depimplib\[\-\]** activar \(o desactivar\) la generación de Bibliotecas de Importación para fuentes de biblioteca de importación especificados en la opción \-depimplibs= \(por defecto: yes\)
  - **\-stop\[=&lt;text&gt;\]** parar sin hacer nada y mostrar &lt;text&gt; si se ha especificado
  - **\-echo=&lt;text&gt;** eco de texto en la pantalla
@@ -107,7 +107,7 @@ Opciones:
 \(por defecto: \.hbmk/&lt;plataforma&gt;/&lt;compilador&gt; \[\*\] en modo incremental, si no, directorio temporal del SO\)
 
 
- - **\-hbcontainer** objetivo virtual, no crea nada\. Útil para crear un \.hbp con el único propósito de hacer referencia a sub\-proyectos
+ - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
  - **\-hbimplib** crear librería de importación \(solo en Windows\)
 
 
@@ -142,10 +142,10 @@ Opciones:
 Las siguientes opciones están disponibles en línea de comandos:  
 
 
- - **\-target=&lt;script&gt;** especifica un nuevo destino de construcción\. &lt;script&gt; puede ser \.prg \(o sin extensión\) o \.hbp archivo\. Tenga en cuenta que los archivos \.hbp son automáticamente considerados como destinos separados\.
+ - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
 
 
- - **\-hbrun** ejecutar destino
+ - **\-hbrun** run build target
  - **\-hbraw** parar después de ejecutar compilador Harbour
  - **\-hbcmp|\-clipper** para después de la creación de los archivos objeto  
 crear un enlace/copia a hbmk2 para hbcmp/clipper resultará el mismo efecto
@@ -176,11 +176,11 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-xhp=&lt;file&gt;** convierte un proyecto \.xhp \(xMate\) en un archivo \.hbp
 
 
- - **\-\-hbdirbin** directorio de binarios de Harbour
- - **\-\-hbdirdyn** directorio de salida de librerías dinámicas de Harbour
- - **\-\-hbdirlib** directorio de salida de librerías estáticas de Harbour
- - **\-\-hbdirinc** directorio de cabeceras de Harbour
- - **\-\-hbinfo\[=nested\]** salida de información de la construcción de Harbour\. La salida es en formato JSON\. Las rutas incluidas siempre contienen barras\. Cada bloque JSON siempre es seguido por un byte 0x0A\.
+ - **\-\-hbdirbin** output Harbour binary directory to stdout
+ - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
+ - **\-\-hbdirlib** output Harbour static library directory to stdout
+ - **\-\-hbdirinc** output Harbour header directory to stdout
+ - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
 
 
  - **\-plat=&lt;platform&gt;** override default target platform \(default: automatic\)
@@ -243,7 +243,7 @@ Ficheros:
  - **hbmk\.hbc** archivo \.hbc estandar que es procesado automáticamente si está presente\. Posible\(s\) localizacion\(es\) \(en orden de preferencia\) \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **hbmk\.hbm** archivo \.hbm situado en el directorio de trabajo actual, que es procesado automáticamente antes que otras opciones
  - **$hb\_pkg\_dynlib\.hbm** archivo especial \.hbm incrustado en hbmk2\. Se encarga de la creación de una biblioteca dinámica \(al estilo de las contribuciones de Harbour\)
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
  - **\*\.hb** Archivo de órdenes de Harbour
@@ -303,9 +303,9 @@ Filtros \(puedes combinarlos y/o negarlos\):
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
  - **\{&lt;cpu&gt;\}** CPU destino\. &lt;cpu&gt; puede ser una de: x86, x86\_64, ia64, arm, mips, sh
- - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
- - **\{mt\}** el objetivo es multihilo \(ver opción \-mt\)
- - **\{st\}** el objetivo es monohilo \(ver opción \-st\)
+ - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
+ - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
+ - **\{st\}** build target is single\-threaded \(see \-st option\)
  - **\{gui\}** GUI target \(see \-gui option\)
  - **\{std\}** el objetivo es una consola de linea de comandos \(ver opción \-console\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
@@ -340,7 +340,7 @@ Constantes predefinidas en el código fuente:
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
  - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;hbcname&gt;** cuando el paquete &lt;hbcname&gt;\.hbc se enlaza al destino\. El valor se obtiene de la entrada version= del archivo \.hbc, convertido a número decimal, '1' si no se especifica\. \(Disponible en el código fuente de Harbour\)\.
+ - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
  - **HBMK\_HAS\_&lt;depname&gt;** cuando la dependencia &lt;depname&gt; se detectó \(disponible en código fuente C\)
 
 
@@ -392,7 +392,7 @@ directivas \.hbc \(tienen que ser escritas en líneas separadas\):
  - **headers=** añadir una lista de archivos de cabecera \.ch separados por espacios como cabeceras estándar
  - **libs=** añadir lista de bibliotecas separadas por espacios \(ver más en la opción \-l\)
  - **frameworks=** add space separated list of frameworks \(Darwin only\)
- - **requests=** añadir lista de símbolos separados por espacios para forzar a enlazarlos al destino
+ - **requests=** add space separated list of symbols to force link to the build target
  - **syslibs=** añadir lista de bibliotecas separadas por espacios como bibliotecas del sistema \(antes de las bibliotecas normales\)
  - **hbcs=** incrusta una lista de archivos \.hbc separados por espacios\. Se aceptan nombres sin extensión\. Estas referencias se procesan en el sitio\.
  - **autohbcs=** space separated list of values as in \-autohbc= option
@@ -456,23 +456,23 @@ Plugin API:
 \('hbmk' is the context variable received by the plugin entry function\)
 
 
- - **hbmk\_Register\_Input\_File\_Extension\( hbmk, cExt \) \-&gt; NIL**  
+ - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
 Registra la extensión de archivo de entrada para ser pasada a un complemento \(por defecto, todos los archivos con extensión desconocida se pasan al compilador Harbour\)\.
- - **hbmk\_AddInput\_PRG\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Añadir un archivo de entrada de Harbour al proyecto\.
- - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Añadir un archivo de entrada de C al proyecto\.
- - **hbmk\_AddInput\_CPP\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Añadir un archivo de entrada de C\+\+ al proyecto\.
- - **hbmk\_AddInput\_RC\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Añadir un archivo de entrda de recursos de Windows al proyecto\.
- - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Añadir un archivo objeto binario al proyecto\.
- - **hbmk\_AddInput\_INSTFILE\( hbmk, cFileName, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Añadir un archivo para instalar, con un nombre de grupo \-instpath= opcional\.
- - **hbmk\_OutStd\( hbmk, cText \) \-&gt; NIL**  
+ - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar el texto de salida a stdout\.
- - **hbmk\_OutErr\( hbmk, cText \) \-&gt; NIL**  
+ - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar el texto de salida a stderr\.
  - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
 Output text to stdout without any formatting\.
@@ -480,10 +480,10 @@ Output text to stdout without any formatting\.
 Output text to stderr without any formatting\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Evaluate hbmk2 macro expression\.
- - **hbmk\_FNameEscape\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
+ - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 El nombre de archivo tiene que estar entrecomillado para usarlo como parámetro de comando externo\.
- - **hbmk\_PathSepToTarget\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
-Convert filename to the format required for the target toolchain\.
+ - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
+Convert filename to the format required for the target platform/C compiler\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Convierte el nombre de archivo para que tenga barras como separadores de directorios\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
@@ -494,7 +494,7 @@ Buscar el archivo en &lt;xPath&gt; \(se admite una matriz o una cadena delimitad
 Change directory and/or extension in filename\.
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Codifica el nombre de la función de acuerdo a las reglas del compilador Harbour para formar los nombres de función HB\_FUNC\(\) en el código C\.
- - **hbmk\_StrStripQuote\( cString \) \-&gt; &lt;cString&gt;**  
+ - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
 Strip double quote enclosure from a string\.
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Convierte una lista de cadenas a una cadena\. Por defecto el separador es un solo espacio\.
@@ -632,10 +632,10 @@ Códigos de salida \("errorlevels"\):
 Notas:  
 
 
-  - &lt;script&gt; puede ser:  
- &lt;@script&gt; o &lt;script\.hbm&gt;: comandos de opciones de línea en el archivo  
- &lt;script\.hbp&gt;: comandos de opciones de línea en el archivo, también marca un nuevo destino si se especifica en la línea de comandos  
- &lt;script\.hbc&gt;: archivo de configuración de paquetes
+  - &lt;script&gt; can be:  
+  &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
+  &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
+  &lt;script\.hbc&gt;: package configuration file
   - Un nombre de archivo fuente sin extensión cargará el archivo \.hbp, si este existe en el directorio actual\. Si no, la extensión \.prg será usada\.
   - Múltiples parámetros son aceptados \-l, \-L, \-i y &lt;script&gt;\.
   - las opciones regulares de compilador Harbour también son aceptadas\.  
@@ -647,7 +647,7 @@ Notas:
 Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palabra\-clave&gt;\]\}\. Filtros pueden ser combinados usando los operadores '&amp;', '|' y agrupados en parénteses\. Ej\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - La mayoría de la líneas de un fichero \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) y sus correspondientes parámetros de línea de comandos aceptan variables de macro\. libpaths= también acepta %\{hb\_name\} que se transforma al nombre del fichero \.hbc que se busca\.
   - Tambien acepta Opciones de macros sustitución de comandos\. Incluya comando dentro de \`\`, y, si el comando contiene espacios, también entre comillas dobles\. F\.e\. "\-cflag==\`wx\-config \-cflags\`", o ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
+  - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Bibliotecas y archivos objeto construidos con/para CA\-Cl\*pper no funcionarán con ningún compilador/plataforma soportados\.
   - Valores por defecto y caracteristicas soportadas pueden variar entre plataformas/compiladores\.
   - No es necesario para ejecutar hbmk2 la herramienta GNU Make o cualquier otra utilidad 'make' específica de un compilador C o de MSYS \(en Windows\)\.

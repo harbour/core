@@ -2,10 +2,11 @@ Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-28 03:24\)
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
+Μετάφραση \(el\): \(να βάλλω το όνομα μου εδώ\)  
 
 Σύνταξη:  
   
-  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
+  hbrun &lt;αρχείο\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;επιλογή&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
   
 Περιγραφή:  
 
@@ -65,9 +66,9 @@ Shell API διαθέσιμο σε σενάρια Harbour:
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Λίστα φορτωμένων πακέτων
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-hb\_DirBase\(\) not mapped to script\.
+Το hb\_DirBase\(\) δεν χαρτογραφήθηκε σε σενάριο\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-hb\_ProgName\(\) not mapped to script\.
+Το hb\_ProgName\(\) δεν χαρτογραφήθηκε σε σενάριο\.
   
 Σημειώσεις:  
 
