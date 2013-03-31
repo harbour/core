@@ -540,7 +540,7 @@ msgstr "Το Plugin %1$s επιστράφηκε προς '%2$s': '%3$s'"
 
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
-msgstr "Λάθος: Κατά την εκτέλεση plugin: %1$s προς %3$s(%4$d)⏎ '%2$s'"
+msgstr "Λάθος: Κατά την εκτέλεση plugin: %1$s προς %3$s(%4$d)\n'%2$s'"
 
 #, c-format
 msgid "<%1$s directory>"
@@ -724,7 +724,7 @@ msgstr "Λάθος: Ενημέρωσης εξωτερικού header"
 
 #, c-format
 msgid "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation."
-msgstr "Προειδοποίηση: Αποτυχία ανίχνευσης του Harbour.⏎ Εκτελέστε αυτό το εργαλείο από την αρχική του θέση μεσα στο φάκελο εγκατάστασης του Harbour."
+msgstr "Προειδοποίηση: Αποτυχία ανίχνευσης του Harbour.\nΕκτελέστε αυτό το εργαλείο από την αρχική του θέση μεσα στο φάκελο εγκατάστασης του Harbour."
 
 #, c-format
 msgid "Cannot find script '%1$s'"
@@ -744,7 +744,7 @@ msgstr "Αδυναμία φόρτωσης '%1$s'. Απαιτεί -shared %2$s κ
 
 #, c-format
 msgid "Error: Loading shell plugin: %1$s\n'%2$s'"
-msgstr "Λάθος: Φώρτωσης shell plugin: %1$s⏎ '%2$s'"
+msgstr "Λάθος: Φώρτωσης shell plugin: %1$s\n'%2$s'"
 
 #, c-format
 msgid "Error: Interactive session not possible with %1$s terminal driver"
@@ -1116,7 +1116,7 @@ msgstr "διασύνδεση με nulrdd"
 
 #, c-format
 msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n-lng=en,hu-HU,de"
-msgstr "λίστα των γλωσσών προς αντικατάσταση σε %1$s macros σε .pot/.po filenames and output .hbl/.po filenames. Λίστα διαχωριζόμενη με κόμμα:⏎ -lng=en,hu-HU,de"
+msgstr "λίστα των γλωσσών προς αντικατάσταση σε %1$s macros σε .pot/.po filenames and output .hbl/.po filenames. Λίστα διαχωριζόμενη με κόμμα:\n-lng=en,hu-HU,de"
 
 #, c-format
 msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
@@ -1268,7 +1268,7 @@ msgstr "χρήση <pw> ως συνθηματικού κατά την σήμαν
 
 #, c-format
 msgid "working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
-msgstr "κατάλογος εργασίας⏎ (προεπιλογή: %1$s/<platform>/<compiler> [*] σε incremental ρυθμό, αλλιώς ο temp κατάλογος του Λ.Σ.)"
+msgstr "κατάλογος εργασίας\n(προεπιλογή: %1$s/<platform>/<compiler> [*] σε incremental ρυθμό, αλλιώς ο temp κατάλογος του Λ.Σ.)"
 
 #, c-format
 msgid "Options below are available on command-line:"
@@ -1276,7 +1276,7 @@ msgstr "Οι παρακάτω επιλογές είναι διαθέσιμες �
 
 #, c-format
 msgid "accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect"
-msgstr "αποδοχή raw C flags⏎ δημιουργία link/copy %1$s στο hbcc για όμοιο αποτέλεσμα"
+msgstr "αποδοχή raw C flags\nδημιουργία link/copy %1$s στο hbcc για όμοιο αποτέλεσμα"
 
 #, c-format
 msgid "accept raw linker flags"
@@ -1300,7 +1300,7 @@ msgstr "εμφάνιση κεφαλίδας έκδοσης μόνο"
 
 #, c-format
 msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker ⏎ create link/copy %1$s to rtlink/blinker/exospace for the same effect"
+msgstr "προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker \ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
 
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
@@ -2044,7 +2044,7 @@ msgstr "Αποφόρτωση πακέτου"
 
 #, c-format
 msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
-msgstr "Plugin API:\n ('hbmk' is the context variable received by the plugin entry function)"
+msgstr "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
 
 #, c-format
 msgid "Add a binary object file to the project."
@@ -2188,7 +2188,7 @@ msgstr "Η υποστήρξη προεπιλογών και χαρακτηρισ
 
 #, c-format
 msgid "Filters are accepted in each .hbc line and most options.\nFilters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
-msgstr "Φίλτρα επιτρέπονται σε κάθε γραμμή .hbc καθώς και περισσότερες επιλογές.⏎ Τα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&' (and), '|' (or), να αναιρεθούν με τον τελεστή '!' και να ομαδοποιηθούν με αγγύλες. Π.χ.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgstr "Φίλτρα επιτρέπονται σε κάθε γραμμή .hbc καθώς και περισσότερες επιλογές.\nΤα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&' (and), '|' (or), να αναιρεθούν με τον τελεστή '!' και να ομαδοποιηθούν με αγγύλες. Π.χ.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
 
 #, c-format
 msgid "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s."
@@ -2248,7 +2248,7 @@ msgstr "Περιγραφή:"
 
 #, c-format
 msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
-msgstr "Το %1$s είναι ένα ολοκληρωμένο και μεταφέρσιμο εργαλείο κατασκευής, που κάνει εφικτή τη δημιουργία διαφόρων τύπων δυαδικών εκτελέσιμων (εκτελέσιμο, δυναμική βιβλιοθήκη, στατική βιβλιοθήκη, μεταφέρσιμο δυαδικό Harbour) από πολλαπλούς τύπους πηγαίων αρχείων (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Ολοκληρωμένο' σημαίνει ότι ένα μοναδικό %1$s αρχείο έργου μπορεί να διεκπεραιώσει όλες ή τις περισσότερες πτυχές της διαδικασίας κατασκευής. 'Μεταφέρσιμο' σημαίνει ότι ένα μοναδικό %1$s αρχείο έργου ελέγχει την κατασκευή σε όλες τις υποστηριζόμενες πλατφόρμες Λειτουργικών Συστημάτων και έναντι όλων των υποστηριζόμενων C μεταγλωττιστών. Στοχεύει επίσης να καλυψει την πλειοψηφία των εργασιών κατασκευής μέσω σύντομων και απλών αρχείων έργου (επιλογών). Το %1$s υποστηρίζει ακόμα και αμιγή -non-Harbour- C/C++/Objective-C έργα. Προκειμένου να επιτύχει τους παραπάνω στόχους, το %1$s ανιχνεύει αυτόματα τον μεταγλωττιστή Harbour και C και άλλα εργαλεία που απαιτούνται, μετά τα διαμορφώνει και τα καλεί κατάλληλα. Το %1$s επιτρέπει την επέκταση των τύπων των υποστηριζόμενων αρχείων μέσω επεκτάσεων -plugins-.⏎ Πέρα από την δημιουργία εκτελέσιμων, το %1$s είναι σε θέση να τρέχει σενάρια Harbour (αμφότερα, πηγαίου κώδικα και μεταγλωττισμένα) κατευθείαν, και διαθέτει επίσης ένα διαδραστικό κέλυφος εντολών."
+msgstr "Το %1$s είναι ένα ολοκληρωμένο και μεταφέρσιμο εργαλείο κατασκευής, που κάνει εφικτή τη δημιουργία διαφόρων τύπων δυαδικών εκτελέσιμων (εκτελέσιμο, δυναμική βιβλιοθήκη, στατική βιβλιοθήκη, μεταφέρσιμο δυαδικό Harbour) από πολλαπλούς τύπους πηγαίων αρχείων (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Ολοκληρωμένο' σημαίνει ότι ένα μοναδικό %1$s αρχείο έργου μπορεί να διεκπεραιώσει όλες ή τις περισσότερες πτυχές της διαδικασίας κατασκευής. 'Μεταφέρσιμο' σημαίνει ότι ένα μοναδικό %1$s αρχείο έργου ελέγχει την κατασκευή σε όλες τις υποστηριζόμενες πλατφόρμες Λειτουργικών Συστημάτων και έναντι όλων των υποστηριζόμενων C μεταγλωττιστών. Στοχεύει επίσης να καλυψει την πλειοψηφία των εργασιών κατασκευής μέσω σύντομων και απλών αρχείων έργου (επιλογών). Το %1$s υποστηρίζει ακόμα και αμιγή -non-Harbour- C/C++/Objective-C έργα. Προκειμένου να επιτύχει τους παραπάνω στόχους, το %1$s ανιχνεύει αυτόματα τον μεταγλωττιστή Harbour και C και άλλα εργαλεία που απαιτούνται, μετά τα διαμορφώνει και τα καλεί κατάλληλα. Το %1$s επιτρέπει την επέκταση των τύπων των υποστηριζόμενων αρχείων μέσω επεκτάσεων -plugins-.\nΠέρα από την δημιουργία εκτελέσιμων, το %1$s είναι σε θέση να τρέχει σενάρια Harbour (αμφότερα, πηγαίου κώδικα και μεταγλωττισμένα) κατευθείαν, και διαθέτει επίσης ένα διαδραστικό κέλυφος εντολών."
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."

@@ -187,7 +187,7 @@ A hbmk2 program rtlink/blinker/exospace nevekre való másolásával/átnevezés
  - **\-cpu=&lt;cpu&gt;** override default target CPU \(default: automatic\) \(EXPERIMENTAL\)
  - **\-comp=&lt;compiler&gt;** felülbírálja a C fordító detektálást  
 Speciális érték:  
- \- bld: használja a Harbour fordításához használtat \(\*nix\-okon alapértelmezés\)
+\- bld: használja a Harbour fordításához használtat \(\*nix\-okon alapértelmezés\)
  - **\-build=&lt;name&gt;** specify a build name
  - **\-lang=&lt;lang&gt;** override default language\. &lt;lang&gt; is an ISO language code\.
  - **\-width=&lt;n&gt;** set output width to &lt;n&gt; characters \(0=unlimited\)\.

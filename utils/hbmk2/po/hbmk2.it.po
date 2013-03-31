@@ -212,7 +212,7 @@ msgstr "plugin: %1$s"
 
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
-msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)⏎ '%2$s'"
+msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)\n'%2$s'"
 
 #, c-format
 msgid "<%1$s directory>"

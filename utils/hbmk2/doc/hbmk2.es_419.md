@@ -187,7 +187,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-cpu=&lt;cpu&gt;** reemplaza la CPU de destino por defecto \(por defecto:automática\) \(EXPERIMENTAL\)
  - **\-comp=&lt;compiler&gt;** reemplaza la autodetección del compilador C  
 Valor especial:  
- \- bld: usa la configuración de construcción original \(por defecto en \*nix\)
+\- bld: usa la configuración de construcción original \(por defecto en \*nix\)
  - **\-build=&lt;name&gt;** utilizar un nombre de build especifico
  - **\-lang=&lt;lang&gt;** reemplaza lenguaje por defecto\. &lt;lang&gt; es un código de lenguaje ISO\.
  - **\-width=&lt;n&gt;** establecer el ancho de salida a &lt;n&gt; caracteres \(0=sin límite\)\.

@@ -928,7 +928,7 @@ msgstr "forçar pause por uma tela em caso de erro (somente com driver GT altern
 
 #, c-format
 msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
-msgstr "gerar arquivo de cabeçalho \". ch\" com informações do repositório local. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente. O cabeçalho gerado irá definir a constante _HBMK_VCS_TYPE_ no pré-processador com o nome detectados de VCS e _HBMK_VCS_ID_ com o ID único do repositório local. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção.\n VCS - sistema de controle de versão."
+msgstr "gerar arquivo de cabeçalho \". ch\" com informações do repositório local. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente. O cabeçalho gerado irá definir a constante _HBMK_VCS_TYPE_ no pré-processador com o nome detectados de VCS e _HBMK_VCS_ID_ com o ID único do repositório local. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção.\nVCS - sistema de controle de versão."
 
 #, c-format
 msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"

@@ -1344,7 +1344,7 @@ msgstr "muestra el directorio de bibliotecas estáticas de Harbour"
 
 #, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
-msgstr "reemplaza la autodetección del compilador C\nValor especial:\n - bld: usa la configuración de construcción original (por defecto en *nix)"
+msgstr "reemplaza la autodetección del compilador C\nValor especial:\n- bld: usa la configuración de construcción original (por defecto en *nix)"
 
 #, c-format
 msgid "override default language. <lang> is an ISO language code."

@@ -628,7 +628,7 @@ msgstr "teljes súgó"
 
 #, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
-msgstr "felülbírálja a C fordító detektálást\nSpeciális érték:\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
+msgstr "felülbírálja a C fordító detektálást\nSpeciális érték:\n- bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
 
 #, c-format
 msgid "override default target platform (default: automatic)"

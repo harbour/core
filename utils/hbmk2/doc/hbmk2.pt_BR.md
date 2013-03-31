@@ -63,7 +63,7 @@ Opções
 &lt;level&gt; pode ser : yes, no, min, max
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
  - **\-vcshead=&lt;file&gt;** gerar arquivo de cabeçalho "\. ch" com informações do repositório local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente\. O cabeçalho gerado irá definir a constante \_HBMK\_VCS\_TYPE\_ no pré\-processador com o nome detectados de VCS e \_HBMK\_VCS\_ID\_ com o ID único do repositório local\. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção\.  
- VCS \- sistema de controle de versão\.
+VCS \- sistema de controle de versão\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)

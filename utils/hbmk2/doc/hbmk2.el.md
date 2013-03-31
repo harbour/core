@@ -11,7 +11,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
 
 
   Το hbmk2 είναι ένα ολοκληρωμένο και μεταφέρσιμο εργαλείο κατασκευής, που κάνει εφικτή τη δημιουργία διαφόρων τύπων δυαδικών εκτελέσιμων \(εκτελέσιμο, δυναμική βιβλιοθήκη, στατική βιβλιοθήκη, μεταφέρσιμο δυαδικό Harbour\) από πολλαπλούς τύπους πηγαίων αρχείων \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Ολοκληρωμένο' σημαίνει ότι ένα μοναδικό hbmk2 αρχείο έργου μπορεί να διεκπεραιώσει όλες ή τις περισσότερες πτυχές της διαδικασίας κατασκευής\. 'Μεταφέρσιμο' σημαίνει ότι ένα μοναδικό hbmk2 αρχείο έργου ελέγχει την κατασκευή σε όλες τις υποστηριζόμενες πλατφόρμες Λειτουργικών Συστημάτων και έναντι όλων των υποστηριζόμενων C μεταγλωττιστών\. Στοχεύει επίσης να καλυψει την πλειοψηφία των εργασιών κατασκευής μέσω σύντομων και απλών αρχείων έργου \(επιλογών\)\. Το hbmk2 υποστηρίζει ακόμα και αμιγή \-non\-Harbour\- C/C\+\+/Objective\-C έργα\. Προκειμένου να επιτύχει τους παραπάνω στόχους, το hbmk2 ανιχνεύει αυτόματα τον μεταγλωττιστή Harbour και C και άλλα εργαλεία που απαιτούνται, μετά τα διαμορφώνει και τα καλεί κατάλληλα\. Το hbmk2 επιτρέπει την επέκταση των τύπων των υποστηριζόμενων αρχείων μέσω επεκτάσεων \-plugins\-\.  
- Πέρα από την δημιουργία εκτελέσιμων, το hbmk2 είναι σε θέση να τρέχει σενάρια Harbour \(αμφότερα, πηγαίου κώδικα και μεταγλωττισμένα\) κατευθείαν, και διαθέτει επίσης ένα διαδραστικό κέλυφος εντολών\.
+Πέρα από την δημιουργία εκτελέσιμων, το hbmk2 είναι σε θέση να τρέχει σενάρια Harbour \(αμφότερα, πηγαίου κώδικα και μεταγλωττισμένα\) κατευθείαν, και διαθέτει επίσης ένα διαδραστικό κέλυφος εντολών\.
   
 Επιλογές:  
 
@@ -105,7 +105,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-rebuildall** ανακατασκευή μαζί με τα υπο\-έργα \(με αυξητική μέθοδο κατασκευής\)
  - **\-clean** καθαρισμός \(σε incremental ρυθμό\)
  - **\-workdir=&lt;dir&gt;** κατάλογος εργασίας  
- \(προεπιλογή: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] σε incremental ρυθμό, αλλιώς ο temp κατάλογος του Λ\.Σ\.\)
+\(προεπιλογή: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] σε incremental ρυθμό, αλλιώς ο temp κατάλογος του Λ\.Σ\.\)
 
 
  - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
@@ -114,7 +114,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
 
  - **\-hbl\[=&lt;output&gt;\]** έξοδος \.hbl αρχειοονόματος\. %\{hb\_lng\} macro είναι δεκτή στο αρχειοόναμα
  - **\-lng=&lt;languages&gt;** λίστα των γλωσσών προς αντικατάσταση σε %\{hb\_lng\} macros σε \.pot/\.po filenames and output \.hbl/\.po filenames\. Λίστα διαχωριζόμενη με κόμμα:  
- \-lng=en,hu\-HU,de
+\-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** δημιουργία/ενημέρωση αρχείου \.po από το πηγαίο\. Συγχώνευσή του με προηγούμενο αρχείο \.po ίδιου ονόματος
  - **\-minipo\[\-\]** προσθήκη \(ή όχι\) αριθμού έκδοσης Harbour και ένδειξη πηγαίου αρχείου στο \.po \(προεπιλογή: πρόσθεσέ τα\)
  - **\-rebuildpo** αναδημιουργία \.po αρχείου, απομακρύνοντας έτσι όλες τις παρωχημένες καταχωρίσεις
@@ -151,7 +151,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-hbcmp|\-clipper** τερματισμός μετά την δημιουργία των object αρχείων  
 δημιουργείστε δεσμό/αντιγράψτε το hbmk2 σε hbcmp/clipper για να επιτύχετε το αυτό αποτέλεσμα
  - **\-hbcc** αποδοχή raw C flags  
- δημιουργία link/copy hbmk2 στο hbcc για όμοιο αποτέλεσμα
+δημιουργία link/copy hbmk2 στο hbcc για όμοιο αποτέλεσμα
  - **\-hblnk** αποδοχή ανεπεξέργαστων flags συνδέτη
  - **\-autohbm\[\-\]** ενεργοποίηση \(ή απενεργοποίηση\) επεξεργασίας του hbmk\.hbm στο τρέχοντα κατάλογο \(προεπιλογή: yes\)
  - **\-hb10** ενεργοποίηση συμβατότητας Harbour 1\.0\.x
@@ -162,7 +162,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - \-rtlink 
  - \-blinker 
  - **\-exospace** προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker   
- create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
+create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
  - **\-hbreg\[=global\]** καταγραφή σεναρίου Harbour \(\.hb\) μαζί με hbmk2 \(μόνο σε Windows \)
@@ -454,7 +454,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 
 
 Plugin API:  
- \('hbmk' is the context variable received by the plugin entry function\)
+\('hbmk' is the context variable received by the plugin entry function\)
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
@@ -645,7 +645,7 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   - Το hbmk\.hbm σενάριο κατασκευής στον τρέχοντα κατάλογο δέχεται πάντοτε επεξεργασία, αν υπάρχει\.
   - Η χρήση πλάγιας εμπρός κάθετης παύλας συνιστάται στις τιμές των επιλογών ως διαχωριστής μονοπατιού, αλλά η πίσω πλάγια κάθετη παύλα είναι εξίσου αποδεκτή\.
   - Φίλτρα επιτρέπονται σε κάθε γραμμή \.hbc καθώς και περισσότερες επιλογές\.  
- Τα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&amp;' \(and\), '|' \(or\), να αναιρεθούν με τον τελεστή '\!' και να ομαδοποιηθούν με αγγύλες\. Π\.χ\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
+Τα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&amp;' \(and\), '|' \(or\), να αναιρεθούν με τον τελεστή '\!' και να ομαδοποιηθούν με αγγύλες\. Π\.χ\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Οι περισσότερες \.hbc γραμμές \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) και οι αντίστοιχες παράμετροι γραμμής\-εντολής αποδέχονται μεταβλητές macro\. Η libpaths= επίσης αποδέχεται %\{hb\_name\} που μεταφράζεται στο όνομα του υπο διερεύνηση \.hbc αρχείου
   - Επιλογές που δέχοντα μεταβλητές macro υποστηρίζουν επίσης υποκατάσταση εντολών\. Περικλείστε την εντολή μεσα σε \`\`, και, αν η εντολή περιέχει κενό διάστημα, περικλείστε τη επίσης σε διπλά εισαγωγικά\. Η standard έξοδος τη εντολής θα χρησιμοποιηθεί ως τιμή\. Π\.χ\. "\-cflag=\`wx\-config \-\-cflags\`", ή ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
