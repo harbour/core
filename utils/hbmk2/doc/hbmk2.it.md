@@ -364,8 +364,8 @@ Variabili d'ambiente:
  - **HB\_CPU** accetta gli stessi valori come l'opzione \-cpu=
  - **HB\_BUILD\_NAME** accetta gli stessi valori come l'opzione \-build=
  - **HB\_LANG** accetta gli stessi valori come l'opzione \-lang=
- - **HB\_USER\_LIBS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-l
- - **HB\_USER\_LIBPATHS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-L
+ - **HB\_USER\_LIBS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione \-l
+ - **HB\_USER\_LIBPATHS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione \-L
  - **HB\_USER\_PRGFLAGS** opzioni da passare al compilatore Harbour \(prima delle opzioni nella riga di comando\)
  - **HB\_USER\_CFLAGS** opzioni da passare al compilatore C \(prima delle opzioni nella riga di comando\)
  - **HB\_USER\_RESFLAGS** opzioni da passare al compilatore di risorse \(prima delle opzioni nella riga di comando\) \(solo Windows\)
@@ -495,7 +495,7 @@ Cambia cartella e/o estensione nel nome file
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Encode function name according to Harbour compiler rules for forming HB\_FUNC\(\) function names in C code\.
  - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
-Elimina da una stringa la coppia di delimitatori  
+Elimina da una stringa la coppia di delimitatori
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Convert array of strings to a string\. Default separator is a single space\.
 

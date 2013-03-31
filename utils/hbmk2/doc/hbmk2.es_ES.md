@@ -10,7 +10,7 @@ Sintáxis:
 Descripción:  
 
 
-  hbmk2 es una herramienta integrada y portátil de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios \(ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour\) de múltiples tipos de código fuente  \(C, C\+\+, Objective\-C, Harbour, traducciones de 'gettext', recursos de Windows\)\. 'Integrada' significa que un solo fichero de proyecto hbmk2 puede controlar todos, o casi todos, los aspectos del proceso de construcción\. 'Portátil' significa que un solo fichero de proyecto hbmk2 puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados\. Ayuda también en la mayoría de los procesos de construcción por medio de cortos y simples ficheros de proyecto \(opciones\)\. hbmk2 soporta ficheros de proyecto para C/C\+\+/Objetive\-C sin relación con Harbour\. Para conseguir esos objetivos, hbmk2 detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente\. hbmk2 permite extender los tipos de código fuente soportados por medio de complementos\.  
+  hbmk2 es una herramienta integrada y portátil de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios \(ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour\) de múltiples tipos de código fuente \(C, C\+\+, Objective\-C, Harbour, traducciones de 'gettext', recursos de Windows\)\. 'Integrada' significa que un solo fichero de proyecto hbmk2 puede controlar todos, o casi todos, los aspectos del proceso de construcción\. 'Portátil' significa que un solo fichero de proyecto hbmk2 puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados\. Ayuda también en la mayoría de los procesos de construcción por medio de cortos y simples ficheros de proyecto \(opciones\)\. hbmk2 soporta ficheros de proyecto para C/C\+\+/Objetive\-C sin relación con Harbour\. Para conseguir esos objetivos, hbmk2 detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente\. hbmk2 permite extender los tipos de código fuente soportados por medio de complementos\.  
  Además de construir ejecutables, hbmk2 puede ejecutar archivos de órdenes de Harbour \(tanto en código fuente como precompilado\) directamente, y otra característica es que dispone de un intérprete de comandos interactivo\.
   
 Opciones:  
@@ -81,7 +81,7 @@ Opciones:
 
 
  - **\-bldf\[\-\]** heredar flags de Harbour: todos/ninguno \(por defecto\)
- - **\-bldf=\[p\]\[c\]\[l\]** heredar todos los flags \.prg/\.c/linker \(o ninguno\) desde construcción de Harbour 
+ - **\-bldf=\[p\]\[c\]\[l\]** heredar todos los flags \.prg/\.c/linker \(o ninguno\) desde construcción de Harbour
  - **\-F&lt;framework&gt;** Enlace con marco &lt;framework&gt; \(Sólo Darwin \)
  - **\-prgflag=&lt;f&gt;** pasar flags a Harbour
  - **\-cflag=&lt;f&gt;** pasar flags a compilador C
@@ -286,7 +286,7 @@ Variables de macro:
  - **$\{hb\_host\_plat\_unix\}** devuelve '1' si la plataforma anfitriona es compatible \*nix\.
  - **$\{hb\_bin\}** Harbour binary directory
  - **$\{hb\_lib\}** Directorio de las bibliotecas estáticas de Harbour
- - **$\{hb\_lib3rd\}** Directorio de las librerías estáticas de terceros de Harbour 
+ - **$\{hb\_lib3rd\}** Directorio de las librerías estáticas de terceros de Harbour
  - **$\{hb\_dyn\}** Directorio de las bibliotecas de enlace dinámico de Harbour
  - **$\{hb\_inc\}** Harbour header directory
  - **$\{hb\_addons\}** Harbour add\-ons base directory
@@ -654,7 +654,7 @@ Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&
   - si se pasa el \. \(punto\) como primer parámetro se entrará en el intérprete de comandos interactivo\.
 
 
-  - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb  en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos \(codepage\) establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\]  se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
+  - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos \(codepage\) establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\] se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
   - Puede utilizar las teclas &lt;Alt\+V&gt; en el indicador de comandos interactivo de Harbour para pegar texto desde el portapapeles\.
   - Los valores marcados con \[\*\] pueden depender de la plataforma anfitriona y/o la configuración\. Esta ayuda se generó en una plataforma afitriona 'win'\.
 

@@ -488,12 +488,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:7604
 #, c-format
-msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
+msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:7604
 #, c-format
-msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
+msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:7618
@@ -1158,7 +1158,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options."
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1168,32 +1168,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
-msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgid "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1203,7 +1183,27 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
+msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1368,12 +1368,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
+msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1498,12 +1498,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "pass single raw option to linker (executable) after the library list. Use with caution."
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -2038,12 +2038,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16012
 #, c-format
-msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
+msgid "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16012
 #, c-format
-msgid "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)."
+msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16012
@@ -2313,17 +2313,17 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
 #, c-format
-msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16104
-#, c-format
 msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16104
+#, c-format
+msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
@@ -3013,17 +3013,17 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application using a project file"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16438
-#, c-format
 msgid "To build an application using incremental mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application which uses a raw library"
+msgid "To build an application using a project file"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16438
+#, c-format
+msgid "To build an application which uses a Windows resource"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
@@ -3033,12 +3033,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application which links against Harbour dynamic libraries"
+msgid "To build an application which uses a raw library"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application which uses a Windows resource"
+msgid "To build an application which links against Harbour dynamic libraries"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
@@ -3058,12 +3058,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16447
 #, c-format
-msgid "To build library 'mylib' from sources using incremental mode"
+msgid "To build library 'mylib' from sources"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16447
 #, c-format
-msgid "To build library 'mylib' from sources"
+msgid "To build library 'mylib' from sources using incremental mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16451
