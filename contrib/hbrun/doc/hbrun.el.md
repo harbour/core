@@ -3,7 +3,7 @@ Copyright \(c\) 2007\-2013, Viktor Szakáts
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 
-Syntax:  
+Σύνταξη:  
   
   hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;παραμετρος\[ι\]&gt;\]  
   
@@ -20,7 +20,7 @@ Syntax:
 
  - **\-help** η παρούσα βοήθεια
  - **\-viewhelp** εκτεταμένη βοήθεια σε προβολή κειμένου
- - **\-longhelp** long help
+ - **\-longhelp** εκτεταμένη βοήθεια
  - **\-longhelpmd** εκτεταμένη βοήθεια σε μορφή [Markdown](http://daringfireball.net/projects/markdown/)
   
 Αρχεία:  
@@ -37,8 +37,8 @@ Syntax:
 Προκαθορισμένες σταθερές σε πηγαία αρχεία:
 
 
- - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **\_\_HBSCRIPT\_\_HBSHELL** όταν ένα πηγαίο αρχείο Harbour εκτελείται ως σενάριο κελύφους
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, κ\.λ\.π\.\.\.\.
   
 Μεταβλητές περιβάλλοντος:  
 
@@ -49,9 +49,9 @@ Shell API διαθέσιμο σε σενάρια Harbour:
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
-Switch GT\. Default \[\*\]: 'gtwin'
+Αλλαγή GT\. Προεπιλογή \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-Enable Clipper compatibility \(non\-Unicode\) mode\.
+Ενεργοποίηση κατάστασης συμβατότητας Clipper \(όχι\-Unicode\)\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Φόρτωση Harbour header\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -63,13 +63,13 @@ Enable Clipper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Αποφόρτωση πακέτου
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
-List of loaded packages\.
+Λίστα φορτωμένων πακέτων
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
 hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) not mapped to script\.
   
-Notes:  
+Σημειώσεις:  
 
 
   - \.hb, \.prg, \.hrb ή \.dbf αρχείο δοσμένο ως πρώτη παραμέτρος θα εκτελεστεί σαν σενάριο Harbour\. Αν το όνομα\-αρχείου δεν περιέχει ορίσματα μονοπατιών, θα αναζητηθεί στο τρέχοντα κατάλογο εργασίας και στο  PATH\. Αν δεν δόθηκε κατάληξη, θα αναζητηθούν \.hb and \.hrb καταλήξεις, με αυτή τη σειρά\. Αρχείο \.dbf θα ανοιχτεί αυτόματα σε κατάσταση shared και θα ξεκινήσει το διαλογικό shell του Harbour\. Μη standard καταλήξεις θα ανιχνευτούν αυτομάτως για πηγαίους και προκατασεκυασμένους τυπους\. Σημειώστε, για σενάρια Harbour, η κωδικοσελίδα ορίζεται απο προεπιλογή σε  UTF\-8\. Το εξ'ορισμού βασικό αρχείο header 'hb\.ch'  συμπεριλαμβάνεται αυτόματα, δηλ\. \#included\. Προεπιλεγμένη μορφή ημερ/νίας είναι η πρότυπη κατα  ISO μορφή: εεεε\-μμ\-ηη\. Προεπιλεγμένο GT είναι το 'gtcgi', εκτός αν ανιχνευτούν CUI κλήσεις πλήρους οθόνης, οπότε επιλέγεται αυτομάτως 'gtwin' \[\*\] \(εκτός για τις INIT PROCEDUREs\)\.

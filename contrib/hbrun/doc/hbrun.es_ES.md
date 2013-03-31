@@ -75,7 +75,7 @@ Notas:
 
   - el archivo \.hb, \.prg, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb  en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos \(codepage\) establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\]  se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
   - Puede utilizar las teclas &lt;Alt\+V&gt; en el indicador de comandos interactivo de Harbour para pegar texto desde el portapapeles\.
-  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
+  - Los valores marcados con \[\*\] pueden depender de la plataforma anfitriona y/o la configuración\. Esta ayuda se generó en una plataforma afitriona 'win'\.
   
 Licencia:  
 

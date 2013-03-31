@@ -17,7 +17,7 @@ Opciones:
 
 
  - **\-o&lt;outname&gt;** nombre de archivo de salida
- - **\-l&lt;libname&gt;** link with &lt;libname&gt; library\. &lt;libname&gt; should be without path, extension and 'lib' prefix \(unless part of the name\)\. Do not add core Harbour libraries, they are automatically added as needed\. If &lt;libname&gt; starts with a '\-' character, the library will be removed from the list of libraries at link time\.
+ - **\-l&lt;libname&gt;** enlaza con biblioteca &lt;libname&gt;\. &lt;libname&gt; no debe incluir ruta, extensión o prefijo 'lib' \(excepto que sea parte del nombre\)\. No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan\. Si &lt;libname&gt; comienza con un caracter '\-' , la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar\.
  - **\-L&lt;libpath&gt;** ruta adicional para buscar librerías
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** ruta adicional para buscar cabeceras
  - **\-static|\-shared** enlazar con librerías estáticas/compartidas
@@ -132,7 +132,7 @@ Opciones:
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list, where &lt;i&gt; is pointing to a directory local to the project and containing an embedded \(aka\. 'locally hosted'\) dependency\.
  - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; es el nombre de la dependencia\. Anadir &lt;dll&gt; a la lista fuente de la biblioteca de importación\.
  - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; es el nombre de la dependencia\. Establecer nombre generado de biblioteca de importación a &lt;lib&gt;
- - **\-depfinish=&lt;d&gt;** &lt;d&gt; is the name of the dependency\. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly\. Optional, if omitted, detection will take place after processing all options\.
+ - **\-depfinish=&lt;d&gt;** &lt;d&gt; es el nombre de la dependencia\. Cierra la definición de dependencias y ejecuta la detección, estableciendo las variables macro de filtro predefinidas y las opciones de construcción relacionadas\. Opcional, si se omite, la detección tendrá lugar después de procesar todas las opciones\.
 
 
  - **\-plugin=&lt;filename&gt;** agregar plugin \(módulo\)\. &lt;filename&gt; puede ser: \.hb, \.prg, \.hrb
@@ -180,7 +180,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-\-hbdirdyn** directorio de salida de librerías dinámicas de Harbour
  - **\-\-hbdirlib** directorio de salida de librerías estáticas de Harbour
  - **\-\-hbdirinc** directorio de cabeceras de Harbour
- - **\-\-hbinfo\[=nested\]** output Harbour build information\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
+ - **\-\-hbinfo\[=nested\]** muestra información de la construcción de Harbour\. La salida es en formato JSON\. Las rutas incluidas siempre contienen barras invertidas\. Cada bloque JSON siempre es seguido por un byte 0x0A\.
 
 
  - **\-plat=&lt;platform&gt;** reemplaza la plataforma destino por defecto \(por defecto: automático\)
@@ -242,7 +242,7 @@ Archivos:
  - **\*\.ch** si se envía como archivo fuente, será usado como cabecera estándar adicional
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
- - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_dynlib\.hbm** archivo especial \.hbm incrustado dentro de  hbmk2\. Maneja los detalles de la creación de una librería dinámica \(al estilo de contribuciones Harbour\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
@@ -263,8 +263,8 @@ Variables macro:
  - **$\{hb\_self\}** nombre completo del archivo en que es utilizado
  - **$\{hb\_curdir\}** directorio de trabajo actual
  - **$\{hb\_tempdir\}** Directorio del sistema operativo para archivos temporales
- - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
- - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
+ - **$\{hb\_targetname\}** nombre del proyecto \(sin directorio ni extensión\)\. Devuelve \.adhoc\. si no existe archivo de proyecto\.
+ - **$\{hb\_targettype\}** tipo de proyecto  \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** plataforma seleccionada
  - **$\{hb\_comp\}** compilador C seleccionado
  - **$\{hb\_comp\_ver\}** versión de compilador C
@@ -290,11 +290,11 @@ Variables macro:
  - **$\{hb\_dyn\}** Directorio de librerías dinámicas de Harbour 
  - **$\{hb\_inc\}** directorio de cabeceras Harbour
  - **$\{hb\_addons\}** directorio base de complementos de Harbour
- - **$\{hb\_first\}** name of source file that holds the entry function \(without directory and extension\)
+ - **$\{hb\_first\}** nombre del archivo fuente que contiene la función principal \(sin directorio ni extensión\)
  - **$\{hb\_outputdir\}** directorio de salida
  - **$\{hb\_outputname\}** nombre de la salida \(sin extensión\)
  - **$\{hb\_level\}** sub\-project recursion level
- - **$\{&lt;depname&gt;\}** returns the header directory of dependency &lt;depname&gt;, or '1' if it is not detected
+ - **$\{&lt;depname&gt;\}** devuelve el directorio cabecera de la dependencia &lt;depname&gt; fue detectado, o '1' si no se ha detectado\.
  - **$\{&lt;envvar&gt;\}** devuelve el valor de la variable de entorno &lt;envvar&gt;
   
 Filtros \(puede combinar y/o negarlos\):  
@@ -366,7 +366,7 @@ Variables de entorno
  - **HB\_LANG** acepta los mismos valores que la opción  \-lang=
  - **HB\_USER\_LIBS** acepta los mismos valores \(separador por espacio\) que la opción  \-l
  - **HB\_USER\_LIBPATHS** acepta los mismos valores \(separador por espacio\) que la opción  \-L
- - **HB\_USER\_PRGFLAGS** options to be passed to Harbour compiler \(before command\-line options\)
+ - **HB\_USER\_PRGFLAGS** opciones para pasar al compilador Harbour \(antes de las opciones de línea de comandos\)
  - **HB\_USER\_CFLAGS** opciones para pasar al compilador C \(antes de las opciones de línea de comandos\)
  - **HB\_USER\_RESFLAGS** opciones para pasar al compilador de recursos \(antes de las opciones de línea de comandos\) \(solo Windows\)
  - **HB\_USER\_LDFLAGS** opciones para pasar al enlazador \(ejecutable\) \(antes de las opciones de línea de comandos\)
@@ -394,7 +394,7 @@ directivas \.hbc \(deben ser escritas en líneas separadas\):
  - **frameworks=** agregar lista de frameworks  separados por espacio \(solo Darwin\)
  - **requests=** agrega lista de símbolos separados por espacio para forzar el enlace al objetivo\.
  - **syslibs=** agregar lista de bibliotecas separadas por espacio como bibliotecas de sistema \(antes de las bibliotecas regulares\)
- - **hbcs=** embed space separated list of \.hbc files\. Names without the extension is accepted\. These references are processed in place\.
+ - **hbcs=** incrusta una lista de archivos \.hbc separados por espacios\. Se aceptan nombres sin extensión\. Estas referencias se procesan en el momento\.
  - **autohbcs=** space separated list of values as in \-autohbc= option
  - **libpaths=** lista de rutas de biblioteca adicionales separadas por espacio 
  - **incpaths=** agrega lista de rutas adicionales de cabecera   separada por espacio  \(para Harbour y C\)
@@ -446,18 +446,18 @@ directivas \.hbc \(deben ser escritas en líneas separadas\):
  - **depimplibd=** igual que la opción \-depimplibd=
  - **name=** Nombre de paquete
  - **description=** descripción del paquete
- - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
+ - **version=&lt;x\.y\.z&gt;** número de versión del paquete, donde x,y,z &gt;= 0 &lt;= 255\. Por defecto  0\.0\.1, si no es especificado\.
  - **keywords=** lista de palabras clave separadas por espacio
  - **licences=** lista de licencias separadas por espacio
  - **repository=** lista separada por espacio de referencias a repositorios fuente
 
 
-Plugin API:  
-\('hbmk' is the context variable received by the plugin entry function\)
+API de plugin:  
+\('hbmk' es la variable de contexto recibida por la función principal del plugin\)
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, cExt \) \-&gt; NIL**  
-Register input file extension to be passed to plugin \(by default all unknown file extensions are passed to Harbour compiler\)\.
+Registra extensión de archivo de entrada para enviar al plugin \(por defecto todas las extensiones de archivo desconocidas son pasadas al compilador Harbour\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, cFileName \) \-&gt; NIL**  
 Agregar un archivo Harbour al proyecto\.
  - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
@@ -570,7 +570,7 @@ $ hbmk2 \.
 $ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 
 
-Examples to build and run Harbour portable binary \(aka precompiled Harbour script\):
+Ejemplos para construir y ejecutar un binario portable Harbour \(tambien llamado script Harbour precompilado\):
 
 
  - **A construir**  
@@ -590,7 +590,7 @@ $ hbmk2 mymain\.prg myfuncs\.prg \-inc
 $ hbmk2 myapp\.hbp
  - **Para construir una aplicación usando el modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
- - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
+ - **Para construir una aplicación que utiliza un paquete de contribución o un complemento que se envia con un archivo \.hbc**  
 $ hbmk2 myapp\.prg hbct\.hbc
  - **Para construir una aplicación que utiliza una biblioteca pura**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
@@ -598,7 +598,7 @@ $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
 $ hbmk2 mymain\.prg myres\.rc
  - **Para construir una aplicación que enlaza con bibliotecas dinámicas Harbour**  
 $ hbmk2 \-shared myapp\.prg
- - **To build an application out of all \.prg and \.c sources residing in 'source' subdir**  
+ - **Para construir una aplicación desde todas las fuentes \.prg y \.c ubicadas en el subdirectorio 'fuente'**  
 $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
 
@@ -656,7 +656,7 @@ Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&
 
   - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un script Harbour\. Si el nombre del archivo no contiene componentes de ruta, será buscado en el directorio de trabajo actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb  en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y scripts precompilados\. Nota:, para los scripts Harbour, la página de códigos \(codepage\) es establecida a UTF\-8 por defecto\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\]  se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
   - Puede usar las teclas &lt;Alt\+V&gt; en la consola interactiva Harbour para pegar texto del portapapeles\.
-  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
+  - Valores marcados con \[\*\] pueden ser dependientes de la plataforma huésped o de la configuración\. Esta ayuda ha sido generada en la plataforma huésped  'win' \.
 
 
 Valores suportados para &lt;compiler&gt; conforme a &lt;platform&gt; disponible:

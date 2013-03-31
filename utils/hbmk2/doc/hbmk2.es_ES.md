@@ -180,7 +180,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-\-hbdirdyn** directorio de salida de librerías dinámicas de Harbour
  - **\-\-hbdirlib** directorio de salida de librerías estáticas de Harbour
  - **\-\-hbdirinc** directorio de cabeceras de Harbour
- - **\-\-hbinfo\[=nested\]** salida de información de la construcción de Harbour\. La salida es en formato JSON\. Las rutas incluidas siempre contienen barras invertidas\. Cada bloque JSON siempre es seguido por un byte 0x0A\.
+ - **\-\-hbinfo\[=nested\]** salida de información de la construcción de Harbour\. La salida es en formato JSON\. Las rutas incluidas siempre contienen barras\. Cada bloque JSON siempre es seguido por un byte 0x0A\.
 
 
  - **\-plat=&lt;platform&gt;** override default target platform \(default: automatic\)
@@ -485,7 +485,7 @@ El nombre de archivo tiene que estar entrecomillado para usarlo como parámetro 
  - **hbmk\_PathSepToTarget\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
 Convert filename to the format required for the target toolchain\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
-Convierte el nombre de archivo para que tenga barras invertidas como separadores de directorios\.
+Convierte el nombre de archivo para que tenga barras como separadores de directorios\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Devolver la ruta relativa al valor de \-workdir= para el directorio de trabajo actual\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
@@ -642,7 +642,7 @@ Notas:
 \(Verlos con la opción \-harbourhelp\)
   - archivo de opciones hbmk\.hbc en directorio de hbmk2 siempre es procesado si existe\. En plataformas \*nix este archivo es chequeado \(en este orden\) ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc antes de pasar a directorio de hbmk2\.
   - hbmk\.hbm hace script en el directorio actual siempre se procesa, si existe\.
-  - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
+  - Se recomienda usar barras en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas\.
   - filtros para plataformas son aceptados en cada linea de archivo \.hbc y con varias opciones\.  
 Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palabra\-clave&gt;\]\}\. Filtros pueden ser combinados usando los operadores '&amp;', '|' y agrupados en parénteses\. Ej\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - La mayoría de la líneas de un fichero \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) y sus correspondientes parámetros de línea de comandos aceptan variables de macro\. libpaths= también acepta %\{hb\_name\} que se transforma al nombre del fichero \.hbc que se busca\.
@@ -656,7 +656,7 @@ Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&
 
   - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb  en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos \(codepage\) establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\]  se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
   - Puede utilizar las teclas &lt;Alt\+V&gt; en el indicador de comandos interactivo de Harbour para pegar texto desde el portapapeles\.
-  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
+  - Los valores marcados con \[\*\] pueden depender de la plataforma anfitriona y/o la configuración\. Esta ayuda se generó en una plataforma afitriona 'win'\.
 
 
 Valores suportados para &lt;compiler&gt; conforme a &lt;platform&gt; disponible:
