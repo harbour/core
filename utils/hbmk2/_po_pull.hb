@@ -62,6 +62,8 @@ STATIC FUNCTION DoctorTranslation( cString )
    cString := Unspace( AllTrim( cString ) )
    cString := StrTran( cString, hb_UChar( 0x23CE ), e"\n" )
    cString := StrTran( cString, e"\n ", e"\n" )
+   cString := StrTran( cString, "( ", "(" )
+   cString := StrTran( cString, " )", ")" )
 
    RETURN cString
 

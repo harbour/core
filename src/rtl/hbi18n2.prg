@@ -330,7 +330,7 @@ STATIC FUNCTION __i18n_ItemToStr( item )
       cSource := Left( cSource, tmp - 1 ) + Str( Val( SubStr( cSource, tmp + 1 ) ), 10, 0 )
    ENDIF
 
-   RETURN cSource + Left( item[ _I18N_MSGID, 1 ], 30 )
+   RETURN cSource + item[ _I18N_MSGID, 1 ]
 
 FUNCTION __i18n_potArrayClean( aTrans, lSource, lEmptyTranslations, bTransformTranslation )
 
