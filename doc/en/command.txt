@@ -235,7 +235,7 @@
 
       METHOD <MethodName>( [<params,...>] ) BLOCK  <CodeBlock>
 
-      METHOD <MethodName>( [<params,...>] ) EXTERN <NAME>([<args,...>])
+      METHOD <MethodName>( [<params,...>] ) EXTERN <NAME>( [<args,...>] )
 
       METHOD <MethodName>( [<params,...>] ) SETGET
 

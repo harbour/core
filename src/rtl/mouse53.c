@@ -48,7 +48,7 @@
 
 #include "hbapigt.h"
 
-/* HARBOUR callable interface */
+/* Harbour callable interface */
 
 #ifdef HB_COMPAT_C53
 

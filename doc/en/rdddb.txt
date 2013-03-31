@@ -128,7 +128,7 @@
       This function add a new record to the end of the database
       in the selected or aliased work area. All fields in that
       database will be given empty data values - character fields
-      will be filled with blank spaces, date fields with CToD('//'),
+      will be filled with blank spaces, date fields with hb_SToD(),
       numeric fields with 0, logical fields with .F., and memo fields
       with NULL bytes. The header of the database is not updated until
       the record is flushed from the buffer and the contents are
@@ -137,7 +137,7 @@
       Under a networking enviroment, dbAppend() performs an additional
       operation: It attrmps to lock the newly added record. If
       the database file is currently locked or if a locking assignment
-      if made to LastRec()+1, NetErr() will return a logical true (.T.)
+      if made to LastRec() + 1, NetErr() will return a logical true (.T.)
       immediately after the dbAppend() function. This function does
       not unlock the locked records.
 
@@ -147,7 +147,7 @@
       default for this parameter is a logical false (.F.).
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL cName := "HARBOUR", nId := 10
+         LOCAL cName := "Harbour", nId := 10
          USE test
          test->( dbAppend() )
          REPLACE test->Name WITH cName, test->Id WITH nId
@@ -721,7 +721,7 @@
    $ONELINER$
       This function locks the record based on identity
    $SYNTAX$
-      dbRLock([<xIdentity>]) --> lSuccess
+      dbRLock( [<xIdentity>] ) --> lSuccess
    $ARGUMENTS$
       <xIdentity> Record identifier
    $RETURNS$
@@ -812,7 +812,7 @@
    $ONELINER$
       Unlocks a record based on its identifier
    $SYNTAX$
-      dbRUnlock([<xIdentity>])
+      dbRUnlock( [<xIdentity>] )
    $ARGUMENTS$
       <xIdentity> Record identifier, typically a record number
    $DESCRIPTION$
@@ -1012,7 +1012,7 @@
    $ONELINER$
       Moves the record pointer in the selected work area.
    $SYNTAX$
-      dbSkip([<nRecords>])
+      dbSkip( [<nRecords>] )
    $ARGUMENTS$
       <nRecords> Numbers of records to move record pointer.
    $DESCRIPTION$

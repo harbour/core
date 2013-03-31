@@ -285,7 +285,7 @@ HB_FUNC( ORDISUNIQUE )
       if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      /* HARBOUR extension: NewVal to set/reset unique flag */
+      /* Harbour extension: NewVal to set/reset unique flag */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, DBOI_UNIQUE, &pOrderInfo );
