@@ -805,7 +805,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
       IF ( idx := AScan( p_aPlatforms, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aPlatforms[ idx ][ 2 ]
       ELSE
-         RETURN "Unknown 'PLATFORMS' code: '" + cCode + "'"
+         RETURN cCode
       ENDIF
 
    CASE cType == "COMPLIANCE"
@@ -840,7 +840,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
       ELSEIF ! hb_HHasKey( hsBlock, "RETURNS" )
          RETURN hsBlock[ "NAME" ]
       ELSEIF Empty( hsBlock[ "RETURNS" ] ) .OR. ;
-         Lower( hsBlock[ "RETURNS" ] ) == "nil" .OR. ;
+         Upper( hsBlock[ "RETURNS" ] ) == "NIL" .OR. ;
          Lower( hsBlock[ "RETURNS" ] ) == "none" .OR. ;
          Lower( hsBlock[ "RETURNS" ] ) == "none."
 

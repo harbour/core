@@ -698,7 +698,7 @@
       <cString> A string representation of <xValue> using default
       conversions.
    $DESCRIPTION$
-      HB_VALTOSTR can be used to convert any scalar value to a string.
+      hb_ValToStr() can be used to convert any scalar value to a string.
    $EXAMPLES$
       Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
       ? hb_ValToStr( 4 ) == "         4"

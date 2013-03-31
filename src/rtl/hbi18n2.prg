@@ -71,7 +71,6 @@ STATIC FUNCTION __i18n_fileName( cFileName )
    RETURN cFileName
 
 STATIC FUNCTION __i18n_strEncode( cStr )
-
    RETURN SubStr( hb_StrToExp( cStr, .T. ), 2 )
 
 STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
