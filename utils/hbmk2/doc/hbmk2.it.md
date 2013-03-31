@@ -101,7 +101,7 @@ Opzioni:
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
  - **\-rebuild** rebuild \(in incremental build mode\)
- - **\-rebuildall** rebuild with sub\-projects \(in incremental build mode\)
+ - **\-rebuildall** Ricompila con i sotto\-progetti \(in compilazione incrementale\)
  - **\-clean** clean \(in incremental build mode\)
  - **\-workdir=&lt;dir&gt;** working directory  
 \(default: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] in incremental mode, OS temp directory otherwise\)
@@ -259,7 +259,7 @@ Macro variables:
  - **$\{hb\_root\}** directory of hbmk2
  - **$\{hb\_dir\}** directory of the filename it is used in
  - **$\{hb\_dirname\}** top directory of the filename it is used in
- - **$\{hb\_name\}** name of the filename it is used in \(without directory and extension\)
+ - **$\{hb\_name\}** nome del file in uso \(senza cartella ed estensione\)
  - **$\{hb\_self\}** nome completo del file utilizzato
  - **$\{hb\_curdir\}** attuale cartella di lavoro
  - **$\{hb\_tempdir\}** OS directory for temporary files
@@ -313,9 +313,9 @@ Filters \(you can combine and/or negate them\):
  - **\{shared\}** shared build \(see \-shared and related options\)
  - **\{static\}** static build \(see \-static and related options\)
  - **\{lngcpp\}** forced C\+\+ mode \(see \-cpp option\)
- - **\{lngc\}** forced C mode \(see \-cpp\- option\)
+ - **\{lngc\}** modalità C forzata \(vedere l'opzione \-cpp\-\)
  - **\{winuni\}** Modo Windows UNICODE \(WIDE\) \(vedere l'opzione \-winuni\)
- - **\{winansi\}** Windows ANSI mode \(see \-winuni\- option\)
+ - **\{winansi\}** Modalità ANSI Windows \(vedere l'opzione \-winuni\-\)
  - **\{unix\}** target platform is \*nix compatible \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** la piattaforma di destinazione è compatibile con Windows \(win, wce\)
  - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
@@ -341,7 +341,7 @@ Predefined constants in sources:
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** quando uno scripr \.hb viene compilato come plugin hbmk2
  - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
  - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected \(available in C sources\)
+ - **HBMK\_HAS\_&lt;depname&gt;** dove la dipendenza &lt;depname&gt; è stata rilevata \(disponibile nei sorgenti C\)
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando un file sorgente Harbour è eseguito come uno script di shell
@@ -359,14 +359,14 @@ Variabili d'ambiente:
 
 
  - **HBMK\_OPTIONS** accepts any options as if they were passed in the beginning of the command\-line
- - **HB\_PLATFORM** accepts same values as \-plat= option
- - **HB\_COMPILER** accepts same values as \-comp= option
- - **HB\_CPU** accepts same values as \-cpu= option
- - **HB\_BUILD\_NAME** accepts same values as \-build= option
- - **HB\_LANG** accepts same values as \-lang= option
+ - **HB\_PLATFORM** accetta gli stessi valori come l'opzione \-plat=
+ - **HB\_COMPILER** accetta gli stessi valori come l'opzione \-comp=
+ - **HB\_CPU** accetta gli stessi valori come l'opzione \-cpu=
+ - **HB\_BUILD\_NAME** accetta gli stessi valori come l'opzione \-build=
+ - **HB\_LANG** accetta gli stessi valori come l'opzione \-lang=
  - **HB\_USER\_LIBS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-l
  - **HB\_USER\_LIBPATHS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione  \-L
- - **HB\_USER\_PRGFLAGS** options to be passed to Harbour compiler \(before command\-line options\)
+ - **HB\_USER\_PRGFLAGS** opzioni da passare al compilatore Harbour \(prima delle opzioni nella riga di comando\)
  - **HB\_USER\_CFLAGS** opzioni da passare al compilatore C \(prima delle opzioni nella riga di comando\)
  - **HB\_USER\_RESFLAGS** opzioni da passare al compilatore di risorse \(prima delle opzioni nella riga di comando\) \(solo Windows\)
  - **HB\_USER\_LDFLAGS** options to be passed to linker \(executable\) \(before command\-line options\)
@@ -389,7 +389,7 @@ Variabili d'ambiente:
  - **skip=\[&lt;msg&gt;\]** skip processing the rest of the \.hbc file\. Display &lt;msg&gt;, if specified\.
  - **stop=\[&lt;msg&gt;\]** ferma la compilazione\. Visualizza &lt;msg&gt;, se specificato\.
  - **sources=** aggiunge come file di input una lista di file separati da spazio
- - **headers=** add space separated list of \.ch format headers as standard header
+ - **headers=** aggiungere un elenco di intestazioni \.ch separate da spazio come intestazione standard
  - **libs=** Aggiungi un elenco di librerie, separate da uno spazio \(più informazioni con l'opzione \-l\)
  - **frameworks=** aggiunge una lista di strutture separate da spazio \(solo Darwin\)
  - **requests=** add space separated list of symbols to force link to the build target
@@ -485,7 +485,7 @@ Escape/quote filename for using it as external command parameter\.
  - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Convert filename to the format required for the target platform/C compiler\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
-Convert filename to have forward slash directory separators\.
+Convertire il nome del file con lo "slash" come separatore di cartella
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Return relative path of \-workdir= value from current working directory\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  

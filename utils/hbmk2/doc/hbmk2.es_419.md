@@ -177,8 +177,8 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
 
 
  - **\-\-hbdirbin** output Harbour binary directory to stdout
- - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
- - **\-\-hbdirlib** output Harbour static library directory to stdout
+ - **\-\-hbdirdyn** muestra el directorio de bibliotecas dinámicas de Harbour
+ - **\-\-hbdirlib** muestra el directorio de bibliotecas estáticas de Harbour
  - **\-\-hbdirinc** output Harbour header directory to stdout
  - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
 
@@ -293,7 +293,7 @@ Variables macro:
  - **$\{hb\_first\}** nombre del archivo fuente que contiene la función principal \(sin directorio ni extensión\)
  - **$\{hb\_outputdir\}** directorio de salida
  - **$\{hb\_outputname\}** nombre de la salida \(sin extensión\)
- - **$\{hb\_level\}** sub\-project recursion level
+ - **$\{hb\_level\}** nivel de recursión de sub\-proyecto
  - **$\{&lt;depname&gt;\}** devuelve el directorio cabecera de la dependencia &lt;depname&gt; fue detectado, o '1' si no se ha detectado\.
  - **$\{&lt;envvar&gt;\}** devuelve el valor de la variable de entorno &lt;envvar&gt;
   
@@ -305,7 +305,7 @@ Filtros \(puede combinar y/o negarlos\):
  - **\{&lt;cpu&gt;\}** CPU destino\. Donde  &lt;cpu&gt; puede ser uno de: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
  - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
- - **\{st\}** build target is single\-threaded \(see \-st option\)
+ - **\{st\}** construir destino como monohilo \(ver opción \-st\)
  - **\{gui\}** GUI destino \(vea opción \-gui\)
  - **\{std\}** consola destino \(vea opción \-console\)
  - **\{debug\}** El nivel de depuración C está habilitado \(ver la opción \-debug\-\)
@@ -395,20 +395,20 @@ directivas \.hbc \(deben ser escritas en líneas separadas\):
  - **requests=** add space separated list of symbols to force link to the build target
  - **syslibs=** agregar lista de bibliotecas separadas por espacio como bibliotecas de sistema \(antes de las bibliotecas regulares\)
  - **hbcs=** incrusta una lista de archivos \.hbc separados por espacios\. Se aceptan nombres sin extensión\. Estas referencias se procesan en el momento\.
- - **autohbcs=** space separated list of values as in \-autohbc= option
+ - **autohbcs=** lista de valores separados por espacio como en opción \-autohbc=
  - **libpaths=** lista de rutas de biblioteca adicionales separadas por espacio 
  - **incpaths=** agrega lista de rutas adicionales de cabecera   separada por espacio  \(para Harbour y C\)
- - **instfiles=** space separated list of values as in \-instfile= option
- - **instpaths=** space separated list of values as in \-instpath= option
- - **prgflags=** space separated list of values as in \-prgflag= option
- - **cflags=** space separated list of values as in \-cflag= option
- - **resflags=** space separated list of values as in \-resflag= option
- - **ldflags=** space separated list of values as in \-ldflag= option
- - **ldflags\+=** space separated list of values as in \-ldflag\+= option
- - **dflags=** space separated list of values as in \-dflag= option
- - **dflags\+=** space separated list of values as in \-dflag\+= option
- - **pflags=** space separated list of values as in \-pflag= option
- - **psources=** space separated list of values as in \-pi= option
+ - **instfiles=** lista de valores separados por espacio como en opción \-instfile=
+ - **instpaths=** lista de valores separados por espacio como en opción \-instpath=
+ - **prgflags=** lista de valores separados por espacio como en opción \-prgflag=
+ - **cflags=** lista de valores separados por espacio como en opción \-cflag=
+ - **resflags=** lista de valores separados por espacio como en opción \-resflag=
+ - **ldflags=** lista de valores separados por espacio como en opción \-ldflag=
+ - **ldflags\+=** lista de valores separados por espacio como en opción \-ldflag\+=
+ - **dflags=** lista de valores separados por espacio como en opción \-dflag=
+ - **dflags\+=** lista de valores separados por espacio como en opción \-dflag\+=
+ - **pflags=** lista de valores separados por espacio como en opción \-pflag=
+ - **psources=** lista de valores separados por espacio como en opción \-pi=
  - **gui=&lt;bool&gt;** opción 'yes' = \-gui, 'no' = \-std
  - **mt=&lt;bool&gt;** opción 'yes' = \-mt, 'no' = \-st
  - **pic=&lt;bool&gt;** opción 'yes' = \-pic, 'no' = \-pic\-
