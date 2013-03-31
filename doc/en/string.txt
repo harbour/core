@@ -188,7 +188,7 @@
    $DESCRIPTION$
       This function trims the leading space blank
    $EXAMPLES$
-      ? LTrim( "HELLO     " )
+      ? LTrim( "Hello     " )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1199,7 +1199,7 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? RTrim( "HELLO" )              //  "HELLO"
+      ? RTrim( "Hello" )              //  "Hello"
       ? RTrim( "" )                   //  ""
       ? RTrim( "UA   " )              //  "UA"
       ? RTrim( "   UA" )              //  "   UA"
@@ -1241,7 +1241,7 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? Trim( "HELLO" )     //  "HELLO"
+      ? Trim( "Hello" )     //  "Hello"
       ? Trim( "" )          //   ""
       ? Trim( "UA   " )     //   "UA"
       ? Trim( "   UA" )     //   "   UA"
