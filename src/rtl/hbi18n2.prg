@@ -332,6 +332,41 @@ STATIC FUNCTION __i18n_ItemToStr( item )
 
    RETURN cSource + Left( item[ _I18N_MSGID, 1 ], 30 )
 
+FUNCTION __i18n_potArrayClean( aTrans, lSource, lEmptyTranslations, bTransformTranslation )
+
+   LOCAL item
+   LOCAL lEmpty
+   LOCAL cString
+
+   hb_default( @lSource, .T. )
+   hb_default( @lEmptyTranslations, .T. )
+
+   FOR EACH item IN aTrans DESCEND
+      IF ! lEmptyTranslations
+         lEmpty := .T.
+         FOR EACH cString IN item[ _I18N_MSGSTR ]
+            IF ! Empty( cString )
+               lEmpty := .F.
+               EXIT
+            ENDIF
+         NEXT
+         IF lEmpty
+            hb_ADel( aTrans, item:__enumIndex(), .T. )
+            LOOP
+         ENDIF
+      ENDIF
+      IF HB_ISEVALITEM( bTransformTranslation )
+         FOR EACH cString IN item[ _I18N_MSGSTR ]
+            cString := Eval( bTransformTranslation, cString )
+         NEXT
+      ENDIF
+      IF ! lSource
+         item[ _I18N_SOURCE ] := ""
+      ENDIF
+   NEXT
+
+   RETURN aTrans
+
 FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
 
    LOCAL aItem

@@ -387,12 +387,12 @@ msgid "Running executable:"
 msgstr "Ejecutando aplicativo:"
 
 #, c-format
-msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en la línea de comando."
-
-#, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
 msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en '%3$s', lineas %4$d y %5$d."
+
+#, c-format
+msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
+msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en la línea de comando."
 
 #, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
@@ -907,40 +907,40 @@ msgid "<.ch> is a header file name. <.hbc> is a .hbc filename to be automaticall
 msgstr "<.ch> es un nombre de archivo de cabecera. <.hbc> es un nombre de archivo .hbc para ser incluido automáticamente en caso la cabecera se encuentra en cualquiera de las fuentes compiladas. (EXPERIMENTAL)"
 
 #, c-format
-msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
-msgstr "<d> es el nombre de la dependencia. <n> nombre de la dependencia de un paquete. Se puede especificar varias veces."
-
-#, c-format
-msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
-msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
-
-#, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
-
-#, c-format
 msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
 msgstr "<d> es el nombre de la dependencia. <f> puede ser 'yes' o 'no', especifica si la dependencia es opcional. Por defecto: no"
 
 #, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
-msgstr "<d> es el nombre de la dependencia. Añadir <i> a la lista de rutas de detección de cabeceras, donde <i> apunta a un directorio local del proyecto, conteniendo una dependencia embebida (conocido como 'alojado localmente')."
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
+msgstr "<d> es el nombre de la dependencia. <n> nombre de la dependencia de un paquete. Se puede especificar varias veces."
 
 #, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr "<d> es el nombre de la dependencia. Establecer nombre generado de biblioteca de importación a <lib>"
 
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
-msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
-
-#, c-format
 msgid "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified."
 msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la dependencia de un paquete. Varios encabezados alternativos pueden ser especificados."
 
 #, c-format
+msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
+msgstr "<d> es el nombre de la dependencia. Añadir <i> a la lista de rutas de detección de cabeceras, donde <i> apunta a un directorio local del proyecto, conteniendo una dependencia embebida (conocido como 'alojado localmente')."
+
+#, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
 msgstr "<d> es el nombre de la dependencia. Anadir <i> a la lista de rutas de detección de encabezados."
+
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
+
+#, c-format
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
+msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
+
+#, c-format
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
 
 #, c-format
 msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied."
@@ -1051,12 +1051,12 @@ msgid "force waiting for a key on exit in case of failure (with alternate GTs on
 msgstr "forzar pause para presionar una tecla en caso de error (solo con driver GT alternativo)"
 
 #, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "generar archivo de cabecera .ch con información de fecha/hora. Cabecera generado definirá macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ con fecha/hora de creación de archivo."
-
-#, c-format
 msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
 msgstr "generar archivo de cabecera .ch con información del repositorio local. Actualmente están soportados Git, SVN, Mercurial, Bazaar, Fossil, CVS y Monotone. El archivo de cabecera definirá la constante de preprocesador _HBMK_VCS_TYPE_ con el nombre del VCS detectado, y _HBMK_VCS_ID_ con el ID único del repositorio local. Si no se detecta un VCS, un número secuencial será incrementado cada vez que se construya."
+
+#, c-format
+msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgstr "generar archivo de cabecera .ch con información de fecha/hora. Cabecera generado definirá macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ con fecha/hora de creación de archivo."
 
 #, c-format
 msgid "ignore errors when running compiler tools (default: off)"
@@ -1155,12 +1155,12 @@ msgid "pass single flag to resource compiler (Windows only)"
 msgstr "pasar flags a compilador de recursos (sólo para Windows)"
 
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
-msgstr "pasar una sola opción al enlazador (biblioteca dinámica) después de la lista de bibliotecas. Usar con precaución."
-
-#, c-format
 msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr "pasar una sola opción al enlazador (ejecutable) después de la lista de bibliotecas. Usar con precaución."
+
+#, c-format
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgstr "pasar una sola opción al enlazador (biblioteca dinámica) después de la lista de bibliotecas. Usar con precaución."
 
 #, c-format
 msgid "rebuild (in incremental build mode)"
@@ -1960,7 +1960,7 @@ msgstr "Descripción:"
 
 #, c-format
 msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
-msgstr "%1$s es una herramienta integrada y portátil de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios (ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour) de múltiples tipos de código fuente (C, C++, Objective-C, Harbour, traducciones de 'gettext', recursos de Windows). 'Integrada' significa que un solo fichero de proyecto %1$s puede controlar todos, o casi todos, los aspectos del proceso de construcción. 'Portátil' significa que un solo fichero de proyecto %1$s puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados. Ayuda también en la mayoría de los procesos de construcción por medio de cortos y simples ficheros de proyecto (opciones). %1$s soporta ficheros de proyecto para C/C++/Objetive-C sin relación con Harbour. Para conseguir esos objetivos, %1$s detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente. %1$s permite extender los tipos de código fuente soportados por medio de complementos.\n Además de construir ejecutables, %1$s puede ejecutar archivos de órdenes de Harbour (tanto en código fuente como precompilado) directamente, y otra característica es que dispone de un intérprete de comandos interactivo."
+msgstr "%1$s es una herramienta integrada y portátil de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios (ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour) de múltiples tipos de código fuente (C, C++, Objective-C, Harbour, traducciones de 'gettext', recursos de Windows). 'Integrada' significa que un solo fichero de proyecto %1$s puede controlar todos, o casi todos, los aspectos del proceso de construcción. 'Portátil' significa que un solo fichero de proyecto %1$s puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados. Ayuda también en la mayoría de los procesos de construcción por medio de cortos y simples ficheros de proyecto (opciones). %1$s soporta ficheros de proyecto para C/C++/Objetive-C sin relación con Harbour. Para conseguir esos objetivos, %1$s detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente. %1$s permite extender los tipos de código fuente soportados por medio de complementos.⏎ Además de construir ejecutables, %1$s puede ejecutar archivos de órdenes de Harbour (tanto en código fuente como precompilado) directamente, y otra característica es que dispone de un intérprete de comandos interactivo."
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
@@ -2003,12 +2003,12 @@ msgid "Examples to build a Harbour static library:"
 msgstr "Ejemplos para construir una biblioteca estática con Harbour:"
 
 #, c-format
-msgid "To build library 'mylib' from sources using incremental mode"
-msgstr "Construir la biblioteca 'mylib' desde el código fuente usando el modo incremental"
-
-#, c-format
 msgid "To build library 'mylib' from sources"
 msgstr "Construir la librería 'mylib' desde el código fuente"
+
+#, c-format
+msgid "To build library 'mylib' from sources using incremental mode"
+msgstr "Construir la biblioteca 'mylib' desde el código fuente usando el modo incremental"
 
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"

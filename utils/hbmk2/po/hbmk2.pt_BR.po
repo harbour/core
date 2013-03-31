@@ -387,12 +387,12 @@ msgid "Running executable:"
 msgstr "Executando aplicativo:"
 
 #, c-format
-msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr "Atenção:Desnecessário usar as opções %1$s e %2$s juntas em interpretado de comando \"command-line\"."
-
-#, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
 msgstr "Atenção:Desnecessário usar as opçoes %1$s e %2$s juntas em '%3$s' linha %4$d e %5$d."
+
+#, c-format
+msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
+msgstr "Atenção:Desnecessário usar as opções %1$s e %2$s juntas em interpretado de comando \"command-line\"."
 
 #, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
@@ -827,16 +827,16 @@ msgid "more help"
 msgstr "mais ajuda"
 
 #, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr "<d> é o nome da dependencia. Adicione <dll> para importar a biblioteca na lista de fontes."
-
-#, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr "<d> é o nome da dependência. Coloque no nome da biblioteca de importação para <lib>"
 
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
 msgstr "<d> é o nome da dependêcia. Adicione <i> para detectar o cabeçalho na lista de caminhos."
+
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr "<d> é o nome da dependencia. Adicione <dll> para importar a biblioteca na lista de fontes."
 
 #, c-format
 msgid "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual"
@@ -927,12 +927,12 @@ msgid "force waiting for a key on exit in case of failure (with alternate GTs on
 msgstr "forçar pause por uma tela em caso de erro (somente com driver GT alternativo)"
 
 #, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "gerar cabeçalho .ch com informação de data/hora. Cabeçalho gerado conterá as macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ com a data/hora de criação do arquivo."
-
-#, c-format
 msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
 msgstr "gerar arquivo de cabeçalho \". ch\" com informações do repositório local. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente. O cabeçalho gerado irá definir a constante _HBMK_VCS_TYPE_ no pré-processador com o nome detectados de VCS e _HBMK_VCS_ID_ com o ID único do repositório local. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção.\n VCS - sistema de controle de versão."
+
+#, c-format
+msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgstr "gerar cabeçalho .ch com informação de data/hora. Cabeçalho gerado conterá as macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ com a data/hora de criação do arquivo."
 
 #, c-format
 msgid "ignore errors when running compiler tools (default: off)"
@@ -1015,12 +1015,12 @@ msgid "pass single flag to resource compiler (Windows only)"
 msgstr "especifica flags para o compilador de recursos (apenas windows)"
 
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
-msgstr "passar uma unica opção \"raw\" para linkar (biblioteca dinâmica), após a lista da biblioteca. Use com cuidado."
-
-#, c-format
 msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr "passar uma unica opção \"raw\" para linkar (executável), após a lista da biblioteca. Use com cuidado."
+
+#, c-format
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgstr "passar uma unica opção \"raw\" para linkar (biblioteca dinâmica), após a lista da biblioteca. Use com cuidado."
 
 #, c-format
 msgid "rebuild (in incremental build mode)"
@@ -1767,20 +1767,20 @@ msgid "Examples to build a Harbour application:"
 msgstr "Exemplos para gerar uma aplicação Harbour:"
 
 #, c-format
-msgid "To build an application using a project file"
-msgstr "Para construir uma aplicação usando un arquivo de projeto"
-
-#, c-format
 msgid "To build an application using incremental mode"
 msgstr "Para construir uma aplicação usando o modo incremental"
 
 #, c-format
-msgid "To build an application which uses a raw library"
-msgstr "Para construir uma aplicação que utiliza uma biblioteca raw"
+msgid "To build an application using a project file"
+msgstr "Para construir uma aplicação usando un arquivo de projeto"
 
 #, c-format
 msgid "To build an application which uses a Windows resource"
 msgstr "Para construir uma aplicação que usa um recurso do Windows"
+
+#, c-format
+msgid "To build an application which uses a raw library"
+msgstr "Para construir uma aplicação que utiliza uma biblioteca raw"
 
 #, c-format
 msgid "To build one simple .prg"

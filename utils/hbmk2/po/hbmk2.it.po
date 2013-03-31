@@ -212,7 +212,7 @@ msgstr "plugin: %1$s"
 
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
-msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)\n '%2$s'"
+msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)⏎ '%2$s'"
 
 #, c-format
 msgid "<%1$s directory>"
@@ -899,16 +899,16 @@ msgid "To build an application out of all .prg and .c sources residing in 'sourc
 msgstr "Per compilare un'applicazione esterna a tutti i sorgenti .prg e .c residenti nella sottocartella 'source'"
 
 #, c-format
+msgid "To build an application which uses a Windows resource"
+msgstr "Per compilare un'applicazione che usa una risorsa Windows"
+
+#, c-format
 msgid "To build an application which uses a raw library"
 msgstr "Per compilare un'applicazione che utilizza direttamente una libreria"
 
 #, c-format
 msgid "To build an application which links against Harbour dynamic libraries"
 msgstr "Per compilare un'applicazione che si linka a librerie dinamiche Harbour"
-
-#, c-format
-msgid "To build an application which uses a Windows resource"
-msgstr "Per compilare un'applicazione che usa una risorsa Windows"
 
 #, c-format
 msgid "To build multiple .prg sources into one application in incremental mode"

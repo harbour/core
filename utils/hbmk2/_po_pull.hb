@@ -42,6 +42,13 @@ PROCEDURE Main( cLogin )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
          hb_MemoWrit( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", DoctorContent( json[ "content" ] ) )
+         /* should only do this if the translation is primarily done
+            on Transifex website. This encouraged and probably the case
+            in practice. Delete source information, delete empty
+            translations and apply some automatic transformation for
+            common translation mistakes. */
+         PO_Clean( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", .F., .F., @DoctorTranslation() )
+         FToNativeEOL( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po" )
       ELSE
          ? "API error"
       ENDIF
@@ -51,12 +58,48 @@ PROCEDURE Main( cLogin )
 
    RETURN
 
+STATIC FUNCTION FToNativeEOL( cFile )
+   RETURN hb_MemoWrit( cFile, StrTran( hb_MemoRead( cFile ), e"\n", hb_eol() ) )
+
 STATIC FUNCTION DoctorContent( cString )
+   RETURN StrTran( cString, hb_UChar( 0x23CE ), "\n" )  /* convert RETURN SYMBOL used by Transifex for NEWLINE */
 
-   cString := StrTran( cString, hb_UChar( 0x23CE ), "\n" )  /* convert RETURN SYMBOL used by Transifex for NEWLINE */
-   cString := StrTran( cString, e"\n", hb_eol() )
+STATIC FUNCTION DoctorTranslation( cString )
+   RETURN Unspace( AllTrim( cString ) )
 
-   RETURN cString
+/* Converts multiple spaces to just one */
+STATIC FUNCTION Unspace( cString )
+
+   LOCAL cResult := ""
+   LOCAL cChar, cCharPrev
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( cString )
+
+      cChar := SubStr( cString, tmp, 1 )
+
+      IF !( cChar == " " ) .OR. !( cCharPrev == " " )
+         cResult += cChar
+      ENDIF
+
+      cCharPrev := cChar
+   NEXT
+
+   RETURN cResult
+
+STATIC FUNCTION PO_Clean( cFileName, ... )
+
+   LOCAL aTrans
+   LOCAL cErrorMsg
+
+   IF ( aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg ) ) != NIL .AND. ;
+      __i18n_potArraySave( cFileName, __i18n_potArrayClean( aTrans, ... ), @cErrorMsg )
+      RETURN .T.
+   ENDIF
+
+   ? cErrorMsg
+
+   RETURN .F.
 
 STATIC FUNCTION GetJSON( cString )
 

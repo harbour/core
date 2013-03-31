@@ -151,12 +151,12 @@ msgid "pass single flag to import library creation command"
 msgstr "une seule passe poue la commande de création de librairie d'importation"
 
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
-msgstr "Passer une seule option bas-niveau à l'éditeur de liens (bibliothèque dynamique) après la liste de la bibliothèque. A utiliser avec prudence."
-
-#, c-format
 msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr "édition des liens en une seule passe (exécutable) après la liste des librairies. A utiliser avec prudence."
+
+#, c-format
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgstr "Passer une seule option bas-niveau à l'éditeur de liens (bibliothèque dynamique) après la liste de la bibliothèque. A utiliser avec prudence."
 
 #, c-format
 msgid "rebuild with sub-projects (in incremental build mode)"

@@ -387,12 +387,12 @@ msgid "Running executable:"
 msgstr "Ejecutando aplicativo:"
 
 #, c-format
-msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en la línea de comando."
-
-#, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
 msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en '%3$s', lineas %4$d y %5$d."
+
+#, c-format
+msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
+msgstr "Advertencia: No tiene sentido usar juntas las opciones %1$s y %2$s en la línea de comando."
 
 #, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
@@ -915,32 +915,20 @@ msgid "<.ch> is a header file name. <.hbc> is a .hbc filename to be automaticall
 msgstr "<.ch> es un nombre de archivo de cabecera. <.hbc> es un nombre de archivo .hbc para ser incluido automáticamente en caso la cabecera se encuentra en cualquiera de las fuentes compiladas. (EXPERIMENTAL)"
 
 #, c-format
-msgid "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options."
-msgstr "<d> es el nombre de la dependencia. Cierra la definición de dependencias y ejecuta la detección, estableciendo las variables macro de filtro predefinidas y las opciones de construcción relacionadas. Opcional, si se omite, la detección tendrá lugar después de procesar todas las opciones."
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
+msgstr "<d> es el nombre de la dependencia. <f> puede ser 'yes' o 'no', especifica si la dependencia es opcional. Por defecto: no"
 
 #, c-format
 msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
 msgstr "<d> es el nombre de la dependencia. <n> nombre de la dependencia de un paquete. Se puede especificar varias veces."
 
 #, c-format
-msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
-msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
-
-#, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
-
-#, c-format
-msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
-msgstr "<d> es el nombre de la dependencia. <f> puede ser 'yes' o 'no', especifica si la dependencia es opcional. Por defecto: no"
-
-#, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr "<d> es el nombre de la dependencia. Establecer nombre generado de biblioteca de importación a <lib>"
 
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
-msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
+msgid "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options."
+msgstr "<d> es el nombre de la dependencia. Cierra la definición de dependencias y ejecuta la detección, estableciendo las variables macro de filtro predefinidas y las opciones de construcción relacionadas. Opcional, si se omite, la detección tendrá lugar después de procesar todas las opciones."
 
 #, c-format
 msgid "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified."
@@ -949,6 +937,18 @@ msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la 
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
 msgstr "<d> es el nombre de la dependencia. Anadir <i> a la lista de rutas de detección de encabezados."
+
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
+
+#, c-format
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
+msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
+
+#, c-format
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
 
 #, c-format
 msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied."
@@ -1071,12 +1071,12 @@ msgid "force waiting for a key on exit in case of failure (with alternate GTs on
 msgstr "forzar pause para presionar una tecla en caso de error (solo con driver GT alternativo)"
 
 #, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "generar archivo de cabecera .ch con información de fecha/hora. Cabecera generado definirá macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ con fecha/hora de creación de archivo."
-
-#, c-format
 msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
 msgstr "generar archivo de cabecera .ch con información del repositorio local. Actualmente están soportados Git, SVN, Mercurial, Bazaar, Fossil, CVS y Monotone. El archivo de cabecera generado definirá la constante de preprocesador _HBMK_VCS_TYPE_ con el nombre del SCV detectado, y _HBMK_VCS_ID_ con el ID único del repositorio local. Si no se detecta un SCV, un número secuencial será incrementado cada vez que se construya."
+
+#, c-format
+msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgstr "generar archivo de cabecera .ch con información de fecha/hora. Cabecera generado definirá macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ con fecha/hora de creación de archivo."
 
 #, c-format
 msgid "ignore errors when running compiler tools (default: off)"
@@ -1175,12 +1175,12 @@ msgid "pass single flag to resource compiler (Windows only)"
 msgstr "pasar bandera única al compilador de recursos (sólo Windows)"
 
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
-msgstr "pasar una sola opción al enlazador (biblioteca dinámica) después de la lista de bibliotecas. Usar con precaución."
-
-#, c-format
 msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr "pasar una sola opción al enlazador (ejecutable) después de la lista de bibliotecas. Usar con precaución."
+
+#, c-format
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgstr "pasar una sola opción al enlazador (biblioteca dinámica) después de la lista de bibliotecas. Usar con precaución."
 
 #, c-format
 msgid "rebuild (in incremental build mode)"
@@ -1727,16 +1727,16 @@ msgid "filter will pass if ${MACRO} value is larger than <value> (case insensiti
 msgstr "el filtro pasará si el valor de ${MACRO} es mayor a <value> (insensible a minúsculas y mayúsculas)"
 
 #, c-format
-msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr "el filtro pasará si el valor de ${MACRO} es igual a <value> (insensible a minúsculas y mayúsculas)"
-
-#, c-format
 msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
 msgstr "el filtro pasará si el valor de ${MACRO} es menor a <value> (insensible a minúsculas y mayúsculas)"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
 msgstr "el filtro pasará si el valor de ${MACRO} no está vacio y no es igual a '0' o 'no' (insensible a minúsculas y mayúsculas)"
+
+#, c-format
+msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
+msgstr "el filtro pasará si el valor de ${MACRO} es igual a <value> (insensible a minúsculas y mayúsculas)"
 
 #, c-format
 msgid "forced C mode (see -cpp- option)"
@@ -2211,28 +2211,28 @@ msgid "To build an application out of all .prg and .c sources residing in 'sourc
 msgstr "Para construir una aplicación desde todas las fuentes .prg y .c ubicadas en el subdirectorio 'fuente'"
 
 #, c-format
-msgid "To build an application using a project file"
-msgstr "para construir una aplicación usando un archivo de projecto"
-
-#, c-format
 msgid "To build an application using incremental mode"
 msgstr "Para construir una aplicación usando el modo incremental"
 
 #, c-format
-msgid "To build an application which uses a raw library"
-msgstr "Para construir una aplicación que utiliza una biblioteca pura"
+msgid "To build an application using a project file"
+msgstr "para construir una aplicación usando un archivo de projecto"
+
+#, c-format
+msgid "To build an application which uses a Windows resource"
+msgstr "Para construir una aplicación que utiliza un recurso Windows"
 
 #, c-format
 msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
 msgstr "Para construir una aplicación que utiliza un paquete de contribución o un complemento que se envia con un archivo .hbc"
 
 #, c-format
-msgid "To build an application which links against Harbour dynamic libraries"
-msgstr "Para construir una aplicación que enlaza con bibliotecas dinámicas Harbour"
+msgid "To build an application which uses a raw library"
+msgstr "Para construir una aplicación que utiliza una biblioteca pura"
 
 #, c-format
-msgid "To build an application which uses a Windows resource"
-msgstr "Para construir una aplicación que utiliza un recurso Windows"
+msgid "To build an application which links against Harbour dynamic libraries"
+msgstr "Para construir una aplicación que enlaza con bibliotecas dinámicas Harbour"
 
 #, c-format
 msgid "To build multiple .prg sources into one application in incremental mode"
@@ -2247,12 +2247,12 @@ msgid "Examples to build a Harbour static library:"
 msgstr "Ejemplos para construir una librería estática Harbour"
 
 #, c-format
-msgid "To build library 'mylib' from sources using incremental mode"
-msgstr "Para construir librería 'mylib' desde las fuentes utilizando el modo incremental"
-
-#, c-format
 msgid "To build library 'mylib' from sources"
 msgstr "Para construir librería 'mylib' desde las fuentes"
+
+#, c-format
+msgid "To build library 'mylib' from sources using incremental mode"
+msgstr "Para construir librería 'mylib' desde las fuentes utilizando el modo incremental"
 
 #, c-format
 msgid "space separated list of extensions to load in interactive Harbour shell"

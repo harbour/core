@@ -1400,6 +1400,7 @@ DYNAMIC __HBVMInit
 DYNAMIC __hb_langSelect
 DYNAMIC __i18n_hashJoin
 DYNAMIC __i18n_hashTable
+DYNAMIC __i18n_potArrayClean
 DYNAMIC __i18n_potArrayJoin
 DYNAMIC __i18n_potArrayLoad
 DYNAMIC __i18n_potArraySave
