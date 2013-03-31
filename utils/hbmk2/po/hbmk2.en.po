@@ -1093,12 +1093,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15729
 #, c-format
-msgid "additional path to search for libraries"
+msgid "additional path to search for headers"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15729
 #, c-format
-msgid "additional path to search for headers"
+msgid "additional path to search for libraries"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15729
@@ -1158,12 +1158,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
+msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
@@ -1173,12 +1173,22 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
@@ -1193,17 +1203,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15835
-#, c-format
 msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15835
-#, c-format
-msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
@@ -1448,12 +1448,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
+msgid "pass single flag to C compiler"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "pass single flag to C compiler"
+msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
@@ -1498,12 +1498,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
+msgid "pass single raw option to linker (executable) after the library list. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
 #, c-format
-msgid "pass single raw option to linker (executable) after the library list. Use with caution."
+msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15835
@@ -1958,7 +1958,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15984
 #, c-format
-msgid "options to be passed to linker (dynamic library) (before command-line options)"
+msgid "options to be passed to linker (executable) (before command-line options)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15984
@@ -1968,7 +1968,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15984
 #, c-format
-msgid "options to be passed to linker (executable) (before command-line options)"
+msgid "options to be passed to linker (dynamic library) (before command-line options)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15984
@@ -2308,12 +2308,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16101
 #, c-format
-msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16101
-#, c-format
-msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
+msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16101
@@ -2323,7 +2318,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16101
 #, c-format
-msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
+msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16101
+#, c-format
+msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16101
@@ -2468,12 +2468,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16173
 #, c-format
-msgid "add space separated list of libraries as system libraries (before regular libraries)"
+msgid "add space separated list of libraries (see more at -l option)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16173
 #, c-format
-msgid "add space separated list of libraries (see more at -l option)"
+msgid "add space separated list of libraries as system libraries (before regular libraries)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16173
@@ -2618,12 +2618,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16199
 #, c-format
-msgid "when <depname> dependency was detected"
+msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16199
 #, c-format
-msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
+msgid "when <depname> dependency was detected"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16204
@@ -3013,17 +3013,22 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16435
 #, c-format
-msgid "To build an application using a project file"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16435
-#, c-format
 msgid "To build an application using incremental mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16435
 #, c-format
+msgid "To build an application using a project file"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16435
+#, c-format
 msgid "To build an application which links against Harbour dynamic libraries"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16435
+#, c-format
+msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16435
@@ -3034,11 +3039,6 @@ msgstr ""
 #: utils/hbmk2/hbmk2.prg:16435
 #, c-format
 msgid "To build an application which uses a Windows resource"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16435
-#, c-format
-msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16435
