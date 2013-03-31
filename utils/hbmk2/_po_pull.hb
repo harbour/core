@@ -41,14 +41,13 @@ PROCEDURE Main( cLogin )
          cLogin, cProject, hb_FNameName( cMain ), cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
-         hb_MemoWrit( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", DoctorContent( json[ "content" ] ) )
+         hb_MemoWrit( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", json[ "content" ] )
          /* should only do this if the translation is primarily done
             on Transifex website. This encouraged and probably the case
             in practice. Delete source information, delete empty
             translations and apply some automatic transformation for
             common translation mistakes. */
          PO_Clean( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", .F., .F., @DoctorTranslation() )
-         FToNativeEOL( cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po" )
       ELSE
          ? "API error"
       ENDIF
@@ -58,14 +57,13 @@ PROCEDURE Main( cLogin )
 
    RETURN
 
-STATIC FUNCTION FToNativeEOL( cFile )
-   RETURN hb_MemoWrit( cFile, StrTran( hb_MemoRead( cFile ), e"\n", hb_eol() ) )
-
-STATIC FUNCTION DoctorContent( cString )
-   RETURN StrTran( cString, hb_UChar( 0x23CE ), "\n" )  /* convert RETURN SYMBOL used by Transifex for NEWLINE */
-
 STATIC FUNCTION DoctorTranslation( cString )
-   RETURN Unspace( AllTrim( cString ) )
+
+   cString := Unspace( AllTrim( cString ) )
+   cString := StrTran( cString, hb_UChar( 0x23CE ), e"\n" )
+   cString := StrTran( cString, e"\n ", e"\n" )
+
+   RETURN cString
 
 /* Converts multiple spaces to just one */
 STATIC FUNCTION Unspace( cString )
