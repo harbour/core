@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Harbour\n"
-"PO-Revision-Date: 2013-03-30 15:45+0000\n"
-"Last-Translator: hbtest <harbour@syenar.net>\n"
+"PO-Revision-Date: 2013-03-31 02:46+0000\n"
+"Last-Translator: SAMI <sami@laham.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Press any key to continue..."
 msgstr "Tecle algo para continuar..."
 
-#: utils/hbmk2/hbmk2.prg:10489 utils/hbmk2/hbmk2.prg:13977
+#: utils/hbmk2/hbmk2.prg:10489 utils/hbmk2/hbmk2.prg:13983
 #, c-format
 msgid "<%1$s directory>"
 msgstr "<%1$s diretório>"
@@ -47,6 +47,69 @@ msgstr "Ignorando à partir de: %1$s"
 msgid "Exit code: %1$d: %2$s"
 msgstr "Código de Saída: %1$d: %2$s"
 
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"virtual target, it does not create anything. Useful for creating an .hbp "
+"with the sole purpose of referencing sub-projects"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"enable (or disable) import library generation for import library sources "
+"specified in -depimplibs= options (default: yes)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) "
+"(Windows only. For WinCE it is always set to UNICODE)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"standard .hbc file that gets automatically processed, if present. Possible "
+"location(s) (in order of precedence) [*]: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, "
+"vxworks, symbian, linux, darwin, cygwin, minix, aix)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid ""
+"embed space separated list of .hbc files. Names without the extension is "
+"accepted. These references are processed in place."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid ""
+"Register input file extension to be passed to plugin (by default all unknown"
+" file extensions are passed to Harbour compiler)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"Using forwards slashes is recommended in option values as directory "
+"separator, but backslashes are also equally accepted."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16351
+#, c-format
+msgid ""
+"Values marked with [*] may be host platform and/or configuration dependent. "
+"This help was generated on '%1$s' host platform."
+msgstr ""
+
 #: utils/hbmk2/hbmk2.prg:3032
 #, c-format
 msgid ""
@@ -57,7 +120,7 @@ msgstr "Atenção: Opção disponível apenas quando estive usando compilador Ha
 #, c-format
 msgid ""
 "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr ""
+msgstr "Atenção:Desnecessário usar as opções %1$s e %2$s juntas em  interpretado de comando \"command-line\"."
 
 #: utils/hbmk2/hbmk2.prg:7763
 #, c-format
@@ -79,1080 +142,38 @@ msgid ""
 "%2$s"
 msgstr "Dica: Instale o pacote %3$s e adicione as opções '%1$s' faltando nas funções: %2$s"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
 msgstr "\"options/flags\" reservado para ferramentas de terceiros, sempre ignorado por %1$s "
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "force waiting for a key on exit in case of failure (with alternate GTs only)"
 msgstr "forçar pause por uma tela em caso de erro (somente com driver GT alternativo)"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "<d> is the name of the dependency. Add <i> to the header detection path "
 "list."
 msgstr "<d> é o nome da dependêcia. Adicione <i> para detectar o cabeçalho na lista de caminhos."
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "<d> is the name of the dependency. Add <dll> to the import library source "
 "list."
 msgstr "<d> é o nome da dependencia. Adicione <dll> para importar a biblioteca na lista de fontes."
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "<d> is the name of the dependency. Set generated import library name to "
 "<lib>"
 msgstr "<d> é o nome da dependência. Coloque no nome da biblioteca de importação para <lib>"
-
-#: utils/hbmk2/hbmk2.prg:1677
-#, c-format
-msgid "Error: Cannot nest projects deeper than %1$d levels"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:2449 utils/hbmk2/hbmk2.prg:11359
-#, c-format
-msgid "Found project reference on library search path: %1$s"
-msgstr "Encontrado referência ao projeto na procura das bilbiotecas: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:3022
-#, c-format
-msgid "Warning: Ignored unsupported codepage value: %1$s"
-msgstr "Atenção:Página de código não suportado ou ignorado valor: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:3514 utils/hbmk2/hbmk2.prg:10660
-#: utils/hbmk2/hbmk2.prg:10713 utils/hbmk2/hbmk2.prg:10751
-#, c-format
-msgid "Warning: Cannot find %1$s (referenced from %2$s)"
-msgstr "Atenção:Não posso encontrar %1$s (referenciado por %2$s)"
-
-#: utils/hbmk2/hbmk2.prg:3736
-#, c-format
-msgid "Error: Working directory cannot be created: %1$s"
-msgstr "Erro: Diretório de trabalho nao pode ser criado: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:5958
-#, c-format
-msgid "Error: Running Harbour compiler (embedded). %1$d"
-msgstr "Erro: Executando o compilador Harbour (interno): %1$d"
-
-#: utils/hbmk2/hbmk2.prg:6233
-#, c-format
-msgid "Warning: Stub helper .c program could not be created."
-msgstr "Atenção: arquivo auxiliar .c não pode ser criado."
-
-#: utils/hbmk2/hbmk2.prg:6342
-#, c-format
-msgid "Warning: Stub helper .cpp program could not be created."
-msgstr "Atenção: arquivo auxiliar .cpp não pode ser criado."
-
-#: utils/hbmk2/hbmk2.prg:6583
-#, c-format
-msgid "Warning: Stub helper .rc file could not be created."
-msgstr "Atencao: arquivo auxiliar .rc não pode ser criado."
-
-#: utils/hbmk2/hbmk2.prg:6967
-#, c-format
-msgid "Warning: Cannot create directory for target '%1$s'."
-msgstr "Atenção: Não foi possível criar o diretório para o alvo '%1$s'."
-
-#: utils/hbmk2/hbmk2.prg:7961
-#, c-format
-msgid "Error: Failed creating symbolic link %1$s to %2$s"
-msgstr "Erro: Falha criando ligação simbólica %1$s para %2$s"
-
-#: utils/hbmk2/hbmk2.prg:8007
-#, c-format
-msgid "Error: Failed creating import library %1$s from %2$s."
-msgstr "Erro:Falha criando importação de bibliotecas %1$s para %2$s."
-
-#: utils/hbmk2/hbmk2.prg:9778
-#, c-format
-msgid ""
-"Error: Executing plugin: %1$s at %3$s(%4$d)\n"
-"'%2$s'"
-msgstr "Erro: Executando o plugin: %1$s em  %3$s(%4$d)\n'%2$s'"
-
-#: utils/hbmk2/hbmk2.prg:12237
-#, c-format
-msgid "Error: Cannot create temporary unified .po file."
-msgstr "Erro: Não foi possível criar um arquivo .po temporário unificado."
-
-#: utils/hbmk2/hbmk2.prg:13236
-#, c-format
-msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
-msgstr "Dica: Adicionar opção '%1$s' faltando nas funções: %2$s"
-
-#: utils/hbmk2/hbmk2.prg:14129
-#, c-format
-msgid "Cannot load '%1$s'. Requires -shared %2$s build."
-msgstr "Não posso carregar '%1$s'. Requer -shared %2$s build."
-
-#: utils/hbmk2/hbmk2.prg:15657
-#, c-format
-msgid "failed in final assembly (linker or library manager)"
-msgstr "Falha na montagem final (linker ou  gerenciador de bibliotecas)"
-
-#: utils/hbmk2/hbmk2.prg:15723
-#, c-format
-msgid "create dynamic library (without linked Harbour VM)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "select C++ mode. Allowed values are: def, yes, no"
-msgstr "selecione modo C++.Os Valores permitidos são: def, yes, no"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "do not use static core Harbour libraries when linking"
-msgstr "não usar bibliotecas estáticas do núcleo do Harbour quando linkar"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "do not link default GTs (effective in -static mode)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "show commands to be executed, but do not execute them"
-msgstr "exibir os comandos à serem executados, mas não execute-os"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "copy target to install path even if it is up to date"
-msgstr "copie para o destino mesmo que ele esteja atualizado"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "show error result as human readable text on exit"
-msgstr "Exibir  erros na forma de  texto amigável \"human readable\""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "inherit all/no (default) flags from Harbour build"
-msgstr "herdar flags do Harbour: todos/nenhum (padrão) "
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "pass single flag to resource compiler (Windows only)"
-msgstr "especifica flags para o compilador de recursos (apenas windows)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "pass single flag to import library creation command"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "rebuild with sub-projects (in incremental build mode)"
-msgstr "recriar com os sub-projetos (em modo incremental)"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "convert .xbp (xbuild) project <file> to .hbp file"
-msgstr "converte um projeto .xbp (xbuild) em um arquivo .hbp"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "override the name of starting function/procedure"
-msgstr "sobrescreva o nome da função/procedimento inicial"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "convert .xhp (xMate) project <file> to .hbp file"
-msgstr "converte um projeto .xhp (xMate) em um arquivo .hbp"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "override default target platform (default: automatic)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "set output width to <n> characters (0=unlimited)."
-msgstr "ajuste a largura de saída para <n> caracteres (0=ilimitado)."
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "register Harbour Script (.hb) with %1$s (Windows only)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "returns the value of the environment variable <envvar>"
-msgstr "returna os valores das variáveis de ambiente <envvar>"
-
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode script runner / interactive shell in debug mode"
-msgstr "rodando em modo script / debugador em \"shell\" interativo"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "C level debugging is disabled (see -debug- option)"
-msgstr "Debugador nivel C está disabilitado (veja a opção -debug )"
-
-#: utils/hbmk2/hbmk2.prg:15980 utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid "accepts same values (space separated) as %1$s option"
-msgstr "aceita os mesmos valores (separados por espaços) como opção %1$s "
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "returns '1' if Harbour host platform is *nix compatible"
-msgstr "retorna '1' se o Harbour estiver hospedado numa plataforma compatível com *nix "
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
-msgstr "Modo Windows UNICODE (WIDE)  (veja opção -winuni )"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target platform is Windows compatible (win, wce)"
-msgstr "plataforma alvo é compátivel com Windows (win, wce)"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target C compiler is mingw* (mingw, mingw64, mingwarm)"
-msgstr "compilador alvo C  é  mingw* (mingw, mingw64, mingwarm)"
-
-#: utils/hbmk2/hbmk2.prg:7604
-#, c-format
-msgid ""
-"Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line "
-"%4$d and %5$d."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:2152
-#, c-format
-msgid ""
-"Autodetected C compiler '%1$s' skipped because required Harbour core "
-"libraries are not found."
-msgstr "Compilador C detectado '%1$s' porém ignorado porque as bibliotecas necessárias do Harbour não foram encontrados."
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"create (or not) an import library (in -hbdyn/-hbexe mode). The name will "
-"have a postfix added."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15674
-#, c-format
-msgid ""
-"%1$s [options] [<script[s]>] "
-"<src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"create import library (in -hbdyn/-hbexe mode) name to <output> (default: "
-"same as output)"
-msgstr "Criar biblioteca importação (no modo -hbdyn/-hbexe)  nomeado para  <output> (padrão:com o mesmo)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"pass single raw option to linker (dynamic library) after the library list. "
-"Use with caution."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"do (not) add Harbour version number and source file reference to .po "
-"(default: add them)"
-msgstr "adicionar (ou não) a referência do número da versão do Harbour e o arquivo de origem ao .po (ativo por padrão)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"add/exclude C compiler debug info. For Harbour level debug, use Harbour "
-"option -b as usual"
-msgstr "adicionar/excluir informações de debug do compilador C. Para compilar com Harbour utilize a opção -b como de costume."
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"stop after creating the object files\n"
-"create link/copy %1$s to hbcmp/clipper for the same effect"
-msgstr "interromper após criar os arquivos objetos\ncriar um link ou copiar o %1$s para hbcmp/clipper resultará no mesmo efeito"
-
-#: utils/hbmk2/hbmk2.prg:15911
-#, c-format
-msgid ""
-"You can sym-link/copy/rename %1$s to the following names to alter default "
-"mode of operation:"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15953
-#, c-format
-msgid ""
-"when -run option is used, the exit code will be the one returned by the "
-"target executable"
-msgstr "quando a opção -run for usada, o código de saida  será o código devolvido pelo executável de destino"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no'"
-" (case insensitive)"
-msgstr "passará pelo filtro se o valor ${MACRO} não for vazio e não for igual a zero '0' ou 'no' (maiúsculas e minúsculas \"case insensitive\")"
-
-#: utils/hbmk2/hbmk2.prg:16195
-#, c-format
-msgid ""
-"when <depname> dependency was detected in a location configured by "
-"-depincpathlocal= option"
-msgstr "quando dependência <depname> foi detectada em um local configurado pela opção -depincpathlocal"
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"Regular Harbour compiler options are also accepted as is.\n"
-"(see them with -harbourhelp option)"
-msgstr "Opções usadas com o compilador Harbour também são aceitas."
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"GNU Make or any C compiler specific make tool and MSYS (on Windows) are not "
-"needed to run %1$s."
-msgstr "não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS (no Windows) para rodar %1$s."
-
-#: utils/hbmk2/hbmk2.prg:2507
-#, c-format
-msgid "Warning: Ignored option valid only on command-line: %1$s"
-msgstr "Atenção: opção ignorada, valida apenas para linha de comando: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:3760
-#, c-format
-msgid "Error: Temporary Working directory cannot be created: %1$s"
-msgstr "Erro:Diretório de trabalho temporário não pode ser criado: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:6971
-#, c-format
-msgid "Warning: Cannot create directory for import library '%1$s'."
-msgstr "Atenção: Não foi possível criar o diretório para biblioteca de importação '%1$s'."
-
-#: utils/hbmk2/hbmk2.prg:7637
-#, c-format
-msgid "Warning: Dangerous low-level option not recommended: %1$s"
-msgstr "Atenção: Opção de baixo nivel \"low-level\" perigosa e não recomendada: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:8099
-#, c-format
-msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
-msgstr "Atenção: Copiando  o link simbólico %1$s para %2$s falhou em %3$d."
-
-#: utils/hbmk2/hbmk2.prg:11375
-#, c-format
-msgid "Warning: Project reference (%1$s) ignored. File not found."
-msgstr "Atenção:Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
-
-#: utils/hbmk2/hbmk2.prg:13240
-#, c-format
-msgid "Error: Referenced, missing, but unknown function(s): %1$s"
-msgstr "Erro: Referenciado, faltando, mas  funções desconhecida(s): %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15656
-#, c-format
-msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "Falha na compilação  (Harbour, compilador C , compilador Recursos \"RC\")"
-
-#: utils/hbmk2/hbmk2.prg:15723
-#, c-format
-msgid "enable/disable incremental build mode (default: disabled)"
-msgstr "habilita o modo de compilação incremental"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "stop without doing anything and display <text> if specified"
-msgstr "interromper sem executar nada"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "embed manifest <file> in executable/dynamic lib (Windows only)"
-msgstr "incorporar arquivo manifest  <file> no executável / lib dinâmica (somente para Windows)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "inherit .prg/.c/linker flags (or none) from Harbour build"
-msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour "
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "pass single flag to output executable when -run option is used"
-msgstr "argumentos à serem passados ao executável gerado quando -run for utilizado"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "start n compilation threads (multiprocess platforms only)"
-msgstr "dispara <n> threads de compilação (apenas plataformas multiprocessadas)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "output .hbl filename. %1$s macro is accepted in filename"
-msgstr "nome-de-arquivo .hbl resultante. A macro %1$s é aceita no nome-de-arquivo."
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "recreate .po file, thus removing all obsolete entries in it"
-msgstr "recria o arquivo .po removendo assim todas as entradas obsoletas no mesmo"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
-msgstr "substituir o destino da  CPU  padrão (padrão: automática) (EXPERIMENTAL)"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "ignore errors when running compiler tools (default: off)"
-msgstr "ignore erros quando executar as ferramentas de compilação (padrão: off)"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "override default language. <lang> is an ISO language code."
-msgstr "Sobrescrever a linguagem padrão. <lang> está em formato de código ISO."
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "unregister Harbour Script (.hb) from %1$s (Windows only)"
-msgstr "Harbour Script (.hb) não registrado  %1$s (somente para Windows)"
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "Harbour version in hexadecimal triple byte format. F.e.: %1$s"
-msgstr "Versão do Harbour no formato de tres bytes em hexadecimal. Por exemplo: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
-msgstr "modo  %1$s (emular compilador Harbour produzindo um objeto binario \"binary object\")"
-
-#: utils/hbmk2/hbmk2.prg:16010
-#, c-format
-msgid "Harbour portable binary (aka precompiled Harbour script)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "filter will pass if <file> or <dir> name exists on disk."
-msgstr "passará pelo filtro se o nome do arquivo  <file> ou  <dir> diretório existir no disco."
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "default workdir subdirectory for dynamic library targets"
-msgstr "subdiretório padrão de trabalho para bibliotecas dinâmicas "
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "add space separated list of symbols to force link to the target"
-msgstr "adicionar lista separada por espaços de simbolos para forçar a linkedição"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target C compiler is msvc* (msvc, msvc64, msvcia64, msvcarm)"
-msgstr "compilador C alvo é  msvc* (msvc, msvc64, msvcia64, msvcarm)"
-
-#: utils/hbmk2/hbmk2.prg:16101
-#, c-format
-msgid ".hbc directives (they should be written in separate lines):"
-msgstr "diretivas .hbc (devem ser escritas em linhas separadas):"
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "add space separated list of libraries (see more at -l option)"
-msgstr "adicionar lista separada por espaços de bibliotecas (veja mais opções em -l)"
-
-#: utils/hbmk2/hbmk2.prg:16180
-#, c-format
-msgid "when <depname> dependency was detected (available in C sources)"
-msgstr "quando dependência <depname> foi detectada (disponível nos fontes C )"
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Convert filename to have forward slash directory separators."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16280
-#, c-format
-msgid "hash of plugin custom variables. Writable, local to each plugin"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid "Defaults and feature support may vary by platform/compiler."
-msgstr "Padrões e especificações suportadas podem variar de acordo com plataforma/compilador."
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid "Multiple -l, -L, -i and <script> parameters are accepted."
-msgstr "Multiplos parâmetros -l, -L, -i e <script> são aceitos."
-
-#: utils/hbmk2/hbmk2.prg:16440
-#, c-format
-msgid "To build library 'mylib' from sources using incremental mode"
-msgstr "para gerar a biblioteca  'mylib' dos fontes usando o modo incremental"
-
-#: utils/hbmk2/hbmk2.prg:2180
-#, c-format
-msgid ""
-"Choose a C compiler by using -comp= option.\n"
-"You have the following choices on your platform: %1$s"
-msgstr "Por favor, selecione um compilador C usando a opção -comp=.\nVocê possui as seguintes opções para sua plataforma> %1$s"
-
-#: utils/hbmk2/hbmk2.prg:8450
-#, c-format
-msgid ""
-"Internal Error: Regular expression engine missing or unsupported. Check your"
-" Harbour build settings."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"generate .ch header file with local repository information. Git, SVN, "
-"Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. "
-"Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the "
-"name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local "
-"repository. If no VCS system is detected, a sequential number will be rolled"
-" automatically on each build."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:3070
-#, c-format
-msgid ""
-"Warning: Ignoring explicitly specified core library directory: %1$s (in "
-"option %2$s)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:3109 utils/hbmk2/hbmk2.prg:3133
-#, c-format
-msgid ""
-"Warning: Ignoring explicitly specified core header directory: %1$s (in "
-"option %2$s)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:6656
-#, c-format
-msgid ""
-"Warning: Resource compiler script could not be created, continuing in "
-"command-line."
-msgstr "Atenção: Script para o compilador de Recursos não pode ser criado, continuando com a linha de comando."
-
-#: utils/hbmk2/hbmk2.prg:7466
-#, c-format
-msgid ""
-"Warning: Code signing skipped, because no supported code signing tool could "
-"be found."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:6832
-#, c-format
-msgid ""
-"Warning: C/C++ compiler script could not be created, continuing in command-"
-"line."
-msgstr "Atenção: Script para o compilador C/C++ não pode ser criado, continuando com a linha de comando."
-
-#: utils/hbmk2/hbmk2.prg:7116 utils/hbmk2/hbmk2.prg:7146
-#, c-format
-msgid ""
-"Warning: Dynamic lib link script could not be created, continuing in "
-"command-line."
-msgstr "Atenção: Script para linkagem da biblioteca dinâmica não pode ser criado, continuando com a linha de comando."
-
-#: utils/hbmk2/hbmk2.prg:12550
-#, c-format
-msgid ""
-"Found OMF .lib with the same name, falling back to using it instead of the "
-".dll."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:8034
-#, c-format
-msgid ""
-"Error: Creating import libraries is not supported for this platform or "
-"compiler."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:10766
-#, c-format
-msgid ""
-"Warning: Ignoring explicitly specified core library directory: %1$s (in "
-"directive %2$s)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:10778
-#, c-format
-msgid ""
-"Warning: Ignoring explicitly specified core header directory: %1$s (in "
-"directive %2$s)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:12534
-#, c-format
-msgid ""
-"Found COFF .lib with the same name, falling back to using it instead of the "
-".dll."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:12565
-#, c-format
-msgid ""
-"Found .def file with the same name, falling back to using it instead of the "
-".dll."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"set C compiler warning level\n"
-"<level> can be: max, yes, low, no, def (default: yes)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"create symbolic link pointing to <output> (<link> is considered relative to "
-"<output>)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"compress executable/dynamic lib (needs UPX tool)\n"
-"<level> can be: yes, no, min, max"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"pass single raw option to linker (executable) after the library list. Use "
-"with caution."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"create/update .po file from source. Merge it with previous .po file of the "
-"same name"
-msgstr "criar/atualizar arquivo .po à partir dos fontes. Se um arquivo .po com o mesmo nome existir, o arquivo será mesclado."
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid ""
-"name of source file that holds the entry function (without directory and "
-"extension)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"create position independent object code (always enabled in -hbdyn/-hbdynvm "
-"modes)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"options to be passed to resource compiler (before command-line options) "
-"(Windows only)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"if passed directly as a source file, it will be used as additional standard "
-"header"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid ""
-"Harbour version in human readable format <major>.<minor>.<release><status>. "
-"F.e.: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid ""
-"returns the header directory of dependency <depname>, or '1' if it is not "
-"detected"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid ""
-"package version number, where x,y,z >= 0 <= 255. Defaults to 0.0.1, if not "
-"specified."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid ""
-"type of the project (hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, "
-"hbcontainer)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid ""
-"add space separated list of libraries as system libraries (before regular "
-"libraries)"
-msgstr "adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema (antes bibliotecas regulares)"
-
-#: utils/hbmk2/hbmk2.prg:16195
-#, c-format
-msgid ""
-"return the header directory where <depname> was detected, or empty if it was"
-" not."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16218
-#, c-format
-msgid ""
-"Plugin API:\n"
-"('hbmk' is the context variable received by the plugin entry function)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16345
-#, c-format
-msgid ""
-"You can use key <Alt+V> in interactive Harbour shell to paste text from the "
-"clipboard."
-msgstr "Voce pode usar <Alt+V> no \"shell do Harbour\"  para colar um texto do clipboard."
-
-#: utils/hbmk2/hbmk2.prg:13820
-#, c-format
-msgid ""
-"Warning: Failed to detect Harbour.\n"
-"Run this tool from its original location inside the Harbour installation."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:11378
-#, c-format
-msgid ""
-"Warning: Project reference (%1$s) ignored. Project references require %2$s "
-"to be invoked with a main project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15723
-#, c-format
-msgid ""
-"link with GT<name> GT driver, can be repeated to link with more GTs. First "
-"one will be the default at run-time"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"<d> is the name of the dependency. Set <r> as root directory for paths "
-"specified in -depincpath options."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"working directory\n"
-"(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"emulate Clipper compatible linker behavior\n"
-"create link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "emula o comportamento de um linkeditor compatível com clipper\ncriar um link ou copiar o %1$s para rtlink/blinker/exospace resultará no mesmo efeito"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, "
-"djgpp, gccomf, clang, open64, pcc)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16189
-#, c-format
-msgid ""
-"Predefined constants in build files (they are available after "
-"'-depfinish=<depname>' / 'depfinish=<depname>'):"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid ""
-"Encode function name according to Harbour compiler rules for forming "
-"HB_FUNC() function names in C code."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"Libraries and object files built with/for CA-Cl*pper will not work with any "
-"supported platform/compiler."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16431
-#, c-format
-msgid ""
-"To build an application which uses a contrib package or 3rd party (add-on) "
-"package that ships with an .hbc file"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "Harbour dynamic library directory"
-msgstr "diretório de bibliotécas dinâmicas Harbour"
-
-#: utils/hbmk2/hbmk2.prg:2147
-#, c-format
-msgid "Autodetected platform: %1$s (adjusted)"
-msgstr " Auto detecção de Plataforma: %1$s (ajustado)"
-
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "modo %1$s (emular compilador Clipper)"
-
-#: utils/hbmk2/hbmk2.prg:5945
-#, c-format
-msgid "Harbour compiler command (embedded):"
-msgstr "Linha de comando do compilador Harbour: (interno)"
-
-#: utils/hbmk2/hbmk2.prg:1689
-#, c-format
-msgid "Processing environment options: %1$s"
-msgstr "Processando opções do ambiente: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "OS directory for temporary files"
-msgstr "Diretório do Sistema Operacional para arquivos temporários"
-
-#: utils/hbmk2/hbmk2.prg:5985 utils/hbmk2/hbmk2.prg:6031
-#, c-format
-msgid "Error: Running Harbour compiler. %1$d"
-msgstr "Erro: Executando o compilador Harbour: %1$d"
-
-#: utils/hbmk2/hbmk2.prg:3441
-#, c-format
-msgid "Warning: Unknown dependency name: %1$s"
-msgstr "Atenção: Nome de dependência desconhecido: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15931 utils/hbmk2/hbmk2.prg:15931
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode %1$s (emulate Clipper linker)"
-msgstr "modo %1$s (emular linkeditor Clipper)"
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "Harbour static library directory"
-msgstr "diretório de bibliotécas estáticas Harbour"
-
-#: utils/hbmk2/hbmk2.prg:2188
-#, c-format
-msgid "Error: Compiler value unknown: %1$s"
-msgstr "Erro: Compilador inválido ou desconhecido: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:5826
-#, c-format
-msgid "Triggered by #require directive: %1$s"
-msgstr "Acionado pelo operador de diretivas \" # \": %1$s"
-
-#: utils/hbmk2/hbmk2.prg:2365
-#, c-format
-msgid "Using C compiler: %1$s [%2$s...%3$s]"
-msgstr "Usando compilador C : %1$s [%2$s...%3$s]"
-
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode script runner / interactive shell"
-msgstr "rodando em modo script / \"shell\" interativo"
-
-#: utils/hbmk2/hbmk2.prg:6632 utils/hbmk2/hbmk2.prg:6674
-#, c-format
-msgid "Error: Running resource compiler. %1$d"
-msgstr "Erro: Ao executar o compilador de recursos. %1$d"
-
-#: utils/hbmk2/hbmk2.prg:2411
-#, c-format
-msgid "Processing local make script: %1$s"
-msgstr "Processando script local: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "name of the output (without extension)"
-msgstr "nome de saída (sem a extensão)"
-
-#: utils/hbmk2/hbmk2.prg:1989
-#, c-format
-msgid "Error: Platform value unknown: %1$s"
-msgstr "Erro: Valor incorreto para plataforma: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:1683
-#, c-format
-msgid "Building sub-project (level %1$d): %2$s"
-msgstr "Gerando sub-projeto ( passo %1$d): %2$s"
-
-#: utils/hbmk2/hbmk2.prg:5828
-#, c-format
-msgid "Triggered by '%1$s' header: %2$s"
-msgstr "Acionado pelo '%1$s' cabeçalho \"header\": %2$s"
-
-#: utils/hbmk2/hbmk2.prg:2182
-#, c-format
-msgid ""
-"Could not detect any supported C compiler in your PATH.\n"
-"Setup one or set -comp= option to one of these values: %1$s"
-msgstr "Nenhum compilador C suportado foi encontrado em seu PATH.\nPor favor, utilize a opção -comp= com um destes valores: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies "
-"whether the dependency is optional. Default: no"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"optional .hbm file residing in current working directory, which gets "
-"automatically processed before other options"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16375
-#, c-format
-msgid ""
-"%1$s is able to run Harbour scripts (both source and precompiled), and it "
-"also features an interactive shell prompt."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16280
-#, c-format
-msgid ""
-"array of parameters passed to plugins via -pflag=/pi= options or having an "
-"extension registered via hbmk_Register_Input_File_Extension()"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n"
-"-lng=en,hu-HU,de"
-msgstr "lista de idiomas à serem substituidos nas macros %1$s nos arquivos .pot/.po e nos nomes de arquivos de saída .hbl/.po. Lista separada por vírgula:\n-lng=en,hu-HU,de"
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"collection of options. Can be used to collect common ones into a file and "
-"include that into project files. Uses same format as .hbp files."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16280
-#, c-format
-msgid ""
-"callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', "
-"'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"Source filename without extension will load the .hbp file, if such .hbp file"
-" exists in current directory. If not, .prg extension will be used."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"virtual target, it does not create anything. Useful for creating an .hbp "
-"with the sole purpose of referencing sub-projects"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"enable (or disable) import library generation for import library sources "
-"specified in -depimplibs= options (default: yes)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) "
-"(Windows only. For WinCE it is always set to UNICODE)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"standard .hbc file that gets automatically processed, if present. Possible "
-"location(s) (in order of precedence) [*]: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, "
-"vxworks, symbian, linux, darwin, cygwin, minix, aix)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid ""
-"embed space separated list of .hbc files. Names without the extension is "
-"accepted. These references are processed in place."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid ""
-"Register input file extension to be passed to plugin (by default all unknown"
-" file extensions are passed to Harbour compiler)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"Using forwards slashes is recommended in option values as directory "
-"separator, but backslashes are also equally accepted."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16345
-#, c-format
-msgid ""
-"Values marked with [*] may be host platform and/or configuration dependent. "
-"This help was generated on '%1$s' host platform."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:2176
-#, c-format
-msgid "Autodetected C compiler: %1$s"
-msgstr "Compilador C detectado automaticamente: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:1821
-#, c-format
-msgid "Autodetected platform: %1$s"
-msgstr "Plataforma detectada: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:3169 utils/hbmk2/hbmk2.prg:3178
-#: utils/hbmk2/hbmk2.prg:10560 utils/hbmk2/hbmk2.prg:10805
-#: utils/hbmk2/hbmk2.prg:10812
-#, c-format
-msgid "%1$s"
-msgstr "%1$s"
 
 #: utils/hbmk2/hbmk2.prg:2909
 #, c-format
@@ -1239,10 +260,528 @@ msgstr ""
 msgid "Warning: Copying %1$s to %2$s failed with %3$d."
 msgstr "Atenção: Copiando %1$s para  %2$s Falhou em %3$d."
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "output Harbour dynamic library directory"
 msgstr "exibe o diretório das bibliotecas dinâmicas do Harbour"
+
+#: utils/hbmk2/hbmk2.prg:7604
+#, c-format
+msgid ""
+"Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line "
+"%4$d and %5$d."
+msgstr "Atenção:Desnecessário usar as opçoes  %1$s e  %2$s juntas em  '%3$s'  linha  %4$d e %5$d."
+
+#: utils/hbmk2/hbmk2.prg:2152
+#, c-format
+msgid ""
+"Autodetected C compiler '%1$s' skipped because required Harbour core "
+"libraries are not found."
+msgstr "Compilador C detectado '%1$s' porém ignorado porque as bibliotecas necessárias do Harbour não foram encontrados."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create (or not) an import library (in -hbdyn/-hbexe mode). The name will "
+"have a postfix added."
+msgstr "Criar (ou não) uma biblioteca importação (no modo  -hbdyn/-hbexe ). O nome terá um sufixo adicionado."
+
+#: utils/hbmk2/hbmk2.prg:15680
+#, c-format
+msgid ""
+"%1$s [options] [<script[s]>] "
+"<src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create import library (in -hbdyn/-hbexe mode) name to <output> (default: "
+"same as output)"
+msgstr "Criar biblioteca importação (no modo -hbdyn/-hbexe)  nomeado para  <output> (padrão:com o mesmo)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"pass single raw option to linker (dynamic library) after the library list. "
+"Use with caution."
+msgstr "passar uma unica opção \"raw\" para linkar  (biblioteca dinâmica), após a lista da biblioteca. Use com cuidado."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"do (not) add Harbour version number and source file reference to .po "
+"(default: add them)"
+msgstr "adicionar (ou não) a referência do número da versão do Harbour e o arquivo de origem ao .po (ativo por padrão)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"add/exclude C compiler debug info. For Harbour level debug, use Harbour "
+"option -b as usual"
+msgstr "adicionar/excluir informações de debug do compilador C. Para compilar com Harbour utilize a opção -b como de costume."
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"stop after creating the object files\n"
+"create link/copy %1$s to hbcmp/clipper for the same effect"
+msgstr "interromper após criar os arquivos objetos\ncriar um link ou copiar o %1$s para hbcmp/clipper resultará no mesmo efeito"
+
+#: utils/hbmk2/hbmk2.prg:15917
+#, c-format
+msgid ""
+"You can sym-link/copy/rename %1$s to the following names to alter default "
+"mode of operation:"
+msgstr "É possível  \"sym-link/copy/rename\"  %1$s para os seguintes nomes para alterar o modo padrão de operação:"
+
+#: utils/hbmk2/hbmk2.prg:15959
+#, c-format
+msgid ""
+"when -run option is used, the exit code will be the one returned by the "
+"target executable"
+msgstr "quando a opção -run for usada, o código de saida  será o código devolvido pelo executável de destino"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no'"
+" (case insensitive)"
+msgstr "passará pelo filtro se o valor ${MACRO} não for vazio e não for igual a zero '0' ou 'no' (maiúsculas e minúsculas \"case insensitive\")"
+
+#: utils/hbmk2/hbmk2.prg:16201
+#, c-format
+msgid ""
+"when <depname> dependency was detected in a location configured by "
+"-depincpathlocal= option"
+msgstr "quando dependência <depname> foi detectada em um local configurado pela opção -depincpathlocal"
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"Regular Harbour compiler options are also accepted as is.\n"
+"(see them with -harbourhelp option)"
+msgstr "Opções usadas com o compilador Harbour também são aceitas."
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"GNU Make or any C compiler specific make tool and MSYS (on Windows) are not "
+"needed to run %1$s."
+msgstr "não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS (no Windows) para rodar %1$s."
+
+#: utils/hbmk2/hbmk2.prg:1677
+#, c-format
+msgid "Error: Cannot nest projects deeper than %1$d levels"
+msgstr "Erro:Não é possível criar projetos aninhados em um nível mais profundo que %1$d"
+
+#: utils/hbmk2/hbmk2.prg:2449 utils/hbmk2/hbmk2.prg:11359
+#, c-format
+msgid "Found project reference on library search path: %1$s"
+msgstr "Encontrado referência ao projeto na procura das bilbiotecas: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:3022
+#, c-format
+msgid "Warning: Ignored unsupported codepage value: %1$s"
+msgstr "Atenção:Página de código não suportado ou ignorado valor: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:3514 utils/hbmk2/hbmk2.prg:10660
+#: utils/hbmk2/hbmk2.prg:10713 utils/hbmk2/hbmk2.prg:10751
+#, c-format
+msgid "Warning: Cannot find %1$s (referenced from %2$s)"
+msgstr "Atenção:Não é possível encontrar o %1$s (referenciado por %2$s)"
+
+#: utils/hbmk2/hbmk2.prg:3736
+#, c-format
+msgid "Error: Working directory cannot be created: %1$s"
+msgstr "Erro: Diretório de trabalho nao pode ser criado: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:5958
+#, c-format
+msgid "Error: Running Harbour compiler (embedded). %1$d"
+msgstr "Erro: Executando o compilador Harbour (interno): %1$d"
+
+#: utils/hbmk2/hbmk2.prg:6233
+#, c-format
+msgid "Warning: Stub helper .c program could not be created."
+msgstr "Atenção: arquivo auxiliar .c não pode ser criado."
+
+#: utils/hbmk2/hbmk2.prg:6342
+#, c-format
+msgid "Warning: Stub helper .cpp program could not be created."
+msgstr "Atenção: arquivo auxiliar .cpp não pode ser criado."
+
+#: utils/hbmk2/hbmk2.prg:6583
+#, c-format
+msgid "Warning: Stub helper .rc file could not be created."
+msgstr "Atencao: arquivo auxiliar .rc não pode ser criado."
+
+#: utils/hbmk2/hbmk2.prg:6967
+#, c-format
+msgid "Warning: Cannot create directory for target '%1$s'."
+msgstr "Atenção: Não foi possível criar o diretório para o alvo '%1$s'."
+
+#: utils/hbmk2/hbmk2.prg:7961
+#, c-format
+msgid "Error: Failed creating symbolic link %1$s to %2$s"
+msgstr "Erro: Falha criando ligação simbólica %1$s para %2$s"
+
+#: utils/hbmk2/hbmk2.prg:8007
+#, c-format
+msgid "Error: Failed creating import library %1$s from %2$s."
+msgstr "Erro:Falha criando importação de bibliotecas %1$s para %2$s."
+
+#: utils/hbmk2/hbmk2.prg:9778
+#, c-format
+msgid ""
+"Error: Executing plugin: %1$s at %3$s(%4$d)\n"
+"'%2$s'"
+msgstr "Erro: Executando o plugin: %1$s em  %3$s(%4$d)\n'%2$s'"
+
+#: utils/hbmk2/hbmk2.prg:12237
+#, c-format
+msgid "Error: Cannot create temporary unified .po file."
+msgstr "Erro: Não foi possível criar um arquivo .po temporário unificado."
+
+#: utils/hbmk2/hbmk2.prg:13236
+#, c-format
+msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
+msgstr "Dica: Adicionar opção '%1$s' faltando nas funções: %2$s"
+
+#: utils/hbmk2/hbmk2.prg:14135
+#, c-format
+msgid "Cannot load '%1$s'. Requires -shared %2$s build."
+msgstr "Não posso carregar '%1$s'. Requer -shared %2$s build."
+
+#: utils/hbmk2/hbmk2.prg:15663
+#, c-format
+msgid "failed in final assembly (linker or library manager)"
+msgstr "Falha na montagem final (linker ou  gerenciador de bibliotecas)"
+
+#: utils/hbmk2/hbmk2.prg:15729
+#, c-format
+msgid "create dynamic library (without linked Harbour VM)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "select C++ mode. Allowed values are: def, yes, no"
+msgstr "selecione modo C++.Os Valores permitidos são: def, yes, no"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "do not use static core Harbour libraries when linking"
+msgstr "não usar bibliotecas estáticas do núcleo do Harbour quando linkar"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "do not link default GTs (effective in -static mode)"
+msgstr "Não link GTs padrão (o modo -static é mais eficaz)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "show commands to be executed, but do not execute them"
+msgstr "exibir os comandos à serem executados, mas não execute-os"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "copy target to install path even if it is up to date"
+msgstr "copie para o destino mesmo que ele esteja atualizado"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "show error result as human readable text on exit"
+msgstr "Exibir  erros na forma de  texto amigável \"human readable\""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "inherit all/no (default) flags from Harbour build"
+msgstr "herdar flags do Harbour: todos/nenhum (padrão) "
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "pass single flag to resource compiler (Windows only)"
+msgstr "especifica flags para o compilador de recursos (apenas windows)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "pass single flag to import library creation command"
+msgstr "passar um unico \"flag\" para criar o comando de impotação de bibliotecas "
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "rebuild with sub-projects (in incremental build mode)"
+msgstr "recriar com os sub-projetos (em modo incremental)"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "convert .xbp (xbuild) project <file> to .hbp file"
+msgstr "converte um projeto .xbp (xbuild) em um arquivo .hbp"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "override the name of starting function/procedure"
+msgstr "sobrescreva o nome da função/procedimento inicial"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "convert .xhp (xMate) project <file> to .hbp file"
+msgstr "converte um projeto .xhp (xMate) em um arquivo .hbp"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "override default target platform (default: automatic)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "set output width to <n> characters (0=unlimited)."
+msgstr "ajuste a largura de saída para <n> caracteres (0=ilimitado)."
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "register Harbour Script (.hb) with %1$s (Windows only)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "returns the value of the environment variable <envvar>"
+msgstr "returna os valores das variáveis de ambiente <envvar>"
+
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode script runner / interactive shell in debug mode"
+msgstr "rodando em modo script / debugador em \"shell\" interativo"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "C level debugging is disabled (see -debug- option)"
+msgstr "Debugador nivel C está disabilitado (veja a opção -debug )"
+
+#: utils/hbmk2/hbmk2.prg:15986 utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid "accepts same values (space separated) as %1$s option"
+msgstr "aceita os mesmos valores (separados por espaços) como opção %1$s "
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "returns '1' if Harbour host platform is *nix compatible"
+msgstr "retorna '1' se o Harbour estiver hospedado numa plataforma compatível com *nix "
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
+msgstr "Modo Windows UNICODE (WIDE)  (veja opção -winuni )"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target platform is Windows compatible (win, wce)"
+msgstr "plataforma alvo é compátivel com Windows (win, wce)"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target C compiler is mingw* (mingw, mingw64, mingwarm)"
+msgstr "compilador alvo C  é  mingw* (mingw, mingw64, mingwarm)"
+
+#: utils/hbmk2/hbmk2.prg:2507
+#, c-format
+msgid "Warning: Ignored option valid only on command-line: %1$s"
+msgstr "Atenção: opção ignorada, valida apenas para linha de comando: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:3760
+#, c-format
+msgid "Error: Temporary Working directory cannot be created: %1$s"
+msgstr "Erro:Diretório de trabalho temporário não pode ser criado: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:6971
+#, c-format
+msgid "Warning: Cannot create directory for import library '%1$s'."
+msgstr "Atenção: Não foi possível criar o diretório para biblioteca de importação '%1$s'."
+
+#: utils/hbmk2/hbmk2.prg:7637
+#, c-format
+msgid "Warning: Dangerous low-level option not recommended: %1$s"
+msgstr "Atenção: Opção de baixo nivel \"low-level\" perigosa e não recomendada: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:8099
+#, c-format
+msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
+msgstr "Atenção: Copiando  o link simbólico %1$s para %2$s falhou em %3$d."
+
+#: utils/hbmk2/hbmk2.prg:11375
+#, c-format
+msgid "Warning: Project reference (%1$s) ignored. File not found."
+msgstr "Atenção:Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
+
+#: utils/hbmk2/hbmk2.prg:13240
+#, c-format
+msgid "Error: Referenced, missing, but unknown function(s): %1$s"
+msgstr "Erro: Referenciado, faltando, mas  funções desconhecida(s): %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15662
+#, c-format
+msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
+msgstr "Falha na compilação  (Harbour, compilador C , compilador Recursos \"RC\")"
+
+#: utils/hbmk2/hbmk2.prg:15729
+#, c-format
+msgid "enable/disable incremental build mode (default: disabled)"
+msgstr "habilita o modo de compilação incremental"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "stop without doing anything and display <text> if specified"
+msgstr "interromper sem executar nada"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "embed manifest <file> in executable/dynamic lib (Windows only)"
+msgstr "incorporar arquivo manifest  <file> no executável / lib dinâmica (somente para Windows)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "inherit .prg/.c/linker flags (or none) from Harbour build"
+msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour "
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "pass single flag to output executable when -run option is used"
+msgstr "argumentos à serem passados ao executável gerado quando -run for utilizado"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "start n compilation threads (multiprocess platforms only)"
+msgstr "dispara <n> threads de compilação (apenas plataformas multiprocessadas)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "output .hbl filename. %1$s macro is accepted in filename"
+msgstr "nome-de-arquivo .hbl resultante. A macro %1$s é aceita no nome-de-arquivo."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "recreate .po file, thus removing all obsolete entries in it"
+msgstr "recria o arquivo .po removendo assim todas as entradas obsoletas no mesmo"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
+msgstr "substituir o destino da  CPU  padrão (padrão: automática) (EXPERIMENTAL)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "ignore errors when running compiler tools (default: off)"
+msgstr "ignore erros quando executar as ferramentas de compilação (padrão: off)"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "override default language. <lang> is an ISO language code."
+msgstr "Sobrescrever a linguagem padrão. <lang> está em formato de código ISO."
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "unregister Harbour Script (.hb) from %1$s (Windows only)"
+msgstr "Harbour Script (.hb) não registrado  %1$s (somente para Windows)"
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "Harbour version in hexadecimal triple byte format. F.e.: %1$s"
+msgstr "Versão do Harbour no formato de tres bytes em hexadecimal. Por exemplo: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
+msgstr "modo  %1$s (emular compilador Harbour produzindo um objeto binario \"binary object\")"
+
+#: utils/hbmk2/hbmk2.prg:16016
+#, c-format
+msgid "Harbour portable binary (aka precompiled Harbour script)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "filter will pass if <file> or <dir> name exists on disk."
+msgstr "passará pelo filtro se o nome do arquivo  <file> ou  <dir> diretório existir no disco."
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "default workdir subdirectory for dynamic library targets"
+msgstr "subdiretório padrão de trabalho para bibliotecas dinâmicas "
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "add space separated list of symbols to force link to the target"
+msgstr "adicionar lista separada por espaços de simbolos para forçar a linkedição"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target C compiler is msvc* (msvc, msvc64, msvcia64, msvcarm)"
+msgstr "compilador C alvo é  msvc* (msvc, msvc64, msvcia64, msvcarm)"
+
+#: utils/hbmk2/hbmk2.prg:16107
+#, c-format
+msgid ".hbc directives (they should be written in separate lines):"
+msgstr "diretivas .hbc (devem ser escritas em linhas separadas):"
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "add space separated list of libraries (see more at -l option)"
+msgstr "adicionar lista separada por espaços de bibliotecas (veja mais opções em -l)"
+
+#: utils/hbmk2/hbmk2.prg:16186
+#, c-format
+msgid "when <depname> dependency was detected (available in C sources)"
+msgstr "quando dependência <depname> foi detectada (disponível nos fontes C )"
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Convert filename to have forward slash directory separators."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid "hash of plugin custom variables. Writable, local to each plugin"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid "Defaults and feature support may vary by platform/compiler."
+msgstr "Padrões e especificações suportadas podem variar de acordo com plataforma/compilador."
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid "Multiple -l, -L, -i and <script> parameters are accepted."
+msgstr "Multiplos parâmetros -l, -L, -i e <script> são aceitos."
+
+#: utils/hbmk2/hbmk2.prg:16446
+#, c-format
+msgid "To build library 'mylib' from sources using incremental mode"
+msgstr "para gerar a biblioteca  'mylib' dos fontes usando o modo incremental"
+
+#: utils/hbmk2/hbmk2.prg:2180
+#, c-format
+msgid ""
+"Choose a C compiler by using -comp= option.\n"
+"You have the following choices on your platform: %1$s"
+msgstr "Por favor, selecione um compilador C usando a opção -comp=.\nVocê possui as seguintes opções para sua plataforma> %1$s"
+
+#: utils/hbmk2/hbmk2.prg:8450
+#, c-format
+msgid ""
+"Internal Error: Regular expression engine missing or unsupported. Check your"
+" Harbour build settings."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"generate .ch header file with local repository information. Git, SVN, "
+"Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. "
+"Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the "
+"name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local "
+"repository. If no VCS system is detected, a sequential number will be rolled"
+" automatically on each build."
+msgstr "gerar arquivo de cabeçalho \". ch\" com informações do repositório local. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente. O cabeçalho gerado irá definir a constante _HBMK_VCS_TYPE_  no pré-processador com o nome detectados de VCS  e _HBMK_VCS_ID_ com o ID único do repositório local. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção.\n VCS - sistema de controle de versão."
 
 #: utils/hbmk2/hbmk2.prg:2004
 #, c-format
@@ -1251,70 +790,464 @@ msgid ""
 "Run this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory."
 msgstr "Erro: %1$s não definido, falha na detecção automática."
 
+#: utils/hbmk2/hbmk2.prg:3070
+#, c-format
+msgid ""
+"Warning: Ignoring explicitly specified core library directory: %1$s (in "
+"option %2$s)"
+msgstr "Atenção: Ignorando explicitamente o  diretório especificado no nucleo da biblioteca:  %1$s (na opção %2$s)"
+
+#: utils/hbmk2/hbmk2.prg:3109 utils/hbmk2/hbmk2.prg:3133
+#, c-format
+msgid ""
+"Warning: Ignoring explicitly specified core header directory: %1$s (in "
+"option %2$s)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:6656
+#, c-format
+msgid ""
+"Warning: Resource compiler script could not be created, continuing in "
+"command-line."
+msgstr "Atenção: Script para o compilador de Recursos não pode ser criado, continuando com a linha de comando."
+
+#: utils/hbmk2/hbmk2.prg:7466
+#, c-format
+msgid ""
+"Warning: Code signing skipped, because no supported code signing tool could "
+"be found."
+msgstr "Atencão: assinatura de código ignorada, porque nenhuma ferramenta assinatura código pode ser encontrado."
+
+#: utils/hbmk2/hbmk2.prg:6832
+#, c-format
+msgid ""
+"Warning: C/C++ compiler script could not be created, continuing in command-"
+"line."
+msgstr "Atenção: Script para o compilador C/C++ não pode ser criado, continuando com a linha de comando."
+
+#: utils/hbmk2/hbmk2.prg:7116 utils/hbmk2/hbmk2.prg:7146
+#, c-format
+msgid ""
+"Warning: Dynamic lib link script could not be created, continuing in "
+"command-line."
+msgstr "Atenção: Script para linkagem da biblioteca dinâmica não pode ser criado, continuando com a linha de comando."
+
+#: utils/hbmk2/hbmk2.prg:12550
+#, c-format
+msgid ""
+"Found OMF .lib with the same name, falling back to using it instead of the "
+".dll."
+msgstr "Encontrado OMF .lib com o mesmo nome, voltando a usá-la em vez da .dll ."
+
+#: utils/hbmk2/hbmk2.prg:8034
+#, c-format
+msgid ""
+"Error: Creating import libraries is not supported for this platform or "
+"compiler."
+msgstr "Erro: esta plataforma ou compilador não tem suporte para criar bibliotecas de importação."
+
+#: utils/hbmk2/hbmk2.prg:10766
+#, c-format
+msgid ""
+"Warning: Ignoring explicitly specified core library directory: %1$s (in "
+"directive %2$s)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:10778
+#, c-format
+msgid ""
+"Warning: Ignoring explicitly specified core header directory: %1$s (in "
+"directive %2$s)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:12534
+#, c-format
+msgid ""
+"Found COFF .lib with the same name, falling back to using it instead of the "
+".dll."
+msgstr "Encontrado COMF .lib com o mesmo nome, voltando a usá-la em vez da .dll ."
+
+#: utils/hbmk2/hbmk2.prg:12565
+#, c-format
+msgid ""
+"Found .def file with the same name, falling back to using it instead of the "
+".dll."
+msgstr "Encontrado arquivo .def  com o mesmo nome, voltando a usá-lo em vez da .dll ."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"set C compiler warning level\n"
+"<level> can be: max, yes, low, no, def (default: yes)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create symbolic link pointing to <output> (<link> is considered relative to "
+"<output>)"
+msgstr "criar um link simbólico apontando para <output> (<link> é considerado em relação ao <output>)"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"compress executable/dynamic lib (needs UPX tool)\n"
+"<level> can be: yes, no, min, max"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"pass single raw option to linker (executable) after the library list. Use "
+"with caution."
+msgstr "passar uma unica opção \"raw\" para linkar  (executável), após a lista da biblioteca. Use com cuidado."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create/update .po file from source. Merge it with previous .po file of the "
+"same name"
+msgstr "criar/atualizar arquivo .po à partir dos fontes. Se um arquivo .po com o mesmo nome existir, o arquivo será mesclado."
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid ""
+"name of source file that holds the entry function (without directory and "
+"extension)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create position independent object code (always enabled in -hbdyn/-hbdynvm "
+"modes)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"options to be passed to resource compiler (before command-line options) "
+"(Windows only)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"if passed directly as a source file, it will be used as additional standard "
+"header"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid ""
+"Harbour version in human readable format <major>.<minor>.<release><status>. "
+"F.e.: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid ""
+"returns the header directory of dependency <depname>, or '1' if it is not "
+"detected"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid ""
+"package version number, where x,y,z >= 0 <= 255. Defaults to 0.0.1, if not "
+"specified."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid ""
+"type of the project (hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, "
+"hbcontainer)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid ""
+"add space separated list of libraries as system libraries (before regular "
+"libraries)"
+msgstr "adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema (antes bibliotecas regulares)"
+
+#: utils/hbmk2/hbmk2.prg:16201
+#, c-format
+msgid ""
+"return the header directory where <depname> was detected, or empty if it was"
+" not."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16224
+#, c-format
+msgid ""
+"Plugin API:\n"
+"('hbmk' is the context variable received by the plugin entry function)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16351
+#, c-format
+msgid ""
+"You can use key <Alt+V> in interactive Harbour shell to paste text from the "
+"clipboard."
+msgstr "Voce pode usar <Alt+V> no \"shell do Harbour\"  para colar um texto do clipboard."
+
+#: utils/hbmk2/hbmk2.prg:13820
+#, c-format
+msgid ""
+"Warning: Failed to detect Harbour.\n"
+"Run this tool from its original location inside the Harbour installation."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:11378
+#, c-format
+msgid ""
+"Warning: Project reference (%1$s) ignored. Project references require %2$s "
+"to be invoked with a main project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15729
+#, c-format
+msgid ""
+"link with GT<name> GT driver, can be repeated to link with more GTs. First "
+"one will be the default at run-time"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<d> is the name of the dependency. Set <r> as root directory for paths "
+"specified in -depincpath options."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"working directory\n"
+"(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"emulate Clipper compatible linker behavior\n"
+"create link/copy %1$s to rtlink/blinker/exospace for the same effect"
+msgstr "emula o comportamento de um linkeditor compatível com clipper\ncriar um link ou copiar o %1$s para rtlink/blinker/exospace resultará no mesmo efeito"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, "
+"djgpp, gccomf, clang, open64, pcc)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16195
+#, c-format
+msgid ""
+"Predefined constants in build files (they are available after "
+"'-depfinish=<depname>' / 'depfinish=<depname>'):"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid ""
+"Encode function name according to Harbour compiler rules for forming "
+"HB_FUNC() function names in C code."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"Libraries and object files built with/for CA-Cl*pper will not work with any "
+"supported platform/compiler."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16437
+#, c-format
+msgid ""
+"To build an application which uses a contrib package or 3rd party (add-on) "
+"package that ships with an .hbc file"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "Harbour dynamic library directory"
+msgstr "diretório de bibliotécas dinâmicas Harbour"
+
+#: utils/hbmk2/hbmk2.prg:2147
+#, c-format
+msgid "Autodetected platform: %1$s (adjusted)"
+msgstr " Auto detecção de Plataforma: %1$s (ajustado)"
+
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode %1$s (emulate Clipper compiler)"
+msgstr "modo %1$s (emular compilador Clipper)"
+
+#: utils/hbmk2/hbmk2.prg:5945
+#, c-format
+msgid "Harbour compiler command (embedded):"
+msgstr "Linha de comando do compilador Harbour: (interno)"
+
+#: utils/hbmk2/hbmk2.prg:1689
+#, c-format
+msgid "Processing environment options: %1$s"
+msgstr "Processando opções do ambiente: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "OS directory for temporary files"
+msgstr "Diretório do Sistema Operacional para arquivos temporários"
+
+#: utils/hbmk2/hbmk2.prg:5985 utils/hbmk2/hbmk2.prg:6031
+#, c-format
+msgid "Error: Running Harbour compiler. %1$d"
+msgstr "Erro: Executando o compilador Harbour: %1$d"
+
+#: utils/hbmk2/hbmk2.prg:3441
+#, c-format
+msgid "Warning: Unknown dependency name: %1$s"
+msgstr "Atenção: Nome de dependência desconhecido: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15937 utils/hbmk2/hbmk2.prg:15937
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode %1$s (emulate Clipper linker)"
+msgstr "modo %1$s (emular linkeditor Clipper)"
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "Harbour static library directory"
+msgstr "diretório de bibliotécas estáticas Harbour"
+
+#: utils/hbmk2/hbmk2.prg:2188
+#, c-format
+msgid "Error: Compiler value unknown: %1$s"
+msgstr "Erro: Compilador inválido ou desconhecido: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:5826
+#, c-format
+msgid "Triggered by #require directive: %1$s"
+msgstr "Acionado pelo operador de diretivas \" # \": %1$s"
+
+#: utils/hbmk2/hbmk2.prg:2365
+#, c-format
+msgid "Using C compiler: %1$s [%2$s...%3$s]"
+msgstr "Usando compilador C : %1$s [%2$s...%3$s]"
+
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode script runner / interactive shell"
+msgstr "rodando em modo script / \"shell\" interativo"
+
+#: utils/hbmk2/hbmk2.prg:6632 utils/hbmk2/hbmk2.prg:6674
+#, c-format
+msgid "Error: Running resource compiler. %1$d"
+msgstr "Erro: Ao executar o compilador de recursos. %1$d"
+
+#: utils/hbmk2/hbmk2.prg:2411
+#, c-format
+msgid "Processing local make script: %1$s"
+msgstr "Processando script local: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "name of the output (without extension)"
+msgstr "nome de saída (sem a extensão)"
+
+#: utils/hbmk2/hbmk2.prg:1989
+#, c-format
+msgid "Error: Platform value unknown: %1$s"
+msgstr "Erro: Valor incorreto para plataforma: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:1683
+#, c-format
+msgid "Building sub-project (level %1$d): %2$s"
+msgstr "Gerando sub-projeto ( passo %1$d): %2$s"
+
+#: utils/hbmk2/hbmk2.prg:5828
+#, c-format
+msgid "Triggered by '%1$s' header: %2$s"
+msgstr "Acionado pelo '%1$s' cabeçalho \"header\": %2$s"
+
+#: utils/hbmk2/hbmk2.prg:2182
+#, c-format
+msgid ""
+"Could not detect any supported C compiler in your PATH.\n"
+"Setup one or set -comp= option to one of these values: %1$s"
+msgstr "Nenhum compilador C suportado foi encontrado em seu PATH.\nPor favor, utilize a opção -comp= com um destes valores: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies "
+"whether the dependency is optional. Default: no"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"optional .hbm file residing in current working directory, which gets "
+"automatically processed before other options"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16381
+#, c-format
+msgid ""
+"%1$s is able to run Harbour scripts (both source and precompiled), and it "
+"also features an interactive shell prompt."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid ""
+"array of parameters passed to plugins via -pflag=/pi= options or having an "
+"extension registered via hbmk_Register_Input_File_Extension()"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separated list:\n"
+"-lng=en,hu-HU,de"
+msgstr "lista de idiomas à serem substituidos nas macros %1$s nos arquivos .pot/.po e nos nomes de arquivos de saída .hbl/.po. Lista separada por vírgula:\n-lng=en,hu-HU,de"
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"collection of options. Can be used to collect common ones into a file and "
+"include that into project files. Uses same format as .hbp files."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid ""
+"callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', "
+"'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"Source filename without extension will load the .hbp file, if such .hbp file"
+" exists in current directory. If not, .prg extension will be used."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:2176
+#, c-format
+msgid "Autodetected C compiler: %1$s"
+msgstr "Compilador C detectado automaticamente: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:1821
+#, c-format
+msgid "Autodetected platform: %1$s"
+msgstr "Plataforma detectada: %1$s"
+
 #: utils/hbmk2/hbmk2.prg:5907
 #, c-format
 msgid "Target(s) up to date."
 msgstr "Alvo(s) atualizados."
-
-#: utils/hbmk2/hbmk2.prg:6848
-#, c-format
-msgid "C/C++ compiler script:"
-msgstr "Script do compilador C/C++:"
-
-#: utils/hbmk2/hbmk2.prg:2363
-#, c-format
-msgid "Using C compiler: %1$s"
-msgstr "Usando compilador C: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:6740
-#, c-format
-msgid "Compiling C++..."
-msgstr "Compilando C++..."
-
-#: utils/hbmk2/hbmk2.prg:7492
-#, c-format
-msgid "Code sign command:"
-msgstr "Comando \"Code sign\":"
-
-#: utils/hbmk2/hbmk2.prg:7368
-#, c-format
-msgid "Post processor command:"
-msgstr "Comando pós processo:"
-
-#: utils/hbmk2/hbmk2.prg:7542
-#, c-format
-msgid "Running executable:"
-msgstr "Executando aplicativo:"
-
-#: utils/hbmk2/hbmk2.prg:6957
-#, c-format
-msgid "Target up to date: %1$s"
-msgstr "Alvo atualizado: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:7519
-#, c-format
-msgid "Running time: %1$ds"
-msgstr "Tempo de execução: %1$ds"
-
-#: utils/hbmk2/hbmk2.prg:8107
-#, c-format
-msgid "Copied %1$s to %2$s"
-msgstr "Copiado  %1$s para  %2$s"
-
-#: utils/hbmk2/hbmk2.prg:7438
-#, c-format
-msgid "Compression command:"
-msgstr "Comando para compressão:"
-
-#: utils/hbmk2/hbmk2.prg:6843 utils/hbmk2/hbmk2.prg:8208
-#, c-format
-msgid "C/C++ compiler command:"
-msgstr "Comando do compilador C/C++:"
-
-#: utils/hbmk2/hbmk2.prg:6603
-#, c-format
-msgid "Compiling resources..."
-msgstr "Compilando recursos..."
 
 #: utils/hbmk2/hbmk2.prg:3303 utils/hbmk2/hbmk2.prg:3526
 #: utils/hbmk2/hbmk2.prg:11042
@@ -1323,7 +1256,7 @@ msgid "Warning: Plugin not found: %1$s"
 msgstr "Atenção: Plugin não encontrado: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:3512 utils/hbmk2/hbmk2.prg:5831
-#: utils/hbmk2/hbmk2.prg:14100
+#: utils/hbmk2/hbmk2.prg:14106
 #, c-format
 msgid "Warning: Cannot find %1$s"
 msgstr "Atenção: Não posso encontrar %1$s"
@@ -1393,160 +1326,72 @@ msgstr "Atenção: Não foi possível criar o diretório de instalação %1$s."
 msgid "Warning: Project reference (%1$s) ignored in automatic make file: %2$s"
 msgstr "Atenção:Projeto de referência (%1$s) ignorado automaticamente na construçao do arquivo: %2$s"
 
-#: utils/hbmk2/hbmk2.prg:15651
+#: utils/hbmk2/hbmk2.prg:3169 utils/hbmk2/hbmk2.prg:3178
+#: utils/hbmk2/hbmk2.prg:10560 utils/hbmk2/hbmk2.prg:10805
+#: utils/hbmk2/hbmk2.prg:10812
 #, c-format
-msgid "no error"
-msgstr ""
+msgid "%1$s"
+msgstr "%1$s"
 
-#: utils/hbmk2/hbmk2.prg:15667
+#: utils/hbmk2/hbmk2.prg:6848
 #, c-format
-msgid "unknown: %1$d"
-msgstr ""
+msgid "C/C++ compiler script:"
+msgstr "Script do compilador C/C++:"
 
-#: utils/hbmk2/hbmk2.prg:15658
+#: utils/hbmk2/hbmk2.prg:2363
 #, c-format
-msgid "unsupported"
-msgstr ""
+msgid "Using C compiler: %1$s"
+msgstr "Usando compilador C: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15664
+#: utils/hbmk2/hbmk2.prg:6740
 #, c-format
-msgid "stop requested"
-msgstr ""
+msgid "Compiling C++..."
+msgstr "Compilando C++..."
 
-#: utils/hbmk2/hbmk2.prg:15681 utils/hbmk2/hbmk2.prg:16406
-#: utils/hbmk2/hbmk2.prg:16415
+#: utils/hbmk2/hbmk2.prg:7492
 #, c-format
-msgid "<parameter[s]>"
-msgstr ""
+msgid "Code sign command:"
+msgstr "Comando \"Code sign\":"
 
-#: utils/hbmk2/hbmk2.prg:15709
+#: utils/hbmk2/hbmk2.prg:7368
 #, c-format
-msgid "Options:"
-msgstr "Opções"
+msgid "Post processor command:"
+msgstr "Comando pós processo:"
 
-#: utils/hbmk2/hbmk2.prg:16415
+#: utils/hbmk2/hbmk2.prg:7542
 #, c-format
-msgid "To build"
-msgstr ""
+msgid "Running executable:"
+msgstr "Executando aplicativo:"
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:6957
 #, c-format
-msgid "override Harbour base add-ons directory"
-msgstr ""
+msgid "Target up to date: %1$s"
+msgstr "Alvo atualizado: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:11391
+#: utils/hbmk2/hbmk2.prg:7519
 #, c-format
-msgid "Warning: File cannot be found: %1$s"
-msgstr "Atenção: Arquivo não encontrado: %1$s"
+msgid "Running time: %1$ds"
+msgstr "Tempo de execução: %1$ds"
 
-#: utils/hbmk2/hbmk2.prg:15980 utils/hbmk2/hbmk2.prg:15980
-#: utils/hbmk2/hbmk2.prg:15980 utils/hbmk2/hbmk2.prg:15980
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:8107
 #, c-format
-msgid "accepts same values as %1$s option"
-msgstr ""
+msgid "Copied %1$s to %2$s"
+msgstr "Copiado  %1$s para  %2$s"
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:7438
 #, c-format
-msgid "directory of the filename it is used in"
-msgstr ""
+msgid "Compression command:"
+msgstr "Comando para compressão:"
 
-#: utils/hbmk2/hbmk2.prg:8786 utils/hbmk2/hbmk2.prg:8794
+#: utils/hbmk2/hbmk2.prg:6843 utils/hbmk2/hbmk2.prg:8208
 #, c-format
-msgid "Error: In %1$s at line %2$d %3$s:"
-msgstr "Erro: Em %1$s na linha %2$d %3$s:"
+msgid "C/C++ compiler command:"
+msgstr "Comando do compilador C/C++:"
 
-#: utils/hbmk2/hbmk2.prg:7236
+#: utils/hbmk2/hbmk2.prg:6603
 #, c-format
-msgid "Error: Running lib command. %1$d"
-msgstr "Erro: Executando comando lib. %1$d"
-
-#: utils/hbmk2/hbmk2.prg:6841 utils/hbmk2/hbmk2.prg:8206
-#, c-format
-msgid "C/C++ compiler command job #%1$d:"
-msgstr "Comando do Compilador C/C++ - tarefa #%1$d:"
-
-#: utils/hbmk2/hbmk2.prg:9028
-#, c-format
-msgid "Error: Missing dependencies: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:6858 utils/hbmk2/hbmk2.prg:6882
-#: utils/hbmk2/hbmk2.prg:8218
-#, c-format
-msgid "Error: Running C/C++ compiler. %1$d"
-msgstr "Erro: Executando compilador C/C++. %1$d"
-
-#: utils/hbmk2/hbmk2.prg:8003
-#, c-format
-msgid "Created import library: %1$s <= %2$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:9469
-#, c-format
-msgid "Error: Initializing plugin: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:8101
-#, c-format
-msgid "Copied symbolic link %1$s to %2$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:7097
-#, c-format
-msgid "Creating dynamic library... %1$s"
-msgstr "Criando biblioteca dinâmica... %1$s"
-
-#: utils/hbmk2/hbmk2.prg:9036
-#, c-format
-msgid "Warning: Missing dependencies: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:7963
-#, c-format
-msgid "Created symbolic link %1$s to %2$s"
-msgstr "Criado ligação simbólica %1$s para %2$s"
-
-#: utils/hbmk2/hbmk2.prg:8990
-#, c-format
-msgid "Dependency '%1$s' forcibly disabled"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:9038
-#, c-format
-msgid "Warning: Missing dependency: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "forced C++ mode (see -cpp option)"
-msgstr "Forçado modo C++ (veja opção -cpp )"
-
-#: utils/hbmk2/hbmk2.prg:10663 utils/hbmk2/hbmk2.prg:10716
-#: utils/hbmk2/hbmk2.prg:11331 utils/hbmk2/hbmk2.prg:11342
-#, c-format
-msgid "Warning: Cannot nest deeper in %1$s"
-msgstr "Atenção: Erro ao processar aninhamento em %1$s"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target C compiler is bcc* (bcc, bcc64)"
-msgstr "compilador alvo C é bcc* (bcc, bcc64)"
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "forced C mode (see -cpp- option)"
-msgstr "forçado modo C (veja opção -cpp-)"
-
-#: utils/hbmk2/hbmk2.prg:9770
-#, c-format
-msgid "Plugin %1$s returned at '%2$s': '%3$s'"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "Windows ANSI mode (see -winuni- option)"
-msgstr ""
+msgid "Compiling resources..."
+msgstr "Compilando recursos..."
 
 #: utils/hbmk2/hbmk2.prg:9030
 #, c-format
@@ -1628,54 +1473,54 @@ msgstr "Arquivo .hbl '%1$s' criado para o(s) idioma(s): %2$s"
 msgid "Warning: Source dynamic library not found: %1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:14307
+#: utils/hbmk2/hbmk2.prg:14313
 #, c-format
 msgid ""
 "Error: Loading shell plugin: %1$s\n"
 "'%2$s'"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15623
+#: utils/hbmk2/hbmk2.prg:15629
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
 msgstr "Translation (%1$s): Vailton Renato <vailtom@gmail.com>"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "toggle C compiler optimizations (default: on)"
 msgstr "alterna as optimizações do compilador C (ativado por padrão)"
 
-#: utils/hbmk2/hbmk2.prg:15681
+#: utils/hbmk2/hbmk2.prg:15687
 #, c-format
 msgid "%1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [%2$s]"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "create dynamic library (with linked Harbour VM)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "disable library grouping on gcc based compilers"
 msgstr "desativar agrupamento de LIBs em compiladores baseados no gcc."
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "link with <framework> framework (Darwin only)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to linker (dynamic library)"
 msgstr "informar flags para o linkeditor (biblioteca dinânica)"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to linker (static library)"
 msgstr "passa flag para o linkeditor (lib estática)"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
 msgstr ""
@@ -1689,86 +1534,6 @@ msgstr ""
 #, c-format
 msgid "Error: Loading plugin: %1$s"
 msgstr "Erro: Carregando o plugin: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"<d> is the name of the dependency. Closes the dependency definition and does"
-" the actual dependency detection, setting all predefined filter macro "
-"variables and build options accordingly. Optional, if omitted, detection "
-"will take place after processing all options."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"alter local environment. <e> is the name of the environment variable to "
-"alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the "
-"end of existing value, '#' to insert to the beginning of existing value. <v>"
-" is the value to set/append/insert."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"add <file> in to the list of files to be copied to path specified by "
-"-instpath option. <g> is an optional copy group (case sensitive), it must be"
-" at least two characters long. In case you do not specify <file>, the list "
-"of files in that group will be emptied."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, "
-"instfiles=, instpaths=, echo=) and corresponding command-line parameters "
-"will accept macro variables. libpaths= also accepts %{hb_name} which "
-"translates to the name of the .hbc file under search."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:12425
-#, c-format
-msgid ".pot merge error: %1$s"
-msgstr "Erro ao mesclar o arquivo .pot : %1$s"
-
-#: utils/hbmk2/hbmk2.prg:12299
-#, c-format
-msgid "Updated .po file '%1$s'"
-msgstr "Atualizado arquivo .po '%1$s'"
-
-#: utils/hbmk2/hbmk2.prg:12263
-#, c-format
-msgid "Created .po file '%1$s'"
-msgstr "Gerado arquivo .po '%1$s'"
-
-#: utils/hbmk2/hbmk2.prg:12384
-#, c-format
-msgid ".pot error: %1$s"
-msgstr ".pot erro: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:12270
-#, c-format
-msgid "Rebuilt .po file '%1$s'"
-msgstr "Reconstruído arquivo .po '%1$s'"
-
-#: utils/hbmk2/hbmk2.prg:12196
-#, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:12810
-#, c-format
-msgid "VCS version command:"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"<script> can be:\n"
-"  <@script> or <script.hbm>: command-line options in file\n"
-"  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n"
-"  <script.hbc>: package configuration file"
-msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:6738
 #, c-format
@@ -1810,20 +1575,133 @@ msgstr "Comando do Linkeditor:"
 msgid "Lib script:"
 msgstr "Script para biblioteca:"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:12412
 #, c-format
-msgid ""
-"<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically "
-"included in case the header is found in any of the compiled sources. "
-"(EXPERIMENTAL)"
+msgid "Warning: %1$s"
+msgstr "Atenção: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:12440
+#, c-format
+msgid "Error: %1$s"
+msgstr "Erro: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid "override Harbour base add-ons directory"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:11391
 #, c-format
-msgid ""
-"output Harbour build information. Output is in JSON format. The included "
-"paths always contain forward slashes. Each JSON block is followed by an 0x0A"
-" byte."
+msgid "Warning: File cannot be found: %1$s"
+msgstr "Atenção: Arquivo não encontrado: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:15986 utils/hbmk2/hbmk2.prg:15986
+#: utils/hbmk2/hbmk2.prg:15986 utils/hbmk2/hbmk2.prg:15986
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid "accepts same values as %1$s option"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "directory of the filename it is used in"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:8786 utils/hbmk2/hbmk2.prg:8794
+#, c-format
+msgid "Error: In %1$s at line %2$d %3$s:"
+msgstr "Erro: Em %1$s na linha %2$d %3$s:"
+
+#: utils/hbmk2/hbmk2.prg:7236
+#, c-format
+msgid "Error: Running lib command. %1$d"
+msgstr "Erro: Executando comando lib. %1$d"
+
+#: utils/hbmk2/hbmk2.prg:6841 utils/hbmk2/hbmk2.prg:8206
+#, c-format
+msgid "C/C++ compiler command job #%1$d:"
+msgstr "Comando do Compilador C/C++ - tarefa #%1$d:"
+
+#: utils/hbmk2/hbmk2.prg:9028
+#, c-format
+msgid "Error: Missing dependencies: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:6858 utils/hbmk2/hbmk2.prg:6882
+#: utils/hbmk2/hbmk2.prg:8218
+#, c-format
+msgid "Error: Running C/C++ compiler. %1$d"
+msgstr "Erro: Executando compilador C/C++. %1$d"
+
+#: utils/hbmk2/hbmk2.prg:8003
+#, c-format
+msgid "Created import library: %1$s <= %2$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:9469
+#, c-format
+msgid "Error: Initializing plugin: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:8101
+#, c-format
+msgid "Copied symbolic link %1$s to %2$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:7097
+#, c-format
+msgid "Creating dynamic library... %1$s"
+msgstr "Criando biblioteca dinâmica... %1$s"
+
+#: utils/hbmk2/hbmk2.prg:9036
+#, c-format
+msgid "Warning: Missing dependencies: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:7963
+#, c-format
+msgid "Created symbolic link %1$s to %2$s"
+msgstr "Criado ligação simbólica %1$s para %2$s"
+
+#: utils/hbmk2/hbmk2.prg:8990
+#, c-format
+msgid "Dependency '%1$s' forcibly disabled"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:9038
+#, c-format
+msgid "Warning: Missing dependency: %1$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "forced C++ mode (see -cpp option)"
+msgstr "Forçado modo C++ (veja opção -cpp )"
+
+#: utils/hbmk2/hbmk2.prg:10663 utils/hbmk2/hbmk2.prg:10716
+#: utils/hbmk2/hbmk2.prg:11331 utils/hbmk2/hbmk2.prg:11342
+#, c-format
+msgid "Warning: Cannot nest deeper in %1$s"
+msgstr "Atenção: Erro ao processar aninhamento em %1$s"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target C compiler is bcc* (bcc, bcc64)"
+msgstr "compilador alvo C é bcc* (bcc, bcc64)"
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "forced C mode (see -cpp- option)"
+msgstr "forçado modo C (veja opção -cpp-)"
+
+#: utils/hbmk2/hbmk2.prg:9770
+#, c-format
+msgid "Plugin %1$s returned at '%2$s': '%3$s'"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "Windows ANSI mode (see -winuni- option)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:9450
@@ -1841,7 +1719,171 @@ msgstr ""
 msgid "plugin: %1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16345
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<d> is the name of the dependency. <h> is the key header (.h) of the package"
+" dependency. Multiple alternative headers can be specified."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"override C compiler version autodetection (gcc and msvc compiler families "
+"only). Format: <15><00>[.<00>] = <major><minor>[.<revision>]"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"special .hbm file embedded inside %1$s. It manages the details of creating a"
+" dynamic library (in the style of Harbour contribs)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically "
+"included in case the header is found in any of the compiled sources. "
+"(EXPERIMENTAL)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"output Harbour build information. Output is in JSON format. The included "
+"paths always contain forward slashes. Each JSON block is followed by an 0x0A"
+" byte."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"specify a new build target. <script> can be .prg (or no extension) or .hbp "
+"file. Note that .hbp files are automatically considered as separate targets."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"When multiple target type selection options (-hblib, -hbdyn, etc.) are "
+"specified, the first one will be significant, the rest will be silently "
+"ignored."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16464
+#, c-format
+msgid ""
+"stores command history for interactive Harbour shell. You can disable "
+"history by making the first line '%1$s' (without quotes and with newline). "
+"Resides in [*]: %2$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"copy target to <path>. if <path> is a directory, it should end with path "
+"separator, in this case files specified by -instfile option will also be "
+"copied. can be specified multiple times. <g> is an optional copy group, it "
+"must be at least two characters long. Build target will be automatically "
+"copied to default (empty) copy group. There exist following built-in <g> "
+"groups: 'depimplib' for import libraries and 'depimplibsrc' for import "
+"library source (.dll) files, both belonging to dependencies."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"Filters are accepted in each .hbc line and most options.\n"
+"Filters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgstr "Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas opções.\nFormato de um filtro: {[!][<arquitetura>|<compilador>|<cpu>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+
+#: utils/hbmk2/hbmk2.prg:10504
+#, c-format
+msgid "Processing configuration: %1$s"
+msgstr "Processando arquivo de configuração: %1$s"
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"<script> can be:\n"
+"  <@script> or <script.hbm>: command-line options in file\n"
+"  <script.hbp>: command-line options in file, it also marks a new target if specified on the command-line\n"
+"  <script.hbc>: package configuration file"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<d> is the name of the dependency. <v> is a value that controls how "
+"detection is done. Accepted values: no, yes, force, nolocal, local. Default:"
+" content of environment variable HBMK_WITH_<d>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"control source header parsing (in incremental build mode)\n"
+"<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid ""
+"Find file in <xPath> (array or pathsep delimited string are accepted) with "
+"list of <aExtDef> alternate extensions (defaults to executable binaries). "
+"Returns filename if found and NIL if not."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"<d> is the name of the dependency. Add <i> to the header detection path "
+"list, where <i> is pointing to a directory local to the project and "
+"containing an embedded (aka. 'locally hosted') dependency."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"generate .ch header file with timestamp information. Generated header will "
+"define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, "
+"_HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgstr "gerar cabeçalho .ch com informação de data/hora. Cabeçalho gerado conterá as macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ com a data/hora de criação do arquivo."
+
+#: utils/hbmk2/hbmk2.prg:16186
+#, c-format
+msgid ""
+"when <hbcname>.hbc package is linked to the target. The value is the "
+"version= value from the .hbc file, converted to a decimal number, which is "
+"'1', if not specified. (available in Harbour sources)"
+msgstr "quando o pacote <hbcname>.hbc está linkado ao alvo. O valor  \"version=\" é igual ao da versão do arquivo .hbc, convertido para numero decimal que é  '1', se não especificado. (disponível nos fontes do Harbour)"
+
+#: utils/hbmk2/hbmk2.prg:16332
+#, c-format
+msgid ""
+"%1$s option file in %2$s directory is always processed if it exists. On *nix"
+" platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are "
+"checked (in that order) before the %2$s directory."
+msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre ser processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que contém o %2$s."
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"set <file> as application icon. <file> should be a supported format on the "
+"target platform (not supported by some platforms/compilers). On Windows, it "
+"is implemented by generating and linking a resource file."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"create shared Harbour binaries without/with absolute dir reference to "
+"Harbour library (default: 'fullshared' when Harbour is installed on system "
+"location, 'fixshared' otherwise) (fix/full option in *nix only)"
+msgstr "criar binário que faça uso da biblioteca compartilhada do Harbour com referência absoluta (ou não) (padrão: 'fullshared' quando Harbour é instalado no local do sistema, caso contrário será 'fixshared') (fix/full é somente para *nix)"
+
+#: utils/hbmk2/hbmk2.prg:16351
 #, c-format
 msgid ""
 "%1$s file passed as first parameter will be run as Harbour script. If the "
@@ -1857,113 +1899,50 @@ msgid ""
 "INIT PROCEDUREs)."
 msgstr "%1$s arquivo passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb  serão pesquisados nessa ordem. arquivos  .dbf  serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Nota, para Scripts Harbour, a pagina de códigos  \"codepage\" será em  UTF-8 por padrão. O nucleo padrão de cabeçalhos 'hb.ch' será automaticamente incluido. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é  '%2$s' , a menos que as chamadasCUI de tela cheia seja detectadas, quando  '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\" )."
 
-#: utils/hbmk2/hbmk2.prg:16458
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
-"stores command history for interactive Harbour shell. You can disable "
-"history by making the first line '%1$s' (without quotes and with newline). "
-"Resides in [*]: %2$s"
+"<d> is the name of the dependency. Closes the dependency definition and does"
+" the actual dependency detection, setting all predefined filter macro "
+"variables and build options accordingly. Optional, if omitted, detection "
+"will take place after processing all options."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:10504
-#, c-format
-msgid "Processing configuration: %1$s"
-msgstr "Processando arquivo de configuração: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
-"copy target to <path>. if <path> is a directory, it should end with path "
-"separator, in this case files specified by -instfile option will also be "
-"copied. can be specified multiple times. <g> is an optional copy group, it "
-"must be at least two characters long. Build target will be automatically "
-"copied to default (empty) copy group. There exist following built-in <g> "
-"groups: 'depimplib' for import libraries and 'depimplibsrc' for import "
-"library source (.dll) files, both belonging to dependencies."
+"alter local environment. <e> is the name of the environment variable to "
+"alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the "
+"end of existing value, '#' to insert to the beginning of existing value. <v>"
+" is the value to set/append/insert."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16326
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
-"Filters are accepted in each .hbc line and most options.\n"
-"Filters can be combined using '&' (and), '|' (or) operators, negated by '!' operator and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
-msgstr "Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas opções.\nFormato de um filtro: {[!][<arquitetura>|<compilador>|<cpu>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+"add <file> in to the list of files to be copied to path specified by "
+"-instpath option. <g> is an optional copy group (case sensitive), it must be"
+" at least two characters long. In case you do not specify <file>, the list "
+"of files in that group will be emptied."
+msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:16332
 #, c-format
 msgid ""
-"<d> is the name of the dependency. <v> is a value that controls how "
-"detection is done. Accepted values: no, yes, force, nolocal, local. Default:"
-" content of environment variable HBMK_WITH_<d>"
+"Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, "
+"instfiles=, instpaths=, echo=) and corresponding command-line parameters "
+"will accept macro variables. libpaths= also accepts %{hb_name} which "
+"translates to the name of the .hbc file under search."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:16011
 #, c-format
 msgid ""
-"control source header parsing (in incremental build mode)\n"
-"<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
+"collection of options that accompany components (aka 'libs', aka packages). "
+"Use different syntax than command-line and .hbp/.hbm files. Lines beginning "
+"with '#' character are ignored, each directive must be placed in separate "
+"lines."
 msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid ""
-"Find file in <xPath> (array or pathsep delimited string are accepted) with "
-"list of <aExtDef> alternate extensions (defaults to executable binaries). "
-"Returns filename if found and NIL if not."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"project file. Can contain any number of command-line options, which are "
-"expected to create an output. Lines beginning with '#' character are "
-"ignored, otherwise newline is optional and options are space separated, just"
-" like on the command-line. You must enclose option containing space in "
-"double quotes. Each .hbp file reference will be executed as a sub-project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:14115
-#, c-format
-msgid "'%1$s' (%2$s) not found."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:14119
-#, c-format
-msgid "Error loading '%1$s' (%2$s)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16367
-#, c-format
-msgid ""
-"%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\n"
-"Besides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"sign executable with <key> (Windows and Darwin only). On Windows "
-"signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles "
-"C 7), in that order, both autodetected."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16459
-#, c-format
-msgid ""
-"list of extensions to load in interactive Harbour shell. One extension per "
-"line, part of line beyond a '#' character is ignored. Alternate filename on "
-"%2$s: %1$s. Resides in [*]: %3$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:12412
-#, c-format
-msgid "Warning: %1$s"
-msgstr "Atenção: %1$s"
-
-#: utils/hbmk2/hbmk2.prg:12440
-#, c-format
-msgid "Error: %1$s"
-msgstr "Erro: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:12171
 #, c-format
@@ -1975,106 +1954,39 @@ msgstr "Erro: Não foi possível abrir o arquivo: %1$s"
 msgid "Created .hbl file '%1$s'"
 msgstr "Criado arquivo .hbl '%1$s'"
 
-#: utils/hbmk2/hbmk2.prg:16005
+#: utils/hbmk2/hbmk2.prg:12425
 #, c-format
-msgid ""
-"collection of options that accompany components (aka 'libs', aka packages). "
-"Use different syntax than command-line and .hbp/.hbm files. Lines beginning "
-"with '#' character are ignored, each directive must be placed in separate "
-"lines."
-msgstr ""
+msgid ".pot merge error: %1$s"
+msgstr "Erro ao mesclar o arquivo .pot : %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:12299
 #, c-format
-msgid ""
-"set <file> as application icon. <file> should be a supported format on the "
-"target platform (not supported by some platforms/compilers). On Windows, it "
-"is implemented by generating and linking a resource file."
-msgstr ""
+msgid "Updated .po file '%1$s'"
+msgstr "Atualizado arquivo .po '%1$s'"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:12263
 #, c-format
-msgid ""
-"create shared Harbour binaries without/with absolute dir reference to "
-"Harbour library (default: 'fullshared' when Harbour is installed on system "
-"location, 'fixshared' otherwise) (fix/full option in *nix only)"
-msgstr "criar binário que faça uso da biblioteca compartilhada do Harbour com referência absoluta (ou não) (padrão: 'fullshared' quando Harbour é instalado no local do sistema, caso contrário será 'fixshared') (fix/full é somente para *nix)"
+msgid "Created .po file '%1$s'"
+msgstr "Gerado arquivo .po '%1$s'"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:12384
 #, c-format
-msgid ""
-"<d> is the name of the dependency. Add <i> to the header detection path "
-"list, where <i> is pointing to a directory local to the project and "
-"containing an embedded (aka. 'locally hosted') dependency."
-msgstr ""
+msgid ".pot error: %1$s"
+msgstr ".pot erro: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:12270
 #, c-format
-msgid ""
-"generate .ch header file with timestamp information. Generated header will "
-"define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, "
-"_HBMK_BUILD_TIMESTAMP_ with the date/time of build"
-msgstr "gerar cabeçalho .ch com informação de data/hora. Cabeçalho gerado conterá as macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ com a data/hora de criação do arquivo."
+msgid "Rebuilt .po file '%1$s'"
+msgstr "Reconstruído arquivo .po '%1$s'"
 
-#: utils/hbmk2/hbmk2.prg:16180
+#: utils/hbmk2/hbmk2.prg:12196
 #, c-format
-msgid ""
-"when <hbcname>.hbc package is linked to the target. The value is the "
-"version= value from the .hbc file, converted to a decimal number, which is "
-"'1', if not specified. (available in Harbour sources)"
-msgstr "quando o pacote <hbcname>.hbc está linkado ao alvo. O valor  \"version=\" é igual ao da versão do arquivo .hbc, convertido para numero decimal que é  '1', se não especificado. (disponível nos fontes do Harbour)"
+msgid "Blinker ECHO: %1$s"
+msgstr "Blinker ECHO: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:16326
+#: utils/hbmk2/hbmk2.prg:12810
 #, c-format
-msgid ""
-"%1$s option file in %2$s directory is always processed if it exists. On *nix"
-" platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are "
-"checked (in that order) before the %2$s directory."
-msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre ser processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que contém o %2$s."
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"lists all known Harbour functions that contain <text> in their name, along "
-"with their package (case insensitive, accepts multiple values, can contain "
-"wildcard characters)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"special .hbm file embedded inside %1$s. It manages the details of installing"
-" targets and related package files to standard locations (in the style of "
-"Harbour contribs)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16456
-#, c-format
-msgid ""
-"startup Harbour script for interactive Harbour shell. It gets executed "
-"automatically on shell startup, if present. Possible locations (in order of "
-"precedence) [*]: %1$s"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"<d> is the name of the dependency. <h> is the key header (.h) of the package"
-" dependency. Multiple alternative headers can be specified."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"override C compiler version autodetection (gcc and msvc compiler families "
-"only). Format: <15><00>[.<00>] = <major><minor>[.<revision>]"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16005
-#, c-format
-msgid ""
-"special .hbm file embedded inside %1$s. It manages the details of creating a"
-" dynamic library (in the style of Harbour contribs)."
+msgid "VCS version command:"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:12459
@@ -2082,57 +1994,57 @@ msgstr ""
 msgid "Error: Cannot create file: %1$s"
 msgstr "Erro: Impossível criar arquivo: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "additional path to search for headers"
 msgstr "paths adicionais para pesquisa de arquivos headers"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "run/do not run output executable"
 msgstr "executar/não executar o aplicativo gerado."
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to linker (executable)"
 msgstr "especifica flags para o linkeditor (executável)"
 
-#: utils/hbmk2/hbmk2.prg:15054
+#: utils/hbmk2/hbmk2.prg:15060
 #, c-format
 msgid "Loading hbmake project file: %1$s"
 msgstr "Carregando projeto do hbmake: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "Harbour compiler build information"
 msgstr "Compilador Harbour (build)"
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "additional path to search for libraries"
 msgstr "path adicional para pesquisar por bibliotecas"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to Harbour compiler"
 msgstr "especifica flags para o Harbour"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "clean (in incremental build mode)"
 msgstr "compilação limpa (em modo de compilação incremental)"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "show sub-project level in output lines"
 msgstr "exibir  niveis de sub-projeto nas linhas de saída"
 
-#: utils/hbmk2/hbmk2.prg:15318
+#: utils/hbmk2/hbmk2.prg:15324
 #, c-format
 msgid "Loading xhp (xMate) project file: %1$s"
 msgstr "Carregando projeto xhp (xMate): %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "rebuild (in incremental build mode)"
 msgstr ""
@@ -2142,182 +2054,448 @@ msgstr ""
 msgid "Import library creation command:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "force function/procedure to be linked"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "stop after running Harbour compiler"
 msgstr "interromper após executar o compilador Harbour"
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "console target (see -console option)"
 msgstr "alvo console (veja opção -console)"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to code sign command"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15186
+#: utils/hbmk2/hbmk2.prg:15192
 #, c-format
 msgid "Loading xbp (xbuild) project file: %1$s"
 msgstr "Carregando projeto xbp (xbuild): %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "enable Harbour 3.0.x compatibility mode"
 msgstr "habilita modo de compatibilidade 'Harbour 3.0.x'"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "create import library (Windows only)"
 msgstr "Criar Bibliotecas de importação (só para Windows)"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "output Harbour static library directory"
 msgstr "exibe o diretório das bibliotecas estáticas do Harbour"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "enable Harbour 1.0.x compatibility mode"
 msgstr "habilita modo de compatibilidade 'Harbour 1.0.x'"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "enable Harbour 2.0.x compatibility mode"
 msgstr "habilita modo de compatibilidade 'Harbour 2.0.x'"
 
-#: utils/hbmk2/hbmk2.prg:15659
+#: utils/hbmk2/hbmk2.prg:15665
 #, c-format
 msgid "failed to create working directory"
 msgstr "Falhou na criação do diretório de trabalho"
 
-#: utils/hbmk2/hbmk2.prg:14419
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid "link with multi/single-thread Harbour VM"
+msgstr "linkar com suporte multi ou single-thread na HVM"
+
+#: utils/hbmk2/hbmk2.prg:15839
+#, c-format
+msgid "Options below are available on command-line:"
+msgstr "Opções abaixo estão disponíveis em linha de comando:"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid "convert hbmake project <file> to .hbp file"
+msgstr "converte um projeto do hbmake em um arquivo .hbp"
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "Harbour 3rd party static library directory"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15937
+#, c-format
+msgid "mode %1$s (emulate - raw - Harbour compiler)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid "override Harbour base installation directory"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target is single-threaded (see -st option)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
+#, c-format
+msgid "top directory of the filename it is used in"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16067
+#, c-format
+msgid "Filters (you can combine and/or negate them):"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "shared build (see -shared and related options)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "static build (see -static and related options)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target C compiler is icc* (icc, iccia64)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "space separated list of %1$s plugins to load"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid "target is multi-threaded (see -mt option)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "stop the build. Display <msg>, if specified."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16186
+#, c-format
+msgid "when an .hb script is compiled as %1$s plugin"
+msgstr "quando um script .hb é compilado como %1$s plugin"
+
+#: utils/hbmk2/hbmk2.prg:16219
+#, c-format
+msgid "Load package. Similar to #request PP directive."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Add a binary object file to the project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Output text to stdout without any formatting."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Output text to stderr without any formatting."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Change directory and/or extension in filename."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Strip double quote enclosure from a string."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Add a Harbour input file to the project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"Harbour compiler help (all Harbour compiler options are accepted as is by "
+"%1$s)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"enable (or disable) single beep on successful exit, double beep on failure"
+msgstr "ativa (ou desativa) um beep simples em caso de sucesso ou um beep duplo em caso de erro"
+
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"enable (or disable) processing of %1$s in current directory (default: yes)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"options to be passed to linker (executable) (before command-line options)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"options to be passed to linker (dynamic library) (before command-line "
+"options)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"options to be passed to linker (static library) (before command-line "
+"options)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15986
+#, c-format
+msgid ""
+"accepts any options as if they were passed in the beginning of the command-"
+"line"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"filter will pass if ${MACRO} value equals to <value> (case insensitive)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"target C compiler. Where <compiler> can be any value accepted by -comp= "
+"option."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"filter will pass if ${MACRO} value is larger than <value> (case "
+"insensitive)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"filter will pass if ${MACRO} value is smaller than <value> (case "
+"insensitive)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid ""
+"similar to shared=, but works only if shared/static mode was not set before"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16103
+#, c-format
+msgid ""
+"target platform. Where <platform> can be any value accepted by -plat= "
+"option."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid ""
+"add space separated list of additional header paths (for both Harbour and C)"
+msgstr "adicionar lista separada por espaços dos locais adicionais dos \"header\"  (para ambos Harbour e  C )"
+
+#: utils/hbmk2/hbmk2.prg:16186
+#, c-format
+msgid ""
+"when an .hbx source file is present in a project (available in Harbour "
+"sources)"
+msgstr "quando um arquivo  .hbx está presente em um projeto (disponível nos fontes do Harbour) "
+
+#: utils/hbmk2/hbmk2.prg:15835
+#, c-format
+msgid ""
+"sign executable with <key> (Windows and Darwin only). On Windows "
+"signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles "
+"C 7), in that order, both autodetected."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16465
+#, c-format
+msgid ""
+"list of extensions to load in interactive Harbour shell. One extension per "
+"line, part of line beyond a '#' character is ignored. Alternate filename on "
+"%2$s: %1$s. Resides in [*]: %3$s"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:14425
 #, c-format
 msgid "Error: Interactive session not possible with %1$s terminal driver"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "do not add extra list of system libraries to default library list"
 msgstr "não adicione bibliotecas extras do sistema à lista padrão de bibliotecas"
 
-#: utils/hbmk2/hbmk2.prg:15685
+#: utils/hbmk2/hbmk2.prg:15691
 #, c-format
 msgid "Supported <compiler> values for each supported <platform> value:"
 msgstr "Valores suportados para <compiler> conforme a <platform> disponível:"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "use <pw> as password when signing executable (Windows and Darwin only)"
 msgstr "usar  <pw>  como senha ao assinar executável (somente Windows e Darwin)"
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:15986
 #, c-format
 msgid "options to be passed to C compiler (before command-line options)"
 msgstr "opções a serem passados ​​para o compilador C (antes da linha de comando)"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "override standard C++ memory management functions with Harbour ones"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid ""
 "accept raw C flags\n"
 "create link/copy %1$s to hbcc for the same effect"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:15986
 #, c-format
 msgid "override C compiler executable directory (gcc compiler families only)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:15986
 #, c-format
 msgid "override C compiler executable prefix (gcc compiler families only)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:15986
 #, c-format
 msgid "override C compiler executable suffix (gcc compiler families only)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "add space separated list of .ch format headers as standard header"
 msgstr "adicionar lista separada por espaços de arquivos \".ch\"  tipo  \"headers\""
 
-#: utils/hbmk2/hbmk2.prg:15980
+#: utils/hbmk2/hbmk2.prg:15986
 #, c-format
 msgid "options to be passed to Harbour compiler (before command-line options)"
 msgstr "opções a serem passados ​​para o compilador Harbour  (antes da linha de comando)"
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "name of the filename it is used in (without directory and extension)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid ""
 "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Escape/quote filename for using it as external command parameter."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid ""
 "skip processing the rest of the .hbc file. Display <msg>, if specified."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Convert filename to the format required for the target toolchain."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid ""
 "Return relative path of -workdir= value from current working directory."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Add a file to be installed, with an optional -instpath= group name."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16326
+#: utils/hbmk2/hbmk2.prg:16332
 #, c-format
 msgid ""
 "%1$s make script in current directory is always processed if it exists."
 msgstr "O script %1$s no diretório atual será sempre processado se existir."
 
-#: utils/hbmk2/hbmk2.prg:16455
+#: utils/hbmk2/hbmk2.prg:16461
 #, c-format
 msgid ""
 "space separated list of extensions to load in interactive Harbour shell"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid ""
 "To build multiple .prg sources into one application in incremental mode"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build an application which links against Harbour dynamic libraries"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15657
+#, c-format
+msgid "no error"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15673
+#, c-format
+msgid "unknown: %1$d"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15664
+#, c-format
+msgid "unsupported"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15670
+#, c-format
+msgid "stop requested"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15687 utils/hbmk2/hbmk2.prg:16412
+#: utils/hbmk2/hbmk2.prg:16421
+#, c-format
+msgid "<parameter[s]>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15715
+#, c-format
+msgid "Options:"
+msgstr "Opções"
+
+#: utils/hbmk2/hbmk2.prg:16421
+#, c-format
+msgid "To build"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:13210
@@ -2345,6 +2523,30 @@ msgstr ""
 msgid "Harbour core"
 msgstr ""
 
+#: utils/hbmk2/hbmk2.prg:15888
+#, c-format
+msgid ""
+"lists all known Harbour functions that contain <text> in their name, along "
+"with their package (case insensitive, accepts multiple values, can contain "
+"wildcard characters)"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"special .hbm file embedded inside %1$s. It manages the details of installing"
+" targets and related package files to standard locations (in the style of "
+"Harbour contribs)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16462
+#, c-format
+msgid ""
+"startup Harbour script for interactive Harbour shell. It gets executed "
+"automatically on shell startup, if present. Possible locations (in order of "
+"precedence) [*]: %1$s"
+msgstr ""
+
 #: utils/hbmk2/hbmk2.prg:13574
 #, c-format
 msgid "Updating extern header: %1$s"
@@ -2355,12 +2557,72 @@ msgstr ""
 msgid "Error: Updating extern header."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:13942
+#: utils/hbmk2/hbmk2.prg:13948
 #, c-format
 msgid "Cannot find script '%1$s'"
-msgstr "Não posso encontrar o script '%1$s'"
+msgstr "Não é possível encontrar o script '%1$s'"
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:14121
+#, c-format
+msgid "'%1$s' (%2$s) not found."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:14125
+#, c-format
+msgid "Error loading '%1$s' (%2$s)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16219
+#, c-format
+msgid "Unload package."
+msgstr "Descarregar pacote."
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "display <msg>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16186 utils/hbmk2/hbmk2.prg:16201
+#: utils/hbmk2/hbmk2.prg:16201 utils/hbmk2/hbmk2.prg:16201
+#, c-format
+msgid "<depname>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16186
+#, c-format
+msgid "<hbcname>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16175
+#, c-format
+msgid "package name"
+msgstr "Nome do Pacote"
+
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid "%1$s value"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid "see %1$s envvar"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#, c-format
+msgid "see %1$s macro"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16355
+#, c-format
+msgid "Description:"
+msgstr "Descrições:"
+
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid ""
 "link with <libname> library. <libname> should be without path, extension and"
@@ -2370,7 +2632,7 @@ msgid ""
 "time."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16326
+#: utils/hbmk2/hbmk2.prg:16332
 #, c-format
 msgid ""
 "Options accepting macro variables also support command substitution. Enclose"
@@ -2380,153 +2642,153 @@ msgid ""
 "--libs`\"."
 msgstr "Opções aceitando macros também suportam linhas de comando. Neste caso basta rodeiar o comando dentro de ``, e, se o comando contiver espaço, também adicione aspas duplas. i.e. \"-cflag=`wx-config --cflags`\", ou ldflags={unix&gcc}\"`wx-config --libs`\"."
 
-#: utils/hbmk2/hbmk2.prg:14567
+#: utils/hbmk2/hbmk2.prg:14573
 #, c-format
 msgid "Enter password:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:14636
+#: utils/hbmk2/hbmk2.prg:14642
 #, c-format
 msgid "Arguments:"
 msgstr "Argumentos:"
 
-#: utils/hbmk2/hbmk2.prg:14684
+#: utils/hbmk2/hbmk2.prg:14690
 #, c-format
 msgid "Syntax error."
 msgstr "Erro de sintaxe."
 
-#: utils/hbmk2/hbmk2.prg:14629
+#: utils/hbmk2/hbmk2.prg:14635
 #, c-format
 msgid "Could not execute:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "create static library"
 msgstr "criar biblioteca estática"
 
-#: utils/hbmk2/hbmk2.prg:15663
+#: utils/hbmk2/hbmk2.prg:15669
 #, c-format
 msgid "too deep nesting"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15652
+#: utils/hbmk2/hbmk2.prg:15658
 #, c-format
 msgid "unknown platform"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15662
+#: utils/hbmk2/hbmk2.prg:15668
 #, c-format
 msgid "plugin initialization"
 msgstr "inicialização de plugin "
 
-#: utils/hbmk2/hbmk2.prg:15653
+#: utils/hbmk2/hbmk2.prg:15659
 #, c-format
 msgid "unknown compiler"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15655
+#: utils/hbmk2/hbmk2.prg:15661
 #, c-format
 msgid "failed stub creation"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "output file name"
 msgstr "nome de arquivo de saída"
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "package description"
 msgstr "descrição do pacote"
 
-#: utils/hbmk2/hbmk2.prg:16280
+#: utils/hbmk2/hbmk2.prg:16286
 #, c-format
 msgid "Current exit code"
 msgstr "Código de saída atual"
 
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "same as %1$s option"
 msgstr "mesmo que %1$s opções"
 
-#: utils/hbmk2/hbmk2.prg:15660
+#: utils/hbmk2/hbmk2.prg:15666
 #, c-format
 msgid "help"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15674 utils/hbmk2/hbmk2.prg:15681
+#: utils/hbmk2/hbmk2.prg:15680 utils/hbmk2/hbmk2.prg:15687
 #, c-format
 msgid "Syntax:"
 msgstr "Sintaxe:"
 
-#: utils/hbmk2/hbmk2.prg:16459
+#: utils/hbmk2/hbmk2.prg:16465
 #, c-format
 msgid "MS-DOS"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15987
+#: utils/hbmk2/hbmk2.prg:15993
 #, c-format
 msgid "Files:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16284
+#: utils/hbmk2/hbmk2.prg:16290
 #, c-format
 msgid "Notes:"
 msgstr "Notas:"
 
-#: utils/hbmk2/hbmk2.prg:15953
+#: utils/hbmk2/hbmk2.prg:15959
 #, c-format
 msgid "<other>"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16391
+#: utils/hbmk2/hbmk2.prg:16397
 #, c-format
 msgid "Author:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15165 utils/hbmk2/hbmk2.prg:15294
-#: utils/hbmk2/hbmk2.prg:15443
+#: utils/hbmk2/hbmk2.prg:15171 utils/hbmk2/hbmk2.prg:15300
+#: utils/hbmk2/hbmk2.prg:15449
 #, c-format
 msgid "Saving as .hbp file: %1$s"
 msgstr "Salvando arquivo no formato .hbp: %1$s"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "pass single flag to C compiler overriding C compiler flags added by %1$s "
 "itself. Use with caution."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "Create Harbour header (in .hbx format) with all external symbols. Empty "
 "parameter will disable it."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "<d> is the name of the dependency. <n> name of the package dependency. Can "
 "be specified multiple times."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid ""
 "enable safety options in C compiler/linker (default: enabled on Windows, "
 "disabled on other systems)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid ""
 "override C compiler autodetection\n"
@@ -2534,936 +2796,674 @@ msgid ""
 " - bld: use original build settings (default on *nix)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid ""
 "name of the project (without directory and extension). Returns %1$s if there"
 " is not project file."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid ""
 "target type. Where <targettype> is any of the values returned by macro "
 "variable ${hb_targettype}."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16246
+#: utils/hbmk2/hbmk2.prg:16252
 #, c-format
 msgid ""
 "Plugin variables:\n"
 "('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
-msgid "Unload package."
-msgstr "Descarregar pacote."
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "display <msg>"
+msgid "hb_DirBase() not mapped to script."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16180 utils/hbmk2/hbmk2.prg:16195
-#: utils/hbmk2/hbmk2.prg:16195 utils/hbmk2/hbmk2.prg:16195
+#: utils/hbmk2/hbmk2.prg:16206
 #, c-format
-msgid "<depname>"
+msgid "Shell API available in Harbour scripts:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16180
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
-msgid "<hbcname>"
+msgid "Display list of loaded Harbour header."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16179
 #, c-format
-msgid "package name"
-msgstr "Nome do Pacote"
-
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#, c-format
-msgid "%1$s value"
+msgid "Predefined constants in sources:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
-msgid "see %1$s envvar"
+msgid "space separated list of keywords"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
-msgid "see %1$s macro"
+msgid "space separated list of licenses"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16349
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
-msgid "Description:"
-msgstr "Descrições:"
+msgid "'yes' = %1$s, 'no' = %2$s option"
+msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15654
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Add a C++ input file to the project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16201
+#, c-format
+msgid "when <depname> dependency was detected"
+msgstr "quando <depname> dependência foi detectada"
+
+#: utils/hbmk2/hbmk2.prg:16446
+#, c-format
+msgid "To build library 'mylib' from sources"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16248
+#, c-format
+msgid "Add a C input file to the project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16219
+#, c-format
+msgid "hb_ProgName() not mapped to script."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15660
 #, c-format
 msgid "failed Harbour detection"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15661
+#: utils/hbmk2/hbmk2.prg:15667
 #, c-format
 msgid "dependency missing or disabled"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "create executable (default)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15723
+#: utils/hbmk2/hbmk2.prg:15729
 #, c-format
 msgid "link with static/shared libs"
 msgstr "linkar com biliotecas estáticas/compartilhadas"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "link with all static libs"
 msgstr "linkar com todas as bibliotecas estáticas"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "create (or not) a map file"
 msgstr "criar (ou não) o arquivo map"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "strip (no strip) binaries"
 msgstr "strip (ou não) arquivos binários"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "turn on informational messages"
 msgstr "ativar mensagens informativas"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "suppress all screen messages"
 msgstr "suprimir todas as mensagens"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to C compiler"
 msgstr "especifica flags para o compilador C"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass input file to plugins"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "pass single flag to plugins"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "create GUI/console executable"
 msgstr "criar um executável GUI/console"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "output Harbour header directory"
 msgstr "exibe o diretório dos headers do Harbour"
 
-#: utils/hbmk2/hbmk2.prg:15882 utils/hbmk2/hbmk2.prg:15891
+#: utils/hbmk2/hbmk2.prg:15888 utils/hbmk2/hbmk2.prg:15897
 #, c-format
 msgid "long help in text viewer"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882 utils/hbmk2/hbmk2.prg:15891
+#: utils/hbmk2/hbmk2.prg:15888 utils/hbmk2/hbmk2.prg:15897
 #, c-format
 msgid "long help in Markdown format"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "Harbour compiler credits"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "display version header only"
 msgstr "exibir somente o cabeçalho com a versão do hbmk"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "output Harbour binary directory"
 msgstr "exibe o diretório dos binários do Harbour"
 
-#: utils/hbmk2/hbmk2.prg:15931
+#: utils/hbmk2/hbmk2.prg:15937
 #, c-format
 msgid "mode %1$s (emulate C linker)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15931
+#: utils/hbmk2/hbmk2.prg:15937
 #, c-format
 msgid "mode %1$s (emulate C compiler)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15935
+#: utils/hbmk2/hbmk2.prg:15941
 #, c-format
 msgid "Exit codes (\"errorlevels\"):"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid "link with multi/single-thread Harbour VM"
-msgstr "linkar com suporte multi ou single-thread na HVM"
-
-#: utils/hbmk2/hbmk2.prg:15833
-#, c-format
-msgid "Options below are available on command-line:"
-msgstr "Opções abaixo estão disponíveis em linha de comando:"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid "convert hbmake project <file> to .hbp file"
-msgstr "converte um projeto do hbmake em um arquivo .hbp"
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "Harbour 3rd party static library directory"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15931
-#, c-format
-msgid "mode %1$s (emulate - raw - Harbour compiler)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid "override Harbour base installation directory"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target is single-threaded (see -st option)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16057
-#, c-format
-msgid "top directory of the filename it is used in"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16061
-#, c-format
-msgid "Filters (you can combine and/or negate them):"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "shared build (see -shared and related options)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "static build (see -static and related options)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target C compiler is icc* (icc, iccia64)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "space separated list of %1$s plugins to load"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid "target is multi-threaded (see -mt option)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "stop the build. Display <msg>, if specified."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16180
-#, c-format
-msgid "when an .hb script is compiled as %1$s plugin"
-msgstr "quando um script .hb é compilado como %1$s plugin"
-
-#: utils/hbmk2/hbmk2.prg:16213
-#, c-format
-msgid "Load package. Similar to #request PP directive."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Add a binary object file to the project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Output text to stdout without any formatting."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Output text to stderr without any formatting."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Change directory and/or extension in filename."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Strip double quote enclosure from a string."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Add a Harbour input file to the project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15726
+#: utils/hbmk2/hbmk2.prg:15732
 #, c-format
 msgid "more help"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15891
+#: utils/hbmk2/hbmk2.prg:15897
 #, c-format
 msgid "this help"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "run target"
 msgstr "executar alvo"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "enable xhb mode"
 msgstr "habilitar modo xHb"
 
-#: utils/hbmk2/hbmk2.prg:15882 utils/hbmk2/hbmk2.prg:15891
+#: utils/hbmk2/hbmk2.prg:15888 utils/hbmk2/hbmk2.prg:15897
 #, c-format
 msgid "long help"
 msgstr "ajuda detalhada"
 
-#: utils/hbmk2/hbmk2.prg:16010
+#: utils/hbmk2/hbmk2.prg:16016
 #, c-format
 msgid "Harbour script"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15931 utils/hbmk2/hbmk2.prg:15931
-#: utils/hbmk2/hbmk2.prg:15931 utils/hbmk2/hbmk2.prg:15931
+#: utils/hbmk2/hbmk2.prg:15937 utils/hbmk2/hbmk2.prg:15937
+#: utils/hbmk2/hbmk2.prg:15937 utils/hbmk2/hbmk2.prg:15937
 #, c-format
 msgid "option %1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15931 utils/hbmk2/hbmk2.prg:15931
-#: utils/hbmk2/hbmk2.prg:15931
+#: utils/hbmk2/hbmk2.prg:15937 utils/hbmk2/hbmk2.prg:15937
+#: utils/hbmk2/hbmk2.prg:15937
 #, c-format
 msgid "mode %1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "build name"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "selected CPU"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16383
+#: utils/hbmk2/hbmk2.prg:16389
 #, c-format
 msgid "License:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"Harbour compiler help (all Harbour compiler options are accepted as is by "
-"%1$s)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15829
-#, c-format
-msgid ""
-"enable (or disable) single beep on successful exit, double beep on failure"
-msgstr "ativa (ou desativa) um beep simples em caso de sucesso ou um beep duplo em caso de erro"
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"enable (or disable) processing of %1$s in current directory (default: yes)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"options to be passed to linker (executable) (before command-line options)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"options to be passed to linker (dynamic library) (before command-line "
-"options)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"options to be passed to linker (static library) (before command-line "
-"options)"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15980
-#, c-format
-msgid ""
-"accepts any options as if they were passed in the beginning of the command-"
-"line"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"target C compiler. Where <compiler> can be any value accepted by -comp= "
-"option."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"filter will pass if ${MACRO} value is larger than <value> (case "
-"insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"filter will pass if ${MACRO} value is smaller than <value> (case "
-"insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid ""
-"similar to shared=, but works only if shared/static mode was not set before"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16097
-#, c-format
-msgid ""
-"target platform. Where <platform> can be any value accepted by -plat= "
-"option."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid ""
-"add space separated list of additional header paths (for both Harbour and C)"
-msgstr "adicionar lista separada por espaços dos locais adicionais dos \"header\"  (para ambos Harbour e  C )"
-
-#: utils/hbmk2/hbmk2.prg:16180
-#, c-format
-msgid ""
-"when an .hbx source file is present in a project (available in Harbour "
-"sources)"
-msgstr "quando um arquivo  .hbx está presente em um projeto (disponível nos fontes do Harbour) "
-
-#: utils/hbmk2/hbmk2.prg:16410
+#: utils/hbmk2/hbmk2.prg:16416
 #, c-format
 msgid ""
 "Examples to build and run Harbour portable binary (aka precompiled Harbour "
 "script):"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid ""
 "To build an application out of all .prg and .c sources residing in 'source' "
 "subdir"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16457
+#: utils/hbmk2/hbmk2.prg:16463
 #, c-format
 msgid ""
 ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: "
 "%1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid ""
 "Convert array of strings to a string. Default separator is a single space."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16326
+#: utils/hbmk2/hbmk2.prg:16332
 #, c-format
 msgid ""
 ". (dot) passed as first parameter will enter the interactive Harbour shell."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280 utils/hbmk2/hbmk2.prg:16280
-#: utils/hbmk2/hbmk2.prg:16280
+#: utils/hbmk2/hbmk2.prg:16373
+#, c-format
+msgid ""
+"%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\n"
+"Besides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286 utils/hbmk2/hbmk2.prg:16286
+#: utils/hbmk2/hbmk2.prg:16286
 #, c-format
 msgid "%1$s option status"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "Load Harbour header."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "Unload Harbour header."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Output text to stdout."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Output text to stderr."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16415
+#: utils/hbmk2/hbmk2.prg:16421
 #, c-format
 msgid "To run result of above"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16345
+#: utils/hbmk2/hbmk2.prg:16351
 #, c-format
 msgid ".hb, .prg, .hrb or .dbf"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16345
+#: utils/hbmk2/hbmk2.prg:16351
 #, c-format
 msgid ".hb, .hrb or .dbf"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "directory of the output"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16406
+#: utils/hbmk2/hbmk2.prg:16412
 #, c-format
 msgid "To run a Harbour script"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour host platform"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour revision"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour version status"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "selected C compiler"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "selected platform"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "dynamic library prefix"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "accept raw linker flags"
 msgstr "parâmetros específicos do linkeditor."
 
-#: utils/hbmk2/hbmk2.prg:15957
+#: utils/hbmk2/hbmk2.prg:15963
 #, c-format
 msgid "Environment variables:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "link with nulrdd"
 msgstr "linkar com o nulrdd"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "force C++/C mode"
 msgstr "forçar compilação em modo C++/C"
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "show commands executed"
 msgstr "exibir os comandos executados"
 
-#: utils/hbmk2/hbmk2.prg:16014
+#: utils/hbmk2/hbmk2.prg:16020
 #, c-format
 msgid "Macro variables:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15829
+#: utils/hbmk2/hbmk2.prg:15835
 #, c-format
 msgid "echo text on screen"
 msgstr "ecoa texto na tela"
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "directory of %1$s"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "C compiler version"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "dynamic library suffix"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15891
+#: utils/hbmk2/hbmk2.prg:15897
 #, c-format
 msgid "enable script debugging"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "enable pure C mode"
 msgstr "ativa modo C puro"
 
-#: utils/hbmk2/hbmk2.prg:15882
+#: utils/hbmk2/hbmk2.prg:15888
 #, c-format
 msgid "specify a build name"
 msgstr "utilizar um nome de build especifico"
 
-#: utils/hbmk2/hbmk2.prg:16213
-#, c-format
-msgid "hb_DirBase() not mapped to script."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16200
-#, c-format
-msgid "Shell API available in Harbour scripts:"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16213
-#, c-format
-msgid "Display list of loaded Harbour header."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16173
-#, c-format
-msgid "Predefined constants in sources:"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "space separated list of keywords"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "space separated list of licenses"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169
-#, c-format
-msgid "'yes' = %1$s, 'no' = %2$s option"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Add a C++ input file to the project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16195
-#, c-format
-msgid "when <depname> dependency was detected"
-msgstr "quando <depname> dependência foi detectada"
-
-#: utils/hbmk2/hbmk2.prg:16440
-#, c-format
-msgid "To build library 'mylib' from sources"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16242
-#, c-format
-msgid "Add a C input file to the project."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16213
-#, c-format
-msgid "hb_ProgName() not mapped to script."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build an application using incremental mode"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16406
+#: utils/hbmk2/hbmk2.prg:16412
 #, c-format
 msgid "To run the interactive shell ('dot' prompt)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16419
+#: utils/hbmk2/hbmk2.prg:16425
 #, c-format
 msgid "Examples to build a Harbour application:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build an application using a project file"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16435
+#: utils/hbmk2/hbmk2.prg:16441
 #, c-format
 msgid "Examples to build a Harbour static library:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "target C compiler is pocc* (pocc, pocc64, poccarm)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "Harbour 1.0.x compatibility mode (see -hb10 option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "Harbour 2.0.x compatibility mode (see -hb20 option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "Harbour 3.0.x compatibility mode (see -hb30 option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "add space separated list of frameworks (Darwin only)"
 msgstr "adicione espaços para separar a lista de \"frameworks\"  (somente para Darwin)"
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "C level debugging is enabled (see -debug option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
-#: utils/hbmk2/hbmk2.prg:16169 utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
+#: utils/hbmk2/hbmk2.prg:16175 utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "space separated list of values as in %1$s option"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "space separated list of additional library paths"
 msgstr "espaço separa a lista de locais de bibliotecas adicionais"
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "Enable Clipper compatibility (non-Unicode) mode."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16185
+#: utils/hbmk2/hbmk2.prg:16191
 #, c-format
 msgid "when a Harbour source file is run as a shell script"
 msgstr "quando um programa fonte Harbour está rudando como \"shell script\""
 
-#: utils/hbmk2/hbmk2.prg:16185
+#: utils/hbmk2/hbmk2.prg:16191
 #, c-format
 msgid "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "space separated list of source repository references"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Add a Windows resource input file to the project."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "add space separated list of files as input files"
 msgstr "adicione espaços para separar a lista de arquivos de entrada"
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build an application which uses a Windows resource"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build an application which uses a raw library"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16011
+#, c-format
+msgid ""
+"project file. Can contain any number of command-line options, which are "
+"expected to create an output. Lines beginning with '#' character are "
+"ignored, otherwise newline is optional and options are space separated, just"
+" like on the command-line. You must enclose option containing space in "
+"double quotes. Each .hbp file reference will be executed as a sub-project."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "current working directory"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "default base workdir name"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "dynamic library extension"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour major version number"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour minor version number"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour release version number"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour binary directory"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour header directory"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "Harbour add-ons base directory"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "sub-project recursion level"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16057
+#: utils/hbmk2/hbmk2.prg:16063
 #, c-format
 msgid "full filename it is used in"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "xhb mode (see -xhb option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16097
+#: utils/hbmk2/hbmk2.prg:16103
 #, c-format
 msgid "GUI target (see -gui option)"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16169
+#: utils/hbmk2/hbmk2.prg:16175
 #, c-format
 msgid "set the default GT to be used"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "List of loaded packages."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16213
+#: utils/hbmk2/hbmk2.prg:16219
 #, c-format
 msgid "Switch GT. Default [*]: '%1$s'"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16242
+#: utils/hbmk2/hbmk2.prg:16248
 #, c-format
 msgid "Evaluate %1$s macro expression."
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16280
+#: utils/hbmk2/hbmk2.prg:16286
 #, c-format
 msgid "API version as an integer"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16401
+#: utils/hbmk2/hbmk2.prg:16407
 #, c-format
 msgid "Examples to start with %1$s:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16431
+#: utils/hbmk2/hbmk2.prg:16437
 #, c-format
 msgid "To build one simple .prg"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16444
+#: utils/hbmk2/hbmk2.prg:16450
 #, c-format
 msgid "%1$s build-time configuration:"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15882
-#, c-format
-msgid ""
-"specify a new build target. <script> can be .prg (or no extension) or .hbp "
-"file. Note that .hbp files are automatically considered as separate targets."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16326
-#, c-format
-msgid ""
-"When multiple target type selection options (-hblib, -hbdyn, etc.) are "
-"specified, the first one will be significant, the rest will be silently "
-"ignored."
 msgstr ""

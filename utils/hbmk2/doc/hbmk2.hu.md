@@ -59,8 +59,7 @@ Kapcsolók:
  - **\-warn=&lt;level&gt;** set C compiler warning level  
 &lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
- - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
-&lt;level&gt; can be: yes, no, min, max
+ - **\-compr=&lt;level&gt;** tömörítse a végeredményt \(UPX szükséges\)⏎&lt;level&gt; lehet: yes, no, min, max
  - **\-run\[\-\]** futtassa/ne az elkészült alkalmazást
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-tshead=&lt;file&gt;** hozzon létre egy \.ch fejlécet időpont adatokkal\. Generált fejléc \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ makrói az aktuális dátumokkal kerülnek feltöltésre
@@ -222,10 +221,10 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **rtlink** mode \-rtlink \(emulate Clipper linker\)
  - **exospace** mode \-rtlink \(emulate Clipper linker\)
  - **blinker** mode \-rtlink \(emulate Clipper linker\)
- - **\*10** option \-hb10
- - **\*20** option \-hb20
- - **\*30** option \-hb30
- - **x\*** option \-xhb
+ - **\*10** \-hb10 kapcsoló
+ - **\*20** \-hb20 kapcsoló
+ - **\*30** \-hb30 kapcsoló
+ - **x\*** \-xhb kapcsoló
  - **hbcmp\*|\*hbcmp** mode \-hbcmp \(emulate Harbour compiler producing a binary object\)
  - **hbcc\*|\*hbcc** mode \-hbcc \(emulate C compiler\)
  - **hblnk\*|\*hblnk** mode \-hblnk \(emulate C linker\)
@@ -409,24 +408,24 @@ Environment variables:
  - **dflags\+=** space separated list of values as in \-dflag\+= option
  - **pflags=** space separated list of values as in \-pflag= option
  - **psources=** space separated list of values as in \-pi= option
- - **gui=&lt;bool&gt;** 'yes' = \-gui, 'no' = \-std option
- - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st option
- - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- option
- - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static option
+ - **gui=&lt;bool&gt;** 'yes' = \-gui, 'no' = \-std kapcsoló
+ - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st kapcsoló
+ - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- kapcsoló
+ - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static kapcsoló
  - **shareddef=&lt;bool&gt;** similar to shared=, but works only if shared/static mode was not set before
- - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static option
- - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- option
- - **optim=** 'yes' = \-optim, 'no' = \-optim\- option
- - **nulrdd=&lt;bool&gt;** 'yes' = \-nulrdd, 'no' = \-nulrdd\- option
- - **nodefgt=&lt;bool&gt;** 'yes' = \-nodefgt, 'no' = \-nodefgt\- option
- - **map=&lt;bool&gt;** 'yes' = \-map, 'no' = \-map\- option
- - **hbcppmm=&lt;bool&gt;** 'yes' = \-hbcpmm, 'no' = \-hbcpmm\- option
- - **implib=&lt;bool&gt;** 'yes' = \-implib, 'no' = \-implib\- option
- - **winuni=&lt;bool&gt;** 'yes' = \-winuni, 'no' = \-winuni\- option
- - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- option
- - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
- - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
- - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
+ - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static kapcsoló
+ - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- kapcsoló
+ - **optim=** 'yes' = \-optim, 'no' = \-optim\- kapcsoló
+ - **nulrdd=&lt;bool&gt;** 'yes' = \-nulrdd, 'no' = \-nulrdd\- kapcsoló
+ - **nodefgt=&lt;bool&gt;** 'yes' = \-nodefgt, 'no' = \-nodefgt\- kapcsoló
+ - **map=&lt;bool&gt;** 'yes' = \-map, 'no' = \-map\- kapcsoló
+ - **hbcppmm=&lt;bool&gt;** 'yes' = \-hbcpmm, 'no' = \-hbcpmm\- kapcsoló
+ - **implib=&lt;bool&gt;** 'yes' = \-implib, 'no' = \-implib\- kapcsoló
+ - **winuni=&lt;bool&gt;** 'yes' = \-winuni, 'no' = \-winuni\- kapcsoló
+ - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- kapcsoló
+ - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- kapcsoló
+ - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- kapcsoló
+ - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- kapcsoló
  - **cpp=** ugyanaz, mint \-cpp= kapcsoló
  - **warn=** ugyanaz, mint \-warn= kapcsoló
  - **compr=** ugyanaz, mint \-compr= kapcsoló

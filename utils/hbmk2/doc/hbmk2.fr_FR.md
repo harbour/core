@@ -39,7 +39,7 @@ Options:
  - **\-debug\[\-\]** add/exclude C compiler debug info\. For Harbour level debug, use Harbour option \-b as usual
  - **\-optim\[\-\]** toggle C compiler optimizations \(default: on\)
  - **\-cpp\[\-\]** force C\+\+/C mode
- - **\-cpp=&lt;value&gt;** select C\+\+ mode\. Allowed values are: def, yes, no
+ - **\-cpp=&lt;value&gt;** Choix du mode C\+\+\. Les valeurs permises sont def, yes, no
  - **\-map\[\-\]** create \(or not\) a map file
  - **\-implib\[\-\]** Créer \(ou non\) une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\)\. Le nom aura un suffixe ajouté\.
  - **\-implib=&lt;output&gt;** créer une bibliothèque d'importation \(en mode \-hbdyn/\-hbexe\) Nom de &lt;output&gt; \(par défaut: identique à la destination\)
@@ -50,13 +50,13 @@ Options:
  - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
  - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
- - **\-nohblib\[\-\]** do not use static core Harbour libraries when linking
- - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
+ - **\-nohblib\[\-\]** ne pas utiliser de librairies statiques Harbour lors de l'édition des liens
+ - **\-nodefgt\[\-\]** ne pas lier GT par défaut \(efficace en mode statique\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
  - **\-nomiscsyslib\[\-\]** do not add extra list of system libraries to default library list
  - **\-traceonly** show commands to be executed, but do not execute them
- - **\-warn=&lt;level&gt;** set C compiler warning level  
-&lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
+ - **\-warn=&lt;level&gt;** définir le niveau d'avertissement du compilateur C  
+&lt;level&gt; peut être: max, yes, low, no, def \(par défaut: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;level&gt; can be: yes, no, min, max
@@ -69,12 +69,12 @@ Options:
  - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; as password when signing executable \(Windows and Darwin only\)
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
- - **\-instforce\[\-\]** copy target to install path even if it is up to date
+ - **\-instforce\[\-\]** copier la cible vers le chemin d'installation, même si elle est à jour
  - **\-depimplib\[\-\]** enable \(or disable\) import library generation for import library sources specified in \-depimplibs= options \(default: yes\)
  - **\-stop\[=&lt;text&gt;\]** stop without doing anything and display &lt;text&gt; if specified
  - **\-echo=&lt;text&gt;** echo text on screen
  - **\-pause** force waiting for a key on exit in case of failure \(with alternate GTs only\)
- - **\-exitstr** show error result as human readable text on exit
+ - **\-exitstr** affiche les compte\-rendus d'erreur sous forme de texte lisible par l'homme à la sortie
  - **\-info** turn on informational messages
  - **\-quiet\[\-\]** suppress all screen messages
 
@@ -88,11 +88,11 @@ Options:
  - **\-ldflag=&lt;f&gt;** pass single flag to linker \(executable\)
  - **\-dflag=&lt;f&gt;** pass single flag to linker \(dynamic library\)
  - **\-aflag=&lt;f&gt;** pass single flag to linker \(static library\)
- - **\-iflag=&lt;f&gt;** pass single flag to import library creation command
+ - **\-iflag=&lt;f&gt;** une seule passe poue la commande de création de librairie d'importation
  - **\-signflag=&lt;f&gt;** pass single flag to code sign command
  - **\-runflag=&lt;f&gt;** pass single flag to output executable when \-run option is used
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
- - **\-ldflag\+=&lt;f&gt;** Passer une seule option bas\-niveau à l'éditeur de liens \(exécutable\) après la liste des librairies\. A utiliser avec prudence\.
+ - **\-ldflag\+=&lt;f&gt;** édition des liens en une seule passe \(exécutable\) après la liste des librairies\. A utiliser avec prudence\.
  - **\-dflag\+=&lt;f&gt;** Passer une seule option bas\-niveau à l'éditeur de liens \(bibliothèque dynamique\) après la liste de la bibliothèque\. A utiliser avec prudence\.
  - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
@@ -100,7 +100,7 @@ Options:
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
  - **\-rebuild** rebuild \(in incremental build mode\)
- - **\-rebuildall** rebuild with sub\-projects \(in incremental build mode\)
+ - **\-rebuildall** reconstruire avec les sous\-projets \(en mode incrémental\)
  - **\-clean** clean \(in incremental build mode\)
  - **\-workdir=&lt;dir&gt;** working directory  
 \(default: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] in incremental mode, OS temp directory otherwise\)
@@ -163,7 +163,7 @@ create link/copy hbmk2 to hbcc for the same effect
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
- - **\-hbreg\[=global\]** register Harbour Script \(\.hb\) with hbmk2 \(Windows only\)
+ - **\-hbreg\[=global\]** enregistrer les scripts Harbour \(\.hb\) avec hbmk2 \(Windows seulement\)
  - **\-hbunreg\[=global\]** unregister Harbour Script \(\.hb\) from hbmk2 \(Windows only\)
 
 
@@ -189,7 +189,7 @@ Special value:
  \- bld: use original build settings \(default on \*nix\)
  - **\-build=&lt;name&gt;** specify a build name
  - **\-lang=&lt;lang&gt;** override default language\. &lt;lang&gt; is an ISO language code\.
- - **\-width=&lt;n&gt;** set output width to &lt;n&gt; characters \(0=unlimited\)\.
+ - **\-width=&lt;n&gt;** définir la taille de sortie de &lt;n&gt; caractères \(0 = illimité\)\.
  - **\-shl** show sub\-project level in output lines
  - **\-viewhelp** long help in text viewer
  - **\-longhelp** long help
@@ -215,7 +215,7 @@ Vous pouvez créer un lien symbolique/copier/renommer hbmk2 pour les noms suivan
 
 
  - **hbrun\*|\*hbrun** mode lancement de script/script interactif
- - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
+ - **hbrund|hbrun\*d** mode exécution de script / shell interactif en mode debug
  - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
  - **clipper** mode \-hbcmp \(émule le compilateur Clipper\)
  - **rtlink** mode \-rtlink \(émule l'éditeur de lien de Clipper\)
@@ -294,7 +294,7 @@ Macro variables:
  - **$\{hb\_outputname\}** nom de la destination \(sans extension\)
  - **$\{hb\_level\}** sub\-project recursion level
  - **$\{&lt;depname&gt;\}** returns the header directory of dependency &lt;depname&gt;, or '1' if it is not detected
- - **$\{&lt;envvar&gt;\}** returns the value of the environment variable &lt;envvar&gt;
+ - **$\{&lt;envvar&gt;\}** retourne la valeur de la variable d'environnement &lt;envvar&gt;
   
 Filters \(you can combine and/or negate them\):  
 
@@ -308,7 +308,7 @@ Filters \(you can combine and/or negate them\):
  - **\{gui\}** GUI target \(see \-gui option\)
  - **\{std\}** console target \(see \-console option\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
- - **\{nodebug\}** C level debugging is disabled \(see \-debug\- option\)
+ - **\{nodebug\}** le niveau de déboggage C est désactivé \(voir l'option \-debug\)
  - **\{shared\}** shared build \(see \-shared and related options\)
  - **\{static\}** static build \(see \-static and related options\)
  - **\{lngcpp\}** forced C\+\+ mode \(see \-cpp option\)
@@ -618,7 +618,7 @@ Exit codes \("errorlevels"\):
  - **3** failed Harbour detection
  - **5** failed stub creation
  - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
- - **7** failed in final assembly \(linker or library manager\)
+ - **7** Echec à l'assemblage final \(éditeur de liens ou gestionnaire de librairie\)
  - **8** unsupported
  - **9** failed to create working directory
  - **19** help

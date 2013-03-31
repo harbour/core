@@ -153,7 +153,7 @@ create link/copy hbmk2 to hbcmp/clipper for the same effect
 create link/copy hbmk2 to hbcc for the same effect
  - **\-hblnk** accept raw linker flags
  - **\-autohbm\[\-\]** enable \(or disable\) processing of hbmk\.hbm in current directory \(default: yes\)
- - **\-hb10** enable Harbour 1\.0\.x compatibility mode
+ - **\-hb10** abilita la compatibilità Harbour 1\.0\.x
  - **\-hb20** enable Harbour 2\.0\.x compatibility mode
  - **\-hb30** enable Harbour 3\.0\.x compatibility mode
  - **\-xhb** enable xhb mode
@@ -390,7 +390,7 @@ Variabili d'ambiente:
  - **stop=\[&lt;msg&gt;\]** ferma la compilazione\. Visualizza &lt;msg&gt;, se specificato\.
  - **sources=** aggiunge come file di input una lista di file separati da spazio
  - **headers=** add space separated list of \.ch format headers as standard header
- - **libs=** add space separated list of libraries \(see more at \-l option\)
+ - **libs=** Aggiungi un elenco di librerie, separate da uno spazio \(più informazioni con l'opzione \-l\)
  - **frameworks=** aggiunge una lista di strutture separate da spazio \(solo Darwin\)
  - **requests=** aggiungere una lista di simboli separati da uno spazio per forzare il link al target
  - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
@@ -508,12 +508,12 @@ Plugin variables:
  - **"cSTATE"** callback state\. Can be: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
  - **"params"** array of parameters passed to plugins via \-pflag=/pi= options or having an extension registered via hbmk\_Register\_Input\_File\_Extension\(\)
  - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
- - **"cPLAT"** \-plat value
- - **"cCOMP"** \-comp value
+ - **"cPLAT"** valore \-plat
+ - **"cCOMP"** valore \-comp
  - **"nCOMPVer"** see HB\_COMPILER\_VER envvar
- - **"cCPU"** \-cpu value
- - **"cBUILD"** \-build= value
- - **"cOUTPUTNAME"** \-o value
+ - **"cCPU"** valore \-cpu
+ - **"cBUILD"** valore \-build=
+ - **"cOUTPUTNAME"** valore \-o
  - **"cTARGETNAME"** see $\{hb\_targetname\} macro
  - **"cTARGETTYPE"** see $\{hb\_targettype\} macro
  - **"lREBUILD"** \-rebuild stato dell'opzione
@@ -533,7 +533,7 @@ Plugin variables:
  - **"cCCPREFIX"** see HB\_CCPREFIX envvar
  - **"cCCSUFFIX"** see HB\_CCSUFFIX envvar
  - **"cCCEXT"** see HB\_CCEXT envvar
- - **"cWorkDir"** \-workdir= value
+ - **"cWorkDir"** valore \-workdir=
  - **"nExitCode"** Codice di uscita attuale
   
 Shell API available in Harbour scripts:  
@@ -616,14 +616,14 @@ Exit codes \("errorlevels"\):
  - **0** Nessun errore
  - **1** piattaforma sconosciuta
  - **2** compilatore sconosciuto
- - **3** failed Harbour detection
+ - **3** Individuazione fallita di Harbour
  - **5** failed stub creation
  - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
  - **7** failed in final assembly \(linker or library manager\)
  - **8** non sopportato
- - **9** failed to create working directory
+ - **9** Impossibile creare la cartella di lavoro
  - **19** aiuto
- - **10** dependency missing or disabled
+ - **10** Dipendenza omessa o disabilitata
  - **20** plugin initialization
  - **30** nidificazione troppo profonda
  - **50** richiesta di stop

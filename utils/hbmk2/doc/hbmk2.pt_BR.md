@@ -42,9 +42,9 @@ Opções
  - **\-cpp\[\-\]** forçar compilação em modo C\+\+/C
  - **\-cpp=&lt;value&gt;** selecione modo C\+\+\.Os Valores permitidos são: def, yes, no
  - **\-map\[\-\]** criar \(ou não\) o arquivo map
- - **\-implib\[\-\]** create \(or not\) an import library \(in \-hbdyn/\-hbexe mode\)\. The name will have a postfix added\.
+ - **\-implib\[\-\]** Criar \(ou não\) uma biblioteca importação \(no modo  \-hbdyn/\-hbexe \)\. O nome terá um sufixo adicionado\.
  - **\-implib=&lt;output&gt;** Criar biblioteca importação \(no modo \-hbdyn/\-hbexe\)  nomeado para  &lt;output&gt; \(padrão:com o mesmo\)
- - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
+ - **\-ln=&lt;link&gt;** criar um link simbólico apontando para &lt;output&gt; \(&lt;link&gt; é considerado em relação ao &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(ou não\) arquivos binários
  - **\-trace\[\-\]** exibir os comandos executados
  - **\-beep\[\-\]** ativa \(ou desativa\) um beep simples em caso de sucesso ou um beep duplo em caso de erro
@@ -52,7 +52,7 @@ Opções
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
  - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
  - **\-nohblib\[\-\]** não usar bibliotecas estáticas do núcleo do Harbour quando linkar
- - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
+ - **\-nodefgt\[\-\]** Não link GTs padrão \(o modo \-static é mais eficaz\)
  - **\-nolibgrouping\[\-\]** desativar agrupamento de LIBs em compiladores baseados no gcc\.
  - **\-nomiscsyslib\[\-\]** não adicione bibliotecas extras do sistema à lista padrão de bibliotecas
  - **\-traceonly** exibir os comandos à serem executados, mas não execute\-os
@@ -62,7 +62,8 @@ Opções
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
- - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-vcshead=&lt;file&gt;** gerar arquivo de cabeçalho "\. ch" com informações do repositório local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente\. O cabeçalho gerado irá definir a constante \_HBMK\_VCS\_TYPE\_  no pré\-processador com o nome detectados de VCS  e \_HBMK\_VCS\_ID\_ com o ID único do repositório local\. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção\.  
+ VCS \- sistema de controle de versão\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest  &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
@@ -89,12 +90,12 @@ Opções
  - **\-ldflag=&lt;f&gt;** especifica flags para o linkeditor \(executável\)
  - **\-dflag=&lt;f&gt;** informar flags para o linkeditor \(biblioteca dinânica\)
  - **\-aflag=&lt;f&gt;** passa flag para o linkeditor \(lib estática\)
- - **\-iflag=&lt;f&gt;** pass single flag to import library creation command
+ - **\-iflag=&lt;f&gt;** passar um unico "flag" para criar o comando de impotação de bibliotecas 
  - **\-signflag=&lt;f&gt;** pass single flag to code sign command
  - **\-runflag=&lt;f&gt;** argumentos à serem passados ao executável gerado quando \-run for utilizado
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
- - **\-ldflag\+=&lt;f&gt;** pass single raw option to linker \(executable\) after the library list\. Use with caution\.
- - **\-dflag\+=&lt;f&gt;** pass single raw option to linker \(dynamic library\) after the library list\. Use with caution\.
+ - **\-ldflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar  \(executável\), após a lista da biblioteca\. Use com cuidado\.
+ - **\-dflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar  \(biblioteca dinâmica\), após a lista da biblioteca\. Use com cuidado\.
  - **\-3rd=&lt;f&gt;** "options/flags" reservado para ferramentas de terceiros, sempre ignorado por hbmk2 
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
  - **\-jobs=&lt;n&gt;** dispara &lt;n&gt; threads de compilação \(apenas plataformas multiprocessadas\)
@@ -212,7 +213,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\-debugrte** generate a run\-time error
 
 
-You can sym\-link/copy/rename hbmk2 to the following names to alter default mode of operation:
+É possível  "sym\-link/copy/rename"  hbmk2 para os seguintes nomes para alterar o modo padrão de operação:
 
 
  - **hbrun\*|\*hbrun** rodando em modo script / "shell" interativo
