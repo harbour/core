@@ -1017,7 +1017,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_lSysLoc ] := .F.
    hbmk[ _HBMK_lDumpInfo ] := .F.
    hbmk[ _HBMK_lMarkdown ] := .F.
-   hbmk[ _HBMK_bOut ] := {| cText | OutStd( cText ) }
+   hbmk[ _HBMK_bOut ] := @OutStd()
 
    RETURN hbmk
 
@@ -15613,6 +15613,9 @@ STATIC PROCEDURE ShowHeader( hbmk )
       hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
       cText := ToMarkdown( cText )
    ELSE
+      IF ! hb_FIsDevice( 1 /* stdout */ ) .OR. HB_ISBLOCK( hbmk[ _HBMK_bOut ] )
+         hb_SetTermCP( "UTF8EX" ) /* UTF-8 output when redirected or directly writing to file */
+      ENDIF
       cText := StrTran( cText, e"\n", _OUT_EOL )
    ENDIF
    Eval( hbmk[ _HBMK_bOut ], cText )

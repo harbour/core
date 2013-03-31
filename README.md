@@ -60,8 +60,8 @@ There are several ways to help making Harbour better:
   the files you're patching. The easiest way to achieve this
   is to use these commands to format your sources:
 
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
-        $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
+        $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
 
 - Text editor setting for Harbour files
   - Encoding is either 7-bit ASCII or UTF-8 (without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark))
