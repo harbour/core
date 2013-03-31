@@ -1548,7 +1548,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF tmp > 40
             hbmk[ _HBMK_nMaxCol ] := tmp
          ELSEIF tmp == 0
-            hbmk[ _HBMK_nMaxCol ] := 65535
+            hbmk[ _HBMK_nMaxCol ] := 32767
          ENDIF
 
       CASE cParamL             == "-hbrun"     ; lSkipBuild := .T. ; hbmk[ _HBMK_lRUN ] := .T.
@@ -13918,8 +13918,14 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          NEXT
 
          /* We can use this function as this is a GPL licenced application */
-         cFile := hb_compileBuf( hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                 hb_ArrayToParams( aOPTPRG ), "-D" + _HBMK_SHELL, cFile )
+         cFile := hb_compileBuf( ;
+            hbmk_CoreHeaderFiles(), ;
+            hb_ProgName(), ;
+            "-n2", "-w", "-es2", "-q0", ;
+            hb_ArrayToParams( aOPTPRG ), ;
+            "-D" + _HBMK_SHELL, ;
+            cFile )
+
          IF cFile == NIL
             ErrorLevel( _EXIT_COMPPRG )
             EXIT

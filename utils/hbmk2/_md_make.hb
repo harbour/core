@@ -14,25 +14,44 @@
 
 PROCEDURE Main()
 
+   LOCAL cBase := hb_DirBase()
+
    LOCAL file
    LOCAL cLang
+   LOCAL cTemp
 
-   FOR EACH file IN Directory( hb_DirBase() + hb_DirSepToOS( "po/*.po" ) )
+   ? "preparing"
+
+   FOR EACH file IN Directory( cBase + hb_DirSepToOS( "po/*.po" ) )
       hb_run( hb_StrFormat( "hbi18n -q -g -o%1$s %2$s", ;
-         hb_DirBase() + hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
-         hb_DirSepToOS( hb_DirBase() + "po/" + file[ F_NAME ] ) ) )
+         cBase + hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
+         cBase + hb_DirSepToOS( "po/" + file[ F_NAME ] ) ) )
    NEXT
 
-   FOR EACH cLang IN hb_ATokens( "en," + hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_DirBase() + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
-      ? file := hb_DirSepToOS( hb_DirBase() + "doc/hbmk2." + cLang + ".md" )
-      hb_run( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmd > %3$s", hb_DirBase() + "hbmk2.prg", cLang, file ) )
-      hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )
+   cTemp := cBase + "hbmk2.hrb"
 
-      ? file := hb_DirSepToOS( hb_DirBase() + "../../contrib/hbrun/doc/hbrun." + cLang + ".md" )
-      hb_run( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmdsh > %3$s", hb_DirBase() + "hbmk2.prg", cLang, file ) )
-      hb_MemoWrit( file, StrTran( hb_MemoRead( file ), e"\n", hb_eol() ) )
+   hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 -gh %1$s -o%2$s", cBase + "hbmk2.prg", cTemp ) )
+
+   ? "generating .md help:"
+
+   FOR EACH cLang IN hb_ATokens( "en," + hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( cBase + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+
+      ?? "", cLang
+
+      file := cBase + hb_DirSepToOS( "doc/hbmk2." + cLang + ".md" )
+      hb_run( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmd > %3$s", cTemp, cLang, file ) )
+      FToNativeEOL( file )
+
+      file := cBase + hb_DirSepToOS( "../../contrib/hbrun/doc/hbrun." + cLang + ".md" )
+      hb_run( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmdsh > %3$s", cTemp, cLang, file ) )
+      FToNativeEOL( file )
    NEXT
 
-   AEval( Directory( hb_DirBase() + "*.hbl" ), {| tmp | FErase( hb_DirBase() + tmp[ F_NAME ] ) } )
+   FErase( cTemp )
+
+   AEval( Directory( cBase + "*.hbl" ), {| tmp | FErase( cBase + tmp[ F_NAME ] ) } )
 
    RETURN
+
+STATIC FUNCTION FToNativeEOL( cFile )
+   RETURN hb_MemoWrit( cFile, StrTran( hb_MemoRead( cFile ), e"\n", hb_eol() ) )

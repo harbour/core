@@ -13,6 +13,8 @@
 
 PROCEDURE Main( cLogin )
 
+   LOCAL cBase := hb_DirBase()
+
    LOCAL json
    LOCAL cLang
    LOCAL cTemp
@@ -23,9 +25,11 @@ PROCEDURE Main( cLogin )
 
    FClose( hb_FTempCreateEx( @cTemp ) )
 
-   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_DirBase() + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+   ? "pulling .po files:"
 
-      ? cLang
+   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( cBase + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+
+      ?? "", cLang
 
       hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X " + ;
          "GET https://www.transifex.com/api/2/project/harbour/resource/hbmk2/translation/%2$s/ " + ;
@@ -33,9 +37,9 @@ PROCEDURE Main( cLogin )
          cLogin, cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
-         hb_MemoWrit( hb_DirSepToOS( hb_DirBase() + "po/hbmk2." + cLang + ".po" ), StrTran( json[ "content" ], e"\n", hb_eol() ) )
+         hb_MemoWrit( hb_DirSepToOS( cBase + "po/hbmk2." + cLang + ".po" ), StrTran( json[ "content" ], e"\n", hb_eol() ) )
       ELSE
-         ? "error"
+         ? "API error"
       ENDIF
    NEXT
 
