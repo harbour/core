@@ -19,6 +19,8 @@ PROCEDURE Main( cLogin )
    LOCAL cTemp, cTemp2
    LOCAL cContent
 
+   LOCAL cMain := cBase + "hbmk2.prg"
+
    IF Empty( cLogin )
       cLogin := GetEnv( "HB_TRANSIFEX_LOGIN" )  /* Format: username:password */
    ENDIF
@@ -28,22 +30,23 @@ PROCEDURE Main( cLogin )
 
    ? "generating pot"
 
-   hb_run( hb_StrFormat( "harbour -q0 %1$s -j%2$s -i%3$s -s", cBase + "hbmk2.prg", cTemp, hb_DirSepToOS( cBase + "../../include" )) )
+   hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", cMain, cTemp ) )
 
    ? "saving locally"
 
-   cContent := ;
+   cContent := hb_StrFormat( ;
       '#, c-format' + hb_eol() + ;
       'msgid ""' + hb_eol() + ;
       'msgstr ""' + hb_eol() + ;
-      '"Project-Id-Version: hbmk2\n"' + hb_eol() + ;
+      '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
       '"Language: en\n"' + hb_eol() + ;
       '"MIME-Version: 1.0\n"' + hb_eol() + ;
       '"Content-Type: text/plain; charset=UTF-8\n"' + hb_eol() + ;
-      '"Content-Transfer-Encoding: 8bit\n"' + hb_eol() + hb_eol() + ;
+      '"Content-Transfer-Encoding: 8bit\n"', hb_FNameName( cMain ) ) + hb_eol() + ;
+      hb_eol() + ;
       hb_MemoRead( cTemp )
 
-   hb_MemoWrit( hb_DirSepToOS( cBase + "po/hbmk2.en.po" ), cContent )
+   hb_MemoWrit( hb_DirSepToOS( cBase + "po/" + hb_FNameName( cMain ) + ".en.po" ), cContent )
 
    ? "uploading", "size", Len( cContent )
    ?
@@ -52,9 +55,9 @@ PROCEDURE Main( cLogin )
 
    hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
-      'https://www.transifex.com/api/2/project/harbour/resource/hbmk2/content/' + ;
-      ' -o %3$s', ;
-      cLogin, cTemp, cTemp2 ) )
+      'https://www.transifex.com/api/2/project/harbour/resource/%3$s/content/' + ;
+      ' -o %4$s', ;
+      cLogin, cTemp, hb_FNameName( cMain ), cTemp2 ) )
 
    IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp2 ) ), @json ) > 0
       ? hb_ValToExp( json )

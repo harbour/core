@@ -19,6 +19,8 @@ PROCEDURE Main( cLogin )
    LOCAL cLang
    LOCAL cTemp
 
+   LOCAL cMain := cBase + "hbmk2.prg"
+
    IF Empty( cLogin )
       cLogin := GetEnv( "HB_TRANSIFEX_LOGIN" )  /* Format: username:password */
    ENDIF
@@ -27,17 +29,17 @@ PROCEDURE Main( cLogin )
 
    ? "pulling .po files:"
 
-   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( cBase + "hbmk2.hbp" ),,,,, .T. )[ 1 ][ 2 ], "," )
+   FOR EACH cLang IN hb_ATokens( hb_regexAll( "-lng=([a-zA-Z0-9_,]*)", hb_MemoRead( hb_FNameExtSet( cMain, ".hbp" ) ),,,,, .T. )[ 1 ][ 2 ], "," )
 
       ?? "", cLang
 
       hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X " + ;
-         "GET https://www.transifex.com/api/2/project/harbour/resource/hbmk2/translation/%2$s/ " + ;
-         "-o %3$s", ;
-         cLogin, cLang, cTemp ) )
+         "GET https://www.transifex.com/api/2/project/harbour/resource/%2$s/translation/%3$s/ " + ;
+         "-o %4$s", ;
+         cLogin, hb_FNameName( cMain ), cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
-         hb_MemoWrit( hb_DirSepToOS( cBase + "po/hbmk2." + cLang + ".po" ), StrTran( json[ "content" ], e"\n", hb_eol() ) )
+         hb_MemoWrit( hb_DirSepToOS( cBase + "po/" + hb_FNameName( cMain ) + "." + cLang + ".po" ), DoctorContent( json[ "content" ] ) )
       ELSE
          ? "API error"
       ENDIF
@@ -46,6 +48,13 @@ PROCEDURE Main( cLogin )
    FErase( cTemp )
 
    RETURN
+
+STATIC FUNCTION DoctorContent( cString )
+
+   cString := StrTran( cString, hb_UChar( 9166 ), "\n" )  /* convert RETURN SYMBOL used by Transifex for NEWLINE */
+   cString := StrTran( cString, e"\n", hb_eol() )
+
+   RETURN cString
 
 STATIC FUNCTION GetJSON( cString )
 

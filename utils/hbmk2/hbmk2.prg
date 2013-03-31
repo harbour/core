@@ -15582,10 +15582,10 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
    IF HB_ISSTRING( cStyle )
       SWITCH cStyle
       CASE "strong"
-         cText := "**" + cText + "**"
+         cText := "**" + AllTrim( cText ) + "**"
          EXIT
       CASE "url"
-         cText := "<" + cText + ">"
+         cText := "<" + AllTrim( cText ) + ">"
          EXIT
       ENDSWITCH
    ENDIF
