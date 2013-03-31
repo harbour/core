@@ -19,7 +19,10 @@ PROCEDURE Main( cLogin )
    LOCAL cTemp, cTemp2
    LOCAL cContent
 
+   LOCAL cProject := "harbour"
    LOCAL cMain := cBase + "hbmk2.prg"
+   LOCAL cBaseLang := "en"
+   LOCAL cPO_Dir := cBase + hb_DirSepToOS( "po/" )
 
    IF Empty( cLogin )
       cLogin := GetEnv( "HB_TRANSIFEX_LOGIN" )  /* Format: username:password */
@@ -39,25 +42,24 @@ PROCEDURE Main( cLogin )
       'msgid ""' + hb_eol() + ;
       'msgstr ""' + hb_eol() + ;
       '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
-      '"Language: en\n"' + hb_eol() + ;
+      '"Language: %2$s\n"' + hb_eol() + ;
       '"MIME-Version: 1.0\n"' + hb_eol() + ;
       '"Content-Type: text/plain; charset=UTF-8\n"' + hb_eol() + ;
-      '"Content-Transfer-Encoding: 8bit\n"', hb_FNameName( cMain ) ) + hb_eol() + ;
+      '"Content-Transfer-Encoding: 8bit\n"', hb_FNameName( cMain ), cBaseLang ) + hb_eol() + ;
       hb_eol() + ;
       hb_MemoRead( cTemp )
 
-   hb_MemoWrit( hb_DirSepToOS( cBase + "po/" + hb_FNameName( cMain ) + ".en.po" ), cContent )
+   hb_MemoWrit( cPO_Dir + hb_FNameName( cMain ) + "." + cBaseLang + ".po", cContent )
 
    ? "uploading", "size", Len( cContent )
-   ?
 
    hb_MemoWrit( cTemp, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
    hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
-      'https://www.transifex.com/api/2/project/harbour/resource/%3$s/content/' + ;
-      ' -o %4$s', ;
-      cLogin, cTemp, hb_FNameName( cMain ), cTemp2 ) )
+      'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
+      ' -o %5$s', ;
+      cLogin, cTemp, cProject, hb_FNameName( cMain ), cTemp2 ) )
 
    IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp2 ) ), @json ) > 0
       ? hb_ValToExp( json )
