@@ -19,20 +19,20 @@ Las siguientes opciones están disponibles en línea de comandos:
  - **\-\-hb:debug** activar la depuración de archivos de órdenes
 
 
- - **\-help** this help
- - **\-viewhelp** long help in text viewer
+ - **\-help** esta ayuda
+ - **\-viewhelp** abrir ayuda completa en visor de texto
  - **\-longhelp** ayuda detallada
- - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
+ - **\-longhelpmd** ayuda completa en formato [Markdown](http://daringfireball.net/projects/markdown/)
   
 Ficheros:  
 
 
- - **\*\.hb** Harbour script
+ - **\*\.hb** Archivo de órdenes de Harbour
  - **\*\.hrb** binario portable de Harbour \(aka archivo de comandos pre\-compilado de Harbour\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbrun&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** guarda el historial de comandos del intérprete de comandos de Harbour\. Puedes deshabilitar el historial haciendo que la primera linea sea 'no' \(sin comillas y con salto de linea\)\. Se guarda en \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hb\_extension** lista de extensiones para cargar en el interprete de comandos interactivo de Harbour\. Una extensión por línea, y se ignora todo lo que hay detrás del caracter '\#'\. Nombre de fichero alternativo en MS\-DOS: hb\_ext\.ini\. Reside en \[\*\]: %APPDATA%\\\.harbour\\
 
 
 Constantes predefinidas en el código fuente:
@@ -46,7 +46,7 @@ Variables de entorno:
 
  - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
   
-Shell API available in Harbour scripts:  
+API del intérprete de comandos disponible en los archivos de órdenes de Harbour:  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -58,11 +58,11 @@ Cargar cabecera de Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descargar cabecera de Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Display list of loaded Harbour header\.
+Mostrar la lista de cabeceras de Harbour cargadas\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Load package\. Similar to \#request PP directive\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Unload package\.
+Descargar paquete\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  

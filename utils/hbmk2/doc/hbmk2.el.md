@@ -32,7 +32,7 @@ Options:
  - **\-main=&lt;mainfunc&gt;** override the name of starting function/procedure
  - **\-request=&lt;func&gt;** εξαναγκασμός συνάρτησης/λειτουργίας να διασυνδεθεί
  - **\-fullstatic** link with all static libs
- - **\-pic\[\-\]** create position independent object code \(always enabled in \-hbdyn/\-hbdynvm modes\)
+ - **\-pic\[\-\]** δημιουργία position independent αντικειμενικού κώδικα \(πάντα ενεροπιημένο στα μοντέλα \-hbdyn/\-hbdynvm\)
  - **\-\[full|fix\]shared** δημιούργησε κοινόχρηστα Harbour binaries χωρίς/με απόλυτη αναφορά καταλόγου στη βιβλιοθήκη Harbour  \(προεπιλογή: ''fullshared'' οταν το Harbour είναι εγκατεστημένο σε περιοχή συστήματος, αλλοιώς 'fixshared'\) \(επιλογή fix/full  μόνο σε  \*nix \)
  - **\-nulrdd\[\-\]** link with nulrdd
  - **\-debug\[\-\]** add/exclude C compiler debug info\. For Harbour level debug, use Harbour option \-b as usual
@@ -56,7 +56,7 @@ Options:
  - **\-traceonly** show commands to be executed, but do not execute them
  - **\-warn=&lt;level&gt;** set C compiler warning level  
 &lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
- - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-safe\[\-\]** ενεργοποίηση επιλογών ασφαλείας του μεταγλωττιστή/συνδέτη C  \(προεπιλογή: ενεργοποιημένο σε Windows, απενεργοποιημένο σε άλλα συστήματα\)
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;level&gt; can be: yes, no, min, max
  - **\-run\[\-\]** run/do not run output executable
@@ -65,7 +65,7 @@ Options:
  - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** ορίζει το &lt;file&gt; ως εικονίδιο της εφαρμογής\. Το &lt;file&gt; πρέπει να είναι σε μορφή υποστηριζόμενη από τη πλατφόρμα\-στόχο \(δεν υποστηρίζεται από μερικές πλατφόρμες/μεταγλωττιστές\)\. Σε Windows, υλοποιείται με τη δημιουργία και διασύνδεση ενός resource αρχείου\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
- - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
+ - **\-sign=&lt;key&gt;** σήμανση εκτελέσιμου με το &lt;key&gt; \(μόνο σε Windows και Darwin \)\. Σε περιβάλλον Windows χρησιμοποιείται το signtool\.exe  \(περιέχεται στο MS Windows SDK\) ή  το posign\.exe \(περιέχεται στην Pelles C 7\), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα\.
  - **\-signpw=&lt;pw&gt;** χρήση &lt;pw&gt; ως συνθηματικού κατά την σήμανση του εκτελέσιμου \(μόνο σε Windows και Darwin\)
  - **\-instfile=&lt;g:file&gt;** προσθήκη &lt;file&gt; iστη λίστα αρχείων προς αντιγραφή στο μονοπάτι που ορίστηκε από την επιλογή \-instpath\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής \(πεζά/κεφαλαία ευαίσθητο\), πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Σε περίπτωση μη καθορισμού του  &lt;file&gt;, η λίστα αρχείων σε αυτή την ομάδα θα εκκενωθεί\.
  - **\-instpath=&lt;g:path&gt;** αντιγραφή στόχου στο &lt;path&gt;\. Αν το &lt;path&gt; είναι κατάλογος, πρέπει να τελειώνει με τον διαχωριστή μονοπατιού, σε αυτή την περίπτωσητα αρχεία που καθορίστηκαν με την επιλογή  \-instfile θα αντιγραφούν επίσης\. Μπορεί να οριστεί πολλαπλές φορές\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής, πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Ο στόχος κατασκευής θα αντιγραφτεί αυτόματα σε προεπιλεγμένη \(άδεια\) ομάδα αντιγραφής\. Υπάρχουν οι ακόλουθες ενσωματωμένες &lt;g&gt; ομάδες αντιγραφής: 'depimplib' για τις βιβλιοθήκες εισαγωγής και 'depimplibsrc' για πηγαία \(\.dll\) αρχεία βιβλιοθηκών εισαγωγής, ανήκοντας αμφότερες σε εξαρτήσεις\.
@@ -91,14 +91,14 @@ Options:
  - **\-iflag=&lt;f&gt;** περασμα απλής σημαίας στην εντολή δημιουργίας βιβλιοθήκης εισαγωγής
  - **\-signflag=&lt;f&gt;** περασμα απλής σημαίας στην εντολή σήμανσης κώδικα
  - **\-runflag=&lt;f&gt;** pass single flag to output executable when \-run option is used
- - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
+ - **\-cflag\+=&lt;f&gt;** πέρασμα μιάς σημαίας \-flag\- στον μεταγλωττιστή C υπερκαλύπτοντας αντίστοιχες σημαίες C που προστέθηκαν απο το ίδιο το hbmk2 itself\. Χρησιμοποιείστε το με προσοχή\.
  - **\-ldflag\+=&lt;f&gt;** πέρασμα επιλογής χωρίς προεπεξεργασία στο συνδέτη/linker \(εκτελέσιμο\) μετά τη λίστα βιβλιοθηκών\. Χρησιμοποιήστε το με προσοχή\!
  - **\-dflag\+=&lt;f&gt;** πέρασμα επιλογής χωρίς προεπεξεργασία στο συνδέτη/linker \(δυναμική βιβλιοθήκη\) μετά τη λίστα βιβλιοθηκών\. Χρησιμοποιήστε το με προσοχή\!
  - **\-3rd=&lt;f&gt;** εφεδρικές επιλογές/σημαίες για  3rd party εργαλεία, πάντοτε αγνοούνται αφ'εαυτού από hbmk2 
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** τροποποίηση τοπικού περιβάλλοντος\. &lt;e&gt; είναι το όνομα μεταβλητής περιβάλλοντος για αλλαγή\. &lt;o&gt; μπορεί να είναι '=' για ορισμό/επικάλυψη, '\-' για διαγραφή, '\+' για προσθήκη στο τέλος της υπάρχουσας τιμής, '\#' για εισαγωγή στην αρχή της υπάρχουσας τιμής\. &lt;v&gt; είναι η τιμή που θα οριστεί/προστεθεί/εισαχθεί\.
  - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\)
- - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
-&lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
+ - **\-head=&lt;m&gt;** έλεγχος της ανάλυσης του πηγαίου header \(σε αυξητικό \-incremental\- ρυθμό κατασκευής\)  
+&lt;m&gt; μπορεί να είναι: native \(χρήση του μεταγλωττιστή για εξαγωγή των εξαρτήσεων\), full \(προεπιλογή, χρήση απλού αναλυτή κειμένου σε όλο το αρχείο\), dep, off
  - **\-rebuild** ανακατασκευή \(σε incremental ρυθμό\)
  - **\-rebuildall** ανακατασκευή μαζί με τα υπο\-έργα \(με αυξητική μέθοδο κατασκευής\)
  - **\-clean** clean \(in incremental build mode\)
@@ -116,14 +116,14 @@ Options:
  - **\-rebuildpo** recreate \.po file, thus removing all obsolete entries in it
 
 
- - **\-hbx=\[&lt;\.ch&gt;\]** Create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\.
+ - **\-hbx=\[&lt;\.ch&gt;\]** Δημιουργία  header αρχείο \(σε \.hbx μορφή\) μέ όλα τα εξωτερικά σύμβολα \-ονοματα συναρτήσεων κ\.λ\.π\.\- \. Κενή παράμετρος το απενεργοποιεί\.
  - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt; είναι ένα όνομα αρχείου header\. &lt;\.hbc&gt; είναι ένα \.hbc όνομα αρχείου που θα συμπεριληφθεί αυτομάτως σε περίπτωση που το  header βρίσκεται σε κάποιο απο τα μεταγλωττισμένα πηγαία αρχεία\. \(ΠΕΙΡΑΜΑΤΙΚΟ\)
 
 
- - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; is the name of the dependency\. &lt;n&gt; name of the package dependency\. Can be specified multiple times\.
- - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; is the name of the dependency\. &lt;h&gt; is the key header \(\.h\) of the package dependency\. Multiple alternative headers can be specified\.
+ - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. &lt;n&gt; είναι το όνομα του πακέτου  εξάρτησης\.  Μπορεί να οριστεί πολλαπλές φορές\.
+ - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. &lt;h&gt; είναι το header\-κλειδί \(\.h\) της εξάρτησης πακέτου\. Μπορούν να οριστούν πολλαπλά εναλλακτικά headers \.
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. το &lt;f&gt; μπορεί να είναι 'yes' ή 'no', καθορίζει το άν η εξάρτηση είναι προαιρετική\. Προεπιλογή: no
- - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; is the name of the dependency\. &lt;v&gt; is a value that controls how detection is done\. Accepted values: no, yes, force, nolocal, local\. Default: content of environment variable HBMK\_WITH\_&lt;d&gt;
+ - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. &lt;v&gt; είναι η τιμή που ελέγχει πως γίνεται η ανίχνευση\. Αποδεκτές τιμές: no, yes, force, nolocal, local\. Προεπιλογή: το περιεχόμενο της μεταβλητής περιβάλλοντος HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. Ορίστε το &lt;r&gt; ως ριζικό κατάλογο για μονοπάτια που ορίζονται στις  \-depincpath επιλογές\.
  - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. Προσθέστε &lt;i&gt; στη λίστα μονοπατιών ανίχνευσης header
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; είναι το όνομα της εξάρτησης\. Προσθέστε &lt;i&gt; στη λιστα μονοπατιών ανίχνευσης header, όπου &lt;i&gt; δείχνει σε ένα κατάλογο τοπικό προς το έργο και περιέχει μια ενσωματωμένη \(aka\. 'locally hosted'\) εξάρτηση\.
@@ -139,7 +139,7 @@ Options:
 Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:  
 
 
- - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate targets\.
+ - **\-target=&lt;script&gt;** ορίζει ένα νέο στόχο κατασκευής\. το &lt;script&gt; μπορεί να είναι \.prg \(ή χωρίς καμμία κατάληξη\) ή  \.hbp αρχείο\. Σημειώστε ότι τα αρχεία \.hbp θεωρούνται αυτόματα ως ξεχωριστοί στόχοι\.
 
 
  - **\-hbrun** run target
@@ -212,7 +212,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 
  - **hbrun\*|\*hbrun** μοντέλο εκτέλεσης σεναρίων / διαλογικό shell
  - **hbrund|hbrun\*d** μοντέλο εκτέλεσης σεναρίων / διαλογικό shell με λειτουργία αποσφαλμάτωσης
- - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
+ - **harbour** μοντέλο \-hbraw \(προσομοίωση  \- raw \- του μεταγλωττιστή Harbour\)
  - **clipper** μοντέλο \-hbcmp \(προσομοίωση μεταγλωττιστή Clipper\)
  - **rtlink** μοντέλο \-rtlink \(προσομοίωση Clipper linker\)
  - **exospace** μοντέλο \-rtlink \(προσομοίωση Clipper linker\)
@@ -231,13 +231,13 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 Αρχεία:  
 
 
- - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
+ - **\*\.hbp** αρχείο έργου\. Μπορεί να περιέχει οποιοδήποτε αριθμό επιλογών γραμμής\-εντολών,  οι οποίες αναμένεται να αποφέρουν ένα αποτέλεσμα, δηλ\. δημιουργία μιας εφαρμογής\. Γραμμές που αρχίζουν με το χαρακτήρα '\#' αγνοούνται, κατα τ'άλλα, η δημιουργία ξεχωριστών γραμμών είναι προαιρετική και οι επιλογές μπαίνουν διαχωρισμένες με κενό διάστημα, ακριβώς όπως στη γραμμή\-εντολών\. Επιλογή που περιέχει κενό διάστημα πρέπει να εγκλειστεί σε "εισαγωγικα"\. Κάθε αναφορά αρχείου \.hbp θα εκτελεστεί σαν υπο\-έργο\.
  - **\*\.hbm** συλλογή επιλογών\. Μπορεί να χρησιμοποιηθεί για συγκέντρωση κοινών επιλογών μέσα σε ένα αρχείο το οποίο θα συμπεριληφθεί μέσα σε αρχεία έργου\. Η μορφή που χρησιμοποιεί ή ίδια με τα \.hbp αρχεία\.
- - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
- - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
+ - **\*\.hbc** συλλογή από επιλογές που σθνοδεύουν collection of options that accompany συστατικά στοιχεία \(γνωστά και ως 'libs', γνωστά και ως packages\)\. Χρήσιμοποιείται διαφορετική σύνταξη απο αυτήν της γραμμής\-εντολών και των αρχείων  \.hbp/\.hbm\. Γραμμές που αρχίζουν με το χαρακτήρα '\#' αγνοούνται, κάθε ντιρεκτίβα πρέπει να τοποθετείται σε ξεχωριστή γραμμή\.
+ - **\*\.ch** αν περαστεί κατευθείαν σαν πηγαίο αρχείο, θα χρησιμοποιηθεί σαν επιπλέον πρότυπο header
  - **hbmk\.hbc** standard αρχείο \.hbc που δέχεται αυτόματη επεξεργασία , αν είναι παρόν\. Πιθανή\(ές\) τοποθεσίες \(με σειρά προτεραιότητας\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
  - **hbmk\.hbm** προαιρετικό \.hbm αρχείο μέσα στο τρέχοντα κατάλογο εργασίας, που δέχεται επεξεργασία αυτομάτως πρίν από τυχόν άλλες επιλογές
- - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_dynlib\.hbm** ειδικό \.hbm αρχείο ενσωματομένο μέσα στο hbmk2\. Διαχειρίζεται τις λεπτομέρειες δημιουργίας μιας δυναμικής βιβλιοθήκης \(κατά το πρότυπο των Harbour contribs\)\.
  - **$hb\_pkg\_install\.hbm** ειδικό \.hbm αρχείο ενσωματωμένο εντός του hbmk2\. Διαχειρίζεται τις λεπτομέρειες εγκατάστασης των στόχων και των σχετιζόμενων πακέτων στις standard περιοχές \(κατά το πρότυπο των Harbour contribs\)\.
 
 
@@ -246,7 +246,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** αποθηκεύει ιστορικό εντολών για το διαλογικό shell Harbour\. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή 'no' \(χωρίς τα εισαγωγικά και με νεα γραμμή\)\. Βρίσκεται στο \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on Ms\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hb\_extension** λίστα καταλήξεων προς φόρτωση στο διαλογικό κέλυφος του Harbour\. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '\#' αγνοείται\. Εναλλακτικά ονομα\-αρχείου στο Ms\-DOS: Το hb\_ext\.ini\. Βρίσκεται μεσα στο \[\*\]: %APPDATA%\\\.harbour\\
   
 Μεταβλητές Macro:  
 
@@ -258,8 +258,8 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **$\{hb\_self\}** full filename it is used in
  - **$\{hb\_curdir\}** current working directory
  - **$\{hb\_tempdir\}** Κατάλογος Λ\.Σ\. για προσωρινα αρχεία
- - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
- - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
+ - **$\{hb\_targetname\}** όνομα του έργου  \(χωρίς κατάλογο και κατάληξη\)\. Επιστρέφει \.adhoc\. αν δεν υπαρχει αρχείο έργου\.
+ - **$\{hb\_targettype\}** ο τύπος του έργου \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** επιλεγμένη πλατφόρμα
  - **$\{hb\_comp\}** επιλεγμένος μεταγλωττιστής C
  - **$\{hb\_comp\_ver\}** Εκδοση μεταγλωττιστή C
@@ -271,7 +271,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **$\{hb\_dynsuffix\}** επίθεμα δυναμικής βιβλιοθήκης
  - **$\{hb\_dynext\}** dynamic library extension
  - **$\{hb\_ver\}** Η έκδοση Harbour σε δεκαεξαδική triple byte μορφή\. Π\.χ\.: 030200
- - **$\{hb\_verstr\}** Harbour version in human readable format &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. F\.e\.: 3\.2\.0dev
+ - **$\{hb\_verstr\}** η έκδοση Harbour σε ανθρώπινα αναγνώσιμη μορφή &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Π\.χ\.: 3\.2\.0dev
  - **$\{hb\_major\}** Harbour major version number
  - **$\{hb\_minor\}** Harbour minor version number
  - **$\{hb\_release\}** Harbour release version number
@@ -281,32 +281,32 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **$\{hb\_host\_plat\_unix\}** επιστρέφει '1' αν η πλατφόρμα υποδοχής Harbour είναι \*nix συμβατή
  - **$\{hb\_bin\}** Harbour binary directory
  - **$\{hb\_lib\}** Κατάλογος στατικών βιβλιοθηκών Harbour 
- - **$\{hb\_lib3rd\}** Harbour 3rd party static library directory
+ - **$\{hb\_lib3rd\}** Κατάλογος 3rd party βιβλιοθηκών Harbour 
  - **$\{hb\_dyn\}** Κατάλογος δυναμικών βιβλιοθηκών Harbour 
  - **$\{hb\_inc\}** Harbour header directory
  - **$\{hb\_addons\}** Harbour add\-ons base directory
- - **$\{hb\_first\}** name of source file that holds the entry function \(without directory and extension\)
- - **$\{hb\_outputdir\}** directory of the output
+ - **$\{hb\_first\}** το όνομα του πηγαίου αρχείου που περιέχει την συνάρτηση εκκίνησης \(χωρίς κατάλογο και κατάληξη\)
+ - **$\{hb\_outputdir\}** ο κατάλογος εξόδου
  - **$\{hb\_outputname\}** όνομα εξόδου \(χωρίς κατάληξη\)
  - **$\{hb\_level\}** sub\-project recursion level
- - **$\{&lt;depname&gt;\}** returns the header directory of dependency &lt;depname&gt;, or '1' if it is not detected
+ - **$\{&lt;depname&gt;\}** επιστρέφει τον επικεφαλής κατάλογο της εξάρτησης &lt;depname&gt;, ή '1' αν δεν ανιχνευτεί
  - **$\{&lt;envvar&gt;\}** επιστρέφει την τιμή της μεταβλητής περιβάλλοντος &lt;envvar&gt;
   
-Filters \(you can combine and/or negate them\):  
+Φίλτρα \(μπορείτε να τα συνδυάσετε και/ή να τα αναιρέσετε\):  
 
 
- - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
- - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
+ - **\{&lt;platform&gt;\}** η πλατφόρμα\-στόχος\. Οπου &lt;platform&gt; μπορεί να είναι κάθε τιμή αποδεκτή από την επιλογή \-plat= \.
+ - **\{&lt;compiler&gt;\}** ο C μεταγλωττιστής\-στόχος\. Οπου &lt;compiler&gt; μπορεί να είναι κάθε τιμή αποδεκτή απο την επιλογή \-comp\.
  - **\{&lt;cpu&gt;\}** σκοπούμενη CPU\. Οπου &lt;cpu&gt; μπορεί να είναι κάτι από : x86, x86\_64, ia64, arm, mips, sh
- - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
- - **\{mt\}** target is multi\-threaded \(see \-mt option\)
- - **\{st\}** target is single\-threaded \(see \-st option\)
+ - **\{&lt;targettype&gt;\}** τύπος στόχου\. Οπου &lt;targettype&gt; είναι οποιαδήποτε από τις τιμές που επιστρέφονται από την macro μεταβλητή $\{hb\_targettype\}\.
+ - **\{mt\}** ο στόχος είναι multi\-threaded \(δες \-mt επιλογή\)
+ - **\{st\}** ο στόχος είναι single\-threaded \(δες \-st επιλογή\)
  - **\{gui\}** GUI target \(see \-gui option\)
  - **\{std\}** στόχος κονσόλας \(δες επιλογή \-console\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
  - **\{nodebug\}** Απενεργοποιημένη αποσφαλμάτωση επιπέδου C \(δες \-debug\- επιλογή\)
- - **\{shared\}** shared build \(see \-shared and related options\)
- - **\{static\}** static build \(see \-static and related options\)
+ - **\{shared\}** κατασκευή shared \(δες \-shared και τις σχετικές επιλογές\)
+ - **\{static\}** κατασκευή static \(δες \-static και τις σχετικές επιλογές\)
  - **\{lngcpp\}** εξαναγασμένο C\+\+ μοντέλο \(δες  \-cpp επιλογή\)
  - **\{lngc\}** εξαναγασμένο C μοντέλο \(δες  \-cpp επιλογή\)
  - **\{winuni\}** μοντέλο Windows UNICODE \(WIDE\)  \(δες επιλογή \-winuni\)
@@ -318,24 +318,24 @@ Filters \(you can combine and/or negate them\):
  - **\{allmsvc\}** ο στοχευμένος μεταγλωττιστής C είναι msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
  - **\{allbcc\}** ο στοχευμένος μεταγλωττιστής C είναι bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** target C compiler is pocc\* \(pocc, pocc64, poccarm\)
- - **\{allicc\}** target C compiler is icc\* \(icc, iccia64\)
+ - **\{allicc\}** ο στοχευμένος μεταγλωττιστής C είναι icc\* \(icc, iccia64\)
  - **\{hb10\}** Harbour 1\.0\.x compatibility mode \(see \-hb10 option\)
  - **\{hb20\}** Harbour 2\.0\.x compatibility mode \(see \-hb20 option\)
  - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
  - **\{xhb\}** xhb mode \(see \-xhb option\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** το φίλτρο θα περάσει αν το όνομα &lt;file&gt; ή &lt;dir&gt; υπάρχει στο δίσκο\.
  - **\{MACRO\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} δεν είναι άδεια και όχι ίση με '0' ή 'no' \(πεζά/κεφαλαία: αδιάφορο\)
- - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
- - **\{MACRO&gt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is larger than &lt;value&gt; \(case insensitive\)\.
- - **\{MACRO&lt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is smaller than &lt;value&gt; \(case insensitive\)\.
+ - **\{MACRO='&lt;value&gt;'\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\}  ισούται με την &lt;value&gt; \(ευαίσθητο σε πεζά/κεφαλαία\)
+ - **\{MACRO&gt;'&lt;value&gt;'\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} είναι μεγαλίτερη από την  &lt;value&gt; \(πεζά/κεφαλαία: αδιάφορο\)
+ - **\{MACRO&lt;'&lt;value&gt;'\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} είναι μικρότερη από την  &lt;value&gt; \(πεζά/κεφαλαία: αδιάφορο\)
 
 
 Προκαθορισμένες σταθερές σε πηγαία αρχεία:
 
 
- - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
- - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;hbcname&gt; ** when &lt;hbcname&gt;\.hbc package is linked to the target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
+ - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** όταν ένα σενάριο \.hb είναι μεταγλωττισμένο ως plugin του hbmk2 
+ - **\_\_HBEXTREQ\_\_** όταν ενα \.hbx πηγαίο αρχείο είναι παρόν σε ένα έργο \(διαθέσιμο στα πηγαία αρχεία Harbour\)
+ - **HBMK\_HAS\_&lt;hbcname&gt; ** όταν το πακέτο &lt;hbcname&gt;\.hbc διασυνδέεται με το στόχο\. Η τιμή είναι η version= τιμή απο το αρχείο \.hbc, μετασχηματισμένη σε δεκαδικό αριθμό, που είναι '1', αν δεν έχει οριστεί\. \(διαθέσιμο σε πηγαία αρχεία Harbour\)
  - **HBMK\_HAS\_&lt;depname&gt; ** όταν  ανιχνεύτηκε &lt;depname&gt; εξάρτηση \(διαθέσιμο σε πηγαίους κώδικες C\)
 
 
@@ -347,13 +347,13 @@ Filters \(you can combine and/or negate them\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt; ** όταν  &lt;depname&gt; εξάρτηση ανιχνεύτηκε
- - **HBMK\_DIR\_&lt;depname&gt; ** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
+ - **HBMK\_DIR\_&lt;depname&gt; ** επιστρέφει τον επικεφαλής κατάλογο όπου η &lt;depname&gt; ανιχνεύτηκε, ή κενό αν δεν ανιχνεύτηκε\.
  - **HBMK\_HAS\_&lt;depname&gt; \_LOCAL** οταν η  &lt;depname&gt;  εξάρτηση ανιχνεύτηκε σε μια θέση που ορίστηκε από την επιλογή \-depincpathlocal=
   
 Μεταβλητές περιβάλλοντος:  
 
 
- - **HBMK\_OPTIONS** accepts any options as if they were passed in the beginning of the command\-line
+ - **HBMK\_OPTIONS** δέχεται οποιεσδήποτε επιλογές σαν να είχαν αυτές περαστεί στην αρχή της γραμμής\-εντολών
  - **HB\_PLATFORM** δέχεται τις ίδιες τιμές όπως και η επιλογή \-plat= 
  - **HB\_COMPILER** δέχεται τις ίδιες τιμές όπως και η επιλογή \-comp= 
  - **HB\_CPU** δέχεται τις ίδιες τιμές όπως και η επιλογή \-cpu= 
@@ -363,15 +363,15 @@ Filters \(you can combine and/or negate them\):
  - **HB\_USER\_LIBPATHS** δέχεται τις ίδιες τιμές \(χωρισμένες με κενό\)  όπως και η επιλογή \-L 
  - **HB\_USER\_PRGFLAGS** επιλογές που θα περαστούν στον μεταγλωττιστή Harbour \(πρίν από επιλογές γραμμής\-εντολών\)
  - **HB\_USER\_CFLAGS** επιλογές που θα περαστούν στον μεταγλωττιστή C \(πρίν από επιλογές γραμμής\-εντολών\)
- - **HB\_USER\_RESFLAGS** options to be passed to resource compiler \(before command\-line options\) \(Windows only\)
+ - **HB\_USER\_RESFLAGS** επιλογές που θα περαστούν στον resource compiler \(πρίν από επιλογές γραμμής\-εντολών\) \(μόνο για Windows\)
  - **HB\_USER\_LDFLAGS** επιλογής που θα περαστούν στον συνδέτη \(εκτελέσιμου\) \(πρίν τις επιλογές της γραμμής\-εντολών\)
- - **HB\_USER\_DFLAGS** options to be passed to linker \(dynamic library\) \(before command\-line options\)
- - **HB\_USER\_AFLAGS** options to be passed to linker \(static library\) \(before command\-line options\)
- - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
+ - **HB\_USER\_DFLAGS** επιλογές που θα περαστούν στον συνδέτη \-linker\- \(dynamic library\)  \(πρίν από επιλογές γραμμής\-εντολών\)
+ - **HB\_USER\_AFLAGS** επιλογές που θα περαστούν στον συνδέτη \-linker\-  \(static library\) \(πρίν τις επιλογές της γραμμής\-εντολών\)
+ - **HB\_COMPILER\_VER** επικάλυψη αυτόματης ανίχνευσης της έκδοσης του μεταγλωττιστή C \(μόνο για οικογένειες μεταγλωττιστών gcc και msvc\)\. Μορφή: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
  - **HB\_CCPATH** επικάλυψη του καταλόγου μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
  - **HB\_CCPREFIX** επικάλυψη του προθέματος μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
  - **HB\_CCSUFFIX** επικάλυψη του επιθέματος μεταγλωττιστή C  \(μόνο σε gcc οικογένειες μεταγλωττιστών\)
- - **HB\_INSTALL\_PREFIX** override Harbour base installation directory
+ - **HB\_INSTALL\_PREFIX** επικάλυψη του βασικού καταλόγου εγκατάστασης του Harbour
  - **HB\_INSTALL\_ADDONS** επικάλυψη του βασικού καταλόγου add\-ons του Harbour
 
 
@@ -382,17 +382,17 @@ Filters \(you can combine and/or negate them\):
 
  - **echo=&lt;msg&gt;** εμφάνιση &lt;msg&gt;
  - **skip=\[&lt;msg&gt;\]** παράλειψη επεξεργασίας του υπόλοιπου \.hbc αρχείου\. Εμφάνιση &lt;msg&gt;, αν οριστεί\.
- - **stop=\[&lt;msg&gt;\]** stop the build\. Display &lt;msg&gt;, if specified\.
+ - **stop=\[&lt;msg&gt;\]** διακοπή της κατασκευής\. Εμφάνιση του &lt;msg&gt;, αν οριστεί\.
  - **sources=** add space separated list of files as input files
  - **headers=** προσθήκη διαχωρισμένης με κενό λίστας από headers μορφής \.ch  ως πρότυπο header
  - **libs=** προσθέστε λίστα βιβλιοθηκών διαχωρισμένων με κενό \(δες περισσότερα  στην \-l επιλογή\)
  - **frameworks=** add space separated list of frameworks \(Darwin only\)
  - **requests=** προσθέστε διαχωρισμένη με κενό λίστα συμβόλων που θα διασυνδεθούν  υποχρεωτικά στο στόχο
- - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
+ - **syslibs=** προσθήκη λίστας βιβλιοθηκών χωρισμένων με κενό διάστημα ως βιβλιοθήκες συστήματος \(πρίν από άλλες βιβλιοθήκες\)
  - **hbcs=** ενσωμάτψση λίστας \.hbc αρχείων διαχωρισμένων με κενό διάστημα\. Επιτρέπονται  ονόματα χωρίς την κατάληξη\. Οι αναφορές αυτές επεξεργάζονται επι τόπου\.
  - **autohbcs=** space separated list of values as in \-autohbc= option
  - **libpaths=** space separated list of additional library paths
- - **incpaths=** add space separated list of additional header paths \(for both Harbour and C\)
+ - **incpaths=** προσθήκη διαχωρισμένης με κενό λίστας πρόσθετων μονοπατιών header   \( για αμφότερα  Harbour και C\)
  - **instfiles=** space separated list of values as in \-instfile= option
  - **instpaths=** space separated list of values as in \-instpath= option
  - **prgflags=** space separated list of values as in \-prgflag= option
@@ -408,7 +408,7 @@ Filters \(you can combine and/or negate them\):
  - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st επιλογή
  - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- επιλογή
  - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static επιλογή
- - **shareddef=&lt;bool&gt;** similar to shared=, but works only if shared/static mode was not set before
+ - **shareddef=&lt;bool&gt;** παρόμοιο με  shared=, αλλά λειτουργεί μόνο αν το μοντέλο shared/static δεν έχει οριστεί πιο πρίν
  - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static επιλογή
  - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- επιλογή
  - **optim=** 'yes' = \-optim, 'no' = \-optim\- επιλογή
@@ -426,7 +426,7 @@ Filters \(you can combine and/or negate them\):
  - **warn=** όμοιο με την επιλογή \-warn= 
  - **compr=** όμοιο με την επιλογή \-compr= 
  - **head=** όμοιο με την επιλογή \-head= 
- - **plugins=** space separated list of hbmk2 plugins to load
+ - **plugins=** λίστα plugins του hbmk2 διαχωρισμένων με κενό διάστημα
  - **gt=&lt;name&gt;** όμοιο με την επιλογή \-gt&lt;name&gt; 
  - **gtdef=&lt;name&gt;** set the default GT to be used
  - **env=** όμοιο με την επιλογή \-env: 
@@ -441,20 +441,20 @@ Filters \(you can combine and/or negate them\):
  - **depimplibd=** όμοιο με την επιλογή \-depimplibd= 
  - **name=** όνομα πακέτου
  - **description=** περιγραφή πακέτου
- - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
+ - **version=&lt;x\.y\.z&gt;** ο αριθμός έκδοσης του πακέτου, όπου x,y,z &gt;= 0 &lt;= 255\. Τίθεται σε 0\.0\.1, αν δεν οριστεί\.
  - **keywords=** λίστα keywords διαχωρισμένων με κενό διάστημα
  - **licences=** λίστα αδειών διαχωρισμένων με κενό διάστημα
  - **repository=** space separated list of source repository references
 
 
 Plugin API:  
-\('hbmk' is the context variable received by the plugin entry function\)
+ \('hbmk' is the context variable received by the plugin entry function\)
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, cExt \) \-&gt; NIL**  
 Καταχώριση κατάληξης αρχείου που θα περαστεί σε plugin \(από προεπιλογή,  όλες οι άγνωστες καταλήξεις αρχείων περνάνε στον μεταγλωττιστή Harbour\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, cFileName \) \-&gt; NIL**  
-Add a Harbour input file to the project\.
+Προσθήκη ενός Harbour αρχείου εισόδου στο έργο\.
  - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
 Προσθήκη ενός C αρχείου εισόδου στο έργο\.
  - **hbmk\_AddInput\_CPP\( hbmk, cFileName \) \-&gt; NIL**  
@@ -462,7 +462,7 @@ Add a Harbour input file to the project\.
  - **hbmk\_AddInput\_RC\( hbmk, cFileName \) \-&gt; NIL**  
 Add a Windows resource input file to the project\.
  - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
-Add a binary object file to the project\.
+Προσθήκη ενός δυαδικού object αρχείου στο έργο\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, cFileName, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Προσθήκη αρχείου προς εγκατάσταση, με ένα προαιρετικό \-instpath= όνομα ομάδας\.
  - **hbmk\_OutStd\( hbmk, cText \) \-&gt; NIL**  
@@ -470,9 +470,9 @@ Add a binary object file to the project\.
  - **hbmk\_OutErr\( hbmk, cText \) \-&gt; NIL**  
 Εξοδος κειμένου στο
  - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
-Output text to stdout without any formatting\.
+Εξοδος κειμένου στο stdout χωρίς καμμία μορφοποίηση\.
  - **hbmk\_OutErrRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
-Output text to stderr without any formatting\.
+Εξοδος κειμένου στο stderr χωρίς καμμία μορφοποίηση\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Evaluate hbmk2 macro expression\.
  - **hbmk\_FNameEscape\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
@@ -484,18 +484,18 @@ Evaluate hbmk2 macro expression\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Επιστροφή σχετικού μονοπατιού της τιμής του \-workdir= από το τρέχοντα κατάλογο εργασίας\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
-Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
+Ευρεση αρχείου στο &lt;xPath&gt; \(είναι δεκτά, πίνακας ή συμβολοσειρά διαχωρισμένη με διαχωριστές καταλόγου\) που περιέχει λίστα από  &lt;aExtDef&gt; εναλλακτικές καταλήξεις \(defaults to executable binaries\)\. Επιστρέφει όνομα\-αρχείου αν βρεθεί και NIL αν όχι\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 Change directory and/or extension in filename\.
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Κωδικοποίηση ονόματος συνάρτησης σύμφωνα με τους κανόνες Harbour περί μορφοποίησης ονόματων HB\_FUNC\(\) συναρτήσεων σε κώδικα C \.
  - **hbmk\_StrStripQuote\( cString \) \-&gt; &lt;cString&gt;**  
-Strip double quote enclosure from a string\.
+Αφαίρεση των διπλών εισαγωγικών εγκλεισμού από μία συμβολοσειρά\.
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
-Convert array of strings to a string\. Default separator is a single space\.
+Μετατροπή ενός πίνακα συμβολοσειρών σε συμβολοσειρά\. Προεπιλεγμένος διαχωριστής είναι ένα κενό διάστημα\.
 
 
-Plugin variables:  
+Μεταβλητές Plugin:  
 \('hbmk' context hash items, case\-sensitive, read\-only unless marked otherwise\)
 
 
@@ -545,7 +545,7 @@ Enable Clipper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Εμφάνιση λίστας των φορτωμένων Harbour header\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Load package\. Similar to \#request PP directive\.
+Φόρτωση πακέτου\. Παρόμοιο με τη ντιρεκτίβα \#request PP\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Αποφόρτωση πακέτου
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
@@ -559,7 +559,7 @@ hb\_ProgName\(\) not mapped to script\.
 Examples to start with hbmk2:
 
 
- - **To run the interactive shell \('dot' prompt\)**  
+ - **Για εκτέλεση το διαλογικού κελύφους \('dot' prompt\)**  
 $ hbmk2 \.
  - **Για να εκτελέσετε ένα σενάριο Harbour**  
 $ hbmk2 myscript\.hb \[&lt;παραμετρος\[ι\]&gt;\]
@@ -583,7 +583,7 @@ $ hbmk2 hello\.prg
 $ hbmk2 mymain\.prg myfuncs\.prg \-inc
  - **Για να δημιουργήσετε μία εφαρμογή με χρήση ενός αρχείου Εργου**  
 $ hbmk2 myapp\.hbp
- - **To build an application using incremental mode**  
+ - **Για να δημιουργήσετε  μία εφαρμογή χρησιμοποιώντας σταδιακά\-αυξητική \-incremental\- μέθοδο**  
 $ hbmk2 myapp\.hbp \-inc
  - **Για κατασκευή μιάς εφαρμογής που χρησιμοποιεί πακέτα contrib ή πακέτα 3rd party \(πρόσθετα\) που συμπεριλαμβάνουν ένα \.hbc αρχείο**  
 $ hbmk2 myapp\.prg hbct\.hbc
@@ -633,16 +633,16 @@ Notes:
   - Regular Harbour compiler options are also accepted as is\.  
 \(see them with \-harbourhelp option\)
   - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
-  - hbmk\.hbm make script in current directory is always processed if it exists\.
+  - Το hbmk\.hbm σενάριο κατασκευής στον τρέχοντα κατάλογο δέχεται  πάντοτε επεξεργασία, αν υπάρχει\.
   - Η χρήση πλάγιας εμπρός κάθετης παύλας συνιστάται στις τιμές των επιλογών ως διαχωριστής μονοπατιού, αλλά η πίσω πλάγια κάθετη παύλα είναι εξίσου αποδεκτή\.
   - Φίλτρα επιτρέπονται σε κάθε γραμμή \.hbc καθώς και περισσότερες επιλογές\.⏎ Τα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&amp;' \(and\), '|' \(or\), να αναιρεθούν με τον τελεστή '\!' και να ομαδοποιηθούν με αγγύλες\. Π\.χ\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Οι περισσότερες  \.hbc γραμμές \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) και οι αντίστοιχες παράμετροι γραμμής\-εντολής  αποδέχονται μεταβλητές macro\. Η libpaths= επίσης αποδέχεται %\{hb\_name\} που μεταφράζεται στο όνομα του υπο διερεύνηση \.hbc αρχείου 
   - Επιλογές που δέχοντα μεταβλητές macro υποστηρίζουν επίσης υποκατάσταση εντολών\. Περικλείστε την εντολή μεσα σε \`\`, και, αν η εντολή περιέχει κενό διάστημα, περικλείστε τη επίσης σε διπλά εισαγωγικά\. Η standard έξοδος τη εντολής θα χρησιμοποιηθεί ως τιμή\. Π\.χ\. "\-cflag=\`wx\-config \-\-cflags\`", ή ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
+  - Οταν ορίζονται πολλαπλές επιλογές  για τον καθορισμό του τύπου του στόχου \(\-hblib, \-hbdyn, etc\.\),  θα προτιμηθεί η πρώτη απ'αυτές, οι υπόλοιπες θα αγνοηθούν σιωπηρά\.
   - Βιβλιοθήκες και object αρχεία δημιουργημένα με/για τον CA\-Cl\*pper δεν θα λειτουργήσουν με κανέναν υποστηριζόμενο μεταγλωττιστή/πλατφόρμα\.
   - Η υποστήρξη προεπιλογών και χαρακτηριστικών μπορεί να διαφέρει ανάλογα με την πλατφόρμα/μεταγλωττιστή\.
   - Δεν χρειάζεστε το GNU Make ή κάποιο άλλο make μεταγλωττιστή C και το MSYS \(σε Windows\)  για να εκτελέσετε το  hbmk2\.
-  - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
+  - \. \(τελεία\) περασμένη σαν πρώτη παράμετρος θα εκκινήσει το διαλογικό κέλυφος Harbour\.
 
 
   - \.hb, \.hrb ή \.dbf αρχείο δοσμένο ως πρώτη παραμέτρος θα εκτελεστεί σαν σενάριο Harbour\. Αν το όνομα\-αρχείου δεν περιέχει ορίσματα μονοπατιών, θα αναζητηθεί στο τρέχοντα κατάλογο εργασίας και στο  PATH\. Αν δεν δόθηκε κατάληξη, θα αναζητηθούν \.hb and \.hrb καταλήξεις, με αυτή τη σειρά\. Αρχείο \.dbf θα ανοιχτεί αυτόματα σε κατάσταση shared και θα ξεκινήσει το διαλογικό shell του Harbour\. Μη standard καταλήξεις θα ανιχνευτούν αυτομάτως για πηγαίους και προκατασεκυασμένους τυπους\. Σημειώστε, για σενάρια Harbour, η κωδικοσελίδα ορίζεται απο προεπιλογή σε  UTF\-8\. Το εξ'ορισμού βασικό αρχείο header 'hb\.ch'  συμπεριλαμβάνεται αυτόματα, δηλ\. \#included\. Προεπιλεγμένη μορφή ημερ/νίας είναι η πρότυπη κατα  ISO μορφή: εεεε\-μμ\-ηη\. Προεπιλεγμένο GT είναι το 'gtcgi', εκτός αν ανιχνευτούν CUI κλήσεις πλήρους οθόνης, οπότε επιλέγεται αυτομάτως 'gtwin' \[\*\] \(εκτός για τις INIT PROCEDUREs\)\.
