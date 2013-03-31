@@ -1,36 +1,13 @@
 # build generated files
 /include/hbverbld.h
-*.hbl
-*.hbd
-
-# build targets
-lib/aix/
-lib/android/
-lib/beos/
-lib/bsd/
-lib/cygwin/
-lib/darwin/
-lib/dos/
-lib/hpux/
-lib/linux/
-lib/minix/
-lib/os2/
-lib/qnx/
-lib/sunos/
-lib/symbian/
-lib/vxworks/
-lib/wce/
-lib/win/
-
-# misc build files
 bin/*/
+lib/*/
+!lib/3rd/
 obj
 .hbmk/
+*.hbl
+*.hbd
 *.hbr
-
-# misc junk
-.DS_Store
-*.bak
 
 # 'install'-ed binaries
 *.exe
@@ -47,3 +24,7 @@ obj
 
 # not hosted contribs
 /addons/
+
+# misc junk
+.DS_Store
+*.bak
