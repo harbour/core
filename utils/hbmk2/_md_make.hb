@@ -26,23 +26,19 @@ PROCEDURE Main()
    LOCAL cPO_Dir := cBase + hb_DirSepToOS( "po/" )
    LOCAL cDoc_Dir := cBase + hb_DirSepToOS( "doc/" )
 
-   ? "preparing"
-
-   FOR EACH file IN Directory( cPO_Dir + "*.po" )
-      hb_run( hb_StrFormat( "hbi18n -q -g -o%1$s %2$s", ;
-         hb_FNameDir( cMain ) + hb_FNameName( file[ F_NAME ] ) + ".hbl", ;
-         cPO_Dir + file[ F_NAME ] ) )
-   NEXT
-
    cTemp := hb_FNameExtSet( cMain, ".hrb" )
 
-   hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -gh -o%2$s", cMain, cTemp ) )
-
    ? "generating .md help:"
+
+   hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -gh -o%2$s", cMain, cTemp ) )
 
    FOR EACH cLang IN hb_ATokens( cBaseLang + "," + hb_regexAll( "-lng=([a-zA-Z0-9_\-,]*)", hb_MemoRead( hb_FNameExtSet( cMain, ".hbp" ) ),,,,, .T. )[ 1 ][ 2 ], "," )
 
       ?? "", cLang
+
+      hb_run( hb_StrFormat( "hbi18n -q -g %1$s -o%2$s", ;
+         cPO_Dir + hb_FNameName( cMain ) + "." + cLang + ".po", ;
+         hb_FNameDir( cMain ) + hb_FNameName( cMain ) + "." + cLang + ".hbl" ) )
 
       file := cDoc_Dir + hb_FNameName( cMain ) + "." + cLang + ".md"
       hb_run( hb_StrFormat( "hbrun %1$s %2$s > %3$s", cTemp, StrTran( cDocOptions, "{LANG}", cLang ), file ) )
@@ -54,12 +50,11 @@ PROCEDURE Main()
          hb_run( hb_StrFormat( "hbrun %1$s -lang=%2$s -longhelpmdsh > %3$s", cTemp, cLang, file ) )
          FToNativeEOL( file )
       ENDIF
+
+      FErase( hb_FNameDir( cMain ) + hb_FNameName( cMain ) + "." + cLang + ".hbl" )
    NEXT
 
    FErase( cTemp )
-
-   AEval( Directory( hb_FNameDir( cMain ) + "*.hbl" ), ;
-      {| tmp | FErase( hb_FNameDir( cMain ) + tmp[ F_NAME ] ) } )
 
    RETURN
 

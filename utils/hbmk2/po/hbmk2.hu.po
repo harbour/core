@@ -88,12 +88,12 @@ msgstr "Figyelem: Hibás -main= érték figyelmen kívül hagyva: %1$s"
 #: utils/hbmk2/hbmk2.prg:2900
 #, c-format
 msgid "Warning: Invalid -request= value ignored: %1$s"
-msgstr ""
+msgstr "Figyelem: Hibás -request= érték figyelmen kívül hagyva: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:3022
 #, c-format
 msgid "Warning: Ignored unsupported codepage value: %1$s"
-msgstr ""
+msgstr "Figyelem: Nem támogatott kódlap figyelmen kívül hagyva: %1$s"
 
 #: utils/hbmk2/hbmk2.prg:3070
 #, c-format

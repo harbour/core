@@ -36,8 +36,8 @@ PROCEDURE Main( cLogin )
       ?? "", cLang
 
       hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X " + ;
-         "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/ " + ;
-         "-o %5$s", ;
+         "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
+         " -o %5$s", ;
          cLogin, cProject, hb_FNameName( cMain ), cLang, cTemp ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTemp ) ), @json ) > 0
