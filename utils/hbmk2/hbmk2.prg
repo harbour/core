@@ -16351,6 +16351,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration " + ;
          "dependent. This help was generated on '%1$s' host platform." ), ;
          Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
+   /* TOFIX: hb.ch is only included at interactive shell prompt, not in scripts. */
 
    LOCAL aHdr_Desc := { ;
       "", ;
