@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:07+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -48,11 +48,11 @@ msgstr "Ο αυτόματα εντοπισμένος μεαταγλωττιστ�
 
 #, c-format
 msgid "Autodetected C compiler: %1$s"
-msgstr "Ανιχνεύτηκε αυτόματα o μεταγλωττιστής C : %1$s"
+msgstr "Ανιχνεύτηκε αυτόματα o μεταγλωττιστής C: %1$s"
 
 #, c-format
 msgid "Choose a C compiler by using -comp= option.\nYou have the following choices on your platform: %1$s"
-msgstr "Επιλέξτε ένα μεταγλωττιστή C χρησιμοποιώντας την επιλογή -comp= .\nΕχετε τις εξής επιλογές στην πλατφόρμα σας: %1$s"
+msgstr "Επιλέξτε ένα μεταγλωττιστή C χρησιμοποιώντας την επιλογή -comp=.\nΕχετε τις εξής επιλογές στην πλατφόρμα σας: %1$s"
 
 #, c-format
 msgid "Could not detect any supported C compiler in your PATH.\nSetup one or set -comp= option to one of these values: %1$s"
@@ -68,11 +68,11 @@ msgstr "Χρήση Harbour: %1$s %2$s %3$s %4$s %5$s %6$s"
 
 #, c-format
 msgid "Using C compiler: %1$s"
-msgstr "Χρήση μεταγλωττιστή C : %1$s"
+msgstr "Χρήση μεταγλωττιστή C: %1$s"
 
 #, c-format
 msgid "Using C compiler: %1$s [%2$s...%3$s]"
-msgstr "Χρήση μεταγλωττιστή C : %1$s [%2$s...%3$s]"
+msgstr "Χρήση μεταγλωττιστή C: %1$s [%2$s...%3$s]"
 
 #, c-format
 msgid "Processing local make script: %1$s"
@@ -92,7 +92,7 @@ msgstr "Προειδοποίηση: Mη επιτρεπή τιμή -main= αγν�
 
 #, c-format
 msgid "Warning: Invalid -request= value ignored: %1$s"
-msgstr "Προειδοποίηση: Αγνοήθηκε μη επιτρεπή τιμή -request= : %1$s"
+msgstr "Προειδοποίηση: Αγνοήθηκε μη επιτρεπή τιμή -request=: %1$s"
 
 #, c-format
 msgid "Warning: Invalid -gt value ignored: %1$s"
@@ -113,10 +113,6 @@ msgstr "Προσοχή: Γίνεται παράβλεψη του ρητά καθ
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)"
 msgstr "Προσοχή: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών header: %1$s (στην επιλογή %2$s)"
-
-#, c-format
-msgid "%1$s"
-msgstr "%1$s"
 
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
@@ -252,11 +248,11 @@ msgstr "Εντεταλμένη εργασία C/C++ μεταγλωττιστή #
 
 #, c-format
 msgid "C/C++ compiler command:"
-msgstr "Εντολή μεταγλωττιστή C/C++ :"
+msgstr "Εντολή μεταγλωττιστή C/C++:"
 
 #, c-format
 msgid "C/C++ compiler script:"
-msgstr "Σενάριο μεταγλωττιστή C/C++ :"
+msgstr "Σενάριο μεταγλωττιστή C/C++:"
 
 #, c-format
 msgid "Error: Running C/C++ compiler. %1$d"
@@ -368,7 +364,7 @@ msgstr "Προειδοποίηση: Εκτέλεση εντολής συμπίε
 
 #, c-format
 msgid "Warning: Code signing skipped, because no supported code signing tool could be found."
-msgstr "Προσοχη: Η σήμανση του κώδικα παρακάμφθηκε , διότι δεν βρέθηκε εργαλείο σήμανσης κώδικα."
+msgstr "Προσοχη: Η σήμανση του κώδικα παρακάμφθηκε, διότι δεν βρέθηκε εργαλείο σήμανσης κώδικα."
 
 #, c-format
 msgid "Code sign command:"
@@ -531,10 +527,6 @@ msgid "Error: Loading plugin: %1$s"
 msgstr "Λάθος: Φορτώματος plugin: %1$s"
 
 #, c-format
-msgid "plugin: %1$s"
-msgstr "plugin: %1$s"
-
-#, c-format
 msgid "Plugin %1$s returned at '%2$s': '%3$s'"
 msgstr "Το Plugin %1$s επιστράφηκε προς '%2$s': '%3$s'"
 
@@ -597,10 +589,6 @@ msgstr "Προειδοποίηση: Λάθος έκφρασης φίλτρου: 
 #, c-format
 msgid "Error: Cannot open file: %1$s"
 msgstr "Λάθος: Αδυναμία ανοίγματος αρχείου: %1$s"
-
-#, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
 
 #, c-format
 msgid "Error: Cannot create temporary unified .po file."
@@ -693,10 +681,6 @@ msgstr "(εγκαταστάθηκε)"
 #, c-format
 msgid "(not installed)"
 msgstr "(δεν εγκαταστάθηκε)"
-
-#, c-format
-msgid "%1$s %2$s:"
-msgstr "%1$s %2$s:"
 
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
@@ -900,7 +884,7 @@ msgstr "ενεργοποίηση/απενεργοποίηση incremental μεθ
 
 #, c-format
 msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of the name). Do not add core Harbour libraries, they are automatically added as needed. If <libname> starts with a '-' character, the library will be removed from the list of libraries at link time."
-msgstr "διασύνδεση της <libname> βιβλιοθήκης. Το <libname> πρέπει να είναι χωρίς μονοπάτι, κατάληξη και πρόθεμα 'lib' (εκτός αν είναι μέρος του ονόματος). Μη προσθέτετε τις βασικές βιβλιοθήκες Harbour, αυτές προστίθενται αυτόματα εφόσον χρειάζονται. Αν το <libname> αρχίζει με ένα χαρακτήρα '-' , η βιβλιοθήκη θα αφαιρεθεί από τη λίστα βιβλιοθηκών τη στιγμή της διασύνδεσης."
+msgstr "διασύνδεση της <libname> βιβλιοθήκης. Το <libname> πρέπει να είναι χωρίς μονοπάτι, κατάληξη και πρόθεμα 'lib' (εκτός αν είναι μέρος του ονόματος). Μη προσθέτετε τις βασικές βιβλιοθήκες Harbour, αυτές προστίθενται αυτόματα εφόσον χρειάζονται. Αν το <libname> αρχίζει με ένα χαρακτήρα '-', η βιβλιοθήκη θα αφαιρεθεί από τη λίστα βιβλιοθηκών τη στιγμή της διασύνδεσης."
 
 #, c-format
 msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time"
@@ -1084,7 +1068,7 @@ msgstr "υποχρεωση αναμονής για πάτημα πλήκτρου
 
 #, c-format
 msgid "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. If no VCS system is detected, a sequential number will be rolled automatically on each build."
-msgstr "δημιουργία header αρχείων .ch με πληροφορίες της τοπικής αποθήκες -local repository-. Προς το παρόν υποστηρίζονται τα Git, SVN, Mercurial, Bazaar, Fossil, CVS και Monotone.\nΤα header που θα δημιουργηθούν θα ορίσουν τη σταθερά _HBMK_VCS_TYPE_ στο όνομα του VCS που ανιχνεύτηκε και τη _HBMK_VCS_ID_ στο μοναδικό ID της τοπικής αποθήκης. Αν δεν ανιχνευτεί κάποιο VCS , ένα διαδοχικός αριθμός θα ενημερώνεται αυτόματα με κάθε μεταγλώττιση."
+msgstr "δημιουργία header αρχείων .ch με πληροφορίες της τοπικής αποθήκες -local repository-. Προς το παρόν υποστηρίζονται τα Git, SVN, Mercurial, Bazaar, Fossil, CVS και Monotone.\nΤα header που θα δημιουργηθούν θα ορίσουν τη σταθερά _HBMK_VCS_TYPE_ στο όνομα του VCS που ανιχνεύτηκε και τη _HBMK_VCS_ID_ στο μοναδικό ID της τοπικής αποθήκης. Αν δεν ανιχνευτεί κάποιο VCS, ένα διαδοχικός αριθμός θα ενημερώνεται αυτόματα με κάθε μεταγλώττιση."
 
 #, c-format
 msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
@@ -1455,10 +1439,6 @@ msgid "Exit codes (\"errorlevels\"):"
 msgstr "Κωδικοί εξόδου (\"errorlevels\"):"
 
 #, c-format
-msgid "<other>"
-msgstr "<other>"
-
-#, c-format
 msgid "when -run option is used, the exit code will be the one returned by the target executable"
 msgstr "όταν γίνει χρήση της επιλογής -run, κωδικός εξόδου θα είναι αυτός που θα επιστραφεί από το δημιουργημένο εκτελέσιμο."
 
@@ -1556,7 +1536,7 @@ msgstr "ειδικό .hbm αρχείο ενσωματομένο μέσα στο 
 
 #, c-format
 msgid "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s"
-msgstr "standard αρχείο .hbc που δέχεται αυτόματη επεξεργασία , αν είναι παρόν. Πιθανή(ές) τοποθεσίες (με σειρά προτεραιότητας) [*]: %1$s"
+msgstr "standard αρχείο .hbc που δέχεται αυτόματη επεξεργασία, αν είναι παρόν. Πιθανή(ές) τοποθεσίες (με σειρά προτεραιότητας) [*]: %1$s"
 
 #, c-format
 msgid "Harbour portable binary (aka precompiled Harbour script)"
@@ -1828,7 +1808,7 @@ msgstr "ο C μεταγλωττιστής-στόχος. Οπου <compiler> μπ
 
 #, c-format
 msgid "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
-msgstr "σκοπούμενη CPU. Οπου <cpu> μπορεί να είναι κάτι από : x86, x86_64, ia64, arm, mips, sh"
+msgstr "σκοπούμενη CPU. Οπου <cpu> μπορεί να είναι κάτι από: x86, x86_64, ia64, arm, mips, sh"
 
 #, c-format
 msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
@@ -1940,7 +1920,7 @@ msgstr "λίστα αδειών διαχωρισμένων με κενό διά�
 
 #, c-format
 msgid "space separated list of source repository references"
-msgstr "λίστα αναφορών πηγαίων αποθηκών -repository- , διαχωρισμένων με κενό διάστημα"
+msgstr "λίστα αναφορών πηγαίων αποθηκών -repository-, διαχωρισμένων με κενό διάστημα"
 
 #, c-format
 msgid "space separated list of values as in %1$s option"
@@ -1953,14 +1933,6 @@ msgstr "διακοπή της κατασκευής. Εμφάνιση του <msg
 #, c-format
 msgid "Predefined constants in sources:"
 msgstr "Προκαθορισμένες σταθερές σε πηγαία αρχεία:"
-
-#, c-format
-msgid "<depname>"
-msgstr "<depname>"
-
-#, c-format
-msgid "<hbcname>"
-msgstr "<hbcname>"
 
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
@@ -2041,10 +2013,6 @@ msgstr "Αποφόρτωση Harbour header."
 #, c-format
 msgid "Unload package."
 msgstr "Αποφόρτωση πακέτου"
-
-#, c-format
-msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
-msgstr "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
 
 #, c-format
 msgid "Add a binary object file to the project."

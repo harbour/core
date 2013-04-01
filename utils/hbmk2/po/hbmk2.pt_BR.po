@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 03:36+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -16,7 +16,7 @@ msgstr "Tecle algo para continuar..."
 
 #, c-format
 msgid "Error: Cannot nest projects deeper than %1$d levels"
-msgstr "Erro:Não é possível criar projetos aninhados em um nível mais profundo que %1$d"
+msgstr "Erro: Não é possível criar projetos aninhados em um nível mais profundo que %1$d"
 
 #, c-format
 msgid "Building sub-project (level %1$d): %2$s"
@@ -72,7 +72,7 @@ msgstr "Usando compilador C: %1$s"
 
 #, c-format
 msgid "Using C compiler: %1$s [%2$s...%3$s]"
-msgstr "Usando compilador C : %1$s [%2$s...%3$s]"
+msgstr "Usando compilador C: %1$s [%2$s...%3$s]"
 
 #, c-format
 msgid "Processing local make script: %1$s"
@@ -100,7 +100,7 @@ msgstr "Atenção: Opção -gt inválida sendo ignorada: %1$s"
 
 #, c-format
 msgid "Warning: Ignored unsupported codepage value: %1$s"
-msgstr "Atenção:Página de código não suportado ou ignorado valor: %1$s"
+msgstr "Atenção: Página de código não suportado ou ignorado valor: %1$s"
 
 #, c-format
 msgid "Warning: Option available only when using embedded Harbour compiler: %1$s"
@@ -128,7 +128,7 @@ msgstr "Atenção: Não posso encontrar %1$s"
 
 #, c-format
 msgid "Warning: Cannot find %1$s (referenced from %2$s)"
-msgstr "Atenção:Não é possível encontrar o %1$s (referenciado por %2$s)"
+msgstr "Atenção: Não é possível encontrar o %1$s (referenciado por %2$s)"
 
 #, c-format
 msgid "Warning: No source files were specified."
@@ -136,7 +136,7 @@ msgstr "Atenção: não foram especificados arquivos de código fonte."
 
 #, c-format
 msgid "Warning: Non-portable output filename: %1$s. Delete '%2$s' extension."
-msgstr "Atenção: Arquivo de saída não portável \"Non-portable\" : %1$s. Excluindo '%2$s' estensão."
+msgstr "Atenção: Arquivo de saída não portável \"Non-portable\": %1$s. Excluindo '%2$s' estensão."
 
 #, c-format
 msgid "Error: Working directory cannot be created: %1$s"
@@ -144,7 +144,7 @@ msgstr "Erro: Diretório de trabalho nao pode ser criado: %1$s"
 
 #, c-format
 msgid "Error: Temporary Working directory cannot be created: %1$s"
-msgstr "Erro:Diretório de trabalho temporário não pode ser criado: %1$s"
+msgstr "Erro: Diretório de trabalho temporário não pode ser criado: %1$s"
 
 #, c-format
 msgid "Creating VCS header: %1$s"
@@ -384,11 +384,11 @@ msgstr "Executando aplicativo:"
 
 #, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
-msgstr "Atenção:Desnecessário usar as opçoes %1$s e %2$s juntas em '%3$s' linha %4$d e %5$d."
+msgstr "Atenção: Desnecessário usar as opçoes %1$s e %2$s juntas em '%3$s' linha %4$d e %5$d."
 
 #, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
-msgstr "Atenção:Desnecessário usar as opções %1$s e %2$s juntas em interpretado de comando \"command-line\"."
+msgstr "Atenção: Desnecessário usar as opções %1$s e %2$s juntas em interpretado de comando \"command-line\"."
 
 #, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
@@ -420,7 +420,7 @@ msgstr "Criado ligação simbólica %1$s para %2$s"
 
 #, c-format
 msgid "Error: Failed creating import library %1$s from %2$s."
-msgstr "Erro:Falha criando importação de bibliotecas %1$s para %2$s."
+msgstr "Erro: Falha criando importação de bibliotecas %1$s para %2$s."
 
 #, c-format
 msgid "Warning: No import library sources were found."
@@ -516,11 +516,11 @@ msgstr "Atenção: Erro ao processar aninhamento em %1$s"
 
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
-msgstr "Atenção:Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
+msgstr "Atenção: Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
 
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored in automatic make file: %2$s"
-msgstr "Atenção:Projeto de referência (%1$s) ignorado automaticamente na construçao do arquivo: %2$s"
+msgstr "Atenção: Projeto de referência (%1$s) ignorado automaticamente na construçao do arquivo: %2$s"
 
 #, c-format
 msgid "Warning: File cannot be found: %1$s"
@@ -580,7 +580,7 @@ msgstr "Atenção: %1$s"
 
 #, c-format
 msgid ".pot merge error: %1$s"
-msgstr "Erro ao mesclar o arquivo .pot : %1$s"
+msgstr "Erro ao mesclar o arquivo .pot: %1$s"
 
 #, c-format
 msgid "Error: %1$s"
@@ -716,7 +716,7 @@ msgstr "criação stub falhou"
 
 #, c-format
 msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "Falha na compilação (Harbour, compilador C , compilador Recursos \"RC\")"
+msgstr "Falha na compilação (Harbour, compilador C, compilador Recursos \"RC\")"
 
 #, c-format
 msgid "failed in final assembly (linker or library manager)"
@@ -796,7 +796,7 @@ msgstr "criar biblioteca estática"
 
 #, c-format
 msgid "enable/disable incremental build mode (default: disabled)"
-msgstr "habilita o modo de compilação incremental"
+msgstr "habilita/desabilitar o modo de compilação incremental (padrão: desbilitado)"
 
 #, c-format
 msgid "link with static/shared libs"
@@ -836,7 +836,7 @@ msgstr "compilação limpa (em modo de compilação incremental)"
 
 #, c-format
 msgid "compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max"
-msgstr "comprimir executável/lib dinamica (precisa programa UPX)\n<level> pode ser : yes, no, min, max"
+msgstr "comprimir executável/lib dinamica (precisa programa UPX)\n<level> pode ser: yes, no, min, max"
 
 #, c-format
 msgid "create (or not) a map file"
@@ -852,7 +852,7 @@ msgstr "criar um executável GUI/console"
 
 #, c-format
 msgid "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)"
-msgstr "Criar biblioteca importação (no modo -hbdyn/-hbexe) nomeado para <output> (padrão:com o mesmo)"
+msgstr "Criar biblioteca importação (no modo -hbdyn/-hbexe) nomeado para <output> (padrão: com o mesmo)"
 
 #, c-format
 msgid "create import library (Windows only)"
@@ -1167,6 +1167,10 @@ msgid "register Harbour Script (.hb) with %1$s (Windows only)"
 msgstr "registre Harbour Script (.hb) com %1$s (somente para Windows)"
 
 #, c-format
+msgid "run build target"
+msgstr "executa programa gerado."
+
+#, c-format
 msgid "set output width to <n> characters (0=unlimited)."
 msgstr "ajuste a largura de saída para <n> caracteres (0=ilimitado)."
 
@@ -1451,8 +1455,16 @@ msgid "Filters (you can combine and/or negate them):"
 msgstr "Filtros (você pode combinar e / ou negá-los):"
 
 #, c-format
+msgid "build target is multi-threaded (see -mt option)"
+msgstr "construção alvo é \"multi-threaded\" (veja opção -mt)"
+
+#, c-format
 msgid "build target is single-threaded (see -st option)"
-msgstr "o alvo é \"single-threaded\" (veja opção -st)"
+msgstr "construção o alvo é \"single-threaded\" (veja opção -st)"
+
+#, c-format
+msgid "build target type. Where <targettype> is any of the values returned by macro variable ${hb_targettype}."
+msgstr "tipo de construção alvo. Onde <targettype> é qualquer um dos valores retornados por macro variável ${hb_targettype}."
 
 #, c-format
 msgid "console target (see -console option)"
@@ -1579,6 +1591,10 @@ msgid "space separated list of additional library paths"
 msgstr "espaço separa a lista de locais de bibliotecas adicionais"
 
 #, c-format
+msgid "stop the build. Display <msg>, if specified."
+msgstr "parar a geração. Mostrar <msg>, se especificado."
+
+#, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "quando dependência <depname> foi detectada (disponível nos fontes C)"
 
@@ -1604,7 +1620,7 @@ msgstr "quando dependência <depname> foi detectada em um local configurado pela
 
 #, c-format
 msgid "Shell API available in Harbour scripts:"
-msgstr "Shell API disponível nos scripts em Harbour :"
+msgstr "Shell API disponível nos scripts em Harbour:"
 
 #, c-format
 msgid "Display list of loaded Harbour header."
@@ -1648,7 +1664,7 @@ msgstr "Adicionar um arquivo de entrada C++ ao projeto."
 
 #, c-format
 msgid "Add a file to be installed, with an optional -instpath= group name."
-msgstr "adicione um arquivo para ser instalado , com o opcional -instpath= nome do grupo."
+msgstr "adicione um arquivo para ser instalado, com o opcional -instpath= nome do grupo."
 
 #, c-format
 msgid "Evaluate %1$s macro expression."
@@ -1736,7 +1752,7 @@ msgstr ".hb, .prg, .hrb ou .dbf"
 
 #, c-format
 msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "%1$s arquivo passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb serão pesquisados nessa ordem. arquivos .dbf serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Nota, para Scripts Harbour, a pagina de códigos \"codepage\" será em UTF-8 por padrão. O nucleo padrão de cabeçalhos 'hb.ch' será automaticamente incluido. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é '%2$s' , a menos que as chamadasCUI de tela cheia seja detectadas, quando '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\")."
+msgstr "%1$s arquivo passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb serão pesquisados nessa ordem. arquivos .dbf serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Nota, para Scripts Harbour, a pagina de códigos \"codepage\" será em UTF-8 por padrão. O nucleo padrão de cabeçalhos 'hb.ch' será automaticamente incluido. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é '%2$s', a menos que as chamadasCUI de tela cheia seja detectadas, quando '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\")."
 
 #, c-format
 msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
@@ -1767,6 +1783,10 @@ msgid "To run the interactive shell ('dot' prompt)"
 msgstr "Para rodar o \"shell\" interativo (interpretador de comandos)"
 
 #, c-format
+msgid "Examples to build and run Harbour portable binary (aka precompiled Harbour script):"
+msgstr "Exemplo para gerar e rodar Harbour binario portável (Também conhecida como Harbour script pré-compilado)"
+
+#, c-format
 msgid "To build"
 msgstr "Para gerar"
 
@@ -1779,20 +1799,32 @@ msgid "Examples to build a Harbour application:"
 msgstr "Exemplos para gerar uma aplicação Harbour:"
 
 #, c-format
+msgid "To build an application out of all .prg and .c sources residing in 'source' subdir"
+msgstr "Para gerar uma aplicação de todos os fontes .prg e .c residentes no subduretório"
+
+#, c-format
 msgid "To build an application using a project file"
 msgstr "Para gerar uma aplicação usando um arquivo de projeto"
 
 #, c-format
 msgid "To build an application using incremental mode"
-msgstr "Para construir uma aplicação usando o modo incremental"
+msgstr "Para gerar uma aplicação usando o modo incremental"
+
+#, c-format
+msgid "To build an application which links against Harbour dynamic libraries"
+msgstr "Para gerar uma aplicação sem linkar bibliotecas dinâmicas Harbour"
 
 #, c-format
 msgid "To build an application which uses a raw library"
-msgstr "Para construir uma aplicação que utiliza uma biblioteca raw"
+msgstr "Para gerar uma aplicação que utiliza uma biblioteca raw"
 
 #, c-format
 msgid "To build an application which uses a Windows resource"
-msgstr "Para construir uma aplicação que usa um recurso do Windows"
+msgstr "Para gerar uma aplicação que utiliza recursos do Windows"
+
+#, c-format
+msgid "To build multiple .prg sources into one application in incremental mode"
+msgstr "para gerar multiplos fontes .prg dentro de uma aplicação em modo incremental"
 
 #, c-format
 msgid "To build one simple .prg"

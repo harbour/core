@@ -294,7 +294,7 @@ Macro variables:
  - **$\{hb\_outputdir\}** directory dell'output
  - **$\{hb\_outputname\}** nome dell'output \(senza estensione\)
  - **$\{hb\_level\}** livello di recursione del sub\-progetto
- - **$\{&lt;depname&gt;\}** restituisce la directory di intestazione della dipendenza &lt;depname&gt; , o '1 ', se essa non viene rilevata
+ - **$\{&lt;depname&gt;\}** restituisce la directory di intestazione della dipendenza &lt;depname&gt;, o '1 ', se essa non viene rilevata
  - **$\{&lt;envvar&gt;\}** ritorna il valore della variabile d'ambiente &lt;envvar&gt;
   
 Filters \(you can combine and/or negate them\):  

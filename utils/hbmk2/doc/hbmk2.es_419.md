@@ -17,7 +17,7 @@ Opciones:
 
 
  - **\-o&lt;outname&gt;** nombre de archivo de salida
- - **\-l&lt;libname&gt;** enlaza con biblioteca &lt;libname&gt;\. &lt;libname&gt; no debe incluir ruta, extensión o prefijo 'lib' \(excepto que sea parte del nombre\)\. No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan\. Si &lt;libname&gt; comienza con un caracter '\-' , la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar\.
+ - **\-l&lt;libname&gt;** enlaza con biblioteca &lt;libname&gt;\. &lt;libname&gt; no debe incluir ruta, extensión o prefijo 'lib' \(excepto que sea parte del nombre\)\. No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan\. Si &lt;libname&gt; comienza con un caracter '\-', la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar\.
  - **\-L&lt;libpath&gt;** ruta adicional para buscar librerías
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** ruta adicional para buscar cabeceras
  - **\-static|\-shared** enlazar con librerías estáticas/compartidas
@@ -184,7 +184,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
 
 
  - **\-plat=&lt;platform&gt;** reemplaza la plataforma destino por defecto \(por defecto: automático\)
- - **\-cpu=&lt;cpu&gt;** reemplaza la CPU de destino por defecto \(por defecto:automática\) \(EXPERIMENTAL\)
+ - **\-cpu=&lt;cpu&gt;** reemplaza la CPU de destino por defecto \(por defecto: automática\) \(EXPERIMENTAL\)
  - **\-comp=&lt;compiler&gt;** reemplaza la autodetección del compilador C  
 Valor especial:  
 \- bld: usa la configuración de construcción original \(por defecto en \*nix\)
@@ -618,7 +618,7 @@ Códigos de salida \("errorlevels"\):
  - **2** compilador desconocido
  - **3** detección de Harbour fallida
  - **5** failed stub creation
- - **6** falló en compilación \(Harbour, compilador C , compilador de Recursos\)
+ - **6** falló en compilación \(Harbour, compilador C, compilador de Recursos\)
  - **7** falló en ensamblado final \(enlazador o administrador de bibliotecas\)
  - **8** no soportado
  - **9** fallo al crear directorio de trabajo
@@ -647,14 +647,14 @@ Notas:
 Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palabra\-clave&gt;\]\}\. Filtros pueden ser combinados usando los operadores '&amp;', '|' y agrupados en parénteses\. Ej\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Most \.hbc lines \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) and corresponding command\-line parameters will accept macro variables\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.
   - Tambien acepta Opciones de macros sustitución de comandos\. Incluya comando dentro de \`\`, y, si el comando contiene espacios, también entre comillas dobles\. F\.e\. "\-cflag==\`wx\-config \-cflags\`", o ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - Cuando se especifican múltiples opciones de tipo de construcción destino \(\-hblib, \-hbdyn, etc\.\) , solo se utilizará la primera, las demás serán ignoradas silenciosamente\.
+  - Cuando se especifican múltiples opciones de tipo de construcción destino \(\-hblib, \-hbdyn, etc\.\), solo se utilizará la primera, las demás serán ignoradas silenciosamente\.
   - Bibliotecas y archivos objeto construidos con/para CA\-Cl\*pper no funcionaran con ninguna plataforma/compilador seleccionado\.
   - Modos por defecto y soporte de características pueden variar por plataforma/compilador\.
   - No se necesita GNU Make u otra utilidad 'make' específica de un compilador C y MSYS \(en Windows\) para ejecutar hbmk2\.
   - \. \(punto\) pasado como primer parámetro activará la consola interactiva Harbour\.
 
 
-  - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un script Harbour\. Si el nombre del archivo no contiene componentes de ruta, será buscado en el directorio de trabajo actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y scripts precompilados\. Nota:, para los scripts Harbour, la página de códigos \(codepage\) es establecida a UTF\-8 por defecto\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\] se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
+  - el archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un script Harbour\. Si el nombre del archivo no contiene componentes de ruta, será buscado en el directorio de trabajo actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y scripts precompilados\. Nota: para los scripts Harbour, la página de códigos \(codepage\) es establecida a UTF\-8 por defecto\. El archivo de cabecera principal 'hb\.ch' es incluido \(\#include\) automáticamente\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\] se selecciona automáticamente \(excepto para INIT PROCEDURESs\)\.
   - Puede usar las teclas &lt;Alt\+V&gt; en la consola interactiva Harbour para pegar texto del portapapeles\.
   - Valores marcados con \[\*\] pueden ser dependientes de la plataforma huésped o de la configuración\. Esta ayuda ha sido generada en la plataforma huésped 'win' \.
 

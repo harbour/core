@@ -22,7 +22,7 @@ Opções
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** paths adicionais para pesquisa de arquivos headers
  - **\-static|\-shared** linkar com biliotecas estáticas/compartilhadas
  - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
- - **\-inc\[\-\]** habilita o modo de compilação incremental
+ - **\-inc\[\-\]** habilita/desabilitar o modo de compilação incremental \(padrão: desbilitado\)
  - **\-hbexe** criar um executável \(padrão\)
  - **\-hblib** criar biblioteca estática
  - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
@@ -43,7 +43,7 @@ Opções
  - **\-cpp=&lt;value&gt;** selecione modo C\+\+\.Os Valores permitidos são: def, yes, no
  - **\-map\[\-\]** criar \(ou não\) o arquivo map
  - **\-implib\[\-\]** Criar \(ou não\) uma biblioteca importação \(no modo \-hbdyn/\-hbexe\)\. O nome terá um sufixo adicionado\.
- - **\-implib=&lt;output&gt;** Criar biblioteca importação \(no modo \-hbdyn/\-hbexe\) nomeado para &lt;output&gt; \(padrão:com o mesmo\)
+ - **\-implib=&lt;output&gt;** Criar biblioteca importação \(no modo \-hbdyn/\-hbexe\) nomeado para &lt;output&gt; \(padrão: com o mesmo\)
  - **\-ln=&lt;link&gt;** criar um link simbólico apontando para &lt;output&gt; \(&lt;link&gt; é considerado em relação ao &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(ou não\) arquivos binários
  - **\-trace\[\-\]** exibir os comandos executados
@@ -60,7 +60,7 @@ Opções
 &lt;level&gt; pode ser: max, yes, low, no, def \(padrão: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
  - **\-compr=&lt;level&gt;** comprimir executável/lib dinamica \(precisa programa UPX\)  
-&lt;level&gt; pode ser : yes, no, min, max
+&lt;level&gt; pode ser: yes, no, min, max
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
  - **\-vcshead=&lt;file&gt;** gerar arquivo de cabeçalho "\. ch" com informações do repositório local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente\. O cabeçalho gerado irá definir a constante \_HBMK\_VCS\_TYPE\_ no pré\-processador com o nome detectados de VCS e \_HBMK\_VCS\_ID\_ com o ID único do repositório local\. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção\.  
 VCS \- sistema de controle de versão\.
@@ -146,7 +146,7 @@ Opções abaixo estão disponíveis em linha de comando:
  - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
 
 
- - **\-hbrun** run build target
+ - **\-hbrun** executa programa gerado\.
  - **\-hbraw** interromper após executar o compilador Harbour
  - **\-hbcmp|\-clipper** interromper após criar os arquivos objetos  
 criar um link ou copiar o hbmk2 para hbcmp/clipper resultará no mesmo efeito
@@ -304,9 +304,9 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
  - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
- - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
- - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
- - **\{st\}** o alvo é "single\-threaded" \(veja opção \-st\)
+ - **\{&lt;targettype&gt;\}** tipo de construção alvo\. Onde &lt;targettype&gt; é qualquer um dos valores retornados por macro variável $\{hb\_targettype\}\.
+ - **\{mt\}** construção alvo é "multi\-threaded" \(veja opção \-mt\)
+ - **\{st\}** construção o alvo é "single\-threaded" \(veja opção \-st\)
  - **\{gui\}** GUI alvo \(veja opção \-gui\)
  - **\{std\}** alvo console \(veja opção \-console\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
@@ -388,7 +388,7 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
 
  - **echo=&lt;msg&gt;** Exibir &lt;msg&gt;
  - **skip=\[&lt;msg&gt;\]** pular o processamento do resto do arquivo hbc\.\. Mostrar &lt;msg&gt;, se especificado\.
- - **stop=\[&lt;msg&gt;\]** stop the build\. Display &lt;msg&gt;, if specified\.
+ - **stop=\[&lt;msg&gt;\]** parar a geração\. Mostrar &lt;msg&gt;, se especificado\.
  - **sources=** adicionar lista arquivos separada por espaços como entrada
  - **headers=** adicionar lista separada por espaços de arquivos "\.ch" tipo "headers"
  - **libs=** adicionar lista separada por espaços de bibliotecas \(veja mais opções em \-l\)
@@ -470,7 +470,7 @@ Add a Windows resource input file to the project\.
  - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a binary object file to the project\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
-adicione um arquivo para ser instalado , com o opcional \-instpath= nome do grupo\.
+adicione um arquivo para ser instalado, com o opcional \-instpath= nome do grupo\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Texto de saída para stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
@@ -537,7 +537,7 @@ Plugin variables:
  - **"cWorkDir"** \-workdir= valor
  - **"nExitCode"** Código de saída atual
   
-Shell API disponível nos scripts em Harbour :  
+Shell API disponível nos scripts em Harbour:  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -571,7 +571,7 @@ $ hbmk2 \.
 $ hbmk2 myscript\.hb \[&lt;parâmetro\[s\]&gt;\]
 
 
-Examples to build and run Harbour portable binary \(aka precompiled Harbour script\):
+Exemplo para gerar e rodar Harbour binario portável \(Também conhecida como Harbour script pré\-compilado\)
 
 
  - **Para gerar**  
@@ -585,21 +585,21 @@ Exemplos para gerar uma aplicação Harbour:
 
  - **Para criar um simples \.prg**  
 $ hbmk2 hello\.prg
- - **To build multiple \.prg sources into one application in incremental mode**  
+ - **para gerar multiplos fontes \.prg dentro de uma aplicação em modo incremental**  
 $ hbmk2 mymain\.prg myfuncs\.prg \-inc
  - **Para gerar uma aplicação usando um arquivo de projeto**  
 $ hbmk2 myapp\.hbp
- - **Para construir uma aplicação usando o modo incremental**  
+ - **Para gerar uma aplicação usando o modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
  - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
 $ hbmk2 myapp\.prg hbct\.hbc
- - **Para construir uma aplicação que utiliza uma biblioteca raw**  
+ - **Para gerar uma aplicação que utiliza uma biblioteca raw**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
- - **Para construir uma aplicação que usa um recurso do Windows**  
+ - **Para gerar uma aplicação que utiliza recursos do Windows**  
 $ hbmk2 mymain\.prg myres\.rc
- - **To build an application which links against Harbour dynamic libraries**  
+ - **Para gerar uma aplicação sem linkar bibliotecas dinâmicas Harbour**  
 $ hbmk2 \-shared myapp\.prg
- - **To build an application out of all \.prg and \.c sources residing in 'source' subdir**  
+ - **Para gerar uma aplicação de todos os fontes \.prg e \.c residentes no subduretório**  
 $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
 
@@ -619,7 +619,7 @@ Códigos de saída \("errorlevels"\):
  - **2** compilador desconhecido
  - **3** falhou na detecção Harbour
  - **5** criação stub falhou
- - **6** Falha na compilação \(Harbour, compilador C , compilador Recursos "RC"\)
+ - **6** Falha na compilação \(Harbour, compilador C, compilador Recursos "RC"\)
  - **7** Falha na montagem final \(linker ou gerenciador de bibliotecas\)
  - **8** não suportado
  - **9** Falhou na criação do diretório de trabalho
@@ -654,7 +654,7 @@ Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&g
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb ou \.dbf arquivo passado como primeiro parâmetro irá rodar como Script Harbour\. Se o nome do arquivo não contiver componentes do "path", ele será procurado no diretório de trabalho atual e no "PATH"\.Se não é dada extensão, \.hb e \.hrb serão pesquisados nessa ordem\. arquivos \.dbf serão abertos no modo compartilhado "shared" e o "shell" interativo Harbour será lançado\. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré\-compilados\. Nota, para Scripts Harbour, a pagina de códigos "codepage" será em UTF\-8 por padrão\. O nucleo padrão de cabeçalhos 'hb\.ch' será automaticamente incluido\. O formato da data será "aaaa\-mm\-dd" padrão "ISO"\. O Gt padrão é 'gtcgi' , a menos que as chamadasCUI de tela cheia seja detectadas, quando 'gtwin' \[\*\] será automaticamente selecionado \(exeto para "INIT PROCEDUREs"\)\.
+  - \.hb, \.hrb ou \.dbf arquivo passado como primeiro parâmetro irá rodar como Script Harbour\. Se o nome do arquivo não contiver componentes do "path", ele será procurado no diretório de trabalho atual e no "PATH"\.Se não é dada extensão, \.hb e \.hrb serão pesquisados nessa ordem\. arquivos \.dbf serão abertos no modo compartilhado "shared" e o "shell" interativo Harbour será lançado\. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré\-compilados\. Nota, para Scripts Harbour, a pagina de códigos "codepage" será em UTF\-8 por padrão\. O nucleo padrão de cabeçalhos 'hb\.ch' será automaticamente incluido\. O formato da data será "aaaa\-mm\-dd" padrão "ISO"\. O Gt padrão é 'gtcgi', a menos que as chamadasCUI de tela cheia seja detectadas, quando 'gtwin' \[\*\] será automaticamente selecionado \(exeto para "INIT PROCEDUREs"\)\.
   - Voce pode usar &lt;Alt\+V&gt; no "shell do Harbour" para colar um texto do clipboard\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 

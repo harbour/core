@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 00:27+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -200,7 +200,7 @@ msgstr "Advertencia: archivo auxiliar .c no puede ser creado."
 
 #, c-format
 msgid "Warning: Stub helper .cpp program could not be created."
-msgstr "Advertencia:. Programa de Ayudante Stub .cpp podría no crearse."
+msgstr "Advertencia: Programa de Ayudante Stub .cpp podría no crearse."
 
 #, c-format
 msgid "Warning: Stub helper .rc file could not be created."
@@ -396,7 +396,7 @@ msgstr "Advertencia: se ignora el valor inválido de opción: %1$s"
 
 #, c-format
 msgid "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead."
-msgstr "Advertencia:Opción de compatibilidad : %1$s depreciada. Use '%2$s' en su lugar."
+msgstr "Advertencia: Opción de compatibilidad: %1$s depreciada. Use '%2$s' en su lugar."
 
 #, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
@@ -404,11 +404,11 @@ msgstr "Advertencia: Opción de bajo nivel peligrosa no recomendada: %1$s"
 
 #, c-format
 msgid "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead."
-msgstr "Advertencia: parámetro no portable : %1$s. Use directiva(s) %2$s en su lugar."
+msgstr "Advertencia: parámetro no portable: %1$s. Use directiva(s) %2$s en su lugar."
 
 #, c-format
 msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
-msgstr "Advertencia: parámetro no portable : %1$s. Use opcion(es) '%2$s' en su lugar."
+msgstr "Advertencia: parámetro no portable: %1$s. Use opcion(es) '%2$s' en su lugar."
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
@@ -636,7 +636,7 @@ msgstr "Advertencia: %1$s"
 
 #, c-format
 msgid ".pot merge error: %1$s"
-msgstr "Error al mezclar archivo .pot : %1$s"
+msgstr "Error al mezclar archivo .pot: %1$s"
 
 #, c-format
 msgid "Error: Cannot create file: %1$s"
@@ -784,7 +784,7 @@ msgstr "detección de Harbour fallida"
 
 #, c-format
 msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "falló en compilación (Harbour, compilador C , compilador de Recursos)"
+msgstr "falló en compilación (Harbour, compilador C, compilador de Recursos)"
 
 #, c-format
 msgid "failed in final assembly (linker or library manager)"
@@ -868,7 +868,7 @@ msgstr "habilita modo de compilación incremental"
 
 #, c-format
 msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of the name). Do not add core Harbour libraries, they are automatically added as needed. If <libname> starts with a '-' character, the library will be removed from the list of libraries at link time."
-msgstr "enlaza con biblioteca <libname>. <libname> no debe incluir ruta, extensión o prefijo 'lib' (excepto que sea parte del nombre). No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan. Si <libname> comienza con un caracter '-' , la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar."
+msgstr "enlaza con biblioteca <libname>. <libname> no debe incluir ruta, extensión o prefijo 'lib' (excepto que sea parte del nombre). No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan. Si <libname> comienza con un caracter '-', la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar."
 
 #, c-format
 msgid "link with static/shared libs"
@@ -1356,7 +1356,7 @@ msgstr "reemplaza lenguaje por defecto. <lang> es un código de lenguaje ISO."
 
 #, c-format
 msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
-msgstr "reemplaza la CPU de destino por defecto (por defecto:automática) (EXPERIMENTAL)"
+msgstr "reemplaza la CPU de destino por defecto (por defecto: automática) (EXPERIMENTAL)"
 
 #, c-format
 msgid "override default target platform (default: automatic)"
@@ -2236,7 +2236,7 @@ msgstr "Un archivo fuente sin extensión cargará el archivo .hbp, si este .hbp 
 
 #, c-format
 msgid "When multiple build target type selection options (-hblib, -hbdyn, etc.) are specified, the first one will be significant, the rest will be silently ignored."
-msgstr "Cuando se especifican múltiples opciones de tipo de construcción destino (-hblib, -hbdyn, etc.) , solo se utilizará la primera, las demás serán ignoradas silenciosamente."
+msgstr "Cuando se especifican múltiples opciones de tipo de construcción destino (-hblib, -hbdyn, etc.), solo se utilizará la primera, las demás serán ignoradas silenciosamente."
 
 #, c-format
 msgid ".hb, .hrb or .dbf"
@@ -2248,7 +2248,7 @@ msgstr ".hb, .prg, .hrb o .dbf"
 
 #, c-format
 msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "el archivo %1$s pasado como primer parámetro será ejecutado como un script Harbour. Si el nombre del archivo no contiene componentes de ruta, será buscado en el directorio de trabajo actual y en el PATH. Si no se especifica una extensión, se buscarán las extensiones .hb y .hrb en ese orden. Los archivos .dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado. Las extensiones no-estandar se autodetectarán para archivos de tipo fuente y scripts precompilados. Nota:, para los scripts Harbour, la página de códigos (codepage) es establecida a UTF-8 por defecto. El archivo de cabecera principal 'hb.ch' es incluido (#include) automáticamente. El formato de fecha por defecto es el estandar ISO: yyyy-mm-dd. El GT por defecto es '%2$s', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT '%3$s' [*] se selecciona automáticamente (excepto para INIT PROCEDURESs)."
+msgstr "el archivo %1$s pasado como primer parámetro será ejecutado como un script Harbour. Si el nombre del archivo no contiene componentes de ruta, será buscado en el directorio de trabajo actual y en el PATH. Si no se especifica una extensión, se buscarán las extensiones .hb y .hrb en ese orden. Los archivos .dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado. Las extensiones no-estandar se autodetectarán para archivos de tipo fuente y scripts precompilados. Nota: para los scripts Harbour, la página de códigos (codepage) es establecida a UTF-8 por defecto. El archivo de cabecera principal 'hb.ch' es incluido (#include) automáticamente. El formato de fecha por defecto es el estandar ISO: yyyy-mm-dd. El GT por defecto es '%2$s', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT '%3$s' [*] se selecciona automáticamente (excepto para INIT PROCEDURESs)."
 
 #, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."

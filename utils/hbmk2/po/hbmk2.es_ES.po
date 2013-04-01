@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-03-31 20:54+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -200,7 +200,7 @@ msgstr "Advertencia: archivo auxiliar .c no puede ser creado."
 
 #, c-format
 msgid "Warning: Stub helper .cpp program could not be created."
-msgstr "Advertencia:. Programa de Ayudante Stub .cpp podría no crearse."
+msgstr "Advertencia: Programa de Ayudante Stub .cpp podría no crearse."
 
 #, c-format
 msgid "Warning: Stub helper .rc file could not be created."
@@ -636,7 +636,7 @@ msgstr "Advertencia: %1$s"
 
 #, c-format
 msgid ".pot merge error: %1$s"
-msgstr "Error al mezclar archivo .pot : %1$s"
+msgstr "Error al mezclar archivo .pot: %1$s"
 
 #, c-format
 msgid "Error: Cannot create file: %1$s"
