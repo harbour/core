@@ -104,8 +104,8 @@ VCS \- sistema de controle de versão\.
  - **\-rebuild** recriar \(em modo incremental\)
  - **\-rebuildall** recriar com os sub\-projetos \(em modo incremental\)
  - **\-clean** compilação limpa \(em modo de compilação incremental\)
- - **\-workdir=&lt;dir&gt;** working directory  
-\(default: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] in incremental mode, OS temp directory otherwise\)
+ - **\-workdir=&lt;dir&gt;** diretório de trabalho  
+\(padrão: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] no modo incremental, outra forma diretório temporário do sistema operacional "OS temp directory"\)
 
 
  - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
@@ -151,8 +151,8 @@ Opções abaixo estão disponíveis em linha de comando:
  - **\-hbraw** interromper após executar o compilador Harbour
  - **\-hbcmp|\-clipper** interromper após criar os arquivos objetos  
 criar um link ou copiar o hbmk2 para hbcmp/clipper resultará no mesmo efeito
- - **\-hbcc** accept raw C flags  
-create link/copy hbmk2 to hbcc for the same effect
+ - **\-hbcc** aceita raw C flags  
+cria link/copia hbmk2 para hbcc para o mesmo efeito
  - **\-hblnk** parâmetros específicos do linkeditor\.
  - **\-autohbm\[\-\]** enable \(or disable\) processing of hbmk\.hbm in current directory \(default: yes\)
  - **\-hb10** habilita modo de compatibilidade 'Harbour 1\.0\.x'
@@ -243,7 +243,7 @@ Arquivos:
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
- - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
+ - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
  - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
@@ -483,7 +483,7 @@ Texto de saída para stderr sem formatação\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Avaliar expressão macro hbmk2 \.
  - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
-Escape/quote filename for using it as external command parameter\.
+utilizar "Escape/quote" no nome de arquivo para usá\-lo como parâmetro de comando externo\.
  - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Converte o nome do arquivo para o formato requerido pelo plataforma/compilador C
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
@@ -495,9 +495,9 @@ Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) wi
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 mudar diretório e/ou extenção do nome do arquivo
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
-Encode function name according to Harbour compiler rules for forming HB\_FUNC\(\) function names in C code\.
+codificar os nomes de função de acordo com o compilador Harbour formatando os nomes das funçoes em código C "HB\_FUNC\(\)" de acordo as regras\.
  - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
-Strip double quote enclosure from a string\.
+Remover aspas duplas de uma string\.
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Converte matriz de strings para uma string\. O separador padão é um espaço simples\.
 

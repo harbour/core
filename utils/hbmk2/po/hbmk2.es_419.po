@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 13:28+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 18:57+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -2237,6 +2237,10 @@ msgstr "No se necesita GNU Make u otra utilidad 'make' específica de un compila
 #, c-format
 msgid "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler."
 msgstr "Bibliotecas y archivos objeto construidos con/para CA-Cl*pper no funcionaran con ninguna plataforma/compilador seleccionado."
+
+#, c-format
+msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command-line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgstr "La mayoría de las líneas .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) y sus parámetros de línea de comando correspondientes aceptarán variables macro. libpaths= tambien acepta %{hb_name} que se traduce al nombre del archivo .hbc buscado."
 
 #, c-format
 msgid "Multiple -l, -L, -i and <script> parameters are accepted."

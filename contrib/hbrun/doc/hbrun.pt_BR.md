@@ -11,7 +11,7 @@ Sintaxe:
 Descrições:  
 
 
-  hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
+  hbrun está habilitado a rodar scripts Harbour \(ambos fonte e pré\-compilado\), e dispõe também de um "prompt shell" interativo\.
   
 Opções abaixo estão disponíveis em linha de comando:  
 

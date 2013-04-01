@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 16:52+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 21:06+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -731,6 +731,10 @@ msgid "Error: Loading shell plugin: %1$s\n'%2$s'"
 msgstr "Erro: Carregando o shell plugin: %1$s\n'%2$s'"
 
 #, c-format
+msgid "Error: Interactive session not possible with %1$s terminal driver"
+msgstr "Erro: Não é possível sessão interativa com driver de terminal %1$s"
+
+#, c-format
 msgid "Enter password:"
 msgstr "Entre com a senha:"
 
@@ -1187,8 +1191,16 @@ msgid "use <pw> as password when signing executable (Windows and Darwin only)"
 msgstr "usar <pw> como senha ao assinar executável (somente Windows e Darwin)"
 
 #, c-format
+msgid "working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
+msgstr "diretório de trabalho\n(padrão: %1$s/<platform>/<compiler> [*] no modo incremental, outra forma diretório temporário do sistema operacional \"OS temp directory\")"
+
+#, c-format
 msgid "Options below are available on command-line:"
 msgstr "Opções abaixo estão disponíveis em linha de comando:"
+
+#, c-format
+msgid "accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect"
+msgstr "aceita raw C flags\ncria link/copia %1$s para hbcc para o mesmo efeito"
 
 #, c-format
 msgid "accept raw linker flags"
@@ -1465,6 +1477,10 @@ msgstr "sobrepor o diretório base de instalação Harbour"
 #, c-format
 msgid "Files:"
 msgstr "Arquivos:"
+
+#, c-format
+msgid "optional .hbm file residing in current working directory, which gets automatically processed before other options"
+msgstr "o arquivo opcional .hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções"
 
 #, c-format
 msgid "Harbour portable binary (aka precompiled Harbour script)"
@@ -1943,6 +1959,14 @@ msgid "Convert filename to the format required for the target platform/C compile
 msgstr "Converte o nome do arquivo para o formato requerido pelo plataforma/compilador C"
 
 #, c-format
+msgid "Encode function name according to Harbour compiler rules for forming HB_FUNC() function names in C code."
+msgstr "codificar os nomes de função de acordo com o compilador Harbour formatando os nomes das funçoes em código C \"HB_FUNC()\" de acordo as regras."
+
+#, c-format
+msgid "Escape/quote filename for using it as external command parameter."
+msgstr "utilizar \"Escape/quote\" no nome de arquivo para usá-lo como parâmetro de comando externo."
+
+#, c-format
 msgid "Evaluate %1$s macro expression."
 msgstr "Avaliar expressão macro %1$s ."
 
@@ -1965,6 +1989,10 @@ msgstr "Texto de saída para stdout."
 #, c-format
 msgid "Return relative path of -workdir= value from current working directory."
 msgstr "retorna o caminho relativo de -workdir= valor do diretório atual de trabalho."
+
+#, c-format
+msgid "Strip double quote enclosure from a string."
+msgstr "Remover aspas duplas de uma string."
 
 #, c-format
 msgid "%1$s option status"
@@ -2049,6 +2077,10 @@ msgstr "Voce pode usar <Alt+V> no \"shell do Harbour\" para colar um texto do cl
 #, c-format
 msgid "Description:"
 msgstr "Descrições:"
+
+#, c-format
+msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
+msgstr "%1$s está habilitado a rodar scripts Harbour (ambos fonte e pré-compilado), e dispõe também de um \"prompt shell\" interativo."
 
 #, c-format
 msgid "License:"
