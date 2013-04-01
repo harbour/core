@@ -1158,17 +1158,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
-msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:15838
-#, c-format
-msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1178,12 +1168,17 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1193,12 +1188,17 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
+msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:15838
+#, c-format
 msgid "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1448,12 +1448,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
+msgid "pass single flag to C compiler"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
 #, c-format
-msgid "pass single flag to C compiler"
+msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15838
@@ -1898,12 +1898,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15938
 #, c-format
-msgid "mode script runner / interactive shell in debug mode"
+msgid "mode script runner / interactive shell"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15938
 #, c-format
-msgid "mode script runner / interactive shell"
+msgid "mode script runner / interactive shell in debug mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15938 utils/hbmk2/hbmk2.prg:15938 utils/hbmk2/hbmk2.prg:15938 utils/hbmk2/hbmk2.prg:15938
@@ -1958,7 +1958,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
 #, c-format
-msgid "options to be passed to linker (static library) (before command-line options)"
+msgid "options to be passed to linker (dynamic library) (before command-line options)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
@@ -1968,7 +1968,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
 #, c-format
-msgid "options to be passed to linker (dynamic library) (before command-line options)"
+msgid "options to be passed to linker (static library) (before command-line options)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
@@ -1983,12 +1983,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
 #, c-format
-msgid "override C compiler executable suffix (gcc compiler families only)"
+msgid "override C compiler executable prefix (gcc compiler families only)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
 #, c-format
-msgid "override C compiler executable prefix (gcc compiler families only)"
+msgid "override C compiler executable suffix (gcc compiler families only)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:15987
@@ -2308,7 +2308,12 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
 #, c-format
-msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
+msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16104
+#, c-format
+msgid "filter will pass if ${MACRO} value is larger than <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
@@ -2318,12 +2323,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
 #, c-format
-msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16104
-#, c-format
-msgid "filter will pass if ${MACRO} value is larger than <value> (case insensitive)."
+msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16104
@@ -3013,22 +3013,22 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application using incremental mode"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16438
-#, c-format
 msgid "To build an application using a project file"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
-msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
+msgid "To build an application using incremental mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438
 #, c-format
 msgid "To build an application which links against Harbour dynamic libraries"
+msgstr ""
+
+#: utils/hbmk2/hbmk2.prg:16438
+#, c-format
+msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16438

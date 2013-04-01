@@ -911,16 +911,20 @@ msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies wh
 msgstr "<d> es el nombre de la dependencia. <f> puede ser 'yes' o 'no', especifica si la dependencia es opcional. Por defecto: no"
 
 #, c-format
+msgid "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified."
+msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la dependencia de un paquete. Varios encabezados alternativos pueden ser especificados."
+
+#, c-format
 msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
 msgstr "<d> es el nombre de la dependencia. <n> nombre de la dependencia de un paquete. Se puede especificar varias veces."
 
 #, c-format
-msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
-msgstr "<d> es el nombre de la dependencia. Establecer nombre generado de biblioteca de importación a <lib>"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
+msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
 
 #, c-format
-msgid "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified."
-msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la dependencia de un paquete. Varios encabezados alternativos pueden ser especificados."
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
 
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
@@ -931,16 +935,12 @@ msgid "<d> is the name of the dependency. Add <i> to the header detection path l
 msgstr "<d> es el nombre de la dependencia. Anadir <i> a la lista de rutas de detección de encabezados."
 
 #, c-format
-msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr "<d> es el nombre de la dependencia. Anadir <dll> a la lista fuente de la biblioteca de importación."
-
-#, c-format
 msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
 msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
 
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>"
-msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
+msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
+msgstr "<d> es el nombre de la dependencia. Establecer nombre generado de biblioteca de importación a <lib>"
 
 #, c-format
 msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied."
@@ -1072,7 +1072,7 @@ msgstr "heredar flags de Harbour: todos/ninguno (por defecto)"
 
 #, c-format
 msgid "link with <framework> framework (Darwin only)"
-msgstr "Enlace con marco <framework> (Sólo Darwin )"
+msgstr "Enlace con marco <framework> (Sólo Darwin)"
 
 #, c-format
 msgid "link with all static libs"
@@ -1155,12 +1155,12 @@ msgid "pass single flag to resource compiler (Windows only)"
 msgstr "pasar flags a compilador de recursos (sólo para Windows)"
 
 #, c-format
-msgid "pass single raw option to linker (executable) after the library list. Use with caution."
-msgstr "pasar una sola opción al enlazador (ejecutable) después de la lista de bibliotecas. Usar con precaución."
-
-#, c-format
 msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
 msgstr "pasar una sola opción al enlazador (biblioteca dinámica) después de la lista de bibliotecas. Usar con precaución."
+
+#, c-format
+msgid "pass single raw option to linker (executable) after the library list. Use with caution."
+msgstr "pasar una sola opción al enlazador (ejecutable) después de la lista de bibliotecas. Usar con precaución."
 
 #, c-format
 msgid "rebuild (in incremental build mode)"
@@ -1423,6 +1423,10 @@ msgid "options to be passed to Harbour compiler (before command-line options)"
 msgstr "opciones para pasar al compilador Harbour (antes de las opciones de línea de comandos)"
 
 #, c-format
+msgid "options to be passed to linker (dynamic library) (before command-line options)"
+msgstr "opciones para ser enviadas al enlazador (librería dinámica) (antes de las opciones de la linea de comandos)"
+
+#, c-format
 msgid "options to be passed to linker (executable) (before command-line options)"
 msgstr "opciones para ser enviadas al enlazador (ejecutable) (antes de las opciones de la linea de comandos)"
 
@@ -1431,16 +1435,8 @@ msgid "options to be passed to linker (static library) (before command-line opti
 msgstr "opciones para ser enviadas al enlazador (librería estática) (antes de las opciones de la linea de comandos)"
 
 #, c-format
-msgid "options to be passed to linker (dynamic library) (before command-line options)"
-msgstr "opciones para ser enviadas al enlazador (librería dinámica) (antes de las opciones de la linea de comandos)"
-
-#, c-format
 msgid "options to be passed to resource compiler (before command-line options) (Windows only)"
 msgstr "opciones a pasar al compilador de recursos (antes de las opciones de línea de comandos)(sólo Windows)"
-
-#, c-format
-msgid "override C compiler executable suffix (gcc compiler families only)"
-msgstr "Sustituir el sufijo del ejecutable del compilador de C (sólo para la familia de compiladores gcc)"
 
 #, c-format
 msgid "override C compiler executable directory (gcc compiler families only)"
@@ -1449,6 +1445,10 @@ msgstr "Sustituir el directorio del compilador de C (sólo para la familia de co
 #, c-format
 msgid "override C compiler executable prefix (gcc compiler families only)"
 msgstr "Sustituir el prefijo del ejecutable del compilador de C (sólo para la familia de compiladores gcc)"
+
+#, c-format
+msgid "override C compiler executable suffix (gcc compiler families only)"
+msgstr "Sustituir el sufijo del ejecutable del compilador de C (sólo para la familia de compiladores gcc)"
 
 #, c-format
 msgid "override C compiler version autodetection (gcc and msvc compiler families only). Format: <15><00>[.<00>] = <major><minor>[.<revision>]"
@@ -1691,12 +1691,12 @@ msgid "add space separated list of .ch format headers as standard header"
 msgstr "añadir una lista de archivos de cabecera .ch separados por espacios como cabeceras estándar"
 
 #, c-format
-msgid "add space separated list of libraries as system libraries (before regular libraries)"
-msgstr "añadir lista de bibliotecas separadas por espacios como bibliotecas del sistema (antes de las bibliotecas normales)"
-
-#, c-format
 msgid "add space separated list of libraries (see more at -l option)"
 msgstr "añadir lista de bibliotecas separadas por espacios (ver más en la opción -l)"
+
+#, c-format
+msgid "add space separated list of libraries as system libraries (before regular libraries)"
+msgstr "añadir lista de bibliotecas separadas por espacios como bibliotecas del sistema (antes de las bibliotecas normales)"
 
 #, c-format
 msgid "display <msg>"
@@ -1759,12 +1759,12 @@ msgid "return the header directory where <depname> was detected, or empty if it 
 msgstr "devuelve el directorio de los archivos de cabecera donde <depname> ha sido detectado, o vacio si no."
 
 #, c-format
-msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
-msgstr "cuando la dependencia <depname> se detectó en la localización configurada por la opción -decincpathlocal="
-
-#, c-format
 msgid "when <depname> dependency was detected"
 msgstr "cuando la dependencia <depname> se detectó"
+
+#, c-format
+msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
+msgstr "cuando la dependencia <depname> se detectó en la localización configurada por la opción -decincpathlocal="
 
 #, c-format
 msgid "Shell API available in Harbour scripts:"

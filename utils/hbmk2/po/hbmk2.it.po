@@ -759,12 +759,12 @@ msgid "when a Harbour source file is run as a shell script"
 msgstr "quando un file sorgente Harbour è eseguito come uno script di shell"
 
 #, c-format
-msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
-msgstr "quando la dipendenza <depname> è stata rilevata nella locazione configurata da -depincpathlocal= opzione"
-
-#, c-format
 msgid "when <depname> dependency was detected"
 msgstr "quando la dipendenza <depname> è stata rilevata"
+
+#, c-format
+msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
+msgstr "quando la dipendenza <depname> è stata rilevata nella locazione configurata da -depincpathlocal= opzione"
 
 #, c-format
 msgid "Display list of loaded Harbour header."
@@ -899,16 +899,16 @@ msgid "To build an application out of all .prg and .c sources residing in 'sourc
 msgstr "Per compilare un'applicazione esterna a tutti i sorgenti .prg e .c residenti nella sottocartella 'source'"
 
 #, c-format
-msgid "To build an application which uses a Windows resource"
-msgstr "Per compilare un'applicazione che usa una risorsa Windows"
+msgid "To build an application which links against Harbour dynamic libraries"
+msgstr "Per compilare un'applicazione che si linka a librerie dinamiche Harbour"
 
 #, c-format
 msgid "To build an application which uses a raw library"
 msgstr "Per compilare un'applicazione che utilizza direttamente una libreria"
 
 #, c-format
-msgid "To build an application which links against Harbour dynamic libraries"
-msgstr "Per compilare un'applicazione che si linka a librerie dinamiche Harbour"
+msgid "To build an application which uses a Windows resource"
+msgstr "Per compilare un'applicazione che usa una risorsa Windows"
 
 #, c-format
 msgid "To build multiple .prg sources into one application in incremental mode"

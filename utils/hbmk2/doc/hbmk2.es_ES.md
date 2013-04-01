@@ -82,7 +82,7 @@ Opciones:
 
  - **\-bldf\[\-\]** heredar flags de Harbour: todos/ninguno \(por defecto\)
  - **\-bldf=\[p\]\[c\]\[l\]** heredar todos los flags \.prg/\.c/linker \(o ninguno\) desde construcción de Harbour
- - **\-F&lt;framework&gt;** Enlace con marco &lt;framework&gt; \(Sólo Darwin \)
+ - **\-F&lt;framework&gt;** Enlace con marco &lt;framework&gt; \(Sólo Darwin\)
  - **\-prgflag=&lt;f&gt;** pasar flags a Harbour
  - **\-cflag=&lt;f&gt;** pasar flags a compilador C
  - **\-resflag=&lt;f&gt;** pasar flags a compilador de recursos \(sólo para Windows\)

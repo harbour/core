@@ -35,7 +35,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-request=&lt;func&gt;** εξαναγκασμός συνάρτησης/λειτουργίας να διασυνδεθεί
  - **\-fullstatic** διασύνδεση με όλες τις static βιβλιοθήκες
  - **\-pic\[\-\]** δημιουργία position independent αντικειμενικού κώδικα \(πάντα ενεροπιημένο στα μοντέλα \-hbdyn/\-hbdynvm\)
- - **\-\[full|fix\]shared** δημιούργησε κοινόχρηστα Harbour binaries χωρίς/με απόλυτη αναφορά καταλόγου στη βιβλιοθήκη Harbour \(προεπιλογή: ''fullshared'' οταν το Harbour είναι εγκατεστημένο σε περιοχή συστήματος, αλλοιώς 'fixshared'\) \(επιλογή fix/full μόνο σε \*nix \)
+ - **\-\[full|fix\]shared** δημιούργησε κοινόχρηστα Harbour binaries χωρίς/με απόλυτη αναφορά καταλόγου στη βιβλιοθήκη Harbour \(προεπιλογή: ''fullshared'' οταν το Harbour είναι εγκατεστημένο σε περιοχή συστήματος, αλλοιώς 'fixshared'\) \(επιλογή fix/full μόνο σε \*nix\)
  - **\-nulrdd\[\-\]** διασύνδεση με nulrdd
  - **\-debug\[\-\]** προσθήκη/παράλειψη πληροφοριών αποσφλαμάτωσης μεταγλωττιστή C\. Για αποσφαλμάτωση σε επίπεδο Harbour, χρησιμοποιείστε την συνηθισμένη επιλογή \-b του Harbour
  - **\-optim\[\-\]** εναλλαγή βελτιστοποιήσεων μεταγλωττιστή C \(προεπιλογή: on\)
@@ -67,7 +67,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-tshead=&lt;file&gt;** δημιουργία \.ch header αρχείου με πληροφορίες χρονοσήμανσης\. Το δημιουργημένο header θα ορίσει τις σταθερές προεπεξεργασίας \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ με την ημερ/νία\-ωρα της κατασκευής
  - **\-icon=&lt;file&gt;** ορίζει το &lt;file&gt; ως εικονίδιο της εφαρμογής\. Το &lt;file&gt; πρέπει να είναι σε μορφή υποστηριζόμενη από τη πλατφόρμα\-στόχο \(δεν υποστηρίζεται από μερικές πλατφόρμες/μεταγλωττιστές\)\. Σε Windows, υλοποιείται με τη δημιουργία και διασύνδεση ενός resource αρχείου\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
- - **\-sign=&lt;key&gt;** σήμανση εκτελέσιμου με το &lt;key&gt; \(μόνο σε Windows και Darwin \)\. Σε περιβάλλον Windows χρησιμοποιείται το signtool\.exe \(περιέχεται στο MS Windows SDK\) ή το posign\.exe \(περιέχεται στην Pelles C 7\), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα\.
+ - **\-sign=&lt;key&gt;** σήμανση εκτελέσιμου με το &lt;key&gt; \(μόνο σε Windows και Darwin\)\. Σε περιβάλλον Windows χρησιμοποιείται το signtool\.exe \(περιέχεται στο MS Windows SDK\) ή το posign\.exe \(περιέχεται στην Pelles C 7\), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα\.
  - **\-signpw=&lt;pw&gt;** χρήση &lt;pw&gt; ως συνθηματικού κατά την σήμανση του εκτελέσιμου \(μόνο σε Windows και Darwin\)
  - **\-instfile=&lt;g:file&gt;** προσθήκη &lt;file&gt; iστη λίστα αρχείων προς αντιγραφή στο μονοπάτι που ορίστηκε από την επιλογή \-instpath\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής \(πεζά/κεφαλαία ευαίσθητο\), πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Σε περίπτωση μη καθορισμού του &lt;file&gt;, η λίστα αρχείων σε αυτή την ομάδα θα εκκενωθεί\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
@@ -165,8 +165,8 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
- - **\-hbreg\[=global\]** καταγραφή σεναρίου Harbour \(\.hb\) μαζί με hbmk2 \(μόνο σε Windows \)
- - **\-hbunreg\[=global\]** αποκαταχώριση σεναρίου Harbour \(\.hb\) από hbmk2 \(μόνο σε Windows \)
+ - **\-hbreg\[=global\]** καταγραφή σεναρίου Harbour \(\.hb\) μαζί με hbmk2 \(μόνο σε Windows\)
+ - **\-hbunreg\[=global\]** αποκαταχώριση σεναρίου Harbour \(\.hb\) από hbmk2 \(μόνο σε Windows\)
 
 
  - **\-find &lt;text&gt;** δημιουργεί λίστα όλων των γνωστών συναρτήσεων Harbour που περιέχουν &lt;text&gt; στο όνομα τους, μαζί με τα πακέτα τους \(αδιάφορο παζών/κεφαλαίων, δέχεται παλλαπλές τιμές, μπορεί να περιέχει wildcard χαρακτήρες\)
@@ -325,10 +325,10 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\{allbcc\}** ο στοχευμένος μεταγλωττιστής C είναι bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** ο στοχευμένος μεταγλωττιστής C είναι pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** ο στοχευμένος μεταγλωττιστής C είναι icc\* \(icc, iccia64\)
- - **\{hb10\}** Κατάσταση συμβατότητας Harbour 1\.0\.x \( δες επιλογή \-hb10\)
- - **\{hb20\}** Κατάσταση συμβατότητας Harbour 2\.0\.x \( δες επιλογή \-hb20\)
- - **\{hb30\}** Κατάσταση συμβατότητας Harbour 3\.0\.x \( δες επιλογή \-hb30\)
- - **\{xhb\}** xhb μοντέλο \( δες επιλογή \-xhb\)
+ - **\{hb10\}** Κατάσταση συμβατότητας Harbour 1\.0\.x \(δες επιλογή \-hb10\)
+ - **\{hb20\}** Κατάσταση συμβατότητας Harbour 2\.0\.x \(δες επιλογή \-hb20\)
+ - **\{hb30\}** Κατάσταση συμβατότητας Harbour 3\.0\.x \(δες επιλογή \-hb30\)
+ - **\{xhb\}** xhb μοντέλο \(δες επιλογή \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** το φίλτρο θα περάσει αν το όνομα &lt;file&gt; ή &lt;dir&gt; υπάρχει στο δίσκο\.
  - **\{MACRO\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} δεν είναι άδεια και όχι ίση με '0' ή 'no' \(πεζά/κεφαλαία: αδιάφορο\)
  - **\{MACRO='&lt;value&gt;'\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} ισούται με την &lt;value&gt; \(ευαίσθητο σε πεζά/κεφαλαία\)
@@ -398,7 +398,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **hbcs=** ενσωμάτψση λίστας \.hbc αρχείων διαχωρισμένων με κενό διάστημα\. Επιτρέπονται ονόματα χωρίς την κατάληξη\. Οι αναφορές αυτές επεξεργάζονται επι τόπου\.
  - **autohbcs=** λίστα τιμών διαχωρισμένων με κενό διάστημα, όπως στην επιλογή \-autohbc=
  - **libpaths=** λίστα μονοπατιών, διαχωρισμένων με κενό διάστημα, για πρόσθετες βιβλιοθήκες
- - **incpaths=** προσθήκη διαχωρισμένης με κενό λίστας πρόσθετων μονοπατιών header \( για αμφότερα Harbour και C\)
+ - **incpaths=** προσθήκη διαχωρισμένης με κενό λίστας πρόσθετων μονοπατιών header \(για αμφότερα Harbour και C\)
  - **instfiles=** λίστα τιμών διαχωρισμένων με κενό διάστημα, όπως στην επιλογή \-instfile=
  - **instpaths=** λίστα τιμών διαχωρισμένων με κενό διάστημα, όπως στην επιλογή \-instpath=
  - **prgflags=** λίστα τιμών διαχωρισμένων με κενό διάστημα, όπως στην επιλογή \-prgflag=

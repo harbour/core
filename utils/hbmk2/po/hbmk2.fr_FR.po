@@ -151,12 +151,12 @@ msgid "pass single flag to import library creation command"
 msgstr "une seule passe poue la commande de création de librairie d'importation"
 
 #, c-format
-msgid "pass single raw option to linker (executable) after the library list. Use with caution."
-msgstr "édition des liens en une seule passe (exécutable) après la liste des librairies. A utiliser avec prudence."
-
-#, c-format
 msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
 msgstr "Passer une seule option bas-niveau à l'éditeur de liens (bibliothèque dynamique) après la liste de la bibliothèque. A utiliser avec prudence."
+
+#, c-format
+msgid "pass single raw option to linker (executable) after the library list. Use with caution."
+msgstr "édition des liens en une seule passe (exécutable) après la liste des librairies. A utiliser avec prudence."
 
 #, c-format
 msgid "rebuild with sub-projects (in incremental build mode)"
@@ -195,12 +195,12 @@ msgid "mode %1$s (emulate Clipper linker)"
 msgstr "mode %1$s (émule l'éditeur de lien de Clipper)"
 
 #, c-format
-msgid "mode script runner / interactive shell in debug mode"
-msgstr "mode exécution de script / shell interactif en mode debug"
-
-#, c-format
 msgid "mode script runner / interactive shell"
 msgstr "mode lancement de script/script interactif"
+
+#, c-format
+msgid "mode script runner / interactive shell in debug mode"
+msgstr "mode exécution de script / shell interactif en mode debug"
 
 #, c-format
 msgid "when -run option is used, the exit code will be the one returned by the target executable"
