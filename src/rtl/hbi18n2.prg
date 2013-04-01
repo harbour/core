@@ -321,31 +321,42 @@ STATIC FUNCTION __i18n_ItemToStr( item )
    LOCAL cSource := item[ _I18N_SOURCE ]
    LOCAL tmp
 
+   hb_default( @cSource, "" )
+
    /* first source occurrence */
    IF ( tmp := At( " ", cSource ) ) > 0
       cSource := Left( cSource, tmp - 1 )
    ENDIF
 
    IF ( tmp := RAt( ":", cSource ) ) > 0
-      cSource := Left( cSource, tmp - 1 ) + Str( Val( SubStr( cSource, tmp + 1 ) ), 10, 0 )
+      cSource := "~" + Left( cSource, tmp - 1 ) + Str( Val( SubStr( cSource, tmp + 1 ) ), 10, 0 )
    ENDIF
 
    RETURN cSource + item[ _I18N_MSGID, 1 ]
 
-FUNCTION __i18n_potArrayClean( aTrans, lSource, lEmptyTranslations, bTransformTranslation )
+FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTransformTranslation )
 
    LOCAL item
    LOCAL lEmpty
    LOCAL cString
 
-   hb_default( @lSource, .T. )
-   hb_default( @lEmptyTranslations, .T. )
+   hb_default( @lKeepSource, .T. )
+   hb_default( @lKeepVoidTranslations, .T. )
 
    FOR EACH item IN aTrans DESCEND
-      IF ! lEmptyTranslations
+      IF HB_ISEVALITEM( bTransformTranslation )
+         FOR EACH cString IN item[ _I18N_MSGSTR ]
+            cString := Eval( bTransformTranslation, cString, item[ _I18N_MSGID, cString:__enumIndex() ] )
+            IF ! HB_ISSTRING( cString )
+               hb_ADel( aTrans, item:__enumIndex(), .T. )
+               LOOP
+            ENDIF
+         NEXT
+      ENDIF
+      IF ! lKeepVoidTranslations
          lEmpty := .T.
          FOR EACH cString IN item[ _I18N_MSGSTR ]
-            IF ! Empty( cString )
+            IF ! Empty( cString ) .AND. !( cString == item[ _I18N_MSGID, cString:__enumIndex() ] )
                lEmpty := .F.
                EXIT
             ENDIF
@@ -355,12 +366,7 @@ FUNCTION __i18n_potArrayClean( aTrans, lSource, lEmptyTranslations, bTransformTr
             LOOP
          ENDIF
       ENDIF
-      IF HB_ISEVALITEM( bTransformTranslation )
-         FOR EACH cString IN item[ _I18N_MSGSTR ]
-            cString := Eval( bTransformTranslation, cString )
-         NEXT
-      ENDIF
-      IF ! lSource
+      IF ! lKeepSource
          item[ _I18N_SOURCE ] := ""
       ENDIF
    NEXT

@@ -70,7 +70,7 @@ There are several ways to help making Harbour better:
   - Always keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100KB),
-  use this [free service](http://dropcanvas.com)
+  use this [free service](http://dropcanvas.com).
 - Of course, there is more into Harbour contribution than writing
   code, so you're welcome to do so in other areas like documentation,
   helping fellow users, giving input on decisions, testing in
