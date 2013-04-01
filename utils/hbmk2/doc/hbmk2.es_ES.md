@@ -168,7 +168,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-hbunreg\[=global\]** unregister Harbour Script \(\.hb\) from hbmk2 \(Windows only\)
 
 
- - **\-find &lt;text&gt;** lists all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
+ - **\-find &lt;text&gt;** muestra un listado de las funciones conocidas de Harbour que contienen &lt;text&gt; en su nombre, junto a su paquete \(no es sensible a mayúsculas/minúsculas, acepta múltiples valores, puede contener caracteres comodín\)
 
 
  - **\-hbmake=&lt;file&gt;** convierte proyecto hbmake en un archivo \.hbp
@@ -176,10 +176,10 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-xhp=&lt;file&gt;** convierte un proyecto \.xhp \(xMate\) en un archivo \.hbp
 
 
- - **\-\-hbdirbin** output Harbour binary directory to stdout
- - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
- - **\-\-hbdirlib** output Harbour static library directory to stdout
- - **\-\-hbdirinc** output Harbour header directory to stdout
+ - **\-\-hbdirbin** envía el directorio de programas de Harbour a stdout\.
+ - **\-\-hbdirdyn** envía el directorio de bibliotecas dinámicas de Harbour a stdout\.
+ - **\-\-hbdirlib** envía el directorio de bibliotecas estáticas de Harbour a stdout\.
+ - **\-\-hbdirinc** envía el directorio de archivos de cabecera de Harbour a stdout\.
  - **\-\-hbinfo\[=nested\]** envia información de la construcción de Harbour a stdout\. La salida esta en formato JSON\. Los directorios incluidos siempre contienen barras inclinadas\. Cada bloque JSON es seguido de un byte 0x0A\.
 
 

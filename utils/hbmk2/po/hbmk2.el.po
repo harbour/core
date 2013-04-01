@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 12:22+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 14:12+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -108,7 +108,7 @@ msgstr "Προειδοποίηση: Επιλογή διαθέσιμη μόνο �
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in option %2$s)"
-msgstr "Προσοχή: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών βιβλιοθηκών: %1$s (στην επιλογή %2$s)"
+msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών βιβλιοθηκών: %1$s (στην επιλογή %2$s)"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)"
@@ -560,7 +560,7 @@ msgstr "Προειδοποίηση: Αδυναμία βαθύτερης εμφώ
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)"
-msgstr "Προσοχή: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών βιβλιοθηκών: %1$s (στην ντιρεκτίβα %2$s)"
+msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών βιβλιοθηκών: %1$s (στην ντιρεκτίβα %2$s)"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)"
@@ -975,6 +975,10 @@ msgid "control source header parsing (in incremental build mode)\n<m> can be: na
 msgstr "έλεγχος της ανάλυσης του πηγαίου header (σε αυξητικό -incremental- ρυθμό κατασκευής)\n<m> μπορεί να είναι: native (χρήση του μεταγλωττιστή για εξαγωγή των εξαρτήσεων), full (προεπιλογή, χρήση απλού αναλυτή κειμένου σε όλο το αρχείο), dep, off"
 
 #, c-format
+msgid "copy target file(s) to install path even if already up to date"
+msgstr "αντιγραφή του κατασκευασμένου αρχείου(ων) του έργου στο κατάλογο εγκατάστασης έστω κι αν είναι ενήμερο /up to date/"
+
+#, c-format
 msgid "create (or not) a map file"
 msgstr "δημιουργία (ή όχι) ενός map αρχείου"
 
@@ -1095,6 +1099,10 @@ msgid "link with all static libs"
 msgstr "διασύνδεση με όλες τις static βιβλιοθήκες"
 
 #, c-format
+msgid "link with multi/single-thread Harbour VM"
+msgstr "διασύνδεση με την πολυ/μονο-νηματική εικονική μηχανή Harbour VM"
+
+#, c-format
 msgid "link with nulrdd"
 msgstr "διασύνδεση με nulrdd"
 
@@ -1180,7 +1188,7 @@ msgstr "ανακατασκευή (σε incremental ρυθμό)"
 
 #, c-format
 msgid "rebuild with sub-projects (in incremental build mode)"
-msgstr "ανακατασκευή μαζί με τα υπο-έργα (σε αυξητική -incremental- μέθοδο κατασκευής)"
+msgstr "ανακατασκευή μαζί με τα υπο-έργα (με αυξητική -incremental- μέθοδο κατασκευής)"
 
 #, c-format
 msgid "recreate .po file, thus removing all obsolete entries in it"
@@ -1339,6 +1347,26 @@ msgid "long help in text viewer"
 msgstr "εκτεταμένη βοήθεια σε προβολή κειμένου"
 
 #, c-format
+msgid "output Harbour binary directory to stdout"
+msgstr "εξάγει τον κατάλογο /path/ των εκτελέσιμων Harbour στη stdout"
+
+#, c-format
+msgid "output Harbour build information to stdout. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte."
+msgstr "Εξαγωγή πληροφορίες κατασκευής του Harbour στην stdout. Το αποτέλεσμα είναι σε μορφή JSON. Τα περιλαμβανόμενα μονοπάτια πάντοτε περιέχουν κάθετες εμπρός παύλες. Κάθε JSON τμήμα ακολουθείται από ένα 0x0A χαρακτήρα."
+
+#, c-format
+msgid "output Harbour dynamic library directory to stdout"
+msgstr "εξάγει τον κατάλογο /path/ των δυναμικών βιβλιοθηκών Harbour στη stdout"
+
+#, c-format
+msgid "output Harbour header directory to stdout"
+msgstr "εξάγει τον κατάλογο /path/ των αρχείων Harbour στη stdout"
+
+#, c-format
+msgid "output Harbour static library directory to stdout"
+msgstr "εξάγει τον κατάλογο /path/ των στατικών βιβλιοθηκών Harbour στη stdout"
+
+#, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
 msgstr "επικάλυψη της αυτόματης ανίχνευσης μεταγλωττιστή C\nΕιδική τιμή:\n- bld: χρήση των πρωταρχικών ρυθμίσεων κατασκευής (προεπιλογή σε *nix)"
 
@@ -1359,6 +1387,10 @@ msgid "register Harbour Script (.hb) with %1$s (Windows only)"
 msgstr "καταχώριση συσχέτισης σεναρίου Harbour (.hb) με το %1$s (μόνο σε Windows -registry-)"
 
 #, c-format
+msgid "run build target"
+msgstr "εκτέλεση του κατασκευασμένου έργου"
+
+#, c-format
 msgid "set output width to <n> characters (0=unlimited)."
 msgstr "ορισμός του πλάτους εξόδου σε <n> χαρακτήρες (0=απεριόριστο)."
 
@@ -1369,6 +1401,10 @@ msgstr "εμφάνιση επιπέδου του υπο-έργου στις γρ
 #, c-format
 msgid "specify a build name"
 msgstr "ορισμός ονόματος κατασκευής"
+
+#, c-format
+msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate build targets."
+msgstr "καθορίζει ένα νέο έργο προς κατασκευή. το <script> μπορεί να είναι .prg (ή καμμία κατάληξη) ή .hbp αρχείο. Σημειώστε ότι τα αρχεία .hbp θεωρούνται αυτόματα ως ξεχωριστές κατασκευές."
 
 #, c-format
 msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
@@ -1533,6 +1569,10 @@ msgstr "αρχείο έργου. Μπορεί να περιέχει οποιοδ
 #, c-format
 msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
 msgstr "ειδικό .hbm αρχείο ενσωματομένο μέσα στο %1$s. Διαχειρίζεται τις λεπτομέρειες δημιουργίας μιας δυναμικής βιβλιοθήκης (κατά το πρότυπο των Harbour contribs)."
+
+#, c-format
+msgid "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)."
+msgstr "ειδικό .hbm αρχείο ενσωματωμένο μέσα στο %1$s. Διαχειρίζεται τις λεπτομέρειες της εγκατάστασης των κατασκευαζόμενων έργων και των σχετιζόμενων πακέτων αρχείων σε standard περιοχές (κατά το πρότυπο των Harbour contribs)."
 
 #, c-format
 msgid "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s"
@@ -1715,6 +1755,18 @@ msgid "Filters (you can combine and/or negate them):"
 msgstr "Φίλτρα (μπορείτε να τα συνδυάσετε και/ή να τα αναιρέσετε):"
 
 #, c-format
+msgid "build target is multi-threaded (see -mt option)"
+msgstr "το κατασκευαζόμενο έργο είναι πολυ-νηματικό /multi-threaded/ (δες επιλογή -mt)"
+
+#, c-format
+msgid "build target is single-threaded (see -st option)"
+msgstr "το κατασκευαζόμενο έργο είναι μονό-νηματικό /single-threaded/ (δες επιλογή -st)"
+
+#, c-format
+msgid "build target type. Where <targettype> is any of the values returned by macro variable ${hb_targettype}."
+msgstr "τύπος κατασκευής έργου. Οπου <targettype> είναι μια από τις τιμές που επιστρέφονται από την macro μεταβλητή ${hb_targettype}."
+
+#, c-format
 msgid "console target (see -console option)"
 msgstr "στόχος κονσόλας (δες επιλογή -console)"
 
@@ -1867,6 +1919,10 @@ msgid "add space separated list of libraries as system libraries (before regular
 msgstr "προσθήκη λίστας βιβλιοθηκών χωρισμένων με κενό διάστημα ως βιβλιοθήκες συστήματος (πρίν από άλλες βιβλιοθήκες)"
 
 #, c-format
+msgid "add space separated list of symbols to force link to the build target"
+msgstr "προσθήκη λίστας συμβόλων /ονοματα συναρτήσεων κ.λ.π/ διαχωρισμένα με κενό, που θα διασυνδεθούν υποχρεωτικά στο κατασκευαζόμενο έργο"
+
+#, c-format
 msgid "display <msg>"
 msgstr "εμφάνιση <msg>"
 
@@ -1937,6 +1993,10 @@ msgstr "Προκαθορισμένες σταθερές σε πηγαία αρχ
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "όταν ανιχνεύτηκε η εξάρτηση <depname> (διαθέσιμο σε πηγαίους κώδικες C)"
+
+#, c-format
+msgid "when <hbcname>.hbc package is linked to the build target. The value is the version= value from the .hbc file, converted to a decimal number, which is '1', if not specified. (available in Harbour sources)"
+msgstr "όταν το πακέτο <hbcname>.hbc είναι συνδεδεμένο στο έργο κατασκευής. Η τιμή είναι η version= τιμή απο το αρχείο .hbc, μετασχηματισμένη σε δεκαδικό αριθμό, ο οποίος είναι '1', αν δεν έχει οριστεί. (διαθέσιμο σε πηγαία αρχεία Harbour)"
 
 #, c-format
 msgid "when an .hb script is compiled as %1$s plugin"
@@ -2055,6 +2115,10 @@ msgid "Convert filename to have forward slash directory separators."
 msgstr "Μετατροπή του ονόματος αρχείου ωστε να έχει, ως διαχωριστικό καταλόγου, την εμπρός κάθετη παύλα / ."
 
 #, c-format
+msgid "Convert filename to the format required for the target platform/C compiler."
+msgstr "Μετατροπή ονόματος αρχείου στη μορφή που απαιτείται για την πλατφόρμα προορισμού/μεταγλωττιστή C."
+
+#, c-format
 msgid "Encode function name according to Harbour compiler rules for forming HB_FUNC() function names in C code."
 msgstr "Κωδικοποίηση ονόματος συνάρτησης σύμφωνα με τους κανόνες Harbour περί μορφοποίησης ονόματων των HB_FUNC() συναρτήσεων σε κώδικα C ."
 
@@ -2141,6 +2205,10 @@ msgstr "δες %1$s macro"
 #, c-format
 msgid "Notes:"
 msgstr "Σημειώσεις:"
+
+#, c-format
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new build target if specified on the command-line\n  <script.hbc>: package configuration file"
+msgstr "Το <script> μπορεί να είναι:\n<@script> ή <script.hbm>: επιλογές γραμμής-εντολών σε αρχείο\n<script.hbp>: επιλογές γραμμής εντολών σε αρχείο, σηματοδοτεί επίσης ενα νέο έργο αν οριστεί στην γραμμή-εντολών\n<script.hbc>: αρχείο πακέτου διαμόρφωσης"
 
 #, c-format
 msgid ". (dot) passed as first parameter will enter the interactive Harbour shell."
@@ -2317,6 +2385,10 @@ msgstr "%1$s διαμόρφωση χρόνου-κατασκευής:"
 #, c-format
 msgid "space separated list of extensions to load in interactive Harbour shell"
 msgstr "λίστα καταλήξεων, διαχωρισμένων με κενό διάστημα, προς φόρτωση στο διαλογικό κέλυφος του Harbour"
+
+#, c-format
+msgid "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s"
+msgstr "εναρκτήριο σενάριο Harbour για το διαδραστικό κέλυφος Harbour. Εκτελείται αυτόματα κατά την έναρξη του κελύφους, αν υπάρχει. Ενδεχόμενες τοποθεσίες (με σειρά προτεραιότητας) [*]: %1$s"
 
 #, c-format
 msgid ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s"

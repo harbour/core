@@ -10,8 +10,8 @@ Sintáxis:
 Descripción:  
 
 
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
-Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
+  hbmk2 es una herramienta integrada y portable, que permite crear varios tipos de binarios ejecutables \(ejecutable, biblioteca dinámica, biblioteca estática, binario portable Harbour\) desde múltiples tipos de archivos fuente \(C, C\+\+, Objective\-C, Harbour, traducciones gettext, recursos Windows\)\. 'Integrada' significa que un único proyecto hbmk2 puede controlar todos o la mayoría de los aspectos del proceso de construcción\. 'Portable' significa que un único proyecto hbmk2 puede controlar la construcción en todos los SO soportados y a través de todos los compiladores C soportados\. Apunta además a cubrir la mayoría de las tareas de construcción mediante simples y cortos archivos de proyecto \(opciones\)\. hbmk2 soporta además proyectos C/C\+\+/Objective\-C puros \-no\-Harbour\-\. Para lograr estos objetivos, hbmk2 auto\-detectará Harbour, el compilador C y otras herramientas requeridas, para luego configurarlas y ejecutarse adecuadamente\. hbmk2 permite extender, via plugins, los tipos de archivo fuente soportados\.  
+Ademas de construir ejecutables, hbmk2 puede ejecutar directamente scripts Harbour \(desde fuente o pre\-compilados\), y ofrece además una consola de comandos interactiva\.
   
 Opciones:  
 
@@ -21,7 +21,7 @@ Opciones:
  - **\-L&lt;libpath&gt;** ruta adicional para buscar librerías
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** ruta adicional para buscar cabeceras
  - **\-static|\-shared** enlazar con librerías estáticas/compartidas
- - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
+ - **\-gt&lt;name&gt;** enlaza con el driver GT GT&lt;name&gt;, puede repetirse para enlazar con mas GTs\. El primero será utilzado por defecto en tiempo de ejecución
  - **\-inc\[\-\]** habilita modo de compilación incremental
  - **\-hbexe** crea ejecutable \(por defecto\)
  - **\-hblib** crear librería estática
@@ -180,7 +180,7 @@ crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efect
  - **\-\-hbdirdyn** muestra el directorio de bibliotecas dinámicas de Harbour
  - **\-\-hbdirlib** muestra el directorio de bibliotecas estáticas de Harbour
  - **\-\-hbdirinc** muestra el directorio de cabeceras de Harbour
- - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
+ - **\-\-hbinfo\[=nested\]** muestra información de la construcción de Harbour\. La salida es en formato JSON\. Las rutas incluidas siempre contienen barras invertidas\. Cada bloque JSON siempre es seguido por un byte 0x0A\.
 
 
  - **\-plat=&lt;platform&gt;** reemplaza la plataforma destino por defecto \(por defecto: automático\)
@@ -243,13 +243,13 @@ Archivos:
  - **hbmk\.hbc** archivo \.hbc estandar que es automáticamente procesado, si existe\. Ubicación\(es\) posibles \(en orden de precedencia\) v \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **hbmk\.hbm** archivo \.hbm opcional ubicado en el directorio de trabajo actual, que es automáticamente procesado antes que otras opciones
  - **$hb\_pkg\_dynlib\.hbm** archivo especial \.hbm incrustado dentro de hbmk2\. Maneja los detalles de la creación de una librería dinámica \(al estilo de contribuciones Harbour\)\.
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** archivo especial \.hbm incrustado dentro de hbmk2\. Maneja los detalles de la instalación de construcciones destino y paquetes relacionados en las instalaciones estándar \(al estilo de contribuciones Harbour\)\.
 
 
  - **\*\.hb** script Harbour
  - **\*\.hrb** Binario portable Harbour \(aka script precompilado Harbour\)
  - **hbstart\.hb** Script de inicio Harbour para la consola interactiva\. Es ejecutado automáticamente al iniciar la consola, si existe\. Ubicación\(es\) posible\(s\) \(en orden de precedencia\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
- - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
+ - **shell plugins** plugins \.hb y \.hrb para la consola interactiva Harbour\. Pueden residir en \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** guarda el historial de comandos del intérprete de comandos de Harbour\. Puede deshabilitar el historial haciendo que la primera linea sea 'no' \(sin comillas y con salto de línea\)\. Se guarda en \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
   
@@ -344,7 +344,7 @@ Constantes predefinidas en fuentes\.
  - **HBMK\_HAS\_&lt;depname&gt;** cuando la dependencia &lt;depname&gt; ha sido detectada \(disponible en fuentes C\)
 
 
- - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
+ - **\_\_HBSCRIPT\_\_HBSHELL** cuando un archivo fuente Harbour es ejecutado como un script de consola
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
 
 
@@ -540,7 +540,7 @@ API de consola disponible en scripts Harbour:
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
-Switch GT\. Default \[\*\]: 'gtwin'
+Intercambia GT\. Por defecto \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Habilita modo de compatibilidad Clipper \(no\-Unicode\)
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  

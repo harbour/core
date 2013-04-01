@@ -29,7 +29,7 @@ Copyright \(c\) 2003\-2007, Przemysław Czerpak
 
  - **\*\.hb** Σενάριο Harbour
  - **\*\.hrb** Μεταφέρσιμο δυαδικό Harbour \(γνωστό και ως προκατασκευασμένο σενάριο\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun κατάλογος&gt;
+ - **hbstart\.hb** εναρκτήριο σενάριο Harbour για το διαδραστικό κέλυφος Harbour\. Εκτελείται αυτόματα κατά την έναρξη του κελύφους, αν υπάρχει\. Ενδεχόμενες τοποθεσίες \(με σειρά προτεραιότητας\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun κατάλογος&gt;
  - **shell plugins** \.hb and \.hrb plugins για το διαλογικό κέλυφος του Harbour\. Πρέπει να βρίσκονται μέσα στο \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** αποθηκεύει ιστορικό εντολών για το διαλογικό shell Harbour\. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή 'no' \(χωρίς τα εισαγωγικά και με νεα γραμμή\)\. Βρίσκεται στο \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** λίστα καταλήξεων προς φόρτωση στο διαλογικό κέλυφος του Harbour\. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '\#' αγνοείται\. Εναλλακτικά ονομα\-αρχείου στο Ms\-DOS: Το hb\_ext\.ini\. Βρίσκεται μεσα στο \[\*\]: %APPDATA%\\\.harbour\\

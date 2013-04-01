@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 10:51+0000\nLast-Translator: oscarhdezsz <oscar.hernandez.suarez@gmail.com>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 12:33+0000\nLast-Translator: zgamero <zgamero@yahoo.es>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1279,6 +1279,10 @@ msgid "Harbour compiler credits"
 msgstr "créditos del compilador Harbour"
 
 #, c-format
+msgid "lists all known Harbour functions that contain <text> in their name, along with their package (case insensitive, accepts multiple values, can contain wildcard characters)"
+msgstr "muestra un listado de las funciones conocidas de Harbour que contienen <text> en su nombre, junto a su paquete (no es sensible a mayúsculas/minúsculas, acepta múltiples valores, puede contener caracteres comodín)"
+
+#, c-format
 msgid "long help"
 msgstr "ayuda detallada"
 
@@ -1291,8 +1295,24 @@ msgid "long help in text viewer"
 msgstr "abrir ayuda completa en visor de texto"
 
 #, c-format
+msgid "output Harbour binary directory to stdout"
+msgstr "envía el directorio de programas de Harbour a stdout."
+
+#, c-format
 msgid "output Harbour build information to stdout. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte."
 msgstr "envia información de la construcción de Harbour a stdout. La salida esta en formato JSON. Los directorios incluidos siempre contienen barras inclinadas. Cada bloque JSON es seguido de un byte 0x0A."
+
+#, c-format
+msgid "output Harbour dynamic library directory to stdout"
+msgstr "envía el directorio de bibliotecas dinámicas de Harbour a stdout."
+
+#, c-format
+msgid "output Harbour header directory to stdout"
+msgstr "envía el directorio de archivos de cabecera de Harbour a stdout."
+
+#, c-format
+msgid "output Harbour static library directory to stdout"
+msgstr "envía el directorio de bibliotecas estáticas de Harbour a stdout."
 
 #, c-format
 msgid "override default language. <lang> is an ISO language code."

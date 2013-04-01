@@ -29,7 +29,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-hbdynvm** δημιουργία δυναμικής βιβλιοθήκης \(με συνδεδεμένη Harbour VM\)
 
 
- - **\-mt|\-st** link with multi/single\-thread Harbour VM
+ - **\-mt|\-st** διασύνδεση με την πολυ/μονο\-νηματική εικονική μηχανή Harbour VM
  - **\-gui|\-std** δημιουργία GUI/console εκτελέσιμου
  - **\-main=&lt;mainfunc&gt;** υπερκάλυψη του ονόματος της εναρκτήριας συνάρτησης
  - **\-request=&lt;func&gt;** εξαναγκασμός συνάρτησης/λειτουργίας να διασυνδεθεί
@@ -71,7 +71,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-signpw=&lt;pw&gt;** χρήση του &lt;pw&gt; ως συνθηματικού κατά την σήμανση του εκτελέσιμου \(μόνο σε Windows και Darwin\)
  - **\-instfile=&lt;g:file&gt;** προσθήκη &lt;file&gt; iστη λίστα αρχείων προς αντιγραφή στο μονοπάτι που ορίστηκε από την επιλογή \-instpath\. &lt;g&gt; είναι μια προαιρετική ομάδα αντιγραφής \(πεζά/κεφαλαία ευαίσθητο\), πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων\. Σε περίπτωση μη καθορισμού του &lt;file&gt;, η λίστα αρχείων σε αυτή την ομάδα θα εκκενωθεί\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
- - **\-instforce\[\-\]** copy target file\(s\) to install path even if already up to date
+ - **\-instforce\[\-\]** αντιγραφή του κατασκευασμένου αρχείου\(ων\) του έργου στο κατάλογο εγκατάστασης έστω κι αν είναι ενήμερο /up to date/
  - **\-depimplib\[\-\]** ενεργοποίηση \(ή απενεργοποίηση\) δημιουργίας βιβλιοθήκης εισαγωγής για πηγαίες βιβλιοθήκες εισαγωγής που ορίστηκαν με τις επιλογές \-depimplibs= \(προεπιλογή: yes\)
  - **\-stop\[=&lt;text&gt;\]** Τερματισμός χωρίς να κάνει οτιδήποτε και εμφάνιση του κειμένου &lt;text&gt; άν καθορίστηκε
  - **\-echo=&lt;text&gt;** αντήχηση \-echo\- κειμένου στην οθόνη
@@ -102,7 +102,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-head=&lt;m&gt;** έλεγχος της ανάλυσης του πηγαίου header \(σε αυξητικό \-incremental\- ρυθμό κατασκευής\)  
 &lt;m&gt; μπορεί να είναι: native \(χρήση του μεταγλωττιστή για εξαγωγή των εξαρτήσεων\), full \(προεπιλογή, χρήση απλού αναλυτή κειμένου σε όλο το αρχείο\), dep, off
  - **\-rebuild** ανακατασκευή \(σε incremental ρυθμό\)
- - **\-rebuildall** ανακατασκευή μαζί με τα υπο\-έργα \(σε αυξητική \-incremental\- μέθοδο κατασκευής\)
+ - **\-rebuildall** ανακατασκευή μαζί με τα υπο\-έργα \(με αυξητική \-incremental\- μέθοδο κατασκευής\)
  - **\-clean** καθαρισμός \(σε incremental ρυθμό\)
  - **\-workdir=&lt;dir&gt;** κατάλογος εργασίας  
 \(προεπιλογή: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] σε incremental μέθοδο κατασκευής, αλλιώς ο temp κατάλογος του Λ\.Σ\.\)
@@ -143,10 +143,10 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
 Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:  
 
 
- - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
+ - **\-target=&lt;script&gt;** καθορίζει ένα νέο έργο προς κατασκευή\. το &lt;script&gt; μπορεί να είναι \.prg \(ή καμμία κατάληξη\) ή \.hbp αρχείο\. Σημειώστε ότι τα αρχεία \.hbp θεωρούνται αυτόματα ως ξεχωριστές κατασκευές\.
 
 
- - **\-hbrun** run build target
+ - **\-hbrun** εκτέλεση του κατασκευασμένου έργου
  - **\-hbraw** διακοπή μετά το τρέξιμο του μεταγλωττιστή
  - **\-hbcmp|\-clipper** τερματισμός μετά την δημιουργία των object αρχείων  
 δημιουργείστε δεσμό/αντιγράψτε το hbmk2 σε hbcmp/clipper για να επιτύχετε το αυτό αποτέλεσμα
@@ -177,11 +177,11 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-xhp=&lt;file&gt;** μετατροπή έργου \.xhp \(xMate\) &lt;file&gt; σε αρχείο \.hbp
 
 
- - **\-\-hbdirbin** output Harbour binary directory to stdout
- - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
- - **\-\-hbdirlib** output Harbour static library directory to stdout
- - **\-\-hbdirinc** output Harbour header directory to stdout
- - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
+ - **\-\-hbdirbin** εξάγει τον κατάλογο /path/ των εκτελέσιμων Harbour στη stdout
+ - **\-\-hbdirdyn** εξάγει τον κατάλογο /path/ των δυναμικών βιβλιοθηκών Harbour στη stdout
+ - **\-\-hbdirlib** εξάγει τον κατάλογο /path/ των στατικών βιβλιοθηκών Harbour στη stdout
+ - **\-\-hbdirinc** εξάγει τον κατάλογο /path/ των αρχείων Harbour στη stdout
+ - **\-\-hbinfo\[=nested\]** Εξαγωγή πληροφορίες κατασκευής του Harbour στην stdout\. Το αποτέλεσμα είναι σε μορφή JSON\. Τα περιλαμβανόμενα μονοπάτια πάντοτε περιέχουν κάθετες εμπρός παύλες\. Κάθε JSON τμήμα ακολουθείται από ένα 0x0A χαρακτήρα\.
 
 
  - **\-plat=&lt;platform&gt;** παραμερισμός προεπιλεγμένης πλατφόρμας\-στόχου \(προεπιλογή: αυτομάτως\)
@@ -244,12 +244,12 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **hbmk\.hbc** standard αρχείο \.hbc που δέχεται αυτόματη επεξεργασία, αν είναι παρόν\. Πιθανή\(ές\) τοποθεσίες \(με σειρά προτεραιότητας\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
  - **hbmk\.hbm** προαιρετικό \.hbm αρχείο μέσα στο τρέχοντα κατάλογο εργασίας, που δέχεται επεξεργασία αυτομάτως, πρίν από τυχόν άλλες επιλογές
  - **$hb\_pkg\_dynlib\.hbm** ειδικό \.hbm αρχείο ενσωματομένο μέσα στο hbmk2\. Διαχειρίζεται τις λεπτομέρειες δημιουργίας μιας δυναμικής βιβλιοθήκης \(κατά το πρότυπο των Harbour contribs\)\.
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** ειδικό \.hbm αρχείο ενσωματωμένο μέσα στο hbmk2\. Διαχειρίζεται τις λεπτομέρειες της εγκατάστασης των κατασκευαζόμενων έργων και των σχετιζόμενων πακέτων αρχείων σε standard περιοχές \(κατά το πρότυπο των Harbour contribs\)\.
 
 
  - **\*\.hb** Σενάριο Harbour
  - **\*\.hrb** Μεταφέρσιμο δυαδικό Harbour \(γνωστό και ως προκατασκευασμένο σενάριο\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
+ - **hbstart\.hb** εναρκτήριο σενάριο Harbour για το διαδραστικό κέλυφος Harbour\. Εκτελείται αυτόματα κατά την έναρξη του κελύφους, αν υπάρχει\. Ενδεχόμενες τοποθεσίες \(με σειρά προτεραιότητας\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 κατάλογος&gt;
  - **shell plugins** \.hb and \.hrb plugins για το διαλογικό κέλυφος του Harbour\. Πρέπει να βρίσκονται μέσα στο \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** αποθηκεύει ιστορικό εντολών για το διαλογικό shell Harbour\. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή 'no' \(χωρίς τα εισαγωγικά και με νεα γραμμή\)\. Βρίσκεται στο \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** λίστα καταλήξεων προς φόρτωση στο διαλογικό κέλυφος του Harbour\. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '\#' αγνοείται\. Εναλλακτικά ονομα\-αρχείου στο Ms\-DOS: Το hb\_ext\.ini\. Βρίσκεται μεσα στο \[\*\]: %APPDATA%\\\.harbour\\
@@ -304,9 +304,9 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **\{&lt;platform&gt;\}** η πλατφόρμα\-στόχος\. Οπου &lt;platform&gt; μπορεί να είναι κάθε τιμή αποδεκτή από την επιλογή \-plat= \.
  - **\{&lt;compiler&gt;\}** ο C μεταγλωττιστής\-στόχος\. Οπου &lt;compiler&gt; μπορεί να είναι κάθε τιμή αποδεκτή απο την επιλογή \-comp\.
  - **\{&lt;cpu&gt;\}** τύπος CPU εκτέλεσης του έργου\. Οπου &lt;cpu&gt; μπορεί να είναι κάτι από: x86, x86\_64, ia64, arm, mips, sh
- - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
- - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
- - **\{st\}** build target is single\-threaded \(see \-st option\)
+ - **\{&lt;targettype&gt;\}** τύπος κατασκευής έργου\. Οπου &lt;targettype&gt; είναι μια από τις τιμές που επιστρέφονται από την macro μεταβλητή $\{hb\_targettype\}\.
+ - **\{mt\}** το κατασκευαζόμενο έργο είναι πολυ\-νηματικό /multi\-threaded/ \(δες επιλογή \-mt\)
+ - **\{st\}** το κατασκευαζόμενο έργο είναι μονό\-νηματικό /single\-threaded/ \(δες επιλογή \-st\)
  - **\{gui\}** στόχος Γραφικού Περιβάλλοντος Χρήστη GUI \(δες επιλογή \-gui\)
  - **\{std\}** στόχος κονσόλας \(δες επιλογή \-console\)
  - **\{debug\}** Ενεργοποιημένη αποσφαλμάτωση επιπέδου C \(δες επιλογή \-debug\)
@@ -341,7 +341,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** όταν ένα σενάριο \.hb είναι μεταγλωττισμένο ως plugin του hbmk2
  - **\_\_HBEXTREQ\_\_** όταν ενα \.hbx πηγαίο αρχείο είναι παρόν σε ένα έργο \(διαθέσιμο στα πηγαία αρχεία Harbour\)
- - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
+ - **HBMK\_HAS\_&lt;hbcname&gt;** όταν το πακέτο &lt;hbcname&gt;\.hbc είναι συνδεδεμένο στο έργο κατασκευής\. Η τιμή είναι η version= τιμή απο το αρχείο \.hbc, μετασχηματισμένη σε δεκαδικό αριθμό, ο οποίος είναι '1', αν δεν έχει οριστεί\. \(διαθέσιμο σε πηγαία αρχεία Harbour\)
  - **HBMK\_HAS\_&lt;depname&gt;** όταν ανιχνεύτηκε η εξάρτηση &lt;depname&gt; \(διαθέσιμο σε πηγαίους κώδικες C\)
 
 
@@ -393,7 +393,7 @@ Options below are internal/developer ones \(compatibility not guaranteed\):
  - **headers=** προσθήκη διαχωρισμένης με κενό λίστας από headers μορφής \.ch ως πρότυπο header
  - **libs=** προσθήκη λίστας βιβλιοθηκών διαχωρισμένων με κενό \(δες περισσότερα στην \-l επιλογή\)
  - **frameworks=** προσθήκη λίστας frameworks διαχωρισμένων με κενό \(μόνο σε Darwin\)
- - **requests=** add space separated list of symbols to force link to the build target
+ - **requests=** προσθήκη λίστας συμβόλων /ονοματα συναρτήσεων κ\.λ\.π/ διαχωρισμένα με κενό, που θα διασυνδεθούν υποχρεωτικά στο κατασκευαζόμενο έργο
  - **syslibs=** προσθήκη λίστας βιβλιοθηκών χωρισμένων με κενό διάστημα ως βιβλιοθήκες συστήματος \(πρίν από άλλες βιβλιοθήκες\)
  - **hbcs=** ενσωμάτψση λίστας \.hbc αρχείων διαχωρισμένων με κενό διάστημα\. Επιτρέπονται ονόματα χωρίς την κατάληξη\. Οι αναφορές αυτές επεξεργάζονται επι τόπου\.
  - **autohbcs=** λίστα τιμών διαχωρισμένων με κενό διάστημα, όπως στην επιλογή \-autohbc=
@@ -484,7 +484,7 @@ Plugin API:
  - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Οριοθετημενο με Escape ή εισαγωγικά όνομα αρχείου που θα χρησιμοποιηθεί ως παραμέτρος εξωτερικής εντολή\.
  - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
-Convert filename to the format required for the target platform/C compiler\.
+Μετατροπή ονόματος αρχείου στη μορφή που απαιτείται για την πλατφόρμα προορισμού/μεταγλωττιστή C\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Μετατροπή του ονόματος αρχείου ωστε να έχει, ως διαχωριστικό καταλόγου, την εμπρός κάθετη παύλα / \.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
@@ -633,10 +633,10 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
 Σημειώσεις:  
 
 
-  - &lt;script&gt; can be:  
-  &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
-  &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
-  &lt;script\.hbc&gt;: package configuration file
+  - Το &lt;script&gt; μπορεί να είναι:  
+&lt;@script&gt; ή &lt;script\.hbm&gt;: επιλογές γραμμής\-εντολών σε αρχείο  
+&lt;script\.hbp&gt;: επιλογές γραμμής εντολών σε αρχείο, σηματοδοτεί επίσης ενα νέο έργο αν οριστεί στην γραμμή\-εντολών  
+&lt;script\.hbc&gt;: αρχείο πακέτου διαμόρφωσης
   - Πηγαίο όνομα\-αρχείου χωρίς κατάληξη θα φορτώσει το \.hbp αρχείο, αν υπάρχει τέτοιο \.hbp αρχείο στον τρέχοντα κατάλογο\. Αν όχι, θα γίνει χρήση \.prg κατάληξης\.
   - Πολλαπλές \-l, \-L, \-i και &lt;script&gt; παράμετροι είναι δεκτές\.
   - Οι συνηθισμένες επιλογές του μεταγλωττιστή Harbour γίνονται επίσης δεκτές ως έχουν\.  

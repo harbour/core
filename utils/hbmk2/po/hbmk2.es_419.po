@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 13:28+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -871,6 +871,10 @@ msgid "link with <libname> library. <libname> should be without path, extension 
 msgstr "enlaza con biblioteca <libname>. <libname> no debe incluir ruta, extensión o prefijo 'lib' (excepto que sea parte del nombre). No agregue bibliotecas principales de Harbour, estas son agregadas automáticamente cuando se necesitan. Si <libname> comienza con un caracter '-', la biblioteca será removida de la lista de bibliotecas principales al momento de enlazar."
 
 #, c-format
+msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time"
+msgstr "enlaza con el driver GT GT<name>, puede repetirse para enlazar con mas GTs. El primero será utilzado por defecto en tiempo de ejecución"
+
+#, c-format
 msgid "link with static/shared libs"
 msgstr "enlazar con librerías estáticas/compartidas"
 
@@ -1335,6 +1339,10 @@ msgid "output Harbour binary directory to stdout"
 msgstr "muestra el directorio de binarios de Harbour"
 
 #, c-format
+msgid "output Harbour build information to stdout. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte."
+msgstr "muestra información de la construcción de Harbour. La salida es en formato JSON. Las rutas incluidas siempre contienen barras invertidas. Cada bloque JSON siempre es seguido por un byte 0x0A."
+
+#, c-format
 msgid "output Harbour dynamic library directory to stdout"
 msgstr "muestra el directorio de bibliotecas dinámicas de Harbour"
 
@@ -1577,6 +1585,10 @@ msgstr "archivo de proyecto. Puede contener cualquier número de opciones de lí
 #, c-format
 msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
 msgstr "archivo especial .hbm incrustado dentro de %1$s. Maneja los detalles de la creación de una librería dinámica (al estilo de contribuciones Harbour)."
+
+#, c-format
+msgid "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)."
+msgstr "archivo especial .hbm incrustado dentro de %1$s. Maneja los detalles de la instalación de construcciones destino y paquetes relacionados en las instalaciones estándar (al estilo de contribuciones Harbour)."
 
 #, c-format
 msgid "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s"
@@ -2007,6 +2019,10 @@ msgid "when an .hbx source file is present in a project (available in Harbour so
 msgstr "cuando una fuente .hbx existe en un proyecto (disponible en las fuentes Harbour)"
 
 #, c-format
+msgid "when a Harbour source file is run as a shell script"
+msgstr "cuando un archivo fuente Harbour es ejecutado como un script de consola"
+
+#, c-format
 msgid "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>'):"
 msgstr "Constantes predefinidas en ficheros de construcción (están disponibles luego de '-depfinish=<depname>' / 'depfinish=<depname>'):"
 
@@ -2053,6 +2069,10 @@ msgstr "Cargar cabecera Harbour."
 #, c-format
 msgid "Load package. Similar to #request PP directive."
 msgstr "Carga paquete. Similar a la directiva PP #request."
+
+#, c-format
+msgid "Switch GT. Default [*]: '%1$s'"
+msgstr "Intercambia GT. Por defecto [*]: '%1$s'"
 
 #, c-format
 msgid "Unload Harbour header."
@@ -2263,6 +2283,10 @@ msgid "Description:"
 msgstr "Descripción:"
 
 #, c-format
+msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
+msgstr "%1$s es una herramienta integrada y portable, que permite crear varios tipos de binarios ejecutables (ejecutable, biblioteca dinámica, biblioteca estática, binario portable Harbour) desde múltiples tipos de archivos fuente (C, C++, Objective-C, Harbour, traducciones gettext, recursos Windows). 'Integrada' significa que un único proyecto %1$s puede controlar todos o la mayoría de los aspectos del proceso de construcción. 'Portable' significa que un único proyecto %1$s puede controlar la construcción en todos los SO soportados y a través de todos los compiladores C soportados. Apunta además a cubrir la mayoría de las tareas de construcción mediante simples y cortos archivos de proyecto (opciones). %1$s soporta además proyectos C/C++/Objective-C puros -no-Harbour-. Para lograr estos objetivos, %1$s auto-detectará Harbour, el compilador C y otras herramientas requeridas, para luego configurarlas y ejecutarse adecuadamente. %1$s permite extender, via plugins, los tipos de archivo fuente soportados.\nAdemas de construir ejecutables, %1$s puede ejecutar directamente scripts Harbour (desde fuente o pre-compilados), y ofrece además una consola de comandos interactiva."
+
+#, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
 msgstr "%1$s puede ejecutar scripts Harbour (fuente y pre-compilados), y además presenta una consola interactiva de comandos."
 
@@ -2357,6 +2381,10 @@ msgstr "lista separada por espacio de extensiones a cargar en la consola Harbour
 #, c-format
 msgid "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s"
 msgstr "Script de inicio Harbour para la consola interactiva. Es ejecutado automáticamente al iniciar la consola, si existe. Ubicación(es) posible(s) (en orden de precedencia) [*]: %1$s"
+
+#, c-format
+msgid ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s"
+msgstr "plugins .hb y .hrb para la consola interactiva Harbour. Pueden residir en [*]: %1$s"
 
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"
