@@ -46,7 +46,7 @@ PROCEDURE Main( cCommand, cMain, ... )
       Set( _SET_DEFEXTENSIONS, .F. )
       Eval( ;
          hCommand[ cCommand ], ;
-         hb_PathJoin( hb_DirBase(), iif( Empty( hb_FNameName( cMain := hb_DirSepToOS( cMain ) ) ), cMain + hb_FNameName( hb_DirSepDel( cMain ) ) + ".prg", cMain ) ), ;
+         iif( Empty( hb_FNameName( cMain := hb_DirSepToOS( cMain ) ) ), cMain + hb_FNameName( hb_DirSepDel( cMain ) ) + ".prg", cMain ), ;
          ... )
    ELSE
       ? "unknown command or missing target"
@@ -80,7 +80,7 @@ STATIC PROCEDURE doc_make( cMain )
             hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
             hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" ) )
 
-         file := hb_FNameExtSet( hPar[ "doc" ] + hPar[ "name" ] + "." + cLang, hPar[ "docext" ] )
+         file := hPar[ "doc" ] + hPar[ "name" ] + "." + cLang + hPar[ "docext" ]
          hb_run( hb_StrFormat( "hbmk2 %1$s %2$s > %3$s", ;
             cTempHRB, StrTran( ArrayToList( hPar[ "docoption" ] ), "{LNG}", cLang ), file ) )
          FToNativeEOL( file )
@@ -388,7 +388,7 @@ STATIC FUNCTION LoadPar( cMain )
       AAdd( hPar[ "docoption" ], item[ 2 ] )
    NEXT
 
-   item := hb_PathJoin( hb_DirBase(), _HAGetDef( hb_regexAll( "-3rd=_hblang_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 ) )
+   item := _HAGetDef( hb_regexAll( "-3rd=_hblang_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
    IF item != NIL
       item := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( item )
       hPar[ "entry" ] := iif( Empty( hb_FNameName( item ) ), item + hb_FNameName( hb_DirSepDel( item ) ) + ".prg", item )
