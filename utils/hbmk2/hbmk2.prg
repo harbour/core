@@ -16331,6 +16331,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS " + ;
          "(on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) }
+   /* TOFIX: ". (dot)" -> "'.' (dot)" */
 
    LOCAL aLst_Notes_Shell := { ;
       NIL, ;

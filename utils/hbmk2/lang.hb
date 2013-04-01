@@ -1,12 +1,30 @@
 /*
- * Manages translations and automatic doc generation
+ * Harbour Project source code:
+ * Manage translations and automatic doc generation
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
- * Requires: curl (built with SSL), Harbour in PATH
- * Reference: http://help.transifex.com/features/api/api-v2.1.html
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
+
+/*
+ * Requires: curl (built with SSL) and Harbour in PATH
+ * Reference: http://help.transifex.com/features/api/api-v2.1.html
  */
 
 #pragma -w3
@@ -209,13 +227,42 @@ STATIC PROCEDURE trs_pull( cLogin )
 
    RETURN
 
-STATIC FUNCTION DoctorTranslation( cString )
+STATIC FUNCTION DoctorTranslation( cString, cOri )
 
-   cString := StrUnspace( AllTrim( cString ) )
+   LOCAL regex, hit
+
+   cString := AllTrim( cString )
+
+   /* Only if original doesn't have elongated spaces */
+   IF cOri == StrUnspace( cOri )
+      cString := StrUnspace( cString )
+   ENDIF
+
+   /* For Transifex: RETURN SYMBOL to real new line */
    cString := StrTran( cString, hb_UChar( 0x23CE ), e"\n" )
-   cString := StrTran( cString, e"\n ", e"\n" )
-   cString := StrTran( cString, "( ", "(" )
-   cString := StrTran( cString, " )", ")" )
+
+   /* Common typos: extra space or punctuation */
+   cString := hb_StrReplace( cString, { ;
+      e"\n "  => e"\n"  , ;
+      e" .\n" => e".\n" , ;
+      "( "    => "("    , ;
+      " )"    => ")"    , ;
+      " :"    => ":"    , ;
+      " ,"    => ","    , ;
+      " ;"    => ";"    , ;
+      ":. "   => ": "   , ;
+      ": . "  => ": "   , ;
+      ":, "   => ": "   , ;
+      ": , "  => ": "   } )
+
+   /* Common typos: missing space */
+   FOR EACH regex IN { ":([A-Za-z])", "[,;](\S)", "\)(\w)" }
+      FOR EACH hit IN hb_regexAll( regex, cString,,,,, .T. )
+         IF ! hit[ 1 ] $ cOri
+            cString := StrTran( cString, hit[ 1 ], StrTran( hit[ 1 ], hit[ 2 ], " " + hit[ 2 ] ) )
+         ENDIF
+      NEXT
+   NEXT
 
    RETURN cString
 
