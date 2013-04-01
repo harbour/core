@@ -47,10 +47,6 @@ msgid "Warning: Option available only when using embedded Harbour compiler: %1$s
 msgstr "Attenzione: opzione disponibile solo quando si usa il compilatore Harbour integrato: %1$s"
 
 #, c-format
-msgid "%1$s"
-msgstr "%1$s"
-
-#, c-format
 msgid "Warning: Plugin not found: %1$s"
 msgstr "Attenzione: Plugin non trovato: %1$s"
 
@@ -205,10 +201,6 @@ msgstr "Plugin caricato: %1$s %2$s"
 #, c-format
 msgid "Error: Loading plugin: %1$s"
 msgstr "Errore: Caricamento del plugin: %1$s"
-
-#, c-format
-msgid "plugin: %1$s"
-msgstr "plugin: %1$s"
 
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
@@ -735,14 +727,6 @@ msgid "stop the build. Display <msg>, if specified."
 msgstr "ferma la compilazione. Visualizza <msg>, se specificato."
 
 #, c-format
-msgid "<depname>"
-msgstr "<depname>"
-
-#, c-format
-msgid "<hbcname>"
-msgstr "<hbcname>"
-
-#, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "dove la dipendenza <depname> è stata rilevata (disponibile nei sorgenti C)"
 
@@ -863,14 +847,6 @@ msgid "%1$s make script in current directory is always processed if it exists."
 msgstr "se esistente, lo script make %1$s nella cartella corrente è sempre processato"
 
 #, c-format
-msgid ".hb, .hrb or .dbf"
-msgstr ".hb, .hrb or .dbf"
-
-#, c-format
-msgid ".hb, .prg, .hrb or .dbf"
-msgstr ".hb, .prg, .hrb or .dbf"
-
-#, c-format
 msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
 msgstr "Puoi usare i tasti <Alt+V> nella shell interativa di Harbour per incollare il testo dalla clipboard."
 
@@ -937,7 +913,3 @@ msgstr "lista di estensioni separate da spazio da caricare nella shell interatti
 #, c-format
 msgid ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s"
 msgstr "plugins .hb e .hrb per la shell interattiva di Harbour. Possono essere situati in [*]: %1$s"
-
-#, c-format
-msgid "MS-DOS"
-msgstr "MS-DOS"

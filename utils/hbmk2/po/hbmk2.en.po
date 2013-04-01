@@ -2566,16 +2566,6 @@ msgstr ""
 msgid "Predefined constants in sources:"
 msgstr ""
 
-#: utils/hbmk2/hbmk2.prg:16187 utils/hbmk2/hbmk2.prg:16202 utils/hbmk2/hbmk2.prg:16202 utils/hbmk2/hbmk2.prg:16202
-#, c-format
-msgid "<depname>"
-msgstr ""
-
-#: utils/hbmk2/hbmk2.prg:16187
-#, c-format
-msgid "<hbcname>"
-msgstr ""
-
 #: utils/hbmk2/hbmk2.prg:16187
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"

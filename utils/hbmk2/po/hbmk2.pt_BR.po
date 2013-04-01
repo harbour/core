@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 01:42+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -113,10 +113,6 @@ msgstr "Atenção: Ignorando explicitamente o diretório especificado no nucleo 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)"
 msgstr "Atenção: Ignorar especificado explicitamente no diretório do núcleo header: %1$s (na opção %2$s)"
-
-#, c-format
-msgid "%1$s"
-msgstr "%1$s"
 
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
@@ -491,10 +487,6 @@ msgid "Error: Loading plugin: %1$s"
 msgstr "Erro: Carregando o plugin: %1$s"
 
 #, c-format
-msgid "plugin: %1$s"
-msgstr "plugin: %1$s"
-
-#, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
 msgstr "Erro: Executando o plugin: %1$s em %3$s(%4$d)\n'%2$s'"
 
@@ -541,10 +533,6 @@ msgstr "Atenção: Erro nas expressões do filtro: '%1$s'"
 #, c-format
 msgid "Error: Cannot open file: %1$s"
 msgstr "Erro: Não foi possível abrir o arquivo: %1$s"
-
-#, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
 
 #, c-format
 msgid "Error: Cannot create temporary unified .po file."
@@ -633,10 +621,6 @@ msgstr "(instalado)"
 #, c-format
 msgid "(not installed)"
 msgstr "(não intalado)"
-
-#, c-format
-msgid "%1$s %2$s:"
-msgstr "%1$s %2$s:"
 
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
@@ -844,7 +828,7 @@ msgstr "adicionar/excluir informações de debug do compilador C. Para compilar 
 
 #, c-format
 msgid "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert."
-msgstr "alterar as variáveis locais. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert."
+msgstr "alterar as variáveis locais de ambiente. <e>é o nome da variável a ser alterada. <o> pode ser '=' para definir/sobrepor, '-' para apagar, '+' to adicionar ao fim do valor existente, '#' para inserir o valor inicialização da variável. <v> é o valor a ser definido/adicionardo/inserido \"set/append/insert\"."
 
 #, c-format
 msgid "clean (in incremental build mode)"
@@ -1192,7 +1176,7 @@ msgstr "exibir niveis de sub-projeto nas linhas de saída"
 
 #, c-format
 msgid "specify a build name"
-msgstr "utilizar um nome de build especifico"
+msgstr "especificar um nome de 'build'"
 
 #, c-format
 msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
@@ -1467,6 +1451,10 @@ msgid "Filters (you can combine and/or negate them):"
 msgstr "Filtros (você pode combinar e / ou negá-los):"
 
 #, c-format
+msgid "build target is single-threaded (see -st option)"
+msgstr "o alvo é \"single-threaded\" (veja opção -st)"
+
+#, c-format
 msgid "console target (see -console option)"
 msgstr "alvo console (veja opção -console)"
 
@@ -1493,6 +1481,14 @@ msgstr "Forçado modo C++ (veja opção -cpp)"
 #, c-format
 msgid "GUI target (see -gui option)"
 msgstr "GUI alvo (veja opção -gui)"
+
+#, c-format
+msgid "shared build (see -shared and related options)"
+msgstr "construção compartilhada (veja -shared e opções relativas)"
+
+#, c-format
+msgid "static build (see -static and related options)"
+msgstr "construção compartilhada (veja -static e opções relativas)"
 
 #, c-format
 msgid "target C compiler is bcc* (bcc, bcc64)"
@@ -1581,14 +1577,6 @@ msgstr "lista separada por espaço de %1$s plugins para carga"
 #, c-format
 msgid "space separated list of additional library paths"
 msgstr "espaço separa a lista de locais de bibliotecas adicionais"
-
-#, c-format
-msgid "<depname>"
-msgstr "<depname>"
-
-#, c-format
-msgid "<hbcname>"
-msgstr "<hbcname>"
 
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
@@ -1792,7 +1780,7 @@ msgstr "Exemplos para gerar uma aplicação Harbour:"
 
 #, c-format
 msgid "To build an application using a project file"
-msgstr "Para construir uma aplicação usando un arquivo de projeto"
+msgstr "Para gerar uma aplicação usando um arquivo de projeto"
 
 #, c-format
 msgid "To build an application using incremental mode"
@@ -1815,13 +1803,13 @@ msgid "Examples to build a Harbour static library:"
 msgstr "Exemplos para gerar uma biblioteca estática Harbour:"
 
 #, c-format
+msgid "To build library 'mylib' from sources"
+msgstr "para gerar a biblioteca 'mylib' dos fontes"
+
+#, c-format
 msgid "To build library 'mylib' from sources using incremental mode"
 msgstr "para gerar a biblioteca 'mylib' dos fontes usando o modo incremental"
 
 #, c-format
 msgid "%1$s build-time configuration:"
 msgstr "%1$s configuração build-time:"
-
-#, c-format
-msgid "MS-DOS"
-msgstr "MS-DOS"

@@ -75,10 +75,6 @@ msgid "Warning: Ignored unsupported codepage value: %1$s"
 msgstr "Figyelem: Nem támogatott kódlap figyelmen kívül hagyva: %1$s"
 
 #, c-format
-msgid "%1$s"
-msgstr "%1$s"
-
-#, c-format
 msgid "Error: Working directory cannot be created: %1$s"
 msgstr "Hiba: Munkakönyvtár nem hozható létre: %1$s"
 
@@ -291,10 +287,6 @@ msgid "Error: Cannot open file: %1$s"
 msgstr "Hiba: Fájl nem nyitható meg: %1$s"
 
 #, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
-
-#, c-format
 msgid "Error: Cannot create temporary unified .po file."
 msgstr "Hiba: Nem sikerült létrehozni az ideiglenes .po fájlt."
 
@@ -361,10 +353,6 @@ msgstr "(telepített)"
 #, c-format
 msgid "(not installed)"
 msgstr "(nem telepített)"
-
-#, c-format
-msgid "%1$s %2$s:"
-msgstr "%1$s %2$s:"
 
 #, c-format
 msgid "Harbour core"
@@ -717,7 +705,3 @@ msgstr "Licenc (angolul):"
 #, c-format
 msgid "Author:"
 msgstr "Szerző:"
-
-#, c-format
-msgid "MS-DOS"
-msgstr "MS-DOS"

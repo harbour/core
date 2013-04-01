@@ -115,10 +115,6 @@ msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in op
 msgstr "Advertencia: ignorando el directorio de archivos de cabecera principales indicado explícitamente: %1$s (en la opción %2$s)"
 
 #, c-format
-msgid "%1$s"
-msgstr "%1$s"
-
-#, c-format
 msgid "Warning: Plugin not found: %1$s"
 msgstr "Advertencia: Plugin no encontrado: %1$s"
 
@@ -531,10 +527,6 @@ msgid "Error: Loading plugin: %1$s"
 msgstr "Error: Cargando plugin: %1$s"
 
 #, c-format
-msgid "plugin: %1$s"
-msgstr "plugin: %1$s"
-
-#, c-format
 msgid "Plugin %1$s returned at '%2$s': '%3$s'"
 msgstr "Plugin %1$s retornado en '%2$s': '%3$s'"
 
@@ -599,10 +591,6 @@ msgid "Error: Cannot open file: %1$s"
 msgstr "Error: No se puede abrir archivo: %1$s"
 
 #, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
-
-#, c-format
 msgid "Error: Cannot create temporary unified .po file."
 msgstr "Error: No se puede crear archivo temporal unificado .po."
 
@@ -651,10 +639,6 @@ msgid ".pot merge error: %1$s"
 msgstr "Error al mezclar archivo .pot : %1$s"
 
 #, c-format
-msgid "Error: %1$s"
-msgstr "Error: %1$s"
-
-#, c-format
 msgid "Error: Cannot create file: %1$s"
 msgstr "Error: No se puede crear el archivo: %1$s"
 
@@ -693,10 +677,6 @@ msgstr "(instalado)"
 #, c-format
 msgid "(not installed)"
 msgstr "(no instalado)"
-
-#, c-format
-msgid "%1$s %2$s:"
-msgstr "%1$s %2$s:"
 
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
@@ -849,14 +829,6 @@ msgstr "%1$s [opciones] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|
 #, c-format
 msgid "Syntax:"
 msgstr "Sintáxis:"
-
-#, c-format
-msgid "<parameter[s]>"
-msgstr "<parameter[s]>"
-
-#, c-format
-msgid "%1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [%2$s]"
-msgstr "%1$s <file[.hb|.prg|.hrb|.dbf]>|<option> [%2$s]"
 
 #, c-format
 msgid "Supported <compiler> values for each supported <platform> value:"
@@ -2023,14 +1995,6 @@ msgid "Predefined constants in sources:"
 msgstr "Constantes predefinidas en fuentes."
 
 #, c-format
-msgid "<depname>"
-msgstr "<depname>"
-
-#, c-format
-msgid "<hbcname>"
-msgstr "<hbcname>"
-
-#, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "cuando la dependencia <depname> ha sido detectada (disponible en fuentes C)"
 
@@ -2041,10 +2005,6 @@ msgstr "cuando un script .hb es compilado como plugin %1$s"
 #, c-format
 msgid "when an .hbx source file is present in a project (available in Harbour sources)"
 msgstr "cuando una fuente .hbx existe en un proyecto (disponible en las fuentes Harbour)"
-
-#, c-format
-msgid "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..."
-msgstr "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..."
 
 #, c-format
 msgid "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>'):"
@@ -2401,7 +2361,3 @@ msgstr "Script de inicio Harbour para la consola interactiva. Es ejecutado autom
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"
 msgstr "guarda el historial de comandos del intérprete de comandos de Harbour. Puede deshabilitar el historial haciendo que la primera linea sea '%1$s' (sin comillas y con salto de línea). Se guarda en [*]: %2$s"
-
-#, c-format
-msgid "MS-DOS"
-msgstr "MS-DOS"

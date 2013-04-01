@@ -115,10 +115,6 @@ msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in op
 msgstr "Advertencia: se ignorará el directorio de archivos de cabecera principales indicado explícitamente: %1$s (en la opción %2$s)"
 
 #, c-format
-msgid "%1$s"
-msgstr "%1$s"
-
-#, c-format
 msgid "Warning: Plugin not found: %1$s"
 msgstr "Advertencia: Plugin no encontrado: %1$s"
 
@@ -531,10 +527,6 @@ msgid "Error: Loading plugin: %1$s"
 msgstr "Error: Cargando plugin: %1$s"
 
 #, c-format
-msgid "plugin: %1$s"
-msgstr "plugin: %1$s"
-
-#, c-format
 msgid "Plugin %1$s returned at '%2$s': '%3$s'"
 msgstr "Plugin %1$s retornado en '%2$s': '%3$s'"
 
@@ -599,10 +591,6 @@ msgid "Error: Cannot open file: %1$s"
 msgstr "Error: No se puede abrir archivo: %1$s"
 
 #, c-format
-msgid "Blinker ECHO: %1$s"
-msgstr "Blinker ECHO: %1$s"
-
-#, c-format
 msgid "Error: Cannot create temporary unified .po file."
 msgstr "Error: No se puede crear archivo temporal unificado .po."
 
@@ -651,10 +639,6 @@ msgid ".pot merge error: %1$s"
 msgstr "Error al mezclar archivo .pot : %1$s"
 
 #, c-format
-msgid "Error: %1$s"
-msgstr "Error: %1$s"
-
-#, c-format
 msgid "Error: Cannot create file: %1$s"
 msgstr "Error: No se puede crear el archivo: %1$s"
 
@@ -693,10 +677,6 @@ msgstr "(instalado)"
 #, c-format
 msgid "(not installed)"
 msgstr "(no instalado)"
-
-#, c-format
-msgid "%1$s %2$s:"
-msgstr "%1$s %2$s:"
 
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
@@ -841,10 +821,6 @@ msgstr "Desconocido: %1$d"
 #, c-format
 msgid "Syntax:"
 msgstr "Sintáxis:"
-
-#, c-format
-msgid "<parameter[s]>"
-msgstr "<parameter[s]>"
 
 #, c-format
 msgid "Supported <compiler> values for each supported <platform> value:"
@@ -1395,10 +1371,6 @@ msgid "Exit codes (\"errorlevels\"):"
 msgstr "Códigos de salida (\"errorlevels\"):"
 
 #, c-format
-msgid "<other>"
-msgstr "<other>"
-
-#, c-format
 msgid "when -run option is used, the exit code will be the one returned by the target executable"
 msgstr "cuando se utilice la opción -run, el código de salida será el que devuelva el ejecutable de destino"
 
@@ -1739,14 +1711,6 @@ msgid "Predefined constants in sources:"
 msgstr "Constantes predefinidas en el código fuente:"
 
 #, c-format
-msgid "<depname>"
-msgstr "<depname>"
-
-#, c-format
-msgid "<hbcname>"
-msgstr "<hbcname>"
-
-#, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "cuando la dependencia <depname> se detectó (disponible en código fuente C)"
 
@@ -2017,7 +1981,3 @@ msgstr "guarda el historial de comandos del intérprete de comandos de Harbour. 
 #, c-format
 msgid "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s"
 msgstr "lista de extensiones para cargar en el interprete de comandos interactivo de Harbour. Una extensión por línea, y se ignora todo lo que hay detrás del caracter '#'. Nombre de fichero alternativo en %2$s: %1$s. Reside en [*]: %3$s"
-
-#, c-format
-msgid "MS-DOS"
-msgstr "MS-DOS"

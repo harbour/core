@@ -97,7 +97,7 @@ VCS \- sistema de controle de versão\.
  - **\-ldflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar \(executável\), após a lista da biblioteca\. Use com cuidado\.
  - **\-dflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar \(biblioteca dinâmica\), após a lista da biblioteca\. Use com cuidado\.
  - **\-3rd=&lt;f&gt;** "options/flags" reservado para ferramentas de terceiros, sempre ignorado por hbmk2
- - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alterar as variáveis locais\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
+ - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alterar as variáveis locais de ambiente\. &lt;e&gt;é o nome da variável a ser alterada\. &lt;o&gt; pode ser '=' para definir/sobrepor, '\-' para apagar, '\+' to adicionar ao fim do valor existente, '\#' para inserir o valor inicialização da variável\. &lt;v&gt; é o valor a ser definido/adicionardo/inserido "set/append/insert"\.
  - **\-jobs=&lt;n&gt;** dispara &lt;n&gt; threads de compilação \(apenas plataformas multiprocessadas\)
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
@@ -189,7 +189,7 @@ criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo
  - **\-comp=&lt;compiler&gt;** sobrepor auto\-detecção do compilador C  
 VAlores especiais:  
 \- bld: use as definições da versão original \(padrão em \*nix\)
- - **\-build=&lt;name&gt;** utilizar um nome de build especifico
+ - **\-build=&lt;name&gt;** especificar um nome de 'build'
  - **\-lang=&lt;lang&gt;** Sobrepor a linguagem padrão\. &lt;lang&gt; está em formato de código ISO\.
  - **\-width=&lt;n&gt;** ajuste a largura de saída para &lt;n&gt; caracteres \(0=ilimitado\)\.
  - **\-shl** exibir niveis de sub\-projeto nas linhas de saída
@@ -306,13 +306,13 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
  - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
- - **\{st\}** build target is single\-threaded \(see \-st option\)
+ - **\{st\}** o alvo é "single\-threaded" \(veja opção \-st\)
  - **\{gui\}** GUI alvo \(veja opção \-gui\)
  - **\{std\}** alvo console \(veja opção \-console\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
  - **\{nodebug\}** Debugador nivel C está disabilitado \(veja a opção \-debug\)
- - **\{shared\}** shared build \(see \-shared and related options\)
- - **\{static\}** static build \(see \-static and related options\)
+ - **\{shared\}** construção compartilhada \(veja \-shared e opções relativas\)
+ - **\{static\}** construção compartilhada \(veja \-static e opções relativas\)
  - **\{lngcpp\}** Forçado modo C\+\+ \(veja opção \-cpp\)
  - **\{lngc\}** forçado modo C \(veja opção \-cpp\-\)
  - **\{winuni\}** Modo Windows UNICODE \(WIDE\) \(veja opção \-winuni\)
@@ -587,7 +587,7 @@ Exemplos para gerar uma aplicação Harbour:
 $ hbmk2 hello\.prg
  - **To build multiple \.prg sources into one application in incremental mode**  
 $ hbmk2 mymain\.prg myfuncs\.prg \-inc
- - **Para construir uma aplicação usando un arquivo de projeto**  
+ - **Para gerar uma aplicação usando um arquivo de projeto**  
 $ hbmk2 myapp\.hbp
  - **Para construir uma aplicação usando o modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
@@ -606,7 +606,7 @@ $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 Exemplos para gerar uma biblioteca estática Harbour:
 
 
- - **To build library 'mylib' from sources**  
+ - **para gerar a biblioteca 'mylib' dos fontes**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
  - **para gerar a biblioteca 'mylib' dos fontes usando o modo incremental**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
