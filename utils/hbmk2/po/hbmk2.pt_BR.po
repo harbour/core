@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 11:16+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 11:34+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -859,6 +859,14 @@ msgid "additional path to search for libraries"
 msgstr "path adicional para pesquisar por bibliotecas"
 
 #, c-format
+msgid "create dynamic library (with linked Harbour VM)"
+msgstr "criar biblioteca dinâmica (ligada com a Harbour VM)"
+
+#, c-format
+msgid "create dynamic library (without linked Harbour VM)"
+msgstr "criar biblioteca dinâmica (não ligada com a Harbour VM)"
+
+#, c-format
 msgid "create executable (default)"
 msgstr "criar um executável (padrão)"
 
@@ -1243,8 +1251,16 @@ msgid "output Harbour binary directory to stdout"
 msgstr "saída do diretório de binarios Harbour para stdout"
 
 #, c-format
+msgid "output Harbour dynamic library directory to stdout"
+msgstr "saída do diretório de bibliotéca dinâmica Harbour para stdout"
+
+#, c-format
 msgid "output Harbour header directory to stdout"
 msgstr "saída do diretório Harbour header para stdout"
+
+#, c-format
+msgid "output Harbour static library directory to stdout"
+msgstr "saída do diretório de bibliotécas estáticas Harbour para stdout"
 
 #, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
@@ -1811,6 +1827,10 @@ msgid "Display list of loaded Harbour header."
 msgstr "Mostra a lista de cabeçalhos Harbour carregados."
 
 #, c-format
+msgid "Enable Clipper compatibility (non-Unicode) mode."
+msgstr "habilitar modo de compatibilidade Clipper (non-Unicode)"
+
+#, c-format
 msgid "hb_DirBase() not mapped to script."
 msgstr "hb_DirBase() não mapeado para script."
 
@@ -1839,6 +1859,10 @@ msgid "Unload package."
 msgstr "Descarregar pacote."
 
 #, c-format
+msgid "Add a binary object file to the project."
+msgstr "Adicionar um arquivo objeto binário ao projeto."
+
+#, c-format
 msgid "Add a C input file to the project."
 msgstr "Adicionar um arquivo de entrada C ao projeto."
 
@@ -1851,12 +1875,24 @@ msgid "Add a file to be installed, with an optional -instpath= group name."
 msgstr "adicione um arquivo para ser instalado, com o opcional -instpath= nome do grupo."
 
 #, c-format
+msgid "Add a Harbour input file to the project."
+msgstr "Adicionar um arquivo de entrada Harbour ao projeto."
+
+#, c-format
+msgid "Add a Windows resource input file to the project."
+msgstr "Adicionar um arquivo de entrada \"Windows resource\" ao projeto."
+
+#, c-format
 msgid "Convert array of strings to a string. Default separator is a single space."
 msgstr "Converte matriz de strings para uma string. O separador padão é um espaço simples."
 
 #, c-format
 msgid "Convert filename to have forward slash directory separators."
 msgstr "Converter nome do arquivo para ter barra separadora de diretório."
+
+#, c-format
+msgid "Convert filename to the format required for the target platform/C compiler."
+msgstr "Converte o nome do arquivo para o formato requerido pelo plataforma/compilador C"
 
 #, c-format
 msgid "Evaluate %1$s macro expression."

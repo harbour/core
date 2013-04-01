@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 09:16+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 12:22+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -2013,6 +2013,10 @@ msgstr "Αποφόρτωση Harbour header."
 #, c-format
 msgid "Unload package."
 msgstr "Αποφόρτωση πακέτου"
+
+#, c-format
+msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
+msgstr "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
 
 #, c-format
 msgid "Add a binary object file to the project."

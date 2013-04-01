@@ -25,8 +25,8 @@ Opções
  - **\-inc\[\-\]** habilita/desabilitar o modo de compilação incremental \(padrão: desbilitado\)
  - **\-hbexe** criar um executável \(padrão\)
  - **\-hblib** criar biblioteca estática
- - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
- - **\-hbdynvm** create dynamic library \(with linked Harbour VM\)
+ - **\-hbdyn** criar biblioteca dinâmica \(não ligada com a Harbour VM\)
+ - **\-hbdynvm** criar biblioteca dinâmica \(ligada com a Harbour VM\)
 
 
  - **\-mt|\-st** linkar com suporte multi ou single\-thread na HVM
@@ -179,8 +179,8 @@ criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo
 
 
  - **\-\-hbdirbin** saída do diretório de binarios Harbour para stdout
- - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
- - **\-\-hbdirlib** output Harbour static library directory to stdout
+ - **\-\-hbdirdyn** saída do diretório de bibliotéca dinâmica Harbour para stdout
+ - **\-\-hbdirlib** saída do diretório de bibliotécas estáticas Harbour para stdout
  - **\-\-hbdirinc** saída do diretório Harbour header para stdout
  - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
 
@@ -461,15 +461,15 @@ Plugin API:
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
 Register input file extension to be passed to plugin \(by default all unknown file extensions are passed to Harbour compiler\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
-Add a Harbour input file to the project\.
+Adicionar um arquivo de entrada Harbour ao projeto\.
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Adicionar um arquivo de entrada C ao projeto\.
  - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Adicionar um arquivo de entrada C\+\+ ao projeto\.
  - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
-Add a Windows resource input file to the project\.
+Adicionar um arquivo de entrada "Windows resource" ao projeto\.
  - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
-Add a binary object file to the project\.
+Adicionar um arquivo objeto binário ao projeto\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 adicione um arquivo para ser instalado, com o opcional \-instpath= nome do grupo\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
@@ -485,7 +485,7 @@ Avaliar expressão macro hbmk2 \.
  - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Escape/quote filename for using it as external command parameter\.
  - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
-Convert filename to the format required for the target platform/C compiler\.
+Converte o nome do arquivo para o formato requerido pelo plataforma/compilador C
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Converter nome do arquivo para ter barra separadora de diretório\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
@@ -544,7 +544,7 @@ Shell API disponível nos scripts em Harbour:
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Mudar GT\. Padrão \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-Enable Clipper compatibility \(non\-Unicode\) mode\.
+habilitar modo de compatibilidade Clipper \(non\-Unicode\)
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carregar cabeçalho "header" Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
