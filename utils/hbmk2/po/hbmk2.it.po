@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 02:24+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 09:14+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -247,6 +247,10 @@ msgid "Error: %1$s"
 msgstr "Errore: %1$s"
 
 #, c-format
+msgid "No matches"
+msgstr "Nessuna corrispondenza"
+
+#, c-format
 msgid "(installed)"
 msgstr "(installato)"
 
@@ -263,8 +267,24 @@ msgid "Hint: Install package %3$s and add option '%1$s' for missing function(s):
 msgstr "Suggerimento: Installare il pacchetto %3$s e aggiungere l'opzione '%1$s' per l'omessa funzione(i): %2$s"
 
 #, c-format
+msgid "Updating extern header: %1$s"
+msgstr "Aggiornamento dell'intestazione esterna: %1$s"
+
+#, c-format
+msgid "Error: Updating extern header."
+msgstr "Errore: aggiornamento intestazione esterna."
+
+#, c-format
+msgid "Cannot find script '%1$s'"
+msgstr "Lo script '%1$s' non può essere trovato"
+
+#, c-format
 msgid "'%1$s' (%2$s) not found."
 msgstr "'%1$s' (%2$s) non trovato."
+
+#, c-format
+msgid "Error loading '%1$s' (%2$s)."
+msgstr "Errore del caricamento '%1$s' (%2$s)."
 
 #, c-format
 msgid "Cannot load '%1$s'. Requires -shared %2$s build."
@@ -347,6 +367,10 @@ msgid "Options:"
 msgstr "Opzioni:"
 
 #, c-format
+msgid "create executable (default)"
+msgstr "creazione dell'eseguibile (predefinita)"
+
+#, c-format
 msgid "enable/disable incremental build mode (default: disabled)"
 msgstr "abilita/disabilita la compilazione incrementale (default: disabilitata)"
 
@@ -367,12 +391,20 @@ msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies wh
 msgstr "<d> è il nome della dipendenza. <f> può essere 'yes' o 'no', specifica se la dipendenza è opzionale. Default: no"
 
 #, c-format
+msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
+msgstr "aggiungere il plugin. <filename> può essere: .hb, .prg, .hrb"
+
+#, c-format
 msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
 msgstr "crea (o non) una libreria d'importazione (in modalità -hbdyn/-hbexe). Al nome verrà aggiunto un suffisso."
 
 #, c-format
 msgid "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)"
 msgstr "crea la libreria di importazione (in modalità -hbdyn/-hbexe) di nome <output> (default: identica all'output)"
+
+#, c-format
+msgid "create import library (Windows only)"
+msgstr "creare la libreria d'importazione (solamente WIndows)"
 
 #, c-format
 msgid "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it."
@@ -407,6 +439,10 @@ msgid "link with all static libs"
 msgstr "linkare con una libreria statica"
 
 #, c-format
+msgid "pass input file to plugins"
+msgstr "specificare il file di input ai plugin"
+
+#, c-format
 msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
 msgstr "passa una singola opzione direttamente al linker (libreria dinamica) dopo la lista di libreria. Usare con cautela."
 
@@ -439,6 +475,22 @@ msgid "enable Harbour 1.0.x compatibility mode"
 msgstr "abilita la compatibilità Harbour 1.0.x"
 
 #, c-format
+msgid "enable Harbour 2.0.x compatibility mode"
+msgstr "abilita la compatibilità Harbour 2.0.x"
+
+#, c-format
+msgid "enable Harbour 3.0.x compatibility mode"
+msgstr "abilita la compatibilità Harbour 3.0.x"
+
+#, c-format
+msgid "Harbour compiler build information"
+msgstr "Informazioni del compilatore Harbour"
+
+#, c-format
+msgid "Harbour compiler credits"
+msgstr "Riconoscimenti del compilatore Harbour"
+
+#, c-format
 msgid "long help"
 msgstr "aiuto esteso"
 
@@ -459,12 +511,24 @@ msgid "specify a build name"
 msgstr "specificare un nome di compilazione"
 
 #, c-format
+msgid "stop after running Harbour compiler"
+msgstr "esecuzione fermata dopo l'esecuzione del compilatore Harbour"
+
+#, c-format
 msgid "this help"
 msgstr "questo aiuto"
 
 #, c-format
 msgid "mode %1$s"
 msgstr "modo %1$s"
+
+#, c-format
+msgid "mode %1$s (emulate C compiler)"
+msgstr "modo %1$s (emulazione compilatore Clipper)"
+
+#, c-format
+msgid "mode %1$s (emulate C linker)"
+msgstr "modo %1$s (emulazione linker di Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper compiler)"
@@ -623,6 +687,10 @@ msgid "forced C mode (see -cpp- option)"
 msgstr "modalità C forzata (vedere l'opzione -cpp-)"
 
 #, c-format
+msgid "forced C++ mode (see -cpp option)"
+msgstr "modalità C++ forzata (vedere l'opzione -cpp)"
+
+#, c-format
 msgid "GUI target (see -gui option)"
 msgstr "destinazione GUI (vedi l'opzone -gui)"
 
@@ -685,6 +753,10 @@ msgstr "aggiunge una lista di strutture separate da spazio (solo Darwin)"
 #, c-format
 msgid "add space separated list of libraries (see more at -l option)"
 msgstr "Aggiungi un elenco di librerie, separate da uno spazio (più informazioni con l'opzione -l)"
+
+#, c-format
+msgid "display <msg>"
+msgstr "visualizzare <msg>"
 
 #, c-format
 msgid "package description"
@@ -771,6 +843,10 @@ msgid "Switch GT. Default [*]: '%1$s'"
 msgstr "Cambia GT. Default [*]: '%1$s'"
 
 #, c-format
+msgid "Unload package."
+msgstr "Scaricare pacchetto."
+
+#, c-format
 msgid "Add a binary object file to the project."
 msgstr "Aggiunge al progetto un file binario oggetto."
 
@@ -839,6 +915,14 @@ msgid "Current exit code"
 msgstr "Codice di uscita attuale"
 
 #, c-format
+msgid "see %1$s envvar"
+msgstr "vedere variabile d'ambiente %1$s"
+
+#, c-format
+msgid "see %1$s macro"
+msgstr "vedere la macro %1$s"
+
+#, c-format
 msgid "Notes:"
 msgstr "Note:"
 
@@ -869,6 +953,10 @@ msgstr "Esempi per partire con %1$s:"
 #, c-format
 msgid "Examples to build and run Harbour portable binary (aka precompiled Harbour script):"
 msgstr "Esempi per compilare e lanciare un eseguibile portabile Harbour (ossia uno script Harbour precompilato):"
+
+#, c-format
+msgid "To build"
+msgstr "Per compilare"
 
 #, c-format
 msgid "To build an application out of all .prg and .c sources residing in 'source' subdir"

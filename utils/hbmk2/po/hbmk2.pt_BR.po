@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 03:36+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 11:16+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -403,6 +403,10 @@ msgid "Warning: Dangerous low-level option not recommended: %1$s"
 msgstr "Atenção: Opção de baixo nivel \"low-level\" perigosa e não recomendada: %1$s"
 
 #, c-format
+msgid "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead."
+msgstr "Atenção: Parâmetro não suportável: %1$s. Use as diretiva(s) %2$s no lugar."
+
+#, c-format
 msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
 msgstr "Atenção: Parâmetro não suportável: %1$s. Use no lugar a opção '%2$s'."
 
@@ -417,6 +421,10 @@ msgstr "Erro: Falha criando ligação simbólica %1$s para %2$s"
 #, c-format
 msgid "Created symbolic link %1$s to %2$s"
 msgstr "Criado ligação simbólica %1$s para %2$s"
+
+#, c-format
+msgid "Created import library: %1$s <= %2$s"
+msgstr "Biblioteca de importação criada: %1$s <= %2$s"
 
 #, c-format
 msgid "Error: Failed creating import library %1$s from %2$s."
@@ -443,6 +451,10 @@ msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
 msgstr "Atenção: Copiando o link simbólico %1$s para %2$s falhou em %3$d."
 
 #, c-format
+msgid "Copied symbolic link %1$s to %2$s"
+msgstr "link simbólico copiado %1$s para %2$s"
+
+#, c-format
 msgid "Warning: Copying %1$s to %2$s failed with %3$d."
 msgstr "Atenção: Copiando %1$s para %2$s Falhou em %3$d."
 
@@ -455,12 +467,20 @@ msgid "Warning: Cannot create install directory for install target %1$s."
 msgstr "Atenção: Não foi possível criar o diretório de instalação %1$s."
 
 #, c-format
+msgid "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings."
+msgstr "Erro interno: o mecanismo de expressão regular esta faltando ou não é suportado. Verifique suas configurações de compilação Harbour."
+
+#, c-format
 msgid "Error: In %1$s at line %2$d %3$s:"
 msgstr "Erro: Em %1$s na linha %2$d %3$s:"
 
 #, c-format
 msgid "Dependency '%1$s' found: %2$s%3$s%4$s%5$s"
 msgstr "Dependência '%1$s' encontrado: %2$s%3$s%4$s%5$s"
+
+#, c-format
+msgid "Dependency '%1$s' forcibly disabled"
+msgstr "Dependência '%1$s' desativação forcçada"
 
 #, c-format
 msgid "Warning: Missing optional dependencies: %1$s"
@@ -471,8 +491,20 @@ msgid "Warning: Missing optional dependency: %1$s"
 msgstr "Atenção: Faltou a dependência opcional: %1$s"
 
 #, c-format
+msgid "Error: Missing dependencies: %1$s"
+msgstr "Erro: Faltando a dependência: %1$s"
+
+#, c-format
 msgid "Error: Missing dependency: %1$s"
 msgstr "Erro: Faltou a dependência: %1$s"
+
+#, c-format
+msgid "Warning: Missing dependencies: %1$s"
+msgstr "Atenção: Faltando as dependências: %1$s"
+
+#, c-format
+msgid "Warning: Missing dependency: %1$s"
+msgstr "Atenção: Faltando a dependência: %1$s"
 
 #, c-format
 msgid "(compiled)"
@@ -483,8 +515,20 @@ msgid "(source)"
 msgstr "(fonte)"
 
 #, c-format
+msgid "Error: Initializing plugin: %1$s"
+msgstr "Erro: inicializando o plugin: %1$s"
+
+#, c-format
+msgid "Loaded plugin: %1$s %2$s"
+msgstr "Plugin carregado: %1$s %2$s"
+
+#, c-format
 msgid "Error: Loading plugin: %1$s"
 msgstr "Erro: Carregando o plugin: %1$s"
+
+#, c-format
+msgid "Plugin %1$s returned at '%2$s': '%3$s'"
+msgstr "Plugin %1$s devolvido em '%2$s': '%3$s'"
 
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
@@ -515,8 +559,20 @@ msgid "Warning: Cannot nest deeper in %1$s"
 msgstr "Atenção: Erro ao processar aninhamento em %1$s"
 
 #, c-format
+msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)"
+msgstr "Atenção: Ignorando explicitamente o diretório especificado no núcleo da biblioteca: %1$s (na directiva %2$s)"
+
+#, c-format
+msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)"
+msgstr "Atenção: Ignorando explicitamente especificado no diretório do núcleo header: %1$s (na directiva %2$s)"
+
+#, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
 msgstr "Atenção: Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
+
+#, c-format
+msgid "Warning: Project reference (%1$s) ignored. Project references require %2$s to be invoked with a main project."
+msgstr "Atenção: Projeto de referencia (%1$s) ignorado.Referências do projeto requerem %2$s para serem invocadas com um projeto principal."
 
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored in automatic make file: %2$s"
@@ -591,6 +647,10 @@ msgid "Error: Cannot create file: %1$s"
 msgstr "Erro: Impossível criar arquivo: %1$s"
 
 #, c-format
+msgid "Warning: Source dynamic library not found: %1$s"
+msgstr "Atenção: Fonte biblioteca dinâmica não encontrado: %1$s"
+
+#, c-format
 msgid "Import library creation command:"
 msgstr "comando de criação de bibliotecas de importação:"
 
@@ -647,6 +707,10 @@ msgid "Error: Updating extern header."
 msgstr "Erro: Atualizando cabeçalhos externos \"extern header\"."
 
 #, c-format
+msgid "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation."
+msgstr "Atenção: Falha ao detectar Harbour.\nExecutar esta ferramenta a partir de sua localização original, dentro da instalação do Harbour."
+
+#, c-format
 msgid "Cannot find script '%1$s'"
 msgstr "Não é possível encontrar o script '%1$s'"
 
@@ -661,6 +725,14 @@ msgstr "Erro carregando '%1$s' (%2$s)."
 #, c-format
 msgid "Cannot load '%1$s'. Requires -shared %2$s build."
 msgstr "Não posso carregar '%1$s'. Requer -shared %2$s build."
+
+#, c-format
+msgid "Error: Loading shell plugin: %1$s\n'%2$s'"
+msgstr "Erro: Carregando o shell plugin: %1$s\n'%2$s'"
+
+#, c-format
+msgid "Enter password:"
+msgstr "Entre com a senha:"
 
 #, c-format
 msgid "Could not execute:"
@@ -799,6 +871,10 @@ msgid "enable/disable incremental build mode (default: disabled)"
 msgstr "habilita/desabilitar o modo de compilação incremental (padrão: desbilitado)"
 
 #, c-format
+msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time"
+msgstr "linkar com GT<name> GT driver, a linkagem pode ser repetido com mais GTs. O primeiro será o GT padrão na execuçao do programa"
+
+#, c-format
 msgid "link with static/shared libs"
 msgstr "linkar com biliotecas estáticas/compartilhadas"
 
@@ -811,6 +887,10 @@ msgid "more help"
 msgstr "mais ajuda"
 
 #, c-format
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
+msgstr "<d> é o nome da dependencia. <f> pode ser 'yes' or 'no', especifica se a dependência é opcional.\nPadrão: no"
+
+#, c-format
 msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
 msgstr "<d> é o nome da dependencia. Adicione <dll> para importar a biblioteca na lista de fontes."
 
@@ -821,6 +901,10 @@ msgstr "<d> é o nome da dependêcia. Adicione <i> para detectar o cabeçalho na
 #, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr "<d> é o nome da dependência. Coloque no nome da biblioteca de importação para <lib>"
+
+#, c-format
+msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
+msgstr "adicionar plugin. <filename> pode ser: .hb, .prg, .hrb"
 
 #, c-format
 msgid "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual"
@@ -837,6 +921,10 @@ msgstr "compilação limpa (em modo de compilação incremental)"
 #, c-format
 msgid "compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max"
 msgstr "comprimir executável/lib dinamica (precisa programa UPX)\n<level> pode ser: yes, no, min, max"
+
+#, c-format
+msgid "copy target file(s) to install path even if already up to date"
+msgstr "copie os arquivo(s) para o destino do caminho de instalação mesmo que já atualizados"
 
 #, c-format
 msgid "create (or not) a map file"
@@ -933,6 +1021,10 @@ msgstr "herdar todos os flags .prg/.c/linker (ou nenhum) provindos do Harbour"
 #, c-format
 msgid "inherit all/no (default) flags from Harbour build"
 msgstr "herdar flags do Harbour: todos/nenhum (padrão)"
+
+#, c-format
+msgid "link with <framework> framework (Darwin only)"
+msgstr "linkar com <framework> framework (somente Darwin)"
 
 #, c-format
 msgid "link with all static libs"
@@ -1147,6 +1239,14 @@ msgid "long help in text viewer"
 msgstr "help completo em formato \"text viewer\""
 
 #, c-format
+msgid "output Harbour binary directory to stdout"
+msgstr "saída do diretório de binarios Harbour para stdout"
+
+#, c-format
+msgid "output Harbour header directory to stdout"
+msgstr "saída do diretório Harbour header para stdout"
+
+#, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
 msgstr "sobrepor auto-detecção do compilador C\nVAlores especiais:\n- bld: use as definições da versão original (padrão em *nix)"
 
@@ -1168,7 +1268,7 @@ msgstr "registre Harbour Script (.hb) com %1$s (somente para Windows)"
 
 #, c-format
 msgid "run build target"
-msgstr "executa programa gerado."
+msgstr "executar programa gerado."
 
 #, c-format
 msgid "set output width to <n> characters (0=unlimited)."
@@ -1201,6 +1301,38 @@ msgstr "ativar debugação de script"
 #, c-format
 msgid "this help"
 msgstr "esta ajuda"
+
+#, c-format
+msgid "Options below are internal/developer ones (compatibility not guaranteed):"
+msgstr "Opções abaixo são \" internal/developer ones\" (compatibilidade não garantida):"
+
+#, c-format
+msgid "display all input parameters in processing order"
+msgstr "exibir todos os parâmetros de entrada na ordem de processamento"
+
+#, c-format
+msgid "display content of all internally generated source files"
+msgstr "exibir o conteúdo de todos os arquivos fontes gerados internamente"
+
+#, c-format
+msgid "display internals of dependency detection"
+msgstr "exibir a dependência interna da detecção"
+
+#, c-format
+msgid "display internals of incremental build"
+msgstr "exibir as partes internas da compilação incremental"
+
+#, c-format
+msgid "display internals on translation file generation"
+msgstr "exibir o conteúdo da geração de arquivo de tradução"
+
+#, c-format
+msgid "generate a run-time error"
+msgstr "gerar um \"run-time error\" erro de tempo de execução"
+
+#, c-format
+msgid "measure time spent on the build"
+msgstr "medir o tempo gasto na contrução."
 
 #, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
@@ -1265,6 +1397,10 @@ msgstr "Variáveis ​​de ambiente:"
 #, c-format
 msgid "accepts same values (space separated) as %1$s option"
 msgstr "aceita os mesmos valores (separados por espaços) como opção %1$s"
+
+#, c-format
+msgid "accepts same values as %1$s option"
+msgstr "aceita os mesmos valores que a opção %1$s"
 
 #, c-format
 msgid "options to be passed to C compiler (before command-line options)"
@@ -1337,6 +1473,10 @@ msgstr "subdiretório padrão de trabalho para bibliotecas dinâmicas"
 #, c-format
 msgid "directory of %1$s"
 msgstr "directório de %1$s"
+
+#, c-format
+msgid "directory of the filename it is used in"
+msgstr "diretório de nome de arquivo é usado em"
 
 #, c-format
 msgid "directory of the output"
@@ -1503,8 +1643,16 @@ msgid "static build (see -static and related options)"
 msgstr "construção compartilhada (veja -static e opções relativas)"
 
 #, c-format
+msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+msgstr "o compilador C alvo pertence a família gcc.(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+
+#, c-format
 msgid "target C compiler is bcc* (bcc, bcc64)"
 msgstr "compilador C alvo é bcc* (bcc, bcc64)"
+
+#, c-format
+msgid "target C compiler is icc* (icc, iccia64)"
+msgstr "compilador alvo C é icc* (icc, iccia64)"
 
 #, c-format
 msgid "target C compiler is mingw* (mingw, mingw64, mingwarm)"
@@ -1515,8 +1663,20 @@ msgid "target C compiler is msvc* (msvc, msvc64, msvcia64, msvcarm)"
 msgstr "compilador C alvo é msvc* (msvc, msvc64, msvcia64, msvcarm)"
 
 #, c-format
+msgid "target C compiler is pocc* (pocc, pocc64, poccarm)"
+msgstr "compilador alvo C é pocc* (pocc, pocc64, poccarm)"
+
+#, c-format
+msgid "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
+msgstr "CPU alvo. Onde <cpu> pode ser qualquer uma dessas: x86, x86_64, ia64, arm, mips, sh"
+
+#, c-format
 msgid "target platform is Windows compatible (win, wce)"
 msgstr "plataforma alvo é compátivel com Windows (win, wce)"
+
+#, c-format
+msgid "Windows ANSI mode (see -winuni- option)"
+msgstr "modo Windows ANSI (veja opção -winuni-)"
 
 #, c-format
 msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
@@ -1544,11 +1704,11 @@ msgstr "adicionar lista separada por espaços dos locais adicionais dos \"header
 
 #, c-format
 msgid "add space separated list of files as input files"
-msgstr "adicionar lista arquivos separada por espaços como entrada"
+msgstr "adicionar lista separada por espaços de arquivos de entrada"
 
 #, c-format
 msgid "add space separated list of frameworks (Darwin only)"
-msgstr "adicione espaços para separar a lista de \"frameworks\" (somente para Darwin)"
+msgstr "adicionar lista separada por espaços de \"frameworks\" (somente para Darwin)"
 
 #, c-format
 msgid "add space separated list of libraries (see more at -l option)"
@@ -1557,6 +1717,10 @@ msgstr "adicionar lista separada por espaços de bibliotecas (veja mais opções
 #, c-format
 msgid "add space separated list of libraries as system libraries (before regular libraries)"
 msgstr "adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema (antes bibliotecas regulares)"
+
+#, c-format
+msgid "add space separated list of symbols to force link to the build target"
+msgstr "adicionar lista separada por espaços de símbolos para forçar a linkagem do programa"
 
 #, c-format
 msgid "display <msg>"
@@ -1588,11 +1752,31 @@ msgstr "lista separada por espaço de %1$s plugins para carga"
 
 #, c-format
 msgid "space separated list of additional library paths"
-msgstr "espaço separa a lista de locais de bibliotecas adicionais"
+msgstr "adicionar lista separada por espaços dos locais de bibliotecas adicionais"
+
+#, c-format
+msgid "space separated list of keywords"
+msgstr "lista separada por espaço de palavras-chave"
+
+#, c-format
+msgid "space separated list of licenses"
+msgstr "lista separada por espaço de licenças"
+
+#, c-format
+msgid "space separated list of source repository references"
+msgstr "lista separada por espaço dos repositório de referências dos fontes"
+
+#, c-format
+msgid "space separated list of values as in %1$s option"
+msgstr "lista separada por espaço de opções de valores de entrada %1$s"
 
 #, c-format
 msgid "stop the build. Display <msg>, if specified."
 msgstr "parar a geração. Mostrar <msg>, se especificado."
+
+#, c-format
+msgid "Predefined constants in sources:"
+msgstr "Constantes pré-definidas nos fontes:"
 
 #, c-format
 msgid "when <depname> dependency was detected (available in C sources)"
@@ -1667,6 +1851,14 @@ msgid "Add a file to be installed, with an optional -instpath= group name."
 msgstr "adicione um arquivo para ser instalado, com o opcional -instpath= nome do grupo."
 
 #, c-format
+msgid "Convert array of strings to a string. Default separator is a single space."
+msgstr "Converte matriz de strings para uma string. O separador padão é um espaço simples."
+
+#, c-format
+msgid "Convert filename to have forward slash directory separators."
+msgstr "Converter nome do arquivo para ter barra separadora de diretório."
+
+#, c-format
 msgid "Evaluate %1$s macro expression."
 msgstr "Avaliar expressão macro %1$s ."
 
@@ -1677,6 +1869,10 @@ msgstr "Texto de saída para stderr."
 #, c-format
 msgid "Output text to stdout."
 msgstr "Texto de saída para stdout."
+
+#, c-format
+msgid "Return relative path of -workdir= value from current working directory."
+msgstr "retorna o caminho relativo de -workdir= valor do diretório atual de trabalho."
 
 #, c-format
 msgid "%1$s option status"
@@ -1845,3 +2041,7 @@ msgstr "para gerar a biblioteca 'mylib' dos fontes usando o modo incremental"
 #, c-format
 msgid "%1$s build-time configuration:"
 msgstr "%1$s configuração build-time:"
+
+#, c-format
+msgid "space separated list of extensions to load in interactive Harbour shell"
+msgstr "lista separada por espaço de extensões para carga no shell interativo do Harbour"

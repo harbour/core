@@ -62,7 +62,7 @@ Visualizza l'elenco di intestazione di Harbour caricato\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carica un pacchetto\. Simile alla direttiva PP \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Unload package\.
+Scaricare pacchetto\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista dei pacchetti caricati
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  

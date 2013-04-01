@@ -23,7 +23,7 @@ Opzioni:
  - **\-static|\-shared** link with static/shared libs
  - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
  - **\-inc\[\-\]** abilita/disabilita la compilazione incrementale \(default: disabilitata\)
- - **\-hbexe** create executable \(default\)
+ - **\-hbexe** creazione dell'eseguibile \(predefinita\)
  - **\-hblib** create static library
  - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
  - **\-hbdynvm** create dynamic library \(with linked Harbour VM\)
@@ -108,7 +108,7 @@ Opzioni:
 
 
  - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
- - **\-hbimplib** create import library \(Windows only\)
+ - **\-hbimplib** creare la libreria d'importazione \(solamente WIndows\)
 
 
  - **\-hbl\[=&lt;output&gt;\]** output \.hbl filename\. %\{hb\_lng\} macro is accepted in filename
@@ -135,8 +135,8 @@ Opzioni:
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; is the name of the dependency\. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly\. Optional, if omitted, detection will take place after processing all options\.
 
 
- - **\-plugin=&lt;filename&gt;** add plugin\. &lt;filename&gt; can be: \.hb, \.prg, \.hrb
- - **\-pi=&lt;filename&gt;** pass input file to plugins
+ - **\-plugin=&lt;filename&gt;** aggiungere il plugin\. &lt;filename&gt; può essere: \.hb, \.prg, \.hrb
+ - **\-pi=&lt;filename&gt;** specificare il file di input ai plugin
  - **\-pflag=&lt;f&gt;** pass single flag to plugins
   
 Opzioni riportate di seguito sono disponibili da riga di comando:  
@@ -146,7 +146,7 @@ Opzioni riportate di seguito sono disponibili da riga di comando:
 
 
  - **\-hbrun** run build target
- - **\-hbraw** stop after running Harbour compiler
+ - **\-hbraw** esecuzione fermata dopo l'esecuzione del compilatore Harbour
  - **\-hbcmp|\-clipper** stop after creating the object files  
 create link/copy hbmk2 to hbcmp/clipper for the same effect
  - **\-hbcc** accept raw C flags  
@@ -154,8 +154,8 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hblnk** accept raw linker flags
  - **\-autohbm\[\-\]** enable \(or disable\) processing of hbmk\.hbm in current directory \(default: yes\)
  - **\-hb10** abilita la compatibilità Harbour 1\.0\.x
- - **\-hb20** enable Harbour 2\.0\.x compatibility mode
- - **\-hb30** enable Harbour 3\.0\.x compatibility mode
+ - **\-hb20** abilita la compatibilità Harbour 2\.0\.x
+ - **\-hb30** abilita la compatibilità Harbour 3\.0\.x
  - **\-xhb** enable xhb mode
  - **\-hbc** enable pure C mode
  - \-rtlink 
@@ -196,8 +196,8 @@ Special value:
  - **\-longhelp** aiuto esteso
  - **\-longhelpmd** Help esteso in formato [Markdown](http://daringfireball.net/projects/markdown/)
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
- - **\-credits** Harbour compiler credits
- - **\-build** Harbour compiler build information
+ - **\-credits** Riconoscimenti del compilatore Harbour
+ - **\-build** Informazioni del compilatore Harbour
  - **\-version** display version header only
   
 Options below are internal/developer ones \(compatibility not guaranteed\):  
@@ -227,8 +227,8 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **\*30** opzione \-hb30
  - **x\*** opzione \-xhb
  - **hbcmp\*|\*hbcmp** mode \-hbcmp \(emulate Harbour compiler producing a binary object\)
- - **hbcc\*|\*hbcc** mode \-hbcc \(emulate C compiler\)
- - **hblnk\*|\*hblnk** mode \-hblnk \(emulate C linker\)
+ - **hbcc\*|\*hbcc** modo \-hbcc \(emulazione compilatore Clipper\)
+ - **hblnk\*|\*hblnk** modo \-hblnk \(emulazione linker di Clipper\)
  - **hbexe\*|\*hbexe** modo \-hbexe
  - **hblib\*|\*hblib** modo \-hblib
  - **hbdyn\*|\*hbdyn** modo \-hbdyn
@@ -312,7 +312,7 @@ Filters \(you can combine and/or negate them\):
  - **\{nodebug\}** C level debugging is disabled \(see \-debug\- option\)
  - **\{shared\}** shared build \(see \-shared and related options\)
  - **\{static\}** static build \(see \-static and related options\)
- - **\{lngcpp\}** forced C\+\+ mode \(see \-cpp option\)
+ - **\{lngcpp\}** modalità C\+\+ forzata \(vedere l'opzione \-cpp\)
  - **\{lngc\}** modalità C forzata \(vedere l'opzione \-cpp\-\)
  - **\{winuni\}** Modo Windows UNICODE \(WIDE\) \(vedere l'opzione \-winuni\)
  - **\{winansi\}** Modalità ANSI Windows \(vedere l'opzione \-winuni\-\)
@@ -385,7 +385,7 @@ Variabili d'ambiente:
 \.hbc direttive \(essi dovrebbero essere scritte in righe separate\):  
 
 
- - **echo=&lt;msg&gt;** display &lt;msg&gt;
+ - **echo=&lt;msg&gt;** visualizzare &lt;msg&gt;
  - **skip=\[&lt;msg&gt;\]** skip processing the rest of the \.hbc file\. Display &lt;msg&gt;, if specified\.
  - **stop=\[&lt;msg&gt;\]** ferma la compilazione\. Visualizza &lt;msg&gt;, se specificato\.
  - **sources=** aggiunge come file di input una lista di file separati da spazio
@@ -510,12 +510,12 @@ Plugin variables:
  - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
  - **"cPLAT"** valore \-plat
  - **"cCOMP"** valore \-comp
- - **"nCOMPVer"** see HB\_COMPILER\_VER envvar
+ - **"nCOMPVer"** vedere variabile d'ambiente HB\_COMPILER\_VER
  - **"cCPU"** valore \-cpu
  - **"cBUILD"** valore \-build=
  - **"cOUTPUTNAME"** valore \-o
- - **"cTARGETNAME"** see $\{hb\_targetname\} macro
- - **"cTARGETTYPE"** see $\{hb\_targettype\} macro
+ - **"cTARGETNAME"** vedere la macro $\{hb\_targetname\}
+ - **"cTARGETTYPE"** vedere la macro $\{hb\_targettype\}
  - **"lREBUILD"** \-rebuild stato dell'opzione
  - **"lCLEAN"** \-clean stato dell'opzione
  - **"lDEBUG"** \-debug stato dell'opzione
@@ -529,10 +529,10 @@ Plugin variables:
  - **"lBEEP"** \-beep stato dell'opzione
  - **"lRUN"** \-run stato dell'opzione
  - **"lINC"** \-inc stato dell'opzione
- - **"cCCPATH"** see HB\_CCPATH envvar
- - **"cCCPREFIX"** see HB\_CCPREFIX envvar
- - **"cCCSUFFIX"** see HB\_CCSUFFIX envvar
- - **"cCCEXT"** see HB\_CCEXT envvar
+ - **"cCCPATH"** vedere variabile d'ambiente HB\_CCPATH
+ - **"cCCPREFIX"** vedere variabile d'ambiente HB\_CCPREFIX
+ - **"cCCSUFFIX"** vedere variabile d'ambiente HB\_CCSUFFIX
+ - **"cCCEXT"** vedere variabile d'ambiente HB\_CCEXT
  - **"cWorkDir"** valore \-workdir=
  - **"nExitCode"** Codice di uscita attuale
   
@@ -552,7 +552,7 @@ Visualizza l'elenco di intestazione di Harbour caricato\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carica un pacchetto\. Simile alla direttiva PP \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Unload package\.
+Scaricare pacchetto\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista dei pacchetti caricati
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
@@ -573,7 +573,7 @@ $ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 Esempi per compilare e lanciare un eseguibile portabile Harbour \(ossia uno script Harbour precompilato\):
 
 
- - **To build**  
+ - **Per compilare**  
 $ hbmk2 \-gh myscript\.hb
  - **To run result of above**  
 $ hbmk2 myscript\.hrb \[&lt;parameter\[s\]&gt;\]

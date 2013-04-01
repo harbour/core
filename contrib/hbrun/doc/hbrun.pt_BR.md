@@ -35,7 +35,7 @@ Arquivos:
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Predefined constants in sources:
+Constantes pré\-definidas nos fontes:
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rudando como "shell script"
@@ -44,7 +44,7 @@ Predefined constants in sources:
 Variáveis ​​de ambiente:  
 
 
- - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
+ - **HB\_EXTENSION** lista separada por espaço de extensões para carga no shell interativo do Harbour
   
 Shell API disponível nos scripts em Harbour:  
 
