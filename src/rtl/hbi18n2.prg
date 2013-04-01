@@ -337,31 +337,37 @@ STATIC FUNCTION __i18n_ItemToStr( item )
 FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTransformTranslation )
 
    LOCAL item
-   LOCAL lEmpty
    LOCAL cString
+   LOCAL lDelete
+   LOCAL lVoid
 
    hb_default( @lKeepSource, .T. )
    hb_default( @lKeepVoidTranslations, .T. )
 
    FOR EACH item IN aTrans DESCEND
       IF HB_ISEVALITEM( bTransformTranslation )
+         lDelete := .F.
          FOR EACH cString IN item[ _I18N_MSGSTR ]
             cString := Eval( bTransformTranslation, cString, item[ _I18N_MSGID, cString:__enumIndex() ] )
             IF ! HB_ISSTRING( cString )
-               hb_ADel( aTrans, item:__enumIndex(), .T. )
-               LOOP
-            ENDIF
-         NEXT
-      ENDIF
-      IF ! lKeepVoidTranslations
-         lEmpty := .T.
-         FOR EACH cString IN item[ _I18N_MSGSTR ]
-            IF ! Empty( cString ) .AND. !( cString == item[ _I18N_MSGID, cString:__enumIndex() ] )
-               lEmpty := .F.
+               lDelete := .T.
                EXIT
             ENDIF
          NEXT
-         IF lEmpty
+         IF lDelete
+            hb_ADel( aTrans, item:__enumIndex(), .T. )
+            LOOP
+         ENDIF
+      ENDIF
+      IF ! lKeepVoidTranslations
+         lVoid := .T.
+         FOR EACH cString IN item[ _I18N_MSGSTR ]
+            IF ! Empty( cString ) .AND. !( cString == item[ _I18N_MSGID, cString:__enumIndex() ] )
+               lVoid := .F.
+               EXIT
+            ENDIF
+         NEXT
+         IF lVoid
             hb_ADel( aTrans, item:__enumIndex(), .T. )
             LOOP
          ENDIF
