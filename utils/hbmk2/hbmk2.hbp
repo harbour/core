@@ -20,13 +20,18 @@ hbmk2.prg
 
 -lhbpmcom{dos}
 
-po/hbmk2.%{hb_lng}.po
--hbl=hbmk2.%{hb_lng}.hbl
-
--lng=el,es_419,es_ES,fr_FR,hu,it,pt_BR
-
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs
 #-icon={allwin}../../package/harb_win.ico
 #-icon={os2}../../package/harb_os2.ico
 hbmk2.rc
+
+# localization
+po/hbmk2.%{hb_lng}.po
+-hbl=hbmk2.%{hb_lng}.hbl
+-lng=el,es_419,es_ES,fr_FR,hu,it,pt_BR
+
+# localization (automatization)
+-3rd=_hblang_docext=.md
+-3rd=_hblang_docoption=-lang={LNG}
+-3rd=_hblang_docoption=-longhelpmd

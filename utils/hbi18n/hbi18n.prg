@@ -174,18 +174,16 @@ STATIC PROCEDURE Logo()
 STATIC PROCEDURE Syntax()
 
    Logo()
-   OutStd( I_( ;
-      "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + hb_eol() + ;
+   OutStd( ;
+      I_( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" ) + hb_eol() + ;
       hb_eol() + ;
-      "    -m          merge given .pot files" + hb_eol() + ;
-      "    -g          generate .hbl file from given .pot files" + hb_eol() + ;
-      "    -a          add automatic translations to 1-st .pot file using" + hb_eol() + ;
-      "                translations from other .pot or .hbl files" + hb_eol() + ;
-      "    -o<outfile> output file name" + hb_eol() + ;
-      "                default is first .pot file name with" + hb_eol() + ;
-      "                .po (merge) or .hbl extension" + hb_eol() + ;
-      "    -e          do not strip empty translation rules from .hbl files" + hb_eol() + ;
-      "    -q          quiet mode" + hb_eol() ) + ;
+      "    -m          " + I_( "merge given .pot files" ) + hb_eol() + ;
+      "    -g          " + I_( "generate .hbl file from given .pot files" ) + hb_eol() + ;
+      "    -a          " + I_( "add automatic translations to 1st .pot file using translations from other .pot/.hbl files" ) + hb_eol() + ;
+      "    -o<outfile> " + I_( "output file name" ) + hb_eol() + ;
+      "                " + I_( "default is first .pot file name with .po (merge) or .hbl extension" ) + hb_eol() + ;
+      "    -e          " + I_( "do not strip empty translation rules from .hbl files" ) + hb_eol() + ;
+      "    -q          " + I_( "quiet mode" ) + hb_eol() + ;
       hb_eol() )
 
    IF hb_gtInfo( HB_GTI_ISGRAPHIC )

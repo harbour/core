@@ -188,7 +188,7 @@ EXTERNAL hbmk_KEYW
 
 #define _SELF_NAME_             "hbmk2"
 
-#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x /*, _SELF_NAME_ */ ) )
 #define R_( x )                 ( x ) /* marking for regexps */
 
 #define _TARG_PLAT              1
@@ -15629,8 +15629,8 @@ STATIC PROCEDURE ShowHeader( hbmk )
    Eval( hbmk[ _HBMK_bOut ], cText )
 
    IF !( Lower( Left( hbmk[ _HBMK_cUILNG ], 2 ) ) == "en" )
-      cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" )
-      cTrsTextI := I_( cTrsText )
+      cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" /*, _SELF_NAME_ */ )
+      cTrsTextI := hb_UTF8ToStr( hb_i18n_gettext( cTrsText ) )
       IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )
          cText := hb_StrFormat( cTrsTextI, hbmk[ _HBMK_cUILNG ] ) + e"\n"
          IF hbmk[ _HBMK_lMarkdown ]
