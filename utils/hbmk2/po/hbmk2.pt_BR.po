@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 11:34+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 16:42+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -955,6 +955,10 @@ msgid "create import library (Windows only)"
 msgstr "Criar Bibliotecas de importação (só para Windows)"
 
 #, c-format
+msgid "create position independent object code (always enabled in -hbdyn/-hbdynvm modes)"
+msgstr "criar posição independente do código objeto (sempre habilitado no modo -hbdyn/-hbdynvm)"
+
+#, c-format
 msgid "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)"
 msgstr "criar binário que faça uso da biblioteca compartilhada do Harbour com referência absoluta (ou não) (padrão: 'fullshared' quando Harbour é instalado no local do sistema, caso contrário será 'fixshared') (fix/full é somente para *nix)"
 
@@ -1069,6 +1073,10 @@ msgstr "sobrepor o nome inicial das função/procedures"
 #, c-format
 msgid "pass input file to plugins"
 msgstr "passar arquivo de entrada paraplugins"
+
+#, c-format
+msgid "pass single flag to code sign command"
+msgstr "passar um único \"flag\" para criar o comando \"code sign\""
 
 #, c-format
 msgid "pass single flag to C compiler"
@@ -1233,6 +1241,10 @@ msgstr "Compilador Harbour (build)"
 #, c-format
 msgid "Harbour compiler credits"
 msgstr "créditos compilador Harbour"
+
+#, c-format
+msgid "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)"
+msgstr "Ajuda do compilador Harbour (todas as opções do compilador Harbour serão aceitas como %1$s)"
 
 #, c-format
 msgid "long help"
@@ -1563,6 +1575,10 @@ msgid "Harbour version in hexadecimal triple byte format. F.e.: %1$s"
 msgstr "Versão do Harbour no formato de tres bytes em hexadecimal. Por exemplo: %1$s"
 
 #, c-format
+msgid "Harbour version in human readable format <major>.<minor>.<release><status>. F.e.: %1$s"
+msgstr "Versão do Harbour no formato legível por humanos <major>.<minor>.<release><status>. Ex.: %1$s"
+
+#, c-format
 msgid "Harbour version status"
 msgstr "status da versão Harbour"
 
@@ -1809,6 +1825,10 @@ msgstr "quando um arquivo .hbx está presente em um projeto (disponível nos fon
 #, c-format
 msgid "when a Harbour source file is run as a shell script"
 msgstr "quando um programa fonte Harbour está rudando como \"shell script\""
+
+#, c-format
+msgid "return the header directory where <depname> was detected, or empty if it was not."
+msgstr "retorna o diretório header onde <depname> foi detectada, ou vazio se não."
 
 #, c-format
 msgid "when <depname> dependency was detected"

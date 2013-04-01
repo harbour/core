@@ -34,7 +34,7 @@ Opções
  - **\-main=&lt;mainfunc&gt;** sobrepor o nome inicial das função/procedures
  - **\-request=&lt;func&gt;** forçar a linkagem da função/procedure
  - **\-fullstatic** linkar com todas as bibliotecas estáticas
- - **\-pic\[\-\]** create position independent object code \(always enabled in \-hbdyn/\-hbdynvm modes\)
+ - **\-pic\[\-\]** criar posição independente do código objeto \(sempre habilitado no modo \-hbdyn/\-hbdynvm\)
  - **\-\[full|fix\]shared** criar binário que faça uso da biblioteca compartilhada do Harbour com referência absoluta \(ou não\) \(padrão: 'fullshared' quando Harbour é instalado no local do sistema, caso contrário será 'fixshared'\) \(fix/full é somente para \*nix\)
  - **\-nulrdd\[\-\]** linkar com o nulrdd
  - **\-debug\[\-\]** adicionar/excluir informações de debug do compilador C\. Para compilar com Harbour utilize a opção \-b como de costume\.
@@ -91,7 +91,7 @@ VCS \- sistema de controle de versão\.
  - **\-dflag=&lt;f&gt;** informar flags para o linkeditor \(biblioteca dinânica\)
  - **\-aflag=&lt;f&gt;** passa flag para o linkeditor \(lib estática\)
  - **\-iflag=&lt;f&gt;** passar um unico "flag" para criar o comando de impotação de bibliotecas
- - **\-signflag=&lt;f&gt;** pass single flag to code sign command
+ - **\-signflag=&lt;f&gt;** passar um único "flag" para criar o comando "code sign"
  - **\-runflag=&lt;f&gt;** argumentos à serem passados ao executável gerado quando \-run for utilizado
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
  - **\-ldflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar \(executável\), após a lista da biblioteca\. Use com cuidado\.
@@ -197,7 +197,7 @@ VAlores especiais:
  - **\-viewhelp** help completo em formato "text viewer"
  - **\-longhelp** ajuda detalhada
  - **\-longhelpmd** help completo em formato [Markdown](http://daringfireball.net/projects/markdown/)
- - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
+ - **\-harbourhelp** Ajuda do compilador Harbour \(todas as opções do compilador Harbour serão aceitas como hbmk2\)
  - **\-credits** créditos compilador Harbour
  - **\-build** Compilador Harbour \(build\)
  - **\-version** exibir somente o cabeçalho com a versão do hbmk
@@ -278,7 +278,7 @@ Variáveis macro:
  - **$\{hb\_dynsuffix\}** sufixo de biblioteca dinâmica
  - **$\{hb\_dynext\}** extensão de biblioteca dinâmica
  - **$\{hb\_ver\}** Versão do Harbour no formato de tres bytes em hexadecimal\. Por exemplo: 030200
- - **$\{hb\_verstr\}** Harbour version in human readable format &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. F\.e\.: 3\.2\.0dev
+ - **$\{hb\_verstr\}** Versão do Harbour no formato legível por humanos &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Ex\.: 3\.2\.0dev
  - **$\{hb\_major\}** número da versão principal Harbour
  - **$\{hb\_minor\}** úmero da versão secundária Harbour
  - **$\{hb\_release\}** número da versão Harbour
@@ -354,7 +354,7 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** quando &lt;depname&gt; dependência foi detectada
- - **HBMK\_DIR\_&lt;depname&gt;** return the header directory where &lt;depname&gt; was detected, or empty if it was not\.
+ - **HBMK\_DIR\_&lt;depname&gt;** retorna o diretório header onde &lt;depname&gt; foi detectada, ou vazio se não\.
  - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** quando dependência &lt;depname&gt; foi detectada em um local configurado pela opção \-depincpathlocal
   
 Variáveis ​​de ambiente:  

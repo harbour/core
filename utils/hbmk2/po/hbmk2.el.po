@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 14:12+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 15:27+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -112,7 +112,7 @@ msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρ�
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)"
-msgstr "Προσοχή: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών header: %1$s (στην επιλογή %2$s)"
+msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών header: %1$s (στην επιλογή %2$s)"
 
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
@@ -364,7 +364,7 @@ msgstr "Προειδοποίηση: Εκτέλεση εντολής συμπίε
 
 #, c-format
 msgid "Warning: Code signing skipped, because no supported code signing tool could be found."
-msgstr "Προσοχη: Η σήμανση του κώδικα παρακάμφθηκε, διότι δεν βρέθηκε εργαλείο σήμανσης κώδικα."
+msgstr "Προειδοποίηση: Η σήμανση του κώδικα παρακάμφθηκε, διότι δεν βρέθηκε εργαλείο σήμανσης κώδικα."
 
 #, c-format
 msgid "Code sign command:"
@@ -384,7 +384,7 @@ msgstr "Τρέξιμο του εκτελέσιμου:"
 
 #, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d."
-msgstr "Προσοχή: Άσκοπη από κοινού χρήση των επιλογών %1$s και %2$s στο '%3$s' γραμμή %4$d και %5$d."
+msgstr "Προειδοποίηση: Άσκοπη από κοινού χρήση των επιλογών %1$s και %2$s στο '%3$s' γραμμή %4$d και %5$d."
 
 #, c-format
 msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
@@ -412,7 +412,7 @@ msgstr "Προειδοποίηση: Μη-μεταφέρσιμη παράμετρ
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
-msgstr "Προσοχή: Γίνεται παράβλεψη της ρητά ορισθείσας βιβλιοθήκης-πυρήνα: %1$s (στην επιλογή %2$s)"
+msgstr "Προειδοποίηση: Γίνεται παράβλεψη της ρητά ορισθείσας βιβλιοθήκης-πυρήνα: %1$s (στην επιλογή %2$s)"
 
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
@@ -460,7 +460,7 @@ msgstr "Προειδοποίηση: Η αντιγραφή %1$s σε %2$s απέ�
 
 #, c-format
 msgid "Copied %1$s to %2$s"
-msgstr "Εγινε αντιγραφή %1$s σε %2$s"
+msgstr "Εγινε αντιγραφή του %1$s σε %2$s"
 
 #, c-format
 msgid "Warning: Cannot create install directory for install target %1$s."
@@ -472,7 +472,7 @@ msgstr "Εσωτερικό λάθος: Η μηχανή των Regular expression
 
 #, c-format
 msgid "Error: In %1$s at line %2$d %3$s:"
-msgstr "Λάθος: σε %1$s στη γραμμή %2$d %3$s:"
+msgstr "Λάθος: στο %1$s στη γραμμή %2$d %3$s:"
 
 #, c-format
 msgid "Dependency '%1$s' found: %2$s%3$s%4$s%5$s"
@@ -628,7 +628,7 @@ msgstr "Δημιουργήθηκε το .hbl αρχείο '%1$s' για τη γ�
 
 #, c-format
 msgid ".pot error: %1$s"
-msgstr ".pot λάθος: %1$s"
+msgstr "λάθος .pot: %1$s"
 
 #, c-format
 msgid "Warning: %1$s"
@@ -636,7 +636,7 @@ msgstr "Προειδοποίηση: %1$s"
 
 #, c-format
 msgid ".pot merge error: %1$s"
-msgstr ".pot λάθος συγχώνευσης: %1$s"
+msgstr "λάθος συγχώνευσης .pot: %1$s"
 
 #, c-format
 msgid "Error: %1$s"
@@ -652,23 +652,23 @@ msgstr "Προειδοποίηση: Δεν βρέθηκε η πηγαία δυν
 
 #, c-format
 msgid "Import library creation command:"
-msgstr "εντολή δημιουργίας βιβλιοθήκης εισαγωγής"
+msgstr "Εντολή δημιουργίας βιβλιοθήκης εισαγωγής"
 
 #, c-format
 msgid "Found COFF .lib with the same name, falling back to using it instead of the .dll."
-msgstr "Βρέθηκε COFF .lib με το ίδιο όνομα, θα χρησιμοποιηθεί αυτή αντί για την .dll."
+msgstr "Βρέθηκε COFF .lib με το ίδιο όνομα, θα χρησιμοποιηθεί αυτή αντί για το .dll."
 
 #, c-format
 msgid "Found OMF .lib with the same name, falling back to using it instead of the .dll."
-msgstr "Βρέθηκε OMF .lib με το ίδιο όνομα, θα χρησιμοποιηθεί αυτή αντί για τη .dll."
+msgstr "Βρέθηκε OMF .lib με το ίδιο όνομα, θα χρησιμοποιηθεί αυτή αντί για το .dll."
 
 #, c-format
 msgid "Found .def file with the same name, falling back to using it instead of the .dll."
-msgstr "Βρέθηκε .def αρχείο με το ίδιο όνομα, θα χρησιμοποιηθεί αυτό αντί για τη .dll."
+msgstr "Βρέθηκε .def αρχείο με το ίδιο όνομα, θα χρησιμοποιηθεί αυτό αντί για το .dll."
 
 #, c-format
 msgid "VCS version command:"
-msgstr "εντολή έκδοσης VCS:"
+msgstr "Εντολή έκδοσης VCS:"
 
 #, c-format
 msgid "No matches"
@@ -732,11 +732,11 @@ msgstr "Λάθος: Κατά την φόρτωση του plugin κελύφου�
 
 #, c-format
 msgid "Error: Interactive session not possible with %1$s terminal driver"
-msgstr "Λάθος: Η διαλογική συνεδρία είναι ανέφικτη με τον %1$s οδηγό τερματικού"
+msgstr "Λάθος: Η διαδραστική συνεδρία είναι ανέφικτη με τον %1$s οδηγό τερματικού"
 
 #, c-format
 msgid "Enter password:"
-msgstr "Εισάγετε κωδικό:"
+msgstr "Εισάγετε κωδικό πρόσβασης:"
 
 #, c-format
 msgid "Could not execute:"
@@ -768,7 +768,7 @@ msgstr "Φόρτωση xhp (xMate) αρχείο έργου: %1$s"
 
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
-msgstr "Μετάφραση (%1$s): (να βάλλω το όνομα μου εδώ)"
+msgstr "Μετάφραση (%1$s): Pete D. (pete_westg@yahoo.gr)"
 
 #, c-format
 msgid "no error"
@@ -973,6 +973,10 @@ msgstr "συμπίεση εκτελέσιμου/δυναμικής βιβλιο�
 #, c-format
 msgid "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
 msgstr "έλεγχος της ανάλυσης του πηγαίου header (σε αυξητικό -incremental- ρυθμό κατασκευής)\n<m> μπορεί να είναι: native (χρήση του μεταγλωττιστή για εξαγωγή των εξαρτήσεων), full (προεπιλογή, χρήση απλού αναλυτή κειμένου σε όλο το αρχείο), dep, off"
+
+#, c-format
+msgid "copy target file(s) to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies."
+msgstr "αντιγραφή των αρχείου(ων) στο <path>. Αν το <path> είναι κατάλογος, πρέπει να τελειώνει με τον διαχωριστή μονοπατιού· σε αυτή την περίπτωση τα αρχεία που καθορίστηκαν με την επιλογή -instfile θα αντιγραφούν επίσης· μπορεί να οριστεί πολλαπλές φορές. <g> είναι μια προαιρετική ομάδα αντιγραφής, πρέπει να έχει μήκος τουλάχιστον δύο χαρακτήρων. Το κατασκευασμένο έργο θα αντιγραφεί αυτόματα σε προεπιλεγμένη (άδεια) ομάδα αντιγραφής. Υπάρχουν οι ακόλουθες ενσωματωμένες <g> ομάδες: 'depimplib' για τις βιβλιοθήκες εισαγωγής και 'depimplibsrc' για πηγαία (.dll) αρχεία βιβλιοθηκών εισαγωγής, αμφότερες ανήκουσες σε εξαρτήσεις."
 
 #, c-format
 msgid "copy target file(s) to install path even if already up to date"
@@ -1259,6 +1263,10 @@ msgid "use <pw> as password when signing executable (Windows and Darwin only)"
 msgstr "χρήση του <pw> ως συνθηματικού κατά την σήμανση του εκτελέσιμου (μόνο σε Windows και Darwin)"
 
 #, c-format
+msgid "virtual build target, it does not create anything. Useful for creating an .hbp with the sole purpose of referencing sub-projects"
+msgstr "εικονική κατασκευή έργου· δεν δημιουργεί τίποτα. Χρήσιμο για την δημιουργία ενός .hbp με μοναδικό σκοπό την μνημόνευση των υπο-έργων"
+
+#, c-format
 msgid "working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
 msgstr "κατάλογος εργασίας\n(προεπιλογή: %1$s/<platform>/<compiler> [*] σε incremental μέθοδο κατασκευής, αλλιώς ο temp κατάλογος του Λ.Σ.)"
 
@@ -1427,6 +1435,38 @@ msgid "this help"
 msgstr "η παρούσα βοήθεια"
 
 #, c-format
+msgid "Options below are internal/developer ones (compatibility not guaranteed):"
+msgstr "Οι παρακάτω επιλογές είναι εσωτερικές/developer (η συμβατότητα δεν είναι εγγυημένη)"
+
+#, c-format
+msgid "display all input parameters in processing order"
+msgstr "εμφάνιση όλων των παραμέτρων εισόδου με τη σειρά που επεξεργάζονται"
+
+#, c-format
+msgid "display content of all internally generated source files"
+msgstr "εμφάνιση περιεχομένων όλων των εσωτερικά δημιουργημένων πηγαίων αρχείων"
+
+#, c-format
+msgid "display internals of dependency detection"
+msgstr "εμφάνιση εσωτερικών στοιχείων της ανίχνευσης εξάρτησης"
+
+#, c-format
+msgid "display internals of incremental build"
+msgstr "εμφάνιση εσωτερικών στοιχείων της incremental κατασκευής"
+
+#, c-format
+msgid "display internals on translation file generation"
+msgstr "εμφάνιση εσωτερικών στοιχείων της δημιουργίας αρχείου μετάφρασης"
+
+#, c-format
+msgid "generate a run-time error"
+msgstr "παράγει ένα λάθος χρόνου-εκτέλεσης /run-time error/"
+
+#, c-format
+msgid "measure time spent on the build"
+msgstr "μέτρηση χρόνου κατασκευής"
+
+#, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
 msgstr "Μορείτε να συνδέσετε/αντιγράψετε/μετονομάσετε το %1$s στα ακόλουθα ονόματα για να αλλάξετε την προεπιλεγμένη λειτουργία του:"
 
@@ -1460,11 +1500,11 @@ msgstr "κατάσταση λειτουργίας %1$s (προσομοίωση �
 
 #, c-format
 msgid "mode script runner / interactive shell"
-msgstr "κατάσταση λειτουργίας εκτέλεσης σεναρίων / διαλογικό κέλυφος"
+msgstr "κατάσταση λειτουργίας εκτέλεσης σεναρίων / διαδραστικό κέλυφος"
 
 #, c-format
 msgid "mode script runner / interactive shell in debug mode"
-msgstr "κατάσταση λειτουργίας εκτέλεσης σεναρίων / διαλογικό κέλυφος με λειτουργία αποσφαλμάτωσης"
+msgstr "κατάσταση λειτουργίας εκτέλεσης σεναρίων / διαδραστικό κέλυφος με λειτουργία αποσφαλμάτωσης"
 
 #, c-format
 msgid "option %1$s"
@@ -2212,7 +2252,7 @@ msgstr "Το <script> μπορεί να είναι:\n<@script> ή <script.hbm>: 
 
 #, c-format
 msgid ". (dot) passed as first parameter will enter the interactive Harbour shell."
-msgstr ". (τελεία) περασμένη σαν πρώτη παράμετρος θα εκκινήσει το διαλογικό κέλυφος Harbour."
+msgstr ". (τελεία) περασμένη σαν πρώτη παράμετρος θα εκκινήσει το διαδραστικό κέλυφος Harbour."
 
 #, c-format
 msgid "%1$s make script in current directory is always processed if it exists."
@@ -2263,6 +2303,10 @@ msgid "Using forwards slashes is recommended in option values as directory separ
 msgstr "Η χρήση πλάγιας εμπρός κάθετης παύλας συνιστάται στις τιμές των επιλογών ως διαχωριστής μονοπατιού, αλλά η πίσω πλάγια κάθετη παύλα είναι εξίσου αποδεκτή."
 
 #, c-format
+msgid "When multiple build target type selection options (-hblib, -hbdyn, etc.) are specified, the first one will be significant, the rest will be silently ignored."
+msgstr "Οταν ορίζονται πολλαπλές επιλογές καθορισμού του τύπου του κατασκευαζόμενου έργου (-hblib, -hbdyn, etc.), σημαντική θα είναι η πρώτη απ' αυτές, οι υπόλοιπες θα αγνοηθούν σιωπηρά."
+
+#, c-format
 msgid ".hb, .hrb or .dbf"
 msgstr ".hb, .hrb ή .dbf"
 
@@ -2272,7 +2316,7 @@ msgstr ".hb, .prg, .hrb ή .dbf"
 
 #, c-format
 msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "Αρχείο %1$s δοσμένο ως πρώτη παραμέτρος θα εκτελεστεί σαν σενάριο Harbour. Αν το όνομα-αρχείου δεν περιέχει ορίσματα μονοπατιών, θα αναζητηθεί στο τρέχοντα κατάλογο εργασίας και στο PATH. Αν δεν δωθεί κατάληξη, θα αναζητηθούν .hb and .hrb καταλήξεις, με αυτή τη σειρά. Αρχείο .dbf θα ανοιχτεί αυτόματα σε κατάσταση shared και θα ξεκινήσει το διαλογικό κέλυφος του Harbour. Μη πρότυπες -μη standard- καταλήξεις θα ανιχνευτούν αυτομάτως για πηγαίους και προκατασεκυασμένους τυπους σεναρίων. Σημειώστε ότι, για σενάρια Harbour, η κωδικοσελίδα ορίζεται απο προεπιλογή σε UTF-8. Το προεπιλεγμένο βασικό αρχείο header 'hb.ch' συμπεριλαμβάνεται αυτόματα, δηλ. #included. Προεπιλεγμένη μορφή ημερ/νίας είναι η πρότυπη κατα ISO μορφή: εεεε-μμ-ηη. Προεπιλεγμένο GT είναι το '%2$s', εκτός αν ανιχνευτούν CUI κλήσεις πλήρους οθόνης, οπότε επιλέγεται αυτομάτως '%3$s' [*] (εκτός για τις INIT PROCEDUREs)."
+msgstr "Αρχείο %1$s δοσμένο ως πρώτη παραμέτρος θα εκτελεστεί σαν σενάριο Harbour. Αν το όνομα-αρχείου δεν περιέχει ορίσματα μονοπατιών, θα αναζητηθεί στο τρέχοντα κατάλογο εργασίας και στο PATH. Αν δεν δωθεί κατάληξη, θα αναζητηθούν .hb and .hrb καταλήξεις, με αυτή τη σειρά. Αρχείο .dbf θα ανοιχτεί αυτόματα σε κατάσταση shared και θα ξεκινήσει το διαδραστικό κέλυφος του Harbour. Μη πρότυπες -μη standard- καταλήξεις θα ανιχνευτούν αυτομάτως για πηγαίους και προκατασεκυασμένους τυπους σεναρίων. Σημειώστε ότι, για σενάρια Harbour, η κωδικοσελίδα ορίζεται απο προεπιλογή σε UTF-8. Το προεπιλεγμένο βασικό αρχείο header 'hb.ch' συμπεριλαμβάνεται αυτόματα, δηλ. #included. Προεπιλεγμένη μορφή ημερ/νίας είναι η πρότυπη κατα ISO μορφή: εεεε-μμ-ηη. Προεπιλεγμένο GT είναι το '%2$s', εκτός αν ανιχνευτούν CUI κλήσεις πλήρους οθόνης, οπότε επιλέγεται αυτομάτως '%3$s' [*] (εκτός για τις INIT PROCEDUREs)."
 
 #, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."
@@ -2280,7 +2324,7 @@ msgstr "Τιμές με αστερίσκο [*] μπορεί να εξαρτών�
 
 #, c-format
 msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
-msgstr "Μπορείτε να χρησιμοποιείτε το συνδυασμό πλήκτρων <Alt+V> στο διαλογικό κέλυφος του Harbour για επικόλληση από το πρόχειρο."
+msgstr "Μπορείτε να χρησιμοποιείτε το συνδυασμό πλήκτρων <Alt+V> στο διαδραστικό κέλυφος του Harbour για επικόλληση από το πρόχειρο."
 
 #, c-format
 msgid "Description:"
@@ -2292,7 +2336,7 @@ msgstr "Το %1$s είναι ένα ολοκληρωμένο και μεταφέ
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
-msgstr "Το %1$s μπορεί να εκτελεί σενάρια Harbour (πηγαία ή προκατασκευασμένα), ενώ προσφέρει επίσης ένα διαλογικό περιβάλλον εργασίας."
+msgstr "Το %1$s μπορεί να εκτελεί σενάρια Harbour (πηγαία ή προκατασκευασμένα), ενώ προσφέρει επίσης ένα διαδραστικό περιβάλλον εργασίας."
 
 #, c-format
 msgid "License:"
@@ -2312,7 +2356,7 @@ msgstr "Για να εκτελέσετε ένα σενάριο Harbour"
 
 #, c-format
 msgid "To run the interactive shell ('dot' prompt)"
-msgstr "Για εκτέλεση το διαλογικού κελύφους ('dot' prompt)"
+msgstr "Για εκτέλεση το διαδραστικού κελύφους ('dot' prompt)"
 
 #, c-format
 msgid "Examples to build and run Harbour portable binary (aka precompiled Harbour script):"
@@ -2384,7 +2428,7 @@ msgstr "%1$s διαμόρφωση χρόνου-κατασκευής:"
 
 #, c-format
 msgid "space separated list of extensions to load in interactive Harbour shell"
-msgstr "λίστα καταλήξεων, διαχωρισμένων με κενό διάστημα, προς φόρτωση στο διαλογικό κέλυφος του Harbour"
+msgstr "λίστα καταλήξεων, διαχωρισμένων με κενό διάστημα, προς φόρτωση στο διαδραστικό κέλυφος του Harbour"
 
 #, c-format
 msgid "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s"
@@ -2392,15 +2436,15 @@ msgstr "εναρκτήριο σενάριο Harbour για το διαδραστ
 
 #, c-format
 msgid ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s"
-msgstr ".hb and .hrb plugins για το διαλογικό κέλυφος του Harbour. Πρέπει να βρίσκονται μέσα στο [*]: %1$s"
+msgstr ".hb και .hrb plugins για το διαδραστικό κέλυφος του Harbour. Πρέπει να βρίσκονται μέσα στο [*]: %1$s"
 
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"
-msgstr "αποθηκεύει ιστορικό εντολών για το διαλογικό shell Harbour. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή '%1$s' (χωρίς τα εισαγωγικά και με νεα γραμμή). Βρίσκεται στο [*]: %2$s"
+msgstr "αποθηκεύει ιστορικό εντολών για το διαδραστικό κέλυφος του Harbour. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή '%1$s' (χωρίς τα εισαγωγικά και με νεα γραμμή). Βρίσκεται στο [*]: %2$s"
 
 #, c-format
 msgid "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s"
-msgstr "λίστα καταλήξεων προς φόρτωση στο διαλογικό κέλυφος του Harbour. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '#' αγνοείται. Εναλλακτικά ονομα-αρχείου στο %2$s: Το %1$s. Βρίσκεται μεσα στο [*]: %3$s"
+msgstr "λίστα καταλήξεων προς φόρτωση στο διαδραστικό κέλυφος του Harbour. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '#' αγνοείται. Εναλλακτικά ονομα-αρχείου στο %2$s: Το %1$s. Βρίσκεται μεσα στο [*]: %3$s"
 
 #, c-format
 msgid "MS-DOS"
