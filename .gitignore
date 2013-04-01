@@ -8,6 +8,7 @@ obj
 *.hbl
 *.hbd
 *.hbr
+*.hrb
 
 # 'install'-ed binaries
 *.exe
