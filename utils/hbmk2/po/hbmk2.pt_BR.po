@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 16:42+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 16:52+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1647,8 +1647,16 @@ msgid "C level debugging is disabled (see -debug- option)"
 msgstr "Debugador nivel C está disabilitado (veja a opção -debug)"
 
 #, c-format
+msgid "C level debugging is enabled (see -debug option)"
+msgstr "Debugador nivel C está habilitado (veja a opção -debug)"
+
+#, c-format
 msgid "filter will pass if <file> or <dir> name exists on disk."
 msgstr "passará pelo filtro se o nome do arquivo <file> ou <dir> diretório existir no disco."
+
+#, c-format
+msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
+msgstr "passará pelo filtro se o valor ${MACRO} for igual a <value> (maiúsculas e minúsculas \"case insensitive\")"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
@@ -1665,6 +1673,18 @@ msgstr "Forçado modo C++ (veja opção -cpp)"
 #, c-format
 msgid "GUI target (see -gui option)"
 msgstr "GUI alvo (veja opção -gui)"
+
+#, c-format
+msgid "Harbour 1.0.x compatibility mode (see -hb10 option)"
+msgstr "habilita modo de compatibilidade 'Harbour 1.0.x' (veja opção -hb10)"
+
+#, c-format
+msgid "Harbour 2.0.x compatibility mode (see -hb20 option)"
+msgstr "habilita modo de compatibilidade 'Harbour 2.0.x' (veja opção -hb20)"
+
+#, c-format
+msgid "Harbour 3.0.x compatibility mode (see -hb30 option)"
+msgstr "habilita modo de compatibilidade 'Harbour 3.0.x' (veja opção -hb30)"
 
 #, c-format
 msgid "shared build (see -shared and related options)"
@@ -1867,6 +1887,10 @@ msgid "Load Harbour header."
 msgstr "Carregar cabeçalho \"header\" Harbour."
 
 #, c-format
+msgid "Load package. Similar to #request PP directive."
+msgstr "pacote carregado. Similar para diretivas de #request PP."
+
+#, c-format
 msgid "Switch GT. Default [*]: '%1$s'"
 msgstr "Mudar GT. Padrão [*]: '%1$s'"
 
@@ -1903,6 +1927,10 @@ msgid "Add a Windows resource input file to the project."
 msgstr "Adicionar um arquivo de entrada \"Windows resource\" ao projeto."
 
 #, c-format
+msgid "Change directory and/or extension in filename."
+msgstr "mudar diretório e/ou extenção do nome do arquivo"
+
+#, c-format
 msgid "Convert array of strings to a string. Default separator is a single space."
 msgstr "Converte matriz de strings para uma string. O separador padão é um espaço simples."
 
@@ -1919,8 +1947,16 @@ msgid "Evaluate %1$s macro expression."
 msgstr "Avaliar expressão macro %1$s ."
 
 #, c-format
+msgid "Output text to stderr without any formatting."
+msgstr "Texto de saída para stderr sem formatação."
+
+#, c-format
 msgid "Output text to stderr."
 msgstr "Texto de saída para stderr."
+
+#, c-format
+msgid "Output text to stdout without any formatting."
+msgstr "Texto de saída para stdout sem formatação."
 
 #, c-format
 msgid "Output text to stdout."

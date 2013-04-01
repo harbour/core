@@ -310,7 +310,7 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{st\}** construção o alvo é "single\-threaded" \(veja opção \-st\)
  - **\{gui\}** GUI alvo \(veja opção \-gui\)
  - **\{std\}** alvo console \(veja opção \-console\)
- - **\{debug\}** C level debugging is enabled \(see \-debug option\)
+ - **\{debug\}** Debugador nivel C está habilitado \(veja a opção \-debug\)
  - **\{nodebug\}** Debugador nivel C está disabilitado \(veja a opção \-debug\)
  - **\{shared\}** construção compartilhada \(veja \-shared e opções relativas\)
  - **\{static\}** construção compartilhada \(veja \-static e opções relativas\)
@@ -326,13 +326,13 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{allbcc\}** compilador C alvo é bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** compilador alvo C é pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** compilador alvo C é icc\* \(icc, iccia64\)
- - **\{hb10\}** Harbour 1\.0\.x compatibility mode \(see \-hb10 option\)
- - **\{hb20\}** Harbour 2\.0\.x compatibility mode \(see \-hb20 option\)
- - **\{hb30\}** Harbour 3\.0\.x compatibility mode \(see \-hb30 option\)
+ - **\{hb10\}** habilita modo de compatibilidade 'Harbour 1\.0\.x' \(veja opção \-hb10\)
+ - **\{hb20\}** habilita modo de compatibilidade 'Harbour 2\.0\.x' \(veja opção \-hb20\)
+ - **\{hb30\}** habilita modo de compatibilidade 'Harbour 3\.0\.x' \(veja opção \-hb30\)
  - **\{xhb\}** modo xhb \(veja opção \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** passará pelo filtro se o nome do arquivo &lt;file&gt; ou &lt;dir&gt; diretório existir no disco\.
  - **\{MACRO\}** passará pelo filtro se o valor $\{MACRO\} não for vazio e não for igual a zero '0' ou 'no' \(maiúsculas e minúsculas "case insensitive"\)
- - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
+ - **\{MACRO='&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} for igual a &lt;value&gt; \(maiúsculas e minúsculas "case insensitive"\)
  - **\{MACRO&gt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is larger than &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&lt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is smaller than &lt;value&gt; \(case insensitive\)\.
 
@@ -477,9 +477,9 @@ Texto de saída para stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Texto de saída para stderr\.
  - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
-Output text to stdout without any formatting\.
+Texto de saída para stdout sem formatação\.
  - **hbmk\_OutErrRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
-Output text to stderr without any formatting\.
+Texto de saída para stderr sem formatação\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Avaliar expressão macro hbmk2 \.
  - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
@@ -493,7 +493,7 @@ retorna o caminho relativo de \-workdir= valor do diretório atual de trabalho\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
 Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
-Change directory and/or extension in filename\.
+mudar diretório e/ou extenção do nome do arquivo
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Encode function name according to Harbour compiler rules for forming HB\_FUNC\(\) function names in C code\.
  - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
@@ -552,7 +552,7 @@ Descarregar cabeçalho "header" Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Mostra a lista de cabeçalhos Harbour carregados\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Load package\. Similar to \#request PP directive\.
+pacote carregado\. Similar para diretivas de \#request PP\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar pacote\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
