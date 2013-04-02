@@ -10,7 +10,7 @@ Sintáxis:
 Descripción:  
 
 
-  hbmk2 es una herramienta integrada y portátil de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios \(ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour\) desde múltiples tipos de ficheros de código fuente \(C, C\+\+, Objective\-C, Harbour, traducciones de 'gettext', recursos de Windows\)\. 'Integrada' significa que un solo fichero de proyecto hbmk2 puede controlar todos, o casi todos, los aspectos del proceso de construcción\. 'Portátil' significa que un solo fichero de proyecto hbmk2 puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados\. Ayuda también en la mayoría de los procesos de construcción por medio de pequeños y simples ficheros de proyecto \(opciones\)\. hbmk2 soporta ficheros de proyecto para C/C\+\+/Objetive\-C sin relación con Harbour\. Para conseguir esos objetivos, hbmk2 detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente\. hbmk2 permite extender los tipos de código fuente soportados por medio de complementos\.  
+  hbmk2 es una herramienta integrada y portable de generación o automatización de código, haciendo posible la creación de varios tipos de ejecutables binarios \(ejecutable, biblioteca dinámica, biblioteca estática, binario portátil de Harbour\) desde múltiples tipos de ficheros de código fuente \(C, C\+\+, Objective\-C, Harbour, traducciones de 'gettext', recursos de Windows\)\. 'Integrada' significa que un solo fichero de proyecto hbmk2 puede controlar todos, o casi todos, los aspectos del proceso de construcción\. 'Portable' significa que un solo fichero de proyecto hbmk2 puede controlar la construcción del ejecutable binario en todas las plataformas de los sistemas operativos soportados y a través de todos los compiladores de C soportados\. Ayuda también en la mayoría de los procesos de construcción por medio de pequeños y simples ficheros de proyecto \(opciones\)\. hbmk2 soporta ficheros de proyecto para C/C\+\+/Objetive\-C sin relación con Harbour\. Para conseguir esos objetivos, hbmk2 detecta automáticamente a Harbour, al compilador de C y a las demás herramientas necesarias, las configura y luego las ejecuta convenientemente\. hbmk2 permite extender los tipos de código fuente soportados por medio de complementos\.  
 Además de construir ejecutables, hbmk2 puede ejecutar archivos de órdenes de Harbour \(tanto en código fuente como precompilado\) directamente, y otra característica de la que dispone es de un intérprete de comandos interactivo\.
   
 Opciones:  
@@ -42,8 +42,8 @@ Opciones:
  - **\-cpp\[\-\]** fuerza modo C\+\+/C
  - **\-cpp=&lt;value&gt;** selecciona el modo C\+\+\. Los valores permitidos son: def, yes, no
  - **\-map\[\-\]** crear \(o no\) un archivo map
- - **\-implib\[\-\]** crear \(o no\) una biblioteca de importación \(en modo \-hbdyn/\-hbexe\)\. El nombre tendrá un sufijo anadido\.
- - **\-implib=&lt;output&gt;** crear biblioteca de importación \(en modo \-hbdyn/\-hbexe\) Nombre de &lt;output&gt; \(por defecto: igual que la salida\)
+ - **\-implib\[\-\]** crea \(o no\) una biblioteca de importación \(en modo \-hbdyn/\-hbexe\)\. Se le añade un sufijo al nombre\.
+ - **\-implib=&lt;output&gt;** crea una biblioteca de importación \(en modo \-hbdyn/\-hbexe\) denominada &lt;output&gt; \(por defecto: igual que la salida\)
  - **\-ln=&lt;link&gt;** crea enlace simbólico apuntando a &lt;output&gt; \(&lt;link&gt; se asocia a &lt;output&gt;\)
  - **\-strip\[\-\]** desmontar \(no desmontar\) binarios
  - **\-trace\[\-\]** mostrar comandos ejecutados
@@ -54,7 +54,7 @@ Opciones:
  - **\-nohblib\[\-\]** no use librerías estáticas del núcleo de Harbour al enlazar
  - **\-nodefgt\[\-\]** no enlaza GTs por defecto \(efectivo en modo \-static\)
  - **\-nolibgrouping\[\-\]** desactivar agrupamiento de LIBs en compiladores basados en gcc\.
- - **\-nomiscsyslib\[\-\]** no agregue lista adicional de librerías del sistema a lista de librerías por defecto
+ - **\-nomiscsyslib\[\-\]** no se añade lista adicional de librerías del sistema a lista de librerías por defecto
  - **\-traceonly** mostrar comandos a ser ejecutados, pero no ejecutarlos
  - **\-warn=&lt;level&gt;** establece el nivel advertencias del compilar de C  
 &lt;level&gt; puede ser: max, yes, low, no, def \(por defecto: yes\)
@@ -68,7 +68,7 @@ Opciones:
  - **\-manifest=&lt;file&gt;** incrustar manifiesto &lt;file&gt; en ejecutable/lib dinámica \(sólo Windows\)
  - **\-sign=&lt;key&gt;** firma del ejecutable con &lt;key&gt; \(solo en Windows y Darwin\)\. En Windows se usa signtool\.exe \(incluido en MS Windows SDK\) o posign\.exe \(incluido en Pelles C 7\), por ese orden, se detectan ambos automaticamente\.
  - **\-signpw=&lt;pw&gt;** utilice &lt;pw&gt; como contraseña cuando firme el ejecutable \(sólo Windows y Darwin\)
- - **\-instfile=&lt;g:file&gt;** anadir &lt;archivo&gt; a la lista de archivos que desea copiar a la ruta especificada por la opción \-instpath\. &lt;g&gt; es un grupo opcional de copia \(distingue mayúsculas y minúsculas\), debe haber al menos dos caracteres\. En caso de que no se especifica &lt;archivo&gt;, la lista de archivos en ese grupo se vaciará\.
+ - **\-instfile=&lt;g:file&gt;** añade &lt;archivo&gt; a la lista de archivos que desea copiar a la ruta especificada por la opción \-instpath\. &lt;g&gt; es un grupo opcional de copia \(distingue mayúsculas y minúsculas\), debe haber al menos dos caracteres\. En caso de que no se especifica &lt;archivo&gt;, la lista de archivos en ese grupo se vaciará\.
  - **\-instpath=&lt;g:path&gt;** copia el/los archivo\(s\) objetivo a la ruta &lt;path&gt;\. Si &lt;path&gt; es un directorio, debería terminar con un separador de rutas, en este caso los archivos especificados en la opción '\-instfile' también son copiados\. Puede ser especificado varias veces\. &lt;g&gt; es grupo de copia opcional, debe tener al menos dos caracteres de largo\. El objetivo final será copiado automaticamente al grupo de copia por defecto \(sin asignación de &lt;g&gt;\)\. Existen los siguientes grupos de copia ya incluidos: 'depimplib' para las bibliotecas importadas y 'depimplibsrc' para los archivos fuente de las bibliotecas importadas \(\.dll\), ambos pertenecientes a las dependencias\.
  - **\-instforce\[\-\]** copia el/los archivo\(s\) objetivos a la ruta de instalación aunque esten al día
  - **\-depimplib\[\-\]** activar \(o desactivar\) la generación de Bibliotecas de Importación para fuentes de biblioteca de importación especificados en la opción \-depimplibs= \(por defecto: yes\)
@@ -89,14 +89,14 @@ Opciones:
  - **\-ldflag=&lt;f&gt;** pasar flags a linkeditor \(ejecutable\)
  - **\-dflag=&lt;f&gt;** pasar flags a linkeditor \(librería dinánica\)
  - **\-aflag=&lt;f&gt;** pasa flag a linkeditor \(lib estática\)
- - **\-iflag=&lt;f&gt;** pasar solo bandera a comando de creación de biblioteca de importación
+ - **\-iflag=&lt;f&gt;** pasa un solo indicador al comando de creación de bibliotecas de importación
  - **\-signflag=&lt;f&gt;** pasar un solo indicador al comando de firma de código
  - **\-runflag=&lt;f&gt;** pasar flag a ejecutable de salida cuando opción \-run es utilizada
- - **\-cflag\+=&lt;f&gt;** pasar solo bandera del compilador de C para reemplazar las opciones del compilador C anadida por hbmk2 mismo\. Usar con precaución\.
+ - **\-cflag\+=&lt;f&gt;** pasa un solo indicador al compilador de C para reemplazar las opciones del compilador C añadida por hbmk2 mismo\. Usar con precaución\.
  - **\-ldflag\+=&lt;f&gt;** pasar una sola opción al enlazador \(ejecutable\) después de la lista de bibliotecas\. Usar con precaución\.
  - **\-dflag\+=&lt;f&gt;** pasar una sola opción al enlazador \(biblioteca dinámica\) después de la lista de bibliotecas\. Usar con precaución\.
  - **\-3rd=&lt;f&gt;** opciones/flags reservados para herramientas de terceros, siempre ignorado por hbmk2 en sí
- - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alterar el ambiente local\. &lt;e&gt; es el nombre de la variable de entorno a alterar\. &lt;o&gt; puede ser '=' para establecer/reemplazar, '\-' para borrar, '\+' para anadir al final de valor existente, '\#' para insertar al principio del valor existente\. &lt;v&gt; es el valor a poner/agregar/insertar\.
+ - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** modifica las variables de entorno local\. &lt;e&gt; es el nombre de la variable de entorno a modificar\. &lt;o&gt; puede ser '=' para establecer/reemplazar, '\-' para borrar, '\+' para añadir al final de valor existente, '\#' para insertar al principio del valor existente\. &lt;v&gt; es el valor a establecer/añadir/insertar\.
  - **\-jobs=&lt;n&gt;** Inicia &lt;n&gt; threads de compilación \(solo para plataformas multiproceso\)
  - **\-head=&lt;m&gt;** analizando fuente de control de encabezado \(en construcción en modo incremental\)  
 &lt;m&gt; puede ser: nativo \(compilador utilizado para extraer las dependencias\), completa \(por defecto, utiliza analizador de texto simple en el fichero entero\), dep, off
@@ -115,7 +115,7 @@ Opciones:
  - **\-lng=&lt;languages&gt;** lista de idiomas a ser reemplazados en %\{hb\_lng\} macros en archivos \.pot/\.po y nombres de archivos y salida \.hbl/\.po\. Lista separada por comas:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** crear/actualizar archivo \.po desde fuentes\. Combinar con anterior archivo \.po del mismo nombre\.
- - **\-minipo\[\-\]** añadir \(o no\) el número de versión y referencia del archivo de origen al \.po \(por defecto: anadirlos\)
+ - **\-minipo\[\-\]** añade \(o no\) el número de versión y referencia del archivo de origen al \.po \(por defecto: añadirlos\)
  - **\-rebuildpo** recrea archivo \.po, eliminando todas las entradas obsoletas en el mismo\.
 
 
@@ -128,16 +128,16 @@ Opciones:
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; es el nombre de la dependencia\. &lt;f&gt; puede ser 'yes' o 'no', especifica si la dependencia es opcional\. Por defecto: no
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; es el nombre de la dependencia\. &lt;v&gt; es un valor que controla como se hace la detección\. Valores aceptados: no, yes, force, nolocal, local\. Por defecto: contenido de envvar HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; es el nombre de la dependencia\. Establecer &lt;r&gt; como directorio raíz para las rutas especificadas en la opción \-depincpath\.
- - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Anadir &lt;i&gt; a la lista de rutas de detección de encabezados\.
+ - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;i&gt; a la lista de rutas de detección de encabezados\.
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;i&gt; a la lista de rutas de detección de cabeceras, donde &lt;i&gt; apunta a un directorio local del proyecto, conteniendo una dependencia embebida \(conocido como 'alojado localmente'\)\.
- - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; es el nombre de la dependencia\. Anadir &lt;dll&gt; a la lista fuente de la biblioteca de importación\.
+ - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;dll&gt; a la lista de las fuentes de bibliotecas de importación\.
  - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; es el nombre de la dependencia\. Establecer nombre generado de biblioteca de importación a &lt;lib&gt;
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; es el nombre de la dependencia\. Cierra la definición de la dependencias y realiza la detección, estableciendo todas las variables macro de los filtros predefinidos y las opciones de construcción relacionadas\. Es opcional; si se omite, la detección tendrá lugar después de procesar todas las opciones\.
 
 
- - **\-plugin=&lt;filename&gt;** agregar plugin \(módulo\)\. &lt;filename&gt; puede ser: \.hb, \.prg, \.hrb
+ - **\-plugin=&lt;filename&gt;** añade complemento\. &lt;filename&gt; puede ser: \.hb, \.prg, \.hrb
  - **\-pi=&lt;filename&gt;** pasar archivo de entrada a plugins
- - **\-pflag=&lt;f&gt;** pasar solo bandera para plugins
+ - **\-pflag=&lt;f&gt;** pasa un solo indicador a los complementos
   
 Las siguientes opciones están disponibles en línea de comandos:  
 
@@ -570,7 +570,7 @@ $ hbmk2 \.
 $ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 
 
-Ejemplos para construir y ejecutar binarios portátiles de Harbour \(conocidos como archivos de órdenes precompilados de Harbour\):
+Ejemplos para construir y ejecutar binarios portables de Harbour \(conocidos como archivos de órdenes precompilados de Harbour\):
 
 
  - **Para construir**  

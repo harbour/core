@@ -50,7 +50,7 @@ Opzioni:
  - **\-beep\[\-\]** attiva \(o disattiva\) un beep singolo in caso di successo in uscita, doppio beep in caso di errore
  - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
- - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
+ - **\-winuni\[\-\]** Scegliere tra modo compilazione UNICODE \(WIDE\) e ANSI \(predefinito: ANSI\) \(Solo Windows\. Per WinCE esso è sempre fissato a UNICODE\)
  - **\-nohblib\[\-\]** non si devono usare librerie statiche principali di Harbour durante il linking
  - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
@@ -237,7 +237,7 @@ Files:
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
- - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
+ - **\*\.hbm** insieme di opzioni\. Può essere utilizzata per raccoglierle in un file ed includerle nei files di progetto\. Esso usa lo stesso formato \.hbp\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** se passato direttamente come file sorgente, esso sarà utilizzato come intestazione standard addizionale
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 cartella&gt;
@@ -636,7 +636,7 @@ Note:
   &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
   &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
   &lt;script\.hbc&gt;: package configuration file
-  - Source filename without extension will load the \.hbp file, if such \.hbp file exists in current directory\. If not, \.prg extension will be used\.
+  - Il nome del file sorgente senza estensione caricherà il file\. hbp, se tale file\. hbp esiste nella cartella corrente\. Altrimenti, verrà utilizzata l'estensione \.prg\.
   - Multiple \-l, \-L, \-i and &lt;script&gt; parameters are accepted\.
   - Regular Harbour compiler options are also accepted as is\.  
 \(see them with \-harbourhelp option\)

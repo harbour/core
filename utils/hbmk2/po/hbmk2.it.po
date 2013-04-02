@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-02 00:22+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-02 19:15+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -559,6 +559,10 @@ msgid "run/do not run output executable"
 msgstr "eseguire/non eseguire l'eseguibile finale"
 
 #, c-format
+msgid "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
+msgstr "Scegliere tra modo compilazione UNICODE (WIDE) e ANSI (predefinito: ANSI) (Solo Windows. Per WinCE esso è sempre fissato a UNICODE)"
+
+#, c-format
 msgid "show commands executed"
 msgstr "mostra comandi eseguiti"
 
@@ -717,6 +721,10 @@ msgstr "opzioni da passare al linker (libreria statica) (prima delle opzioni da 
 #, c-format
 msgid "options to be passed to resource compiler (before command-line options) (Windows only)"
 msgstr "opzioni da passare al compilatore di risorse (prima delle opzioni nella riga di comando) (solo Windows)"
+
+#, c-format
+msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
+msgstr "insieme di opzioni. Può essere utilizzata per raccoglierle in un file ed includerle nei files di progetto. Esso usa lo stesso formato .hbp."
 
 #, c-format
 msgid "if passed directly as a source file, it will be used as additional standard header"
@@ -1169,6 +1177,10 @@ msgstr ". (il punto) passato come primo parametro entrerà nella shell interatti
 #, c-format
 msgid "%1$s make script in current directory is always processed if it exists."
 msgstr "se esistente, lo script make %1$s nella cartella corrente è sempre processato"
+
+#, c-format
+msgid "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used."
+msgstr "Il nome del file sorgente senza estensione caricherà il file. hbp, se tale file. hbp esiste nella cartella corrente. Altrimenti, verrà utilizzata l'estensione .prg."
 
 #, c-format
 msgid "Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted."
