@@ -10,6 +10,7 @@ C_SOURCES := \
    l_el.c \
    l_eo.c \
    l_es.c \
+   l_es_419.c \
    l_eu.c \
    l_fr.c \
    l_gl.c \

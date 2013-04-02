@@ -242,7 +242,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "en-zw"
       CASE "en"         ; cLangHb := "en" ; EXIT
       CASE "eo"         ; cLangHb := "eo" ; EXIT
-      CASE "es-419"
+      CASE "es-419"     ; cLangHb := "es_419" ; EXIT
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -353,7 +353,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "sl"         ; cLangHb := "sl" ; EXIT
       CASE "sq-al"      ; EXIT
       CASE "sq"         ; EXIT
-      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyrl" ; EXIT
+      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyr" ; EXIT
       CASE "sr-sp-latn" ; cLangHb := "sr_lat" ; EXIT
       CASE "sv-fi"
       CASE "sv-se"
@@ -387,7 +387,8 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "zh-hk"
       CASE "zh-mo"
       CASE "zh-sg"
-      CASE "zh-tw"      ; cLangHb := "zh_tra" ; EXIT
+      CASE "zh-tw"
+      CASE "zh"         ; cLangHb := "zh_tra" ; EXIT
       ENDSWITCH
    ENDIF
 
