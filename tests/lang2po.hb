@@ -12,34 +12,53 @@
 
 #include "hblang.ch"
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 PROCEDURE Main()
 
-   LOCAL tmp, tmp1
-   LOCAL nCount
-   LOCAL cName
-   LOCAL cPO
+   LOCAL cLang
 
-   nCount := __dynsCount()
+   FOR EACH cLang IN CoreLangList()
+      hb_MemoWrit( Lower( hb_FNameName( cLang ) ) + ".po", LangToPO( cLang ) )
+   NEXT
+
+   RETURN
+
+STATIC FUNCTION LangToPO( cLang )
+
+   LOCAL nPos := 0
+   LOCAL cPO := Item( "", Meta( cLang ), nPos++ )
+   LOCAL tmp
+
+   FOR tmp := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
+      cPO += Item( ;
+         hb_langMessage( tmp, "en" ), ;
+         iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ), "", hb_langMessage( tmp, cLang ) ), ;
+         nPos++ )
+   NEXT
+
+   RETURN hb_StrShrink( cPO, Len( hb_eol() ) )
+
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
+STATIC FUNCTION CoreLangList()
+
+   LOCAL aList := {}
+
+   LOCAL nCount := __dynsCount()
+   LOCAL cName
+   LOCAL tmp
+
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
       IF LEFTEQUAL( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
-            cPO := Item( "", Meta( cName ) )
-            /* TODO: do something with the metadata (position 0 to 5) */
-            FOR tmp1 := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
-               cPO += Item( hb_langMessage( tmp1, "en" ), ;
-                  iif( hb_langMessage( tmp1, "en" ) == hb_langMessage( tmp1, cName ), "", hb_langMessage( tmp1, cName ) ) )
-            NEXT
-            hb_MemoWrit( Lower( hb_FNameName( cName ) ) + ".po", hb_StrShrink( cPO, Len( hb_eol() ) ) )
+            AAdd( aList, cName )
          ENDIF
       ENDIF
    NEXT
 
-   RETURN
+   RETURN aList
 
 STATIC FUNCTION Meta( cName )
 
@@ -54,7 +73,7 @@ STATIC FUNCTION Meta( cName )
    /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
    hb_HKeepOrder( hMeta, .T. )
-   hMeta[ "Project-Id-Version:"        ] := "harbour"
+   hMeta[ "Project-Id-Version:"        ] := "core-lang"
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
@@ -65,10 +84,10 @@ STATIC FUNCTION Meta( cName )
    hMeta[ "Content-Transfer-Encoding:" ] := "8bit"
 
    FOR tmp := 0 TO 5
-      hMeta[ hb_StrFormat( "Harbour-Meta-%1$d:", tmp ) ] := hb_langMessage( tmp, cName )
+      hMeta[ hb_StrFormat( "Harbour-Lang-Meta-%1$d:", tmp ) ] := hb_langMessage( tmp, cName )
    NEXT
 
-   cMeta := '"' + e"\n"
+   cMeta := '"' + hb_eol()
    FOR EACH meta IN hMeta
       cMeta += ;
          '"' + ;
@@ -76,7 +95,7 @@ STATIC FUNCTION Meta( cName )
          " " + ;
          meta + ;
          "\n" + ;
-         iif( meta:__enumIsLast(), "", '"' + e"\n" )
+         iif( meta:__enumIsLast(), "", '"' + hb_eol() )
    NEXT
 
    RETURN cMeta
@@ -91,9 +110,9 @@ STATIC FUNCTION ISO_TimeStamp()
       Int( nOffset / 3600 ), ;
       Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
 
-STATIC FUNCTION Item( cEN, cTrs )
+STATIC FUNCTION Item( cOri, cTrs, nPos )
    RETURN hb_StrFormat( ;
       "#, c-format" + hb_eol() + ;
       'msgid "%1$s"' + hb_eol() + ;
       'msgstr "%2$s"' + hb_eol() + ;
-      hb_eol(), cEN, cTrs )
+      hb_eol(), iif( Empty( cOri ) .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ), cTrs )

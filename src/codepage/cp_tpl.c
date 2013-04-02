@@ -50,7 +50,7 @@
    If accented characters need special sorting ( HB_CDP_ACSORT_EQUAL or
    HB_CDP_ACSORT_INTERLEAVE ) then you need to mark the accented characters
    with the symbol '~' before each of them, for example:
-      a~€
+      a~Ã‡
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...

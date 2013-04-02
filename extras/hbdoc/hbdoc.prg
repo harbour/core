@@ -1147,7 +1147,7 @@ FUNCTION Filename( cFile, cFormat, nLength )
    RETURN cResult
 
 #if defined( __HBSCRIPT__HBSHELL )
-SET PROCEDURE TO "_tmplates.prg"
+SET PROCEDURE TO "_tmplate.prg"
 SET PROCEDURE TO "_genbase.prg"
 SET PROCEDURE TO "_gentxt.prg"
 SET PROCEDURE TO "_genhtml.prg"

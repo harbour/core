@@ -19,7 +19,6 @@ ChangeLog.txt ident
 *.hbm     text
 *.hbp     text
 *.hbx     text
-*.htm     text
 *.html    text
 *.in      text
 *.ini     text

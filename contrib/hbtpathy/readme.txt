@@ -49,4 +49,3 @@ If you find a bug or write some new code for this project, pretty please send
 me email with it.
 
 - Dan Levitt <dan@boba-fett.net>
-

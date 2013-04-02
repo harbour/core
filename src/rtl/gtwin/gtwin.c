@@ -333,7 +333,7 @@ static const CLIPKEYCODE s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
    { 124, 299,             28,              0, 0        },             /* '|' */
    { 125, 283,             29,              0, 0        },             /* '}' */
    { 126, 297,             297,             0, 0        },             /* '~' */
-   { 127, K_ALT_BS,        127,             0, K_ALT_BS },             /* '' */
+   { 127, K_ALT_BS,        127,             0, K_ALT_BS },             /* 0x7F */
 };
 
 #define EXKEY_F1          ( 0 )

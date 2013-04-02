@@ -1,3 +1,4 @@
+#!/usr/bin/hbmk2
 /*
  * Harbour Project source code:
  * Commit preparer
@@ -33,7 +34,8 @@ PROCEDURE Main()
 
    LOCAL cVCS := VCSDetect()
 
-   LOCAL aChanges := DoctorChanges( cVCS, Changes( cVCS ) )
+   LOCAL aFiles := {}
+   LOCAL aChanges := DoctorChanges( cVCS, Changes( cVCS ), aFiles )
    LOCAL cLog
    LOCAL cLogNew
    LOCAL cLine
@@ -45,7 +47,7 @@ PROCEDURE Main()
    LOCAL cLogName
 
    IF Empty( aChanges )
-      OutStd( hb_ProgName() + ": no changes" + hb_eol() )
+      OutStd( hb_ProgName() + ": " + "no changes" + hb_eol() )
       RETURN
    ENDIF
 
@@ -80,27 +82,34 @@ PROCEDURE Main()
 
    IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
       IF ! hb_FileExists( cLogName := "ChangeLog" )
-         OutStd( hb_ProgName() + ": can't find ChangeLog file" + hb_eol() )
+         OutStd( hb_ProgName() + ": " + "can't find ChangeLog file" + hb_eol() )
          RETURN
       ENDIF
    ENDIF
 
-   cLog := MemoRead( cLogName )
-   cOldLang := hb_cdpSelect( "EN" )
-   cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
-   IF Empty( cHit )
-      cHit := ""
-   ENDIF
-   hb_cdpSelect( cOldLang )
+   IF CheckFileList( aFiles )
 
-   nPos := At( AllTrim( cHit ), cLog )
-   IF nPos > 0
-      cLog := Left( cLog, nPos - 1 ) + cLogNew + hb_eol() + SubStr( cLog, nPos )
+      cLog := MemoRead( cLogName )
+      cOldLang := hb_cdpSelect( "EN" )
+      cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
+      IF Empty( cHit )
+         cHit := ""
+      ENDIF
+      hb_cdpSelect( cOldLang )
+
+      nPos := At( AllTrim( cHit ), cLog )
+      IF nPos > 0
+         cLog := Left( cLog, nPos - 1 ) + cLogNew + hb_eol() + SubStr( cLog, nPos )
+      ELSE
+         cLog += hb_eol() + cLogNew
+      ENDIF
+
+      hb_MemoWrit( cLogName, cLog )
+
+      OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
    ELSE
-      cLog += hb_eol() + cLogNew
+      OutStd( hb_ProgName() + ": " + "Please correct errors listed above and re-run" + hb_eol() )
    ENDIF
-
-   hb_MemoWrit( cLogName, cLog )
 
    RETURN
 
@@ -113,7 +122,7 @@ STATIC FUNCTION VCSDetect()
 
    RETURN ""
 
-STATIC FUNCTION DoctorChanges( cVCS, aChanges )
+STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
 
    LOCAL cLine
    LOCAL cStart
@@ -146,6 +155,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
+               AAdd( aFiles, SubStr( cLine, 8 + 1 ) )
             ENDIF
          ENDIF
       NEXT
@@ -181,6 +191,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 3 + 1 ), "\", "/" ) )
+               AAdd( aFiles, SubStr( cLine, 3 + 1 ) )
             ENDIF
          ENDIF
       NEXT
@@ -239,3 +250,5 @@ STATIC FUNCTION GitUser()
    RETURN hb_StrFormat( "%s (%s)", ;
       AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ), "" ) ), ;
       StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ), "" ) ), "@", " " ) )
+
+#include "check.hb"

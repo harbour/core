@@ -87,7 +87,7 @@ PROCEDURE Main()
    ELSE
 
       // Sets the metahtml file
-      oHTML:SetHTMLFile( "C:\inetpub\wwwroot\guestbk.htm" )
+      oHTML:SetHTMLFile( "C:\inetpub\wwwroot\guestbk.html" )
 
       // Retrieves odd and even entries color
       cOddColor := oIni:ReadString( "Header", "OddColor", "#FFFFFF" )

@@ -71,4 +71,3 @@ HB_FUNC( CAIRO_SURFACE_WRITE_TO_PNG )
    hb_retni( -1 );              /* There is no good CAIRO_STATUS_* for this */
 #endif
 }
-

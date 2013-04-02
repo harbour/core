@@ -26,14 +26,14 @@ STATIC FUNCTION PO_2_C( cFileIn, cFileOut, ... )
 
    IF ( aTrans := __i18n_potArrayLoad( cFileIn, @cErrorMsg ) ) != NIL
 
-      cContent := _begin()
+      cContent := StrTran( _begin(), e"\n", hb_eol() )
       nPos := 0
 
       __i18n_potArrayClean( aTrans,,, {| cTrs, cOri | ProcessTrs( @cContent, cTrs, cOri, @cTranslator, @cID, @nPos ) } )
 
       cContent := "/* Last Translator: " + cTranslator + " */" + hb_eol() + ;
          Left( cContent, Len( cContent ) - Len( "," ) - Len( hb_eol() ) ) + hb_eol() + ;
-         StrTran( _end(), "{LNG}", Upper( cID ) )
+         StrTran( StrTran( _end(), e"\n", hb_eol() ), "{LNG}", Upper( cID ) )
 
       hb_MemoWrit( cFileOut, cContent )
 
@@ -69,7 +69,7 @@ STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /
          cTranslator := ""
       ENDIF
       FOR tmp := 0 TO 5
-         cContent += Space( 6 ) + ConvToC( tmp1 := hb_regexAll( hb_StrFormat( "Harbour-Meta-%1$d: ([\S]*)", tmp ), cTrs,,,,, .T. )[ 1 ][ 2 ] ) + "," + hb_eol()
+         cContent += Space( 6 ) + ConvToC( tmp1 := hb_regexAll( hb_StrFormat( "Harbour-Lang-Meta-%1$d: ([\S]*)", tmp ), cTrs,,,,, .T. )[ 1 ][ 2 ] ) + "," + hb_eol()
          ++nPos
          IF tmp == 0
             cID := tmp1
