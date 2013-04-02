@@ -72,7 +72,7 @@ VCS \- sistema de controle de versão\.
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copie os arquivo\(s\) para o destino do caminho de instalação mesmo que já atualizados
- - **\-depimplib\[\-\]** enable \(or disable\) import library generation for import library sources specified in \-depimplibs= options \(default: yes\)
+ - **\-depimplib\[\-\]** habilitar \(ou desabilitar\) a importação da biblioteca da fontes de bibliotecas especificadas em \-depimplibs= opções \(padrão: yes\)
  - **\-stop\[=&lt;text&gt;\]** interromper sem executar nada
  - **\-echo=&lt;text&gt;** ecoa texto na tela
  - **\-pause** forçar pause por uma tela em caso de erro \(somente com driver GT alternativo\)
@@ -239,10 +239,10 @@ Arquivos:
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
- - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
+ - **\*\.hbm** coleção de opções\. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto\.Usar o mesmo formata dos arquivos \.hbp\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
- - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
+ - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
  - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
@@ -396,7 +396,7 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **frameworks=** adicionar lista separada por espaços de "frameworks" \(somente para Darwin\)
  - **requests=** adicionar lista separada por espaços de símbolos para forçar a linkagem do programa
  - **syslibs=** adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema \(antes bibliotecas regulares\)
- - **hbcs=** embed space separated list of \.hbc files\. Names without the extension is accepted\. These references are processed in place\.
+ - **hbcs=** incorporat lista separada por espaçoe de arquivos \.hbc\. São aceitos nomes se a extensão\. Essas referências são processados ​​no local\.
  - **autohbcs=** lista separada por espaço de opções de valores de entrada \-autohbc=
  - **libpaths=** adicionar lista separada por espaços dos locais de bibliotecas adicionais
  - **incpaths=** adicionar lista separada por espaços dos locais adicionais dos "header" \(para ambos Harbour e C\)
@@ -508,8 +508,8 @@ Plugin variables:
 
  - **"apiver"** versão da API como um número inteiro
  - **"cSTATE"** callback state\. Can be: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
- - **"params"** array of parameters passed to plugins via \-pflag=/pi= options or having an extension registered via hbmk\_Register\_Input\_File\_Extension\(\)
- - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
+ - **"params"** passar uma matriz de parâmetros para os plugins através das opções \-pflag=/pi= ou tendo registrado as extensões via hbmk\_Register\_Input\_File\_Extension\(\)
+ - **"vars"** variavés "hash de plugin" ​​personalizadas\. Gravável, local para cada plugin
  - **"cPLAT"** \-plat valor
  - **"cCOMP"** \-comp valor
  - **"nCOMPVer"** veja HB\_COMPILER\_VER envvar
@@ -638,12 +638,12 @@ Notas:
   &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
   &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
   &lt;script\.hbc&gt;: package configuration file
-  - Source filename without extension will load the \.hbp file, if such \.hbp file exists in current directory\. If not, \.prg extension will be used\.
+  - se existir um nome de arquivo projeto \.hbp no diretório atual este será carregado como fonte de origem\. Caso contrário, o arquivo o com extensão \.prg extension será usado\.
   - Multiplos parâmetros \-l, \-L, \-i e &lt;script&gt; são aceitos\.
   - Opções usadas com o compilador Harbour também são aceitas\.
   - O arquivo de configuração hbmk\.hbc no diretório do hbmk2 sempre ser processado caso exista\. Em plataformas \*nix este arquivo é sempre procurado nas pastas ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc \(exatamente nesta ordem\) antes da pasta que contém o hbmk2\.
   - O script hbmk\.hbm no diretório atual será sempre processado se existir\.
-  - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
+  - Usar a opção de barras como separador de diretório é recomendado\.mas barras invertidas também são igualmente aceitas\.
   - Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo \.hbc e possuem diversas opções\.  
 Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palavra\-chave&gt;\]\}\. Os filtros podem ser combinados usando os operadores '&amp;', '|' e agrupados por parênteses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - A maioria das linhas \.hbc \(libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =\) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro\. libpaths = também aceita%\{hb\_name\} que traduz o nome do arquivo\. hbc sob pesquisa\.

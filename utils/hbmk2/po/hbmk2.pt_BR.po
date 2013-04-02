@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 23:31+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-02 11:11+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1015,6 +1015,10 @@ msgid "embed manifest <file> in executable/dynamic lib (Windows only)"
 msgstr "incorporar arquivo manifest <file> no executável / lib dinâmica (somente para Windows)"
 
 #, c-format
+msgid "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)"
+msgstr "habilitar (ou desabilitar) a importação da biblioteca da fontes de bibliotecas especificadas em -depimplibs= opções (padrão: yes)"
+
+#, c-format
 msgid "enable (or disable) single beep on successful exit, double beep on failure"
 msgstr "ativa (ou desativa) um beep simples em caso de sucesso ou um beep duplo em caso de erro"
 
@@ -1499,8 +1503,16 @@ msgid "Files:"
 msgstr "Arquivos:"
 
 #, c-format
+msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
+msgstr "coleção de opções. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto.Usar o mesmo formata dos arquivos .hbp."
+
+#, c-format
 msgid "optional .hbm file residing in current working directory, which gets automatically processed before other options"
 msgstr "o arquivo opcional .hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções"
+
+#, c-format
+msgid "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s"
+msgstr "por padrão, se presente o arquivo .hbc é o que será processado automaticamente. Localização (ões) possíveis (em ordem de prioridade) [*]: %1$s"
 
 #, c-format
 msgid "Harbour portable binary (aka precompiled Harbour script)"
@@ -1819,6 +1831,10 @@ msgid "display <msg>"
 msgstr "Exibir <msg>"
 
 #, c-format
+msgid "embed space separated list of .hbc files. Names without the extension is accepted. These references are processed in place."
+msgstr "incorporat lista separada por espaçoe de arquivos .hbc. São aceitos nomes se a extensão. Essas referências são processados ​​no local."
+
+#, c-format
 msgid "package description"
 msgstr "descrição do pacote"
 
@@ -2031,12 +2047,20 @@ msgid "%1$s value"
 msgstr "%1$s valor"
 
 #, c-format
+msgid "array of parameters passed to plugins via -pflag=/pi= options or having an extension registered via hbmk_Register_Input_File_Extension()"
+msgstr "passar uma matriz de parâmetros para os plugins através das opções -pflag=/pi= ou tendo registrado as extensões via hbmk_Register_Input_File_Extension()"
+
+#, c-format
 msgid "API version as an integer"
 msgstr "versão da API como um número inteiro"
 
 #, c-format
 msgid "Current exit code"
 msgstr "Código de saída atual"
+
+#, c-format
+msgid "hash of plugin custom variables. Writable, local to each plugin"
+msgstr "variavés \"hash de plugin\" ​​personalizadas. Gravável, local para cada plugin"
 
 #, c-format
 msgid "see %1$s envvar"
@@ -2089,6 +2113,14 @@ msgstr "Opções aceitando macros também suportam linhas de comando. Neste caso
 #, c-format
 msgid "Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)"
 msgstr "Opções usadas com o compilador Harbour também são aceitas."
+
+#, c-format
+msgid "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used."
+msgstr "se existir um nome de arquivo projeto .hbp no diretório atual este será carregado como fonte de origem. Caso contrário, o arquivo o com extensão .prg extension será usado."
+
+#, c-format
+msgid "Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted."
+msgstr "Usar a opção de barras como separador de diretório é recomendado.mas barras invertidas também são igualmente aceitas."
 
 #, c-format
 msgid ".hb, .hrb or .dbf"
