@@ -70,7 +70,7 @@ STATIC PROCEDURE doc_make( cMain )
 
       cTempHRB := hb_FNameExtSet( hPar[ "entry" ], ".hrb" )
 
-      ? "generating documentation:"
+      ? hPar[ "name" ], "generating documentation:"
 
       hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -gh -o%2$s", hPar[ "entry" ], cTempHRB ) )
 
@@ -112,13 +112,13 @@ STATIC PROCEDURE src_push( cMain )
    FClose( hb_FTempCreateEx( @cTempContent, , , ".pot" ) )
    FClose( hb_FTempCreateEx( @cTempResult ) )
 
-   ? "generating translation source"
+   ? hPar[ "name" ], "generating translation source"
 
    hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", hPar[ "entry" ], cTempContent ) )
 
    POT_Sort( cTempContent )
 
-   ? "saving locally"
+   ? hPar[ "name" ], "saving locally"
 
    cContent := hb_StrFormat( ;
       '#, c-format' + hb_eol() + ;
@@ -134,7 +134,7 @@ STATIC PROCEDURE src_push( cMain )
 
    hb_MemoWrit( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + hPar[ "baselang" ] + ".po", cContent )
 
-   ? "uploading", "size", hb_ntos( Len( cContent ) )
+   ? hPar[ "name" ], "uploading", "size", hb_ntos( Len( cContent ) )
 
    hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
@@ -182,7 +182,7 @@ STATIC PROCEDURE trs_pull( cMain )
 
    FClose( hb_FTempCreateEx( @cTempResult ) )
 
-   ? "pulling translations:"
+   ? hPar[ "name" ], "pulling translations:"
 
    FOR EACH cLang IN hPar[ "langs" ]
 
@@ -305,7 +305,7 @@ STATIC PROCEDURE trs_push( cMain )
 
       cContent := hb_MemoRead( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po" )
 
-      ? "uploading translation", "size", Len( cContent )
+      ? hPar[ "name" ], "uploading translation", "size", Len( cContent )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
