@@ -28,13 +28,11 @@ PROCEDURE Main()
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
-            cPO := Item( "", Meta() )
+            cPO := Item( "", Meta( cName ) )
             /* TODO: do something with the metadata (position 0 to 5) */
             FOR tmp1 := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
-               IF ! Empty( hb_langMessage( tmp1, "en" ) )
-                  cPO += Item( hb_langMessage( tmp1, "en" ), ;
-                     iif( hb_langMessage( tmp1, "en" ) == hb_langMessage( tmp1, cName ), "", hb_langMessage( tmp1, cName ) ) )
-               ENDIF
+               cPO += Item( hb_langMessage( tmp1, "en" ), ;
+                  iif( hb_langMessage( tmp1, "en" ) == hb_langMessage( tmp1, cName ), "", hb_langMessage( tmp1, cName ) ) )
             NEXT
             hb_MemoWrit( Lower( hb_FNameName( cName ) ) + ".po", hb_StrShrink( cPO, Len( hb_eol() ) ) )
          ENDIF
@@ -43,7 +41,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION Meta()
+STATIC FUNCTION Meta( cName )
 
    LOCAL cISO_TimeStamp := ISO_TimeStamp()
 
@@ -51,6 +49,7 @@ STATIC FUNCTION Meta()
    LOCAL cMeta
 
    LOCAL meta
+   LOCAL tmp
 
    /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
@@ -60,10 +59,14 @@ STATIC FUNCTION Meta()
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
    hMeta[ "Last-Translator:"           ] := "a b <a.b@c.d>"
-   hMeta[ "Language-Team:"             ] := "a b <a.b@c.d>"
+   hMeta[ "Language-Team:"             ] := "https://www.transifex.com/projects/p/harbour/"
    hMeta[ "MIME-Version:"              ] := "1.0"
    hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"
    hMeta[ "Content-Transfer-Encoding:" ] := "8bit"
+
+   FOR tmp := 0 TO 5
+      hMeta[ hb_StrFormat( "Harbour-Meta-%1$d:", tmp ) ] := hb_langMessage( tmp, cName )
+   NEXT
 
    cMeta := '"' + e"\n"
    FOR EACH meta IN hMeta

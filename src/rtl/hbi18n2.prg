@@ -344,8 +344,7 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
    hb_default( @lKeepSource, .T. )
    hb_default( @lKeepVoidTranslations, .T. )
 
-   FOR EACH item IN aTrans DESCEND
-
+   FOR EACH item IN aTrans
       IF HB_ISEVALITEM( bTransformTranslation )
          FOR EACH cString IN item[ _I18N_MSGSTR ]
             tmp := Eval( bTransformTranslation, cString, item[ _I18N_MSGID, cString:__enumIndex() ] )
@@ -354,8 +353,13 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
             ENDIF
          NEXT
       ENDIF
+      IF ! lKeepSource
+         item[ _I18N_SOURCE ] := ""
+      ENDIF
+   NEXT
 
-      IF ! lKeepVoidTranslations
+   IF ! lKeepVoidTranslations
+      FOR EACH item IN aTrans DESCEND
          lVoid := .T.
          FOR EACH cString IN item[ _I18N_MSGSTR ]
             IF ! Empty( cString ) .AND. !( cString == item[ _I18N_MSGID, cString:__enumIndex() ] )
@@ -367,12 +371,8 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
             hb_ADel( aTrans, item:__enumIndex(), .T. )
             LOOP
          ENDIF
-      ENDIF
-
-      IF ! lKeepSource
-         item[ _I18N_SOURCE ] := ""
-      ENDIF
-   NEXT
+      NEXT
+   ENDIF
 
    RETURN aTrans
 
