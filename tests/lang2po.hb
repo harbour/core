@@ -37,7 +37,7 @@ STATIC FUNCTION LangToPO( cLang )
             hb_langMessage( tmp, "en" ), ;
             iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ) .AND. ;
                ! NonTranslatable( hb_langMessage( tmp, "en" ) ) .AND. ;
-               nPos != 28, "", hb_langMessage( tmp, cLang ) ), ;
+               nPos != 28 .AND. Len( hb_langMessage( tmp, "en" ) ) > 1, "", hb_langMessage( tmp, cLang ) ), ;
             nPos++ )
       ENDIF
    NEXT

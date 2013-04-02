@@ -148,7 +148,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "",
+      "Objektum destruktor hiba",
       "tömbelem hozzáférés",
       "tömbelem értékadás",
       "tömbelem dimenzió",
