@@ -255,6 +255,11 @@ STATIC FUNCTION IsBinary( cFile )
    RETURN Chr( 0 ) $ cFile .OR. !( Chr( 10 ) $ cFile )
 
 /*
+ * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
+ * Harbour adaptation Copyright 2013 Viktor Szakats (harbour syenar.net)
+ */
+
+/*
 Copyright (c) 1996 Eugene Roshal
 Copyright (c) 2000 Far Group
 All rights reserved.
