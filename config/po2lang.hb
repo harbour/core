@@ -1,5 +1,5 @@
 /*
- * Converts .po files to lang modules
+ * Converts .po files to core lang modules
  *
  * Copyright 2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

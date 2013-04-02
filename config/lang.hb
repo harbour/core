@@ -114,31 +114,41 @@ STATIC PROCEDURE src_push( cMain )
 
    ? hPar[ "name" ], "generating translation source"
 
-   hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", hPar[ "entry" ], cTempContent ) )
+   IF Empty( hPar[ "po" ] )
+      cContent := LangToPO( LangToCoreLang( hPar[ "baselang" ] ) )
+   ELSE
+      hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", hPar[ "entry" ], cTempContent ) )
 
-   POT_Sort( cTempContent )
+      POT_Sort( cTempContent )
 
-   ? hPar[ "name" ], "saving locally"
+      cContent := hb_MemoRead( cTempContent )
+   ENDIF
 
-   cContent := hb_StrFormat( ;
-      '#, c-format' + hb_eol() + ;
-      'msgid ""' + hb_eol() + ;
-      'msgstr ""' + hb_eol() + ;
-      '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
-      '"Language: %2$s\n"' + hb_eol() + ;
-      '"MIME-Version: 1.0\n"' + hb_eol() + ;
-      '"Content-Type: text/plain; charset=UTF-8\n"' + hb_eol() + ;
-      '"Content-Transfer-Encoding: 8bit\n"', hb_FNameName( hPar[ "entry" ] ), hPar[ "baselang" ] ) + hb_eol() + ;
-      hb_eol() + ;
-      hb_MemoRead( cTempContent )
-
-   hb_MemoWrit( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + hPar[ "baselang" ] + ".po", cContent )
+   IF Empty( hPar[ "po" ] )
+      #ifdef DEBUG
+         hb_MemoWrit( hPar[ "baselang" ] + ".po", cContent )
+      #endif
+   ELSE
+      cContent := hb_StrFormat( ;
+         '#, c-format' + hb_eol() + ;
+         'msgid ""' + hb_eol() + ;
+         'msgstr ""' + hb_eol() + ;
+         '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
+         '"Language: %2$s\n"' + hb_eol() + ;
+         '"MIME-Version: 1.0\n"' + hb_eol() + ;
+         '"Content-Type: text/plain; charset=UTF-8\n"' + hb_eol() + ;
+         '"Content-Transfer-Encoding: 8bit\n"', hb_FNameName( hPar[ "entry" ] ), hPar[ "baselang" ] ) + hb_eol() + ;
+         hb_eol() + ;
+         cContent
+      ? hPar[ "name" ], "saving locally"
+      hb_MemoWrit( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + hPar[ "baselang" ] + ".po", cContent )
+   ENDIF
 
    ? hPar[ "name" ], "uploading", "size", hb_ntos( Len( cContent ) )
 
    hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-   hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
+   hb_run( hb_StrFormat( 'curl -v -s -i -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
@@ -196,14 +206,24 @@ STATIC PROCEDURE trs_pull( cMain )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
          hb_MemoWrit( cTempResult, json[ "content" ] )
-         POT_Sort( cTempResult )
-         /* should only do this if the translation is primarily done
-            on Transifex website. This encouraged and probably the case
-            in practice. Delete source information, delete empty
-            translations and apply some automatic transformation for
-            common translation mistakes. */
-         PO_Clean( cTempResult, hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
-            .F., .F., @DoctorTranslation() )
+         IF ! Empty( hPar[ "po" ] )
+            POT_Sort( cTempResult )
+            /* should only do this if the translation is primarily done
+               on Transifex website. This encouraged and probably the case
+               in practice. Delete source information, delete empty
+               translations and apply some automatic transformation for
+               common translation mistakes. */
+            PO_Clean( cTempResult, hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
+               .F., .F., @DoctorTranslation() )
+         ELSE
+            POToLang( ;
+               cTempResult, ;
+               hb_DirBase() + hb_DirSepToOS( "../src/lang/" ) + "l_" + LangToCoreLang( cLang ) + ".c", ;
+               LangToCoreLang( cLang ) )
+            #ifdef DEBUG
+               hb_MemoWrit( cLang + ".po", json[ "content" ] )
+            #endif
+         ENDIF
       ELSE
          ? "API error"
       ENDIF
@@ -301,11 +321,22 @@ STATIC PROCEDURE trs_push( cMain )
    FClose( hb_FTempCreateEx( @cTempContent ) )
    FClose( hb_FTempCreateEx( @cTempResult ) )
 
+   ? hPar[ "name" ], "uploading translation:"
+
    FOR EACH cLang IN hPar[ "langs" ]
 
-      cContent := hb_MemoRead( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po" )
+      ?? "", cLang
 
-      ? hPar[ "name" ], "uploading translation", "size", Len( cContent )
+      IF Empty( hPar[ "po" ] )
+         cContent := LangToPO( LangToCoreLang( cLang ) )
+         #ifdef DEBUG
+            hb_MemoWrit( cLang + ".po", cContent )
+         #endif
+      ELSE
+         cContent := hb_MemoRead( hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po" )
+      ENDIF
+
+      ?? "", hb_ntos( Len( cContent ) )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
@@ -369,6 +400,16 @@ STATIC FUNCTION _HAGetDef( xContainer, xDefault, ... )
 
    RETURN xDefault
 
+STATIC FUNCTION LangToCoreLang( cLang )
+   RETURN hb_HGetDef( { ;
+      "zh_CN"        => "zh_tra", ;
+      "zh_CN.GB2312" => "zh_sim", ;
+      "sr"           => "sr_cyr", ;
+      "sr@latin"     => "sr_lat", ;
+      "fr_FR"        => "fr", ;
+      "es_ES"        => "es", ;
+      "pt_BR"        => "pt" }, cLang, cLang )
+
 STATIC FUNCTION LoadPar( cMain )
 
    LOCAL hPar := { => }
@@ -376,31 +417,44 @@ STATIC FUNCTION LoadPar( cMain )
    LOCAL cConfig
    LOCAL item
 
-   hPar[ "entry" ] := cMain
-
-   cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
-
    hPar[ "project" ]   := "harbour"
+   hPar[ "entry" ]     := cMain
    hPar[ "login" ]     := GetEnv( "HB_TRANSIFEX_LOGIN" )  /* Format: username:password */
    hPar[ "name" ]      := hb_FNameName( hPar[ "entry" ] )
-   hPar[ "doc" ]       := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "doc/" )
-   hPar[ "docext" ]    := _HAGetDef( hb_regexAll( "-3rd=_hblang_docext=([\S]*)", cConfig,,,,, .T. ), ".txt", 1, 2 )
-   hPar[ "docoption" ] := {}
-   FOR EACH item IN hb_regexAll( "-3rd=_hblang_docoption=([\S]*)", cConfig,,,,, .T. )
-      AAdd( hPar[ "docoption" ], item[ 2 ] )
-   NEXT
 
-   item := _HAGetDef( hb_regexAll( "-3rd=_hblang_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
-   IF item != NIL
-      item := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( item )
-      hPar[ "entry" ] := iif( Empty( hb_FNameName( item ) ), item + hb_FNameName( hb_DirSepDel( item ) ) + ".prg", item )
+   IF hPar[ "entry" ] == "core-lang"
+//    hPar[ "langs" ]     := { "hu", "el", "fr_FR", "it", "es_ES", "es_419", "pt_BR", "de" }
+//    hPar[ "langs" ]     := { "zh_CN", "zh_CN.GB2312" } // CoreLangList()
+      hPar[ "langs" ]     := { "hu" }
+      hPar[ "baselang" ]  := "en"
+      hPar[ "po" ]        := NIL
+   ELSE
+      cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
+
+      hPar[ "doc" ]       := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "doc/" )
+      hPar[ "docext" ]    := _HAGetDef( hb_regexAll( "-3rd=_hblang_docext=([\S]*)", cConfig,,,,, .T. ), ".txt", 1, 2 )
+      hPar[ "docoption" ] := {}
+      FOR EACH item IN hb_regexAll( "-3rd=_hblang_docoption=([\S]*)", cConfig,,,,, .T. )
+         AAdd( hPar[ "docoption" ], item[ 2 ] )
+      NEXT
+
+      item := _HAGetDef( hb_regexAll( "-3rd=_hblang_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
+      IF item != NIL
+         item := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( item )
+         hPar[ "entry" ] := iif( Empty( hb_FNameName( item ) ), item + hb_FNameName( hb_DirSepDel( item ) ) + ".prg", item )
+      ENDIF
+
+      cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
+
+      hPar[ "langs" ]     := hb_ATokens( _HAGetDef( hb_regexAll( "-lng=([\w,]*)", cConfig,,,,, .T. ), "", 1, 2 ), "," )
+      hPar[ "baselang" ]  := _HAGetDef( hb_regexAll( "-3rd=_hblang_base=([\w]*)", cConfig,,,,, .T. ), "en", 1, 2 )
+
+      hPar[ "po" ]        := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "po/" )
    ENDIF
 
-   cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
-
-   hPar[ "langs" ]     := hb_ATokens( _HAGetDef( hb_regexAll( "-lng=([\w,]*)", cConfig,,,,, .T. ), "", 1, 2 ), "," )
-   hPar[ "baselang" ]  := _HAGetDef( hb_regexAll( "-3rd=_hblang_base=([\w]*)", cConfig,,,,, .T. ), "en", 1, 2 )
-
-   hPar[ "po" ]        := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "po/" )
-
    RETURN hPar
+
+/* --------------------------------------------- */
+
+#include "lang2po.hb"
+#include "po2lang.hb"
