@@ -17,7 +17,7 @@ Opções
 
 
  - **\-o&lt;outname&gt;** nome de arquivo de saída
- - **\-l&lt;libname&gt;** link with &lt;libname&gt; library\. &lt;libname&gt; should be without path, extension and 'lib' prefix \(unless part of the name\)\. Do not add core Harbour libraries, they are automatically added as needed\. If &lt;libname&gt; starts with a '\-' character, the library will be removed from the list of libraries at link time\.
+ - **\-l&lt;libname&gt;** linkar com a biblioteca &lt;libname&gt;\. &lt;libname&gt; deve estar sem path, extensão e prefixo 'lib' \(menos a parte do nome\)\. Não adicione bibliotecas do núcleo Harbour, elas são automaticamente inseridas quando necessário\. Se &lt;libname&gt; inicializar com um caracter '\-', a biblioteca será removida da lista de bibiotecas na hora de linkar\.
  - **\-L&lt;libpath&gt;** path adicional para pesquisar por bibliotecas
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** paths adicionais para pesquisa de arquivos headers
  - **\-static|\-shared** linkar com biliotecas estáticas/compartilhadas
@@ -50,7 +50,7 @@ Opções
  - **\-beep\[\-\]** ativa \(ou desativa\) um beep simples em caso de sucesso ou um beep duplo em caso de erro
  - **\-ignore\[\-\]** ignore erros quando executar as ferramentas de compilação \(padrão: off\)
  - **\-hbcppmm\[\-\]** sobrepor o as funções padrão C\+\+ de gerenciamento de memoria pelas do Harbour
- - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
+ - **\-winuni\[\-\]** selecione o modo de compilação entre UNICODE \(WIDE\) e ANSI \(padrão: ANSI\) \(somente Windows\. Para WinCE está sempre configurado para UNICODE\)
  - **\-nohblib\[\-\]** não usar bibliotecas estáticas do núcleo do Harbour quando linkar
  - **\-nodefgt\[\-\]** Não link GTs padrão \(o modo \-static é mais eficaz\)
  - **\-nolibgrouping\[\-\]** desativar agrupamento de LIBs em compiladores baseados no gcc\.
@@ -65,7 +65,7 @@ Opções
  - **\-vcshead=&lt;file&gt;** gerar arquivo de cabeçalho "\. ch" com informações do repositório local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente\. O cabeçalho gerado irá definir a constante \_HBMK\_VCS\_TYPE\_ no pré\-processador com o nome detectados de VCS e \_HBMK\_VCS\_ID\_ com o ID único do repositório local\. Se nenhum sistema VCS é detectado, um número seqüencial será lançado automaticamente em cada construção\.  
 VCS \- sistema de controle de versão\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
- - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
+ - **\-icon=&lt;file&gt;** colocar o arquivo &lt;file&gt; como ícone de aplicação\. O arquivo &lt;file&gt; deve estar em um formato suportado na plataforma alvo \(não suportado por algumas plataformas/compiladores\)\. No Windows, isso é implementado gerando e linkando um arquivo de recursos\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
  - **\-signpw=&lt;pw&gt;** usar &lt;pw&gt; como senha ao assinar executável \(somente Windows e Darwin\)
@@ -121,7 +121,7 @@ VCS \- sistema de controle de versão\.
 
 
  - **\-hbx=\[&lt;\.ch&gt;\]** Create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\.
- - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt; is a header file name\. &lt;\.hbc&gt; is a \.hbc filename to be automatically included in case the header is found in any of the compiled sources\. \(EXPERIMENTAL\)
+ - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt;é um nome de arquivo header \. &lt;\.hbc&gt; é um nome de arquivo \.hbc que será automaticamente incluído caso o header seja encontrado em algum dos fonte compilados\. \(EXPERIMENTAL\)
 
 
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; is the name of the dependency\. &lt;n&gt; name of the package dependency\. Can be specified multiple times\.
@@ -129,7 +129,7 @@ VCS \- sistema de controle de versão\.
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; é o nome da dependencia\. &lt;f&gt; pode ser 'yes' or 'no', especifica se a dependência é opcional\.  
 Padrão: no
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; is the name of the dependency\. &lt;v&gt; is a value that controls how detection is done\. Accepted values: no, yes, force, nolocal, local\. Default: content of environment variable HBMK\_WITH\_&lt;d&gt;
- - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; is the name of the dependency\. Set &lt;r&gt; as root directory for paths specified in \-depincpath options\.
+ - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; é o nome da dependência\. Definir &lt;r&gt; como diretório raiz para os caminhos especificados nas opções \-depincpath \.
  - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; é o nome da dependêcia\. Adicione &lt;i&gt; para detectar o cabeçalho na lista de caminhos\.
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list, where &lt;i&gt; is pointing to a directory local to the project and containing an embedded \(aka\. 'locally hosted'\) dependency\.
  - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; é o nome da dependencia\. Adicione &lt;dll&gt; para importar a biblioteca na lista de fontes\.
@@ -252,7 +252,7 @@ Arquivos:
  - **\*\.hrb** Harbour binario portável \(Também conhecida como Harbour script pré\-compilado\)
  - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
- - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **\.hb\_history** armazena o historico de comando do shell interativo Harbour shell\. Voce pode desabilitar o historico fazendo a primeira linha 'no' \(sem aspas e com nova linha\)\. Localizado em \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
   
 Variáveis macro:  
@@ -318,7 +318,7 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{lngc\}** forçado modo C \(veja opção \-cpp\-\)
  - **\{winuni\}** Modo Windows UNICODE \(WIDE\) \(veja opção \-winuni\)
  - **\{winansi\}** modo Windows ANSI \(veja opção \-winuni\-\)
- - **\{unix\}** target platform is \*nix compatible \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
+ - **\{unix\}** plataforma alvo é compatível com \*nix \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** plataforma alvo é compátivel com Windows \(win, wce\)
  - **\{allgcc\}** o compilador C alvo pertence a família gcc\.\(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
  - **\{allmingw\}** compilador alvo C é mingw\* \(mingw, mingw64, mingwarm\)
@@ -350,7 +350,7 @@ Constantes pré\-definidas nos fontes:
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
 
 
-Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Constantes predefinidas em arquivos de construção \(eles estão disponíveis depois '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** quando &lt;depname&gt; dependência foi detectada
@@ -592,7 +592,7 @@ $ hbmk2 mymain\.prg myfuncs\.prg \-inc
 $ hbmk2 myapp\.hbp
  - **Para gerar uma aplicação usando o modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
- - **To build an application which uses a contrib package or 3rd party \(add\-on\) package that ships with an \.hbc file**  
+ - **para construir uma aplicação que usa os pacotes da contribuinte ou pacotes de terceiros que vem com um arquivo \.hbc**  
 $ hbmk2 myapp\.prg hbct\.hbc
  - **Para gerar uma aplicação que utiliza uma biblioteca raw**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
@@ -649,7 +649,7 @@ Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&g
   - A maioria das linhas \.hbc \(libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =\) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro\. libpaths = também aceita%\{hb\_name\} que traduz o nome do arquivo\. hbc sob pesquisa\.
   - Opções aceitando macros também suportam linhas de comando\. Neste caso basta rodeiar o comando dentro de \`\`, e, se o comando contiver espaço, também adicione aspas duplas\. i\.e\. "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
-  - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
+  - Bibliotecas e arquivos de objetos construídos com/para CA\-Cl\*pper não irá funcionar com qualquer plataforma /compilador suportada\.
   - Padrões e especificações suportadas podem variar de acordo com plataforma/compilador\.
   - não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS \(no Windows\) para rodar hbmk2\.
   - \. \(dot\) passed as first parameter will enter the interactive Harbour shell\.

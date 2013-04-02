@@ -55,7 +55,7 @@ Opzioni:
  - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
  - **\-nomiscsyslib\[\-\]** non aggiungere un'ulteriore elenco di librerie di sistema alla lista della libreria di default
- - **\-traceonly** show commands to be executed, but do not execute them
+ - **\-traceonly** mostrare i comandi da essere eseguiti, ma non vengono eseguiti
  - **\-warn=&lt;level&gt;** set C compiler warning level  
 &lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
@@ -198,7 +198,7 @@ Special value:
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Riconoscimenti del compilatore Harbour
  - **\-build** Informazioni del compilatore Harbour
- - **\-version** display version header only
+ - **\-version** visualizza solamente la versione dell'intestazione
   
 Options below are internal/developer ones \(compatibility not guaranteed\):  
 

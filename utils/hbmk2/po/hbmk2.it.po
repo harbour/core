@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 17:59+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-02 00:22+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -39,8 +39,16 @@ msgid "Autodetected C compiler: %1$s"
 msgstr "Compilatore C rilevato: %1$s"
 
 #, c-format
+msgid "Error: Compiler value unknown: %1$s"
+msgstr "Errore: Valore del compilatore sconosciuto: %1$s"
+
+#, c-format
 msgid "Using Harbour: %1$s %2$s %3$s %4$s %5$s %6$s"
 msgstr "Harbour in uso: %1$s %2$s %3$s %4$s %5$s %6$s"
+
+#, c-format
+msgid "Using C compiler: %1$s"
+msgstr "Uso del compilatore C: %1$s"
 
 #, c-format
 msgid "Using C compiler: %1$s [%2$s...%3$s]"
@@ -95,6 +103,10 @@ msgid "Compiling resources..."
 msgstr "Compilazione risorse in corso..."
 
 #, c-format
+msgid "Error: Running resource compiler. %1$d"
+msgstr "Errore: Nell'esecuzione del compilatore di risorse. %1$d"
+
+#, c-format
 msgid "Warning: Resource compiler script could not be created, continuing in command-line."
 msgstr "Attenzione: lo script di risorse del compilatore non può essere creato, continuare in linea di comando."
 
@@ -115,6 +127,14 @@ msgid "Warning: C/C++ compiler script could not be created, continuing in comman
 msgstr "Attenzione: lo script C/C++ del compilatore non può essere creato, continuare in linea di comando."
 
 #, c-format
+msgid "C/C++ compiler command:"
+msgstr "Comando del compilatore C/C++:"
+
+#, c-format
+msgid "C/C++ compiler script:"
+msgstr "Script del compilatore C/C++"
+
+#, c-format
 msgid "'cd' back."
 msgstr "'cd' indietro."
 
@@ -127,8 +147,28 @@ msgid "Warning: Cannot create directory for import library '%1$s'."
 msgstr "Attenzione: impossibile creare la cartella per la libreri di import '%1$s'."
 
 #, c-format
+msgid "Linking... %1$s"
+msgstr "Link in corso di... %1$s"
+
+#, c-format
 msgid "Warning: Dynamic lib link script could not be created, continuing in command-line."
 msgstr "Attenzione: lo script di collegamento della libreria dinamica non può essere creato, continuare in linea di comando."
+
+#, c-format
+msgid "Creating static library... %1$s"
+msgstr "Creazione della libreria statica... %1$s"
+
+#, c-format
+msgid "Compression command:"
+msgstr "Comando di compressione:"
+
+#, c-format
+msgid "Running time: %1$ds"
+msgstr "Orario dell'esecuzione: %1$ds"
+
+#, c-format
+msgid "Running executable:"
+msgstr "Esecuzione dell'eseguibile:"
 
 #, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
@@ -523,6 +563,10 @@ msgid "show commands executed"
 msgstr "mostra comandi eseguiti"
 
 #, c-format
+msgid "show commands to be executed, but do not execute them"
+msgstr "mostrare i comandi da essere eseguiti, ma non vengono eseguiti"
+
+#, c-format
 msgid "show error result as human readable text on exit"
 msgstr "mostra gli errori all'uscita come testo leggibile"
 
@@ -545,6 +589,10 @@ msgstr "Opzioni riportate di seguito sono disponibili da riga di comando:"
 #, c-format
 msgid "convert hbmake project <file> to .hbp file"
 msgstr "Converte il progetto hbmake <file> in file .hbp"
+
+#, c-format
+msgid "display version header only"
+msgstr "visualizza solamente la versione dell'intestazione"
 
 #, c-format
 msgid "enable Harbour 1.0.x compatibility mode"

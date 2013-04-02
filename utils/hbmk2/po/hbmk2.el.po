@@ -2115,10 +2115,6 @@ msgid "Unload package."
 msgstr "Αποφόρτωση πακέτου"
 
 #, c-format
-msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
-msgstr "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
-
-#, c-format
 msgid "Add a binary object file to the project."
 msgstr "Προσθήκη ενός δυαδικού object αρχείου στο έργο."
 
