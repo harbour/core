@@ -14,12 +14,12 @@
 
 PROCEDURE Main_po2lang()
 
-   PO_2_C( "hu.po", "l_hu.c", "hu" )
-   PO_2_C( "el.po", "l_el.c", "el" )
+   POToLang( "hu.po", "l_hu.c", "hu" )
+   POToLang( "el.po", "l_el.c", "el" )
 
    RETURN
 
-STATIC FUNCTION PO_2_C( cFileIn, cFileOut, cLang )
+STATIC FUNCTION POToLang( cFileIn, cFileOut, cLang )
 
    LOCAL aTrans
    LOCAL cErrorMsg

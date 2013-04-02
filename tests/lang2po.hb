@@ -73,7 +73,7 @@ STATIC FUNCTION CoreLangList()
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF Len( cName ) != 5 .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
-            AAdd( aList, cName )
+            AAdd( aList, Lower( Left( cName, 2 ) ) + SubStr( cName, 3 ) )
          ENDIF
       ENDIF
    NEXT
@@ -102,15 +102,12 @@ STATIC FUNCTION Meta()
    hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"
    hMeta[ "Content-Transfer-Encoding:" ] := "8bit"
 
-   cMeta := '"' + hb_eol()
+   cMeta := ""
    FOR EACH meta IN hMeta
-      cMeta += ;
-         '"' + ;
-         meta:__enumKey() + ;
-         " " + ;
-         meta + ;
-         "\n" + ;
-         iif( meta:__enumIsLast(), "", '"' + hb_eol() )
+      cMeta += meta:__enumKey() + " " + meta
+      IF ! meta:__enumIsLast()
+         cMeta += e"\n"
+      ENDIF
    NEXT
 
    RETURN cMeta
@@ -129,12 +126,35 @@ STATIC FUNCTION Item( cOri, cTrs, nPos )
 
    LOCAL cComment := Comment( nPos )
 
-   RETURN hb_StrFormat( ;
+   RETURN ;
       iif( Empty( cComment ), "", "#  " + cComment + hb_eol() ) + ;
       "#, c-format" + hb_eol() + ;
-      'msgid "%1$s"' + hb_eol() + ;
-      'msgstr "%2$s"' + hb_eol() + ;
-      hb_eol(), iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ), cTrs )
+      "msgid " + ItemString( iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ) ) + ;
+      "msgstr " + ItemString( cTrs ) + hb_eol()
+
+STATIC FUNCTION ItemString( cString )
+
+   LOCAL cResult := ""
+   LOCAL line
+
+   LOCAL aLine := hb_ATokens( cString, e"\n" )
+
+   IF Len( aLine ) > 1
+      cResult += '""' + hb_eol()
+   ENDIF
+
+   FOR EACH line IN aLine
+      cResult += '"' + ConvToC_2( line )
+      IF ! line:__enumIsLast()
+         cResult += "\n"
+      ENDIF
+      cResult += '"' + hb_eol()
+   NEXT
+
+   RETURN cResult
+
+STATIC FUNCTION ConvToC_2( cStr )
+   RETURN hb_StrReplace( cStr, { '"' => '\"' } )
 
 STATIC FUNCTION Comment( nPos )
 
