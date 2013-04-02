@@ -207,7 +207,6 @@ HB_LANG_ANNOUNCE( EN )
 #define HB_LANG_ITEM_ID_ID        0
 #define HB_LANG_ITEM_ID_NAME      1
 #define HB_LANG_ITEM_ID_NAMENAT   2
-#define HB_LANG_ITEM_ID_RFCID     3
 #define HB_LANG_ITEM_ID_CODEPAGE  4
 
 typedef struct

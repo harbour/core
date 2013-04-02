@@ -12,7 +12,7 @@
 
 #include "hblang.ch"
 
-PROCEDURE Main()
+PROCEDURE Main_lang2po()
 
    LOCAL cLang
 
@@ -25,17 +25,37 @@ PROCEDURE Main()
 STATIC FUNCTION LangToPO( cLang )
 
    LOCAL nPos := 0
-   LOCAL cPO := Item( "", Meta( cLang ), nPos++ )
+   LOCAL cPO := Item( "", Meta(), nPos++ )
    LOCAL tmp
 
+   cPO += Item( "English (in English)", hb_langMessage( 1, cLang ), nPos++ )
+   cPO += Item( "English", hb_langMessage( 2, cLang ), nPos++ )
+
    FOR tmp := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
-      cPO += Item( ;
-         hb_langMessage( tmp, "en" ), ;
-         iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ), "", hb_langMessage( tmp, cLang ) ), ;
-         nPos++ )
+      IF Len( hb_langMessage( tmp, "en" ) ) > 0
+         cPO += Item( ;
+            hb_langMessage( tmp, "en" ), ;
+            iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ) .AND. ;
+               ! NonTranslatable( hb_langMessage( tmp, "en" ) ) .AND. ;
+               nPos != 28, "", hb_langMessage( tmp, cLang ) ), ;
+            nPos++ )
+      ENDIF
    NEXT
 
    RETURN hb_StrShrink( cPO, Len( hb_eol() ) )
+
+STATIC FUNCTION NonTranslatable( cString )
+
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( cString )
+      IF IsAlpha( SubStr( cString, tmp, 1 ) ) .OR. ;
+         IsDigit( SubStr( cString, tmp, 1 ) )
+         RETURN .F.
+      ENDIF
+   NEXT
+
+   RETURN .T.
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
@@ -60,7 +80,7 @@ STATIC FUNCTION CoreLangList()
 
    RETURN aList
 
-STATIC FUNCTION Meta( cName )
+STATIC FUNCTION Meta()
 
    LOCAL cISO_TimeStamp := ISO_TimeStamp()
 
@@ -68,7 +88,6 @@ STATIC FUNCTION Meta( cName )
    LOCAL cMeta
 
    LOCAL meta
-   LOCAL tmp
 
    /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
@@ -77,15 +96,11 @@ STATIC FUNCTION Meta( cName )
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
-   hMeta[ "Last-Translator:"           ] := "a b <a.b@c.d>"
+   hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@foobaz>"
    hMeta[ "Language-Team:"             ] := "https://www.transifex.com/projects/p/harbour/"
    hMeta[ "MIME-Version:"              ] := "1.0"
    hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"
    hMeta[ "Content-Transfer-Encoding:" ] := "8bit"
-
-   FOR tmp := 0 TO 5
-      hMeta[ hb_StrFormat( "Harbour-Lang-Meta-%1$d:", tmp ) ] := hb_langMessage( tmp, cName )
-   NEXT
 
    cMeta := '"' + hb_eol()
    FOR EACH meta IN hMeta
@@ -111,8 +126,22 @@ STATIC FUNCTION ISO_TimeStamp()
       Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
 
 STATIC FUNCTION Item( cOri, cTrs, nPos )
+
+   LOCAL cComment := Comment( nPos )
+
    RETURN hb_StrFormat( ;
+      iif( Empty( cComment ), "", "#  " + cComment + hb_eol() ) + ;
       "#, c-format" + hb_eol() + ;
       'msgid "%1$s"' + hb_eol() + ;
       'msgstr "%2$s"' + hb_eol() + ;
-      hb_eol(), iif( Empty( cOri ) .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ), cTrs )
+      hb_eol(), iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ), cTrs )
+
+STATIC FUNCTION Comment( nPos )
+
+   SWITCH nPos
+   CASE 22 ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
+   CASE 29 ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt)"
+   CASE 102 ; RETURN "Local date format, where YYYY=year, MM=month, DD=day"
+   ENDSWITCH
+
+   RETURN ""

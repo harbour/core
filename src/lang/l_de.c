@@ -94,7 +94,7 @@ static HB_LANG s_lang =
       "* Teilsumme *",
       "*** Summe ***",
       "Einfg.",
-      "   ",
+      "      ",
       "Ungültiges Datum",
       "Bereich: ",
       " - ",

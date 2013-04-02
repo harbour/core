@@ -94,7 +94,7 @@ static HB_LANG s_lang =
       "* Subsubtotaal *",
       "*** Totaal ***",
       "Ins",
-      " ",
+      "   ",
       "Ongeldige datum",
       "Bereik: ",
       " - ",

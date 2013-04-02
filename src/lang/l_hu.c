@@ -96,7 +96,7 @@ static HB_LANG s_lang =
       "Ins",
       "   ",
       "Rossz dátum",
-      " Határok ",
+      "Határok: ",
       " - ",
       "I/N",
       "HIBÁS KIFEJEZÉS",

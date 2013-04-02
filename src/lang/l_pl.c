@@ -96,7 +96,7 @@ static HB_LANG s_lang =
       "Wst",    /* wstaw */
       "Zas",    /* zastap */
       "Nieprawidłowa data",
-      "Zakres:",
+      "Zakres: ",
       " - ",
       "T/N",
       "Błędne wyrażenie",

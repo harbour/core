@@ -24,6 +24,9 @@
  *
  */
 
+/* TODO: Apply transformations:
+         Uncrustify, hbformat, optipng, jpgclean, css/html/xml format, etc */
+
 #pragma -w3
 #pragma -km+
 #pragma -ko+
@@ -60,11 +63,14 @@ FUNCTION CheckFileList( xName )
 
    RETURN lPassed
 
-STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
+STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL cFile
    LOCAL tmp
    LOCAL cEOL
+
+   LOCAL lReBuild
+   LOCAL lRemoveEndingWhitespace
 
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
@@ -116,6 +122,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
    LOCAL aForcedLF := { ;
       "*.sh" }
 
+   hb_default( @lApplyFixes, .F. )
+
    cName := hb_DirSepToOS( cName )
    cFile := hb_MemoRead( cName )
 
@@ -123,7 +131,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
 
    /* filename checks */
 
-   IF ! FNameExc( cName, LoadGitIgnore() )
+   IF ! FNameExc( cName, LoadGitignore() )
 
       IF ( Len( hb_FNameName( cName ) ) > 8 .OR. Len( hb_FNameExt( cName ) ) > 4 ) .AND. ! FNameExc( cName, aCanBeLong )
          AAdd( aErr, "filename: non-8.3" )
@@ -142,7 +150,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
       ENDIF
 
       IF IsBinary( cFile )
-         IF .F.
+         IF lApplyFixes
             IF hb_FNameExt( cFile ) == ".png"
                OutStd( cFile + ": " + "content: optimizing" + hb_eol() )
                hb_run( "optipng " + cFile )
@@ -150,9 +158,11 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
          ENDIF
       ELSE
 
-         IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768
+         IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
             cFile := Left( cFile, 16384 ) + Right( cFile, 16384 )
          ENDIF
+
+         lReBuild := .F.
 
          /* text content checks */
 
@@ -162,37 +172,68 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr )
 
          IF hb_BLeft( cFile, Len( UTF8_BOM() ) ) == UTF8_BOM()
             AAdd( aErr, "content: has BOM" )
-         ENDIF
-
-         IF ! FNameExc( cName, aCanHaveSpaceAtEol ) .AND. EndingWhitespace( cFile )
-            AAdd( aErr, "content: has ending whitespace" )
+            IF lApplyFixes
+               cFile := hb_BSubStr( cFile, Len( UTF8_BOM() ) + 1 )
+            ENDIF
          ENDIF
 
          IF Right( cFile, 1 ) == Chr( 26 )
             AAdd( aErr, "content: has legacy EOF char" )
+            IF lApplyFixes
+               cFile := hb_StrShrink( cFile, 1 )
+            ENDIF
          ENDIF
 
          cEOL := EOLDetect( cFile )
 
          IF Len( cEOL ) == 0
             AAdd( aErr, "content: has mixed EOL types" )
+            IF lApplyFixes
+               lReBuild := .T.
+            ENDIF
          ENDIF
 
          IF FNameExc( cName, aForcedCRLF ) .AND. !( cEOL == Chr( 13 ) + Chr( 10 ) )
             AAdd( aErr, "content: must use CRLF EOL for file type" )
+            IF lApplyFixes
+               cFile := StrTran( StrTran( cFile, Chr( 13 ) ), Chr( 10 ), cEOL := Chr( 13 ) + Chr( 10 ) )
+            ENDIF
          ENDIF
 
          IF FNameExc( cName, aForcedLF ) .AND. !( cEOL == Chr( 10 ) )
             AAdd( aErr, "content: must use LF EOL for file type" )
+            IF lApplyFixes
+               cFile := StrTran( cFile, Chr( 13 ) )
+               cEOL := Chr( 10 )
+            ENDIF
          ENDIF
 
-         IF !( Right( cFile, Len( hb_eol() ) ) == hb_eol() ) .AND. ;
-            !( Right( cFile, Len( e"\n" ) ) == e"\n" )
+         IF ! FNameExc( cName, aCanHaveSpaceAtEol ) .AND. EndingWhitespace( cFile )
+            AAdd( aErr, "content: has ending whitespace" )
+            IF lApplyFixes
+               lRemoveEndingWhitespace := .T.
+               lReBuild := .T.
+            ENDIF
+         ENDIF
+
+         IF lReBuild
+            cFile := RemoveEndingWhitespace( cFile, cEOL, lRemoveEndingWhitespace )
+         ENDIF
+
+         IF !( Right( cFile, Len( cEOL ) ) == cEOL )
             AAdd( aErr, "content: has no EOL at EOF" )
+            IF lApplyFixes
+               cFile += cEOL
+            ENDIF
          ENDIF
 
-         IF Right( cFile, 2 * Len( hb_eol() ) ) == Replicate( hb_eol(), 2 )
+         IF Right( cFile, Len( cEOL ) * 2 ) == Replicate( cEOL, 2 )
             AAdd( aErr, "content: has multiple EOL at EOF" )
+            IF lApplyFixes
+               DO WHILE Right( cFile, Len( cEOL ) * 2 ) == Replicate( cEOL, 2 )
+                  cFile := hb_StrShrink( cFile, Len( cEOL ) )
+               ENDDO
+            ENDIF
          ENDIF
 
          IF ! FNameExc( cName, aCanHaveAnyEncoding )
@@ -312,6 +353,8 @@ STATIC FUNCTION EOLDetect( cFile )
       RETURN Chr( 13 )
    ELSEIF nCR == 0 .AND. nLF > 0
       RETURN Chr( 10 )
+   ELSEIF nCR == 0 .AND. nLF == 0
+      RETURN "binary"
    ELSEIF nCR == nLF
       RETURN Chr( 13 ) + Chr( 10 )
    ENDIF
@@ -329,6 +372,20 @@ STATIC FUNCTION EndingWhitespace( cFile )
    NEXT
 
    RETURN .F.
+
+STATIC FUNCTION RemoveEndingWhitespace( cFile, cEOL, lRTrim )
+
+   LOCAL cResult := ""
+   LOCAL cLine
+
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 13 ) ), Chr( 10 ) )
+      cResult += iif( lRTrim, RTrim( cLine ), cLine )
+      IF ! cLine:__enumIsLast()
+         cResult += cEOL
+      ENDIF
+   NEXT
+
+   RETURN cResult
 
 STATIC FUNCTION FNameExc( cName, aList )
 
@@ -353,7 +410,7 @@ STATIC FUNCTION UTF8_BOM()
       hb_BChar( 0xBB ) + ;
       hb_BChar( 0xBF )
 
-STATIC FUNCTION LoadGitIgnore()
+STATIC FUNCTION LoadGitignore()
 
    THREAD STATIC s_aIgnore := NIL
 

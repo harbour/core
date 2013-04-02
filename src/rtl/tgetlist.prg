@@ -804,7 +804,11 @@ METHOD ShowScoreboard() CLASS HBGetList
 
    IF Set( _SET_SCOREBOARD )
 
-      hb_DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __natMsg( _GET_INSERT_ON ), __natMsg( _GET_INSERT_OFF ) ) )
+      hb_DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), ;
+         __natMsg( _GET_INSERT_ON ), ;
+         iif( Len( __natMsg( _GET_INSERT_OFF ) ) == Len( __natMsg( _GET_INSERT_ON ) ), ;
+            __natMsg( _GET_INSERT_ON ), ;
+            Space( Len( __natMsg( _GET_INSERT_ON ) ) ) ) ) )
 
    ENDIF
 

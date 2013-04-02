@@ -1,3 +1,10 @@
+/*
+ * Converts .po files to lang modules
+ *
+ * Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * www - http://harbour-project.org
+ *
+ */
 
 #pragma -w3
 #pragma -km+
@@ -5,23 +12,20 @@
 
 #include "hblang.ch"
 
-PROCEDURE Main()
+PROCEDURE Main_po2lang()
 
-   LOCAL cFileIn := "hu.po"
-   LOCAL cFileOut := "l_hu.c"
-
-   PO_2_C( cFileIn, cFileOut )
+   PO_2_C( "hu.po", "l_hu.c", "hu" )
+   PO_2_C( "el.po", "l_el.c", "el" )
 
    RETURN
 
-STATIC FUNCTION PO_2_C( cFileIn, cFileOut, ... )
+STATIC FUNCTION PO_2_C( cFileIn, cFileOut, cLang )
 
    LOCAL aTrans
    LOCAL cErrorMsg
 
    LOCAL cContent
    LOCAL cTranslator
-   LOCAL cID
    LOCAL nPos
 
    IF ( aTrans := __i18n_potArrayLoad( cFileIn, @cErrorMsg ) ) != NIL
@@ -29,11 +33,11 @@ STATIC FUNCTION PO_2_C( cFileIn, cFileOut, ... )
       cContent := StrTran( _begin(), e"\n", hb_eol() )
       nPos := 0
 
-      __i18n_potArrayClean( aTrans,,, {| cTrs, cOri | ProcessTrs( @cContent, cTrs, cOri, @cTranslator, @cID, @nPos ) } )
+      __i18n_potArrayClean( aTrans,,, {| cTrs, cOri | ProcessTrs( @cContent, cTrs, cOri, @cTranslator, @nPos, cLang ) } )
 
       cContent := "/* Last Translator: " + cTranslator + " */" + hb_eol() + ;
          Left( cContent, Len( cContent ) - Len( "," ) - Len( hb_eol() ) ) + hb_eol() + ;
-         StrTran( StrTran( _end(), e"\n", hb_eol() ), "{LNG}", Upper( cID ) )
+         StrTran( StrTran( _end(), e"\n", hb_eol() ), "{LNG}", Upper( cLang ) )
 
       hb_MemoWrit( cFileOut, cContent )
 
@@ -44,9 +48,16 @@ STATIC FUNCTION PO_2_C( cFileIn, cFileOut, ... )
 
    RETURN .F.
 
-STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ cID, /* @ */ nPos )
+STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ nPos, cLang )
 
-   LOCAL tmp, tmp1
+   STATIC sc_hEmpty := { ;
+      3  => { "", "UTF8", "" }, ;
+      47 => { "", "" }, ;
+      57 => { "" }, ;
+      64 => { "", "", "", "" }, ;
+      80 => { "", "", "" } }
+
+   LOCAL tmp
 
    SWITCH nPos
    CASE HB_LANG_ITEM_BASE_ID      ; tmp := "/* Identification */" ; EXIT
@@ -65,22 +76,24 @@ STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /
 
    IF nPos == 0
       cTranslator := hb_regexAll( "Last-Translator: ([^\n]*)", cTrs,,,,, .T. )[ 1 ][ 2 ]
-      IF cTranslator == "a b <a.b@c.d>"
+      IF cTranslator == "foo bar <foo.bar@foobaz>"
          cTranslator := ""
       ENDIF
-      FOR tmp := 0 TO 5
-         cContent += Space( 6 ) + ConvToC( tmp1 := hb_regexAll( hb_StrFormat( "Harbour-Lang-Meta-%1$d: ([\S]*)", tmp ), cTrs,,,,, .T. )[ 1 ][ 2 ] ) + "," + hb_eol()
-         ++nPos
-         IF tmp == 0
-            cID := tmp1
-         ENDIF
-      NEXT
+      cContent += Space( 6 ) + ConvToC( cLang ) + "," + hb_eol()
+      ++nPos
    ELSE
       IF Len( cTrs ) == 0
          cTrs := cOri
       ENDIF
       cContent += Space( 6 ) + ConvToC( cTrs ) + "," + hb_eol()
       ++nPos
+
+      IF nPos $ sc_hEmpty
+         FOR tmp := 1 TO Len( sc_hEmpty[ nPos ] )
+            cContent += Space( 6 ) + ConvToC( sc_hEmpty[ nPos ][ tmp ] ) + "," + hb_eol()
+         NEXT
+         nPos += Len( sc_hEmpty[ nPos ] )
+      ENDIF
    ENDIF
 
    RETURN NIL
