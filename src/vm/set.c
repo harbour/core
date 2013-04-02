@@ -303,7 +303,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
       }
    }
 
-   /* free the old value before setting the new one (CA-Cl*pper does it.
+   /* free the old value before setting the new one (CA-Cl*pper does it).
     * This code must be executed after setting szFileName, [druzus]
     */
    if( *set_value )
