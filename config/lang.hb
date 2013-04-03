@@ -156,7 +156,7 @@ STATIC PROCEDURE src_push( cMain )
 
    hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-   hb_run( hb_StrFormat( 'curl -v -s -i -L --user %1$s -X ' + ;
+   hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
@@ -224,6 +224,9 @@ STATIC PROCEDURE trs_pull( cMain )
             PO_Clean( cTempResult, hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
                .F., .F., @DoctorTranslation() )
          ELSE
+         ///////////////////// TEST TEST //////////////////
+//            PO_Clean( cTempResult, cTempResult, ;
+//               .F., .F., @DoctorTranslation() )
             POToLang( ;
                cTempResult, ;
                hb_DirBase() + hb_DirSepToOS( "../src/lang/" ) + "l_" + LangToCoreLang( cLang ) + ".c", ;
@@ -425,17 +428,21 @@ STATIC FUNCTION LoadPar( cMain )
    hPar[ "name" ]      := hb_FNameName( hPar[ "entry" ] )
 
    IF hPar[ "entry" ] == "core-lang"
+      hPar[ "baselang" ]  := "en"
+      hPar[ "po" ]        := NIL
       hPar[ "langs" ]     := CoreLangList()
-      FOR EACH item IN hPar[ "langs" ]
+      FOR EACH item IN hPar[ "langs" ] DESCEND
+         IF Lower( item ) == hPar[ "baselang" ]
+            hb_ADel( item:__enumBase(), item:__enumIndex(), .T. )
+            LOOP
+         ENDIF
          FOR EACH tmp IN sc_hLangMapping
-            IF tmp == Lower( item )
+            IF Lower( item ) == tmp
                item := tmp:__enumKey()
                EXIT
             ENDIF
          NEXT
       NEXT
-      hPar[ "baselang" ]  := "en"
-      hPar[ "po" ]        := NIL
    ELSE
       cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
 

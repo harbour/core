@@ -368,7 +368,7 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
             ENDIF
          NEXT
          IF lVoid
-            hb_ADel( aTrans, item:__enumIndex(), .T. )
+            hb_ADel( item:__enumBase(), item:__enumIndex(), .T. )
             LOOP
          ENDIF
       NEXT
