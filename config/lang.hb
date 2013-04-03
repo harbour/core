@@ -224,9 +224,8 @@ STATIC PROCEDURE trs_pull( cMain )
             PO_Clean( cTempResult, hPar[ "po" ] + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".po", ;
                .F., .F., @DoctorTranslation() )
          ELSE
-         ///////////////////// TEST TEST //////////////////
-//            PO_Clean( cTempResult, cTempResult, ;
-//               .F., .F., @DoctorTranslation() )
+            PO_Clean( cTempResult, cTempResult, ;
+               .F., .T., @DoctorTranslation() )
             POToLang( ;
                cTempResult, ;
                hb_DirBase() + hb_DirSepToOS( "../src/lang/" ) + "l_" + LangToCoreLang( cLang ) + ".c", ;
@@ -246,9 +245,25 @@ STATIC PROCEDURE trs_pull( cMain )
 
 STATIC FUNCTION DoctorTranslation( cString, cOri )
 
+   LOCAL lRightToLeft := IsRightToLeft( cString )
+
    LOCAL regex, hit
 
-   cString := AllTrim( cString )
+   IF lRightToLeft
+      IF ! Empty( Left( cOri, 1 ) )
+         cString := RTrim( cString )
+      ENDIF
+      IF ! Empty( Right( cOri, 1 ) )
+         cString := LTrim( cString )
+      ENDIF
+   ELSE
+      IF ! Empty( Left( cOri, 1 ) )
+         cString := LTrim( cString )
+      ENDIF
+      IF ! Empty( Right( cOri, 1 ) )
+         cString := RTrim( cString )
+      ENDIF
+   ENDIF
 
    /* Only if original doesn't have elongated spaces */
    IF cOri == StrUnspace( cOri )
@@ -258,30 +273,70 @@ STATIC FUNCTION DoctorTranslation( cString, cOri )
    /* For Transifex: RETURN SYMBOL to real new line */
    cString := StrTran( cString, hb_UChar( 0x23CE ), e"\n" )
 
-   /* Common typos: extra space or punctuation */
-   cString := hb_StrReplace( cString, { ;
-      e"\n "  => e"\n"  , ;
-      e" .\n" => e".\n" , ;
-      "( "    => "("    , ;
-      " )"    => ")"    , ;
-      " :"    => ":"    , ;
-      " ,"    => ","    , ;
-      " ;"    => ";"    , ;
-      ":. "   => ": "   , ;
-      ": . "  => ": "   , ;
-      ":, "   => ": "   , ;
-      ": , "  => ": "   } )
+   IF lRightToLeft
+      /* Common typos: extra space or punctuation */
+      cString := hb_StrReplace( cString, { ;
+         e"\n "  => e"\n"  , ;
+         e". \n" => e".\n" , ;
+         "( "    => "("    , ;
+         " )"    => ")"    , ;
+         ": "    => ":"    , ;
+         ", "    => ","    , ;
+         "; "    => ";"    , ;
+         " .:"   => ": "   , ;
+         " . :"  => ": "   , ;
+         " ,:"   => ": "   , ;
+         " , :"  => ": "   } )
 
-   /* Common typos: missing space */
-   FOR EACH regex IN { ":([A-Za-z])", "[,;](\S)", "\)(\w)" }
-      FOR EACH hit IN hb_regexAll( regex, cString,,,,, .T. )
-         IF ! hit[ 1 ] $ cOri
-            cString := StrTran( cString, hit[ 1 ], StrTran( hit[ 1 ], hit[ 2 ], " " + hit[ 2 ] ) )
-         ENDIF
+      /* Common typos: missing space */
+      FOR EACH regex IN { "([A-Za-z]):", "(\S)[,;]", "(\w)\(" }
+         FOR EACH hit IN hb_regexAll( regex, cString,,,,, .T. )
+            IF ! hit[ 1 ] $ cOri
+               cString := StrTran( cString, hit[ 1 ], StrTran( hit[ 1 ], hit[ 2 ], hit[ 2 ] + " " ) )
+            ENDIF
+         NEXT
       NEXT
-   NEXT
+   ELSE
+      /* Common typos: extra space or punctuation */
+      cString := hb_StrReplace( cString, { ;
+         e"\n "  => e"\n"  , ;
+         e" .\n" => e".\n" , ;
+         "( "    => "("    , ;
+         " )"    => ")"    , ;
+         " :"    => ":"    , ;
+         " ,"    => ","    , ;
+         " ;"    => ";"    , ;
+         ":. "   => ": "   , ;
+         ": . "  => ": "   , ;
+         ":, "   => ": "   , ;
+         ": , "  => ": "   } )
+
+      /* Common typos: missing space */
+      FOR EACH regex IN { ":([A-Za-z])", "[,;](\S)", "\)(\w)" }
+         FOR EACH hit IN hb_regexAll( regex, cString,,,,, .T. )
+            IF ! hit[ 1 ] $ cOri
+               cString := StrTran( cString, hit[ 1 ], StrTran( hit[ 1 ], hit[ 2 ], " " + hit[ 2 ] ) )
+            ENDIF
+         NEXT
+      NEXT
+   ENDIF
 
    RETURN cString
+
+STATIC FUNCTION IsRightToLeft( cString )
+
+   LOCAL nChar
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( cString )
+      nChar := Asc( SubStr( cString, tmp, 1 ) )
+      IF ( nChar >= 0x0590 .AND. nChar <= 0x05FF ) .OR. ;
+         ( nChar >= 0x0600 .AND. nChar <= 0x06FF )
+         RETURN .T.
+      ENDIF
+   NEXT
+
+   RETURN .F.
 
 /* Converts multiple spaces to just one */
 STATIC FUNCTION StrUnspace( cString )
