@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 08:00+0000\nLast-Translator: oscarhdezsz <oscar.hernandez.suarez@gmail.com>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 10:11+0000\nLast-Translator: oscarhdezsz <oscar.hernandez.suarez@gmail.com>\nLanguage-Team: Spanish (Spain) (http://www.transifex.com/projects/p/harbour/language/es_ES/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_ES\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -480,7 +480,7 @@ msgstr "Dependencia '%1$s' encontrada: %2$s%3$s%4$s%5$s"
 
 #, c-format
 msgid "Dependency '%1$s' forcibly disabled"
-msgstr "Dependencia '%1$s' deshabilitada a la fuerza"
+msgstr "Forzada la desactivación de la dependencia '%1$s'"
 
 #, c-format
 msgid "Warning: Missing optional dependencies: %1$s"
@@ -876,7 +876,7 @@ msgstr "crea una librería estática"
 
 #, c-format
 msgid "enable/disable incremental build mode (default: disabled)"
-msgstr "habilita modo de compilación incremental"
+msgstr "activa el modo de compilación incremental (por defecto: desactivado)"
 
 #, c-format
 msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of the name). Do not add core Harbour libraries, they are automatically added as needed. If <libname> starts with a '-' character, the library will be removed from the list of libraries at link time."
@@ -1304,15 +1304,15 @@ msgstr "activa (o desactiva) el procesamiento de %1$s en el directorio actual (p
 
 #, c-format
 msgid "enable Harbour 1.0.x compatibility mode"
-msgstr "habilita modo de compatibilidad 'Harbour 1.0.x'"
+msgstr "activa el modo de compatibilidad 'Harbour 1.0.x'"
 
 #, c-format
 msgid "enable Harbour 2.0.x compatibility mode"
-msgstr "activa el modo de compatibilidad Harbour 2.0.x"
+msgstr "activa el modo de compatibilidad 'Harbour 2.0.x'"
 
 #, c-format
 msgid "enable Harbour 3.0.x compatibility mode"
-msgstr "activa modo de compatibilidad con Harbour 3.0.x"
+msgstr "activa el modo de compatibilidad 'Harbour 3.0.x'"
 
 #, c-format
 msgid "enable pure C mode"
@@ -1320,7 +1320,7 @@ msgstr "activa modo puro C"
 
 #, c-format
 msgid "enable xhb mode"
-msgstr "habilita el modo xHb"
+msgstr "activa el modo xhb"
 
 #, c-format
 msgid "Harbour compiler build information"
@@ -1484,15 +1484,15 @@ msgstr "modo %1$s (emular enlazador de C)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "modo %1$s (emular compilador Clipper)"
+msgstr "modo %1$s (emula el compilador Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper linker)"
-msgstr "modo %1$s (emular enlazador de Clipper)"
+msgstr "modo %1$s (emula el enlazador de Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
-msgstr "modo %1$s (emular compilador Harbour creando un objeto binario)"
+msgstr "modo %1$s (emula el compilador Harbour creando un objeto binario)"
 
 #, c-format
 msgid "mode script runner / interactive shell"
@@ -1840,7 +1840,7 @@ msgstr "modo C forzado (ver la opción -cpp-)"
 
 #, c-format
 msgid "forced C++ mode (see -cpp option)"
-msgstr "modo C++ forzado (ver la opción -cpp)"
+msgstr "se fuerza el modo C++ (ver la opción -cpp)"
 
 #, c-format
 msgid "GUI target (see -gui option)"
@@ -1916,7 +1916,7 @@ msgstr "modo ANSI de Windows (ver la opción -winuni-)"
 
 #, c-format
 msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
-msgstr "Modo UNICODE (WIDE) de Windows (ver la opción -winuni)"
+msgstr "modo UNICODE (WIDE) de Windows (ver la opción -winuni)"
 
 #, c-format
 msgid "xhb mode (see -xhb option)"

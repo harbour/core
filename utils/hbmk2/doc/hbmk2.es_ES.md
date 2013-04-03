@@ -22,7 +22,7 @@ Opciones:
  - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** rutas adicionales para buscar archivos de cabecera
  - **\-static|\-shared** enlaza con librerías estáticas/compartidas
  - **\-gt&lt;name&gt;** enlaza con el controlador GT GT&lt;name&gt;, se puede repetir para enlazar más GTs\. El primero de ellos será el GT por defecto en tiempo de ejecución\.
- - **\-inc\[\-\]** habilita modo de compilación incremental
+ - **\-inc\[\-\]** activa el modo de compilación incremental \(por defecto: desactivado\)
  - **\-hbexe** crea ejecutable \(por defecto\)
  - **\-hblib** crea una librería estática
  - **\-hbdyn** crea biblioteca dinámica \(sin enlace a Harbour VM\)
@@ -153,10 +153,10 @@ crear un enlace/copia a hbmk2 para hbcmp/clipper resultará el mismo efecto
 puede crear un enlace/copia de hbmk2 a 'hbcc' para obtener el mismo efecto
  - **\-hblnk** acepta indicadores propios del enlazador
  - **\-autohbm\[\-\]** activa \(o desactiva\) el procesamiento de hbmk\.hbm en el directorio actual \(por defecto: yes\)
- - **\-hb10** habilita modo de compatibilidad 'Harbour 1\.0\.x'
- - **\-hb20** activa el modo de compatibilidad Harbour 2\.0\.x
- - **\-hb30** activa modo de compatibilidad con Harbour 3\.0\.x
- - **\-xhb** habilita el modo xHb
+ - **\-hb10** activa el modo de compatibilidad 'Harbour 1\.0\.x'
+ - **\-hb20** activa el modo de compatibilidad 'Harbour 2\.0\.x'
+ - **\-hb30** activa el modo de compatibilidad 'Harbour 3\.0\.x'
+ - **\-xhb** activa el modo xhb
  - **\-hbc** activa modo puro C
  - \-rtlink 
  - \-blinker 
@@ -218,15 +218,15 @@ Puedes crear un enlace simbólico/copiar/renombrar hbmk2 a los siguientes nombre
  - **hbrun\*|\*hbrun** modo de ejecución de archivos de órdenes / intérprete de comandos interactivo
  - **hbrund|hbrun\*d** modo de ejecución de archivos de órdenes / intérprete de comandos interactivo en modo depuración
  - **harbour** modo \-hbraw \(emular el compilador Harbour plano\)
- - **clipper** modo \-hbcmp \(emular compilador Clipper\)
- - **rtlink** modo \-rtlink \(emular enlazador de Clipper\)
- - **exospace** modo \-rtlink \(emular enlazador de Clipper\)
- - **blinker** modo \-rtlink \(emular enlazador de Clipper\)
+ - **clipper** modo \-hbcmp \(emula el compilador Clipper\)
+ - **rtlink** modo \-rtlink \(emula el enlazador de Clipper\)
+ - **exospace** modo \-rtlink \(emula el enlazador de Clipper\)
+ - **blinker** modo \-rtlink \(emula el enlazador de Clipper\)
  - **\*10** opción \-hb10
  - **\*20** opción \-hb20
  - **\*30** opción \-hb30
  - **x\*** opción \-xhb
- - **hbcmp\*|\*hbcmp** modo \-hbcmp \(emular compilador Harbour creando un objeto binario\)
+ - **hbcmp\*|\*hbcmp** modo \-hbcmp \(emula el compilador Harbour creando un objeto binario\)
  - **hbcc\*|\*hbcc** modo \-hbcc \(emular compilador de C\)
  - **hblnk\*|\*hblnk** modo \-hblnk \(emular enlazador de C\)
  - **hbexe\*|\*hbexe** modo \-hbexe
@@ -312,9 +312,9 @@ Filtros \(puedes combinarlos y/o negarlos\):
  - **\{nodebug\}** La depuración a nivel C está desactivada \(ver la opción \-debug\-\)
  - **\{shared\}** construcción en modo compartido \(ver \-shared y opciones relacionadas\)
  - **\{static\}** construcción en modo estático \(ver \-static y opciones relacionadas\)
- - **\{lngcpp\}** modo C\+\+ forzado \(ver la opción \-cpp\)
+ - **\{lngcpp\}** se fuerza el modo C\+\+ \(ver la opción \-cpp\)
  - **\{lngc\}** modo C forzado \(ver la opción \-cpp\-\)
- - **\{winuni\}** Modo UNICODE \(WIDE\) de Windows \(ver la opción \-winuni\)
+ - **\{winuni\}** modo UNICODE \(WIDE\) de Windows \(ver la opción \-winuni\)
  - **\{winansi\}** modo ANSI de Windows \(ver la opción \-winuni\-\)
  - **\{unix\}** la plataforma de destino es compatible \*nix \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** la plataforma de destino es compatible con Windows \(win, wce\)
