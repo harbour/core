@@ -123,7 +123,7 @@ static HB_LANG s_lang =
       "hb_xrealloc nemôže realokovať pamäť",
       "hb_xfree volaný s neplatným pointrom",
       "hb_xfree volaný s NULL pointrom",
-      "Nenájdená štartovacia procedúra : '%s'",
+      "Nenájdená štartovacia procedúra: '%s'",
       "Štartovacia procedúra neurčená",
       "Nepodporovaný VM opcode",
       "Symbolová položka očakávaná pre %s",

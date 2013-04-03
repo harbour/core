@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 02:23+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 11:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1223,6 +1223,10 @@ msgid "show error result as human readable text on exit"
 msgstr "Exibir erros na forma de texto amigável \"human readable\""
 
 #, c-format
+msgid "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected."
+msgstr "assinar executável com <key> (somente Windows e Darwin). No Windows é usado signtool.exe (parte do MS Windows SDK) ou posign.exe (part do Pelles C 7), nesta ordem, ambos autodetctádos."
+
+#, c-format
 msgid "start n compilation threads (multiprocess platforms only)"
 msgstr "dispara <n> threads de compilação (apenas plataformas multiprocessadas)"
 
@@ -1389,6 +1393,10 @@ msgstr "exibir niveis de sub-projeto nas linhas de saída"
 #, c-format
 msgid "specify a build name"
 msgstr "especificar um nome de 'build'"
+
+#, c-format
+msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate build targets."
+msgstr "especificar um destino de nova compilação. <script> cpode ser .prg (ou sem extensão) ou arquivo .hbp . Note-se que arquivos .hbp são automaticamente considerados como alvos separados de compilação."
 
 #, c-format
 msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
@@ -2169,6 +2177,10 @@ msgstr "retorna o caminho relativo de -workdir= valor do diretório atual de tra
 #, c-format
 msgid "Strip double quote enclosure from a string."
 msgstr "Remover aspas duplas de uma string."
+
+#, c-format
+msgid "Plugin variables:\n('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)"
+msgstr "Váriavés Plugin:\n('hbmk' itens de contexto de hash, case-sensitive, apenas leitura, a menos que indicado o contrário)"
 
 #, c-format
 msgid "%1$s option status"

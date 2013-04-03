@@ -13,7 +13,7 @@ Descripción:
 
   hbrun puede ejecutar archivos de órdenes \(tanto en código fuente como pre\-compilados\), y tambien ofrece un intérprete de línea de comandos\.
   
-Las siguientes opciones están disponibles en línea de comandos:  
+Las siguientes opciones están disponibles en la línea de comandos:  
 
 
  - **\-\-hb:debug** activa la depuración de archivos de órdenes
@@ -27,7 +27,7 @@ Las siguientes opciones están disponibles en línea de comandos:
 Ficheros:  
 
 
- - **\*\.hb** Archivo de órdenes de Harbour
+ - **\*\.hb** archivo de órdenes de Harbour
  - **\*\.hrb** binario portable de Harbour \(aka archivo de comandos pre\-compilado de Harbour\)
  - **hbstart\.hb** archivo de órdenes de inicio de Harbour para el intérprete de comandos de Harbour\. Se ejecuta automáticamente al comienzo de la ejecución del intérprete de comandos, si existe\. Localizaciones posibles \(en orden de precedencia\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbrun&gt;
  - **shell plugins** complementos '\.hb' y '\.hrb' para el intérprete de comandos interactivo de Harbour\. Pueden localizarse en \[\*\]: %APPDATA%\\\.harbour\\

@@ -67,7 +67,7 @@ VCS \- sistema de controle de versão\.
  - **\-tshead=&lt;file&gt;** gerar cabeçalho \.ch com informação de data/hora\. Cabeçalho gerado conterá as macros \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data/hora de criação do arquivo\.
  - **\-icon=&lt;file&gt;** colocar o arquivo &lt;file&gt; como ícone de aplicação\. O arquivo &lt;file&gt; deve estar em um formato suportado na plataforma alvo \(não suportado por algumas plataformas/compiladores\)\. No Windows, isso é implementado gerando e linkando um arquivo de recursos\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
- - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
+ - **\-sign=&lt;key&gt;** assinar executável com &lt;key&gt; \(somente Windows e Darwin\)\. No Windows é usado signtool\.exe \(parte do MS Windows SDK\) ou posign\.exe \(part do Pelles C 7\), nesta ordem, ambos autodetctádos\.
  - **\-signpw=&lt;pw&gt;** usar &lt;pw&gt; como senha ao assinar executável \(somente Windows e Darwin\)
  - **\-instfile=&lt;g:file&gt;** adicionar &lt;file&gt; para a lista de arquivos a serem copiados para caminho especificado pela opção \-instpath\. &lt;g&gt; é um grupo de cópias opcional \(case sensitive\), deve ser de pelo menos dois caracteres\.No caso de você não especificar &lt;file&gt;, a lista de arquivos naquele grupo será esvaziado\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
@@ -144,7 +144,7 @@ Padrão: no
 Opções abaixo estão disponíveis em linha de comando:  
 
 
- - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
+ - **\-target=&lt;script&gt;** especificar um destino de nova compilação\. &lt;script&gt; cpode ser \.prg \(ou sem extensão\) ou arquivo \.hbp \. Note\-se que arquivos \.hbp são automaticamente considerados como alvos separados de compilação\.
 
 
  - **\-hbrun** executar programa gerado\.
@@ -502,8 +502,8 @@ Remover aspas duplas de uma string\.
 Converte matriz de strings para uma string\. O separador padão é um espaço simples\.
 
 
-Plugin variables:  
-\('hbmk' context hash items, case\-sensitive, read\-only unless marked otherwise\)
+Váriavés Plugin:  
+\('hbmk' itens de contexto de hash, case\-sensitive, apenas leitura, a menos que indicado o contrário\)
 
 
  - **"apiver"** versão da API como um número inteiro

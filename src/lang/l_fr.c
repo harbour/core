@@ -50,7 +50,7 @@ static HB_LANG s_lang =
       "Ins",
       "   ",
       "Date invalide",
-      "Limites : ",
+      "Limites: ",
       " - ",
       "O/N",
       "INVALID EXPRESSION",

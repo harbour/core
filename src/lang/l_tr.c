@@ -123,7 +123,7 @@ static HB_LANG s_lang =
       "hb_xrealloc tekrar hafıza atayamadı",
       "hb_xfree geçersiz bir pointer tarafından çağrıldı",
       "hb_xfree NULL pointer tarafından çağrıldı",
-      "Başlama prosedürü bulunamdı : '%s'",
+      "Başlama prosedürü bulunamdı: '%s'",
       "Başlama prosedürü yok",
       "Desteklenmeyen VP işlem kodu",
       "%s için sembol maddesi lâzım",

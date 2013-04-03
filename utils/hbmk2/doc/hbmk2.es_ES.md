@@ -39,7 +39,7 @@ Opciones:
  - **\-nulrdd\[\-\]** enlaza con 'nulrdd'
  - **\-debug\[\-\]** añade/excluye información de debug de compilador C\. Para activar el debug de Harbour utilize la opción \-b como de costumbre\.
  - **\-optim\[\-\]** conmuta las optimizaciones del compilador C \(por defecto: on\)
- - **\-cpp\[\-\]** fuerza modo C\+\+/C
+ - **\-cpp\[\-\]** fuerza el modo C\+\+/C
  - **\-cpp=&lt;value&gt;** selecciona el modo C\+\+\. Los valores permitidos son: def, yes, no
  - **\-map\[\-\]** crea \(o no\) un archivo map
  - **\-implib\[\-\]** crea \(o no\) una biblioteca de importación \(en modo \-hbdyn/\-hbexe\)\. Se le añade un sufijo al nombre\.
@@ -82,7 +82,7 @@ Opciones:
 
  - **\-bldf\[\-\]** hereda indicadores de Harbour: todos/no \(por defecto\)
  - **\-bldf=\[p\]\[c\]\[l\]** hereda todos los indicadores de \.prg/\.c/linker \(o ninguno\) desde la construcción de Harbour
- - **\-F&lt;framework&gt;** enlace con marco &lt;framework&gt; \(Sólo Darwin\)
+ - **\-F&lt;framework&gt;** enlace con la 'framework' &lt;framework&gt; \(sólo Darwin\)
  - **\-prgflag=&lt;f&gt;** pasa un indicador al compilador de Harbour
  - **\-cflag=&lt;f&gt;** pasa un indicador al compilador C
  - **\-resflag=&lt;f&gt;** pasa un indicador al compilador de recursos \(sólo para Windows\)
@@ -98,11 +98,11 @@ Opciones:
  - **\-3rd=&lt;f&gt;** opciones/indicadores reservados para herramientas de terceros, siempre ignorados por el mismo hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** modifica las variables de entorno local\. &lt;e&gt; es el nombre de la variable de entorno a modificar\. &lt;o&gt; puede ser '=' para establecer/reemplazar, '\-' para borrar, '\+' para añadir al final de valor existente, '\#' para insertar al principio del valor existente\. &lt;v&gt; es el valor a establecer/añadir/insertar\.
  - **\-jobs=&lt;n&gt;** Inicia &lt;n&gt; tareas de compilación \(sólo para plataformas multiproceso\)
- - **\-head=&lt;m&gt;** analizando fuente de control de encabezado \(en construcción en modo incremental\)  
-&lt;m&gt; puede ser: nativo \(compilador utilizado para extraer las dependencias\), completa \(por defecto, utiliza analizador de texto simple en el fichero entero\), dep, off
+ - **\-head=&lt;m&gt;** modo de funcionamiento del analizador de cabeceras \(en el modo incremental\)  
+&lt;m&gt; puede ser: nativo \(utiliza el compilador para extraer las dependencias\), completa \(por defecto, utiliza un simple analizador de texto en el fichero entero\), dep, off
  - **\-rebuild** reconstrucción \(en modo incremental\)
  - **\-rebuildall** reconstruye con sub\-proyectos \(contrucción en modo incremental\)
- - **\-clean** compilación limpia \(en modo incremental\)
+ - **\-clean** elimina todos los ficheros generados por la construcción \(en modo incremental\)
  - **\-workdir=&lt;dir&gt;** directorio de trabajo  
 \(por defecto: \.hbmk/&lt;plataforma&gt;/&lt;compilador&gt; \[\*\] en modo incremental, si no, directorio temporal del SO\)
 
@@ -115,7 +115,7 @@ Opciones:
  - **\-lng=&lt;languages&gt;** lista de idiomas a ser reemplazados en %\{hb\_lng\} macros en archivos \.pot/\.po y nombres de archivos y salida \.hbl/\.po\. Lista separada por comas:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** crea/actualiza archivo \.po a partir del código fuente\. Lo combina con el anterior archivo \.po del mismo nombre\.
- - **\-minipo\[\-\]** añade \(o no\) el número de versión y referencia del archivo de origen al \.po \(por defecto: añadirlos\)
+ - **\-minipo\[\-\]** añade \(o no\) el número de versión y referencia del archivo de origen al \.po \(por defecto: se añade\)
  - **\-rebuildpo** recrea archivo \.po, eliminando todas las entradas obsoletas en el mismo\.
 
 
@@ -128,9 +128,9 @@ Opciones:
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; es el nombre de la dependencia\. &lt;f&gt; puede ser 'yes' o 'no', especifica si la dependencia es opcional\. Por defecto: no
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; es el nombre de la dependencia\. &lt;v&gt; es un valor que controla como se hace la detección\. Valores aceptados: no, yes, force, nolocal, local\. Por defecto: contenido de envvar HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; es el nombre de la dependencia\. Establecer &lt;r&gt; como directorio raíz para las rutas especificadas en la opción \-depincpath\.
- - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;i&gt; a la lista de rutas de detección de encabezados\.
+ - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Añade &lt;i&gt; a la lista de rutas de detección de encabezados\.
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;i&gt; a la lista de rutas de detección de cabeceras, donde &lt;i&gt; apunta a un directorio local del proyecto, conteniendo una dependencia embebida \(conocido como 'alojado localmente'\)\.
- - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; es el nombre de la dependencia\. Añadir &lt;dll&gt; a la lista de las fuentes de bibliotecas de importación\.
+ - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; es el nombre de la dependencia\. Añade &lt;dll&gt; a la lista de las fuentes de bibliotecas de importación\.
  - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; es el nombre de la dependencia\. Establecer nombre generado de biblioteca de importación a &lt;lib&gt;
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; es el nombre de la dependencia\. Cierra la definición de la dependencias y realiza la detección, estableciendo todas las variables macro de los filtros predefinidos y las opciones de construcción relacionadas\. Es opcional; si se omite, la detección tendrá lugar después de procesar todas las opciones\.
 
@@ -139,7 +139,7 @@ Opciones:
  - **\-pi=&lt;filename&gt;** pasa un archivo de entrada a los complementos
  - **\-pflag=&lt;f&gt;** pasa un sólo indicador a los complementos
   
-Las siguientes opciones están disponibles en línea de comandos:  
+Las siguientes opciones están disponibles en la línea de comandos:  
 
 
  - **\-target=&lt;script&gt;** especifica un nuevo objetivo final\. &lt;script&gt; puede ser un fichero '\.prg' \(o sin extensión\) o un fichero '\.hbp'\. Tener en cuenta que los ficheros '\.hbp' son considerados automáticamente como objetivos finales por separado\.
@@ -156,15 +156,15 @@ puede crear un enlace/copia de hbmk2 a 'hbcc' para obtener el mismo efecto
  - **\-hb10** activa el modo de compatibilidad 'Harbour 1\.0\.x'
  - **\-hb20** activa el modo de compatibilidad 'Harbour 2\.0\.x'
  - **\-hb30** activa el modo de compatibilidad 'Harbour 3\.0\.x'
- - **\-xhb** activa el modo xhb
- - **\-hbc** activa modo puro C
+ - **\-xhb** activa el modo 'xhb'
+ - **\-hbc** activa el modo puro C
  - \-rtlink 
  - \-blinker 
- - **\-exospace** emula comportamiento de linkeditor compatible con clipper  
-crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efecto
+ - **\-exospace** emula el comportamiento del enlazador compatible con Clipper  
+crear un enlace o copiar hbmk2 a 'rtlink'/'blinker'/'exospace' resultará el mismo efecto
 
 
- - **\-hbreg\[=global\]** registra Harbour Script \(\.hb\) con hbmk2 \(sólo en Windows\)
+ - **\-hbreg\[=global\]** realiza el registro de hbmk2 del tipo de archivo de órdenes de Harbour \(\.hb\) \(sólo en Windows\)
  - **\-hbunreg\[=global\]** anula el registro de hbmk2 del tipo de archivo de órdenes de Harbour \(\.hb\) \(sólo Windows\)
 
 
@@ -217,7 +217,7 @@ Puedes crear un enlace simbólico/copiar/renombrar hbmk2 a los siguientes nombre
 
  - **hbrun\*|\*hbrun** modo de ejecución de archivos de órdenes / intérprete de comandos interactivo
  - **hbrund|hbrun\*d** modo de ejecución de archivos de órdenes / intérprete de comandos interactivo en modo depuración
- - **harbour** modo \-hbraw \(emular el compilador Harbour plano\)
+ - **harbour** modo \-hbraw \(emula el compilador Harbour plano\)
  - **clipper** modo \-hbcmp \(emula el compilador Clipper\)
  - **rtlink** modo \-rtlink \(emula el enlazador de Clipper\)
  - **exospace** modo \-rtlink \(emula el enlazador de Clipper\)
@@ -227,8 +227,8 @@ Puedes crear un enlace simbólico/copiar/renombrar hbmk2 a los siguientes nombre
  - **\*30** opción \-hb30
  - **x\*** opción \-xhb
  - **hbcmp\*|\*hbcmp** modo \-hbcmp \(emula el compilador Harbour creando un objeto binario\)
- - **hbcc\*|\*hbcc** modo \-hbcc \(emular compilador de C\)
- - **hblnk\*|\*hblnk** modo \-hblnk \(emular enlazador de C\)
+ - **hbcc\*|\*hbcc** modo \-hbcc \(emula un compilador de C\)
+ - **hblnk\*|\*hblnk** modo \-hblnk \(emula un enlazador de C\)
  - **hbexe\*|\*hbexe** modo \-hbexe
  - **hblib\*|\*hblib** modo \-hblib
  - **hbdyn\*|\*hbdyn** modo \-hbdyn
@@ -246,7 +246,7 @@ Ficheros:
  - **$hb\_pkg\_install\.hbm** fichero especial '\.hbm' incluido dentro de hbmk2\. Se encarga de los detalles de la instalación de los objetivos finales, y paquetes relacionados, a las localizaciones estándar \(al estilo de las construcciones de Harbour\)\.
 
 
- - **\*\.hb** Archivo de órdenes de Harbour
+ - **\*\.hb** archivo de órdenes de Harbour
  - **\*\.hrb** binario portable de Harbour \(aka archivo de comandos pre\-compilado de Harbour\)
  - **hbstart\.hb** archivo de órdenes de inicio de Harbour para el intérprete de comandos de Harbour\. Se ejecuta automáticamente al comienzo de la ejecución del intérprete de comandos, si existe\. Localizaciones posibles \(en orden de precedencia\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **shell plugins** complementos '\.hb' y '\.hrb' para el intérprete de comandos interactivo de Harbour\. Pueden localizarse en \[\*\]: %APPDATA%\\\.harbour\\
@@ -262,7 +262,7 @@ Variables de macro:
  - **$\{hb\_name\}** nombre del archivo que se ha utilizado \(sin ruta ni extensión\)
  - **$\{hb\_self\}** nombre de archivo completo que esta siendo procesado
  - **$\{hb\_curdir\}** directorio de trabajo actual
- - **$\{hb\_tempdir\}** Directorio para archivos temporales del sistema operativo
+ - **$\{hb\_tempdir\}** directorio para archivos temporales del sistema operativo
  - **$\{hb\_targetname\}** nombre del proyecto \(sin directorio ni extensión\)\. Devuelve \.adhoc\. si no es un archivo de proyecto\.
  - **$\{hb\_targettype\}** tipo de proyecto \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** plataforma seleccionada
@@ -275,19 +275,19 @@ Variables de macro:
  - **$\{hb\_dynprefix\}** prefijo de la librería dinámica
  - **$\{hb\_dynsuffix\}** sufijo de la librería dinámica
  - **$\{hb\_dynext\}** extensión de las bibliotecas dinámicas
- - **$\{hb\_ver\}** Versión de Harbour en formato hexadecimal de tres bytes\. P\.ej\.: 030200
- - **$\{hb\_verstr\}** Versión de Harbour en un formato legible para humanos &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por ejemplo: 3\.2\.0dev
+ - **$\{hb\_ver\}** versión de Harbour en formato hexadecimal de tres bytes\. P\.ej\.: 030200
+ - **$\{hb\_verstr\}** versión de Harbour en un formato legible para humanos &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por ejemplo: 3\.2\.0dev
  - **$\{hb\_major\}** número mayor de la versión de Harbour
  - **$\{hb\_minor\}** número menor de la versión de Harbour
  - **$\{hb\_release\}** número de versión de lanzamiento de Harbour
- - **$\{hb\_status\}** Estado de la versión de Harbour
- - **$\{hb\_revision\}** Revisión de Harbour
- - **$\{hb\_host\_plat\}** Plataforma anfitrión de Harbour
+ - **$\{hb\_status\}** estado de la versión de Harbour
+ - **$\{hb\_revision\}** revisión de Harbour
+ - **$\{hb\_host\_plat\}** plataforma anfitrión de Harbour
  - **$\{hb\_host\_plat\_unix\}** devuelve '1' si la plataforma anfitriona es compatible \*nix\.
  - **$\{hb\_bin\}** directorio de los binarios de Harbour
- - **$\{hb\_lib\}** Directorio de las bibliotecas estáticas de Harbour
+ - **$\{hb\_lib\}** directorio de las bibliotecas estáticas de Harbour
  - **$\{hb\_lib3rd\}** Directorio de las librerías estáticas de terceros de Harbour
- - **$\{hb\_dyn\}** Directorio de las bibliotecas de enlace dinámico de Harbour
+ - **$\{hb\_dyn\}** directorio de las bibliotecas de enlace dinámico de Harbour
  - **$\{hb\_inc\}** directorio de las cabeceras de Harbour
  - **$\{hb\_addons\}** directorio base de los programas adicionales de Harbour
  - **$\{hb\_first\}** nombre del fichero de código fuente que contiene la función de entrada \(sin el directorio ni la extensión\)
@@ -313,7 +313,7 @@ Filtros \(puedes combinarlos y/o negarlos\):
  - **\{shared\}** construcción en modo compartido \(ver \-shared y opciones relacionadas\)
  - **\{static\}** construcción en modo estático \(ver \-static y opciones relacionadas\)
  - **\{lngcpp\}** se fuerza el modo C\+\+ \(ver la opción \-cpp\)
- - **\{lngc\}** modo C forzado \(ver la opción \-cpp\-\)
+ - **\{lngc\}** se fuerza el modo C \(ver la opción \-cpp\-\)
  - **\{winuni\}** modo UNICODE \(WIDE\) de Windows \(ver la opción \-winuni\)
  - **\{winansi\}** modo ANSI de Windows \(ver la opción \-winuni\-\)
  - **\{unix\}** la plataforma de destino es compatible \*nix \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
@@ -324,10 +324,10 @@ Filtros \(puedes combinarlos y/o negarlos\):
  - **\{allbcc\}** el compilador de C de destino es bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** el compilador para el código fuente en C es pocc\* \(pocc, pocc64, poccarm\)
  - **\{allicc\}** el compilador para el código fuente en C es icc\* \(icc, iccia64\)
- - **\{hb10\}** Modo de compatibilidad 'Harbour 1\.0\.x' \(ver opción \-hb10\)
- - **\{hb20\}** Modo de compatibilidad 'Harbour 2\.0\.x' \(ver opción \-hb20\)
- - **\{hb30\}** Modo de compatibilidad 'Harbour 3\.0\.x' \(ver opción \-hb30\)
- - **\{xhb\}** Modo 'xhb' \(ver opción \-xhb\)
+ - **\{hb10\}** modo de compatibilidad 'Harbour 1\.0\.x' \(ver opción \-hb10\)
+ - **\{hb20\}** modo de compatibilidad 'Harbour 2\.0\.x' \(ver opción \-hb20\)
+ - **\{hb30\}** modo de compatibilidad 'Harbour 3\.0\.x' \(ver opción \-hb30\)
+ - **\{xhb\}** modo 'xhb' \(ver opción \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** el filtro pasará si el nombre &lt;file&gt; o &lt;dir&gt; existe en el disco\.
  - **\{MACRO\}** el filtro se pasará si el valor de $\{MACRO\} no está vacio y no es igual a '0' o 'no' \(en mayúsculas o minúsculas\)
  - **\{MACRO='&lt;value&gt;'\}** el filtro pasará si el valor de $\{MACRO\} es igual a &lt;value&gt; \(no diferencia mayúsculas/minúsculas\)\.
@@ -382,7 +382,7 @@ Variables de entorno:
 
  - **HB\_EXTENSION** lista de extensiones para cargar en el intérprete de comandos de Harbour separados por espacio
   
-directivas \.hbc \(tienen que ser escritas en líneas separadas\):  
+Directivas \.hbc \(tienen que ser escritas en líneas separadas\):  
 
 
  - **echo=&lt;msg&gt;** muestra &lt;msg&gt;
@@ -409,24 +409,24 @@ directivas \.hbc \(tienen que ser escritas en líneas separadas\):
  - **dflags\+=** lista de valores separados por espacios como en la opción \-dflag\+=
  - **pflags=** lista de valores separados por espacios como en la opción \-pflag=
  - **psources=** lista de valores separados por espacios como en la opción \-pi=
- - **gui=&lt;bool&gt;** opción 'sí' = \-gui, 'no' = \-std
- - **mt=&lt;bool&gt;** opción 'sí' = \-mt, 'no' = \-st
- - **pic=&lt;bool&gt;** opción 'sí' = \-pic, 'no' = \-pic\-
- - **shared=&lt;bool&gt;** opción 'sí' = \-shared, 'no' = \-static
+ - **gui=&lt;bool&gt;** opción 'yes' = \-gui, 'no' = \-std
+ - **mt=&lt;bool&gt;** opción 'yes' = \-mt, 'no' = \-st
+ - **pic=&lt;bool&gt;** opción 'yes' = \-pic, 'no' = \-pic\-
+ - **shared=&lt;bool&gt;** opción 'yes' = \-shared, 'no' = \-static
  - **shareddef=&lt;bool&gt;** similar a 'shared=', pero solo funciona si no fue establecido anteriormente el modo compartido/estático
- - **fullstatic=&lt;bool&gt;** opción 'sí' = \-fullstatic, 'no' = \-static
- - **debug=&lt;bool&gt;** opción 'sí' = \-debug, 'no' = \-debug\-
- - **optim=** opción 'sí' = \-optim, 'no' = \-optim\-
- - **nulrdd=&lt;bool&gt;** opción 'sí' = \-nulrdd, 'no' = \-nulrdd\-
- - **nodefgt=&lt;bool&gt;** opción 'sí' = \-nodefgt, 'no' = \-nodefgt\-
- - **map=&lt;bool&gt;** opción 'sí' = \-map, 'no' = \-map\-
- - **hbcppmm=&lt;bool&gt;** opción 'sí' = \-hbcpmm, 'no' = \-hbcpmm\-
- - **implib=&lt;bool&gt;** opción 'sí' = \-implib, 'no' = \-implib\-
- - **winuni=&lt;bool&gt;** opción 'sí' = \-winuni, 'no' = \-winuni\-
- - **strip=&lt;bool&gt;** opción 'sí' = \-strip, 'no' = \-strip\-
- - **run=&lt;bool&gt;** opción 'sí' = \-run, 'no' = \-run\-
- - **inc=&lt;bool&gt;** opción 'sí' = \-inc, 'no' = \-inc\-
- - **safe=&lt;bool&gt;** opción 'sí' = \-safe, 'no' = \-safe\-
+ - **fullstatic=&lt;bool&gt;** opción 'yes' = \-fullstatic, 'no' = \-static
+ - **debug=&lt;bool&gt;** opción 'yes' = \-debug, 'no' = \-debug\-
+ - **optim=** opción 'yes' = \-optim, 'no' = \-optim\-
+ - **nulrdd=&lt;bool&gt;** opción 'yes' = \-nulrdd, 'no' = \-nulrdd\-
+ - **nodefgt=&lt;bool&gt;** opción 'yes' = \-nodefgt, 'no' = \-nodefgt\-
+ - **map=&lt;bool&gt;** opción 'yes' = \-map, 'no' = \-map\-
+ - **hbcppmm=&lt;bool&gt;** opción 'yes' = \-hbcpmm, 'no' = \-hbcpmm\-
+ - **implib=&lt;bool&gt;** opción 'yes' = \-implib, 'no' = \-implib\-
+ - **winuni=&lt;bool&gt;** opción 'yes' = \-winuni, 'no' = \-winuni\-
+ - **strip=&lt;bool&gt;** opción 'yes' = \-strip, 'no' = \-strip\-
+ - **run=&lt;bool&gt;** opción 'yes' = \-run, 'no' = \-run\-
+ - **inc=&lt;bool&gt;** opción 'yes' = \-inc, 'no' = \-inc\-
+ - **safe=&lt;bool&gt;** opción 'yes' = \-safe, 'no' = \-safe\-
  - **cpp=** el mismo que la opción \-cpp=
  - **warn=** el mismo que la opción \-warn=
  - **compr=** el mismo que la opción \-compr=
@@ -534,7 +534,7 @@ Variables del complemento:
  - **"cCCSUFFIX"** muestra la variable de entorno HB\_CCSUFFIX
  - **"cCCEXT"** muestra la variable de entorno HB\_CCEXT
  - **"cWorkDir"** valor de \-workdir=
- - **"nExitCode"** Código de salida actual
+ - **"nExitCode"** código de salida actual
   
 API del intérprete de comandos disponible en los archivos de órdenes de Harbour:  
 
