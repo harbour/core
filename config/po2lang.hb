@@ -35,7 +35,7 @@ STATIC FUNCTION POToLang( cFileIn, cFileOut, cLang )
 
       __i18n_potArrayClean( aTrans,,, {| cTrs, cOri | ProcessTrs( @cContent, cTrs, cOri, @cTranslator, @nPos, cLang ) } )
 
-      cContent := "/* Last Translator: " + cTranslator + " */" + hb_eol() + ;
+      cContent := "/* Last Translator: " + MaskEMail( cTranslator ) + " */" + hb_eol() + ;
          Left( cContent, Len( cContent ) - Len( "," ) - Len( hb_eol() ) ) + hb_eol() + ;
          StrTran( StrTran( _end(), e"\n", hb_eol() ), "{LNG}", Upper( cLang ) )
 
@@ -47,6 +47,14 @@ STATIC FUNCTION POToLang( cFileIn, cFileOut, cLang )
    ? "i18n error", cErrorMsg
 
    RETURN .F.
+
+STATIC FUNCTION MaskEMail( cEMail )
+
+   cEMail := StrTran( cEMail, "@", " " )
+   cEMail := StrTran( cEMail, "<", "(" )
+   cEMail := StrTran( cEMail, ">", ")" )
+
+   RETURN cEMail
 
 STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ nPos, cLang )
 

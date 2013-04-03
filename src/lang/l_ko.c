@@ -1,4 +1,4 @@
-/* Last Translator: hbtest <harbour@syenar.net> */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 
@@ -41,7 +41,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "데이터 파일  s    # 레코드수   최종 수정일     크기",
+      "데이터 파일        # 레코드수   최종 수정일     크기",
       "다른 예제를 원하십니까?",
       "페이지 번호.",
       "** 소계 **",

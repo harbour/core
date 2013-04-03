@@ -1,4 +1,4 @@
-/* Last Translator: hbtest <harbour@syenar.net> */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 

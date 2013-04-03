@@ -1,4 +1,4 @@
-/* Last Translator: SAMI <sami@laham.com.br> */
+/* Last Translator: SAMI (sami laham.com.br) */
 
 #include "hbapilng.h"
 
