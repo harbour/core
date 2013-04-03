@@ -1,10 +1,10 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-03\-28 03:24\)  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-03 03:33\)  
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 Traducción \(es\_ES\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
-Sintáxis:  
+Sintaxis:  
   
   hbrun &lt;archivo\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opción&gt; \[&lt;parameter\[s\]&gt;\]  
   
@@ -16,11 +16,11 @@ Descripción:
 Las siguientes opciones están disponibles en línea de comandos:  
 
 
- - **\-\-hb:debug** activar la depuración de archivos de órdenes
+ - **\-\-hb:debug** activa la depuración de archivos de órdenes
 
 
  - **\-help** esta ayuda
- - **\-viewhelp** abrir ayuda completa en visor de texto
+ - **\-viewhelp** abre la ayuda completa en un visor de texto
  - **\-longhelp** ayuda detallada
  - **\-longhelpmd** ayuda completa en formato [Markdown](http://daringfireball.net/projects/markdown/)
   
@@ -50,19 +50,19 @@ API del intérprete de comandos disponible en los archivos de órdenes de Harbou
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
-Cambiar GT\. Por defecto \[\*\]: 'gtwin'
+Cambia el GT\. Por defecto \[\*\]: 'gtwin'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Activa modo de compatibilidad 'Clipper' \(sin Unicode\)\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Cargar cabecera de Harbour\.
+Carga la cabecera de Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Descargar cabecera de Harbour\.
+Descarga la cabecera de Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
-Mostrar la lista de cabeceras de Harbour cargadas\.
+Muestra la lista de cabeceras de Harbour cargadas\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Cargar paquete\. Similar a la directiva de preprocesado \#request\.
+Carga el paquete\. Similar a la directiva de preprocesado \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Descargar paquete\.
+Descarga paquete\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista de paquetes cargados\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  

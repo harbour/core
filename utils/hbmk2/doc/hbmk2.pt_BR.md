@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-03\-28 03:24\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Translation \(pt\_BR\): Vailton Renato &lt;vailtom@gmail\.com&gt;  
@@ -58,7 +58,7 @@ Opções
  - **\-traceonly** exibir os comandos à serem executados, mas não execute\-os
  - **\-warn=&lt;level&gt;** define o nível de aviso do compilador C  
 &lt;level&gt; pode ser: max, yes, low, no, def \(padrão: yes\)
- - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-safe\[\-\]** habilitar as opções de segurança no compilador/linker C \(padrão: habilitado no Windows, desabilitado nos outros sistemas\)
  - **\-compr=&lt;level&gt;** comprimir executável/lib dinamica \(precisa programa UPX\)  
 &lt;level&gt; pode ser: yes, no, min, max
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
@@ -69,7 +69,7 @@ VCS \- sistema de controle de versão\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
  - **\-signpw=&lt;pw&gt;** usar &lt;pw&gt; como senha ao assinar executável \(somente Windows e Darwin\)
- - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
+ - **\-instfile=&lt;g:file&gt;** adicionar &lt;file&gt; para a lista de arquivos a serem copiados para caminho especificado pela opção \-instpath\. &lt;g&gt; é um grupo de cópias opcional \(case sensitive\), deve ser de pelo menos dois caracteres\.No caso de você não especificar &lt;file&gt;, a lista de arquivos naquele grupo será esvaziado\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copie os arquivo\(s\) para o destino do caminho de instalação mesmo que já atualizados
  - **\-depimplib\[\-\]** habilitar \(ou desabilitar\) a importação da biblioteca da fontes de bibliotecas especificadas em \-depimplibs= opções \(padrão: yes\)
@@ -93,14 +93,14 @@ VCS \- sistema de controle de versão\.
  - **\-iflag=&lt;f&gt;** passar um unico "flag" para criar o comando de impotação de bibliotecas
  - **\-signflag=&lt;f&gt;** passar um único "flag" para criar o comando "code sign"
  - **\-runflag=&lt;f&gt;** argumentos à serem passados ao executável gerado quando \-run for utilizado
- - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
+ - **\-cflag\+=&lt;f&gt;** passa umúnico flag para o compilador C substituindo os flags adiconados porele mesmo hbmk2\. Use com cuidado\.
  - **\-ldflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar \(executável\), após a lista da biblioteca\. Use com cuidado\.
  - **\-dflag\+=&lt;f&gt;** passar uma unica opção "raw" para linkar \(biblioteca dinâmica\), após a lista da biblioteca\. Use com cuidado\.
  - **\-3rd=&lt;f&gt;** "options/flags" reservado para ferramentas de terceiros, sempre ignorado por hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alterar as variáveis locais de ambiente\. &lt;e&gt;é o nome da variável a ser alterada\. &lt;o&gt; pode ser '=' para definir/sobrepor, '\-' para apagar, '\+' to adicionar ao fim do valor existente, '\#' para inserir o valor inicialização da variável\. &lt;v&gt; é o valor a ser definido/adicionardo/inserido "set/append/insert"\.
  - **\-jobs=&lt;n&gt;** dispara &lt;n&gt; threads de compilação \(apenas plataformas multiprocessadas\)
- - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
-&lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
+ - **\-head=&lt;m&gt;** controle de análise de fonte header \(em modo de construção incremental\)  
+&lt;m&gt; Pode ser: native \(usa o compilador para extrair dependências\), full \(padrão, usa o analisador de texto simples em todo o arquivo\), dep, off
  - **\-rebuild** recriar \(em modo incremental\)
  - **\-rebuildall** recriar com os sub\-projetos \(em modo incremental\)
  - **\-clean** compilação limpa \(em modo de compilação incremental\)
@@ -238,13 +238,13 @@ Opções abaixo são " internal/developer ones" \(compatibilidade não garantida
 Arquivos:  
 
 
- - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
+ - **\*\.hbp** arquivo de projeto\. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída\. As linhas que começam com caracter '\#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando\. Você deve colocar a opção contendo espaço entre aspas duplas\. Cada referência de arquivo \.hbp será executado como um sub\-projeto\.
  - **\*\.hbm** coleção de opções\. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto\.Usar o mesmo formata dos arquivos \.hbp\.
  - **\*\.hbc** conjunto de opções que acompanham os componentes \(também conhecidos como 'libs', pacotes\)\. Usam diferentes sintaxes de linha de comado "command\-line" e arquivos \.hbp/\.hbm\. As linhas começam com o caracter '\#' serão ignoradas, cada diretiva deve ser colocada em linhas separadas\.
  - **\*\.ch** se passado diretamente como um arquivo de origem, ele será utilizada como padrão cabeçalho adicional
  - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
- - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_dynlib\.hbm** arquivo especial \.hbm incorporado dentro hbmk2\. Ele gerencia os detalhes da criação de uma biblioteca dinâmica \(no estilo 'Harbour contribs'\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
@@ -491,7 +491,7 @@ Converter nome do arquivo para ter barra separadora de diretório\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 retorna o caminho relativo de \-workdir= valor do diretório atual de trabalho\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
-Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
+Encontrar o arquivo na &lt;xPath&gt; \(matriz ou string delimitada pelo separado de path são aceitas\) com a lista de &lt;aExtDef&gt; extensões alternativas \(padrão para executavéis binários\)\. Retorna o nome do arquivo se encontrado caso contrario retorna NIL\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 mudar diretório e/ou extenção do nome do arquivo
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  

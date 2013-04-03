@@ -44,54 +44,49 @@ static HB_LANG s_lang =
       "Banco de Dados    # Registro   Ult. Atuali.    Tam.",
       "Voce quer mais testes?",
       "Pagina No.",
-      "** Subtotal **",
-      "* Subsubtotal *",
-      "*** Total ***",
-      "Ins",
-      "   ",
       "Data inválida",
-      "Faixa: ",
-      " - ",
+      "Faixa:",
+      "-",
       "S/N",
       "EXPRESSÃO INVALIDA",
-
-      /* Error description names */
-
       "Erro desconhecido",
       "Erro nos parâmetros",
       "Erro de limite",
       "Overflow de string",
       "Overflow numérico",
+
+      /* Error description names */
+
       "Divisão por zero",
       "Erro numérico",
       "Erro de sintaxe",
       "Operação muito complexa",
-      "",
-      "",
       "Memória insuficiente",
       "Função indefinida",
       "Método não exportado",
       "Variável não existe",
       "Alias não existe",
+      "",
+      "",
       "Nenhuma variável exportada",
       "Nome de alias incorreto",
       "Nome de alias duplicado",
-      "",
       "Erro de criação",
       "Erro de abertura",
       "Erro ao fechar",
       "Erro de leitura",
       "Erro de escrita",
+      "",
       "Erro de impressão",
-      "",
-      "",
-      "",
-      "",
       "Operação não suportada",
       "Limite excedido",
       "Detectado índice corrompido",
       "Tipo incorreto de dado",
       "Tamanho do dado muito longo",
+      "",
+      "",
+      "",
+      "",
       "Workarea não está em uso",
       "Workarea não indexada",
       "Uso exclusivo requerido",
@@ -99,23 +94,23 @@ static HB_LANG s_lang =
       "Escrita não permitida",
       "Falha no travamento do Append",
       "Falha no travamento",
-      "",
-      "",
-      "",
       "Falha Object destructor",
       "acesso de array",
       "matriz atribuir",
       "dimensão da matriz",
       "não é um array",
+      "",
+      "",
+      "",
       "condicional",
-
-      /* Internal error names */
-
-      "Erro irrecuperável %d: ",
+      "Erro irrecuperável %d:",
       "Erro na recuperaçao do erro",
       "ERRORBLOCK() para erro ausente",
       "Muitas chamadas recursivas ao manipulador de erros",
       "Falha ao carregar ou RDD inválido",
+
+      /* Internal error names */
+
       "Método de %s inválido",
       "hb_xgrab nao pode alocar memória",
       "hb_xrealloc chamado com ponteiro NULL",
@@ -137,12 +132,8 @@ static HB_LANG s_lang =
       "hb_xgrab requisitou para alocar zero bytes",
       "hb_xrealloc requisitou para redimensiorar para zero byte",
       "hb_xalloc requisitou para alocar zero bytes",
-
-      /* Texts */
-
       "DD/MM/YYYY",
-      "S",
-      "N"
+      "S"
    }
 };
 

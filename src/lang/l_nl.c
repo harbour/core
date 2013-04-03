@@ -19,64 +19,57 @@ static HB_LANG s_lang =
       "Januari",
       "Februari",
       "Maart",
-      "April",
       "Mei",
       "Juni",
       "Juli",
       "Augustus",
-      "September",
       "Oktober",
-      "November",
-      "December",
-
-      /* Day names */
-
       "Zondag",
       "Maandag",
       "Dinsdag",
       "Woensdag",
+
+      /* Day names */
+
       "Donderdag",
       "Vrijdag",
       "Zaterdag",
-
-      /* CA-Cl*pper compatible natmsg items */
-
       "Gegevens Bestanden# Regels     Laatste Aanp.   Grootte",
       "Wilt u meer voorbeelden?",
       "Pagina Nr.",
       "** Subtotaal **",
+
+      /* CA-Cl*pper compatible natmsg items */
+
       "* Subsubtotaal *",
       "*** Totaal ***",
-      "Ins",
-      "   ",
       "Ongeldige datum",
-      "Bereik: ",
-      " - ",
+      "Bereik:",
+      "-",
       "J/N",
       "ONGELDIGE EXPRESSIE",
-
-      /* Error description names */
-
       "Onbekende fout",
       "Argument fout",
       "Begrenzings fout",
       "Tekst overloop",
       "Numerieke overloop",
       "Deling door nul",
+
+      /* Error description names */
+
       "Numerieke fout",
       "Syntax fout",
       "Handeling te ingewikkeld",
-      "",
-      "",
       "Weinig geheugen",
       "Niet gedefinieerde functie",
       "Geen geδxporteerde methode",
       "Variabele bestaat niet",
       "Alias bestaat niet",
       "Geen geδxporteerde variabele",
+      "",
+      "",
       "Ongeldige karakters in alias",
       "Alias reeds in gebruik",
-      "",
       "Maak fout",
       "Open fout",
       "Sluit fout",
@@ -84,40 +77,40 @@ static HB_LANG s_lang =
       "Schrijf fout",
       "Print fout",
       "",
-      "",
-      "",
-      "",
       "Handeling niet ondersteund",
       "Limiet overschreden",
       "Corruptie ontdekt",
       "Data type fout",
       "Data lengte fout",
       "Werkgebied niet in gebruik",
+      "",
+      "",
+      "",
+      "",
       "Werkgebied niet ge∩ndexeerd",
       "Exclusieve rechten vereist",
       "Blokkering vereist",
       "Schrijven niet toegestaan",
       "Toevoegen blokkering mislukt",
       "Blokkering mislukt",
-      "",
-      "",
-      "",
-      "Object destructor failure",
       "array toegang",
       "array toewijzing",
       "array afmeting",
       "geen array",
       "voorwaardelijk",
-
-      /* Internal error names */
-
-      "Onherstelbare fout %d: ",
+      "Onherstelbare fout %d:",
+      "",
+      "",
+      "",
       "Fout herstellen mislukt",
       "Geen ERRORBLOCK() voor fout",
       "Teveel herhalende fout behandelings aanroepen",
       "RDD ongeldig of niet geladen",
       "Ongeldige methode type van %s",
       "hb_xgrab kan het geheugen niet toewijzen",
+
+      /* Internal error names */
+
       "hb_xrealloc aangeroepen met een lege aanwijzer",
       "hb_xrealloc aangeroepen met een ongeldige aanwijzer",
       "hb_xrealloc kan het geheugen niet opnieuw toewijzen",
@@ -137,12 +130,7 @@ static HB_LANG s_lang =
       "hb_xgrab verzocht nul bytes toe te wijzen",
       "hb_xrealloc verzocht om naar nul bytes te verkleinen",
       "hb_xalloc verzocht nul bytes toe te wijzen",
-
-      /* Texts */
-
-      "YYYY/MM/DD",
-      "J",
-      "N"
+      "J"
    }
 };
 
