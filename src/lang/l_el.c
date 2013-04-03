@@ -1,4 +1,4 @@
-/* Last Translator: Pete_wg <pete_westg@yahoo.gr> */
+/* Last Translator: hbtest <harbour@syenar.net> */
 
 #include "hbapilng.h"
 
@@ -7,12 +7,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "el",                        /* ISO ID (2 chars) */
-      "Greek",                     /* Name (in English) */
-      "Ελληνικά",                  /* Name (in native language) */
-      "EL",                        /* RFC ID */
-      "UTF8",                      /* Codepage */
-      "",                          /* Version */
+      "el",
+      "Greek",
+      "Ελληνικά",
+      "",
+      "UTF8",
+      "",
 
       /* Month names */
 

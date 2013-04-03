@@ -36,6 +36,15 @@
 
 #include "directry.ch"
 
+STATIC sc_hLangMapping := { ;
+   "zh_CN"        => "zh_tra", ;
+   "zh_CN.GB2312" => "zh_sim", ;
+   "sr"           => "sr_cyr", ;
+   "sr@latin"     => "sr_lat", ;
+   "fr_FR"        => "fr", ;
+   "es_ES"        => "es", ;
+   "pt_BR"        => "pt" }
+
 PROCEDURE Main( cCommand, cMain, ... )
 
    LOCAL hCommand := { ;
@@ -401,14 +410,7 @@ STATIC FUNCTION _HAGetDef( xContainer, xDefault, ... )
    RETURN xDefault
 
 STATIC FUNCTION LangToCoreLang( cLang )
-   RETURN hb_HGetDef( { ;
-      "zh_CN"        => "zh_tra", ;
-      "zh_CN.GB2312" => "zh_sim", ;
-      "sr"           => "sr_cyr", ;
-      "sr@latin"     => "sr_lat", ;
-      "fr_FR"        => "fr", ;
-      "es_ES"        => "es", ;
-      "pt_BR"        => "pt" }, cLang, cLang )
+   RETURN hb_HGetDef( sc_hLangMapping, cLang, cLang )
 
 STATIC FUNCTION LoadPar( cMain )
 
@@ -416,6 +418,7 @@ STATIC FUNCTION LoadPar( cMain )
 
    LOCAL cConfig
    LOCAL item
+   LOCAL tmp
 
    hPar[ "project" ]   := "harbour"
    hPar[ "entry" ]     := cMain
@@ -423,9 +426,15 @@ STATIC FUNCTION LoadPar( cMain )
    hPar[ "name" ]      := hb_FNameName( hPar[ "entry" ] )
 
    IF hPar[ "entry" ] == "core-lang"
-//    hPar[ "langs" ]     := { "hu", "el", "fr_FR", "it", "es_ES", "es_419", "pt_BR", "de" }
-//    hPar[ "langs" ]     := { "zh_CN", "zh_CN.GB2312" } // CoreLangList()
-      hPar[ "langs" ]     := { "hu" }
+      hPar[ "langs" ]     := CoreLangList()
+      FOR EACH item IN hPar[ "langs" ]
+         FOR EACH tmp IN sc_hLangMapping
+            IF tmp == Lower( item )
+               item := tmp:__enumKey()
+               EXIT
+            ENDIF
+         NEXT
+      NEXT
       hPar[ "baselang" ]  := "en"
       hPar[ "po" ]        := NIL
    ELSE

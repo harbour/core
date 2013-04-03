@@ -25,7 +25,10 @@
  */
 
 /* TODO: Apply transformations:
-         Uncrustify, hbformat, optipng, jpgclean, css/html/xml format, etc */
+         Uncrustify, hbformat,
+         pngout/pngcrush/optipng/advpng,
+         jpgoptim/jpegtran/jpegrescan,
+         css/html/xml format, etc */
 
 #pragma -w3
 #pragma -km+

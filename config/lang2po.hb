@@ -161,7 +161,7 @@ STATIC FUNCTION Comment( nPos )
    SWITCH nPos
    CASE 22 ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
    CASE 29 ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt)"
-   CASE 102 ; RETURN "Local date format, where YYYY=year, MM=month, DD=day"
+   CASE 102 ; RETURN "Local date format, where YYYY=year, MM=month, DD=day. DO NOT TRANSLATE "YYYY", "MM" or "DD", only reorder and set delimiter per country standards."
    ENDSWITCH
 
    RETURN ""
