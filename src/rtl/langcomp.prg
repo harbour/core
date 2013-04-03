@@ -338,7 +338,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "pa"         ; EXIT
       CASE "pl-pl"
       CASE "pl"         ; cLangHb := "pl" ; EXIT
-      CASE "pt-br"
+      CASE "pt-br"      ; cLangHb := "pt_br" ; EXIT
       CASE "pt-pt"
       CASE "pt"         ; cLangHb := "pt" ; EXIT
       CASE "ro-ro"

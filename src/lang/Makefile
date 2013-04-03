@@ -25,6 +25,7 @@ C_SOURCES := \
    l_nl.c \
    l_pl.c \
    l_pt.c \
+   l_pt_br.c \
    l_ro.c \
    l_ru.c \
    l_sk.c \

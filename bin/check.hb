@@ -400,7 +400,8 @@ STATIC FUNCTION FNameExc( cName, aList )
    LOCAL tmp, tmp1
 
    FOR EACH tmp IN aList
-      IF !( Left( tmp, 1 ) == "!" ) .AND. hb_FileMatch( cName, hb_DirSepToOS( tmp ) )
+      IF !( Left( tmp, 1 ) == "!" ) .AND. ;
+         ( hb_FileMatch( cName, hb_DirSepToOS( tmp ) ) .OR. hb_FileMatch( hb_FNameNameExt( cName ), hb_DirSepToOS( tmp ) ) )
          FOR EACH tmp1 IN aList
             IF Left( tmp1, 1 ) == "!" .AND. hb_FileMatch( cName, hb_DirSepToOS( SubStr( tmp1, 2 ) ) )
                RETURN .F.
