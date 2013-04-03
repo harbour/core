@@ -7,7 +7,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "pt_br",
+      "pt_BR",
       "Portuguese",
       "Portugues",
       "",
