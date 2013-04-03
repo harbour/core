@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: alkresin (alkresin yahoo.com) */
 
 #include "hbapilng.h"
 
@@ -44,10 +44,10 @@ static HB_LANG s_lang =
       "Файлы данных      # Записи     Последнее изм.  Размер",
       "Нужны еще примеры ?",
       "Стр.N",
-      "** Subtotal **",
-      "* Subsubtotal *",
-      "*** Total ***",
-      "Ins",
+      "Подитог",
+      "Под-подитог",
+      "Итог",
+      "Вст",
       "   ",
       "Неверная дата",
       "Диапазон: ",
@@ -102,7 +102,7 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "Object destructor failure",
+      "Ошибка при уничтожении объекта",
       "Неверное количество аргументов",
       "доступ к массиву",
       "присвоение массива",
@@ -134,9 +134,9 @@ static HB_LANG s_lang =
       "%s: попытка копировать элемент на себя",
       "%s: неверное имя переменной",
       "Переполнение буфера памяти",
-      "hb_xgrab requested to allocate zero bytes",
-      "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes",
+      "hb_xgrab запросил 0 байт",
+      "hb_xrealloc запросил 0 байт",
+      "hb_xalloc запросил 0 байт",
 
       /* Texts */
 

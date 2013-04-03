@@ -108,7 +108,7 @@ VCS \- sistema de controle de versão\.
 \(padrão: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] no modo incremental, outra forma diretório temporário do sistema operacional "OS temp directory"\)
 
 
- - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
+ - **\-hbcontainer** compilação virtual, ela não cria nada\. Útil para a criação de um \.hbp Com o único propósito de fazer referência a sub\-projectos
  - **\-hbimplib** Criar Bibliotecas de importação \(só para Windows\)
 
 
@@ -182,7 +182,8 @@ criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo
  - **\-\-hbdirdyn** saída do diretório de bibliotéca dinâmica Harbour para stdout
  - **\-\-hbdirlib** saída do diretório de bibliotécas estáticas Harbour para stdout
  - **\-\-hbdirinc** saída do diretório Harbour header para stdout
- - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
+ - **\-\-hbinfo\[=nested\]** redireciona as informações 'Harbour build' para stdout\. Saida é em formato JSON\. Os 'paths'  
+inclusos sempre contém as "barras direita" como separador de direório\. Cada bloco de JSON é seguido por um byte 0x0A\.
 
 
  - **\-plat=&lt;platform&gt;** sobrepor a plataforma padrão \(padrão: automatic\)
@@ -245,7 +246,7 @@ Arquivos:
  - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
  - **$hb\_pkg\_dynlib\.hbm** arquivo especial \.hbm incorporado dentro hbmk2\. Ele gerencia os detalhes da criação de uma biblioteca dinâmica \(no estilo 'Harbour contribs'\)\.
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** arquivo especial \.hbm incorporado dentro hbmk2\.Ele gerencia os detalhes de instalação e compilação e arquivos relacionados com o pacote para locais padrão\. \(no estilo do Harbour contribs\)\.
 
 
  - **\*\.hb** script Harbour
@@ -455,7 +456,7 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
 
 
 Plugin API:  
-\('hbmk' is the context variable received by the plugin entry function\)
+\('hbmk' é a variável de contexto recebido pela função de entrada do plugin\)
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
@@ -634,10 +635,10 @@ Códigos de saída \("errorlevels"\):
 Notas:  
 
 
-  - &lt;script&gt; can be:  
-  &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
-  &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
-  &lt;script\.hbc&gt;: package configuration file
+  - &lt;script&gt; pode ser:  
+ &lt;@script&gt; ou &lt;script\.hbm&gt;: arquivo com opções de linha de comando  
+ &lt;script\.hbp&gt;: arquivo com opções de linha de comando, marca também uma nova compilação alvo se especificado na linha de comando  
+ &lt;script\.hbc&gt;: arquivo de configuração de pacote
   - se existir um nome de arquivo projeto \.hbp no diretório atual este será carregado como fonte de origem\. Caso contrário, o arquivo o com extensão \.prg extension será usado\.
   - Multiplos parâmetros \-l, \-L, \-i e &lt;script&gt; são aceitos\.
   - Opções usadas com o compilador Harbour também são aceitas\.
@@ -648,7 +649,7 @@ Notas:
 Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palavra\-chave&gt;\]\}\. Os filtros podem ser combinados usando os operadores '&amp;', '|' e agrupados por parênteses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - A maioria das linhas \.hbc \(libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =\) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro\. libpaths = também aceita%\{hb\_name\} que traduz o nome do arquivo\. hbc sob pesquisa\.
   - Opções aceitando macros também suportam linhas de comando\. Neste caso basta rodeiar o comando dentro de \`\`, e, se o comando contiver espaço, também adicione aspas duplas\. i\.e\. "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
+  - Quando varias tipos de opções de seleção \(\-hblib, \-hbdyn, etc\.\) são especificados na compilação, o primeiro será o mais significativo o resto vai ser ignorado\.
   - Bibliotecas e arquivos de objetos construídos com/para CA\-Cl\*pper não irá funcionar com qualquer plataforma /compilador suportada\.
   - Padrões e especificações suportadas podem variar de acordo com plataforma/compilador\.
   - não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS \(no Windows\) para rodar hbmk2\.

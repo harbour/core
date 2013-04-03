@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 11:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 12:37+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1255,6 +1255,10 @@ msgid "use <pw> as password when signing executable (Windows and Darwin only)"
 msgstr "usar <pw> como senha ao assinar executável (somente Windows e Darwin)"
 
 #, c-format
+msgid "virtual build target, it does not create anything. Useful for creating an .hbp with the sole purpose of referencing sub-projects"
+msgstr "compilação virtual, ela não cria nada. Útil para a criação de um .hbp Com o único propósito de fazer referência a sub-projectos"
+
+#, c-format
 msgid "working directory\n(default: %1$s/<platform>/<compiler> [*] in incremental mode, OS temp directory otherwise)"
 msgstr "diretório de trabalho\n(padrão: %1$s/<platform>/<compiler> [*] no modo incremental, outra forma diretório temporário do sistema operacional \"OS temp directory\")"
 
@@ -1345,6 +1349,10 @@ msgstr "help completo em formato \"text viewer\""
 #, c-format
 msgid "output Harbour binary directory to stdout"
 msgstr "saída do diretório de binarios Harbour para stdout"
+
+#, c-format
+msgid "output Harbour build information to stdout. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte."
+msgstr "redireciona as informações 'Harbour build' para stdout. Saida é em formato JSON. Os 'paths'\ninclusos sempre contém as \"barras direita\" como separador de direório. Cada bloco de JSON é seguido por um byte 0x0A."
 
 #, c-format
 msgid "output Harbour dynamic library directory to stdout"
@@ -1597,6 +1605,10 @@ msgstr "arquivo de projeto. Pode conter qualquer número de opções de linha de
 #, c-format
 msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
 msgstr "arquivo especial .hbm incorporado dentro %1$s. Ele gerencia os detalhes da criação de uma biblioteca dinâmica (no estilo 'Harbour contribs')."
+
+#, c-format
+msgid "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)."
+msgstr "arquivo especial .hbm incorporado dentro %1$s.Ele gerencia os detalhes de instalação e compilação e arquivos relacionados com o pacote para locais padrão. (no estilo do Harbour contribs)."
 
 #, c-format
 msgid "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s"
@@ -2095,6 +2107,10 @@ msgid "Unload package."
 msgstr "Descarregar pacote."
 
 #, c-format
+msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
+msgstr "Plugin API:\n('hbmk' é a variável de contexto recebido pela função de entrada do plugin)"
+
+#, c-format
 msgid "Add a binary object file to the project."
 msgstr "Adicionar um arquivo objeto binário ao projeto."
 
@@ -2223,6 +2239,10 @@ msgid "Notes:"
 msgstr "Notas:"
 
 #, c-format
+msgid "<script> can be:\n  <@script> or <script.hbm>: command-line options in file\n  <script.hbp>: command-line options in file, it also marks a new build target if specified on the command-line\n  <script.hbc>: package configuration file"
+msgstr "<script> pode ser:\n <@script> ou <script.hbm>: arquivo com opções de linha de comando\n <script.hbp>: arquivo com opções de linha de comando, marca também uma nova compilação alvo se especificado na linha de comando\n <script.hbc>: arquivo de configuração de pacote"
+
+#, c-format
 msgid ". (dot) passed as first parameter will enter the interactive Harbour shell."
 msgstr ". (ponto) passado como primeiro parâmetro entrará no shell interativo Harbour."
 
@@ -2273,6 +2293,10 @@ msgstr "se existir um nome de arquivo projeto .hbp no diretório atual este ser�
 #, c-format
 msgid "Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted."
 msgstr "Usar a opção de barras como separador de diretório é recomendado.mas barras invertidas também são igualmente aceitas."
+
+#, c-format
+msgid "When multiple build target type selection options (-hblib, -hbdyn, etc.) are specified, the first one will be significant, the rest will be silently ignored."
+msgstr "Quando varias tipos de opções de seleção (-hblib, -hbdyn, etc.) são especificados na compilação, o primeiro será o mais significativo o resto vai ser ignorado."
 
 #, c-format
 msgid ".hb, .hrb or .dbf"
