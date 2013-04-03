@@ -36,26 +36,27 @@ STATIC FUNCTION LangToPO( cLang )
          cPO += Item( ;
             hb_langMessage( tmp, "en" ), ;
             iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ) .AND. ;
-               ! NonTranslatable( hb_langMessage( tmp, "en" ) ) .AND. ;
-               nPos != 28 .AND. Len( hb_langMessage( tmp, "en" ) ) > 1, "", hb_langMessage( tmp, cLang ) ), ;
+               Translatable( hb_langMessage( tmp, "en" ) ) .AND. ;
+               nPos != 28 .AND. ;  /* Copy "Ins" translation even if the same as original */
+               Len( hb_langMessage( tmp, "en" ) ) > 1, "", hb_langMessage( tmp, cLang ) ), ;
             nPos++ )
       ENDIF
    NEXT
 
    RETURN hb_StrShrink( cPO, Len( hb_eol() ) )
 
-STATIC FUNCTION NonTranslatable( cString )
+STATIC FUNCTION Translatable( cString )
 
    LOCAL tmp
 
    FOR tmp := 1 TO Len( cString )
       IF IsAlpha( SubStr( cString, tmp, 1 ) ) .OR. ;
          IsDigit( SubStr( cString, tmp, 1 ) )
-         RETURN .F.
+         RETURN .T.
       ENDIF
    NEXT
 
-   RETURN .T.
+   RETURN .F.
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
@@ -128,6 +129,7 @@ STATIC FUNCTION Item( cOri, cTrs, nPos )
 
    RETURN ;
       iif( Empty( cComment ), "", "#  " + cComment + hb_eol() ) + ;
+      "#: lang_id:" + hb_ntos( nPos ) + hb_eol() + ;
       "#, c-format" + hb_eol() + ;
       "msgid " + ItemString( iif( Len( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3, 0 ) + "}", cOri ) ) + ;
       "msgstr " + ItemString( cTrs ) + hb_eol()
@@ -163,7 +165,8 @@ STATIC FUNCTION Comment( nPos )
    CASE 25
    CASE 26
    CASE 27  ; RETURN "Keep the '*' decorations and internal space padding intact."
-   CASE 29  ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt)."
+   CASE 28  ; RETURN "Abbrev of 'Insert' (as 'insert mode' in editing)."
+   CASE 29  ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt, or match the length of translation of 'Ins')."
    CASE 31  ; RETURN "Must have one space padding on the right (after ':' character)."
    CASE 32  ; RETURN "One space padding on each side."
    CASE 102 ; RETURN "Local date format, where YYYY=year, MM=month, DD=day. DO NOT TRANSLATE 'YYYY', 'MM' or 'DD', only reorder and set delimiter per country standards."
