@@ -159,8 +159,10 @@ STATIC FUNCTION ConvToC_2( cStr )
 STATIC FUNCTION Comment( nPos )
 
    SWITCH nPos
-   CASE 22 ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
-   CASE 29 ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt)"
+   CASE 22  ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
+   CASE 29  ; RETURN "Abbrev of 'Overwrite' using same length as 'Ins', can be spaces only (fill with 3 spaces if in doubt)."
+   CASE 31  ; RETURN "Must have one space padding on the right (after ':' character)."
+   CASE 32  ; RETURN "One space padding on each side."
    CASE 102 ; RETURN "Local date format, where YYYY=year, MM=month, DD=day. DO NOT TRANSLATE 'YYYY', 'MM' or 'DD', only reorder and set delimiter per country standards."
    ENDSWITCH
 
