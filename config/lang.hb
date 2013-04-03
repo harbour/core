@@ -330,8 +330,8 @@ STATIC FUNCTION IsRightToLeft( cString )
 
    FOR tmp := 1 TO Len( cString )
       nChar := Asc( SubStr( cString, tmp, 1 ) )
-      IF ( nChar >= 0x0590 .AND. nChar <= 0x05FF ) .OR. ;
-         ( nChar >= 0x0600 .AND. nChar <= 0x06FF )
+      IF ( nChar >= 0x0590 .AND. nChar <= 0x05FF ) .OR. ;  /* hebrew */
+         ( nChar >= 0x0600 .AND. nChar <= 0x06FF )         /* arabic */
          RETURN .T.
       ENDIF
    NEXT
