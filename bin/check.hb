@@ -173,10 +173,10 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             AAdd( aErr, "content: has tab" )
          ENDIF
 
-         IF hb_BLeft( cFile, Len( UTF8_BOM() ) ) == UTF8_BOM()
+         IF hb_BLeft( cFile, hb_BLen( UTF8_BOM() ) ) == UTF8_BOM()
             AAdd( aErr, "content: has BOM" )
             IF lApplyFixes
-               cFile := hb_BSubStr( cFile, Len( UTF8_BOM() ) + 1 )
+               cFile := hb_BSubStr( cFile, hb_BLen( UTF8_BOM() ) + 1 )
             ENDIF
          ENDIF
 

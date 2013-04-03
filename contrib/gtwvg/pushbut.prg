@@ -240,7 +240,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
             Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, IMAGE_ICON ) )
             EXIT
          CASE WVG_IMAGE_ICONRESOURCE
-            IF ValType( xCaption[ 3 ] ) == "C"
+            IF HB_ISSTRING( xCaption[ 3 ] )
                Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, IMAGE_ICON ) )
             ELSE
                Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, IMAGE_ICON ) )
@@ -250,7 +250,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
             Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, IMAGE_BITMAP ) )
             EXIT
          CASE WVG_IMAGE_BITMAPRESOURCE
-            IF ValType( xCaption[ 3 ] ) == "C"
+            IF HB_ISSTRING( xCaption[ 3 ] )
                Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, IMAGE_BITMAP ) )
             ELSE
                Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, IMAGE_BITMAP ) )
