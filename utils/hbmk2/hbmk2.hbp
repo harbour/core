@@ -32,6 +32,6 @@ po/hbmk2.%{hb_lng}.po
 -lng=el,es_419,es_ES,fr_FR,hu,it,pt_BR
 
 # localization (automatization)
--3rd=_hblang_docext=.md
--3rd=_hblang_docoption=-lang={LNG}
--3rd=_hblang_docoption=-longhelpmd
+-3rd=_langhb_docext=.md
+-3rd=_langhb_docoption=-lang={LNG}
+-3rd=_langhb_docoption=-longhelpmd

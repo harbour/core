@@ -440,13 +440,13 @@ STATIC FUNCTION LoadPar( cMain )
       cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
 
       hPar[ "doc" ]       := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "doc/" )
-      hPar[ "docext" ]    := _HAGetDef( hb_regexAll( "-3rd=_hblang_docext=([\S]*)", cConfig,,,,, .T. ), ".txt", 1, 2 )
+      hPar[ "docext" ]    := _HAGetDef( hb_regexAll( "-3rd=_langhb_docext=([\S]*)", cConfig,,,,, .T. ), ".txt", 1, 2 )
       hPar[ "docoption" ] := {}
-      FOR EACH item IN hb_regexAll( "-3rd=_hblang_docoption=([\S]*)", cConfig,,,,, .T. )
+      FOR EACH item IN hb_regexAll( "-3rd=_langhb_docoption=([\S]*)", cConfig,,,,, .T. )
          AAdd( hPar[ "docoption" ], item[ 2 ] )
       NEXT
 
-      item := _HAGetDef( hb_regexAll( "-3rd=_hblang_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
+      item := _HAGetDef( hb_regexAll( "-3rd=_langhb_entry=([\S]*)", cConfig,,,,, .T. ), NIL, 1, 2 )
       IF item != NIL
          item := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( item )
          hPar[ "entry" ] := iif( Empty( hb_FNameName( item ) ), item + hb_FNameName( hb_DirSepDel( item ) ) + ".prg", item )
@@ -455,7 +455,7 @@ STATIC FUNCTION LoadPar( cMain )
       cConfig := hb_MemoRead( hb_FNameExtSet( hPar[ "entry" ], ".hbp" ) )
 
       hPar[ "langs" ]     := hb_ATokens( _HAGetDef( hb_regexAll( "-lng=([\w,]*)", cConfig,,,,, .T. ), "", 1, 2 ), "," )
-      hPar[ "baselang" ]  := _HAGetDef( hb_regexAll( "-3rd=_hblang_base=([\w]*)", cConfig,,,,, .T. ), "en", 1, 2 )
+      hPar[ "baselang" ]  := _HAGetDef( hb_regexAll( "-3rd=_langhb_base=([\w]*)", cConfig,,,,, .T. ), "en", 1, 2 )
 
       hPar[ "po" ]        := hb_FNameDir( hPar[ "entry" ] ) + hb_DirSepToOS( "po/" )
    ENDIF

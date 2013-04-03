@@ -29,7 +29,7 @@
 {!(__HBMKDYN='yes')&allwin}hbwin.hbc {!(__HBMKDYN='yes')&allwin}-request=__HBEXTERN__HBWIN__
 
 # localization (automatization)
--3rd=_hblang_entry=../../utils/hbmk2/
--3rd=_hblang_docext=.md
--3rd=_hblang_docoption=-lang={LNG}
--3rd=_hblang_docoption=-longhelpmdsh
+-3rd=_langhb_entry=../../utils/hbmk2/
+-3rd=_langhb_docext=.md
+-3rd=_langhb_docoption=-lang={LNG}
+-3rd=_langhb_docoption=-longhelpmdsh

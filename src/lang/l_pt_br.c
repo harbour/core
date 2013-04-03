@@ -7,7 +7,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "pt",
+      "pt_br",
       "Portuguese",
       "Portugues",
       "",
@@ -146,5 +146,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      PT
+#define HB_LANG_ID      PT_BR
 #include "hbmsgreg.h"
