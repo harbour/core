@@ -1,4 +1,4 @@
-/* Last Translator: alkresin (alkresin yahoo.com) */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 
@@ -44,9 +44,9 @@ static HB_LANG s_lang =
       "Файлы данных      # Записи     Последнее изм.  Размер",
       "Нужны еще примеры ?",
       "Стр.N",
-      "Подитог",
-      "Под-подитог",
-      "Итог",
+      "** Подитог **",
+      "* Под-подитог *",
+      "*** Итог ***",
       "Вст",
       "   ",
       "Неверная дата",

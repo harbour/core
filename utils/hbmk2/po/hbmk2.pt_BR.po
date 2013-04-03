@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 12:37+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 20:51+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -971,6 +971,10 @@ msgid "control source header parsing (in incremental build mode)\n<m> can be: na
 msgstr "controle de análise de fonte header (em modo de construção incremental)\n<m> Pode ser: native (usa o compilador para extrair dependências), full (padrão, usa o analisador de texto simples em todo o arquivo), dep, off"
 
 #, c-format
+msgid "copy target file(s) to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies."
+msgstr "cópia de arquivo alvo (s) para <path>. Se <path> é um diretório, ele deve terminar com o separador de path , , neste caso, os arquivos especificados pela opção -instfile também serão copiados. pode ser especificado várias vezes. <g> é um grupo de cópias opcional, ele deve ser de pelo menos dois caracteres. A construção alvo será automaticamente copiada para o grupo padrão (vazio). Que existem após grupos internos <g>: 'depimplib' para fonte de bibliotecas de importação e 'depimplibsrc' para fonte de bibliotecas de importação de arquivos (.dll), ambos pertencentes as dependências."
+
+#, c-format
 msgid "copy target file(s) to install path even if already up to date"
 msgstr "copie os arquivo(s) para o destino do caminho de instalação mesmo que já atualizados"
 
@@ -988,7 +992,7 @@ msgstr "criar um executável GUI/console"
 
 #, c-format
 msgid "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)"
-msgstr "Criar biblioteca importação (no modo -hbdyn/-hbexe) nomeado para <output> (padrão: com o mesmo)"
+msgstr "Criar bibliotéca importação (no modo -hbdyn/-hbexe) nomear a <output> (padrão: mesma saída)"
 
 #, c-format
 msgid "create import library (Windows only)"
@@ -2321,6 +2325,10 @@ msgstr "Voce pode usar <Alt+V> no \"shell do Harbour\" para colar um texto do cl
 #, c-format
 msgid "Description:"
 msgstr "Descrições:"
+
+#, c-format
+msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
+msgstr "%1$s é um sistema integrado de ferramentas de construção portável, tornando possível criar vários tipos de executáveis binários (executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour) de vários tipos de arquivos de fontes de origem (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' significa que uma única arquivo de projeto %1$s pode controlar tudo ou a maioria dos aspectos do processo de construção. 'Portable' significa que um único arquivo de projeto %1$s pode controlar a construção em todas as plataformas suportadas de sistema operacional e em todos os compiladores C suportados. Ele também pretende cobrir a maioria das tarefas de construção por meio de arquivos (opções) de projetos curtos e simples. %1$s suporta bem projetos puros -non-Harbour - C/C++/Objective-C.De modo a atingir metas acima referidas, %1$s auto-detectará Harbour, compilador C e outras ferramentas requeridas,\nentão configura-rá e os chama-rá de forma adequada. %1$s permite ampliar os tipos de arquivos de origem suportados através de plugins. Além de construir executáveis, %1$s é capaz de executar diretamente Harbour scripts (ambos Fonte e pré-compilado), e dispõe também de um prompt shell interativo."
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."

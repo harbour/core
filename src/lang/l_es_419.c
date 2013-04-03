@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: pemedina (pablo.medina sysadminonline.com) */
 
 #include "hbapilng.h"
 
@@ -102,12 +102,12 @@ static HB_LANG s_lang =
       "",
       "",
       "",
-      "Object destructor failure",
+      "falla en el destructor de Objeto",
       "acceso al array",
       "asignación del array",
       "dimensión del array",
       "no es un array",
-      "conditional",
+      "condicional",
 
       /* Internal error names */
 

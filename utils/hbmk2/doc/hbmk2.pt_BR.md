@@ -10,8 +10,8 @@ Sintaxe:
 Descrições:  
 
 
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
-Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
+  hbmk2 é um sistema integrado de ferramentas de construção portável, tornando possível criar vários tipos de executáveis binários \(executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour\) de vários tipos de arquivos de fontes de origem \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' significa que uma única arquivo de projeto hbmk2 pode controlar tudo ou a maioria dos aspectos do processo de construção\. 'Portable' significa que um único arquivo de projeto hbmk2 pode controlar a construção em todas as plataformas suportadas de sistema operacional e em todos os compiladores C suportados\. Ele também pretende cobrir a maioria das tarefas de construção por meio de arquivos \(opções\) de projetos curtos e simples\. hbmk2 suporta bem projetos puros \-non\-Harbour \- C/C\+\+/Objective\-C\.De modo a atingir metas acima referidas, hbmk2 auto\-detectará Harbour, compilador C e outras ferramentas requeridas,  
+então configura\-rá e os chama\-rá de forma adequada\. hbmk2 permite ampliar os tipos de arquivos de origem suportados através de plugins\. Além de construir executáveis, hbmk2 é capaz de executar diretamente Harbour scripts \(ambos Fonte e pré\-compilado\), e dispõe também de um prompt shell interativo\.
   
 Opções  
 
@@ -43,7 +43,7 @@ Opções
  - **\-cpp=&lt;value&gt;** selecione modo C\+\+\.Os Valores permitidos são: def, yes, no
  - **\-map\[\-\]** criar \(ou não\) o arquivo map
  - **\-implib\[\-\]** Criar \(ou não\) uma biblioteca importação \(no modo \-hbdyn/\-hbexe\)\. O nome terá um sufixo adicionado\.
- - **\-implib=&lt;output&gt;** Criar biblioteca importação \(no modo \-hbdyn/\-hbexe\) nomeado para &lt;output&gt; \(padrão: com o mesmo\)
+ - **\-implib=&lt;output&gt;** Criar bibliotéca importação \(no modo \-hbdyn/\-hbexe\) nomear a &lt;output&gt; \(padrão: mesma saída\)
  - **\-ln=&lt;link&gt;** criar um link simbólico apontando para &lt;output&gt; \(&lt;link&gt; é considerado em relação ao &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(ou não\) arquivos binários "strip reduz o tamanho do binário gerado"
  - **\-trace\[\-\]** exibir os comandos executados
@@ -70,7 +70,7 @@ VCS \- sistema de controle de versão\.
  - **\-sign=&lt;key&gt;** assinar executável com &lt;key&gt; \(somente Windows e Darwin\)\. No Windows é usado signtool\.exe \(parte do MS Windows SDK\) ou posign\.exe \(part do Pelles C 7\), nesta ordem, ambos autodetctádos\.
  - **\-signpw=&lt;pw&gt;** usar &lt;pw&gt; como senha ao assinar executável \(somente Windows e Darwin\)
  - **\-instfile=&lt;g:file&gt;** adicionar &lt;file&gt; para a lista de arquivos a serem copiados para caminho especificado pela opção \-instpath\. &lt;g&gt; é um grupo de cópias opcional \(case sensitive\), deve ser de pelo menos dois caracteres\.No caso de você não especificar &lt;file&gt;, a lista de arquivos naquele grupo será esvaziado\.
- - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
+ - **\-instpath=&lt;g:path&gt;** cópia de arquivo alvo \(s\) para &lt;path&gt;\. Se &lt;path&gt; é um diretório, ele deve terminar com o separador de path , , neste caso, os arquivos especificados pela opção \-instfile também serão copiados\. pode ser especificado várias vezes\. &lt;g&gt; é um grupo de cópias opcional, ele deve ser de pelo menos dois caracteres\. A construção alvo será automaticamente copiada para o grupo padrão \(vazio\)\. Que existem após grupos internos &lt;g&gt;: 'depimplib' para fonte de bibliotecas de importação e 'depimplibsrc' para fonte de bibliotecas de importação de arquivos \(\.dll\), ambos pertencentes as dependências\.
  - **\-instforce\[\-\]** copie os arquivo\(s\) para o destino do caminho de instalação mesmo que já atualizados
  - **\-depimplib\[\-\]** habilitar \(ou desabilitar\) a importação da biblioteca da fontes de bibliotecas especificadas em \-depimplibs= opções \(padrão: yes\)
  - **\-stop\[=&lt;text&gt;\]** interromper sem executar nada
