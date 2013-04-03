@@ -13,3 +13,4 @@ depincpathlocal=inst_expat:3rd/expat
 depfinish=inst_expat
 
 libs=3rd/expat/expat.hbc{HBMK_HAS_INST_EXPAT_LOCAL}
+libs=expat{!HBMK_HAS_INST_EXPAT_LOCAL}
