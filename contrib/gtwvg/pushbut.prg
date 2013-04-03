@@ -112,6 +112,15 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
          ::style += BS_BITMAP
       ENDIF
+   ELSEIF HB_ISARRAY( ::caption )
+      ASize( ::caption, 3 )
+      IF HB_ISNUMERIC( ::caption[ 2 ] )
+         IF ::caption[ 2 ] == WVG_IMAGE_ICONFILE .OR. ::caption[ 2 ] == WVG_IMAGE_ICONRESOURCE
+            ::style += BS_ICON
+         ELSEIF ::caption[ 2 ] == WVG_IMAGE_BITMAPFILE .OR. ::caption[ 2 ] == WVG_IMAGE_BITMAPRESOURCE
+            ::style += BS_BITMAP
+         ENDIF
+      ENDIF
    ENDIF
    IF ! ::border
       ::style += BS_FLAT
@@ -199,24 +208,56 @@ METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisi
    RETURN Self
 
 METHOD WvgPushButton:setCaption( xCaption, cDll )
+   LOCAL nLoadFromResByIdNumber := 0
+   LOCAL nLoadFromResByIdName   := 1
+   LOCAL nLoadFromDiskFile      := 2
 
    __defaultNIL( @xCaption, ::caption )
    HB_SYMBOL_UNUSED( cDll )
 
+   ::caption := xCaption
+
    IF HB_ISSTRING( xCaption )
-      ::caption := xCaption
-      IF ".ico" == Lower( Right( ::caption, 4 ) )
-         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, 2, IMAGE_ICON ) )
+      IF ".ICO" == Upper( Right( ::caption, 4 ) )
+         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_ICON ) )
       ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
-         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, 2, IMAGE_BITMAP ) )
+         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_BITMAP ) )
       ELSE
          Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
       ENDIF
 
    ELSEIF HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
-      ::caption := xCaption
       Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, ::caption )
 
+   ELSEIF HB_ISARRAY( xCaption )
+      ASize( xCaption, 4 )
+      IF HB_ISCHAR( xCaption[ 1 ] )
+         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, xCaption[ 1 ] )
+      ENDIF
+      IF ! Empty( xCaption[ 2 ] )
+         SWITCH xCaption[ 2 ]
+         CASE WVG_IMAGE_ICONFILE
+            Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, IMAGE_ICON ) )
+            EXIT
+         CASE WVG_IMAGE_ICONRESOURCE
+            IF ValType( xCaption[ 3 ] ) == "C"
+               Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, IMAGE_ICON ) )
+            ELSE
+               Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, IMAGE_ICON ) )
+            ENDIF
+            EXIT
+         CASE WVG_IMAGE_BITMAPFILE
+            Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( xCaption[ 3 ], nLoadFromDiskFile, IMAGE_BITMAP ) )
+            EXIT
+         CASE WVG_IMAGE_BITMAPRESOURCE
+            IF ValType( xCaption[ 3 ] ) == "C"
+               Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdName, IMAGE_BITMAP ) )
+            ELSE
+               Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( xCaption[ 3 ], nLoadFromResByIdNumber, IMAGE_BITMAP ) )
+            ENDIF
+            EXIT
+         ENDSWITCH
+      ENDIF
    ENDIF
 
    RETURN Self

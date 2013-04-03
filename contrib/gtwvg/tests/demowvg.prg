@@ -20,6 +20,7 @@
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "wvgparts.ch"
 
 REQUEST DBFCDX
 REQUEST DBFNTX
@@ -579,10 +580,10 @@ FUNCTION BuildButtons()
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
-   oXbp:caption := IMAGE_VR
+   oXbp:caption := { "Vouch", WVG_IMAGE_ICONFILE, IMAGE_VR }
    oXbp:border  := .F.
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -31 }, { -2, -4 } )
-   oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) } // {|| Wvt_Keyboard( K_F8 ) }
+   oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) }
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
    RETURN NIL

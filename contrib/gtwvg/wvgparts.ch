@@ -212,4 +212,9 @@
 #define WVGCOMBO_DROPDOWN                         2
 #define WVGCOMBO_DROPDOWNLIST                     3
 
+#define WVG_IMAGE_ICONFILE                        1
+#define WVG_IMAGE_ICONRESOURCE                    2
+#define WVG_IMAGE_BITMAPFILE                      3
+#define WVG_IMAGE_BITMAPRESOURCE                  4
+
 #endif /* _WVG_CH */
