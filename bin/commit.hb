@@ -52,64 +52,71 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   // ;
-
-   IF cVCS == "git"
-      cMyName := GitUser()
-   ELSE
-      IF ! Empty( GetEnv( _CONFIGENV_ ) )
-         cMyName := GetEnv( _CONFIGENV_ )
-      ELSEIF hb_FileExists( _CONFIGFIL_ )
-         cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
-      ELSE
-         cMyName := "Firstname Lastname (me domain.net)"
-      ENDIF
-   ENDIF
-
-   nOffset := hb_UTCOffset()
-
-   cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
-      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
-      iif( nOffset < 0, "-", "+" ), ;
-      Int( nOffset / 3600 ), ;
-      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
-      cMyName ) + hb_eol()
-
-   FOR EACH cLine IN aChanges
-      cLogNew += cLine + hb_eol()
-   NEXT
-
-   // ;
-
-   IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
-      IF ! hb_FileExists( cLogName := "ChangeLog" )
-         OutStd( hb_ProgName() + ": " + "can't find ChangeLog file" + hb_eol() )
-         ErrorLevel( 2 )
-         RETURN
-      ENDIF
-   ENDIF
-
    IF CheckFileList( aFiles )
 
-      cLog := MemoRead( cLogName )
-      cOldLang := hb_cdpSelect( "EN" )
-      cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
-      IF Empty( cHit )
-         cHit := ""
+      IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
+         IF ! hb_FileExists( cLogName := "ChangeLog" )
+            OutStd( hb_ProgName() + ": " + "can't find ChangeLog file" + hb_eol() )
+            ErrorLevel( 2 )
+            RETURN
+         ENDIF
       ENDIF
-      hb_cdpSelect( cOldLang )
 
-      nPos := At( AllTrim( cHit ), cLog )
-      IF nPos > 0
-         cLog := Left( cLog, nPos - 1 ) + cLogNew + hb_eol() + SubStr( cLog, nPos )
+      IF "--hb-check-only" $ Lower( hb_CmdLine() )
+         IF AScan( aFiles, {| tmp | tmp == cLogName } ) == 0
+            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated", cLogName ) + hb_eol() )
+            ErrorLevel( 3 )
+            RETURN
+         ENDIF
       ELSE
-         cLog += hb_eol() + cLogNew
+         IF cVCS == "git"
+            cMyName := GitUser()
+         ELSE
+            IF ! Empty( GetEnv( _CONFIGENV_ ) )
+               cMyName := GetEnv( _CONFIGENV_ )
+            ELSEIF hb_FileExists( _CONFIGFIL_ )
+               cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
+            ELSE
+               cMyName := "Firstname Lastname (me domain.net)"
+            ENDIF
+         ENDIF
+
+         nOffset := hb_UTCOffset()
+
+         cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
+            hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+            iif( nOffset < 0, "-", "+" ), ;
+            Int( nOffset / 3600 ), ;
+            Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
+            cMyName ) + hb_eol()
+
+         FOR EACH cLine IN aChanges
+            cLogNew += cLine + hb_eol()
+         NEXT
+
+         // ;
+
+         cLog := MemoRead( cLogName )
+         cOldLang := hb_cdpSelect( "EN" )
+         cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
+         IF Empty( cHit )
+            cHit := ""
+         ENDIF
+         hb_cdpSelect( cOldLang )
+
+         nPos := At( AllTrim( cHit ), cLog )
+         IF nPos > 0
+            cLog := Left( cLog, nPos - 1 ) + cLogNew + hb_eol() + SubStr( cLog, nPos )
+         ELSE
+            cLog += hb_eol() + cLogNew
+         ENDIF
+
+         hb_MemoWrit( cLogName, cLog )
+
+         OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
+//       LaunchCommand( GitEditor(), cLogName )
       ENDIF
 
-      hb_MemoWrit( cLogName, cLog )
-
-      OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
-//    LaunchCommand( GitEditor(), cLogName )
       ErrorLevel( 0 )
    ELSE
       OutStd( hb_ProgName() + ": " + "Please correct errors listed above and re-run" + hb_eol() )
