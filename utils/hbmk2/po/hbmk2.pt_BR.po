@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 12:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 14:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -856,11 +856,11 @@ msgstr "Opções"
 
 #, c-format
 msgid "additional path to search for headers"
-msgstr "paths adicionais para pesquisa de arquivos headers"
+msgstr "\"paths\" adicionais para pesquisa de arquivos de cabeçalho \"headers\""
 
 #, c-format
 msgid "additional path to search for libraries"
-msgstr "path adicional para pesquisar por bibliotecas"
+msgstr "\"path\" adicional para pesquisa por bibliotecas"
 
 #, c-format
 msgid "create dynamic library (with linked Harbour VM)"
@@ -884,11 +884,11 @@ msgstr "habilita/desabilitar o modo de compilação incremental (padrão: desbil
 
 #, c-format
 msgid "link with <libname> library. <libname> should be without path, extension and 'lib' prefix (unless part of the name). Do not add core Harbour libraries, they are automatically added as needed. If <libname> starts with a '-' character, the library will be removed from the list of libraries at link time."
-msgstr "linkar com a biblioteca <libname>. <libname> deve estar sem path, extensão e prefixo 'lib' (menos a parte do nome). Não adicione bibliotecas do núcleo Harbour, elas são automaticamente inseridas quando necessário. Se <libname> inicializar com um caracter '-', a biblioteca será removida da lista de bibiotecas na hora de linkar."
+msgstr "linkar com a biblioteca <libname>. <libname> deve estar sem o \"path\", sem a extensão e sem o prefixo \"lib\" (a não ser que faça a parte do nome). Não adicione bibliotecas do núcleo Harbour, elas serão inseridas automaticamente quando necessário. Se <libname> começar com um carácter '-', a biblioteca será removida da lista de bibliotecas na hora de linkar."
 
 #, c-format
 msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time"
-msgstr "linkar com GT<name> GT driver, a linkagem pode ser repetido com mais GTs. O primeiro será o GT padrão na execuçao do programa"
+msgstr "linkar com GT<name> controlador de terminal gráfico \"GT \", a linkagem pode ser repetida com mais GTs. O primeiro será o GT padrão na execução do programa."
 
 #, c-format
 msgid "link with static/shared libs"
@@ -896,7 +896,7 @@ msgstr "linkar com biliotecas estáticas/compartilhadas"
 
 #, c-format
 msgid "output file name"
-msgstr "nome de arquivo de saída"
+msgstr "nome do arquivo de saída"
 
 #, c-format
 msgid "more help"
@@ -2324,7 +2324,7 @@ msgstr "Descrições:"
 
 #, c-format
 msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
-msgstr "%1$s é um sistema integrado e portável de ferramentas de construção, tornando possível a criação de vários tipos de executáveis binários (executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour) a partir de vários tipo de arquivos de fontes (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' significa que uma única arquivo de projeto %1$s pode controlar tudo ou a maioria dos aspectos do processo de construção. 'Portable' significa que um único arquivo de projeto %1$s pode controlar a construção em todas as plataformas suportadas de sistema operacional e em todos os compiladores C suportados. Ele também pretende cobrir a maioria das tarefas de construção por meio de arquivos (opções) de projetos curtos e simples. %1$s suporta bem projetos puros -non-Harbour - C/C++/Objective-C.De modo a atingir metas acima referidas, %1$s auto-detectará Harbour, compilador C e outras ferramentas requeridas,\nentão configura-rá e os chama-rá de forma adequada. %1$s permite ampliar os tipos de arquivos de origem suportados através de plugins. Além de construir executáveis, %1$s é capaz de executar diretamente Harbour scripts (ambos Fonte e pré-compilado), e dispõe também de um prompt shell interativo."
+msgstr "%1$s é um sistema integrado e portável de ferramentas de construção, tornando possível a criação de vários tipos de executáveis binários (executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour) a partir de vários tipo de arquivos de fontes (C, C++, Objective-C, Harbour, tradutores \"gettext\", Windows \"resources\"). 'Integrado' significa que em um único arquivo de projeto %1$s pode-se controlar tudo ou a maioria dos aspectos do processo de construção. 'Portável' significa que um único arquivo de projeto %1$s pode-se controlar a construção do executável para todas as plataformas de sistema operacional suportadas através dos compiladores C suportados. Ele também pretende cobrir a maioria das tarefas da construção e geração por meio de (opções) de arquivos de projetos curtos e simples. %1$s suporta bem projetos \"não Harbour\" C/C++/Objective-C. Para a atingir as metas referidas, %1$s detectará automaticamente o Harbour, compilador C e demais ferramentas requeridas, configura-rá e as chama-rá de forma adequada. %1$s permite ampliar os tipos de arquivos fontes suportados através de plugins. Além de construir executáveis, %1$s é capaz de executar diretamente scripts em Harbour (ambos fonte e pré-compilado), e dispõe também de um interpretador de comandos interativo \"interactive shell prompt.\"."
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."

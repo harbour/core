@@ -1,7 +1,7 @@
 Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
-Traducción \(es\_ES\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
+Traducción \(es\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
 Sintaxis:  
   

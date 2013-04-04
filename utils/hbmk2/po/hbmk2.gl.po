@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 12:25+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 14:02+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -39,6 +39,10 @@ msgid "Warning: Ignored option valid only on command-line: %1$s"
 msgstr "Aviso: Ignorada a opción só válida en liña de comando: %1$s"
 
 #, c-format
+msgid "Warning: Invalid -request= value ignored: %1$s"
+msgstr "Aviso: -request= non válido, valor ignorado: %1$s"
+
+#, c-format
 msgid "Warning: Ignored unsupported codepage value: %1$s"
 msgstr "Aviso: ignorouse o valor de código de páxina non soportado: %1$s"
 
@@ -65,6 +69,10 @@ msgstr "Aviso: Non se atopa %1$s (referenciado dende %2$s)"
 #, c-format
 msgid "Warning: No source files were specified."
 msgstr "Aviso: Non se especificaron arquivos fonte."
+
+#, c-format
+msgid "Warning: Non-portable output filename: %1$s. Delete '%2$s' extension."
+msgstr "Aviso: O nome do arquivo non é portable: %1$s. Elimine a extensión '%2$s'."
 
 #, c-format
 msgid "Error: Temporary Working directory cannot be created: %1$s"
@@ -107,6 +115,10 @@ msgid "'cd' back."
 msgstr "'cd' atrás."
 
 #, c-format
+msgid "Error: C/C++ command is not implemented for this platform/compiler."
+msgstr "Erro: comando non implementado para esta plataforma ou este compilador de C/C++."
+
+#, c-format
 msgid "Warning: Cannot create directory for target '%1$s'."
 msgstr "Aviso: Non se pode crear o directorio para '%1$s'."
 
@@ -139,8 +151,20 @@ msgid "Warning: Ignored invalid option value in: %1$s"
 msgstr "Aviso: Opción non válida ignorada en: %1$s"
 
 #, c-format
+msgid "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead."
+msgstr "Aviso: Opción de compatibilidade obsoleta: %1$s. Utilice '%2$s'"
+
+#, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
 msgstr "Aviso: Opción perigosa de baixo nivel non se recomenda: %1$s"
+
+#, c-format
+msgid "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead."
+msgstr "Aviso: Parámetro non portable: %1$s. Utilice as directivas %2$s."
+
+#, c-format
+msgid "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead."
+msgstr "Aviso: Parámetro non portable: %1$s. Utilice a opción '%2$s'."
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
@@ -149,6 +173,14 @@ msgstr "Aviso: Ignorando bibliotecas estándar especificadas: %1$s (na opción %
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
 msgstr "Erro: Fallo ao crear o enlace simbolico %1$s para %2$s"
+
+#, c-format
+msgid "Created symbolic link %1$s to %2$s"
+msgstr "Creado enlace simbólico de %1$s para %2$s"
+
+#, c-format
+msgid "Created import library: %1$s <= %2$s"
+msgstr "Creada biblioteca de importación: %1$s <= %2$s"
 
 #, c-format
 msgid "Error: Failed creating import library %1$s from %2$s."
@@ -175,6 +207,10 @@ msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
 msgstr "Aviso: Copiando enlace simbólico %1$s para %2$s fallou con %3$d."
 
 #, c-format
+msgid "Copied symbolic link %1$s to %2$s"
+msgstr "Copiado enlace simbólico de %1$s para %2$s"
+
+#, c-format
 msgid "Warning: Copying %1$s to %2$s failed with %3$d."
 msgstr "Aviso: Copiando %1$s para %2$s fallou con %3$d."
 
@@ -183,12 +219,44 @@ msgid "Copied %1$s to %2$s"
 msgstr "Copiado %1$s para %2$s"
 
 #, c-format
+msgid "Warning: Cannot create install directory for install target %1$s."
+msgstr "Aviso: Non se pode crear o directorio de instalación para %1$s."
+
+#, c-format
+msgid "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings."
+msgstr "Erro interno: Non se atopa o motor de expresión regulares ou non se soporta. Comprobe as opcións da construcción de Harbour."
+
+#, c-format
 msgid "Dependency '%1$s' found: %2$s%3$s%4$s%5$s"
 msgstr "Dependencia '%1$s' atopada %2$s%3$s%4$s%5$s"
 
 #, c-format
+msgid "Dependency '%1$s' forcibly disabled"
+msgstr "Dependencia %1$s desactivada á forza"
+
+#, c-format
+msgid "Warning: Missing optional dependencies: %1$s"
+msgstr "Aviso: Non se atopan dependencias opcionais: %1$s"
+
+#, c-format
+msgid "Warning: Missing optional dependency: %1$s"
+msgstr "Aviso: Non se atopa a dependencia opcional: %1$s"
+
+#, c-format
+msgid "Error: Missing dependencies: %1$s"
+msgstr "Erro: Non se atopan as dependencias: %1$s"
+
+#, c-format
 msgid "Error: Missing dependency: %1$s"
 msgstr "Erro: Dependencia non atopada: %1$s"
+
+#, c-format
+msgid "Warning: Missing dependencies: %1$s"
+msgstr "Aviso: Non se atopan as dependencias: %1$s"
+
+#, c-format
+msgid "Warning: Missing dependency: %1$s"
+msgstr "Aviso: Non se atopa a dependencia: %1$s"
 
 #, c-format
 msgid "(compiled)"
@@ -215,12 +283,20 @@ msgid "plugin: %1$s"
 msgstr "complemento: %1$s"
 
 #, c-format
+msgid "Plugin %1$s returned at '%2$s': '%3$s'"
+msgstr "O complemento %1$s retornou en '%2$s': '%3$s\""
+
+#, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
 msgstr "Erro: Executando complemento: %1$s en %3$s(%4$d) '%2$s'"
 
 #, c-format
 msgid "<%1$s directory>"
 msgstr "<directorio %1$s>"
+
+#, c-format
+msgid "Warning: Cannot nest deeper in %1$s"
+msgstr "Aviso: Non se pode añiñar máis de %1$s nivéis"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)"
@@ -235,8 +311,24 @@ msgid "Warning: Project reference (%1$s) ignored. File not found."
 msgstr "Aviso: Referencia ao proxecto (%1$s) ignorada. Arquivo non atopado."
 
 #, c-format
+msgid "Warning: Project reference (%1$s) ignored. Project references require %2$s to be invoked with a main project."
+msgstr "Aviso: Referencia do proxecto (%1$s) ignorada. Referencias de proxectos requiren invocar %2$s con un proxecto principal."
+
+#, c-format
+msgid "Warning: Project reference (%1$s) ignored in automatic make file: %2$s"
+msgstr "Aviso: Referencia ao proxecto (%1$s) ignorada en arquivo de compilación (makefile) automático: %2$s"
+
+#, c-format
 msgid "Warning: Error in filter expression: '%1$s'"
 msgstr "Aviso: Erro na expresión do filtro: '%1$s'"
+
+#, c-format
+msgid "Warning: Source dynamic library not found: %1$s"
+msgstr "Aviso: Non se atopa a biblioteca dinamica: %1$s"
+
+#, c-format
+msgid "Import library creation command:"
+msgstr "Comando para creación de bibliotecas de importación:"
 
 #, c-format
 msgid "Found COFF .lib with the same name, falling back to using it instead of the .dll."
@@ -245,6 +337,10 @@ msgstr "Atopado arquivo de biblioteca .lib en formato COFF co mesmo nome, usaras
 #, c-format
 msgid "Found .def file with the same name, falling back to using it instead of the .dll."
 msgstr "Atopado arquivo de definición .def co mesmo nome, usarase en vez do arquivo .dll."
+
+#, c-format
+msgid "VCS version command:"
+msgstr "Comando de versión VCS:"
 
 #, c-format
 msgid "No matches"
@@ -275,12 +371,40 @@ msgid "Harbour core"
 msgstr "Núcleo de Harbour"
 
 #, c-format
+msgid "Updating extern header: %1$s"
+msgstr "Actualizando cabeceira externa: %1$s"
+
+#, c-format
+msgid "Error: Updating extern header."
+msgstr "Erro: Ao actualizar cabeceira externa."
+
+#, c-format
+msgid "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation."
+msgstr "Aviso: Non se puido detectar Harbour. Execute esta ferramenta dende a súa localización orixinal na instalación de Harbour."
+
+#, c-format
+msgid "Cannot find script '%1$s'"
+msgstr "Non se atopa o guión '%1$s'"
+
+#, c-format
+msgid "'%1$s' (%2$s) not found."
+msgstr "Non atopado '%1$s' (%2$s)."
+
+#, c-format
 msgid "Error loading '%1$s' (%2$s)."
 msgstr "Erro cargando '%1$s' (%2$s)."
 
 #, c-format
 msgid "Cannot load '%1$s'. Requires -shared %2$s build."
 msgstr "Non se pode cargar '%1$s'. E necesario compilar %2$s con -shared."
+
+#, c-format
+msgid "Error: Loading shell plugin: %1$s\n'%2$s'"
+msgstr "Erro: Cargando complemento do intérprete de comandos: %1$s '%2$s'"
+
+#, c-format
+msgid "Error: Interactive session not possible with %1$s terminal driver"
+msgstr "Erro: Sesión interactiva non é posible co controlador de terminal %1$s"
 
 #, c-format
 msgid "Enter password:"
@@ -299,8 +423,20 @@ msgid "Syntax error."
 msgstr "Erro de sintaxe."
 
 #, c-format
+msgid "Loading hbmake project file: %1$s"
+msgstr "Cargando arquivo de proxecto hbmake: %1$s"
+
+#, c-format
 msgid "Saving as .hbp file: %1$s"
 msgstr "Salvando como arquivo .hbp: %1$s"
+
+#, c-format
+msgid "Loading xbp (xbuild) project file: %1$s"
+msgstr "Cargando arquivo de proxecto .xbp (xbuild): %1$s"
+
+#, c-format
+msgid "Loading xhp (xMate) project file: %1$s"
+msgstr "Cargando arquivo de proxecto .xhp (xMate): %1$s"
 
 #, c-format
 msgid "no error"
@@ -317,6 +453,10 @@ msgstr "Compilador descoñecido"
 #, c-format
 msgid "failed Harbour detection"
 msgstr "Fallou a detección de Harbour"
+
+#, c-format
+msgid "failed stub creation"
+msgstr "Fallou a creación do arquivo auxiliar"
 
 #, c-format
 msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
@@ -351,6 +491,10 @@ msgid "too deep nesting"
 msgstr "Aniñamento demasiado profundo."
 
 #, c-format
+msgid "stop requested"
+msgstr "parada solicitada"
+
+#, c-format
 msgid "unknown: %1$d"
 msgstr "Descoñecido: %1$d"
 
@@ -359,8 +503,16 @@ msgid "create executable (default)"
 msgstr "Crear executable (predeterminado)"
 
 #, c-format
+msgid "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at run-time"
+msgstr "enlazar co controlador de terminal GT<name>, pode repetirse para enlazar varios GTs. O primero será o predeterminado en tempo de execución"
+
+#, c-format
 msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
 msgstr "<d> é o nome da dependencia. <f> pose ser 'yes' ou 'no' e indica se a dependencia é opcional. Predeterminado: 'no'"
+
+#, c-format
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
+msgstr "<d> é o nome da dependencia. <n> é o nome da dependencia de un paquete. Pode indicarse varias veces."
 
 #, c-format
 msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
@@ -371,8 +523,16 @@ msgid "<d> is the name of the dependency. Add <i> to the header detection path l
 msgstr "<d> é o nome da dependencia. Engada <i> á lista de rutas de busca de arquivos de cabeceira."
 
 #, c-format
+msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
+msgstr "<d> é o nome da dependencia. Use <r> como directorio base para as rutas indicadas nas opcións -depincpath."
+
+#, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
 msgstr "<d> é o nome de dependencia. Establecer o nome da biblioteca de importación xenerada a <lib>"
+
+#, c-format
+msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
+msgstr "engadir complemento. <filename> pode ser: .hb, .prg, .hrb"
 
 #, c-format
 msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
@@ -391,6 +551,18 @@ msgid "create symbolic link pointing to <output> (<link> is considered relative 
 msgstr "crear enlace simbólico para <output> (<link> considérase relativo a <output>)"
 
 #, c-format
+msgid "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it."
+msgstr "Crear cabeceira de Harbour (en formato .hbx) con todos os símbolos externos. Un parámetro vacío desactiva a opción."
+
+#, c-format
+msgid "disable library grouping on gcc based compilers"
+msgstr "desactivar agrupamento de bibliotecas para compiladores basados en gcc"
+
+#, c-format
+msgid "do not add extra list of system libraries to default library list"
+msgstr "non engadir lista extra de bibliotecas do sistema á lista predeterminada de bibliotecas"
+
+#, c-format
 msgid "do not link default GTs (effective in -static mode)"
 msgstr "Non enlazar GTs predeterminados (eficaz en modo -static)"
 
@@ -403,20 +575,44 @@ msgid "embed manifest <file> in executable/dynamic lib (Windows only)"
 msgstr "Incrustar arquivo de manifesto <file> en executable/biblioteca dinámica (só Windows)"
 
 #, c-format
+msgid "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)"
+msgstr "activa (ou desactiva) a xeneración de bibliotecas de importación para as bibliotecas indicadas nas opcións -depimplibs= (Predeterminado: yes)"
+
+#, c-format
+msgid "enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)"
+msgstr "activa as opcións de seguridade no compilador de C/enlazador (Predeterminado: activado en Windows, desactivado en outros sistemas)"
+
+#, c-format
 msgid "force function/procedure to be linked"
 msgstr "Forzar enlazado de función/procedemento"
+
+#, c-format
+msgid "link with <framework> framework (Darwin only)"
+msgstr "enlazar co marco de traballo <framework> (Só Darwin)"
 
 #, c-format
 msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
 msgstr "opcións/parámetros reservados para ferramentas externas, ignoradas sempre por %1$s"
 
 #, c-format
+msgid "override standard C++ memory management functions with Harbour ones"
+msgstr "substituír as funcións estándar de xestión de memoria de C++ coas propias de Harbour"
+
+#, c-format
 msgid "pass input file to plugins"
 msgstr "Pasar arquivos de entrada a os complementos"
 
 #, c-format
+msgid "pass single flag to code sign command"
+msgstr "pasar a opción para a ferramenta de asinado de código"
+
+#, c-format
 msgid "pass single flag to import library creation command"
 msgstr "Pasar a opción ao comando de creación de bibliotecas de importación"
+
+#, c-format
+msgid "pass single flag to plugins"
+msgstr "pasar opción para os complementos"
 
 #, c-format
 msgid "pass single raw option to linker (dynamic library) after the library list. Use with caution."
@@ -431,12 +627,20 @@ msgid "rebuild with sub-projects (in incremental build mode)"
 msgstr "Reconstruir con subproxectos (en modo de construcción incremental)"
 
 #, c-format
+msgid "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
+msgstr "selecciona entre os modos de compilación UNICODE (WIDE) ou ANSI (Predeterminado: ANSI) (Só para Windows. En WinCE é sempre UNICODE)"
+
+#, c-format
 msgid "select C++ mode. Allowed values are: def, yes, no"
 msgstr "Selecciona o modo C++. Os valores posibles son: def, yes, no"
 
 #, c-format
 msgid "show error result as human readable text on exit"
 msgstr "Mostrar resultado de error como texto lexible"
+
+#, c-format
+msgid "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected."
+msgstr "asinar executable con <key> (Só Windows e Darwin). En Windows úsase a ferramenta signtool.exe (pertence ao SDK de Windows) ou posign.exe (pertence a Pelles C 7), nesa orde, ambos autodetectados."
 
 #, c-format
 msgid "use <pw> as password when signing executable (Windows and Darwin only)"
@@ -451,12 +655,36 @@ msgid "enable Harbour 1.0.x compatibility mode"
 msgstr "Habilitar modo compatibilidade Harbour 1.0.x"
 
 #, c-format
+msgid "enable Harbour 2.0.x compatibility mode"
+msgstr "Activar modo de compatibilidade con Harbour 2.0.x"
+
+#, c-format
+msgid "enable Harbour 3.0.x compatibility mode"
+msgstr "activar modo de compatibilidade Harbour 3.0.x"
+
+#, c-format
 msgid "Harbour compiler build information"
 msgstr "Información da construcción do compilador Harbour"
 
 #, c-format
 msgid "Harbour compiler credits"
 msgstr "Créditos do compilador Harbour"
+
+#, c-format
+msgid "long help in Markdown format"
+msgstr "axuda extendia en formato Markdown"
+
+#, c-format
+msgid "long help in text viewer"
+msgstr "axuda extendida no visor de texto"
+
+#, c-format
+msgid "override default language. <lang> is an ISO language code."
+msgstr "substituír idioma predeterminado. <lang> é o código ISO do idioma."
+
+#, c-format
+msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
+msgstr "substituír CPU predeterminado de destino (predeterminado: automático) (EXPERIMENTAL)"
 
 #, c-format
 msgid "register Harbour Script (.hb) with %1$s (Windows only)"
@@ -467,12 +695,28 @@ msgid "set output width to <n> characters (0=unlimited)."
 msgstr "Fixar ancho da saída a <n> caracteres (0=ilimitado)."
 
 #, c-format
+msgid "show sub-project level in output lines"
+msgstr "mostrar nivéis de subproxecto en liñas de saída"
+
+#, c-format
 msgid "stop after running Harbour compiler"
 msgstr "Deter despois de executar o compilador Harbour"
 
 #, c-format
+msgid "unregister Harbour Script (.hb) from %1$s (Windows only)"
+msgstr "anular rexistro de Harbour Script (.hb) de %1$s (Só Windows)"
+
+#, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
 msgstr "Pode engadir un enlace simbólico/copia/renomear %1$s a os seguintes nomes para alterar o modo predeterminado de operación:"
+
+#, c-format
+msgid "mode %1$s (emulate C compiler)"
+msgstr "modo %1$s (simular compilador C)"
+
+#, c-format
+msgid "mode %1$s (emulate C linker)"
+msgstr "modo %1$s (simular enlazador C)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper compiler)"
@@ -483,12 +727,20 @@ msgid "mode %1$s (emulate Clipper linker)"
 msgstr "Modo %1$s (emular enlazador Clipper)"
 
 #, c-format
+msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
+msgstr "modo %1$s (simular compilador Harbour producindo un obxeto binario)"
+
+#, c-format
 msgid "mode script runner / interactive shell"
-msgstr "modo secuencia de comandos / consola interactiva"
+msgstr "modo secuencia de comandos / intérprete interactivo"
 
 #, c-format
 msgid "mode script runner / interactive shell in debug mode"
-msgstr "Modo secuencia de comandos / consola interactiva en modo depuración"
+msgstr "Modo secuencia de comandos / intérprete interactivo en modo depuración"
+
+#, c-format
+msgid "Exit codes (\"errorlevels\"):"
+msgstr "Códigos de saída (\"errorlevels\"):"
 
 #, c-format
 msgid "when -run option is used, the exit code will be the one returned by the target executable"
@@ -499,6 +751,10 @@ msgid "accepts same values (space separated) as %1$s option"
 msgstr "Acepta os mesmos valores (separados por espacios) que a opción %1$s"
 
 #, c-format
+msgid "accepts same values as %1$s option"
+msgstr "acepta os mesmos valores que a opción %1$s"
+
+#, c-format
 msgid "options to be passed to C compiler (before command-line options)"
 msgstr "opcións para o compilador C (antes das opcións de liña de comandos)"
 
@@ -507,12 +763,44 @@ msgid "options to be passed to Harbour compiler (before command-line options)"
 msgstr "opcións para o compilador Harbour (antes das opcións de liña de comandos)"
 
 #, c-format
+msgid "override C compiler executable directory (gcc compiler families only)"
+msgstr "substituír o directorio do executable do compilador de C (só para a famila de compiladores gcc)"
+
+#, c-format
+msgid "override C compiler executable prefix (gcc compiler families only)"
+msgstr "substituír o prefixo do executable do compilador de C (só para a famila de compiladores gcc)"
+
+#, c-format
+msgid "override C compiler executable suffix (gcc compiler families only)"
+msgstr "substituír o sufixo do executable do compilador de C (só para a famila de compiladores gcc)"
+
+#, c-format
+msgid "override Harbour base add-ons directory"
+msgstr "substituír o directorio base dos complementos de Harbour"
+
+#, c-format
 msgid "Files:"
 msgstr "Arquivos:"
 
 #, c-format
+msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
+msgstr "colección de opcións. Pode usarse para agrupar opcións comúns no mesmo arquivo e incluílo nos arquivos de proxecto. Usa o mesmo formato que os arquivos .hbp."
+
+#, c-format
 msgid "optional .hbm file residing in current working directory, which gets automatically processed before other options"
 msgstr "arquivo opcional .hbm no directorio de traballo actual, que é automaticamente procesado antes de outras opcións"
+
+#, c-format
+msgid "Harbour portable binary (aka precompiled Harbour script)"
+msgstr "Binario portable de Harbour (coñecido como guión de Harbour precompilado)"
+
+#, c-format
+msgid "default workdir subdirectory for dynamic library targets"
+msgstr "subdirectorio por defecto para o destino das bibliotecas dinámicas"
+
+#, c-format
+msgid "directory of the filename it is used in"
+msgstr "o directorio do nome do arquivo é usado en"
 
 #, c-format
 msgid "Harbour dynamic library directory"
@@ -523,8 +811,20 @@ msgid "Harbour static library directory"
 msgstr "Directorio para bibliotecas estáticas de Harbour"
 
 #, c-format
+msgid "Harbour version in hexadecimal triple byte format. F.e.: %1$s"
+msgstr "Versión de Harbour en formato hexadecimal de tres bytes. Por exemplo: %1$s"
+
+#, c-format
+msgid "name of the filename it is used in (without directory and extension)"
+msgstr "nome do arquivo usado (sen directorio nin extensión)"
+
+#, c-format
 msgid "name of the output (without extension)"
 msgstr "Nome do arquivo de saída (sen extensión)"
+
+#, c-format
+msgid "name of the project (without directory and extension). Returns %1$s if there is not project file."
+msgstr "nome do proxecto (sen directorio nin extensión). Retorna %1$s se non hay arquivo de proxecto."
 
 #, c-format
 msgid "OS directory for temporary files"
@@ -539,8 +839,16 @@ msgid "returns the value of the environment variable <envvar>"
 msgstr "Retorna o valor da variable de entorno <envvar>"
 
 #, c-format
+msgid "console target (see -console option)"
+msgstr "tipo de consola (ver opción -console)"
+
+#, c-format
 msgid "C level debugging is disabled (see -debug- option)"
 msgstr "Depuración a nivel C está desactivada (ver opción -debug-)"
+
+#, c-format
+msgid "filter will pass if <file> or <dir> name exists on disk."
+msgstr "o filtro pasará se o nome de <file> ou <dir> existe no disco."
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
@@ -555,8 +863,20 @@ msgid "forced C++ mode (see -cpp option)"
 msgstr "Forzado modo C++ (ver opción -cpp)"
 
 #, c-format
+msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+msgstr "O compilador de C pertence á familia gcc (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+
+#, c-format
+msgid "target C compiler is bcc* (bcc, bcc64)"
+msgstr "Compilador C destino é bcc* (bcc, bcc64)"
+
+#, c-format
 msgid "target C compiler is mingw* (mingw, mingw64, mingwarm)"
 msgstr "O compilador C é mingw* (mingw, mingw64, mingwarm)"
+
+#, c-format
+msgid "target C compiler is msvc* (msvc, msvc64, msvcia64, msvcarm)"
+msgstr "compilador C de destino é msvc* (msvc, msvc64, msvcia64, msvcarm)"
 
 #, c-format
 msgid "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
@@ -573,6 +893,18 @@ msgstr "Modo Windows ANSI (ver opción -winuni-)"
 #, c-format
 msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
 msgstr "Modo Windows UNICODE (WIDE) (ver opción -winuni)"
+
+#, c-format
+msgid ".hbc directives (they should be written in separate lines):"
+msgstr "directivas .hbc (deben ser escritas en liñas separadas):"
+
+#, c-format
+msgid "add space separated list of .ch format headers as standard header"
+msgstr "engadir lista de cabeceiras .ch separada por espazos como cabeceira estándar"
+
+#, c-format
+msgid "add space separated list of libraries (see more at -l option)"
+msgstr "engada lista de bibliotecas separadas por espacios (ver opción -l)"
 
 #, c-format
 msgid "display <msg>"
@@ -607,24 +939,100 @@ msgid "Predefined constants in sources:"
 msgstr "Constantes predefinidas nos fontes:"
 
 #, c-format
+msgid "when <depname> dependency was detected (available in C sources)"
+msgstr "cando a dependencia <depname> se detectou (dispoñible nas fontes en C)"
+
+#, c-format
+msgid "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>'):"
+msgstr "Constantes predefinidas en arquivos de construcción (están dispoñibles despois de '-depfinish=<depname>' / 'depfinish=<depname>'):"
+
+#, c-format
 msgid "when <depname> dependency was detected in a location configured by -depincpathlocal= option"
 msgstr "cando a dependencia <depname> se detectou nun lugar configurado pola opción -depincpathlocal="
+
+#, c-format
+msgid "Display list of loaded Harbour header."
+msgstr "Mostra a lista de cabeceiras de Harbour cargadas."
 
 #, c-format
 msgid "Unload package."
 msgstr "Descargar paquete."
 
 #, c-format
+msgid "Add a C++ input file to the project."
+msgstr "Engade un arquivo C++ a o proxecto."
+
+#, c-format
+msgid "Add a file to be installed, with an optional -instpath= group name."
+msgstr "Engadir un arquivo para ser instalado, con un nome de grupo opcional para -instpath=."
+
+#, c-format
+msgid "Convert filename to have forward slash directory separators."
+msgstr "Converter nome de arquivo para usar a barra invertida coma separadores de directorio."
+
+#, c-format
+msgid "Encode function name according to Harbour compiler rules for forming HB_FUNC() function names in C code."
+msgstr "Codificar nomes de funcións de acordo ás normas do compilador Harbour para xenerar funcións de tipo HB_FUNC() en código C."
+
+#, c-format
+msgid "Escape/quote filename for using it as external command parameter."
+msgstr "Citar/Entrecomillar o nome do arquivo para ser usado como parámetro para comandos externos."
+
+#, c-format
+msgid "Return relative path of -workdir= value from current working directory."
+msgstr "Retorna a ruta relativa do valor de -workdir= dende o directorio de traballo actual."
+
+#, c-format
+msgid "Plugin variables:\n('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)"
+msgstr "Variables para os complementos: (elementos hash do contexto de 'hbmk', sen distinción maiúsculas/minúsculas, só lectura se non se indica o contrario)"
+
+#, c-format
+msgid "%1$s value"
+msgstr "valor %1$s"
+
+#, c-format
+msgid "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
+msgstr "aviso de estado. Pode ser: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
+
+#, c-format
 msgid "Current exit code"
 msgstr "Código actual de saída"
+
+#, c-format
+msgid "hash of plugin custom variables. Writable, local to each plugin"
+msgstr "lista tipo hash de variables personalizadas para o complemento. Modificables e locais para cada complemento"
+
+#, c-format
+msgid "see %1$s envvar"
+msgstr "ver variable de ámbito %1$s"
+
+#, c-format
+msgid "see %1$s macro"
+msgstr "ver macro %1$s"
+
+#, c-format
+msgid "Defaults and feature support may vary by platform/compiler."
+msgstr "Os valores predeterminados e o soporte de características pode variar para cada plataforma/compilador."
 
 #, c-format
 msgid "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s."
 msgstr "Non se necesita GNU Make, ningunha ferramenta de tipo make específica do compilador C, nin MSYS (en Windows) para executar %1$s."
 
 #, c-format
+msgid "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler."
+msgstr "Bibliotecas e arquivos obxeto compilados con/para CA-Cl*pper non funcionarán en ningunha plataforma ou compilador soportados."
+
+#, c-format
+msgid "Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted."
+msgstr "Recoméndase o uso da barra invertida como separador de directorios pero a barra estándar tamén se acepta."
+
+#, c-format
+msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."
+msgstr "Os valores marcados con [*] poden depender da plataforma anfitriona e/ou da configuración. Esta axuda foi xenerada na plataforma '%1$s'."
+
+#, c-format
 msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
-msgstr "Pose usar <Alt+V> no modo de consola interactiva de Harbour para pegar texto dende o portapapeis."
+msgstr "Pose usar <Alt+V> no modo de intérprete interactivo de Harbour para pegar texto dende o portapapéis."
 
 #, c-format
 msgid "Description:"
@@ -632,7 +1040,7 @@ msgstr "Descripción:"
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
-msgstr "%1$s é quen de executar guións de Harbour (arquivos fontes ou precompilados), e dispón de unha consola de comandos interactiva."
+msgstr "%1$s é quen de executar guións de Harbour (arquivos fontes ou precompilados), e dispón de un intérprete interactivo."
 
 #, c-format
 msgid "Author:"
@@ -641,3 +1049,7 @@ msgstr "Autor:"
 #, c-format
 msgid "To build"
 msgstr "Para construir"
+
+#, c-format
+msgid "To build library 'mylib' from sources using incremental mode"
+msgstr "Para construir a biblioteca 'mylib' desde as fontes usando o modo incremental"

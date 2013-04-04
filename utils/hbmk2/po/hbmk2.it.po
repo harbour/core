@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 12:26+0000\nLast-Translator: marcobra <marcobra.ubuntu@gmail.com>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 13:38+0000\nLast-Translator: mlacecilia <m.lacecilia@gmail.com>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -16,7 +16,7 @@ msgstr "Premi un tasto qualsiasi per continuare..."
 
 #, c-format
 msgid "Error: Cannot nest projects deeper than %1$d levels"
-msgstr "Errore: i progetti non si possono nidificare di più di %1$d livelli"
+msgstr "Errore: Impossibile nidificare progetti oltre %1$d livelli"
 
 #, c-format
 msgid "Building sub-project (level %1$d): %2$s"
@@ -33,6 +33,10 @@ msgstr "Piattaforma rilevata: %1$s"
 #, c-format
 msgid "Error: Platform value unknown: %1$s"
 msgstr "Errore: Valore della piattaforma sconosciuto: %1$s"
+
+#, c-format
+msgid "Autodetected platform: %1$s (adjusted)"
+msgstr "Piattaforma autorilevata: %1$s (corretta)"
 
 #, c-format
 msgid "Autodetected C compiler: %1$s"
@@ -55,8 +59,16 @@ msgid "Using C compiler: %1$s [%2$s...%3$s]"
 msgstr "Compilatore C in uso: %1$s [%2$s...%3$s]"
 
 #, c-format
+msgid "Found project reference on library search path: %1$s"
+msgstr "Trovato riferimento al progetto nel percorso di ricerca della libreria: %1$s"
+
+#, c-format
 msgid "Warning: Invalid -request= value ignored: %1$s"
 msgstr "Attenzione: Non valido -request= value ignorato: %1$s"
+
+#, c-format
+msgid "Warning: Ignored unsupported codepage value: %1$s"
+msgstr "Attenzione: Ignorato valore non supportato per la codepage: %1$s"
 
 #, c-format
 msgid "Warning: Option available only when using embedded Harbour compiler: %1$s"
@@ -93,6 +105,10 @@ msgstr "Errore: La cartella di lavoro non può essere creata: %1$s"
 #, c-format
 msgid "Error: Temporary Working directory cannot be created: %1$s"
 msgstr "Errore: la cartella di lavoro temporanea non può essere creata: %1$s"
+
+#, c-format
+msgid "Triggered by #require directive: %1$s"
+msgstr "Attivato dalla direttiva #require: %1$s"
 
 #, c-format
 msgid "Compiling Harbour sources..."
@@ -155,12 +171,16 @@ msgid "Error: C/C++ command is not implemented for this platform/compiler."
 msgstr "Errore: il comando C/C++ non è implementato per questa piattaforma/compilatore."
 
 #, c-format
+msgid "Warning: Cannot create directory for target '%1$s'."
+msgstr "Attenzione: impossibile creare la cartella per la destinazione '%1$s'."
+
+#, c-format
 msgid "Warning: Cannot create directory for import library '%1$s'."
 msgstr "Attenzione: impossibile creare la cartella per la libreri di import '%1$s'."
 
 #, c-format
 msgid "Warning: Cannot delete existing target '%1$s'."
-msgstr "Attenzione: Esistente obiettivo '%1$s' non può essere cancellato."
+msgstr "Attenzione: Impossibile cancellare il file esistente di destinazione '%1$s'."
 
 #, c-format
 msgid "Linking... %1$s"
@@ -232,7 +252,7 @@ msgstr "Attenzione: Non è stato specificata alcuna libreria sorgente di importa
 
 #, c-format
 msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
-msgstr "Attenzione: Copia di %1$s su %2$s fallita con %3$d."
+msgstr "Attenzione: Copia del collegamento simbolico %1$s a %2$s fallita con %3$d."
 
 #, c-format
 msgid "Copied symbolic link %1$s to %2$s"
@@ -248,7 +268,7 @@ msgstr "%1$s sopiato su %2$s"
 
 #, c-format
 msgid "Warning: Cannot create install directory for install target %1$s."
-msgstr "Attenzione: la cartella per l'installazione finale %1$s non può essere creata."
+msgstr "Attenzione: Impossibile creare la cartella di installazione per la destinazione %1$s."
 
 #, c-format
 msgid "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings."
@@ -308,7 +328,7 @@ msgstr "Errore: nell'esecuzione del plugin: %1$s a %3$s(%4$d)\n'%2$s'"
 
 #, c-format
 msgid "<%1$s directory>"
-msgstr "<%1$s cartella>"
+msgstr "<cartella %1$s>"
 
 #, c-format
 msgid "Processing: %1$s"
@@ -376,7 +396,7 @@ msgstr "Suggerimento: Installare il pacchetto %3$s e aggiungere l'opzione '%1$s'
 
 #, c-format
 msgid "Error: Referenced, missing, but unknown function(s): %1$s"
-msgstr "Errore: Funzione referenziata, mancante ma sconosciuta(e): %1$s"
+msgstr "Errore: Funzione(i) referenziata, mancante ma sconosciuta: %1$s"
 
 #, c-format
 msgid "Harbour core"
@@ -408,7 +428,7 @@ msgstr "Errore del caricamento '%1$s' (%2$s)."
 
 #, c-format
 msgid "Cannot load '%1$s'. Requires -shared %2$s build."
-msgstr "'%1$s' non può essere caricato. Si richiede la compilazione -shared %2$s"
+msgstr "'%1$s' non può essere caricato. E' richiesta la compilazione -shared %2$s"
 
 #, c-format
 msgid "Error: Interactive session not possible with %1$s terminal driver"
@@ -588,7 +608,7 @@ msgstr "non aggiungere un'ulteriore elenco di librerie di sistema alla lista del
 
 #, c-format
 msgid "do not use static core Harbour libraries when linking"
-msgstr "non si devono usare librerie statiche principali di Harbour durante il linking"
+msgstr "non usare librerie statiche principali di Harbour durante il linking"
 
 #, c-format
 msgid "echo text on screen"
@@ -636,7 +656,7 @@ msgstr "Ricompila con i sotto-progetti (in compilazione incrementale)"
 
 #, c-format
 msgid "run/do not run output executable"
-msgstr "eseguire/non eseguire l'eseguibile finale"
+msgstr "eseguire/non eseguire l'eseguibile prodotto"
 
 #, c-format
 msgid "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
@@ -731,12 +751,16 @@ msgid "long help in text viewer"
 msgstr "Help esteso nel visualizzatore di testo"
 
 #, c-format
+msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
+msgstr "sovrascrive la C compiler autodetection\nSpecial value:\n- bld: use original build settings (default on *nix)"
+
+#, c-format
 msgid "override default language. <lang> is an ISO language code."
-msgstr "ignora il linguaggio predefinito. <lang> è un linguaggio ISO."
+msgstr "ignora la lingua predefinita. <lang> è un codice ISO di lingua."
 
 #, c-format
 msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
-msgstr "ignora la CPU predefinita di destinazione (predevinito: automatico) (SPERIMENTALE)"
+msgstr "ignora la CPU predefinita di destinazione (predefinito: automatico) (SPERIMENTALE)"
 
 #, c-format
 msgid "set output width to <n> characters (0=unlimited)."
@@ -752,7 +776,7 @@ msgstr "esecuzione fermata dopo l'esecuzione del compilatore Harbour"
 
 #, c-format
 msgid "unregister Harbour Script (.hb) from %1$s (Windows only)"
-msgstr "Script Harbour (.hb) non registrato da %1$s (solo Windows)"
+msgstr "elimina la registrazione dello Script Harbour (.hb) da %1$s (solo Windows)"
 
 #, c-format
 msgid "enable script debugging"
@@ -780,15 +804,15 @@ msgstr "modo %1$s (emulazione linker di Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper compiler)"
-msgstr "modo %1$s (emulazione compilatore Clipper)"
+msgstr "modalità %1$s (emulazione compilatore Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper linker)"
-msgstr "modo %1$s (emulazione linker di Clipper)"
+msgstr "modalità %1$s (emulazione linker di Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Harbour compiler producing a binary object)"
-msgstr "modo %1$s (emula il compilatore Harbour producendo un oggetto binario)"
+msgstr "modalità %1$s (emula il compilatore Harbour producendo un oggetto binario)"
 
 #, c-format
 msgid "option %1$s"
@@ -940,7 +964,7 @@ msgstr "cartella dei file binari Harbour"
 
 #, c-format
 msgid "Harbour dynamic library directory"
-msgstr "Cartella di Harbour della libreria dinamica"
+msgstr "Cartella della libreria dinamica di Harbour"
 
 #, c-format
 msgid "Harbour header directory"
@@ -968,7 +992,7 @@ msgstr "Revisione di Harbour"
 
 #, c-format
 msgid "Harbour static library directory"
-msgstr "Cartella di Harbour della libreria statica"
+msgstr "Cartella della libreria statica di Harbour"
 
 #, c-format
 msgid "Harbour version in human readable format <major>.<minor>.<release><status>. F.e.: %1$s"
@@ -996,7 +1020,7 @@ msgstr "Directory di sistema per i files temporanei"
 
 #, c-format
 msgid "returns '1' if Harbour host platform is *nix compatible"
-msgstr "ritorna \"1\" se la piattaforma host Harbour è *nix compatibile"
+msgstr "ritorna '1' se la piattaforma host Harbour è *nix compatibile"
 
 #, c-format
 msgid "returns the header directory of dependency <depname>, or '1' if it is not detected"
@@ -1040,7 +1064,7 @@ msgstr "è abilitato il debug a livello C (vedi l'opzione -debug)"
 
 #, c-format
 msgid "filter will pass if <file> or <dir> name exists on disk."
-msgstr "il filtro passerà se il nome <file> o <dir> esistono sul disco."
+msgstr "il filtro sarà soddisfatto se il esiste il nome <file> o <dir> sul disco."
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is larger than <value> (case insensitive)."
@@ -1048,7 +1072,7 @@ msgstr "il filtro passerà se il valore ${MACRO} è più grande di <value> (igno
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
-msgstr "verrà soddisfatto il filtro se il ${MACRO} è valorizzato e diverso da '0' or 'no' (ignora maiuscole e minuscole)"
+msgstr "verrà soddisfatto il filtro se ${MACRO} è valorizzato e diverso da '0' or 'no' (ignora maiuscole e minuscole)"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
@@ -1120,7 +1144,7 @@ msgstr "Modalità ANSI Windows (vedere l'opzione -winuni-)"
 
 #, c-format
 msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
-msgstr "Modo Windows UNICODE (WIDE) (vedere l'opzione -winuni)"
+msgstr "Modalità Windows UNICODE (WIDE) (vedere l'opzione -winuni)"
 
 #, c-format
 msgid "xhb mode (see -xhb option)"
@@ -1128,7 +1152,7 @@ msgstr "modalità xhb (vedi l'opzione -xhb)"
 
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
-msgstr ".hbc direttive (essi dovrebbero essere scritte in righe separate):"
+msgstr "direttive .hbc (dovrebbero essere scritte in righe separate):"
 
 #, c-format
 msgid "'yes' = %1$s, 'no' = %2$s option"
@@ -1152,7 +1176,7 @@ msgstr "aggiunge una lista di strutture separate da spazio (solo Darwin)"
 
 #, c-format
 msgid "add space separated list of libraries (see more at -l option)"
-msgstr "Aggiungi un elenco di librerie, separate da uno spazio (più informazioni con l'opzione -l)"
+msgstr "Aggiungi un elenco di librerie, separate da uno spazio (vedi l'opzione -l per maggiori informazioni)"
 
 #, c-format
 msgid "add space separated list of libraries as system libraries (before regular libraries)"

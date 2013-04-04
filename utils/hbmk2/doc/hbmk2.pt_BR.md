@@ -10,18 +10,17 @@ Sintaxe:
 Descrições:  
 
 
-  hbmk2 é um sistema integrado e portável de ferramentas de construção, tornando possível a criação de vários tipos de executáveis binários \(executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour\) a partir de vários tipo de arquivos de fontes \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' significa que uma única arquivo de projeto hbmk2 pode controlar tudo ou a maioria dos aspectos do processo de construção\. 'Portable' significa que um único arquivo de projeto hbmk2 pode controlar a construção em todas as plataformas suportadas de sistema operacional e em todos os compiladores C suportados\. Ele também pretende cobrir a maioria das tarefas de construção por meio de arquivos \(opções\) de projetos curtos e simples\. hbmk2 suporta bem projetos puros \-non\-Harbour \- C/C\+\+/Objective\-C\.De modo a atingir metas acima referidas, hbmk2 auto\-detectará Harbour, compilador C e outras ferramentas requeridas,  
-então configura\-rá e os chama\-rá de forma adequada\. hbmk2 permite ampliar os tipos de arquivos de origem suportados através de plugins\. Além de construir executáveis, hbmk2 é capaz de executar diretamente Harbour scripts \(ambos Fonte e pré\-compilado\), e dispõe também de um prompt shell interativo\.
+  hbmk2 é um sistema integrado e portável de ferramentas de construção, tornando possível a criação de vários tipos de executáveis binários \(executáveis, bibliotecas dinâmicas, bibliotecas estáticas, binários portáveis Harbour\) a partir de vários tipo de arquivos de fontes \(C, C\+\+, Objective\-C, Harbour, tradutores "gettext", Windows "resources"\)\. 'Integrado' significa que em um único arquivo de projeto hbmk2 pode\-se controlar tudo ou a maioria dos aspectos do processo de construção\. 'Portável' significa que um único arquivo de projeto hbmk2 pode\-se controlar a construção do executável para todas as plataformas de sistema operacional suportadas através dos compiladores C suportados\. Ele também pretende cobrir a maioria das tarefas da construção e geração por meio de \(opções\) de arquivos de projetos curtos e simples\. hbmk2 suporta bem projetos "não Harbour" C/C\+\+/Objective\-C\. Para a atingir as metas referidas, hbmk2 detectará automaticamente o Harbour, compilador C e demais ferramentas requeridas, configura\-rá e as chama\-rá de forma adequada\. hbmk2 permite ampliar os tipos de arquivos fontes suportados através de plugins\. Além de construir executáveis, hbmk2 é capaz de executar diretamente scripts em Harbour \(ambos fonte e pré\-compilado\), e dispõe também de um interpretador de comandos interativo "interactive shell prompt\."\.
   
 Opções  
 
 
- - **\-o&lt;outname&gt;** nome de arquivo de saída
- - **\-l&lt;libname&gt;** linkar com a biblioteca &lt;libname&gt;\. &lt;libname&gt; deve estar sem path, extensão e prefixo 'lib' \(menos a parte do nome\)\. Não adicione bibliotecas do núcleo Harbour, elas são automaticamente inseridas quando necessário\. Se &lt;libname&gt; inicializar com um caracter '\-', a biblioteca será removida da lista de bibiotecas na hora de linkar\.
- - **\-L&lt;libpath&gt;** path adicional para pesquisar por bibliotecas
- - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** paths adicionais para pesquisa de arquivos headers
+ - **\-o&lt;outname&gt;** nome do arquivo de saída
+ - **\-l&lt;libname&gt;** linkar com a biblioteca &lt;libname&gt;\. &lt;libname&gt; deve estar sem o "path", sem a extensão e sem o prefixo "lib" \(a não ser que faça a parte do nome\)\. Não adicione bibliotecas do núcleo Harbour, elas serão inseridas automaticamente quando necessário\. Se &lt;libname&gt; começar com um carácter '\-', a biblioteca será removida da lista de bibliotecas na hora de linkar\.
+ - **\-L&lt;libpath&gt;** "path" adicional para pesquisa por bibliotecas
+ - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** "paths" adicionais para pesquisa de arquivos de cabeçalho "headers"
  - **\-static|\-shared** linkar com biliotecas estáticas/compartilhadas
- - **\-gt&lt;name&gt;** linkar com GT&lt;name&gt; GT driver, a linkagem pode ser repetido com mais GTs\. O primeiro será o GT padrão na execuçao do programa
+ - **\-gt&lt;name&gt;** linkar com GT&lt;name&gt; controlador de terminal gráfico "GT ", a linkagem pode ser repetida com mais GTs\. O primeiro será o GT padrão na execução do programa\.
  - **\-inc\[\-\]** habilita/desabilitar o modo de compilação incremental \(padrão: desbilitado\)
  - **\-hbexe** criar um executável \(padrão\)
  - **\-hblib** criar biblioteca estática

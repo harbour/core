@@ -1,4 +1,4 @@
-/* Last Translator: oscarhdezsz (oscar.hernandez.suarez gmail.com) */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 
