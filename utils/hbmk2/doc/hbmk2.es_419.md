@@ -238,7 +238,7 @@ Archivos:
 
  - **\*\.hbp** archivo de proyecto\. Puede contener cualquier número de opciones de línea de comandos, que deben generar una salida\. Las líneas que comienzan con "\#" son ignoradas, de otra manera, una nueva línea es opcional y las opciones están separadas por espacio, tal como en la línea de comandos\. Se deben encomillar las opciones que contengan espacios\. Cada referencia a un archivo \.hbp será ejecutada como un sub\-proyecto\.
  - **\*\.hbm** Conjunto de opciones\. Puede ser usado para agrupar opciones comunes dentro de un archivo e incluirlo entre los archivos del projecto\. Utiliza el mismo formato que los archivos \.hbp\.
- - **\*\.hbc** colección de opciones que acompañan a los componentes \(conocidos como 'bibliotecas' o paquetes\)\. Usa una sintaxis diferente a la línea de comandos y a archivos \.hbp/\.hbm\. Las líneas que comienzan con "\#" son ignoradas\. Cada directiva debe ser ubicada en líneas separadas\.
+ - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** si se envía como archivo fuente, será usado como cabecera estándar adicional
  - **hbmk\.hbc** archivo \.hbc estandar que es automáticamente procesado, si existe\. Ubicación\(es\) posibles \(en orden de precedencia\) v \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **hbmk\.hbm** archivo \.hbm opcional ubicado en el directorio de trabajo actual, que es automáticamente procesado antes que otras opciones
@@ -444,6 +444,7 @@ directivas \.hbc \(deben ser escritas en líneas separadas\):
  - **depincpathlocal=** igual que la opción \-depincpathlocal=
  - **depimplibs=** igual que la opción \-depimplibs=
  - **depimplibd=** igual que la opción \-depimplibd=
+ - **depfinish=** igual que la opción \-depfinish=
  - **name=** Nombre de paquete
  - **description=** descripción del paquete
  - **version=&lt;x\.y\.z&gt;** número de versión del paquete, donde x,y,z &gt;= 0 &lt;= 255\. Por defecto 0\.0\.1, si no es especificado\.

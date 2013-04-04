@@ -237,7 +237,7 @@ Files:
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
  - **\*\.hbm** insieme di opzioni\. Può essere utilizzata per raccoglierle in un file ed includerle nei files di progetto\. Esso usa lo stesso formato \.hbp\.
- - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
+ - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** se passato direttamente come file sorgente, esso sarà utilizzato come intestazione standard addizionale
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 cartella&gt;
  - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
@@ -443,6 +443,7 @@ Variabili d'ambiente:
  - **depincpathlocal=** come l'opzione \-depincpathlocal=
  - **depimplibs=** come l'opzione \-depimplibs=
  - **depimplibd=** come l'opzione \-depimplibd=
+ - **depfinish=** come l'opzione \-depfinish=
  - **name=** Nome del pacchetto
  - **description=** descrizione del pacchetto
  - **version=&lt;x\.y\.z&gt;** numero di versione del pacchetto, dove x, y, z &gt;=0 &lt;=255\. Il valore predefinito è 0\.0\.1, se non specificato\.

@@ -241,7 +241,7 @@ Arquivos:
 
  - **\*\.hbp** arquivo de projeto\. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída\. As linhas que começam com caracter '\#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando\. Você deve colocar a opção contendo espaço entre aspas duplas\. Cada referência de arquivo \.hbp será executado como um sub\-projeto\.
  - **\*\.hbm** coleção de opções\. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto\.Usar o mesmo formata dos arquivos \.hbp\.
- - **\*\.hbc** conjunto de opções que acompanham os componentes \(também conhecidos como 'libs', pacotes\)\. Usam diferentes sintaxes de linha de comado "command\-line" e arquivos \.hbp/\.hbm\. As linhas começam com o caracter '\#' serão ignoradas, cada diretiva deve ser colocada em linhas separadas\.
+ - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** se passado diretamente como um arquivo de origem, ele será utilizada como padrão cabeçalho adicional
  - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
@@ -447,6 +447,7 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **depincpathlocal=** mesmo que \-depincpathlocal= opções
  - **depimplibs=** mesmo que \-depimplibs= opções
  - **depimplibd=** mesmo que \-depimplibd= opções
+ - **depfinish=** mesmo que \-depfinish= opções
  - **name=** Nome do Pacote
  - **description=** descrição do pacote
  - **version=&lt;x\.y\.z&gt;** número da versão do pacote, onde x,y,z &gt;= 0 &lt;= 255\. O padrão é 0\.0\.1, se não especificado\.

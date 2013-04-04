@@ -238,7 +238,7 @@ Ficheros:
 
  - **\*\.hbp** archivo de proyecto\. Puede contener cualquier número de opciones de la linea de comandos, que son los esperados para crear un objetivo final\. La lineas que comienzan con el carácter "\#" son ignoradas, por otra parte es opcional incluir caracteres de nueva linea y las opciones deben de estar separadas por espacios, como en la linea de comandos\. Las opciones que contienen espacios deben encerrarse entre comillas dobles\. Cada referencia a un archivo '\.hbp' será ejecutado como un sub\-proyecto\.
  - **\*\.hbm** colección de opciones\. Puede ser utilizada para recoger opciones por defecto en un archivo e incluirlo dentro de un archivo de proyecto\. Utiliza el mismo formato que los archivos \.hbp\.
- - **\*\.hbc** colección de opciones que acompañan a los componentes \(conocidos como 'bibliotecas' o paquetes\)\. Usa una sintaxis diferente a la línea de comandos y a archivos '\.hbp'/'\.hbm'\. Las líneas que comienzan con "\#" son ignoradas\. Cada directiva debe ser ubicada en líneas separadas\.
+ - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** si se pasa directamente como un archivo fuente, se utilizará como una cabecera estándar adicional
  - **hbmk\.hbc** archivo \.hbc estandar que es procesado automáticamente si está presente\. Posible\(s\) localizacion\(es\) \(en orden de preferencia\) \[\*\]: %APPDATA%\\\.harbour, &lt;directorio de hbmk2&gt;
  - **hbmk\.hbm** archivo \.hbm situado en el directorio de trabajo actual, que es procesado automáticamente antes que otras opciones
@@ -444,6 +444,7 @@ Directivas \.hbc \(tienen que ser escritas en líneas separadas\):
  - **depincpathlocal=** el mismo que la opción \-depincpathlocal=
  - **depimplibs=** el mismo que la opción \-depimplibs=
  - **depimplibd=** el mismo que la opción \-depimplibd=
+ - **depfinish=** el mismo que la opción \-depfinish=
  - **name=** nombre del paquete
  - **description=** descripción del paquete
  - **version=&lt;x\.y\.z&gt;** número de versión del paquete, donde x\.y\.z &gt;= 0 &lt;= 255\. Si no se especifica se usa el valor por defecto '0\.0\.1'\.
