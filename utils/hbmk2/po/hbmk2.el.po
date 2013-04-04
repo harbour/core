@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-02 17:16+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 06:40+0000\nLast-Translator: Pete_wg <pete_westg@yahoo.gr>\nLanguage-Team: Greek (http://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -565,6 +565,10 @@ msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρ�
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)"
 msgstr "Προειδοποίηση: Γίνεται παράβλεψη του ρητά καθορισμένου κατάλογου βασικών header: %1$s (στη ντιρεκτίβα %2$s)"
+
+#, c-format
+msgid "Warning: Unknown directive: %1$s"
+msgstr "Προειδοποίηση: Αγνωστη ντιρεκτίβα: %1$s"
 
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
@@ -1388,7 +1392,7 @@ msgstr "υπερισχύει έναντι της προεπιλεγμένης CP
 
 #, c-format
 msgid "override default target platform (default: automatic)"
-msgstr "παραμερισμός προεπιλεγμένης πλατφόρμας-στόχου (προεπιλογή: αυτομάτως)"
+msgstr "επικάλυψη προεπιλεγμένης πλατφόρμας-έργου (προεπιλογή: αυτομάτως)"
 
 #, c-format
 msgid "register Harbour Script (.hb) with %1$s (Windows only)"
@@ -1587,8 +1591,8 @@ msgid "Files:"
 msgstr "Αρχεία:"
 
 #, c-format
-msgid "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines."
-msgstr "συλλογή από επιλογές που σθνοδεύουν collection of options that accompany συστατικά στοιχεία (γνωστά και ως 'libs', γνωστά και ως packages). Χρήσιμοποιείται διαφορετική σύνταξη απο αυτήν της γραμμής-εντολών και των αρχείων .hbp/.hbm. Γραμμές που αρχίζουν με το χαρακτήρα '#' αγνοούνται, κάθε ντιρεκτίβα πρέπει να τοποθετείται σε ξεχωριστή γραμμή."
+msgid "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate line."
+msgstr "συλλογή από επιλογές που συνοδεύουν συστατικά στοιχεία (γνωστά και ως 'βιβλιοθήκες', γνωστά και ως πακέτα). γίνεται χρήση διαφορετικής σύνταξης απο αυτήν της γραμμής-εντολών και των αρχείων .hbp/.hbm. Γραμμές που αρχίζουν με το χαρακτήρα '#' αγνοούνται, κάθε ντιρεκτίβα πρέπει να τοποθετείται σε ξεχωριστή γραμμή."
 
 #, c-format
 msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
@@ -2115,6 +2119,10 @@ msgid "Unload package."
 msgstr "Αποφόρτωση πακέτου"
 
 #, c-format
+msgid "Plugin API:\n('hbmk' is the context variable received by the plugin entry function)"
+msgstr "Plugin API:\n(η 'hbmk' είναι η μεταβλητή περιβάλλοντος που λαμβάνεται από τη συνάρτηση εισόδου του plugin)"
+
+#, c-format
 msgid "Add a binary object file to the project."
 msgstr "Προσθήκη ενός δυαδικού object αρχείου στο έργο."
 
@@ -2200,7 +2208,7 @@ msgstr "Αφαίρεση των διπλών εισαγωγικών εγκλει
 
 #, c-format
 msgid "Plugin variables:\n('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)"
-msgstr "Μεταβλητές Plugin:\n('hbmk' context hash items, case-sensitive, read-only unless marked otherwise)"
+msgstr "Μεταβλητές Plugin:\n(στοιχεία hash συναφή με 'hbmk', ευαίσθητα σε πεζά-κεφαλαία, μόνο-για ανάγνωση, εκτός κι αν σημειώνεται κάτι άλλο)"
 
 #, c-format
 msgid "%1$s option status"

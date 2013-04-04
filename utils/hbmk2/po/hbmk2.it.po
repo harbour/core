@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 09:05+0000\nLast-Translator: calimero22 <calimero22@yahoo.it>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 12:26+0000\nLast-Translator: marcobra <marcobra.ubuntu@gmail.com>\nLanguage-Team: Italian (http://www.transifex.com/projects/p/harbour/language/it/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: it\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -351,6 +351,10 @@ msgid "Error: %1$s"
 msgstr "Errore: %1$s"
 
 #, c-format
+msgid "Found OMF .lib with the same name, falling back to using it instead of the .dll."
+msgstr "E' stata trovata una libreria OMF con lo stesso nome, verrà utilizzata questa al posto della .dll."
+
+#, c-format
 msgid "No matches"
 msgstr "Nessuna corrispondenza"
 
@@ -433,6 +437,10 @@ msgstr "Caricamento in corso del progetto hbmake: %1$s"
 #, c-format
 msgid "Saving as .hbp file: %1$s"
 msgstr "Memorizzazione come file .hbp %1$s"
+
+#, c-format
+msgid "Loading xhp (xMate) project file: %1$s"
+msgstr "Caricamento file di progetto xhp (xMate): %1$s"
 
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
@@ -747,6 +755,10 @@ msgid "unregister Harbour Script (.hb) from %1$s (Windows only)"
 msgstr "Script Harbour (.hb) non registrato da %1$s (solo Windows)"
 
 #, c-format
+msgid "enable script debugging"
+msgstr "abilita lo script debugging"
+
+#, c-format
 msgid "this help"
 msgstr "questo aiuto"
 
@@ -789,6 +801,10 @@ msgstr "Codice di uscita (\"errorlevels\"):"
 #, c-format
 msgid "<other>"
 msgstr "<altro>"
+
+#, c-format
+msgid "when -run option is used, the exit code will be the one returned by the target executable"
+msgstr "quando è utilizzata l'opzione -run, il codice di uscita sarà quello riportato dall'eseguibile"
 
 #, c-format
 msgid "Environment variables:"
@@ -975,6 +991,10 @@ msgid "name of the project (without directory and extension). Returns %1$s if th
 msgstr "nome del progetto (senza nome cartella ed estensione). Ritorna %1$s se non c'è il file di progetto."
 
 #, c-format
+msgid "OS directory for temporary files"
+msgstr "Directory di sistema per i files temporanei"
+
+#, c-format
 msgid "returns '1' if Harbour host platform is *nix compatible"
 msgstr "ritorna \"1\" se la piattaforma host Harbour è *nix compatibile"
 
@@ -1025,6 +1045,10 @@ msgstr "il filtro passerà se il nome <file> o <dir> esistono sul disco."
 #, c-format
 msgid "filter will pass if ${MACRO} value is larger than <value> (case insensitive)."
 msgstr "il filtro passerà se il valore ${MACRO} è più grande di <value> (ignora maiuscole e minuscole)."
+
+#, c-format
+msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
+msgstr "verrà soddisfatto il filtro se il ${MACRO} è valorizzato e diverso da '0' or 'no' (ignora maiuscole e minuscole)"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
@@ -1231,6 +1255,10 @@ msgid "when <depname> dependency was detected in a location configured by -depin
 msgstr "quando la dipendenza <depname> è stata rilevata nella locazione configurata da -depincpathlocal= opzione"
 
 #, c-format
+msgid "Shell API available in Harbour scripts:"
+msgstr "Shell API disponibile negli Harbour scripts:"
+
+#, c-format
 msgid "Display list of loaded Harbour header."
 msgstr "Visualizza l'elenco di intestazione di Harbour caricato."
 
@@ -1361,6 +1389,10 @@ msgstr "se esistente, lo script make %1$s nella cartella corrente è sempre proc
 #, c-format
 msgid "Defaults and feature support may vary by platform/compiler."
 msgstr "Comportamenti predefiniti e caratteristiche potrebbero essere differenti in altre piattaforme/compilatori."
+
+#, c-format
+msgid "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s."
+msgstr "Per eseguire %1$s non sono richiesti né GNU Make, o qualsiasi altro strumento make specifico per il compilatore C, né MSYS (in Windows)."
 
 #, c-format
 msgid "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used."

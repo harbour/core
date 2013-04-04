@@ -43,7 +43,7 @@ Options:
  - **\-map\[\-\]** create \(or not\) a map file
  - **\-implib\[\-\]** Crear \(ou non\) a biblioteca de imporación \(en modo \-hbdyn/\-hbexe\)\. Engadirase un sufixo ao nome\.
  - **\-implib=&lt;output&gt;** crear nome de biblioteca de importación \(en modo \-hbdyn/\-hbexe\) para a saída a &lt;output&gt; \(predeterminado: o mesmo que a saída\)
- - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
+ - **\-ln=&lt;link&gt;** crear enlace simbólico para &lt;output&gt; \(&lt;link&gt; considérase relativo a &lt;output&gt;\)
  - **\-strip\[\-\]** strip \(no strip\) binaries
  - **\-trace\[\-\]** show commands executed
  - **\-beep\[\-\]** enable \(or disable\) single beep on successful exit, double beep on failure
@@ -94,7 +94,7 @@ Options:
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
  - **\-ldflag\+=&lt;f&gt;** pass single raw option to linker \(executable\) after the library list\. Use with caution\.
  - **\-dflag\+=&lt;f&gt;** pasar a opción tal cuál ao enlazador \(biblioteca dinámica\), tra\-la lista de bibliotecas\. Usar con precaución\.
- - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
+ - **\-3rd=&lt;f&gt;** opcións/parámetros reservados para ferramentas externas, ignoradas sempre por hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
  - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\)
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
@@ -124,13 +124,13 @@ Options:
 
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; is the name of the dependency\. &lt;n&gt; name of the package dependency\. Can be specified multiple times\.
  - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; is the name of the dependency\. &lt;h&gt; is the key header \(\.h\) of the package dependency\. Multiple alternative headers can be specified\.
- - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; is the name of the dependency\. &lt;f&gt; can be 'yes' or 'no', specifies whether the dependency is optional\. Default: no
+ - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; é o nome da dependencia\. &lt;f&gt; pose ser 'yes' ou 'no' e indica se a dependencia é opcional\. Predeterminado: 'no'
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; is the name of the dependency\. &lt;v&gt; is a value that controls how detection is done\. Accepted values: no, yes, force, nolocal, local\. Default: content of environment variable HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; is the name of the dependency\. Set &lt;r&gt; as root directory for paths specified in \-depincpath options\.
- - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list\.
+ - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; é o nome da dependencia\. Engada &lt;i&gt; á lista de rutas de busca de arquivos de cabeceira\.
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list, where &lt;i&gt; is pointing to a directory local to the project and containing an embedded \(aka\. 'locally hosted'\) dependency\.
- - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;dll&gt; to the import library source list\.
- - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; is the name of the dependency\. Set generated import library name to &lt;lib&gt;
+ - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; é o nome da dependencia\. Engada &lt;dll&gt; á lista de arquivos de bibliotecas de importación\.
+ - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; é o nome de dependencia\. Establecer o nome da biblioteca de importación xenerada a &lt;lib&gt;
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; is the name of the dependency\. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly\. Optional, if omitted, detection will take place after processing all options\.
 
 
@@ -163,7 +163,7 @@ create link/copy hbmk2 to hbcc for the same effect
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
- - **\-hbreg\[=global\]** register Harbour Script \(\.hb\) with hbmk2 \(Windows only\)
+ - **\-hbreg\[=global\]** registrar Harbour Script \(\.hb\) con hbmk2 \(Só Windows\)
  - **\-hbunreg\[=global\]** unregister Harbour Script \(\.hb\) from hbmk2 \(Windows only\)
 
 
@@ -217,7 +217,7 @@ Pode engadir un enlace simbólico/copia/renomear hbmk2 a os seguintes nomes para
  - **hbrun\*|\*hbrun** modo secuencia de comandos / consola interactiva
  - **hbrund|hbrun\*d** Modo secuencia de comandos / consola interactiva en modo depuración
  - **harbour** mode \-hbraw \(emulate \- raw \- Harbour compiler\)
- - **clipper** mode \-hbcmp \(emulate Clipper compiler\)
+ - **clipper** mode \-hbcmp \(emulación do compilador Clipper\)
  - **rtlink** Modo \-rtlink \(emular enlazador Clipper\)
  - **exospace** Modo \-rtlink \(emular enlazador Clipper\)
  - **blinker** Modo \-rtlink \(emular enlazador Clipper\)
@@ -240,7 +240,7 @@ Arquivos:
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
  - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
- - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
+ - **hbmk\.hbm** arquivo opcional \.hbm no directorio de traballo actual, que é automaticamente procesado antes de outras opcións
  - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
  - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
@@ -655,7 +655,7 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
 
 
   - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Pose usar &lt;Alt\+V&gt; no modo de consola interactiva de Harbour para pegar texto dende o portapapeis\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 
 

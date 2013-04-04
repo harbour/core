@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-03 17:20+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 12:25+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -31,8 +31,20 @@ msgid "Using C compiler: %1$s [%2$s...%3$s]"
 msgstr "Usando compilador C: %1$s [%2$s...%3$s]"
 
 #, c-format
+msgid "Found project reference on library search path: %1$s"
+msgstr "Atopada referencia ao proxecto na ruta de búsqueda de bibliotecas: %1$s"
+
+#, c-format
+msgid "Warning: Ignored option valid only on command-line: %1$s"
+msgstr "Aviso: Ignorada a opción só válida en liña de comando: %1$s"
+
+#, c-format
 msgid "Warning: Ignored unsupported codepage value: %1$s"
 msgstr "Aviso: ignorouse o valor de código de páxina non soportado: %1$s"
+
+#, c-format
+msgid "Warning: Option available only when using embedded Harbour compiler: %1$s"
+msgstr "Aviso: Opción dispoñible só ao usar compilación integrada de Harbour: %1$s"
 
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
@@ -53,6 +65,10 @@ msgstr "Aviso: Non se atopa %1$s (referenciado dende %2$s)"
 #, c-format
 msgid "Warning: No source files were specified."
 msgstr "Aviso: Non se especificaron arquivos fonte."
+
+#, c-format
+msgid "Error: Temporary Working directory cannot be created: %1$s"
+msgstr "Erro: O directorio de traballo temporal no pode ser creado: %1$s"
 
 #, c-format
 msgid "Triggered by #require directive: %1$s"
@@ -115,12 +131,20 @@ msgid "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line
 msgstr "Aviso: Uso inútil das opcións %1$s e %2$s xuntas en '%3$s' liña %4$d e %5$d."
 
 #, c-format
+msgid "Warning: Pointless usage of %1$s and %2$s options together on command-line."
+msgstr "Aviso: Non ten senso o uso das opcións %1$s e %2$s xuntas na liña de comandos."
+
+#, c-format
 msgid "Warning: Ignored invalid option value in: %1$s"
 msgstr "Aviso: Opción non válida ignorada en: %1$s"
 
 #, c-format
 msgid "Warning: Dangerous low-level option not recommended: %1$s"
 msgstr "Aviso: Opción perigosa de baixo nivel non se recomenda: %1$s"
+
+#, c-format
+msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
+msgstr "Aviso: Ignorando bibliotecas estándar especificadas: %1$s (na opción %2$s)"
 
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
@@ -137,6 +161,14 @@ msgstr "Aviso: Non se atoparon bibliotecas de importación."
 #, c-format
 msgid "Warning: No import library source was specified"
 msgstr "Aviso: Non se especificou ningunha biblioteca de importación"
+
+#, c-format
+msgid "Error: Creating import libraries is not supported for this platform or compiler."
+msgstr "Erro: Esta plataforma ou compilador non soporta a creaciación de bibliotecas de importación."
+
+#, c-format
+msgid "Warning: Install path not a directory (%1$s). Extra install files not copied."
+msgstr "Aviso: A ruta de instalación non é un directorio (%1$s). Arquivos extra de instalación non serán copiados."
 
 #, c-format
 msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
@@ -191,12 +223,28 @@ msgid "<%1$s directory>"
 msgstr "<directorio %1$s>"
 
 #, c-format
+msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)"
+msgstr "Aviso: Ignorouse o directorio especificado para as bibliotecas de núcleo: %1$s (en directiva %2$s)"
+
+#, c-format
+msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)"
+msgstr "Aviso: Ignorouse o directorio especificado para os arquivos de cabeceira estándar: %1$s (en directiva %2$s)"
+
+#, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
 msgstr "Aviso: Referencia ao proxecto (%1$s) ignorada. Arquivo non atopado."
 
 #, c-format
 msgid "Warning: Error in filter expression: '%1$s'"
 msgstr "Aviso: Erro na expresión do filtro: '%1$s'"
+
+#, c-format
+msgid "Found COFF .lib with the same name, falling back to using it instead of the .dll."
+msgstr "Atopado arquivo de biblioteca .lib en formato COFF co mesmo nome, usarase en vez do arquivo .dll."
+
+#, c-format
+msgid "Found .def file with the same name, falling back to using it instead of the .dll."
+msgstr "Atopado arquivo de definición .def co mesmo nome, usarase en vez do arquivo .dll."
 
 #, c-format
 msgid "No matches"
@@ -213,6 +261,14 @@ msgstr "(non instalado)"
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"
 msgstr "Sugerencia: Engada a opción '%1$s' para as funcións que faltan: %2$s"
+
+#, c-format
+msgid "Hint: Install package %3$s and add option '%1$s' for missing function(s): %2$s"
+msgstr "Consello: Instale o paquete %3$s e use a opción '%1$s' para as funcións non atopadas: %2$s"
+
+#, c-format
+msgid "Error: Referenced, missing, but unknown function(s): %1$s"
+msgstr "Error: Funcións referenciadas e non atopadas ou faltantes: %1$s"
 
 #, c-format
 msgid "Harbour core"
@@ -303,6 +359,22 @@ msgid "create executable (default)"
 msgstr "Crear executable (predeterminado)"
 
 #, c-format
+msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
+msgstr "<d> é o nome da dependencia. <f> pose ser 'yes' ou 'no' e indica se a dependencia é opcional. Predeterminado: 'no'"
+
+#, c-format
+msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
+msgstr "<d> é o nome da dependencia. Engada <dll> á lista de arquivos de bibliotecas de importación."
+
+#, c-format
+msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
+msgstr "<d> é o nome da dependencia. Engada <i> á lista de rutas de busca de arquivos de cabeceira."
+
+#, c-format
+msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
+msgstr "<d> é o nome de dependencia. Establecer o nome da biblioteca de importación xenerada a <lib>"
+
+#, c-format
 msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
 msgstr "Crear (ou non) a biblioteca de imporación (en modo -hbdyn/-hbexe). Engadirase un sufixo ao nome."
 
@@ -313,6 +385,10 @@ msgstr "crear nome de biblioteca de importación (en modo -hbdyn/-hbexe) para a 
 #, c-format
 msgid "create import library (Windows only)"
 msgstr "Crear biblioteca de importación (só Windows)"
+
+#, c-format
+msgid "create symbolic link pointing to <output> (<link> is considered relative to <output>)"
+msgstr "crear enlace simbólico para <output> (<link> considérase relativo a <output>)"
 
 #, c-format
 msgid "do not link default GTs (effective in -static mode)"
@@ -329,6 +405,10 @@ msgstr "Incrustar arquivo de manifesto <file> en executable/biblioteca dinámica
 #, c-format
 msgid "force function/procedure to be linked"
 msgstr "Forzar enlazado de función/procedemento"
+
+#, c-format
+msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
+msgstr "opcións/parámetros reservados para ferramentas externas, ignoradas sempre por %1$s"
 
 #, c-format
 msgid "pass input file to plugins"
@@ -379,6 +459,10 @@ msgid "Harbour compiler credits"
 msgstr "Créditos do compilador Harbour"
 
 #, c-format
+msgid "register Harbour Script (.hb) with %1$s (Windows only)"
+msgstr "registrar Harbour Script (.hb) con %1$s (Só Windows)"
+
+#, c-format
 msgid "set output width to <n> characters (0=unlimited)."
 msgstr "Fixar ancho da saída a <n> caracteres (0=ilimitado)."
 
@@ -389,6 +473,10 @@ msgstr "Deter despois de executar o compilador Harbour"
 #, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
 msgstr "Pode engadir un enlace simbólico/copia/renomear %1$s a os seguintes nomes para alterar o modo predeterminado de operación:"
+
+#, c-format
+msgid "mode %1$s (emulate Clipper compiler)"
+msgstr "mode %1$s (emulación do compilador Clipper)"
 
 #, c-format
 msgid "mode %1$s (emulate Clipper linker)"
@@ -421,6 +509,10 @@ msgstr "opcións para o compilador Harbour (antes das opcións de liña de coman
 #, c-format
 msgid "Files:"
 msgstr "Arquivos:"
+
+#, c-format
+msgid "optional .hbm file residing in current working directory, which gets automatically processed before other options"
+msgstr "arquivo opcional .hbm no directorio de traballo actual, que é automaticamente procesado antes de outras opcións"
 
 #, c-format
 msgid "Harbour dynamic library directory"
@@ -531,8 +623,16 @@ msgid "GNU Make or any C compiler specific make tool and MSYS (on Windows) are n
 msgstr "Non se necesita GNU Make, ningunha ferramenta de tipo make específica do compilador C, nin MSYS (en Windows) para executar %1$s."
 
 #, c-format
+msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
+msgstr "Pose usar <Alt+V> no modo de consola interactiva de Harbour para pegar texto dende o portapapeis."
+
+#, c-format
 msgid "Description:"
 msgstr "Descripción:"
+
+#, c-format
+msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."
+msgstr "%1$s é quen de executar guións de Harbour (arquivos fontes ou precompilados), e dispón de unha consola de comandos interactiva."
 
 #, c-format
 msgid "Author:"

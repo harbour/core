@@ -60,9 +60,9 @@ Descarga la cabecera de Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Muestra la lista de cabeceras de Harbour cargadas\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Carga el paquete\. Similar a la directiva de preprocesado \#request\.
+Carga el paquete en memoria\. Similar a la directiva de preprocesado \#request\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-Descarga paquete\.
+Descarga el paquete de la memoria\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista de paquetes cargados\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  

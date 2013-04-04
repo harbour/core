@@ -10,7 +10,7 @@ Syntax:
 Descripción:  
 
 
-  hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
+  hbrun é quen de executar guións de Harbour \(arquivos fontes ou precompilados\), e dispón de unha consola de comandos interactiva\.
   
 As seguintes opcións están dispoñibles na liña de comandos:  
 
@@ -73,7 +73,7 @@ Notes:
 
 
   - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - You can use key &lt;Alt\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Pose usar &lt;Alt\+V&gt; no modo de consola interactiva de Harbour para pegar texto dende o portapapeis\.
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
   
 License:  

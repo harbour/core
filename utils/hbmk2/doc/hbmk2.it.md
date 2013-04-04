@@ -261,7 +261,7 @@ Variabili macro:
  - **$\{hb\_name\}** nome del file in uso \(senza cartella ed estensione\)
  - **$\{hb\_self\}** nome completo del file utilizzato
  - **$\{hb\_curdir\}** attuale cartella di lavoro
- - **$\{hb\_tempdir\}** OS directory for temporary files
+ - **$\{hb\_tempdir\}** Directory di sistema per i files temporanei
  - **$\{hb\_targetname\}** nome del progetto \(senza nome cartella ed estensione\)\. Ritorna \.adhoc\. se non c'è il file di progetto\.
  - **$\{hb\_targettype\}** tipologia del progetto \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** piattaforma selezionata
@@ -328,7 +328,7 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{hb30\}** modalità di comaptibilità Harbour 3\.0\.x \(vedi l'opzione \-hb30\)
  - **\{xhb\}** modalità xhb \(vedi l'opzione \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** il filtro passerà se il nome &lt;file&gt; o &lt;dir&gt; esistono sul disco\.
- - **\{MACRO\}** filter will pass if $\{MACRO\} value is not empty and not equal to '0' or 'no' \(case insensitive\)
+ - **\{MACRO\}** verrà soddisfatto il filtro se il $\{MACRO\} è valorizzato e diverso da '0' or 'no' \(ignora maiuscole e minuscole\)
  - **\{MACRO='&lt;value&gt;'\}** filter will pass if $\{MACRO\} value equals to &lt;value&gt; \(case insensitive\)\.
  - **\{MACRO&gt;'&lt;value&gt;'\}** il filtro passerà se il valore $\{MACRO\} è più grande di &lt;value&gt; \(ignora maiuscole e minuscole\)\.
  - **\{MACRO&lt;'&lt;value&gt;'\}** il filtro passerà se il valore $\{MACRO\} è più piccolo di &lt;value&gt; \(ignora maiuscole e minuscole\)\.
@@ -536,7 +536,7 @@ Plugin variables:
  - **"cWorkDir"** valore \-workdir=
  - **"nExitCode"** Codice di uscita attuale
   
-Shell API available in Harbour scripts:  
+Shell API disponibile negli Harbour scripts:  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -627,7 +627,7 @@ Codice di uscita \("errorlevels"\):
  - **20** Inizializzazione del plugin
  - **30** nidificazione troppo profonda
  - **50** richiesta di stop
- - **&lt;altro&gt;** when \-run option is used, the exit code will be the one returned by the target executable
+ - **&lt;altro&gt;** quando è utilizzata l'opzione \-run, il codice di uscita sarà quello riportato dall'eseguibile
   
 Note:  
 
@@ -650,7 +650,7 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
   - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Comportamenti predefiniti e caratteristiche potrebbero essere differenti in altre piattaforme/compilatori\.
-  - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
+  - Per eseguire hbmk2 non sono richiesti né GNU Make, o qualsiasi altro strumento make specifico per il compilatore C, né MSYS \(in Windows\)\.
   - \. \(il punto\) passato come primo parametro entrerà nella shell interattiva di Harbour\.
 
 

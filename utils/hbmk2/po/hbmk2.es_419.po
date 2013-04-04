@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-01 18:57+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 01:53+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1561,10 +1561,6 @@ msgstr "reemplaza el directorio base de instalación de Harbour"
 #, c-format
 msgid "Files:"
 msgstr "Archivos:"
-
-#, c-format
-msgid "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines."
-msgstr "colección de opciones que acompañan a los componentes (conocidos como 'bibliotecas' o paquetes). Usa una sintaxis diferente a la línea de comandos y a archivos .hbp/.hbm. Las líneas que comienzan con \"#\" son ignoradas. Cada directiva debe ser ubicada en líneas separadas."
 
 #, c-format
 msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."

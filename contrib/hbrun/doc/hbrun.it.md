@@ -16,7 +16,7 @@ Descrizione:
 Opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
- - **\-\-hb:debug** enable script debugging
+ - **\-\-hb:debug** abilita lo script debugging
 
 
  - **\-help** questo aiuto
@@ -46,7 +46,7 @@ Variabili d'ambiente:
 
  - **HB\_EXTENSION** lista di estensioni separate da spazio da caricare nella shell interattiva di Harbour
   
-Shell API available in Harbour scripts:  
+Shell API disponibile negli Harbour scripts:  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  

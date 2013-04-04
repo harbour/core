@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: mlacecilia (m.lacecilia gmail.com) */
 
 #include "hbapilng.h"
 
@@ -127,16 +127,16 @@ static HB_LANG s_lang =
       "Manca una procedura iniziale",
       "VM opcode non supportato",
       "Symbol item atteso per %s",
-      "Invalid symbol type for self from %s",
+      "Tipo di simbolo non valido per self da %s",
       "Codeblock atteso per %s",
-      "Incorrect item type on the stack trying to pop from %s",
-      "Stack underflow",
-      "An item was going to be copied to itself from %s",
-      "Invalid symbol item passed as memvar %s",
+      "Trovato nello stack un tipo di elemento incongruente nel tentativo di estrarre da %s",
+      "Numero insufficiente di elementi nello stack",
+      "Tentativo di copia di un elemento su se stesso da %s",
+      "Simbolo non valido passato come memvar %s",
       "Overflow del buffer di memoria",
-      "hb_xgrab requested to allocate zero bytes",
-      "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes",
+      "hb_xgrab ha richiesto di allocare zero bytes",
+      "hb_xrealloc ha richiesto un ridimensionamento di zero bytes",
+      "hb_xalloc ha richiesto di allocare zero bytes",
 
       /* Texts */
 
