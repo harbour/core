@@ -1,8 +1,10 @@
+# To validate, run:
+#   'git ls-files -i --exclude-standard'
+
 # build generated files
 /include/hbverbld.h
 bin/*/
 lib/*/
-!lib/3rd/
 obj
 .hbmk/
 *.hbl
@@ -29,3 +31,10 @@ obj
 # misc junk
 .DS_Store
 *.bak
+
+# exceptions
+!libunicows.a
+!unicows.lib
+!lib/3rd
+!config/*.exe
+!/*.exe
