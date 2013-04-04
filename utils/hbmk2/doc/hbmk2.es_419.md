@@ -69,7 +69,7 @@ Opciones:
  - **\-sign=&lt;key&gt;** firma el ejecutable con &lt;key&gt; \(solo Windows y Darwin\)\. En Windows, se utiliza sigtntool\.exe \(incluido en el SDK de MS Windows\) o posign\.exe \(parte de Pelees C 7\), en ese orden, ambos auto\-detectados\.
  - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; como contraseña al firmar ejecutables \(solo Windows y Darwin\)
  - **\-instfile=&lt;g:file&gt;** anadir &lt;archivo&gt; a la lista de archivos que desea copiar a la ruta especificada por la opción \-instpath\. &lt;g&gt; es un grupo opcional de copia \(distingue mayúsculas y minúsculas\), debe haber al menos dos caracteres\. En caso de que no se especifica &lt;archivo&gt;, la lista de archivos en ese grupo se vaciará\.
- - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
+ - **\-instpath=&lt;g:path&gt;** copia el/los archivo\(s\) objetivo a la ruta &lt;path&gt;\. Si &lt;path&gt; es un directorio, debería terminar con un separador de rutas, en este caso los archivos especificados en la opción '\-instfile' también son copiados\. Puede ser especificado varias veces\. &lt;g&gt; es grupo de copia opcional, debe tener al menos dos caracteres de largo\. El objetivo final será copiado automaticamente al grupo de copia por defecto \(sin asignación de &lt;g&gt;\)\. Existen los siguientes grupos de copia ya incluidos: 'depimplib' para las bibliotecas importadas y 'depimplibsrc' para los archivos fuente de las bibliotecas importadas \(\.dll\), ambos pertenecientes a las dependencias\.
  - **\-instforce\[\-\]** copia archivo\(s\) destino a ruta de instalación incluso si está\(n\) actualizado\(s\)
  - **\-depimplib\[\-\]** activar \(o desactivar\) la generación de Bibliotecas de Importación para fuentes de biblioteca de importación especificados en la opción \-depimplibs= \(por defecto: yes\)
  - **\-stop\[=&lt;text&gt;\]** parar sin hacer nada y mostrar &lt;text&gt; si se ha especificado
@@ -204,10 +204,10 @@ Las opciones de mas abajo son internas o de desarrollador \(no se garantiza comp
 
 
  - **\-debugtime** mide el tiempo transcurrido durante la construcción
- - **\-debuginc** display internals of incremental build
+ - **\-debuginc** muestra detalles internos del modo de construcción incremental
  - **\-debugstub** muestra el contenido de todos los archivos fuente generados internamente
  - **\-debugi18n** muestra
- - **\-debugdepd** display internals of dependency detection
+ - **\-debugdepd** muestra detalles internos de la búsqueda de dependencia
  - **\-debugpars** muestra todos los parámetros de entrada en orden de procesamiento
  - **\-debugrte** genera un error en tiempo de ejecución
 
@@ -238,7 +238,7 @@ Archivos:
 
  - **\*\.hbp** archivo de proyecto\. Puede contener cualquier número de opciones de línea de comandos, que deben generar una salida\. Las líneas que comienzan con "\#" son ignoradas, de otra manera, una nueva línea es opcional y las opciones están separadas por espacio, tal como en la línea de comandos\. Se deben encomillar las opciones que contengan espacios\. Cada referencia a un archivo \.hbp será ejecutada como un sub\-proyecto\.
  - **\*\.hbm** Conjunto de opciones\. Puede ser usado para agrupar opciones comunes dentro de un archivo e incluirlo entre los archivos del projecto\. Utiliza el mismo formato que los archivos \.hbp\.
- - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
+ - **\*\.hbc** colección de opciones que acompañan a los componentes \(conocidos como 'bibliotecas' o paquetes\)\. Usa una sintaxis diferente a la línea de comandos y a los archivos '\.hbp'/'\.hbm'\. Las líneas que comienzan con "\#" son ignoradas, cada directiva debe ser ubicada en líneas separadas\.
  - **\*\.ch** si se envía como archivo fuente, será usado como cabecera estándar adicional
  - **hbmk\.hbc** archivo \.hbc estandar que es automáticamente procesado, si existe\. Ubicación\(es\) posibles \(en orden de precedencia\) v \[\*\]: %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **hbmk\.hbm** archivo \.hbm opcional ubicado en el directorio de trabajo actual, que es automáticamente procesado antes que otras opciones
@@ -251,7 +251,7 @@ Archivos:
  - **hbstart\.hb** Script de inicio Harbour para la consola interactiva\. Es ejecutado automáticamente al iniciar la consola, si existe\. Ubicación\(es\) posible\(s\) \(en orden de precedencia\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbmk2&gt;
  - **shell plugins** plugins \.hb y \.hrb para la consola interactiva Harbour\. Pueden residir en \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** guarda el historial de comandos del intérprete de comandos de Harbour\. Puede deshabilitar el historial haciendo que la primera linea sea 'no' \(sin comillas y con salto de línea\)\. Se guarda en \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hb\_extension** lista de extensiones para cargar en el interprete de comandos interactivo de Harbour\. Una extensión por línea, y se ignora todo lo que hay detrás del caracter '\#'\. Nombre de fichero alternativo en MS\-DOS: hb\_ext\.ini\. Reside en \[\*\]: %APPDATA%\\\.harbour\\
   
 Variables macro:  
 
@@ -340,7 +340,7 @@ Constantes predefinidas en fuentes\.
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** cuando un script \.hb es compilado como plugin hbmk2
  - **\_\_HBEXTREQ\_\_** cuando una fuente \.hbx existe en un proyecto \(disponible en las fuentes Harbour\)
- - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
+ - **HBMK\_HAS\_&lt;hbcname&gt;** cuando el paquete &lt;hbcname&gt;\.hbc se enlaza al objetivo final\. El valor se obtiene de la entrada 'version=' del archivo \.hbc, convertido a número decimal, '1' si no se especifica\. \(disponible en el código fuente de Harbour\)
  - **HBMK\_HAS\_&lt;depname&gt;** cuando la dependencia &lt;depname&gt; ha sido detectada \(disponible en fuentes C\)
 
 
@@ -490,7 +490,7 @@ Convierte el nombre de archivo para que tenga barras invertidas como separadores
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Devuelve la ruta relativa del valor de \-workdir= desde el directorio de trabajo actual\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
-Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) with list of &lt;aExtDef&gt; alternate extensions \(defaults to executable binaries\)\. Returns filename if found and NIL if not\.
+Busca el archivo en &lt;xPath&gt; \(se admite una matriz o una cadena delimitada con separadores de ruta\) con una lista de extensiones alternativas &lt;aExtDef&gt; \(por defecto ejecutables binarios\)\. Devuelve un nombre de archivo si se encuentra, NIL si no\.
  - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 Cambiar directorio y/o extensión en nombre de archivo\.
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
@@ -508,7 +508,7 @@ Variables de plugin:
  - **"apiver"** versión API como un entero
  - **"cSTATE"** Esta
  - **"params"** arreglo de parámetros pasados a los plugins vía \-pflag=/pi=, o a con una extensión registrada vía hbmk\_Register\_Input\_File\_Extension\(\)
- - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
+ - **"vars"** 'hash' de variables para uso del complemento\. Modificable, local para cada complemento\.
  - **"cPLAT"** valor \-plat
  - **"cCOMP"** valor \-comp
  - **"nCOMPVer"** ver envvar HB\_COMPILER\_VER
@@ -618,7 +618,7 @@ Códigos de salida \("errorlevels"\):
  - **1** plataforma desconocida
  - **2** compilador desconocido
  - **3** detección de Harbour fallida
- - **5** failed stub creation
+ - **5** no se pudo crear fragmento de código
  - **6** falló en compilación \(Harbour, compilador C, compilador de Recursos\)
  - **7** falló en ensamblado final \(enlazador o administrador de bibliotecas\)
  - **8** no soportado
@@ -643,7 +643,7 @@ Notas:
 \(Verlos con la opción \-harbourhelp\)
   - archivo de opciones hbmk\.hbc en directorio de hbmk2 siempre es procesado si existe\. En plataformas \*nix este archivo es chequeado \(en este orden\) ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc antes de pasar a directorio de hbmk2\.
   - hbmk\.hbm hace script en el directorio actual siempre se procesa, si existe\.
-  - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
+  - Se recomienda usar barras inclinadas en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas\.
   - filtros para plataformas son aceptados en cada linea de archivo \.hbc y con varias opciones\.  
 Formato de filtro: \{\[\!\]\[&lt;plataforma&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palabra\-clave&gt;\]\}\. Filtros pueden ser combinados usando los operadores '&amp;', '|' y agrupados en parénteses\. Ej\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - La mayoría de las líneas \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) y sus parámetros de línea de comando correspondientes aceptarán variables macro\. libpaths= tambien acepta %\{hb\_name\} que se traduce al nombre del archivo \.hbc buscado\.

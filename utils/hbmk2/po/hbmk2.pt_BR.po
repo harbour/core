@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 14:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 19:58+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -567,6 +567,10 @@ msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in di
 msgstr "Atenção: Ignorando explicitamente especificado no diretório do núcleo header: %1$s (na directiva %2$s)"
 
 #, c-format
+msgid "Warning: Unknown directive: %1$s"
+msgstr "Atenção: Diretiva desconhecida: %1$s"
+
+#, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
 msgstr "Atenção: Projeto de referência (%1$s) ignorado. Arquivo não encontrado."
 
@@ -784,7 +788,7 @@ msgstr "compilador desconhecido"
 
 #, c-format
 msgid "failed Harbour detection"
-msgstr "falhou na detecção Harbour"
+msgstr "falha Harbour não detectado"
 
 #, c-format
 msgid "failed stub creation"
@@ -792,11 +796,11 @@ msgstr "criação stub falhou"
 
 #, c-format
 msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
-msgstr "Falha na compilação (Harbour, compilador C, compilador Recursos \"RC\")"
+msgstr "falha na compilação (Harbour, compilador C, compilador Recursos \"RC\")"
 
 #, c-format
 msgid "failed in final assembly (linker or library manager)"
-msgstr "Falha na montagem final (linker ou gerenciador de bibliotecas)"
+msgstr "falha na montagem final (linker ou gerenciador de bibliotecas)"
 
 #, c-format
 msgid "unsupported"
@@ -812,7 +816,7 @@ msgstr "ajuda"
 
 #, c-format
 msgid "dependency missing or disabled"
-msgstr "dependência em falta ou desativada"
+msgstr "dependência não encontrada ou desativada"
 
 #, c-format
 msgid "plugin initialization"
@@ -824,7 +828,7 @@ msgstr "aninhamento muito profundo"
 
 #, c-format
 msgid "stop requested"
-msgstr "solicitação de parada"
+msgstr "parada solícitada"
 
 #, c-format
 msgid "unknown: %1$d"
@@ -832,7 +836,7 @@ msgstr "desconhecido: %1$d"
 
 #, c-format
 msgid "%1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>"
-msgstr "%1$s [opções] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>"
+msgstr "%1$s [opções] [<script[s]>] <fontes[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>"
 
 #, c-format
 msgid "Syntax:"
@@ -1408,7 +1412,7 @@ msgstr "especificar um nome de 'build'"
 
 #, c-format
 msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate build targets."
-msgstr "especificar um destino de nova compilação. <script> cpode ser .prg (ou sem extensão) ou arquivo .hbp . Note-se que arquivos .hbp são automaticamente considerados como alvos separados de compilação."
+msgstr "especificar um novo destino de compilação. <script> pode ser .prg (sem extensão) ou um arquivo .hbp . Note-se que arquivos .hbp são automaticamente considerados como alvos separados de compilação."
 
 #, c-format
 msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
@@ -1432,7 +1436,7 @@ msgstr "esta ajuda"
 
 #, c-format
 msgid "Options below are internal/developer ones (compatibility not guaranteed):"
-msgstr "Opções abaixo são \" internal/developer ones\" (compatibilidade não garantida):"
+msgstr "As opções abaixo são para desenvolvedores e internas (compatibilidade não garantida):"
 
 #, c-format
 msgid "display all input parameters in processing order"
@@ -1472,7 +1476,7 @@ msgstr "modo %1$s"
 
 #, c-format
 msgid "mode %1$s (emulate - raw - Harbour compiler)"
-msgstr "modo %1$s (emular - raw - compilador Harbour)"
+msgstr "modo %1$s (emular compilador Harbour \"raw\")"
 
 #, c-format
 msgid "mode %1$s (emulate C compiler)"
@@ -1496,15 +1500,15 @@ msgstr "modo %1$s (emular compilador Harbour produzindo um objeto binario \"bina
 
 #, c-format
 msgid "mode script runner / interactive shell"
-msgstr "rodando em modo script / \"shell\" interativo"
+msgstr "rodar em modo script / \"shell\" interativo"
 
 #, c-format
 msgid "mode script runner / interactive shell in debug mode"
-msgstr "rodando em modo script / debugador em \"shell\" interativo"
+msgstr "rodar em modo script /\"shell\" interativo com debugador"
 
 #, c-format
 msgid "option %1$s"
-msgstr "opções %1$s"
+msgstr "opção %1$s"
 
 #, c-format
 msgid "Exit codes (\"errorlevels\"):"
@@ -1587,8 +1591,12 @@ msgid "Files:"
 msgstr "Arquivos:"
 
 #, c-format
+msgid "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate line."
+msgstr "conjunto de opções que acompanham os componentes (também conhecidos como 'libs', pacotes). Usam diferentes sintaxes de linha de comado \"command-line\" e arquivos .hbp/.hbm. As linhas que começam com o carácter '#' serão ignoradas, cada diretiva deve ser colocada em linhas separadas."
+
+#, c-format
 msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
-msgstr "coleção de opções. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto.Usar o mesmo formata dos arquivos .hbp."
+msgstr "coleção de opções. Pode ser usado coletando-as para dentro de um arquivo e inclui-lo dentro de arquivo de projeto.Usar o mesmo formato dos arquivos .hbp."
 
 #, c-format
 msgid "if passed directly as a source file, it will be used as additional standard header"
@@ -1600,7 +1608,7 @@ msgstr "o arquivo opcional .hbm residente no diretório de trabalho atual será 
 
 #, c-format
 msgid "project file. Can contain any number of command-line options, which are expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional and options are space separated, just like on the command-line. You must enclose option containing space in double quotes. Each .hbp file reference will be executed as a sub-project."
-msgstr "arquivo de projeto. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída. As linhas que começam com caracter '#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando. Você deve colocar a opção contendo espaço entre aspas duplas. Cada referência de arquivo .hbp será executado como um sub-projeto."
+msgstr "arquivo de projeto. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída. As linhas que começam com caracter '#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando. Você deve colocar as opções que contenham espaço entre aspas duplas. Cada referência de arquivo .hbp será executado como um sub-projeto."
 
 #, c-format
 msgid "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)."
@@ -2252,7 +2260,7 @@ msgstr "O script %1$s no diretório atual será sempre processado se existir."
 
 #, c-format
 msgid "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory."
-msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre ser processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que contém o %2$s."
+msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre será processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (nesta ordem) antes do diretório %2$s."
 
 #, c-format
 msgid "Defaults and feature support may vary by platform/compiler."
@@ -2264,7 +2272,7 @@ msgstr "Os filtros para plataformas são aceitos para cada uma das linhas de um 
 
 #, c-format
 msgid "GNU Make or any C compiler specific make tool and MSYS (on Windows) are not needed to run %1$s."
-msgstr "não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS (no Windows) para rodar %1$s."
+msgstr "Para executar o %1$s não é necessário qualquer ferrramenta \"make\" do compilador C, GNU Make e MSYS (no Windows)."
 
 #, c-format
 msgid "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler."
@@ -2272,7 +2280,7 @@ msgstr "Bibliotecas e arquivos de objetos construídos com/para CA-Cl*pper não 
 
 #, c-format
 msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command-line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
-msgstr "A maioria das linhas .hbc (libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro. libpaths = também aceita%{hb_name} que traduz o nome do arquivo. hbc sob pesquisa."
+msgstr "A maioria das linhas de um arquivo .hbc (libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro. libpaths = também aceita%{hb_name} que se transforama no nome do arquivo. hbc sob pesquisa."
 
 #, c-format
 msgid "Multiple -l, -L, -i and <script> parameters are accepted."
@@ -2280,7 +2288,7 @@ msgstr "Multiplos parâmetros -l, -L, -i e <script> são aceitos."
 
 #, c-format
 msgid "Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. Standard output of the command will be used as the value. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
-msgstr "Opções aceitando macros também suportam linhas de comando. Neste caso basta rodeiar o comando dentro de ``, e, se o comando contiver espaço, também adicione aspas duplas. i.e. \"-cflag=`wx-config --cflags`\", ou ldflags={unix&gcc}\"`wx-config --libs`\"."
+msgstr "Também aceita opções de macros substituição de comando. Neste caso basta inserir o comando dentro de ``, e, se o comando contiver espaço, também adicione aspas duplas. Ex: \"-cflag=`wx-config --cflags`\", ou ldflags={unix&gcc}\"`wx-config --libs`\"."
 
 #, c-format
 msgid "Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)"
@@ -2296,7 +2304,7 @@ msgstr "Usar a opção de barras como separador de diretório é recomendado.mas
 
 #, c-format
 msgid "When multiple build target type selection options (-hblib, -hbdyn, etc.) are specified, the first one will be significant, the rest will be silently ignored."
-msgstr "Quando varias tipos de opções de seleção (-hblib, -hbdyn, etc.) são especificados na compilação, o primeiro será o mais significativo o resto vai ser ignorado."
+msgstr "Quando vários tipos de opções de seleção (-hblib, -hbdyn, etc.) são especificados na compilação, o primeiro será o mais significativo o resto será ignorado silenciosamente."
 
 #, c-format
 msgid ".hb, .hrb or .dbf"
@@ -2308,7 +2316,7 @@ msgstr ".hb, .prg, .hrb ou .dbf"
 
 #, c-format
 msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "%1$s arquivo passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb serão pesquisados nessa ordem. arquivos .dbf serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Nota, para Scripts Harbour, a pagina de códigos \"codepage\" será em UTF-8 por padrão. O nucleo padrão de cabeçalhos 'hb.ch' será automaticamente incluido. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é '%2$s', a menos que as chamadasCUI de tela cheia seja detectadas, quando '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\")."
+msgstr "O arquivo %1$s passado como primeiro parâmetro irá rodar como Script Harbour. Se o nome do arquivo não contiver componentes do \"path\", ele será procurado no diretório de trabalho atual e no \"PATH\".Se não é dada extensão, .hb e .hrb serão pesquisados nessa ordem. arquivos .dbf serão abertos no modo compartilhado \"shared\" e o \"shell\" interativo Harbour será lançado. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré-compilados. Note que para Scripts Harbour, a pagina de códigos \"codepage\" será em UTF-8 por padrão. O arquivo de cabeçalhos principal 'hb.ch' será incluido automaticamente como #included. O formato da data será \"aaaa-mm-dd\" padrão \"ISO\". O Gt padrão é '%2$s', a menos que as chamadas CUI de tela cheia seja detectadas, quando '%3$s' [*] será automaticamente selecionado (exeto para \"INIT PROCEDUREs\")."
 
 #, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."
@@ -2340,7 +2348,7 @@ msgstr "Autor:"
 
 #, c-format
 msgid "Examples to start with %1$s:"
-msgstr "Exemplos ta iniciar com %1$s:"
+msgstr "Exemplos para iniciar com %1$s:"
 
 #, c-format
 msgid "To run a Harbour script"
@@ -2384,7 +2392,7 @@ msgstr "Para gerar uma aplicação sem linkar bibliotecas dinâmicas Harbour"
 
 #, c-format
 msgid "To build an application which uses a contrib package or 3rd party (add-on) package that ships with an .hbc file"
-msgstr "para construir uma aplicação que usa os pacotes da contribuinte ou pacotes de terceiros que vem com um arquivo .hbc"
+msgstr "Para gerar uma aplicação que usa os pacotes da contribuinte ou pacotes de terceiros (aplicações adicionais) que venha incorporado um arquivo .hbc"
 
 #, c-format
 msgid "To build an application which uses a raw library"
@@ -2408,11 +2416,11 @@ msgstr "Exemplos para gerar uma biblioteca estática Harbour:"
 
 #, c-format
 msgid "To build library 'mylib' from sources"
-msgstr "para gerar a biblioteca 'mylib' dos fontes"
+msgstr "Para gerar a biblioteca 'mylib' dos fontes"
 
 #, c-format
 msgid "To build library 'mylib' from sources using incremental mode"
-msgstr "para gerar a biblioteca 'mylib' dos fontes usando o modo incremental"
+msgstr "Para gerar a biblioteca 'mylib' dos fontes usando o modo incremental"
 
 #, c-format
 msgid "%1$s build-time configuration:"

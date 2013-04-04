@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 01:53+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 18:57+0000\nLast-Translator: pemedina <pablo.medina@sysadminonline.com>\nLanguage-Team: Spanish (Latin America) (http://www.transifex.com/projects/p/harbour/language/es_419/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es_419\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -567,6 +567,10 @@ msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in di
 msgstr "Advertencia: ignorando el directorio de archivos de cabecera principales indicado explícitamente: %1$s (en la directiva %2$s)"
 
 #, c-format
+msgid "Warning: Unknown directive: %1$s"
+msgstr "Advertencia: Directiva desconocida: %1$s"
+
+#, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
 msgstr "Advertencia: Referencia del proyecto (%1$s) ignorada. Archivo no encontrado."
 
@@ -783,6 +787,10 @@ msgid "failed Harbour detection"
 msgstr "detección de Harbour fallida"
 
 #, c-format
+msgid "failed stub creation"
+msgstr "no se pudo crear fragmento de código"
+
+#, c-format
 msgid "failed in compilation (Harbour, C compiler, Resource compiler)"
 msgstr "falló en compilación (Harbour, compilador C, compilador de Recursos)"
 
@@ -957,6 +965,10 @@ msgstr "comprime ejecutable/librería dinamica (necesita la herramienta UPX)\n<l
 #, c-format
 msgid "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
 msgstr "analizando fuente de control de encabezado (en construcción en modo incremental)\n<m> puede ser: nativo (compilador utilizado para extraer las dependencias), completa (por defecto, utiliza analizador de texto simple en el fichero entero), dep, off"
+
+#, c-format
+msgid "copy target file(s) to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies."
+msgstr "copia el/los archivo(s) objetivo a la ruta <path>. Si <path> es un directorio, debería terminar con un separador de rutas, en este caso los archivos especificados en la opción '-instfile' también son copiados. Puede ser especificado varias veces. <g> es grupo de copia opcional, debe tener al menos dos caracteres de largo. El objetivo final será copiado automaticamente al grupo de copia por defecto (sin asignación de <g>). Existen los siguientes grupos de copia ya incluidos: 'depimplib' para las bibliotecas importadas y 'depimplibsrc' para los archivos fuente de las bibliotecas importadas (.dll), ambos pertenecientes a las dependencias."
 
 #, c-format
 msgid "copy target file(s) to install path even if already up to date"
@@ -1427,6 +1439,14 @@ msgid "display content of all internally generated source files"
 msgstr "muestra el contenido de todos los archivos fuente generados internamente"
 
 #, c-format
+msgid "display internals of dependency detection"
+msgstr "muestra detalles internos de la búsqueda de dependencia"
+
+#, c-format
+msgid "display internals of incremental build"
+msgstr "muestra detalles internos del modo de construcción incremental"
+
+#, c-format
 msgid "display internals on translation file generation"
 msgstr "muestra"
 
@@ -1561,6 +1581,10 @@ msgstr "reemplaza el directorio base de instalación de Harbour"
 #, c-format
 msgid "Files:"
 msgstr "Archivos:"
+
+#, c-format
+msgid "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate line."
+msgstr "colección de opciones que acompañan a los componentes (conocidos como 'bibliotecas' o paquetes). Usa una sintaxis diferente a la línea de comandos y a los archivos '.hbp'/'.hbm'. Las líneas que comienzan con \"#\" son ignoradas, cada directiva debe ser ubicada en líneas separadas."
 
 #, c-format
 msgid "collection of options. Can be used to collect common ones into a file and include that into project files. Uses same format as .hbp files."
@@ -2007,6 +2031,10 @@ msgid "when <depname> dependency was detected (available in C sources)"
 msgstr "cuando la dependencia <depname> ha sido detectada (disponible en fuentes C)"
 
 #, c-format
+msgid "when <hbcname>.hbc package is linked to the build target. The value is the version= value from the .hbc file, converted to a decimal number, which is '1', if not specified. (available in Harbour sources)"
+msgstr "cuando el paquete <hbcname>.hbc se enlaza al objetivo final. El valor se obtiene de la entrada 'version=' del archivo .hbc, convertido a número decimal, '1' si no se especifica. (disponible en el código fuente de Harbour)"
+
+#, c-format
 msgid "when an .hb script is compiled as %1$s plugin"
 msgstr "cuando un script .hb es compilado como plugin %1$s"
 
@@ -2135,6 +2163,10 @@ msgid "Evaluate %1$s macro expression."
 msgstr "Evaluate la expresión macro %1$s."
 
 #, c-format
+msgid "Find file in <xPath> (array or pathsep delimited string are accepted) with list of <aExtDef> alternate extensions (defaults to executable binaries). Returns filename if found and NIL if not."
+msgstr "Busca el archivo en <xPath> (se admite una matriz o una cadena delimitada con separadores de ruta) con una lista de extensiones alternativas <aExtDef> (por defecto ejecutables binarios). Devuelve un nombre de archivo si se encuentra, NIL si no."
+
+#, c-format
 msgid "Output text to stderr without any formatting."
 msgstr "Enviar texto a stderr sin ningún formato."
 
@@ -2189,6 +2221,10 @@ msgstr "Esta"
 #, c-format
 msgid "Current exit code"
 msgstr "Código de salida actual"
+
+#, c-format
+msgid "hash of plugin custom variables. Writable, local to each plugin"
+msgstr "'hash' de variables para uso del complemento. Modificable, local para cada complemento."
 
 #, c-format
 msgid "see %1$s envvar"
@@ -2253,6 +2289,10 @@ msgstr "las opciones regulares de compilador Harbour también son aceptadas.\n(V
 #, c-format
 msgid "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used."
 msgstr "Un archivo fuente sin extensión cargará el archivo .hbp, si este .hbp existe en el directorio actual. De otra manera, se usará la extensión .prg."
+
+#, c-format
+msgid "Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted."
+msgstr "Se recomienda usar barras inclinadas en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas."
 
 #, c-format
 msgid "When multiple build target type selection options (-hblib, -hbdyn, etc.) are specified, the first one will be significant, the rest will be silently ignored."
@@ -2375,6 +2415,10 @@ msgid "To build library 'mylib' from sources using incremental mode"
 msgstr "Para construir librería 'mylib' desde las fuentes utilizando el modo incremental"
 
 #, c-format
+msgid "%1$s build-time configuration:"
+msgstr "Configuración de %1$s en el momento de construcción:"
+
+#, c-format
 msgid "space separated list of extensions to load in interactive Harbour shell"
 msgstr "lista separada por espacio de extensiones a cargar en la consola Harbour interactiva"
 
@@ -2389,3 +2433,7 @@ msgstr "plugins .hb y .hrb para la consola interactiva Harbour. Pueden residir e
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"
 msgstr "guarda el historial de comandos del intérprete de comandos de Harbour. Puede deshabilitar el historial haciendo que la primera linea sea '%1$s' (sin comillas y con salto de línea). Se guarda en [*]: %2$s"
+
+#, c-format
+msgid "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s"
+msgstr "lista de extensiones para cargar en el interprete de comandos interactivo de Harbour. Una extensión por línea, y se ignora todo lo que hay detrás del caracter '#'. Nombre de fichero alternativo en %2$s: %1$s. Reside en [*]: %3$s"

@@ -5,7 +5,7 @@ Translation \(pt\_BR\): Vailton Renato &lt;vailtom@gmail\.com&gt;
 
 Sintaxe:  
   
-  hbmk2 \[opções\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[opções\] \[&lt;script\[s\]&gt;\] &lt;fontes\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Descrições:  
 
@@ -143,7 +143,7 @@ Padrão: no
 Opções abaixo estão disponíveis em linha de comando:  
 
 
- - **\-target=&lt;script&gt;** especificar um destino de nova compilação\. &lt;script&gt; cpode ser \.prg \(ou sem extensão\) ou arquivo \.hbp \. Note\-se que arquivos \.hbp são automaticamente considerados como alvos separados de compilação\.
+ - **\-target=&lt;script&gt;** especificar um novo destino de compilação\. &lt;script&gt; pode ser \.prg \(sem extensão\) ou um arquivo \.hbp \. Note\-se que arquivos \.hbp são automaticamente considerados como alvos separados de compilação\.
 
 
  - **\-hbrun** executar programa gerado\.
@@ -202,7 +202,7 @@ VAlores especiais:
  - **\-build** Compilador Harbour \(build\)
  - **\-version** exibir somente o cabeçalho com a versão do hbmk
   
-Opções abaixo são " internal/developer ones" \(compatibilidade não garantida\):  
+As opções abaixo são para desenvolvedores e internas \(compatibilidade não garantida\):  
 
 
  - **\-debugtime** medir o tempo gasto na contrução\.
@@ -217,17 +217,17 @@ Opções abaixo são " internal/developer ones" \(compatibilidade não garantida
 É possível "sym\-link/copy/rename" hbmk2 para os seguintes nomes para alterar o modo padrão de operação:
 
 
- - **hbrun\*|\*hbrun** rodando em modo script / "shell" interativo
- - **hbrund|hbrun\*d** rodando em modo script / debugador em "shell" interativo
- - **harbour** modo \-hbraw \(emular \- raw \- compilador Harbour\)
+ - **hbrun\*|\*hbrun** rodar em modo script / "shell" interativo
+ - **hbrund|hbrun\*d** rodar em modo script /"shell" interativo com debugador
+ - **harbour** modo \-hbraw \(emular compilador Harbour "raw"\)
  - **clipper** modo \-hbcmp \(emular compilador Clipper\)
  - **rtlink** modo \-rtlink \(emular linkeditor Clipper\)
  - **exospace** modo \-rtlink \(emular linkeditor Clipper\)
  - **blinker** modo \-rtlink \(emular linkeditor Clipper\)
- - **\*10** opções \-hb10
- - **\*20** opções \-hb20
- - **\*30** opções \-hb30
- - **x\*** opções \-xhb
+ - **\*10** opção \-hb10
+ - **\*20** opção \-hb20
+ - **\*30** opção \-hb30
+ - **x\*** opção \-xhb
  - **hbcmp\*|\*hbcmp** modo \-hbcmp \(emular compilador Harbour produzindo um objeto binario "binary object"\)
  - **hbcc\*|\*hbcc** modo \-hbcc \(emular compilador C\)
  - **hblnk\*|\*hblnk** modo \-hblnk \(emular linkeditor C\)
@@ -238,9 +238,9 @@ Opções abaixo são " internal/developer ones" \(compatibilidade não garantida
 Arquivos:  
 
 
- - **\*\.hbp** arquivo de projeto\. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída\. As linhas que começam com caracter '\#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando\. Você deve colocar a opção contendo espaço entre aspas duplas\. Cada referência de arquivo \.hbp será executado como um sub\-projeto\.
- - **\*\.hbm** coleção de opções\. Elas podem ser usadas dentro de um arquivo e incluídas dentro de arquivo de projeto\.Usar o mesmo formata dos arquivos \.hbp\.
- - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
+ - **\*\.hbp** arquivo de projeto\. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída\. As linhas que começam com caracter '\#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando\. Você deve colocar as opções que contenham espaço entre aspas duplas\. Cada referência de arquivo \.hbp será executado como um sub\-projeto\.
+ - **\*\.hbm** coleção de opções\. Pode ser usado coletando\-as para dentro de um arquivo e inclui\-lo dentro de arquivo de projeto\.Usar o mesmo formato dos arquivos \.hbp\.
+ - **\*\.hbc** conjunto de opções que acompanham os componentes \(também conhecidos como 'libs', pacotes\)\. Usam diferentes sintaxes de linha de comado "command\-line" e arquivos \.hbp/\.hbm\. As linhas que começam com o carácter '\#' serão ignoradas, cada diretiva deve ser colocada em linhas separadas\.
  - **\*\.ch** se passado diretamente como um arquivo de origem, ele será utilizada como padrão cabeçalho adicional
  - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
@@ -564,7 +564,7 @@ hb\_DirBase\(\) não mapeado para script\.
 hb\_ProgName\(\) não mapeado para script\.
 
 
-Exemplos ta iniciar com hbmk2:
+Exemplos para iniciar com hbmk2:
 
 
  - **Para rodar o "shell" interativo \(interpretador de comandos\)**  
@@ -593,7 +593,7 @@ $ hbmk2 mymain\.prg myfuncs\.prg \-inc
 $ hbmk2 myapp\.hbp
  - **Para gerar uma aplicação usando o modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
- - **para construir uma aplicação que usa os pacotes da contribuinte ou pacotes de terceiros que vem com um arquivo \.hbc**  
+ - **Para gerar uma aplicação que usa os pacotes da contribuinte ou pacotes de terceiros \(aplicações adicionais\) que venha incorporado um arquivo \.hbc**  
 $ hbmk2 myapp\.prg hbct\.hbc
  - **Para gerar uma aplicação que utiliza uma biblioteca raw**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
@@ -608,9 +608,9 @@ $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 Exemplos para gerar uma biblioteca estática Harbour:
 
 
- - **para gerar a biblioteca 'mylib' dos fontes**  
+ - **Para gerar a biblioteca 'mylib' dos fontes**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **para gerar a biblioteca 'mylib' dos fontes usando o modo incremental**  
+ - **Para gerar a biblioteca 'mylib' dos fontes usando o modo incremental**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   
 Códigos de saída \("errorlevels"\):  
@@ -619,17 +619,17 @@ Códigos de saída \("errorlevels"\):
  - **0** sem erros
  - **1** plataforma desconhecida
  - **2** compilador desconhecido
- - **3** falhou na detecção Harbour
+ - **3** falha Harbour não detectado
  - **5** criação stub falhou
- - **6** Falha na compilação \(Harbour, compilador C, compilador Recursos "RC"\)
- - **7** Falha na montagem final \(linker ou gerenciador de bibliotecas\)
+ - **6** falha na compilação \(Harbour, compilador C, compilador Recursos "RC"\)
+ - **7** falha na montagem final \(linker ou gerenciador de bibliotecas\)
  - **8** não suportado
  - **9** Falhou na criação do diretório de trabalho
  - **19** ajuda
- - **10** dependência em falta ou desativada
+ - **10** dependência não encontrada ou desativada
  - **20** inicialização de plugin
  - **30** aninhamento muito profundo
- - **50** solicitação de parada
+ - **50** parada solícitada
  - **&lt;outros&gt;** quando a opção \-run for usada, o código de saida será o código devolvido pelo executável de destino
   
 Notas:  
@@ -642,21 +642,21 @@ Notas:
   - se existir um nome de arquivo projeto \.hbp no diretório atual este será carregado como fonte de origem\. Caso contrário, o arquivo o com extensão \.prg extension será usado\.
   - Multiplos parâmetros \-l, \-L, \-i e &lt;script&gt; são aceitos\.
   - Opções usadas com o compilador Harbour também são aceitas\.
-  - O arquivo de configuração hbmk\.hbc no diretório do hbmk2 sempre ser processado caso exista\. Em plataformas \*nix este arquivo é sempre procurado nas pastas ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc \(exatamente nesta ordem\) antes da pasta que contém o hbmk2\.
+  - O arquivo de configuração hbmk\.hbc no diretório do hbmk2 sempre será processado caso exista\. Em plataformas \*nix este arquivo é sempre procurado nas pastas ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc \(nesta ordem\) antes do diretório hbmk2\.
   - O script hbmk\.hbm no diretório atual será sempre processado se existir\.
   - Usar a opção de barras como separador de diretório é recomendado\.mas barras invertidas também são igualmente aceitas\.
   - Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo \.hbc e possuem diversas opções\.  
 Formato de um filtro: \{\[\!\]\[&lt;arquitetura&gt;|&lt;compilador&gt;|&lt;cpu&gt;|&lt;palavra\-chave&gt;\]\}\. Os filtros podem ser combinados usando os operadores '&amp;', '|' e agrupados por parênteses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
-  - A maioria das linhas \.hbc \(libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =\) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro\. libpaths = também aceita%\{hb\_name\} que traduz o nome do arquivo\. hbc sob pesquisa\.
-  - Opções aceitando macros também suportam linhas de comando\. Neste caso basta rodeiar o comando dentro de \`\`, e, se o comando contiver espaço, também adicione aspas duplas\. i\.e\. "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - Quando varias tipos de opções de seleção \(\-hblib, \-hbdyn, etc\.\) são especificados na compilação, o primeiro será o mais significativo o resto vai ser ignorado\.
+  - A maioria das linhas de um arquivo \.hbc \(libs =, HBCS =, prgflags =, cflags =, ldflags =, libpaths =, instfiles =, instpaths =, echo =\) e os parâmetros correspondentes de linha de comando aceitarão variáveis ​​macro\. libpaths = também aceita%\{hb\_name\} que se transforama no nome do arquivo\. hbc sob pesquisa\.
+  - Também aceita opções de macros substituição de comando\. Neste caso basta inserir o comando dentro de \`\`, e, se o comando contiver espaço, também adicione aspas duplas\. Ex: "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
+  - Quando vários tipos de opções de seleção \(\-hblib, \-hbdyn, etc\.\) são especificados na compilação, o primeiro será o mais significativo o resto será ignorado silenciosamente\.
   - Bibliotecas e arquivos de objetos construídos com/para CA\-Cl\*pper não irá funcionar com qualquer plataforma /compilador suportada\.
   - Padrões e especificações suportadas podem variar de acordo com plataforma/compilador\.
-  - não necessita de qualquer ferrramenta make do compilador C, GNU Make e MSYS \(no Windows\) para rodar hbmk2\.
+  - Para executar o hbmk2 não é necessário qualquer ferrramenta "make" do compilador C, GNU Make e MSYS \(no Windows\)\.
   - \. \(ponto\) passado como primeiro parâmetro entrará no shell interativo Harbour\.
 
 
-  - \.hb, \.hrb ou \.dbf arquivo passado como primeiro parâmetro irá rodar como Script Harbour\. Se o nome do arquivo não contiver componentes do "path", ele será procurado no diretório de trabalho atual e no "PATH"\.Se não é dada extensão, \.hb e \.hrb serão pesquisados nessa ordem\. arquivos \.dbf serão abertos no modo compartilhado "shared" e o "shell" interativo Harbour será lançado\. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré\-compilados\. Nota, para Scripts Harbour, a pagina de códigos "codepage" será em UTF\-8 por padrão\. O nucleo padrão de cabeçalhos 'hb\.ch' será automaticamente incluido\. O formato da data será "aaaa\-mm\-dd" padrão "ISO"\. O Gt padrão é 'gtcgi', a menos que as chamadasCUI de tela cheia seja detectadas, quando 'gtwin' \[\*\] será automaticamente selecionado \(exeto para "INIT PROCEDUREs"\)\.
+  - O arquivo \.hb, \.hrb ou \.dbf passado como primeiro parâmetro irá rodar como Script Harbour\. Se o nome do arquivo não contiver componentes do "path", ele será procurado no diretório de trabalho atual e no "PATH"\.Se não é dada extensão, \.hb e \.hrb serão pesquisados nessa ordem\. arquivos \.dbf serão abertos no modo compartilhado "shared" e o "shell" interativo Harbour será lançado\. Extensões não padronizadas serão detectadas para fontes e e tipos de script pré\-compilados\. Note que para Scripts Harbour, a pagina de códigos "codepage" será em UTF\-8 por padrão\. O arquivo de cabeçalhos principal 'hb\.ch' será incluido automaticamente como \#included\. O formato da data será "aaaa\-mm\-dd" padrão "ISO"\. O Gt padrão é 'gtcgi', a menos que as chamadas CUI de tela cheia seja detectadas, quando 'gtwin' \[\*\] será automaticamente selecionado \(exeto para "INIT PROCEDUREs"\)\.
   - Voce pode usar &lt;Alt\+V&gt; no "shell do Harbour" para colar um texto do clipboard\.
   - Valores marcados com \[\*\] pode ser plataforma hospedagem e/ou configuração dependente\. Esta ajuda foi gerada em 'win' plataforma de hospedagem\.
 
