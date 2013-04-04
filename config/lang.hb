@@ -40,8 +40,7 @@ STATIC sc_hLangMapping := { ;
    "zh_CN"        => "zh_tra", ;
    "zh_CN.GB2312" => "zh_sim", ;
    "sr"           => "sr_cyr", ;
-   "sr@latin"     => "sr_lat", ;
-   "es_ES"        => "es" }   /* TODO: Synchronize Harbour with Transifex */
+   "sr@latin"     => "sr_lat" }
 
 PROCEDURE Main( cCommand, cMain, ... )
 

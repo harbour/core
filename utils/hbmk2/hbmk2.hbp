@@ -29,7 +29,7 @@ hbmk2.rc
 # localization
 po/hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
--lng=el,es_419,es_ES,fr,gl,hu,it,pt_BR
+-lng=el,es,es_419,fr,gl,hu,it,pt_BR
 
 # localization (automatization)
 -3rd=_langhb_docext=.md
