@@ -7534,6 +7534,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lGUI ]
             /* TOFIX: Find a way to pass arbitrary options to an .app. */
             l_aOPTRUN := {}
+            cCommand += ".app"
          ENDIF
       #endif
       cCommand := AllTrim( LaunchCommand( cCommand ) + " " + ArrayToList( l_aOPTRUN ) )
@@ -7561,7 +7562,7 @@ STATIC FUNCTION LaunchCommand( cCommand )
 #elif defined( __PLATFORM__OS2 )
    cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
 #elif defined( __PLATFORM__DARWIN )
-   cCommand := "open " + FNameEscape( cCommand + ".app", _ESC_NIX )
+   cCommand := "open " + FNameEscape( cCommand, _ESC_NIX )
 #endif
 
    RETURN cCommand

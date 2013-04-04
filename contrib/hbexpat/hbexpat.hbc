@@ -6,11 +6,4 @@ incpaths=.
 headers=${hb_name}.ch
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
-
-depkeyhead=expat_hbc:expat.hbc
-depcontrol=expat_hbc:local{HB_BUILD_3RDEXT='no'}
-depincpathlocal=expat_hbc:3rd/expat
-depfinish=expat_hbc
-
-libs=3rd/expat/expat.hbc{HBMK_HAS_EXPAT_HBC_LOCAL}
-libs=expat{!HBMK_HAS_INST_EXPAT_HBC_LOCAL}
+libs=3rd/expat/expat.hbc

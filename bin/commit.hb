@@ -109,6 +109,7 @@ PROCEDURE Main()
       hb_MemoWrit( cLogName, cLog )
 
       OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
+//    LaunchCommand( GitEditor(), cLogName )
       ErrorLevel( 0 )
    ELSE
       OutStd( hb_ProgName() + ": " + "Please correct errors listed above and re-run" + hb_eol() )
@@ -254,5 +255,41 @@ STATIC FUNCTION GitUser()
    RETURN hb_StrFormat( "%s (%s)", ;
       AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ), "" ) ), ;
       StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ), "" ) ), "@", " " ) )
+
+STATIC FUNCTION GitEditor()
+
+   LOCAL cValue := ""
+
+   hb_processRun( Shell() + " " + CmdEscape( "git config --global core.editor" ),, @cValue )
+
+   cValue := hb_StrReplace( cValue, Chr( 10 ) + Chr( 13 ), "" )
+
+   IF Left( cValue, 1 ) == "'" .AND. Right( cValue, 1 ) == "'"
+      cValue := hb_StrShrink( SubStr( cValue, 2 ), 1 )
+   ENDIF
+
+   IF Lower( cValue ) == "notepad.exe" /* banned, use notepad2.exe or else */
+      cValue := ""
+   ENDIF
+
+   RETURN cValue
+
+STATIC FUNCTION LaunchCommand( cCommand, cArg )
+
+   IF Empty( cCommand )
+      RETURN -1
+   ENDIF
+
+#if defined( __PLATFORM__WINDOWS )
+   IF hb_osIsWinNT()
+      cCommand := 'start "" "' + cCommand + '"'
+   ELSE
+      cCommand := "start " + cCommand
+   ENDIF
+#elif defined( __PLATFORM__OS2 )
+   cCommand := 'start "" "' + cCommand + '"'
+#endif
+
+   RETURN hb_run( cCommand + " " + cArg )
 
 #include "check.hb"
