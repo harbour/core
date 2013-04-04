@@ -48,6 +48,7 @@ PROCEDURE Main()
 
    IF Empty( aChanges )
       OutStd( hb_ProgName() + ": " + "no changes" + hb_eol() )
+      ErrorLevel( 0 )
       RETURN
    ENDIF
 
@@ -83,6 +84,7 @@ PROCEDURE Main()
    IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
       IF ! hb_FileExists( cLogName := "ChangeLog" )
          OutStd( hb_ProgName() + ": " + "can't find ChangeLog file" + hb_eol() )
+         ErrorLevel( 2 )
          RETURN
       ENDIF
    ENDIF
@@ -107,8 +109,10 @@ PROCEDURE Main()
       hb_MemoWrit( cLogName, cLog )
 
       OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
+      ErrorLevel( 0 )
    ELSE
       OutStd( hb_ProgName() + ": " + "Please correct errors listed above and re-run" + hb_eol() )
+      ErrorLevel( 1 )
    ENDIF
 
    RETURN

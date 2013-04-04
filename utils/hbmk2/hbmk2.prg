@@ -11154,6 +11154,17 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cIMPLIBDST ] := hb_FNameNameExt( hb_DirSepToOS( cLine ) )
          ENDIF
 
+      CASE Lower( Left( cLine, Len( "depfinish="    ) ) ) == "depfinish="    ; cLine := SubStr( cLine, Len( "depfinish="    ) + 1 )
+
+         cLine := MacroProc( hbmk, cLine, cFileName )
+         IF ! Empty( cLine )
+            IF cLine $ hbmk[ _HBMK_hDEP ]
+               dep_try_detection( hbmk, hbmk[ _HBMK_hDEP ][ cLine ] )
+            ELSE
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Unknown dependency name: %1$s" ), ParamToString( _PAR_NEW_HBC() ) ) )
+            ENDIF
+         ENDIF
+
       /* .hbc identification strings. Similar to pkgconfig ones. */
       CASE Lower( Left( cLine, Len( "name="         ) ) ) == "name="         ; cLine := SubStr( cLine, Len( "name="         ) + 1 )
 
@@ -11188,6 +11199,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       CASE Lower( Left( cLine, Len( "repository="   ) ) ) == "repository="   ; cLine := SubStr( cLine, Len( "repository="   ) + 1 )
 
          /* Silently ignore */
+
+      CASE ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
+
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Unknown directive: %1$s" ), ParamToString( _PAR_NEW_HBC() ) ) )
 
       ENDCASE
    NEXT
@@ -16004,7 +16019,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
                                    "include that into project files. Uses same format as .hbp files." ) }, ;
       { "*.hbc"              , I_( "collection of options that accompany components (aka 'libs', aka packages). " + ;
                                    "Use different syntax than command-line and .hbp/.hbm files. Lines beginning " + ;
-                                   "with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
+                                   "with '#' character are ignored, each directive must be placed in separate line." ) }, ;
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( hbmk, .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
@@ -16168,6 +16183,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "depincpathlocal="  , hb_StrFormat( I_( "same as %1$s option" ), "-depincpathlocal=" ) }, ;
       { "depimplibs="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibs="      ) }, ;
       { "depimplibd="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibd="      ) }, ;
+      { "depfinish="        , hb_StrFormat( I_( "same as %1$s option" ), "-depfinish="       ) }, ;
       { "name="             , I_( "package name" ) }, ;
       { "description="      , I_( "package description" ) }, ;
       { "version=<x.y.z>"   , I_( "package version number, where x,y,z >= 0 <= 255. Defaults to 0.0.1, if not specified." ) }, ;

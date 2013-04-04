@@ -162,7 +162,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       ELSE
 
          IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
-            cFile := Left( cFile, 16384 ) + Right( cFile, 16384 )
+            cFile := RTrimEOL( Left( cFile, 16384 ) ) + LTrim( Right( cFile, 16384 ) )
          ENDIF
 
          lReBuild := .F.
@@ -220,21 +220,28 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
          ENDIF
 
          IF lReBuild
-            cFile := RemoveEndingWhitespace( cFile, cEOL, lRemoveEndingWhitespace )
+            cFile := RemoveEndingWhitespace( cFile, iif( Empty( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
          ENDIF
 
-         IF !( Right( cFile, Len( cEOL ) ) == cEOL )
+         IF !( Right( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
             AAdd( aErr, "content: has no EOL at EOF" )
             IF lApplyFixes
-               cFile += cEOL
+               cFile += iif( Empty( cEOL ), hb_eol(), cEOL )
             ENDIF
          ENDIF
 
-         IF Right( cFile, Len( cEOL ) * 2 ) == Replicate( cEOL, 2 )
+         IF Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
             AAdd( aErr, "content: has multiple EOL at EOF" )
             IF lApplyFixes
-               DO WHILE Right( cFile, Len( cEOL ) * 2 ) == Replicate( cEOL, 2 )
-                  cFile := hb_StrShrink( cFile, Len( cEOL ) )
+               DO WHILE Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
+                  cFile := hb_StrShrink( cFile, Len( Chr( 10 ) ) )
+               ENDDO
+            ENDIF
+         ELSEIF Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
+            AAdd( aErr, "content: has multiple EOL at EOF" )
+            IF lApplyFixes
+               DO WHILE Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
+                  cFile := hb_StrShrink( cFile, Len( Chr( 13 ) + Chr( 10 ) ) )
                ENDDO
             ENDIF
          ENDIF
@@ -256,6 +263,14 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
 STATIC FUNCTION IsBinary( cFile )
    RETURN Chr( 0 ) $ cFile .OR. !( Chr( 10 ) $ cFile )
+
+STATIC FUNCTION RTrimEOL( cFile )
+
+   DO WHILE Right( cFile, 1 ) $ Chr( 13 ) + Chr( 10 )
+      cFile := hb_StrShrink( cFile, 1 )
+   ENDDO
+
+   RETURN cFile
 
 /*
  * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
@@ -426,7 +441,13 @@ STATIC FUNCTION LoadGitignore()
    LOCAL cLine
 
    IF s_aIgnore == NIL
-      s_aIgnore := { "*/3rd/*" }
+
+      s_aIgnore := { ;
+         "*/3rd/*", ;
+         "!*/3rd/*/*.hbc", ;
+         "!*/3rd/*/*.hbp", ;
+         "!*/3rd/*/Makefile" }
+
       FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
             /* TODO: clean this */

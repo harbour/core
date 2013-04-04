@@ -1,8 +1,6 @@
 /*
- * $Id$
- */
-
-/*
+ * "$Id: config.h.in 408 2010-09-19 05:26:46Z mike $"
+ *
  * Configuration file for Mini-XML, a small XML-like file parsing library.
  *
  * Copyright 2003-2010 by Michael R Sweet.

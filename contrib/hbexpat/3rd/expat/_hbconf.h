@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #ifndef _HBCONF_H
 #define _HBCONF_H

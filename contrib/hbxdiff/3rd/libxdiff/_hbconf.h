@@ -1,6 +1,3 @@
-/*
- * $Id$
- */
 
 #if ! defined( HB_CONFIG_H )
 #define HB_CONFIG_H
