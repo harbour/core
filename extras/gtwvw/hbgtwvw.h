@@ -610,9 +610,9 @@ typedef struct wvw_data
 }WVW_DATA;
 
 #if 0
-#define HB_RETHANDLE( h )        hb_retptr( ( void * ) ( h ) )
-#define HB_PARHANDLE( n )        hb_parptr( n )
-#define HB_STOREHANDLE( h, n )   hb_storptr( ( void * ) ( h ), n )
+#define HB_RETHANDLE( h )          hb_retptr( ( void * ) ( h ) )
+#define HB_PARHANDLE( n )          hb_parptr( n )
+#define HB_STOREHANDLE( h, n )     hb_storptr( ( void * ) ( h ), n )
 #endif
    #define HB_RETHANDLE( h )       hb_retnl( ( LONG ) ( h ) )
    #define HB_PARHANDLE( n )       ( ( LONG ) hb_parnl( n ) )

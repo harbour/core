@@ -203,12 +203,12 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
 }
 
 #if 0
- WVW_MENUITEM_SETBITMAPS(
-           hMenu,
-           nIDEnableItem,
-           nPosition,
-           ncBitmapUnchecked,
-           ncBimapChecked )
+WVW_MENUITEM_SETBITMAPS(
+   hMenu,
+   nIDEnableItem,
+   nPosition,
+   ncBitmapUnchecked,
+   ncBimapChecked )
 #endif
 HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
@@ -354,8 +354,8 @@ HB_FUNC( WVW_NOSYSMENU )
 }
 
 /* WVW_GetSystemMenu( [nWinNum], lReset )
-   *returns the System Menu of a window
-   *if lRemoveClose is .t., also removes the 'Close' command and 'X' button
+ * returns the System Menu of a window
+ * if lRemoveClose is .t., also removes the 'Close' command and 'X' button
  */
 HB_FUNC( WVW_GETSYSTEMMENU )
 {

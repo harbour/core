@@ -626,9 +626,9 @@ HB_FUNC( BRINGTOTOP1 )
    HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
 
 #if 0
-DWORD  ForegroundThreadID;
-DWORD  ThisThreadID;
-DWORD  timeout;
+   DWORD ForegroundThreadID;
+   DWORD ThisThreadID;
+   DWORD timeout;
 #endif
 
    if( IsIconic( hWnd ) )
@@ -868,12 +868,12 @@ HB_FUNC( OPENIMAGE )
    }
 
 #if 0
-#if defined(__cplusplus)
-OleLoadPicture( pStream,0,0,&IID_IPicture,(void**)&pPic );
-pStream->Release();
+#if defined( __cplusplus )
+   OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
+   pStream->Release();
 #else
- OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
- pStream->lpVtbl->Release( pStream );
+   OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
+   pStream->lpVtbl->Release( pStream );
 #endif
 #endif
 
@@ -886,20 +886,20 @@ pStream->Release();
    }
 
 #if 0
-#if defined(__cplusplus)
-pPic->get_Handle( (OLE_HANDLE*)&hBitmap );
+#if defined( __cplusplus )
+   pPic->get_Handle( ( OLE_HANDLE * ) &hBitmap );
 #else
- pPic->lpVtbl->get_Handle( pPic, ( OLE_HANDLE * ) &hBitmap );
+   pPic->lpVtbl->get_Handle( pPic, ( OLE_HANDLE * ) &hBitmap );
 #endif
 #endif
 
    hb_retnl( ( LONG ) CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
 
 #if 0
-#if defined(__cplusplus)
-pPic->Release();
+#if defined( __cplusplus )
+   pPic->Release();
 #else
- pPic->lpVtbl->Release( pPic );
+   pPic->lpVtbl->Release( pPic );
 #endif
 #endif
 }
@@ -1192,15 +1192,15 @@ HB_FUNC( TOOLBARADDBUTTONS )
       /* bSystem = hb_arrayGetL( pTemp, 9 ); */
 
 #if 0
-      if (bSystem)
-      if (ulID > 0 && ulID <  31 )
-    {
-    tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulID : -1;
-      }
-      else
-      {
-         tb[ ulCount ].iBitmap   = ulID > 0 ? ( int ) ulCount : -1;
-      }
+      if( bSystem )
+         if( ulID > 0 && ulID < 31 )
+         {
+            tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulID : -1;
+         }
+         else
+         {
+            tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulCount : -1;
+         }
 #endif
       tb[ ulCount ].idCommand = hb_arrayGetNI( pTemp, 2 );
       tb[ ulCount ].fsState   = ( BYTE ) hb_arrayGetNI( pTemp, 3 );
@@ -1382,10 +1382,10 @@ HB_FUNC( WVW_NUMBMCACHE )
 
 
 /*WVW_SetTimer([nWinNum], nInterval)
-   *set timer event for every nInterval millisec
-   *(effective only if WVW_TIMER() function exists)
-   *eg. it can be usefull to update clock on status bar
-   *returns .t. if successfull
+ * set timer event for every nInterval millisec
+ *(effective only if WVW_TIMER() function exists)
+ * eg. it can be usefull to update clock on status bar
+ * returns .t. if successfull
  */
 /*20040602: WARNING: WVT is slightly different*/
 HB_FUNC( WVW_SETTIMER )
@@ -1406,8 +1406,8 @@ HB_FUNC( WVW_SETTIMER )
 }
 
 /*WVW_KillTimer([nWinNum])
-   *kill the timer event handler for window nWinNum
-   *returns .t. if successfull
+ * kill the timer event handler for window nWinNum
+ * returns .t. if successfull
  */
 /*20040602: WARNING: WVT is slightly different */
 HB_FUNC( WVW_KILLTIMER )

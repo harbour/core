@@ -74,10 +74,10 @@
 #include "hbgtwvw.h"
 
 /*WVW_TBCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
-   *creates a toolbar at the top (no button initially)
-   *lDisplayText==.f. button's string is used as tooltips (default)
-   *nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
-   *nSystemBitmap: 0:none, 1:small, 2:large (defaults: 1)
+ * creates a toolbar at the top (no button initially)
+ * lDisplayText==.f. button's string is used as tooltips (default)
+ * nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
+ * nSystemBitmap: 0:none, 1:small, 2:large (defaults: 1)
  *               small=16x16 large=24x24
  * nImageWidth/Height are in effect only if nSystemBitmap==0
  */
@@ -292,7 +292,7 @@ HB_FUNC( WVW_TBADDBUTTON )
 }
 
 /*WVW_TBButtonCount([nWinNum])
-   *returns number of buttons in toolbar on window nWinNum
+ * returns number of buttons in toolbar on window nWinNum
  */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
@@ -311,9 +311,9 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
 }
 
 /*WVW_TBDelButton([nWinNum], nButton)
-   *nButton is zero based index of button to delete
-   *index=0 is the leftmost button
-   *NOTE: button separator is indexed and deleteable too
+ * nButton is zero based index of button to delete
+ * index=0 is the leftmost button
+ * NOTE: button separator is indexed and deleteable too
  */
 HB_FUNC( WVW_TBDELBUTTON )
 {
@@ -386,10 +386,10 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 
 
 /*WVW_TBEnableButton([nWinNum], nButton, [lToggle])
-   *nButton is zero based index of button to enable/disable
-   *index=0 is the leftmost button
-   *NOTE: button separator is indexed too
-   *returns .t. if successful
+ * nButton is zero based index of button to enable/disable
+ * index=0 is the leftmost button
+ * NOTE: button separator is indexed too
+ * returns .t. if successful
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {
@@ -432,7 +432,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
 }
 
 /*WVW_TBdestroy( [nWinNum] )
-   *destroy toolbar for window nWinNum
+ * destroy toolbar for window nWinNum
  */
 HB_FUNC( WVW_TBDESTROY )
 {
@@ -450,8 +450,8 @@ HB_FUNC( WVW_TBDESTROY )
 }
 
 /*WVW_TBINDEX2CMD([nWinNum], nIndex)
-   *returns Command Id of button nIndex (0 based)
-   *returns -1 if the button does not exist
+ * returns Command Id of button nIndex (0 based)
+ * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
@@ -465,8 +465,8 @@ HB_FUNC( WVW_TBINDEX2CMD )
 }
 
 /*WVW_TBCmd2Index([nWinNum], nCmd)
-   *returns Index (0 based) of button whose command id is nCmd
-   *returns -1 if the button does not exist
+ * returns Index (0 based) of button whose command id is nCmd
+ * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBCMD2INDEX )
 {

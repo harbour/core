@@ -151,7 +151,7 @@ HB_FUNC( WVW_PBCREATE )
 }
 
 /*WVW_PBdestroy( [nWinNum], nPBid )
-   *destroy button nPBid for window nWinNum
+ * destroy button nPBid for window nWinNum
  */
 HB_FUNC( WVW_PBDESTROY )
 {
@@ -187,7 +187,7 @@ HB_FUNC( WVW_PBDESTROY )
 }
 
 /*WVW_PBsetFocus( [nWinNum], nButtonId )
-   *set the focus to button nButtonId in window nWinNum
+ * set the focus to button nButtonId in window nWinNum
  */
 HB_FUNC( WVW_PBSETFOCUS )
 {
@@ -203,7 +203,7 @@ HB_FUNC( WVW_PBSETFOCUS )
 }
 
 /*WVW_PBisFocused( [nWinNum], nPBid )
-   *returns .t. if the focus is on button nPBid in window nWinNum
+ * returns .t. if the focus is on button nPBid in window nWinNum
  */
 HB_FUNC( WVW_PBISFOCUSED )
 {
@@ -216,10 +216,10 @@ HB_FUNC( WVW_PBISFOCUSED )
 }
 
 /*WVW_PBenable( [nWinNum], nButtonId, [lToggle] )
-   *enable/disable button nButtonId on window nWinNum
-   *(lToggle defaults to .t., ie. enabling the button)
-   *return previous state of the button (TRUE:enabled FALSE:disabled)
-   *(if nButtonId is invalid, this function returns FALSE too)
+ * enable/disable button nButtonId on window nWinNum
+ *(lToggle defaults to .t., ie. enabling the button)
+ * return previous state of the button (TRUE:enabled FALSE:disabled)
+ *(if nButtonId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_PBENABLE )
 {
@@ -242,7 +242,7 @@ HB_FUNC( WVW_PBENABLE )
 }
 
 /*WVW_PBsetcodeblock( [nWinNum], nPBid, bBlock )
-   *assign (new) codeblock bBlock to button nPBid for window nWinNum
+ * assign (new) codeblock bBlock to button nPBid for window nWinNum
  *
  * return .t. if successful
  */
@@ -605,7 +605,7 @@ HB_FUNC( WVW_CBCREATE )
 }
 
 /*WVW_CBdestroy( [nWinNum], nCBid )
-   *destroy combobox nCBid for window nWinNum
+ * destroy combobox nCBid for window nWinNum
  */
 HB_FUNC( WVW_CBDESTROY )
 {
@@ -641,7 +641,7 @@ HB_FUNC( WVW_CBDESTROY )
 }
 
 /*WVW_CBsetFocus( [nWinNum], nComboId )
-   *set the focus to combobox nComboId in window nWinNum
+ * set the focus to combobox nComboId in window nWinNum
  */
 HB_FUNC( WVW_CBSETFOCUS )
 {
@@ -657,7 +657,7 @@ HB_FUNC( WVW_CBSETFOCUS )
 }
 
 /*WVW_CBisFocused( [nWinNum], nComboId )
-   *returns .t. if the focus is on combobox nComboId in window nWinNum
+ * returns .t. if the focus is on combobox nComboId in window nWinNum
  */
 HB_FUNC( WVW_CBISFOCUSED )
 {
@@ -670,10 +670,10 @@ HB_FUNC( WVW_CBISFOCUSED )
 }
 
 /*WVW_CBenable( [nWinNum], nComboId, [lEnable] )
-   *enable/disable button nComboId on window nWinNum
-   *(lEnable defaults to .t., ie. enabling the combobox)
-   *return previous state of the combobox (TRUE:enabled FALSE:disabled)
-   *(if nComboId is invalid, this function returns FALSE too)
+ * enable/disable button nComboId on window nWinNum
+ *(lEnable defaults to .t., ie. enabling the combobox)
+ * return previous state of the combobox (TRUE:enabled FALSE:disabled)
+ *(if nComboId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_CBENABLE )
 {
@@ -696,7 +696,7 @@ HB_FUNC( WVW_CBENABLE )
 }
 
 /*WVW_CBsetcodeblock( [nWinNum], nCBid, bBlock )
-   *assign (new) codeblock bBlock to combobox nCBid for window nWinNum
+ * assign (new) codeblock bBlock to combobox nCBid for window nWinNum
  *
  * return .t. if successful
  */
@@ -889,8 +889,8 @@ HB_FUNC( WVW_CBFINDSTRING )
 }
 
 /*WVW_cbGetCurText( [nWinNum], nCBid )
-   *get current selected cString in combobox nCBid in window nWinNum
-   *returns "" if none selected
+ * get current selected cString in combobox nCBid in window nWinNum
+ * returns "" if none selected
  *
  */
 HB_FUNC( WVW_CBGETCURTEXT )
@@ -937,9 +937,9 @@ HB_FUNC( WVW_CBGETCURTEXT )
 }
 
 /*WVW_cbIsDropped( [nWinNum], nCBid )
-   *get current dropped state of combobox nCBid in window nWinNum
-   *returns .t. if listbox is being shown, otherwise .f.
-   *Also returns .f. if nCBid not valid
+ * get current dropped state of combobox nCBid in window nWinNum
+ * returns .t. if listbox is being shown, otherwise .f.
+ * Also returns .f. if nCBid not valid
  */
 HB_FUNC( WVW_CBISDROPPED )
 {

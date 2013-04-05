@@ -1397,8 +1397,8 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
       pPic = rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
 
 #if 0
- lImgWidth  = iImgWidth;
- lImgHeight = iImgHeight;
+   lImgWidth  = iImgWidth;
+   lImgHeight = iImgHeight;
 #endif
 
    if( pPic == NULL )

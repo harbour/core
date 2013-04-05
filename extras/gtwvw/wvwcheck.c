@@ -152,7 +152,7 @@ HB_FUNC( WVW_CXCREATE )
 }
 
 /*WVW_CXdestroy( [nWinNum], nCXid )
-   *destroy checkbox nCXid for window nWinNum
+ * destroy checkbox nCXid for window nWinNum
  */
 HB_FUNC( WVW_CXDESTROY )
 {
@@ -188,7 +188,7 @@ HB_FUNC( WVW_CXDESTROY )
 }
 
 /*WVW_CXsetFocus( [nWinNum], nButtonId )
-   *set the focus to checkbox nButtonId in window nWinNum
+ * set the focus to checkbox nButtonId in window nWinNum
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
@@ -204,10 +204,10 @@ HB_FUNC( WVW_CXSETFOCUS )
 }
 
 /*WVW_CXenable( [nWinNum], nButtonId, [lToggle] )
-   *enable/disable checkbox nButtonId on window nWinNum
-   *(lToggle defaults to .t., ie. enabling the checkbox)
-   *return previous state of the checkbox (TRUE:enabled FALSE:disabled)
-   *(if nButtonId is invalid, this function returns FALSE too)
+ * enable/disable checkbox nButtonId on window nWinNum
+ *(lToggle defaults to .t., ie. enabling the checkbox)
+ * return previous state of the checkbox (TRUE:enabled FALSE:disabled)
+ *(if nButtonId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_CXENABLE )
 {
@@ -230,7 +230,7 @@ HB_FUNC( WVW_CXENABLE )
 }
 
 /*WVW_CXsetcodeblock( [nWinNum], nCXid, bBlock )
-   *assign (new) codeblock bBlock to button nCXid for window nWinNum
+ * assign (new) codeblock bBlock to button nCXid for window nWinNum
  *
  * return .t. if successful
  */
@@ -287,7 +287,7 @@ HB_FUNC( WVW_CXSETCHECK )
 }
 
 /*WVW_CXgetcheck( [nWinNum], nCXid )
-   *returns check-state of checkbox nCXid
+ * returns check-state of checkbox nCXid
  *           0==unchecked    BST_UNCHECKED
  *           1==checked      BST_CHECKED
  *           2==indeterminate BST_INDETERMINATE
@@ -517,8 +517,8 @@ HB_FUNC( WVW_PGCREATE )
 }
 
 /*WVW_PGdestroy( [nWinNum], nPGid )
-   *destroy progressbar nPGid for window nWinNum
-   *This function has no return value.
+ * destroy progressbar nPGid for window nWinNum
+ * This function has no return value.
  */
 HB_FUNC( WVW_PGDESTROY )
 {
@@ -585,9 +585,9 @@ HB_FUNC( WVW_PGSETRANGE )
 }
 
 /*WVW_PGsetpos(nWinNum, PGid, [nPos])
-   *update progressbar position within current range
-   *nPos: a number in range of current range
-   *returns .t. if operation considered successfull
+ * update progressbar position within current range
+ * nPos: a number in range of current range
+ * returns .t. if operation considered successfull
  */
 HB_FUNC( WVW_PGSETPOS )
 {
@@ -619,8 +619,8 @@ HB_FUNC( WVW_PGSETPOS )
 }
 
 /*WVW_PGgetpos(nWinNum, PGid)
-   *get progressbar current position
-   *returns 0 if operation failed
+ * get progressbar current position
+ * returns 0 if operation failed
  */
 HB_FUNC( WVW_PGGETPOS )
 {
