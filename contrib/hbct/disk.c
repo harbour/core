@@ -239,12 +239,11 @@ HB_FUNC( VOLUME )
  * floppy, Hard-disk, CD or mapped network drive. The return value is a dword
  * type. If the drive is not available, VolSerial() returns -1.
  *
- * Sintax is: VolSerial("X:\")
+ * Syntax is: VolSerial( "X:\" )
  * Note that the trailing backslash is required.
  *
- * To convert in the hex format, call NumToHex() function.
- * Example: NumToHex( VolSerial("C:\")).
- * See volser.prg in xharbour\tests\cttest folder.
+ * To convert in the hex format, call hb_NumToHex() function.
+ * Example: hb_NumToHex( VolSerial( "C:\" ) ).
  */
 
 HB_FUNC( VOLSERIAL )

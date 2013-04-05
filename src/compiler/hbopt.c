@@ -972,10 +972,10 @@ static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
    as unconditional jump by Harbour VM. This hack solves 'Variable is assigned but not used'
    warning in code:
      BEGIN SEQUENCE
-       nI := 1
-       Break(NIL)
+        nI := 1
+        Break( NIL )
      RECOVER
-       ? nI
+        ? nI
      END SEQUENCE
    [Mindaugas]
  */

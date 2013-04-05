@@ -412,7 +412,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pnStringLen )
  *  = HB_P_MACROPUSHPARE
  *
  * iContext contains HB_P_MACROPUSHPARE if a macro is used inside a codeblock
- * Eval( {|| &macro} )
+ * Eval( {|| &macro } )
  *
  */
 
@@ -464,7 +464,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
           *
           * Always:
           * macro := "1,2"
-          * Eval( {|| &macro} )
+          * Eval( {|| &macro } )
           *
           */
          struMacro.Flags |= HB_MACRO_GEN_LIST;
