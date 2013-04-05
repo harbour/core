@@ -33,6 +33,8 @@
 
 #include "directry.ch"
 
+#define _HBROOT_  hb_DirBase() + hb_DirSepToOS( "../" )  /* must end with dirsep */
+
 FUNCTION CheckFileList( xName )
 
    LOCAL lPassed := .T.
@@ -40,16 +42,21 @@ FUNCTION CheckFileList( xName )
    LOCAL aErr, s
    LOCAL file
 
+   LOCAL lApplyFixes := "--fixup" $ hb_CmdLine()
+
    IF HB_ISSTRING( xName )
       xName := { xName }
    ENDIF
 
    IF Empty( xName ) .OR. HB_ISARRAY( xName )
       IF Empty( xName )
+         s := hb_cwd( _HBROOT_ )
          xName := my_DirScan( hb_osFileMask() )
+         hb_cwd( s )
+         lApplyFixes := .F.  /* do not allow to mass fix all files */
       ENDIF
       FOR EACH file IN xName
-         IF ! CheckFile( file, @aErr )
+         IF ! CheckFile( file, @aErr, lApplyFixes )
             lPassed := .F.
             FOR EACH s IN aErr
                OutStd( file + ": " + s + hb_eol() )
@@ -127,7 +134,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
    LOCAL aForcedLF := { ;
       "*.sh" }
 
-   LOCAL hAllowedExt := LoadGitattributes()
+   LOCAL aCanHaveIdent
+   LOCAL hAllowedExt := LoadGitattributes( @aCanHaveIdent )
 
    /* TODO: extend as you go */
    LOCAL hDoNotProcess := { ;
@@ -137,7 +145,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
    hb_default( @lApplyFixes, .F. )
 
    cName := hb_DirSepToOS( cName )
-   cFile := hb_MemoRead( cName )
+   cFile := hb_MemoRead( _HBROOT_ + cName )
 
    aErr := {}
 
@@ -277,8 +285,18 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             ENDIF
          ENDIF
 
-         IF "$" + "Id" $ cFile .AND. ! hb_FileMatch( cName, "ChangeLog.txt" )
-            AAdd( aErr, "content: has " + "$" + "Id" )
+         IF ( tmp := "$" + "Id" ) $ cFile != FNameExc( cName, aCanHaveIdent )
+            IF tmp
+               AAdd( aErr, "content: has " + "$" + "Id" )
+            ELSE
+               AAdd( aErr, "content: missing " + "$" + "Id" )
+            ENDIF
+         ENDIF
+
+         IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|"
+            IF "//" $ StripCStrings( StripCComments( cFile ) )
+               AAdd( aErr, "content: C file with C++ coment" )
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
@@ -434,6 +452,63 @@ STATIC FUNCTION RemoveEndingWhitespace( cFile, cEOL, lRTrim )
 
    RETURN cResult
 
+STATIC FUNCTION StripCStrings( cFile )
+
+   LOCAL nPos := 1
+   LOCAL aHits := {}
+   LOCAL tmp
+
+   DO WHILE ( tmp := hb_BAt( '"', cFile, nPos ) ) > 0
+      /* TOFIX: imprecise escaped char detection */
+      IF ( !( hb_BSubStr( cFile, tmp - 1, 1 ) == "\" ) .OR. ;
+         hb_BSubStr( cFile, tmp - 2, 2 ) == "\\" ) .AND. ;
+         !( hb_BSubStr( cFile, tmp - 1, 1 ) + hb_BSubStr( cFile, tmp + 1, 1 ) == "''" )
+         AAdd( aHits, tmp )
+      ENDIF
+      nPos := tmp + 1
+   ENDDO
+
+   /* unbalanced */
+   IF Len( aHits ) % 2 != 0
+      AAdd( aHits, hb_BLen( cFile ) )
+   ENDIF
+
+   FOR tmp := 1 TO Len( aHits ) STEP 2
+      cFile := hb_BLeft( cFile, aHits[ tmp ] ) + Replicate( " ", aHits[ tmp + 1 ] - aHits[ tmp ] - 1 ) + hb_BSubStr( cFile, aHits[ tmp + 1 ] )
+   NEXT
+
+   RETURN cFile
+
+/* bare bones */
+STATIC FUNCTION StripCComments( cFile )
+
+   LOCAL nPos := 1
+   LOCAL aHits := {}
+   LOCAL tmp
+   LOCAL tmp1
+   LOCAL lStart := .T.
+
+   DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
+      AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
+      nPos := tmp
+      lStart := ! lStart
+   ENDDO
+
+   /* unbalanced */
+   IF Len( aHits ) % 2 != 0
+      AAdd( aHits, hb_BLen( cFile ) )
+   ENDIF
+
+   FOR tmp := 1 TO Len( aHits ) STEP 2
+      FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
+         IF ! hb_BSubStr( cFile, tmp1, 1 ) $ Chr( 13 ) + Chr( 10 )
+            hb_BPoke( @cFile, tmp1, hb_BCode( " " ) )
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN cFile
+
 STATIC FUNCTION FNameExc( cName, aList )
 
    LOCAL tmp, tmp1
@@ -457,21 +532,27 @@ STATIC PROCEDURE ProcFile( cFileName )
    STATIC sc_hProc := { ;
       ".png" => { "avdpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
-      ".c"   => { "uncrustify -c bin/harbour.ucf %1$s" }, ;
+      ".c"   => { "uncrustify -c bin/harbour.ucf %1$s", @FixFuncCase() }, ;
       ".cpp" => ".c", ;
-      ".h"   => ".c" }
-// NOTE: hbformat has bugs which make it unsuitable for unattended use
-//    ".prg" => { "hbformat %1$s" } }
+      ".h"   => ".c", ;
+      ".api" => ".c", ;
+      ".txt" => { @FixFuncCase() }, ;
+      ".prg" => { @FixFuncCase() /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
+      ".ch"  => ".prg" }
 
    LOCAL aProc := hb_FNameExt( cFileName )
-   LOCAL cCmd
+   LOCAL xCmd
 
    DO WHILE HB_ISSTRING( aProc := hb_HGetDef( sc_hProc, aProc, NIL ) )
    ENDDO
 
    IF HB_ISARRAY( aProc )
-      FOR EACH cCmd IN aProc
-         hb_run( hb_StrFormat( hb_DirSepToOS( cCmd ), '"' + cFileName + '"' ) )
+      FOR EACH xCmd IN aProc
+         IF HB_ISSTRING( xCmd )
+            hb_run( hb_StrFormat( hb_DirSepToOS( xCmd ), '"' + _HBROOT_ + cFileName + '"' ) )
+         ELSEIF HB_ISEVALITEM( xCmd )
+            Eval( xCmd, cFileName )
+         ENDIF
       NEXT
    ENDIF
 
@@ -497,7 +578,7 @@ STATIC FUNCTION LoadGitignore()
          "!*/3rd/*/*.hbp", ;
          "!*/3rd/*/Makefile" }
 
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( _HBROOT_ + ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
             /* TODO: clean this */
             AAdd( s_aIgnore, ;
@@ -517,24 +598,31 @@ STATIC FUNCTION LoadGitignore()
 
    RETURN s_aIgnore
 
-STATIC FUNCTION LoadGitattributes()
+STATIC FUNCTION LoadGitattributes( /* @ */ aIdent )
 
    THREAD STATIC s_hExt := NIL
+   THREAD STATIC s_aIdent := NIL
 
    LOCAL cLine
    LOCAL tmp
 
    IF s_hExt == NIL
       s_hExt := { => }
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
+      s_aIdent := {}
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( _HBROOT_ + ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
          IF Left( cLine, 2 ) == "*."
              cLine := SubStr( cLine, 2 )
              IF ( tmp := At( " ", cLine ) ) > 0
                 s_hExt[ RTrim( Left( cLine, tmp - 1 ) ) ] := NIL
              ENDIF
          ENDIF
+         IF ( tmp := At( " ", cLine ) ) > 0 .AND. "ident" $ SubStr( cLine, tmp + 1 )
+            AAdd( s_aIdent, RTrim( Left( cLine, tmp - 1 ) ) )
+         ENDIF
       NEXT
    ENDIF
+
+   aIdent := s_aIdent
 
    RETURN s_hExt
 
@@ -555,3 +643,197 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
    NEXT
 
    RETURN aList
+
+/* ---- */
+
+STATIC FUNCTION FixFuncCase( cFileName )
+
+   STATIC sc_hExtExceptions := { ;
+      ".dll"   =>, ;
+      ".dxe"   =>, ;
+      ".dylib" =>, ;
+      ".so"    =>, ;
+      ".sl"    =>, ;
+      ".zip"   =>, ;
+      ".7z"    =>, ;
+      ".exe"   =>, ;
+      ".o"     =>, ;
+      ".obj"   =>, ;
+      ".js"    =>, ;
+      ".dif"   =>, ;
+      ".exe"   =>, ;
+      ".y"     =>, ;
+      ".yyc"   =>, ;
+      ".yyh"   =>, ;
+      ".a"     =>, ;
+      ".afm"   =>, ;
+      ".bmp"   =>, ;
+      ".dat"   =>, ;
+      ".dbf"   =>, ;
+      ".exe"   =>, ;
+      ".frm"   =>, ;
+      ".gif"   =>, ;
+      ".icns"  =>, ;
+      ".ico"   =>, ;
+      ".jpg"   =>, ;
+      ".lbl"   =>, ;
+      ".lib"   =>, ;
+      ".mdb"   =>, ;
+      ".ng"    =>, ;
+      ".odt"   =>, ;
+      ".pdf"   =>, ;
+      ".pfb"   =>, ;
+      ".png"   =>, ;
+      ".sq3"   =>, ;
+      ".tif"   => }
+
+   STATIC sc_hPartial := { ;
+      ".c"    =>, ;
+      ".cpp"  =>, ;
+      ".h"    =>, ;
+      ".api"  => }
+
+   STATIC sc_hFileExceptions := { ;
+      "ChangeLog.txt" =>, ;
+      "std.ch"        =>, ;
+      "wcecon.prg"    =>, ;
+      "uc16_gen.prg"  =>, ;
+      "clsscope.prg"  =>, ;
+      "speedstr.prg"  =>, ;
+      "cpinfo.prg"    =>, ;
+      "clsccast.prg"  =>, ;
+      "clsicast.prg"  =>, ;
+      "clsscast.prg"  =>, ;
+      "big5_gen.prg"  =>, ;
+      "foreach2.prg"  =>, ;
+      "speedtst.prg"  =>, ;
+      "keywords.prg"  =>, ;
+      "xhb-diff.txt"  =>, ;
+      "pp.txt"        =>, ;
+      "locks.txt"     =>, ;
+      "oldnews.txt"   =>, ;
+      "news.html"     =>, ;
+      "news1.html"    =>, ;
+      "c_std.txt"     =>, ;
+      "tracing.txt"   =>, ;
+      "pcode.txt"     => }
+
+   STATIC sc_aMaskExceptions := { ;
+      "contrib/xhb/thtm.prg"       , ;
+      "contrib/hbnetio/readme.txt" , ;
+      "contrib/hbnetio/tests/*"    , ;
+      "extras/httpsrv/home/*"      , ;
+      "tests/hbpptest/*"           , ;
+      "tests/mt/*"                 , ;
+      "tests/multifnc/*"           , ;
+      "tests/rddtest/*"            }
+
+   LOCAL hAll
+   LOCAL cLog
+
+   LOCAL a
+   LOCAL cProper
+   LOCAL cOldCP
+
+   LOCAL cRest
+   LOCAL nPartial
+
+   LOCAL nChanged := 0
+
+   IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
+      hb_FNameExt( cFileName ) $ sc_hExtExceptions .OR. ;
+      hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .OR. ;
+      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( cFileName, "\", "/" ), tmp ) } ) == 0
+      RETURN .F.
+   ENDIF
+
+   hAll := __hbformat_BuildListOfFunctions()
+   cLog := MemoRead( _HBROOT_ + cFileName )
+
+   IF hb_FNameExt( cFileName ) $ sc_hPartial
+      IF ( nPartial := At( "See COPYING.txt for licensing terms.", cLog ) ) > 0
+      ELSEIF ( nPartial := At( "If you do not wish that, delete this exception notice.", cLog ) ) > 0
+      ELSE
+         nPartial := 300
+      ENDIF
+      /* arbitrary size limit */
+      cRest := SubStr( cLog, nPartial )
+      cLog := Left( cLog, nPartial - 1 )
+   ELSE
+      cRest := ""
+   ENDIF
+
+   cOldCP := hb_cdpSelect( "EN" )
+
+   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
+      IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
+         cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
+         IF !( cProper == a[ 3 ] ) .AND. ;
+            !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
+            !( Upper( cProper ) == "INT(" )          /* interacts with SQL statements */
+            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
+            OutStd( cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|" + hb_eol() )
+            nChanged++
+         ENDIF
+      ENDIF
+   NEXT
+
+   IF !( "hbclass.ch" $ cFileName )
+      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cLog,,,,, .T. )
+         cProper := ProperCase( hAll, a[ 2 ] )
+         IF !( cProper == a[ 2 ] )
+            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
+            OutStd( cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|" + hb_eol() )
+            nChanged++
+         ENDIF
+      NEXT
+   ENDIF
+
+   hb_cdpSelect( cOldCP )
+
+   IF nChanged > 0
+      OutStd( cFileName + ": Harbour function casings fixed: " + hb_ntos( nChanged ) + hb_eol() )
+      hb_MemoWrit( _HBROOT_ + cFileName, cLog + cRest )
+   ENDIF
+
+   RETURN .T.
+
+STATIC FUNCTION ProperCase( hAll, cName )
+
+   IF cName $ hAll
+      RETURN hb_HKeyAt( hAll, hb_HPos( hAll, cName ) )
+   ENDIF
+
+   RETURN cName
+
+STATIC FUNCTION __hbformat_BuildListOfFunctions()
+
+   THREAD STATIC s_hFunctions := NIL
+
+   IF s_hFunctions == NIL
+      s_hFunctions := { => }
+      hb_HCaseMatch( s_hFunctions, .F. )
+
+      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "include/" ), s_hFunctions )
+      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "contrib/" ), s_hFunctions )
+      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "extras/" ), s_hFunctions )
+   ENDIF
+
+   RETURN s_hFunctions
+
+STATIC PROCEDURE WalkDir( cDir, hFunctions )
+
+   LOCAL file
+   LOCAL cLine
+
+   FOR EACH file IN hb_DirScan( cDir, "*.hbx" )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cDir + file[ F_NAME ] ), Chr( 13 ) ), Chr( 10 ) )
+         IF Left( cLine, Len( "DYNAMIC " ) ) == "DYNAMIC "
+            hFunctions[ SubStr( cLine, Len( "DYNAMIC " ) + 1 ) ] := NIL
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN
+
+/* ---- */

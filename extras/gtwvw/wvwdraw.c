@@ -1396,8 +1396,10 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
    else
       pPic = rr_LoadPictureFromResource( NULL, hb_parni( 6 ), &lImgWidth, &lImgHeight );
 
-// lImgWidth  = iImgWidth;
-// lImgHeight = iImgHeight;
+#if 0
+ lImgWidth  = iImgWidth;
+ lImgHeight = iImgHeight;
+#endif
 
    if( pPic == NULL )
       hb_retl( bResult );
@@ -1564,7 +1566,7 @@ HB_FUNC( WVW_DRAWOUTLINE )
          hOldPen = ( HPEN ) SelectObject( pWindowData->hdc, hPen );
    }
    else
-      //hPen = 0;
+      /* hPen = 0; */
       SelectObject( pWindowData->hdc, s_sApp->penBlack );
 
    hb_gt_wvwDrawOutline( usWinNum, iTop, iLeft, iBottom, iRight );
@@ -1803,7 +1805,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
               usLeft   = ( USHORT ) hb_parni( 3 ),
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
-   // Ref.: 28454 - Marson de Paula - 2007-11-27
+   /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
    BOOL bUsaCurrentPen = HB_ISNIL( 7 ) ? TRUE : hb_parl( 7 );
 
    iOffTop    = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 1 ) : 0;
@@ -1826,7 +1828,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    iRight  = xy.x - 1 + iOffRight;
 
    SelectObject( pWindowData->hdc, s_sApp->currentBrush );
-   // Ref.: 28454 - Marson de Paula - 2007-11-27
+   /* Ref.: 28454 - Marson de Paula - 2007-11-27 */
    if( bUsaCurrentPen )
       SelectObject( pWindowData->hdc, s_sApp->currentPen );
    else

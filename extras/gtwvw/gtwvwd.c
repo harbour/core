@@ -100,66 +100,70 @@
 
 /* settable by user: ****************************************************/
 
-//static UINT s_uiPaintRefresh = 100;    /* milliseconds between timer check */
+#if 0
+static UINT s_uiPaintRefresh = 100;    /* milliseconds between timer check */
 
-//static BOOL s_bMainCoordMode = FALSE;  /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
+static BOOL s_bMainCoordMode = FALSE;  /* in this mode, all HB_GT_FUNC() uses Main Window's coordinate */
 
-//static BOOL s_bVertCaret     = FALSE;  /* if TRUE, caret is in Vertical style */
+static BOOL s_bVertCaret     = FALSE;  /* if TRUE, caret is in Vertical style */
 
-//static BOOL s_bNOSTARTUPSUBWINDOW = FALSE;  /* if TRUE, subwindow will not be displayed during opening */
+static BOOL s_bNOSTARTUPSUBWINDOW = FALSE;  /* if TRUE, subwindow will not be displayed during opening */
 /* use WVW_NOSTARTUPSUBWINDOW() to check/set it */
 
-//static BOOL s_bDefCentreWindow = FALSE;     /* default CentreWindow setting for subwindows */
+static BOOL s_bDefCentreWindow = FALSE;     /* default CentreWindow setting for subwindows */
 
-//static BOOL s_bDefHCentreWindow = FALSE;     /* default HCentreWindow setting for subwindows */
-//static BOOL s_bDefVCentreWindow = FALSE;     /* default VCentreWindow setting for subwindows */
+static BOOL s_bDefHCentreWindow = FALSE;     /* default HCentreWindow setting for subwindows */
+static BOOL s_bDefVCentreWindow = FALSE;     /* default VCentreWindow setting for subwindows */
 
-//static int  s_byDefLineSpacing = 0;    /* default line spacing */
+static int  s_byDefLineSpacing = 0;    /* default line spacing */
 
-//static int  s_iDefLSpaceColor = -1;    /* if >= 0 this will be the color index
-//for spacing between lines */
+static int  s_iDefLSpaceColor = -1;    /* if >= 0 this will be the color index
+for spacing between lines */
 
-//static BOOL s_bAllowNonTop = FALSE; /* allow non-topmost window's control to
-//accept input */
+static BOOL s_bAllowNonTop = FALSE; /* allow non-topmost window's control to
+accept input */
 
-//static BOOL s_bRecurseCBlock = FALSE; /* allow control's codeblock
-//to recurse */
+static BOOL s_bRecurseCBlock = FALSE; /* allow control's codeblock
+to recurse */
 
-//static LOGFONT s_lfPB = { 0 };       /* default font for pushbuttons */
+static LOGFONT s_lfPB = { 0 };       /* default font for pushbuttons */
 
-//static LOGFONT s_lfSB = { 0 };       /* default font for statusbar  */
-//static LOGFONT s_lfCB = { 0 };       /* default font for comboboxes */
+static LOGFONT s_lfSB = { 0 };       /* default font for statusbar  */
+static LOGFONT s_lfCB = { 0 };       /* default font for comboboxes */
 
-//static LOGFONT s_lfEB = { 0 };       /* default font for editboxes */
+static LOGFONT s_lfEB = { 0 };       /* default font for editboxes */
 
-//static LOGFONT s_lfCX = { 0 };       /* font for 'focused'checkbox */
-//static LOGFONT s_lfST = { 0 };       /* font for static control    */
+static LOGFONT s_lfCX = { 0 };       /* font for 'focused'checkbox */
+static LOGFONT s_lfST = { 0 };       /* font for static control    */
 
-//static HWND hWndTT = 0;              /* Window handle Tool Tip     */
+static HWND hWndTT = 0;              /* Window handle Tool Tip     */
+#endif
 
 /* read only by user ***/
 
 /* for GTWVW private use: ***********************************************/
-//static BOOL s_bQuickSetMode = FALSE;   /* quick SetMode(), to reset maxrow() and maxcol() only */
+#if 0
+static BOOL s_bQuickSetMode = FALSE;   /* quick SetMode(), to reset maxrow() and maxcol() only */
 
-//static BOOL s_bFlashingWindow = FALSE; /* topmost window is flashing
-//due to invalid input on other
-//window */
+static BOOL s_bFlashingWindow = FALSE; /* topmost window is flashing
+due to invalid input on other
+window */
 
-//static int  s_iScrolling = 0;           /* scrollbar is scrolling */
-//static int  s_iWrongButtonUp = 0;       /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
-//static int  s_iMaxWrongButtonUp = 500; /* max number of s_iWrongButtonUp. If it goes higher than this number,
-//the scrollbar is forced to stop */
+static int  s_iScrolling = 0;           /* scrollbar is scrolling */
+static int  s_iWrongButtonUp = 0;       /* number of consecutive scrollbar's WM_LBUTTONUP encountered by gtProcessMessages */
+static int  s_iMaxWrongButtonUp = 500; /* max number of s_iWrongButtonUp. If it goes higher than this number,
+the scrollbar is forced to stop */
 
-//static TCHAR szAppName[] = TEXT( "Harbour WVW" );
-//static TCHAR szSubWinName[] = TEXT( "Harbour WVW subwindows" );
-//static BOOL  s_bSWRegistered = FALSE;
+static TCHAR szAppName[] = TEXT( "Harbour WVW" );
+static TCHAR szSubWinName[] = TEXT( "Harbour WVW subwindows" );
+static BOOL  s_bSWRegistered = FALSE;
 
-//static UINT s_usNumWindows;                    /*number of windows                         */
-//static UINT s_usCurWindow = 0;                 /*current window handled by HB_GT_FUNC(...) */
+static UINT s_usNumWindows;                    /*number of windows                         */
+static UINT s_usCurWindow = 0;                 /*current window handled by HB_GT_FUNC(...) */
 
-//static WIN_DATA *s_pWindows[ WVW_MAXWINDOWS ];   /*array of WIN_DATA                         */
-//static APP_DATA  s_sApp;                          /*application wide vars                     */
+static WIN_DATA *s_pWindows[ WVW_MAXWINDOWS ];   /*array of WIN_DATA                         */
+static APP_DATA  s_sApp;                          /*application wide vars                     */
+#endif
 WVW_DATA *      s_pWvwData;
 static BOOL     bStartMode = TRUE;
 static COLORREF _COLORS[]  = {
@@ -363,19 +367,19 @@ LONG  GetFontDialogUnits( HWND h, HFONT f )
    char * tmp = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
    SIZE   sz;
 
-   //get the hdc to the main window
+   /* get the hdc to the main window */
    hDc = GetDC( h );
 
-   //with the current font attributes, select the font
-   hFont    = f; //GetStockObject(ANSI_VAR_FONT);
+   /* with the current font attributes, select the font */
+   hFont    = f; /* GetStockObject(ANSI_VAR_FONT); */
    hFontOld = ( HFONT ) SelectObject( hDc, &hFont );
 
-   //get its length, then calculate the average character width
+   /* get its length, then calculate the average character width */
 
    GetTextExtentPoint32( hDc, tmp, 52, &sz );
    avgWidth = ( sz.cx / 52 );
 
-   //re-select the previous font & delete the hDc
+   /* re-select the previous font & delete the hDc */
    SelectObject( hDc, hFontOld );
    DeleteObject( hFont );
    ReleaseDC( h, hDc );
@@ -511,7 +515,7 @@ BOOL hb_gt_wvwDestroyPicture( IPicture * iPicture )
 
 static void hb_gt_wvw_Exit( PHB_GT pGT )
 {
-//void gt_Exit( void )
+/* void gt_Exit( void ) */
    int i;
    int j;
    WIN_DATA *       pWindowData;
@@ -1342,7 +1346,7 @@ static int hb_gt_wvw_mouse_CountButton( PHB_GT pGT )
 /*WARNING: assume working on current window
    *NOTES: in MainCoord Mode current window is always the Main Window
  */
-//int gt_info(int iMsgType, BOOL bUpdate, int iParam, void *vpParam )
+/* int gt_info(int iMsgType, BOOL bUpdate, int iParam, void *vpParam ) */
 static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    WIN_DATA * pWindowData = s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ];
@@ -1688,10 +1692,12 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iX = hb_itemGetNI( hb_arrayGetItemPtr( pInfo->pNewVal, 1 ) );
 
          if( iY > 0 )
-            //BOOL bOldCentre = pWindowData->CentreWindow;
-            //pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+#if 0
+            BOOL bOldCentre = pWindowData->CentreWindow;
+            pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+#endif
             hb_gt_wvw_bSetMode( pWindowData, ( USHORT ) ( iY / pWindowData->PTEXTSIZE.y ), ( USHORT ) ( iX / pWindowData->PTEXTSIZE.x ) );
-         //pWindowData->CentreWindow = bOldCentre;
+         /* pWindowData->CentreWindow = bOldCentre; */
          break;
       }
 
@@ -3012,10 +3018,12 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             }
          }
 
-//      if ( hb_gt_gobjects != NULL )
-//      {
-//         s_wvw_paintGraphicObjects( hdc, &updateRect );
-//      }
+#if 0
+        if ( hb_gt_gobjects != NULL )
+        {
+           s_wvw_paintGraphicObjects( hdc, &updateRect );
+        }
+#endif
 
          SelectObject( hdc, hOldFont );
 
@@ -3095,8 +3103,10 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          hb_gt_wvwKillCaret( pWindowData );
 
          if( s_pWvwData->s_sApp->pSymWVW_KILLFOCUS )
-//        hb_vmPushState();
-//        hb_vmPushSymbol( s_pWvwData->s_sApp->pSymWVW_KILLFOCUS->pSymbol );
+#if 0
+          hb_vmPushState();
+          hb_vmPushSymbol( s_pWvwData->s_sApp->pSymWVW_KILLFOCUS->pSymbol );
+#endif
             if( hb_vmRequestReenter() )
             {
                hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_KILLFOCUS );
@@ -3110,8 +3120,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
-//    case WM_CHAR:
-         //case WM_SYSCHAR:
+/*    case WM_CHAR: */
+         /* case WM_SYSCHAR: */
 
       {
          BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
@@ -3481,7 +3491,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
                So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
              */
-//         hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG );
+/*         hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG ); */
             hb_gt_wvwAddCharToInputQueue( K_ESC );
 
          else
@@ -3641,7 +3651,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             LPDRAWITEMSTRUCT lpDIS;
             PTSTR ptStr;
             RECT  rectCorner;
-            //long             lSBColorForeground, lSBColorBackground;
+            /* long             lSBColorForeground, lSBColorBackground; */
 
             size_t stLen;
             const TCHAR * pEnd;
@@ -3655,12 +3665,12 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
 
             if( pWindowData->cSBColorForeground )
-               //lSBColorForeground = strtol( s_cSBColorForeground, NULL, 10 );
-               SetTextColor( lpDIS->hDC, pWindowData->cSBColorForeground );  //lSBColorForeground );
+               /* lSBColorForeground = strtol( s_cSBColorForeground, NULL, 10 ); */
+               SetTextColor( lpDIS->hDC, pWindowData->cSBColorForeground );  /* lSBColorForeground ); */
 
             if( pWindowData->cSBColorBackground )
-               //lSBColorBackground = strtol( s_cSBColorBackground, NULL, 10 );
-               SetBkColor( lpDIS->hDC, pWindowData->cSBColorBackground );  //lSBColorBackground );
+               /* lSBColorBackground = strtol( s_cSBColorBackground, NULL, 10 ); */
+               SetBkColor( lpDIS->hDC, pWindowData->cSBColorBackground );  /* lSBColorBackground ); */
 
             for( pEnd = ptStr; *pEnd != TEXT( '\0' ); pEnd++ )
                continue;
@@ -4436,7 +4446,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
       s_pWvwData->s_lfSB.lfWidth       = 0;
       s_pWvwData->s_lfSB.lfEscapement  = 0;
       s_pWvwData->s_lfSB.lfOrientation = 0;
-      s_pWvwData->s_lfSB.lfWeight      = 400;       //
+      s_pWvwData->s_lfSB.lfWeight      = 400;       /* */
       s_pWvwData->s_lfSB.lfItalic      = 0;
       s_pWvwData->s_lfSB.lfUnderline   = 0;
       s_pWvwData->s_lfSB.lfStrikeOut   = 0;
@@ -5908,7 +5918,7 @@ static BOOL  hb_gt_wvw_bSetMode( WIN_DATA * pWindowData, USHORT row, USHORT col 
                bResult = hb_gt_wvwInitWindow( pWindowData, pWindowData->hWnd, col, row );
 
             DeleteObject( hFont );
-            //HB_GTSELF_REFRESH( hb_gt_Base() );
+            /* HB_GTSELF_REFRESH( hb_gt_Base() ); */
          }
       }
       else
@@ -6885,10 +6895,10 @@ void hb_gt_wvwDrawOutline( UINT usWinNum, int iTop, int iLeft, int iBottom, int 
    LineTo( pWindowData->hdc, iRight, iBottom + 1 );
 
 }
-//BOOL hb_gt_wvw_KeyEvent( message, wParam, lParam  ) ;
+/* BOOL hb_gt_wvw_KeyEvent( message, wParam, lParam  ); */
 
 /*NOTE: are these workable in MULTI_GT ? */
-//static void gtFnInit( PHB_GT_FUNCS gt_funcs )
+/* static void gtFnInit( PHB_GT_FUNCS gt_funcs ) */
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", pFuncTable ) );
@@ -6909,7 +6919,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->WriteAt        = hb_gt_wvw_WriteAt;
    pFuncTable->PutText        = hb_gt_wvw_PutText;
    pFuncTable->SetAttribute   = hb_gt_wvw_SetAttribute;
-//  pFuncTable->Scroll                = hb_gt_wvw_Scroll;
+/*  pFuncTable->Scroll                = hb_gt_wvw_Scroll; */
    pFuncTable->SetMode   = hb_gt_wvw_SetMode;
    pFuncTable->GetBlink  = hb_gt_wvw_GetBlink;
    pFuncTable->SetBlink  = hb_gt_wvw_SetBlink;
@@ -6950,11 +6960,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 #include "hbgtreg.h"
 
-///////////////////////////////////////////////////////////////////////
-//
-//           GetSet Functions for static Variable
-//
-///////////////////////////////////////////////////////////////////////
+/* GetSet Functions for static Variable */
+
 BOOL hb_gt_wvw_GetMainCoordMode( void )
 {
    return s_pWvwData->s_bMainCoordMode;
@@ -8411,7 +8418,7 @@ IPicture * rr_LoadPictureFromResource( const char * resname, UINT iresimage, LON
    HBITMAP    hbmpx;
    IPicture * iPicture = NULL;
    PICTDESC   picd;
-// int nSize;
+/* int nSize; */
    char szResname[ _MAX_PATH + 1 ];
    int  iWidth, iHeight;
 
@@ -9142,8 +9149,10 @@ LRESULT CALLBACK hb_gt_wvwTBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
             return 0;
 
          hb_gt_wvwTBMouseEvent( pWindowData, hWnd, message, wParam, lParam );
-      //return( 0 );
-      //TB_ISBUTTONHIGHLIGHTED
+#if 0
+      return( 0 );
+      TB_ISBUTTONHIGHLIGHTED
+#endif
       case WM_PAINT:
       {
 
@@ -9574,7 +9583,7 @@ LRESULT CALLBACK hb_gt_wvwXBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
    UINT usWinNum;
 
    UINT uiXBid;
-   // byte bStyle;
+   /* byte bStyle; */
    WNDPROC OldProc;
 
    if( message == WM_MOUSEACTIVATE )
@@ -9843,8 +9852,10 @@ UINT ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, 
 
       AddControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, uiPBid, ( PHB_ITEM ) phbiCodeBlock, rXB, rOffXB, ( byte ) iStyle );
 
-      //OldProc = SetWindowLongPtr (hWndButton,
-      //GWLP_WNDPROC, (LONG_PTR)hb_gt_wvwBtnProc) ;
+#if 0
+      OldProc = SetWindowLongPtr (hWndButton,
+      GWLP_WNDPROC, (LONG_PTR)hb_gt_wvwBtnProc) ;
+#endif
       OldProc = SubclassWindow( hWndButton, hb_gt_wvwBtnProc );
 
       StoreControlProc( usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, OldProc );

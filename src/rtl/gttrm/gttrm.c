@@ -1493,7 +1493,7 @@ again:
       }
       else if( nKey >= 32 && nKey <= 255 )
       {
-         //hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc )
+         /* hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc ) */
          HB_WCHAR wc = 0;
          n = i = 0;
          if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) nKey, &n, &wc ) )

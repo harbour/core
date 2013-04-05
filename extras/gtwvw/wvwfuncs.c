@@ -391,17 +391,13 @@ HB_FUNC( WIN_DRAWTEXT )
 }
 
 
-///////////////////////////////////////////////////////////////////
-//                                                               //
-// Adiciones a GtWVW desarrolladas por SOLUCIONES PERCEPTIVAS... //
-//                                                               //
-///////////////////////////////////////////////////////////////////
+/* Adiciones a GtWVW desarrolladas por SOLUCIONES PERCEPTIVAS... */
 
 HB_FUNC( WVW_GBCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   // int   iStyle;
+   /* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( USHORT ) hb_parni( 2 ),
           usLeft        = ( USHORT ) hb_parni( 3 ),
@@ -426,14 +422,14 @@ HB_FUNC( WVW_GBCREATE )
    hb_retnl( ( LONG ) uiPBid );
 }
 
-// BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
-// BS_GROUPBOX | WS_GROUP | BS_TEXT | WS_OVERLAPPED
+/* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
+   BS_GROUPBOX | WS_GROUP | BS_TEXT | WS_OVERLAPPED */
 
 HB_FUNC( WVW_RBCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   // int   iStyle;
+   /* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( USHORT ) hb_parni( 2 ),
           usLeft        = ( USHORT ) hb_parni( 3 ),
@@ -603,11 +599,11 @@ HB_FUNC( SENDMESSAGE )
 {
 
    hb_retnl( ( LONG ) SendMessage(
-                ( HWND ) HB_PARHANDLE( 1 ),     // handle of destination window
-                ( UINT ) hb_parni( 2 ),         // message to send
-                ( WPARAM ) hb_parnl( 3 ),       // first message parameter
+                ( HWND ) HB_PARHANDLE( 1 ),     /* handle of destination window */
+                ( UINT ) hb_parni( 2 ),         /* message to send */
+                ( WPARAM ) hb_parnl( 3 ),       /* first message parameter */
                 ( HB_ISCHAR( 4 ) ) ? ( LPARAM ) hb_parc( 4 ) :
-                ( LPARAM ) hb_parnl( 4 )        // second message parameter
+                ( LPARAM ) hb_parnl( 4 )        /* second message parameter */
                 ) );
 }
 
@@ -629,9 +625,11 @@ HB_FUNC( BRINGTOTOP1 )
 {
    HWND hWnd = ( HWND ) HB_PARHANDLE( 1 );
 
-//   DWORD  ForegroundThreadID;
-//DWORD  ThisThreadID;
-//DWORD  timeout;
+#if 0
+DWORD  ForegroundThreadID;
+DWORD  ThisThreadID;
+DWORD  timeout;
+#endif
 
    if( IsIconic( hWnd ) )
    {
@@ -639,7 +637,7 @@ HB_FUNC( BRINGTOTOP1 )
       hb_retl( TRUE );
       return;
    }
-   BringWindowToTop( hWnd ); // IE 5.5 related hack
+   BringWindowToTop( hWnd ); /* IE 5.5 related hack */
    SetForegroundWindow( hWnd );
 }
 
@@ -649,9 +647,9 @@ HB_FUNC( ISWINDOW )
 }
 
 
-HB_FUNC( ADDTOOLTIPEX ) // changed by MAG
+HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 {
-// HWND hWnd = ( HWND ) hb_parnl( 1 );
+/* HWND hWnd = ( HWND ) hb_parnl( 1 ); */
    UINT       usWinNum    = WVW_WHICH_WINDOW;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    WVW_DATA * pData       = hb_getWvwData();
@@ -669,10 +667,12 @@ HB_FUNC( ADDTOOLTIPEX ) // changed by MAG
    {
    }
 
-// if( lToolTipBalloon )
-// {
-   iStyle = iStyle | TTS_BALLOON;
-// }
+#if 0
+   if( lToolTipBalloon )
+   {
+      iStyle = iStyle | TTS_BALLOON;
+   }
+#endif
 
    if( ! pData->hWndTT )
       pData->hWndTT = CreateWindow( TOOLTIPS_CLASS, ( LPSTR ) NULL, iStyle,
@@ -686,7 +686,7 @@ HB_FUNC( ADDTOOLTIPEX ) // changed by MAG
    ti.uFlags = TTF_SUBCLASS | TTF_IDISHWND;
    ti.hwnd   = pWindowData->hWnd;
    ti.uId    = ( UINT ) hb_parnl( 2 );
-// ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) );
+/* ti.uId    = ( UINT ) GetDlgItem( hWnd, hb_parni( 2 ) ); */
    ti.hinst    = GetModuleHandle( NULL );
    ti.lpszText = ( LPSTR ) hb_parc( 3 );
 
@@ -761,22 +761,22 @@ HB_FUNC( LOADIMAGE )
 {
    if( HB_ISNUM( 2 ) )
       hb_retnl( ( LONG )
-                LoadImage( hb_getWvwData()->hInstance,                     //HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl( 1 ),    // handle of the instance that contains the image
-                           ( LPCTSTR ) MAKEINTRESOURCE( hb_parnl( 2 ) ),   // name or identifier of image
-                           ( UINT ) hb_parni( 3 ),                         // type of image
-                           hb_parni( 4 ),                                  // desired width
-                           hb_parni( 5 ),                                  // desired height
-                           ( UINT ) hb_parni( 6 )                          // load flags
+                LoadImage( hb_getWvwData()->hInstance,                     /* HB_ISNIL( 1 ) ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl( 1 ),   handle of the instance that contains the image */
+                           ( LPCTSTR ) MAKEINTRESOURCE( hb_parnl( 2 ) ),   /* name or identifier of image */
+                           ( UINT ) hb_parni( 3 ),                         /* type of image */
+                           hb_parni( 4 ),                                  /* desired width */
+                           hb_parni( 5 ),                                  /* desired height */
+                           ( UINT ) hb_parni( 6 )                          /* load flags */
                            ) );
 
    else
       HB_RETHANDLE(
-         LoadImage( ( HINSTANCE ) hb_parnl( 1 ),   // handle of the instance that contains the image
-                    ( LPCTSTR ) hb_parc( 2 ),      // name or identifier of image
-                    ( UINT ) hb_parni( 3 ),        // type of image
-                    hb_parni( 4 ),                 // desired width
-                    hb_parni( 5 ),                 // desired height
-                    ( UINT ) hb_parni( 6 )         // load flags
+         LoadImage( ( HINSTANCE ) hb_parnl( 1 ),   /* handle of the instance that contains the image */
+                    ( LPCTSTR ) hb_parc( 2 ),      /* name or identifier of image */
+                    ( UINT ) hb_parni( 3 ),        /* type of image */
+                    hb_parni( 4 ),                 /* desired width */
+                    hb_parni( 5 ),                 /* desired height */
+                    ( UINT ) hb_parni( 6 )         /* load flags */
                     ) );
 
 }
@@ -786,7 +786,7 @@ HB_FUNC( LOADBITMAP )
    if( HB_ISNUM( 1 ) )
    {
       if( ! HB_ISNIL( 2 ) && hb_parl( 2 ) )
-//               hb_retnl( (LONG) LoadBitmap( GetModuleHandle( NULL ),  MAKEINTRESOURCE(hb_parnl( 1 ) )) );
+/*               hb_retnl( (LONG) LoadBitmap( GetModuleHandle( NULL ),  MAKEINTRESOURCE(hb_parnl( 1 ) )) ); */
          HB_RETHANDLE( LoadBitmap( NULL, ( LPCTSTR ) hb_parnl( 1 ) ) );
       else
          HB_RETHANDLE( LoadBitmap( GetModuleHandle( NULL ), ( LPCTSTR ) hb_parnl( 1 ) ) );
@@ -802,7 +802,7 @@ HB_FUNC( LOADBITMAPEX )
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       if( ! HB_ISNIL( 3 ) && hb_parl( 3 ) )
-//               hb_retnl( (LONG) LoadBitmap( h,  MAKEINTRESOURCE(hb_parnl( 2 ) )) );
+/*               hb_retnl( (LONG) LoadBitmap( h,  MAKEINTRESOURCE(hb_parnl( 2 ) )) ); */
          HB_RETHANDLE( LoadBitmap( h, ( LPCTSTR ) hb_parnl( 3 ) ) );
       else
          HB_RETHANDLE( LoadBitmap( ( HINSTANCE ) h, ( LPCTSTR ) hb_parnl( 2 ) ) );
@@ -818,7 +818,7 @@ HB_FUNC( OPENIMAGE )
    BOOL         lString   = HB_ISNIL( 2 ) ? 0 : hb_parl( 2 );
    int          iFileSize;
    FILE *       fp;
-   // IPicture * pPic;
+   /* IPicture * pPic; */
    LPPICTURE pPic;
    IStream * pStream;
    HGLOBAL   hG;
@@ -867,13 +867,15 @@ HB_FUNC( OPENIMAGE )
       return;
    }
 
-//#if defined(__cplusplus)
-//OleLoadPicture( pStream,0,0,&IID_IPicture,(void**)&pPic );
-//pStream->Release();
-//#else
-   OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
-   pStream->lpVtbl->Release( pStream );
-//#endif
+#if 0
+#if defined(__cplusplus)
+OleLoadPicture( pStream,0,0,&IID_IPicture,(void**)&pPic );
+pStream->Release();
+#else
+ OleLoadPicture( pStream, 0, 0, &IID_IPicture, ( void ** ) &pPic );
+ pStream->lpVtbl->Release( pStream );
+#endif
+#endif
 
    GlobalFree( hG );
 
@@ -883,19 +885,23 @@ HB_FUNC( OPENIMAGE )
       return;
    }
 
-//#if defined(__cplusplus)
-//pPic->get_Handle( (OLE_HANDLE*)&hBitmap );
-//#else
-   pPic->lpVtbl->get_Handle( pPic, ( OLE_HANDLE * ) &hBitmap );
-//#endif
+#if 0
+#if defined(__cplusplus)
+pPic->get_Handle( (OLE_HANDLE*)&hBitmap );
+#else
+ pPic->lpVtbl->get_Handle( pPic, ( OLE_HANDLE * ) &hBitmap );
+#endif
+#endif
 
    hb_retnl( ( LONG ) CopyImage( hBitmap, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG ) );
 
-//#if defined(__cplusplus)
-//pPic->Release();
-//#else
-   pPic->lpVtbl->Release( pPic );
-//#endif
+#if 0
+#if defined(__cplusplus)
+pPic->Release();
+#else
+ pPic->lpVtbl->Release( pPic );
+#endif
+#endif
 }
 
 HB_FUNC( OPENBITMAP )
@@ -999,8 +1005,8 @@ HB_FUNC( OPENBITMAP )
 HB_FUNC( SETTEXTCOLOR )
 {
    COLORREF crColor = SetTextColor(
-      ( HDC ) HB_PARHANDLE( 1 ),          // handle of device context
-      ( COLORREF ) hb_parnl( 2 )          // text color
+      ( HDC ) HB_PARHANDLE( 1 ),          /* handle of device context */
+      ( COLORREF ) hb_parnl( 2 )          /* text color */
       );
 
    hb_retnl( ( LONG ) crColor );
@@ -1009,8 +1015,8 @@ HB_FUNC( SETTEXTCOLOR )
 HB_FUNC( SETBKCOLOR )
 {
    COLORREF crColor = SetBkColor(
-      ( HDC ) HB_PARHANDLE( 1 ),          // handle of device context
-      ( COLORREF ) hb_parnl( 2 )          // text color
+      ( HDC ) HB_PARHANDLE( 1 ),          /* handle of device context */
+      ( COLORREF ) hb_parnl( 2 )          /* text color */
       );
 
    hb_retnl( ( LONG ) crColor );
@@ -1019,7 +1025,7 @@ HB_FUNC( SETBKCOLOR )
 HB_FUNC( CREATESOLIDBRUSH )
 {
    HB_RETHANDLE( CreateSolidBrush(
-                    ( COLORREF ) hb_parnl( 1 ) // brush color
+                    ( COLORREF ) hb_parnl( 1 ) /* brush color */
                     ) );
 }
 
@@ -1041,10 +1047,10 @@ HB_FUNC( GETSYSCOLOR )
 HB_FUNC( REDRAWWINDOW )
 {
    RedrawWindow(
-      ( HWND ) HB_PARHANDLE( 1 ),   // handle of window
-      NULL,                         // address of structure with update rectangle
-      NULL,                         // handle of update region
-      ( UINT ) hb_parni( 2 )        // array of redraw flags
+      ( HWND ) HB_PARHANDLE( 1 ),   /* handle of window */
+      NULL,                         /* address of structure with update rectangle */
+      NULL,                         /* handle of update region */
+      ( UINT ) hb_parni( 2 )        /* array of redraw flags */
       );
 }
 
@@ -1061,20 +1067,20 @@ HB_FUNC( CREATEFONT )
    DWORD fdwStrikeOut = HB_ISNIL( 8 ) ? 0 : hb_parnl( 8 );
 
    hFont = CreateFont(
-      hb_parni( 3 ),             // logical height of font
-      hb_parni( 2 ),             // logical average character width
-      0,                         // angle of escapement
-      0,                         // base-line orientation angle
-      fnWeight,                  // font weight
-      fdwItalic,                 // italic attribute flag
-      fdwUnderline,              // underline attribute flag
-      fdwStrikeOut,              // strikeout attribute flag
-      fdwCharSet,                // character set identifier
-      0,                         // output precision
-      0,                         // clipping precision
-      0,                         // output quality
-      0,                         // pitch and family
-      ( LPCTSTR ) hb_parc( 1 )   // pointer to typeface name string
+      hb_parni( 3 ),             /* logical height of font */
+      hb_parni( 2 ),             /* logical average character width */
+      0,                         /* angle of escapement */
+      0,                         /* base-line orientation angle */
+      fnWeight,                  /* font weight */
+      fdwItalic,                 /* italic attribute flag */
+      fdwUnderline,              /* underline attribute flag */
+      fdwStrikeOut,              /* strikeout attribute flag */
+      fdwCharSet,                /* character set identifier */
+      0,                         /* output precision */
+      0,                         /* clipping precision */
+      0,                         /* output quality */
+      0,                         /* pitch and family */
+      ( LPCTSTR ) hb_parc( 1 )   /* pointer to typeface name string */
       );
    HB_RETHANDLE( hFont );
 }
@@ -1087,7 +1093,7 @@ HB_FUNC( SELECTFONT )
    LOGFONT    lf;
    HFONT      hfont;
    PHB_ITEM   pObj = HB_ISNIL( 1 ) ? NULL : hb_param( 1, HB_IT_OBJECT );
-   //PHB_ITEM temp1;
+   /* PHB_ITEM temp1; */
    PHB_ITEM aMetr = hb_itemArrayNew( 9 );
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
@@ -1149,9 +1155,9 @@ HB_FUNC( INVALIDATERECT )
    }
 
    InvalidateRect(
-      ( HWND ) HB_PARHANDLE( 1 ),         // handle of window with changed update region
-      ( hb_pcount() > 2 ) ? &rc : NULL,   // address of rectangle coordinates
-      hb_parni( 2 )                       // erase-background flag
+      ( HWND ) HB_PARHANDLE( 1 ),         /* handle of window with changed update region */
+      ( hb_pcount() > 2 ) ? &rc : NULL,   /* address of rectangle coordinates */
+      hb_parni( 2 )                       /* erase-background flag */
       );
 }
 
@@ -1167,7 +1173,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    int        iButtons = hb_parni( 4 );
    TBBUTTON * tb       = ( struct _TBBUTTON * ) hb_xgrab( iButtons * sizeof( TBBUTTON ) );
    PHB_ITEM   pTemp;
-   //BOOL bSystem;
+   /* BOOL bSystem; */
 
    ULONG  ulCount;
    ULONG  ulID;
@@ -1183,17 +1189,19 @@ HB_FUNC( TOOLBARADDBUTTONS )
 
       pTemp = hb_arrayGetItemPtr( pArray, ulCount + 1 );
       ulID  = hb_arrayGetNI( pTemp, 1 );
-      //bSystem = hb_arrayGetL( pTemp, 9 );
+      /* bSystem = hb_arrayGetL( pTemp, 9 ); */
 
-//      if (bSystem)
-//      if (ulID > 0 && ulID <  31 )
-//    {
-      tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulID : -1;
-//      }
-//      else
-//      {
-//         tb[ ulCount ].iBitmap   = ulID > 0 ? ( int ) ulCount : -1;
-//      }
+#if 0
+      if (bSystem)
+      if (ulID > 0 && ulID <  31 )
+    {
+    tb[ ulCount ].iBitmap = ulID > 0 ? ( int ) ulID : -1;
+      }
+      else
+      {
+         tb[ ulCount ].iBitmap   = ulID > 0 ? ( int ) ulCount : -1;
+      }
+#endif
       tb[ ulCount ].idCommand = hb_arrayGetNI( pTemp, 2 );
       tb[ ulCount ].fsState   = ( BYTE ) hb_arrayGetNI( pTemp, 3 );
       tb[ ulCount ].fsStyle   = ( BYTE ) hb_arrayGetNI( pTemp, 4 );
@@ -1826,7 +1834,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
    iBottom = xy.y - 1;
    iRight  = xy.x - 1;
 
-   // Aplica OffSet
+   /* Aplica OffSet */
    iTop    += iOffTop;
    iLeft   += iOffLeft;
    iBottom += iOffBottom;

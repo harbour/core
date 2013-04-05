@@ -210,7 +210,7 @@ HB_FUNC( WVW_EBCREATE )
    {
       RECT    rXB = { 0 }, rOffXB = { 0 };
       WNDPROC OldProc;
-      //USHORT i;
+      /* USHORT i; */
       BOOL bFromOEM = ( pWindowData->CodePage == OEM_CHARSET );
 
       if( bFromOEM )
@@ -668,7 +668,7 @@ HB_FUNC( WVW_EBSETSEL )
                 );
    hb_retl( TRUE );
 }
-//Static controls
+/* Static controls */
 
 HB_FUNC( WVW_STCREATE )
 {
@@ -678,8 +678,10 @@ HB_FUNC( WVW_STCREATE )
    WVW_DATA * pData       = hb_getWvwData();
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
-   //RECT r;
-//   HDC hDc;
+#if 0
+   RECT r;
+   HDC hDc;
+#endif
 
    POINT xy = { 0 };
    int   iTop, iLeft, iBottom, iRight;
@@ -693,7 +695,7 @@ HB_FUNC( WVW_STCREATE )
           usLeft   = ( USHORT ) hb_parni( 3 ),
           usBottom = HB_ISNUM( 11 ) ? ( USHORT ) hb_parni( 11 ) : usTop,
           usRight  = HB_ISNUM( 12 ) ? ( USHORT ) hb_parni( 12 ) : usLeft + usWidth - 1;
-   //char * sText = hb_parc( 5 );
+   /* char * sText = hb_parc( 5 ); */
 
 
    int   iStyle = ( bBorder ? WS_BORDER : 0 );
@@ -779,7 +781,6 @@ HB_FUNC( WVW_STCREATE )
 
 HB_FUNC( WVW_STSETTEXT )
 {
-//  byte   bStyle;
    HWND hWndCB = ( HWND ) HB_PARHANDLE( 2 );
 
    if( hWndCB )

@@ -62,7 +62,7 @@ PROCEDURE Main()
          ENDIF
       ENDIF
 
-      IF "--hb-check-only" $ Lower( hb_CmdLine() )
+      IF "--check-only" $ hb_CmdLine()
          IF AScan( aFiles, {| tmp | tmp == cLogName } ) == 0
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
             ErrorLevel( 3 )

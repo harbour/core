@@ -1168,7 +1168,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
    TOOLINFO toolInfo;
 
    hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
-                             WS_POPUP | TTS_ALWAYSTIP,  // | TTS_BALLOON,
+                             WS_POPUP | TTS_ALWAYSTIP, /* | TTS_BALLOON, */
                              CW_USEDEFAULT, CW_USEDEFAULT,
                              CW_USEDEFAULT, CW_USEDEFAULT,
                              wvg_parhwnd( 1 ),

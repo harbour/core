@@ -644,7 +644,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
             PMIXKEY  pKey = mixKeyEval( pTag, pArea );
             mixFindKey( pTag, pKey, &ulKeyPos );
 
-            // insert key into index
+            /* insert key into index */
             if( pTag->ulRecCount == pTag->ulRecMax )
             {
                pTag->pKeys = ( PMIXKEY* ) hb_xrealloc( pTag->pKeys, sizeof( PMIXKEY ) * ( pTag->ulRecMax + MIX_KEYPOOLRESIZE ) );
@@ -668,12 +668,12 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
                mixFindKey( pTag, pKey, &ulKeyPos );
                if( ulKeyPos == pUpdate[ iTag ] || ulKeyPos == pUpdate[ iTag ] + 1 )
                {
-                  // assign new key in same position
+                  /* assign new key in same position */
                   pTag->pKeys[ pUpdate[ iTag ] ] = pKey;
                }
                else
                {
-                  // move keys and assign new key to new position
+                  /* move keys and assign new key to new position */
                   if( ulKeyPos < pUpdate[ iTag ] )
                   {
                      memmove( pTag->pKeys + ulKeyPos + 1, pTag->pKeys + ulKeyPos, ( pUpdate[ iTag ] - ulKeyPos ) * sizeof( PMIXKEY ) );
@@ -691,7 +691,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
          }
          else
          {
-            // delete key
+            /* delete key */
             mixKeyFree( pKey );
             memmove( pTag->pKeys + pUpdate[ iTag ], pTag->pKeys + pUpdate[ iTag ] + 1, ( pTag->ulRecCount - pUpdate[ iTag ] ) * sizeof( PMIXKEY ) );
             pTag->ulRecCount--;

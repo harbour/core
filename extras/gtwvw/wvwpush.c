@@ -119,7 +119,7 @@ HB_FUNC( WVW_PBCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   // int   iStyle;
+   /* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( USHORT ) hb_parni( 2 ),
           usLeft        = ( USHORT ) hb_parni( 3 ),
@@ -433,11 +433,11 @@ HB_FUNC( WVW_CBCREATE )
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndCB;
    WVW_DATA * pData = hb_getWvwData();
-//   LONG cnt;
+/*   LONG cnt; */
    LONG numofchars;
    LONG avgwidth;
    LONG LongComboWidth, NewLongComboWidth;
-//   RECT r;
+/*   RECT r; */
    HFONT hFont = hb_gt_wvwGetFont( pWindowData->fontFace, 10, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
 
    POINT xy = { 0 };
@@ -578,7 +578,7 @@ HB_FUNC( WVW_CBCREATE )
       SendMessage(
          ( HWND ) hWndCB,
          CB_SETDROPPEDWIDTH,
-         ( WPARAM ) NewLongComboWidth + 100, //LongComboWidth+100
+         ( WPARAM ) NewLongComboWidth + 100, /* LongComboWidth+100 */
          ( LPARAM ) 0
          );
 

@@ -959,7 +959,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                       * will break code like:
                       */
 #if 0
-                     //   if /**/lVar; endif
+                     "//   if /**/lVar; endif" /* enclosed in double-quotes to make commit checker happy */
 #endif
                      pState->nSpacesMin = 1;
                      ++n;

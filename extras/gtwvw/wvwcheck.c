@@ -120,7 +120,7 @@ HB_FUNC( WVW_CXCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   // int   iStyle;
+   /* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( BYTE ) hb_parni( 2 ),
           usLeft        = ( BYTE ) hb_parni( 3 ),

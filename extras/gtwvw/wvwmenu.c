@@ -202,13 +202,14 @@ HB_FUNC( WVW_SETMENUKEYEVENT )
    hb_retni( hb_gt_wvwSetMenuKeyEvent( usWinNum, iEvent ) );
 }
 
-// WVW_MENUITEM_SETBITMAPS(
-//           hMenu,
-//           nIDEnableItem,
-//           nPosition,
-//           ncBitmapUnchecked,
-//           ncBimapChecked )
-//
+#if 0
+ WVW_MENUITEM_SETBITMAPS(
+           hMenu,
+           nIDEnableItem,
+           nPosition,
+           ncBitmapUnchecked,
+           ncBimapChecked )
+#endif
 HB_FUNC( WVW_MENUITEM_SETBITMAPS )
 {
    HBITMAP hBitmapUnchecked = NULL;
