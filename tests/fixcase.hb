@@ -92,6 +92,9 @@ PROCEDURE Main( cFile )
       "pcode.txt"     => }
 
    LOCAL aMaskExceptions := { ;
+      "src/3rd/*"                  , ;
+      "contrib/3rd/*"              , ;
+      "contrib/*/3rd/*"            , ;
       "contrib/xhb/thtm.prg"       , ;
       "contrib/hbnetio/readme.txt" , ;
       "contrib/hbnetio/tests/*"    , ;
@@ -125,49 +128,41 @@ PROCEDURE Main( cFile )
 
 STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
 
-   LOCAL cLog := MemoRead( cFileName )
+   LOCAL cFile := MemoRead( cFileName )
+   LOCAL cFileStripped
 
    LOCAL a
    LOCAL cProper
-
-   LOCAL cRest
-   LOCAL nPartial
 
    LOCAL nChanged := 0
 
    hb_default( @lPartial, .F. )
 
    IF lPartial
-      IF ( nPartial := At( "See COPYING.txt for licensing terms.", cLog ) ) > 0
-      ELSEIF ( nPartial := At( "If you do not wish that, delete this exception notice.", cLog ) ) > 0
-      ELSE
-         nPartial := 300
-      ENDIF
-      /* arbitrary size limit */
-      cRest := SubStr( cLog, nPartial )
-      cLog := Left( cLog, nPartial - 1 )
+      cFileStripped := GetCComments( cFile )
    ELSE
-      cRest := ""
+      cFileStripped := cFile
    ENDIF
 
-   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
+   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .T. )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
-            !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
-            !( Upper( cProper ) == "INT(" )          /* interacts with SQL statements */
-            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
+            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ; /* interacts with "file(s)" text */
+            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;  /* interacts with SQL statements */
+            ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|max(|min(|fopen(|abs(|log10(|getenv(|sqrt(|rand(|" ) ) )
+            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
             ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
             nChanged++
          ENDIF
       ENDIF
    NEXT
 
-   IF !( "hbclass.ch" $ cFileName )
-      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cLog,,,,, .T. )
+   IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
+      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
          cProper := ProperCase( hAll, a[ 2 ] )
          IF !( cProper == a[ 2 ] )
-            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
+            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
             ? cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|"
             nChanged++
          ENDIF
@@ -176,7 +171,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
 
    IF nChanged > 0
       ? cFileName, "changed: ", nChanged
-      hb_MemoWrit( cFileName, cLog + cRest )
+//      hb_MemoWrit( cFileName, cFile )
    ENDIF
 
    RETURN
@@ -219,3 +214,38 @@ STATIC PROCEDURE HBXToFuncList( hFunctions, cHBX )
    NEXT
 
    RETURN
+
+/* retains positions in file */
+STATIC FUNCTION GetCComments( cFile )
+
+   LOCAL nPos := 1
+   LOCAL aHits := {}
+   LOCAL tmp
+   LOCAL tmp1
+   LOCAL lStart := .T.
+
+   LOCAL cComments
+
+   /* bare bones */
+   DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
+      AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
+      nPos := tmp
+      lStart := ! lStart
+   ENDDO
+
+   /* unbalanced */
+   IF Len( aHits ) % 2 != 0
+      AAdd( aHits, hb_BLen( cFile ) )
+   ENDIF
+
+   cComments := Space( hb_BLen( cFile ) )
+
+   FOR tmp := 1 TO Len( aHits ) STEP 2
+      FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
+         IF ! hb_BSubStr( cFile, tmp1, 1 ) $ Chr( 13 ) + Chr( 10 )
+            hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN cComments

@@ -177,21 +177,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
          AAdd( aErr, "filename: non-ASCII-7" )
       ENDIF
 
-      IF IsBinary( cFile )
-         IF lApplyFixes
-            lProcess := .T.
-            FOR EACH tmp IN hb_HGetDef( hDoNotProcess, hb_FNameExt( cName ), {} )
-               IF tmp $ cName
-                  lProcess := .F.
-                  EXIT
-               ENDIF
-            NEXT
-            IF lProcess
-               OutStd( cName + ": " + "content: processing" + hb_eol() )
-               ProcFile( cName )
-            ENDIF
-         ENDIF
-      ELSE
+      IF ! IsBinary( cFile )
 
          IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
             cFile := RTrimEOL( Left( cFile, 16384 ) ) + LTrim( Right( cFile, 16384 ) )
@@ -297,6 +283,20 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             IF "//" $ StripCStrings( StripCComments( cFile ) )
                AAdd( aErr, "content: C file with C++ coment" )
             ENDIF
+         ENDIF
+      ENDIF
+
+      IF lApplyFixes
+         lProcess := .T.
+         FOR EACH tmp IN hb_HGetDef( hDoNotProcess, hb_FNameExt( cName ), {} )
+            IF tmp $ cName
+               lProcess := .F.
+               EXIT
+            ENDIF
+         NEXT
+         IF lProcess
+            OutStd( cName + ": " + "content: processing" + hb_eol() )
+            ProcFile( cName )
          ENDIF
       ENDIF
    ENDIF
@@ -452,6 +452,7 @@ STATIC FUNCTION RemoveEndingWhitespace( cFile, cEOL, lRTrim )
 
    RETURN cResult
 
+/* retains positions in file */
 STATIC FUNCTION StripCStrings( cFile )
 
    LOCAL nPos := 1
@@ -479,7 +480,7 @@ STATIC FUNCTION StripCStrings( cFile )
 
    RETURN cFile
 
-/* bare bones */
+/* retains positions in file */
 STATIC FUNCTION StripCComments( cFile )
 
    LOCAL nPos := 1
@@ -488,6 +489,7 @@ STATIC FUNCTION StripCComments( cFile )
    LOCAL tmp1
    LOCAL lStart := .T.
 
+   /* bare bones */
    DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
       AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
       nPos := tmp
@@ -508,6 +510,42 @@ STATIC FUNCTION StripCComments( cFile )
    NEXT
 
    RETURN cFile
+
+/* retains positions in file */
+/* same as StripCComments() but gathers the comments in a new strings */
+STATIC FUNCTION GetCComments( cFile )
+
+   LOCAL nPos := 1
+   LOCAL aHits := {}
+   LOCAL tmp
+   LOCAL tmp1
+   LOCAL lStart := .T.
+
+   LOCAL cComments
+
+   /* bare bones */
+   DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
+      AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
+      nPos := tmp
+      lStart := ! lStart
+   ENDDO
+
+   /* unbalanced */
+   IF Len( aHits ) % 2 != 0
+      AAdd( aHits, hb_BLen( cFile ) )
+   ENDIF
+
+   cComments := Space( hb_BLen( cFile ) )
+
+   FOR tmp := 1 TO Len( aHits ) STEP 2
+      FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
+         IF ! hb_BSubStr( cFile, tmp1, 1 ) $ Chr( 13 ) + Chr( 10 )
+            hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
+         ENDIF
+      NEXT
+   NEXT
+
+   RETURN cComments
 
 STATIC FUNCTION FNameExc( cName, aList )
 
@@ -719,6 +757,9 @@ STATIC FUNCTION FixFuncCase( cFileName )
       "pcode.txt"     => }
 
    STATIC sc_aMaskExceptions := { ;
+      "src/3rd/*"                  , ;
+      "contrib/3rd/*"              , ;
+      "contrib/*/3rd/*"            , ;
       "contrib/xhb/thtm.prg"       , ;
       "contrib/hbnetio/readme.txt" , ;
       "contrib/hbnetio/tests/*"    , ;
@@ -729,15 +770,14 @@ STATIC FUNCTION FixFuncCase( cFileName )
       "tests/rddtest/*"            }
 
    LOCAL hAll
-   LOCAL cLog
+   LOCAL cFile
+   LOCAL cFileStripped
 
    LOCAL a
    LOCAL cProper
    LOCAL cOldCP
 
-   LOCAL cRest
-   LOCAL nPartial
-
+   LOCAL lPartial
    LOCAL nChanged := 0
 
    IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
@@ -748,41 +788,37 @@ STATIC FUNCTION FixFuncCase( cFileName )
    ENDIF
 
    hAll := __hbformat_BuildListOfFunctions()
-   cLog := MemoRead( _HBROOT_ + cFileName )
+   cFile := MemoRead( _HBROOT_ + cFileName )
 
-   IF hb_FNameExt( cFileName ) $ sc_hPartial
-      IF ( nPartial := At( "See COPYING.txt for licensing terms.", cLog ) ) > 0
-      ELSEIF ( nPartial := At( "If you do not wish that, delete this exception notice.", cLog ) ) > 0
-      ELSE
-         nPartial := 300
-      ENDIF
-      /* arbitrary size limit */
-      cRest := SubStr( cLog, nPartial )
-      cLog := Left( cLog, nPartial - 1 )
+   lPartial := hb_FNameExt( cFileName ) $ sc_hPartial
+
+   IF lPartial
+      cFileStripped := GetCComments( cFile )
    ELSE
-      cRest := ""
+      cFileStripped := cFile
    ENDIF
 
    cOldCP := hb_cdpSelect( "EN" )
 
-   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
+   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .T. )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
-            !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
-            !( Upper( cProper ) == "INT(" )          /* interacts with SQL statements */
-            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
-            OutStd( cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|" + hb_eol() )
+            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ; /* interacts with "file(s)" text */
+            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;  /* interacts with SQL statements */
+            ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|max(|min(|fopen(|abs(|log10(|getenv(|sqrt(|rand(|" ) ) )
+            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
+            ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
             nChanged++
          ENDIF
       ENDIF
    NEXT
 
-   IF !( "hbclass.ch" $ cFileName )
-      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cLog,,,,, .T. )
+   IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
+      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
          cProper := ProperCase( hAll, a[ 2 ] )
          IF !( cProper == a[ 2 ] )
-            cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
+            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
             OutStd( cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|" + hb_eol() )
             nChanged++
          ENDIF
@@ -793,7 +829,7 @@ STATIC FUNCTION FixFuncCase( cFileName )
 
    IF nChanged > 0
       OutStd( cFileName + ": Harbour function casings fixed: " + hb_ntos( nChanged ) + hb_eol() )
-      hb_MemoWrit( _HBROOT_ + cFileName, cLog + cRest )
+      hb_MemoWrit( _HBROOT_ + cFileName, cFile )
    ENDIF
 
    RETURN .T.
