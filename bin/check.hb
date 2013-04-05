@@ -567,10 +567,10 @@ STATIC FUNCTION FNameExc( cName, aList )
 
 STATIC PROCEDURE ProcFile( cFileName )
 
-   STATIC sc_hProc := { ;
+   LOCAL hProc := { ;
       ".png" => { "avdpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
-      ".c"   => { "uncrustify -c bin/harbour.ucf %1$s", @FixFuncCase() }, ;
+      ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), @FixFuncCase() }, ;
       ".cpp" => ".c", ;
       ".h"   => ".c", ;
       ".api" => ".c", ;
@@ -581,7 +581,7 @@ STATIC PROCEDURE ProcFile( cFileName )
    LOCAL aProc := hb_FNameExt( cFileName )
    LOCAL xCmd
 
-   DO WHILE HB_ISSTRING( aProc := hb_HGetDef( sc_hProc, aProc, NIL ) )
+   DO WHILE HB_ISSTRING( aProc := hb_HGetDef( hProc, aProc, NIL ) )
    ENDDO
 
    IF HB_ISARRAY( aProc )
