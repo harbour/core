@@ -384,21 +384,21 @@ Variáveis ​​de ambiente:
 
  - **HB\_EXTENSION** lista separada por espaço de extensões para carga no shell interativo do Harbour
   
-diretivas \.hbc \(devem ser escritas em linhas separadas\):  
+Diretivas \.hbc \(devem ser escritas em linhas separadas\):  
 
 
  - **echo=&lt;msg&gt;** Exibir &lt;msg&gt;
- - **skip=\[&lt;msg&gt;\]** pular o processamento do resto do arquivo hbc\.\. Mostrar &lt;msg&gt;, se especificado\.
- - **stop=\[&lt;msg&gt;\]** parar a geração\. Mostrar &lt;msg&gt;, se especificado\.
+ - **skip=\[&lt;msg&gt;\]** pular o processamento do resto do arquivo \.hbc\. Mostrar &lt;msg&gt;, se especificado\.
+ - **stop=\[&lt;msg&gt;\]** parar a construção\. Mostrar &lt;msg&gt;, se especificado\.
  - **sources=** adicionar lista separada por espaços de arquivos de entrada
  - **headers=** adicionar lista separada por espaços de arquivos "\.ch" tipo "headers"
  - **libs=** adicionar lista separada por espaços de bibliotecas \(veja mais opções em \-l\)
  - **frameworks=** adicionar lista separada por espaços de "frameworks" \(somente para Darwin\)
  - **requests=** adicionar lista separada por espaços de símbolos para forçar a linkagem do programa
  - **syslibs=** adicionar lista separada por espaços de bibliotecas como bibliotecas do sistema \(antes bibliotecas regulares\)
- - **hbcs=** incorporat lista separada por espaçoe de arquivos \.hbc\. São aceitos nomes se a extensão\. Essas referências são processados ​​no local\.
+ - **hbcs=** incorporar lista separada por espaços de arquivos \.hbc\. São aceitos nomes sem a extensão\. Estas referências são processados ​​no local\.
  - **autohbcs=** lista separada por espaço de opções de valores de entrada \-autohbc=
- - **libpaths=** adicionar lista separada por espaços dos locais de bibliotecas adicionais
+ - **libpaths=** lista separada por espaços dos "paths" adicionais de bibliotecas
  - **incpaths=** adicionar lista separada por espaços dos locais adicionais dos "header" \(para ambos Harbour e C\)
  - **instfiles=** lista separada por espaço de opções de valores de entrada \-instfile=
  - **instpaths=** lista separada por espaço de opções de valores de entrada \-instpath=
@@ -415,7 +415,7 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **mt=&lt;bool&gt;** opções 'yes' = \-mt, 'no' = \-st
  - **pic=&lt;bool&gt;** opções 'yes' = \-pic, 'no' = \-pic\-
  - **shared=&lt;bool&gt;** opções 'yes' = \-shared, 'no' = \-static
- - **shareddef=&lt;bool&gt;** semelhante ao shared=, mas funciona apenas se o modo shared/static não foi definido antes de
+ - **shareddef=&lt;bool&gt;** semelhante ao shared=, mas funciona apenas se o modo shared/static não foi definido antes
  - **fullstatic=&lt;bool&gt;** opções 'yes' = \-fullstatic, 'no' = \-static
  - **debug=&lt;bool&gt;** opções 'yes' = \-debug, 'no' = \-debug\-
  - **optim=** opções 'yes' = \-optim, 'no' = \-optim\-
@@ -429,24 +429,24 @@ diretivas \.hbc \(devem ser escritas em linhas separadas\):
  - **run=&lt;bool&gt;** opções 'yes' = \-run, 'no' = \-run\-
  - **inc=&lt;bool&gt;** opções 'yes' = \-inc, 'no' = \-inc\-
  - **safe=&lt;bool&gt;** opções 'yes' = \-safe, 'no' = \-safe\-
- - **cpp=** mesmo que \-cpp= opções
- - **warn=** mesmo que \-warn= opções
- - **compr=** mesmo que \-compr= opções
- - **head=** mesmo que \-head= opções
+ - **cpp=** o mesmo para \-cpp= opções
+ - **warn=** o mesmo para \-warn= opções
+ - **compr=** o mesmo para \-compr= opções
+ - **head=** o mesmo para \-head= opções
  - **plugins=** lista separada por espaço de hbmk2 plugins para carga
- - **gt=&lt;name&gt;** mesmo que \-gt&lt;name&gt; opções
+ - **gt=&lt;name&gt;** o mesmo para \-gt&lt;name&gt; opções
  - **gtdef=&lt;name&gt;** definir o GT padrão a ser usado
- - **env=** mesmo que \-env: opções
- - **deppkgname=** mesmo que \-deppkgname= opções
- - **depkeyhead=** mesmo que \-depkeyhead= opções
- - **depoptional=** mesmo que \-depoptional= opções
- - **depcontrol=** mesmo que \-depcontrol= opções
- - **depincroot=** mesmo que \-depincroot= opções
- - **depincpath=** mesmo que \-depincpath= opções
- - **depincpathlocal=** mesmo que \-depincpathlocal= opções
- - **depimplibs=** mesmo que \-depimplibs= opções
- - **depimplibd=** mesmo que \-depimplibd= opções
- - **depfinish=** mesmo que \-depfinish= opções
+ - **env=** o mesmo para \-env: opções
+ - **deppkgname=** o mesmo para \-deppkgname= opções
+ - **depkeyhead=** o mesmo para \-depkeyhead= opções
+ - **depoptional=** o mesmo para \-depoptional= opções
+ - **depcontrol=** o mesmo para \-depcontrol= opções
+ - **depincroot=** o mesmo para \-depincroot= opções
+ - **depincpath=** o mesmo para \-depincpath= opções
+ - **depincpathlocal=** o mesmo para \-depincpathlocal= opções
+ - **depimplibs=** o mesmo para \-depimplibs= opções
+ - **depimplibd=** o mesmo para \-depimplibd= opções
+ - **depfinish=** o mesmo para \-depfinish= opções
  - **name=** Nome do Pacote
  - **description=** descrição do pacote
  - **version=&lt;x\.y\.z&gt;** número da versão do pacote, onde x,y,z &gt;= 0 &lt;= 255\. O padrão é 0\.0\.1, se não especificado\.

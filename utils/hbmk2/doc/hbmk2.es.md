@@ -33,7 +33,7 @@ Opciones:
  - **\-gui|\-std** crea un ejecutable con interfaz gráfico o de consola
  - **\-main=&lt;mainfunc&gt;** sustituye el nombre de la función o procedimento inicial
  - **\-request=&lt;func&gt;** fuerza función/procedimiento a enlazarse
- - **\-fullstatic** enlaza con todas las librerías en modo estático
+ - **\-fullstatic** enlaza en modo estático con todas las librerías
  - **\-pic\[\-\]** crea código objeto independiente de la posición \(siempre activado en los modos \-hbdyn/\-hbdynvm\)
  - **\-\[full|fix\]shared** crea archivos binarios Harbour para compartir sin/con referencia absoluta a librerías de Harbour \(por defecto: 'fullshared' cuando Harbour se instala en ubicación del sistema, 'fixshared' en otro caso\) \(opción fix/full en \*nix solamente\)
  - **\-nulrdd\[\-\]** enlaza con 'nulrdd'
@@ -148,9 +148,9 @@ Las siguientes opciones están disponibles en la línea de comandos:
  - **\-hbrun** ejecuta el objetivo final de la construcción
  - **\-hbraw** se detiene después de ejecutar el compilador de Harbour
  - **\-hbcmp|\-clipper** se detiene después de la creación de los archivos objeto  
-crear un enlace/copia a hbmk2 para hbcmp/clipper resultará el mismo efecto
+puede crear un enlace o copiar hbmk2 a hbcmp/clipper para obtener el mismo efecto
  - **\-hbcc** acepta indicadores propios de C  
-puede crear un enlace/copia de hbmk2 a 'hbcc' para obtener el mismo efecto
+puede crear un enlace o copiar hbmk2 a 'hbcc' para obtener el mismo efecto
  - **\-hblnk** acepta indicadores propios del enlazador
  - **\-autohbm\[\-\]** activa \(o desactiva\) el procesamiento de hbmk\.hbm en el directorio actual \(por defecto: yes\)
  - **\-hb10** activa el modo de compatibilidad 'Harbour 1\.0\.x'
@@ -161,7 +161,7 @@ puede crear un enlace/copia de hbmk2 a 'hbcc' para obtener el mismo efecto
  - \-rtlink 
  - \-blinker 
  - **\-exospace** emula el comportamiento del enlazador compatible con Clipper  
-crear un enlace o copiar hbmk2 a 'rtlink'/'blinker'/'exospace' resultará el mismo efecto
+puede crear un enlace o copiar hbmk2 a 'rtlink'/'blinker'/'exospace' para obtener el mismo efecto
 
 
  - **\-hbreg\[=global\]** realiza el registro de hbmk2 para el tipo de archivo de órdenes de Harbour \(\.hb\) \(sólo para Windows\)
@@ -176,11 +176,11 @@ crear un enlace o copiar hbmk2 a 'rtlink'/'blinker'/'exospace' resultará el mis
  - **\-xhp=&lt;file&gt;** convierte un proyecto \.xhp \(xMate\) en un archivo \.hbp
 
 
- - **\-\-hbdirbin** envía el directorio de programas de Harbour a stdout\.
- - **\-\-hbdirdyn** envía el directorio de bibliotecas dinámicas de Harbour a stdout\.
- - **\-\-hbdirlib** envía el directorio de bibliotecas estáticas de Harbour a stdout\.
- - **\-\-hbdirinc** envía el directorio de archivos de cabecera de Harbour a stdout\.
- - **\-\-hbinfo\[=nested\]** envia información de la construcción de Harbour a stdout\. La salida esta en formato JSON\. Los directorios incluidos siempre contienen barras inclinadas\. Cada bloque JSON es seguido de un byte 0x0A\.
+ - **\-\-hbdirbin** envía el directorio de programas de Harbour a la salida estándar
+ - **\-\-hbdirdyn** envía el directorio de bibliotecas dinámicas de Harbour a la salida entándar
+ - **\-\-hbdirlib** envía el directorio de bibliotecas estáticas de Harbour a la salida estándar
+ - **\-\-hbdirinc** envía el directorio de archivos de cabecera de Harbour a la salida estándar
+ - **\-\-hbinfo\[=nested\]** envia información de la construcción de Harbour a la salida estándar\. La salida esta en formato JSON\. Los rutas incluidas contienen siempre barras inclinadas\. Cada bloque JSON es seguido de un byte 0x0A\.
 
 
  - **\-plat=&lt;platform&gt;** selecciona la CPU de destino \(por defecto: 'automatic'\)
@@ -191,7 +191,7 @@ Valor especial:
  - **\-build=&lt;name&gt;** utilizar un nombre de build especifico
  - **\-lang=&lt;lang&gt;** sustituye idioma por defecto\. &lt;lang&gt; es un código ISO de idioma\.
  - **\-width=&lt;n&gt;** establece el ancho de salida a &lt;n&gt; caracteres \(0=sin límite\)\.
- - **\-shl** muestra el nivel de sub\-proyecto en las líneas de salida
+ - **\-shl** muestra el nivel del sub\-proyecto en las líneas de salida
  - **\-viewhelp** abre la ayuda completa en un visor de texto
  - **\-longhelp** ayuda completa
  - **\-longhelpmd** ayuda completa en formato [Markdown](http://daringfireball.net/projects/markdown/)
@@ -292,7 +292,7 @@ Variables de macro:
  - **$\{hb\_addons\}** directorio base de los programas adicionales de Harbour
  - **$\{hb\_first\}** nombre del fichero de código fuente que contiene la función de entrada \(sin el directorio ni la extensión\)
  - **$\{hb\_outputdir\}** directorio de salida
- - **$\{hb\_outputname\}** Nombre del archivo de salida \(sin extensión\)
+ - **$\{hb\_outputname\}** nombre del archivo de salida \(sin extensión\)
  - **$\{hb\_level\}** nivel de recursión del sub\-proyecto
  - **$\{&lt;depname&gt;\}** devuelve el directorio de archivos de cabecera de la dependencia &lt;depname&gt;, o '1' si no se ha detectado
  - **$\{&lt;envvar&gt;\}** devuelve el valor de la variable de entorno &lt;envvar&gt;
@@ -387,7 +387,7 @@ Directivas \.hbc \(tienen que ser escritas en líneas separadas\):
 
  - **echo=&lt;msg&gt;** muestra &lt;msg&gt;
  - **skip=\[&lt;msg&gt;\]** omite el procesado del resto del archivo \.hbc\. Muestra &lt;msg&gt;, si se especifica\.
- - **stop=\[&lt;msg&gt;\]** para la construcción\. Mostrar &lt;msg&gt;, si se especifica\.
+ - **stop=\[&lt;msg&gt;\]** detiene la construcción\. Muestra &lt;msg&gt;, si se especifica\.
  - **sources=** añade una lista de archivos separados por espacios como archivos de entrada
  - **headers=** añade una lista de archivos de cabecera \.ch separados por espacios como cabeceras estándar
  - **libs=** añade una lista de bibliotecas separadas por espacios \(ver más en la opción \-l\)
@@ -506,17 +506,17 @@ Variables del complemento:
 
 
  - **"apiver"** versión del API como un número entero
- - **"cSTATE"** estado de retrollamada\. Puede ser: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
+ - **"cSTATE"** estado de la llamada al complemento\. Puede ser: 'init', 'pre\_all', 'pre\_prg', 'pre\_res', 'pre\_c', 'pre\_link', 'pre\_lib', 'pre\_cleanup', 'post\_build', 'post\_all'
  - **"params"** matriz de parámetros pasada al complemento vía opción \-pflag=/pi= o que tenga una extensión registrada vía hbmk\_Register\_Input\_File\_Extension\(\)
  - **"vars"** 'hash' de variables para uso del complemento\. Modificable, local para cada complemento\.
  - **"cPLAT"** valor de \-plat
  - **"cCOMP"** valor de \-comp
- - **"nCOMPVer"** muestra la variable de entorno HB\_COMPILER\_VER
+ - **"nCOMPVer"** contiene el valor de la variable de entorno HB\_COMPILER\_VER
  - **"cCPU"** valor de \-cpu
  - **"cBUILD"** valor de \-build=
  - **"cOUTPUTNAME"** valor de \-o
- - **"cTARGETNAME"** muestra la macro $\{hb\_targetname\}
- - **"cTARGETTYPE"** muestra la macro $\{hb\_targettype\}
+ - **"cTARGETNAME"** contiene el valor de la macro $\{hb\_targetname\}
+ - **"cTARGETTYPE"** contiene el valor de la macro $\{hb\_targettype\}
  - **"lREBUILD"** estado de la opción \-rebuild
  - **"lCLEAN"** estado de la opción \-clean
  - **"lDEBUG"** estado de la opción \-debug
@@ -530,10 +530,10 @@ Variables del complemento:
  - **"lBEEP"** estado de la opción \-beep
  - **"lRUN"** estado de la opción \-run
  - **"lINC"** estado de la opción \-inc
- - **"cCCPATH"** muestra la variable de entorno HB\_CCPATH
- - **"cCCPREFIX"** muestra la variable de entorno HB\_CCPREFIX
- - **"cCCSUFFIX"** muestra la variable de entorno HB\_CCSUFFIX
- - **"cCCEXT"** muestra la variable de entorno HB\_CCEXT
+ - **"cCCPATH"** contiene el valor de la variable de entorno HB\_CCPATH
+ - **"cCCPREFIX"** contiene el valor de la variable de entorno HB\_CCPREFIX
+ - **"cCCSUFFIX"** contiene el valor de la variable de entorno HB\_CCSUFFIX
+ - **"cCCEXT"** contiene el valor de la variable de entorno HB\_CCEXT
  - **"cWorkDir"** valor de \-workdir=
  - **"nExitCode"** código de salida actual
   
@@ -567,7 +567,7 @@ Ejemplos para comenzar con hbmk2:
 
  - **Ejecuta el intérprete de comandos interactivo \('dot' prompt\)**  
 $ hbmk2 \.
- - **Ejecutar un archivo de órdenes de Harbour**  
+ - **Ejecuta un archivo de órdenes de Harbour**  
 $ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 
 
@@ -620,7 +620,7 @@ Códigos de salida \("errorlevels"\):
  - **3** no se pudo detectar Harbour
  - **5** no se pudo crear fragmento de código
  - **6** fallo al compilar \(Harbour, compilador de C, compilador de recursos\)
- - **7** falló en el ensamblaje final \(enlazador o gestor de bibliotecas\)
+ - **7** fallo en el ensamblaje final \(enlazador o gestor de bibliotecas\)
  - **8** no soportado
  - **9** error al crear el directorio de trabajo
  - **19** ayuda
@@ -646,7 +646,7 @@ Notas:
   - Se recomienda usar barras inclinadas en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas\.
   - Se aceptan filtros para plataformas en cada linea de archivo '\.hbc' y en la mayoría de las opciones\.  
 Los filtros pueden ser combinados usando los operadores '&amp;' \(y\), '|' \(o\), negados por el operador '\!' y agrupados por paréntesis\. Ej\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
-  - La mayoría de la líneas de un fichero \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) y sus correspondientes parámetros de línea de comandos aceptan variables de macro\. libpaths= también acepta %\{hb\_name\} que se transforma al nombre del fichero \.hbc que se busca\.
+  - La mayoría de la líneas de un fichero \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) y sus correspondientes parámetros de línea de comandos aceptan variables de macro\. libpaths= también acepta %\{hb\_name\} que se transforma en el nombre del fichero \.hbc bajo búsqueda\.
   - Tambien acepta Opciones de macros sustitución de comandos\. Incluya comando dentro de \`\`, y, si el comando contiene espacios, también entre comillas dobles\. F\.e\. "\-cflag==\`wx\-config \-cflags\`", o ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
   - Cuando varias opciones de selección del tipo de objetivo final \(\-hblib, \-hbdyn, etc\.\) son especificados, el primero será el elegido, el resto será ignorado silenciosamente\.
   - Bibliotecas y archivos objeto construidos con/para CA\-Cl\*pper no funcionarán con ningún compilador/plataforma soportados\.
@@ -655,12 +655,12 @@ Los filtros pueden ser combinados usando los operadores '&amp;' \(y\), '|' \(o\)
   - Si se pasa el \. \(punto\) como primer parámetro se entrará en el intérprete de comandos interactivo\.
 
 
-  - El archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido automáticamente como \#include\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\] se selecciona automáticamente \(excepto para los INIT PROCEDURES\)\.
+  - El archivo \.hb, \.hrb o \.dbf pasado como primer parámetro será ejecutado como un archivo de órdenes\. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH\. Si no se especifica una extensión, se buscarán las extensiones \.hb y \.hrb en ese orden\. Los archivos \.dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado\. Las extensiones no\-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados\. Nótese, que para los archivos de órdenes de Harbour, la página de códigos establecida por defecto es la UTF\-8\. El archivo de cabecera principal 'hb\.ch' es incluido automáticamente como \#include\. El formato de fecha por defecto es el estandar ISO: yyyy\-mm\-dd\. El GT por defecto es 'gtcgi', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT 'gtwin' \[\*\] se selecciona automáticamente \(excepto para los INIT PROCEDURE\)\.
   - Puede utilizar las teclas &lt;Alt\+V&gt; en el indicador de comandos interactivo de Harbour para pegar texto desde el portapapeles\.
-  - Los valores marcados con \[\*\] pueden depender de la plataforma anfitriona y/o la configuración\. Esta ayuda se generó en una plataforma afitriona 'win'\.
+  - Los valores marcados con \[\*\] pueden depender de la plataforma anfitriona y/o la configuración\. Esta ayuda se generó en una plataforma anfitriona 'win'\.
 
 
-Valores soportados para &lt;compiler&gt; por cada valor de &lt;platform&gt;:
+Valores soportados de &lt;compiler&gt; para cada valor de &lt;platform&gt;:
 
 
  - **linux** gcc, clang, icc, watcom, sunpro, open64

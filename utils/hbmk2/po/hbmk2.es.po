@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 14:14+0000\nLast-Translator: hbtest <harbour@syenar.net>\nLanguage-Team: Spanish (http://www.transifex.com/projects/p/harbour/language/es/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-05 08:19+0000\nLast-Translator: oscarhdezsz <oscar.hernandez.suarez@gmail.com>\nLanguage-Team: Spanish (http://www.transifex.com/projects/p/harbour/language/es/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: es\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -800,7 +800,7 @@ msgstr "fallo al compilar (Harbour, compilador de C, compilador de recursos)"
 
 #, c-format
 msgid "failed in final assembly (linker or library manager)"
-msgstr "falló en el ensamblaje final (enlazador o gestor de bibliotecas)"
+msgstr "fallo en el ensamblaje final (enlazador o gestor de bibliotecas)"
 
 #, c-format
 msgid "unsupported"
@@ -848,7 +848,7 @@ msgstr "%1$s <archivo[.hb|.prg|.hrb|.dbf]>|<opción> [%2$s]"
 
 #, c-format
 msgid "Supported <compiler> values for each supported <platform> value:"
-msgstr "Valores soportados para <compiler> por cada valor de <platform>:"
+msgstr "Valores soportados de <compiler> para cada valor de <platform>:"
 
 #, c-format
 msgid "Options:"
@@ -1100,7 +1100,7 @@ msgstr "enlace con la 'framework' <framework> (sólo para Darwin)"
 
 #, c-format
 msgid "link with all static libs"
-msgstr "enlaza con todas las librerías en modo estático"
+msgstr "enlaza en modo estático con todas las librerías"
 
 #, c-format
 msgid "link with multi/single-thread Harbour VM"
@@ -1276,7 +1276,7 @@ msgstr "Las siguientes opciones están disponibles en la línea de comandos:"
 
 #, c-format
 msgid "accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect"
-msgstr "acepta indicadores propios de C\npuede crear un enlace/copia de %1$s a 'hbcc' para obtener el mismo efecto"
+msgstr "acepta indicadores propios de C\npuede crear un enlace o copiar %1$s a 'hbcc' para obtener el mismo efecto"
 
 #, c-format
 msgid "accept raw linker flags"
@@ -1300,7 +1300,7 @@ msgstr "muestra sólo la cabecera con la versión"
 
 #, c-format
 msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "emula el comportamiento del enlazador compatible con Clipper\ncrear un enlace o copiar %1$s a 'rtlink'/'blinker'/'exospace' resultará el mismo efecto"
+msgstr "emula el comportamiento del enlazador compatible con Clipper\npuede crear un enlace o copiar %1$s a 'rtlink'/'blinker'/'exospace' para obtener el mismo efecto"
 
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
@@ -1356,23 +1356,23 @@ msgstr "abre la ayuda completa en un visor de texto"
 
 #, c-format
 msgid "output Harbour binary directory to stdout"
-msgstr "envía el directorio de programas de Harbour a stdout."
+msgstr "envía el directorio de programas de Harbour a la salida estándar"
 
 #, c-format
 msgid "output Harbour build information to stdout. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte."
-msgstr "envia información de la construcción de Harbour a stdout. La salida esta en formato JSON. Los directorios incluidos siempre contienen barras inclinadas. Cada bloque JSON es seguido de un byte 0x0A."
+msgstr "envia información de la construcción de Harbour a la salida estándar. La salida esta en formato JSON. Los rutas incluidas contienen siempre barras inclinadas. Cada bloque JSON es seguido de un byte 0x0A."
 
 #, c-format
 msgid "output Harbour dynamic library directory to stdout"
-msgstr "envía el directorio de bibliotecas dinámicas de Harbour a stdout."
+msgstr "envía el directorio de bibliotecas dinámicas de Harbour a la salida entándar"
 
 #, c-format
 msgid "output Harbour header directory to stdout"
-msgstr "envía el directorio de archivos de cabecera de Harbour a stdout."
+msgstr "envía el directorio de archivos de cabecera de Harbour a la salida estándar"
 
 #, c-format
 msgid "output Harbour static library directory to stdout"
-msgstr "envía el directorio de bibliotecas estáticas de Harbour a stdout."
+msgstr "envía el directorio de bibliotecas estáticas de Harbour a la salida estándar"
 
 #, c-format
 msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
@@ -1404,7 +1404,7 @@ msgstr "establece el ancho de salida a <n> caracteres (0=sin límite)."
 
 #, c-format
 msgid "show sub-project level in output lines"
-msgstr "muestra el nivel de sub-proyecto en las líneas de salida"
+msgstr "muestra el nivel del sub-proyecto en las líneas de salida"
 
 #, c-format
 msgid "specify a build name"
@@ -1416,7 +1416,7 @@ msgstr "especifica un nuevo objetivo final. <script> puede ser un fichero '.prg'
 
 #, c-format
 msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
-msgstr "se detiene después de la creación de los archivos objeto\ncrear un enlace/copia a %1$s para hbcmp/clipper resultará el mismo efecto"
+msgstr "se detiene después de la creación de los archivos objeto\npuede crear un enlace o copiar %1$s a hbcmp/clipper para obtener el mismo efecto"
 
 #, c-format
 msgid "stop after running Harbour compiler"
@@ -1744,7 +1744,7 @@ msgstr "nombre del archivo que se ha utilizado (sin ruta ni extensión)"
 
 #, c-format
 msgid "name of the output (without extension)"
-msgstr "Nombre del archivo de salida (sin extensión)"
+msgstr "nombre del archivo de salida (sin extensión)"
 
 #, c-format
 msgid "name of the project (without directory and extension). Returns %1$s if there is not project file."
@@ -2024,7 +2024,7 @@ msgstr "lista de valores separados por espacios como en la opción %1$s"
 
 #, c-format
 msgid "stop the build. Display <msg>, if specified."
-msgstr "para la construcción. Mostrar <msg>, si se especifica."
+msgstr "detiene la construcción. Muestra <msg>, si se especifica."
 
 #, c-format
 msgid "Predefined constants in sources:"
@@ -2220,7 +2220,7 @@ msgstr "versión del API como un número entero"
 
 #, c-format
 msgid "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
-msgstr "estado de retrollamada. Puede ser: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
+msgstr "estado de la llamada al complemento. Puede ser: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
 
 #, c-format
 msgid "Current exit code"
@@ -2232,11 +2232,11 @@ msgstr "'hash' de variables para uso del complemento. Modificable, local para ca
 
 #, c-format
 msgid "see %1$s envvar"
-msgstr "muestra la variable de entorno %1$s"
+msgstr "contiene el valor de la variable de entorno %1$s"
 
 #, c-format
 msgid "see %1$s macro"
-msgstr "muestra la macro %1$s"
+msgstr "contiene el valor de la macro %1$s"
 
 #, c-format
 msgid "Notes:"
@@ -2276,7 +2276,7 @@ msgstr "Bibliotecas y archivos objeto construidos con/para CA-Cl*pper no funcion
 
 #, c-format
 msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command-line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
-msgstr "La mayoría de la líneas de un fichero .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) y sus correspondientes parámetros de línea de comandos aceptan variables de macro. libpaths= también acepta %{hb_name} que se transforma al nombre del fichero .hbc que se busca."
+msgstr "La mayoría de la líneas de un fichero .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) y sus correspondientes parámetros de línea de comandos aceptan variables de macro. libpaths= también acepta %{hb_name} que se transforma en el nombre del fichero .hbc bajo búsqueda."
 
 #, c-format
 msgid "Multiple -l, -L, -i and <script> parameters are accepted."
@@ -2312,11 +2312,11 @@ msgstr ".hb, .prg, .hrb o .dbf"
 
 #, c-format
 msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
-msgstr "El archivo %1$s pasado como primer parámetro será ejecutado como un archivo de órdenes. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH. Si no se especifica una extensión, se buscarán las extensiones .hb y .hrb en ese orden. Los archivos .dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado. Las extensiones no-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados. Nótese, que para los archivos de órdenes de Harbour, la página de códigos establecida por defecto es la UTF-8. El archivo de cabecera principal 'hb.ch' es incluido automáticamente como #include. El formato de fecha por defecto es el estandar ISO: yyyy-mm-dd. El GT por defecto es '%2$s', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT '%3$s' [*] se selecciona automáticamente (excepto para los INIT PROCEDURES)."
+msgstr "El archivo %1$s pasado como primer parámetro será ejecutado como un archivo de órdenes. Si el nombre del archivo no contiene componentes de una ruta, será buscado en el directorio actual y en el PATH. Si no se especifica una extensión, se buscarán las extensiones .hb y .hrb en ese orden. Los archivos .dbf se abrirán automáticamente en modo compartido y el intérprete de comandos de Harbour será iniciado. Las extensiones no-estandar se autodetectarán para archivos de tipo fuente y archivos de órdenes precompilados. Nótese, que para los archivos de órdenes de Harbour, la página de códigos establecida por defecto es la UTF-8. El archivo de cabecera principal 'hb.ch' es incluido automáticamente como #include. El formato de fecha por defecto es el estandar ISO: yyyy-mm-dd. El GT por defecto es '%2$s', excepto que se detecten llamadas CUI de pantalla completa, en cuyo caso el GT '%3$s' [*] se selecciona automáticamente (excepto para los INIT PROCEDURE)."
 
 #, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."
-msgstr "Los valores marcados con [*] pueden depender de la plataforma anfitriona y/o la configuración. Esta ayuda se generó en una plataforma afitriona '%1$s'."
+msgstr "Los valores marcados con [*] pueden depender de la plataforma anfitriona y/o la configuración. Esta ayuda se generó en una plataforma anfitriona '%1$s'."
 
 #, c-format
 msgid "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard."
@@ -2348,7 +2348,7 @@ msgstr "Ejemplos para comenzar con %1$s:"
 
 #, c-format
 msgid "To run a Harbour script"
-msgstr "Ejecutar un archivo de órdenes de Harbour"
+msgstr "Ejecuta un archivo de órdenes de Harbour"
 
 #, c-format
 msgid "To run the interactive shell ('dot' prompt)"

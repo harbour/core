@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 19:58+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-05 13:03+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -1932,7 +1932,7 @@ msgstr "modo xhb (veja opção -xhb)"
 
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
-msgstr "diretivas .hbc (devem ser escritas em linhas separadas):"
+msgstr "Diretivas .hbc (devem ser escritas em linhas separadas):"
 
 #, c-format
 msgid "'yes' = %1$s, 'no' = %2$s option"
@@ -1972,7 +1972,7 @@ msgstr "Exibir <msg>"
 
 #, c-format
 msgid "embed space separated list of .hbc files. Names without the extension is accepted. These references are processed in place."
-msgstr "incorporat lista separada por espaçoe de arquivos .hbc. São aceitos nomes se a extensão. Essas referências são processados ​​no local."
+msgstr "incorporar lista separada por espaços de arquivos .hbc. São aceitos nomes sem a extensão. Estas referências são processados ​​no local."
 
 #, c-format
 msgid "package description"
@@ -1988,7 +1988,7 @@ msgstr "número da versão do pacote, onde x,y,z >= 0 <= 255. O padrão é 0.0.1
 
 #, c-format
 msgid "same as %1$s option"
-msgstr "mesmo que %1$s opções"
+msgstr "o mesmo para %1$s opções"
 
 #, c-format
 msgid "set the default GT to be used"
@@ -1996,11 +1996,11 @@ msgstr "definir o GT padrão a ser usado"
 
 #, c-format
 msgid "similar to shared=, but works only if shared/static mode was not set before"
-msgstr "semelhante ao shared=, mas funciona apenas se o modo shared/static não foi definido antes de"
+msgstr "semelhante ao shared=, mas funciona apenas se o modo shared/static não foi definido antes"
 
 #, c-format
 msgid "skip processing the rest of the .hbc file. Display <msg>, if specified."
-msgstr "pular o processamento do resto do arquivo hbc.. Mostrar <msg>, se especificado."
+msgstr "pular o processamento do resto do arquivo .hbc. Mostrar <msg>, se especificado."
 
 #, c-format
 msgid "space separated list of %1$s plugins to load"
@@ -2008,7 +2008,7 @@ msgstr "lista separada por espaço de %1$s plugins para carga"
 
 #, c-format
 msgid "space separated list of additional library paths"
-msgstr "adicionar lista separada por espaços dos locais de bibliotecas adicionais"
+msgstr "lista separada por espaços dos \"paths\" adicionais de bibliotecas"
 
 #, c-format
 msgid "space separated list of keywords"
@@ -2028,7 +2028,7 @@ msgstr "lista separada por espaço de opções de valores de entrada %1$s"
 
 #, c-format
 msgid "stop the build. Display <msg>, if specified."
-msgstr "parar a geração. Mostrar <msg>, se especificado."
+msgstr "parar a construção. Mostrar <msg>, se especificado."
 
 #, c-format
 msgid "Predefined constants in sources:"
