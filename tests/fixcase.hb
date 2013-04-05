@@ -171,7 +171,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
 
    IF nChanged > 0
       ? cFileName, "changed: ", nChanged
-//      hb_MemoWrit( cFileName, cFile )
+      hb_MemoWrit( cFileName, cFile )
    ENDIF
 
    RETURN
