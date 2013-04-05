@@ -122,7 +122,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "UADOS"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
       CASE "UAKOI8" ; cCPDef := "UAKOI8"; cLangIDBase := "uk" ; EXIT
       CASE "UAWIN"  ; cCPDef := "UA1251"; cLangIDBase := "uk" ; EXIT
-      CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
+      CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh" ; EXIT
       CASE "ZHGB"   ; cCPDef := "GBK"   ; cLangIDBase := "zh_sim" ; EXIT
       OTHERWISE
          /* Case sensitive legacy IDs. Lowercase flavours denote new
@@ -388,7 +388,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "zh-mo"
       CASE "zh-sg"
       CASE "zh-tw"
-      CASE "zh"         ; cLangHb := "zh_tra" ; EXIT
+      CASE "zh"         ; cLangHb := "zh" ; EXIT
       ENDSWITCH
    ENDIF
 

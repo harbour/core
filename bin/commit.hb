@@ -64,7 +64,7 @@ PROCEDURE Main()
 
       IF "--hb-check-only" $ Lower( hb_CmdLine() )
          IF AScan( aFiles, {| tmp | tmp == cLogName } ) == 0
-            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated", cLogName ) + hb_eol() )
+            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN
          ENDIF
@@ -140,6 +140,9 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
    LOCAL cStart
    LOCAL aNew := {}
 
+   LOCAL cFile
+   LOCAL tmp
+
    ASort( aChanges,,, {| x, y | x < y } )
 
    DO CASE
@@ -167,7 +170,9 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
-               AAdd( aFiles, SubStr( cLine, 8 + 1 ) )
+               IF !( cStart == "-" )
+                  AAdd( aFiles, SubStr( cLine, 8 + 1 ) )
+               ENDIF
             ENDIF
          ENDIF
       NEXT
@@ -203,7 +208,13 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             ENDSWITCH
             IF ! Empty( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 3 + 1 ), "\", "/" ) )
-               AAdd( aFiles, SubStr( cLine, 3 + 1 ) )
+               IF !( cStart == "-" )
+                  cFile := SubStr( cLine, 3 + 1 )
+                  IF ( tmp := At( " -> ", cFile ) ) > 0
+                     cFile := SubStr( cFile, tmp + Len( " -> " ) )
+                  ENDIF
+                  AAdd( aFiles, cFile )
+               ENDIF
             ENDIF
          ENDIF
       NEXT

@@ -23,6 +23,7 @@ ChangeLog.txt ident
 *.in      text
 *.ini     text
 *.js      text
+*.log     text
 *.m       text
 *.md      text
 *.mft     text
@@ -38,6 +39,7 @@ ChangeLog.txt ident
 *.sx      text
 *.tpl     text
 *.txt     text
+*.ucf     text
 *.vbs     text
 *.xml     text
 *.xsl     text

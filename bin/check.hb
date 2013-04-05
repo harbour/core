@@ -25,9 +25,6 @@
  */
 
 /* TODO: Apply transformations:
-         Uncrustify, hbformat,
-         pngout/pngcrush/optipng/advpng,
-         jpgoptim/jpegtran/jpegrescan,
          css/html/xml format, etc */
 
 #pragma -w3
@@ -49,10 +46,7 @@ FUNCTION CheckFileList( xName )
 
    IF Empty( xName ) .OR. HB_ISARRAY( xName )
       IF Empty( xName )
-         xName := hb_DirScan( "", hb_osFileMask() )
-         FOR EACH file IN xName
-            file := file[ F_NAME ]
-         NEXT
+         xName := my_DirScan( hb_osFileMask() )
       ENDIF
       FOR EACH file IN xName
          IF ! CheckFile( file, @aErr )
@@ -72,6 +66,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
    LOCAL tmp
    LOCAL cEOL
 
+   LOCAL lProcess
    LOCAL lReBuild
    LOCAL lRemoveEndingWhitespace
 
@@ -96,14 +91,21 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*.md", ;
       "*.html", ;
       "*/hb-charmap.def", ;  /* TOFIX: Use 8.3 name */
+      "debian/*", ;
       "package/*", ;
       "*/3rd/*", ;
       "contrib/hbwin/*", ;
       "contrib/rddads/unixutils.h", ;
       "extras/httpsrv/*" }
 
+   LOCAL aCanHaveNoExtension := { ;
+      "Makefile", ;
+      ".*", ;
+      "debian/*" }
+
    LOCAL aCanHaveTab := { ;
       "Makefile", ;
+      "debian/rules", ;
       "*.mk", ;
       "*.yyc", ;
       "*.dif", ;
@@ -125,6 +127,13 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
    LOCAL aForcedLF := { ;
       "*.sh" }
 
+   LOCAL hAllowedExt := LoadGitattributes()
+
+   /* TODO: extend as you go */
+   LOCAL hDoNotProcess := { ;
+      ".c" => { "3rd", "include", "dlmalloc", "hvm", "sha1", "sha2" }, ;
+      ".h" => { "3rd", "include" } }
+
    hb_default( @lApplyFixes, .F. )
 
    cName := hb_DirSepToOS( cName )
@@ -144,6 +153,14 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
          AAdd( aErr, "filename: non MS-DOS compatible" )
       ENDIF
 
+      IF Empty( hb_FNameExt( cName ) )
+         IF ! FNameExc( cName, aCanHaveNoExtension )
+            AAdd( aErr, "filename: missing extension" )
+         ENDIF
+      ELSEIF ! hb_FNameExt( cName ) $ hAllowedExt
+         AAdd( aErr, "filename: unknown extension. Either change it or update .gitattributes." )
+      ENDIF
+
       IF !( cName == Lower( cName ) ) .AND. ! FNameExc( cName, aCanBeUpper )
          AAdd( aErr, "filename: non-lowercase" )
       ENDIF
@@ -154,9 +171,16 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
       IF IsBinary( cFile )
          IF lApplyFixes
-            IF hb_FNameExt( cFile ) == ".png"
-               OutStd( cFile + ": " + "content: optimizing" + hb_eol() )
-               hb_run( "optipng " + cFile )
+            lProcess := .T.
+            FOR EACH tmp IN hb_HGetDef( hDoNotProcess, hb_FNameExt( cName ), {} )
+               IF tmp $ cName
+                  lProcess := .F.
+                  EXIT
+               ENDIF
+            NEXT
+            IF lProcess
+               OutStd( cName + ": " + "content: processing" + hb_eol() )
+               ProcFile( cName )
             ENDIF
          ENDIF
       ELSE
@@ -428,6 +452,31 @@ STATIC FUNCTION FNameExc( cName, aList )
 
    RETURN .F.
 
+STATIC PROCEDURE ProcFile( cFileName )
+
+   STATIC sc_hProc := { ;
+      ".png" => { "avdpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
+      ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
+      ".c"   => { "uncrustify -c bin/harbour.ucf %1$s" }, ;
+      ".cpp" => ".c", ;
+      ".h"   => ".c" }
+// NOTE: hbformat has bugs which make it unsuitable for unattended use
+//    ".prg" => { "hbformat %1$s" } }
+
+   LOCAL aProc := hb_FNameExt( cFileName )
+   LOCAL cCmd
+
+   DO WHILE HB_ISSTRING( aProc := hb_HGetDef( sc_hProc, aProc, NIL ) )
+   ENDDO
+
+   IF HB_ISARRAY( aProc )
+      FOR EACH cCmd IN aProc
+         hb_run( hb_StrFormat( hb_DirSepToOS( cCmd ), '"' + cFileName + '"' ) )
+      NEXT
+   ENDIF
+
+   RETURN
+
 STATIC FUNCTION UTF8_BOM()
    RETURN ;
       hb_BChar( 0xEF ) + ;
@@ -467,3 +516,42 @@ STATIC FUNCTION LoadGitignore()
    ENDIF
 
    RETURN s_aIgnore
+
+STATIC FUNCTION LoadGitattributes()
+
+   THREAD STATIC s_hExt := NIL
+
+   LOCAL cLine
+   LOCAL tmp
+
+   IF s_hExt == NIL
+      s_hExt := { => }
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
+         IF Left( cLine, 2 ) == "*."
+             cLine := SubStr( cLine, 2 )
+             IF ( tmp := At( " ", cLine ) ) > 0
+                s_hExt[ RTrim( Left( cLine, tmp - 1 ) ) ] := NIL
+             ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN s_hExt
+
+STATIC FUNCTION my_DirScan( cMask )
+   RETURN my_DirScanWorker( cMask, {} )
+
+STATIC FUNCTION my_DirScanWorker( cMask, aList )
+
+   LOCAL file
+
+   FOR EACH file IN Directory( cMask, "D" )
+      IF file[ F_NAME ] == "." .OR. file[ F_NAME ] == ".."
+      ELSEIF "D" $ file[ F_ATTR ]
+         my_DirScanWorker( hb_FNameDir( cMask ) + file[ F_NAME ] + hb_ps() + hb_FNameNameExt( cMask ), aList )
+      ELSE
+         AAdd( aList, hb_FNameDir( cMask ) + file[ F_NAME ] )
+      ENDIF
+   NEXT
+
+   RETURN aList

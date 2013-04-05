@@ -78,7 +78,7 @@ PROCEDURE Main( ... )
    hProjectList := { => }
    hb_HKeepOrder( hProjectList, .T. )
 
-   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist" )
+   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist.txt" )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    aParams := hb_AParams()

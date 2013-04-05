@@ -463,6 +463,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "zh-mo"      ; EXIT
       CASE "zh-sg"      ; EXIT
       CASE "zh-tw"      ; EXIT
+      CASE "zh"         ; EXIT
       ENDSWITCH
    ENDIF
 

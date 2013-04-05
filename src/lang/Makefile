@@ -35,8 +35,8 @@ C_SOURCES := \
    l_sv.c \
    l_tr.c \
    l_uk.c \
+   l_zh.c \
    l_zh_sim.c \
-   l_zh_tra.c \
 
 LIBNAME := hblang
 

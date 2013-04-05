@@ -37,7 +37,6 @@
 #include "directry.ch"
 
 STATIC sc_hLangMapping := { ;
-   "zh_CN"        => "zh_tra", ;
    "zh_CN.GB2312" => "zh_sim", ;
    "sr"           => "sr_cyr", ;
    "sr@latin"     => "sr_lat" }
