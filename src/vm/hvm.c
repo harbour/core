@@ -143,10 +143,10 @@ static void    hb_vmArrayGen( HB_SIZE nElements ); /* generates an nElements Arr
 static void    hb_vmHashGen( HB_SIZE nElements ); /* generates an nElements Hash and fills it from the stack values */
 
 /* macros */
-static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments Set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments Set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments Set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments Set(s) on HVM stack { &var } */
+static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments set on HVM stack { &var } */
 static void    hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
