@@ -390,7 +390,7 @@ void nxs_make_scramble( HB_ISIZ * scramble, const unsigned char * key, HB_SIZE k
 /*****
  * Encrypt a text using a key
  * Usage:
- * HB_Crypt( cSource, cKey ) --> cCipher
+ * hb_Crypt( cSource, cKey ) --> cCipher
  */
 
 HB_FUNC( HB_CRYPT )
@@ -411,7 +411,7 @@ HB_FUNC( HB_CRYPT )
 /*****
  * Decrypt a text using a key
  * Usage:
- * HB_Decrypt( cCrypt, cKey ) --> cSource
+ * hb_Decrypt( cCrypt, cKey ) --> cSource
  */
 
 HB_FUNC( HB_DECRYPT )

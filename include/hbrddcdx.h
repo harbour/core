@@ -155,11 +155,11 @@ HB_EXTERN_BEGIN
       case CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM:
          PARTIAL_RYO | NOUPDATE_RYO
          if index key begin with:
-            'SXCHAR(' or 'SXNUM(' or 'SXDATE(' or 'SXLOG('
+            'sxChar(' or 'sxNum(' or 'sxDate(' or 'sxLog('
          then
             | TEMPLATE_RYO
 
-   sx_chill()  if ( ! NOUPDATE_RYO ) then set ( CHGONLY_RYO | PARTIAL_RYO )
+   sx_Chill()  if ( ! NOUPDATE_RYO ) then set ( CHGONLY_RYO | PARTIAL_RYO )
                   if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
                         CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
                   {
@@ -167,7 +167,7 @@ HB_EXTERN_BEGIN
                      indexOpt |= CDX_TYPE_TEMPORARY
                   }
 
-   sx_warm()   if ( ! NOUPDATE_RYO ) then clear CHGONLY_RYO
+   sx_Warm()   if ( ! NOUPDATE_RYO ) then clear CHGONLY_RYO
                   if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
                         CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
                   {
@@ -175,7 +175,7 @@ HB_EXTERN_BEGIN
                      indexOpt &= ~CDX_TYPE_TEMPORARY
                   }
 
-   sx_freeze() set NOUPDATE_RYO
+   sx_Freeze() set NOUPDATE_RYO
                   indexOpt |= CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM;
 */
 

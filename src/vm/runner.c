@@ -697,7 +697,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 }
 
 /*
-   HB_HRBRUN( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) -> <retVal>
+   hb_hrbRun( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) -> <retVal>
 
    This program will get the data from the .hrb file and run the p-code
    contained in it.
@@ -753,7 +753,7 @@ HB_FUNC( HB_HRBRUN )
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_HRBLOAD( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) */
+/* hb_hrbLoad( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) */
 
 HB_FUNC( HB_HRBLOAD )
 {

@@ -4321,7 +4321,7 @@ HB_FUNC( __CLSPARENT )
             hb_clsIsParent( ( HB_USHORT ) hb_parni( 1 ), szParentName ) );
 }
 
-/* __sender() -> <obj> | NIL
+/* __Sender() -> <obj> | NIL
  * returns sender object
  */
 HB_FUNC( __SENDER )
@@ -5082,7 +5082,7 @@ void hb_mthAddTime( HB_ULONG ulClockTicks )
 }
 #endif
 
-/* __getMsgPrf( <hClass>, <cMsg> ) -> <aMethodInfo> { { <nTimes>, <nTime> }, ... }
+/* __GetMsgPrf( <hClass>, <cMsg> ) -> <aMethodInfo> { { <nTimes>, <nTime> }, ... }
  */
 HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
 {
@@ -5380,7 +5380,7 @@ HB_FUNC( __OBJRESTOREIVARS )
 }
 
 /* __clsGetProperties( <nClassHandle>, [<lAllExported>] ) -> <acProperties>
- * Notice that this function works quite similar to __CLASSSEL()
+ * Notice that this function works quite similar to __classSel()
  * except that just returns the name of the datas and methods
  * that have been declared as PROPERTY (PERSISTENT) or also EXPORTED
  * if second parameter <lAllExported> is true and message has corresponding
@@ -5507,7 +5507,7 @@ HB_FUNC( __CLSMSGTYPE )
  * for MT programs which will allocate dynamically at runtime
  * more then 16386 classes. In practice rather impossible though
  * who knows ;-)
- * __clsPreAllocate( [<nMaxClasses>] ) -> <nMaxClasses>
+ * __clsPreallocate( [<nMaxClasses>] ) -> <nMaxClasses>
  */
 HB_FUNC( __CLSPREALLOCATE )
 {

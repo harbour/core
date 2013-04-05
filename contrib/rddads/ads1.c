@@ -2711,7 +2711,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             long lDate = hb_itemGetDL( pItem );
 
             /* ADS does not support dates before 0001-01-01. It generates corructed
-               DBF records and fires ADS error 5095 on FIELDGET() later. [Mindaugas] */
+               DBF records and fires ADS error 5095 on FieldGet() later. [Mindaugas] */
             if( pField->uiLen != 4 && lDate < 1721426 )  /* 1721426 ~= 0001-01-01 */
                lDate = 0;
 

@@ -537,7 +537,7 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 #  define HB_LONG_EXPLENGTH( l ) HB_LONG_LENGTH( l )
 #endif
 
-/* HB_DBL_LENGTH() is used by VAL() for strings longer then 10 characters
+/* HB_DBL_LENGTH() is used by Val() for strings longer then 10 characters
  * (counted to '.') and to set the size of math operations and new
  * double item - it's CA-Cl*pper compatible range. For doubles we do
  * not have separated limit for result of math operations. [druzus]

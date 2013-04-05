@@ -385,7 +385,7 @@ HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero o
  */
 
 /*
-   WALIAS( <nHandle> ) -> <nHandle> | -1
+   WAlias( <nHandle> ) -> <nHandle> | -1
    change current window handle to <nHandle>
    if <nHandle> is not used by other window
    or is current window.
@@ -406,8 +406,8 @@ HB_FUNC( WALIAS )
 }
 
 /*
-   WLIST() -> <cHandleList>
-   _WSTACK() -> <cHandleList>
+   WList() -> <cHandleList>
+   _WStack() -> <cHandleList>
    return string with window handles in each character,
    the last character is the top window.
 

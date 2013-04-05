@@ -143,10 +143,10 @@ static void    hb_vmArrayGen( HB_SIZE nElements ); /* generates an nElements Arr
 static void    hb_vmHashGen( HB_SIZE nElements ); /* generates an nElements Hash and fills it from the stack values */
 
 /* macros */
-static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
+static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments Set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments Set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments Set(s) on HVM stack func( &var ) */
+static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments Set(s) on HVM stack { &var } */
 static void    hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
@@ -8707,7 +8707,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
        * immediately interrupted. Because Clipper does not check the
        * exception flag often enough then it's possible to execute one
        * function from first EXIT PROC. Using small trick with
-       * QOUT( TYPE( cPrivateVar ) ) in the EXIT procedure (TYPE() is
+       * QOut( Type( cPrivateVar ) ) in the EXIT procedure (Type() is
        * not normal function) we can also check that it tries to execute
        * EXIT procedures exactly here before leave current function.
        * So to be as close as possible the Clipper intentional behavior

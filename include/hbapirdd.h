@@ -391,7 +391,7 @@ typedef struct
 typedef DBEVALINFO * LPDBEVALINFO;
 
 /*
- * NOTE: If your redefine EVAL() method then you may use itmBlock as
+ * NOTE: If your redefine Eval() method then you may use itmBlock as
  * string ITEM to make some operations on server side of remote RDD.
  */
 

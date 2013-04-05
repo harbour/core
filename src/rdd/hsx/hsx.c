@@ -194,7 +194,7 @@
       which are related to workarea errors
    6. The literal version passed to HS_SET is remembered and can be
       later used by HS_VERIFY if not given explicitly.
-   7. HS_VERIFY respects the lCase flag (fixed SIX bug) and also CftsVeri()
+   7. HS_VERIFY respects the lCase flag (fixed SIX bug) and also cftsVeri()
       syntax (first parameter in numeric indicating the HSX handler)
       See also the note about HS_SET.
    8. HS_FILTER respects the filter flags in verification process, it
@@ -204,7 +204,7 @@
    8. HS_ADD and HS_REPLACE have optional additional logical parameter
       which allow to set DELETE flag in new/modified record
    9. Mindaugas noticed me that tests shows CFTS effectively
-      uses only the part of string to first chr(0) byte.
+      uses only the part of string to first Chr(0) byte.
       In first version this behavior was emulated but later I read
       in CFTS documentation that behavior for strings with
       embedded 0 is undefined (so it was not intentionally designed)
@@ -472,7 +472,7 @@ static void hb_hsxHashStr( const char * pStr, HB_SIZE nLen, HB_BYTE * pKey, int 
    memset( pKey, '\0', iKeySize );
 #if 0
 /* This code keeps the strict CFTS behavior which stops string
-   manipulating at first chr(0) character */
+   manipulating at first Chr(0) character */
    if( pStr && nLen-- && ( c1 = ( HB_UCHAR ) *pStr++ ) != 0 )
    {
       while( nLen-- && ( c2 = ( HB_UCHAR ) *pStr++ ) != 0 )
@@ -530,7 +530,7 @@ static int hb_hsxStrCmp( const char * pSub, HB_SIZE nSub, const char * pStr, HB_
             }
          }
 #if 0
-/* This code is for strict CftsVeri() behavior - uncomment if necessary
+/* This code is for strict cftsVeri() behavior - uncomment if necessary
    but it's IMHO bug */
          if( iFilter == 1 )
          {

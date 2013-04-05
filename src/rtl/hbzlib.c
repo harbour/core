@@ -189,7 +189,7 @@ static int hb_gz_compress( char ** pDstPtr, HB_SIZE * pnDst,
 }
 
 /*
- * HB_ZLIBVERSION( [<nType>] ) -> <cZlibVersion>
+ * hb_ZLibVersion( [<nType>] ) -> <cZlibVersion>
  */
 HB_FUNC( HB_ZLIBVERSION )
 {
@@ -205,7 +205,7 @@ HB_FUNC( HB_ZLIBVERSION )
 }
 
 /*
- * HB_ZCOMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * hb_ZCompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
  */
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
@@ -218,7 +218,7 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
 }
 
 /*
- * HB_ZUNCOMPRESSLEN( <cCompressedData>, [<@nResult>] )
+ * hb_ZUncompressLen( <cCompressedData>, [<@nResult>] )
  *          -> <nUnCompressedDataLen> or -1 on error
  */
 HB_FUNC( HB_ZUNCOMPRESSLEN )
@@ -245,7 +245,7 @@ HB_FUNC( HB_ZUNCOMPRESSLEN )
 }
 
 /*
- * HB_ZCOMPRESS( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
+ * hb_ZCompress( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
  *    => <cCompressedData> or NIL on Error
  */
 HB_FUNC( HB_ZCOMPRESS )
@@ -310,7 +310,7 @@ HB_FUNC( HB_ZCOMPRESS )
 }
 
 /*
- * HB_ZUNCOMPRESS( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
+ * hb_ZUncompress( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
  *    => <cUnCompressedData> or NIL on Error
  */
 HB_FUNC( HB_ZUNCOMPRESS )
@@ -372,7 +372,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 }
 
 /*
- * HB_GZCOMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * hb_gzCompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
  */
 HB_FUNC( HB_GZCOMPRESSBOUND )
 {
@@ -385,7 +385,7 @@ HB_FUNC( HB_GZCOMPRESSBOUND )
 }
 
 /*
- * HB_GZCOMPRESS( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
+ * hb_gzCompress( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
  *    => <cCompressedData> or NIL on Error
  *
  * Note: this function does not create any references to gz* ZLIB functions
@@ -457,7 +457,7 @@ HB_FUNC( HB_GZCOMPRESS )
 }
 
 /*
- * HB_ZERROR( <nError> ) => <cErrorDescription>
+ * hb_ZError( <nError> ) => <cErrorDescription>
  */
 HB_FUNC( HB_ZERROR )
 {

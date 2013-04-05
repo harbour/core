@@ -56,7 +56,7 @@
 
    PRG functions:
 
-   HB_MD5( <cString> ) -> <cMD5>
+   hb_MD5( <cString> ) -> <cMD5>
          Calculates RFC 1321 MD5 digest (128-bit checksum)
       Parameters:
          <cString>   - string variable to calculate MD5
@@ -64,7 +64,7 @@
          ASCII hex MD5 digest as 32-byte string
          empty string on error
 
-   HB_MD5FILE( <cFileName> ) -> <cMD5>
+   hb_MD5File( <cFileName> ) -> <cMD5>
          Calculates RFC 1321 MD5 digest (128-bit checksum) of a file contents
          (file size is limited by OS limits only)
       Parameters:
@@ -75,14 +75,14 @@
 
    C functions:
 
-   void hb_md5( const void * data, HB_SIZE datalen, char * digest )
+   void hb_MD5( const void * data, HB_SIZE datalen, char * digest )
       Parameters:
          data     - input byte stream
          datalen  - input stream length
          digest   - raw (unformatted) MD5 digest buffer
                     (at least 16 bytes long)
 
-   void hb_md5file( HB_FHANDLE hFile, char * digest )
+   void hb_MD5File( HB_FHANDLE hFile, char * digest )
       Parameters:
          hFile    - file handle
          digest   - raw (unformatted) MD5 digest buffer
@@ -250,7 +250,7 @@ static void hb_md5val( HB_U32 accum[], char * md5val )
    }
 }
 
-void hb_md5( const void * data, HB_SIZE nLen, char * digest )
+void hb_MD5( const void * data, HB_SIZE nLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
    HB_UCHAR buf[ 128 ];
@@ -294,7 +294,7 @@ void hb_md5( const void * data, HB_SIZE nLen, char * digest )
    hb_md5val( md5.accum, digest );
 }
 
-void hb_md5file( HB_FHANDLE hFile, char * digest )
+void hb_MD5File( HB_FHANDLE hFile, char * digest )
 {
    MD5_BUF md5;
    HB_SIZE n;

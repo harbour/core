@@ -936,7 +936,7 @@ static void hb_gt_def_WriteCon( PHB_GT pGT, const char * szText, HB_SIZE nLength
 
    HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
 
-   /* Limit the starting cursor position to maxrow(),maxcol()
+   /* Limit the starting cursor position to MaxRow(),MaxCol()
       on the high end, but don't limit it on the low end. */
 
    if( iRow > iMaxRow || iCol > iMaxCol )
@@ -1078,7 +1078,7 @@ static void hb_gt_def_WriteConW( PHB_GT pGT, const HB_WCHAR * szText, HB_SIZE nL
 
    HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
 
-   /* Limit the starting cursor position to maxrow(),maxcol()
+   /* Limit the starting cursor position to MaxRow(),MaxCol()
       on the high end, but don't limit it on the low end. */
 
    if( iRow > iMaxRow || iCol > iMaxCol )
@@ -3842,7 +3842,7 @@ void hb_gtStartupInit( void )
 
    hb_errInternal( 9998, "Harbour terminal (GT) initialization failure", NULL, NULL );
 
-   /* not executed, only to force linking HB_GTSYS() */
+   /* not executed, only to force linking hb_GTSYS() */
    HB_FUNC_EXEC( HB_GTSYS );
 }
 

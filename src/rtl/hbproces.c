@@ -1133,7 +1133,7 @@ int hb_fsProcessRun( const char * pszFilename,
                ul = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
                if( ul == 0 )
                {
-                  /* zero bytes read after positive select()
+                  /* zero bytes read after positive Select()
                    * - writing process closed the pipe
                    */
                   hb_fsClose( hStdout );
@@ -1153,7 +1153,7 @@ int hb_fsProcessRun( const char * pszFilename,
                ul = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
                if( ul == 0 )
                {
-                  /* zero bytes read after positive select()
+                  /* zero bytes read after positive Select()
                    * - writing process closed the pipe
                    */
                   hb_fsClose( hStderr );

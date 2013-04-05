@@ -77,7 +77,7 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
    hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 
-/* HPDF_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
+/* HPDF_LoadJpegImageFromFile( hDoc, cHPEGFileName ) -> hImage
  */
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 {

@@ -792,7 +792,7 @@ HB_FUNC( HB_GCALL )
     * try to retrieve returned value. It's safe and cost nearly
     * nothing in whole GC scan process. It may help when previously
     * called function returned complex item with cross references.
-    * It's quite common situation that people executes HB_GCALL()
+    * It's quite common situation that people executes hb_gcAll()
     * immediately after such function. [druzus]
     */
    hb_ret();

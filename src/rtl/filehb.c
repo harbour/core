@@ -57,7 +57,7 @@
          modification on the filename. [vszakats]
          For easier portability in Harbour user can optionally enable
          leading and trailing spaces stripping by
-            SET( _SET_TRIMFILENAME, .T. )
+            Set( _SET_TRIMFILENAME, .T. )
          [druzus] */
 
 HB_FUNC( FILE )

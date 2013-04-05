@@ -297,10 +297,10 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
    ADSHANDLE hConnToCheck = HB_ADS_PARCONNECTION( 1 );
 
    /* NOTE: Caller can specify a connection. Otherwise use default thread local handle.
-            The thread default handle will continue to be 0 if no adsConnect60() (Data
+            The thread default handle will continue to be 0 if no AdsConnect60() (Data
             Dictionary) calls are made. Simple table access uses an implicit connection
             whose handle we don't see unless you get it from an opened table
-            with ADSGETTABLECONTYPE(). */
+            with AdsGetTableConType(). */
 
    if( hConnToCheck )
    {
@@ -1611,7 +1611,7 @@ HB_FUNC( ADSROLLBACK )
 
 /*
    set the number of records to read ahead, for the current work area
-   Call:    ADSCACHERECORDS( nRecords )
+   Call:    AdsCacheRecords( nRecords )
    Returns: True if successful
  */
 HB_FUNC( ADSCACHERECORDS )
@@ -2088,7 +2088,7 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
 
 /*
    Verify if a username/password combination is valid for this database
-   Call :    ADSTESTLOGIN( cServerPath, nServerTypes, cUserName, cPassword, options,
+   Call :    AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
                           [ nUserProperty, @cBuffer ] )
    Returns : True if login succeeds
 

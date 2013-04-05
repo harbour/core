@@ -223,7 +223,7 @@ typedef __int64 LONG_PTR;
 
 /* default maximum number of user bitmap cache
    One bitmap cache currently takes 280 bytes (see BITMAP_HANDLE).
-   See also wvw_setMaxBMCache().
+   See also wvw_SetMaxBMCache().
  */
 #define WVW_DEFAULT_MAX_BMCACHE   20
 
@@ -511,7 +511,7 @@ typedef struct win_data
    int   keyPointerOut;                            /* Offset into key array of next character to read */
    int   keyLast;
 
-   RECT  RectInvalid;                  /* Invalid rectangle if DISPBEGIN() active */
+   RECT  RectInvalid;                  /* Invalid rectangle if DispBegin() active */
    HFONT hFont;
    int   fontHeight;                   /* requested font height */
    int   fontWidth;                    /* requested font width */
@@ -552,7 +552,7 @@ typedef struct wvw_data
    BOOL s_bVertCaret;            /* if TRUE, caret is in Vertical style */
 
    BOOL s_bNOSTARTUPSUBWINDOW;   /* if TRUE, subwindow will not be displayed during opening */
-   /* use WVW_NOSTARTUPSUBWINDOW() to check/set it */
+   /* use wvw_NoStartupSubWindow() to check/set it */
 
    BOOL s_bDefCentreWindow;   /* default CentreWindow setting for subwindows */
 
@@ -582,7 +582,7 @@ typedef struct wvw_data
 /* read only by user ***/
 
 /* for GTWVW private use: ***********************************************/
-   BOOL s_bQuickSetMode;   /* quick SetMode(), to reset maxrow() and maxcol() only */
+   BOOL s_bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
 
    BOOL s_bFlashingWindow;
    /* topmost window is flashing

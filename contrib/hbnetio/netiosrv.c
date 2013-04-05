@@ -494,7 +494,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
 }
 
 
-/* NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+/* netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
  */
 HB_FUNC( NETIO_RPC )
 {
@@ -520,7 +520,7 @@ HB_FUNC( NETIO_RPC )
    hb_retl( fRPC );
 }
 
-/* NETIO_RPCFILTER( <pConnectionSocket>,
+/* netio_RPCFilter( <pConnectionSocket>,
  *                  <sFuncSym> | <hValue> | NIL ) -> NIL
  */
 HB_FUNC( NETIO_RPCFILTER )
@@ -547,7 +547,7 @@ HB_FUNC( NETIO_RPCFILTER )
    }
 }
 
-/* NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+/* netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
  */
 HB_FUNC( NETIO_SERVERSTOP )
 {
@@ -564,7 +564,7 @@ HB_FUNC( NETIO_SERVERSTOP )
    }
 }
 
-/* NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+/* netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
  */
 HB_FUNC( NETIO_SERVERTIMEOUT )
 {
@@ -578,7 +578,7 @@ HB_FUNC( NETIO_SERVERTIMEOUT )
    }
 }
 
-/* NETIO_LISTEN( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
+/* netio_Listen( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
  *    -> <pListenSocket> | NIL
  */
 HB_FUNC( NETIO_LISTEN )
@@ -617,7 +617,7 @@ HB_FUNC( NETIO_LISTEN )
    s_listenRet( sd, szRootPath, fRPC );
 }
 
-/* NETIO_ACCEPT( <pListenSocket>, [<nTimeOut>],
+/* netio_Accept( <pListenSocket>, [<nTimeOut>],
  *               [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *    -> <pConnectionSocket> | NIL
  */
@@ -673,7 +673,7 @@ HB_FUNC( NETIO_ACCEPT )
    s_consrvRet( conn );
 }
 
-/* NETIO_COMPRESS( <pConnectionSocket>,
+/* netio_Compress( <pConnectionSocket>,
  *                 [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
  */
 HB_FUNC( NETIO_COMPRESS )
@@ -745,7 +745,7 @@ static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
    return conn->login;
 }
 
-/* NETIO_VERIFYCLIENT( <pConnectionSocket> ) -> <lAccepted>
+/* netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>
  */
 HB_FUNC( NETIO_VERIFYCLIENT )
 {
@@ -755,7 +755,7 @@ HB_FUNC( NETIO_VERIFYCLIENT )
       hb_retl( s_netio_login_accept( conn ) );
 }
 
-/* NETIO_SERVER( <pConnectionSocket> ) -> NIL
+/* netio_Server( <pConnectionSocket> ) -> NIL
  */
 HB_FUNC( NETIO_SERVER )
 {
@@ -1318,7 +1318,7 @@ HB_FUNC( NETIO_SERVER )
    }
 }
 
-/* NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
+/* netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDITEM )
 {
@@ -1363,7 +1363,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
    hb_retl( fResult );
 }
 
-/* NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
+/* netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDDATA )
 {
@@ -1403,7 +1403,7 @@ HB_FUNC( NETIO_SRVSENDDATA )
    hb_retl( fResult );
 }
 
-/* NETIO_SRVSTATUS( <pConnectionSocket>
+/* netio_SrvStatus( <pConnectionSocket>
  *                  [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
  */
 HB_FUNC( NETIO_SRVSTATUS )

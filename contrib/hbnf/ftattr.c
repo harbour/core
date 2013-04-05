@@ -80,7 +80,7 @@ HB_FUNC( FT_SAVEATT )
  *
  *     Rev 1.2   03 Oct 1992 14:33:46   GLENN
  *  Ted Means made modifications so these functions will work with
- *  dispBegin() and dispEnd().
+ *  DispBegin() and DispEnd().
  *
  *     Rev 1.1   15 Aug 1991 23:08:02   GLENN
  *  Forest Belt proofread/edited/cleaned up doc

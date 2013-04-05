@@ -430,7 +430,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
 }
 
 /*
- * __HBCT_DSPTIME() is helper functions for SHOWTIME()
+ * __hbct_DspTime() is helper functions for ShowTime()
  */
 HB_FUNC( __HBCT_DSPTIME )
 {

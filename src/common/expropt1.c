@@ -1371,7 +1371,7 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
          {
             /* &macro was passed
                or optional parameters list passed, f.e.: f(a,b,...)
-               or hb_arrayToParams( aParams )
+               or hb_ArrayToParams( aParams )
                - handle it differently then in a normal statement */
             if( pElem->ExprType == HB_ET_MACRO )
                pElem->value.asMacro.SubType |= HB_ET_MACRO_LIST;

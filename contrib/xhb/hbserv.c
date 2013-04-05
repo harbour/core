@@ -801,7 +801,7 @@ HB_FUNC( HB_STARTSERVICE )
 }
 
 /**
- * Returns true if the current program is a service, that is if HB_StartService() has
+ * Returns true if the current program is a service, that is if hb_StartService() has
  * Been called. C version useful for internal api
  */
 
@@ -828,7 +828,7 @@ void hb_serviceExit( void )
 
 
 /**
- * Returns true if the current program is a service, that is if HB_StartService() has
+ * Returns true if the current program is a service, that is if hb_StartService() has
  * Been called.
  */
 HB_FUNC( HB_ISSERVICE )

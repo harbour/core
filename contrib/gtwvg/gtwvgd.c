@@ -3966,7 +3966,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 /* ********** Graphics API ********** */
 /*
  * NOTE:
- *      gfxPrimitive() parameters may have different meanings
+ *      GfxPrimitive() parameters may have different meanings
  *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
  *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
  *

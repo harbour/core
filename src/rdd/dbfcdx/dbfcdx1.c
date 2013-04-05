@@ -6570,7 +6570,7 @@ static HB_ERRCODE hb_cdxSeek( CDXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pKeyIt
       else
          fLast = pTag->UsrAscend ? fFindLast : ! fFindLast;
 
-      /* TODO: runtime error if valtype(pKeyItm) != pTag->Type */
+      /* TODO: runtime error if ValType(pKeyItm) != pTag->Type */
       pKey = hb_cdxKeyPutItem( NULL, pKeyItm,
                                fLast ? CDX_MAX_REC_NUM : CDX_IGNORE_REC_NUM,
                                pTag, HB_TRUE, CDX_CMP_PREFIX );

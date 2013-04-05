@@ -52,7 +52,7 @@
 #include "hbapigt.h"
 #include "hbchksum.h"
 
-/* COM_DOSCON( <cString>, [<nLine>], [<nColumn>] ) -> <cNull>
+/* com_DosCon( <cString>, [<nLine>], [<nColumn>] ) -> <cNull>
  */
 HB_FUNC( COM_DOSCON )
 {
@@ -76,7 +76,7 @@ HB_FUNC( COM_DOSCON )
    hb_retc_null();
 }
 
-/* COM_CRC( <cString>, [<nStart>], [<nPolynomial>] ) -> <nCRC>
+/* com_CRC( <cString>, [<nStart>], [<nPolynomial>] ) -> <nCRC>
  */
 HB_FUNC( COM_CRC )
 {
@@ -113,7 +113,7 @@ static char s_xmoblock_sum( const char * szData, HB_SIZE nLen )
    return ( char ) uc;
 }
 
-/* XMOBLOCK( <cString>, <nBlockNumber>, [<lCRC>], [<nMode>] ) -> <cXModemBlock>
+/* XMoBlock( <cString>, <nBlockNumber>, [<lCRC>], [<nMode>] ) -> <cXModemBlock>
  */
 HB_FUNC( XMOBLOCK )
 {
@@ -154,7 +154,7 @@ HB_FUNC( XMOBLOCK )
    hb_retclen_buffer( pszBlock, nSize );
 }
 
-/* XMOCHECK( <cString>, [<lCRC>] ) -> <nBlockNumber>|-1
+/* XMoCheck( <cString>, [<lCRC>] ) -> <nBlockNumber>|-1
  */
 HB_FUNC( XMOCHECK )
 {
@@ -185,7 +185,7 @@ HB_FUNC( XMOCHECK )
    hb_retni( iResult );
 }
 
-/* ZEROINSERT( <cString> ) -> <cDataBlock>
+/* ZeroInsert( <cString> ) -> <cDataBlock>
  */
 HB_FUNC( ZEROINSERT )
 {
@@ -267,7 +267,7 @@ HB_FUNC( ZEROINSERT )
       hb_retc_null();
 }
 
-/* ZEROREMOVE( <cDataBlock> ) -> cString
+/* ZeroRemove( <cDataBlock> ) -> cString
  */
 HB_FUNC( ZEROREMOVE )
 {

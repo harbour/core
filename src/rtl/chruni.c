@@ -53,7 +53,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* HB_UCHAR( <nCode> ) -> <cText>
+/* hb_UChar( <nCode> ) -> <cText>
  * return string with U+nCode character in HVM CP encoding
  */
 HB_FUNC( HB_UCHAR )
@@ -71,7 +71,7 @@ HB_FUNC( HB_UCHAR )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BCHAR( <nCode> ) -> <cText>
+/* hb_BChar( <nCode> ) -> <cText>
  * return 1 byte string with <nCode> value
  */
 HB_FUNC( HB_BCHAR )
@@ -86,7 +86,7 @@ HB_FUNC( HB_BCHAR )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_UCODE( <cText> ) -> <nCode>
+/* hb_UCode( <cText> ) -> <nCode>
  * return unicode value of 1-st character (not byte) in given string
  */
 HB_FUNC( HB_UCODE )
@@ -100,7 +100,7 @@ HB_FUNC( HB_UCODE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BCODE( <cText> ) -> <nCode>
+/* hb_BCode( <cText> ) -> <nCode>
  * return value of 1-st byte in given string
  */
 HB_FUNC( HB_BCODE )
@@ -113,7 +113,7 @@ HB_FUNC( HB_BCODE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_ULEN( <cText> ) -> <nChars>
+/* hb_ULen( <cText> ) -> <nChars>
  * return string length in characters
  */
 HB_FUNC( HB_ULEN )
@@ -127,7 +127,7 @@ HB_FUNC( HB_ULEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BLEN( <cText> ) -> <nBytes>
+/* hb_BLen( <cText> ) -> <nBytes>
  * return string length in bytes
  */
 HB_FUNC( HB_BLEN )
@@ -140,7 +140,7 @@ HB_FUNC( HB_BLEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_UPEEK( <cText>, <n> ) -> <nCode>
+/* hb_UPeek( <cText>, <n> ) -> <nCode>
  * return unicode value of <n>-th character in given string
  */
 HB_FUNC( HB_UPEEK )
@@ -169,7 +169,7 @@ HB_FUNC( HB_UPEEK )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BPEEK( <cText>, <n> ) -> <nCode>
+/* hb_BPeek( <cText>, <n> ) -> <nCode>
  * return value of <n>-th byte in given string
  */
 HB_FUNC( HB_BPEEK )
@@ -187,7 +187,7 @@ HB_FUNC( HB_BPEEK )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_UPOKE( [@]<cText>, <n>, <nVal> ) -> <cText>
+/* hb_UPoke( [@]<cText>, <n>, <nVal> ) -> <cText>
  * change <n>-th character in given string to unicode <nVal> one and return modified text
  */
 HB_FUNC( HB_UPOKE )
@@ -239,7 +239,7 @@ HB_FUNC( HB_UPOKE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BPOKE( [@]<cText>, <n>, <nVal> ) -> <cText>
+/* hb_BPoke( [@]<cText>, <n>, <nVal> ) -> <cText>
  * change <n>-th byte in given string to <nVal> and return modified text
  */
 HB_FUNC( HB_BPOKE )
@@ -262,7 +262,7 @@ HB_FUNC( HB_BPOKE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_USUBSTR( <cString>, <nStart>, <nCount> ) -> <cSubstring>
+/* hb_USubStr( <cString>, <nStart>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_USUBSTR )
 {
@@ -310,7 +310,7 @@ HB_FUNC( HB_USUBSTR )
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BSUBSTR( <cString>, <nStart>, <nCount> ) -> <cSubstring>
+/* hb_BSubStr( <cString>, <nStart>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_BSUBSTR )
 {
@@ -356,7 +356,7 @@ HB_FUNC( HB_BSUBSTR )
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_ULEFT( <cString>, <nCount> ) -> <cSubstring>
+/* hb_ULeft( <cString>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_ULEFT )
 {
@@ -382,7 +382,7 @@ HB_FUNC( HB_ULEFT )
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BLEFT( <cString>, <nCount> ) -> <cSubstring>
+/* hb_BLeft( <cString>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_BLEFT )
 {
@@ -406,7 +406,7 @@ HB_FUNC( HB_BLEFT )
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_URIGHT( <cString>, <nCount> ) -> <cSubstring>
+/* hb_URight( <cString>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_URIGHT )
 {
@@ -434,7 +434,7 @@ HB_FUNC( HB_URIGHT )
       hb_retc_null();
 }
 
-/* HB_BRIGHT( <cString>, <nCount> ) -> <cSubstring>
+/* hb_BRight( <cString>, <nCount> ) -> <cSubstring>
  */
 HB_FUNC( HB_BRIGHT )
 {
@@ -454,7 +454,7 @@ HB_FUNC( HB_BRIGHT )
 }
 
 
-/* HB_UAT( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+/* hb_UAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
  */
 HB_FUNC( HB_UAT )
 {
@@ -508,7 +508,7 @@ HB_FUNC( HB_UAT )
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_BAT( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+/* hb_BAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
  */
 HB_FUNC( HB_BAT )
 {

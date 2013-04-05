@@ -96,7 +96,6 @@ PROCEDURE Main( cFile )
       "contrib/3rd/*"              , ;
       "contrib/*/3rd/*"            , ;
       "contrib/xhb/thtm.prg"       , ;
-      "contrib/hbnetio/readme.txt" , ;
       "contrib/hbnetio/tests/*"    , ;
       "extras/httpsrv/home/*"      , ;
       "tests/hbpptest/*"           , ;
@@ -148,9 +147,10 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
-            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ; /* interacts with "file(s)" text */
-            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;  /* interacts with SQL statements */
-            ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|max(|min(|fopen(|abs(|log10(|getenv(|sqrt(|rand(|" ) ) )
+            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
+            !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
+            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
+            ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
             cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
             ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
             nChanged++

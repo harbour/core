@@ -459,7 +459,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
          if( y_stop < format_len )
             hb_strncat( szNewFormat, szDateFormat + y_stop, size );
          /* DATE FORMAT is under direct control of SET, so notify when it
-            it is changed indirectly via __SETCENTURY() */
+            it is changed indirectly via __SetCentury() */
          hb_setListenerNotify( HB_SET_DATEFORMAT, HB_SET_LISTENER_BEFORE );
          hb_xfree( szDateFormat );
          pSet->HB_SET_DATEFORMAT = szNewFormat;
@@ -487,7 +487,7 @@ HB_FUNC( SETCANCEL )
 {
    HB_STACK_TLS_PRELOAD
    hb_retl( hb_setGetCancel() );
-   /* SETCANCEL() accepts only logical parameters */
+   /* SetCancel() accepts only logical parameters */
    hb_setSetItem( HB_SET_CANCEL, hb_param( 1, HB_IT_LOGICAL ) );
 }
 
@@ -1074,9 +1074,9 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_TIMEFORMAT = hb_strdup( "hh:mm:ss.fff" );
    /*
     * Tests shows that Clipper has two different flags to control ALT+D
-    * and ALTD() behavior and on startup these flags are not synchronized.
+    * and AltD() behavior and on startup these flags are not synchronized.
     * When application starts _SET_DEBUG is set to HB_FALSE but debugger
-    * can be activated by hitting K_ALT_D or calling ALTD() function without
+    * can be activated by hitting K_ALT_D or calling AltD() function without
     * parameter. It means that some other internal flag enables these
     * operations.
     * Because Harbour is using _SET_DEBUG flag only then we have to

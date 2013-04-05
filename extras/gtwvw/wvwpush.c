@@ -73,7 +73,7 @@
 
 #include "hbgtwvw.h"
 
-/* WVW_PBcreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
+/* wvw_pbCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
  *               nStretchBitmap, lMap3Dcolors)
  * create pushbutton for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -150,7 +150,7 @@ HB_FUNC( WVW_PBCREATE )
    hb_retnl( ( LONG ) uiPBid );
 }
 
-/*WVW_PBdestroy( [nWinNum], nPBid )
+/*wvw_pbDestroy( [nWinNum], nPBid )
  * destroy button nPBid for window nWinNum
  */
 HB_FUNC( WVW_PBDESTROY )
@@ -186,7 +186,7 @@ HB_FUNC( WVW_PBDESTROY )
    hb_xfree( pcd );
 }
 
-/*WVW_PBsetFocus( [nWinNum], nButtonId )
+/*wvw_pbSetFocus( [nWinNum], nButtonId )
  * set the focus to button nButtonId in window nWinNum
  */
 HB_FUNC( WVW_PBSETFOCUS )
@@ -202,7 +202,7 @@ HB_FUNC( WVW_PBSETFOCUS )
       hb_retl( FALSE );
 }
 
-/*WVW_PBisFocused( [nWinNum], nPBid )
+/*wvw_pbIsFocused( [nWinNum], nPBid )
  * returns .t. if the focus is on button nPBid in window nWinNum
  */
 HB_FUNC( WVW_PBISFOCUSED )
@@ -215,7 +215,7 @@ HB_FUNC( WVW_PBISFOCUSED )
    hb_retl( ( HWND ) GetFocus() == hWndPB );
 }
 
-/*WVW_PBenable( [nWinNum], nButtonId, [lToggle] )
+/*wvw_pbEnable( [nWinNum], nButtonId, [lToggle] )
  * enable/disable button nButtonId on window nWinNum
  *(lToggle defaults to .t., ie. enabling the button)
  * return previous state of the button (TRUE:enabled FALSE:disabled)
@@ -241,7 +241,7 @@ HB_FUNC( WVW_PBENABLE )
       hb_retl( FALSE );
 }
 
-/*WVW_PBsetcodeblock( [nWinNum], nPBid, bBlock )
+/*wvw_pbSetCodeblock( [nWinNum], nPBid, bBlock )
  * assign (new) codeblock bBlock to button nPBid for window nWinNum
  *
  * return .t. if successful
@@ -291,7 +291,7 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    hb_retl( TRUE );
 }
 
-/* WVW_PBsetstyle( [nWinNum], nPBid, nStyle )
+/* wvw_pbSetStyle( [nWinNum], nPBid, nStyle )
  * assign new style nStyle to button nPBid for window nWinNum
  * typical usage: nStyle==BS_DEFPUSHBUTTON (==01) to turn the button
  *                                               into default push button
@@ -318,7 +318,7 @@ HB_FUNC( WVW_PBSETSTYLE )
    hb_retl( TRUE );
 }
 
-/* WVW_PBSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/* wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
  *                             lItalic, lUnderline, lStrikeout
  *
  * this will initialize font for ALL pushbuttons in window nWinNum
@@ -383,7 +383,7 @@ HB_FUNC( WVW_PBSETFONT )
 /* COMBOBOX begins (experimental)                                    */
 
 
-/* WVW_CBcreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
+/* wvw_cbCreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
  *                          nReserved, nKbdType, aOffset, hControl )
  * create combobox (drop-down list, no editbox) for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -403,7 +403,7 @@ HB_FUNC( WVW_PBSETFONT )
  *         nType  : event type (CBN_SELCHANGE/CBN_SETFOCUS/CBN_KILLFOCUS supported)
  *         nIndex : index of the selected list item (0 based)
  * nListLines: number of lines for list items, default = 3
- *            (will be automatically truncated if it's > len(aText))
+ *            (will be automatically truncated if it's > Len(aText))
  * nReserved: reserved for future (this parm is now ignored)
  *
  * nKbdType: WVW_CB_KBD_STANDARD (0): similar to standard windows convention
@@ -604,7 +604,7 @@ HB_FUNC( WVW_CBCREATE )
       hb_retnl( ( LONG ) 0 );
 }
 
-/*WVW_CBdestroy( [nWinNum], nCBid )
+/*wvw_cbDestroy( [nWinNum], nCBid )
  * destroy combobox nCBid for window nWinNum
  */
 HB_FUNC( WVW_CBDESTROY )
@@ -640,7 +640,7 @@ HB_FUNC( WVW_CBDESTROY )
    hb_xfree( pcd );
 }
 
-/*WVW_CBsetFocus( [nWinNum], nComboId )
+/*wvw_cbSetFocus( [nWinNum], nComboId )
  * set the focus to combobox nComboId in window nWinNum
  */
 HB_FUNC( WVW_CBSETFOCUS )
@@ -656,7 +656,7 @@ HB_FUNC( WVW_CBSETFOCUS )
       hb_retl( FALSE );
 }
 
-/*WVW_CBisFocused( [nWinNum], nComboId )
+/*wvw_cbIsFocused( [nWinNum], nComboId )
  * returns .t. if the focus is on combobox nComboId in window nWinNum
  */
 HB_FUNC( WVW_CBISFOCUSED )
@@ -669,7 +669,7 @@ HB_FUNC( WVW_CBISFOCUSED )
    hb_retl( ( HWND ) GetFocus() == hWndCB );
 }
 
-/*WVW_CBenable( [nWinNum], nComboId, [lEnable] )
+/*wvw_cbEnable( [nWinNum], nComboId, [lEnable] )
  * enable/disable button nComboId on window nWinNum
  *(lEnable defaults to .t., ie. enabling the combobox)
  * return previous state of the combobox (TRUE:enabled FALSE:disabled)
@@ -695,7 +695,7 @@ HB_FUNC( WVW_CBENABLE )
       hb_retl( FALSE );
 }
 
-/*WVW_CBsetcodeblock( [nWinNum], nCBid, bBlock )
+/*wvw_cbSetCodeblock( [nWinNum], nCBid, bBlock )
  * assign (new) codeblock bBlock to combobox nCBid for window nWinNum
  *
  * return .t. if successful
@@ -731,7 +731,7 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    hb_retl( TRUE );
 }
 
-/* WVW_CBSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/* wvw_cbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
  *                             lItalic, lUnderline, lStrikeout
  *
  * this will initialize font for ALL comboboxes in window nWinNum
@@ -793,14 +793,14 @@ HB_FUNC( WVW_CBSETFONT )
 
 }
 
-/* WVW_CBsetIndex( [nWinNum], nCBid, nIndex )
+/* wvw_cbSetIndex( [nWinNum], nCBid, nIndex )
  *  set current selection of combobox nCBid in window nWinNum to nIndex
  *  (nIndex is 0 based)
  *  returns .t. if successful.
  *
- * NOTE: the better name to this function should be WVW_CBsetCurSel()
+ * NOTE: the better name to this function should be wvw_CBSetCurSel()
  *      but that name is already used.
- *      (WVW_CBsetcursel() and WVW_CBaddstring() is NOT related to other
+ *      (wvw_CBSetCurSel() and wvw_cbAddString() is NOT related to other
  *       WVW_CB* functions)
  */
 HB_FUNC( WVW_CBSETINDEX )
@@ -826,7 +826,7 @@ HB_FUNC( WVW_CBSETINDEX )
    hb_retl( retval );
 }
 
-/* WVW_CBgetIndex( [nWinNum], nCBid )
+/* wvw_cbGetIndex( [nWinNum], nCBid )
  *  get current selection of combobox nCBid in window nWinNum
  *  return nIndex (0 based)
  *  returns CB_ERR (-1) if none selected
@@ -834,7 +834,7 @@ HB_FUNC( WVW_CBSETINDEX )
  * NOTE: the better name to this function should be WVW_CBgetCurSel()
  *      but that name is potentially misleading to WVW_CBsetCursel
  *      which is not our family of WVW_CB* functions
- *      (WVW_CBsetcursel() and WVW_CBaddstring() is NOT related to other
+ *      (wvw_CBSetCurSel() and wvw_cbAddString() is NOT related to other
  *       WVW_CB* functions)
  */
 HB_FUNC( WVW_CBGETINDEX )
@@ -859,7 +859,7 @@ HB_FUNC( WVW_CBGETINDEX )
    hb_retni( retval );
 }
 
-/* WVW_CBfindString( [nWinNum], nCBid, cString )
+/* wvw_cbFindString( [nWinNum], nCBid, cString )
  *  find index of cString in combobox nCBid in window nWinNum
  *  returns index of cString (0 based)
  *  returns CB_ERR (-1) if string not found
@@ -888,7 +888,7 @@ HB_FUNC( WVW_CBFINDSTRING )
    hb_retni( retval );
 }
 
-/*WVW_cbGetCurText( [nWinNum], nCBid )
+/*wvw_cbGetCurText( [nWinNum], nCBid )
  * get current selected cString in combobox nCBid in window nWinNum
  * returns "" if none selected
  *
@@ -936,7 +936,7 @@ HB_FUNC( WVW_CBGETCURTEXT )
    hb_xfree( lptstr );
 }
 
-/*WVW_cbIsDropped( [nWinNum], nCBid )
+/*wvw_cbIsDropped( [nWinNum], nCBid )
  * get current dropped state of combobox nCBid in window nWinNum
  * returns .t. if listbox is being shown, otherwise .f.
  * Also returns .f. if nCBid not valid

@@ -4792,7 +4792,7 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
          hb_gt_xwc_Enable();
 
          /* hack for multiple window resizing when user executes
-          * series of setmode() function. I'll look for cleaner
+          * series of SetMode() function. I'll look for cleaner
           * solution in some spare time.
           */
          hb_gt_xwc_RealRefresh( wnd, HB_TRUE );

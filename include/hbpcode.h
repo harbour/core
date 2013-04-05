@@ -105,7 +105,7 @@ typedef enum
    HB_P_MACROPOP,              /*  38 compile and run - pop a value from the stack */
    HB_P_MACROPOPALIASED,       /*  39 compile and run - pop a field value from the stack */
    HB_P_MACROPUSH,             /*  40 compile and run - leave the result on the stack */
-   HB_P_MACROARRAYGEN,         /*  41 generate array from arguments set(s) on HVM stack { &var } */
+   HB_P_MACROARRAYGEN,         /*  41 generate array from arguments Set(s) on HVM stack { &var } */
    HB_P_MACROPUSHLIST,         /*  42 compile and run - leave the result on the stack */
    HB_P_MACROPUSHINDEX,        /*  43 push array items using macro array index */
    HB_P_MACROPUSHPARE,         /*  44 compile and run - leave the result on the stack */

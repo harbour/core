@@ -45,7 +45,7 @@
 #include "hbdate.h"
 
 /* TODO: Add support for this compiler switches
-   -r -t || hb_getenv( "TMP" )
+   -r -t || hb_GetEnv( "TMP" )
  */
 
 
@@ -1086,14 +1086,14 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
       /* NOTE: CLIPPERCMD enviroment variable
          is overriden if HARBOURCMD exists
        */
-      char * szStrEnv = hb_getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_GetEnv( "HARBOURCMD" );
 
       if( ! szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
          if( szStrEnv )
             hb_xfree( szStrEnv );
 
-         szStrEnv = hb_getenv( "CLIPPERCMD" );
+         szStrEnv = hb_GetEnv( "CLIPPERCMD" );
       }
 
       if( szStrEnv )
@@ -1126,7 +1126,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
 void hb_compChkPaths( HB_COMP_DECL )
 {
-   char * szInclude = hb_getenv( "INCLUDE" );
+   char * szInclude = hb_GetEnv( "INCLUDE" );
 
    if( szInclude )
    {
@@ -1185,14 +1185,14 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
    {
       /* NOTE: CLIPPERCMD enviroment variable is overriden
          if HARBOURCMD exists */
-      char * szStrEnv = hb_getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_GetEnv( "HARBOURCMD" );
 
       if( ! szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
          if( szStrEnv )
             hb_xfree( szStrEnv );
 
-         szStrEnv = hb_getenv( "CLIPPERCMD" );
+         szStrEnv = hb_GetEnv( "CLIPPERCMD" );
       }
 
       if( szStrEnv )

@@ -108,7 +108,7 @@ static BOOL s_bMainCoordMode = FALSE;      /* in this mode, all HB_GT_FUNC() use
 static BOOL s_bVertCaret = FALSE;          /* if TRUE, caret is in Vertical style */
 
 static BOOL s_bNOSTARTUPSUBWINDOW = FALSE; /* if TRUE, subwindow will not be displayed during opening */
-/* use WVW_NOSTARTUPSUBWINDOW() to check/set it */
+/* use wvw_NoStartupSubWindow() to check/set it */
 
 static BOOL s_bDefCentreWindow = FALSE;  /* default CentreWindow setting for subwindows */
 
@@ -143,7 +143,7 @@ static HWND hWndTT = 0;                  /* Window handle Tool Tip     */
 
 /* for GTWVW private use: ***********************************************/
 #if 0
-static BOOL s_bQuickSetMode = FALSE;   /* quick SetMode(), to reset maxrow() and maxcol() only */
+static BOOL s_bQuickSetMode = FALSE;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
 
 static BOOL s_bFlashingWindow = FALSE; /* topmost window is flashing
                                           due to invalid input on other
@@ -1003,7 +1003,7 @@ static BOOL hb_gt_wvw_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    if( s_pWvwData->s_bQuickSetMode ) /*this is eg. done when we are closing window
                                       * we do nothing here, what we need is performed by GTAPI level
-                                      * ie. setting its s_height and s_width (= maxrow() and maxcol() )
+                                      * ie. setting its s_height and s_width (= MaxRow() and MaxCol() )
                                       */
       return TRUE;
 
@@ -1739,7 +1739,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 /*
  * NOTE:
- *      gfxPrimitive() parameters may have different meanings
+ *      GfxPrimitive() parameters may have different meanings
  *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
  *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
  *
@@ -3762,7 +3762,7 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
    /* If you wish to show window the way you want, put somewhere in your application
     * ANNOUNCE HB_NOSTARTUPWINDOW
-    * If so compiled, then you need to issue Wvw_ShowWindow( nWinNum, SW_RESTORE )
+    * If so compiled, then you need to issue wvw_ShowWindow( nWinNum, SW_RESTORE )
     * at the point you desire in your code.
     */
    if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
@@ -5155,7 +5155,7 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
 
    /* If you wish to show window the way you want, put somewhere in your application
     * ANNOUNCE HB_NOSTARTUPWINDOW
-    * If so compiled, then you need to issue Wvw_ShowWindow( nWinNum, SW_RESTORE )
+    * If so compiled, then you need to issue wvw_ShowWindow( nWinNum, SW_RESTORE )
     * at the point you desire in your code.
     */
 
@@ -5392,18 +5392,18 @@ static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam
    uses coordinate relative to the physical screen area.
 
    This mode can be set and reset during runtime,eg.
-   oldCoordMode := WVW_SetMainCoord( .t. )
+   oldCoordMode := wvw_SetMainCoord( .t. )
 
    Illustration:
  *+------
  *|Main Window (Window 0)
- *|maxrow()=24 maxcol()=79
+ *|MaxRow()=24 MaxCol()=79
  |   +---------------
  |   |Window1 RowOfs=3 ColOfs=4
- |   |maxrow()=9 maxcol()=29
+ |   |MaxRow()=9 MaxCol()=29
  |   |          +--------------------------------------+
  |   |          |Window2 RowOfs=6 ColOfs=15            |
- |   |          |maxrow()=3 maxcol()=49                |
+ |   |          |MaxRow()=3 MaxCol()=49                |
  |   |          |                                      |
 
    @ 6,15 say "text1" will be written to Window2 starting at 0,0
@@ -5417,7 +5417,7 @@ static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam
 
    If more than one pair of coordinate is dealt with, the second one is ignored.
    Example:
-   scroll(2,2,10,10) will operate on Main Window on the above illustration.
+   Scroll(2,2,10,10) will operate on Main Window on the above illustration.
 
    WARNING:
    Remember current restriction that topmost window is the only one allowed
@@ -5459,7 +5459,7 @@ USHORT hb_gt_wvwColOfs( UINT usWinNum )
 }
 
 /*(usrow,uscol) is coordinate relative to Main Window (MainCoord Mode)
- * returns true if usrow and uscol is within maxrow() and maxcol() of Window usWinNum
+ * returns true if usrow and uscol is within MaxRow() and MaxCol() of Window usWinNum
  */
 static BOOL hb_gt_wvwInWindow( UINT usWinNum, USHORT usrow, USHORT uscol )
 {
@@ -5566,7 +5566,7 @@ static UINT hb_gt_wvwSetCurWindow( UINT usWinNum )
    s_pWvwData->s_bMainCoordMode = FALSE;
 
    /*updating GTAPI's statics:
-    * tell GTAPI about the new maxrow(), maxcol()
+    * tell GTAPI about the new MaxRow(), MaxCol()
     */
    s_pWvwData->s_bQuickSetMode = TRUE;
 
@@ -5574,7 +5574,7 @@ static UINT hb_gt_wvwSetCurWindow( UINT usWinNum )
 
    s_pWvwData->s_bQuickSetMode = FALSE;
 
-   /* tell GTAPI about the new row(), col() */
+   /* tell GTAPI about the new Row(), Col() */
 
    hb_gtSetPos( ( SHORT ) s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->caretPos.y,
                 ( SHORT ) s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->caretPos.x );
@@ -7006,12 +7006,12 @@ WVW_DATA * hb_getWvwData( void )
  *  now it is wvw_nOpenWindow()
  *  it now returns numeric
 
- *  WVW_nOpenWindow(cWinName, row1, col1, row2, col2, ;
+ *  wvw_nOpenWindow(cWinName, row1, col1, row2, col2, ;
  *                nStyle, nParentWin)
  * rowx and colx are relative to MAIN WINDOW (not current window!)
  * rowx and colx are used for:
  * (1) positioning window to its initial position,
- * (2) determining the size of the window (new maxrow() and maxcol())
+ * (2) determining the size of the window (new MaxRow() and MaxCol())
  * (3) saved into RowOfs and ColOfs for MainCoord mode
  *
  * nStyle is window style (eg. WS_OVERLAPPEDWINDOW, etc.)
@@ -7181,7 +7181,7 @@ HB_FUNC( WVW_SIZE_READY )
 }
 
 
-/*WVW_lCloseWindow()
+/*wvw_lCloseWindow()
  * closes the last/topmost window
  * returns .t. if successful
  */
@@ -7219,7 +7219,7 @@ HB_FUNC( WVW_LCLOSEWINDOW )
    hb_retl( TRUE );
 }
 
-/*WVW_nNumWindows()
+/*wvw_nNumWindows()
  * returns number of windows opened (including main window)
  */
 HB_FUNC( WVW_NNUMWINDOWS )
@@ -7227,14 +7227,14 @@ HB_FUNC( WVW_NNUMWINDOWS )
    hb_retni( ( int ) s_pWvwData->s_usNumWindows );
 }
 
-/*WVW_xReposWindow(lAnchored)
+/*wvw_XReposWindow(lAnchored)
  * reposition all windows to their initial position
  *
  * if lAnchored == .t. (default)
  *    all subwindows are positioned according to their respective (row1,col1) coordinate
  * else
  *    all subwindows are positioned according to whatever their "CenterWindow" setting
- *    (see also WVW_CENTERWINDOW())
+ *    (see also wvw_CenterWindow())
  */
 HB_FUNC( WVW_XREPOSWINDOW )
 {
@@ -7258,12 +7258,12 @@ HB_FUNC( WVW_XREPOSWINDOW )
    }
 }
 
-/* WVW_nSetCurWindow( nWinNum )   (0==MAIN)
+/* wvw_nSetCurWindow( nWinNum )   (0==MAIN)
  *  assigns nWinNum as the new current window (s_pWvwData->s_usCurWindow)
  *  returns old current window
- *  example: saved := WVW_nSetCurWindow(0)
+ *  example: saved := wvw_nSetCurWindow(0)
  *         ? "This will be displayed in Main Window"
- *         WVW_nSetCurWindow(saved)
+ *         wvw_nSetCurWindow(saved)
  * notes: makes sense only if !s_pWvwData->s_bMainCoordMode
  */
 HB_FUNC( WVW_NSETCURWINDOW )
@@ -7283,7 +7283,7 @@ HB_FUNC( WVW_NSETCURWINDOW )
    }
 }
 
-/*WVW_nRowOfs( [nWinNum] )
+/*wvw_nRowOfs( [nWinNum] )
  * returns row offset of window #nWinNum (0==MAIN), relative to Main Window
  * nWinNum defaults to current window
  */
@@ -7294,7 +7294,7 @@ HB_FUNC( WVW_NROWOFS )
    hb_retni( ( int ) hb_gt_wvwRowOfs( usWinNum ) );
 }
 
-/*WVW_nColOfs( [nWinNum] )
+/*wvw_nColOfs( [nWinNum] )
  * returns col offset of window #nWinNum (0==MAIN), relative to Main Window
  * nWinNum defaults to topmost window
  */
@@ -7306,8 +7306,8 @@ HB_FUNC( WVW_NCOLOFS )
 }
 
 /*
- * WVW_MAXMAXROW( [nWinNum] )
- * returns maximum possible MAXROW() in current screen setting for font used by window nWinNum
+ * wvw_MaxMaxRow( [nWinNum] )
+ * returns maximum possible MaxRow() in current screen setting for font used by window nWinNum
  *
  */
 HB_FUNC( WVW_MAXMAXROW )
@@ -7322,8 +7322,8 @@ HB_FUNC( WVW_MAXMAXROW )
 }
 
 /*
- * WVW_MAXMAXCOL( [nWinNum] )
- * returns maximum possible MAXCOL() in current screen setting for font used by window nWinNum
+ * wvw_MaxMaxCol( [nWinNum] )
+ * returns maximum possible MaxCol() in current screen setting for font used by window nWinNum
  *
  */
 HB_FUNC( WVW_MAXMAXCOL )
@@ -7338,9 +7338,9 @@ HB_FUNC( WVW_MAXMAXCOL )
 }
 
 /*
- * WVW_UNREACHEDBR( [nWinNum], [nBottomPixels], [nRightPixels] )
+ * wvw_UnreachedBr( [nWinNum], [nBottomPixels], [nRightPixels] )
  * get unreached pixels
- * below maxrow() to nBottomPixels
+ * below MaxRow() to nBottomPixels
  * and on the right of maxcols() to nRightPixels
  *
  */
@@ -7356,7 +7356,7 @@ HB_FUNC( WVW_UNREACHEDBR )
       hb_storni( cols, 3 );
 }
 
-/*WVW_SetMainCoord( [lMainCoord] )
+/*wvw_SetMainCoord( [lMainCoord] )
  * returns old setting of s_pWvwData->s_bMainCoordMode,
  * then assigns s_pWvwData->s_bMainCoordMode := lMainCoord (if supplied)
  */
@@ -7377,7 +7377,7 @@ HB_FUNC( WVW_SETMAINCOORD )
    hb_retl( bOldMainCoordMode );
 }
 
-/* WVW_ADDROWS( [nWinNum], nRows)
+/* wvw_AddRows( [nWinNum], nRows)
  * add nRows rows to window nWinNum (nRows may be < 0)
  * returns .t. if successful
  *
@@ -7385,7 +7385,7 @@ HB_FUNC( WVW_SETMAINCOORD )
  *        column 0 of original last row
  * WARNING: no checking if window size will become larger than desktop area
  *          (except if in MainCoord Mode, because it is implied from
- *           restriction of resulted maxrow())
+ *           restriction of resulted MaxRow())
  */
 
 /* WARNING! this function relies on the fact that char/attr buffers are static!
@@ -7497,7 +7497,7 @@ HB_FUNC( WVW_ADDROWS )
 }
 
 /*
- * WVW_NOCLOSE( [nWinNum] )
+ * wvw_NoClose( [nWinNum] )
  * disable CLOSE 'X' button of a window
  *
  * no return value
@@ -7515,7 +7515,7 @@ HB_FUNC( WVW_NOCLOSE )
 }
 
 /*
- *  WVW_SETWINSTYLE( [nWinNum], [nStyle] )
+ *  wvw_SetWinStyle( [nWinNum], [nStyle] )
  *  Get/Set window style
  *  NOTES: if window has controls (eg. pushbutton, scrollbar)
  *       you should include WS_CLIPCHILDREN in nStyle
@@ -7546,7 +7546,7 @@ HB_FUNC( WVW_SETWINSTYLE )
 }
 
 /*
- * WVW_ENABLEMAXIMIZE( [nWinNum], [lEnable] )
+ * wvw_EnableMaximize( [nWinNum], [lEnable] )
  * Get/Set maximize button
  *
  * returns maximize box state prior to applying the new style
@@ -7595,7 +7595,7 @@ HB_FUNC( WVW_ENABLEMAXIMIZE )
 /*                                                                   */
 
 
-/*WVW_SetPaintRefresh( [nPaintRefresh] )
+/*wvw_SetPaintRefresh( [nPaintRefresh] )
  * returns old setting of s_pWvwData->s_uiPaintRefresh (millisec between calls to WVW_PAINT)
  * then assigns s_pWvwData->s_uiPaintRefresh:= nPaintRefresh (if supplied)
  * NOTES: nPaintRefresh must be >= 50
@@ -7626,7 +7626,7 @@ HB_FUNC( WVW_SETPAINTREFRESH )
    hb_retni( uiOldPaintRefresh );
 }
 
-/*WVW_SetVertCaret( [lOn] )
+/*wvw_SetVertCaret( [lOn] )
  * if lOn is supplied:
  * lOn == .t.: turn caret into vertical caret
  * lOn == .f.: turn caret into horizontal caret
@@ -7651,7 +7651,7 @@ HB_FUNC( WVW_SETVERTCARET )
    hb_retl( bOldVertCaret );
 }
 
-/*WVW_SetDefCentreWindow( [lCentre] )
+/*wvw_SetDefCentreWindow( [lCentre] )
  * returns old setting of s_pWvwData->s_bDefCentreWindow (default CentreWindow setting for newly opened subwindow)
  * then assigns s_pWvwData->s_bDefCentreWindow := lCentre (if supplied)
  * NOTES:
@@ -7667,7 +7667,7 @@ HB_FUNC( WVW_SETDEFCENTREWINDOW )
    hb_retl( bOldDef );
 }
 
-/*WVW_SetDefHCentreWindow( [lCentre] )
+/*wvw_SetDefHCentreWindow( [lCentre] )
  * returns old setting of s_pWvwData->s_bDefHCentreWindow (default horizontal CentreWindow setting for newly opened subwindow)
  * then assigns s_pWvwData->s_bDefHCentreWindow := lCentre (if supplied)
  * NOTES:
@@ -7683,7 +7683,7 @@ HB_FUNC( WVW_SETDEFHCENTREWINDOW )
    hb_retl( bOldDef );
 }
 
-/*WVW_SetDefVCentreWindow( [lCentre] )
+/*wvw_SetDefVCentreWindow( [lCentre] )
  * returns old setting of s_pWvwData->s_bDefVCentreWindow (default horizontal CentreWindow setting for newly opened subwindow)
  * then assigns s_pWvwData->s_bDefVCentreWindow := lCentre (if supplied)
  * NOTES:
@@ -7699,14 +7699,14 @@ HB_FUNC( WVW_SETDEFVCENTREWINDOW )
    hb_retl( bOldDef );
 }
 
-/*WVW_SetDefLineSpacing( [nLineSpacing] )
+/*wvw_SetDefLineSpacing( [nLineSpacing] )
  * returns old setting of s_pWvwData->s_byDefLineSpacing (default linespacing between lines)
  * then assigns s_pWvwData->s_byDefLineSpacing:= nLineSpacing (if supplied)
  * NOTES:
  * - nLineSpacing will be the default line spacing for all window opens
  * - nLineSpacing must be even, positive number <= 40
  *   otherwise it will be ignored
- * - to check line spacing being used by a window, use WVW_SetLineSpacing()
+ * - to check line spacing being used by a window, use wvw_SetLineSpacing()
  */
 HB_FUNC( WVW_SETDEFLINESPACING )
 {
@@ -7719,14 +7719,14 @@ HB_FUNC( WVW_SETDEFLINESPACING )
    hb_retni( byOldLineSpacing );
 }
 
-/*WVW_SetLineSpacing( [nWinNum], [nLineSpacing] )
+/*wvw_SetLineSpacing( [nWinNum], [nLineSpacing] )
  * returns old setting of linespacing between lines in window nWinNum
  * then set the line spacing to nLineSpacing (if supplied)
  * NOTES:
  * - nLineSpacing must be even, positive number <= 40
  *   otherwise it will be ignored
  * - if window size will become too high, line spacing is restored
- * - to change default line spacing for next window open, use WVW_SetDefLineSpacing()
+ * - to change default line spacing for next window open, use wvw_SetDefLineSpacing()
  */
 HB_FUNC( WVW_SETLINESPACING )
 {
@@ -7756,7 +7756,7 @@ HB_FUNC( WVW_SETLINESPACING )
    hb_retni( byOldLineSpacing );
 }
 
-/*WVW_SetDefLSpaceColor( [nColorIndex] )
+/*wvw_SetDefLSpaceColor( [nColorIndex] )
  * returns old setting of s_pWvwData->s_iDefLSpaceColor (color index of spacing between lines)
  * then assigns s_pWvwData->s_iDefLSpaceColor:= nColorIndex (if supplied)
  * NOTES:
@@ -7764,7 +7764,7 @@ HB_FUNC( WVW_SETLINESPACING )
  * - nColorIndex must >= 0 and <= 15, or == -1
  *   nCOlorIndex == 0:black, 1:blue, ..., 7:white, ..., 15:bright white
  *   nColorIndex == -1 means line spacing has no color
- * - to check line spacing color being used by a window, use WVW_SetLSpaceColor()
+ * - to check line spacing color being used by a window, use wvw_SetLSpaceColor()
  */
 HB_FUNC( WVW_SETDEFLSPACECOLOR )
 {
@@ -7776,7 +7776,7 @@ HB_FUNC( WVW_SETDEFLSPACECOLOR )
    hb_retni( iOldDefLSpaceColor );
 }
 
-/*WVW_SetLSpaceColor( [nWinNum], [nColorIndex] )
+/*wvw_SetLSpaceColor( [nWinNum], [nColorIndex] )
  * returns old setting of line space color in window nWinNum
  * then set the line spacing color to nColorIndex (if supplied)
  * NOTES:
@@ -7784,7 +7784,7 @@ HB_FUNC( WVW_SETDEFLSPACECOLOR )
  *   otherwise it will be ignored
  *   nCOlorIndex == 0:black, 1:blue, ..., 7:white, ..., 15:bright white
  * - nColorIndex == -1 means line spacing is not colored
- * - to change default line space color for next window open, use WVW_SetDefLineSpacing()
+ * - to change default line space color for next window open, use wvw_SetDefLineSpacing()
  */
 HB_FUNC( WVW_SETLSPACECOLOR )
 {
@@ -7803,7 +7803,7 @@ HB_FUNC( WVW_SETLSPACECOLOR )
    hb_retni( iOldLSpaceColor );
 }
 
-/*WVW_AllowNonTopEvent( [lAllow] )
+/*wvw_AllowNonTopEvent( [lAllow] )
  * returns old setting of s_pWvwData->s_bAllowNonTop
  * and set s_pWvwData->s_bAllowNonTop := lAllow (if this optional param is passed)
  *
@@ -7827,7 +7827,7 @@ HB_FUNC( WVW_ALLOWNONTOPEVENT )
    hb_retl( bOldSetting );
 }
 
-/*WVW_RecurseCBlock( [lAllow] )
+/*wvw_RecurseCBlock( [lAllow] )
  * returns old setting of s_pWvwData->s_bRecurseCBlock
  * and set s_pWvwData->s_bRecurseCBlock := lAllow (if this optional param is passed)
  *
@@ -7849,7 +7849,7 @@ HB_FUNC( WVW_RECURSECBLOCK )
    hb_retl( bOldSetting );
 }
 
-/*WVW_NoStartupSubWindow( [lOn] )
+/*wvw_NoStartupSubWindow( [lOn] )
  * if lOn is supplied:
  * lOn == .t.: when opening window, window will not be displayed
  * lOn == .f.: when opening window, window will be displayed (default)
@@ -7878,7 +7878,7 @@ HB_FUNC( WVW_GETSCREENHEIGHT )
 }
 
 
-/*WVW_SetWindowCentre( nWinNum,   (0==MAIN)
+/*wvw_SetWindowCentre( nWinNum,   (0==MAIN)
  *                     lCentre,
  *                     lPaintIt)  (if .f. it will just assign lCentre to WIN_DATA)
  */
@@ -7890,7 +7890,7 @@ HB_FUNC( WVW_SETWINDOWCENTRE )
 }
 
 
-/*WVW_EnableShortCuts( nWinNum, lEnable )
+/*wvw_EnableShortcuts( nWinNum, lEnable )
  * lEnable defaults to .t.
  *
  * returns old setting of EnableShortCuts
@@ -7933,7 +7933,7 @@ HB_FUNC( WVW_GETTITLE )
 
 /*                                                                   */
 /*   Author.....: Francesco Saverio Giudice <info@fsgiudice.com>     */
-/*   Syntax.....: Wvw_GetRGBColor( nColor ) --> nRGBColor            */
+/*   Syntax.....: wvw_GetRGBColor( nColor ) --> nRGBColor            */
 /*   Description: Return the RGB values passing the color positional value */
 /*                0=Black, 1=Blue, etc                               */
 /*                as returned from hb_ColorToN()                     */
@@ -8184,7 +8184,7 @@ HB_FUNC( WVW_SETTITLE )
 }
 
 
-/* WVW_SetWindowPos( nWinNum, nXposition, nYposition)  (position in pixel) */
+/* wvw_SetWindowPos( nWinNum, nXposition, nYposition)  (position in pixel) */
 HB_FUNC( WVW_SETWINDOWPOS )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -8209,7 +8209,7 @@ HB_FUNC( WVW_SETCODEPAGE )
 }
 
 
-/* WVW_CenterWindow( nWinNum, lCenter, lPaint )   (nWinNum==0==MAIN) */
+/* wvw_CenterWindow( nWinNum, lCenter, lPaint )   (nWinNum==0==MAIN) */
 HB_FUNC( WVW_CENTERWINDOW )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -8246,7 +8246,7 @@ HB_FUNC( WVW_GETXYFROMROWCOL )
 }
 
 
-/* WVW_GetRowColFromXY( [nWinNum], nX, nY )
+/* wvw_GetRowColFromXY( [nWinNum], nX, nY )
  * return an array {nRow, nCol}
  */
 HB_FUNC( WVW_GETROWCOLFROMXY )
@@ -8296,7 +8296,7 @@ HB_FUNC( WVW_GETPALETTE )
 
 
 /*                                                                   */
-/*    Wvw_SetPalette( aRGBValues ) -> An array of 16 elements with RGB values */
+/*    wvw_SetPalette( aRGBValues ) -> An array of 16 elements with RGB values */
 /*                                                                   */
 HB_FUNC( WVW_SETPALETTE )
 {
@@ -8315,11 +8315,11 @@ HB_FUNC( WVW_MINIMIZE )
 }
 
 
-/* wvw_maximize( [nWinNum] )
+/* wvw_Maximize( [nWinNum] )
    maximizes the window, if callback function WVW_SIZE exists
 
-   note: in gtwvt wvt_maximize() restores the window, not maximizes it
-   see also: WVW_RESTORE(), WVW_MAXMAXROW(), WVW_MAXMAXCOL()
+   note: in gtwvt Wvt_Maximize() restores the window, not maximizes it
+   see also: wvw_Restore(), wvw_MaxMaxRow(), wvw_MaxMaxCol()
  */
 HB_FUNC( WVW_MAXIMIZE )
 {
@@ -8334,13 +8334,13 @@ HB_FUNC( WVW_MAXIMIZE )
 
 }
 
-/* wvw_restore( [nWinNum] )
-   restores the window (similar with gtwvt's wvt_maximize())
+/* wvw_Restore( [nWinNum] )
+   restores the window (similar with gtwvt's Wvt_Maximize())
 
    WARNING: restoring window from its maximized state might need handling
             in callback function WVW_SIZE,
-            because this function assumes no change in maxrow()/maxcol()
-   see also: WVW_MAXIMIZE(), WVW_MAXMAXROW(), WVW_MAXMAXCOL()
+            because this function assumes no change in MaxRow()/MaxCol()
+   see also: wvw_Maximize(), wvw_MaxMaxRow(), wvw_MaxMaxCol()
  */
 HB_FUNC( WVW_RESTORE )
 {

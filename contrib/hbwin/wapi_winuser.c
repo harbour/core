@@ -243,7 +243,7 @@ HB_FUNC( WAPI_ENABLESCROLLBAR )
    Local cSCROLLBARINFO = strSCROLLBARINFO:value
    Local nCtrlType      = OBJID_CLIENT | OBJID_HSCROLL | OBJID_VSCROLL
 
-   lSuccess := WAPI_GetScrollInfo( hWnd, nCtrType, @cSCROLLINFO )
+   lSuccess := wapi_GetScrollInfo( hWnd, nCtrType, @cSCROLLINFO )
 
    strSCROLLBARINFO:buffer( cSCROLLBARINFO )
    ? strSCROLLINFO:
@@ -471,7 +471,7 @@ HB_FUNC( WAPI_LOADBITMAP )
 }
 #endif
 
-/* WAPI_LoadImage( [<hInstance>], <cName>, [<nType>],
+/* wapi_LoadImage( [<hInstance>], <cName>, [<nType>],
                    [<nWidth>], [<nHeight>], [<nFlags>] ) -> <hImage> */
 HB_FUNC( WAPI_LOADIMAGE )
 {
@@ -829,7 +829,7 @@ HB_FUNC( WAPI_GETMENUDEFAULTITEM )
 #endif
 }
 
-/* WAPI_CreateAcceleratorTable( <aAccelTable> ) -> <hAccel> */
+/* wapi_CreateAcceleratorTable( <aAccelTable> ) -> <hAccel> */
 HB_FUNC( WAPI_CREATEACCELERATORTABLE )
 {
    HACCEL hAccel = NULL;

@@ -563,8 +563,8 @@ HB_FUNC( GDIMAGEPNG ) /* original: void gdImagePngEx(gdImagePtr im, FILE *out, i
    GDImageSaveTo( IMAGE_PNG );
 }
 
-HB_FUNC( GDIMAGEWBMP ) /* original: void gdImageWBMP(gdImagePtr im, FILE *out) */
-{                      /* implementation: void gdImageWBMP(gdImagePtr im, char *szFile, int fg) */
+HB_FUNC( GDIMAGEWBMP ) /* original: void gdImageWBmp(gdImagePtr im, FILE *out) */
+{                      /* implementation: void gdImageWBmp(gdImagePtr im, char *szFile, int fg) */
    GDImageSaveTo( IMAGE_WBMP );
 }
 

@@ -208,7 +208,7 @@ HB_FUNC( HB_TABEXPAND )
    }
 }
 
-/* HB_READLINE( <cText>, [<aTerminators | cTerminator>], <nLineLen>, <nTabLen>, <lWrap>, [<nStartOffset>], @nOffSet, @nEnd, @lFound, @lEOF ) */
+/* hb_ReadLine( <cText>, [<aTerminators | cTerminator>], <nLineLen>, <nTabLen>, <lWrap>, [<nStartOffset>], @nOffSet, @nEnd, @lFound, @lEOF ) */
 HB_FUNC( HB_READLINE )
 {
    PHB_ITEM      pTerm1;

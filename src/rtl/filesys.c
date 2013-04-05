@@ -3798,7 +3798,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pFilename, const char * pDefExt,
          hb_fsClose( hFile );
          hFile = FS_ERROR;
          /*
-          * fix for neterr() support and Clipper compatibility,
+          * fix for NetErr() support and Clipper compatibility,
           * should be revised with a better multi platform solution.
           */
          hb_fsSetError( ( uiExFlags & FXO_TRUNCATE ) ? 5 : 32 );
@@ -3818,7 +3818,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pFilename, const char * pDefExt,
    }
 #elif 1
    /*
-    * Temporary fix for neterr() support and Clipper compatibility,
+    * Temporary fix for NetErr() support and Clipper compatibility,
     * should be revised with a better solution.
     */
    if( ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&

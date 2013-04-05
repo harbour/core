@@ -127,7 +127,7 @@ HB_FUNC( SX_TAGORDER )
 }
 
 /*
- * Sx_TagNo(tag,bag) -> nTagPosInBag
+ * sx_TagNo(tag,bag) -> nTagPosInBag
  * returns order position in order bag
  */
 HB_FUNC( SX_TAGNO )

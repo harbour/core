@@ -74,7 +74,7 @@ HB_FUNC( SOUNDEX )
       {
          char cChar = pszString[ nPos ];
 
-         /* NOTE: Intentionally not using toupper()/isalpha() to be 100%
+         /* NOTE: Intentionally not using toupper()/IsAlpha() to be 100%
                   Clipper compatible here, these ANSI C functions may behave
                   differently for accented and national characters. It's also
                   faster this way. [vszakats] */
@@ -83,7 +83,7 @@ HB_FUNC( SOUNDEX )
          if( cChar >= 'a' && cChar <= 'z' )
             cChar -= ( 'a' - 'A' );
 
-         /* Check if isalpha() */
+         /* Check if IsAlpha() */
          if( cChar >= 'A' && cChar <= 'Z' )
          {
             static const char s_szTable[] = "01230120022455012623010202"; /* NOTE: SoundEx result codes for letters from "A" to "Z" */

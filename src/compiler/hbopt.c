@@ -973,7 +973,7 @@ static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
    warning in code:
      BEGIN SEQUENCE
        nI := 1
-       BREAK(NIL)
+       Break(NIL)
      RECOVER
        ? nI
      END SEQUENCE

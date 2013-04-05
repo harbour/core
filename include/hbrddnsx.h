@@ -336,7 +336,7 @@ typedef struct _NSXLEAFKEY
                                */
    HB_UCHAR DupCount[1];      /* number of bytes from previous key */
    HB_UCHAR KeyData[l];       /* rest of key value with RLE compression:
-                               *    FF xx yy => REPLICATE(yy, xx)
+                               *    FF xx yy => Replicate(yy, xx)
                                *    FF 01    => FF
                                * l = Size - n - 2
                                * if l == KEY_SIZE - DupCount then key value

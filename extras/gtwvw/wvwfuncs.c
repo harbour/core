@@ -141,7 +141,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 
 /*
  *
- *  WIN_SetTimer( hWnd, nIdentifier, nTimeOut )
+ *  win_SetTimer( hWnd, nIdentifier, nTimeOut )
  */
 
 HB_FUNC( WIN_SETTIMER )
@@ -268,7 +268,7 @@ HB_FUNC( WIN_INVALIDATERECT )
 
 /*
  *
- *  Win_LoadIcon( ncIcon )
+ *  win_LoadIcon( ncIcon )
  */
 
 HB_FUNC( WIN_LOADICON )
@@ -285,7 +285,7 @@ HB_FUNC( WIN_LOADICON )
 
 /*
  *
- *  Win_LoadImage( ncImage, nSource ) -> hImage
+ *  win_LoadImage( ncImage, nSource ) -> hImage
  *    nSource == 0 ResourceIdByNumber
  *    nSource == 0 ResourceIdByName
  *    nSource == 0 ImageFromDiskFile
@@ -375,7 +375,7 @@ HB_FUNC( WIN_CREATEBRUSH )
 
 /*
  *
- *   Win_DrawText( hDC, cText, aRect, nFormat )
+ *   win_DrawText( hDC, cText, aRect, nFormat )
  */
 
 HB_FUNC( WIN_DRAWTEXT )
@@ -538,7 +538,7 @@ HB_FUNC( WVW_CXVISIBLE )
    hb_retl( ShowWindow( hWndPB, iCmdShow ) == 0 );
 }
 
-/* WVW_XBVisible( [nWinNum], nXBid, lShow )
+/* wvw_xbVisible( [nWinNum], nXBid, lShow )
  *  show/hide scrollbar nXBid in window nWinNum (default to topmost window)
  *  nWinNum better be NIL
  *  nXBid is the handle of the scrolbar
@@ -695,7 +695,7 @@ HB_FUNC( ADDTOOLTIPEX ) /* changed by MAG */
 
 
 /*
- * CreateImagelist( array, cx, cy, nGrow, flags )
+ * CreateImageList( array, cx, cy, nGrow, flags )
  */
 HB_FUNC( CREATEIMAGELIST )
 {
@@ -1338,7 +1338,7 @@ HB_FUNC( WINDOW2BITMAP )
 
    Remarks:
    There is no way to discard a specific bitmap from the cache.
-   If you want to control bitmap caching manually, use wvw_loadpicture()
+   If you want to control bitmap caching manually, use wvw_LoadPicture()
    instead.
 
    Example:
@@ -1381,7 +1381,7 @@ HB_FUNC( WVW_NUMBMCACHE )
 /* TIMER                                                             */
 
 
-/*WVW_SetTimer([nWinNum], nInterval)
+/*wvw_SetTimer([nWinNum], nInterval)
  * set timer event for every nInterval millisec
  *(effective only if WVW_TIMER() function exists)
  * eg. it can be usefull to update clock on status bar
@@ -1405,7 +1405,7 @@ HB_FUNC( WVW_SETTIMER )
       hb_retl( FALSE );
 }
 
-/*WVW_KillTimer([nWinNum])
+/*wvw_KillTimer([nWinNum])
  * kill the timer event handler for window nWinNum
  * returns .t. if successfull
  */
@@ -1427,7 +1427,7 @@ HB_FUNC( WVW_KILLTIMER )
 }
 
 
-/*WVW_GetPaintRect( nWinNum )   nWinNum is 0 based               */
+/*wvw_GetPaintRect( nWinNum )   nWinNum is 0 based               */
 /*returns array of paint pending rect {top, left, bottom, right} */
 /*WARNING:                                                       */
 /*unlike WVT, top maybe > bottom                                 */
@@ -1534,7 +1534,7 @@ HB_FUNC( WVW_SETPOINTER )
 
 
 /*                                                                   */
-/*   Wvw_LoadPicture( nSlot, cFilePic )                              */
+/*   wvw_LoadPicture( nSlot, cFilePic )                              */
 /*                                                                   */
 HB_FUNC( WVW_LOADPICTURE )
 {
@@ -1560,7 +1560,7 @@ HB_FUNC( WVW_LOADPICTURE )
 
 
 /*                                                                                                */
-/* Wvw_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout, */
+/* wvw_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout, */
 /*               nCharSet, nQuality, nEscapement )                                                */
 /*                                                                                                */
 HB_FUNC( WVW_LOADFONT )
@@ -1603,7 +1603,7 @@ HB_FUNC( WVW_LOADFONT )
 
 
 /*                                                                   */
-/*  Wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )                  */
+/*  wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )                  */
 /*                                                                   */
 HB_FUNC( WVW_LOADPEN )
 {
@@ -1649,7 +1649,7 @@ HB_FUNC( WVW_MESSAGEBOX )
 
 
 /*                                                                      */
-/*     Wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ; */
+/*     wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ; */
 /*                                    lItalic, lUnderline, lStrikeout ) */
 /*                                                                      */
 
@@ -1726,7 +1726,7 @@ HB_FUNC( WVW_CHOOSEFONT )
 
 
 /*                                                                   */
-/*    Wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected    */
+/*    wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected    */
 /*                                                                   */
 
 HB_FUNC( WVW_CHOOSECOLOR )
@@ -1754,12 +1754,12 @@ HB_FUNC( WVW_CHOOSECOLOR )
 }
 
 
-/*WVW_SETMOUSEPOS( nWinNum, nRow, nCol ) nWinNum is 0 based        */
+/*wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based        */
 /*WHAT'S the difference with GT_FUNC( mouse_SetPos ) ???           */
 /*this func is able to position cursor on any window               */
 
-/*NOTE: consider using 'standard' SETMOUSE() instead:     */
-/*      SETMOUSE(.t., nRow, nCol)                                  */
+/*NOTE: consider using 'standard' SetMouse() instead:     */
+/*      SetMouse(.t., nRow, nCol)                                  */
 /*      This will treat (nRow,nCol) according to current s_pWvwData->s_bMainCoordMode setting */
 
 HB_FUNC( WVW_SETMOUSEPOS )
@@ -1784,7 +1784,7 @@ HB_FUNC( WVW_SETMOUSEPOS )
 
 /*by bdj                                                                                */
 /*none in gtwvt                                                                         */
-/*    Wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,       */
+/*    wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,       */
 /*                       lTight, lUseBrush, aOffSet )                                   */
 /*                                                                                      */
 /*   if lTight, rect is drawn inside the character region                               */
@@ -1912,7 +1912,7 @@ HB_FUNC( WVW_DLGSETICON )
 
 
 /*                                                                   */
-/*   Wvw_SetPen( nPenStyle, nWidth, nColor )                         */
+/*   wvw_SetPen( nPenStyle, nWidth, nColor )                         */
 /*                                                                   */
 
 /* IMPORTANT: in prev release this functions has nWinNum parameter
@@ -1959,7 +1959,7 @@ HB_FUNC( WVW_SETPEN )
 
 
 /*                                                                   */
-/*   Wvw_SetBrush( nStyle, nColor, [ nHatch ] )                      */
+/*   wvw_SetBrush( nStyle, nColor, [ nHatch ] )                      */
 /*                                                                   */
 
 /* IMPORTANT: in prev release this functions has nWinNum parameter
@@ -2123,7 +2123,7 @@ HB_FUNC( WVW_GETCURSORPOS )
 }
 
 
-/* WVW_ShowWindow( [nWinNum], nCmdShow ) */
+/* wvw_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -2134,7 +2134,7 @@ HB_FUNC( WVW_SHOWWINDOW )
 }
 
 
-/* WVW_UpdateWindow( [nWinNum] ) */
+/* wvw_UpdateWindow( [nWinNum] ) */
 HB_FUNC( WVW_UPDATEWINDOW )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -2372,7 +2372,7 @@ HB_FUNC( WVW_SETASNORMAL )
 
 
 /*                                                                   */
-/*   aScr := Wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */
+/*   aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight ) */
 /*                                                                   */
 
 /*TODO: reconsider, is it really needed? is it better to be handled by application?
@@ -2423,7 +2423,7 @@ HB_FUNC( WVW_SAVESCREEN )
 
 
 /*                                                                     */
-/*   Wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )*/
+/*   wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )*/
 /*                                                                     */
 
 /*TODO: reconsider, is it really needed? is it better to be handled by application?
@@ -2502,7 +2502,7 @@ HB_FUNC( WVW_RESTSCREEN )
 
 
 /*                                                                     */
-/* Wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,*/
+/* wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,*/
 /*                 lStrikeout, nCharSet, nQuality, nEscapement )            */
 /*                                                                          */
 HB_FUNC( WVW_CREATEFONT )

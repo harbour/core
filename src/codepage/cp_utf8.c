@@ -281,7 +281,7 @@ static void hb_cp_init( PHB_CODEPAGE cdp )
 
 /* use character indexes instead of bytes ones */
 #define HB_CP_CHARIDX
-/* CHR(), ASC() and similar functions operates on Unicode values instead of bytes */
+/* Chr(), Asc() and similar functions operates on Unicode values instead of bytes */
 #define HB_CP_CHARUNI
 /* UTF-8 string encoding */
 #define HB_CP_UTF8

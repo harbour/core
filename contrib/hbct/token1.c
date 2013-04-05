@@ -152,7 +152,7 @@ static void do_token1( int iSwitch )
       }
       else
       {
-         if( HB_ISNUM( 4 ) ) /* HB_EXTENSION for ATTOKEN()/TOKENLOWER()/TOKENUPPER() */
+         if( HB_ISNUM( 4 ) ) /* HB_EXTENSION for AtToken()/TokenLower()/TokenUpper() */
             nSkip = hb_parns( 4 );
          else
             nSkip = HB_SIZE_MAX;
@@ -160,7 +160,7 @@ static void do_token1( int iSwitch )
       if( nSkip == 0 )
          nSkip = HB_SIZE_MAX;
 
-      /* prepare return value for TOKENUPPER()/TOKENLOWER() */
+      /* prepare return value for TokenUpper()/TokenLower() */
       if( iSwitch == DO_TOKEN1_TOKENLOWER || iSwitch == DO_TOKEN1_TOKENUPPER )
       {
          if( sStrLen == 0 )

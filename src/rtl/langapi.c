@@ -483,7 +483,7 @@ HB_FUNC( HB_LANGMESSAGE )
    hb_retc_const( hb_langGetItem( hb_parc( 2 ), hb_parnl( 1 ) ) );
 }
 
-/* HB_LANGNEW( <cNewLangId>, <cNewLangCpId>,
+/* hb_langNew( <cNewLangId>, <cNewLangCpId>,
  *             <cLangId>, <cLangCpId> ) -> <lOK>
  */
 HB_FUNC( HB_LANGNEW )

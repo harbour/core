@@ -214,7 +214,7 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
 }
 
 /*
- * HB_BZ2_VERSION() -> <cBZlibVersion>
+ * hb_bz2_Version() -> <cBZlibVersion>
  */
 HB_FUNC( HB_BZ2_VERSION )
 {
@@ -222,7 +222,7 @@ HB_FUNC( HB_BZ2_VERSION )
 }
 
 /*
- * HB_BZ2_COMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * hb_bz2_CompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
  */
 HB_FUNC( HB_BZ2_COMPRESSBOUND )
 {
@@ -235,7 +235,7 @@ HB_FUNC( HB_BZ2_COMPRESSBOUND )
 }
 
 /*
- * HB_BZ2_UNCOMPRESSLEN( <cCompressedData>, [<@nResult>] )
+ * hb_bz2_UncompressLen( <cCompressedData>, [<@nResult>] )
  *          -> <nUnCompressedDataLen> or -1 on error
  */
 HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
@@ -262,7 +262,7 @@ HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
 }
 
 /*
- * HB_BZ2_COMPRESS( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
+ * hb_bz2_Compress( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
  *    => <cCompressedData> or NIL on Error
  */
 HB_FUNC( HB_BZ2_COMPRESS )
@@ -322,7 +322,7 @@ HB_FUNC( HB_BZ2_COMPRESS )
 }
 
 /*
- * HB_BZ2_UNCOMPRESS( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
+ * hb_bz2_Uncompress( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
  *    => <cUnCompressedData> or NIL on Error
  */
 HB_FUNC( HB_BZ2_UNCOMPRESS )

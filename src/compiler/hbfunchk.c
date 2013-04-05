@@ -117,7 +117,7 @@ HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
    int iLen = ( int ) strlen( szFuncCall ), iCmp;
 
    /* Respect 4 or more letters shortcuts
-    * SECO() is not allowed because of Clipper function SECONDS()
+    * SECO() is not allowed because of Clipper function Seconds()
     * however SECO32() is a valid name.
     */
    if( iLen < 4 )

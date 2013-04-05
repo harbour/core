@@ -408,7 +408,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                                will strip Chr( 26 ) from inside the file, which
                                means it will corrupt it. [vszakats] */
                      if( pbyBuffer[ nRead - 1 ] == 26 )
-                        nRead--;   /* Skip the EOF() character */
+                        nRead--;   /* Skip the Eof() character */
 #endif
 
                      while( nWritten < nRead )

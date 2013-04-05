@@ -110,7 +110,7 @@
    I do not want to make the same.
    When file is compressed then SIX put the uncompressed file size in
    first four bytes. Similar situation is with string returned by
-   sx_compress() - first four bytes is uncompressed size in little
+   sx_Compress() - first four bytes is uncompressed size in little
    endian order. This has to be done in upper level functions,
    hb_LZSSxCompressMem() and hb_LZSSxCompressFile() intentionally
    do not do that.

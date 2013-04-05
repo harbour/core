@@ -152,7 +152,7 @@ HB_FUNC( WVG_SENDDLGITEMMESSAGE )
 }
 
 /*
- *  WIN_SetTimer( hWnd, nIdentifier, nTimeOut )
+ *  win_SetTimer( hWnd, nIdentifier, nTimeOut )
  */
 HB_FUNC( WVG_SETTIMER )
 {
@@ -293,7 +293,7 @@ HB_FUNC( WVG_INVALIDATERECT )
 }
 
 /*
- *  Win_LoadIcon( ncIcon )
+ *  win_LoadIcon( ncIcon )
  */
 HB_FUNC( WVG_LOADICON )
 {
@@ -314,7 +314,7 @@ HB_FUNC( WVG_LOADICON )
 }
 
 /*
- *  Win_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
+ *  win_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight ) -> hImage
  *    nSource == 0 ResourceIdByNumber
  *    nSource == 1 ResourceIdByName
  *    nSource == 2 ImageFromDiskFile
@@ -400,7 +400,7 @@ HB_FUNC( WVG_CREATEBRUSH )
 }
 
 /*
- *   Win_DrawText( hDC, cText, aRect, nFormat )
+ *   win_DrawText( hDC, cText, aRect, nFormat )
  */
 HB_FUNC( WVG_DRAWTEXT )
 {

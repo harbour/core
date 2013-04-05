@@ -1303,7 +1303,7 @@ static void hb_ctw_gt_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 /*
  * CTWIN uses differ rules when set cursor position out of screen visible
  * area then standard Clipper's GT drivers so we have to replicate it in
- * SETPOS() method, [druzus]
+ * SetPos() method, [druzus]
  */
 static void hb_ctw_gt_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
@@ -1951,7 +1951,7 @@ static HB_BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
           * which switches to window 0 for pass-throw output it causes that
           * wrong attributes appears after this operation. In Harbour it's
           * fixed so such problem do not exist. Anyhow some code may switch
-          * to window 0, make savescreen()/restscreen() and in such case
+          * to window 0, make SaveScreen()/RestScreen() and in such case
           * all shadow attributes are copied to window 0 buffer. The code
           * below is workaround for it. [druzus]
           */

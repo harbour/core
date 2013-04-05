@@ -388,18 +388,18 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 }
 
 /*
- * based on xHrbour's HB_ExecFromArray() by Giancarlo Niccolai
+ * based on xHrbour's hb_ExecFromArray() by Giancarlo Niccolai
  * This version supports the same syntax though it's independent
  * implementation [druzus]
  *
  * The following syntax is supported:
- *    hb_execFromArray( <cFuncName> [, <aParams> ] )
- *    hb_execFromArray( @<funcName>() [, <aParams> ] )
- *    hb_execFromArray( <bCodeBlock> [, <aParams> ] )
- *    hb_execFromArray( <oObject> , <cMethodName> [, <aParams> ] )
- *    hb_execFromArray( <oObject> , @<msgName>() [, <aParams> ] )
+ *    hb_ExecFromArray( <cFuncName> [, <aParams> ] )
+ *    hb_ExecFromArray( @<funcName>() [, <aParams> ] )
+ *    hb_ExecFromArray( <bCodeBlock> [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject> , <cMethodName> [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject> , @<msgName>() [, <aParams> ] )
  * or:
- *    hb_execFromArray( <aExecArray> )
+ *    hb_ExecFromArray( <aExecArray> )
  * where <aExecArray> is in one of the following format:
  *    { <cFuncName> [, <params,...>] }
  *    { @<funcName>() [, <params,...>] }
@@ -505,7 +505,7 @@ HB_FUNC( HB_EXECFROMARRAY )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_BOOL hb_execFromArray( PHB_ITEM pParam )
+HB_BOOL hb_ExecFromArray( PHB_ITEM pParam )
 {
    PHB_SYMB pExecSym = NULL;
    PHB_ITEM pArray = NULL;
@@ -572,7 +572,7 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
    return HB_FALSE;
 }
 
-/* hb_execMsg( <sFuncSym>, <object>, [<params,...>] ) -> <xResult>
+/* hb_ExecMsg( <sFuncSym>, <object>, [<params,...>] ) -> <xResult>
  * Execute <sFuncSym> with <object> set as QSELF() value
  */
 HB_FUNC( HB_EXECMSG )

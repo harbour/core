@@ -86,7 +86,7 @@ static gzFile hb_gzParam( int iParam )
 }
 
 /*
- * HB_GZOPEN( <cFile>, <cMode> ) => <pGZipStream> or NIL on Error
+ * hb_gzOpen( <cFile>, <cMode> ) => <pGZipStream> or NIL on Error
  */
 HB_FUNC( HB_GZOPEN )
 {
@@ -121,7 +121,7 @@ HB_FUNC( HB_GZOPEN )
 }
 
 /*
- * HB_GZDOPEN( <hFile>, <cMode> ) => <pGZipStream> or NIL on Error
+ * hb_gzDOpen( <hFile>, <cMode> ) => <pGZipStream> or NIL on Error
  */
 HB_FUNC( HB_GZDOPEN )
 {
@@ -148,7 +148,7 @@ HB_FUNC( HB_GZDOPEN )
 }
 
 /*
- * HB_GZCLOSE( <pGZipStream> ) => <nResult>
+ * hb_gzClose( <pGZipStream> ) => <nResult>
  */
 HB_FUNC( HB_GZCLOSE )
 {
@@ -172,7 +172,7 @@ HB_FUNC( HB_GZCLOSE )
 }
 
 /*
- * HB_GZSETPARAMS( <pGZipStream>, <nLevel>, <nStrategy> ) => <nResult>
+ * hb_gzSetParams( <pGZipStream>, <nLevel>, <nStrategy> ) => <nResult>
  */
 HB_FUNC( HB_GZSETPARAMS )
 {
@@ -187,7 +187,7 @@ HB_FUNC( HB_GZSETPARAMS )
 }
 
 /*
- * HB_GZREAD( <pGZipStream>, <@cData>, [ <nLen> ] ) => <nResult>
+ * hb_gzRead( <pGZipStream>, <@cData>, [ <nLen> ] ) => <nResult>
  */
 HB_FUNC( HB_GZREAD )
 {
@@ -221,7 +221,7 @@ HB_FUNC( HB_GZREAD )
 }
 
 /*
- * HB_GZWRITE( <pGZipStream>, <cData>, [ <nLen> ] ) => <nResult>
+ * hb_gzWrite( <pGZipStream>, <cData>, [ <nLen> ] ) => <nResult>
  */
 HB_FUNC( HB_GZWRITE )
 {
@@ -248,7 +248,7 @@ HB_FUNC( HB_GZWRITE )
 }
 
 /*
- * HB_GZGETS( <pGZipStream>, <nMaxBytes> ) => <cLine> or NIL on error
+ * hb_gzGetS( <pGZipStream>, <nMaxBytes> ) => <cLine> or NIL on error
  */
 HB_FUNC( HB_GZGETS )
 {
@@ -281,7 +281,7 @@ HB_FUNC( HB_GZGETS )
 }
 
 /*
- * HB_GZPUTS( <pGZipStream>, <cData> ) => <nResult>
+ * hb_gzPutS( <pGZipStream>, <cData> ) => <nResult>
  */
 HB_FUNC( HB_GZPUTS )
 {
@@ -306,7 +306,7 @@ HB_FUNC( HB_GZPUTS )
 }
 
 /*
- * HB_GZPUTC( <pGZipStream>, <nByte> ) => <nResult>
+ * hb_gzPutC( <pGZipStream>, <nByte> ) => <nResult>
  */
 HB_FUNC( HB_GZPUTC )
 {
@@ -329,7 +329,7 @@ HB_FUNC( HB_GZPUTC )
 }
 
 /*
- * HB_GZGETC( <pGZipStream> ) => <nByte>
+ * hb_gzGetC( <pGZipStream> ) => <nByte>
  */
 HB_FUNC( HB_GZGETC )
 {
@@ -348,7 +348,7 @@ HB_FUNC( HB_GZGETC )
 }
 
 /*
- * HB_GZUNGETC( <nByte>, <pGZipStream> ) => <nByte>
+ * hb_gzUnGetC( <nByte>, <pGZipStream> ) => <nByte>
  */
 HB_FUNC( HB_GZUNGETC )
 {
@@ -373,7 +373,7 @@ HB_FUNC( HB_GZUNGETC )
 }
 
 /*
- * HB_GZFLUSH( <pGZipStream>, [ <nFlush> ] ) => <nResult>
+ * hb_gzFlush( <pGZipStream>, [ <nFlush> ] ) => <nResult>
  */
 HB_FUNC( HB_GZFLUSH )
 {
@@ -392,7 +392,7 @@ HB_FUNC( HB_GZFLUSH )
 }
 
 /*
- * HB_GZSEEK( <pGZipStream>, <nOffset>, [ <nWhence> ] ) => <nOffset>
+ * hb_gzSeek( <pGZipStream>, <nOffset>, [ <nWhence> ] ) => <nOffset>
  */
 HB_FUNC( HB_GZSEEK )
 {
@@ -416,7 +416,7 @@ HB_FUNC( HB_GZSEEK )
 }
 
 /*
- * HB_GZREWIND( <pGZipStream> ) => <nResult>
+ * hb_gzRewind( <pGZipStream> ) => <nResult>
  */
 HB_FUNC( HB_GZREWIND )
 {
@@ -435,7 +435,7 @@ HB_FUNC( HB_GZREWIND )
 }
 
 /*
- * HB_GZTELL( <pGZipStream> ) => <nResult>
+ * hb_gzTell( <pGZipStream> ) => <nResult>
  */
 HB_FUNC( HB_GZTELL )
 {
@@ -454,7 +454,7 @@ HB_FUNC( HB_GZTELL )
 }
 
 /*
- * HB_GZEOF( <pGZipStream> ) => <lResult>
+ * hb_gzEof( <pGZipStream> ) => <lResult>
  */
 HB_FUNC( HB_GZEOF )
 {
@@ -473,7 +473,7 @@ HB_FUNC( HB_GZEOF )
 }
 
 /*
- * HB_GZDIRECT( <pGZipStream> ) => <lResult>
+ * hb_gzDirect( <pGZipStream> ) => <lResult>
  */
 HB_FUNC( HB_GZDIRECT )
 {
@@ -493,7 +493,7 @@ HB_FUNC( HB_GZDIRECT )
 }
 
 /*
- * HB_GZERROR( <pGZipStream>, [ <@nError> ] ) => <cError>
+ * hb_gzError( <pGZipStream>, [ <@nError> ] ) => <cError>
  */
 HB_FUNC( HB_GZERROR )
 {
@@ -509,7 +509,7 @@ HB_FUNC( HB_GZERROR )
 }
 
 /*
- * HB_GZCLEARERR( <pGZipStream> ) => NIL
+ * hb_gzClearErr( <pGZipStream> ) => NIL
  */
 HB_FUNC( HB_GZCLEARERR )
 {

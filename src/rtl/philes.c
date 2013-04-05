@@ -500,7 +500,7 @@ HB_FUNC( HB_FISDEVICE )
    hb_fsSetFError( hb_fsError() );
 }
 
-/* HB_PREAD( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
+/* hb_PRead( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
       -> <nBytesRead> */
 HB_FUNC( HB_PREAD )
 {

@@ -116,7 +116,7 @@ HB_FUNC( WVW_CREATEPOPUPMENU )
 }
 
 
-/* WVW_APPENDMENU( hMenu, nFlags, nMenuItemId, cCaption ) */
+/* wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption ) */
 
 HB_FUNC( WVW_APPENDMENU )
 {
@@ -290,7 +290,7 @@ HB_FUNC( WVW_ENDMENU )
    hb_retl( EndMenu() );
 }
 
-/* WVW_GetMenu([nWinNum]) */
+/* wvw_GetMenu([nWinNum]) */
 HB_FUNC( WVW_GETMENU )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -299,7 +299,7 @@ HB_FUNC( WVW_GETMENU )
    HB_RETHANDLE( GetMenu( pWindowData->hWnd ) );
 }
 
-/* WVW_TrackPopupMenu([nWinNum], n) */
+/* wvw_TrackPopupMenu([nWinNum], n) */
 HB_FUNC( WVW_TRACKPOPUPMENU )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -323,7 +323,7 @@ HB_FUNC( WIN_SETMENU )
 }
 
 /*
- *  WVW_NOSYSMENU( [nWinNum], lRemoveClose )
+ *  wvw_NoSysMenu( [nWinNum], lRemoveClose )
  *  removes System Menu of a window
  *  if lRemoveClose is .t., also removes the 'Close' command and 'X' button
  *
@@ -353,7 +353,7 @@ HB_FUNC( WVW_NOSYSMENU )
    }
 }
 
-/* WVW_GetSystemMenu( [nWinNum], lReset )
+/* wvw_GetSystemMenu( [nWinNum], lReset )
  * returns the System Menu of a window
  * if lRemoveClose is .t., also removes the 'Close' command and 'X' button
  */

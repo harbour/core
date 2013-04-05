@@ -366,9 +366,9 @@ HB_FUNC( TRANSFORM )
              * one is smaller then 5 bytes then first two bytes are exchanged
              * with 4-5 bytes from previous result which was length enough,
              * f.e.:
-             *          ? transform( "0123456789", "" )
-             *          ? transform( "AB", "@E" )
-             *          ? transform( "ab", "@E" )
+             *          ? Transform( "0123456789", "" )
+             *          ? Transform( "AB", "@E" )
+             *          ? Transform( "ab", "@E" )
              * [druzus]
              */
             if( HB_CDP_ISCHARIDX( cdp ) )

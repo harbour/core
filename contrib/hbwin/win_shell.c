@@ -82,7 +82,7 @@
 #  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
-/* WIN_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
+/* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
                         [<cTooltip>], [<lAddDel>],
                         [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
@@ -208,7 +208,7 @@ static LPTSTR s_StringList( int iParam )
 
 #endif
 
-/* WIN_SHFileOperation( [<hWnd>], [<nFunction>], [<cFrom>|<aFrom>], [<cTo>|<aTo>],
+/* win_SHFileOperation( [<hWnd>], [<nFunction>], [<cFrom>|<aFrom>], [<cTo>|<aTo>],
                         [<nFlags>], [<@lAnyOperationAborted>],
                         [<aNameMappings>], [<cProgressTitle>] ) -> <nResult> */
 HB_FUNC( WIN_SHFILEOPERATION )

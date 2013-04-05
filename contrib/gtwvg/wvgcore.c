@@ -1040,7 +1040,7 @@ HB_FUNC( WVT_DRAWIMAGE )
 }
 
 /*
- *    WVT_DRAWLABEL( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor,;
+ *    Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor,;
  *                     cFontFace, nFontHeight, nFontWidth, nFontWeight, nQuality,  ;
  *                        nCharSet, lItalics, lUnderline, lStrikeOut, aPxlOff )
  */
@@ -1840,7 +1840,7 @@ HB_FUNC( WVT_DRAWPICTURE )
 }
 
 /*
- *    WVT_DRAWLABELEX( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff )
+ *    Wvt_DrawLabelEx( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff )
  */
 HB_FUNC( WVT_DRAWLABELEX )
 {
@@ -2106,7 +2106,7 @@ HB_FUNC( WVT_DRAWOUTLINEEX )
 }
 
 /*                        1     2       3        4       5         6           7         8            9      10       11
- *    WVT_DRAWLABELOBJ( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff )
+ *    Wvt_DrawLabelObj( nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aPxlOff )
  */
 HB_FUNC( WVT_DRAWLABELOBJ )
 {

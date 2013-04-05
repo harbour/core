@@ -1137,7 +1137,7 @@ HB_ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, HB_USHORT uiIndex,
          }
       }
       /*
-       * check for NULL fields created by Access, they have chr(0) set
+       * check for NULL fields created by Access, they have Chr(0) set
        * in the whole memo block address, [druzus]
        */
       else if( pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] != 0 )
@@ -5639,7 +5639,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
           * supported and if yes then try to delete memo file if it exists
           * in the same directory as table file
           * hb_fsFNameSplit() repeated intentionally to respect
-          * the path set by hb_fileExists()
+          * the path set by hb_FileExists()
           */
          pFileName = hb_fsFNameSplit( szFileName );
          pFileExt = hb_itemPutC( pFileExt, NULL );
@@ -5752,7 +5752,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    if( szFile[ 0 ] && hb_fileExists( szFileName, szFileName ) )
    {
       /* hb_fsFNameSplit() repeated intentionally to respect
-       * the path set by hb_fileExists()
+       * the path set by hb_FileExists()
        */
       pFileName = hb_fsFNameSplit( szFileName );
 

@@ -1987,7 +1987,7 @@ HB_BOOL hb_compExprReduceAT( PHB_EXPR pSelf, HB_COMP_DECL )
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING &&
        ! HB_SUPPORT_USERCP )
    {
-      /* NOTE: CA-Cl*pper has a bug in AT("",cText) compile time
+      /* NOTE: CA-Cl*pper has a bug in At("",cText) compile time
        *       optimization and always set 1 as result in such cses.
        *       This bug exist only in compiler and CA-Cl*pper macro
        *       compiler does not have optimizer. This bug is replicated
@@ -2041,7 +2041,7 @@ HB_BOOL hb_compExprReduceCHR( PHB_EXPR pSelf, HB_COMP_DECL )
    if( fDoOpt )
    {
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
-       *       CHR() cases where the passed parameter is a constant which
+       *       Chr() cases where the passed parameter is a constant which
        *       can be divided by 256 but it's not zero, in this case it
        *       will return an empty string instead of a Chr(0). [vszakats]
        *

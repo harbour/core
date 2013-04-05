@@ -79,7 +79,7 @@ void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some CHR(n) can be converted
+       * NOTE: After optimization some Chr(n) can be converted
        *       into a string containing nonprintable characters.
        *
        * ? is escaped to avoid conflicts with trigraph sequences which
