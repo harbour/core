@@ -130,7 +130,7 @@ Padrão: no
  - **\-depcontrol=&lt;d:v&gt;** &lt;d&gt; is the name of the dependency\. &lt;v&gt; is a value that controls how detection is done\. Accepted values: no, yes, force, nolocal, local\. Default: content of environment variable HBMK\_WITH\_&lt;d&gt;
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; é o nome da dependência\. Definir &lt;r&gt; como diretório raiz para os caminhos especificados nas opções \-depincpath \.
  - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; é o nome da dependêcia\. Adicione &lt;i&gt; para detectar o cabeçalho na lista de caminhos\.
- - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; é o nome da dependêcia\. Adicione &lt;i&gt; para detectar o cabeçalho na lista de caminhos, onde &lt;i&gt; aponta para o diretorio local do projeto e contendo um incorporado \(Também conhecida como 'locally hosted' dependência\)\.
+ - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; é o nome da dependêcia\. Adicione &lt;i&gt; para detectar o cabeçalho na lista de caminhos, onde &lt;i&gt; aponta para o diretório local do projeto e contendo um incorporado \(Também conhecida como 'locally hosted' dependência\)\.
  - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; é o nome da dependência\. Adicione &lt;dll&gt; para importar a biblioteca na lista de fontes\.
  - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; é o nome da dependência\. Coloque no nome da biblioteca de importação para &lt;lib&gt;
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; é o nome da dependência\. Fecha as definição de dependência e faça a detecção de dependência real, configure todos os filtros pré\-definidos, macro variáveis e adeque as opções de construção\. Opcional, se for omitido, a detecção será realizada após o processamento de todas as opções\.
@@ -214,7 +214,7 @@ As opções abaixo são para desenvolvedores e internas \(compatibilidade não g
  - **\-debugrte** gerar um "run\-time error" erro de tempo de execução
 
 
-É possível "sym\-link/copy/rename" hbmk2 para os seguintes nomes para alterar o modo padrão de operação:
+Você pode criar um link simbólico/copiar/renomear hbmk2 para os seguintes nomes para alterar o modo padrão de operação:
 
 
  - **hbrun\*|\*hbrun** rodar em modo script / "shell" interativo
@@ -241,47 +241,47 @@ Arquivos:
  - **\*\.hbp** arquivo de projeto\. Pode conter qualquer número de opções de linha de comando, que são esperados para criar uma saída\. As linhas que começam com caracter '\#' são ignoradas, caso contrário, nova linha é opcional e as opções são separados por espaço, assim como na linha de comando\. Você deve colocar as opções que contenham espaço entre aspas duplas\. Cada referência de arquivo \.hbp será executado como um sub\-projeto\.
  - **\*\.hbm** coleção de opções\. Pode ser usado coletando\-as para dentro de um arquivo e inclui\-lo dentro de arquivo de projeto\.Usar o mesmo formato dos arquivos \.hbp\.
  - **\*\.hbc** conjunto de opções que acompanham os componentes \(também conhecidos como 'libs', pacotes\)\. Usam diferentes sintaxes de linha de comado "command\-line" e arquivos \.hbp/\.hbm\. As linhas que começam com o carácter '\#' serão ignoradas, cada diretiva deve ser colocada em linhas separadas\.
- - **\*\.ch** se passado diretamente como um arquivo de origem, ele será utilizada como padrão cabeçalho adicional
+ - **\*\.ch** se passado diretamente como um arquivo fonte, ele será utilizada como padrão cabeçalho adicional
  - **hbmk\.hbc** por padrão, se presente o arquivo \.hbc é o que será processado automaticamente\. Localização \(ões\) possíveis \(em ordem de prioridade\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
- - **hbmk\.hbm** o arquivo opcional \.hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções
+ - **hbmk\.hbm** o arquivo \.hbm opcional residente no diretório de trabalho atual será processado automaticamente antes das outras opções
  - **$hb\_pkg\_dynlib\.hbm** arquivo especial \.hbm incorporado dentro hbmk2\. Ele gerencia os detalhes da criação de uma biblioteca dinâmica \(no estilo 'Harbour contribs'\)\.
  - **$hb\_pkg\_install\.hbm** arquivo especial \.hbm incorporado dentro hbmk2\.Ele gerencia os detalhes de instalação e compilação e arquivos relacionados com o pacote para locais padrão\. \(no estilo do Harbour contribs\)\.
 
 
- - **\*\.hb** script Harbour
- - **\*\.hrb** Harbour binario portável \(Também conhecida como Harbour script pré\-compilado\)
- - **hbstart\.hb** script de inicialização Harbour para shell interativo Harbour\. Se presente ele é executado automaticamente na inicialização do shell\. Localizações possíveis \(em ordem de precedência\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
+ - **\*\.hb** arquivo script Harbour
+ - **\*\.hrb** Harbour binario portável \(Também conhecido como Harbour script pré\-compilado\)
+ - **hbstart\.hb** arquivo de inicialização de script para shell interativo Harbour\. Se presente ele é executado automaticamente na inicialização do shell\. Localizações possíveis \(em ordem de precedência\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 diretório&gt;
  - **shell plugins** \.hb e \.hrb plugins para shell interativo Harbour\. Eles pode residir em \[\*\]: %APPDATA%\\\.harbour\\
- - **\.hb\_history** armazena o historico de comando do shell interativo Harbour shell\. Voce pode desabilitar o historico fazendo a primeira linha 'no' \(sem aspas e com nova linha\)\. Localizado em \[\*\]: %APPDATA%\\\.harbour\\
+ - **\.hb\_history** armazena o histórico de comando do shell interativo Harbour shell\. Voce pode desabilitar o histórico fazendo a primeira linha 'no' \(sem aspas e com nova linha\)\. Localizado em \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** lista de extensões a ser carregada no shell interativo Harbour\. Uma extensão por linha, a parte alem do caracter '\#' será ignorada\. Nome alternativo em MS\-DOS: hb\_ext\.ini\. localizado em \[\*\]: %APPDATA%\\\.harbour\\
   
 Variáveis macro:  
 
 
- - **$\{hb\_root\}** directório de hbmk2
+ - **$\{hb\_root\}** diretório de hbmk2
  - **$\{hb\_dir\}** diretório de nome de arquivo é usado em
- - **$\{hb\_dirname\}** diretório raiz do nome de arquivo é usado em
- - **$\{hb\_name\}** nomeie o nome de arquivo ele é usado \(sem diretório e extensão\)
- - **$\{hb\_self\}** nome completo que é usado em
+ - **$\{hb\_dirname\}** nome do diretório raiz dos arquivos em uso
+ - **$\{hb\_name\}** é usado para nomear o arquivo \(sem diretório e extensão\)
+ - **$\{hb\_self\}** nome completodo arquivo que está em uso
  - **$\{hb\_curdir\}** diretório de trabalho atual
  - **$\{hb\_tempdir\}** Diretório do Sistema Operacional para arquivos temporários
- - **$\{hb\_targetname\}** nome do projeto \(sem a extensão de diretório\)\. Retorna \.adhoc\. se não existir arquivo de projeto\.
+ - **$\{hb\_targetname\}** nome do projeto \(sem a diretório e extensão\)\. Retorna \.adhoc\. se não existir arquivo de projeto\.
  - **$\{hb\_targettype\}** tipo do projeto \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
  - **$\{hb\_plat\}** plataforma selecionada
- - **$\{hb\_comp\}** compilado C selecionado
+ - **$\{hb\_comp\}** compilador C selecionado
  - **$\{hb\_comp\_ver\}** versão do compilador C
  - **$\{hb\_build\}** nome da construção "build"
  - **$\{hb\_cpu\}** CPU selecionada
- - **$\{hb\_work\}** nome padrão do diretorio de trabalho
- - **$\{hb\_workdynsub\}** subdiretório padrão de trabalho para bibliotecas dinâmicas
+ - **$\{hb\_work\}** nome padrão do diretório base de trabalho
+ - **$\{hb\_workdynsub\}** subdiretório padrão de trabalho para bibliotecas dinâmicas de destino
  - **$\{hb\_dynprefix\}** prefixo de biblioteca dinâmica
  - **$\{hb\_dynsuffix\}** sufixo de biblioteca dinâmica
  - **$\{hb\_dynext\}** extensão de biblioteca dinâmica
- - **$\{hb\_ver\}** Versão do Harbour no formato de tres bytes em hexadecimal\. Por exemplo: 030200
+ - **$\{hb\_ver\}** Versão do Harbour no formato de tres bytes em hexadecimal\. Exemplo: 030200
  - **$\{hb\_verstr\}** Versão do Harbour no formato legível por humanos &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Ex\.: 3\.2\.0dev
  - **$\{hb\_major\}** número da versão principal Harbour
- - **$\{hb\_minor\}** úmero da versão secundária Harbour
- - **$\{hb\_release\}** número da versão Harbour
+ - **$\{hb\_minor\}** número da versão secundária Harbour
+ - **$\{hb\_release\}** número da versão Harbour liberada
  - **$\{hb\_status\}** status da versão Harbour
  - **$\{hb\_revision\}** revisão Harbour
  - **$\{hb\_host\_plat\}** plataforma de hospedagem Harbour
@@ -292,7 +292,7 @@ Variáveis macro:
  - **$\{hb\_dyn\}** diretório de bibliotécas dinâmicas Harbour
  - **$\{hb\_inc\}** diretório Harbour para header
  - **$\{hb\_addons\}** diretório base para complementos "add\-ons" Harbour\.
- - **$\{hb\_first\}** nome do arquivo de origem que detém a função de entrada \(sem diretório e extensão\)
+ - **$\{hb\_first\}** nome do arquivo do fonte que detém a função de entrada \(sem diretório e extensão\)
  - **$\{hb\_outputdir\}** diretório de saída
  - **$\{hb\_outputname\}** nome de saída \(sem a extensão\)
  - **$\{hb\_level\}** nível de recursão do sub\-projeto

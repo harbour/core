@@ -5,7 +5,7 @@ Copyright \(c\) 2003\-2007, Przemysław Czerpak
 
 Sintaxe:  
   
-  hbrun &lt;file\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;option&gt; \[&lt;parameter\[s\]&gt;\]  
+  hbrun &lt;arquivo\[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opción&gt; \[&lt;parameter\[s\]&gt;\]  
   
 Descripción:  
 
@@ -28,10 +28,10 @@ Arquivos:
 
  - **\*\.hb** Guión de Harbour
  - **\*\.hrb** Binario portable de Harbour \(coñecido como guión de Harbour precompilado\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbrun&gt;
- - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
- - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hbstart\.hb** guión de arranque para o intérprete interactivo\. Execútase automáticamente cando se inicia o intérprete, se existe\. Localizacións posibles \(en orde de precedencia\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;directorio hbrun&gt;
+ - **shell plugins** complementos \.hb e \.hrb para o intérprete interactivo de Harbour\. Poden ubicarse en \[\*\]: %APPDATA%\\\.harbour\\
+ - **\.hb\_history** garda o historial do intérprete interactivo de Harbour\. Pode omitirse o historial usando 'no' na primeira liña \(sen comiñas e con retorno de carro/nova liña\)\. Atópase en \[\*\]: %APPDATA%\\\.harbour\\
+ - **hb\_extension** lista de extensións para cargar no intérprete interactivo\. Unha extensión por liña, ignórase a partir do caracter '\#' \. Nome de arquivo alternativo en MS\-DOS: hb\_ext\.ini\. Reside en \[\*\]: %APPDATA%\\\.harbour\\
 
 
 Constantes predefinidas nos fontes:
@@ -43,9 +43,9 @@ Constantes predefinidas nos fontes:
 Variables de ámbito:  
 
 
- - **HB\_EXTENSION** space separated list of extensions to load in interactive Harbour shell
+ - **HB\_EXTENSION** lista separada por espazos de extensións para cargar no intérprete interactivo de Harbour
   
-Shell API available in Harbour scripts:  
+Intérprete interactivo de Harbour dispoñible en guións:  
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
@@ -65,9 +65,9 @@ Descargar paquete\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista de paquetes cargados\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-hb\_DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) non mapeada para o guión\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-hb\_ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) non mapeada para script\.
   
 Notas:  
 

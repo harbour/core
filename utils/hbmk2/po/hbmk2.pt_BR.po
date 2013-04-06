@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-05 13:03+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-06 10:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -928,7 +928,7 @@ msgstr "<d> é o nome da dependência. Adicione <dll> para importar a biblioteca
 
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency."
-msgstr "<d> é o nome da dependêcia. Adicione <i> para detectar o cabeçalho na lista de caminhos, onde <i> aponta para o diretorio local do projeto e contendo um incorporado (Também conhecida como 'locally hosted' dependência)."
+msgstr "<d> é o nome da dependêcia. Adicione <i> para detectar o cabeçalho na lista de caminhos, onde <i> aponta para o diretório local do projeto e contendo um incorporado (Também conhecida como 'locally hosted' dependência)."
 
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
@@ -1468,7 +1468,7 @@ msgstr "medir o tempo gasto na contrução."
 
 #, c-format
 msgid "You can sym-link/copy/rename %1$s to the following names to alter default mode of operation:"
-msgstr "É possível \"sym-link/copy/rename\" %1$s para os seguintes nomes para alterar o modo padrão de operação:"
+msgstr "Você pode criar um link simbólico/copiar/renomear %1$s para os seguintes nomes para alterar o modo padrão de operação:"
 
 #, c-format
 msgid "mode %1$s"
@@ -1600,11 +1600,11 @@ msgstr "coleção de opções. Pode ser usado coletando-as para dentro de um arq
 
 #, c-format
 msgid "if passed directly as a source file, it will be used as additional standard header"
-msgstr "se passado diretamente como um arquivo de origem, ele será utilizada como padrão cabeçalho adicional"
+msgstr "se passado diretamente como um arquivo fonte, ele será utilizada como padrão cabeçalho adicional"
 
 #, c-format
 msgid "optional .hbm file residing in current working directory, which gets automatically processed before other options"
-msgstr "o arquivo opcional .hbm residente no diretório de trabalho atual será processado automaticamente antes das outras opções"
+msgstr "o arquivo .hbm opcional residente no diretório de trabalho atual será processado automaticamente antes das outras opções"
 
 #, c-format
 msgid "project file. Can contain any number of command-line options, which are expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional and options are space separated, just like on the command-line. You must enclose option containing space in double quotes. Each .hbp file reference will be executed as a sub-project."
@@ -1624,11 +1624,11 @@ msgstr "por padrão, se presente o arquivo .hbc é o que será processado automa
 
 #, c-format
 msgid "Harbour portable binary (aka precompiled Harbour script)"
-msgstr "Harbour binario portável (Também conhecida como Harbour script pré-compilado)"
+msgstr "Harbour binario portável (Também conhecido como Harbour script pré-compilado)"
 
 #, c-format
 msgid "Harbour script"
-msgstr "script Harbour"
+msgstr "arquivo script Harbour"
 
 #, c-format
 msgid "Macro variables:"
@@ -1648,15 +1648,15 @@ msgstr "versão do compilador C"
 
 #, c-format
 msgid "default base workdir name"
-msgstr "nome padrão do diretorio de trabalho"
+msgstr "nome padrão do diretório base de trabalho"
 
 #, c-format
 msgid "default workdir subdirectory for dynamic library targets"
-msgstr "subdiretório padrão de trabalho para bibliotecas dinâmicas"
+msgstr "subdiretório padrão de trabalho para bibliotecas dinâmicas de destino"
 
 #, c-format
 msgid "directory of %1$s"
-msgstr "directório de %1$s"
+msgstr "diretório de %1$s"
 
 #, c-format
 msgid "directory of the filename it is used in"
@@ -1680,7 +1680,7 @@ msgstr "sufixo de biblioteca dinâmica"
 
 #, c-format
 msgid "full filename it is used in"
-msgstr "nome completo que é usado em"
+msgstr "nome completodo arquivo que está em uso"
 
 #, c-format
 msgid "Harbour 3rd party static library directory"
@@ -1712,11 +1712,11 @@ msgstr "número da versão principal Harbour"
 
 #, c-format
 msgid "Harbour minor version number"
-msgstr "úmero da versão secundária Harbour"
+msgstr "número da versão secundária Harbour"
 
 #, c-format
 msgid "Harbour release version number"
-msgstr "número da versão Harbour"
+msgstr "número da versão Harbour liberada"
 
 #, c-format
 msgid "Harbour revision"
@@ -1728,7 +1728,7 @@ msgstr "diretório de bibliotécas estáticas Harbour"
 
 #, c-format
 msgid "Harbour version in hexadecimal triple byte format. F.e.: %1$s"
-msgstr "Versão do Harbour no formato de tres bytes em hexadecimal. Por exemplo: %1$s"
+msgstr "Versão do Harbour no formato de tres bytes em hexadecimal. Exemplo: %1$s"
 
 #, c-format
 msgid "Harbour version in human readable format <major>.<minor>.<release><status>. F.e.: %1$s"
@@ -1740,11 +1740,11 @@ msgstr "status da versão Harbour"
 
 #, c-format
 msgid "name of source file that holds the entry function (without directory and extension)"
-msgstr "nome do arquivo de origem que detém a função de entrada (sem diretório e extensão)"
+msgstr "nome do arquivo do fonte que detém a função de entrada (sem diretório e extensão)"
 
 #, c-format
 msgid "name of the filename it is used in (without directory and extension)"
-msgstr "nomeie o nome de arquivo ele é usado (sem diretório e extensão)"
+msgstr "é usado para nomear o arquivo (sem diretório e extensão)"
 
 #, c-format
 msgid "name of the output (without extension)"
@@ -1752,7 +1752,7 @@ msgstr "nome de saída (sem a extensão)"
 
 #, c-format
 msgid "name of the project (without directory and extension). Returns %1$s if there is not project file."
-msgstr "nome do projeto (sem a extensão de diretório). Retorna %1$s se não existir arquivo de projeto."
+msgstr "nome do projeto (sem a diretório e extensão). Retorna %1$s se não existir arquivo de projeto."
 
 #, c-format
 msgid "OS directory for temporary files"
@@ -1772,7 +1772,7 @@ msgstr "returna os valores das variáveis de ambiente <envvar>"
 
 #, c-format
 msgid "selected C compiler"
-msgstr "compilado C selecionado"
+msgstr "compilador C selecionado"
 
 #, c-format
 msgid "selected CPU"
@@ -1788,7 +1788,7 @@ msgstr "nível de recursão do sub-projeto"
 
 #, c-format
 msgid "top directory of the filename it is used in"
-msgstr "diretório raiz do nome de arquivo é usado em"
+msgstr "nome do diretório raiz dos arquivos em uso"
 
 #, c-format
 msgid "type of the project (hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer)"
@@ -2432,7 +2432,7 @@ msgstr "lista separada por espaço de extensões para carga no shell interativo 
 
 #, c-format
 msgid "startup Harbour script for interactive Harbour shell. It gets executed automatically on shell startup, if present. Possible locations (in order of precedence) [*]: %1$s"
-msgstr "script de inicialização Harbour para shell interativo Harbour. Se presente ele é executado automaticamente na inicialização do shell. Localizações possíveis (em ordem de precedência) [*]: %1$s"
+msgstr "arquivo de inicialização de script para shell interativo Harbour. Se presente ele é executado automaticamente na inicialização do shell. Localizações possíveis (em ordem de precedência) [*]: %1$s"
 
 #, c-format
 msgid ".hb and .hrb plugins for interactive Harbour shell. They may reside in [*]: %1$s"
@@ -2440,7 +2440,7 @@ msgstr ".hb e .hrb plugins para shell interativo Harbour. Eles pode residir em [
 
 #, c-format
 msgid "stores command history for interactive Harbour shell. You can disable history by making the first line '%1$s' (without quotes and with newline). Resides in [*]: %2$s"
-msgstr "armazena o historico de comando do shell interativo Harbour shell. Voce pode desabilitar o historico fazendo a primeira linha '%1$s' (sem aspas e com nova linha). Localizado em [*]: %2$s"
+msgstr "armazena o histórico de comando do shell interativo Harbour shell. Voce pode desabilitar o histórico fazendo a primeira linha '%1$s' (sem aspas e com nova linha). Localizado em [*]: %2$s"
 
 #, c-format
 msgid "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s"
