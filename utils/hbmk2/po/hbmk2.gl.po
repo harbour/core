@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-05 19:50+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-06 11:02+0000\nLast-Translator: jlalin <jjjlll@tempinbox.com>\nLanguage-Team: Galician (http://www.transifex.com/projects/p/harbour/language/gl/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: gl\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -775,6 +775,10 @@ msgid "Loading xhp (xMate) project file: %1$s"
 msgstr "Cargando arquivo de proxecto .xhp (xMate): %1$s"
 
 #, c-format
+msgid "Translation (%1$s): (add your name here)"
+msgstr "Traducción (%1$s): JLalín"
+
+#, c-format
 msgid "no error"
 msgstr "Sen error"
 
@@ -1132,7 +1136,7 @@ msgstr "substituír o nome da función/procedemento de arranque"
 
 #, c-format
 msgid "pass input file to plugins"
-msgstr "Pasar arquivos de entrada a os complementos"
+msgstr "Pasar arquivos a os complementos"
 
 #, c-format
 msgid "pass single flag to code sign command"
@@ -2120,7 +2124,7 @@ msgstr "Engadir un arquivo C ao proxecto."
 
 #, c-format
 msgid "Add a C++ input file to the project."
-msgstr "Engade un arquivo C++ a o proxecto."
+msgstr "Engade un arquivo C++ ao proxecto."
 
 #, c-format
 msgid "Add a file to be installed, with an optional -instpath= group name."
@@ -2307,6 +2311,10 @@ msgid ".hb, .prg, .hrb or .dbf"
 msgstr ".hb, .prg, .hrb ou .dbf"
 
 #, c-format
+msgid "%1$s file passed as first parameter will be run as Harbour script. If the filename contains no path components, it will be searched in current working directory and in PATH. If not extension is given, .hb and .hrb extensions are searched, in that order. .dbf file will be opened automatically in shared mode and interactive Harbour shell launched. Non-standard extensions will be autodetected for source and precompiled script types. Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default core header 'hb.ch' is automatically #included. The default date format is the ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)."
+msgstr "o arquivo %1$s pasado como primeiro parámetro será executado coma un guión de Harbour. Se o arquivo non inclúe ruta buscarase no directorio actual e na variable de ámbito PATH. Se o arquivo non ten extensión asumiránse .hb e .hrb, nesa mesma orde. Os arquivos .dbf ábrense automáticamente en modo compartido e iníciase o intérprete interactivo de Harbour. Para as extensións non estándar autodetectarase a partir do fonte y tipos de guións predefinidos. Para os guións de Harbour o código de páxina predefinido é UTF-8. A cabeceira predeterminada 'hb.ch' e incluida (#include) automáticamente. O formato para datas predeterminado e o estándar ISO: yyyy-mm-dd. O terminal xeral predeterminado é '%2$s', non sendo que se detecten chamadas a funcións CUI a pantalla completa, entón selecciónase automáticamente '%3$s' [*] (excepto para INIT PROCEDUREs)."
+
+#, c-format
 msgid "Values marked with [*] may be host platform and/or configuration dependent. This help was generated on '%1$s' host platform."
 msgstr "Os valores marcados con [*] poden depender da plataforma anfitriona e/ou da configuración. Esta axuda foi xenerada na plataforma '%1$s'."
 
@@ -2317,6 +2325,10 @@ msgstr "Pose usar <Alt+V> no modo de intérprete interactivo de Harbour para peg
 #, c-format
 msgid "Description:"
 msgstr "Descripción:"
+
+#, c-format
+msgid "%1$s is an integrated and portable build tool, making it possible to create various types of executable binaries (executable, dynamic library, static library, Harbour portable binary) out of multiple types of source files (C, C++, Objective-C, Harbour, gettext translations, Windows resources). 'Integrated' means that a single %1$s project file can control all or most aspects of the build process. 'Portable' means that a single %1$s project file can control the build on all supported OS platforms and across all supported C compilers. It also aims to cover the majority of build tasks via short and simple project files (options). %1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. In order to achieve above goals, %1$s will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately. %1$s allows to extend the types of supported source files via plugins.\nBesides building executables, %1$s is able to run Harbour scripts (both source and precompiled) directly, and it also features an interactive shell prompt."
+msgstr "%1$s é unha ferramenta portable e integrada de construcción, facendo posible a creación de diferentes tipos de binarios (executables, bibliotecas dinámicas, bibliotecas estáticas, binarios portables de Harbour) a partires de múltiples tipos de fontes (C, C++, Objective-C, Harbour, traduccións de gettext, recursos de Windows). 'Integrado' significa que un sinxelo arquivo de proxecto %1$s pode controlar todos ou a maioría dos aspectos do proceso de construcción. 'Portable' significa que que un sinxelo arquivo de proxecto %1$s pode controlar o proceso de construcción en todas as plataformas soportadas e con todos os compiladores C soportados. Tamén axuda a cubrir a maioría de tarefas de construcción con sinxelos e pequenos arquivos de proxectos (opcións). %1$s tamén soporta proxectos -independentes de Harbour- C/C++/Objective-C puros. Para conseguir os obxetivos %1$s autodetectará o compilador Harbour, o compilador de C e outras ferramentas necesarias e usaráas cando se necesiten. %1$s permite extender os tipos de arquivos soportados usando complementos (plugins).\nAdemáis de construir executables, %1$s pode executar guións (scripts) de Harbour (tanto en código fonte como precompilados) e inclúe un intérprete interactivo de comandos."
 
 #, c-format
 msgid "%1$s is able to run Harbour scripts (both source and precompiled), and it also features an interactive shell prompt."

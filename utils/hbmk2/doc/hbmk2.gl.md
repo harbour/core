@@ -1,6 +1,7 @@
 Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
+Traducción \(gl\): JLalín  
 
 Sintaxe:  
   
@@ -9,8 +10,8 @@ Sintaxe:
 Descripción:  
 
 
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
-Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
+  hbmk2 é unha ferramenta portable e integrada de construcción, facendo posible a creación de diferentes tipos de binarios \(executables, bibliotecas dinámicas, bibliotecas estáticas, binarios portables de Harbour\) a partires de múltiples tipos de fontes \(C, C\+\+, Objective\-C, Harbour, traduccións de gettext, recursos de Windows\)\. 'Integrado' significa que un sinxelo arquivo de proxecto hbmk2 pode controlar todos ou a maioría dos aspectos do proceso de construcción\. 'Portable' significa que que un sinxelo arquivo de proxecto hbmk2 pode controlar o proceso de construcción en todas as plataformas soportadas e con todos os compiladores C soportados\. Tamén axuda a cubrir a maioría de tarefas de construcción con sinxelos e pequenos arquivos de proxectos \(opcións\)\. hbmk2 tamén soporta proxectos \-independentes de Harbour\- C/C\+\+/Objective\-C puros\. Para conseguir os obxetivos hbmk2 autodetectará o compilador Harbour, o compilador de C e outras ferramentas necesarias e usaráas cando se necesiten\. hbmk2 permite extender os tipos de arquivos soportados usando complementos \(plugins\)\.  
+Ademáis de construir executables, hbmk2 pode executar guións \(scripts\) de Harbour \(tanto en código fonte como precompilados\) e inclúe un intérprete interactivo de comandos\.
   
 Opcións:  
 
@@ -140,7 +141,7 @@ Opcións:
 
 
  - **\-plugin=&lt;filename&gt;** engadir complemento\. &lt;filename&gt; pode ser: \.hb, \.prg, \.hrb
- - **\-pi=&lt;filename&gt;** Pasar arquivos de entrada a os complementos
+ - **\-pi=&lt;filename&gt;** Pasar arquivos a os complementos
  - **\-pflag=&lt;f&gt;** pasar opción para os complementos
   
 As seguintes opcións están dispoñibles na liña de comandos:  
@@ -474,7 +475,7 @@ Engadir un arquivo de Harbour ao proxecto\.
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo C ao proxecto\.
  - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
-Engade un arquivo C\+\+ a o proxecto\.
+Engade un arquivo C\+\+ ao proxecto\.
  - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo de recursos Windows ao proxecto\.
  - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
@@ -669,7 +670,7 @@ Tamén se poden combinar os filtros usando os operadores '&amp;' \(and\), '|' \(
   - \.\(dot\) pasado como primeiro parámetro iniciará o intérprete interactivo de Harbour\.
 
 
-  - \.hb, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - o arquivo \.hb, \.hrb ou \.dbf pasado como primeiro parámetro será executado coma un guión de Harbour\. Se o arquivo non inclúe ruta buscarase no directorio actual e na variable de ámbito PATH\. Se o arquivo non ten extensión asumiránse \.hb e \.hrb, nesa mesma orde\. Os arquivos \.dbf ábrense automáticamente en modo compartido e iníciase o intérprete interactivo de Harbour\. Para as extensións non estándar autodetectarase a partir do fonte y tipos de guións predefinidos\. Para os guións de Harbour o código de páxina predefinido é UTF\-8\. A cabeceira predeterminada 'hb\.ch' e incluida \(\#include\) automáticamente\. O formato para datas predeterminado e o estándar ISO: yyyy\-mm\-dd\. O terminal xeral predeterminado é 'gtcgi', non sendo que se detecten chamadas a funcións CUI a pantalla completa, entón selecciónase automáticamente 'gtwin' \[\*\] \(excepto para INIT PROCEDUREs\)\.
   - Pose usar &lt;Alt\+V&gt; no modo de intérprete interactivo de Harbour para pegar texto dende o portapapéis\.
   - Os valores marcados con \[\*\] poden depender da plataforma anfitriona e/ou da configuración\. Esta axuda foi xenerada na plataforma 'win'\.
 

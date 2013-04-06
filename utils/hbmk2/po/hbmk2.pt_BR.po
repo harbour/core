@@ -4,7 +4,7 @@
 
 #, c-format
 msgid ""
-msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-06 10:05+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-06 11:02+0000\nLast-Translator: SAMI <sami@laham.com.br>\nLanguage-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
@@ -80,7 +80,7 @@ msgstr "Processando script local: %1$s"
 
 #, c-format
 msgid "Found project reference on library search path: %1$s"
-msgstr "Encontrado referência ao projeto na procura das bilbiotecas: %1$s"
+msgstr "Encontrada referência ao projeto no caminho de procura das bilbiotecas: %1$s"
 
 #, c-format
 msgid "Warning: Ignored option valid only on command-line: %1$s"
@@ -108,11 +108,11 @@ msgstr "Atenção: Opção disponível apenas quando estive usando compilador Ha
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in option %2$s)"
-msgstr "Atenção: Ignorando explicitamente o diretório especificado no nucleo da biblioteca: %1$s (na opção %2$s)"
+msgstr "Atenção: Ignorando explicitamente o diretório do núcleo da biblioteca especificado: %1$s (na opção %2$s)"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)"
-msgstr "Atenção: Ignorar especificado explicitamente no diretório do núcleo header: %1$s (na opção %2$s)"
+msgstr "Atenção: Ignorando explicitamente o diretório do núcleo header especificado: %1$s (na opção %2$s)"
 
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
@@ -412,7 +412,7 @@ msgstr "Atenção: Parâmetro não suportável: %1$s. Use no lugar a opção '%2
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)"
-msgstr "Atenção: Ignorar especificado explicitamente no nucleo da biblioteca: %1$s (na opção %2$s)"
+msgstr "Atenção: Ignorando explicitamente o nucleo da biblioteca especificado: %1$s (na opção %2$s)"
 
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
@@ -440,7 +440,7 @@ msgstr "Atenção: Biblioteca não importada fonte não foi especificado."
 
 #, c-format
 msgid "Error: Creating import libraries is not supported for this platform or compiler."
-msgstr "Erro: esta plataforma ou compilador não tem suporte para criar bibliotecas de importação."
+msgstr "Erro: Criando bibliotecas de importação não são suportadas para essa plataforma ou compilador."
 
 #, c-format
 msgid "Warning: Install path not a directory (%1$s). Extra install files not copied."
@@ -560,11 +560,11 @@ msgstr "Atenção: Erro ao processar aninhamento em %1$s"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)"
-msgstr "Atenção: Ignorando explicitamente o diretório especificado no núcleo da biblioteca: %1$s (na directiva %2$s)"
+msgstr "Atenção: Ignorando explicitamente o núcleo da biblioteca especificado: %1$s (na diretiva %2$s)"
 
 #, c-format
 msgid "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)"
-msgstr "Atenção: Ignorando explicitamente especificado no diretório do núcleo header: %1$s (na directiva %2$s)"
+msgstr "Atenção: Ignorando explicitamente o diretório do núcleo header especificado: %1$s (na diretiva %2$s)"
 
 #, c-format
 msgid "Warning: Unknown directive: %1$s"
@@ -1208,7 +1208,7 @@ msgstr "selecione o modo de compilação entre UNICODE (WIDE) e ANSI (padrão: A
 
 #, c-format
 msgid "select C++ mode. Allowed values are: def, yes, no"
-msgstr "selecione modo C++.Os Valores permitidos são: def, yes, no"
+msgstr "seleciona modo C++.Os Valores permitidos são: def, yes, no"
 
 #, c-format
 msgid "set <file> as application icon. <file> should be a supported format on the target platform (not supported by some platforms/compilers). On Windows, it is implemented by generating and linking a resource file."
@@ -1828,19 +1828,19 @@ msgstr "passará pelo filtro se o nome do arquivo <file> ou <dir> diretório exi
 
 #, c-format
 msgid "filter will pass if ${MACRO} value equals to <value> (case insensitive)."
-msgstr "passará pelo filtro se o valor ${MACRO} for igual a <value> (maiúsculas e minúsculas \"case insensitive\")"
+msgstr "passará pelo filtro se o valor ${MACRO} for igual a <value> (insensível a maiúscula e minúscula \"case insensitive\")"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is larger than <value> (case insensitive)."
-msgstr "passará pelo filtro se o valor ${MACRO} for maio que o <value> (maiúsculas e minúsculas \"case insensitive\")"
+msgstr "passará pelo filtro se o valor ${MACRO} for maio que o <value> (insensível a maiúscula e minúscula \"case insensitive\")"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is not empty and not equal to '0' or 'no' (case insensitive)"
-msgstr "passará pelo filtro se o valor ${MACRO} não for vazio e não for igual a zero '0' ou 'no' (maiúsculas e minúsculas \"case insensitive\")"
+msgstr "passará pelo filtro se o valor ${MACRO} não for vazio e não for igual a zero '0' ou 'no' (insensível a maiúscula e minúscula \"case insensitive\")"
 
 #, c-format
 msgid "filter will pass if ${MACRO} value is smaller than <value> (case insensitive)."
-msgstr "passará pelo filtro se o valor ${MACRO} menor que <value> (maiúsculas e minúsculas \"case insensitive\")"
+msgstr "passará pelo filtro se o valor ${MACRO} menor que <value> (insensível a maiúscula e minúscula \"case insensitive\")"
 
 #, c-format
 msgid "forced C mode (see -cpp- option)"

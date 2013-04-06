@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: jlalin (jjjlll tempinbox.com) */
 
 #include "hbapilng.h"
 
@@ -21,7 +21,7 @@ static HB_LANG s_lang =
       "Marzo",
       "Abril",
       "Maio",
-      "Xunio",
+      "Xuño",
       "Xullo",
       "Agosto",
       "Setembro",
@@ -41,14 +41,14 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Arquivos de base  # Rexistros  Ultima actuali. Tamaño",
-      "¿Quere máis exemplos?",
-      "Páxina",
+      "Arquivos de datos # Rexistros  Ultima actual.  Tamaño",
+      "¿Desexa máis exemplos?",
+      "Páxina número",
       "** Subtotal **",
       "* Subsubtotal *",
       "*** Total ***",
-      "Insertar",
-      "   ",
+      "Ins",
+      "   Sob",
       "Data non válida",
       "Rango: ",
       " - ",
@@ -79,7 +79,7 @@ static HB_LANG s_lang =
       "",
       "Erro de creación",
       "Erro de apertura",
-      "Erro de peche",
+      "Erro ao pechar",
       "Erro de lectura",
       "Erro de escritura",
       "Erro de impresión",
@@ -112,14 +112,14 @@ static HB_LANG s_lang =
       /* Internal error names */
 
       "Erro irrecuperable %d:",
-      "Fallo na recuperación do erro",
+      "Fallou a recuperación do erro",
       "Non hai ERRORBLOCK() para o erro",
       "Demasiadas chamadas recursivas ao manexador de erros",
-      "RDD non válido ou fallo ao cargar",
+      "RDD non válido ou fallo ao cargalo",
       "Tipo de método non válido de %s",
       "hb_xgrab non pode asignar memoria",
       "hb_xrealloc chamado con un punteiro nulo (NULL)",
-      "hb_xrealloc chamada con un punteiro non válido",
+      "hb_xrealloc chamado con un punteiro non válido",
       "hb_xrealloc non pode reasignar memoria",
       "hb_xfree chamado con un punteiro non válido",
       "hb_xfree chamado con un punteiro nulo (NULL)",
@@ -131,12 +131,12 @@ static HB_LANG s_lang =
       "Bloque de código esperado de %s",
       "Tipo de elemento incorrecto na pila intentando extraer de %s",
       "Desbordamiento da pila",
-      "Un elemento ía ser copiado para sí mesmo de %s",
+      "Un elemento ía ser copiado sobre sí mesmo de %s",
       "Elemento de tipo símbolo non válido pasado como variable de memoria (memvar) %s",
       "Desbordamento do búfer de memoria",
-      "hb_xgrab solicitado para asignar cero bytes",
-      "hb_xgrealloc solicitado para redimensionar cero bytes",
-      "hb_xalloc requerido para asignar cero bytes",
+      "solicitado hb_xgrab para asignar cero bytes",
+      "solicitado hb_xgrealloc para redimensionar cero bytes",
+      "solicitado hb_xalloc para asignar cero bytes",
 
       /* Texts */
 

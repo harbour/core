@@ -39,7 +39,7 @@ Opções
  - **\-debug\[\-\]** adicionar/excluir informações de debug do compilador C\. Para compilar com Harbour utilize a opção \-b como de costume\.
  - **\-optim\[\-\]** alterna as optimizações do compilador C \(ativado por padrão\)
  - **\-cpp\[\-\]** forçar compilação em modo C\+\+/C
- - **\-cpp=&lt;value&gt;** selecione modo C\+\+\.Os Valores permitidos são: def, yes, no
+ - **\-cpp=&lt;value&gt;** seleciona modo C\+\+\.Os Valores permitidos são: def, yes, no
  - **\-map\[\-\]** criar \(ou não\) o arquivo map
  - **\-implib\[\-\]** Criar \(ou não\) uma biblioteca importação \(no modo \-hbdyn/\-hbexe\)\. O nome terá um sufixo adicionado\.
  - **\-implib=&lt;output&gt;** Criar bibliotéca importação \(no modo \-hbdyn/\-hbexe\) nomear a &lt;output&gt; \(padrão: mesma saída\)
@@ -331,10 +331,10 @@ Filtros \(você pode combinar e / ou negá\-los\):
  - **\{hb30\}** habilita modo de compatibilidade 'Harbour 3\.0\.x' \(veja opção \-hb30\)
  - **\{xhb\}** modo xhb \(veja opção \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** passará pelo filtro se o nome do arquivo &lt;file&gt; ou &lt;dir&gt; diretório existir no disco\.
- - **\{MACRO\}** passará pelo filtro se o valor $\{MACRO\} não for vazio e não for igual a zero '0' ou 'no' \(maiúsculas e minúsculas "case insensitive"\)
- - **\{MACRO='&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} for igual a &lt;value&gt; \(maiúsculas e minúsculas "case insensitive"\)
- - **\{MACRO&gt;'&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} for maio que o &lt;value&gt; \(maiúsculas e minúsculas "case insensitive"\)
- - **\{MACRO&lt;'&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} menor que &lt;value&gt; \(maiúsculas e minúsculas "case insensitive"\)
+ - **\{MACRO\}** passará pelo filtro se o valor $\{MACRO\} não for vazio e não for igual a zero '0' ou 'no' \(insensível a maiúscula e minúscula "case insensitive"\)
+ - **\{MACRO='&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} for igual a &lt;value&gt; \(insensível a maiúscula e minúscula "case insensitive"\)
+ - **\{MACRO&gt;'&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} for maio que o &lt;value&gt; \(insensível a maiúscula e minúscula "case insensitive"\)
+ - **\{MACRO&lt;'&lt;value&gt;'\}** passará pelo filtro se o valor $\{MACRO\} menor que &lt;value&gt; \(insensível a maiúscula e minúscula "case insensitive"\)
 
 
 Constantes pré\-definidas nos fontes:
