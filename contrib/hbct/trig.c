@@ -468,7 +468,7 @@ HB_FUNC( TANH )
       double dResult, dArg = hb_parnd( 1 );
 
       hb_mathResetError( &hb_exc );
-      dResult = Tanh( dArg );
+      dResult = tanh( dArg );
       if( hb_mathGetError( &hb_exc, "TANH", dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )

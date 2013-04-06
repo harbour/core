@@ -211,9 +211,8 @@ HB_FUNC( WAPI_DRAWTEXT )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*-----------------------------------------------------------------------/
-              BEGIN SCROLLBAR MANIPULATION WINAPI FUNCTIONS
-/-----------------------------------------------------------------------*/
+/* BEGIN SCROLLBAR MANIPULATION WINAPI FUNCTIONS */
+
 /*
    BOOL EnableScrollBar( HWND hWnd, UINT wSBflags, UINT wArrows );
  */
@@ -238,16 +237,6 @@ HB_FUNC( WAPI_ENABLESCROLLBAR )
 
 /*
    BOOL GetScrollBarInfo( HWND hwnd, LONG idObject, PSCROLLBARINFO psbi );
-   $$
-   Local strSCROLLBARINFO IS SCROLLBARINFO
-   Local cSCROLLBARINFO = strSCROLLBARINFO:value
-   Local nCtrlType      = OBJID_CLIENT | OBJID_HSCROLL | OBJID_VSCROLL
-
-   lSuccess := wapi_GetScrollInfo( hWnd, nCtrType, @cSCROLLINFO )
-
-   strSCROLLBARINFO:buffer( cSCROLLBARINFO )
-   ? strSCROLLINFO:
-   $$
  */
 #if 0
 HB_FUNC( WAPI_GETSCROLLBARINFO )
