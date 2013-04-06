@@ -250,7 +250,7 @@ static void hb_md5val( HB_U32 accum[], char * md5val )
    }
 }
 
-void hb_MD5( const void * data, HB_SIZE nLen, char * digest )
+void hb_md5( const void * data, HB_SIZE nLen, char * digest )
 {
    const unsigned char * ucdata = ( const unsigned char * ) data;
    HB_UCHAR buf[ 128 ];
@@ -294,7 +294,7 @@ void hb_MD5( const void * data, HB_SIZE nLen, char * digest )
    hb_md5val( md5.accum, digest );
 }
 
-void hb_MD5File( HB_FHANDLE hFile, char * digest )
+void hb_md5File( HB_FHANDLE hFile, char * digest )
 {
    MD5_BUF md5;
    HB_SIZE n;

@@ -388,7 +388,7 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 }
 
 /*
- * based on xHrbour's hb_ExecFromArray() by Giancarlo Niccolai
+ * based on xHarbour's hb_ExecFromArray() by Giancarlo Niccolai
  * This version supports the same syntax though it's independent
  * implementation [druzus]
  *
@@ -505,7 +505,7 @@ HB_FUNC( HB_EXECFROMARRAY )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_BOOL hb_ExecFromArray( PHB_ITEM pParam )
+HB_BOOL hb_execFromArray( PHB_ITEM pParam )
 {
    PHB_SYMB pExecSym = NULL;
    PHB_ITEM pArray = NULL;
