@@ -1929,7 +1929,7 @@ Supported shells per host platforms:
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
-     * Harbour [online documentation](http://harbour.github.com/doc/)
+     * Harbour [online documentation](http://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
