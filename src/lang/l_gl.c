@@ -1,4 +1,4 @@
-/* Last Translator: jlalin (jjjlll tempinbox.com) */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 
@@ -48,7 +48,7 @@ static HB_LANG s_lang =
       "* Subsubtotal *",
       "*** Total ***",
       "Ins",
-      "   Sob",
+      "Sob",
       "Data non válida",
       "Rango: ",
       " - ",
