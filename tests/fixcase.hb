@@ -242,9 +242,7 @@ STATIC FUNCTION GetCComments( cFile )
 
    FOR tmp := 1 TO Len( aHits ) STEP 2
       FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
-         IF ! hb_BSubStr( cFile, tmp1, 1 ) $ Chr( 13 ) + Chr( 10 )
-            hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
-         ENDIF
+         hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
       NEXT
    NEXT
 

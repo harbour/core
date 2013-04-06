@@ -235,15 +235,15 @@ HB_EXTERN_BEGIN
 #define NSX_TAG_MULTIKEY   0x20
 
 /*
-sx_chill()  => if ( indexFlag & ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) == 0 )
+sx_Chill()  => if ( indexFlag & ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) == 0 )
                   indexFlag |= NSX_TAG_CHGONLY | NSX_TAG_PARTIAL;
-sx_warm()   => if ( indexFlag & ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) == 0 )
+sx_Warm()   => if ( indexFlag & ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) == 0 )
                   indexFlag &= ~NSX_TAG_CHGONLY
                   indexFlag |= NSX_TAG_PARTIAL // I do not like this
-sx_freeze() => indexFlag |= NSX_TAG_NOUPDATE | NSX_TAG_PARTIAL
+sx_Freeze() => indexFlag |= NSX_TAG_NOUPDATE | NSX_TAG_PARTIAL
                indexFlag &= ~NSX_TAG_CHGONLY
 
-sx_thermometer() => if ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) -> 4
+sx_Thermometer() => if ( NSX_TAG_NOUPDATE | NSX_TAG_TEMPLATE ) -> 4
                     if ( NSX_TAG_CHGONLY )                     -> 3
                     if ( NSX_TAG_PARTIAL )                     -> 2
                     else                                       -> 1
