@@ -294,7 +294,7 @@ void hb_md5( const void * data, HB_SIZE nLen, char * digest )
    hb_md5val( md5.accum, digest );
 }
 
-void hb_md5File( HB_FHANDLE hFile, char * digest )
+void hb_md5file( HB_FHANDLE hFile, char * digest )
 {
    MD5_BUF md5;
    HB_SIZE n;
