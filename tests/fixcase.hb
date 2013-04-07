@@ -17,14 +17,10 @@
 #pragma -ko+
 
 #include "directry.ch"
-#include "simpleio.ch"
+
+#define _HBROOT_  hb_DirBase() + hb_DirSepToOS( "../" )  /* must end with dirsep */
 
 PROCEDURE Main( cFile )
-
-   LOCAL aFile
-   LOCAL cExt
-
-   LOCAL hAll := { => }
 
    STATIC sc_hExtExceptions := { ;
       ".dll"   =>, ;
@@ -102,6 +98,12 @@ PROCEDURE Main( cFile )
       "tests/multifnc/*"           , ;
       "tests/rddtest/*"            }
 
+   LOCAL aFile
+   LOCAL cExt
+   LOCAL cOldCWD
+
+   LOCAL hAll := { => }
+
    hb_cdpSelect( "EN" )
 
    hb_HCaseMatch( hAll, .F. )
@@ -111,6 +113,7 @@ PROCEDURE Main( cFile )
    IF HB_ISSTRING( cFile )
       ProcFile( hAll, cFile )
    ELSE
+      cOldCWD := hb_cwd( _HBROOT_ )
       FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
          cExt := hb_FNameExt( aFile[ F_NAME ] )
          IF ! Empty( cExt ) .AND. ;
@@ -120,6 +123,7 @@ PROCEDURE Main( cFile )
             ProcFile( hAll, aFile[ F_NAME ] )
          ENDIF
       NEXT
+      hb_cwd( cOldCWD )
    ENDIF
 
    RETURN
@@ -142,12 +146,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName )
    LOCAL nChanged := 0
 
    lPartial := hb_FNameExt( cFileName ) $ sc_hPartial
-
-   IF lPartial
-      cFileStripped := GetCComments( cFile )
-   ELSE
-      cFileStripped := cFile
-   ENDIF
+   cFileStripped := iif( lPartial, GetCComments( cFile ), cFile )
 
    #define _MATCH_cStr    1
    #define _MATCH_nStart  2

@@ -788,12 +788,7 @@ STATIC FUNCTION FixFuncCase( cFileName )
    cFile := MemoRead( _HBROOT_ + cFileName )
 
    lPartial := hb_FNameExt( cFileName ) $ sc_hPartial
-
-   IF lPartial
-      cFileStripped := GetCComments( cFile )
-   ELSE
-      cFileStripped := cFile
-   ENDIF
+   cFileStripped := iif( lPartial, GetCComments( cFile ), cFile )
 
    cOldCP := hb_cdpSelect( "EN" )
 
