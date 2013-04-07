@@ -770,7 +770,7 @@ STATIC FUNCTION FixFuncCase( cFileName )
    LOCAL cFile
    LOCAL cFileStripped
 
-   LOCAL a
+   LOCAL match
    LOCAL cProper
    LOCAL cOldCP
 
@@ -797,27 +797,31 @@ STATIC FUNCTION FixFuncCase( cFileName )
 
    cOldCP := hb_cdpSelect( "EN" )
 
-   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .T. )
-      IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
-         cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
-         IF !( cProper == a[ 3 ] ) .AND. ;
+   #define _MATCH_cStr    1
+   #define _MATCH_nStart  2
+   #define _MATCH_nEnd    3
+
+   FOR EACH match IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+      IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
+         cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
+         IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
             !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
             !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
             !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
             ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
-            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
-            ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
+            cFile := Left( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
+            ? cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|"
             nChanged++
          ENDIF
       ENDIF
    NEXT
 
    IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
-      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
-         cProper := ProperCase( hAll, a[ 2 ] )
-         IF !( cProper == a[ 2 ] )
-            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
-            OutStd( cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|" + hb_eol() )
+      FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
+         cProper := ProperCase( hAll, match[ 2 ] )
+         IF !( cProper == match[ 2 ] )
+            cFile := StrTran( cFile, match[ 1 ], StrTran( match[ 1 ], match[ 2 ], cProper ) )
+            OutStd( cFileName, match[ 2 ], cProper, "|" + match[ 1 ] + "|" + hb_eol() )
             nChanged++
          ENDIF
       NEXT

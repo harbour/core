@@ -26,8 +26,12 @@ PROCEDURE Main( cFile )
 
    LOCAL hAll := { => }
 
-   LOCAL hExtExceptions := { ;
-      hb_libExt() =>, ;
+   STATIC sc_hExtExceptions := { ;
+      ".dll"   =>, ;
+      ".dxe"   =>, ;
+      ".dylib" =>, ;
+      ".so"    =>, ;
+      ".sl"    =>, ;
       ".zip"  =>, ;
       ".7z"   =>, ;
       ".exe"  =>, ;
@@ -61,12 +65,7 @@ PROCEDURE Main( cFile )
       ".sq3"  =>, ;
       ".tif"  => }
 
-   LOCAL hPartial := { ;
-      ".c"    =>, ;
-      ".h"    =>, ;
-      ".api"  => }
-
-   LOCAL hFileExceptions := { ;
+   STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
       "std.ch"        =>, ;
       "wcecon.prg"    =>, ;
@@ -91,7 +90,7 @@ PROCEDURE Main( cFile )
       "tracing.txt"   =>, ;
       "pcode.txt"     => }
 
-   LOCAL aMaskExceptions := { ;
+   STATIC sc_aMaskExceptions := { ;
       "src/3rd/*"                  , ;
       "contrib/3rd/*"              , ;
       "contrib/*/3rd/*"            , ;
@@ -115,27 +114,34 @@ PROCEDURE Main( cFile )
       FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
          cExt := hb_FNameExt( aFile[ F_NAME ] )
          IF ! Empty( cExt ) .AND. ;
-            !( cExt $ hExtExceptions ) .AND. ;
-            !( hb_FNameNameExt( aFile[ F_NAME ] ) $ hFileExceptions ) .AND. ;
-            AScan( aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
-            ProcFile( hAll, aFile[ F_NAME ], cExt $ hPartial )
+            !( cExt $ sc_hExtExceptions ) .AND. ;
+            !( hb_FNameNameExt( aFile[ F_NAME ] ) $ sc_hFileExceptions ) .AND. ;
+            AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
+            ProcFile( hAll, aFile[ F_NAME ] )
          ENDIF
       NEXT
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
+STATIC PROCEDURE ProcFile( hAll, cFileName )
+
+   STATIC sc_hPartial := { ;
+      ".c"    =>, ;
+      ".cpp"  =>, ;
+      ".h"    =>, ;
+      ".api"  => }
 
    LOCAL cFile := MemoRead( cFileName )
    LOCAL cFileStripped
 
-   LOCAL a
+   LOCAL match
    LOCAL cProper
 
+   LOCAL lPartial
    LOCAL nChanged := 0
 
-   hb_default( @lPartial, .F. )
+   lPartial := hb_FNameExt( cFileName ) $ sc_hPartial
 
    IF lPartial
       cFileStripped := GetCComments( cFile )
@@ -143,27 +149,31 @@ STATIC PROCEDURE ProcFile( hAll, cFileName, lPartial )
       cFileStripped := cFile
    ENDIF
 
-   FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .T. )
-      IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
-         cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ] ) ) + "("
-         IF !( cProper == a[ 3 ] ) .AND. ;
+   #define _MATCH_cStr    1
+   #define _MATCH_nStart  2
+   #define _MATCH_nEnd    3
+
+   FOR EACH match IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+      IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
+         cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
+         IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
             !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
             !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
             !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
             ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
-            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
-            ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
+            cFile := Left( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
+            ? cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|"
             nChanged++
          ENDIF
       ENDIF
    NEXT
 
    IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
-      FOR EACH a IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
-         cProper := ProperCase( hAll, a[ 2 ] )
-         IF !( cProper == a[ 2 ] )
-            cFile := StrTran( cFile, a[ 1 ], StrTran( a[ 1 ], a[ 2 ], cProper ) )
-            ? cFileName, a[ 2 ], cProper, "|" + a[ 1 ] + "|"
+      FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
+         cProper := ProperCase( hAll, match[ 2 ] )
+         IF !( cProper == match[ 2 ] )
+            cFile := StrTran( cFile, match[ 1 ], StrTran( match[ 1 ], match[ 2 ], cProper ) )
+            ? cFileName, match[ 2 ], cProper, "|" + match[ 1 ] + "|"
             nChanged++
          ENDIF
       NEXT
