@@ -748,8 +748,6 @@ STATIC FUNCTION FixFuncCase( cFileName )
       "pp.txt"        =>, ;
       "locks.txt"     =>, ;
       "oldnews.txt"   =>, ;
-      "news.html"     =>, ;
-      "news1.html"    =>, ;
       "c_std.txt"     =>, ;
       "tracing.txt"   =>, ;
       "pcode.txt"     => }
