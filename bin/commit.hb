@@ -30,6 +30,8 @@
 #pragma -km+
 #pragma -ko+
 
+#include "hbgtinfo.ch"
+
 PROCEDURE Main()
 
    LOCAL cVCS := VCSDetect()
@@ -37,14 +39,10 @@ PROCEDURE Main()
    LOCAL aFiles := {}
    LOCAL aChanges := DoctorChanges( cVCS, Changes( cVCS ), aFiles )
    LOCAL cLog
-   LOCAL cLogNew
-   LOCAL cLine
-   LOCAL nOffset
-   LOCAL cHit
-   LOCAL nPos
+   LOCAL nStart, nEnd
    LOCAL cMyName
-   LOCAL cOldLang
    LOCAL cLogName
+   LOCAL lWasChangeLog
 
    IF Empty( aChanges )
       OutStd( hb_ProgName() + ": " + "no changes" + hb_eol() )
@@ -67,6 +65,12 @@ PROCEDURE Main()
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN
+         ELSE
+            cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
+            IF ! Empty( cLog )
+               hbshell_gtSelect()
+               hb_gtInfo( HB_GTI_CLIPBOARDDATA, cLog )
+            ENDIF
          ENDIF
       ELSE
          IF cVCS == "git"
@@ -81,34 +85,28 @@ PROCEDURE Main()
             ENDIF
          ENDIF
 
-         nOffset := hb_UTCOffset()
-
-         cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
-            hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
-            iif( nOffset < 0, "-", "+" ), ;
-            Int( nOffset / 3600 ), ;
-            Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
-            cMyName ) + hb_eol()
-
-         FOR EACH cLine IN aChanges
-            cLogNew += cLine + hb_eol()
-         NEXT
-
          // ;
 
          cLog := MemoRead( cLogName )
-         cOldLang := hb_cdpSelect( "EN" )
-         cHit := hb_AtX( "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] ", cLog )
-         IF Empty( cHit )
-            cHit := ""
-         ENDIF
-         hb_cdpSelect( cOldLang )
 
-         nPos := At( AllTrim( cHit ), cLog )
-         IF nPos > 0
-            cLog := Left( cLog, nPos - 1 ) + cLogNew + hb_eol() + SubStr( cLog, nPos )
+         GetLastEntry( cLog, @nStart, @nEnd )
+
+         IF nStart > 0
+
+            /* Strip last entry if it's empty to avoid adding double entries */
+            IF IsLastEntryEmpty( SubStr( cLog, nStart, nEnd - nStart ), cLogName, @lWasChangeLog )
+               OutStd( hb_ProgName() + ": " + hb_StrFormat( "Updating last empty %1$s entry", cLogName ) + hb_eol() )
+               cLog := Left( cLog, nStart - 1 ) + SubStr( cLog, nEnd )
+            ELSE
+               lWasChangelog := .T.
+            ENDIF
+
+            cLog := ;
+               Left( cLog, nStart - 1 ) + ;
+               MakeEntry( aChanges, cMyName, cLogName, lWasChangeLog ) + hb_eol() + ;
+               SubStr( cLog, nStart )
          ELSE
-            cLog += hb_eol() + cLogNew
+            cLog += hb_eol() + MakeEntry( aChanges, cMyName, cLogName, .T. )
          ENDIF
 
          hb_MemoWrit( cLogName, cLog )
@@ -124,6 +122,85 @@ PROCEDURE Main()
    ENDIF
 
    RETURN
+
+STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
+
+   LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*" + hb_eol()
+
+   LOCAL cOldLang := hb_cdpSelect( "EN" )
+   LOCAL cHit
+
+   nEnd := 0
+
+   cHit := hb_AtX( cLogHeaderExp, cLog )
+   IF Empty( cHit )
+      cHit := ""
+   ENDIF
+
+   nStart := At( AllTrim( cHit ), cLog )
+   IF nStart > 0
+
+      cHit := hb_AtX( cLogHeaderExp, cLog,, nStart + Len( cHit ) )
+      IF Empty( cHit )
+         cHit := ""
+      ENDIF
+
+      nEnd := At( AllTrim( cHit ), cLog )
+      IF nEnd == 0
+         nEnd := Len( cLog )
+      ENDIF
+
+      cLog := hb_StrShrink( SubStr( cLog, nStart, nEnd - nStart ), Len( hb_eol() ) )
+   ELSE
+      cLog := ""
+   ENDIF
+
+   hb_cdpSelect( cOldLang )
+
+   RETURN cLog
+
+STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
+
+   LOCAL nOffset := hb_UTCOffset()
+
+   LOCAL cLog := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
+      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+      iif( nOffset < 0, "-", "+" ), ;
+      Int( nOffset / 3600 ), ;
+      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
+      cMyName ) + hb_eol()
+
+   LOCAL cLine
+
+   FOR EACH cLine IN aChanges
+      IF lAllowChangeLog .OR. !( SubStr( cLine, 5 ) == cLogName )
+         cLog += cLine + hb_eol()
+      ENDIF
+   NEXT
+
+   RETURN cLog
+
+STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
+
+   LOCAL cLine
+
+   lChangeLog := .F.
+
+   FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
+      IF cLine:__enumIndex() != 1
+         IF Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) )
+            IF SubStr( cLine, 5 ) == cLogName
+               lChangeLog := .T.
+            ENDIF
+         ELSE
+            IF ! Empty( cLine )
+               RETURN .F.
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN .T.
 
 STATIC FUNCTION VCSDetect()
 

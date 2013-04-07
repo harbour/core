@@ -45,7 +45,7 @@ FUNCTION CheckFileList( xName )
    LOCAL lApplyFixes := "--fixup" $ hb_CmdLine()
 
    IF HB_ISSTRING( xName )
-      xName := { xName }
+      xName := iif( Left( xName, 2 ) == "--", NIL, { xName } )
    ENDIF
 
    IF Empty( xName ) .OR. HB_ISARRAY( xName )
@@ -55,14 +55,22 @@ FUNCTION CheckFileList( xName )
          hb_cwd( s )
          lApplyFixes := .F.  /* do not allow to mass fix all files */
       ENDIF
-      FOR EACH file IN xName
-         IF ! CheckFile( file, @aErr, lApplyFixes )
-            lPassed := .F.
-            FOR EACH s IN aErr
-               OutStd( file + ": " + s + hb_eol() )
-            NEXT
-         ENDIF
-      NEXT
+      IF "--fixup-case" $ hb_CmdLine()
+         FOR EACH file IN xName
+            IF "|" + hb_FNameExt( file ) + "|" $ "|.c|.cpp|.h|.api|.ch|.hb|.po|.prg|.md|.txt|"
+               FixFuncCase( file, .T. )
+            ENDIF
+         NEXT
+      ELSE
+         FOR EACH file IN xName
+            IF ! CheckFile( file, @aErr, lApplyFixes )
+               lPassed := .F.
+               FOR EACH s IN aErr
+                  OutStd( file + ": " + s + hb_eol() )
+               NEXT
+            ENDIF
+         NEXT
+      ENDIF
    ENDIF
 
    RETURN lPassed
@@ -100,14 +108,14 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*/hb-charmap.def", ;  /* TOFIX: Use 8.3 name */
       "debian/*", ;
       "package/*", ;
-      "*/3rd/*", ;
+      "lib/3rd/*", ;
       "contrib/hbwin/*", ;
       "contrib/rddads/unixutils.h", ;
       "extras/httpsrv/*" }
 
    LOCAL aCanHaveNoExtension := { ;
-      "Makefile", ;
       ".*", ;
+      "Makefile", ;
       "debian/*" }
 
    LOCAL aCanHaveTab := { ;
@@ -116,6 +124,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*.mk", ;
       "*.yyc", ;
       "*.dif", ;
+      "*.html", ;
       "*.xml", ;
       "*.css" }
 
@@ -685,9 +694,9 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
 
 /* ---- */
 
-STATIC FUNCTION FixFuncCase( cFileName )
+STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
 
-   STATIC sc_hPartial := { ;
+   STATIC sc_hInCommentOnly := { ;
       ".c"   =>, ;
       ".cpp" =>, ;
       ".h"   =>, ;
@@ -696,32 +705,30 @@ STATIC FUNCTION FixFuncCase( cFileName )
    STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
       "std.ch"        =>, ;
-      "wcecon.prg"    =>, ;
-      "uc16_gen.prg"  =>, ;
-      "clsscope.prg"  =>, ;
-      "speedstr.prg"  =>, ;
-      "cpinfo.prg"    =>, ;
+      "big5_gen.prg"  =>, ;
       "clsccast.prg"  =>, ;
       "clsicast.prg"  =>, ;
       "clsscast.prg"  =>, ;
-      "big5_gen.prg"  =>, ;
+      "clsscope.prg"  =>, ;
+      "cpinfo.prg"    =>, ;
       "foreach2.prg"  =>, ;
-      "speedtst.prg"  =>, ;
       "keywords.prg"  =>, ;
-      "xhb-diff.txt"  =>, ;
-      "pp.txt"        =>, ;
-      "locks.txt"     =>, ;
-      "oldnews.txt"   =>, ;
+      "speedstr.prg"  =>, ;
+      "speedtst.prg"  =>, ;
+      "uc16_gen.prg"  =>, ;
+      "wcecon.prg"    =>, ;
       "c_std.txt"     =>, ;
+      "locks.txt"     =>, ;
+      "pcode.txt"     =>, ;
       "tracing.txt"   =>, ;
-      "pcode.txt"     => }
+      "xhb-diff.txt"  => }
 
    STATIC sc_aMaskExceptions := { ;
       "src/3rd/*"               , ;
       "contrib/3rd/*"           , ;
       "contrib/*/3rd/*"         , ;
       "contrib/hbnetio/tests/*" , ;
-      "extras/httpsrv/home/*"   , ;
+      "contrib/xhb/thtm.prg"    , ;
       "tests/hbpptest/*"        , ;
       "tests/mt/*"              , ;
       "tests/multifnc/*"        , ;
@@ -735,20 +742,22 @@ STATIC FUNCTION FixFuncCase( cFileName )
    LOCAL cProper
    LOCAL cOldCP
 
-   LOCAL lPartial
+   LOCAL lInCommentOnly
    LOCAL nChanged := 0
+
+   hb_default( @lVerbose, .F. )
 
    IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
       hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .OR. ;
-      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( cFileName, "\", "/" ), tmp ) } ) == 0
+      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( cFileName, "\", "/" ), tmp ) } ) != 0
       RETURN .F.
    ENDIF
 
    hAll := __hbformat_BuildListOfFunctions()
    cFile := MemoRead( _HBROOT_ + cFileName )
 
-   lPartial := hb_FNameExt( cFileName ) $ sc_hPartial
-   cFileStripped := iif( lPartial, GetCComments( cFile ), cFile )
+   lInCommentOnly := hb_FNameExt( cFileName ) $ sc_hInCommentOnly
+   cFileStripped := iif( lInCommentOnly, GetCComments( cFile ), cFile )
 
    cOldCP := hb_cdpSelect( "EN" )
 
@@ -763,15 +772,17 @@ STATIC FUNCTION FixFuncCase( cFileName )
             !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
             !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
             !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
-            ( ! lPartial .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
+            ( ! lInCommentOnly .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
             cFile := Left( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
-            ? cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|"
+            IF lVerbose
+               OutStd( cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
+            ENDIF
             nChanged++
          ENDIF
       ENDIF
    NEXT
 
-   IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
+   IF !( "hbclass.ch" $ cFileName ) .AND. ! lInCommentOnly
       FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
