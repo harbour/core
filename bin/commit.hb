@@ -69,7 +69,10 @@ PROCEDURE Main()
             cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
             IF ! Empty( cLog )
                hbshell_gtSelect()
-               hb_gtInfo( HB_GTI_CLIPBOARDDATA, cLog )
+               /* if clipboard already contains part of the entry, do not overwrite it */
+               IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ), "" ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ), "" )
+                  hb_gtInfo( HB_GTI_CLIPBOARDDATA, cLog )
+               ENDIF
             ENDIF
          ENDIF
       ELSE
