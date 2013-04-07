@@ -169,11 +169,11 @@ STATIC PROCEDURE ProcFile( hAll, cFileName )
    NEXT
 
    IF !( "hbclass.ch" $ cFileName ) .AND. ! lPartial
-      FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .T. )
-         cProper := ProperCase( hAll, match[ 2 ] )
-         IF !( cProper == match[ 2 ] )
-            cFile := StrTran( cFile, match[ 1 ], StrTran( match[ 1 ], match[ 2 ], cProper ) )
-            ? cFileName, match[ 2 ], cProper, "|" + match[ 1 ] + "|"
+      FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
+         cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
+         IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
+            cFile := Left( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
+            OutStd( cFileName, match[ 2 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
             nChanged++
          ENDIF
       NEXT
