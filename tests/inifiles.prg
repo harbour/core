@@ -48,6 +48,35 @@
 #include "fileio.ch"
 #include "hbclass.ch"
 
+PROCEDURE Main( cFilename, cSection )
+
+   LOCAL oIni
+   LOCAL s, n
+
+   hb_default( @cFilename, "harbour.ini" )
+   hb_default( @cSection, "1" )
+
+   oIni := TIniFile():New( cFileName )
+   n := Val( cSection )
+
+   ?
+   ? "Sections:"
+   s := oIni:ReadSections()
+   AEval( s, {| x | QOut( "[" + x + "]" ) } )
+
+   ?
+   ? "[" + s[ n ] + "]"
+   s := oIni:ReadSection( s[ n ] )
+   AEval( s, {| x | QOut( x ) } )
+
+   oIni:WriteDate( "Date Test", "Today", Date() )
+   oIni:WriteBool( "Bool Test", "True", .T. )
+   ? oIni:ReadBool( "Bool Test", "True", .F. )
+
+   oIni:UpdateFile()
+
+   RETURN
+
 CREATE CLASS TIniFile
 
    VAR FileName
