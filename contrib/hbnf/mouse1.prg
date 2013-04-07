@@ -1,3 +1,7 @@
+/*
+ * The functions contained herein are the work of Viktor Szakats based
+ * on previous versions, all placed in the public domain.
+ */
 
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMInit := .F.
@@ -70,7 +74,6 @@ FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
    RETURN lDouble
 
 FUNCTION ft_MInRegion( nTR, nLC, nBR, nRC )
-
    RETURN ;
       MRow() >= nTR .AND. MRow() <= nBR .AND. ;
       MCol() >= nLC .AND. MCol() <= nRC
@@ -93,7 +96,6 @@ FUNCTION ft_MGetPos( /* @ */ nX, /* @ */ nY )
       iif( hb_MMiddleDown(), 4, 0 )
 
 FUNCTION ft_MSetPos( nX, nY )
-
    RETURN MSetPos( nX / 8, nY / 8 )
 
 FUNCTION ft_MGetCoord( /* @ */ nX, /* @ */ nY )
@@ -107,7 +109,6 @@ FUNCTION ft_MGetCoord( /* @ */ nX, /* @ */ nY )
       iif( hb_MMiddleDown(), 4, 0 )
 
 FUNCTION ft_MSetCoord( nX, nY )
-
    RETURN MSetPos( nX, nY )
 
 FUNCTION ft_MSetSens( nHoriz, nVert, nDouble )
@@ -209,15 +210,12 @@ FUNCTION ft_MYLimit( nMin, nMax )
          horizontal position (col) as Y. [vszakats] */
 
 FUNCTION ft_MGetX()
-
    RETURN MRow()
 
 FUNCTION ft_MGetY()
-
    RETURN MCol()
 
 FUNCTION ft_MGetPage()
-
    RETURN 0
 
 /* NOTE: Page is ignored in Harbour */

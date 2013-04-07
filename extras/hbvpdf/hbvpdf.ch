@@ -1,3 +1,4 @@
+/* Copyright andvit@sympatico.ca */
 
 #ifndef HBVPDF_CH
 #define HBVPDF_CH

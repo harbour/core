@@ -3,6 +3,9 @@
 * Syntax..: int _GT_Internal_StringAsInt(char *String, int Start, int End)
 * Usage...: Convert a numeric value in a string to an int value.
 * By......: David A Pearson
+*
+* This is an original work by David A Pearson and is placed in the
+* public domain.
 */
 
 #include "hbapi.h"

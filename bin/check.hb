@@ -145,6 +145,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL aCanHaveIdent
    LOCAL hAllowedExt := LoadGitattributes( @aCanHaveIdent )
+   LOCAL nLines
 
    /* TODO: extend as you go */
    LOCAL hDoNotProcess := { ;
@@ -214,7 +215,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             ENDIF
          ENDIF
 
-         cEOL := EOLDetect( cFile )
+         cEOL := EOLDetect( cFile, @nLines )
 
          IF Len( cEOL ) == 0
             AAdd( aErr, "content: has mixed EOL types" )
@@ -288,9 +289,20 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             ENDIF
          ENDIF
 
+         IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|.prg|.hb|.ch|" .AND. ;
+            nLines > 20 .AND. ;
+            ! hb_DirSepToOS( "tests/" ) $ hb_FNameDir( cName ) .AND. ;
+            ! hb_DirSepToOS( "src/codepage/" ) $ hb_FNameDir( cName ) .AND. ;
+            ! hb_DirSepToOS( "src/lang/" ) $ hb_FNameDir( cName ) .AND. ;
+            ! "public domain" $ Lower( cFile ) .AND. ;
+            ! "copyright" $ Lower( cFile ) .AND. ;
+            ! "license" $ Lower( cFile )
+            AAdd( aErr, "content: source code missing copyright/license" )
+         ENDIF
+
          IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|"
             IF "//" $ StripCStrings( StripCComments( cFile ) )
-               AAdd( aErr, "content: C file with C++ coment" )
+               AAdd( aErr, "content: C file with C++ comment" )
             ENDIF
          ENDIF
       ENDIF
@@ -409,7 +421,7 @@ STATIC FUNCTION IsASCII7( cString, /* @ */ nChar )
 
    RETURN .T.
 
-STATIC FUNCTION EOLDetect( cFile )
+STATIC FUNCTION EOLDetect( cFile, /* @ */ nLines )
 
    LOCAL nCR := 0
    LOCAL nLF := 0
@@ -424,14 +436,20 @@ STATIC FUNCTION EOLDetect( cFile )
    NEXT
 
    IF nCR > 0 .AND. nLF == 0
+      nLines := nCR
       RETURN Chr( 13 )
    ELSEIF nCR == 0 .AND. nLF > 0
+      nLines := nLF
       RETURN Chr( 10 )
    ELSEIF nCR == 0 .AND. nLF == 0
+      nLines := 0
       RETURN "binary"
    ELSEIF nCR == nLF
+      nLines := nCR
       RETURN Chr( 13 ) + Chr( 10 )
    ENDIF
+
+   nLines := -1
 
    RETURN ""
 
