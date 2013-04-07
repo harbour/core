@@ -22,44 +22,17 @@
 
 PROCEDURE Main( cFile )
 
-   STATIC sc_hExtExceptions := { ;
-      ".dll"   =>, ;
-      ".dxe"   =>, ;
-      ".dylib" =>, ;
-      ".so"    =>, ;
-      ".sl"    =>, ;
-      ".zip"  =>, ;
-      ".7z"   =>, ;
-      ".exe"  =>, ;
-      ".o"    =>, ;
-      ".obj"  =>, ;
-      ".js"   =>, ;
-      ".dif"  =>, ;
-      ".exe"  =>, ;
-      ".y"    =>, ;
-      ".yyc"  =>, ;
-      ".yyh"  =>, ;
-      ".a"    =>, ;
-      ".afm"  =>, ;
-      ".bmp"  =>, ;
-      ".dat"  =>, ;
-      ".dbf"  =>, ;
-      ".exe"  =>, ;
-      ".frm"  =>, ;
-      ".gif"  =>, ;
-      ".icns" =>, ;
-      ".ico"  =>, ;
-      ".jpg"  =>, ;
-      ".lbl"  =>, ;
-      ".lib"  =>, ;
-      ".mdb"  =>, ;
-      ".ng"   =>, ;
-      ".odt"  =>, ;
-      ".pdf"  =>, ;
-      ".pfb"  =>, ;
-      ".png"  =>, ;
-      ".sq3"  =>, ;
-      ".tif"  => }
+   STATIC sc_hTypes := { ;
+      ".c"   =>, ;
+      ".cpp" =>, ;
+      ".h"   =>, ;
+      ".api" =>, ;
+      ".ch"  =>, ;
+      ".hb"  =>, ;
+      ".po"  =>, ;
+      ".prg" =>, ;
+      ".md"  =>, }
+      ".txt" => }
 
    STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
@@ -85,16 +58,16 @@ PROCEDURE Main( cFile )
       "pcode.txt"     => }
 
    STATIC sc_aMaskExceptions := { ;
-      "src/3rd/*"                  , ;
-      "contrib/3rd/*"              , ;
-      "contrib/*/3rd/*"            , ;
-      "contrib/xhb/thtm.prg"       , ;
-      "contrib/hbnetio/tests/*"    , ;
-      "extras/httpsrv/home/*"      , ;
-      "tests/hbpptest/*"           , ;
-      "tests/mt/*"                 , ;
-      "tests/multifnc/*"           , ;
-      "tests/rddtest/*"            }
+      "src/3rd/*"               , ;
+      "contrib/3rd/*"           , ;
+      "contrib/*/3rd/*"         , ;
+      "contrib/xhb/thtm.prg"    , ;
+      "contrib/hbnetio/tests/*" , ;
+      "extras/httpsrv/home/*"   , ;
+      "tests/hbpptest/*"        , ;
+      "tests/mt/*"              , ;
+      "tests/multifnc/*"        , ;
+      "tests/rddtest/*"         }
 
    LOCAL aFile
    LOCAL cExt
@@ -114,8 +87,7 @@ PROCEDURE Main( cFile )
       cOldCWD := hb_cwd( _HBROOT_ )
       FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
          cExt := hb_FNameExt( aFile[ F_NAME ] )
-         IF ! Empty( cExt ) .AND. ;
-            !( cExt $ sc_hExtExceptions ) .AND. ;
+         IF cExt $ sc_hTypes .AND. ;
             !( hb_FNameNameExt( aFile[ F_NAME ] ) $ sc_hFileExceptions ) .AND. ;
             AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
             ProcFile( hAll, aFile[ F_NAME ] )
@@ -129,10 +101,10 @@ PROCEDURE Main( cFile )
 STATIC PROCEDURE ProcFile( hAll, cFileName )
 
    STATIC sc_hPartial := { ;
-      ".c"    =>, ;
-      ".cpp"  =>, ;
-      ".h"    =>, ;
-      ".api"  => }
+      ".c"   =>, ;
+      ".cpp" =>, ;
+      ".h"   =>, ;
+      ".api" => }
 
    LOCAL cFile := MemoRead( cFileName )
    LOCAL cFileStripped

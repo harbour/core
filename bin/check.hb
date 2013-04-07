@@ -573,7 +573,10 @@ STATIC PROCEDURE ProcFile( cFileName )
       ".h"   => ".c", ;
       ".api" => ".c", ;
       ".txt" => { @FixFuncCase() }, ;
+      ".md"  => ".txt", ;
+      ".po"  => ".txt", ;
       ".prg" => { @FixFuncCase() /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
+      ".hb"  => ".prg", ;
       ".ch"  => ".prg" }
 
    LOCAL aProc := hb_FNameExt( cFileName )
@@ -684,50 +687,11 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
 
 STATIC FUNCTION FixFuncCase( cFileName )
 
-   STATIC sc_hExtExceptions := { ;
-      ".dll"   =>, ;
-      ".dxe"   =>, ;
-      ".dylib" =>, ;
-      ".so"    =>, ;
-      ".sl"    =>, ;
-      ".zip"   =>, ;
-      ".7z"    =>, ;
-      ".exe"   =>, ;
-      ".o"     =>, ;
-      ".obj"   =>, ;
-      ".js"    =>, ;
-      ".dif"   =>, ;
-      ".exe"   =>, ;
-      ".y"     =>, ;
-      ".yyc"   =>, ;
-      ".yyh"   =>, ;
-      ".a"     =>, ;
-      ".afm"   =>, ;
-      ".bmp"   =>, ;
-      ".dat"   =>, ;
-      ".dbf"   =>, ;
-      ".exe"   =>, ;
-      ".frm"   =>, ;
-      ".gif"   =>, ;
-      ".icns"  =>, ;
-      ".ico"   =>, ;
-      ".jpg"   =>, ;
-      ".lbl"   =>, ;
-      ".lib"   =>, ;
-      ".mdb"   =>, ;
-      ".ng"    =>, ;
-      ".odt"   =>, ;
-      ".pdf"   =>, ;
-      ".pfb"   =>, ;
-      ".png"   =>, ;
-      ".sq3"   =>, ;
-      ".tif"   => }
-
    STATIC sc_hPartial := { ;
-      ".c"    =>, ;
-      ".cpp"  =>, ;
-      ".h"    =>, ;
-      ".api"  => }
+      ".c"   =>, ;
+      ".cpp" =>, ;
+      ".h"   =>, ;
+      ".api" => }
 
    STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
@@ -753,16 +717,15 @@ STATIC FUNCTION FixFuncCase( cFileName )
       "pcode.txt"     => }
 
    STATIC sc_aMaskExceptions := { ;
-      "src/3rd/*"                  , ;
-      "contrib/3rd/*"              , ;
-      "contrib/*/3rd/*"            , ;
-      "contrib/xhb/thtm.prg"       , ;
-      "contrib/hbnetio/tests/*"    , ;
-      "extras/httpsrv/home/*"      , ;
-      "tests/hbpptest/*"           , ;
-      "tests/mt/*"                 , ;
-      "tests/multifnc/*"           , ;
-      "tests/rddtest/*"            }
+      "src/3rd/*"               , ;
+      "contrib/3rd/*"           , ;
+      "contrib/*/3rd/*"         , ;
+      "contrib/hbnetio/tests/*" , ;
+      "extras/httpsrv/home/*"   , ;
+      "tests/hbpptest/*"        , ;
+      "tests/mt/*"              , ;
+      "tests/multifnc/*"        , ;
+      "tests/rddtest/*"         }
 
    LOCAL hAll
    LOCAL cFile
@@ -776,7 +739,6 @@ STATIC FUNCTION FixFuncCase( cFileName )
    LOCAL nChanged := 0
 
    IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
-      hb_FNameExt( cFileName ) $ sc_hExtExceptions .OR. ;
       hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .OR. ;
       AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( cFileName, "\", "/" ), tmp ) } ) == 0
       RETURN .F.
