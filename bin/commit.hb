@@ -45,13 +45,8 @@ PROCEDURE Main( cParam1 )
    LOCAL cLogName
    LOCAL lWasChangeLog
 
-   IF "--prepare-commit" $ hb_CmdLine()
-      hb_MemoWrit( cParam1, GetLastEntry( MemoRead( FindChangeLog() ) ) + hb_eol() + hb_MemoRead( cParam1 ) )
-      ErrorLevel( 0 )
-      RETURN
-   ENDIF
-
-   InstallPreCommitHook()
+   InstallHook( "pre-commit"        , hb_StrFormat( "exec hbrun bin/%1$s.hb --check-only", hb_FNameName( hb_ProgName() ) ) )
+// InstallHook( "prepare-commit-msg", hb_StrFormat( "exec hbrun bin/%1$s.hb $1 --prepare-commit", hb_FNameName( hb_ProgName() ) )
 
    cVCS := VCSDetect()
    aFiles := {}
@@ -71,7 +66,9 @@ PROCEDURE Main( cParam1 )
          ErrorLevel( 2 )
       ENDIF
 
-      IF "--check-only" $ hb_CmdLine()
+      IF "--check-only" $ hb_CmdLine() .OR. ;
+         "--prepare-commit" $ hb_CmdLine()
+
          IF AScan( aFiles, {| tmp | tmp == hb_FNameNameExt( cLogName ) } ) == 0
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
             ErrorLevel( 3 )
@@ -79,10 +76,14 @@ PROCEDURE Main( cParam1 )
          ELSE
             cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
             IF ! Empty( cLog )
-               hbshell_gtSelect()
-               /* if clipboard already contains part of the entry, do not overwrite it */
-               IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ), "" ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ), "" )
-                  hb_gtInfo( HB_GTI_CLIPBOARDDATA, cLog )
+               IF "--prepare-commit" $ hb_CmdLine()
+                  hb_MemoWrit( cParam1, EntryToCommitMsg( cLog ) + hb_MemoRead( cParam1 ) )
+               ELSE
+                  hbshell_gtSelect()
+                  /* if clipboard already contains part of the entry, do not overwrite it */
+                  IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ), "" ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ), "" )
+                     hb_gtInfo( HB_GTI_CLIPBOARDDATA, EntryToCommitMsg( cLog ) )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -137,17 +138,16 @@ PROCEDURE Main( cParam1 )
 
    RETURN
 
-STATIC FUNCTION InstallPreCommitHook()
+STATIC FUNCTION InstallHook( cHookName, cCommand )
 
-   LOCAL cName := _COMMIT_HBROOT_ + hb_DirSepToOS( ".git/hooks/pre-commit" )
+   LOCAL cName := _COMMIT_HBROOT_ + hb_DirSepToOS( ".git/hooks/" ) + cHookName
    LOCAL cFile := hb_MemoRead( cName )
-   LOCAL cLine := "exec hbrun bin/commit --check-only"
 
-   IF cLine $ cFile
+   IF cCommand $ cFile
       RETURN .T.
    ENDIF
 
-   RETURN hb_MemoWrit( cName, cFile + hb_eol() + cLine + hb_eol() )
+   RETURN hb_MemoWrit( cName, cFile + hb_eol() + cCommand + hb_eol() )
 
 STATIC FUNCTION FindChangeLog()
 
@@ -238,6 +238,27 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
    NEXT
 
    RETURN .T.
+
+/* If it's a single mod, include only the change text,
+   otherwise include the whole entry. */
+STATIC FUNCTION EntryToCommitMsg( cLog )
+
+   LOCAL cLine
+   LOCAL cMsg
+   LOCAL nCount := 0
+
+   FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
+      IF cLine:__enumIndex() != 1
+         IF !( Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) ) )
+            IF ! Empty( cLine )
+               cMsg := SubStr( cLine, 7 )
+               ++nCount
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN iif( nCount == 1, cMsg, cLog )
 
 STATIC FUNCTION VCSDetect()
 
