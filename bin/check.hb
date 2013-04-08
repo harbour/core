@@ -43,9 +43,17 @@ FUNCTION CheckFileList( xName )
    LOCAL file
 
    LOCAL lApplyFixes := "--fixup" $ hb_CmdLine()
+   LOCAL lRebase := .T.
+
+   IF HB_ISSTRING( xName ) .AND. Left( xName, 2 ) == "--"
+      xName := NIL
+   ENDIF
 
    IF HB_ISSTRING( xName )
-      xName := iif( Left( xName, 2 ) == "--", NIL, { xName } )
+      xName := { xName }
+      IF "--fixup-case" $ hb_CmdLine()
+         lRebase := .F.
+      ENDIF
    ENDIF
 
    IF Empty( xName ) .OR. HB_ISARRAY( xName )
@@ -58,7 +66,7 @@ FUNCTION CheckFileList( xName )
       IF "--fixup-case" $ hb_CmdLine()
          FOR EACH file IN xName
             IF "|" + hb_FNameExt( file ) + "|" $ "|.c|.cpp|.h|.api|.ch|.hb|.po|.prg|.md|.txt|"
-               FixFuncCase( file, .T. )
+               FixFuncCase( file, .T., lRebase )
             ENDIF
          NEXT
       ELSE
@@ -134,8 +142,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL aCanHaveAnyEncoding := { ;
       "*.dif", ;
-      "contrib/hbmisc/tests/sample.txt", ;  /* TOFIX: Not Unicode compatible component */
-      "contrib/hbhpdf/tests/files/*.txt" }
+      "contrib/hbmisc/tests/sample.txt" }  /* TOFIX: Not Unicode compatible component */
 
    LOCAL aForcedCRLF := { ;
       "*.bat" }
@@ -712,7 +719,7 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
 
 /* ---- */
 
-STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
+STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
 
    STATIC sc_hInCommentOnly := { ;
       ".c"   =>, ;
@@ -722,35 +729,31 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
 
    STATIC sc_hFileExceptions := { ;
       "ChangeLog.txt" =>, ;
-      "std.ch"        =>, ;
-      "big5_gen.prg"  =>, ;
-      "clsccast.prg"  =>, ;
-      "clsicast.prg"  =>, ;
-      "clsscast.prg"  =>, ;
-      "clsscope.prg"  =>, ;
-      "cpinfo.prg"    =>, ;
-      "foreach2.prg"  =>, ;
-      "keywords.prg"  =>, ;
-      "speedstr.prg"  =>, ;
-      "speedtst.prg"  =>, ;
-      "uc16_gen.prg"  =>, ;
-      "wcecon.prg"    =>, ;
-      "c_std.txt"     =>, ;
-      "locks.txt"     =>, ;
-      "pcode.txt"     =>, ;
-      "tracing.txt"   =>, ;
+      "std.ch"        =>, ;  /* compatibility */
+      "big5_gen.prg"  =>, ;  /* new style code */
+      "clsccast.prg"  =>, ;  /* new style code */
+      "clsicast.prg"  =>, ;  /* new style code */
+      "clsscast.prg"  =>, ;  /* new style code */
+      "clsscope.prg"  =>, ;  /* new style code */
+      "cpinfo.prg"    =>, ;  /* new style code */
+      "foreach2.prg"  =>, ;  /* new style code */
+      "keywords.prg"  =>, ;  /* new style code */
+      "speedstr.prg"  =>, ;  /* new style code */
+      "speedtst.prg"  =>, ;  /* new style code */
+      "uc16_gen.prg"  =>, ;  /* new style code */
+      "wcecon.prg"    =>, ;  /* new style code */
+      "c_std.txt"     =>, ;  /* C level doc */
+      "locks.txt"     =>, ;  /* C level doc */
+      "pcode.txt"     =>, ;  /* C level doc */
+      "tracing.txt"   =>, ;  /* C level doc */
       "xhb-diff.txt"  => }
 
    STATIC sc_aMaskExceptions := { ;
-      "src/3rd/*"               , ;
-      "contrib/3rd/*"           , ;
-      "contrib/*/3rd/*"         , ;
-      "contrib/hbnetio/tests/*" , ;
-      "contrib/xhb/thtm.prg"    , ;
-      "tests/hbpptest/*"        , ;
-      "tests/mt/*"              , ;
-      "tests/multifnc/*"        , ;
-      "tests/rddtest/*"         }
+      "*/3rd/*"          , ;  /* foreign code */
+      "tests/hbpptest/*" , ;  /* test code, must be kept as is */
+      "tests/mt/*"       , ;  /* new style code */
+      "tests/multifnc/*" , ;
+      "tests/rddtest/*"  }
 
    LOCAL hAll
    LOCAL cFile
@@ -764,15 +767,16 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
    LOCAL nChanged := 0
 
    hb_default( @lVerbose, .F. )
+   hb_default( @lRebase, .T. )
 
    IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
       hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .OR. ;
-      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( StrTran( cFileName, "\", "/" ), tmp ) } ) != 0
+      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( cFileName, hb_DirSepToOS( tmp ) ) } ) != 0
       RETURN .F.
    ENDIF
 
    hAll := __hbformat_BuildListOfFunctions()
-   cFile := MemoRead( _HBROOT_ + cFileName )
+   cFile := MemoRead( iif( lRebase, _HBROOT_, "" ) + cFileName )
 
    lInCommentOnly := hb_FNameExt( cFileName ) $ sc_hInCommentOnly
    cFileStripped := iif( lInCommentOnly, GetCComments( cFile ), cFile )
@@ -800,7 +804,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
       ENDIF
    NEXT
 
-   IF !( "hbclass.ch" $ cFileName ) .AND. ! lInCommentOnly
+   IF ! lInCommentOnly
       FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
@@ -815,7 +819,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose )
 
    IF nChanged > 0
       OutStd( cFileName + ": Harbour function casings fixed: " + hb_ntos( nChanged ) + hb_eol() )
-      hb_MemoWrit( _HBROOT_ + cFileName, cFile )
+      hb_MemoWrit( iif( lRebase, _HBROOT_, "" ) + cFileName, cFile )
    ENDIF
 
    RETURN .T.

@@ -24,20 +24,20 @@
 /* few PP rules which allow to execute RPC function using
  * pseudo object 'net', i.e. ? net:date()
  */
-#xtranslate net:<!func!>([<params,...>]) => ;
-            netio_funcexec( #<func> [,<params>] )
-#xtranslate net:[<server>]:<!func!>([<params,...>]) => ;
-            netio_funcexec( [ #<server> + ] ":" + #<func> [,<params>] )
-#xtranslate net:[<server>]:<port>:<!func!>([<params,...>]) => ;
-            netio_funcexec( [ #<server> + ] ":" + #<port> + ":" + #<func> ;
+#xtranslate net:<!func!>( [<params,...>] ) => ;
+            netio_FuncExec( #<func> [,<params>] )
+#xtranslate net:[<server>]:<!func!>( [<params,...>] ) => ;
+            netio_FuncExec( [ #<server> + ] ":" + #<func> [,<params>] )
+#xtranslate net:[<server>]:<port>:<!func!>( [<params,...>] ) => ;
+            netio_FuncExec( [ #<server> + ] ":" + #<port> + ":" + #<func> ;
                             [,<params>] )
 
 #xtranslate net:exists:<!func!> => ;
-            netio_procexists( #<func> )
+            netio_ProcExists( #<func> )
 #xtranslate net:exists:[<server>]:<!func!> => ;
-            netio_procexists( [ #<server> + ] ":" + #<func> )
+            netio_ProcExists( [ #<server> + ] ":" + #<func> )
 #xtranslate net:exists:[<server>]:<port>:<!func!> => ;
-            netio_procexists( [ #<server> + ] ":" + #<port> + ":" + #<func> )
+            netio_ProcExists( [ #<server> + ] ":" + #<port> + ":" + #<func> )
 
 
 /* address of computer executing netiosrv,
@@ -48,31 +48,32 @@
 #define NETPASSWD  "topsecret"
 
 
-proc main()
+PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    /* connect to the server */
    ? "CONNECTING..."
-   ? "NETIO_CONNECT():", netio_connect( NETSERVER, NETPORT,, NETPASSWD )
+   ? "netio_Connect():", netio_Connect( NETSERVER, NETPORT,, NETPASSWD )
    ?
    /* check if some function are available on server side */
-   ? "DATE() function is supported:",        net:exists:DATE
-   ? "QOUT() function is supported:",        net:exists:QOUT
-   ? "HB_DATETIME() function is supported:", net:exists:HB_DATETIME
+   ? "Date() function is supported:",        net:exists:DATE
+   ? "QOut() function is supported:",        net:exists:QOUT
+   ? "hb_DateTime() function is supported:", net:exists:HB_DATETIME
    ?
    /* display text on server console */
-   net:QOUT( replicate( "=", 70 ) )
-   net:QOUT( "This is RPC TEST", hb_datetime(), version() )
-   net:QOUT( replicate( "=", 70 ) )
+   net:QOut( Replicate( "=", 70 ) )
+   net:QOut( "This is RPC TEST", hb_DateTime(), Version() )
+   net:QOut( Replicate( "=", 70 ) )
 
    /* execute some functions on the server side and display the results */
-   ? "SERVER DATE:",     net:DATE()
-   ? "SERVER TIME:",     net:TIME()
-   ? "SERVER DATETIME:", net:HB_DATETIME()
-   ? net:upper( "hello world !!!" )
+   ? "SERVER DATE:",     net:Date()
+   ? "SERVER TIME:",     net:Time()
+   ? "SERVER DATETIME:", net:hb_DateTime()
+   ? net:Upper( "hello world !!!" )
    ?
 
    /* close the connection to the server */
-   ? "NETIO_DISCONNECT():", netio_disconnect( NETSERVER, NETPORT )
-return
+   ? "netio_Disconnect():", netio_Disconnect( NETSERVER, NETPORT )
+
+   RETURN

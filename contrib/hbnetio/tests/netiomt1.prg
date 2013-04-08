@@ -14,18 +14,18 @@
 #define NETPASSWD  "toptopsecret"
 
 
-proc main()
+PROCEDURE Main()
 
    /* connect to the server */
    ? "CONNECTING..."
-   ? "NETIO_CONNECT():", netio_connect( NETSERVER, NETPORT,, NETPASSWD )
+   ? "netio_Connect():", netio_Connect( NETSERVER, NETPORT,, NETPASSWD )
    ?
    /* check if some function are available on server side */
-   ? "Number of connected clients:", Len( netio_funcexec( "netio_conninfo" ) )
-   ? "SHUTDOWN server:", netio_funcexec( "netio_shutdown" )
+   ? "Number of connected clients:", Len( netio_FuncExec( "netio_conninfo" ) )
+   ? "SHUTDOWN server:", netio_FuncExec( "netio_shutdown" )
    ?
 
    /* close the connection to the server */
-   ? "NETIO_DISCONNECT():", netio_disconnect( NETSERVER, NETPORT )
+   ? "netio_Disconnect():", netio_Disconnect( NETSERVER, NETPORT )
 
-return
+   RETURN
