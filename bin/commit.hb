@@ -34,19 +34,28 @@
 
 #define _COMMIT_HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
 
-PROCEDURE Main()
+PROCEDURE Main( cParam1 )
 
-   LOCAL cVCS := VCSDetect()
-
-   LOCAL aFiles := {}
-   LOCAL aChanges := DoctorChanges( cVCS, Changes( cVCS ), aFiles )
+   LOCAL cVCS
+   LOCAL aFiles
+   LOCAL aChanges
    LOCAL cLog
    LOCAL nStart, nEnd
    LOCAL cMyName
    LOCAL cLogName
    LOCAL lWasChangeLog
 
+   IF "--prepare-commit" $ hb_CmdLine()
+      hb_MemoWrit( cParam1, GetLastEntry( MemoRead( FindChangeLog() ) ) + hb_eol() + hb_MemoRead( cParam1 ) )
+      ErrorLevel( 0 )
+      RETURN
+   ENDIF
+
    InstallPreCommitHook()
+
+   cVCS := VCSDetect()
+   aFiles := {}
+   aChanges := DoctorChanges( cVCS, Changes( cVCS ), aFiles )
 
    IF Empty( aChanges )
       OutStd( hb_ProgName() + ": " + "no changes" + hb_eol() )
@@ -56,12 +65,10 @@ PROCEDURE Main()
 
    IF CheckFileList( aFiles )
 
-      IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog.txt" )
-         IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog" )
-            OutStd( hb_ProgName() + ": " + "cannot find ChangeLog file" + hb_eol() )
-            ErrorLevel( 2 )
-            RETURN
-         ENDIF
+      cLogName := FindChangeLog()
+      IF Empty( cLogName )
+         OutStd( hb_ProgName() + ": " + "cannot find ChangeLog file" + hb_eol() )
+         ErrorLevel( 2 )
       ENDIF
 
       IF "--check-only" $ hb_CmdLine()
@@ -141,6 +148,17 @@ STATIC FUNCTION InstallPreCommitHook()
    ENDIF
 
    RETURN hb_MemoWrit( cName, cFile + hb_eol() + cLine + hb_eol() )
+
+STATIC FUNCTION FindChangeLog()
+
+   LOCAL cLogName
+
+   IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog.txt" ) .AND. ;
+      ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog" )
+      RETURN ""
+   ENDIF
+
+   RETURN cLogName
 
 STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
