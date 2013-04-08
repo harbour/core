@@ -53,12 +53,13 @@ There are several ways to help making Harbour better:
 - Submit a change:
   1. Fork Harbour
   2. Create a branch: `git checkout -b my_mod`
-  3. Commit your changes: `git commit -am "Added my feature"`
-  4. Push to the branch: `git push origin my_mod`
-  5. Open a Pull Request
+  3. Do commit pre-check and new log entry: `hbrun bin/commit`
+  4. Commit your changes: `git commit -am "Added my feature"`
+  5. Push to the branch: `git push origin my_mod`
+  6. Open a Pull Request
 - Always use the same coding/formatting style as you find in
-  the files you're patching. The easiest way to achieve this
-  is to use these commands to format your sources:
+  the files you're modifying. The easiest way to achieve this
+  is to use these commands to format the sources:
 
         $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
         $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
@@ -112,7 +113,7 @@ Download source archive from this page and unpack:
 You'll need Git version control software installed on your system,
 and issue this command:
 
-    git clone https://github.com/harbour/core.git harbour
+    git clone https://github.com/harbour/core.git harbour-core
 
 You can get subsequent updates using this command:
 
@@ -1341,7 +1342,7 @@ For all platforms you'll need two things:
 Use hbmk2 to build your app from source. It's recommended to put
 it in the PATH (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
 
-See hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md).
+See hbmk2 [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
 
 
 # Debugging Options

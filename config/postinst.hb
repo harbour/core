@@ -80,8 +80,8 @@ PROCEDURE Main( ... )
          /* public Harbour scripts */
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
-            "bin/commit.hb", ;
             "bin/check.hb", ;
+            "bin/commit.hb", ;
             "bin/harbour.ucf" }
             mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
          NEXT
