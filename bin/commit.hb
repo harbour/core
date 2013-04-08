@@ -32,6 +32,8 @@
 
 #include "hbgtinfo.ch"
 
+#define _COMMIT_HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
+
 PROCEDURE Main()
 
    LOCAL cVCS := VCSDetect()
@@ -44,6 +46,8 @@ PROCEDURE Main()
    LOCAL cLogName
    LOCAL lWasChangeLog
 
+   InstallPreCommitHook()
+
    IF Empty( aChanges )
       OutStd( hb_ProgName() + ": " + "no changes" + hb_eol() )
       ErrorLevel( 0 )
@@ -52,16 +56,16 @@ PROCEDURE Main()
 
    IF CheckFileList( aFiles )
 
-      IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
-         IF ! hb_FileExists( cLogName := "ChangeLog" )
-            OutStd( hb_ProgName() + ": " + "can't find ChangeLog file" + hb_eol() )
+      IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog.txt" )
+         IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog" )
+            OutStd( hb_ProgName() + ": " + "cannot find ChangeLog file" + hb_eol() )
             ErrorLevel( 2 )
             RETURN
          ENDIF
       ENDIF
 
       IF "--check-only" $ hb_CmdLine()
-         IF AScan( aFiles, {| tmp | tmp == cLogName } ) == 0
+         IF AScan( aFiles, {| tmp | tmp == hb_FNameNameExt( cLogName ) } ) == 0
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN
@@ -126,6 +130,18 @@ PROCEDURE Main()
 
    RETURN
 
+STATIC FUNCTION InstallPreCommitHook()
+
+   LOCAL cName := _COMMIT_HBROOT_ + hb_DirSepToOS( ".git/hooks/pre-commit" )
+   LOCAL cFile := hb_MemoRead( cName )
+   LOCAL cLine := "exec hbrun bin/commit --check-only"
+
+   IF cLine $ cFile
+      RETURN .T.
+   ENDIF
+
+   RETURN hb_MemoWrit( cName, cFile + hb_eol() + cLine + hb_eol() )
+
 STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
    LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*" + hb_eol()
@@ -176,7 +192,7 @@ STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
    LOCAL cLine
 
    FOR EACH cLine IN aChanges
-      IF lAllowChangeLog .OR. !( SubStr( cLine, 5 ) == cLogName )
+      IF lAllowChangeLog .OR. !( SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName ) )
          cLog += cLine + hb_eol()
       ENDIF
    NEXT
@@ -192,7 +208,7 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
    FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
       IF cLine:__enumIndex() != 1
          IF Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) )
-            IF SubStr( cLine, 5 ) == cLogName
+            IF SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName )
                lChangeLog := .T.
             ENDIF
          ELSE
@@ -208,8 +224,8 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
 STATIC FUNCTION VCSDetect()
 
    DO CASE
-   CASE hb_DirExists( ".svn" ) ; RETURN "svn"
-   CASE hb_DirExists( ".git" ) ; RETURN "git"
+   CASE hb_DirExists( _COMMIT_HBROOT_ + ".svn" ) ; RETURN "svn"
+   CASE hb_DirExists( _COMMIT_HBROOT_ + ".git" ) ; RETURN "git"
    ENDCASE
 
    RETURN ""

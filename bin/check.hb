@@ -33,7 +33,7 @@
 
 #include "directry.ch"
 
-#define _HBROOT_  hb_DirBase() + hb_DirSepToOS( "../" )  /* must end with dirsep */
+#define _HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
 
 FUNCTION CheckFileList( xName )
 
