@@ -82,13 +82,13 @@
 {_HB_BUILD_INSTALL}-instforce
 
 # install (standalone)
-{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=${HB_LIB}/
-{_HB_BUILD_INSTALL_STDALONE&hbexe}-instpath=${HB_BIN}/
-{_HB_BUILD_INSTALL_STDALONE&hbdyn}-instpath=${HB_DYN}/
-{_HB_BUILD_INSTALL_STDALONE&hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${HB_DYN}/
-{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=inc:${HB_INC}/
-{_HB_BUILD_INSTALL_STDALONE}-instpath=implib:${HB_LIB}/
-{_HB_BUILD_INSTALL_STDALONE}-instpath=etc:${HB_ETC}/
-{_HB_BUILD_INSTALL_STDALONE}-instpath=man:${HB_MAN}/
-{_HB_BUILD_INSTALL_STDALONE&!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${HB_LIB}/
+{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=${hb_lib}/
+{_HB_BUILD_INSTALL_STDALONE&hbexe}-instpath=${hb_bin}/
+{_HB_BUILD_INSTALL_STDALONE&hbdyn}-instpath=${hb_dyn}/
+{_HB_BUILD_INSTALL_STDALONE&hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${hb_dyn}/
+{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=inc:${hb_inc}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=implib:${hb_lib}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=etc:${hb_etc}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=man:${hb_man}/
+{_HB_BUILD_INSTALL_STDALONE&!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${hb_lib}/
 {_HB_BUILD_INSTALL_STDALONE}-instforce

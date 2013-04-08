@@ -1,4 +1,3 @@
-
 # Include file to setup standard installation rules
 # for 3rd party packages. To use it just add the line
 # '$hb_pkg_install.hbm' to the beginning of your project
@@ -19,26 +18,26 @@
 # -----------------------------------------
 
 # static library & dynamic library on *nix
-{hblib}-instpath=${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+{hblib}-instpath=${hb_addons}/${hb_name}/lib/${hb_plat}/${hb_comp}/
 
 # dynamic library on non-*nix
-{hbdyn&!unix}-instpath=${HB_BIN}/
-{hbdyn&unix}-instpath=${HB_LIB}/
+{hbdyn&!unix}-instpath=${hb_bin}/
+{hbdyn&unix}-instpath=${hb_lib}/
 
 # executable
-{hbexe}-instpath=${HB_BIN}/
+{hbexe}-instpath=${hb_bin}/
 
 # import library on non-*nix
--instpath=implib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+-instpath=implib:${hb_addons}/${hb_name}/lib/${hb_plat}/${hb_comp}/
 
 # dynamic libraries belonging to project dependencies
-{hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${HB_BIN}/
+{hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${hb_bin}/
 
 # import libraries belonging to project dependencies
-{!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+{!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${hb_addons}/${hb_name}/lib/${hb_plat}/${hb_comp}/
 
 # misc files, public headers, tests
--instpath=misc:${HB_ADDONS}/${hb_name}/
--instpath=inc:${HB_ADDONS}/${hb_name}/
--instpath=inc_sub:${HB_ADDONS}/${hb_name}/include/
--instpath=tests:${HB_ADDONS}/${hb_name}/tests/
+-instpath=misc:${hb_addons}/${hb_name}/
+-instpath=inc:${hb_addons}/${hb_name}/
+-instpath=inc_sub:${hb_addons}/${hb_name}/include/
+-instpath=tests:${hb_addons}/${hb_name}/tests/
