@@ -141,8 +141,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*.md" }
 
    LOCAL aCanHaveAnyEncoding := { ;
-      "*.dif", ;
-      "contrib/hbmisc/tests/sample.txt" }  /* TOFIX: Not Unicode compatible component */
+      "*.dif" }
 
    LOCAL aForcedCRLF := { ;
       "*.bat" }

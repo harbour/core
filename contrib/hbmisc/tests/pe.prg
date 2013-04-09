@@ -7,13 +7,16 @@ PROCEDURE Main( cFile )
    LOCAL lEdit := .T.
 
    IF cFile == NIL
-      cFile := __FILE__
-      lEdit := .F.
+      cText := Example_Text()
+   ELSE
+      IF hb_FileMatch( cFile, __FILE__ )
+         lEdit := .F.
+      ENDIF
+      cText := MemoRead( cFile )
    ENDIF
 
-   cText := MemoRead( cFile )
    cText := MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
-   MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
+   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
 
    RETURN
 
@@ -36,3 +39,37 @@ STATIC FUNCTION MyMemoEdit( cText, nTop, nLeft, nBottom, nRight, lEdit )
    ENDIF
 
    RETURN cText
+
+STATIC FUNCTION Example_Text()
+   RETURN StrTran( Example_Text_Raw(), "~", hb_BChar( 168 ) )
+
+STATIC FUNCTION Example_Text_Raw()
+#pragma __cstream | RETURN %s
+
+ ~2THE HARBOUR PROJECT LICENSE~1
+~3 ===========================
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version, with one exception:
+
+ The exception is that if you link the Harbour Runtime Library (HRL)
+ and/or the Harbour Virtual Machine (HVM) with other files to produce
+ an executable, this does not by itself cause the resulting executable
+ to be covered by the GNU General Public License. Your use of that
+ executable is in no way restricted on account of linking the HRL
+ and/or HVM code into it.
+
+ This program is distributed in the hope that it will be useful,
+ but ~2WITHOUT ANY WARRANTY~1; without even the implied warranty of
+ ~4MERCHANTABILITY~1 or ~5FITNESS FOR A PARTICULAR PURPOSE~1.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ their web site at http://www.gnu.org/).
+
+~5This file have to be separated with CR/LF characters~1
+#pragma __endtext

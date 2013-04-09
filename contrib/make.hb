@@ -762,7 +762,9 @@ PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
       IF "#" $ cItem
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
-      AddProject( hProjectList, cItem )
+      IF hb_FileExists( s_cBase + s_cHome + cItem )
+         AddProject( hProjectList, cItem )
+      ENDIF
    NEXT
 
    RETURN
@@ -772,7 +774,9 @@ PROCEDURE LoadProjectListFromString( hProjectList, cString )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
-      AddProject( hProjectList, cItem )
+      IF hb_FileExists( s_cBase + s_cHome + cItem )
+         AddProject( hProjectList, cItem )
+      ENDIF
    NEXT
 
    RETURN
