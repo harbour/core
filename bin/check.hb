@@ -149,6 +149,9 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
    LOCAL aForcedLF := { ;
       "*.sh" }
 
+   LOCAL aNoProc := { ;
+      "maskimag.png" }  /* will crash libharu demo if optimized in any way */
+
    LOCAL aCanHaveIdent
    LOCAL hAllowedExt := LoadGitattributes( @aCanHaveIdent )
    LOCAL nLines
@@ -287,7 +290,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             ENDIF
          ENDIF
 
-         IF ( tmp := "$" + "Id" ) $ cFile != FNameExc( cName, aCanHaveIdent )
+         IF ( ( tmp := "$" + "Id" ) $ cFile ) != FNameExc( cName, aCanHaveIdent )
             IF tmp
                AAdd( aErr, "content: has " + "$" + "Id" )
             ELSE
@@ -321,7 +324,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
                EXIT
             ENDIF
          NEXT
-         IF lProcess
+         IF lProcess .AND. ! FNameExc( cName, aNoProc )
             OutStd( cName + ": " + "content: processing" + hb_eol() )
             ProcFile( cName )
          ENDIF
@@ -599,7 +602,7 @@ STATIC FUNCTION FNameExc( cName, aList )
 STATIC PROCEDURE ProcFile( cFileName )
 
    LOCAL hProc := { ;
-      ".png" => { "avdpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
+      ".png" => { "advpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
       ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), @FixFuncCase() }, ;
       ".cpp" => ".c", ;

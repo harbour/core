@@ -147,6 +147,10 @@ STATIC FUNCTION InstallHook( cHookName, cCommand )
       RETURN .T.
    ENDIF
 
+   IF Empty( cFile )
+      cFile += "#!/bin/sh" + hb_eol()
+   ENDIF
+
    RETURN hb_MemoWrit( cName, cFile + hb_eol() + cCommand + hb_eol() )
 
 STATIC FUNCTION FindChangeLog()
