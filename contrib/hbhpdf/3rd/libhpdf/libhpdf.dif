@@ -1,6 +1,6 @@
-diff -urN libhpdf-rc2.orig\hpdf.h libhpdf-rc2\hpdf.h
---- libhpdf-rc2.orig\hpdf.h	Wed Apr 04 21:40:06 2012
-+++ libhpdf-rc2\hpdf.h	Wed Apr 04 21:40:06 2012
+diff -urN libhpdf.orig\hpdf.h libhpdf\hpdf.h
+--- libhpdf.orig\hpdf.h	Wed Apr 10 01:02:31 2013
++++ libhpdf\hpdf.h	Wed Apr 10 01:02:31 2013
 @@ -17,7 +17,7 @@
  #ifndef _HPDF_H
  #define _HPDF_H
@@ -19,9 +19,20 @@ diff -urN libhpdf-rc2.orig\hpdf.h libhpdf-rc2\hpdf.h
  HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
  								HPDF_Rect      rect,
  								const char     *text,
-diff -urN libhpdf-rc2.orig\hpdfutil.h libhpdf-rc2\hpdfutil.h
---- libhpdf-rc2.orig\hpdfutil.h	Wed Apr 04 21:40:06 2012
-+++ libhpdf-rc2\hpdfutil.h	Wed Apr 04 21:40:06 2012
+diff -urN libhpdf.orig\hpdfimap.c libhpdf\hpdfimap.c
+--- libhpdf.orig\hpdfimap.c	Wed Apr 10 01:02:31 2013
++++ libhpdf\hpdfimap.c	Wed Apr 10 01:02:31 2013
+@@ -21,6 +21,7 @@
+ 
+ #ifndef LIBHPDF_HAVE_NOPNGLIB
+ #include <png.h>
++#include <string.h>
+ 
+ static void
+ PngErrorFunc  (png_structp       png_ptr,
+diff -urN libhpdf.orig\hpdfutil.h libhpdf\hpdfutil.h
+--- libhpdf.orig\hpdfutil.h	Wed Apr 10 01:02:31 2013
++++ libhpdf\hpdfutil.h	Wed Apr 10 01:02:31 2013
 @@ -18,7 +18,7 @@
  #ifndef _HPDF_UTILS_H
  #define _HPDF_UTILS_H
@@ -31,3 +42,12 @@ diff -urN libhpdf-rc2.orig\hpdfutil.h libhpdf-rc2\hpdfutil.h
  #include "hpdftype.h"
  
  #ifdef __cplusplus
+diff -urN libhpdf.orig\t4.h libhpdf\t4.h
+--- libhpdf.orig\t4.h	Wed Apr 10 01:02:31 2013
++++ libhpdf\t4.h	Wed Apr 10 01:02:31 2013
+@@ -1,4 +1,4 @@
+-/* $Id: t4.h,v 1.20 2007/11/10 18:40:44 drolon Exp $ */
++/* $Id$ */
+ 
+ /*
+  * Copyright (c) 1988-1997 Sam Leffler
