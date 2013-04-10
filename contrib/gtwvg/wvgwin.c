@@ -329,11 +329,17 @@ HB_FUNC( WVG_LOADIMAGE )
    switch( iSource )
    {
       case 0:   /* Image from resource by numeric id */
-         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
+            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
+         else
+            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 1 ) ) );
          break;
 
       case 1:   /* image from resource by name */
-         hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+         if( HB_ISNUM( 3 ) && hb_parni( 3 ) == IMAGE_ICON )
+            hImage = LoadIcon( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
+         else
+            hImage = LoadBitmap( ( HINSTANCE ) wvg_hInstance(), lpBuffer );
          break;
 
       case 2:   /* Image from disk file */
