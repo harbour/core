@@ -57,6 +57,6 @@ HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
 #if HB_HPDF_VERS( 2, 2, 0 ) && ! defined( HB_DYNLIB )
    hb_retnl( HPDF_PDFA_SetPDFAConformance( hb_HPDF_Doc_par( 1 ), ( HPDF_PDFAType ) hb_parni( 2 ) ) );
 #else
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }

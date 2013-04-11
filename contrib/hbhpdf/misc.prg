@@ -52,7 +52,8 @@ FUNCTION hb_HPDF_IsVersion( ma, mi, mu )
 
    hb_HPDF_Version( @HPDF_MAJOR_VERSION, @HPDF_MINOR_VERSION, @HPDF_BUGFIX_VERSION )
 
-   RETURN HPDF_MAJOR_VERSION > ma .OR. ;
-          ( HPDF_MAJOR_VERSION == ma .AND. ;
-             ( HPDF_MINOR_VERSION > mi .OR. ;
-                ( HPDF_MINOR_VERSION == mi .AND. HPDF_BUGFIX_VERSION >= mu ) ) )
+   RETURN ;
+      HPDF_MAJOR_VERSION > ma .OR. ;
+      ( HPDF_MAJOR_VERSION == ma .AND. ;
+      ( HPDF_MINOR_VERSION > mi .OR. ;
+      ( HPDF_MINOR_VERSION == mi .AND. HPDF_BUGFIX_VERSION >= mu ) ) )

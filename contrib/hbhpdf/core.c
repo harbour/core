@@ -355,14 +355,24 @@ HB_FUNC( HPDF_SETCURRENTENCODER )
  */
 HB_FUNC( HPDF_SETINFOATTR )
 {
-   hb_retnl( ( long ) HPDF_SetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), hb_parc( 3 ) ) );
+   HPDF_Doc doc = hb_HPDF_Doc_par( 1 );
+
+   if( doc )
+      hb_retnl( ( long ) HPDF_SetInfoAttr( doc, ( HPDF_InfoType ) hb_parni( 2 ), hb_parc( 3 ) ) );
+   else
+      hb_retnl( HB_HPDF_BADPARAM );
 }
 
 /* HPDF_GetInfoAttr( hDoc, nInfoType ) -> cInfo
  */
 HB_FUNC( HPDF_GETINFOATTR )
 {
-   hb_retc( HPDF_GetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ) ) );
+   HPDF_Doc doc = hb_HPDF_Doc_par( 1 );
+
+   if( doc )
+      hb_retc( HPDF_GetInfoAttr( doc, ( HPDF_InfoType ) hb_parni( 2 ) ) );
+   else
+      hb_retc_null();
 }
 
 /* HPDF_SetInfoDateAttr( hDoc, nInfoType, aDateValues ) -> hStatus
@@ -372,19 +382,26 @@ HB_FUNC( HPDF_GETINFOATTR )
  */
 HB_FUNC( HPDF_SETINFODATEATTR )
 {
-   HPDF_Date date;
+   HPDF_Doc doc = hb_HPDF_Doc_par( 1 );
 
-   memset( &date, 0, sizeof( date ) );
+   if( doc )
+   {
+      HPDF_Date date;
 
-   date.year    = hb_parvni( 3, 1 );
-   date.month   = hb_parvni( 3, 2 );
-   date.day     = hb_parvni( 3, 3 );
-   date.hour    = hb_parvni( 3, 4 );
-   date.minutes = hb_parvni( 3, 5 );
-   date.seconds = hb_parvni( 3, 6 );
-   date.ind     = ' ';
+      memset( &date, 0, sizeof( date ) );
 
-   hb_retnl( ( long ) HPDF_SetInfoDateAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
+      date.year    = hb_parvni( 3, 1 );
+      date.month   = hb_parvni( 3, 2 );
+      date.day     = hb_parvni( 3, 3 );
+      date.hour    = hb_parvni( 3, 4 );
+      date.minutes = hb_parvni( 3, 5 );
+      date.seconds = hb_parvni( 3, 6 );
+      date.ind     = ' ';
+
+      hb_retnl( ( long ) HPDF_SetInfoDateAttr( doc, ( HPDF_InfoType ) hb_parni( 2 ), date ) );
+   }
+   else
+      hb_retnl( HB_HPDF_BADPARAM );
 }
 
 /* HPDF_SetPassword( hDoc, cOwnerPassword = NO NIL, cUserPassword = CANBE NIL ) -> hStatus
@@ -440,20 +457,24 @@ HB_FUNC( HPDF_SETCOMPRESSIONMODE )
  */
 HB_FUNC( HPDF_PAGE_SETWIDTH )
 {
-   HPDF_Page page = hb_parptr( 1 );
+   HPDF_Page page = ( HPDF_Page ) hb_parptr( 1 );
 
    if( page )
       hb_retnl( ( long ) HPDF_Page_SetWidth( page, ( HPDF_REAL ) hb_parnd( 2 ) ) );
+   else
+      hb_retnl( HB_HPDF_BADPARAM );
 }
 
 /* HPDF_Page_SetHeight( hPage, nHeight ) -> hStatus
  */
 HB_FUNC( HPDF_PAGE_SETHEIGHT )
 {
-   HPDF_Page page = hb_parptr( 1 );
+   HPDF_Page page = ( HPDF_Page ) hb_parptr( 1 );
 
    if( page )
       hb_retnl( ( long ) HPDF_Page_SetHeight( page, ( HPDF_REAL ) hb_parnd( 2 ) ) );
+   else
+      hb_retnl( HB_HPDF_BADPARAM );
 }
 
 /* HPDF_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) -> hStatus
@@ -1593,7 +1614,7 @@ HB_FUNC( HPDF_GETCONTENTS )
       hb_xfree( buffer );
 #else
    hb_storc( NULL, 2 );
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }
 /*
@@ -1603,9 +1624,14 @@ HB_FUNC( HPDF_GETCONTENTS )
 HB_FUNC( HPDF_CHECKERROR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retnl( ( long ) HPDF_CheckError( ( HPDF_Error ) hb_parptr( 1 ) ) );
+   HPDF_Error error = ( HPDF_Error ) hb_parptr( 1 );
+
+   if( error )
+      hb_retnl( ( long ) HPDF_CheckError( error ) );
+   else
+      hb_retnl( HB_HPDF_BADPARAM );
 #else
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }
 /*
@@ -1618,7 +1644,7 @@ HB_FUNC( HPDF_PAGE_SETZOOM )
 #if HB_HPDF_VERS( 2, 2, 0 )
    hb_retnl( ( long ) HPDF_Page_SetZoom( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ) ) );
 #else
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }
 /*
@@ -1660,7 +1686,12 @@ HB_FUNC( HPDF_ATTACHFILE )
 HB_FUNC( HPDF_ICC_LOADICCFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   hb_retptr( ( HPDF_OutputIntent ) HPDF_ICC_LoadIccFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_MMgr ) hb_parptr( 2 ), ( HPDF_Stream ) hb_parptr( 3 ), ( HPDF_Xref ) hb_parptr( 4 ), hb_parni( 5 ) ) );
+   HPDF_MMgr mmgr = ( HPDF_MMgr ) hb_parptr( 2 );
+
+   if( mmgr )
+      hb_retptr( ( HPDF_OutputIntent ) HPDF_ICC_LoadIccFromMem( hb_HPDF_Doc_par( 1 ), mmgr, ( HPDF_Stream ) hb_parptr( 3 ), ( HPDF_Xref ) hb_parptr( 4 ), hb_parni( 5 ) ) );
+   else
+      hb_retptr( NULL );
 #else
    hb_retptr( NULL );
 #endif
@@ -1689,7 +1720,7 @@ HB_FUNC( HPDF_USEUTFENCODINGS )
 #if HB_HPDF_VERS( 2, 3, 0 )
    hb_retnl( HPDF_UseUTFEncodings( hb_HPDF_Doc_par( 1 ) ) );
 #else
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }
 

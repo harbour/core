@@ -54,6 +54,9 @@
 
 #define HB_HPDF_VERS( ma, mi, mu )  ( HPDF_MAJOR_VERSION > ma || ( HPDF_MAJOR_VERSION == ma && ( HPDF_MINOR_VERSION > mi || ( HPDF_MINOR_VERSION == mi && HPDF_BUGFIX_VERSION >= mu ) ) ) )
 
+#define HB_HPDF_BADPARAM      -2
+#define HB_HPDF_NOTSUPPORTED  -1
+
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT HPDF_Doc hb_HPDF_Doc_par( int iParam );
