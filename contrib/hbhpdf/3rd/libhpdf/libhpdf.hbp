@@ -94,8 +94,8 @@ hpdfutil.c
 hpdfxref.c
 
 # ORIGIN http://libharu.org/
-# VER    2.3.0RC2
-# URL    http://libharu.org/files/libhpdf-2.3.0RC2.tar.gz
+# VER    head
+# URL    https://github.com/libharu/libharu/archive/master.zip
 # DIFF   libhpdf.dif
 #
 # MAP    README
