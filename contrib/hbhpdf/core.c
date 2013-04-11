@@ -440,14 +440,20 @@ HB_FUNC( HPDF_SETCOMPRESSIONMODE )
  */
 HB_FUNC( HPDF_PAGE_SETWIDTH )
 {
-   hb_retnl( ( long ) HPDF_Page_SetWidth( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ) ) );
+   HPDF_Page page = hb_parptr( 1 );
+
+   if( page )
+      hb_retnl( ( long ) HPDF_Page_SetWidth( page, ( HPDF_REAL ) hb_parnd( 2 ) ) );
 }
 
 /* HPDF_Page_SetHeight( hPage, nHeight ) -> hStatus
  */
 HB_FUNC( HPDF_PAGE_SETHEIGHT )
 {
-   hb_retnl( ( long ) HPDF_Page_SetHeight( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ) ) );
+   HPDF_Page page = hb_parptr( 1 );
+
+   if( page )
+      hb_retnl( ( long ) HPDF_Page_SetHeight( page, ( HPDF_REAL ) hb_parnd( 2 ) ) );
 }
 
 /* HPDF_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) -> hStatus
