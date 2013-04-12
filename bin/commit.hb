@@ -32,11 +32,9 @@
 
 #include "hbgtinfo.ch"
 
-#define _COMMIT_HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
-
 PROCEDURE Main( cParam1 )
 
-   LOCAL cVCS
+   LOCAL cVCS := VCSDetect()
    LOCAL aFiles
    LOCAL aChanges
    LOCAL cLog
@@ -45,10 +43,11 @@ PROCEDURE Main( cParam1 )
    LOCAL cLogName
    LOCAL lWasChangeLog
 
-   InstallHook( "pre-commit"        , hb_StrFormat( "exec hbrun bin/%1$s.hb --check-only", hb_FNameName( hb_ProgName() ) ) )
-// InstallHook( "prepare-commit-msg", hb_StrFormat( "exec hbrun bin/%1$s.hb $1 --prepare-commit", hb_FNameName( hb_ProgName() ) )
+   IF cVCS == "git"
+      InstallHook( "pre-commit"        , hb_StrFormat( "exec hbrun bin/%1$s.hb --check-only", hb_FNameName( hb_ProgName() ) ) )
+//    InstallHook( "prepare-commit-msg", hb_StrFormat( "exec hbrun bin/%1$s.hb $1 --prepare-commit", hb_FNameName( hb_ProgName() ) )
+   ENDIF
 
-   cVCS := VCSDetect()
    aFiles := {}
    aChanges := DoctorChanges( cVCS, Changes( cVCS ), aFiles )
 
@@ -140,7 +139,7 @@ PROCEDURE Main( cParam1 )
 
 STATIC FUNCTION InstallHook( cHookName, cCommand )
 
-   LOCAL cName := _COMMIT_HBROOT_ + hb_DirSepToOS( ".git/hooks/" ) + cHookName
+   LOCAL cName := hb_DirSepToOS( ".git/hooks/" ) + cHookName
    LOCAL cFile := hb_MemoRead( cName )
 
    IF cCommand $ cFile
@@ -157,8 +156,8 @@ STATIC FUNCTION FindChangeLog()
 
    LOCAL cLogName
 
-   IF ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog.txt" ) .AND. ;
-      ! hb_FileExists( cLogName := _COMMIT_HBROOT_ + "ChangeLog" )
+   IF ! hb_FileExists( cLogName := "ChangeLog.txt" ) .AND. ;
+      ! hb_FileExists( cLogName := "ChangeLog" )
       RETURN ""
    ENDIF
 
@@ -267,8 +266,8 @@ STATIC FUNCTION EntryToCommitMsg( cLog )
 STATIC FUNCTION VCSDetect()
 
    DO CASE
-   CASE hb_DirExists( _COMMIT_HBROOT_ + ".svn" ) ; RETURN "svn"
-   CASE hb_DirExists( _COMMIT_HBROOT_ + ".git" ) ; RETURN "git"
+   CASE hb_DirExists( ".svn" ) ; RETURN "svn"
+   CASE hb_DirExists( ".git" ) ; RETURN "git"
    ENDCASE
 
    RETURN ""

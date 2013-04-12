@@ -184,7 +184,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
          IF ! FNameExc( cName, aCanHaveNoExtension )
             AAdd( aErr, "filename: missing extension" )
          ENDIF
-      ELSEIF ! hb_FNameExt( cName ) $ hAllowedExt
+      ELSEIF ! Empty( hAllowedExt ) .AND. ! hb_FNameExt( cName ) $ hAllowedExt
          AAdd( aErr, "filename: unknown extension. Either change it or update .gitattributes." )
       ENDIF
 
@@ -653,7 +653,7 @@ STATIC FUNCTION LoadGitignore()
          "!*/3rd/*/*.hbp", ;
          "!*/3rd/*/Makefile" }
 
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( _HBROOT_ + ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
             /* TODO: clean this */
             AAdd( s_aIgnore, ;
@@ -684,7 +684,7 @@ STATIC FUNCTION LoadGitattributes( /* @ */ aIdent )
    IF s_hExt == NIL
       s_hExt := { => }
       s_aIdent := {}
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( _HBROOT_ + ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
          IF Left( cLine, 2 ) == "*."
              cLine := SubStr( cLine, 2 )
              IF ( tmp := At( " ", cLine ) ) > 0
