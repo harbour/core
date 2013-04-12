@@ -290,7 +290,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
             ENDIF
          ENDIF
 
-         IF ( ( tmp := "$" + "Id" ) $ cFile ) != FNameExc( cName, aCanHaveIdent )
+         IF ( tmp := ( ( "$" + "Id" ) $ cFile ) ) != FNameExc( cName, aCanHaveIdent )
             IF tmp
                AAdd( aErr, "content: has " + "$" + "Id" )
             ELSE
