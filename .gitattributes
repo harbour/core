@@ -23,7 +23,6 @@ ChangeLog.txt ident
 *.in      text
 *.ini     text
 *.js      text
-*.log     text
 *.m       text
 *.md      text
 *.mft     text

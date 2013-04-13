@@ -19,3 +19,5 @@ before_install:
  - sudo apt-get install -qq libpq-dev
 notifications:
  email: false
+git:
+ submodules: false
