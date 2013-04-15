@@ -703,14 +703,14 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
 
    hb_default( @lApplyFixes, .F. )
 
-   cName := hb_DirSepToOS( cName )
-   cFile := hb_MemoRead( iif( lRebase, _HBROOT_, "" ) + cName )
-
    aErr := {}
 
-   /* filename checks */
+   cName := hb_DirSepToOS( cName )
 
-   IF ! FNameExc( cName, LoadGitignore() )
+   IF hb_FileExists( iif( lRebase, _HBROOT_, "" ) + cName ) .AND. ;
+      ! FNameExc( cName, LoadGitignore() )
+
+      /* filename checks */
 
       IF "msdosfs" $ hFLags .AND. ( Len( hb_FNameName( cName ) ) > 8 .OR. Len( hb_FNameExt( cName ) ) > 4 ) .AND. ! FNameExc( cName, aCanBeLong )
          AAdd( aErr, "filename: non-8.3" )
@@ -735,6 +735,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
       IF ! IsASCII7( cName )
          AAdd( aErr, "filename: non-ASCII-7" )
       ENDIF
+
+      cFile := hb_MemoRead( iif( lRebase, _HBROOT_, "" ) + cName )
 
       IF ! IsBinary( cFile )
 
