@@ -175,8 +175,8 @@ PROCEDURE Main( ... )
 
          FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-               FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-                  mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ], ;
+               FOR EACH aFile IN Directory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
+                  mk_hbl( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/" + aFile[ F_NAME ] ), ;
                      hb_DirSepToOS( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF

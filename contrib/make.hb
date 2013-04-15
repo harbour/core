@@ -762,7 +762,7 @@ PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
       IF "#" $ cItem
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
-      IF hb_FileExists( s_cBase + s_cHome + cItem )
+      IF hb_FileExists( s_cBase + s_cHome + hb_DirSepToOS( AllTrim( cItem ) ) )
          AddProject( hProjectList, cItem )
       ENDIF
    NEXT
