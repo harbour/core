@@ -117,7 +117,7 @@ static void do_pos1( int iSwitch )
                break;
 
             case DO_POS1_POSRANGE:
-               iDoRet = ( ( ucChar1 <= *puc ) && ( ucChar2 >= *puc ) );
+               iDoRet = ( ucChar1 <= *puc && ucChar2 >= *puc );
                break;
 
             case DO_POS1_POSUPPER:

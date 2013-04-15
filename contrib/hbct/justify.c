@@ -91,7 +91,7 @@ static void do_justify( int iSwitch )
          case DO_JUSTIFY_JUSTLEFT:
             pc = pcString;
             sJustOffset = 0;
-            while( ( *pc == cJustChar ) && ( pc < pcString + sStrLen ) )
+            while( *pc == cJustChar && pc < ( pcString + sStrLen ) )
             {
                sJustOffset++;
                pc++;
@@ -107,7 +107,7 @@ static void do_justify( int iSwitch )
          case DO_JUSTIFY_JUSTRIGHT:
             pc = pcString + sStrLen - 1;
             sJustOffset = 0;
-            while( ( *pc == cJustChar ) && ( pc >= pcString ) )
+            while( *pc == cJustChar && pc >= pcString )
             {
                sJustOffset++;
                pc--;

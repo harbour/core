@@ -68,7 +68,7 @@ HB_FUNC( CHARRELA )
       HB_SIZE sMatchStrLen;
 
       /* check for empty strings */
-      if( ( sStrToMatchLen1 == 0 ) || ( sStrToMatchLen2 == 0 ) )
+      if( sStrToMatchLen1 == 0 || sStrToMatchLen2 == 0 )
       {
          hb_retns( 0 );
          return;
@@ -167,7 +167,7 @@ HB_FUNC( CHARRELREP )
       /* NOTE: this algorithm is not the best since the search that gave
          the larger relative position in the step before is repeated;
          try a search algorithm alternating between both strings */
-      while( ( sOffset1 < sStrLen1 ) && ( sOffset2 < sStrLen2 ) )
+      while( sOffset1 < sStrLen1 && sOffset2 < sStrLen2 )
       {
          pc1 = ct_at_exact_forward( pcStringToMatch1, sStrToMatchLen1,
                                     pcString1 + sOffset1, sStrLen1 - sOffset1,

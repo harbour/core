@@ -76,7 +76,7 @@ HB_FUNC( POSDIFF )
       pc1 = pcString1 + sIgnore;
       pc2 = pcString2 + sIgnore;
 
-      while( ( pc1 < pcString1 + sStrLen1 ) && ( pc2 < pcString2 + sStrLen2 ) )
+      while( pc1 < ( pcString1 + sStrLen1 ) && pc2 < ( pcString2 + sStrLen2 ) )
       {
          if( *pc1 != *pc2 )
          {
@@ -128,7 +128,7 @@ HB_FUNC( POSEQUAL )
       else
          sCompare = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) - sIgnore;
 
-      if( ( sCompare == 0 ) || ( sIgnore > sStrLen1 ) || ( sIgnore > sStrLen2 ) )
+      if( sCompare == 0 || sIgnore > sStrLen1 || sIgnore > sStrLen2 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
@@ -140,7 +140,7 @@ HB_FUNC( POSEQUAL )
          return;
       }
 
-      if( ( sStrLen1 < ( sCompare + sIgnore ) ) || ( sStrLen2 < ( sCompare + sIgnore ) ) )
+      if( sStrLen1 < ( sCompare + sIgnore ) || sStrLen2 < ( sCompare + sIgnore ) )
       {
          int iArgErrorMode = ct_getargerrormode();
 

@@ -224,7 +224,7 @@ HB_FUNC( FACT )
       int i;
       double dResult = 1.0;
 
-      if( ( iInput >= 0 ) && ( iInput < 22 ) )
+      if( iInput >= 0 && iInput < 22 )
       {
          for( i = 1; i <= iInput; i++ )
             dResult *= ( double ) i;

@@ -78,7 +78,7 @@ PROCEDURE Main()
          "--prepare-commit" $ cli_Options()
 
          IF AScan( aFiles, {| tmp | tmp == hb_FNameNameExt( cLogName ) } ) == 0
-            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun bin/commit' and retry.", cLogName ) + hb_eol() )
+            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun %2$s' and retry.", cLogName, CommitScript() ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN
          ELSE
@@ -89,7 +89,7 @@ PROCEDURE Main()
                ELSE
                   hbshell_gtSelect()
                   /* if clipboard already contains part of the entry, do not overwrite it */
-                  IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ), "" ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ), "" )
+                  IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ) ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ) )
                      hb_gtInfo( HB_GTI_CLIPBOARDDATA, EntryToCommitMsg( cLog ) )
                   ENDIF
                ENDIF

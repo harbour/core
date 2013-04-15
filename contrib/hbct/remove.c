@@ -87,7 +87,7 @@ static void do_remove( int iSwitch )
 
       if( iSwitch != DO_REMOVE_REMRIGHT )
       {
-         while( ( *pcRet == cSearch ) && ( pcRet < pcString + sStrLen ) )
+         while( *pcRet == cSearch && pcRet < ( pcString + sStrLen ) )
          {
             pcRet++;
             sRetLen--;
@@ -97,7 +97,7 @@ static void do_remove( int iSwitch )
       if( iSwitch != DO_REMOVE_REMLEFT )
       {
          pc = pcString + sStrLen - 1;
-         while( ( *pc == cSearch ) && ( pc >= pcRet ) )
+         while( *pc == cSearch && pc >= pcRet )
          {
             pc--;
             sRetLen--;

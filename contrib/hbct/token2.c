@@ -443,7 +443,7 @@ HB_FUNC( TOKENNEXT )
          sTokEnvIncPtr( sTokenEnvironment );
       }
 
-      if( ( psTokenPosition == NULL ) || ( sStrLen <= psTokenPosition->sStartPos ) )
+      if( psTokenPosition == NULL || sStrLen <= psTokenPosition->sStartPos )
       {
          int iArgErrorMode = ct_getargerrormode();
 
