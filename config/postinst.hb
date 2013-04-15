@@ -80,7 +80,6 @@ PROCEDURE Main( ... )
          /* public Harbour scripts */
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
-            "bin/check.hb", ;
             "bin/commit.hb", ;
             "bin/harbour.ucf" }
             mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
@@ -102,13 +101,13 @@ PROCEDURE Main( ... )
 
             OutStd( "! Creating Linux ld config file..." + hb_eol() )
 
-            tmp := GetEnvC( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+            tmp := GetEnvC( "HB_INSTALL_ETC" ) + "/../ld.so.conf.d"
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
                IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
-               hb_MemoWrit( tmp + hb_ps() + "harbour.conf", tmp1 + hb_eol() )
+               hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -119,11 +118,13 @@ PROCEDURE Main( ... )
 
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
-         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
+         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1" ) )
             FOR EACH tmp IN { ;
                "src/main/harbour.1", ;
                "src/pp/hbpp.1" }
-               mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
+               mk_hb_FCopy( ;
+                  hb_DirSepToOS( tmp ), ;
+                  hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ), .T. )
             NEXT
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_MAN" ) ) + hb_eol() )
@@ -149,9 +150,9 @@ PROCEDURE Main( ... )
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg:
@@ -175,8 +176,8 @@ PROCEDURE Main( ... )
 
          FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-               FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-                  mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ], ;
+               FOR EACH aFile IN Directory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
+                  mk_hbl( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/" + aFile[ F_NAME ] ), ;
                      hb_DirSepToOS( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF

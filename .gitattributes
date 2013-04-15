@@ -81,3 +81,6 @@ ChangeLog.txt ident
 #*.html    text diff=html
 #*.m       text diff=objc
 #*.rb      text diff=ruby
+
+## msdosfs
+## casematters
