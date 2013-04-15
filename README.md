@@ -1780,7 +1780,7 @@ Supported shells per host platforms:
      * HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
         * <http://freeimage.sourceforge.net/>
      * HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
-        * <http://www.libgd.org>
+        * <http://www.libgd.org/>
      * HB_WITH_GS - Ghostscript [multiplatform, free, open-source]
         * <http://www.ghostscript.com/>
         * <http://pages.cs.wisc.edu/~ghost/>
