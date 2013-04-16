@@ -465,11 +465,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
                EXIT
             CASE "A"
             CASE "C"
-               IF SubStr( cLine, 2, 1 ) == "M"
-                  cStart := ""
-               ELSE
-                  cStart := "+"
-               ENDIF
+               cStart := "+"
                EXIT
             CASE "D"
                cStart := "-"
@@ -528,7 +524,7 @@ STATIC FUNCTION Changes( cVCS )
 
    DO CASE
    CASE cVCS == "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut )
-   CASE cVCS == "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s --ignore-submodules" ),, @cStdOut )
+   CASE cVCS == "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut )
    ENDCASE
 
    RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )

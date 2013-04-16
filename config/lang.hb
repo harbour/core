@@ -61,6 +61,9 @@ PROCEDURE Main( cCommand, cMain, ... )
 
    RETURN
 
+STATIC FUNCTION ParEscape( cPar )
+   RETURN '"' + cPar + '"'
+
 /* --------------------------------------------- */
 
 STATIC PROCEDURE doc_make( cMain )
@@ -157,7 +160,7 @@ STATIC PROCEDURE src_push( cMain )
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
-      hPar[ "login" ], cTempContent, hPar[ "project" ], ;
+      ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
       hb_FNameName( hPar[ "entry" ] ), cTempResult ) )
 
    IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
@@ -177,7 +180,7 @@ STATIC FUNCTION POT_Sort( cFileName )
    LOCAL cErrorMsg
 
    IF ( aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg ) ) != NIL .AND. ;
-      __i18n_potArraySave( cFileName, __i18n_potArraySort( aTrans ), @cErrorMsg )
+      __i18n_potArraySave( cFileName, __i18n_potArraySort( aTrans ), @cErrorMsg, .F. )
       RETURN .T.
    ENDIF
 
@@ -203,10 +206,10 @@ STATIC PROCEDURE trs_pull( cMain )
 
       ?? "", cLang
 
-      hb_run( hb_StrFormat( "curl -s -i -L --user %1$s -X " + ;
+      hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
-         hPar[ "login" ], hPar[ "project" ], ;
+         ParEscape( hPar[ "login" ] ), hPar[ "project" ], ;
          hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
@@ -361,7 +364,7 @@ STATIC FUNCTION PO_Clean( cFNSource, cFNTarget, ... )
    LOCAL cErrorMsg
 
    IF ( aTrans := __i18n_potArrayLoad( cFNSource, @cErrorMsg ) ) != NIL .AND. ;
-      __i18n_potArraySave( cFNTarget, __i18n_potArrayClean( aTrans, ... ), @cErrorMsg )
+      __i18n_potArraySave( cFNTarget, __i18n_potArrayClean( aTrans, ... ), @cErrorMsg, .F. )
       RETURN .T.
    ENDIF
 
@@ -407,7 +410,7 @@ STATIC PROCEDURE trs_push( cMain )
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
-         hPar[ "login" ], cTempContent, hPar[ "project" ], ;
+         ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
          hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
 
       IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
