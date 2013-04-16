@@ -1,14 +1,14 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-03 03:33\)  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-15 16:01\)  
 Copyright \(c\) 2007\-2013, Viktor Szakáts  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
-Translation \(pt\_BR\): Vailton Renato &lt;vailtom@gmail\.com&gt;  
+Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;  
 
 Sintaxe:  
   
   hbrun &lt;arquivo \[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opção&gt; \[&lt;parâmetro\[s\]&gt;\]  
   
-Descrições:  
+Descrição:  
 
 
   hbrun está habilitado a rodar scripts Harbour \(ambos fonte e pré\-compilado\), e dispõe também de um "prompt shell" interativo\.
@@ -27,7 +27,7 @@ Opções abaixo estão disponíveis em linha de comando:
 Arquivos:  
 
 
- - **\*\.hb** arquivo script Harbour
+ - **\*\.hb** script Harbour
  - **\*\.hrb** Harbour binario portável \(Também conhecido como Harbour script pré\-compilado\)
  - **hbstart\.hb** arquivo de inicialização de script para shell interativo Harbour\. Se presente ele é executado automaticamente na inicialização do shell\. Localizações possíveis \(em ordem de precedência\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbrun diretório&gt;
  - **shell plugins** \.hb e \.hrb plugins para shell interativo Harbour\. Eles pode residir em \[\*\]: %APPDATA%\\\.harbour\\
@@ -38,13 +38,13 @@ Arquivos:
 Constantes pré\-definidas nos fontes:
 
 
- - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rudando como "shell script"
+ - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rodando como "shell script"
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
   
 Variáveis ​​de ambiente:  
 
 
- - **HB\_EXTENSION** lista separada por espaço de extensões para carga no shell interativo do Harbour
+ - **HB\_EXTENSION** lista de extensões para carga no shell interativo do Harbour separada por espaço
   
 Shell API disponível nos scripts em Harbour:  
 
@@ -60,7 +60,7 @@ Descarregar cabeçalho "header" Harbour\.
  - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Mostra a lista de cabeçalhos Harbour carregados\.
  - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
-pacote carregado\. Similar para diretivas de \#request PP\.
+carregar pacote\. Similar para diretivas de \#request PP\.
  - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar pacote\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  

@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-15 16:01\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor  
@@ -63,6 +63,7 @@ Kapcsolók:
 &lt;level&gt; lehet: yes, no, min, max
  - **\-run\[\-\]** futtassa/ne az elkészült alkalmazást
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-seqhead=&lt;file&gt;** generate \.ch header file with a sequential number, that will be rolled automatically on each build\. Generated header will define preprocessor constant \_HBMK\_SEQ\_ID\_\.
  - **\-tshead=&lt;file&gt;** hozzon létre egy \.ch fejlécet időpont adatokkal\. Generált fejléc \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ makrói az aktuális dátumokkal kerülnek feltöltésre
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)

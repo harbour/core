@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-15 16:01\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -64,6 +64,7 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-run\[\-\]** εκτέλεση/ή όχι, του εκτελέσιμου που θα δημιουργηθεί
  - **\-vcshead=&lt;file&gt;** δημιουργία header αρχείων \.ch με πληροφορίες της τοπικής αποθήκες \-local repository\-\. Προς το παρόν υποστηρίζονται τα Git, SVN, Mercurial, Bazaar, Fossil, CVS και Monotone\.  
 Τα header που θα δημιουργηθούν θα ορίσουν τη σταθερά \_HBMK\_VCS\_TYPE\_ στο όνομα του VCS που ανιχνεύτηκε και τη σταθερά \_HBMK\_VCS\_ID\_ στο μοναδικό ID της τοπικής αποθήκης\. Αν δεν ανιχνευτεί κάποιο VCS, ένα διαδοχικός αριθμός θα ενημερώνεται αυτόματα με κάθε μεταγλώττιση\.
+ - **\-seqhead=&lt;file&gt;** generate \.ch header file with a sequential number, that will be rolled automatically on each build\. Generated header will define preprocessor constant \_HBMK\_SEQ\_ID\_\.
  - **\-tshead=&lt;file&gt;** δημιουργία \.ch header αρχείου με πληροφορίες χρονοσήμανσης\. Το δημιουργημένο header θα ορίσει τις σταθερές προεπεξεργασίας \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ με την ημερ/νία\-ωρα της κατασκευής
  - **\-icon=&lt;file&gt;** ορίζει το &lt;file&gt; ως εικονίδιο της εφαρμογής\. Το &lt;file&gt; πρέπει να είναι σε μορφή υποστηριζόμενη από τη πλατφόρμα\-στόχο \(δεν υποστηρίζεται από μερικές πλατφόρμες/μεταγλωττιστές\)\. Σε Windows, υλοποιείται με τη δημιουργία και διασύνδεση ενός resource αρχείου\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
