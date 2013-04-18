@@ -593,9 +593,9 @@ like:
 and unlike Clipper both compilers generates correct PCODE which shows
          10       12
 Maybe in the future we add support for Clipper compatible local variable
-initialization covered by -kc Harbor compiler switch.
+initialization covered by -kc Harbour compiler switch.
 
-xBase++ uses mixed behavior. Just like Clipper it stores variables with
+Xbase++ uses mixed behavior. Just like Clipper it stores variables with
 initialization expressions but then it generates slightly different code
 initializing variables one by one without line groping like in Clipper.
 
@@ -614,8 +614,8 @@ it may cause VM crash or runtime error, i.e. this code:
          eval( s )
       return
 
-is cleanly compiled by Clipper and xBase++ but it causes RTE in
-Clipper and FATAL ERROR LOG in xBase++.
+is cleanly compiled by Clipper and Xbase++ but it causes RTE in
+Clipper and FATAL ERROR LOG in Xbase++.
 Harbour and xHarbour correctly report compile time error for it.
 
 
