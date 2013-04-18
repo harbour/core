@@ -28,6 +28,7 @@ PROCEDURE Main()
          "| index:", enum:__enumIndex(), ;
          "| value:", enum:__enumValue(), ;
          "| base:", ValType( enum:__enumBase() ), ;
+         "| isfirst:", enum:__enumIsFirst(), ;
          "| islast:", enum:__enumIsLast()
    NEXT
    ? "after loop ENUM=", enum
@@ -47,12 +48,14 @@ PROCEDURE Main()
             "| index:", enum:__enumIndex(), ;
             "| value:", enum:__enumValue(), ;
             "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
             "| islast:", enum:__enumIsLast()
          testBYREF( @enum )
          ? " after passing by @ | ENUM=", enum, ;
             "| index:", enum:__enumIndex(), ;
             "| value:", enum:__enumValue(), ;
             "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
             "| islast:", enum:__enumIsLast()
       ENDIF
    NEXT
@@ -70,6 +73,7 @@ PROCEDURE Main()
             "| index:", enum:__enumIndex(), ;
             "| value:", enum:__enumValue(), ;
             "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
             "| islast:", enum:__enumIsLast()
          TESTbreak( enum )
       NEXT
@@ -95,6 +99,7 @@ PROCEDURE Main()
             "| index:", enum:__enumIndex(), ;
             "| value:", enum:__enumValue(), ;
             "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
             "| islast:", enum:__enumIsLast()
       NEXT
    RECOVER USING i

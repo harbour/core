@@ -521,6 +521,105 @@ references by detached locals and add workarounds for it if necessary.
 
 
 
+###    DECLARATION AND INITIALIZATION OF VARIABLES    ###
+=========================================================
+Clipper parses variable declaration in a little bit different way then
+Harbour and xHarbour. It makes it in two passes. In first pass it collects
+names and scope of all declared variables and then in second pass this
+information is available during variable initialization. This can be
+illustrated by the following example:
+
+      /*** tst.prg ***/
+      proc main()
+         local cb := {|| qout( n + 5 ), qout( f ) }  // (*)
+         field f in table
+         local n := 10
+         eval( cb )
+      return
+
+In the line which initialize cb code (*) we are using local variable n
+and field f. Both are declared below the line in which codeblock is
+initialized anyhow Clipper does not recognize it as undeclared variables
+and use their later declarations. If you compile above code using Clipper
+with -n -w -es2 switches, i.e.
+   cl tst -n -w -es2
+then it's compiled without any compile time warnings or errors. Then
+during execution it shows 15 for the first QOUT() function call and
+generate runtime error
+   Error BASE/1002  Alias does not exist: TABLE
+for the second QOUT() call. It means that it correctly recognized scope
+of both variables and also bound alias TABLE with field F though it was
+declared two lines below codeblock initialization.
+
+In fact Clipper probably does not make two passes but parsing declarations
+which have to be at the beginning of function or module it stores names of
+variables which should be initialized with the initialization expressions.
+Then when all declarations are processed for each line with declared and
+initialized variables it generates code which pushes on VM stack results
+of initialization expressions and then code which pops it initializing
+variables. As result in Clipper this code cannot work:
+      local x := 10, y := x + 2
+because Clipper generate PCODE like:
+      push 10
+      push x
+      push 2
+      add
+      pop y
+      pop x
+but this code:
+      local x := 10
+      local y := x + 2
+works correctly because declarations were in separated lines and in such
+case Clipper generates PCODE like:
+      push 10
+      pop x
+      push x
+      push 2
+      add
+      pop y
+
+In Harbour and xHarbour all variables are declared in the moment when they
+are processed. It means that during compilation of above example using
+      harbour tst -n -w -es2
+both compilers generate compile time warnings:
+      tst.prg(2) Warning W0001  Ambiguous reference 'N'
+      tst.prg(2) Warning W0001  Ambiguous reference 'F'
+but it also means that in Harbour and xHarbour it's possible to write code
+like:
+      proc main()
+         local x := 10, y := x + 2
+         ? x, y
+      return
+and unlike Clipper both compilers generates correct PCODE which shows
+         10       12
+Maybe in the future we add support for Clipper compatible local variable
+initialization covered by -kc Harbor compiler switch.
+
+xBase++ uses mixed behavior. Just like Clipper it stores variables with
+initialization expressions but then it generates slightly different code
+initializing variables one by one without line groping like in Clipper.
+
+Please also note that in Clipper PRIVATE and PUBLIC declarations are
+executable statements so they are not used used as declarations by
+Clipper compiler even if -a compiler switch is used. So when we talk
+about initialization then it means that we are talking about LOCAL
+variables. STATIC variables are initialized in different way at
+application startup so cannot use local variables though due to but
+in Clipper in some cases compiler can accept local variables and then
+it may cause VM crash or runtime error, i.e. this code:
+
+      proc main()
+         local n
+         static s := {|| n }
+         eval( s )
+      return
+
+is cleanly compiled by Clipper and xBase++ but it causes RTE in
+Clipper and FATAL ERROR LOG in xBase++.
+Harbour and xHarbour correctly report compile time error for it.
+
+
+
 ###    FUNCTIONS WITH VARIABLE NUMBER OF PARAMETERS    ###
 ==========================================================
 Both compilers supports them though xHarbour is limited to all parameters

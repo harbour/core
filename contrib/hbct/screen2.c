@@ -50,6 +50,7 @@
  */
 
 #include "hbapigt.h"
+#include "hbapistr.h"
 #include "hbdate.h"
 
 HB_FUNC( SAYDOWN )
@@ -107,23 +108,11 @@ HB_FUNC( SAYDOWN )
    hb_retc_null();
 }
 
-static HB_WCHAR * ct_TextToWChar( const char * szText, HB_SIZE * pnLen )
-{
-   HB_WCHAR wc;
-   PHB_CODEPAGE cdp = hb_gtHostCP();
-   HB_SIZE nIndex = 0, nI = 0;
-   HB_WCHAR * pwc = ( HB_WCHAR * ) hb_xgrab( *pnLen * sizeof( HB_WCHAR ) );
-
-   while( HB_CDPCHAR_GET( cdp, szText, *pnLen, &nIndex, &wc ) )
-      pwc[ nI ++ ] = wc;
-   *pnLen = nI;
-
-   return pwc;
-}
-
 HB_FUNC( SAYSPREAD )
 {
-   HB_SIZE nLen = hb_parclen( 1 );
+   HB_SIZE nLen;
+   void * hText;
+   const HB_WCHAR * pwText = hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hText, &nLen );
 
    if( nLen )
    {
@@ -144,9 +133,6 @@ HB_FUNC( SAYSPREAD )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         const char * szText = hb_parc( 1 );
-         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
-
          int iColor = hb_gtGetCurrColor();
 
          nPos = nLen >> 1;
@@ -161,7 +147,7 @@ HB_FUNC( SAYSPREAD )
          do
          {
             for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwc[ nPos + ul ] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ nPos + ul ] );
             nLen += 2;
             if( lDelay )
             {
@@ -173,16 +159,18 @@ HB_FUNC( SAYSPREAD )
          while( nPos-- && iCol-- );
          /* CT3 does not respect iCol in the above condition */
          hb_gtEndWrite();
-         hb_xfree( pwc );
       }
    }
+   hb_strfree( hText );
 
    hb_retc_null();
 }
 
 HB_FUNC( SAYMOVEIN )
 {
-   HB_SIZE nLen = hb_parclen( 1 );
+   HB_SIZE nLen;
+   void * hText;
+   const HB_WCHAR * pwText = hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hText, &nLen );
 
    if( nLen )
    {
@@ -204,17 +192,13 @@ HB_FUNC( SAYMOVEIN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         const char * szText = hb_parc( 1 );
-         HB_WCHAR * pwc = ct_TextToWChar( szText, &nLen );
-         HB_WCHAR * pText = pwc;
-
          int iColor = hb_gtGetCurrColor();
 
-         iNewCol = iCol + nLen;
+         iNewCol = iCol + ( int ) nLen;
          if( fBack )
-            iCol += nLen - 1;
+            iCol += ( int ) nLen - 1;
          else
-            pText += nLen - 1;
+            pwText += ( int ) nLen - 1;
          nChars = 1;
 
          hb_gtBeginWrite();
@@ -225,15 +209,15 @@ HB_FUNC( SAYMOVEIN )
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < nChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pText[ ul ] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ ul ] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < nChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pText[ ul ] );
-               --pText;
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ ul ] );
+               --pwText;
             }
             if( ( int ) nChars + iCol <= iMaxCol )
                ++nChars;
@@ -248,9 +232,9 @@ HB_FUNC( SAYMOVEIN )
          while( --nLen );
          hb_gtSetPos( iRow, iNewCol );
          hb_gtEndWrite();
-         hb_xfree( pwc );
       }
    }
+   hb_strfree( hText );
 
    hb_retc_null();
 }
@@ -435,8 +419,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
 HB_FUNC( __HBCT_DSPTIME )
 {
    int iRow, iCol;
-   int iColor;
-   HB_SIZE nLen;
+   int iColor, iLen;
    char szTime[ 10 ];
 
    iRow = hb_parni( 1 );
@@ -453,17 +436,17 @@ HB_FUNC( __HBCT_DSPTIME )
       iColor = hb_gtGetClearColor();
 
    hb_dateTimeStr( szTime );
-   nLen = 8;
+   iLen = 8;
 
    if( hb_parl( 3 ) )
-      nLen -= 3;
+      iLen -= 3;
 
    if( hb_parl( 5 ) )
    {
       int iHour = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
 
       if( hb_parl( 6 ) )
-         szTime[ nLen++ ] = iHour >= 12 ? 'p' : 'a';
+         szTime[ iLen++ ] = iHour >= 12 ? 'p' : 'a';
       if( iHour > 12 )
          iHour -= 12;
       else if( iHour == 0 )
@@ -475,5 +458,5 @@ HB_FUNC( __HBCT_DSPTIME )
    if( szTime[ 0 ] == '0' )
       szTime[ 0 ] = ' ';
 
-   hb_gtPutText( iRow, iCol, szTime, nLen, iColor );
+   hb_gtPutText( iRow, iCol, szTime, iLen, iColor );
 }

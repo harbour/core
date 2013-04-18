@@ -358,8 +358,8 @@ static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOO
 static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
-   HB_MAXUINT end_timer;
    long lRead = 0, l;
+   HB_MAXUINT end_timer;
 
    end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
 
@@ -390,15 +390,18 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lSent = 0, lLast = 1, l;
+   HB_MAXUINT end_timer;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
+      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+
       while( lSent < len && ! conn->stop )
       {
          if( conn->zstream )
-            l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, -1, &lLast );
+            l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, 1000, &lLast );
          else
-            l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
+            l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, 1000 );
          if( l > 0 )
          {
             lSent += l;
@@ -407,13 +410,15 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
          if( lLast <= 0 )
          {
             if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-                hb_vmRequestQuery() != 0 )
+                hb_vmRequestQuery() != 0 ||
+                ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
                break;
          }
       }
       if( conn->zstream && lLast > 0 && ! conn->stop )
       {
-         if( hb_znetFlush( conn->zstream, conn->sd, -1 ) != 0 )
+         if( hb_znetFlush( conn->zstream, conn->sd,
+                           conn->timeout > 0 ? conn->timeout : -1 ) != 0 )
             lSent = -1;
       }
 

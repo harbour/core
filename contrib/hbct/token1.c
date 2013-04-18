@@ -136,27 +136,23 @@ static void do_token1( int iSwitch )
          sSeparatorStrLen = sc_sSeparatorStrLen;
       }
 
-      /* token counter */
-      if( iSwitch != DO_TOKEN1_NUMTOKEN )
-         nTokenCounter = hb_parns( 3 );
-      if( nTokenCounter == 0 )
-         nTokenCounter = HB_SIZE_MAX;
-
-      /* skip width */
       if( iSwitch == DO_TOKEN1_NUMTOKEN )
       {
-         if( HB_ISNUM( 3 ) )
-            nSkip = hb_parns( 3 );
-         else
-            nSkip = HB_SIZE_MAX;
+         /* token counter */
+         nTokenCounter = HB_SIZE_MAX;
+         /* skip width */
+         nSkip = hb_parns( 3 );
       }
       else
       {
-         if( HB_ISNUM( 4 ) ) /* HB_EXTENSION for AtToken()/TokenLower()/TokenUpper() */
-            nSkip = hb_parns( 4 );
-         else
-            nSkip = HB_SIZE_MAX;
+         /* token counter */
+         nTokenCounter = hb_parns( 3 );
+         /* skip width */
+         nSkip = hb_parns( 4 ); /* HB_EXTENSION for AtToken()/TokenLower()/TokenUpper() */
       }
+
+      if( nTokenCounter == 0 )
+         nTokenCounter = HB_SIZE_MAX;
       if( nSkip == 0 )
          nSkip = HB_SIZE_MAX;
 
