@@ -1272,7 +1272,7 @@ int hb_comClose( int iPort )
    {
       hb_vmUnlock();
 #if defined( TIOCNXCL )
-      ioctl( pCom->fd, TIOCNXCL );
+      ioctl( pCom->fd, TIOCNXCL, 0 );
 #endif
       do
       {
@@ -1314,7 +1314,7 @@ int hb_comOpen( int iPort )
          if( pCom->fd != -1 )
          {
 #if defined( TIOCEXCL ) /* TIOCNXCL */
-            iResult = ioctl( pCom->fd, TIOCEXCL );
+            iResult = ioctl( pCom->fd, TIOCEXCL, 0 );
             if( iResult != 0 )
             {
                close( pCom->fd );

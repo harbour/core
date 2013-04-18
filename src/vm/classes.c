@@ -304,51 +304,54 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
    { "__ENUMVALUE",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 24 */
    { "__ENUMSTART",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
    { "__ENUMSKIP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 26 */
-   { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL }   /* 27 */
+   { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 27 */
+   { "__ENUMISFIRST",         {HB_FS_MESSAGE}, {NULL}, NULL },  /* 28 */
+   { "__ENUMISLAST",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 29 */
 };
 
-static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
-static HB_SYMB s___msgOnError    = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgDestructor  = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgOnError     = { "__msgOnError",    {HB_FS_MESSAGE}, {NULL},               NULL };
 
-static HB_SYMB s___msgSetData    = { "__msgSetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetData )},    NULL };
-static HB_SYMB s___msgGetData    = { "__msgGetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetData )},    NULL };
-static HB_SYMB s___msgSetClsData = { "__msgSetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetClsData )}, NULL };
-static HB_SYMB s___msgGetClsData = { "__msgGetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetClsData )}, NULL };
-static HB_SYMB s___msgSetShrData = { "__msgSetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetShrData )}, NULL };
-static HB_SYMB s___msgGetShrData = { "__msgGetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetShrData )}, NULL };
-static HB_SYMB s___msgEvalInline = { "__msgEvalInline", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgEvalInline )}, NULL };
-static HB_SYMB s___msgVirtual    = { "__msgVirtual",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgVirtual )},    NULL };
-static HB_SYMB s___msgSuper      = { "__msgSuper",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSuper )},      NULL };
-static HB_SYMB s___msgRealClass  = { "__msgRealClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgRealClass )},  NULL };
-static HB_SYMB s___msgPerform    = { "__msgPerform",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgPerform )},    NULL };
-static HB_SYMB s___msgDelegate   = { "__msgDelegate",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgDelegate )},   NULL };
-static HB_SYMB s___msgSync       = { "__msgSync",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSync )},       NULL };
-static HB_SYMB s___msgSyncClass  = { "__msgSyncClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSyncClass )},  NULL };
-static HB_SYMB s___msgNoMethod   = { "__msgNoMethod",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNoMethod )},   NULL };
-static HB_SYMB s___msgScopeErr   = { "__msgScopeErr",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgScopeErr )},   NULL };
-static HB_SYMB s___msgTypeErr    = { "__msgTypeErr",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgTypeErr )},    NULL };
+static HB_SYMB s___msgSetData     = { "__msgSetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetData )},    NULL };
+static HB_SYMB s___msgGetData     = { "__msgGetData",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetData )},    NULL };
+static HB_SYMB s___msgSetClsData  = { "__msgSetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetClsData )}, NULL };
+static HB_SYMB s___msgGetClsData  = { "__msgGetClsData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetClsData )}, NULL };
+static HB_SYMB s___msgSetShrData  = { "__msgSetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSetShrData )}, NULL };
+static HB_SYMB s___msgGetShrData  = { "__msgGetShrData", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgGetShrData )}, NULL };
+static HB_SYMB s___msgEvalInline  = { "__msgEvalInline", {HB_FS_MESSAGE}, {HB_FUNCNAME( msgEvalInline )}, NULL };
+static HB_SYMB s___msgVirtual     = { "__msgVirtual",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgVirtual )},    NULL };
+static HB_SYMB s___msgSuper       = { "__msgSuper",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSuper )},      NULL };
+static HB_SYMB s___msgRealClass   = { "__msgRealClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgRealClass )},  NULL };
+static HB_SYMB s___msgPerform     = { "__msgPerform",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgPerform )},    NULL };
+static HB_SYMB s___msgDelegate    = { "__msgDelegate",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgDelegate )},   NULL };
+static HB_SYMB s___msgSync        = { "__msgSync",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSync )},       NULL };
+static HB_SYMB s___msgSyncClass   = { "__msgSyncClass",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgSyncClass )},  NULL };
+static HB_SYMB s___msgNoMethod    = { "__msgNoMethod",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNoMethod )},   NULL };
+static HB_SYMB s___msgScopeErr    = { "__msgScopeErr",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgScopeErr )},   NULL };
+static HB_SYMB s___msgTypeErr     = { "__msgTypeErr",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgTypeErr )},    NULL };
 
-static HB_SYMB s___msgNew        = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
-static HB_SYMB s___msgSymbol     = { "SYMBOL",          {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgNew         = { "NEW",             {HB_FS_MESSAGE}, {NULL},               NULL };
+static HB_SYMB s___msgSymbol      = { "SYMBOL",          {HB_FS_MESSAGE}, {NULL},               NULL };
 
-static HB_SYMB s___msgClassName  = { "CLASSNAME",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassName )},  NULL };
-static HB_SYMB s___msgClassH     = { "CLASSH",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassH )},     NULL };
-static HB_SYMB s___msgClassSel   = { "CLASSSEL",        {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassSel )},   NULL };
-static HB_SYMB s___msgExec       = { "EXEC",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgName       = { "NAME",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgClassName   = { "CLASSNAME",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassName )},  NULL };
+static HB_SYMB s___msgClassH      = { "CLASSH",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassH )},     NULL };
+static HB_SYMB s___msgClassSel    = { "CLASSSEL",        {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassSel )},   NULL };
+static HB_SYMB s___msgExec        = { "EXEC",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgName        = { "NAME",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 /*
-static HB_SYMB s___msgClsParent  = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassParent )},NULL };
-static HB_SYMB s___msgClass      = { "CLASS",           {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClass )},      NULL };
+static HB_SYMB s___msgClsParent   = { "ISDERIVEDFROM",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClassParent )},NULL };
+static HB_SYMB s___msgClass       = { "CLASS",           {HB_FS_MESSAGE}, {HB_FUNCNAME( msgClass )},      NULL };
 */
-static HB_SYMB s___msgKeys       = { "KEYS",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgValues     = { "VALUES",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgKeys        = { "KEYS",            {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgValues      = { "VALUES",          {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 
 /* Default enumerator methods (FOR EACH) */
-static HB_SYMB s___msgEnumIndex  = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgEnumBase   = { "__ENUMBASE",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgEnumKey    = { "__ENUMKEY",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgEnumValue  = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
-static HB_SYMB s___msgEnumIsLast = { "__ENUMISLAST",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumIndex   = { "__ENUMINDEX",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumBase    = { "__ENUMBASE",      {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumKey     = { "__ENUMKEY",       {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumValue   = { "__ENUMVALUE",     {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumIsFirst = { "__ENUMISFIRST",   {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
+static HB_SYMB s___msgEnumIsLast  = { "__ENUMISLAST",    {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
 
 /* WITH OBJECT base value access/asign methods (:__withobject) */
 static HB_SYMB s___msgWithObjectPush = { "__WITHOBJECT",  {HB_FS_MESSAGE}, {HB_FUNCNAME( msgNull )},       NULL };
@@ -1180,6 +1183,7 @@ void hb_clsInit( void )
    s___msgEnumBase.pDynSym    = hb_dynsymGetCase( s___msgEnumBase.szName );
    s___msgEnumKey.pDynSym     = hb_dynsymGetCase( s___msgEnumKey.szName );
    s___msgEnumValue.pDynSym   = hb_dynsymGetCase( s___msgEnumValue.szName );
+   s___msgEnumIsFirst.pDynSym = hb_dynsymGetCase( s___msgEnumIsFirst.szName );
    s___msgEnumIsLast.pDynSym  = hb_dynsymGetCase( s___msgEnumIsLast.szName );
 
    s___msgWithObjectPush.pDynSym = hb_dynsymGetCase( s___msgWithObjectPush.szName );
@@ -2010,14 +2014,34 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                   hb_itemCopy( pEnum, hb_itemUnRef( hb_stackItemFromBase( 1 ) ) );
                return &s___msgEnumValue;
             }
+            else if( pMsg == s___msgEnumIsFirst.pDynSym )
+            {
+               PHB_ITEM pBase = HB_IS_BYREF( pEnum->item.asEnum.basePtr ) ?
+                                hb_itemUnRef( pEnum->item.asEnum.basePtr ) :
+                                pEnum->item.asEnum.basePtr;
+               if( HB_IS_OBJECT( pBase ) &&
+                   hb_objHasOperator( pBase, HB_OO_OP_ENUMISFIRST ) )
+                  return hb_objGetMethod( pBase, pMessage, pStack );
+               hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset <= 1 );
+               return &s___msgEnumIsFirst;
+            }
             else if( pMsg == s___msgEnumIsLast.pDynSym )
             {
-               if( HB_IS_ARRAY( pEnum->item.asEnum.basePtr ) )
-                  hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_arrayLen( pEnum->item.asEnum.basePtr ) );
-               else if( HB_IS_HASH( pEnum->item.asEnum.basePtr ) )
-                  hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_hashLen( pEnum->item.asEnum.basePtr ) );
-               else if( HB_IS_STRING( pEnum->item.asEnum.basePtr ) )
-                  hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_itemGetCLen( pEnum->item.asEnum.basePtr ) );
+               PHB_ITEM pBase = HB_IS_BYREF( pEnum->item.asEnum.basePtr ) ?
+                                hb_itemUnRef( pEnum->item.asEnum.basePtr ) :
+                                pEnum->item.asEnum.basePtr;
+               if( HB_IS_ARRAY( pBase ) )
+               {
+                  if( HB_IS_OBJECT( pBase ) &&
+                      hb_objHasOperator( pBase, HB_OO_OP_ENUMISLAST ) )
+                     return hb_objGetMethod( pBase, pMessage, pStack );
+                  else
+                     hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_arrayLen( pBase ) );
+               }
+               else if( HB_IS_HASH( pBase ) )
+                  hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_hashLen( pBase ) );
+               else if( HB_IS_STRING( pBase ) )
+                  hb_itemPutL( hb_stackReturnItem(), ( HB_SIZE ) pEnum->item.asEnum.offset >= hb_itemGetCLen( pBase ) );
 
                return &s___msgEnumIsLast;
             }

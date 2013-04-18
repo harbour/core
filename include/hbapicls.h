@@ -83,8 +83,10 @@ HB_EXTERN_BEGIN
 #define HB_OO_OP_ENUMSTART    25
 #define HB_OO_OP_ENUMSKIP     26
 #define HB_OO_OP_ENUMSTOP     27
+#define HB_OO_OP_ENUMISFIRST  28
+#define HB_OO_OP_ENUMISLAST   29
 
-#define HB_OO_MAX_OPERATOR    27
+#define HB_OO_MAX_OPERATOR    29
 
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
 extern void       hb_clsDoInit( void );         /* initialize Classy/OO system .prg functions */

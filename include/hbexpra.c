@@ -144,7 +144,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
 #if ! defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
       {
          int iLen = strlen( pName->value.asSymbol.name );
-         if( iLen >= 10 && i <= 12 && memcmp( "HB_ENUM", pName->value.asSymbol.name, 7 ) == 0 )
+         if( iLen >= 10 && iLen <= 14 && memcmp( "HB_ENUM", pName->value.asSymbol.name, 7 ) == 0 )
          {
             const char * szMessage = pName->value.asSymbol.name + 7;
 
@@ -156,6 +156,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                szMessage = "__ENUMBASE";
             else if( iLen == 10 && memcmp( "KEY", szMessage, 3 ) == 0 )
                szMessage = "__ENUMKEY";
+            else if( iLen == 14 && memcmp( "ISFIRST", szMessage, 7 ) == 0 )
+               szMessage = "__ENUMISFIRST";
             else if( iLen == 13 && memcmp( "ISLAST", szMessage, 6 ) == 0 )
                szMessage = "__ENUMISLAST";
             else
@@ -164,42 +166,59 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
             if( szMessage )
             {
                int iCount = ( int ) hb_compExprParamListLen( pParms );
-               const char * szName = NULL;
+               PHB_ENUMERATOR pForVar, pEnumVar = NULL;
+
+               pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
 
                if( iCount == 0 )
                {
-                  PHB_ENUMERATOR pForVar, pEnumVar = NULL;
-                  pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
-                  if( pForVar )
+                  while( pForVar )
                   {
-                     while( pForVar )
-                     {
-                        if( pForVar->bForEach )
-                           pEnumVar = pForVar;
-                        pForVar = pForVar->pNext;
-                     }
-                     if( pEnumVar )
-                        szName = pEnumVar->szName;
+                     if( pForVar->iForEachDir != 0 )
+                        pEnumVar = pForVar;
+                     pForVar = pForVar->pNext;
                   }
                }
                else if( iCount == 1 )
                {
                   if( pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE ||
                       pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
-                     szName = pParms->value.asList.pExprList->value.asSymbol.name;
+                  {
+                     const char * szName = pParms->value.asList.pExprList->value.asSymbol.name;
+
+                     while( pForVar )
+                     {
+                        if( pForVar->iForEachDir != 0 &&
+                            strcmp( pEnumVar->szName, szName ) == 0 )
+                        {
+                           pEnumVar = pForVar;
+                           break;
+                        }
+                        pForVar = pForVar->pNext;
+                     }
+                  }
                }
-               if( szName )
+               if( pEnumVar )
                {
+#if 0
+                  if( pEnumVar->iForEachDir < 0 )
+                  {
+                     if( strcmp( "__ENUMISFIRST", szMessage ) == 0 )
+                        szMessage = "__ENUMISLAST";
+                     else if( strcmp( "__ENUMISLAST",  szMessage ) == 0 )
+                        szMessage = "__ENUMISFIRST";
+                  }
+#endif
                   if( pParms )
                      HB_COMP_EXPR_FREE( pParms );
                   HB_COMP_EXPR_FREE( pName );
                   return hb_compExprNewMethodObject(
                                  hb_compExprNewSend( szMessage, HB_COMP_PARAM ),
-                                 hb_compExprNewVar( szName, HB_COMP_PARAM ) );
+                                 hb_compExprNewVar( pEnumVar->szName, HB_COMP_PARAM ) );
                }
             }
          }
-         else
+      }
 #endif
       if( pName->value.asSymbol.funcid == HB_F_EVAL &&
           hb_compExprParamListLen( pParms ) != 0 )
