@@ -8,7 +8,7 @@
 
 -stop{!win}
 
--depoptional=blat:yes
+-depoptional=blat:yes{!hbdyn}
 -depkeyhead=blat:blat.h
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
