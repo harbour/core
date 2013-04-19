@@ -965,20 +965,8 @@ static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
 {
    return bPCode == HB_P_JUMPNEAR ||
           bPCode == HB_P_JUMP ||
-          bPCode == HB_P_JUMPFAR;
-/*   || bPCode == HB_P_SEQEND;
-   BEGIN SEQUENCE/END SEQUENCE logic could not be processed using conditional/unconditional
-   jumps. I set HB_P_SEQEND as conditional jump though this PCode instruction is processed
-   as unconditional jump by Harbour VM. This hack solves 'Variable is assigned but not used'
-   warning in code:
-     BEGIN SEQUENCE
-        nI := 1
-        Break( NIL )
-     RECOVER
-        ? nI
-     END SEQUENCE
-   [Mindaugas]
- */
+          bPCode == HB_P_JUMPFAR ||
+          bPCode == HB_P_SEQEND;
 }
 
 #if 0
@@ -1256,7 +1244,7 @@ static void hb_compPCodeEnumSelfifyLocal( PHB_HFUNC pFunc, HB_SHORT isLocal )
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BYTE * pMap, HB_SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BYTE * pMap, HB_SHORT isLocal, HB_BOOL fCanBreak )
 {
    for( ;; )
    {
@@ -1265,22 +1253,56 @@ static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BY
 
       pMap[ nPos ] = 1;
 
-      if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
-          pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR ||
-          pFunc->pCode[ nPos ] == HB_P_PUSHLOCAL ||
-          pFunc->pCode[ nPos ] == HB_P_PUSHLOCALNEAR ||
-          pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF ||
-          pFunc->pCode[ nPos ] == HB_P_LOCALINCPUSH ||
-          pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
-          pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
-          pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
-          pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT )
+
+      if( pFunc->pCode[ nPos ] == HB_P_FUNCTION ||
+          pFunc->pCode[ nPos ] == HB_P_FUNCTIONSHORT ||
+          pFunc->pCode[ nPos ] == HB_P_DO ||
+          pFunc->pCode[ nPos ] == HB_P_DOSHORT ||
+          pFunc->pCode[ nPos ] == HB_P_SEND ||
+          pFunc->pCode[ nPos ] == HB_P_SENDSHORT ||
+          pFunc->pCode[ nPos ] == HB_P_MACRODO ||
+          pFunc->pCode[ nPos ] == HB_P_MACROFUNC ||
+          pFunc->pCode[ nPos ] == HB_P_MACROSEND )
+      {
+         fCanBreak = HB_TRUE;
+      }
+      else if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
+               pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR ||
+               pFunc->pCode[ nPos ] == HB_P_PUSHLOCAL ||
+               pFunc->pCode[ nPos ] == HB_P_PUSHLOCALNEAR ||
+               pFunc->pCode[ nPos ] == HB_P_PUSHLOCALREF ||
+               pFunc->pCode[ nPos ] == HB_P_LOCALINCPUSH ||
+               pFunc->pCode[ nPos ] == HB_P_LOCALDEC ||
+               pFunc->pCode[ nPos ] == HB_P_LOCALINC ||
+               pFunc->pCode[ nPos ] == HB_P_LOCALADDINT ||
+               pFunc->pCode[ nPos ] == HB_P_LOCALNEARADDINT )
+
       {
          if( hb_compLocalGetNumber( pFunc->pCode + nPos ) == isLocal )
          {
             if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
                 pFunc->pCode[ nPos ] == HB_P_POPLOCALNEAR )
-               return 0;
+            {
+               if( fCanBreak )
+               {
+                  nPos += hb_compPCodeSize( pFunc, nPos );
+                  while( pFunc->pCode[ nPos ] != HB_P_ENDPROC && pFunc->pCode[ nPos ] != HB_P_ENDBLOCK && 
+                         pFunc->pCode[ nPos ] != HB_P_SEQBEGIN && pFunc->pCode[ nPos ] != HB_P_SEQEND )
+                  {
+                     nPos += hb_compPCodeSize( pFunc, nPos );
+                  }
+                  if( pFunc->pCode[ nPos ] == HB_P_SEQEND )
+                  {
+                     /* Process RECOVER */
+                     fCanBreak = HB_FALSE;
+                     nPos += hb_compPCodeSize( pFunc, nPos );
+                     continue;
+                  }
+                  return 0;
+               }
+               else
+                  return 0;
+            }
             else
                return 1;
          }
@@ -1301,7 +1323,7 @@ static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BY
             continue;
          }
 
-         if( hb_compPCodeTraceAssignedUnused( pFunc, nPos2, pMap, isLocal ) )
+         if( hb_compPCodeTraceAssignedUnused( pFunc, nPos2, pMap, isLocal, fCanBreak ) )
             return 1;
       }
       else if( pFunc->pCode[ nPos ] == HB_P_SWITCH ) /* Switch is multiplace jump */
@@ -1311,7 +1333,7 @@ static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BY
          nPos += 3;
          for( us = 0; us < usCount; us++ )
          {
-            if( hb_compPCodeTraceAssignedUnused( pFunc, nPos, pMap, isLocal ) )
+            if( hb_compPCodeTraceAssignedUnused( pFunc, nPos, pMap, isLocal, fCanBreak ) )
                return 1;
 
             nPos += hb_compPCodeSize( pFunc, nPos );
@@ -1423,7 +1445,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_O
             pMap[ nPos ] = 1;
 
             if( ! hb_compPCodeTraceAssignedUnused( pFunc, nPos + hb_compPCodeSize( pFunc, nPos ),
-                                                   pMap, isLocal ) )
+                                                   pMap, isLocal, HB_FALSE ) )
             {
                char szFun[ 256 ];
 

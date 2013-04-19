@@ -2022,7 +2022,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    }
 
    /* Read record */
-   if( ! pArea->fValidBuffer && ! hb_dbfReadRecord( pArea ) )
+   if( ! pArea->pRecord || ! pArea->fValidBuffer && ! hb_dbfReadRecord( pArea ) )
       return HB_FAILURE;
 
    if( --uiIndex >= pArea->area.uiFieldCount )
