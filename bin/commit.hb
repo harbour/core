@@ -66,7 +66,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF CheckFileList( aFiles )
+   IF CheckFileList( aFiles, .F. )
 
       cLogName := FindChangeLog( cVCS )
       IF Empty( cLogName )
@@ -551,7 +551,7 @@ STATIC FUNCTION LaunchCommand( cCommand, cArg )
 
 #define _HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
 
-STATIC FUNCTION CheckFileList( xName )
+STATIC FUNCTION CheckFileList( xName, lRebase )
 
    LOCAL lPassed := .T.
 
@@ -559,7 +559,8 @@ STATIC FUNCTION CheckFileList( xName )
    LOCAL file
 
    LOCAL lApplyFixes := "--fixup" $ cli_Options()
-   LOCAL lRebase := .T.
+
+   hb_default( @lRebase, .T. )
 
    IF HB_ISSTRING( xName )
       xName := { xName }
@@ -738,7 +739,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
       IF ! IsBinary( cFile )
 
          IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
-            cFile := RTrimEOL( Left( cFile, 16384 ) ) + LTrim( Right( cFile, 16384 ) )
+            cFile := RTrimEOL( Left( cFile, 16384 ) ) + hb_eol() + LTrim( Right( cFile, 16384 ) )
          ENDIF
 
          lReBuild := .F.
