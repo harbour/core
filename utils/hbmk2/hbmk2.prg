@@ -7398,72 +7398,78 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
 
-         /* Setup compressor for host platform */
+         IF hbmk[ _HBMK_nCOMPR ] != _COMPR_OFF .AND. ! hbmk[ _HBMK_lCreateLib ]
 
-         #if defined( __PLATFORM__WINDOWS ) .OR. ;
-             defined( __PLATFORM__DOS )
-
-            cBin_Cprs := "upx.exe"
-            cOpt_Cprs := "{OB}"
-            cOpt_CprsMin := "-1"
-            cOpt_CprsMax := "-9"
-            IF hbmk[ _HBMK_cPLAT ] == "linux"
-               /* To avoid error below when creating Linux targets on non-Linux hosts using watcom:
-                  upx: t.: CantPackException: invalid Phdr p_offset; try '--force-execve'
-                  [vszakats] */
-               cOpt_Cprs += " --force-execve"
-            ENDIF
-
-         #elif defined( __PLATFORM__UNIX )
-
-            cBin_Cprs := "upx"
-            cOpt_Cprs := "{OB}"
-            cOpt_CprsMin := "-1"
-            cOpt_CprsMax := "-9"
-
-         #else
-
-            cBin_Cprs := NIL
-            cOpt_Cprs := ""
-            cOpt_CprsMin := ""
-            cOpt_CprsMax := ""
-
-         #endif
-
-         IF hbmk[ _HBMK_nCOMPR ] != _COMPR_OFF .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Cprs )
-
-            /* Executable compression */
+            /* Setup compressor for host platform */
 
             #if defined( __PLATFORM__WINDOWS ) .OR. ;
                 defined( __PLATFORM__DOS )
 
                /* Use embedded version if present, otherwise it should be in PATH. */
-               IF hb_FileExists( hb_DirSepAdd( hb_DirBase() ) + cBin_Cprs )
-                  cBin_Cprs := hb_DirSepAdd( hb_DirBase() ) + cBin_Cprs
+               IF ! hb_FileExists( cBin_Cprs := ( hb_DirSepAdd( hb_DirBase() ) + "upx.exe" ) )
+                  /* Chocolatey for Windows exposes a .cmd or .bat wrapper */
+                  #if defined( __PLATFORM__DOS )
+                     cBin_Cprs := FindInPath( "upx.exe" )
+                  #else
+                     cBin_Cprs := FindInPath( "upx",, { ".exe", ".bat", ".cmd" } )  /* search order to mimic OS behavior */
+                  #endif
                ENDIF
+
+               cOpt_Cprs := "{OB}"
+               cOpt_CprsMin := "-1"
+               cOpt_CprsMax := "-9"
+               IF hbmk[ _HBMK_cPLAT ] == "linux"
+                  /* To avoid error below when creating Linux targets on non-Linux hosts using watcom:
+                     upx: t.: CantPackException: invalid Phdr p_offset; try '--force-execve'
+                     [vszakats] */
+                  cOpt_Cprs += " --force-execve"
+               ENDIF
+
+            #elif defined( __PLATFORM__UNIX )
+
+               cBin_Cprs := "upx"
+               cOpt_Cprs := "{OB}"
+               cOpt_CprsMin := "-1"
+               cOpt_CprsMax := "-9"
+
+            #else
+
+               cBin_Cprs := NIL
+               cOpt_Cprs := ""
+               cOpt_CprsMin := ""
+               cOpt_CprsMax := ""
+
             #endif
 
-            DO CASE
-            CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MIN ; cOpt_Cprs += " " + cOpt_CprsMin
-            CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MAX ; cOpt_Cprs += " " + cOpt_CprsMax
-            ENDCASE
+            /* Executable compression */
 
-            cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
-            cOpt_Cprs := AllTrim( cOpt_Cprs )
-
-            cCommand := cBin_Cprs + " " + cOpt_Cprs
-
-            IF hbmk[ _HBMK_lTRACE ]
-               IF ! hbmk[ _HBMK_lQuiet ]
-                  _hbmk_OutStd( hbmk, I_( "Compression command:" ) )
+            IF Empty( cBin_Cprs )
+               IF ! Empty( cOpt_Cprs )  /* show warning on platforms with upx support at all */
+                  _hbmk_OutErr( hbmk, I_( "Warning: Compression skipped, because upx tool could not be found." ) )
                ENDIF
-               OutStd( cCommand + _OUT_EOL )
-            ENDIF
+            ELSE
+               DO CASE
+               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MIN ; cOpt_Cprs += " " + cOpt_CprsMin
+               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MAX ; cOpt_Cprs += " " + cOpt_CprsMax
+               ENDCASE
 
-            IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running compression command. %1$d:" ), tmp ) )
-               IF ! hbmk[ _HBMK_lQuiet ]
-                  OutErr( cCommand + _OUT_EOL )
+               cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
+               cOpt_Cprs := AllTrim( cOpt_Cprs )
+
+               cCommand := cBin_Cprs + " " + cOpt_Cprs
+
+               IF hbmk[ _HBMK_lTRACE ]
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     _hbmk_OutStd( hbmk, I_( "Compression command:" ) )
+                  ENDIF
+                  OutStd( cCommand + _OUT_EOL )
+               ENDIF
+
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running compression command. %1$d:" ), tmp ) )
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     OutErr( cCommand + _OUT_EOL )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF

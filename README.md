@@ -1851,6 +1851,8 @@ Supported shells per host platforms:
                (not verified with current Harbour version)
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
+     * ack (programmer grep) [multiplatform, free, open-source]
+        * <http://beyondgrep.com/>
      * Uncrustify (source formatter) [multiplatform, free, open-source]
         * <http://uncrustify.sourceforge.net/>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
@@ -1864,6 +1866,8 @@ Supported shells per host platforms:
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
            * <http://www.bzip.org/downloads.html>
+     * Chocolatey (Windows package manager) [free, open-source]
+        * <http://chocolatey.org/>
      * GNU Make
 
         Windows binary + source:

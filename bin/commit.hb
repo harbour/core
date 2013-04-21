@@ -623,7 +623,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
 
    LOCAL aCanBeDot := { ;
       ".travis.yml", ;
-      ".git*" }
+      ".git*", ;
+      ".ackrc" }
 
    /* TOFIX: Harbour repo specific */
    LOCAL aCanBeLong := { ;
