@@ -739,7 +739,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
       IF ! IsBinary( cFile )
 
          IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
-            cFile := RTrimEOL( Left( cFile, 16384 ) ) + hb_eol() + LTrim( Right( cFile, 16384 ) )
+            cFile := RTrimEOL( Left( cFile, 16384 ) ) + LTrim( Right( cFile, 16384 ) )
          ENDIF
 
          lReBuild := .F.
