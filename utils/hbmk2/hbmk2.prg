@@ -677,6 +677,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
    LOCAL lHadTarget
 
    LOCAL cParam1L
+   LOCAL cTargetName
 
    /* for temp debug messages */
 
@@ -775,6 +776,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       nTarget := 0
       nTargetPos := 0
       lHadTarget := .F.
+      cTargetName := ""
 
       FOR EACH tmp IN aArgsProc
          DO CASE
@@ -785,12 +787,14 @@ STATIC PROCEDURE hbmk_local_entry( ... )
             IF nTarget == nTargetTO_DO
                AAdd( aArgsTarget, tmp )
                nTargetPos := Len( aArgsTarget )
+               cTargetName := hb_FNameName( tmp )
             ENDIF
          CASE Lower( Left( tmp, Len( "-target=" ) ) ) == "-target="
             ++nTarget
             IF nTarget == nTargetTO_DO
                AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
                nTargetPos := Len( aArgsTarget )
+               cTargetName := hb_FNameName( tmp )
             ENDIF
          OTHERWISE
             IF ! lHadTarget .OR. nTarget == nTargetTO_DO
@@ -817,7 +821,8 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    IF nResult != _EXIT_OK
       IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
+         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
+                               ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
       ENDIF
       IF lPause
          OutStd( I_( "Press any key to continue..." ) )
@@ -4354,7 +4359,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          AAddNotEmpty( hbmk[ _HBMK_aOPTCX ], gcc_opt_lngc_fill( hbmk ) )
          AAddNotEmpty( hbmk[ _HBMK_aOPTCPPX ], gcc_opt_lngcpp_fill( hbmk ) )
          cBin_Dyn := cBin_CompC
-         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}{SCRIPT_MINGW}"
+         cOpt_Dyn := "-shared -o {OD} {LO} {FD} {IM} {DL} {LS}"
+         IF !( hbmk[ _HBMK_cCOMP ] == "tcc" )
+            cOpt_Dyn += "{SCRIPT_MINGW}"
+         ENDIF
          cBin_Link := cBin_CompC
          cOpt_Link := "{LO} {LA} {LS} {FL} {IM} {DL}"
          bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_gcc( hbmk, hbmk[ _HBMK_cCCPREFIX ] + "dlltool" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] + " {FI} -d {ID} -l {OL}", cSourceDLL, cTargetLib, cFlags ) }
@@ -7105,6 +7113,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                aOBJLIST := ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] )
                tmp := ArrayToList( aOBJLIST,, nOpt_Esc, nOpt_FNF, cDynObjPrefix )
 
+               cScriptFile := NIL
                IF "{SCRIPT_MINGW}" $ cOpt_Dyn
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
@@ -7135,8 +7144,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
                /* Handle moving the whole command line to a script, if requested. */
-               cScriptFile := NIL
-               IF "{SCRIPT}" $ cOpt_Dyn
+               IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
                   fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
                   IF fhnd != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
@@ -13171,7 +13179,11 @@ STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 
       FClose( hOutErr )
 
-      OutStd( cStdOutErr )
+      IF nExitCode != 0
+         OutErr( cStdOutErr )
+      ELSE
+         OutStd( cStdOutErr )
+      ENDIF
    ELSE
       nExitCode := -999
    ENDIF
@@ -16758,7 +16770,7 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
       RETURN
    ENDIF
 
-   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
+   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ + _hbmk_TargetName( hbmk ) )
 
    IF hbmk[ _HBMK_lShowLevel ]
       nWidth := Len( cSelf ) + 5
@@ -16777,6 +16789,19 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    NEXT
 
    RETURN
+
+STATIC FUNCTION _hbmk_TargetName( hbmk )
+
+   LOCAL cName := ""
+
+   IF !Empty( hbmk[ _HBMK_nArgTarget ] )
+      cName := hb_FNameName( hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] )
+      IF !Empty( cName )
+         cName := "[" + cName + "]"
+      ENDIF
+   ENDIF
+
+   RETURN cName
 
 STATIC FUNCTION LicenseString()
 #pragma __cstream | RETURN %s
