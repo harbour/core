@@ -548,6 +548,9 @@ static HB_BOOL hb_dbfReadRecord( DBFAREAP pArea )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfReadRecord(%p)", pArea ) );
 
+   if( ! pArea->pRecord )
+      return HB_FALSE;
+
    if( ! pArea->fPositioned )
    {
       pArea->fValidBuffer = HB_TRUE;
@@ -2021,11 +2024,11 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          return HB_FAILURE;
    }
 
-   /* Read record */
-   if( ! pArea->pRecord || ! pArea->fValidBuffer && ! hb_dbfReadRecord( pArea ) )
+   if( --uiIndex >= pArea->area.uiFieldCount )
       return HB_FAILURE;
 
-   if( --uiIndex >= pArea->area.uiFieldCount )
+   /* Read record */
+   if( ! pArea->fValidBuffer && ! hb_dbfReadRecord( pArea ) )
       return HB_FAILURE;
 
    fError = HB_FALSE;

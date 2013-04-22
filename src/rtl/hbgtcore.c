@@ -2177,7 +2177,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                HB_GTSELF_DISPEND( pGT );
             HB_GTSELF_REFRESH( pGT );
 
-            iKey = fKeyBoard ? HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL | HB_INKEY_EXT ) : 0;
+            iKey = fKeyBoard ? HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL ) : 0;
 
             if( iKey == K_ESC )
                break;
@@ -2277,7 +2277,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          nChar = 0;
          while( iRet == 0 )
          {
-            iKey = fKeyBoard ? HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL | HB_INKEY_EXT ) : 0;
+            iKey = fKeyBoard ? HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL ) : 0;
             if( iKey == 0 )
                iRet = 1;
             else if( iKey == K_ESC )
@@ -2711,22 +2711,29 @@ static void hb_gt_def_InkeyPut( PHB_GT pGT, int iKey )
 
    iHead = pGT->inkeyHead;
 
-   if( iKey == K_MOUSEMOVE )
+   if( pGT->inkeyHead != pGT->inkeyTail && pGT->inkeyLastPos >= 0 &&
+       ( iKey == K_MOUSEMOVE || HB_INKEY_ISMOUSEPOS( iKey ) ) )
    {
       /*
        * Clipper does not store in buffer repeated mouse movement
        * IMHO it's good idea to reduce unnecessary inkey buffer
        * overloading so I also implemented it, [druzus]
        */
-      if( pGT->iLastPut == iKey && pGT->inkeyHead != pGT->inkeyTail )
+      int iLastKey = pGT->inkeyBuffer[ pGT->inkeyLastPos ];
+
+      if( iLastKey == K_MOUSEMOVE || HB_INKEY_ISMOUSEPOS( iLastKey ) )
+      {
+         if( HB_INKEY_ISMOUSEPOS( iKey ) )
+            pGT->inkeyBuffer[ pGT->inkeyLastPos ] = iKey;
          return;
+      }
    }
 
    /*
     * When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
     */
-   pGT->inkeyBuffer[ iHead++ ] = pGT->iLastPut = iKey;
+   pGT->inkeyBuffer[ pGT->inkeyLastPos = iHead++ ] = iKey;
    if( iHead >= pGT->inkeyBufferSize )
       iHead = 0;
 
@@ -2751,6 +2758,7 @@ static void hb_gt_def_InkeyIns( PHB_GT pGT, int iKey )
    {
       if( --pGT->inkeyHead < 0 )
          pGT->inkeyHead = pGT->inkeyBufferSize - 1;
+      pGT->inkeyLastPos = -1;
    }
 }
 
@@ -2979,6 +2987,7 @@ static void hb_gt_def_InkeyReset( PHB_GT pGT )
 
    pGT->inkeyHead = 0;
    pGT->inkeyTail = 0;
+   pGT->inkeyLastPos = -1;
 
    iTypeAhead = hb_setGetTypeAhead();
 
@@ -3268,7 +3277,7 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
          {
             pGT->iMouseLastRow = iRow;
             pGT->iMouseLastCol = iCol;
-            iKey = K_MOUSEMOVE;
+            iKey = HB_INKEY_NEW_MPOS( iCol, iRow );
          }
       }
    }

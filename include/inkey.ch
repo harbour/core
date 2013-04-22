@@ -101,11 +101,6 @@
 #define HB_K_CONNECT            1105
 #define HB_K_DISCONNECT         1106
 
-/* Harbour extension - this marks that multi-characters keycode will be
-   returned - call Inkey() until ZERO will be returned
-*/
-#define HB_K_MULTICODE          4096
-
 /* Cursor movement keys */
 
 #define K_UP                    5     /*   Up arrow, Ctrl-E              */
@@ -331,5 +326,46 @@
 #define K_SH_F10                -19   /*   Shift-F10                     */
 #define K_SH_F11                -42   /* * Shift-F11                     */
 #define K_SH_F12                -43   /* * Shift-F12                     */
+
+
+/* key flags used by extended key codes */
+
+#define HB_KF_SHIFT             0x01
+#define HB_KF_CTRL              0x02
+#define HB_KF_ALT               0x04
+#define HB_KF_KEYPAD            0x08
+
+/* extended key codes */
+
+#define HB_KX_F1                1
+#define HB_KX_F2                2
+#define HB_KX_F3                3
+#define HB_KX_F4                4
+#define HB_KX_F5                5
+#define HB_KX_F6                6
+#define HB_KX_F7                7
+#define HB_KX_F8                8
+#define HB_KX_F9                9
+#define HB_KX_F10               10
+#define HB_KX_F11               11
+#define HB_KX_F12               12
+#define HB_KX_UP                13
+#define HB_KX_DOWN              14
+#define HB_KX_LEFT              15
+#define HB_KX_RIGHT             16
+#define HB_KX_HOME              17
+#define HB_KX_END               18
+#define HB_KX_PGUP              19
+#define HB_KX_PGDN              20
+#define HB_KX_INS               21
+#define HB_KX_DEL               22
+#define HB_KX_BS                23
+#define HB_KX_TAB               24
+#define HB_KX_ESC               25
+#define HB_KX_ENTER             26
+#define HB_KX_CENTER            27
+#define HB_KX_PRTSCR            28
+#define HB_KX_PAUSE             29
+
 
 #endif /* HB_INKEY_CH_ */

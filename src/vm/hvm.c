@@ -81,8 +81,6 @@
 #include "hbset.h"
 #include "hbdate.h"
 #include "hbmath.h"
-#include "hbinkey.ch"
-#include "inkey.ch"
 #include "hbdebug.ch"
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
@@ -271,17 +269,6 @@ static HB_BOOL     s_fCloneSym = HB_FALSE;/* clone registered symbol tables */
 
 /* main VM thread stack ID */
 static void * s_main_thread = NULL;
-
-/* Various compatibility flags
- */
-static HB_U32 s_VMFlags = HB_VMFLAG_HARBOUR;
-#undef hb_vmFlagEnabled
-#define hb_vmFlagEnabled( flag )      ( s_VMFlags & ( flag ) )
-
-/* Keycodes to stop virtual machine
- */
-static int s_VMCancelKey   = K_ALT_C;
-static int s_VMCancelKeyEx = HB_K_ALT_C;
 
 /* SEQUENCE envelope items position from stack top active
  */
@@ -1009,8 +996,7 @@ void hb_vmInit( HB_BOOL bStartMainProc )
    hb_conInit();
 
    /* Check for some internal switches */
-   s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
-   hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+   hb_cmdargProcess();
 
    hb_i18n_init();            /* initialize i18n module */
 
@@ -11764,24 +11750,6 @@ void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
       hb_vmPush( pWith );
    else
       hb_stackAllocItem()->type = HB_IT_NIL;
-}
-
-
-
-#undef hb_vmFlagEnabled
-HB_U32 hb_vmFlagEnabled( HB_U32 flags )
-{
-   return s_VMFlags & flags;
-}
-
-void hb_vmFlagSet( HB_U32 flags )
-{
-   s_VMFlags |= flags;
-}
-
-void hb_vmFlagClear( HB_U32 flags )
-{
-   s_VMFlags &= ~flags;
 }
 
 /* ------------------------------------------------------------------------ */

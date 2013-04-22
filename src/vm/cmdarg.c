@@ -802,11 +802,9 @@ HB_FUNC( HB_CMDLINE )
 }
 
 /* Check for command line internal arguments */
-HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
+void hb_cmdargProcess( void )
 {
-   char * cFlags;
-   HB_U32 ulFlags = HB_VMFLAG_HARBOUR;
-   int iHandles, iVal;
+   int iHandles;
 
    if( hb_cmdargCheck( "INFO" ) )
    {
@@ -850,49 +848,6 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
          #endif
       #endif
    }
-
-   if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL )
-   {
-      int i = 0;
-      while( cFlags[ i ] )
-      {
-         switch( cFlags[ i++ ] )
-         {
-            case 'c':
-               /* clear all flags - minimal set of features */
-               ulFlags = 0;
-               break;
-
-            case 'h':
-               /* default Harbour mode */
-               ulFlags |= HB_VMFLAG_HARBOUR;
-               break;
-#if 0
-            case 'x':
-               ulFlags |= HB_VMFLAG_XBASE;
-               break;
-
-            case 'r':
-               ulFlags |= HB_VMFLAG_RT_MACRO;
-               break;
-#endif
-            case 's':
-               ulFlags |= HB_VMFLAG_ARRSTR;
-               break;
-         }
-      }
-      hb_xfree( cFlags );
-   }
-
-   iVal = hb_cmdargNum( "CANCEL" );
-   if( iVal )
-      *pCancelKey = iVal;
-
-   iVal = hb_cmdargNum( "CANCELEX" );
-   if( iVal )
-      *pCancelKeyEx = iVal;
-
-   return ulFlags;
 }
 
 /* Source repository revision number */
