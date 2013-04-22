@@ -634,6 +634,7 @@ DYNAMIC hb_keyClear
 DYNAMIC hb_keyCode
 DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
+DYNAMIC hb_keyMod
 DYNAMIC hb_keyNext
 DYNAMIC hb_keyPut
 DYNAMIC hb_keySetLast

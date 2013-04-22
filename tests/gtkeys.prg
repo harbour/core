@@ -20,6 +20,9 @@ REQUEST HB_CODEPAGE_PLWIN
 #define hb_keyChar( c ) Chr( c )
 #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
+#ifndef HB_K_RESIZE
+#define HB_K_RESIZE 1101
+#endif
 
 PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
@@ -57,11 +60,21 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       { "K_CTRL_RETURN",     10, "Ctrl-Return"                     }, ;
       { "K_CTRL_RET",        10, "Ctrl-Return (Compat.)"           }, ;
       { "K_CTRL_PRTSCR",    379, "Ctrl-Print Screen"               }, ;
-      { "K_CTRL_QUESTION",  309, "Ctrl-?"                          }, ;
+      { "K_ALT_COMMA",      307, "Alt-,"                           }, ;
+      { "K_ALT_PERIOD",     308, "Alt-."                           }, ;
+      { "K_CTRL_QUESTION",  309, "Ctrl-?, Alt-Slash"               }, ;
+      { "K_ALT_SLASH",      309, "Alt-Slash"                       }, ;
+      { "K_ALT_BACKSLASH",  299, "Alt-Backslash"                   }, ;
       { "K_ALT_ENTER",      284, "Alt-Enter"                       }, ;
       { "K_ALT_RETURN",     284, "Alt-Return"                      }, ;
+      { "K_ALT_MINUS",      386, "Alt-Minus"                       }, ;
       { "K_ALT_EQUALS",     387, "Alt-Equals"                      }, ;
       { "K_ALT_ESC",        257, "Alt-Esc"                         }, ;
+      { "K_ALT_BACKQUOTE",  297, "Alt-backquote"                   }, ;
+      { "K_ALT_OSB",        282, "Alt-["                           }, ;
+      { "K_ALT_CSB",        283, "Alt-]"                           }, ;
+      { "K_ALT_SC",         295, "Alt-;"                           }, ;
+      { "K_ALT_QUOTE",      296, "Alt-'"                           }, ;
       { "KP_CENTER",        332, "Keypad CENTER (5)"               }, ;
       { "KP_ALT_ENTER",     422, "Keypad Alt-Enter"                }, ;
       { "KP_CTRL_5",        399, "Keypad Ctrl-5"                   }, ;
@@ -77,6 +90,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       { "K_INS",             22, "Ins, Ctrl-V"                     }, ;
       { "K_DEL",              7, "Del, Ctrl-G"                     }, ;
       { "K_BS",               8, "Backspace, Ctrl-H"               }, ;
+      { "K_SH_BS",          423, "Shift-Backspace, Ctrl-Shift-Tab" }, ;
+      { "K_CTRL_SH_TAB",    423, "Ctrl-Shift-Tab"                  }, ;
       { "K_TAB",              9, "Tab, Ctrl-I"                     }, ;
       { "K_SH_TAB",         271, "Shift-Tab"                       }, ;
       { "K_CTRL_INS",       402, "Ctrl-Ins"                        }, ;
@@ -86,151 +101,163 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       { "K_ALT_INS",        418, "Alt-Ins"                         }, ;
       { "K_ALT_DEL",        419, "Alt-Del"                         }, ;
       { "K_ALT_BS",         270, "Alt-Backspace"                   }, ;
-      { "K_ALT_TAB",        421, "Alt-Tab"                         }, ;
-      { "K_CTRL_A",           1, "Ctrl-A, Home"                    }, ;
-      { "K_CTRL_B",           2, "Ctrl-B, Ctrl-Right arrow"        }, ;
-      { "K_CTRL_C",           3, "Ctrl-C, PgDn, Ctrl-ScrollLock"   }, ;
-      { "K_CTRL_D",           4, "Ctrl-D, Right arrow"             }, ;
-      { "K_CTRL_E",           5, "Ctrl-E, Up arrow"                }, ;
-      { "K_CTRL_F",           6, "Ctrl-F, End"                     }, ;
-      { "K_CTRL_G",           7, "Ctrl-G, Del"                     }, ;
-      { "K_CTRL_H",           8, "Ctrl-H, Backspace"               }, ;
-      { "K_CTRL_I",           9, "Ctrl-I, Tab"                     }, ;
-      { "K_CTRL_J",          10, "Ctrl-J"                          }, ;
-      { "K_CTRL_K",          11, "Ctrl-K"                          }, ;
-      { "K_CTRL_L",          12, "Ctrl-L"                          }, ;
-      { "K_CTRL_M",          13, "Ctrl-M, Return"                  }, ;
-      { "K_CTRL_N",          14, "Ctrl-N"                          }, ;
-      { "K_CTRL_O",          15, "Ctrl-O"                          }, ;
-      { "K_CTRL_P",          16, "Ctrl-P"                          }, ;
-      { "K_CTRL_Q",          17, "Ctrl-Q"                          }, ;
-      { "K_CTRL_R",          18, "Ctrl-R, PgUp"                    }, ;
-      { "K_CTRL_S",          19, "Ctrl-S, Left arrow"              }, ;
-      { "K_CTRL_T",          20, "Ctrl-T"                          }, ;
-      { "K_CTRL_U",          21, "Ctrl-U"                          }, ;
-      { "K_CTRL_V",          22, "Ctrl-V, Ins"                     }, ;
-      { "K_CTRL_W",          23, "Ctrl-W, Ctrl-End"                }, ;
-      { "K_CTRL_X",          24, "Ctrl-X, Down arrow"              }, ;
-      { "K_CTRL_Y",          25, "Ctrl-Y"                          }, ;
-      { "K_CTRL_Z",          26, "Ctrl-Z, Ctrl-Left arrow"         } }
+      { "K_ALT_TAB",        421, "Alt-Tab"                         } }
 
-   AAdd( aKeys, { "K_ALT_A",          286, "Alt-A"                          }  )
-   AAdd( aKeys, { "K_ALT_B",          304, "Alt-B"                          }  )
-   AAdd( aKeys, { "K_ALT_C",          302, "Alt-C"                          }  )
-   AAdd( aKeys, { "K_ALT_D",          288, "Alt-D"                          }  )
-   AAdd( aKeys, { "K_ALT_E",          274, "Alt-E"                          }  )
-   AAdd( aKeys, { "K_ALT_F",          289, "Alt-F"                          }  )
-   AAdd( aKeys, { "K_ALT_G",          290, "Alt-G"                          }  )
-   AAdd( aKeys, { "K_ALT_H",          291, "Alt-H"                          }  )
-   AAdd( aKeys, { "K_ALT_I",          279, "Alt-I"                          }  )
-   AAdd( aKeys, { "K_ALT_J",          292, "Alt-J"                          }  )
-   AAdd( aKeys, { "K_ALT_K",          293, "Alt-K"                          }  )
-   AAdd( aKeys, { "K_ALT_L",          294, "Alt-L"                          }  )
-   AAdd( aKeys, { "K_ALT_M",          306, "Alt-M"                          }  )
-   AAdd( aKeys, { "K_ALT_N",          305, "Alt-N"                          }  )
-   AAdd( aKeys, { "K_ALT_O",          280, "Alt-O"                          }  )
-   AAdd( aKeys, { "K_ALT_P",          281, "Alt-P"                          }  )
-   AAdd( aKeys, { "K_ALT_Q",          272, "Alt-Q"                          }  )
-   AAdd( aKeys, { "K_ALT_R",          275, "Alt-R"                          }  )
-   AAdd( aKeys, { "K_ALT_S",          287, "Alt-S"                          }  )
-   AAdd( aKeys, { "K_ALT_T",          276, "Alt-T"                          }  )
-   AAdd( aKeys, { "K_ALT_U",          278, "Alt-U"                          }  )
-   AAdd( aKeys, { "K_ALT_V",          303, "Alt-V"                          }  )
-   AAdd( aKeys, { "K_ALT_W",          273, "Alt-W"                          }  )
-   AAdd( aKeys, { "K_ALT_X",          301, "Alt-X"                          }  )
-   AAdd( aKeys, { "K_ALT_Y",          277, "Alt-Y"                          }  )
-   AAdd( aKeys, { "K_ALT_Z",          300, "Alt-Z"                          }  )
-   AAdd( aKeys, { "K_ALT_1",          376, "Alt-1"                          }  )
-   AAdd( aKeys, { "K_ALT_2",          377, "Alt-2"                          }  )
-   AAdd( aKeys, { "K_ALT_3",          378, "Alt-3"                          }  )
-   AAdd( aKeys, { "K_ALT_4",          379, "Alt-4"                          }  )
-   AAdd( aKeys, { "K_ALT_5",          380, "Alt-5"                          }  )
-   AAdd( aKeys, { "K_ALT_6",          381, "Alt-6"                          }  )
-   AAdd( aKeys, { "K_ALT_7",          382, "Alt-7"                          }  )
-   AAdd( aKeys, { "K_ALT_8",          383, "Alt-8"                          }  )
-   AAdd( aKeys, { "K_ALT_9",          384, "Alt-9"                          }  )
-   AAdd( aKeys, { "K_ALT_0",          385, "Alt-0"                          }  )
-   AAdd( aKeys, { "K_F1",              28, "F1, Ctrl-Backslash"             }  )
-   AAdd( aKeys, { "K_F2",              - 1, "F2"                             }  )
-   AAdd( aKeys, { "K_F3",              - 2, "F3"                             }  )
-   AAdd( aKeys, { "K_F4",              - 3, "F4"                             }  )
-   AAdd( aKeys, { "K_F5",              - 4, "F5"                             }  )
-   AAdd( aKeys, { "K_F6",              - 5, "F6"                             }  )
-   AAdd( aKeys, { "K_F7",              - 6, "F7"                             }  )
-   AAdd( aKeys, { "K_F8",              - 7, "F8"                             }  )
-   AAdd( aKeys, { "K_F9",              - 8, "F9"                             }  )
-   AAdd( aKeys, { "K_F10",             - 9, "F10"                            }  )
-   AAdd( aKeys, { "K_F11",            - 40, "F11"                            }  )
-   AAdd( aKeys, { "K_F12",            - 41, "F12"                            }  )
-   AAdd( aKeys, { "K_CTRL_F1",        - 20, "Ctrl-F1"                        }  )
-   AAdd( aKeys, { "K_CTRL_F2",        - 21, "Ctrl-F2"                        }  )
-   AAdd( aKeys, { "K_CTRL_F3",        - 22, "Ctrl-F4"                        }  )
-   AAdd( aKeys, { "K_CTRL_F4",        - 23, "Ctrl-F3"                        }  )
-   AAdd( aKeys, { "K_CTRL_F5",        - 24, "Ctrl-F5"                        }  )
-   AAdd( aKeys, { "K_CTRL_F6",        - 25, "Ctrl-F6"                        }  )
-   AAdd( aKeys, { "K_CTRL_F7",        - 26, "Ctrl-F7"                        }  )
-   AAdd( aKeys, { "K_CTRL_F8",        - 27, "Ctrl-F8"                        }  )
-   AAdd( aKeys, { "K_CTRL_F9",        - 28, "Ctrl-F9"                        }  )
-   AAdd( aKeys, { "K_CTRL_F10",       - 29, "Ctrl-F10"                       }  )
-   AAdd( aKeys, { "K_CTRL_F11",       - 44, "Ctrl-F11"                       }  )
-   AAdd( aKeys, { "K_CTRL_F12",       - 45, "Ctrl-F12"                       }  )
-   AAdd( aKeys, { "K_ALT_F1",         - 30, "Alt-F1"                         }  )
-   AAdd( aKeys, { "K_ALT_F2",         - 31, "Alt-F2"                         }  )
-   AAdd( aKeys, { "K_ALT_F3",         - 32, "Alt-F3"                         }  )
-   AAdd( aKeys, { "K_ALT_F4",         - 33, "Alt-F4"                         }  )
-   AAdd( aKeys, { "K_ALT_F5",         - 34, "Alt-F5"                         }  )
-   AAdd( aKeys, { "K_ALT_F6",         - 35, "Alt-F6"                         }  )
-   AAdd( aKeys, { "K_ALT_F7",         - 36, "Alt-F7"                         }  )
-   AAdd( aKeys, { "K_ALT_F8",         - 37, "Alt-F8"                         }  )
-   AAdd( aKeys, { "K_ALT_F9",         - 38, "Alt-F9"                         }  )
-   AAdd( aKeys, { "K_ALT_F10",        - 39, "Alt-F10"                        }  )
-   AAdd( aKeys, { "K_ALT_F11",        - 46, "Alt-F11"                        }  )
-   AAdd( aKeys, { "K_ALT_F12",        - 47, "Alt-F12"                        }  )
-   AAdd( aKeys, { "K_SH_F1",          - 10, "Shift-F1"                       }  )
-   AAdd( aKeys, { "K_SH_F2",          - 11, "Shift-F2"                       }  )
-   AAdd( aKeys, { "K_SH_F3",          - 12, "Shift-F3"                       }  )
-   AAdd( aKeys, { "K_SH_F4",          - 13, "Shift-F4"                       }  )
-   AAdd( aKeys, { "K_SH_F5",          - 14, "Shift-F5"                       }  )
-   AAdd( aKeys, { "K_SH_F6",          - 15, "Shift-F6"                       }  )
-   AAdd( aKeys, { "K_SH_F7",          - 16, "Shift-F7"                       }  )
-   AAdd( aKeys, { "K_SH_F8",          - 17, "Shift-F8"                       }  )
-   AAdd( aKeys, { "K_SH_F9",          - 18, "Shift-F9"                       }  )
-   AAdd( aKeys, { "K_SH_F10",         - 19, "Shift-F10"                      }  )
-   AAdd( aKeys, { "K_SH_F11",         - 42, "Shift-F11"                      }  )
-   AAdd( aKeys, { "K_SH_F12",         - 43, "Shift-F12"                      }  )
-   AAdd( aKeys, { "K_MOUSEMOVE",     1001, "mouse move"                     }  )
-   AAdd( aKeys, { "K_LBUTTONDOWN",   1002, "mouse left button down"         }  )
-   AAdd( aKeys, { "K_LBUTTONUP",     1003, "mouse left button up"           }  )
-   AAdd( aKeys, { "K_RBUTTONDOWN",   1004, "mouse right button down"        }  )
-   AAdd( aKeys, { "K_RBUTTONUP",     1005, "mouse right button up"          }  )
-   AAdd( aKeys, { "K_LDBLCLK",       1006, "mouse left button double click" }  )
-   AAdd( aKeys, { "K_RDBLCLK",       1007, "mouse right button double click" }  )
-   AAdd( aKeys, { "K_MBUTTONDOWN",   1008, "mouse middle button down"       }  )
-   AAdd( aKeys, { "K_MBUTTONUP",     1009, "mouse middle button up"         }  )
-   AAdd( aKeys, { "K_MDBLCLK",       1010, "mouse middle button double click" }  )
-   AAdd( aKeys, { "K_MMLEFTDOWN",    1011, "Mouse Move Left Down"           }  )
-   AAdd( aKeys, { "K_MMRIGHTDOWN",   1012, "Mouse Move Right Down"          }  )
-   AAdd( aKeys, { "K_MMMIDDLEDOWN",  1013, "Mouse Move Middle Down"         }  )
-   AAdd( aKeys, { "K_MWFORWARD",     1014, "Mouse Wheel Forward"            }  )
-   AAdd( aKeys, { "K_MWBACKWARD",    1015, "Mouse Wheel Backward"           }  )
-   AAdd( aKeys, { "K_NCMOUSEMOVE",   1016, "Non-Client Area Mouse Movement" }  )
-   AAdd( aKeys, { "HB_K_RESIZE",     1101, "screen dimension changed"       }  )
-   AAdd( aKeys, { "HB_K_CLOSE",      1102, "close button hit"               }  )
-   AAdd( aKeys, { "HB_K_GETFOCUS",   1103, "focus restored"                 }  )
-   AAdd( aKeys, { "HB_K_LOSTFOCUS",  1104, "focus lost"                     }  )
-   AAdd( aKeys, { "HB_K_CONNECT",    1105, "remote terminal connected"      }  )
-   AAdd( aKeys, { "HB_K_DISCONNECT", 1106, "remote terminal disconnected"   }  )
+   AAdd( aKeys, { "K_CTRL_A",           1, "Ctrl-A, Home"                    } )
+   AAdd( aKeys, { "K_CTRL_B",           2, "Ctrl-B, Ctrl-Right arrow"        } )
+   AAdd( aKeys, { "K_CTRL_C",           3, "Ctrl-C, PgDn, Ctrl-ScrollLock"   } )
+   AAdd( aKeys, { "K_CTRL_D",           4, "Ctrl-D, Right arrow"             } )
+   AAdd( aKeys, { "K_CTRL_E",           5, "Ctrl-E, Up arrow"                } )
+   AAdd( aKeys, { "K_CTRL_F",           6, "Ctrl-F, End"                     } )
+   AAdd( aKeys, { "K_CTRL_G",           7, "Ctrl-G, Del"                     } )
+   AAdd( aKeys, { "K_CTRL_H",           8, "Ctrl-H, Backspace"               } )
+   AAdd( aKeys, { "K_CTRL_I",           9, "Ctrl-I, Tab"                     } )
+   AAdd( aKeys, { "K_CTRL_J",          10, "Ctrl-J"                          } )
+   AAdd( aKeys, { "K_CTRL_K",          11, "Ctrl-K"                          } )
+   AAdd( aKeys, { "K_CTRL_L",          12, "Ctrl-L"                          } )
+   AAdd( aKeys, { "K_CTRL_M",          13, "Ctrl-M, Return"                  } )
+   AAdd( aKeys, { "K_CTRL_N",          14, "Ctrl-N"                          } )
+   AAdd( aKeys, { "K_CTRL_O",          15, "Ctrl-O"                          } )
+   AAdd( aKeys, { "K_CTRL_P",          16, "Ctrl-P"                          } )
+   AAdd( aKeys, { "K_CTRL_Q",          17, "Ctrl-Q"                          } )
+   AAdd( aKeys, { "K_CTRL_R",          18, "Ctrl-R, PgUp"                    } )
+   AAdd( aKeys, { "K_CTRL_S",          19, "Ctrl-S, Left arrow"              } )
+   AAdd( aKeys, { "K_CTRL_T",          20, "Ctrl-T"                          } )
+   AAdd( aKeys, { "K_CTRL_U",          21, "Ctrl-U"                          } )
+   AAdd( aKeys, { "K_CTRL_V",          22, "Ctrl-V, Ins"                     } )
+   AAdd( aKeys, { "K_CTRL_W",          23, "Ctrl-W, Ctrl-End"                } )
+   AAdd( aKeys, { "K_CTRL_X",          24, "Ctrl-X, Down arrow"              } )
+   AAdd( aKeys, { "K_CTRL_Y",          25, "Ctrl-Y"                          } )
+   AAdd( aKeys, { "K_CTRL_Z",          26, "Ctrl-Z, Ctrl-Left arrow"         } )
+
+   AAdd( aKeys, { "K_ALT_A",          286, "Alt-A"                           } )
+   AAdd( aKeys, { "K_ALT_B",          304, "Alt-B"                           } )
+   AAdd( aKeys, { "K_ALT_C",          302, "Alt-C"                           } )
+   AAdd( aKeys, { "K_ALT_D",          288, "Alt-D"                           } )
+   AAdd( aKeys, { "K_ALT_E",          274, "Alt-E"                           } )
+   AAdd( aKeys, { "K_ALT_F",          289, "Alt-F"                           } )
+   AAdd( aKeys, { "K_ALT_G",          290, "Alt-G"                           } )
+   AAdd( aKeys, { "K_ALT_H",          291, "Alt-H"                           } )
+   AAdd( aKeys, { "K_ALT_I",          279, "Alt-I"                           } )
+   AAdd( aKeys, { "K_ALT_J",          292, "Alt-J"                           } )
+   AAdd( aKeys, { "K_ALT_K",          293, "Alt-K"                           } )
+   AAdd( aKeys, { "K_ALT_L",          294, "Alt-L"                           } )
+   AAdd( aKeys, { "K_ALT_M",          306, "Alt-M"                           } )
+   AAdd( aKeys, { "K_ALT_N",          305, "Alt-N"                           } )
+   AAdd( aKeys, { "K_ALT_O",          280, "Alt-O"                           } )
+   AAdd( aKeys, { "K_ALT_P",          281, "Alt-P"                           } )
+   AAdd( aKeys, { "K_ALT_Q",          272, "Alt-Q"                           } )
+   AAdd( aKeys, { "K_ALT_R",          275, "Alt-R"                           } )
+   AAdd( aKeys, { "K_ALT_S",          287, "Alt-S"                           } )
+   AAdd( aKeys, { "K_ALT_T",          276, "Alt-T"                           } )
+   AAdd( aKeys, { "K_ALT_U",          278, "Alt-U"                           } )
+   AAdd( aKeys, { "K_ALT_V",          303, "Alt-V"                           } )
+   AAdd( aKeys, { "K_ALT_W",          273, "Alt-W"                           } )
+   AAdd( aKeys, { "K_ALT_X",          301, "Alt-X"                           } )
+   AAdd( aKeys, { "K_ALT_Y",          277, "Alt-Y"                           } )
+   AAdd( aKeys, { "K_ALT_Z",          300, "Alt-Z"                           } )
+   AAdd( aKeys, { "K_ALT_1",          376, "Alt-1"                           } )
+   AAdd( aKeys, { "K_ALT_2",          377, "Alt-2"                           } )
+   AAdd( aKeys, { "K_ALT_3",          378, "Alt-3"                           } )
+   AAdd( aKeys, { "K_ALT_4",          379, "Alt-4"                           } )
+   AAdd( aKeys, { "K_ALT_5",          380, "Alt-5"                           } )
+   AAdd( aKeys, { "K_ALT_6",          381, "Alt-6"                           } )
+   AAdd( aKeys, { "K_ALT_7",          382, "Alt-7"                           } )
+   AAdd( aKeys, { "K_ALT_8",          383, "Alt-8"                           } )
+   AAdd( aKeys, { "K_ALT_9",          384, "Alt-9"                           } )
+   AAdd( aKeys, { "K_ALT_0",          385, "Alt-0"                           } )
+
+   AAdd( aKeys, { "K_F1",              28, "F1, Ctrl-Backslash"              } )
+   AAdd( aKeys, { "K_F2",              -1, "F2"                              } )
+   AAdd( aKeys, { "K_F3",              -2, "F3"                              } )
+   AAdd( aKeys, { "K_F4",              -3, "F4"                              } )
+   AAdd( aKeys, { "K_F5",              -4, "F5"                              } )
+   AAdd( aKeys, { "K_F6",              -5, "F6"                              } )
+   AAdd( aKeys, { "K_F7",              -6, "F7"                              } )
+   AAdd( aKeys, { "K_F8",              -7, "F8"                              } )
+   AAdd( aKeys, { "K_F9",              -8, "F9"                              } )
+   AAdd( aKeys, { "K_F10",             -9, "F10"                             } )
+   AAdd( aKeys, { "K_F11",            -40, "F11"                             } )
+   AAdd( aKeys, { "K_F12",            -41, "F12"                             } )
+   AAdd( aKeys, { "K_CTRL_F1",        -20, "Ctrl-F1"                         } )
+   AAdd( aKeys, { "K_CTRL_F2",        -21, "Ctrl-F2"                         } )
+   AAdd( aKeys, { "K_CTRL_F3",        -22, "Ctrl-F4"                         } )
+   AAdd( aKeys, { "K_CTRL_F4",        -23, "Ctrl-F3"                         } )
+   AAdd( aKeys, { "K_CTRL_F5",        -24, "Ctrl-F5"                         } )
+   AAdd( aKeys, { "K_CTRL_F6",        -25, "Ctrl-F6"                         } )
+   AAdd( aKeys, { "K_CTRL_F7",        -26, "Ctrl-F7"                         } )
+   AAdd( aKeys, { "K_CTRL_F8",        -27, "Ctrl-F8"                         } )
+   AAdd( aKeys, { "K_CTRL_F9",        -28, "Ctrl-F9"                         } )
+   AAdd( aKeys, { "K_CTRL_F10",       -29, "Ctrl-F10"                        } )
+   AAdd( aKeys, { "K_CTRL_F11",       -44, "Ctrl-F11"                        } )
+   AAdd( aKeys, { "K_CTRL_F12",       -45, "Ctrl-F12"                        } )
+   AAdd( aKeys, { "K_ALT_F1",         -30, "Alt-F1"                          } )
+   AAdd( aKeys, { "K_ALT_F2",         -31, "Alt-F2"                          } )
+   AAdd( aKeys, { "K_ALT_F3",         -32, "Alt-F3"                          } )
+   AAdd( aKeys, { "K_ALT_F4",         -33, "Alt-F4"                          } )
+   AAdd( aKeys, { "K_ALT_F5",         -34, "Alt-F5"                          } )
+   AAdd( aKeys, { "K_ALT_F6",         -35, "Alt-F6"                          } )
+   AAdd( aKeys, { "K_ALT_F7",         -36, "Alt-F7"                          } )
+   AAdd( aKeys, { "K_ALT_F8",         -37, "Alt-F8"                          } )
+   AAdd( aKeys, { "K_ALT_F9",         -38, "Alt-F9"                          } )
+   AAdd( aKeys, { "K_ALT_F10",        -39, "Alt-F10"                         } )
+   AAdd( aKeys, { "K_ALT_F11",        -46, "Alt-F11"                         } )
+   AAdd( aKeys, { "K_ALT_F12",        -47, "Alt-F12"                         } )
+   AAdd( aKeys, { "K_SH_F1",          -10, "Shift-F1"                        } )
+   AAdd( aKeys, { "K_SH_F2",          -11, "Shift-F2"                        } )
+   AAdd( aKeys, { "K_SH_F3",          -12, "Shift-F3"                        } )
+   AAdd( aKeys, { "K_SH_F4",          -13, "Shift-F4"                        } )
+   AAdd( aKeys, { "K_SH_F5",          -14, "Shift-F5"                        } )
+   AAdd( aKeys, { "K_SH_F6",          -15, "Shift-F6"                        } )
+   AAdd( aKeys, { "K_SH_F7",          -16, "Shift-F7"                        } )
+   AAdd( aKeys, { "K_SH_F8",          -17, "Shift-F8"                        } )
+   AAdd( aKeys, { "K_SH_F9",          -18, "Shift-F9"                        } )
+   AAdd( aKeys, { "K_SH_F10",         -19, "Shift-F10"                       } )
+   AAdd( aKeys, { "K_SH_F11",         -42, "Shift-F11"                       } )
+   AAdd( aKeys, { "K_SH_F12",         -43, "Shift-F12"                       } )
+
+   AAdd( aKeys, { "K_MOUSEMOVE",     1001, "mouse move"                      } )
+   AAdd( aKeys, { "K_LBUTTONDOWN",   1002, "mouse left button down"          } )
+   AAdd( aKeys, { "K_LBUTTONUP",     1003, "mouse left button up"            } )
+   AAdd( aKeys, { "K_RBUTTONDOWN",   1004, "mouse right button down"         } )
+   AAdd( aKeys, { "K_RBUTTONUP",     1005, "mouse right button up"           } )
+   AAdd( aKeys, { "K_LDBLCLK",       1006, "mouse left button double click"  } )
+   AAdd( aKeys, { "K_RDBLCLK",       1007, "mouse right button double click" } )
+   AAdd( aKeys, { "K_MBUTTONDOWN",   1008, "mouse middle button down"        } )
+   AAdd( aKeys, { "K_MBUTTONUP",     1009, "mouse middle button up"          } )
+   AAdd( aKeys, { "K_MDBLCLK",       1010, "mouse middle button double click" } )
+   AAdd( aKeys, { "K_MMLEFTDOWN",    1011, "Mouse Move Left Down"            } )
+   AAdd( aKeys, { "K_MMRIGHTDOWN",   1012, "Mouse Move Right Down"           } )
+   AAdd( aKeys, { "K_MMMIDDLEDOWN",  1013, "Mouse Move Middle Down"          } )
+   AAdd( aKeys, { "K_MWFORWARD",     1014, "Mouse Wheel Forward"             } )
+   AAdd( aKeys, { "K_MWBACKWARD",    1015, "Mouse Wheel Backward"            } )
+   AAdd( aKeys, { "K_NCMOUSEMOVE",   1016, "Non-Client Area Mouse Movement"  } )
+
+   AAdd( aKeys, { "HB_K_RESIZE",     1101, "screen dimension changed"        } )
+   AAdd( aKeys, { "HB_K_CLOSE",      1102, "close button hit"                } )
+   AAdd( aKeys, { "HB_K_GOTFOCUS",   1103, "focus restored"                  } )
+   AAdd( aKeys, { "HB_K_LOSTFOCUS",  1104, "focus lost"                      } )
+   AAdd( aKeys, { "HB_K_CONNECT",    1105, "remote terminal connected"       } )
+   AAdd( aKeys, { "HB_K_DISCONNECT", 1106, "remote terminal disconnected"    } )
 
 
 #ifdef __HARBOUR__
    Set( _SET_EVENTMASK, HB_INKEY_ALL )
+   hb_gtInfo( HB_GTI_CURSORBLINKRATE, 1000 )
+   hb_gtInfo( HB_GTI_ESCDELAY, 50 )
+   // hb_gtinfo( HB_GTI_FONTATTRIBUTE, 0 )
+   // hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_DRAWBOX, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
+   // hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CTRLCHARS, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
+   // hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_FIXMETRIC, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
+   // hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CLRBKG, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
    // hb_gtInfo( HB_GTI_RESIZABLE, .F. )
    // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
-   hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. )
-   hb_gtInfo( HB_GTI_ALTENTER, .T. )
+   // hb_gtInfo( HB_GTI_MAXIMIZED, .T. )
+   // hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. )
+   // hb_gtInfo( HB_GTI_ALTENTER, .T. )
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
-   hb_gtInfo( HB_GTI_ESCDELAY, 50 )
+   hb_gtInfo( HB_GTI_SELECTCOPY, .T. )
    IF Empty( cTermCP )
       cTermCP := "PLISO"
    ELSE
@@ -267,7 +294,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
          ? " key:" + Str( aKeys[ i, 2 ], 7 ) + "  " + PadR( aKeys[ i, 1 ], 18 ) + aKeys[ i, 3 ]
       ELSEIF k >= 32 .AND. k <= 126 .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
-            ( k >= 0 .AND. k <= 255 .AND. IsAlpha( hb_keyChar( k ) ) )
+             Len( hb_keyChar( k ) ) > 0
          ? "char:" + Str( k, 7 ) + "  " + hb_keyChar( k )
       ELSE
          ? " key:" + Str( k, 7 )
@@ -276,6 +303,13 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
       IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT
+      ELSEIF k == K_INS
+         Set( _SET_CURSOR, ( Set( _SET_CURSOR ) + 1 ) % 5 )
+         ?? "  cursor:" + hb_ntos( Set( _SET_CURSOR ) )
+      ELSEIF k == HB_K_RESIZE
+         ?? "  (" + hb_ntos( MaxRow() + 1 ) + "," + hb_ntos( MaxCol() + 1 ) + ")"
+      ELSEIF k >= 1000 .AND. k < 1100
+         ?? "  mpos(" + hb_ntos( MRow() ) + "," + hb_ntos( MCol() ) + ")"
 #ifdef __HARBOUR__
       ELSEIF k == K_CTRL_INS
          IF Alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1

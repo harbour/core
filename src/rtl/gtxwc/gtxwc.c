@@ -82,150 +82,6 @@ static const int s_mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBU
 static const int s_mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
 static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
 
-typedef struct
-{
-   int key;
-   int alt_key;
-   int ctrl_key;
-   int shift_key;
-} ClipKeyCode;
-
-/* The tables below are indexed by internal key value,
- * It cause that we don't have to make any linear scans
- * to access proper ClipKeyCode entry
- */
-static const ClipKeyCode s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
-   { K_SPACE,   0,               0,               0 },   /*  32 */
-   { '!',       0,               0,               0 },   /*  33 */
-   { '"',       0,               0,               0 },   /*  34 */
-   { '#',       0,               0,               0 },   /*  35 */
-   { '$',       0,               0,               0 },   /*  36 */
-   { '%',       0,               0,               0 },   /*  37 */
-   { '&',       0,               0,               0 },   /*  38 */
-   { '\'',      296,             7,               0 },   /*  39 */
-   { '(',       0,               0,               0 },   /*  40 */
-   { ')',       0,               0,               0 },   /*  41 */
-   { '*',       0,               0,               0 },   /*  42 */
-   { '+',       0,               0,               0 },   /*  43 */
-   { ',',       307,             0,               0 },   /*  44 */
-   { '-',       386,             31,              0 },   /*  45 */
-   { '.',       308,             0,               0 },   /*  46 */
-   { '/',       K_CTRL_QUESTION, 127,             0 },   /*  47 */
-   { '0',       K_ALT_0,         0,               0 },   /*  48 */
-   { '1',       K_ALT_1,         0,               0 },   /*  49 */
-   { '2',       K_ALT_2,         259,             0 },   /*  50 */
-   { '3',       K_ALT_3,         27,              0 },   /*  51 */
-   { '4',       K_ALT_4,         28,              0 },   /*  52 */
-   { '5',       K_ALT_5,         29,              0 },   /*  53 */
-   { '6',       K_ALT_6,         30,              0 },   /*  54 */
-   { '7',       K_ALT_7,         31,              0 },   /*  55 */
-   { '8',       K_ALT_8,         127,             0 },   /*  56 */
-   { '9',       K_ALT_9,         0,               0 },   /*  57 */
-   { ':',       0,               0,               0 },   /*  58 */
-   { ';',       295,             0,               0 },   /*  59 */
-   { '<',       0,               0,               0 },   /*  60 */
-   { '=',       K_ALT_EQUALS,    0,               0 },   /*  61 */
-   { '>',       0,               0,               0 },   /*  62 */
-   { '?',       0,               K_CTRL_QUESTION, 0 },   /*  63 */
-   { '@',       0,               0,               0 },   /*  64 */
-   { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /*  65 */
-   { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /*  66 */
-   { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /*  67 */
-   { 'D',       K_ALT_D,         K_CTRL_D,        0 },   /*  68 */
-   { 'E',       K_ALT_E,         K_CTRL_E,        0 },   /*  69 */
-   { 'F',       K_ALT_F,         K_CTRL_F,        0 },   /*  70 */
-   { 'G',       K_ALT_G,         K_CTRL_G,        0 },   /*  71 */
-   { 'H',       K_ALT_H,         K_CTRL_H,        0 },   /*  72 */
-   { 'I',       K_ALT_I,         K_CTRL_I,        0 },   /*  73 */
-   { 'J',       K_ALT_J,         K_CTRL_J,        0 },   /*  74 */
-   { 'K',       K_ALT_K,         K_CTRL_K,        0 },   /*  75 */
-   { 'L',       K_ALT_L,         K_CTRL_L,        0 },   /*  76 */
-   { 'M',       K_ALT_M,         K_CTRL_M,        0 },   /*  77 */
-   { 'N',       K_ALT_N,         K_CTRL_N,        0 },   /*  78 */
-   { 'O',       K_ALT_O,         K_CTRL_O,        0 },   /*  79 */
-   { 'P',       K_ALT_P,         K_CTRL_P,        0 },   /*  80 */
-   { 'Q',       K_ALT_Q,         K_CTRL_Q,        0 },   /*  81 */
-   { 'R',       K_ALT_R,         K_CTRL_R,        0 },   /*  82 */
-   { 'S',       K_ALT_S,         K_CTRL_S,        0 },   /*  83 */
-   { 'T',       K_ALT_T,         K_CTRL_T,        0 },   /*  84 */
-   { 'U',       K_ALT_U,         K_CTRL_U,        0 },   /*  85 */
-   { 'V',       K_ALT_V,         K_CTRL_V,        0 },   /*  86 */
-   { 'W',       K_ALT_W,         K_CTRL_W,        0 },   /*  87 */
-   { 'X',       K_ALT_X,         K_CTRL_X,        0 },   /*  88 */
-   { 'Y',       K_ALT_Y,         K_CTRL_Y,        0 },   /*  89 */
-   { 'Z',       K_ALT_Z,         K_CTRL_Z,        0 },   /*  90 */
-   { '[',       282,             27,              0 },   /*  91 */
-   { '\\',      299,             28,              0 },   /*  92 */
-   { ']',       283,             29,              0 },   /*  93 */
-   { '^',       K_ALT_6,         30,              0 },   /*  94 */
-   { '_',       386,             31,              0 },   /*  95 */
-   { '`',       297,             297,             0 },   /*  96 */
-   { 'a',       K_ALT_A,         K_CTRL_A,        0 },   /*  97 */
-   { 'b',       K_ALT_B,         K_CTRL_B,        0 },   /*  98 */
-   { 'c',       K_ALT_C,         K_CTRL_C,        0 },   /*  99 */
-   { 'd',       K_ALT_D,         K_CTRL_D,        0 },   /* 100 */
-   { 'e',       K_ALT_E,         K_CTRL_E,        0 },   /* 101 */
-   { 'f',       K_ALT_F,         K_CTRL_F,        0 },   /* 102 */
-   { 'g',       K_ALT_G,         K_CTRL_G,        0 },   /* 103 */
-   { 'h',       K_ALT_H,         K_CTRL_H,        0 },   /* 104 */
-   { 'i',       K_ALT_I,         K_CTRL_I,        0 },   /* 105 */
-   { 'j',       K_ALT_J,         K_CTRL_J,        0 },   /* 106 */
-   { 'k',       K_ALT_K,         K_CTRL_K,        0 },   /* 107 */
-   { 'l',       K_ALT_L,         K_CTRL_L,        0 },   /* 108 */
-   { 'm',       K_ALT_M,         K_CTRL_M,        0 },   /* 109 */
-   { 'n',       K_ALT_N,         K_CTRL_N,        0 },   /* 110 */
-   { 'o',       K_ALT_O,         K_CTRL_O,        0 },   /* 111 */
-   { 'p',       K_ALT_P,         K_CTRL_P,        0 },   /* 112 */
-   { 'q',       K_ALT_Q,         K_CTRL_Q,        0 },   /* 113 */
-   { 'r',       K_ALT_R,         K_CTRL_R,        0 },   /* 114 */
-   { 's',       K_ALT_S,         K_CTRL_S,        0 },   /* 115 */
-   { 't',       K_ALT_T,         K_CTRL_T,        0 },   /* 116 */
-   { 'u',       K_ALT_U,         K_CTRL_U,        0 },   /* 117 */
-   { 'v',       K_ALT_V,         K_CTRL_V,        0 },   /* 118 */
-   { 'w',       K_ALT_W,         K_CTRL_W,        0 },   /* 119 */
-   { 'x',       K_ALT_X,         K_CTRL_X,        0 },   /* 120 */
-   { 'y',       K_ALT_Y,         K_CTRL_Y,        0 },   /* 121 */
-   { 'z',       K_ALT_Z,         K_CTRL_Z,        0 },   /* 122 */
-   { '{',       282,             27,              0 },   /* 123 */
-   { '|',       299,             28,              0 },   /* 124 */
-   { '}',       283,             29,              0 },   /* 125 */
-   { '~',       297,             297,             0 },   /* 126 */
-   { K_CTRL_BS, K_ALT_BS,        127,             0 },   /* 127 */
-};
-
-static const ClipKeyCode s_extKeyTab[ CLIP_EXTKEY_COUNT ] = {
-    {K_F1,          K_ALT_F1,     K_CTRL_F1,    K_SH_F1}, /*  00 */
-    {K_F2,          K_ALT_F2,     K_CTRL_F2,    K_SH_F2}, /*  01 */
-    {K_F3,          K_ALT_F3,     K_CTRL_F3,    K_SH_F3}, /*  02 */
-    {K_F4,          K_ALT_F4,     K_CTRL_F4,    K_SH_F4}, /*  03 */
-    {K_F5,          K_ALT_F5,     K_CTRL_F5,    K_SH_F5}, /*  04 */
-    {K_F6,          K_ALT_F6,     K_CTRL_F6,    K_SH_F6}, /*  05 */
-    {K_F7,          K_ALT_F7,     K_CTRL_F7,    K_SH_F7}, /*  06 */
-    {K_F8,          K_ALT_F8,     K_CTRL_F8,    K_SH_F8}, /*  07 */
-    {K_F9,          K_ALT_F9,     K_CTRL_F9,    K_SH_F9}, /*  08 */
-    {K_F10,        K_ALT_F10,    K_CTRL_F10,   K_SH_F10}, /*  09 */
-    {K_F11,        K_ALT_F11,    K_CTRL_F11,   K_SH_F11}, /*  10 */
-    {K_F12,        K_ALT_F12,    K_CTRL_F12,   K_SH_F12}, /*  11 */
-    {K_UP,          K_ALT_UP,     K_CTRL_UP,    K_SH_UP}, /*  12 */
-    {K_DOWN,      K_ALT_DOWN,   K_CTRL_DOWN,  K_SH_DOWN}, /*  13 */
-    {K_LEFT,      K_ALT_LEFT,   K_CTRL_LEFT,  K_SH_LEFT}, /*  14 */
-    {K_RIGHT,    K_ALT_RIGHT,  K_CTRL_RIGHT, K_SH_RIGHT}, /*  15 */
-    {K_INS,        K_ALT_INS,    K_CTRL_INS,   K_SH_INS}, /*  16 */
-    {K_DEL,        K_ALT_DEL,    K_CTRL_DEL,   K_SH_DEL}, /*  17 */
-    {K_HOME,      K_ALT_HOME,   K_CTRL_HOME,  K_SH_HOME}, /*  18 */
-    {K_END,        K_ALT_END,    K_CTRL_END,   K_SH_END}, /*  19 */
-    {K_PGUP,      K_ALT_PGUP,   K_CTRL_PGUP,  K_SH_PGUP}, /*  20 */
-    {K_PGDN,      K_ALT_PGDN,   K_CTRL_PGDN,  K_SH_PGDN}, /*  21 */
-    {K_BS,          K_ALT_BS,           127,    K_SH_BS}, /*  22 */
-    {K_TAB,        K_ALT_TAB,    K_CTRL_TAB,   K_SH_TAB}, /*  23 */
-    {K_ESC,        K_ALT_ESC,         K_ESC,          0}, /*  24 */
-    {K_ENTER,    K_ALT_ENTER,  K_CTRL_ENTER,          0}, /*  25 */
-    {K_ENTER,   KP_ALT_ENTER,  K_CTRL_ENTER,          0}, /*  26 */
-    {KP_CENTER,            0,     KP_CTRL_5,          0}, /*  27 */
-    {0,                    0, K_CTRL_PRTSCR,          0}, /*  28 */
-    {0,                    0, HB_BREAK_FLAG,          0}  /*  29 */
-};
-
 /* these are standard PC console colors in RGB */
 static const int s_rgb_values[] = {
    0x000000,   /* black         "rgb:00/00/00" */
@@ -399,9 +255,9 @@ typedef struct
    HB_ULONG * pCurrScr;
 
    /* character translation table, it changes some characters in screen buffer into graphs primitives */
-   XWC_CharTrans boxTrans[ HB_GTXWC_TRANS_MAX ];
-   HB_UCHAR boxIndex[ HB_GTXWC_TRANS_COUNT ];
-   int transCount;
+   XWC_CharTrans boxTrans[ HB_BOXCH_TRANS_MAX ];
+   HB_UCHAR boxIndex[ HB_BOXCH_TRANS_COUNT ];
+   int boxCount;
 
    HB_BOOL fInvalidChr;
    XWC_RECT rInvalidChr;
@@ -599,10 +455,10 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
    int celly = wnd->fontHeight;
    int i, y, x, yy, xx, skip, start, mod;
 
-   if( usCh >= HB_GTXWC_RC_MIN && usCh <= HB_GTXWC_RC_MAX )
+   if( usCh >= HB_BOXCH_RC_MIN && usCh <= HB_BOXCH_RC_MAX )
       switch( usCh )
       {
-         case HB_GTXWC_RC_ARROW_DL:
+         case HB_BOXCH_RC_ARROW_DL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = celly / 2 - 1;
             for( y = celly - 4, x = cellx - 1; x >= 3 && y >= yy && size < XWC_MAX_CHAR_SEGS; --x, --y )
@@ -625,7 +481,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_DR:
+         case HB_BOXCH_RC_ARROW_DR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = ( celly + 1 ) / 2;
             for( y = celly - 5, x = 0; x < cellx - 4 && y >= yy && size < XWC_MAX_CHAR_SEGS; ++x, --y )
@@ -648,7 +504,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_UL:
+         case HB_BOXCH_RC_ARROW_UL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = ( celly + 1 ) / 2;
             for( y = 3, x = cellx - 1; x >= 3 && y <= yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
@@ -671,7 +527,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_UR:
+         case HB_BOXCH_RC_ARROW_UR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = ( celly + 1 ) / 2;
             for( y = 4, x = 0; x < cellx - 4 && y <= yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
@@ -694,7 +550,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_VL:
+         case HB_BOXCH_RC_ARROW_VL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = ( celly - 1 ) / 2;
             for( y = 3, x = cellx - 1; x >= 3 && y < yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
@@ -716,7 +572,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_VR:
+         case HB_BOXCH_RC_ARROW_VR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = ( celly - 1 ) / 2;
             for( y = 4, x = 0; x < cellx - 4 && y < yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
@@ -727,7 +583,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
                segs[ size ].y2 = y;
                size++;
             }
-            for( y += 2, --x; x >= 0 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
+            for( y = yy + 2, --x; x >= 0 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
             {
                segs[ size ].x1 = 0;
                segs[ size ].y1 = y;
@@ -738,17 +594,17 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BUTTON_L:
+         case HB_BOXCH_RC_BUTTON_L:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BUTTON_R:
+         case HB_BOXCH_RC_BUTTON_R:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_LL:
+         case HB_BOXCH_RC_ARROW_LL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = ( celly - 1 ) / 2;
             for( x = 3, y = 0; x < cellx && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
@@ -762,7 +618,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_LR:
+         case HB_BOXCH_RC_ARROW_LR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = HB_MAX( celly / 5, 3 ) | 1;
             for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
@@ -776,7 +632,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_RL:
+         case HB_BOXCH_RC_ARROW_RL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = HB_MAX( celly / 5, 3 ) | 1;
             for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
@@ -790,7 +646,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ARROW_RR:
+         case HB_BOXCH_RC_ARROW_RR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = ( celly - 1 ) / 2;
             for( x = cellx - 4, y = 0; x >= 0 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
@@ -804,17 +660,17 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_ENTER1:
+         case HB_BOXCH_RC_ENTER1:
             /* TODO */
             break;
-         case HB_GTXWC_RC_ENTER2:
+         case HB_BOXCH_RC_ENTER2:
             /* TODO */
             break;
-         case HB_GTXWC_RC_ENTER3:
+         case HB_BOXCH_RC_ENTER3:
             /* TODO */
             break;
 
-         case HB_GTXWC_RC_VSCRL_LD:
+         case HB_BOXCH_RC_VSCRL_LD:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -846,7 +702,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_VSCRL_RD:
+         case HB_BOXCH_RC_VSCRL_RD:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -883,7 +739,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_VSCRL_LU:
+         case HB_BOXCH_RC_VSCRL_LU:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -910,7 +766,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_VSCRL_RU:
+         case HB_BOXCH_RC_VSCRL_RU:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -942,7 +798,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_VSCRL_L:
+         case HB_BOXCH_RC_VSCRL_L:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -964,7 +820,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_VSCRL_R:
+         case HB_BOXCH_RC_VSCRL_R:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -986,7 +842,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_HSCRL:
+         case HB_BOXCH_RC_HSCRL:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx - 1;
@@ -1013,68 +869,68 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             break;
 
-         case HB_GTXWC_RC_0:
+         case HB_BOXCH_RC_0:
             type = CH_CHAR;
             usCh = '0';
             /* TODO */
             break;
-         case HB_GTXWC_RC_1:
+         case HB_BOXCH_RC_1:
             type = CH_CHAR;
             usCh = '1';
             /* TODO */
             break;
-         case HB_GTXWC_RC_2:
+         case HB_BOXCH_RC_2:
             type = CH_CHAR;
             usCh = '2';
             /* TODO */
             break;
-         case HB_GTXWC_RC_3:
+         case HB_BOXCH_RC_3:
             type = CH_CHAR;
             usCh = '3';
             /* TODO */
             break;
-         case HB_GTXWC_RC_4:
+         case HB_BOXCH_RC_4:
             type = CH_CHAR;
             usCh = '4';
             /* TODO */
             break;
-         case HB_GTXWC_RC_5:
+         case HB_BOXCH_RC_5:
             type = CH_CHAR;
             usCh = '5';
             /* TODO */
             break;
-         case HB_GTXWC_RC_6:
+         case HB_BOXCH_RC_6:
             type = CH_CHAR;
             usCh = '6';
             /* TODO */
             break;
-         case HB_GTXWC_RC_7:
+         case HB_BOXCH_RC_7:
             type = CH_CHAR;
             usCh = '7';
             /* TODO */
             break;
-         case HB_GTXWC_RC_8:
+         case HB_BOXCH_RC_8:
             type = CH_CHAR;
             usCh = '8';
             /* TODO */
             break;
-         case HB_GTXWC_RC_9:
+         case HB_BOXCH_RC_9:
             type = CH_CHAR;
             usCh = '9';
             /* TODO */
             break;
-         case HB_GTXWC_RC_DOT:
+         case HB_BOXCH_RC_DOT:
             type = CH_CHAR;
             usCh = '.';
             /* TODO */
             break;
-         case HB_GTXWC_RC_ACC:
+         case HB_BOXCH_RC_ACC:
             type = CH_CHAR;
             usCh = '\'';
             /* TODO */
             break;
 
-         case HB_GTXWC_RC_BOX_ML:
+         case HB_BOXCH_RC_BOX_ML:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -1089,7 +945,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_MR:
+         case HB_BOXCH_RC_BOX_MR:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -1104,7 +960,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_HWND_L:
+         case HB_BOXCH_RC_HWND_L:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = 0;
@@ -1144,7 +1000,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_HWND_R:
+         case HB_BOXCH_RC_HWND_R:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx - 1;
@@ -1189,7 +1045,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_TL:
+         case HB_BOXCH_RC_BOX_TL:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx - 1;
@@ -1204,7 +1060,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_T:
+         case HB_BOXCH_RC_BOX_T:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx - 1;
@@ -1214,7 +1070,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_TR:
+         case HB_BOXCH_RC_BOX_TR:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx - 1;
@@ -1229,7 +1085,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_R:
+         case HB_BOXCH_RC_BOX_R:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1239,7 +1095,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_BR:
+         case HB_BOXCH_RC_BOX_BR:
             segs[ 0 ].x1 = cellx - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1254,7 +1110,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_B:
+         case HB_BOXCH_RC_BOX_B:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -1264,7 +1120,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_BL:
+         case HB_BOXCH_RC_BOX_BL:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1279,7 +1135,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_L:
+         case HB_BOXCH_RC_BOX_L:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1289,7 +1145,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_MT:
+         case HB_BOXCH_RC_BOX_MT:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1304,7 +1160,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BOX_MB:
+         case HB_BOXCH_RC_BOX_MB:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1319,7 +1175,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BUTTON_CL:
+         case HB_BOXCH_RC_BUTTON_CL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = celly - 2 / 3;
             xx = cellx - 4;
@@ -1348,7 +1204,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_BUTTON_CR:
+         case HB_BOXCH_RC_BUTTON_CR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = celly - 2 / 3;
             xx = cellx - 4;
@@ -1368,7 +1224,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_FARROW_DL:
+         case HB_BOXCH_RC_FARROW_DL:
             size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
             yy = ( celly - cellx ) / 2 + 1;
             yy = HB_MAX( yy, 2 );
@@ -1383,7 +1239,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_FARROW_DR:
+         case HB_BOXCH_RC_FARROW_DR:
             size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
             yy = ( celly - cellx ) / 2 + 1;
             yy = HB_MAX( yy, 2 );
@@ -1398,7 +1254,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_RC_DOTS:
+         case HB_BOXCH_RC_DOTS:
             pts[ 0 ].x = 1;
             pts[ 0 ].y = celly / 2;
             size++;
@@ -1411,7 +1267,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_PTS;
             break;
 
-         case HB_GTXWC_RC_DOTS_L:
+         case HB_BOXCH_RC_DOTS_L:
             i = cellx / 2;
             xx = i - i / 2;
             yy = HB_MAX( 2, xx - 1 );
@@ -1430,7 +1286,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_RECT;
             break;
 
-         case HB_GTXWC_RC_DOTS_R:
+         case HB_BOXCH_RC_DOTS_R:
             i = cellx / 2;
             xx = i - i / 2;
             yy = HB_MAX( 2, xx - 1 );
@@ -1452,15 +1308,15 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
    else
       switch( usCh )
       {
-         case HB_GTXWC_FILLER1:
-         case HB_GTXWC_FILLER2:
-         case HB_GTXWC_FILLER3:
-            if( usCh == HB_GTXWC_FILLER1 )
+         case HB_BOXCH_FILLER1:
+         case HB_BOXCH_FILLER2:
+         case HB_BOXCH_FILLER3:
+            if( usCh == HB_BOXCH_FILLER1 )
             {
                skip = 4;
                start = mod = 1;
             }
-            else if( usCh == HB_GTXWC_FILLER2 )
+            else if( usCh == HB_BOXCH_FILLER2 )
             {
                skip = 2;
                start = 0;
@@ -1493,7 +1349,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = size == 0 ? CH_NONE : CH_PTS;
             break;
 
-         case HB_GTXWC_ARROW_R:
+         case HB_BOXCH_ARROW_R:
             i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
             pts[ 0 ].x = ( ( cellx - i ) >> 1 );
             pts[ 0 ].y = ( celly >> 1 ) - i;
@@ -1505,7 +1361,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_POLY;
             break;
 
-         case HB_GTXWC_ARROW_L:
+         case HB_BOXCH_ARROW_L:
             i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
             pts[ 0 ].x = ( ( cellx - i ) >> 1 ) + i;
             pts[ 0 ].y = ( celly >> 1 ) - i;
@@ -1517,7 +1373,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_POLY;
             break;
 
-         case HB_GTXWC_ARROW_U:
+         case HB_BOXCH_ARROW_U:
             i = HB_MIN( celly, cellx >> 1 );
             pts[ 0 ].x = ( cellx >> 1 ) - i;
             pts[ 0 ].y = ( ( celly - i ) >> 1 ) + i;
@@ -1529,7 +1385,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_POLY;
             break;
 
-         case HB_GTXWC_ARROW_D:
+         case HB_BOXCH_ARROW_D:
             i = HB_MIN( celly, cellx >> 1 );
             pts[ 0 ].x = ( cellx >> 1 ) - i;
             pts[ 0 ].y = ( ( celly - i ) >> 1 );
@@ -1541,14 +1397,14 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_POLY;
             break;
 
-         case HB_GTXWC_FULL:
+         case HB_BOXCH_FULL:
             inverse = HB_TRUE;
             type = CH_NONE;
             break;
 
-         case HB_GTXWC_FULL_B:
+         case HB_BOXCH_FULL_B:
             inverse = HB_TRUE;
-         case HB_GTXWC_FULL_T:
+         case HB_BOXCH_FULL_T:
             rect[ 0 ].x = 0;
             rect[ 0 ].y = 0;
             rect[ 0 ].width = cellx;
@@ -1557,9 +1413,9 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_RECT;
             break;
 
-         case HB_GTXWC_FULL_R:
+         case HB_BOXCH_FULL_R:
             inverse = HB_TRUE;
-         case HB_GTXWC_FULL_L:
+         case HB_BOXCH_FULL_L:
             rect[ 0 ].x = 0;
             rect[ 0 ].y = 0;
             rect[ 0 ].width = cellx / 2;
@@ -1568,7 +1424,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_RECT;
             break;
 
-         case HB_GTXWC_SNG_LT:
+         case HB_BOXCH_SNG_LT:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = celly - 1;
             segs[ 0 ].x2 = cellx / 2;
@@ -1583,7 +1439,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_TD:
+         case HB_BOXCH_SNG_TD:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -1598,7 +1454,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_RT:
+         case HB_BOXCH_SNG_RT:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = celly - 1;
             segs[ 0 ].x2 = cellx / 2;
@@ -1613,7 +1469,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_LB:
+         case HB_BOXCH_SNG_LB:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx / 2;
@@ -1628,7 +1484,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_BU:
+         case HB_BOXCH_SNG_BU:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx / 2;
@@ -1643,7 +1499,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_RB:
+         case HB_BOXCH_SNG_RB:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = cellx / 2;
@@ -1658,7 +1514,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_VL:
+         case HB_BOXCH_SNG_VL:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1673,7 +1529,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_VR:
+         case HB_BOXCH_SNG_VR:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1688,7 +1544,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_CRS:
+         case HB_BOXCH_SNG_CRS:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1703,7 +1559,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_HOR:
+         case HB_BOXCH_SNG_HOR:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -1713,7 +1569,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_VRT:
+         case HB_BOXCH_SNG_VRT:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1723,7 +1579,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_LT:
+         case HB_BOXCH_DBL_LT:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = celly - 1;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1748,7 +1604,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_TD:
+         case HB_BOXCH_DBL_TD:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -1778,7 +1634,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_RT:
+         case HB_BOXCH_DBL_RT:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = celly - 1;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1803,7 +1659,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_LB:
+         case HB_BOXCH_DBL_LB:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1828,7 +1684,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_BU:
+         case HB_BOXCH_DBL_BU:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 + 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -1858,7 +1714,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_RB:
+         case HB_BOXCH_DBL_RB:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1883,7 +1739,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_VL:
+         case HB_BOXCH_DBL_VL:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1914,7 +1770,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             break;
 
 
-         case HB_GTXWC_DBL_VR:
+         case HB_BOXCH_DBL_VR:
             segs[ 0 ].x1 = cellx / 2 + 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1944,7 +1800,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_CRS:
+         case HB_BOXCH_DBL_CRS:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -1989,7 +1845,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_HOR:
+         case HB_BOXCH_DBL_HOR:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 + 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -2004,7 +1860,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_VRT:
+         case HB_BOXCH_DBL_VRT:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2019,7 +1875,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_L_DBL_T:
+         case HB_BOXCH_SNG_L_DBL_T:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -2039,7 +1895,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_T_DBL_D:
+         case HB_BOXCH_SNG_T_DBL_D:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -2059,7 +1915,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_R_DBL_T:
+         case HB_BOXCH_SNG_R_DBL_T:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx / 2 + 1;
@@ -2079,7 +1935,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_L_DBL_B:
+         case HB_BOXCH_SNG_L_DBL_B:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -2099,7 +1955,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_B_DBL_U:
+         case HB_BOXCH_SNG_B_DBL_U:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx - 1;
@@ -2119,7 +1975,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_R_DBL_B:
+         case HB_BOXCH_SNG_R_DBL_B:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = cellx / 2 + 1;
@@ -2139,7 +1995,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_V_DBL_L:
+         case HB_BOXCH_SNG_V_DBL_L:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2159,7 +2015,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_V_DBL_R:
+         case HB_BOXCH_SNG_V_DBL_R:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2179,7 +2035,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SNG_DBL_CRS:
+         case HB_BOXCH_SNG_DBL_CRS:
             segs[ 0 ].x1 = cellx / 2;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2199,7 +2055,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_L_SNG_T:
+         case HB_BOXCH_DBL_L_SNG_T:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = celly / 2;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2219,7 +2075,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_T_SNG_D:
+         case HB_BOXCH_DBL_T_SNG_D:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -2239,7 +2095,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_R_SNG_T:
+         case HB_BOXCH_DBL_R_SNG_T:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx / 2;
@@ -2259,7 +2115,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_L_SNG_B:
+         case HB_BOXCH_DBL_L_SNG_B:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2279,7 +2135,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_B_SNG_U:
+         case HB_BOXCH_DBL_B_SNG_U:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx - 1;
@@ -2299,7 +2155,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_R_SNG_B:
+         case HB_BOXCH_DBL_R_SNG_B:
             segs[ 0 ].x1 = 0;
             segs[ 0 ].y1 = celly / 2 - 1;
             segs[ 0 ].x2 = cellx / 2;
@@ -2319,7 +2175,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_V_SNG_L:
+         case HB_BOXCH_DBL_V_SNG_L:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2339,7 +2195,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_V_SNG_R:
+         case HB_BOXCH_DBL_V_SNG_R:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2359,7 +2215,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_DBL_SNG_CRS:
+         case HB_BOXCH_DBL_SNG_CRS:
             segs[ 0 ].x1 = cellx / 2 - 1;
             segs[ 0 ].y1 = 0;
             segs[ 0 ].x2 = segs[ 0 ].x1;
@@ -2379,7 +2235,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             type = CH_SEG;
             break;
 
-         case HB_GTXWC_SQUARE:
+         case HB_BOXCH_SQUARE:
             rect[ 0 ].width = cellx - HB_MAX( cellx >> 2, 2 );
             rect[ 0 ].height = rect[ 0 ].width;
             rect[ 0 ].x = ( ( cellx - rect[ 0 ].width ) >> 1 );
@@ -2435,7 +2291,7 @@ static void hb_gt_xwc_ResetCharTrans( PXWND_DEF wnd )
 {
    int i;
 
-   for( i = 0; i <= wnd->transCount; i++ )
+   for( i = 0; i <= wnd->boxCount; i++ )
    {
       switch( wnd->boxTrans[ i ].type )
       {
@@ -2458,15 +2314,15 @@ static void hb_gt_xwc_ResetCharTrans( PXWND_DEF wnd )
       }
    }
    memset( wnd->boxTrans, 0, sizeof( wnd->boxTrans ) );
-   wnd->transCount = 0;
+   wnd->boxCount = 0;
 
    wnd->boxTrans[ 0 ].type = CH_CHAR;
    wnd->boxTrans[ 0 ].u.ch16 = 0;
    wnd->boxTrans[ 0 ].size = 0;
    wnd->boxTrans[ 0 ].inverse = HB_FALSE;
 
-   for( i = 0; i < HB_GTXWC_TRANS_COUNT; ++i )
-      wnd->boxIndex[ i ] = HB_GTXWC_TRANS_MAX;
+   for( i = 0; i < HB_BOXCH_TRANS_COUNT; ++i )
+      wnd->boxIndex[ i ] = HB_BOXCH_TRANS_MAX;
 }
 
 /* *********************************************************************** */
@@ -2481,20 +2337,20 @@ static XWC_CharTrans * hb_gt_xwc_GetBoxChar( PXWND_DEF wnd, HB_USHORT uc16 )
       return &wnd->boxTrans[ 0 ];
    }
 
-   if     ( uc16 == HB_GTXWC_ARROW_R )
+   if     ( uc16 == HB_BOXCH_ARROW_R )
       iPos = 0;
-   else if( uc16 == HB_GTXWC_ARROW_L )
+   else if( uc16 == HB_BOXCH_ARROW_L )
       iPos = 1;
-   else if( uc16 == HB_GTXWC_ARROW_U )
+   else if( uc16 == HB_BOXCH_ARROW_U )
       iPos = 2;
-   else if( uc16 == HB_GTXWC_ARROW_D )
+   else if( uc16 == HB_BOXCH_ARROW_D )
       iPos = 3;
-   else if( uc16 >= HB_GTXWC_BOX_MIN && uc16 <= HB_GTXWC_BOX_MAX )
-      iPos = HB_GTXWC_CHR_BASE +
-             ( uc16 - HB_GTXWC_BOX_MIN );
-   else if( uc16 >= HB_GTXWC_RC_MIN && uc16 <= HB_GTXWC_RC_MAX )
-      iPos = HB_GTXWC_CHR_BASE + ( HB_GTXWC_BOX_MAX - HB_GTXWC_BOX_MIN + 1 ) +
-             ( uc16 - HB_GTXWC_RC_MIN );
+   else if( uc16 >= HB_BOXCH_BOX_MIN && uc16 <= HB_BOXCH_BOX_MAX )
+      iPos = HB_BOXCH_CHR_BASE +
+             ( uc16 - HB_BOXCH_BOX_MIN );
+   else if( uc16 >= HB_BOXCH_RC_MIN && uc16 <= HB_BOXCH_RC_MAX )
+      iPos = HB_BOXCH_CHR_BASE + ( HB_BOXCH_BOX_MAX - HB_BOXCH_BOX_MIN + 1 ) +
+             ( uc16 - HB_BOXCH_RC_MIN );
    else
    {
       wnd->boxTrans[ 0 ].u.ch16 = hb_cdpGetU16Ctrl( uc16 );
@@ -2502,13 +2358,13 @@ static XWC_CharTrans * hb_gt_xwc_GetBoxChar( PXWND_DEF wnd, HB_USHORT uc16 )
    }
 
    iTrans = wnd->boxIndex[ iPos ];
-   if( iTrans == HB_GTXWC_TRANS_MAX )
+   if( iTrans == HB_BOXCH_TRANS_MAX )
    {
-      if( wnd->transCount < HB_GTXWC_TRANS_MAX - 1 )
+      if( wnd->boxCount < HB_BOXCH_TRANS_MAX - 1 )
       {
-         iTrans = wnd->transCount + 1;
+         iTrans = wnd->boxCount + 1;
          if( hb_gt_xwc_DefineBoxChar( wnd, uc16, &wnd->boxTrans[ iTrans ] ) )
-            wnd->transCount = iTrans;
+            wnd->boxCount = iTrans;
          else
             iTrans = 0;
       }
@@ -2551,13 +2407,23 @@ static void hb_gt_xwc_MouseInit( PXWND_DEF wnd )
 
 static void hb_gt_xwc_AddCharToInputQueue( PXWND_DEF wnd, int keyCode )
 {
+   if( wnd->keyBuffNO > 0 && HB_INKEY_ISMOUSEPOS( keyCode ) )
+   {
+      int index = wnd->keyBuffPointer - 1;
+      if( index < 0 )
+         index += XWC_CHAR_QUEUE_SIZE;
+      if( HB_INKEY_ISMOUSEPOS( wnd->KeyBuff[ index ] ) )
+      {
+         wnd->KeyBuff[ index ] = keyCode;
+         return;
+      }
+   }
+
    if( wnd->keyBuffNO < XWC_CHAR_QUEUE_SIZE )
    {
       wnd->KeyBuff[ wnd->keyBuffPointer++ ] = keyCode;
       if( wnd->keyBuffPointer == XWC_CHAR_QUEUE_SIZE )
-      {
          wnd->keyBuffPointer = 0;
-      }
       wnd->keyBuffNO++;
    }
 }
@@ -2571,9 +2437,7 @@ static HB_BOOL hb_gt_xwc_GetCharFromInputQueue( PXWND_DEF wnd, int * keyCode )
    {
       int index = wnd->keyBuffPointer - wnd->keyBuffNO;
       if( index < 0 )
-      {
          index += XWC_CHAR_QUEUE_SIZE;
-      }
       *keyCode = wnd->KeyBuff[ index ];
       wnd->keyBuffNO--;
       return HB_TRUE;
@@ -2583,64 +2447,20 @@ static HB_BOOL hb_gt_xwc_GetCharFromInputQueue( PXWND_DEF wnd, int * keyCode )
 
 /* *********************************************************************** */
 
-static int hb_gt_xwc_LastCharInInputQueue( PXWND_DEF wnd )
+static int hb_gt_xwc_keyFlags( PXWND_DEF wnd, int flags )
 {
-   if( wnd->keyBuffNO > 0 )
-   {
-      int index = wnd->keyBuffPointer - 1;
-      if( index < 0 )
-      {
-         index += XWC_CHAR_QUEUE_SIZE;
-      }
-      return wnd->KeyBuff[ index ];
-   }
-   return 0;
+   if( wnd->keyModifiers.bShift )
+      flags |= HB_KF_SHIFT;
+   if( wnd->keyModifiers.bCtrl )
+      flags |= HB_KF_CTRL;
+   if( wnd->keyModifiers.bAlt )
+      flags |= HB_KF_ALT;
+
+   return flags;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
-{
-   const ClipKeyCode * clipKey = NULL;
-
-   if( key >= K_SPACE && key <= K_CTRL_BS )
-   {
-      clipKey = &s_stdKeyTab[ key - K_SPACE ];
-   }
-   else if( key > 0 && key < K_SPACE && wnd->keyModifiers.bCtrl )
-   {
-      clipKey = &s_stdKeyTab[ key + '@' ];
-   }
-   else if( XWC_IS_EXTKEY( key ) )
-   {
-      clipKey = &s_extKeyTab[ XWC_CLR_KEYMASK( key ) ];
-   }
-   if( clipKey != NULL )
-   {
-      if( wnd->keyModifiers.bAlt )
-      {
-         key = clipKey->alt_key;
-      }
-      else if( wnd->keyModifiers.bCtrl )
-      {
-         key = clipKey->ctrl_key;
-      }
-      else if( wnd->keyModifiers.bShift )
-      {
-         key = clipKey->shift_key;
-      }
-      else
-      {
-         key = clipKey->key;
-      }
-   }
-   if( key != 0 )
-   {
-      hb_gt_xwc_AddCharToInputQueue( wnd, key );
-   }
-}
-
-/* *********************************************************************** */
 static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
 {
    XEvent evt;
@@ -2664,7 +2484,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 {
    char buf[ 32 ];
    KeySym outISO = 0, out = XLookupKeysym( evt, 0 );
-   int ikey = 0, i;
+   int ikey = 0, flags = hb_gt_xwc_keyFlags( wnd, 0 ), i;
 #ifdef X_HAVE_UTF8_STRING
    Status status_return = 0;
 #endif
@@ -2713,43 +2533,43 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 
       /* Then we scan for movement */
       case XK_Left:
-         ikey = EXKEY_LEFT;
+         ikey = HB_KX_LEFT;
          break;
       case XK_Right:
-         ikey = EXKEY_RIGHT;
+         ikey = HB_KX_RIGHT;
          break;
       case XK_Up:
-         ikey = EXKEY_UP;
+         ikey = HB_KX_UP;
          break;
       case XK_Down:
-         ikey = EXKEY_DOWN;
+         ikey = HB_KX_DOWN;
          break;
       /* case XK_Begin: case XK_KP_Begin: */
       case XK_Home:
-         ikey = EXKEY_HOME;
+         ikey = HB_KX_HOME;
          break;
       case XK_End:
-         ikey = EXKEY_END;
+         ikey = HB_KX_END;
          break;
       case XK_Page_Up:
-         ikey = EXKEY_PGUP;
+         ikey = HB_KX_PGUP;
          break;
       case XK_Page_Down:
-         ikey = EXKEY_PGDN;
+         ikey = HB_KX_PGDN;
          break;
 
       /* Special cursor operations */
       case XK_Delete:
-         ikey = EXKEY_DEL;
+         ikey = HB_KX_DEL;
          break;
       case XK_Insert:
-         ikey = EXKEY_INS;
+         ikey = HB_KX_INS;
          break;
       case XK_BackSpace:
-         ikey = EXKEY_BS;
+         ikey = HB_KX_BS;
          break;
       case XK_Tab:
-         ikey = EXKEY_TAB;
+         ikey = HB_KX_TAB;
          break;
       case XK_Linefeed:
       case XK_Return:
@@ -2759,65 +2579,124 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
             hb_gt_xwc_FullScreen( wnd );
             return;
          }
-         ikey = EXKEY_ENTER;
+         ikey = HB_KX_ENTER;
          break;
       case XK_KP_Enter:
-         ikey = EXKEY_KPENTER;
+         ikey = HB_KX_ENTER;
+         flags |= HB_KF_KEYPAD;
          break;
       case XK_Escape:
-         ikey = EXKEY_ESC;
+         ikey = HB_KX_ESC;
          break;
 
       /* then we scan for function keys */
       case XK_F1:
-         ikey = EXKEY_F1;
+         ikey = HB_KX_F1;
          break;
       case XK_F2:
-         ikey = EXKEY_F2;
+         ikey = HB_KX_F2;
          break;
       case XK_F3:
-         ikey = EXKEY_F3;
+         ikey = HB_KX_F3;
          break;
       case XK_F4:
-         ikey = EXKEY_F4;
+         ikey = HB_KX_F4;
          break;
       case XK_F5:
-         ikey = EXKEY_F5;
+         ikey = HB_KX_F5;
          break;
       case XK_F6:
-         ikey = EXKEY_F6;
+         ikey = HB_KX_F6;
          break;
       case XK_F7:
-         ikey = EXKEY_F7;
+         ikey = HB_KX_F7;
          break;
       case XK_F8:
-         ikey = EXKEY_F8;
+         ikey = HB_KX_F8;
          break;
       case XK_F9:
-         ikey = EXKEY_F9;
+         ikey = HB_KX_F9;
          break;
       case XK_F10:
-         ikey = EXKEY_F10;
+         ikey = HB_KX_F10;
          break;
       case XK_F11:
-         ikey = EXKEY_F11;
+         ikey = HB_KX_F11;
          break;
       case XK_F12:
-         ikey = EXKEY_F12;
+         ikey = HB_KX_F12;
          break;
 
       /* Keys with special meanings to clipper */
       case XK_Pause:
-         ikey = EXKEY_PAUSE;
+         ikey = HB_KX_PAUSE;
          break;
       case XK_Print:
-         ikey = EXKEY_PRTSCR;
+         ikey = HB_KX_PRTSCR;
          break;
    }
    if( ikey )
    {
-      hb_gt_xwc_TranslateKey( wnd, ikey );
+      hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_KEY( ikey, flags ) );
       return;
+   }
+
+   /* look for keypad keys if they haven't been processed by XLookupString */
+   flags |= HB_KF_KEYPAD;
+   switch( out )
+   {
+      case XK_KP_Left:
+         ikey = HB_KX_LEFT;
+         break;
+      case XK_KP_Right:
+         ikey = HB_KX_RIGHT;
+         break;
+      case XK_KP_Up:
+         ikey = HB_KX_UP;
+         break;
+      case XK_KP_Down:
+         ikey = HB_KX_DOWN;
+         break;
+      case XK_KP_Home:
+         ikey = HB_KX_HOME;
+         break;
+      case XK_KP_End:
+         ikey = HB_KX_END;
+         break;
+      case XK_KP_Page_Up:
+         ikey = HB_KX_PGUP;
+         break;
+      case XK_KP_Page_Down:
+         ikey = HB_KX_PGDN;
+         break;
+      case XK_KP_Begin:
+      case XK_KP_5:
+         ikey = HB_KX_CENTER;
+         break;
+      case XK_KP_Insert:
+         ikey = HB_KX_INS;
+         break;
+      case XK_KP_Delete:
+         ikey = HB_KX_DEL;
+         break;
+      case XK_KP_Enter:
+         ikey = HB_KX_ENTER;
+         break;
+      case XK_KP_Multiply:
+         ikey = '*';
+         break;
+      case XK_KP_Add:
+         ikey = '+';
+         break;
+      case XK_KP_Subtract:
+         ikey = '-';
+         break;
+      case XK_KP_Divide:
+         ikey = '/';
+         break;
+      default:
+         flags ^= HB_KF_KEYPAD;
+         break;
    }
 
    /* First check if there is no string bound with with a key, because
@@ -2845,7 +2724,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
          {
             ikey = hb_cdpGetChar( HB_GTSELF_HOSTCP( wnd->pGT ), ( HB_WCHAR ) outISO );
             if( ikey )
-               hb_gt_xwc_AddCharToInputQueue( wnd, ikey );
+               hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_CHAR( ikey ) );
             return;
          }
       }
@@ -2860,70 +2739,25 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 
       while( HB_CDPCHAR_GET( cdp, buf, i, &nI, &wc ) )
       {
-         if( wc < 128 && ( wnd->keyModifiers.bAlt || wnd->keyModifiers.bCtrl ) )
-            hb_gt_xwc_TranslateKey( wnd, wc );
+         if( wc < 32 ||
+             ( wc < 128 && ( flags & ( HB_KF_CTRL | HB_KF_ALT | HB_KF_KEYPAD ) ) ) )
+         {
+            int fl = flags;
+            if( wc > 0 && wc < 32 )
+            {
+               wc += 'A' - 1;
+               fl |= HB_KF_CTRL;
+            }
+            hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_KEY( wc, fl ) );
+         }
          else
-            hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_UNICODE( wc ) );
+            hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_UNICODEF( wc, flags ) );
       }
       return;
    }
 
-   /* look for special keys if they haven't been processed by XLookupString,
-      mostly keypad keys */
-   switch( out )
-   {
-      case XK_KP_Left:
-         ikey = EXKEY_LEFT;
-         break;
-      case XK_KP_Right:
-         ikey = EXKEY_RIGHT;
-         break;
-      case XK_KP_Up:
-         ikey = EXKEY_UP;
-         break;
-      case XK_KP_Down:
-         ikey = EXKEY_DOWN;
-         break;
-      case XK_KP_Home:
-         ikey = EXKEY_HOME;
-         break;
-      case XK_KP_End:
-         ikey = EXKEY_END;
-         break;
-      case XK_KP_Page_Up:
-         ikey = EXKEY_PGUP;
-         break;
-      case XK_KP_Page_Down:
-         ikey = EXKEY_PGDN;
-         break;
-      case XK_KP_Begin:
-      case XK_KP_5:
-         ikey = EXKEY_CENTER;
-         break;
-      case XK_KP_Insert:
-         ikey = EXKEY_INS;
-         break;
-      case XK_KP_Delete:
-         ikey = EXKEY_DEL;
-         break;
-      case XK_KP_Enter:
-         ikey = EXKEY_KPENTER;
-         break;
-      case XK_KP_Multiply:
-         ikey = '*';
-         break;
-      case XK_KP_Add:
-         ikey = '+';
-         break;
-      case XK_KP_Subtract:
-         ikey = '-';
-         break;
-      case XK_KP_Divide:
-         ikey = '/';
-         break;
-   }
    if( ikey )
-      hb_gt_xwc_TranslateKey( wnd, ikey );
+      hb_gt_xwc_AddCharToInputQueue( wnd, HB_INKEY_NEW_KEY( ikey, flags ) );
 }
 
 /* *********************************************************************** */
@@ -3033,8 +2867,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
             hb_gt_xwc_InvalidateChar( wnd, wnd->markLeft, wnd->markTop,
                                            wnd->markRight, wnd->markBottom );
          }
-         else if( hb_gt_xwc_LastCharInInputQueue( wnd ) != K_MOUSEMOVE )
-            hb_gt_xwc_AddCharToInputQueue( wnd, K_MOUSEMOVE );
+         else
+            hb_gt_xwc_AddCharToInputQueue( wnd,
+                           HB_INKEY_NEW_MPOS( wnd->mouseCol, wnd->mouseRow ) );
          break;
 
       case ButtonPress:
@@ -3103,7 +2938,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                      nI += hb_cdpTextPutU16( wnd->utf8CDP, pBuffer + nI, nSize - nI, usChar );
                      /* nI += hb_cdpU16CharToUTF8( pBuffer + nI, &usChar ); */
                   }
-                  pBuffer[ nI++ ] = '\n';
+                  if( wnd->markTop < wnd->markBottom )
+                     pBuffer[ nI++ ] = '\n';
                   ++top;
                }
                if( nI > 0 )
@@ -3121,7 +2957,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
             }
             if( key != 0 )
             {
-               hb_gt_xwc_AddCharToInputQueue( wnd, key );
+               hb_gt_xwc_AddCharToInputQueue( wnd,
+                     HB_INKEY_NEW_MKEY( key, hb_gt_xwc_keyFlags( wnd, 0 ) ) );
             }
          }
          break;
@@ -3223,7 +3060,8 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 
                   wnd->ClipboardSize = text.nitems;
                   wnd->ClipboardData = ( unsigned char * )
-                                       hb_xmemdup( text.value, text.nitems );
+                                       hb_xmemdup( text.value, text.nitems + 1 );
+                  wnd->ClipboardData[ wnd->ClipboardSize ] = '\0';
                   wnd->ClipboardTime = evt->xselection.time;
                   wnd->ClipboardRcvd = HB_TRUE;
                }
@@ -3622,7 +3460,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
             color = ( color << 4 ) | ( color >> 4 );
          }
          if( len > 0 && ( chTrans->type != CH_CHAR ||
-                           color != oldColor || ulCurr == wnd->pCurrScr[index] ) )
+                          color != oldColor || ulCurr == wnd->pCurrScr[ index ] ) )
          {
             hb_gt_xwc_DrawString( wnd, startCol, irow, oldColor, usChBuf, len );
             len = 0;
@@ -4017,7 +3855,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       {
          HB_ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
 
-         if( ulCurrentTime - wnd->cursorStateTime > wnd->cursorBlinkRate )
+         if( ulCurrentTime - wnd->cursorStateTime > wnd->cursorBlinkRate >> 1 )
          {
             wnd->cursorState = ! wnd->cursorState;
             wnd->cursorStateTime = ulCurrentTime;
@@ -4096,7 +3934,7 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows 
       if( wnd->pCurrScr != NULL )
          hb_xfree( wnd->pCurrScr );
       wnd->pCurrScr = ( HB_ULONG * ) hb_xgrab( iSize * sizeof( HB_ULONG ) );
-      memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( HB_ULONG ) );
+      memset( wnd->pCurrScr, 0xFF, iSize * sizeof( HB_ULONG ) );
       hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
       HB_GTSELF_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
    }
@@ -4725,7 +4563,7 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_wnd = wnd;
 
    wnd->cursorState = HB_TRUE;
-   wnd->cursorBlinkRate = 350;
+   wnd->cursorBlinkRate = 700;
    wnd->cursorStateTime = 0;
 
    HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
@@ -5166,7 +5004,10 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cursorBlinkRate );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            wnd->cursorBlinkRate = hb_itemGetNI( pInfo->pNewVal );
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            wnd->cursorBlinkRate = HB_MAX( iVal, 0 );
+         }
          break;
 
       case HB_GTI_KBDSHIFTS:
@@ -5273,12 +5114,17 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 2 );
 
+         if( iType == HB_GTI_SETPOS_ROWCOL )
+         {
+            iVal = x;
+            x = y / wnd->fontHeight;
+            y = iVal / wnd->fontWidth;
+         }
          hb_arraySetNI( pInfo->pResult, 1, x );
          hb_arraySetNI( pInfo->pResult, 2, y );
 
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
              ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
-
          {
             x = hb_itemGetNI( pInfo->pNewVal );
             y = hb_itemGetNI( pInfo->pNewVal2 );
@@ -5294,9 +5140,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( iType == HB_GTI_SETPOS_ROWCOL )
          {
-            iVal = y;
-            y = x * wnd->fontHeight;
-            x = iVal * wnd->fontWidth;
+            iVal = x;
+            x = y * wnd->fontWidth;
+            y = iVal * wnd->fontHeight;
          }
          if( wnd->window )
          {
@@ -5325,7 +5171,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                      if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                      {
-                        memset( wnd->pCurrScr, 0xFFFFFFFFL, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                        memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                      }
                   }
@@ -5353,7 +5199,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                {
-                  memset( wnd->pCurrScr, 0xFFFFFFFFL, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                  memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                }
             }

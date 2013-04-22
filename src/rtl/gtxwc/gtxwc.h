@@ -122,210 +122,155 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define XWC_SYNC_UPDATE             0
 #define XWC_ASYNC_UPDATE            1
 
-#define CLIP_STDKEY_COUNT           96
-#define CLIP_EXTKEY_COUNT           30
-
-#define XWC_EXTKEYMASK              0x10000000
-#define XWC_KEYMASK                 0xF0000000
-#define XWC_CLR_KEYMASK( x )  ( ( x ) & ~XWC_KEYMASK )
-#define XWC_IS_EXTKEY( x )    ( ( ( x ) & XWC_EXTKEYMASK ) != 0 )
-
-#define EXKEY_F1                    ( 0 | XWC_EXTKEYMASK )
-#define EXKEY_F2                    ( 1 | XWC_EXTKEYMASK )
-#define EXKEY_F3                    ( 2 | XWC_EXTKEYMASK )
-#define EXKEY_F4                    ( 3 | XWC_EXTKEYMASK )
-#define EXKEY_F5                    ( 4 | XWC_EXTKEYMASK )
-#define EXKEY_F6                    ( 5 | XWC_EXTKEYMASK )
-#define EXKEY_F7                    ( 6 | XWC_EXTKEYMASK )
-#define EXKEY_F8                    ( 7 | XWC_EXTKEYMASK )
-#define EXKEY_F9                    ( 8 | XWC_EXTKEYMASK )
-#define EXKEY_F10                   ( 9 | XWC_EXTKEYMASK )
-#define EXKEY_F11                   ( 10 | XWC_EXTKEYMASK )
-#define EXKEY_F12                   ( 11 | XWC_EXTKEYMASK )
-#define EXKEY_UP                    ( 12 | XWC_EXTKEYMASK )
-#define EXKEY_DOWN                  ( 13 | XWC_EXTKEYMASK )
-#define EXKEY_LEFT                  ( 14 | XWC_EXTKEYMASK )
-#define EXKEY_RIGHT                 ( 15 | XWC_EXTKEYMASK )
-#define EXKEY_INS                   ( 16 | XWC_EXTKEYMASK )
-#define EXKEY_DEL                   ( 17 | XWC_EXTKEYMASK )
-#define EXKEY_HOME                  ( 18 | XWC_EXTKEYMASK )
-#define EXKEY_END                   ( 19 | XWC_EXTKEYMASK )
-#define EXKEY_PGUP                  ( 20 | XWC_EXTKEYMASK )
-#define EXKEY_PGDN                  ( 21 | XWC_EXTKEYMASK )
-#define EXKEY_BS                    ( 22 | XWC_EXTKEYMASK )
-#define EXKEY_TAB                   ( 23 | XWC_EXTKEYMASK )
-#define EXKEY_ESC                   ( 24 | XWC_EXTKEYMASK )
-#define EXKEY_ENTER                 ( 25 | XWC_EXTKEYMASK )
-#define EXKEY_KPENTER               ( 26 | XWC_EXTKEYMASK )
-#define EXKEY_CENTER                ( 27 | XWC_EXTKEYMASK )
-#define EXKEY_PRTSCR                ( 28 | XWC_EXTKEYMASK )
-#define EXKEY_PAUSE                 ( 29 | XWC_EXTKEYMASK )
-
-/* xHarbour compatible definitions */
-#if ! defined( K_SH_LEFT )
-#define K_SH_LEFT                   K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP                     K_UP     /* Shift-Up    == Up    */
-#define K_SH_RIGHT                  K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN                   K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS                    K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL                    K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME                   K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END                    K_END    /* Shift-End   == End   */
-#define K_SH_PGUP                   K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN                   K_PGDN   /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN                 K_RETURN /* Shift-Enter == Enter */
-#define K_SH_ENTER                  K_ENTER  /* Shift-Enter == Enter */
-#endif
-
 #define XWC_STD_MASK                ( ExposureMask | StructureNotifyMask | FocusChangeMask | \
                                       ButtonPressMask | ButtonReleaseMask | PointerMotionMask | \
                                       KeyPressMask | KeyReleaseMask )
 
 /* Box char unicode values */
-#define HB_GTXWC_ARROW_R            0x0010 /* ARROW RIGHT */
-#define HB_GTXWC_ARROW_L            0x0011 /* ARROW LEFT */
-#define HB_GTXWC_ARROW_U            0x001E /* ARROW UP */
-#define HB_GTXWC_ARROW_D            0x001F /* ARROW DOWN */
+#define HB_BOXCH_ARROW_R            0x0010 /* ARROW RIGHT */
+#define HB_BOXCH_ARROW_L            0x0011 /* ARROW LEFT */
+#define HB_BOXCH_ARROW_U            0x001E /* ARROW UP */
+#define HB_BOXCH_ARROW_D            0x001F /* ARROW DOWN */
 
-#define HB_GTXWC_CHR_BASE           4
+#define HB_BOXCH_CHR_BASE           4
 
-#define HB_GTXWC_DBL_LT             0x2554 /* BOX DRAWINGS DOUBLE DOWN AND RIGHT (Double left top angle) */
-#define HB_GTXWC_DBL_TD             0x2566 /* BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL (Double top with junction down) */
-#define HB_GTXWC_DBL_RT             0x2557 /* BOX DRAWINGS DOUBLE DOWN AND LEFT (Double right top angle) */
+#define HB_BOXCH_DBL_LT             0x2554 /* BOX DRAWINGS DOUBLE DOWN AND RIGHT (Double left top angle) */
+#define HB_BOXCH_DBL_TD             0x2566 /* BOX DRAWINGS DOUBLE DOWN AND HORIZONTAL (Double top with junction down) */
+#define HB_BOXCH_DBL_RT             0x2557 /* BOX DRAWINGS DOUBLE DOWN AND LEFT (Double right top angle) */
 
-#define HB_GTXWC_DBL_LB             0x255A /* BOX DRAWINGS DOUBLE UP AND RIGHT (Double left bottom angle) */
-#define HB_GTXWC_DBL_BU             0x2569 /* BOX DRAWINGS DOUBLE UP AND HORIZONTAL (Double bottom with junction up) */
-#define HB_GTXWC_DBL_RB             0x255D /* BOX DRAWINGS DOUBLE DOWN AND LEFT (Double right bottom angle) */
+#define HB_BOXCH_DBL_LB             0x255A /* BOX DRAWINGS DOUBLE UP AND RIGHT (Double left bottom angle) */
+#define HB_BOXCH_DBL_BU             0x2569 /* BOX DRAWINGS DOUBLE UP AND HORIZONTAL (Double bottom with junction up) */
+#define HB_BOXCH_DBL_RB             0x255D /* BOX DRAWINGS DOUBLE DOWN AND LEFT (Double right bottom angle) */
 
-#define HB_GTXWC_DBL_VL             0x2560 /* BOX DRAWINGS DOUBLE VERTICAL AND RIGHT (Double Vertical with left junction) */
-#define HB_GTXWC_DBL_VR             0x2563 /* BOX DRAWINGS DOUBLE VERTICAL AND LEFT (Double vertical with right junction) */
-#define HB_GTXWC_DBL_CRS            0x256C /* BOX DRAWINGS DOUBLE VERTICAL AND HORIZONTAL (Double cross) */
+#define HB_BOXCH_DBL_VL             0x2560 /* BOX DRAWINGS DOUBLE VERTICAL AND RIGHT (Double Vertical with left junction) */
+#define HB_BOXCH_DBL_VR             0x2563 /* BOX DRAWINGS DOUBLE VERTICAL AND LEFT (Double vertical with right junction) */
+#define HB_BOXCH_DBL_CRS            0x256C /* BOX DRAWINGS DOUBLE VERTICAL AND HORIZONTAL (Double cross) */
 
-#define HB_GTXWC_DBL_HOR            0x2550 /* BOX DRAWINGS DOUBLE HORIZONTAL (Double Horizontal bar) */
-#define HB_GTXWC_DBL_VRT            0x2551 /* BOX DRAWINGS DOUBLE VERTICAL (Double Vertical bar) */
+#define HB_BOXCH_DBL_HOR            0x2550 /* BOX DRAWINGS DOUBLE HORIZONTAL (Double Horizontal bar) */
+#define HB_BOXCH_DBL_VRT            0x2551 /* BOX DRAWINGS DOUBLE VERTICAL (Double Vertical bar) */
 
-#define HB_GTXWC_SNG_LT             0x250C /* BOX DRAWINGS LIGHT DOWN AND RIGHT (Single left top angle) */
-#define HB_GTXWC_SNG_TD             0x252C /* BOX DRAWINGS LIGHT DOWN AND HORIZONTAL (Single top with junction down) */
-#define HB_GTXWC_SNG_RT             0x2510 /* BOX DRAWINGS LIGHT DOWN AND LEFT (Single right top angle) */
+#define HB_BOXCH_SNG_LT             0x250C /* BOX DRAWINGS LIGHT DOWN AND RIGHT (Single left top angle) */
+#define HB_BOXCH_SNG_TD             0x252C /* BOX DRAWINGS LIGHT DOWN AND HORIZONTAL (Single top with junction down) */
+#define HB_BOXCH_SNG_RT             0x2510 /* BOX DRAWINGS LIGHT DOWN AND LEFT (Single right top angle) */
 
-#define HB_GTXWC_SNG_LB             0x2514 /* BOX DRAWINGS LIGHT UP AND RIGHT (Single left bottom angle) */
-#define HB_GTXWC_SNG_BU             0x2534 /* BOX DRAWINGS LIGHT UP AND HORIZONTAL (Single bottom with junction up) */
-#define HB_GTXWC_SNG_RB             0x2518 /* BOX DRAWINGS LIGHT UP AND LEFT (Single right bottom angle) */
+#define HB_BOXCH_SNG_LB             0x2514 /* BOX DRAWINGS LIGHT UP AND RIGHT (Single left bottom angle) */
+#define HB_BOXCH_SNG_BU             0x2534 /* BOX DRAWINGS LIGHT UP AND HORIZONTAL (Single bottom with junction up) */
+#define HB_BOXCH_SNG_RB             0x2518 /* BOX DRAWINGS LIGHT UP AND LEFT (Single right bottom angle) */
 
-#define HB_GTXWC_SNG_VL             0x251C /* BOX DRAWINGS LIGHT VERTICAL AND RIGHT (Single Vertical with left junction) */
-#define HB_GTXWC_SNG_VR             0x2524 /* BOX DRAWINGS LIGHT VERTICAL AND LEFT (Single vertical with right junction) */
-#define HB_GTXWC_SNG_CRS            0x253C /* BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL (Single cross) */
+#define HB_BOXCH_SNG_VL             0x251C /* BOX DRAWINGS LIGHT VERTICAL AND RIGHT (Single Vertical with left junction) */
+#define HB_BOXCH_SNG_VR             0x2524 /* BOX DRAWINGS LIGHT VERTICAL AND LEFT (Single vertical with right junction) */
+#define HB_BOXCH_SNG_CRS            0x253C /* BOX DRAWINGS LIGHT VERTICAL AND HORIZONTAL (Single cross) */
 
-#define HB_GTXWC_SNG_HOR            0x2500 /* BOX DRAWINGS LIGHT HORIZONTAL (Single Horizontal bar) */
-#define HB_GTXWC_SNG_VRT            0x2502 /* BOX DRAWINGS LIGHT VERTICAL (Single Vertical bar) */
-
-
-#define HB_GTXWC_SNG_L_DBL_T        0x2552 /* BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE (Single left double top angle) */
-#define HB_GTXWC_SNG_T_DBL_D        0x2565 /* BOX DRAWINGS DOWN DOUBLE AND HORIZONTAL SINGLE (Single top with double junction down) */
-#define HB_GTXWC_SNG_R_DBL_T        0x2556 /* BOX DRAWINGS DOWN DOUBLE AND LEFT SINGLE (Single right double top angle) */
-
-#define HB_GTXWC_SNG_L_DBL_B        0x2558 /* BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE (Single left double bottom angle) */
-#define HB_GTXWC_SNG_B_DBL_U        0x2568 /* BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE (Single bottom double with junction up) */
-#define HB_GTXWC_SNG_R_DBL_B        0x255C /* BOX DRAWINGS UP DOUBLE AND LEFT SINGLE (Single right double bottom angle) */
-
-#define HB_GTXWC_SNG_V_DBL_L        0x255E /* BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE (Single Vertical double left junction) */
-#define HB_GTXWC_SNG_V_DBL_R        0x2561 /* BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE (Single vertical double right junction) */
-#define HB_GTXWC_SNG_DBL_CRS        0x256A /* BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE (Single cross (double horiz) */
+#define HB_BOXCH_SNG_HOR            0x2500 /* BOX DRAWINGS LIGHT HORIZONTAL (Single Horizontal bar) */
+#define HB_BOXCH_SNG_VRT            0x2502 /* BOX DRAWINGS LIGHT VERTICAL (Single Vertical bar) */
 
 
-#define HB_GTXWC_DBL_L_SNG_T        0x2553 /* BOX DRAWINGS DOWN DOUBLE AND RIGHT SINGLE (Double left single top angle) */
-#define HB_GTXWC_DBL_T_SNG_D        0x2564 /* BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE (Double top signle junction down) */
-#define HB_GTXWC_DBL_R_SNG_T        0x2555 /* BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE (Double right single top angle) */
+#define HB_BOXCH_SNG_L_DBL_T        0x2552 /* BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE (Single left double top angle) */
+#define HB_BOXCH_SNG_T_DBL_D        0x2565 /* BOX DRAWINGS DOWN DOUBLE AND HORIZONTAL SINGLE (Single top with double junction down) */
+#define HB_BOXCH_SNG_R_DBL_T        0x2556 /* BOX DRAWINGS DOWN DOUBLE AND LEFT SINGLE (Single right double top angle) */
 
-#define HB_GTXWC_DBL_L_SNG_B        0x2559 /* BOX DRAWINGS UP DOUBLE AND RIGHT SINGLE (Double left single bottom angle) */
-#define HB_GTXWC_DBL_B_SNG_U        0x2567 /* BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE (Double bottom single junction up) */
-#define HB_GTXWC_DBL_R_SNG_B        0x255B /* BOX DRAWINGS UP SINGLE AND LEFT DOUBLE (Double right single bottom angle) */
+#define HB_BOXCH_SNG_L_DBL_B        0x2558 /* BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE (Single left double bottom angle) */
+#define HB_BOXCH_SNG_B_DBL_U        0x2568 /* BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE (Single bottom double with junction up) */
+#define HB_BOXCH_SNG_R_DBL_B        0x255C /* BOX DRAWINGS UP DOUBLE AND LEFT SINGLE (Single right double bottom angle) */
 
-#define HB_GTXWC_DBL_V_SNG_R        0x2562 /* BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE (Double Vertical single left junction) */
-#define HB_GTXWC_DBL_V_SNG_L        0x255F /* BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE (Double vertical single right junction) */
-#define HB_GTXWC_DBL_SNG_CRS        0x256B /* BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE (Double cross (single horiz) */
+#define HB_BOXCH_SNG_V_DBL_L        0x255E /* BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE (Single Vertical double left junction) */
+#define HB_BOXCH_SNG_V_DBL_R        0x2561 /* BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE (Single vertical double right junction) */
+#define HB_BOXCH_SNG_DBL_CRS        0x256A /* BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE (Single cross (double horiz) */
 
-#define HB_GTXWC_FULL               0x2588 /* FULL BLOCK */
-#define HB_GTXWC_FULL_B             0x2584 /* LOWER HALF BLOCK */
-#define HB_GTXWC_FULL_L             0x258C /* LEFT HALF BLOCK */
-#define HB_GTXWC_FULL_R             0x2590 /* RIGHT HALF BLOCK */
-#define HB_GTXWC_FULL_T             0x2580 /* UPPER HALF BLOCK */
 
-#define HB_GTXWC_FILLER1            0x2591 /* LIGHT SHADE */
-#define HB_GTXWC_FILLER2            0x2592 /* MEDIUM SHADE */
-#define HB_GTXWC_FILLER3            0x2593 /* DARK SHADE */
+#define HB_BOXCH_DBL_L_SNG_T        0x2553 /* BOX DRAWINGS DOWN DOUBLE AND RIGHT SINGLE (Double left single top angle) */
+#define HB_BOXCH_DBL_T_SNG_D        0x2564 /* BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE (Double top signle junction down) */
+#define HB_BOXCH_DBL_R_SNG_T        0x2555 /* BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE (Double right single top angle) */
 
-#define HB_GTXWC_SQUARE             0x25A0 /* BLACK SQUARE */
+#define HB_BOXCH_DBL_L_SNG_B        0x2559 /* BOX DRAWINGS UP DOUBLE AND RIGHT SINGLE (Double left single bottom angle) */
+#define HB_BOXCH_DBL_B_SNG_U        0x2567 /* BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE (Double bottom single junction up) */
+#define HB_BOXCH_DBL_R_SNG_B        0x255B /* BOX DRAWINGS UP SINGLE AND LEFT DOUBLE (Double right single bottom angle) */
 
-#define HB_GTXWC_BOX_MIN            0x2500
-#define HB_GTXWC_BOX_MAX            0x25A0
+#define HB_BOXCH_DBL_V_SNG_R        0x2562 /* BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE (Double Vertical single left junction) */
+#define HB_BOXCH_DBL_V_SNG_L        0x255F /* BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE (Double vertical single right junction) */
+#define HB_BOXCH_DBL_SNG_CRS        0x256B /* BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE (Double cross (single horiz) */
 
-#define HB_GTXWC_RC_ARROW_DL        0xE040 /* USER ARROW DOWN (LEFT) */
-#define HB_GTXWC_RC_ARROW_DR        0xE041 /* USER ARROW DOWN (RIGHT) */
-#define HB_GTXWC_RC_ARROW_UL        0xE042 /* USER ARROW UP (LEFT) */
-#define HB_GTXWC_RC_ARROW_UR        0xE043 /* USER ARROW UP (RIGHT) */
-#define HB_GTXWC_RC_ARROW_VL        0xE044 /* USER ARROWS UP/DOWN (LEFT) */
-#define HB_GTXWC_RC_ARROW_VR        0xE045 /* USER ARROWS UP/DOWN (RIGHT) */
-#define HB_GTXWC_RC_BUTTON_L        0xE046 /* USER BUTTON (LEFT) */
-#define HB_GTXWC_RC_BUTTON_R        0xE047 /* USER BUTTON (RIGHT) */
-#define HB_GTXWC_RC_ARROW_LL        0xE048 /* USER ARROW LEFT (LEFT) */
-#define HB_GTXWC_RC_ARROW_LR        0xE049 /* USER ARROW LEFT (RIGHT) */
-#define HB_GTXWC_RC_ARROW_RL        0xE04A /* USER ARROW RIGHT (LEFT) */
-#define HB_GTXWC_RC_ARROW_RR        0xE04B /* USER ARROW RIGHT (RIGHT) */
-#define HB_GTXWC_RC_ENTER1          0xE04C /* USER ENTER (LEFT) */
-#define HB_GTXWC_RC_ENTER2          0xE04D /* USER ENTER (MIDDLE) */
-#define HB_GTXWC_RC_ENTER3          0xE04E /* USER ENTER (RIGHT) */
-#define HB_GTXWC_RC_VSCRL_LD        0xE04F /* USER VERTICAL SCROLL (LEFT-DOWN) */
-#define HB_GTXWC_RC_VSCRL_RD        0xE050 /* USER VERTICAL SCROLL (RIGHT-DOWN) */
-#define HB_GTXWC_RC_VSCRL_LU        0xE051 /* USER VERTICAL SCROLL (LEFT-UP) */
-#define HB_GTXWC_RC_VSCRL_RU        0xE052 /* USER VERTICAL SCROLL (RIGHT-UP) */
-#define HB_GTXWC_RC_VSCRL_L         0xE053 /* USER VERTICAL SCROLL (LEFT) */
-#define HB_GTXWC_RC_VSCRL_R         0xE054 /* USER VERTICAL SCROLL (RIGHT) */
-#define HB_GTXWC_RC_HSCRL           0xE055 /* USER HORIZONTAL SCROLL */
+#define HB_BOXCH_FULL               0x2588 /* FULL BLOCK */
+#define HB_BOXCH_FULL_B             0x2584 /* LOWER HALF BLOCK */
+#define HB_BOXCH_FULL_L             0x258C /* LEFT HALF BLOCK */
+#define HB_BOXCH_FULL_R             0x2590 /* RIGHT HALF BLOCK */
+#define HB_BOXCH_FULL_T             0x2580 /* UPPER HALF BLOCK */
 
-#define HB_GTXWC_RC_0               0xE056 /* USER BIG 0 */
-#define HB_GTXWC_RC_1               0xE057 /* USER BIG 1 */
-#define HB_GTXWC_RC_2               0xE058 /* USER BIG 2 */
-#define HB_GTXWC_RC_3               0xE059 /* USER BIG 3 */
-#define HB_GTXWC_RC_4               0xE05A /* USER BIG 4 */
-#define HB_GTXWC_RC_5               0xE05B /* USER BIG 5 */
-#define HB_GTXWC_RC_6               0xE05C /* USER BIG 6 */
-#define HB_GTXWC_RC_7               0xE05D /* USER BIG 7 */
-#define HB_GTXWC_RC_8               0xE05E /* USER BIG 8 */
-#define HB_GTXWC_RC_9               0xE05F /* USER BIG 9 */
-#define HB_GTXWC_RC_DOT             0xE060 /* USER BIG DOT */
-#define HB_GTXWC_RC_ACC             0xE061 /* USER BIG ACCENT */
+#define HB_BOXCH_FILLER1            0x2591 /* LIGHT SHADE */
+#define HB_BOXCH_FILLER2            0x2592 /* MEDIUM SHADE */
+#define HB_BOXCH_FILLER3            0x2593 /* DARK SHADE */
 
-#define HB_GTXWC_RC_BOX_ML          0xE062 /* USER BOX MIDDLE LEFT */
-#define HB_GTXWC_RC_BOX_MR          0xE063 /* USER BOX MIDDLE RIGHT */
-#define HB_GTXWC_RC_HWND_L          0xE064 /* USER WINDOW HANDLE LEFT */
-#define HB_GTXWC_RC_HWND_R          0xE065 /* USER WINDOW HANDLE RIGHT */
-#define HB_GTXWC_RC_BOX_TL          0xE066 /* USER BOX TOP LEFT */
-#define HB_GTXWC_RC_BOX_T           0xE067 /* USER BOX TOP */
-#define HB_GTXWC_RC_BOX_TR          0xE068 /* USER BOX TOP RIGHT */
-#define HB_GTXWC_RC_BOX_R           0xE069 /* USER BOX RIGHT */
-#define HB_GTXWC_RC_BOX_BR          0xE06A /* USER BOX BOTTOM RIGHT */
-#define HB_GTXWC_RC_BOX_B           0xE06B /* USER BOX BOTTOM */
-#define HB_GTXWC_RC_BOX_BL          0xE06C /* USER BOX BOTTOM LEFT */
-#define HB_GTXWC_RC_BOX_L           0xE06D /* USER BOX LEFT */
-#define HB_GTXWC_RC_BOX_MT          0xE06E /* USER BOX MIDDLE TOP */
-#define HB_GTXWC_RC_BOX_MB          0xE06F /* USER BOX MIDDLE BOTTOM */
+#define HB_BOXCH_SQUARE             0x25A0 /* BLACK SQUARE */
 
-#define HB_GTXWC_RC_BUTTON_CL       0xE070 /* USER BUTTON CHECK (LEFT) */
-#define HB_GTXWC_RC_BUTTON_CR       0xE071 /* USER BUTTON CHECK (RIGHT) */
+#define HB_BOXCH_BOX_MIN            0x2500
+#define HB_BOXCH_BOX_MAX            0x25A0
 
-#define HB_GTXWC_RC_FARROW_DL       0xE072 /* USER FAT ARROW DOWN (LEFT) */
-#define HB_GTXWC_RC_FARROW_DR       0xE073 /* USER FAT ARROW DOWN (RIGHT) */
+#define HB_BOXCH_RC_ARROW_DL        0xE040 /* USER ARROW DOWN (LEFT) */
+#define HB_BOXCH_RC_ARROW_DR        0xE041 /* USER ARROW DOWN (RIGHT) */
+#define HB_BOXCH_RC_ARROW_UL        0xE042 /* USER ARROW UP (LEFT) */
+#define HB_BOXCH_RC_ARROW_UR        0xE043 /* USER ARROW UP (RIGHT) */
+#define HB_BOXCH_RC_ARROW_VL        0xE044 /* USER ARROWS UP/DOWN (LEFT) */
+#define HB_BOXCH_RC_ARROW_VR        0xE045 /* USER ARROWS UP/DOWN (RIGHT) */
+#define HB_BOXCH_RC_BUTTON_L        0xE046 /* USER BUTTON (LEFT) */
+#define HB_BOXCH_RC_BUTTON_R        0xE047 /* USER BUTTON (RIGHT) */
+#define HB_BOXCH_RC_ARROW_LL        0xE048 /* USER ARROW LEFT (LEFT) */
+#define HB_BOXCH_RC_ARROW_LR        0xE049 /* USER ARROW LEFT (RIGHT) */
+#define HB_BOXCH_RC_ARROW_RL        0xE04A /* USER ARROW RIGHT (LEFT) */
+#define HB_BOXCH_RC_ARROW_RR        0xE04B /* USER ARROW RIGHT (RIGHT) */
+#define HB_BOXCH_RC_ENTER1          0xE04C /* USER ENTER (LEFT) */
+#define HB_BOXCH_RC_ENTER2          0xE04D /* USER ENTER (MIDDLE) */
+#define HB_BOXCH_RC_ENTER3          0xE04E /* USER ENTER (RIGHT) */
+#define HB_BOXCH_RC_VSCRL_LD        0xE04F /* USER VERTICAL SCROLL (LEFT-DOWN) */
+#define HB_BOXCH_RC_VSCRL_RD        0xE050 /* USER VERTICAL SCROLL (RIGHT-DOWN) */
+#define HB_BOXCH_RC_VSCRL_LU        0xE051 /* USER VERTICAL SCROLL (LEFT-UP) */
+#define HB_BOXCH_RC_VSCRL_RU        0xE052 /* USER VERTICAL SCROLL (RIGHT-UP) */
+#define HB_BOXCH_RC_VSCRL_L         0xE053 /* USER VERTICAL SCROLL (LEFT) */
+#define HB_BOXCH_RC_VSCRL_R         0xE054 /* USER VERTICAL SCROLL (RIGHT) */
+#define HB_BOXCH_RC_HSCRL           0xE055 /* USER HORIZONTAL SCROLL */
 
-#define HB_GTXWC_RC_DOTS            0xE074 /* USER DOTS */
-#define HB_GTXWC_RC_DOTS_L          0xE075 /* USER BIG DOTS (LEFT) */
-#define HB_GTXWC_RC_DOTS_R          0xE076 /* USER BIG DOTS (RIGHT) */
+#define HB_BOXCH_RC_0               0xE056 /* USER BIG 0 */
+#define HB_BOXCH_RC_1               0xE057 /* USER BIG 1 */
+#define HB_BOXCH_RC_2               0xE058 /* USER BIG 2 */
+#define HB_BOXCH_RC_3               0xE059 /* USER BIG 3 */
+#define HB_BOXCH_RC_4               0xE05A /* USER BIG 4 */
+#define HB_BOXCH_RC_5               0xE05B /* USER BIG 5 */
+#define HB_BOXCH_RC_6               0xE05C /* USER BIG 6 */
+#define HB_BOXCH_RC_7               0xE05D /* USER BIG 7 */
+#define HB_BOXCH_RC_8               0xE05E /* USER BIG 8 */
+#define HB_BOXCH_RC_9               0xE05F /* USER BIG 9 */
+#define HB_BOXCH_RC_DOT             0xE060 /* USER BIG DOT */
+#define HB_BOXCH_RC_ACC             0xE061 /* USER BIG ACCENT */
 
-#define HB_GTXWC_RC_MIN             0xE040
-#define HB_GTXWC_RC_MAX             0xE076
+#define HB_BOXCH_RC_BOX_ML          0xE062 /* USER BOX MIDDLE LEFT */
+#define HB_BOXCH_RC_BOX_MR          0xE063 /* USER BOX MIDDLE RIGHT */
+#define HB_BOXCH_RC_HWND_L          0xE064 /* USER WINDOW HANDLE LEFT */
+#define HB_BOXCH_RC_HWND_R          0xE065 /* USER WINDOW HANDLE RIGHT */
+#define HB_BOXCH_RC_BOX_TL          0xE066 /* USER BOX TOP LEFT */
+#define HB_BOXCH_RC_BOX_T           0xE067 /* USER BOX TOP */
+#define HB_BOXCH_RC_BOX_TR          0xE068 /* USER BOX TOP RIGHT */
+#define HB_BOXCH_RC_BOX_R           0xE069 /* USER BOX RIGHT */
+#define HB_BOXCH_RC_BOX_BR          0xE06A /* USER BOX BOTTOM RIGHT */
+#define HB_BOXCH_RC_BOX_B           0xE06B /* USER BOX BOTTOM */
+#define HB_BOXCH_RC_BOX_BL          0xE06C /* USER BOX BOTTOM LEFT */
+#define HB_BOXCH_RC_BOX_L           0xE06D /* USER BOX LEFT */
+#define HB_BOXCH_RC_BOX_MT          0xE06E /* USER BOX MIDDLE TOP */
+#define HB_BOXCH_RC_BOX_MB          0xE06F /* USER BOX MIDDLE BOTTOM */
 
-#define HB_GTXWC_TRANS_COUNT        ( HB_GTXWC_CHR_BASE + ( HB_GTXWC_BOX_MAX - HB_GTXWC_BOX_MIN + 1 ) + ( HB_GTXWC_RC_MAX - HB_GTXWC_RC_MIN + 1 ) )
-#define HB_GTXWC_TRANS_MAX          0xFF
+#define HB_BOXCH_RC_BUTTON_CL       0xE070 /* USER BUTTON CHECK (LEFT) */
+#define HB_BOXCH_RC_BUTTON_CR       0xE071 /* USER BUTTON CHECK (RIGHT) */
+
+#define HB_BOXCH_RC_FARROW_DL       0xE072 /* USER FAT ARROW DOWN (LEFT) */
+#define HB_BOXCH_RC_FARROW_DR       0xE073 /* USER FAT ARROW DOWN (RIGHT) */
+
+#define HB_BOXCH_RC_DOTS            0xE074 /* USER DOTS */
+#define HB_BOXCH_RC_DOTS_L          0xE075 /* USER BIG DOTS (LEFT) */
+#define HB_BOXCH_RC_DOTS_R          0xE076 /* USER BIG DOTS (RIGHT) */
+
+#define HB_BOXCH_RC_MIN             0xE040
+#define HB_BOXCH_RC_MAX             0xE076
+
+#define HB_BOXCH_TRANS_COUNT        ( HB_BOXCH_CHR_BASE + ( HB_BOXCH_BOX_MAX - HB_BOXCH_BOX_MIN + 1 ) + ( HB_BOXCH_RC_MAX - HB_BOXCH_RC_MIN + 1 ) )
+#define HB_BOXCH_TRANS_MAX          0xFF
 
 /********************** Unix to graphic box translation ******************/
 

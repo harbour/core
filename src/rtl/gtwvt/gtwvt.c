@@ -159,6 +159,7 @@ static const int K_Ctrl[] =
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT );
+static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT );
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
@@ -265,6 +266,15 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 #else
    if( pWVT->wcTrans )
       hb_itemFreeC( ( char * ) pWVT->wcTrans );
+
+   hb_gt_wvt_ResetBoxCharBitmaps( pWVT );
+
+   if( pWVT->hBmpDC )
+      DeleteDC( pWVT->hBmpDC );
+   if( pWVT->hPen )
+      DeleteObject( pWVT->hPen );
+   if( pWVT->hBrush )
+      DeleteObject( pWVT->hBrush );
 #endif
    if( pWVT->hFont )
       DeleteObject( pWVT->hFont );
@@ -340,11 +350,10 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->CaretWidth        = 0;
    pWVT->MousePos.x        = 0;
    pWVT->MousePos.y        = 0;
-   pWVT->MouseMove         = HB_TRUE;
    pWVT->hWnd              = NULL;
    pWVT->keyPointerIn      = 0;
    pWVT->keyPointerOut     = 0;
-   pWVT->keyLast           = 0;
+   pWVT->keyLastPos        = 0;
 
    pWVT->CentreWindow      = HB_TRUE;         /* Default is to always display window in centre of screen */
    pWVT->CodePage          = OEM_CHARSET;     /* GetACP(); - set code page to default system */
@@ -356,7 +365,6 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 #endif
 
    pWVT->Win9X             = hb_iswin9x();
-   pWVT->AltF4Close        = HB_FALSE;
 
    pWVT->IgnoreWM_SYSCHAR  = HB_FALSE;
 
@@ -395,6 +403,1101 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    return pWVT;
 }
+
+#if defined( UNICODE )
+
+#define hb_bm_line( x1, y1, x2, y2 )      do { \
+               MoveToEx( pWVT->hBmpDC, x1, y1, NULL ); \
+               LineTo( pWVT->hBmpDC, x2, y2 ); \
+               SetPixel( pWVT->hBmpDC, x2, y2, pWVT->COLORS[ 0 ] ); \
+            } while( 0 )
+#define hb_bm_point( x, y )         SetPixel( pWVT->hBmpDC, x, y, pWVT->COLORS[ 0 ] )
+#define hb_bm_rect( x, y, w, h )    Rectangle( pWVT->hBmpDC, x, y, (x)+(w), (y)+(h) )
+#define hb_bm_polygon( pts, n )     Polygon( pWVT->hBmpDC, pts, n )
+#define hb_bm_invertrect( x, y, w, h )    do { \
+               SetRect( &rc, 0, 0, cellx, celly ); \
+               InvertRect( pWVT->hBmpDC, &rc ); \
+            } while( 0 )
+#define hb_bm_text( ch )                  do { \
+               SetTextAlign( pWVT->hBmpDC, TA_LEFT ); \
+               SetRect( &rc, 0, 0, cellx, celly ); \
+               ExtTextOut( pWVT->hBmpDC, 0, 0, ETO_CLIPPED | ETO_OPAQUE, &rc, \
+                           ch, 1, pWVT->FixedFont ? NULL : pWVT->FixedSize ); \
+            } while( 0 )
+
+static HBITMAP hb_gt_wvt_bitmap_char( PHB_GTWVT pWVT, int cellx, int celly )
+{
+   HBITMAP hBitMap = CreateBitmap( cellx + 1, celly + 1, 1, 1, NULL );
+   HBRUSH hBrush;
+   RECT rc;
+
+   if( !pWVT->hBmpDC )
+   {
+      HDC hdc = GetDC( pWVT->hWnd );
+      pWVT->hBmpDC = CreateCompatibleDC( hdc );
+      ReleaseDC( pWVT->hWnd, hdc );
+   }
+
+   SelectObject( pWVT->hBmpDC, hBitMap );
+
+   rc.left   = 0;
+   rc.top    = 0;
+   rc.right  = cellx + 1;
+   rc.bottom = celly + 1;
+   hBrush = CreateSolidBrush( GetBkColor( pWVT->hBmpDC ) );
+   FillRect( pWVT->hBmpDC, &rc, hBrush );
+   DeleteObject( hBrush );
+
+   if( !pWVT->hPen )
+   {
+      pWVT->hPen = CreatePen( PS_SOLID, 0, pWVT->COLORS[ 0 ] );
+      SelectObject( pWVT->hBmpDC, pWVT->hPen );
+   }
+
+   if( !pWVT->hBrush )
+   {
+      pWVT->hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
+      SelectObject( pWVT->hBmpDC, pWVT->hBrush );
+   }
+
+   SelectObject( pWVT->hBmpDC, pWVT->hFont );
+
+   return hBitMap;
+}
+
+static HBITMAP hb_gt_wvt_DefineBoxButtonL( PHB_GTWVT pWVT, int cellx, int celly )
+{
+   HBITMAP hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+   MoveToEx( pWVT->hBmpDC, cellx - 1, 0, NULL );
+   LineTo( pWVT->hBmpDC, 0, 0 );
+   LineTo( pWVT->hBmpDC, 0, celly - 1 );
+   LineTo( pWVT->hBmpDC, cellx, celly - 1 );
+
+   MoveToEx( pWVT->hBmpDC, 2, celly - 2, NULL );
+   LineTo( pWVT->hBmpDC, cellx, celly - 2 );
+
+   return hBitMap;
+}
+
+static HBITMAP hb_gt_wvt_DefineBoxButtonR( PHB_GTWVT pWVT, int cellx, int celly )
+{
+   HBITMAP hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+   MoveToEx( pWVT->hBmpDC, 0, 0, NULL );
+   LineTo( pWVT->hBmpDC, cellx - 1, 0 );
+   LineTo( pWVT->hBmpDC, cellx - 1, celly - 1 );
+   LineTo( pWVT->hBmpDC, -1, celly - 1 );
+
+   MoveToEx( pWVT->hBmpDC, cellx - 2, 3, NULL );
+   LineTo( pWVT->hBmpDC, cellx - 2, celly - 2 );
+   LineTo( pWVT->hBmpDC, -1, celly - 2 );
+
+   return hBitMap;
+}
+
+static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
+{
+   HBITMAP hBitMap = NULL;
+   int cellx = pWVT->PTEXTSIZE.x;
+   int celly = pWVT->PTEXTSIZE.y;
+   int i, y, x, yy, xx, skip, start, mod;
+   POINT pts[ 3 ];
+   RECT rc;
+
+   if( usCh >= HB_BOXCH_RC_MIN && usCh <= HB_BOXCH_RC_MAX )
+      switch( usCh )
+      {
+         case HB_BOXCH_RC_ARROW_DL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = celly / 2 - 1;
+            for( y = celly - 4, x = cellx - 1; x >= 3 && y >= yy; --x, --y )
+               hb_bm_line( x, y, cellx - 1, y );
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = cellx - xx / 2 - 1; y >= 3; --y )
+               hb_bm_line( x, y, cellx - 1, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_DR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = celly - 5, x = 0; x < cellx - 4 && y >= yy; ++x, --y )
+               hb_bm_line( 0, y, x, y );
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = xx / 2 - 1; y >= 3; --y )
+               hb_bm_line( 0, y, x, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_UL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = 3, x = cellx - 1; x >= 3 && y <= yy; --x, ++y )
+               hb_bm_line( x, y, cellx - 1, y );
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = cellx - xx / 2 - 1; y < celly - 3; ++y )
+               hb_bm_line( x, y, cellx - 1, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_UR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = 4, x = 0; x < cellx - 4 && y <= yy; ++x, ++y )
+               hb_bm_line( 0, y, x, y );
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = xx / 2 - 1; y < celly - 3; ++y )
+               hb_bm_line( 0, y, x, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_VL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( y = 3, x = cellx - 1; x >= 3 && y < yy; --x, ++y )
+               hb_bm_line( x, y, cellx - 1, y );
+            for( y = yy + 2, ++x; x <= cellx - 1 && y < celly - 3; ++x, ++y )
+               hb_bm_line( x, y, cellx - 1, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_VR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( y = 4, x = 0; x < cellx - 4 && y < yy; ++x, ++y )
+               hb_bm_line( 0, y, x, y );
+            for( y = yy + 2, --x; x >= 0 && y < celly - 3; --x, ++y )
+               hb_bm_line( 0, y, x, y );
+            break;
+
+         case HB_BOXCH_RC_BUTTON_L:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            break;
+
+         case HB_BOXCH_RC_BUTTON_R:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            break;
+
+         case HB_BOXCH_RC_ARROW_LL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( x = 3, y = 0; x < cellx; ++x, ++y )
+               hb_bm_line( x, yy - y, x, yy + y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_LR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = HB_MAX( celly / 5, 3 ) | 1;
+            for( y = ( celly - yy ) / 2; yy--; ++y )
+               hb_bm_line( 0, y, cellx - 4, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_RL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = HB_MAX( celly / 5, 3 ) | 1;
+            for( y = ( celly - yy ) / 2; yy--; ++y )
+               hb_bm_line( 3, y, cellx - 1, y );
+            break;
+
+         case HB_BOXCH_RC_ARROW_RR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( x = cellx - 4, y = 0; x >= 0; --x, ++y )
+               hb_bm_line( x, yy - y, x, yy + y );
+            break;
+
+         case HB_BOXCH_RC_ENTER1:
+            /* TODO */
+            break;
+         case HB_BOXCH_RC_ENTER2:
+            /* TODO */
+            break;
+         case HB_BOXCH_RC_ENTER3:
+            /* TODO */
+            break;
+
+         case HB_BOXCH_RC_VSCRL_LD:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( 2, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+
+            for( y = celly / 2 + 1; y < celly; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_VSCRL_RD:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            hb_bm_line( cellx - 2, 0, cellx - 2, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+
+            for( y = celly / 2 + 1; y < celly; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_VSCRL_LU:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+
+            for( y = 0; y < celly / 2; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_VSCRL_RU:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( cellx - 2, celly / 2 + 3, cellx - 2, celly - 1 );
+
+            for( y = 0; y < celly / 2; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_VSCRL_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, 0, celly - 1 );
+
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_VSCRL_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_HSCRL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+
+            for( y = 2; y < celly - 2; y++ )
+            {
+               for( x = y & 1; x < cellx; x += 2 )
+                  hb_bm_point( x, y );
+            }
+            break;
+
+         case HB_BOXCH_RC_0:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "0" ) );
+            break;
+
+         case HB_BOXCH_RC_1:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "1" ) );
+            break;
+
+         case HB_BOXCH_RC_2:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "2" ) );
+            break;
+
+         case HB_BOXCH_RC_3:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "3" ) );
+            break;
+
+         case HB_BOXCH_RC_4:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "4" ) );
+            break;
+
+         case HB_BOXCH_RC_5:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "5" ) );
+            break;
+
+         case HB_BOXCH_RC_6:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "6" ) );
+            break;
+
+         case HB_BOXCH_RC_7:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "7" ) );
+            break;
+
+         case HB_BOXCH_RC_8:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "8" ) );
+            break;
+
+         case HB_BOXCH_RC_9:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "9" ) );
+            break;
+
+         case HB_BOXCH_RC_DOT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "." ) );
+            break;
+
+         case HB_BOXCH_RC_ACC:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+            hb_bm_text( TEXT( "'" ) );
+            break;
+
+         case HB_BOXCH_RC_BOX_ML:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_MR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_HWND_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, 0, 0 );
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+            hb_bm_line( cellx - 1, celly / 4 + 2, cellx / 4 + 1, celly / 4 + 2 );
+            hb_bm_line( cellx / 4 + 1, celly / 4 + 2, cellx / 4 + 1, celly - 4 - celly / 4 );
+            hb_bm_line( cellx / 4 + 1, celly - 4 - celly / 4, cellx - 1, celly - 4 - celly / 4 );
+            hb_bm_line( cellx / 4 + 2, celly - 3 - celly / 4, cellx - 1, celly - 3 - celly / 4 );
+            break;
+
+         case HB_BOXCH_RC_HWND_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            hb_bm_line( cellx - 1, celly - 1, 0, celly - 1 );
+            hb_bm_line( 0, celly / 4 + 2, cellx - cellx / 4 - 2, celly / 4 + 2 );
+            hb_bm_line( cellx - cellx / 4 - 2, celly / 4 + 2, cellx - cellx / 4 - 2, celly - 4 - celly / 4 );
+            hb_bm_line( cellx - cellx / 4 - 2, celly - 4 - celly / 4, 0, celly - 4 - celly / 4 );
+            hb_bm_line( 0, celly - 3 - celly / 4, cellx - cellx / 4 - 1, celly - 3 - celly / 4 );
+            hb_bm_line( cellx - cellx / 4 - 1, celly - 3 - celly / 4, cellx - cellx / 4 - 1, celly / 4 + 2 );
+            break;
+
+         case HB_BOXCH_RC_BOX_TL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            break;
+
+         case HB_BOXCH_RC_BOX_TR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_BR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx - 1, 0, cellx - 1, celly - 1 );
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_BL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, 0, 0, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BOX_MT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( 0, 0, cellx - 1, 0 );
+            break;
+
+         case HB_BOXCH_RC_BOX_MB:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( 0, celly - 1, cellx - 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_RC_BUTTON_CL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = celly - 2 / 3;
+            xx = cellx - 4;
+            if( yy > xx )
+               yy = xx;
+            xx = ( xx * 2 + 1 ) / 3;
+            if( xx < 2 )
+               xx = 2;
+            for( y = celly - yy - 3 - xx, i = 0; i < xx; ++y, ++i )
+               hb_bm_line( 3, y, 3 + yy - 1, y + yy - 1 );
+            y = celly - 5 - xx;
+            hb_bm_line( cellx - 1, y, cellx - 1, y + xx - 1 );
+            break;
+
+         case HB_BOXCH_RC_BUTTON_CR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = celly - 2 / 3;
+            xx = cellx - 4;
+            if( yy > xx )
+               yy = xx;
+            xx = ( xx * 2 + 1 ) / 3;
+            if( xx < 2 )
+               xx = 2;
+            for( y = celly - 6 - xx, i = 0; i < xx; ++y, ++i )
+               hb_bm_line( 0, y, yy, y - yy );
+            break;
+
+         case HB_BOXCH_RC_FARROW_DL:
+            hBitMap = hb_gt_wvt_DefineBoxButtonL( pWVT, cellx, celly );
+            yy = ( celly - cellx ) / 2 + 1;
+            yy = HB_MAX( yy, 2 );
+            for( y = celly - yy - 1, x = cellx - 1; x >= 2 && y >= 3; --x, --y )
+               hb_bm_line( x, y, cellx - 1, y );
+            break;
+
+         case HB_BOXCH_RC_FARROW_DR:
+            hBitMap = hb_gt_wvt_DefineBoxButtonR( pWVT, cellx, celly );
+            yy = ( celly - cellx ) / 2 + 1;
+            yy = HB_MAX( yy, 2 );
+            for( y = celly - yy - 2, x = 0; x < cellx - 3 && y >= 3; ++x, --y )
+               hb_bm_line( 0, y, x, y );
+            break;
+
+         case HB_BOXCH_RC_DOTS:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            for( x = 1; x < cellx; x += 2 )
+               hb_bm_point( x, celly / 2 );
+            break;
+
+         case HB_BOXCH_RC_DOTS_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = cellx / 2;
+            xx = i - i / 2;
+            yy = HB_MAX( 2, xx - 1 );
+
+            hb_bm_rect( cellx - xx / 2 - i, celly / 3 * 2, xx    , yy );
+            hb_bm_rect( cellx - xx / 2    , celly / 3 * 2, xx / 2, yy );
+            break;
+
+         case HB_BOXCH_RC_DOTS_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = cellx / 2;
+            xx = i - i / 2;
+            yy = HB_MAX( 2, xx - 1 );
+
+            hb_bm_rect( 0         , celly / 3 * 2, xx - xx / 2, yy );
+            hb_bm_rect( i - xx / 2, celly / 3 * 2, xx         , yy );
+            break;
+      }
+   else
+      switch( usCh )
+      {
+         case HB_BOXCH_FILLER1:
+         case HB_BOXCH_FILLER2:
+         case HB_BOXCH_FILLER3:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            if( usCh == HB_BOXCH_FILLER1 )
+            {
+               skip = 4;
+               start = mod = 1;
+            }
+            else if( usCh == HB_BOXCH_FILLER2 )
+            {
+               skip = 2;
+               start = 0;
+               mod = 1;
+            }
+            else
+            {
+               skip = 4;
+               start = mod = 0;
+            }
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = start + ( skip >> 1 ) * ( ( y & 1 ) ^ mod ); x < cellx; x += skip )
+                  hb_bm_point( x, y );
+            }
+            if( usCh == HB_BOXCH_FILLER3 )
+               hb_bm_invertrect( 0, 0, cellx, celly );
+            break;
+
+         case HB_BOXCH_ARROW_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
+            pts[ 0 ].x = ( ( cellx - i ) >> 1 );
+            pts[ 0 ].y = ( celly >> 1 ) - i;
+            pts[ 1 ].x = pts[ 0 ].x + i;
+            pts[ 1 ].y = pts[ 0 ].y + i;
+            pts[ 2 ].x = pts[ 1 ].x - i;
+            pts[ 2 ].y = pts[ 1 ].y + i;
+            hb_bm_polygon( pts, 3 );
+            break;
+
+         case HB_BOXCH_ARROW_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
+            pts[ 0 ].x = ( ( cellx - i ) >> 1 ) + i;
+            pts[ 0 ].y = ( celly >> 1 ) - i;
+            pts[ 1 ].x = pts[ 0 ].x - i;
+            pts[ 1 ].y = pts[ 0 ].y + i;
+            pts[ 2 ].x = pts[ 1 ].x + i;
+            pts[ 2 ].y = pts[ 1 ].y + i;
+            hb_bm_polygon( pts, 3 );
+            break;
+
+         case HB_BOXCH_ARROW_U:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = HB_MIN( celly, cellx >> 1 );
+            pts[ 0 ].x = ( cellx >> 1 ) - i;
+            pts[ 0 ].y = ( ( celly - i ) >> 1 ) + i;
+            pts[ 1 ].x = pts[ 0 ].x + i;
+            pts[ 1 ].y = pts[ 0 ].y - i;
+            pts[ 2 ].x = pts[ 1 ].x + i;
+            pts[ 2 ].y = pts[ 1 ].y + i;
+            hb_bm_polygon( pts, 3 );
+            break;
+
+         case HB_BOXCH_ARROW_D:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            i = HB_MIN( celly, cellx >> 1 );
+            pts[ 0 ].x = ( cellx >> 1 ) - i;
+            pts[ 0 ].y = ( ( celly - i ) >> 1 );
+            pts[ 1 ].x = pts[ 0 ].x + i;
+            pts[ 1 ].y = pts[ 0 ].y + i;
+            pts[ 2 ].x = pts[ 1 ].x + i;
+            pts[ 2 ].y = pts[ 1 ].y - i;
+            hb_bm_polygon( pts, 3 );
+            break;
+
+         case HB_BOXCH_FULL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_rect( 0, 0, cellx, celly );
+            break;
+
+         case HB_BOXCH_FULL_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_rect( 0, celly / 2 + 1, cellx, ( celly + 1 ) / 2 );
+            break;
+
+         case HB_BOXCH_FULL_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_rect( 0, 0, cellx, celly / 2 );
+            break;
+
+         case HB_BOXCH_FULL_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_rect( cellx / 2 + 1, 0, ( cellx + 1 ) / 2, celly );
+            break;
+
+         case HB_BOXCH_FULL_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_rect( 0, 0, cellx / 2, celly );
+            break;
+
+         case HB_BOXCH_SNG_LT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, celly - 1, cellx / 2, celly / 2 );
+            hb_bm_line( cellx / 2, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_TD:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( cellx / 2, celly / 2, cellx / 2, celly - 1 );
+            break;
+
+         case HB_BOXCH_SNG_RT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, celly - 1, cellx / 2, celly / 2 );
+            hb_bm_line( cellx / 2, celly / 2, 0, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_LB:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 );
+            hb_bm_line( cellx / 2, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_BU:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_RB:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 );
+            hb_bm_line( cellx / 2, celly / 2, 0, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_VL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( cellx / 2, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_VR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( cellx / 2, celly / 2, 0, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_CRS:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_HOR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_VRT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            break;
+
+         case HB_BOXCH_DBL_LT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, celly - 1, cellx / 2 - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly - 1, cellx / 2 + 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_TD:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx / 2 - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx / 2 + 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_DBL_RT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, celly - 1, cellx / 2 - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, 0, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, celly - 1, cellx / 2 + 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, 0, celly / 2 - 1 );
+            break;
+
+         case HB_BOXCH_DBL_LB:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            break;
+
+         case HB_BOXCH_DBL_BU:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( 0, celly / 2 - 1, cellx / 2 - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 - 1, cellx / 2 - 1, 0 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, cellx / 2 + 1, 0 );
+            break;
+
+         case HB_BOXCH_DBL_RB:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 - 1, 0, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, 0, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_VL:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_VR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 - 1, 0, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, 0, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_CRS:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 - 1, 0, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2 + 1, 0, celly / 2 + 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_HOR:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_VRT:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_SNG_L_DBL_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, celly / 2 - 1, cellx / 2, celly - 1 );
+            break;
+
+         case HB_BOXCH_SNG_T_DBL_D:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( cellx / 2 - 1, celly / 2, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2, cellx / 2 + 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_SNG_R_DBL_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx / 2 + 1, celly / 2 );
+            hb_bm_line( cellx / 2 - 1, celly / 2, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2, cellx / 2 + 1, celly - 1 );
+            break;
+
+         case HB_BOXCH_SNG_L_DBL_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_SNG_B_DBL_U:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_R_DBL_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2, cellx / 2 + 1, celly / 2 );
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SNG_V_DBL_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( cellx / 2, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( cellx / 2, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_SNG_V_DBL_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( 0, celly / 2 - 1, cellx / 2, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx / 2, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_SNG_DBL_CRS:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly - 1 );
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_L_SNG_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, celly / 2, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( cellx / 2 - 1, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_DBL_T_SNG_D:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, celly / 2 + 1, cellx / 2, celly - 1 );
+            break;
+
+         case HB_BOXCH_DBL_R_SNG_T:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx / 2, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx / 2, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, celly / 2 - 1, cellx / 2, celly - 1 );
+            break;
+
+         case HB_BOXCH_DBL_L_SNG_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly / 2 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly / 2 );
+            hb_bm_line( cellx / 2 - 1, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_DBL_B_SNG_U:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx - 1, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx - 1, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 - 1 );
+            break;
+
+         case HB_BOXCH_DBL_R_SNG_B:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( 0, celly / 2 - 1, cellx / 2, celly / 2 - 1 );
+            hb_bm_line( 0, celly / 2 + 1, cellx / 2, celly / 2 + 1 );
+            hb_bm_line( cellx / 2, 0, cellx / 2, celly / 2 + 1 );
+            break;
+
+         case HB_BOXCH_DBL_V_SNG_L:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_DBL_V_SNG_R:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx / 2 - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_DBL_SNG_CRS:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            hb_bm_line( cellx / 2 - 1, 0, cellx / 2 - 1, celly - 1 );
+            hb_bm_line( cellx / 2 + 1, 0, cellx / 2 + 1, celly - 1 );
+            hb_bm_line( 0, celly / 2, cellx - 1, celly / 2 );
+            break;
+
+         case HB_BOXCH_SQUARE:
+            hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
+
+            xx = yy = cellx - HB_MAX( cellx >> 2, 2 );
+            hb_bm_rect( ( cellx - xx ) >> 1, ( celly - yy ) >> 1, xx, yy );
+            break;
+      }
+
+   return hBitMap;
+}
+
+/* *********************************************************************** */
+
+static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT )
+{
+   int i;
+
+   for( i = 1; i <= pWVT->boxCount; i++ )
+      DeleteObject( pWVT->boxImage[ i ] );
+
+   memset( pWVT->boxImage, 0, sizeof( pWVT->boxImage ) );
+   pWVT->boxCount = 0;
+
+   for( i = 0; i < HB_BOXCH_TRANS_COUNT; ++i )
+      pWVT->boxIndex[ i ] = HB_BOXCH_TRANS_MAX;
+}
+
+/* *********************************************************************** */
+
+static HBITMAP hb_gt_wvt_GetBoxChar( PHB_GTWVT pWVT, HB_USHORT * puc16 )
+{
+   HB_USHORT uc16 = *puc16;
+   int iPos, iTrans;
+
+   if( ( pWVT->fontAttribute & HB_GTI_FONTA_DRAWBOX ) == 0 )
+      return NULL;
+
+   if( uc16 >= HB_BOXCH_RC_0 && uc16 <= HB_BOXCH_RC_ACC )
+   {
+      switch( uc16 )
+      {
+         case HB_BOXCH_RC_0:
+            *puc16 = '0';
+            break;
+         case HB_BOXCH_RC_1:
+            *puc16 = '1';
+            break;
+         case HB_BOXCH_RC_2:
+            *puc16 = '2';
+            break;
+         case HB_BOXCH_RC_3:
+            *puc16 = '3';
+            break;
+         case HB_BOXCH_RC_4:
+            *puc16 = '4';
+            break;
+         case HB_BOXCH_RC_5:
+            *puc16 = '5';
+            break;
+         case HB_BOXCH_RC_6:
+            *puc16 = '6';
+            break;
+         case HB_BOXCH_RC_7:
+            *puc16 = '7';
+            break;
+         case HB_BOXCH_RC_8:
+            *puc16 = '8';
+            break;
+         case HB_BOXCH_RC_9:
+            *puc16 = '9';
+            break;
+         case HB_BOXCH_RC_DOT:
+            *puc16 = '.';
+            break;
+         case HB_BOXCH_RC_ACC:
+            *puc16 = '\'';
+            break;
+      }
+      return NULL;
+   }
+
+   if     ( uc16 == HB_BOXCH_ARROW_R )
+      iPos = 0;
+   else if( uc16 == HB_BOXCH_ARROW_L )
+      iPos = 1;
+   else if( uc16 == HB_BOXCH_ARROW_U )
+      iPos = 2;
+   else if( uc16 == HB_BOXCH_ARROW_D )
+      iPos = 3;
+   else if( uc16 >= HB_BOXCH_BOX_MIN && uc16 <= HB_BOXCH_BOX_MAX )
+      iPos = HB_BOXCH_CHR_BASE +
+             ( uc16 - HB_BOXCH_BOX_MIN );
+   else if( uc16 >= HB_BOXCH_RC_MIN && uc16 <= HB_BOXCH_RC_MAX )
+      iPos = HB_BOXCH_CHR_BASE + ( HB_BOXCH_BOX_MAX - HB_BOXCH_BOX_MIN + 1 ) +
+             ( uc16 - HB_BOXCH_RC_MIN );
+   else
+      return NULL;
+
+   iTrans = pWVT->boxIndex[ iPos ];
+   if( iTrans == HB_BOXCH_TRANS_MAX )
+   {
+      if( pWVT->boxCount < HB_BOXCH_TRANS_MAX - 1 )
+      {
+         iTrans = pWVT->boxCount + 1;
+         pWVT->boxImage[ iTrans ] = hb_gt_wvt_DefineBoxChar( pWVT, uc16 );
+         if( pWVT->boxImage[ iTrans ] )
+            pWVT->boxCount = iTrans;
+         else
+            iTrans = 0;
+      }
+      else
+         iTrans = 0;
+      pWVT->boxIndex[ iPos ] = iTrans;
+   }
+
+   return pWVT->boxImage[ iTrans ];
+}
+#endif /* UNICODE */
 
 /*
  * use the standard fixed OEM font, unless the caller has requested set size fonts
@@ -523,18 +1626,22 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
 {
    int iPos = pWVT->keyPointerIn;
 
-   if( iKey == K_MOUSEMOVE || iKey == K_NCMOUSEMOVE )
+   if( pWVT->keyPointerIn != pWVT->keyPointerOut &&
+       HB_INKEY_ISMOUSEPOS( iKey ) )
    {
-      /* Clipper strips repeated mouse movemnt - let's do the same */
-      if( pWVT->keyLast == iKey && pWVT->keyPointerIn != pWVT->keyPointerOut )
+      int iLastKey = pWVT->Keys[ pWVT->keyLastPos ];
+      if( HB_INKEY_ISMOUSEPOS( iLastKey ) )
+      {
+         pWVT->Keys[ pWVT->keyLastPos ] = iKey;
          return;
+      }
    }
 
    /*
     * When the buffer is full new event overwrite the last one
     * in the buffer - it's Clipper behavior, [druzus]
     */
-   pWVT->Keys[ iPos ] = pWVT->keyLast = iKey;
+   pWVT->Keys[ pWVT->keyLastPos = iPos ] = iKey;
    if( ++iPos >= WVT_CHAR_QUEUE_SIZE )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
@@ -554,28 +1661,6 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 
    *iKey = 0;
    return HB_FALSE;
-}
-
-static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
-{
-   int nVirtKey = GetKeyState( VK_MENU );
-
-   if( nVirtKey & 0x8000 ) /* alt + key */
-      hb_gt_wvt_AddCharToInputQueue( pWVT, altkey );
-   else
-   {
-      nVirtKey = GetKeyState( VK_CONTROL );
-      if( nVirtKey & 0x8000 ) /* control + key */
-         hb_gt_wvt_AddCharToInputQueue( pWVT, controlkey );
-      else
-      {
-         nVirtKey = GetKeyState( VK_SHIFT );
-         if( nVirtKey & 0x8000 ) /* shift + key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, shiftkey );
-         else /* just key */
-            hb_gt_wvt_AddCharToInputQueue( pWVT, key );
-      }
-   }
 }
 
 #if ! defined( UNICODE )
@@ -716,6 +1801,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
                pWVT->PTEXTSIZE.y = tm.tmHeight;
 
+#if defined( UNICODE )
+               /* reset character bitmap tables (after font selection) */
+               hb_gt_wvt_ResetBoxCharBitmaps( pWVT );
+#endif
+
 #if defined( HB_OS_WIN_CE )
                pWVT->FixedFont = HB_FALSE;
 #else
@@ -852,6 +1942,11 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
                     tm.tmAveCharWidth; /* For fixed FONT should == tm.tmMaxCharWidth */
    pWVT->PTEXTSIZE.y = tm.tmHeight;    /* but seems to be a problem on Win9X so */
                                        /* assume proportional fonts always for Win9X */
+#if defined( UNICODE )
+   /* reset character bitmaps (after font selection) */
+   hb_gt_wvt_ResetBoxCharBitmaps( pWVT );
+#endif
+
 #if defined( HB_OS_WIN_CE )
    pWVT->FixedFont = HB_FALSE;
 #else
@@ -1032,10 +2127,28 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
    return colrow;
 }
 
-static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
+static HB_BOOL hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 {
-   pWVT->MousePos.y = iRow;
-   pWVT->MousePos.x = iCol;
+   if( pWVT->MousePos.y != iRow || pWVT->MousePos.x != iCol )
+   {
+      pWVT->MousePos.y = iRow;
+      pWVT->MousePos.x = iCol;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
+static int hb_gt_wvt_GetKeyFlags( void )
+{
+   int iFlags = 0;
+   if( GetKeyState( VK_SHIFT ) & 0x8000 )
+      iFlags |= HB_KF_SHIFT;
+   if( GetKeyState( VK_CONTROL ) & 0x8000 )
+      iFlags |= HB_KF_CTRL;
+   if( GetKeyState( VK_MENU ) & 0x8000 )
+      iFlags |= HB_KF_ALT;
+
+   return iFlags;
 }
 
 static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
@@ -1057,19 +2170,16 @@ static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
-   POINT xy, colrow;
    SHORT keyCode = 0;
-
-   HB_SYMBOL_UNUSED( wParam );
-
-   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
-      return;
+   POINT xy, colrow;
 
    xy.x = LOWORD( lParam );
    xy.y = HIWORD( lParam );
 
    colrow = hb_gt_wvt_GetColRowFromXY( pWVT, xy.x, xy.y );
-   hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x );
+   if( hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x ) )
+      hb_gt_wvt_AddCharToInputQueue( pWVT,
+                     HB_INKEY_NEW_MPOS( pWVT->MousePos.x, pWVT->MousePos.y ) );
 
    switch( message )
    {
@@ -1082,7 +2192,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_LBUTTONDOWN:
-
          if( pWVT->bBeginMarked )
          {
             pWVT->bBeingMarked = HB_TRUE;
@@ -1101,11 +2210,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
             return;
          }
-         else
-         {
-            keyCode = K_LBUTTONDOWN;
-            break;
-         }
+         keyCode = K_LBUTTONDOWN;
+         break;
+
       case WM_RBUTTONDOWN:
          keyCode = K_RBUTTONDOWN;
          break;
@@ -1129,59 +2236,57 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                             cdpBox  = HB_GTSELF_BOXCP( pWVT->pGT );
 #endif
                TCHAR * sBuffer;
-               HB_SIZE nSize;
-               int     irow, icol, j, top, left, bottom, right;
-               RECT    rect = { 0, 0, 0, 0 };
-               RECT    colrowRC = { 0, 0, 0, 0 };
+               HB_SIZE nSize, n;
+               int     row, col;
+               RECT    rect;
 
                rect.left   = HB_MIN( pWVT->sRectNew.left, pWVT->sRectNew.right  );
                rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
                rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
                rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
 
-               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+               rect = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
 
-               left   = colrowRC.left;
-               top    = colrowRC.top;
-               right  = colrowRC.right;
-               bottom = colrowRC.bottom;
-
-               nSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
+               nSize = ( ( rect.bottom - rect.top + 1 ) *
+                         ( rect.right - rect.left + 1 + 2 ) );
                sBuffer = ( TCHAR * ) hb_xgrab( nSize * sizeof( TCHAR ) + 1 );
 
-               for( j = 0, irow = top; irow <= bottom; irow++ )
+               for( n = 0, row = rect.top; row <= rect.bottom; row++ )
                {
-                  for( icol = left; icol <= right; icol++ )
+                  for( col = rect.left; col <= rect.right; col++ )
                   {
                      int iColor;
                      HB_BYTE bAttr;
                      HB_USHORT usChar;
 
-                     if( ! HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &iColor, &bAttr, &usChar ) )
+                     if( ! HB_GTSELF_GETSCRCHAR( pWVT->pGT, row, col, &iColor, &bAttr, &usChar ) )
                         break;
 #if defined( UNICODE )
                      usChar = hb_cdpGetU16Ctrl( usChar );
 #else
                      usChar = hb_cdpGetUC( bAttr & HB_GT_ATTR_BOX ? cdpBox : cdpHost, usChar, '?' );
 #endif
-                     sBuffer[ j++ ] = ( TCHAR ) usChar;
+                     sBuffer[ n++ ] = ( TCHAR ) usChar;
                   }
-                  sBuffer[ j++ ] = '\r';
-                  sBuffer[ j++ ] = '\n';
+                  if( rect.top < rect.bottom )
+                  {
+                     sBuffer[ n++ ] = '\r';
+                     sBuffer[ n++ ] = '\n';
+                  }
                }
 
 #if defined( UNICODE )
-               if( j > 0 )
+               if( n > 0 )
                {
-                  PHB_ITEM pItem = hb_itemPutStrLenU16( NULL, HB_CDP_ENDIAN_NATIVE, sBuffer, j );
+                  PHB_ITEM pItem = hb_itemPutStrLenU16( NULL, HB_CDP_ENDIAN_NATIVE, sBuffer, n );
                   hb_gt_winapi_setClipboard( CF_UNICODETEXT, pItem );
                   hb_itemRelease( pItem );
                }
                hb_xfree( sBuffer );
 #else
-               if( j > 0 )
+               if( n > 0 )
                {
-                  PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, j );
+                  PHB_ITEM pItem = hb_itemPutCLPtr( NULL, sBuffer, n );
                   hb_gt_winapi_setClipboard( pWVT->CodePage == OEM_CHARSET ?
                                              CF_OEMTEXT : CF_TEXT, pItem );
                   hb_itemRelease( pItem );
@@ -1192,14 +2297,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             }
 
             hb_gt_wvt_Composited( pWVT, HB_TRUE );
-
             return;
          }
-         else
-         {
-            keyCode = K_LBUTTONUP;
-            break;
-         }
+         keyCode = K_LBUTTONUP;
+         break;
+
       case WM_MBUTTONDOWN:
          keyCode = K_MBUTTONDOWN;
          break;
@@ -1216,8 +2318,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
          if( pWVT->bBeingMarked )
          {
-            RECT rect     = { 0, 0, 0, 0 };
-            RECT colrowRC = { 0, 0, 0, 0 };
+            RECT rect;
 
             pWVT->sRectNew.right  = xy.x;
             pWVT->sRectNew.bottom = xy.y;
@@ -1226,9 +2327,18 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             rect.top    = HB_MIN( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
             rect.right  = HB_MAX( pWVT->sRectNew.left, pWVT->sRectNew.right  );
             rect.bottom = HB_MAX( pWVT->sRectNew.top , pWVT->sRectNew.bottom );
+            /* out of band cords may appear due to margins in maximized mode */
+            if( rect.left < 0 )
+               rect.left = 0;
+            if( rect.top < 0 )
+               rect.top = 0;
+            if( rect.right > pWVT->COLS * pWVT->PTEXTSIZE.x )
+               rect.right = pWVT->COLS * pWVT->PTEXTSIZE.x;
+            if( rect.bottom > pWVT->ROWS * pWVT->PTEXTSIZE.y )
+               rect.bottom = pWVT->ROWS * pWVT->PTEXTSIZE.y;
 
-            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
+            rect = hb_gt_wvt_GetXYFromColRowRect( pWVT,
+                                 hb_gt_wvt_GetColRowFromXYRect( pWVT, rect ) );
 
             if( rect.left   != pWVT->sRectOld.left   ||
                 rect.top    != pWVT->sRectOld.top    ||
@@ -1251,6 +2361,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                DeleteObject( rgn1 );
                DeleteObject( rgn2 );
                DeleteObject( rgn3 );
+#else
+               HDC hdc = GetDC( pWVT->hWnd );
+               InvertRect( hdc, &pWVT->sRectOld );
+               InvertRect( hdc, &rect );
+               ReleaseDC( pWVT->hWnd, hdc );
 #endif
                pWVT->sRectOld.left   = rect.left;
                pWVT->sRectOld.top    = rect.top;
@@ -1259,353 +2374,254 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             }
             return;
          }
-         else
-         {
-            keyCode = K_MOUSEMOVE;
-            break;
-         }
+         break;
 
       case WM_MOUSEWHEEL:
-      {
-         SHORT keyState = ( SHORT ) HIWORD( wParam );
-         keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
-         break;
-      }
-      case WM_NCMOUSEMOVE:
-         keyCode = K_NCMOUSEMOVE;
+         keyCode = ( SHORT ) HIWORD( wParam ) > 0 ? K_MWFORWARD : K_MWBACKWARD;
          break;
    }
 
    if( keyCode != 0 )
-      hb_gt_wvt_AddCharToInputQueue( pWVT, keyCode );
+      hb_gt_wvt_AddCharToInputQueue( pWVT,
+                     HB_INKEY_NEW_MKEY( keyCode, hb_gt_wvt_GetKeyFlags() ) );
 }
 
 static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
+   int iKey = 0, iFlags = pWVT->keyFlags;
+
    switch( message )
    {
       case WM_KEYDOWN:
       case WM_SYSKEYDOWN:
-      {
-         HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
-
          pWVT->IgnoreWM_SYSCHAR = HB_FALSE;
-
+         iFlags = hb_gt_wvt_GetKeyFlags();
          switch( wParam )
          {
+            case VK_BACK:
+               pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               iKey = HB_KX_BS;
+               break;
+            case VK_TAB:
+               pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               iKey = HB_KX_TAB;
+               break;
             case VK_RETURN:
-               /* in WM_CHAR i was unable to read Alt key state */
-               if( bAlt && pWVT->bAltEnter )
+               pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               if( pWVT->bAltEnter && ( iFlags & HB_KF_ALT ) != 0 )
+                  hb_gt_wvt_FullScreen( pWVT->pGT );
+               else
                {
-                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;   /* this must be FIRST, otherwise some process in hb_gt_wvt_FullScreen posts the ENTER key to the InputQueue */
-                  hb_gt_wvt_FullScreen( pWVT->pGT );  /* this must be last, otherwise some process in hb_gt_wvt_FullScreen posts the ENTER key to the InputQueue */
+                  iKey = HB_KX_ENTER;
+                  if( lParam & WVT_EXTKEY_FLAG )
+                     iFlags |= HB_KF_KEYPAD;
                }
                break;
-            case VK_LEFT:
-               hb_gt_wvt_TranslateKey( pWVT, K_LEFT , K_SH_LEFT , K_ALT_LEFT , K_CTRL_LEFT  );
+            case VK_ESCAPE:
+               pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               iKey = HB_KX_ESC;
                break;
-            case VK_RIGHT:
-               hb_gt_wvt_TranslateKey( pWVT, K_RIGHT, K_SH_RIGHT, K_ALT_RIGHT, K_CTRL_RIGHT );
-               break;
+
             case VK_UP:
-               hb_gt_wvt_TranslateKey( pWVT, K_UP   , K_SH_UP   , K_ALT_UP   , K_CTRL_UP    );
+               iKey = HB_KX_UP;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
             case VK_DOWN:
-               hb_gt_wvt_TranslateKey( pWVT, K_DOWN , K_SH_DOWN , K_ALT_DOWN , K_CTRL_DOWN  );
+               iKey = HB_KX_DOWN;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
+               break;
+            case VK_LEFT:
+               iKey = HB_KX_LEFT;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
+               break;
+            case VK_RIGHT:
+               iKey = HB_KX_RIGHT;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
             case VK_HOME:
-               hb_gt_wvt_TranslateKey( pWVT, K_HOME , K_SH_HOME , K_ALT_HOME , K_CTRL_HOME  );
+               iKey = HB_KX_HOME;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
             case VK_END:
-               hb_gt_wvt_TranslateKey( pWVT, K_END  , K_SH_END  , K_ALT_END  , K_CTRL_END   );
-               break;
-            case VK_DELETE:
-               hb_gt_wvt_TranslateKey( pWVT, K_DEL  , K_SH_DEL  , K_ALT_DEL  , K_CTRL_DEL   );
-               break;
-            case VK_INSERT:
-               hb_gt_wvt_TranslateKey( pWVT, K_INS  , K_SH_INS  , K_ALT_INS  , K_CTRL_INS   );
+               iKey = HB_KX_END;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
             case VK_PRIOR:
-               hb_gt_wvt_TranslateKey( pWVT, K_PGUP , K_SH_PGUP , K_ALT_PGUP , K_CTRL_PGUP  );
+               iKey = HB_KX_PGUP;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
             case VK_NEXT:
-               hb_gt_wvt_TranslateKey( pWVT, K_PGDN , K_SH_PGDN , K_ALT_PGDN , K_CTRL_PGDN  );
+               iKey = HB_KX_PGDN;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
+               break;
+            case VK_INSERT:
+               iKey = HB_KX_INS;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
+               break;
+            case VK_DELETE:
+               iKey = HB_KX_DEL;
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  iFlags |= HB_KF_KEYPAD;
                break;
 
             case VK_F1:
-               hb_gt_wvt_TranslateKey( pWVT, K_F1   , K_SH_F1, K_ALT_F1   , K_CTRL_F1    );
+               iKey = HB_KX_F1;
                break;
             case VK_F2:
-               hb_gt_wvt_TranslateKey( pWVT, K_F2   , K_SH_F2, K_ALT_F2   , K_CTRL_F2    );
+               iKey = HB_KX_F2;
                break;
             case VK_F3:
-               hb_gt_wvt_TranslateKey( pWVT, K_F3   , K_SH_F3, K_ALT_F3   , K_CTRL_F3    );
+               iKey = HB_KX_F3;
                break;
             case VK_F4:
-               if( pWVT->AltF4Close && bAlt )
-                  return DefWindowProc( pWVT->hWnd, message, wParam, lParam ) != 0;
-               hb_gt_wvt_TranslateKey( pWVT, K_F4   , K_SH_F4, K_ALT_F4   , K_CTRL_F4    );
+               iKey = HB_KX_F4;
                break;
             case VK_F5:
-               hb_gt_wvt_TranslateKey( pWVT, K_F5   , K_SH_F5, K_ALT_F5   , K_CTRL_F5    );
+               iKey = HB_KX_F5;
                break;
             case VK_F6:
-               hb_gt_wvt_TranslateKey( pWVT, K_F6   , K_SH_F6, K_ALT_F6   , K_CTRL_F6    );
+               iKey = HB_KX_F6;
                break;
             case VK_F7:
-               hb_gt_wvt_TranslateKey( pWVT, K_F7   , K_SH_F7, K_ALT_F7   , K_CTRL_F7    );
+               iKey = HB_KX_F7;
                break;
             case VK_F8:
-               hb_gt_wvt_TranslateKey( pWVT, K_F8   , K_SH_F8, K_ALT_F8   , K_CTRL_F8    );
+               iKey = HB_KX_F8;
                break;
             case VK_F9:
-               hb_gt_wvt_TranslateKey( pWVT, K_F9   , K_SH_F9, K_ALT_F9   , K_CTRL_F9    );
+               iKey = HB_KX_F9;
                break;
             case VK_F10:
-               hb_gt_wvt_TranslateKey( pWVT, K_F10  , K_SH_F10,K_ALT_F10  , K_CTRL_F10   );
+               iKey = HB_KX_F10;
                break;
             case VK_F11:
-               hb_gt_wvt_TranslateKey( pWVT, K_F11  , K_SH_F11,K_ALT_F11  , K_CTRL_F11   );
+               iKey = HB_KX_F11;
                break;
             case VK_F12:
-               hb_gt_wvt_TranslateKey( pWVT, K_F12  , K_SH_F12,K_ALT_F12  , K_CTRL_F12   );
+               iKey = HB_KX_F12;
                break;
-            default:
-            {
-               HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-               HB_BOOL bShift    = GetKeyState( VK_SHIFT ) & 0x8000;
-               int  iScanCode = HIWORD( lParam ) & 0xFF;
 
-               if( bCtrl && iScanCode == 76 ) /* CTRL_VK_NUMPAD5 */
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, KP_CTRL_5 );
-               else if( bCtrl && wParam == VK_TAB ) /* K_CTRL_TAB */
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, bShift ? K_CTRL_SH_TAB : K_CTRL_TAB );
-               else if( iScanCode == 70 ) /* Ctrl_Break key OR Scroll Lock Key */
-               {
-                  if( bCtrl )  /* Not scroll lock */
-                  {
-                     hb_gt_wvt_AddCharToInputQueue( pWVT, HB_BREAK_FLAG ); /* Pretend Alt+C pressed */
-                     pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
-                  }
-                  else
-                     DefWindowProc( pWVT->hWnd, message, wParam, lParam );   /* Let windows handle ScrollLock */
-               }
-               else if( bCtrl && iScanCode == 53 && bShift )
-                  hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_QUESTION );
-               else if( ( bAlt || bCtrl ) && (
-                        wParam == VK_MULTIPLY || wParam == VK_ADD ||
-                        wParam == VK_SUBTRACT || wParam == VK_DIVIDE ) )
-               {
-                  if( bAlt )
-                     pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+            case VK_SNAPSHOT:
+               iKey = HB_KX_PRTSCR;
+               break;
+            case VK_CANCEL:
+               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+                  break;
+               iFlags |= HB_KF_CTRL;
+            case VK_PAUSE:
+               pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+               iKey = HB_KX_PAUSE;
+               break;
 
-                  switch( wParam )
-                  {
-                     case VK_MULTIPLY:
-                        hb_gt_wvt_TranslateKey( pWVT, '*', '*', KP_ALT_ASTERISK, KP_CTRL_ASTERISK );
-                        break;
-                     case VK_ADD:
-                        hb_gt_wvt_TranslateKey( pWVT, '+', '+', KP_ALT_PLUS, KP_CTRL_PLUS );
-                        break;
-                     case VK_SUBTRACT:
-                        hb_gt_wvt_TranslateKey( pWVT, '-', '-', KP_ALT_MINUS, KP_CTRL_MINUS );
-                        break;
-                     case VK_DIVIDE:
-                        hb_gt_wvt_TranslateKey( pWVT, '/', '/', KP_ALT_SLASH, KP_CTRL_SLASH );
-                        break;
-                  }
+            case VK_CLEAR:
+               iKey = HB_KX_CENTER;
+               iFlags |= HB_KF_KEYPAD;
+               break;
+
+            case VK_NUMPAD0:
+            case VK_NUMPAD1:
+            case VK_NUMPAD2:
+            case VK_NUMPAD3:
+            case VK_NUMPAD4:
+            case VK_NUMPAD5:
+            case VK_NUMPAD6:
+            case VK_NUMPAD7:
+            case VK_NUMPAD8:
+            case VK_NUMPAD9:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+               {
+                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+                  iKey = wParam - VK_NUMPAD0 + '0';
                }
-            }
+               break;
+            case VK_DECIMAL:
+            case VK_SEPARATOR:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+               {
+                  pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
+                  iKey = '.';
+               }
+               break;
+
+            case VK_DIVIDE:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+                  iKey = '/';
+               break;
+            case VK_MULTIPLY:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+                  iKey = '*';
+               break;
+            case VK_SUBTRACT:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+                  iKey = '-';
+               break;
+            case VK_ADD:
+               iFlags |= HB_KF_KEYPAD;
+               if( iFlags & HB_KF_CTRL )
+                  iKey = '+';
+               break;
+
+            case VK_OEM_2:
+               if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_SHIFT ) != 0 )
+                  iKey = '?';
+               break;
          }
+         pWVT->keyFlags = iFlags;
+         if( iKey != 0 )
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
          break;
-      }
 
       case WM_CHAR:
-      {
-         HB_BOOL bCtrl     = GetKeyState( VK_CONTROL ) & 0x8000;
-         int  iScanCode = HIWORD( lParam ) & 0xFF;
-         int  c = ( int ) wParam;
-
+      case WM_SYSCHAR:
          if( ! pWVT->IgnoreWM_SYSCHAR )
          {
-            if( bCtrl && iScanCode == 28 )  /* K_CTRL_RETURN */
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_RETURN );
-            else if( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
-               hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[ c - 1 ] );
+            iKey = ( int ) wParam;
+
+            if( ( iFlags & HB_KF_CTRL ) != 0 && ( iKey >= 0 && iKey < 32 ) )
+            {
+               iKey += 'A' - 1;
+               iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+            }
             else
             {
-               switch( c )
-               {
-                  /* handle special characters */
-                  case VK_BACK:
-                     hb_gt_wvt_TranslateKey( pWVT, K_BS, K_SH_BS, K_ALT_BS, K_CTRL_BS );
-                     break;
-                  case VK_TAB:
-                     hb_gt_wvt_TranslateKey( pWVT, K_TAB, K_SH_TAB, K_ALT_TAB, K_CTRL_TAB );
-                     break;
-                  case VK_RETURN:
-                     hb_gt_wvt_TranslateKey( pWVT, K_RETURN, K_SH_RETURN, K_ALT_RETURN, K_CTRL_RETURN );
-                     break;
-                  case VK_ESCAPE:
-                     hb_gt_wvt_AddCharToInputQueue( pWVT, K_ESC );
-                     break;
-                  default:
 #if defined( UNICODE )
-                     if( c >= 127 )
-                        c = HB_INKEY_NEW_UNICODE( c );
+               if( iKey >= 128 )
+                  iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
+               else
+                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
 #else
-                     {
-                        int u = HB_GTSELF_KEYTRANS( pWVT->pGT, c );
-                        if( u )
-                           c = HB_INKEY_NEW_UNICODE( u );
-                        else if( pWVT->CodePage == OEM_CHARSET )
-                           c = hb_gt_wvt_key_ansi_to_oem( c );
-                     }
-#endif
-                     hb_gt_wvt_AddCharToInputQueue( pWVT, c );
-                     break;
+               int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
+               if( u )
+                  iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
+               else
+               {
+                  if( pWVT->CodePage == OEM_CHARSET )
+                     iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
+                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
                }
+#endif
             }
-         }
-         pWVT->IgnoreWM_SYSCHAR = HB_FALSE; /* As Suggested by Peter */
-         break;
-      }
-
-      case WM_SYSCHAR:
-
-         if( ! pWVT->IgnoreWM_SYSCHAR )
-         {
-            int c, iScanCode = HIWORD( lParam ) & 0xFF;
-            switch( iScanCode )
-            {
-               case  2:
-                  c = K_ALT_1;
-                  break;
-               case  3:
-                  c = K_ALT_2;
-                  break;
-               case  4:
-                  c = K_ALT_3;
-                  break;
-               case  5:
-                  c = K_ALT_4;
-                  break;
-               case  6:
-                  c = K_ALT_5;
-                  break;
-               case  7:
-                  c = K_ALT_6;
-                  break;
-               case  8:
-                  c = K_ALT_7;
-                  break;
-               case  9:
-                  c = K_ALT_8;
-                  break;
-               case 10:
-                  c = K_ALT_9;
-                  break;
-               case 11:
-                  c = K_ALT_0;
-                  break;
-               case 13:
-                  c = K_ALT_EQUALS;
-                  break;
-               case 14:
-                  c = K_ALT_BS;
-                  break;
-               case 16:
-                  c = K_ALT_Q;
-                  break;
-               case 17:
-                  c = K_ALT_W;
-                  break;
-               case 18:
-                  c = K_ALT_E;
-                  break;
-               case 19:
-                  c = K_ALT_R;
-                  break;
-               case 20:
-                  c = K_ALT_T;
-                  break;
-               case 21:
-                  c = K_ALT_Y;
-                  break;
-               case 22:
-                  c = K_ALT_U;
-                  break;
-               case 23:
-                  c = K_ALT_I;
-                  break;
-               case 24:
-                  c = K_ALT_O;
-                  break;
-               case 25:
-                  c = K_ALT_P;
-                  break;
-               case 30:
-                  c = K_ALT_A;
-                  break;
-               case 31:
-                  c = K_ALT_S;
-                  break;
-               case 32:
-                  c = K_ALT_D;
-                  break;
-               case 33:
-                  c = K_ALT_F;
-                  break;
-               case 34:
-                  c = K_ALT_G;
-                  break;
-               case 35:
-                  c = K_ALT_H;
-                  break;
-               case 36:
-                  c = K_ALT_J;
-                  break;
-               case 37:
-                  c = K_ALT_K;
-                  break;
-               case 38:
-                  c = K_ALT_L;
-                  break;
-               case 44:
-                  c = K_ALT_Z;
-                  break;
-               case 45:
-                  c = K_ALT_X;
-                  break;
-               case 46:
-                  c = K_ALT_C;
-                  break;
-               case 47:
-                  c = K_ALT_V;
-                  break;
-               case 48:
-                  c = K_ALT_B;
-                  break;
-               case 49:
-                  c = K_ALT_N;
-                  break;
-               case 50:
-                  c = K_ALT_M;
-                  break;
-               case 51:
-                  c = K_ALT_COMMA;
-                  break;
-               case 52:
-                  c = K_ALT_PERIOD;
-                  break;
-               default:
-                  c = ( int ) wParam;
-                  break;
-            }
-            hb_gt_wvt_AddCharToInputQueue( pWVT, c );
          }
          pWVT->IgnoreWM_SYSCHAR = HB_FALSE;
+         break;
    }
+
+   if( iKey != 0 )
+      hb_gt_wvt_AddCharToInputQueue( pWVT, iKey );
 
    return 0;
 }
@@ -1614,23 +2630,33 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
  * hb_gt_wvt_TextOut converts col and row to x and y ( pixels ) and calls
  * the Windows function TextOut with the expected coordinates
  */
-static HB_BOOL hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int iColor, LPCTSTR lpString, UINT cbString )
+static void hb_gt_wvt_TextOut( PHB_GTWVT pWVT, HDC hdc, int col, int row, int iColor, LPCTSTR lpString, UINT cbString )
 {
    POINT xy;
    RECT  rClip;
-
-   /* set foreground color */
-   SetTextColor( hdc, pWVT->COLORS[ iColor & 0x0F ] );
-   /* set background color */
-   SetBkColor( hdc, pWVT->COLORS[ ( iColor >> 4 ) & 0x0F ] );
-
-   SetTextAlign( hdc, TA_LEFT );
+   UINT  fuOptions = ETO_CLIPPED;
 
    xy = hb_gt_wvt_GetXYFromColRow( pWVT, col, row );
    SetRect( &rClip, xy.x, xy.y, xy.x + cbString * pWVT->PTEXTSIZE.x, xy.y + pWVT->PTEXTSIZE.y );
 
-   return ExtTextOut( hdc, xy.x, xy.y, ETO_CLIPPED | ETO_OPAQUE, &rClip,
-                      lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
+   if( ( pWVT->fontAttribute & HB_GTI_FONTA_CLRBKG ) != 0 )
+   {
+      HBRUSH hBrush = CreateSolidBrush( pWVT->COLORS[ ( iColor >> 4 ) & 0x0F ] );
+      FillRect( hdc, &rClip, hBrush );
+      DeleteObject( hBrush );
+   }
+   else
+      fuOptions |= ETO_OPAQUE;
+
+   /* set background color */
+   SetBkColor( hdc, pWVT->COLORS[ ( iColor >> 4 ) & 0x0F ] );
+   /* set foreground color */
+   SetTextColor( hdc, pWVT->COLORS[ iColor & 0x0F ] );
+
+   SetTextAlign( hdc, TA_LEFT );
+
+   ExtTextOut( hdc, xy.x, xy.y, fuOptions, &rClip,
+               lpString, cbString, pWVT->FixedFont ? NULL : pWVT->FixedSize );
 }
 
 static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
@@ -1638,10 +2664,10 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
    PAINTSTRUCT ps;
    HDC         hdc;
    RECT        rcRect;
-   HBRUSH      hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
    int         iRow, iCol, startCol, len;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
+   HB_BOOL     fFixMetric = ( pWVT->fontAttribute & HB_GTI_FONTA_FIXMETRIC ) != 0;
 
 #if ! defined( UNICODE )
    HFONT       hFont, hOldFont = NULL;
@@ -1654,6 +2680,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
     */
    if( pWVT->bMaximized )
    {
+      HBRUSH hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
       RECT ciNew = ps.rcPaint;
       RECT ciTemp = ps.rcPaint;
       if( pWVT->MarginLeft > 0 )
@@ -1678,6 +2705,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
        * WM_PAINT message which caused a Browse scroll to flicker badly under XP.
        * Now, only repaints the margin areas as required.
        */
+      DeleteObject( hBrush );
    }
    else if( pWVT->bAlreadySizing )
    {
@@ -1690,6 +2718,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
        * Client area coordinates before Window sized, this is set in the WM_ENTERSIZEMOVE
        * message and then used here to calculate the size changed areas to paint black.
        */
+      HBRUSH hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
       RECT ciNew = ps.rcPaint;
       RECT ciTemp = ps.rcPaint;
       if( ciNew.bottom > pWVT->ciLast.bottom )
@@ -1698,12 +2727,12 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
          FillRect( hdc, &ciTemp, hBrush );
          ciTemp.top = ciNew.top;
       }
-
       if( ciNew.right > pWVT->ciLast.right )
       {
          ciTemp.left = pWVT->ciLast.right;
          FillRect( hdc, &ciTemp, hBrush );
       }
+      DeleteObject( hBrush );
    }
 
 #if defined( UNICODE )
@@ -1720,7 +2749,9 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
       while( iCol <= rcRect.right )
       {
 #if defined( UNICODE )
+         HBITMAP hBitMap;
          HB_USHORT usChar;
+
          if( ! HB_GTSELF_GETSCRCHAR( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          if( ( pWVT->fontAttribute & HB_GTI_FONTA_CTRLCHARS ) == 0 )
@@ -1738,16 +2769,33 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
           * and not divide output when it does not change anythings
           */
          iColor &= 0xff;
-         if( len == 0 )
-            iOldColor = iColor;
-         else if( iColor != iOldColor )
+         hBitMap = hb_gt_wvt_GetBoxChar( pWVT, &usChar );
+         if( len > 0 && ( iColor != iOldColor || fFixMetric || hBitMap ) )
          {
             hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
-            iOldColor = iColor;
-            startCol = iCol;
             len = 0;
          }
-         pWVT->TextLine[ len++ ] = ( TCHAR ) usChar;
+         if( hBitMap )
+         {
+            POINT xy;
+            /* set foreground color */
+            SetTextColor( hdc, pWVT->COLORS[ iColor & 0x0F ] );
+            /* set background color */
+            SetBkColor( hdc, pWVT->COLORS[ ( iColor >> 4 ) & 0x0F ] );
+            xy = hb_gt_wvt_GetXYFromColRow( pWVT, iCol, iRow );
+            SelectObject( pWVT->hBmpDC, hBitMap );
+            BitBlt( hdc, xy.x, xy.y, pWVT->PTEXTSIZE.x + 1, pWVT->PTEXTSIZE.y + 1,
+                    pWVT->hBmpDC, 0, 0, SRCCOPY );
+         }
+         else
+         {
+            if( len == 0 )
+            {
+               iOldColor = iColor;
+               startCol = iCol;
+            }
+            pWVT->TextLine[ len++ ] = ( TCHAR ) usChar;
+         }
 #else
          HB_UCHAR uc;
          if( ! HB_GTSELF_GETSCRUC( pWVT->pGT, iRow, iCol, &iColor, &bAttr, &uc, HB_TRUE ) )
@@ -1762,7 +2810,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
             }
             iOldColor = iColor;
          }
-         else if( iColor != iOldColor || hFont != hOldFont )
+         else if( iColor != iOldColor || hFont != hOldFont || fFixMetric )
          {
             hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
             if( hFont != hOldFont )
@@ -1782,7 +2830,6 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
          hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
    }
    EndPaint( pWVT->hWnd, &ps );
-   DeleteObject( hBrush );
 }
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -1875,7 +2922,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       /* Pritpal Bedi - 2008-06-06 */
       case WM_ACTIVATE:
-         hb_gt_wvt_AddCharToInputQueue( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_K_LOSTFOCUS : HB_K_GOTFOCUS ) );
+         hb_gt_wvt_AddCharToInputQueue( pWVT, LOWORD( wParam ) == WA_INACTIVE ? HB_K_LOSTFOCUS : HB_K_GOTFOCUS );
          return 0;
 
       case WM_ENTERSIZEMOVE:
@@ -2527,7 +3574,11 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_FONTATTRIBUTE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->fontAttribute );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            pWVT->fontAttribute = hb_itemGetNI( pInfo->pNewVal ) & HB_GTI_FONTA_CTRLCHARS;
+            pWVT->fontAttribute = hb_itemGetNI( pInfo->pNewVal ) &
+                                           ( HB_GTI_FONTA_FIXMETRIC |
+                                             HB_GTI_FONTA_CLRBKG    |
+                                             HB_GTI_FONTA_CTRLCHARS |
+                                             HB_GTI_FONTA_DRAWBOX );
          break;
 
       case HB_GTI_FONTSEL:
@@ -2811,13 +3862,13 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, GetCaretBlinkTime() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            SetCaretBlinkTime( HB_MAX( iVal, 0 ) );
+         }
          break;
 
       case HB_GTI_SCREENSIZE:
-      {
-         int iX, iY;
-
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
 
@@ -2827,6 +3878,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
          {
+            int iX, iY;
+
             iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
             iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
 
@@ -2846,7 +3899,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
-      }
+
       case HB_GTI_RESIZABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
@@ -3026,6 +4079,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
+
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->hWnd );
+         break;
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );

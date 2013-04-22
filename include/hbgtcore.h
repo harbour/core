@@ -331,7 +331,7 @@ typedef struct _HB_GT_BASE
    int            inkeyBufferSize;
    int            inkeyHead;
    int            inkeyTail;
-   int            iLastPut;
+   int            inkeyLastPos;
    int            inkeyLast;
    HB_WCHAR *     StrBuffer;
    HB_SIZE        StrBufferSize;
@@ -669,10 +669,12 @@ extern int hb_gt_dos_keyCodeTranslate( int iKey );
 #define HB_INKEY_NEW_VALF( v, f )   ( ( ( v ) & HB_INKEY_EXT_VALMASK ) | \
                                       ( ( ( f ) << HB_INKEY_EXT_VALBITS ) & HB_INKEY_EXT_FLAGMASK ) )
 
-#define HB_INKEY_NEW_MKEY( b, f )   ( HB_INKEY_NEW_VALF( b, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_NEW_MKEY( k, f )   ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
 #define HB_INKEY_NEW_KEY( k, f )    ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_KEY )
 #define HB_INKEY_NEW_CHAR( b )      ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_CHARF( b, f )  ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
 #define HB_INKEY_NEW_UNICODE( b )   ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+#define HB_INKEY_NEW_UNICODEF( b, f ) ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
 
 #define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
                                       ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
