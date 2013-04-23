@@ -1,3 +1,4 @@
+#!/usr/bin/hbmk2
 /*
  * Harbour Project source code:
  * Manage translations and automatic doc generation

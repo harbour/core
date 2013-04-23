@@ -1,4 +1,4 @@
-#!/usr/bin/hbrun --hb:gtcgi
+#!/usr/bin/hbmk2
 /*
  * Harbour Project source code:
  * Package build orchestrator script
