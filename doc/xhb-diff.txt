@@ -1,6 +1,6 @@
 
 This text describes most important differences between Harbour and xHarbour
-with some references to Clipper and other compatible compilers like xBase++,
+with some references to Clipper and other compatible compilers like Xbase++,
 CLIP, FlagShip.
 Many thanks to Pritpal and Viktor for updating this text.
 I hope that it will be updated in the future also by xHarbour developers,
@@ -984,12 +984,12 @@ can compile and execute this code:
          ? "a" $ { "qwe", "abc", "zxc", { "a" } } // result .F.
       return
 
-Warning! XBase++ also support $ operator for arrays but it makes non
-         exact comparison so ` "a" $ { "abc" } ' gives .T. in XBase++
+Warning! Xbase++ also support $ operator for arrays but it makes non
+         exact comparison so ` "a" $ { "abc" } ' gives .T. in Xbase++
          and .F. in xHarbour or in Harbour when xHarbour compatibility
-         library is used. Harbour users who need strict XBase++ compatibility
+         library is used. Harbour users who need strict Xbase++ compatibility
          should create own code to overload $ operators used for arrays
-         which will follow exact XBase++ rules.
+         which will follow exact Xbase++ rules.
          CLIP also has some code for such extension but it has two bugs.
          1-st is a semi bug: it uses non exact comparison but reverts
          arguments so ` "abc" $ { "a" } ' gives .T.
@@ -1095,15 +1095,15 @@ Here is simple code which illustrates it:
       aeval( a, { |x| qout( x ) } )
    return
 
-This problem is also fixed in xBase++ so it's possible to exchange code
-using such expressions between Harbour and xBase++.
+This problem is also fixed in Xbase++ so it's possible to exchange code
+using such expressions between Harbour and Xbase++.
 In xHarbour the behavior of such expressions in in practice undefined.
 In most of cases it behaves like Clipper (i.e. it gives the same wrong
 results in above example) but not always because some not cleanly
 implemented extensions changed above behavior for chosen operators
 executed in some context (i.e. modifying -= to += in above example
 causes that xHarbour generates correct code which give the same results
-as Harbour and xBase++). Additionally so far no one has tried to control
+as Harbour and Xbase++). Additionally so far no one has tried to control
 such things in xHarbour compiler so the behavior of different operators
 and/or context where they behaves differently has been changing few times
 as side effect of some other modifications.
@@ -1126,7 +1126,7 @@ are send to exactly the same object. This example illustrates it:
       ?? " F()"
    return o
 
-In Harbour and xBase++ function F() is executed only once for each
+In Harbour and Xbase++ function F() is executed only once for each
 expression but in Clipper and xHarbour once for 'assign', then twice for
 'predec' and finaly three times for 'postinc'. In this code function f()
 returns the same object 'o' on each call so it's not a problem but code
@@ -1581,7 +1581,7 @@ without class object) though xHarbour wrongly use class messages as normal
 messages.
 
 In the future we plan to introduce real class objects like in Class(y) and
-some other languages (i.e. XBASE++) so it's important for portability to
+some other languages (i.e. Xbase++) so it's important for portability to
 write code which is Class(y) friendly and never use class function directly
 as constructor, i.e. instead of writing code like:
       o := mycls( p1, p2, p3 )
@@ -1596,7 +1596,7 @@ be redefined as constructor in user class. Instead :INIT() method should
 be used as constructor. It's executed automatically when object is
 created from the :NEW() method.
 
-In Class(y) and xBase++ class function never returns final object.
+In Class(y) and Xbase++ class function never returns final object.
 It returns class object which is completely different and this object
 understands few messages which allow to manage class, check inheritance
 scheme, check object definition and access many different information
@@ -2075,19 +2075,19 @@ is write access to the same item with complex variable. This part
 have to be synced by user and automatic synchronization here will
 strongly reduce scalability.
 
-Harbour also support xBase++ compatible MT API with SYNC and CLASS SYNC
+Harbour also support Xbase++ compatible MT API with SYNC and CLASS SYNC
 methods, SIGNAL and THREAD classes, work area zones and thread functions.
-It allows to easy port xbase++ code to Harbour. The main difference
-between Harbour and xbase++ is write protection to complex items.
+It allows to easy port Xbase++ code to Harbour. The main difference
+between Harbour and Xbase++ is write protection to complex items.
 Harbour gives only read protection so threads can access the same
 complex variable simultaneously without any restrictions as long
 as it's not modified (assigned) by some other thread. Assign operations
 to variable which can be accessed simultaneously by other threads
-need explicit synchronization by user code. In xBase++ it should
+need explicit synchronization by user code. In Xbase++ it should
 be synced automatically so users have to use own synchronization
 only to keep synced his application logic.
 
-For sure xBase++ is more user friendly here. Anyhow such solution
+For sure Xbase++ is more user friendly here. Anyhow such solution
 strongly reduce scalability so the cost of such automatic protection
 is very high. Additionally in most of cases simultaneous access and
 assign operations on the same complex variable need additional
@@ -2119,10 +2119,10 @@ it in last years. This feature in xHarbour was implemented only in .c
 code generated by xHarbour compiler (-gc[0-3] output) so it was never
 working with .hrb (-gh) files or some interpreters like xBaseScript.
 xHarbour has support for SYNC methods which were designed to replicate
-xBase++ functionality but their real behavior is neither xBase++ nor
-Harbour compatible. It seems to be close to SYNC CLASS methods in xBase++
+Xbase++ functionality but their real behavior is neither Xbase++ nor
+Harbour compatible. It seems to be close to SYNC CLASS methods in Xbase++
 and Harbour though it's not exactly the same. There is no support for
-real xBase++ SYNC methods and xBase++ MT programming functions and classes.
+real Xbase++ SYNC methods and Xbase++ MT programming functions and classes.
 
 In summary MT mode in xHarbour looks like a work in progress, started few
 years ago and never finished. Instead some other core code modifications
@@ -2149,10 +2149,10 @@ far from current Harbour functionality and quality.
 
 ###    THREAD LOCAL WORK AREAS AND CONCURRENT WORK AREA ACCESS    ###
 =====================================================================
-In Harbour and xBase++ work areas are local to the thread. It means
+In Harbour and Xbase++ work areas are local to the thread. It means
 that each thread has its own independent work areas and aliases.
 Anyhow it's possible to move work area from one thread to other one
-using known from xBase++ zero space. In xBase++ each thread can
+using known from Xbase++ zero space. In Xbase++ each thread can
 move his work area to zero space using:
    DbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
 Then this work area can be attached by other thread using:
@@ -2195,7 +2195,7 @@ Setting _SET_WORKAREAS_SHARED to .F. disables global work areas and
 switches to thread local ones.
 There is no technical or mathematical reason to keep such strange
 implementation because it does not give any new functionality to
-programmer in comparison to xBase++ and Harbour but allows to easy
+programmer in comparison to Xbase++ and Harbour but allows to easy
 corrupt RDD internals.
 
 
