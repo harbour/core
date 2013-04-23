@@ -8,8 +8,6 @@
  *
  */
 
-/* UTF-8 */
-
 #include "hbgtinfo.ch"
 
 #define POL_MAZ   hb_Translate( "ĄĆĘŁŃÓŚŹŻąćęłńóśźż", "UTF8", "PLMAZ" )

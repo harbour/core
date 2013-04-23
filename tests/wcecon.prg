@@ -7,8 +7,6 @@
  *
  */
 
-/* UTF-8 */
-
 #include "hbgtinfo.ch"
 
 request DBFCDX

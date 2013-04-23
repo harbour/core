@@ -48,8 +48,6 @@
  *
  */
 
-/* UTF-8 */
-
 #include "hbclass.ch"
 #include "fileio.ch"
 

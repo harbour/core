@@ -410,7 +410,7 @@ You can fine-tune the build with these options:
 
     $ package/mpkg_rpm_wce.sh
 
-## Binary .zip & .exe on Windows for all targets (except Linux)
+## Binary .zip and .exe on Windows for all targets (except Linux)
 
     $ set HB_DIR_NSIS=%ProgramFiles%\NSIS\
     $ set HB_DIR_ZIP=C:\info-zip\
@@ -427,7 +427,7 @@ See: [How to Build](#how-to-build)
 Then run build as usual with `clean install` options.
 See: [How to Build](#how-to-build)
 
-## Unified .7z & .exe installer for Windows
+## Unified .7z and .exe installer for Windows
 
     $ package\winuni\mpkg_win_uni.bat
 
@@ -518,11 +518,11 @@ advanced users only):
 
 > NOTES:
 >
->    * You need to use native path format to your shell/OS.
->    * Spaces in directory names aren't currently supported.
->      You *can* use 8.3 name alias on Windows platform, though.
->    * Don't put directory names inside double quotes.
->    * Use absolute paths.
+>    * you need to use native path format to your shell/OS
+>    * spaces in directory names aren't currently supported
+>      (you *can* use 8.3 name alias on Windows platform, though)
+>    * don't put directory names inside double quotes
+>    * use absolute paths
 
 ## Darwin (OS X)
 
@@ -1151,7 +1151,7 @@ set HB_WITH_PGSQL=C:\pgsql\include
 Same as 32-bit Windows, but, you'll have to change `%ProgramFiles%` to
 `%ProgramFiles(x86)%` for 32-bit and mixed tools, you can build for
 both x86 and x64 without building a native target first, and potential
-differences with some compilers in order to use native binaries if
+differences with some compilers in using native binaries if
 they are available.
 
 ```batchfile
@@ -1481,7 +1481,7 @@ mailing list.
 13. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Clipper
     core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
-    functions against CT3 library, etc.)
+    functions against CT3 library, etc)
 
 
 # Supported Platforms and C Compilers
@@ -1498,7 +1498,7 @@ mailing list.
 * android  - Android
 * vxworks  - VxWorks
 * symbian  - Symbian OS (experimental)
-* minix    - Minix 3 (tested on 3.2.1; earlier releases will not work)
+* minix    - Minix 3 (tested on 3.2.1; earlier releases won't work)
 * aix      - IBM AIX
 * win      - MS Windows (all flavors)
              (see [External links](#external-links) for Win9x requirements)

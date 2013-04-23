@@ -1,5 +1,3 @@
-/* UTF-8 */
-
 // Harbour Class TBrowse and TBColumn sample
 
 #include "inkey.ch"

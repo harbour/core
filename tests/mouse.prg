@@ -156,7 +156,7 @@ STATIC PROCEDURE TEST2( nR, nC )
 
    MUPDATE()
 
-   WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
+   DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
 
       DO CASE
       CASE nKey == K_MOUSEMOVE

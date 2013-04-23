@@ -46,8 +46,6 @@
  *
  */
 
-/* UTF-8 */
-
 FUNCTION NumToTxtHU( nValue )
 
    LOCAL aTort := { "tized", "század", "ezred", "tízezred", "százezred", "milliomod", "milliárdod" }

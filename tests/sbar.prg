@@ -8,8 +8,6 @@
  * modified by Alejandro de Garate
  */
 
-/* UTF-8 */
-
 #include "directry.ch"
 #include "achoice.ch"
 #include "inkey.ch"

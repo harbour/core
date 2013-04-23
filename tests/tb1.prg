@@ -7,8 +7,6 @@
  *
  */
 
-/* UTF-8 */
-
 #include "inkey.ch"
 #include "button.ch"
 #include "setcurs.ch"

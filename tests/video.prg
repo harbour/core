@@ -7,8 +7,6 @@
  *
  */
 
-/* UTF-8 */
-
 #include "box.ch"
 
 #ifndef __CLIP__

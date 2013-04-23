@@ -680,7 +680,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
 
    /* TOFIX: Harbour repo specific */
    LOCAL aNoProc := { ;
-      "maskimag.png" }  /* will crash libharu demo if optimized in any way */
+      "maskimag.png" }  /* libharu demo will fail if optimized */
 
    /* TOFIX: Harbour repo specific */
    LOCAL aNoCopyrightOk := { ;
