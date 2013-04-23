@@ -329,7 +329,7 @@ STATIC FUNCTION EntryToCommitMsg( cLog )
       ENDIF
    NEXT
 
-   RETURN iif( nCount == 1, cMsg, cLog )
+   RETURN iif( nCount == 1, cMsg + hb_eol(), cLog )
 
 STATIC FUNCTION VCSDetect()
 

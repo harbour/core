@@ -16831,9 +16831,9 @@ STATIC FUNCTION _hbmk_TargetName( hbmk )
 
    LOCAL cName := ""
 
-   IF !Empty( hbmk[ _HBMK_nArgTarget ] )
+   IF ! Empty( hbmk[ _HBMK_nArgTarget ] )
       cName := hb_FNameName( hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] )
-      IF !Empty( cName )
+      IF ! Empty( cName )
          cName := "[" + cName + "]"
       ENDIF
    ENDIF
