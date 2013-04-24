@@ -170,9 +170,7 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
 
          AdsGetLastError( &ulErrCode, aucError, &usLength );
          if( ulErrCode != ( UNSIGNED32 ) errSubCode )
-         {
             AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
-         }
          hb_errPutDescription( pError, ( char * ) aucError );
       }
       else
