@@ -10,6 +10,7 @@ ChangeLog.txt ident
 *.c       text
 *.cfg     text
 *.ch      text
+*.cpp     text
 *.css     text
 *.def     text
 *.dif     text
