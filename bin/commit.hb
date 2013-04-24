@@ -202,6 +202,8 @@ STATIC FUNCTION InstallHook( cHookName, cCommand )
    LOCAL cName := hb_DirSepToOS( ".git/hooks/" ) + cHookName
    LOCAL cFile := hb_MemoRead( cName )
 
+   cCommand := StrTran( cCommand, "\", "/" )
+
    IF cCommand $ cFile
       RETURN .T.
    ENDIF
@@ -638,6 +640,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
       "debian/*", ;
       "package/*", ;
       "lib/3rd/*", ;
+      "contrib/gtqtc/*", ;
       "contrib/hbwin/*", ;
       "contrib/rddads/unixutils.h", ;
       "extras/httpsrv/*" }

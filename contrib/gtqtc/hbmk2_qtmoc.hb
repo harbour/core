@@ -21,7 +21,7 @@
  *
  */
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 
@@ -108,8 +108,8 @@ FUNCTION hbmk_plugin_qt( hbmk )
                IF lBuildIt
 
                   cCommand := hbmk[ "vars" ][ "cMOC_BIN" ] +;
-                              " " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cSrc ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cDst ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] )
+                     " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) ) +;
+                     " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) )
 
                   IF hbmk[ "lTRACE" ]
                      IF ! hbmk[ "lQUIET" ]
