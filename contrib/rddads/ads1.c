@@ -166,8 +166,13 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
       {
          UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ] = { 0 };
          UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
+         UNSIGNED32 ulErrCode;
 
-         AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
+         AdsGetLastError( &ulErrCode, aucError, &usLength );
+         if( ulErrCode != ( UNSIGNED32 ) errSubCode )
+         {
+            AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
+         }
          hb_errPutDescription( pError, ( char * ) aucError );
       }
       else
@@ -3455,7 +3460,11 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 #endif
 
          if( u32RetVal != AE_SUCCESS )
+         {
+            commonError( pArea, EG_OPEN, ( HB_ERRCODE ) u32RetVal, 0, pOpenInfo->abName, 0, NULL );
             AdsCloseSQLStatement( hStatement );
+            return HB_FAILURE;
+         }
       }
       else
       {
