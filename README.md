@@ -492,6 +492,7 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
     HB_WITH_PGSQL=C:\pgsql\include
     HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
+    HB_WITH_QT=C:\Qt\include (version 4.5.0 or upper is required)
     HB_WITH_SLANG= (on *nix systems)
     HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
     HB_WITH_TIFF=C:\libtiff (defaults to locally hosted version if not found)
@@ -507,6 +508,13 @@ on *nix systems. You may also use the value `local` to force using the
 locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
+
+You can override autodetection of QT 'moc' tool by using HB_QTPATH and
+optionally HB_QTPOSTFIX envvars. This may only be necessary on some *nix
+systems. F.e.:
+
+   HB_QTPATH=/opt/qt5/bin/
+   HB_QTPOSTFIX=
 
 Certain contribs can be instructed &ndash; when using .hbc files &ndash; to
 link against static build of their 3rd party lib dependencies (for
@@ -529,8 +537,8 @@ advanced users only):
 1. Install [Homebrew](http://mxcl.github.com/homebrew/)
 2. Install packages:
 
-        $ brew install pcre slang cairo freeimage libgd mysql postgresql
-        $ brew install upx uncrustify
+        $ brew install pcre slang cairo freeimage libgd mysql postgresql qt5
+        $ brew install upx uncrustify ack optipng jpegoptim
 
 ## Linux (generic)
 
@@ -570,6 +578,7 @@ You'll need these packages to compile certain contribs and optional Harbour feat
       for contrib/hbmysql lib:   $ sudo apt-get install libmysqlclient15-dev
       for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
       for contrib/hbpgsql lib:   $ sudo apt-get install libpq-dev
+      for contrib/hbqt lib:      $ sudo apt-get install libqt5-dev
 
 Optional, to override locally hosted sources:
 
@@ -606,6 +615,7 @@ You'll need these packages to compile certain contribs and optional Harbour feat
       for contrib/hbodbc lib:    unixodbc-devel OR
                                  unixODBC-devel
       for contrib/hbpgsql lib:   postgresql-devel
+      for contrib/hbqt lib:      qt5-devel
 
 > NOTES:
 >
@@ -1144,6 +1154,7 @@ set HB_WITH_MYSQL=C:\mysql\include
 set HB_WITH_OCILIB=C:\ocilib\include
 set HB_WITH_OPENSSL=C:\openssl\inc32
 set HB_WITH_PGSQL=C:\pgsql\include
+set HB_WITH_QT=C:\Qt\include
 ```
 
 ## on Windows x86-64 (64-bit) hosts
@@ -1813,6 +1824,9 @@ Supported shells per host platforms:
         * <http://www.postgresql.org/>
      * HB_WITH_PNG - libpng [multiplatform, free, open-source]
         * <http://www.libpng.org/pub/png/libpng.html>
+     * HB_WITH_QT - QT (GUI) [multiplatform, free, open-source]
+        * <https://qt-project.org/>
+        * <http://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
         * <http://www.sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
