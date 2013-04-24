@@ -23,7 +23,7 @@
 {darwin}-depincpath=qt:/usr/local/include
 {beos}-depincpath=qt:/boot/common/include
 
-gtqtc.cpp
+gtqtc1.cpp
 gtqtc.h
 
 ${hb_name}.hbx
