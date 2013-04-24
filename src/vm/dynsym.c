@@ -297,7 +297,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
                /* It's dynamic module so we are guessing that HVM
                 * intentionally not updated function address allowing
                 * multiple functions, f.e. programmer asked about keeping
-                * local references using HB_LIBLOAD()/HB_HBRLOAD() parameter.
+                * local references using hb_libLoad()/hb_hrbLoad() parameter.
                 * In such case update pDynSym address in the new symbol but
                 * do not register it as the main one
                 */

@@ -283,7 +283,7 @@ HB_FUNC( RATE )
 
          r = j * 0.000833333;   /* j * ( 0.01 / 12.0)  mensual's rate */
 
-         /* replace PAYMENT() function overhead */
+         /* replace Payment() function overhead */
 
          hb_mathResetError( &hb_exc );
          dBase = 1.0 + r;

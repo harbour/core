@@ -2,6 +2,8 @@
  * Author....: James J. Orlowski, M.D.
  * CIS ID....: 72707,601
  *
+ * This is an original work by James Orlowski and is placed in the
+ * public domain.
  *
  * Modification history:
  * ---------------------

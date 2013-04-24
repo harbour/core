@@ -307,7 +307,7 @@ STATIC FUNCTION XToStrX( xValue )
 
       FOR EACH tmp IN xValue
          cRetVal += XToStrX( tmp )
-         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+         IF ! tmp:__enumIsLast()
             cRetVal += ", "
          ENDIF
       NEXT
@@ -320,7 +320,7 @@ STATIC FUNCTION XToStrX( xValue )
 
       FOR EACH tmp IN xValue
          cRetVal += tmp:__enumKey() + " => " + XToStrX( tmp )
-         IF tmp:__enumIndex() < Len( tmp:__enumBase() )
+         IF ! tmp:__enumIsLast()
             cRetVal += ", "
          ENDIF
       NEXT
@@ -410,28 +410,40 @@ STATIC PROCEDURE cmdDisconnect( netiocli )
 
 STATIC PROCEDURE cmdSysInfo( netiocli )
 
+   LOCAL aArray
    LOCAL cLine
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      FOR EACH cLine IN netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_sysinfo" )
-         hbnetiocon_dispevent( netiocli, cLine )
-      NEXT
+      aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_sysinfo" )
+      IF HB_ISARRAY( aArray )
+         FOR EACH cLine IN aArray
+            hbnetiocon_dispevent( netiocli, cLine )
+         NEXT
+      ELSE
+         hbnetiocon_dispevent( netiocli, "Error: RPC call failed." )
+      ENDIF
    ENDIF
 
    RETURN
 
 STATIC PROCEDURE cmdServerConfig( netiocli )
 
+   LOCAL aArray
    LOCAL cLine
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      FOR EACH cLine IN netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_serverconfig" )
-         hbnetiocon_dispevent( netiocli, cLine )
-      NEXT
+      aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_serverconfig" )
+      IF HB_ISARRAY( aArray )
+         FOR EACH cLine IN aArray
+            hbnetiocon_dispevent( netiocli, cLine )
+         NEXT
+      ELSE
+         hbnetiocon_dispevent( netiocli, "Error: RPC call failed." )
+      ENDIF
    ENDIF
 
    RETURN
@@ -485,19 +497,22 @@ STATIC PROCEDURE cmdConnInfo( netiocli, lManagement )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
       aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
+      IF HB_ISARRAY( aArray )
+         hbnetiocon_dispevent( netiocli, hb_StrFormat( "Number of connections: %1$d", Len( aArray ) ) )
 
-      hbnetiocon_dispevent( netiocli, hb_StrFormat( "Number of connections: %1$d", Len( aArray ) ) )
-
-      FOR EACH hConn IN aArray
-         hbnetiocon_dispevent( netiocli, "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " + ;
-            hb_TToC( hConn[ "tStart" ] ) + " " + ;
-            PadR( hConn[ "cStatus" ], 12 ) + " " + ;
-            "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " + ;
-            "send: " + Str( hConn[ "nBytesSent" ] ) + " " + ;
-            "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " + ;
-            hConn[ "cAddressPeer" ] + " " + ;
-            iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ) )
-      NEXT
+         FOR EACH hConn IN aArray
+            hbnetiocon_dispevent( netiocli, "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " + ;
+               hb_TToC( hConn[ "tStart" ] ) + " " + ;
+               PadR( hConn[ "cStatus" ], 12 ) + " " + ;
+               "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " + ;
+               "send: " + Str( hConn[ "nBytesSent" ] ) + " " + ;
+               "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " + ;
+               hConn[ "cAddressPeer" ] + " " + ;
+               iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ) )
+         NEXT
+      ELSE
+         hbnetiocon_dispevent( netiocli, "Error: RPC call failed." )
+      ENDIF
    ENDIF
 
    RETURN
@@ -534,6 +549,7 @@ STATIC PROCEDURE cmdConnLogEnable( netiocli, lValue )
 
 STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
 
+   LOCAL lResult
    LOCAL aToken
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -541,10 +557,15 @@ STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
-         IF netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
-            hbnetiocon_dispevent( netiocli, "Done" )
+         lResult := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
+         IF HB_ISLOGICAL( lResult )
+            IF lResult
+               hbnetiocon_dispevent( netiocli, "Done" )
+            ELSE
+               hbnetiocon_dispevent( netiocli, "Failed" )
+            ENDIF
          ELSE
-            hbnetiocon_dispevent( netiocli, "Failed" )
+            hbnetiocon_dispevent( netiocli, "Error: RPC call failed." )
          ENDIF
       ELSE
          hbnetiocon_dispevent( netiocli, "Error: Invalid syntax." )
@@ -562,11 +583,14 @@ STATIC PROCEDURE cmdConnFilters( netiocli, lManagement )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
       aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
-
-      FOR EACH hFilter IN aArray
-         hbnetiocon_dispevent( netiocli, hFilter[ "cType" ], ;
-            hFilter[ "cAddress" ] )
-      NEXT
+      IF HB_ISARRAY( aArray )
+         FOR EACH hFilter IN aArray
+            hbnetiocon_dispevent( netiocli, hFilter[ "cType" ], ;
+               hFilter[ "cAddress" ] )
+         NEXT
+      ELSE
+         hbnetiocon_dispevent( netiocli, "Error: RPC call failed." )
+      ENDIF
    ENDIF
 
    RETURN

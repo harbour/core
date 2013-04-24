@@ -765,7 +765,7 @@ static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
     * extensions which can be hard coded only for given hardware (or
     * software terminal emulator). I think that if it's necessary then
     * user should add such tricks yourself to his programs using
-    * outstd( <cBlinkSequence> )
+    * OutStd( <cBlinkSequence> )
     * The only one thing I can make in portable way which will always
     * work is disabling sending BLINK attribute to remote terminal. So
     * in GTSLN like in GTCRS the function SetBlink( .F. ) does it, [Druzus]

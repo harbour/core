@@ -300,8 +300,8 @@ HB_FUNC( ATAN )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
          {
-            /* atan normally don't error, but it's save to return PI()/2
-               or -PI()/2, respectively, as these
+            /* atan normally don't error, but it's save to return Pi()/2
+               or -Pi()/2, respectively, as these
                are the boundary result values */
             if( dArg < 0.0 )
                hb_retnd( -CT_PI / 2.0 );
@@ -475,7 +475,7 @@ HB_FUNC( TANH )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
          {
-            /* normally, tanh() doesn't give errors, but let's return -1 or +1,
+            /* normally, Tanh() doesn't give errors, but let's return -1 or +1,
                respectively, as these are the boundary result values */
             if( dArg < 0.0 )
                hb_retnd( -1.0 );

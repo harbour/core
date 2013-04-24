@@ -51,7 +51,7 @@
 
   hb_threadStart( [<nThreadAttrs> ,] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
   hb_threadSelf() -> <pThID> | NIL
-  hb_threadId( [ <pThID> ] ) -> <nThNo>
+  hb_threadID( [ <pThID> ] ) -> <nThNo>
   hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
   hb_threadDetach( <pThID> ) -> <lOK>
 * hb_threadQuitRequest( <pThID> ) -> <lOK>
@@ -69,7 +69,7 @@
   hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
   hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> [, <params,...> ] ) -> <xCodeResult>
 ** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) -> .T.
-  hb_mtVM() -> <lMultiThreadVM>
+  hb_mtvm() -> <lMultiThreadVM>
 
   * - this function call can be ignored by the destination thread in some
       cases. HVM does not guaranties that the QUIT signal will be always
@@ -240,7 +240,7 @@ void hb_threadReleaseCPU( void )
 {
    /*
     * The following code is modified:
-    *       hb_releaseCPU()
+    *       hb_ReleaseCPU()
     * originally created by:
     *       Copyright 1999 David G. Holm <dholm@jsd-llc.com>
     * and then updated by few Harbour developers

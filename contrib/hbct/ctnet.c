@@ -49,32 +49,32 @@
 /*
  * CT3 NET Functions Comments:
  *
- * NETCANCEL( <cLocalDevice> ) -> lReleased
+ * NetCancel( <cLocalDevice> ) -> lReleased
  * Return true if <cLocalDevice> was disconnected.
  *
- * NETDISK( cDrive ) -> lSuccess
+ * NetDisk( cDrive ) -> lSuccess
  * Return true if <cDrive> is a network drive, otherwise return false if is a local drive.
  *
  * NETLOCNAME( cSahredDevice ) -> cLocalDevice
  * Not implemented yet.
  *
- * NETPRINTER() -> lSuccess
+ * NetPrinter() -> lSuccess
  * Return true if a current local printer seted by SET PRINTER TO was connected to a
  * network printer.
  *
- * NETREDIR( cLocalDevice, cSharedDevice, [ cPassword ], [ lShowError] ) -> lSuccess
+ * NetRedir( cLocalDevice, cSharedDevice, [ cPassword ], [ lShowError] ) -> lSuccess
  * Return true if <cLocalDevice> was connected to <cSharedDevice> with <cPassword>, if any.
  *
- * NETRMTNAME( cLocalDevice ) -> cSharedName
+ * NetRmtname( cLocalDevice ) -> cSharedName
  * Return the shared resource name connected to a <cLocalDevice>.
  * The original parameter <nDevice> in CA-Cl*pper Tools was changed to <cLocalName> in
  * xHarbour because in Windows Network I didn't find a number table like in MS-DOS. See
  * CA-T*ols help for more details.
  *
- * NETWORK() -> lSuccess
+ * Network() -> lSuccess
  * Return true if a PC-LAN/MS-NET or Netware type is active.
  *
- * NNETWORK() -> lSuccess
+ * NNetwork() -> lSuccess
  * Return true if a Netware type is active.
  *
  */

@@ -297,10 +297,10 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
    ADSHANDLE hConnToCheck = HB_ADS_PARCONNECTION( 1 );
 
    /* NOTE: Caller can specify a connection. Otherwise use default thread local handle.
-            The thread default handle will continue to be 0 if no adsConnect60() (Data
+            The thread default handle will continue to be 0 if no AdsConnect60() (Data
             Dictionary) calls are made. Simple table access uses an implicit connection
             whose handle we don't see unless you get it from an opened table
-            with ADSGETTABLECONTYPE(). */
+            with AdsGetTableConType(). */
 
    if( hConnToCheck )
    {
@@ -1430,22 +1430,31 @@ HB_FUNC( ADSCONVERTTABLE )
 }
 
 #if ! defined( ADS_LINUX )
-UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
+#if ADS_LIB_VERSION >= 620
+UNSIGNED32 WINAPI hb_adsShowCallback( UNSIGNED16 usPercentDone, UNSIGNED32 ulCallbackID )
+#else
+UNSIGNED32 WINAPI hb_adsShowCallback( UNSIGNED16 usPercentDone )
+#endif
 {
    PHB_ITEM pCallBack = hb_ads_getCallBack();
 
    if( pCallBack )
    {
       PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
+#if ADS_LIB_VERSION >= 620
+      PHB_ITEM pCallbackID = hb_itemPutNL( NULL, ulCallbackID );
+      HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( pCallBack, 2, pPercentDone, pCallbackID ) );
+      hb_itemRelease( pCallbackID );
+#else
       HB_BOOL fResult = hb_itemGetL( hb_vmEvalBlockV( pCallBack, 1, pPercentDone ) );
-
+#endif
       hb_itemRelease( pPercentDone );
 
       return fResult ? 1 : 0;
    }
 #if HB_TR_LEVEL >= HB_TR_DEBUG
    else
-      HB_TRACE( HB_TR_DEBUG, ( "hb_adsShowPercentageCB(%d) called with no codeblock set.", usPercentDone ) );
+      HB_TRACE( HB_TR_DEBUG, ( "hb_adsShowCallback(%d) called with no codeblock set.", usPercentDone ) );
 #endif
 
    return 0;
@@ -1469,7 +1478,11 @@ HB_FUNC( ADSREGCALLBACK )
    if( pCallBack )
    {
       hb_ads_setCallBack( pCallBack );
-      if( AdsRegisterProgressCallback( hb_adsShowPercentageCB ) == AE_SUCCESS )
+#if ADS_LIB_VERSION >= 620
+      if( AdsRegisterCallbackFunction( hb_adsShowCallback, hb_parnl( 2 ) ) == AE_SUCCESS )
+#else
+      if( AdsRegisterProgressCallback( hb_adsShowCallback ) == AE_SUCCESS )
+#endif
          fResult = HB_TRUE;
       else
          hb_ads_setCallBack( NULL );
@@ -1483,7 +1496,11 @@ HB_FUNC( ADSCLRCALLBACK )
 {
 #if ! defined( ADS_LINUX )
    hb_ads_setCallBack( NULL );
+#if ADS_LIB_VERSION >= 620
+   hb_retnl( AdsClearCallbackFunction() );
+#else
    hb_retnl( AdsClearProgressCallback() );
+#endif
 #else
    hb_retnl( 0 );
 #endif /* ADS_LINUX */
@@ -1611,7 +1628,7 @@ HB_FUNC( ADSROLLBACK )
 
 /*
    set the number of records to read ahead, for the current work area
-   Call:    ADSCACHERECORDS( nRecords )
+   Call:    AdsCacheRecords( nRecords )
    Returns: True if successful
  */
 HB_FUNC( ADSCACHERECORDS )
@@ -2088,7 +2105,7 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
 
 /*
    Verify if a username/password combination is valid for this database
-   Call :    ADSTESTLOGIN( cServerPath, nServerTypes, cUserName, cPassword, options,
+   Call :    AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
                           [ nUserProperty, @cBuffer ] )
    Returns : True if login succeeds
 

@@ -36,6 +36,8 @@
 #xtranslate HB_ISLOGICAL( <v> )            => ( ValType( <v> ) == "L" )
 #xtranslate HB_ISARRAY( <v> )              => ( ValType( <v> ) == "A" )
 #xtranslate HB_ISOBJECT( <v> )             => ( ValType( <v> ) == "O" )
+#xtranslate HB_ISBLOCK( <v> )              => ( ValType( <v> ) == "B" )
+#xtranslate HB_ISEVALITEM( <v> )           => ( ValType( <v> ) == "B" )
 
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
 #xtranslate hb_keyChar( <c> )              => Chr( <c> )

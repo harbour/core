@@ -136,7 +136,7 @@ HB_FUNC( DTOS )
       hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* NOTE: Harbour extension, exactly the same as STOD(). */
+/* NOTE: Harbour extension, exactly the same as SToD(). */
 
 HB_FUNC( HB_STOD )
 {

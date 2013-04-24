@@ -358,8 +358,8 @@ static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOO
 static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
-   HB_MAXUINT end_timer;
    long lRead = 0, l;
+   HB_MAXUINT end_timer;
 
    end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
 
@@ -390,15 +390,18 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lSent = 0, lLast = 1, l;
+   HB_MAXUINT end_timer;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
+      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+
       while( lSent < len && ! conn->stop )
       {
          if( conn->zstream )
-            l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, -1, &lLast );
+            l = hb_znetWrite( conn->zstream, conn->sd, ptr + lSent, len - lSent, 1000, &lLast );
          else
-            l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, -1 );
+            l = lLast = hb_socketSend( conn->sd, ptr + lSent, len - lSent, 0, 1000 );
          if( l > 0 )
          {
             lSent += l;
@@ -407,13 +410,15 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
          if( lLast <= 0 )
          {
             if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-                hb_vmRequestQuery() != 0 )
+                hb_vmRequestQuery() != 0 ||
+                ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
                break;
          }
       }
       if( conn->zstream && lLast > 0 && ! conn->stop )
       {
-         if( hb_znetFlush( conn->zstream, conn->sd, -1 ) != 0 )
+         if( hb_znetFlush( conn->zstream, conn->sd,
+                           conn->timeout > 0 ? conn->timeout : -1 ) != 0 )
             lSent = -1;
       }
 
@@ -494,7 +499,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
 }
 
 
-/* NETIO_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+/* netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
  */
 HB_FUNC( NETIO_RPC )
 {
@@ -520,7 +525,7 @@ HB_FUNC( NETIO_RPC )
    hb_retl( fRPC );
 }
 
-/* NETIO_RPCFILTER( <pConnectionSocket>,
+/* netio_RPCFilter( <pConnectionSocket>,
  *                  <sFuncSym> | <hValue> | NIL ) -> NIL
  */
 HB_FUNC( NETIO_RPCFILTER )
@@ -547,7 +552,7 @@ HB_FUNC( NETIO_RPCFILTER )
    }
 }
 
-/* NETIO_SERVERSTOP( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
+/* netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
  */
 HB_FUNC( NETIO_SERVERSTOP )
 {
@@ -564,7 +569,7 @@ HB_FUNC( NETIO_SERVERSTOP )
    }
 }
 
-/* NETIO_SERVERTIMEOUT( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+/* netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
  */
 HB_FUNC( NETIO_SERVERTIMEOUT )
 {
@@ -578,7 +583,7 @@ HB_FUNC( NETIO_SERVERTIMEOUT )
    }
 }
 
-/* NETIO_LISTEN( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
+/* netio_Listen( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
  *    -> <pListenSocket> | NIL
  */
 HB_FUNC( NETIO_LISTEN )
@@ -617,7 +622,7 @@ HB_FUNC( NETIO_LISTEN )
    s_listenRet( sd, szRootPath, fRPC );
 }
 
-/* NETIO_ACCEPT( <pListenSocket>, [<nTimeOut>],
+/* netio_Accept( <pListenSocket>, [<nTimeOut>],
  *               [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
  *    -> <pConnectionSocket> | NIL
  */
@@ -673,7 +678,7 @@ HB_FUNC( NETIO_ACCEPT )
    s_consrvRet( conn );
 }
 
-/* NETIO_COMPRESS( <pConnectionSocket>,
+/* netio_Compress( <pConnectionSocket>,
  *                 [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
  */
 HB_FUNC( NETIO_COMPRESS )
@@ -745,7 +750,7 @@ static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
    return conn->login;
 }
 
-/* NETIO_VERIFYCLIENT( <pConnectionSocket> ) -> <lAccepted>
+/* netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>
  */
 HB_FUNC( NETIO_VERIFYCLIENT )
 {
@@ -755,7 +760,7 @@ HB_FUNC( NETIO_VERIFYCLIENT )
       hb_retl( s_netio_login_accept( conn ) );
 }
 
-/* NETIO_SERVER( <pConnectionSocket> ) -> NIL
+/* netio_Server( <pConnectionSocket> ) -> NIL
  */
 HB_FUNC( NETIO_SERVER )
 {
@@ -1318,7 +1323,7 @@ HB_FUNC( NETIO_SERVER )
    }
 }
 
-/* NETIO_SRVSENDITEM( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
+/* netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDITEM )
 {
@@ -1363,7 +1368,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
    hb_retl( fResult );
 }
 
-/* NETIO_SRVSENDDATA( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
+/* netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDDATA )
 {
@@ -1403,7 +1408,7 @@ HB_FUNC( NETIO_SRVSENDDATA )
    hb_retl( fResult );
 }
 
-/* NETIO_SRVSTATUS( <pConnectionSocket>
+/* netio_SrvStatus( <pConnectionSocket>
  *                  [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
  */
 HB_FUNC( NETIO_SRVSTATUS )

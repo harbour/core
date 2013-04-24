@@ -412,7 +412,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pnStringLen )
  *  = HB_P_MACROPUSHPARE
  *
  * iContext contains HB_P_MACROPUSHPARE if a macro is used inside a codeblock
- * EVAL( {|| &macro} )
+ * Eval( {|| &macro } )
  *
  */
 
@@ -444,7 +444,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
        *          M->v := "'B'"
        *          ? "Macro:", cText
        *          ? "Result:", &cText
-       *          ? "Type:", type(cText)
+       *          ? "Type:", Type(cText)
        *       RETURN
        */
       pszFree = hb_macroTextSubst( pItem->item.asString.value, &struMacro.length );
@@ -464,7 +464,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
           *
           * Always:
           * macro := "1,2"
-          * EVAL( {|| &macro} )
+          * Eval( {|| &macro } )
           *
           */
          struMacro.Flags |= HB_MACRO_GEN_LIST;
@@ -1318,7 +1318,7 @@ static void hb_macroMemvarGenPCode( HB_BYTE bPCode, const char * szVarName, HB_C
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
    {
-      /* we are determining the type of expression (called from TYPE() function)
+      /* we are determining the type of expression (called from Type() function)
        * then we shouldn't create the requested variable if it doesn't exist
        */
       pSym = hb_dynsymFind( szVarName );
@@ -1346,7 +1346,7 @@ void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COM
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
    {
-      /* we are determining the type of expression (called from TYPE() function)
+      /* we are determining the type of expression (called from Type() function)
        */
       pSym = hb_dynsymFind( szSymbolName );
       if( ! pSym )
@@ -1481,7 +1481,7 @@ void hb_macroGenPopVar( const char * szVarName, HB_COMP_DECL )
    }
    else
    {
-      /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
+      /* TODO: memvars created inside Type() function should have PUBLIC scope */
       hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
    }
 }
@@ -1512,7 +1512,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
          {
             /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
-            /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
+            /* TODO: memvars created inside Type() function should have PUBLIC scope */
             hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 6 &&
@@ -1541,7 +1541,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
        * NOTE: An alias will be determined at runtime then we cannot decide
        * here if passed name is either a field or a memvar
        */
-      /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
+      /* TODO: memvars created inside Type() function should have PUBLIC scope */
       hb_macroMemvarGenPCode( HB_P_MPOPALIASEDVAR, szVarName, HB_COMP_PARAM );
    }
 }

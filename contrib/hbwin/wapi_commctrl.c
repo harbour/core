@@ -478,7 +478,7 @@ HB_FUNC( WAPI_IMAGELIST_WRITEEX )
 /*----------------------------------------------------------------------*/
 /*                           Tab Control Macros                         */
 /*----------------------------------------------------------------------*/
-/* Wapi_TabCtrl_InsertItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
+/* wapi_TabCtrl_InsertItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
 
 HB_FUNC( WAPI_TABCTRL_INSERTITEM )
 {
@@ -556,7 +556,7 @@ HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
                                                          hbwapi_par_raw_HIMAGELIST( 2 ) ) );
 }
 
-/* Wapi_TabCtrl_SetItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
+/* wapi_TabCtrl_SetItem( hWndTab, nInsertPos, cText, iImageListIndex ) */
 /* (BOOL)SNDMSG((hwnd), TCM_SETITEM, (WPARAM)(int)(iItem), (LPARAM)(TC_ITEM FAR*)(pitem)) */
 
 HB_FUNC( WAPI_TABCTRL_SETITEM )

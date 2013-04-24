@@ -97,7 +97,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS myclass2
    /* set enumerator value */
    (@enum):__enumValue( ::value / 10.0 )
    /* the index is updated automatically but if we want some noncontinuous
-    * indexes then here we van set it using (@enum):__enumIndex( nNeIndex )
+    * indexes then here we can set it using (@enum):__enumIndex( nNeIndex )
     * message
     */
    return .T. /* continue iteration */

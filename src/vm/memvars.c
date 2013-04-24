@@ -63,8 +63,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-#include "hbapifs.h" /* for __MVSAVE()/__MVRESTORE() */
-#include "hbdate.h"  /* for __MVSAVE()/__MVRESTORE() */
+#include "hbapifs.h" /* for __mvSave()/__mvRestore() */
+#include "hbdate.h"  /* for __mvSave()/__mvRestore() */
 #include "hbcomp.h"  /* for HB_VSCOMP_* macros */
 #include "error.ch"
 #include "hbmemvar.ch"
@@ -1714,7 +1714,7 @@ HB_FUNC( __MVRESTORE )
 
 /*
  * This is a hacking function which changes base private offset so
- * PRIVATE variables created in function which calls __MVSETBASE()
+ * PRIVATE variables created in function which calls __mvSetBase()
  * will not be released when the function exit but will be inherited
  * by its caller. [druzus]
  */

@@ -1,4 +1,9 @@
 /*
+ * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
+ * www - http://harbour-project.org
+ */
+
+/*
  * This module demonstrates a simple UDP Discovery Server
  *
  * If you run some service on the network (ex., netio) you need to

@@ -301,7 +301,7 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
 }
 
 
-/* MEMOLINE( <cString>, [ <nLineLength>=79 ],
+/* MemoLine( <cString>, [ <nLineLength>=79 ],
  *           [ <nLineNumber>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *           [ <cEOL>|<acEOLs> ] ) -> <cLine>
@@ -329,7 +329,7 @@ HB_FUNC( MEMOLINE )
             /* CA-Cl*pper also does not check if line exists and always
              * fill one line more, i.e.:
              *    for i := 0 to 4
-             *       ? "[" + memoline( " ", 20, i ) + "]"
+             *       ? "[" + MemoLine( " ", 20, i ) + "]"
              *    next
              * [druzus]
              */
@@ -398,7 +398,7 @@ HB_FUNC( MEMOLINE )
       hb_retclen_buffer( szLine, nLen );
 }
 
-/* MLCOUNT( <cString>, [ <nLineLength>=79 ],
+/* MLCount( <cString>, [ <nLineLength>=79 ],
  *          [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *          [ <cEOL>|<acEOLs> ] ) -> <nLines>
  */
@@ -416,7 +416,7 @@ HB_FUNC( MLCOUNT )
    hb_retns( nLines );
 }
 
-/* MLPOS( <cString>, [ <nLineLength>=79 ],
+/* MLPos( <cString>, [ <nLineLength>=79 ],
  *        [ <nLineNumber>=1 ],
  *        [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *        [ <cEOL>|<acEOLs> ] ) -> <nLinePos>
@@ -444,7 +444,7 @@ HB_FUNC( MLPOS )
    hb_retns( nOffset );
 }
 
-/* MLCTOPOS( <cString>, [ <nLineLength>=79 ],
+/* MLCToPos( <cString>, [ <nLineLength>=79 ],
  *           [ <nLine>=1 ], [ <nCol>=0 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *           [ <cEOL>|<acEOLs> ] ) -> <nPos>
@@ -480,7 +480,7 @@ HB_FUNC( MLCTOPOS )
    hb_retns( nOffset + 1 );
 }
 
-/* MPOSTOLC( <cString>, [ <nLineLength>=79 ],
+/* MPosToLC( <cString>, [ <nLineLength>=79 ],
  *           [ <nPos>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
  *           [ <cEOL>|<acEOLs> ] ) -> <aLineCol>

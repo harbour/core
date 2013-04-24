@@ -190,13 +190,6 @@ extern HB_EXPORT void     hb_vmTerminateThreads( void ); /* send QUIT request to
 extern HB_EXPORT PHB_ITEM hb_vmThreadStart( HB_ULONG ulAttr, PHB_CARGO_FUNC pThreadFunc, void * cargo ); /* create new thread with HVM stack */
 extern HB_EXPORT void *   hb_vmThreadState( void );
 
-/* various flags for supported features */
-#define HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */
-#define HB_VMFLAG_ARRSTR    16     /* support for string as array of bytes -ks */
-extern HB_EXPORT HB_U32   hb_vmFlagEnabled( HB_U32 flags );
-extern HB_EXPORT void     hb_vmFlagSet( HB_U32 flags );
-extern HB_EXPORT void     hb_vmFlagClear( HB_U32 flags );
-
 HB_EXTERN_END
 
 #endif /* HB_VM_H_ */

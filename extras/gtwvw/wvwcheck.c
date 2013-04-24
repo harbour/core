@@ -77,7 +77,7 @@
 /* CHECKBOX begins                                                   */
 
 
-/*WVW_CXcreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
+/*wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
  *              nStretchBitmap, lMap3Dcolors)
  * create CHECKBOX for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -120,7 +120,7 @@ HB_FUNC( WVW_CXCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iOffTop, iOffLeft, iOffBottom, iOffRight;
-   // int   iStyle;
+   /* int   iStyle; */
    UINT   uiPBid;
    USHORT usTop         = ( BYTE ) hb_parni( 2 ),
           usLeft        = ( BYTE ) hb_parni( 3 ),
@@ -151,8 +151,8 @@ HB_FUNC( WVW_CXCREATE )
    hb_retnl( ( LONG ) uiPBid );
 }
 
-/*WVW_CXdestroy( [nWinNum], nCXid )
-   *destroy checkbox nCXid for window nWinNum
+/*wvw_cxDestroy( [nWinNum], nCXid )
+ * destroy checkbox nCXid for window nWinNum
  */
 HB_FUNC( WVW_CXDESTROY )
 {
@@ -187,8 +187,8 @@ HB_FUNC( WVW_CXDESTROY )
    hb_xfree( pcd );
 }
 
-/*WVW_CXsetFocus( [nWinNum], nButtonId )
-   *set the focus to checkbox nButtonId in window nWinNum
+/*wvw_cxSetFocus( [nWinNum], nButtonId )
+ * set the focus to checkbox nButtonId in window nWinNum
  */
 HB_FUNC( WVW_CXSETFOCUS )
 {
@@ -203,11 +203,11 @@ HB_FUNC( WVW_CXSETFOCUS )
       hb_retl( FALSE );
 }
 
-/*WVW_CXenable( [nWinNum], nButtonId, [lToggle] )
-   *enable/disable checkbox nButtonId on window nWinNum
-   *(lToggle defaults to .t., ie. enabling the checkbox)
-   *return previous state of the checkbox (TRUE:enabled FALSE:disabled)
-   *(if nButtonId is invalid, this function returns FALSE too)
+/*wvw_cxEnable( [nWinNum], nButtonId, [lToggle] )
+ * enable/disable checkbox nButtonId on window nWinNum
+ *(lToggle defaults to .t., ie. enabling the checkbox)
+ * return previous state of the checkbox (TRUE:enabled FALSE:disabled)
+ *(if nButtonId is invalid, this function returns FALSE too)
  */
 HB_FUNC( WVW_CXENABLE )
 {
@@ -229,8 +229,8 @@ HB_FUNC( WVW_CXENABLE )
       hb_retl( FALSE );
 }
 
-/*WVW_CXsetcodeblock( [nWinNum], nCXid, bBlock )
-   *assign (new) codeblock bBlock to button nCXid for window nWinNum
+/*wvw_cxSetCodeblock( [nWinNum], nCXid, bBlock )
+ * assign (new) codeblock bBlock to button nCXid for window nWinNum
  *
  * return .t. if successful
  */
@@ -264,7 +264,7 @@ HB_FUNC( WVW_CXSETCODEBLOCK )
    hb_retl( TRUE );
 }
 
-/* WVW_CXsetcheck( [nWinNum], nCXid, nCheckState )
+/* wvw_cxSetCheck( [nWinNum], nCXid, nCheckState )
  * assigns check-state of checkbox nCXid
  *           0==unchecked    BST_UNCHECKED
  *           1==checked      BST_CHECKED
@@ -286,8 +286,8 @@ HB_FUNC( WVW_CXSETCHECK )
    hb_retl( TRUE );
 }
 
-/*WVW_CXgetcheck( [nWinNum], nCXid )
-   *returns check-state of checkbox nCXid
+/*wvw_cxGetCheck( [nWinNum], nCXid )
+ * returns check-state of checkbox nCXid
  *           0==unchecked    BST_UNCHECKED
  *           1==checked      BST_CHECKED
  *           2==indeterminate BST_INDETERMINATE
@@ -307,7 +307,7 @@ HB_FUNC( WVW_CXGETCHECK )
    hb_retnl( ulCheck );
 }
 
-/*WVW_CXSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/*wvw_cxSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
  *                             lItalic, lUnderline, lStrikeout
  *
  */
@@ -392,7 +392,7 @@ HB_FUNC( WVW_CXSTATUSFONT )
 /* PROGRESSBAR begins                                                 */
 
 
-/* WVW_PGcreate( [nWinNum], nTop, nLeft, nBottom, nRight, [aOffset],
+/* wvw_pgCreate( [nWinNum], nTop, nLeft, nBottom, nRight, [aOffset],
  *                         [nBackColor], [nBarColor], [lSmooth], [lVertical])
  * create progress bar for window nWinNum
  * nTop: row of top/left corner (in character unit)
@@ -410,11 +410,11 @@ HB_FUNC( WVW_CXSTATUSFONT )
  * returns 0 if failed
  *
  * example:
- * WVW_PGcreate( , 5, 10, 5, 30)
+ * wvw_pgCreate( , 5, 10, 5, 30)
  *  :: creates horiz progressbar on current window at (5,10) to (5,30)
  *     colors using default ones.
  *
- * WVW_PGcreate( , 5, 10, 5, 30, {-1, 0, +1, 0} )
+ * wvw_pgCreate( , 5, 10, 5, 30, {-1, 0, +1, 0} )
  *  :: same as above, but the bar is enlarged 1 pixel to the top
  *     and 1 pixel to the bottom
  *
@@ -516,9 +516,9 @@ HB_FUNC( WVW_PGCREATE )
       hb_retnl( ( LONG ) 0 );
 }
 
-/*WVW_PGdestroy( [nWinNum], nPGid )
-   *destroy progressbar nPGid for window nWinNum
-   *This function has no return value.
+/*wvw_pgDestroy( [nWinNum], nPGid )
+ * destroy progressbar nPGid for window nWinNum
+ * This function has no return value.
  */
 HB_FUNC( WVW_PGDESTROY )
 {
@@ -553,7 +553,7 @@ HB_FUNC( WVW_PGDESTROY )
    hb_xfree( pcd );
 }
 
-/* WVW_PGsetrange(nWinNum, PGid, [nMin], [nMax])
+/* wvw_pgSetRange(nWinNum, PGid, [nMin], [nMax])
  *  update progressbar data range (default is 0-100)
  *  nMin: a number in range of -32767 to +32767
  *  nMax: a number in range of -32767 to +32767
@@ -584,10 +584,10 @@ HB_FUNC( WVW_PGSETRANGE )
    hb_retl( TRUE );
 }
 
-/*WVW_PGsetpos(nWinNum, PGid, [nPos])
-   *update progressbar position within current range
-   *nPos: a number in range of current range
-   *returns .t. if operation considered successfull
+/*wvw_pgSetPos(nWinNum, PGid, [nPos])
+ * update progressbar position within current range
+ * nPos: a number in range of current range
+ * returns .t. if operation considered successfull
  */
 HB_FUNC( WVW_PGSETPOS )
 {
@@ -618,9 +618,9 @@ HB_FUNC( WVW_PGSETPOS )
    hb_retl( TRUE );
 }
 
-/*WVW_PGgetpos(nWinNum, PGid)
-   *get progressbar current position
-   *returns 0 if operation failed
+/*wvw_pgGetPos(nWinNum, PGid)
+ * get progressbar current position
+ * returns 0 if operation failed
  */
 HB_FUNC( WVW_PGGETPOS )
 {

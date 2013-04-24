@@ -10,6 +10,7 @@ C_SOURCES := \
    l_el.c \
    l_eo.c \
    l_es.c \
+   l_es_419.c \
    l_eu.c \
    l_fr.c \
    l_gl.c \
@@ -24,6 +25,7 @@ C_SOURCES := \
    l_nl.c \
    l_pl.c \
    l_pt.c \
+   l_pt_br.c \
    l_ro.c \
    l_ru.c \
    l_sk.c \
@@ -33,8 +35,8 @@ C_SOURCES := \
    l_sv.c \
    l_tr.c \
    l_uk.c \
+   l_zh.c \
    l_zh_sim.c \
-   l_zh_tra.c \
 
 LIBNAME := hblang
 

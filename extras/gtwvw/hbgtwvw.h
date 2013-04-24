@@ -60,7 +60,7 @@
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
 
-#define TTS_BALLOON           0x40   // added by MAG
+#define TTS_BALLOON           0x40   /* added by MAG */
 
 #ifndef GRADIENT_FILL_RECT_H
 #define GRADIENT_FILL_RECT_H  0x00000000
@@ -223,7 +223,7 @@ typedef __int64 LONG_PTR;
 
 /* default maximum number of user bitmap cache
    One bitmap cache currently takes 280 bytes (see BITMAP_HANDLE).
-   See also wvw_setMaxBMCache().
+   See also wvw_SetMaxBMCache().
  */
 #define WVW_DEFAULT_MAX_BMCACHE   20
 
@@ -232,7 +232,7 @@ typedef __int64 LONG_PTR;
  */
 #define WVW_TB_LABELMAXLENGTH     100
 
-//#define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) )
+/* #define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) ) */
 #define WVW_WHICH_WINDOW          ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ( ( hb_gt_wvw_GetNumWindows() ) - 1 )  : hb_gt_wvw_GetCurWindow() ) : ( ( UINT ) hb_parni( 1 ) ) )
 
 #define BLACK                     RGB( 0x0, 0x0, 0x0  )
@@ -511,7 +511,7 @@ typedef struct win_data
    int   keyPointerOut;                            /* Offset into key array of next character to read */
    int   keyLast;
 
-   RECT  RectInvalid;                  /* Invalid rectangle if DISPBEGIN() active */
+   RECT  RectInvalid;                  /* Invalid rectangle if DispBegin() active */
    HFONT hFont;
    int   fontHeight;                   /* requested font height */
    int   fontWidth;                    /* requested font width */
@@ -552,7 +552,7 @@ typedef struct wvw_data
    BOOL s_bVertCaret;            /* if TRUE, caret is in Vertical style */
 
    BOOL s_bNOSTARTUPSUBWINDOW;   /* if TRUE, subwindow will not be displayed during opening */
-   /* use WVW_NOSTARTUPSUBWINDOW() to check/set it */
+   /* use wvw_NoStartupSubWindow() to check/set it */
 
    BOOL s_bDefCentreWindow;   /* default CentreWindow setting for subwindows */
 
@@ -561,7 +561,7 @@ typedef struct wvw_data
 
    int s_byDefLineSpacing;    /* default line spacing */
 
-   int s_iDefLSpaceColor;     /* if >; //= 0 this will be the color index                                          for spacing between lines */
+   int s_iDefLSpaceColor;     /* if >= 0 this will be the color index                                          for spacing between lines */
 
    BOOL s_bAllowNonTop;       /* allow non-topmost window's control to  accept input */
 
@@ -582,7 +582,7 @@ typedef struct wvw_data
 /* read only by user ***/
 
 /* for GTWVW private use: ***********************************************/
-   BOOL s_bQuickSetMode;   /* quick SetMode(), to reset maxrow() and maxcol() only */
+   BOOL s_bQuickSetMode;   /* quick SetMode(), to reset MaxRow() and MaxCol() only */
 
    BOOL s_bFlashingWindow;
    /* topmost window is flashing
@@ -609,9 +609,11 @@ typedef struct wvw_data
 
 }WVW_DATA;
 
-//#define HB_RETHANDLE( h )        hb_retptr( ( void * ) ( h ) )
-//#define HB_PARHANDLE( n )        hb_parptr( n )
-//#define HB_STOREHANDLE( h, n )   hb_storptr( ( void * ) ( h ), n )
+#if 0
+#define HB_RETHANDLE( h )          hb_retptr( ( void * ) ( h ) )
+#define HB_PARHANDLE( n )          hb_parptr( n )
+#define HB_STOREHANDLE( h, n )     hb_storptr( ( void * ) ( h ), n )
+#endif
    #define HB_RETHANDLE( h )       hb_retnl( ( LONG ) ( h ) )
    #define HB_PARHANDLE( n )       ( ( LONG ) hb_parnl( n ) )
    #define HB_STOREHANDLE( h, n )  hb_stornl( ( LONG ) ( h ), n )

@@ -235,4 +235,3 @@ HB_FUNC( CAIRO_TEXT_PATH )
       hb_strfree( hText );
    }
 }
-

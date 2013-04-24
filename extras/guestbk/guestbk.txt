@@ -4,14 +4,14 @@ Felipe Coury <fcoury@flexsys-ci.com>
 
 How to create and test the Harbour Guestbook
 
-You'll find guestbk.prg and guestbk.htm files.
+You'll find guestbk.prg and guestbk.html files.
 To build the executable, review guestbk.prg and
 check the directories for locating guestbk.ini
-and guestbk.htm correctly.
+and guestbk.html correctly.
 
-With that done, build it using hbmk2. Put the
-resulting .exe, the .exe and .htm files on a script-
-enabled directory and call guestbk.exe via WebBrowser.
+With that done, build it using hbmk2. Put the resulting
+executable and .html files on a script-enabled directory
+and call guestbk executable via WebBrowser.
 
 The best thing about this guestbook is its highly
 configurable architecture. Please review guestbk.ini

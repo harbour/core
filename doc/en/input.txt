@@ -141,7 +141,7 @@
       //
       KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
       KEYBOARD ";" ? Inkey() // ==> 13
-      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
+      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -323,7 +323,7 @@
       CLEAR TYPEAHEAD
       //
       KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
-      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
+      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
    $STATUS$
       R
    $COMPLIANCE$

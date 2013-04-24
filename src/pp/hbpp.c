@@ -340,7 +340,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
    {
       char * pszEscaped;
 
-      fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
+      fprintf( fout, "/*\n"
                " * Harbour Project source code:\n"
                " *    Version information and build time switches.\n"
                " *\n"
@@ -528,7 +528,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
 
          if( ! *szId )
          {
-            szFrom = strstr( szLine, "$Id" );
+            szFrom = strstr( szLine, "$" "Id" );
             if( szFrom )
             {
                szFrom += 3;
@@ -569,7 +569,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
       if( ! *szLog )
       {
          if( iQuiet < 2 )
-            fprintf( stderr, "Cannot find valid $Id entry in the %s file.\n", pszFileName );
+            fprintf( stderr, "Cannot find valid $" "Id entry in the %s file.\n", pszFileName );
          iResult = 1;
       }
       else

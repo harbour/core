@@ -68,7 +68,7 @@
 #include "hbssl.h"
 
 /* NOTE: See: http://www.openssl.org/support/faq.html#PROG2
-         Application must call SSL_INIT(), so that this module gets linked.
+         Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
 #if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
    /* NOTE: It doesn't build in bcc55:

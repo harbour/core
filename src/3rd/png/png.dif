@@ -1,7 +1,7 @@
 diff -urN png.orig\png.h png\png.h
---- png.orig\png.h	Sat Feb 02 19:40:41 2013
-+++ png\png.h	Sat Feb 02 19:40:41 2013
-@@ -442,7 +442,7 @@
+--- png.orig\png.h	Thu Apr 04 05:52:29 2013
++++ png\png.h	Thu Apr 04 05:52:29 2013
+@@ -431,7 +431,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,11 +11,11 @@ diff -urN png.orig\png.h png\png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig\pnglconf.h png\pnglconf.h
---- png.orig\pnglconf.h	Sat Feb 02 19:40:41 2013
-+++ png\pnglconf.h	Sat Feb 02 19:40:41 2013
-@@ -21,7 +21,11 @@
- #ifndef PNGLCONF_H
- #define PNGLCONF_H
+--- png.orig\pnglconf.h	Thu Apr 04 05:52:29 2013
++++ png\pnglconf.h	Thu Apr 04 05:52:29 2013
+@@ -187,7 +187,11 @@
+ #define PNG_zTXt_SUPPORTED
+ /* end of options */
  /* settings */
 -#define PNG_API_RULE 0
 +#if defined( __WATCOMC__ )
@@ -26,3 +26,15 @@ diff -urN png.orig\pnglconf.h png\pnglconf.h
  #define PNG_CALLOC_SUPPORTED
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
+diff -urN png.orig\pngpriv.h png\pngpriv.h
+--- png.orig\pngpriv.h	Thu Apr 04 05:52:29 2013
++++ png\pngpriv.h	Thu Apr 04 05:52:29 2013
+@@ -69,7 +69,7 @@
+  * before png.h is included, but load the configuration now if it is available.
+  */
+ #ifndef PNGLCONF_H
+-#  include "pnglibconf.h"
++#  include "pnglconf.h"
+ #endif
+ 
+ /* Local renames may change non-exported API functions from png.h */

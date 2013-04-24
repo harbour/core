@@ -301,7 +301,7 @@ typedef HB_PP_MSG_FUNC_( ( * PHB_PP_MSG_FUNC ) );
    properly parsed, f.e:
       ? 1 + + 2
    does not work when
-      qout( 1 + + 2 )
+      QOut( 1 + + 2 )
    perfectly does.
    It this difference will be reason of some problems then please inform me
    with a code example so I'll be able if it should be implemented or not.

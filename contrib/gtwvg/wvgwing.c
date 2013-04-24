@@ -992,7 +992,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 
 /*
  *                                IL  | DL
- *  Wvg_AddToolbarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
+ *  Wvg_AddToolBarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
  */
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
@@ -1076,7 +1076,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 }
 
 /*
- *  Function with Win_FillRect() exists in hbwin:win_parn1.c with different approach.
+ *  Function with win_FillRect() exists in hbwin:win_parn1.c with different approach.
  */
 HB_FUNC( WVG_FILLRECT )
 {
@@ -1160,7 +1160,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 }
 
 /*
-   WVG_CreateTooltipWindow( hControl ) -> hWndTT
+   Wvg_CreateToolTipWindow( hControl ) -> hWndTT
  */
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
@@ -1168,7 +1168,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
    TOOLINFO toolInfo;
 
    hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
-                             WS_POPUP | TTS_ALWAYSTIP,  // | TTS_BALLOON,
+                             WS_POPUP | TTS_ALWAYSTIP, /* | TTS_BALLOON, */
                              CW_USEDEFAULT, CW_USEDEFAULT,
                              CW_USEDEFAULT, CW_USEDEFAULT,
                              wvg_parhwnd( 1 ),

@@ -24,7 +24,12 @@ PROCEDURE Main()
       IF LEFTEQUAL( enum, "two" )
          enum := Upper( enum )
       ENDIF
-      ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+      ? "end:   ENUM=", enum, ;
+         "| index:", enum:__enumIndex(), ;
+         "| value:", enum:__enumValue(), ;
+         "| base:", ValType( enum:__enumBase() ), ;
+         "| isfirst:", enum:__enumIsFirst(), ;
+         "| islast:", enum:__enumIsLast()
    NEXT
    ? "after loop ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
@@ -39,9 +44,19 @@ PROCEDURE Main()
    FOR EACH enum IN A
       IF LEFTEQUAL( Upper( enum ), "TWO" )
          enum := Upper( enum )
-         ? "before passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         ? "before passing by @ | ENUM=", enum, ;
+            "| index:", enum:__enumIndex(), ;
+            "| value:", enum:__enumValue(), ;
+            "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
+            "| islast:", enum:__enumIsLast()
          testBYREF( @enum )
-         ? " after passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         ? " after passing by @ | ENUM=", enum, ;
+            "| index:", enum:__enumIndex(), ;
+            "| value:", enum:__enumValue(), ;
+            "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
+            "| islast:", enum:__enumIsLast()
       ENDIF
    NEXT
    ? "after loop ENUM=", enum
@@ -54,7 +69,12 @@ PROCEDURE Main()
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    BEGIN SEQUENCE
       FOR EACH enum IN A DESCEND
-         ? "loop:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         ? "loop:   ENUM=", enum, ;
+            "| index:", enum:__enumIndex(), ;
+            "| value:", enum:__enumValue(), ;
+            "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
+            "| islast:", enum:__enumIsLast()
          TESTbreak( enum )
       NEXT
 
@@ -75,7 +95,12 @@ PROCEDURE Main()
             enum := Upper( enum )
          ENDIF
          Testbreak( enum )
-         ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         ? "end:   ENUM=", enum, ;
+            "| index:", enum:__enumIndex(), ;
+            "| value:", enum:__enumValue(), ;
+            "| base:", ValType( enum:__enumBase() ), ;
+            "| isfirst:", enum:__enumIsFirst(), ;
+            "| islast:", enum:__enumIsLast()
       NEXT
    RECOVER USING i
       ? "after loop ENUM=", enum

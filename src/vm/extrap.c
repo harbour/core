@@ -425,7 +425,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       }
    }
 
-   hb_errInternalRaw( 6005, "Exception error: %s", errmsg, NULL );
+   hb_errInternalRaw( 6005, "Exception error:%s", errmsg, NULL );
 
    return hb_cmdargCheck( "BATCH" ) ? EXCEPTION_EXECUTE_HANDLER : EXCEPTION_CONTINUE_SEARCH;
 }

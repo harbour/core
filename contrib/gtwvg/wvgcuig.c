@@ -568,7 +568,7 @@ static void hb_wvg_BoxGroupRaised( PHB_GTWVT pWVT, int iLeft, int iTop, int iRig
 }
 
 /*
- *    WVG_LABEL( nRow, nCol, aPxlOff, cLabel, nAlign,
+ *    Wvg_Label( nRow, nCol, aPxlOff, cLabel, nAlign,
  *               nEscapement, nTextColor, nBkColor, cFontFace, nFontHeight,
  *               nFontWidth, nFontWeight, nQuality,  nCharSet, lItalics,
  *               lUnderline, lStrikeOut )
@@ -628,7 +628,7 @@ HB_FUNC( WVG_LABEL )
 }
 
 /*
-   WVG_LABELEX( nRow, nCol, aPxlOff, cLabel, nAlign, nTextColor, nBkColor, nSlotFont )
+   Wvg_LabelEx( nRow, nCol, aPxlOff, cLabel, nAlign, nTextColor, nBkColor, nSlotFont )
  */
 HB_FUNC( WVG_LABELEX )
 {

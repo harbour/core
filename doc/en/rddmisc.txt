@@ -103,7 +103,7 @@
    $ONELINER$
       Returns the alias name of a work area
    $SYNTAX$
-      Alias([<nWorkArea>]) --> <cWorkArea>
+      Alias( [<nWorkArea>] ) --> <cWorkArea>
    $ARGUMENTS$
       <nWorkArea> Number of a work area
    $RETURNS$
@@ -696,7 +696,7 @@
    $ONELINER$
       Tests the success of a network function
    $SYNTAX$
-      NetErr([<lNewError>]) --> lError
+      NetErr( [<lNewError>] ) --> lError
    $ARGUMENTS$
       <lNewError> Is a logical Expression.
    $RETURNS$
@@ -714,11 +714,14 @@
       This allow the run-time error-handling system to control the way
       certain errors are handled.
    $EXAMPLES$
-      USE test NEW INDEX test
+      USE test NEW
       IF ! NetErr()
-         SEEK test->Name := "HARBOUR"
+         INDEX ON field->First TO test
+         SET INDEX TO test
+         test->First := "Harbour"
+         SEEK "Harbour"
          IF Found()
-            ? test->Name
+            ? test->First
          ENDIF
       ENDIF
       USE
@@ -919,7 +922,7 @@
    $ONELINER$
       Returns the work area number for a specified alias.
    $SYNTAX$
-      Select([<cAlias>]) --> nWorkArea
+      Select( [<cAlias>] ) --> nWorkArea
    $ARGUMENTS$
       <cAlias> is the target work area alias name.
    $RETURNS$

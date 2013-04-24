@@ -73,11 +73,11 @@
 
 #include "hbgtwvw.h"
 
-/*WVW_TBCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
-   *creates a toolbar at the top (no button initially)
-   *lDisplayText==.f. button's string is used as tooltips (default)
-   *nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
-   *nSystemBitmap: 0:none, 1:small, 2:large (defaults: 1)
+/*wvw_tbCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
+ * creates a toolbar at the top (no button initially)
+ * lDisplayText==.f. button's string is used as tooltips (default)
+ * nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
+ * nSystemBitmap: 0:none, 1:small, 2:large (defaults: 1)
  *               small=16x16 large=24x24
  * nImageWidth/Height are in effect only if nSystemBitmap==0
  */
@@ -88,7 +88,7 @@ HB_FUNC( WVW_TBCREATE )
    HWND       hWndParent  = pWindowData->hWnd;
    HWND       hWndTB;
    int        iMaxTextRows = ( int ) ( HB_ISNIL( 2 ) ? 0 : ( hb_parl( 2 ) ? 1 : 0 ) );
-//   DWORD dwStyle = (DWORD) ( HB_ISNIL( 3 ) ? TBSTYLE_FLAT | TBSTYLE_TOOLTIPS : hb_parni( 3 ) );
+/*   DWORD dwStyle = (DWORD) ( HB_ISNIL( 3 ) ? TBSTYLE_FLAT | TBSTYLE_TOOLTIPS : hb_parni( 3 ) ); */
    DWORD dwStyle = ( DWORD ) ( HB_ISNIL( 3 ) ? TBSTYLE_ALTDRAG | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT | TBSTYLE_WRAPABLE : hb_parnl( 3 ) );
 
    int iSystemBitmap = ( int ) ( HB_ISNIL( 4 ) ? 1 : hb_parni( 4 ) );
@@ -201,7 +201,7 @@ HB_FUNC( WVW_TBCREATE )
    hb_retnl( ( LONG ) hWndTB );
 }
 
-/*WVW_TBAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
+/*wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
  *                           lMap3Dcolors, lDropdown)
  * adds one button on the right of existing buttons
  * xBitmap:
@@ -291,8 +291,8 @@ HB_FUNC( WVW_TBADDBUTTON )
    hb_retl( TRUE );
 }
 
-/*WVW_TBButtonCount([nWinNum])
-   *returns number of buttons in toolbar on window nWinNum
+/*wvw_tbButtonCount([nWinNum])
+ * returns number of buttons in toolbar on window nWinNum
  */
 HB_FUNC( WVW_TBBUTTONCOUNT )
 {
@@ -310,10 +310,10 @@ HB_FUNC( WVW_TBBUTTONCOUNT )
    hb_retni( SendMessage( hWndTB, TB_BUTTONCOUNT, ( WPARAM ) 0, ( LPARAM ) 0 ) );
 }
 
-/*WVW_TBDelButton([nWinNum], nButton)
-   *nButton is zero based index of button to delete
-   *index=0 is the leftmost button
-   *NOTE: button separator is indexed and deleteable too
+/*wvw_tbDelButton([nWinNum], nButton)
+ * nButton is zero based index of button to delete
+ * index=0 is the leftmost button
+ * NOTE: button separator is indexed and deleteable too
  */
 HB_FUNC( WVW_TBDELBUTTON )
 {
@@ -346,7 +346,7 @@ HB_FUNC( WVW_TBDELBUTTON )
    hb_retl( TRUE );
 }
 
-/* WVW_TBGetButtonRect([nWinNum], nButton)
+/* wvw_tbGetButtonRect([nWinNum], nButton)
  * return an array {nRowStart, nColStart, nRowStop, nColStop}
  */
 HB_FUNC( WVW_TBGETBUTTONRECT )
@@ -385,11 +385,11 @@ HB_FUNC( WVW_TBGETBUTTONRECT )
 }
 
 
-/*WVW_TBEnableButton([nWinNum], nButton, [lToggle])
-   *nButton is zero based index of button to enable/disable
-   *index=0 is the leftmost button
-   *NOTE: button separator is indexed too
-   *returns .t. if successful
+/*wvw_tbEnableButton([nWinNum], nButton, [lToggle])
+ * nButton is zero based index of button to enable/disable
+ * index=0 is the leftmost button
+ * NOTE: button separator is indexed too
+ * returns .t. if successful
  */
 HB_FUNC( WVW_TBENABLEBUTTON )
 {
@@ -431,8 +431,8 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    hb_retl( TRUE );
 }
 
-/*WVW_TBdestroy( [nWinNum] )
-   *destroy toolbar for window nWinNum
+/*wvw_tbDestroy( [nWinNum] )
+ * destroy toolbar for window nWinNum
  */
 HB_FUNC( WVW_TBDESTROY )
 {
@@ -449,9 +449,9 @@ HB_FUNC( WVW_TBDESTROY )
    }
 }
 
-/*WVW_TBINDEX2CMD([nWinNum], nIndex)
-   *returns Command Id of button nIndex (0 based)
-   *returns -1 if the button does not exist
+/*wvw_tbIndex2Cmd([nWinNum], nIndex)
+ * returns Command Id of button nIndex (0 based)
+ * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBINDEX2CMD )
 {
@@ -464,9 +464,9 @@ HB_FUNC( WVW_TBINDEX2CMD )
    hb_retni( ( int ) ( iCmd > 0 ? iCmd : -1 ) );
 }
 
-/*WVW_TBCmd2Index([nWinNum], nCmd)
-   *returns Index (0 based) of button whose command id is nCmd
-   *returns -1 if the button does not exist
+/*wvw_tbCmd2Index([nWinNum], nCmd)
+ * returns Index (0 based) of button whose command id is nCmd
+ * returns -1 if the button does not exist
  */
 HB_FUNC( WVW_TBCMD2INDEX )
 {

@@ -122,7 +122,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "UADOS"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
       CASE "UAKOI8" ; cCPDef := "UAKOI8"; cLangIDBase := "uk" ; EXIT
       CASE "UAWIN"  ; cCPDef := "UA1251"; cLangIDBase := "uk" ; EXIT
-      CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
+      CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh" ; EXIT
       CASE "ZHGB"   ; cCPDef := "GBK"   ; cLangIDBase := "zh_sim" ; EXIT
       OTHERWISE
          /* Case sensitive legacy IDs. Lowercase flavours denote new
@@ -183,7 +183,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
    LOCAL cLangHb := ""
 
    IF HB_ISSTRING( cLangStd )
-      SWITCH Lower( cLangStd )
+      SWITCH Lower( StrTran( cLangStd, "_", "-" ) )
       CASE "af-za"      ; EXIT
       CASE "af"         ; EXIT
       CASE "ar-ae"      ; EXIT
@@ -242,6 +242,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "en-zw"
       CASE "en"         ; cLangHb := "en" ; EXIT
       CASE "eo"         ; cLangHb := "eo" ; EXIT
+      CASE "es-419"     ; cLangHb := "es_419" ; EXIT
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -337,7 +338,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "pa"         ; EXIT
       CASE "pl-pl"
       CASE "pl"         ; cLangHb := "pl" ; EXIT
-      CASE "pt-br"
+      CASE "pt-br"      ; cLangHb := "pt_br" ; EXIT
       CASE "pt-pt"
       CASE "pt"         ; cLangHb := "pt" ; EXIT
       CASE "ro-ro"
@@ -352,7 +353,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "sl"         ; cLangHb := "sl" ; EXIT
       CASE "sq-al"      ; EXIT
       CASE "sq"         ; EXIT
-      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyrl" ; EXIT
+      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyr" ; EXIT
       CASE "sr-sp-latn" ; cLangHb := "sr_lat" ; EXIT
       CASE "sv-fi"
       CASE "sv-se"
@@ -386,7 +387,8 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "zh-hk"
       CASE "zh-mo"
       CASE "zh-sg"
-      CASE "zh-tw"      ; cLangHb := "zh_tra" ; EXIT
+      CASE "zh-tw"
+      CASE "zh"         ; cLangHb := "zh" ; EXIT
       ENDSWITCH
    ENDIF
 

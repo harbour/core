@@ -183,7 +183,7 @@ making in last days.
    '\t' when not inside quoted string is converted to 4 spaces
    '\r' is always stripped, also from quoted strings
    '\0' stop line processing, like '\n' but the rest of line is ignored
-   ^z   (chr(26)) works _exactly_ like '\n'
+   ^z   (Chr(26)) works _exactly_ like '\n'
    All other characters are illegal
 
 12. All characters which are not keyword, string, numbers and know

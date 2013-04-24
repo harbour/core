@@ -1,5 +1,4 @@
 #!/usr/bin/hbrun --hb:gtcgi
-
 /*
  * Harbour Project source code:
  * Package build orchestrator script
@@ -79,7 +78,7 @@ PROCEDURE Main( ... )
    hProjectList := { => }
    hb_HKeepOrder( hProjectList, .T. )
 
-   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist" )
+   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist.txt" )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    aParams := hb_AParams()
@@ -400,12 +399,9 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    /* Add referenced project not present in our list and featuring an .hbp file */
    FOR EACH cProject IN aSortedList
-      IF !( cProject $ hProjectList )
-         IF hb_FileExists( s_cBase + s_cHome + cProject )
-            AddProject( hProjectList, cProject )
-            call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
-            hProjectList[ cProject ][ "lFromContainer" ] := NIL
-         ENDIF
+      IF AddProject( hProjectList, @cProject )
+         call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
+         hProjectList[ cProject ][ "lFromContainer" ] := NIL
       ENDIF
    NEXT
 
@@ -726,7 +722,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    RETURN aList
 
-PROCEDURE AddProject( hProjectList, cFileName )
+FUNCTION AddProject( hProjectList, cFileName )
 
    LOCAL cDir
    LOCAL cName
@@ -738,11 +734,10 @@ PROCEDURE AddProject( hProjectList, cFileName )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 
-      IF ! Empty( cName ) .AND. Empty( cDir )
-         cDir := cName
-      ENDIF
       IF Empty( cName )
          cName := DirGetName( cDir )
+      ELSEIF Empty( cDir )
+         cDir := cName
       ENDIF
       IF Empty( cExt )
          cExt := ".hbp"
@@ -750,10 +745,17 @@ PROCEDURE AddProject( hProjectList, cFileName )
 
       cFileName := hb_FNameMerge( cDir, cName, cExt )
 
-      hProjectList[ StrTran( cFileName, "\", "/" ) ] := { => }
+      IF hb_FileExists( s_cBase + s_cHome + cFileName )
+         cFileName := StrTran( cFileName, "\", "/" )
+         IF ! cFileName $ hProjectList
+            hProjectList[ cFileName ] := { => }
+            RETURN .T.
+         ENDIF
+      ENDIF
+
    ENDIF
 
-   RETURN
+   RETURN .F.
 
 PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
 

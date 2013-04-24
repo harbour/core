@@ -27,3 +27,9 @@
 {!(__HBMKDYN='yes')}hbnetio.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBNETIO__
 {!(__HBMKDYN='yes')&unix}hbunix.hbc  {!(__HBMKDYN='yes')&unix}-request=__HBEXTERN__HBUNIX__
 {!(__HBMKDYN='yes')&allwin}hbwin.hbc {!(__HBMKDYN='yes')&allwin}-request=__HBEXTERN__HBWIN__
+
+# localization (for automatization with config/lang.hb)
+-3rd=_langhb_entry=../../utils/hbmk2/
+-3rd=_langhb_docext=.md
+-3rd=_langhb_docoption=-lang={LNG}
+-3rd=_langhb_docoption=-longhelpmdsh

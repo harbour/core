@@ -45,7 +45,7 @@
 #include "hbdate.h"
 
 /* TODO: Add support for this compiler switches
-   -r -t || hb_getenv( "TMP" )
+   -r -t || hb_GetEnv( "TMP" )
  */
 
 

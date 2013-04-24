@@ -92,6 +92,13 @@
 #endif
 #if defined( HB_HAS_GPM )
 # include <gpm.h>
+# if defined( HB_OS_LINUX ) && 0
+#  include <linux/keyboard.h>
+# else
+#  define KG_SHIFT      0
+#  define KG_CTRL       2
+#  define KG_ALT        3
+# endif
 #endif
 
 #ifndef O_ACCMODE
@@ -174,11 +181,14 @@ static HB_GT_FUNCS SuperTable;
 
 #endif
 
-#define KEY_ALTMASK   0x10000000
-#define KEY_CTRLMASK  0x20000000
-#define KEY_EXTDMASK  0x40000000
-#define KEY_CLIPMASK  0x80000000
-#define KEY_MASK      0xF0000000
+#define KEY_SHIFTMASK 0x01000000
+#define KEY_CTRLMASK  0x02000000
+#define KEY_ALTMASK   0x04000000
+#define KEY_KPADMASK  0x08000000
+#define KEY_EXTDMASK  0x10000000
+#define KEY_CLIPMASK  0x20000000
+/* 0x40000000 reserved for Harbour extended keys */
+#define KEY_MASK      0xFF000000
 
 #define CLR_KEYMASK( x )  ( ( x ) & ~KEY_MASK )
 #define GET_KEYMASK( x )  ( ( x ) & KEY_MASK )
@@ -191,36 +201,35 @@ static HB_GT_FUNCS SuperTable;
 #define ALT_SEQ        "\037"
 /*#define NATION_SEQ      "\016"*/
 
-#define EXKEY_F1       ( 0 | KEY_EXTDMASK )
-#define EXKEY_F2       ( 1 | KEY_EXTDMASK )
-#define EXKEY_F3       ( 2 | KEY_EXTDMASK )
-#define EXKEY_F4       ( 3 | KEY_EXTDMASK )
-#define EXKEY_F5       ( 4 | KEY_EXTDMASK )
-#define EXKEY_F6       ( 5 | KEY_EXTDMASK )
-#define EXKEY_F7       ( 6 | KEY_EXTDMASK )
-#define EXKEY_F8       ( 7 | KEY_EXTDMASK )
-#define EXKEY_F9       ( 8 | KEY_EXTDMASK )
-#define EXKEY_F10      ( 9 | KEY_EXTDMASK )
-#define EXKEY_F11      ( 10 | KEY_EXTDMASK )
-#define EXKEY_F12      ( 11 | KEY_EXTDMASK )
-#define EXKEY_UP       ( 12 | KEY_EXTDMASK )
-#define EXKEY_DOWN     ( 13 | KEY_EXTDMASK )
-#define EXKEY_LEFT     ( 14 | KEY_EXTDMASK )
-#define EXKEY_RIGHT    ( 15 | KEY_EXTDMASK )
-#define EXKEY_INS      ( 16 | KEY_EXTDMASK )
-#define EXKEY_DEL      ( 17 | KEY_EXTDMASK )
-#define EXKEY_HOME     ( 18 | KEY_EXTDMASK )
-#define EXKEY_END      ( 19 | KEY_EXTDMASK )
-#define EXKEY_PGUP     ( 20 | KEY_EXTDMASK )
-#define EXKEY_PGDN     ( 21 | KEY_EXTDMASK )
-#define EXKEY_BS       ( 22 | KEY_EXTDMASK )
-#define EXKEY_TAB      ( 23 | KEY_EXTDMASK )
-#define EXKEY_ESC      ( 24 | KEY_EXTDMASK )
-#define EXKEY_ENTER    ( 25 | KEY_EXTDMASK )
-#define EXKEY_KPENTER  ( 26 | KEY_EXTDMASK )
-#define EXKEY_CENTER   ( 27 | KEY_EXTDMASK )
-#define EXKEY_PRTSCR   ( 28 | KEY_EXTDMASK )
-#define EXKEY_PAUSE    ( 29 | KEY_EXTDMASK )
+#define EXKEY_F1       ( HB_KX_F1     | KEY_EXTDMASK )
+#define EXKEY_F2       ( HB_KX_F2     | KEY_EXTDMASK )
+#define EXKEY_F3       ( HB_KX_F3     | KEY_EXTDMASK )
+#define EXKEY_F4       ( HB_KX_F4     | KEY_EXTDMASK )
+#define EXKEY_F5       ( HB_KX_F5     | KEY_EXTDMASK )
+#define EXKEY_F6       ( HB_KX_F6     | KEY_EXTDMASK )
+#define EXKEY_F7       ( HB_KX_F7     | KEY_EXTDMASK )
+#define EXKEY_F8       ( HB_KX_F8     | KEY_EXTDMASK )
+#define EXKEY_F9       ( HB_KX_F9     | KEY_EXTDMASK )
+#define EXKEY_F10      ( HB_KX_F10    | KEY_EXTDMASK )
+#define EXKEY_F11      ( HB_KX_F11    | KEY_EXTDMASK )
+#define EXKEY_F12      ( HB_KX_F12    | KEY_EXTDMASK )
+#define EXKEY_UP       ( HB_KX_UP     | KEY_EXTDMASK )
+#define EXKEY_DOWN     ( HB_KX_DOWN   | KEY_EXTDMASK )
+#define EXKEY_LEFT     ( HB_KX_LEFT   | KEY_EXTDMASK )
+#define EXKEY_RIGHT    ( HB_KX_RIGHT  | KEY_EXTDMASK )
+#define EXKEY_HOME     ( HB_KX_HOME   | KEY_EXTDMASK )
+#define EXKEY_END      ( HB_KX_END    | KEY_EXTDMASK )
+#define EXKEY_PGUP     ( HB_KX_PGUP   | KEY_EXTDMASK )
+#define EXKEY_PGDN     ( HB_KX_PGDN   | KEY_EXTDMASK )
+#define EXKEY_INS      ( HB_KX_INS    | KEY_EXTDMASK )
+#define EXKEY_DEL      ( HB_KX_DEL    | KEY_EXTDMASK )
+#define EXKEY_BS       ( HB_KX_BS     | KEY_EXTDMASK )
+#define EXKEY_TAB      ( HB_KX_TAB    | KEY_EXTDMASK )
+#define EXKEY_ESC      ( HB_KX_ESC    | KEY_EXTDMASK )
+#define EXKEY_ENTER    ( HB_KX_ENTER  | KEY_EXTDMASK )
+#define EXKEY_CENTER   ( HB_KX_CENTER | KEY_EXTDMASK )
+#define EXKEY_PRTSCR   ( HB_KX_PRTSCR | KEY_EXTDMASK )
+#define EXKEY_PAUSE    ( HB_KX_PAUSE  | KEY_EXTDMASK )
 
 #define K_UNDEF        0x10000
 #define K_METAALT      0x10001
@@ -228,24 +237,6 @@ static HB_GT_FUNCS SuperTable;
 #define K_NATIONAL     0x10003
 #define K_MOUSETERM    0x10004
 #define K_RESIZE       0x10005
-#define K_PRTSCR       0x10006
-#define K_PAUSE        0x10007
-
-/* xHarbour compatible definitions */
-#if ! defined( K_SH_LEFT )
-#define K_SH_LEFT      K_LEFT        /* Shift-Left  == Left  */
-#define K_SH_UP        K_UP          /* Shift-Up    == Up    */
-#define K_SH_RIGHT     K_RIGHT       /* Shift-Right == Right */
-#define K_SH_DOWN      K_DOWN        /* Shift-Down  == Down  */
-#define K_SH_INS       K_INS         /* Shift-Ins   == Ins   */
-#define K_SH_DEL       K_DEL         /* Shift-Del   == Del   */
-#define K_SH_HOME      K_HOME        /* Shift-Home  == Home  */
-#define K_SH_END       K_END         /* Shift-End   == End   */
-#define K_SH_PGUP      K_PGUP        /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN      K_PGDN        /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN    K_RETURN      /* Shift-Enter == Enter */
-#define K_SH_ENTER     K_ENTER       /* Shift-Enter == Enter */
-#endif
 
 typedef struct
 {
@@ -261,6 +252,7 @@ typedef struct
    int row, col;
    int buttonstate;
    int lbuttons;
+   int flags;
    int lbup_row, lbup_col;
    int lbdn_row, lbdn_col;
    int rbup_row, rbup_col;
@@ -422,195 +414,38 @@ static const char s_szBell[] = { HB_CHAR_BEL, 0 };
 /* conversion table for ANSI color indexes */
 static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
 
-/* The tables below are indexed by internal key value,
- * It cause that we don't have to make any linear scans
- * to access information proper ClipKeyCode entry
- */
-static const ClipKeyCode stdKeyTab[ NO_STDKEYS ] = {
-   { K_SPACE,   0,            0,        0 },            /*  32 */
-   { '!',       0,            0,        0 },            /*  33 */
-   { '"',       0,            0,        0 },            /*  34 */
-   { '#',       0,            0,        0 },            /*  35 */
-   { '$',       0,            0,        0 },            /*  36 */
-   { '%',       0,            0,        0 },            /*  37 */
-   { '&',       0,            0,        0 },            /*  38 */
-   { '\'',      296,          7,        0 },            /*  39 */
-   { '(',       0,            0,        0 },            /*  40 */
-   { ')',       0,            0,        0 },            /*  41 */
-   { '*',       0,            0,        0 },            /*  42 */
-   { '+',       0,            0,        0 },            /*  43 */
-   { ',',       307,          0,        0 },            /*  44 */
-   { '-',       386,          31,       0 },            /*  45 */
-   { '.',       308,          0,        0 },            /*  46 */
-   { '/',       309,          127,      0 },            /*  47 */
-   { '0',       K_ALT_0,      0,        0 },            /*  48 */
-   { '1',       K_ALT_1,      0,        0 },            /*  49 */
-   { '2',       K_ALT_2,      259,      0 },            /*  50 */
-   { '3',       K_ALT_3,      27,       0 },            /*  51 */
-   { '4',       K_ALT_4,      28,       0 },            /*  52 */
-   { '5',       K_ALT_5,      29,       0 },            /*  53 */
-   { '6',       K_ALT_6,      30,       0 },            /*  54 */
-   { '7',       K_ALT_7,      31,       0 },            /*  55 */
-   { '8',       K_ALT_8,      127,      0 },            /*  56 */
-   { '9',       K_ALT_9,      0,        0 },            /*  57 */
-   { ':',       0,            0,        0 },            /*  58 */
-   { ';',       295,          0,        0 },            /*  59 */
-   { '<',       0,            0,        0 },            /*  60 */
-   { '=',       K_ALT_EQUALS, 0,        0 },            /*  61 */
-   { '>',       0,            0,        0 },            /*  62 */
-   { '?',       0,            0,        0 },            /*  63 */
-   { '@',       0,            0,        0 },            /*  64 */
-   { 'A',       K_ALT_A,      K_CTRL_A, 0 },            /*  65 */
-   { 'B',       K_ALT_B,      K_CTRL_B, 0 },            /*  66 */
-   { 'C',       K_ALT_C,      K_CTRL_C, 0 },            /*  67 */
-   { 'D',       K_ALT_D,      K_CTRL_D, 0 },            /*  68 */
-   { 'E',       K_ALT_E,      K_CTRL_E, 0 },            /*  69 */
-   { 'F',       K_ALT_F,      K_CTRL_F, 0 },            /*  70 */
-   { 'G',       K_ALT_G,      K_CTRL_G, 0 },            /*  71 */
-   { 'H',       K_ALT_H,      K_CTRL_H, 0 },            /*  72 */
-   { 'I',       K_ALT_I,      K_CTRL_I, 0 },            /*  73 */
-   { 'J',       K_ALT_J,      K_CTRL_J, 0 },            /*  74 */
-   { 'K',       K_ALT_K,      K_CTRL_K, 0 },            /*  75 */
-   { 'L',       K_ALT_L,      K_CTRL_L, 0 },            /*  76 */
-   { 'M',       K_ALT_M,      K_CTRL_M, 0 },            /*  77 */
-   { 'N',       K_ALT_N,      K_CTRL_N, 0 },            /*  78 */
-   { 'O',       K_ALT_O,      K_CTRL_O, 0 },            /*  79 */
-   { 'P',       K_ALT_P,      K_CTRL_P, 0 },            /*  80 */
-   { 'Q',       K_ALT_Q,      K_CTRL_Q, 0 },            /*  81 */
-   { 'R',       K_ALT_R,      K_CTRL_R, 0 },            /*  82 */
-   { 'S',       K_ALT_S,      K_CTRL_S, 0 },            /*  83 */
-   { 'T',       K_ALT_T,      K_CTRL_T, 0 },            /*  84 */
-   { 'U',       K_ALT_U,      K_CTRL_U, 0 },            /*  85 */
-   { 'V',       K_ALT_V,      K_CTRL_V, 0 },            /*  86 */
-   { 'W',       K_ALT_W,      K_CTRL_W, 0 },            /*  87 */
-   { 'X',       K_ALT_X,      K_CTRL_X, 0 },            /*  88 */
-   { 'Y',       K_ALT_Y,      K_CTRL_Y, 0 },            /*  89 */
-   { 'Z',       K_ALT_Z,      K_CTRL_Z, 0 },            /*  90 */
-   { '[',       282,          27,       0 },            /*  91 */
-   { '\\',      299,          28,       0 },            /*  92 */
-   { ']',       283,          29,       0 },            /*  93 */
-   { '^',       K_ALT_6,      30,       0 },            /*  94 */
-   { '_',       386,          31,       0 },            /*  95 */
-   { '`',       297,          297,      0 },            /*  96 */
-   { 'a',       K_ALT_A,      K_CTRL_A, 0 },            /*  97 */
-   { 'b',       K_ALT_B,      K_CTRL_B, 0 },            /*  98 */
-   { 'c',       K_ALT_C,      K_CTRL_C, 0 },            /*  99 */
-   { 'd',       K_ALT_D,      K_CTRL_D, 0 },            /* 100 */
-   { 'e',       K_ALT_E,      K_CTRL_E, 0 },            /* 101 */
-   { 'f',       K_ALT_F,      K_CTRL_F, 0 },            /* 102 */
-   { 'g',       K_ALT_G,      K_CTRL_G, 0 },            /* 103 */
-   { 'h',       K_ALT_H,      K_CTRL_H, 0 },            /* 104 */
-   { 'i',       K_ALT_I,      K_CTRL_I, 0 },            /* 105 */
-   { 'j',       K_ALT_J,      K_CTRL_J, 0 },            /* 106 */
-   { 'k',       K_ALT_K,      K_CTRL_K, 0 },            /* 107 */
-   { 'l',       K_ALT_L,      K_CTRL_L, 0 },            /* 108 */
-   { 'm',       K_ALT_M,      K_CTRL_M, 0 },            /* 109 */
-   { 'n',       K_ALT_N,      K_CTRL_N, 0 },            /* 110 */
-   { 'o',       K_ALT_O,      K_CTRL_O, 0 },            /* 111 */
-   { 'p',       K_ALT_P,      K_CTRL_P, 0 },            /* 112 */
-   { 'q',       K_ALT_Q,      K_CTRL_Q, 0 },            /* 113 */
-   { 'r',       K_ALT_R,      K_CTRL_R, 0 },            /* 114 */
-   { 's',       K_ALT_S,      K_CTRL_S, 0 },            /* 115 */
-   { 't',       K_ALT_T,      K_CTRL_T, 0 },            /* 116 */
-   { 'u',       K_ALT_U,      K_CTRL_U, 0 },            /* 117 */
-   { 'v',       K_ALT_V,      K_CTRL_V, 0 },            /* 118 */
-   { 'w',       K_ALT_W,      K_CTRL_W, 0 },            /* 119 */
-   { 'x',       K_ALT_X,      K_CTRL_X, 0 },            /* 120 */
-   { 'y',       K_ALT_Y,      K_CTRL_Y, 0 },            /* 121 */
-   { 'z',       K_ALT_Z,      K_CTRL_Z, 0 },            /* 122 */
-   { '{',       282,          27,       0 },            /* 123 */
-   { '|',       299,          28,       0 },            /* 124 */
-   { '}',       283,          29,       0 },            /* 125 */
-   { '~',       297,          297,      0 },            /* 126 */
-   { K_CTRL_BS, K_ALT_BS,     127,      0 }             /* 127 */
-};
-
-static const ClipKeyCode extdKeyTab[ NO_EXTDKEYS ] = {
-   { K_F1,      K_ALT_F1,     K_CTRL_F1,     K_SH_F1    }, /*  00 */
-   { K_F2,      K_ALT_F2,     K_CTRL_F2,     K_SH_F2    }, /*  01 */
-   { K_F3,      K_ALT_F3,     K_CTRL_F3,     K_SH_F3    }, /*  02 */
-   { K_F4,      K_ALT_F4,     K_CTRL_F4,     K_SH_F4    }, /*  03 */
-   { K_F5,      K_ALT_F5,     K_CTRL_F5,     K_SH_F5    }, /*  04 */
-   { K_F6,      K_ALT_F6,     K_CTRL_F6,     K_SH_F6    }, /*  05 */
-   { K_F7,      K_ALT_F7,     K_CTRL_F7,     K_SH_F7    }, /*  06 */
-   { K_F8,      K_ALT_F8,     K_CTRL_F8,     K_SH_F8    }, /*  07 */
-   { K_F9,      K_ALT_F9,     K_CTRL_F9,     K_SH_F9    }, /*  08 */
-   { K_F10,     K_ALT_F10,    K_CTRL_F10,    K_SH_F10   }, /*  09 */
-   { K_F11,     K_ALT_F11,    K_CTRL_F11,    K_SH_F11   }, /*  10 */
-   { K_F12,     K_ALT_F12,    K_CTRL_F12,    K_SH_F12   }, /*  11 */
-
-   { K_UP,      K_ALT_UP,     K_CTRL_UP,     K_SH_UP    }, /*  12 */
-   { K_DOWN,    K_ALT_DOWN,   K_CTRL_DOWN,   K_SH_DOWN  }, /*  13 */
-   { K_LEFT,    K_ALT_LEFT,   K_CTRL_LEFT,   K_SH_LEFT  }, /*  14 */
-   { K_RIGHT,   K_ALT_RIGHT,  K_CTRL_RIGHT,  K_SH_RIGHT }, /*  15 */
-   { K_INS,     K_ALT_INS,    K_CTRL_INS,    K_SH_INS   }, /*  16 */
-   { K_DEL,     K_ALT_DEL,    K_CTRL_DEL,    K_SH_DEL   }, /*  17 */
-   { K_HOME,    K_ALT_HOME,   K_CTRL_HOME,   K_SH_HOME  }, /*  18 */
-   { K_END,     K_ALT_END,    K_CTRL_END,    K_SH_END   }, /*  19 */
-   { K_PGUP,    K_ALT_PGUP,   K_CTRL_PGUP,   K_SH_PGUP  }, /*  20 */
-   { K_PGDN,    K_ALT_PGDN,   K_CTRL_PGDN,   K_SH_PGDN  }, /*  21 */
-
-   { K_BS,      K_ALT_BS,     127,           K_SH_BS    }, /*  22 */
-   { K_TAB,     K_ALT_TAB,    K_CTRL_TAB,    K_SH_TAB   }, /*  23 */
-   { K_ESC,     K_ALT_ESC,    K_ESC,         0          }, /*  24 */
-
-   { K_ENTER,   K_ALT_ENTER,  K_CTRL_ENTER,  K_SH_ENTER }, /*  25 */
-
-   { K_ENTER,   KP_ALT_ENTER, K_CTRL_ENTER,  0          }, /*  26 */
-   { KP_CENTER, 0,            KP_CTRL_5,     0          }, /*  27 */
-   { K_PRTSCR,  0,            K_CTRL_PRTSCR, 0          }, /*  28 */
-   { K_PAUSE,   0,            0,             0          } /*  29 */
-};
-
 static int getClipKey( int nKey )
 {
    int nRet = 0, nFlag, n;
 
    if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
+   else if( HB_INKEY_ISEXT( nKey ) )
+      nRet = nKey;
    else
    {
-      nFlag = GET_KEYMASK( nKey );
+      n = GET_KEYMASK( nKey );
       nKey = CLR_KEYMASK( nKey );
-      if( nFlag & KEY_EXTDMASK )
-      {
-         if( nKey >= 0 && nKey < NO_EXTDKEYS )
-         {
-            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                extdKeyTab[ nKey ].shift_key != 0 )
-               nRet = extdKeyTab[ nKey ].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && extdKeyTab[ nKey ].alt_key != 0 )
-               nRet = extdKeyTab[ nKey ].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK )
-                     && extdKeyTab[ nKey ].ctrl_key != 0 )
-               nRet = extdKeyTab[ nKey ].ctrl_key;
-            else
-               nRet = extdKeyTab[ nKey ].key;
-         }
-      }
+      nFlag = 0;
+      if( n & KEY_SHIFTMASK )
+         nFlag |= HB_KF_SHIFT;
+      if( n & KEY_CTRLMASK )
+         nFlag |= HB_KF_CTRL;
+      if( n & KEY_ALTMASK )
+         nFlag |= HB_KF_ALT;
+      if( n & KEY_KPADMASK )
+         nFlag |= HB_KF_KEYPAD;
+
+      if( n & KEY_EXTDMASK )
+         nRet = HB_INKEY_NEW_KEY( nKey, nFlag );
       else
       {
          if( nKey > 0 && nKey < 32 )
          {
-            nFlag |= KEY_CTRLMASK;
+            nFlag |= HB_KF_CTRL;
             nKey += ( 'A' - 1 );
          }
-         n = nKey - 32;
-         if( n >= 0 && n < NO_STDKEYS )
-         {
-            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                stdKeyTab[ n ].shift_key != 0 )
-               nRet = stdKeyTab[ n ].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
-               nRet = stdKeyTab[ n ].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
-               nRet = stdKeyTab[ n ].ctrl_key;
-            else
-               nRet = stdKeyTab[ n ].key;
-         }
-         else
-            nRet = nKey;
-
+         nRet = HB_INKEY_NEW_KEY( nKey, nFlag );
       }
    }
 
@@ -678,6 +513,17 @@ static void set_signals( void )
 }
 
 #endif
+
+static int hb_gt_trm_getKbdState( PHB_GTTRM pTerm )
+{
+   int iFlags = 0;
+
+   if( pTerm->mLastEvt.flags & HB_KF_SHIFT ) iFlags |= HB_GTI_KBD_SHIFT;
+   if( pTerm->mLastEvt.flags & HB_KF_CTRL  ) iFlags |= HB_GTI_KBD_CTRL;
+   if( pTerm->mLastEvt.flags & HB_KF_ALT   ) iFlags |= HB_GTI_KBD_ALT;
+
+   return iFlags;
+}
 
 static int hb_gt_trm_getSize( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
@@ -892,17 +738,17 @@ static int getMouseKey( mouseEvent * mEvt )
    {
       if( mEvt->buttonstate & M_CURSOR_MOVE )
       {
-         nKey = K_MOUSEMOVE;
+         nKey = HB_INKEY_NEW_MPOS( mEvt->col, mEvt->row );
          mEvt->buttonstate &= ~M_CURSOR_MOVE;
       }
       else if( mEvt->buttonstate & M_BUTTON_WHEELUP )
       {
-         nKey = K_MWFORWARD;
+         nKey = HB_INKEY_NEW_MKEY( K_MWFORWARD, mEvt->flags );
          mEvt->buttonstate &= ~M_BUTTON_WHEELUP;
       }
       else if( mEvt->buttonstate & M_BUTTON_WHEELDOWN )
       {
-         nKey = K_MWBACKWARD;
+         nKey = HB_INKEY_NEW_MKEY( K_MWBACKWARD, mEvt->flags );
          mEvt->buttonstate &= ~M_BUTTON_WHEELDOWN;
       }
       else
@@ -924,6 +770,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_LEFT ) ?
                ( ( mEvt->buttonstate & M_BUTTON_LDBLCK ) ? K_LDBLCLK :
                  K_LBUTTONDOWN ) : K_LBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_LEFT;
             mEvt->buttonstate &= ~M_BUTTON_LDBLCK;
          }
@@ -942,6 +789,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_RIGHT ) ?
                ( ( mEvt->buttonstate & M_BUTTON_RDBLCK ) ? K_RDBLCLK :
                  K_RBUTTONDOWN ) : K_RBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_RIGHT;
             mEvt->buttonstate &= ~M_BUTTON_RDBLCK;
          }
@@ -960,6 +808,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_MIDDLE ) ?
                ( ( mEvt->buttonstate & M_BUTTON_MDBLCK ) ? K_MDBLCLK :
                  K_MBUTTONDOWN ) : K_MBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_MIDDLE;
             mEvt->buttonstate &= ~M_BUTTON_MDBLCK;
          }
@@ -1012,6 +861,14 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char * cMBuf, mouseEvent * mEvt
 {
    int row, col;
 
+   mEvt->flags = 0;
+   if( cMBuf[ 0 ] & 0x04 )
+      mEvt->flags |= HB_KF_SHIFT;
+   if( cMBuf[ 0 ] & 0x08 )
+      mEvt->flags |= HB_KF_ALT;
+   if( cMBuf[ 0 ] & 0x10 )
+      mEvt->flags |= HB_KF_CTRL;
+
    col = cMBuf[ 1 ] - 33;
    row = cMBuf[ 2 ] - 33;
    if( mEvt->row != row || mEvt->col != col )
@@ -1026,10 +883,8 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char * cMBuf, mouseEvent * mEvt
    switch( cMBuf[ 0 ] & 0xC3 )
    {
       case 0x1:
-         cMBuf[ 0 ] = 0x2;
-         break;
       case 0x2:
-         cMBuf[ 0 ] = 0x1;
+         cMBuf[ 0 ] ^= 0x3;
          break;
    }
 #endif
@@ -1075,9 +930,17 @@ static int set_gpmevt( int fd, int mode, void * cargo )
 
    if( Gpm_GetEvent( &gEvt ) > 0 )
    {
+      pTerm->mLastEvt.flags = 0;
+      if( gEvt.modifiers & ( 1 << KG_SHIFT ) )
+         pTerm->mLastEvt.flags |= HB_KF_SHIFT;
+      if( gEvt.modifiers & ( 1 << KG_CTRL ) )
+         pTerm->mLastEvt.flags |= HB_KF_CTRL;
+      if( gEvt.modifiers & ( 1 << KG_ALT ) )
+         pTerm->mLastEvt.flags |= HB_KF_ALT;
+
       pTerm->mLastEvt.row = gEvt.y;
       pTerm->mLastEvt.col = gEvt.x;
-      if( gEvt.type & GPM_MOVE )
+      if( gEvt.type & ( GPM_MOVE | GPM_DRAG ) )
          pTerm->mLastEvt.buttonstate |= M_CURSOR_MOVE;
       if( gEvt.type & GPM_DOWN )
       {
@@ -1101,7 +964,7 @@ static int set_gpmevt( int fd, int mode, void * cargo )
    chk_mevtdblck( pTerm );
    nKey = getMouseKey( &pTerm->mLastEvt );
 
-   return nKey ? SET_CLIPKEY( nKey ) : 0;
+   return nKey ? ( HB_INKEY_ISEXT( nKey ) ? nKey : SET_CLIPKEY( nKey ) ) : 0;
 }
 
 static void flush_gpmevt( PHB_GTTRM pTerm )
@@ -1150,11 +1013,12 @@ static void mouse_init( PHB_GTTRM pTerm )
    if( pTerm->terminal_type == TERM_LINUX )
    {
       pTerm->Conn.eventMask =
-         GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_DOUBLE;
+         GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_SINGLE | GPM_DOUBLE;
       /* give me move events but handle them anyway */
       pTerm->Conn.defaultMask = GPM_MOVE | GPM_HARD;
-      /* only pure mouse events, no Ctrl,Alt,Shft events */
-      pTerm->Conn.minMod = pTerm->Conn.maxMod = 0;
+      /* report Ctrl,Alt,Shft events */
+      pTerm->Conn.minMod = 0;
+      pTerm->Conn.maxMod = ( ( 1 << KG_SHIFT ) | ( 1 << KG_CTRL ) | ( 1 << KG_ALT ) );
       gpm_zerobased = 1;
       gpm_visiblepointer = 0;
       if( Gpm_Open( &pTerm->Conn, 0 ) >= 0 && gpm_fd >= 0 )
@@ -1303,7 +1167,7 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                   else
                   {
                      pTerm->event_fds[ i ]->status = EVTFDSTAT_RUN;
-                     if( IS_CLIPKEY( n ) )
+                     if( IS_CLIPKEY( n ) || HB_INKEY_ISEXT( n ) )
                      {
                         nRet = n;
                         npfd = pTerm->event_fds[ i ]->fd;
@@ -1346,9 +1210,9 @@ static int test_bufch( PHB_GTTRM pTerm, int n, int delay )
    if( pTerm->stdin_inbuf == n )
       nKey = get_inch( pTerm, delay );
 
-   return IS_CLIPKEY( nKey ) ? nKey :
-            ( pTerm->stdin_inbuf > n ) ?
-            pTerm->stdin_buf[( pTerm->stdin_ptr_l + n ) % STDIN_BUFLEN] : -1;
+   return ( IS_CLIPKEY( nKey ) || HB_INKEY_ISEXT( nKey ) ) ? nKey :
+          ( pTerm->stdin_inbuf > n ?
+            pTerm->stdin_buf[( pTerm->stdin_ptr_l + n ) % STDIN_BUFLEN] : -1 );
 }
 
 static void free_bufch( PHB_GTTRM pTerm, int n )
@@ -1399,7 +1263,10 @@ again:
       nKey = ch;
       ptr = pTerm->pKeyTab;
       if( i == 1 && nKey == K_ESC && esc == 0 )
+      {
+         nKey = EXKEY_ESC;
          esc = 1;
+      }
       while( ch >= 0 && ch <= 255 && ptr != NULL )
       {
          if( ptr->ch == ch )
@@ -1448,8 +1315,10 @@ again:
    if( ch == -1 && pTerm->nTermMouseChars )
       pTerm->nTermMouseChars = 0;
 
-   if( ch != -1 && IS_CLIPKEY( ch ) )
+   if( IS_CLIPKEY( ch ) )
       nKey = GET_CLIPKEY( ch );
+   else if( HB_INKEY_ISEXT( ch ) )
+      nKey = ch;
    else
    {
       if( esc == 1 && n == 0 && ( ch != -1 || i >= 2 ) )
@@ -1464,19 +1333,27 @@ again:
          if( nKey != 0 )
             pTerm->key_flag |= KEY_ALTMASK;
          else
-            nKey = K_ESC;
+            nKey = EXKEY_ESC;
          if( n == 1 && i > 1 )
             n = 2;
       }
-      else if( n == 0 && i > 0 )
-         n = 1;
+      else
+      {
+         if( nKey != 0 && ( pTerm->key_flag & KEY_CTRLMASK ) != 0 &&
+                          ( pTerm->key_flag & KEY_ALTMASK ) != 0 )
+         {
+            pTerm->key_flag &= ~( KEY_CTRLMASK | KEY_ALTMASK );
+            pTerm->key_flag |= KEY_SHIFTMASK;
+         }
+         if( n == 0 && i > 0 )
+            n = 1;
+      }
 
       if( n > 0 )
          free_bufch( pTerm, n );
 
       if( pTerm->key_flag != 0 && nKey != 0 )
       {
-
          nKey |= pTerm->key_flag;
          pTerm->key_flag = 0;
       }
@@ -1493,7 +1370,6 @@ again:
       }
       else if( nKey >= 32 && nKey <= 255 )
       {
-         //hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n, HB_WCHAR * pwc )
          HB_WCHAR wc = 0;
          n = i = 0;
          if( hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) nKey, &n, &wc ) )
@@ -2499,18 +2375,18 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_F11, "\033[23~" }, /* kf11 */
       { EXKEY_F12, "\033[24~" }, /* kf12 */
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[25~" }, /* kf13 */
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[26~" }, /* kf14 */
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[28~" }, /* kf15 */
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[29~" }, /* kf16 */
-      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[31~" }, /* kf17 */
-      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[32~" }, /* kf18 */
-      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[33~" }, /* kf19 */
-      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[34~" }, /* kf20 */
-      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[35~" }, /* kf21 */
-      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[36~" }, /* kf22 */
-      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[37~" }, /* kf23 */
-      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[38~" }, /* kf24 */
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033[25~" }, /* kf13 */
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033[26~" }, /* kf14 */
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033[28~" }, /* kf15 */
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033[29~" }, /* kf16 */
+      { EXKEY_F5 |KEY_SHIFTMASK, "\033[31~" }, /* kf17 */
+      { EXKEY_F6 |KEY_SHIFTMASK, "\033[32~" }, /* kf18 */
+      { EXKEY_F7 |KEY_SHIFTMASK, "\033[33~" }, /* kf19 */
+      { EXKEY_F8 |KEY_SHIFTMASK, "\033[34~" }, /* kf20 */
+      { EXKEY_F9 |KEY_SHIFTMASK, "\033[35~" }, /* kf21 */
+      { EXKEY_F10|KEY_SHIFTMASK, "\033[36~" }, /* kf22 */
+      { EXKEY_F11|KEY_SHIFTMASK, "\033[37~" }, /* kf23 */
+      { EXKEY_F12|KEY_SHIFTMASK, "\033[38~" }, /* kf24 */
 
       { EXKEY_F1 |KEY_CTRLMASK, "\033[39~" }, /* kf25 */
       { EXKEY_F2 |KEY_CTRLMASK, "\033[40~" }, /* kf26 */
@@ -2643,40 +2519,40 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_PGUP  |KEY_ALTMASK, "\033[5;3~" },
       { EXKEY_PGDN  |KEY_ALTMASK, "\033[6;3~" },
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2P" },
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2Q" },
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2R" },
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2S" },
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033O2P" },
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033O2Q" },
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033O2R" },
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033O2S" },
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033O1;2P" },
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033O1;2Q" },
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033O1;2R" },
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033O1;2S" },
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033O1;2P" },
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033O1;2Q" },
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033O1;2R" },
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033O1;2S" },
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2P" },
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2Q" },
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2R" },
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2S" },
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033[1;2P" },
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033[1;2Q" },
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033[1;2R" },
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033[1;2S" },
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[11;2~" },
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[12;2~" },
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[13;2~" },
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[14;2~" },
-      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[15;2~" },
-      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[17;2~" },
-      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[18;2~" },
-      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[19;2~" },
-      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[20;2~" },
-      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[21;2~" },
-      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[23;2~" },
-      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[24;2~" },
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033[11;2~" },
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033[12;2~" },
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033[13;2~" },
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033[14;2~" },
+      { EXKEY_F5 |KEY_SHIFTMASK, "\033[15;2~" },
+      { EXKEY_F6 |KEY_SHIFTMASK, "\033[17;2~" },
+      { EXKEY_F7 |KEY_SHIFTMASK, "\033[18;2~" },
+      { EXKEY_F8 |KEY_SHIFTMASK, "\033[19;2~" },
+      { EXKEY_F9 |KEY_SHIFTMASK, "\033[20;2~" },
+      { EXKEY_F10|KEY_SHIFTMASK, "\033[21;2~" },
+      { EXKEY_F11|KEY_SHIFTMASK, "\033[23;2~" },
+      { EXKEY_F12|KEY_SHIFTMASK, "\033[24;2~" },
 
-      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2~" },
-      { EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;2~" },
-      { EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;2~" },
-      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[4;2~" },
-      { EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;2~" },
-      { EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;2~" },
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[1;2~" },
+      { EXKEY_INS   |KEY_SHIFTMASK, "\033[2;2~" },
+      { EXKEY_DEL   |KEY_SHIFTMASK, "\033[3;2~" },
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[4;2~" },
+      { EXKEY_PGUP  |KEY_SHIFTMASK, "\033[5;2~" },
+      { EXKEY_PGDN  |KEY_SHIFTMASK, "\033[6;2~" },
 
       { EXKEY_BS |KEY_ALTMASK,     "\033\010" },
 
@@ -2708,7 +2584,7 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_CENTER, "\033[G" }, /* PuTTY */
       { EXKEY_HOME  , "\033[H" }, /* XTerm */
 
-      { EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* kcbt, XTerm */
+      { EXKEY_TAB   |KEY_SHIFTMASK, "\033[Z" }, /* kcbt, XTerm */
 
       /* XTerm  with modifiers */
       { EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" },
@@ -2727,16 +2603,16 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_END   |KEY_ALTMASK, "\033[1;3F" },
       { EXKEY_HOME  |KEY_ALTMASK, "\033[1;3H" },
 
-      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2A" },
-      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2B" },
-      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2C" },
-      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2D" },
-      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2E" },
-      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2F" },
-      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[1;2H" },
+      { EXKEY_UP    |KEY_SHIFTMASK, "\033[1;2A" },
+      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[1;2B" },
+      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[1;2C" },
+      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[1;2D" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[1;2E" },
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[1;2F" },
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[1;2H" },
 
       /* Konsole */
-      { EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033OM" },
+      { EXKEY_ENTER |KEY_SHIFTMASK, "\033OM" },
 
       { EXKEY_END,    "\033Ow" },  /* rxvt */
 
@@ -2761,34 +2637,34 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_END   |KEY_ALTMASK, "\033[3F" }, /* --- */
       { EXKEY_HOME  |KEY_ALTMASK, "\033[3H" }, /* --- */
 
-      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[2A" },
-      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2B" },
-      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[2C" },
-      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2D" },
-      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[2E" }, /* --- */
-      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2F" }, /* --- */
-      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[2H" }, /* --- */
+      { EXKEY_UP    |KEY_SHIFTMASK, "\033[2A" },
+      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[2B" },
+      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[2C" },
+      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[2D" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[2E" }, /* --- */
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[2F" }, /* --- */
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[2H" }, /* --- */
 
 #if 0
       /* key added for gnome-terminal and teraterm */
       { EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" },
       { EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" },
 
-      { EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[6A" },
-      { EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6B" },
-      { EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[6C" },
-      { EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6D" },
-      { EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[6E" },
-      { EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[6F" },
-      { EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6H" },
+      { EXKEY_UP    |KEY_SHIFTMASK, "\033[6A" },
+      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[6B" },
+      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[6C" },
+      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[6D" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[6E" },
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[6F" },
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[6H" },
 
-      { EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;6~" },
-      { EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;6~" },
-      { EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;6~" },
-      { EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;6~" },
-      { EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033[7;6~" },
+      { EXKEY_INS   |KEY_SHIFTMASK, "\033[2;6~" },
+      { EXKEY_DEL   |KEY_SHIFTMASK, "\033[3;6~" },
+      { EXKEY_PGUP  |KEY_SHIFTMASK, "\033[5;6~" },
+      { EXKEY_PGDN  |KEY_SHIFTMASK, "\033[6;6~" },
+      { EXKEY_ENTER |KEY_SHIFTMASK, "\033[7;6~" },
 
-      { EXKEY_BS    |KEY_CTRLMASK|KEY_ALTMASK, "\033[W" },
+      { EXKEY_BS    |KEY_SHIFTMASK, "\033[W" },
 #endif
 
       { 0, NULL } };
@@ -2844,18 +2720,18 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_F11, "\033[W" }, /* kf11 */
       { EXKEY_F12, "\033[X" }, /* kf12 */
 
-      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Y" }, /* kf13 */
-      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* kf14 */
-      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[a" }, /* kf15 */
-      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[b" }, /* kf16 */
-      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[c" }, /* kf17 */
-      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[d" }, /* kf18 */
-      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[e" }, /* kf19 */
-      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[f" }, /* kf20 */
-      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[g" }, /* kf21 */
-      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[h" }, /* kf22 */
-      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[i" }, /* kf23 */
-      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[j" }, /* kf24 */
+      { EXKEY_F1 |KEY_SHIFTMASK, "\033[Y" }, /* kf13 */
+      { EXKEY_F2 |KEY_SHIFTMASK, "\033[Z" }, /* kf14 */
+      { EXKEY_F3 |KEY_SHIFTMASK, "\033[a" }, /* kf15 */
+      { EXKEY_F4 |KEY_SHIFTMASK, "\033[b" }, /* kf16 */
+      { EXKEY_F5 |KEY_SHIFTMASK, "\033[c" }, /* kf17 */
+      { EXKEY_F6 |KEY_SHIFTMASK, "\033[d" }, /* kf18 */
+      { EXKEY_F7 |KEY_SHIFTMASK, "\033[e" }, /* kf19 */
+      { EXKEY_F8 |KEY_SHIFTMASK, "\033[f" }, /* kf20 */
+      { EXKEY_F9 |KEY_SHIFTMASK, "\033[g" }, /* kf21 */
+      { EXKEY_F10|KEY_SHIFTMASK, "\033[h" }, /* kf22 */
+      { EXKEY_F11|KEY_SHIFTMASK, "\033[i" }, /* kf23 */
+      { EXKEY_F12|KEY_SHIFTMASK, "\033[j" }, /* kf24 */
 
       { EXKEY_F1 |KEY_CTRLMASK, "\033[k" },        /* kf25 */
       { EXKEY_F2 |KEY_CTRLMASK, "\033[l" },        /* kf26 */
@@ -2887,7 +2763,7 @@ static void init_keys( PHB_GTTRM pTerm )
 
    static const keySeq bsdConsKeySeq[] = {
 
-      { EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" }, /* SHIFT+TAB */
+      { EXKEY_TAB   |KEY_SHIFTMASK, "\033[Z" }, /* SHIFT+TAB */
 
       { 0, NULL } };
 
@@ -2995,18 +2871,18 @@ static void init_keys( PHB_GTTRM pTerm )
    addKeyMap( pTerm, EXKEY_F12,    tiGetS( "kf12"  ) );
 
    /* shifted function keys */
-   addKeyMap( pTerm, EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf13" ) );
-   addKeyMap( pTerm, EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf14" ) );
-   addKeyMap( pTerm, EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf15" ) );
-   addKeyMap( pTerm, EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf16" ) );
-   addKeyMap( pTerm, EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf17" ) );
-   addKeyMap( pTerm, EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf18" ) );
-   addKeyMap( pTerm, EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf19" ) );
-   addKeyMap( pTerm, EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf20" ) );
-   addKeyMap( pTerm, EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf21" ) );
-   addKeyMap( pTerm, EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf22" ) );
-   addKeyMap( pTerm, EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf23" ) );
-   addKeyMap( pTerm, EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf24" ) );
+   addKeyMap( pTerm, EXKEY_F1 |KEY_SHIFTMASK, tiGetS( "kf13" ) );
+   addKeyMap( pTerm, EXKEY_F2 |KEY_SHIFTMASK, tiGetS( "kf14" ) );
+   addKeyMap( pTerm, EXKEY_F3 |KEY_SHIFTMASK, tiGetS( "kf15" ) );
+   addKeyMap( pTerm, EXKEY_F4 |KEY_SHIFTMASK, tiGetS( "kf16" ) );
+   addKeyMap( pTerm, EXKEY_F5 |KEY_SHIFTMASK, tiGetS( "kf17" ) );
+   addKeyMap( pTerm, EXKEY_F6 |KEY_SHIFTMASK, tiGetS( "kf18" ) );
+   addKeyMap( pTerm, EXKEY_F7 |KEY_SHIFTMASK, tiGetS( "kf19" ) );
+   addKeyMap( pTerm, EXKEY_F8 |KEY_SHIFTMASK, tiGetS( "kf20" ) );
+   addKeyMap( pTerm, EXKEY_F9 |KEY_SHIFTMASK, tiGetS( "kf21" ) );
+   addKeyMap( pTerm, EXKEY_F10|KEY_SHIFTMASK, tiGetS( "kf22" ) );
+   addKeyMap( pTerm, EXKEY_F11|KEY_SHIFTMASK, tiGetS( "kf23" ) );
+   addKeyMap( pTerm, EXKEY_F12|KEY_SHIFTMASK, tiGetS( "kf24" ) );
 #endif
 }
 
@@ -3745,6 +3621,11 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pTerm->esc_delay = hb_itemGetNI( pInfo->pNewVal );
          break;
 
+      case HB_GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult,
+                                        hb_gt_trm_getKbdState( pTerm ) );
+         break;
+
       case HB_GTI_DELKEYMAP:
          szVal = hb_itemGetCPtr( pInfo->pNewVal );
          if( szVal && *szVal )
@@ -3757,7 +3638,8 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
             szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
             if( iVal && szVal && *szVal )
-               addKeyMap( pTerm, SET_CLIPKEY( iVal ), szVal );
+               addKeyMap( pTerm, HB_INKEY_ISEXT( iVal ) ?
+                                 iVal : SET_CLIPKEY( iVal ), szVal );
          }
          break;
 

@@ -57,7 +57,7 @@
    length of structure before the structure. The latter simple approach
    was used in Length Prefix Protocol (LPP). Protocol can easily be
    described by simple Clipper expression:
-    BIN2L(LEN(cData)) + cData
+    Bin2L(Len(cData)) + cData
 
    Future extensions: Protocol is limitted to 4GB size for a single LPP
    message. This can be extended in future to use highest bit of length

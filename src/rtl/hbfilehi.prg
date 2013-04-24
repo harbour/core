@@ -66,7 +66,7 @@ FUNCTION hb_PathNormalize( cPath )
 
          IF cDir == "." .OR. ;
             ( Empty( cDir ) .AND. ;
-            cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+            ! cDir:__enumIsLast() .AND. ;
             ( cDir:__enumIndex() > 2 .OR. ;
             ( cDir:__enumIndex() == 2 .AND. ! Empty( aDir[ 1 ] ) ) ) )
 
@@ -76,7 +76,7 @@ FUNCTION hb_PathNormalize( cPath )
             ! Empty( cDir ) .AND. ;
             ! _ISDRIVESPEC( cDir )
 
-            IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+            IF ! cDir:__enumIsLast() .AND. ;
                aDir[ cDir:__enumIndex() + 1 ] == ".."
                hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
                hb_ADel( aDir, cDir:__enumIndex(), .T. )
@@ -87,7 +87,7 @@ FUNCTION hb_PathNormalize( cPath )
       cPath := ""
       FOR EACH cDir IN aDir
          cPath += cDir
-         IF cDir:__enumIndex() < Len( cDir:__enumBase() )
+         IF ! cDir:__enumIsLast()
             cPath += hb_ps()
          ENDIF
       NEXT

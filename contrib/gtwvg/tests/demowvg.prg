@@ -1,23 +1,26 @@
-//                   GTWVT Console GUI Interface
-//
-//               Pritpal Bedi <pritpal@vouchcac.com>
-//
-//       I have tried to simulate the gui controls through GDI
-//        functions and found a way to refresh those controls
-//          through WM_PAINT message issued to the Window.
-//                               and
-//             I feel that IF this functionality is built
-//                 into the GT itself, what a wonder!
-//
-//   This protocol opens up the the distinct possibilities and hope
-//            you all will cooperate to enhance it further.
-//
-//           Thanks Peter Rees! You have laid the foundation!
+/*
+ *                   GTWVT Console GUI Interface
+ *
+ *               Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ *       I have tried to simulate the gui controls through GDI
+ *        functions and found a way to refresh those controls
+ *          through WM_PAINT message issued to the Window.
+ *                               and
+ *             I feel that IF this functionality is built
+ *                 into the GT itself, what a wonder!
+ *
+ *   This protocol opens up the the distinct possibilities and hope
+ *            you all will cooperate to enhance it further.
+ *
+ *           Thanks Peter Rees! You have laid the foundation!
+ */
 
 #require "gtwvg"
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "wvgparts.ch"
 
 REQUEST DBFCDX
 REQUEST DBFNTX
@@ -127,7 +130,7 @@ PROCEDURE Main()
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH ) } )
+   AAdd( aBlocks, {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH, , .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 41, MaxRow(), 41, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
@@ -577,10 +580,10 @@ FUNCTION BuildButtons()
 
    oXbp := WvgPushButton():new()
    oXbp:pointerFocus := .F.
-   oXbp:caption := IMAGE_VR
+   oXbp:caption := { "Vouch", WVG_IMAGE_ICONFILE, IMAGE_VR }
    oXbp:border  := .F.
    oXbp:create( , , { {|| -( MaxRow() - 1 ) }, -31 }, { -2, -4 } )
-   oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) } // {|| Wvt_Keyboard( K_F8 ) }
+   oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) }
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
    RETURN NIL

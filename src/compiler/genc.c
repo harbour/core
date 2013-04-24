@@ -505,7 +505,7 @@ static void hb_compGenCByteStr( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen 
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some CHR(n) can be converted
+       * NOTE: After optimization some Chr(n) can be converted
        *    into a string containing nonprintable characters.
        *
        * TODO: add switch to use hexadecimal format "%#04x"

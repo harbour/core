@@ -437,7 +437,7 @@ typedef struct HB_EXPR_
 typedef struct HB_ENUMERATOR_
 {
    const char * szName;
-   HB_BOOL bForEach;
+   int iForEachDir;     /* 0 - standard FOR/NEXT, 1(-1) FOR EACH(descendant) */
    struct HB_ENUMERATOR_ *pNext;
 } HB_ENUMERATOR, * PHB_ENUMERATOR; /* support structure for FOR EACH statements */
 
@@ -822,6 +822,7 @@ typedef struct _HB_COMP
    HB_BOOL           fBuildInfo;          /* print build info */
    HB_BOOL           fLogo;               /* print logo */
    HB_BOOL           fSwitchCase;         /* generate PCODE for CASE value of SWITCH statement */
+   HB_BOOL           fDescend;            /* add descendant FOR EACH iterators */
    HB_BOOL           fSingleModule;       /* do not automatically compile DO...[WITH...] external modules (-m) */
    HB_BOOL           fError;              /* error appeared during compilation */
    HB_BOOL           fNoArchDefs;         /* do not define architecture dependent macros: __PLATFORM__*, __ARCH??BIT__, __*_ENDIAN__ */

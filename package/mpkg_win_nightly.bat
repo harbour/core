@@ -37,6 +37,7 @@ set _HB_DIR_TOOL=%~dp0tool\
 echo ! Downloading Harbour sources...
 
 if exist core-master rd /q /s core-master
+del master.
 %_HB_DIR_TOOL%wget --no-check-certificate https://github.com/harbour/core/archive/master.zip
 if errorlevel 1 goto _EXIT
 

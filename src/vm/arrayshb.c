@@ -236,9 +236,9 @@ HB_FUNC( AFILL )
    }
    else
 #ifdef HB_CLP_STRICT
-      /* NOTE: In CA-Cl*pper AFILL() is written in a manner that it will
-               call AEVAL() to do the job, so the error (if any) will also be
-               thrown by AEVAL().  [vszakats] */
+      /* NOTE: In CA-Cl*pper AFill() is written in a manner that it will
+               call AEval() to do the job, so the error (if any) will also be
+               thrown by AEval().  [vszakats] */
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", 0 );
 #else
       hb_errRT_BASE( EG_ARG, 6004, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -264,7 +264,7 @@ HB_FUNC( ASCAN )
       hb_retni( 0 );
 }
 
-/* Same as ASCAN() but has an additional parameter to force exact comparison. */
+/* Same as AScan() but has an additional parameter to force exact comparison. */
 HB_FUNC( HB_ASCAN )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );

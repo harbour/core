@@ -1,10 +1,11 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-03\-26 01:47\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
+Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor  
 
-Syntax:  
+Használat:  
   
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[kapcsolók\] \[&lt;szkript\[ek\]&gt;\] &lt;források\[ok\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Description:  
 
@@ -12,110 +13,110 @@ Description:
   hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
   
-Options:  
+Kapcsolók:  
 
 
- - **\-o&lt;outname&gt;** output file name
+ - **\-o&lt;outname&gt;** kimeneti fájlnév
  - **\-l&lt;libname&gt;** link with &lt;libname&gt; library\. &lt;libname&gt; should be without path, extension and 'lib' prefix \(unless part of the name\)\. Do not add core Harbour libraries, they are automatically added as needed\. If &lt;libname&gt; starts with a '\-' character, the library will be removed from the list of libraries at link time\.
- - **\-L&lt;libpath&gt;** additional path to search for libraries
- - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** additional path to search for headers
- - **\-static|\-shared** link with static/shared libs
+ - **\-L&lt;libpath&gt;** további keresési útvonal függvénykönyvtárakhoz
+ - **\-i&lt;p&gt;|\-incpath=&lt;p&gt;** további keresési útvonal a fejlécekhez
+ - **\-static|\-shared** használjon a szerkesztéskor statikus/dinamikus függvénykönyvtárakat
  - **\-gt&lt;name&gt;** link with GT&lt;name&gt; GT driver, can be repeated to link with more GTs\. First one will be the default at run\-time
- - **\-inc\[\-\]** enable/disable incremental build mode \(default: disabled\)
+ - **\-inc\[\-\]** kapcsolja be/ki a lépcsőzetes \(incremental\) üzemmódot \(alapértelmezés: kikapcsolva\)
  - **\-hbexe** create executable \(default\)
- - **\-hblib** create static library
- - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
- - **\-hbdynvm** create dynamic library \(with linked Harbour VM\)
+ - **\-hblib** statikus függvénykönyvtár létrehozása
+ - **\-hbdyn** dinamikus függvénykönyvtár létrehozása \(Harbour VM nélkül\)
+ - **\-hbdynvm** dinamikus függvénykönyvtár létrehozása \(Harbour VM\-mel\)
 
 
- - **\-mt|\-st** link with multi/single\-thread Harbour VM
- - **\-gui|\-std** create GUI/console executable
- - **\-main=&lt;mainfunc&gt;** override the name of starting function/procedure
+ - **\-mt|\-st** többszálú/egyszálú virtuális gép használata
+ - **\-gui|\-std** GUI/konzol alkalmazás létrehozása
+ - **\-main=&lt;mainfunc&gt;** állítson be alternatív kezdő/belépési függvénynevet
  - **\-request=&lt;func&gt;** force function/procedure to be linked
- - **\-fullstatic** link with all static libs
+ - **\-fullstatic** csak statikus függvénykönyvtárak használata
  - **\-pic\[\-\]** create position independent object code \(always enabled in \-hbdyn/\-hbdynvm modes\)
- - **\-\[full|fix\]shared** create shared Harbour binaries without/with absolute dir reference to Harbour library \(default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise\) \(fix/full option in \*nix only\)
- - **\-nulrdd\[\-\]** link with nulrdd
- - **\-debug\[\-\]** add/exclude C compiler debug info\. For Harbour level debug, use Harbour option \-b as usual
- - **\-optim\[\-\]** toggle C compiler optimizations \(default: on\)
+ - **\-\[full|fix\]shared** használjon a szerkesztéskor dinamikus függvénykönyvtárakat közvetlen hivatkozás nélkül/hivtakozással a dinamikus Harbour függvénykönyvtár felé\. \(alapértelmezés: 'fullshared', ha a Harbour telepítve van\) \(fix/full opció csak \*nix rendszereken\)
+ - **\-nulrdd\[\-\]** nulrdd használata
+ - **\-debug\[\-\]** C fordító debug információ hozzáadása \(vagy sem\)\. Harbour szintű debughoz használja a \-b kapcsolót
+ - **\-optim\[\-\]** C fordító optimalizálási szintjét állítja \(alapértelmezés: be\)
  - **\-cpp\[\-\]** force C\+\+/C mode
  - **\-cpp=&lt;value&gt;** select C\+\+ mode\. Allowed values are: def, yes, no
- - **\-map\[\-\]** create \(or not\) a map file
+ - **\-map\[\-\]** készítsen \(vagy ne\) térkép \(map\) fájlt
  - **\-implib\[\-\]** create \(or not\) an import library \(in \-hbdyn/\-hbexe mode\)\. The name will have a postfix added\.
  - **\-implib=&lt;output&gt;** create import library \(in \-hbdyn/\-hbexe mode\) name to &lt;output&gt; \(default: same as output\)
  - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
- - **\-strip\[\-\]** strip \(no strip\) binaries
- - **\-trace\[\-\]** show commands executed
- - **\-beep\[\-\]** enable \(or disable\) single beep on successful exit, double beep on failure
- - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
+ - **\-strip\[\-\]** távolítsa el \(vagy ne\) a kimenetről az extra belső információkat \(strip\)
+ - **\-trace\[\-\]** mutassa a végrehajtott parancsokat
+ - **\-beep\[\-\]** egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba esetén
+ - **\-ignore\[\-\]** külső parancsok hibáinak figyelmen hagyása \(alapértelmezés: ki\)
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
  - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI compilation modes \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
  - **\-nohblib\[\-\]** do not use static core Harbour libraries when linking
  - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
  - **\-nomiscsyslib\[\-\]** do not add extra list of system libraries to default library list
- - **\-traceonly** show commands to be executed, but do not execute them
- - **\-warn=&lt;lev&gt;** set C compiler warning level  
-&lt;lev&gt; can be: max, yes, low, no, def \(default: yes\)
+ - **\-traceonly** mutassa a végrehajtandó parancsokat, anélkül hogy végrehajtaná őket
+ - **\-warn=&lt;level&gt;** set C compiler warning level  
+&lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
  - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
- - **\-compr=&lt;lev&gt;** compress executable/dynamic lib \(needs UPX tool\)  
-&lt;lev&gt; can be: yes, no, min, max
- - **\-run\[\-\]** run/do not run output executable
+ - **\-compr=&lt;level&gt;** tömörítse a végeredményt \(UPX szükséges\)  
+&lt;level&gt; lehet: yes, no, min, max
+ - **\-run\[\-\]** futtassa/ne az elkészült alkalmazást
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
- - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-tshead=&lt;file&gt;** hozzon létre egy \.ch fejlécet időpont adatokkal\. Generált fejléc \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ makrói az aktuális dátumokkal kerülnek feltöltésre
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
  - **\-signpw=&lt;pw&gt;** use &lt;pw&gt; as password when signing executable \(Windows and Darwin only\)
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
- - **\-instpath=&lt;g:path&gt;** copy target to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
- - **\-instforce\[\-\]** copy target to install path even if it is up to date
+ - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
+ - **\-instforce\[\-\]** copy target file\(s\) to install path even if already up to date
  - **\-depimplib\[\-\]** enable \(or disable\) import library generation for import library sources specified in \-depimplibs= options \(default: yes\)
- - **\-stop\[=&lt;text&gt;\]** stop without doing anything and display &lt;text&gt; if specified
+ - **\-stop\[=&lt;text&gt;\]** álljon meg anélkül hogy bármit csinálna
  - **\-echo=&lt;text&gt;** echo text on screen
- - **\-pause** force waiting for a key on exit in case of failure \(with alternate GTs only\)
+ - **\-pause** várjon billentyűre sikertelen befejezés esetén\. \(csak alternatív GT használata esetén\)
  - **\-exitstr** show error result as human readable text on exit
- - **\-info** turn on informational messages
- - **\-quiet\[\-\]** suppress all screen messages
+ - **\-info** tájékoztató üzenetek bekapcsolása
+ - **\-quiet\[\-\]** semmit ne írjon a képernyőre
 
 
- - **\-bldf\[\-\]** inherit all/no \(default\) flags from Harbour build
- - **\-bldf=\[p\]\[c\]\[l\]** inherit \.prg/\.c/linker flags \(or none\) from Harbour build
+ - **\-bldf\[\-\]** örököljön minden/semmi \(alapért\.\) kapcsolót a Harbourtól
+ - **\-bldf=\[p\]\[c\]\[l\]** örökölje a \.prg/\.c/szerkesztő kapcsolókat \(vagy ne\) a Harbourtól
  - **\-F&lt;framework&gt;** link with &lt;framework&gt; framework \(Darwin only\)
- - **\-prgflag=&lt;f&gt;** pass single flag to Harbour compiler
- - **\-cflag=&lt;f&gt;** pass single flag to C compiler
- - **\-resflag=&lt;f&gt;** pass single flag to resource compiler \(Windows only\)
- - **\-ldflag=&lt;f&gt;** pass single flag to linker \(executable\)
- - **\-dflag=&lt;f&gt;** pass single flag to linker \(dynamic library\)
- - **\-aflag=&lt;f&gt;** pass single flag to linker \(static library\)
+ - **\-prgflag=&lt;f&gt;** kapcsoló továbbítása Harbour fordítónak
+ - **\-cflag=&lt;f&gt;** kapcsoló továbbítása C fordítónak
+ - **\-resflag=&lt;f&gt;** továbbítsa a kapcsolót az erőforrás fordítónak \(csak Windows\-on\)
+ - **\-ldflag=&lt;f&gt;** kapcsoló továbbítása \(alkalmazás\) szerkesztőnek
+ - **\-dflag=&lt;f&gt;** kapcsoló továbbítása \(dinamikus függvénykönyvtár\) szerkesztőnek
+ - **\-aflag=&lt;f&gt;** kapcsoló továbbítása \(statikus függvénykönyvtár\) szerkesztőnek
  - **\-iflag=&lt;f&gt;** pass single flag to import library creation command
  - **\-signflag=&lt;f&gt;** pass single flag to code sign command
- - **\-runflag=&lt;f&gt;** pass single flag to output executable when \-run option is used
+ - **\-runflag=&lt;f&gt;** továbbítsa a kapcsolót a létrehozott alkalmazásnak, \-run kapcsoló használatakor
  - **\-cflag\+=&lt;f&gt;** pass single flag to C compiler overriding C compiler flags added by hbmk2 itself\. Use with caution\.
  - **\-ldflag\+=&lt;f&gt;** pass single raw option to linker \(executable\) after the library list\. Use with caution\.
  - **\-dflag\+=&lt;f&gt;** pass single raw option to linker \(dynamic library\) after the library list\. Use with caution\.
  - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
- - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\)
+ - **\-jobs=&lt;n&gt;** n szálon futtassa a fordítókat \(csak támogatott platformokon\)
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
  - **\-rebuild** rebuild \(in incremental build mode\)
  - **\-rebuildall** rebuild with sub\-projects \(in incremental build mode\)
- - **\-clean** clean \(in incremental build mode\)
+ - **\-clean** törlés \(lépcsőzetes üzemmódban\)
  - **\-workdir=&lt;dir&gt;** working directory  
 \(default: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] in incremental mode, OS temp directory otherwise\)
 
 
- - **\-hbcontainer** virtual target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
+ - **\-hbcontainer** virtual build target, it does not create anything\. Useful for creating an \.hbp with the sole purpose of referencing sub\-projects
  - **\-hbimplib** create import library \(Windows only\)
 
 
- - **\-hbl\[=&lt;output&gt;\]** output \.hbl filename\. %\{hb\_lng\} macro is accepted in filename
- - **\-lng=&lt;languages&gt;** list of languages to be replaced in %\{hb\_lng\} macros in \.pot/\.po filenames and output \.hbl/\.po filenames\. Comma separated list:  
+ - **\-hbl\[=&lt;output&gt;\]** kimeneti \.hbl fájlnév\. %\{hb\_lng\} makró használható a fájlnévben
+ - **\-lng=&lt;languages&gt;** nyelvek listája, amelyek a \.pot/\.po és \.hbl/\.po állományokban levő %\{hb\_lng\} makrókba kerülnek behelyettesítésre\. Vesszővel elválasztott lista:  
 \-lng=en,hu\-HU,de
- - **\-po=&lt;output&gt;** create/update \.po file from source\. Merge it with previous \.po file of the same name
- - **\-minipo\[\-\]** do \(not\) add Harbour version number and source file reference to \.po \(default: add them\)
- - **\-rebuildpo** recreate \.po file, thus removing all obsolete entries in it
+ - **\-po=&lt;output&gt;** hozzon létre/frissítse a \.po fálj a forráskód alapján\. Használja a meglévő \.po fájlban levő fordításokat
+ - **\-minipo\[\-\]** írja bele \(vagy ne\) a Harbour verizószámát és a forrásállomány referenciákat a \.po állományba \(alapértelmezés: írja\)
+ - **\-rebuildpo** Generálja újra a \.po fájlt, törölve ezáltal minden szükségtelen bejegyzést
 
 
  - **\-hbx=\[&lt;\.ch&gt;\]** Create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\.
@@ -141,26 +142,26 @@ Options:
 Options below are available on command\-line:  
 
 
- - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate targets\.
+ - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
 
 
- - **\-hbrun** run target
+ - **\-hbrun** run build target
  - **\-hbraw** stop after running Harbour compiler
- - **\-hbcmp|\-clipper** stop after creating the object files  
-create link/copy hbmk2 to hbcmp/clipper for the same effect
+ - **\-hbcmp|\-clipper** álljon meg az object állományok létrehozása után  
+A hbmk2 program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el
  - **\-hbcc** accept raw C flags  
 create link/copy hbmk2 to hbcc for the same effect
- - **\-hblnk** accept raw linker flags
+ - **\-hblnk** kapcsolókat adja tovább a szerkesztőnek
  - **\-autohbm\[\-\]** enable \(or disable\) processing of hbmk\.hbm in current directory \(default: yes\)
  - **\-hb10** enable Harbour 1\.0\.x compatibility mode
  - **\-hb20** enable Harbour 2\.0\.x compatibility mode
  - **\-hb30** enable Harbour 3\.0\.x compatibility mode
- - **\-xhb** enable xhb mode
+ - **\-xhb** kapcsolja be az xhb üzemmódot
  - **\-hbc** enable pure C mode
  - \-rtlink 
  - \-blinker 
- - **\-exospace** emulate Clipper compatible linker behavior  
-create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
+ - **\-exospace** emuláljon Clipper kompatibilis szerkesztő üzemmódot\.  
+A hbmk2 program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el
 
 
  - **\-hbreg\[=global\]** register Harbour Script \(\.hb\) with hbmk2 \(Windows only\)
@@ -171,33 +172,33 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
  - **\-hbmake=&lt;file&gt;** convert hbmake project &lt;file&gt; to \.hbp file
- - **\-xbp=&lt;file&gt;** convert \.xbp \(xbuild\) project &lt;file&gt; to \.hbp file
- - **\-xhp=&lt;file&gt;** convert \.xhp \(xMate\) project &lt;file&gt; to \.hbp file
+ - **\-xbp=&lt;file&gt;** \.xbp \(xbuild\) project állomány konvertálása \.hbp állományba
+ - **\-xhp=&lt;file&gt;** \.xhp \(xMate\) project állomány konvertálása \.hbp állományba
 
 
- - **\-\-hbdirbin** output Harbour binary directory
- - **\-\-hbdirdyn** output Harbour dynamic library directory
- - **\-\-hbdirlib** output Harbour static library directory
- - **\-\-hbdirinc** output Harbour header directory
- - **\-\-hbinfo\[=nested\]** output Harbour build information\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
+ - **\-\-hbdirbin** output Harbour binary directory to stdout
+ - **\-\-hbdirdyn** output Harbour dynamic library directory to stdout
+ - **\-\-hbdirlib** output Harbour static library directory to stdout
+ - **\-\-hbdirinc** output Harbour header directory to stdout
+ - **\-\-hbinfo\[=nested\]** output Harbour build information to stdout\. Output is in JSON format\. The included paths always contain forward slashes\. Each JSON block is followed by an 0x0A byte\.
 
 
- - **\-plat=&lt;platform&gt;** override default target platform \(default: automatic\)
+ - **\-plat=&lt;platform&gt;** felülbírálja az alapértelmezett cél platformot \(alapértelmezés: automatikus\)
  - **\-cpu=&lt;cpu&gt;** override default target CPU \(default: automatic\) \(EXPERIMENTAL\)
- - **\-comp=&lt;compiler&gt;** override C compiler autodetection  
-Special value:  
- \- bld: use original build settings \(default on \*nix\)
+ - **\-comp=&lt;compiler&gt;** felülbírálja a C fordító detektálást  
+Speciális érték:  
+\- bld: használja a Harbour fordításához használtat \(\*nix\-okon alapértelmezés\)
  - **\-build=&lt;name&gt;** specify a build name
  - **\-lang=&lt;lang&gt;** override default language\. &lt;lang&gt; is an ISO language code\.
  - **\-width=&lt;n&gt;** set output width to &lt;n&gt; characters \(0=unlimited\)\.
  - **\-shl** show sub\-project level in output lines
  - **\-viewhelp** long help in text viewer
- - **\-longhelp** long help
+ - **\-longhelp** teljes súgó
  - **\-longhelpmd** long help in [Markdown](http://daringfireball.net/projects/markdown/) format
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Harbour compiler credits
  - **\-build** Harbour compiler build information
- - **\-version** display version header only
+ - **\-version** csak a verziószám kijelzése
   
 Options below are internal/developer ones \(compatibility not guaranteed\):  
 
@@ -221,10 +222,10 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **rtlink** mode \-rtlink \(emulate Clipper linker\)
  - **exospace** mode \-rtlink \(emulate Clipper linker\)
  - **blinker** mode \-rtlink \(emulate Clipper linker\)
- - **\*10** option \-hb10
- - **\*20** option \-hb20
- - **\*30** option \-hb30
- - **x\*** option \-xhb
+ - **\*10** \-hb10 kapcsoló
+ - **\*20** \-hb20 kapcsoló
+ - **\*30** \-hb30 kapcsoló
+ - **x\*** \-xhb kapcsoló
  - **hbcmp\*|\*hbcmp** mode \-hbcmp \(emulate Harbour compiler producing a binary object\)
  - **hbcc\*|\*hbcc** mode \-hbcc \(emulate C compiler\)
  - **hblnk\*|\*hblnk** mode \-hblnk \(emulate C linker\)
@@ -232,27 +233,27 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **hblib\*|\*hblib** mode \-hblib
  - **hbdyn\*|\*hbdyn** mode \-hbdyn
   
-Files:  
+Fájlok:  
 
 
  - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
  - **\*\.hbm** collection of options\. Can be used to collect common ones into a file and include that into project files\. Uses same format as \.hbp files\.
- - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate lines\.
+ - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** if passed directly as a source file, it will be used as additional standard header
- - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 directory&gt;
+ - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;hbmk2 mappa&gt;
  - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
  - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
  - **\*\.hb** Harbour script
  - **\*\.hrb** Harbour portable binary \(aka precompiled Harbour script\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 directory&gt;
+ - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;hbmk2 mappa&gt;
  - **shell plugins** \.hb and \.hrb plugins for interactive Harbour shell\. They may reside in \[\*\]: %APPDATA%\\\.harbour\\
  - **\.hb\_history** stores command history for interactive Harbour shell\. You can disable history by making the first line 'no' \(without quotes and with newline\)\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
  - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
   
-Macro variables:  
+Makró változók:  
 
 
  - **$\{hb\_root\}** directory of hbmk2
@@ -264,11 +265,11 @@ Macro variables:
  - **$\{hb\_tempdir\}** OS directory for temporary files
  - **$\{hb\_targetname\}** name of the project \(without directory and extension\)\. Returns \.adhoc\. if there is not project file\.
  - **$\{hb\_targettype\}** type of the project \(hbexe, hblib, hbdyn, hbdynvm, hbimplib, hbppo, hbhrb, hbcontainer\)
- - **$\{hb\_plat\}** selected platform
+ - **$\{hb\_plat\}** kiválasztott platform
  - **$\{hb\_comp\}** selected C compiler
  - **$\{hb\_comp\_ver\}** C compiler version
  - **$\{hb\_build\}** build name
- - **$\{hb\_cpu\}** selected CPU
+ - **$\{hb\_cpu\}** kiválasztott CPU
  - **$\{hb\_work\}** default base workdir name
  - **$\{hb\_workdynsub\}** default workdir subdirectory for dynamic library targets
  - **$\{hb\_dynprefix\}** dynamic library prefix
@@ -302,9 +303,9 @@ Filters \(you can combine and/or negate them\):
  - **\{&lt;platform&gt;\}** target platform\. Where &lt;platform&gt; can be any value accepted by \-plat= option\.
  - **\{&lt;compiler&gt;\}** target C compiler\. Where &lt;compiler&gt; can be any value accepted by \-comp= option\.
  - **\{&lt;cpu&gt;\}** target CPU\. Where &lt;cpu&gt; can be any of: x86, x86\_64, ia64, arm, mips, sh
- - **\{&lt;targettype&gt;\}** target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
- - **\{mt\}** target is multi\-threaded \(see \-mt option\)
- - **\{st\}** target is single\-threaded \(see \-st option\)
+ - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
+ - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
+ - **\{st\}** build target is single\-threaded \(see \-st option\)
  - **\{gui\}** GUI target \(see \-gui option\)
  - **\{std\}** console target \(see \-console option\)
  - **\{debug\}** C level debugging is enabled \(see \-debug option\)
@@ -339,12 +340,12 @@ Predefined constants in sources:
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
  - **\_\_HBEXTREQ\_\_** when an \.hbx source file is present in a project \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
+ - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected \(available in C sources\)
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** when a Harbour source file is run as a shell script
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, stb\.
 
 
 Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
@@ -391,7 +392,7 @@ Environment variables:
  - **headers=** add space separated list of \.ch format headers as standard header
  - **libs=** add space separated list of libraries \(see more at \-l option\)
  - **frameworks=** add space separated list of frameworks \(Darwin only\)
- - **requests=** add space separated list of symbols to force link to the target
+ - **requests=** add space separated list of symbols to force link to the build target
  - **syslibs=** add space separated list of libraries as system libraries \(before regular libraries\)
  - **hbcs=** embed space separated list of \.hbc files\. Names without the extension is accepted\. These references are processed in place\.
  - **autohbcs=** space separated list of values as in \-autohbc= option
@@ -408,46 +409,47 @@ Environment variables:
  - **dflags\+=** space separated list of values as in \-dflag\+= option
  - **pflags=** space separated list of values as in \-pflag= option
  - **psources=** space separated list of values as in \-pi= option
- - **gui=&lt;bool&gt;** 'yes' = \-gui, 'no' = \-std option
- - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st option
- - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- option
- - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static option
+ - **gui=&lt;bool&gt;** 'yes' = \-gui, 'no' = \-std kapcsoló
+ - **mt=&lt;bool&gt;** 'yes' = \-mt, 'no' = \-st kapcsoló
+ - **pic=&lt;bool&gt;** 'yes' = \-pic, 'no' = \-pic\- kapcsoló
+ - **shared=&lt;bool&gt;** 'yes' = \-shared, 'no' = \-static kapcsoló
  - **shareddef=&lt;bool&gt;** similar to shared=, but works only if shared/static mode was not set before
- - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static option
- - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- option
- - **optim=** 'yes' = \-optim, 'no' = \-optim\- option
- - **nulrdd=&lt;bool&gt;** 'yes' = \-nulrdd, 'no' = \-nulrdd\- option
- - **nodefgt=&lt;bool&gt;** 'yes' = \-nodefgt, 'no' = \-nodefgt\- option
- - **map=&lt;bool&gt;** 'yes' = \-map, 'no' = \-map\- option
- - **hbcppmm=&lt;bool&gt;** 'yes' = \-hbcpmm, 'no' = \-hbcpmm\- option
- - **implib=&lt;bool&gt;** 'yes' = \-implib, 'no' = \-implib\- option
- - **winuni=&lt;bool&gt;** 'yes' = \-winuni, 'no' = \-winuni\- option
- - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- option
- - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- option
- - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- option
- - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- option
- - **cpp=** same as \-cpp= option
- - **warn=** same as \-warn= option
- - **compr=** same as \-compr= option
- - **head=** same as \-head= option
+ - **fullstatic=&lt;bool&gt;** 'yes' = \-fullstatic, 'no' = \-static kapcsoló
+ - **debug=&lt;bool&gt;** 'yes' = \-debug, 'no' = \-debug\- kapcsoló
+ - **optim=** 'yes' = \-optim, 'no' = \-optim\- kapcsoló
+ - **nulrdd=&lt;bool&gt;** 'yes' = \-nulrdd, 'no' = \-nulrdd\- kapcsoló
+ - **nodefgt=&lt;bool&gt;** 'yes' = \-nodefgt, 'no' = \-nodefgt\- kapcsoló
+ - **map=&lt;bool&gt;** 'yes' = \-map, 'no' = \-map\- kapcsoló
+ - **hbcppmm=&lt;bool&gt;** 'yes' = \-hbcpmm, 'no' = \-hbcpmm\- kapcsoló
+ - **implib=&lt;bool&gt;** 'yes' = \-implib, 'no' = \-implib\- kapcsoló
+ - **winuni=&lt;bool&gt;** 'yes' = \-winuni, 'no' = \-winuni\- kapcsoló
+ - **strip=&lt;bool&gt;** 'yes' = \-strip, 'no' = \-strip\- kapcsoló
+ - **run=&lt;bool&gt;** 'yes' = \-run, 'no' = \-run\- kapcsoló
+ - **inc=&lt;bool&gt;** 'yes' = \-inc, 'no' = \-inc\- kapcsoló
+ - **safe=&lt;bool&gt;** 'yes' = \-safe, 'no' = \-safe\- kapcsoló
+ - **cpp=** ugyanaz, mint \-cpp= kapcsoló
+ - **warn=** ugyanaz, mint \-warn= kapcsoló
+ - **compr=** ugyanaz, mint \-compr= kapcsoló
+ - **head=** ugyanaz, mint \-head= kapcsoló
  - **plugins=** space separated list of hbmk2 plugins to load
- - **gt=&lt;name&gt;** same as \-gt&lt;name&gt; option
+ - **gt=&lt;name&gt;** ugyanaz, mint \-gt&lt;name&gt; kapcsoló
  - **gtdef=&lt;name&gt;** set the default GT to be used
- - **env=** same as \-env: option
- - **deppkgname=** same as \-deppkgname= option
- - **depkeyhead=** same as \-depkeyhead= option
- - **depoptional=** same as \-depoptional= option
- - **depcontrol=** same as \-depcontrol= option
- - **depincroot=** same as \-depincroot= option
- - **depincpath=** same as \-depincpath= option
- - **depincpathlocal=** same as \-depincpathlocal= option
- - **depimplibs=** same as \-depimplibs= option
- - **depimplibd=** same as \-depimplibd= option
+ - **env=** ugyanaz, mint \-env: kapcsoló
+ - **deppkgname=** ugyanaz, mint \-deppkgname= kapcsoló
+ - **depkeyhead=** ugyanaz, mint \-depkeyhead= kapcsoló
+ - **depoptional=** ugyanaz, mint \-depoptional= kapcsoló
+ - **depcontrol=** ugyanaz, mint \-depcontrol= kapcsoló
+ - **depincroot=** ugyanaz, mint \-depincroot= kapcsoló
+ - **depincpath=** ugyanaz, mint \-depincpath= kapcsoló
+ - **depincpathlocal=** ugyanaz, mint \-depincpathlocal= kapcsoló
+ - **depimplibs=** ugyanaz, mint \-depimplibs= kapcsoló
+ - **depimplibd=** ugyanaz, mint \-depimplibd= kapcsoló
+ - **depfinish=** ugyanaz, mint \-depfinish= kapcsoló
  - **name=** package name
  - **description=** package description
  - **version=&lt;x\.y\.z&gt;** package version number, where x,y,z &gt;= 0 &lt;= 255\. Defaults to 0\.0\.1, if not specified\.
  - **keywords=** space separated list of keywords
- - **licences=** space separated list of licenses
+ - **licences=** licencek szóközzel elválasztott listája
  - **repository=** space separated list of source repository references
 
 
@@ -455,23 +457,23 @@ Plugin API:
 \('hbmk' is the context variable received by the plugin entry function\)
 
 
- - **hbmk\_Register\_Input\_File\_Extension\( hbmk, cExt \) \-&gt; NIL**  
+ - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
 Register input file extension to be passed to plugin \(by default all unknown file extensions are passed to Harbour compiler\)\.
- - **hbmk\_AddInput\_PRG\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a Harbour input file to the project\.
- - **hbmk\_AddInput\_C\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a C input file to the project\.
- - **hbmk\_AddInput\_CPP\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a C\+\+ input file to the project\.
- - **hbmk\_AddInput\_RC\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a Windows resource input file to the project\.
- - **hbmk\_AddInput\_OBJ\( hbmk, cFileName \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a binary object file to the project\.
- - **hbmk\_AddInput\_INSTFILE\( hbmk, cFileName, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
+ - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Add a file to be installed, with an optional \-instpath= group name\.
- - **hbmk\_OutStd\( hbmk, cText \) \-&gt; NIL**  
+ - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Output text to stdout\.
- - **hbmk\_OutErr\( hbmk, cText \) \-&gt; NIL**  
+ - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Output text to stderr\.
  - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
 Output text to stdout without any formatting\.
@@ -479,10 +481,10 @@ Output text to stdout without any formatting\.
 Output text to stderr without any formatting\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Evaluate hbmk2 macro expression\.
- - **hbmk\_FNameEscape\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
+ - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Escape/quote filename for using it as external command parameter\.
- - **hbmk\_PathSepToTarget\( hbmk, cFileName \) \-&gt; &lt;cFileName&gt;**  
-Convert filename to the format required for the target toolchain\.
+ - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
+Convert filename to the format required for the target platform/C compiler\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Convert filename to have forward slash directory separators\.
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
@@ -493,7 +495,7 @@ Find file in &lt;xPath&gt; \(array or pathsep delimited string are accepted\) wi
 Change directory and/or extension in filename\.
  - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Encode function name according to Harbour compiler rules for forming HB\_FUNC\(\) function names in C code\.
- - **hbmk\_StrStripQuote\( cString \) \-&gt; &lt;cString&gt;**  
+ - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
 Strip double quote enclosure from a string\.
  - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Convert array of strings to a string\. Default separator is a single space\.
@@ -533,7 +535,7 @@ Plugin variables:
  - **"cCCSUFFIX"** see HB\_CCSUFFIX envvar
  - **"cCCEXT"** see HB\_CCEXT envvar
  - **"cWorkDir"** \-workdir= value
- - **"nExitCode"** Current exit code
+ - **"nExitCode"** Aktuális kilépési érték
   
 Shell API available in Harbour scripts:  
 
@@ -555,9 +557,9 @@ Unload package\.
  - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 List of loaded packages\.
  - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
-DirBase\(\) not mapped to script\.
+hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
-ProgName\(\) not mapped to script\.
+hb\_ProgName\(\) not mapped to script\.
 
 
 Examples to start with hbmk2:
@@ -613,40 +615,39 @@ Exit codes \("errorlevels"\):
 
 
  - **0** no error
- - **1** unknown platform
- - **2** unknown compiler
+ - **1** ismeretlen platform
+ - **2** ismeretlen fordítóprogram
  - **3** failed Harbour detection
  - **5** failed stub creation
  - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
  - **7** failed in final assembly \(linker or library manager\)
  - **8** unsupported
  - **9** failed to create working directory
- - **19** help
+ - **19** súgó
  - **10** dependency missing or disabled
- - **20** plugin initialization
- - **30** too deep nesting
+ - **20** beépülő\-modul inicializáció
+ - **30** túl mély rekurzió
  - **50** stop requested
- - **&lt;other&gt;** when \-run option is used, the exit code will be the one returned by the target executable
+ - **&lt;egyéb&gt;** when \-run option is used, the exit code will be the one returned by the target executable
   
-Notes:  
+Megjegyzések:  
 
 
   - &lt;script&gt; can be:  
   &lt;@script&gt; or &lt;script\.hbm&gt;: command\-line options in file  
-  &lt;script\.hbp&gt;: command\-line options in file, it also marks a new target if specified on the command\-line  
+  &lt;script\.hbp&gt;: command\-line options in file, it also marks a new build target if specified on the command\-line  
   &lt;script\.hbc&gt;: package configuration file
   - Source filename without extension will load the \.hbp file, if such \.hbp file exists in current directory\. If not, \.prg extension will be used\.
-  - Multiple \-l, \-L, \-i and &lt;script&gt; parameters are accepted\.
-  - Regular Harbour compiler options are also accepted as is\.  
-\(see them with \-harbourhelp option\)
-  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
+  - Több \-l, \-L, \-i és &lt;parancsállomány&gt; kapcsoló/paraméter is megengedett\.
+  - Normál Harbour fordító kapcsolók is megadhatók\.
+  - hbmk\.hbc opció fájl a hbmk2 könyvtárában mindig feldolgozásra kerül amennyiben létezik\. \*nix platformokon a fájl a ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc könyvtárak \(ebben a sorrendben\) szintén ellenőrzésre kerülnek\.
   - hbmk\.hbm make script in current directory is always processed if it exists\.
   - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
-  - Filters are accepted in each \.hbc line and most options\.  
-Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by '\!' operator and grouped by parentheses\. Ex\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
-  - Most \.hbc lines \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) and corresponding command\-line parameters will accept macro variables\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.
+  - A szűrők az egyes \.hbc sorokban használhatók és számos opció esetén támogatottak\.  
+Szűrő formátum: \{\[\!\]\[&lt;platform&gt;|&lt;compiler&gt;|&lt;cpu&gt;|&lt;keyword&gt;\]\}\. Szűrők kombinálhatók '&amp;', '|' operátorokkal és zárójelekkel csoportosíthatók\. Pl\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
+  - A legtöbb \.hbc opcióban és parancssori megfelelőikben \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) használhatók makró változókat\. libpaths= also accepts %\{hb\_name\} which translates to the name of the \.hbc file under search\.
   - Options accepting macro variables also support command substitution\. Enclose command inside \`\`, and, if the command contains space, also enclose in double quotes\. Standard output of the command will be used as the value\. F\.e\. "\-cflag=\`wx\-config \-\-cflags\`", or ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
-  - When multiple target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
+  - When multiple build target type selection options \(\-hblib, \-hbdyn, etc\.\) are specified, the first one will be significant, the rest will be silently ignored\.
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Defaults and feature support may vary by platform/compiler\.
   - GNU Make or any C compiler specific make tool and MSYS \(on Windows\) are not needed to run hbmk2\.
@@ -658,7 +659,7 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
   - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
 
 
-Supported &lt;compiler&gt; values for each supported &lt;platform&gt; value:
+Az egyes &lt;platform&gt; értékekhez tartozó &lt;compiler&gt; értékek a következők:
 
 
  - **linux** gcc, clang, icc, watcom, sunpro, open64
@@ -679,7 +680,7 @@ Supported &lt;compiler&gt; values for each supported &lt;platform&gt; value:
  - **aix** gcc
  - **sunos** gcc, sunpro
   
-License:  
+Licenc \(angolul\):  
 
 
   This program is free software; you can redistribute it and/or modify  
@@ -712,7 +713,7 @@ License extensions:
     http://creativecommons\.org/licenses/by\-sa/3\.0/  
 
   
-Author:  
+Szerző:  
 
 
  - Viktor Szakáts \(harbour syenar\.net\) 

@@ -1,6 +1,3 @@
-#
-# $Id$
-#
 
 -stop{hbdyn}
 
@@ -45,8 +42,8 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.15.2
-# URL    http://www.sqlite.org/sqlite-amalgamation-3071502.zip
+# VER    3.7.16
+# URL    http://sqlite.org/2013/sqlite-amalgamation-3071600.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c

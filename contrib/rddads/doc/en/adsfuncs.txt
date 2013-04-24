@@ -7,7 +7,7 @@
    $ONELINER$
       Write a Binary (memo) field's contents to a file
    $SYNTAX$
-      AdsBlob2File( cFileName, cFieldName ) --> lSuccess
+      AdsBlob2File( <cFileName>, <cFieldName> ) --> lSuccess
    $ARGUMENTS$
       <cFileName>    File to create. If it already exists, it will be
       overwritten on success and destroyed on error.
@@ -43,7 +43,7 @@
    $ONELINER$
       Save a Binary file to a field
    $SYNTAX$
-      AdsFile2Blob( cFileName, cFieldName, <nBinaryType> ) --> lSuccess
+      AdsFile2Blob( <cFileName>, <cFieldName>, <nBinaryType> ) --> lSuccess
    $ARGUMENTS$
       <cFileName>    File to read. Can be in UNC format. A common example is an image file.
 
@@ -680,7 +680,7 @@
    $ONELINER$
       For Progress displays: Sets a codeblock to be called during indexing
    $SYNTAX$
-      AdsRegCallback( bEval )  --> nil
+      AdsRegCallback( <bEval> )  --> NIL
    $ARGUMENTS$
       <bEval>    The codeblock that is eval'ed every 2 seconds during
       indexing. A numeric value of the "percent completed" is passed
@@ -688,7 +688,7 @@
       a logical value: .T. to abort or .F. to not stop indexing.
 
    $RETURNS$
-      <nil>
+      NIL
    $DESCRIPTION$
       See ace.hlp for full details on AdsRegisterProgressCallback.
       ace32.dll does not support the EVAL/EVERY clauses. Remember, there
@@ -734,11 +734,11 @@
    $ONELINER$
       Clears the callback set by AdsRegCallback().
    $SYNTAX$
-      AdsClrCallback() --> nil
+      AdsClrCallback() --> NIL
    $ARGUMENTS$
 
    $RETURNS$
-      <nil>
+      NIL
    $DESCRIPTION$
       See AdsRegCallback().
    $EXAMPLES$

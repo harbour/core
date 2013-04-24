@@ -341,7 +341,7 @@ static void mixQSort( PMIXKEY * pKeys, HB_ULONG left, HB_ULONG right, HB_USHORT 
 }
 
 
-static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG * ulKeyPos )
+static PMIXKEY mixFindKeyLen( PMIXTAG pTag, PMIXKEY pKey, HB_USHORT uiLen, HB_ULONG * ulKeyPos )
 {
    HB_ULONG l, r;
    int      i = 1;
@@ -358,7 +358,7 @@ static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG * ulKeyPos )
 
    while( l < r )
    {
-      i = mixQSortCompare( pTag->pKeys[ ( l + r ) / 2 ], pKey, pTag->uiLen, pTag->pCodepage );
+      i = mixQSortCompare( pTag->pKeys[ ( l + r ) / 2 ], pKey, uiLen, pTag->pCodepage );
 
       if( i < 0 )
          l = ( l + r ) / 2 + 1;
@@ -370,7 +370,7 @@ static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG * ulKeyPos )
 
    if( i )
    {
-      i = mixQSortCompare( pTag->pKeys[ l ], pKey, pTag->uiLen, pTag->pCodepage );
+      i = mixQSortCompare( pTag->pKeys[ l ], pKey, uiLen, pTag->pCodepage );
       if( i < 0 )
          l++;
    }
@@ -382,9 +382,15 @@ static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG * ulKeyPos )
 }
 
 
-static int mixCompareKey( PMIXTAG pTag, HB_ULONG ulKeyPos, PMIXKEY pKey )
+static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG * ulKeyPos )
 {
-   return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, pTag->uiLen, pTag->pCodepage );
+  return mixFindKeyLen( pTag, pKey, pTag->uiLen, ulKeyPos );
+}
+
+
+static int mixCompareKey( PMIXTAG pTag, HB_ULONG ulKeyPos, PMIXKEY pKey, HB_USHORT uiLen )
+{
+   return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, uiLen, pTag->pCodepage );
 }
 
 
@@ -644,7 +650,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
             PMIXKEY  pKey = mixKeyEval( pTag, pArea );
             mixFindKey( pTag, pKey, &ulKeyPos );
 
-            // insert key into index
+            /* insert key into index */
             if( pTag->ulRecCount == pTag->ulRecMax )
             {
                pTag->pKeys = ( PMIXKEY* ) hb_xrealloc( pTag->pKeys, sizeof( PMIXKEY ) * ( pTag->ulRecMax + MIX_KEYPOOLRESIZE ) );
@@ -661,19 +667,19 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
          PMIXKEY pKey = mixKeyEval( pTag, pArea );
          if( bFor )
          {
-            if( mixCompareKey( pTag, pUpdate[ iTag ], pKey ) != 0 )
+            if( mixCompareKey( pTag, pUpdate[ iTag ], pKey, pTag->uiLen ) != 0 )
             {
                HB_ULONG ulKeyPos;
                mixKeyFree( pTag->pKeys[ pUpdate[ iTag ] ] );
                mixFindKey( pTag, pKey, &ulKeyPos );
                if( ulKeyPos == pUpdate[ iTag ] || ulKeyPos == pUpdate[ iTag ] + 1 )
                {
-                  // assign new key in same position
+                  /* assign new key in same position */
                   pTag->pKeys[ pUpdate[ iTag ] ] = pKey;
                }
                else
                {
-                  // move keys and assign new key to new position
+                  /* move keys and assign new key to new position */
                   if( ulKeyPos < pUpdate[ iTag ] )
                   {
                      memmove( pTag->pKeys + ulKeyPos + 1, pTag->pKeys + ulKeyPos, ( pUpdate[ iTag ] - ulKeyPos ) * sizeof( PMIXKEY ) );
@@ -691,7 +697,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
          }
          else
          {
-            // delete key
+            /* delete key */
             mixKeyFree( pKey );
             memmove( pTag->pKeys + pUpdate[ iTag ], pTag->pKeys + pUpdate[ iTag ] + 1, ( pTag->ulRecCount - pUpdate[ iTag ] ) * sizeof( PMIXKEY ) );
             pTag->ulRecCount--;
@@ -767,6 +773,7 @@ static HB_ERRCODE adsxGoTop( ADSXAREAP pArea )
 static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast )
 {
    PMIXKEY    pMixKey;
+   HB_USHORT  uiLen;
    HB_ULONG   ulKeyPos, ulRecNo;
    HB_ERRCODE errCode;
    HB_BOOL    fFound = HB_FALSE;
@@ -775,19 +782,26 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
       return SUPER_SEEK( ( AREAP ) pArea, bSoftSeek, pKey, bFindLast );
 
    /* TODO: pKey type validation, EG_DATATYPE runtime error */
-   pMixKey = mixKeyNew( pKey, bFindLast ? ( HB_ULONG ) ( -1 ) : 0, pArea->pTagCurrent->bType,
-                        pArea->pTagCurrent->uiLen );
+   uiLen = pArea->pTagCurrent->uiLen;
+   pMixKey = mixKeyNew( pKey, bFindLast ? ( HB_ULONG ) ( -1 ) : 0, pArea->pTagCurrent->bType, uiLen );
+
+   if( pArea->pTagCurrent->bType == 'C' )
+   {
+      HB_SIZE ul = hb_itemGetCLen( pKey );
+      if( ul < ( HB_SIZE ) uiLen )
+         uiLen = ( HB_USHORT ) ul;
+   }
 
    /* reset any pending relations - I hope ACE make the same and the problem
       reported in GOTO() does not exist here */
    SELF_RESETREL( &pArea->adsarea );
 
-   mixFindKey( pArea->pTagCurrent, pMixKey, &ulKeyPos );
+   mixFindKeyLen( pArea->pTagCurrent, pMixKey, uiLen, &ulKeyPos );
 
    ulRecNo = 0;
    if( bFindLast )
    {
-      if( ulKeyPos > 0 && mixCompareKey( pArea->pTagCurrent, ulKeyPos - 1, pMixKey ) == -1 )
+      if( ulKeyPos > 0 && mixCompareKey( pArea->pTagCurrent, ulKeyPos - 1, pMixKey, uiLen ) == -1 )
       {
          ulRecNo = pArea->pTagCurrent->pKeys[ ulKeyPos - 1 ]->rec;
          fFound  = HB_TRUE;
@@ -803,7 +817,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
       if( ulKeyPos < pArea->pTagCurrent->ulRecCount )
       {
          ulRecNo = pArea->pTagCurrent->pKeys[ ulKeyPos ]->rec;
-         fFound  = mixCompareKey( pArea->pTagCurrent, ulKeyPos, pMixKey ) == 1;
+         fFound = mixCompareKey( pArea->pTagCurrent, ulKeyPos, pMixKey, uiLen ) == 1;
       }
    }
 

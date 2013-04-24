@@ -1,4 +1,9 @@
 /*
+ * Copyright 1999 Ryszard Glab
+ * www - http://harbour-project.org
+ */
+
+/*
    Known bugs:
    ----------
    1) It requires files separated with CR/LF pairs

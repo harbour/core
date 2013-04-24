@@ -705,7 +705,7 @@ static void s_inetRecvInternal( int iMode )
          if( iLen >= 0 )
          {
             iReceived += iLen;
-            if( iMode == 0 ) /* Called from InetRecv()? */
+            if( iMode == 0 ) /* Called from hb_inetRecv()? */
                break;
          }
          else if( iLen == -1 && hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT )

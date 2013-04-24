@@ -77,10 +77,10 @@
 /* STATUS BAR                                                        */
 
 
-/*WVW_SBcreate( [nWinNum] )
-   *create status bar for window nWinNum, with one part.
-   *returns handle to status bar of windows nWinNum
-   *returns 0 if failed, eg. if there is already a status bar for this window
+/*wvw_sbCreate( [nWinNum] )
+ * create status bar for window nWinNum, with one part.
+ * returns handle to status bar of windows nWinNum
+ * returns 0 if failed, eg. if there is already a status bar for this window
  */
 HB_FUNC( WVW_SBCREATE )
 {
@@ -124,8 +124,8 @@ HB_FUNC( WVW_SBCREATE )
    hb_retnl( ( LONG ) hWndSB );
 }
 
-/*WVW_SBdestroy( [nWinNum] )
-   *destroy status bar for window nWinNum
+/*wvw_sbDestroy( [nWinNum] )
+ * destroy status bar for window nWinNum
  */
 HB_FUNC( WVW_SBDESTROY )
 {
@@ -148,7 +148,7 @@ HB_FUNC( WVW_SBDESTROY )
    }
 }
 
-/* WVW_SBaddPart(nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip])
+/* wvw_sbAddPart(nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip])
  *  ps.
  *  lResetParts==.t. :: remove all previously created parts
  *  nStyle: 0 (default), 0x0200 (SBT_POPOUT), 0x0100 (SBT_NOBORDERS)
@@ -237,11 +237,11 @@ HB_FUNC( WVW_SBADDPART )
    hb_retni( numOfParts );
 }
 
-/*WVW_SBrefresh(nWinNum)
-   *reinitialize StatusBar's parts, eg. after window resize
-   *TODO: do it automatically, after hb_gt_wvwResetWindowSize()
-   *returns number of parts
-   *returns 0 if failed
+/*wvw_sbRefresh(nWinNum)
+ * reinitialize StatusBar's parts, eg. after window resize
+ * TODO: do it automatically, after hb_gt_wvwResetWindowSize()
+ * returns number of parts
+ * returns 0 if failed
  */
 HB_FUNC( WVW_SBREFRESH )
 {
@@ -279,8 +279,8 @@ HB_FUNC( WVW_SBREFRESH )
    hb_retni( numOfParts );
 }
 
-/*WVW_SBsetText([nWinNum], [nPart], cText)
-   *Set Text of status bar's part #npart
+/*wvw_sbSetText([nWinNum], [nPart], cText)
+ * Set Text of status bar's part #npart
  */
 HB_FUNC( WVW_SBSETTEXT )
 {
@@ -314,8 +314,8 @@ HB_FUNC( WVW_SBSETTEXT )
       SendMessage( pWindowData->hStatusBar, SB_SETTEXT, iPart, ( LPARAM ) hb_parcx( 3 ) );
 }
 
-/*WVW_SBgetText([nWinNum], [nPart])
-   *Get Text of status bar's part #npart
+/*wvw_sbGetText([nWinNum], [nPart])
+ * Get Text of status bar's part #npart
  */
 HB_FUNC( WVW_SBGETTEXT )
 {
@@ -328,8 +328,8 @@ HB_FUNC( WVW_SBGETTEXT )
    hb_retc( cString );
 }
 
-/*WVW_SBgetparts([nWinNum])
-   *Get number of parts in statusbar of window nWinNum
+/*wvw_sbGetParts([nWinNum])
+ * Get number of parts in statusbar of window nWinNum
  */
 HB_FUNC( WVW_SBGETPARTS )
 {
@@ -340,7 +340,7 @@ HB_FUNC( WVW_SBGETPARTS )
    hb_retni( numOfParts );
 }
 
-/*WVW_SBSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+/*wvw_sbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
  *                             lItalic, lUnderline, lStrikeout
  *
  */
@@ -385,13 +385,13 @@ HB_FUNC( WVW_SBSETFONT )
 }
 
 
-/*WVW_XBcreate( [nWinNum], nStyle, nTop, nLeft, nLength, bBlock, aOffset)
-   *create scroll bar for window nWinNum
-   *nStyle: SBS_HORZ (0)=horizontal, SBS_VERT (1)=vertical
-   *nTop: row of top/left corner (in character unit)
-   *nLeft: col of top/left corner (in character unit)
-   *nLength: length of scrollbar (in character unit)
-   *NOTES: width of scrollbar (in character unit)
+/*wvw_xbCreate( [nWinNum], nStyle, nTop, nLeft, nLength, bBlock, aOffset)
+ * create scroll bar for window nWinNum
+ * nStyle: SBS_HORZ (0)=horizontal, SBS_VERT (1)=vertical
+ * nTop: row of top/left corner (in character unit)
+ * nLeft: col of top/left corner (in character unit)
+ * nLength: length of scrollbar (in character unit)
+ * NOTES: width of scrollbar (in character unit)
  *            horiz: defaults to one character height
  *            verti: defaults to one character _height_ too (!)
  *       use aOffset to adjust the dimension
@@ -422,12 +422,12 @@ HB_FUNC( WVW_SBSETFONT )
  * returns 0 if failed
  *
  * example:
- * WVW_XBcreate( , 1, 10, 70, 12)
+ * wvw_xbCreate( , 1, 10, 70, 12)
  *  :: creates Vertical scrollbar on current window at (10,70) with length 12
  *     dimensions using default ones.
  *     buttons/parts behaviour using default ones.
  *
- * WVW_XBcreate( , 1, 10, 70, 12, {0, +5, 0, +5} )
+ * wvw_xbCreate( , 1, 10, 70, 12, {0, +5, 0, +5} )
  *  :: creates Vertical scrollbar on current window at (10,70) with length 12
  *     left and right coordinate is shifted 5 pixels to the right.
  *     buttons/parts behaviour using default ones.
@@ -551,8 +551,8 @@ HB_FUNC( WVW_XBCREATE )
       hb_retnl( ( LONG ) 0 );
 }
 
-/*WVW_XBdestroy( [nWinNum], nXBid )
-   *destroy scrollbar nXBid for window nWinNum
+/*wvw_xbDestroy( [nWinNum], nXBid )
+ * destroy scrollbar nXBid for window nWinNum
  */
 HB_FUNC( WVW_XBDESTROY )
 {
@@ -587,12 +587,12 @@ HB_FUNC( WVW_XBDESTROY )
    hb_xfree( pcd );
 }
 
-/*WVW_XBupdate(nWinNum, XBid, [nPos], [nPageSize], [nMin], [nMax])
-   *update scrollbar data and its display
-   *nPos, nPageSize, nMin, nMax are optional.
-   *however, both nMin & nMax must be supplied, or not at all.
-   *returns current position of scroll thumb.
-   *returns -1 if update failed.
+/*wvw_xbUpdate(nWinNum, XBid, [nPos], [nPageSize], [nMin], [nMax])
+ * update scrollbar data and its display
+ * nPos, nPageSize, nMin, nMax are optional.
+ * however, both nMin & nMax must be supplied, or not at all.
+ * returns current position of scroll thumb.
+ * returns -1 if update failed.
  */
 HB_FUNC( WVW_XBUPDATE )
 {
@@ -636,7 +636,7 @@ HB_FUNC( WVW_XBUPDATE )
    hb_retni( iRetval );
 }
 
-/* WVW_XBinfo( [nWinNum], XBid )
+/* wvw_xbInfo( [nWinNum], XBid )
  * return an array {nMin, nMax, nPageSize, nPos, nTrackPos }
  * return an empty array {} if invalid parameter passed.
  */
@@ -681,7 +681,7 @@ HB_FUNC( WVW_XBINFO )
    hb_itemReturnRelease( aInfo );
 }
 
-/* WVW_XBenable( [nWinNum], nXBid, nFlags )
+/* wvw_xbEnable( [nWinNum], nXBid, nFlags )
  *  enable/disable scrollbar nXBid in window nWinNum (default to topmost window)
  *  nFlags: ESB_ENABLE_BOTH                    0: enable both arrows
  *        ESB_DISABLE_LEFT/ESB_DISABLE_UP    1: disable left/up arrow
@@ -707,7 +707,7 @@ HB_FUNC( WVW_XBENABLE )
    hb_retl( EnableScrollBar( hWndXB, SB_CTL, uiFlags ) );
 }
 
-/* WVW_XBshow( [nWinNum], nXBid, lShow )
+/* wvw_xbShow( [nWinNum], nXBid, lShow )
  *  show/hide scrollbar nXBid in window nWinNum (default to topmost window)
  *  nXBid is the handle of the scrolbar
  *  lShow: .T. shows the scrolbar (default)

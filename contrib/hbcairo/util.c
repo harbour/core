@@ -66,4 +66,3 @@ HB_FUNC( CAIRO_VERSION_STRING )
 {
    hb_retc( cairo_version_string() );
 }
-

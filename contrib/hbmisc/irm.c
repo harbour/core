@@ -275,7 +275,7 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 }
 
 
-/* IRMEXECUTE( aFilterTree ) --> pMap */
+/* irmExecute( aFilterTree ) --> pMap */
 HB_FUNC( IRMEXECUTE )
 {
    PHB_IRMMAP pMap = hb_irmExecute( hb_param( 1, HB_IT_ANY ) );
@@ -290,7 +290,7 @@ HB_FUNC( IRMEXECUTE )
 
 /*
  * ulRecNo := 0
- * DO WHILE IRMMAPNEXT( pMap, @ulRecNo )
+ * DO WHILE irmMapNext( pMap, @ulRecNo )
  *    dbGoto( nRecNo )
  *    ...
  * ENDDO
@@ -311,7 +311,7 @@ HB_FUNC( IRMMAPNEXT )
 
 /*
  * ulRecNo := 0
- * DO WHILE IRMMAPSKIP( pMap, @ulRecNo )
+ * DO WHILE irmMapSkip( pMap, @ulRecNo )
  *    ...
  * ENDDO
  */
@@ -332,7 +332,7 @@ HB_FUNC( IRMMAPSKIP )
 }
 
 
-/* IRMMAPCOUNT( pMap ) --> nRecCount */
+/* irmMapCount( pMap ) --> nRecCount */
 HB_FUNC( IRMMAPCOUNT )
 {
    PHB_IRMMAP pMap = hb_irmMapParam( 1 );

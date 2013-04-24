@@ -138,7 +138,7 @@ HB_FUNC( XUNFORM )
  *    Returns: cRating  - Letter A-I or Z
  *   Category: INTERNAL
  *  Called by: Sp_Suggest()
- *      Notes: SP_Rate() assigns a rating based upon how likely the
+ *      Notes: Sp_Rate() assigns a rating based upon how likely the
  *             word matches the dictionary word.  It compares the
  *             first 5 letters of the boths word, then the last 5,
  *             down to 2 letters.  This results in a rating from A-H.

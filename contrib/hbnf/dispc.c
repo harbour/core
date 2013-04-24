@@ -27,7 +27,7 @@
  * Steve Tyrakowski and Kevin Maher modified to be CPMI-compliant.
  *
  *    Rev 1.4   18 Nov 1991 02:20:20   GLENN
- * Mike fixed a bug in _ft_dfinit() related to allocating memory.  Some
+ * Mike fixed a bug in _ft_DFInit() related to allocating memory.  Some
  * users had been reporting problems, but everyone who tested this patch
  * reported success.
  *

@@ -288,7 +288,7 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
 }
 
 /*
- *  CSETREF() stuff
+ *  CSetRef() stuff
  */
 
 void ct_setref( int iNewSwitch )
@@ -326,7 +326,7 @@ HB_FUNC( CSETREF )
 }
 
 /*
- * CSETATMUPA() stuff
+ * CSetAtMupa() stuff
  */
 
 void ct_setatmupa( int iNewSwitch )
@@ -364,7 +364,7 @@ HB_FUNC( CSETATMUPA )
 }
 
 /*
- * SETATLIKE() stuff
+ * SetAtLike() stuff
  */
 
 void ct_setatlike( int iNewMode )

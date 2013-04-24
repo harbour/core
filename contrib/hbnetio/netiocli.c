@@ -951,7 +951,7 @@ static void s_netio_init( void * cargo )
    }
 }
 
-/* NETIO_DECODE( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>], ;
+/* netio_Decode( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>], ;
  *               [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] ) -> <lOK>
  */
 HB_FUNC( NETIO_DECODE )
@@ -993,7 +993,7 @@ HB_FUNC( NETIO_DECODE )
    hb_retl( pszFile != pszFullName );
 }
 
-/* NETIO_CONNECT( [<cServer>], [<nPort>], [<nTimeOut>], ;
+/* netio_Connect( [<cServer>], [<nPort>], [<nTimeOut>], ;
  *                [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] ) -> <lOK>
  */
 HB_FUNC( NETIO_CONNECT )
@@ -1067,7 +1067,7 @@ static PHB_CONCLI s_connParam( int iParam )
    return NULL;
 }
 
-/* NETIO_GETCONNECTION( [<cServer>], [<nPort>], [<nTimeOut>], ;
+/* netio_GetConnection( [<cServer>], [<nPort>], [<nTimeOut>], ;
  *                      [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
  *       -> <pConnection> | NIL
  */
@@ -1098,7 +1098,7 @@ HB_FUNC( NETIO_GETCONNECTION )
    }
 }
 
-/* NETIO_DISCONNECT( [<cServer>], [<nPort>] ) -> <lOK>
+/* netio_Disconnect( [<cServer>], [<nPort>] ) -> <lOK>
  */
 HB_FUNC( NETIO_DISCONNECT )
 {
@@ -1234,7 +1234,7 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
 
 /* check if function/procedure exists on the server side:
  *
- * NETIO_PROCEXISTS( <cProcName> ) -> <lExists>
+ * netio_ProcExists( <cProcName> ) -> <lExists>
  */
 HB_FUNC( NETIO_PROCEXISTS )
 {
@@ -1244,7 +1244,7 @@ HB_FUNC( NETIO_PROCEXISTS )
 /* execute function/procedure on server the side,
  * do not wait for confirmation:
  *
- * NETIO_PROCEXEC( <cProcName> [, <params,...>] ) -> <lSent>
+ * netio_ProcExec( <cProcName> [, <params,...>] ) -> <lSent>
  */
 HB_FUNC( NETIO_PROCEXEC )
 {
@@ -1254,7 +1254,7 @@ HB_FUNC( NETIO_PROCEXEC )
 /* execute function/procedure on the server side and wait for
  * confirmation:
  *
- * NETIO_PROCEXECW( <cProcName> [, <params,...>] ) -> <lExecuted>
+ * netio_ProcExecW( <cProcName> [, <params,...>] ) -> <lExecuted>
  */
 HB_FUNC( NETIO_PROCEXECW )
 {
@@ -1263,7 +1263,7 @@ HB_FUNC( NETIO_PROCEXECW )
 
 /* execute function on the server side and wait for its return value:
  *
- * NETIO_FUNCEXEC( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
+ * netio_FuncExec( <cFuncName> [, <params,...>] ) -> <xFuncRetVal>
  */
 HB_FUNC( NETIO_FUNCEXEC )
 {
@@ -1273,7 +1273,7 @@ HB_FUNC( NETIO_FUNCEXEC )
 /* open communication stream/channel which allow to send data
  * asynchronously from server to client:
  *
- * NETIO_OPENDATASTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
+ * netio_OpenDataStream( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
  *
  * it executes on the server side:
  *    <cStreamFuncName>( <pConnSock>, <nStreamID> [, <params,...>] )
@@ -1291,7 +1291,7 @@ HB_FUNC( NETIO_OPENDATASTREAM )
 /* open communication stream/channel which allow to send data
  * asynchronously from server to client:
  *
- * NETIO_OPENITEMSTREAM( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
+ * netio_OpenItemStream( <cStreamFuncName> [, <params,...>] ) -> <nStreamID>
  *
  * it executes on the server side:
  *    <cStreamFuncName>( <pConnSock>, <nStreamID> [, <params,...>] )
@@ -1330,7 +1330,7 @@ static PHB_CONCLI s_netio_getConn( void )
 
 /* close communication stream/channel:
  *
- * NETIO_CLOSESTREAM( <nStreamID>, [<pConnection>] | [[<cServer>], [<nPort>]] )
+ * netio_CloseStream( <nStreamID>, [<pConnection>] | [[<cServer>], [<nPort>]] )
  *    -> <lOK>
  */
 HB_FUNC( NETIO_CLOSESTREAM )
@@ -1366,7 +1366,7 @@ HB_FUNC( NETIO_CLOSESTREAM )
 
 /* retrieve data sent from the server by cominication stream
  *
- * NETIO_GETDATA( <nStreamID>, [<pConnection>] | [[<cServer>], [<nPort>]] )
+ * netio_GetData( <nStreamID>, [<pConnection>] | [[<cServer>], [<nPort>]] )
  *    -> <aData> | <cData> | NIL
  */
 HB_FUNC( NETIO_GETDATA )

@@ -188,7 +188,7 @@
    $DESCRIPTION$
       This function trims the leading space blank
    $EXAMPLES$
-      ? LTrim( "HELLO     " )
+      ? LTrim( "Hello     " )
    $STATUS$
       R
    $COMPLIANCE$
@@ -423,7 +423,7 @@
 
       SubStr( <cString>, 1, <nLen> )
    $EXAMPLES$
-      ? Left( "HELLO HARBOUR", 5 )    // HELLO
+      ? Left( "Hello Harbour", 5 )    // Hello
    $STATUS$
       R
    $COMPLIANCE$
@@ -464,7 +464,7 @@
 
       SubStr( <cString>, Len( <cString> ) - <nLen> + 1, <nLen> )
    $EXAMPLES$
-      ? Right( "HELLO HARBOUR", 5 )     // RBOUR
+      ? Right( "Hello Harbour", 5 )     // rbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -511,9 +511,9 @@
       characters from <nStart> to the end of the string is less than <nLen>
       the rest are ignored.
    $EXAMPLES$
-      ? SubStr( "HELLO HARBOUR" ,  7, 4 )      // HARB
-      ? SubStr( "HELLO HARBOUR" , -3, 3 )      // OUR
-      ? SubStr( "HELLO HARBOUR" ,  7    )      // HARBOUR
+      ? SubStr( "Hello Harbour" ,  7, 4 )      // Harb
+      ? SubStr( "Hello Harbour" , -3, 3 )      // our
+      ? SubStr( "Hello Harbour" ,  7    )      // Harbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -698,7 +698,7 @@
       <cString> A string representation of <xValue> using default
       conversions.
    $DESCRIPTION$
-      HB_VALTOSTR can be used to convert any scalar value to a string.
+      hb_ValToStr() can be used to convert any scalar value to a string.
    $EXAMPLES$
       Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
       ? hb_ValToStr( 4 ) == "         4"
@@ -1157,10 +1157,10 @@
       This function returns the string <cExpression> will all leading and
       trailing blank spaces removed.
    $EXAMPLES$
-      ? AllTrim( "HELLO HARBOUR" )
-      ? AllTrim( "     HELLO HARBOUR" )
-      ? AllTrim( "HELLO HARBOUR     " )
-      ? AllTrim( "     HELLO HARBOUR     " )
+      ? AllTrim( "Hello Harbour" )
+      ? AllTrim( "     Hello Harbour" )
+      ? AllTrim( "Hello Harbour     " )
+      ? AllTrim( "     hello Harbour     " )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1199,7 +1199,7 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? RTrim( "HELLO" )              //  "HELLO"
+      ? RTrim( "Hello" )              //  "Hello"
       ? RTrim( "" )                   //  ""
       ? RTrim( "UA   " )              //  "UA"
       ? RTrim( "   UA" )              //  "   UA"
@@ -1241,7 +1241,7 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? Trim( "HELLO" )     //  "HELLO"
+      ? Trim( "Hello" )     //  "Hello"
       ? Trim( "" )          //   ""
       ? Trim( "UA   " )     //   "UA"
       ? Trim( "   UA" )     //   "   UA"

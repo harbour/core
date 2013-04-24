@@ -1,4 +1,4 @@
-# Welcome to Harbour
+# Welcome to Harbour [![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
@@ -53,15 +53,16 @@ There are several ways to help making Harbour better:
 - Submit a change:
   1. Fork Harbour
   2. Create a branch: `git checkout -b my_mod`
-  3. Commit your changes: `git commit -am "Added my feature"`
-  4. Push to the branch: `git push origin my_mod`
-  5. Open a Pull Request
+  3. Do commit pre-check and new log entry: `hbrun bin/commit`
+  4. Commit your changes: `git commit -am "Added my feature"`
+  5. Push to the branch: `git push origin my_mod`
+  6. Open a Pull Request
 - Always use the same coding/formatting style as you find in
-  the files you're patching. The easiest way to achieve this
-  is to use these commands to format your sources:
+  the files you're modifying. The easiest way to achieve this
+  is to use these commands to format the sources:
 
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <file.c|.h>
-        $ <harbour_dir>/bin/hbformat <file.prg|.hb|.ch>
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
+        $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
 
 - Text editor setting for Harbour files
   - Encoding is either 7-bit ASCII or UTF-8 (without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark))
@@ -70,11 +71,13 @@ There are several ways to help making Harbour better:
   - Always keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100KB),
-  use this [free service](http://dropcanvas.com)
+  use this [free service](http://dropcanvas.com).
 - Of course, there is more into Harbour contribution than writing
   code, so you're welcome to do so in other areas like documentation,
   helping fellow users, giving input on decisions, testing in
   various environments, volunteering in administration tasks, etc.
+- Participate in localization:<br />
+  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
 
 # How to Get
@@ -99,16 +102,18 @@ Download source archive from this page and unpack:
 ## Unstable versions
 
 > WARNING:
-> Recommended for users contributing to Harbour development,
-> following the development mailing list, commits and reading
-> [ChangeLog.txt](ChangeLog.txt?raw=true).
+> Recommended
+> [for](https://groups.google.com/forum/#!msg/harbour-users/2fwUzdKwpKA/32nI4WhZLfYJ)
+> [users](https://groups.google.com/forum/#!msg/harbour-users/Ro99f8S6my0/KvfjhCx_jE4J)
+> contributing to Harbour development, following the development mailing list,
+> commits and reading [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
 
 You'll need Git version control software installed on your system,
 and issue this command:
 
-    git clone https://github.com/harbour/core.git harbour
+    git clone https://github.com/harbour/core.git harbour-core
 
 You can get subsequent updates using this command:
 
@@ -122,8 +127,6 @@ Download source archive from any of these links and unpack:
 * <https://github.com/harbour/core/archive/master.tar.gz>
 
 ### Harbour unstable binaries (updated once a day from live source repository)
-
-[![Build Status](https://travis-ci.org/harbour/core.png)](https://travis-ci.org/harbour/core)
 
 Windows (unified):
 
@@ -1339,7 +1342,7 @@ For all platforms you'll need two things:
 Use hbmk2 to build your app from source. It's recommended to put
 it in the PATH (f.e. by using `set PATH=C:\harbour\bin;%PATH%` on Windows).
 
-See hbmk2 [documentation, with examples](utils/hbmk2/hbmk2.md).
+See hbmk2 [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
 
 
 # Debugging Options
@@ -1433,20 +1436,6 @@ mailing list.
     Follows some environment variable settings which are commonly believed
     by users to be useful, but which in reality are either not needed or
     not even used by Harbour build process and hbmk2.
-    You should delete them:
-
-        set HB_DIR=<harbour_dir>
-        set HB_PATH=<harbour_dir>
-        set HRB_DIR=<some_harbour_dir>
-        set INCLUDE=<harbour_include_dir>
-        set LIB=<harbour_lib_dir>
-        set HB_GT_LIB=
-        set HB_*_INSTALL=
-        set HB_INSTALL_???=
-        set HB_INC_*=
-        set HB_DIR_*=
-        set HB_LEX=
-
 7.  Remove any Harbour build settings documented in [Build Options](#build-options).
 8.  Try to do no or only small modifications at once to examples
     included in [Build Examples](#build-examples).
@@ -1922,6 +1911,9 @@ Supported shells per host platforms:
      * [Setting up Git](https://help.github.com/articles/set-up-git)
      * [Git book](http://git-scm.com/book) [free]
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
+     * Using gettext (.po files)
+       * <http://help.transifex.com/features/formats.html#po-files>
+       * <http://www.heiner-eichmann.de/autotools/using_gettext.html>
 
 
 # Harbour Links
@@ -1930,14 +1922,15 @@ Supported shells per host platforms:
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)
+  * [Localization](https://www.transifex.com/projects/p/harbour/)
   * [Issues](https://github.com/harbour/core/issues)
   * Documents:
-     * [hbmk2 documentation](utils/hbmk2/hbmk2.md)
-     * [hbrun documentation](contrib/hbrun/hbrun.md)
+     * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
+     * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
-     * Harbour [online documentation](http://harbour.github.com/doc/)
+     * Harbour [online documentation](http://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 

@@ -81,8 +81,6 @@
 #include "hbset.h"
 #include "hbdate.h"
 #include "hbmath.h"
-#include "hbinkey.ch"
-#include "inkey.ch"
 #include "hbdebug.ch"
 #if defined( HB_MT_VM )
 #  include "hbthread.h"
@@ -143,10 +141,10 @@ static void    hb_vmArrayGen( HB_SIZE nElements ); /* generates an nElements Arr
 static void    hb_vmHashGen( HB_SIZE nElements ); /* generates an nElements Hash and fills it from the stack values */
 
 /* macros */
-static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments set(s) on HVM stack func( &var ) */
-static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments set(s) on HVM stack { &var } */
+static void    hb_vmMacroDo( HB_USHORT uiArgSets );         /* execute function passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroFunc( HB_USHORT uiArgSets );       /* execute procedure passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroSend( HB_USHORT uiArgSets );       /* execute procedure passing arguments set on HVM stack func( &var ) */
+static void    hb_vmMacroArrayGen( HB_USHORT uiArgSets );   /* generate array from arguments set on HVM stack { &var } */
 static void    hb_vmMacroPushIndex( void );              /* push macro array index {...}[ &var ] */
 
 /* Database */
@@ -271,17 +269,6 @@ static HB_BOOL     s_fCloneSym = HB_FALSE;/* clone registered symbol tables */
 
 /* main VM thread stack ID */
 static void * s_main_thread = NULL;
-
-/* Various compatibility flags
- */
-static HB_U32 s_VMFlags = HB_VMFLAG_HARBOUR;
-#undef hb_vmFlagEnabled
-#define hb_vmFlagEnabled( flag )      ( s_VMFlags & ( flag ) )
-
-/* Keycodes to stop virtual machine
- */
-static int s_VMCancelKey   = K_ALT_C;
-static int s_VMCancelKeyEx = HB_K_ALT_C;
 
 /* SEQUENCE envelope items position from stack top active
  */
@@ -1009,8 +996,7 @@ void hb_vmInit( HB_BOOL bStartMainProc )
    hb_conInit();
 
    /* Check for some internal switches */
-   s_VMFlags = hb_cmdargProcessVM( &s_VMCancelKey, &s_VMCancelKeyEx );
-   hb_inkeySetCancelKeys( s_VMCancelKey, s_VMCancelKeyEx );
+   hb_cmdargProcess();
 
    hb_i18n_init();            /* initialize i18n module */
 
@@ -8707,7 +8693,7 @@ void hb_vmRequestBreak( PHB_ITEM pItem )
        * immediately interrupted. Because Clipper does not check the
        * exception flag often enough then it's possible to execute one
        * function from first EXIT PROC. Using small trick with
-       * QOUT( TYPE( cPrivateVar ) ) in the EXIT procedure (TYPE() is
+       * QOut( Type( cPrivateVar ) ) in the EXIT procedure (Type() is
        * not normal function) we can also check that it tries to execute
        * EXIT procedures exactly here before leave current function.
        * So to be as close as possible the Clipper intentional behavior
@@ -11764,24 +11750,6 @@ void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
       hb_vmPush( pWith );
    else
       hb_stackAllocItem()->type = HB_IT_NIL;
-}
-
-
-
-#undef hb_vmFlagEnabled
-HB_U32 hb_vmFlagEnabled( HB_U32 flags )
-{
-   return s_VMFlags & flags;
-}
-
-void hb_vmFlagSet( HB_U32 flags )
-{
-   s_VMFlags |= flags;
-}
-
-void hb_vmFlagClear( HB_U32 flags )
-{
-   s_VMFlags &= ~flags;
 }
 
 /* ------------------------------------------------------------------------ */

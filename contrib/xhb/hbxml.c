@@ -2293,7 +2293,7 @@ HB_FUNC( HBXML_DATAREAD )
 
 
 /**
- * HB_XmlErrorDesc( nErrorNumber ) --> cErrorDesc
+ * hb_XMLErrorDesc( nErrorNumber ) --> cErrorDesc
  * Returns a descriptive string telling what the error number is meaning.
  */
 HB_FUNC( HB_XMLERRORDESC )

@@ -51,7 +51,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* HB_STRDECODESCAPE( <cEscSeqStr> ) -> <cStr>
+/* hb_StrDecodEscape( <cEscSeqStr> ) -> <cStr>
  * decode string with \ escape sequences
  */
 HB_FUNC( HB_STRDECODESCAPE )
@@ -75,7 +75,7 @@ HB_FUNC( HB_STRDECODESCAPE )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* HB_STRCDECODE( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
+/* hb_StrCDecode( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
  * decode string using C compiler rules
  * if second parameter <lCont> is passed by reference then it allows
  * to decode multiline strings. In such case <lCont> is set to .T.

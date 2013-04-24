@@ -516,7 +516,6 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                   break;
 
                case SQL_LONG:
-                  pItem = hb_itemPutNL( NULL, *( long * ) pVar->sqldata );
                   if( pField->uiDec == 0 )
                      pItem = hb_itemPutNLLen( NULL, *( short * ) pVar->sqldata, 11 );
                   else

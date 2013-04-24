@@ -83,7 +83,7 @@ static TOKEN_ENVIRONMENT sTokEnvNew( void )
    env[ 0 ].sStartPos = 0;                    /* 0-based index to next free, unused element */
    env[ 0 ].sEndPos = TOKEN_ENVIRONMENT_STEP; /* but there are 100 elements ready for use */
 
-   /* use second element to store actual index with tokennext() */
+   /* use second element to store actual index with TokenNext() */
    env[ 1 ].sStartPos = 0;        /* 0-based index value that is to be used NEXT */
 
    return env;

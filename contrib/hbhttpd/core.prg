@@ -1,3 +1,7 @@
+/*
+ * Copyright 2009 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
+ * www - http://harbour-project.org
+ */
 
 #include "hbclass.ch"
 #include "error.ch"

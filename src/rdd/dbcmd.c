@@ -53,7 +53,7 @@
  *
  * hb_rddIterateWorkAreas()
  * hb_rddGetTempAlias()
- * hb_RDDGETTEMPALIAS()
+ * hb_rddGetTempAlias()
  *
  */
 
@@ -457,7 +457,7 @@ HB_FUNC( HB_DBCREATETEMP )
  * tested it with Clipper yet. If it doesn't then please inform me about it
  * and I'll update the code. [druzus]
  */
-/* __dbopensdf( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
+/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
 HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
@@ -1068,7 +1068,7 @@ HB_FUNC( INDEXORD )
       hb_retni( 0 );
 }
 
-/* Same as RECCOUNT() */
+/* Same as RecCount() */
 HB_FUNC( LASTREC )
 {
    HB_ULONG ulRecCount = 0;
@@ -1221,7 +1221,7 @@ HB_FUNC( ORDCONDSET )
       lpdbOrdCondInfo->fNoOptimize   = hb_parl( 16 );
       /* 18th parameter in [x]Harbour is MEMORY flag added by Alexander for
          DBFNTX, so far it was served in hacked way inside SELF_ORDSETCOND()
-         so it was working only if this method was called from ORDCONDSET()
+         so it was working only if this method was called from ordCondSet()
          function. I also do not like the idea that it was called MEMORY.
          It should be RDD decision how such index will be served on low
          level and it should be IMHO called TEMPORARY - if RDD wants then
@@ -1585,7 +1585,7 @@ HB_FUNC( RDDREGISTER )
    }
 }
 
-/* Same as LASTREC() */
+/* Same as LastRec() */
 HB_FUNC_TRANSLATE( RECCOUNT, LASTREC )
 
 HB_FUNC( RECNO )

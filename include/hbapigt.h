@@ -308,13 +308,13 @@ extern HB_EXPORT int        hb_inkeyLast( int iEvenMask );  /* Return the value 
 extern HB_EXPORT int        hb_inkeyNext( int iEvenMask );  /* Return the next key without extracting it */
 extern HB_EXPORT void       hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern HB_EXPORT void       hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
-extern HB_EXPORT void       hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
 extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen ); /* Set text into inkey buffer */
 extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LastKey() value, return previous one */
 extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
 extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
+extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers from Harbour extended key code */
 
 HB_EXTERN_END
 

@@ -181,7 +181,7 @@ HB_FUNC( NUMDISKL )
 }
 
 /*
- * Volume() depends of the CSETSAFETY() setting and, if is true, does not
+ * Volume() depends of the CSetSafety() setting and, if is true, does not
  * overwrite an existing label.
  *
  * Syntax is: Volume("X:test") or Volume("X:\test"), where "x" is the
@@ -237,14 +237,13 @@ HB_FUNC( VOLUME )
 /*
  * VolSerial() function returns the volume serial number of an drive letter like
  * floppy, Hard-disk, CD or mapped network drive. The return value is a dword
- * type. If the drive is not available, volserial() returns -1.
+ * type. If the drive is not available, VolSerial() returns -1.
  *
- * Sintax is: VolSerial("X:\")
+ * Syntax is: VolSerial( "X:\" )
  * Note that the trailing backslash is required.
  *
- * To convert in the hex format, call numtohex() function.
- * Example: numtohex( volserial("C:\")).
- * See volser.prg in xharbour\tests\cttest folder.
+ * To convert in the hex format, call hb_NumToHex() function.
+ * Example: hb_NumToHex( VolSerial( "C:\" ) ).
  */
 
 HB_FUNC( VOLSERIAL )

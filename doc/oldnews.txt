@@ -26,7 +26,7 @@ Known build issues
 Known open issues
 =============================
 - HB_TCHAR_* macro usage in Harbour sources
-- ACHOICE() minor Clipper compatibility bugs
+- AChoice() minor Clipper compatibility bugs
 - MENUSYS minor Clipper incompatibility
 - Target specific C code generated for some numeric
   operations in -gc3 mode (preventing cross-compilation)
@@ -143,54 +143,54 @@ Core
   files (hbi18n).
 - Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.
 - Fixed to not use C RTL CP dependent character functions
-  in Harbour code. (islower(), toupper(), etc)
+  in Harbour code. (IsLower(), toupper(), etc)
   Added new macros instead.
-- __NATISNEGATIVE() and __NATISAFFIRM() are now using
+- __natIsNegative() and __natIsAffirm() are now using
   CP sensitive case conversion.
 - Added hb_charIsUpper()/hb_charIsLower() APIs.
-- CURDRIVE() and DISKNAME() fixed for systems that don't support
+- CurDrive() and DiskName() fixed for systems that don't support
   drive letters.
-- Xbase++ compatible TBROWSE()/TBCOLUMN()/GET() related methods
+- Xbase++ compatible TBrowse()/TBColumn()/Get() related methods
   moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().
-- Fixed potential GPF in HB_RASCAN().
+- Fixed potential GPF in hb_RAScan().
 - Debugger improvements and fixes.
 - Most Harbour level code prepared for MT.
 - Fixed few potential GPFs in RDDNTX, RDDCDX code.
 - Added own hb_snprintf() implementation.
-- Fixed HB_VERSION( HB_VERSION_BUILD_DATE )
+- Fixed hb_Version( HB_VERSION_BUILD_DATE )
 - Added hbuddall library holding all core supplied user RDDs.
 - Fixed to successfully build all user RDD examples.
 - Fixed dbCreate() behaviour in arrayrdd user RDD.
 - Added new LOGRDD user RDD.
 - Added DBFNSX RDD.
-- Fixed FWRITE() potential GPF and security hole.
+- Fixed FWrite() potential GPF and security hole.
 - Added __FILE__ support for .prg code.
 - Added:
-  HB_MILLISECONDS()
-  HB_FTEMPCREATEEX( @<cName>, <cDir>, <cPrefix>, <cExt> ) -> <nHandle>
-  HB_STRDECODESCAPE( <cEscSeqStr> ) -> <cStr>
-  HB_STRCDECODE( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
-  HB_STRXOR( <cStr1>, <cStr2> | <nNum> ) -> <cResult>
-  HB_PROGNAME() -> <cProgramNameWithPath>
-  HB_DISPOUTATBOX() similar to HB_DISPOUTAT() but for drawing chars.
-  HB_FGETATTR( <cFileName>, @<nAttr> ) -> <lSuccess>
-  HB_FSETATTR( <cFileName>, <nAttr> ) -> <lSuccess>
-  HB_FSETDATETIME( <cFileName>, [<dDate>], [<cTime HH:MM:SS>], [<nMilliSec>] ) -> <lSuccess>
-  HB_FGETDATETIME()
-  HB_WILDMATCHI() like HB_WILDMATCH() but case-insentitive.
-  HB_CDPSELECT() same as HB_SETCODEPAGE() (please upgrade to new function name).
-  HB_CDPUNIID( <cHarbourCP> ) -> <cCPName>
-  HB_GTINFO( HB_GTI_CARGO[, <xValue ] ) -> <xPrevValue>
-  HB_DIRBASE() -> <cBaseDirectory>
-  HB_DBCREATETEMP()/DBCREATETEMP() to create temporary tables.
-  HB_MMIDDLEDOWN/MMIDDLEDOWN() new Harbour function.
-  DBINFO( DBI_ISTEMPORARY )
-  HB_VERSION( HB_VERSION_BUILD_PLAT )
-  HB_VERSION( HB_VERSION_BUILD_COMP )
-  HB_STRFORMAT() C-like string formatting function
+  hb_MilliSeconds()
+  hb_FTempCreateEx( @<cName>, <cDir>, <cPrefix>, <cExt> ) -> <nHandle>
+  hb_StrDecodEscape( <cEscSeqStr> ) -> <cStr>
+  hb_StrCDecode( <cStr> [, @<lCont> ] ) -> <cResult> | NIL
+  hb_StrXor( <cStr1>, <cStr2> | <nNum> ) -> <cResult>
+  hb_ProgName() -> <cProgramNameWithPath>
+  hb_DispOutAtBox() similar to hb_DispOutAt() but for drawing chars.
+  hb_FGetAttr( <cFileName>, @<nAttr> ) -> <lSuccess>
+  hb_FSetAttr( <cFileName>, <nAttr> ) -> <lSuccess>
+  hb_FSetDateTime( <cFileName>, [<dDate>], [<cTime HH:MM:SS>], [<nMilliSec>] ) -> <lSuccess>
+  hb_FGetDateTime()
+  hb_WildMatchI() like hb_WildMatch() but case-insentitive.
+  hb_cdpSelect() same as hb_SetCodepage() (please upgrade to new function name).
+  hb_cdpUniID( <cHarbourCP> ) -> <cCPName>
+  hb_gtInfo( HB_GTI_CARGO[, <xValue ] ) -> <xPrevValue>
+  hb_DirBase() -> <cBaseDirectory>
+  hb_dbCreateTemp()/DBCREATETEMP() to create temporary tables.
+  HB_MMIDDLEDOWN/MMiddleDown() new Harbour function.
+  dbInfo( DBI_ISTEMPORARY )
+  hb_Version( HB_VERSION_BUILD_PLAT )
+  hb_Version( HB_VERSION_BUILD_COMP )
+  hb_StrFormat() C-like string formatting function
     (also as C level API named hb_StrFormat())
-  HB_SETENV( <cEnvName>, [<cNewVal>] [, <lOsCP>] ) -> <lOK>
-    (also as C level API named hb_setenv())
+  hb_SetEnv( <cEnvName>, [<cNewVal>] [, <lOsCP>] ) -> <lOK>
+    (also as C level API named hb_SetEnv())
 - Fixed UNSELECTED color updating in SetColor().
 - GTWVT, GTWIN HB_GTI_CODEPAGE support.
 - GTWVT now supports drawing chars even if the selected codepage
@@ -198,10 +198,10 @@ Core
 - GTWVT HB_GTI_BOXCP support.
 - GTWVT disabled K_MM*DOWN non-Clipper (and other GT) compatible mouse
   events.
-- Fixed TBROWSE(), TPOPUP() to display drawing chars properly.
-- Fixed DISKSPACE() and HB_DISKSPACE() to return proper values
+- Fixed TBrowse(), TPOPUP() to display drawing chars properly.
+- Fixed DiskSpace() and hb_DiskSpace() to return proper values
   on Darwin.
-- Fixed DIRECTORY() when called with "V" (label) parameter (on Windows).
+- Fixed Directory() when called with "V" (label) parameter (on Windows).
 - New HB_SIZEOFARRAY() macro.
 - Added C APIs:
   hb_charIsDigit(), hb_charIsAlpha(), hb_charIsLower(), hb_charIsUpper()
@@ -210,13 +210,13 @@ Core
   C level: hb_setGetOSCODEPAGE()
   Conversion is done automatically in existing functions.
 - Added hb_osDecode(), hb_osEncode() C APIs.
-- HB_GETENV() extended with 3rd parameter to control OS codepage
+- hb_GetEnv() extended with 3rd parameter to control OS codepage
   conversion (on by default).
 - Added CPU dump support for AMD64/x64.
 - Added module listing on GPF for x86 and x64.
 - GTXWC potential GPF fixed.
 - Added process handling:
-  HB_PROCESSOPEN(), HB_PROCESSVALUE(), HB_PROCESSCLOSE()
+  hb_processOpen(), hb_processValue(), hb_processClose()
 - Added HB_GTI_BOXCP to control box drawing CP for GTs.
 - Using Heap instead of Local memory when HB_FM_WIN32_ALLOC is set.
 - Added __objHasMsgAssigned( object, "msgName" )
@@ -235,7 +235,7 @@ Core
 - GTTRM added support for HB_GTI_PALETTE.
 - New compiler expression optimizations, and some fixes for rare cases.
 - Some compiler optimizations are now enabled using new -ko switch.
-- Added array preallocation on AADD().
+- Added array preallocation on AAdd().
 - Optimization to string reallocation.
 - Added detection of unused variable assigments. Code cleaned
   in all Harbour for such warnings.
@@ -243,7 +243,7 @@ Core
 - __HRB*() functions marked as compatibility, please update your
   code to use HB_HRB*().
 - __RDDGETTEMPALIAS() marked as compatibility, please update your
-  code to use HB_RDDGETTEMPALIAS().
+  code to use hb_rddGetTempAlias().
 - Added hb_spFileExists() a more efficient version of hb_spFile().
   Modified Harbour code to use the new API.
 - HSX index MT support.
@@ -254,7 +254,7 @@ Core
 - HB_SYMBOL_UNUSED() moved to std.ch. NOTE: This macro is no longer
   present in common.ch so if you're overriding std.ch, make sure to add
   this macro to your header file.
-- BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN(), BIN2U(), W2BIN(), U2BIN()
+- Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin(), Bin2U(), W2Bin(), U2Bin()
   functions rewritten in a more efficient way. Previous pure GPL
   license changed to standard Harbour license (including exception).
 - Fixed Ukrainian localization files.
@@ -274,7 +274,7 @@ Core
   and much more. Replaced Win/DOS specific .bat files with portable
   .hbp and .hbm files.
 - Added all missing non-multibyte codepages.
-- LISTBOX() doesn't modify _SET_EXACT settings anymore in :Find*() methods.
+- ListBox() doesn't modify _SET_EXACT settings anymore in :Find*() methods.
 - HVM pcode evaluation speed improvement.
 - Fixed _SET_EXACT handling in core.
 - hb_gtInfo( HB_GTI_PALLETE ) now uses zero based color indexes in
@@ -324,40 +324,40 @@ Core
   It should make some xHarbour users using OVERRIDE METHOD happy
   but please remember it's still undocumented and unsupported
   functionality - use for your own risk.
-- Fixed typo in HB_INETDATAREADY() - the second parameter (timeout)
+- Fixed typo in hb_inetDataReady() - the second parameter (timeout)
   was ignored.
 - Changed the NOT operator precedence - it should be bigger then
   logical .and./.or. operators in #if expressions.
-- Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled
+- Fixed hb_regexMatch(). Now the HAS/LIKE mode can be controlled
   by 5th logical parameter (was 3rd), so 3rd parameter is solely
   controlling case-sensitivity as indicated in the documentation.
-  Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE()
+  Users are recommended to use hb_regexHas() and hb_regexLike()
   functions as unambiguous alternatives, which work equally
-  well on all Harbour versions. HB_REGEXMATCH() is now deprecated,
+  well on all Harbour versions. hb_regexMatch() is now deprecated,
   but kept for compatibility.
-- ACHOICE() fixed to redisplay itself when exiting with <Esc> or
+- AChoice() fixed to redisplay itself when exiting with <Esc> or
   equivalent.
 
 Contrib
 =============================
 - hbblat new Blat interface class for Windows
   (Contributed by Francesco Saverio Giudice).
-- hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.
-- hbmzip fixed handling attributes in HB_ZIPFILECREATE().
+- hbmzip fixed GPF in hb_zipDeleteFile() when file has comment.
+- hbmzip fixed handling attributes in hb_zipFileCreate().
 - hbmzip fixed timestamps stored in .zip files.
-- hbmzip added HB_ZIPSTOREFILEHANDLE(),
-  HB_UNZIPEXTRACTCURRENTFILETOHANDLE() functions.
-- hbwin WIN_REGREAD()/GETREGISTRY() got new parameter to supply
+- hbmzip added hb_zipStoreFileHandle(),
+  hb_unzipExtractCurrentFileToHandle() functions.
+- hbwin win_regRead()/GetRegistry() got new parameter to supply
   a default value when the entry isn't found.
 - hbtip FTP handling fixed some accidental typos.
 - hbtip new MIME types.
 - hbtip fixes and optimization to HB_BASE64().
 - rddads now autodetects version 9.10.
-- hbct XTOC(), FTOC() and CTOF() fixed to be properly multiplatform.
+- hbct XToC(), FToC() and CToF() fixed to be properly multiplatform.
 - hbct unbuffered drawing speed improvement in windowing code.
-- hbct DIRNAME() fixed.
+- hbct DirName() fixed.
 - hbct other fixes.
-- hbct FILESEEK(), FILEATTR(), FILESIZE(), FILEDATE() now MT compatible.
+- hbct FileSeek(), FileAttr(), FileSize(), FileDate() now MT compatible.
 - hbct added support for thread local current window pointer in CT Windows.
 - hbwin made steps towards creating a unified Windows API wrapper layer.
 - Added hbcrypt, hbssl and rddsql (with mysql, pgsql, fbsql plugins)
@@ -367,71 +367,71 @@ Contrib
 - gtwvg lots of improvements.
 - gtwvg Xbase++ compatible UI objects.
 - hbw32 library renamed to hbwin.
-- hbwin added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
-  WIN_LOADRESOURCE().
+- hbwin added win_AbortDoc(), win_RunDetached(), WIN_SHELLEXECUTE(),
+  win_LoadResource().
 - dbu patch now adds SET DATE ANSI and SET CENTURY ON.
-- hbwin WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() extended to
+- hbwin win_MulDiv(), win_Rectangle(), win_SetBkMode() extended to
   accept handles passed using alternate methods.
 - hbwin function names changed as below:
-  - W32_REGPATHSPLIT()            -> WIN_REGPATHSPLIT()
-  - W32_REGREAD()                 -> WIN_REGREAD()
-  - W32_REGWRITE()                -> WIN_REGWRITE()
-  - WIN32_REGCREATEKEYEX()        -> WIN_REGCREATEKEYEX()
-  - WIN32_REGOPENKEYEX()          -> WIN_REGOPENKEYEX()
-  - WIN32_REGQUERYVALUEEX()       -> WIN_REGQUERYVALUEEX()
-  - WIN32_REGSETVALUEEX()         -> WIN_REGSETVALUEEX()
-  - WIN32_REGCLOSEKEY()           -> WIN_REGCLOSEKEY()
-  - WIN32_ARC()                   -> WIN_ARC()
-  - WIN32_BITMAPSOK()             -> WIN_BITMAPSOK()
-  - WIN32_CREATEDC()              -> WIN_CREATEDC()
-  - WIN32_CREATEFONT()            -> WIN_CREATEFONT()
-  - WIN32_DELETEDC()              -> WIN_DELETEDC()
-  - WIN32_DRAWBITMAP()            -> WIN_DRAWBITMAP()
-  - WIN32_ELLIPSE()               -> WIN_ELLIPSE()
-  - WIN32_ENDDOC()                -> WIN_ENDDOC()
-  - WIN32_ENDPAGE()               -> WIN_ENDPAGE()
-  - WIN32_ENUMFONTS()             -> WIN_ENUMFONTS()
-  - WIN32_FILLRECT()              -> WIN_FILLRECT()
-  - WIN32_GETCHARSIZE()           -> WIN_GETCHARSIZE()
-  - WIN32_GETDEVICECAPS()         -> WIN_GETDEVICECAPS()
+  - W32_REGPATHSPLIT()            -> win_regPathSplit()
+  - W32_REGREAD()                 -> win_regRead()
+  - W32_REGWRITE()                -> win_regWrite()
+  - WIN32_REGCREATEKEYEX()        -> win_regCreateKeyEx()
+  - WIN32_REGOPENKEYEX()          -> win_regOpenKeyEx()
+  - WIN32_REGQUERYVALUEEX()       -> win_regQueryValueEx()
+  - WIN32_REGSETVALUEEX()         -> win_regSetValueEx()
+  - WIN32_REGCLOSEKEY()           -> win_regCloseKey()
+  - WIN32_ARC()                   -> win_Arc()
+  - WIN32_BITMAPSOK()             -> win_BitmapsOK()
+  - WIN32_CREATEDC()              -> win_CreateDC()
+  - WIN32_CREATEFONT()            -> win_CreateFont()
+  - WIN32_DELETEDC()              -> win_DeleteDC()
+  - WIN32_DRAWBITMAP()            -> win_DrawBitmap()
+  - WIN32_ELLIPSE()               -> win_Ellipse()
+  - WIN32_ENDDOC()                -> win_EndDoc()
+  - WIN32_ENDPAGE()               -> win_EndPage()
+  - WIN32_ENUMFONTS()             -> win_EnumFonts()
+  - WIN32_FILLRECT()              -> win_FillRect()
+  - WIN32_GETCHARSIZE()           -> win_GetCharSize()
+  - WIN32_GETDEVICECAPS()         -> win_GetDeviceCaps()
   - WIN32_GETEXEFILENAME()        -> WIN_GETEXEFILENAME()
-  - WIN32_GETPRINTERFONTNAME()    -> WIN_GETPRINTERFONTNAME()
-  - WIN32_GETTEXTSIZE()           -> WIN_GETTEXTSIZE()
-  - WIN32_LINETO()                -> WIN_LINETO()
-  - WIN32_LOADBITMAPFILE()        -> WIN_LOADBITMAPFILE()
-  - WIN32_MULDIV()                -> WIN_MULDIV()
+  - WIN32_GETPRINTERFONTNAME()    -> win_GetPrinterFontName()
+  - WIN32_GETTEXTSIZE()           -> win_GetTextSize()
+  - WIN32_LINETO()                -> win_LineTo()
+  - WIN32_LOADBITMAPFILE()        -> win_LoadBitmapFile()
+  - WIN32_MULDIV()                -> win_MulDiv()
   - WIN32_OS_ISWIN9X()            -> WIN_OS_ISWIN9X()
-  - WIN32_RECTANGLE()             -> WIN_RECTANGLE()
-  - WIN32_SETBKMODE()             -> WIN_SETBKMODE()
-  - WIN32_SETCOLOR()              -> WIN_SETCOLOR()
-  - WIN32_SETDOCUMENTPROPERTIES() -> WIN_SETDOCUMENTPROPERTIES()
-  - WIN32_SETMAPMODE()            -> WIN_SETMAPMODE()
-  - WIN32_SETPEN()                -> WIN_SETPEN()
-  - WIN32_STARTDOC()              -> WIN_STARTDOC()
-  - WIN32_STARTPAGE()             -> WIN_STARTPAGE()
-  - WIN32_TEXTOUT()               -> WIN_TEXTOUT()
+  - WIN32_RECTANGLE()             -> win_Rectangle()
+  - WIN32_SETBKMODE()             -> win_SetBkMode()
+  - WIN32_SETCOLOR()              -> win_SetColor()
+  - WIN32_SETDOCUMENTPROPERTIES() -> win_SetDocumentProperties()
+  - WIN32_SETMAPMODE()            -> win_SetMapMode()
+  - WIN32_SETPEN()                -> win_SetPen()
+  - WIN32_STARTDOC()              -> win_StartDoc()
+  - WIN32_STARTPAGE()             -> win_StartPage()
+  - WIN32_TEXTOUT()               -> win_TextOut()
   - WIN32PRN class                -> WIN_PRN class
   - WIN32BMP class                -> WIN_BMP class
 - hbct GPF and wrong RTE messages fixed in:
-  CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()
+  CharAdd(), CharSub(), CharAnd(), CharOr(), CharXor()
 - hbct string optimizations in thrown RTEs.
 - hbziparc fixed <acFiles> behavior if the parameter is not passed.
 - hbhpdf added HPDF_VERSION_TEXT() to replace former macro
   with the same name.
-- hbhpdf fixed HPDF_SETINFODATEATTR() function.
+- hbhpdf fixed HPDF_SetInfoDateAttr() function.
 - Added experimental terminal server written in Harbour. Find it
   in /examples.
 - hbgt now properly checks for package version and includes
   feature accordingly.
-- hbwin added WAPI_GETCOMMANDLINE(), WIN_GETCOMMANDLINEPARAM(),
-  WAPI_GETLASTERROR(), WAPI_SETLASTERROR(), WAPI_SETERRORMODE().
+- hbwin added wapi_GetCommandLine(), win_GetCommandLineParam(),
+  wapi_GetLastError(), wapi_SetLastError(), wapi_SetErrorMode().
 - hbwhat removed from contrib list and moved to examples instead.
 - xhb OVERRIDE / EXTEND CLASS emulation in xhbcls.ch header.
   (this feature is there to help xhb compatibility, but can break
   inheritance scheme and internal class definitions in both
   compilers)
 - xhb added DBF2TXT() with critical fixes.
-- xhb added HB_REGEXREPLACE().
+- xhb added hb_regexReplace().
 - hbwin WINPORTWRITE() GPF when wrong parameter type is passed.
 - Added Darwin/MacPorts support for following contribs:
   gtalleg, hbmysql, hbpgsql, sddmy, sddpg, hbfimage.
@@ -598,7 +598,7 @@ Core
 - Fixed OS() to detect Vista/Windows 2008. This bug got
   introduced in 1.0.0rc2.
 - Fixed OS() string when run on Windows XP 64-bit Edition.
-- Changed HB_COMPILER() to always show 32/64-bit in the
+- Changed hb_Compiler() to always show 32/64-bit in the
   returned string.
 - Fixed GPFs and leaks when using Harbour compiler -w3 switch.
 - Bad workaround added for Pelles C 5.00.1 in AMD64 mode to
@@ -607,7 +607,7 @@ Core
 - PCRE lib upgraded to 7.8 (from 7.7)
 - Fixed dbInfo( DBI_POSITIONED ) returned value.
 - Fixed internal error in dirty index reading.
-- Fixed return value of HB_INETGETSNDBUFSIZE().
+- Fixed return value of hb_inetGetSndBufSize().
 - Fixed GPF when user sort code block reduces the size of sorted array.
 - Fixed typo in hash cloning code which caused that references
   was copied to cloned array. Thanks to Mindaugas for example.
@@ -623,14 +623,14 @@ Contrib
 - hbclipsm GAUGE*() function fixes.
 - gtalleg fixed to compile under several non-*nix platforms
   (still needs more work).
-- xhb: HB_ARRAYBLOCK() compatibility function added.
-- hbnf FT_GETE() function bad leak fixed on Win32 systems,
+- xhb: hb_ArrayBlock() compatibility function added.
+- hbnf ft_GetE() function bad leak fixed on Win32 systems,
   and potential GPF on all systems.
 - hbwhat32 removed wintypes.ch header. Header with the same
   name and identical content can be found in xhb contrib.
-- hbct VOLUME() buffer overrun fixed.
+- hbct Volume() buffer overrun fixed.
 - hbole GPF fixed. This bug got introduced in 1.0.0rc2.
-- hbole, hbw32 64-bit fix for MESSAGEBOX() functions. It now
+- hbole, hbw32 64-bit fix for MessageBox() functions. It now
   allows for both pointer and numeric types to be passed as
   a window handle.
 - hbwhat32 fixed to not define WinMain() and also not to
@@ -669,7 +669,7 @@ Contrib
   and fixed to support Win64 platform. INTERNETREADFILE(),
   INTERNETWRITEFILE() functions were fixed. what32.ch renamed
   to hbwhat.ch.
-- hbhpdf fixed HPDF_ADDPAGELABEL().
+- hbhpdf fixed HPDF_AddPageLabel().
 - hbw32 got a new COM port handling class and API.
 - gtwvg got some enhancements and 64-bit compatibility fixes.
   A critical 1.0.0 bug was also fixed, which could cause
@@ -715,7 +715,7 @@ General
 Core
 =============================
 - Fixed __HARBOUR__ macro on .prg level, when compiled with -u switch.
-- HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64-bit compatible.
+- hb_ArrayId() moved to xhb.lib, synced with xhb and made 64-bit compatible.
 - File handle usage cleanup and 64-bit compatibility.
 - Automatic destructors for .hrb modules.
 - Added passing non-string parameters to .hrb functions.
@@ -725,47 +725,47 @@ Core
   hb_fsGetAttr().
 - New date API function: hb_timeStampEncode().
 - Fixed printing under OS/2.
-- Implemented DBEDIT() DE_APPEND mode plus some other features and
+- Implemented dbEdit() DE_APPEND mode plus some other features and
   compatibility fixes.
 - MD5 calculation fixes.
 - Added C level hb_hashAddNew().
-- Compile time optimization of EMPTY() function.
+- Compile time optimization of Empty() function.
 - Compress trailing spaces during string item serialization.
 - Replicated CA-Cl*pper compile time optimization bugs.
-- TCP/IP function (HB_INET*()) fixes.
-- Added HB_OSFILEMASK(), HB_DIRSCAN(), HB_FILEMATCH() Harbour level functions.
+- TCP/IP function (hb_inet*()) fixes.
+- Added hb_osFileMask(), hb_DirScan(), hb_FileMatch() Harbour level functions.
 - Fixed RTE in HBReportForm() class.
-- Added __OBJGETPROPERTIES(), extended __CLSGETPROPERTIES().
+- Added __objGetProperties(), extended __clsGetProperties().
 - Changed (incompatible):
   __PLATFORM__Windows -> __PLATFORM__WINDOWS
   __PLATFORM__Linux   -> __PLATFORM__LINUX
 - hbdot functionality merged into hbrun.
 - *nix exception handler added.
 - Source filename visible in stack traces.
-- ACHOICE() mouse support added.
+- AChoice() mouse support added.
 - Core Harbour level ZLIB compression functions renamed as follows:
-  HB_COMPRESS()      -> HB_ZCOMPRESS()
-  HB_COMPRESSBOUND() -> HB_ZCOMPRESSBOUND()
-  HB_UNCOMPRESS()    -> HB_ZUNCOMPRESS()
-  HB_UNCOMPRESSLEN() -> HB_ZUNCOMPRESSLEN()
+  hb_Compress()      -> hb_ZCompress()
+  HB_COMPRESSBOUND() -> hb_ZCompressBound()
+  hb_Uncompress()    -> hb_ZUncompress()
+  HB_UNCOMPRESSLEN() -> hb_ZUncompressLen()
 - Harbour .hrb API moved to the documented namespace as follows:
-  __HRBRUN()    -> HB_HRBRUN()
-  __HRBLOAD()   -> HB_HRBLOAD()
-  __HRBUNLOAD() -> HB_HRBUNLOAD()
-  __HRBDO()     -> HB_HRBDO()
-  __HRBDOFU()   -> (deleted, please use DO())
-  __HRBGETFU()  -> HB_HRBGETFUNSYM()
+  __HRBRUN()    -> hb_hrbRun()
+  __HRBLOAD()   -> hb_hrbLoad()
+  __HRBUNLOAD() -> hb_hrbUnload()
+  __HRBDO()     -> hb_hrbDo()
+  __HRBDOFU()   -> (deleted, please use Do())
+  __HRBGETFU()  -> hb_hrbGetFunSym()
   (old function names still function)
 
 Contrib
 =============================
 - Better cross-build support for contribs with external dependencies.
 - hbmzip OS/2 support, Unix .zip header fix, using Harbour memory
-  management functions, global and file comment support, HB_ZIPDELETEFILE()
+  management functions, global and file comment support, hb_zipDeleteFile()
   function.
 - hbziparch fixes and better portability.
 - hbcurl fixes, now using Harbour memory allocation functions,
-  now older libcurl versions are supported as well, CURL_EASY_GETINFO()
+  now older libcurl versions are supported as well, curl_easy_getinfo()
   fixed for unsupported info types.
 - 64-bit compatibility fixes. hbmysql/SQLLISTF() function now
   uses pointer instead of numeric type.
@@ -837,19 +837,19 @@ Contrib
 - hbziparch updated, bugs fixed and ZipArchive library
   updated to latest version.
 - Added DLL call functionality to hbw32 contrib.
-- Added HB_FREADLINE(), HB_CRYPT(), HB_DECRYPT() to xhb contrib.
+- Added hb_FReadLine(), hb_Crypt(), hb_Decrypt() to xhb contrib.
 - Added hbtip contrib tests.
 - GTWVG contrib enhancements.
-- Added SQL_SPRINTF() to hbmisc contrib.
-- Enhanced STRFORMAT() in hbmisc contrib.
+- Added sql_sprintf() to hbmisc contrib.
+- Enhanced StrFormat() in hbmisc contrib.
 - Enabled hbgf contrib for all (Linux, OS/2, Windows) platforms.
 - Due to fixing 64-bit portability problems, some functions became
   incompatible, because numeric addresses have been converted to
   pointer types:
   - hbwhat32: wndproc/dlgproc parameters in related functions.
-  - hbmysql: SQLCONNECT(), SQLSTORER(), SQLUSERES()
+  - hbmysql: SQLConnect(), SQLSTORER(), SQLUSERES()
   - hbmsql: MSQLSTORER(), MSQLLISTFI()
-- Removed function CEIL() from hbmisc. Please use CEILING() from hbct
+- Removed function CEIL() from hbmisc. Please use Ceiling() from hbct
   instead.
 - Optimizations and minor fixes.
 
@@ -988,9 +988,9 @@ VM
                      c := Upper( c )
                   NEXT
 - added full support for FOR EACH overloading
-- extended PROCFILE() function - now it can accept <nLevel> | <sFuncSym> |
-  <cFuncName> as first parameter, f.e.: PROCFILE( @someFunc() ) or
-  PROCFILE( "PUBLICFUNC" ) or PROCFILE( nStackLevel ). For non character
+- extended ProcFile() function - now it can accept <nLevel> | <sFuncSym> |
+  <cFuncName> as first parameter, f.e.: ProcFile( @someFunc() ) or
+  ProcFile( "PUBLICFUNC" ) or ProcFile( nStackLevel ). For non character
   parameters it fully works also for static functions even if source code
   have many static functions with the same name
 - added support for detecting not cleanly overloaded by linker .prg
@@ -1013,9 +1013,9 @@ RTL
 - added functions for bit manipulations: HB_BIT*() and for conversions
   to/from hexadecimal format
 - added set of functions with hb_ prefix supported extended parameters,
-  f.e.: HB_AINS(), HB_ADEL(), HB_ASCAN(), HB_RASCAN(), HB_GETENV(),
-  HB_AT(), ...
-- added HB_FILEEXISTS(), HB_DIREXISTS()
+  f.e.: hb_AIns(), hb_ADel(), hb_AScan(), hb_RAScan(), hb_GetEnv(),
+  hb_At(), ...
+- added hb_FileExists(), hb_DirExists()
 - new TBROWSE class which is now very highly compatible with Clipper
   It should resolve 99.9% problems with BROWSE reported in the past.
 - TBCOLUMN class is now fully Clipper compatible
@@ -1032,8 +1032,8 @@ RTL
 - added _SET_TRIMFILENAME - when enabled low level hb_fs*() functions strip
   trailing and leading spaces from file names to emulate DOS like behavior
 - added support for _SET_DEFEXTENSIONS to native all RDDs
-- many fixes in transform() function and fixed 64-bit integer transformation.
-  Now transform() passes our all compatibility tests
+- many fixes in Transform() function and fixed 64-bit integer transformation.
+  Now Transform() passes our all compatibility tests
 - added undocumented Clipper error functions
 - added functions to manage .ini files: HB_INI*()
 - extended HB_KEYPUT to support strings and arrays.
@@ -1081,7 +1081,7 @@ GT:
   escape key sequences in terminal based GTs. It's supported by
   GTCRS and GTTRM
 - fixed color string decoding to be fully Clipper compatible
-- OUTSTD()/OUTERR() respects automatic CP translation when they
+- OutStd()/OutErr() respects automatic CP translation when they
   are not redirected to GT screen
 - added common for all GTs CLIPBOARD support. If possible low level GT
   drivers uses system clipboard otherwise they emulate it for Harbour
@@ -1121,8 +1121,8 @@ Contrib
 - many contrib libraries borrowed from xHarbour code
 - added xHarbour compatibility library: xhb. It emulates many of xHarbour
   behavior which cannot be covered by PP rules like extended operators,
-  strings like arrays, one byte string in math operations, HB_ENUMINDEX(),
-  HB_QWith(), HB_QSelf(), accessing hash item using OOP interface,
+  strings like arrays, one byte string in math operations, hb_enumIndex(),
+  hb_QWith(), hb_QSelf(), accessing hash item using OOP interface,
   accessing/assigning string characters using [] operators (many of the
   above fully works only in Harbour but not in native xHarbour code :-))
   and many extensions like HBLOG, HBXML, HBCSTRUCT, HASH, INET*(), etc.
@@ -1227,7 +1227,7 @@ The runtime modules
 - Class code extensively changed with many extensions like nonvirtual
   methods and members, scopes, friend classes and functions,
   destructors, etc.
-- Added support for PROCFILE()
+- Added support for ProcFile()
 - Profiler code disabled in default build.
 GT:
 ---
@@ -1274,7 +1274,7 @@ syntax:
 internals:
 ----------
 - Fixed bug in divide by 0 substitution.
-- Fixed bug in ASC() optimization (when character code > 127)
+- Fixed bug in Asc() optimization (when character code > 127)
 - Fixed path delimiters in included file names.
 - Removed strong typing in the compiler. Reactivate it by compiling
   with -DHB_COMP_STRONG_TYPES.
@@ -1372,25 +1372,25 @@ API
   Now HB_P_ENDBLOCK and HB_P_ENDPROC pcodes set HB_ENDPROC_REQUESTED
   and the main loop can be exited only from one place. It gives some
   small but noticeable speed improvement.
-- Possible problem fixed in __CLSADDMSG() where message parameter was
+- Possible problem fixed in __clsAddMsg() where message parameter was
   required to be uppercase when overloading operators .NOT. .AND. .OR.
 - Fixed GPF when unshareing string item buffer with embedded 0 by
   using hb_itemUnShare().
 - Make HB_SET_TYPEAHEAD Clipper compatible.
-- Set DOSERROR() to oError:OSCODE when RT error is generated.
+- Set DosError() to oError:OSCODE when RT error is generated.
 - Fixed some small incompatibilities with Clipper in number to string
   conversions.
 - Added HB_STR_DATE_BASE for conversion to string, Clipper
-  compatibility though we are not 100% Clipper compatible in STOD()
+  compatibility though we are not 100% Clipper compatible in SToD()
   because we will have to reduce functionality (supported date range)
-  to reach it. In Clipper STOD(DTOS()) is not revertible, it is
+  to reach it. In Clipper SToD(DToS()) is not revertible, it is
   revertible in [x]Harbour for the whole supported in string
   conversion range: 0000-01-01 : 9999-01-01.
 - Fixed possible GPF in CTOD when badly formated date is given.
 - Optimized hb_dateEncode().
 - Fixed RT error number in hb_vmAddInt() for negative values to be
   Clipper compatible.
-- Optimized __CLSADDMSG() to call hb_parc() only once instead of 25
+- Optimized __clsAddMsg() to call hb_parc() only once instead of 25
   times for most cases.
 - Synced file IO with xHarbour, it fixed some problems, added some
   missing functionality and long (64-bit) file support for Windows.
@@ -1406,7 +1406,7 @@ API
 - Added STRPEEK and STRPOKE FS functions covered by HB_COMPAT_FLAGSHIP
   macro.
 - Added hb_fsSetDevMode() Unix branch added.
-- hb_secondsCPU() move inside FlagShip guard instead of HB_EXTENSION.
+- hb_SecondsCPU() move inside FlagShip guard instead of HB_EXTENSION.
 - Fixed invalid handle error in Windows when file() fails (borrowed
   from xHarbour).
 - SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER
@@ -1452,10 +1452,10 @@ RDD
   USE command. For newly created tables the memo type can be set with
   rddInfo(RDDI_MEMOTYPE,<DB_MEMO_DBT|DB_MEMO_FPT|DB_MEMO_SMT> [,<cRdd>])
   It's possible to use any combinations of memo and index files.
-- Added RDDINFO() to set global RDD parameters. See dbinfo.ch for
+- Added rddInfo() to set global RDD parameters. See dbinfo.ch for
   possible actions.
 - Rewritten DBFNTX, now it supports in practice all CDX features with
-  multi tags and many others. With RDDINFO() some important new
+  multi tags and many others. With rddInfo() some important new
   features in DBFNTX can be enabled like increased maximum NTX file
   size up to 4TB, support structural/autoopen indexes, bounding record
   number with index key (like in CDX format what resaolves the
@@ -1464,7 +1464,7 @@ RDD
 - User setable locking DBF mode.
 - Added SIXCDX which is modified version of DBFCDX without trailing
   spaces compresion for SIX3 compatibility.
-- Added ordKeyRelPos([nNewPos])->nOldPos which works with all RDDs
+- Added ordKeyRelPos( [nNewPos] ) -> nOldPos which works with all RDDs
   and returns relative (from 0.0 to 1.0) position in index file but
   much faster than ordKeyPos()/ordKeyCount() combination. It works
   like AdsGetRelKeyPos()/AdsSetRelKeyPos() and the results for CDX are
@@ -1482,9 +1482,9 @@ RDD
 - Fixed possible GPF when "/an/existing/path/" was used as file name.
 - Enable 'Y' (currency) fields, translated to HB_IT_DOUBLE.
 - Fixed some wrong behavior in SORT parameters setting in __dbArrange()
-- Removed hack with COPY TO when lastrec() == 1.
+- Removed hack with COPY TO when LastRec() == 1.
 - Fixed GPF in DBF2TEXT when work are is not in use.
-- __dbDelim() generate 2001 RT error when work area is not in USED()
+- __dbDelim() generate 2001 RT error when work area is not in Used()
   before export file is created.
 - Added DBI_SCOPEDRELATION action. It alow to test if given relation
   on current work area sets scope on child index.
@@ -1496,7 +1496,7 @@ RDD
 - Added new RDD DBFBLOB compatible with Clipper 5.3 DBFBLOB. It
   operates on memo files only (.dbv) without tables (.dbf).
 - Do not report error when empty structure table is passed to
-  DBCREATE().
+  dbCreate().
 - Added support for NIL value in SIX3 FPT files.
 - Changed definition of SUPERTABLE for optional dynamic overloading.
 - Added default SYSNAME method.
@@ -1598,9 +1598,9 @@ The runtime modules
 - Replaced code which made pointer casting without respecting machine
   alignment with proper macros and fixed some problems with byte alignment
 - Added function hb_stackIncrease() and modifications for new stack macros
-- Improved Clipper compatibility in AFILL()
+- Improved Clipper compatibility in AFill()
 - Replace of malloc()/free() that still remains by hb_xgrab()/hb_xfree()
-- Added new functions: HB_IDLESLEEP() and hb_idleSleep()
+- Added new functions: hb_idleSleep() and hb_idleSleep()
 - Add the missing Greek language and codepage files.
 - Added Spanish Modern codepage
 - Synced HB CDP API with xHarbour - added basic Unicode support
@@ -1679,11 +1679,11 @@ The runtime modules
 - Enhanced Debugger.
 - Added missing code to use HB_IT_POINTER just like other value's type.
   For example:
-      p = GET_SOME_POINTER()
-      ? VALTYPE(p)   //prints: 'P'
-      ? p   //prints: 0x12345678
+      p := GET_SOME_POINTER()
+      ? ValType( p )   // prints: "P"
+      ? p   // prints: 0x12345678
 - The support for runtime definition of keycodes mapping was added
-  (translation from terminal key sequences into INKEY() codes)
+  (translation from terminal key sequences into Inkey() codes)
   eterm.map and linux.map are example files with keycode mapping
   HB_GT_KEYMAP() function was added (ncurses GT only)
 - Added possibility to load a character mapping using HB_GT_CHARMAP()
@@ -1706,7 +1706,7 @@ The runtime modules
         //CANCEL:key
         //CANCELEX:keyex
             this flag allows change the keycode of application cancel
-            request (usually Alt-C) - using normal INKEY() keycodes
+            request (usually Alt-C) - using normal Inkey() keycodes
             or extended keycodes (CANCELEX)
             For example:
             myapp //CANCEL:304
@@ -1720,13 +1720,13 @@ The runtime modules
   displaying like in C52.
 - TBColumn - Added PreBlock and PostBlock instance variables for
   Clipper 5.3b compatibility.
-- Fixed TYPE() function to return correct value when an  assigment to
+- Fixed Type() function to return correct value when an  assigment to
   undeclared variable is checked (Clipper creates the memvar variable).
 - TGet - Fixed to correctly display buffer when negative value
   and '0' was pressed in the position next to decimal point.
 - TGet - Fixed support for '9999.' picture.
-- TRANSFORM(1.23,"999.") correctly returns "  1." now instead of empty string.
-- Fixed to correctly check for infinity on Unix STR(LOG(-1)) no longer
+- Transform(1.23,"999.") correctly returns "  1." now instead of empty string.
+- Fixed to correctly check for infinity on Unix Str(Log(-1)) no longer
   core dumps.
 - Fixed infinite support for WatcomC.
 - Fixed to release memory in cases where invalid syntax was macro compiled.
@@ -1743,12 +1743,12 @@ RDD
 - Latest RDD changes synced with xHarbour.
 - Fixed dbCreate() bug that closed an open dbf with same name as newly
   created dbf in a different folder.
-- FIELDPUT() Fixed to accept and ignore field NIL values
+- FieldPut() Fixed to accept and ignore field NIL values
   without runtime error. C52 compatible.
-- Added scopped relations. Now OrdSetRelation() works with DBFCDX like
+- Added scopped relations. Now ordSetRelation() works with DBFCDX like
   it does with Clipper 5.3b.
-- Changes to ADSCOPYTABLE.
-- Changes to ADSCOPYTABLECONTENTS.
+- Changes to ADSCOPYTABLE().
+- Changes to ADSCOPYTABLECONTENTS().
 - Fixed rddMoveRecords() so that copied records, which are
   deleted, maintain their deleted status.
 
@@ -1810,7 +1810,7 @@ Version 0.39 Alpha Build 39 (2002-04-08) tag: build39
 - Delphi integration started
 - Dbfntx basic functionality is ready
 - Added new possibilities in hrb handling
-- __dbSdf() is ready
+- __dbSDF() is ready
 - Enhacements to hbmake,hbzlib
 - Great speed improvement
 - New enhancements and bug fixes in the debugger
@@ -1828,16 +1828,16 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - Added new function __VMVARSLEN() --> nStatics
   It returns the total amount of used statics variables
 - include/hbapi.h Enhanced HB_IS_OBJECT( PHB_ITEM )
-- __ClsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )
-- __ClsAddMsg() call, for ON ERROR clause, modified suplied parameters
+- __clsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )
+- __clsAddMsg() call, for ON ERROR clause, modified suplied parameters
 - ::Super(::oneVar) is now correctly interpreted
 - Freezed Scooping because it was not anymore working after the
   previous fix. Waiting after Alpha build 38 to fix and re-enable it
 - HGF (Harbour GUI multiplatform Framework) started
 - Class HBPersistent added to RTL to provide Harbour objects persistence
 - New PROPERTY | PERSISTENT clause added as a DATA feature
-- New function __ClsGetProperties() added. Syntax:
-  __ClsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
+- New function __clsGetProperties() added. Syntax:
+  __clsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
 - Harbour Profiler foundation functions added
 - New apollo.lib for SIXNSX database connection via sde60.dll
 - RDD Scope handling was changed to handle non-character
@@ -1851,9 +1851,9 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - Added AdsRefreshRecord, AdsIsTableLocked, AdsIsRecordLocked
 - Dave Pearson's bitflags.c, which I ported to Harbour.
   Has functions to use a Harbour string for storing On/Off bit flags
-- Added HB_TRACESTRING() which lets prg code trace a string into same
+- Added hb_traceString() which lets prg code trace a string into same
   trace file/window as C traces
-- Added __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+- Added __TracePrgCalls( <lOnOff> ) --> <lOldValue>
   Turns on | off tracing of PRG-level function and method calls.
   Dumps symbol name just before it's called. This is very useful when
   debugging GPFs as it will trace all PRG-level calls up until the crash.
@@ -1919,9 +1919,9 @@ Version 0.35 Alpha Build 35 (2000-08-15)
 - Garbage collector added
 - Compiler -u, -m support, support for automatically compiled files for
   DO, SET FORMAT TO, etc., memory usage optimizations
-- Added HB_DISKSPACE(), __DBLIST(), __DBAPPEND()
+- Added hb_DiskSpace(), __dbList(), __dbAppend()
 - Fixes: Line numbering, PP, macro compiler, RTL (Extend API, Item API,
-  TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC,
+  Transform(), DiskSpace(), CurDir(), __Get()), HBDOC,
   HBTEST (for Xbase++ and Linux), Documentation, Class engine
 - HBZLIB enhancements
 - MySQL database access contribution started
@@ -1947,7 +1947,7 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 - Far jump pcode support
 - Double number size support in pcode
 - Pcode finalized in the compiler, instead of the output generation modules
-- OS/2 support improved (DISKSPACE(), MEMORY(), locks, etc...)
+- OS/2 support improved (DiskSpace(), Memory(), locks, etc...)
 - Linux/Unix support for file locks and commit
 - DBFCDX index creation support (started)
 - Strong Typing support
@@ -1956,7 +1956,7 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 - Clipper 5.3 compatible MENUITEM, POPUP, TOPBAR classes
 - HBDOC further enhanced
 - RSX32 and RSXNT compiler support
-- SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
+- SETKEY functions, ASort(), SAVESCREEN/RESTSCREEN rewritten in C
 - Extensions (XPP, C53, Harbour) are easier to switch of and better separated
   from Harbour
 - Some fixes for 10 chars support
@@ -1964,7 +1964,7 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 - -gf switch renamed to -go
 - Compiler /BUILD switch added
 - Crew list added to /CREDIT compiler switch
-- CURDIR(), CURDRIVE() fixed
+- CurDir(), CurDrive() fixed
 - Updated national language modules
 - More documented functions
 - Documented all db* related functions
@@ -1979,11 +1979,11 @@ Version 0.33 Alpha Build 33 (2000-04-07)
 
 - Final cleanups on global macro and symbol names
   (date*(), console*(), HB_FUNC())
-- DISKSPACE() enhancements
+- DiskSpace() enhancements
 - Microsoft C++ 8.x compiler support started
 - 10 character symbol support finalized
-- VAL() made fully compatible
-- New functions HB_COMPILER(), HB_FSIZE(), HB_FTEMPNAME(), HB_FTEMPCREATE()
+- Val() made fully compatible
+- New functions hb_Compiler(), hb_FSize(), HB_FTEMPNAME(), hb_FTempCreate()
 - PP bug fixes
 - More functions documented
 - Fixed to compile with Borland C++ in C++ mode
@@ -2026,7 +2026,7 @@ Version 0.32 Alpha Build 32 (2000-03-07)
 - New C include file names
 - Many other small fixes and changes
 - PP __DATE__ and __TIME__ support
-- __TYPEFILE() added
+- __TypeFile() added
 
 ----------------------------------------------------------------------
 Version 0.31a Alpha Build 31a (2000-02-02) tag: build31a
@@ -2040,8 +2040,8 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 - Many changes, fixes, and enhancements to compiler internals
 - Many changes, fixes, and enhancements to RDD system
 - Many changes, fixes, and enhancements to the GT API system
-- Improved SETCURSOR() and SET( _SET_CURSOR )
-- Added FIELDBLOCK() and FIELDWBLOCK()
+- Improved SetCursor() and Set( _SET_CURSOR )
+- Added FieldBlock() and FieldWBlock()
 - The Harbour '-w' command line option can set the maximal level of reported
   warnings. The following levels are supported currently:
    '-w0'         - no warnings
@@ -2054,18 +2054,18 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 - db_brows significantly enhanced
 - Regression testing enhanced and expanded, replacing several standalone
   test modules. Now in tests/regress directory
-- Added FSETDEVMOD()
-- Added READINSERT()
-- Added MEMOLINE()
-- Added undocumented DISPOUTAT()
-- Added DEFPATH() and __DEFPATH()
-- Enhanced VERSION() to optionally include the compiler version used to
+- Added FSetDevMod()
+- Added ReadInsert()
+- Added MemoLine()
+- Added undocumented DispOutAt()
+- Added DefPath() and __DefPath()
+- Enhanced Version() to optionally include the compiler version used to
   create Harbour
 - Enhanced OS() to include more Windows version details
-- Added __INPUT(), __WAIT(), and SETTYPEAHEAD()
+- Added __Input(), __Wait(), and SetTypeahead()
 - Added several undocumented __BOX*() functions
-- Added HB_VALTOSTR()
-- Improved Windows INKEY() support
+- Added hb_ValToStr()
+- Improved Windows Inkey() support
 - Added missing Clipper 5.3 SETs:
   _SET_VIDEOMODE
   _SET_MBLOCKSIZE
@@ -2074,19 +2074,19 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
   _SET_OPTIMIZE
   _SET_AUTOPEN
   _SET_AUTORDER
-- Added undocumented GETE()
+- Added undocumented GetE()
 - Compatibility functions added:
-  __CLASSNEW()
-  __CLASSINSTANCE()
-  __CLASSADD()
-  __CLASSNAME()
-  __CLASSSEL()
-  __CLEAR()
-  __ATCLEAR()
+  __classNew()
+  __classInstance()
+  __classAdd()
+  __className()
+  __classSel()
+  __Clear()
+  __AtClear()
 - Added ANNOUNCE CLIPPER520 and ANNOUNCE CLIPPER530
-- Added PROCFILE()
+- Added ProcFile()
 - Added national message related functions:
-  ISAFFIRM(), ISNEGATIVE(), NATIONMSG(), _NATSORTVER(), _NATMSGVER()
+  IsAffirm(), IsNegative(), NationMsg(), _NatSortVer(), _NatMsgVer()
 - Added Harbour compiler tracing (i.e., debug output)
 - Many changes, fixes, and enhancements to documentation
 - Program added to extract documentation from source code and create NG,
@@ -2094,12 +2094,12 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 - Compile time expression optimizer
 - Some preprocessor fixes
 - Added ADS RDD
-- Added TYPE() function
-- MlCount() and MlPos() functions
+- Added Type() function
+- MLCount() and MLPos() functions
 - Get system completely finished
 - Added HARBOURCMD/CLIPPERCMD environment variables
 - Added support for #pragma directives
-- Enhanced Getenv() function
+- Enhanced GetEnv() function
 - Added //BUILD app command line option
 
 ----------------------------------------------------------------------

@@ -3,10 +3,8 @@
  * Header file for Class commands
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    most of rules rewritten
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

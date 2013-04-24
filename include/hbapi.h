@@ -941,7 +941,7 @@ extern HB_EXPORT HB_SIZE   hb_strnlen( const char * pszText, HB_SIZE nLen ); /* 
 extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT HB_BOOL   hb_compStrToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
-extern HB_EXPORT HB_BOOL   hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by VAL() */
+extern HB_EXPORT HB_BOOL   hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by Val() */
 extern HB_EXPORT HB_BOOL   hb_strToNum( const char * szNum, HB_MAXINT * pnVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
 extern HB_EXPORT HB_BOOL   hb_strnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal ); /* converts string to number, returns HB_TRUE if results is double */
 extern HB_EXPORT int       hb_snprintf( char * buffer, size_t bufsize, const char * format, ... ) HB_PRINTF_FORMAT( 3, 4 ); /* snprintf() equivalent */
@@ -1050,7 +1050,7 @@ extern           void          hb_cmdargUpdate( void ); /* update arguments afte
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern           HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx ); /* Check for command line internal arguments */
+extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
 extern HB_EXPORT void          hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */

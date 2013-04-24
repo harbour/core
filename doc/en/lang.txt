@@ -187,8 +187,8 @@
       Belorussian           be
       Bulgarian             bg
       Catalan               ca
+      Chinese Traditional   zh
       Chinese Simplified    zh_sim
-      Chinese Traditional   zh_tra
       Croatian              hr
       Czech                 cs
       Dutch                 nl

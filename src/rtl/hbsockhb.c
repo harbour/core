@@ -47,43 +47,43 @@
  */
 
 /*
- * HB_SOCKETGETERROR() --> nSocketError
- * HB_SOCKETGETOSERROR() --> nOSError
- * HB_SOCKETERRORSTRING( [ nSocketErrror = hb_socketGetError() ] ) --> cError
- * HB_SOCKETGETSOCKNAME( hSocket ) --> aAddr | NIL
- * HB_SOCKETGETPEERNAME( hSocket ) --> aAddr | NIL
- * HB_SOCKETOPEN( [ nDomain = HB_SOCKET_AF_INET ] , [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
- * HB_SOCKETCLOSE( hSocket ) --> lSuccess
- * HB_SOCKETSHUTDOWN( hSocket, [ nMode = HB_SOCKET_SHUT_RDWR ] ) --> lSuccess
- * HB_SOCKETBIND( hSocket, aAddr ) --> lSuccess
- * HB_SOCKETLISTEN( hSocket, [ iQueueLen = 10 ] ) --> lSuccess
- * HB_SOCKETACCEPT( hSocket, [ @aAddr ], [ nTimeout = FOREVER ] ) --> hConnectionSocket
- * HB_SOCKETCONNECT( hSocket, aAddr, [ nTimeout = FOREVER ] ) --> lSuccess
- * HB_SOCKETSEND( hSocket, cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], [ nTimeout = FOREVER ] ) --> nBytesSent
- * HB_SOCKETSENDTO( hSocket, cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], aAddr, [ nTimeout = FOREVER ] ) --> nBytesSent
- * HB_SOCKETRECV( hSocket, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], [ nTimeout = FOREVER ] ) --> nBytesRecv
- * HB_SOCKETRECVFROM( hSocket, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nFlags = 0 ], @aAddr, [ nTimeout = FOREVER ] ) --> nBytesRecv
- * HB_SOCKETSETBLOCKINGIO( hSocket, lValue ) --> nSuccess
- * HB_SOCKETSETNODELAY( hSocket, lValue ) --> lSuccess
- * HB_SOCKETSETEXCLUSIVEADDR( hSocket, lValue ) --> lSuccess
- * HB_SOCKETSETREUSEADDR( hSocket, lValue ) --> lSuccess
- * HB_SOCKETSETKEEPALIVE( hSocket, lValue ) --> lSuccess
- * HB_SOCKETSETBROADCAST( hSocket, lValue ) --> lSuccess
- * HB_SOCKETSETSNDBUFSIZE( hSocket, nValue ) --> lSuccess
- * HB_SOCKETSETRCVBUFSIZE( hSocket, nValue ) --> lSuccess
- * HB_SOCKETGETSNDBUFSIZE( hSocket, @nValue ) --> lSuccess
- * HB_SOCKETGETRCVBUFSIZE( hSocket, @nValue ) --> lSuccess
- * HB_SOCKETSETMULTICAST( hSocket, [ nFamily = HB_SOCKET_AF_INET ], cAddr ) --> lSuccess
- * HB_SOCKETSELECTREAD( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * HB_SOCKETSELECTWRITE( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * HB_SOCKETSELECTWRITEEX( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * HB_SOCKETSELECT( aRead, lSetRead, aWrite, lSetWrite, aExcep, lSetExcep, [ nTimeout = FOREVER ] ) --> nRet
- * HB_SOCKETRESOLVEINETADDR( cAddr, nPort ) --> aAddr | NIL
- * HB_SOCKETRESOLVEADDR( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> cResolved
- * HB_SOCKETGETHOSTNAME( aAddr ) --> cHostName
- * HB_SOCKETGETHOSTS( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> aHosts
- * HB_SOCKETGETIFACES( [ nFamily ], [ lNoAliases ] ) --> aIfaces
- * HB_SOCKETGETFD( hSocket ) --> nFD
+ * hb_socketGetError() --> nSocketError
+ * hb_socketGetOSError() --> nOSError
+ * hb_socketErrorString( [ nSocketErrror = hb_socketGetError() ] ) --> cError
+ * hb_socketGetSockName( hSocket ) --> aAddr | NIL
+ * hb_socketGetPeerName( hSocket ) --> aAddr | NIL
+ * hb_socketOpen( [ nDomain = HB_SOCKET_AF_INET ] , [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
+ * hb_socketClose( hSocket ) --> lSuccess
+ * hb_socketShutdown( hSocket, [ nMode = HB_SOCKET_SHUT_RDWR ] ) --> lSuccess
+ * hb_socketBind( hSocket, aAddr ) --> lSuccess
+ * hb_socketListen( hSocket, [ iQueueLen = 10 ] ) --> lSuccess
+ * hb_socketAccept( hSocket, [ @aAddr ], [ nTimeout = FOREVER ] ) --> hConnectionSocket
+ * hb_socketConnect( hSocket, aAddr, [ nTimeout = FOREVER ] ) --> lSuccess
+ * hb_socketSend( hSocket, cBuffer, [ nLen = Len( cBuffer ) ], [ nFlags = 0 ], [ nTimeout = FOREVER ] ) --> nBytesSent
+ * hb_socketSendTo( hSocket, cBuffer, [ nLen = Len( cBuffer ) ], [ nFlags = 0 ], aAddr, [ nTimeout = FOREVER ] ) --> nBytesSent
+ * hb_socketRecv( hSocket, @cBuffer, [ nLen = Len( cBuffer ) ], [ nFlags = 0 ], [ nTimeout = FOREVER ] ) --> nBytesRecv
+ * hb_socketRecvFrom( hSocket, @cBuffer, [ nLen = Len( cBuffer ) ], [ nFlags = 0 ], @aAddr, [ nTimeout = FOREVER ] ) --> nBytesRecv
+ * hb_socketSetBlockingIO( hSocket, lValue ) --> nSuccess
+ * hb_socketSetNoDelay( hSocket, lValue ) --> lSuccess
+ * hb_socketSetExclusiveAddr( hSocket, lValue ) --> lSuccess
+ * hb_socketSetReuseAddr( hSocket, lValue ) --> lSuccess
+ * hb_socketSetKeepAlive( hSocket, lValue ) --> lSuccess
+ * hb_socketSetBroadcast( hSocket, lValue ) --> lSuccess
+ * hb_socketSetSndBufSize( hSocket, nValue ) --> lSuccess
+ * hb_socketSetRcvBufSize( hSocket, nValue ) --> lSuccess
+ * hb_socketGetSndBufSize( hSocket, @nValue ) --> lSuccess
+ * hb_socketGetRcvBufSize( hSocket, @nValue ) --> lSuccess
+ * hb_socketSetMulticast( hSocket, [ nFamily = HB_SOCKET_AF_INET ], cAddr ) --> lSuccess
+ * hb_socketSelectRead( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWrite( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWriteEx( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelect( aRead, lSetRead, aWrite, lSetWrite, aExcep, lSetExcep, [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketResolveINetAddr( cAddr, nPort ) --> aAddr | NIL
+ * hb_socketResolveAddr( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> cResolved
+ * hb_socketGetHostName( aAddr ) --> cHostName
+ * hb_socketGetHosts( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> aHosts
+ * hb_socketGetIFaces( [ nFamily ], [ lNoAliases ] ) --> aIfaces
+ * hb_socketGetFD( hSocket ) --> nFD
  */
 
 #include "hbapiitm.h"

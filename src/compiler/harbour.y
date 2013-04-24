@@ -91,7 +91,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * );
 static PHB_EXPR hb_compArrayDimPush( PHB_EXPR pInitValue, HB_COMP_DECL );
 static void hb_compVariableDim( const char *, PHB_EXPR, HB_COMP_DECL );
 
-static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEach );
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, int iForEachDir );
 static void hb_compForEnd( HB_COMP_DECL, const char *szVarName );
 static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int descend );
 static void hb_compEnumNext( HB_COMP_DECL, PHB_EXPR pExpr, int descend );
@@ -1551,7 +1551,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   $<asExpr>$ = hb_compExprGenPush( hb_compExprAssign( $2, $4, HB_COMP_PARAM ), HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( $2 ) )
                   {
-                     hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( $2 ), HB_FALSE );
+                     hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( $2 ), 0 );
                   }
                }
              TO ExpList StepExpr                      /* 6  7  8 */
@@ -2416,7 +2416,7 @@ static void hb_compVariableDim( const char * szName, PHB_EXPR pInitValue, HB_COM
    }
 }
 
-static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEach )
+static void hb_compForStart( HB_COMP_DECL, const char *szVarName, int iForEachDir )
 {
    PHB_ENUMERATOR pEnumVar;
 
@@ -2448,12 +2448,12 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEa
       pLast->pNext = ( PHB_ENUMERATOR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = pLast->pNext;
    }
-   pEnumVar->szName   = szVarName;
-   pEnumVar->bForEach = bForEach;
-   pEnumVar->pNext    = NULL;
+   pEnumVar->szName      = szVarName;
+   pEnumVar->iForEachDir = iForEachDir;
+   pEnumVar->pNext       = NULL;
 }
 
-static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
+static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName, int * piDir )
 {
    PHB_ENUMERATOR pEnumVar;
 
@@ -2464,7 +2464,8 @@ static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
       {
          if( strcmp( pEnumVar->szName, szVarName ) == 0 )
          {
-            if( pEnumVar->bForEach )
+            * piDir = pEnumVar->iForEachDir;
+            if( * piDir != 0 )
             {
                /* only if it is FOR EACH enumerator
                 * generate warning if it is FOR/NEXT loop
@@ -2502,7 +2503,7 @@ static HB_COMP_CARGO2_FUNC( hb_compEnumEvalStart )
    const char * szName = hb_compExprAsSymbol( ( PHB_EXPR ) cargo );
 
    if( szName )
-      hb_compForStart( HB_COMP_PARAM, szName, HB_TRUE );
+      hb_compForStart( HB_COMP_PARAM, szName, HB_COMP_PARAM->fDescend ? -1 : 1 );
 
    hb_compExprGenPush( ( PHB_EXPR ) dummy, HB_COMP_PARAM );  /* expression */
    hb_compExprGenPush( ( PHB_EXPR ) cargo, HB_COMP_PARAM );  /* variable */
@@ -2517,6 +2518,7 @@ static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
    }
 
+   HB_COMP_PARAM->fDescend = descend < 0;
    ulLen = hb_compExprListEval2( HB_COMP_PARAM, pVars, pExprs, hb_compEnumEvalStart );
 
    if( ulLen > 255 )
@@ -2811,13 +2813,27 @@ static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr )
    {
       const char * szMessage = pExpr->value.asMessage.szMessage + 6;
 
-      if( strcmp( "INDEX", szMessage ) == 0 ||
-          strcmp( "KEY",   szMessage ) == 0 ||
-          strcmp( "BASE",  szMessage ) == 0 ||
-          strcmp( "VALUE", szMessage ) == 0 )
+      if( strcmp( "INDEX",   szMessage ) == 0 ||
+          strcmp( "KEY",     szMessage ) == 0 ||
+          strcmp( "BASE",    szMessage ) == 0 ||
+          strcmp( "VALUE",   szMessage ) == 0 ||
+          strcmp( "ISFIRST", szMessage ) == 0 ||
+          strcmp( "ISLAST",  szMessage ) == 0 )
       {
-         if( ! hb_compForEachVarError( HB_COMP_PARAM, pExpr->value.asMessage.pObject->value.asSymbol.name ) )
+         int iDir = 0;
+         if( ! hb_compForEachVarError( HB_COMP_PARAM, pExpr->value.asMessage.pObject->value.asSymbol.name, &iDir ) )
+         {
             pExpr->value.asMessage.pObject->ExprType = HB_ET_VARREF;
+#if 0
+            if( iDir < 0 )
+            {
+               if( strcmp( "ISFIRST", szMessage ) == 0 )
+                  pExpr->value.asMessage.szMessage = "__ENUMISLAST";
+               else if( strcmp( "ISLAST",  szMessage ) == 0 )
+                  pExpr->value.asMessage.szMessage = "__ENUMISFIRST";
+            }
+#endif
+         }
       }
    }
 

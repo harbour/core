@@ -87,7 +87,7 @@ HB_FUNC( FILESTATS )
 
       if( stat( hb_parc( 1 ), &statbuf ) == 0 )
       {
-         // determine if we can read/write/execute the file
+         /* determine if we can read/write/execute the file */
          HB_FATTR usAttr, ushbAttr = 0;
          time_t   ftime;
 #if defined( HB_HAS_LOCALTIME_R )

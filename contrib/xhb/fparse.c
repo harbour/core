@@ -53,7 +53,7 @@
  */
 
 /*
-   FPARSE( cFile, cDelimiter ) -> array
+   FParse( cFile, cDelimiter ) -> array
 
    Purpose:
       Parse a delimited text file.

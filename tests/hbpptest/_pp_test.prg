@@ -1,15 +1,18 @@
-/* Test file to check the preprocessor.
+/*
+ * Test file to check the preprocessor.
  *
  * Usage:
- * 1) Run compare.bat for a comparison between Harbour and CA-Cl*pper.
- * 2) Results will be stored in pp_test.diff
+ * 1) Execute compare.hb script for a comparison between Harbour and CA-Cl*pper:
+ *       'hbrun compare'
+ * 2) Results will be stored in pp_test.dif
  *
  * Notes:
- * - clipper.exe and diff.exe needs to be in the path.
+ * - clipper.exe (5.x) and diff executable need to be in the path.
+ * - requires 32-bit Windows OS
  *
  * Ignore most of errors reported during compilation.
  *
-*/
+ */
 
 PROCEDURE Main()
 

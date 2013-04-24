@@ -634,6 +634,7 @@ DYNAMIC hb_keyClear
 DYNAMIC hb_keyCode
 DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
+DYNAMIC hb_keyMod
 DYNAMIC hb_keyNext
 DYNAMIC hb_keyPut
 DYNAMIC hb_keySetLast
@@ -1400,9 +1401,11 @@ DYNAMIC __HBVMInit
 DYNAMIC __hb_langSelect
 DYNAMIC __i18n_hashJoin
 DYNAMIC __i18n_hashTable
+DYNAMIC __i18n_potArrayClean
 DYNAMIC __i18n_potArrayJoin
 DYNAMIC __i18n_potArrayLoad
 DYNAMIC __i18n_potArraySave
+DYNAMIC __i18n_potArraySort
 DYNAMIC __i18n_potArrayToHash
 DYNAMIC __i18n_potArrayTrans
 DYNAMIC __Input

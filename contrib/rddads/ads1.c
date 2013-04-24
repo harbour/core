@@ -166,8 +166,13 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
       {
          UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ] = { 0 };
          UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
+         UNSIGNED32 ulErrCode;
 
-         AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
+         AdsGetLastError( &ulErrCode, aucError, &usLength );
+         if( ulErrCode != ( UNSIGNED32 ) errSubCode )
+         {
+            AdsGetErrorString( ( UNSIGNED32 ) errSubCode, aucError, &usLength );
+         }
          hb_errPutDescription( pError, ( char * ) aucError );
       }
       else
@@ -2711,7 +2716,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             long lDate = hb_itemGetDL( pItem );
 
             /* ADS does not support dates before 0001-01-01. It generates corructed
-               DBF records and fires ADS error 5095 on FIELDGET() later. [Mindaugas] */
+               DBF records and fires ADS error 5095 on FieldGet() later. [Mindaugas] */
             if( pField->uiLen != 4 && lDate < 1721426 )  /* 1721426 ~= 0001-01-01 */
                lDate = 0;
 
@@ -3455,7 +3460,11 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 #endif
 
          if( u32RetVal != AE_SUCCESS )
+         {
+            commonError( pArea, EG_OPEN, ( HB_ERRCODE ) u32RetVal, 0, pOpenInfo->abName, 0, NULL );
             AdsCloseSQLStatement( hStatement );
+            return HB_FAILURE;
+         }
       }
       else
       {

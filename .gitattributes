@@ -10,6 +10,7 @@ ChangeLog.txt ident
 *.c       text
 *.cfg     text
 *.ch      text
+*.cpp     text
 *.css     text
 *.def     text
 *.dif     text
@@ -19,11 +20,11 @@ ChangeLog.txt ident
 *.hbm     text
 *.hbp     text
 *.hbx     text
-*.htm     text
 *.html    text
 *.in      text
 *.ini     text
 *.js      text
+*.log     text
 *.m       text
 *.md      text
 *.mft     text
@@ -39,10 +40,12 @@ ChangeLog.txt ident
 *.sx      text
 *.tpl     text
 *.txt     text
+*.ucf     text
 *.vbs     text
 *.xml     text
 *.xsl     text
 *.y       text
+*.yml     text
 *.yyc     text
 *.yyh     text
 
@@ -72,3 +75,11 @@ ChangeLog.txt ident
 *.png     binary
 *.sq3     binary
 *.tif     binary
+
+# TOTEST:
+#*.c       text diff=cpp
+#*.h       text diff=cpp
+#*.htm     text diff=html
+#*.html    text diff=html
+#*.m       text diff=objc
+#*.rb      text diff=ruby

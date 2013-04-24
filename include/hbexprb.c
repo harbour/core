@@ -1644,7 +1644,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_PARE )
                {
                   /* var := (somevalue, &macro) - in Xbase++ compatibility mode
-                   * EVAL( {|| &macro} ) - in all cases
+                   * Eval( {|| &macro} ) - in all cases
                    */
                   HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHPARE );
                }
@@ -4527,7 +4527,7 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
       {
          /* Clipper allows for list expressions in a codeblock
           * macro := "1,2"
-          * EVAL( {|| &macro} )
+          * Eval( {|| &macro} )
           */
          pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
       }
@@ -4551,7 +4551,7 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
       /* NOTE: This will genereate warnings if constant value is
        * used as an expression - some operators will generate it too
        * e.g.
-       * EVAL( {|| 3+5, func()} )
+       * Eval( {|| 3+5, func()} )
        */
 #if defined( HB_MACRO_SUPPORT )
       if( pNext )

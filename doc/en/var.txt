@@ -838,7 +838,7 @@
       PROCEDURE Main()
          ? ValType( Array( 1 ) )   // "A"
          ? ValType( {|| 1 + 1 } )  // "B"
-         ? ValType( "HARBOUR" )    // "C"
+         ? ValType( "Harbour" )    // "C"
          ? ValType( Date() )       // "D"
          ? ValType( .T. )          // "L"
          ? ValType( 1 )            // "N"

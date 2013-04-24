@@ -1,51 +1,4 @@
-/*
- * Harbour Project source code:
- * Language Support Module (es)
- *
- * Copyright 2000 Jose Lalin <dezac@corevia.com>
- * Copyright 2000 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
- *
- */
+/* Last Translator: hbtest (harbour syenar.net) */
 
 #include "hbapilng.h"
 
@@ -54,12 +7,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "es",                        /* ISO ID (2 chars) */
-      "Spanish",                   /* Name (in English) */
-      "Español",                   /* Name (in native language) */
-      "ES",                        /* RFC ID */
-      "UTF8",                      /* Codepage */
-      "",                          /* Version */
+      "es",
+      "Spanish",
+      "Español",
+      "",
+      "UTF8",
+      "",
 
       /* Month names */
 
@@ -100,7 +53,7 @@ static HB_LANG s_lang =
       "Rango: ",
       " - ",
       "S/N",
-      "EXPRESION NO VÁLIDA",
+      "EXPRESIÓN NO VÁLIDA",
 
       /* Error description names */
 
@@ -144,17 +97,17 @@ static HB_LANG s_lang =
       "Se requiere uso exclusivo",
       "Se requiere bloqueo",
       "Escritura no autorizada",
-      "Fallo en el bloqueo de adición",
+      "Fallo en el bloqueo al añadir",
       "Fallo en bloqueo",
       "",
       "",
       "",
-      "",
+      "Error en destructor del objecto",
       "acceso al array",
       "asignación del array",
       "dimensión del array",
       "no es un array",
-      "conditional",
+      "condicional",
 
       /* Internal error names */
 
@@ -170,7 +123,7 @@ static HB_LANG s_lang =
       "hb_xrealloc no puede reubicar la memoria",
       "hb_xfree llamado con un puntero no válido",
       "hb_xfree llamado con un puntero nulo",
-      "No se puede localizar el procedimiento de inicio: \'%s\'",
+      "No se puede localizar el procedimiento de inicio: '%s'",
       "No hay procedimiento de inicio",
       "Opcode no soportado por la VM",
       "Símbolo item esperado desde %s",

@@ -317,6 +317,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "en-zw"
       CASE "en"         ; cCtryHb := "EN" ; EXIT
       CASE "eo"         ; EXIT
+      CASE "es-419"
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -462,6 +463,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "zh-mo"      ; EXIT
       CASE "zh-sg"      ; EXIT
       CASE "zh-tw"      ; EXIT
+      CASE "zh"         ; EXIT
       ENDSWITCH
    ENDIF
 

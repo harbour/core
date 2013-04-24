@@ -264,8 +264,8 @@ HB_FUNC( HB_PQCOPYFROMWA )
       pgCopyContext * context;
       char *          szInit;
       char *          szFields = NULL;
-      char *          szTmp    = NULL;
-      PGresult *      pgResult = NULL;
+      char *          szTmp;
+      PGresult *      pgResult;
       HB_BOOL         bFail    = HB_FALSE;
 
       pItem = hb_itemNew( NULL );

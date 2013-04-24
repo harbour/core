@@ -100,7 +100,7 @@
    simple 'struct sockaddr' is not large enough for such usage:
       #define HB_HAS_SOCKADDR_STORAGE
 
-   timeval parameter used in select() function is updated by kernel/CRTL
+   timeval parameter used in Select() function is updated by kernel/CRTL
    and decreased by the amount of time the function was waiting:
       #define HB_HAS_SELECT_TIMER
 
@@ -2213,7 +2213,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    {
       /* it's necessary to set non blocking IO to be sure that application
        * will not be frozen inside accept(). It may happen if some asynchronous
-       * network error appear after above select() or when other thread
+       * network error appear after above Select() or when other thread
        * accepts incoming connection (concurrent calls).
        */
       ret = timeout < 0 ? 0 : hb_socketSetBlockingIO( sd, HB_FALSE );

@@ -21,111 +21,119 @@
 #define DBNAME    "net:" + DBSERVER + ":" + hb_ntos( DBPORT ) + ":" + ;
                   DBPASSWD + ":" + DBDIR + "/" + DBFILE
 
-request DBFCDX
+REQUEST DBFCDX
 
-request HB_DIREXISTS
-request HB_DIRCREATE
+REQUEST hb_DirExists
+REQUEST hb_DirCreate
 
-proc main()
-   local pSockSrv, lExists
+PROCEDURE Main()
 
-   set exclusive off
+   LOCAL pSockSrv, lExists
+
+   SET EXCLUSIVE OFF
    rddSetDefault( "DBFCDX" )
 
-   pSockSrv := netio_mtserver( DBPORT,,, /* RPC */ .T., DBPASSWD )
-   if empty( pSockSrv )
+   pSockSrv := netio_MTServer( DBPORT,,, /* RPC */ .T., DBPASSWD )
+   IF Empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
-      wait "Press any key to exit..."
-      quit
-   endif
+      WAIT "Press any key to exit..."
+      QUIT
+   ENDIF
 
    ? "NETIO server activated."
    hb_idleSleep( 0.1 )
-   wait
+   WAIT
 
    ?
-   ? "NETIO_CONNECT():", netio_connect( DBSERVER, DBPORT, , DBPASSWD )
+   ? "netio_Connect():", netio_Connect( DBSERVER, DBPORT, , DBPASSWD )
    ?
 
-   lExists := netio_funcexec( "HB_DirExists", "./data" )
+   lExists := netio_FuncExec( "HB_DirExists", "./data" )
    ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
-   if ! lExists
+   IF ! lExists
       ? "Creating directory './data' ->", ;
-       iif( netio_funcexec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
-   endif
+         iif( netio_FuncExec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
+   ENDIF
 
    ? "'" + DBNAME + "'"
    createdb( DBNAME )
    testdb( DBNAME )
-   wait
+   WAIT
 
    ?
    ? "table exists:", dbExists( DBNAME )
-   wait
+   WAIT
 
    ?
    ? "delete table with indexes:", dbDrop( DBNAME )
    ? "table exists:", dbExists( DBNAME )
-   wait
+   WAIT
 
-   ? "NETIO_DISCONNECT():", netio_disconnect( DBSERVER, DBPORT )
+   ? "netio_Disconnect():", netio_Disconnect( DBSERVER, DBPORT )
 
    ?
    ? "stopping the server..."
-   netio_serverstop( pSockSrv, .t. )
-return
+   netio_ServerStop( pSockSrv, .T. )
 
-proc createdb( cName )
-   local n
+   RETURN
 
-   dbCreate( cName, {{"F1", "C", 20, 0},;
-                     {"F2", "M",  4, 0},;
-                     {"F3", "N", 10, 2},;
-                     {"F4", "T",  8, 0}} )
-   ? "create neterr:", neterr(), hb_osError()
-   use (cName)
-   ? "use neterr:", neterr(), hb_osError()
-   while lastrec() < 100
+PROCEDURE createdb( cName )
+
+   LOCAL n
+
+   dbCreate( cName, { ;
+      { "F1", "C", 20, 0 }, ;
+      { "F2", "M",  4, 0 }, ;
+      { "F3", "N", 10, 2 }, ;
+      { "F4", "T",  8, 0 } } )
+   ? "create neterr:", NetErr(), hb_osError()
+   USE ( cName )
+   ? "use neterr:", NetErr(), hb_osError()
+   WHILE LastRec() < 100
       dbAppend()
-      n := recno() - 1
-      field->F1 := chr( n % 26 + asc( "A" ) ) + " " + time()
+      n := RecNo() - 1
+      field->F1 := Chr( n % 26 + Asc( "A" ) ) + " " + Time()
       field->F2 := field->F1
       field->F3 := n / 100
-      field->F4 := hb_dateTime()
-   enddo
-   index on field->F1 tag T1
-   index on field->F3 tag T3
-   index on field->F4 tag T4
-   close
+      field->F4 := hb_DateTime()
+   ENDDO
+   INDEX ON field->F1 TAG T1
+   INDEX ON field->F3 TAG T3
+   INDEX ON field->F4 TAG T4
+   CLOSE
    ?
-return
 
-proc testdb( cName )
-   local i, j
-   use (cName)
-   ? "used:", used()
-   ? "nterr:", neterr()
-   ? "alias:", alias()
-   ? "lastrec:", lastrec()
+   RETURN
+
+PROCEDURE testdb( cName )
+
+   LOCAL i, j
+
+   USE ( cName )
+   ? "used:", Used()
+   ? "nterr:", NetErr()
+   ? "alias:", Alias()
+   ? "lastrec:", LastRec()
    ? "ordCount:", ordCount()
-   for i:=1 to ordCount()
+   FOR i := 1 TO ordCount()
       ordSetFocus( i )
       ? i, "name:", ordName(), "key:", ordKey(), "keycount:", ordKeyCount()
-   next
+   NEXT
    ordSetFocus( 1 )
-   dbgotop()
-   while ! eof()
-      if ! field->F1 == field->F2
-         ? "error at record:", recno()
+   dbGoTop()
+   WHILE ! Eof()
+      IF ! field->F1 == field->F2
+         ? "error at record:", RecNo()
          ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"
-      endif
+      ENDIF
       dbSkip()
-   enddo
-   wait
-   i := row()
-   j := col()
-   dbgotop()
-   browse()
-   setpos( i, j )
-   close
-return
+   ENDDO
+   WAIT
+   i := Row()
+   j := Col()
+   dbGoTop()
+   Browse()
+   SetPos( i, j )
+   CLOSE
+
+   RETURN

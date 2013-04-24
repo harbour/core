@@ -19,179 +19,196 @@
 #define DBFILE    "_tst_"
 
 #define DBNAME    "net:" + DBSERVER + ":" + hb_ntos( DBPORT ) + ":" + ;
-                  DBPASSWD + ":" + DBDIR + "/" + DBFILE
+      DBPASSWD + ":" + DBDIR + "/" + DBFILE
 
-request DBFCDX
+REQUEST DBFCDX
 
-request HB_DIREXISTS
-request HB_DIRCREATE
-request HB_DATETIME
+REQUEST hb_DirExists
+REQUEST hb_DirCreate
+REQUEST hb_DateTime
 
-proc main()
-   local pSockSrv, lExists, nStream1, nStream2, nSec, xData
+PROCEDURE Main()
 
-   set exclusive off
+   LOCAL pSockSrv, lExists, nStream1, nStream2, nSec, xData
+
+   SET EXCLUSIVE OFF
    rddSetDefault( "DBFCDX" )
 
-   pSockSrv := netio_mtserver( DBPORT,,, /* RPC */ .T., DBPASSWD )
-   if empty( pSockSrv )
+   pSockSrv := netio_MTServer( DBPORT,,, /* RPC */ .T., DBPASSWD )
+   IF Empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
-      wait "Press any key to exit..."
-      quit
-   endif
+      WAIT "Press any key to exit..."
+      QUIT
+   ENDIF
 
    ? "NETIO server activated."
    hb_idleSleep( 0.1 )
-   wait
+   WAIT
 
    ?
-   ? "NETIO_CONNECT():", netio_connect( DBSERVER, DBPORT, , DBPASSWD )
+   ? "netio_Connect():", netio_Connect( DBSERVER, DBPORT, , DBPASSWD )
    ?
 
-   netio_procexec( "QOut", "PROCEXEC", "P2", "P3", "P4" )
-   netio_funcexec( "QOut", "FUNCEXEC", "P2", "P3", "P4" )
-   ? "SERVER TIME:", netio_funcexec( "hb_dateTime" )
+   netio_ProcExec( "QOut", "PROCEXEC", "P2", "P3", "P4" )
+   netio_FuncExec( "QOut", "FUNCEXEC", "P2", "P3", "P4" )
+   ? "SERVER TIME:", netio_FuncExec( "hb_dateTime" )
    ?
-   wait
+   WAIT
 
-   nStream1 := NETIO_OPENITEMSTREAM( "reg_stream" )
+   nStream1 := netio_OpenItemStream( "reg_stream" )
    ? "NETIO_OPENITEMSTREAM:", nStream1
-   nStream2 := NETIO_OPENDATASTREAM( "reg_charstream" )
+   nStream2 := netio_OpenDataStream( "reg_charstream" )
    ? "NETIO_OPENDATASTREAM:", nStream2
 
    hb_idleSleep( 3 )
-   ? "NETIO_GETDATA 1:", hb_valToExp( NETIO_GETDATA( nStream1 ) )
-   ? "NETIO_GETDATA 2:", hb_valToExp( NETIO_GETDATA( nStream2 ) )
-   nSec := seconds() + 3
-   while seconds() < nSec
-      xData := NETIO_GETDATA( nStream1 )
-      if ! empty( xData )
-         ? hb_valToExp( xData )
-      endif
-      xData := NETIO_GETDATA( nStream2 )
-      if ! empty( xData )
-         ?? "", hb_valToExp( xData )
-      endif
-   enddo
-   wait
-   ? "NETIO_GETDATA 1:", hb_valToExp( NETIO_GETDATA( nStream1 ) )
-   ? "NETIO_GETDATA 2:", hb_valToExp( NETIO_GETDATA( nStream2 ) )
-   wait
+   ? "NETIO_GETDATA 1:", hb_ValToExp( netio_GetData( nStream1 ) )
+   ? "NETIO_GETDATA 2:", hb_ValToExp( netio_GetData( nStream2 ) )
+   nSec := Seconds() + 3
+   WHILE Seconds() < nSec
+      xData := netio_GetData( nStream1 )
+      IF ! Empty( xData )
+         ? hb_ValToExp( xData )
+      ENDIF
+      xData := netio_GetData( nStream2 )
+      IF ! Empty( xData )
+         ?? "", hb_ValToExp( xData )
+      ENDIF
+   ENDDO
+   WAIT
+   ? "NETIO_GETDATA 1:", hb_ValToExp( netio_GetData( nStream1 ) )
+   ? "NETIO_GETDATA 2:", hb_ValToExp( netio_GetData( nStream2 ) )
+   WAIT
 
-   lExists := netio_funcexec( "HB_DirExists", "./data" )
-   ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
-   if ! lExists
+   lExists := netio_FuncExec( "hb_DirExists", "./data" )
+   ? "Directory './data'", iif( lExists, "exists", "not exists" )
+   IF ! lExists
       ? "Creating directory './data' ->", ;
-       iif( netio_funcexec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
-   endif
+         iif( netio_FuncExec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
+   ENDIF
 
    createdb( DBNAME )
    testdb( DBNAME )
-   wait
+   WAIT
 
    ?
    ? "table exists:", dbExists( DBNAME )
-   wait
+   WAIT
 
    ?
    ? "delete table with indexes:", dbDrop( DBNAME )
    ? "table exists:", dbExists( DBNAME )
-   wait
+   WAIT
 
-   ? "NETIO_GETDATA 1:", hb_valToExp( NETIO_GETDATA( nStream1 ) )
-   ? "NETIO_GETDATA 2:", hb_valToExp( NETIO_GETDATA( nStream2 ) )
-   ? "NETIO_DISCONNECT():", netio_disconnect( DBSERVER, DBPORT )
-   ? "NETIO_CLOSESTREAM 1:", NETIO_CLOSESTREAM( nStream1 )
-   ? "NETIO_CLOSESTREAM 2:", NETIO_CLOSESTREAM( nStream2 )
+   ? "NETIO_GETDATA 1:", hb_ValToExp( netio_GetData( nStream1 ) )
+   ? "NETIO_GETDATA 2:", hb_ValToExp( netio_GetData( nStream2 ) )
+   ? "netio_Disconnect():", netio_Disconnect( DBSERVER, DBPORT )
+   ? "NETIO_CLOSESTREAM 1:", netio_CloseStream( nStream1 )
+   ? "NETIO_CLOSESTREAM 2:", netio_CloseStream( nStream2 )
    hb_idleSleep( 2 )
    ?
    ? "stopping the server..."
-   netio_serverstop( pSockSrv, .t. )
-return
+   netio_ServerStop( pSockSrv, .T. )
 
-proc createdb( cName )
-   local n
+   RETURN
 
-   dbCreate( cName, {{"F1", "C", 20, 0},;
-                     {"F2", "M",  4, 0},;
-                     {"F3", "N", 10, 2},;
-                     {"F4", "T",  8, 0}} )
-   ? "create neterr:", neterr(), hb_osError()
-   use (cName)
-   ? "use neterr:", neterr(), hb_osError()
-   while lastrec() < 100
+PROCEDURE createdb( cName )
+
+   LOCAL n
+
+   dbCreate( cName, { ;
+      { "F1", "C", 20, 0 }, ;
+      { "F2", "M",  4, 0 }, ;
+      { "F3", "N", 10, 2 }, ;
+      { "F4", "T",  8, 0 } } )
+   ? "create neterr:", NetErr(), hb_osError()
+   USE ( cName )
+   ? "use neterr:", NetErr(), hb_osError()
+   WHILE LastRec() < 100
       dbAppend()
-      n := recno() - 1
-      field->F1 := chr( n % 26 + asc( "A" ) ) + " " + time()
+      n := RecNo() - 1
+      field->F1 := Chr( n % 26 + Asc( "A" ) ) + " " + Time()
       field->F2 := field->F1
       field->F3 := n / 100
-      field->F4 := hb_dateTime()
-   enddo
-   index on field->F1 tag T1
-   index on field->F3 tag T3
-   index on field->F4 tag T4
-   close
+      field->F4 := hb_DateTime()
+   ENDDO
+   INDEX ON field->F1 TAG T1
+   INDEX ON field->F3 TAG T3
+   INDEX ON field->F4 TAG T4
+   CLOSE
    ?
-return
 
-proc testdb( cName )
-   local i, j
-   use (cName)
-   ? "used:", used()
-   ? "nterr:", neterr()
-   ? "alias:", alias()
-   ? "lastrec:", lastrec()
+   RETURN
+
+PROCEDURE testdb( cName )
+
+   LOCAL i, j
+
+   USE ( cName )
+   ? "used:", Used()
+   ? "nterr:", NetErr()
+   ? "alias:", Alias()
+   ? "lastrec:", LastRec()
    ? "ordCount:", ordCount()
-   for i:=1 to ordCount()
+   FOR i := 1 TO ordCount()
       ordSetFocus( i )
       ? i, "name:", ordName(), "key:", ordKey(), "keycount:", ordKeyCount()
-   next
+   NEXT
    ordSetFocus( 1 )
-   dbgotop()
-   while ! eof()
-      if ! field->F1 == field->F2
-         ? "error at record:", recno()
+   dbGoTop()
+   WHILE ! Eof()
+      IF ! field->F1 == field->F2
+         ? "error at record:", RecNo()
          ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"
-      endif
+      ENDIF
       dbSkip()
-   enddo
-   wait
-   i := row()
-   j := col()
-   dbgotop()
-   browse()
-   setpos( i, j )
-   close
-return
+   ENDDO
+   WAIT
+   i := Row()
+   j := Col()
+   dbGoTop()
+   Browse()
+   SetPos( i, j )
+   CLOSE
 
-func reg_stream( pConnSock, nStream )
-   ? PROCNAME(), nStream
+   RETURN
+
+FUNCTION reg_stream( pConnSock, nStream )
+
+   ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_timer(), pConnSock, nStream ) )
-return nStream
 
-func reg_charstream( pConnSock, nStream )
-   ? PROCNAME(), nStream
+   RETURN nStream
+
+FUNCTION reg_charstream( pConnSock, nStream )
+
+   ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_charstream(), pConnSock, nStream ) )
-return nStream
 
-static func rpc_timer( pConnSock, nStream )
-   while .t.
-      if ! netio_srvSendItem( pConnSock, nStream, time() )
+   RETURN nStream
+
+STATIC FUNCTION rpc_timer( pConnSock, nStream )
+
+   WHILE .T.
+      IF ! netio_SrvSendItem( pConnSock, nStream, Time() )
          ? "CLOSED STREAM:", nStream
-         exit
-      endif
+         EXIT
+      ENDIF
       hb_idleSleep( 1 )
-   enddo
-return nil
+   ENDDO
 
-static func rpc_charstream( pConnSock, nStream )
-   local n := 0
-   while .t.
-      if ! netio_srvSendData( pConnSock, nStream, chr( asc( "A" ) + n ) )
+   RETURN NIL
+
+STATIC FUNCTION rpc_charstream( pConnSock, nStream )
+
+   LOCAL n := 0
+
+   WHILE .T.
+      IF ! netio_SrvSendData( pConnSock, nStream, Chr( Asc( "A" ) + n ) )
          ? "CLOSED STREAM:", nStream
-         exit
-      endif
-      n := int( ( n + 1 ) % 26 )
+         EXIT
+      ENDIF
+      n := Int( ( n + 1 ) % 26 )
       hb_idleSleep( 0.1 )
-   enddo
-return nil
+   ENDDO
+
+   RETURN NIL
