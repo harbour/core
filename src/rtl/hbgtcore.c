@@ -2806,22 +2806,49 @@ static void hb_gt_def_InkeyPollDo( PHB_GT pGT )
 
    if( iKey )
    {
-      switch( iKey )
+      if( HB_INKEY_ISEXT( iKey ) )
       {
-         case HB_BREAK_FLAG:           /* Check for Ctrl+Break */
-         case K_ALT_C:                 /* Check for normal Alt+C */
-            if( hb_setGetCancel() )
+         if( HB_INKEY_FLAGS( iKey ) & HB_KF_ALT )
+         {
+            switch( HB_INKEY_VALUE( iKey ) )
             {
-               hb_vmRequestCancel();   /* Request cancellation */
-               return;
+               case 'C':
+               case 'c':
+                  if( hb_setGetCancel() )
+                  {
+                     hb_vmRequestCancel();   /* Request cancellation */
+                     return;
+                  }
+                  break;
+               case 'D':
+               case 'd':
+                  if( hb_setGetDebug() )
+                  {
+                     hb_vmRequestDebug();    /* Request the debugger */
+                     return;
+                  }
             }
-            break;
-         case K_ALT_D:                 /* Check for Alt+D */
-            if( hb_setGetDebug() )
-            {
-               hb_vmRequestDebug();    /* Request the debugger */
-               return;
-            }
+         }
+      }
+      else
+      {
+         switch( iKey )
+         {
+            case HB_BREAK_FLAG:           /* Check for Ctrl+Break */
+            case K_ALT_C:                 /* Check for normal Alt+C */
+               if( hb_setGetCancel() )
+               {
+                  hb_vmRequestCancel();   /* Request cancellation */
+                  return;
+               }
+               break;
+            case K_ALT_D:                 /* Check for Alt+D */
+               if( hb_setGetDebug() )
+               {
+                  hb_vmRequestDebug();    /* Request the debugger */
+                  return;
+               }
+         }
       }
       HB_GTSELF_INKEYPUT( pGT, iKey );
    }
