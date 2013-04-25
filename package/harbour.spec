@@ -62,6 +62,7 @@
 %define hb_crs    export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
+%define hb_ssl    export HB_WITH_OPENSSL=%{?_with_openssl:yes}%{!?_with_openssl:no}
 %define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
@@ -75,7 +76,7 @@
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_ssl} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -399,9 +400,10 @@ make install %{?_smp_mflags}
 
 %{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
+%{!?_with_openssl:rm -f $HB_INSTALL_LIB/libhbssl.a}
 rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
 rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
-rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,harbour.ucf}
+rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,check.hb,commit.hb,harbour.ucf}
 rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/liblibhpdf.a \
@@ -518,7 +520,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libsddsqlt3.a
 %{_libdir}/%{name}/libhbsms.a
-%([ -f %{buildroot}%{_libdir}/%{name}/libhbssl.a ] && echo %{_libdir}/%{name}/libhbssl.a)
+%{?_with_openssl:%{_libdir}/%{name}/libhbssl.a}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
