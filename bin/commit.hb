@@ -36,6 +36,8 @@
 PROCEDURE Main()
 
    LOCAL cVCS
+   LOCAL cVCSDir
+   LOCAL cRepoRoot
    LOCAL aFiles
    LOCAL aChanges
    LOCAL cLog
@@ -50,11 +52,11 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   cVCS := VCSDetect()
+   cVCS := VCSDetect( @cVCSDir, @cRepoRoot )
 
    IF cVCS == "git"
-      InstallHook( "pre-commit"        , hb_StrFormat( "exec hbrun %1$s --check-only", CommitScript() ) )
-//    InstallHook( "prepare-commit-msg", hb_StrFormat( "exec hbrun %1$s $1 --prepare-commit", CommitScript() )
+      InstallHook( cVCSDir, "pre-commit"        , hb_StrFormat( "exec hbrun %1$s --check-only", CommitScript() ) )
+//    InstallHook( cVCSDir, "prepare-commit-msg", hb_StrFormat( "exec hbrun %1$s $1 --prepare-commit", CommitScript() )
    ENDIF
 
    aFiles := {}
@@ -66,7 +68,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF CheckFileList( aFiles, .F. )
+   IF CheckFileList( aFiles, cRepoRoot, .F. )
 
       cLogName := FindChangeLog( cVCS )
       IF Empty( cLogName )
@@ -82,15 +84,17 @@ PROCEDURE Main()
             ErrorLevel( 3 )
             RETURN
          ELSE
-            cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
-            IF ! Empty( cLog )
-               IF "--prepare-commit" $ cli_Options() .AND. ! Empty( cli_Values() )
-                  hb_MemoWrit( cli_Values()[ 1 ], EntryToCommitMsg( cLog ) + hb_MemoRead( cli_Values()[ 1 ] ) )
-               ELSE
-                  hbshell_gtSelect()
-                  /* if clipboard already contains part of the entry, do not overwrite it */
-                  IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ) ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ) )
-                     hb_gtInfo( HB_GTI_CLIPBOARDDATA, EntryToCommitMsg( cLog ) )
+            IF ! GitIsMerge( cVCSDir )
+               cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
+               IF ! Empty( cLog )
+                  IF "--prepare-commit" $ cli_Options() .AND. ! Empty( cli_Values() )
+                     hb_MemoWrit( cli_Values()[ 1 ], EntryToCommitMsg( cLog ) + hb_MemoRead( cli_Values()[ 1 ] ) )
+                  ELSE
+                     hbshell_gtSelect()
+                     /* if clipboard already contains part of the entry, do not overwrite it */
+                     IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ) ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ) )
+                        hb_gtInfo( HB_GTI_CLIPBOARDDATA, EntryToCommitMsg( cLog ) )
+                     ENDIF
                   ENDIF
                ENDIF
             ENDIF
@@ -101,8 +105,8 @@ PROCEDURE Main()
          ELSE
             IF ! Empty( GetEnv( _CONFIGENV_ ) )
                cMyName := GetEnv( _CONFIGENV_ )
-            ELSEIF hb_FileExists( _CONFIGFIL_ )
-               cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
+            ELSEIF hb_FileExists( cRepoRoot + _CONFIGFIL_ )
+               cMyName := AllTrim( hb_MemoRead( cRepoRoot + _CONFIGFIL_ ) )
             ELSE
                cMyName := "Firstname Lastname (me domain.net)"
             ENDIF
@@ -197,9 +201,9 @@ STATIC FUNCTION CommitScript()
 
    RETURN cBaseName
 
-STATIC FUNCTION InstallHook( cHookName, cCommand )
+STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
 
-   LOCAL cName := hb_DirSepToOS( ".git/hooks/" ) + cHookName
+   LOCAL cName := hb_DirSepAdd( cDir ) + hb_DirSepToOS( "hooks/" ) + cHookName
    LOCAL cFile := hb_MemoRead( cName )
 
    cCommand := StrTran( cCommand, "\", "/" )
@@ -333,21 +337,39 @@ STATIC FUNCTION EntryToCommitMsg( cLog )
 
    RETURN iif( nCount == 1, cMsg + hb_eol(), cLog )
 
-STATIC FUNCTION VCSDetect()
+STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cRepoRoot )
 
    DO CASE
-   CASE hb_DirExists( ".svn" ) ; RETURN "svn"
-   CASE hb_DirExists( ".git" ) .OR. GitDetect() ; RETURN "git"
+   CASE hb_DirExists( ".svn" )
+      cVCSDir := hb_DirSepToOS( "./svn/" )
+      cRepoRoot := hb_DirSepToOS( "./" )
+      RETURN "svn"
+   CASE hb_DirExists( ".git" )
+      cVCSDir := hb_DirSepToOS( "./git/" )
+      cRepoRoot := hb_DirSepToOS( "./" )
+      RETURN "git"
+   CASE GitDetect( @cVCSDir )
+      cVCSDir := cVCSDir
+      cRepoRoot := GitTopDir()
+      RETURN "git"
    ENDCASE
+
+   cVCSDir := ""
 
    RETURN ""
 
-STATIC FUNCTION GitDetect()
+STATIC FUNCTION GitDetect( /* @ */ cGitDir )
 
    LOCAL cStdOut, cStdErr
    LOCAL nResult := hb_processRun( "git rev-parse --is-inside-work-tree",, @cStdOut, @cStdErr )
 
-   RETURN nResult == 0 .AND. hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) == "true"
+   IF nResult == 0 .AND. hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) == "true"
+      hb_processRun( "git rev-parse --git-dir",, @cGitDir )
+      cGitDir := hb_DirSepAdd( hb_DirSepToOS( hb_StrReplace( cGitDir, Chr( 13 ) + Chr( 10 ) ) ) )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION GitTopDir()
 
@@ -355,6 +377,9 @@ STATIC FUNCTION GitTopDir()
    LOCAL nResult := hb_processRun( "git rev-parse --show-toplevel",, @cStdOut, @cStdErr )
 
    RETURN iif( nResult == 0, hb_DirSepAdd( hb_DirSepToOS( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) ) ), "" )
+
+STATIC FUNCTION GitIsMerge( cGitDir )
+   RETURN hb_FileExists( cGitDir + "MERGE_HEAD" )
 
 STATIC FUNCTION GitFileList()
 
@@ -553,7 +578,7 @@ STATIC FUNCTION LaunchCommand( cCommand, cArg )
 
 #define _HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
 
-STATIC FUNCTION CheckFileList( xName, lRebase )
+STATIC FUNCTION CheckFileList( xName, cRepoRoot, lRebase )
 
    LOCAL lPassed := .T.
 
@@ -562,6 +587,7 @@ STATIC FUNCTION CheckFileList( xName, lRebase )
 
    LOCAL lApplyFixes := "--fixup" $ cli_Options()
 
+   hb_default( @cRepoRoot, "" )
    hb_default( @lRebase, .T. )
 
    IF HB_ISSTRING( xName )
@@ -591,7 +617,7 @@ STATIC FUNCTION CheckFileList( xName, lRebase )
          NEXT
       ELSE
          FOR EACH file IN xName
-            IF ! CheckFile( file, @aErr, lApplyFixes, lRebase )
+            IF ! CheckFile( file, @aErr, lApplyFixes, cRepoRoot, lRebase )
                lPassed := .F.
                FOR EACH s IN aErr
                   OutStd( file + ": " + s + hb_eol() )
@@ -603,7 +629,7 @@ STATIC FUNCTION CheckFileList( xName, lRebase )
 
    RETURN lPassed
 
-STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
+STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cRepoRoot, lRebase )
 
    LOCAL cFile
    LOCAL tmp
@@ -693,7 +719,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
 
    LOCAL hFlags
    LOCAL aCanHaveIdent
-   LOCAL hAllowedExt := LoadGitattributes( @aCanHaveIdent, @hFlags )
+   LOCAL hAllowedExt := LoadGitattributes( cRepoRoot + ".gitattributes", @aCanHaveIdent, @hFlags )
    LOCAL nLines
 
    /* TODO: extend as you go */
@@ -709,7 +735,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, lRebase )
    cName := hb_DirSepToOS( cName )
 
    IF hb_FileExists( iif( lRebase, _HBROOT_, "" ) + cName ) .AND. ;
-      ! FNameExc( cName, LoadGitignore() )
+      ! FNameExc( cName, LoadGitignore( cRepoRoot + ".gitignore" ) )
 
       /* filename checks */
 
@@ -1183,7 +1209,7 @@ STATIC FUNCTION UTF8_BOM()
       hb_BChar( 0xBB ) + ;
       hb_BChar( 0xBF )
 
-STATIC FUNCTION LoadGitignore()
+STATIC FUNCTION LoadGitignore( cFileName )
 
    THREAD STATIC t_aIgnore := NIL
 
@@ -1198,7 +1224,7 @@ STATIC FUNCTION LoadGitignore()
          "!*/3rd/*/*.hbp", ;
          "!*/3rd/*/Makefile" }
 
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitignore" ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
          IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
             /* TODO: clean this */
             AAdd( t_aIgnore, ;
@@ -1218,7 +1244,7 @@ STATIC FUNCTION LoadGitignore()
 
    RETURN t_aIgnore
 
-STATIC FUNCTION LoadGitattributes( /* @ */ aIdent, /* @ */ hFlags )
+STATIC FUNCTION LoadGitattributes( cFileName, /* @ */ aIdent, /* @ */ hFlags )
 
    THREAD STATIC t_hExt := NIL
    THREAD STATIC t_aIdent := NIL
@@ -1231,7 +1257,7 @@ STATIC FUNCTION LoadGitattributes( /* @ */ aIdent, /* @ */ hFlags )
       t_hExt := { => }
       t_aIdent := {}
       t_hFlags := { => }
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( ".gitattributes" ), Chr( 13 ) ), Chr( 10 ) )
+      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
          IF Left( cLine, 2 ) == "*."
              cLine := SubStr( cLine, 2 )
              IF ( tmp := At( " ", cLine ) ) > 0
