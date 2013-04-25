@@ -2244,7 +2244,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                HB_GTSELF_DISPEND( pGT );
             HB_GTSELF_REFRESH( pGT );
 
-            iKey = HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL | HB_INKEY_EXT );
+            iKey = HB_GTSELF_INKEYGET( pGT, HB_TRUE, dDelay, INKEY_ALL );
             /* TODO: add support for SET KEY blocks */
 
             if( iKey == K_ESC )
