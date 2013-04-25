@@ -277,7 +277,9 @@ METHOD GetLine( nRow ) CLASS HBEditor
 
 // Return text length of line n
 METHOD LineLen( nRow ) CLASS HBEditor
-   RETURN Len( ::aText[ nRow ]:cText )
+   /* TOFIX: bounds checking as a workaround for RTE in:
+             HBEDITOR:LINELEN < HBEDITOR:MOVECURSOR < HBEDITOR:SPLITLINE < HBEDITOR:EDIT */
+   RETURN iif( nRow >= 1 .AND. nRow <= Len( ::aText ), Len( ::aText[ nRow ]:cText ), 0 )
 
 // Converts an array of text lines to a String
 METHOD GetText() CLASS HBEditor
