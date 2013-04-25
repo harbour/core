@@ -58,6 +58,10 @@ if test_reqrpm "curl-devel"
 then
    INST_PARAM="${INST_PARAM} --with curl"
 fi
+if test_reqrpm "openssl"
+then
+   INST_PARAM="${INST_PARAM} --with openssl"
+fi
 if test_reqrpm "firebird-devel"
 then
    INST_PARAM="${INST_PARAM} --with firebird"
