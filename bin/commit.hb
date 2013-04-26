@@ -37,7 +37,7 @@ PROCEDURE Main()
 
    LOCAL cVCS
    LOCAL cVCSDir
-   LOCAL cRepoRoot
+   LOCAL cLocalRoot
    LOCAL aFiles
    LOCAL aChanges
    LOCAL cLog
@@ -52,7 +52,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   cVCS := VCSDetect( @cVCSDir, @cRepoRoot )
+   cVCS := VCSDetect( @cVCSDir, @cLocalRoot )
 
    IF cVCS == "git"
       InstallHook( cVCSDir, "pre-commit"        , hb_StrFormat( "exec hbrun %1$s --check-only", CommitScript() ) )
@@ -68,7 +68,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF CheckFileList( aFiles, cRepoRoot, .F. )
+   IF CheckFileList( aFiles, cLocalRoot, .F. )
 
       cLogName := FindChangeLog( cVCS )
       IF Empty( cLogName )
@@ -105,8 +105,8 @@ PROCEDURE Main()
          ELSE
             IF ! Empty( GetEnv( _CONFIGENV_ ) )
                cMyName := GetEnv( _CONFIGENV_ )
-            ELSEIF hb_FileExists( cRepoRoot + _CONFIGFIL_ )
-               cMyName := AllTrim( hb_MemoRead( cRepoRoot + _CONFIGFIL_ ) )
+            ELSEIF hb_FileExists( cLocalRoot + _CONFIGFIL_ )
+               cMyName := AllTrim( hb_MemoRead( cLocalRoot + _CONFIGFIL_ ) )
             ELSE
                cMyName := "Firstname Lastname (me domain.net)"
             ENDIF
@@ -228,7 +228,7 @@ STATIC FUNCTION FindChangeLog( cVCS )
       RETURN cLogName
    ENDIF
 
-   cDir := iif( cVCS == "git", GitTopDir(), "" )
+   cDir := iif( cVCS == "git", GitLocalRoot(), "" )
 
    IF hb_FileExists( cLogName := cDir + "ChangeLog.txt" ) .OR. ;
       hb_FileExists( cLogName := cDir + "ChangeLog" )
@@ -337,20 +337,20 @@ STATIC FUNCTION EntryToCommitMsg( cLog )
 
    RETURN iif( nCount == 1, cMsg + hb_eol(), cLog )
 
-STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cRepoRoot )
+STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cLocalRoot )
 
    DO CASE
    CASE hb_DirExists( ".svn" )
       cVCSDir := hb_DirSepToOS( "./svn/" )
-      cRepoRoot := hb_DirSepToOS( "./" )
+      cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "svn"
    CASE hb_DirExists( ".git" )
       cVCSDir := hb_DirSepToOS( "./git/" )
-      cRepoRoot := hb_DirSepToOS( "./" )
+      cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "git"
    CASE GitDetect( @cVCSDir )
       cVCSDir := cVCSDir
-      cRepoRoot := GitTopDir()
+      cLocalRoot := GitLocalRoot()
       RETURN "git"
    ENDCASE
 
@@ -371,7 +371,7 @@ STATIC FUNCTION GitDetect( /* @ */ cGitDir )
 
    RETURN .F.
 
-STATIC FUNCTION GitTopDir()
+STATIC FUNCTION GitLocalRoot()
 
    LOCAL cStdOut, cStdErr
    LOCAL nResult := hb_processRun( "git rev-parse --show-toplevel",, @cStdOut, @cStdErr )
@@ -578,7 +578,7 @@ STATIC FUNCTION LaunchCommand( cCommand, cArg )
 
 #define _HBROOT_  hb_PathNormalize( hb_DirSepToOS( hb_DirBase() + "../" ) )  /* must end with dirsep */
 
-STATIC FUNCTION CheckFileList( xName, cRepoRoot, lRebase )
+STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
 
    LOCAL lPassed := .T.
 
@@ -587,7 +587,7 @@ STATIC FUNCTION CheckFileList( xName, cRepoRoot, lRebase )
 
    LOCAL lApplyFixes := "--fixup" $ cli_Options()
 
-   hb_default( @cRepoRoot, "" )
+   hb_default( @cLocalRoot, "" )
    hb_default( @lRebase, .T. )
 
    IF HB_ISSTRING( xName )
@@ -617,7 +617,7 @@ STATIC FUNCTION CheckFileList( xName, cRepoRoot, lRebase )
          NEXT
       ELSE
          FOR EACH file IN xName
-            IF ! CheckFile( file, @aErr, lApplyFixes, cRepoRoot, lRebase )
+            IF ! CheckFile( file, @aErr, lApplyFixes, cLocalRoot, lRebase )
                lPassed := .F.
                FOR EACH s IN aErr
                   OutStd( file + ": " + s + hb_eol() )
@@ -629,7 +629,7 @@ STATIC FUNCTION CheckFileList( xName, cRepoRoot, lRebase )
 
    RETURN lPassed
 
-STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cRepoRoot, lRebase )
+STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase )
 
    LOCAL cFile
    LOCAL tmp
@@ -719,7 +719,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cRepoRoot, lRebase 
 
    LOCAL hFlags
    LOCAL aCanHaveIdent
-   LOCAL hAllowedExt := LoadGitattributes( cRepoRoot + ".gitattributes", @aCanHaveIdent, @hFlags )
+   LOCAL hAllowedExt := LoadGitattributes( cLocalRoot + ".gitattributes", @aCanHaveIdent, @hFlags )
    LOCAL nLines
 
    /* TODO: extend as you go */
@@ -735,7 +735,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cRepoRoot, lRebase 
    cName := hb_DirSepToOS( cName )
 
    IF hb_FileExists( iif( lRebase, _HBROOT_, "" ) + cName ) .AND. ;
-      ! FNameExc( cName, LoadGitignore( cRepoRoot + ".gitignore" ) )
+      ! FNameExc( cName, LoadGitignore( cLocalRoot + ".gitignore" ) )
 
       /* filename checks */
 
