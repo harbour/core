@@ -379,7 +379,7 @@ STATIC FUNCTION GitTopDir()
    RETURN iif( nResult == 0, hb_DirSepAdd( hb_DirSepToOS( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) ) ), "" )
 
 STATIC FUNCTION GitIsMerge( cGitDir )
-   RETURN hb_FileExists( cGitDir + "MERGE_HEAD" )
+   RETURN hb_FileExists( cGitDir + "MERGE_MSG" )
 
 STATIC FUNCTION GitFileList()
 
