@@ -314,7 +314,8 @@ extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool 
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
 extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
-extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers from Harbour extended key code */
+extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers HB_KF_* from Harbour extended key code */
+extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/character code from Harbour extended key code */
 
 HB_EXTERN_END
 

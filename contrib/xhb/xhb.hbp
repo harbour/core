@@ -55,6 +55,7 @@ xhbi18n.c
 xhbinet.c
 xhbini.c
 xhbis.c
+xhbkey.c
 xhbmsgs.c
 xhbmtc.c
 xhbmvinf.c
