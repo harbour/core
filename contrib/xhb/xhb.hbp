@@ -17,9 +17,9 @@
 
 hbct.hbc
 hbtip.hbc
-hbwin.hbc
 hbfship.hbc
 hbxpp.hbc
+hbwin.hbc{allwin}
 
 ${hb_name}.hbx
 
