@@ -13,7 +13,6 @@ depfinish=qt5
 {darwin}depincpath=qt:/Developer/qt/include
 {darwin}depincpath=qt:/Library/Frameworks
 {darwin}depincpath=qt:/usr/local/include
-{darwin}depoptional=qt:yes
 {darwin}depfinish=qt
 
 {allwin|os2}libpaths=${HB_WITH_QT}/../lib

@@ -17,9 +17,9 @@
 
 hbct.hbc
 hbtip.hbc
-hbwin.hbc
 hbfship.hbc
 hbxpp.hbc
+hbwin.hbc{allwin}
 
 ${hb_name}.hbx
 
@@ -55,6 +55,7 @@ xhbi18n.c
 xhbinet.c
 xhbini.c
 xhbis.c
+xhbkey.c
 xhbmsgs.c
 xhbmtc.c
 xhbmvinf.c
