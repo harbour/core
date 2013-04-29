@@ -485,3 +485,15 @@ int hb_inkeyKeyMod( int iKey )
 
    return iFlags;
 }
+
+int hb_inkeyKeyVal( int iKey )
+{
+   int iValue = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyVal(%d)", iKey ) );
+
+   if( HB_INKEY_ISEXT( iKey ) && ! HB_INKEY_ISMOUSEPOS( iKey ) )
+      iValue = HB_INKEY_VALUE( iKey );
+
+   return iValue;
+}

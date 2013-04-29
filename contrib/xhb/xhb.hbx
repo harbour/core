@@ -447,6 +447,8 @@ DYNAMIC xhb_HashError
 DYNAMIC xhb_Inc
 DYNAMIC xhb_Include
 DYNAMIC xhb_Index
+DYNAMIC xhb_Inkey
+DYNAMIC xhb_KeyTrans
 DYNAMIC xhb_Less
 DYNAMIC xhb_LessEq
 DYNAMIC xhb_Lib
