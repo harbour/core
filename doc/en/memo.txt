@@ -238,7 +238,7 @@
    $SYNTAX$
       MemoWrit( <cFileName>, <cString> ) --> lSuccess
    $ARGUMENTS$
-      <cFileName> is the filename to read from disk.
+      <cFileName> is the filename to be written to disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
 
@@ -299,7 +299,7 @@
    $SYNTAX$
       hb_MemoWrit( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
    $ARGUMENTS$
-      <cFileName> is the filename to read from disk.
+      <cFileName> is the filename to be written to disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
 
