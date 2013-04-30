@@ -17,7 +17,7 @@ depfinish=qt5
 
 {allwin|os2}libpaths=${HB_WITH_QT}/../lib
 {(allwin|os2)&!HBMK_HAS_QT5}libs=QtCore4 QtGui4
-{(allwin|os2)&HBMK_HAS_QT5}libs=Qt5Core Qt5Gui
+{(allwin|os2)&HBMK_HAS_QT5}libs=Qt5Core Qt5Gui Qt5Widgets
 {linux|beos|symbian}libs=QtCore QtGui
 {darwin}ldflags=-F${HBMK_DIR_QT}/../lib
 {darwin}frameworks=QtCore QtGui
