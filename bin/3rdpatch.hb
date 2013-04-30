@@ -415,8 +415,6 @@ PROCEDURE Main( ... )
       QUIT
    ENDIF
 
-   s_nErrors := 0
-
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
 
 #if defined( _CURDIR )
@@ -458,6 +456,9 @@ PROCEDURE Main( ... )
     * The pristine tree is for reference, used as the left component of the diff
     * Our tree will have the local diff applied, and used as the right component of the diff
     */
+
+   s_nErrors := 0
+
    FOR EACH aOneMap IN s_aChangeMap
       IF ! hb_FileExists( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ) )
          OutStd( "W: `" + aOneMap[ FN_ORIG ] + "' does not exist in the source tree" + hb_eol() )
@@ -887,8 +888,6 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
    IF cFileName == NIL .OR. ! hb_FileExists( cFileName )
       RETURN
    ENDIF
-
-   s_nErrors := 0
 
    cFile := hb_MemoRead( cFileName )
    cNewFile := ""
