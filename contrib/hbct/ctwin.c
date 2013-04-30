@@ -2474,13 +2474,17 @@ int  hb_ctwSetBorderMode( int iTop, int iLeft, int iBottom, int iRight )
 int  hb_ctwCreateWindow( int iTop, int iLeft, int iBottom, int iRight, HB_BOOL fClear, int iColor, HB_BOOL fVisible )
 {
    int iResult = -1;
-   PHB_GTCTW pCTW = hb_ctw_base();
 
-   if( pCTW )
+   if( iTop <= iBottom && iLeft <= iRight )
    {
-      iResult = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, fClear, iColor, fVisible );
-      HB_GTSELF_FLUSH( pCTW->pGT );
-      hb_gt_BaseFree( pCTW->pGT );
+      PHB_GTCTW pCTW = hb_ctw_base();
+
+      if( pCTW )
+      {
+         iResult = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, fClear, iColor, fVisible );
+         HB_GTSELF_FLUSH( pCTW->pGT );
+         hb_gt_BaseFree( pCTW->pGT );
+      }
    }
    return iResult;
 }
