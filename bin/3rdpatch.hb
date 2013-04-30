@@ -105,7 +105,7 @@
  *      Harbour tree as `baz.h'. All notes above about hierarchical and flat
  *      trees strictly apply.
  *
- *   For hierarchical source trees, the path separator must always be the UNIX
+ *   For hierarchical source trees, the path separator must always be the Unix
  *   forward slash (`/'). DOS-style backslash separators are not recognized and
  *   will produce undefined results.
  *
@@ -202,10 +202,25 @@
  * In all error cases 3rdpatch will provide a meaningful error message. Armed with
  * that and the information here, troubleshooting should not be much of a problem.
  *
- * 4. BUGS
+ * 5. NOTES
+ * --------
+ *
+ * It seems that the Unix versions of GNU patch can not handle diff files with
+ * DOS-style path separators, whereas the Windows (MinGW/Cygwin) versions have no
+ * problem working with Unix-style path separators. They however can't be coerced
+ * into generating diffs with Unix-style path separators, which results in diffs
+ * generated on Windows hosts can not be applied on non-Windows hosts.
+ *
+ * To remedy this situation, 3rdpatch will change diffs to use Unix-style path
+ * separators. Since this is a grave problem (the diff is unapplyable on
+ * non-Windows hosts), this change takes place unconditionally. The user is
+ * notified of the change by an informational message stating the fact. These
+ * changed diffs should be committed back to the repository.
+ *
+ * 6. BUGS
  * -------
  *
- * None known. More testing on non-UNIX systems is desired.
+ * None known. More testing on non-Unix systems is desired.
  *
  */
 
@@ -304,7 +319,7 @@ PROCEDURE Main( ... )
 
    SetupTools()
 
-   cFile := MemoRead( cFileName )
+   cFile := hb_MemoRead( cFileName )
    cDiffFile := NIL        /* default to `no local diff' */
 
    nMemoLine := 0
@@ -382,6 +397,8 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
+   DOSToUnixPathSep( cDiffFile )
+
    IF lValidateOnly
       OutStd( "Metadata syntax is OK." + hb_eol() )
       QUIT
@@ -397,6 +414,8 @@ PROCEDURE Main( ... )
       ErrorLevel( 2 )
       QUIT
    ENDIF
+
+   s_nErrors := 0
 
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
 
@@ -525,6 +544,8 @@ PROCEDURE Main( ... )
       IF cDiffFile != NIL
          /* Copy the diff back to the live tree */
          hb_FCopy( CombinePath( s_cTempDir, cDiffFile ), cDiffFile )
+         /* Convert path separators */
+         DOSToUnixPathSep( cDiffFile )
       ENDIF
 
    ELSE
@@ -851,6 +872,75 @@ STATIC FUNCTION FNameEscape( cFileName )
 #endif
 
    RETURN cFileName
+
+/* Check diff file for DOS-style path separators; convert them to Unix-style if needed.
+ * Assumes that diffs use host-native line endings (which should be the case anyway). */
+STATIC PROCEDURE DOSToUnixPathSep( cFileName )
+
+   LOCAL cFile
+   LOCAL cMemoLine
+   LOCAL cNewFile
+   LOCAL cLookFor
+   LOCAL nStart
+   LOCAL nEnd
+
+   IF cFileName == NIL .OR. ! hb_FileExists( cFileName )
+      RETURN
+   ENDIF
+
+   s_nErrors := 0
+
+   cFile := hb_MemoRead( cFileName )
+   cNewFile := ""
+   cLookFor := hb_eol()
+   nStart := 1
+   s_nErrors := 0
+
+   DO WHILE .T.
+
+      nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1
+      IF nEnd < 1
+         /* If anything is left in the input string, stick it to the end
+          * of the output string. No path searching as that would be
+          * an invalid diff anyway */
+         IF Len( SubStr( cFile, nStart ) ) > 0
+            cNewFile := SubStr( cFile, nStart )
+         ENDIF
+         EXIT
+      ENDIF
+
+      cMemoLine := SubStr( cFile, nStart, nEnd )
+
+      IF ( Left( cMemoLine, 5 ) == "diff " .OR. ;
+           Left( cMemoLine, 4 ) == "+++ " .OR. ;
+           Left( cMemoLine, 4 ) == "--- " ) .AND. ;
+         At( "\", cMemoLine ) > 0
+            cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
+            s_nErrors++
+      ELSE
+         cNewFile += cMemoLine + cLookFor
+      ENDIF
+
+      nStart += nEnd + Len( cLookFor )
+
+   ENDDO
+
+   IF s_nErrors > 0
+      IF hb_MemoWrit( cFileName, cNewFile )
+         OutStd( "I: DOS-style path name separators in `" + cFileName + ;
+                 "' have been converted to Unix-style" + hb_eol() )
+         OutStd( "W: Do not forget to push this file!" + hb_eol() )
+      ELSE
+         OutStd( "E: Oops, something bad happened while trying to " + ;
+                 "overwrite `" + cFileName + "'" + hb_eol() )
+         OutStd( "E: You will probably have to clean up manually" + hb_eol() )
+         /* XXX: Error details? */
+         ErrorLevel( 2 )
+         QUIT
+      ENDIF
+   ENDIF
+
+   RETURN
 
 /*
  * vim: ts=3 expandtab ft=clipper
