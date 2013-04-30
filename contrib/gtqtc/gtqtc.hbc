@@ -3,15 +3,25 @@ description=Multi-Platform QT based GUI console (QTC)
 
 gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
+depcontrol=qt5:${HB_WITH_QT}
+depkeyhead=qt5:QtCore/QJsonObject
+depoptional=qt5:yes
+depfinish=qt5
+
+{darwin}depcontrol=qt:${HB_WITH_QT}
+{darwin}depkeyhead=qt:QtCore/qglobal.h
+{darwin}depincpath=qt:/Developer/qt/include
+{darwin}depincpath=qt:/Library/Frameworks
+{darwin}depincpath=qt:/usr/local/include
+{darwin}depfinish=qt
+
 {allwin|os2}libpaths=${HB_WITH_QT}/../lib
-
-{(HB_QT_MAJOR_VER='4')&(allwin|os2)}libs=QtCore4 QtGui4
-{(HB_QT_MAJOR_VER='4')&(linux|beos|symbian)}libs=QtCore QtGui
-{(HB_QT_MAJOR_VER='4')&(darwin)}frameworks=QtCore QtGui
-
-{(HB_QT_MAJOR_VER='5')&(allwin|os2)}libs=Qt5Core Qt5Gui Qt5Widgets Qt5PrintSupport
-{(HB_QT_MAJOR_VER='5')&(linux|beos|symbian)}libs=QtCore QtGui QtWidgets QtPrintSupport
-{(HB_QT_MAJOR_VER='5')&(darwin)}frameworks=QtCore QtGui QtWidgets QtPrintSupport
+{(allwin|os2)&!HBMK_HAS_QT5}libs=QtCore4 QtGui4
+{(allwin|os2)&HBMK_HAS_QT5}libs=Qt5Core Qt5Gui
+{linux|beos|symbian}libs=QtCore QtGui
+{darwin}ldflags=-F${HBMK_DIR_QT}/../lib
+{darwin}frameworks=QtCore QtGui
+{(bsd|darwin)}libs=stdc++
 
 cpp=yes
 gui=yes

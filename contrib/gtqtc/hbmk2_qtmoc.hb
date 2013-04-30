@@ -21,7 +21,7 @@
  *
  */
 
-#pragma warninglevel=3
+#pragma -w3
 #pragma -km+
 #pragma -ko+
 
@@ -38,7 +38,6 @@ FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL cDst
    LOCAL tSrc
    LOCAL tDst
-   LOCAL cTmp
 
    LOCAL cCommand
    LOCAL nError
@@ -48,15 +47,6 @@ FUNCTION hbmk_plugin_qt( hbmk )
    CASE "init"
 
       hbmk_Register_Input_File_Extension( hbmk, ".h" )
-
-      IF Empty( GetEnv( "HB_QT_MAJOR_VER" ) )              /* To honor Qt 5.0.1 */
-         cTmp := qt_version_detect( hbmk, "uic", "UIC_BIN" )
-         IF " 5." $ cTmp
-            hb_SetEnv( "HB_QT_MAJOR_VER", "5" )
-         ELSE
-            hb_SetEnv( "HB_QT_MAJOR_VER", "4" )
-         ENDIF
-      ENDIF
 
       EXIT
 
@@ -118,8 +108,8 @@ FUNCTION hbmk_plugin_qt( hbmk )
                IF lBuildIt
 
                   cCommand := hbmk[ "vars" ][ "cMOC_BIN" ] +;
-                              " " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cSrc ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] ) +;
-                              " -o " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cDst ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] )
+                     " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) ) +;
+                     " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) )
 
                   IF hbmk[ "lTRACE" ]
                      IF ! hbmk[ "lQUIET" ]
@@ -156,18 +146,6 @@ FUNCTION hbmk_plugin_qt( hbmk )
    ENDSWITCH
 
    RETURN cRetVal
-
-
-STATIC FUNCTION qt_version_detect( hbmk, cName, cEnvQT, lPostfix )
-   LOCAL cTmp := ""
-   LOCAL cBIN := qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
-
-   IF ! Empty( cBIN )
-      hb_processRun( cBIN + " -v",,, @cTmp )
-   ENDIF
-
-   RETURN cTmp
-
 
 STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    LOCAL cBIN
