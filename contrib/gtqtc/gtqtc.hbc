@@ -21,6 +21,7 @@ depfinish=qt5
 {linux|beos|symbian}libs=QtCore QtGui
 {(linux|beos|symbian)&HBMK_HAS_QT5}libs=QtWidgets
 {darwin}ldflags=-F${HBMK_DIR_QT}/../lib
+{darwin}dflags=-F${HBMK_DIR_QT}/../lib
 {darwin}frameworks=QtCore QtGui
 {darwin&HBMK_HAS_QT5}frameworks=QtWidgets
 {(bsd|darwin)}libs=stdc++
