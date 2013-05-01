@@ -3,10 +3,27 @@ description=Multi-Platform QT based GUI console (QTC)
 
 gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
+depcontrol=qt5:${HB_WITH_QT}
+depkeyhead=qt5:QtCore/QJsonObject
+depoptional=qt5:yes
+depfinish=qt5
+
+{darwin}depcontrol=qt:${HB_WITH_QT}
+{darwin}depkeyhead=qt:QtCore/qglobal.h
+{darwin}depincpath=qt:/Developer/qt/include
+{darwin}depincpath=qt:/Library/Frameworks
+{darwin}depincpath=qt:/usr/local/include
+{darwin}depfinish=qt
+
 {allwin|os2}libpaths=${HB_WITH_QT}/../lib
-{allwin|os2}libs=QtCore4 QtGui4
+{(allwin|os2)&!HBMK_HAS_QT5}libs=QtCore4 QtGui4
+{(allwin|os2)&HBMK_HAS_QT5}libs=Qt5Core Qt5Gui Qt5Widgets
 {linux|beos|symbian}libs=QtCore QtGui
+{(linux|beos|symbian)&HBMK_HAS_QT5}libs=QtWidgets
+{darwin}ldflags=-F${HBMK_DIR_QT}/../lib
 {darwin}frameworks=QtCore QtGui
+{darwin&HBMK_HAS_QT5}frameworks=QtWidgets
+{(bsd|darwin)}libs=stdc++
 
 cpp=yes
 gui=yes
