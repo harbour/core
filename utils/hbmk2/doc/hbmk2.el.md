@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-15 16:01\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -62,10 +62,8 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-compr=&lt;level&gt;** συμπίεση εκτελέσιμου/δυναμικής βιβλιοθήκης \(απαιτεί το εργαλείο UPX\)  
 το &lt;level&gt; μπορεί να είναι: yes, no, min, max
  - **\-run\[\-\]** εκτέλεση/ή όχι, του εκτελέσιμου που θα δημιουργηθεί
- - **\-vcshead=&lt;file&gt;** δημιουργία header αρχείων \.ch με πληροφορίες της τοπικής αποθήκες \-local repository\-\. Προς το παρόν υποστηρίζονται τα Git, SVN, Mercurial, Bazaar, Fossil, CVS και Monotone\.  
-Τα header που θα δημιουργηθούν θα ορίσουν τη σταθερά \_HBMK\_VCS\_TYPE\_ στο όνομα του VCS που ανιχνεύτηκε και τη σταθερά \_HBMK\_VCS\_ID\_ στο μοναδικό ID της τοπικής αποθήκης\. Αν δεν ανιχνευτεί κάποιο VCS, ένα διαδοχικός αριθμός θα ενημερώνεται αυτόματα με κάθε μεταγλώττιση\.
- - **\-seqhead=&lt;file&gt;** generate \.ch header file with a sequential number, that will be rolled automatically on each build\. Generated header will define preprocessor constant \_HBMK\_SEQ\_ID\_\.
- - **\-tshead=&lt;file&gt;** δημιουργία \.ch header αρχείου με πληροφορίες χρονοσήμανσης\. Το δημιουργημένο header θα ορίσει τις σταθερές προεπεξεργασίας \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ με την ημερ/νία\-ωρα της κατασκευής
+ - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** ορίζει το &lt;file&gt; ως εικονίδιο της εφαρμογής\. Το &lt;file&gt; πρέπει να είναι σε μορφή υποστηριζόμενη από τη πλατφόρμα\-στόχο \(δεν υποστηρίζεται από μερικές πλατφόρμες/μεταγλωττιστές\)\. Σε Windows, υλοποιείται με τη δημιουργία και διασύνδεση ενός resource αρχείου\.
  - **\-manifest=&lt;file&gt;** ενσωμάτωση του μανιφέστου &lt;file&gt; στο εκτελέσιμο/δυναμική βιβλ\. \(μονο σε Windows\)
  - **\-sign=&lt;key&gt;** σήμανση εκτελέσιμου με το &lt;key&gt; \(μόνο σε Windows και Darwin\)\. Σε περιβάλλον Windows χρησιμοποιείται το signtool\.exe \(περιέχεται στο MS Windows SDK\) ή το posign\.exe \(περιέχεται στην Pelles C 7\), με αυτή τη σειρά, αμφότερα ανιχνεύονται αυτόματα\.

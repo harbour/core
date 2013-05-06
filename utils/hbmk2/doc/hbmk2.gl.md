@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-15 16:01\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
 Copyright \(c\) 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(gl\): JLalín  
@@ -64,9 +64,8 @@ Opcións:
   
 &lt;level&gt; pode ser: yes, no, min, max
  - **\-run\[\-\]** executar/non executar o executable de saída
- - **\-vcshead=&lt;file&gt;** xenerar arquivo de cabeceira \.ch con información do repositorio local\. Sopórtanse Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone\. A cabeceira xenerada definirá a constante do preprocesador \_HBMK\_VCS\_TYPE\_ co nome do sistema VCS e \_HBMK\_VCS\_ID\_ co identificador único do repositorio local\. Se non se detecta ningún sistema VCS usarase un número secuencial que será incrementado en cada construcción\.
- - **\-seqhead=&lt;file&gt;** generate \.ch header file with a sequential number, that will be rolled automatically on each build\. Generated header will define preprocessor constant \_HBMK\_SEQ\_ID\_\.
- - **\-tshead=&lt;file&gt;** xenerar arquivos de cabeceira \.ch con información de data/hora\. A cabeceira definirá as constantes do procesador \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ coa data/hora da construcción
+ - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** usar &lt;file&gt; como icono para a aplicación\. O arquivo &lt;file&gt; debe ser soportado na plataforma destino \(non soportado en algunhas plataformas/compiladores\)\. En Windows impleméntase xenerando e enlazando un arquivo de recursos\.
  - **\-manifest=&lt;file&gt;** Incrustar arquivo de manifesto &lt;file&gt; en executable/biblioteca dinámica \(só Windows\)
  - **\-sign=&lt;key&gt;** asinar executable con &lt;key&gt; \(Só Windows e Darwin\)\. En Windows úsase a ferramenta signtool\.exe \(pertence ao SDK de Windows\) ou posign\.exe \(pertence a Pelles C 7\), nesa orde, ambos autodetectados\.

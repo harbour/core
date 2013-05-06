@@ -157,14 +157,14 @@ STATIC PROCEDURE src_push( cMain )
 
    hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-   hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
+   hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
       'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
       ' -o %5$s', ;
       ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
       hb_FNameName( hPar[ "entry" ] ), cTempResult ) )
 
-   IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
+   IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
       ? hb_ValToExp( json )
    ELSE
       ? "API error"
@@ -207,18 +207,18 @@ STATIC PROCEDURE trs_pull( cMain )
 
       ?? "", cLang
 
-      hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
+      hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
          ParEscape( hPar[ "login" ] ), hPar[ "project" ], ;
          hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
 
-      IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
+      IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          hb_MemoWrit( cTempResult, json[ "content" ] )
          IF ! Empty( hPar[ "po" ] )
             POT_Sort( cTempResult )
             /* should only do this if the translation is primarily done
-               on Transifex website. This encouraged and probably the case
+               on Transifex website. This is encouraged and probably the case
                in practice. Delete source information, delete empty
                translations and apply some automatic transformation for
                common translation mistakes. */
@@ -407,14 +407,14 @@ STATIC PROCEDURE trs_push( cMain )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-      hb_run( hb_StrFormat( 'curl -s -i -L --user %1$s -X ' + ;
+      hb_run( hb_StrFormat( 'curl -s -L --user %1$s -X ' + ;
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
          'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
          ' -o %6$s', ;
          ParEscape( hPar[ "login" ] ), cTempContent, hPar[ "project" ], ;
          hb_FNameName( hPar[ "entry" ] ), cLang, cTempResult ) )
 
-      IF hb_jsonDecode( GetJSON( hb_MemoRead( cTempResult ) ), @json ) > 0
+      IF hb_jsonDecode( hb_MemoRead( cTempResult ), @json ) > 0
          ? hb_ValToExp( json )
       ELSE
          ? "API error"
@@ -427,13 +427,6 @@ STATIC PROCEDURE trs_push( cMain )
    RETURN
 
 /* --------------------------------------------- */
-
-STATIC FUNCTION GetJSON( cString )
-
-   cString := SubStr( cString, At( "{", cString ) )
-   cString := Left( cString, RAt( "}", cString ) )
-
-   RETURN cString
 
 STATIC FUNCTION ArrayToList( array )
 
