@@ -2541,9 +2541,7 @@ void QTConsole::resizeEvent( QResizeEvent * event )
       update();
    }
    else
-   {
       QWidget::resizeEvent( event );
-   }
 }
 
 static QRect hb_gt_qtc_cellToPixel( PHB_GTQTC pQTC, const QRect & rc )
