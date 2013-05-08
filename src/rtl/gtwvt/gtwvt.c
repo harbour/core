@@ -409,9 +409,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 #define hb_bm_line( x1, y1, x2, y2 )      do { \
                MoveToEx( pWVT->hBmpDC, x1, y1, NULL ); \
                LineTo( pWVT->hBmpDC, x2, y2 ); \
-               SetPixel( pWVT->hBmpDC, x2, y2, pWVT->COLORS[ 0 ] ); \
+               SetPixel( pWVT->hBmpDC, x2, y2, BLACK ); \
             } while( 0 )
-#define hb_bm_point( x, y )         SetPixel( pWVT->hBmpDC, x, y, pWVT->COLORS[ 0 ] )
+#define hb_bm_point( x, y )         SetPixel( pWVT->hBmpDC, x, y, BLACK )
 #define hb_bm_rect( x, y, w, h )    Rectangle( pWVT->hBmpDC, x, y, (x)+(w), (y)+(h) )
 #define hb_bm_polygon( pts, n )     Polygon( pWVT->hBmpDC, pts, n )
 #define hb_bm_invertrect( x, y, w, h )    do { \
@@ -450,13 +450,13 @@ static HBITMAP hb_gt_wvt_bitmap_char( PHB_GTWVT pWVT, int cellx, int celly )
 
    if( !pWVT->hPen )
    {
-      pWVT->hPen = CreatePen( PS_SOLID, 0, pWVT->COLORS[ 0 ] );
+      pWVT->hPen = CreatePen( PS_SOLID, 0, BLACK );
       SelectObject( pWVT->hBmpDC, pWVT->hPen );
    }
 
    if( !pWVT->hBrush )
    {
-      pWVT->hBrush = CreateSolidBrush( pWVT->COLORS[ 0 ] );
+      pWVT->hBrush = CreateSolidBrush( BLACK );
       SelectObject( pWVT->hBmpDC, pWVT->hBrush );
    }
 

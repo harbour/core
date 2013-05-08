@@ -103,7 +103,6 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE  /* Enable undocumented Windows API function call */
 #endif
 
-#if 0
 #if ( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
                                     ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) && ! defined( __POCC__ )
 #  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
@@ -130,9 +129,6 @@
 #     define HB_GTWIN_USE_PCONSOLEINFOEX
 #  endif
 #endif
-#endif
-
-#undef HB_GTWIN_USE_PCONSOLEINFOEX
 
 #ifndef MOUSE_WHEELED
 #  define MOUSE_WHEELED                0x0004
@@ -179,8 +175,26 @@ static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER                          ( &SuperTable )
 #define HB_GTID_PTR                         ( &s_GtId )
 
+static const COLORREF s_colorsDef[ 16 ] = { RGB( 0x00, 0x00, 0x00 ),
+                                            RGB( 0x00, 0x00, 0x80 ),
+                                            RGB( 0x00, 0x80, 0x00 ),
+                                            RGB( 0x00, 0x80, 0x80 ),
+                                            RGB( 0x80, 0x00, 0x00 ),
+                                            RGB( 0x80, 0x00, 0x80 ),
+                                            RGB( 0x80, 0x80, 0x00 ),
+                                            RGB( 0xC0, 0xC0, 0xC0 ),
+                                            RGB( 0x80, 0x80, 0x80 ),
+                                            RGB( 0x00, 0x00, 0xFF ),
+                                            RGB( 0x00, 0xFF, 0x00 ),
+                                            RGB( 0x00, 0xFF, 0xFF ),
+                                            RGB( 0xFF, 0x00, 0x00 ),
+                                            RGB( 0xFF, 0x00, 0xFF ),
+                                            RGB( 0xFF, 0xFF, 0x00 ),
+                                            RGB( 0xFF, 0xFF, 0xFF ) };
+
 static HB_BOOL     s_bWin9x;
 static COLORREF    s_colorsOld[ 16 ];
+static HB_BOOL     s_bResetColors;
 static HB_BOOL     s_bOldClosable;
 static HB_BOOL     s_bClosable;
 static HB_BOOL     s_bSpecialKeyHandling;
@@ -717,7 +731,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
 #if defined( HB_GTWIN_USE_PCONSOLEINFOEX )
 
-static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
+static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 {
    static HB_BOOL s_bChecked = HB_FALSE;
 
@@ -725,6 +739,9 @@ static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
    typedef BOOL ( WINAPI * P_GETCONSOLESCREENBUFFERINFOEX )( HANDLE, PCONSOLE_SCREEN_BUFFER_INFOEX );
    static P_GETCONSOLESCREENBUFFERINFOEX s_pGetConsoleScreenBufferInfoEx;
    static P_SETCONSOLESCREENBUFFERINFOEX s_pSetConsoleScreenBufferInfoEx;
+
+   HB_BOOL bDone = HB_FALSE;
+   int tmp;
 
    if( ! s_bChecked )
    {
@@ -736,39 +753,64 @@ static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
    if( s_pGetConsoleScreenBufferInfoEx )
    {
       CONSOLE_SCREEN_BUFFER_INFOEX info;
-      int tmp;
 
       info.cbSize = sizeof( info );
-      s_pGetConsoleScreenBufferInfoEx( s_HOutput, &info );
-
-      if( bSet && s_pSetConsoleScreenBufferInfoEx )
+      bDone = s_pGetConsoleScreenBufferInfoEx( s_HOutput, &info ) != 0;
+      if( bDone )
       {
-         for( tmp = 0; tmp < 16; ++tmp )
-            info.ColorTable[ tmp ] = colors[ tmp ];
+         if( ! bSet )
+         {
+            for( tmp = 0; tmp < 16; ++tmp )
+               colors[ tmp ] = info.ColorTable[ tmp ];
+         }
+         else if( s_pSetConsoleScreenBufferInfoEx )
+         {
+            if( ! s_bResetColors )
+            {
+               for( tmp = 0; tmp < 16; ++tmp )
+                  s_colorsOld[ tmp ] = info.ColorTable[ tmp ];
+               s_bResetColors = HB_TRUE;
+            }
+            for( tmp = 0; tmp < 16; ++tmp )
+               info.ColorTable[ tmp ] = colors[ tmp ];
 
-         s_pSetConsoleScreenBufferInfoEx( s_HOutput, &info );
-      }
-      else
-      {
-         for( tmp = 0; tmp < 16; ++tmp )
-            colors[ tmp ] = info.ColorTable[ tmp ];
+            /* workaround for console window size reduction when structure
+             * filled by GetConsoleScreenBufferInfoEx() is passed directly
+             * to SetConsoleScreenBufferInfoEx() [druzus]
+             */
+            info.srWindow.Right++;
+            info.srWindow.Bottom++;
+            bDone = s_pSetConsoleScreenBufferInfoEx( s_HOutput, &info ) != 0;
+         }
+         else
+            bDone = HB_FALSE;
       }
    }
+
+   if( ! bSet && ! bDone )
+   {
+      for( tmp = 0; tmp < 16; ++tmp )
+         colors[ tmp ] = s_colorsDef[ tmp ];
+   }
+
+   return bDone;
 }
 
 #endif
 
-static void hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
+static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 {
 #if defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-   hb_gt_win_SetPalette_Vista( bSet, colors );
+   return hb_gt_win_SetPalette_Vista( bSet, colors );
 #else
    if( ! bSet )
    {
       int tmp;
       for( tmp = 0; tmp < 16; ++tmp )
-         colors[ tmp ] = 0;
+         colors[ tmp ] = s_colorsDef[ tmp ];
    }
+
+   return HB_FALSE;
 #endif
 }
 
@@ -926,29 +968,8 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
 
-   {
-      COLORREF colors[ 16 ] = { RGB( 0x00, 0x00, 0x00 ),
-                                RGB( 0x00, 0x00, 0xAA ),
-                                RGB( 0x00, 0xAA, 0x00 ),
-                                RGB( 0x00, 0xAA, 0xAA ),
-                                RGB( 0xAA, 0x00, 0x00 ),
-                                RGB( 0xAA, 0x00, 0xAA ),
-                                RGB( 0xAA, 0x55, 0x00 ),
-                                RGB( 0xAA, 0xAA, 0xAA ),
-                                RGB( 0x55, 0x55, 0x55 ),
-                                RGB( 0x55, 0x55, 0xFF ),
-                                RGB( 0x55, 0xFF, 0x55 ),
-                                RGB( 0x55, 0xFF, 0xFF ),
-                                RGB( 0xFF, 0x55, 0x55 ),
-                                RGB( 0xFF, 0x55, 0xFF ),
-                                RGB( 0xFF, 0xFF, 0x55 ),
-                                RGB( 0xFF, 0xFF, 0xFF ) };
-
-      hb_gt_win_SetPalette( HB_FALSE, s_colorsOld );
-      hb_gt_win_SetPalette( HB_TRUE, colors );
-   }
-
    s_bClosable = s_bOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
+   s_bResetColors = HB_FALSE;
 
    if( hb_fsIsDevice( hFilenoStdout ) )
       HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, HB_TRUE );
@@ -965,7 +986,8 @@ static void hb_gt_win_Exit( PHB_GT pGT )
    HB_GTSELF_REFRESH( pGT );
 
    hb_gt_win_SetCloseButton( HB_TRUE, s_bOldClosable );
-   hb_gt_win_SetPalette( HB_TRUE, s_colorsOld );
+   if( s_bResetColors )
+      hb_gt_win_SetPalette( HB_TRUE, s_colorsOld );
 
    if( s_pCharInfoScreen )
    {
@@ -1870,12 +1892,11 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( iIndex >= 0 && iIndex < 16 )
             {
                COLORREF colors[ 16 ];
-
-               hb_gt_win_SetPalette( HB_FALSE, colors );
+               HB_BOOL fGet = hb_gt_win_SetPalette( HB_FALSE, colors );
 
                pInfo->pResult = hb_itemPutNL( pInfo->pResult, colors[ iIndex ] );
 
-               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+               if( fGet && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
                {
                   colors[ iIndex ] = hb_itemGetNL( pInfo->pNewVal2 );
                   hb_gt_win_SetPalette( HB_TRUE, colors );
