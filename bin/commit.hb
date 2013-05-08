@@ -341,11 +341,11 @@ STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cLocalRoot )
 
    DO CASE
    CASE hb_DirExists( ".svn" )
-      cVCSDir := hb_DirSepToOS( "./svn/" )
+      cVCSDir := hb_DirSepToOS( "./.svn/" )
       cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "svn"
    CASE hb_DirExists( ".git" )
-      cVCSDir := hb_DirSepToOS( "./git/" )
+      cVCSDir := hb_DirSepToOS( "./.git/" )
       cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "git"
    CASE GitDetect( @cVCSDir )
