@@ -2354,8 +2354,9 @@ static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
       HB_GTSUPER_REDRAWDIFF( pGT );
    else if( pGT->fRefresh )
    {
-      int i, l, r;
+      int i, l, r, s;
       long lIndex;
+      HB_U32 uiValue;
 
       for( i = 0; i < pGT->iHeight; ++i )
       {
@@ -2365,27 +2366,24 @@ static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
             for( l = 0; l < pGT->iWidth; ++l, ++lIndex )
             {
                if( pGT->prevBuffer[ lIndex ].uiValue !=
-                   hb_ctw_gt_cellValue( pGT, i, l ) )
-                  break;
-            }
-            if( l < pGT->iWidth )
-            {
-               lIndex = ( long ) ( i + 1 ) * pGT->iWidth - 1;
-               for( r = pGT->iWidth - 1; r > l; --r, --lIndex )
+                   ( uiValue = hb_ctw_gt_cellValue( pGT, i, l ) ) )
                {
-                  if( pGT->prevBuffer[ lIndex ].uiValue !=
-                      hb_ctw_gt_cellValue( pGT, i, r ) )
-                     break;
+                  pGT->prevBuffer[ lIndex ].uiValue = uiValue;
+                  s = r = l;
+                  while( ++l < pGT->iWidth )
+                  {
+                     ++lIndex;
+                     if( pGT->prevBuffer[ lIndex ].uiValue !=
+                         ( uiValue = pGT->screenBuffer[ lIndex ].uiValue ) )
+                     {
+                        pGT->prevBuffer[ lIndex ].uiValue = uiValue;
+                        r = l;
+                     }
+                     else if( pGT->iRedrawMax != 0 && l - r >= pGT->iRedrawMax )
+                        break;
+                  }
+                  HB_GTSELF_REDRAW( pGT, i, s, r - s + 1 );
                }
-               HB_GTSELF_REDRAW( pGT, i, l, r - l + 1 );
-               lIndex = ( long ) i * pGT->iWidth + l;
-               do
-               {
-                  pGT->prevBuffer[ lIndex ].uiValue =
-                     hb_ctw_gt_cellValue( pGT, i, l );
-                  ++lIndex;
-               }
-               while( ++l <= r );
             }
             pGT->pLines[ i ] = HB_FALSE;
          }

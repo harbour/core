@@ -971,6 +971,8 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_bClosable = s_bOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
    s_bResetColors = HB_FALSE;
 
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 4 );
+
    if( hb_fsIsDevice( hFilenoStdout ) )
       HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, HB_TRUE );
    if( hb_fsIsDevice( hFilenoStderr ) )

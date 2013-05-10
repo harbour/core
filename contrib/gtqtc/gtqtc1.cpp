@@ -1621,6 +1621,7 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pQTC->iRows, pQTC->iCols );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
    HB_GTSELF_SEMICOLD( pGT );
 }
 
@@ -2456,6 +2457,10 @@ void QTConsole::setFontSize( int iFH, int iFW )
       if( iWidth != iFW )
       {
          iDec = ( iFW * 100 ) / iWidth;
+         if( iDec < 1 )
+            iDec = 1;
+         else if( iDec >= 4000 )
+            iDec = 3999;
          iDir = iDec;
          do
          {
@@ -2470,15 +2475,17 @@ void QTConsole::setFontSize( int iFH, int iFW )
 
             if( iWidth < iFW )
             {
-               if( iDir <= iDec )
-                  iDec++;
-               else
+               if( iDir > iDec )
                   break;
+               ++iDec;
             }
             else /* iWidth > iFW */
-               iDir = iDec--;
+            {
+               if( --iDec <= iDir )
+                  iDir = iDec + 1;
+            }
          }
-         while( iDec >= ( iDir >> 1 ) && iDec <= ( iDir << 1 ) );
+         while( iDec > ( iDir >> 1 ) && iDec < ( iDir << 1 ) && iDec < 4000 );
       }
    }
 

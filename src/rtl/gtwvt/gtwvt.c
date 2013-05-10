@@ -2176,6 +2176,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    xy.x = LOWORD( lParam );
    xy.y = HIWORD( lParam );
 
+   if( message == WM_MOUSEWHEEL )
+      ScreenToClient( pWVT->hWnd, &xy );
+
    colrow = hb_gt_wvt_GetColRowFromXY( pWVT, xy.x, xy.y );
    if( hb_gt_wvt_SetMousePos( pWVT, colrow.y, colrow.x ) )
       hb_gt_wvt_AddCharToInputQueue( pWVT,
@@ -3184,6 +3187,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
    HB_GTSELF_SEMICOLD( pGT );
 
    /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
