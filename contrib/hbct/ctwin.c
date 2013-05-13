@@ -2374,7 +2374,7 @@ static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
                   {
                      ++lIndex;
                      if( pGT->prevBuffer[ lIndex ].uiValue !=
-                         ( uiValue = pGT->screenBuffer[ lIndex ].uiValue ) )
+                         ( uiValue = hb_ctw_gt_cellValue( pGT, i, l ) ) )
                      {
                         pGT->prevBuffer[ lIndex ].uiValue = uiValue;
                         r = l;
