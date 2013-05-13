@@ -1808,6 +1808,12 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pGT->fVgaCell = hb_itemGetL( pInfo->pNewVal );
          break;
 
+      case HB_GTI_REDRAWMAX:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pGT->iRedrawMax );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            pGT->iRedrawMax = hb_itemGetNI( pInfo->pNewVal );
+         break;
+
       case HB_GTI_BOXCP:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        pGT->cdpBox ? pGT->cdpBox->id : NULL );
@@ -2329,6 +2335,11 @@ static int hb_gt_def_SetFlag( PHB_GT pGT, int iType, int iNewValue )
          iPrevValue = pGT->fStdErrCon;
          pGT->fStdErrCon = iNewValue != 0;
          break;
+
+      case HB_GTI_REDRAWMAX:
+         iPrevValue = pGT->iRedrawMax;
+         pGT->iRedrawMax = iNewValue;
+         break;
    }
 
    return iPrevValue;
@@ -2515,7 +2526,7 @@ static void hb_gt_def_RedrawDiff( PHB_GT pGT )
 {
    if( pGT->fRefresh )
    {
-      int i, l, r;
+      int i, l, r, s;
       long lIndex;
 
       for( i = 0; i < pGT->iHeight; ++i )
@@ -2527,26 +2538,25 @@ static void hb_gt_def_RedrawDiff( PHB_GT pGT )
             {
                if( pGT->prevBuffer[ lIndex ].uiValue !=
                    pGT->screenBuffer[ lIndex ].uiValue )
-                  break;
-            }
-            if( l < pGT->iWidth )
-            {
-               lIndex = ( long ) ( i + 1 ) * pGT->iWidth - 1;
-               for( r = pGT->iWidth - 1; r > l; --r, --lIndex )
-               {
-                  if( pGT->prevBuffer[ lIndex ].uiValue !=
-                      pGT->screenBuffer[ lIndex ].uiValue )
-                     break;
-               }
-               HB_GTSELF_REDRAW( pGT, i, l, r - l + 1 );
-               lIndex = ( long ) i * pGT->iWidth + l;
-               do
                {
                   pGT->prevBuffer[ lIndex ].uiValue =
                      pGT->screenBuffer[ lIndex ].uiValue;
-                  ++lIndex;
+                  s = r = l;
+                  while( ++l < pGT->iWidth )
+                  {
+                     ++lIndex;
+                     if( pGT->prevBuffer[ lIndex ].uiValue !=
+                         pGT->screenBuffer[ lIndex ].uiValue )
+                     {
+                        pGT->prevBuffer[ lIndex ].uiValue =
+                           pGT->screenBuffer[ lIndex ].uiValue;
+                        r = l;
+                     }
+                     else if( pGT->iRedrawMax != 0 && l - r >= pGT->iRedrawMax )
+                        break;
+                  }
+                  HB_GTSELF_REDRAW( pGT, i, s, r - s + 1 );
                }
-               while( ++l <= r );
             }
             pGT->pLines[ i ] = HB_FALSE;
          }

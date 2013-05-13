@@ -290,8 +290,9 @@ typedef struct _HB_GT_BASE
    PHB_SCREENCELL screenBuffer;     /* window foreground (board) current buffer */
    PHB_SCREENCELL prevBuffer;       /* window foreground (board) previous buffer */
 
-   HB_BOOL *      pLines;           /* Touched Window lines */
-   HB_BOOL        fRefresh;         /* Should Window be refreshed */
+   HB_BOOL *      pLines;           /* touched Window lines */
+   HB_BOOL        fRefresh;         /* should Window be refreshed */
+   int            iRedrawMax;       /* maximum number of unchanged neighboring chars in redrawn line */
 
    HB_BOOL        fVgaCell;
    HB_BOOL        fIsColor;
