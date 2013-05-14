@@ -2,21 +2,21 @@ language: c
 compiler: gcc
 script: make
 before_install:
- - sudo apt-get install -qq libncurses-dev
- - sudo apt-get install -qq libslang2-dev
- - sudo apt-get install -qq libgpm-dev
+ - sudo apt-get install -qq firebird2.1-dev
  - sudo apt-get install -qq liballegro4.2-dev
  - sudo apt-get install -qq libcairo2-dev
  - sudo apt-get install -qq libcups2-dev
  - sudo apt-get install -qq libcurl4-openssl-dev
- - sudo apt-get install -qq firebird2.1-dev
  - sudo apt-get install -qq libfreeimage-dev
  - sudo apt-get install -qq libgd2-xpm-dev
+ - sudo apt-get install -qq libgpm-dev
  - sudo apt-get install -qq libgs-dev
  - sudo apt-get install -qq libmagic-dev
  - sudo apt-get install -qq libmysqlclient15-dev
- - sudo apt-get install -qq unixodbc-dev
+ - sudo apt-get install -qq libncurses-dev
  - sudo apt-get install -qq libpq-dev
+ - sudo apt-get install -qq libslang2-dev
+ - sudo apt-get install -qq unixodbc-dev
 notifications:
  email: false
 git:

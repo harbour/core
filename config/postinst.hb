@@ -346,6 +346,11 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    LOCAL cErrorMsg
    LOCAL aTrans
 
+   /* do not create .hbl for the base language */
+   IF SubStr( hb_FNameExt( hb_FNameName( cIn ) ), 2 ) == "en"
+      RETURN .T.
+   ENDIF
+
    aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg )
    IF aTrans != NIL
       IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
