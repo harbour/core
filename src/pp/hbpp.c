@@ -427,6 +427,7 @@ static char * hb_fsFileFind( const char * pszFileMask )
       char pszFileName[ HB_PATH_MAX ];
       PHB_FNAME pFileName = hb_fsFNameSplit( pszFileMask );
       pFileName->szName = ffind->szName;
+      pFileName->szExtension = NULL;
       hb_fsFNameMerge( pszFileName, pFileName );
       hb_fsFindClose( ffind );
       hb_xfree( pFileName );

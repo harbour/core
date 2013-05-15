@@ -13158,34 +13158,16 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 
 STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 
-   LOCAL hProc
-   LOCAL hOutErr
-
-   LOCAL cData
-   LOCAL nLen
-
    LOCAL nExitCode
 
    cStdOutErr := ""
 
-   IF ( hProc := hb_processOpen( cCommand,, @hOutErr, @hOutErr ) ) != F_ERROR
+   nExitCode := hb_processRun( cCommand,, @cStdOutErr, @cStdOutErr )
 
-      cData := Space( 1024 )
-      DO WHILE ( nLen := FRead( hOutErr, @cData, hb_BLen( cData ) ) ) > 0
-         cStdOutErr += hb_BLeft( cData, nLen )
-      ENDDO
-
-      nExitCode := hb_processValue( hProc )
-
-      FClose( hOutErr )
-
-      IF nExitCode != 0
-         OutErr( cStdOutErr )
-      ELSE
-         OutStd( cStdOutErr )
-      ENDIF
+   IF nExitCode != 0
+      OutErr( cStdOutErr )
    ELSE
-      nExitCode := -999
+      OutStd( cStdOutErr )
    ENDIF
 
    RETURN nExitCode

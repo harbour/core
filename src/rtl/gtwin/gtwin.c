@@ -1671,9 +1671,12 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT &&
                iEventMask & ~( INKEY_KEYBOARD | HB_INKEY_RAW ) )
       {
-
-         s_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-         s_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+         /* mouse wheel events use screen based mouse possition */
+         if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags != MOUSE_WHEELED )
+         {
+            s_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+            s_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+         }
 
          if( iEventMask & INKEY_MOVE &&
              s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )

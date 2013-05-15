@@ -138,7 +138,7 @@ HB_FUNC( HB_PROCESSRUN )
       nStdOut = nStdErr = 0;
       pStdOutBuf = pStdErrBuf = NULL;
       pStdOutPtr = pStdOut ? &pStdOutBuf : NULL;
-      pStdErrPtr = pStdErr ? &pStdErrBuf : NULL;
+      pStdErrPtr = pStdErr ? ( pStdOut == pStdErr ? pStdOutPtr : &pStdErrBuf ) : NULL;
 
       iResult = hb_fsProcessRun( szName, szStdIn, hb_parclen( 2 ),
                                  pStdOutPtr, &nStdOut, pStdErrPtr, &nStdErr,
@@ -157,7 +157,7 @@ HB_FUNC( HB_PROCESSRUN )
          if( ! hb_storclen_buffer( pStdErrBuf, nStdErr, 4 ) )
             hb_xfree( pStdErrBuf );
       }
-      else if( pStdErr )
+      else if( pStdErr && pStdOut != pStdErr )
          hb_storc( NULL, 4 );
 
       hb_retni( iResult );
