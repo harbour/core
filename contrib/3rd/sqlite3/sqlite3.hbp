@@ -9,6 +9,10 @@
 # NOTE: disable *nix builds on non-*nix platforms; [vszakats]
 #       except for cygwin-on-win
 -stop{!(HB_HOST_PLAT='win'&cygwin)&HB_HOST_PLAT_UNIX=''&unix}
+# NOTE: no MAP_SHARED (used by WAL) -- don't yet know what to do;
+#       this lets the rest build.
+-stop{minix}
+
 
 -hblib
 -inc
