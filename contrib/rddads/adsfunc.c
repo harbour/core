@@ -2170,6 +2170,7 @@ HB_FUNC( ADSRESTRUCTURETABLE )
 #endif
 }
 
+/* lSuccess := AdsCopyTableContent( szAliasDest [, nAdsFilterOption ] ) */
 HB_FUNC( ADSCOPYTABLECONTENTS )
 {
 #if ADS_LIB_VERSION >= 600
@@ -2188,7 +2189,7 @@ HB_FUNC( ADSCOPYTABLECONTENTS )
          if( pDest )
             hb_retl( AdsCopyTableContents( pArea->hTable,
                                            pDest->hTable,
-                                           ADS_IGNOREFILTERS ) == AE_SUCCESS );
+                                           ( UNSIGNED16 ) hb_parnidef( 2, ADS_IGNOREFILTERS ) ) == AE_SUCCESS );
          else
             hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
       }
