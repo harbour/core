@@ -877,7 +877,8 @@ int hb_fsProcessRun( const char * pszFilename,
    hStdin = hStdout = hStderr = FS_ERROR;
    phStdin = pStdInBuf ? &hStdin : NULL;
    phStdout = pStdOutPtr && pulStdOut ? &hStdout : NULL;
-   phStderr = pStdErrPtr && pulStdErr ? &hStderr : NULL;
+   phStderr = pStdErrPtr && pulStdErr ?
+              ( pStdOutPtr == pStdErrPtr ? phStdout : &hStderr ) : NULL;
 
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
 {
@@ -916,7 +917,12 @@ int hb_fsProcessRun( const char * pszFilename,
       hStdout = _HB_NULLHANDLE();
 
    if( pStdErrPtr && pulStdErr )
-      hStderr = hb_fsCreateTempEx( sTmpErr, NULL, NULL, NULL, FC_NORMAL );
+   {
+      if( phStdout == phStderr )
+         hStderr = hStdout;
+      else
+         hStderr = hb_fsCreateTempEx( sTmpErr, NULL, NULL, NULL, FC_NORMAL );
+   }
    else if( fDetach )
       hStderr = _HB_NULLHANDLE();
 
@@ -944,7 +950,7 @@ int hb_fsProcessRun( const char * pszFilename,
       if( sTmpOut[ 0 ] )
          hb_fsDelete( sTmpOut );
    }
-   if( hStderr != FS_ERROR )
+   if( hStderr != FS_ERROR && hStderr != hStdout )
    {
       if( pStdErrPtr && pulStdErr )
       {
@@ -1030,7 +1036,8 @@ int hb_fsProcessRun( const char * pszFilename,
                else
                   nOutBuf += ul;
             }
-            else if( hStderr != FS_ERROR && lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStderr ) )
+            else if( hStderr != FS_ERROR &&
+                     lpHandles[ dwResult ] == ( HANDLE ) hb_fsGetOsHandle( hStderr ) )
             {
                if( nErrBuf == nErrSize )
                {
@@ -1205,7 +1212,7 @@ int hb_fsProcessRun( const char * pszFilename,
       *pStdOutPtr = pOutBuf;
       *pulStdOut = nOutBuf;
    }
-   if( phStderr )
+   if( phStderr && phStdout != phStderr )
    {
       *pStdErrPtr = pErrBuf;
       *pulStdErr = nErrBuf;

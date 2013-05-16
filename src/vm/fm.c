@@ -1353,7 +1353,7 @@ HB_SIZE hb_xquery( int iMode )
             union REGS regs;
             regs.HB_XREGS.ax = 0;
             HB_DOS_INT86( 0x12, &regs, &regs );
-            iMode = regs.h.al;
+            nResult = regs.w.ax;
          }
 #else
          nResult = 9999;
