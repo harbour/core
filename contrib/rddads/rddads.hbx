@@ -151,7 +151,7 @@ DYNAMIC AdsSetDeleted
 DYNAMIC AdsSetEpoch
 DYNAMIC AdsSetExact
 DYNAMIC AdsSetFileType
-DYNAMIC ADSSETINDEXDIRECTION
+DYNAMIC AdsSetIndexDirection
 DYNAMIC AdsSetRelKeyPos
 DYNAMIC AdsSetSearchPath
 DYNAMIC AdsSetServerType
