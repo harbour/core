@@ -2419,3 +2419,15 @@ HB_FUNC( ADSDDDROPLINK )
    hb_retl( HB_FALSE );
 #endif
 }
+
+HB_FUNC( ADSSETINDEXDIRECTION )
+{
+   UNSIGNED32 nRet = 0;
+#if ADS_LIB_VERSION >= 900
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea )
+      nRet = AdsSetIndexDirection( pArea->hOrdCurrent, ( UNSIGNED16 ) hb_parni( 1 ) );
+#endif
+   hb_retni( nRet );
+}

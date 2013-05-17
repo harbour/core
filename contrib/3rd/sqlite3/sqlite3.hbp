@@ -35,6 +35,7 @@
 
 -cflag=-DSQLITE_THREADSAFE=0{minix}
 -cflag=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
+-cflag=-DSQLITE_OMIT_WAL=1{minix}
 
 # mingw 4.5.0/4.5.1 revisions fail compiling in iso90 mode. It's fixed in 4.5.2.
 -c=gnu90{allgcc&HB_COMP_VER='45'}
@@ -42,8 +43,8 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.16
-# URL    http://sqlite.org/2013/sqlite-amalgamation-3071600.zip
+# VER    3.7.16.2
+# URL    http://sqlite.org/2013/sqlite-amalgamation-3071602.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
