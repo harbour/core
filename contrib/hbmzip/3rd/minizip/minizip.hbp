@@ -27,15 +27,16 @@ unzip.c
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
-# ORIGIN http://www.winimage.com/zLibDll/minizip.html
-# VER    1.? (from zlib 1.2.8)
-# URL    http://www.winimage.com/zLibDll/unzip1?.zip
+# ORIGIN http://zlib.net/
+# VER    1.2.8
+# URL    http://prdownloads.sourceforge.net/libpng/zlib128.zip?download
 # DIFF   minizip.dif
 #
-# MAP    crypt.h
-# MAP    ioapi.c
-# MAP    ioapi.h
-# MAP    unzip.c
-# MAP    unzip.h
-# MAP    zip.c
-# MAP    zip.h
+# MAP    README
+# MAP    contrib/minizip/crypt.h crypt.h
+# MAP    contrib/minizip/ioapi.c ioapi.c
+# MAP    contrib/minizip/ioapi.h ioapi.h
+# MAP    contrib/minizip/unzip.c unzip.c
+# MAP    contrib/minizip/unzip.h unzip.h
+# MAP    contrib/minizip/zip.c   zip.c
+# MAP    contrib/minizip/zip.h   zip.h
