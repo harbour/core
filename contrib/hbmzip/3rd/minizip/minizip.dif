@@ -1,6 +1,6 @@
-diff -u minizip.orig\crypt.h minizip\crypt.h
---- minizip.orig\crypt.h	Sun Oct 25 22:49:58 2009
-+++ minizip\crypt.h	Fri Jun 08 16:12:21 2012
+diff -u minizip.orig/crypt.h minizip/crypt.h
+--- minizip.orig/crypt.h	Sun Oct 25 22:49:58 2009
++++ minizip/crypt.h	Fri Jun 08 16:12:21 2012
 @@ -32,12 +32,14 @@
  /***********************************************************************
   * Return the next byte in the pseudo-random sequence
@@ -44,9 +44,9 @@ diff -u minizip.orig\crypt.h minizip\crypt.h
                       unsigned long crcForCrypting)
  {
      int n;                       /* index in random header */
-diff -u minizip.orig\ioapi.c minizip\ioapi.c
---- minizip.orig\ioapi.c	Sat Jan 21 12:58:44 2012
-+++ minizip\ioapi.c	Wed Feb 08 00:33:29 2012
+diff -u minizip.orig/ioapi.c minizip/ioapi.c
+--- minizip.orig/ioapi.c	Sat Jan 21 12:58:44 2012
++++ minizip/ioapi.c	Wed Feb 08 00:33:29 2012
 @@ -27,6 +27,7 @@
  
  
@@ -176,9 +176,9 @@ diff -u minizip.orig\ioapi.c minizip\ioapi.c
  {
      pzlib_filefunc_def->zopen_file = fopen_file_func;
      pzlib_filefunc_def->zread_file = fread_file_func;
-diff -u minizip.orig\ioapi.h minizip\ioapi.h
---- minizip.orig\ioapi.h	Mon Jan 16 19:51:30 2012
-+++ minizip\ioapi.h	Wed Feb 08 00:39:52 2012
+diff -u minizip.orig/ioapi.h minizip/ioapi.h
+--- minizip.orig/ioapi.h	Mon Jan 16 19:51:30 2012
++++ minizip/ioapi.h	Wed Feb 08 00:39:52 2012
 @@ -21,30 +21,58 @@
  #ifndef _ZLIBIOAPI64_H
  #define _ZLIBIOAPI64_H
@@ -267,9 +267,9 @@ diff -u minizip.orig\ioapi.h minizip\ioapi.h
  #define ZCLOSE64(filefunc,filestream)             ((*((filefunc).zfile_func64.zclose_file))  ((filefunc).zfile_func64.opaque,filestream))
  #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
  
-diff -u minizip.orig\unzip.c minizip\unzip.c
---- minizip.orig\unzip.c	Sat Jan 21 12:49:30 2012
-+++ minizip\unzip.c	Fri Jun 08 16:24:24 2012
+diff -u minizip.orig/unzip.c minizip/unzip.c
+--- minizip.orig/unzip.c	Sat Jan 21 12:49:30 2012
++++ minizip/unzip.c	Fri Jun 08 16:24:24 2012
 @@ -68,13 +68,21 @@
  #include <stdlib.h>
  #include <string.h>
@@ -369,9 +369,9 @@ diff -u minizip.orig\unzip.c minizip\unzip.c
  
      pfile_in_zip_read_info->crc32_wait=s->cur_file_info.crc;
      pfile_in_zip_read_info->crc32=0;
-diff -u minizip.orig\zip.c minizip\zip.c
---- minizip.orig\zip.c	Sat Feb 04 11:14:12 2012
-+++ minizip\zip.c	Fri Jun 08 16:25:00 2012
+diff -u minizip.orig/zip.c minizip/zip.c
+--- minizip.orig/zip.c	Sat Feb 04 11:14:12 2012
++++ minizip/zip.c	Fri Jun 08 16:25:00 2012
 @@ -29,16 +29,24 @@
  #include "zlib.h"
  #include "zip.h"
@@ -562,9 +562,9 @@ diff -u minizip.orig\zip.c minizip\zip.c
  
    if(pData == NULL || *dataLen < 4)
      return ZIP_PARAMERROR;
-diff -u minizip.orig\zip.h minizip\zip.h
---- minizip.orig\zip.h	Mon Feb 15 04:58:22 2010
-+++ minizip\zip.h	Wed Feb 08 00:31:09 2012
+diff -u minizip.orig/zip.h minizip/zip.h
+--- minizip.orig/zip.h	Mon Feb 15 04:58:22 2010
++++ minizip/zip.h	Wed Feb 08 00:31:09 2012
 @@ -44,7 +44,7 @@
  extern "C" {
  #endif

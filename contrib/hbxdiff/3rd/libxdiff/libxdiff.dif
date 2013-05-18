@@ -1,6 +1,6 @@
 diff -urN libxdiff.orig/xinclude.h libxdiff/xinclude.h
---- libxdiff.orig/xinclude.h	2008-11-12 21:29:12 +0000
-+++ libxdiff/xinclude.h	2011-01-04 10:57:29 +0000
+--- libxdiff.orig/xinclude.h	Sat May 18 04:20:42 2013
++++ libxdiff/xinclude.h	Sat May 18 04:20:42 2013
 @@ -23,6 +23,9 @@
  #if !defined(XINCLUDE_H)
  #define XINCLUDE_H
@@ -10,4 +10,4 @@ diff -urN libxdiff.orig/xinclude.h libxdiff/xinclude.h
 +#endif /* #if defined(HAVE_HBCONFIG_H) */
  
  #if defined(HAVE_WINCONFIG_H)
- #include "winconfig.h"
+ #include "winconf.h"

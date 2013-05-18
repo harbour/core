@@ -34,7 +34,7 @@ xversion.c
 #
 # MAP    AUTHORS
 # MAP    COPYING
-# MAP    winconfig.h
+# MAP    winconfig.h         winconf.h
 # MAP    man/xdiff.txt       xdiff.txt
 # MAP    xdiff/xadler32.c    xadler32.c
 # MAP    xdiff/xadler32.h    xadler32.h
