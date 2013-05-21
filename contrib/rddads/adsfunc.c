@@ -2422,18 +2422,20 @@ HB_FUNC( ADSDDDROPLINK )
 
 HB_FUNC( ADSSETINDEXDIRECTION  )
 {
+#if ADS_LIB_VERSION >= 900
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+   ADSHANDLE hIndex;
    UNSIGNED32 nRet = 0 ;
    
-   if( pArea )
-      {
-         ADSHANDLE  hIndex = pArea->hOrdCurrent;
+   if( pArea && HB_ISNUM( 1 ) )
+   {
+       hIndex = pArea->hOrdCurrent;
    
-         if (hb_parinfo(0)==1  && HB_ISNUM(1) )
-          {
-             nRet = AdsSetIndexDirection( hIndex, (UNSIGNED16) hb_parni(1) );
-         }
-      }
+       nRet = AdsSetIndexDirection( hIndex, ( UNSIGNED16 ) hb_parni( 1 ) );
+   }
       
-   hb_retni(nRet);   
+   hb_retnl( nRet );   
+#else
+   hb_retnl( 0 );
+#endif
 }
