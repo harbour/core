@@ -169,8 +169,13 @@ static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    PGconn *       pConn;
    ConnStatusType status;
+   const char *   pszHost;
 
-   pConn = PQsetdbLogin( hb_arrayGetCPtr( pItem, 2 ), NULL, NULL, NULL, hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
+   pszHost = hb_arrayGetCPtr( pItem, 2 );
+   if( pszHost && strncmp( pszHost, "postgresql://", 13 ) == 0 || strchr( pszHost, '=' ) )
+      pConn = PQconnectdb( pszHost );
+   else
+      pConn = PQsetdbLogin( pszHost, hb_arrayGetCPtr( pItem, 6 ), hb_arrayGetCPtr( pItem, 7 ), hb_arrayGetCPtr( pItem, 8 ), hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
 
    if( ! pConn )   /* Low memory, etc */
    {
