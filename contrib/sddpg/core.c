@@ -172,7 +172,7 @@ static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    const char *   pszHost;
 
    pszHost = hb_arrayGetCPtr( pItem, 2 );
-   if( pszHost && strncmp( pszHost, "postgresql://", 13 ) == 0 || strchr( pszHost, '=' ) )
+   if( pszHost && ( strncmp( pszHost, "postgresql://", 13 ) == 0 || strchr( pszHost, '=' ) ) )
       pConn = PQconnectdb( pszHost );
    else
       pConn = PQsetdbLogin( pszHost, hb_arrayGetCPtr( pItem, 6 ), hb_arrayGetCPtr( pItem, 7 ), hb_arrayGetCPtr( pItem, 8 ), hb_arrayGetCPtr( pItem, 5 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ) );
