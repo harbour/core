@@ -5443,28 +5443,28 @@ static void hb_vmHashGen( HB_SIZE nElements ) /* generates an nElements Hash and
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pHash, pKey, pVal;
+   int iPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmHashGen(%" HB_PFS "u)", nElements ) );
 
    /* create new hash item */
    pHash = hb_hashNew( NULL );
    hb_hashPreallocate( pHash, nElements );
-   while( nElements-- )
+   nElements <<= 1;
+   iPos = - ( int ) nElements;
+   while( iPos )
    {
-      pKey = hb_stackItemFromTop( -2 );
-      pVal = hb_stackItemFromTop( -1 );
+      pKey = hb_stackItemFromTop( iPos++ );
+      pVal = hb_stackItemFromTop( iPos++ );
       if( HB_IS_HASHKEY( pKey ) )
-      {
          hb_hashAddNew( pHash, pKey, pVal );
-         hb_stackPop();
-         hb_stackPop();
-      }
       else
       {
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pHash, pKey, pVal );
          break;
       }
    }
+   hb_stackRemove( hb_stackTopOffset() - nElements );
    hb_itemMove( hb_stackAllocItem(), pHash );
    hb_itemRelease( pHash );
 }

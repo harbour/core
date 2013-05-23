@@ -917,7 +917,7 @@ extern HB_EXPORT HB_BOOL   hb_hashDelAt( PHB_ITEM pHash, HB_SIZE nPos );
 #define HB_HASH_KEEPORDER           0x40
 
 #define HB_HASH_FLAG_MASK           0xFFFF
-#define HB_HASH_FLAG_DEFAULT        ( HB_HASH_AUTOADD_ASSIGN | HB_HASH_BINARY )
+#define HB_HASH_FLAG_DEFAULT        ( HB_HASH_AUTOADD_ASSIGN | HB_HASH_BINARY | HB_HASH_KEEPORDER )
 
 #define HB_HASH_UNION      0  /* logical OR  on items in two hash tables */
 #define HB_HASH_INTERSECT  1  /* logical AND on items in two hash tables */
