@@ -211,7 +211,6 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             AAdd( aEntry, hEntry )
          ENDIF
          hEntry := { => }
-         hb_HKeepOrder( hEntry, .T. )
          IF HB_ISHASH( hMeta )
             FOR EACH tmp IN hMeta
                hEntry[ tmp:__enumKey() ] := tmp

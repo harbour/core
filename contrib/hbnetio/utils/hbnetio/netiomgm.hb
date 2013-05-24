@@ -266,8 +266,6 @@ STATIC FUNCTION MyClientInfo()
 
    LOCAL hInfo := { => }
 
-   hb_HKeepOrder( hInfo, .T. )
-
    hInfo[ "OS()"          ] := OS()
    hInfo[ "Version()"     ] := Version()
    hInfo[ "hb_Compiler()" ] := hb_Compiler()

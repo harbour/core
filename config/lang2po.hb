@@ -90,9 +90,7 @@ STATIC FUNCTION Meta()
 
    LOCAL meta
 
-   /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
-   hb_HKeepOrder( hMeta, .T. )
    hMeta[ "Project-Id-Version:"        ] := "core-lang"
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp

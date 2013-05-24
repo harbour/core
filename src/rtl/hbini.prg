@@ -91,13 +91,10 @@ FUNCTION hb_iniNew( lAutoMain )
 
    LOCAL hIni := { => }
 
-   hb_HKeepOrder( hIni, .T. )
-
    hb_default( @lAutoMain, .T. )
 
    IF lAutoMain
       hIni[ "MAIN" ] := { => }
-      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
    RETURN hIni
@@ -110,8 +107,6 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
    LOCAL hIni := { => }
 
-   hb_HKeepOrder( hIni, .T. )
-
    /* Default case sensitiveness for keys */
    hb_default( @lKeyCaseSens, .T. )
    hb_default( @cSplitters, "=" )
@@ -122,7 +117,6 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
    IF lAutoMain
       hIni[ "MAIN" ] := { => }
-      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
    RETURN hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
@@ -249,7 +243,6 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
             hCurrentSection := { => }
-            hb_HKeepOrder( hCurrentSection, .T. )
             IF ! lKeyCaseSens
                cLine := Upper( cLine )
             ENDIF

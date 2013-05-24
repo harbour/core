@@ -345,7 +345,6 @@ function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    cLine := ""
    hVal := {=>}
    aInd := {}
-   hb_hKeepOrder( hVal, .t. )
    for n := nMin to nMax
       cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
       if len( cLine ) == nLine
@@ -401,7 +400,6 @@ function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    cLine := ""
    hVal := {=>}
    aInd := {}
-   hb_hKeepOrder( hVal, .t. )
    for n := nMin to nMax step 2
       cLine += chr( iif( n == 0, 0, aVal[ n ] ) + aVal[ n + 1 ] * 16 )
       if len( cLine ) == nLine

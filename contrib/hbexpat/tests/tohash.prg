@@ -52,8 +52,6 @@ PROCEDURE Main( cFileName )
    aNode[ _N_xValue ] := NIL
    aNode[ _N_hAttr ] := NIL
 
-   hb_HKeepOrder( aNode[ _N_hChild ], .T. )
-
    aUserData := Array( _D_MAX_ )
    aUserData[ _D_aTree ] := aNode
    aUserData[ _D_aNode ] := aUserData[ _D_aTree ]
@@ -134,8 +132,6 @@ STATIC PROCEDURE cb_start( aUserData, cElement, aAttrList )
    aNewNode[ _N_hChild ] := { => }
    aNewNode[ _N_xValue ] := ""
    aNewNode[ _N_hAttr ] := { => }
-
-   hb_HKeepOrder( aNewNode[ _N_hChild ], .T. )
 
    IF cElement $ aNode[ _N_hChild ]
       AAdd( aNode[ _N_hChild ][ cElement ], aNewNode )

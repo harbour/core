@@ -53,11 +53,7 @@ PROCEDURE DllMain()
     * array bound with given OLE object using QSelf() function. It maybe
     * useful if hash array contains instance variables and programmer
     * wants to access them.
-    * Please remember that using hash array which was initialized to keep
-    * original assign order by hb_HKeepOrder( <hAction>, .T. ) before
-    * adding its items you can define strict message numbers (DISPIDs), i.e.:
-    *    hAction := {=>}
-    *    hb_HKeepOrder( hAction, .T. )
+    *    hAction := { => }
     *    hAction[ "OPEN" ]  := @myole_open()     // DISPID=1
     *    hAction[ "CLOSE" ] := @myole_close()    // DISPID=2
     *    hAction[ "SAVE" ]  := @myole_save()     // DISPID=3

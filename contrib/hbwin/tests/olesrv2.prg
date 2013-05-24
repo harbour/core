@@ -16,7 +16,6 @@ PROCEDURE DllMain()
    LOCAL hAction
 
    hAction := { => }
-   hb_HKeepOrder( hAction, .T. )
    hb_HCaseMatch( hAction, .F. )
    hAction[ "DATE" ]     := @Date()          // DISPID=1
    hAction[ "TIME" ]     := @Time()          // DISPID=2
