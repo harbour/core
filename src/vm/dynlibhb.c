@@ -138,6 +138,11 @@ PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
          }
 #elif defined( HB_HAS_DLFCN )
          hDynLib = ( void * ) dlopen( hb_itemGetCPtr( pLibName ), RTLD_LAZY | RTLD_GLOBAL );
+
+         if( ! hDynLib )
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "hb_libLoad(): dlopen(): %s", dlerror() ) );
+         }
 #else
          {
             int iTODO;
