@@ -2170,7 +2170,7 @@ HB_FUNC( ADSRESTRUCTURETABLE )
 #endif
 }
 
-/* lSuccess := AdsCopyTableContent( szAliasDest [, nAdsFilterOption ] ) */
+/* AdsCopyTableContent( szAliasDest [, nAdsFilterOption ] ) -> lSuccess */
 HB_FUNC( ADSCOPYTABLECONTENTS )
 {
 #if ADS_LIB_VERSION >= 600
@@ -2420,21 +2420,19 @@ HB_FUNC( ADSDDDROPLINK )
 #endif
 }
 
-HB_FUNC( ADSSETINDEXDIRECTION  )
+HB_FUNC( ADSSETINDEXDIRECTION )
 {
 #if ADS_LIB_VERSION >= 900
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
    ADSHANDLE hIndex;
-   UNSIGNED32 nRet = 0 ;
-   
+   UNSIGNED32 nRet = 0;
+
    if( pArea && HB_ISNUM( 1 ) )
    {
-       hIndex = pArea->hOrdCurrent;
-   
-       nRet = AdsSetIndexDirection( hIndex, ( UNSIGNED16 ) hb_parni( 1 ) );
+      hIndex = pArea->hOrdCurrent;
+      nRet = AdsSetIndexDirection( hIndex, ( UNSIGNED16 ) hb_parni( 1 ) );
    }
-      
-   hb_retnl( nRet );   
+   hb_retnl( nRet );
 #else
    hb_retnl( 0 );
 #endif
