@@ -210,19 +210,16 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
 static void hb_hashResort( PHB_BASEHASH pBaseHash )
 {
    HB_SIZE nPos;
-
+   PHB_HASHPAIR pPairs = ( PHB_HASHPAIR )
+                           hb_xgrab( pBaseHash->nLen * sizeof( HB_HASHPAIR ) );
    for( nPos = 0; nPos < pBaseHash->nLen; ++nPos )
    {
-      HB_SIZE nFrom = pBaseHash->pnPos[ nPos ];
-
-      if( nFrom != nPos )
-      {
-         HB_HASHPAIR pair;
-         memcpy( &pair, pBaseHash->pPairs + nPos, sizeof( HB_HASHPAIR ) );
-         memcpy( pBaseHash->pPairs + nPos, pBaseHash->pPairs + nFrom, sizeof( HB_HASHPAIR ) );
-         memcpy( pBaseHash->pPairs + nFrom, &pair, sizeof( HB_HASHPAIR ) );
-      }
+      memcpy( pPairs + nPos, pBaseHash->pPairs + pBaseHash->pnPos[ nPos ], sizeof( HB_HASHPAIR ) );
+      pBaseHash->pnPos[ nPos ] = nPos;
    }
+
+   hb_xfree( pBaseHash->pPairs );
+   pBaseHash->pPairs = pPairs;
 }
 
 static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
