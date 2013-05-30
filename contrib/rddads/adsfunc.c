@@ -2429,5 +2429,5 @@ HB_FUNC( ADSSETINDEXDIRECTION )
    if( pArea )
       nRet = AdsSetIndexDirection( pArea->hOrdCurrent, ( UNSIGNED16 ) hb_parni( 1 ) );
 #endif
-   hb_retni( nRet );
+   hb_retnl( nRet );
 }
