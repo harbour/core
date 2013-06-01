@@ -5457,7 +5457,7 @@ static void hb_vmHashGen( HB_SIZE nElements ) /* generates an nElements Hash and
       pKey = hb_stackItemFromTop( iPos++ );
       pVal = hb_stackItemFromTop( iPos++ );
       if( HB_IS_HASHKEY( pKey ) )
-         hb_hashAddNew( pHash, pKey, pVal );
+         hb_hashAdd( pHash, pKey, pVal );
       else
       {
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pHash, pKey, pVal );
