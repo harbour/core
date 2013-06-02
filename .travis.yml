@@ -5,7 +5,6 @@ before_install:
  - sudo apt-get install -qq firebird2.1-dev
  - sudo apt-get install -qq liballegro4.2-dev
  - sudo apt-get install -qq libcairo2-dev
- - sudo apt-get install -qq libcups2-dev
  - sudo apt-get install -qq libcurl4-openssl-dev
  - sudo apt-get install -qq libfreeimage-dev
  - sudo apt-get install -qq libgd2-xpm-dev
