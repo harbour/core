@@ -9,7 +9,7 @@ before_install:
  - sudo apt-get install -qq libfreeimage-dev
  - sudo apt-get install -qq libgd2-xpm-dev
  - sudo apt-get install -qq libgpm-dev
- - sudo apt-get install -qq libgs-dev
+ - sudo apt-get install -qq libgs-dev --fix-missing
  - sudo apt-get install -qq libmagic-dev
  - sudo apt-get install -qq libmysqlclient15-dev
  - sudo apt-get install -qq libncurses-dev
