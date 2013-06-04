@@ -759,6 +759,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
    {
       struct stat statbuf;
       struct tm   st;
+      time_t      ftime;
       char *      pszFree;
 
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
@@ -784,10 +785,11 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                       ( ( statbuf.st_mode & S_IWUSR ) ? 0x00800000 : 0 ) |
                       ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
+         ftime = statbuf.st_mtime;
 #  if defined( HB_HAS_LOCALTIME_R )
-         localtime_r( &statbuf.st_mtime, &st );
+         localtime_r( &ftime, &st );
 #  else
-         st = *localtime( &statbuf.st_mtime );
+         st = *localtime( &ftime );
 #  endif
 
          zfi.tmz_date.tm_sec  = st.tm_sec;

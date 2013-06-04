@@ -92,8 +92,8 @@ License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
-BuildPrereq:    gcc binutils bash %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
-Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
+BuildPrereq:    gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
+Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour lib%{name}.so
 BuildRoot:      /tmp/%{name}-%{version}-root
 

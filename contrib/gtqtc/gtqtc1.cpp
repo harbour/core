@@ -56,6 +56,23 @@ static  HB_GT_FUNCS     SuperTable;
 
 #define HB_GTQTC_GET(p) ( ( PHB_GTQTC ) HB_GTLOCAL( p ) )
 
+
+#ifndef HB_QT_NEEDLOCKS
+#  if defined( HB_OS_UNIX )
+#     define HB_QT_NEEDLOCKS
+#  endif
+#endif
+
+#ifdef HB_QT_NEEDLOCKS
+#  include "hbthread.h"
+   static HB_CRITICAL_NEW( s_qtcMtx );
+#  define HB_QTC_LOCK()       do { hb_threadEnterCriticalSection( &s_qtcMtx )
+#  define HB_QTC_UNLOCK()     hb_threadLeaveCriticalSection( &s_qtcMtx ); } while( 0 )
+#else
+#  define HB_QTC_LOCK()       do {} while( 0 )
+#  define HB_QTC_UNLOCK()     do {} while( 0 )
+#endif
+
 static QApplication * s_qtapp = NULL;
 
 /* *********************************************************************** */
@@ -1537,7 +1554,9 @@ static void hb_gt_qtc_setWindowFlags( PHB_GTQTC pQTC, Qt::WindowFlags flags, HB_
       currFlags &= ~flags;
 
    pQTC->qWnd->setWindowFlags( currFlags );
+   HB_QTC_LOCK();
    pQTC->qWnd->show();
+   HB_QTC_UNLOCK();
 }
 
 static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB_BOOL fSet )
@@ -1550,7 +1569,9 @@ static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB
       currState &= ~state;
 
    pQTC->qWnd->setWindowState( currState );
+   HB_QTC_LOCK();
    pQTC->qWnd->show();
+   HB_QTC_UNLOCK();
 }
 
 static void hb_gt_qtc_initWindow( PHB_GTQTC pQTC, HB_BOOL fCenter )
@@ -1577,7 +1598,9 @@ static void hb_gt_qtc_createConsoleWindow( PHB_GTQTC pQTC )
 
    hb_gt_qtc_initWindow( pQTC, HB_FALSE );
 
+   HB_QTC_LOCK();
    pQTC->qWnd->show();
+   HB_QTC_UNLOCK();
    pQTC->qWnd->update();
 }
 
@@ -1735,10 +1758,12 @@ static int hb_gt_qtc_ReadKey( PHB_GT pGT, int iEventMask )
    {
       int iKey;
 
+      HB_QTC_LOCK();
       if( pQTC->qEventLoop )
          pQTC->qEventLoop->processEvents( QEventLoop::AllEvents );
       else
          QApplication::processEvents( QEventLoop::AllEvents );
+      HB_QTC_UNLOCK();
 
       if( hb_gt_qtc_getKeyFromInputQueue( pQTC, &iKey ) )
          return iKey;

@@ -5442,7 +5442,7 @@ static void hb_vmArrayDim( HB_USHORT uiDimensions ) /* generates an uiDimensions
 static void hb_vmHashGen( HB_SIZE nElements ) /* generates an nElements Hash and fills it from the stack values */
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pHash, pKey, pVal;
+   PHB_ITEM pHash;
    int iPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmHashGen(%" HB_PFS "u)", nElements ) );
@@ -5454,8 +5454,8 @@ static void hb_vmHashGen( HB_SIZE nElements ) /* generates an nElements Hash and
    iPos = - ( int ) nElements;
    while( iPos )
    {
-      pKey = hb_stackItemFromTop( iPos++ );
-      pVal = hb_stackItemFromTop( iPos++ );
+      PHB_ITEM pKey = hb_stackItemFromTop( iPos++ );
+      PHB_ITEM pVal = hb_stackItemFromTop( iPos++ );
       if( HB_IS_HASHKEY( pKey ) )
          hb_hashAdd( pHash, pKey, pVal );
       else
