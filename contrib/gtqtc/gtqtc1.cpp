@@ -2985,6 +2985,9 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
       HB_WCHAR wc = event->text().constData()[ 0 ].unicode();
       if( wc >= 32 && wc != 127 )
       {
+         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
+            /* workaround for AltGR and German keyboard */
+            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
          hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
          return;
       }
