@@ -377,7 +377,7 @@ HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
    return nLen;
 }
 
-int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal )
+static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal )
 {
    if( ( iFlags & HB_KF_KEYPAD ) != 0 &&
        ( iFlags & ( HB_KF_ALT | HB_KF_CTRL ) ) != 0 )

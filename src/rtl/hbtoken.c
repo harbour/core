@@ -52,8 +52,9 @@
 
 #define _HB_TOK_RESPECT_DQUOTE   1
 #define _HB_TOK_RESPECT_SQUOTE   2
-#define _HB_TOK_ISDELIM          4
-#define _HB_TOK_STRIP_QUUTE      8
+#define _HB_TOK_RESPECT_BQUOTE   4
+#define _HB_TOK_ISDELIM          8
+#define _HB_TOK_STRIP_QUUTE      16
 
 static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
                               const char * szDelim, HB_SIZE nDelim,
@@ -70,7 +71,8 @@ static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
             cQuote = 0;
       }
       else if( ( szLine[ ul ] == '"' && ( iFlags & _HB_TOK_RESPECT_DQUOTE ) ) ||
-               ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
+               ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) ||
+               ( szLine[ ul ] == '`' && ( iFlags & _HB_TOK_RESPECT_BQUOTE ) ) )
          cQuote = szLine[ ul ];
       else if( szLine[ ul ] == szDelim[ 0 ] &&
                ( nDelim == 1 || ! memcmp( szLine + ul, szDelim, nDelim ) ) )
@@ -104,7 +106,8 @@ static const char * hb_tokenGet( const char * szLine, HB_SIZE nLen,
             cQuote = 0;
       }
       else if( ( szLine[ ul ] == '"' && ( iFlags & _HB_TOK_RESPECT_DQUOTE ) ) ||
-               ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
+               ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) ||
+               ( szLine[ ul ] == '`' && ( iFlags & _HB_TOK_RESPECT_BQUOTE ) ) )
          cQuote = szLine[ ul ];
       else if( szLine[ ul ] == szDelim[ 0 ] &&
                ( nDelim == 1 || ! memcmp( szLine + ul, szDelim, nDelim ) ) )
@@ -152,7 +155,8 @@ static PHB_ITEM hb_tokenArray( const char * szLine, HB_SIZE nLen,
                cQuote = 0;
          }
          else if( ( szLine[ ul ] == '"' && ( iFlags & _HB_TOK_RESPECT_DQUOTE ) ) ||
-                  ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) )
+                  ( szLine[ ul ] == '\'' && ( iFlags & _HB_TOK_RESPECT_SQUOTE ) ) ||
+                  ( szLine[ ul ] == '`' && ( iFlags & _HB_TOK_RESPECT_BQUOTE ) ) )
             cQuote = szLine[ ul ];
          else if( szLine[ ul ] == szDelim[ 0 ] &&
                   ( nDelim == 1 || ! memcmp( szLine + ul, szDelim, nDelim ) ) )
@@ -221,6 +225,8 @@ static HB_BOOL hb_tokenParam( int iParam, HB_SIZE nSkip,
          if( hb_parl( iParam + 2 ) )
             iFlags &= ~_HB_TOK_RESPECT_SQUOTE;
       }
+      else
+         iFlags |= hb_parni( iParam + 1 );
    }
 
    *pnLen = nLen;

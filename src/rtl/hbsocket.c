@@ -2650,7 +2650,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
 {
    if( af == HB_SOCKET_AF_INET )
    {
-#if defined( IP_ADD_MEMBERSHIP ) && defined( IPPROTO_IP )
+#if defined( IP_ADD_MEMBERSHIP ) /* && defined( IPPROTO_IP ) */
       struct ip_mreq mreq;
       int ret;
 

@@ -15,10 +15,12 @@ REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
+REQUEST HB_CODEPAGE_UTF8EX
 #else
+#define hb_keyStd( n )  ( n )
 #define hb_keyCode( n ) Asc( n )
-#define hb_keyChar( c ) Chr( c )
-#define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_keyChar( c ) iif( c >= 32 .AND. c <= 255, Chr( c ), "" )
+#define hb_ntos( n )    LTrim( Str( n ) )
 #endif
 #ifndef HB_K_RESIZE
 #define HB_K_RESIZE 1101
@@ -26,7 +28,7 @@ REQUEST HB_CODEPAGE_PLWIN
 
 PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
-   LOCAL k, i, s
+   LOCAL k, kX, i, s
    LOCAL aKeys := { ;
       { "K_UP",               5, "Up arrow, Ctrl-E"                }, ;
       { "K_DOWN",            24, "Down arrow, Ctrl-X"              }, ;
@@ -242,7 +244,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
 
 #ifdef __HARBOUR__
-   Set( _SET_EVENTMASK, HB_INKEY_ALL )
+   Set( _SET_EVENTMASK, HB_INKEY_ALL + HB_INKEY_EXT )
    hb_gtInfo( HB_GTI_CURSORBLINKRATE, 1000 )
    hb_gtInfo( HB_GTI_ESCDELAY, 50 )
    // hb_gtinfo( HB_GTI_FONTATTRIBUTE, 0 )
@@ -259,12 +261,12 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
    hb_gtInfo( HB_GTI_SELECTCOPY, .T. )
    IF Empty( cTermCP )
-      cTermCP := "PLISO"
+      cTermCP := "UTF8"
    ELSE
       cTermCP := Upper( cTermCP )
    ENDIF
    IF Empty( cHostCP )
-      cHostCP := "PLMAZ"
+      cHostCP := "UTF8"
    ELSE
       cHostCP := Upper( cHostCP )
    ENDIF
@@ -290,14 +292,25 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ?
 
    WHILE .T.
-      k := Inkey( 0 )
+      kX := Inkey( 0 )
+      k := hb_keyStd( kX )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
          ? " key:" + Str( aKeys[ i, 2 ], 7 ) + "  " + PadR( aKeys[ i, 1 ], 18 ) + aKeys[ i, 3 ]
       ELSEIF k >= 32 .AND. k <= 126 .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
              Len( hb_keyChar( k ) ) > 0
+#ifdef __HARBOUR__
+         ? "char:" + iif( k > 256, " U+" + hb_NumToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ) + ;
+           "  " + hb_keyChar( k )
+#else
          ? "char:" + Str( k, 7 ) + "  " + hb_keyChar( k )
+#endif
       ELSE
+#ifdef __HARBOUR__
+         ? " key:" + Str( k, 7 ) + " ext: 0x" + hb_NumToHex( kX, 8 ) + " -> " + ;
+           hb_NumToHex( hb_keyMod( kX ), 2 ) + ":" + hb_NumToHex( hb_keyVal( kX ), 8 )
+#else
          ? " key:" + Str( k, 7 )
+#endif
       ENDIF
 //    ?? "  (" + hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ) + ")"
 

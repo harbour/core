@@ -12,7 +12,7 @@ test_reqrpm()
    rpm -q --whatprovides "$1" >/dev/null 2>&1
 }
 
-NEED_RPM="make gcc binutils bash"
+NEED_RPM="make gcc binutils"
 
 FORCE=""
 
