@@ -1380,13 +1380,12 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 
       if( ( iRows || iCols ) && iColSize >= 0 && ( iBottom - iTop >= iRows ) )
       {
-         HB_SIZE nSize = HB_GTSELF_RECTSIZE( pGT, iTop, iColOld, iTop, iColOld + iColSize );
+         HB_SIZE nSize;
 
+         iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
+         nSize = HB_GTSELF_RECTSIZE( pGT, iTop, iColOld, iTop, iColOld + iColSize );
          if( nSize )
-         {
             pBuffer = hb_xgrab( nSize );
-            iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
-         }
       }
 
       while( iTop <= iBottom )
@@ -1857,7 +1856,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_GETWIN:  /* save screen buffer, cursor shape and position */
       {
-         int iRow, iCol;
+         int iRow, iCol, iFlag;
          HB_SIZE nSize;
 
          if( ! pInfo->pResult )
@@ -1874,15 +1873,16 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          hb_arraySetNI( pInfo->pResult, 5, iRow );
          hb_arraySetNI( pInfo->pResult, 6, iCol );
 
+         iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
          nSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRow, iCol );
          if( nSize )
          {
             void * pBuffer = hb_xgrab( nSize + 1 );
-            int iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRow, iCol, pBuffer );
-            HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
             hb_arraySetCLPtr( pInfo->pResult, 7, ( char * ) pBuffer, nSize );
          }
+         if( iFlag != 0 )
+            HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
          break;
       }
       case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
@@ -2023,7 +2023,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          HB_UINT ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ulMsg = 0, ulDst = 0,
                  ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          HB_WCHAR * szMsgDsp;
-         int iFlag = 0;
+         int iFlag;
 
          ulMaxWidth = iCols - 4;
          ulDefWidth = ( ulMaxWidth * 3 ) >> 2;
@@ -2137,11 +2137,11 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
          iStyle = HB_GTSELF_GETCURSORSTYLE( pGT );
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NONE );
+         iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
          nLen = HB_GTSELF_RECTSIZE( pGT, iTop, iLeft, iBottom, iRight );
          if( nLen )
          {
             pBuffer = hb_xgrab( nLen );
-            iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
             HB_GTSELF_SAVE( pGT, iTop, iLeft, iBottom, iRight, pBuffer );
          }
          HB_GTSELF_BOXS( pGT, iTop, iLeft, iBottom, iRight, NULL, iClrNorm );
@@ -2257,10 +2257,10 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          if( pBuffer )
          {
             HB_GTSELF_REST( pGT, iTop, iLeft, iBottom, iRight, pBuffer );
-            if( iFlag != 0 )
-               HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
             hb_xfree( pBuffer );
          }
+         if( iFlag != 0 )
+            HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
          HB_GTSELF_SETPOS( pGT, iRow, iCol );
          HB_GTSELF_SETCURSORSTYLE( pGT, iStyle );
          HB_GTSELF_REFRESH( pGT );
@@ -2372,13 +2372,13 @@ static HB_BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
          void * pBuffer = NULL;
          HB_SIZE nLen = ( HB_SIZE ) iRows * iCols, nIndex;
          HB_SIZE nSize;
-         int iFlag = 0, i;
+         int iFlag, i;
 
+         iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
          nSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRows - 1, iCols - 1 );
          if( nSize )
          {
             pBuffer = hb_xgrab( nSize );
-            iFlag = HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, 0 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRows - 1, iCols - 1, pBuffer );
          }
 
@@ -2417,10 +2417,10 @@ static HB_BOOL hb_gt_def_Resize( PHB_GT pGT, int iRows, int iCols )
          if( nSize )
          {
             HB_GTSELF_REST( pGT, 0, 0, iRows - 1, iCols - 1, pBuffer );
-            if( iFlag != 0 )
-               HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
             hb_xfree( pBuffer );
          }
+         if( iFlag != 0 )
+            HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, iFlag );
       }
 
       return HB_TRUE;
