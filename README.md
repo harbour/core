@@ -113,7 +113,7 @@ Download source archive from this page and unpack:
 You'll need Git version control software installed on your system,
 and issue this command:
 
-    git clone https://github.com/harbour/core.git harbour-core
+    git clone https://github.com/vszakats/harbour-core.git harbour-core
 
 You can get subsequent updates using this command:
 
@@ -123,22 +123,13 @@ You can get subsequent updates using this command:
 
 Download source archive from any of these links and unpack:
 
-* <https://github.com/harbour/core/archive/master.zip>
-* <https://github.com/harbour/core/archive/master.tar.gz>
-
-### Harbour unstable binaries (updated once a day from live source repository)
-
-Windows (unified):
-
-* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download><br />
-* <http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download>
+* <https://github.com/vszakats/harbour-core/archive/master.zip>
+* <https://github.com/vszakats/harbour-core/archive/master.tar.gz>
 
 ### Follow commits using any of these facilities
 
-* [Web](https://github.com/harbour/core/commits/master)
-* [RSS](https://github.com/harbour/core/commits/master.atom)
-* [Twitter](https://twitter.com/harbourdev)
-* [E-mail](https://groups.google.com/forum/?fromgroups=#!forum/harbour-commits)
+* [Web](https://github.com/vszakats/harbour-core/commits/master)
+* [RSS](https://github.com/vszakats/harbour-core/commits/master.atom)
 * [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
 * [Mac tool](https://github.com/marcocampana/git-notifier)
 
@@ -1939,9 +1930,9 @@ Supported shells per host platforms:
   * [Homepage](http://harbour-project.org/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
-  * [Source code](https://github.com/harbour/core)
+  * [Source code](https://github.com/vszakats/harbour-core)
   * [Localization](https://www.transifex.com/projects/p/harbour/)
-  * [Issues](https://github.com/harbour/core/issues)
+  * [Issues](https://github.com/vszakats/harbour-core/issues)
   * Documents:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
      * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)

@@ -40,7 +40,7 @@
 #xtranslate HB_ISEVALITEM( <v> )           => ( ValType( <v> ) == "B" )
 
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
-#xtranslate hb_keyChar( <c> )              => Chr( <c> )
+#xtranslate hb_keyChar( <c> )              => iif( <c> >= 32 .AND. <c> <= 255, Chr( <c> ), "" )
 #xtranslate hb_keyPut( <n> )               => __Keyboard( Chr( <n> ) )
 #xtranslate hb_keyIns( <n> )               => __Keyboard( Chr( <n> ) )
 
