@@ -220,6 +220,7 @@ static void hb_hashResort( PHB_BASEHASH pBaseHash )
 
    hb_xfree( pBaseHash->pPairs );
    pBaseHash->pPairs = pPairs;
+   pBaseHash->nSize = pBaseHash->nLen;
 }
 
 static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
