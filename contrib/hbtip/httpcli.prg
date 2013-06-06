@@ -65,23 +65,27 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    VAR cAuthMode    INIT ""
    VAR cBoundary
    VAR aAttachments INIT {}
+   VAR lPersistent  INIT .F.
 
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Get( cQuery )
    METHOD Post( xPostData, cQuery )
    METHOD Put( xPostData, cQuery )
    METHOD Delete( xPostData, cQuery )
+   METHOD Head( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
-   METHOD UseBasicAuth()      INLINE   ::cAuthMode := "Basic"
+   METHOD UseBasicAuth()                INLINE   ::cAuthMode := "Basic"
    METHOD ReadAll()
-   METHOD SetCookie
-   METHOD GetCookies
-   METHOD Boundary
+   METHOD setCookie( cLine )
+   METHOD getcookies( cHost, cPath )
+   METHOD Boundary( nType )
    METHOD Attach( cName, cFileName, cType )
    METHOD PostMultiPart( xPostData, cQuery )
    METHOD WriteAll( cFile )
    METHOD StandardFields()
+   METHOD SetConnectionPersistent()     INLINE ::lPersistent := .T.
+   METHOD IsConnectionAlive()           INLINE ::inetErrorCode( ::SocketCon ) == 0
 
    PROTECTED:
 
@@ -124,6 +128,9 @@ METHOD Put( xPostData, cQuery ) CLASS TIPClientHTTP
 
 METHOD Delete( xPostData, cQuery ) CLASS TIPClientHTTP
    RETURN ::postByVerb( xPostData, cQuery, "DELETE" )
+
+METHOD Head( xPostData, cQuery ) CLASS TIPClientHTTP
+   RETURN ::postByVerb( xPostData, cQuery, "HEAD" )
 
 METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
 
@@ -193,7 +200,9 @@ METHOD StandardFields() CLASS TIPClientHTTP
 
    ::inetSendAll( ::SocketCon, "Host: " + ::oUrl:cServer + ::cCRLF )
    ::inetSendAll( ::SocketCon, "User-agent: " + ::cUserAgent + ::cCRLF )
-   ::inetSendAll( ::SocketCon, "Connection: close" + ::cCRLF )
+   IF ! ::lPersistent
+      ::inetSendAll( ::SocketCon, "Connection: close" + ::cCRLF )
+   ENDIF
 
    // Perform a basic authentication request
    IF ::cAuthMode == "Basic" .AND. !( "Authorization" $ ::hFields )
