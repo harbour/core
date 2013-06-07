@@ -807,7 +807,7 @@ METHOD ShowScoreboard() CLASS HBGetList
       hb_DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), ;
          __natMsg( _GET_INSERT_ON ), ;
          iif( Len( __natMsg( _GET_INSERT_OFF ) ) == Len( __natMsg( _GET_INSERT_ON ) ), ;
-            __natMsg( _GET_INSERT_ON ), ;
+            __natMsg( _GET_INSERT_OFF ), ;
             Space( Len( __natMsg( _GET_INSERT_ON ) ) ) ) ) )
 
    ENDIF

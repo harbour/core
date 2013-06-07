@@ -894,7 +894,7 @@ static HB_SIZE hb_deserializeHash( PHB_ITEM pItem,
 #else
       PHB_ITEM pKey, pVal;
 
-      hb_hashSetFlags( pItem, HB_HASH_BINARY /* | HB_HASH_RESORT */ );
+      hb_hashSetFlags( pItem, HB_HASH_BINARY | HB_HASH_RESORT );
       hb_hashPreallocate( pItem, nLen );
       while( nLen-- )
       {
