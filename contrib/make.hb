@@ -76,7 +76,6 @@ PROCEDURE Main( ... )
    /* Load list of projects */
 
    hProjectList := { => }
-   hb_HKeepOrder( hProjectList, .T. )
 
    LoadProjectListFromFile( hProjectList, s_cHome + "hbplist.txt" )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
@@ -165,7 +164,6 @@ PROCEDURE Standalone( aParams, hProjectList )
    /* Assemble list of primary targets (registered projects in current directory) */
 
    hProjectReqList := { => }
-   hb_HKeepOrder( hProjectReqList, .T. )
 
    IF hb_DirExists( AllTrim( cOptionsUser ) )
       cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
@@ -303,7 +301,6 @@ PROCEDURE GNUMake( aParams, hProjectList )
    ENDIF
 
    hProjectReqList := { => }
-   hb_HKeepOrder( hProjectReqList, .T. )
 
    FOR EACH tmp IN hProjectList
       hProjectReqList[ tmp:__enumKey() ] := tmp:__enumKey()
@@ -686,8 +683,6 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    LOCAL n, m
    LOCAL tmp
-
-   hb_HKeepOrder( hTopNodes, .T. )
 
    FOR EACH n IN aEdgeList
       IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == n[ 1 ] } ) == 0

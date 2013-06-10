@@ -264,17 +264,11 @@ STATIC PROCEDURE DisconnectLow( netiocli )
 
 STATIC FUNCTION MyClientInfo()
 
-   LOCAL hInfo := { => }
-
-   hb_HKeepOrder( hInfo, .T. )
-
-   hInfo[ "OS()"          ] := OS()
-   hInfo[ "Version()"     ] := Version()
-   hInfo[ "hb_Compiler()" ] := hb_Compiler()
-   hInfo[ "NetName()"     ] := NetName()
-   hInfo[ "hb_UserName()" ] := hb_UserName()
-
-   RETURN hInfo
+   RETURN { "OS()"          => OS()          , ;
+            "Version()"     => Version()     , ;
+            "hb_Compiler()" => hb_Compiler() , ;
+            "NetName()"     => NetName()     , ;
+            "hb_UserName()" => hb_UserName() }
 
 STATIC FUNCTION XToStrX( xValue )
 

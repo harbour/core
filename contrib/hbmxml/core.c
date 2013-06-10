@@ -1877,8 +1877,6 @@ HB_FUNC( HB_MXMLGETATTRS )
       int i;
       mxml_attr_t * attr;
 
-      hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
-
       for( i = node->value.element.num_attrs, attr = node->value.element.attrs;
            i > 0;
            i--, attr++ )

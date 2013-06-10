@@ -588,7 +588,6 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
    else if( *szSource == '{' )
    {
       hb_hashNew( pValue );
-      hb_hashSetFlags( pValue, HB_HASH_KEEPORDER );
       szSource = _skipws( szSource + 1 );
       if( *szSource != '}' )
       {

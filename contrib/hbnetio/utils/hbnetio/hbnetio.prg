@@ -121,10 +121,6 @@ PROCEDURE netiosrv_Main( lUI, ... )
    netiosrv[ _NETIOSRV_hBlock ]         := { => }
    netiosrv[ _NETIOSRV_mtxFilters ]     := hb_mutexCreate()
 
-   hb_HKeepOrder( netiosrv[ _NETIOSRV_hConnection ], .T. )
-   hb_HKeepOrder( netiosrv[ _NETIOSRV_hAllow ], .T. )
-   hb_HKeepOrder( netiosrv[ _NETIOSRV_hBlock ], .T. )
-
    netiomgm[ _NETIOSRV_cName ]          := "Management"
    netiomgm[ _NETIOSRV_nPort ]          := _NETIOMGM_PORT_DEF
    netiomgm[ _NETIOSRV_cIFAddr ]        := _NETIOMGM_IPV4_DEF
@@ -138,10 +134,6 @@ PROCEDURE netiosrv_Main( lUI, ... )
    netiomgm[ _NETIOSRV_mtxFilters ]     := hb_mutexCreate()
    netiomgm[ _NETIOSRV_hNotifStream ]   := { => }
    netiomgm[ _NETIOSRV_mtxNotifStream ] := hb_mutexCreate()
-
-   hb_HKeepOrder( netiomgm[ _NETIOSRV_hConnection ], .T. )
-   hb_HKeepOrder( netiomgm[ _NETIOSRV_hAllow ], .T. )
-   hb_HKeepOrder( netiomgm[ _NETIOSRV_hBlock ], .T. )
 
    FOR EACH cParam IN { ... }
       DO CASE
@@ -325,8 +317,6 @@ STATIC FUNCTION netiosrv_ConfName()
 STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
 
    LOCAL hConf := { => }
-
-   hb_HKeepOrder( hConf, .T. )
 
    hConf[ "__signature" ]  := _NETIOSRV_SIGNATURE
    hConf[ "__version" ]    := 1

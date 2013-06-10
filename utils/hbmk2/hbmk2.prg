@@ -8710,8 +8710,6 @@ STATIC FUNCTION getNewestTime( hbmk, cFile, hFiles, lCMode )
 
    IF hFiles == NIL
       hFiles := { => }
-      /* for easier visualization the scan steps in debug mode */
-      /* hb_HKeepOrder( hFiles, .T. ) */
    ENDIF
    s_getFilesDep( hbmk, cFile, hFiles, hb_FNameDir( cFile ), .F., lCMode )
    tTime := s_getNewestTime( cFile, hFiles )
