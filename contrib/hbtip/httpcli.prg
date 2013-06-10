@@ -75,7 +75,7 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD Head( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
-   METHOD UseBasicAuth()                INLINE   ::cAuthMode := "Basic"
+   METHOD UseBasicAuth()                INLINE ::cAuthMode := "Basic"
    METHOD ReadAll()
    METHOD setCookie( cLine )
    METHOD getcookies( cHost, cPath )
