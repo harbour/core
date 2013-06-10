@@ -220,6 +220,7 @@ static void hb_hashResort( PHB_BASEHASH pBaseHash )
 
    hb_xfree( pBaseHash->pPairs );
    pBaseHash->pPairs = pPairs;
+   pBaseHash->nSize = pBaseHash->nLen;
 }
 
 static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
@@ -229,15 +230,17 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
 
    if( pBaseHash->pnPos )
    {
+      HB_SIZE * pnPos = pBaseHash->pnPos;
+
       for( nFrom = 1; nFrom < pBaseHash->nLen; ++nFrom )
       {
-         PHB_ITEM pKey = &pBaseHash->pPairs[ pBaseHash->pnPos[ nFrom ] ].key;
+         PHB_ITEM pKey = &pBaseHash->pPairs[ pnPos[ nFrom ] ].key;
          HB_SIZE nLeft = 0, nRight = nFrom;
 
          while( nLeft < nRight )
          {
             HB_SIZE nMiddle = ( nLeft + nRight ) >> 1;
-            int i = hb_hashItemCmp( &pBaseHash->pPairs[ pBaseHash->pnPos[ nMiddle ] ].key,
+            int i = hb_hashItemCmp( &pBaseHash->pPairs[ pnPos[ nMiddle ] ].key,
                                     pKey, iFlags );
             if( i > 0 )
                nRight = nMiddle;
@@ -246,10 +249,11 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
          }
          if( nLeft < nFrom )
          {
-            nRight = pBaseHash->pnPos[ nLeft ];
-            memmove( pBaseHash->pnPos + nLeft, pBaseHash->pnPos + nLeft + 1,
-                     ( nFrom - nLeft ) * sizeof( HB_SIZE ) );
-            pBaseHash->pnPos[ nFrom ] = nRight;
+            nRight = pnPos[ nLeft ];
+            do
+               pnPos[ nLeft ] = pnPos[ nLeft + 1 ];
+            while( ++nLeft < nFrom );
+            pnPos[ nFrom ] = nRight;
          }
       }
    }
@@ -386,8 +390,9 @@ static PHB_ITEM hb_hashValuePtr( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, HB_BOOL 
          pBaseHash->pPairs[ nPos ].key.type = HB_IT_NIL;
          pBaseHash->pPairs[ nPos ].value.type = HB_IT_NIL;
       }
-      hb_itemCopy( &pBaseHash->pPairs[ nPos ].key, pKey );
+
       pBaseHash->nLen++;
+      hb_itemCopy( &pBaseHash->pPairs[ nPos ].key, pKey );
       if( pBaseHash->pDefault )
          hb_itemCloneTo( &pBaseHash->pPairs[ nPos ].value, pBaseHash->pDefault );
    }
@@ -418,9 +423,9 @@ static HB_BOOL hb_hashNewValue( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, PHB_ITEM 
          pBaseHash->pPairs[ nPos ].value.type = HB_IT_NIL;
       }
 
+      pBaseHash->nLen++;
       hb_itemCopy( &pBaseHash->pPairs[ nPos ].key, pKey );
       hb_itemCopyFromRef( &pBaseHash->pPairs[ nPos ].value, pValue );
-      pBaseHash->nLen++;
 
       return HB_TRUE;
    }
@@ -462,7 +467,7 @@ static void hb_hashDelPair( PHB_BASEHASH pBaseHash, HB_SIZE nPos )
    }
    else
    {
-      if( pBaseHash->pnPos )
+      if( pBaseHash->pnPos && ( pBaseHash->iFlags & HB_HASH_RESORT ) == 0 )
       {
 #ifdef HB_FAST_HASH_DEL
          HB_SIZE * pnPos, * pnDel, * pnLast;
@@ -1161,7 +1166,7 @@ void hb_hashSetFlags( PHB_ITEM pHash, int iFlags )
          HB_SIZE n = pHash->item.asHash.value->nSize;
 
          pHash->item.asHash.value->pnPos = ( HB_SIZE * )
-            hb_xgrab( pHash->item.asHash.value->nSize * sizeof( HB_SIZE ) );
+                                             hb_xgrab( n * sizeof( HB_SIZE ) );
          do
          {
             --n;
@@ -1183,6 +1188,8 @@ void hb_hashClearFlags( PHB_ITEM pHash, int iFlags )
           ( pHash->item.asHash.value->iFlags & HB_HASH_KEEPORDER ) == 0 )
       {
          hb_hashResort( pHash->item.asHash.value );
+         hb_xfree( pHash->item.asHash.value->pnPos );
+         pHash->item.asHash.value->pnPos = NULL;
       }
    }
 }

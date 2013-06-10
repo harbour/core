@@ -1018,6 +1018,12 @@ HB_FUNC( WVG_POSTMESSAGE )
    hb_retl( PostMessage( wvg_parhwnd( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
 }
 
+HB_FUNC( WVG_FORCEWINDOWTOTOP )
+{
+   SetWindowPos( wvg_parhwnd( 1 ), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+   SetWindowPos( wvg_parhwnd( 1 ), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE );
+}
+
 /*
  * Win_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] )
  */

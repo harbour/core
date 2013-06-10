@@ -1045,9 +1045,6 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
          context->obj_ref   = hb_hashNew( NULL );
          context->str_ref   = hb_hashNew( NULL );
          context->class_ref = hb_hashNew( NULL );
-         hb_hashSetFlags( context->obj_ref, HB_HASH_KEEPORDER );
-         hb_hashSetFlags( context->str_ref, HB_HASH_KEEPORDER );
-         hb_hashSetFlags( context->class_ref, HB_HASH_KEEPORDER );
       }
    }
    else
@@ -1400,9 +1397,6 @@ HB_FUNC( AMF3_ENCODE )
    context->use_refs      = HB_TRUE;
    context->conv_function = pFuncSym;
    context->encode_ba     = lBA;
-   hb_hashSetFlags( context->obj_ref, HB_HASH_KEEPORDER );
-   hb_hashSetFlags( context->str_ref, HB_HASH_KEEPORDER );
-   hb_hashSetFlags( context->class_ref, HB_HASH_KEEPORDER );
 
    /* "strstr" is another optional idea of catching similar strings,
       key in this hash is not the pointer to C char, but the string

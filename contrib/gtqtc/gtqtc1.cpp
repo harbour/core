@@ -66,8 +66,16 @@ static  HB_GT_FUNCS     SuperTable;
 #ifdef HB_QT_NEEDLOCKS
 #  include "hbthread.h"
    static HB_CRITICAL_NEW( s_qtcMtx );
-#  define HB_QTC_LOCK()       do { hb_threadEnterCriticalSection( &s_qtcMtx )
-#  define HB_QTC_UNLOCK()     hb_threadLeaveCriticalSection( &s_qtcMtx ); } while( 0 )
+   static HB_THREAD_NO s_thNO = 0;
+   static HB_THREAD_NO s_thCount = 0;
+#  define HB_QTC_LOCK()       do { if( s_thNO != hb_threadNO() ) { \
+                                      hb_threadEnterCriticalSection( &s_qtcMtx ); \
+                                      s_thNO = hb_threadNO(); } \
+                                   ++s_thCount
+#  define HB_QTC_UNLOCK()     if( --s_thCount == 0 ) { \
+                                 s_thNO = 0; \
+                                 hb_threadLeaveCriticalSection( &s_qtcMtx ); } \
+                              } while( 0 )
 #else
 #  define HB_QTC_LOCK()       do {} while( 0 )
 #  define HB_QTC_UNLOCK()     do {} while( 0 )
@@ -2985,6 +2993,9 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
       HB_WCHAR wc = event->text().constData()[ 0 ].unicode();
       if( wc >= 32 && wc != 127 )
       {
+         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
+            /* workaround for AltGR and German keyboard */
+            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
          hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
          return;
       }

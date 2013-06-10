@@ -53,12 +53,15 @@ PROCEDURE DllMain()
     * array bound with given OLE object using QSelf() function. It maybe
     * useful if hash array contains instance variables and programmer
     * wants to access them.
-    *    hAction := { => }
-    *    hAction[ "OPEN" ]  := @myole_open()     // DISPID=1
-    *    hAction[ "CLOSE" ] := @myole_close()    // DISPID=2
-    *    hAction[ "SAVE" ]  := @myole_save()     // DISPID=3
-    *    hAction[ "LOAD" ]  := @myole_load()     // DISPID=4
-    *    hAction[ "PRINT" ] := @myole_print()    // DISPID=5
+    * Please remember that using hash array which was initialized to keep
+    * original assign order before adding its items you can define strict
+    * message numbers (DISPIDs), i.e.:
+    *    hAction := { ;
+    *       "OPEN"  => @myole_open()  , ;   // DISPID=1
+    *       "CLOSE" => @myole_close() , ;   // DISPID=2
+    *       "SAVE"  => @myole_save()  , ;   // DISPID=3
+    *       "LOAD"  => @myole_load()  , ;   // DISPID=4
+    *       "PRINT" => @myole_print() }     // DISPID=5
     * (see example in olesrv2.prg)
     *
     * <oAction> is optional parameter with Harbour object which is used

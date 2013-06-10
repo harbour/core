@@ -4,6 +4,7 @@ description=RDDSQL OCILib (Oracle SQL) backend
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {HB_WITH_OCILIB_WIDE}libs=ocilibw
 {HB_WITH_OCILIB_MIXED}libs=ocilibm
-{!HB_WITH_OCILIB_WIDE&!HB_WITH_OCILIB_MIXED}libs=ociliba
+{!HB_WITH_OCILIB_WIDE&!HB_WITH_OCILIB_MIXED&linux}libs=ocilib
+{!HB_WITH_OCILIB_WIDE&!HB_WITH_OCILIB_MIXED&!linux}libs=ociliba
 
 libs=rddsql.hbc

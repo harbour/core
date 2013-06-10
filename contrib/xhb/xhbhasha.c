@@ -217,14 +217,9 @@ HB_FUNC( HSETAACOMPATIBILITY )
    if( pHash && pValue && hb_hashLen( pHash ) == 0 )
    {
       if( hb_itemGetL( pValue ) )
-      {
          hb_hashSetFlags( pHash, HB_HASH_KEEPORDER );
-      }
       else
-      {
          hb_hashClearFlags( pHash, HB_HASH_KEEPORDER );
-         hb_hashSetFlags( pHash, HB_HASH_RESORT );
-      }
       hb_retl( HB_TRUE );
    }
    else

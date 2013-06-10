@@ -290,18 +290,21 @@ information about the order in which items were added to hash array and
 set of functions with HAA prefix to operate on hash array items using this
 index instead of real position in hash array, i.e. HAAGETVALUEAT() which
 works like HGETVALUEAT().
-In Harbour such functionality also exists and it's enabled by HB_HKEEPORDER()
-function but the internal implementation is completely different. Harbour
+In Harbour such functionality also exists and is enabled by default in all
+hash array but the internal implementation is completely different. Harbour
 does not emulate associative arrays by special index which keeps assign order
 but it uses real natural order in hash array. It means that associative array
 indexes are equal to regular hash indexes so it does not need any translation
 between them and Harbour users can use regular hash array functions for
 associative array indexes. So separated functions for accessing by other
 index are not necessary. The Harbour implementation is also more efficient
-because it does not introduce linear index updated each time new key is
+because it does not introduce linear index updating each time new key is
 added to hash array.
 Harbour emulates HAA*() xHarbour functions in XHB library but only for
 compatibility with existing xHarbour code.
+This functionality can be disabled for each hash array in Harbour by
+HB_HKEEPORDER() function which sorts key-value pairs in hash array and
+removes the access index.
 
 
 

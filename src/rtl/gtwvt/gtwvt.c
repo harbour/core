@@ -149,14 +149,6 @@ static int       s_wvtCount = 0;
 
 static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
 
-static const int K_Ctrl[] =
-{
-   K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G,
-   K_CTRL_H, K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N,
-   K_CTRL_O, K_CTRL_P, K_CTRL_Q, K_CTRL_R, K_CTRL_S, K_CTRL_T, K_CTRL_U,
-   K_CTRL_V, K_CTRL_W, K_CTRL_X, K_CTRL_Y, K_CTRL_Z
-};
-
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT );
 static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT );
@@ -2577,11 +2569,12 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                if( iFlags & HB_KF_CTRL )
                   iKey = '+';
                break;
-
+#ifdef VK_OEM_2
             case VK_OEM_2:
                if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_SHIFT ) != 0 )
                   iKey = '?';
                break;
+#endif
          }
          pWVT->keyFlags = iFlags;
          if( iKey != 0 )

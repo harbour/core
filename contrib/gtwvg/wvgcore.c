@@ -1840,6 +1840,30 @@ HB_FUNC( WVT_DRAWPICTURE )
 }
 
 /*
+ *  Wvt_DrawPictureByHandle( nTop, nLeft, nBottom, nRight, hPicture, aPxlOff, lDoNotScale ) -> lOk
+ */
+HB_FUNC( WVT_DRAWPICTUREEX )
+{
+#if ! defined( HB_OS_WIN_CE )
+   POINT xy = { 0, 0 };
+   int   iTop, iLeft, iBottom, iRight;
+
+   if( HB_ISNUM( 5 ) )
+   {
+      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+      iTop  = xy.y + hb_parvni( 6, 1 );
+      iLeft = xy.x + hb_parvni( 6, 2 );
+
+      xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
+      iBottom = xy.y - 1 + hb_parvni( 6, 3 );
+      iRight  = xy.x - 1 + hb_parvni( 6, 4 );
+
+      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) hb_parnl( 5 ), hb_parl( 7 ) ) );
+   }
+#endif
+}
+
+/*
  *    Wvt_DrawLabelEx( nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont, aPxlOff )
  */
 HB_FUNC( WVT_DRAWLABELEX )
@@ -2736,6 +2760,22 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
    }
 #endif
    hb_retl( bResult );
+}
+
+HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
+{
+#if ! defined( HB_OS_WIN_CE )
+   void *     hResource;
+   void *     hSection;
+   IPicture * iPicture = hb_wvt_gtLoadPictureFromResource( HB_PARSTR( 1, &hResource, NULL ), HB_PARSTR( 2, &hSection, NULL ) );
+
+   hb_strfree( hResource );
+   hb_strfree( hSection );
+   if( iPicture )
+   {
+      hb_retnl( ( HB_PTRDIFF ) iPicture );
+   }
+#endif
 }
 
 /*

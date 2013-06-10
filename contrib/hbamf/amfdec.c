@@ -443,7 +443,6 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    {
       context->position--;
       hb_hashNew( pItem );
-      hb_hashSetFlags( pHash, HB_HASH_KEEPORDER );
       hb_hashPreallocate( pItem, array_len );
 
       if( ! amf3_decode_dynamic_dict( context, pItem ) )

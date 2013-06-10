@@ -1285,6 +1285,39 @@ HB_FUNC( WVG_PICTURE )
 #endif
 }
 
+HB_FUNC( WVG_PICTUREEX )
+{
+#if ! defined( HB_OS_WIN_CE )
+   if( HB_ISNUM( 6 ) )
+   {
+      PHB_GTWVT  pWVT = hb_wvt_gtGetWVT();
+      HB_GOBJS * gObj = hb_wvg_ObjectNew( pWVT );
+
+      gObj->iObjType = GOBJ_OBJTYPE_PICTURE;
+
+      gObj->iTop    = hb_parni( 1 );
+      gObj->iLeft   = hb_parni( 2 );
+      gObj->iBottom = hb_parni( 3 );
+      gObj->iRight  = hb_parni( 4 );
+
+      gObj->aOffset.iTop    = hb_parvni( 5, 1 );
+      gObj->aOffset.iLeft   = hb_parvni( 5, 2 );
+      gObj->aOffset.iBottom = hb_parvni( 5, 3 );
+      gObj->aOffset.iRight  = hb_parvni( 5, 4 );
+
+      gObj->iPicture        = ( IPicture * ) hb_parnl( 6 );
+      gObj->bDestroyPicture = HB_FALSE;
+
+      gObj->gObjNext = pWVT->gObjs;
+      pWVT->gObjs    = gObj;
+   }
+   else
+      hb_retni( 0 );
+#else
+   hb_retni( 0 );
+#endif
+}
+
 /*
     Wvg_Image( nTop, nLeft, nBottom, nRight, aPxlOff, nImageSource, cImage/nPictureSlot, cSection )
  */
