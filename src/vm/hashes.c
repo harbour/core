@@ -177,7 +177,7 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, int iFlags )
          return pKey1->item.asDateTime.julian < pKey2->item.asDateTime.julian ? -1 :
               ( pKey1->item.asDateTime.julian > pKey2->item.asDateTime.julian ? 1 :
               ( pKey1->item.asDateTime.time < pKey2->item.asDateTime.time ? -1 :
-              ( pKey1->item.asDateTime.time < pKey2->item.asDateTime.time ? 1 : 0 ) ) );
+              ( pKey1->item.asDateTime.time > pKey2->item.asDateTime.time ? 1 : 0 ) ) );
       else if( HB_IS_STRING( pKey2 ) )
          return -1;
       else
@@ -221,6 +221,8 @@ static void hb_hashResort( PHB_BASEHASH pBaseHash )
    hb_xfree( pBaseHash->pPairs );
    pBaseHash->pPairs = pPairs;
    pBaseHash->nSize = pBaseHash->nLen;
+   pBaseHash->pnPos = ( HB_SIZE * )
+         hb_xrealloc( pBaseHash->pnPos, pBaseHash->nSize * sizeof( HB_SIZE ) );
 }
 
 static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
@@ -232,9 +234,10 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
    {
       HB_SIZE * pnPos = pBaseHash->pnPos;
 
+      pnPos[ 0 ] = 0;
       for( nFrom = 1; nFrom < pBaseHash->nLen; ++nFrom )
       {
-         PHB_ITEM pKey = &pBaseHash->pPairs[ pnPos[ nFrom ] ].key;
+         PHB_ITEM pKey = &pBaseHash->pPairs[ nFrom ].key;
          HB_SIZE nLeft = 0, nRight = nFrom;
 
          while( nLeft < nRight )
@@ -249,12 +252,12 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
          }
          if( nLeft < nFrom )
          {
-            nRight = pnPos[ nLeft ];
+            nRight = nFrom;
             do
-               pnPos[ nLeft ] = pnPos[ nLeft + 1 ];
-            while( ++nLeft < nFrom );
-            pnPos[ nFrom ] = nRight;
+               pnPos[ nRight ] = pnPos[ nRight - 1 ];
+            while( --nRight > nLeft );
          }
+         pnPos[ nLeft ] = nFrom;
       }
    }
    else

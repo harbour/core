@@ -315,13 +315,11 @@ static void hb_membufFlush( PHB_MEM_BUFFER pBuffer )
    pBuffer->nLen = 0;
 }
 
-#ifdef HB_PP_MULTILINE_STRINGS
 static void hb_membufRemove( PHB_MEM_BUFFER pBuffer, HB_SIZE nLeft )
 {
    if( nLeft < pBuffer->nLen )
       pBuffer->nLen = nLeft;
 }
-#endif
 
 static HB_SIZE hb_membufLen( const PHB_MEM_BUFFER pBuffer )
 {
@@ -1125,8 +1123,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      break;
                }
             }
-
-#ifdef HB_PP_MULTILINE_STRINGS
+            if( pState->fMultiLineStr )
             {
                while( n == nLen )
                {
@@ -1156,7 +1153,6 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      break;
                }
             }
-#endif
             u = ch != '"' ? 2 : 1;
             nStrip = n - u;
             hb_strRemEscSeq( pBuffer + u, &nStrip );
@@ -1213,7 +1209,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ch = '\'';
             while( ++n < nLen && pBuffer[ n ] != ch )
                ;
-#ifdef HB_PP_MULTILINE_STRINGS
+            if( pState->fMultiLineStr )
             {
                while( n == nLen )
                {
@@ -1239,7 +1235,6 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                   }
                }
             }
-#endif
             hb_pp_tokenAddNext( pState, pBuffer + 1, n - 1,
                                 HB_PP_TOKEN_STRING );
             if( n == nLen )
@@ -2696,6 +2691,11 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       else if( hb_pp_tokenValueCmp( pToken, "ESCAPEDSTRINGS", HB_PP_CMP_DBASE ) )
       {
          pValue = hb_pp_pragmaGetLogical( pToken->pNext, &pState->fEscStr );
+         fError = pValue == NULL;
+      }
+      else if( hb_pp_tokenValueCmp( pToken, "MULTILINESTRINGS", HB_PP_CMP_DBASE ) )
+      {
+         pValue = hb_pp_pragmaGetLogical( pToken->pNext, &pState->fMultiLineStr );
          fError = pValue == NULL;
       }
       else if( hb_pp_tokenValueCmp( pToken, "EXITSEVERITY", HB_PP_CMP_DBASE ) )
@@ -5576,6 +5576,7 @@ void hb_pp_reset( PHB_PP_STATE pState )
    pState->iErrors       = 0;
    pState->iLineTot      = 0;
    pState->fEscStr       = HB_FALSE;
+   pState->fMultiLineStr = HB_FALSE;
    pState->fTracePragmas = HB_FALSE;
    pState->fQuiet        = pState->fQuietSet;
    pState->iMaxCycles    = pState->iMaxCyclesSet;
