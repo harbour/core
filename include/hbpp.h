@@ -591,6 +591,7 @@ typedef struct
    HB_BOOL   fQuietSet;             /* do not show standard information (default) */
    HB_BOOL   fQuiet;                /* do not show standard information (current) */
    HB_BOOL   fEscStr;               /* use \ in strings as escape character */
+   HB_BOOL   fMultiLineStr;         /* allow to define multiline [] and e"" strings using ; as line concatenator */
    HB_BOOL   fError;                /* indicates error in last operation */
    int       iErrors;               /* number of error during preprocessing */
    int       iCondCompile;          /* current conditional compilation flag, when not 0 disable preprocessing and output */

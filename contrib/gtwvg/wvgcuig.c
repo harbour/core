@@ -1305,7 +1305,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) hb_parptr( 6 );
+      gObj->iPicture        = ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 6 );
       gObj->bDestroyPicture = HB_FALSE;
 
       gObj->gObjNext = pWVT->gObjs;
