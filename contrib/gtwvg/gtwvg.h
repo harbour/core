@@ -309,7 +309,7 @@ typedef struct
    HBRUSH    solidBrush;                    /* Handle to solid brush                                                      */
    HBRUSH    whiteBrush;                    /* Wvt specific White colored brush                                           */
 #if ! defined( HB_OS_WIN_CE )
-   IPicture  *iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+   IPicture * iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
    HFONT     hUserFonts[ WVT_FONTS_MAX ];   /* User defined font handles                                                  */
    HPEN      hUserPens[ WVT_PENS_MAX ];     /* User defined pens                                                          */

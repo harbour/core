@@ -129,7 +129,7 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
 }
 
 /*
- *               Courtesy - Augusto Infante - Thanks
+ * Courtesy - Augusto Infante - Thanks
  */
 #if ! defined( HB_OS_WIN_CE )
 IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
@@ -1858,7 +1858,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )
       iBottom = xy.y - 1 + hb_parvni( 6, 3 );
       iRight  = xy.x - 1 + hb_parvni( 6, 4 );
 
-      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) hb_parnl( 5 ), hb_parl( 7 ) ) );
+      hb_retl( hb_wvt_gtRenderPicture( iLeft, iTop, iRight - iLeft + 1, iBottom - iTop + 1, ( IPicture * ) hb_parptr( 5 ), hb_parl( 7 ) ) );
    }
 #endif
 }
