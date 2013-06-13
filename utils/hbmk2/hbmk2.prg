@@ -11330,7 +11330,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
 
       FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
          IF !( Left( cLine, 1 ) == "#" )
-            FOR EACH cParam IN hb_ATokens( cLine,, 7 )
+            FOR EACH cParam IN hb_ATokens( cLine,, .T. )
                cParam := StrStripQuote( cParam )
 
                IF ! Empty( cParam )
