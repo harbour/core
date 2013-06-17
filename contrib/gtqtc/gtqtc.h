@@ -324,6 +324,7 @@ typedef struct
    HB_BOOL     fClosable;                    /* accept ALT+F4 and/or [x] button as CTRL+BREAK */
    HB_BOOL     fAltEnter;                    /* ALT+ENTER switch between fullscreen mode */
    HB_BOOL     fResizable;                   /* enable/disable window resizing */
+   HB_BOOL     fResizeInc;                   /* enable/disable resize progression */
    HB_BOOL     fMaximized;                   /* enter/leave mximize mode */
    HB_BOOL     fFullScreen;                  /* enable/disable fullscreen mode */
    HB_BOOL     fSelectCopy;                  /* allow marking texts by mouse left button with shift */

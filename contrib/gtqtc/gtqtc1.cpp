@@ -57,9 +57,10 @@ static  HB_GT_FUNCS     SuperTable;
 #define HB_GTQTC_GET(p) ( ( PHB_GTQTC ) HB_GTLOCAL( p ) )
 
 
-#ifndef HB_QT_NEEDLOCKS
-#  if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX )
+#  if !defined( HB_QT_NEEDLOCKS )
 #     define HB_QT_NEEDLOCKS
+/* #     define HB_XLIB_NEEDLOCKS */
 #  endif
 #endif
 
@@ -1372,6 +1373,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->cellX         = pQTC->fontWidth == 0 ? pQTC->cellY / 2: pQTC->fontWidth;
    pQTC->iResizeMode   = HB_GTI_RESIZEMODE_FONT;
    pQTC->fResizable    = HB_TRUE;
+   pQTC->fResizeInc    = HB_FALSE;
    pQTC->fClosable     = HB_TRUE;
    pQTC->fAltEnter     = HB_FALSE;
    pQTC->fMaximized    = HB_FALSE;
@@ -1614,6 +1616,8 @@ static void hb_gt_qtc_createConsoleWindow( PHB_GTQTC pQTC )
 
 /* *********************************************************************** */
 
+static void hb_gt_qtc_InitMT( void );
+
 static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GTQTC pQTC;
@@ -1622,6 +1626,8 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! s_qtapp )
    {
+      hb_gt_qtc_InitMT();
+
       s_qtapp = qApp;
       if( ! s_qtapp )
       {
@@ -1714,20 +1720,21 @@ static void hb_gt_qtc_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    PHB_GTQTC pQTC;
-   HB_BOOL fResult;
+   HB_BOOL fResult, fCenter;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    pQTC = HB_GTQTC_GET( pGT );
-   fResult = hb_gt_qtc_setWindowSize( pQTC, iRow, iCol );
+   fCenter = iRows != pQTC->iRows || iCols != pQTC->iCols;
+   fResult = hb_gt_qtc_setWindowSize( pQTC, iRows, iCols );
    if( fResult )
    {
       if( pQTC->qWnd )
       {
-         hb_gt_qtc_initWindow( pQTC, HB_TRUE );
+         hb_gt_qtc_initWindow( pQTC, fCenter );
          HB_GTSELF_REFRESH( pGT );
       }
       else
@@ -2096,6 +2103,17 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   }
                   break;
             }
+         }
+         break;
+
+      case HB_GTI_RESIZESTEP:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->fResizeInc );
+         if( pInfo->pNewVal && HB_IS_LOGICAL( pInfo->pNewVal ) &&
+             ( hb_itemGetL( pInfo->pNewVal ) ? ! pQTC->fResizeInc : pQTC->fResizeInc ) )
+         {
+            pQTC->fResizeInc = ! pQTC->fResizeInc;
+            if( pQTC->qWnd )
+               pQTC->qWnd->setResizing();
          }
          break;
 
@@ -3417,7 +3435,7 @@ void QTCWindow::setResizing( void )
       {
          setMinimumWidth( qConsole->pQTC->cellX << 1 );
          setMinimumHeight( qConsole->pQTC->cellY << 1 );
-         if( windowState() & Qt::WindowMaximized )
+         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->cellX, qConsole->pQTC->cellY );
@@ -3426,7 +3444,7 @@ void QTCWindow::setResizing( void )
       {
          setMinimumWidth( qConsole->pQTC->iCols << 1 );
          setMinimumHeight( qConsole->pQTC->iRows << 2 );
-         if( windowState() & Qt::WindowMaximized )
+         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->iCols, qConsole->pQTC->iRows );
@@ -3441,5 +3459,26 @@ void QTCWindow::setResizing( void )
       setSizeIncrement( 0, 0 );
    }
 }
+
+/* *********************************************************************** */
+
+#ifdef HB_XLIB_NEEDLOCKS
+
+#include <X11/Xlib.h>
+
+static void hb_gt_qtc_InitMT( void )
+{
+   if( hb_vmIsMt() )
+   {
+      if( ! XInitThreads() )
+         hb_errInternal( 10002, "XInitThreads() failed !!!", NULL, NULL );
+   }
+}
+
+#else
+
+static void hb_gt_qtc_InitMT( void ) { }
+
+#endif
 
 /* *********************************************************************** */
