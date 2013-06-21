@@ -2037,14 +2037,13 @@ Most of core code had been rewritten to be reentrant safe so it does
 not have to be protected by any mutexes what greatly helps in
 scalability. Below is a short description which shows which resources
 are thread local which ones are shared and how they are initialized:
-      Thread attributes inherited from parent thread:
+      Thread local attributes inherited from parent thread:
          - code page
          - language
          - SETs
          - default RDD
-         - active GT driver/console window
          - I18N translation set
-      Thread attributes initialized to default value:
+      Thread local attributes initialized to default value:
          - public variable GetList := {}
            (of course if public variables are not shared with parent
            thread).
@@ -2055,6 +2054,13 @@ are thread local which ones are shared and how they are initialized:
          - RDDI_* settings in core RDDs (some 3-rd party RDDs may use
            global settings)
          - thread static variables
+         - SETKEY() are reset to empty array (Clipper compatible automatic
+           binding between F1 key and HELP() if such function/procedure was
+           registered in HVM is done only for main thread).
+      Other thread local resources:
+         - memvar (public and private) variables (except the ones which
+           are shared with parent threads)
+         - work areas
       Resources which can be shared or copied form parent to child thread
       on user request when thread is created:
          - public variables
@@ -2066,13 +2072,16 @@ are thread local which ones are shared and how they are initialized:
          - GT drivers
          - lang modules
          - codepage modules
-      Global resources:
+         - active GT driver/console window (by default GT is inherited
+           from parent thread so also all GT internal settings are shared
+           between threads using the same GT anyhow each thread can create
+           new GT and set it as its own GT driver - such functionality is
+           available only in this GTs which can use independent system
+           resources for input and output, i.e. separate windows in GUI
+           GTs like GTWVT, GTXWC, GTQTC or input/output handles in terminal
+           stream GTs like GTCGI, GTSTD, GTTRM).
+      Other global resources:
          - .prg static variables (Harbour core code does not use them)
-      Thread local resources:
-         - memvar (public and private) variables (except the ones which
-           are shared with parent threads)
-         - work areas
-         - thread static variables
 In practice the only one not synced automatically element in Harbour
 is write access to the same item with complex variable. This part
 have to be synced by user and automatic synchronization here will

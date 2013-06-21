@@ -53,6 +53,7 @@
 #define HB_GT_NAME  QTC
 
 #include <QtCore/QThread>
+#include <QtCore/QMutex>
 
 #include <QtGui/QFont>
 #include <QtGui/QColor>
@@ -381,7 +382,7 @@ class QTCWindow : public QMainWindow
 
 public:
     QTCWindow( PHB_GTQTC pQTC );
-    virtual ~QTCWindow();
+    virtual ~QTCWindow( void );
 
     QTConsole * qConsole;
     void setWindowSize( void );

@@ -60,23 +60,16 @@ static  HB_GT_FUNCS     SuperTable;
 #if defined( HB_OS_UNIX )
 #  if !defined( HB_QT_NEEDLOCKS )
 #     define HB_QT_NEEDLOCKS
+#  endif
+#  if !defined( HB_XLIB_NEEDLOCKS )
 /* #     define HB_XLIB_NEEDLOCKS */
 #  endif
 #endif
 
 #ifdef HB_QT_NEEDLOCKS
-#  include "hbthread.h"
-   static HB_CRITICAL_NEW( s_qtcMtx );
-   static HB_THREAD_NO s_thNO = 0;
-   static HB_THREAD_NO s_thCount = 0;
-#  define HB_QTC_LOCK()       do { if( s_thNO != hb_threadNO() ) { \
-                                      hb_threadEnterCriticalSection( &s_qtcMtx ); \
-                                      s_thNO = hb_threadNO(); } \
-                                   ++s_thCount
-#  define HB_QTC_UNLOCK()     if( --s_thCount == 0 ) { \
-                                 s_thNO = 0; \
-                                 hb_threadLeaveCriticalSection( &s_qtcMtx ); } \
-                              } while( 0 )
+   static QMutex s_qMtx( QMutex::Recursive );
+#  define HB_QTC_LOCK()       do { s_qMtx.lock()
+#  define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
 #else
 #  define HB_QTC_LOCK()       do {} while( 0 )
 #  define HB_QTC_UNLOCK()     do {} while( 0 )
@@ -1967,7 +1960,6 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_gt_qtc_itemPutQString( pInfo->pResult, pQTC->wndTitle );
          if( pInfo->pNewVal && HB_IS_STRING( pInfo->pNewVal ) )
          {
-            /* store font status for next operation on fontsize */
             hb_gt_qtc_itemGetQString( pInfo->pNewVal, pQTC->wndTitle );
             if( pQTC->qWnd )
                pQTC->qWnd->setWindowTitle( *pQTC->wndTitle );
@@ -2637,20 +2629,15 @@ static QRect hb_gt_qtc_unmapRect( PHB_GTQTC pQTC, const QRect & rc )
 void QTConsole::copySelection( void )
 {
    const QRect rc = hb_gt_qtc_mapRect( pQTC, image, selectRect );
-   HB_SIZE nSize, nEol, nI, nE;
    int iRow, iCol;
-   const char * pszEol;
-   QChar * pBuffer;
+   QString qStrEol( hb_conNewLine() );
+   QString qStr( "" );
 
-   pszEol = hb_conNewLine();
-   nEol = strlen( pszEol );
-   nSize = rc.height() * ( rc.width() + nEol );
-   pBuffer = ( QChar * ) hb_xgrab( sizeof( QChar ) * nSize );
+   qStr.reserve( rc.height() * ( rc.width() + qStrEol.size() ) );
 
    selectMode = false;
    update( hb_gt_qtc_unmapRect( pQTC, rc ) );
 
-   nI = 0;
    for( iRow = rc.top(); iRow <= rc.bottom(); ++iRow )
    {
       for( iCol = rc.left(); iCol <= rc.right(); ++iCol )
@@ -2661,14 +2648,13 @@ void QTConsole::copySelection( void )
 
          if( !HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
-         pBuffer[ nI++ ] = usChar;
+         qStr += ( QChar ) usChar;
       }
       if( rc.height() > 1 )
-         for( nE = 0; nE < nEol; ++nE )
-            pBuffer[ nI++ ] = pszEol[ nE ];
+         qStr += qStrEol;
    }
-   QApplication::clipboard()->setText( QString( pBuffer, nI ) );
-   hb_xfree( pBuffer );
+
+   QApplication::clipboard()->setText( qStr );
 }
 
 void QTConsole::repaintChars( const QRect & rx )
