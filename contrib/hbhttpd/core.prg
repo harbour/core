@@ -7,6 +7,7 @@
 #include "error.ch"
 #include "hbsocket.ch"
 #include "hbthread.ch"
+#include "hbver.ch"
 
 #include "hbssl.ch"
 #undef __HBEXTREQ__
@@ -1011,7 +1012,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
    cRet += "Executable:  " + hb_ProgName() + hb_eol()
    cRet += "Versions:" + hb_eol()
    cRet += "  OS: " + OS() + hb_eol()
-   cRet += "  Harbour: " + Version() + ", " + hb_BuildDate() + hb_eol()
+   cRet += "  Harbour: " + Version() + ", " + hb_Version( HB_VERSION_BUILD_DATE_STR ) + hb_eol()
    cRet += hb_eol()
 
    IF oErr:genCode != EG_MEM
@@ -1494,7 +1495,7 @@ PROCEDURE UProcInfo()
    UWrite( '<table border=1 cellspacing=0>' )
    UWrite( '<tr><td>OS</td><td>' + UHtmlEncode( OS() ) + '</td></tr>' )
    UWrite( '<tr><td>Harbour</td><td>' + UHtmlEncode( Version() ) + '</td></tr>' )
-   UWrite( '<tr><td>Build date</td><td>' + UHtmlEncode( hb_BuildDate() ) + '</td></tr>' )
+   UWrite( '<tr><td>Build date</td><td>' + UHtmlEncode( hb_Version( HB_VERSION_BUILD_DATE_STR ) ) + '</td></tr>' )
    UWrite( '<tr><td>Compiler</td><td>' + UHtmlEncode( hb_Compiler() ) + '</td></tr>' )
    UWrite( '</table>' )
 

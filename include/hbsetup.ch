@@ -59,7 +59,7 @@
 #define HB_COMPAT_C53             /* Enable Cl*pper 5.3b extensions */
 
 #ifndef HB_LEGACY_OFF
-#define HB_LEGACY_LEVEL4
+/* #define HB_LEGACY_LEVEL4 */
 #endif
 
 /* Future level of legacy cleanup */

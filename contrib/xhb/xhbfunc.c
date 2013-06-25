@@ -303,7 +303,14 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT );
 }
 
-#if ! defined( HB_LEGACY_LEVEL4 )
+#if 0
+
+/* length of buffer for CR/LF characters */
+#if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
+#  define CRLF_BUFFER_LEN  4
+#else
+#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+#endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
    static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };

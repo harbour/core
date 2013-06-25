@@ -257,7 +257,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
    ::CheckParam( ::cReturn )
 
    // Analyze function serial number
-   IF ! hb_regexMatch( "[0-9]{8}\..", cSerial )
+   IF ! hb_regexHas( "[0-9]{8}\..", cSerial )
       Alert( "Serial value not valid" )
       ErrorLevel( 1 )
       QUIT
@@ -317,7 +317,7 @@ METHOD Run( aParams, oClient ) CLASS TRPCFunction
 
 METHOD CheckParam( cParam ) CLASS TRPCFunction
 
-   IF ! hb_regexMatch( ::cPattern, cParam )
+   IF ! hb_regexHas( ::cPattern, cParam )
       Alert( "TRPCFunction:CheckParam() wrong parameter specification: " + cParam )
       QUIT
    ENDIF
@@ -1479,7 +1479,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
       ENDIF
       IF nPacketLen > 6
          cMatch := hb_Deserialize( hb_BSubStr( cData, 7 ) )
-         IF hb_regexMatch( cMatch, ::cServerName )
+         IF hb_regexHas( cMatch, ::cServerName )
             cRes := "XHBR10" + hb_Serialize( ::cServerName )
          ENDIF
       ELSE
@@ -1509,7 +1509,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
          ENDIF
 
          FOR EACH oFunc IN ::aFunctions
-            IF hb_regexMatch( cMatch, oFunc:cName ) .AND. cNumber <= oFunc:cSerial
+            IF hb_regexHas( cMatch, oFunc:cName ) .AND. cNumber <= oFunc:cSerial
                cRes := "XHBR11" + hb_Serialize( ::cServerName ) + hb_Serialize( ofunc:Describe() )
                RETURN .T.
             ENDIF

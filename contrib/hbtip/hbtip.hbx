@@ -21,13 +21,9 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC ANSIToHtml
 DYNAMIC hb_MailAssemble
 DYNAMIC hb_SendMail
 DYNAMIC hb_SetMimeType
-DYNAMIC HtmlToANSI
-DYNAMIC HtmlToOEM
-DYNAMIC OEMToHtml
 DYNAMIC THtmlCleanup
 DYNAMIC THtmlDocument
 DYNAMIC THtmlInit

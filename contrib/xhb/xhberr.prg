@@ -65,7 +65,15 @@
 #include "error.ch"
 #include "fileio.ch"
 
-REQUEST Select, Alias, RecNo, DbFilter, DbRelation, IndexOrd, IndexKey
+#include "hbver.ch"
+
+REQUEST Select
+REQUEST Alias
+REQUEST RecNo
+REQUEST dbFilter
+REQUEST dbRelation
+REQUEST IndexOrd
+REQUEST IndexKey
 
 STATIC s_cErrorLog := "error.log"
 STATIC s_lErrorLogAppend := .F.
@@ -347,7 +355,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "" )
       FWriteLine( nHandle, "Operating system...: " + OS() )
       FWriteLine( nHandle, "xHarbour version...: " + Version() )
-      FWriteLine( nHandle, "xHarbour built on..: " + hb_BuildDate() )
+      FWriteLine( nHandle, "xHarbour built on..: " + hb_Version( HB_VERSION_BUILD_DATE_STR ) )
       FWriteLine( nHandle, "C/C++ compiler.....: " + hb_Compiler() )
 
       FWriteLine( nHandle, "Multi Threading....: " + iif( hb_mtvm(), "YES", "NO" ) )

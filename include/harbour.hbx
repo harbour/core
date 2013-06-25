@@ -284,7 +284,6 @@ DYNAMIC hb_ADel
 DYNAMIC hb_Adler32
 DYNAMIC hb_AIns
 DYNAMIC hb_Alert
-DYNAMIC hb_ANSIToOEM
 DYNAMIC hb_AParams
 DYNAMIC hb_argc
 DYNAMIC hb_argCheck
@@ -327,7 +326,6 @@ DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
 DYNAMIC hb_BRight
 DYNAMIC hb_BSubStr
-DYNAMIC hb_BuildDate
 DYNAMIC hb_ByteSwapI
 DYNAMIC hb_ByteSwapL
 DYNAMIC hb_ByteSwapLL
@@ -691,7 +689,6 @@ DYNAMIC hb_NToColor
 DYNAMIC hb_ntos
 DYNAMIC hb_NToT
 DYNAMIC hb_NumToHex
-DYNAMIC hb_OEMToANSI
 DYNAMIC hb_osCPU
 DYNAMIC hb_osDriveSeparator
 DYNAMIC hb_osError
@@ -702,14 +699,11 @@ DYNAMIC hb_osIsWin9x
 DYNAMIC hb_osIsWinCE
 DYNAMIC hb_osIsWinNT
 DYNAMIC hb_osIsWinVista
-DYNAMIC hb_osNewLine
 DYNAMIC hb_osPathDelimiters
 DYNAMIC hb_osPathListSeparator
-DYNAMIC hb_osPathSeparator
 DYNAMIC hb_PathJoin
 DYNAMIC hb_PathNormalize
 DYNAMIC hb_PathRelativize
-DYNAMIC hb_PCodeVer
 DYNAMIC hb_PIsByRef
 DYNAMIC hb_PopupMenu
 DYNAMIC hb_PRead
@@ -735,7 +729,6 @@ DYNAMIC hb_regexAtX
 DYNAMIC hb_regexComp
 DYNAMIC hb_regexHas
 DYNAMIC hb_regexLike
-DYNAMIC hb_regexMatch
 DYNAMIC hb_regexSplit
 DYNAMIC hb_ReleaseCPU
 DYNAMIC hb_run

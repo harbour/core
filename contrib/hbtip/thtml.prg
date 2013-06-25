@@ -134,7 +134,8 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
 
    LOCAL cEmptyHtmlDoc, oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
 
-   cEmptyHtmlDoc := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() + ;
+   cEmptyHtmlDoc := ;
+      '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() + ;
       "<html>" + hb_eol() + ;
       " <head>" + hb_eol() + ;
       " </head>" + hb_eol() + ;
@@ -1667,7 +1668,9 @@ FUNCTION THtmlInit( lInit )
       t_lInit := .F.
    ELSEIF ! t_lInit
       t_aHtmlAttr := Array( HTML_ATTR_COUNT )
+#ifdef HB_LEGACY_LEVEL4
       _Init_Html_AnsiCharacterEntities()
+#endif
       _Init_Html_Attributes()
       _Init_Html_TagTypes()
       t_lInit := .T.
