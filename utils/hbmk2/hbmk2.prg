@@ -85,7 +85,7 @@
 
 /* needed for -u */
 #ifndef HB_LEGACY_LEVEL4
-#define HB_LEGACY_LEVEL4
+/* #define HB_LEGACY_LEVEL4 */
 #endif
 
 #include "directry.ch"
@@ -1468,6 +1468,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    LOCAL cStdOutErr
    LOCAL aParamINC
+
+   hb_default( @aArgs, {} )
+   hb_default( @nArgTarget, 0 )
+   hb_default( @nLevel, 1 )
+   hb_default( @lPause, .F. )
 
    hbmk := hbmk_new( .F. )
 
@@ -16771,23 +16776,19 @@ STATIC PROCEDURE _hbmk_OutStd( hbmk, cText )
    LOCAL nLines
    LOCAL nWidth
    LOCAL cPrefix
-   LOCAL cSelf
    LOCAL tmp
 
    IF hbmk[ _HBMK_lDumpInfo ]
       RETURN
    ENDIF
 
-   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
-
+   cPrefix := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
    IF hbmk[ _HBMK_lShowLevel ]
-      nWidth := Len( cSelf ) + 5
-      cPrefix := hb_StrFormat( cSelf + " #%1$d:", hbmk[ _HBMK_nLevel ] )
-   ELSE
-      nWidth := Len( cSelf ) + 2
-      cPrefix := cSelf + ":"
+      cPrefix += " #" + hb_ntos( hbmk[ _HBMK_nLevel ] )
    ENDIF
+   cPrefix += ":"
 
+   nWidth := Len( cPrefix ) + 1
    cText := StrTran( cText, e"\n", hb_eol() )
    nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
@@ -16804,23 +16805,22 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    LOCAL nLines
    LOCAL nWidth
    LOCAL cPrefix
-   LOCAL cSelf
    LOCAL tmp
 
    IF hbmk[ _HBMK_lDumpInfo ]
       RETURN
    ENDIF
 
-   cSelf := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ + _hbmk_TargetName( hbmk ) )
-
+   cPrefix := iif( hbmk[ _HBMK_lShellMode ], "hbshell", _SELF_NAME_ )
    IF hbmk[ _HBMK_lShowLevel ]
-      nWidth := Len( cSelf ) + 5
-      cPrefix := hb_StrFormat( cSelf + " #%1$d:", hbmk[ _HBMK_nLevel ] )
-   ELSE
-      nWidth := Len( cSelf ) + 2
-      cPrefix := cSelf + ":"
+      cPrefix += " #" + hb_ntos( hbmk[ _HBMK_nLevel ] )
    ENDIF
+   IF ! Empty( tmp := _hbmk_TargetName( hbmk ) )
+      cPrefix += " [" + tmp + "]"
+   ENDIF
+   cPrefix += ":"
 
+   nWidth := Len( cPrefix ) + 1
    cText := StrTran( cText, e"\n", hb_eol() )
    nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
@@ -16832,17 +16832,7 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    RETURN
 
 STATIC FUNCTION _hbmk_TargetName( hbmk )
-
-   LOCAL cName := ""
-
-   IF ! Empty( hbmk[ _HBMK_nArgTarget ] )
-      cName := hb_FNameName( hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] )
-      IF ! Empty( cName )
-         cName := "[" + cName + "]"
-      ENDIF
-   ENDIF
-
-   RETURN cName
+   RETURN iif( hbmk[ _HBMK_nArgTarget ] == 0, "", hb_FNameName( hbmk[ _HBMK_aArgs ][ hbmk[ _HBMK_nArgTarget ] ] ) )
 
 STATIC FUNCTION LicenseString()
 #pragma __cstream | RETURN %s
