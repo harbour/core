@@ -144,12 +144,13 @@
 #define HB_GTI_VERSION          65  /* Get terminal version string */
 
 #define HB_GTI_MAXIMIZED        66  /* Get/Set Window's Maximized status (supported by: GTWVT) */
-#define HB_GTI_FONTATTRIBUTE    67  /* Get/set font attribute */
-#define HB_GTI_UNITRANS         68  /* set translation table for UNICODE characters */
+#define HB_GTI_FONTATTRIBUTE    67  /* Get/Set font attribute */
+#define HB_GTI_UNITRANS         68  /* Set translation table for UNICODE characters */
 #define HB_GTI_WINHANDLE        69  /* Get console window low level handle */
 #define HB_GTI_MOUSEPOS_XY      70  /* Get mouse position in pixels */
 #define HB_GTI_DISPIMAGE        71  /* Display image with given name */
 #define HB_GTI_REDRAWMAX        72  /* Maximum number of unchanged neighboring chars in redrawn line */
+#define HB_GTI_RESIZESTEP       73  /* Enable/Disable window resizing steps */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

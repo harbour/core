@@ -317,6 +317,51 @@ extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour e
 extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers HB_KF_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/character code from Harbour extended key code */
 
+/* macros to manipulate Harbour extended key codes */
+#define HB_INKEY_EXT_MASK           0xF8000000
+#define HB_INKEY_EXT_BIT            0x40000000
+#define HB_INKEY_EXT_TYPEMASK       0xFF000000
+#define HB_INKEY_EXT_VALBITS        16
+#define HB_INKEY_EXT_VALMASK        ( ( 1 << HB_INKEY_EXT_VALBITS ) - 1 )
+#define HB_INKEY_EXT_FLAGMASK       ( 0xFF << HB_INKEY_EXT_VALBITS )
+#define HB_INKEY_EXT_KEY            0x01000000
+#define HB_INKEY_EXT_CHAR           0x02000000
+#define HB_INKEY_EXT_UNICODE        0x03000000
+#define HB_INKEY_EXT_MOUSEKEY       0x04000000
+#define HB_INKEY_EXT_MOUSEPOS       0x05000000
+#define HB_INKEY_EXT_EVENT          0x06000000
+#define HB_INKEY_EXT_POSBITS        12
+#define HB_INKEY_EXT_POSMASK        ( ( 1 << HB_INKEY_EXT_POSBITS ) - 1 )
+
+#define HB_INKEY_ISEXT( n )         ( ( ( n ) & HB_INKEY_EXT_MASK ) == HB_INKEY_EXT_BIT )
+#define HB_INKEY_TYPE( n )          ( ( ( n ) ^ HB_INKEY_EXT_BIT ) & HB_INKEY_EXT_TYPEMASK )
+#define HB_INKEY_ISKEY( n )         ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_KEY )
+#define HB_INKEY_ISCHAR( n )        ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_CHAR )
+#define HB_INKEY_ISUNICODE( n )     ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_UNICODE )
+#define HB_INKEY_ISMOUSEKEY( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_ISMOUSEPOS( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEPOS )
+#define HB_INKEY_ISEVENT( n )       ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_EVENT )
+
+#define HB_INKEY_NEW_VALF( v, f )   ( ( ( v ) & HB_INKEY_EXT_VALMASK ) | \
+                                      ( ( ( f ) << HB_INKEY_EXT_VALBITS ) & HB_INKEY_EXT_FLAGMASK ) )
+
+#define HB_INKEY_NEW_MKEY( k, f )   ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_NEW_KEY( k, f )    ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_KEY )
+#define HB_INKEY_NEW_CHAR( b )      ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_CHARF( b, f )  ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_UNICODE( b )   ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+#define HB_INKEY_NEW_UNICODEF( b, f ) ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+
+#define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
+                                      ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
+                                      ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
+
+#define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
+#define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )
+
+#define HB_INKEY_VALUE( n )         ( ( n ) & HB_INKEY_EXT_VALMASK )
+#define HB_INKEY_FLAGS( n )         ( ( ( n ) & HB_INKEY_EXT_FLAGMASK ) >> HB_INKEY_EXT_VALBITS )
+
 HB_EXTERN_END
 
 #endif /* HB_APIGT_H_ */

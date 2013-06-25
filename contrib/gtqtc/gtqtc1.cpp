@@ -57,25 +57,19 @@ static  HB_GT_FUNCS     SuperTable;
 #define HB_GTQTC_GET(p) ( ( PHB_GTQTC ) HB_GTLOCAL( p ) )
 
 
-#ifndef HB_QT_NEEDLOCKS
-#  if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX )
+#  if !defined( HB_QT_NEEDLOCKS )
 #     define HB_QT_NEEDLOCKS
+#  endif
+#  if !defined( HB_XLIB_NEEDLOCKS )
+/* #     define HB_XLIB_NEEDLOCKS */
 #  endif
 #endif
 
 #ifdef HB_QT_NEEDLOCKS
-#  include "hbthread.h"
-   static HB_CRITICAL_NEW( s_qtcMtx );
-   static HB_THREAD_NO s_thNO = 0;
-   static HB_THREAD_NO s_thCount = 0;
-#  define HB_QTC_LOCK()       do { if( s_thNO != hb_threadNO() ) { \
-                                      hb_threadEnterCriticalSection( &s_qtcMtx ); \
-                                      s_thNO = hb_threadNO(); } \
-                                   ++s_thCount
-#  define HB_QTC_UNLOCK()     if( --s_thCount == 0 ) { \
-                                 s_thNO = 0; \
-                                 hb_threadLeaveCriticalSection( &s_qtcMtx ); } \
-                              } while( 0 )
+   static QMutex s_qMtx( QMutex::Recursive );
+#  define HB_QTC_LOCK()       do { s_qMtx.lock()
+#  define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
 #else
 #  define HB_QTC_LOCK()       do {} while( 0 )
 #  define HB_QTC_UNLOCK()     do {} while( 0 )
@@ -1372,6 +1366,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->cellX         = pQTC->fontWidth == 0 ? pQTC->cellY / 2: pQTC->fontWidth;
    pQTC->iResizeMode   = HB_GTI_RESIZEMODE_FONT;
    pQTC->fResizable    = HB_TRUE;
+   pQTC->fResizeInc    = HB_FALSE;
    pQTC->fClosable     = HB_TRUE;
    pQTC->fAltEnter     = HB_FALSE;
    pQTC->fMaximized    = HB_FALSE;
@@ -1614,6 +1609,8 @@ static void hb_gt_qtc_createConsoleWindow( PHB_GTQTC pQTC )
 
 /* *********************************************************************** */
 
+static void hb_gt_qtc_InitMT( void );
+
 static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
    PHB_GTQTC pQTC;
@@ -1622,6 +1619,8 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! s_qtapp )
    {
+      hb_gt_qtc_InitMT();
+
       s_qtapp = qApp;
       if( ! s_qtapp )
       {
@@ -1714,20 +1713,21 @@ static void hb_gt_qtc_Refresh( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRow, int iCol )
+static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    PHB_GTQTC pQTC;
-   HB_BOOL fResult;
+   HB_BOOL fResult, fCenter;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    pQTC = HB_GTQTC_GET( pGT );
-   fResult = hb_gt_qtc_setWindowSize( pQTC, iRow, iCol );
+   fCenter = iRows != pQTC->iRows || iCols != pQTC->iCols;
+   fResult = hb_gt_qtc_setWindowSize( pQTC, iRows, iCols );
    if( fResult )
    {
       if( pQTC->qWnd )
       {
-         hb_gt_qtc_initWindow( pQTC, HB_TRUE );
+         hb_gt_qtc_initWindow( pQTC, fCenter );
          HB_GTSELF_REFRESH( pGT );
       }
       else
@@ -1960,7 +1960,6 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_gt_qtc_itemPutQString( pInfo->pResult, pQTC->wndTitle );
          if( pInfo->pNewVal && HB_IS_STRING( pInfo->pNewVal ) )
          {
-            /* store font status for next operation on fontsize */
             hb_gt_qtc_itemGetQString( pInfo->pNewVal, pQTC->wndTitle );
             if( pQTC->qWnd )
                pQTC->qWnd->setWindowTitle( *pQTC->wndTitle );
@@ -2096,6 +2095,17 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   }
                   break;
             }
+         }
+         break;
+
+      case HB_GTI_RESIZESTEP:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->fResizeInc );
+         if( pInfo->pNewVal && HB_IS_LOGICAL( pInfo->pNewVal ) &&
+             ( hb_itemGetL( pInfo->pNewVal ) ? ! pQTC->fResizeInc : pQTC->fResizeInc ) )
+         {
+            pQTC->fResizeInc = ! pQTC->fResizeInc;
+            if( pQTC->qWnd )
+               pQTC->qWnd->setResizing();
          }
          break;
 
@@ -2619,20 +2629,15 @@ static QRect hb_gt_qtc_unmapRect( PHB_GTQTC pQTC, const QRect & rc )
 void QTConsole::copySelection( void )
 {
    const QRect rc = hb_gt_qtc_mapRect( pQTC, image, selectRect );
-   HB_SIZE nSize, nEol, nI, nE;
    int iRow, iCol;
-   const char * pszEol;
-   QChar * pBuffer;
+   QString qStrEol( hb_conNewLine() );
+   QString qStr( "" );
 
-   pszEol = hb_conNewLine();
-   nEol = strlen( pszEol );
-   nSize = rc.height() * ( rc.width() + nEol );
-   pBuffer = ( QChar * ) hb_xgrab( sizeof( QChar ) * nSize );
+   qStr.reserve( rc.height() * ( rc.width() + qStrEol.size() ) );
 
    selectMode = false;
    update( hb_gt_qtc_unmapRect( pQTC, rc ) );
 
-   nI = 0;
    for( iRow = rc.top(); iRow <= rc.bottom(); ++iRow )
    {
       for( iCol = rc.left(); iCol <= rc.right(); ++iCol )
@@ -2643,14 +2648,13 @@ void QTConsole::copySelection( void )
 
          if( !HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
-         pBuffer[ nI++ ] = usChar;
+         qStr += ( QChar ) usChar;
       }
       if( rc.height() > 1 )
-         for( nE = 0; nE < nEol; ++nE )
-            pBuffer[ nI++ ] = pszEol[ nE ];
+         qStr += qStrEol;
    }
-   QApplication::clipboard()->setText( QString( pBuffer, nI ) );
-   hb_xfree( pBuffer );
+
+   QApplication::clipboard()->setText( qStr );
 }
 
 void QTConsole::repaintChars( const QRect & rx )
@@ -3417,7 +3421,7 @@ void QTCWindow::setResizing( void )
       {
          setMinimumWidth( qConsole->pQTC->cellX << 1 );
          setMinimumHeight( qConsole->pQTC->cellY << 1 );
-         if( windowState() & Qt::WindowMaximized )
+         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->cellX, qConsole->pQTC->cellY );
@@ -3426,7 +3430,7 @@ void QTCWindow::setResizing( void )
       {
          setMinimumWidth( qConsole->pQTC->iCols << 1 );
          setMinimumHeight( qConsole->pQTC->iRows << 2 );
-         if( windowState() & Qt::WindowMaximized )
+         if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
             setSizeIncrement( qConsole->pQTC->iCols, qConsole->pQTC->iRows );
@@ -3441,5 +3445,26 @@ void QTCWindow::setResizing( void )
       setSizeIncrement( 0, 0 );
    }
 }
+
+/* *********************************************************************** */
+
+#ifdef HB_XLIB_NEEDLOCKS
+
+#include <X11/Xlib.h>
+
+static void hb_gt_qtc_InitMT( void )
+{
+   if( hb_vmIsMt() )
+   {
+      if( ! XInitThreads() )
+         hb_errInternal( 10002, "XInitThreads() failed !!!", NULL, NULL );
+   }
+}
+
+#else
+
+static void hb_gt_qtc_InitMT( void ) { }
+
+#endif
 
 /* *********************************************************************** */
