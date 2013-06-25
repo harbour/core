@@ -278,7 +278,7 @@ METHOD WvgMLE:copyMarked()
    nE := Wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
+      hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n

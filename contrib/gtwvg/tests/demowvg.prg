@@ -1,7 +1,7 @@
 /*
  *                   GTWVT Console GUI Interface
  *
- *               Pritpal Bedi <pritpal@vouchcac.com>
+ *         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
  *
  *       I have tried to simulate the gui controls through GDI
  *        functions and found a way to refresh those controls
@@ -124,7 +124,7 @@ PROCEDURE Main()
    Wvt_SetMousePos( 2, 40 )
 
    AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
-   AAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
+   AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Vouch" ) } )
    AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
@@ -251,7 +251,7 @@ PROCEDURE WvtNextGets_X()
    LOCAL aBlocks    := {}
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
-   LOCAL aPalette   := Wvt_GetPalette()
+   LOCAL aPalette   := hb_gtInfo( HB_GTI_PALETTE )
    LOCAL aNewPalette := AClone( aPalette )
    LOCAL aObjects   := WvtSetObjects( {} )
    LOCAL nRow       := Row()
@@ -265,9 +265,9 @@ PROCEDURE WvtNextGets_X()
    // these values with realistic values.
    aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++s_nPalletMultiplier )
 
-   Wvt_SetPalette( aNewPalette )
+   hb_gtInfo( HB_GTI_PALETTE, aNewPalette )
 
-   AAdd( aBlocks, {|| Wvt_SetTitle( "Wvt Gets 2nd Window with Different Palette" ) } )
+   AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Wvt Gets 2nd Window with Different Palette" ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
    AAdd( aBlocks, {|| Wvt_SetBrush( 0, RGB( 32, 255, 100 ) )    } )
    AAdd( aBlocks, {|| Wvt_DrawEllipse( 6, 50, 10, 58 )           } )
@@ -306,7 +306,7 @@ PROCEDURE WvtNextGets_X()
    READ
 
    // Restore Environment
-   Wvt_SetPalette( aPalette )
+   hb_gtInfo( HB_GTI_PALETTE, aPalette )
    WvtSetObjects( aObjects )
    WvtSetBlocks( aLastPaint )
    SetColor( clr )

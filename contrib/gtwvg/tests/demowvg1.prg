@@ -1,6 +1,6 @@
 //                   GTWVT Console GUI Interface
 //
-//               Pritpal Bedi <bedipritpal@hotmail.com>
+//         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
 
 #require "gtwvg"
 
@@ -35,7 +35,7 @@ PROCEDURE Main()
    SetColor( "N/W" )
    CLS
    Wvt_ShowWindow( SW_RESTORE )
-   Wvt_SetTitle( "Harbour's GTWVG Demo ( Simplified )" )
+   hb_gtInfo( HB_GTI_WINTITLE, "Harbour's GTWVG Demo ( Simplified )" )
    Wvt_SetIcon( hb_DirBase() +  "vr_1.ico" )
 
    SetGT( 1, hb_gtSelect() )

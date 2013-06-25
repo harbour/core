@@ -58,6 +58,7 @@
  */
 
 #include "hbclass.ch"
+#include "hbgtinfo.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -175,7 +176,7 @@ METHOD WvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
 
    __defaultNIL( @nRows        , 25 )
    __defaultNIL( @nCols        , 80 )
-   __defaultNIL( @cTitle       , Wvt_GetTitle() )
+   __defaultNIL( @cTitle       , hb_gtInfo( HB_GTI_WINTITLE ) )
    __defaultNIL( @cFont        , fnt_[ 1 ] )
    __defaultNIL( @nFontHeight  , fnt_[ 2 ] )
    __defaultNIL( @nFontWidth   , fnt_[ 3 ] )
@@ -195,10 +196,10 @@ METHOD WvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
    ::nOldRows            := MaxRow() + 1
    ::nOldCols            := MaxCol() + 1
    ::aOldFont            := Wvt_GetFontInfo()
-   ::cOldTitle           := Wvt_GetTitle()
+   ::cOldTitle           := hb_gtInfo( HB_GTI_WINTITLE )
    ::cOldColor           := SetColor()
    ::nOldCursor          := SetCursor()
-   ::aPalette            := Wvt_GetPalette()
+   ::aPalette            := hb_gtInfo( HB_GTI_PALETTE )
 
    ::oldMenuHandle       := Wvt_GetMenu()
    ::oldMenuBlock        := SetKey( Wvt_SetMenuKeyEvent() )
@@ -240,9 +241,9 @@ METHOD WvtDialog:Create()
       Wvt_SetToolTipTextColor( ::nTooltipTextColor )
    ENDIF
 
-   aPalette      := Wvt_GetPalette()
+   aPalette      := hb_gtInfo( HB_GTI_PALETTE )
    aPalette[ 9 ] := RGB( 175, 175, 175 )
-   Wvt_SetPalette( aPalette )
+   hb_gtInfo( HB_GTI_PALETTE, aPalette )
 
    ::cScreen     := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    ::aWvtScreen  := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -258,7 +259,7 @@ METHOD WvtDialog:Create()
    /* Wvt_SetFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontBold, ::nFontQuality ) */
    SetMode( ::nRows, ::nCols )
 
-   Wvt_SetTitle( ::cTitle )
+   hb_gtInfo( HB_GTI_WINTITLE, ::cTitle )
 
    SetColor( ::cColor )
    CLS
@@ -311,8 +312,8 @@ METHOD WvtDialog:Destroy()
    /*  Here set mode is before setting the font  */
    SetMode( ::nOldRows, ::nOldCols )
    Wvt_SetFont( ::aOldFont[ 1 ], ::aOldFont[ 2 ], ::aOldFont[ 3 ], ::aOldFont[ 4 ], ::aOldFont[ 5 ] )
-   Wvt_SetTitle( ::cOldTitle )
-   Wvt_SetPalette( ::aPalette )
+   hb_gtInfo( HB_GTI_WINTITLE, ::cOldTitle )
+   hb_gtInfo( HB_GTI_PALETTE, ::aPalette )
    Wvt_SetPointer( WVT_IDC_ARROW )
    Wvt_SetMousePos( MRow(), MCol() )
 

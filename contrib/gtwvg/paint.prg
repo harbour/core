@@ -53,7 +53,7 @@
 THREAD STATIC t_paint_ := { { "", {} } }
 
 /*
- *        This function must have to be defined in your appls
+ * This function must have to be defined in your appls
  */
 #if 0
 
@@ -539,77 +539,76 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
    RETURN xRet
 
 /*
- *                      C Functions to PRG Ports
+ * C Functions to PRG Ports
  */
 
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 
-FUNCTION Wvt_SetTitle( cTitle )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetTitle( cTitle )
    RETURN hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
 FUNCTION Wvt_GetTitle()
-
    RETURN hb_gtInfo( HB_GTI_WINTITLE )
+
+#endif
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
    IF HB_ISNUMERIC( ncIconRes )
       hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
-
    ELSEIF HB_ISSTRING( cIconName )
       hb_gtInfo( HB_GTI_ICONRES, cIconName )
-
    ELSEIF HB_ISSTRING( ncIconRes )
       hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
-
    ENDIF
 
    RETURN NIL
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
-   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME    ) )
-   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH   ) )
-   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
+   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME ) )
+   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH ) )
+   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT ) )
    __defaultNIL( @nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) )
-   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE    ) )
+   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE ) )
 
    RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
-FUNCTION Wvt_SetCodepage( nCodePage )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetCodepage( nCodePage )
    RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
 FUNCTION Wvt_GetPalette()
-
    RETURN hb_gtInfo( HB_GTI_PALETTE )
 
 FUNCTION Wvt_SetPalette( aRGB )
-
    RETURN hb_gtInfo( HB_GTI_PALETTE, aRGB )
 
 FUNCTION Wvt_GetRGBColor( nIndex )
-
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-#define BLACK                                     RGB( 0x0 ,0x0 ,0x0  )
-#define BLUE                                      RGB( 0x0 ,0x0 ,0x85 )
-#define GREEN                                     RGB( 0x0 ,0x85,0x0  )
-#define CYAN                                      RGB( 0x0 ,0x85,0x85 )
-#define RED                                       RGB( 0x85,0x0 ,0x0  )
-#define MAGENTA                                   RGB( 0x85,0x0 ,0x85 )
-#define BROWN                                     RGB( 0x85,0x85,0x0  )
-#define LIGHT_GRAY                                RGB( 0xC6,0xC6,0xC6 )
-#define GRAY                                      RGB( 0x60,0x60,0x60 )
-#define BRIGHT_BLUE                               RGB( 0x00,0x00,0xFF )
-#define BRIGHT_GREEN                              RGB( 0x60,0xFF,0x60 )
-#define BRIGHT_CYAN                               RGB( 0x60,0xFF,0xFF )
-#define BRIGHT_RED                                RGB( 0xF8,0x00,0x26 )
-#define BRIGHT_MAGENTA                            RGB( 0xFF,0x60,0xFF )
-#define YELLOW                                    RGB( 0xFF,0xFF,0x00 )
-#define WHITE                                     RGB( 0xFF,0xFF,0xFF )
+#endif
+
+#define BLACK                                     RGB( 0x00, 0x00, 0x00 )
+#define BLUE                                      RGB( 0x00, 0x00, 0x85 )
+#define GREEN                                     RGB( 0x00, 0x85, 0x00 )
+#define CYAN                                      RGB( 0x00, 0x85, 0x85 )
+#define RED                                       RGB( 0x85, 0x00, 0x00 )
+#define MAGENTA                                   RGB( 0x85, 0x00, 0x85 )
+#define BROWN                                     RGB( 0x85, 0x85, 0x00 )
+#define LIGHT_GRAY                                RGB( 0xC6, 0xC6, 0xC6 )
+#define GRAY                                      RGB( 0x60, 0x60, 0x60 )
+#define BRIGHT_BLUE                               RGB( 0x00, 0x00, 0xFF )
+#define BRIGHT_GREEN                              RGB( 0x60, 0xFF, 0x60 )
+#define BRIGHT_CYAN                               RGB( 0x60, 0xFF, 0xFF )
+#define BRIGHT_RED                                RGB( 0xF8, 0x00, 0x26 )
+#define BRIGHT_MAGENTA                            RGB( 0xFF, 0x60, 0xFF )
+#define YELLOW                                    RGB( 0xFF, 0xFF, 0x00 )
+#define WHITE                                     RGB( 0xFF, 0xFF, 0xFF )
 
 FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
@@ -646,20 +645,20 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-FUNCTION Wvt_SetAltF4Close( lSetClose )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetAltF4Close( lSetClose )
    RETURN hb_gtInfo( HB_GTI_CLOSABLE, lSetClose )
 
 FUNCTION Wvt_GetScreenWidth()
-
    RETURN hb_gtInfo( HB_GTI_DESKTOPWIDTH )
 
 FUNCTION Wvt_GetScreenHeight()
-
    RETURN hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
 
-FUNCTION Wvt_GetWindowHandle()
+#endif
 
+FUNCTION Wvt_GetWindowHandle()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
@@ -688,13 +687,15 @@ FUNCTION Wvt_Keyboard( nKey )
 
    RETURN NIL
 
-FUNCTION Wvt_GetClipboard()
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_GetClipboard()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
 FUNCTION Wvt_SetClipboard( cText )
-
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
+
+#endif
 
 FUNCTION Wvt_PasteFromClipboard()
 
@@ -710,49 +711,37 @@ FUNCTION Wvt_PasteFromClipboard()
    RETURN NIL
 
 FUNCTION Wvt_ResetWindow()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
 FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
 FUNCTION Wvt_KillTimer( nTimerID )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
 FUNCTION Wvt_SetOnTop()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
 FUNCTION Wvt_SetAsNormal()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
 FUNCTION Wvt_Minimize()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
 FUNCTION Wvt_Maximize()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
 FUNCTION Wvt_Hide()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
 FUNCTION Wvt_Show()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
 FUNCTION Wvt_SetWindowPos( nX, nY )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
 FUNCTION Wvt_ShowWindow( nState )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
 FUNCTION Wvt_Update()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
