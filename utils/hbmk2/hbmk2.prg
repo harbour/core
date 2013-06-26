@@ -13303,15 +13303,15 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
          aLib := LibReferenceToOption( hbmk, tmp:__enumKey() )
          _hbmk_OutStd( hbmk, hb_StrFormat( ;
             iif( aLib[ 2 ], ;
-               I_( "Hint: Add option '%1$s' for missing function(s): %2$s" ), ;
-               I_( "Hint: Install package %3$s and add option '%1$s' for missing function(s): %2$s" ) ), ;
+               I_( "Hint: Add option '%1$s' for missing Harbour function(s): %2$s" ), ;
+               I_( "Hint: Install package %3$s and add option '%1$s' for missing Harbour function(s): %2$s" ) ), ;
             aLib[ 1 ], ;
             ArrayToList( tmp, ", ",,,, "()" ), ;
             hb_FNameName( aLib[ 1 ] ) ) )
       NEXT
 
       IF ! Empty( aFunction )
-         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown function(s): %1$s" ), ArrayToList( aFunction, ", ",,,, "()" ) ) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown Harbour function(s): %1$s" ), ArrayToList( aFunction, ", ",,,, "()" ) ) )
       ENDIF
    ENDIF
 
