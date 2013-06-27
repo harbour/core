@@ -1656,6 +1656,9 @@ METHOD LoadCallStack() CLASS HBDebugger
       IF nPos > 0
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
+         IF ::aCallStack[ nPos ][ CSTACK_LINE ] = 0
+            ::aCallStack[ nPos ][ CSTACK_LINE ] := ProcLine( i )
+         ENDIF
       ELSE
          ::aProcStack[ i - nDebugLevel + 1 ] := {, ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")", , nLevel, , }
       ENDIF
