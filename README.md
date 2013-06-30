@@ -1919,6 +1919,7 @@ Supported shells per host platforms:
      * [Netiquette Guidelines](http://tools.ietf.org/html/rfc1855)
      * [Setting up Git](https://help.github.com/articles/set-up-git)
      * [Git book](http://git-scm.com/book) [free]
+     * [Git Reference](http://gitref.org)
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
        * <http://help.transifex.com/features/formats.html#po-files>

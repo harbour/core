@@ -237,6 +237,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMODE_RAW_C           ( -1 )
 
 #define _HBMODE_IS_HB( n )      ( n >= _HBMODE_HB10 )
+#define _HBMODE_IS_HB_O( n, r ) ( n >= _HBMODE_HB10 .AND. n <= r )
 #define _HBMODE_IS_OLDHB( n )   ( n >= _HBMODE_HB10 .AND. n < _HBMODE_NATIVE )
 #define _HBMODE_IS_XHB( n )     ( n <= _HBMODE_XHB )
 
