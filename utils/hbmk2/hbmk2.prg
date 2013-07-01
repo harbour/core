@@ -822,7 +822,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    IF nResult != _EXIT_OK
       IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
+         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), " " + "[" + cTargetName + "]", "" ) + ;
                                ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
       ENDIF
       IF lPause
@@ -1082,6 +1082,8 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, lIgnoreEnvVar )
    LOCAL tmp
 
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
+   hbmk[ _HBMK_cHB_INSTALL_CON ] := ""
+   hbmk[ _HBMK_cHB_INSTALL_ADD ] := ""
 
    IF lIgnoreEnvVar
       hbmk[ _HBMK_cHB_INSTALL_PFX ] := ""
@@ -2356,7 +2358,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Finish detecting bin/lib/include dirs */
 
-   hbmk_harbour_dirlayout_init( hbmk )
+   IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
+      hbmk_harbour_dirlayout_init( hbmk )
+   ENDIF
 
    /* Display detection results */
 
@@ -10443,17 +10447,19 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
             hbmk[ _HBMK_cHB_INSTALL_CON ], ;
             hbmk[ _HBMK_cHB_INSTALL_ADD ] }
 
-            FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
-               IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
-                  hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
+            IF ! Empty( cDir )
+               FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
+                  IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
+                     hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
 
-                  cFile := tmp
-                  lFound := .T.
+                     cFile := tmp
+                     lFound := .T.
+                     EXIT
+                  ENDIF
+               NEXT
+               IF lFound
                   EXIT
                ENDIF
-            NEXT
-            IF lFound
-               EXIT
             ENDIF
          NEXT
       ENDIF
