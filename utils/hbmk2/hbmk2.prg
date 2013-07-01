@@ -3601,7 +3601,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_FNameExt( cParamL ) == ".cpp" .OR. ;
            hb_FNameExt( cParamL ) == ".cc" .OR. ;
            hb_FNameExt( cParamL ) == ".cxx" .OR. ;
-           hb_FNameExt( cParamL ) == ".cx"
+           hb_FNameExt( cParamL ) == ".cx" .OR. ;
+           hb_FNameExt( cParamL ) == ".mm"
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aCPP ], cParam )
@@ -10610,7 +10611,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                CASE hb_FNameExt( cItemL ) == ".cpp" .OR. ;
                     hb_FNameExt( cItemL ) == ".cc" .OR. ;
                     hb_FNameExt( cItemL ) == ".cxx" .OR. ;
-                    hb_FNameExt( cItemL ) == ".cx"
+                    hb_FNameExt( cItemL ) == ".cx" .OR. ;
+                    hb_FNameExt( cItemL ) == ".mm"
                   AAddNew( hbmk[ _HBMK_aCPP ], cItem )
                CASE hb_FNameExt( cItemL ) == ".c" .OR. ;
                     hb_FNameExt( cItemL ) == ".m"
@@ -10671,7 +10673,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   CASE hb_FNameExt( cItemL ) == ".h" .OR. ;
                        hb_FNameExt( cItemL ) == ".hpp" .OR. ;
                        hb_FNameExt( cItemL ) == ".hh" .OR. ;
-                       hb_FNameExt( cItemL ) == ".mm" .OR. ;
                        Empty( hb_FNameExt( cItemL ) )
                      /* ignore C/C++/Objective-C headers */
                   OTHERWISE
