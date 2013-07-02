@@ -2881,7 +2881,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE Left( cParamL, 5 ) == "-hbl="
 
-         hbmk[ _HBMK_cHBL ] := hb_DirSepToOS( SubStr( cParam, 6 ) )
+         hbmk[ _HBMK_cHBL ] := hb_DirSepToOS( MacroProc( hbmk, SubStr( cParam, 6 ), aParam[ _PAR_cFileName ] ) )
          hbmk[ _HBMK_cHBLDir ] := hb_FNameDir( aParam[ _PAR_cFileName ] )
 
       CASE Left( cParamL, 4 ) == "-po="
