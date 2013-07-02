@@ -24,7 +24,7 @@ hbmk2.prg
 # do not support multiple .rc inputs
 #-icon={allwin}../../package/harb_win.ico
 #-icon={os2}../../package/harb_os2.ico
-hbmk2.rc
+hbmk2.rc{!HBMK_GENERIC}
 
 # localization
 po/hbmk2.%{hb_lng}.po
