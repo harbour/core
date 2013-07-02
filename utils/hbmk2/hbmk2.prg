@@ -187,6 +187,7 @@ EXTERNAL hbmk_KEYW
 #endif
 
 #define _SELF_NAME_             "hbmk2"
+#define _SELF_NAME_LONG_        "Harbour Make"
 
 #define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x /*, _SELF_NAME_ */ ) )
 #define R_( x )                 ( x ) /* marking for regexps */
@@ -2869,7 +2870,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE Left( cParamL, 5 ) == "-lng="
 
          cParam := SubStr( cParam, 6 )
-         IF ! Empty( cParam )
+         IF Empty( cParam )
+            hbmk[ _HBMK_aLNG ] := {}
+         ELSE
             hbmk[ _HBMK_aLNG ] := ListToArray( cParam, "," )
             FOR EACH tmp IN hbmk[ _HBMK_aLNG ]
                tmp := AllTrim( tmp )
@@ -2940,7 +2943,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE Left( cParamL, 2 ) == "/o" .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
          /* Swallow this switch. We do not pass it to Harbour, as it may badly
-            interact with hbmk. */
+            interact with our own logic. */
 #endif
 
       CASE Left( cParam, 2 ) == "-o"
@@ -11298,9 +11301,10 @@ STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
 
 STATIC FUNCTION hbmk_builtin_List()
 
-   STATIC s_hHBM_BuiltIn := { ;
-      _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" => {|| hbmk_builtin_File_hb_pkg_dynlib() }, ;
-      _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" => {|| hbmk_builtin_File_hb_pkg_install() } }
+   STATIC s_hHBM_BuiltIn := { => }
+
+   s_hHBM_BuiltIn[ _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" ] := {|| hbmk_builtin_File_hb_pkg_dynlib() }
+   s_hHBM_BuiltIn[ _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" ] := {|| hbmk_builtin_File_hb_pkg_install() }
 
    RETURN s_hHBM_BuiltIn
 
@@ -15687,7 +15691,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
          "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
       cText := ;
-         "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
+         _SELF_NAME_LONG_ + " (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
          "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
    ENDIF
 
