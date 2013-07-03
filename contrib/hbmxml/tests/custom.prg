@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cFileName := hb_DirBase() + hb_FNameExtSet( __FILE__, ".xml" )
+   LOCAL cFileName := hb_FNameExtSet( __FILE__, ".xml" )
 
    LOCAL tree, node
    LOCAL xData
