@@ -67,7 +67,8 @@ extern HB_EXPORT PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset );
 
 /* internal debugger function */
 extern HB_EXPORT void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITEM pFrame );
-extern HB_EXPORT void hb_dbgAddBreak( void * handle, const char * cModule, int nLine, const char * szFunction );
+extern HB_EXPORT const char * hb_dbgGetModuleName( void * handle, const char * szName );
+extern HB_EXPORT void hb_dbgAddBreak( void * handle, const char * szModule, int nLine, const char * szFunction );
 extern HB_EXPORT void hb_dbgAddWatch( void * handle, const char * szExpr, HB_BOOL bTrace );
 extern HB_EXPORT void hb_dbgDelBreak( void * handle, int nBreak );
 extern HB_EXPORT void hb_dbgDelWatch( void * handle, int nWatch );

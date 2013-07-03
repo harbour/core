@@ -131,12 +131,8 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
 
    LOCAL lStartup
 
-   DO CASE
-   CASE nMode == HB_DBG_GETENTRY
-
-      __dbgSetEntry()
-
-   CASE nMode == HB_DBG_ACTIVATE
+   SWITCH nMode
+   CASE HB_DBG_ACTIVATE
 
       IF ( lStartup := ( t_oDebugger == NIL ) )
          t_oDebugger := HBDebugger():New()
@@ -154,8 +150,13 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
       ENDIF
       t_oDebugger:lGo := .F.
       t_oDebugger:Activate()
+      RETURN
 
-   ENDCASE
+   CASE HB_DBG_GETENTRY
+
+      __dbgSetEntry()
+
+   ENDSWITCH
 
    RETURN
 
@@ -268,6 +269,7 @@ CREATE CLASS HBDebugger
    METHOD FindPrevious()
    METHOD GetExprValue( xExpr, lValid )
    METHOD GetSourceFiles()
+   METHOD ModuleMatch( cModuleName1, cModuleName2 )
 
    METHOD Global()
 
@@ -564,52 +566,62 @@ METHOD CallStackProcessKey( nKey ) CLASS HBDebugger
    LOCAL nSkip
    LOCAL lUpdate := .F.
 
-   DO CASE
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+   SWITCH nKey
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
 
       IF ::oBrwStack:Cargo > 1
          ::oBrwStack:GoTop()
          ::oBrwStack:ForceStable()
          lUpdate := .T.
       ENDIF
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
 
       IF ::oBrwStack:Cargo < Len( ::aProcStack )
          ::oBrwStack:GoBottom()
          ::oBrwStack:ForceStable()
          lUpdate := .T.
       ENDIF
+      EXIT
 
-   CASE nKey == K_UP
+   CASE K_UP
 
       IF ::oBrwStack:Cargo > 1
          ::oBrwStack:Up()
          ::oBrwStack:ForceStable()
          lUpdate := .T.
       ENDIF
+      EXIT
 
-   CASE nKey == K_DOWN
+   CASE K_DOWN
 
       IF ::oBrwStack:Cargo < Len( ::aProcStack )
          ::oBrwStack:Down()
          ::oBrwStack:ForceStable()
          lUpdate := .T.
       ENDIF
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
 
       ::oBrwStack:PageUp()
       ::oBrwStack:ForceStable()
       lUpdate := .T.
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
 
       ::oBrwStack:PageDown()
       ::oBrwStack:ForceStable()
       lUpdate := .T.
+      EXIT
 
-   CASE nKey == K_LBUTTONDOWN
+   CASE K_LBUTTONDOWN
 
       IF ( nSkip := MRow() - ::oWndStack:nTop - ::oBrwStack:RowPos ) != 0
          IF nSkip > 0
@@ -626,8 +638,9 @@ METHOD CallStackProcessKey( nKey ) CLASS HBDebugger
          ::oBrwStack:ForceStable()
       ENDIF
       lUpdate := .T.
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    IF lUpdate
       IF ::oWndVars != NIL .AND. ::oWndVars:lVisible
@@ -663,15 +676,20 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
 
    IF ::oBrwText != NIL
 
-      DO CASE
-      CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
+      SWITCH nKey
+      CASE K_HOME
+      CASE K_CTRL_PGUP
+      CASE K_CTRL_HOME
 
          ::oBrwText:GoTop()
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )
          ENDIF
+         EXIT
 
-      CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
+      CASE K_END
+      CASE K_CTRL_PGDN
+      CASE K_CTRL_END
 
          ::oBrwText:GoBottom()
          ::oBrwText:nCol := ::oWndCode:nLeft + 1
@@ -680,26 +698,33 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )
          ENDIF
+         EXIT
 
-      CASE nKey == K_LEFT
+      CASE K_LEFT
          ::oBrwText:Left()
+         EXIT
 
-      CASE nKey == K_RIGHT
+      CASE K_RIGHT
          ::oBrwText:Right()
+         EXIT
 
-      CASE nKey == K_UP
+      CASE K_UP
          ::oBrwText:Up()
+         EXIT
 
-      CASE nKey == K_DOWN
+      CASE K_DOWN
          ::oBrwText:Down()
+         EXIT
 
-      CASE nKey == K_PGUP
+      CASE K_PGUP
          ::oBrwText:PageUp()
+         EXIT
 
-      CASE nKey == K_PGDN
+      CASE K_PGDN
          ::oBrwText:PageDown()
+         EXIT
 
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
    RETURN NIL
@@ -872,7 +897,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          ELSE
             cParam1 := ::cPrgName
          ENDIF
-         ::ToggleBreakPoint( Val( cParam ), strip_path( cParam1 ) )
+         ::ToggleBreakPoint( Val( cParam ), cParam1 )
       ELSE
          ::ToggleBreakPoint()
       ENDIF
@@ -1200,6 +1225,10 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
 
 METHOD GetSourceFiles() CLASS HBDebugger
    RETURN __dbgGetSourceFiles( ::pInfo )
+
+
+METHOD ModuleMatch( cModuleName1, cModuleName2 ) CLASS HBDebugger
+   RETURN __dbgModuleMatch( ::pInfo, cModuleName1, cModuleName2 )
 
 
 METHOD Global() CLASS HBDebugger
@@ -1537,11 +1566,12 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       DO WHILE ! lExit
          Inkey( 0 )
 
-         DO CASE
-         CASE LastKey() == K_ESC
+         SWITCH LastKey()
+         CASE K_ESC
             lExit := .T.
+            EXIT
 
-         CASE LastKey() == K_ENTER
+         CASE K_ENTER
             IF cType == "A"
                IF Len( uValue ) == 0
                   __dbgAlert( "Array is empty" )
@@ -1562,10 +1592,12 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
             ELSE
                __dbgAlert( "Value cannot be edited" )
             ENDIF
+            EXIT
 
          OTHERWISE
             __dbgAlert( "Value cannot be edited" )
-         ENDCASE
+
+         ENDSWITCH
       ENDDO
 
    ENDIF
@@ -1736,7 +1768,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
          FOR n := 1 TO Len( ::aModules )
             IF ! ::lShowAllGlobals
-               IF ! hb_FileMatch( ::aModules[ n ][ MODULE_NAME ], cName )
+               IF ! ::ModuleMatch( ::aModules[ n ][ MODULE_NAME ], cName )
                   LOOP
                ENDIF
             ENDIF
@@ -1755,7 +1787,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
 
       IF ::lShowStatics
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
-         n := AScan( ::aModules, {| a | hb_FileMatch( a[ MODULE_NAME ], cName ) } )
+         n := AScan( ::aModules, {| a | ::ModuleMatch( a[ MODULE_NAME ], cName ) } )
          IF n > 0
             aVars := ::aModules[ n ][ MODULE_STATICS ]
             FOR m := 1 TO Len( aVars )
@@ -2083,7 +2115,7 @@ METHOD RedisplayBreakPoints() CLASS HBDebugger
    LOCAL n
 
    FOR n := 1 TO Len( ::aBreakpoints )
-      IF hb_FileMatch( ::aBreakpoints[ n ][ 2 ], strip_path( ::cPrgName ) )
+      IF ::ModuleMatch( ::aBreakpoints[ n ][ 2 ], ::cPrgName )
          ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T. )
       ENDIF
    NEXT
@@ -2493,7 +2525,7 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
 
       IF ! Empty( cPrgName )
 
-         IF ! hb_FileMatch( strip_path( cPrgName ), strip_path( ::cPrgName ) ) .OR. ;
+         IF ! ::ModuleMatch( cPrgName, ::cPrgName ) .OR. ;
             ::oBrwText == NIL
 
             IF ! hb_FileExists( cPrgName ) .AND. ! Empty( ::cPathForFiles )
@@ -2728,8 +2760,8 @@ METHOD Step() CLASS HBDebugger
 
 METHOD ToCursor() CLASS HBDebugger
 
-   IF ::IsValidStopLine( strip_path( ::cPrgName ), ::oBrwText:RowPos )
-      __dbgSetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:RowPos )
+   IF ::IsValidStopLine( ::cPrgName, ::oBrwText:RowPos )
+      __dbgSetToCursor( ::pInfo, ::cPrgName, ::oBrwText:RowPos )
       ::RestoreAppScreen()
       ::RestoreAppState()
       ::Exit()
@@ -2751,7 +2783,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
    ENDIF
 
    IF nLine == NIL
-      cFileName := strip_path( ::cPrgName )
+      cFileName := ::cPrgName
       nLine := ::oBrwText:RowPos
    ENDIF
 
@@ -2760,18 +2792,18 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
    ENDIF
 
    nAt := AScan( ::aBreakPoints, {| aBreak | aBreak[ 1 ] == nLine ;
-      .AND. hb_FileMatch( aBreak[ 2 ], cFileName ) } )
+      .AND. ::ModuleMatch( aBreak[ 2 ], cFileName ) } )
 
    IF nAt == 0
       AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
       __dbgAddBreak( ::pInfo, cFileName, nLine )
-      IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
+      IF ::ModuleMatch( cFileName, ::cPrgName )
          ::oBrwText:ToggleBreakPoint( nLine, .T. )
       ENDIF
    ELSE
       hb_ADel( ::aBreakPoints, nAt, .T. )
       __dbgDelBreak( ::pInfo, nAt - 1 )
-      IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
+      IF ::ModuleMatch( cFileName, ::cPrgName )
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
       ENDIF
    ENDIF
@@ -2816,15 +2848,14 @@ METHOD TracepointAdd( cExpr ) CLASS HBDebugger
 
 METHOD VarGetInfo( aVar ) CLASS HBDebugger
 
-   LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
    LOCAL uValue := ::VarGetValue( aVar )
 
-   DO CASE
-   CASE cType == "G" ; RETURN aVar[ VAR_NAME ] + " <Global, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
-   CASE cType == "L" ; RETURN aVar[ VAR_NAME ] + " <Local, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
-   CASE cType == "S" ; RETURN aVar[ VAR_NAME ] + " <Static, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
-   OTHERWISE         ; RETURN aVar[ VAR_NAME ] + " <" + aVar[ VAR_TYPE ] + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
-   ENDCASE
+   SWITCH Left( aVar[ VAR_TYPE ], 1 )
+   CASE "G" ; RETURN aVar[ VAR_NAME ] + " <Global, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
+   CASE "L" ; RETURN aVar[ VAR_NAME ] + " <Local, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
+   CASE "S" ; RETURN aVar[ VAR_NAME ] + " <Static, " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
+   OTHERWISE; RETURN aVar[ VAR_NAME ] + " <" + aVar[ VAR_TYPE ] + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
+   ENDSWITCH
 
    // ; Never reached
 
@@ -2833,14 +2864,12 @@ METHOD VarGetInfo( aVar ) CLASS HBDebugger
 
 METHOD VarGetValue( aVar ) CLASS HBDebugger
 
-   LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
-
-   DO CASE
-   CASE cType == "G" ; RETURN __dbgVMVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE cType == "L" ; RETURN __dbgVMVarLGet( __dbgProcLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE cType == "S" ; RETURN __dbgVMVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   OTHERWISE         ; RETURN aVar[ VAR_POS ] // Public or Private
-   ENDCASE
+   SWITCH Left( aVar[ VAR_TYPE ], 1 )
+   CASE "G" ; RETURN __dbgVMVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   CASE "L" ; RETURN __dbgVMVarLGet( __dbgProcLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   CASE "S" ; RETURN __dbgVMVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   OTHERWISE; RETURN aVar[ VAR_POS ] // Public or Private
+   ENDSWITCH
 
    // ; Never reached
 
@@ -2850,24 +2879,23 @@ METHOD VarGetValue( aVar ) CLASS HBDebugger
 METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
 
    LOCAL nProcLevel
-   LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
 
-   IF cType == "G"
+   SWITCH Left( aVar[ VAR_TYPE ], 1 )
+   CASE "G"
       __dbgVMVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
-
-   ELSEIF cType == "L"
+      EXIT
+   CASE "L"
       nProcLevel := __dbgProcLevel() - aVar[ VAR_LEVEL ]   // skip debugger stack
       __dbgVMVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
-
-   ELSEIF cType == "S"
+      EXIT
+   CASE "S"
       __dbgVMVarSSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
-
-   ELSE
+      EXIT
+   OTHERWISE
       // Public or Private
       aVar[ VAR_POS ] := uValue
       &( aVar[ VAR_NAME ] ) := uValue
-
-   ENDIF
+   ENDSWITCH
 
    RETURN Self
 
@@ -3179,32 +3207,38 @@ METHOD WndVarsLButtonDown( nMRow, nMCol ) CLASS HBDebugger
 
 STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
-   DO CASE
-   CASE nKey == K_UP
-
+   SWITCH nKey
+   CASE K_UP
       oBrwSets:up()
+      EXIT
 
-   CASE nKey == K_DOWN
-
+   CASE K_DOWN
       oBrwSets:down()
+      EXIT
 
-   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
-
+   CASE K_HOME
+   CASE K_CTRL_PGUP
+   CASE K_CTRL_HOME
       oBrwSets:goTop()
+      EXIT
 
-   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
-
+   CASE K_END
+   CASE K_CTRL_PGDN
+   CASE K_CTRL_END
       oBrwSets:goBottom()
+      EXIT
 
-   CASE nKey == K_PGDN
+   CASE K_PGDN
 
       oBrwSets:pageDown()
+      EXIT
 
-   CASE nKey == K_PGUP
+   CASE K_PGUP
 
       oBrwSets:pageUp()
+      EXIT
 
-   CASE nKey == K_ENTER
+   CASE K_ENTER
 
       IF bEdit != NIL
          Eval( bEdit )
@@ -3213,8 +3247,9 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
       IF LastKey() == K_ENTER
          hb_keyPut( K_DOWN )
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RefreshVarsS( oBrwSets )
 
@@ -3280,19 +3315,6 @@ STATIC FUNCTION PathToArray( cList )
 /* Check if a string starts with another string */
 STATIC FUNCTION starts( cLine, cStart )
    RETURN cStart == Left( cLine, Len( cStart ) )
-
-
-/* Strip path from filename */
-STATIC FUNCTION strip_path( cFileName )
-
-   LOCAL cName
-   LOCAL cExt
-
-   hb_default( @cFileName, "" )
-
-   hb_FNameSplit( cFileName, NIL, @cName, @cExt )
-
-   RETURN cName + cExt
 
 
 FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
@@ -3371,21 +3393,23 @@ FUNCTION __dbgAlert( cMessage )
 
 FUNCTION __dbgValToStr( uVal )
 
-   LOCAL cType := ValType( uVal )
-
-   DO CASE
-   CASE uVal == NIL  ; RETURN "NIL"
-   CASE cType == "B" ; RETURN "{|| ... }"
-   CASE cType == "A" ; RETURN "{ ... }"
-   CASE cType $ "CM" ; RETURN '"' + uVal + '"'
-   CASE cType == "L" ; RETURN iif( uVal, ".T.", ".F." )
-   CASE cType == "D" ; RETURN DToC( uVal )
-   CASE cType == "T" ; RETURN hb_TToC( uVal )
-   CASE cType == "N" ; RETURN Str( uVal )
-   CASE cType == "O" ; RETURN "Class " + uVal:ClassName() + " object"
-   CASE cType == "H" ; RETURN "Hash of " + hb_ntos( Len( uVal ) ) + " elements"
-   CASE cType == "P" ; RETURN "Pointer"
-   ENDCASE
+   SWITCH ValType( uVal )
+   CASE "B" ; RETURN "{|| ... }"
+   CASE "A" ; RETURN "{ ... }"
+   CASE "C"
+   CASE "M" ; RETURN '"' + uVal + '"'
+   CASE "L" ; RETURN iif( uVal, ".T.", ".F." )
+   CASE "D" ; RETURN DToC( uVal )
+   CASE "T" ; RETURN hb_TToC( uVal )
+   CASE "N" ; RETURN Str( uVal )
+   CASE "O" ; RETURN "Class " + uVal:ClassName() + " object"
+   CASE "H" ; RETURN "Hash of " + hb_ntos( Len( uVal ) ) + " elements"
+   CASE "P" ; RETURN "Pointer"
+   OTHERWISE
+      IF uVal == NIL
+         RETURN "NIL"
+      ENDIF
+   ENDSWITCH
 
    RETURN "U"
 
