@@ -346,7 +346,6 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    mxmlIndexReset( hInd )
-
    IF Empty( mxmlIndexEnum( hInd ) )
       OutErr( "ERROR: mxmlIndexEnum failed!" + hb_eol() )
 
@@ -589,7 +588,7 @@ PROCEDURE Main( cFileArg )
 /* I - SAX event */
 /* I - SAX user data */
 
-PROCEDURE sax_cb( hNode, hEvent, hData )
+STATIC PROCEDURE sax_cb( hNode, hEvent, hData )
 
    /*
     * This SAX callback just counts the different events.
@@ -609,7 +608,7 @@ PROCEDURE sax_cb( hNode, hEvent, hData )
 /* O - Data type */
 /* I - Element node */
 
-FUNCTION type_cb( hNode )
+STATIC FUNCTION type_cb( hNode )
 
    LOCAL cType                            /* Type string */
 
@@ -638,7 +637,7 @@ FUNCTION type_cb( hNode )
 /* I - Element node */
 /* I - Open or close tag? */
 
-FUNCTION whitespace_cb( hNode, nWhere )
+STATIC FUNCTION whitespace_cb( hNode, nWhere )
 
    LOCAL hParent                          /* Parent node */
    LOCAL nLevel                           /* Indentation level */

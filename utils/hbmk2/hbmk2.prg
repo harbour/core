@@ -1086,6 +1086,8 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_lMarkdown ] := .F.
    hbmk[ _HBMK_bOut ] := @OutStd()
 
+   hbmk[ _HBMK_nArgTarget ] := 0
+
    RETURN hbmk
 
 STATIC PROCEDURE hbmk_init_stage2( hbmk )
