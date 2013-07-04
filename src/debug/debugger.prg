@@ -116,7 +116,7 @@
 THREAD STATIC t_oDebugger
 
 /* debugger entry point */
-PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
+PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4 )
 
    LOCAL lStartup
 
@@ -130,7 +130,6 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
       t_oDebugger:nProcLevel := uParam2
       t_oDebugger:aCallStack := uParam3
       t_oDebugger:aModules := uParam4
-      t_oDebugger:aBreakPoints := uParam5
       IF lStartup
          IF t_oDebugger:lRunAtStartup
             __dbgSetGo( uParam1 )
@@ -181,7 +180,6 @@ CREATE CLASS HBDebugger
    VAR hDebuggerWindow
    VAR lDebuggerWindowIsOpen INIT .F.
 
-   VAR aBreakPoints      INIT {}
    VAR aCallStack        INIT {}    // stack of procedures with debug info
    VAR aProcStack        INIT {}    // stack of all procedures
    VAR nProcLevel                   // procedure level where the debugger is currently
@@ -191,7 +189,7 @@ CREATE CLASS HBDebugger
 
    VAR aLastCommands
    VAR nCommand
-   VAR oGet
+   VAR oGetCommand
 
    VAR lAnimate          INIT .F.
    VAR lEnd              INIT .F.
@@ -308,7 +306,6 @@ CREATE CLASS HBDebugger
    METHOD ShowCodeLine( nProc )
    METHOD ShowHelp( nTopic )
    METHOD ShowVars()
-   METHOD RedisplayBreakpoints()
    METHOD LocatePrgPath( cPrgName )
    METHOD Sort() INLINE ASort( ::aVars,,, {| x, y | x[ 1 ] < y[ 1 ] } ), ;
       ::lSortVars := .T., ;
@@ -387,8 +384,8 @@ METHOD New() CLASS HBDebugger
    ::oWndCode             := HBDbWindow():New( 1, 0, ::nMaxRow - 6, ::nMaxCol )
    ::oWndCode:Cargo       := { ::oWndCode:nTop, ::oWndCode:nLeft }
    ::oWndCode:bKeyPressed := {| nKey | ::CodeWindowProcessKey( nKey ) }
-   ::oWndCode:bGotFocus   := {|| ::oGet:SetFocus() }
-   ::oWndCode:bLostFocus  := {|| ::oGet:KillFocus(), SetCursor( SC_NONE ), ;
+   ::oWndCode:bGotFocus   := {|| ::oGetCommand:SetFocus() }
+   ::oWndCode:bLostFocus  := {|| ::oGetCommand:KillFocus(), SetCursor( SC_NONE ), ;
       ::oWndCode:Cargo[ 1 ] := Row(), ;
       ::oWndCode:Cargo[ 2 ] := Col() }
 
@@ -528,12 +525,12 @@ METHOD BuildCommandWindow() CLASS HBDebugger
 
    ::oWndCommand := HBDbWindow():New( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol, "Command" )
 
-   ::oWndCommand:bGotFocus   := {|| ::oGet:SetFocus() }
-   ::oWndCommand:bLostFocus  := {|| ::oGet:KillFocus(), SetCursor( SC_NONE ) }
+   ::oWndCommand:bGotFocus   := {|| ::oGetCommand:SetFocus() }
+   ::oWndCommand:bLostFocus  := {|| ::oGetCommand:KillFocus(), SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := {| nKey | ::CommandWindowProcessKey( nKey ) }
    ::oWndCommand:bPainted    := {|| hb_DispOutAt( ::oWndCommand:nBottom - 1, ;
       ::oWndCommand:nLeft + 1, "> ", __DbgColors()[ 2 ] ), ;
-      ::oGet:SetColor( __DbgColors()[ 2 ] ):display(), ;
+      ::oGetCommand:SetColor( __DbgColors()[ 2 ] ):display(), ;
       hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1, ;
       ::oWndCommand:nBottom - 2, ::oWndCommand:nRight - 1, ;
       iif( ::lMonoDisplay, 15, hb_ColorToN( __DbgColors()[ 2 ] ) ) ) }
@@ -543,7 +540,7 @@ METHOD BuildCommandWindow() CLASS HBDebugger
    ::nCommand := 1
 
    nSize := ::oWndCommand:nRight - ::oWndCommand:nLeft - 3
-   ::oGet := HbDbInput():new( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
+   ::oGetCommand := HbDbInput():new( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
       nSize, "", __DbgColors()[ 2 ], Max( nSize, 256 ) )
 
    RETURN NIL
@@ -666,7 +663,6 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
    IF ::oBrwText != NIL
 
       SWITCH nKey
-      CASE K_HOME
       CASE K_CTRL_PGUP
       CASE K_CTRL_HOME
 
@@ -676,7 +672,6 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
          ENDIF
          EXIT
 
-      CASE K_END
       CASE K_CTRL_PGDN
       CASE K_CTRL_END
 
@@ -687,6 +682,14 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )
          ENDIF
+         EXIT
+
+      CASE K_HOME
+         ::oBrwText:Home()
+         EXIT
+
+      CASE K_END
+         ::oBrwText:End()
          EXIT
 
       CASE K_LEFT
@@ -776,18 +779,18 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
    CASE K_UP
    CASE K_F3
       IF ::nCommand > 1
-         ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
-         ::oGet:setValue( ::aLastCommands[ --::nCommand ] ):display()
+         ::aLastCommands[ ::nCommand ] := RTrim( ::oGetCommand:getValue() )
+         ::oGetCommand:setValue( ::aLastCommands[ --::nCommand ] ):display()
       ENDIF
       EXIT
    CASE K_DOWN
       IF ::nCommand < Len( ::aLastCommands )
-         ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
-         ::oGet:setValue( ::aLastCommands[ ++::nCommand ] ):display()
+         ::aLastCommands[ ::nCommand ] := RTrim( ::oGetCommand:getValue() )
+         ::oGetCommand:setValue( ::aLastCommands[ ++::nCommand ] ):display()
       ENDIF
       EXIT
    CASE K_ENTER
-      cCommand := RTrim( ::oGet:getValue() )
+      cCommand := RTrim( ::oGetCommand:getValue() )
       IF ! Empty( cCommand )
          IF ( n := hb_AScan( ::aLastCommands, cCommand, , , .T. ) ) > 0 .AND. n < Len( ::aLastCommands )
             hb_ADel( ::aLastCommands, n, .T. )
@@ -801,10 +804,10 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
       ENDIF
       hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
          __DbgColors()[ 2 ] )
-      ::oGet:setValue( "" ):display()
+      ::oGetCommand:setValue( "" ):display()
       EXIT
    OTHERWISE
-      ::oGet:applyKey( nKey )
+      ::oGetCommand:applyKey( nKey )
    ENDSWITCH
 
    RETURN NIL
@@ -1310,132 +1313,160 @@ METHOD HandleEvent() CLASS HBDebugger
    DO WHILE ! ::lEnd
 
       nKey := Inkey( 0, INKEY_ALL )
-
-      DO CASE
-      CASE nKey == K_ALT_X
+      IF nKey == K_ALT_X
          t_oDebugger:Quit()
-
-      CASE ::oPullDown:IsOpen()
+      ELSEIF ::oPullDown:IsOpen()
          ::oPullDown:ProcessKey( nKey )
          IF ::oPullDown:nOpenPopup == 0 // Closed
             ::aWindows[ ::nCurrentWindow ]:Show( .T. )
          ENDIF
+      ELSE
+         SWITCH nKey
+         CASE K_LDBLCLK
 
-      CASE nKey == K_LDBLCLK
+            IF MRow() != 0 .AND. MRow() != ::nMaxRow
 
-         IF MRow() != 0 .AND. MRow() != ::nMaxRow
-
-            nMRow := MRow()
-            nMCol := MCol()
-            FOR n := 1 TO Len( ::aWindows )
-               IF ::aWindows[ n ]:IsOver( nMRow, nMCol )
-                  IF ! ::aWindows[ n ]:lFocused
-                     ::aWindows[ ::nCurrentWindow ]:Show( .F. )
-                     ::nCurrentWindow := n
-                     ::aWindows[ n ]:Show( .T. )
+               nMRow := MRow()
+               nMCol := MCol()
+               FOR n := 1 TO Len( ::aWindows )
+                  IF ::aWindows[ n ]:IsOver( nMRow, nMCol )
+                     IF ! ::aWindows[ n ]:lFocused
+                        ::aWindows[ ::nCurrentWindow ]:Show( .F. )
+                        ::nCurrentWindow := n
+                        ::aWindows[ n ]:Show( .T. )
+                     ENDIF
+                     ::aWindows[ n ]:LDblClick( nMRow, nMCol )
+                     EXIT
                   ENDIF
-                  ::aWindows[ n ]:LDblClick( nMRow, nMCol )
-                  EXIT
+               NEXT
+            ENDIF
+            EXIT
+
+         CASE K_LBUTTONDOWN
+
+            IF MRow() == 0
+
+               IF ( nPopup := ::oPullDown:GetItemOrdByCoors( 0, MCol() ) ) != 0
+                  IF ! ::oPullDown:IsOpen()
+                     IF ::oWndCode:lFocused
+                        Eval( ::oWndCode:bLostFocus )
+                     ENDIF
+                     SetCursor( SC_NONE )
+                  ENDIF
+                  ::oPullDown:ShowPopup( nPopup )
                ENDIF
-            NEXT
-         ENDIF
 
-      CASE nKey == K_LBUTTONDOWN
+            ELSEIF MRow() != ::nMaxRow
 
-         IF MRow() == 0
+               nMRow := MRow()
+               nMCol := MCol()
+               FOR n := 1 TO Len( ::aWindows )
+                  IF ::aWindows[ n ]:IsOver( nMRow, nMCol )
+                     IF ! ::aWindows[ n ]:lFocused
+                        ::aWindows[ ::nCurrentWindow ]:Show( .F. )
+                        ::nCurrentWindow := n
+                        ::aWindows[ n ]:Show( .T. )
+                     ENDIF
+                     ::aWindows[ n ]:LButtonDown( nMRow, nMCol )
+                     EXIT
+                  ENDIF
+               NEXT
+            ENDIF
+            EXIT
 
-            IF ( nPopup := ::oPullDown:GetItemOrdByCoors( 0, MCol() ) ) != 0
-               IF ! ::oPullDown:IsOpen()
+         CASE K_RBUTTONDOWN
+            EXIT
+/*
+         CASE K_ESC
+            ::RestoreAppStatus()
+            t_oDebugger := NIL
+            s_lExit := .T.
+            DispEnd()
+            ::Exit()
+            EXIT
+*/
+
+         CASE K_ENTER
+            IF !Empty( ::oGetCommand:getValue() )
+               ::oWndCommand:KeyPressed( nKey )
+               EXIT
+            ENDIF
+         CASE K_UP
+         CASE K_DOWN
+         CASE K_LEFT
+         CASE K_RIGHT
+         CASE K_PGUP
+         CASE K_PGDN
+         CASE K_HOME
+         CASE K_END
+         CASE K_DEL
+         CASE K_CTRL_PGUP
+         CASE K_CTRL_PGDN
+         CASE K_CTRL_HOME
+         CASE K_CTRL_END
+         CASE K_CTRL_ENTER
+            oWnd := ::aWindows[ ::nCurrentWindow ]
+            oWnd:KeyPressed( nKey )
+            EXIT
+
+         CASE K_F1
+            ::ShowHelp()
+            EXIT
+
+         CASE K_F4
+            ::ShowAppScreen()
+            EXIT
+
+         CASE K_F5
+            ::Go()
+            EXIT
+
+         CASE K_CTRL_F5
+            ::NextRoutine()
+            EXIT
+
+         CASE K_F6
+            ::ShowWorkAreas()
+            EXIT
+
+         CASE K_F7
+            ::ToCursor()
+            EXIT
+
+         CASE K_F8
+            ::Step()
+            EXIT
+
+         CASE K_F9
+            ::ToggleBreakPoint()
+            EXIT
+
+         CASE K_F10
+            ::Trace()
+            EXIT
+
+         CASE K_TAB
+            ::NextWindow()
+            EXIT
+
+         CASE K_SH_TAB
+            ::PrevWindow()
+            EXIT
+
+         OTHERWISE
+            IF ( nPopup := ::oPullDown:GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
+               IF ::oPullDown:nOpenPopup != nPopup
                   IF ::oWndCode:lFocused
                      Eval( ::oWndCode:bLostFocus )
                   ENDIF
                   SetCursor( SC_NONE )
+                  ::oPullDown:ShowPopup( nPopup )
                ENDIF
-               ::oPullDown:ShowPopup( nPopup )
+            ELSE /* IF ::oWndCommand:lFocused */
+               ::oWndCommand:KeyPressed( nKey )
             ENDIF
-
-         ELSEIF MRow() != ::nMaxRow
-
-            nMRow := MRow()
-            nMCol := MCol()
-            FOR n := 1 TO Len( ::aWindows )
-               IF ::aWindows[ n ]:IsOver( nMRow, nMCol )
-                  IF ! ::aWindows[ n ]:lFocused
-                     ::aWindows[ ::nCurrentWindow ]:Show( .F. )
-                     ::nCurrentWindow := n
-                     ::aWindows[ n ]:Show( .T. )
-                  ENDIF
-                  ::aWindows[ n ]:LButtonDown( nMRow, nMCol )
-                  EXIT
-               ENDIF
-            NEXT
-         ENDIF
-
-      CASE nKey == K_RBUTTONDOWN
-/*
-      CASE nKey == K_ESC
-         ::RestoreAppStatus()
-         t_oDebugger := NIL
-         s_lExit := .T.
-         DispEnd()
-         ::Exit()
-*/
-
-      CASE nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_HOME .OR. ;
-           nKey == K_END .OR. nKey == K_ENTER .OR. nKey == K_PGDN .OR. ;
-           nKey == K_PGUP .OR. nKey == K_DEL .OR. nKey == K_LEFT .OR. ;
-           nKey == K_RIGHT .OR. nKey == K_CTRL_ENTER
-
-         oWnd := ::aWindows[ ::nCurrentWindow ]
-         oWnd:KeyPressed( nKey )
-
-      CASE nKey == K_F1
-         ::ShowHelp()
-
-      CASE nKey == K_F4
-         ::ShowAppScreen()
-
-      CASE nKey == K_F5
-         ::Go()
-
-      CASE nKey == K_CTRL_F5
-         ::NextRoutine()
-
-      CASE nKey == K_F6
-         ::ShowWorkAreas()
-
-      CASE nKey == K_F7
-         ::ToCursor()
-
-      CASE nKey == K_F8
-         ::Step()
-
-      CASE nKey == K_F9
-         ::ToggleBreakPoint()
-
-      CASE nKey == K_F10
-         ::Trace()
-
-      CASE nKey == K_TAB
-         ::NextWindow()
-
-      CASE nKey == K_SH_TAB
-         ::PrevWindow()
-
-      CASE /* ::oWndCommand:lFocused .AND. */ nKey < 272 // Alt
-         ::oWndCommand:KeyPressed( nKey )
-
-      OTHERWISE
-         IF ( nPopup := ::oPullDown:GetHotKeyPos( __dbgAltToKey( nKey ) ) ) != 0
-            IF ::oPullDown:nOpenPopup != nPopup
-               IF ::oWndCode:lFocused
-                  Eval( ::oWndCode:bLostFocus )
-               ENDIF
-               SetCursor( SC_NONE )
-               ::oPullDown:ShowPopup( nPopup )
-            ENDIF
-         ENDIF
-      ENDCASE
+         ENDSWITCH
+      ENDIF
    ENDDO
 
    RETURN NIL
@@ -1553,9 +1584,8 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       lExit := .F.
 
       DO WHILE ! lExit
-         Inkey( 0 )
 
-         SWITCH LastKey()
+         SWITCH Inkey( 0, INKEY_ALL )
          CASE K_ESC
             lExit := .T.
             EXIT
@@ -1949,7 +1979,6 @@ METHOD Open() CLASS HBDebugger
          __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ], ;
          ::lLineNumbers, ::nTabWidth )
       ::oWndCode:Browser := ::oBrwText
-      ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
       ::oWndCode:SetCaption( ::cPrgName )
       ::oWndCode:Refresh()       // to force the window caption to update
    ENDIF
@@ -1986,7 +2015,6 @@ METHOD OpenPPO() CLASS HBDebugger
          __DbgColors()[ 2 ] + "," + __DbgColors()[ 5 ] + "," + ;
          __DbgColors()[ 3 ] + "," + __DbgColors()[ 6 ], ::lLineNumbers, ::nTabWidth )
       ::oWndCode:Browser := ::oBrwText
-      ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
       ::oWndCode:SetCaption( ::cPrgName )
       ::oWndCode:Refresh() // to force the window caption to update
    ENDIF
@@ -2094,20 +2122,6 @@ METHOD Public() CLASS HBDebugger
 
    ::lShowPublics := ! ::lShowPublics
    ::RefreshVars()
-
-   RETURN NIL
-
-
-// check for breakpoints in the current file and display them
-METHOD RedisplayBreakPoints() CLASS HBDebugger
-
-   LOCAL n
-
-   FOR n := 1 TO Len( ::aBreakpoints )
-      IF ::ModuleMatch( ::aBreakpoints[ n ][ 2 ], ::cPrgName )
-         ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T. )
-      ENDIF
-   NEXT
 
    RETURN NIL
 
@@ -2257,7 +2271,7 @@ METHOD SaveAppScreen() CLASS HBDebugger
       nTop := 1
       nRight := ::nMaxCol
       ::oWndCommand:Resize( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol )
-      ::oGet:newPos( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 )
+      ::oGetCommand:newPos( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3 )
       ::oBrwStack:nTop := 2
       ::oBrwStack:nLeft := ::nMaxCol - 14
       ::oBrwStack:nRight := ::nMaxCol - 1
@@ -2298,6 +2312,7 @@ METHOD SaveSettings() CLASS HBDebugger
    LOCAL cInfo := ""
    LOCAL n
    LOCAL oWnd
+   LOCAL aBreak
 
    ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
 
@@ -2364,12 +2379,10 @@ METHOD SaveSettings() CLASS HBDebugger
          cInfo += "Num Off" + hb_eol()
       ENDIF
 
-      IF ! Empty( ::aBreakPoints )
-         FOR n := 1 TO Len( ::aBreakPoints )
-            cInfo += "BP " + hb_ntos( ::aBreakPoints[ n ][ 1 ] ) + " " + ;
-               AllTrim( ::aBreakPoints[ n ][ 2 ] ) + hb_eol()
-         NEXT
-      ENDIF
+      FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
+         cInfo += "BP " + hb_ntos( aBreak[ 1 ] ) + " " + ;
+                  AllTrim( aBreak[ 2 ] ) + hb_eol()
+      NEXT
 
       /* This part of the script must be executed after all windows are created */
       FOR n := 1 TO Len( ::aWindows )
@@ -2546,7 +2559,6 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
             ENDIF
 
             ::oWndCode:bPainted := {|| iif( ::oBrwText != NIL, ::oBrwText:RefreshAll():ForceStable(), ::oWndCode:Clear() ) }
-            ::RedisplayBreakpoints()               // check for breakpoints in this file and display them
             ::oWndCode:SetCaption( ::cPrgName )
             ::oWndCode:Refresh()       // to force the window caption to update
          ENDIF
@@ -2763,7 +2775,7 @@ METHOD ToCursor() CLASS HBDebugger
 // which may be different from the file in which execution was broken
 METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
 
-   // look for a breakpoint which matches both line number and program name
+   // look for a breakpoint which matches both line number and module name
 
    LOCAL nAt
 
@@ -2776,25 +2788,10 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
       nLine := ::oBrwText:RowPos
    ENDIF
 
-   IF ! ::IsValidStopLine( cFileName, nLine )
-      RETURN NIL
-   ENDIF
-
-   nAt := AScan( ::aBreakPoints, {| aBreak | aBreak[ 1 ] == nLine ;
-      .AND. ::ModuleMatch( aBreak[ 2 ], cFileName ) } )
-
-   IF nAt == 0
-      AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
+   IF ( nAt := __dbgIsBreak( ::pInfo, cFileName, nLine ) ) >= 0
+      __dbgDelBreak( ::pInfo, nAt )
+   ELSEIF ::IsValidStopLine( cFileName, nLine )
       __dbgAddBreak( ::pInfo, cFileName, nLine )
-      IF ::ModuleMatch( cFileName, ::cPrgName )
-         ::oBrwText:ToggleBreakPoint( nLine, .T. )
-      ENDIF
-   ELSE
-      hb_ADel( ::aBreakPoints, nAt, .T. )
-      __dbgDelBreak( ::pInfo, nAt - 1 )
-      IF ::ModuleMatch( cFileName, ::cPrgName )
-         ::oBrwText:ToggleBreakPoint( nLine, .F. )
-      ENDIF
    ENDIF
 
    ::oBrwText:RefreshCurrent():ForceStable()
@@ -3320,7 +3317,7 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
    oGet:setFocus()
 
    WHILE .T.
-      nKey := Inkey( 0 )
+      nKey := Inkey( 0, INKEY_ALL )
       IF nKey == K_ESC
          EXIT
       ELSEIF nKey == K_ENTER
@@ -3344,7 +3341,6 @@ FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
    LOCAL oBrw
    LOCAL oCol
    LOCAL nRow
-   LOCAL nKey
    LOCAL nLen
 
    oBrw := HBDbBrowser():New( nTop, nLeft, nBottom, nRight )
@@ -3360,8 +3356,7 @@ FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
       nRow += n, n }
    WHILE .T.
       oBrw:forceStable()
-      nKey := Inkey( 0 )
-      SWITCH nKey
+      SWITCH Inkey( 0, INKEY_ALL )
       CASE K_UP;     oBrw:up();        EXIT
       CASE K_DOWN;   oBrw:down();      EXIT
       CASE K_PGUP;   oBrw:pageUp();    EXIT

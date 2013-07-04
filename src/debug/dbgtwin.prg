@@ -289,7 +289,7 @@ METHOD Move() CLASS HBDbWindow
       RestScreen( ,,,, ::cBackImage )
       hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
 
-      nKey := Inkey( 0 )
+      nKey := Inkey( 0, INKEY_ALL )
 
       DO CASE
       CASE nKey == K_UP

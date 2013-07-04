@@ -367,7 +367,7 @@ HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
    {
       if( HB_INKEY_ISCHAR( iKey ) )
          iKey = HB_INKEY_VALUE( iKey );
-      if( iKey >= 32 && iKey <= 255 )
+      if( iKey >= 32 && iKey <= 255 && iKey != 127 )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
          nLen = hb_cdpTextPutU16( cdp, buffer, nSize,

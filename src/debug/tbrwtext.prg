@@ -56,8 +56,8 @@ CREATE CLASS HBBrwText
    VAR cFileName
    VAR aRows
    VAR nRows
+   VAR nLineNoLen
    VAR nActiveLine
-   VAR aBreakPoints  INIT {}
    VAR lLineNumbers
    VAR nRow
    VAR nFirstCol
@@ -65,7 +65,6 @@ CREATE CLASS HBBrwText
 
    VAR oBrw
 
-   VAR cCurLine
    VAR nLineOffset   INIT 1
    VAR nMaxLineLen
    VAR nTabWidth     INIT 4
@@ -86,7 +85,8 @@ CREATE CLASS HBBrwText
    METHOD GotoLine( n )
    METHOD SetActiveLine( n )
    METHOD GetLine()
-   METHOD ToggleBreakPoint( nRow, lSet )
+   METHOD GetLineText()
+   METHOD GetLineColor()
    METHOD Search( cString, lCaseSensitive, nMode )
 
    METHOD GoFirst()
@@ -96,7 +96,6 @@ CREATE CLASS HBBrwText
    METHOD GoPrev()
 
    METHOD Resize( nTop, nLeft, nBottom, nRight )
-   METHOD GetLineColor()
 
    METHOD Up() INLINE ::oBrw:Up():ForceStable(), Self
    METHOD Down() INLINE ::oBrw:Down():ForceStable(), Self
@@ -104,6 +103,9 @@ CREATE CLASS HBBrwText
    METHOD PageDown() INLINE ::oBrw:PageDown():ForceStable(), Self
    METHOD GoTop() INLINE ::oBrw:GoTop():ForceStable(), Self
    METHOD GoBottom() INLINE ::oBrw:GoBottom():ForceStable(), Self
+
+   METHOD Home() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset := 1, ::oBrw:RefreshAll():ForceStable() ), ), Self
+   METHOD End() INLINE ::nLineOffset := Max( 1, ::nMaxLineLen - ( ::nWidth - ::nLineNoLen ) + 1 ), ::oBrw:RefreshAll():ForceStable(), Self
 
    METHOD Right() INLINE iif( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
    METHOD Left() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset--, ::oBrw:RefreshAll():ForceStable() ), ), Self
@@ -134,7 +136,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors, lLineNumbers ) CLA
 
    ::oBrw:colorSpec := cColors
 
-   oCol := HBDbColumnNew( "", {|| ::GetLine() } )
+   oCol := HBDbColumnNew( "", {|| ::GetLineText() } )
 
    oCol:colorBlock := {|| ::GetLineColor() }
 
@@ -166,26 +168,27 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 
 METHOD GetLine() CLASS HBBrwText
 
-   RETURN PadR( hb_ntos( ::nRow ) + ": " + SubStr( ;
-      MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .F. ), ;
-      ::nLineOffset ), ::nWidth )
+   RETURN padr( hb_ntos( ::nRow ) + ":", ::nLineNoLen ) + ;
+          MemoLine( ::aRows[ ::nRow ], ::nMaxLineLen, 1, ::nTabWidth, .F. )
 
-METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
+METHOD GetLineText() CLASS HBBrwText
 
-   LOCAL nAt := AScan( ::aBreakPoints, nRow )
+   RETURN PadR( SubStr( ::GetLine(), ::nLineOffset ), ::nWidth )
 
-   IF lSet
-      // add it only if not present
-      IF nAt == 0
-         AAdd( ::aBreakPoints, nRow )
-      ENDIF
+METHOD GetLineColor() CLASS HBBrwText
+
+   LOCAL aColor
+   LOCAL lBreak
+
+   lBreak := __dbgIsBreak( __Dbg():pInfo, ::cFileName, ::nRow ) >= 0
+
+   IF lBreak
+      aColor := iif( ::nRow == ::nActiveLine, { 4, 4 }, { 3, 3 } )
    ELSE
-      IF nAt != 0
-         hb_ADel( ::aBreakPoints, nAt, .T. )
-      ENDIF
+      aColor := iif( ::nRow == ::nActiveLine, { 2, 2 }, { 1, 1 } )
    ENDIF
 
-   RETURN Self
+   RETURN aColor
 
 METHOD LoadFile( cFileName ) CLASS HBBrwText
 
@@ -195,6 +198,7 @@ METHOD LoadFile( cFileName ) CLASS HBBrwText
    ::cFileName := cFileName
    ::aRows := Text2Array( MemoRead( cFileName ) )
    ::nRows := Len( ::aRows )
+   ::nLineNoLen := Len( hb_ntos( ::nRows ) ) + 2
 
    FOR EACH cLine in ::aRows
       nMaxLineLen := Max( nMaxLineLen, ;
@@ -231,25 +235,6 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
    ENDIF
 
    RETURN Self
-
-METHOD GetLineColor() CLASS HBBrwText
-
-   LOCAL aColor
-   LOCAL lBreak
-
-   lBreak := AScan( ::aBreakPoints, ::nRow ) > 0
-
-   IF lBreak .AND. ::nRow == ::nActiveLine
-      aColor := { 4, 4 }
-   ELSEIF lBreak
-      aColor := { 3, 3 }
-   ELSEIF ::nRow == ::nActiveLine
-      aColor := { 2, 2 }
-   ELSE
-      aColor := { 1, 1 }
-   ENDIF
-
-   RETURN aColor
 
 METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
 
