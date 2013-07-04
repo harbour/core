@@ -188,7 +188,7 @@ static PHB_ITEM hb_dbgActivateModuleArray( void );
 static PHB_ITEM hb_dbgActivateVarArray( int nVars, HB_VARINFO * aVars );
 static void     hb_dbgAddLocal( HB_DEBUGINFO * info, const char * szName, int nIndex, int nFrame );
 static void     hb_dbgAddModule( const char * szName );
-static void     hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nProcLevel );
+static void     hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nLine, int nProcLevel );
 static void     hb_dbgAddStatic( HB_DEBUGINFO * info, const char * szName, int nIndex, PHB_ITEM pFrame );
 static void     hb_dbgAddVar( int * nVars, HB_VARINFO ** aVars, const char * szName, char cType, int nIndex, int nFrame, PHB_ITEM pFrame );
 static void     hb_dbgAddStopLines( PHB_ITEM pItem );
@@ -361,6 +361,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_DEBUGINFO ** infoPtr = ( HB_DEBUGINFO ** ) hb_stackDebugInfo();
    HB_DEBUGINFO * info = *infoPtr;
+   HB_USHORT uiLine;
 
    if( info == HB_DBGINFO_DISABLE )
       return;
@@ -384,7 +385,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          if( szName[ strlen( szName ) - 1 ] == ':' )
             return;
 
-         hb_procinfo( 0, szProcName, NULL, NULL );
+         hb_procinfo( 0, szProcName, &uiLine, NULL );
          if( ! strncmp( szProcName, "(_INITSTATICS", 13 ) )
             info->bInitStatics = HB_TRUE;
          else if( ! strncmp( szProcName, "(_INITGLOBALS", 13 ) )
@@ -399,7 +400,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          else if( info->bNextRoutine )
             info->bNextRoutine = HB_FALSE;
 
-         hb_dbgAddStack( info, szName, hb_dbg_ProcLevel() );
+         hb_dbgAddStack( info, szName, uiLine, hb_dbg_ProcLevel() );
          for( i = 0; i < info->nBreakPoints; i++ )
          {
             if( info->aBreak[ i ].szFunction
@@ -639,7 +640,7 @@ static void hb_dbgAddModule( const char * szName )
 }
 
 
-static void hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nProcLevel )
+static void hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nLine, int nProcLevel )
 {
    char szBuff[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_CALLSTACKINFO * top;
@@ -678,7 +679,7 @@ static void hb_dbgAddStack( HB_DEBUGINFO * info, const char * szName, int nProcL
       top->szModule = hb_strdup( szName );
 
    top->nProcLevel = nProcLevel;
-   top->nLine = 0;
+   top->nLine = nLine;
    top->nLocals = 0;
    top->nStatics = 0;
 }
