@@ -115,17 +115,6 @@
 
 THREAD STATIC t_oDebugger
 
-PROCEDURE __dbgAltDEntry()
-
-   /* do not activate the debugger imediatelly because the module
-      where AltD() was called can have no debugger info - stop
-      on first LINE with debugged info
-    */
-
-   __dbgInvokeDebug( Set( _SET_DEBUG ) )
-
-   RETURN
-
 /* debugger entry point */
 PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
 

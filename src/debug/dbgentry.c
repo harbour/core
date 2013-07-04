@@ -198,7 +198,7 @@ static PHB_ITEM hb_dbgEvalMacro( const char * szExpr, PHB_ITEM pItem );
 static PHB_ITEM hb_dbgEvalMakeBlock( HB_WATCHPOINT * watch );
 static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch );
 static HB_BOOL  hb_dbgIsAltD( void );
-static HB_BOOL  hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine );
+static int      hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine );
 static HB_BOOL  hb_dbgEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 static void     hb_dbgQuit( HB_DEBUGINFO * info );
 static void     hb_dbgRelease( void );
@@ -468,9 +468,9 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          }
          hb_clsSetScope( bOldClsScope );
 
-         if( hb_dbgIsBreakPoint( info, pTop->szModule, nLine )
-             || hb_dbg_InvokeDebug( HB_FALSE )
-             || ( info->pFunInvoke && info->pFunInvoke() ) )
+         if( hb_dbgIsBreakPoint( info, pTop->szModule, nLine ) >= 0 ||
+             hb_dbg_InvokeDebug( HB_FALSE ) ||
+             ( info->pFunInvoke && info->pFunInvoke() ) )
          {
             info->bTraceOver = HB_FALSE;
             if( info->bToCursor )
@@ -1376,7 +1376,7 @@ static HB_BOOL hb_dbgIsAltD( void )
 }
 
 
-static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine )
+static int hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, int nLine )
 {
    int i;
 
@@ -1386,11 +1386,10 @@ static HB_BOOL hb_dbgIsBreakPoint( HB_DEBUGINFO * info, const char * szModule, i
    {
       HB_BREAKPOINT * point = &info->aBreak[ i ];
 
-      if( point->nLine == nLine
-          && FILENAME_EQUAL( szModule, point->szModule ) )
-         return HB_TRUE;
+      if( point->nLine == nLine && FILENAME_EQUAL( szModule, point->szModule ) )
+         return i;
    }
-   return HB_FALSE;
+   return -1;
 }
 
 
@@ -1760,6 +1759,24 @@ HB_FUNC( __DBGDELBREAK )
 
    if( ptr )
       hb_dbgDelBreak( ptr, hb_parni( 2 ) );
+}
+
+HB_FUNC( __DBGISBREAK )
+{
+   void * ptr = hb_parptr( 1 );
+
+   if( ptr )
+      hb_retni( hb_dbgIsBreakPoint( ptr,
+                                    hb_dbgStripModuleName( hb_parc( 2 ) ),
+                                    hb_parni( 3 ) ) );
+}
+
+HB_FUNC( __DBGGETBREAKPOINTS )
+{
+   void * ptr = hb_parptr( 1 );
+
+   if( ptr )
+      hb_itemReturnRelease( hb_dbgActivateBreakArray( ( HB_DEBUGINFO * ) ptr ) );
 }
 
 HB_FUNC( __DBGADDWATCH )
