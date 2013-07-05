@@ -1835,7 +1835,9 @@ METHOD LoadCallStack() CLASS HBDebugger
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
       ELSE
-         ::aProcStack[ i - nDebugLevel + 1 ] := {, ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")", , nLevel, , }
+         ::aProcStack[ i - nDebugLevel + 1 ] := iif( ProcLine( i ) != 0, ;
+            { ProcFile( i ), ProcName( i ), ProcLine( i ), nLevel, {}, {} }, ;
+            {, ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")", , nLevel, , } )
       ENDIF
    NEXT
 

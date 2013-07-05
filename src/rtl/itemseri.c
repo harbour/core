@@ -492,7 +492,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
          }
          else
          {
-            if( hb_hashGetFlags( pItem ) != HB_HASH_FLAG_DEFAULT )
+            if( ( hb_hashGetFlags( pItem ) & ~HB_HASH_RESORT ) != HB_HASH_FLAG_DEFAULT )
                nSize = 3;
             else
                nSize = 0;
@@ -815,7 +815,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL fNumSize,
             int iFlags = hb_hashGetFlags( pItem );
             PHB_ITEM pDefVal = hb_hashGetDefault( pItem );
 
-            if( iFlags != HB_HASH_FLAG_DEFAULT )
+            if( ( iFlags & ~HB_HASH_RESORT ) != HB_HASH_FLAG_DEFAULT )
             {
                pBuffer[ nOffset++ ] = HB_SERIAL_HASHFLAGS;
                HB_PUT_LE_UINT16( &pBuffer[ nOffset ], iFlags );
