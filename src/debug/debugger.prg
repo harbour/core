@@ -396,10 +396,7 @@ METHOD New() CLASS HBDebugger
    ::BuildBrowseStack()
 
    IF hb_FileExists( ::cSettingsFileName )
-      ::Show()
-      ::lActive := .T.
       ::LoadSettings()
-      ::lActive := .F.
       ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
 
@@ -435,6 +432,8 @@ METHOD CloseDebuggerWindow() CLASS HBDebugger
 
 METHOD Activate() CLASS HBDebugger
 
+   LOCAL lFirst := .F.
+
    ::LoadCallStack()
    ::SaveAppState()
 
@@ -444,6 +443,7 @@ METHOD Activate() CLASS HBDebugger
       IF ::lShowCallStack
          ::ShowCallStack()
       ENDIF
+      lFirst := .T.
    ELSE
       ::SaveAppScreen()
    ENDIF
@@ -457,6 +457,12 @@ METHOD Activate() CLASS HBDebugger
 
    // show the topmost procedure
    ::ShowCodeLine( 1 ) // ::aCallStack[ 1 ][ CSTACK_LINE ], ::aCallStack[ 1 ][ CSTACK_MODULE ] )
+
+   // Most commands can be executed only after activation
+   IF lFirst
+      ::LoadSettings()
+   ENDIF
+
    ::HandleEvent()
 
    RETURN NIL
@@ -1219,7 +1225,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
 METHOD DoScript( cFileName ) CLASS HBDebugger
 
    LOCAL cInfo
-   LOCAL n
+   LOCAL n, nPos
    LOCAL cLine
    LOCAL nLen
 
@@ -1228,7 +1234,10 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
       nLen := MLCount( cInfo, NIL, NIL, .F. )
       FOR n := 1 TO nLen
          cLine := MemoLine( cInfo, 16384, n, NIL, .F., .T. )
-         ::DoCommand( cLine )
+         IF ::lActive .OR. ( ( nPos := At( ' ', cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos ) ) ) )
+            // In inactive debugger, only "OPTIONS" commands can be executed safely
+            ::DoCommand( cLine )
+         ENDIF
       NEXT
    ENDIF
 
@@ -2460,7 +2469,7 @@ METHOD SaveSettings() CLASS HBDebugger
    LOCAL cInfo := ""
    LOCAL n
    LOCAL oWnd
-   LOCAL aBreak
+   LOCAL aBreak, aWatch
 
    ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
 
@@ -2530,6 +2539,10 @@ METHOD SaveSettings() CLASS HBDebugger
       FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
          cInfo += "BP " + hb_ntos( aBreak[ 1 ] ) + " " + ;
                   AllTrim( aBreak[ 2 ] ) + hb_eol()
+      NEXT
+
+      FOR EACH aWatch IN ::aWatch
+         cInfo += Upper( aWatch[ 1 ] ) + " " + aWatch[ 2 ] + hb_eol()
       NEXT
 
       /* This part of the script must be executed after all windows are created */
@@ -2625,8 +2638,11 @@ METHOD ShowCallStack() CLASS HBDebugger
       ::oWndStack:bKeyPressed  := {| nKey | ::CallStackProcessKey( nKey ) }
       ::oWndStack:bLButtonDown := {|| ::CallStackProcessKey( K_LBUTTONDOWN ) }
 
-      AAdd( ::aWindows, ::oWndStack )
-      // ::nCurrentWindow := Len( ::aWindows )
+      // Maintain fixed window array order: code, monitor, watch, callstack, command
+      IF ::nCurrentWindow >= Len( ::aWindows )
+        ::nCurrentWindow++
+      ENDIF
+      hb_AIns( ::aWindows, Len( ::aWindows ), ::oWndStack, .T. )
 
       IF ::oBrwStack == NIL
          ::BuildBrowseStack()
@@ -2777,7 +2793,12 @@ METHOD ShowVars() CLASS HBDebugger
          iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[ 1 ] ), NIL ), ;
          iif( Len( ::aVars ) > 0, ::oBrwVars:ForceStable(), NIL ) ) ) }
 
-      AAdd( ::aWindows, ::oWndVars )
+      // Maintain fixed window array order: code, monitor, watch, callstack, command
+      hb_AIns( ::aWindows, 2, ::oWndVars, .T. )
+      IF ::nCurrentWindow >= 2
+        ::nCurrentWindow++
+      ENDIF
+
       lWindowCreated := .T.
    ELSE
 
@@ -3216,6 +3237,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
    LOCAL lRepaint := .F.
    LOCAL nTop
    LOCAL aColors
+   LOCAL nPos
 
    IF ::lGo
       RETURN NIL
@@ -3286,7 +3308,13 @@ METHOD WatchpointsShow() CLASS HBDebugger
          iif( nKey == K_CTRL_ENTER, ::WatchpointInspect( ::oBrwPnt:Cargo[ 1 ] ), NIL ), ;
          ::oBrwPnt:ForceStable() ) }
 
-      AAdd( ::aWindows, ::oWndPnt )
+      // Maintain fixed window array order: code, monitor, watch, callstack, command
+      nPos := IIf( ::aWindows[2] == ::oWndVars, 3, 2 )
+      hb_AIns( ::aWindows, nPos, ::oWndPnt, .T. )
+      IF ::nCurrentWindow >= nPos
+        ::nCurrentWindow++
+      ENDIF
+
       ::oWndPnt:Show()
       ::ResizeWindows( ::oWndPnt )
    ELSE
