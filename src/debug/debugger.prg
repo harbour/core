@@ -223,6 +223,7 @@ CREATE CLASS HBDebugger
    VAR lLineNumbers      INIT .T.
    VAR nHelpPage         INIT 1
    VAR nWaFocus          INIT 1
+   VAR lWindowsAutoSized INIT .T.
 
    METHOD New()
    METHOD Activate()
@@ -295,11 +296,11 @@ CREATE CLASS HBDebugger
    METHOD RefreshVars()
    METHOD RestoreAppScreen()
    METHOD RestoreAppState()
-   METHOD RestoreSettings()
+   METHOD RestoreSettings( cFileName )
    METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := ! ::lRunAtStartup
    METHOD SaveAppScreen()
    METHOD SaveAppState()
-   METHOD SaveSettings()
+   METHOD SaveSettings( cFileName )
    METHOD Show()
    METHOD ShowAllGlobals()
    METHOD ShowAppScreen()
@@ -1059,9 +1060,9 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       CASE starts( "NORUNATSTARTUP", cParam )
          ::lRunAtStartup := .F.
       CASE starts( "SAVESETTINGS", cParam )
-         ::SaveSettings()
+         ::SaveSettings( AllTrim( cParam1 ) )
       CASE starts( "RESTORESETTINGS", cParam )
-         ::RestoreSettings()
+         ::RestoreSettings( AllTrim( cParam1 ) )
       OTHERWISE
          cResult := "Command error"
       ENDCASE
@@ -1180,6 +1181,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             oWindow:Resize( Val( cParam1 ), n, ;
                oWindow:nBottom + Val( cParam1 ) - oWindow:nTop, ;
                oWindow:nRight + n - oWindow:nLeft )
+            ::lWindowsAutoSized := .F.
          ENDIF
       CASE starts( "SIZE", cParam )
          IF Empty( cParam1 )
@@ -1191,6 +1193,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
                oWindow:Resize( oWindow:nTop, oWindow:nLeft, ;
                   Val( cParam1 ) - 1 + oWindow:nTop, ;
                   Val( SubStr( cParam1, n ) ) - 1 + oWindow:nLeft )
+               ::lWindowsAutoSized := .F.
             ENDIF
          ENDIF
       CASE starts( "ZOOM", cParam ) .OR. starts( "ICONIZE", cParam) ;
@@ -2396,14 +2399,19 @@ METHOD RestoreAppState() CLASS HBDebugger
    RETURN NIL
 
 
-METHOD RestoreSettings() CLASS HBDebugger
+METHOD RestoreSettings( cFileName ) CLASS HBDebugger
 
-   ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
-
-   IF LastKey() != K_ESC
-      ::LoadSettings()
-      ::ShowVars()
+   IF Empty( cFileName )
+      ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
+      IF LastKey() == K_ESC
+         RETURN NIL
+      ENDIF
+   ELSE
+      ::cSettingsFileName := cFileName
    ENDIF
+
+   ::LoadSettings()
+   ::ShowVars()
 
    RETURN NIL
 
@@ -2464,87 +2472,93 @@ METHOD SaveAppState() CLASS HBDebugger
    RETURN NIL
 
 
-METHOD SaveSettings() CLASS HBDebugger
+METHOD SaveSettings( cFileName ) CLASS HBDebugger
 
    LOCAL cInfo := ""
    LOCAL n
    LOCAL oWnd
    LOCAL aBreak, aWatch
 
-   ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
+   IF Empty( cFileName )
+     ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
+     IF LastKey() == K_ESC
+        RETURN NIL
+     ENDIF
+   ELSE
+     ::cSettingsFileName := cFileName
+   ENDIF
 
-   IF LastKey() != K_ESC
+   IF ! Empty( ::cPathForFiles )
+      cInfo += "Options Path " + ::cPathForFiles + hb_eol()
+   ENDIF
 
-      IF ! Empty( ::cPathForFiles )
-         cInfo += "Options Path " + ::cPathForFiles + hb_eol()
+   cInfo += "Options Colors {"
+   FOR n := 1 TO Len( ::aColors )
+      cInfo += '"' + ::aColors[ n ] + '"'
+      IF n < Len( ::aColors )
+         cInfo += ","
       ENDIF
+   NEXT
+   cInfo += "}" + hb_eol()
 
-      cInfo += "Options Colors {"
-      FOR n := 1 TO Len( ::aColors )
-         cInfo += '"' + ::aColors[ n ] + '"'
-         IF n < Len( ::aColors )
-            cInfo += ","
-         ENDIF
-      NEXT
-      cInfo += "}" + hb_eol()
+   IF ::lMonoDisplay
+      cInfo += "Options mono " + hb_eol()
+   ENDIF
 
-      IF ::lMonoDisplay
-         cInfo += "Options mono " + hb_eol()
-      ENDIF
+   IF ! ::lRunAtStartup
+      cInfo += "Options NoRunAtStartup " + hb_eol()
+   ENDIF
 
-      IF ! ::lRunAtStartup
-         cInfo += "Options NoRunAtStartup " + hb_eol()
-      ENDIF
+   IF ::nSpeed != 0
+      cInfo += "Run Speed " + hb_ntos( ::nSpeed ) + hb_eol()
+   ENDIF
 
-      IF ::nSpeed != 0
-         cInfo += "Run Speed " + hb_ntos( ::nSpeed ) + hb_eol()
-      ENDIF
+   IF ::nTabWidth != 4
+      cInfo += "Options Tab " + hb_ntos( ::nTabWidth ) + hb_eol()
+   ENDIF
 
-      IF ::nTabWidth != 4
-         cInfo += "Options Tab " + hb_ntos( ::nTabWidth ) + hb_eol()
-      ENDIF
+   IF ::lShowStatics
+      cInfo += "Monitor Static" + hb_eol()
+   ENDIF
 
-      IF ::lShowStatics
-         cInfo += "Monitor Static" + hb_eol()
-      ENDIF
+   IF ::lShowPublics
+      cInfo += "Monitor Public" + hb_eol()
+   ENDIF
 
-      IF ::lShowPublics
-         cInfo += "Monitor Public" + hb_eol()
-      ENDIF
+   IF ::lShowLocals
+      cInfo += "Monitor Local" + hb_eol()
+   ENDIF
 
-      IF ::lShowLocals
-         cInfo += "Monitor Local" + hb_eol()
-      ENDIF
+   IF ::lShowPrivates
+      cInfo += "Monitor Private" + hb_eol()
+   ENDIF
 
-      IF ::lShowPrivates
-         cInfo += "Monitor Private" + hb_eol()
-      ENDIF
+   IF ::lShowGlobals
+      cInfo += "Monitor Global" + hb_eol()
+   ENDIF
 
-      IF ::lShowGlobals
-         cInfo += "Monitor Global" + hb_eol()
-      ENDIF
+   IF ::lSortVars
+      cInfo += "Monitor Sort" + hb_eol()
+   ENDIF
 
-      IF ::lSortVars
-         cInfo += "Monitor Sort" + hb_eol()
-      ENDIF
+   IF ::lShowCallStack
+      cInfo += "View CallStack" + hb_eol()
+   ENDIF
 
-      IF ::lShowCallStack
-         cInfo += "View CallStack" + hb_eol()
-      ENDIF
+   IF ! ::lLineNumbers
+      cInfo += "Num Off" + hb_eol()
+   ENDIF
 
-      IF ! ::lLineNumbers
-         cInfo += "Num Off" + hb_eol()
-      ENDIF
+   FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
+      cInfo += "BP " + hb_ntos( aBreak[ 1 ] ) + " " + ;
+               AllTrim( aBreak[ 2 ] ) + hb_eol()
+   NEXT
 
-      FOR EACH aBreak IN __dbgGetBreakPoints( ::pInfo )
-         cInfo += "BP " + hb_ntos( aBreak[ 1 ] ) + " " + ;
-                  AllTrim( aBreak[ 2 ] ) + hb_eol()
-      NEXT
+   FOR EACH aWatch IN ::aWatch
+      cInfo += Upper( aWatch[ 1 ] ) + " " + aWatch[ 2 ] + hb_eol()
+   NEXT
 
-      FOR EACH aWatch IN ::aWatch
-         cInfo += Upper( aWatch[ 1 ] ) + " " + aWatch[ 2 ] + hb_eol()
-      NEXT
-
+   IF !::lWindowsAutoSized
       /* This part of the script must be executed after all windows are created */
       FOR n := 1 TO Len( ::aWindows )
          oWnd := ::aWindows[ n ]
@@ -2554,9 +2568,9 @@ METHOD SaveSettings() CLASS HBDebugger
          cInfo += hb_ntos( oWnd:nLeft ) + hb_eol()
          cInfo += "Window Next" + hb_eol()
       NEXT
-
-      hb_MemoWrit( ::cSettingsFileName, cInfo )
    ENDIF
+
+   hb_MemoWrit( ::cSettingsFileName, cInfo )
 
    RETURN NIL
 
