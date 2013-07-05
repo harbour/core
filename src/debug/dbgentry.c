@@ -1767,7 +1767,7 @@ HB_FUNC( __DBGISBREAK )
    void * ptr = hb_parptr( 1 );
 
    if( ptr )
-      hb_retni( hb_dbgIsBreakPoint( ptr,
+      hb_retni( hb_dbgIsBreakPoint( ( HB_DEBUGINFO * ) ptr,
                                     hb_dbgStripModuleName( hb_parc( 2 ) ),
                                     hb_parni( 3 ) ) );
 }
