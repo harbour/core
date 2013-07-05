@@ -396,6 +396,7 @@ METHOD New() CLASS HBDebugger
    ::BuildBrowseStack()
 
    IF hb_FileExists( ::cSettingsFileName )
+      ::Show()
       ::LoadSettings()
       ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
@@ -1173,7 +1174,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
                oWindow:nRight + n - oWindow:nLeft )
          ENDIF
       CASE starts( "SIZE", cParam )
-         IF Empty( cParam )
+         IF Empty( cParam1 )
             ::NotSupported()
          ELSE
             n := At( " ", cParam1 )
@@ -1820,7 +1821,7 @@ METHOD LoadCallStack() CLASS HBDebugger
    LOCAL i
    LOCAL nDebugLevel
    LOCAL nCurrLevel
-   LOCAL nlevel
+   LOCAL nLevel
    LOCAL nPos
 
    ::aProcStack := Array( ::nProcLevel )
@@ -2353,9 +2354,9 @@ METHOD ResizeWindows( oWindow ) CLASS HBDebugger
    ENDIF
 
    IF oWindow2 != NIL .AND. lVisible2
-      oWindow2:show()
+      oWindow2:Show()
    ENDIF
-   oWindow:show()
+   oWindow:Show()
    DispEnd()
 
    RETURN Self
