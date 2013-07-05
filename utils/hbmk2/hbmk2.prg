@@ -16246,9 +16246,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hb30"              , H_( "enable Harbour 3.0.x compatibility mode" ) }, ;
       { "-xhb"               , H_( "enable xhb mode" ) }, ;
       { "-hbc"               , H_( "enable pure C mode" ) }, ;
-      { "-rtlink"            , H_( "" ) }, ;
-      { "-blinker"           , H_( "" ) }, ;
-      { "-exospace"          , hb_StrFormat( H_( e"emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-blinker"           , hb_StrFormat( H_( e"emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-exospace"          , H_( "see above" ) }, ;
+      { "-rtlink"            , H_( "see above" ) }, ;
       NIL, ; /* HARBOUR_SUPPORT */
       { "-hbreg[=global]"    , hb_StrFormat( H_( "register Harbour Script (.hb) with %1$s (Windows only)" ), _SELF_NAME_ ) }, ;
       { "-hbunreg[=global]"  , hb_StrFormat( H_( "unregister Harbour Script (.hb) from %1$s (Windows only)" ), _SELF_NAME_ ) }, ;
