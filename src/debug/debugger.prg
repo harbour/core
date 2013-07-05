@@ -1234,7 +1234,7 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
       nLen := MLCount( cInfo, NIL, NIL, .F. )
       FOR n := 1 TO nLen
          cLine := MemoLine( cInfo, 16384, n, NIL, .F., .T. )
-         IF ::lActive .OR. ( ( nPos := At( ' ', cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos ) ) ) )
+         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos ) ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
@@ -2640,7 +2640,7 @@ METHOD ShowCallStack() CLASS HBDebugger
 
       // Maintain fixed window array order: code, monitor, watch, callstack, command
       IF ::nCurrentWindow >= Len( ::aWindows )
-        ::nCurrentWindow++
+         ::nCurrentWindow++
       ENDIF
       hb_AIns( ::aWindows, Len( ::aWindows ), ::oWndStack, .T. )
 
@@ -2796,7 +2796,7 @@ METHOD ShowVars() CLASS HBDebugger
       // Maintain fixed window array order: code, monitor, watch, callstack, command
       hb_AIns( ::aWindows, 2, ::oWndVars, .T. )
       IF ::nCurrentWindow >= 2
-        ::nCurrentWindow++
+         ::nCurrentWindow++
       ENDIF
 
       lWindowCreated := .T.
@@ -3309,10 +3309,10 @@ METHOD WatchpointsShow() CLASS HBDebugger
          ::oBrwPnt:ForceStable() ) }
 
       // Maintain fixed window array order: code, monitor, watch, callstack, command
-      nPos := IIf( ::aWindows[2] == ::oWndVars, 3, 2 )
+      nPos := iif( ::aWindows[ 2 ] == ::oWndVars, 3, 2 )
       hb_AIns( ::aWindows, nPos, ::oWndPnt, .T. )
       IF ::nCurrentWindow >= nPos
-        ::nCurrentWindow++
+         ::nCurrentWindow++
       ENDIF
 
       ::oWndPnt:Show()
