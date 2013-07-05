@@ -397,7 +397,9 @@ METHOD New() CLASS HBDebugger
 
    IF hb_FileExists( ::cSettingsFileName )
       ::Show()
+      ::lActive := .T.
       ::LoadSettings()
+      ::lActive := .F.
       ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
 
