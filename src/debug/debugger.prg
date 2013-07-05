@@ -1589,7 +1589,7 @@ METHOD HandleEvent() CLASS HBDebugger
             EXIT
 
          OTHERWISE
-            IF !::OpenMenu( __dbgAltToKey( nKey ) )
+            IF ! ::OpenMenu( __dbgAltToKey( nKey ) )
                ::oWndCommand:KeyPressed( nKey )
             ENDIF
          ENDSWITCH
@@ -2112,8 +2112,8 @@ METHOD Open() CLASS HBDebugger
 
    RETURN NIL
 
-
 METHOD OpenMenu( cName ) CLASS HBDebugger
+
    LOCAL nPopup := ::oPullDown:GetHotKeyPos( Left( cName, 1 ) )
 
    IF nPopup == 0
@@ -2126,8 +2126,8 @@ METHOD OpenMenu( cName ) CLASS HBDebugger
       SetCursor( SC_NONE )
       ::oPullDown:ShowPopup( nPopup )
    ENDIF
-   RETURN .T.
 
+   RETURN .T.
 
 METHOD OpenPPO() CLASS HBDebugger
 
