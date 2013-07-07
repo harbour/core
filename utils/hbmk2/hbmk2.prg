@@ -319,6 +319,7 @@ EXTERNAL hbmk_KEYW
 
 #define _HBMK_REGEX_INCLUDE     R_( '(?:^|;)[ \t]*#[ \t]*(?:incl|inclu|includ|include|import)[ \t]*(\".+?\"' + "|<.+?>|['`].+?')" )
 #define _HBMK_REGEX_REQUIRE     R_( '(?:^|;)[ \t]*#[ \t]*require[ \t]*(\".+?\"' + "|'.+?')" )
+#define _HBMK_REGEX_SETPROC     R_( '(?:^|;)[ \t]*SET[ \t]+(?:PROC|PROCE|PROCED|PROCEDU|PROCEDUR|PROCEDURE)[ \t]+TO[ \t]+(\".+?\"' + "|'.+?'|\S+)" )
 
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
@@ -8709,6 +8710,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
 
    THREAD STATIC t_pRegexInclude
    THREAD STATIC t_pRegexRequire
+   THREAD STATIC t_pRegexSETPROC
    THREAD STATIC t_hExclStd
 
    LOCAL aDeps
@@ -8730,6 +8732,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
       tmp := hb_cdpSelect( "EN" )
       t_pRegexInclude := hb_regexComp( _HBMK_REGEX_INCLUDE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
       t_pRegexRequire := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+      t_pRegexSETPROC := hb_regexComp( _HBMK_REGEX_SETPROC, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
       hb_cdpSelect( tmp )
       IF Empty( t_pRegexInclude )
          _hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
@@ -8739,7 +8742,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
 
    aDeps := {}
    IF ! Empty( t_pRegexInclude ) .AND. ;
-      ! Empty( t_pRegexRequire )
+      ! Empty( t_pRegexRequire ) .AND. ;
+      ! Empty( t_pRegexSETPROC )
 
       cFileBody := MemoRead( cFile )
 
@@ -8872,7 +8876,9 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
             ENDIF
          NEXT
 
+#ifdef HARBOUR_SUPPORT
          IF ! lCMode
+
             FOR EACH tmp IN hb_regexAll( t_pRegexRequire, cFileBody, ;
                                          NIL /* lCaseSensitive */, ;
                                          NIL /* lNewLine */, NIL, ;
@@ -8882,7 +8888,38 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
                hbmk[ _HBMK_hAUTOHBCFOUND ][ "." + cHeader ] := hb_FNameExtSet( cHeader, ".hbc" )
             NEXT
+
+            FOR EACH tmp IN hb_regexAll( t_pRegexSETPROC, cFileBody, ;
+                                         NIL /* lCaseSensitive */, ;
+                                         NIL /* lNewLine */, NIL, ;
+                                         NIL /* nGetMatch */, ;
+                                         .T. /* lOnlyMatch */ )
+               /* NOTE: It will accept files with unclosed string separators
+                        (the compiler doesn't).
+                        It won't consider closing command separator (';') nor
+                        inline comments.
+                        Other minor differences might be also possible. */
+               cHeader := tmp[ 2 ]
+               IF Left( cHeader, 1 ) + Right( cHeader, 1 ) == "''" .OR. ;
+                  Left( cHeader, 1 ) + Right( cHeader, 1 ) == '""'
+                  cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
+               ENDIF
+               cHeader := hb_FNameExtSetDef( cHeader, ".prg" )
+
+               IF ( cHeader := FindHeader( hbmk, cHeader, cParentDir, .F., .F. ) ) != NIL
+
+                  IF hbmk[ _HBMK_lDEBUGINC ]
+                     _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: SET PROCEDURE TO %1$s", cHeader ) )
+                  ENDIF
+
+                  aDep := Array( _HBMK_HEADER_LEN_ )
+                  aDep[ _HBMK_HEADER_cHeader ]       := cHeader
+                  aDep[ _HBMK_HEADER_lSystemHeader ] := .F.
+                  AAdd( aDeps, aDep )
+               ENDIF
+            NEXT
          ENDIF
+#endif
       ENDIF
    ENDIF
 
