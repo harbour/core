@@ -1234,10 +1234,10 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
 
    IF hb_FileExists( cFileName )
       cInfo := MemoRead( cFileName )
-      nLen := MLCount( cInfo, NIL, NIL, .F. )
+      nLen := MLCount( cInfo, 16384, NIL, .F.,.T. )
       FOR n := 1 TO nLen
          cLine := MemoLine( cInfo, 16384, n, NIL, .F., .T. )
-         IF ::lActive .OR. ( ( nPos := At( ' ', cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos ) ) ) )
+         IF ::lActive .OR. ( ( nPos := At( ' ', cLine ) ) > 0 .AND. starts( Upper( Left( cLine, nPos ) ), "OPTIONS" ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
