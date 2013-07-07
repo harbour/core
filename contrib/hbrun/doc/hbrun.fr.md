@@ -1,7 +1,8 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 2007\-2013, Viktor Szakáts  
-Copyright \(c\) 2003\-2007, Przemysław Czerpak  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 2007\-2013, Viktor Szakáts  
+Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
+Traduction \(fr\): \(ajoutez votre nom ici\)  
 
 Syntax:  
   

@@ -1,7 +1,7 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
-Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor  
+Magyar \(hu\) fordítás: Copyright &copy; 2009\-2013, Szakáts Viktor  
 
 Használat:  
   
@@ -158,10 +158,10 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hb30** enable Harbour 3\.0\.x compatibility mode
  - **\-xhb** kapcsolja be az xhb üzemmódot
  - **\-hbc** enable pure C mode
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emuláljon Clipper kompatibilis szerkesztő üzemmódot\.  
+ - **\-blinker** emuláljon Clipper kompatibilis szerkesztő üzemmódot\.  
 A hbmk2 program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** register Harbour Script \(\.hb\) with hbmk2 \(Windows only\)
@@ -619,7 +619,7 @@ Exit codes \("errorlevels"\):
  - **2** ismeretlen fordítóprogram
  - **3** failed Harbour detection
  - **5** failed stub creation
- - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
+ - **6** failed in compilation phase
  - **7** failed in final assembly \(linker or library manager\)
  - **8** unsupported
  - **9** failed to create working directory
@@ -640,7 +640,7 @@ Megjegyzések:
   - Source filename without extension will load the \.hbp file, if such \.hbp file exists in current directory\. If not, \.prg extension will be used\.
   - Több \-l, \-L, \-i és &lt;parancsállomány&gt; kapcsoló/paraméter is megengedett\.
   - Normál Harbour fordító kapcsolók is megadhatók\.
-  - hbmk\.hbc opció fájl a hbmk2 könyvtárában mindig feldolgozásra kerül amennyiben létezik\. \*nix platformokon a fájl a ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc könyvtárak \(ebben a sorrendben\) szintén ellenőrzésre kerülnek\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - hbmk\.hbm make script in current directory is always processed if it exists\.
   - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
   - A szűrők az egyes \.hbc sorokban használhatók és számos opció esetén támogatottak\.  

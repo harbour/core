@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(gl\): JLalín  
 
@@ -165,11 +165,11 @@ crear enlace/copia de hbmk2 para hbcc para o mesmo resultado
  - **\-hb30** activar modo de compatibilidade Harbour 3\.0\.x
  - **\-xhb** activar o modo xhb
  - **\-hbc** activar modo C puro
- - \-rtlink 
- - \-blinker 
- - **\-exospace** simular o comportamento de enlazador Clipper  
+ - **\-blinker** simular o comportamento de enlazador Clipper  
   
 crear enlace/copia a hbmk2 para rtlink/blinker/exospace para o mesmo resultado
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** registrar Harbour Script \(\.hb\) con hbmk2 \(Só Windows\)
@@ -629,7 +629,7 @@ Códigos de saída \("errorlevels"\):
  - **2** Compilador descoñecido
  - **3** Fallou a detección de Harbour
  - **5** Fallou a creación do arquivo auxiliar
- - **6** Fallou a compilación \(Harbour, compilador C, compilador de recursos\)
+ - **6** failed in compilation phase
  - **7** Fallo na montaxe final \(o enlazador ou o xestor de bibliotecas\)
  - **8** Non soportado
  - **9** Fallo ao crear directorio de traballo
@@ -655,7 +655,7 @@ Notas:
   - As opcións habituáis do compilador Harbour acéptanse tal cuál\.  
   
 \(ver opción \-harbourhelp\)
-  - o arquivo de opcións hbmk\.hbc no directorio hbmk2 sempre se procesa cando existe\. En plataformas \*nix ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc compróbanse \(nesa mesma orde\) antes do directorio hbmk2\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - o guión de construcción hbmk\.hbm no directorio actual sempre é procesado se existe\.
   - Recoméndase o uso da barra invertida como separador de directorios pero a barra estándar tamén se acepta\.
   - Os filtros poden ser usados en cada liña do arquivo \.hbc e na maioría das opcións\.  

@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;  
 
@@ -160,10 +160,10 @@ criar link/copia hbmk2 para hbcc para o mesmo efeito
  - **\-hb30** habilita modo de compatibilidade 'Harbour 3\.0\.x'
  - **\-xhb** habilitar modo xHb
  - **\-hbc** ativa modo C puro
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emula o comportamento de um linkeditor compatível com Clipper  
+ - **\-blinker** emula o comportamento de um linkeditor compatível com Clipper  
 criar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo efeito
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** registre Harbour Script \(\.hb\) com hbmk2 \(somente para Windows\)
@@ -622,7 +622,7 @@ Códigos de saída \("errorlevels"\):
  - **2** compilador desconhecido
  - **3** falha Harbour não detectado
  - **5** criação stub falhou
- - **6** falha na compilação \(Harbour, compilador C, compilador Recursos "RC"\)
+ - **6** failed in compilation phase
  - **7** falha na montagem final \(linkeditor ou gerenciador de bibliotecas\)
  - **8** não suportado
  - **9** Falhou na criação do diretório de trabalho
@@ -644,7 +644,7 @@ Notas:
   - Multiplos parâmetros \-l, \-L, \-i e &lt;script&gt; são aceitos\.
   - Opções usadas com o compilador Harbour também são aceitas\.  
 \(veja com a opção \-harbourhelp\)
-  - O arquivo de configuração hbmk\.hbc no diretório do hbmk2 sempre será processado caso exista\. Em plataformas \*nix este arquivo é sempre procurado nas pastas ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc \(nesta ordem\) antes do diretório hbmk2\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - O script hbmk\.hbm no diretório atual será sempre processado se existir\.
   - Usar a opção de barras como separador de diretório é recomendado\.mas barras invertidas também são igualmente aceitas\.
   - Os filtros são aceitos para cada uma das linhas de um arquivo \.hbc e possuem diversas opções\.  

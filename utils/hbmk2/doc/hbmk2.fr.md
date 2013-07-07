@@ -1,6 +1,7 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
+Traduction \(fr\): \(ajoutez votre nom ici\)  
 
 Syntax:  
   
@@ -157,10 +158,10 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hb30** enable Harbour 3\.0\.x compatibility mode
  - **\-xhb** enable xhb mode
  - **\-hbc** enable pure C mode
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emulate Clipper compatible linker behavior  
+ - **\-blinker** emulate Clipper compatible linker behavior  
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** enregistrer les scripts Harbour \(\.hb\) avec hbmk2 \(Windows seulement\)
@@ -613,12 +614,12 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
 Exit codes \("errorlevels"\):  
 
 
- - **0** no error
- - **1** unknown platform
- - **2** unknown compiler
- - **3** failed Harbour detection
+ - **0** aucune erreur
+ - **1** plateforme inconnue
+ - **2** compilateur inconnu
+ - **3** échec à la détection de Harbour
  - **5** failed stub creation
- - **6** failed in compilation \(Harbour, C compiler, Resource compiler\)
+ - **6** failed in compilation phase
  - **7** Echec à l'assemblage final \(éditeur de liens ou gestionnaire de librairie\)
  - **8** unsupported
  - **9** failed to create working directory
@@ -640,7 +641,7 @@ Notes:
   - Multiple \-l, \-L, \-i and &lt;script&gt; parameters are accepted\.
   - Regular Harbour compiler options are also accepted as is\.  
 \(see them with \-harbourhelp option\)
-  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - hbmk\.hbm make script in current directory is always processed if it exists\.
   - Using forwards slashes is recommended in option values as directory separator, but backslashes are also equally accepted\.
   - Filters are accepted in each \.hbc line and most options\.  

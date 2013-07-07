@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
 
@@ -158,10 +158,10 @@ Copyright \(c\) 1999\-2013, Viktor Szakáts
  - **\-hb30** ενργοποίηση συμβατότητας Harbour 3\.0\.x
  - **\-xhb** ενεργοποίηση xhb mode
  - **\-hbc** ενεργοποίηση καθαρού C mode
- - \-rtlink 
- - \-blinker 
- - **\-exospace** προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker   
+ - **\-blinker** προσομοίωσε σε Clipper συμβατή τη συμπεριφορά του linker   
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** καταχώριση συσχέτισης σεναρίου Harbour \(\.hb\) με το hbmk2 \(μόνο σε Windows \-registry\-\)
@@ -619,7 +619,7 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
  - **2** άγνωστος μεταγλωττιστής
  - **3** αποτυχία ανίχνευσης Harbour
  - **5** αποτυχίας δημιουργίας stub
- - **6** αποτυχία κατά τη μεταγλώττιση \(Harbour, C compiler, Resource compiler\)
+ - **6** failed in compilation phase
  - **7** αποτυχία στη τελική συναρμολόγηση \(linker or library manager\)
  - **8** δεν υποστηρίζεται
  - **9** αποτυχία δημιουργίας καταλόγου εργασίας
@@ -641,7 +641,7 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
   - Πολλαπλές \-l, \-L, \-i και &lt;script&gt; παράμετροι είναι δεκτές\.
   - Οι συνηθισμένες επιλογές του μεταγλωττιστή Harbour γίνονται επίσης δεκτές ως έχουν\.  
 \(μπορείτε να τις δείτε με την επιλογή \-harbourhelp\)
-  - hbmk\.hbc προαιρετικό αρχείο στον κατάλογο hbmk2, αν υπάρχει, δέχεται παντοτε επεξεργασία\. Σε \*nix πλατφόρμες οι κατάλογοι ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc ελέγχονται \(με αυτή τη σειρά\) πρίν από τον κατάλογο hbmk2 \.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - Το hbmk\.hbm σενάριο κατασκευής στον τρέχοντα κατάλογο δέχεται πάντοτε επεξεργασία, αν υπάρχει\.
   - Η χρήση πλάγιας εμπρός κάθετης παύλας συνιστάται στις τιμές των επιλογών ως διαχωριστής μονοπατιού, αλλά η πίσω πλάγια κάθετη παύλα είναι εξίσου αποδεκτή\.
   - Φίλτρα επιτρέπονται σε κάθε γραμμή \.hbc καθώς και περισσότερες επιλογές\.  

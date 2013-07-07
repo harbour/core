@@ -1,6 +1,6 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 2007\-2013, Viktor Szakáts  
-Copyright \(c\) 2003\-2007, Przemysław Czerpak  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 2007\-2013, Viktor Szakáts  
+Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
 
@@ -13,10 +13,10 @@ Descrizione:
 
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
   
-Opzioni riportate di seguito sono disponibili da riga di comando:  
+Le opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
- - **\-\-hb:debug** abilita lo script debugging
+ - **\-\-hb:debug** abilita il debug dello script
 
 
  - **\-help** questo aiuto

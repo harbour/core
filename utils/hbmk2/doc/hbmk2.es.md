@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(es\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
@@ -158,10 +158,10 @@ puede crear un enlace o copiar hbmk2 a 'hbcc' para obtener el mismo efecto
  - **\-hb30** activa el modo de compatibilidad 'Harbour 3\.0\.x'
  - **\-xhb** activa el modo 'xhb'
  - **\-hbc** activa el modo C puro
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emula el comportamiento del enlazador compatible con Clipper  
+ - **\-blinker** emula el comportamiento del enlazador compatible con Clipper  
 puede crear un enlace o copiar hbmk2 a 'rtlink'/'blinker'/'exospace' para obtener el mismo efecto
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** realiza el registro de hbmk2 para el tipo de archivo de órdenes de Harbour \(\.hb\) \(sólo para Windows\)
@@ -619,7 +619,7 @@ Códigos de salida \("errorlevels"\):
  - **2** compilador desconocido
  - **3** no se pudo detectar Harbour
  - **5** no se pudo crear fragmento de código
- - **6** fallo al compilar \(Harbour, compilador de C, compilador de recursos\)
+ - **6** failed in compilation phase
  - **7** fallo en el ensamblaje final \(enlazador o gestor de bibliotecas\)
  - **8** no soportado
  - **9** error al crear el directorio de trabajo
@@ -641,7 +641,7 @@ Notas:
   - Múltiples parámetros son aceptados \-l, \-L, \-i y &lt;script&gt;\.
   - Las opciones normales del compilador Harbour también son aceptadas\.  
 \(se pueden ver con la opción \-harbourhelp\)
-  - El archivo de opciones hbmk\.hbc que exista en el directorio del hbmk2 siempre es procesado\. En plataformas \*nix este archivo es buscado en ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc \(por este orden\) antes del directorio de hbmk2\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - El archivo de órdenes hbmk\.hbm en el directorio actual siempre se procesa, si existe\.
   - Se recomienda usar barras inclinadas en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas\.
   - Se aceptan filtros para plataformas en cada linea de archivo '\.hbc' y en la mayoría de las opciones\.  

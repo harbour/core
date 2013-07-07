@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-25 19:40\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-07\-05 12:12\)  
+Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(es\_419\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
 
@@ -158,10 +158,10 @@ create enlace/copia hbmk2 para hbcc para el mismo efecto
  - **\-hb30** activa el modo de compatibilidad Harbour 3\.0\.x
  - **\-xhb** habilitar modo xHb
  - **\-hbc** activa modo puro C
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emula comportamiento de linkeditor compatible con clipper  
+ - **\-blinker** emula comportamiento de linkeditor compatible con clipper  
 crear link o copiar hbmk2 para rtlink/blinker/exospace resultará el mismo efecto
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** registra script Harbour \(\.hb\) con hbmk2 \(solo Windows\)
@@ -619,7 +619,7 @@ Códigos de salida \("errorlevels"\):
  - **2** compilador desconocido
  - **3** detección de Harbour fallida
  - **5** no se pudo crear fragmento de código
- - **6** falló en compilación \(Harbour, compilador C, compilador de Recursos\)
+ - **6** failed in compilation phase
  - **7** falló en ensamblado final \(enlazador o administrador de bibliotecas\)
  - **8** no soportado
  - **9** fallo al crear directorio de trabajo
@@ -641,7 +641,7 @@ Notas:
   - Múltiples parámetros son aceptados \-l, \-L, \-i y &lt;script&gt;\.
   - las opciones regulares de compilador Harbour también son aceptadas\.  
 \(Verlos con la opción \-harbourhelp\)
-  - archivo de opciones hbmk\.hbc en directorio de hbmk2 siempre es procesado si existe\. En plataformas \*nix este archivo es chequeado \(en este orden\) ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc antes de pasar a directorio de hbmk2\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - hbmk\.hbm hace script en el directorio actual siempre se procesa, si existe\.
   - Se recomienda usar barras inclinadas en los valores de opciones de directorios, pero tambien se aceptan igualmente barras invertidas\.
   - filtros para plataformas son aceptados en cada linea de archivo \.hbc y con varias opciones\.  
