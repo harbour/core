@@ -72,6 +72,7 @@ PHB_FUNC hb_vmProcAddress( const char * szFuncName )
       { "hb_arraySet",         ( PHB_FUNC ) hb_arraySet               },
       { "hb_arraySize",        ( PHB_FUNC ) hb_arraySize              },
       { "hb_extIsArray",       ( PHB_FUNC ) hb_extIsArray             },
+      { "hb_extIsNil",         ( PHB_FUNC ) hb_extIsNil               },
       { "hb_param",            ( PHB_FUNC ) hb_param                  },
       { "hb_paramError",       ( PHB_FUNC ) hb_paramError             },
       { "hb_parinfa",          ( PHB_FUNC ) hb_parinfa                },

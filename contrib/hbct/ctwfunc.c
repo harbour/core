@@ -220,14 +220,19 @@ HB_FUNC( WBOX )
       HB_B_FULL_W
    };                         /* 15 WB_FULL */
 
-   HB_WCHAR szBoxBuf[ 10 ];
-   PHB_ITEM pBoxFrame = hb_param( 1, HB_IT_STRING );
+   HB_WCHAR szBoxBuf[ 10 ], wc;
+   const char * pszBoxFrame = hb_parc( 1 );
    int iColor;
 
-   if( pBoxFrame )
+   if( pszBoxFrame )
    {
-      hb_itemCopyStrU16( pBoxFrame, HB_CDP_ENDIAN_NATIVE, szBoxBuf, HB_SIZEOFARRAY( szBoxBuf ) );
-      szBoxBuf[ HB_SIZEOFARRAY( szBoxBuf ) - 1 ] = 0;
+      HB_SIZE nLen = hb_parclen( 1 ), nIndex = 0, nSize = 0;
+      PHB_CODEPAGE cdp = hb_gtBoxCP();
+
+      while( nSize < HB_SIZEOFARRAY( szBoxBuf ) - 1 &&
+             HB_CDPCHAR_GET( cdp, pszBoxFrame, nLen, &nIndex, &wc ) )
+         szBoxBuf[ nSize++ ] = wc;
+      szBoxBuf[ nSize ] = 0;
    }
    else
    {
