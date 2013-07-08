@@ -1853,7 +1853,7 @@ Supported shells per host platforms:
      * Travis CI [continuous integration, web service, free]
         * <https://travis-ci.org/>
      * Read the Docs [online documentation creator, web service, free]
-        * <https://readthedocs.org>
+        * <https://readthedocs.org/>
      * GNU Bison (grammer paser generator) [multiplatform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
