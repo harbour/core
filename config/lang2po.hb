@@ -118,8 +118,8 @@ STATIC FUNCTION ISO_TimeStamp()
    RETURN hb_StrFormat( "%1$s%2$s%3$02d%4$02d", ;
       hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
       iif( nOffset < 0, "-", "+" ), ;
-      Int( nOffset / 3600 ), ;
-      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
+      Int( Abs( nOffset ) / 3600 ), ;
+      Int( ( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 ) )
 
 STATIC FUNCTION Item( cOri, cTrs, nPos )
 

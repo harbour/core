@@ -16760,8 +16760,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       I_( "Defaults and feature support may vary by platform/compiler." ), ;
       hb_StrFormat( I_( "GNU Make or any C compiler specific make tool and MSYS " + ;
          "(on Windows) are not needed to run %1$s." ), _SELF_NAME_ ), ;
-      H_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) }
-   /* TOFIX: ". (dot)" -> "'.' (dot)" */
+      H_( "'.' (dot) passed as first parameter will enter the interactive Harbour shell." ) }
 
 #ifdef HARBOUR_SUPPORT
    LOCAL aLst_Notes_Shell := { ;
@@ -16773,8 +16772,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          "interactive Harbour shell launched. " + ;
          "Non-standard extensions will be autodetected for source and precompiled script types. " + ;
          "Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default " + ;
-         "core header 'hb.ch' is automatically #included. The default date format is the " + ;
-         "ISO standard: yyyy-mm-dd. The default GT is '%2$s', unless full-screen CUI calls " + ;
+         "core header 'hb.ch' is automatically #included at the interactive shell prompt. " + ;
+         "The default date format is the ISO standard: yyyy-mm-dd. " + ;
+         "The default GT is '%2$s', unless full-screen CUI calls " + ;
          "are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)." ), ;
          iif( hbmk[ _HBMK_lShellMode ], I_( ".hb, .prg, .hrb or .dbf" ), I_( ".hb, .hrb or .dbf" ) ), ;
          Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
@@ -16782,7 +16782,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration " + ;
          "dependent. This help was generated on '%1$s' host platform." ), ;
          Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
-   /* TOFIX: hb.ch is only included at interactive shell prompt, not in scripts. */
 #endif
 
    LOCAL aHdr_Desc := { ;
