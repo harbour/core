@@ -646,16 +646,17 @@ HB_FUNC( HB_DISPOUTAT )
    so we can use it to draw graphical elements. */
 HB_FUNC( HB_DISPOUTATBOX )
 {
-   const char * pszString = hb_parc( 3 );
+   HB_SIZE nLen = hb_parclen( 3 );
 
-   if( pszString )
+   if( nLen > 0 )
    {
-      PHB_CODEPAGE cdp;
-      HB_SIZE nLen = hb_parclen( 3 ), nIndex = 0;
-      HB_WCHAR wc;
       int iRow = hb_parni( 1 );
       int iCol = hb_parni( 2 );
+      const char * pszString = hb_parc( 3 );
       int iColor;
+      PHB_CODEPAGE cdp;
+      HB_SIZE nIndex = 0;
+      HB_WCHAR wc;
 
       if( HB_ISCHAR( 4 ) )
          iColor = hb_gtColorToN( hb_parc( 4 ) );
