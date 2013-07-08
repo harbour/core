@@ -668,6 +668,8 @@ HB_FUNC( HB_DISPOUTATBOX )
 
       while( HB_CDPCHAR_GET( cdp, pszString, nLen, &nIndex, &wc ) )
          hb_gtPutChar( iRow, iCol++, iColor, HB_GT_ATTR_BOX, wc );
+
+      hb_gtFlush();
    }
 }
 

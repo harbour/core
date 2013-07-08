@@ -297,7 +297,7 @@ CREATE CLASS HBDebugger
    METHOD RestoreAppScreen()
    METHOD RestoreAppState()
    METHOD RestoreSettings( cFileName )
-   METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := ! ::lRunAtStartup
+   METHOD RunAtStartup( lRunAtStartup )
    METHOD SaveAppScreen()
    METHOD SaveAppState()
    METHOD SaveSettings( cFileName )
@@ -1056,9 +1056,9 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       CASE starts( "PATHFORFILES", cParam )
          ::PathForFiles( AllTrim( cParam1 ) )
       CASE starts( "RUNATSTARTUP", cParam )
-         ::RunAtStartup()
+         ::RunAtStartup( .T. )
       CASE starts( "NORUNATSTARTUP", cParam )
-         ::lRunAtStartup := .F.
+         ::RunAtStartup( .F. )
       CASE starts( "SAVESETTINGS", cParam )
          ::SaveSettings( AllTrim( cParam1 ) )
       CASE starts( "RESTORESETTINGS", cParam )
@@ -1234,10 +1234,10 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
 
    IF hb_FileExists( cFileName )
       cInfo := MemoRead( cFileName )
-      nLen := MLCount( cInfo, NIL, NIL, .F. )
+      nLen := MLCount( cInfo, 16384, NIL, .F., .T. )
       FOR n := 1 TO nLen
-         cLine := MemoLine( cInfo, 16384, n, NIL, .F., .T. )
-         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos ) ) ) )
+         cLine := AllTrim( MemoLine( cInfo, 16384, n, NIL, .F., .T. ) )
+         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos - 1 ) ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
@@ -1780,6 +1780,16 @@ METHOD Inspect( uValue, cValueName ) CLASS HBDebugger
 
 METHOD IsValidStopLine( cName, nLine ) CLASS HBDebugger
    RETURN __dbgIsValidStopLine( ::pInfo, cName, nLine )
+
+
+METHOD RunAtStartup( lRunAtStartup ) CLASS HBDebugger
+
+   hb_default( @lRunAtStartup, ! ::lRunAtStartup )
+
+   ::lRunAtStartup := lRunAtStartup
+   ::oPulldown:GetItemByIdent( "ALTD" ):checked := ::lRunAtStartup
+
+   RETURN Self
 
 
 METHOD LineNumbers( lLineNumbers ) CLASS HBDebugger
