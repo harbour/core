@@ -196,8 +196,6 @@ PHB_CODEBLOCK hb_codeblockNew( const HB_BYTE * pBuffer,
       {
          /* Swap the current value of local variable with the reference to this
           * value.
-          * TODO: If Harbour will support threads in the future then we need
-          * to implement some kind of semaphores here.
           */
          int iLocal = HB_PCODE_MKUSHORT( pLocalPosTable );
          pLocal = hb_stackLocalVariable( iLocal );
