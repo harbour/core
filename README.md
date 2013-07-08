@@ -36,7 +36,7 @@ and interfaces to many popular APIs.
    Contributors are NOT LIABLE for any damages that result from using
    Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
-   If you think you can make Harbour better, start to contribute.
+   If you think you can make Harbour better: contribute.
    See [How to Participate](#how-to-participate).
 
    The information this document is subject to change without notice
@@ -72,8 +72,8 @@ There are several ways to help making Harbour better:
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100KB),
   use this [free service](http://dropcanvas.com).
-- Of course, there is more into Harbour contribution than writing
-  code, so you're welcome to do so in other areas like documentation,
+- There is more into Harbour contribution than writing code,
+  so you're welcome to do so in other areas like documentation,
   helping fellow users, giving input on decisions, testing in
   various environments, volunteering in administration tasks, etc.
 - Participate in localization:<br />
@@ -151,11 +151,11 @@ For all platforms you'll need:
 Platform specific prerequisites:
 
 1. Windows XP or upper system is recommended to build Harbour.
-2. Make sure to have your C compiler of choice properly installed
+2. Make sure to have your C compiler of choice installed
    in PATH. Refer to your C compiler installation and setup
    instructions for details. It's recommended to make sure no tools
    in your PATH belonging to other C compilers are interfering with
-   your setup. It's also highly discouraged to keep multiple copies
+   your setup. It's also discouraged to keep multiple copies
    of the same compiler, or different versions of the same compiler
    in PATH at the same time. For the list of supported compilers,
    look up [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers).
@@ -181,7 +181,7 @@ You should see ``Hello, world!`` on screen.
 ## on Windows hosts with POSIX shells (MSYS/Cygwin)
 
 > Though you can use these alternative shells to build Harbour on Windows,
-> it's generally recommended to use the native one.
+> it's recommended to use the native one.
 
 To build:
 
@@ -200,7 +200,7 @@ You should see ``Hello, world!`` on screen.
 
 ## on MS-DOS hosts (possible cross-build targets: Windows, OS/2, Linux)
 
-Make sure to have your C compiler of choice properly installed in PATH.
+Make sure to have your C compiler of choice installed in PATH.
 
 To build:
 
@@ -422,7 +422,7 @@ See: [How to Build](#how-to-build)
 
     $ package\winuni\mpkg_win_uni.bat
 
-> Carefully read in-file instructions and do the necessary
+> Read in-file instructions and do the necessary
 > steps before calling the script.
 
 
@@ -434,7 +434,7 @@ to tell Harbour where to find the headers for these 3rd party
 components.
 
 On *nix systems most of these 3rd party components will
-automatically be picked up if installed on well-known standard
+automatically be used if installed on well-known standard
 system locations.
 
 You only need to use manual setup if the dependency isn't available
@@ -518,14 +518,14 @@ advanced users only):
 > NOTES:
 >
 >    * you need to use native path format to your shell/OS
->    * spaces in directory names aren't currently supported
+>    * spaces in directory names aren't supported
 >      (you *can* use 8.3 name alias on Windows platform, though)
 >    * don't put directory names inside double quotes
 >    * use absolute paths
 
 ## Darwin (OS X)
 
-1. Install [Homebrew](http://mxcl.github.com/homebrew/)
+1. Install [Homebrew](http://mxcl.github.io/homebrew/)
 2. Install packages:
 
         $ brew install pcre slang cairo freeimage libgd mysql postgresql qt5
@@ -805,9 +805,9 @@ sensitive.
 
    - `HB_REBUILD_EXTERN=yes`
 
-     Rebuild extern headers. This is typically used by
-     developers after code modifications or before
-     release. Default: no
+     Rebuild extern headers. It is meant for developers
+     doing Harbour code modifications and releases.
+     Default: no
 
    - `HB_REBUILD_PARSER=yes`
 
@@ -1330,7 +1330,7 @@ For all platforms you'll need two things:
 
     Either a Harbour binary distribution or a local Harbour
     build will be okay. If you're reading this text, it's
-    very likely you have one of these already.
+    likely you have one of these already.
 
 * Supported ANSI C compiler
 
@@ -1435,11 +1435,11 @@ mailing list.
     and C compiler) from your environment. Also remove any custom settings
     for your C compiler.
     Use only those documented in this file.
-    Follows some environment variable settings which are commonly believed
+    Follows some environment variable settings which are often believed
     by users to be useful, but which in reality are either not needed or
     not even used by Harbour build process and hbmk2.
 7.  Remove any Harbour build settings documented in [Build Options](#build-options).
-8.  Try to do no or only small modifications at once to examples
+8.  Do no or only small modifications at once to the examples
     included in [Build Examples](#build-examples).
     If it doesn't work, fall back to documented examples _as is_.
 9.  If everything fails and you are to report a build problem to Harbour
@@ -1475,7 +1475,7 @@ mailing list.
     library, or any 3rd party Harbour libraries. The example shall reproduce
     the problem using official stable or nightly Harbour build.
     Do not post executables and other binary files. If your source contains
-    non-ASCII (national, accented, special) chars, clearly mark the
+    non-ASCII (national, accented, special) chars, make sure to mark the
     codepage/encoding used (UTF-8 recommended) and attach the files
     compressed with zip. (use the extension `.zip`)<br />
     See more on self-contained examples:
@@ -1741,7 +1741,7 @@ Supported shells per host platforms:
         * <http://www.openwatcom.org/>
      * Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
         * <https://itunes.apple.com/us/app/xcode/id497799835>
-        * <http://developer.apple.com/downloads/>
+        * <https://developer.apple.com/downloads/>
      * MS Windows SDK [win, free, closed-source]
         * <http://msdn.microsoft.com/en-us/windowsserver/bb980924.aspx>
          (7.0 and above contains compilers for x86, x86_64 and IA-64)
@@ -1806,8 +1806,8 @@ Supported shells per host platforms:
         * <http://orclib.sourceforge.net/>
         * <http://www.oracle.com/technology/tech/oci/instantclient/index.html>
      * HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
-        * <http://www.openssl.org/>
-        * <http://www.openssl.org/related/binaries.html>
+        * <https://www.openssl.org/>
+        * <https://www.openssl.org/related/binaries.html>
         * <http://wiki.opensslfoundation.com/>
      * HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
         * <http://www.pcre.org/>
@@ -1817,7 +1817,7 @@ Supported shells per host platforms:
         * <http://www.libpng.org/pub/png/libpng.html>
      * HB_WITH_QT - QT (GUI) [multiplatform, free, open-source]
         * <https://qt-project.org/>
-        * <http://download.qt-project.org/official_releases/qt/>
+        * <https://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
         * <http://www.sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
@@ -1833,7 +1833,7 @@ Supported shells per host platforms:
 
      * Windows 95 Winsock2 [win, free, closed-source]
         * Information: Microsoft KB182108 "Availability of Windows Sockets 2.0 for Windows 95"
-        * Search for `w95ws2setup.exe`
+        * Search for `w95ws2setup.exe`: <https://duckduckgo.com/?q=w95ws2setup.exe>
             (required for Win95 support to run applications built with Harbour)
      * Windows UNICOWS .dll [win, free, closed-source]
         * <http://go.microsoft.com/fwlink/?LinkId=14851>
@@ -1848,8 +1848,12 @@ Supported shells per host platforms:
         * <http://git-scm.com/>
         * <https://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git> (Windows binaries)
      * GitHub Client [multiplatform, free]
-        * <http://windows.github.com/>
-        * <http://mac.github.com/>
+        * <https://windows.github.com/>
+        * <https://mac.github.com/>
+     * Travis CI [continuous integration, web service, free]
+        * <https://travis-ci.org/>
+     * Read the Docs [online documentation creator, web service, free]
+        * <https://readthedocs.org>
      * GNU Bison (grammer paser generator) [multiplatform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
@@ -1916,7 +1920,7 @@ Supported shells per host platforms:
 
 * Documentation:
 
-     * [Netiquette Guidelines](http://tools.ietf.org/html/rfc1855)
+     * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
      * [Setting up Git](https://help.github.com/articles/set-up-git)
      * [Git book](http://git-scm.com/book) [free]
      * [Git Reference](http://gitref.org)
@@ -1943,6 +1947,7 @@ Supported shells per host platforms:
      * Harbour [online documentation](http://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
+     * [Stack Overflow](http://stackoverflow.com/questions/tagged/clipper)
 
 
 This document Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
