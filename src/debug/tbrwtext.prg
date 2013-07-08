@@ -105,9 +105,9 @@ CREATE CLASS HBBrwText
    METHOD GoBottom() INLINE ::oBrw:GoBottom():ForceStable(), Self
 
    METHOD Home() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset := 1, ::oBrw:RefreshAll():ForceStable() ), ), Self
-   METHOD End() INLINE ::nLineOffset := Max( 1, ::nMaxLineLen - ( ::nWidth - ::nLineNoLen ) + 1 ), ::oBrw:RefreshAll():ForceStable(), Self
+   METHOD End() INLINE ::nLineOffset := Max( 1, ::nMaxLineLen - ( ::nWidth - iif( ::lLineNumbers, ::nLineNoLen, 0 ) ) + 1 ), ::oBrw:RefreshAll():ForceStable(), Self
 
-   METHOD Right() INLINE iif( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
+   METHOD Right() INLINE iif( ::nLineOffset < ::nMaxLineLen + iif( ::lLineNumbers, ::nLineNoLen, 0 ), ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
    METHOD Left() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset--, ::oBrw:RefreshAll():ForceStable() ), ), Self
 
    METHOD RowPos() INLINE ::nRow
@@ -168,7 +168,7 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 
 METHOD GetLine() CLASS HBBrwText
 
-   RETURN padr( hb_ntos( ::nRow ) + ":", ::nLineNoLen ) + ;
+   RETURN iif( ::lLineNumbers, padr( hb_ntos( ::nRow ) + ":", ::nLineNoLen ), "" ) + ;
           MemoLine( ::aRows[ ::nRow ], ::nMaxLineLen, 1, ::nTabWidth, .F. )
 
 METHOD GetLineText() CLASS HBBrwText

@@ -480,9 +480,11 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
          IF IsAlpha( hb_keyChar( nKey ) )
             oPopup := ::aItems[ ::nOpenPopup ]:bAction
             nPopup := oPopup:GetHotKeyPos( Upper( hb_keyChar( nKey ) ) )
-            IF nPopup > 0 .AND. oPopup:nOpenPopup != nPopup
-               oPopup:DeHilite()
-               oPopup:ShowPopup( nPopup )
+            IF nPopup > 0
+               IF oPopup:nOpenPopup != nPopup
+                  oPopup:DeHilite()
+                  oPopup:ShowPopup( nPopup )
+               ENDIF
                ::EvalAction()
             ENDIF
          ENDIF
