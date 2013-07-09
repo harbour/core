@@ -858,13 +858,17 @@ static void hb_dbgClearWatch( HB_WATCHPOINT * pWatch )
 void hb_dbgDelBreak( void * handle, int nBreak )
 {
    HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
-   HB_BREAKPOINT * pBreak = &info->aBreak[ nBreak ];
 
-   hb_xfree( pBreak->szModule );
-   if( pBreak->szFunction )
-      hb_xfree( pBreak->szFunction );
+   if( nBreak >= 0 && nBreak < info->nBreakPoints )
+   {
+      HB_BREAKPOINT * pBreak = &info->aBreak[ nBreak ];
 
-   ARRAY_DEL( HB_BREAKPOINT, info->aBreak, info->nBreakPoints, nBreak );
+      hb_xfree( pBreak->szModule );
+      if( pBreak->szFunction )
+         hb_xfree( pBreak->szFunction );
+
+      ARRAY_DEL( HB_BREAKPOINT, info->aBreak, info->nBreakPoints, nBreak );
+   }
 }
 
 
