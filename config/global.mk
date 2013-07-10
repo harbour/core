@@ -5,17 +5,17 @@
 
 # ---------------------------------------------------------------
 # GNU make docs:
-#    http://www.gnu.org/software/make/manual/make.html
+#    https://www.gnu.org/software/make/manual/make.html
 #    http://www.wanderinghorse.net/computing/make/
 #    http://www.jgc.org/feeds/topic-gnumake.xml
-#    http://lists.gnu.org/archive/html/help-make/
+#    https://lists.gnu.org/archive/html/help-make/
 #    http://make.paulandlesley.org/
 # Portable shell programming:
-#    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
-#    http://www.gnu.org/software/bash/manual/bashref.html
-#    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+#    https://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
+#    https://www.gnu.org/software/bash/manual/bashref.html
+#    http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # GNU coding standards:
-#    http://www.gnu.org/prep/standards/standards.html
+#    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
 #    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
 # ---------------------------------------------------------------

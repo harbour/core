@@ -1947,9 +1947,9 @@ Supported shells per host platforms:
      * Harbour [online documentation](http://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
-     * [Stack Overflow](http://stackoverflow.com/questions/tagged/clipper)
+     * [StackOverflow](http://stackoverflow.com/questions/tagged/clipper)
 
 
 This document Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
-Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
+Licensed under [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/)<br />
 See [COPYING](COPYING.txt).
