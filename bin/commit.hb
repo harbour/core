@@ -1178,6 +1178,7 @@ STATIC PROCEDURE ProcFile( cFileName )
       ".cpp" => ".c", ;
       ".h"   => ".c", ;
       ".api" => ".c", ;
+      ".go"  => { "go fmt %1$s" }, ;
       ".txt" => { @FixFuncCase() }, ;
       ".md"  => ".txt", ;
       ".po"  => ".txt", ;
