@@ -66,6 +66,8 @@
  *
  */
 
+#define _BSD_SOURCE
+
 #include "hbapi.h"
 #include "hbdate.h"
 #if defined( HB_LONG_LONG_OFF )
@@ -835,7 +837,7 @@ double hb_timeStampPack( int iYear, int iMonth, int iDay,
          dTimeStamp = ( double ) lJulian +
                       ( double ) ( ( ( long ) ( iHour * 60 + iMinutes ) * 60 +
                                      iSeconds ) * 1000 + iMSec ) /
-                      HB_SECONDS_PER_DAY;
+                      HB_MILLISECS_PER_DAY;
       }
    }
    return dTimeStamp;
@@ -930,13 +932,105 @@ long hb_timeUTCOffset( void ) /* in seconds */
       utc = mktime( gmtime_r( &current, &timeinfo ) );
       local = mktime( localtime_r( &current, &timeinfo ) );
 #else
-      utc = mktime( gmtime( &current ) );
+      timeinfo = *gmtime( &local );
+      utc = mktime( &timeinfo );
       timeinfo = *localtime( &current );
       local = mktime( &timeinfo );
 #endif
       return ( long ) difftime( local, utc ) + ( timeinfo.tm_isdst > 0 ? 3600 : 0 );
    }
 #endif
+}
+
+long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
+                            int iHour, int iMinutes, int iSeconds )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeStampUTCOffset(%d, %d, %d, %d, %d, %d)", iYear, iMonth, iDay, iHour, iMinutes, iSeconds ) );
+
+#if defined( HB_OS_WIN )
+   {
+      typedef BOOL ( WINAPI * P_TZSPECIFICLOCALTIMETOSYSTEMTIME )( LPTIME_ZONE_INFORMATION, LPSYSTEMTIME, LPSYSTEMTIME );
+
+      static HB_BOOL s_fInit = HB_TRUE;
+      static P_TZSPECIFICLOCALTIMETOSYSTEMTIME s_pTzSpecificLocalTimeToSystemTime = NULL;
+
+      if( s_fInit )
+      {
+         s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME )
+               GetProcAddress( GetModuleHandle( TEXT( "kernel32" ) ),
+                               "TzSpecificLocalTimeToSystemTime" );
+         s_fInit = HB_FALSE;
+      }
+
+      if( s_pTzSpecificLocalTimeToSystemTime )
+      {
+         SYSTEMTIME lt, st;
+
+         lt.wYear         = iYear;
+         lt.wMonth        = iMonth;
+         lt.wDay          = iDay;
+         lt.wHour         = iHour;
+         lt.wMinute       = iMinutes;
+         lt.wSecond       = iSeconds;
+         lt.wMilliseconds = 0;
+         lt.wDayOfWeek    = 0;
+
+         if( s_pTzSpecificLocalTimeToSystemTime( NULL, &lt, &st ) )
+            return ( long ) ( ( hb_timeStampPack( lt.wYear, lt.wMonth, lt.wDay,
+                                                  lt.wHour, lt.wMinute, lt.wSecond,
+                                                  lt.wMilliseconds ) -
+                                hb_timeStampPack( st.wYear, st.wMonth, st.wDay,
+                                                  st.wHour, st.wMinute, st.wSecond,
+                                                  st.wMilliseconds ) ) * HB_SECONDS_PER_DAY +
+                              0.5 );
+      }
+
+      return hb_timeUTCOffset();
+   }
+#else
+   {
+      struct tm timeinfo;
+      time_t utc, local;
+
+      timeinfo.tm_sec   = iSeconds;       /* seconds */
+      timeinfo.tm_min   = iMinutes;       /* minutes */
+      timeinfo.tm_hour  = iHour;          /* hours */
+      timeinfo.tm_mday  = iDay;           /* day of the month */
+      timeinfo.tm_mon   = iMonth - 1;     /* month */
+      timeinfo.tm_year  = iYear - 1900;   /* year */
+      timeinfo.tm_isdst = -1;             /* daylight saving time */
+
+      local = mktime( &timeinfo );
+
+      if( local != ( time_t ) -1 )
+      {
+         int isdst = ( timeinfo.tm_isdst > 0 ? 3600 : 0 );
+#if defined( HB_HAS_LOCALTIME_R )
+         utc = mktime( gmtime_r( &local, &timeinfo ) );
+#else
+         timeinfo = *gmtime( &local );
+         utc = mktime( &timeinfo );
+#endif
+         return ( long ) difftime( local, utc ) + isdst;
+      }
+      return 0;
+   }
+#endif
+}
+
+double hb_timeLocalToUTC( double dTimeStamp )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeLocalToUTC(%f)", dTimeStamp ) );
+
+   hb_timeStampUnpack( dTimeStamp,
+                       &iYear, &iMonth, &iDay,
+                       &iHour, &iMinutes, &iSeconds, &iMSec );
+
+   return dTimeStamp - ( double )
+          hb_timeStampUTCOffset( iYear, iMonth, iDay,
+                                 iHour, iMinutes, iSeconds ) / HB_SECONDS_PER_DAY;
 }
 
 #if defined( HB_OS_VXWORKS )

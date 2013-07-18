@@ -840,6 +840,7 @@ DYNAMIC hb_traceString
 DYNAMIC hb_traceSysOut
 DYNAMIC hb_Translate
 DYNAMIC hb_TSToStr
+DYNAMIC hb_TSToUTC
 DYNAMIC hb_TToC
 DYNAMIC hb_TToD
 DYNAMIC hb_TToN

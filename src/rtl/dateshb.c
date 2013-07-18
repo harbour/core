@@ -493,5 +493,21 @@ HB_FUNC( HB_STRTOTS )
 
 HB_FUNC( HB_UTCOFFSET )
 {
-   hb_retnl( hb_timeUTCOffset() );
+   if( HB_ISDATETIME( 1 ) )
+   {
+      int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
+
+      hb_timeStampUnpack( hb_partd( 1 ), &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
+      hb_retnl( hb_timeStampUTCOffset( iYear, iMonth, iDay, iHour, iMinute, iSecond ) );
+   }
+   else
+      hb_retnl( hb_timeUTCOffset() );
+}
+
+HB_FUNC( HB_TSTOUTC )
+{
+   if( HB_ISTIMESTAMP( 1 ) )
+      hb_rettd( hb_timeLocalToUTC( hb_partd( 1 ) ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
