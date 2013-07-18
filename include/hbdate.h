@@ -101,6 +101,9 @@ extern HB_EXPORT void hb_timeStampGetLocal( int * piYear, int * piMonth, int * p
 extern HB_EXPORT void   hb_timeStampGet( long * plJulian, long * plMilliSec );
 
 extern HB_EXPORT long   hb_timeUTCOffset( void ); /* in seconds */
+extern HB_EXPORT double hb_timeLocalToUTC( double dTimeStamp );
+extern HB_EXPORT long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
+                                             int iHour, int iMinutes, int iSeconds );
 
 extern HB_EXPORT char * hb_timeStampStrRawPut( char * szDateTime, long lJulian, long lMilliSec );
 extern HB_EXPORT void   hb_timeStampStrRawGet( const char * szDateTime, long * plJulian, long * plMilliSec );

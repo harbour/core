@@ -66,7 +66,7 @@
 #include "hbdate.h"
 
 /************************************************************
- * Useful internet timestamp based on RFC822
+ * Useful internet timestamp based on RFC 822 & RFC 2822
  */
 
 HB_FUNC( TIP_TIMESTAMP )
@@ -76,27 +76,25 @@ HB_FUNC( TIP_TIMESTAMP )
 
    char szRet[ 64 ];
    int  iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
-   long lOffset = hb_timeUTCOffset();
+   long lOffset;
 
    if( HB_ISDATE( 1 ) )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
-      iHour = iMinute = iSecond = 0;
+
+      /* For compatibility, seconds() value */
+      if( HB_ISNUM( 2 ) )
+         hb_timeDecode( hb_parnd( 2 ) * 1000,
+                        &iHour, &iMinute, &iSecond, &iMSec );
+      else
+         iHour = iMinute = iSecond = 0;
    }
    else if( HB_ISDATETIME( 1 ) )
       hb_timeStampUnpack( hb_partd( 1 ), &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
    else
       hb_timeStampGetLocal( &iYear, &iMonth, &iDay, &iHour, &iMinute, &iSecond, &iMSec );
 
-   /* For compatibility */
-   if( HB_ISNUM( 2 ) )
-   {
-      HB_ULONG ulHour = hb_parnl( 2 );
-
-      iHour   = ( int ) ( ulHour / 3600 );
-      iMinute = ( int ) ( ( ulHour % 3600 ) / 60 );
-      iSecond = ( int ) ( ulHour % 60 );
-   }
+   lOffset = hb_timeStampUTCOffset( iYear, iMonth, iDay, iHour, iMinute, iSecond );
 
    hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
                 s_days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ],
@@ -465,6 +463,27 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
    return NULL;
 }
 
+HB_FUNC( TIP_FILENAMEMIMETYPE )
+{
+   const char * fname = hb_parc( 1 );
+
+   if( fname )
+   {
+      const char * ext_type = NULL;
+      HB_ISIZ nPos = strlen( fname ) - 1;
+
+      while( nPos >= 0 && fname[ nPos ] != '.' )
+         nPos--;
+
+      if( nPos > 0 )
+         ext_type = s_findExtMimeType( fname + nPos + 1 );
+
+      hb_retc_const( ext_type ? ext_type : "unknown" );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( TIP_FILEMIMETYPE )
 {
    PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
@@ -488,11 +507,11 @@ HB_FUNC( TIP_FILEMIMETYPE )
             ext_type = s_findExtMimeType( fname + nPos + 1 );
 
          fileIn = hb_fsOpen( fname, FO_READ );
-
-         if( hb_fsError() == 0 )
+         if( fileIn != FS_ERROR )
+         {
             magic_type = s_findFileMimeType( fileIn );
-
-         hb_fsClose( fileIn );
+            hb_fsClose( fileIn );
+         }
       }
       else
       {

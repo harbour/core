@@ -51,6 +51,7 @@ DYNAMIC tip_CheckSID
 DYNAMIC tip_CRLF
 DYNAMIC tip_DateToGMT
 DYNAMIC tip_FileMimeType
+DYNAMIC tip_FileNameMimeType
 DYNAMIC tip_GenerateSID
 DYNAMIC tip_GetEncoder
 DYNAMIC tip_GetNameEmail
