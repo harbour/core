@@ -1928,6 +1928,7 @@ Supported shells per host platforms:
      * Using gettext (.po files)
        * <http://help.transifex.com/features/formats.html#po-files>
        * <http://www.heiner-eichmann.de/autotools/using_gettext.html>
+     * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
 
 
 # Harbour Links
