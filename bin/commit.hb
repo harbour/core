@@ -690,6 +690,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "*.xml", ;
       "*.xsd", ;
       "*.js", ;
+      "*.vbs", ;
       "*.css" }
 
    LOCAL aAnyIdent := { ;
