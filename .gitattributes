@@ -78,7 +78,6 @@ ChangeLog.txt ident
 # TOTEST:
 #*.c       text diff=cpp
 #*.h       text diff=cpp
-#*.htm     text diff=html
 #*.html    text diff=html
 #*.m       text diff=objc
 #*.rb      text diff=ruby
