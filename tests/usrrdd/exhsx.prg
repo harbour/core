@@ -1,4 +1,3 @@
-
 #include "dbinfo.ch"
 
 PROCEDURE Main()

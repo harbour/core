@@ -1,5 +1,3 @@
-
-
 This folder contains compression related files including:
  * zip file support based on minizip library (http://www.winimage.com/zLibDll/minizip.html)
    including:

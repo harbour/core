@@ -1,4 +1,3 @@
-
 # GNU Make file for Pelles ISO C Compiler
 
 OBJ_EXT := .obj

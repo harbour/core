@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    LOCAL start := Seconds(), stop

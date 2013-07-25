@@ -1,4 +1,3 @@
-
 1.) Obtain PageScript32 installation and install it.
     (even the evaluation version will do)
 

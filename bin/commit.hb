@@ -716,6 +716,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    /* TOFIX: Harbour repo specific */
    LOCAL aNoCopyrightOk := { ;
       "tests/*", ;
+      "*/tests/*", ;
       "src/codepage/*", ;
       "src/lang/*" }
 

@@ -1,4 +1,3 @@
-
 /* NOTE: - Please use these template for your new files, replace parts
            between curly braces {} with the appropriate text.
          - You can find a history at the end of the file. */

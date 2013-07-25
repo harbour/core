@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    ? "Running with SET FIXED OFF (the default setting):"

@@ -1,4 +1,3 @@
-
 description=MySQL wrapper (SQL)
 
 incpaths=.

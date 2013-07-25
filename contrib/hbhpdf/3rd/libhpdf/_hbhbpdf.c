@@ -1,4 +1,3 @@
-
 #include "hbapi.h"
 
 #if defined( HB_OS_WIN_CE )

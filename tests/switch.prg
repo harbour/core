@@ -1,4 +1,3 @@
-
 #ifdef __XHARBOUR__
 #define OTHERWISE DEFAULT
 #define ENDSWITCH END

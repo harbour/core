@@ -1,4 +1,3 @@
-
 #require "hbnf"
 
 #include "simpleio.ch"

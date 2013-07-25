@@ -1,4 +1,3 @@
-
 ifneq ($(HB_SHELL),sh)
    MK_OS := $(subst /,\,$(MK))
    DIRS_OS := $(subst /,\,$(DIRS))

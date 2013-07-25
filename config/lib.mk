@@ -1,4 +1,3 @@
-
 include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),)

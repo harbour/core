@@ -1,4 +1,3 @@
-
 gtalleg.hbm
 
 -stop{!msvc}

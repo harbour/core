@@ -1,4 +1,3 @@
-
 #include "hbcom.ch"
 
 PROCEDURE Main( cParam )

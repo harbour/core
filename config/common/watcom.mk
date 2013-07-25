@@ -1,4 +1,3 @@
-
 # GNU Make file for Open Watcom C/C++ compiler
 # (shell specific rules)
 

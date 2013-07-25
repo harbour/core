@@ -1,4 +1,3 @@
-
 RDD for Advantage Database Server
 Alexander Kresin <alex@belacy.belgorod.su>
 

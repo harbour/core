@@ -1,4 +1,3 @@
-
 #require "hbwin"
 
 #include "hbgtinfo.ch"

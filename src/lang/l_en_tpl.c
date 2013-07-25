@@ -1,4 +1,3 @@
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =

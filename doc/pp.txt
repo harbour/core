@@ -1,4 +1,3 @@
-
 PP description
 ==============
 By Przemyslaw Czerpak (druzus/at/priv.onet.pl)

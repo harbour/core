@@ -1,4 +1,3 @@
-
 hbcups provides access to the CUPS printing library.
 
 Function Reference

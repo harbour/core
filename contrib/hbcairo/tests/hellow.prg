@@ -1,4 +1,3 @@
-
 #require "hbcairo"
 
 REQUEST HB_CODEPAGE_LTWIN

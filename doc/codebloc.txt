@@ -1,4 +1,3 @@
-
 The Harbour implementation of codeblocks.
 Ryszard Glab <rglab@imid.med.pl>
 

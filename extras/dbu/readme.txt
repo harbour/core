@@ -1,4 +1,3 @@
-
 1.) Copy the full content of /SOURCE/DBU from your original
     CA-Cl*pper installation to this directory.
 

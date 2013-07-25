@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       ft_Byt2Hex()

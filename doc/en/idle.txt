@@ -1,4 +1,3 @@
-
 /* $DOC$
    $TEMPLATE$
       Document

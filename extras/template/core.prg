@@ -1,4 +1,3 @@
-
 #include "hbtpl.ch"
 
 /* Public API */

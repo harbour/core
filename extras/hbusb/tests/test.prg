@@ -1,4 +1,3 @@
-
 #require "hbusb"
 
 PROCEDURE Main()
