@@ -1,4 +1,3 @@
-
 ROOT := ../
 
 DOC_FILES := \
