@@ -1951,6 +1951,6 @@ Supported shells per host platforms:
      * [StackOverflow](http://stackoverflow.com/questions/tagged/clipper)
 
 
-This document Copyright &copy; 2009&ndash;2013 Viktor Szakáts (harbour syenar.net)<br />
+This document Copyright &copy;&nbsp;2009&ndash;2013 Viktor Szakáts (harbour syenar.net)<br />
 Licensed under [Creative Commons Attribution-ShareAlike 3.0](https://creativecommons.org/licenses/by-sa/3.0/)<br />
 See [COPYING](COPYING.txt).
