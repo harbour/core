@@ -25,6 +25,7 @@ and interfaces to many popular APIs.
 14. [Platform Matrix](#platform-matrix)
 15. [External links](#external-links)
 16. [Harbour Links](#harbour-links)
+17. [How to Donate](#how-to-donate)
 
 ---
 
@@ -1949,6 +1950,14 @@ Supported shells per host platforms:
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
      * [StackOverflow](http://stackoverflow.com/questions/tagged/clipper)
+
+
+# How to Donate
+
+  You can donate to fund further maintenance of this fork:
+
+  * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
+  * [Bitcoin - 1FZAKswukCrV9cjxco1xgnKzNGkWdPKjF4](bitcoin:1FZAKswukCrV9cjxco1xgnKzNGkWdPKjF4)
 
 
 This document Copyright &copy;&nbsp;2009&ndash;2013 Viktor Szakáts (harbour syenar.net)<br />
