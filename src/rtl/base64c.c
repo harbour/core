@@ -55,13 +55,24 @@ HB_FUNC( HB_BASE64ENCODE )
 
    if( len > 0 )
    {
-      HB_SIZE dst = ( 4 * ( ( len + 2 ) / 3 ) + 1 ) * sizeof( char );
+      HB_SIZE lin = hb_parns( 2 );
+      HB_SIZE dst = ( 4 * ( ( len + 2 ) / 3 ) + 1 );
+
+      if( lin <= 2 )
+         lin = 0;
+
+      if( lin )
+         dst += ( ( dst / lin ) + 1 ) * 2;
+      dst *= sizeof( char );
 
       if( dst > len )
       {
          const char * s = hb_parcx( 1 );
 
          char * t, * p;
+         HB_SIZE lln = lin - 1;
+
+         #define ADD_EOL()  if( lin && lln == 0 ) { *p++ = '\r'; *p++ = '\n'; lln = lin - 1; } else { --lln; }
 
          t = p = ( char * ) hb_xgrab( dst );
 
@@ -73,29 +84,44 @@ HB_FUNC( HB_BASE64ENCODE )
             x = *s++;
 
             *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
+            ADD_EOL();
 
             if( len-- == 0 )
             {
                *p++ = s_b64chars[ ( x << 4 ) & 0x3F ];
+               ADD_EOL();
                *p++ = '=';
+               ADD_EOL();
                *p++ = '=';
+               ADD_EOL();
                break;
             }
             y = *s++;
 
             *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
+            ADD_EOL();
 
             if( len-- == 0 )
             {
                *p++ = s_b64chars[ ( y << 2 ) & 0x3F ];
+               ADD_EOL();
                *p++ = '=';
+               ADD_EOL();
                break;
             }
 
             x = *s++;
 
             *p++ = s_b64chars[ ( ( y << 2 ) | ( ( x >> 6 ) & 3 ) ) & 0x3F ];
+            ADD_EOL();
             *p++ = s_b64chars[ x & 0x3F ];
+            ADD_EOL();
+         }
+
+         if( lin )
+         {
+            *p++ = '\r';
+            *p++ = '\n';
          }
          *p = '\0';
 

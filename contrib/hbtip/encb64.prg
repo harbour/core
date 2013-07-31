@@ -55,7 +55,7 @@ CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
    // not applying CRLF after each 76 output bytes.
    VAR bHttpExcept
 
-   METHOD New()      Constructor
+   METHOD New()      CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
 
@@ -69,27 +69,7 @@ METHOD New() CLASS TIPEncoderBase64
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
-   RETURN tip_Base64Encode( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
+   RETURN hb_base64Encode( cData, iif( ::bHttpExcept, NIL, 72 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
    RETURN hb_base64Decode( cData )
-
-FUNCTION tip_Base64Encode( cBinary, nLineLength, cCRLF )
-
-   LOCAL cTextIn := hb_base64Encode( cBinary )
-
-   LOCAL cText
-   LOCAL tmp
-
-   IF ! HB_ISNUMERIC( nLineLength )
-      RETURN cTextIn
-   ENDIF
-
-   hb_default( @cCRLF, hb_eol() )
-
-   cText := ""
-   FOR tmp := 1 TO Len( cTextIn ) STEP nLineLength
-      cText += SubStr( cTextIn, tmp, nLineLength ) + cCRLF
-   NEXT
-
-   RETURN cText
