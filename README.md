@@ -1957,7 +1957,7 @@ Supported shells per host platforms:
   You can donate to fund further maintenance of this fork:
 
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
-  * [Bitcoin - 1FZAKswukCrV9cjxco1xgnKzNGkWdPKjF4](bitcoin:1FZAKswukCrV9cjxco1xgnKzNGkWdPKjF4)
+  * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
 
 
 This document Copyright &copy;&nbsp;2009&ndash;2013 Viktor Szakáts (harbour syenar.net)<br />

@@ -17,7 +17,7 @@
 # GNU coding standards:
 #    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
-#    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
+#    http://git.savannah.gnu.org/cgit/make.git/tree/NEWS
 # ---------------------------------------------------------------
 
 # NOTE: $(realpath/abspath) need GNU Make 3.81 or upper
