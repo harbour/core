@@ -700,9 +700,10 @@ sensitive.
 
      Create Harbour dynamic libraries. Default: `yes`
 
-   - `HB_BUILD_CONTRIB_DYN=no`
+   - `HB_BUILD_CONTRIB_DYN=yes`
 
-     Create contrib dynamic libraries. Default: `yes`
+     Create contrib dynamic libraries. Default: `no`,
+     except Windows platform, where it's `yes`.
 
    - `HB_BUILD_SHARED=yes`
 

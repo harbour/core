@@ -387,8 +387,10 @@ ifeq ($(HB_HOST_PLAT),)
    endif
 endif
 
-ifeq ($(HB_BUILD_CONTRIB_DYN),)
-   export HB_BUILD_CONTRIB_DYN := yes
+ifneq ($(filter $(HB_HOST_PLAT),win),)
+   ifeq ($(HB_BUILD_CONTRIB_DYN),)
+      export HB_BUILD_CONTRIB_DYN := yes
+   endif
 endif
 
 ifneq ($(filter $(HB_HOST_PLAT),win wce dos os2),)
