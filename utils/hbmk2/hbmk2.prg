@@ -12954,7 +12954,7 @@ STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
          It cannot properly link stdcall decorated (_sym@nn) function names
          directly with .dlls, since in .dlls the decoration is stripped from
          the exported symbols. So, it _requires_ a .def file or a COFF import .lib
-         which have the the decorated version of the symbols. Such .def/.lib
+         which have the decorated version of the symbols. Such .def/.lib
          file cannot be automatically generated from the .dll, as the
          decoration needs to be rebuilt based on function parameters.
          Not even 'ld' option '--enable-stdcall-fixup' ("Link _sym to _sym@nn without warnings")
