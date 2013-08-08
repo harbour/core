@@ -9,7 +9,7 @@ and interfaces to many popular APIs.
 
 # Table of Content
 
-1. [Guarantees and Liability](#guarantees-and-liability)
+1. [How to Donate](#how-to-donate)
 2. [How to Participate](#how-to-participate)
 3. [How to Get](#how-to-get)
 4. [How to Build](#how-to-build)
@@ -25,24 +25,16 @@ and interfaces to many popular APIs.
 14. [Platform Matrix](#platform-matrix)
 15. [External links](#external-links)
 16. [Harbour Links](#harbour-links)
-17. [How to Donate](#how-to-donate)
+17. [Guarantees and Liability](#guarantees-and-liability)
 
 ---
 
-# Guarantees and Liability
+# How to Donate
 
-   This document and all other parts of Harbour are distributed in the
-   hope they will be useful, but there is NO GUARANTEE that they are
-   complete, accurate, non-infringing or usable for any purpose whatsoever.
-   Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
+  You can donate to fund further maintenance of this fork:
 
-   If you think you can make Harbour better: contribute.
-   See [How to Participate](#how-to-participate).
-
-   The information this document is subject to change without notice
-   and does not represent any future commitment by the participants
-   of the project.
+  * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
+  * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
 
 
 # How to Participate
@@ -1953,12 +1945,20 @@ Supported shells per host platforms:
      * [StackOverflow](http://stackoverflow.com/questions/tagged/clipper)
 
 
-# How to Donate
+# Guarantees and Liability
 
-  You can donate to fund further maintenance of this fork:
+   This document and all other parts of Harbour are distributed in the
+   hope they will be useful, but there is NO GUARANTEE that they are
+   complete, accurate, non-infringing or usable for any purpose whatsoever.
+   Contributors are NOT LIABLE for any damages that result from using
+   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
-  * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
-  * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
+   If you think you can make Harbour better: contribute.
+   See [How to Participate](#how-to-participate).
+
+   The information this document is subject to change without notice
+   and does not represent any future commitment by the participants
+   of the project.
 
 
 This document Copyright &copy;&nbsp;2009&ndash;2013 Viktor Szakáts (harbour syenar.net)<br />
