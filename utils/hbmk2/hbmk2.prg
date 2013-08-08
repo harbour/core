@@ -655,20 +655,21 @@ EXTERNAL __dbgEntry
 
 #define _HBSH_cDirBase          1
 #define _HBSH_cProgName         2
-#define _HBSH_hLibExt           3
-#define _HBSH_hCH               4
-#define _HBSH_hOPTPRG           5
-#define _HBSH_hINCPATH          6
-#define _HBSH_hCHCORE           7
-#define _HBSH_hbmk              8
-#define _HBSH_nRow              9
-#define _HBSH_nCol              10
-#define _HBSH_aHistory          11
-#define _HBSH_lPreserveHistory  12
-#define _HBSH_lWasLoad          13
-#define _HBSH_lInteractive      14
-#define _HBSH_lClipperComp      15
-#define _HBSH_MAX_              15
+#define _HBSH_cScriptName       3
+#define _HBSH_hLibExt           4
+#define _HBSH_hCH               5
+#define _HBSH_hOPTPRG           6
+#define _HBSH_hINCPATH          7
+#define _HBSH_hCHCORE           8
+#define _HBSH_hbmk              9
+#define _HBSH_nRow              10
+#define _HBSH_nCol              11
+#define _HBSH_aHistory          12
+#define _HBSH_lPreserveHistory  13
+#define _HBSH_lWasLoad          14
+#define _HBSH_lInteractive      15
+#define _HBSH_lClipperComp      16
+#define _HBSH_MAX_              16
 
 /* Trick to make it run if compiled without -n/-n1/-n2
    (or with -n-) option.
@@ -14163,6 +14164,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    hbsh[ _HBSH_cDirBase ] := hb_DirBase()
    hbsh[ _HBSH_cProgName ] := hb_ProgName()
+   hbsh[ _HBSH_cScriptName ] := ""
 
    /* Init */
 
@@ -14269,6 +14271,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       __hbshell_prompt( hb_AParams() )
 
    ELSEIF ! Empty( cFile := FindInPath( cFileOri := cFile,, { ".hb", ".hrb" } ) )
+
+      hbsh[ _HBSH_cScriptName ] := PathMakeAbsolute( cFile, hb_cwd() )
 
       cExt := Lower( hb_FNameExt( cFile ) )
 
@@ -15404,6 +15408,17 @@ FUNCTION hbshell_ProgName()
    LOCAL hbsh := hbsh()
 
    RETURN hb_UTF8ToStr( hbsh[ _HBSH_cProgName ] )
+
+/* TODO: Probably it'd be better if hb_ProgName()
+         returned this value when in script mode.
+         At the moment it returns the script name
+         as passed on the command-line (that may be
+         without path and/or extension). [vszakats] */
+FUNCTION hbshell_ScriptName()
+
+   LOCAL hbsh := hbsh()
+
+   RETURN hb_UTF8ToStr( hbsh[ _HBSH_cScriptName ] )
 
 FUNCTION hbshell_Clipper()
 
@@ -16646,7 +16661,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "hbshell_ext_unload( <cPackageName> ) -> <lSuccess>", I_( "Unload package." ) }, ;
       { "hbshell_ext_get_list() -> <aPackages>"             , I_( "List of loaded packages." ) }, ;
       { "hbshell_DirBase() -> <cBaseDir>"                   , I_( "hb_DirBase() not mapped to script." ) }, ;
-      { "hbshell_ProgName() -> <cPath>"                     , I_( "hb_ProgName() not mapped to script." ) } }
+      { "hbshell_ProgName() -> <cPath>"                     , I_( "hb_ProgName() not mapped to script." ) }, ;
+      { "hbshell_ScriptName() -> <cPath>"                   , I_( "Name of the script executing." ) } }
 #endif
 #endif
 
