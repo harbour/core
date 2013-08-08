@@ -165,19 +165,24 @@ static HB_HASH_FUNC( hb_curl_HashCmp )
 
 static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 {
-   char * szHash;
-
-   if( ! hb_curl->pHash )
-      hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
-                                           hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
-
-   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, szValue );
-   if( ! szHash )
+   if( szValue )
    {
-      szHash = hb_strdup( szValue );
-      hb_hashTableAdd( hb_curl->pHash, szHash, szHash );
+      char * szHash;
+
+      if( ! hb_curl->pHash )
+         hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
+                                              hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
+
+      szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, szValue );
+      if( ! szHash )
+      {
+         szHash = hb_strdup( szValue );
+         hb_hashTableAdd( hb_curl->pHash, szHash, szHash );
+      }
+      return szHash;
    }
-   return szHash;
+   else
+      return NULL;
 }
 
 #  define hb_curl_StrHash( c, s )  hb_curl_StrHashNew( ( c ), ( s ) )
