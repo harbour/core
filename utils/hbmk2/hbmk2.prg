@@ -566,7 +566,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_lShellMode        157
 #define _HBMK_bOut              158
 
-#define _HBMK_MAX_              158
+#define _HBMK_cSignTime         159
+
+#define _HBMK_MAX_              159
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1139,6 +1141,7 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
    hbmk[ _HBMK_aINSTPATH ] := {}
    hbmk[ _HBMK_lWINUNI ] := .F.
    hbmk[ _HBMK_cHBX ] := NIL
+   hbmk[ _HBMK_cSignTime ] := _HBMK_SIGN_TIMEURL_DEF
 
    RETURN
 
@@ -1475,7 +1478,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cOpt_Sign
    LOCAL cOpt_SignID
    LOCAL cOpt_SignPass
-   LOCAL cOpt_SignTime := _HBMK_SIGN_TIMEURL_DEF
    LOCAL aParamPROGNAME
 
    LOCAL cCommand
@@ -3235,7 +3237,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE Left( cParamL, Len( "-signts=" ) ) == "-signts="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-signts=" ) + 1 ), aParam[ _PAR_cFileName ] )
-         cOpt_SignTime := iif( Empty( cParam ), _HBMK_SIGN_TIMEURL_DEF, cParam )
+         hbmk[ _HBMK_cSignTime ] := iif( Empty( cParam ), _HBMK_SIGN_TIMEURL_DEF, cParam )
 
       CASE Left( cParamL, Len( "-ln=" ) ) == "-ln="
 
@@ -7762,7 +7764,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                hReplace := { ;
                   "{FS}" => ArrayToList( hbmk[ _HBMK_aOPTS ] ), ;
-                  "{UT}" => cOpt_SignTime, ;
+                  "{UT}" => hbmk[ _HBMK_cSignTime ], ;
                   "{ID}" => cOpt_SignID, ;
                   "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
                   "{PW}" => cOpt_SignPass }
@@ -11518,6 +11520,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Unknown dependency name: %1$s" ), ParamToString( _PAR_NEW_HBC() ) ) )
             ENDIF
          ENDIF
+
+      CASE Lower( Left( cLine, Len( "signts="       ) ) ) == "signts="       ; cLine := SubStr( cLine, Len( "signts="       ) + 1 )
+         cLine := MacroProc( hbmk, cLine, cFileName )
+         hbmk[ _HBMK_cSignTime ] := iif( Empty( cLine ), _HBMK_SIGN_TIMEURL_DEF, cLine )
 
       /* .hbc identification strings. Similar to pkgconfig ones. */
       CASE Lower( Left( cLine, Len( "name="         ) ) ) == "name="         ; cLine := SubStr( cLine, Len( "name="         ) + 1 )
@@ -16618,6 +16624,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "depimplibs="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibs="      ) }, ;
       { "depimplibd="       , hb_StrFormat( I_( "same as %1$s option" ), "-depimplibd="      ) }, ;
       { "depfinish="        , hb_StrFormat( I_( "same as %1$s option" ), "-depfinish="       ) }, ;
+      { "signts="           , hb_StrFormat( I_( "same as %1$s option" ), "-signts="          ) }, ;
       { "name="             , I_( "package name" ) }, ;
       { "description="      , I_( "package description" ) }, ;
       { "version=<x.y.z>"   , I_( "package version number, where x,y,z >= 0 <= 255. Defaults to 0.0.1, if not specified." ) }, ;
