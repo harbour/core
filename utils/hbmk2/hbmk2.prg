@@ -301,7 +301,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_SPECDIR_CONTRIB   "contrib"
 #define _HBMK_SPECDIR_ADDONS    "addons"
 
-#define _HBMK_SIGN_TIMEURL      "http://timestamp.verisign.com/scripts/timstamp.dll"
+#define _HBMK_SIGN_TIMEURL_DEF  "http://timestamp.verisign.com/scripts/timstamp.dll"
 
 #define _HBMK_HBEXTREQ          "__HBEXTREQ__"
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
@@ -1475,6 +1475,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cOpt_Sign
    LOCAL cOpt_SignID
    LOCAL cOpt_SignPass
+   LOCAL cOpt_SignTime := _HBMK_SIGN_TIMEURL_DEF
    LOCAL aParamPROGNAME
 
    LOCAL cCommand
@@ -3230,6 +3231,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF ! Empty( cParam )
             cOpt_SignPass := cParam
          ENDIF
+
+      CASE Left( cParamL, Len( "-signts=" ) ) == "-signts="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-signts=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         cOpt_SignTime := iif( Empty( cParam ), _HBMK_SIGN_TIMEURL_DEF, cParam )
 
       CASE Left( cParamL, Len( "-ln=" ) ) == "-ln="
 
@@ -7756,7 +7762,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                hReplace := { ;
                   "{FS}" => ArrayToList( hbmk[ _HBMK_aOPTS ] ), ;
-                  "{UT}" => _HBMK_SIGN_TIMEURL, ;
+                  "{UT}" => cOpt_SignTime, ;
                   "{ID}" => cOpt_SignID, ;
                   "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
                   "{PW}" => cOpt_SignPass }
@@ -16216,6 +16222,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected." ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
+      { "-signts=<url>"      , hb_StrFormat( I_( "use <url> as trusted timestamp server. Empty value resets it to the default: %1$s" ), _HBMK_SIGN_TIMEURL_DEF ) }, ;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied." ) }, ;
       { "-instpath=<g:path>" , I_( "copy target file(s) to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies." ) }, ;
       { "-instforce[-]"      , I_( "copy target file(s) to install path even if already up to date" ) }, ;

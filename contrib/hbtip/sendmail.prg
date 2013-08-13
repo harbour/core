@@ -47,7 +47,7 @@
  *
  */
 
-#translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
+#translate ( <exp1> LIKE <exp2> )  => hb_regexLike( <exp2>, <exp1> )
 
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
