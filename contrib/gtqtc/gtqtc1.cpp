@@ -1919,7 +1919,8 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                 ( HB_GTI_FONTA_FIXMETRIC |
                                                   HB_GTI_FONTA_CLRBKG    |
                                                   HB_GTI_FONTA_CTRLCHARS |
-                                                  HB_GTI_FONTA_DRAWBOX );
+                                                  HB_GTI_FONTA_DRAWBOX   |
+                                                  HB_GTI_FONTA_NOSTRETCH );
          break;
 
       case HB_GTI_SCREENHEIGHT:
