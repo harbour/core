@@ -163,10 +163,11 @@
 #define HB_GTI_FONTQ_HIGH       3
 
 /* Font attributes */
-#define HB_GTI_FONTA_FIXMETRIC  1
-#define HB_GTI_FONTA_CLRBKG     2
-#define HB_GTI_FONTA_DRAWBOX    4
-#define HB_GTI_FONTA_CTRLCHARS  8
+#define HB_GTI_FONTA_FIXMETRIC  0x0001
+#define HB_GTI_FONTA_CLRBKG     0x0002
+#define HB_GTI_FONTA_DRAWBOX    0x0004
+#define HB_GTI_FONTA_CTRLCHARS  0x0008
+#define HB_GTI_FONTA_NOSTRETCH  0x0010
 
 /* Keyboard shifts states */
 #define HB_GTI_KBD_SHIFT        0x000001
