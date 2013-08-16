@@ -5,7 +5,6 @@
  * GetSecret()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,6 +49,7 @@
  */
 
 #include "getexit.ch"
+#include "inkey.ch"
 #include "setcurs.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
@@ -136,6 +136,14 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                   oGetList:ReadVar() )
                lHide := .T.
                LOOP
+            ELSEIF nKey == K_BS
+               IF oGet:pos > 1
+                  _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 2 ) + ;
+                     SubStr( _cGetSecret, oGet:pos ), nLen )
+               ENDIF
+            ELSEIF nKey == K_DEL
+               _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 1 ) + ;
+                  SubStr( _cGetSecret, oGet:pos + 1 ), nLen )
             ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
                IF Set( _SET_INSERT )
                   _cGetSecret := Stuff( Left( _cGetSecret, nLen - 1 ), ;
