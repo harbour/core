@@ -9059,7 +9059,7 @@ STATIC FUNCTION checkDepTime( hbmk, cFile, tTime )
 
    IF cFile $ hbmk[ _HBMK_hDEPTS ]
       IF hbmk[ _HBMK_lDEBUGINC ]
-         _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECKING....", cFile) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: CHECKING... %s", cFile ) )
       ENDIF
       FOR EACH cDepFile IN hbmk[ _HBMK_hDEPTS ][ cFile ]
          IF ! hb_FGetDateTime( cDepFile, @tDepTime ) .OR. ;
@@ -15995,6 +15995,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "<"        => "&lt;", ;
       ">"        => "&gt;", ;
       "(c)"      => "&copy;", ;
+      "..."      => "&hellip;", ;
       e"\n"      => "  " + _OUT_EOL, ;
       "\"        => "\\", ;
       "`"        => "\`", ;
@@ -16646,7 +16647,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_PredSource_Shell := { ;
       NIL, ;
       { _HBMK_SHELL                                      , H_( "when a Harbour source file is run as a shell script" ) }, ;
-      { "<standard Harbour>"                             , H_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..." ) } }
+      { "<standard Harbour>"                             , H_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc." ) } }
 
    LOCAL aHdr_PredBuild := { ;
       NIL, ;
