@@ -1919,7 +1919,8 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                 ( HB_GTI_FONTA_FIXMETRIC |
                                                   HB_GTI_FONTA_CLRBKG    |
                                                   HB_GTI_FONTA_CTRLCHARS |
-                                                  HB_GTI_FONTA_DRAWBOX );
+                                                  HB_GTI_FONTA_DRAWBOX   |
+                                                  HB_GTI_FONTA_NOSTRETCH );
          break;
 
       case HB_GTI_SCREENHEIGHT:
@@ -2475,6 +2476,9 @@ void QTConsole::resetWindowSize( void )
 void QTConsole::setFontSize( int iFH, int iFW )
 {
    int iDec = 0, iDir, iHeight, iWidth, iAscent;
+   bool bStretch = ( pQTC->fontAttribute & HB_GTI_FONTA_NOSTRETCH ) == 0;
+   bool bMaxSize = ( pQTC->qWnd->windowState() &
+                     ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0;
 
    if( iFH < 4 )
       iFH = 4;
@@ -2487,12 +2491,12 @@ void QTConsole::setFontSize( int iFH, int iFW )
       iHeight = fm.height();
       iWidth  = fm.averageCharWidth();
       iAscent = fm.ascent();
-      if( fm.height() <= iFH )
+      if( iHeight <= iFH && ( bStretch || ! bMaxSize || iWidth <= iFW ) )
          break;
    }
    while( iFH - ++iDec >= 4 );
 
-   if( iFW > 0 )
+   if( iFW > 0 && bStretch )
    {
       if( iFW < 2 )
          iFW = 2;
@@ -2783,8 +2787,16 @@ void QTConsole::paintEvent( QPaintEvent * event )
       QRect rSel = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
       if( rSel.intersects( rEvt ) )
       {
+#if defined( HB_OS_DARWIN )
+         /* RasterOp operations are not supported in MacOSX */
+         rEvt &= rSel;
+         image->invertPixels();
+         painter.drawImage( rEvt, *image, rEvt.translated( -pQTC->marginLeft, -pQTC->marginTop ) );
+         image->invertPixels();
+#else
          painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
          painter.fillRect( rSel & rEvt, Qt::color0 );
+#endif
       }
    }
    else if( pQTC->cursorType != SC_NONE )
@@ -2795,9 +2807,24 @@ void QTConsole::paintEvent( QPaintEvent * event )
                   pQTC->cellX, pQTC->cursorSize );
       if( rEvt.intersects( rCrs ) )
       {
+#if defined( HB_OS_DARWIN )
+         /* RasterOp operations are not supported in MacOSX,
+          * use foreground cell color like hardware VGA cursor
+          */
+         HB_BYTE   bAttr;
+         HB_USHORT usChar;
+         int       iColor;
+
+         if( HB_GTSELF_GETSCRCHAR( pQTC->pGT, pQTC->cursorRow, pQTC->cursorCol,
+                                   &iColor, &bAttr, &usChar ) )
+         {
+            painter.fillRect( rCrs, pQTC->colors[ iColor & 0x0F ] );
+         }
+#else
          painter.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
          /* TODO? use foreground cell color like hardware VGA cursor ? */
          painter.fillRect( rCrs, Qt::color0 );
+#endif
       }
    }
 }
