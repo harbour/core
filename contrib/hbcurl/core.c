@@ -116,7 +116,7 @@ typedef struct _HB_CURL
    size_t          dl_len;
    size_t          dl_pos;
 
-   PHB_ITEM pProgressCallback;
+   PHB_ITEM pXferInfoCallback;
 
    PHB_HASH_TABLE pHash;
 
@@ -386,6 +386,30 @@ static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nm
    return ( size_t ) -1;
 }
 
+#if LIBCURL_VERSION_NUM >= 0x072000
+static int hb_curl_xferinfo_callback( void * Cargo, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow )
+{
+   if( Cargo )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( ( PHB_ITEM ) Cargo );
+         hb_vmPushNumInt( ( HB_FOFFSET ) ( ulnow > 0 ? ulnow : dlnow ) );
+         hb_vmPushNumInt( ( HB_FOFFSET ) ( ultotal > 0 ? ultotal : dltotal ) );
+         hb_vmSend( 2 );
+
+         if( hb_parl( -1 ) )
+            return 1;  /* Abort */
+
+         hb_vmRequestRestore();
+      }
+   }
+
+   return 0;
+}
+#else
+
 static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )
 {
    if( Cargo )
@@ -394,7 +418,7 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
       {
          hb_vmPushEvalSym();
          hb_vmPush( ( PHB_ITEM ) Cargo );
-         hb_vmPushDouble( ulnow > 0 ? ulnow   : dlnow, HB_DEFAULT_DECIMALS );
+         hb_vmPushDouble( ulnow > 0 ? ulnow : dlnow, HB_DEFAULT_DECIMALS );
          hb_vmPushDouble( ultotal > 0 ? ultotal : dltotal, HB_DEFAULT_DECIMALS );
          hb_vmSend( 2 );
 
@@ -407,6 +431,7 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
 
    return 0;
 }
+#endif
 
 /* Helpers */
 /* ------- */
@@ -522,10 +547,10 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    hb_curl_buff_ul_free( hb_curl );
    hb_curl_buff_dl_free( hb_curl );
 
-   if( hb_curl->pProgressCallback )
+   if( hb_curl->pXferInfoCallback )
    {
-      hb_itemRelease( hb_curl->pProgressCallback );
-      hb_curl->pProgressCallback = NULL;
+      hb_itemRelease( hb_curl->pXferInfoCallback );
+      hb_curl->pXferInfoCallback = NULL;
    }
 
    if( hb_curl->pHash )
@@ -590,8 +615,8 @@ static HB_GARBAGE_FUNC( PHB_CURL_mark )
    {
       PHB_CURL hb_curl = *hb_curl_ptr;
 
-      if( hb_curl->pProgressCallback )
-         hb_gcMark( hb_curl->pProgressCallback );
+      if( hb_curl->pXferInfoCallback )
+         hb_gcMark( hb_curl->pXferInfoCallback );
    }
 }
 
@@ -1634,27 +1659,37 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             /* Harbour specials */
 
-            case HB_CURLOPT_PROGRESSBLOCK:
+            case HB_CURLOPT_XFERINFOBLOCK:
             {
-               PHB_ITEM pProgressCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+               PHB_ITEM pXferInfoCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
 
-               if( hb_curl->pProgressCallback )
+               if( hb_curl->pXferInfoCallback )
                {
+#if LIBCURL_VERSION_NUM >= 0x072000
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_XFERINFOFUNCTION, NULL );
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_XFERINFODATA, NULL );
+#else
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
+#endif
 
-                  hb_itemRelease( hb_curl->pProgressCallback );
-                  hb_curl->pProgressCallback = NULL;
+                  hb_itemRelease( hb_curl->pXferInfoCallback );
+                  hb_curl->pXferInfoCallback = NULL;
                }
 
-               if( pProgressCallback )
+               if( pXferInfoCallback )
                {
-                  hb_curl->pProgressCallback = hb_itemNew( pProgressCallback );
+                  hb_curl->pXferInfoCallback = hb_itemNew( pXferInfoCallback );
                   /* unlock the item so GC will not mark them as used */
-                  hb_gcUnlock( hb_curl->pProgressCallback );
+                  hb_gcUnlock( hb_curl->pXferInfoCallback );
 
+#if LIBCURL_VERSION_NUM >= 0x072000
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_XFERINFOFUNCTION, hb_curl_xferinfo_callback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_XFERINFODATA, hb_curl->pXferInfoCallback );
+#else
                   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, hb_curl_progress_callback );
-                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pProgressCallback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pXferInfoCallback );
+#endif
                }
             }
             break;
