@@ -339,7 +339,7 @@ STATIC FUNCTION LogError( oerr )
    IF nHandle < 3
    ELSE
 
-      FWriteLine( nHandle, PadC( " xHarbour Error Log ", 79, "-" ) )
+      FWriteLine( nHandle, PadC( " Harbour Error Log ", 79, "-" ) )
       FWriteLine( nHandle, "" )
 
       FWriteLine( nHandle, "Date...............: " + DToC( Date() )  )
@@ -354,8 +354,8 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "Free disk space....: " + strvalue( DiskSpace() ) )
       FWriteLine( nHandle, "" )
       FWriteLine( nHandle, "Operating system...: " + OS() )
-      FWriteLine( nHandle, "xHarbour version...: " + Version() )
-      FWriteLine( nHandle, "xHarbour built on..: " + hb_Version( HB_VERSION_BUILD_DATE_STR ) )
+      FWriteLine( nHandle, "Harbour version....: " + Version() )
+      FWriteLine( nHandle, "Harbour built on...: " + hb_Version( HB_VERSION_BUILD_DATE_STR ) )
       FWriteLine( nHandle, "C/C++ compiler.....: " + hb_Compiler() )
 
       FWriteLine( nHandle, "Multi Threading....: " + iif( hb_mtvm(), "YES", "NO" ) )
