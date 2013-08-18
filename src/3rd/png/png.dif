@@ -1,7 +1,7 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	Fri May 17 16:41:34 2013
-+++ png/png.h	Fri May 17 16:41:34 2013
-@@ -434,7 +434,7 @@
+--- png.orig/png.h	Sun Aug 18 03:27:53 2013
++++ png/png.h	Sun Aug 18 03:27:53 2013
+@@ -437,7 +437,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,9 +11,9 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	Fri May 17 16:41:34 2013
-+++ png/pnglconf.h	Fri May 17 16:41:34 2013
-@@ -114,7 +114,9 @@
+--- png.orig/pnglconf.h	Sun Aug 18 03:27:53 2013
++++ png/pnglconf.h	Sun Aug 18 03:27:53 2013
+@@ -113,7 +113,9 @@
  #define PNG_SIMPLIFIED_WRITE_AFIRST_SUPPORTED
  #define PNG_SIMPLIFIED_WRITE_BGR_SUPPORTED
  #define PNG_SIMPLIFIED_WRITE_SUPPORTED
@@ -23,7 +23,7 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED
  #define PNG_TEXT_SUPPORTED
  #define PNG_TIME_RFC1123_SUPPORTED
-@@ -187,7 +189,11 @@
+@@ -186,7 +188,11 @@
  #define PNG_zTXt_SUPPORTED
  /* end of options */
  /* settings */
@@ -37,8 +37,8 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
 diff -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	Fri May 17 16:41:34 2013
-+++ png/pngpriv.h	Fri May 17 16:41:34 2013
+--- png.orig/pngpriv.h	Sun Aug 18 03:27:53 2013
++++ png/pngpriv.h	Sun Aug 18 03:27:53 2013
 @@ -69,7 +69,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
