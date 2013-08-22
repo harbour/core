@@ -23,7 +23,6 @@
 
 DYNAMIC hb_MailAssemble
 DYNAMIC hb_SendMail
-DYNAMIC hb_SetMimeType
 DYNAMIC THtmlCleanup
 DYNAMIC THtmlDocument
 DYNAMIC THtmlInit
