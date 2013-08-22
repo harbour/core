@@ -66,8 +66,6 @@
  *
  */
 
-#define _BSD_SOURCE
-
 #include "hbapi.h"
 #include "hbdate.h"
 #if defined( HB_LONG_LONG_OFF )

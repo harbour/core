@@ -51,6 +51,7 @@
 
 #include "getexit.ch"
 #include "setcurs.ch"
+#include "inkey.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
@@ -136,10 +137,18 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                   oGetList:ReadVar() )
                lHide := .T.
                LOOP
+            ELSEIF nKey == K_BS
+               IF oGet:pos > 1
+                  _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 2 ) + ;
+                                       Substr( _cGetSecret, oGet:pos ), nLen )
+               ENDIF
+            ELSEIF nKey == K_DEL
+               _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 1 ) + ;
+                                    Substr( _cGetSecret, oGet:pos + 1 ), nLen )
             ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
                IF Set( _SET_INSERT )
                   _cGetSecret := Stuff( Left( _cGetSecret, nLen - 1 ), ;
-                     oGet:pos, 0, cKey )
+                                        oGet:pos, 0, cKey )
                ELSE
                   _cGetSecret := Stuff( _cGetSecret, oGet:pos, 1, cKey )
                ENDIF
