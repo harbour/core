@@ -369,11 +369,12 @@ FUNCTION tip_MailAssemble( ;
    hb_default( @cEncoding, "quoted-printable" )
    hb_default( @lBodyHTML, .F. )
 
-   /* NOTE: Either extend the conversion table from std CP ID
-            to Harbour CP ID, or wait until Harbour supports std CP IDs.
-            Either way, for now it only works for UTF-8. [vszakats] */
+   /* Attempt to convert to selected charset if it's supported
+      by Harbour (and linked to app). */
    IF Upper( cCharset ) == "UTF-8"
       cCharsetCP := "UTF8"
+   ELSEIF hb_cdpExists( Lower( cCharset ) )
+      cCharsetCP := hb_cdpUniID( Lower( cCharset ) )
    ENDIF
 
    /* add ending EOL to body, if there wasn't any */

@@ -86,6 +86,16 @@ HB_FUNC( HB_CDPSELECT )
       hb_cdpSelectID( id );
 }
 
+HB_FUNC( HB_CDPEXISTS )
+{
+   const char * id = hb_parc( 1 );
+
+   if( id )
+      hb_retl( hb_cdpFind( id ) != NULL );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_CDPUNIID )
 {
    const char * id = hb_parc( 1 );
