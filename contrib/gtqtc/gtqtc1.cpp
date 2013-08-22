@@ -1501,6 +1501,9 @@ static int hb_gt_qtc_getKeyFlags( Qt::KeyboardModifiers keyFlags )
    if( keyFlags & Qt::ControlModifier ) iFlags |= HB_KF_CTRL;
    if( keyFlags & Qt::ShiftModifier   ) iFlags |= HB_KF_SHIFT;
    if( keyFlags & Qt::KeypadModifier  ) iFlags |= HB_KF_KEYPAD;
+#ifdef HB_OS_DARWIN
+   if( keyFlags & Qt::MetaModifier )    iFlags |= HB_KF_CTRL;
+#endif
 
    return iFlags;
 }
@@ -2436,11 +2439,20 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
    setAttribute( Qt::WA_StaticContents );
    setAttribute( Qt::WA_PaintOnScreen );
    setAttribute( Qt::WA_OpaquePaintEvent );
-   setAttribute( Qt::WA_InputMethodEnabled );
-   /* it may be usable in some cases but KeyCompression needs some
-    * modifications in keyevent code [druzus]
+
+   /* Qt::WA_InputMethodEnabled disables support for
+    * national characters in few European countries
+    * (f.e. Polish characters with ALT in MacOSX)
+    * If some Asian users needs it then we will have
+    * to enable it optionally [druzus]
+    */
+   /* setAttribute( Qt::WA_InputMethodEnabled ); */
+
+   /* It may be usable in some cases but KeyCompression
+    * needs some modifications in keyevent code [druzus]
     */
    /* setAttribute( Qt::WA_KeyCompression ); */
+
    setFocusPolicy( Qt::StrongFocus );
    setMouseTracking( true );
 
