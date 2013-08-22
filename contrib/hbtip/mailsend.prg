@@ -460,7 +460,7 @@ FUNCTION tip_MailAssemble( ;
       IF cMimeText == "unknown"
          cMimeText := "text/plain"  /* TOFIX: Such fallback doesn't seem right. [vszakats] */
       ENDIF
-      cMimeText := GetMimeType( cFile ) + "; name=" + '"' + hb_FNameNameExt( cFileCP ) + '"'
+      cMimeText += "; name=" + '"' + hb_FNameNameExt( cFileCP ) + '"'
       IF Lower( hb_FNameExt( cFile ) ) == ".html" .OR. ;
          Lower( hb_FNameExt( cFile ) ) == ".htm"
          cMimeText += "; charset=" + cCharset
