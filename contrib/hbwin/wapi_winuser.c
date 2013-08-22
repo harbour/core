@@ -853,3 +853,21 @@ HB_FUNC( WAPI_DESTROYACCELERATORTABLE )
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( fResult );
 }
+
+HB_FUNC( WAPI_GETKEYBOARDLAYOUT )
+{
+   hbwapi_ret_DWORD( ( DWORD ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
+}
+
+HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )
+{
+   TCHAR szName[ KL_NAMELENGTH ];
+   BOOL bResult;
+
+   szName[ 0 ] = TEXT( '\0' );
+   bResult = GetKeyboardLayoutName( szName );
+
+   hbwapi_SetLastError( GetLastError() );
+   HB_STORSTR( szName, 1 );
+   hbwapi_ret_L( bResult );
+}

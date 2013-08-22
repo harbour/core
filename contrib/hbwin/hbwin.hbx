@@ -73,6 +73,8 @@ DYNAMIC wapi_GetDesktopWindow
 DYNAMIC wapi_GetDeviceCaps
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
+DYNAMIC wapi_GetKeyboardLayout
+DYNAMIC wapi_GetKeyboardLayoutName
 DYNAMIC wapi_GetKeyState
 DYNAMIC wapi_GetLastError
 DYNAMIC wapi_GetLongPathName
