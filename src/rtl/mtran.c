@@ -51,25 +51,25 @@
 
 /* NOTE: pszResult must have an allocated buffer of at least nStringLen */
 
-static char * hb_strMemotran( char * pszResult, HB_SIZE * pnResultLen, const char * pszString, HB_SIZE nStringLen, char cHardcr, char cSoftcr )
+HB_SIZE hb_strMemotran( char * pszResult, const char * pszString, HB_SIZE nStringLen, char cHardCR, char cSoftCR )
 {
    HB_SIZE nStringPos = 0;
    HB_SIZE nResultPos = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %p, %s, %" HB_PFS "u, %x, %x)", pszResult, pnResultLen, pszString, nStringLen, cHardcr, cSoftcr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %p, %s, %" HB_PFS "u, %x, %x)", pszResult, pnResultLen, pszString, nStringLen, cHardCR, cSoftCR ) );
 
    while( nStringPos < nStringLen )
    {
       if(      pszString[ nStringPos ]     == HB_CHAR_HARD1 &&
                pszString[ nStringPos + 1 ] == HB_CHAR_HARD2 )
       {
-         pszResult[ nResultPos++ ] = cHardcr;
+         pszResult[ nResultPos++ ] = cHardCR;
          nStringPos += 2;
       }
       else if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
                pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         pszResult[ nResultPos++ ] = cSoftcr;
+         pszResult[ nResultPos++ ] = cSoftCR;
          nStringPos += 2;
       }
       else
@@ -78,9 +78,7 @@ static char * hb_strMemotran( char * pszResult, HB_SIZE * pnResultLen, const cha
 
    pszResult[ nResultPos ] = '\0';
 
-   *pnResultLen = nResultPos;
-
-   return pszResult;
+   return nResultPos;
 }
 
 HB_FUNC( MEMOTRAN )
@@ -89,13 +87,29 @@ HB_FUNC( MEMOTRAN )
 
    if( pString )
    {
-      char * pszResult = ( char * ) hb_xgrab( hb_itemGetCLen( pString ) + 1 );
-      char cHardcr = HB_ISCHAR( 2 ) ? *hb_parc( 2 ) : ';';
-      char cSoftcr = HB_ISCHAR( 3 ) ? *hb_parc( 3 ) : ' ';
-      HB_SIZE nResultLen;
+      HB_SIZE nLen = hb_itemGetCLen( pString );
+      char * pszResult = ( char * ) hb_xgrab( nLen + 1 );
+      const char * pszRepl;
+      char cHardCR = ';';
+      char cSoftCR = ' ';
 
-      hb_strMemotran( pszResult, &nResultLen, hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ), cHardcr, cSoftcr );
-      hb_retclen_buffer( pszResult, nResultLen );
+      pszRepl = hb_parc( 2 );
+      if( pszRepl )
+         cHardCR = *pszRepl;
+
+      /* CA-Cl*pper checks 3-rd cSoftCR parameter only
+       * if 2-nd one cHardCR is specified [druzus]
+       */
+#ifdef HB_CLP_STRICT
+      if( pszRepl )
+#endif
+      pszRepl = hb_parc( 3 );
+      if( pszRepl )
+         cSoftCR = *pszRepl;
+
+      nLen = hb_strMemotran( pszResult, hb_itemGetCPtr( pString ), nLen,
+                             cHardCR, cSoftCR );
+      hb_retclen_buffer( pszResult, nLen );
    }
    else
       hb_retc_null();
