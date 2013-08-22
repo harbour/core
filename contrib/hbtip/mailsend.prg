@@ -441,10 +441,10 @@ FUNCTION tip_MailAssemble( ;
             cData := aThisFile[ 2 ]
             hb_default( @cFile, "unnamed" )
          ELSE
-            IF ! HB_ISSTRING( cFile )
-               LOOP /* No filename and no content. */
-            ELSE
+            IF HB_ISSTRING( cFile )
                cData := hb_MemoRead( cFile )
+            ELSE
+               LOOP /* No filename and no content. */
             ENDIF
          ENDIF
          IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
