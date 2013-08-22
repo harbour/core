@@ -22,8 +22,8 @@ ftpcli.prg
 httpcli.prg
 log.prg
 mail.prg
+mailsend.prg
 popcli.prg
-sendmail.prg
 sessid.prg
 smtpcli.prg
 thtml.prg

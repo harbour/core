@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
+ * tip_MailSend() (This version started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
  * Copyright 2009 Viktor Szakats (harbour syenar.net) (SSL support)
@@ -47,6 +47,11 @@
  *
  */
 
+#if defined( HB_LEGACY_LEVEL4 )
+FUNCTION hb_SendMail( ... )
+   RETURN tip_MailSend( ... )
+#endif
+
 /*
    cServer     -> Required. IP or domain name of the mail server
    nPort       -> Optional. Port used my email server
@@ -71,7 +76,7 @@
    cClientHost -> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
                             Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
 */
-FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
+FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
       xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
       lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
@@ -86,6 +91,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL oUrl
    LOCAL oUrl1
 
+   LOCAL lBodyHTML     := .F.
    LOCAL lConnectPlain := .F.
    LOCAL lReturn       := .T.
    LOCAL lAuthLogin    := .F.
@@ -137,7 +143,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       cTo := tip_GetRawEmail( AllTrim( xTo ) )
    ENDIF
 
-
    // CC (Carbon Copy)
    IF HB_ISARRAY( xCC )
       FOR tmp := Len( xCC ) TO 1 STEP -1
@@ -155,7 +160,6 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    ELSEIF HB_ISSTRING( xCC )
       cCC := tip_GetRawEmail( AllTrim( xCC ) )
    ENDIF
-
 
    // BCC (Blind Carbon Copy)
    IF HB_ISARRAY( xBCC )
@@ -301,15 +305,28 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    ENDIF
 
+   /* If the string is an existing HTML filename, load it. */
+   IF ( Lower( hb_FNameExt( cBody ) ) == ".htm" .OR. ;
+        Lower( hb_FNameExt( cBody ) ) == ".html" ) .AND. ;
+      hb_FileExists( cBody )
+      cBody := MemoRead( cBody )
+      lBodyHTML := .T.
+   ENDIF
+
    oInMail:oUrl:cUserid := tip_GetRawEmail( cFrom )
 
-   oInMail:Write( hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, cEncoding ) )
+   oInMail:Write( tip_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, cEncoding, lBodyHTML ) )
    oInMail:Commit()
    oInMail:Close()
 
    RETURN lReturn
 
-FUNCTION hb_MailAssemble( ;
+#if defined( HB_LEGACY_LEVEL4 )
+FUNCTION hb_MailAssemble( ... )
+   RETURN tip_MailAssemble( ... )
+#endif
+
+FUNCTION tip_MailAssemble( ;
       cFrom, ;       /* Required. Email address of the sender */
       xTo, ;         /* Required. Character string or array of email addresses to send the email to */
       xCC, ;         /* Optional. Character string or array of email adresses for CC (Carbon Copy) */
@@ -320,7 +337,8 @@ FUNCTION hb_MailAssemble( ;
       lRead, ;       /* Optional. If set to .T., a confirmation request is send. Standard setting is .F. */
       cReplyTo, ;    /* Optional. */
       cCharset, ;    /* Optional. */
-      cEncoding )    /* Optional. */
+      cEncoding, ;   /* Optional. */
+      lBodyHTML )    /* Optional. */
 
    LOCAL oMail
    LOCAL oAttach
@@ -349,24 +367,13 @@ FUNCTION hb_MailAssemble( ;
    hb_default( @cReplyTo, "" )
    hb_default( @cCharset, "UTF-8" )
    hb_default( @cEncoding, "quoted-printable" )
+   hb_default( @lBodyHTML, .F. )
 
    /* NOTE: Either extend the conversion table from std CP ID
             to Harbour CP ID, or wait until Harbour supports std CP IDs.
             Either way, for now it only works for UTF-8. [vszakats] */
    IF Upper( cCharset ) == "UTF-8"
       cCharsetCP := "UTF8"
-   ENDIF
-
-   /* If the string is an existing HTML filename, load it. */
-   /* TOFIX: This is such a PHP-spirited ugly hack with various
-             adverse effects, that it needs to be reworked. */
-   IF ( Lower( hb_FNameExt( cBody ) ) == ".htm" .OR. ;
-        Lower( hb_FNameExt( cBody ) ) == ".html" ) .AND. ;
-      hb_FileExists( cBody )
-      cBody := MemoRead( cBody )
-      cContentType := "text/html"
-   ELSE
-      cContentType := "text/plain"
    ENDIF
 
    /* add ending EOL to body, if there wasn't any */
@@ -406,14 +413,16 @@ FUNCTION hb_MailAssemble( ;
       oMail:hHeaders[ "Reply-to" ] := cReplyTo
    ENDIF
 
+   cContentType := iif( lBodyHTML, "text/html", "text/plain" ) + "; charset=" + cCharset
+
    IF Empty( aFiles )
-      oMail:hHeaders[ "Content-Type" ] := cContentType + "; charset=" + cCharset
+      oMail:hHeaders[ "Content-Type" ] := cContentType
       oMail:SetBody( cBody )
    ELSE
       oAttach := TIPMail():new()
       oAttach:SetEncoder( cEncoding )
       oAttach:SetCharset( cCharset )
-      oAttach:hHeaders[ "Content-Type" ] := cContentType + "; charset=" + cCharset
+      oAttach:hHeaders[ "Content-Type" ] := cContentType
       oAttach:SetBody( cBody )
       oMail:Attach( oAttach )
    ENDIF
@@ -471,7 +480,7 @@ FUNCTION hb_MailAssemble( ;
 
 STATIC FUNCTION IsBinaryType( cFileName )
    RETURN Empty( hb_FNameExt( cFileName ) ) .OR. hb_regexLike( ".+\.(" + ;
-      "3dm|3dmf|aabaam|aas|adr|afl|ai|aif|aifc|aiff|alt|arj|asd|" + ;
+      "3dm|3dmf|aab|aam|aas|adr|afl|ai|aif|aifc|aiff|alt|arj|asd|" + ;
       "asf|asn|asp|asx|asz|au|avi|axs|bcpio|bin|bin|cdf|cdx|chat|" + ;
       "che|cht|class|cnc|cod|coda|con|cpi|cpio|csh|csm|css|cu|" + ;
       "dbf|dbt|dcr|dig|dir|doc|dsf|dst|dus|dvi|dwf|dwg|dxf|dxr|" + ;

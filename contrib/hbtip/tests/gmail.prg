@@ -21,7 +21,7 @@ PROCEDURE Main( cFrom, cPassword, cTo )
    hb_default( @cPassword, "<mypassword>" )
    hb_default( @cTo      , "addressee@domain.com" )
 
-   ? hb_SendMail( ;
+   ? tip_MailSend( ;
       "smtp.gmail.com", ;
       465, ;
       cFrom, ;

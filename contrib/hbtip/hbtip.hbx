@@ -21,8 +21,6 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC hb_MailAssemble
-DYNAMIC hb_SendMail
 DYNAMIC THtmlCleanup
 DYNAMIC THtmlDocument
 DYNAMIC THtmlInit
@@ -57,6 +55,8 @@ DYNAMIC tip_GetRawEmail
 DYNAMIC tip_HtmlSpecialChars
 DYNAMIC tip_HtmlToStr
 DYNAMIC tip_JSONSpecialChars
+DYNAMIC tip_MailAssemble
+DYNAMIC tip_MailSend
 DYNAMIC tip_MimeType
 DYNAMIC tip_QPDecode
 DYNAMIC tip_QPEncode
