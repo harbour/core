@@ -484,7 +484,8 @@ FUNCTION tip_MailAssemble( ;
 
 /* TOFIX: Decide based on mime type instead. */
 STATIC FUNCTION IsBinaryType( cFileName )
-   RETURN Empty( hb_FNameExt( cFileName ) ) .OR. hb_regexLike( ".+\.(" + ;
+   RETURN Empty( hb_FNameExt( cFileName ) ) .OR. ;
+      "|" + SubStr( hb_FNameExt( Lower( cFileName ) ), 2 ) + "|" $ "|" + ;
       "3dm|3dmf|aab|aam|aas|adr|afl|ai|aif|aifc|aiff|alt|arj|asd|" + ;
       "asf|asn|asp|asx|asz|au|avi|axs|bcpio|bin|bin|cdf|cdx|chat|" + ;
       "che|cht|class|cnc|cod|coda|con|cpi|cpio|csh|csm|css|cu|" + ;
@@ -501,5 +502,4 @@ STATIC FUNCTION IsBinaryType( cFileName )
       "swf|t|talk|tar|tbk|tcl|tex|texi|texinfo|tif|tiff|tlk|tmv|" + ;
       "tr|tsi|tsp|ustar|vbd|vcd|vgm|vgp|vgx|viv|vivo|vmd|vmf|vox|" + ;
       "vqe|vqf|vql|vrt|vts|vtts|waf|wan|wav|wi|wid|wis|wlt|wri|" + ;
-      "wrl|wrz|wtx|wtx|xbm|xdr|xls|xlt|xml|xpm|xwd|z|zip|zpa" + ")", ;
-      Lower( cFileName ) )
+      "wrl|wrz|wtx|wtx|xbm|xdr|xls|xlt|xml|xpm|xwd|z|zip|zpa|"
