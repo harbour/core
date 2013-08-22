@@ -63,7 +63,7 @@ ENDCLASS
 
 METHOD New() CLASS TIPEncoderBase64
 
-   ::cName := "Base64"
+   ::cName := "base64"
    ::bHttpExcept := .F.
 
    RETURN Self

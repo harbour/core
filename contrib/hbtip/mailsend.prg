@@ -430,6 +430,8 @@ FUNCTION tip_MailAssemble( ;
 
    FOR EACH aThisFile IN aFiles
 
+      cMimeText := NIL
+
       IF HB_ISSTRING( aThisFile )
          cFile := aThisFile
          cData := hb_MemoRead( cFile )
@@ -445,9 +447,14 @@ FUNCTION tip_MailAssemble( ;
                cData := hb_MemoRead( cFile )
             ENDIF
          ENDIF
+         IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
+            cMimeText := aThisFile[ 3 ]
+         ENDIF
       ELSE
          LOOP
       ENDIF
+
+      hb_default( @cMimeText, tip_FileNameMimeType( cFile ) )
 
       cData += Chr( 13 ) + Chr( 10 )
 
@@ -455,9 +462,8 @@ FUNCTION tip_MailAssemble( ;
 
       oAttach := TIPMail():New()
       oAttach:SetCharset( cCharset )
-      oAttach:SetEncoder( iif( IsBinaryType( cFile ), "base64", cEncoding ) )
+      oAttach:SetEncoder( iif( Left( cMimeText, Len( "text/" ) ) == "text/", cEncoding, "base64" ) )
       // Some e-mail clients use Content-Type to check for filename
-      cMimeText := tip_FileNameMimeType( cFile )
       IF cMimeText == "unknown"
          cMimeText := "text/plain"  /* TOFIX: Such fallback doesn't seem right. [vszakats] */
       ENDIF
@@ -482,25 +488,3 @@ FUNCTION tip_MailAssemble( ;
    ENDIF
 
    RETURN oMail:ToString()
-
-/* TOFIX: Decide based on mime type instead. */
-STATIC FUNCTION IsBinaryType( cFileName )
-   RETURN Empty( hb_FNameExt( cFileName ) ) .OR. ;
-      "|" + SubStr( hb_FNameExt( Lower( cFileName ) ), 2 ) + "|" $ "|" + ;
-      "3dm|3dmf|aab|aam|aas|adr|afl|ai|aif|aifc|aiff|alt|arj|asd|" + ;
-      "asf|asn|asp|asx|asz|au|avi|axs|bcpio|bin|bin|cdf|cdx|chat|" + ;
-      "che|cht|class|cnc|cod|coda|con|cpi|cpio|csh|csm|css|cu|" + ;
-      "dbf|dbt|dcr|dig|dir|doc|dsf|dst|dus|dvi|dwf|dwg|dxf|dxr|" + ;
-      "ebk|eps|es|etf|evy|exe|fh4|fh5|fhc|fif|fpt|fpx|frl|" + ;
-      "gif|gsd|gsm|gtar|gz|hdf|hqx|ica|ief|ins|ips|ips|ipx|ivr|" + ;
-      "jpe|jpeg|jpg|js|latex|lha|lzh|lzx|m3u|man|map|mbd|mcf|" + ;
-      "mems|mfp|mid|midi|mif|mol|mov|movie|mp2|mp3|mpe|mpeg|mpg|" + ;
-      "mpire|mpl|n2p|nc|npx|nsc|ntx|oda|ofml|page|pbm|pdb|pdf|" + ;
-      "pfr|pgm|pgp|php3|phtml|pnm|pot|ppm|pps|ppt|ppz|pqf|pqi|" + ;
-      "ps|ptlk|push|qd3|qd3d|qrt|qt|ra|ram|ras|rgb|rip|rmf|rmf|" + ;
-      "roff|rpm|rrf|rtc|rtf|sca|sh|shar|shw|sit|sml|smp|snd|spl|" + ;
-      "spr|sprite|src|stk|stream|sv4cpio|sv4crc|svf|svh|svr|swa|" + ;
-      "swf|t|talk|tar|tbk|tcl|tex|texi|texinfo|tif|tiff|tlk|tmv|" + ;
-      "tr|tsi|tsp|ustar|vbd|vcd|vgm|vgp|vgx|viv|vivo|vmd|vmf|vox|" + ;
-      "vqe|vqf|vql|vrt|vts|vtts|waf|wan|wav|wi|wid|wis|wlt|wri|" + ;
-      "wrl|wrz|wtx|wtx|xbm|xdr|xls|xlt|xml|xpm|xwd|z|zip|zpa|"

@@ -86,7 +86,7 @@ FUNCTION tip_QPEncode( cData )
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen
       c := hb_BSubStr( cData, nPos, 1 )
-      IF c == Chr( 13 )
+      IF c == Chr( 10 )
          cString += Chr( 13 ) + Chr( 10 )
          nLineLen := 0
       ELSEIF hb_BCode( c ) > 126 .OR. ;
@@ -99,7 +99,7 @@ FUNCTION tip_QPEncode( cData )
          ENDIF
          cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
          nLineLen += 3
-      ELSEIF !( c == Chr( 10 ) )
+      ELSEIF !( c == Chr( 13 ) )
          cString += c
          nLineLen += 1
       ENDIF
