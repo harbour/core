@@ -2398,17 +2398,29 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Process build-time configuration */
 
-   #if defined( HB_HAS_WATT )
-      IF hbmk[ _HBMK_cPLAT ] == "dos"
-         SWITCH hbmk[ _HBMK_cCOMP ]
-         CASE "djgpp"  ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "watt" ) ; EXIT
-         CASE "watcom" ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "wattcpwf" ) ; EXIT
-         ENDSWITCH
-         IF hb_DirExists( tmp := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], tmp )
-         ENDIF
+   IF hbmk[ _HBMK_cPLAT ] == "dos"
+      SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
+      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
+      OTHERWISE     ; tmp := NIL
+      ENDSWITCH
+
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
+      IF !Empty( tmp )
+         #if defined( HB_HAS_WATT )
+            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+            ENDIF
+         #else
+            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .and. ;
+               hb_FileExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            ENDIF
+         #endif
       ENDIF
-   #endif
+   ENDIF
 
    /* Process automatic make files in current dir. */
    IF hbmk[ _HBMK_lAutoHBM ] .AND. hb_FileExists( _HBMK_AUTOHBM_NAME )
@@ -5983,30 +5995,28 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          NEXT
 
-         IF hb_mtvm() .AND. Len( aThreads ) > 1
-            FOR EACH thread IN aThreads
-               hb_threadJoin( thread[ 1 ], @tmp )
-               IF tmp != 0
-                  IF Len( aThreads ) > 1
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$d. %2$d" ), thread:__enumIndex(), tmp ) )
-                  ELSE
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$d" ), tmp ) )
-                  ENDIF
-                  IF ! hbmk[ _HBMK_lQuiet ]
-                     OutErr( ArrayToList( thread[ 2 ] ) + _OUT_EOL )
-                  ENDIF
-                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                     IF lDeleteWorkDir
-                        hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
-                     ENDIF
-                     IF hbmk[ _HBMK_lBEEP ]
-                        DoBeep( .F. )
-                     ENDIF
-                     RETURN _EXIT_COMPPRG
-                  ENDIF
+         FOR EACH thread IN aThreads
+            hb_threadJoin( thread[ 1 ], @tmp )
+            IF tmp != 0
+               IF Len( aThreads ) > 1
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler job #%1$d. %2$d" ), thread:__enumIndex(), tmp ) )
+               ELSE
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler. %1$d" ), tmp ) )
                ENDIF
-            NEXT
-         ENDIF
+               IF ! hbmk[ _HBMK_lQuiet ]
+                  OutErr( ArrayToList( thread[ 2 ] ) + _OUT_EOL )
+               ENDIF
+               IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                  IF lDeleteWorkDir
+                     hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
+                  ENDIF
+                  IF hbmk[ _HBMK_lBEEP ]
+                     DoBeep( .F. )
+                  ENDIF
+                  RETURN _EXIT_COMPPRG
+               ENDIF
+            ENDIF
+         NEXT
       ELSE
          /* Use external compiler */
 
@@ -6775,7 +6785,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      aThreads := {}
                      FOR EACH aTO_DO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
                         IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hReplace, cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
+                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hb_hClone( hReplace ), cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
                         ELSE
                            IF ! CompileCLoop( hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hReplace, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
@@ -6786,16 +6796,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         ENDIF
                      NEXT
 
-                     IF hb_mtvm() .AND. Len( aThreads ) > 1
-                        FOR EACH thread IN aThreads
-                           hb_threadJoin( thread, @tmp )
-                           IF ! tmp
-                              IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                 hbmk[ _HBMK_nExitCode ] := _EXIT_COMPC
-                              ENDIF
+                     FOR EACH thread IN aThreads
+                        hb_threadJoin( thread, @tmp )
+                        IF ! tmp
+                           IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                              hbmk[ _HBMK_nExitCode ] := _EXIT_COMPC
                            ENDIF
-                        NEXT
-                     ENDIF
+                        ENDIF
+                     NEXT
                   ELSE
                      hReplace[ "{OO}" ] := FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF )
                      hReplace[ "{OW}" ] := FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF )
@@ -6880,24 +6888,22 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         ENDIF
                      NEXT
 
-                     IF hb_mtvm() .AND. Len( aThreads ) > 1
-                        FOR EACH thread IN aThreads
-                           hb_threadJoin( thread[ 1 ], @tmp )
-                           IF tmp != 0
-                              IF Len( aThreads ) > 1
-                                 _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler job #%1$d. %2$d" ), thread:__enumIndex(), tmp ) )
-                              ELSE
-                                 _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$d" ), tmp ) )
-                              ENDIF
-                              IF ! hbmk[ _HBMK_lQuiet ]
-                                 OutErr( thread[ 2 ] + _OUT_EOL )
-                              ENDIF
-                              IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                 hbmk[ _HBMK_nExitCode ] := _EXIT_COMPC
-                              ENDIF
+                     FOR EACH thread IN aThreads
+                        hb_threadJoin( thread[ 1 ], @tmp )
+                        IF tmp != 0
+                           IF Len( aThreads ) > 1
+                              _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler job #%1$d. %2$d" ), thread:__enumIndex(), tmp ) )
+                           ELSE
+                              _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$d" ), tmp ) )
                            ENDIF
-                        NEXT
-                     ENDIF
+                           IF ! hbmk[ _HBMK_lQuiet ]
+                              OutErr( thread[ 2 ] + _OUT_EOL )
+                           ENDIF
+                           IF ! hbmk[ _HBMK_lIGNOREERROR ]
+                              hbmk[ _HBMK_nExitCode ] := _EXIT_COMPC
+                           ENDIF
+                        ENDIF
+                     NEXT
 
                      IF lCHD_Comp .AND. cCHD_DirOld != NIL
                         hb_cwd( cCHD_DirOld )
