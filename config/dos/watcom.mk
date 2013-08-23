@@ -56,11 +56,6 @@ endif
 # dos32a (DOS/32A LE executable), dos32x (DOS/32A LX executable)
 LDFLAGS += SYS dos32a
 
-# workaround for not included automatically CLIB in pure C mode builds
-ifeq ($(CC),wcc386)
-   LDFLAGS += LIB clib3r.lib
-endif
-
 LDLIBS := $(HB_USER_LIBS)
 LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
@@ -69,6 +64,11 @@ ifneq ($(HB_LINKING_RTL),)
       LDLIBS += $(HB_LIB_WATT)/wattcpwf
    endif
    LDLIBS += $(LIB_DIR)/hbpmcom
+endif
+
+# workaround for not included automatically CLIB in pure C mode builds
+ifeq ($(CC),wcc386)
+   LDLIBS += clib3r
 endif
 
 ifeq ($(HB_BUILD_DYN),dostest)
