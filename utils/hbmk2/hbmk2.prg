@@ -2406,14 +2406,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDSWITCH
 
       AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
-      IF !Empty( tmp )
+      IF ! Empty( tmp )
          #if defined( HB_HAS_WATT )
             AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
             IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
                AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
             ENDIF
          #else
-            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .and. ;
+            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
                hb_FileExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
                AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
                AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
@@ -6785,7 +6785,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      aThreads := {}
                      FOR EACH aTO_DO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
                         IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hb_hClone( hReplace ), cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
+                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hb_HClone( hReplace ), cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
                         ELSE
                            IF ! CompileCLoop( hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hReplace, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
