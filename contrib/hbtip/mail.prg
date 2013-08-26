@@ -82,7 +82,7 @@ CREATE CLASS TIPMail
    METHOD GetFieldOption( cPart, cOption )
    METHOD SetFieldPart( cPart, cValue )
    METHOD SetFieldOption( cPart, cOption, cValue )
-   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( HB_ISSTRING( cCharset ), cCharset, "ISO-8859-1" )
+   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( HB_ISSTRING( cCharset ), cCharset, "UTF-8" )
 
    METHOD GetContentType() INLINE ::GetFieldPart( "Content-Type" )
    METHOD GetCharEncoding() INLINE ::GetFieldOption( "Content-Type", "encoding" )

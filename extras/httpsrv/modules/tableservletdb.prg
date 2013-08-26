@@ -94,7 +94,7 @@ FUNCTION HRBMAIN()
       uhttpd_Write( cXml )
    ELSE
       uhttpd_SetHeader( "Content-Type", "text/xml" )
-      uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+      uhttpd_Write( '<?xml version="1.0" encoding="UTF-8"?>' )
       uhttpd_Write( "<pages><page>No Data</page></pages>" )
    ENDIF
 
@@ -234,7 +234,7 @@ METHOD getXmlData( page ) CLASS TableManager
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    // Add the opening <table> tag
    xml:append( "<table>" )
@@ -289,7 +289,7 @@ METHOD getXmlCount( nCount ) CLASS TableManager
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    xml:append( "<pages>" )
    FOR n := 1 TO nPages
@@ -357,7 +357,7 @@ METHOD xmlEncode( input ) CLASS TableManager
          EXIT
       OTHERWISE
          // All non-ascii
-         IF Asc( c ) <= 0x1F .OR. Asc( c ) >= 0x80
+         IF Asc( c ) < 32 .OR. Asc( c ) >= 128
             out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
          ELSE
             out += c

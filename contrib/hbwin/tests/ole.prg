@@ -406,7 +406,7 @@ STATIC PROCEDURE Exm_CDO()
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
-      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
+      oCDOMsg:BodyPart:Charset := "utf-8" // "iso-8859-1" "iso-8859-2"
       oCDOMsg:To := "test@localhost"
       oCDOMsg:From := "sender@localhost"
       oCDOMsg:Subject := "Test message"
