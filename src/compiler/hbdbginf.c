@@ -101,7 +101,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                {
                   int i;
 
-                  ptr = strchr( pszModuleName, ':' );
+                  ptr = strrchr( pszModuleName, ':' );
                   i = ptr ? ( int ) ( ptr - pszModuleName ) : ( int ) strlen( pszModuleName );
 
                   pInfo = pLineInfo;
