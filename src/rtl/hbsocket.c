@@ -1650,6 +1650,10 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
          iResult = -1;
          iError = HB_SOCK_GETERROR();
       }
+#if defined( HB_OS_DOS )
+      else if( iError == EISCONN )
+         iError = 0;
+#endif
       else if( iError != 0 )
          iResult = -1;
 
