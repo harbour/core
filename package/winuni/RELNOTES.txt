@@ -8,7 +8,7 @@ releases are available for download on sourceforge.net:
 Make sure to check README.md "Build Your Own Harbour App"
 section and visit our user' mailing list at:
 
-   http://groups.google.com/group/harbour-users/
+   https://groups.google.com/group/harbour-users/
 
 Release notes:
 -----------------------------------------------------------------------

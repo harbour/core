@@ -1,6 +1,6 @@
 /* This work is licensed under the Creative Commons Attribution-ShareAlike
    License. To view a copy of this license, visit
-   http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
+   https://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
    Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305,
    USA.  A summary of the license and the full legal text is included
    in file: COPYING.txt.  If you wish to distribute some or all of this
