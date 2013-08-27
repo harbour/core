@@ -720,7 +720,6 @@ DYNAMIC hb_Random
 DYNAMIC hb_RandomInt
 DYNAMIC hb_RandomIntMax
 DYNAMIC hb_RandomSeed
-DYNAMIC hb_randStr
 DYNAMIC hb_RAScan
 DYNAMIC hb_RAt
 DYNAMIC hb_rddGetTempAlias
