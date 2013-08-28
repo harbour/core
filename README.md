@@ -1723,12 +1723,7 @@ Supported shells per host platforms:
      * Cygwin [win, free, open-source]
         * <http://www.cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
-        * <ftp://ftp.netlabs.org/pub/gcc/>
-        * <ftp://ftp.netlabs.org/pub/gcc/GCC-3.3.5-csd3.zip>
-        * <ftp://ftp.netlabs.org/pub/gcc/libc-0_6_3-csd3.exe>
-        * <http://os2ports.smedley.info/index.php?page=gcc>
-        * <http://os2ports.smedley.info/index.php?page=gcc44>
-        * <http://download.smedley.info/gcc-4.4.5-os2-20101004.zip>
+        * <http://os2ports.smedley.id.au/index.php?page=gcc-v4-4-x>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
