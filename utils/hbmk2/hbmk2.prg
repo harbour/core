@@ -360,7 +360,7 @@ EXTERNAL hbmk_KEYW
 
 #define HB_ISALPHA( c )         hb_asciiIsAlpha( c )
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == "_" )
-#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR(c) .OR. hb_asciiIsDigit( c ) )
+#define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR( c ) .OR. hb_asciiIsDigit( c ) )
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
