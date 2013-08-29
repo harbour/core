@@ -108,7 +108,7 @@ PROCEDURE Main()
             ELSEIF hb_FileExists( cLocalRoot + _CONFIGFIL_ )
                cMyName := AllTrim( hb_MemoRead( cLocalRoot + _CONFIGFIL_ ) )
             ELSE
-               cMyName := "Firstname Lastname (me example.com)"
+               cMyName := "Firstname Lastname (me example.org)"
             ENDIF
          ENDIF
 
