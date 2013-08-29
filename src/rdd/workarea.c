@@ -796,6 +796,10 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
             hb_itemPutL( pItem, ulRecNo != ulRecCount + 1 );
          break;
       }
+      case DBI_CODEPAGE:
+         hb_itemPutC( pItem, pArea->cdPage ? pArea->cdPage->id : NULL );
+         break;
+
       case DBI_RM_SUPPORTED:
          hb_itemPutL( pItem, HB_FALSE );
          break;
