@@ -1198,7 +1198,7 @@
       hb_inetConnectIP().
 
       cName can be any string: valid DNS names (eg.
-      "www.myserver.com"), locally available names (e.g. "localhost" or
+      "www.example.com"), locally available names (e.g. "localhost" or
       windows Network Neighborhood names), or even IP addresses in quad
       dot notation.
 

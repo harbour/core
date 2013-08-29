@@ -52,7 +52,7 @@
      JIS-X-0510  QR Code standard in Japaneese language :)
        http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
-   http://en.wikipedia.org/wiki/QR_Code
+   https://en.wikipedia.org/wiki/QR_Code
    http://www.denso-wave.com/qrcode/index-e.html
    http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html

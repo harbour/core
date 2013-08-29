@@ -48,11 +48,11 @@
 
 #require "hbblat"
 
-#define ADDRESS_FROM   "yourname@domain.com"         // put here your address from
+#define ADDRESS_FROM   "yourname@example.com"        // put here your address from
 #define ADDRESS_TO     "hbblat_test@fsgiudice.com"   // this mail can be used for tests
-//#define ADDRESS_CC     "another@domain.com"
+//#define ADDRESS_CC     "another@example.com"
 
-#define SERVER_SMTP    "your.stmpserver.com"         // put your smtp server here
+#define SERVER_SMTP    "smtp.example.com"            // put your smtp server here
 
 PROCEDURE Main()
 
@@ -65,9 +65,9 @@ PROCEDURE Main()
 
    oBlat:cFrom                   := ADDRESS_FROM
    oBlat:cTo                     := ADDRESS_TO
-// oBlat:cUserAUTH               := "myaccount@mydomain.org"
+// oBlat:cUserAUTH               := "myaccount@example.com"
 // oBlat:cPasswordAUTH           := "mypassword"
-// oBlat:cHostname               := "mail.anydomain.com"
+// oBlat:cHostname               := "mail.example.com"
 // oBlat:cCC                     := ADDRESS_CC
 // oBlat:cCCFile                 := "f_cc.txt"
 // oBlat:cBCC                    := "info@fsgiudice.com"

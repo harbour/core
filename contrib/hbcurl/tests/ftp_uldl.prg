@@ -44,7 +44,7 @@ PROCEDURE Main( cDL, cUL )
 
    IF ! Empty( curl := curl_easy_init() )
 
-      ? "ESCAPE:", tmp := curl_easy_escape( curl, "http://domain.com/my dir with space&more/" )
+      ? "ESCAPE:", tmp := curl_easy_escape( curl, "http://example.com/my dir with space&more/" )
       ? "UNESCAPE:", curl_easy_unescape( curl, tmp )
 
       ? "Press key..."

@@ -62,7 +62,7 @@ PROCEDURE Main()
     */
    xml:docTitle( "My Demo Doc" )
    xml:docAuthor( "Robert F Greer" )
-   xml:docCompany( "Greers.Org" )
+   xml:docCompany( "Greers Org" )
    xml:docManager( "Wife" )
 
    /**

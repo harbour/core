@@ -171,7 +171,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    if( ! bResult && hb_iswin9x() )
    {
       /* This option should never be required but is included because of this article
-            http://support.microsoft.com/kb/246772/en-us
+            https://support.microsoft.com/kb/246772/en-us
 
          This option will not enumerate any network printers.
 
