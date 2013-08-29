@@ -789,6 +789,10 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 #  define HB_SOCK_GETERROR()              WSAGetLastError()
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == WSAEINTR )
 #  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == WSAEWOULDBLOCK )
+#elif defined( HB_OS_OS2 ) && defined( __WATCOMC__ )
+#  define HB_SOCK_GETERROR()              sock_errno()
+#  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
+#  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
 #else
 #  define HB_SOCK_GETERROR()              errno
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
