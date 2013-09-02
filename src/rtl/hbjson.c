@@ -342,14 +342,14 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
                }
                _hb_jsonEncode( pKey, pCtx, nLevel + 1 );
 
+               _hb_jsonCtxAdd( pCtx, ":", 1 );
                if( pCtx->fHuman )
                {
-                  _hb_jsonCtxAdd( pCtx, ": ", 2 );
                   if( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0 )
                      _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+                  else
+                     _hb_jsonCtxAdd( pCtx, " ", 1 );
                }
-               else
-                  _hb_jsonCtxAdd( pCtx, ":", 1 );
 
                _hb_jsonEncode( pItem, pCtx, nLevel + 1 );
             }
