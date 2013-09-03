@@ -345,16 +345,19 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
    DO WHILE bMoreDataToRead
 
       szResponse := Space( 1 )
-      nData := ::inetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
+      nData := ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) )
       IF nData == 0
          RETURN .F.
       ENDIF
       sResponse += szResponse
 
-      nLength := Len( sResponse )
+      nLength := hb_BLen( sResponse )
       IF nLength >= 4
-         bMoreDataToRead := !( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
-            SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength, 1 ) == Chr( 10 ) )
+         bMoreDataToRead := !( ;
+            hb_BSubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. ;
+            hb_BSubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
+            hb_BSubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. ;
+            hb_BSubStr( sResponse, nLength, 1 ) == Chr( 10 ) )
       ENDIF
    ENDDO
 
@@ -415,7 +418,7 @@ METHOD Read( nLen ) CLASS TIPClient
       ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
       DO WHILE ::nLastRead > 0
          ::nRead += ::nLastRead
-         cStr0 += Left( cStr1, ::nLastRead )
+         cStr0 += hb_BLeft( cStr1, ::nLastRead )
          ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
       ENDDO
       ::bEof := .T.
@@ -439,7 +442,7 @@ METHOD Read( nLen ) CLASS TIPClient
 
       IF ::nLastRead != nLen
          ::bEof := .T.
-         cStr0 := Left( cStr0, ::nLastRead )
+         cStr0 := hb_BLeft( cStr0, ::nLastRead )
          // S.R.         RETURN NIL
       ENDIF
 
@@ -488,7 +491,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
          RETURN .F.
       ENDIF
 
-      nSent += Len( cData )
+      nSent += hb_BLen( cData )
       IF ! Empty( ::exGauge )
          hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
       ENDIF
@@ -572,7 +575,7 @@ METHOD Data( cData ) CLASS TIPClient
 METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
 
    IF Empty( nLen )
-      nLen := Len( cData )
+      nLen := hb_BLen( cData )
    ENDIF
 
    ::nLastWrite := ::inetSendAll( ::SocketCon, cData, nLen )
@@ -590,7 +593,7 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
    LOCAL nRet
 
    IF Empty( nLen )
-      nLen := Len( cData )
+      nLen := hb_BLen( cData )
    ENDIF
 
    IF ::lTLS
@@ -733,10 +736,8 @@ METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
 
    IF ! Empty( SocketCon )
       IF ::lTLS
-         IF ::lHasSSL
-            IF ::nSSLError != 0
-               cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
-            ENDIF
+         IF ::lHasSSL .AND. ::nSSLError != 0
+            cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
          ENDIF
       ELSE
          cMsg := hb_inetErrorDesc( SocketCon )
