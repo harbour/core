@@ -857,7 +857,7 @@ Version 1.0.0 rc1 (2008-06-04) tag: 1.0.0rc1
 General
 =============================
 - The SourceForge repository was moved from CVS to SVN
-- added docs/howtorep.txt
+- added docs/howtovcs.txt
 - changed pack_src.sh to extract list of files from local SVN copy using
   SVN commands
 - improved CYGWIN compatibility
