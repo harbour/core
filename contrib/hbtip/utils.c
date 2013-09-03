@@ -258,7 +258,7 @@ typedef struct tag_mime_ext
    const char * mime_type; /* Mimetype if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  316
+#define EXT_MIME_TABLE_SIZE  314
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
@@ -266,7 +266,6 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "3dmf"    , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
    { "3gp"     , MIME_FLAG_CASEINSENS, "video/3gpp" },
    { "3gpp"    , MIME_FLAG_CASEINSENS, "video/3gpp" },
-   { "7z"      , MIME_FLAG_CASEINSENS, "application/x-7z-compressed" },
    { "7z"      , MIME_FLAG_CASEINSENS, "application/x-7z-compressed" },
    { "aab"     , MIME_FLAG_CASEINSENS, "application/x-authorware-bin" },
    { "aam"     , MIME_FLAG_CASEINSENS, "application/x-authorware-map" },
@@ -491,7 +490,6 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "shar"    , MIME_FLAG_CASEINSENS, "application/x-shar" },
    { "shtml"   , MIME_FLAG_CASEINSENS, "text/html" },
    { "shw"     , MIME_FLAG_CASEINSENS, "application/presentations" },
-   { "sit"     , MIME_FLAG_CASEINSENS, "application/x-stuffit" },
    { "sit"     , MIME_FLAG_CASEINSENS, "application/x-stuffit" },
    { "sml"     , MIME_FLAG_CASEINSENS, "application/fml" },
    { "smp"     , MIME_FLAG_CASEINSENS, "application/studiom" },
