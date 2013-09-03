@@ -71,7 +71,7 @@
  * Prerequisites:
  * 1) source must be at least 8 bytes long.
  * 2) key must be at least 6 characters long.
- *    Optimal lenght is about 12 to 16 bytes. Maximum keylen is 512 bytes
+ *    Optimal length is about 12 to 16 bytes. Maximum keylen is 512 bytes
  * 3) cipher must be preallocated with srclen bytes
  */
 

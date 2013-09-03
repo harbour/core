@@ -231,7 +231,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
    LOCAL cLine, nPos, aVersion
    LOCAL aHead
 
-   // Now reads the fields and set the content lenght
+   // Now reads the fields and set the content length
    cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    IF Empty( cLine )
       // In case of timeout or error on receiving
@@ -304,10 +304,10 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       ENDIF
    ENDIF
 
-   /* On HTTP/1.1 protocol, content lenght can be in hex format before each chunk.
+   /* On HTTP/1.1 protocol, content length can be in hex format before each chunk.
       The chunk header is read each time nLength is -1; While reading the chunk,
-      nLenght is set to nRead plus the expected chunk size. After reading the
-      chunk, the footer is discarded, and nLenght is reset to -1.
+      nLength is set to nRead plus the expected chunk size. After reading the
+      chunk, the footer is discarded, and nLength is reset to -1.
    */
    IF ::nLength == -1 .AND. ::bChunked
       cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )

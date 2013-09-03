@@ -168,7 +168,7 @@ CREATE CLASS GDImage
    METHOD SetStyle( aStyle )               INLINE hb_default( @aStyle, ::aStyles ), gdImageSetStyle( ::pImage, aStyle )
    METHOD AddStyle( pColor )               INLINE AAdd( ::aStyles, pColor )
    METHOD ResetStyles()                    INLINE ::aStyles := {}
-   METHOD StyleLenght()                    INLINE Len( ::aStyles )
+   METHOD StyleLength()                    INLINE Len( ::aStyles )
 
    METHOD SetThickness( nThickness )       INLINE gdImageSetThickness( ::pImage, nThickness )
    METHOD SetAlphaBlending( lAlphaBlending )  INLINE gdImageAlphaBlending( ::pImage, lAlphaBlending )

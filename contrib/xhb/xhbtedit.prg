@@ -294,7 +294,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
 
-   // 2006-08-18 - E.F. Adjusted nLineLenght in accordance with Clipper's
+   // 2006-08-18 - E.F. Adjusted nLineLength in accordance with Clipper's
    //                   memoedit.
    IF ! HB_ISNUMERIC( nLineLength )
       nLineLength := ::nNumCols

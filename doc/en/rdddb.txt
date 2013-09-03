@@ -1100,7 +1100,7 @@
    $DESCRIPTION$
       This function returns a multidimensional array. This array has array
       pointers to other arrays, each of which contains the characteristic
-      of a field in the active work area. The lenght of this array is based
+      of a field in the active work area. The length of this array is based
       in the number of fields in that particular work area. In other words,
       Len(dbStruct()) is equal to the value obtained from FCount().
       Each subscript position

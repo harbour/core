@@ -594,7 +594,7 @@ METHOD GenCodei25() CLASS GDBarCode
    LOCAL bc_string
 
    IF ( Len( ::text ) % 2 ) != 0
-      ::DrawError( "Invalid barcode lenght" )
+      ::DrawError( "Invalid barcode length" )
       lError := .T.
    ENDIF
 

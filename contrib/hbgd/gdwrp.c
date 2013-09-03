@@ -230,7 +230,7 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
 
    if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
    {
-      /* get lenght */
+      /* get length */
       *sz = ( int ) hb_fsSeek( fhandle, 0, FS_END );
       /* rewind */
       hb_fsSeek( fhandle, 0, FS_SET );

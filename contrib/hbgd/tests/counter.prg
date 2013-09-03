@@ -38,7 +38,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    nValue := Val( cValue )
 
-   // Fix num lenght
+   // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM
       nValue := 10 ^ DISPLAY_NUM
    ENDIF

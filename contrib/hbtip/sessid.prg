@@ -71,7 +71,7 @@ FUNCTION tip_GenerateSID( cCRCKey )
 
    hb_default( @cCRCKey, CRC_KEY_STRING )
 
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( cCRCKey, 10 )      // Max Length must to be of 10 chars
 
    /* Let's generate the sequence */
    cSID := Space( nLenSID )
@@ -101,7 +101,7 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    hb_default( @cCRCKey, CRC_KEY_STRING )
 
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( cCRCKey, 10 )      // Max Length must to be of 10 chars
 
    /* Calculate the key */
    FOR n := 1 TO nLenSID

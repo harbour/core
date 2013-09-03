@@ -116,7 +116,7 @@ CLASS uhttpd_Session
    VAR lUse_Only_Cookies       INIT .F.
    VAR cReferrer_Check                        // If is set check if referrer is equal to, if it isn't block
    // VAR cEntropy_File
-   // VAR nEntropy_Lenght
+   // VAR nEntropy_Length
    VAR cCache_Limiter          INIT "nocache" // Possible values are: none, nocache, private, private_no_expire, public
    VAR nCache_Expire           INIT 180       // in minutes, not checked if cCache_Limiter == none or nocache
    VAR lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
@@ -458,7 +458,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
             aHashVars[ cName ] := { xValue }
 
             // aHashVars:Keys( cName )
-            // __objSendMsg( aHashVars, "_" + cName, { xValue } )  // variant from Ron to handle 1 lenght name
+            // __objSendMsg( aHashVars, "_" + cName, { xValue } )  // variant from Ron to handle 1 length name
 
          ELSE
             // aHashVars[ cName ] := xValue
@@ -466,7 +466,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
             aHashVars[ cName ] := xValue
 
             // aHashVars:Keys( cName )
-            // __objSendMsg( aHashVars, "_" + cName, xValue )  // variant from Ron to handle 1 lenght name
+            // __objSendMsg( aHashVars, "_" + cName, xValue )  // variant from Ron to handle 1 length name
          ENDIF
          // TraceLog( "aHashVars, cName, xValue", DumpValue( aHashVars ), cName, xValue )
       ELSE
@@ -503,7 +503,7 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
 
    // LOCAL a := 0
 
-   // Max Lenght must to be 10
+   // Max Length must to be 10
    // __defaultNIL( @cCRCKey, "3InFoW4lL5" )
    __defaultNIL( @cCRCKey, MY_CRCKEY )
 
@@ -547,7 +547,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
    __defaultNIL( @::cSID, ::RegenerateID() )
    __defaultNIL( @cSID, ::cSID )
-   // Max Lenght must to be 10
+   // Max Length must to be 10
    __defaultNIL( @cCRCKey, MY_CRCKEY )
 
    // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_ValToExp( cSID ), hb_ValToExp( ::cSID ) )

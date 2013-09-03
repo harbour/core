@@ -159,7 +159,7 @@ typedef struct tag_mxml_refil
    HB_ISIZ         buflen;  /* valid characters in the current buffer */
    HB_ISIZ         bufpos;  /* current position */
 
-   /* lenght of the stream for implementing progress indicators */
+   /* length of the stream for implementing progress indicators */
    HB_ISIZ streampos;
    HB_ISIZ streamlen;
 

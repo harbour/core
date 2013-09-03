@@ -42,7 +42,7 @@ PROCEDURE Main()
 
    @ 8, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
    @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
-   // Notice: this time the lenght of the destination buffer is not the lenght of
+   // Notice: this time the length of the destination buffer is not the length of
    // the original buffer, but Int(nBufLen * 1.1)
    @ 10, 7 SAY "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
 

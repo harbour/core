@@ -56,7 +56,7 @@
    string. A field in {} means a serialized array. A field in '' means a literal
    set of bytes (characters).
 
-   Serialized strings: 4 chars lenght in network order, and then the string.
+   Serialized strings: 4 chars length in network order, and then the string.
    Function serial numbers: "AAAAMMDD.C", where c is a developer defined character.
 
    UDP requests:
@@ -155,7 +155,7 @@
    35 - Progress with compressed data
      + Serialized progress number (0 to 100 float) (10 chars)
      + <LEN8> - Original data length
-     + <LEN8> - compressed data lenght
+     + <LEN8> - compressed data length
      + Compressed progress data
 
 
@@ -800,7 +800,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS TRPCServeCon
    LOCAL cMode := " "
    LOCAL cData
 
-   /* Original lenght of data */
+   /* Original length of data */
    IF hb_inetRecvAll( ::skRemote, @cLength, 8 ) != 8
       RETURN NIL
    ENDIF
@@ -810,7 +810,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS TRPCServeCon
       RETURN NIL
    ENDIF
 
-   /* compressed lenght */
+   /* compressed length */
    IF bComp
       IF hb_inetRecvAll( ::skRemote, @cLength, 8 ) != 8
          RETURN NIL

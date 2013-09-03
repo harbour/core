@@ -126,7 +126,7 @@ HB_FUNC( TIP_URLDECODE )
          HB_ISIZ nPos = 0, nPosRet = 0;
          char    cElem;
 
-         /* maximum possible lenght */
+         /* maximum possible length */
          cRet = ( char * ) hb_xgrab( nLen );
 
          while( nPos < nLen )
