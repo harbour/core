@@ -1,6 +1,6 @@
---ignore-dir=obj
---ignore-dir=lib
---ignore-dir=bin
---ignore-dir=pkg
---ignore-dir=addons
 --ignore-dir=.hbmk
+--ignore-dir=addons
+--ignore-dir=bin
+--ignore-dir=lib
+--ignore-dir=obj
+--ignore-dir=pkg

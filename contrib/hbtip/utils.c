@@ -380,7 +380,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "jpe"     , MIME_FLAG_CASEINSENS, "image/jpeg" },
    { "jpeg"    , MIME_FLAG_CASEINSENS, "image/jpeg" },
    { "jpg"     , MIME_FLAG_CASEINSENS, "image/jpeg" },
-   { "js"      , MIME_FLAG_CASEINSENS, "application/x-javascript" },
+   { "js"      , MIME_FLAG_CASEINSENS, "application/javascript" },
    { "kar"     , MIME_FLAG_CASEINSENS, "audio/midi" },
    { "kml"     , MIME_FLAG_CASEINSENS, "application/vnd.google-earth.kml+xml" },
    { "kmz"     , MIME_FLAG_CASEINSENS, "application/vnd.google-earth.kmz" },
