@@ -57,7 +57,7 @@
  *   3rdpatch will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
  *   be picked. As an example, SourceForge-style distributed download URLs like
- *   `http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download'
+ *   `https://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.2/lpng142.zip/download'
  *   are OK, but `http://example.com/download/latest' is not, even if latter
  *   would ultimately result (perhaps by the server using Content-Disposition
  *   or similar headers) in a file named `example-pkg-54.tar.gz'.

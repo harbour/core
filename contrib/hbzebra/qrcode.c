@@ -50,7 +50,7 @@
      QR Code is ISO/IEC18004
 
      JIS-X-0510  QR Code standard in Japaneese language :)
-       http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+       https://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
    https://en.wikipedia.org/wiki/QR_Code
    http://www.denso-wave.com/qrcode/index-e.html
@@ -58,13 +58,13 @@
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
    http://www.codeproject.com/KB/cs/qrcode.aspx
-   http://sourceforge.jp/projects/reedsolomon
+   https://sourceforge.jp/projects/reedsolomon
    http://twit88.com/home/
    http://qrcode.sourceforge.jp/
    http://zxing.org/w/decode.jspx                          Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
-   http://code.google.com/p/zxing/                         Java library
+   https://code.google.com/p/zxing/                        Java library
    http://goqr.me/                                         Online encode
    http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
    http://raidenii.net/files/datasheets/misc/qr_code.pdf

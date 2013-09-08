@@ -5,7 +5,7 @@
  * www - http://harbour-project.org
  *
  * Thanks to Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/
+ * https://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
  * it under the terms of the GNU General PUBLIC License as published by

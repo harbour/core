@@ -6,7 +6,7 @@
  * You should install PDFCreator to be able to run this test
  *
  * Download site:
- * http://sourceforge.net/projects/pdfcreator/
+ * https://sourceforge.net/projects/pdfcreator/
  *
  * COM interface docs:
  * http://www.pdfforge.org/content/com-interface

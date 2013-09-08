@@ -4,4 +4,4 @@ and unpack/install into this directory.
 Non-official:
    http://tdm-gcc.tdragon.net/
 Official:
-   http://sourceforge.net/projects/mingw/files/
+   https://sourceforge.net/projects/mingw/files/

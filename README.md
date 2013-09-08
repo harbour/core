@@ -81,14 +81,14 @@ There are several ways to help making Harbour better:
 
 Download binary archive from this page and unpack or install:
 
-* <http://sourceforge.net/projects/harbour-project/files/><br />
+* <https://sourceforge.net/projects/harbour-project/files/><br />
 (choose the highest version number)
 
 ### Harbour stable source download
 
 Download source archive from this page and unpack:
 
-* <http://sourceforge.net/projects/harbour-project/files/source/><br />
+* <https://sourceforge.net/projects/harbour-project/files/source/><br />
 (choose the highest version number)
 
 
@@ -155,7 +155,7 @@ Platform specific prerequisites:
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in all Harbour packages, so you don't have to do
    anything.
-   If you want to get it separately, you can find it [here](http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/)
+   If you want to get it separately, you can find it [here](https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/)
    Unpack it to your PATH or Harbour source root directory,
    and run it as `mingw32-make`.
 
@@ -1713,10 +1713,10 @@ Supported shells per host platforms:
 * C/C++ Compilers/Shells:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
-        * <http://sourceforge.net/projects/mingwbuilds/> (unofficial, recommended)
-        * <http://tdm-gcc.tdragon.net/>, <http://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
-        * <http://www.mingw.org/>, <http://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
-        * <http://mingw-w64.sourceforge.net/>, <http://sourceforge.net/projects/mingw-w64/> (official 64-bit, MSYS home)
+        * <https://sourceforge.net/projects/mingwbuilds/> (unofficial, recommended)
+        * <http://tdm-gcc.tdragon.net/>, <https://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
+        * <http://www.mingw.org/>, <https://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
+        * <http://mingw-w64.sourceforge.net/>, <https://sourceforge.net/projects/mingw-w64/> (official 64-bit, MSYS home)
         * <http://nuwen.net/mingw.html> (unofficial)
      * MinGW CEGCC [win, *nix, free, open-source]
         * <http://cegcc.sourceforge.net/>
@@ -1870,9 +1870,9 @@ Supported shells per host platforms:
 
         Windows binary + source:
 
-         * <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
-         * <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download>
-         * <http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download>
+         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
+         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download>
+         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download>
          * `cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make`
           <br />(included in Harbour as [win-make.exe](win-make.exe))
 
