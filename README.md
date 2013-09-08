@@ -1790,7 +1790,7 @@ Supported shells per host platforms:
      * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
         * <http://www.minixml.org>
      * HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
-        * <http://dev.mysql.com/downloads/>
+        * <https://dev.mysql.com/downloads/>
      * HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
         * <http://orclib.sourceforge.net/>
         * <http://www.oracle.com/technology/tech/oci/instantclient/index.html>
@@ -1808,7 +1808,7 @@ Supported shells per host platforms:
         * <https://qt-project.org/>
         * <https://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
-        * <http://www.sqlite.org/>
+        * <https://www.sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
         * <http://www.libtiff.org/>
      * HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
@@ -1865,7 +1865,7 @@ Supported shells per host platforms:
          Windows binary:
            * <http://www.bzip.org/downloads.html>
      * Chocolatey (Windows package manager) [free, open-source]
-        * <http://chocolatey.org/>
+        * <https://chocolatey.org/>
      * GNU Make
 
         Windows binary + source:
