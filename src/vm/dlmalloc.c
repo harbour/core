@@ -2932,7 +2932,8 @@ static size_t traverse_and_check(mstate m);
   }\
 }
 
-#elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
+#elif defined(__GNUC__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) && \
+      (defined(__i386__) || defined(__x86_64__))
 #define compute_tree_index(S, I)\
 {\
   unsigned int X = S >> TREEBIN_SHIFT;\
@@ -3021,7 +3022,8 @@ static size_t traverse_and_check(mstate m);
 
 /* index corresponding to given bit. Use x86 asm if possible */
 
-#if defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
+#if defined(__GNUC__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)) && \
+    (defined(__i386__) || defined(__x86_64__))
 #define compute_bit2idx(X, I)\
 {\
   unsigned int J;\

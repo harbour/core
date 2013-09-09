@@ -414,7 +414,16 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
    }
 #else
    {
-      int iTODO; /* TODO: */
+      if( ! pGTSTD->fStdinConsole )
+      {
+         HB_BYTE bChar;
+         if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+            ch = bChar;
+      }
+      else
+      {
+         int iTODO; /* TODO: */
+      }
    }
 #endif
 

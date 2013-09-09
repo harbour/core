@@ -1744,6 +1744,7 @@ Supported shells per host platforms:
         * <http://os2ports.smedley.info/index.php?page=gcc>
         * <http://os2ports.smedley.info/index.php?page=gcc44>
         * <http://download.smedley.info/gcc-4.4.5-os2-20101004.zip>
+        * <https://dl.dropboxusercontent.com/u/76425158/gcc-4.5.4-os2-20130803.zip>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
