@@ -1690,6 +1690,18 @@ HB_UCHAR hb_cdpGetUC( PHB_CODEPAGE cdp, HB_WCHAR wc, HB_UCHAR ucDef )
             if( uc )
                ucDef = uc;
          }
+         if( ucDef == 0 )
+         {
+            int i;
+            for( i = 0; i < 32; ++i )
+            {
+               if( s_uniCtrls[ i ] == wc )
+               {
+                  ucDef = ( HB_UCHAR ) i;
+                  break;
+               }
+            }
+         }
       }
    }
    else if( wc <= 0xFF )

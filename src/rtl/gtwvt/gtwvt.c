@@ -2383,7 +2383,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
 static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
-   int iKey = 0, iFlags = pWVT->keyFlags;
+   int iKey = 0, iFlags = pWVT->keyFlags, iKeyPad = 0;
 
    switch( message )
    {
@@ -2418,49 +2418,31 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                break;
 
             case VK_UP:
-               iKey = HB_KX_UP;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_UP;
                break;
             case VK_DOWN:
-               iKey = HB_KX_DOWN;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_DOWN;
                break;
             case VK_LEFT:
-               iKey = HB_KX_LEFT;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_LEFT;
                break;
             case VK_RIGHT:
-               iKey = HB_KX_RIGHT;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_RIGHT;
                break;
             case VK_HOME:
-               iKey = HB_KX_HOME;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_HOME;
                break;
             case VK_END:
-               iKey = HB_KX_END;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_END;
                break;
             case VK_PRIOR:
-               iKey = HB_KX_PGUP;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_PGUP;
                break;
             case VK_NEXT:
-               iKey = HB_KX_PGDN;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_PGDN;
                break;
             case VK_INSERT:
-               iKey = HB_KX_INS;
-               if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
-                  iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_INS;
                break;
             case VK_DELETE:
                iKey = HB_KX_DEL;
@@ -2518,8 +2500,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                break;
 
             case VK_CLEAR:
-               iKey = HB_KX_CENTER;
-               iFlags |= HB_KF_KEYPAD;
+               iKeyPad = HB_KX_CENTER;
                break;
 
             case VK_NUMPAD0:
@@ -2532,12 +2513,14 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             case VK_NUMPAD7:
             case VK_NUMPAD8:
             case VK_NUMPAD9:
-               iFlags |= HB_KF_KEYPAD;
                if( iFlags & HB_KF_CTRL )
                {
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                   iKey = wParam - VK_NUMPAD0 + '0';
                }
+               else if( iFlags == HB_KF_ALT )
+                  iFlags = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
+               iFlags |= HB_KF_KEYPAD;
                break;
             case VK_DECIMAL:
             case VK_SEPARATOR:
@@ -2575,6 +2558,17 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   iKey = '?';
                break;
 #endif
+         }
+         if( iKeyPad != 0 )
+         {
+            iKey = iKeyPad;
+            if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
+            {
+               if( iFlags == HB_KF_ALT )
+                  iFlags = iKey = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
+               else
+                  iFlags |= HB_KF_KEYPAD;
+            }
          }
          pWVT->keyFlags = iFlags;
          if( iKey != 0 )
