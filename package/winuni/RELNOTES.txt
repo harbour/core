@@ -95,8 +95,8 @@ Changes since previous (2.0.0beta3 20090905) release:
   to support for old GCC versions.
 - Added public Harbour C level API to handle GC collected pure pointers.
 - Added workaround fox Pelles C 6.0 bug, so now it can be used
-  with Harbour for win32 and wince. Win64 build still doesn't work,
-  due to other POCC6 bugs.
+  with Harbour for Windows 32-bit and wince. Windows 64-bit
+  build still doesn't work, due to other POCC6 bugs.
 - Fixed to support MSVC 6.0.
 - dlmalloc memory allocator now also optimized for MT mode.
 - DJGPP builds received support for .dxe dynamic libs.
