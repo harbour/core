@@ -1144,11 +1144,11 @@ set HB_WITH_QT=C:\Qt\include
 
 ## on Windows x86-64 (64-bit) hosts
 
-Same as 32-bit Windows, but, you'll have to change `%ProgramFiles%` to
-`%ProgramFiles(x86)%` for 32-bit and mixed tools, you can build for
-both x86 and x64 without building a native target first, and potential
-differences with some compilers in using native binaries if
-they are available.
+Same as 32-bit Windows, with the difference that you'll have to change
+`%ProgramFiles%` to `%ProgramFiles(x86)%` for 32-bit and mixed tools,
+that you can build for both x86 and x64 without building a native target
+first, and potential differences with some compilers in using native
+binaries if they are available.
 
 ```batchfile
 rem MinGW GCC for Windows x86-64
@@ -1429,9 +1429,6 @@ mailing list.
     and C compiler) from your environment. Also remove any custom settings
     for your C compiler.
     Use only those documented in this file.
-    Follows some environment variable settings which are often believed
-    by users to be useful, but which in reality are either not needed or
-    not even used by Harbour build process and hbmk2.
 7.  Remove any Harbour build settings documented in [Build Options](#build-options).
 8.  Do no or only small modifications at once to the examples
     included in [Build Examples](#build-examples).
@@ -1943,8 +1940,8 @@ Supported shells per host platforms:
 # Guarantees and Liability
 
    This document and all other parts of Harbour are distributed in the
-   hope they will be useful, but there is NO GUARANTEE that they are
-   complete, accurate, non-infringing or usable for any purpose whatsoever.
+   hope they will be useful, but WITHOUT GUARANTEE that they are complete,
+   accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
    Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
