@@ -1,0 +1,98 @@
+Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+
+In Harbour preprocessor can be used in PRG code.
+This is list of PRG functions available for programmer.
+
+   REQUEST __PP_STDRULES
+      It forces including standard std.ch rules in static binaries.
+      Dynamic binaries linked with harbour dynamic library always
+      includes standard PP rules.
+
+
+   __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] ) -> <pPP>
+      Initialize new PP context and return pointer to it.
+      when <cStdChFile> is empty string ("") then no default rules are
+      used and only the dynamically created #defines like __HARBOUR__,
+      __DATE__, __TIME__, __PLATFORM__* are registered.
+      If <cStdChFile> is missing or NIL and standard PP rules from
+      std.ch are included in binaries (REQUEST __PP_STDRULES) then
+      they are used.
+
+   __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] ) -> NIL
+      Add new (or replace previous) include paths.
+
+   __PP_RESET( <pPP> )
+      Reset the PP context (remove all rules added by user or
+      preprocessed code)
+
+   __PP_ADDRULE( <pPP>, <cDirective> )
+      Preprocess and execute new preprocessor directive
+
+   __PP_PROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+      Preprocess given code and return result
+
+User can create more then one PP context and then use each of them
+separately. Any modifications in one context have no effect in other
+so different PP contexts can be used simultaneously in MT programs.
+To free allocated PP context is enough to clear <pPP> variable.
+When last instance of this variable in user code is cleared then
+automatic destructor frees PP context with its all internal data
+so even if variable is not explicitly cleared by assigning NIL but
+is out of scope (e.g. local variable when program leaves the function)
+PP context is freed.
+
+Below is simple test program which preprocess file and executes
+it's lines by macro compiler:
+
+
+   /*** macro.dat ***/
+   #define VALUE 123.45
+   #xcommand INFO <data> => Alert( <data> )
+   ? "Hello!"
+   WAIT
+   INFO "Let's test simple calculation."
+   pow := 2
+   ? "value =", VALUE
+   ? "pow =", pow
+   ? "value * pow =", VALUE * pow
+   WAIT
+   ? VALUE2 // generate RTE
+
+
+   /*** testpp.prg ***/
+   REQUEST __PP_STDRULES
+   PROC Main()
+      local cLine, pPP, oErr
+      pPP := __PP_INIT()
+      BEGIN SEQUENCE WITH {|oErr| BREAK( oErr ) }
+         FOR EACH cLine IN hb_ATokens( StrTran( __PP_Process( pPP, ;
+               hb_MemoRead( "macro.dat" ) ), Chr( 13 ) ), Chr( 10 ) )
+            BEGIN SEQUENCE
+               IF !Empty( cLine )
+                  &cLine
+               ENDIF
+            RECOVER USING oErr
+               ? "MacroCompiler error at line:", ;
+                 hb_ntos( cLine:__enumIndex() )
+               ? cLine
+               ? ErrMsg( oErr )
+            END SEQUENCE
+         NEXT
+      RECOVER USING oErr
+         ? ErrMsg( oErr )
+      END SEQUENCE
+      ?
+   RETURN
+
+   STATIC FUNCTION ErrMsg( oErr )
+   RETURN "Error " + ;
+          iif( HB_ISSTRING( oErr:subsystem ), ;
+               oErr:subsystem, "???" ) + ;
+          iif( HB_ISNUMERIC( oErr:subCode ), ;
+               "/" + hb_ntos( oErr:subCode ), "/???" ) + ;
+          iif( HB_ISSTRING( oErr:description ), ;
+               " " + oErr:description, "" ) + ;
+          iif( ! Empty( oErr:filename ), ;
+               " " + oErr:filename, ;
+               iif( ! Empty( oErr:operation ), ;
+                    " " + oErr:operation, "" ) )
