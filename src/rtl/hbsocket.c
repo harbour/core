@@ -2736,6 +2736,20 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_MAXINT timeout )
    return ret;
 }
 
+static HB_SOCKET s_socketSelectCallback( PHB_ITEM pItem )
+{
+   HB_SOCKET sd = HB_NO_SOCKET;
+
+   if( pItem )
+   {
+      if( HB_IS_NUMERIC( pItem ) )
+         sd = ( HB_SOCKET ) hb_itemGetNInt( pItem );
+      else if( HB_IS_POINTER( pItem ) )
+         sd = ( HB_SOCKET ) ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
+   }
+   return sd;
+}
+
 int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                      PHB_ITEM pArrayWR, HB_BOOL fSetWR,
                      PHB_ITEM pArrayEX, HB_BOOL fSetEX,
@@ -2748,6 +2762,9 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    HB_BOOL pSet[ 3 ];
    fd_set fds[ 3 ], * pfds[ 3 ];
    struct timeval tv, * ptv;
+
+   if( pFunc == NULL )
+      pFunc = s_socketSelectCallback;
 
    pItemSets[ 0 ] = pArrayRD;
    pItemSets[ 1 ] = pArrayWR;
@@ -2766,18 +2783,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
          FD_ZERO( &fds[ i ] );
          for( ul = 1; ul <= nLen; ul++ )
          {
-            if( pFunc )
-               sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
-            else
-            {
-               HB_TYPE type = hb_arrayGetType( pItemSets[ i ], ul );
-               if( type & HB_IT_NUMERIC )
-                  sd = ( HB_SOCKET ) hb_arrayGetNInt( pItemSets[ i ], ul );
-               else if( type & HB_IT_POINTER )
-                  sd = ( HB_SOCKET ) ( HB_PTRDIFF ) hb_arrayGetPtr( pItemSets[ i ], ul );
-               else
-                  sd = HB_NO_SOCKET;
-            }
+            sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
             if( sd != HB_NO_SOCKET )
             {
                if( maxsd < sd )
@@ -2811,18 +2817,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
             nLen = hb_arrayLen( pItemSets[ i ] );
             for( ul = 1; ul <= nLen; ul++ )
             {
-               if( pFunc )
-                  sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
-               else
-               {
-                  HB_TYPE type = hb_arrayGetType( pItemSets[ i ], ul );
-                  if( type & HB_IT_NUMERIC )
-                     sd = ( HB_SOCKET ) hb_arrayGetNInt( pItemSets[ i ], ul );
-                  else if( type & HB_IT_POINTER )
-                     sd = ( HB_SOCKET ) ( HB_PTRDIFF ) hb_arrayGetPtr( pItemSets[ i ], ul );
-                  else
-                     sd = HB_NO_SOCKET;
-               }
+               sd = pFunc( hb_arrayGetItemPtr( pItemSets[ i ], ul ) );
                if( sd != HB_NO_SOCKET && FD_ISSET( ( HB_SOCKET_T ) sd, pfds[ i ] ) )
                {
                   if( ++nPos != ul )

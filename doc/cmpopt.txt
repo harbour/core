@@ -62,7 +62,7 @@ arguments are well known and can be calculated at compile time:
                                  // can contain '&' character. Harbour checks
                                  // if concatenation can change existing valid
                                  // macro name or ignore '&' when -kM compiler
-                                 // switch which disable macro substitution
+                                 // switch which disables macro substitution
                                  // is used
       <nConst1> - <nConst2>   => <nConst>
       <dConst1> - <dConst2>   => <dConst>
@@ -72,7 +72,7 @@ arguments are well known and can be calculated at compile time:
                                  // can contain '&' character. Harbour checks
                                  // if concatenation can change existing valid
                                  // macro name or ignore '&' when -kM compiler
-                                 // switch which disable macro substitution
+                                 // switch which disables macro substitution
                                  // is used
       <nConst1> * <nConst2>   => <nConst>
       <nConst1> / <nConst2>   => <nConst> // Clipper optimize only integers
@@ -84,7 +84,7 @@ arguments are well known and can be calculated at compile time:
                                  // can contain '&' character. Harbour checks
                                  // if after '&' is potentially valid macro
                                  // name or ignore '&' when -kM compiler switch
-                                 // which disable macro substitution is used
+                                 // which disables macro substitution is used
       <lConst1> == <lConst2>  => <lConst>
       <nConst1> == <nConst2>  => <lConst>
       <dConst1> == <dConst2>  => <lConst>
@@ -93,7 +93,7 @@ arguments are well known and can be calculated at compile time:
                                  // can contain '&' character. Harbour checks
                                  // if after '&' is potentially valid macro
                                  // name or ignore '&' when -kM compiler switch
-                                 // which disable macro substitution is used
+                                 // which disables macro substitution is used
 
       NIL       == <xConst>   => <lConst>
       <xConst>  == NIL        => <lConst>

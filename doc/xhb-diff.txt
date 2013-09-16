@@ -9,7 +9,7 @@ It describes status of both compiler at the end of October 2009:
 
 Przemek,
 
-(Przemyslaw Czerpak, druzus/at/acn.waw.pl)
+(Przemyslaw Czerpak, druzus /at/ priv.onet.pl)
 
 
 
@@ -741,12 +741,12 @@ If it's possible then for macrocodeblocks Harbour compiler tries to
 generate early eval code in which macros are expanded when codeblock
 is created. Otherwise macros are expanded each time codeblock is
 evaluated.
-xHarbour has also similar extension but limited to only to macro
-variables and it works only if other macros are not used in the
-same expression. When more complicated examples are create xHarbour
-compiler generates broken code which generate RTE or GPF during
-execution. It also does not support codeblocks which contain mixed
-macros and refuse to compile such code.
+xHarbour has also similar extension but limited to macro variables
+and it works only if other macros are not used in the same expression.
+When more complicated examples are created xHarbour compiler generates
+broken code which causes RTE or GPF during execution. It also does not
+support codeblocks which contain mixed macros and refuse to compile
+such code.
 
 This example illustrates macros with declared symbols.
 
