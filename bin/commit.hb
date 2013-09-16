@@ -1347,6 +1347,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    LOCAL cFile
    LOCAL cFileStripped
 
+   LOCAL aMatchList
    LOCAL match
    LOCAL cProper
    LOCAL cOldCP
@@ -1369,13 +1370,15 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    lInCommentOnly := hb_FNameExt( cFileName ) $ sc_hInCommentOnly
    cFileStripped := iif( lInCommentOnly, GetCComments( cFile ), cFile )
 
-   cOldCP := hb_cdpSelect( "EN" )
-
    #define _MATCH_cStr    1
    #define _MATCH_nStart  2
    #define _MATCH_nEnd    3
 
-   FOR EACH match IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+   cOldCP := hb_cdpSelect( "EN" )
+   aMatchList := hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+   hb_cdpSelect( cOldCP )
+
+   FOR EACH match IN aMatchList
       IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
          IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
@@ -1393,7 +1396,11 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    NEXT
 
    IF ! lInCommentOnly
-      FOR EACH match IN hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
+      cOldCP := hb_cdpSelect( "EN" )
+      aMatchList := hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
+      hb_cdpSelect( cOldCP )
+
+      FOR EACH match IN aMatchList
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
             cFile := Left( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
@@ -1402,8 +1409,6 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
          ENDIF
       NEXT
    ENDIF
-
-   hb_cdpSelect( cOldCP )
 
    IF nChanged > 0
       OutStd( cFileName + ": Harbour function casings fixed: " + hb_ntos( nChanged ) + hb_eol() )
