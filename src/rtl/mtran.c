@@ -56,7 +56,7 @@ HB_SIZE hb_strMemotran( char * pszResult, const char * pszString, HB_SIZE nStrin
    HB_SIZE nStringPos = 0;
    HB_SIZE nResultPos = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %p, %s, %" HB_PFS "u, %x, %x)", pszResult, pnResultLen, pszString, nStringLen, cHardCR, cSoftCR ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %s, %" HB_PFS "u, %x, %x)", pszResult, pszString, nStringLen, cHardCR, cSoftCR ) );
 
    while( nStringPos < nStringLen )
    {
