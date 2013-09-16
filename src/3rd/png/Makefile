@@ -68,8 +68,8 @@ else
 endif
 
 # ORIGIN http://www.libpng.org/pub/png/libpng.html
-# VER    1.6.3
-# URL    http://prdownloads.sourceforge.net/libpng/libpng-1.6.3.tar.gz?download
+# VER    1.6.6
+# URL    https://downloads.sourceforge.net/libpng/libpng-1.6.6.tar.gz
 # DIFF   png.dif
 #
 # MAP    LICENSE

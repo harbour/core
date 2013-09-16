@@ -1868,8 +1868,8 @@ Supported shells per host platforms:
         Windows binary + source:
 
          * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
-         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download>
-         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download>
+         * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma>
+         * <https://downloads.sourceforge.net/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma>
          * `cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make`
           <br />(included in Harbour as [win-make.exe](win-make.exe))
 

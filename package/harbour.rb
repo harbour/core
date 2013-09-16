@@ -1,7 +1,7 @@
 require 'formula'
 
 class Harbour < Formula
-  url 'http://downloads.sourceforge.net/project/harbour-project/source/3.0.0/harbour-3.0.0.tar.bz2'
+  url 'https://downloads.sourceforge.net/harbour-project/source/3.0.0/harbour-3.0.0.tar.bz2'
   homepage 'harbour-project.org/'
   sha1 '66c21d666ac24c45485179eeaa9f90458b552e92'
 

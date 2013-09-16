@@ -28,7 +28,7 @@ unzip.c
 
 # ORIGIN http://zlib.net/
 # VER    1.2.8
-# URL    http://prdownloads.sourceforge.net/libpng/zlib128.zip?download
+# URL    https://downloads.sourceforge.net/libpng/zlib128.zip
 # DIFF   minizip.dif
 #
 # MAP    README
