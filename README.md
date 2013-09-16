@@ -1762,7 +1762,7 @@ Supported shells per host platforms:
      * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
         * <http://curl.haxx.se/>
      * HB_WITH_EXPAT - Expat (XML parser) [multiplatform, free, open-source]
-        * <http://expat.sourceforge.net/>
+        * <http://www.libexpat.org>
      * HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
         * <http://www.firebirdsql.org/>
      * HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
