@@ -2806,6 +2806,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
       ptv = NULL;
 
    ret = select( ( int ) ( maxsd + 1 ), pfds[ 0 ], pfds[ 1 ], pfds[ 2 ], ptv );
+   hb_socketSetOsError( ret == -1 ? HB_SOCK_GETERROR() : 0 );
 
    for( i = 0; i < 3; i++ )
    {
