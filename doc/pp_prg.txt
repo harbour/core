@@ -61,6 +61,7 @@ it's lines by macro compiler:
 
    /*** testpp.prg ***/
    REQUEST __PP_STDRULES
+   REQUEST __WAIT
    PROC Main()
       local cLine, pPP, oErr
       pPP := __PP_INIT()
