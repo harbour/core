@@ -1609,8 +1609,8 @@ mailing list.
  :---- | :------- | :---------------- | :---------------------------------------
        | win      | win/bcc           | x86
        | win      | win/bcc64         | x86-64
+       | win      | win/clang         | x86
        | win      | win/gcc           | x86
-       | win      | win/global        | x86
        | win      | win/icc           | x86
        | win      | win/icc64         | x86-64 (not supported yet)
        | win      | win/iccia64       | ia64
