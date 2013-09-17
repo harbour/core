@@ -36,7 +36,9 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    HB_CFLAGS_STA := -DPCRE_STATIC
 
    ifneq ($(filter $(HB_COMPILER),clang gcc mingw mingw64),)
-      HB_CFLAGS += -DHAVE_INTTYPES_H
+      ifneq ($(filter $(PLATFORM)-$(HB_COMPILER),win-clang),)
+         HB_CFLAGS += -DHAVE_INTTYPES_H
+      endif
    endif
 
 #   ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc mvc64)$(filter $(HB_PLATFORM),darwin linux),)

@@ -2070,6 +2070,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| FindInPath( "armasm.exe" ) }, "msvcarm" }, ;
          { {|| FindInPath( "ml64.exe"   ) }, "msvc64" }, ;
          { {|| FindInPath( "ias.exe"    ) }, "msvcia64" }, ;
+         { {|| FindInPath( "clang-cl.exe" ) }, "clang" }, ;
          { {|| iif( FindInPath( "wcc386"   ) == NIL, ;
                     FindInPath( "cl.exe"   ), ;
                     NIL )                      }, "msvc"    }, ;
@@ -4502,10 +4503,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "clang" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "tcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" )
+
+         /* NOTE: 'clang' branches are there for the gcc flavor of clang (clang-gcc),
+                  which is not available in any usable form yet [2013-09-17] */
 
          hbmk[ _HBMK_nCmd_FNF ] := _FNF_FWDSLASH
 
@@ -5299,7 +5302,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
 
-      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64" ) ) .OR. ;
+      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64|clang" ) ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
 
          hbmk[ _HBMK_nCmd_FNF ] := _FNF_BCKSLASH
@@ -5349,9 +5352,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cBin_Lib := "lib.exe"
             IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. ( hbmk[ _HBMK_nCOMPVer ] != 0 .AND. hbmk[ _HBMK_nCOMPVer ] < 1400 )
                cBin_CompC := "clarm.exe"
+            ELSEIF hbmk[ _HBMK_cCOMP ] == "clang"
+               cBin_CompC := "clang-cl.exe"
             ELSE
                cBin_CompC := "cl.exe"
             ENDIF
+            /* lld.exe crashes, so it's not used for clang-cl yet [2013-09-17] */
             cBin_Link := "link.exe"
             cBin_Dyn := cBin_Link
          ENDIF
@@ -5426,11 +5432,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOptIncMask := "-I{DI}"
          cOpt_Link := "-nologo -out:{OE} {LO} {DL} {FL} {IM} {LL} {LB} {LF} {LS}{SCRIPT}"
          SWITCH hbmk[ _HBMK_cCOMP ]
+         CASE "clang"
+         CASE "icc"
          CASE "msvc"     ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
+         CASE "clang64"
          CASE "msvc64"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x64"  ) ; EXIT
+         CASE "iccia64"
          CASE "msvcia64" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:ia64" ) ; EXIT
-         CASE "icc"      ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:x86"  ) ; EXIT
-         CASE "iccia64"  ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:ia64" ) ; EXIT
          CASE "msvcarm"  ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:xarm" ) ; EXIT
          CASE "msvcmips" ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:mips" ) ; EXIT
          CASE "msvcsh"   ; AAdd( hbmk[ _HBMK_aOPTI ], "-machine:sh5"  ) ; EXIT

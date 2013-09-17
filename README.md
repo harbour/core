@@ -866,6 +866,13 @@ executables are required for a cross-build process to succeed.
 >   command: `> log.txt 2>&1`
 
 ```batchfile
+rem clang (alpha)
+call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+set PATH="%ProgramFiles%\LLVM 3.4.svn";%PATH%
+win-make
+```
+
+```batchfile
 rem MSVC 2012
 call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 win-make
@@ -1153,6 +1160,13 @@ binaries if they are available.
 ```batchfile
 rem MinGW GCC for Windows x86-64
 set PATH=C:\mingw64\bin;%PATH%
+win-make
+```
+
+```batchfile
+rem clang (alpha)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+set PATH="%ProgramFiles(x86)%\LLVM 3.4.svn";%PATH%
 win-make
 ```
 

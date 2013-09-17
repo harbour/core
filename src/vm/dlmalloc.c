@@ -1557,7 +1557,7 @@ LONG __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value);
 #endif
 
 /* Declarations for bit scanning on win32 */
-#if defined(_MSC_VER) && _MSC_VER>=1300
+#if defined(_MSC_VER) && _MSC_VER>=1300 && !defined(__clang__)
 #ifndef BitScanForward /* Try to avoid pulling in WinNT.h */
 #ifdef __cplusplus
 extern "C" {
@@ -1573,7 +1573,7 @@ unsigned char _BitScanReverse(unsigned long *index, unsigned long mask);
 #pragma intrinsic(_BitScanForward)
 #pragma intrinsic(_BitScanReverse)
 #endif /* BitScanForward */
-#endif /* defined(_MSC_VER) && _MSC_VER>=1300 */
+#endif /* defined(_MSC_VER) && _MSC_VER>=1300 && !defined(__clang__) */
 
 #ifndef WIN32
 #ifndef malloc_getpagesize
@@ -2947,7 +2947,7 @@ static size_t traverse_and_check(mstate m);
   }\
 }
 
-#elif defined(_MSC_VER) && _MSC_VER>=1300
+#elif defined(_MSC_VER) && _MSC_VER>=1300 && !defined(__clang__)
 #define compute_tree_index(S, I)\
 {\
   size_t X = S >> TREEBIN_SHIFT;\
@@ -3039,7 +3039,7 @@ static size_t traverse_and_check(mstate m);
   I = (bindex_t)J;\
 }
 
-#elif defined(_MSC_VER) && _MSC_VER>=1300
+#elif defined(_MSC_VER) && _MSC_VER>=1300 && !defined(__clang__)
 #define compute_bit2idx(X, I)\
 {\
   unsigned int J;\

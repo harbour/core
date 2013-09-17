@@ -4,7 +4,12 @@ LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
 
+ifeq ($(HB_COMPILER),clang)
+CC := clang-cl.exe
+HB_BUILD_MODE := c
+else
 CC := cl.exe
+endif
 CC_IN := -c
 CC_OUT := -Fo
 
@@ -71,7 +76,12 @@ endif
 #    CFLAGS += -GA
 # endif
 
+# lld.exe crashes
+# ifeq ($(HB_COMPILER),clang)
+# LD := lld.exe -flavor link
+# else
 LD := link.exe
+# endif
 LD_OUT := -out:
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),-libpath:$(dir))
