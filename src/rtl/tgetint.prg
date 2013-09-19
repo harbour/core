@@ -55,7 +55,7 @@ FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    IF bSetGet == NIL
       IF FieldPos( cVarName ) > 0
-         bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
+         bSetGet := hb_macroBlock( "iif(PCount()==0," + hb_ntos( Select() ) + "->" + cVarName + "," + hb_ntos( Select() ) + "->" + cVarName + ":=hb_PValue(1))" )
       ELSEIF __mvExist( cVarName )
          bSetGet := {| _1 | iif( _1 == NIL, __mvGet( cVarName ), __mvPut( cVarName, _1 ) ) }
       ELSE
@@ -76,7 +76,7 @@ FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    IF bGetArray == NIL
       IF FieldPos( cVarName ) > 0
-         bGetArray := hb_macroBlock( "FIELD->" + cVarName )
+         bGetArray := hb_macroBlock( hb_ntos( Select() ) + "->" + cVarName )
       ELSEIF __mvExist( cVarName )
          bGetArray := {|| __mvGet( cVarName ) }
       ELSE
