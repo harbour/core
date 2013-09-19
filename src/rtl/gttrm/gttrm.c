@@ -2109,21 +2109,42 @@ static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
 /*
  * common functions
  */
+static HB_BOOL hb_trm_Param( const char * pszParam )
+{
+   HB_BOOL fResult = HB_FALSE;
+   char * pszGtTrmParams = hb_cmdargString( "GTTRM" );
+
+   if( pszGtTrmParams )
+   {
+      fResult = strstr( hb_strupr( pszGtTrmParams ), pszParam ) != NULL;
+      hb_xfree( pszGtTrmParams );
+   }
+
+   return fResult;
+}
+
 static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
 {
+   HB_BOOL fUTF8 = HB_FALSE;
    char * szLang;
 
    if( pTerm->fPosAnswer )
    {
       int iRow = 0, iCol = 0;
-      HB_BOOL fSize;
 
       hb_gt_trm_termOut( pTerm, "\005\r\303\255", 4 );
-      fSize = pTerm->GetCursorPos( pTerm, &iRow, &iCol, "\r   \r" );
+      fUTF8 = pTerm->GetCursorPos( pTerm, &iRow, &iCol, "\r   \r" ) &&
+              iCol == 1;
       pTerm->iCol = 0;
-      if( fSize )
-         return iCol == 1;
    }
+
+   if( hb_trm_Param( "UTF8" ) || hb_trm_Param( "UTF-8" ) )
+      return HB_TRUE;
+   else if( hb_trm_Param( "ISO" ) )
+      return HB_FALSE;
+   else if( fUTF8 )
+      return HB_TRUE;
+
    szLang = getenv( "LANG" );
    return szLang && strstr( szLang, "UTF-8" ) != NULL;
 }
@@ -2905,6 +2926,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    pTerm->iAttrMask     = ~HB_GTTRM_ATTR_BOX;
    pTerm->terminal_ext  = 0;
    pTerm->fAM           = HB_FALSE;
+   if( hb_trm_Param( "PUTTY" ) )
+      pTerm->terminal_ext |= TERM_PUTTY;
 
    szTerm = getenv( "HB_TERM" );
    if( szTerm == NULL || *szTerm == '\0' )
@@ -2919,7 +2942,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
        strstr( szTerm, "xterm" ) != NULL ||
        strncmp( szTerm, "rxvt", 4 ) == 0 ||
        strcmp( szTerm, "putty" ) == 0 ||
-       strncmp( szTerm, "screen", 6 ) == 0 )
+       strncmp( szTerm, "screen", 6 ) == 0 ||
+       hb_trm_Param( "XTERM" ) )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -2937,7 +2961,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    }
    else if( strncmp( szTerm, "linux", 5 ) == 0 ||
             strcmp( szTerm, "tterm" ) == 0 ||
-            strcmp( szTerm, "teraterm" ) == 0 )
+            strcmp( szTerm, "teraterm" ) == 0 ||
+            hb_trm_Param( "LINUX" ) )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -2953,7 +2978,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->szAcsc         = szExtAcsc;
       pTerm->terminal_type  = TERM_LINUX;
    }
-   else if( strncmp( szTerm, "cons", 4 ) == 0 )
+   else if( strncmp( szTerm, "cons", 4 ) == 0 ||
+            hb_trm_Param( "CONS" ) )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -2997,7 +3023,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->hFileno     = pTerm->hFilenoStdin;
       pTerm->fOutTTY     = HB_TRUE;
    }
-   pTerm->fPosAnswer     = pTerm->fOutTTY;
+   pTerm->fPosAnswer     = pTerm->fOutTTY && ! hb_trm_Param( "NOPOS" );
    pTerm->fUTF8          = HB_FALSE;
 
    hb_fsSetDevMode( pTerm->hFileno, FD_BINARY );

@@ -3876,7 +3876,16 @@ static HB_BOOL hb_gtTryInit( const char * szGtName, HB_BOOL fFree )
    if( szGtName )
    {
       if( hb_stackGetGT() == NULL )
+      {
+         if( fFree )
+         {
+            char * pszStr;
+            if( ( pszStr = strchr( szGtName, ':' ) ) != NULL )
+               * pszStr = '\0';
+         }
+
          hb_stackSetGT( hb_gtLoad( szGtName, NULL, NULL ) );
+      }
 
       if( fFree )
          hb_xfree( ( void * ) szGtName );
