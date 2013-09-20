@@ -1741,11 +1741,15 @@ HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
 
 HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */
 {
-   HB_USHORT uiWorkArea = 0;
+   HB_USHORT uiWorkArea = 0, uiRelation = ( HB_USHORT ) hb_parni( 1 );
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
-      SELF_RELAREA( pArea, ( HB_USHORT ) hb_parni( 1 ), &uiWorkArea );
+      /* undocumented CA-Cl*pper behavior:
+       * When parameter is missing, wrong or 0 then 1 is used as
+       * relation number [druzus]
+       */
+      SELF_RELAREA( pArea, uiRelation ? uiRelation : 1, &uiWorkArea );
 
    hb_retni( uiWorkArea );
 }
