@@ -3879,8 +3879,8 @@ static HB_BOOL hb_gtTryInit( const char * szGtName, HB_BOOL fFree )
       {
          if( fFree )
          {
-            char * pszStr;
-            if( ( pszStr = strchr( szGtName, ':' ) ) != NULL )
+            char * pszStr = ( char * ) strchr( szGtName, ':' );
+            if( pszStr != NULL )
                * pszStr = '\0';
          }
 
