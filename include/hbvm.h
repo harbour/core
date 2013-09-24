@@ -90,7 +90,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
       HB_ULONG  ulID;               /* module unique identifier */
    } HB_SYMBOLS, * PHB_SYMBOLS;     /* structure to keep track of all modules symbol tables */
 
-   extern PHB_SYMBOLS   hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_BOOL fDynLib, HB_BOOL fClone );
+   extern PHB_SYMBOLS   hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_BOOL fDynLib, HB_BOOL fClone, HB_BOOL fOverLoad );
    extern HB_BOOL       hb_vmLockModuleSymbols( void );
    extern void          hb_vmUnlockModuleSymbols( void );
    extern void          hb_vmFreeSymbols( PHB_SYMBOLS pSymbols );

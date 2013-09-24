@@ -525,7 +525,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
 
       if( hb_vmLockModuleSymbols() )
       {
-         if( usBind == HB_HRB_BIND_LOCAL || usBind == HB_HRB_BIND_OVERLOAD )
+         if( usBind == HB_HRB_BIND_LOCAL )
          {
             for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
             {
@@ -535,24 +535,17 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
                   pDynSym = hb_dynsymFind( pSymRead[ ul ].szName );
                   if( pDynSym )
                   {
-                     if( usBind == HB_HRB_BIND_LOCAL )
-                     {
-                        /* convert public function to static one */
-                        pSymRead[ ul ].scope.value |= HB_FS_STATIC;
-                     }
-                     else
-                     {
-                        /* overload existing public function */
-                        pDynSym->pSymbol = &pSymRead[ ul ];
-                        hb_vmSetDynFunc( pDynSym );
-                     }
+                     /* convert public function to static one */
+                     pSymRead[ ul ].scope.value |= HB_FS_STATIC;
                   }
                }
             }
          }
 
          pHrbBody->pModuleSymbols = hb_vmRegisterSymbols( pHrbBody->pSymRead,
-                  ( HB_USHORT ) pHrbBody->ulSymbols, szFileName ? szFileName : "pcode.hrb", 0, HB_TRUE, HB_FALSE );
+                        ( HB_USHORT ) pHrbBody->ulSymbols,
+                        szFileName ? szFileName : "pcode.hrb", 0,
+                        HB_TRUE, HB_FALSE, usBind == HB_HRB_BIND_OVERLOAD );
 
          if( pHrbBody->pModuleSymbols->pModuleSymbols != pSymRead )
          {
