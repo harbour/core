@@ -7841,13 +7841,14 @@ void hb_vmExitSymbolGroup( void * hDynLib )
 
 PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
                                   const char * szModuleName, HB_ULONG ulID,
-                                  HB_BOOL fDynLib, HB_BOOL fClone )
+                                  HB_BOOL fDynLib, HB_BOOL fClone,
+                                  HB_BOOL fOverLoad )
 {
    PHB_SYMBOLS pNewSymbols;
    HB_BOOL fRecycled, fInitStatics = HB_FALSE;
    HB_USHORT ui;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_vmRegisterSymbols(%p,%hu,%s,%lu,%d,%d)", pModuleSymbols, uiSymbols, szModuleName, ulID, ( int ) fDynLib, ( int ) fClone ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmRegisterSymbols(%p,%hu,%s,%lu,%d,%d,%d)", pModuleSymbols, uiSymbols, szModuleName, ulID, ( int ) fDynLib, ( int ) fClone, ( int ) fOverLoad ) );
 
    pNewSymbols = s_ulFreeSymbols == 0 ? NULL :
                  hb_vmFindFreeModule( pModuleSymbols, uiSymbols, szModuleName, ulID );
@@ -7972,6 +7973,13 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
             if( pDynSym )
             {
+               if( fOverLoad && ( pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
+               {
+                  /* overload existing public function */
+                  pDynSym->pSymbol = pSymbol;
+                  hb_vmSetDynFunc( pDynSym );
+                  continue;
+               }
                pSymbol->pDynSym = pDynSym;
                if( pDynSym->pSymbol != pSymbol && HB_VM_ISFUNC( pDynSym->pSymbol ) &&
                    ( pDynSym->pSymbol->value.pFunPtr != pSymbol->value.pFunPtr ||
@@ -8033,7 +8041,8 @@ PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
 
    hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
-                                s_fCloneSym, s_fCloneSym )->pModuleSymbols;
+                                s_fCloneSym, s_fCloneSym,
+                                HB_FALSE )->pModuleSymbols;
 }
 
 PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols,
@@ -8044,7 +8053,7 @@ PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHORT uiModuleSymbols
 
    hb_vmVerifyPCodeVersion( szModuleName, uiPCodeVer );
    return hb_vmRegisterSymbols( pSymbols, uiModuleSymbols, szModuleName, ulID,
-                                HB_TRUE, HB_TRUE )->pModuleSymbols;
+                                HB_TRUE, HB_TRUE, HB_FALSE )->pModuleSymbols;
 }
 
 static void hb_vmReleaseLocalSymbols( void )
