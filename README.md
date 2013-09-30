@@ -1726,19 +1726,21 @@ Supported shells per host platforms:
      * MinGW/MinGW-64 [win, *nix, free, open-source]
         * <https://sourceforge.net/projects/mingwbuilds/> (unofficial, recommended)
         * <http://tdm-gcc.tdragon.net/>, <https://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
-        * <http://www.mingw.org/>, <https://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
+        * <http://mingw.org/>, <https://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
         * <http://mingw-w64.sourceforge.net/>, <https://sourceforge.net/projects/mingw-w64/> (official 64-bit, MSYS home)
         * <http://nuwen.net/mingw.html> (unofficial)
      * MinGW CEGCC [win, *nix, free, open-source]
         * <http://cegcc.sourceforge.net/>
      * Cygwin [win, free, open-source]
-        * <http://www.cygwin.com/>
+        * <http://cygwin.com/>
+     * Clang [multiplatform, free, open-source]
+        * <http://llvm.org/builds/> (Windows snapshots)
      * OS/2 GCC [os2, free, open-source]
         * <http://os2ports.smedley.id.au/index.php?page=gcc-v4-4-x>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
-        * <http://www.openwatcom.org/>
+        * <http://openwatcom.org/>
      * Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
@@ -1752,7 +1754,7 @@ Supported shells per host platforms:
      * MS Visual Studio [win, commercial, closed-source]
         * <http://www.microsoft.com/visualstudio/>
      * Pelles C [win, wce, free, closed-source]
-        * <http://www.smorgasbordet.com/pellesc/>
+        * <http://smorgasbordet.com/pellesc/>
      * Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
         * <https://downloads.embarcadero.com/free/c_builder>
      * Intel Compiler [win, linux, darwin, commercial, closed-source]
@@ -1767,27 +1769,27 @@ Supported shells per host platforms:
      * HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
         * <http://www.blat.net/>
      * HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
-        * <http://www.bzip.org/>
+        * <http://bzip.org/>
      * HB_WITH_CAIRO - Cairo [multiplatform, open-source]
         * <http://www.gtk.org/download/win32.php><br />
         Look for these components on page above: cairo-dev_*_win32.zip, cairo_*_win32.zip, libpng_*_win32.zip
      * HB_WITH_CUPS - libcups (printing) [*nix, free, open-source]
-        * <http://www.cups.org/>
+        * <http://cups.org/>
      * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
         * <http://curl.haxx.se/>
      * HB_WITH_EXPAT - Expat (XML parser) [multiplatform, free, open-source]
         * <http://www.libexpat.org>
      * HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
-        * <http://www.firebirdsql.org/>
+        * <http://firebirdsql.org/>
      * HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
         * <http://freeimage.sourceforge.net/>
      * HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
-        * <http://www.libgd.org/>
+        * <http://libgd.org/>
      * HB_WITH_GS - Ghostscript [multiplatform, free, open-source]
-        * <http://www.ghostscript.com/>
+        * <http://ghostscript.com/>
         * <http://pages.cs.wisc.edu/~ghost/>
      * HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
-        * <http://www.ijg.org/>
+        * <http://ijg.org/>
      * HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
         * <http://libharu.org/>
      * HB_WITH_LIBMAGIC - libmagic, file recognition [multiplatform, free, open-source]
@@ -1797,7 +1799,7 @@ Supported shells per host platforms:
      * HB_WITH_MINILZO - miniLZO library (RT data compression) [multiplatform, free, open-source]
         * <http://www.oberhumer.com/opensource/lzo/>
      * HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
-        * <http://www.winimage.com/zLibDll/minizip.html>
+        * <http://winimage.com/zLibDll/minizip.html>
      * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
         * <http://www.minixml.org>
      * HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
@@ -1810,26 +1812,26 @@ Supported shells per host platforms:
         * <https://www.openssl.org/related/binaries.html>
         * <http://wiki.opensslfoundation.com/>
      * HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
-        * <http://www.pcre.org/>
+        * <http://pcre.org/>
      * HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]
-        * <http://www.postgresql.org/>
+        * <https://www.postgresql.org/>
      * HB_WITH_PNG - libpng [multiplatform, free, open-source]
-        * <http://www.libpng.org/pub/png/libpng.html>
+        * <http://libpng.org/pub/png/libpng.html>
      * HB_WITH_QT - QT (GUI) [multiplatform, free, open-source]
         * <https://qt-project.org/>
         * <https://download.qt-project.org/official_releases/qt/>
      * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
-        * <https://www.sqlite.org/>
+        * <https://sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
-        * <http://www.libtiff.org/>
+        * <http://remotesensing.org/libtiff/>
      * HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
         * <http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
         * <http://home.broadpark.no/~gvanem/>
      * HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
-        * <http://www.zlib.net/>
+        * <http://zlib.net/>
      * HB_WITH_XDIFF - libxdiff (file differences/patches) [multiplatform, free, open-source]
-        * <http://www.xmailserver.org/xdiff-lib.html>
+        * <http://xmailserver.org/xdiff-lib.html>
 
      * Windows 95 Winsock2 [win, free, closed-source]
         * Information: Microsoft KB182108 "Availability of Windows Sockets 2.0 for Windows 95"
@@ -1869,12 +1871,12 @@ Supported shells per host platforms:
      * Nullsoft Installer [win, free, open-source]
         * <http://nsis.sourceforge.net/>
      * 7-Zip [multiplatform, free, open-source]
-        * <http://www.7-zip.org/>
+        * <http://7-zip.org/>
      * Info-ZIP [multiplatform, free, open-source]
-        * <http://www.info-zip.org/>
+        * <http://info-zip.org/>
      * bzip2 [multiplatform, free, open-source]
          Windows binary:
-           * <http://www.bzip.org/downloads.html>
+           * <http://bzip.org/downloads.html>
      * Chocolatey (Windows package manager) [free, open-source]
         * <https://chocolatey.org/>
      * GNU Make
@@ -1927,7 +1929,7 @@ Supported shells per host platforms:
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
        * <http://help.transifex.com/features/formats.html#po-files>
-       * <http://www.heiner-eichmann.de/autotools/using_gettext.html>
+       * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
 
 

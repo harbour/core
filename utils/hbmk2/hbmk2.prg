@@ -8759,7 +8759,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
 
    /* NOTE:
          https://en.wikipedia.org/wiki/PCRE
-         http://www.pcre.org/pcre.txt */
+         http://pcre.org/pcre.txt */
 
    IF t_pRegexInclude == NIL
       /* Switch to non UTF8 CP - otherwise PCRE fails on user files

@@ -67,7 +67,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.libpng.org/pub/png/libpng.html
+# ORIGIN http://libpng.org/pub/png/libpng.html
 # VER    1.6.6
 # URL    https://downloads.sourceforge.net/libpng/libpng-1.6.6.tar.gz
 # DIFF   png.dif

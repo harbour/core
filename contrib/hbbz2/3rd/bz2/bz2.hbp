@@ -26,9 +26,9 @@ randtabl.c
 -cflag=-DBZ_STRICT_ANSI
 -cflag=-DBZ_NO_STDIO
 
-# ORIGIN http://www.bzip.org/
+# ORIGIN http://bzip.org/
 # VER    1.0.6
-# URL    http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+# URL    http://bzip.org/1.0.6/bzip2-1.0.6.tar.gz
 # DIFF   bz2.dif
 #
 # MAP    LICENSE

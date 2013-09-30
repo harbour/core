@@ -69,7 +69,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.pcre.org/
+# ORIGIN http://pcre.org/
 # VER    8.33
 # URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.33.tar.gz
 # DIFF   pcre.dif

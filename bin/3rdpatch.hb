@@ -38,7 +38,7 @@
  * ORIGIN
  *   Takes one argument, the URL of component's home page. Not currently used,
  *   but greatly helps locating resources regarding the component.
- *   Example: for PCRE, it is `http://www.pcre.org/'.
+ *   Example: for PCRE, it is `http://pcre.org/'.
  *
  * VER
  *   Takes one argument, the version number of the component currently in the

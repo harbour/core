@@ -26,9 +26,9 @@ xrabply.c
 xutils.c
 xversion.c
 
-# ORIGIN http://www.xmailserver.org/xdiff-lib.html
+# ORIGIN http://xmailserver.org/xdiff-lib.html
 # VER    0.23
-# URL    http://www.xmailserver.org/libxdiff-0.23.tar.gz
+# URL    http://xmailserver.org/libxdiff-0.23.tar.gz
 # DIFF   libxdiff.dif
 #
 # MAP    AUTHORS

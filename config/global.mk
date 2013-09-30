@@ -6,8 +6,8 @@
 # ---------------------------------------------------------------
 # GNU make docs:
 #    https://www.gnu.org/software/make/manual/make.html
-#    http://www.wanderinghorse.net/computing/make/
-#    http://www.jgc.org/feeds/topic-gnumake.xml
+#    http://wanderinghorse.net/computing/make/
+#    http://blog.jgc.org/2013/02/updated-list-of-my-gnu-make-articles.html
 #    https://lists.gnu.org/archive/html/help-make/
 #    http://make.paulandlesley.org/
 # Portable shell programming:
