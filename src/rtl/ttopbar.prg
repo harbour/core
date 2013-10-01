@@ -194,12 +194,12 @@ METHOD display() CLASS TopBarMenu
          ENDIF
       ENDIF
 
-      hb_DispOutAt( nRow, nLeft, cCaption,;
-         iif( nItem == nCurrent, cColor2,;
+      hb_DispOutAt( nRow, nLeft, cCaption, ;
+         iif( nItem == nCurrent, cColor2, ;
             iif( aItems[ nItem ]:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF aItems[ nItem ]:enabled .AND. nPos > 0
-         hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
+         hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
             iif( nItem == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
@@ -391,7 +391,7 @@ METHOD setItem( nPos, oItem ) CLASS TopBarMenu
 METHOD colorSpec( cColorSpec ) CLASS TopBarMenu
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| ! Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 

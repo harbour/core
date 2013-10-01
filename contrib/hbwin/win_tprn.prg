@@ -134,10 +134,10 @@ CREATE CLASS win_Prn
    METHOD INCH_TO_POSX( nInch )  // Convert position on page from INCH to pixel location Column
    METHOD INCH_TO_POSY( nInch )  //   "       "      "    "    "   "    "   "       "    Row
 
-   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize,;     // Print text string at location
-                      nWidth, nBold, lUnderLine, lItalic, nCharSet,; // in specified font and color.
-                      lNewLine, lUpdatePosX, nColor, nAlign )        // Restore original font and colour
-                                                                     // after printing.
+   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;     // Print text string at location
+                      nWidth, nBold, lUnderLine, lItalic, nCharSet, ; // in specified font and color.
+                      lNewLine, lUpdatePosX, nColor, nAlign )         // Restore original font and colour
+                                                                      // after printing.
 
    METHOD GetDeviceCaps( nCaps )
 

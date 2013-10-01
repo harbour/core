@@ -64,21 +64,21 @@ CREATE CLASS Entry
       { "NAME",         "" }, ;
       { "CATEGORY",     "Category" }, ;
       { "SUBCATEGORY",  "Sub category" }, ;
-      { "ONELINER",     "" },;
-      { "SYNTAX",       "Syntax" },;
-      { "ARGUMENTS",    "Argument(s)" },;
-      { "RETURNS",      "Returns" },;
-      { "DESCRIPTION",  "Description" },;
-      { "DATALINK",     "Data link" },;
-      { "DATANOLINK",   "Data no link" },;
-      { "METHODSLINK",  "Methods link" },;
-      { "METHODSNOLINK","Methods no link" },;
-      { "EXAMPLES",     "Example(s)" },;
-      { "TESTS",        "Test(s)" },;
-      { "STATUS",       "Status" },;      /* p_aStatus is the constraint list */
-      { "COMPLIANCE",   "Compliance" },;  /* p_aCompliance is the constraint list */
-      { "PLATFORMS",    "Platform(s)" },; /* p_aPlatforms is the constraint list */
-      { "FILES",        "File(s)" },;
+      { "ONELINER",     "" }, ;
+      { "SYNTAX",       "Syntax" }, ;
+      { "ARGUMENTS",    "Argument(s)" }, ;
+      { "RETURNS",      "Returns" }, ;
+      { "DESCRIPTION",  "Description" }, ;
+      { "DATALINK",     "Data link" }, ;
+      { "DATANOLINK",   "Data no link" }, ;
+      { "METHODSLINK",  "Methods link" }, ;
+      { "METHODSNOLINK","Methods no link" }, ;
+      { "EXAMPLES",     "Example(s)" }, ;
+      { "TESTS",        "Test(s)" }, ;
+      { "STATUS",       "Status" }, ;      /* p_aStatus is the constraint list */
+      { "COMPLIANCE",   "Compliance" }, ;  /* p_aCompliance is the constraint list */
+      { "PLATFORMS",    "Platform(s)" }, ; /* p_aPlatforms is the constraint list */
+      { "FILES",        "File(s)" }, ;
       { "SEEALSO",      "See also" }, ;
       { "END",          "End" } ;
    }

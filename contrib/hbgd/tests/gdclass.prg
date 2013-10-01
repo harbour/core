@@ -248,14 +248,14 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
    oI5:AddDef( "COLOR", blue )
 
-   // oI5:AddSeries( "LABEL"  => "Primo",;
+   // oI5:AddSeries( "LABEL"  => "Primo", ;
    //                "VALUES" => { 10, 23, 54, 11, 32, 25 }, ;
    //                "COLOR"  => blue )
 
 #if 0
    oI5:SetData( { ;
-      { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40 },;
-      { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
+      { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40 }, ;
+      { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
       { "LABEL" => "Three", "VALUE" => 5500, "COLOR" => green, "FILLED" => .T. }, ;
       { "LABEL" => "Four", "VALUE" => 6500, "FILLED" => .T., "TILE" => oB }, ;
       { "LABEL" => "Five", "VALUE" => 3400, "FILLED" => .T., "COLOR" => green }, ;

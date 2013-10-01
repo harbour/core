@@ -120,13 +120,13 @@ CREATE CLASS HBFormatCode
    VAR cCommands      INIT ","
    VAR cClauses       INIT ","
    VAR cFunctions     INIT ","
-   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "endif"     },;
-                             { "do"    , "while"   , ""                , "enddo"     },;
-                             { "while" , ""        , ""                , "enddo"     },;
-                             { "for"   , ""        , ""                , "next"      },;
-                             { "do"    , "case"    , "|case|otherwise|", "endcase"   },;
-                             { "with"  , "object"  , ""                , "end"       },;
-                             { "begin" , "sequence", "|recover|always|", "end"       },;
+   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "endif"     }, ;
+                             { "do"    , "while"   , ""                , "enddo"     }, ;
+                             { "while" , ""        , ""                , "enddo"     }, ;
+                             { "for"   , ""        , ""                , "next"      }, ;
+                             { "do"    , "case"    , "|case|otherwise|", "endcase"   }, ;
+                             { "with"  , "object"  , ""                , "end"       }, ;
+                             { "begin" , "sequence", "|recover|always|", "end"       }, ;
                              { "switch", ""        , "|case|otherwise|", "endswitch" } }
 
    VAR bCallback

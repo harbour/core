@@ -808,7 +808,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 }
 
 /*
- * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize,;
+ * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
  *                 viewScreenFonts, viewPrinterFonts )
  */
 HB_FUNC( WVG_CHOOSEFONT )

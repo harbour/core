@@ -548,10 +548,10 @@ METHOD open() CLASS ListBox
    IF ! ::lIsOpen
 
       ::aSaveScr := { ;
-         ::nTop + 1,;
-         ::nLeft,;
-         ::nBottom,;
-         ::nRight,;
+         ::nTop + 1, ;
+         ::nLeft, ;
+         ::nBottom, ;
+         ::nRight, ;
          SaveScreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
 
       ::lIsOpen := .T.
@@ -1086,7 +1086,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
 FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
+FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
    LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )

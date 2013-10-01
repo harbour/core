@@ -95,16 +95,16 @@
           [<lcache:NOCACHE>]           ;
           OF <oHtml>                 ;
           =>                         ;
-          <oHtml> := THtml():new( <file>,<title>,<linktitle>,<charset>,;
+          <oHtml> := THtml():new( <file>, <title>, <linktitle>, <charset>, ;
                                  [{<(javasrc)>}], ;
-                                 [<bgimg>], [<bgcolor>], [<txtcolor>],;
-                                 [{<(javacode)>}],;
+                                 [<bgimg>], [<bgcolor>], [<txtcolor>], ;
+                                 [{<(javacode)>}], ;
                                  [<(onload)>], [<(onunload)>], ;
-                                 [<(lcolor)>],[<(vlcolor)>],[<(alcolor)>],;
-                                 [<(cStyle)>], [<aImages>],;
-                                 [<baseurl>], [<basetarget>] ,;
-                                 [<nRefresh>], [<cRefreshURL>],;
-                                 <cStyleScr>,<.lcache.>)
+                                 [<(lcolor)>],[<(vlcolor)>],[<(alcolor)>], ;
+                                 [<(cStyle)>], [<aImages>], ;
+                                 [<baseurl>], [<basetarget>], ;
+                                 [<nRefresh>], [<cRefreshURL>], ;
+                                 <cStyleScr>, <.lcache.> )
 */
 #xcommand DEFINE HTML                 ;
           [FILE <file>]              ;
@@ -138,17 +138,17 @@
           [MARGINWIDTH <nMarginWidth>] ;
           OF <oHtml>                 ;
           =>                         ;
-          <oHtml> := THtml():new(<title>, <linktitle>, <charset>,;
+          <oHtml> := THtml():new( <title>, <linktitle>, <charset>, ;
                                    [{<(javasrc)>}], ;
-                                   [<bgimg>], [<bgcolor>], [<txtcolor>],;
-                                   [{<(javacode)>}],;
+                                   [<bgimg>], [<bgcolor>], [<txtcolor>], ;
+                                   [{<(javacode)>}], ;
                                    [<(onload)>], [<(onunload)>], ;
-                                   [<(lcolor)>], [<(vlcolor)>], [<(alcolor)>],;
-                                   [<(cStyle)>], [<aImages>], [{<(srvr)>}],;
+                                   [<(lcolor)>], [<(vlcolor)>], [<(alcolor)>], ;
+                                   [<(cStyle)>], [<aImages>], [{<(srvr)>}], ;
                                    [<baseurl>], [<basetarget>], ;
-                                   <nrefr>, <refrURL>, <cStyleScr>, <.lcache.>, <nof>,;
-                                   <nMarginTop>, <nMarginHeight>, <nMarginWidth>, <nMarginLeft> ,;
-                                   .F.,<file>)
+                                   <nrefr>, <refrURL>, <cStyleScr>, <.lcache.>, <nof>, ;
+                                   <nMarginTop>, <nMarginHeight>, <nMarginWidth>, <nMarginLeft>, ;
+                                   .F.,<file> )
 
 #xcommand DEFINE CGI                 ;
           [FILE <file>]              ;
@@ -182,16 +182,16 @@
           [MARGINWIDTH <nMarginWidth>] ;
           OF <oHtml>                 ;
           =>                         ;
-          <oHtml> := THtml():new(<title>, <linktitle>, <charset>,;
+          <oHtml> := THtml():new( <title>, <linktitle>, <charset>, ;
                                    [{<(javasrc)>}], ;
-                                   [<bgimg>], [<bgcolor>], [<txtcolor>],;
-                                   [{<(javacode)>}],;
+                                   [<bgimg>], [<bgcolor>], [<txtcolor>], ;
+                                   [{<(javacode)>}], ;
                                    [<(onload)>], [<(onunload)>], ;
-                                   [<(lcolor)>], [<(vlcolor)>], [<(alcolor)>],;
-                                   [<(cStyle)>], [<aImages>], [{<(srvr)>}],;
+                                   [<(lcolor)>], [<(vlcolor)>], [<(alcolor)>], ;
+                                   [<(cStyle)>], [<aImages>], [{<(srvr)>}], ;
                                    [<baseurl>], [<basetarget>], ;
-                                   <nrefr>, <refrURL>, <cStyleScr>, <.lcache.>, <nof>,;
-                                   <nMarginTop>, <nMarginHeight>, <nMarginWidth>, <nMarginLeft> ,;
+                                   <nrefr>, <refrURL>, <cStyleScr>, <.lcache.>, <nof>, ;
+                                   <nMarginTop>, <nMarginHeight>, <nMarginWidth>, <nMarginLeft>, ;
                                    .T., <file> )
 
           // [<auth:AUTHENTICATE>]      ;
@@ -222,13 +222,13 @@
           [NOF <nof> ]               ;
           OF <oHtm>                  ;
           =>                         ;
-          <oHtm>:defineTable( <cols>, <border>, <width>,<height>, ;
+          <oHtm>:defineTable( <cols>, <border>, <width>, <height>, ;
                               <clrfore>, <clrbg>, ;
-                              <.d.>, <.c.>, <.r.>,;
+                              <.d.>, <.c.>, <.r.>, ;
                               <clrdrk>, <clrlt>, <cClrBorder>,  ;
                               <nCellPadding>, <nCellSpacing>, ;
                               __HTML_ALING__ [<aln>], <.x.>, <bgImage>, ;
-                              <cStyle>, <id> , <nof>)
+                              <cStyle>, <id>, <nof> )
 
 
 #xcommand DEFINE TABLE HEADER        ;
@@ -268,7 +268,7 @@
           <oHtm>:newTableCell( __HTML_ALING__ [<aln>], <cColor>, <cFont>, ;
                                <nSize>, <cFntColor>, <nHeight>, ;
                                <img>, <width>, ! <.nowrap.>, ;
-                               <cspan>, <rspan> ,__HTML_ALING__ [<valn>], <clrdrk>, <clrlt>, <bclrlt>, <cClass>)
+                               <cspan>, <rspan> ,__HTML_ALING__ [<valn>], <clrdrk>, <clrlt>, <bclrlt>, <cClass> )
 
 
 #xcommand TABLE CELL                 ;
@@ -356,7 +356,7 @@
           [COLOR <clr>]          ;
           <of:OF,IN> <oHtm>      ;
           =>                     ;
-          <oHtm>:Say( <str>, <fnt>, <size>, <type>, <clr>, <style>)
+          <oHtm>:Say( <str>, <fnt>, <size>, <type>, <clr>, <style> )
 
 
 #xcommand PUSH BUTTON            ;
@@ -374,8 +374,8 @@
           =>                     ;
           <oHtm>:PushButton( <(name)>, <(caption)>, ;
                              [<(cgiapp)>], [<(onclick)>], ;
-                             [<(onfocus)>], [<(onblur)>],;
-                             [<(onmsov)>], [<(onmsou)>],;
+                             [<(onfocus)>], [<(onblur)>], ;
+                             [<(onmsov)>], [<(onmsou)>], ;
                              [<(style)>], [<(id)>] )
 
 #xcommand BUTTON                 ;
@@ -391,7 +391,7 @@
           =>;
           <oHtm>:Button( <(name)>, <(caption)>,      ;
                          [<(onclick)>],[<(cgiapp)>], ;
-                         [<(onmsov)>], [<(onmsou)>],;
+                         [<(onmsov)>], [<(onmsou)>], ;
                          [<(style)>], [<(id)>] )
 
 
@@ -414,9 +414,9 @@
           [<break:BREAK>]             ;
           OF <oHtm>                 ;
           =>                        ;
-          <oHtm>:putImageURL( <image>, <border>, <height>, <url>,;
+          <oHtm>:putImageURL( <image>, <border>, <height>, <url>, ;
                               <onclick>, <onmsover>, <onmsout>,  ;
-                              <name>, <alt>, <target>, <width>,<.break.>)
+                              <name>, <alt>, <target>, <width>, <.break.> )
 
 
 #xcommand IMAGE <image>             ;
@@ -436,10 +436,10 @@
           [ALIGN <aln1:LEFT,RIGHT,CENTER,MIDDLE,TOP,TEXTTOP,BOTTOM,ABSMIDDLE,ABSCENTER,ABSBOTTOM,BASELINE>];
           OF <oHtm>                 ;
           =>                        ;
-          <oHtm>:putImage( <image>, <border>, <height>,;
+          <oHtm>:putImage( <image>, <border>, <height>, ;
                            <onclick>, <onmsover>, <onmsout>, ;
                            <name>, <alt>, ;
-                           <target>, <width>, <.break.>, <iD>, <map>, __HTML_ALING__ [<aln1>] , <hspace>)
+                           <target>, <width>, <.break.>, <iD>, <map>, __HTML_ALING__ [<aln1>], <hspace> )
 
 #xcommand LINK <url>                ;
           [TEXT <text>]             ;
@@ -458,7 +458,7 @@
           =>                        ;
           <oHtm>:putTextURL( <text>, <url>, ;
                                 <onclick>, <onmsover>, <onmsout>, ;
-                             <target>, <font>, <clr>, <size>, <style>, <.bld.> ,<.break.>, <cClass>)
+                             <target>, <font>, <clr>, <size>, <style>, <.bld.>, <.break.>, <cClass> )
 
 #xcommand LINK <url>                ;
           [IMAGE <image>]           ;
@@ -478,7 +478,7 @@
           [ALIGN <aln1:LEFT,RIGHT,CENTER,MIDDLE,TOP,TEXTTOP,BOTTOM,ABSMIDDLE,ABSCENTER,ABSBOTTOM,BASELINE>];
           OF <oHtm>                 ;
           =>                        ;
-          <oHtm>:putImageURL( <image>,<border>,<height>,<url>,;
+          <oHtm>:putImageURL( <image>, <border>, <height>, <url>, ;
                              <onclick>, <onmsover>, <onmsout>, <name>, <alt>, ;
                              <target>, <width>, <.break.>, <cClass>, <id>, < hspace >, __HTML_ALING__ [<aln1>]  )
 
@@ -549,7 +549,7 @@
           <oHtm>:Marquee( <cText>, <cFont>, <cFntColor>, <nFntSize>, ;
                    __HTML_POS__ [<pos>], <nWidth>, <nHeight>, <cbgColor>, ;
                    __HTML_BEHAVE__ [<bhv>], __HTML_DIR__ [<dir>], ;
-                   <nScrollAmt>, <nScrollDel>, <loop>,;
+                   <nScrollAmt>, <nScrollDel>, <loop>, ;
                    [<(onmsover)>], [<(onmsout)>], [<(onclick)>], ;
                    [<(onstart)>], [<(onfinish)>] )
 
@@ -577,7 +577,7 @@
           <oHtm>:StartMarquee( <cFont>, <cFntColor>, <nFntSize>, ;
                    __HTML_POS__ [<pos>], <nWidth>, <nHeight>, <cbgColor>, ;
                    __HTML_BEHAVE__ [<bhv>], __HTML_DIR__ [<dir>], ;
-                   <nScrollAmt>, <nScrollDel>, <loop>,;
+                   <nScrollAmt>, <nScrollDel>, <loop>, ;
                    [<(onmsover)>], [<(onmsout)>], [<(onclick)>], ;
                    [<(onstart)>], [<(onfinish)>] )
 
@@ -638,24 +638,24 @@
           [CLASS <cClass>]          ;
           OF <oHtm>                 ;
           =>                        ;
-          <oHtm>:putTextImageURL( <image>, <border>, <height>, <url>,;
-                             <onclick>, <onmsover>, <onmsout>, <name>, <alt> , ;
-                             <target>,<width>, <.break.>, <cClass>, <text>)
+          <oHtm>:putTextImageURL( <image>, <border>, <height>, <url>, ;
+                             <onclick>, <onmsover>, <onmsout>, <name>, <alt>, ;
+                             <target>, <width>, <.break.>, <cClass>, <text> )
 #xcommand SPAN <text>           ;
           [STYLE <cStyle>]      ;
           OF <oHtm>             ;
           =>                    ;
-          <oHtm>:Span(<text>,<cStyle>)
+          <oHtm>:Span( <text>, <cStyle> )
 
 #xcommand Comment <text>        ;
           OF <oHtm>             ;
           =>                    ;
-          <oHtm>:Comment(<text>)
+          <oHtm>:Comment( <text> )
 
 #xcommand LINKNAME <cName>      ;
           OF <oHtm>             ;
           =>                    ;
-          <oHtm>:PutLinkName(<cName>)
+          <oHtm>:PutLinkName( <cName> )
 
 
 #xcommand CREATE OBJECT          ;
@@ -670,14 +670,14 @@
           [<aln:LEFT,RIGHT,MIDDLE,TOP,TEXTTOP,BOTTOM,ABSMIDDLE,ABSBOTTOM,BASELINE>];
           OF <oHtm>              ;
           =>                     ;
-          <oHtm>:ADDOBJECT(<cType>,<cClassid>,__HTML_ALING__ [<aln>],<cCode>,<.lDisable.>,<cCodeBase>,<cName>,<nWidth>,<nHeight>)
+          <oHtm>:ADDOBJECT( <cType>, <cClassid>, __HTML_ALING__ [<aln>], <cCode>, <.lDisable.>, <cCodeBase>, <cName>, <nWidth>, <nHeight> )
 
 #xcommand OBJECT PARAM   ;
           NAME <cName>   ;
           VALUE <cValue> ;
           OF <oHtm>      ;
           =>             ;
-          <oHtm>:ADDPARAM(<cName>,<cValue>)
+          <oHtm>:ADDPARAM( <cName>, <cValue> )
 
 #xcommand END OBJECT     ;
           OF <oHtm>      ;

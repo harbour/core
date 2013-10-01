@@ -70,7 +70,7 @@
 #define WVT_BTN_IMAGE_RIGHT                       3
 
 /*
- *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat,;
+ *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, ;
  *                 nAlign, nStyle, nThick, nColor )
  */
 /*   nOrient   */

@@ -1040,7 +1040,7 @@ HB_FUNC( WVT_DRAWIMAGE )
 }
 
 /*
- *    Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor,;
+ *    Wvt_DrawLabel( nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, nBkColor, ;
  *                     cFontFace, nFontHeight, nFontWidth, nFontWeight, nQuality,  ;
  *                        nCharSet, lItalics, lUnderline, lStrikeOut, aPxlOff )
  */
@@ -2583,7 +2583,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
 }
 
 /*
- * Wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent,;
+ * Wvt_DrawProgressBar( nTop, nLeft, nBottom, nRight, aPxlOff, nPercent, ;
  *                      nBackColor, nBarColor, cImage, lVertical, nDirection )
  */
 HB_FUNC( WVT_DRAWPROGRESSBAR )
