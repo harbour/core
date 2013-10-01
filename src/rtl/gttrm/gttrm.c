@@ -2130,20 +2130,20 @@ static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
 
    if( pTerm->fPosAnswer )
    {
-      int iRow = 0, iCol = 0;
-
       hb_gt_trm_termOut( pTerm, "\005\r\303\255", 4 );
-      fUTF8 = pTerm->GetCursorPos( pTerm, &iRow, &iCol, "\r   \r" ) &&
-              iCol == 1;
-      pTerm->iCol = 0;
+      if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol, "\r   \r" ) )
+      {
+         fUTF8 = pTerm->iCol == 1;
+         pTerm->iCol = 0;
+      }
    }
 
    if( hb_trm_Param( "UTF8" ) || hb_trm_Param( "UTF-8" ) )
       return HB_TRUE;
    else if( hb_trm_Param( "ISO" ) )
       return HB_FALSE;
-   else if( fUTF8 )
-      return HB_TRUE;
+   else if( pTerm->fPosAnswer )
+      return fUTF8;
 
    szLang = getenv( "LANG" );
    return szLang && strstr( szLang, "UTF-8" ) != NULL;
@@ -3117,9 +3117,15 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pTerm->fStderrTTY && pTerm->fOutTTY );
    pTerm->Init( pTerm );
    pTerm->SetTermMode( pTerm, 0 );
+#ifdef HB_GTTRM_CHK_EXACT_POS
    if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol, NULL ) )
       HB_GTSELF_SETPOS( pGT, pTerm->iRow, pTerm->iCol );
    pTerm->fUTF8 = hb_trm_isUTF8( pTerm );
+#else
+   pTerm->fUTF8 = hb_trm_isUTF8( pTerm );
+   if( pTerm->fPosAnswer )
+      HB_GTSELF_SETPOS( pGT, pTerm->iRow, pTerm->iCol );
+#endif
    if( ! pTerm->fUTF8 )
    {
 #ifndef HB_GT_UNICODE_BUF
