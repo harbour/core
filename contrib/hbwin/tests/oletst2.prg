@@ -14,6 +14,8 @@ PROCEDURE Main()
 
    LOCAL oObject
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    oObject := win_oleCreateObject( "MyOleTimeServer" )
 
    IF ! Empty( oObject )
