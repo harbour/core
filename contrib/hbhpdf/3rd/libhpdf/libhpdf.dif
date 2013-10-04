@@ -1,6 +1,6 @@
 diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
---- libhpdf.orig/hpdf.h	Sat Oct 05 00:54:25 2013
-+++ libhpdf/hpdf.h	Sat Oct 05 00:54:25 2013
+--- libhpdf.orig/hpdf.h	Sat Oct 05 00:56:07 2013
++++ libhpdf/hpdf.h	Sat Oct 05 00:56:07 2013
 @@ -17,7 +17,7 @@
  #ifndef _HPDF_H
  #define _HPDF_H
@@ -20,8 +20,8 @@ diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
  								HPDF_Rect      rect,
  								const char     *text,
 diff -urN libhpdf.orig/hpdfimac.c libhpdf/hpdfimac.c
---- libhpdf.orig/hpdfimac.c	Sat Oct 05 00:54:25 2013
-+++ libhpdf/hpdfimac.c	Sat Oct 05 00:54:25 2013
+--- libhpdf.orig/hpdfimac.c	Sat Oct 05 00:56:07 2013
++++ libhpdf/hpdfimac.c	Sat Oct 05 00:56:07 2013
 @@ -78,7 +78,7 @@
  
  #define	Fax3State(tif)		(&(tif)->tif_data->b)
@@ -31,9 +31,37 @@ diff -urN libhpdf.orig/hpdfimac.c libhpdf/hpdfimac.c
  
  /* NB: the uint32 casts are to silence certain ANSI-C compilers */
  #define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
+diff -urN libhpdf.orig/hpdfimap.c libhpdf/hpdfimap.c
+--- libhpdf.orig/hpdfimap.c	Sat Oct 05 00:56:07 2013
++++ libhpdf/hpdfimap.c	Sat Oct 05 00:56:07 2013
+@@ -280,8 +280,8 @@
+ 		case PNG_COLOR_TYPE_RGB_ALPHA:
+ 			row_len = 3 * width * sizeof(png_byte);
+ 			for (j = 0; j < height; j++) {
++				row = row_ptr[j];
+ 				for (i = 0; i < width; i++) {
+-					row = row_ptr[j];
+ 					memmove(row + (3 * i), row + (4*i), 3);
+ 					smask_data[width * j + i] = row[4 * i + 3];
+ 				}
+@@ -295,8 +295,8 @@
+ 		case PNG_COLOR_TYPE_GRAY_ALPHA:
+ 			row_len = width * sizeof(png_byte);
+ 			for (j = 0; j < height; j++) {
++				row = row_ptr[j];
+ 				for (i = 0; i < width; i++) {
+-					row = row_ptr[j];
+ 					row[i] = row[2 * i];
+ 					smask_data[width * j + i] = row[2 * i + 1];
+ 				}
+@@ -706,4 +706,3 @@
+ 
+ 
+ #endif /* LIBHPDF_HAVE_NOPNGLIB */
+-
 diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
---- libhpdf.orig/hpdfutil.h	Sat Oct 05 00:54:25 2013
-+++ libhpdf/hpdfutil.h	Sat Oct 05 00:54:25 2013
+--- libhpdf.orig/hpdfutil.h	Sat Oct 05 00:56:07 2013
++++ libhpdf/hpdfutil.h	Sat Oct 05 00:56:07 2013
 @@ -18,7 +18,7 @@
  #ifndef _HPDF_UTILS_H
  #define _HPDF_UTILS_H
@@ -44,8 +72,8 @@ diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
  
  #ifdef __cplusplus
 diff -urN libhpdf.orig/t4.h libhpdf/t4.h
---- libhpdf.orig/t4.h	Sat Oct 05 00:54:25 2013
-+++ libhpdf/t4.h	Sat Oct 05 00:54:25 2013
+--- libhpdf.orig/t4.h	Sat Oct 05 00:56:07 2013
++++ libhpdf/t4.h	Sat Oct 05 00:56:07 2013
 @@ -1,4 +1,4 @@
 -/* $Id: t4.h,v 1.20 2007/11/10 18:40:44 drolon Exp $ */
 +/* $Id$ */
