@@ -1484,7 +1484,7 @@ static HBITMAP hb_gt_wvt_GetBoxChar( PHB_GTWVT pWVT, HB_USHORT * puc16 )
       }
       else
          iTrans = 0;
-      pWVT->boxIndex[ iPos ] = iTrans;
+      pWVT->boxIndex[ iPos ] = ( HB_UCHAR ) iTrans;
    }
 
    return pWVT->boxImage[ iTrans ];

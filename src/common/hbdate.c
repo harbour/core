@@ -964,12 +964,12 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
       {
          SYSTEMTIME lt, st;
 
-         lt.wYear         = iYear;
-         lt.wMonth        = iMonth;
-         lt.wDay          = iDay;
-         lt.wHour         = iHour;
-         lt.wMinute       = iMinutes;
-         lt.wSecond       = iSeconds;
+         lt.wYear         = ( WORD ) iYear;
+         lt.wMonth        = ( WORD ) iMonth;
+         lt.wDay          = ( WORD ) iDay;
+         lt.wHour         = ( WORD ) iHour;
+         lt.wMinute       = ( WORD ) iMinutes;
+         lt.wSecond       = ( WORD ) iSeconds;
          lt.wMilliseconds = 0;
          lt.wDayOfWeek    = 0;
 

@@ -153,7 +153,7 @@ static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
    iPos = 0;
    for( ;; )
    {
-      char c = lpKey[ iPos++ ];
+      TCHAR c = lpKey[ iPos++ ];
       if( c == TEXT( '$' ) || c == TEXT( '@' ) || c == TEXT( '\0' ) )
       {
          if( --iPos )

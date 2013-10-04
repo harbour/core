@@ -22,6 +22,11 @@ ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400),)
    LDFLAGS += -nxcompat -dynamicbase -fixed:no
    DFLAGS += -nxcompat -dynamicbase
 endif
+# MSVS 2012 and upper
+ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600),)
+   # some 3rd party code (libjpeg) won't compile with it
+   #CFLAGS += -sdl
+endif
 
 ifeq ($(HB_BUILD_MODE),c)
    CFLAGS += -TC

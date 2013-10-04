@@ -1,6 +1,6 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	Mon Sep 16 22:27:46 2013
-+++ png/png.h	Mon Sep 16 22:27:46 2013
+--- png.orig/png.h	Fri Oct 04 15:19:06 2013
++++ png/png.h	Fri Oct 04 15:19:06 2013
 @@ -442,7 +442,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
@@ -11,8 +11,17 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	Mon Sep 16 22:27:46 2013
-+++ png/pnglconf.h	Mon Sep 16 22:27:46 2013
+--- png.orig/pnglconf.h	Fri Oct 04 15:19:06 2013
++++ png/pnglconf.h	Fri Oct 04 15:19:06 2013
+@@ -27,7 +27,7 @@
+ #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
+ #define PNG_COLORSPACE_SUPPORTED
+ #define PNG_CONSOLE_IO_SUPPORTED
+-#define PNG_CONVERT_tIME_SUPPORTED
++/*#define PNG_CONVERT_tIME_SUPPORTED*/
+ #define PNG_EASY_ACCESS_SUPPORTED
+ /*#undef PNG_ERROR_NUMBERS_SUPPORTED*/
+ #define PNG_ERROR_TEXT_SUPPORTED
 @@ -113,7 +113,9 @@
  #define PNG_SIMPLIFIED_WRITE_AFIRST_SUPPORTED
  #define PNG_SIMPLIFIED_WRITE_BGR_SUPPORTED
@@ -37,8 +46,8 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
 diff -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	Mon Sep 16 22:27:46 2013
-+++ png/pngpriv.h	Mon Sep 16 22:27:46 2013
+--- png.orig/pngpriv.h	Fri Oct 04 15:19:06 2013
++++ png/pngpriv.h	Fri Oct 04 15:19:06 2013
 @@ -69,7 +69,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */

@@ -11,6 +11,8 @@
 
 -safe
 
+#{win&allmsvc&HB_COMP_VER>'1600'}-cflag=-sdl
+
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows
 

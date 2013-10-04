@@ -84,7 +84,7 @@ HB_FUNC( TIP_TIMESTAMP )
 
       /* For compatibility, seconds() value */
       if( HB_ISNUM( 2 ) )
-         hb_timeDecode( hb_parnd( 2 ) * 1000,
+         hb_timeDecode( ( long ) ( hb_parnd( 2 ) * 1000 ),
                         &iHour, &iMinute, &iSecond, &iMSec );
       else
          iHour = iMinute = iSecond = 0;
