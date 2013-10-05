@@ -709,6 +709,10 @@ ifeq ($(HB_COMPILER),)
                                                    else
                                                    ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
                                                       HB_COMPILER_VER := 1700
+                                                   else
+                                                   ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1800
+                                                   endif
                                                    endif
                                                    endif
                                                    endif
@@ -729,6 +733,10 @@ ifeq ($(HB_COMPILER),)
                                                       else
                                                       ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
                                                          HB_COMPILER_VER := 1700
+                                                      else
+                                                      ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                         HB_COMPILER_VER := 1800
+                                                      endif
                                                       endif
                                                       endif
                                                       endif
@@ -754,6 +762,10 @@ ifeq ($(HB_COMPILER),)
                                                          else
                                                          ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
                                                             HB_COMPILER_VER := 1700
+                                                         else
+                                                         ifneq ($(findstring 12.0,$(HB_COMP_PATH)),)
+                                                            HB_COMPILER_VER := 1800
+                                                         endif
                                                          endif
                                                          endif
                                                          endif

@@ -873,6 +873,19 @@ win-make
 ```
 
 ```batchfile
+rem MSVC 2013
+call "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+win-make
+```
+
+```batchfile
+rem MSVC 2013 for Windows x86-64
+rem (requires preceding build for native target)
+call "%ProgramFiles%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+win-make
+```
+
+```batchfile
 rem MSVC 2012
 call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 win-make
@@ -1167,6 +1180,19 @@ win-make
 rem clang (alpha)
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
 set PATH="%ProgramFiles(x86)%\LLVM 3.4.svn";%PATH%
+win-make
+```
+
+```batchfile
+rem MSVC 2013 for Windows x86
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+win-make
+```
+
+```batchfile
+rem MSVC 2013 for Windows x86-64
+rem (requires preceding build for native target)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
 win-make
 ```
 

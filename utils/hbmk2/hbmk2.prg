@@ -2490,6 +2490,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                hbmk[ _HBMK_nCOMPVer ] := 1600
             CASE "11.0" $ cPath_CompC /* Visual Studio 2012 */
                hbmk[ _HBMK_nCOMPVer ] := 1700
+            CASE "12.0" $ cPath_CompC /* Visual Studio 2013 */
+               hbmk[ _HBMK_nCOMPVer ] := 1800
             OTHERWISE
                hbmk[ _HBMK_nCOMPVer ] := 1400
             ENDCASE
