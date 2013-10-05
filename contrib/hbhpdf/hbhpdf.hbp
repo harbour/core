@@ -35,3 +35,6 @@ errstr.prg
 misc.prg
 
 3rd/libhpdf/libhpdf.hbc{HBMK_HAS_LIBHARU_LOCAL}
+
+-instfile=contrib_tests_files:tests/files/*.*
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_tests_files:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/tests/files/
