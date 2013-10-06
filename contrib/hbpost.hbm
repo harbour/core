@@ -12,6 +12,7 @@
 -safe
 
 #{win&allmsvc&HB_COMP_VER>'1600'}-cflag=-sdl
+{win&allmsvc&HB_COMP_VER>'1700'}-cflag=-analyze
 
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows

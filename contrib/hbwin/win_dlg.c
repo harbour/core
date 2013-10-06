@@ -83,7 +83,10 @@ HB_FUNC( WIN_PRINTDLGDC )
       if( pd.hDevNames )
       {
          LPDEVNAMES lpdn = ( LPDEVNAMES ) GlobalLock( pd.hDevNames );
-         HB_STORSTR( ( LPCTSTR ) lpdn + lpdn->wDeviceOffset, 1 );
+         if( lpdn )
+            HB_STORSTR( ( LPCTSTR ) lpdn + lpdn->wDeviceOffset, 1 );
+         else
+            hb_storc( NULL, 1 );
          GlobalUnlock( pd.hDevNames );
          GlobalFree( pd.hDevNames );
       }

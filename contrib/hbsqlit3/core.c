@@ -1742,7 +1742,7 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
    sqlite3_profile( db, lOnOff )
  */
 
-static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 int64 )
+static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 uint64 )
 {
    if( sProfileMsg )
    {
@@ -1750,7 +1750,7 @@ static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint
 
       if( hFile )
       {
-         fprintf( hFile, "%s - %"PFLL "d\n", sProfileMsg, int64 );
+         fprintf( hFile, "%s - %"PFLL "u\n", sProfileMsg, uint64 );
          fclose( hFile );
       }
    }

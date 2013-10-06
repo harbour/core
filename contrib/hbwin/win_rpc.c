@@ -70,12 +70,14 @@ HB_FUNC( WIN_UUIDCREATESTRING )
 
    if( ! s_pUuidCreate )
    {
-      HMODULE hRpcrt4 = GetModuleHandle( TEXT( "rpcrt4.dll" ) );
+      HMODULE hModule = GetModuleHandle( TEXT( "rpcrt4.dll" ) );
 
-      s_pUuidCreate = ( _HB_UUIDCREATE ) GetProcAddress( hRpcrt4, "UuidCreate" );
-
-      s_pUuidToString = ( _HB_UUIDTOSTRING ) GetProcAddress( hRpcrt4, HB_WINAPI_FUNCTION_NAME( "UuidToString" ) );
-      s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) GetProcAddress( hRpcrt4, HB_WINAPI_FUNCTION_NAME( "RpcStringFree" ) );
+      if( hModule )
+      {
+         s_pUuidCreate = ( _HB_UUIDCREATE ) GetProcAddress( hModule, "UuidCreate" );
+         s_pUuidToString = ( _HB_UUIDTOSTRING ) GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "UuidToString" ) );
+         s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "RpcStringFree" ) );
+      }
    }
 
    if( s_pUuidCreate &&

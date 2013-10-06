@@ -1309,15 +1309,17 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
    if( pTag )
    {
-
       if( pTag == pArea->pTagList )
          pArea->pTagList = pTag->pNext;
       else
       {
          pTag2 = pArea->pTagList;
-         while( pTag2->pNext != pTag )
-            pTag2 = pTag2->pNext;
-         pTag2->pNext = pTag->pNext;
+         if( pTag2 )
+         {
+            while( pTag2->pNext != pTag )
+               pTag2 = pTag2->pNext;
+            pTag2->pNext = pTag->pNext;
+         }
       }
 
       if( pTag == pArea->pTagCurrent )

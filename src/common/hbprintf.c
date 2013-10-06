@@ -779,9 +779,9 @@ static size_t put_wstr( char *buffer, size_t bufsize, size_t size,
    }
    else if( precision > 0 )
    {
-      int size = precision;
+      int precision_ori = precision;
       precision = 0;
-      while( precision < size && wstr[ precision ] )
+      while( precision < precision_ori && wstr[ precision ] )
          ++precision;
    }
 

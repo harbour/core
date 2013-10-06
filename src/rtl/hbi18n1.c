@@ -874,7 +874,7 @@ PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext )
       }
    }
 
-   if( HB_IS_ARRAY( pMsgID ) )
+   if( pMsgID && HB_IS_ARRAY( pMsgID ) )
    {
       long lIndex;
 

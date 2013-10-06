@@ -1002,9 +1002,15 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
  */
 HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 {
-   LPRECT prc = NULL;
+   LPRECT prc = ( LPRECT ) hb_xgrab( sizeof( RECT ) );
+
+   memset( prc, 0, sizeof( RECT ) );
 
    hbwapi_ret_L( TreeView_GetItemRect( hbwapi_par_raw_HWND( 1 ), ( HTREEITEM ) hbwapi_par_raw_HANDLE( 2 ), prc, hbwapi_par_BOOL( 4 ) ) );
+
+   /* TODO: return prc in 3rd param */
+
+   hb_xfree( prc );
 }
 
 /* IE 5.0

@@ -75,10 +75,12 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
          static _HB_CREATEHARDLINK s_pCreateHardLink = NULL;
 
          if( ! s_pCreateHardLink )
-            s_pCreateHardLink =
-               ( _HB_CREATEHARDLINK )
-                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                  HB_WINAPI_FUNCTION_NAME( "CreateHardLink" ) );
+         {
+            HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+            if( hModule )
+               s_pCreateHardLink = ( _HB_CREATEHARDLINK )
+                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "CreateHardLink" ) );
+         }
 
          if( s_pCreateHardLink )
          {
@@ -157,10 +159,12 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
          #endif
 
          if( ! s_pCreateSymbolicLink )
-            s_pCreateSymbolicLink =
-               ( _HB_CREATESYMBOLICLINK )
-                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                  HB_WINAPI_FUNCTION_NAME( "CreateSymbolicLink" ) );
+         {
+            HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+            if( hModule )
+               s_pCreateSymbolicLink = ( _HB_CREATESYMBOLICLINK )
+                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "CreateSymbolicLink" ) );
+         }
 
          if( s_pCreateSymbolicLink )
          {
@@ -261,10 +265,12 @@ char * hb_fsLinkRead( const char * pszFile )
          #endif
 
          if( ! s_pGetFinalPathNameByHandle )
-            s_pGetFinalPathNameByHandle =
-               ( _HB_GETFINALPATHNAMEBYHANDLE )
-                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                  HB_WINAPI_FUNCTION_NAME( "GetFinalPathNameByHandle" ) );
+         {
+            HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+            if( hModule )
+               s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE )
+                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "GetFinalPathNameByHandle" ) );
+         }
 
          if( s_pGetFinalPathNameByHandle )
          {

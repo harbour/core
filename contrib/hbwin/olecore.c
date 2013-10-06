@@ -339,10 +339,10 @@ void hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack )
    {
       if( pOle->pCallBack && *pOle->pCallBack )
       {
-         PHB_ITEM pCallBack = *pOle->pCallBack;
+         PHB_ITEM pCallBackPrev = *pOle->pCallBack;
          *pOle->pCallBack = NULL;
          pOle->pCallBack = NULL;
-         hb_itemRelease( pCallBack );
+         hb_itemRelease( pCallBackPrev );
       }
       if( pCallBack )
       {
@@ -739,7 +739,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
                                    int iDim, long * plIndex, VARTYPE vt,
                                    HB_USHORT uiClass )
 {
-   long lFrom, lTo;
+   long lFrom = 0, lTo = 0;
 
    SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
    SafeArrayGetUBound( pSafeArray, iDim, &lTo );
@@ -1015,7 +1015,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
       case VT_CY:
       case VT_CY | VT_BYREF:
       {
-         double dblVal;
+         double dblVal = 0;
          VarR8FromCy( V_VT( pVariant ) == VT_CY ?
                       V_CY( pVariant ) :
                       *V_CYREF( pVariant ), &dblVal );
@@ -1027,7 +1027,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
       case VT_DECIMAL:
       case VT_DECIMAL | VT_BYREF:
       {
-         double dblVal;
+         double dblVal = 0;
          VarR8FromDec( V_VT( pVariant ) == VT_DECIMAL ?
                        &HB_WIN_U1( pVariant, decVal ) :
                        V_DECIMALREF( pVariant ), &dblVal );

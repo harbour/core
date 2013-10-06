@@ -508,8 +508,11 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                  char str[ 256 ];
                                  int  iLen;
 
+                                 str[ 0 ] = '\0';
+
                                  iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
-                                 str[ iLen - 1 ] = '\0';
+                                 if( iLen > 0 )
+                                    str[ iLen - 1 ] = '\0';
                                  if( ! strcmp( szEvent, str ) )
                                  {
                                     hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) & pTypeAttr2 );

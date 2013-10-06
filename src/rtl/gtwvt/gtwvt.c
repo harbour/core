@@ -2112,9 +2112,9 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
    colrow.left   = xy.left   / pWVT->PTEXTSIZE.x;
    colrow.top    = xy.top    / pWVT->PTEXTSIZE.y;
    colrow.right  = xy.right  / pWVT->PTEXTSIZE.x -
-                   ( xy.right  % pWVT->PTEXTSIZE.x ? 0 : 1 ); /* Adjust for when rectangle */
+                   ( ( xy.right  % pWVT->PTEXTSIZE.x ) ? 0 : 1 ); /* Adjust for when rectangle */
    colrow.bottom = xy.bottom / pWVT->PTEXTSIZE.y -
-                   ( xy.bottom % pWVT->PTEXTSIZE.y ? 0 : 1 ); /* EXACTLY overlaps characters */
+                   ( ( xy.bottom % pWVT->PTEXTSIZE.y ) ? 0 : 1 ); /* EXACTLY overlaps characters */
 
    return colrow;
 }
@@ -3006,45 +3006,47 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
    if( ! pWVT->hWnd )
    {
       hb_gt_wvt_CreateWindow( pWVT );
-      if( ! pWVT->hWnd )
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
-
-      hb_gt_wvt_Composited( pWVT, HB_TRUE );
-
-      /* Set icon */
-      if( pWVT->hIcon )
+      if( pWVT->hWnd )
       {
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-      }
+         hb_gt_wvt_Composited( pWVT, HB_TRUE );
 
-      {
-         HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-         if( hSysMenu )
+         /* Set icon */
+         if( pWVT->hIcon )
          {
-            /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
          }
-      }
-      if( pWVT->bFullScreen )
-      {
-         pWVT->bMaximized = HB_FALSE;
-         pWVT->bFullScreen = HB_FALSE;
-         hb_gt_wvt_FullScreen( pWVT->pGT );
+
+         {
+            HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+            if( hSysMenu )
+            {
+               /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+               AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+            }
+         }
+         if( pWVT->bFullScreen )
+         {
+            pWVT->bMaximized = HB_FALSE;
+            pWVT->bFullScreen = HB_FALSE;
+            hb_gt_wvt_FullScreen( pWVT->pGT );
+         }
+         else
+         {
+            if( pWVT->iNewPosX >= 0 && pWVT->iNewPosY >= 0 )
+            {
+               RECT wi = { 0, 0, 0, 0 };
+               GetWindowRect( pWVT->hWnd, &wi );
+               SetWindowPos( pWVT->hWnd, NULL, pWVT->iNewPosX, pWVT->iNewPosY,
+                             wi.right - wi.left, wi.bottom - wi.top,
+                             SWP_NOSIZE | SWP_NOZORDER );
+            }
+            ShowWindow( pWVT->hWnd, pWVT->bMaximized ? SW_SHOWMAXIMIZED : pWVT->iCmdShow );
+            UpdateWindow( pWVT->hWnd );
+         }
       }
       else
-      {
-         if( pWVT->iNewPosX >= 0 && pWVT->iNewPosY >= 0 )
-         {
-            RECT wi = { 0, 0, 0, 0 };
-            GetWindowRect( pWVT->hWnd, &wi );
-            SetWindowPos( pWVT->hWnd, NULL, pWVT->iNewPosX, pWVT->iNewPosY,
-                          wi.right - wi.left, wi.bottom - wi.top,
-                          SWP_NOSIZE | SWP_NOZORDER );
-         }
-         ShowWindow( pWVT->hWnd, pWVT->bMaximized ? SW_SHOWMAXIMIZED : pWVT->iCmdShow );
-         UpdateWindow( pWVT->hWnd );
-      }
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
 
    return HB_TRUE;
@@ -3169,18 +3171,20 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
-   if( ! pWVT )
+   if( pWVT )
+   {
+      HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+      /* SUPER GT initialization */
+      HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+      HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+      HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
+      HB_GTSELF_SEMICOLD( pGT );
+
+      /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
+   }
+   else
       hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
-
-   HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-
-   /* SUPER GT initialization */
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
-   HB_GTSELF_SEMICOLD( pGT );
-
-   /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
 }
 
 /* ********************************************************************** */

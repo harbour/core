@@ -849,10 +849,13 @@ static int hb_ctw_CloseAllWindows( PHB_GTCTW pCTW )
          pWnd = pCTW->windows[ iWindow ];
          pCTW->windowStack[ i ] = 0;
          pCTW->windows[ iWindow ] = NULL;
-         hb_xfree( pWnd->screenBuffer );
-         if( pWnd->iColorCount )
-            hb_xfree( pWnd->piColors );
-         hb_xfree( pWnd );
+         if( pWnd )
+         {
+            hb_xfree( pWnd->screenBuffer );
+            if( pWnd->iColorCount )
+               hb_xfree( pWnd->piColors );
+            hb_xfree( pWnd );
+         }
       }
       pCTW->iOpenWindows = 0;
       HB_CTW_SETCURRENT( pCTW, 0 );
@@ -2291,7 +2294,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                PHB_CODEPAGE cdp = hb_vmCDP();
                for( i = 1; i <= iOptions; ++i )
                {
-                  HB_SIZE nOptLen = hb_arrayGetCLen( pOptions, i );
+                  nOptLen = hb_arrayGetCLen( pOptions, i );
                   if( nOptLen > 0 )
                   {
                      HB_SIZE nIdx1 = 0, nIdx2 = 0;

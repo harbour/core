@@ -260,49 +260,53 @@ HB_FUNC( WIN_HIWORD )
 
 HB_FUNC( WIN_SYSREFRESH )
 {
-   DWORD dwMsec = ( DWORD ) hb_parnl( 1 );
-
    HANDLE hDummyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
-   /* Begin the operation and continue until it is complete
-      or until the user clicks the mouse or presses a key. */
-
-   if( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( dwMsec == 0 ? INFINITE : dwMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
+   if( hDummyEvent )
    {
-      MSG msg;
+      DWORD dwMsec = ( DWORD ) hb_parnl( 1 );
 
-      while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+      /* Begin the operation and continue until it is complete
+         or until the user clicks the mouse or presses a key. */
+
+      if( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( dwMsec == 0 ? INFINITE : dwMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
       {
-         switch( msg.message )
+         MSG msg;
+
+         while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
          {
-            case WM_CLOSE:
-               CloseHandle( hDummyEvent );
-               hb_retni( 1 );
-               return;
-            case WM_QUIT:
-               CloseHandle( hDummyEvent );
-               hb_retnint( msg.wParam );
-               return;
+            switch( msg.message )
+            {
+               case WM_CLOSE:
+                  CloseHandle( hDummyEvent );
+                  hb_retni( 1 );
+                  return;
+               case WM_QUIT:
+                  CloseHandle( hDummyEvent );
+                  hb_retnint( msg.wParam );
+                  return;
 #if 0
-            case WM_LBUTTONDOWN:
-            case WM_RBUTTONDOWN:
-            case WM_KEYDOWN:
-            case WM_LBUTTONUP:
-            case WM_RBUTTONUP:
-            case WM_KEYUP:
-               /* Perform any required cleanup. */
-               break;
-               /* exit; */
+               case WM_LBUTTONDOWN:
+               case WM_RBUTTONDOWN:
+               case WM_KEYDOWN:
+               case WM_LBUTTONUP:
+               case WM_RBUTTONUP:
+               case WM_KEYUP:
+                  /* Perform any required cleanup. */
+                  break;
+                  /* exit; */
 
 #endif
-            default:
-               TranslateMessage( &msg );
-               DispatchMessage( &msg );
+               default:
+                  TranslateMessage( &msg );
+                  DispatchMessage( &msg );
+            }
          }
       }
+
+      CloseHandle( hDummyEvent );
    }
 
-   CloseHandle( hDummyEvent );
    hb_retni( 0 );
 }
 

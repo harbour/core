@@ -854,6 +854,7 @@ HB_FUNC( WIN_COMDEBUGDCB )
       {
          s_PortData[ iPort ].iFunction = HB_WIN_COM_FUN_GETCOMMPROPERTIES;
          s_PortData[ iPort ].dwError = 0;
+         memset( &CurCOMMPROP, 0, sizeof( CurCOMMPROP ) );
          if( GetCommProperties( hCommPort, &CurCOMMPROP ) )
          {
             hb_snprintf( buffer, sizeof( buffer ), "dwCurrentTxQueue : %lu\n", CurCOMMPROP.dwCurrentTxQueue ); hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );
