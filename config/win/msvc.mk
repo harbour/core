@@ -27,7 +27,7 @@ ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600),)
    # some 3rd party code (libjpeg) won't compile with it
    #CFLAGS += -sdl
 endif
-# MSVS 2013 and upper
+# enable this only for users of MSVS 2013 and upper
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600 1700),)
    CFLAGS += -analyze
 endif

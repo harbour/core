@@ -162,6 +162,8 @@ DYNAMIC hb_MutexTimeOutLock
 DYNAMIC hb_MutexTryLock
 DYNAMIC hb_OpenProcess
 DYNAMIC hb_OpenStandardLog
+DYNAMIC hb_osNewLine
+DYNAMIC hb_osPathSeparator
 DYNAMIC hb_OutDebug
 DYNAMIC hb_OutDebugName
 DYNAMIC hb_Pointer2String

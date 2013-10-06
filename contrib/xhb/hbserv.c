@@ -306,7 +306,7 @@ static void * s_signalListener( void * my_stack )
    pthread_setcanceltype( PTHREAD_CANCEL_DEFERRED, NULL );
    pthread_setcancelstate( PTHREAD_CANCEL_ENABLE, NULL );
 
-   for(;; )
+   for( ;; )
    {
       /* allow safe cancelation */
       HB_STACK_UNLOCK;
@@ -1089,11 +1089,18 @@ HB_FUNC( HB_SIGNALDESC )
 
 HB_FUNC( HB_SERVICEGENERATEFAULT )
 {
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(push)
+#pragma warning(disable:6011)
+#endif
    int * pGPF = NULL;
 
    *pGPF = 0;
    /* if it doesn't cause GPF (on some platforms it's possible) try this */
    *( --pGPF ) = 0;
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(pop)
+#endif
 }
 
 HB_FUNC( HB_SERVICEGENERATEFPE )

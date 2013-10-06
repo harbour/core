@@ -7647,8 +7647,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
             IF ! Empty( l_aOBJ )
                AEval( l_aOBJ, {| tmp | FErase( tmp ) } )
-               IF HBMK_ISCOMP( "msvc|msvc64" ) .AND. hbmk[ _HBMK_nCOMPVer ] >= 1800
-                  /* delete MSVS 2013 native analyzes outputs */
+               IF HBMK_ISCOMP( "msvc|msvc64|msvcia64" ) .AND. hbmk[ _HBMK_nCOMPVer ] >= 1600
+                  /* delete msvc code analysis outputs */
                   AEval( l_aOBJ, {| tmp | FErase( hb_FNameExtSet( tmp, ".nativecodeanalysis.xml" ) ) } )
                ENDIF
             ENDIF
