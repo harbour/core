@@ -957,7 +957,7 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
          HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
          if( hModule )
             s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME )
-                GetProcAddress( hModule, "TzSpecificLocalTimeToSystemTime" );
+               GetProcAddress( hModule, "TzSpecificLocalTimeToSystemTime" );
          s_fInit = HB_FALSE;
       }
 

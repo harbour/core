@@ -192,7 +192,7 @@ HB_FUNC( NETRMTNAME )
    DWORD dwSize = 0;
    LPCTSTR lpLocalName = HB_PARSTRDEF( 1, &hLocalDev, NULL );
 
-   if( WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == NO_ERROR )
+   if( WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == ERROR_MORE_DATA )
    {
       if( dwSize > 0 && dwSize <= dwLen && WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == NO_ERROR )
          HB_RETSTRLEN( lpRemoteDevice, ( HB_SIZE ) ( dwSize - 1 ) );
