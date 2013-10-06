@@ -146,7 +146,14 @@ static HB_BOOL s_win_iswow64( void )
    {
       typedef BOOL ( WINAPI * P_ISWOW64PROCESS )( HANDLE, PBOOL );
 
-      P_ISWOW64PROCESS pIsWow64Process = ( P_ISWOW64PROCESS ) GetProcAddress( GetModuleHandle( TEXT( "kernel32" ) ), "IsWow64Process" );
+      P_ISWOW64PROCESS pIsWow64Process;
+
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
+
+      if( hModule )
+         pIsWow64Process = ( P_ISWOW64PROCESS ) GetProcAddress( hModule, "IsWow64Process" );
+      else
+         pIsWow64Process = NULL;
 
       if( pIsWow64Process )
       {

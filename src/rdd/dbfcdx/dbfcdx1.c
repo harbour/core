@@ -566,7 +566,7 @@ static LPCDXKEY hb_cdxKeyPutItem( LPCDXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRec,
          ptr = NULL;
 #ifdef HB_CDX_DBGCODE
          /* TODO: RTerror */
-         printf( "hb_cdxKeyPutItem( invalid item type: %i )", hb_itemType( pItem ) );
+         printf( "hb_cdxKeyPutItem( invalid item type: %u )", hb_itemType( pItem ) );
 #endif
          break;
    }
@@ -1798,7 +1798,7 @@ static void hb_cdxPageLeafEncode( LPCDXPAGE pPage, HB_BYTE * pKeyBuf, int iKeys 
 #ifdef HB_CDX_DBGCODE
    if( pKeyPos - pRecPos != pPage->iFree )
    {
-      printf( "\r\nPage=0x%lx, calc=%d, iFree=%d, req=%d, keys=%d, keyLen=%d\r\n",
+      printf( "\r\nPage=0x%lx, calc=%d, iFree=%d, req=%u, keys=%d, keyLen=%d\r\n",
               pPage->Page, ( int ) ( pKeyPos - pRecPos ), pPage->iFree, pPage->ReqByte, iKeys, iNum );
       fflush( stdout );
       hb_cdxErrInternal( "hb_cdxPageLeafEncode: FreeSpace calculated wrong!" );
@@ -3825,9 +3825,9 @@ static int hb_cdxPageSeekKey( LPCDXPAGE pPage, LPCDXKEY pKey, HB_ULONG ulKeyRec 
           hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) !=
           hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys - 1 ) )
       {
-         printf( "\r\nkeyLen=%d", pPage->TagParent->uiLen );
-         printf( "\r\nparent=%lx, iKey=%d, rec=%ld", pPage->Page, pPage->iCurKey, hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) );
-         printf( "\r\n child=%lx, iKey=%d, rec=%ld", pPage->Child->Page, pPage->Child->iKeys - 1, hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys - 1 ) );
+         printf( "\r\nkeyLen=%u", pPage->TagParent->uiLen );
+         printf( "\r\nparent=%lx, iKey=%d, rec=%lu", pPage->Page, pPage->iCurKey, hb_cdxPageGetKeyRec( pPage, pPage->iCurKey ) );
+         printf( "\r\n child=%lx, iKey=%d, rec=%lu", pPage->Child->Page, pPage->Child->iKeys - 1, hb_cdxPageGetKeyRec( pPage->Child, pPage->Child->iKeys - 1 ) );
          printf( "\r\nparent val=[%s]", hb_cdxPageGetKeyVal( pPage, pPage->iCurKey ) );
          printf( "\r\n child val=[%s]", hb_cdxPageGetKeyVal( pPage->Child, pPage->Child->iKeys - 1 ) );
          fflush( stdout );
@@ -9656,7 +9656,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
                   }
                   else
                   {
-                     printf( "hb_cdxTagDoIndex: hb_itemType( pItem ) = %i", hb_itemType( pItem ) );
+                     printf( "hb_cdxTagDoIndex: hb_itemType( pItem ) = %u", hb_itemType( pItem ) );
                   }
                   break;
             }

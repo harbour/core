@@ -90,7 +90,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
          fprintf( fout, ", NULL%*s", i, "" );
 
       i = 16 - ( int ) strlen( pToken->value );
-      fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %d }%s\n",
+      fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %u }%s\n",
                pToken->value,
                i < 0 ? 0 : i, "",
                ( int ) pToken->len, ( int ) pToken->spaces,
@@ -171,7 +171,7 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szNam
          if( pRule->pMarkers[ u ].canrepeat )
             ulRepeatBits |= ulBit;
       }
-      fprintf( fout, "   { %s, %s, %d,%2d, 0x%04lx }%s\n",
+      fprintf( fout, "   { %s, %s, %d,%2u, 0x%04lx }%s\n",
                szMatch, szResult, HB_PP_CMP_MODE( pRule->mode ),
                pRule->markers, ulRepeatBits, pRule->pPrev ? "," : "" );
       pRule = pRule->pPrev;
