@@ -753,13 +753,11 @@ static HB_BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 
    GetWindowRect( pWVT->hWnd, &wi );
 
-   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+   borderWidth = wi.right - wi.left - ( ci.right - ci.left );
+   borderHeight = wi.bottom - wi.top - ( ci.bottom - ci.top );
 
-   if( pWVT->bMaximized )
+   if( pWVT->bMaximized && SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 ) )
    {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
-
       maxHeight = wi.bottom - wi.top - borderHeight;
       maxWidth  = wi.right - wi.left - borderWidth;
    }
@@ -773,7 +771,7 @@ static HB_BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
    {
       HB_BOOL bOldCentre = pWVT->CentreWindow;
       pWVT->CentreWindow = pWVT->bMaximized ? HB_TRUE : HB_FALSE;
-      HB_GTSELF_SETMODE( pWVT->pGT, ( maxHeight / pWVT->PTEXTSIZE.y ), ( maxWidth / pWVT->PTEXTSIZE.x ) );
+      HB_GTSELF_SETMODE( pWVT->pGT, maxHeight / pWVT->PTEXTSIZE.y, maxWidth / pWVT->PTEXTSIZE.x );
       pWVT->CentreWindow = bOldCentre;
       return HB_TRUE;
    }
@@ -800,8 +798,8 @@ static HB_BOOL hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
    GetWindowRect( pWVT->hWnd, &wi );
 
-   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+   borderWidth = wi.right - wi.left - ( ci.right - ci.left );
+   borderHeight = wi.bottom - wi.top - ( ci.bottom - ci.top );
 
    if( pWVT->bMaximized )
    {
@@ -1165,9 +1163,9 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( PHB_GTWVT pWVT, RECT xy )
    colrow.left   = xy.left   / pWVT->PTEXTSIZE.x;
    colrow.top    = xy.top    / pWVT->PTEXTSIZE.y;
    colrow.right  = xy.right  / pWVT->PTEXTSIZE.x -
-                   ( xy.right  % pWVT->PTEXTSIZE.x ? 0 : 1 ); /* Adjust for when rectangle */
+                   ( ( xy.right  % pWVT->PTEXTSIZE.x ) ? 0 : 1 ); /* Adjust for when rectangle */
    colrow.bottom = xy.bottom / pWVT->PTEXTSIZE.y -
-                   ( xy.bottom % pWVT->PTEXTSIZE.y ? 0 : 1 ); /* EXACTLY overlaps characters */
+                   ( ( xy.bottom % pWVT->PTEXTSIZE.y ) ? 0 : 1 ); /* EXACTLY overlaps characters */
 
    return colrow;
 }
@@ -2382,7 +2380,8 @@ static HB_BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT h
    TEXTMETRIC tm;
    RECT       rcWorkArea;
 
-   SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 );
+   if( ! SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
+      return HB_FALSE;
 
    maxWidth  = ( int ) ( rcWorkArea.right - rcWorkArea.left );
    maxHeight = ( int ) ( rcWorkArea.bottom - rcWorkArea.top );
@@ -2599,47 +2598,49 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
    if( ! pWVT->hWnd )
    {
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT, pWVT->bResizable );
-      if( ! pWVT->hWnd )
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
-
-      hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
-
-      /* Set icon */
-      if( pWVT->hIcon )
+      if( pWVT->hWnd )
       {
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-      }
+         hb_gt_wvt_InitWindow( pWVT, pWVT->ROWS, pWVT->COLS );
 
-      {
-         HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-         if( hSysMenu )
+         /* Set icon */
+         if( pWVT->hIcon )
          {
-            /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-            AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
+         }
 
-            if( ! pWVT->bClosable )
-               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
+         {
+            HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+            if( hSysMenu )
+            {
+               /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+               AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+
+               if( ! pWVT->bClosable )
+                  EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | MF_GRAYED );
+            }
+         }
+
+         if( pWVT->bFullScreen )
+         {
+            pWVT->bFullScreen = HB_FALSE;
+            hb_gt_wvt_FullScreen( pWVT->pGT );
+         }
+
+         /* Show | Update Window */
+         hb_gt_wvt_ShowWindow( pWVT );
+
+         /* Initialize GUI base */
+         {
+            pWVT->hdc        = GetDC( pWVT->hWnd );
+            hb_wvt_gtInitGui( pWVT );
+
+            if( b_MouseEnable )
+               hb_wvt_gtCreateToolTipWindow( pWVT );
          }
       }
-
-      if( pWVT->bFullScreen )
-      {
-         pWVT->bFullScreen = HB_FALSE;
-         hb_gt_wvt_FullScreen( pWVT->pGT );
-      }
-
-      /* Show | Update Window */
-      hb_gt_wvt_ShowWindow( pWVT );
-
-      /* Initialize GUI base */
-      {
-         pWVT->hdc        = GetDC( pWVT->hWnd );
-         hb_wvt_gtInitGui( pWVT );
-
-         if( b_MouseEnable )
-            hb_wvt_gtCreateToolTipWindow( pWVT );
-      }
+      else
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
    return HB_TRUE;
 }
@@ -2702,21 +2703,30 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    rt.bottom = 0;
 
 #ifdef MONITOR_DEFAULTTONEAREST
-   pMonitorFromWindow = ( P_MFW ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                                  "MonitorFromWindow" );
-   pGetMonitorInfo = ( P_GMI ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                               "GetMonitorInfo" );
-
-   if( pMonitorFromWindow && pGetMonitorInfo )
    {
-      mon = pMonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
-      mi.cbSize = sizeof( mi );
-      pGetMonitorInfo( mon, &mi );
-      rt = mi.rcMonitor;
-   }
-   else
-      GetClientRect( GetDesktopWindow(), &rt );
+      HMODULE hModule = GetModuleHandle( TEXT( "user32.dll" ) );
 
+      if( hModule )
+      {
+         pMonitorFromWindow = ( P_MFW ) GetProcAddress( hModule, "MonitorFromWindow" );
+         pGetMonitorInfo = ( P_GMI ) GetProcAddress( hModule, "GetMonitorInfo" );
+      }
+      else
+      {
+         pMonitorFromWindow = NULL;
+         pGetMonitorInfo = NULL;
+      }
+
+      if( pMonitorFromWindow && pGetMonitorInfo )
+      {
+         mon = pMonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
+         mi.cbSize = sizeof( mi );
+         pGetMonitorInfo( mon, &mi );
+         rt = mi.rcMonitor;
+      }
+      else
+         GetClientRect( GetDesktopWindow(), &rt );
+   }
 #else
    GetClientRect( GetDesktopWindow(), &rt );
 #endif
@@ -2752,17 +2762,19 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
-   if( ! pWVT )
+   if( pWVT )
+   {
+      HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+      /* SUPER GT initialization */
+      HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+      HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+      HB_GTSELF_SEMICOLD( pGT );
+
+      /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
+   }
+   else
       hb_errInternal( 10001, "Maximum number of WVG windows reached, cannot create another one", NULL, NULL );
-
-   HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-
-   /* SUPER GT initialization */
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSELF_SEMICOLD( pGT );
-
-   /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
 }
 
 /* ********************************************************************** */
@@ -3421,7 +3433,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iW = hb_arrayGetNI( pInfo->pNewVal2, 1 );
             iH = hb_arrayGetNI( pInfo->pNewVal2, 2 );
 
-            SetWindowPos( pWVT->hWnd, NULL, iX, iY, iW, iH, SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOZORDER );
+            if( pWVT->hWnd )
+               SetWindowPos( pWVT->hWnd, NULL, iX, iY, iW, iH, SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOZORDER );
 
             hb_gt_wvt_FitSize( pWVT );
 

@@ -1180,19 +1180,21 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       RECT rc = { 0, 0, 0, 0 };
 
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT );
-      if( ! pWVT->hWnd )
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
-
-      GetClientRect( pWVT->hWnd, &rc );
-      pWVT->width = rc.right - rc.left;
-      pWVT->height = rc.bottom - rc.top;
-
-      /* Set icon */
-      if( pWVT->hIcon )
+      if( pWVT->hWnd )
       {
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon );
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon );
+         GetClientRect( pWVT->hWnd, &rc );
+         pWVT->width = rc.right - rc.left;
+         pWVT->height = rc.bottom - rc.top;
+
+         /* Set icon */
+         if( pWVT->hIcon )
+         {
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon );
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon );
+         }
       }
+      else
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
 
    return HB_TRUE;
@@ -1219,20 +1221,22 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
-   if( ! pWVT )
+   if( pWVT )
+   {
+      HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+      /* SUPER GT initialization */
+      HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+      HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+      HB_GTSELF_SEMICOLD( pGT );
+
+      #if 0
+      hb_gt_wvt_CreateConsoleWindow( pWVT );
+      hb_gt_wvt_ProcessMessages( pWVT );
+      #endif
+   }
+   else
       hb_errInternal( 10001, "Maximum number of WGU windows reached, cannot create another one", NULL, NULL );
-
-   HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-
-   /* SUPER GT initialization */
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSELF_SEMICOLD( pGT );
-
-   #if 0
-   hb_gt_wvt_CreateConsoleWindow( pWVT );
-   hb_gt_wvt_ProcessMessages( pWVT );
-   #endif
 }
 
 /* ********************************************************************** */

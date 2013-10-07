@@ -157,8 +157,8 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 
    bSuccess = ReadFile( hFile, &bmfh, sizeof( BITMAPFILEHEADER ), &dwBytesRead, NULL );
 
-   if( ! bSuccess || ( dwBytesRead != sizeof( BITMAPFILEHEADER ) )
-       || ( bmfh.bfType != *( WORD * ) "BM" ) )
+   if( ! bSuccess || dwBytesRead != sizeof( BITMAPFILEHEADER ) ||
+       bmfh.bfType != 0x4D42 /* "BM" */ )
    {
       CloseHandle( hFile );
       return NULL;
@@ -171,7 +171,7 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
    bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
    CloseHandle( hFile );
 
-   if( ! bSuccess || ( dwBytesRead != dwPackedDibSize ) )
+   if( ! bSuccess || dwBytesRead != dwPackedDibSize )
    {
       hb_xfree( pbmi );
       return NULL;
