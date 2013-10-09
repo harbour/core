@@ -1,7 +1,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  */

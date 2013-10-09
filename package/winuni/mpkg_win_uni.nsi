@@ -1,7 +1,7 @@
 ; ---------------------------------------------------------------
 ; NSIS installer script for Harbour
 ;
-; Copyright 2009 Viktor Szakats (harbour syenar.net)
+; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
 ; See COPYING.txt for licensing terms.
 ; ---------------------------------------------------------------
 

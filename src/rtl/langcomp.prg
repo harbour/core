@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * The Language API module selection
  *
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

@@ -60,7 +60,7 @@
  *    CToD()
  *    Date()
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    hb_SToD()
  *
  * See COPYING.txt for licensing terms.

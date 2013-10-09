@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Supplementary functions (error strings)
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 P.Chornyj <myorg63@mail.ru>
  * www - http://harbour-project.org
  *

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2/hbrun)
  *
- * Copyright 1999-2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -14637,7 +14637,7 @@ STATIC FUNCTION __plugin_ext()
  * Harbour Project source code:
  * extension manager plugin
  *
- * Copyright 2012-2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  */
 
@@ -16900,7 +16900,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_Auth := { ;
       NIL, ;
-      { "Viktor Szakáts (harbour syenar.net)", "" } }
+      { "Viktor Szakáts (vszakats.net/harbour)", "" } }
 
    // ; Examples
 

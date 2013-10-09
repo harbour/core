@@ -3,7 +3,7 @@
  * Harbour Project source code:
  * Manage translations and automatic doc generation
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

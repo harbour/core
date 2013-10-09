@@ -3,7 +3,7 @@
  * Harbour Project source code:
  * Commit preparer and source checker/fixer
  *
- * Copyright 2012-2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -919,7 +919,7 @@ STATIC FUNCTION RTrimEOL( cFile )
 
 /*
  * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
- * Harbour adaptation Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Harbour adaptation Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  */
 
 /*

@@ -2,7 +2,7 @@
  * This Harbour script is part of the GNU Make-based build system.
  * WARNING: Running it separately is not supported.
  *
- * Copyright 2009-2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2009-2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
  * See COPYING.txt for licensing terms.
  */

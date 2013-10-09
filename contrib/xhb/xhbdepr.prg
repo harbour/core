@@ -4,7 +4,7 @@
  *   but kept in xHarbour, so they are made available here as well.
  *   Do not add internal functions (names starting with '__')
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

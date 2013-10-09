@@ -92,7 +92,7 @@ Exceptions:
   "//" should always be used on the command line.
 
 
-[ Copyright (c) 1999-2009 Viktor Szakats (harbour syenar.net)
+[ Copyright (c) 1999-2009 Viktor Szakats (vszakats.net/harbour)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   https://creativecommons.org/licenses/by-sa/3.0/
   See COPYING.txt. ]

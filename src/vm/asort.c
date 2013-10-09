@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * ASort() function
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *                     Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
  *

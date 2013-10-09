@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-06\-25 17:16\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-09\-04 00:44\)  
 Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Magyar \(hu\) fordítás: Copyright &copy; 2009\-2013, Szakáts Viktor  
@@ -720,4 +720,4 @@ License extensions:
 Szerző:  
 
 
- - Viktor Szakáts \(harbour syenar\.net\) 
+ - Viktor Szakáts \(vszakats\.net/harbour\) 

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * OEM <-> ANSI string conversion functions (Windows specific, Xbase++ ext.)
  *
- * Copyright 1999-2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

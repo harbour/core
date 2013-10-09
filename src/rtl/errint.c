@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * The Error API (internal error)
  *
- * Copyright 1999-2004 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2004 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

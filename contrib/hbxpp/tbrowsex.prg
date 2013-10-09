@@ -4,7 +4,7 @@
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * This implementation contains code and notes by:
- * Copyright 2008 Viktor Szakats (harbour syenar.net)
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

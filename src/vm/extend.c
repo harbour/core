@@ -50,7 +50,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 1999-2009 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour)
  *    hb_stor()
  *    hb_retnlen()
  *    hb_retnilen()

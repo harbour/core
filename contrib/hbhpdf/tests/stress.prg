@@ -1,4 +1,4 @@
-/* Copyright 2013 Viktor Szakats (harbour syenar.net) */
+/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbhpdf"
 

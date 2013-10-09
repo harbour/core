@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * UUID definitions (for watcom)
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2011 Andi Jahja <andi.jahja yahoo.co.id>
  * www - http://harbour-project.org
  *
