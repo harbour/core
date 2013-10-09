@@ -1,21 +1,13 @@
 /*
- * $Id$
+   Harbour Project - http://www.harbour-project.org
+
+   Please left here information about any modifications to original
+   ZLIB files. It will make upgrading ZLIB library much more easier
+   and safer in the future.
  */
 
-/*
- * Harbour Project - http://www.harbour-project.org
- * xHarbour Project - http://www.xharbour.org
- *
- * Please left here information about any modifications to original
- * ZLIB files. It will make upgrading ZLIB library much more easier
- * and safer in the future.
- *
- *
- * Use this format for the entry headers:
- * YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
- * For example:
- * 2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
- *
+/* YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name (your_email address)
+   2013-12-31 13:59 UTC+0100 Foo Bar (foo.bar example.org)
  */
 
 2009-08-12 23:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -26,7 +18,7 @@
   * harbour/source/hbzlib/trees.c
     * cleaned casting
 
-2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar.hu)
+2008-08-05 21:39 UTC+0200 Viktor Szakats (vszakats.net/harbour)
    * harbour/source/hbzlib/zconf.h
      + Setting ZLIB_DLL if HB_DYNLIB is defined.
 
