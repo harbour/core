@@ -4,7 +4,11 @@
 
 #, c-format
 msgid ""
+<<<<<<< HEAD
 msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-07-01 08:14+0000\nLast-Translator: jujuland <alain.aupeix@wanadoo.fr>\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+=======
+msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2013-04-04 01:53+0000\nLast-Translator: hbtest\nLanguage-Team: French (http://www.transifex.com/projects/p/harbour/language/fr/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: fr\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
+>>>>>>> 6752936b5718430c96ada9fc0938a12c611698e2
 
 #, c-format
 msgid "Exit code: %1$d: %2$s"
