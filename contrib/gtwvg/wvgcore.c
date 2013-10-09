@@ -134,31 +134,50 @@ void hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE *
 #if ! defined( HB_OS_WIN_CE )
 IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
 {
-   HRSRC  res      = 0;
    LPVOID iPicture = NULL;
+
+   HRSRC  res;
    HANDLE hInstance;
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
       res = FindResource( ( HINSTANCE ) hInstance, resource, section );
+   else
+      res = 0;
 
    if( res )
    {
-      IStream * iStream   = NULL;
-      HGLOBAL   mem       = LoadResource( GetModuleHandle( NULL ), res );
-      void *    data      = LockResource( mem );
-      LONG      nFileSize = ( LONG ) SizeofResource( GetModuleHandle( NULL ), res );
-      HGLOBAL   hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize );
-      LPVOID    pvData    = GlobalLock( hGlobal );
+      HGLOBAL mem = LoadResource( GetModuleHandle( NULL ), res );
 
-      memcpy( pvData, data, nFileSize );
+      if( mem )
+      {
+         void * data = LockResource( mem );
 
-      GlobalUnlock( hGlobal );
+         if( data )
+         {
+            LONG    nFileSize = ( LONG ) SizeofResource( GetModuleHandle( NULL ), res );
+            HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize );
 
-      CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
+            if( hGlobal )
+            {
+               LPVOID pvData = GlobalLock( hGlobal );
 
-      OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
+               if( pvData )
+                  memcpy( pvData, data, nFileSize );
 
-      FreeResource( mem );
+               GlobalUnlock( hGlobal );
+
+               if( pvData )
+               {
+                  IStream * iStream = NULL;
+
+                  if( CreateStreamOnHGlobal( hGlobal, TRUE, &iStream ) == S_OK )
+                     OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), &iPicture );
+               }
+            }
+         }
+
+         FreeResource( mem );
+      }
    }
 
    return ( IPicture * ) iPicture;
@@ -216,7 +235,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
 
       if( bDoNotScale )
       {
-         iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+         iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
          iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
          x  += abs( ( iWd - wd ) / 2 );
          y  += abs( ( iHt - ht ) / 2 );
@@ -538,7 +557,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                   if( bDoNotScale )
                   {
-                     iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+                     iHt = ( int ) ( ( float ) wd * lHeight / lWidth );
                      iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
                      x  += abs( ( iWd - wd ) / 2 );
                      y  += abs( ( iHt - ht ) / 2 );
@@ -1121,7 +1140,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
    POINT xy = { 0, 0 };
    int   iTop, iLeft, iBottom, iRight;
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop    = xy.y - 1 + hb_parvni( 8, 1 );
    iLeft   = xy.x - 1 + hb_parvni( 8, 2 );
    xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
@@ -1825,7 +1844,7 @@ HB_FUNC( WVT_DRAWPICTURE )
    {
       if( _s->pGUI->iPicture[ iSlot ] )
       {
-         xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+         xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
          iTop  = xy.y + hb_parvni( 6, 1 );
          iLeft = xy.x + hb_parvni( 6, 2 );
 
@@ -1850,7 +1869,7 @@ HB_FUNC( WVT_DRAWPICTUREEX )
 
    if( HB_ISNUM( 5 ) )
    {
-      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop  = xy.y + hb_parvni( 6, 1 );
       iLeft = xy.x + hb_parvni( 6, 2 );
 
@@ -1880,7 +1899,7 @@ HB_FUNC( WVT_DRAWLABELEX )
       COLORREF fgClr = hb_wvt_FgColorParam( 5 ),
                bgClr = hb_wvt_BgColorParam( 6 );
 
-      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+      xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       xy.x += hb_parvni( 8, 2 );
       xy.y += hb_parvni( 8, 1 );
 
@@ -1922,7 +1941,7 @@ HB_FUNC( WVT_DRAWLINEEX )
    HPEN  hPen;
    int   iSlot = hb_parni( 8 ) - 1;
 
-   xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+   xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop  = xy.y + hb_parvni( 9, 1 );
    iLeft = xy.x + hb_parvni( 9, 2 );
 
@@ -2136,18 +2155,18 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   POINT xy   = { 0, 0 };
-   RECT  rect = { 0, 0, 0, 0 };
-   int   iTop, iLeft, iBottom, iRight, x, y;
-   int   iAlignHorz, iAlignVert, iAlignH, iAlignV;
-   UINT  uiOptions;
-   SIZE  sz = { 0, 0 };
+   POINT    xy   = { 0, 0 };
+   RECT     rect = { 0, 0, 0, 0 };
+   int      iTop, iLeft, iBottom, iRight, x, y;
+   int      iAlignHorz, iAlignVert, iAlignH, iAlignV;
+   UINT     uiOptions;
+   SIZE     sz = { 0, 0 };
    void *   hText;
    LPCTSTR  text  = HB_PARSTR( 5, &hText, NULL );
    COLORREF fgClr = hb_wvt_FgColorParam( 8 ),
             bgClr = hb_wvt_BgColorParam( 9 );
 
-   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+   xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop    = xy.y + hb_parvni( 11, 1 );
    iLeft   = xy.x + hb_parvni( 11, 2 );
    xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 4 ) + 1, hb_parni( 3 ) + 1 );
@@ -2901,7 +2920,7 @@ HB_FUNC( WVT_RESTSCREEN )
    HB_BOOL bResult = HB_FALSE;
    HB_BOOL bDoNotDestroyBMP = hb_parl( 6 );
 
-   xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );;
+   xy    = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop  = xy.y;
    iLeft = xy.x;
 
