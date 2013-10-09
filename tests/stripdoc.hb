@@ -1,7 +1,7 @@
 /*
  * Strips HBDOC docs from source files.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  */

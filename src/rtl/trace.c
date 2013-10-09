@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * The Clipper tracing API
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Gonzalo A. Diethelm <gonzalo.diethelm@iname.com>
  * www - http://harbour-project.org
  *

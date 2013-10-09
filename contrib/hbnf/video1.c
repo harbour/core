@@ -3,7 +3,7 @@
  *   NF functions: ft_SetAttr(), ft_RevAttr(), ft_RevChr()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

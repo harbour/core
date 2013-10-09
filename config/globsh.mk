@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (harbour syenar.net) (rework)
+# Copyright 2009 Viktor Szakats (vszakats.net/harbour) (rework)
 # See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 

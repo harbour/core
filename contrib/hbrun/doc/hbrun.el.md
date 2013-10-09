@@ -113,4 +113,4 @@ License extensions:
 Συγγραφέας:  
 
 
- - Viktor Szakáts \(harbour syenar\.net\) 
+ - Viktor Szakáts \(vszakats\.net/harbour\) 

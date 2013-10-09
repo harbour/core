@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Internal versions for database version (Clipper undocumented)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

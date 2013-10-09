@@ -716,4 +716,4 @@ License extensions:
 Szerző:  
 
 
- - Viktor Szakáts \(harbour syenar\.net\) 
+ - Viktor Szakáts \(vszakats\.net/harbour\) 

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * xhb compatibility functions
  *
- * Copyright 2007 Viktor Szakats (harbour syenar.net)
+ * Copyright 2007 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

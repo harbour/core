@@ -3,7 +3,7 @@
  *    hb_UTF8ToStrBox()
  *
  * Copyright 2009-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

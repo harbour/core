@@ -55,7 +55,7 @@
  *    Cursor declarations
  * See above for licensing terms.
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    Mouse related declarations
  *    Undocumented GT API declarations
  *

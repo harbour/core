@@ -3,7 +3,7 @@
  * FreeImage graphic library low level (client api) interface code.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

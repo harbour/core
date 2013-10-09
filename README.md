@@ -1954,6 +1954,6 @@ Supported shells per host platforms:
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
 
-This document Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
+This document Copyright &copy; 2009-2013 Viktor Szakáts (vszakats.net/harbour)<br />
 Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
 See [COPYING](COPYING.txt).

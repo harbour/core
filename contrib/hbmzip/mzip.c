@@ -4,7 +4,7 @@
  *    Some higher level zip archive functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
- * Copyright 2011-2013 Viktor Szakats (harbour syenar.net) (codepage/unicode)
+ * Copyright 2011-2013 Viktor Szakats (vszakats.net/harbour) (codepage/unicode)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

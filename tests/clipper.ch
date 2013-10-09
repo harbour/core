@@ -2,7 +2,7 @@
  * Harbour compatibility header for
  * other Clipper compatible languages
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  */

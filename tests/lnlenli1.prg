@@ -2,7 +2,7 @@
 
 // ; Pushing Harbour preprocessor to the line length limit.
 // ; Donated to the public domain by
-//   Viktor Szakats (harbour syenar.net)
+//   Viktor Szakats (vszakats.net/harbour)
 
 PROCEDURE Main()
 

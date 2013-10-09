@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Windows dialogs
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *    win_PrintDlgDC()
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Misc FoxPro functions (feel free to expand/fix it as you like)
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

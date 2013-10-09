@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Advantage Database Server RDD (additional functions)
  *
- * Copyright 2008 Viktor Szakats (harbour syenar.net) (cleanups)
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour) (cleanups)
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
  *

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Legacy language module definitions (to make old code happy)
  *
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

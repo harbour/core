@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Harbour interface to TinyMT, Pseudo Random Generator
  *
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2012 Andi Jahja <xharbour@telkom.net.id>
  * www - http://www.harbour-project.org
  *

@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * POPUP menu class (Harbour extended)
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
  *

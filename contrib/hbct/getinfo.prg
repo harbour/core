@@ -3,7 +3,7 @@
  *   CT3 GET/READ Functions
  *
  * SaveGets(), RestGets()
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar()

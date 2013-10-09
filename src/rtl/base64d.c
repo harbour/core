@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * hb_base64Decode() function
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * [ base64_decode_* functions are part of the libb64 project, and has
  *   been placed in the public domain. Author: Chris Venter
  *   For details, see http://sourceforge.net/projects/libb64 ]
