@@ -3126,15 +3126,64 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 )
+         if( iVal > 0 && ! pWVT->bMaximized && ! pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
+         {
             HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+
+            /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
+            RECT ci;
+            GetClientRect( pWVT->hWnd, &ci );
+            if( ci.bottom != iVal )
+            {
+               RECT wi;
+               GetWindowRect( pWVT->hWnd, &wi );
+               iVal += wi.bottom - wi.top - ci.bottom;
+               SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, wi.right - wi.left, iVal, SWP_NOZORDER );
+               hb_gt_wvt_FitSizeRows( pWVT );   /* Needed because GTWVG does not adjust to resize until WM_EXITSIZEMOVE is received */
+            }
+         }
          break;
 
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x * pWVT->COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 )
-            HB_GTSELF_SETMODE( pGT, pWVT->ROWS, ( iVal / pWVT->PTEXTSIZE.x ) );
+         if( iVal > 0 && ! pWVT->bMaximized && ! pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
+         {
+            HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
+
+            /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
+            RECT ci;
+            GetClientRect( pWVT->hWnd, &ci );
+            if( ci.right != iVal )
+            {
+               RECT wi;
+               GetWindowRect( pWVT->hWnd, &wi );
+               iVal += wi.right - wi.left - ci.right;
+               SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, iVal, wi.bottom - wi.top, SWP_NOZORDER );
+               hb_gt_wvt_FitSizeRows( pWVT );   /* Needed because GTWVG does not adjust to resize until WM_EXITSIZEMOVE is received */
+            }
+         }
+         break;
+
+      case HB_GTI_BORDERSIZES:
+         if( pWVT->hWnd )
+         {
+            RECT ci, wi;
+            int borderWidth, borderHeight;
+
+            GetClientRect( pWVT->hWnd, &ci );
+            GetWindowRect( pWVT->hWnd, &wi );
+
+            borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) ) / 2;
+            borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+
+            pInfo->pResult = hb_itemNew( NULL );
+            hb_arrayNew( pInfo->pResult, 4 );
+            hb_arraySetNI( pInfo->pResult, 1, borderWidth );
+            hb_arraySetNI( pInfo->pResult, 2, borderHeight - borderWidth );
+            hb_arraySetNI( pInfo->pResult, 3, borderWidth );
+            hb_arraySetNI( pInfo->pResult, 4, borderWidth );
+         }
          break;
 
       case HB_GTI_DESKTOPWIDTH:
