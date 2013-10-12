@@ -2757,6 +2757,26 @@ HB_FUNC( WVT_LOADPICTURE )
    hb_retl( bResult );
 }
 
+HB_FUNC( WVT_DESTROYPICTURE )
+{
+   hb_retl( hb_wvt_gtDestroyPicture( ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+}
+
+/*
+ *   Wvt_LoadPictureEx( cFilePic )
+ */
+HB_FUNC( WVT_LOADPICTUREEX )
+{
+#if ! defined( HB_OS_WIN_CE )
+   void *     hImage;
+   IPicture * iPicture = hb_wvt_gtLoadPicture( HB_PARSTR( 1, &hImage, NULL ) );
+   hb_strfree( hImage );
+   hb_retnint( ( HB_PTRDIFF ) iPicture );
+#else
+   hb_retnint( 0 );
+#endif
+}
+
 HB_FUNC( WVT_LOADPICTUREFROMRESOURCE )
 {
    HB_BOOL bResult = HB_FALSE;

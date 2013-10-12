@@ -250,6 +250,7 @@ DYNAMIC Wvt_CreateMenu
 DYNAMIC Wvt_CreatePopupMenu
 DYNAMIC Wvt_DeleteMenu
 DYNAMIC Wvt_DestroyMenu
+DYNAMIC Wvt_DestroyPicture
 DYNAMIC Wvt_DialogBox
 DYNAMIC Wvt_DlgSetIcon
 DYNAMIC Wvt_DrawBoxGet
@@ -312,6 +313,7 @@ DYNAMIC Wvt_LBSetCurSel
 DYNAMIC Wvt_LoadFont
 DYNAMIC Wvt_LoadPen
 DYNAMIC Wvt_LoadPicture
+DYNAMIC Wvt_LoadPictureEx
 DYNAMIC Wvt_LoadPictureFromResource
 DYNAMIC Wvt_LoadPictureFromResourceEx
 DYNAMIC Wvt_MakeDlgTemplate

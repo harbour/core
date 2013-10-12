@@ -164,6 +164,7 @@ CREATE CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
    METHOD showWindow()                          INLINE ::show()
    METHOD refresh()                             INLINE ::invalidateRect()
+   METHOD refreshEx()
 
    /* LIFE CYCLE */
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -434,6 +435,10 @@ METHOD WvgCrt:hide()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, HB_GTS_SW_HIDE )
 
+   RETURN Self
+
+METHOD WvgCrt:refreshEx()
+   Wvg_InvalidateRect( ::hWnd )
    RETURN Self
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
