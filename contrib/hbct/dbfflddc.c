@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * dbf structure related functions:
  *
- *    FieldSize(), FieldNum(), DbfSize()
+ *    FieldDeci()
  *
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
@@ -49,36 +49,5 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapirdd.h"
 
-HB_FUNC_TRANSLATE( FIELDSIZE, FIELDLEN )
-HB_FUNC_TRANSLATE( FIELDNUM , FIELDPOS )
-
-HB_FUNC( DBFSIZE )
-{
-   HB_MAXINT llSize = 0;
-   AREAP pArea;
-
-   if( ( pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer() ) != NULL )
-   {
-      PHB_ITEM pSize = hb_itemNew( NULL );
-      HB_ULONG ulRecSize, ulRecCount;
-
-      if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == HB_SUCCESS )
-      {
-         llSize = hb_itemGetNL( pSize ) + 1;
-         if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == HB_SUCCESS )
-         {
-            ulRecSize = hb_itemGetNL( pSize );
-            if( SELF_RECCOUNT( pArea, &ulRecCount ) == HB_SUCCESS )
-            {
-               llSize += ( HB_MAXINT ) ulRecCount * ulRecSize;
-            }
-         }
-      }
-      hb_itemRelease( pSize );
-   }
-
-   hb_retnint( llSize );
-}
+HB_FUNC_TRANSLATE( FIELDDECI, HB_FIELDDEC )

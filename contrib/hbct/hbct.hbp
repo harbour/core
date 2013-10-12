@@ -59,6 +59,7 @@ cursor.c
 datetime.c
 dattime2.c
 dattime3.c
+dbfflddc.c
 dbftools.c
 disk.c
 envparam.c
