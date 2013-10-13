@@ -46,7 +46,7 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       oFTP:bUsePasv     := .T.
 
       /* Comprobamos si el usuario contiene una @ para forzar el userid */
-      IF At( "@", cUser ) > 0
+      IF "@" $ cUser
          oFTP:oUrl:cServer   := cServer
          oFTP:oUrl:cUserID   := cUser
          oFTP:oUrl:cPassword := cPassword

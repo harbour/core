@@ -1918,7 +1918,7 @@ METHOD ReformParagraph() CLASS XHBEditor
          ::aText[ nRow ]:cText := StrTran( ::aText[ nRow ]:cText, __SoftCR() )
          ::aText[ nRow ]:lSoftCR := .F.
 
-         IF At( hb_eol(), ::aText[ nRow ]:cText ) != 0
+         IF hb_eol() $ ::aText[ nRow ]:cText
             EXIT
          ENDIF
       NEXT

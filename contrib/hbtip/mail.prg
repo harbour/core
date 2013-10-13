@@ -251,7 +251,7 @@ METHOD Attach( oSubPart ) CLASS TIPMail
 
    IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName() == "TIPMAIL"
       // reset wrong content-type
-      IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
+      IF !( "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) ) )
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
 
@@ -291,7 +291,7 @@ METHOD ToString() CLASS TIPMail
 
    IF Len( ::aAttachments ) > 0
       // reset failing content type
-      IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
+      IF !( "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) ) )
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
 
@@ -439,7 +439,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    ENDIF
 
    // se if we have subparts:
-   IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) > 0
+   IF "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) )
       cSubBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
       // strip " on boundary
       IF Left( cSubBoundary, 1 ) == '"'

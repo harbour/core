@@ -1105,7 +1105,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          ELSE
             cParam1 := SubStr( cParam1, At( "{", cParam1 ) + 1 )
             FOR n := 1 TO 11
-               IF At( ",", cParam1 ) != 0
+               IF "," $ cParam1
                   ::aColors[ n ] := ;
                      StrTran( Left( cParam1, At( ",", cParam1 ) - 1 ), '"' )
                   cParam1 := SubStr( cParam1, At( ",", cParam1 ) + 1 )

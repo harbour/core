@@ -27,12 +27,10 @@
 
 FUNCTION ft_Linked( cFuncs )
 
-   LOCAL aFuncArray := {}, nSpace, nComma, nFEnd, lRetVal := .F.
+   LOCAL aFuncArray, nSpace, nComma, nFEnd, lRetVal := .F.
 
-   IF At( "(", cFuncs ) == 0
-      // No functions in string
-      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
-   ELSE
+   IF "(" $ cFuncs
+      aFuncArray := {}
       DO WHILE ( nFEnd := At( "(", cFuncs ) ) > 0
          // Add the current function to the array of functions
          AAdd( aFuncArray, Left( cFuncs, nFEnd ) + ")" )
@@ -56,6 +54,9 @@ FUNCTION ft_Linked( cFuncs )
       // Scan through the array of functions, stop after the first occurence
       // of a function which returns a Type() of "U" (hence is not linked in)
       lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
+   ELSE
+      // No functions in string
+      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
    ENDIF
 
    RETURN lRetVal

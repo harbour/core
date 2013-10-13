@@ -277,7 +277,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
 
       // as above
       CASE Lower( aHead[ 1 ] ) == "transfer-encoding"
-         IF At( "chunked", Lower( cLine ) ) > 0
+         IF "chunked" $ Lower( cLine )
             ::bChunked := .T.
             ::nLength := -1
          ENDIF

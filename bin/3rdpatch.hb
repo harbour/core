@@ -701,7 +701,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    FOR EACH cPattern IN hb_HKeys( aActionMap )
       FOR EACH cFrag IN hb_ATokens( cPattern, "|" )
-         IF At( cFrag, cFileName ) != 0
+         IF cFrag $ cFileName
             cMatchedPattern := cFrag
             cExtractor := aActionMap[ cPattern ][ "Extractor" ]
             cExtractorArgs := aActionMap[ cPattern ][ "ExtractorArgs" ]
