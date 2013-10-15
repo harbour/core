@@ -3128,10 +3128,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 && ! pWVT->bMaximized && ! pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
          {
+            RECT ci;
             HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
 
             /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
-            RECT ci;
             GetClientRect( pWVT->hWnd, &ci );
             if( ci.bottom != iVal )
             {
@@ -3149,10 +3149,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 && ! pWVT->bMaximized && ! pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
          {
+            RECT ci;
             HB_GTSELF_SETMODE( pGT, ( iVal / pWVT->PTEXTSIZE.y ), pWVT->COLS );
 
             /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
-            RECT ci;
             GetClientRect( pWVT->hWnd, &ci );
             if( ci.right != iVal )
             {
