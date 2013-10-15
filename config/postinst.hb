@@ -440,7 +440,7 @@ STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
             IF hb_FCopy( cDst, cSrc ) == 0
                OutStd( hb_StrFormat( "! Copyfile: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
             ELSE
-               OutStd( hb_StrFormat( "! Error: Copping file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
+               OutStd( hb_StrFormat( "! Error: Copying file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
             ENDIF
          ENDIF
       ENDIF
