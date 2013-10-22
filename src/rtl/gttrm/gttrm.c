@@ -2146,7 +2146,15 @@ static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
       return fUTF8;
 
    szLang = getenv( "LANG" );
-   return szLang && strstr( szLang, "UTF-8" ) != NULL;
+   if( szLang && strstr( szLang, "UTF-8" ) != NULL )
+      return HB_TRUE;
+
+#ifdef IUTF8
+   if( ( pTerm->curr_TIO.c_iflag & IUTF8 ) != 0 )
+      return HB_TRUE;
+#endif
+
+   return HB_FALSE;
 }
 
 static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, const char * pStr, int iLen, int iChars )
