@@ -690,6 +690,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "*.xml", ;
       "*.xsd", ;
       "*.xsl", ;
+      "*.java", ;
       "*.js", ;
       "*.vbs", ;
       "*.css" }
