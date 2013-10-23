@@ -1507,20 +1507,40 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
    }
 }
 
-static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
+static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndexFrom, int iIndexTo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxSetPalette(%p,%d)", pTerm, iIndex ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxSetPalette(%p,%d,%d)", pTerm, iIndexFrom, iIndexTo ) );
 
-   if( iIndex >= 0 && iIndex <= 15 )
+   if( iIndexFrom < 0 )
+      iIndexFrom = 0;
+   if( iIndexTo > 15 )
+      iIndexTo = 15;
+
+   if( iIndexFrom <= iIndexTo )
    {
-      char szColor[ 11 ];
-      int iAnsiIndex = s_AnsiColors[ iIndex & 0x07 ] | ( iIndex & 0x08 );
-      hb_snprintf( szColor, sizeof( szColor ), "\033]P%X%02X%02X%02X",
-                   iAnsiIndex,
-                   ( pTerm->colors[ iIndex ] ) & 0xff,
-                   ( pTerm->colors[ iIndex ] >> 8 ) & 0xff,
-                   ( pTerm->colors[ iIndex ] >> 16 ) & 0xff );
-      hb_gt_trm_termOut( pTerm, szColor, 10 );
+      do
+      {
+         char szColor[ 11 ];
+         int iAnsiIndex = s_AnsiColors[ iIndexFrom & 0x07 ] | ( iIndexFrom & 0x08 );
+
+         hb_snprintf( szColor, sizeof( szColor ), "\033]P%X%02X%02X%02X",
+                      iAnsiIndex,
+                      ( pTerm->colors[ iIndexFrom ] ) & 0xff,
+                      ( pTerm->colors[ iIndexFrom ] >> 8 ) & 0xff,
+                      ( pTerm->colors[ iIndexFrom ] >> 16 ) & 0xff );
+         hb_gt_trm_termOut( pTerm, szColor, 10 );
+      }
+      while( ++iIndexFrom <= iIndexTo );
+
+      /* ESC ] is Operating System Command (OSC) which by default should
+       * be terminated by ESC \ (ST). Some terminals which sets LINUX
+       * TERM envvar but do not correctly understand above palette set
+       * sequence may hang waiting for ST. We send ST below to avoid such
+       * situation.
+       * Linux console simply ignore ST terminator so nothing wrong
+       * should happen.
+       */
+      hb_gt_trm_termOut( pTerm, "\033\\", 2 );
    }
 }
 
@@ -2175,14 +2195,14 @@ static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, co
    pTerm->iCol += iChars;
 }
 
-static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
+static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndexFrom, int iIndexTo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetPalette(%p,%d)", pTerm, iIndex ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetPalette(%p,%d,%d)", pTerm, iIndexFrom, iIndexTo ) );
 
    if( pTerm->terminal_type == TERM_LINUX ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
    {
-      hb_gt_trm_LinuxSetPalette( pTerm, iIndex );
+      hb_gt_trm_LinuxSetPalette( pTerm, iIndexFrom, iIndexTo );
    }
 }
 
@@ -3724,7 +3744,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
                {
                   pTerm->colors[ iVal ] = hb_itemGetNI( pInfo->pNewVal2 );
-                  hb_gt_trm_SetPalette( pTerm, iVal );
+                  hb_gt_trm_SetPalette( pTerm, iVal, iVal );
                   hb_gt_trm_termFlush( pTerm );
                }
             }
@@ -3740,10 +3760,8 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                 hb_arrayLen( pInfo->pNewVal ) == 16 )
             {
                for( iVal = 0; iVal < 16; iVal++ )
-               {
                   pTerm->colors[ iVal ] = hb_arrayGetNI( pInfo->pNewVal, iVal + 1 );
-                  hb_gt_trm_SetPalette( pTerm, iVal );
-               }
+               hb_gt_trm_SetPalette( pTerm, 0, 15 );
                hb_gt_trm_termFlush( pTerm );
             }
          }
