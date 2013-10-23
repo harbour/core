@@ -2439,6 +2439,7 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
    setAttribute( Qt::WA_StaticContents );
    setAttribute( Qt::WA_PaintOnScreen );
    setAttribute( Qt::WA_OpaquePaintEvent );
+   setAttribute( Qt::WA_KeyCompression );
 
    /* Qt::WA_InputMethodEnabled disables support for
     * national characters in few European countries
@@ -2447,11 +2448,6 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
     * to enable it optionally [druzus]
     */
    /* setAttribute( Qt::WA_InputMethodEnabled ); */
-
-   /* It may be usable in some cases but KeyCompression
-    * needs some modifications in keyevent code [druzus]
-    */
-   /* setAttribute( Qt::WA_KeyCompression ); */
 
    setFocusPolicy( Qt::StrongFocus );
    setMouseTracking( true );
@@ -3028,18 +3024,26 @@ void QTConsole::keyReleaseEvent( QKeyEvent * event )
 
 void QTConsole::keyPressEvent( QKeyEvent * event )
 {
-   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( event->modifiers() );
+   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( event->modifiers() ),
+       iSize, i;
 
    /* support for national characters */
-   if( event->text().size() > 0 )
+   if( ( iSize = event->text().size() ) > 0 )
    {
-      HB_WCHAR wc = event->text().constData()[ 0 ].unicode();
-      if( wc >= 32 && wc != 127 )
+      QString qStr = event->text();
+      HB_WCHAR wc = qStr[ 0 ].unicode();
+
+      if( iSize > 1 || ( wc >= 32 && wc != 127 ) )
       {
          if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
             /* workaround for AltGR and German keyboard */
             iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
-         hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
+
+         for( i = 0; i < iSize; ++i )
+         {
+            wc = qStr[ i ].unicode();
+            hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
+         }
          return;
       }
    }
