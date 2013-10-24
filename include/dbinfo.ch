@@ -105,7 +105,6 @@
 #define RDDI_PASSWORD            42   /* Get/Set default password */
 #define RDDI_LOCKRETRY           43   /* Get/Set record and file lock timeout value */
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
-#define RDDI_CODEPAGE            45   /* Default codepage used by RDD */
 
 /*
    Constants for SELF_ORDINFO ()

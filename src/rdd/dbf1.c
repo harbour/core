@@ -3381,10 +3381,12 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->ulMemoBlockSize = 0;
 
    if( pCreateInfo->cdpId )
+   {
       pArea->area.cdPage = hb_cdpFindExt( pCreateInfo->cdpId );
-   if( ! pArea->area.cdPage )
-      pArea->area.cdPage = DBFAREA_DATA( pArea )->pCodepage;
-   if( ! pArea->area.cdPage )
+      if( ! pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
+   }
+   else
       pArea->area.cdPage = hb_vmCDP();
 
    pItem = hb_itemNew( NULL );
@@ -4013,10 +4015,12 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
 
    if( pOpenInfo->cdpId )
+   {
       pArea->area.cdPage = hb_cdpFindExt( pOpenInfo->cdpId );
-   if( ! pArea->area.cdPage )
-      pArea->area.cdPage = DBFAREA_DATA( pArea )->pCodepage;
-   if( ! pArea->area.cdPage )
+      if( ! pArea->area.cdPage )
+         pArea->area.cdPage = hb_vmCDP();
+   }
+   else
       pArea->area.cdPage = hb_vmCDP();
 
    pArea->fShared = pOpenInfo->fShared;
@@ -6033,16 +6037,6 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          else
             return HB_FAILURE;
          break;
-
-      case RDDI_CODEPAGE:
-      {
-         const char * szCodepage = pData->pCodepage ? pData->pCodepage->id : NULL;
-
-         if( HB_IS_STRING( pItem ) )
-            pData->pCodepage = hb_cdpFindExt( hb_itemGetCPtr( pItem ) );
-
-         hb_itemPutC( pItem, szCodepage );
-      }
 
       default:
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
