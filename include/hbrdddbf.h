@@ -137,6 +137,8 @@ typedef struct _DBFDATA
    char *    szTrigger;
    char *    szPendingTrigger;
 
+   PHB_CODEPAGE pCodepage;     /* Default RDD codepage */
+
    HB_BYTE   bLockType;        /* 0 */
    HB_BYTE   bTableType;       /* DB_DBF_STD */
    HB_BYTE   bCryptType;       /* DB_CRYPT_NONE */
