@@ -269,14 +269,14 @@ METHOD Top( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0 " + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0" + ::cCRLF )
    IF ! ::GetOk()
       RETURN NIL
    ENDIF
 
    cRet := ""
    DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
-      cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
+      cStr := ::inetRecvLine( ::SocketCon, @nPos, 512 )
       IF !( cStr == "." )
          cRet += cStr + ::cCRLF
       ELSE
@@ -312,7 +312,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
    ENDIF
 
    IF ! Empty( nMsgId )
-      // +OK Space(1) nMsg Space(1) UID
+      // +OK Space( 1 ) nMsg Space( 1 ) UID
       RETURN SubStr( ::cReply, RAt( Space( 1 ), ::cReply ) + 1 )
    ELSE
       cRet := ""
@@ -393,10 +393,11 @@ METHOD retrieveAll( lDelete )
 
    FOR i := 1 TO imax
       ::reset()
-      /* TOFIX: cMail might get assigned NIL here, creating RTE later. */
-      cMail := ::retrieve( i )
       aMails[ i ] := TIPMail():new()
-      aMails[ i ]:fromString( cMail )
+      /* NOTE: cMail might get assigned NIL here, so this hack is added to avoid RTE. */
+      IF HB_ISSTRING( cMail := ::retrieve( i ) )
+         aMails[ i ]:fromString( cMail )
+      ENDIF
 
       IF lDelete
          ::reset()
