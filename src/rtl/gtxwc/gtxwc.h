@@ -84,8 +84,8 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define XWC_CHAR_QUEUE_SIZE         128
 #define XWC_CHAR_BUFFER             1024
-#define XWC_MIN_ROWS                3
-#define XWC_MIN_COLS                6
+#define XWC_MIN_ROWS                1
+#define XWC_MIN_COLS                1
 #define XWC_MAX_ROWS                256
 #define XWC_MAX_COLS                256
 #define XWC_DEFAULT_ROWS            25

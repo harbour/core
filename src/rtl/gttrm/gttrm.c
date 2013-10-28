@@ -3433,15 +3433,16 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 
 static HB_BOOL hb_gt_trm_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   PHB_GTTRM pTerm;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
-   pTerm = HB_GTTRM_GET( pGT );
-   if( pTerm->SetMode( pTerm, &iRows, &iCols ) )
+   if( iRows > 0 && iCols > 0 )
    {
-      HB_GTSELF_RESIZE( pGT, iRows, iCols );
-      return HB_TRUE;
+      PHB_GTTRM pTerm = HB_GTTRM_GET( pGT );
+      if( pTerm->SetMode( pTerm, &iRows, &iCols ) )
+      {
+         HB_GTSELF_RESIZE( pGT, iRows, iCols );
+         return HB_TRUE;
+      }
    }
    return HB_FALSE;
 }

@@ -1039,12 +1039,12 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
             uiSize = 0;
             break;
          }
-#endif
          if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
          {
             fAll = HB_FALSE;
             break;
          }
+#endif
       }
       hb_itemRelease( pSrcItm );
       hb_itemRelease( pDstItm );
