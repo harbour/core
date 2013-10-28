@@ -739,29 +739,32 @@ static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_BOOL fResult;
+   HB_BOOL fResult = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
-   s_vi.cb = sizeof( VIOMODEINFO );
-   VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
-   s_vi.row = iRows;
-   s_vi.col = iCols;
-   fResult = VioSetMode( &s_vi, 0 ) == 0; /* 0 = Ok, other = Fail */
-
-   if( ! fResult )
+   if( iRows > 0 && iCols > 0 )
    {
       s_vi.cb = sizeof( VIOMODEINFO );
       VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
-   }
+      s_vi.row = iRows;
+      s_vi.col = iCols;
+      fResult = VioSetMode( &s_vi, 0 ) == 0; /* 0 = Ok, other = Fail */
 
-   hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
-   s_iCursorStyle = hb_gt_os2_GetCursorStyle();
-   HB_GTSELF_RESIZE( pGT, s_vi.row, s_vi.col );
-   HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
-   if( s_iCursorStyle > 0 )
-      HB_GTSELF_SETCURSORSTYLE( pGT, s_iCursorStyle );
-   hb_gt_os2_GetScreenContents( pGT );
+      if( ! fResult )
+      {
+         s_vi.cb = sizeof( VIOMODEINFO );
+         VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
+      }
+
+      hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
+      s_iCursorStyle = hb_gt_os2_GetCursorStyle();
+      HB_GTSELF_RESIZE( pGT, s_vi.row, s_vi.col );
+      HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
+      if( s_iCursorStyle > 0 )
+         HB_GTSELF_SETCURSORSTYLE( pGT, s_iCursorStyle );
+      hb_gt_os2_GetScreenContents( pGT );
+   }
 
    return fResult;
 }
