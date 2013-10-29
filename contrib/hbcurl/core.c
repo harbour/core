@@ -985,6 +985,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYAUTH, hb_parnl( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072100
+            case HB_CURLOPT_BEARER:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_BEARER, hb_parc( 3 ) );
+               break;
+#endif
 
             /* HTTP options */
 

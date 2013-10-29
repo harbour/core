@@ -255,6 +255,7 @@
 #define HB_CURLOPT_TCP_KEEPIDLE               205
 #define HB_CURLOPT_TCP_KEEPINTVL              206
 #define HB_CURLOPT_MAIL_AUTH                  207
+#define HB_CURLOPT_BEARER                     208
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
