@@ -1763,12 +1763,18 @@ static HB_ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfAddField(%p, %p)", pArea, pFieldInfo ) );
 
-   if( pArea->bMemoType == DB_MEMO_SMT &&
-       ( pFieldInfo->uiType == HB_FT_MEMO ||
-         pFieldInfo->uiType == HB_FT_IMAGE ||
-         pFieldInfo->uiType == HB_FT_BLOB ||
-         pFieldInfo->uiType == HB_FT_OLE ) )
-      pFieldInfo->uiLen = 10;
+   switch( pFieldInfo->uiType )
+   {
+      case HB_FT_IMAGE:
+      case HB_FT_BLOB:
+      case HB_FT_OLE:
+         pFieldInfo->uiFlags |= HB_FF_BINARY;
+         /* no break */
+      case HB_FT_MEMO:
+         if( pArea->bMemoType == DB_MEMO_SMT )
+            pFieldInfo->uiLen = 10;
+         break;
+   }
 
    /* Update field offset */
    pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
@@ -3172,7 +3178,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pThisField->bFieldFlags = HB_FF_BINARY;
+            pThisField->bFieldFlags |= HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
             break;
@@ -3182,7 +3188,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pThisField->bFieldFlags = HB_FF_BINARY;
+            pThisField->bFieldFlags |= HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
             break;
@@ -3192,7 +3198,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pThisField->bFieldFlags = HB_FF_BINARY;
+            pThisField->bFieldFlags |= HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             pArea->fHasMemo = HB_TRUE;
             break;
@@ -3303,7 +3309,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = pArea->bTableType == DB_DBF_VFP ? 'T' : '@';
             pField->uiLen = 8;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pThisField->bFieldFlags = HB_FF_BINARY;
+            pThisField->bFieldFlags |= HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             break;
 
@@ -3349,6 +3355,13 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          pArea->lpdbOpenInfo = NULL;
          return HB_FAILURE;
       }
+
+      if( pArea->bTableType == DB_DBF_VFP &&
+          ( pThisField->bFieldFlags & HB_FF_NULLABLE ) != 0 )
+      {
+         hb_dbfAllocNullFlag( pArea, uiCount, HB_FALSE );
+      }
+
       pThisField++;
    }
 
