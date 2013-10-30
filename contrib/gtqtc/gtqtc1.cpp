@@ -1372,6 +1372,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->fMaximized    = HB_FALSE;
    pQTC->fFullScreen   = HB_FALSE;
    pQTC->fSelectCopy   = HB_FALSE;
+   pQTC->fRepaint      = HB_TRUE;
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
@@ -2559,10 +2560,14 @@ void QTConsole::setFontSize( int iFH, int iFW )
    pQTC->fontWidth  = iWidth;
    pQTC->fontAscent = iAscent;
 
+   pQTC->fRepaint = pQTC->cellX != pQTC->fontWidth ||
+                    pQTC->cellY != pQTC->fontHeight;
+
    pQTC->cellX = pQTC->fontWidth;
    pQTC->cellY = pQTC->fontHeight;
 
-   hb_gt_qtc_resetBoxCharBitmaps( pQTC );
+   if( pQTC->fRepaint )
+      hb_gt_qtc_resetBoxCharBitmaps( pQTC );
    setImageSize();
 }
 
@@ -2575,8 +2580,13 @@ void QTConsole::setImageSize( void )
    {
       delete image;
       image = new QImage( iWidth, iHeight, QImage::Format_RGB32 );
+      pQTC->fRepaint = HB_TRUE;
+   }
+   if( pQTC->fRepaint )
+   {
       image->fill( BLACK );
       repaintChars( image->rect() );
+      pQTC->fRepaint = HB_FALSE;
    }
 }
 
@@ -3431,13 +3441,13 @@ void QTCWindow::setWindowSize( void )
 {
    if( ( windowState() & ( Qt::WindowMaximized | Qt::WindowFullScreen ) ) != 0 )
    {
-      qConsole->pQTC->marginLeft = rect().width() - qConsole->image->width();
+      qConsole->pQTC->marginLeft = width() - qConsole->image->width();
       if( qConsole->pQTC->marginLeft > 0 )
          qConsole->pQTC->marginLeft >>= 1;
       else
          qConsole->pQTC->marginLeft = 0;
 
-      qConsole->pQTC->marginTop = rect().height() - qConsole->image->height();
+      qConsole->pQTC->marginTop = height() - qConsole->image->height();
       if( qConsole->pQTC->marginTop > 0 )
          qConsole->pQTC->marginTop >>= 1;
       else

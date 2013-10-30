@@ -329,6 +329,7 @@ typedef struct
    HB_BOOL     fMaximized;                   /* enter/leave mximize mode */
    HB_BOOL     fFullScreen;                  /* enable/disable fullscreen mode */
    HB_BOOL     fSelectCopy;                  /* allow marking texts by mouse left button with shift */
+   HB_BOOL     fRepaint;                     /* force internal image repainting */
 
    int         iResizeMode;                  /* Sets the resizing mode either to FONT or ROWS */
 }
