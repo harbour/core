@@ -1816,14 +1816,15 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                   pWVT->MarginLeft = ( wi.right - wi.left - width  ) / 2;
                   pWVT->MarginTop  = ( wi.bottom - wi.top - height ) / 2;
                }
-               else if( wi.right - wi.left != width || wi.bottom - wi.top != height )
-                        /* above condition is necessary to avoid infinite
-                         * recursive in WInCE builds
-                         */
+               else
                {
                   pWVT->MarginLeft = 0;
                   pWVT->MarginTop  = 0;
-                  SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+                  if( wi.right - wi.left != width || wi.bottom - wi.top != height )
+                      /* above condition is necessary to avoid infinite
+                       * recursive in WinCE builds
+                       */
+                     SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
                }
 
                if( pWVT->CaretExist && ! pWVT->CaretHidden )

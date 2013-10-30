@@ -1422,7 +1422,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_O
                bCodeNext2 == HB_P_DECEQ ||
                bCodeNext2 == HB_P_INCEQ ) )
          {
-            fCheck = 1;
+            fCheck = HB_TRUE;
          }
       }
 

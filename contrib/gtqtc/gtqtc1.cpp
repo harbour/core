@@ -3455,15 +3455,11 @@ void QTCWindow::setResizing( void )
 {
    if( qConsole->pQTC->fResizable )
    {
-      QRect rc( QApplication::desktop()->screenGeometry() );
-
-      setMaximumWidth( rc.width() );
-      setMaximumHeight( rc.height() );
+      setMaximumSize( QApplication::desktop()->screenGeometry().size() );
 
       if( qConsole->pQTC->iResizeMode == HB_GTI_RESIZEMODE_ROWS )
       {
-         setMinimumWidth( qConsole->pQTC->cellX << 1 );
-         setMinimumHeight( qConsole->pQTC->cellY << 1 );
+         setMinimumSize( qConsole->pQTC->cellX << 1, qConsole->pQTC->cellY << 1 );
          if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
@@ -3471,8 +3467,7 @@ void QTCWindow::setResizing( void )
       }
       else
       {
-         setMinimumWidth( qConsole->pQTC->iCols << 1 );
-         setMinimumHeight( qConsole->pQTC->iRows << 2 );
+         setMinimumSize( qConsole->pQTC->iCols << 1, qConsole->pQTC->iRows << 2 );
          if( !qConsole->pQTC->fResizeInc || ( windowState() & Qt::WindowMaximized ) != 0 )
             setSizeIncrement( 0, 0 );
          else
@@ -3481,10 +3476,8 @@ void QTCWindow::setResizing( void )
    }
    else
    {
-      setMinimumWidth( width() );
-      setMaximumWidth( width() );
-      setMinimumHeight( height() );
-      setMaximumHeight( height() );
+      setMinimumSize( size() );
+      setMaximumSize( size() );
       setSizeIncrement( 0, 0 );
    }
 }
