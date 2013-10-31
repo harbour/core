@@ -10,14 +10,22 @@
 /* UTF-8 */
 
 #include "box.ch"
+#ifdef __HARBOUR__
+   #include "hbgtinfo.ch"
+#endif
 
-#ifndef __CLIP__
-   #ifdef FlagShip
-      #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( [<x>] )
-   #else
-      #ifndef __HARBOUR__
-         #xtranslate hb_SecondsCPU( [<x>] ) => Seconds( [<x>] )
-      #endif
+#ifdef __CLIP__
+   #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( [<x>] )
+#endif
+#ifdef FlagShip
+   #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( [<x>] )
+#endif
+#ifdef __XHARBOUR__
+   #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( [<x>] )
+   #undef __HARBOUR__
+#else
+   #ifndef __HARBOUR__
+      #xtranslate hb_SecondsCPU( [<x>] ) => Seconds( [<x>] )
    #endif
 #endif
 
@@ -37,9 +45,17 @@ STATIC s_nDispCount := 0
 
 #endif
 
-PROCEDURE Main()
+PROCEDURE Main( xUtf, xCompatBuf )
 
    LOCAL aResult := {}
+
+#ifdef __HARBOUR__
+   hb_cdpSelect( iif( !Empty( xUtf ), "UTF8", "EN" ) )
+   hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, !Empty( xCompatBuf ) )
+   ? "codepage:", hb_cdpSelect(), "box CP:", hb_gtInfo( HB_GTI_BOXCP ), ;
+     "compat buffer:", hb_gtInfo( HB_GTI_COMPATBUFFER )
+#endif
 
    Initialise()   // Initialise Screen Display
 

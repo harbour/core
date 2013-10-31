@@ -25,7 +25,6 @@ DYNAMIC dbSetLocate
 DYNAMIC dbSetLocateBlock
 DYNAMIC ExecName
 DYNAMIC ExecPIDNum
-DYNAMIC FIELDDECI
 DYNAMIC FieldGetArr
 DYNAMIC FieldPutArr
 DYNAMIC IndexCount

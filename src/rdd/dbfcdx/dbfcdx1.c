@@ -3476,6 +3476,7 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    if( pTag->RootBlock == 0 || pTag->RootBlock % CDX_PAGELEN != 0 ||
        ( HB_FOFFSET ) pTag->RootBlock >= hb_fileSize( pTag->pIndex->pFile ) ||
        HB_GET_LE_UINT16( tagHeader.keySize ) > CDX_MAXKEY ||
+       uiKeyLen + uiForLen > CDX_HEADEREXPLEN ||
        uiForPos + uiForLen > CDX_HEADEREXPLEN ||
        uiKeyPos + uiKeyLen > CDX_HEADEREXPLEN ||
        ( uiKeyPos < uiForPos ? ( uiKeyPos + uiKeyLen > uiForPos && tagHeader.keyExpPool[ uiForPos ] ) :
@@ -3486,6 +3487,8 @@ static void hb_cdxTagLoad( LPCDXTAG pTag )
    }
 
    /* some wrong RDDs do not set expression length this is workaround for them */
+   if( uiKeyPos == 0 && uiKeyLen != 0 && uiForPos == 0 && uiForLen != 0 )
+      uiForPos = uiKeyLen;
    if( ! uiKeyLen )
       uiKeyLen = ( uiForPos >= uiKeyPos ? uiForPos : CDX_HEADEREXPLEN ) - uiKeyPos;
    if( ! uiForLen )
