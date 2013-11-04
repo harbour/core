@@ -90,19 +90,19 @@
                             iif( <.last.>, .T., NIL ), ;
                      <(wa)>, <(tag)> )
 #command SET FILTER TO <exp> IN <wa> [NOOPTIMIZE] => ;
-                                 <wa>->( DbSetFilter( <{exp}>, <"exp"> ) )
-#command SKIP [<n>] IN <wa>   => <wa>->( DbSkip( <n> ) )
-#command UNLOCK IN <wa>       => <wa>->( DbUnlock() )
-#command GO TOP IN <wa>       => <wa>->( DbGoTop() )
-#command GO BOTTOM IN <wa>    => <wa>->( DbGoBottom() )
-#command GOTO <nRec> IN <wa>  => <wa>->( DbGoTo( <nRec> ) )
+                                 <wa>->( dbSetFilter( <{exp}>, <"exp"> ) )
+#command SKIP [<n>] IN <wa>   => <wa>->( dbSkip( <n> ) )
+#command UNLOCK IN <wa>       => <wa>->( dbUnlock() )
+#command GO TOP IN <wa>       => <wa>->( dbGoTop() )
+#command GO BOTTOM IN <wa>    => <wa>->( dbGoBottom() )
+#command GOTO <nRec> IN <wa>  => <wa>->( dbGoto( <nRec> ) )
 
-#xtranslate SEEK( <x>, <wa> ) => (<wa>)->( DbSeek( <x> ) )
+#xtranslate SEEK( <x>, <wa> ) => (<wa>)->( dbSeek( <x> ) )
 #xtranslate RECCOUNT( <wa> )  => (<wa>)->( RecCount() )
 #xtranslate RECSIZE( <wa> )   => (<wa>)->( RecSize() )
 #xtranslate FCOUNT( <wa> )    => (<wa>)->( FCount() )
 #xtranslate RECNO( <wa> )     => (<wa>)->( RecNo() )
-#xtranslate RLOCK( <wa> )     => (<wa>)->( Rlock() )
+#xtranslate RLOCK( <wa> )     => (<wa>)->( RLock() )
 
 #xtranslate USED( <wa> )    => __fox_Used( <wa> )
 
@@ -115,7 +115,7 @@
 #command ENDSCAN => __dbContinue(); ENDDO
 
 #command EJECT PAGE => __Eject()
-#command FLUSH      => DbCommitAll()
+#command FLUSH      => dbCommitAll()
 #command REGIONAL [<defs,...>] => LOCAL <defs>
 
 

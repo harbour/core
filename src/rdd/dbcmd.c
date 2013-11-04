@@ -1818,7 +1818,7 @@ HB_FUNC( __DBARRANGE )
 
    if( pArea )
    {
-      HB_AREANO uiNewArea
+      HB_AREANO uiNewArea;
       HB_USHORT uiCount, uiDest;
       HB_SIZE nSize;
       char * szFieldLine, * szPos;
