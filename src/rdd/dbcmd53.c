@@ -74,9 +74,7 @@ HB_FUNC( ORDKEYCOUNT )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
 
@@ -97,9 +95,7 @@ HB_FUNC( ORDKEYNO )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
       pOrderInfo.itmNewVal = NULL;
@@ -215,9 +211,7 @@ HB_FUNC( ORDKEYADD )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_ANY );
@@ -237,9 +231,7 @@ HB_FUNC( ORDKEYDEL )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_ANY );
@@ -259,9 +251,7 @@ HB_FUNC( ORDDESCEND )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
@@ -281,9 +271,7 @@ HB_FUNC( ORDISUNIQUE )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Harbour extension: NewVal to set/reset unique flag */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
@@ -303,9 +291,7 @@ HB_FUNC( ORDCUSTOM )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( ! pOrderInfo.itmOrder )
-         pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
+      pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
       pOrderInfo.itmNewVal = hb_param( 3, HB_IT_LOGICAL );
@@ -352,13 +338,8 @@ HB_FUNC( DBORDERINFO )
          DBORDERINFO pOrderInfo;
 
          /* atomBagName may be NIL */
-         pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-         if( ! pOrderInfo.atomBagName )
-            pOrderInfo.atomBagName = hb_param( 2, HB_IT_NUMERIC );
-
-         pOrderInfo.itmOrder = hb_param( 3, HB_IT_STRING );
-         if( ! pOrderInfo.itmOrder )
-            pOrderInfo.itmOrder = hb_param( 3, HB_IT_NUMERIC );
+         pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING | HB_IT_NUMERIC );
+         pOrderInfo.itmOrder = hb_param( 3, HB_IT_STRING | HB_IT_NUMERIC );
 
          pOrderInfo.itmNewVal  = hb_param( 4, HB_IT_ANY );
          pOrderInfo.itmResult  = hb_itemNew( NULL );

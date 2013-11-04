@@ -3,6 +3,7 @@
  * Misc FoxPro functions (feel free to expand/fix it as you like)
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,6 +48,7 @@
  */
 
 #include "setcurs.ch"
+#include "dbinfo.ch"
 
 FUNCTION Sys( nValue, xPar1 )
 
@@ -55,9 +57,27 @@ FUNCTION Sys( nValue, xPar1 )
       RETURN NetName() + " # " + hb_UserName()
    CASE 2
       RETURN hb_ntos( Seconds() )
+   CASE 5
+      RETURN Set( _SET_DEFAULT )
+   CASE 6
+      RETURN Set( _SET_PRINTFILE )
+   CASE 10
+      hb_default( @xPar1, 0 )
+      RETURN CToD( "" ) + xPar1
+   CASE 100
+      RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
+   CASE 101
+      RETURN Set( _SET_DEVICE )
+   CASE 102
+      RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
    CASE 2002
       hb_default( @xPar1, SC_NONE )
       RETURN SetCursor( xPar1 )
+   CASE 2011
+      RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
+             iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
+             iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
+                                               "Not locked" ) ) )
    OTHERWISE
       /* Throw RTE? */
    ENDSWITCH
@@ -80,3 +100,22 @@ STATIC FUNCTION AFillNested( aValue, xVal )
 
 FUNCTION __fox_Array( ... )
    RETURN AFillNested( Array( ... ), .F. )
+
+FUNCTION AElement( aValue, ... )
+   RETURN aValue[ ... ]
+
+FUNCTION Occurs( cSub, cStr )
+   LOCAL nCount := 0, nFrom, nPos
+
+   FOR nFrom := 1 to Len( cStr )
+      IF ( nPos := hb_At( cSub, cStr, nFrom ) ) == 0
+         EXIT
+      ENDIF
+      ++nCount
+      nFrom := nPos
+   NEXT
+
+   RETURN nCount
+
+FUNCTION InsMode( ... )
+   RETURN Set( _SET_INSERT, ... )

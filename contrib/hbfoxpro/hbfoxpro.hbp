@@ -9,3 +9,6 @@ ${hb_name}.hbx
 
 dll.prg
 misc.prg
+
+dbfunc.c
+miscfunc.c

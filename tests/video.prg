@@ -48,9 +48,9 @@ PROCEDURE Main( xUtf, xCompatBuf )
    LOCAL aResult := {}
 
 #ifdef __HARBOUR__
-   hb_cdpSelect( iif( !Empty( xUtf ), "UTF8", "EN" ) )
+   hb_cdpSelect( iif( ! Empty( xUtf ), "UTF8", "EN" ) )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
-   hb_gtInfo( HB_GTI_COMPATBUFFER, !Empty( xCompatBuf ) )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, ! Empty( xCompatBuf ) )
    ? "codepage:", hb_cdpSelect(), "box CP:", hb_gtInfo( HB_GTI_BOXCP ), ;
      "compat buffer:", hb_gtInfo( HB_GTI_COMPATBUFFER )
 #endif
