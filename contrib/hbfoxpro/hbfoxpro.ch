@@ -82,4 +82,41 @@
                    <{for}>, <{while}>, <next>, ;
                    <rec>, <.rest.>, <.prn.>, <(f)> )
 
+
+/* commands and standard functions with alias */
+#command SEEK <exp> [<soft: SOFTSEEK>] [<last: LAST>] ;
+              [TAG <tag>] [IN <wa>] => ;
+         __fox_Seek( <exp>, iif( <.soft.>, .T., NIL ), ;
+                            iif( <.last.>, .T., NIL ), ;
+                     <(wa)>, <(tag)> )
+#command SET FILTER TO <exp> IN <wa> [NOOPTIMIZE] => ;
+                                 <wa>->( DbSetFilter( <{exp}>, <"exp"> ) )
+#command SKIP [<n>] IN <wa>   => <wa>->( DbSkip( <n> ) )
+#command UNLOCK IN <wa>       => <wa>->( DbUnlock() )
+#command GO TOP IN <wa>       => <wa>->( DbGoTop() )
+#command GO BOTTOM IN <wa>    => <wa>->( DbGoBottom() )
+#command GOTO <nRec> IN <wa>  => <wa>->( DbGoTo( <nRec> ) )
+
+#xtranslate SEEK( <x>, <wa> ) => (<wa>)->( DbSeek( <x> ) )
+#xtranslate RECCOUNT( <wa> )  => (<wa>)->( RecCount() )
+#xtranslate RECSIZE( <wa> )   => (<wa>)->( RecSize() )
+#xtranslate FCOUNT( <wa> )    => (<wa>)->( FCount() )
+#xtranslate RECNO( <wa> )     => (<wa>)->( RecNo() )
+#xtranslate RLOCK( <wa> )     => (<wa>)->( Rlock() )
+
+#xtranslate USED( <wa> )    => __fox_Used( <wa> )
+
+
+/* other commands */
+#command SCAN [FOR <for>] [WHILE <while>] [NEXT <next>] ;
+              [RECORD <rec>] [<rest:REST>] [ALL] [NOOPTIMIZE] => ;
+         __dbLocate( <{for}>, <{while}>, <next>, <rec>, <.rest.> ) ;;
+         WHILE Found()
+#command ENDSCAN => __dbContinue(); ENDDO
+
+#command EJECT PAGE => __Eject()
+#command FLUSH      => DbCommitAll()
+#command REGIONAL [<defs,...>] => LOCAL <defs>
+
+
 #endif /* HBFOXPRO_CH_ */
