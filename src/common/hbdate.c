@@ -726,7 +726,7 @@ HB_BOOL hb_timeStampStrGet( const char * szDateTime,
             }
             else
             {
-               if( *szDateTime == ',' )
+               if( *szDateTime == ',' || *szDateTime == ';' )
                   ++szDateTime;
                while( HB_ISSPACE( *szDateTime ) )
                   ++szDateTime;
