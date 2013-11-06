@@ -151,6 +151,7 @@
 #define HB_GTI_DISPIMAGE        71  /* Display image with given name */
 #define HB_GTI_REDRAWMAX        72  /* Maximum number of unchanged neighboring chars in redrawn line */
 #define HB_GTI_RESIZESTEP       73  /* Enable/Disable window resizing steps */
+#define HB_GTI_CLOSEMODE        74  /* Close event: 0 terminate application, >=1 generate HB_K_CLOSE, 2 disable close button */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1

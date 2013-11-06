@@ -4367,7 +4367,7 @@ static void hb_gt_xwc_SetResizing( PXWND_DEF wnd )
 
    /* xsize.flags = PWinGravity | PBaseSize | PResizeInc | PMinSize; */
    xsize.flags = PWinGravity | PResizeInc | PMinSize | PMaxSize | PBaseSize;
-   xsize.win_gravity = CenterGravity;
+   xsize.win_gravity = StaticGravity;
    if( wnd->fResizable )
    {
       xsize.width_inc = wnd->fontWidth;
@@ -5044,6 +5044,16 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fClosable );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             wnd->fClosable = hb_itemGetL( pInfo->pNewVal );
+         break;
+
+      case HB_GTI_CLOSEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fClosable ? 0 : 1 );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal >= 0 && iVal <= 2 )
+               wnd->fClosable = iVal == 0;
+         }
          break;
 
       case HB_GTI_RESIZABLE:

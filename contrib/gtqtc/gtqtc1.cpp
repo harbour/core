@@ -1364,10 +1364,10 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->fontName      = new QString( QTC_DEFAULT_FONT_NAME );
    pQTC->cellY         = pQTC->fontHeight;
    pQTC->cellX         = pQTC->fontWidth == 0 ? pQTC->cellY / 2: pQTC->fontWidth;
+   pQTC->iCloseMode    = 0;
    pQTC->iResizeMode   = HB_GTI_RESIZEMODE_FONT;
    pQTC->fResizable    = HB_TRUE;
    pQTC->fResizeInc    = HB_FALSE;
-   pQTC->fClosable     = HB_TRUE;
    pQTC->fAltEnter     = HB_FALSE;
    pQTC->fMaximized    = HB_FALSE;
    pQTC->fFullScreen   = HB_FALSE;
@@ -1553,32 +1553,38 @@ static HB_BOOL hb_gt_qtc_setWindowSize( PHB_GTQTC pQTC, int iRows, int iCols )
 
 static void hb_gt_qtc_setWindowFlags( PHB_GTQTC pQTC, Qt::WindowFlags flags, HB_BOOL fSet )
 {
-   Qt::WindowFlags currFlags = pQTC->qWnd->windowFlags();
+   Qt::WindowFlags currFlags = pQTC->qWnd->windowFlags(), newFlags;
 
    if( fSet )
-      currFlags |= flags;
+      newFlags = currFlags | flags;
    else
-      currFlags &= ~flags;
+      newFlags = currFlags & ~flags;
 
-   pQTC->qWnd->setWindowFlags( currFlags );
-   HB_QTC_LOCK();
-   pQTC->qWnd->show();
-   HB_QTC_UNLOCK();
+   if( newFlags != currFlags )
+   {
+      pQTC->qWnd->setWindowFlags( currFlags );
+      HB_QTC_LOCK();
+      pQTC->qWnd->show();
+      HB_QTC_UNLOCK();
+   }
 }
 
 static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB_BOOL fSet )
 {
-   Qt::WindowStates currState = pQTC->qWnd->windowState();
+   Qt::WindowStates currState = pQTC->qWnd->windowState(), newState;
 
    if( fSet )
-      currState |= state;
+      newState = currState | state;
    else
-      currState &= ~state;
+      newState = currState & ~state;
 
-   pQTC->qWnd->setWindowState( currState );
-   HB_QTC_LOCK();
-   pQTC->qWnd->show();
-   HB_QTC_UNLOCK();
+   if( newState != currState )
+   {
+      pQTC->qWnd->setWindowState( currState );
+      HB_QTC_LOCK();
+      pQTC->qWnd->show();
+      HB_QTC_UNLOCK();
+   }
 }
 
 static void hb_gt_qtc_initWindow( PHB_GTQTC pQTC, HB_BOOL fCenter )
@@ -2059,13 +2065,29 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CLOSABLE:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->fClosable );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pQTC->iCloseMode == 0 );
          if( pInfo->pNewVal && HB_IS_LOGICAL( pInfo->pNewVal ) &&
-             ( hb_itemGetL( pInfo->pNewVal ) ? ! pQTC->fClosable : pQTC->fClosable ) )
+             ( hb_itemGetL( pInfo->pNewVal ) ? ( pQTC->iCloseMode != 0 ) :
+                                               ( pQTC->iCloseMode == 0 ) ) )
          {
-            pQTC->fClosable = ! pQTC->fClosable;
+            iVal = pQTC->iCloseMode;
+            pQTC->iCloseMode = iVal == 0 ? 1 : 0;
             if( pQTC->qWnd )
-               hb_gt_qtc_setWindowFlags( pQTC, Qt::WindowCloseButtonHint, pQTC->fClosable );
+               hb_gt_qtc_setWindowFlags( pQTC, Qt::WindowCloseButtonHint, pQTC->iCloseMode < 2 );
+         }
+         break;
+
+      case HB_GTI_CLOSEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pQTC->iCloseMode );
+         if( pInfo->pNewVal && HB_IS_NUMERIC( pInfo->pNewVal ) )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal >= 0 && iVal <= 2 )
+            {
+               pQTC->iCloseMode = iVal;
+               if( pQTC->qWnd )
+                  hb_gt_qtc_setWindowFlags( pQTC, Qt::WindowCloseButtonHint, pQTC->iCloseMode < 2 );
+            }
          }
          break;
 
@@ -3386,7 +3408,7 @@ QTCWindow::QTCWindow( PHB_GTQTC pQTC )
                            Qt::WindowSystemMenuHint                |
                            Qt::WindowTitleHint                     |
                            Qt::Window;
-   if( pQTC->fClosable )
+   if( pQTC->iCloseMode < 2 )
       flags |= Qt::WindowCloseButtonHint;
    if( pQTC->fResizable )
       flags |= Qt::WindowMaximizeButtonHint;
@@ -3424,7 +3446,7 @@ QTCWindow::~QTCWindow( void )
 
 void QTCWindow::closeEvent( QCloseEvent * event )
 {
-   if( qConsole->pQTC->fClosable )
+   if( qConsole->pQTC->iCloseMode == 0 )
    {
       PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
       hb_setSetItem( HB_SET_CANCEL, pItem );

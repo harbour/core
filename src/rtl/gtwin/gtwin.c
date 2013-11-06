@@ -1825,7 +1825,8 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          UINT uiCodePage = GetConsoleCP();
          UINT uiCodePageNew = hb_itemGetNI( pInfo->pNewVal );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, uiCodePage );
-         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) && uiCodePageNew != uiCodePage )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+             uiCodePageNew != uiCodePage )
          {
             SetConsoleCP( uiCodePageNew );
             SetConsoleOutputCP( uiCodePageNew );
@@ -1851,13 +1852,27 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_CLOSABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bClosable );
-         if( pInfo->pNewVal )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
             HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != s_bClosable )
             {
                hb_gt_win_SetCloseButton( HB_TRUE, bNewValue );
                s_bClosable = bNewValue;
+            }
+         }
+         break;
+
+      case HB_GTI_CLOSEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_bClosable ? 0 : 2 );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            int iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal >= 0 && iVal <= 2 &&
+                ( s_bClosable ? ( iVal != 0 ) : ( iVal == 0 ) ) )
+            {
+               s_bClosable = iVal == 0;
+               hb_gt_win_SetCloseButton( HB_TRUE, s_bClosable );
             }
          }
          break;
