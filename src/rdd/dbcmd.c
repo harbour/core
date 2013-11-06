@@ -1818,8 +1818,8 @@ HB_FUNC( __DBARRANGE )
 
    if( pArea )
    {
-      HB_AREANO uiNewArea;
       HB_USHORT uiCount, uiDest;
+      HB_AREANO uiNewArea;
       HB_SIZE nSize;
       char * szFieldLine, * szPos;
       PHB_ITEM pStruct, pFields;

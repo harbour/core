@@ -201,6 +201,7 @@ static HB_BOOL     s_bSpecialKeyHandling;
 static HB_BOOL     s_bAltKeyHandling;
 static DWORD       s_dwAltGrBits;       /* JC: used to verify ALT+GR on different platforms */
 static HB_BOOL     s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
+static HB_BOOL     s_bSuspend;
 static int         s_iCursorStyle;
 static int         s_iOldCurStyle;
 static int         s_iCurRow;
@@ -598,7 +599,8 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
       case CTRL_CLOSE_EVENT:
       case CTRL_BREAK_EVENT:
-         s_bBreak = HB_TRUE;
+         if( ! s_bSuspend )
+            s_bBreak = HB_TRUE;
          bHandled = TRUE;
          break;
 
@@ -885,7 +887,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_hStdOut = hFilenoStdout;
    s_hStdErr = hFilenoStderr;
 
-   s_bBreak = HB_FALSE;
+   s_bBreak = s_bSuspend = HB_FALSE;
    s_cNumRead = 0;
    s_cNumIndex = 0;
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
@@ -1155,11 +1157,10 @@ static HB_BOOL hb_gt_win_Suspend( PHB_GT pGT )
 
    if( s_pCharInfoScreen )
    {
-      SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, FALSE );
-      SetConsoleCtrlHandler( NULL, TRUE );
       SetConsoleMode( s_HOutput, s_dwomode );
       SetConsoleMode( s_HInput, s_dwimode );
    }
+   s_bSuspend = HB_TRUE;
    return HB_TRUE;
 }
 
@@ -1169,13 +1170,13 @@ static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
 
    if( s_pCharInfoScreen )
    {
-      SetConsoleCtrlHandler( NULL, FALSE );
       SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
       SetConsoleMode( s_HOutput, s_dwomode );
       SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
       hb_gt_win_xInitScreenParam( pGT );
       hb_gt_win_xSetCursorStyle();
    }
+   s_bSuspend = HB_FALSE;
    return HB_TRUE;
 }
 
