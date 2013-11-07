@@ -325,7 +325,7 @@ typedef struct
    HB_BOOL  IgnoreWM_SYSCHAR;
 
    HB_BOOL  bResizable;
-   HB_BOOL  bClosable;
+   HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bFullScreen;
    HB_BOOL  bAltEnter;                    /* Can use Alt+Enter to enter full screen mode */
    int      MarginTop;
@@ -334,7 +334,6 @@ typedef struct
    int      iNewPosX;
    int      iNewPosY;
 
-   HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */
    HB_BOOL  bBeginMarked;
 
@@ -345,6 +344,7 @@ typedef struct
    RECT     sRectNew;
    RECT     sRectOld;
 
+   int      CloseMode;
    int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
 
    HB_BOOL  bResizing;

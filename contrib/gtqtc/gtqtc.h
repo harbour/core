@@ -322,7 +322,6 @@ typedef struct
    QIcon *     qIcon;                        /* application icon */
    QString *   wndTitle;                     /* window title */
 
-   HB_BOOL     fClosable;                    /* accept ALT+F4 and/or [x] button as CTRL+BREAK */
    HB_BOOL     fAltEnter;                    /* ALT+ENTER switch between fullscreen mode */
    HB_BOOL     fResizable;                   /* enable/disable window resizing */
    HB_BOOL     fResizeInc;                   /* enable/disable resize progression */
@@ -332,6 +331,7 @@ typedef struct
    HB_BOOL     fRepaint;                     /* force internal image repainting */
 
    int         iResizeMode;                  /* Sets the resizing mode either to FONT or ROWS */
+   HB_BOOL     iCloseMode;                   /* ==0 accept ALT+F4 and/or [x] button as CTRL+BREAK, >=1 generate HB_K_CLOSE, ==2 disable [x] */
 }
 HB_GTQTC, * PHB_GTQTC;
 
