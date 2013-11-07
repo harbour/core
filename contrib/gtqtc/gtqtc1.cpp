@@ -1562,7 +1562,7 @@ static void hb_gt_qtc_setWindowFlags( PHB_GTQTC pQTC, Qt::WindowFlags flags, HB_
 
    if( newFlags != currFlags )
    {
-      pQTC->qWnd->setWindowFlags( currFlags );
+      pQTC->qWnd->setWindowFlags( newFlags );
       HB_QTC_LOCK();
       pQTC->qWnd->show();
       HB_QTC_UNLOCK();
@@ -1580,7 +1580,7 @@ static void hb_gt_qtc_setWindowState( PHB_GTQTC pQTC, Qt::WindowStates state, HB
 
    if( newState != currState )
    {
-      pQTC->qWnd->setWindowState( currState );
+      pQTC->qWnd->setWindowState( newState );
       HB_QTC_LOCK();
       pQTC->qWnd->show();
       HB_QTC_UNLOCK();
