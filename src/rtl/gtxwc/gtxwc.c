@@ -4710,6 +4710,7 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       HB_XWC_XLIB_LOCK();
       XChangeKeyboardControl( wnd->dpy, KBBellPitch | KBBellDuration, &XkbCtrl );
       XBell( wnd->dpy, 0 );
+      XSync( wnd->dpy, False );
       HB_XWC_XLIB_UNLOCK();
    }
    hb_idleSleep( dDuration );
