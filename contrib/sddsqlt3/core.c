@@ -436,12 +436,6 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       PHB_ITEM  pArray;
       HB_USHORT ui;
 
-      if( sqlite3_step( st ) != SQLITE_ROW )
-      {
-         pArea->fFetched = HB_TRUE;
-         break;
-      }
-
       pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
 
       for( ui = 0; ui < pArea->area.uiFieldCount; ++ui )
@@ -488,6 +482,12 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       pArea->ulRecCount++;
       pArea->pRow[ pArea->ulRecCount ]      = pArray;
       pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
+
+      if( sqlite3_step( st ) != SQLITE_ROW )
+      {
+         pArea->fFetched = HB_TRUE;
+         break;
+      }
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )

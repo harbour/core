@@ -40,7 +40,7 @@ PROCEDURE Main()
    Inkey( 0 )
    Browse()
 
-   INDEX ON FIELD->AGE TO age
+   INDEX ON FIELD->age TO age
    dbGoTop()
    Browse()
    dbCloseArea()
