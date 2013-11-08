@@ -117,6 +117,8 @@ static Atom s_atomText;
 static Atom s_atomCompoundText;
 static Atom s_atomFullScreen;
 static Atom s_atomState;
+static Atom s_atomAllowedActions;
+static Atom s_atomActionClose;
 
 
 typedef struct
@@ -180,8 +182,8 @@ typedef struct
    HB_USHORT newWidth;
    HB_USHORT newHeight;
 
+   int     iCloseMode;
    HB_BOOL fResizable;
-   HB_BOOL fClosable;
    HB_BOOL fFullScreen;
    HB_BOOL fAltEnter;
 
@@ -2480,6 +2482,66 @@ static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
+static void hb_gt_xwc_CloseButton( PXWND_DEF wnd, HB_BOOL fEnabled )
+{
+   Atom actual_type_return = 0;
+   int actual_format_return = 0, mode = -1;
+   unsigned long nitems_return = 0, bytes_after_return = 0, ul;
+   unsigned char * prop_return = NULL;
+
+   if( XGetWindowProperty( wnd->dpy, wnd->window, s_atomAllowedActions,
+                           0, 256, False, s_atomAtom,
+                           &actual_type_return, &actual_format_return,
+                           &nitems_return, &bytes_after_return,
+                           &prop_return ) == Success )
+   {
+      if( prop_return )
+      {
+         if( actual_type_return == s_atomAtom && actual_format_return == 32 )
+         {
+            long * prop32 = ( long * ) prop_return;
+
+            for( ul = 0; ul < nitems_return; ++ul )
+            {
+               if( ( Atom ) prop32[ ul ] == s_atomActionClose )
+                  break;
+            }
+            if( ul < nitems_return )
+            {
+               if( ! fEnabled )
+               {
+                  --nitems_return;
+                  while( ul < nitems_return )
+                  {
+                     prop32[ ul ] = prop32[ ul + 1 ];
+                     ++ul;
+                  }
+                  mode = PropModeReplace;
+                  XChangeProperty( wnd->dpy, wnd->window,
+                                   s_atomAllowedActions, actual_type_return, actual_format_return,
+                                   PropModeReplace, prop_return, nitems_return );
+               }
+            }
+            else if( fEnabled && nitems_return > 0 )
+            {
+               prop32[ 0 ] = ( long ) s_atomActionClose;
+               nitems_return = 1;
+               mode = PropModeAppend;;
+            }
+            if( mode != -1 )
+            {
+               XChangeProperty( wnd->dpy, wnd->window,
+                                s_atomAllowedActions, actual_type_return, actual_format_return,
+                                mode, prop_return, nitems_return );
+            }
+         }
+         XFree( prop_return );
+      }
+   }
+}
+
+/* *********************************************************************** */
+
 static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 {
    char buf[ 32 ];
@@ -3015,7 +3077,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 #endif
          if( ( Atom ) evt->xclient.data.l[ 0 ] == s_atomDelWin )
          {
-            if( wnd->fClosable )
+            if( wnd->iCloseMode == 0 )
                hb_vmRequestQuit();
             else
                hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_CLOSE );
@@ -4183,8 +4245,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->fInit = wnd->fData = HB_FALSE;
    hb_gt_xwc_SetScrBuff( wnd, XWC_DEFAULT_COLS, XWC_DEFAULT_ROWS );
    wnd->iNewPosX = wnd->iNewPosY = -1;
+   wnd->iCloseMode = 0;
    wnd->fResizable = HB_TRUE;
-   wnd->fClosable = HB_TRUE;
    wnd->fWinResize = HB_FALSE;
    wnd->fFullScreen = HB_FALSE;
    wnd->fAltEnter = HB_FALSE;
@@ -4255,21 +4317,23 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    hb_gt_xwc_MouseInit( wnd );
 
    /* set atom identifiers for atom names we will use */
-   s_atomDelWin       = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
-   s_atomTimestamp    = XInternAtom( wnd->dpy, "TIMESTAMP", False );
-   s_atomAtom         = XInternAtom( wnd->dpy, "ATOM", False );
-   s_atomInteger      = XInternAtom( wnd->dpy, "INTEGER", False );
-   s_atomString       = XInternAtom( wnd->dpy, "STRING", False );
-   s_atomUTF8String   = XInternAtom( wnd->dpy, "UTF8_STRING", False );
-   s_atomPrimary      = XInternAtom( wnd->dpy, "PRIMARY", False );
-   s_atomSecondary    = XInternAtom( wnd->dpy, "SECONDARY", False );
-   s_atomClipboard    = XInternAtom( wnd->dpy, "CLIPBOARD", False );
-   s_atomTargets      = XInternAtom( wnd->dpy, "TARGETS", False );
-   s_atomCutBuffer0   = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
-   s_atomText         = XInternAtom( wnd->dpy, "TEXT", False );
-   s_atomCompoundText = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
-   s_atomFullScreen   = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
-   s_atomState        = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
+   s_atomDelWin         = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
+   s_atomTimestamp      = XInternAtom( wnd->dpy, "TIMESTAMP", False );
+   s_atomAtom           = XInternAtom( wnd->dpy, "ATOM", False );
+   s_atomInteger        = XInternAtom( wnd->dpy, "INTEGER", False );
+   s_atomString         = XInternAtom( wnd->dpy, "STRING", False );
+   s_atomUTF8String     = XInternAtom( wnd->dpy, "UTF8_STRING", False );
+   s_atomPrimary        = XInternAtom( wnd->dpy, "PRIMARY", False );
+   s_atomSecondary      = XInternAtom( wnd->dpy, "SECONDARY", False );
+   s_atomClipboard      = XInternAtom( wnd->dpy, "CLIPBOARD", False );
+   s_atomTargets        = XInternAtom( wnd->dpy, "TARGETS", False );
+   s_atomCutBuffer0     = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
+   s_atomText           = XInternAtom( wnd->dpy, "TEXT", False );
+   s_atomCompoundText   = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
+   s_atomFullScreen     = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
+   s_atomState          = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
+   s_atomAllowedActions = XInternAtom( wnd->dpy, "_NET_WM_ALLOWED_ACTIONS", False );
+   s_atomActionClose    = XInternAtom( wnd->dpy, "_NET_WM_ACTION_CLOSE", False );
 
    HB_XWC_XLIB_UNLOCK();
 
@@ -4460,6 +4524,9 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
    /* Request WM to deliver destroy event */
    XSetWMProtocols( wnd->dpy, wnd->window, &s_atomDelWin, 1 );
+
+   if( wnd->iCloseMode == 2 )
+      hb_gt_xwc_CloseButton( wnd, HB_FALSE );
 
 #ifdef X_HAVE_UTF8_STRING
    wnd->im = XOpenIM( wnd->dpy, NULL, NULL, NULL );
@@ -5042,18 +5109,29 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_CLOSABLE:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->fClosable );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
-            wnd->fClosable = hb_itemGetL( pInfo->pNewVal );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->iCloseMode == 0 );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL ) &&
+             ( hb_itemGetL( pInfo->pNewVal ) ? ( wnd->iCloseMode != 0 ) :
+                                               ( wnd->iCloseMode == 0 ) ) )
+         {
+            iVal = wnd->iCloseMode;
+            wnd->iCloseMode = iVal == 0 ? 1 : 0;
+            if( iVal == 2 && wnd->fInit )
+               hb_gt_xwc_CloseButton( wnd, HB_FALSE );
+         }
          break;
 
       case HB_GTI_CLOSEMODE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fClosable ? 0 : 1 );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->iCloseMode );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             iVal = hb_itemGetNI( pInfo->pNewVal );
-            if( iVal >= 0 && iVal <= 2 )
-               wnd->fClosable = iVal == 0;
+            if( iVal >= 0 && iVal <= 2 && wnd->iCloseMode != iVal )
+            {
+               if( iVal == 2 || wnd->iCloseMode == 2 )
+                  hb_gt_xwc_CloseButton( wnd, iVal < 2 );
+               wnd->iCloseMode = iVal;
+            }
          }
          break;
 
