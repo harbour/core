@@ -3508,8 +3508,7 @@ void QTCWindow::setResizing( void )
    }
    else
    {
-      setMinimumSize( size() );
-      setMaximumSize( size() );
+      setFixedSize( size() );
       setSizeIncrement( 0, 0 );
    }
 }
