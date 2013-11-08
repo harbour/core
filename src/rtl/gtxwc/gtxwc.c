@@ -5128,7 +5128,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal >= 0 && iVal <= 2 && wnd->iCloseMode != iVal )
             {
-               if( iVal == 2 || wnd->iCloseMode == 2 )
+               if( iVal == 2 || wnd->iCloseMode == 2 && wnd->fInit )
                   hb_gt_xwc_CloseButton( wnd, iVal < 2 );
                wnd->iCloseMode = iVal;
             }
