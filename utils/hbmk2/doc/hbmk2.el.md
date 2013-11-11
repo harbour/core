@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-09\-04 00:44\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-11\-07 14:03\)  
 Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -336,7 +336,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\{MACRO&lt;'&lt;value&gt;'\}** το φίλτρο θα περάσει αν η τιμή $\{MACRO\} είναι μικρότερη από την &lt;value&gt; \(πεζά/κεφαλαία: αδιάφορο\)
 
 
-Προκαθορισμένες σταθερές σε πηγαία αρχεία:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** όταν ένα σενάριο \.hb είναι μεταγλωττισμένο ως plugin του hbmk2
@@ -349,7 +349,7 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
 
 
-Προκαθορισμένες σταθερές σε αρχεία κατασκευής \(είναι διαθέσιμες μετά από '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\) \(do not define them manually\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** όταν &lt;depname&gt; εξάρτηση ανιχνεύτηκε

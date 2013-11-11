@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-09\-04 00:44\)  
+Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-11\-07 14:03\)  
 Copyright &copy; 1999\-2013, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Magyar \(hu\) fordítás: Copyright &copy; 2009\-2013, Szakáts Viktor  
@@ -336,7 +336,7 @@ Filters \(you can combine and/or negate them\):
  - **\{MACRO&lt;'&lt;value&gt;'\}** filter will pass if $\{MACRO\} value is smaller than &lt;value&gt; \(case insensitive\)\.
 
 
-Predefined constants in sources:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** when an \.hb script is compiled as hbmk2 plugin
@@ -349,7 +349,7 @@ Predefined constants in sources:
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
 
 
-Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\) \(do not define them manually\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** when &lt;depname&gt; dependency was detected

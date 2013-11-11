@@ -16672,7 +16672,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aHdr_PredSource := { ;
       NIL, ;
-      { "", I_( "Predefined constants in sources:" ) } }
+      { "", I_( "Predefined constants in sources (do not define them manually):" ) } }
 
    LOCAL aLst_PredSource := { ;
       NIL, ;
@@ -16688,7 +16688,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aHdr_PredBuild := { ;
       NIL, ;
-      { "", I_( "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>'):" ) } }
+      { "", I_( "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>') (do not define them manually):" ) } }
 
    LOCAL aLst_PredBuild := { ;
       NIL, ;

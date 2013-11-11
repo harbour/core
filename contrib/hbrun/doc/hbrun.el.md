@@ -1,4 +1,4 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-09\-04 00:44\)  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-11\-07 14:03\)  
 Copyright &copy; 2007\-2013, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
@@ -35,7 +35,7 @@ Copyright &copy; 2003\-2007, Przemysław Czerpak
  - **hb\_extension** λίστα καταλήξεων προς φόρτωση στο διαδραστικό κέλυφος του Harbour\. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '\#' αγνοείται\. Εναλλακτικά ονομα\-αρχείου στο Ms\-DOS: Το hb\_ext\.ini\. Βρίσκεται μεσα στο \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Προκαθορισμένες σταθερές σε πηγαία αρχεία:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** όταν ένα πηγαίο αρχείο Harbour εκτελείται ως σενάριο κελύφους

@@ -1,4 +1,4 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-09\-04 00:44\)  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-11\-07 14:03\)  
 Copyright &copy; 2007\-2013, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
@@ -35,7 +35,7 @@ Arquivos:
  - **hb\_extension** lista de extensões a ser carregada no shell interativo Harbour\. Uma extensão por linha, a parte alem do caracter '\#' será ignorada\. Nome alternativo em MS\-DOS: hb\_ext\.ini\. localizado em \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Constantes pré\-definidas nos fontes:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rodando como "shell script"
