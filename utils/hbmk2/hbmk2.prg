@@ -16248,7 +16248,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-beep[-]"           , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) }, ;
       { "-ignore[-]"         , I_( "ignore errors when running compiler tools (default: off)" ) }, ;
       { "-hbcppmm[-]"        , H_( "override standard C++ memory management functions with Harbour ones" ) }, ;
-      { "-winuni[-]"         , I_( "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)" ) }, ;
+      { "-winuni[-]"         , I_( "select between UNICODE (WIDE) and ANSI compilation modes for C/C++ input files (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)" ) }, ;
       { "-nohblib[-]"        , H_( "do not use static core Harbour libraries when linking" ) }, ;
       { "-nodefgt[-]"        , H_( "do not link default GTs (effective in -static mode)" ) }, ;
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) }, ;
