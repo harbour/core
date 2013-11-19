@@ -67,6 +67,7 @@
 #include "hbapicdp.h"
 #include "hbapistr.h"
 #include "hbthread.h"
+#include "hbdate.h"
 
 #include <unistd.h>
 #include <signal.h>

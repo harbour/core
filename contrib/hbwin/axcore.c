@@ -509,23 +509,25 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                  int  iLen;
 
                                  iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
-                                 str[ iLen - 1 ] = '\0';
-                                 if( ! strcmp( szEvent, str ) )
+                                 if( iLen > 0 )
                                  {
-                                    hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) & pTypeAttr2 );
-                                    if( hr == S_OK )
+                                    str[ iLen - 1 ] = '\0';
+                                    if( ! strcmp( szEvent, str ) )
                                     {
-                                       *piid = pTypeAttr2->guid;
-                                       HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
+                                       hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) & pTypeAttr2 );
+                                       if( hr == S_OK )
+                                       {
+                                          *piid = pTypeAttr2->guid;
+                                          HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
 
-                                       HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
-                                       HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
-                                       HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
-                                       HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
-                                       return S_OK;
+                                          HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
+                                          HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
+                                          HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
+                                          HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
+                                          return S_OK;
+                                       }
                                     }
                                  }
-
                               }
                               HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
                            }
