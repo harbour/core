@@ -254,7 +254,7 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  			ENDIF
 diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
 --- dbu53ori/dbuedit.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbuedit.prg	2012-05-02 17:23:18.000000000 +0200
++++ dbu53pat/dbuedit.prg	2013-11-20 21:56:24.000000000 +0100
 @@ -47,7 +47,7 @@
     nHelpSave := help_code
  
@@ -312,7 +312,15 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
     /* init rest of locals */
     cAlias := ""
-@@ -353,11 +353,11 @@
+@@ -208,6 +208,7 @@
+                DISPEND()
+                nRefreshTimer := SECONDS()
+             ENDIF
++            hb_idleState()
+          END
+ 
+       else
+@@ -353,11 +354,11 @@
              box_open := .t.
  
              /* save, clear, and frame window for memoedit */
@@ -327,7 +335,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
              /* use fieldspec for title */
              SetColor(color9)
-@@ -365,7 +365,7 @@
+@@ -365,7 +366,7 @@
  
              /* edit the memo field */
              SetColor(color8)
@@ -336,7 +344,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
              if Lastkey() == K_CTRL_END
                 /* ^W..new memo confirmed */
-@@ -397,7 +397,7 @@
+@@ -397,7 +398,7 @@
              end
  
              /* restore the window */
@@ -345,7 +353,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
              box_open := .F.
           else
              /* regular data entry */
-@@ -467,7 +467,7 @@
+@@ -467,7 +468,7 @@
     end
  
     /* restore the screen */
@@ -354,7 +362,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
     SetColor(nColorSave)
     SetCursor(nCType)
     curs_on := (nCType != 0)
-@@ -930,8 +930,8 @@
+@@ -930,8 +931,8 @@
                 "mGetVar")
  
     /* setup a scrolling GET if it's too long to fit on the screen */
