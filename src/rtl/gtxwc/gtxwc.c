@@ -5353,7 +5353,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                      if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                      {
-                        memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                        memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                      }
                   }
@@ -5381,7 +5381,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                {
-                  memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                  memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                }
             }
