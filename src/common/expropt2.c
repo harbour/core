@@ -317,7 +317,7 @@ PHB_EXPR hb_compExprReduceMult( PHB_EXPR pSelf, HB_COMP_DECL )
 
             pSelf->value.asNum.val.d   = pLeft->value.asNum.val.d * pRight->value.asNum.val.d;
             pSelf->value.asNum.bWidth  = HB_DEFAULT_WIDTH;
-            pSelf->value.asNum.bDec    = ( HB_UCHAR ) ( pLeft->value.asNum.bDec + pRight->value.asNum.bDec );
+            pSelf->value.asNum.bDec    = ( HB_UCHAR ) HB_MIN( pLeft->value.asNum.bDec + pRight->value.asNum.bDec, HB_DEFAULT_DECIMALS );
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
             break;
 
