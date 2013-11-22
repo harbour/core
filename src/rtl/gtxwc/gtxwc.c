@@ -118,6 +118,8 @@ static Atom s_atomCompoundText;
 static Atom s_atomFullScreen;
 static Atom s_atomState;
 static Atom s_atomMotifHints;
+static Atom s_atomFrameExtends;
+static Atom s_atomCardinal;
 
 
 typedef struct
@@ -175,6 +177,10 @@ typedef struct
 
    int iNewPosX;
    int iNewPosY;
+
+   int iCordLeft;
+   int iCordTop;
+   HB_BOOL fCordsInited;
 
    /* Set to true when Windows is resized */
    HB_BOOL fWinResize;
@@ -2603,6 +2609,44 @@ static void hb_gt_xwc_MotifWmHints( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
+/* update returned cords for NorthWestGravity */
+static void hb_gt_xwc_UpdateWindowCords( PXWND_DEF wnd, int * pX, int * pY )
+{
+   if( ! wnd->fCordsInited )
+   {
+      Atom actual_type_return = 0;
+      int actual_format_return = 0;
+      unsigned long nitems_return = 0, bytes_after_return = 0;
+      unsigned char * prop_return = NULL;
+
+      if( XGetWindowProperty( wnd->dpy, wnd->window, s_atomFrameExtends,
+                              0, 4, False, s_atomCardinal, &actual_type_return,
+                              &actual_format_return, &nitems_return,
+                              &bytes_after_return, &prop_return ) == Success )
+      {
+         if( prop_return )
+         {
+            if( actual_type_return == s_atomCardinal && nitems_return == 4 &&
+                actual_format_return == 32 )
+            {
+               /* _NET_FRAME_EXTENTS: left, right, top, bottom, CARDINAL[4]/32 */
+               long * fe = ( long * ) prop_return;
+
+               wnd->iCordLeft = fe[ 0 ];
+               wnd->iCordTop  = fe[ 2 ];
+            }
+            XFree( prop_return );
+         }
+      }
+      wnd->fCordsInited = HB_TRUE;
+   }
+
+   *pX -= wnd->iCordLeft;
+   *pY -= wnd->iCordTop;
+}
+
+/* *********************************************************************** */
+
 static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 {
    char buf[ 32 ];
@@ -3123,7 +3167,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 
       case ConfigureNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: ConfigureNotify (%d,%d)\n", evt->xconfigure.width, evt->xconfigure.height ); fflush( stdout );
+         printf( "Event: ConfigureNotify (x=%d, y=%d, w=%d, h=%d, or=%d)\n",
+                 evt->xconfigure.x, evt->xconfigure.y,
+                 evt->xconfigure.width, evt->xconfigure.height,
+                 evt->xconfigure.override_redirect ); fflush( stdout );
 #endif
          wnd->iNewPosX   = evt->xconfigure.x;
          wnd->iNewPosY   = evt->xconfigure.y;
@@ -3328,7 +3375,81 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
             wnd->lastEventTime = evt->xproperty.time;
          break;
 
+      case VisibilityNotify:
 #ifdef XWC_DEBUG
+         printf( "Event: VisibilityNotify\n" ); fflush( stdout );
+#endif
+         wnd->fCordsInited = HB_FALSE;
+         break;
+
+      case GraphicsExpose:
+#ifdef XWC_DEBUG
+         printf( "Event: GraphicsExpose\n" ); fflush( stdout );
+#endif
+         wnd->fCordsInited = HB_FALSE;
+         break;
+
+#ifdef XWC_DEBUG
+      case GravityNotify:
+         printf( "Event: GravityNotify (%d, %d)\n", evt->xgravity.x, evt->xgravity.y ); fflush( stdout );
+         break;
+
+      case ResizeRequest:
+         printf( "Event: ResizeRequest\n" ); fflush( stdout );
+         break;
+
+      case KeymapNotify:
+         printf( "Event: KeymapNotify\n" ); fflush( stdout );
+         break;
+
+      case EnterNotify:
+         printf( "Event: EnterNotify\n" ); fflush( stdout );
+         break;
+
+      case LeaveNotify:
+         printf( "Event: LeaveNotify\n" ); fflush( stdout );
+         break;
+
+      case DestroyNotify:
+         printf( "Event: DestroyNotify\n" ); fflush( stdout );
+         break;
+
+      case UnmapNotify:
+         printf( "Event: UnmapNotify\n" ); fflush( stdout );
+         break;
+
+      case MapNotify:
+         printf( "Event: MapNotify\n" ); fflush( stdout );
+         break;
+
+      case MapRequest:
+         printf( "Event: MapRequest\n" ); fflush( stdout );
+         break;
+
+      case ReparentNotify:
+         printf( "Event: ReparentNotify\n" ); fflush( stdout );
+         break;
+
+      case ConfigureRequest:
+         printf( "Event: ConfigureRequest\n" ); fflush( stdout );
+         break;
+
+      case CirculateNotify:
+         printf( "Event: CirculateNotify\n" ); fflush( stdout );
+         break;
+
+      case CirculateRequest:
+         printf( "Event: CirculateRequest\n" ); fflush( stdout );
+         break;
+
+      case ColormapNotify:
+         printf( "Event: ColormapNotify\n" ); fflush( stdout );
+         break;
+
+      case GenericEvent:
+         printf( "Event: GenericEvent\n" ); fflush( stdout );
+         break;
+
       default:
          printf( "Event: #%d\n", evt->type ); fflush( stdout );
          break;
@@ -4002,6 +4123,7 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
           ( wnd->oldWidth != wnd->newWidth || wnd->oldHeight != wnd->newHeight ) &&
           ! wnd->fFullScreen )
       {
+         wnd->fCordsInited = HB_FALSE;
          wnd->oldWidth = wnd->newWidth;
          wnd->oldHeight = wnd->newHeight;
          XResizeWindow( wnd->dpy, wnd->window, wnd->width, wnd->height );
@@ -4072,47 +4194,27 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       hb_gt_xwc_SetTitle( wnd, wnd->szTitle );
    }
 
-#if 1
-   if( fSync )
-      XSync( wnd->dpy, False );
-   do
+   for( ;; )
    {
-      while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) )
-      {
-         XEvent evt;
-         XNextEvent( wnd->dpy, &evt );
-         hb_gt_xwc_WndProc( wnd, &evt );
-      }
-      hb_gt_xwc_UpdateSize( wnd );
-      hb_gt_xwc_UpdatePts( wnd );
-      hb_gt_xwc_UpdateCursor( wnd );
+      HB_BOOL fRepeat = HB_FALSE;
+      XEvent evt;
+
       if( fSync )
          XSync( wnd->dpy, False );
-   }
-   while( XEventsQueued( wnd->dpy, QueuedAfterFlush ) );
-#else
-{
-   HB_BOOL fRepeat;
-   XEvent evt;
 
-   while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
-      hb_gt_xwc_WndProc( wnd, &evt );
-
-   do
-   {
-      hb_gt_xwc_UpdateSize( wnd );
-      hb_gt_xwc_UpdatePts( wnd );
-      hb_gt_xwc_UpdateCursor( wnd );
-      fRepeat = HB_FALSE;
       while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
       {
          hb_gt_xwc_WndProc( wnd, &evt );
          fRepeat = HB_TRUE;
       }
+
+      if( !fRepeat )
+         break;
+
+      hb_gt_xwc_UpdateSize( wnd );
+      hb_gt_xwc_UpdatePts( wnd );
+      hb_gt_xwc_UpdateCursor( wnd );
    }
-   while( fRepeat );
-}
-#endif
 
    HB_XWC_XLIB_UNLOCK();
 
@@ -4410,6 +4512,8 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    s_atomFullScreen     = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
    s_atomState          = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
    s_atomMotifHints     = XInternAtom( wnd->dpy, "_MOTIF_WM_HINTS", False );
+   s_atomFrameExtends   = XInternAtom( wnd->dpy, "_NET_FRAME_EXTENTS", False );
+   s_atomCardinal       = XInternAtom( wnd->dpy, "CARDINAL", False );
 
    HB_XWC_XLIB_UNLOCK();
 
@@ -4509,11 +4613,11 @@ static void hb_gt_xwc_SetResizing( PXWND_DEF wnd )
 
    /* with StaticGravity XMoveWindow expects upper left corner of client area
     * and with NorthWestGravity it expect upper left corner of window with
-    * title bar. Anyhow in WM I tested it ConfigureNotify give us client area
-    * possition so if we want to use compatible coordiantes in HB_GTI_SETPOS_XY
-    * we should use StaticGravity.
+    * frame and title bar. ConfigureNotify always returns client area possition
+    * so working with NorthWestGravity it's necessary to update cords returned
+    * to user in hb_gt_xwc_UpdateWindowCords()
     */
-   xsize.win_gravity = StaticGravity;
+   xsize.win_gravity = NorthWestGravity;
 
    if( wnd->fResizable )
    {
@@ -5274,7 +5378,6 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          int x = wnd->iNewPosX, y = wnd->iNewPosY;
 
-#if 0
          if( wnd->window )
          {
             XWindowAttributes wndAttr;
@@ -5290,11 +5393,13 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
             }
          }
-#endif
 
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 2 );
+
+         if( wnd->fInit )
+            hb_gt_xwc_UpdateWindowCords( wnd, &x, &y );
 
          if( iType == HB_GTI_SETPOS_ROWCOL )
          {
@@ -5326,7 +5431,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             x = y * wnd->fontWidth;
             y = iVal * wnd->fontHeight;
          }
-         if( wnd->window )
+         if( wnd->fInit )
          {
             XMoveWindow( wnd->dpy, wnd->window, x, y );
          }
