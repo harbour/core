@@ -103,18 +103,6 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 #define XWC_DEFAULT_FONT_NAME       "fixed"
 #define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
 
-#if 0
-#define XWC_DEFAULT_FONT_WEIGHT     "*"
-#define XWC_DEFAULT_FONT_ENCODING   "iso8859-1"
-#define XWC_DEFAULT_FONT_NAME       "Lucida Console"
-
-#define XWC_DEFAULT_FONT_HEIGHT     20
-#define XWC_DEFAULT_FONT_WIDTH      9
-#define XWC_DEFAULT_FONT_WEIGHT     "medium"
-#define XWC_DEFAULT_FONT_NAME       "rcsoft"
-#define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
-#endif
-
 #define XWC_DEFAULT_FONT_FIXMETRIC  HB_FALSE
 #define XWC_DEFAULT_FONT_CLRBKG     HB_FALSE
 #define XWC_DEFAULT_FONT_DRAWBOX    HB_TRUE
@@ -125,7 +113,7 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define XWC_STD_MASK                ( ExposureMask | StructureNotifyMask | FocusChangeMask | \
                                       ButtonPressMask | ButtonReleaseMask | PointerMotionMask | \
-                                      KeyPressMask | KeyReleaseMask )
+                                      KeyPressMask | KeyReleaseMask | VisibilityChangeMask )
 
 /* Box char unicode values */
 #define HB_BOXCH_ARROW_R            0x0010 /* ARROW RIGHT */
