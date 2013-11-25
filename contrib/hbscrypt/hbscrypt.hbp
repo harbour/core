@@ -1,0 +1,26 @@
+-stop{!allgcc&!allmsvc&!watcom}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-w3 -es2
+
+-cflag=-DHAVE_CONFIG_H
+
+# Harbour specific short filename
+-depkeyhead=scrypt:scrypt_p.h
+-depcontrol=scrypt:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=scrypt:${HB_WITH_SCRYPT}
+-depincpath=scrypt:/usr/include
+-depincpathlocal=scrypt:3rd/scrypt
+-depfinish=scrypt
+
+${hb_name}.hbx
+
+pbkdf2.c
+scrypt.c
+strcmpc.c
+
+3rd/scrypt/scrypt.hbc{HBMK_HAS_SCRYPT_LOCAL}
