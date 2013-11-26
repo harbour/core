@@ -1,5 +1,5 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-11\-07 14:03\)  
-Copyright &copy; 2007\-2013, Viktor Szakáts  
+Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-11\-26 05:07\)  
+Copyright &copy; 2007\-2014, Viktor Szakáts  
 Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 Traducción \(es\_419\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
