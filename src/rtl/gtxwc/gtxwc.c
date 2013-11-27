@@ -4250,6 +4250,9 @@ static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char * fontFace,
    wnd->fontHeight = xfs->max_bounds.ascent + xfs->max_bounds.descent;
    /* wnd->fontWidth = xfs->max_bounds.rbearing - xfs->min_bounds.lbearing; */
    wnd->fontWidth = xfs->max_bounds.width;
+
+   if( wnd->xfs )
+      XFreeFont( wnd->dpy, wnd->xfs );
    wnd->xfs = xfs;
 
    return HB_TRUE;
