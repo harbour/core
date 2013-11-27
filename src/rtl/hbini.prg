@@ -162,115 +162,112 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
 
-   IF HB_ISSTRING( cData )
+   reComment := hb_regexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
+   reInclude := hb_regexComp( "include (.*)" )
+   reSection := hb_regexComp( "[[](.*)[]]" )
+   reSplitters := hb_regexComp( cSplitters )
 
-      reComment := hb_regexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
-      reInclude := hb_regexComp( "include (.*)" )
-      reSection := hb_regexComp( "[[](.*)[]]" )
-      reSplitters := hb_regexComp( cSplitters )
+   /* Always begin with the MAIN section */
+   IF lAutoMain
+      hCurrentSection := hIni[ "MAIN" ]
+   ELSE
+      hCurrentSection := hIni
+   ENDIF
 
-      /* Always begin with the MAIN section */
-      IF lAutoMain
-         hCurrentSection := hIni[ "MAIN" ]
-      ELSE
-         hCurrentSection := hIni
+   cLine := ""
+   DO WHILE Len( cData ) > 0
+      nLen := 2
+      nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData )
+      IF nLineEnd == 0
+         nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData )
+         IF nLineEnd == 0
+            nLen := 1
+            nLineEnd := At( Chr( 10 ), cData )
+            IF nLineEnd == 0
+               nLineEnd := At( Chr( 13 ), cData )
+               IF nLineEnd == 0
+                  nLineEnd := Len( cData ) + 1
+               ENDIF
+            ENDIF
+         ENDIF
       ENDIF
 
-      cLine := ""
-      DO WHILE Len( cData ) > 0
-         nLen := 2
-         nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData )
-         IF nLineEnd == 0
-            nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData )
-            IF nLineEnd == 0
-               nLen := 1
-               nLineEnd := At( Chr( 10 ), cData )
-               IF nLineEnd == 0
-                  nLineEnd := At( Chr( 13 ), cData )
-                  IF nLineEnd == 0
-                     nLineEnd := Len( cData ) + 1
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
+      /* Get the current line */
+      cLine += AllTrim( SubStr( cData, 1, nLineEnd - 1 ) )
+      /* remove current line */
+      cData := SubStr( cData, nLineEnd + nLen )
 
-         /* Get the current line */
-         cLine += AllTrim( SubStr( cData, 1, nLineEnd - 1 ) )
-         /* remove current line */
-         cData := SubStr( cData, nLineEnd + nLen )
+      /* Skip void lines */
+      IF Empty( cLine )
+         LOOP
+      ENDIF
 
-         /* Skip void lines */
-         IF Empty( cLine )
+      /* Sum up lines terminating with "<space>||" ...*/
+      IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
+
+         cLine := SubStr( cLine, 1, Len( cLine ) - 2 )
+         /* ... but proceed if stream over */
+         IF Len( cData ) > 0
             LOOP
          ENDIF
 
-         /* Sum up lines terminating with "<space>||" ...*/
-         IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
+      ENDIF
 
-            cLine := SubStr( cLine, 1, Len( cLine ) - 2 )
-            /* ... but proceed if stream over */
-            IF Len( cData ) > 0
-               LOOP
-            ENDIF
+      /* remove eventual comments */
+      aKeyVal := hb_regexSplit( reComment, cLine )
+      IF ! Empty( aKeyVal )
+         cLine := AllTrim( aKeyVal[ 1 ] )
+      ENDIF
 
-         ENDIF
+      /* Skip all comment lines */
+      IF Empty( cLine )
+         LOOP
+      ENDIF
 
-         /* remove eventual comments */
-         aKeyVal := hb_regexSplit( reComment, cLine )
-         IF ! Empty( aKeyVal )
-            cLine := AllTrim( aKeyVal[ 1 ] )
-         ENDIF
-
-         /* Skip all comment lines */
-         IF Empty( cLine )
+      /* Is it an "INCLUDE" statement ? */
+      aKeyVal := hb_regex( reInclude, cLine )
+      IF ! Empty( aKeyVal )
+         /* ignore void includes */
+         aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
+         IF Len( aKeyVal[ 2 ] ) == 0
             LOOP
          ENDIF
-
-         /* Is it an "INCLUDE" statement ? */
-         aKeyVal := hb_regex( reInclude, cLine )
-         IF ! Empty( aKeyVal )
-            /* ignore void includes */
-            aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
-            IF Len( aKeyVal[ 2 ] ) == 0
-               LOOP
-            ENDIF
-            hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
-            cLine := ""
-            LOOP
-         ENDIF
-
-         /* Is it a NEW section? */
-         aKeyVal := hb_regex( reSection, cLine )
-         IF ! Empty( aKeyVal )
-            cLine := AllTrim( aKeyVal[ 2 ] )
-            IF Len( cLine ) != 0
-               hCurrentSection := { => }
-               IF ! lKeyCaseSens
-                  cLine := Upper( cLine )
-               ENDIF
-               hIni[ cLine ] := hCurrentSection
-            ENDIF
-            cLine := ""
-            LOOP
-         ENDIF
-
-         /* Is it a valid key */
-         aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 )
-         IF Len( aKeyVal ) == 1
-            /* TODO: Signal error */
-            cLine := ""
-            LOOP
-         ENDIF
-
-         /* If not case sensitive, use upper keys */
-         IF ! lKeyCaseSens
-            aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
-         ENDIF
-
-         hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
+         hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
          cLine := ""
-      ENDDO
-   ENDIF
+         LOOP
+      ENDIF
+
+      /* Is it a NEW section? */
+      aKeyVal := hb_regex( reSection, cLine )
+      IF ! Empty( aKeyVal )
+         cLine := AllTrim( aKeyVal[ 2 ] )
+         IF Len( cLine ) != 0
+            hCurrentSection := { => }
+            IF ! lKeyCaseSens
+               cLine := Upper( cLine )
+            ENDIF
+            hIni[ cLine ] := hCurrentSection
+         ENDIF
+         cLine := ""
+         LOOP
+      ENDIF
+
+      /* Is it a valid key */
+      aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 )
+      IF Len( aKeyVal ) == 1
+         /* TODO: Signal error */
+         cLine := ""
+         LOOP
+      ENDIF
+
+      /* If not case sensitive, use upper keys */
+      IF ! lKeyCaseSens
+         aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
+      ENDIF
+
+      hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
+      cLine := ""
+   ENDDO
 
    RETURN hIni
 
