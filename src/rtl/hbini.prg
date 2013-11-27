@@ -142,7 +142,7 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
    NEXT
 
    IF hFile == F_ERROR
-      RETURN NIL
+      RETURN ""
    ENDIF
 
    /* we'll read the whole file, then we'll break it in lines. */
