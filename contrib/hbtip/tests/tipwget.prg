@@ -27,7 +27,7 @@
  *    - use &at; in mail-from message
  *    - Send the letter in filename (that must include
  *      headers) to RCPT e.f.
- *      stmp://user&at;myprovider.com@smtp.myprovider.com/gian@niccolai.ws
+ *      stmp://user&at;example.com@smtp.example.com/gian@niccolai.ws
  *
  *      NOTE: In Unix, to use '&' from command line you have to surround
  *      the url with "", eg "smtp://...&at;...@server/dest"
@@ -52,7 +52,7 @@ PROCEDURE Main( cUrl, cFile )
    LOCAL cData
 
    CLS
-   @ 1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
+   @ 1, 6 SAY "xHarbour - TIP (class based internet client protocol) test"
 
    IF Empty( cUrl )
       @ 4, 5 SAY hb_StrFormat( "USAGE: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )

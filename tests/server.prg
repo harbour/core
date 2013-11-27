@@ -22,7 +22,7 @@ PROCEDURE Main( cPort )
 
    hb_inetInit()
 
-   @ 1, 15 SAY "H A R B O U R - Inet Api Server Demo"
+   @ 1, 15 SAY "Harbour - Inet Api Server Demo"
    @ 2,  5 SAY "Contact this server using telnet or the Harbour Inet Client demo"
    @ 3,  5 SAY "Press a [KEY] to terminate the program"
    @ 5,  5 SAY "Server listening on port " + cPort + "..."

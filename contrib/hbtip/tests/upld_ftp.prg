@@ -31,9 +31,9 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
    LOCAL cPassword
    LOCAL cFile     := ""
 
-   cServer   := "ftpserver"   /* change ftpserver to the real name  or ip of your ftp server */
-   cUser     := "ftpuser"     /* change ftpuser to an valid user on ftpserer */
-   cPassword := "ftppass"     /* change ftppass  to an valid password for ftpuser */
+   cServer   := "ftp.example.com"   /* change ftpserver to the real name  or ip of your ftp server */
+   cUser     := "ftpuser"           /* change ftpuser to an valid user on ftpserer */
+   cPassword := "ftppass"           /* change ftppass  to an valid password for ftpuser */
    cUrl      := "ftp://" + cUser + ":" + cPassword + "@" + cServer
 
    /* Leemos ficheros a enviar */

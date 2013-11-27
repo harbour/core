@@ -16,7 +16,7 @@ PROCEDURE Main()
    LOCAL nError, nBufLen
 
    CLS
-   @ 1, 15 SAY "X H A R B O U R - ZLIB based compression test"
+   @ 1, 15 SAY "xHarbour - ZLIB based compression test"
 
    @ 2, 5 SAY "TEST 1: using on-the-fly Buffer creation"
 
