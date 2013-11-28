@@ -272,6 +272,19 @@ HB_FUNC( HB_MXMLVERSION )
 
 /* void mxmlAdd( mxml_node_t * parent, int where, mxml_node_t * child, mxml_node_t * node ) */
 
+/* mxmlAdd() does not update reference counters, we use our own
+ * wrapper which does it [druzus]
+ */
+
+static void mxmlAddRef( mxml_node_t * parent, int where, mxml_node_t * child, mxml_node_t * node )
+{
+   mxml_node_t * old_parent = node->parent;
+
+   mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
+   if( ! old_parent )
+      mxmlRetain( node );
+}
+
 HB_FUNC( MXMLADD )
 {
    mxml_node_t * parent = mxml_node_param( 1 );
@@ -283,7 +296,7 @@ HB_FUNC( MXMLADD )
    {
       where = ( where == MXML_ADD_BEFORE ) ? MXML_ADD_BEFORE : MXML_ADD_AFTER;
 
-      mxmlAdd( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
+      mxmlAddRef( parent, where, ( child != NULL ) ? child : MXML_ADD_TO_PARENT, node );
    }
    else
       MXML_ERR_ARGS;
