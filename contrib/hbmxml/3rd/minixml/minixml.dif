@@ -1,6 +1,6 @@
 diff -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	Thu Apr 04 03:37:59 2013
-+++ minixml/config.h	Thu Apr 04 03:37:59 2013
+--- minixml.orig/config.h	Thu Nov 28 04:15:10 2013
++++ minixml/config.h	Thu Nov 28 04:15:10 2013
 @@ -18,62 +18,89 @@
   * Include necessary headers...
   */
@@ -128,8 +128,8 @@ diff -urN minixml.orig/config.h minixml/config.h
 +}
 +#  endif /* __cplusplus */
 diff -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml.h	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml.h	Thu Nov 28 04:15:10 2013
++++ minixml/mxml.h	Thu Nov 28 04:15:10 2013
 @@ -29,8 +29,16 @@
  #  include <stdlib.h>
  #  include <string.h>
@@ -150,8 +150,8 @@ diff -urN minixml.orig/mxml.h minixml/mxml.h
  /*
   * Constants...
 diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_fil.c	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_fil.c	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_fil.c	Thu Nov 28 04:15:10 2013
 @@ -329,8 +329,14 @@
      return (-1);
  
@@ -204,6 +204,15 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
      if (errno != EAGAIN)
  #endif /* EINTR */
        return (-1);
+@@ -2074,7 +2091,7 @@
+   {
+     node = parent;
+ 
+-    while (parent->parent != top && parent->parent)
++    while (parent != top && parent->parent)
+       parent = parent->parent;
+ 
+     if (node != parent)
 @@ -2786,6 +2803,10 @@
  
  	  if (global->wrap > 0 && (col + width) > global->wrap)
@@ -249,8 +258,8 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	      return (-1);
  
 diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_nod.c	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_nod.c	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_nod.c	Thu Nov 28 04:15:10 2013
 @@ -221,7 +221,11 @@
    */
  
@@ -265,8 +274,8 @@ diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
   /*
    * Now delete any node data...
 diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
---- minixml.orig/mxml_pri.c	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_pri.c	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_pri.c	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_pri.c	Thu Nov 28 04:15:10 2013
 @@ -1,5 +1,5 @@
  /*
 - * "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $"
@@ -282,8 +291,8 @@ diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
 + * End of "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $".
   */
 diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
---- minixml.orig/mxml_pri.h	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_pri.h	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_pri.h	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_pri.h	Thu Nov 28 04:15:10 2013
 @@ -1,5 +1,5 @@
  /*
 - * "$Id: mxml-private.h 408 2010-09-19 05:26:46Z mike $"
@@ -299,8 +308,8 @@ diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
 + * End of "$Id: mxml_pri.h 408 2010-09-19 05:26:46Z mike $".
   */
 diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_set.c	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_set.c	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_set.c	Thu Nov 28 04:15:10 2013
 @@ -1,5 +1,5 @@
  /*
 - * "$Id: mxml-set.c 441 2011-12-09 23:49:00Z mike $"
@@ -458,8 +467,8 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
 + * End of "$Id: mxml-set.c 426 2011-01-01 23:42:17Z mike $".
   */
 diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	Thu Apr 04 03:37:59 2013
-+++ minixml/mxml_str.c	Thu Apr 04 03:37:59 2013
+--- minixml.orig/mxml_str.c	Thu Nov 28 04:15:10 2013
++++ minixml/mxml_str.c	Thu Nov 28 04:15:10 2013
 @@ -28,6 +28,9 @@
  
  #include "config.h"
