@@ -4199,6 +4199,10 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       HB_BOOL fRepeat = HB_FALSE;
       XEvent evt;
 
+      hb_gt_xwc_UpdateSize( wnd );
+      hb_gt_xwc_UpdatePts( wnd );
+      hb_gt_xwc_UpdateCursor( wnd );
+
       if( fSync )
          XSync( wnd->dpy, False );
 
@@ -4210,10 +4214,6 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 
       if( !fRepeat )
          break;
-
-      hb_gt_xwc_UpdateSize( wnd );
-      hb_gt_xwc_UpdatePts( wnd );
-      hb_gt_xwc_UpdateCursor( wnd );
    }
 
    HB_XWC_XLIB_UNLOCK();
