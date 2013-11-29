@@ -85,14 +85,14 @@ Note: This license applies to the files where the content
       explicitly indicates so.
 
    These works are licensed under the Creative Commons Attribution-ShareAlike
-   License. To view a copy of this license, visit
-   https://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
+   4.0 International License. To view a copy of this license, visit
+   https://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
    Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305,
    USA.  A summary of the license and the full legal text is included
    after this text.  If you wish to distribute some or all of these works
    under different terms, please contact respective author(s).
 
-   License summary: Creative Commons Attribution-ShareAlike 3.0 Unported
+   License summary: Creative Commons Attribution-ShareAlike 4.0 International
 
 -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*-
 
@@ -123,7 +123,7 @@ Under the following conditions:
 
 -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*- -*-
 
-   Creative Commons Legal Code: Attribution-ShareAlike 3.0 Unported
+   Creative Commons Legal Code: Attribution-ShareAlike 4.0 International
 
 CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
 LEGAL SERVICES. DISTRIBUTION OF THIS LICENSE DOES NOT CREATE AN

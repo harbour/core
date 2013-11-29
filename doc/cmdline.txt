@@ -93,6 +93,6 @@ Exceptions:
 
 
 [ Copyright (c) 1999-2009 Viktor Szakats (vszakats.net/harbour)
-  Licensed under Creative Commons Attribution-ShareAlike 3.0:
-  https://creativecommons.org/licenses/by-sa/3.0/
+  Licensed under Creative Commons Attribution-ShareAlike 4.0:
+  https://creativecommons.org/licenses/by-sa/4.0/
   See COPYING.txt. ]

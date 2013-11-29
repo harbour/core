@@ -31,8 +31,8 @@
  *   - Source code modifications shall always be made available
  *     along with binaries.
  *   - Help text and documentation is licensed under
- *     Creative Commons Attribution-ShareAlike 3.0:
- *     https://creativecommons.org/licenses/by-sa/3.0/
+ *     Creative Commons Attribution-ShareAlike 4.0 International:
+ *     https://creativecommons.org/licenses/by-sa/4.0/
  *
  */
 
@@ -17306,6 +17306,6 @@ License extensions:
   - Source code modifications shall always be made available
     along with binaries.
   - Help text and documentation is licensed under
-    Creative Commons Attribution-ShareAlike 3.0:
-    https://creativecommons.org/licenses/by-sa/3.0/
+    Creative Commons Attribution-ShareAlike 4.0 International:
+    https://creativecommons.org/licenses/by-sa/4.0/
 #pragma __endtext
