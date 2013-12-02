@@ -148,14 +148,14 @@ FUNCTION ExecBrowser( oCrt )
 
    WHILE ! lEnd
       DispBegin()
-      DO WHILE ( ( nKey := Inkey( , INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0 .OR. nKey == K_MOVING ) .AND. ! oBrowse:stabilize()
+      DO WHILE ( ( nKey := Inkey( , hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) ) == 0 .OR. nKey == K_MOVING ) .AND. ! oBrowse:stabilize()
       ENDDO
       DispEnd()
 
       IF nKey == 0
          oVBar:setData( ordKeyNo() )
          oHBar:setData( oBrowse:colPos )
-         DO WHILE ( ( nKey := Inkey( , INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0 .OR. nKey == K_MOVING )
+         DO WHILE ( ( nKey := Inkey( , hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) ) == 0 .OR. nKey == K_MOVING )
          ENDDO
       ENDIF
 

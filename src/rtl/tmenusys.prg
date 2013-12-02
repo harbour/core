@@ -155,7 +155,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       DO WHILE nSelection <= 0
 
-         nKey := Inkey( 0, INKEY_KEYBOARD + INKEY_LDOWN )
+         nKey := Inkey( 0, hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ) )
 
          IF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
             nSelection := oTopMenu:hitTest( MRow(), MCol() )

@@ -70,7 +70,7 @@
 #define HB_INKEY_GTEVENT        1024 /* Harbour extension */
 #define HB_INKEY_EXT            2048 /* Harbour extension */
 
-#define HB_INKEY_ALL            ( INKEY_ALL + HB_INKEY_GTEVENT )
+#define HB_INKEY_ALL            hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT )
 
 /* Mouse events */
 

@@ -244,7 +244,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
 
 #ifdef __HARBOUR__
-   Set( _SET_EVENTMASK, HB_INKEY_ALL + HB_INKEY_EXT )
+   Set( _SET_EVENTMASK, hb_bitOr( HB_INKEY_ALL, HB_INKEY_EXT ) )
    hb_gtInfo( HB_GTI_CURSORBLINKRATE, 1000 )
    hb_gtInfo( HB_GTI_ESCDELAY, 50 )
    // hb_gtinfo( HB_GTI_FONTATTRIBUTE, 0 )

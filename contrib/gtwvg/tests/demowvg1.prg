@@ -26,7 +26,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
+   Set( _SET_EVENTMASK, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) )
 
    Wvt_SetGUI( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )

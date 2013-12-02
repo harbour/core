@@ -336,7 +336,7 @@ METHOD WvtDialog:Event()
 
    LOCAL  nKey
 
-   IF ( nKey := Inkey( 0.1, INKEY_ALL + HB_INKEY_GTEVENT ) ) == 0
+   IF ( nKey := Inkey( 0.1, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) ) == 0
       IF Wvt_IsLButtonPressed()
          nKey := K_LBUTTONPRESSED
       ENDIF
@@ -348,7 +348,7 @@ METHOD WvtDialog:Execute()
 
    IF ::nObjects == 0
       DO WHILE .T.
-         IF Inkey( 0.1, INKEY_ALL + HB_INKEY_GTEVENT ) == K_ESC
+         IF Inkey( 0.1, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) == K_ESC
             EXIT
          ENDIF
       ENDDO

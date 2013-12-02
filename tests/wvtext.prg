@@ -60,7 +60,7 @@ PROCEDURE Main()
          nMSec := NIL
       ENDIF
 
-      nKey := Inkey( 0.1, hb_bitAnd( INKEY_ALL, hb_bitNot( INKEY_MOVE ) ) + HB_INKEY_GTEVENT )
+      nKey := Inkey( 0.1, hb_bitOr( hb_bitAnd( INKEY_ALL, hb_bitNot( INKEY_MOVE ) ), HB_INKEY_GTEVENT ) )
 
       IF nKey == 0
          LOOP
