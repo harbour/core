@@ -4897,7 +4897,8 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
                fResult = HB_TRUE;
             else if( hb_dateMilliSeconds() > nTimeOut )
                break;
-            hb_releaseCPU();
+            else
+               hb_releaseCPU();
          }
          while( !fResult );
 
