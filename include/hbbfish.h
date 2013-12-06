@@ -60,8 +60,10 @@
 
 HB_EXTERN_BEGIN
 
-#define SUBKEYS_COUNT   18
-#define SBOX_ENTRIES    256
+#define HB_BF_CIPHERBLOCK     8
+
+#define SUBKEYS_COUNT         18
+#define SBOX_ENTRIES          256
 
 typedef struct
 {
