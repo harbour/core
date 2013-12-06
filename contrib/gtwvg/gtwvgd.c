@@ -2842,9 +2842,16 @@ static HB_BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 static HB_BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
                                   int iColor, HB_BYTE bAttr, HB_USHORT usChar )
 {
+   PHB_GTWVT pWVT;
+
    if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, iColor, bAttr, usChar ) )
    {
-      HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
+      pWVT = HB_GTWVT_GET( pGT );
+      if( pWVT->bGui )
+         HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
+      else
+         HB_GTSUPER_TOUCHCELL( pGT, iRow, iCol );
+
       return HB_TRUE;
    }
    return HB_FALSE;
