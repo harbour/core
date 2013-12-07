@@ -96,7 +96,7 @@ HB_EXTERN_BEGIN
 
 /*-*/
 
-#define WVT_CHAR_QUEUE_SIZE         128
+#define WVT_CHAR_QUEUE_SIZE         256
 #define WVT_MAX_TITLE_SIZE          128
 #define WVT_MAX_ROWS                256
 #define WVT_MAX_COLS               1024

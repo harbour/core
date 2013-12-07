@@ -191,7 +191,9 @@
 
 /*-*/
 
+#ifndef RGB
 #define RGB( nR, nG, nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
+#endif
 
 //
 //                          Windows Specific
@@ -199,7 +201,7 @@
 
 #define LVM_FIRST                                 0x1000      // ListView messages
 #define TV_FIRST                                  0x1100      // TreeView messages
-#define TVN_FIRST                                 (0-400)
+#define TVN_FIRST                                 -400
 #define HDM_FIRST                                 0x1200      // Header messages
 #define TCM_FIRST                                 0x1300      // Tab control messages
 

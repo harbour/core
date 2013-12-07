@@ -176,7 +176,7 @@ static void hb_bf_initvect( HB_BYTE * vect )
    int iLen = ( int ) hb_parclen( 3 );
    int i;
 
-   for( i = 0; i < 8; ++i )
+   for( i = 0; i < HB_BF_CIPHERBLOCK; ++i )
    {
       vect[ i ] = ( HB_BYTE ) i;
       if( iLen > 0 )
@@ -213,13 +213,13 @@ HB_FUNC( HB_BLOWFISHENCRYPT_CFB )
       {
          const char * pszSource = hb_itemGetCPtr( pData );
          char * pszData = ( char * ) hb_xgrab( nLen + 1 );
-         HB_BYTE vect[ 8 ];
+         HB_BYTE vect[ HB_BF_CIPHERBLOCK ];
 
          hb_bf_initvect( vect );
 
          for( n = 0; n < nLen; ++n )
          {
-            int i = ( int ) ( n & 0x07 );
+            int i = ( int ) ( n & ( HB_BF_CIPHERBLOCK - 1 ) );
             if( i == 0 )
                hb_bf_encode( bf, vect );
             pszData[ n ] = ( vect[ i ] ^= pszSource[ n ] );
@@ -249,13 +249,13 @@ HB_FUNC( HB_BLOWFISHDECRYPT_CFB )
       {
          const char * pszSource = hb_itemGetCPtr( pData );
          char * pszData = ( char * ) hb_xgrab( nLen + 1 );
-         HB_BYTE vect[ 8 ];
+         HB_BYTE vect[ HB_BF_CIPHERBLOCK ];
 
          hb_bf_initvect( vect );
 
          for( n = 0; n < nLen; ++n )
          {
-            int i = ( int ) ( n & 0x07 );
+            int i = ( int ) ( n & ( HB_BF_CIPHERBLOCK - 1 ) );
             if( i == 0 )
                hb_bf_encode( bf, vect );
             pszData[ n ] = ( vect[ i ] ^ pszSource[ n ] );
