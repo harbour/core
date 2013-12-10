@@ -52,7 +52,7 @@ PROCEDURE Main()
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4, 0 )
+         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4 )
       NEXT
 
       IF nMSec != NIL .AND. hb_MilliSeconds() > nMSec + 2000
@@ -72,7 +72,7 @@ PROCEDURE Main()
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4, 0 )
+         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4 )
       NEXT
 
       IF nKey == K_ESC

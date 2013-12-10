@@ -40,9 +40,9 @@ PROCEDURE Main()
 
    // Some closing stats
    DrawScreen( "Totals" )
-   @ 2, 0 SAY "  Total Calls: " + Str( oProfile:totalCalls() )
-   @ 3, 0 SAY "  Total Ticks: " + Str( oProfile:totalTicks() )
-   @ 4, 0 SAY "Total Seconds: " + Str( oProfile:totalSeconds() )
+   @ 2, 0 SAY "  Total Calls: " + hb_ntos( oProfile:totalCalls() )
+   @ 3, 0 SAY "  Total Ticks: " + hb_ntos( oProfile:totalTicks() )
+   @ 4, 0 SAY "Total Seconds: " + hb_ntos( oProfile:totalSeconds() )
 
    RETURN
 

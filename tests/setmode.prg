@@ -65,7 +65,7 @@ PROCEDURE TESTBOX( cMode )
    @ 9, 0 SAY Replicate( "0123456789", 20 )
 
    FOR nRow := 0 TO MaxRow()
-      @ nRow, 18 SAY Str( nRow, 2 )
+      @ nRow, 18 SAY nRow
    NEXT
 
    @ 4, 2 SAY "MaxRow() = " + Str( MaxRow(), 3 )

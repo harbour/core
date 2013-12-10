@@ -13,11 +13,11 @@ PROCEDURE Main()
    ? "Can you see it ??? :) Press any key or wait 30 seconds"
    ?
    ?
-   @ 10, 2 SAY "Memory before TEST() call" + Str( Memory( HB_MEM_USED ) )
+   @ 10, 2 SAY "Memory before TEST() call " + hb_ntos( Memory( HB_MEM_USED ) )
    TEST()
-   @ 11, 2 SAY "Memory after TEST() and before collecting" + Str( Memory( HB_MEM_USED ) )
+   @ 11, 2 SAY "Memory after TEST() and before collecting " + hb_ntos( Memory( HB_MEM_USED ) )
    hb_gcAll()
-   @ 12, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
+   @ 12, 2 SAY "Memory after collecting " + hb_ntos( Memory( HB_MEM_USED ) )
    nH1 := hb_idleAdd( {||                             hb_DispOutAt( 0,  1, Time() ) } )
    nH2 := hb_idleAdd( {|| TEST(),                     hb_DispOutAt( 0, 21, Memory( HB_MEM_USED ) ) } )
    nH3 := hb_idleAdd( {|| iif( n == 4, n := 1, n++ ), hb_DispOutAt( 0, 41, aSign[ n ] ) } )
@@ -43,9 +43,9 @@ PROCEDURE Main()
       hb_idleDel( nH4 )
    ENDIF
 
-   @ 18, 2 SAY "Memory after idle states" + Str( Memory( HB_MEM_USED ) )
+   @ 18, 2 SAY "Memory after idle states " + hb_ntos( Memory( HB_MEM_USED ) )
    hb_gcAll()
-   @ 19, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
+   @ 19, 2 SAY "Memory after collecting " + hb_ntos( Memory( HB_MEM_USED ) )
 
    RETURN
 

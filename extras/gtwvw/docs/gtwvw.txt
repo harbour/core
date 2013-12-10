@@ -242,10 +242,10 @@ In Standard Mode:
 
 - Programmer can change CurrentWindow by using HB_FUNC( WVW_NSETCURWINDOW ).
   Example:
-     nCurWin := wvw_nSetCurWindow(1)
+     nCurWin := wvw_nSetCurWindow( 1 )
      ? "In Window 1"
-     wvw_nSetCurWindow(nCurWin)
-     ? "Back in Window " + AllTrim(Str(nCurWin))
+     wvw_nSetCurWindow( nCurWin )
+     ? "Back in Window " + hb_ntos( nCurWin )
 
 - All exported, output oriented C functions work on window designated by
   usWinNum parameter.

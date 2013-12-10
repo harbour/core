@@ -55,7 +55,7 @@ PROCEDURE Main( cPort )
 
       hb_inetTimeout( s, 500 )
 
-      @ 6, 5 SAY "Connection from: " + hb_inetAddress( s ) + ":" + Str( hb_inetPort( s ), 5 )
+      @ 6, 5 SAY "Connection from: " + hb_inetAddress( s ) + ":" + hb_ntos( hb_inetPort( s ) )
       @ 7, 5 SAY "Receiving: "
       @ 8, 5
 

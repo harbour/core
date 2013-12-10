@@ -1003,8 +1003,8 @@ FUNCTION pdfPageSize( _cPageSize, _nWidth, _nHeight )
 
    ELSE
 
-      _nWidth := Val( Str( _nWidth ) )
-      _nHeight := Val( Str( _nHeight ) )
+      _nWidth := Val( hb_ntos( _nWidth ) )
+      _nHeight := Val( hb_ntos( _nHeight ) )
 
       nSize := AScan( aSize, {| arr | ( arr[ 2 ] == _nWidth  ) .AND. ( arr[ 3 ] == _nHeight ) } )
 

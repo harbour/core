@@ -246,8 +246,8 @@
       To truncate a file, a call of FWrite( nHandle, "", 0 ) is needed.
    $EXAMPLES$
       nHandle := FCreate( "test.txt" )
-      FOR X := 1 TO 10
-         FWrite( nHandle, Str( x ) )
+      FOR x := 1 TO 10
+         FWrite( nHandle, hb_ntos( x ) )
       NEXT
       FClose( nHandle )
    $STATUS$

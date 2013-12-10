@@ -215,7 +215,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
 METHOD ReadNumber( cSection, cIdent, nDefault ) CLASS TIniFile
 
-   RETURN Val( ::ReadString( cSection, cIdent, Str( nDefault ) ) )
+   RETURN Val( ::ReadString( cSection, cIdent, hb_ntos( nDefault ) ) )
 
 METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
 

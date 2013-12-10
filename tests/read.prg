@@ -7,7 +7,8 @@ PROCEDURE Main()
    LOCAL cName   := "Harbour     "
    LOCAL cWish   := "Power   "
    LOCAL cEffort := "Join us!    "
-   LOCAL acVars  := { { "Hello", "World" } }, Counter
+   LOCAL acVars  := { { "Hello", "World" } }
+   LOCAL nCounter
 
    LOCAL GetList := {}
 
@@ -21,8 +22,8 @@ PROCEDURE Main()
    @ 6, 2 SAY "Enter your effort:" GET cEffort
    @ 8, 2 SAY "Object Data      :" GET GetList[ 1 ]:Picture
 
-   FOR Counter := 1 TO Len( acVars[ 1 ] )
-      @ Row() + 2, 2 SAY "Array Element[ 1 ][ " + Str( Counter, 1 ) + " ]: " GET acVars[ 1 ][ Counter ]
+   FOR nCounter := 1 TO Len( acVars[ 1 ] )
+      @ Row() + 2, 2 SAY "Array Element[ 1 ][ " + hb_ntos( nCounter ) + " ]: " GET acVars[ 1 ][ nCounter ]
    NEXT
 
    READ
