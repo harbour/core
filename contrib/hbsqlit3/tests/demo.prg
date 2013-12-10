@@ -142,7 +142,7 @@ PROCEDURE t2()
 
       ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
       ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
-      ? "Last _ROWID_: " + Str( sqlite3_last_insert_rowid( db ) )
+      ? "Last _ROWID_: " + hb_ntos( sqlite3_last_insert_rowid( db ) )
       ? ""
 
       stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE name == :name " )
@@ -155,7 +155,7 @@ PROCEDURE t2()
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + Str( nJ )
+         ? "Record # " + hb_ntos( nJ )
 
          IF nCCount > 0
             FOR nI := 0 TO nCCount - 1
@@ -170,7 +170,7 @@ PROCEDURE t2()
                   EXIT
 
                CASE SQLITE_INTEGER
-                  ?? Str( sqlite3_column_int( stmt, nI ) )
+                  ?? hb_ntos( sqlite3_column_int( stmt, nI ) )
                   EXIT
 
                CASE SQLITE_NULL
@@ -185,7 +185,7 @@ PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + Str( nJ )
+      ? "Total records - " + hb_ntos( nJ )
 
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
@@ -201,7 +201,7 @@ PROCEDURE t2()
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + Str( nJ )
+         ? "Record # " + hb_ntos( nJ )
 
          IF nCCount > 0
             FOR nI := 1 TO nCCount
@@ -216,7 +216,7 @@ PROCEDURE t2()
                   EXIT
 
                CASE SQLITE_INTEGER
-                  ?? Str( sqlite3_column_int( stmt, nI ) )
+                  ?? hb_ntos( sqlite3_column_int( stmt, nI ) )
                   EXIT
 
                CASE SQLITE_NULL
@@ -231,7 +231,7 @@ PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + Str( nJ )
+      ? "Total records - " + hb_ntos( nJ )
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
 

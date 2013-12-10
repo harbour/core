@@ -388,7 +388,7 @@ METHOD Output() CLASS UWBrowse
          ENDIF
          SWITCH ValType( xI )
          CASE "C"  ; xI := RTrim( xI ); EXIT
-         CASE "N"  ; xI := Str( xI ); EXIT
+         CASE "N"  ; xI := hb_ntos( xI ); EXIT
          CASE "D"  ; xI := DToC( xI ); EXIT
          OTHERWISE ; xI := "ValType()==" + ValType( xI )
          ENDSWITCH

@@ -61,10 +61,10 @@ PROCEDURE Main()
    ? "Begin test of AddAscii()"
    ?
    ? "Simple tests:"
-   ? '  This should be "1000": ' + AddAscii( "0000", 1, 1 )
-   ? '  This should be "0001": ' + AddAscii( "0000", 1 )
-   ? '  This should be "BAAA": ' + AddAscii( "AAAA", -255, 1 )
-   ? '  This should be "AAAB": ' + AddAscii( "AAAA", -255 )
+   ? '  This should be "1000":', AddAscii( "0000", 1, 1 )
+   ? '  This should be "0001":', AddAscii( "0000", 1 )
+   ? '  This should be "BAAA":', AddAscii( "AAAA", -255, 1 )
+   ? '  This should be "AAAB":', AddAscii( "AAAA", -255 )
 
    ?
    ? "CSetRef() tests:"

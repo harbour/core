@@ -647,7 +647,7 @@ STATIC FUNCTION Arguments( oErr )
          cArguments += " [" + Str( xArg:__EnumIndex(), 2 ) + "] = Type: " + ValType( xArg )
 
          IF xArg != NIL
-            cArguments +=  " Val: " + hb_CStr( xArg )
+            cArguments += " Val: " + hb_CStr( xArg )
          ENDIF
       NEXT
    ENDIF
@@ -655,11 +655,9 @@ STATIC FUNCTION Arguments( oErr )
    RETURN cArguments
 
 FUNCTION __BreakBlock()
-
    RETURN {| e | Break( e ) }
 
 FUNCTION __ErrorBlock()
-
    RETURN {| e | __MinimalErrorHandler( e ) }
 
 PROCEDURE __MinimalErrorHandler( oError )

@@ -312,7 +312,7 @@ FUNCTION NetDelete()
       dbCommit()
    ELSE
       s_lNetOk := .T.
-      Alert( " Failed to DELETE Record -> " + Str( RecNo() ) )
+      Alert( " Failed to DELETE Record -> " + hb_ntos( RecNo() ) )
    ENDIF
 
    RETURN s_lNetOk
@@ -331,7 +331,7 @@ FUNCTION NetRecall()
       dbCommit()
    ELSE
       s_lNetOk := .T.
-      Alert( " Failed to RECALL Record -> " + Str( RecNo() ) )
+      Alert( " Failed to RECALL Record -> " + hb_ntos( RecNo() ) )
    ENDIF
 
    RETURN s_lNetOk

@@ -218,7 +218,7 @@ PROCEDURE Main( ... )
          IF cValue != NIL
             IF dType != sType
                IF dType == "C" .AND. sType == "N"
-                  cValue := Str( cValue )
+                  cValue := hb_ntos( cValue )
 
                ELSEIF dType == "C" .AND. sType == "D"
                   cValue := DToC( cValue )

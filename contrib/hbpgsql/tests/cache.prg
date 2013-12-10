@@ -33,7 +33,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
       FOR i := 1 TO 50
          APPEND BLANK
          REPLACE codigo WITH i
-         REPLACE descri WITH "test " + Str( i )
+         REPLACE descri WITH "test " + hb_ntos( i )
       NEXT
 
       SQLApplyUpdates()

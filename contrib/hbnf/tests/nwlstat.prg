@@ -2,6 +2,6 @@
 
 PROCEDURE Main()
 
-   ? "Logical station: " + Str( ft_NWLStat() )
+   ? "Logical station:", ft_NWLStat()
 
    RETURN

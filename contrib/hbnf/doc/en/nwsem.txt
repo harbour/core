@@ -82,7 +82,7 @@
                                 @nHandle, @nOpenCnt )
 
       IF nRc != 0
-         ? "Error: " + Str( nRc )
+         ? "Error:", nRc
          QUIT
       ENDIF
    $SEEALSO$
@@ -206,7 +206,7 @@
 
       For more information, see the description under ft_NWSemOpen().
    $EXAMPLES$
-      ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
+      ? "Signal returns:", ft_NWSemSig( nHandle )
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemClose() ft_NWSemLock()
    $END$
@@ -234,7 +234,7 @@
       the open count for the semaphore.  If the open count hits zero,
       the semaphore is deleted by NetWare.
    $EXAMPLES$
-      ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
+      ? "Close returns:", ft_NWSemClose( nHandle )
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
    $END$

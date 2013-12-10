@@ -151,7 +151,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::Handle := FOpen( cFile, nMode )
    IF ::Handle == F_ERROR
-      Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
 
    ::nPosition := 0
@@ -222,7 +222,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
       ::Handle := FOpen( cFile, nMode )
       IF ::Handle == F_ERROR
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
+         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 
       ::nLength := FSeek( ::Handle, 0, FS_END )
@@ -232,7 +232,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
       ::Handle := FCreate( cFile, nMode )
       IF ::Handle == F_ERROR
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + Str( FError() ), hb_AParams() ) )
+         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 
       ::nPosition := 0
@@ -256,7 +256,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
    ::nPosition += nWritten
 
    IF nWritten != nCount
-      Throw( xhb_ErrorNew( "Stream", 0, 1003, ProcName(), "Write failed - written:" + Str( nWritten ) + " bytes", hb_AParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1003, ProcName(), "Write failed - written: " + hb_ntos( nWritten ) + " bytes", hb_AParams() ) )
    ENDIF
 
    RETURN nWritten

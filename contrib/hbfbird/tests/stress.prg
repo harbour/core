@@ -62,7 +62,7 @@ PROCEDURE Main()
    oServer:StartTransaction()
 
    FOR i := 1 TO 10000
-      @ 15, 0 SAY "Inserting values...." + hb_ntos( i )
+      @ 15, 0 SAY "Inserting values...." + Str( i )
 
       oRow := oQuery:Blank()
 
@@ -85,7 +85,7 @@ PROCEDURE Main()
       @ 16, 0 SAY "Deleting values...." + Str( i )
 
       oRow := oQuery:Blank()
-      oServer:Delete( oRow, "code = " + Str( i ) )
+      oServer:Delete( oRow, "Code = " + hb_ntos( i ) )
 
       IF i % 100 == 0
          oServer:Commit()
@@ -98,7 +98,7 @@ PROCEDURE Main()
 
       oRow := oQuery:Blank()
       oRow:FieldPut( 5, 4000 + i )
-      oServer:update( oRow, "code = " + Str( i ) )
+      oServer:update( oRow, "Code = " + hb_ntos( i ) )
 
       IF i % 100 == 0
          oServer:Commit()

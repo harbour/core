@@ -1042,7 +1042,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
          BEGIN SEQUENCE WITH {| o | Break( o ) }
             IF Used()
                dbSelectArea( nI )
-               cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + ;
+               cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
                   Str( RecNo() ) + "/" + Str( LastRec() ) + ;
                   iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()
                dbCloseArea()

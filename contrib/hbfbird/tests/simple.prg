@@ -92,7 +92,7 @@ PROCEDURE Main()
 
    FOR i := 1 TO 100
       cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-      cQuery += 'VALUES( ' + Str( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "12-22-2003", "Short Description about what ? ")'
+      cQuery += 'VALUES( ' + hb_ntos( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "2003-12-22", "Short Description about what ? ")'
 
       oServer:Execute( cQuery )
 

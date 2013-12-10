@@ -373,7 +373,7 @@ FUNCTION ctodowtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " + Str( CToDoW( Upper( AllTrim( cDow ) ) ) )
+         @ 11, 10 SAY "The day number is " + hb_ntos( CToDoW( Upper( AllTrim( cDow ) ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -423,7 +423,7 @@ FUNCTION ctomonthtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " + Str( CToMonth( cDom ) )
+         @ 11, 10 SAY "The day number is " + hb_ntos( CToMonth( cDom ) )
 
          SET CURSOR OFF
          Inkey( 0 )

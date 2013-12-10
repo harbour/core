@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    nmar := ft_MVersion( @nver, @ntype, @nir )
    ppp := nmar + nver
-   ? Str( nmar, 2, 0 ), ".", Str( nver, 2, 0 )
+   ? hb_ntos( nmar ) + "." + hb_ntos( nver )
    ? ppp / 100
    Inkey( 0 )
    ? "is mouse on", ft_MReset()

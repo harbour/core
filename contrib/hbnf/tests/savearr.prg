@@ -33,9 +33,9 @@ FUNCTION DispArray( aTest )
    FOR nk := 1 TO Len( aTest )
       ? aTest[ nk, 1 ]
       ?? "  "
-      ?? DToC( aTest[ nk, 2 ] )
+      ?? aTest[ nk, 2 ]
       ?? "  "
-      ?? Str( aTest[ nk, 3 ] )
+      ?? aTest[ nk, 3 ]
       ?? "  "
       ?? iif( aTest[ nk, 4 ], "true", "false" )
    NEXT

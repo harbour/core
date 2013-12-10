@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    ? "Waiting ten seconds..."
    nRc := ft_NWSemWait( nHandle, 180 )
-   ? "Final nRc value = " + Str( nRc )
+   ? "Final nRc value =", nRc
    Inkey( 0 )
    IF nRc == 254
       ? "Couldn't get the semaphore.  Try again."
@@ -24,7 +24,7 @@ PROCEDURE Main()
    CLS
 
    @ 24, 0 SAY "Any key to exit"
-   @ 0,  0 SAY "Handle: " + Str( nHandle )
+   @ 0,  0 SAY "Handle: " + hb_ntos( nHandle )
 
    ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
    WHILE .T.
@@ -41,7 +41,7 @@ PROCEDURE Main()
       ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
    ENDDO
 
-   ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
-   ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
+   ? "Signal returns:", ft_NWSemSig( nHandle )
+   ? "Close returns: ", ft_NWSemClose( nHandle )
 
    RETURN

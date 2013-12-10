@@ -903,7 +903,7 @@ METHOD Append( oRow ) CLASS TPQquery
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1 ) +  ") VALUES ("
+      cQuery := Left( cQuery, Len( cQuery ) - 1 ) + ") VALUES ("
 
       FOR i := 1 TO oRow:FCount()
          IF ::lallCols .OR. oRow:Changed( i )
@@ -1158,7 +1158,7 @@ METHOD SetKey() CLASS TPQquery
             ENDIF
 
             IF Empty( ::Tablename )
-               cQuery := "SELECT relname FROM pg_class WHERE oid = " + Str( xTableId )
+               cQuery := "SELECT relname FROM pg_class WHERE oid = " + hb_ntos( xTableId )
 
                res := PQexec( ::pDB, cQuery )
 
@@ -1323,14 +1323,10 @@ STATIC FUNCTION DataToSql( xField )
 
    SWITCH ValType( xField )
    CASE "C"
-   CASE "M"
-      RETURN "'" + StrTran( xField, "'", " " ) + "'"
-   CASE "D"
-      RETURN DToS( xField )
-   CASE "N"
-      RETURN Str( xField )
-   CASE "L"
-      RETURN iif( xField, "'t'", "'f'" )
+   CASE "M" ; RETURN "'" + StrTran( xField, "'", " " ) + "'"
+   CASE "D" ; RETURN DToS( xField )
+   CASE "N" ; RETURN hb_ntos( xField )
+   CASE "L" ; RETURN iif( xField, "'t'", "'f'" )
    ENDSWITCH
 
    RETURN "NULL"
@@ -1338,15 +1334,11 @@ STATIC FUNCTION DataToSql( xField )
 STATIC FUNCTION ValueToString( xField )
 
    SWITCH ValType( xField )
-   CASE "D"
-      RETURN DToS( xField )
-   CASE "N"
-      RETURN Str( xField )
-   CASE "L"
-      RETURN iif( xField, "t", "f" )
    CASE "C"
-   CASE "M"
-      RETURN xField
+   CASE "M" ; RETURN xField
+   CASE "D" ; RETURN DToS( xField )
+   CASE "N" ; RETURN hb_ntos( xField )
+   CASE "L" ; RETURN iif( xField, "t", "f" )
    ENDSWITCH
 
    RETURN NIL

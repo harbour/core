@@ -63,7 +63,7 @@ PROCEDURE Main()
    ?    "Given       Date:  "
    ??   dDate
    ??   " cFY_Start: " + cFY_Start
-   ??   " nDOW_Start:" + Str( nDOW_Start, 2 )
+   ??   " nDOW_Start: " + hb_ntos( nDOW_Start )
    ?    "---- Fiscal Year Data -----------"
 
    aTestData := ft_Year( dDate )

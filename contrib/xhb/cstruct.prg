@@ -114,7 +114,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
 
       t_aActiveStructure := ATail( s_aClasses )
    ELSE
-      // TraceLog( "Created: " + Str( nId ) )
+      // TraceLog( "Created: " + hb_ntos( nId ) )
 
       acMembers := t_aActiveStructure[ 3 ]
       aCTypes   := t_aActiveStructure[ 4 ]

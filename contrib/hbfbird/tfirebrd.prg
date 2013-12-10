@@ -226,11 +226,11 @@ METHOD ListTables() CLASS TFbServer
    LOCAL cQuery
    LOCAL qry
 
-   cQuery := 'select rdb$relation_name '
-   cQuery += '  from rdb$relations '
-   cQuery += ' where rdb$relation_name not like "RDB$%" '
-   cQuery += '   and rdb$view_blr is null '
-   cQuery += ' order by 1 '
+   cQuery := "select rdb$relation_name"
+   cQuery += "  from rdb$relations"
+   cQuery += ' where rdb$relation_name not like "RDB$%"'
+   cQuery += "   and rdb$view_blr is null"
+   cQuery += " order by 1"
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
@@ -250,19 +250,19 @@ METHOD TableStruct( cTable ) CLASS TFbServer
    LOCAL cQuery, cType, nSize, cDomain, cField, nType, nDec
    LOCAL qry
 
-   cQuery := 'select '
-   cQuery += '  a.rdb$field_name,'
-   cQuery += '  b.rdb$field_type,'
-   cQuery += '  b.rdb$field_length,'
-   cQuery += '  b.rdb$field_scale * -1,'
-   cQuery += '  a.rdb$field_source '
-   cQuery += 'from '
-   cQuery += '  rdb$relation_fields a, rdb$fields b '
-   cQuery += 'where '
-   cQuery += '  a.rdb$field_source = b.rdb$field_name '
-   cQuery += '  and a.rdb$relation_name = "' + Upper( ctable ) + '" '
-   cQuery += 'order by '
-   cQuery += '  a.rdb$field_position '
+   cQuery := "select"
+   cQuery += "   a.rdb$field_name,"
+   cQuery += "   b.rdb$field_type,"
+   cQuery += "   b.rdb$field_length,"
+   cQuery += "   b.rdb$field_scale * -1,"
+   cQuery += "   a.rdb$field_source"
+   cQuery += " from"
+   cQuery += "   rdb$relation_fields a, rdb$fields b"
+   cQuery += " where"
+   cQuery += "   a.rdb$field_source = b.rdb$field_name"
+   cQuery += '   and a.rdb$relation_name = "' + Upper( ctable ) + '"'
+   cQuery += " order by"
+   cQuery += "   a.rdb$field_position"
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
@@ -379,7 +379,7 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
       ENDIF
 
       IF !( cWhere == "" )
-         cQuery := 'DELETE FROM ' + aTables[ 1 ] + ' WHERE ' + cWhere
+         cQuery := "DELETE FROM " + aTables[ 1 ] + " WHERE " + cWhere
 
          result := ::Execute( cQuery )
       ENDIF
@@ -397,7 +397,7 @@ METHOD Append( oRow ) CLASS TFbServer
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Can insert only one table, not in joined tables
 
-      cQuery := 'INSERT INTO ' + aTables[ 1 ] + '('
+      cQuery := "INSERT INTO " + aTables[ 1 ] + "("
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
             // Send only changed field
@@ -911,18 +911,18 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
    IF Len( aTables ) == 1
       cTable := aTables[ 1 ]
 
-      cQuery := ' select                                      '
-      cQuery += '   a.rdb$field_name                          '
-      cQuery += ' from                                        '
-      cQuery += '   rdb$index_segments a,                     '
-      cQuery += '   rdb$relation_constraints b                '
-      cQuery += ' where                                       '
-      cQuery += '   a.rdb$index_name = b.rdb$index_name and   '
-      cQuery += '   b.rdb$constraint_type = "PRIMARY KEY" and '
-      cQuery += '   b.rdb$relation_name = ' + DataToSql( cTable )
-      cQuery += ' order by                                    '
-      cQuery += '   b.rdb$relation_name,                      '
-      cQuery += '   a.rdb$field_position                      '
+      cQuery := "select"
+      cQuery += "   a.rdb$field_name"
+      cQuery += " from"
+      cQuery += "   rdb$index_segments a,"
+      cQuery += "   rdb$relation_constraints b"
+      cQuery += " where"
+      cQuery += "   a.rdb$index_name = b.rdb$index_name and"
+      cQuery += '   b.rdb$constraint_type = "PRIMARY KEY" and'
+      cQuery += "   b.rdb$relation_name = " + DataToSql( cTable )
+      cQuery += " order by"
+      cQuery += "   b.rdb$relation_name,"
+      cQuery += "   a.rdb$field_position"
 
       qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
@@ -940,17 +940,13 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 STATIC FUNCTION DataToSql( xField )
 
    SWITCH ValType( xField )
-   CASE "C"
-      RETURN '"' + StrTran( xField, '"', ' ' ) + '"'
-   CASE "D"
-      RETURN '"' + StrZero( Month( xField ), 2 ) + "/" + StrZero( Day( xField ), 2 ) + "/" + StrZero( Year( xField ), 4 ) + '"'
-   CASE "N"
-      RETURN Str( xField )
-   CASE "L"
-      RETURN iif( xField, "1", "0" )
+   CASE "C" ; RETURN '"' + StrTran( xField, '"', " " ) + '"'
+   CASE "D" ; RETURN '"' + StrZero( Month( xField ), 2 ) + "/" + StrZero( Day( xField ), 2 ) + "/" + StrZero( Year( xField ), 4 ) + '"'
+   CASE "N" ; RETURN hb_ntos( xField )
+   CASE "L" ; RETURN iif( xField, "1", "0" )
    ENDSWITCH
 
-   RETURN NIL
+   RETURN ""
 
 STATIC FUNCTION StructConvert( aStru, db, dialect )
 
@@ -974,21 +970,21 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    /* create table list and field list */
 
    FOR i := 1 TO Len( aStru )
-      xtables += DataToSql( aStru[ i ][ 5 ] )
-      xfields += DataToSql( aStru[ i ][ 1 ] )
+      xTables += DataToSql( aStru[ i ][ 5 ] )
+      xFields += DataToSql( aStru[ i ][ 1 ] )
 
       IF i != Len( aStru )
-         xtables += ","
-         xfields += ","
+         xTables += ","
+         xFields += ","
       ENDIF
    NEXT
 
    /* Look for domains */
-   cQuery := 'select rdb$relation_name, rdb$field_name, rdb$field_source '
-   cQuery += '  from rdb$relation_fields '
-   cQuery += ' where rdb$field_name not like "RDB$%" '
-   cQuery += '   and rdb$relation_name in (' + xtables + ')'
-   cQuery += '   and rdb$field_name in (' + xfields + ')'
+   cQuery := "select rdb$relation_name, rdb$field_name, rdb$field_source"
+   cQuery += "  from rdb$relation_fields"
+   cQuery += ' where rdb$field_name not like "RDB$%"'
+   cQuery += "   and rdb$relation_name in (" + xTables + ")"
+   cQuery += "   and rdb$field_name in (" + xFields + ")"
 
    qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
@@ -1083,7 +1079,7 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
 STATIC FUNCTION RemoveSpaces( cQuery )
 
-   DO WHILE At( "  ", cQuery ) != 0
+   DO WHILE "  " $ cQuery
       cQuery := StrTran( cQuery, "  ", " " )
    ENDDO
 

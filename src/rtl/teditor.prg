@@ -1159,7 +1159,6 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
-
       ENDIF
 
    ENDDO

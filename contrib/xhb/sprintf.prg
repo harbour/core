@@ -148,7 +148,7 @@ FUNCTION sprintf( ... )
             hb_default( @xVal, 0 )
             IF nLen != 0
                IF nLen - Int( nLen ) > 0.0
-                  nDec := Str( nLen )
+                  nDec := hb_ntos( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
                      nDec := Left( nDec, Len( nDec ) - 1 )
                   ENDDO

@@ -65,7 +65,7 @@ PROCEDURE Main()
    ENDDO
 
    ? "------------------------------------------------------------------------------"
-   ? Str( nRows, 4 ), " Row(s) affected."
+   ? hb_ntos( nRows ), " Row(s) affected."
 
    SQLDisconnect( hDbc )
 

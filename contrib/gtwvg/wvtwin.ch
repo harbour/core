@@ -180,9 +180,9 @@
 #define WVT_SCROLLBUTTON_RIGHT                    4
 #define WVT_SCROLL_THUMB                          5
 
-//
-// wvtmenu defines  .  Peter Rees
-//
+/*
+ * WvtMenu() defines [Peter Rees]
+ */
 #define WVT_MENU_TYPE                             1
 #define WVT_MENU_IDENTIFIER                       2
 #define WVT_MENU_CAPTION                          3
@@ -292,7 +292,7 @@
 #define SW_MAX                                    11
 
 /*
- *  Window Messages
+ * Window Messages
  */
 #define WM_USER                                   1024
 
