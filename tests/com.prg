@@ -12,18 +12,18 @@ PROCEDURE Main( cPortName )
    ENDIF
    IF ! hb_comOpen( nPort )
       ? "Cannot open port:", nPort, hb_comGetDevice( nPort ), ;
-        "error: " + hb_ntos( hb_comGetError( nPort ) )
+        "error:", hb_ntos( hb_comGetError( nPort ) )
    ELSE
       ? "port:", hb_comGetDevice( nPort ), "opened"
       IF ! hb_comInit( nPort, 9600, "N", 8, 1 )
          ? "Cannot initialize port to: 9600:N:8:1", ;
-           "error: " + hb_ntos( hb_comGetError( nPort ) )
+           "error:", hb_ntos( hb_comGetError( nPort ) )
       ELSE
          nResult := hb_comSend( nPort, cString, hb_BLen( cString ), nTimeOut )
          IF nResult != hb_BLen( cString )
             ? "SEND() failed,", nResult, "bytes sent in", nTimeOut / 1000, ;
               "sec., expected:", hb_BLen( cString ), "bytes."
-            ? "error: " + hb_ntos( hb_comGetError( nPort ) )
+            ? "error:", hb_ntos( hb_comGetError( nPort ) )
          ELSE
             ? "SEND() succeeded."
          ENDIF
@@ -34,7 +34,7 @@ PROCEDURE Main( cPortName )
          nResult := hb_comRecv( nPort, @cString, hb_BLen( cString ), nTimeOut )
          IF nResult == -1
             ? "RECV() failed,", ;
-              "error: " + hb_ntos( hb_comGetError( nPort ) )
+              "error:", hb_ntos( hb_comGetError( nPort ) )
          ELSE
             ? nResult, "bytes read in", nTimeOut / 1000, "sec."
          ENDIF

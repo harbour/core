@@ -9,7 +9,7 @@ PROCEDURE Main( cCk, cStr, nOcc, xCase )
    ELSE
       xCase := iif( xCase == "Y", .T., .F. )
       nOcc  := Val( nOcc )
-      ? iif( xCase, "Ignoring ", "Observing " ) + "case:"
+      ? iif( xCase, "Ignoring", "Observing" ), "case:"
 
       ? cStr
       nFind := ft_FindITh( cCk, cStr, nOcc, xCase )

@@ -2,6 +2,6 @@
 
 PROCEDURE Main()
 
-   ? "Conventional memory: " + hb_ntos( ft_SysMem() ) + "K installed"
+   ? "Conventional memory:", hb_ntos( ft_SysMem() ) + "K installed"
 
    RETURN

@@ -26,7 +26,7 @@ PROCEDURE Main( cName )
 
    @ nRow, 0
 
-   ? "Content of " + cName
+   ? "Content of", cName
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -37,7 +37,7 @@ PROCEDURE Main( cName )
          aSect := hIni[ cSection ]
 
          FOR EACH cKey IN aSect:Keys
-            ? cKey + " = " + aSect[ cKey ]
+            ? cKey, "=", aSect[ cKey ]
          NEXT
       NEXT
    ENDIF
@@ -67,7 +67,7 @@ PROCEDURE Main( cName )
                        ,; /* default key indicators */
                        , .F. )
 
-   ? "Content of " + cName
+   ? "Content of", cName
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -82,11 +82,11 @@ PROCEDURE Main( cName )
             ? "Section [" + cSection + "]"
 
             FOR EACH cKey IN aSect:Keys
-               ? cKey + " = " + aSect[ cKey ]
+               ? cKey, "=", aSect[ cKey ]
             NEXT
          ELSE
             /* It's a toplevel option */
-            ? "TOPLEVEL option:", cSection + " = " + aSect
+            ? "TOPLEVEL option:", cSection, "=", aSect
          ENDIF
       NEXT
    ENDIF
@@ -148,11 +148,11 @@ PROCEDURE Main( cName )
             ? "Section [" + cSection + "]"
 
             FOR EACH cKey IN aSect:Keys
-               ? cKey + " = " + aSect[ cKey ]
+               ? cKey, "=", aSect[ cKey ]
             NEXT
          ELSE
             /* It's a toplevel option */
-            ? "TOPLEVEL option:", cSection + " = " + aSect
+            ? "TOPLEVEL option:", cSection, "=", aSect
          ENDIF
       NEXT
    ENDIF
@@ -169,7 +169,7 @@ PROCEDURE Main( cName )
 
    cIni := hb_iniWriteStr( hb_iniRead( cName ) )
 
-   ? "Content of " + cName
+   ? "Content of", cName
    ?
    ? cIni
    ?

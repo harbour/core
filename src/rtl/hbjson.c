@@ -53,7 +53,7 @@
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)
-   http://www.ietf.org/rfc/rfc4627.txt
+   https://www.ietf.org/rfc/rfc4627.txt
 
       C level functions:
         char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );

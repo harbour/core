@@ -38,9 +38,9 @@ proc main( cdp, info, unicode )
 
    ? date(), time(), os(), version()
 #ifdef __HARBOUR__
-   ? "Character encoding: " + Set( _SET_CODEPAGE )
+   ? "Character encoding:", Set( _SET_CODEPAGE )
 #else
-   ? "Character encoding: " + _natSortVersion()
+   ? "Character encoding:", _natSortVersion()
 #endif
    ? replicate( "=", 50 )
    lSort := .f.

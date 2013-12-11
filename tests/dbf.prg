@@ -140,7 +140,7 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   ? "dbFilter() => " + dbFilter()
+   ? "dbFilter() =>", dbFilter()
    ? ""
 
    ? "Testing __dbPack()"

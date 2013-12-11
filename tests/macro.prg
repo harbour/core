@@ -113,7 +113,7 @@ STATIC PROCEDURE TEST_Type()
    BEGIN SEQUENCE
       ?? &v2
    RECOVER USING oE
-      ? "ERROR: " + oE:Description
+      ? "ERROR:", oE:Description
    END SEQUENCE
    ErrorBlock( bErr )
 

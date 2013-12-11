@@ -14,7 +14,7 @@ PROCEDURE Main()
    ? "Press a key to continue: "
    ?? Inkey( 0 )
 
-   ? "This is row " + hb_ntos( Row() )
+   ? "This is row", hb_ntos( Row() )
 
    @ 7, 30 SAY "@ 7, 30"
    @ 7, 10 SAY "@ 7, 10"

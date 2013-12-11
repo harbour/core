@@ -546,7 +546,7 @@ FUNCTION d2month()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " +  ;
+         @ 11, 10 SAY "The day number is " + ;
             hb_ntos( DaysToMonth( nMonth, IsAffirm( cLeap ) ) )
 
          SET CURSOR OFF

@@ -19,20 +19,20 @@ PROCEDURE Main()
 
    ? "create listening socket"
    IF Empty( hListen := hb_socketOpen() )
-      ? "socket create error " + hb_ntos( hb_socketGetError() )
+      ? "socket create error", hb_ntos( hb_socketGetError() )
    ENDIF
    IF ! hb_socketBind( hListen, { HB_SOCKET_AF_INET, ADDRESS, PORT } )
-      ? "bind error " + hb_ntos( hb_socketGetError() )
+      ? "bind error", hb_ntos( hb_socketGetError() )
    ENDIF
    IF ! hb_socketListen( hListen )
-      ? "listen error " + hb_ntos( hb_socketGetError() )
+      ? "listen error", hb_ntos( hb_socketGetError() )
    ENDIF
    DO WHILE .T.
       IF Empty( hSocket := hb_socketAccept( hListen, , TIMEOUT ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
             ? "loop"
          ELSE
-            ? "accept error " + hb_ntos( hb_socketGetError() )
+            ? "accept error", hb_ntos( hb_socketGetError() )
          ENDIF
       ELSE
          ? "accept socket request"

@@ -128,8 +128,8 @@ PROCEDURE Main()
 
 PROCEDURE ShowStatus()
 
-   ? "Lock: " + iif( s_lLocked, "Held", "Released" ) +;
-     "    Type: " + iif( s_lExclusive, "Exclusive", "Shared" ) +;
-     "  Request is: " + iif( s_lBlocking, "Blocking", "Non-Blocking" )
+   ? "Lock:", iif( s_lLocked, "Held", "Released" ), " ", ;
+     "Type:", iif( s_lExclusive, "Exclusive", "Shared" ), " ", ;
+     "Request is:", iif( s_lBlocking, "Blocking", "Non-Blocking" )
 
    RETURN

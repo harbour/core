@@ -38,7 +38,7 @@ PROCEDURE Main( cRoot )
       cDir := hb_DirSepAdd( cDir )
    ENDIF
 
-   ? "Root: " + cRoot
+   ? "Root:", cRoot
 
    aDir := { cRoot }
 

@@ -388,7 +388,7 @@ METHOD ReadAll() CLASS TIPClientHTTP
 
 METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
-   // docs from http://www.ietf.org/rfc/rfc2109.txt
+   // docs from https://www.ietf.org/rfc/rfc2109.txt
    LOCAL aParam
    LOCAL cHost, cPath, cName, cValue, aElements, cElement
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath

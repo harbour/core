@@ -4,9 +4,10 @@ PROCEDURE Main( cDate )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   cDate := iif( cDate == NIL, DToS( Date() ), cDate )
-   ? "Setting date to: " + cDate  + "... "
+   hb_default( @cDate, DToS( Date() ) )
+
+   ? "Setting date to:", DToC( hb_SToD( cDate ) ) + "..."
    ft_SetDate( hb_SToD( cDate ) )
-   ? "Today is now: " + DToC( Date() )
+   ? "Today is now:", Date()
 
    RETURN

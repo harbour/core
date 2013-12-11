@@ -28,7 +28,7 @@
  *   - curl (built with SSL)
  *   - hbmk2 and hbi18n in PATH
  *   - the target .prg be runnable as script (for doc_make only)
- * Reference: http://help.transifex.com/features/api/api-v2.1.html
+ * Reference: http://support.transifex.com/customer/portal/articles/995872-overview
  */
 
 #pragma -w3

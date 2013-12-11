@@ -518,7 +518,7 @@ advanced users only):
 
 ## Darwin (OS X)
 
-1. Install [Homebrew](http://mxcl.github.io/homebrew/)
+1. Install [Homebrew](http://brew.sh/)
 2. Install packages:
 
         $ brew install pcre slang cairo freeimage libgd mysql postgresql qt5
@@ -1954,7 +1954,7 @@ Supported shells per host platforms:
      * [Git Reference](http://gitref.org)
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
-       * <http://help.transifex.com/features/formats.html#po-files>
+       * <http://support.transifex.com/customer/portal/articles/913371-po-files>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
 

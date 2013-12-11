@@ -9,10 +9,10 @@ PROCEDURE Main()
    LOCAL hSocket
 
    IF Empty( hSocket := hb_socketOpen() )
-      ? "socket create error " + hb_ntos( hb_socketGetError() )
+      ? "socket create error", hb_ntos( hb_socketGetError() )
    ENDIF
    IF ! hb_socketConnect( hSocket, { HB_SOCKET_AF_INET, ADDRESS, PORT } )
-      ? "socket connect error " + hb_ntos( hb_socketGetError() )
+      ? "socket connect error", hb_ntos( hb_socketGetError() )
    ENDIF
 
    ? hb_socketSend( hSocket, "hi" + EOT )

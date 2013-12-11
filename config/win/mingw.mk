@@ -48,7 +48,7 @@ else
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   # -O3 is not recommended for GCC 4.x by some packagers (see http://www.gentoo.org/doc/en/gcc-optimization.xml)
+   # -O3 is not recommended for GCC 4.x by some packagers (see https://wiki.gentoo.org/wiki/GCC_optimization)
    CFLAGS += -O3
    # This option is not needed in x86_64 mode.
    ifneq ($(HB_COMPILER),mingw64)

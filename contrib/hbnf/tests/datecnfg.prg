@@ -62,8 +62,8 @@ PROCEDURE Main()
    CLS
    ?    "Given       Date:  "
    ??   dDate
-   ??   " cFY_Start: " + cFY_Start
-   ??   " nDOW_Start: " + hb_ntos( nDOW_Start )
+   ??   " cFY_Start:", cFY_Start
+   ??   " nDOW_Start:", hb_ntos( nDOW_Start )
    ?    "---- Fiscal Year Data -----------"
 
    aTestData := ft_Year( dDate )
