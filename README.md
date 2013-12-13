@@ -1155,7 +1155,7 @@ set HB_WITH_CURL=C:\curl\include
 set HB_WITH_FIREBIRD=C:\Firebird\include
 set HB_WITH_FREEIMAGE=C:\FreeImage\Dist
 set HB_WITH_GD=C:\gd\include
-set HB_WITH_MYSQL=C:\mysql\include
+set HB_WITH_MYSQL=C:\mysql\include\mysql
 set HB_WITH_OCILIB=C:\ocilib\include
 set HB_WITH_OPENSSL=C:\openssl\inc32
 set HB_WITH_PGSQL=C:\pgsql\include
@@ -1276,7 +1276,7 @@ rem You have to use 8.3 path notation.
 set HB_WITH_ALLEGRO=C:\ALLEGR~1.2\include
 set HB_WITH_FIREBIRD=C:\FIREBI~1.4\include
 set HB_WITH_GD=C:\GD-20~1.34\include
-set HB_WITH_MYSQL=C:\MYSQL-~1.67\include
+set HB_WITH_MYSQL=C:\MYSQL-~1.67\include\mysql
 set HB_WITH_PGSQL=C:\PGSQL-~1.3\include
 set HB_WITH_WATT=C:\WATT\inc
 ```
@@ -1828,7 +1828,8 @@ Supported shells per host platforms:
         * <http://winimage.com/zLibDll/minizip.html>
      * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
         * <http://www.minixml.org>
-     * HB_WITH_MYSQL - MySQL [multiplatform, free, open-source]
+     * HB_WITH_MYSQL - MariaDB/MySQL [multiplatform, free, open-source]
+        * <https://downloads.mariadb.org/mariadb/>
         * <https://dev.mysql.com/downloads/>
      * HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
         * <http://orclib.sourceforge.net/>

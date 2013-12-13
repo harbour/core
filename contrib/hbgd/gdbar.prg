@@ -134,11 +134,11 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
    ::Setfont( "Arial" )
 
    // configures Fontes
-   IF     ::textfont == 1 ; ::SetFontSmall()
-   ELSEIF ::textfont == 2 ; ::SetFontLarge()
-   ELSEIF ::textfont == 3 ; ::SetFontMediumBold()
-   ELSEIF ::textfont == 4 ; ::SetFontGiant()
-   ELSEIF ::textfont == 5 ; ::SetFontTiny()
+   IF     ::textfont == 1; ::SetFontSmall()
+   ELSEIF ::textfont == 2; ::SetFontLarge()
+   ELSEIF ::textfont == 3; ::SetFontMediumBold()
+   ELSEIF ::textfont == 4; ::SetFontGiant()
+   ELSEIF ::textfont == 5; ::SetFontTiny()
    ENDIF
 
    ::SetFontPitch( ::textfont )
@@ -211,8 +211,8 @@ METHOD DrawSingleI25( pcode ) CLASS GDBar
 
    LOCAL j
 
-   LOCAL widthSlimBar  := 1
-   LOCAL widthFatBar   := 3
+   LOCAL widthSlimBar := 1
+   LOCAL widthFatBar  := 3
 
    LOCAL imgBar
    LOCAL imgWid
