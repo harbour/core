@@ -22,9 +22,18 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# Equivalent to MSVC -GS (default) option:
+# Similar to MSVC -GS (default) option:
+ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45 46 47 48),)
+   CFLAGS += -fstack-protector-strong
+   SYSLIBS += ssp
+else
 ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
+   # too weak
    #CFLAGS += -fstack-protector
+   # too slow
+   #CFLAGS += -fstack-protector-all
+   #SYSLIBS += ssp
+endif
 endif
 
 # It is also supported by official mingw 4.4.x and mingw64 4.4.x,

@@ -4221,6 +4221,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          OTHERWISE
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] )
+            IF hbmk[ _HBMK_lSAFE ]
+               /* EXPERIMENTAL */
+               IF hbmk[ _HBMK_nCOMPVer ] >= 49
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
+               ELSEIF hbmk[ _HBMK_nCOMPVer ] >= 41
+                  // too slow
+                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
+                  // too weak
+                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
+               ENDIF
+            ENDIF
          ENDCASE
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
@@ -4569,6 +4580,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDSWITCH
          IF hbmk[ _HBMK_lSAFE ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
+               IF hbmk[ _HBMK_nCOMPVer ] >= 49
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
+                  AAdd( l_aLIBSYS, "ssp" )
+               ELSEIF hbmk[ _HBMK_nCOMPVer ] >= 41
+                  // too slow
+                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
+                  // too weak
+                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
+                  //AAdd( l_aLIBSYS, "ssp" )
+               ENDIF
                /* It is also supported by official mingw 4.4.x and mingw64 4.4.x,
                   but not supported by mingw tdm 4.4.x, so I only enable it on or
                   above 4.5.0 [vszakats] */
