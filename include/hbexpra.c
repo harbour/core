@@ -407,7 +407,6 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                      HB_COMP_EXPR_FREE( pFirst->pNext );  /* delete a second argument */
                   pArg->pNext = hb_compExprNewVar( szName, HB_COMP_PARAM );
                   pArg->pNext->pNext = pNext;    /* restore third argument */
-                  HB_COMP_EXPR_FREE( pFirst );
                }
                else
                {
@@ -421,8 +420,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                      pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
                      pArg->pNext->pNext = pNext;
                   }
-                  HB_COMP_EXPR_FREE( pFirst );  /* delete first argument */
                }
+               HB_COMP_EXPR_FREE( pFirst );  /* delete first argument */
             }
             else
             {
@@ -455,6 +454,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                    */
                   HB_COMP_EXPR_FREE( pArg );
                   pArg = hb_compExprNewNil( HB_COMP_PARAM );
+                  if( HB_COMP_PARAM->iWarnings >= 2 )
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szVarName, NULL );
                }
             }
             else

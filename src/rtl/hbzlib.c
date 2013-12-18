@@ -46,9 +46,13 @@
  *
  */
 
+#define _HB_ZLIB_INTERNAL_
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbinit.h"
+#include "hbzlib.h"
 
 #include <zlib.h>
 
@@ -62,17 +66,21 @@
 #endif
 
 #if ! defined( _HB_Z_COMPRESSBOUND )
-static uLong hb_zlibCompressBound( uLong ulLen )
-{
-   return ulLen + ( ulLen >> 12 ) + ( ulLen >> 14 ) + ( ulLen >> 25 ) + 13;
-}
-#define compressBound( n )    hb_zlibCompressBound( n )
 /* additional 12 bytes is for GZIP compression which uses bigger header */
 #define deflateBound( s, n )  ( hb_zlibCompressBound( n ) + 12 )
 #endif
 
-static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
-                                        int * piResult )
+static HB_SIZE s_zlibCompressBound( HB_SIZE nLen )
+{
+#if ! defined( _HB_Z_COMPRESSBOUND )
+   return nLen + ( nLen >> 12 ) + ( nLen >> 14 ) + ( nLen >> 25 ) + 13;
+#else
+   return compressBound( ( uLong ) nLen );
+#endif
+}
+
+static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
+                                       int * piResult )
 {
    Byte buffer[ 1024 ];
    z_stream stream;
@@ -110,8 +118,8 @@ static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
    return nDest;
 }
 
-static int hb_zlibUncompress( char * pDst, HB_SIZE * pnDst,
-                              const char * pSrc, HB_SIZE nSrc )
+static int s_zlibUncompress( char * pDst, HB_SIZE * pnDst,
+                             const char * pSrc, HB_SIZE nSrc )
 {
    z_stream stream;
    int iResult;
@@ -139,6 +147,19 @@ static int hb_zlibUncompress( char * pDst, HB_SIZE * pnDst,
       }
       inflateEnd( &stream );
    }
+
+   return iResult;
+}
+
+static int s_zlibCompress( char * pDst, HB_SIZE * pnDst,
+                           const char * pSrc, HB_SIZE nSrc, int level )
+{
+   uLong ulDst = ( uLong ) *pnDst;
+   int iResult;
+
+   iResult = compress2( ( Bytef * ) pDst, &ulDst,
+                        ( Bytef * ) pSrc, ( uLong ) nSrc, level );
+   *pnDst = ulDst;
 
    return iResult;
 }
@@ -210,9 +231,9 @@ HB_FUNC( HB_ZLIBVERSION )
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retnint( compressBound( ( uLong ) hb_parclen( 1 ) ) );
+      hb_retnint( s_zlibCompressBound( hb_parclen( 1 ) ) );
    else if( HB_ISNUM( 1 ) )
-      hb_retnint( compressBound( ( uLong ) hb_parns( 1 ) ) );
+      hb_retnint( s_zlibCompressBound( hb_parns( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -231,7 +252,7 @@ HB_FUNC( HB_ZUNCOMPRESSLEN )
       int iResult = Z_OK;
 
       if( nLen )
-         nLen = hb_zlibUncompressedSize( szData, nLen, &iResult );
+         nLen = s_zlibUncompressedSize( szData, nLen, &iResult );
 
       if( iResult == Z_OK )
          hb_retnint( nLen );
@@ -259,40 +280,35 @@ HB_FUNC( HB_ZCOMPRESS )
       if( nLen )
       {
          PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         uLong ulDstLen;
+         HB_SIZE nDstLen;
          char * pDest;
          int iResult;
 
          if( pBuffer )
          {
-            HB_SIZE nDstLen;
             if( ! hb_itemGetWriteCL( pBuffer, &pDest, &nDstLen ) )
                pDest = NULL;
-            ulDstLen = ( uLong ) nDstLen;
          }
          else
          {
-            ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parns( 2 ) :
-                                       compressBound( ( uLong ) nLen );
-            pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
+            nDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parns( 2 ) :
+                                       s_zlibCompressBound( nLen );
+            pDest = ( char * ) hb_xalloc( nDstLen + 1 );
          }
 
          if( pDest )
          {
-            if( HB_ISNUM( 4 ) )
-               iResult = compress2( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ( uLong ) nLen, hb_parni( 4 ) );
-            else
-               iResult = compress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ( uLong ) nLen );
-
+            iResult = s_zlibCompress( pDest, &nDstLen, szData, nLen,
+                                      hb_parnidef( 4, Z_DEFAULT_COMPRESSION ) );
             if( ! pBuffer )
             {
                if( iResult == Z_OK )
-                  hb_retclen_buffer( pDest, ulDstLen );
+                  hb_retclen_buffer( pDest, nDstLen );
                else
                   hb_xfree( pDest );
             }
             else if( iResult == Z_OK )
-               hb_retclen( pDest, ulDstLen );
+               hb_retclen( pDest, nDstLen );
          }
          else
             iResult = Z_MEM_ERROR;
@@ -336,7 +352,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
          else
          {
             nDstLen = HB_ISNUM( 2 ) ? ( HB_SIZE ) hb_parns( 2 ) :
-                           hb_zlibUncompressedSize( szData, nLen, &iResult );
+                           s_zlibUncompressedSize( szData, nLen, &iResult );
             if( iResult == Z_OK )
             {
                pDest = ( char * ) hb_xalloc( nDstLen + 1 );
@@ -347,7 +363,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 
          if( iResult == Z_OK )
          {
-            iResult = hb_zlibUncompress( pDest, &nDstLen, szData, nLen );
+            iResult = s_zlibUncompress( pDest, &nDstLen, szData, nLen );
 
             if( ! pBuffer )
             {
@@ -377,9 +393,9 @@ HB_FUNC( HB_ZUNCOMPRESS )
 HB_FUNC( HB_GZCOMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retnint( compressBound( ( uLong ) hb_parclen( 1 ) ) + 12 );
+      hb_retnint( s_zlibCompressBound( ( uLong ) hb_parclen( 1 ) ) + 12 );
    else if( HB_ISNUM( 1 ) )
-      hb_retnint( compressBound( ( uLong ) hb_parns( 1 ) ) + 12 );
+      hb_retnint( s_zlibCompressBound( ( uLong ) hb_parns( 1 ) ) + 12 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -468,3 +484,15 @@ HB_FUNC( HB_ZERROR )
    hb_retc( zError( hb_parni( 1 ) ) );
 #endif
 }
+
+HB_CALL_ON_STARTUP_BEGIN( _hb_zlib_init_ )
+   hb_zlibInit( s_zlibCompressBound, s_zlibUncompressedSize,
+                s_zlibCompress, s_zlibUncompress );
+HB_CALL_ON_STARTUP_END( _hb_zlib_init_ )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup _hb_zlib_init_
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_zlib_init_ )
+   #include "hbiniseg.h"
+#endif

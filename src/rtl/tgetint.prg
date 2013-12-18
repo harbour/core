@@ -46,20 +46,27 @@
  *
  */
 
-REQUEST hb_PValue
-REQUEST PCount
-
 FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
 
-   IF bSetGet == NIL
+   IF ! HB_ISSTRING( cVarName )
+      RETURN NIL
+   ENDIF
+
+   IF ! HB_ISBLOCK( bSetGet )
       IF FieldPos( cVarName ) > 0
-         bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
-      ELSEIF __mvExist( cVarName )
-         bSetGet := {| _1 | iif( _1 == NIL, __mvGet( cVarName ), __mvPut( cVarName, _1 ) ) }
+         bSetGet := FieldWBlock( cVarName, Select() )
       ELSE
-         bSetGet := hb_macroBlock( "iif(PCount()==0," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
+         /* If cVarName is not a field name in current workarea then
+          * CA-Cl*pper always tries to create SET/GET block for memvar.
+          * Simple loop below with __mvGet() inside is small trick to
+          * force the same RTE as in CA-Cl*pper so user can create
+          * memvar dynamically in his custom error handler. [druzus]
+          */
+         DO WHILE ( bSetGet := MemVarBlock( cVarName ) ) == NIL
+            __mvGet( cVarName )
+         ENDDO
       ENDIF
    ENDIF
 
@@ -74,14 +81,23 @@ FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    LOCAL oGet
 
-   IF bGetArray == NIL
+   IF ! HB_ISSTRING( cVarName ) .OR. ! HB_ISARRAY( aIndex )
+      RETURN NIL
+   ENDIF
+
+   IF ! HB_ISBLOCK( bGetArray )
+      /* CA-Cl*pper creates standard SET/GET block here */
       IF FieldPos( cVarName ) > 0
-         bGetArray := hb_macroBlock( "FIELD->" + cVarName )
-      ELSEIF __mvExist( cVarName )
-         bGetArray := {|| __mvGet( cVarName ) }
+         bGetArray := FieldWBlock( cVarName, Select() )
       ELSE
-         bGetArray := hb_macroBlock( cVarName )
+         DO WHILE ( bGetArray := MemVarBlock( cVarName ) ) == NIL
+            __mvGet( cVarName )
+         ENDDO
       ENDIF
+   ENDIF
+
+   IF ! HB_ISARRAY( Eval( bGetArray ) )
+      RETURN NIL
    ENDIF
 
    oGet := GetNew(,, bGetArray, cVarName, cPicture )
