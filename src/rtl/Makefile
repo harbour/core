@@ -113,6 +113,7 @@ C_SOURCES := \
    hbstrsh.c \
    hbtoken.c \
    hbzlib.c \
+   hbzlibc.c \
    hbzlibgz.c \
    hbznet.c \
    idle.c \
@@ -242,7 +243,6 @@ PRG_SOURCES := \
    libname.prg \
    listbox.prg \
    memoedit.prg \
-   memvarbl.prg \
    memvarhb.prg \
    menuto.prg \
    menusys.prg \

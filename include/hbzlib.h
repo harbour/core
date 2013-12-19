@@ -1,8 +1,8 @@
 /*
  * Harbour Project source code:
- * MemVarBlock() function
+ *    dynamic reference to ZLIB functions
  *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,12 +46,30 @@
  *
  */
 
-#include "hbmemvar.ch"
+#ifndef HB_ZLIB_H_
+#define HB_ZLIB_H_
 
-FUNCTION MemVarBlock( cMemvar )
+#include "hbapi.h"
+#include "hbzlib.ch"
 
-   IF HB_ISSTRING( cMemvar ) .AND. __mvExist( cMemvar )
-      RETURN {| x | iif( x == NIL, __mvGet( cMemvar ), __mvPut( cMemvar, x ) ) }
-   ENDIF
+#if defined( _HB_ZLIB_INTERNAL_ )
 
-   RETURN NIL
+typedef HB_SIZE ( * HB_ZLIB_CBOUND )( HB_SIZE );
+typedef HB_SIZE ( * HB_ZLIB_UNSIZE )( const char *, HB_SIZE, int * );
+typedef int     ( * HB_ZLIB_COMPRS )( char *, HB_SIZE *, const char *, HB_SIZE, int );
+typedef int     ( * HB_ZLIB_UNCMPS )( char *, HB_SIZE *, const char *, HB_SIZE );
+
+extern void hb_zlibInit( HB_ZLIB_CBOUND, HB_ZLIB_UNSIZE, HB_ZLIB_COMPRS, HB_ZLIB_UNCMPS );
+
+#endif /* _HB_ZLIB_INTERNAL_ */
+
+HB_EXTERN_BEGIN
+
+extern HB_EXPORT HB_SIZE hb_zlibCompressBound( HB_SIZE nLen );
+extern HB_EXPORT HB_SIZE hb_zlibUncompressedSize( const char * pSrc, HB_SIZE nLen, int * piResult );
+extern HB_EXPORT int     hb_zlibCompress( char * pDst, HB_SIZE * pnDst, const char * pSrc, HB_SIZE nLen, int iLevel );
+extern HB_EXPORT int     hb_zlibUncompress( char * pDst, HB_SIZE * pnDst, const char * pSrc, HB_SIZE nLen );
+
+HB_EXTERN_END
+
+#endif /* HB_ZLIB_H_ */

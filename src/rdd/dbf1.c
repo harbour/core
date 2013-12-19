@@ -2630,31 +2630,18 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
             double dVal;
             int iSize;
 
-            if( pField->uiDec )
+            if( pField->uiDec || HB_IS_DOUBLE( pItem ) )
             {
+#if 0    /* this version rounds double values to nearest integer */
                dVal = hb_numDecConv( hb_itemGetND( pItem ), -( int ) pField->uiDec );
-               lVal = ( HB_MAXINT ) dVal;
-               if( ! HB_DBL_LIM_INT64( dVal ) )
-                  iSize = 99;
-               else
-#ifndef HB_LONG_LONG_OFF
-                  iSize = HB_LIM_INT8( lVal ) ? 1 :
-                        ( HB_LIM_INT16( lVal ) ? 2 :
-                        ( HB_LIM_INT24( lVal ) ? 3 :
-                        ( HB_LIM_INT32( lVal ) ? 4 : 8 ) ) );
-#else
-                  iSize = HB_DBL_LIM_INT8( dVal ) ? 1 :
-                        ( HB_DBL_LIM_INT16( dVal ) ? 2 :
-                        ( HB_DBL_LIM_INT24( dVal ) ? 3 :
-                        ( HB_DBL_LIM_INT32( dVal ) ? 4 : 8 ) ) );
-#endif
-            }
-            else if( HB_IS_DOUBLE( pItem ) )
-            {
+#else    /* this one truncates double value to integer dropping fractional part */
                dVal = hb_itemGetND( pItem );
+               if( pField->uiDec )
+                  dVal = hb_numDecConv( dVal, -( int ) pField->uiDec );
+#endif
                lVal = ( HB_MAXINT ) dVal;
                if( ! HB_DBL_LIM_INT64( dVal ) )
-                  iSize = 99;
+                  iSize = pField->uiLen + 1;
                else
 #ifndef HB_LONG_LONG_OFF
                   iSize = HB_LIM_INT8( lVal ) ? 1 :
