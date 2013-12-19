@@ -455,7 +455,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                   HB_COMP_EXPR_FREE( pArg );
                   pArg = hb_compExprNewNil( HB_COMP_PARAM );
                   if( HB_COMP_PARAM->iWarnings >= 2 )
-                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szVarName, NULL );
+                     hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, pArg->value.asSymbol.name, NULL );
                }
             }
             else
