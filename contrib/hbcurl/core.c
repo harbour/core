@@ -986,8 +986,13 @@ HB_FUNC( CURL_EASY_SETOPT )
                break;
 #endif
 #if LIBCURL_VERSION_NUM >= 0x072100
-            case HB_CURLOPT_BEARER:
-               res = curl_easy_setopt( hb_curl->curl, CURLOPT_BEARER, hb_parc( 3 ) );
+            case HB_CURLOPT_XOAUTH2_BEARER:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_XOAUTH2_BEARER, hb_parc( 3 ) );
+               break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x072200
+            case HB_CURLOPT_LOGIN_OPTIONS:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_LOGIN_OPTIONS, hb_parc( 3 ) );
                break;
 #endif
 
