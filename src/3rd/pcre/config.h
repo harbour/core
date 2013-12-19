@@ -217,9 +217,6 @@ sure both macros are undefined; an emulation function will then be used. */
 #define NEWLINE 10
 #endif
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
-
 /* PCRE uses recursive function calls to handle backtracking while matching.
    This can sometimes be a problem on systems that have stacks of limited
    size. Define NO_RECURSE to any value to get a version that doesn't use
@@ -239,7 +236,7 @@ sure both macros are undefined; an emulation function will then be used. */
 #define PACKAGE_NAME "PCRE"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PCRE 8.33"
+#define PACKAGE_STRING "PCRE 8.34"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pcre"
@@ -248,7 +245,14 @@ sure both macros are undefined; an emulation function will then be used. */
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "8.33"
+#define PACKAGE_VERSION "8.34"
+
+/* The value of PARENS_NEST_LIMIT specifies the maximum depth of nested
+   parentheses (of any kind) in a pattern. This limits the amount of system
+   stack that is used while compiling a pattern. */
+#ifndef PARENS_NEST_LIMIT
+#define PARENS_NEST_LIMIT 250
+#endif
 
 /* The value of PCREGREP_BUFSIZE determines the size of buffer used by
    pcregrep to hold parts of the file it is searching. This is also the
@@ -290,10 +294,6 @@ sure both macros are undefined; an emulation function will then be used. */
 
 /* Define to 1 if you have the ANSI C header files. */
 /* #undef STDC_HEADERS */
-
-/* Define to allow pcretest and pcregrep to be linked with gcov, so that they
-   are able to generate code coverage reports. */
-/* #undef SUPPORT_GCOV */
 
 /* Define to any value to enable support for Just-In-Time compiling. */
 /* #undef SUPPORT_JIT */
@@ -337,7 +337,7 @@ sure both macros are undefined; an emulation function will then be used. */
 /* #undef SUPPORT_VALGRIND */
 
 /* Version number of package */
-#define VERSION "8.33"
+#define VERSION "8.34"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
