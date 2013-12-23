@@ -52,7 +52,7 @@
  * hb_socketErrorString( [ nSocketErrror = hb_socketGetError() ] ) --> cError
  * hb_socketGetSockName( hSocket ) --> aAddr | NIL
  * hb_socketGetPeerName( hSocket ) --> aAddr | NIL
- * hb_socketOpen( [ nDomain = HB_SOCKET_AF_INET ] , [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
+ * hb_socketOpen( [ nDomain = HB_SOCKET_AF_INET ], [ nType = HB_SOCKET_PT_STREAM ], [ nProtocol = 0 ] ) --> hSocket
  * hb_socketClose( hSocket ) --> lSuccess
  * hb_socketShutdown( hSocket, [ nMode = HB_SOCKET_SHUT_RDWR ] ) --> lSuccess
  * hb_socketBind( hSocket, aAddr ) --> lSuccess
@@ -74,9 +74,9 @@
  * hb_socketGetSndBufSize( hSocket, @nValue ) --> lSuccess
  * hb_socketGetRcvBufSize( hSocket, @nValue ) --> lSuccess
  * hb_socketSetMulticast( hSocket, [ nFamily = HB_SOCKET_AF_INET ], cAddr ) --> lSuccess
- * hb_socketSelectRead( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * hb_socketSelectWrite( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
- * hb_socketSelectWriteEx( hSocket,  [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectRead( hSocket, [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWrite( hSocket, [ nTimeout = FOREVER ] ) --> nRet
+ * hb_socketSelectWriteEx( hSocket, [ nTimeout = FOREVER ] ) --> nRet
  * hb_socketSelect( aRead, lSetRead, aWrite, lSetWrite, aExcep, lSetExcep, [ nTimeout = FOREVER ] ) --> nRet
  * hb_socketResolveINetAddr( cAddr, nPort ) --> aAddr | NIL
  * hb_socketResolveAddr( cAddr, [ nFamily = HB_SOCKET_AF_INET ] ) --> cResolved

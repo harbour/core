@@ -567,8 +567,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_bOut              158
 
 #define _HBMK_cSignTime         159
+#define _HBMK_lCLI              160
 
-#define _HBMK_MAX_              159
+#define _HBMK_MAX_              160
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1006,6 +1007,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
 
    hbmk[ _HBMK_lCPP ] := NIL
    hbmk[ _HBMK_lGUI ] := .F.
+   hbmk[ _HBMK_lCLI ] := .F.
    hbmk[ _HBMK_lMT ] := .F.
    hbmk[ _HBMK_lPIC ] := .F.
    hbmk[ _HBMK_lDEBUG ] := .F.
@@ -2757,8 +2759,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
          ENDIF
 
-      CASE cParamL == "-gui"             ; hbmk[ _HBMK_lGUI ]       := .T.
-      CASE cParamL == "-std"             ; hbmk[ _HBMK_lGUI ]       := .F.
+      CASE cParamL == "-gui"             ; hbmk[ _HBMK_lGUI ]       := .T. ; hbmk[ _HBMK_lCLI ] := .F.
+      CASE cParamL == "-std"             ; hbmk[ _HBMK_lGUI ]       := .F. ; hbmk[ _HBMK_lCLI ] := .F.
+      CASE cParamL == "-cli"             ; hbmk[ _HBMK_lGUI ]       := .F. ; hbmk[ _HBMK_lCLI ] := .T.
 #ifdef HB_LEGACY_LEVEL4
       CASE cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. ; LegacyWarning( hbmk, aParam, "-gui" ) /* Compatibility */
       CASE cParamL == "-mconsole"        ; hbmk[ _HBMK_lGUI ]       := .F. ; LegacyWarning( hbmk, aParam, "-std" ) /* Compatibility */
@@ -7879,7 +7882,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cCommand += ".app"
          ENDIF
       #endif
-      cCommand := AllTrim( LaunchCommand( cCommand ) + " " + ArrayToList( l_aOPTRUN ) )
+      IF ! hbmk[ _HBMK_lCLI ]
+         cCommand := LaunchCommand( cCommand )
+      ENDIF
+      cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
             _hbmk_OutStd( hbmk, I_( "Running executable:" ) )
@@ -16250,7 +16256,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_Opt_Long := { ;
       NIL, ;
       { "-mt|-st"            , H_( "link with multi/single-thread Harbour VM" ) }, ;
-      { "-gui|-std"          , I_( "create GUI/console executable" ) }, ;
+      { "-gui|-std|-cli"     , I_( "create GUI/console/command-line executable" ) }, ;
       { "-main=<mainfunc>"   , H_( "override the name of starting function/procedure" ) }, ;
       { "-request=<func>"    , H_( "force function/procedure to be linked" ) }, ;
       { "-fullstatic"        , I_( "link with all static libs" ) }, ;
