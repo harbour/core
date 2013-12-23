@@ -88,6 +88,7 @@
 #include "hbstack.h"
 #include "hbthread.h"
 #include "netio.h"
+#include "hbserial.ch"
 
 /*
  * client code
@@ -1127,7 +1128,7 @@ static const char * s_netio_params( int iParam, int iMsg, const char * pszName, 
 
    while( ++iParam <= iPCount )
    {
-      itmData = hb_itemSerialize( hb_param( iParam, HB_IT_ANY ), HB_TRUE, &itmSize );
+      itmData = hb_itemSerialize( hb_param( iParam, HB_IT_ANY ), HB_SERIALIZE_NUMSIZE, &itmSize );
       if( data == NULL )
          data = ( char * ) memcpy( hb_xgrab( size + itmSize ), pszName, size );
       else

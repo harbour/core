@@ -125,6 +125,7 @@ PRG_HEADERS := \
    hbmemvar.ch \
    hboo.ch \
    hbpers.ch \
+   hbserial.ch \
    hbsetup.ch \
    hbsix.ch \
    hbsocket.ch \
