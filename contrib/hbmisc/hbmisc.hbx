@@ -97,7 +97,6 @@ DYNAMIC FileFindTime
 DYNAMIC hbmisc_DaysInMonth
 DYNAMIC hb_DynaCall1
 DYNAMIC hb_FAtEof
-DYNAMIC HB_FEof
 DYNAMIC hb_FGoBottom
 DYNAMIC hb_FGoto
 DYNAMIC hb_FGoTop
@@ -109,6 +108,7 @@ DYNAMIC hb_FRecNo
 DYNAMIC hb_FSelect
 DYNAMIC hb_FSkip
 DYNAMIC hb_FUse
+DYNAMIC hb_ntp_GetTimeUTC
 DYNAMIC hb_udpds_Find
 DYNAMIC hb_udpds_Start
 DYNAMIC hb_udpds_Stop
