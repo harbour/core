@@ -1602,7 +1602,6 @@ mailing list.
 * msvcia64 - Microsoft Visual C++ IA-64 (Itanium)
 
 ### win (partial support, some features may be missing)
-
 * clang    - Clang
 * watcom   - Open Watcom C/C++
 * bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
