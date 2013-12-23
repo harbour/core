@@ -180,7 +180,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemValToStr  ( PHB_ITEM pItem ); /* Convert an
 extern HB_EXPORT char *       hb_itemPadConv   ( PHB_ITEM pItem, HB_SIZE * pnSize, HB_BOOL * bFreeReq );
 extern HB_EXPORT void         hb_itemSwap      ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
-extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, HB_BOOL fNumSize, HB_SIZE * pnSize );
+extern HB_EXPORT char *       hb_itemSerialize( PHB_ITEM pItem, int iFlags, HB_SIZE * pnSize );
 extern HB_EXPORT PHB_ITEM     hb_itemDeserialize( const char ** pBufferPtr, HB_SIZE * pnSize );
 
 #if defined( _HB_API_INTERNAL_ )

@@ -84,6 +84,7 @@
 #include "hbthread.h"
 #include "hbdate.h"
 #include "netio.h"
+#include "hbserial.ch"
 
 
 /*
@@ -1243,7 +1244,7 @@ HB_FUNC( NETIO_SERVER )
                                  {
                                     HB_SIZE itmSize;
                                     PHB_ITEM pResult = hb_stackReturnItem();
-                                    char * itmData = hb_itemSerialize( pResult, HB_TRUE, &itmSize );
+                                    char * itmData = hb_itemSerialize( pResult, HB_SERIALIZE_NUMSIZE, &itmSize );
                                     if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
                                        msg = buffer;
                                     else if( ! ptr || itmSize > ( HB_SIZE ) size - NETIO_MSGLEN )
@@ -1341,7 +1342,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
       HB_SIZE nLen;
       long lLen;
 
-      itmData = hb_itemSerialize( pItem, HB_TRUE, &nLen );
+      itmData = hb_itemSerialize( pItem, HB_SERIALIZE_NUMSIZE, &nLen );
       lLen = ( long ) nLen;
       msg = ( char * ) hb_xgrab( lLen + NETIO_MSGLEN );
       HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SRVITEM );
