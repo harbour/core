@@ -647,6 +647,7 @@ EXTERNAL hb_HKeys
 EXTERNAL hb_HKeepOrder
 EXTERNAL hb_FGetAttr
 EXTERNAL hb_FSetAttr
+EXTERNAL hb_ZCompress
 
 /* For hbshell */
 
@@ -14114,6 +14115,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       ADD HEADER TO t_hHeaders FILE "hbmemvar.ch"
       ADD HEADER TO t_hHeaders FILE "hboo.ch"
       ADD HEADER TO t_hHeaders FILE "hbpers.ch"
+      ADD HEADER TO t_hHeaders FILE "hbserial.ch"
       ADD HEADER TO t_hHeaders FILE "hbsetup.ch"
       ADD HEADER TO t_hHeaders FILE "hbsix.ch"
       ADD HEADER TO t_hHeaders FILE "hbsocket.ch"
@@ -14150,6 +14152,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       ADD HEADER TO t_hHeaders FILE "hbgtinfo.ch"
       ADD HEADER TO t_hHeaders FILE "hbhash.ch"
       ADD HEADER TO t_hHeaders FILE "hbmemory.ch"
+      ADD HEADER TO t_hHeaders FILE "hbserial.ch"
       ADD HEADER TO t_hHeaders FILE "hbver.ch"
       ADD HEADER TO t_hHeaders FILE "inkey.ch"
       ADD HEADER TO t_hHeaders FILE "setcurs.ch"
