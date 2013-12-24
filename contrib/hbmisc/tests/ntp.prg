@@ -10,7 +10,7 @@ PROCEDURE Main()
 
    ?? "UTC   time:", tTime := hb_ntp_GetTimeUTC( "0.europe.pool.ntp.org" )
    ?
-   ?? "Local time:", tTime + ( hb_UTCOffset() * ( 1 / 86400 ) )
+   ?? "Local time:", tTime + hb_UTCOffset() / 86400
    ?
 
    RETURN

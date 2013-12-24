@@ -64,7 +64,7 @@ FUNCTION hb_ntp_GetTimeUTC( cServer, nPort, nTimeOut )
          IF hb_socketSendTo( hSocket, cBuffer,,, { HB_SOCKET_AF_INET, hb_socketResolveAddr( cServer ), nPort } ) == hb_BLen( cBuffer )
             cBuffer := Space( 12 * 4 )
             IF hb_socketRecvFrom( hSocket, @cBuffer,,,, nTimeOut ) == hb_BLen( cBuffer )
-               tTime := hb_SToT( "19700101" ) + ( ( Bin2U( ntohl( hb_BSubStr( cBuffer, ( 10 * 4 ) + 1, 4 ) ) ) - 2208988800 ) * ( 1 / 86400 ) )
+               tTime := hb_SToT( "19700101" ) + ( Bin2U( ntohl( hb_BSubStr( cBuffer, 10 * 4 + 1, 4 ) ) ) - 2208988800 ) / 86400
             ENDIF
          ENDIF
          hb_socketClose( hSocket )
