@@ -167,7 +167,7 @@ STATIC FUNCTION Bin2U( c )
 
    LOCAL l := Bin2L( c )
 
-   RETURN iif( l < 0, l + 4294967296, l )
+   RETURN iif( l < 0, l + ( 2 ^ 32 ), l )
 
 FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
