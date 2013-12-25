@@ -15130,7 +15130,7 @@ STATIC PROCEDURE __hbshell_Err( oError, cCommand )
    IF oError:ClassName() == "ERROR"
       cMessage += oError:Description
       IF ! Empty( oError:Operation )
-         cMessage += " " + oError:Operation
+         cMessage += ": " + oError:Operation
       ENDIF
       IF HB_ISARRAY( oError:Args ) .AND. Len( oError:Args ) > 0
          cMessage += ";" + I_( "Arguments:" )
