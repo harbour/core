@@ -123,7 +123,7 @@ STATIC FUNCTION ReferParam()
    PassByValue( {| lEnd | ;
       bResult := GetBlock( @lEnd ), ;
       SetByRef( @lEnd ) } )
-   // Clipper & xHarbour it's .T.
+   // Clipper and xHarbour it's .T.
    // In Harbour it is .F.
    ? "Printed value in Clipper  .T. =", Eval( bResult )
    ?
@@ -134,7 +134,7 @@ STATIC FUNCTION ReferParam()
    PassByRef( {| lEnd | ;
       bResult := GetBlock( @lEnd ), ;
       SetByRef( @lEnd ) } )
-   // Clipper & xHarbour it's .T.
+   // Clipper and xHarbour it's .T.
    // In Harbour it is .F.
    ? "Printed value in Clipper  .T. =", Eval( bResult )
    ?
@@ -144,14 +144,14 @@ STATIC FUNCTION ReferParam()
    PassByValue( {| lEnd | ;
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
-   // Clipper & Harbour it's .F.
+   // Clipper and Harbour it's .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 
    PassByRef( {| lEnd | ;
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
-   // Clipper & Harbour it's .F.
+   // Clipper and Harbour it's .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 

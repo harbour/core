@@ -477,7 +477,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
       FOR EACH aField IN aNotSessionFlds
          cFieldsNotInSession += aField[ 1 ] + "=" + aField[ 2 ] + "&"
       NEXT
-      // Delete last & char
+      // Delete last '&' char
       cFieldsNotInSession := Left( cFieldsNotInSession, Len( cFieldsNotInSession ) - 1 )
    ENDIF
 

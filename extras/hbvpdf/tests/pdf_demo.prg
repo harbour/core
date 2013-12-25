@@ -37,7 +37,7 @@ PROCEDURE Main()
 
    pdfNewPage( "LETTER", "P", 6 )
 
-   pdfBookAdd( "Grids & Borders", 1, aReport[ REPORTPAGE ], 0 )
+   pdfBookAdd( "Grids and Borders", 1, aReport[ REPORTPAGE ], 0 )
    pdfBookAdd( "Simple Grid", 2, aReport[ REPORTPAGE ], 0 )
 
    FOR nI := 0 TO 792 STEP 36
@@ -89,7 +89,7 @@ PROCEDURE Main()
    pdfNewPage( "LETTER", "P", 6 )
    pdfBox1( 0, 0, 100, 200, 10, Chr( 0 ) + Chr( 255 ) + Chr( 0 ), Chr( 255 ) + Chr( 255 ) + Chr( 0 ) )
    pdfBookAdd( "Memos", 1, aReport[ REPORTPAGE ], 0 )
-   pdfBookAdd( "Different Styles & Colors", 2, aReport[ REPORTPAGE ], 0 )
+   pdfBookAdd( "Different Styles and Colors", 2, aReport[ REPORTPAGE ], 0 )
    nWidth := 90
    nTab := 0
 

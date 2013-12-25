@@ -535,7 +535,7 @@ PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
    cFile := TempFile()
    dbCreate( cFile, aStructure )
 
-   /* Abre Tabela */
+   /* Open table */
    dbUseArea( .T., NIL, cFile, cAlias, .F. )
 
    FOR i := 1 TO Len( aIndex )

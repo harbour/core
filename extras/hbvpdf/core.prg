@@ -671,7 +671,7 @@ STATIC FUNCTION pdfClosePage()
 
          AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
-         // "/Filter /CCITTFaxDecode" for B&W only ?
+         // "/Filter /CCITTFaxDecode" for black and white only ?
          cTemp :=  ;
             hb_ntos( t_aReport[ IMAGES ][ nI ][ 2 ] ) + " 0 obj" + CRLF + ;
             "<<" + CRLF + ;
@@ -927,7 +927,7 @@ FUNCTION pdfOpen( cFile, nLen, lOptimize )
    t_aReport[ HEADEREDIT   ] := .F.
    t_aReport[ NEXTOBJ      ] := 0
    t_aReport[ PDFTOP       ] := 1 // top
-   t_aReport[ PDFLEFT      ] := 10 // left & right
+   t_aReport[ PDFLEFT      ] := 10 // left and right
    t_aReport[ PDFBOTTOM    ] := t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
    t_aReport[ HANDLE       ] := FCreate( cFile )
    t_aReport[ PAGES        ] := {}
@@ -1525,7 +1525,7 @@ FUNCTION pdfDrawHeader()
    ELSE
       IF t_aReport[ MARGINS ]
          t_aReport[ PDFTOP ] := 1 // top
-         t_aReport[ PDFLEFT ] := 10 // left & right
+         t_aReport[ PDFLEFT ] := 10 // left and right
          t_aReport[ PDFBOTTOM ] := t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 
          t_aReport[ MARGINS ] := .F.

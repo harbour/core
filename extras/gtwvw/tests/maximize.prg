@@ -111,7 +111,7 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
          maxsavedscrrow := Min( Min( s_nNormalMaxrow, wvw_MaxMaxRow() ), MaxRow() )
          maxsavedscrcol := Min( Min( s_nNormalMaxcol, wvw_MaxMaxCol() ), MaxCol() )
          cScreen := SaveScreen( 0, 0, maxsavedscrrow, maxsavedscrcol )
-         IF SetMode( wvw_MaxMaxRow() + 1, wvw_MaxMaxCol() + 1 ) // adjust MaxRow() & MaxCol()
+         IF SetMode( wvw_MaxMaxRow() + 1, wvw_MaxMaxCol() + 1 ) // adjust MaxRow() and MaxCol()
             RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
          ENDIF
          diminfo()  // updatescr()

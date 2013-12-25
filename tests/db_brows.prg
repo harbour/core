@@ -17,7 +17,7 @@
 //                Function Defpict()
 //                Function NUM_STR()
 //
-//        Tables: USE &filename
+//        Tables: USE ( filename )
 //
 //     Reformatted by Click! 2.00 on Apr-20-2001 at 11:46 am
 //

@@ -17,12 +17,12 @@ PROCEDURE Main()
    hb_idleAdd( {|| QOut( "Idle Block2" ) } )
 
    CLS
-   ? "Idle Block & Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
+   ? "Idle Block and Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
    ?
    Inkey( 2 )
 
    ?
-   ? "Again - Idle Block & Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
+   ? "Again - Idle Block and Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
    ?
    Inkey( 2 )
    ?

@@ -4450,7 +4450,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #ifdef HARBOUR_SUPPORT
             IF ! Empty( cLIB_BASE_PCRE ) .AND. ! hb_FileExists( _HBLIB_FULLPATH( cLIB_BASE_PCRE ) )
                IF hbmk[ _HBMK_cPLAT ] == "bsd"
-                 AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )
                ENDIF
                AAdd( l_aLIBSYS, "pcre" )
                cLIB_BASE_PCRE := NIL

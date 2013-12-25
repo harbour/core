@@ -683,6 +683,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "debian/rules", ;
       "*.mk", ;
       "*.yyc", ;
+      "*.cs", ;
       "*.dif", ;
       "*.htm", ;
       "*.html", ;
