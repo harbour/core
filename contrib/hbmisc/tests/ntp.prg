@@ -8,9 +8,11 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   ?? "UTC   time:", tTime := hb_ntp_GetTimeUTC( "0.europe.pool.ntp.org" )
+   ?? "UTC    time:", tTime := hb_ntp_GetTimeUTC( "0.europe.pool.ntp.org" )
    ?
-   ?? "Local time:", tTime + hb_UTCOffset() / 86400
+   ?? "Local  time:", tTime + hb_UTCOffset() / 86400
+   ?
+   ?? "System time:", hb_DateTime()
    ?
 
    RETURN

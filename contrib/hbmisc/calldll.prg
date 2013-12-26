@@ -59,8 +59,16 @@ PROCEDURE UnloadAllDll()
 
    RETURN
 
-FUNCTION CallDll32( cFunction, cLibrary, ... )
+FUNCTION CallDll( cFunction, cLibrary, ... )
    RETURN hb_DynaCall1( cFunction, cLibrary, NIL, ... )
+
+#if defined( HB_LEGACY_LEVEL4 )
+
+/* Compatibility */
+FUNCTION CallDll32( ... )
+   RETURN CallDll( ... )
+
+#endif
 
 #if define( __PLATFORM__WINDOWS )
    /* Use Windows system .dll calling convention on Windows systems,

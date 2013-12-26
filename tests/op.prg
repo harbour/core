@@ -48,12 +48,7 @@
 
 #include "hbclass.ch"
 
-// Right now you can overload operators with Harbour
-// as C++ does!!! Not all operators are available. ASAP we will provide all
-// of them.
-
-
-//
+// You can overload operators with Harbour as C++ does!
 
 PROCEDURE Main()
 
@@ -76,35 +71,25 @@ CREATE CLASS TCar
 
    METHOD New( cColor, nDoors ) CONSTRUCTOR
 
-   METHOD SUM( oObject ) OPERATOR '+'
+   METHOD Sum( oObject ) OPERATOR '+'
 
 ENDCLASS
 
-//
-
 METHOD New( cColor, nDoors ) CLASS TCar
 
-   IF cColor == NIL
-      cColor := "White"
-   ENDIF
-   IF nDoors == NIL
-      nDoors := 4
-   ENDIF
+   hb_default( @cColor, "White" )
+   hb_default( @nDoors, 4 )
 
    ::cColor := cColor
    ::nDoors := nDoors
 
    RETURN Self
 
-//
-
-METHOD SUM( oObject ) CLASS TCar
+METHOD Sum( oObject ) CLASS TCar
 
    HB_SYMBOL_UNUSED( oObject )
 
    Alert( "+ has a special meaning and " + ;
-      "functionality for TCar Class objects!!!" )
+      "functionality for TCar Class objects!" )
 
    RETURN NIL
-
-//

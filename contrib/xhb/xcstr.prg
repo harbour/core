@@ -49,13 +49,6 @@
 
 #include "hbclass.ch"
 
-/*
-   For performance NOT using OS indpendant R/T function,
-   this define only used in ValTpPrg() which currently only used in win32.
- */
-
-#define CRLF Chr( 13 ) + Chr( 10 )
-
 #xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 //
@@ -69,44 +62,33 @@ FUNCTION CStrToVal( cExp, cType )
    SWITCH cType
    CASE "C"
       RETURN cExp
-
    CASE "P"
       RETURN hb_HexToNum( cExp )
-
    CASE "D"
       IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
-
    CASE "L"
       RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
-
    CASE "N"
       RETURN Val( cExp )
-
    CASE "U"
       RETURN NIL
-
-   /*
+#if 0
    CASE "A"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
    CASE "B"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
    CASE "O"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-   */
-
+#endif
    OTHERWISE
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
 
    RETURN NIL
-
-//
 
 FUNCTION StringToLiteral( cString )
 
@@ -133,8 +115,6 @@ FUNCTION StringToLiteral( cString )
 
    RETURN "[" + cString + "]"
 
-//
-
 FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    LOCAL aVar, cRet, cPad, nObj
@@ -144,16 +124,12 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
    SWITCH ValType( xVal )
    CASE "C"
       RETURN StringToLiteral( xVal )
-
    CASE "D"
       RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
-
    CASE "L"
       RETURN iif( xVal, ".T.", ".F." )
-
    CASE "N"
       RETURN hb_ntos( xVal )
-
    CASE "A"
       IF cName == NIL
          nPad := 0
@@ -170,13 +146,13 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
       AAdd( aObjs, { xVal, cName } )
 
-      cRet  += "Array(" + hb_ntos( Len( xVal ) ) + ")" + CRLF
+      cRet += "Array(" + hb_ntos( Len( xVal ) ) + ")" + hb_eol()
 
       nPad += 3
-      cPad  := Space( nPad )
+      cPad := Space( nPad )
 
       FOR EACH aVar IN xVal
-         cRet += cPad + cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]", nPad, aObjs ) + CRLF
+         cRet += cPad + cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]", nPad, aObjs ) + hb_eol()
       NEXT
 
       nPad -= 3
@@ -206,10 +182,8 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
    CASE "B"
       RETURN ValToPrgExp( xVal )
 #endif
-
    CASE "P"
       RETURN "0x" + hb_NumToHex( xVal )
-
    CASE "O"
       /* TODO: Use HBPersistent() when avialable! */
       IF cName == NIL
@@ -227,13 +201,13 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
       AAdd( aObjs, { xVal, cName } )
 
-      cRet += xVal:ClassName + "():New()" + CRLF
+      cRet += xVal:ClassName + "():New()" + hb_eol()
 
       nPad += 3
       cPad := Space( nPad )
 
       FOR EACH aVar IN __objGetValueList( xVal )
-         cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + CRLF
+         cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + hb_eol()
       NEXT
 
       nPad -= 3
@@ -252,13 +226,8 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    RETURN cRet
 
-//
-
 FUNCTION PrgExpToVal( cExp )
-
    RETURN Eval( hb_macroBlock( cExp ) )
-
-//
 
 FUNCTION ValToArray( xVal )
 
@@ -268,8 +237,6 @@ FUNCTION ValToArray( xVal )
 
    RETURN { xVal }
 
-//
-
 FUNCTION ValToBlock( xVal )
 
    IF HB_ISBLOCK( xVal )
@@ -278,8 +245,6 @@ FUNCTION ValToBlock( xVal )
 
    RETURN {|| xVal }
 
-//
-
 FUNCTION ValToCharacter( xVal )
 
    IF HB_ISSTRING( xVal )
@@ -287,8 +252,6 @@ FUNCTION ValToCharacter( xVal )
    ENDIF
 
    RETURN LTrim( CStr( xVal ) )
-
-//
 
 FUNCTION ValToDate( xVal )
 
@@ -299,10 +262,8 @@ FUNCTION ValToDate( xVal )
    CASE "O"
    CASE "U"
       EXIT
-
    CASE "B"
       RETURN ValToDate( Eval( xVal ) )
-
    CASE "C"
       IF SubStr( DToS( xVal ), 3, 1 ) >= "0" .AND. ;
          SubStr( DToS( xVal ), 3, 1 ) <= "9" .AND. ;
@@ -312,21 +273,16 @@ FUNCTION ValToDate( xVal )
       ELSE
          RETURN CToD( xVal )
       ENDIF
-
    CASE "D"
       RETURN xVal
-
    CASE "N"
    CASE "P"
       RETURN 0d19000101 + xVal
-
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
    RETURN hb_SToD()
-
-//
 
 FUNCTION ValToHash( xVal )
 
@@ -335,8 +291,6 @@ FUNCTION ValToHash( xVal )
    ENDIF
 
    RETURN { ValToCharacter( xVal ) => xVal }
-
-//
 
 FUNCTION ValToLogical( xVal )
 
@@ -348,10 +302,8 @@ FUNCTION ValToLogical( xVal )
    CASE "O"
    CASE "P"
       RETURN ! Empty( xVal )
-
    CASE "B"
       RETURN ValToLogical( Eval( xVal ) )
-
    CASE "C"
       IF Left( xVal, 1 ) == "." .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
          RETURN Upper( SubStr( xVal, 2, 1 ) ) $ "TY"
@@ -361,20 +313,15 @@ FUNCTION ValToLogical( xVal )
          RETURN ! Empty( xVal )
       ENDIF
       EXIT
-
    CASE "L"
       RETURN xVal
-
    CASE "U"
       RETURN .F.
-
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
    RETURN .F.
-
-//
 
 FUNCTION ValToNumber( xVal )
 
@@ -382,38 +329,27 @@ FUNCTION ValToNumber( xVal )
    CASE "A"
    CASE "H"
       RETURN Len( xVal )
-
    CASE "B"
       RETURN ValToNumber( Eval( xVal ) )
-
    CASE "C"
       RETURN Val( xVal )
-
    CASE "D"
       RETURN xVal - 0d19000101
-
    CASE "L"
       RETURN iif( xVal, 1, 0 )
-
    CASE "O"
       RETURN xVal:hClass
-
    CASE "N"
       RETURN xVal
-
    CASE "P"
       RETURN xVal - 0
-
    CASE "U"
       RETURN 0
-
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
    RETURN 0
-
-//
 
 FUNCTION ValToObject( xVal )
 
@@ -421,83 +357,61 @@ FUNCTION ValToObject( xVal )
    CASE "A"
       ENABLE TYPE CLASS ARRAY
       EXIT
-
    CASE "B"
       ENABLE TYPE CLASS BLOCK
       EXIT
-
    CASE "C"
       ENABLE TYPE CLASS CHARACTER
       EXIT
-
    CASE "D"
       ENABLE TYPE CLASS DATE
       EXIT
-
    CASE "H"
       ENABLE TYPE CLASS HASH
       EXIT
-
    CASE "L"
       ENABLE TYPE CLASS LOGICAL
       EXIT
-
    CASE "N"
       ENABLE TYPE CLASS NUMERIC
       EXIT
-
    CASE "O"
       RETURN xVal
-
    CASE "P"
       ENABLE TYPE CLASS POINTER
       EXIT
-
    CASE "U"
       ENABLE TYPE CLASS NIL
       EXIT
-
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
 
    RETURN 0
 
-//
-
 FUNCTION ValToType( xVal, cType )
 
    SWITCH cType
    CASE "A"
       RETURN ValToArray( xVal )
-
    CASE "B"
       RETURN ValToBlock( xVal )
-
    CASE "C"
       RETURN ValToCharacter( xVal )
-
    CASE "D"
       RETURN ValToDate( xVal )
-
    CASE "H"
       RETURN ValToHash( xVal )
-
    CASE "L"
       RETURN ValToLogical( xVal )
-
    CASE "N"
       RETURN ValToNumber( xVal )
-
    CASE "O"
       RETURN ValToObject( xVal )
-
    CASE "P"
       RETURN ValToNumber( xVal )
-
    CASE "U"
       RETURN NIL
-
    OTHERWISE
       Throw( xhb_ErrorNew( "VALTOTYPE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
