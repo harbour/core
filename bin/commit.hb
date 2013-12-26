@@ -112,7 +112,7 @@ PROCEDURE Main()
             ENDIF
          ENDIF
 
-         // ;
+         //
 
          cLog := MemoRead( cLogName )
 

@@ -93,10 +93,10 @@ FUNCTION __dbCopySt( cFileName, aFieldList )
 FUNCTION __dbCopyXS( cFileName )
    RETURN __dbCopyXStruct( cFileName )
 
-/* ; NOTE: The created table will be kept open if lOpenMode parameter
-           is of logical type. If .T. it will be opened in a new workarea,
-           if .F. it will be opened in the current one. */
-/* ; NOTE: Has an identical parameter list with dbCreate() */
+/* NOTE: The created table will be kept open if lOpenMode parameter
+         is of logical type. If .T. it will be opened in a new workarea,
+         if .F. it will be opened in the current one. */
+/* NOTE: Has an identical parameter list with dbCreate() */
 
 FUNCTION __dbOpenSD( cFile, aStruct, cRDD, lOpenMode, cAlias, cDelimArg, cCodePage, nConnection )
    RETURN __dbOpenSDF( cFile, aStruct, cRDD, lOpenMode, cAlias, cDelimArg, cCodePage, nConnection )

@@ -203,9 +203,9 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          IF lLeftDown
 
-            IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) // ; hit nowhere.
+            IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )  // hit nowhere.
 
-            ELSEIF nNewLevel != ::nMenuLevel // ; menu level change.
+            ELSEIF nNewLevel != ::nMenuLevel  // menu level change.
 
                IF nNewItem != oNewMenu:current .AND. oNewMenu:GetItem( nNewItem ):enabled
                   ::oMenu := oNewMenu
@@ -216,7 +216,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                   ::ShowMsg( .T. )
                ENDIF
 
-            ELSEIF nNewItem != oNewMenu:Current() // ; menu item change.
+            ELSEIF nNewItem != oNewMenu:Current()  // menu item change.
 
                ::PopChild( ::nMenuLevel )
 
@@ -411,7 +411,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
       CASE GetList != NIL .AND. ( nNewItem := Accelerator( GetList, nKey, ::GetMsgArray() ) ) != 0
 
          GetActive():ExitState := GE_SHORTCUT
-         ReadStats( SNNEXTGET, nNewItem ) // Reset Get System values
+         ReadStats( SNNEXTGET, nNewItem )  // reset get system values
          IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
             ::PopMenu()
          ENDIF
@@ -419,7 +419,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          nReturn := -1
          EXIT
 
-      CASE ( nNewItem := oTopMenu:getAccel( nKey ) ) != 0 // ; check for the top menu item accelerator key
+      CASE ( nNewItem := oTopMenu:getAccel( nKey ) ) != 0  // check for the top menu item accelerator key
 
          IF oTopMenu:getItem( nNewItem ):enabled
             ::PopAll()

@@ -102,7 +102,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-
+   //
 
    cCommandLine := cArg01 + " " + cArg02 + " " + cArg03 + " " + cArg04
 
@@ -110,7 +110,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    s_lRTEDetails := "RTEDETAILS" $ Upper( cCommandLine )
    s_lObjectDump := !( "NODUMP" $ Upper( cCommandLine ) )
 
-
+   //
 
    #ifdef __HARBOUR__
       s_fhnd := FCreate( "tget_hb.txt", FC_NORMAL )

@@ -1,6 +1,6 @@
 @echo off
 
-rem ; TOFIX: Add compilation for C sources
+rem TOFIX: Add compilation for C sources
 set HB_CLIPOPT=%HB_CLIPOPT% /DRT_NO_C
 
 xpp hbtest.prg   /w /n %HB_CLIPOPT%

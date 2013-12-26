@@ -3145,7 +3145,7 @@ METHOD VarGetInfo( aVar ) CLASS HBDebugger
    OTHERWISE; RETURN aVar[ VAR_NAME ] + " <" + aVar[ VAR_TYPE ] + ", " + ValType( uValue ) + ">: " + __dbgValToStr( uValue )
    ENDSWITCH
 
-   // ; Never reached
+   // Never reached
 
    RETURN ""
 
@@ -3159,7 +3159,7 @@ METHOD VarGetValue( aVar ) CLASS HBDebugger
    OTHERWISE; RETURN aVar[ VAR_POS ] // Public or Private
    ENDSWITCH
 
-   // ; Never reached
+   // Never reached
 
    RETURN NIL
 

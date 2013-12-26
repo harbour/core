@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    RETURN
 
-// ;
+//
 
 CREATE CLASS TTest INHERIT TParent
 
@@ -35,7 +35,7 @@ METHOD New( One, Two ) CLASS TTest
 
    RETURN Self
 
-// ;
+//
 
 CREATE CLASS TParent
 

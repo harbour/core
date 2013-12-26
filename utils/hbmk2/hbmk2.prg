@@ -1621,8 +1621,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aArgs := ArrayJoin( ListToArray( cEnv ), aArgs )
    ENDIF
 
-   /* ; */
-
    FOR EACH cParam IN aArgs
 
       cParamL := Lower( cParam )
@@ -5339,10 +5337,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
          #endif
 
-         /* ; Not enabled yet, because it would cause a lot of 3rd party code to
-              break due to sloppy type conversions and other trivial coding mistakes
-              usually not noticed with C compilers. The other side-effect, is
-              much slower compilation process. [vszakats] */
+         /* Not enabled yet, because it would cause a lot of 3rd party code to
+            break due to sloppy type conversions and other trivial coding mistakes
+            usually not noticed with C compilers. The other side-effect, is
+            much slower compilation process. [vszakats] */
 #if 0
          IF hbmk[ _HBMK_lCPP ] == NIL
             hbmk[ _HBMK_lCPP ] := .T.
@@ -5917,8 +5915,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
       RETURN _EXIT_PLUGINPREALL
    ENDIF
-
-   /* ; */
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       /* OBSOLETE functionality */
@@ -10111,8 +10107,6 @@ STATIC FUNCTION hbmk_SecToken()
 
    RETURN s_cToken
 
-/* ; */
-
 STATIC FUNCTION PlugIn_make_ctx( hbmk, cState, hVars )
    RETURN { ;
       "apiver"        => _HBMK_PLUGIN_APIVER        , ;
@@ -11717,8 +11711,6 @@ STATIC FUNCTION hbmk_builtin_Exists( cFileName )
 
 STATIC FUNCTION hbmk_builtin_Load( cFileName )
    RETURN Eval( hbmk_builtin_List()[ hb_FNameNameExt( cFileName ) ] )
-
-/* ; */
 
 STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cParentFileName )
 
@@ -16932,7 +16924,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       NIL, ;
       { "Viktor Szakáts (vszakats.net/harbour)", "" } }
 
-   // ; Examples
+   // Examples
 
 #ifdef HARBOUR_SUPPORT
    LOCAL aHdr_ExampleBasic := { ;
@@ -16986,7 +16978,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    LOCAL aLst_Config := { ;
       NIL }
 
-   // ;
+   //
 
    hb_default( @lMore, .F. )
    hb_default( @lLong, .F. )

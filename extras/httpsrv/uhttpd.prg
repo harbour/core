@@ -2483,7 +2483,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
       cDOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
-   // ;
+   //
 
    cCallstack := ""
    n := 1

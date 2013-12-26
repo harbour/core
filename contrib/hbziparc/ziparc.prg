@@ -301,7 +301,7 @@ FUNCTION hb_ZipFile( ;
       hb_default( @lWithPath, .F. )
       hb_default( @lWithDrive, .F. )
 
-      // ;
+      //
 
       /* NOTE: Try not to add the .zip file to itself. */
       hb_FNameSplit( cFileName, NIL, @cName, @cExt )
@@ -336,7 +336,7 @@ FUNCTION hb_ZipFile( ;
 
       aExclFile := NIL
 
-      // ;
+      //
 
       nPos := 1
       FOR EACH cFileToZip IN aProcFile

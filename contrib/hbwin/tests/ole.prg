@@ -379,7 +379,7 @@ STATIC PROCEDURE Exm_OOOpen()
 
 STATIC FUNCTION OO_ConvertToURL( cString )
 
-   // ; Handle UNC paths
+   // Handle UNC paths
    IF !( Left( cString, 2 ) == "\\" )
       cString := StrTran( cString, ":", "|" )
       cString := "///" + cString
@@ -399,7 +399,7 @@ STATIC PROCEDURE Exm_CDO()
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // ; cdoSendUsingPort
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // cdoSendUsingPort
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "localhost"
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 25
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120

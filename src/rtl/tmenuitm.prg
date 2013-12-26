@@ -96,8 +96,8 @@ METHOD caption( cCaption ) CLASS MenuItem
 
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
 
-      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-      //          to use it for flag purposes.
+      /* TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+                to use it for flag purposes. */
       IF ::cCaption == HB_MENU_SEPARATOR_UNI
          ::boData   := NIL
          ::lChecked := .F.
@@ -109,8 +109,8 @@ METHOD caption( cCaption ) CLASS MenuItem
 
 METHOD checked( lChecked ) CLASS MenuItem
 
-   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-   //          to use it for flag purposes.
+   /* TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+             to use it for flag purposes. */
    IF lChecked != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
       ::lChecked := __eInstVar53( Self, "CHECKED", lChecked, "L", 1001 )
    ENDIF
@@ -131,8 +131,8 @@ METHOD data( boData ) CLASS MenuItem
 
 METHOD enabled( lEnabled ) CLASS MenuItem
 
-   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-   //          to use it for flag purposes.
+   /* TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+             to use it for flag purposes. */
    IF lEnabled != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
       ::lEnabled := __eInstVar53( Self, "ENABLED", lEnabled, "L", 1001 )
    ENDIF

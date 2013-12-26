@@ -59,7 +59,7 @@ PROCEDURE Main()
       ? ">" + cData + "<"
       DllUnload( hDLL )
 
-      // ; Testing failure 1
+      // Testing failure 1
       hDLL := DllLoad( "pscript.dll" )
       cData := Space( 24 )
       DllCall( hDll, DLL_OSAPI, "PSGet__Version", @cData )
@@ -67,7 +67,7 @@ PROCEDURE Main()
       DllUnload( hDLL )
    ENDIF
 
-   // ; Testing failure 2
+   // Testing failure 2
    hDLL := DllLoad( "nothere.dll" )
    cData := Space( 24 )
    DllCall( hDll, NIL, "PSGetVersion", @cData )

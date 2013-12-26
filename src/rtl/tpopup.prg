@@ -220,8 +220,8 @@ METHOD display() CLASS PopupMenu
 
          nTop++
 
-         // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-         //          to use it for flag purposes.
+         /* TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+                   to use it for flag purposes. */
          IF aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
 
             hb_DispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
@@ -423,8 +423,8 @@ METHOD hitTest( nMRow, nMCol ) CLASS PopupMenu
 
       nPos := nMRow - ::nTop
       DO CASE
-      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-      //          to use it for flag purposes.
+      /* TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+                to use it for flag purposes. */
       CASE ::aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
          RETURN HTSEPARATOR
       OTHERWISE
