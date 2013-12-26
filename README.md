@@ -460,8 +460,8 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_FREEIMAGE=C:\FreeImage\Dist
     HB_WITH_GD=C:\gd\include
     HB_WITH_GPM= (on Linux only)
-    HB_WITH_GS=C:\ghostscript-9.01\psi
-    HB_WITH_GS_BIN=C:\ghostscript-9.01\bin (on Windows)
+    HB_WITH_GS=C:\ghostscript\psi
+    HB_WITH_GS_BIN=C:\ghostscript\bin (on Windows)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
     HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
     HB_WITH_LIBMAGIC= (currently on *nix systems)
@@ -483,7 +483,7 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_TINYMT=C:\tinymt\tinymt (defaults to locally hosted version)
     HB_WITH_WATT= (on MS-DOS systems)
     HB_WITH_X11= (on *nix systems)
-    HB_WITH_XDIFF=C:\libxdiff-0.23\xdiff (defaults to locally hosted version if not found)
+    HB_WITH_XDIFF=C:\libxdiff\xdiff (defaults to locally hosted version if not found)
     HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
 To explicitly disable any given components, use the value `no`.
@@ -528,7 +528,7 @@ advanced users only):
 
 ### For contrib/rddads lib:
    Download and install *Advantage Client Engine API for Linux* package
-   (f.e. `aceapi-10.00.0.3.tar.gz`)
+   (f.e. `aceapi-11.10.0.10.tar.gz`)
 
 ### For contrib/hbhpdf lib, if you don't wish to use locally hosted version:
    Download libharu from <http://libharu.org/> -> `./configure` -> `make install`
