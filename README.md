@@ -63,7 +63,7 @@ There are several ways to help making Harbour better:
   - Remove trailing spaces from lines
   - Always keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
-- In the rare case you need to send something large (> 100KB),
+- In the rare case you need to send something large (> 100kB),
   use this [free service](http://dropcanvas.com).
 - There is more into Harbour contribution than writing code,
   so you're welcome to do so in other areas like documentation,
@@ -1484,7 +1484,7 @@ mailing list.
     problematic behavior occurred _first_. Make sure to not only include
     a link failure or a make tool failure, as it's most of the time not
     enough information. Compress your log using zip if it is larger
-    than 25KB. (use the extension `.zip`)
+    than 25kB. (use the extension `.zip`)
     With these, you have much better chance to get useful or any response.
 10. Do not alter the directory layout and files in Harbour and 3rd party
     packages.
