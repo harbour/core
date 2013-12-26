@@ -49,9 +49,9 @@ proc main()
    ? hb_gtInfo( HB_GTI_FONTSEL )
    OutStd( hb_gtInfo( HB_GTI_FONTSEL ) )
    wait
-return
+   return
 
 function xfontsel()
    local cStdOut
    hb_processRun( "xfontsel -print",, @cStdOut )
-return cStdOut
+   return cStdOut

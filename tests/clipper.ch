@@ -28,6 +28,10 @@
 #xtranslate hb_osFileMask()                => "*.*"
 #xtranslate hb_run( <c> )                  => __Run( <c> )
 
+#xtranslate hb_MemoRead( <x> )             => MemoRead( <x> )
+#xtranslate hb_MemoWrit( [<x,...>] )       => MemoWrit( <x> )
+#xtranslate hb_FileExists( <t> )           => File( <t> )
+
 #xtranslate hb_dbExists( <t> )             => File( <t> )
 #xtranslate hb_dbDrop( <t> )               => FErase( <t> )
 
@@ -54,7 +58,7 @@
 #xtranslate hb_BStrTran( <c>, <s>[, <r>] ) => StrTran( <c>, <s>, <r> )
 
 #xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
-#xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
+#xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_Compiler()                  => "C"
 #xtranslate hb_cdpIsUTF8( [<c>] )          => .F.
 #xtranslate hb_cdpCharMax()                => 255

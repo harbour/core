@@ -52,7 +52,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oCar := TCar():New( "red", 2 )
+   LOCAL oCar := TCar():New( "Red", 2 )
    LOCAL oPetrol := NIL
 
    oCar := oCar + oPetrol
@@ -67,7 +67,6 @@ CREATE CLASS TCar
 
    VAR cColor
    VAR nDoors
-   VAR oGas
 
    METHOD New( cColor, nDoors ) CONSTRUCTOR
 

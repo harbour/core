@@ -56,22 +56,22 @@ PROCEDURE Main()
 
 FUNCTION TEmpty()
 
-   STATIC oEmpty
+   STATIC s_oEmpty
 
-   IF oEmpty == NIL
-      oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
+   IF s_oEmpty == NIL
+      s_oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
-      oEmpty:AddInline( "New", {| self | self } )
+      s_oEmpty:AddInline( "New", {| self | self } )
 
-      oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
-      oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
-      oEmpty:AddData( "Out", "Hi there" )            // Test command
-      oEmpty:AddVirtual( "Dispose" )                 // Clean up code
+      s_oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
+      s_oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
+      s_oEmpty:AddData( "Out", "Hi there" )            // Test command
+      s_oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
-      oEmpty:Create()
+      s_oEmpty:Create()
    ENDIF
 
-   RETURN oEmpty:Instance()
+   RETURN s_oEmpty:Instance()
 
 //
 // Let's add another one on top
@@ -79,15 +79,15 @@ FUNCTION TEmpty()
 
 FUNCTION TOnTop()
 
-   STATIC oOnTop
+   STATIC s_oOnTop
 
-   IF oOnTop == NIL
-      oOnTop := HBClass():New( "TOnTop", "TTextFile" )
-      oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
-      oOnTop:Create()
+   IF s_oOnTop == NIL
+      s_oOnTop := HBClass():New( "TOnTop", "TTextFile" )
+      s_oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
+      s_oOnTop:Create()
    ENDIF
 
-   RETURN oOnTop:Instance()
+   RETURN s_oOnTop:Instance()
 
 //
 // Generic Text file handler
@@ -95,35 +95,35 @@ FUNCTION TOnTop()
 
 FUNCTION TTextFile()
 
-   STATIC oFile
+   STATIC s_oFile
 
-   IF oFile == NIL
-      oFile := HBClass():New( "TTextFile", "TEmpty" )
+   IF s_oFile == NIL
+      s_oFile := HBClass():New( "TTextFile", "TEmpty" )
       // Create a new class def
       // from TEmpty class
 
-      oFile:AddData( "cFileName"  )             // Filename spec. by user
-      oFile:AddData( "hFile"      )             // File handle
-      oFile:AddData( "nLine"      )             // Current linenumber
-      oFile:AddData( "nError"     )             // Last error
-      oFile:AddData( "lEoF"       )             // End of file
-      oFile:AddData( "cBlock"     )             // Storage block
-      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      oFile:AddData( "cMode"      )             // Mode of file use
+      s_oFile:AddData( "cFileName"  )             // Filename spec. by user
+      s_oFile:AddData( "hFile"      )             // File handle
+      s_oFile:AddData( "nLine"      )             // Current linenumber
+      s_oFile:AddData( "nError"     )             // Last error
+      s_oFile:AddData( "lEoF"       )             // End of file
+      s_oFile:AddData( "cBlock"     )             // Storage block
+      s_oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
+      s_oFile:AddData( "cMode"      )             // Mode of file use
       // R = read, W = write
 
-      oFile:AddMethod( "New"    , @New()     )  // Constructor
-      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
-      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
-      oFile:AddMethod( "Read"   , @Read()    )  // Read line
-      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
+      s_oFile:AddMethod( "New"    , @New()     )  // Constructor
+      s_oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
+      s_oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
+      s_oFile:AddMethod( "Read"   , @Read()    )  // Read line
+      s_oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
+      s_oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
+      s_oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
-      oFile:Create()
+      s_oFile:Create()
    ENDIF
 
-   RETURN oFile:Instance()
+   RETURN s_oFile:Instance()
 
 //
 // Method TextFile:New -> Create a new text file

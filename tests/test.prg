@@ -3,8 +3,7 @@ PROCEDURE Main()
    LOCAL s := " " + Chr( 0 ) + "  mab  " + Chr( 0 ) + " "
 
    StrDump( s )
-   ? s
-
+   ? '"' + s + '"'
    ? '"' + LTrim( s ) + '"'
    ? '"' + RTrim( s ) + '"'
    ? '"' + AllTrim( s ) + '"'

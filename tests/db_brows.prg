@@ -6,21 +6,20 @@
 //  Placed in the public domain
 //
 //     Functions: PROCEDURE Main()
-//                Function DBFLIST()
-//                Function DBFLIST()
-//                Function FLDCOUNT()
-//                Function VIVNAMES()
-//                Function WNDVIVOD()
-//                Static Procedure VIVSTR()
-//                Function FLDSTR()
-//                Function InitList()
-//                Function Defpict()
-//                Function NUM_STR()
+//                FUNCTION DBFLIST()
+//                FUNCTION DBFLIST()
+//                FUNCTION FLDCOUNT()
+//                FUNCTION VIVNAMES()
+//                FUNCTION WNDVIVOD()
+//                STATIC PROCEDURE VIVSTR()
+//                FUNCTION FLDSTR()
+//                FUNCTION InitList()
+//                FUNCTION Defpict()
+//                FUNCTION NUM_STR()
 //
 //        Tables: USE ( filename )
 //
-//     Reformatted by Click! 2.00 on Apr-20-2001 at 11:46 am
-//
+//     Reformatted by Click! 2.00
 // --------------------------------------------------------------------
 
 #include "fileio.ch"
@@ -104,7 +103,7 @@ PROCEDURE Main( filename )
 
 // --------------------------------------------------------------------
 //
-//     Function DBFLIST()
+//     FUNCTION DBFLIST()
 //
 //     Called from   1 - PROCEDURE Main()
 //
@@ -141,19 +140,23 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          LI_MSDEC := Array( LI_COLCOUNT )
          FOR i := 1 TO LI_COLCOUNT
             IF HB_ISBLOCK( LI_MSF[ i ] )
-               vartmp        := Eval( LI_MSF[ i ], mslist, i )
-               LI_MSTYP[ i ] := ValType( vartmp )
-               IF LI_MSTYP[ i ] == "C"
+               vartmp := Eval( LI_MSF[ i ], mslist, i )
+               SWITCH LI_MSTYP[ i ] := ValType( vartmp )
+               CASE "C"
                   LI_MSLEN[ i ] := Len( vartmp )
-               ELSEIF LI_MSTYP[ i ] == "N"
+                  EXIT
+               CASE "N"
                   vartmp        := Str( vartmp )
                   LI_MSLEN[ i ] := Len( vartmp )
                   LI_MSDEC[ i ] := iif( "." $ vartmp, LI_MSLEN[ i ] - At( ".", vartmp ), 0 )
-               ELSEIF LI_MSTYP[ i ] == "D"
+                  EXIT
+               CASE "D"
                   LI_MSLEN[ i ] := 8
-               ELSEIF LI_MSTYP[ i ] == "L"
+                  EXIT
+               CASE "L"
                   LI_MSLEN[ i ] := 1
-               ENDIF
+                  EXIT
+               ENDSWITCH
             ELSE
                LI_MSTYP[ i ] := ValType( FieldGet( FieldPos( LI_MSF[ i ] ) ) )
             ENDIF
@@ -200,7 +203,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       ENDIF
    ENDIF
    WNDVIVOD( mslist )
-   Eval( LI_BSKIP, mslist, ( LI_NSTR - 1 ) )
+   Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
    IF LI_KOLZ == 0 .AND. predit == 3
       LI_NSTR := 0
       hb_keyIns( K_DOWN )
@@ -217,13 +220,13 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       SetColor( LI_CLR )
       //
       DO CASE
-      CASE !( Type( "sx_KeyNo()" ) == "U" )
+      CASE hb_IsFunction( "sx_KeyNo" )
          fbar1 := "sx_KeyNo()"
          fbar2 := "sx_KeyCount()"
-      CASE !( Type( "AdsKeyNo()" ) == "U" )
+      CASE hb_IsFunction( "AdsKeyNo" )
          fbar1 := "AdsKeyNo()"
          fbar2 := "AdsKeyCount()"
-      CASE !( Type( "Ax_KeyNo()" ) == "U" )
+      CASE hb_IsFunction( "Ax_KeyNo" )
          fbar1 := "Ax_KeyNo()"
          fbar2 := "Ax_KeyCount()"
       ENDCASE
@@ -446,9 +449,9 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 
 // --------------------------------------------------------------------
 //
-//     Function FLDCOUNT()
+//     FUNCTION FLDCOUNT()
 //
-//     Called from   6 - function dbflist()
+//     Called from   6 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -473,9 +476,9 @@ FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 
 // --------------------------------------------------------------------
 //
-//     Function VIVNAMES()
+//     FUNCTION VIVNAMES()
 //
-//     Called from   3 - function dbflist()
+//     Called from   3 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -509,9 +512,9 @@ FUNCTION VIVNAMES( mslist )
 
 // --------------------------------------------------------------------
 //
-//     Function WNDVIVOD()
+//     FUNCTION WNDVIVOD()
 //
-//     Called from   8 - function dbflist()
+//     Called from   8 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -542,10 +545,10 @@ FUNCTION WNDVIVOD( mslist )
 
 // --------------------------------------------------------------------
 //
-//     Static Procedure VIVSTR()
+//     STATIC PROCEDURE VIVSTR()
 //
-//     Called from   5 - function dbflist()
-//                                    1 - function wndvivod()
+//     Called from   5 - FUNCTION dbflist()
+//                   1 - FUNCTION wndvivod()
 //
 // --------------------------------------------------------------------
 
@@ -592,12 +595,12 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
 
 // --------------------------------------------------------------------
 //
-//     Function FLDSTR()
+//     FUNCTION FLDSTR()
 //
-//     Called from   1 - function dbflist()
-//                                    1 - function fldcount()
-//                                    1 - function vivnames()
-//                                    3 - static procedure vivstr()
+//     Called from   1 - FUNCTION dbflist()
+//                   1 - FUNCTION fldcount()
+//                   1 - FUNCTION vivnames()
+//                   3 - STATIC PROCEDURE vivstr()
 //
 // --------------------------------------------------------------------
 
@@ -610,35 +613,40 @@ FUNCTION FLDSTR( mslist, numf )
          vartmp := LI_MSF[ numf ]
          IF ( fldtype := ValType( vartmp ) ) == "B"
             vartmp := Eval( vartmp, mslist, numf )
-            IF LI_MSTYP[ numf ] == "C"
+            SWITCH LI_MSTYP[ numf ]
+            CASE "C"
                RETURN PadR( vartmp, LI_MSLEN[ numf ] )
-            ELSEIF LI_MSTYP[ numf ] == "N"
+            CASE "N"
                RETURN PadL( Str( vartmp, LI_MSLEN[ numf ], LI_MSDEC[ numf ] ), LI_MSLEN[ numf ] )
-            ELSEIF LI_MSTYP[ numf ] == "D"
+            CASE "D"
                RETURN PadR( DToC( vartmp ), LI_MSLEN[ numf ] )
-            ELSEIF LI_MSTYP[ numf ] == "L"
+            CASE "L"
                RETURN PadR( iif( vartmp, "T", "F" ), LI_MSLEN[ numf ] )
-            ENDIF
+            ENDSWITCH
          ELSEIF fldtype == "C"
             numf := FieldPos( vartmp )
          ENDIF
       ENDIF
    ENDIF
-// fldtype := hb_FieldType( numf )
-   fldtype := LI_MSTYP[ numf ]
-   DO CASE
-   CASE fldtype == "C"
+// SWITCH fldtype := hb_FieldType( numf )
+   SWITCH fldtype := LI_MSTYP[ numf ]
+   CASE "C"
       rez := FieldGet( numf )
-   CASE fldtype == "N"
+      EXIT
+   CASE "N"
 //    rez := Str( FieldGet( numf ), hb_FieldLen( numf ), hb_FieldDec( numf ) )
       rez := Str( FieldGet( numf ), LI_MSLEN[ numf ], LI_MSDEC[ numf ] )
-   CASE fldtype == "D"
+      EXIT
+   CASE "D"
       rez := DToC( FieldGet( numf ) )
-   CASE fldtype == "L"
+      EXIT
+   CASE "L"
       rez := iif( FieldGet( numf ), "T", "F" )
-   CASE fldtype == "M"
+      EXIT
+   CASE "M"
       rez := "  <Memo>  "
-   ENDCASE
+      EXIT
+   ENDSWITCH
    IF LI_BDESHIN != NIL
       rez := Eval( LI_BDESHIN, mslist, rez )
    ENDIF
@@ -647,10 +655,10 @@ FUNCTION FLDSTR( mslist, numf )
 
 // --------------------------------------------------------------------
 //
-//     Function InitList()
+//     FUNCTION InitList()
 //
 //     Called from   1 - PROCEDURE Main()
-//                                    1 - function dbflist()
+//                   1 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -681,9 +689,9 @@ FUNCTION InitList
 
 // --------------------------------------------------------------------
 //
-//     Function Defpict()
+//     FUNCTION Defpict()
 //
-//     Called from   1 - function dbflist()
+//     Called from   1 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
@@ -691,23 +699,27 @@ FUNCTION Defpict( mslist, i, maxlen )
 
 // LOCAL spict, fldd, fldtype := hb_FieldType( i ), fldlen := hb_FieldLen( i )
    LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
-   DO CASE
-   CASE fldtype == "C"
+
+   SWITCH fldtype
+   CASE "C"
       spict := iif( maxlen == NIL, Replicate( "X", fldlen ), "@S" + NUM_STR( maxlen, 2 ) )
-   CASE fldtype == "N"
+      EXIT
+   CASE "N"
       fldd  := LI_MSDEC[ i ]
       spict := iif( fldd == 0, Replicate( "9", fldlen ), Replicate( "9", fldlen - 1 - fldd ) + "." + Replicate( "9", fldd ) )
-   CASE fldtype == "D"
+      EXIT
+   CASE "D"
       spict := "@D"
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN spict
 
 // --------------------------------------------------------------------
 //
-//     Function NUM_STR()
+//     FUNCTION NUM_STR()
 //
-//     Called from   1 - function defpict()
+//     Called from   1 - FUNCTION defpict()
 //
 // --------------------------------------------------------------------
 

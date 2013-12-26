@@ -3,7 +3,7 @@
 PROCEDURE Main()
 
    LOCAL a := { 100, 200, "Third" }
-   LOCAL b := Array( 10000 )  // 10.000 elements !!!
+   LOCAL b := Array( 10000 )  // 10000 elements !
 
    ? ValType( a )
    ? ValType( { "A" } )

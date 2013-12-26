@@ -152,7 +152,7 @@ STATIC FUNCTION Show()
 //
 // Maximum number of arguments passed is limited to 10 !
 //
-// An argument can be one of the following :
+// An argument can be one of the following:
 //
 // { <cSymbol>, <xValue> }              Set DATA <cSymbol> to <xValue>
 // { { <cSym1>, <xVal1> }, { <cSym2>, <xVal2> }, ... }
@@ -170,11 +170,11 @@ STATIC FUNCTION Show()
 // The method aExcept() is called to determine the DATA which should not
 // be returned. Eg. hWnd ( do not copy this DATA from external source )
 //
-// Say we want to copy oSource into oTarget we say :
+// Say we want to copy oSource into oTarget we say:
 //
 // oTarget:Transfer( oSource )
 //
-// If we do not want 'cName' duplicated we have to use __objGetValueList :
+// If we do not want 'cName' duplicated we have to use __objGetValueList:
 //
 // aNewExcept := AClone( oSource:aExcept() )
 // AAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
@@ -182,22 +182,22 @@ STATIC FUNCTION Show()
 //                              /* Get DATA from oSource with new exceptions */
 //                              /* Transfer DATA to oTarget                  */
 //
-// To set two DATA of oTarget :
+// To set two DATA of oTarget:
 //
 // oTarget:Transfer( { "nLeft", 10 }, { "nRight", 5 } )
 //
-// or :
+// or:
 //
 // aCollect := {}
 // AAdd( aCollect, { "nLeft" , 10 } )
 // AAdd( aCollect, { "nRight", 5  } )
 // oTarget:Transfer( aCollect )
 //
-// Copy oSource to a memo field :
+// Copy oSource to a memo field:
 //
 // DbObject->Memo := oSource:Transfer()
 //
-// (Re)create oTarget from the memo field :
+// (Re)create oTarget from the memo field:
 //
 // oTarget := TTarget():New()
 // oTarget:Transfer( DbObject->Memo )
@@ -229,7 +229,6 @@ STATIC FUNCTION Transfer( ... )
          ELSEIF !( ValType( xData ) == "U" )
             ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ") ", xData
          ENDIF
-
       NEXT
    ENDIF
 

@@ -1365,7 +1365,6 @@ FUNCTION pdfOpenHeader( cFile )
          COPY File ( cFile ) TO temp.tmp
          cFile := "temp.tmp"
       ENDIF
-      // t_aReport[ HEADER ] := ft_RestArr( cFile, @nErrorCode )
       t_aReport[ HEADER ] := File2Array( cFile )
    ELSE
       t_aReport[ HEADER ] := {}

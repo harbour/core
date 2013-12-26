@@ -1,5 +1,3 @@
-/* Testing Harbour keyboard input. */
-
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
@@ -7,6 +5,8 @@
    Modularization and display improvements by
    Alejandro de Garate <alex_degarate hotmail com>
 */
+
+/* Testing Harbour keyboard input. */
 
 #include "inkey.ch"
 
@@ -25,7 +25,6 @@ PROCEDURE Main( cSkip, cRaw )
 
       TEST2()
       NextTest()
-
 
       TEST3()
       NextTest()
@@ -235,7 +234,6 @@ PROCEDURE TEST7( cSkip, cRaw )
          Tone( 660, 6 )
       ENDIF
    ENDIF
-
 
    DO WHILE ( nKey := Inkey( 0, nMask ) ) != K_TAB
       DO CASE

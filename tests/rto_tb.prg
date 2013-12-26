@@ -108,7 +108,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   // ;
+   //
 
    cCommandLine := cArg01 + " " + cArg02 + " " + cArg03 + " " + cArg04
 
@@ -122,7 +122,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    s_lRTEDetails := .T.
 // s_lIgnoreErrOp := .T.
 
-   // ;
+   //
 
    #ifdef __HARBOUR__
       s_fhnd := FCreate( "tb_hb.txt", FC_NORMAL )
@@ -134,7 +134,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
       RETURN
    ENDIF
 
-   // ;
+   //
 
    o := TBColumnNew( "test00", {|| "test00" } )
    TEST_L_TBC( OBJ_CREATE() )
@@ -152,7 +152,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_L_TBC( o:defColor := { "1", "2", "3", "4", "5" } )
    TEST_L_TBC( o:defColor := { "1", 2, "3" } )
 
-   // ;
+   //
 
    s_lCheckResult := .T.
 
@@ -188,7 +188,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    s_lCheckResult := .F.
 
-   // ;
+   //
 
    TBRAssign( NIL )
    TBRAssign( -1 )
@@ -209,7 +209,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TBRAssign( {} )
    TBRAssign( { "" } )
 
-   // ;
+   //
 
    TBCAssign( NIL )
    TBCAssign( -1 )
@@ -230,11 +230,11 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TBCAssign( {} )
    TBCAssign( { "" } )
 
-   // ;
+   //
 
    s_cTest := ""
 
-   // ;
+   //
 
    s_lCatchErr := .F.
 
@@ -245,7 +245,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_L_TBR( o:Left() )
    TEST_L_TBR( o:Right() )
 
-   // ;
+   //
 
 #ifdef HB_COMPAT_C53
 
@@ -279,7 +279,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
 #endif
 
-   // ;
+   //
 
    FClose( s_fhnd )
 
@@ -309,7 +309,7 @@ PROCEDURE TBRAssign( xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nBottom       := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nLeft         := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nRight        := xVar )
-   // ; This is needed for CA-Cl*pper 5.x otherwise an unmaskable (bug?) RTE would be thrown. [vszakats]
+   // This is needed for CA-Cl*pper 5.x otherwise an unmaskable (bug?) RTE would be thrown. [vszakats]
    IF ValType( xVar ) == "N" .AND. xVar < o:nBottom
       o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nTop          := xVar )
    ENDIF
@@ -355,7 +355,7 @@ PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
    LOCAL bOldError
    LOCAL oError
 
-   SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
+   SetPos( 0, 0 ) // To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
       bOldError := ErrorBlock( {| oError | Break( oError ) } )
@@ -380,7 +380,7 @@ PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
    LOCAL bOldError
    LOCAL oError
 
-   SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
+   SetPos( 0, 0 ) // To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
       bOldError := ErrorBlock( {| oError | Break( oError ) } )
@@ -788,9 +788,9 @@ FUNCTION hb_SToD( cDate )
 
 FUNCTION hb_SToD( s )
 
-   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
+   LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
-   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) )
    Set( _SET_DATEFORMAT, cDf )
 
    RETURN dt
@@ -801,7 +801,7 @@ FUNCTION hb_SToD( s )
 
 PROCEDURE OBJ_CREATE()
 
-   // ; Dummy
+   // Dummy
 
    RETURN
 

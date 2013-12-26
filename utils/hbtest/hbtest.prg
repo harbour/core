@@ -667,9 +667,9 @@ FUNCTION hb_SToD( cDate )
 
 FUNCTION hb_SToD( s )
 
-   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
+   LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
-   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) )
    Set( _SET_DATEFORMAT, cDf )
 
    RETURN dt

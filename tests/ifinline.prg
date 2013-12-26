@@ -1,6 +1,7 @@
 /* Testing Harbour If inline */
 
 PROCEDURE Main()
+
    LOCAL n := 1
 
    QOut( "Testing Harbour If inline" )

@@ -2,7 +2,8 @@
 //
 // Compile statics1.prg, statics2.prg and link both files
 
-STATIC uOne, uTwo
+STATIC uOne
+STATIC uTwo
 
 PROCEDURE Main()
 
@@ -10,7 +11,7 @@ PROCEDURE Main()
    ? "==================="
    ?
    ? "INSIDE statics1.prg"
-   ? "   static uOne, uTwo"
+   ? "   STATIC uOne, uTwo"
    ?
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    uOne := 1

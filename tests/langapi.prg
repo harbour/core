@@ -1,5 +1,4 @@
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
 
 REQUEST HB_LANG_HU
 REQUEST HB_LANG_KO

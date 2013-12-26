@@ -2,12 +2,13 @@
 //
 // Compile statics1.prg, statics2.prg and link both files
 
-STATIC uA, uB
+STATIC uA
+STATIC uB
 
 PROCEDURE Test()
 
    ? "INSIDE statics2.prg"
-   ? "   static uA, uB"
+   ? "   STATIC uA, uB"
    ?
    ? "   ValType( uA ), ValType( uB ) =>", ValType( uA ), ",", ValType( uB )
    ? "   uA, uB =>", uA, ",", uB

@@ -7,15 +7,16 @@
  *
  */
 
-proc main()
-local hb_inLine := " (var) "
+PROCEDURE Main()
 
-? hb_inLine { hb_retc("inLine"); } + hb_inLine(" parameter ") {
-     hb_retc( hb_parc( 1 ) );
-     } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
-  hb_inLine() + "{}"
+   LOCAL hb_inLine := " (var) "
 
-return
+   ? hb_inLine { hb_retc("inLine"); } + hb_inLine( " parameter " ) {
+        hb_retc( hb_parc( 1 ) );
+        } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
+   hb_inLine() + "{}"
 
-function hb_inLine()
-return " func() "
+   RETURN
+
+FUNCTION hb_inLine()
+   RETURN " func() "

@@ -7,7 +7,8 @@ PROCEDURE Main( n )
    LOCAL pHrb
    LOCAL cExe := "Msg2()"
 
-   n := iif( n == NIL, 0, Val( n ) )
+   hb_default( @n, "0" )
+   n := Val( n )
 
    IF ! hb_FileExists( "hrbext.hrb" )
       hb_run( "harbour hrbext.prg -gh" )

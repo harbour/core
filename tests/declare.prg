@@ -63,7 +63,7 @@ INIT PROCEDURE Main()
 
 METHOD New() CLASS MyClass
 
-   ::While := 2 // TODO: Should produce RT Error.
+   ::While := 2 // TODO: Should produce RTE
 
    RETURN Self
 

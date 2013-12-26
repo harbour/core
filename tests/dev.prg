@@ -1,19 +1,19 @@
-// Test program for DevPos() and DevOut() Clipper compatibility
-// The result is either devtestc.prn or devtesth.prn, depending upon
-// which compiler created the program. Both files should be 263,444
-// bytes in size and should be identical.
-
 /* Harbour Project source code
    http://harbour-project.org/
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
 */
 
+// Test program for DevPos() and DevOut() Clipper compatibility
+// The result is either dev_cl.prn or dev_hb.prn, depending upon
+// which compiler created the program. Both files should be 263444
+// bytes in size and should be identical.
+
 PROCEDURE Main()
 
 #ifdef __HARBOUR__
-   SET PRINTER TO dev_hb
+   SET PRINTER TO dev_hb.prn
 #else
-   SET PRINTER TO dev_cl
+   SET PRINTER TO dev_cl.prn
 #endif
    SET DEVICE TO PRINTER
    DevPos( -2, 76 )

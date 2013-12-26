@@ -12,6 +12,8 @@
    #translate AS LOGICAL =>
    #translate AS USUAL =>
 
+   #translate OPTIONAL =>
+
    #command DECLARE <*x*> =>
 #endif
 
@@ -19,7 +21,7 @@ DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE cOtherFunc( ) AS STRING
 
-DECLARE cOtherFunc( @cVar as string, optional nVar as numeric, optional other /*as variant*/ ) AS STRING
+DECLARE cOtherFunc( @cVar AS STRING, OPTIONAL nVar AS NUMERIC, OPTIONAL other /* AS VARIANT */ ) AS STRING
 
 DECLARE Seconds() AS NUMERIC
 
@@ -27,22 +29,22 @@ DECLARE Int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE TEST() AS NUMERIC
 
-DECLARE MyClass                              ;
+DECLARE MyClass ;
         nMyFunc( nVal AS NUMERIC) AS NUMERIC
 
-DECLARE MyClass                              ;
+DECLARE MyClass ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
-        cMyData    ;
-        aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Class MyClass ) As Class MyClass
+        cMyData ;
+        aInstances AS ARRAY OF OBJECT MyClass ;
+        oNext( oInstance AS CLASS MyClass ) AS CLASS MyClass
 
-DECLARE OtherClass                              ;
+DECLARE OtherClass ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
-        cMyData    ;
-        aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Class OtherClass ) As Class MyClass
+        cMyData ;
+        aInstances AS ARRAY OF OBJECT MyClass ;
+        oNext( oInstance AS CLASS OtherClass ) AS CLASS MyClass
 
 FIELD a AS STRING
 FIELD b AS STRING
@@ -51,13 +53,13 @@ MEMVAR Var1 AS STRING
 
 STATIC s_lGlobal AS LOGICAL
 
-PROCEDURE Main( optional )
+PROCEDURE Main( OPTIONAL )
 
-   STATIC lStatic := 0, oMyObj As Class WrongClass
+   STATIC s_lStatic := 0, s_oMyObj AS CLASS WrongClass
 
    LOCAL cVar AS STRING := [declare function]
 
-   LOCAL a As STRING, oB AS Class MyClass, c AS STRING, oD AS Class OtherClass
+   LOCAL a As STRING, oB AS CLASS MyClass, c AS STRING, oD AS CLASS OtherClass
 
    FIELD b AS NUMERIC
 
@@ -67,7 +69,7 @@ PROCEDURE Main( optional )
 
    USE TEMP
 
-   oMyObj:MyMethod( 2, 3, 4 )
+   s_oMyObj:MyMethod( 2, 3, 4 )
 
    a := b:nMyFunc( 2, 3 )
    a := b:nMyFunc( 2 )
@@ -90,7 +92,7 @@ PROCEDURE Main( optional )
 
    oB := "a"
 
-   IF lStatic
+   IF s_lStatic
       Var1 := .F.
    ENDIF
 
@@ -145,7 +147,8 @@ FUNCTION Test()
    RETURN .T.
 
 FUNCTION Test2()
-   Local n As Numeric, lVar AS LOGICAL
+
+   LOCAL n AS NUMERIC, lVar AS LOGICAL
 
    n := iif( lVar, "A", 3 ) // iif() needs to be completed.
    n := 2
@@ -157,7 +160,7 @@ FUNCTION Test2()
 
 FUNCTION Test3()
 
-   LOCAL n AS NUMERIC, cVar AS STRING, a[5,5,5] AS ARRAY OF STRING
+   LOCAL n AS NUMERIC, cVar AS STRING, a[ 5, 5, 5 ] AS ARRAY OF STRING
 
    cVar := a[1]
 

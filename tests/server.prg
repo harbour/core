@@ -16,13 +16,11 @@ PROCEDURE Main( cPort )
 
    CLS
 
-   IF Empty( cPort )
-      cPort := "2000"
-   ENDIF
+   hb_default( @cPort, "2000" )
 
    hb_inetInit()
 
-   @ 1, 15 SAY "Harbour - Inet Api Server Demo"
+   @ 1, 15 SAY "Harbour - Inet API Server Demo"
    @ 2,  5 SAY "Contact this server using telnet or the Harbour Inet Client demo"
    @ 3,  5 SAY "Press a [KEY] to terminate the program"
    @ 5,  5 SAY "Server listening on port " + cPort + "..."
@@ -108,27 +106,10 @@ PROCEDURE Main( cPort )
 
 PROCEDURE Progress( nProgress, nDrow, nDcol )
 
-   LOCAL nRow := Row(), nCol := Col()
-
-   @ nDrow, nDcol SAY "[ ]"
-
-   DO CASE
-   CASE nProgress == 0
-      @ nDrow, nDcol + 1 SAY "-"
-   CASE nProgress == 1
-      @ nDrow, nDcol + 1 SAY "\"
-   CASE nProgress == 2
-      @ nDrow, nDcol + 1 SAY "|"
-   CASE nProgress == 3
-      @ nDrow, nDcol + 1 SAY "/"
-   ENDCASE
-
-   nProgress++
+   hb_DispOutAt( nDrow, nDcol, "[" + SubStr( "-\|/", ++nProgress, 1 ) + "]" )
 
    IF nProgress == 4
       nProgress := 0
    ENDIF
-
-   @ nRow, nCol
 
    RETURN

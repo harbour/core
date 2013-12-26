@@ -12,6 +12,6 @@ PROCEDURE Main()
 
 STATIC FUNCTION SecondOne()
 
-   ? "From Second()"
+   ? "From SecondOne()"
 
    RETURN NIL

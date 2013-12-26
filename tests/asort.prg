@@ -20,7 +20,7 @@ PROCEDURE Main()
    ?
    ? "Original...:", aDump( c )
    ? "ASort......:", aDump( ASort( AClone( c ) ) )
-   ? "ASort.block:", aDump( ASort( AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
+   ? "ASort.block:", aDump( ASort( AClone( c ), , , {| x, y | XToStr( x ) < XToStr( y ) } ) )
    ?
 
    RETURN
@@ -32,12 +32,12 @@ FUNCTION aDump( a )
    LOCAL i
 
    FOR i := 1 TO n
-      cStr += AllTrim( xToStr( a[ i ] ) ) + " "
+      cStr += AllTrim( XToStr( a[ i ] ) ) + " "
    NEXT
 
    RETURN cStr
 
-FUNCTION xToStr( xValue )
+FUNCTION XToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

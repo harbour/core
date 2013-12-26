@@ -6,7 +6,7 @@ MEMVAR p_initStatics
 
 PROCEDURE Main()
 
-   STATIC s_static_var := "MAIN()"
+   STATIC s_static_var := "Main()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function++
@@ -19,7 +19,7 @@ PROCEDURE Main()
 
 INIT FUNCTION SecondOne()
 
-   STATIC s_static_var := "SECOND()"
+   STATIC s_static_var := "SecondOne()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function++
@@ -29,7 +29,7 @@ INIT FUNCTION SecondOne()
 
 INIT FUNCTION Third()
 
-   STATIC s_static_var := "THIRD()"
+   STATIC s_static_var := "Third()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function++
@@ -39,7 +39,7 @@ INIT FUNCTION Third()
 
 EXIT FUNCTION Fifth()
 
-   STATIC s_static_var := "FIFTH()"
+   STATIC s_static_var := "Fifth()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function--
@@ -49,7 +49,7 @@ EXIT FUNCTION Fifth()
 
 EXIT FUNCTION Sixth()
 
-   STATIC s_static_var := "SIXTH()"
+   STATIC s_static_var := "Sixth()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function--
@@ -59,6 +59,6 @@ EXIT FUNCTION Sixth()
 
 INIT PROCEDURE initStatics()
 
-   PUBLIC p_initStatics := "P_INITSTATICS"
+   PUBLIC p_initStatics := "p_initStatics"
 
    RETURN

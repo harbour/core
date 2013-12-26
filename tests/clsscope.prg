@@ -7,7 +7,7 @@
  *
  */
 
-#command  ? => OUTSTD(hb_eol())
+#command ? => OUTSTD(hb_eol())
 #xtranslate QOUT(<x,...>) => OUTSTD(hb_eol(),<x>)
 
 #include "hbclass.ch"
@@ -158,146 +158,146 @@
 
 
 proc main()
-LOCAL cbErr, self, o
+   local cbErr, self, o
 
-? DATE(), TIME(), VERSION(), OS()
-?
+   ? DATE(), TIME(), VERSION(), OS()
+   ?
 
-o:=clsX():new()
-self:=cls2():new()
-cbErr := errorBlock( {| oErr | errHandler( oErr ) } )
+   o := clsX():new()
+   self := cls2():new()
+   cbErr := errorBlock( {| oErr | errHandler( oErr ) } )
 
-/***************************************************************/
-? "Class Access:"
-self:TEST1()
-?
-? "Parent Class Access:"
-self:TEST0()
-?
-? "Subclass Access:"
-self:TEST2()
-?
-? "Subclass Super Access:"
-self:TEST3()
-?
-? "Foreign Class Access:"
-o:TESTX(self)
-?
-? "Extern Access:"
-MAKE_TEST(self,"extr")
-?
+   /***************************************************************/
+   ? "Class Access:"
+   self:TEST1()
+   ?
+   ? "Parent Class Access:"
+   self:TEST0()
+   ?
+   ? "Subclass Access:"
+   self:TEST2()
+   ?
+   ? "Subclass Super Access:"
+   self:TEST3()
+   ?
+   ? "Foreign Class Access:"
+   o:TESTX(self)
+   ?
+   ? "Extern Access:"
+   MAKE_TEST(self,"extr")
+   ?
 
-/***************************************************************/
-?
-? "Inline Class Access:"
-MAKE_TESTINLINE1(self,b1)
-?
-? "Inline Parent Class Access:"
-MAKE_TESTINLINE0(self,b0)
-?
-? "Inline Subclass Access:"
-MAKE_TESTINLINE2(self,b2)
-?
+   /***************************************************************/
+   ?
+   ? "Inline Class Access:"
+   MAKE_TESTINLINE1(self,b1)
+   ?
+   ? "Inline Parent Class Access:"
+   MAKE_TESTINLINE0(self,b0)
+   ?
+   ? "Inline Subclass Access:"
+   MAKE_TESTINLINE2(self,b2)
+   ?
 
-/***************************************************************/
-?
-? "Access from class method by"
-? "eval() with block created in class method:"
-self:CBINT1()
-?
-? "Access from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBINT2()
-?
-? "Access from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBINT0()
-?
-? "Access from foreign class method by"
-? "eval() with block created in foreign class method:"
-o:CBINTX(self)
+   /***************************************************************/
+   ?
+   ? "Access from class method by"
+   ? "eval() with block created in class method:"
+   self:CBINT1()
+   ?
+   ? "Access from subclass method by"
+   ? "eval() with block created in subclass method:"
+   self:CBINT2()
+   ?
+   ? "Access from parent class method by"
+   ? "eval() with block created in parent class method:"
+   self:CBINT0()
+   ?
+   ? "Access from foreign class method by"
+   ? "eval() with block created in foreign class method:"
+   o:CBINTX(self)
 
-/***************************************************************/
-?
-? "Access from function executed from class method by"
-? "eval() block created in class method:"
-self:CBEVL1()
-?
-? "Access from function executed from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBEVL2()
-?
-? "Access from function executed from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBEVL0()
+   /***************************************************************/
+   ?
+   ? "Access from function executed from class method by"
+   ? "eval() block created in class method:"
+   self:CBEVL1()
+   ?
+   ? "Access from function executed from subclass method by"
+   ? "eval() with block created in subclass method:"
+   self:CBEVL2()
+   ?
+   ? "Access from function executed from parent class method by"
+   ? "eval() with block created in parent class method:"
+   self:CBEVL0()
 
-/***************************************************************/
-?
-? "Access from foreign object method executed from class method by"
-? "eval() block created in class method:"
-self:CBFEVL1(o)
-?
-? "Access from foreign object method executed from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBFEVL2(o)
-?
-? "Access from foreign object method executed from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBFEVL0(o)
+   /***************************************************************/
+   ?
+   ? "Access from foreign object method executed from class method by"
+   ? "eval() block created in class method:"
+   self:CBFEVL1(o)
+   ?
+   ? "Access from foreign object method executed from subclass method by"
+   ? "eval() with block created in subclass method:"
+   self:CBFEVL2(o)
+   ?
+   ? "Access from foreign object method executed from parent class method by"
+   ? "eval() with block created in parent class method:"
+   self:CBFEVL0(o)
 
-/***************************************************************/
-?
-? "External block executed from class method"
-MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
-?
-? "External block executed from subclass method"
-MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
-?
-? "External block executed from parent class method"
-MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
-?
-? "External block access"
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
+   /***************************************************************/
+   ?
+   ? "External block executed from class method"
+   MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
+   ?
+   ? "External block executed from subclass method"
+   MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
+   ?
+   ? "External block executed from parent class method"
+   MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
+   ?
+   ? "External block access"
+   MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
 
-/***************************************************************/
-?
-? "External block executed from function called from class method"
-MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
-?
-? "External block executed from function called from subclass method"
-MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
-?
-? "External block executed from function called from parent class method"
-MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
-?
-/***************************************************************/
+   /***************************************************************/
+   ?
+   ? "External block executed from function called from class method"
+   MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
+   ?
+   ? "External block executed from function called from subclass method"
+   MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
+   ?
+   ? "External block executed from function called from parent class method"
+   MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
+   ?
+   /***************************************************************/
 
-errorBlock(cbErr)
-RETURN
+   errorBlock(cbErr)
+   return
 
 
-FUNC errHandler( oErr )
-? "[ Error:", ltrim(str(oErr:gencode)), "/", ltrim(str(oErr:subcode)), ;
-              oErr:description, oErr:operation, "]"
-break( oErr )
-RETURN NIL
+function errHandler( oErr )
+   ? "[ Error:", hb_ntos( oErr:gencode ), "/", hb_ntos( oErr:subcode ), ;
+                 oErr:description, oErr:operation, "]"
+   break( oErr )
+   RETURN NIL
 
 
 PROC EXTEVAL( cb, o )
-EXTEVAL1( cb, o )
-RETURN
+   EXTEVAL1( cb, o )
+   RETURN
 
 PROC EXTEVAL1( cb, o )
-EXTEVAL2( cb, o )
-RETURN
+   EXTEVAL2( cb, o )
+   RETURN
 
 PROC EXTEVAL2( cb, o )
-EXTEVAL3( cb, o )
-RETURN
+   EXTEVAL3( cb, o )
+   RETURN
 
 PROC EXTEVAL3( cb, o )
-EVAL( cb, o )
-RETURN
+   EVAL( cb, o )
+   RETURN
 
 
 
@@ -312,20 +312,20 @@ EXPORTED:
 ENDCLASS
 
 METHOD TESTX( o )
-MAKE_TEST( o, "clsx" )
-RETURN self
+   MAKE_TEST( o, "clsx" )
+   RETURN self
 
 METHOD CBINTX( o )
-MAKE_TESTBLOCK(eval,o,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(eval,o,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVALX( cb, o )
-EVAL( cb, o )
-RETURN self
+   EVAL( cb, o )
+   RETURN self
 
 METHOD CBXEVALX( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+   EXTEVAL( cb, o )
+   RETURN self
 
 
 CREATE CLASS CLS0
@@ -345,28 +345,28 @@ EXPORTED:
 ENDCLASS
 
 METHOD TEST0
-MAKE_TEST(self,"cls0")
-RETURN self
+   MAKE_TEST(self,"cls0")
+   RETURN self
 
 METHOD CBINT0
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVL0()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBFEVL0(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVAL0( cb, o )
-EVAL( cb, o )
-RETURN self
+   EVAL( cb, o )
+   RETURN self
 
 METHOD CBXEVAL0( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+   EXTEVAL( cb, o )
+   RETURN self
 
 
 
@@ -398,28 +398,28 @@ ENDCLASS
 
 
 METHOD TEST1
-MAKE_TEST(self,"cls1")
-RETURN self
+   MAKE_TEST(self,"cls1")
+   RETURN self
 
 METHOD CBINT1
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVL1()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBFEVL1(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVAL1( cb, o )
-EVAL( cb, o )
-RETURN self
+   EVAL( cb, o )
+   RETURN self
 
 METHOD CBXEVAL1( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+   EXTEVAL( cb, o )
+   RETURN self
 
 
 
@@ -442,33 +442,33 @@ EXPORTED:
 ENDCLASS
 
 METHOD TEST2
-MAKE_TEST(self,"cls2")
-RETURN self
+   MAKE_TEST(self,"cls2")
+   RETURN self
 
 METHOD TEST3
-LOCAL oSuper := self:super
-MAKE_TEST(oSuper,"supr")
-RETURN self
+   LOCAL oSuper := self:super
+   MAKE_TEST(oSuper,"supr")
+   RETURN self
 
 METHOD CBINT2
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVL2()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBFEVL2(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
+   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
+   RETURN self
 
 METHOD CBEVAL2( cb, o )
-EVAL( cb, o )
-RETURN self
+   EVAL( cb, o )
+   RETURN self
 
 METHOD CBXEVAL2( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+   EXTEVAL( cb, o )
+   RETURN self
 
 
 

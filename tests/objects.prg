@@ -24,20 +24,20 @@ PROCEDURE Main()
 
 FUNCTION TAny()         /* builds a class */
 
-   STATIC hClass
+   STATIC s_hClass
 
-   IF hClass == NIL
-      hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
-      __clsAddMsg( hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
-      __clsAddMsg( hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
-      __clsAddMsg( hClass, "New",   @New(), HB_OO_MSG_METHOD )
-      __clsAddMsg( hClass, "Test", @Test(), HB_OO_MSG_METHOD )
-      __clsAddMsg( hClass, "DoNothing",  0, HB_OO_MSG_VIRTUAL )
+   IF s_hClass == NIL
+      s_hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
+      __clsAddMsg( s_hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
+      __clsAddMsg( s_hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
+      __clsAddMsg( s_hClass, "New",   @New(), HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "Test", @Test(), HB_OO_MSG_METHOD )
+      __clsAddMsg( s_hClass, "DoNothing",  0, HB_OO_MSG_VIRTUAL )
    ENDIF
 
    /* warning: we are not defining datas names and methods yet */
 
-   RETURN __clsInst( hClass )  // creates an object of this class
+   RETURN __clsInst( s_hClass )  // creates an object of this class
 
 STATIC FUNCTION New()
 

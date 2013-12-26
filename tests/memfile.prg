@@ -1,5 +1,4 @@
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
 
 MEMVAR m_cLongerNameThen10Chars
 #ifdef __HARBOUR__

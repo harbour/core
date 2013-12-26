@@ -96,11 +96,11 @@ proc main()
    wait
    dbCloseAll()
    hb_dbDrop( cFile )
-return
+   return
 
 proc setLock( n )
    ? "locking record: " + hb_ntos( n ) + " ->", dbRLock( n )
-return
+   return
 
 proc dspLock()
    local n
@@ -108,4 +108,4 @@ proc dspLock()
    for each n in dbRLockList()
       ?? "", hb_ntos( n )
    next
-return
+   return

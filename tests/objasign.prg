@@ -51,17 +51,17 @@ PROCEDURE Main()
 
 FUNCTION TNumber()                              // Very simple class
 
-   STATIC oNumber
+   STATIC s_oNumber
 
-   IF oNumber == NIL
-      oNumber := HBClass():New( "TNumber" )
+   IF s_oNumber == NIL
+      s_oNumber := HBClass():New( "TNumber" )
 
-      oNumber:AddData( "x" )
-      oNumber:AddMethod( "New", @New() )
-      oNumber:Create()
+      s_oNumber:AddData( "x" )
+      s_oNumber:AddMethod( "New", @New() )
+      s_oNumber:Create()
    ENDIF
 
-   RETURN oNumber:Instance()
+   RETURN s_oNumber:Instance()
 
 STATIC FUNCTION New()
 

@@ -21,6 +21,7 @@ PROCEDURE Main()
       cstr := FReadStr( h, 1 )
       ?? cstr
    ENDDO
+   ?
 
    FClose( h )
 
