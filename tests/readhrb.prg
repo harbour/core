@@ -147,7 +147,7 @@ PROCEDURE Main( cFrom )
 
    RETURN
 
-PROCEDURE PrintItem( cSymbol, nType, nScope )
+STATIC PROCEDURE PrintItem( cSymbol, nType, nScope )
 
    LOCAL aTypes := { "NOLINK", "FUNC", "EXTERN", "SYM_DEF" }
 
@@ -157,7 +157,7 @@ PROCEDURE PrintItem( cSymbol, nType, nScope )
 
    RETURN
 
-FUNCTION DecodeScope( nScope )
+STATIC FUNCTION DecodeScope( nScope )
 
    LOCAL cScope := ""
    LOCAL i

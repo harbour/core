@@ -126,7 +126,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE ShowStatus()
+STATIC PROCEDURE ShowStatus()
 
    ? "Lock:", iif( s_lLocked, "Held", "Released" ), " ", ;
      "Type:", iif( s_lExclusive, "Exclusive", "Shared" ), " ", ;

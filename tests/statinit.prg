@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Hello()
+STATIC FUNCTION Hello()
 
    ? "Printed from a codeblock assigned to a static variable."
 

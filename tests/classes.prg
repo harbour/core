@@ -10,12 +10,12 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TForm()
+STATIC FUNCTION TForm()
 
    STATIC s_oClass
 
    IF s_oClass == NIL
-      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
+      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
 
       s_oClass:AddData( "cName" )           // define this class objects datas
       s_oClass:AddData( "nTop" )

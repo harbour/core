@@ -87,26 +87,26 @@ STATIC FUNCTION myErrorHandler( oErr )
 
 CREATE CLASS myClass
 
-   VAR         TYPE
+   VAR         type
    VAR         var1
 
    CLASS VAR   var2
 
-   METHOD      INIT
-   DESTRUCTOR  dtor
+   METHOD      init()
+   DESTRUCTOR  dtor()
 
 END CLASS
 
-METHOD INIT( type ) CLASS myClass
+METHOD init( type ) CLASS myClass
 
    ? "Hi, I'm INIT method of class:", self:classname()
    ::type := type
 
    RETURN self
 
-PROCEDURE DTOR CLASS myClass
+PROCEDURE dtor() CLASS myClass
 
-   ? "   Hi, I'm desturctor of class: ", self:classname()
+   ? "   Hi, I'm desturctor of class:", self:classname()
 
    IF ::type == 1
       ? "   I'm storing reference to self in instance variable."

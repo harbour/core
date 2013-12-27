@@ -34,7 +34,7 @@ PROCEDURE Main()
       QUIT
    ENDIF
 
-//   SetMode( 30, 80 )
+// SetMode( 30, 80 )
 
    nRed   := hb_gfxMakeColor( 200, 32, 32 )
    nGreen := hb_gfxMakeColor( 32, 200, 32 )

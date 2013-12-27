@@ -51,7 +51,7 @@ proc main()
    wait
    return
 
-function xfontsel()
+static function xfontsel()
    local cStdOut
    hb_processRun( "xfontsel -print",, @cStdOut )
    return cStdOut

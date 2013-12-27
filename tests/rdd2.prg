@@ -25,6 +25,8 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    FIELD CHAR, NUM, DATE, LOG
 
+   ErrorBlock( {| e | MyError( e ) } )
+
    bMemoText := {|| "This is memo #" + hb_ntos( RecNo() ) + "." + hb_eol() + ;
       hb_eol() + ;
       "This is a very long string. " + ;
@@ -325,12 +327,6 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    NotifyUser( "Test PASSED! :-)", .T. )
-
-   RETURN
-
-PROCEDURE ErrorSys()
-
-   ErrorBlock( {| e | MyError( e ) } )
 
    RETURN
 

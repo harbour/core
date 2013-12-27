@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION testfun( b, c )
+STATIC FUNCTION testfun( b, c )
 
    b := b + 10
    c := "A"

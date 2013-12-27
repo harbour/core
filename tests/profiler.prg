@@ -61,7 +61,6 @@ PROCEDURE DoNothingForTwoSeconds()
    RETURN
 
 PROCEDURE CallMe500Times()
-
    RETURN
 
 STATIC PROCEDURE Browser( oBrowse )

@@ -56,13 +56,13 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Test( n )
+STATIC FUNCTION Test( n )
 
    ? n
 
    RETURN NIL
 
-FUNCTION ReleaseTest()
+STATIC FUNCTION ReleaseTest()
 
    LOCAL a := { 1, 2, 3 }
 

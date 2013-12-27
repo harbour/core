@@ -6,6 +6,8 @@
 
 PROCEDURE Main()
 
+   hb_langSelect( "EN" )
+
    ? OS(), Version()
    IF ! hb_dbExists( "_tst.dbf" )
       dbCreate( "_tst", { { "F1", "C", 1, 0 } } )
@@ -42,7 +44,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
+STATIC PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
 
    LOCAL cbErr := ErrorBlock( {| oErr | Break( oErr ) } ), oErr
 

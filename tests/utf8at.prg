@@ -1,5 +1,5 @@
 /* hb_utf8At() / hb_utf8RAt() test
-   UTF8-aware hb_At()/hb_RAt() */
+   UTF-8 aware hb_At()/hb_RAt() */
 
 #include "simpleio.ch"
 

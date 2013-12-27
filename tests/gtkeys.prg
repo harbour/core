@@ -286,7 +286,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__
    ? hb_gtVersion( 1 ), "GT" + hb_gtVersion()
-   ? "Host codpage: " + hb_cdpSelect() + ", terminal codepage: " + cTermCP
+   ? "Host codpage:", hb_cdpSelect() + ", terminal codepage:", cTermCP
 #endif
    ? "@ - interrupt, keycodes checking: "
    ?

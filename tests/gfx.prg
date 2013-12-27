@@ -94,7 +94,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
+STATIC FUNCTION PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
 
    hb_gfxRect( nTop, nLeft, nBottom, nRight, nColor1 )
    hb_gfxRect( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1, nColor2 )

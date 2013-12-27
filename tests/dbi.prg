@@ -41,7 +41,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION XToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

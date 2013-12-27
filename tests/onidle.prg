@@ -13,13 +13,13 @@ PROCEDURE Main()
    ? "Can you see it ??? :) Press any key or wait 30 seconds"
    ?
    ?
-   @ 10, 2 SAY "Memory before TEST() call " + hb_ntos( Memory( HB_MEM_USED ) )
-   TEST()
-   @ 11, 2 SAY "Memory after TEST() and before collecting " + hb_ntos( Memory( HB_MEM_USED ) )
+   @ 10, 2 SAY "Memory before Test() call " + hb_ntos( Memory( HB_MEM_USED ) )
+   Test()
+   @ 11, 2 SAY "Memory after Test() and before collecting " + hb_ntos( Memory( HB_MEM_USED ) )
    hb_gcAll()
    @ 12, 2 SAY "Memory after collecting " + hb_ntos( Memory( HB_MEM_USED ) )
    nH1 := hb_idleAdd( {||                             hb_DispOutAt( 0,  1, Time() ) } )
-   nH2 := hb_idleAdd( {|| TEST(),                     hb_DispOutAt( 0, 21, Memory( HB_MEM_USED ) ) } )
+   nH2 := hb_idleAdd( {|| Test(),                     hb_DispOutAt( 0, 21, Memory( HB_MEM_USED ) ) } )
    nH3 := hb_idleAdd( {|| iif( n == 4, n := 1, n++ ), hb_DispOutAt( 0, 41, aSign[ n ] ) } )
    nH4 := hb_idleAdd( {||                             hb_DispOutAt( 0, 61, 1000 * ( Seconds() - nPrev ) ), nPrev := Seconds() } )
 
@@ -49,7 +49,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC PROCEDURE TEST()
+STATIC PROCEDURE Test()
 
    LOCAL a, b, c
    LOCAL cb

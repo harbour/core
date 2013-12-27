@@ -7,15 +7,14 @@
 //
 //     Functions: PROCEDURE Main()
 //                FUNCTION DBFLIST()
-//                FUNCTION DBFLIST()
-//                FUNCTION FLDCOUNT()
-//                FUNCTION VIVNAMES()
-//                FUNCTION WNDVIVOD()
+//                STATIC FUNCTION FLDCOUNT()
+//                STATIC FUNCTION VIVNAMES()
+//                STATIC FUNCTION WNDVIVOD()
 //                STATIC PROCEDURE VIVSTR()
-//                FUNCTION FLDSTR()
-//                FUNCTION InitList()
-//                FUNCTION Defpict()
-//                FUNCTION NUM_STR()
+//                STATIC FUNCTION FLDSTR()
+//                STATIC FUNCTION InitList()
+//                STATIC FUNCTION Defpict()
+//                STATIC FUNCTION NUM_STR()
 //
 //        Tables: USE ( filename )
 //
@@ -69,12 +68,6 @@
 #define LI_COLCOUNT     mslist[ 42 ]
 #define LI_LEN          42
 
-// --------------------------------------------------------------------
-//
-//     PROCEDURE Main()
-//
-// --------------------------------------------------------------------
-
 PROCEDURE Main( filename )
 
    LOCAL vybkey := 1
@@ -102,8 +95,6 @@ PROCEDURE Main( filename )
    RETURN
 
 // --------------------------------------------------------------------
-//
-//     FUNCTION DBFLIST()
 //
 //     Called from   1 - PROCEDURE Main()
 //
@@ -449,13 +440,11 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION FLDCOUNT()
-//
 //     Called from   6 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
-FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
+STATIC FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 
    LOCAL klf := 0, i := iif( LI_FREEZE > 0, 1, fld1 )
 
@@ -476,13 +465,11 @@ FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION VIVNAMES()
-//
 //     Called from   3 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
-FUNCTION VIVNAMES( mslist )
+STATIC FUNCTION VIVNAMES( mslist )
 
    LOCAL i := 1, x, oldc, fif
 
@@ -512,13 +499,11 @@ FUNCTION VIVNAMES( mslist )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION WNDVIVOD()
-//
 //     Called from   8 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
-FUNCTION WNDVIVOD( mslist )
+STATIC FUNCTION WNDVIVOD( mslist )
 
    LOCAL firstrec, nstr := 1, tekzp1
 
@@ -545,10 +530,8 @@ FUNCTION WNDVIVOD( mslist )
 
 // --------------------------------------------------------------------
 //
-//     STATIC PROCEDURE VIVSTR()
-//
 //     Called from   5 - FUNCTION dbflist()
-//                   1 - FUNCTION wndvivod()
+//                   1 - STATIC FUNCTION wndvivod()
 //
 // --------------------------------------------------------------------
 
@@ -595,16 +578,14 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION FLDSTR()
-//
 //     Called from   1 - FUNCTION dbflist()
-//                   1 - FUNCTION fldcount()
-//                   1 - FUNCTION vivnames()
+//                   1 - STATIC FUNCTION fldcount()
+//                   1 - STATIC FUNCTION vivnames()
 //                   3 - STATIC PROCEDURE vivstr()
 //
 // --------------------------------------------------------------------
 
-FUNCTION FLDSTR( mslist, numf )
+STATIC FUNCTION FLDSTR( mslist, numf )
 
    LOCAL fldtype, rez, vartmp
 
@@ -655,14 +636,12 @@ FUNCTION FLDSTR( mslist, numf )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION InitList()
-//
 //     Called from   1 - PROCEDURE Main()
 //                   1 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
-FUNCTION InitList
+STATIC FUNCTION InitList()
 
    LOCAL mslist := Array( LI_LEN )
 
@@ -689,13 +668,11 @@ FUNCTION InitList
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION Defpict()
-//
 //     Called from   1 - FUNCTION dbflist()
 //
 // --------------------------------------------------------------------
 
-FUNCTION Defpict( mslist, i, maxlen )
+STATIC FUNCTION Defpict( mslist, i, maxlen )
 
 // LOCAL spict, fldd, fldtype := hb_FieldType( i ), fldlen := hb_FieldLen( i )
    LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
@@ -717,13 +694,11 @@ FUNCTION Defpict( mslist, i, maxlen )
 
 // --------------------------------------------------------------------
 //
-//     FUNCTION NUM_STR()
-//
-//     Called from   1 - FUNCTION defpict()
+//     Called from   1 - STATIC FUNCTION defpict()
 //
 // --------------------------------------------------------------------
 
-FUNCTION NUM_STR( NOM, KOLZN )
+STATIC FUNCTION NUM_STR( NOM, KOLZN )
 
    NOM := Int( NOM )
 

@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- *    new Hb_inLine {} test
+ *    new hb_inLine {} test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -18,5 +18,5 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION hb_inLine()
+STATIC FUNCTION hb_inLine()
    RETURN " func() "

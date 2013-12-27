@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION transtest( xVal, cPict, cExpect )
+STATIC FUNCTION transtest( xVal, cPict, cExpect )
 
    LOCAL cResult := Transform( xVal, cPict )
 
@@ -26,7 +26,7 @@ FUNCTION transtest( xVal, cPict, cExpect )
    RETURN iif( cResult == cExpect, "[OK]  ", "[ERROR] [" + cExpect + "] => " ) + ;
       "[" + cResult + "]"
 
-PROC stop()
+STATIC PROCEDURE stop()
 
    IF s_stop
       ? Replicate( "*", 50 )
@@ -36,7 +36,7 @@ PROC stop()
 
    RETURN
 
-PROC test()
+STATIC PROCEDURE test()
 
    LOCAL dt
 
@@ -127,7 +127,7 @@ PROC test()
 
    RETURN
 
-PROC tofix()
+STATIC PROCEDURE tofix()
 
    ? transtest( 134.24, "@E99,999.99", "       134,24" )
    ? transtest( -134.24, "@E99,999.99", "      -134,24" )
@@ -307,7 +307,7 @@ PROC tofix()
 
 #ifndef __HARBOUR__
 
-FUNCTION hb_SToD( s )
+STATIC FUNCTION hb_SToD( s )
 
    LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 

@@ -46,7 +46,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    ? OS(), Version(), Date(), Time()
    ? "GT" + hb_gtVersion(), hb_gtVersion( 1 )
-   ? "Host codpage: " + cHostCP + ", terminal codepage: " + cTermCP
+   ? "Host codpage:", cHostCP + ", terminal codepage:", cTermCP
    ?
 
 // hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
@@ -76,7 +76,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    RETURN
 
-FUNCTION dspboxch( cStr )
+STATIC FUNCTION dspboxch( cStr )
 
    LOCAL i, r, c
 

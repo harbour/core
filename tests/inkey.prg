@@ -44,21 +44,21 @@ PROCEDURE Main( cSkip, cRaw )
 
    RETURN
 
-PROCEDURE Results()
+STATIC PROCEDURE Results()
 
    ? "Wait 2 seconds or press most any key to see the results of this test."
    Inkey( 2 )
 
    RETURN
 
-PROCEDURE NextTest()
+STATIC PROCEDURE NextTest()
 
    ? "Press any key to continue on to the next test."
    Inkey( 0 )
 
    RETURN
 
-FUNCTION TEST( cText )
+STATIC FUNCTION TEST( cText )
 
    LOCAL cResult := ""
 
@@ -74,7 +74,7 @@ FUNCTION TEST( cText )
 
    RETURN "'" + cResult + "'"
 
-PROCEDURE TEST1
+STATIC PROCEDURE TEST1()
 
    CLS
    ?
@@ -94,7 +94,7 @@ PROCEDURE TEST1
 
    RETURN
 
-PROCEDURE TEST2
+STATIC PROCEDURE TEST2()
 
    CLS
    ?
@@ -113,7 +113,7 @@ PROCEDURE TEST2
 
    RETURN
 
-PROCEDURE TEST3
+STATIC PROCEDURE TEST3()
 
    CLS
    ?
@@ -131,7 +131,7 @@ PROCEDURE TEST3
 
    RETURN
 
-PROCEDURE TEST4
+STATIC PROCEDURE TEST4()
 
    CLS
    ?
@@ -150,7 +150,7 @@ PROCEDURE TEST4
 
    RETURN
 
-PROCEDURE TEST5
+STATIC PROCEDURE TEST5()
 
    LOCAL cText
 
@@ -188,7 +188,7 @@ PROCEDURE TEST5
 
    RETURN
 
-PROCEDURE TEST6
+STATIC PROCEDURE TEST6()
 
    CLS
    ? "For the sixth test"
@@ -202,7 +202,7 @@ PROCEDURE TEST6
 
    RETURN
 
-PROCEDURE TEST7( cSkip, cRaw )
+STATIC PROCEDURE TEST7( cSkip, cRaw )
 
    LOCAL nKey, nMask
 
@@ -253,9 +253,9 @@ PROCEDURE TEST7( cSkip, cRaw )
          ? "The right mouse button was double-clicked."
       OTHERWISE
 #ifdef __HARBOUR__
-         ? "A keyboard key was pressed: ", nKey, hb_keyChar( nKey )
+         ? "A keyboard key was pressed:", nKey, hb_keyChar( nKey )
 #else
-         ? "A keyboard key was pressed: ", nKey, ;
+         ? "A keyboard key was pressed:", nKey, ;
             iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
 #endif
       ENDCASE

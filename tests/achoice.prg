@@ -173,7 +173,7 @@ PROCEDURE Main()
 
 //
 
-FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
+FUNCTION cUserFunction( nMode, nCurElement, nRowPos )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT                // Default, Continue
    LOCAL nKey    := LastKey()

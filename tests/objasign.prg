@@ -11,36 +11,36 @@ PROCEDURE Main()
 
    LOCAL o := TNumber():New()
 
-   ? "Direct reference : ", o:x
+   ? "Direct reference :", o:x
 
    o:x := "I am a data"
-   ? "Assign text      : ", o:x
+   ? "Assign text      :", o:x
 
    o:x := 4
-   ? "Assign 4         : ", o:x
+   ? "Assign 4         :", o:x
 
-   ? "Post increment   : ", o:x++
-   ? "After            : ", o:x
-   ? "Pre decrement    : ", --o:x
-   ? "After            : ", o:x
+   ? "Post increment   :", o:x++
+   ? "After            :", o:x
+   ? "Pre decrement    :", --o:x
+   ? "After            :", o:x
 
    o:x += 2
-   ? "Plus 2           : ", o:x
+   ? "Plus 2           :", o:x
 
    o:x -= 3
-   ? "Minus 3          : ", o:x
+   ? "Minus 3          :", o:x
 
    o:x *= 3
-   ? "Times 3          : ", o:x
+   ? "Times 3          :", o:x
 
    o:x /= 1.5
-   ? "Divide by 1.5    : ", o:x
+   ? "Divide by 1.5    :", o:x
 
    o:x %= 4
-   ? "Modulus 4        : ", o:x
+   ? "Modulus 4        :", o:x
 
    o:x ^= 3
-   ? "To the power 3   : ", o:x
+   ? "To the power 3   :", o:x
 
    ? "Global stack"
    ? hb_ValToExp( __dbgVMStkGList() )
@@ -49,7 +49,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TNumber()                              // Very simple class
+STATIC FUNCTION TNumber()                       // Very simple class
 
    STATIC s_oNumber
 

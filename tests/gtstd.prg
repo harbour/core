@@ -56,7 +56,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION PosNow()
+STATIC FUNCTION PosNow()
 
    ?? "[" + hb_ntos( Row() ) + "," + hb_ntos( Col() ) + "]"
 

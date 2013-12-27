@@ -1,16 +1,6 @@
 #include "fileio.ch"
 #include "hbclass.ch"
 
-//
-// The Harbour stripping command
-//
-// Usage : Strip( FileFrom, FileTo )
-//
-// The output from FileFrom is copied to FileTo except for the empty lines
-//
-// Default files : From = strip.prg To = strip.out
-//
-
 /*
  * Written by Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
@@ -18,6 +8,15 @@
  * Placed in the public domain
  */
 
+//
+// The Harbour stripping command
+//
+// Usage: Strip( FileFrom, FileTo )
+//
+// The output from FileFrom is copied to FileTo except for the empty lines
+//
+// Default files: From = strip.prg To = strip.out
+//
 PROCEDURE Main( cFrom, cTo )
 
    LOCAL oFrom
@@ -45,7 +44,6 @@ PROCEDURE Main( cFrom, cTo )
 //
 // Generic file handler
 //
-
 CREATE CLASS TTextFile
 
    VAR cFileName               // Filename spec. by user
@@ -76,7 +74,6 @@ END CLASS
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-
 METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    hb_default( @cMode, "R" )
@@ -99,7 +96,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
    ::nError := FError()
    IF ::nError != 0
       ::lEoF := .T.
-      ? "Error ", ::nError
+      ? "Error", ::nError
    ENDIF
    ::nBlockSize := nBlock
 
@@ -108,14 +105,13 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 //
 // Dispose -> Close the file handle
 //
-
 METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
    IF ::hFile != F_ERROR
       IF ! FClose( ::hFile )
          ::nError := FError()
-         ? "OS Error closing ", ::cFileName, " Code ", ::nError
+         ? "OS Error closing", ::cFileName, " Code", ::nError
       ENDIF
    ENDIF
 
@@ -124,7 +120,6 @@ METHOD Dispose() CLASS TTextFile
 //
 // Read a single line
 //
-
 METHOD Read() CLASS TTextFile
 
    LOCAL cRet  := ""
@@ -133,9 +128,9 @@ METHOD Read() CLASS TTextFile
    LOCAL nEoFPos
 
    IF ::hFile == F_ERROR
-      ? "File:Read : No file open"
+      ? "File:Read: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
@@ -180,15 +175,14 @@ METHOD Read() CLASS TTextFile
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-
 METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
-      ? "File:Write : No file open"
+      ? "File:Write: No file open"
    ELSEIF !( ::cMode == "W" )
-      ? "File ", ::cFileName, " not opened for writing"
+      ? "File", ::cFileName, "not opened for writing"
    ELSE
       hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )              // Convert to string
@@ -207,15 +201,14 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 //
 // Go to a specified line number
 //
-
 METHOD Goto( nLine ) CLASS TTextFile
 
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      ? "File:Goto : No file open"
+      ? "File:Goto: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning

@@ -102,7 +102,7 @@ PROCEDURE Main( OPTIONAL )
 
    RETURN
 
-PROCEDURE SOMEPROC()
+PROCEDURE SOMEPROC()  /* must be a public function */
 
    PRIVATE TEST AS NUMERIC
 
@@ -126,7 +126,7 @@ PROCEDURE SOMEPROC()
 
    RETURN
 
-PROCEDURE Main1()
+PROCEDURE Main1()  /* must be a public function */
 
    PRIVATE OTHER, TEST AS STRING
 
@@ -143,10 +143,10 @@ PROCEDURE Main1()
 
    RETURN
 
-FUNCTION Test()
+STATIC FUNCTION Test()
    RETURN .T.
 
-FUNCTION Test2()
+FUNCTION Test2()  /* must be a public function */
 
    LOCAL n AS NUMERIC, lVar AS LOGICAL
 
@@ -158,7 +158,7 @@ FUNCTION Test2()
 
    RETURN NIL
 
-FUNCTION Test3()
+FUNCTION Test3()  /* must be a public function */
 
    LOCAL n AS NUMERIC, cVar AS STRING, a[ 5, 5, 5 ] AS ARRAY OF STRING
 
@@ -196,7 +196,7 @@ FUNCTION Test3()
 
    RETURN NIL
 
-FUNCTION SomeTest( lVar AS LOGICAL )
+FUNCTION SomeTest( lVar AS LOGICAL )  /* must be a public function */
 
    LOCAL nVar AS NUMERIC, cVar AS STRING, lVar2 AS LOGICAL, nNoType := 3
    PRIVATE cMemVar1 AS STRING
@@ -233,14 +233,14 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
    RETURN NIL
 
-FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
+STATIC FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
 
    nVar := Val( cVar )
 
    RETURN nVar + 1
 
-FUNCTION cOtherFunc( )
+STATIC FUNCTION cOtherFunc( )
    RETURN "Hello"
 
-FUNCTION ExtFun()
+STATIC FUNCTION ExtFun()
    RETURN 1

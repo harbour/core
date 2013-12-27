@@ -78,7 +78,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE testline( c, n )
+STATIC PROCEDURE testline( c, n )
 
    ? ;
       Str( n, 3 ),;

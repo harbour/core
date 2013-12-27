@@ -21,14 +21,14 @@ PROCEDURE Main( Param1 )
 
    RETURN
 
-FUNCTION Sub( j )
+STATIC FUNCTION Sub( j )
 
    m->i := 1
    j := 3
 
    RETURN NIL
 
-FUNCTION arrvar()
+STATIC FUNCTION arrvar()
 
 // LOCAL i := { 1 }
 

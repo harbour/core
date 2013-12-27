@@ -25,7 +25,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION InitScrlBar()
+STATIC FUNCTION InitScrlBar()
 
    LOCAL tmpFileList, i
 

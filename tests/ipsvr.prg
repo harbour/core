@@ -51,7 +51,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE process( hSocket )
+STATIC PROCEDURE process( hSocket )
 
    LOCAL cRequest
    LOCAL nLen

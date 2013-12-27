@@ -1,9 +1,5 @@
 #include "fileio.ch"
 
-//
-// Test of inheritance
-//
-
 /*
  * Written by Eddie Runia <eddie@runia.comu>
  * www - http://harbour-project.org
@@ -11,6 +7,9 @@
  * Placed in the public domain
  */
 
+//
+// Test of inheritance
+//
 PROCEDURE Main()
 
    LOCAL oFrom
@@ -53,8 +52,7 @@ PROCEDURE Main()
 //
 // Generic Empty Class
 //
-
-FUNCTION TEmpty()
+FUNCTION TEmpty()  /* must be a public function */
 
    STATIC s_oEmpty
 
@@ -76,8 +74,7 @@ FUNCTION TEmpty()
 //
 // Let's add another one on top
 //
-
-FUNCTION TOnTop()
+STATIC FUNCTION TOnTop()
 
    STATIC s_oOnTop
 
@@ -92,8 +89,7 @@ FUNCTION TOnTop()
 //
 // Generic Text file handler
 //
-
-FUNCTION TTextFile()
+FUNCTION TTextFile()  /* must be a public function */
 
    STATIC s_oFile
 
@@ -132,8 +128,7 @@ FUNCTION TTextFile()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-
-FUNCTION New( cFileName, cMode, nBlock )
+STATIC FUNCTION New( cFileName, cMode, nBlock )
 
    LOCAL self := QSelf()                        // Get self
 
@@ -151,19 +146,19 @@ FUNCTION New( cFileName, cMode, nBlock )
    ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
-      ? "DosFile Init: Unknown file mode:", ::cMode
+      ? "File Init: Unknown file mode:", ::cMode
    ENDIF
 
    ::nError := FError()
    IF ::nError != 0
       ::lEoF := .T.
-      ? "Error ", ::nError
+      ? "Error", ::nError
    ENDIF
    ::nBlockSize := nBlock
 
    RETURN self
 
-FUNCTION RUN( xTxt, lCRLF )
+STATIC FUNCTION RUN( xTxt, lCRLF )
 
    LOCAL self := QSelf()
    LOCAL xRet
@@ -179,8 +174,7 @@ FUNCTION RUN( xTxt, lCRLF )
 //
 // Dispose -> Close the file handle
 //
-
-FUNCTION Dispose()
+STATIC FUNCTION Dispose()
 
    LOCAL self := QSelf()
 
@@ -188,7 +182,7 @@ FUNCTION Dispose()
    IF ::hFile != F_ERROR
       IF ! FClose( ::hFile )
          ::nError := FError()
-         ? "Dos Error closing ", ::cFileName, " Code ", ::nError
+         ? "OS Error closing", ::cFileName, " Code", ::nError
       ENDIF
    ENDIF
 
@@ -197,8 +191,7 @@ FUNCTION Dispose()
 //
 // Read a single line
 //
-
-FUNCTION READ()
+STATIC FUNCTION READ()
 
    LOCAL self := QSelf()
    LOCAL cRet := ""
@@ -207,9 +200,9 @@ FUNCTION READ()
    LOCAL nEoFPos
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Read : No file open"
+      ? "File:Read: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
@@ -254,16 +247,15 @@ FUNCTION READ()
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-
-FUNCTION WriteLn( xTxt, lCRLF )
+STATIC FUNCTION WriteLn( xTxt, lCRLF )
 
    LOCAL self := QSelf()
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Write : No file open"
+      ? "File:Write: No file open"
    ELSEIF !( ::cMode == "W" )
-      ? "File ", ::cFileName, " not opened for writing"
+      ? "File", ::cFileName, "not opened for writing"
    ELSE
       hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )                  // Convert to string
@@ -279,7 +271,7 @@ FUNCTION WriteLn( xTxt, lCRLF )
 
    RETURN self
 
-FUNCTION Write( xTxt )
+STATIC FUNCTION Write( xTxt )
 
    LOCAL self := QSelf()
 
@@ -288,16 +280,15 @@ FUNCTION Write( xTxt )
 //
 // Go to a specified line number
 //
-
 STATIC FUNCTION GOTO( nLine )
 
    LOCAL self   := QSelf()
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      ? "DosFile:Goto : No file open"
+      ? "File:Goto: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning

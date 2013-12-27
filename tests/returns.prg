@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE Two( n )
+STATIC PROCEDURE Two( n )
 
    DO CASE
    CASE n == 1

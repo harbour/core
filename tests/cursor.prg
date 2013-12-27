@@ -14,7 +14,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE CursTest( nCurs )
+STATIC PROCEDURE CursTest( nCurs )
 
    LOCAL aTypes := { "None",    "Underline", "HalfBlock", "FullBlock",   "Upper Half" }
    LOCAL aNames := { "SC_NONE", "SC_NORMAL", "SC_INSERT", "SC_SPECIAL1", "SC_SPECIAL2" }

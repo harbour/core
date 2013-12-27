@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TestBrw( nRowIni )
+STATIC FUNCTION TestBrw( nRowIni )
 
    LOCAL nKey, oBrw := TBrowseNew( 1, 0, MaxRow() - 1, MaxCol() )
 

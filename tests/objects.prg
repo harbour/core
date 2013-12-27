@@ -22,12 +22,12 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TAny()         /* builds a class */
+STATIC FUNCTION TAny()    /* builds a class */
 
    STATIC s_hClass
 
    IF s_hClass == NIL
-      s_hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
+      s_hClass := __clsNew( "TAny", 3 )                 // cClassName, nDatas
       __clsAddMsg( s_hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
       __clsAddMsg( s_hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
       __clsAddMsg( s_hClass, "New",   @New(), HB_OO_MSG_METHOD )

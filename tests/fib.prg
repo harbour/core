@@ -9,7 +9,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION FibR( n )
+STATIC FUNCTION FibR( n )
 
    LOCAL nFib
 
@@ -21,7 +21,7 @@ FUNCTION FibR( n )
 
    RETURN nFib
 
-FUNCTION FibI( n )
+STATIC FUNCTION FibI( n )
 
    LOCAL nFibMin1  := 1
    LOCAL nFibMinN1 := 0

@@ -52,7 +52,7 @@ PROCEDURE Main( n )
 
    RETURN
 
-FUNCTION Msg()
+FUNCTION Msg()  /* must be a public function */
 
    ? "Function called from .exe"
 

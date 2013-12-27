@@ -15,7 +15,7 @@ PROCEDURE Main()
    MSetCursor( .T. )
 #endif
 
-   SET KEY K_F8 TO RECURSE()
+   SET KEY K_F8 TO Recurse()
 
    CLS
 
@@ -33,7 +33,7 @@ PROCEDURE Main()
 
    Inkey( 0 )
 
-   SET KEY K_F8 TO RECURSE()
+   SET KEY K_F8 TO Recurse()
 
    CLS
 
@@ -51,7 +51,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE RECURSE()
+STATIC PROCEDURE Recurse()
 
    LOCAL testvar
 
@@ -70,6 +70,6 @@ PROCEDURE RECURSE()
 
    @  9, 50 SAY "Your Choice = " + hb_ntos( testvar )
 
-   SET KEY K_F8 TO RECURSE()
+   SET KEY K_F8 TO Recurse()
 
    RETURN

@@ -52,7 +52,7 @@ PROCEDURE Main()
 
 // Simple testing screen.
 
-PROCEDURE TESTBOX( cMode )
+STATIC PROCEDURE TESTBOX( cMode )
 
    LOCAL nRow
 

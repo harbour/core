@@ -104,7 +104,7 @@ PROCEDURE Main( cPort )
 
    RETURN
 
-PROCEDURE Progress( nProgress, nDrow, nDcol )
+STATIC PROCEDURE Progress( nProgress, nDrow, nDcol )
 
    hb_DispOutAt( nDrow, nDcol, "[" + SubStr( "-\|/", ++nProgress, 1 ) + "]" )
 

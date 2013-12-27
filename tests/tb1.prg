@@ -151,7 +151,7 @@ PROCEDURE Main()
 
 #ifndef __HARBOUR__
 
-PROCEDURE hb_idleSleep( n )
+STATIC PROCEDURE hb_idleSleep( n )
 
    n += Seconds()
    WHILE Seconds() < n

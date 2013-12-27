@@ -37,7 +37,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE ShowVar()
+STATIC PROCEDURE ShowVar()
 
    Alert( ReadVar() )
 

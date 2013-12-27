@@ -69,7 +69,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE TestCentury()
+STATIC PROCEDURE TestCentury()
 
    ?
    ? __SetCentury()

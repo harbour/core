@@ -61,7 +61,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION pause()
+STATIC FUNCTION pause()
 
    SetPos( MaxRow() - 2, 0 )
    WAIT "pause:"

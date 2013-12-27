@@ -64,7 +64,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
+STATIC FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
 
    LOCAL cStr := "!! Local handling of math error MATH/"
 
