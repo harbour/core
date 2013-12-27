@@ -78,7 +78,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - hbwin cleanups/fixes (printer handling) and improvements (mutex, MAPI, misc)
 - hbwin OLE2, ActiveX support improved and finalized.
 - hbwin full UNICODE support and cleanups.
-- hbwin basic win64 .dll support.
+- hbwin basic 64-bit .dll support.
 - hbtip POP3/SMTP fixes, encoding/charset support.
 - Added hbmemio contrib.
 - hbnetio finalized.
@@ -88,7 +88,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - hbmk2 got support to convert xMate, hbmake and xbuild make files to .hbp
   format.
 - Added hbsms contrib library (to send SMS text messages in multiplatform way).
-- gtwvg now builds in win64 mode.
+- gtwvg now builds in 64-bit mode.
 - Rudimentary port of GTWVW (find it in examples)
 - New hbcairo wrapper for cairo lib.
 - Improved code portability for startup code, C++ mode and
@@ -118,7 +118,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - Embedded libharu made available for MS-DOS Harbour builds,
   plus many other leveling of MS-DOS port.
 - Added Blowfish encryption functions to core.
-- Added experimental win64 binary build of GNU Make.
+- Added experimental Windows 64-bit binary build of GNU Make.
 - Synced with some new features that appeared in xhb, plus some missing
   features from past versions.
 - New Harbour port to Haiku/BeOS.

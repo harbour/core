@@ -1796,8 +1796,8 @@ Supported shells per host platforms:
      * HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
         * <http://bzip.org/>
      * HB_WITH_CAIRO - Cairo [multiplatform, open-source]
-        * <http://www.gtk.org/download/win32.php><br />
-        Look for these components on page above: cairo-dev_*_win32.zip, cairo_*_win32.zip, libpng_*_win32.zip
+        * <http://www.gtk.org/download/index.php><br />
+        Look for these components on page above: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
      * HB_WITH_CUPS - libcups (printing) [*nix, free, open-source]
         * <http://cups.org/>
      * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]

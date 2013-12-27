@@ -317,25 +317,11 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
    RETURN .T.
 
 /* If it's a single mod, include only the change text,
-   otherwise include the whole entry. */
+   otherwise include the whole entry.
+   NOTE: It was confusing to mix the two styles, so for
+         now always include the complete log message. */
 STATIC FUNCTION EntryToCommitMsg( cLog )
-
-   LOCAL cLine
-   LOCAL cMsg
-   LOCAL nCount := 0
-
-   FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
-      IF cLine:__enumIndex() != 1
-         IF !( Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) ) )
-            IF ! Empty( cLine )
-               cMsg := SubStr( cLine, 7 )
-               ++nCount
-            ENDIF
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN iif( nCount == 1, cMsg + hb_eol(), cLog )
+   RETURN cLog
 
 STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cLocalRoot )
 
