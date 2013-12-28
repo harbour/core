@@ -110,7 +110,7 @@ General
   Harbour on Windows, so this is now a requirement for a proper build.
 - hb-mkslib.sh renamed to hb-mkdyn.sh. Old name stil works, but it's
   now deprecated.
-- x64 msvc compiler got a distinct HB_COMPILER value: msvc64.
+- x86_64 msvc compiler got a distinct HB_COMPILER value: msvc64.
 - msvcce compiler made compatible with older MSVC/WinCE versions.
 - Added support for Intel(R) C++ compiler (icc) on Linux and Windows.
 - Added new README.md document giving a quick describing of the build
@@ -211,8 +211,8 @@ Core
 - Added hb_osDecode(), hb_osEncode() C APIs.
 - hb_GetEnv() extended with 3rd parameter to control OS codepage
   conversion (on by default).
-- Added CPU dump support for AMD64/x64.
-- Added module listing on GPF for x86 and x64.
+- Added CPU dump support for AMD64/x86_64.
+- Added module listing on GPF for x86 and x86_64.
 - GTXWC potential GPF fixed.
 - Added process handling:
   hb_processOpen(), hb_processValue(), hb_processClose()

@@ -472,7 +472,7 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_MYSQL=C:\mysql\include
     HB_WITH_OCILIB=C:\ocilib\include
     HB_WITH_ODBC= (may only be needed on non-Windows systems)
-    HB_WITH_OPENSSL=C:\openssl\inc32 OR C:\openssl\include
+    HB_WITH_OPENSSL=C:\openssl\include
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
     HB_WITH_PGSQL=C:\pgsql\include
     HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
@@ -1157,7 +1157,7 @@ set HB_WITH_FREEIMAGE=C:\FreeImage\Dist
 set HB_WITH_GD=C:\gd\include
 set HB_WITH_MYSQL=C:\mysql\include\mysql
 set HB_WITH_OCILIB=C:\ocilib\include
-set HB_WITH_OPENSSL=C:\openssl\inc32
+set HB_WITH_OPENSSL=C:\openssl\include
 set HB_WITH_PGSQL=C:\pgsql\include
 set HB_WITH_QT=C:\Qt\include
 ```
@@ -1166,9 +1166,9 @@ set HB_WITH_QT=C:\Qt\include
 
 Same as 32-bit Windows, with the difference that you'll have to change
 `%ProgramFiles%` to `%ProgramFiles(x86)%` for 32-bit and mixed tools,
-that you can build for both x86 and x64 without building a native target
-first, and potential differences with some compilers in using native
-binaries if they are available.
+that you can build for both x86 and x86_64 without building a native
+target first, and potential differences with some compilers in using
+native binaries if they are available.
 
 ```batchfile
 rem MinGW GCC for Windows x86-64
@@ -1750,7 +1750,7 @@ Supported shells per host platforms:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
         * <https://sourceforge.net/projects/mingwbuilds/> (unofficial, recommended)
-        * <http://tdm-gcc.tdragon.net/>, <https://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x64 use the official release]
+        * <http://tdm-gcc.tdragon.net/>, <https://sourceforge.net/projects/tdm-gcc/> (unofficial) [NOTE: 4.5.1 is broken, 4.5.2, 4.6.1 x86 OK, for x86_64 use the official release]
         * <http://mingw.org/>, <https://sourceforge.net/projects/mingw/> (official 32-bit, MSYS home, broken as of 4.5.0-1)
         * <http://mingw-w64.sourceforge.net/>, <https://sourceforge.net/projects/mingw-w64/> (official 64-bit, MSYS home)
         * <http://nuwen.net/mingw.html> (unofficial)

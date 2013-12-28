@@ -55,7 +55,7 @@
  *
  * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
  *    hb_winExceptionHandler() Module listing code.
- *    hb_winExceptionHandler() x64 support.
+ *    hb_winExceptionHandler() x86_64 support.
  *    hb_winExceptionHandler() WinCE/ARM support.
  *    hb_winExceptionHandler() OS/2 CPU dump.
  *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
