@@ -116,9 +116,7 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
+/* */
 FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
@@ -132,18 +130,14 @@ FUNCTION CallBack( nColCount, aValue, aColName )
 
    RETURN 0
 
-/**
-*/
-
+/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
    hb_default( @lShortMsg, .T. )
 
    RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/**
-*/
-
+/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT

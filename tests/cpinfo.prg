@@ -473,7 +473,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    cDef := strtran( cDef, "$3", unicode )
 return cDef
 
-func a2def( a )
+static func a2def( a )
    local i, cData := ""
    for i := 1 to len( a )
       cData += iif( i == 1, "", "," ) + ltrim( str( a[ i ] ) )

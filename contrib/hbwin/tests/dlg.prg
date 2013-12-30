@@ -28,7 +28,7 @@ PROCEDURE Main()
    RETURN
 
 // Main function to control the user interaction
-FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
+STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
 
    LOCAL cText
 

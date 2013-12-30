@@ -59,11 +59,9 @@ PROCEDURE Main()
 
    RETURN
 
-/*
+//
 
-*/
-
-PROCEDURE test( db )
+STATIC PROCEDURE test( db )
 
    IF sqlite3_exec( db, "SELECT * FROM t1" ) == SQLITE_OK
       ? "TABLE t1"

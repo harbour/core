@@ -54,13 +54,13 @@ STATIC PROCEDURE DrawScreen( cTitle )
 
    RETURN
 
-PROCEDURE DoNothingForTwoSeconds()
+STATIC PROCEDURE DoNothingForTwoSeconds()
 
    Inkey( 2 )
 
    RETURN
 
-PROCEDURE CallMe500Times()
+STATIC PROCEDURE CallMe500Times()
    RETURN
 
 STATIC PROCEDURE Browser( oBrowse )

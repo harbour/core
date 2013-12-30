@@ -103,7 +103,7 @@ PROCEDURE Main( cMode )
 
 #include "fileio.ch"
 
-PROCEDURE SrvMain( cParam1, cParam2 )
+STATIC PROCEDURE SrvMain( cParam1, cParam2 )
 
    LOCAL n := 0
    LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ), FC_NORMAL, FO_DENYNONE + FO_WRITE )

@@ -120,7 +120,7 @@ PROCEDURE Main( cCmdLine )
 
    RETURN
 
-FUNCTION fubar()
+STATIC FUNCTION fubar()
 
    LOCAL OldColor := SetColor( "W/N" )
 

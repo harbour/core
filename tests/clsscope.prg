@@ -276,26 +276,26 @@ proc main()
    return
 
 
-function errHandler( oErr )
+static function errHandler( oErr )
    ? "[ Error:", hb_ntos( oErr:gencode ), "/", hb_ntos( oErr:subcode ), ;
                  oErr:description, oErr:operation, "]"
    break( oErr )
    RETURN NIL
 
 
-PROC EXTEVAL( cb, o )
+STATIC PROCEDURE EXTEVAL( cb, o )
    EXTEVAL1( cb, o )
    RETURN
 
-PROC EXTEVAL1( cb, o )
+STATIC PROCEDURE EXTEVAL1( cb, o )
    EXTEVAL2( cb, o )
    RETURN
 
-PROC EXTEVAL2( cb, o )
+STATIC PROCEDURE EXTEVAL2( cb, o )
    EXTEVAL3( cb, o )
    RETURN
 
-PROC EXTEVAL3( cb, o )
+STATIC PROCEDURE EXTEVAL3( cb, o )
    EVAL( cb, o )
    RETURN
 

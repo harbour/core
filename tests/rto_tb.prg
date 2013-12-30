@@ -285,7 +285,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    RETURN
 
-PROCEDURE TBRAssign( xVar )
+STATIC PROCEDURE TBRAssign( xVar )
    LOCAL o
 
    s_xVar := xVar
@@ -325,7 +325,7 @@ PROCEDURE TBRAssign( xVar )
 
    RETURN
 
-PROCEDURE TBCAssign( xVar )
+STATIC PROCEDURE TBCAssign( xVar )
    LOCAL o
 
    s_xVar := xVar
@@ -350,7 +350,7 @@ PROCEDURE TBCAssign( xVar )
 
    RETURN
 
-PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
+STATIC PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -375,7 +375,7 @@ PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
 
    RETURN
 
-PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
+STATIC PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -404,7 +404,7 @@ PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
 
    RETURN
 
-PROCEDURE LogMe( data, desc )
+STATIC PROCEDURE LogMe( data, desc )
    LOCAL nLevel
    LOCAL cStack
 
@@ -433,7 +433,7 @@ PROCEDURE LogMe( data, desc )
 
    RETURN
 
-PROCEDURE LogTBRVars( o, desc, xResult )
+STATIC PROCEDURE LogTBRVars( o, desc, xResult )
    LOCAL nLevel
    LOCAL cStack
 
@@ -529,7 +529,7 @@ PROCEDURE LogTBRVars( o, desc, xResult )
 
    RETURN
 
-PROCEDURE LogTBCVars( o, desc, xResult )
+STATIC PROCEDURE LogTBCVars( o, desc, xResult )
    LOCAL nLevel
    LOCAL cStack
 
@@ -588,7 +588,7 @@ PROCEDURE LogTBCVars( o, desc, xResult )
 
    RETURN
 
-FUNCTION XToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -614,7 +614,7 @@ FUNCTION XToStr( xValue )
 
    RETURN ""
 
-FUNCTION ArrayToList( a )
+STATIC FUNCTION ArrayToList( a )
    LOCAL tmp
    LOCAL cString := ""
 
@@ -627,7 +627,7 @@ FUNCTION ArrayToList( a )
 
    RETURN cString
 
-FUNCTION XToStrE( xValue )
+STATIC FUNCTION XToStrE( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -653,7 +653,7 @@ FUNCTION XToStrE( xValue )
 
    RETURN ""
 
-FUNCTION XToStrX( xValue )
+STATIC FUNCTION XToStrX( xValue )
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -694,7 +694,7 @@ FUNCTION XToStrX( xValue )
 
    RETURN ""
 
-FUNCTION ArrayToEList( a )
+STATIC FUNCTION ArrayToEList( a )
    LOCAL tmp
    LOCAL cString := ""
 
@@ -773,12 +773,12 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 #ifdef __XPP__
-FUNCTION hb_SToD( cDate )
+STATIC FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
 #ifdef __XHARBOUR__
-FUNCTION hb_SToD( cDate )
+STATIC FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
@@ -786,7 +786,7 @@ FUNCTION hb_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION hb_SToD( s )
+STATIC FUNCTION hb_SToD( s )
 
    LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
@@ -799,7 +799,7 @@ FUNCTION hb_SToD( s )
 #endif
 #endif
 
-PROCEDURE OBJ_CREATE()
+STATIC PROCEDURE OBJ_CREATE()
 
    // Dummy
 
@@ -807,7 +807,7 @@ PROCEDURE OBJ_CREATE()
 
 /* We use this to wash out a small incompatibility in Harbour's built-in __eInstVar53(). */
 
-FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
+FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )  /* must be a public function */
 
    LOCAL oError
 

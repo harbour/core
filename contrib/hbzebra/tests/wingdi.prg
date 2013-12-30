@@ -84,7 +84,7 @@ PROCEDURE Main()
 
 #define _SCALE_ 7.2
 
-PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 

@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE Test( cLang )
+STATIC PROCEDURE Test( cLang )
 
    LOCAL nTemp
 

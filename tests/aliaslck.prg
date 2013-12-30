@@ -98,11 +98,11 @@ proc main()
    hb_dbDrop( cFile )
    return
 
-proc setLock( n )
+static proc setLock( n )
    ? "locking record: " + hb_ntos( n ) + " ->", dbRLock( n )
    return
 
-proc dspLock()
+static proc dspLock()
    local n
    ? Alias(), "active locks:"
    for each n in dbRLockList()

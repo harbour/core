@@ -112,7 +112,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-PROCEDURE Usage()
+STATIC PROCEDURE Usage()
 
    ? "Usage:"
    ? "testmmail [options] attachment1, attachment2..."

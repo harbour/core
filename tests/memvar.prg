@@ -57,7 +57,7 @@ PROCEDURE Main()
 
 //
 
-PROCEDURE Test1()
+STATIC PROCEDURE Test1()
 
    // PUBLIC overrided by PRIVATE overrided by uninitialized PUBLIC
    PUBL memvar1
@@ -72,7 +72,7 @@ PROCEDURE Test1()
 
    RETURN
 
-FUNCTION Scope( value )
+STATIC FUNCTION Scope( value )
 
    PRIVA memvar1 := "scope"
 
@@ -81,7 +81,7 @@ FUNCTION Scope( value )
 
    RETURN value
 
-PROCEDURE Scope2()
+STATIC PROCEDURE Scope2()
 
    PUBLIC memvar1
 
@@ -91,7 +91,7 @@ PROCEDURE Scope2()
 
 //
 
-PROCEDURE Test2()
+STATIC PROCEDURE Test2()
 
    // PUBLIC overrided by PUBLIC overrided by uninitialized PUBLIC
    PUBLIC memvar2
@@ -106,7 +106,7 @@ PROCEDURE Test2()
 
    RETURN
 
-FUNCTION Scope3( value )
+STATIC FUNCTION Scope3( value )
 
    PUBLIC memvar2 := "scope"
 
@@ -115,7 +115,7 @@ FUNCTION Scope3( value )
 
    RETURN value
 
-PROCEDURE Scope4()
+STATIC PROCEDURE Scope4()
 
    PUBLIC memvar2
 
@@ -125,7 +125,7 @@ PROCEDURE Scope4()
 
 //
 
-PROCEDURE Test3()
+STATIC PROCEDURE Test3()
 
    // PUBLIC overrided by PRIVATE overrided by initialized PUBLIC
    PUBLIC memvar3
@@ -140,7 +140,7 @@ PROCEDURE Test3()
 
    RETURN
 
-FUNCTION Scope5( value )
+STATIC FUNCTION Scope5( value )
 
    PRIVATE memvar3 := "scope"
 
@@ -149,7 +149,7 @@ FUNCTION Scope5( value )
 
    RETURN value
 
-PROCEDURE Scope6()
+STATIC PROCEDURE Scope6()
 
    PUBLIC memvar3 := "scope2"
 
@@ -159,7 +159,7 @@ PROCEDURE Scope6()
 
 //
 
-PROCEDURE Test4()
+STATIC PROCEDURE Test4()
 
    // PUBLIC overrided by PUBLIC overrided by initialized PUBLIC
    PUBLIC memvar4
@@ -174,7 +174,7 @@ PROCEDURE Test4()
 
    RETURN
 
-FUNCTION Scope7( value )
+STATIC FUNCTION Scope7( value )
 
    PUBLIC memvar4 := "scope"
 
@@ -183,7 +183,7 @@ FUNCTION Scope7( value )
 
    RETURN value
 
-PROCEDURE Scope8()
+STATIC PROCEDURE Scope8()
 
    PUBLIC memvar4 := "scope2"
 
@@ -193,7 +193,7 @@ PROCEDURE Scope8()
 
 //
 
-PROCEDURE TEST5()
+STATIC PROCEDURE TEST5()
 
    PUBLIC mempublic, public3 := 3
 
@@ -230,7 +230,7 @@ PROCEDURE TEST5()
 
    RETURN
 
-FUNCTION UseVar( value )
+STATIC FUNCTION UseVar( value )
 
    UseRef( @value )
 
@@ -249,7 +249,7 @@ FUNCTION UseVar( value )
 
    RETURN value
 
-PROCEDURE UseRef( reference )
+STATIC PROCEDURE UseRef( reference )
 
    reference += " variable"
 
@@ -257,7 +257,7 @@ PROCEDURE UseRef( reference )
 
 //
 
-PROCEDURE Test6()
+STATIC PROCEDURE Test6()
 
    PUBLIC publCB
    PRIVATE privVar := " (PRIVATE in MAIN) "
@@ -268,7 +268,7 @@ PROCEDURE Test6()
 
    RETURN
 
-PROCEDURE DetachMemvar( cValue )
+STATIC PROCEDURE DetachMemvar( cValue )
 
    PRIVATE privVar := " (PRIVATE in DetachMemvar) "
 
@@ -279,7 +279,7 @@ PROCEDURE DetachMemvar( cValue )
 
 //
 
-PROCEDURE Test7( )
+STATIC PROCEDURE Test7( )
 
    PARAMETERS para1, para2, para3
    PARAM parameter1again
@@ -293,7 +293,7 @@ PROCEDURE Test7( )
 
 //
 
-PROCEDURE Test8()
+STATIC PROCEDURE Test8()
 
    PRIVATE private1 := "PRIVATE1"
 
@@ -313,7 +313,7 @@ PROCEDURE Test8()
 
    RETURN
 
-PROCEDURE UsePriv()
+STATIC PROCEDURE UsePriv()
 
    PARAMETERS param1
 
@@ -327,7 +327,7 @@ PROCEDURE UsePriv()
 
    RETURN
 
-PROCEDURE UseParam()
+STATIC PROCEDURE UseParam()
 
    PARAMETERS param2
 
@@ -346,7 +346,7 @@ PROCEDURE UseParam()
 
 //
 
-PROCEDURE Test9()
+STATIC PROCEDURE Test9()
 
    PUBLIC MEMVAR
    PUBLIC memfunc

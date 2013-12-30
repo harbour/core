@@ -148,7 +148,7 @@ PROCEDURE Main( cUrl, cFile )
 
    RETURN
 
-PROCEDURE Terminate()
+STATIC PROCEDURE Terminate()
 
    @ 23, 18 SAY "Program done - Press a key to terminate"
    Inkey( 0 )
@@ -157,7 +157,7 @@ PROCEDURE Terminate()
 
    RETURN
 
-PROCEDURE ShowGauge( nSent, nSize )
+STATIC PROCEDURE ShowGauge( nSent, nSize )
 
    @ 6, 5 SAY "Sending: " + Replicate( hb_UTF8ToStr( "░" ), 60 )
    /* nSent may be zero */

@@ -101,10 +101,7 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
@@ -117,10 +114,8 @@ FUNCTION CallBack( nColCount, aValue, aColName )
 
    RETURN 0
 
-/**
-*/
-
-FUNCTION HookCommitY()
+/* */
+STATIC FUNCTION HookCommitY()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -130,7 +125,7 @@ FUNCTION HookCommitY()
 
    RETURN 0
 
-FUNCTION HookCommitN()
+STATIC FUNCTION HookCommitN()
 
    LOCAL oldColor := SetColor( "B+/N" )
 
@@ -140,7 +135,7 @@ FUNCTION HookCommitN()
 
    RETURN 1 // not 0
 
-FUNCTION HookRollback()
+STATIC FUNCTION HookRollback()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -150,17 +145,14 @@ FUNCTION HookRollback()
 
    RETURN 1
 
-/**
-*/
+/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
    hb_default( @lShortMsg, .T. )
 
    RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/**
-*/
-
+/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT, cMsg

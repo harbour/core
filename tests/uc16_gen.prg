@@ -316,7 +316,7 @@ static function index_func04( cName, cNameInd, cNameConv, cMin, cMax, cBit )
 
 return cResult
 
-function min_size16( aVal, nMin, nMax, nBit )
+static function min_size16( aVal, nMin, nMax, nBit )
    local n, nM, nS, nSize, nMinX
    nSize := 0xFFFFFF
    nMinX := nMin
@@ -337,7 +337,7 @@ function min_size16( aVal, nMin, nMax, nBit )
    nMin := nMinX
 return nSize
 
-function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ ( nBit + 1 ) )
@@ -371,7 +371,7 @@ function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
 
 return n
 
-function min_size04( aVal, nMin, nMax, nBit )
+static function min_size04( aVal, nMin, nMax, nBit )
    local n, nM, nS, nSize, nMinX
    nSize := 0xFFFFFF
    nMinX := nMin
@@ -392,7 +392,7 @@ function min_size04( aVal, nMin, nMax, nBit )
    nMin := nMinX
 return nSize
 
-function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ ( nBit - 1 ) )

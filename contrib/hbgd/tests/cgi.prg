@@ -105,7 +105,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-PROCEDURE StartHTML( cTitle )
+STATIC PROCEDURE StartHTML( cTitle )
 
    hb_default( @cTitle, "" )
 
@@ -120,14 +120,14 @@ PROCEDURE StartHTML( cTitle )
 
    RETURN
 
-PROCEDURE EndHTML()
+STATIC PROCEDURE EndHTML()
 
    WRITE "</body>"
    WRITE "</html>"
 
    RETURN
 
-PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
+STATIC PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    LOCAL cType
 
@@ -161,7 +161,7 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    RETURN
 
-PROCEDURE OutJpg( cText, nPitch )
+STATIC PROCEDURE OutJpg( cText, nPitch )
 
    LOCAL oI
 
@@ -187,7 +187,7 @@ PROCEDURE OutJpg( cText, nPitch )
 
    oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
-#endif
+#if 0
    __OutDebug( oI:GetFTFontHeight() )
 #endif
    aSize := oI:GetFTStringSize( cText )
@@ -203,7 +203,7 @@ PROCEDURE OutJpg( cText, nPitch )
    oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
-#endif
+#if 0
    oI:SayFreeType( 0, 0, cText, , , 0, blue )
 
    oI:Resize( nWidth, nHeight )
@@ -222,7 +222,7 @@ PROCEDURE OutJpg( cText, nPitch )
 
    RETURN
 
-FUNCTION GetVars( cFields, cSeparator )
+STATIC FUNCTION GetVars( cFields, cSeparator )
 
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
@@ -260,7 +260,7 @@ FUNCTION GetVars( cFields, cSeparator )
 
    RETURN hHashVars
 
-FUNCTION GetParams( aParams )
+STATIC FUNCTION GetParams( aParams )
 
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
@@ -301,7 +301,7 @@ FUNCTION GetParams( aParams )
 // Can return both a string or a number
 //
 
-FUNCTION URLDecode( cStr )
+STATIC FUNCTION URLDecode( cStr )
 
    LOCAL cRet := "", i, cCar
 
@@ -339,7 +339,7 @@ FUNCTION URLDecode( cStr )
 
    RETURN cRet
 
-FUNCTION URLEncode( cStr )
+STATIC FUNCTION URLEncode( cStr )
 
    LOCAL cRet := "", i, nVal, cCar
 

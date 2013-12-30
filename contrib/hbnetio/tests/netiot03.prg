@@ -111,7 +111,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE createdb( cName )
+PROCEDURE createdb( cName )  /* must be a public function */
 
    LOCAL n
 
@@ -139,7 +139,7 @@ PROCEDURE createdb( cName )
 
    RETURN
 
-PROCEDURE testdb( cName )
+PROCEDURE testdb( cName )  /* must be a public function */
 
    LOCAL i, j
 
@@ -172,14 +172,14 @@ PROCEDURE testdb( cName )
 
    RETURN
 
-FUNCTION reg_stream( pConnSock, nStream )
+FUNCTION reg_stream( pConnSock, nStream )  /* must be a public function */
 
    ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_timer(), pConnSock, nStream ) )
 
    RETURN nStream
 
-FUNCTION reg_charstream( pConnSock, nStream )
+FUNCTION reg_charstream( pConnSock, nStream )  /* must be a public function */
 
    ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_charstream(), pConnSock, nStream ) )

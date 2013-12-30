@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Diff( ... )
+STATIC FUNCTION Diff( ... )
 
    LOCAL e
 

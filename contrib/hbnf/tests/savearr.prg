@@ -26,7 +26,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION DispArray( aTest )
+STATIC FUNCTION DispArray( aTest )
 
    LOCAL nk
 

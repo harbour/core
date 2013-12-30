@@ -151,7 +151,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE ShowAdsError()
+STATIC PROCEDURE ShowAdsError()
 
    LOCAL cMsg
 

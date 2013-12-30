@@ -63,9 +63,7 @@ PROCEDURE Main()
 
    RETURN
 
-/*
-*/
-PROCEDURE t1()
+STATIC PROCEDURE t1()
 
    LOCAL lCreateIfNotExist := .F.
    LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
@@ -76,9 +74,7 @@ PROCEDURE t1()
 
    RETURN
 
-/*
-*/
-PROCEDURE t2()
+STATIC PROCEDURE t2()
 
    LOCAL lCreateIfNotExist := .T.
    LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )

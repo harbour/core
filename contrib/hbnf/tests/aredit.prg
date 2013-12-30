@@ -35,7 +35,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TestGet( b, ar, nDim, nElem )
+STATIC FUNCTION TestGet( b, ar, nDim, nElem )
 
    LOCAL GetList   := {}
    LOCAL nRow      := Row()

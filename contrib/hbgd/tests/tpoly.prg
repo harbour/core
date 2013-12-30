@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE DrawFlake( lOpenPoly )
+STATIC PROCEDURE DrawFlake( lOpenPoly )
 
    LOCAL nOrder, nSide, nSides, nSideLen
    LOCAL gdImage, gdColor
@@ -82,7 +82,7 @@ PROCEDURE DrawFlake( lOpenPoly )
 
    RETURN
 
-PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
+STATIC PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
 
    IF nOrder == 0
       AAdd( s_aCoords, { ;

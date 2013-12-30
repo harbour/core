@@ -780,7 +780,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    RETURN
 
-PROCEDURE TGetTOVS( o, aKeys, lInsert )
+STATIC PROCEDURE TGetTOVS( o, aKeys, lInsert )
    LOCAL tmp, tmp1
 
    IF !( ValType( lInsert ) == "L" )
@@ -818,10 +818,10 @@ PROCEDURE TGetTOVS( o, aKeys, lInsert )
 
    RETURN
 
-FUNCTION TGetTIns( o, aKeys )
+STATIC FUNCTION TGetTIns( o, aKeys )
    RETURN TGetTOVS( o, aKeys, .T. )
 
-PROCEDURE TGetAssign( xVar )
+STATIC PROCEDURE TGetAssign( xVar )
    LOCAL o
    LOCAL nInt01 := 76
    LOCAL cStr01 := "AbC DeF 974"
@@ -1392,7 +1392,7 @@ PROCEDURE TGetAssign( xVar )
 
    RETURN
 
-PROCEDURE TGetTest( xVar, cPic )
+STATIC PROCEDURE TGetTest( xVar, cPic )
    LOCAL bOldBlock
    LOCAL o
 
@@ -1508,7 +1508,7 @@ PROCEDURE TGetTest( xVar, cPic )
 
    RETURN
 
-PROCEDURE TEST_CALL( o, cBlock, bBlock )
+STATIC PROCEDURE TEST_CALL( o, cBlock, bBlock )
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
@@ -1529,7 +1529,7 @@ PROCEDURE TEST_CALL( o, cBlock, bBlock )
 
    RETURN
 
-FUNCTION CallStack()
+STATIC FUNCTION CallStack()
    LOCAL tmp := 1
    LOCAL cString := ""
 
@@ -1540,7 +1540,7 @@ FUNCTION CallStack()
 
    RETURN RTrim( cString )
 
-PROCEDURE LogMe( nPCount, data, desc )
+STATIC PROCEDURE LogMe( nPCount, data, desc )
    LOCAL nLevel
    LOCAL cStack
 
@@ -1569,7 +1569,7 @@ PROCEDURE LogMe( nPCount, data, desc )
 
    RETURN
 
-PROCEDURE LogGETVars( o, desc, xResult )
+STATIC PROCEDURE LogGETVars( o, desc, xResult )
    LOCAL nLevel
    LOCAL cStack
 
@@ -1644,7 +1644,7 @@ PROCEDURE LogGETVars( o, desc, xResult )
 
    RETURN
 
-FUNCTION XToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -1670,7 +1670,7 @@ FUNCTION XToStr( xValue )
 
    RETURN ""
 
-FUNCTION ArrayToList( a )
+STATIC FUNCTION ArrayToList( a )
    LOCAL tmp
    LOCAL cString := ""
 
@@ -1683,7 +1683,7 @@ FUNCTION ArrayToList( a )
 
    RETURN cString
 
-FUNCTION XToStrE( xValue )
+STATIC FUNCTION XToStrE( xValue )
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -1709,7 +1709,7 @@ FUNCTION XToStrE( xValue )
 
    RETURN ""
 
-FUNCTION XToStrX( xValue )
+STATIC FUNCTION XToStrX( xValue )
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -1819,7 +1819,7 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 #ifdef __XPP__
-FUNCTION hb_SToD( cDate )
+STATIC FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
@@ -1827,7 +1827,7 @@ FUNCTION hb_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION hb_SToD( s )
+STATIC FUNCTION hb_SToD( s )
 
    LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
@@ -1840,7 +1840,7 @@ FUNCTION hb_SToD( s )
 #endif
 #endif
 
-PROCEDURE OBJ_CREATE()
+STATIC PROCEDURE OBJ_CREATE()
 
    // Dummy
 

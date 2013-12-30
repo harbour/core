@@ -46,7 +46,7 @@ PROCEDURE Main()
    RETURN
 
 
-PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 

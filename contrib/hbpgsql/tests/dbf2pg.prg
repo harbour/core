@@ -303,7 +303,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-PROCEDURE Help()
+STATIC PROCEDURE Help()
 
    ? "dbf2pg - dbf file to PostgreSQL table conversion utility"
    ? "-h hostname (default: localhost)"

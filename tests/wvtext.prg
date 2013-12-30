@@ -336,7 +336,7 @@ STATIC PROCEDURE DispScreen()
 
 #if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
 
-PROCEDURE hb_GTSYS()
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN
@@ -533,7 +533,6 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION BlockField( i )
-
    RETURN {|| FieldGet( i ) }
 
 //

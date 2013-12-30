@@ -77,7 +77,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE createdb( cName )
+PROCEDURE createdb( cName )  /* must be a public function */
 
    LOCAL n
 
@@ -105,7 +105,7 @@ PROCEDURE createdb( cName )
 
    RETURN
 
-PROCEDURE testdb( cName )
+PROCEDURE testdb( cName )  /* must be a public function */
 
    LOCAL i, j
 

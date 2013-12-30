@@ -219,7 +219,7 @@ static function hash_to_array( hVal )
    next
 return aVal
 
-function min_size( aVal, nMin, nMax, nBit )
+static function min_size( aVal, nMin, nMax, nBit )
    local n, nM, nS, nSize, nMinX
    nSize := 0xFFFFFF
    nMinX := nMin
@@ -240,7 +240,7 @@ function min_size( aVal, nMin, nMax, nBit )
    nMin := nMinX
 return nSize
 
-function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ nBit )

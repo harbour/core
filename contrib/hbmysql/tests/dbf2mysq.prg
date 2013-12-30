@@ -170,7 +170,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-PROCEDURE Help()
+STATIC PROCEDURE Help()
 
    ? "dbf2MySQL - dbf file to MySQL table conversion utility"
    ? "-h hostname (default: localhost)"
