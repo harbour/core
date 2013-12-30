@@ -23,7 +23,11 @@
 // Main entry point
 PROCEDURE Main()
 
-   wapi_DialogBoxParam( 0, IDD_DIALOG1, 0, @DialogFunc() )
+   IF Empty( win_LoadResource( IDD_DIALOG1, 5 /* RT_DIALOG */ ) )
+      wapi_MessageBox( "", "Missing resources. Use 'hbmk2 dlg.hbp' to include resources at build time." )
+   ELSE
+      wapi_DialogBoxParam( 0, IDD_DIALOG1, 0, @DialogFunc() )
+   ENDIF
 
    RETURN
 

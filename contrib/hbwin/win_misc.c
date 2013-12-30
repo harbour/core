@@ -133,12 +133,29 @@ HB_FUNC( WIN_LOADRESOURCE )
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
    {
+      LPCTSTR szName;
+      LPCTSTR szType;
+
       void * hName;
       void * hType;
 
-      HRSRC hRes = FindResource( ( HMODULE ) hInstance,
-                                 HB_PARSTRDEF( 1, &hName, NULL ),
-                                 HB_PARSTRDEF( 2, &hType, NULL ) );
+      if( HB_ISNUM( 1 ) )
+      {
+         szName = MAKEINTRESOURCE( hb_parni( 1 ) );
+         hName = NULL;
+      }
+      else
+         szName = HB_PARSTRDEF( 1, &hName, NULL );
+
+      if( HB_ISNUM( 2 ) )
+      {
+         szType = MAKEINTRESOURCE( hb_parni( 2 ) );
+         hType = NULL;
+      }
+      else
+         szType = HB_PARSTRDEF( 2, &hType, NULL );
+
+      HRSRC hRes = FindResource( ( HMODULE ) hInstance, szName, szType );
 
       if( hRes )
       {

@@ -560,7 +560,7 @@ HB_FUNC( WAPI_TRACKPOPUPMENU )
                               hbwapi_par_UINT( 2 ),            /* uFlags */
                               hbwapi_par_INT( 3 ),             /* x */
                               hbwapi_par_INT( 4 ),             /* y */
-                              hbwapi_par_INT( 5 ),             /* nReserved */
+                              0,                               /* nReserved */
                               hWnd ? hWnd : GetActiveWindow(), /* hWnd */
                               NULL /* prcRect */ );
    hbwapi_SetLastError( GetLastError() );

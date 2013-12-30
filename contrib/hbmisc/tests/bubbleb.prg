@@ -37,7 +37,7 @@ PROCEDURE Main()
 
 /* Harbour implementation */
 
-STATIC FUNCTION BubbleBabbleEncode_Prg( cString )
+STATIC FUNCTION BubbleBabbleEncode_prg( cString )
 
    LOCAL vo := "aeiouy"
    LOCAL co := "bcdfghklmnprstvzx"
