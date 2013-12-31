@@ -8,23 +8,23 @@
 #require "hbwin"
 
 // Some constants
-#define IDD_DIALOG1                        101
-#define IDC_BUTTON1                        4001
-#define IDC_STATIC1                        1002
-#define IDC_EDIT1                          1003
-#define IDC_COMBO1                         1006
+#define IDD_DIALOG1         101
+#define IDC_BUTTON1         4001
+#define IDC_STATIC1         1002
+#define IDC_EDIT1           1003
+#define IDC_COMBO1          1006
 
-#define WM_INITDIALOG                      0x0110
-#define WM_COMMAND                         0x0111
-#define WM_SYSCOMMAND                      0x0112
-#define WM_CLOSE                           0x0010
-#define MB_ICONASTERISK                    0x00000040
+#define WM_INITDIALOG       0x0110
+#define WM_COMMAND          0x0111
+#define WM_SYSCOMMAND       0x0112
+#define WM_CLOSE            0x0010
+#define MB_ICONASTERISK     0x00000040
 
 // Main entry point
 PROCEDURE Main()
 
-   IF Empty( win_LoadResource( IDD_DIALOG1, 5 /* RT_DIALOG */ ) )
-      wapi_MessageBox( "", "Missing resources. Use 'hbmk2 dlg.hbp' to include resources at build time." )
+   IF Empty( win_LoadResource( IDD_DIALOG1, WIN_RT_DIALOG ) )
+      wapi_MessageBox( , "Resources not linked. Use 'hbmk2 dlg.hbp' to link resources at build time." )
    ELSE
       wapi_DialogBoxParam( 0, IDD_DIALOG1, 0, @DialogFunc() )
    ENDIF

@@ -776,4 +776,26 @@
 #define HB_RPC_S_UNKNOWN_PRINCIPAL         1332
 #define HB_RPC_S_TIMEOUT                   1460
 
+/* Resource types (win_LoadResource() second parameter) */
+#define WIN_RT_CURSOR                      1
+#define WIN_RT_BITMAP                      2
+#define WIN_RT_ICON                        3
+#define WIN_RT_MENU                        4
+#define WIN_RT_DIALOG                      5
+#define WIN_RT_STRING                      6
+#define WIN_RT_FONTDIR                     7
+#define WIN_RT_FONT                        8
+#define WIN_RT_ACCELERATOR                 9
+#define WIN_RT_RCDATA                      10
+#define WIN_RT_MESSAGETABLE                11
+#define WIN_RT_GROUP_CURSOR                12
+#define WIN_RT_GROUP_ICON                  14
+#define WIN_RT_VERSION                     16
+#define WIN_RT_DLGINCLUDE                  17
+#define WIN_RT_PLUGPLAY                    19
+#define WIN_RT_VXD                         20
+#define WIN_RT_ANICURSOR                   21
+#define WIN_RT_ANIICON                     22
+#define WIN_RT_HTML                        23
+
 #endif /* HBWIN_CH_ */
