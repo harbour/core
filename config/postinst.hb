@@ -381,7 +381,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         OutStd(hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE
          OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
