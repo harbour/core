@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-11\-26 08:58\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(gl\): JLalín  
@@ -30,7 +30,7 @@ Opcións:
 
 
  - **\-mt|\-st** enlazar coa máquina virtual de Harbour para multifío/simple fío
- - **\-gui|\-std** crear executable para GUI/consola
+ - **\-gui|\-std|\-cli** create GUI/console/command\-line executable
  - **\-main=&lt;mainfunc&gt;** substituír o nome da función/procedemento de arranque
  - **\-request=&lt;func&gt;** Forzar enlazado de función/procedemento
  - **\-fullstatic** enlazar con todas as bibliotecas estáticas
@@ -286,8 +286,8 @@ Macro variables:
  - **$\{hb\_dynprefix\}** prefixo para bibliotecas dinámicas
  - **$\{hb\_dynsuffix\}** sufixo para bibliotecas dinámicas
  - **$\{hb\_dynext\}** extensión para bibliotecas dinámicas
- - **$\{hb\_ver\}** Versión de Harbour en formato hexadecimal de tres bytes\. Por exemplo: 030200
- - **$\{hb\_verstr\}** Versión de Harbour en formato lexible: &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por exemplo: 3\.2\.0dev
+ - **$\{hb\_ver\}** Versión de Harbour en formato hexadecimal de tres bytes\. Por exemplo: 030400
+ - **$\{hb\_verstr\}** Versión de Harbour en formato lexible: &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por exemplo: 3\.4\.0dev
  - **$\{hb\_major\}** Número de versión principal de Harbour
  - **$\{hb\_minor\}** Número de versión secundario de Harbour
  - **$\{hb\_release\}** Número de versión da publicación de Harbour

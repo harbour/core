@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-11\-26 08:58\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
@@ -30,7 +30,7 @@ Copyright &copy; 1999\-2014, Viktor Szakáts
 
 
  - **\-mt|\-st** διασύνδεση με την πολυ/μονο\-νηματική εικονική μηχανή Harbour VM
- - **\-gui|\-std** δημιουργία GUI/console εκτελέσιμου
+ - **\-gui|\-std|\-cli** create GUI/console/command\-line executable
  - **\-main=&lt;mainfunc&gt;** υπερκάλυψη του ονόματος της εναρκτήριας συνάρτησης
  - **\-request=&lt;func&gt;** εξαναγκασμός συνάρτησης/λειτουργίας να διασυνδεθεί
  - **\-fullstatic** διασύνδεση με όλες τις static βιβλιοθήκες
@@ -276,8 +276,8 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **$\{hb\_dynprefix\}** πρόθεμα δυναμικής βιβλιοθήκης
  - **$\{hb\_dynsuffix\}** επίθεμα δυναμικής βιβλιοθήκης
  - **$\{hb\_dynext\}** κατάληξη δυναμικής βιβλιοθήκης
- - **$\{hb\_ver\}** Η έκδοση Harbour σε δεκαεξαδική μορφή τριπλού χαρακτήρα\. Π\.χ\.: 030200
- - **$\{hb\_verstr\}** η έκδοση Harbour σε ανθρώπινα αναγνώσιμη μορφή &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Π\.χ\.: 3\.2\.0dev
+ - **$\{hb\_ver\}** Η έκδοση Harbour σε δεκαεξαδική μορφή τριπλού χαρακτήρα\. Π\.χ\.: 030400
+ - **$\{hb\_verstr\}** η έκδοση Harbour σε ανθρώπινα αναγνώσιμη μορφή &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Π\.χ\.: 3\.4\.0dev
  - **$\{hb\_major\}** Μείζων αριθμός έκδοσης Harbour
  - **$\{hb\_minor\}** Δευτερεύων αριθμός έκδοσης
  - **$\{hb\_release\}** Αριθμός έκδοσης Harbour \-release\-

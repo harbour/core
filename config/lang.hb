@@ -81,7 +81,7 @@ STATIC PROCEDURE doc_make( cMain )
 
       ? hPar[ "name" ], "generating documentation:"
 
-      hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -gh -o%2$s", hPar[ "entry" ], cTempHRB ) )
+      hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -gh -o%3$s", hbshell_ProgName(), hPar[ "entry" ], cTempHRB ) )
 
       FOR EACH cLang IN hb_AIns( hPar[ "langs" ], 1, hPar[ "baselang" ], .T. )
 
@@ -92,8 +92,8 @@ STATIC PROCEDURE doc_make( cMain )
             hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" ) )
 
          file := hPar[ "doc" ] + hPar[ "name" ] + "." + cLang + hPar[ "docext" ]
-         hb_run( hb_StrFormat( "hbmk2 %1$s %2$s > %3$s", ;
-            cTempHRB, StrTran( ArrayToList( hPar[ "docoption" ] ), "{LNG}", cLang ), file ) )
+         hb_run( hb_StrFormat( "%1$s %2$s %3$s > %4$s", ;
+            hbshell_ProgName(), cTempHRB, StrTran( ArrayToList( hPar[ "docoption" ] ), "{LNG}", cLang ), file ) )
          FToNativeEOL( file )
 
          FErase( hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" )
@@ -126,7 +126,7 @@ STATIC PROCEDURE src_push( cMain )
    IF Empty( hPar[ "po" ] )
       cContent := LangToPO( LangToCoreLang( hPar[ "baselang" ] ) )
    ELSE
-      hb_run( hb_StrFormat( "hbmk2 -hbraw -q0 %1$s -j%2$s -s", hPar[ "entry" ], cTempContent ) )
+      hb_run( hb_StrFormat( "%1$s -hbraw -q0 %2$s -j%3$s -s", hbshell_ProgName(), hPar[ "entry" ], cTempContent ) )
 
       POT_Sort( cTempContent )
 

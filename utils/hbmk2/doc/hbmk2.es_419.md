@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-11\-26 08:58\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
 Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(es\_419\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
@@ -30,7 +30,7 @@ Opciones:
 
 
  - **\-mt|\-st** enlazar con soporte multi/single\-thread Harbour VM
- - **\-gui|\-std** crear ejecutable GUI/console
+ - **\-gui|\-std|\-cli** create GUI/console/command\-line executable
  - **\-main=&lt;mainfunc&gt;** reemplaza nombre de función/procedimento inicial
  - **\-request=&lt;func&gt;** fuerza función/procedimiento a enlazarse
  - **\-fullstatic** enlazar con todas las librerías estáticas
@@ -276,8 +276,8 @@ Variables macro:
  - **$\{hb\_dynprefix\}** prefijo de librería dinámica
  - **$\{hb\_dynsuffix\}** sufijo de librería dinámica
  - **$\{hb\_dynext\}** extensión de librería dinámica
- - **$\{hb\_ver\}** Versión Harbour en formato triple byte hexadecimal, p\.e: 030200
- - **$\{hb\_verstr\}** Versión Harbour en formato legible &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. ej\.: 3\.2\.0dev
+ - **$\{hb\_ver\}** Versión Harbour en formato triple byte hexadecimal, p\.e: 030400
+ - **$\{hb\_verstr\}** Versión Harbour en formato legible &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. ej\.: 3\.4\.0dev
  - **$\{hb\_major\}** Número mayor de versión Harbour
  - **$\{hb\_minor\}** Número menor de versión Harbour
  - **$\{hb\_release\}** Número de versión de Harbour liberada
