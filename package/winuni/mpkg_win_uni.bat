@@ -13,10 +13,10 @@ rem - Requires GNU sed tool in PATH
 
 echo ! Self: %0
 
-if "%HB_VS%" == "" set HB_VS=32
-if "%HB_VL%" == "" set HB_VL=320
-if "%HB_VM%" == "" set HB_VM=3.2
-if "%HB_VF%" == "" set HB_VF=3.2.0dev
+if "%HB_VS%" == "" set HB_VS=34
+if "%HB_VL%" == "" set HB_VL=340
+if "%HB_VM%" == "" set HB_VM=3.4
+if "%HB_VF%" == "" set HB_VF=3.4.0dev
 if "%HB_RT%" == "" set HB_RT=C:\hb\
 
 set HB_DR=hb%HB_VS%\
