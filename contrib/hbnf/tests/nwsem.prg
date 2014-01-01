@@ -18,7 +18,7 @@ PROCEDURE Main()
    Inkey( 0 )
    IF nRc == 254
       ? "Couldn't get the semaphore.  Try again."
-      QUIT
+      RETURN
    ENDIF
 
    CLS

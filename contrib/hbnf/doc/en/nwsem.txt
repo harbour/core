@@ -83,7 +83,7 @@
 
       IF nRc != 0
          ? "Error:", nRc
-         QUIT
+         RETURN
       ENDIF
    $SEEALSO$
       ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
@@ -130,7 +130,7 @@
       nRc := ft_NWSemWait( nHandle )
       IF nRc == 254
          ? "All slots for this resource are currently in use"
-         QUIT
+         RETURN
       ENDIF
 
       ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
@@ -174,7 +174,7 @@
       nRc := ft_NWSemWait( nHandle )
       IF nRc == 254
          ? "All slots for this resource are currently in use"
-         QUIT
+         RETURN
       ENDIF
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()

@@ -33,7 +33,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    IF ! hb_FileExists( IMAGES_IN + cBaseImage )
       ? "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found"
-      QUIT
+      RETURN
    ENDIF
 
    nValue := Val( cValue )

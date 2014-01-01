@@ -277,7 +277,7 @@ PROCEDURE Main()
 
       CASE nKey == HB_K_CLOSE
          IF Alert( "Close Application", { "Yes", "No" } ) == 1
-            QUIT
+            RETURN
          ENDIF
 
       ENDCASE

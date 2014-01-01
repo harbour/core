@@ -69,7 +69,7 @@ PROCEDURE Main( ... )
 
    IF PCount() < 6
       help()
-      QUIT
+      RETURN
    ENDIF
 
    i := 1
@@ -102,7 +102,7 @@ PROCEDURE Main( ... )
 
       OTHERWISE
          help()
-         QUIT
+         RETURN
       ENDCASE
    ENDDO
 
@@ -112,13 +112,13 @@ PROCEDURE Main( ... )
    oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
    IF oServer:NetErr()
       ? oServer:Error()
-      QUIT
+      RETURN
    ENDIF
 
    oServer:SelectDB( cDataBase )
    IF oServer:NetErr()
       ? oServer:Error()
-      QUIT
+      RETURN
    ENDIF
 
    IF lCreateTable
@@ -126,21 +126,21 @@ PROCEDURE Main( ... )
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:Error()
-            QUIT
+            RETURN
          ENDIF
       ENDIF
       oServer:CreateTable( cTable, aDbfStruct )
       IF oServer:NetErr()
          ? oServer:Error()
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
    // Initialize MySQL table
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
-      Alert( oTable:Error() )
-      QUIT
+      ? oTable:Error()
+      RETURN
    ENDIF
 
    DO WHILE ! dbffile->( Eof() ) .AND. Inkey() != K_ESC
@@ -153,7 +153,7 @@ PROCEDURE Main( ... )
 
       oTable:Append( oRecord )
       IF oTable:NetErr()
-         Alert( oTable:Error() )
+         ? oTable:Error()
       ENDIF
 
       dbffile->( dbSkip() )
@@ -172,7 +172,7 @@ PROCEDURE Main( ... )
 
 STATIC PROCEDURE Help()
 
-   ? "dbf2MySQL - dbf file to MySQL table conversion utility"
+   ? "dbf2mysql - dbf file to MySQL table conversion utility"
    ? "-h hostname (default: localhost)"
    ? "-u user (default: root)"
    ? "-p password (default no password)"

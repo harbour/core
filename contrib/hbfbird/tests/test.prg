@@ -33,7 +33,7 @@ PROCEDURE Main()
    db := FBConnect( cServer + cDatabase, cUser, cPass )
    IF HB_ISNUMERIC( db )
       ? "Error:", db, FBError( db )
-      QUIT
+      RETURN
    ENDIF
 
    ? "Testing invalid request"
@@ -61,19 +61,19 @@ PROCEDURE Main()
    IF HB_ISNUMERIC( trans )
       ? "Error:", trans, FBError( trans )
    ELSE
-      ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 1")', nDialect, trans ), FBError( tmp )
-      ? "Status Rollback: ", tmp := FBRollback( trans ), FBError( tmp )
+      ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 1")', nDialect, trans ), FBError( tmp )
+      ? "Status Rollback:", tmp := FBRollback( trans ), FBError( tmp )
    ENDIF
 
    trans := FBStartTransaction( db )
    IF HB_ISNUMERIC( trans )
       ? "Error:", trans, FBError( trans )
    ELSE
-      ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 2")', nDialect, trans ), FBError( tmp )
-      ? "Status Commit: ", tmp := FBCommit( trans ), FBError( tmp )
+      ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 2")', nDialect, trans ), FBError( tmp )
+      ? "Status Commit:", tmp := FBCommit( trans ), FBError( tmp )
    ENDIF
 
-   ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
+   ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
 
    // FIX WINDOWS GPF BELOW
 
@@ -102,10 +102,10 @@ PROCEDURE Main()
 
       ? "Fetch code:", fetch_stat
 
-      ? "Status Free Query: ", FBFree( qry )
+      ? "Status Free Query:", FBFree( qry )
    ENDIF
 
    /* Close connection with rdbms */
-   ? "Status Close Database: ", tmp := FBClose( db ), FBError( tmp )
+   ? "Status Close Database:", tmp := FBClose( db ), FBError( tmp )
 
    RETURN

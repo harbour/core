@@ -17,21 +17,21 @@ PROCEDURE Main()
    ? PQstatus( conn ), PQerrorMessage( conn )
 
    IF PQstatus( conn ) != CONNECTION_OK
-      QUIT
+      RETURN
    ENDIF
 
-   ? "Blocking: ", PQisnonblocking( conn ), PQsetnonblocking( conn, .T. ), PQisnonblocking( conn )
+   ? "Blocking:", PQisnonblocking( conn ), PQsetnonblocking( conn, .T. ), PQisnonblocking( conn )
 
    pFile := PQtracecreate( "trace.log" )
    PQtrace( conn, pFile )
 
-   ? "Verbose: ", PQsetErrorVerbosity( conn, 2 )
+   ? "Verbose:", PQsetErrorVerbosity( conn, 2 )
 
    ? ;
-      "Protocol: ", PQprotocolVersion( conn ), ;
-      " Server Version: ", PQserverVersion( conn ), ;
-      " Client Encoding: ", PQsetClientEncoding( conn, "ASCII" ), ;
-      "New encode: ", PQclientEncoding( conn )
+      "Protocol:", PQprotocolVersion( conn ), ;
+      "Server Version:", PQserverVersion( conn ), ;
+      "Client Encoding:", PQsetClientEncoding( conn, "ASCII" ), ;
+      "New encode:", PQclientEncoding( conn )
 
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
@@ -43,7 +43,7 @@ PROCEDURE Main()
    ? PQresultStatus( res ), PQresultErrorMessage( res )
 
    res := PQexecParams( conn, "insert into products(product_no, name, price) values ($1, $2, $3)", { "2", "bread", "10.95" } )
-   ? "Oid Row: ", PQoidValue( res ), PQoidStatus( res )
+   ? "Oid Row:", PQoidValue( res ), PQoidStatus( res )
 
    IF PQresultStatus( res ) != PGRES_COMMAND_OK
       ? PQresultStatus( res ), PQresultErrorMessage( res )
@@ -55,8 +55,8 @@ PROCEDURE Main()
       ? PQresultStatus( res ), PQresultErrorMessage( res )
    ENDIF
 
-   ? "Binary: ", PQbinaryTuples( res )
-   ? "Rows: ", PQntuples( res ), "Cols: ", PQnfields( res )
+   ? "Binary:", PQbinaryTuples( res )
+   ? "Rows:", PQntuples( res ), "Cols:", PQnfields( res )
    ? PQfname( res, 1 ), PQftable( res, 1 ), PQftype( res, 1 ), PQfnumber( res, "name" ), PQfmod( res, 1 ), PQfsize( res, 1 ), PQgetisnull( res, 1, 1 )
 
    aTemp := PQmetadata( res )

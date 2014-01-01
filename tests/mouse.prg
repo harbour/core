@@ -14,7 +14,7 @@ PROCEDURE Main()
    CLS
    IF ! MPresent()
       ? " No mouse present !"
-      QUIT
+      RETURN
    ENDIF
 
    @ 0, 0 TO MaxRow(), MaxCol() DOUBLE

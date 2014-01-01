@@ -149,7 +149,7 @@ FUNCTION SQLApplyUpdates()
    ENDIF
 
    IF lError
-      Alert( cError )
+      ? cError
    ENDIF
 
    RETURN ! lError
@@ -301,7 +301,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    oQuery := s_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
-      Alert( oQuery:ErrorMsg() )
+      ? oQuery:ErrorMsg()
       RETURN .F.
    ENDIF
 
@@ -359,7 +359,7 @@ FUNCTION SQLConnect( cServer, cDatabase, cUser, cPassword, cSchema )
 
    s_oServer := TPQServer():New( cServer, cDatabase, cUser, cPassWord, 5432, cSchema )
    IF s_oServer:NetErr()
-      Alert( s_oServer:ErrorMsg() )
+      ? s_oServer:ErrorMsg()
       lRetval := .F.
    ENDIF
    s_oServer:lAllCols := .F.
@@ -385,7 +385,7 @@ FUNCTION SQLQuery( cQuery )
    LOCAL oQuery := s_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
-      Alert( cQuery + ":" + oQuery:ErrorMsg() )
+      ? cQuery + ":" + oQuery:ErrorMsg()
    ENDIF
 
    RETURN oQuery
@@ -398,7 +398,7 @@ FUNCTION SQLExecQuery( cQuery )
 
    oQuery := s_oServer:Query( cQuery )
    IF oQuery:NetErr()
-      Alert( "Cannot execute " + cQuery + ":" + oQuery:ErrorMsg() )
+      ? "Cannot execute " + cQuery + ":" + oQuery:ErrorMsg()
 
       result := .F.
    ELSE

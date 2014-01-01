@@ -1,9 +1,11 @@
-/******************************************
- * TIP test
- * HTTP Advanced operations Test
- ******************************************/
+/*
+ * TIP HTTP advanced operations Test
+ */
 
+#require "hbssl"
 #require "hbtip"
+
+REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main( cUrl )
 
@@ -11,16 +13,22 @@ PROCEDURE Main( cUrl )
 
    oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
-      ? "Invalid url " + cUrl
+      ? "Invalid URL", cUrl
       ?
-      QUIT
+      RETURN
    ENDIF
 
-   IF oUrl:cProto != "http"
-      ? "This is a header test for http."
-      ? "Use an http address."
+   IF !( oUrl:cProto == "http" ) .AND. ;
+      !( oUrl:cProto == "https" )
+      ? "This is a header test for http/https."
+      ? "Use an http/https address."
       ?
-      QUIT
+      RETURN
+   ENDIF
+
+   IF oUrl:cProto == "https" .AND. ! tip_SSL()
+      ? "Error: Requires SSL support"
+      RETURN
    ENDIF
 
    oCon := TIPClientHTTP():New( oUrl )
@@ -28,12 +36,12 @@ PROCEDURE Main( cUrl )
    ? "Connecting with", oUrl:cServer
    IF oCon:Open( cUrl )
       ? "Connection eshtablished"
-      ? "Retreiving", oUrl:cPath, oUrl:cFile, oUrl:cQuery
+      ? "Retrieving", oUrl:cPath, oUrl:cFile, oUrl:cQuery
 
       IF oCon:Get( oUrl:cPath )
-         ? "Get Sucessful"
-         FOR i := 1 TO Len( oCon:hHeaders )
-            ? hb_HKeyAt( oCon:hHeaders, i ) + ":", hb_HValueAt( oCon:hHeaders, i )
+         ? "Get Successful"
+         FOR EACH i IN oCon:hHeaders
+            ? i:__enumKey() + ":", i
          NEXT
       ELSE
          ? "Get failure (server reply:", oCon:cReply, ")"
@@ -45,7 +53,7 @@ PROCEDURE Main( cUrl )
       IF oCon:SocketCon == NIL
          ? "Connection not initiated"
       ELSEIF hb_inetErrorCode( oCon:SocketCon ) == 0
-         ? "Server sayed:", oCon:cReply
+         ? "Server replied:", oCon:cReply
       ELSE
          ? "Error in connection:", hb_inetErrorDesc( oCon:SocketCon )
       ENDIF

@@ -18,7 +18,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    ? PQstatus( conn ), PQerrorMessage( conn )
 
    IF PQstatus( conn ) != CONNECTION_OK
-      QUIT
+      RETURN
    ENDIF
 
    ? "Dropping table..."
@@ -43,7 +43,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    PQexec( conn, "BEGIN" )
 
    FOR i := 1 TO 10000
-      @ 15, 0 SAY "Inserting values...." + Str( i )
+      @ 15, 0 SAY "Inserting values.... " + Str( i )
 
       cQuery := "INSERT INTO test(code, dept, name, sales, salary, creation) " + ;
          "VALUES( " + hb_ntos( i ) + "," + hb_ntos( i + 1 ) + ", 'DEPARTMENT NAME " + StrZero( i ) + "', 'y', " + hb_ntos( 300.49 + i ) + ", '2003-12-28' )"
@@ -57,7 +57,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    NEXT
 
    FOR i := 5000 TO 7000
-      @ 16, 0 SAY "Deleting values...." + Str( i )
+      @ 16, 0 SAY "Deleting values.... " + Str( i )
 
       cQuery := "DELETE FROM test WHERE code = " + hb_ntos( i )
       PQexec( conn, cQuery )
@@ -69,7 +69,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    NEXT
 
    FOR i := 2000 TO 3000
-      @ 17, 0 SAY "Updating values...." + Str( i )
+      @ 17, 0 SAY "Updating values.... " + Str( i )
 
       cQuery := "UPDATE FROM test SET salary = 400 WHERE code = " + hb_ntos( i )
       PQexec( conn, cQuery )

@@ -28,7 +28,7 @@ PROCEDURE Main()
 
    IF oServer:NetErr()
       ? oServer:Error()
-      QUIT
+      RETURN
    ENDIF
 
    ? "Tables..."
@@ -113,7 +113,7 @@ PROCEDURE Main()
 
    aKey := oQuery:GetKeyField()
 
-   ? "Fields: ", oQuery:FCount(), "Primary Key: ", aKey[ 1 ]
+   ? "Fields:", oQuery:FCount(), "Primary Key:", aKey[ 1 ]
 
    oRow := oQuery:Blank()
 
@@ -154,16 +154,16 @@ PROCEDURE Main()
          oRow := oQuery:getrow()
 
          oRow:FieldPut( 2, "My Second test" )
-         ? "Update: ", oServer:Update( oRow )
+         ? "Update:", oServer:Update( oRow )
       ENDIF
 
       IF oQuery:RecNo() == 60
          oRow := oQuery:getrow()
-         ? "Delete: ", oServer:Delete( oRow )
+         ? "Delete:", oServer:Delete( oRow )
       ENDIF
    ENDDO
 
-   ? "Delete: ", oServer:Delete( oQuery:Blank(), "code = 70" )
+   ? "Delete:", oServer:Delete( oQuery:Blank(), "code = 70" )
 
    oQuery:Refresh()
 

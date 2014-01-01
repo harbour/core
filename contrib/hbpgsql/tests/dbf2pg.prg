@@ -83,7 +83,7 @@ PROCEDURE Main( ... )
 
    IF PCount() < 6
       help()
-      QUIT
+      RETURN
    ENDIF
 
    i := 1
@@ -134,14 +134,14 @@ PROCEDURE Main( ... )
 
       OTHERWISE
          help()
-         QUIT
+         RETURN
       ENDCASE
    ENDDO
 
    // create log file
    IF ( nHandle := FCreate( RTrim( cTable ) + ".log" ) ) == F_ERROR
       ? "Cannot create log file"
-      QUIT
+      RETURN
    ENDIF
 
    USE ( cFile ) SHARED
@@ -150,7 +150,7 @@ PROCEDURE Main( ... )
    oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassWord, NIL, cPath )
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
-      QUIT
+      RETURN
    ENDIF
 
    oServer:lallCols := .F.
@@ -162,7 +162,7 @@ PROCEDURE Main( ... )
             ? oServer:ErrorMsg()
             FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
             FClose( nHandle )
-            QUIT
+            RETURN
          ENDIF
       ENDIF
       oServer:CreateTable( cTable, aDbfStruct )
@@ -171,7 +171,7 @@ PROCEDURE Main( ... )
          ? oServer:ErrorMsg()
          FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
          FClose( nHandle )
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
@@ -181,16 +181,16 @@ PROCEDURE Main( ... )
          ? oServer:ErrorMsg()
          FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
          FClose( nHandle )
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
-      Alert( oTable:ErrorMsg() )
+      ? oTable:ErrorMsg()
       FWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_eol() )
       FClose( nHandle )
-      QUIT
+      RETURN
    ENDIF
 
    IF lUseTrans
@@ -199,7 +199,7 @@ PROCEDURE Main( ... )
 
    FWrite( nHandle, "Start: " + Time() + hb_eol() )
 
-   ? "Start: ", Time()
+   ? "Start:", Time()
    ?
 
    IF ! Empty( nRecno )
@@ -264,7 +264,7 @@ PROCEDURE Main( ... )
 
       IF oTable:NetErr()
          ?
-         ? "Error Record: ", RecNo(), Left( oTable:ErrorMsg(), 70 )
+         ? "Error Record:", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
          FWrite( nHandle, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
       ELSE
@@ -275,7 +275,7 @@ PROCEDURE Main( ... )
 
       IF ( nCount % nCommit ) == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs: " + Str( nCount ) )
+         DevOut( "imported recs:", Str( nCount ) )
 
          IF lUseTrans
             oServer:commit()
@@ -292,7 +292,7 @@ PROCEDURE Main( ... )
 
    FWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
 
-   ? "End: ", Time()
+   ? "End:", Time()
    ?
 
    FClose( nHandle )

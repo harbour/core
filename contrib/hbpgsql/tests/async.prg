@@ -41,7 +41,7 @@ PROCEDURE Query( conn, cQuery, lCancel )
       IF lCancel
          IF .T.
             pCancel := PQgetCancel( conn )
-            ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
+            ? "Canceled:", PQcancel( pCancel, @cErrMsg ), cErrMsg
             pCancel := NIL
          ELSE
             ? PQrequestCancel( conn ) /* Deprecated */

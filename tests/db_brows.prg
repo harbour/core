@@ -76,7 +76,7 @@ PROCEDURE Main( filename )
       ? "Dbf browse demo"
       ? "Syntax:"
       ? "", "db_brows filename"
-      QUIT
+      RETURN
    ENDIF
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
    USE ( filename )

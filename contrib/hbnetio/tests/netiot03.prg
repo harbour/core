@@ -38,7 +38,7 @@ PROCEDURE Main()
    IF Empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
       WAIT "Press any key to exit..."
-      QUIT
+      RETURN
    ENDIF
 
    ? "NETIO server activated."

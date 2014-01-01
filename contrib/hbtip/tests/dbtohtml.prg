@@ -1,26 +1,26 @@
 /*
- * This example demonstrates operator overloading for
- * creating a HTML document.
+ * Demonstrating operator overloading for creating an HTML document
  */
 
 #require "hbtip"
 
-PROCEDURE Main
+PROCEDURE Main()
 
    LOCAL oDoc, oNode, oTable, oRow, oCell
    LOCAL i, j
 
+   LOCAL cFileName := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
+
    CLS
 
-   BEGIN SEQUENCE
-      USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + ;
-         "test.dbf" )
+   BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+      USE ( cFileName )
    RECOVER
-      ? "Error: Database not found test.dbf"
-      QUIT
+      ? "Error: Database not found", cFileName
+      RETURN
    END SEQUENCE
 
-   oDoc          := THtmlDocument():new()
+   oDoc          := THtmlDocument():New()
 
    /* Operator "+" creates a new node */
    oNode         := oDoc:head + "meta"
@@ -102,7 +102,7 @@ PROCEDURE Main
    IF oDoc:writeFile( "address.html" )
       ? "File created: address.html"
    ELSE
-      ? "Error: ", FError()
+      ? "Error:", FError()
    ENDIF
 
    WAIT

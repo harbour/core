@@ -49,7 +49,7 @@ PROCEDURE Main( cFileArg )
    IF Empty( cFileArg )
       OutErr( hb_StrFormat( "Usage: %1$s filename.xml", hb_ProgName() ) + hb_eol() )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    /*
@@ -59,7 +59,7 @@ PROCEDURE Main( cFileArg )
    hTree := mxmlNewElement( MXML_NO_PARENT, "element" )
    IF Empty( hTree )
       OutErr( "ERROR: No parent node in basic test!" + hb_eol() )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetType( hTree )
@@ -74,7 +74,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    cStr := mxmlGetElement( hTree )
@@ -83,7 +83,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlNewInteger( hTree, 123 )
@@ -102,7 +102,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetType( hNode )
@@ -117,7 +117,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetInteger( hNode )
@@ -126,7 +126,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    hNode := mxmlGetNextSibling( hNode )
@@ -135,7 +135,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetType( hNode )
@@ -150,7 +150,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    hNode := mxmlGetNextSibling( hNode )
@@ -159,7 +159,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetType( hNode )
@@ -174,7 +174,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetReal( hNode )
@@ -183,7 +183,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    hNode := mxmlGetNextSibling( hNode )
@@ -192,7 +192,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    nNum := mxmlGetType( hNode )
@@ -207,7 +207,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    cStr := mxmlGetText( hNode, @nNum )
@@ -217,7 +217,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    FOR i := 0 TO 3
@@ -226,7 +226,7 @@ PROCEDURE Main( cFileArg )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF ( ( nNum := mxmlGetType( hNode ) ) != MXML_ELEMENT )
@@ -240,7 +240,7 @@ PROCEDURE Main( cFileArg )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
    NEXT
 
@@ -254,13 +254,13 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
       OutErr( "ERROR: Bad value for '*/two'." + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    hNode := mxmlFindPath( hTree, "foo/*/two" )
@@ -269,13 +269,13 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
       OutErr( "ERROR: Bad value for 'foo/*/two'." + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    hNode := mxmlFindPath( hTree, "foo/bar/one/two" )
@@ -284,13 +284,13 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
       OutErr( "ERROR: Bad value for 'foo/bar/one/two'." + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    /*
@@ -303,7 +303,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 10
@@ -312,7 +312,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
@@ -322,7 +322,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
@@ -333,7 +333,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 4
@@ -342,7 +342,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
@@ -352,7 +352,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
@@ -363,7 +363,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
@@ -372,7 +372,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
@@ -382,7 +382,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
@@ -393,7 +393,7 @@ PROCEDURE Main( cFileArg )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
@@ -402,7 +402,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
@@ -412,7 +412,7 @@ PROCEDURE Main( cFileArg )
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
@@ -429,7 +429,7 @@ PROCEDURE Main( cFileArg )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
    NEXT
 
@@ -437,14 +437,14 @@ PROCEDURE Main( cFileArg )
       OutErr( "ERROR: Child pointer not NULL after deleting all children!" + hb_eol() )
 
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ! Empty( mxmlGetLastChild( hTree ) )
       OutErr( "ERROR: Last child pointer not NULL after deleting all children!" + hb_eol() )
 
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    /*
@@ -465,7 +465,7 @@ PROCEDURE Main( cFileArg )
    IF Empty( hTree )
       OutErr( "Unable to read XML file!" + hb_eol() )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF cFileArg == "test.xml"
@@ -480,7 +480,7 @@ PROCEDURE Main( cFileArg )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF Empty( mxmlFindElement( hNode, hTree, "choice",,, MXML_NO_DESCEND ) )
@@ -488,7 +488,7 @@ PROCEDURE Main( cFileArg )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
@@ -536,42 +536,42 @@ PROCEDURE Main( cFileArg )
          OutErr( hb_StrFormat( "MXML_SAX_CDATA seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_CDATA ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_COMMENT ] != 1
          OutErr( hb_StrFormat( "MXML_SAX_COMMENT seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_COMMENT ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DATA ] != 60
          OutErr( hb_StrFormat( "MXML_SAX_DATA seen %1$d times, expected 60 times!", ;
             s_aSAXEventCounts[ MXML_SAX_DATA ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] != 1
          OutErr( hb_StrFormat( "MXML_SAX_DIRECTIVE seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] != 20
          OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_CLOSE seen %1$d times, expected 20 times!", ;
             s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] != 20
          OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_OPEN seen %1$d times, expected 20 times!", ;
             s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] ) + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
    ENDIF

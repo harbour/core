@@ -66,7 +66,7 @@ PROCEDURE Main( cFileName )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
 
    IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
-      OutErr( hb_StrFormat( e"Parse error at line %1$s:\n%2$s\n", ;
+      OutErr( hb_StrFormat( e"Parse error at line %1$d:\n%2$s\n", ;
          XML_GetCurrentLineNumber( p ), ;
          XML_ErrorString( XML_GetErrorCode( p ) ) ) )
       ErrorLevel( -1 )

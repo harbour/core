@@ -310,7 +310,7 @@ PROCEDURE Main( ... )
       IF Empty( aDir := Directory( "*.hbp" ) )
          OutStd( "No `Makefile' or '*.hbp' file in the current directory." + hb_eol() )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ELSE
          ASort( aDir,,, {| tmp, tmp1 | tmp[ F_NAME ] < tmp1[ F_NAME ] } )
          cFileName := aDir[ 1 ][ F_NAME ]
@@ -347,7 +347,7 @@ PROCEDURE Main( ... )
                   "offending line %1$d:", nMemoLine ) + hb_eol() )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
-               QUIT
+               RETURN
             ENDIF
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
@@ -355,7 +355,7 @@ PROCEDURE Main( ... )
                   "offending line %1$d:", nMemoLine ) + hb_eol() )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
-               QUIT
+               RETURN
             ENDIF
             /* If the source argument indicates the source tree is not flat, convert
              * path separator to native. The HB tree is always flattened. */
@@ -369,7 +369,7 @@ PROCEDURE Main( ... )
                   "offending line %1$d:", nMemoLine ) + hb_eol() )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
-               QUIT
+               RETURN
             ENDIF
             /* In case the priginal and the HB file names are identical, the
              * second argument to `MAP' is optional. Due to the way the regex is
@@ -390,7 +390,7 @@ PROCEDURE Main( ... )
                      "offending line %1$d:", nMemoLine ) + hb_eol() )
                   OutStd( aRegexMatch[ 1 ] + hb_eol() )
                   ErrorLevel( 2 )
-                  QUIT
+                  RETURN
                ENDIF
             ENDIF
          ENDIF
@@ -401,18 +401,18 @@ PROCEDURE Main( ... )
 
    IF lValidateOnly
       OutStd( "Metadata syntax is OK." + hb_eol() )
-      QUIT
+      RETURN
    ENDIF
 
    IF Empty( s_aChangeMap ) .AND. cDiffFile == NIL
       OutStd( "No file name changes and no local diff, nothing to do." + hb_eol() )
-      QUIT
+      RETURN
    ENDIF
 
    IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_FileExists( cDiffFile )
       OutStd( hb_StrFormat( "E: `%1$s' does not exist", cDiffFile ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
@@ -440,7 +440,7 @@ PROCEDURE Main( ... )
       OutStd( "E: Fetching or extracting the source archive failed." + hb_eol() )
       OutStd( hb_StrFormat( "   Inspect `%1$s' for further clues.", s_cTempDir ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
    s_cSourceRoot := WalkAndFind( CombinePath( s_cTempDir, "root" ), cTopIndicator )
@@ -448,7 +448,7 @@ PROCEDURE Main( ... )
       OutStd( "E: Unable to find the new tree's root" + hb_eol() )
       OutStd( hb_StrFormat( "   Inspect `%1$s'", s_cTempDir ) + hb_eol() )
       ErrorLevel( 2 )
-      QUIT
+      RETURN
    ENDIF
 
    /*

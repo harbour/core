@@ -21,11 +21,9 @@
       of the currently executing file, so that you may take whatever
       action you need to.
    $EXAMPLES$
-      cMyFile := ft_Origin()
-
-      IF !( cMyFile == "C:\appdir\myfile.exe" )
+      IF !( ft_Origin() == "C:\appdir\myfile.exe" )
          ? "Incorrect startup file.  Please remove/rename and start again"
-         QUIT
+         RETURN
       ENDIF
    $SEEALSO$
    $END$

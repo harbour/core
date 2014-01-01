@@ -10,7 +10,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
-      QUIT
+      RETURN
    ENDIF
 
    oServer:SetVerbosity( 2 )
@@ -89,7 +89,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
       ? aStruct[ i ][ 1 ], aStruct[ i ][ 2 ], aStruct[ i ][ 3 ], aStruct[ i ][ 4 ]
    NEXT
 
-   ? "Fields: ", oQuery:FCount()
+   ? "Fields:", oQuery:FCount()
 
    oRow := oQuery:Blank()
 
@@ -130,12 +130,12 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
          oRow := oQuery:getrow()
 
          oRow:FieldPut( 2, "My Second test" )
-         ? "Update: ", oQuery:Update( oRow )
+         ? "Update:", oQuery:Update( oRow )
       ENDIF
 
       IF oQuery:RecNo() == 60
          oRow := oQuery:getrow()
-         ? "Delete: ", oQuery:Delete( oRow )
+         ? "Delete:", oQuery:Delete( oRow )
       ENDIF
 
       oQuery:Skip()

@@ -18,7 +18,7 @@ PROCEDURE Main()
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
       ? "You are using a non graphics capable gt:"
       ? "GT" + hb_gtVersion()
-      QUIT
+      RETURN
    ENDIF
 
    IF hb_gtInfo( HB_GTI_DESKTOPWIDTH ) > 1000

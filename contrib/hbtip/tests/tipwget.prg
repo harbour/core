@@ -1,23 +1,23 @@
-/*****************************************************
+/*
  * TEST of TIP libs (for higher level URI interface)
  *
  * Usage: This file is similar to a wget command
  *
- * Without the filename, tiptest will be in demo mode,
+ * Without the filename, tipwget will be in demo mode,
  * just demostrating it is working
  *
  * With the filename, data will be stored to the file or
- * retrieved from the file and sent to internet.
+ * retrieved from the file and sent to Internet.
  *
  * Usage of URI.
  * HTTP Protocol
  *   http://<sitename>/<path>?<query>
  *   - at the moment HTTP URI is not able to send data,
- *     (e.g. a form)
+ *     (f.e. a form)
  *
  * POP Protocol
  *    pop://<username>:<password>@<popserver>/[-][MsgNum]
- *    - Witout MsgNum, you get the list of messages
+ *    - Without MsgNum, you get the list of messages
  *    - With MsgNum get Message MsgNum
  *    - With -MsgNum deletes message MsgNum
  *
@@ -25,12 +25,12 @@
  *    smtp://<mail-from>@<server>/RCPT
  *    - (You have to provide a filename)
  *    - use &at; in mail-from message
- *    - Send the letter in filename (that must include
- *      headers) to RCPT e.f.
+ *    - Send the mail in filename (that must include
+ *      headers) to RCPT f.e.
  *      stmp://user&at;example.com@smtp.example.com/gian@niccolai.ws
  *
  *      NOTE: In Unix, to use '&' from command line you have to surround
- *      the url with "", eg "smtp://...&at;...@server/dest"
+ *      the URL with "", f.e. "smtp://...&at;...@server/dest"
  *
  * FTP Protocol
  *    ftp://user:passwd@<ftpserver>/[<path>]
@@ -38,9 +38,12 @@
  *      files in a dir.
  *    - with path, get a file. If the target file (second param) starts with '+'
  *      it will be sent instead of being retrieved.
- *****************************************************/
+ */
 
+#require "hbssl"
 #require "hbtip"
+
+REQUEST __HBEXTERN__HBSSL__
 
 #include "hbclass.ch"
 #include "tip.ch"
@@ -52,40 +55,45 @@ PROCEDURE Main( cUrl, cFile )
    LOCAL cData
 
    CLS
-   @ 1, 6 SAY "xHarbour - TIP (class based internet client protocol) test"
+   @ 1, 6 SAY "Harbour - TIP (class based internet client protocol) test"
 
-   IF Empty( cUrl )
-      @ 4, 5 SAY hb_StrFormat( "USAGE: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )
+   IF ! HB_ISSTRING( cUrl ) .OR. Empty( cUrl )
+      @ 4, 5 SAY hb_StrFormat( "Usage: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )
       Terminate()
+      RETURN
    ENDIF
 
    oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
-      @ 4, 5 SAY "Invalid url " + cUrl
+      @ 4, 5 SAY "Invalid URL " + cUrl
       Terminate()
+      RETURN
    ENDIF
 
-   DO CASE
-   CASE Lower( oUrl:cProto ) == "ftp"
-      oClient := TIPClientFTP():new( oUrl )
-
-   CASE Lower( oUrl:cProto ) == "http"
-      oClient := TIPClientHTTP():new( oUrl )
-
-   CASE Lower( oUrl:cProto ) == "pop"
-      oClient := TIPClientPOP():new( oUrl )
-
-   CASE Lower( oUrl:cProto ) == "smtp"
-      oClient := TIPClientSMTP():new( oUrl )
-
-   ENDCASE
+   SWITCH Lower( oUrl:cProto )
+   CASE "ftp"
+      oClient := TIPClientFTP():New( oUrl )
+      EXIT
+   CASE "http"
+   CASE "https"
+      oClient := TIPClientHTTP():New( oUrl )
+      EXIT
+   CASE "pop"
+   CASE "pops"
+      oClient := TIPClientPOP():New( oUrl )
+      EXIT
+   CASE "smtp"
+   CASE "smtps"
+      oClient := TIPClientSMTP():New( oUrl )
+      EXIT
+   ENDSWITCH
 
    IF Empty( oClient )
-      @ 4, 5 SAY "Invalid url " + cUrl
+      @ 4, 5 SAY "Invalid URL " + cUrl
       Terminate()
+      RETURN
    ENDIF
-   oClient:nConnTimeout := 2000 /* := 20000 */
-
+   oClient:nConnTimeout := 2000 /* 20000 */
 
    oUrl:cUserid := StrTran( oUrl:cUserid, "&at;", "@" )
 
@@ -104,13 +112,14 @@ PROCEDURE Main( cUrl, cFile )
 
       IF oClient:nAccessMode == TIP_WO .OR. ( oClient:nAccessMode == TIP_RW .AND. bWrite )
          oClient:exGauge := {| done, size | ShowGauge( done, size ) }
-         /* Can be also:
-            oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection ) }
-         */
+#if 0
+         /* Can be also: */
+         oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection ) }
+#endif
          IF oClient:WriteFromFile( cFile )
-            @ 7, 5 SAY "Data sucessfully sent"
+            @ 7, 5 SAY "Data successfully sent"
          ELSE
-            @ 7, 5 SAY "ERROR: Data not sent " + oClient:lastErrorMessage()
+            @ 7, 5 SAY "Error: Data not sent " + oClient:lastErrorMessage()
          ENDIF
       ELSE
          IF Empty( cFile )
@@ -119,14 +128,14 @@ PROCEDURE Main( cUrl, cFile )
                @ 7, 5 SAY "First 80 characters:"
                ? RTrim( SubStr( cData, 1, 80 ) )
             ELSE
-               @ 7, 5 SAY "ERROR - file can't be retrieved " + oClient:lastErrorMessage()
+               @ 7, 5 SAY "Error: file can't be retrieved " + oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )
                @ 7, 5 SAY "File " + cFile + " written."
                @ 8, 5 SAY "Server replied " + oClient:cReply
             ELSE
-               @ 7, 5 SAY "Generic error in writing."  + cFile
+               @ 7, 5 SAY "Error: Generic error in writing " + cFile
             ENDIF
          ENDIF
       ENDIF
@@ -150,10 +159,9 @@ PROCEDURE Main( cUrl, cFile )
 
 STATIC PROCEDURE Terminate()
 
-   @ 23, 18 SAY "Program done - Press a key to terminate"
+   @ MaxRow() - 1, 0 SAY PadC( "Program done - Press a key to terminate", MaxCol() + 1 )
    Inkey( 0 )
-   @ 24, 0
-   QUIT
+   @ MaxRow(), 0
 
    RETURN
 
