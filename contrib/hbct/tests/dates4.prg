@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION CheckDate( dDate )
+STATIC FUNCTION CheckDate( dDate )
 
    ? "Testing date:", dDate
    ? "Days in month..:", DaysInMonth( dDate )

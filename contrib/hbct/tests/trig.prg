@@ -90,7 +90,6 @@ PROCEDURE Main()
 
    WAIT4()
 
-
    ? "Str( Cos( 0 ), 18, 15 ) =  1.000000000000000   // CT3"
    ? Space( 26 ) + Str( Cos( 0 ), 18, 15 ), " <-- CT for Harbour"
    ?
@@ -111,9 +110,7 @@ PROCEDURE Main()
    ? Space( 33 ) + Str( Cos( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
-
    WAIT4()
-
 
    ? "Str( Tan( 0 ), 18, 15 ) =  1.000000000000000   // CT3 wrong ! "
    ? Space( 26 ) + Str( Tan( 0 ), 18, 15 ), " <-- CT for Harbour"
@@ -142,7 +139,6 @@ PROCEDURE Main()
    ?
 
    WAIT4()
-
 
    ? "Str( Cot( Pi() / 4 ), 18, 15 ) =  1.000000000000000   // CT3"
    ? Space( 33 ) + Str( Cot( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
@@ -212,7 +208,6 @@ PROCEDURE Main()
 
    WAIT4()
 
-
    ? "Testing Radian TO Degree..."
    ?
    ? "RToD( Pi() ) = 180             // CT3  "
@@ -230,10 +225,8 @@ PROCEDURE Main()
 
    WAIT4()
 
-
-/* NOTE: Atn2( x, y) have the parameters inverted, when
-         comparing with the standard C languaje ATAN2( y, x)
-*/
+   /* NOTE: Atn2( x, y) have the parameters inverted, when
+            comparing with the standard C languaje ATAN2( y, x) */
 
 
    ? "Testing Atn2( x, y )... where:"
@@ -255,7 +248,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE WAIT4
+STATIC PROCEDURE WAIT4()
 
    ? "  PRESS ANY KEY"
    Inkey( 0 )

@@ -65,10 +65,10 @@ PROCEDURE Main( cFileArg )
    nNum := mxmlGetType( hTree )
    IF nNum != MXML_ELEMENT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Parent has type %s (%d), expected MXML_ELEMENT!", ;
+         OutErr( hb_StrFormat( "ERROR: Parent has type %1$s (%2$d), expected MXML_ELEMENT!", ;
             "UNKNOWN", nNum ) + hb_eol() )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Parent has type %s (%d), expected MXML_ELEMENT!", ;
+         OutErr( hb_StrFormat( "ERROR: Parent has type %1$s (%2$d), expected MXML_ELEMENT!", ;
             s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
       ENDIF
 
@@ -79,7 +79,7 @@ PROCEDURE Main( cFileArg )
 
    cStr := mxmlGetElement( hTree )
    IF !( cStr == "element" )
-      OutErr( hb_StrFormat( "ERROR: Parent value is '%s', expected 'element'", cStr ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Parent value is '%1$s', expected 'element'", cStr ) + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -108,10 +108,10 @@ PROCEDURE Main( cFileArg )
    nNum := mxmlGetType( hNode )
    IF nNum != MXML_INTEGER
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: First child has type %s (%d), expected MXML_TEXT!", ;
+         OutErr( hb_StrFormat( "ERROR: First child has type %1$s (%2$d), expected MXML_TEXT!", ;
             "UNKNOWN", nNum ) + hb_eol() )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: First child has type %s (%d), expected MXML_TEXT!", ;
+         OutErr( hb_StrFormat( "ERROR: First child has type %1$s (%2$d), expected MXML_TEXT!", ;
             s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
       ENDIF
 
@@ -122,7 +122,7 @@ PROCEDURE Main( cFileArg )
 
    nNum := mxmlGetInteger( hNode )
    IF nNum != 123
-      OutErr( hb_StrFormat( "ERROR: First child value is %d, expected 123!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: First child value is %1$d, expected 123!", nNum ) + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -141,10 +141,10 @@ PROCEDURE Main( cFileArg )
    nNum := mxmlGetType( hNode )
    IF nNum != MXML_OPAQUE
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Second child has type %s (%d), expected MXML_OPAQUE!", ;
+         OutErr( hb_StrFormat( "ERROR: Second child has type %1$s (%2$d), expected MXML_OPAQUE!", ;
             "UNKNOWN", nNum ) + hb_eol() )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Second child has type %s (%d), expected MXML_OPAQUE!", ;
+         OutErr( hb_StrFormat( "ERROR: Second child has type %1$s (%2$d), expected MXML_OPAQUE!", ;
             s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
       ENDIF
 
@@ -165,10 +165,10 @@ PROCEDURE Main( cFileArg )
    nNum := mxmlGetType( hNode )
    IF nNum != MXML_REAL
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Third child has type %s (%d), expected MXML_REAL!", ;
+         OutErr( hb_StrFormat( "ERROR: Third child has type %1$s (%2$d), expected MXML_REAL!", ;
             "UNKNOWN", nNum ) + hb_eol() )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Third child has type %s (%d), expected MXML_REAL!", ;
+         OutErr( hb_StrFormat( "ERROR: Third child has type %1$s (%2$d), expected MXML_REAL!", ;
             s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
       ENDIF
 
@@ -179,7 +179,7 @@ PROCEDURE Main( cFileArg )
 
    nNum := mxmlGetReal( hNode )
    IF nNum != 123.4
-      OutErr( hb_StrFormat( "ERROR: Third child value is %f, expected 123.4!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Third child value is %1$f, expected 123.4!", nNum ) + hb_eol() )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -198,10 +198,10 @@ PROCEDURE Main( cFileArg )
    nNum := mxmlGetType( hNode )
    IF nNum != MXML_TEXT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Fourth child has type %s (%d), expected MXML_TEXT!", ;
+         OutErr( hb_StrFormat( "ERROR: Fourth child has type %1$s (%2$d), expected MXML_TEXT!", ;
             "UNKNOWN", nNum ) + hb_eol() )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Fourth child has type %s (%d), expected MXML_TEXT!", ;
+         OutErr( hb_StrFormat( "ERROR: Fourth child has type %1$s (%2$d), expected MXML_TEXT!", ;
             s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
       ENDIF
 
@@ -212,7 +212,7 @@ PROCEDURE Main( cFileArg )
 
    cStr := mxmlGetText( hNode, @nNum )
    IF nNum != 1 .OR. Empty( cStr ) .OR. !( cStr == "text" )
-      OutErr( hb_StrFormat( "ERROR: Fourth child value is %d, '%s', expected 1, 'text'!", ;
+      OutErr( hb_StrFormat( "ERROR: Fourth child value is %1$d, '%2$s', expected 1, 'text'!", ;
          nNum, cStr ) + hb_eol() )
 
       mxmlDelete( hTree )
@@ -222,7 +222,7 @@ PROCEDURE Main( cFileArg )
 
    FOR i := 0 TO 3
       IF Empty( hNode := mxmlGetNextSibling( hNode ) )
-         OutErr( hb_StrFormat( "ERROR: No group #%d child node in basic test!", i ) + hb_eol() )
+         OutErr( hb_StrFormat( "ERROR: No group #%1$d child node in basic test!", i ) + hb_eol() )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
@@ -231,11 +231,11 @@ PROCEDURE Main( cFileArg )
 
       IF ( ( nNum := mxmlGetType( hNode ) ) != MXML_ELEMENT )
          IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-            OutErr( hb_StrFormat( "ERROR: Group child #%d has type %s (%d), expected MXML_ELEMENT!", ;
+            OutErr( hb_StrFormat( "ERROR: Group child #%1$d has type %2$s (%3$d), expected MXML_ELEMENT!", ;
                i + 1, "UNKNOWN", nNum ) + hb_eol() )
          ELSE
-            OutErr( hb_StrFormat( "ERROR: Group child #%d has type %s (%d), expected MXML_ELEMENT!", ;
-               s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+            OutErr( hb_StrFormat( "ERROR: Group child #%1$d has type %2$s (%3$d), expected MXML_ELEMENT!", ;
+               i + 1, s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
          ENDIF
 
          mxmlDelete( hTree )
@@ -307,7 +307,7 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 10
-      OutErr( hb_StrFormat( "ERROR: Index of all nodes contains %d nodes; expected 10!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Index of all nodes contains %1$d nodes; expected 10!", nNum ) + hb_eol() )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
@@ -337,7 +337,7 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 4
-      OutErr( hb_StrFormat( "ERROR: Index of groups contains %d nodes; expected 4!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Index of groups contains %1$d nodes; expected 4!", nNum ) + hb_eol() )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
@@ -367,7 +367,7 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
-      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %d nodes; expected 3!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %1$d nodes; expected 3!", nNum ) + hb_eol() )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
@@ -397,7 +397,7 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
-      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %d nodes; expected 3!", nNum ) + hb_eol() )
+      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %1$d nodes; expected 3!", nNum ) + hb_eol() )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
@@ -425,7 +425,7 @@ PROCEDURE Main( cFileArg )
       IF ! Empty( mxmlGetFirstChild( hTree ) )
          mxmlDelete( mxmlGetFirstChild( hTree ) )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Child pointer prematurely NULL on child #%d", i ) + hb_eol() )
+         OutErr( hb_StrFormat( "ERROR: Child pointer prematurely NULL on child #%1$d", i ) + hb_eol() )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
@@ -533,42 +533,42 @@ PROCEDURE Main( cFileArg )
    IF cFileArg == "test.xml"
 
       IF s_aSAXEventCounts[ MXML_SAX_CDATA ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_CDATA seen %d times, expected 1 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_CDATA seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_CDATA ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_COMMENT ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_COMMENT seen %d times, expected 1 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_COMMENT seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_COMMENT ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DATA ] != 60
-         OutErr( hb_StrFormat( "MXML_SAX_DATA seen %d times, expected 60 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_DATA seen %1$d times, expected 60 times!", ;
             s_aSAXEventCounts[ MXML_SAX_DATA ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_DIRECTIVE seen %d times, expected 1 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_DIRECTIVE seen %1$d times, expected 1 times!", ;
             s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] != 20
-         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_CLOSE seen %d times, expected 20 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_CLOSE seen %1$d times, expected 20 times!", ;
             s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] != 20
-         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_OPEN seen %d times, expected 20 times!", ;
+         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_OPEN seen %1$d times, expected 20 times!", ;
             s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] ) + hb_eol() )
          ErrorLevel( 1 )
          QUIT

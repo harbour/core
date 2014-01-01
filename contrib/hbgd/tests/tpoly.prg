@@ -45,7 +45,7 @@ STATIC PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
+   ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
    /** In green */
    gdColor := gdImageColorAllocate( gdImage, 0, 255, 0 )
@@ -67,7 +67,7 @@ STATIC PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
+   ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
    /** In yellow */
    gdColor := gdImageColorAllocate( gdImage, 255, 255, 0 )

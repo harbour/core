@@ -1,8 +1,6 @@
 /*
  * Harbour Project source code:
  *   CT3 Date & Time functions, part II: - AddMonth()
- *                                       - CToDoW()
- *                                       - CToMonth()
  *                                       - DaysInMonth()
  *                                       - DaysToMonth()
  *                                       - DMY()
@@ -98,45 +96,6 @@ static int ct_doy( long lDate )
    hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
    lFirst = hb_dateEncode( iYear, 1, 1 );
    return ( int ) ( lDate - lFirst + 1 );
-}
-
-HB_FUNC( CTODOW )
-{
-   HB_SIZE nLen = hb_parclen( 1 );
-   int iDow = 0;
-
-   if( nLen )
-   {
-      const char * szParam = hb_parc( 1 );
-
-      for( iDow = 7; iDow > 0; iDow-- )
-      {
-         const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
-         if( hb_strnicmp( szDow, szParam, nLen ) == 0 )
-            break;
-      }
-   }
-
-   hb_retnl( iDow );
-}
-
-HB_FUNC( CTOMONTH )
-{
-   HB_SIZE nLen = hb_parclen( 1 );
-   int iMonth = 0;
-
-   if( nLen )
-   {
-      const char * szParam = hb_parc( 1 );
-      for( iMonth = 12; iMonth > 0; iMonth-- )
-      {
-         const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
-         if( hb_strnicmp( szMonth, szParam, nLen ) == 0 )
-            break;
-      }
-   }
-
-   hb_retnl( iMonth );
 }
 
 HB_FUNC( DMY )

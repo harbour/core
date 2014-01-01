@@ -30,13 +30,11 @@ FUNCTION MyAlert( cMsg, aOpt )
 #xtranslate Alert( => MyAlert(
 
 FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
-
    RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
 
 #xuntranslate Alert( =>
 
 FUNCTION Just_Alert( cMsg, aOpt )
-
    RETURN Alert( cMsg, aOpt )
 
 #xtranslate Alert( => MyAlert(
@@ -110,7 +108,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    // check for columns
    // place 2 spaces before and after the buttons
-   nColCap   := Len( cCaption ) + 7  // " - "+"  "+caption+"  "
+   nColCap   := Len( cCaption ) + 7  // " - " + "  " + cCaption + "  "
    nColTxt   := 0
    IF ! Empty( aText_ )
       AEval( aText_, {| e | nColTxt := Max( nColTxt, Len( e ) ) } )

@@ -163,7 +163,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE WAIT4()
+STATIC PROCEDURE WAIT4()
 
    ? "  Press any key"
    Inkey( 0 )

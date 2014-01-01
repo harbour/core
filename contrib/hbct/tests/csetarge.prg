@@ -198,7 +198,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION myerrhandler( oerr )
+STATIC FUNCTION myerrhandler( oerr )
 
    LOCAL ni, nDigit
 

@@ -5,8 +5,8 @@
 #include "simpleio.ch"
 
 #define TEST_STRING  "This is test of LZO extension"
-#define FMT_STRING   "Compressed %d bytes into %d bytes (%d)"
-#define FMT2_STRING  "Decompressed %d bytes back into %d bytes (%d)"
+#define FMT_STRING   "Compressed %1$d bytes into %2$d bytes (%3$d)"
+#define FMT2_STRING  "Decompressed %1$d bytes back into %2$d bytes (%3$d)"
 
 PROCEDURE Main()
 

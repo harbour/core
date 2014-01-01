@@ -50,9 +50,9 @@
 
 #xcommand T( <(title)>, <(subject)> ) => ;
    magic_setflags( hMagic, MAGIC_NONE ) ;;
-   OutStd( hb_StrFormat( <title> + ": t: [%s] ", magic_buffer( hMagic, <subject> ) ) ) ;;
+   OutStd( hb_StrFormat( <title> + ": t: [%1$s] ", magic_buffer( hMagic, <subject> ) ) ) ;;
    magic_setflags( hMagic, MAGIC_MIME_TYPE ) ;;
-   OutStd( hb_StrFormat( "m: [%s]", magic_buffer( hMagic, <subject> ) ) + hb_eol() )
+   OutStd( hb_StrFormat( "m: [%1$s]", magic_buffer( hMagic, <subject> ) ) + hb_eol() )
 
 PROCEDURE Main()
 
@@ -116,7 +116,9 @@ PROCEDURE Main()
    cText := hb_ZUncompress( cText )
    T( "Plain text", cText )
 
-   OutStd( "hb_magic_simple(): t: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_NONE ) + "] " + ;
-      "m: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) + "]" + hb_eol() )
+   OutStd( hb_StrFormat( "hb_magic_simple(): t: [%1$s] " + ;
+      "m: [%2$s]", ;
+      hb_magic_simple( hb_argv( 0 ), MAGIC_NONE ), ;
+      hb_magic_simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) ) + hb_eol() )
 
    RETURN

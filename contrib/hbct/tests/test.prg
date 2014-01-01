@@ -260,4 +260,24 @@ PROCEDURE Main()
    HBTEST ( CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba" ) )      IS "1abaa"
    HBTEST ( CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba", .T. ) ) IS "1bbba"
 
+   hb_langSelect( "en" )
+
+   HBTEST CToDoW()              IS 0
+   HBTEST CToDoW( 1 )           IS 0
+   HBTEST CToDoW( "" )          IS 0
+   HBTEST CToDoW( "Sunday" )    IS 1
+   HBTEST CToDoW( "WEDNESDAY" ) IS 4
+   HBTEST CToDoW( "Wednesday" ) IS 4
+   HBTEST CToDoW( "Wed" )       IS 4
+   HBTEST CToDoW( "M" )         IS 2
+
+   HBTEST CToMonth()            IS 0
+   HBTEST CToMonth( 1 )         IS 0
+   HBTEST CToMonth( "" )        IS 0
+   HBTEST CToMonth( "January" ) IS 1
+   HBTEST CToMonth( "AUGUST" )  IS 8
+   HBTEST CToMonth( "August" )  IS 8
+   HBTEST CToMonth( "Au" )      IS 8
+   HBTEST CToMonth( "A" )       IS 4
+
    RETURN
