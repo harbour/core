@@ -336,13 +336,12 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    IF lAutoMain
       /* When automain is on, write the main section */
       hb_HEval( hIni[ "MAIN" ], ;
-         {| cKey, xVal | cBuffer += hb_CStr( cKey ) + " = " + ;
+         {| cKey, xVal | cBuffer += hb_CStr( cKey ) + "=" + ;
          hb_CStr( xVal ) + cNewLine } )
-
    ELSE
       /* When automain is off, just write all the toplevel variables. */
       hb_HEval( hIni, {| cKey, xVal | iif( ! HB_ISHASH( xVal ), ;
-         cBuffer += hb_CStr( cKey ) + " = " + ;
+         cBuffer += hb_CStr( cKey ) + "=" + ;
          hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
    ENDIF
 

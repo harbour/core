@@ -211,7 +211,7 @@ PROCEDURE Main( ... )
 
             tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
 
-            OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
+            OutStd( hb_StrFormat( "! Making Harbour .zip install package: '%1$s'", tmp ) + hb_eol() )
 
             FErase( tmp )
 
@@ -235,7 +235,7 @@ PROCEDURE Main( ... )
 
                tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
 
-               OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour .exe install package: '%1$s'", tmp ) + hb_eol() )
 
                mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
                   " -V2" + ;
@@ -262,7 +262,7 @@ PROCEDURE Main( ... )
                cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
                cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
-               OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour tar install package: '%1$s'", cTar_Path ) + hb_eol() )
 
                FErase( cTar_Path )
 
@@ -287,7 +287,7 @@ PROCEDURE Main( ... )
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
-                  OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+                  OutStd( hb_StrFormat( "! Making Harbour tar installer package: '%1$s'", tmp ) + hb_eol() )
 
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */
@@ -324,18 +324,19 @@ PROCEDURE Main( ... )
       /* Executing user postinst configuration script */
 
       IF ! Empty( tmp := GetEnvC( "HB_INSTALL_SCRIPT" ) )
-
          mk_hb_processRun( tmp )
       ENDIF
-
    ELSE
       /* Regenerating extern headers */
 
       mk_extern_core()
    ENDIF
 
-   OutStd( "! postinst script finished" + ;
-      iif( nErrorLevel == 0, "", " with with errorlevel=" + hb_ntos( nErrorLevel ) ) + hb_eol() )
+   IF nErrorLevel == 0
+      OutStd( "! postinst script finished" + hb_eol() )
+   ELSE
+      OutStd( hb_StrFormat( "! postinst script finished with errorlevel=%1$d", nErrorLevel ) + hb_eol() )
+   ENDIF
 
    ErrorLevel( nErrorLevel )
 
@@ -354,13 +355,13 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg )
    IF aTrans != NIL
       IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
-         OutStd( "! Created " + cOut + " <= " + cIn + hb_eol() )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cOut, cIn ) + hb_eol() )
          RETURN .T.
       ELSE
-         OutErr( "! Error: Cannot create file: " + cOut + hb_eol() )
+         OutErr( hb_StrFormat( "! Error: Cannot create file: %1$s", cOut ) + hb_eol() )
       ENDIF
    ELSE
-      OutErr( "! Error: Loading translation: " + cIn + " (" + cErrorMsg + ")" + hb_eol() )
+      OutErr( hb_StrFormat( "! Error: Loading translation: %1$s (%2$s)", cIn, cErrorMsg ) + hb_eol() )
    ENDIF
 
    RETURN .F.
@@ -380,7 +381,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         OutStd( "! Created " + cName + " <= " + cDirSource + hb_eol() )
+         OutStd(hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE
          OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )

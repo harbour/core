@@ -847,7 +847,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
          IF ! FNameExc( cName, aCanHaveAnyEncoding )
             tmp := -1
             IF ! IsASCII7( cFile, @tmp ) .AND. ! IsUTF8( cFile )
-               AAdd( aErr, "content: is non-UTF-8/ASCII-7: " + hb_ntos( tmp ) )
+               AAdd( aErr, hb_StrFormat( "content: is non-UTF-8/ASCII-7: %1$d", tmp ) )
             ENDIF
          ENDIF
 
@@ -1399,7 +1399,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    ENDIF
 
    IF nChanged > 0
-      OutStd( cFileName + ": Harbour function casings fixed: " + hb_ntos( nChanged ) + hb_eol() )
+      OutStd( cFileName + ": " + hb_StrFormat( "Harbour function casings fixed: %1$d", nChanged ) + hb_eol() )
       hb_MemoWrit( iif( lRebase, _HBROOT_, "" ) + cFileName, cFile )
    ENDIF
 

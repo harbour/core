@@ -133,9 +133,9 @@ STATIC PROCEDURE PutNormal( aDirEntry )
       file names which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;
-      PadR( cName, 8 ) + " " + ;
-      PadR( SubStr( cExt, 2 ), 3 ) + " " + ;
-      Str( aDirEntry[ F_SIZE ], 8 ) + "  " + ;
+      PadR( cName, 8 ), ;
+      PadR( SubStr( cExt, 2 ), 3 ), ;
+      Str( aDirEntry[ F_SIZE ], 8 ), "", ;
       DToC( aDirEntry[ F_DATE ] ) )
 
    RETURN

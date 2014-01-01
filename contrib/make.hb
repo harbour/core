@@ -285,7 +285,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
    cFilter := GetEnv( "HB_BUILD_CONTRIBS" )
 
    IF ! Empty( cFilter )
-      OutStd( "! HB_BUILD_CONTRIBS: " + cFilter + hb_eol() )
+      OutStd( hb_StrFormat( "! HB_BUILD_CONTRIBS: %1$s", cFilter ) + hb_eol() )
    ENDIF
 
    IF cFilter == "no"
@@ -609,7 +609,7 @@ STATIC FUNCTION mk_hbd( cDir )
       IF ! Empty( aEntry )
          cName := hb_DirSepToOS( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
-            OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
+            OutStd( hb_StrFormat( "! Compiled documentation: %1$s <= %2$s", cName, cDir ) + hb_eol() )
             RETURN .T.
          ELSE
             OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )

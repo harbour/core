@@ -94,7 +94,7 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(DOS Error " + hb_ntos( oError:osCode ) + ")"
+      cDOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
    ENDIF
 
    // Build buttons
@@ -148,8 +148,9 @@ STATIC FUNCTION DefError( oError )
    DO WHILE ! Empty( ProcName( ++n ) )
 
       OutErr( hb_eol() )
-      OutErr( "Called from " + ProcName( n ) + ;
-         "(" + hb_ntos( ProcLine( n ) ) + ")  " )
+      OutErr( hb_StrFormat( "Called from %1$s(%2$d)  ", ;
+         ProcName( n ), ;
+         ProcLine( n ) ) )
 
    ENDDO
 

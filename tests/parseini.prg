@@ -63,8 +63,8 @@ PROCEDURE Main( cName )
    ? "REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
    ?
 
-   hIni := hb_iniRead( cName,; /* default case */
-                       ,; /* default key indicators */
+   hIni := hb_iniRead( cName, ; /* default case */
+                       , ; /* default key indicators */
                        , .F. )
 
    ? "Content of", cName
@@ -97,8 +97,8 @@ PROCEDURE Main( cName )
    hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out1.ini"
-   IF hb_iniWrite( "parseini_out1.ini", hIni,;
-                   "#Generated file without main auto section; don't touch", "#End of file",;
+   IF hb_iniWrite( "parseini_out1.ini", hIni, ;
+                   "#Generated file without main auto section; don't touch", "#End of file", ;
                    .F. )
       ? "File written"
    ELSE
@@ -129,8 +129,8 @@ PROCEDURE Main( cName )
    ? "READING INI FILE FROM A STRING"
    ?
 
-   hIni := hb_iniReadStr( cIni,; /*default case*/
-            ,; /*Default key indicators */
+   hIni := hb_iniReadStr( cIni, ; /* default case */
+            , ; /* default key indicators */
             , .F. )
 
    ? "Content: "

@@ -161,12 +161,12 @@ Platform specific prerequisites:
 
 To build:
 
-    > win-make [install]
+    > win-make
 
 To test it, type:
 
     > cd tests
-    > ..\bin\hbmk2 hello.prg
+    > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
 You should see ``Hello, world!`` on screen.
@@ -178,12 +178,12 @@ You should see ``Hello, world!`` on screen.
 
 To build:
 
-    > sh -c make [install]
+    > sh -c make
 
 To test it, type:
 
     > cd tests
-    > ..\bin\hbmk2 hello.prg
+    > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
 You should see ``Hello, world!`` on screen.
@@ -197,12 +197,12 @@ Make sure to have your C compiler of choice installed in PATH.
 
 To build:
 
-    > dos-make [install]
+    > dos-make
 
 To test it, type:
 
     > cd tests
-    > ..\bin\hbmk2 hello.prg
+    > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
  You should see ``Hello, world!`` on screen.
@@ -211,12 +211,12 @@ To test it, type:
 
 To build:
 
-    > os2-make [install]
+    > os2-make
 
 To test it, type:
 
     > cd tests
-    > ..\bin\hbmk2 hello.prg
+    > ..\bin\<plat>\<comp>\hbmk2 hello.prg
     > hello
 
 You should see ``Hello, world!`` on screen.
@@ -225,12 +225,12 @@ You should see ``Hello, world!`` on screen.
 
 To build:
 
-    $ make [install] [HB_PLATFORM=<...>]
+    $ make [HB_PLATFORM=<...>]
 
 To test it, type:
 
     $ cd tests
-    $ hbmk2 hello.prg
+    $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
 You should see ``Hello, world!`` on screen.
@@ -242,12 +242,12 @@ Platform specific prerequisite:
 
 To build:
 
-    $ make [install] [HB_PLATFORM=<...>]
+    $ make [HB_PLATFORM=<...>]
 
 To test it, type:
 
     $ cd tests
-    $ hbmk2 hello.prg
+    $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
 You should see ``Hello, world!`` on screen.
@@ -283,12 +283,12 @@ Platform specific prerequisites:
 
 To build:
 
-    $ gmake install
+    $ gmake
 
 To test it, type:
 
     $ cd tests
-    $ hbmk2 hello.prg
+    $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
 You should see ``Hello, world!`` on screen.
@@ -304,16 +304,16 @@ of Clang, the Minix system compiler.
 
 To build:
 
-    $ gmake [install] [HB_PLATFORM=<...>]
+    $ gmake [HB_PLATFORM=<...>]
 
 Or
 
-    $ make [install] [HB_PLATFORM=<...>]
+    $ make [HB_PLATFORM=<...>]
 
 To test it, type:
 
     $ cd tests
-    $ hbmk2 hello.prg
+    $ ../bin/<plat>/<comp>/hbmk2 hello.prg
     $ ./hello
 
 You should see ``Hello, world!`` on screen.
@@ -335,7 +335,7 @@ source directory you want to build. When starting GNU Make,
 all components under that dir will be built:
 
     cd src/rtl
-    <make> [clean] [install]
+    <make> [clean]
 
 If you want to rebuild one specific contrib package, use this:
 

@@ -104,7 +104,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    __i18n_fileName( @cFile )
    hFile := FOpen( cFile, FO_READ )
    IF hFile == F_ERROR
-      cErrorMsg := "cannot open file: " + cFile
+      cErrorMsg := hb_StrFormat( "cannot open file: %1$s", cFile )
       RETURN NIL
    ENDIF
    cValue := Space( FSeek( hFile, 0, FS_END ) )
@@ -112,7 +112,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    n := FRead( hFile, @cValue, hb_BLen( cValue ) )
    FClose( hFile )
    IF n != hb_BLen( cValue )
-      cErrorMsg := "cannot read from file: " + cFile
+      cErrorMsg := hb_StrFormat( "cannot read from file: %1$s", cFile )
       RETURN NIL
    ENDIF
    /* Strip UTF-8 BOM */
@@ -153,7 +153,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
                cLine := LTrim( SubStr( cLine, 3 ) )
                IF cLine == "c-format"
                ELSE
-                  cErrorMsg := "unsupported flag: " + cLine
+                  cErrorMsg := hb_StrFormat( "unsupported flag: %1$s", cLine )
                   EXIT
                ENDIF
 #endif
@@ -235,8 +235,8 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
                EXIT
             ENDIF
             IF cValue == NIL
-               cErrorMsg := "undefined " + iif( nMode == _I18N_MSGID, ;
-                  "msgid", "msgstr" ) + " value"
+               cErrorMsg := hb_StrFormat( "undefined %1$s value", ;
+                  iif( nMode == _I18N_MSGID, "msgid", "msgstr" ) )
                EXIT
             ENDIF
             aItem[ _I18N_PLURAL ] := .T.
@@ -286,7 +286,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    ENDIF
 
    IF cErrorMsg != NIL
-      cErrorMsg := cFile + ":" + hb_ntos( nLine ) + ";" + cErrorMsg
+      cErrorMsg := hb_StrFormat( "%1$s:%2$d;%3$s", cFile, nLine, cErrorMsg )
       aTrans := NIL
    ENDIF
 
@@ -433,9 +433,9 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    __i18n_fileName( @cFile )
    hFile := FCreate( cFile )
    IF hFile == F_ERROR
-      cErrorMsg := "cannot create translation file: " + cFile
+      cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
    ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )
-      cErrorMsg := "cannot write to file: " + cFile
+      cErrorMsg := hb_StrFormat( "cannot write to file: %1$s", cFile )
    ELSE
       lRet := .T.
    ENDIF
@@ -649,10 +649,10 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, cErrorMsg )
       __i18n_fileName( @cFile )
       hFile := FCreate( cFile )
       IF hFile == F_ERROR
-         cErrorMsg := "cannot create translation file: " + cFile
+         cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
          lRet := .F.
       ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )
-         cErrorMsg := "cannot write to file: " + cFile
+         cErrorMsg := hb_StrFormat( "cannot write to file: %1$s", cFile )
          lRet := .F.
       ENDIF
       FClose( hFile )
