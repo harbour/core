@@ -1672,7 +1672,7 @@ char * hb_itemSerializeCP( PHB_ITEM pItem, int iFlags,
    if( ( iFlags & HB_SERIALIZE_COMPRESS ) != 0 && nSize > 20 )
    {
       HB_SIZE nDest = hb_zlibCompressBound( nSize );
-      char * pDest = hb_xgrab( nDest );
+      char * pDest = ( char * ) hb_xgrab( nDest );
       if( hb_zlibCompress( pDest, &nDest, ( const char * ) pBuffer, nSize,
                            HB_ZLIB_COMPRESSION_DEFAULT ) == HB_ZLIB_RES_OK )
       {
