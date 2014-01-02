@@ -49,8 +49,8 @@
 #ifndef TIP_CH
 #define TIP_CH
 
-#define TIP_RO    0   /* Tip read only protocol */
-#define TIP_WO    1   /* Tip write only protocol */
-#define TIP_RW    2   /* Tip read/write protocol */
+#define TIP_RO  0  /* TIP read only protocol */
+#define TIP_WO  1  /* TIP write only protocol */
+#define TIP_RW  2  /* TIP read/write protocol */
 
 #endif

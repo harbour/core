@@ -65,8 +65,8 @@
 #include "hbapifs.h"
 #include "hbdate.h"
 
-/************************************************************
- * Useful internet timestamp based on RFC 822 & RFC 2822
+/*
+ * Internet timestamp based on RFC 822 & RFC 2822
  */
 
 HB_FUNC( TIP_TIMESTAMP )
@@ -106,7 +106,7 @@ HB_FUNC( TIP_TIMESTAMP )
    hb_retc( szRet );
 }
 
-/** Detects the mimetype of a given file */
+/* Detects the mimetype of a given file */
 
 typedef struct tag_mime
 {
