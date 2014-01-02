@@ -104,6 +104,7 @@ DYNAMIC AdsIsEmpty
 DYNAMIC AdsIsEncryptionEnabled
 DYNAMIC AdsIsExprValid
 DYNAMIC AdsIsIndexed
+DYNAMIC AdsIsNull
 DYNAMIC AdsIsRecordEncrypted
 DYNAMIC AdsIsRecordInAOF
 DYNAMIC AdsIsRecordLocked

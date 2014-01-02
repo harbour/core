@@ -1720,6 +1720,33 @@ HB_FUNC( ADSISEMPTY )
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
 }
 
+HB_FUNC( ADSISNULL )
+{
+   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) )
+   {
+      UNSIGNED16 u16Null = 0;
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+      if( pArea )
+      {
+#if ADS_LIB_VERSION >= 900
+         AdsIsNull( pArea->hTable,
+                    ( HB_ISCHAR( 1 ) ? ( UNSIGNED8 * ) hb_parcx( 1 ) : ADSFIELD( hb_parni( 1 ) ) ) /* pucFldName */,
+                    &u16Null );
+#else
+         AdsIsEmpty( pArea->hTable,
+                     ( HB_ISCHAR( 1 ) ? ( UNSIGNED8 * ) hb_parcx( 1 ) : ADSFIELD( hb_parni( 1 ) ) ) /* pucFldName */,
+                     &u16Null );
+#endif
+         hb_retl( u16Null != 0 );
+      }
+      else
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
+   }
+   else
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
+}
+
 HB_FUNC( ADSGETNUMACTIVELINKS )         /* Only valid for a DataDict */
 {
    UNSIGNED16 pusNumLinks = 0;

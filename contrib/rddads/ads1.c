@@ -1960,24 +1960,25 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
    {
       case DBS_ISNULL:
       {
-         UNSIGNED16 bEmpty;
+         UNSIGNED16 u16Null = 1;
 
          if( pArea->fPositioned )
          {
             UNSIGNED32 u32RetVal;
 
-            u32RetVal = AdsIsEmpty( pArea->hTable, ADSFIELD( uiIndex ), &bEmpty );
+#if ADS_LIB_VERSION >= 900
+            u32RetVal = AdsIsNull( pArea->hTable, ADSFIELD( uiIndex ), &u16Null );
+#else
+            u32RetVal = AdsIsEmpty( pArea->hTable, ADSFIELD( uiIndex ), &u16Null );
+#endif
             if( u32RetVal != AE_SUCCESS )
             {
                commonError( pArea, EG_READ, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
                return HB_FAILURE;
             }
          }
-         else
-            bEmpty = 1;
-
-         hb_itemPutL( pItem, bEmpty != 0 );
-         return HB_SUCCESS;
+         hb_itemPutL( pItem, u16Null != 0 );
+         break;
       }
 
       case DBS_TYPE:
@@ -2074,11 +2075,12 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
                hb_itemPutC( pItem, "U" );
                break;
          }
-         return HB_SUCCESS;
+         break;
 
       default:
          return SUPER_FIELDINFO( ( AREAP ) pArea, uiIndex, uiType, pItem );
    }
+   return HB_SUCCESS;
 }
 
 static HB_ERRCODE adsFieldName( ADSAREAP pArea, HB_USHORT uiIndex, void * szName )
