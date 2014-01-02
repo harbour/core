@@ -11633,7 +11633,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    RETURN cVersion
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
-
    /* Check if it is a core/user GT. */
    RETURN ;
       AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0 .OR. ;
