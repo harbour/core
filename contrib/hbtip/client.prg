@@ -463,8 +463,8 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
 
    nSent := 0
 
-   IF ! Empty( ::exGauge )
-      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+   IF HB_ISEVALITEM( ::exGauge )
+      Eval( ::exGauge, nSent, nSize, Self )
    ENDIF
 
    ::nRead   := 0
@@ -492,10 +492,10 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
       ENDIF
 
       nSent += hb_BLen( cData )
-      IF ! Empty( ::exGauge )
-         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
-      ENDIF
 
+      IF HB_ISEVALITEM( ::exGauge )
+         Eval( ::exGauge, nSent, nSize, Self )
+      ENDIF
    ENDDO
 
    IF nSent > 0
@@ -530,23 +530,22 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    // allow initialization of the gauge
    nSent := 0
-   IF ! Empty( ::exGauge )
-      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+
+   IF HB_ISEVALITEM( ::exGauge )
+      Eval( ::exGauge, nSent, nSize, Self )
    ENDIF
 
    ::nStatus := 1
    cData := Space( nBufSize )
-   nLen := FRead( nFin, @cData, nBufSize )
-   DO WHILE nLen > 0
+   DO WHILE ( nLen := FRead( nFin, @cData, nBufSize ) ) > 0
       IF ::Write( @cData, nLen ) != nLen
          FClose( nFin )
          RETURN .F.
       ENDIF
       nSent += nLen
-      IF ! Empty( ::exGauge )
-         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+      IF HB_ISEVALITEM( ::exGauge )
+         Eval( ::exGauge, nSent, nSize, Self )
       ENDIF
-      nLen := FRead( nFin, @cData, nBufSize )
    ENDDO
 
    // it may happen that the file has length 0

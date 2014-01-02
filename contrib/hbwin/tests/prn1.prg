@@ -14,7 +14,7 @@ PROCEDURE Main( cPar1 )
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
-         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICT "@K"
+         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICTURE "@K"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
          nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )

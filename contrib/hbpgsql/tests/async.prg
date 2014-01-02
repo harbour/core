@@ -22,7 +22,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
 
    RETURN
 
-PROCEDURE Query( conn, cQuery, lCancel )
+STATIC PROCEDURE Query( conn, cQuery, lCancel )
 
    LOCAL pCancel, cErrMsg := Space( 30 )
    LOCAL res, x, y, cTime

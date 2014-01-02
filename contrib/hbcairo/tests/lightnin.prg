@@ -20,8 +20,7 @@ PROCEDURE Main()
 
    RETURN
 
-
-PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
+STATIC PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
 
    LOCAL nI, nK, nW0, nX2
 

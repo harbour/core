@@ -82,7 +82,7 @@ PROCEDURE WinMain( ... )
 
    RETURN
 
-PROCEDURE hbnetio_WinServiceEntry( ... )
+STATIC PROCEDURE hbnetio_WinServiceEntry( ... )
 
 #if 0
    LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }

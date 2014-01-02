@@ -526,7 +526,7 @@ FUNCTION QuickQuery( cQuery )
    RETURN result
 
 
-PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
+STATIC PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
 
    LOCAL cFile, i, cIndex, cKey
 

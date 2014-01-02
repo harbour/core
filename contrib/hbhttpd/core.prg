@@ -1160,9 +1160,8 @@ PROCEDURE UAddHeader( cType, cValue )
 
 PROCEDURE URedirect( cURL, nCode )
 
-   IF nCode == NIL
-      nCode := 303
-   ENDIF
+   hb_default( @nCode, 303 )
+
    USetStatusCode( nCode )
    UAddHeader( "Location", cURL )
 
@@ -1345,9 +1344,8 @@ FUNCTION UUrlValidate( cUrl )
 
    LOCAL nI
 
-   IF cUrl == NIL
-      cUrl := server[ "REQUEST_URI" ]
-   ENDIF
+   hb_default( @cURL, server[ "REQUEST_URI" ] )
+
    IF ( nI := At( "?_ucs=", cUrl ) ) == 0
       nI := At( "&_ucs=", cUrl )
    ENDIF
@@ -1358,9 +1356,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
    LOCAL aDir, aF, nI, cI, tDate, tHDate
 
-   IF ! HB_ISLOGICAL( lIndex )
-      lIndex := .F.
-   ENDIF
+   hb_default( @lIndex, .F. )
 
    cFileName := StrTran( cFileName, "//", "/" )
 
@@ -1633,9 +1629,8 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
 
    LOCAL nPos, cTpl, aCode := {}
 
-   IF cFileName == NIL
-      cFileName := MEMVAR->server[ "SCRIPT_NAME" ]
-   ENDIF
+   hb_default( @cFileName, MEMVAR->server[ "SCRIPT_NAME" ] )
+
    cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
    IF hb_FileExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
@@ -1644,7 +1639,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
             Break( nPos )
          ENDIF
       RECOVER USING nPos
-         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %s(%d,%d)", cFileName, SUBSTRCOUNT( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
+         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %s(%d,%d)", cFileName, SubStrCount( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
          aCode := {}
       END SEQUENCE
    ELSE
@@ -1723,13 +1718,12 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
 
    RETURN Len( cTpl ) + 1
 
-STATIC FUNCTION SUBSTRCOUNT( cSub, cString, nStart, nEnd )
+STATIC FUNCTION SubStrCount( cSub, cString, nStart, nEnd )
 
    LOCAL nCount := 0
 
-   IF nStart == NIL
-      nStart := 1
-   ENDIF
+   hb_default( @nStart, 1 )
+
    DO WHILE ( nStart := hb_At( cSub, cString, nStart, nEnd ) ) > 0
       nCount++
       nStart++

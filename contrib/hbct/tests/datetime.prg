@@ -143,13 +143,13 @@ STATIC PROCEDURE addmtest()
    LOCAL mnth    := 0
 
    DO WHILE .T.
-      @ 5, 10 SAY "AddMonth( dDate ) returns the date incremented by"
-      @ 6, 10 SAY "the number of days in months."
-      @ 7, 10 SAY "Insert a date"
-      @ 8, 10 SAY "How many months"
+      @  5, 10 SAY "AddMonth( dDate ) returns the date incremented by"
+      @  6, 10 SAY "the number of days in months."
+      @  7, 10 SAY "Insert a date"
+      @  8, 10 SAY "How many months"
 
-      @ 7, 60 GET dDate
-      @ 8, 60 GET mnth PICTURE "99"
+      @  7, 60 GET dDate
+      @  8, 60 GET mnth PICTURE "99"
 
       READ
 
@@ -173,11 +173,11 @@ STATIC PROCEDURE bomtest()
    LOCAL dDate   := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "BoM( dDate ) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoM()"
-      @ 7, 10 SAY "should return 2002-10-01. Test it, Insert a date"
+      @  5, 10 SAY "BoM( dDate ) returns the date of the first day of dDate"
+      @  6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoM()"
+      @  7, 10 SAY "should return 2002-10-01. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -201,12 +201,12 @@ STATIC PROCEDURE boqtest()
    LOCAL dDate   := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "BoQ( dDate ) returns the date of the first day of the"
-      @ 6, 10 SAY "quarter in which dDate is situated. If dDate is"
-      @ 7, 10 SAY "2002-10-15 (that's in yyyy-mm-dd), BoQ() should return"
-      @ 8, 10 SAY "2002-09-01. Test it, Insert a date"
+      @  5, 10 SAY "BoQ( dDate ) returns the date of the first day of the"
+      @  6, 10 SAY "quarter in which dDate is situated. If dDate is"
+      @  7, 10 SAY "2002-10-15 (that's in yyyy-mm-dd), BoQ() should return"
+      @  8, 10 SAY "2002-09-01. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -231,11 +231,11 @@ STATIC PROCEDURE boytest()
    LOCAL nkey
 
    DO WHILE .T.
-      @ 5, 10 SAY "BoY( dDate ) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoY()"
-      @ 7, 10 SAY "should return 2002-01-01. Test it, Insert a date"
+      @  5, 10 SAY "BoY( dDate ) returns the date of the first day of dDate"
+      @  6, 10 SAY "If dDate is 2002-10-15 (that's in yyyy-mm-dd), BoY()"
+      @  7, 10 SAY "should return 2002-01-01. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -264,11 +264,11 @@ STATIC PROCEDURE ctodowtest()
    LOCAL nkey
 
    DO WHILE .T.
-      @ 5, 10 SAY "CToDoW( dDate ) receives the name of a day of the week and "
-      @ 6, 10 SAY "returns a number representing its position in the week"
-      @ 7, 10 SAY "Sunday returns 1. Test it, Insert a day"
+      @  5, 10 SAY "CToDoW( dDate ) receives the name of a day of the week and "
+      @  6, 10 SAY "returns a number representing its position in the week"
+      @  7, 10 SAY "Sunday returns 1. Test it, Insert a day"
 
-      @ 9, 10 GET cDow
+      @  9, 10 GET cDow
 
       READ
 
@@ -296,11 +296,11 @@ STATIC PROCEDURE ctomonthtest()
    LOCAL cDom    := Space( 9 )
 
    DO WHILE .T.
-      @ 5, 10 SAY "CToMonth( cDom ) receives the name of a month and returns"
-      @ 6, 10 SAY "a number representing its position in the month. April"
-      @ 7, 10 SAY "returns 4. Test it, Insert a month"
+      @  5, 10 SAY "CToMonth( cDom ) receives the name of a month and returns"
+      @  6, 10 SAY "a number representing its position in the month. April"
+      @  7, 10 SAY "returns 4. Test it, Insert a month"
 
-      @ 9, 10 GET cDom PICTURE "!!!!!!!!!"
+      @  9, 10 GET cDom PICTURE "!!!!!!!!!"
 
       READ
 
@@ -332,13 +332,13 @@ STATIC PROCEDURE dInMonthtest()
    LOCAL cLeap   := Space( 1 )
 
    DO WHILE .T.
-      @ 5, 10 SAY "DaysInMonth() receives either the number of a month or"
-      @ 6, 10 SAY "its name and returns the number of days in the month. "
-      @ 7, 10 SAY "April returns 30. Test it. Insert a month number"
-      @ 8, 10 SAY "Is it a leap year?"
+      @  5, 10 SAY "DaysInMonth() receives either the number of a month or"
+      @  6, 10 SAY "its name and returns the number of days in the month. "
+      @  7, 10 SAY "April returns 30. Test it. Insert a month number"
+      @  8, 10 SAY "Is it a leap year?"
 
-      @ 7, 60 GET cMonth PICTURE "XXXXXXXXX"
-      @ 8, 60 GET cLeap PICTURE "Y"
+      @  7, 60 GET cMonth PICTURE "XXXXXXXXX"
+      @  8, 60 GET cLeap PICTURE "Y"
 
       READ
 
@@ -381,14 +381,14 @@ STATIC PROCEDURE d2month()
    LOCAL nMonth
 
    DO WHILE .T.
-      @ 5, 10 SAY "DaysToMonth() receives the number a month and returns"
-      @ 6, 10 SAY "the number of days in the year up to that month. March"
-      @ 7, 10 SAY "returns 59 or 60 in a leap year. Test it."
-      @ 8, 10 SAY "Insert a month number"
-      @ 9, 10 SAY "Leap year Y/N?"
+      @  5, 10 SAY "DaysToMonth() receives the number a month and returns"
+      @  6, 10 SAY "the number of days in the year up to that month. March"
+      @  7, 10 SAY "returns 59 or 60 in a leap year. Test it."
+      @  8, 10 SAY "Insert a month number"
+      @  9, 10 SAY "Leap year Y/N?"
 
-      @ 8, 33 GET cMonth PICTURE "99"
-      @ 9, 33 GET cLeap PICTURE "Y"
+      @  8, 33 GET cMonth PICTURE "99"
+      @  9, 33 GET cLeap PICTURE "Y"
 
       READ
 
@@ -460,10 +460,10 @@ STATIC PROCEDURE doytest()
    LOCAL dDate   := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "DoY( dDate ) returns the day of the year for the"
-      @ 6, 10 SAY "date passed. Test it, Insert a date"
+      @  5, 10 SAY "DoY( dDate ) returns the day of the year for the"
+      @  6, 10 SAY "date passed. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -492,10 +492,10 @@ STATIC PROCEDURE eomtest()
    LOCAL dDate := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "EoM( dDate ) returns the last date in the month of the"
-      @ 6, 10 SAY "month appearing in dDate. Test it, Insert a date"
+      @  5, 10 SAY "EoM( dDate ) returns the last date in the month of the"
+      @  6, 10 SAY "month appearing in dDate. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -523,10 +523,10 @@ STATIC PROCEDURE eoqtest()
    LOCAL dDate := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "EoQ( dDate ) returns the last date in the quarter in"
-      @ 6, 10 SAY "which dDate falls. Test it, Insert a date"
+      @  5, 10 SAY "EoQ( dDate ) returns the last date in the quarter in"
+      @  6, 10 SAY "which dDate falls. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -555,10 +555,10 @@ STATIC PROCEDURE eoytest()
    LOCAL dDate := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "EoY( dDate ) returns the last date in the year of the"
-      @ 6, 10 SAY "year appearing in dDate. Test it, Insert a date"
+      @  5, 10 SAY "EoY( dDate ) returns the last date in the year of the"
+      @  6, 10 SAY "year appearing in dDate. Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -587,10 +587,10 @@ STATIC PROCEDURE isleaptest()
    LOCAL dDate := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "IsLeap( dDate ) returns TRUE if dDate is a leap year"
-      @ 6, 10 SAY "Test it, Insert a date"
+      @  5, 10 SAY "IsLeap( dDate ) returns TRUE if dDate is a leap year"
+      @  6, 10 SAY "Test it, Insert a date"
 
-      @ 9, 10 GET dDate
+      @  9, 10 GET dDate
 
       READ
 
@@ -698,10 +698,10 @@ STATIC PROCEDURE ntocdowtest()
    LOCAL cDay := Space( 2 )
 
    DO WHILE .T.
-      @ 5, 10 SAY "NToCDoW( n ) returns the name of the day number n"
-      @ 6, 10 SAY "Test it, Insert a day number"
+      @  5, 10 SAY "NToCDoW( n ) returns the name of the day number n"
+      @  6, 10 SAY "Test it, Insert a day number"
 
-      @ 6, 60 GET cDay
+      @  6, 60 GET cDay
 
       READ
 
@@ -731,10 +731,10 @@ STATIC PROCEDURE ntocmthtest()
    LOCAL cMonth := "  "
 
    DO WHILE .T.
-      @ 5, 10 SAY "NToCMonth( n ) returns the name of the month number n"
-      @ 6, 10 SAY "Test it, Insert a month number"
+      @  5, 10 SAY "NToCMonth( n ) returns the name of the month number n"
+      @  6, 10 SAY "Test it, Insert a month number"
 
-      @ 6, 60 GET cMonth
+      @  6, 60 GET cMonth
 
       READ
 
@@ -763,10 +763,10 @@ STATIC PROCEDURE qtrtest()
    LOCAL dDate  := hb_SToD()
 
    DO WHILE .T.
-      @ 5, 10 SAY "Quarter( dDate ) returns the number of the quarter"
-      @ 6, 10 SAY "Test it, Insert a date"
+      @  5, 10 SAY "Quarter( dDate ) returns the number of the quarter"
+      @  6, 10 SAY "Test it, Insert a date"
 
-      @ 6, 52 GET dDate
+      @  6, 52 GET dDate
 
       READ
 
@@ -858,7 +858,7 @@ STATIC PROCEDURE weektest()
          EXIT
       ENDIF
 
-      @ 8, 10 SAY "The week number is " + ;
+      @  8, 10 SAY "The week number is " + ;
          hb_ntos( Week( dDate, IsAffirm( cMode ) ) )
 
       Inkey( 0 )

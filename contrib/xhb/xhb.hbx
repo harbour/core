@@ -482,7 +482,6 @@ DYNAMIC __ActiveStructure
 DYNAMIC __BreakBlock
 DYNAMIC __CStr_CopyTo
 DYNAMIC __ErrorBlock
-DYNAMIC __init_LONGLONGs
 DYNAMIC __MinimalErrorHandler
 DYNAMIC __mvSymbolInfo
 DYNAMIC __olePDisp

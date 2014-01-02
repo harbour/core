@@ -83,7 +83,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    res := PQexec( conn, "SELECT sum(salary) as sum_salary FROM test WHERE code between 1 and 4000" )
 
    IF PQresultStatus( res ) == PGRES_TUPLES_OK
-      @ 18, 0 SAY "Sum values...." + PQgetvalue( res, 1, 1 )
+      @ 18, 0 SAY "Sum values.... " + PQgetvalue( res, 1, 1 )
    ENDIF
 
    x := 0
@@ -93,7 +93,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
       IF PQresultStatus( res ) == PGRES_TUPLES_OK
          x += Val( PQgetvalue( res, 1, 1 ) )
 
-         @ 19, 0 SAY "Sum values...." + Str( x )
+         @ 19, 0 SAY "Sum values.... " + Str( x )
       ENDIF
    NEXT
 

@@ -105,7 +105,7 @@ PROCEDURE Main( ... )
    #4 install        install        _ACT_INC_INST          -inc -instpath=
    #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
  */
-PROCEDURE Standalone( aParams, hProjectList )
+STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    LOCAL hProjectReqList
 
@@ -218,7 +218,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
-PROCEDURE GNUMake( aParams, hProjectList )
+STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    LOCAL cProject
    LOCAL hProjectReqList
@@ -717,7 +717,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    RETURN aList
 
-FUNCTION AddProject( hProjectList, cFileName )
+STATIC FUNCTION AddProject( hProjectList, cFileName )
 
    LOCAL cDir
    LOCAL cName
@@ -752,7 +752,7 @@ FUNCTION AddProject( hProjectList, cFileName )
 
    RETURN .F.
 
-PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
+STATIC PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
 
    LOCAL cItem
 
@@ -765,7 +765,7 @@ PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
 
    RETURN
 
-PROCEDURE LoadProjectListFromString( hProjectList, cString )
+STATIC PROCEDURE LoadProjectListFromString( hProjectList, cString )
 
    LOCAL cItem
 

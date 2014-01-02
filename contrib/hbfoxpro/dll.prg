@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Calling function from dynamic library (fox___DynCall())
+ * Calling function from dynamic library (__fox_DynCall())
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
@@ -53,7 +53,7 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
    [cParamType1 [@] ParamName1, cParamType2 [@] ParamName2, ...]
 */
 
-FUNCTION fox___DynCall( cCommand, ... )
+FUNCTION __fox_DynCall( cCommand, ... )
 
    LOCAL aParam
 

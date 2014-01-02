@@ -60,7 +60,7 @@ STATIC s_aArrayClasses := {}
 STATIC s_aSynonyms := {}
 STATIC s_lInitLongs := .T.
 
-PROCEDURE __init_LONGLONGs()
+STATIC PROCEDURE __init_LONGLONGs()
 
    hb_CStructureCSyntax( "ULONGLONG", { "-4", "ulong[2]", }, , , 8 )
    __ClsSetModule( __ActiveStructure() )
@@ -225,7 +225,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
    LOCAL nID, cSynon
 
    FOR EACH cElem IN aDefinitions
-      // *** PP bug - remove when possible! ***
+
       IF cElem == NIL
          ASize( aDefinitions, nIndex - 1 )
          EXIT

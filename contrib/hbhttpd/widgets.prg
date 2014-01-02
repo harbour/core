@@ -346,11 +346,8 @@ CREATE CLASS UWBrowse
 
 ENDCLASS
 
-FUNC UWBrowseNew()
-
-   LOCAL oW := UWBrowse()
-
-   RETURN oW
+FUNCTION UWBrowseNew()
+   RETURN UWBrowse()
 
 METHOD AddColumn( nID, cTitle, cField, lRaw ) CLASS UWBrowse
 
@@ -444,11 +441,8 @@ CREATE CLASS UWOption
 
 ENDCLASS
 
-FUNC UWOptionNew()
-
-   LOCAL oW := UWOption()
-
-   RETURN oW
+FUNCTION UWOptionNew()
+   RETURN UWOption()
 
 METHOD Add( cTitle, cCode, lRaw ) CLASS UWOption
 

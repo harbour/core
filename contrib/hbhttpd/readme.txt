@@ -175,7 +175,7 @@ to use some objects (browse, etc.) instead of plain:
     UWrite('<table>')
     DO WHILE ! Eof()
        UWrite( '<tr><td>' + FIELD->NAME + '</td><td align="right">' +
-               Str( FIELD->AGE ) + '</td></tr>' )
+               hb_ntos( FIELD->AGE ) + '</td></tr>' )
        dbSkip()
     ENDDO
     UWrite('</table>')
@@ -200,7 +200,7 @@ containing the mapping of URL subtree into handler functions. Ex.,
 Page handler functions receives a parameter indicating received
 event/method. Handler has a structure:
 
-STATIC FUNC proc_handler(cMethod)
+STATIC FUNCTION proc_handler( cMethod )
    IF cMethod == "INIT"
       // This code is executed on entering URL (first call to this URL)
       // Here we open databases used to process queries
@@ -213,18 +213,18 @@ STATIC FUNC proc_handler(cMethod)
       // another URL)
       // Here we close databases opened in INIT method, etc.
    ENDIF
-RETURN .T.
+   RETURN .T.
 
 As you can see this handler reminds the structure of traditional GUI
 based application message/event handler, for example in windows, we
 have:
 
-STATIC FUNC WndProc( hWnd, uMsg, wParam, lParam )
+STATIC FUNCTION WndProc( hWnd, uMsg, wParam, lParam )
    IF uMsg == WM_CREATE
    ELSEIF uMsg == WM_PAINT
    ELSEIF uMsg == WM_DESTROY
    ENDIF
-RETURN ...
+   RETURN ...
 
 I hope this similarity will help to develop (or convert) event based
 GUI applications to web easier.
@@ -279,7 +279,7 @@ items dialog, and items_edit_handler() function for item_edit dialog.
    PROCEDURE items_handler()
       ...
 
-      IF event = "edit button pressed"
+      IF event == "edit button pressed"
          dialog := create_new_modal_dialog() // create items_edit dialog
          dialog:handler := @items_edit_handler()
          process_event_loop() // until dialog is closed

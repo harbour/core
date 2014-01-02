@@ -25,8 +25,7 @@ PROCEDURE Main()
 
    RETURN
 
-
-PROCEDURE path_debug( hCairo, nTolerance )
+STATIC PROCEDURE path_debug( hCairo, nTolerance )
 
    LOCAL hPath, hIterator, nType, aPoints
 

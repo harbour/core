@@ -15,8 +15,7 @@ PROCEDURE Main()
 
    RETURN
 
-
-PROCEDURE draw( hSurface )
+STATIC PROCEDURE draw( hSurface )
 
    LOCAL hCairo, hPath
 
@@ -59,8 +58,7 @@ PROCEDURE draw( hSurface )
 
    RETURN
 
-
-PROCEDURE map_path_onto( hCairo, hPath )
+STATIC PROCEDURE map_path_onto( hCairo, hPath )
 
    LOCAL hCurrentPath, aLengths, hIterator, nI, aPoints
 
@@ -79,7 +77,6 @@ PROCEDURE map_path_onto( hCairo, hPath )
    cairo_append_path( hCairo, hCurrentPath )
 
    RETURN
-
 
 STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
 
@@ -133,8 +130,7 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
 
    RETURN
 
-
-STATIC FUNC path_lengths( hPath )
+STATIC FUNCTION path_lengths( hPath )
 
    LOCAL hIterator, nType, aLast, aRet, aPoints, nLen
 
@@ -159,12 +155,10 @@ STATIC FUNC path_lengths( hPath )
 
    RETURN aRet
 
-
-STATIC FUNC distance( nX1, nY1, nX2, nY2 )
+STATIC FUNCTION distance( nX1, nY1, nX2, nY2 )
    RETURN Sqrt( ( nX1 - nX2 ) ^ 2 + ( nY1 - nY2 ) ^ 2 )
 
-
-STATIC FUNC curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
+STATIC FUNCTION curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
 
    LOCAL nLength := 0, hSurface, hCairo, hPath, hIterator, nType, aLast, aPoints
 

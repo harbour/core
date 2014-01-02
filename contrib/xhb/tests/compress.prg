@@ -1,8 +1,4 @@
-//
-// Demo of realtime string compression
-//
-// Giancarlo Niccolai
-//
+// Demo of realtime string compression by Giancarlo Niccolai
 
 #require "xhb"
 
@@ -15,21 +11,22 @@ PROCEDURE Main()
    LOCAL cDecomp
    LOCAL nError, nBufLen
 
-   CLS
-   @ 1, 15 SAY "xHarbour - ZLIB based compression test"
+   ? "xHarbour - ZLIB based compression test"
 
-   @ 2, 5 SAY "TEST 1: using on-the-fly Buffer creation"
+   ?
+   ? "TEST 1: using on-the-fly Buffer creation"
 
    nBufLen := hb_CompressBufLen( Len( cText ) )
    // cComp and cDecomp will be created with the correct length
    cComp := hb_Compress( cText )
    cDecomp := hb_Uncompress( nBuflen, cComp )
 
-   @ 3, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
-   @ 4, 7 SAY "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
-   @ 5, 7 SAY "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
+   ? "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
+   ? "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
+   ? "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
 
-   @ 7, 5 SAY "TEST 2: using preallocated buffers"
+   ?
+   ? "TEST 2: using preallocated buffers"
 
    cComp := Space( nBufLen )
    // We allocate more space (manual says 0.1% + 12, but you can never know...)
@@ -40,13 +37,14 @@ PROCEDURE Main()
    hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
    hb_Uncompress( Len( cText ), cComp, nBuflen, @cDecomp )
 
-   @ 8, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
-   @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
+   ? "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
+   ? "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
    // Notice: this time the length of the destination buffer is not the length of
    // the original buffer, but Int(nBufLen * 1.1)
-   @ 10, 7 SAY "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
+   ? "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
 
-   @ 12, 5 SAY "TEST 3: Generating an error"
+   ?
+   ? "TEST 3: Generating an error"
 
    nBufLen := hb_CompressBufLen( Len( cText ) )
    cComp := Space( nBufLen )
@@ -57,15 +55,9 @@ PROCEDURE Main()
    nError := hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
 
    IF nError != HB_Z_OK
-      @ 13, 7 SAY "Error generated (" + hb_ntos( Len( cComp ) ) + ")" + ;
-         hb_CompressErrorDesc( nError )
+      ? "Error generated (" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
    ELSE
-      @ 13, 7 SAY "NO Error generated (" + hb_ntos( Len( cComp ) ) + ")" + ;
-         hb_CompressErrorDesc( nError )
+      ? "NO Error generated (" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
    ENDIF
-
-   @ 22, 25 SAY "Press a key to terminate"
-
-   Inkey( 0 )
 
    RETURN

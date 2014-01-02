@@ -54,19 +54,16 @@ PROCEDURE Main( cUrl, cFile )
    LOCAL oUrl, oClient
    LOCAL cData
 
-   CLS
-   @ 1, 6 SAY "Harbour - TIP (class based internet client protocol) test"
+   ? "Harbour - TIP (class based internet client protocol) test"
 
    IF ! HB_ISSTRING( cUrl ) .OR. Empty( cUrl )
-      @ 4, 5 SAY hb_StrFormat( "Usage: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )
-      Terminate()
+      ? hb_StrFormat( "Usage: %1$s <URI> [dumpToOrFromFileName]", hb_ProgName() )
       RETURN
    ENDIF
 
    oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
-      @ 4, 5 SAY "Invalid URL " + cUrl
-      Terminate()
+      ? "Invalid URL", cUrl
       RETURN
    ENDIF
 
@@ -89,20 +86,19 @@ PROCEDURE Main( cUrl, cFile )
    ENDSWITCH
 
    IF Empty( oClient )
-      @ 4, 5 SAY "Invalid URL " + cUrl
-      Terminate()
+      ? "Invalid URL", cUrl
       RETURN
    ENDIF
    oClient:nConnTimeout := 2000 /* 20000 */
 
    oUrl:cUserid := StrTran( oUrl:cUserid, "&at;", "@" )
 
-   @ 4, 5 SAY "Connecting to " + oUrl:cProto + "://" + oUrl:cServer
+   ? "Connecting to", oUrl:cProto + "://" + oUrl:cServer
    IF oClient:Open()
       IF Empty( oClient:cReply )
-         @ 5, 5 SAY "Connection status: <connected>"
+         ? "Connection status: <connected>"
       ELSE
-         @ 5, 5 SAY "Connection status: " + oClient:cReply
+         ? "Connection status:", oClient:cReply
       ENDIF
 
       IF ! Empty( cFile ) .AND. Left( cFile, 1 ) == "+"
@@ -110,67 +106,57 @@ PROCEDURE Main( cUrl, cFile )
          bWrite := .T.
       ENDIF
 
-      IF oClient:nAccessMode == TIP_WO .OR. ( oClient:nAccessMode == TIP_RW .AND. bWrite )
-         oClient:exGauge := {| done, size | ShowGauge( done, size ) }
+      ?
+      oClient:exGauge := {| done, size | ShowGauge( done, size ) }
 #if 0
-         /* Can be also: */
-         oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection ) }
+      /* Can be also: */
+      oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection ) }
 #endif
+
+      IF oClient:nAccessMode == TIP_WO .OR. ( oClient:nAccessMode == TIP_RW .AND. bWrite )
          IF oClient:WriteFromFile( cFile )
-            @ 7, 5 SAY "Data successfully sent"
+            ? "Data successfully sent"
          ELSE
-            @ 7, 5 SAY "Error: Data not sent " + oClient:lastErrorMessage()
+            ? "Error: Data not sent", oClient:lastErrorMessage()
          ENDIF
       ELSE
          IF Empty( cFile )
             cData := oClient:Read()
             IF ! Empty( cData )
-               @ 7, 5 SAY "First 80 characters:"
-               ? RTrim( SubStr( cData, 1, 80 ) )
+               ? "First 80 characters:", RTrim( Left( cData, 80 ) )
             ELSE
-               @ 7, 5 SAY "Error: file can't be retrieved " + oClient:lastErrorMessage()
+               ? "Error: file can't be retrieved", oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )
-               @ 7, 5 SAY "File " + cFile + " written."
-               @ 8, 5 SAY "Server replied " + oClient:cReply
+               ? "File", cFile, "written."
+               ? "Server replied", oClient:cReply
             ELSE
-               @ 7, 5 SAY "Error: Generic error in writing " + cFile
+               ? "Error: Generic error in writing", cFile
             ENDIF
          ENDIF
       ENDIF
 
       oClient:Close()
       IF Empty( oClient:cReply )
-         @ 22, 5 SAY "Done: (no goodbye message)"
+         ? "Done: (no goodbye message)"
       ELSE
-         @ 22, 5 SAY "Done: " + oClient:cReply
+         ? "Done:", oClient:cReply
       ENDIF
    ELSE
-      @ 5, 5 SAY "Can't open URI " + cUrl
+      ? "Can't open URI", cUrl
       IF ! Empty( oClient:cReply )
-         @ 6, 5 SAY oClient:cReply
+         ? oClient:cReply
       ENDIF
    ENDIF
-
-   Terminate()
-
-   RETURN
-
-STATIC PROCEDURE Terminate()
-
-   @ MaxRow() - 1, 0 SAY PadC( "Program done - Press a key to terminate", MaxCol() + 1 )
-   Inkey( 0 )
-   @ MaxRow(), 0
 
    RETURN
 
 STATIC PROCEDURE ShowGauge( nSent, nSize )
 
-   @ 6, 5 SAY "Sending: " + Replicate( hb_UTF8ToStr( "░" ), 60 )
-   /* nSent may be zero */
-   IF nSent > 0
-      @ 6, 14 SAY Replicate( hb_UTF8ToStr( "█" ), 60 * nSent / nSize )
-   ENDIF
+   hb_default( @nSize, 0 )
+
+   SetPos( Row(), 0 )
+   ?? "Sending:", nSent, "/", nSize
 
    RETURN
