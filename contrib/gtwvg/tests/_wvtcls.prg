@@ -289,7 +289,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen := .F.
    cUseAlias := "TEST"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias ) SHARED
+   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias ) SHARED
    IF ! NetErr()
       lOpen := .T.
       oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
@@ -298,7 +298,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen1 := .F.
    cUseAlias1 := "TEST1"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias1 ) SHARED
+   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias1 ) SHARED
    IF ! NetErr()
       lOpen1 := .T.
       oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test.dbf - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )

@@ -48,10 +48,10 @@
 
 #if defined( HBMK_HAS_HBGD )
 
-MEMVAR _SERVER // defined in uHTTPD
+MEMVAR _SERVER  // defined in uHTTPD
 MEMVAR _REQUEST // defined in uHTTPD
 
-#define IMAGES_IN  ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "contrib" + hb_ps() + "hbgd" + hb_ps() + "tests" + hb_ps() + "digits" + hb_ps()
+#define IMAGES_IN  hb_DirSepToOS( "../../../contrib/hbgd/tests/digits/" )
 #define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
 
 #define DISPLAY_NUM  10

@@ -619,7 +619,7 @@ STATIC PROCEDURE lastdayomtest()
 
    LOCAL GetList := {}
    LOCAL dDate := hb_SToD()
-   LOCAL cMth  := "  "
+   LOCAL cMth  := Space( 2 )
 
    DO WHILE .T.
       @  5, 10 SAY "LastDayOM( xDate ) returns the number of days in the"
@@ -647,7 +647,7 @@ STATIC PROCEDURE lastdayomtest()
       Inkey( 0 )
 
       dDate := hb_SToD()
-      cMth  := "  "
+      cMth  := Space( 2 )
    ENDDO
 
    RETURN
@@ -728,7 +728,7 @@ STATIC PROCEDURE ntocmthtest()
    // module.
 
    LOCAL GetList := {}
-   LOCAL cMonth := "  "
+   LOCAL cMonth := Space( 2 )
 
    DO WHILE .T.
       @  5, 10 SAY "NToCMonth( n ) returns the name of the month number n"
@@ -747,7 +747,7 @@ STATIC PROCEDURE ntocmthtest()
 
       Inkey( 0 )
 
-      cMonth := "  "
+      cMonth := Space( 2 )
    ENDDO
 
    RETURN
@@ -804,7 +804,7 @@ STATIC PROCEDURE stodtest()
 
       READ
 
-      dDate := SToD( cAnsidate )
+      dDate := hb_SToD( cAnsidate )
 
       IF LastKey() == K_ESC
          EXIT

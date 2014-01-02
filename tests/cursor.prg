@@ -1,27 +1,35 @@
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
+#include "setcurs.ch"
+
 PROCEDURE Main()
 
-   LOCAL x
+   LOCAL aCursors := { ;
+      { SC_NONE    , "SC_NONE"    , "None"      }, ;
+      { SC_NORMAL  , "SC_NORMAL"  , "Underline" }, ;
+      { SC_INSERT  , "SC_INSERT"  , "HalfBlock" }, ;
+      { SC_SPECIAL1, "SC_SPECIAL1", "FullBlock" }, ;
+      { SC_SPECIAL2, "SC_SPECIAL2", "UpperHalf" } }
+
+   LOCAL tmp
 
    ? "This lists the cursor modes, along with the expected shape"
    ? "Press a key after each example"
+   IF hb_gtVersion() == "WIN"
+      ? "NOTE: With GTWIN (Windows Console), SC_SPECIAL2 cannot be emulated (it is 2/3 size)"
+   ENDIF
    ?
-   FOR x := 0 TO 4
-      CursTest( x )
+   FOR tmp := 1 TO Len( aCursors )
+      SetCursor( aCursors[ tmp ][ 1 ] )
+      ? ;
+         PadR( aCursors[ tmp ][ 2 ], 12 ), ;
+         PadR( aCursors[ tmp ][ 3 ], 10 ), ;
+         hb_ntos( SetCursor() )
+      Inkey( 0 )
    NEXT
-   ? "Note: In Windows Console mode, Special2 can not be emulated (it is 2/3 size)"
 
-   SetCursor( 1 )
-
-   RETURN
-
-STATIC PROCEDURE CursTest( nCurs )
-
-   LOCAL aTypes := { "None",    "Underline", "HalfBlock", "FullBlock",   "Upper Half" }
-   LOCAL aNames := { "SC_NONE", "SC_NORMAL", "SC_INSERT", "SC_SPECIAL1", "SC_SPECIAL2" }
-
-   SetCursor( nCurs )
-   ++nCurs
-   ? PadR( aNames[ nCurs ], 11 ), PadR( aTypes[ nCurs ], 11 ), Str( SetCursor(), 3 )
-   Inkey( 0 )
+   SetCursor( SC_NORMAL )
 
    RETURN

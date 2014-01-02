@@ -38,6 +38,7 @@
 #xtranslate HB_ISSTRING( <v> )             => ( ValType( <v> ) $ "CM" )
 #xtranslate HB_ISNUMERIC( <v> )            => ( ValType( <v> ) == "N" )
 #xtranslate HB_ISLOGICAL( <v> )            => ( ValType( <v> ) == "L" )
+#xtranslate HB_ISDATE( <v> )               => ( ValType( <v> ) == "D" )
 #xtranslate HB_ISARRAY( <v> )              => ( ValType( <v> ) == "A" )
 #xtranslate HB_ISOBJECT( <v> )             => ( ValType( <v> ) == "O" )
 #xtranslate HB_ISBLOCK( <v> )              => ( ValType( <v> ) == "B" )

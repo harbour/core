@@ -48,7 +48,7 @@
 
 #include "hbclass.ch"
 
-#define TABLE_NAME_PATH ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
+#define TABLE_NAME_PATH hb_DirSepToOS( "../../../tests/test.dbf" )
 #define SIMULATE_SLOW_REPLY
 
 MEMVAR _REQUEST // defined in uHTTPD

@@ -80,7 +80,7 @@ FUNCTION ExecBrowser( oCrt )
    pGT := SetGT( 2, hb_gtSelect() )
 
    cRDD       := "DBFCDX"
-   cFileDbf   := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
+   cFileDbf   := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
    cFileIndex := "test.z01"
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )

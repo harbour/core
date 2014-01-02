@@ -1459,7 +1459,7 @@ mailing list.
     build messages to find their location.
 5.  Keep your PATH clean from old, mixed compiler tools or other Harbour
     versions when building Harbour. The surest way to achieve this is to
-    leave only C compiler directory in PATH:
+    leave only the C compiler directory in PATH:
 
         set PATH=C:\<c_compiler_bin_dir>
 
