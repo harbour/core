@@ -58,6 +58,8 @@
 #xtranslate hb_BRight( <c>, <l> )          => Right( <c>, <l> )
 #xtranslate hb_BStrTran( <c>, <s>[, <r>] ) => StrTran( <c>, <s>, <r> )
 
+#xtranslate hb_gtVersion( [<n>] )          => "DOS"
+
 #xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
 #xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_Compiler()                  => "C"
