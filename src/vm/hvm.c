@@ -1158,13 +1158,13 @@ int hb_vmQuit( void )
    hb_vmDebuggerExit( HB_TRUE );
 #endif
 
-   /* release thread specific data */
-   hb_stackDestroyTSD();
-
    /* stop executing PCODE (HVM reenter request) */
    s_fHVMActive = HB_FALSE;
 
    hb_vmStaticsClear();
+
+   /* release thread specific data */
+   hb_stackDestroyTSD();
 
    hb_errExit();
    hb_clsReleaseAll();
