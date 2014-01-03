@@ -99,9 +99,9 @@ PROCEDURE Main()
       CLS
       SetCursor( SC_NORMAL )
       cpict := PadR( cpict, 40 )
-      @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID hb_FileExists( AllTrim( cpict ) )
-      @ 1, 0 SAY "Transpar? :" GET ltransp PICT "Y"
-      @ 2, 0 SAY "Max Cache :" GET nMaxCache PICT "999"
+      @ 0, 0 SAY "FileName  :" GET cpict PICTURE "@K" VALID hb_FileExists( AllTrim( cpict ) )
+      @ 1, 0 SAY "Transpar? :" GET ltransp PICTURE "Y"
+      @ 2, 0 SAY "Max Cache :" GET nMaxCache PICTURE "999"
       @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
          ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
       READ
@@ -229,7 +229,7 @@ METHOD Draw() CLASS wPaintObj
       // lBoxErrMessage()
    ENDCASE
 
-   RETURN NIL  // DRAW()
+   RETURN NIL
 
 // undraw the object
 // normally this is called with ::lVisible == .F.,
@@ -261,7 +261,7 @@ METHOD Undraw() CLASS wPaintObj
    RestScreen( nRow1, nCol1, nRow2, nCol2, cScreen )
    DispEnd()
 
-   RETURN NIL // undraw()
+   RETURN NIL
 
 METHOD Hide() CLASS wPaintObj
 

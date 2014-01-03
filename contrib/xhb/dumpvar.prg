@@ -274,33 +274,33 @@ STATIC FUNCTION DecodeScope( nScope AS NUMERIC )
 
    LOCAL cString := ""
 
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) # 0  //   1
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) != 0  //   1
       cString += "Ex,"
    ENDIF
 #ifdef __XHARBOUR__
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) # 0  //   2
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) != 0  //   2
       cString += "Pu,"
    ENDIF
 #endif
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) # 0  //   4
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) != 0  //   4
       cString += "Pr,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) # 0  //   8
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) != 0  //   8
       cString += "Hi,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) # 0  //  16
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) != 0  //  16
       cString += "Ct,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) # 0  //  32
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) != 0  //  32
       cString += "Ro,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) # 0  //  64
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) != 0  //  64
       cString += "Sh,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) # 0  // 128
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) != 0  // 128
       cString += "Cl,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) # 0  // 256
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) != 0  // 256
       cString += "Su,"
    ENDIF
 
@@ -312,40 +312,24 @@ STATIC FUNCTION DecodeScope( nScope AS NUMERIC )
 
 STATIC FUNCTION DecodeType( nType AS NUMERIC )
 
-   LOCAL cString := ""
+   SWITCH nType
+   CASE HB_OO_MSG_METHOD        ; RETURN "Method"
+   CASE HB_OO_MSG_DATA          ; RETURN "Data"
+   CASE HB_OO_MSG_CLASSDATA     ; RETURN "Clsdata"
+   CASE HB_OO_MSG_INLINE        ; RETURN "Inline"
+   CASE HB_OO_MSG_VIRTUAL       ; RETURN "Virtual"
+   CASE HB_OO_MSG_SUPER         ; RETURN "Super"
+   CASE HB_OO_MSG_ONERROR       ; RETURN "OnError"
+   CASE HB_OO_MSG_DESTRUCTOR    ; RETURN "Destructor"
+   CASE HB_OO_PROPERTY          ; RETURN "Property"
+   CASE HB_OO_MSG_PROPERTY      ; RETURN "MsgPrp"
+   CASE HB_OO_MSG_CLASSPROPERTY ; RETURN "ClsPrp"
+   CASE HB_OO_MSG_REALCLASS     ; RETURN "RealCls"
+   CASE HB_OO_MSG_DELEGATE      ; RETURN "Delegate"
+   CASE HB_OO_MSG_PERFORM       ; RETURN "Perform"
+   ENDSWITCH
 
-   DO CASE
-   CASE nType == HB_OO_MSG_METHOD      // 0
-      cString += "Method"
-   CASE nType == HB_OO_MSG_DATA        // 1
-      cString += "Data"
-   CASE nType == HB_OO_MSG_CLASSDATA   // 2
-      cString += "Clsdata"
-   CASE nType == HB_OO_MSG_INLINE      // 3
-      cString += "Inline"
-   CASE nType == HB_OO_MSG_VIRTUAL     // 4
-      cString += "Virtual"
-   CASE nType == HB_OO_MSG_SUPER       // 5
-      cString += "Super"
-   CASE nType == HB_OO_MSG_ONERROR     // 6
-      cString += "OnError"
-   CASE nType == HB_OO_MSG_DESTRUCTOR  // 7
-      cString += "Destructor"
-   CASE nType == HB_OO_PROPERTY        // 8
-      cString += "Property"
-   CASE nType == HB_OO_MSG_PROPERTY    // 9
-      cString += "MsgPrp"
-   CASE nType == HB_OO_MSG_CLASSPROPERTY  // 10
-      cString += "ClsPrp"
-   CASE nType == HB_OO_MSG_REALCLASS
-      cString += "RealCls"
-   CASE nType == HB_OO_MSG_DELEGATE
-      cString += "Delegate"
-   CASE nType == HB_OO_MSG_PERFORM
-      cString += "Perform"
-   ENDCASE
-
-   RETURN PadR( cString, 7 )
+   RETURN Space( 7 )
 
 STATIC FUNCTION asString( x )
    RETURN iif( HB_ISSTRING( x ), '"' + x + '"', hb_CStr( x ) )

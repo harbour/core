@@ -390,7 +390,7 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
    // docs from https://www.ietf.org/rfc/rfc2109.txt
    LOCAL aParam
-   LOCAL cHost, cPath, cName, cValue, aElements, cElement
+   LOCAL cHost, cPath, cName, cValue, aElements
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x, y
    IF Empty( cDefaultPath )
@@ -410,16 +410,18 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
             cName := AllTrim( aElements[ 1 ] )
             cValue := AllTrim( aElements[ 2 ] )
          ELSE
-            cElement := Upper( AllTrim( aElements[ 1 ] ) )
-            DO CASE
+            SWITCH Upper( AllTrim( aElements[ 1 ] ) )
 #if 0
-            CASE cElement == "EXPIRES"
+            CASE "EXPIRES"
+               EXIT
 #endif
-            CASE cElement == "PATH"
+            CASE "PATH"
                cPath := AllTrim( aElements[ 2 ] )
-            CASE cElement == "DOMAIN"
+               EXIT
+            CASE "DOMAIN"
                cHost := AllTrim( aElements[ 2 ] )
-            ENDCASE
+               EXIT
+            ENDSWITCH
          ENDIF
       ENDIF
    NEXT

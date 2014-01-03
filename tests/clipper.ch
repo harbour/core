@@ -70,4 +70,14 @@
 #xtranslate __mvScope()                    => -1
 #xtranslate HB_SYMBOL_UNUSED( <v> )        =>
 
+#ifdef __CLIP__
+   #xtranslate hb_SecondsCPU( [<x>] )      => SecondsCPU( [<x>] )
+#endif
+#ifdef FlagShip
+   #xtranslate hb_SecondsCPU( [<x>] )      => SecondsCPU( [<x>] )
+#endif
+#ifdef __CLIPPER__
+   #xtranslate hb_SecondsCPU( [<x>] )      => Seconds( [<x>] )
+#endif
+
 #endif

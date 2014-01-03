@@ -113,7 +113,7 @@
 #define WVW_MAXWINDOWS    20             // ! must match with hbgtwvw.h
 #define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with hbgtwvw.h
 
-// for Button Types: //20040303
+// for Button Types: // 2004-03-03
 #define _BUTTON_NORMAL 0        // normal button
 #define _BUTTON_FLAT   1        // 'transparent', raised when mouseover
 #define _BUTTON_NONE   2        // no sign even when mouseover or clicked
@@ -162,6 +162,8 @@ PROCEDURE Main()
    LOCAL kF9, kF10, kF11
    LOCAL oMouse
    LOCAL ch
+
+   ErrorBlock( {| e | MyError( e ) } )
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
@@ -307,7 +309,7 @@ PROCEDURE Main()
    SetKey( K_F1, kF1 )
    SetCursor( nCursor )
 
-   RETURN  // main()
+   RETURN
 
 //
 
@@ -413,7 +415,7 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    SetColor( cColor )
    wvw_SetMouseMove( , lMouseMove )
 
-   RETURN // Demo_Console()
+   RETURN
 
 //
 
@@ -659,7 +661,7 @@ FUNCTION DEMO_Browse()
    SetColor( cColor )
    // SetCursor( nCursor )
 
-   RETURN NIL // DEMO_Browse()
+   RETURN NIL
 
 /* generic Vertical Scrollbar handler for tbrowse */
 
@@ -821,7 +823,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 //
 
@@ -865,7 +867,6 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION VouBlockField( i )
-
    RETURN {|| FieldGet( i ) }
 
 //
@@ -1043,7 +1044,7 @@ FUNCTION nAfterInkey( nkey )
       RETURN 0
    ENDIF
 
-   RETURN nkey // nAfterInkey(nkey)
+   RETURN nkey
 
 // MENU handler **************************************
 
@@ -1100,7 +1101,7 @@ FUNCTION nMenuChecker( nMenuEvent )
    // xEnableToolbar( 0 )
    xEnableMenus( 0, 4 )
 
-   RETURN nkey // nMenuChecker()
+   RETURN nkey
 
 // MISCELLANEOUS *******************************************************
 
@@ -1118,7 +1119,6 @@ FUNCTION lYesNo( cMsg, cTitle )
    RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
 FUNCTION lDebug( cMsg )
-
    RETURN lBoxMessage( cMsg, "Debug" )
 
 FUNCTION xDebugInfo()
@@ -1244,12 +1244,6 @@ FUNCTION SetDefaultWindowSize()
    RETURN Result
 
 // ERROR handler *******************************************************
-
-PROCEDURE ErrorSys()
-
-   ErrorBlock( {| e | MyError( e ) } )
-
-   RETURN
 
 STATIC PROCEDURE MyError( e )
 

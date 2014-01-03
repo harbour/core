@@ -75,12 +75,12 @@ PROCEDURE Main()
    // reset combobox list:
    s_aComboList := {}
 
-   @ 0, 0 SAY     "Name :" GET mname PICT "@K"
+   @ 0, 0 SAY     "Name :" GET mname PICTURE "@K"
    @ 1, 0 SAY     "Sex  :"
    @ 1, 7 COMBOBOX msex OPTIONS { "Male", "Female", "Unknown" } WIDTH 10
    @ 2, 0 SAY     "Stat :"
    @ 2, 7 COMBOBOX mstat OPTIONS { "Married", "Unmarried", "Widowed" } WIDTH 15
-   @ 3, 0 SAY     "age  :" GET mage PICT "999"
+   @ 3, 0 SAY     "age  :" GET mage PICTURE "999"
    READ
 
    // disable all comboboxes:

@@ -88,10 +88,10 @@ PROCEDURE xGet1()
 #endif
 
    DO WHILE ! lDone
-      @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
-      @ 14, 22 SAY "Address : " GET cAddr  PICT "@!K" WHEN lMessage( "Please enter your address" )
-      @ 16, 22 SAY "Phone   : " GET cPhone PICT "@K"  WHEN lMessage( "Please enter your phone number" )
-      @ 18, 22 SAY "Fax     : " GET cFax   PICT "@K"  WHEN lMessage( "Please enter your fax number" )
+      @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
+      @ 14, 22 SAY "Address : " GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
+      @ 16, 22 SAY "Phone   : " GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
+      @ 18, 22 SAY "Fax     : " GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
       READ
 
       lMessage( "" )
@@ -102,7 +102,7 @@ PROCEDURE xGet1()
 
    SetCursor( oldCurs )
 
-   RETURN // xGet1()
+   RETURN
 
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
@@ -412,14 +412,4 @@ FUNCTION ZREVWINDOW()
    RETURN NIL
 
 FUNCTION nCeiling( nNumber )
-
-   LOCAL nTemp
-
-   nTemp := nNumber - Int( nNumber )  // right of dec point
-   IF nTemp > 0
-      nNumber := Int( nNumber ) + 1
-   ELSE
-      nNumber := Int( nNumber )
-   ENDIF
-
-   RETURN nNumber
+   RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )

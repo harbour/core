@@ -75,7 +75,7 @@ PROCEDURE Main()
 
    // let toolbar and statusbar be autodestroyed
 
-   RETURN // main
+   RETURN
 
 // for toolbar:
 STATIC FUNCTION CreateToolbar( nWinNum )
@@ -98,7 +98,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
    wvw_tbAddButton( nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/ )
    wvw_tbAddButton( nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/ )
 
-   RETURN .T.  // CreateToolbar()
+   RETURN .T.
 
 STATIC FUNCTION CreateStatusbar( nWinNum )
 
@@ -111,7 +111,7 @@ STATIC FUNCTION CreateStatusbar( nWinNum )
       RETURN .F.
    ENDIF
 
-   RETURN .T. // CreateStatusbar()
+   RETURN .T.
 
 // Handle Menu/Toolbar actions
 
@@ -183,7 +183,7 @@ STATIC FUNCTION OpenNewWindow()
       SetCursor( SC_NONE )
    ENDIF
 
-   RETURN .T. // OpenNewWindow()
+   RETURN .T.
 
 // closes the last window. If no window left, Main Window will be closed too.
 // Closing is done indirectly by stuffing K_ESC into kbd buffer of the
@@ -288,7 +288,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
    wvw_MessageBox( 0, cdebug, "Debug", MB_OK )
 #endif
 
-   RETURN .F. // WVW_INPUTFOCUS()
+   RETURN .F.
 
 // ********************************************************************
 // SUPPORTING FUNCTIONS

@@ -184,22 +184,23 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
       win_regQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
 
       IF HB_ISSTRING( xRetVal )
-         DO CASE
-         CASE nValueType == WIN_REG_DWORD .OR. ;
-              nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
+         SWITCH nValueType
+         CASE WIN_REG_DWORD_LITTLE_ENDIAN  /* == WIN_REG_DWORD */
             xRetVal := Bin2U( xRetVal )
-         CASE nValueType == WIN_REG_DWORD_BIG_ENDIAN
+            EXIT
+         CASE WIN_REG_DWORD_BIG_ENDIAN
             xRetVal := Bin2U( hb_BRight( xRetVal, 2 ) + hb_BLeft( xRetVal, 2 ) )
-         CASE nValueType == WIN_REG_QWORD .OR. ;
-              nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
+            EXIT
+         CASE WIN_REG_QWORD_LITTLE_ENDIAN  /* == WIN_REG_QWORD */
             xRetVal := hb_bitShift( Bin2U( hb_BSubStr( xRetVal, 5, 4 ) ), 32 ) +;
                                     Bin2U( hb_BSubStr( xRetVal, 1, 4 ) )
+            EXIT
          OTHERWISE
             /* Strip ending zero byte */
             IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
                xRetVal := hb_BLeft( xRetVal, hb_BLen( xRetVal ) - 1 )
             ENDIF
-         ENDCASE
+         ENDSWITCH
       ELSE
          xRetVal := xDefault
       ENDIF

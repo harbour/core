@@ -98,30 +98,34 @@ METHOD New( cHeading, bBlock, oBrw ) CLASS TBColumnSQL
 METHOD Block() CLASS TBColumnSQL
 
    LOCAL xValue := ::oBrw:oCurRow:FieldGet( ::nFieldNum )
-   LOCAL xType := ::oBrw:oCurRow:FieldType( ::nFieldNum )
 
-   DO CASE
-   CASE xType == "N"
+   SWITCH ::oBrw:oCurRow:FieldType( ::nFieldNum )
+   CASE "N"
       xValue := "'" + Str( xValue, ::oBrw:oCurRow:FieldLen( ::nFieldNum ), ::oBrw:oCurRow:FieldDec( ::nFieldNum ) ) + "'"
+      EXIT
 
-   CASE xType == "D"
+   CASE "D"
       xValue :=  "'" + DToC( xValue ) + "'"
+      EXIT
 
-   CASE xType == "L"
+   CASE "L"
       xValue := iif( xValue, ".T.", ".F." )
+      EXIT
 
-   CASE xType == "C"
+   CASE "C"
       // That is: if there is a double quote inside text substitute it with a string
       // which gets converted back to a double quote by macro operator. If not it would
       // give an error because of unbalanced double quotes.
       xValue := '"' + StrTran( xValue, '"', e"\" + '\"' + \"" ) + '"'
+      EXIT
 
-   CASE xType == "M"
+   CASE "M"
       xValue := "' <MEMO> '"
+      EXIT
 
    OTHERWISE
       xValue := "'" + xValue + "'"
-   ENDCASE
+   ENDSWITCH
 
    RETURN hb_macroBlock( xValue )
 
@@ -186,13 +190,16 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
       oCol:nFieldNum := i
 
       // Add a picture
-      DO CASE
-      CASE ::oCurRow:FieldType( i ) == "N"
+      SWITCH ::oCurRow:FieldType( i )
+      CASE "N"
          oCol:picture := Replicate( "9", oCol:Width )
+         EXIT
 
-      CASE ::oCurRow:FieldType( i ) $ "CM"
+      CASE "M"
+      CASE "C"
          oCol:picture := Replicate( "!", oCol:Width )
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
       ::AddColumn( oCol )
    NEXT

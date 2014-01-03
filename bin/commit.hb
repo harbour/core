@@ -425,8 +425,8 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
 
    ASort( aChanges,,, {| x, y | x < y } )
 
-   DO CASE
-   CASE cVCS == "svn"
+   SWITCH cVCS
+   CASE "svn"
 
       FOR EACH cLine IN aChanges
          IF ! Empty( cLine ) .AND. SubStr( cLine, 8, 1 ) == " "
@@ -456,8 +456,9 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             ENDIF
          ENDIF
       NEXT
+      EXIT
 
-   CASE cVCS == "git"
+   CASE "git"
 
       FOR EACH cLine IN aChanges
          IF ! Empty( cLine ) .AND. SubStr( cLine, 3, 1 ) == " "
@@ -498,8 +499,9 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             ENDIF
          ENDIF
       NEXT
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    RETURN aNew
 
@@ -535,10 +537,10 @@ STATIC FUNCTION Changes( cVCS )
 
    LOCAL cStdOut := ""
 
-   DO CASE
-   CASE cVCS == "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut )
-   CASE cVCS == "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut )
-   ENDCASE
+   SWITCH cVCS
+   CASE "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut ) ; EXIT
+   CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut ) ; EXIT
+   ENDSWITCH
 
    RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )
 

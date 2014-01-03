@@ -155,18 +155,13 @@ METHOD PieChart() CLASS GDChart
    hb_default( @nWidth    , Min( ::Width(), ::Height() ) )
    hb_default( @cFontPitch, "TINY" )
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    /*
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
@@ -312,18 +307,13 @@ METHOD VerticalBarChart() CLASS GDChart
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
 
    // Before sum of values to determine perentual
@@ -505,18 +495,13 @@ METHOD HorizontalBarChart() CLASS GDChart
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    // Before sum of values to determine perentual
    nMaxLabel := 0
@@ -701,18 +686,13 @@ METHOD LineChart() CLASS GDChart
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    // Before sum of values to determine percentual
    nMaxLabel := 0

@@ -378,7 +378,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
       Inkey( 0.5 )
    ENDDO
 
-   RETURN // EBReadGets()
+   RETURN
 
 // inp_handler(nwinnum, bhandler)
 
@@ -427,7 +427,7 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
       ENDIF
    ENDIF
 
-   RETURN  // InpKeyHandler()
+   RETURN
 
 STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButton )
 
@@ -499,13 +499,11 @@ STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 // returns index to aEBGets array containing editbox nEBid
 
 STATIC FUNCTION nGetIndex( aEBGets, nEBId )
-
    RETURN AScan( aEBGets, {| x | x[ __GET_NEBID ] == nEBId } )
 
 // returns index to aEBGets array containing editbox that is/was in focus
 
 STATIC FUNCTION nFocused( aEBGets )
-
    RETURN AScan( aEBGets, {| x | x[ __GET_LFOCUSED ] } )
 
 // callback function called by GTWVW during some events on editbox
@@ -777,12 +775,12 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
          DO CASE
          CASE CM == "9"
             IF IsDigit( CB ) .OR. CB == " "
-               // lPassed:=.T.
+               // lPassed := .T.
             ELSE
                RETURN .F.
             ENDIF
          OTHERWISE
-            // lPassed:=.T.
+            // lPassed := .T.
          ENDCASE
       NEXT
       RETURN .T.
@@ -945,7 +943,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
       RETURN .T.
    ENDCASE
 
-   RETURN .F. // WVW_INPUTFOCUS()
+   RETURN .F.
 
 FUNCTION inp_handler( nwinnum, bhandler )
 

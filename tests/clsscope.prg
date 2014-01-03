@@ -7,8 +7,8 @@
  *
  */
 
-#command ? => OUTSTD(hb_eol())
-#xtranslate QOUT(<x,...>) => OUTSTD(hb_eol(),<x>)
+#command ? => OutStd( hb_eol() )
+#xtranslate QOut( <x,...> ) => OutStd( hb_eol(), <x> )
 
 #include "hbclass.ch"
 

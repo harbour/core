@@ -102,7 +102,7 @@ PROCEDURE Main()
    Inkey( 0 )
    SetCursor( nCursor )
 
-   RETURN  // main
+   RETURN
 
 STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
 

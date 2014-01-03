@@ -34,26 +34,26 @@ PROCEDURE Main( ... )
    IF ! Empty( hParams )
       FOR EACH cPar IN hParams:Keys
 
-         DO CASE
-         CASE cPar == "txt"
+         SWITCH cPar
+         CASE "txt"
             // cText := hParams[ cPar ]
-
-         CASE cPar == "img"
+            EXIT
+         CASE "img"
             cImg := hParams[ cPar ]
-
-         CASE cPar == "photo"
+            EXIT
+         CASE "photo"
             cPhoto := hParams[ cPar ]
-
-         CASE cPar == "width"
+            EXIT
+         CASE "width"
             nWidth := Val( hParams[ cPar ] )
-
-         CASE cPar == "height"
+            EXIT
+         CASE "height"
             nHeight := Val( hParams[ cPar ] )
-
-         CASE cPar == "pt"
+            EXIT
+         CASE "pt"
             nPt := Val( hParams[ cPar ] )
-
-         ENDCASE
+            EXIT
+         ENDSWITCH
       NEXT
    ENDIF
 
@@ -248,11 +248,8 @@ STATIC FUNCTION GetVars( cFields, cSeparator )
          cName := SubStr( cName, 1, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
-
       ELSE
-
          hHashVars[ cName ] := xValue
-
       ENDIF
       // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
@@ -284,11 +281,8 @@ STATIC FUNCTION GetParams( aParams )
          cName := SubStr( cName, 1, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
-
       ELSE
-
          hHashVars[ cName ] := xValue
-
       ENDIF
       // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT

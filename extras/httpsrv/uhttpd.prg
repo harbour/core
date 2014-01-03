@@ -183,13 +183,6 @@ THREAD STATIC t_cResult, t_nStatusCode, /*t_aHeader,*/ t_cErrorMsg, t_oSession
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
-ANNOUNCE ERRORSYS
-
-
-// ----------------------------------------
-//
-//               M A I N
-//
 // ----------------------------------------
 
 PROCEDURE Main( ... )
