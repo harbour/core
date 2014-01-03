@@ -123,8 +123,8 @@ METHOD delItem( nPos ) CLASS TopBarMenu
 
       nLen := Len( ::aItems[ nPos ]:caption )
 
-      ADel( ::aItems, nPos )
-      ASize( ::aItems, --::nItemCount )
+      hb_ADel( ::aItems, nPos, .T. )
+      ::nItemCount--
 
       IF ::nWidth == nLen + 2
          aItems := ::aItems
@@ -347,9 +347,8 @@ METHOD insItem( nPos, oItem ) CLASS TopBarMenu
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
-      ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos )
-      ::aItems[ nPos ] := oItem
+      hb_AIns( ::aItems, nPos, oItem, .T. )
+      ::nItemCount++
 
       ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
    ENDIF

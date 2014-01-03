@@ -53,7 +53,7 @@ PROCEDURE Main( cFilename, cSection )
    LOCAL oIni
    LOCAL s, n
 
-   hb_default( @cFilename, "harbour.ini" )
+   hb_default( @cFilename, hb_FNameExtSet( __FILE__, ".ini" ) )
    hb_default( @cSection, "1" )
 
    oIni := TIniFile():New( cFileName )
@@ -218,9 +218,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
       IF j > 0
          ::Contents[ j ][ 2 ] := cString
       ELSE
-         AAdd( ::Contents, NIL )
-         AIns( ::Contents, 1 )
-         ::Contents[ 1 ] := { cIdent, cString }
+         hb_AIns( ::Contents, 1, { cIdent, cString }, .T. )
       ENDIF
 
    ELSE
@@ -243,7 +241,6 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
    RETURN
 
 METHOD ReadNumber( cSection, cIdent, nDefault ) CLASS TIniFile
-
    RETURN Val( ::ReadString( cSection, cIdent, hb_ntos( nDefault ) ) )
 
 METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
@@ -253,7 +250,6 @@ METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
    RETURN
 
 METHOD ReadDate( cSection, cIdent, dDefault ) CLASS TIniFile
-
    RETURN hb_SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
 METHOD PROCEDURE WriteDate( cSection, cIdent, dDate ) CLASS TIniFile

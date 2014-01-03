@@ -365,8 +365,8 @@ FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
          ELSE
             s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
          ENDIF
-         ADel( s_aPObjList[ nWinNum + 1 ], i )
-         ASize( s_aPObjList[ nWinNum + 1 ], --nLen )
+         hb_ADel( s_aPObjList[ nWinNum + 1 ], i, .T. )
+         nLen--
          nDeleted++
       ELSE
          i++

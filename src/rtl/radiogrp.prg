@@ -143,8 +143,8 @@ METHOD addItem( oRadioButton ) CLASS RadioGroup
 METHOD delItem( nPos ) CLASS RadioGroup
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
-      ADel( ::aItems[ nPos ] )
-      ASize( ::aItems, --::nItemCount )
+      hb_ADel( ::aItems, nPos, .T. )
+      ::nItemCount--
    ENDIF
 
    IF ::lHasFocus .AND. ::nItemCount < ::nValue
@@ -299,9 +299,8 @@ METHOD insItem( nPos, oRadioButton ) CLASS RadioGroup
    IF HB_ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN" .AND. ;
       nPos < ::nItemCount
 
-      ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos, oRadioButton )
-      ::aItems[ nPos ] := oRadioButton
+      hb_AIns( ::aItems, nPos, oRadioButton, .T. )
+      ::nItemCount++
    ENDIF
 
    RETURN ::aItems[ nPos ]

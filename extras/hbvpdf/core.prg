@@ -1401,9 +1401,8 @@ FUNCTION pdfDeleteHeader( cId )
    cId := Upper( cId )
    nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } )
    IF nId > 0
-      nRet := Len( t_aReport[ HEADER ] ) - 1
-      ADel( t_aReport[ HEADER ], nId )
-      ASize( t_aReport[ HEADER ], nRet )
+      hb_ADel( t_aReport[ HEADER ], nId, .T. )
+      nRet := Len( t_aReport[ HEADER ] )
       t_aReport[ MARGINS ] := .T.
    ENDIF
 

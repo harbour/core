@@ -257,17 +257,16 @@ METHOD AddLine( cLine, lSoftCR ) CLASS HBEditor
 // Insert a line of text at a defined row
 METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS HBEditor
 
-   ::AddLine()
-   AIns( ::aText, nRow )
-   ::aText[ nRow ] := HBTextLine():New( cLine, lSoftCR )
+   hb_AIns( ::aText, nRow, HBTextLine():New( cLine, lSoftCR ), .T. )
+   ::naTextLen++
 
    RETURN Self
 
 // Remove a line of text
 METHOD RemoveLine( nRow ) CLASS HBEditor
 
-   ADel( ::aText, nRow )
-   ASize( ::aText, --::naTextLen )
+   hb_ADel( ::aText, nRow, .T. )
+   ::naTextLen--
 
    RETURN Self
 

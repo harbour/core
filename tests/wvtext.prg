@@ -66,8 +66,7 @@ PROCEDURE Main()
          LOOP
       ENDIF
 
-      AIns( aKeys, 1 )
-      aKeys[ 1 ] := nKey
+      hb_AIns( aKeys, 1, nKey )
       FOR nI := 1 TO Len( aKeys )
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT

@@ -922,8 +922,7 @@ STATIC FUNCTION rf_AINS( arr, nItem, cItem )
    IF ATail( arr ) != NIL
       AAdd( arr, NIL )
    ENDIF
-   AIns( arr, nItem )
-   arr[ nItem ] := cItem
+   hb_AIns( arr, nItem, cItem )
 
    RETURN Len( arr )
 
