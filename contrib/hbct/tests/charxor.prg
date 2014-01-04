@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    ? "Simple tests:"
    ? '  CharXor( CharXor( "This is top secret !", "My Password" ),'
-   ? '           "My Password" ) == "This is top secret !" ? ->'
-   ? '  ' + CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" )
+   ? '           "My Password" ) == "This is top secret !" ? -->'
+   ? ' ', '"' + CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" ) + '"'
 
    ? "End test of CharXor()"
    ?

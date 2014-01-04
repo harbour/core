@@ -1,39 +1,32 @@
 #require "hbnf"
 
+#ifndef __HARBOUR__
+#define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main()
 
-   LOCAL aList1, aList2, var0, nstart, nstop, nelapsed, nCtr
+   LOCAL aList1 := { "apple", "orange", "pear" }
+   LOCAL aList2 := { "apple ", "banana", "PEAR" }
 
-   CLS
-   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AADDITION"
+   LOCAL nStart, nCtr
+
+   ? "TEST TO DEMONSTRATE EXAMPLES OF ft_AAddition()"
    ?
-   aList1 := { "apple", "orange", "pear" }
-   aList2 := { "apple ", "banana", "PEAR" }
-   ? "aList1 : "
-   AEval( aList1, {| x | QQOut( x + "," ) } )
-   ?
-   ? "aList2 : "
-   AEval( aList2, {| x | QQOut( x + "," ) } )
+   ? "aList1: "; AEval( aList1, {| x | QQOut( x, "" ) } )
+   ? "aList2: "; AEval( aList2, {| x | QQOut( x, "" ) } )
    ?
 
-   nstart := Seconds()
+   nStart := Seconds()
    FOR nCtr := 1 TO 100
-      var0 := ft_AAddition( aList1, aList2 )
+      ft_AAddition( aList1, aList2 )
    NEXT
-   nstop := Seconds()
-   nelapsed := nstop - nstart
-   ? "time for 100 merges:", nelapsed
+   ? "Elapsed time for 100 merges:", hb_ntos( Seconds() - nStart ), "s"
+   ?
 
-   ? PadR( "ft_AAddition( aList1, aList2 ) ->", 44 )
-   AEval( var0, {| x | QQOut( x + "," ) } )
-   ?
-   var0 := ft_AAddition( aList1, aList2, , .F. )
-   ? PadR( "ft_AAddition( aList1, aList2, , .F. ) ->", 44 )
-   AEval( var0, {| x | QQOut( x + "," ) } )
-   ?
-   var0 := ft_AAddition( aList1, aList2, .F., .F. )
-   ? PadR( "ft_AAddition( aList1, aList2, .F., .F. ) ->", 44 )
-   AEval( var0, {| x | QQOut( x + "," ) } )
+   ? PadR( "ft_AAddition( aList1, aList2 ) ->", 44 )          ; AEval( ft_AAddition( aList1, aList2 )          , {| x | QQOut( x, "" ) } )
+   ? PadR( "ft_AAddition( aList1, aList2, , .F. ) ->", 44 )   ; AEval( ft_AAddition( aList1, aList2, , .F. )   , {| x | QQOut( x, "" ) } )
+   ? PadR( "ft_AAddition( aList1, aList2, .F., .F. ) ->", 44 ); AEval( ft_AAddition( aList1, aList2, .F., .F. ), {| x | QQOut( x, "" ) } )
    ?
 
    RETURN

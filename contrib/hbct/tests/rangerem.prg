@@ -59,11 +59,11 @@ PROCEDURE Main()
    ? "Begin test of RangeRem()"
    ?
 
-   ? '  RangeRem( "0", "9", "year2002.dbf" ) == "year.dbf"     ? --> "' + ;
+   ? '  RangeRem( "0", "9", "year2002.dbf" ) == "year.dbf"     ? -->', '"' + ;
         RangeRem( "0", "9", "year2002.dbf" ) + '"'
-   ? '  RangeRem( "9", "0", "year2002.dbf" ) == "22"           ? --> "' + ;
+   ? '  RangeRem( "9", "0", "year2002.dbf" ) == "22"           ? -->', '"' + ;
         RangeRem( "9", "0", "year2002.dbf" ) + '"'
-   ? '  RangeRem( "0", "9", "yearcurr.dbf" ) == "yearcurr.dbf" ? --> "' + ;
+   ? '  RangeRem( "0", "9", "yearcurr.dbf" ) == "yearcurr.dbf" ? -->', '"' + ;
         RangeRem( "0", "9", "yearcurr.dbf" ) + '"'
 
    ?

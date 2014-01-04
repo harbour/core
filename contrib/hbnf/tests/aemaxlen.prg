@@ -2,28 +2,16 @@
 
 PROCEDURE Main()
 
-   LOCAL var0, myarray1 := Directory()
+   LOCAL myarray1 := Directory()
 
-   CLS
-   ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMAXLEN"
+   ? "TEST TO DEMONSTRATE EXAMPLES OF ft_AEMaxLen()"
    ?
    ? "myarray1 := Directory()"
    ?
-   var0 := ft_AEMaxLen( myarray1 )
-   ? PadR( "ft_AEMaxLen( myarray1 ) ->", 30 )
-   ?? var0
-   ?
-   var0 := ft_AEMaxLen( myarray1, 2 )
-   ? PadR( "ft_AEMaxLen( myarray1, 2 ) ->", 30 )
-   ?? var0
-   ?
-   var0 := ft_AEMaxLen( myarray1, 3 )
-   ? PadR( "ft_AEMaxLen( myarray1, 3 ) ->", 30 )
-   ?? var0
-   ?
-   var0 := ft_AEMaxLen( ATail( myarray1 ) )
-   ? PadR( "ft_AEMaxLen( ATail( myarray1 ) ) ->", 30 )
-   ?? var0
+   ? PadR( "ft_AEMaxLen( myarray1 ) ->", 35 ), ft_AEMaxLen( myarray1 )
+   ? PadR( "ft_AEMaxLen( myarray1, 2 ) ->", 35 ), ft_AEMaxLen( myarray1, 2 )
+   ? PadR( "ft_AEMaxLen( myarray1, 3 ) ->", 35 ), ft_AEMaxLen( myarray1, 3 )
+   ? PadR( "ft_AEMaxLen( ATail( myarray1 ) ) ->", 35 ), ft_AEMaxLen( ATail( myarray1 ) )
    ?
 
    RETURN

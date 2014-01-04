@@ -59,7 +59,7 @@ PROCEDURE Main()
    ctinit()
 
    SET DECIMAL TO 3
-   CLS
+
    ?? "Testing Financial functions...."
    ?
    ? "Calculate how loan summs if you make deposits for $175.00 for 24 months,"

@@ -61,14 +61,13 @@ PROCEDURE Main()
    SET DECIMALS TO 15
 
    FOR n := 1 TO 1000
-      ? Str( n, 20, 15 ) + ": " + Str( Mantissa( n ), 20, 15 ) + " " + Str( Exponent( n ), 4 )
-      ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
+      ? Str( n, 20, 15 ) + ":", Str( Mantissa( n ), 20, 15 ), Str( Exponent( n ), 4 )
+      ? Str( Sqrt( n ), 20, 15 ) + ":", Str( Mantissa( Sqrt( n ) ), 20, 15 ), + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
-   ? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
+   ? Str( Infinity( .T. ) ), Str( Mantissa( Infinity( .T. ) ) ), Str( Exponent( Infinity( .T. ) ) )
 
-   ? "       Infinity( .T. ): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
-   ?? Str( Exponent( Infinity( .T. ) ), 4 )
+   ? "       Infinity( .T. ):", Str( Mantissa( Infinity( .T. ) ), 20, 15 ), Str( Exponent( Infinity( .T. ) ), 4 )
 
    ctexit()
 

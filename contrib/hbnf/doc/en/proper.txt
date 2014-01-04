@@ -29,7 +29,7 @@
       and enhanced) by Robert DiFalco.
    $EXAMPLES$
       PROCEDURE Main( cStr )
-         OutStd( ft_Proper( cStr ) + hb_eol() )
+         ? ft_Proper( cStr )
          RETURN
    $END$
  */

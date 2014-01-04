@@ -67,7 +67,7 @@ PROCEDURE Main()
    ? '    NumToken( "one,,three,four,,six", ",", 1 ) ==  6 ? ----------------->', NumToken( "one,,three,four,,six", ",", 1 )
    ?
 
-   ? '  # of tokens in the string "' + cStr + '"'
+   ? '  # of tokens in the string', '"' + cStr + '"'
    ? '      separator list = ".,!" and skip width = 1: ', NumToken( cStr, ".,!", 1 )
    ? '                                 skip width = 3: ', NumToken( cStr, ".,!", 3 )
    ? '      separator list = ",!"  and skip width = 1: ', NumToken( cStr, ",!", 1 )

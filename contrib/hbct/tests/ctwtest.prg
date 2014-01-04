@@ -25,7 +25,7 @@ PROCEDURE Main()
    SetClearB( 35 )
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), NToColor( 10 * 16 + 14 ) )
    SetPos( 0, 0 )
-   ? "GT driver: " + hb_gtVersion()
+   ? "GT driver:", hb_gtVersion()
    ? hb_gtVersion( 1 )
    ?
    ? "ESC - quit "

@@ -62,10 +62,10 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharAdd( "123456789", hb_BChar( 1 ) ) == "012345678" ? -> "' + CharSub( "123456789", hb_BChar( 1 ) ) + '"'
-   ? '  CharAdd( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) == "002244668" ? -> "' + CharSub( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) + '"'
-   ? '  CharAdd( "012345678", hb_BChar( 255 ) ) == "123456789" ? -> "' + CharSub( "012345678", hb_BChar( 255 ) ) + '"'
-   ? '  CharAdd( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) == "133557799" ? -> "' + CharSub( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 1 ) ) == "012345678" ? -->', '"' + CharSub( "123456789", hb_BChar( 1 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) == "002244668" ? -->', '"' + CharSub( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 255 ) ) == "123456789" ? -->', '"' + CharSub( "012345678", hb_BChar( 255 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) == "133557799" ? -->', '"' + CharSub( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) + '"'
 
    ? "End test of CharSub()"
    ?

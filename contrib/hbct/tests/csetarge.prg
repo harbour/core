@@ -210,7 +210,7 @@ STATIC FUNCTION myerrhandler( oerr )
    ? "      err:operation....:", oerr:operation
    ? "      Len(err:args)....:", Len( oerr:args )
    FOR ni := 1 TO Len( oerr:args )
-      ? "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ ni ]
+      ? "          err:args[ " + hb_ntos( ni ) + " ]:", oerr:args[ ni ]
    NEXT
    ? "      err:genCode......:", oerr:genCode
    ? "      err:subCode......:", oerr:subCode

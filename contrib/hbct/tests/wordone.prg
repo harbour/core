@@ -60,9 +60,9 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  WordOne( "12ABAB12" )       == "12AB12" ? --> "' + WordOne( "12ABAB12" )       + '"'
-   ? '  WordOne( "1AAAA2" )         == "1AAAA2" ? --> "' + WordOne( "1AAAA2" )         + '"'
-   ? '  WordOne( "12", "1212ABAB" ) == "12ABAB" ? --> "' + WordOne( "12", "1212ABAB" ) + '"'
+   ? '  WordOne( "12ABAB12" )       == "12AB12" ? -->', '"' + WordOne( "12ABAB12" )       + '"'
+   ? '  WordOne( "1AAAA2" )         == "1AAAA2" ? -->', '"' + WordOne( "1AAAA2" )         + '"'
+   ? '  WordOne( "12", "1212ABAB" ) == "12ABAB" ? -->', '"' + WordOne( "12", "1212ABAB" ) + '"'
    ?
 
    ? "End test of WordOne()"

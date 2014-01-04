@@ -91,7 +91,7 @@ PROCEDURE Main( cCmdLine )
    CLS
    SetColor( cNormN )
    @ nMaxRow, 0
-   @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
+   @ nMaxRow, 0 SAY hb_UTF8ToStr( " ft_menu1 1.0 │ " )
    @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
    @ nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
@@ -125,7 +125,7 @@ STATIC FUNCTION fubar()
    LOCAL OldColor := SetColor( "W/N" )
 
    CLS
-   QOut( "Press Any Key" )
+   ? "Press Any Key"
    Inkey( 0 )
    SetColor( OldColor )
 

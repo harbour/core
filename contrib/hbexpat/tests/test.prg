@@ -11,31 +11,29 @@
 PROCEDURE Main( cFileName )
 
    LOCAL p := XML_ParserCreate()
-   LOCAL xData
+   LOCAL aUserData
    LOCAL v1, v2, v3
 
-   IF cFileName == NIL
-      cFileName := hb_DirBase() + "test.xml"
-   ENDIF
+   hb_default( @cFileName, hb_DirBase() + "test.xml" )
 
-   OutStd( XML_ExpatVersion(), hb_eol() )
+   OutStd( XML_ExpatVersion() + hb_eol() )
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( v1, v2, v3, hb_eol() )
+   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
    hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( v1, v2, v3, hb_eol() )
+   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
 
    IF Empty( p )
-      OutErr( "Couldn't allocate memory for parser", hb_eol() )
+      OutErr( "Couldn't allocate memory for parser" + hb_eol() )
       ErrorLevel( -1 )
       RETURN
    ENDIF
 
-   xData := Array( 1 )
-   xData[ 1 ] := 1
+   aUserData := Array( 1 )
+   aUserData[ 1 ] := 1
 
-   OutStd( XML_GetUserData( p ), hb_eol() )
-   XML_SetUserData( p, xData )
-   OutStd( ValType( XML_GetUserData( p ) ), hb_eol() )
+   OutStd( XML_GetUserData( p ) ) ; OutStd( hb_eol() )
+   XML_SetUserData( p, aUserData )
+   OutStd( ValType( XML_GetUserData( p ) ) + hb_eol() )
    XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x, e | cb_end( x, e ) } )
    XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
 
@@ -49,11 +47,11 @@ PROCEDURE Main( cFileName )
 
    RETURN
 
-STATIC PROCEDURE cb_start( xData, cElement, aAttr )
+STATIC PROCEDURE cb_start( aUserData, cElement, aAttr )
 
    LOCAL aItem
 
-   OutStd( Replicate( "  ", xData[ 1 ] ), cElement )
+   OutStd( Replicate( "  ", aUserData[ 1 ] ), cElement )
 
    IF ! Empty( aAttr )
       FOR EACH aItem IN aAttr
@@ -63,22 +61,22 @@ STATIC PROCEDURE cb_start( xData, cElement, aAttr )
 
    OutStd( hb_eol() )
 
-   ++xData[ 1 ]
+   ++aUserData[ 1 ]
 
    RETURN
 
-STATIC PROCEDURE cb_end( xData, cElement )
+STATIC PROCEDURE cb_end( aUserData, cElement )
 
-   HB_SYMBOL_UNUSED( xData )
+   HB_SYMBOL_UNUSED( aUserData )
    HB_SYMBOL_UNUSED( cElement )
 
-   --xData[ 1 ]
+   --aUserData[ 1 ]
 
    RETURN
 
-STATIC PROCEDURE cb_data( xData, cData )
+STATIC PROCEDURE cb_data( aUserData, cData )
 
-   HB_SYMBOL_UNUSED( xData )
+   HB_SYMBOL_UNUSED( aUserData )
 
    IF ! Empty( cData )
       OutStd( ">" + cData + "<" )

@@ -60,8 +60,8 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharSwap( "0123456789" )  == "1032547698"  ? --> "' + CharSwap( "0123456789" ) + '"'
-   ? '  CharSwap( "ABCDEFGHIJK" ) == "BADCFEHGJIK" ? --> "' + CharSwap( "ABCDEFGHIJK" ) + '"'
+   ? '  CharSwap( "0123456789" )  == "1032547698"  ? -->', '"' + CharSwap( "0123456789" ) + '"'
+   ? '  CharSwap( "ABCDEFGHIJK" ) == "BADCFEHGJIK" ? -->', '"' + CharSwap( "ABCDEFGHIJK" ) + '"'
    ?
 
    ? "End test of CharSwap()"

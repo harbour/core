@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   SetColor( "w+/b" )
+   SetColor( "W+/B" )
    CLS
    IF ft_NumLock()
       ft_NumLock( .F. )

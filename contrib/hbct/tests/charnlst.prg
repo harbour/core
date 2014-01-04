@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  CharNoList( CharNoList( "Hello World !" ) ) == " !HWdelor" ? -> "' + CharNoList( CharNoList( "Hello World !" ) ) + '"'
-   ? '  CharNoList( CharNoList( NIL ) ) == "" ? -> "' + CharNoList( CharNoList( NIL ) ) + '"'
+   ? '  CharNoList( CharNoList( "Hello World !" ) ) == " !HWdelor" ? -->', '"' + CharNoList( CharNoList( "Hello World !" ) ) + '"'
+   ? '  CharNoList( CharNoList( NIL ) ) == "" ? -->', '"' + CharNoList( CharNoList( NIL ) ) + '"'
 
    ? "End test of CharNoList()"
    ?

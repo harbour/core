@@ -106,7 +106,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
    IF Empty( cFileName )
       // raise an error?
-      OutErr( "No filename passed to TIniFile():New()" )
+      ? "No filename passed to TIniFile():New()"
       RETURN NIL
 
    ELSE
@@ -209,7 +209,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
    LOCAL i, j, cFind
 
    IF Empty( cIdent )
-      OutErr( "Must specify an identifier" )
+      ? "Must specify an identifier"
 
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )

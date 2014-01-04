@@ -13,7 +13,7 @@ PROCEDURE Main()
       ar[ 3, i ] := Chr( Asc( "Z" ) - i + 1 )  // "Z" -> "A"  Character
    NEXT
    // Set Up aHeadings[] for column headings
-   aHeadings  := { "Numbers", "Letters", "Reverse" }
+   aHeadings := { "Numbers", "Letters", "Reverse" }
    // Set Up Blocks Describing Individual Elements in Array ar[]
    aBlocks[ 1 ] := {|| Str( ar[ 1, nElem ], 2 ) }  // to prevent default 10 spaces
    aBlocks[ 2 ] := {|| ar[ 2, nElem ] }

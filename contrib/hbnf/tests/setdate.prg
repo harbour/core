@@ -6,7 +6,7 @@ PROCEDURE Main( cDate )
 
    hb_default( @cDate, DToS( Date() ) )
 
-   ? "Setting date to:", DToC( hb_SToD( cDate ) ) + "..."
+   ? "Setting date to:", hb_SToD( cDate )
    ft_SetDate( hb_SToD( cDate ) )
    ? "Today is now:", Date()
 

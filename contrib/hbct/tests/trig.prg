@@ -71,85 +71,85 @@ PROCEDURE Main()
    CLS
    ? "Begin test of Trigonometric functions... "
    ?
-   ? "PI = " + Str( Pi(), 18, 15 )
+   ? "PI =", Str( Pi(), 18, 15 )
 
    ? "Str( Sin( Pi() / 4 ), 18, 15 ) =  0.707106781186548   // CT3"
-   ? Space( 33 ) + Str( Sin( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Sin( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Sin( Pi() / 2 ), 18, 15 ) =  1.000000000000000   // CT3"
-   ? Space( 33 ) + Str( Sin( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Sin( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Sin( Pi() * 99.5 ), 18, 15 ) = -1.000000000000000   // CT3"
-   ? Space( 36 ) + Str( Sin( Pi() * 99.5 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 35 ), Str( Sin( Pi() * 99.5 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Sin( Pi() / 9 ), 18, 15 ) =  0.342020143325669   // CT3"
-   ? Space( 33 ) + Str( Sin( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Sin( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
 
    WAIT4()
 
    ? "Str( Cos( 0 ), 18, 15 ) =  1.000000000000000   // CT3"
-   ? Space( 26 ) + Str( Cos( 0 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 25 ), Str( Cos( 0 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cos( Pi() / 4 ), 18, 15 ) =  0.707106781186548   // CT3"
-   ? Space( 33 ) + Str( Cos( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cos( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cos( Pi() / 2 ), 18, 15 ) =  0.000000000000000   // CT3"
-   ? Space( 33 ) + Str( Cos( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cos( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cos( Pi() * 99.5 ), 18, 15 ) = 0.000000000000000   // CT3"
-   ? Space( 35 ) + Str( Cos( Pi() * 99.5 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 34 ), Str( Cos( Pi() * 99.5 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cos( Pi() / 9 ), 18, 15 ) =  0.939692620785908   // CT3"
-   ? Space( 33 ) + Str( Cos( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cos( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    WAIT4()
 
    ? "Str( Tan( 0 ), 18, 15 ) =  1.000000000000000   // CT3 wrong ! "
-   ? Space( 26 ) + Str( Tan( 0 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 25 ), Str( Tan( 0 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Tan( Pi() / 4 ), 18, 15 ) =  1.000000000000000   // CT3"
-   ? Space( 33 ) + Str( Tan( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Tan( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Tan( Pi() / 9 ), 18, 15 ) =  0.363970234266202   // CT3"
-   ? Space( 33 ) + Str( Tan( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Tan( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
    ?
    ?
 
    ? "Str( Asin( 0.5 ), 18, 15 ) =  0.523598775598299   // CT3"
-   ? Space( 29 ) + Str( Asin( 0.5 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 28 ), Str( Asin( 0.5 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Acos( 0.7 ), 18, 15 ) =  0.795398830184144   // CT3"
-   ? Space( 29 ) + Str( Acos( 0.7 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 28 ), Str( Acos( 0.7 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Atan( Pi() / 4 ), 18, 15 ) =  0.665773750028354   // CT3"
-   ? Space( 34 ) + Str( Atan( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Atan( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    WAIT4()
 
    ? "Str( Cot( Pi() / 4 ), 18, 15 ) =  1.000000000000000   // CT3"
-   ? Space( 33 ) + Str( Cot( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cot( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cot( Pi() / 2 ), 18, 15 ) =  0.000000000000000   // CT3"
-   ? Space( 33 ) + Str( Cot( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cot( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cot( Pi() / 9 ), 18, 15 ) =  2.747477419454622   // CT3"
-   ? Space( 33 ) + Str( Cot( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 32 ), Str( Cot( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    WAIT4()
@@ -157,30 +157,30 @@ PROCEDURE Main()
    ?? "Testing Hiperbolic Sine..."
    ?
    ? "Str( Sinh( Pi() / 2 ), 18, 15 ) =  2.301298902307295   // CT3"
-   ? Space( 34 ) + Str( Sinh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Sinh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Sinh( Pi() / 4 ), 18, 15 ) =  0.868670961486010   // CT3"
-   ? Space( 34 ) + Str( Sinh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Sinh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Testing Hiperbolic Cosine..."
    ?
    ? "Str( Cosh( Pi() / 2 ), 18, 15 ) =  2.509178478658057   // CT3"
-   ? Space( 34 ) + Str( Cosh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Cosh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( Cosh( Pi() / 4 ), 18, 15 ) =  1.324609089252006   // CT3"
-   ? Space( 34 ) + Str( Cosh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Cosh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Testing Hiperbolic Tangent..."
    ?
    ? "Str( Tanh( Pi() / 2 ), 18, 15 ) =  0.917152335667274   // CT3"
-   ? Space( 34 ) + Str( Tanh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Tanh( Pi() / 2 ), 18, 15 ), " <-- CT for Harbour"
    ?
    ? "Str( Tanh( Pi() / 4 ), 18, 15 ) =  0.655794202632672   // CT3"
-   ? Space( 34 ) + Str( Tanh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 33 ), Str( Tanh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    WAIT4()
@@ -188,23 +188,23 @@ PROCEDURE Main()
    ? "Testing Degree TO Radian..."
    ?
    ? "Str( DToR( 360 ), 18, 15 ) = 6.283185307179588    // CT3"
-   ?  Space( 28 ) + Str( DToR( 360 ), 18, 15 ), " <-- CT for Harbour"
+   ?  Space( 27 ), Str( DToR( 360 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( DToR( 180 ), 18, 15 ) = 3.141592653589794    // CT3"
-   ?  Space( 28 ) + Str( DToR( 180 ), 18, 15 ), " <-- CT for Harbour"
+   ?  Space( 27 ), Str( DToR( 180 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( DToR( 180.5 ), 18, 15 ) = 3.150319299849766   // CT3"
-   ?  Space( 30 ) + Str( DToR( 180.5 ), 18, 15 ), " <-- CT for Harbour"
+   ?  Space( 29 ), Str( DToR( 180.5 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( DToR( 720 ), 18, 15 ) = 12.566370614359180    // CT3"
-   ?  Space( 29 ) + Str( DToR( 720 ), 18, 15 ), " <-- CT for Harbour"
+   ?  Space( 28 ), Str( DToR( 720 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
    ? "Str( DToR( -180 ), 18, 15 ) = -3.141592653589794   // CT3"
-   ?  Space( 30 ) + Str( DToR( -180 ), 18, 15 ), " <-- CT for Harbour"
+   ?  Space( 29 ), Str( DToR( -180 ), 18, 15 ), " <-- CT for Harbour"
 
    WAIT4()
 
@@ -237,9 +237,9 @@ PROCEDURE Main()
    ? "y = Cos( DToR( 30 ) ) =", y
    ?
    ? "Str( Atn2( x, y ), 18, 15 ) =  0.523598775598299   // CT3"
-   ? Space( 30 ) + Str( Atn2( x, y ), 18, 15 ), " <-- CT for Harbour"
+   ? Space( 29 ), Str( Atn2( x, y ), 18, 15 ), " <-- CT for Harbour"
    ?
-   ? "RToD( Atn2( x, y ) ) =" + Str( RToD( Atn2( x, y ) ), 18, 4 ), " <-- CT for Harbour"
+   ? "RToD( Atn2( x, y ) ) =", Str( RToD( Atn2( x, y ) ), 18, 4 ), " <-- CT for Harbour"
    ?
 
    WAIT4()

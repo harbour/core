@@ -15,10 +15,9 @@ PROCEDURE Main()
       "Left(SubStr(nNum,4,Val(cChar+Asc(c))))", ;
       "Eof(>> Note: Syntax IS NOT checked! <<)"           }
 
-   CLS
-   @ 1, 0 SAY "String Tested                               Result"
-   @ 2, 0 TO 2, MaxCol()
-   AEval( aString, {| ele | QOut( ele, Space( 45 - Len( ele ) ), ft_Linked( ele ) ) } )
-   @ MaxRow() - 2, 0
+   ? PadR( "String Tested", 45 ), "Result"
+   ?
+   AEval( aString, {| ele | QOut( PadR( ele, 45 ), ft_Linked( ele ) ) } )
+   ?
 
    RETURN

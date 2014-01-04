@@ -60,8 +60,8 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharList( "Hello World !" ) == "Helo Wrd!" ? -> "' + CharList( "Hello World !" ) + '"'
-   ? '  CharList( NIL ) == "" ? -> "' + CharList( NIL ) + '"'
+   ? '  CharList( "Hello World !" ) == "Helo Wrd!" ? -->', '"' + CharList( "Hello World !" ) + '"'
+   ? '  CharList( NIL ) == "" ? -->', '"' + CharList( NIL ) + '"'
 
    ? "End test of CharList()"
    ?

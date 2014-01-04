@@ -62,28 +62,30 @@
 PROCEDURE Main( cLang )
 
    LOCAL nChoice := 1
-   LOCAL farr := { ;
-      "AddMonth( dDate )     Add a month to dDate      ", ;
-      "BoM()                 Beginning of month        ", ;
-      "BoQ()                 Returns first date of qtr ", ;
-      "BoY()                 Beginning of year         ", ;
-      "CToDoW()              Day name to day number    ", ;
-      "CToMonth()            Month name to number      ", ;
-      "DaysInMonth()         number of days in xMonth  ", ;
-      "DaysToMonth( dDate )  Returns num days to month ", ;
-      "DMY( dDate, lMode )   date as DD month YY       ", ;
-      "DoY( dDate )          Returns day of the year   ", ;
-      "EoM( dDate )          Returns last day of month ", ;
-      "EoQ( dDate )          Returns last date of qtr  ", ;
-      "EoY( dDate )          Returns last day of year  ", ;
-      "IsLeap( dDate )       Returns .T. if leap year  ", ;
-      "LastDayOM( dDate )    Returns num days in month ", ;
-      "MDY( dDate )          Returns stg Month DD, YY  ", ;
-      "NToCDoW( nDay )       Returns name of day       ", ;
-      "NToCMonth( nMth )     Returns name of month     ", ;
-      "Quarter( date )       Returns qtr number of date", ;
-      "SToD( ansi date )     Returns Harbour date      ", ;
-      "Week( dDate, lSWN )   Returns numbef of week    ", }
+
+   LOCAL farr := {}, ffun := {}
+
+   AAdd( farr, "AddMonth( dDate )     Add a month to dDate"       ); AAdd( ffun, {|| addmtest()      } )
+   AAdd( farr, "BoM()                 Beginning of month"         ); AAdd( ffun, {|| bomtest()       } )
+   AAdd( farr, "BoQ()                 Returns first date of qtr"  ); AAdd( ffun, {|| boqtest()       } )
+   AAdd( farr, "BoY()                 Beginning of year"          ); AAdd( ffun, {|| boytest()       } )
+   AAdd( farr, "CToDoW()              Day name to day number"     ); AAdd( ffun, {|| ctodowtest()    } )
+   AAdd( farr, "CToMonth()            Month name to number"       ); AAdd( ffun, {|| ctomonthtest()  } )
+   AAdd( farr, "DaysInMonth()         number of days in xMonth"   ); AAdd( ffun, {|| dInMonthtest()  } )
+   AAdd( farr, "DaysToMonth( dDate )  Returns num days to month"  ); AAdd( ffun, {|| d2month()       } )
+   AAdd( farr, "DMY( dDate, lMode )   date as DD month YY"        ); AAdd( ffun, {|| dmytest()       } )
+   AAdd( farr, "DoY( dDate )          Returns day of the year"    ); AAdd( ffun, {|| doytest()       } )
+   AAdd( farr, "EoM( dDate )          Returns last day of month"  ); AAdd( ffun, {|| eomtest()       } )
+   AAdd( farr, "EoQ( dDate )          Returns last date of qtr"   ); AAdd( ffun, {|| eoqtest()       } )
+   AAdd( farr, "EoY( dDate )          Returns last day of year"   ); AAdd( ffun, {|| eoytest()       } )
+   AAdd( farr, "IsLeap( dDate )       Returns .T. if leap year"   ); AAdd( ffun, {|| isleaptest()    } )
+   AAdd( farr, "LastDayOM( dDate )    Returns num days in month"  ); AAdd( ffun, {|| lastdayomtest() } )
+   AAdd( farr, "MDY( dDate )          Returns stg Month DD, YY"   ); AAdd( ffun, {|| mdytest()       } )
+   AAdd( farr, "NToCDoW( nDay )       Returns name of day"        ); AAdd( ffun, {|| ntocdowtest()   } )
+   AAdd( farr, "NToCMonth( nMth )     Returns name of month"      ); AAdd( ffun, {|| ntocmthtest()   } )
+   AAdd( farr, "Quarter( date )       Returns qtr number of date" ); AAdd( ffun, {|| qtrtest()       } )
+   AAdd( farr, "SToD( ansi date )     Returns Harbour date"       ); AAdd( ffun, {|| stodtest()      } )
+   AAdd( farr, "Week( dDate, lSWN )   Returns numbef of week"     ); AAdd( ffun, {|| weektest()      } )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
@@ -99,35 +101,16 @@ PROCEDURE Main( cLang )
 
       CLS
 
-      @ 2, 5 TO 24, 66
+      @ 2, 5 TO 24, 67
       nChoice := AChoice( 3, 7, 23, 65, farr,,, nChoice )
 
       CLS
 
-      DO CASE
-      CASE nChoice ==  0 ; EXIT
-      CASE nChoice ==  1 ; addmtest()
-      CASE nChoice ==  2 ; bomtest()
-      CASE nChoice ==  3 ; boqtest()
-      CASE nChoice ==  4 ; boytest()
-      CASE nChoice ==  5 ; ctodowtest()
-      CASE nChoice ==  6 ; ctomonthtest()
-      CASE nChoice ==  7 ; dInMonthtest()
-      CASE nChoice ==  8 ; d2month()
-      CASE nChoice ==  9 ; dmytest()
-      CASE nChoice == 10 ; doytest()
-      CASE nChoice == 11 ; eomtest()
-      CASE nChoice == 12 ; eoqtest()
-      CASE nChoice == 13 ; eoytest()
-      CASE nChoice == 14 ; isleaptest()
-      CASE nChoice == 15 ; lastdayomtest()
-      CASE nChoice == 16 ; mdytest()
-      CASE nChoice == 17 ; ntocdowtest()
-      CASE nChoice == 18 ; ntocmthtest()
-      CASE nChoice == 19 ; qtrtest()
-      CASE nChoice == 20 ; stodtest()
-      CASE nChoice == 21 ; weektest()
-      ENDCASE
+      IF nChoice < 1 .OR. nChoice > Len( ffun )
+         EXIT
+      ENDIF
+
+      Eval( ffun[ nChoice ] )
    ENDDO
 
    RETURN

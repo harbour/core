@@ -177,7 +177,8 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
    CASE aOpt[ C_TYPE ] == "M"
       aPrompt := { " Prompt ", " Message ", " HotKey ", ;
          " LightBar ", " LightBar HotKey " }
-   CASE aOpt[ C_TYPE ] == "A" .OR.  aOpt[ C_TYPE ] == "B"
+   CASE aOpt[ C_TYPE ] == "A" .OR. ;
+        aOpt[ C_TYPE ] == "B"
       aPrompt := { " Standard ", " Selected ", " Border ", " Unavailable " }
    OTHERWISE
       aPrompt := { " Standard ", " Selected ", " Border ", " Unselected " }

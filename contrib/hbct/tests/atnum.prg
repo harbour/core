@@ -62,27 +62,27 @@ PROCEDURE Main()
 
    ? "Begin test of AtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  AtNum( "..", cStr )       should be 18,'
-   ? '                               and is ', AtNum( "..", cStr )
+   ? '                               and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2 )    should be 8,'
-   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2 )
    ? '  AtNum( "..", cStr, 2, 2 ) should be 13,'
-   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2, 2 )
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  AtNum( "..", cStr )       should be 18,'
-   ? '                               and is ', AtNum( "..", cStr )
+   ? '                               and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2 )    should be 2,'
-   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2 )
    ? '  AtNum( "..", cStr, 2, 2 ) should be 9,'
-   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2, 2 )
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -91,11 +91,11 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  AtNum( "..", cStr )        should be 23,'
-   ? '                                and is ', AtNum( "..", cStr )
+   ? '                                and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2, 2 )  should be 5,'
-   ? '                                and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                                and is', AtNum( "..", cStr, 2, 2 )
    ? '  AtNum( "..", cStr, 2, 10 ) should be 13,'
-   ? '                                and is ', AtNum( "..", cStr, 2, 10 )
+   ? '                                and is', AtNum( "..", cStr, 2, 10 )
    ?
 
    ? "End test of AtNum()"

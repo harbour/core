@@ -76,7 +76,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION make_dbf()
+STATIC PROCEDURE make_dbf()
 
    LOCAL x, aData := { ;
       { "SHAEFER", "KATHRYN", "415 WEST CITRUS ROAD #150", "LOS ANGELES", "CA", "90030" }, ;
@@ -101,11 +101,14 @@ STATIC FUNCTION make_dbf()
       { "CITY" , "C", 21, 0, }, ;
       { "STATE", "C",  2, 0, }, ;
       { "ZIP"  , "C",  9, 0, } } )
+
    USE tbnames
+
    FOR x := 1 TO Len( aData )
-      APPEND BLANK
+      dbAppend()
       AEval( aData[ x ], {| e, n | FieldPut( n, e ) } )
    NEXT
+
    USE
 
-   RETURN NIL
+   RETURN

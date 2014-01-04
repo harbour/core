@@ -80,7 +80,7 @@ PROCEDURE Main()
    ?
 
    ? '  CharNot( CharNot( "This is a test!" ) ) == "This is a test!" ?'
-   ? '  --> "' + CharNot( CharNot( "This is a test!" ) ) + '"'
+   ? '  -->', '"' + CharNot( CharNot( "This is a test!" ) ) + '"'
    ?
 
    ? "End test of CharNot()"

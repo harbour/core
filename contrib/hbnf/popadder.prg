@@ -89,7 +89,6 @@ THREAD STATIC t_nWinColor
 THREAD STATIC t_aWinColor
 THREAD STATIC t_aStdColor
 
-// ----------------------------------------------------------
 // Pop Up Adder / Calculator with Tape Display
 // NOTE: To make ft_Adder() pop up from any wait state in your
 //       application just insert the line:
@@ -270,7 +269,6 @@ FUNCTION ft_Adder()
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Display the Adder
 
 STATIC FUNCTION _ftAddScreen( aAdder )
@@ -322,7 +320,6 @@ STATIC FUNCTION _ftAddScreen( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Change the decimal position in the display
 
 STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
@@ -352,7 +349,6 @@ STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Display total number to Adder Window
 
 STATIC FUNCTION _ftDispTotal( aAdder )
@@ -376,7 +372,6 @@ STATIC FUNCTION _ftDispTotal( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Display subtotal number
 
 STATIC FUNCTION _ftDispSubTot( aAdder )
@@ -400,7 +395,6 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Act on NUMBER key pressed
 
 STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
@@ -423,8 +417,8 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
       nNum := nKey - hb_keyCode( "0" )
       IF lDecSet                         // Decimal set
          IF nDecDigit < nMaxDeci         // Check how many decimals are allowed
-            nDecDigit := ++nDecDigit
-            nNumTotal := nNumTotal + nNum / ( 10 ^ nDecDigit )
+            ++nDecDigit
+            nNumTotal += nNum / ( 10 ^ nDecDigit )
          ENDIF
       ELSE
          nNumTotal := nNumTotal * 10 + nNum
@@ -435,7 +429,6 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Enter key - SUBTOTAL\TOTAL
 
 STATIC FUNCTION _ftAddTotal( aAdder )
@@ -474,11 +467,11 @@ STATIC FUNCTION _ftAddTotal( aAdder )
             lSubRtn := .T.                  // total key
          ENDIF
          IF nAddMode == 1                  // Add
-            nTotal := nTotal + nNumTotal
+            nTotal += nNumTotal
          ELSEIF nAddMode == 2              // Subtract
-            nTotal := nTotal - nNumTotal
+            nTotal -= nNumTotal
          ELSEIF nAddMode == 3              // Multiply
-            nTotal := nTotal * nNumTotal
+            nTotal *= nNumTotal
          ELSEIF nAddMode == 4              // Divide
             nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
             IF lDivError
@@ -510,7 +503,6 @@ STATIC FUNCTION _ftAddTotal( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Process + or - keypress
 
 STATIC FUNCTION _ftAddSub( aAdder, nKey )
@@ -532,7 +524,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
          nNumTotal := nSavSubTot           // number without re-entering
       ENDIF
       _ftUpdateTrans( aAdder, .F., nNumTotal )
-      nTotal     := nTotal + nNumTotal
+      nTotal     += nNumTotal
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
       nNumTotal  := 0
@@ -543,7 +535,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
          lNewNum   := .T.
       ENDIF
       _ftUpdateTrans( aAdder, .F., nNumTotal )
-      nTotal     := nTotal - nNumTotal
+      nTotal     -= nNumTotal
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
       nNumTotal  := 0
@@ -553,7 +545,6 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Process * or / keypress
 
 STATIC FUNCTION _ftMultDiv( aAdder, nKey )
@@ -601,7 +592,6 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Help window
 
 STATIC FUNCTION _ftAddHelp
@@ -629,7 +619,6 @@ STATIC FUNCTION _ftAddHelp
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Clear entry / Clear Adder
 
 STATIC FUNCTION _ftClearAdder( aAdder )
@@ -651,7 +640,6 @@ STATIC FUNCTION _ftClearAdder( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Update transactions array
 
 STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
@@ -688,7 +676,6 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Clear the <TOTAL> and <SUBTOTAL> from Adder
 
 STATIC FUNCTION _ftEraseTotSubTot( aAdder )
@@ -699,7 +686,6 @@ STATIC FUNCTION _ftEraseTotSubTot( aAdder )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Adder Rounding function
 
 STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
@@ -709,7 +695,6 @@ STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
    RETURN iif( nNumber < 0.0, -1.0, 1.0 ) * ;
       Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
 
-// ----------------------------------------------------------
 // Check divide by zero not allowed
 
 STATIC FUNCTION _ftDivide( aAdder, nNumerator, nDenominator )
@@ -723,7 +708,6 @@ STATIC FUNCTION _ftDivide( aAdder, nNumerator, nDenominator )
 
    RETURN nNumerator / nDenominator
 
-// ----------------------------------------------------------
 // Validate the number of decimals
 
 STATIC FUNCTION _ftValDeci( oGet )
@@ -737,7 +721,6 @@ STATIC FUNCTION _ftValDeci( oGet )
 
    RETURN lRtnValue
 
-// ----------------------------------------------------------
 // Display the Tape
 
 STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
@@ -776,7 +759,6 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Sets the LastKey() value to value of nLastKey
 // NOTE: I use this in most of my Pop-Up routines to reset the
 //       original value of LastKey() when quitting.
@@ -789,7 +771,6 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Push any keys in the Keyboard buffer on the array t_aKeys[]
 // NOTE: Save any keys in the buffer... for FAST typists <g>.
 
@@ -803,7 +784,6 @@ STATIC FUNCTION _ftPushKeys()
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Restore the keyboard with any keystrokes that were saved with _ftPushKeys
 
 STATIC FUNCTION _ftPopKeys
@@ -815,9 +795,8 @@ STATIC FUNCTION _ftPopKeys
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Display a message on the screen in a window
-// See Also: _ftPopMessage
+// See Also: _ftPopMessage()
 
 STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop )
 
@@ -865,7 +844,6 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Pop off the Message Box
 // See Also: _ftPushMessage()
 
@@ -875,7 +853,6 @@ STATIC FUNCTION _ftPopMessage
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Push a Question Box on the Screen
 // NOTE: This function will work for all Data Types
 
@@ -968,7 +945,6 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
 
    RETURN xVarVal
 
-// ----------------------------------------------------------
 // User function for AChoice() when scrolling tape
 
 STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
@@ -978,8 +954,7 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
    HB_SYMBOL_UNUSED( cur_elem )
    HB_SYMBOL_UNUSED( rel_pos )
 
-   DO CASE
-   CASE mode == AC_EXCEPT
+   IF mode == AC_EXCEPT
       nKey := LastKey()
       DO CASE
       CASE nKey == K_CTRL_PGDN
@@ -994,13 +969,12 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
       OTHERWISE
          nRtnVal := AC_CONT
       ENDCASE
-   OTHERWISE
+   ELSE
       nRtnVal := AC_CONT
-   ENDCASE
+   ENDIF
 
    RETURN nRtnVal
 
-// ----------------------------------------------------------
 // Display an ERROR message in a window
 
 STATIC FUNCTION _ftError( cMessage, xDontReset )
@@ -1048,7 +1022,6 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Stuff a Comma in a string
 
 STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
@@ -1087,7 +1060,6 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
 
    RETURN cStrToStuff
 
-// ----------------------------------------------------------
 // Set the standard screen colors to the color requested.
 // See Also: _ftSetWinColor()
 
@@ -1110,7 +1082,6 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
       t_aStdColor[ nBack ] + "," + ;
       t_aStdColor[ nUnsel ] )
 
-// ----------------------------------------------------------
 // NOTE: Push a new window on the screen in the position t,l,b,r
 //       and if cTitle is not NIL print the title for the window
 //       in centered in the top line of the box. Similarly do
@@ -1150,7 +1121,6 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Pop a Window off the screen
 // NOTE: Pop the currently active window off the screen by restoring
 //       it from the t_aWindow Array and if they pushed a new window
@@ -1180,7 +1150,6 @@ STATIC FUNCTION _ftPopWin()
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Set the Color to the Window Colors requested
 // See Also: _ftSetSCRColor()
 // NOTE: If the window number is not passed use the currently
@@ -1202,15 +1171,12 @@ STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
       t_aWinColor[ nBack, nWin ] + "," + ;
       t_aWinColor[ nUnsel, nWin ] )
 
-// ----------------------------------------------------------
 // Decrement the active window color number and return the current value
 // NOTE: If we are already on window #1 restart count by using # 4.
 
 STATIC FUNCTION _ftLastWinColor()
-
    RETURN t_nWinColor := iif( t_nWinColor == 1, 4, t_nWinColor - 1 )
 
-// ----------------------------------------------------------
 // Increment the active window color number and return the current value
 // NOTE: If we are already on window #4 restart count by using # 1.
 
@@ -1222,7 +1188,6 @@ STATIC FUNCTION _ftNextWinColor()
 
    RETURN t_nWinColor := ( iif( t_nWinColor < 4, t_nWinColor + 1, 1 ) )
 
-// ----------------------------------------------------------
 // Print the top or bottom titles on the border of the currently
 // active window.
 
@@ -1236,7 +1201,6 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Initilize the colors for the Adder
 
 STATIC FUNCTION _ftInitColors()
@@ -1264,32 +1228,24 @@ STATIC FUNCTION _ftInitColors()
 
    RETURN NIL
 
-// ----------------------------------------------------------
 // Replace the Character at nPosit in cString with cChar
 
 STATIC FUNCTION _ftPosRepl( cString, cChar, nPosit )
-
    RETURN StrTran( cString, "9", cChar, nPosit, 1 ) + ""
 
-// ----------------------------------------------------------
 // Removes all occurances of cChar from cString.
 
 STATIC FUNCTION _ftCharRem( cChar, cString )
-
    RETURN StrTran( cString, cChar )
 
-// ----------------------------------------------------------
 // Returns the number of spaces on the Left side of the String
 
 STATIC FUNCTION _ftCountLeft( cString )
-
    RETURN Len( cString ) - Len( LTrim( cString ) )
 
-// ----------------------------------------------------------
 // Insert the Character cChar in cString at position nPosit
 
 STATIC FUNCTION _ftPosIns( cString, cChar, nPosit )
-
    RETURN Left( cString, nPosit - 1 ) + cChar + SubStr( cString, nPosit )
 
 STATIC FUNCTION _ftInkey( nSecs, cVar )

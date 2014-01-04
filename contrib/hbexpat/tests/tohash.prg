@@ -4,7 +4,6 @@
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
- * See COPYING.txt for licensing terms.
  */
 
 #require "hbexpat"
@@ -31,9 +30,7 @@ PROCEDURE Main( cFileName )
 
    hb_cdpSelect( "UTF8EX" )
 
-   IF cFileName == NIL
-      cFileName := hb_DirBase() + "test.xml"
-   ENDIF
+   hb_default( @cFileName, hb_DirBase() + "test.xml" )
 
    OutStd( XML_ExpatVersion() + hb_eol() )
    XML_ExpatVersionInfo( @v1, @v2, @v3 )

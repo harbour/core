@@ -68,23 +68,19 @@ PROCEDURE Main()
       "Maclean", ;
       "Exxon" }
 
-   Set( _SET_SCOREBOARD, .F. )
-   SetColor( "W/B" )
    CLS
 
    // display names and metaphones in 3 columns on screen
    AEval( aNames, ;
-      {| cName, nElem | ;
-      SetPos( _ftRow( nElem ), _ftCol( nElem ) ), ;
-      QQOut( PadR( cName, 18, "." ) + ft_Metaph( cName ) ) ;
-      } )
+      {| cName, nElem | SetPos( _ftRow( nElem ), _ftCol( nElem ) ), ;
+      QQOut( PadR( cName, 18, "." ) + ft_Metaph( cName ) ) } )
 
    SetPos( 21, 0 )
 
    RETURN
 
-STATIC FUNCTION _ftRow( nElem )  //  Determine which row to print on
+STATIC FUNCTION _ftRow( nElem )  // Determine which row to print on
    RETURN iif( nElem > 40, nElem - 40, iif( nElem > 20, nElem - 20, nElem ) )
 
-STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
-   RETURN iif( nElem > 40,  55, iif( nElem > 20, 28, 1 ) )
+STATIC FUNCTION _ftCol( nElem )  // Determine which column to start print
+   RETURN iif( nElem > 40, 55, iif( nElem > 20, 28, 1 ) )

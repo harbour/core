@@ -79,11 +79,8 @@ FUNCTION ft_Pegs()
       { { 18, 37, 20, 42 }, { 29 }, { 24 }, .T. }, ;
       { { 18, 45, 20, 50 }, { 30, 32 }, { 25, 31 }, .T. } }
 
-   /*
-      the following code block is used in conjunction with AScan()
-      to validate entry when there is more than one possible move
-   */
-
+   /* the following code block is used in conjunction with AScan()
+      to validate entry when there is more than one possible move */
    scanblock := {| a | a[ 2 ] == move2 }
    hb_Scroll()
    SetColor( "w/r" )
@@ -100,10 +97,7 @@ FUNCTION ft_Pegs()
       READ
 
       IF move > 0
-         DO CASE
-         CASE ! board_[ move ][ 4 ]
-            err_msg( "No piece there!" )
-         OTHERWISE
+         IF board_[ move ][ 4 ]
             possible_ := {}
             FOR xx := 1 TO Len( board_[ move ][ 2 ] )
                IF board_[ board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
@@ -111,17 +105,19 @@ FUNCTION ft_Pegs()
                   AAdd( possible_, { board_[ move ][ 2, xx ], board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
-            // only one available move -- do it
-            DO CASE
-            CASE Len( possible_ ) == 1
+            SWITCH Len( possible_ )
+            CASE 0
+               err_msg( "Illegal move!" )
+               EXIT
+            CASE 1
+               // only one available move -- do it
                // clear out original position and the position you jumped over
                board_[ move ][ 4 ] := board_[ possible_[ 1, 1 ] ][ 4 ] := .F.
                board_[ possible_[ 1, 2 ] ][ 4 ] := .T.
                drawbox( board_, move )
                drawbox( board_, possible_[ 1, 1 ] )
                drawbox( board_, possible_[ 1, 2 ] )
-            CASE Len( possible_ ) == 0
-               err_msg( "Illegal move!" )
+               EXIT
             OTHERWISE
                move2 := possible_[ 1, 2 ]
                toprow := 21 - Len( possible_ )
@@ -147,9 +143,10 @@ FUNCTION ft_Pegs()
                drawbox( board_, move )
                drawbox( board_, possible_[ mpos, 1 ] )
                drawbox( board_, move2 )
-
-            ENDCASE
-         ENDCASE
+            ENDSWITCH
+         ELSE
+            err_msg( "No piece there!" )
+         ENDIF
          move := 1
       ENDIF
    ENDDO

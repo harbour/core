@@ -72,12 +72,12 @@ PROCEDURE Main()
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
-   ? "    Value of cStr is: " + '"' + cStr + '"'
+   ? "    Value of cStr is:", '"' + cStr + '"'
    ?
    FOR ni := 1 TO NumToken( cStr, ".!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".!", ni, 1 ) + '")'
-      ? "          starts at pos " + Str( npos := AtToken( cStr, ".!", ni, 1 ), 3 ) + ;
-         " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
+      ? "          starts at pos", Str( npos := AtToken( cStr, ".!", ni, 1 ), 3 ), ;
+         "and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
    NEXT
 
    ?

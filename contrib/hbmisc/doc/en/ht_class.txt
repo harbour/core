@@ -55,12 +55,10 @@
 
          oFile:Open()
          IF oFile:Error()
-            OutStd( oFile:ErrorMsg( "FileRead: " ) )
-            OutStd( hb_eol() )
+            ? oFile:ErrorMsg( "FileRead:" )
          ELSE
             DO WHILE oFile:MoreToRead()
-               OutStd( oFile:ReadLine() )
-               OutStd( hb_eol() )
+               ? oFile:ReadLine()
             ENDDO
             oFile:Close()
          ENDIF

@@ -43,7 +43,7 @@ FUNCTION ft_PChr( c_nums )
       IF Left( c_part, 1 ) == '"'
 
          c_st2 := At( '"', SubStr( c_part, 2 ) ) + 1
-         c_ret := c_ret + SubStr( c_part, 2, c_st2 - 2 )
+         c_ret += SubStr( c_part, 2, c_st2 - 2 )
 
       ELSEIF Left( c_part, 1 ) == "&"
 
@@ -54,12 +54,12 @@ FUNCTION ft_PChr( c_nums )
             IF c_t2 > -1
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
-            c_ret := c_ret + Chr( c_t1 )
+            c_ret += Chr( c_t1 )
          ENDIF
 
       ELSEIF ( Val( c_part ) > 0 .AND. Val( c_part ) < 256 ) .OR. c_part == "0"
 
-         c_ret := c_ret + Chr( Val( c_part ) )
+         c_ret += Chr( Val( c_part ) )
 
       ELSE
 
@@ -129,9 +129,7 @@ FUNCTION ft_PChr( c_nums )
             CASE LEFTEQUAL( c_upper, "/CAN" )
                c_ret += hb_BChar( 24 )
             ENDCASE
-
          ENDIF
-
       ENDIF
 
       c_st := At( ",", SubStr( c_nums, c_st + 1 ) ) + c_st

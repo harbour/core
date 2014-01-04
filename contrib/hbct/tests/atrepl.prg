@@ -61,12 +61,11 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW" ? --> "' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) == "ABCDABCDxx" ? '
-   ? '           --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW" ? -->', '"' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) == "ABCDABCDxx" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
 
    ? "End test of AtRepl()"
    ?

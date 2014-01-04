@@ -77,49 +77,49 @@ PROCEDURE Main()
    ?
 
    // Some simple tests with global token environment
-   ? '  Incremental tokenizing the string "' + cStr1 + '"'
+   ? '  Incremental tokenizing the string', '"' + cStr1 + '"'
    ? '    TokenInit( @cStr1, ",", 1 ) == .T. ? ---->', TokenInit( @cStr1, ",", 1 )
    ? '    TokenNum() == 6 ? ----------------------->', TokenNum()
    ? '      TokenEnd() ? -------------------------->', TokenEnd()
    WHILE ! TokenEnd()
-      ? '      TokenNext(@cStr1)  -----------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      TokenNext(@cStr1)  ----------------->', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ----------------------->', TokenEnd()
    ENDDO
    ?
    ? '    rewind with TokenInit() == .T. ? -------->', TokenInit()
    ? '      TokenEnd() ? -------------------------->', TokenEnd()
    WHILE ! TokenEnd()
-      ? '      TokenNext( @cStr1 ) ----------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      TokenNext( @cStr1 ) ---------------->', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ----------------------->', TokenEnd()
    ENDDO
    ?
-   ? '    access tokens directly with tokennext'
-   ? '      TokenNext( @cStr1, 2 ) == "BB" ? ------> "' + TokenNext( @cStr1, 2 ) + '"'
-   ? '      TokenNext( @cStr1, 4 ) == "DDDD" ? ----> "' + TokenNext( @cStr1, 4 ) + '"'
+   ? '    access tokens directly with TokenNext()'
+   ? '      TokenNext( @cStr1, 2 ) == "BB" ? ------>', '"' + TokenNext( @cStr1, 2 ) + '"'
+   ? '      TokenNext( @cStr1, 4 ) == "DDDD" ? ---->', '"' + TokenNext( @cStr1, 4 ) + '"'
    ?
 
    ? "...Press any key..."
    ?
    Inkey( 0 )
 
-   ? '  Incremental tokenizing the string "' + cStr3 + '" with the'
+   ? '  Incremental tokenizing the string', '"' + cStr3 + '"', 'with the'
    ? '  token environment of cStr1 !'
    ? '    rewind with TokenInit() == .T. ? ------->', TokenInit()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
    WHILE ! TokenEnd()
-      ? '      TokenNext( @cStr3 ) ------------------> "' + TokenNext( @cStr3 ) + '"'
+      ? '      TokenNext( @cStr3 ) ------------------>', '"' + TokenNext( @cStr3 ) + '"'
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
    ENDDO
    ?
    ? '    rewind with TokenInit() == .T. ? ------->', TokenInit()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
    WHILE ! TokenEnd()
-      ? '      start / end with TokenAt(.F./.T.) ---->', TokenAt(), TokenAt( .T. )
+      ? '      start / end with TokenAt( .F./.T. ) -->', TokenAt(), TokenAt( .T. )
       TokenNext( @cStr1 )
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
    ENDDO
    ?
-   ? '    access tokens directly with tokenat'
+   ? '    access tokens directly with TokenAt()'
    ? '      TokenAt( .F., 2 ) == 3 ? --------------->', TokenAt( .F., 2 )
    ? '      TokenAt( .T., 4 ) == 14 ? -------------->', TokenAt( .T., 4 )
    ?
@@ -128,19 +128,19 @@ PROCEDURE Main()
    ?
    Inkey( 0 )
 
-   ? '  Save global token environment with savetoken'
+   ? '  Save global token environment with SaveToken()'
    cTE1 := SaveToken()
-   ? '    TokenInit() a different string, cStr4 := "' + cStr4 + '", with TokenInit()'
+   ? '    TokenInit() a different string, cStr4 :=', '"' + cStr4 + '"', 'with TokenInit()'
    ? '    TokenInit( @cStr4, ":", 1 ) == .T. ? --->', TokenInit( @cStr4, ":", 1 )
    ? '    TokenNum() == 5 ? ---------------------->', TokenNum()
-   ? '    TokenNext() == "08" ? ------------------> "' + TokenNext( @cStr4 ) + '"'
-   ? '    Now restore global token environment with resttoken and rewind it'
+   ? '    TokenNext() == "08" ? ------------------>', '"' + TokenNext( @cStr4 ) + '"'
+   ? '    Now restore global token environment with RestToken() and rewind it'
    RestToken( cTE1 )
    TokenInit()
    ? '    TokenNum() == 6 ? ---------------------->', TokenNum()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
    WHILE ! TokenEnd()
-      ? '      TokenNext( @cStr1 ) ------------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      TokenNext( @cStr1 ) ------------------>', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
    ENDDO
    ? '  Release global TE with TokenExit() ---->', TokenExit()
@@ -150,8 +150,8 @@ PROCEDURE Main()
    ?
    Inkey( 0 )
 
-   ? '  Now tokenize cStr4 := "' + cStr4 + '" and'
-   ? '  cStr5 := "' + cStr5 + '"'
+   ? '  Now tokenize cStr4 :=', '"' + cStr4 + '"', "and"
+   ? '  cStr5 :=', '"' + cStr5 + '"'
    ? '  and store the token environment locally to cTE1 and cTE2:'
    ? '    TokenInit( @cStr4, ":", 1, @cTE1 ) == .T. ? ->', TokenInit( @cStr4, ":", 1, @cTE1 )
    ? '    TokenInit( @cStr5, "+", 1, @cTE2 ) == .T. ? ->', TokenInit( @cStr5, "+", 1, @cTE2 )
