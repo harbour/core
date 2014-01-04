@@ -6477,14 +6477,10 @@ static void hb_vmTSVRefClear( void * value )
 {
    if( hb_xRefDec( value ) )
    {
-      PHB_ITEM pItem;
-
       if( HB_IS_COMPLEX( &( ( PHB_TSVREF ) value )->source ) )
          hb_itemClear( &( ( PHB_TSVREF ) value )->source );
 
-      pItem = ( PHB_ITEM ) hb_stackTestTSD( &( ( PHB_TSVREF ) value )->threadData );
-      if( pItem && HB_IS_COMPLEX( pItem ) )
-         hb_itemClear( pItem );
+      hb_stackReleaseTSD( &( ( PHB_TSVREF ) value )->threadData );
 
       hb_xfree( value );
    }
