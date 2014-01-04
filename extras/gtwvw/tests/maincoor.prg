@@ -25,7 +25,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE fillscreen()
+STATIC PROCEDURE fillscreen()
 
    LOCAL i, j
 

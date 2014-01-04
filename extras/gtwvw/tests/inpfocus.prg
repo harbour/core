@@ -238,7 +238,7 @@ STATIC FUNCTION typing( ch )
  *
  */
 
-FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
+FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL wParamLow := wvw_LOWORD( wParam )
    LOCAL nCommand, ch

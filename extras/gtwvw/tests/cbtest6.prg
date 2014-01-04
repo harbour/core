@@ -125,7 +125,7 @@ PROCEDURE Main()
  * CBN_SELCHANGE: (1)
  * (do nothing)
  */
-FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
+STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    LOCAL i, ccursel
    LOCAL oGet := GetActive()
@@ -202,7 +202,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 // Some notes:
 // oGet:cargo stores combobox id over this oGet
 //
-FUNCTION CBreader( oGet )
+STATIC FUNCTION CBreader( oGet )
 
    LOCAL nKey, bKeyBlock
    LOCAL oGetList := __GetListActive()
@@ -295,7 +295,7 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
    RETURN .T.
 #endif
 
-/* miscellaneous **********************************/
+/* miscellaneous */
 
 // Set FOCUS to window nWinNum
 STATIC FUNCTION SetWinFocus( nWinNum )

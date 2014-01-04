@@ -5,7 +5,11 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#xuntranslate Alert( =>
+FUNCTION Just_Alert( cMsg, aOpt )
+   RETURN Alert( cMsg, aOpt )
+
+FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
+   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
 
 FUNCTION MyAlert( cMsg, aOpt )
 
@@ -26,18 +30,6 @@ FUNCTION MyAlert( cMsg, aOpt )
    oCrt:destroy()
 
    RETURN nSel
-
-#xtranslate Alert( => MyAlert(
-
-FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
-   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
-
-#xuntranslate Alert( =>
-
-FUNCTION Just_Alert( cMsg, aOpt )
-   RETURN Alert( cMsg, aOpt )
-
-#xtranslate Alert( => MyAlert(
 
 #define DLG_CLR_MOUSE              1
 #define DLG_CLR_CAPT               2
@@ -71,7 +63,7 @@ FUNCTION Just_Alert( cMsg, aOpt )
       <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
       <nRow>, <nCol>, <.lNoTitleBar.> )
 
-FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
+STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    LOCAL nColTxt, nColCap, nColBut, nBtnRow
@@ -129,7 +121,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       aTrg_[ i ] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
    NEXT
 
-   //                        Create a new Window
+   // Create a new Window
    B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE "  " + cCaption INTO oCrt
 
    nTop    := -1
@@ -219,7 +211,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
          lGo := .F.
       CASE nKey == K_ENTER
          lGo := .F.
-      CASE nKey == K_LEFT  .OR. nKey == K_DOWN
+      CASE nKey == K_LEFT .OR. nKey == K_DOWN
          sel--
       CASE nKey == K_RIGHT .OR. nKey == K_UP
          sel++
@@ -259,7 +251,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    RETURN sel
 
-FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
+STATIC FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
       lCenter, nRow, nCol, lNoTitleBar )
 
    LOCAL oCrt, aPos
@@ -333,9 +325,8 @@ FUNCTION DoModalWindow()
    DO WHILE .T.
       nSel := Just_Alert( "I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window", { "OK" } )
 
-      IF nSel == 0  .OR. nSel == 1
+      IF nSel == 0 .OR. nSel == 1
          EXIT
-
       ENDIF
    ENDDO
 

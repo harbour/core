@@ -33,13 +33,12 @@ STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 PROCEDURE Main()
 
    LOCAL i, j
-   LOCAL lMainCoord
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   lMainCoord := wvw_SetMainCoord( .T. )
+   wvw_SetMainCoord( .T. )
 
    wvw_SetCodepage( , 255 )
 
@@ -70,7 +69,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE xGet1()
+STATIC PROCEDURE xGet1()
 
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
@@ -107,7 +106,7 @@ PROCEDURE xGet1()
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-FUNCTION xBrowse1()
+STATIC FUNCTION xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -262,7 +261,7 @@ STATIC FUNCTION VouBlockField( i )
 
 // supporting functions ***************************
 
-FUNCTION lMessage( cMsg )
+STATIC FUNCTION lMessage( cMsg )
 
    // displays a message on MaxRow() and returns .T.
    LOCAL cOldColor := SetColor( s_cStdColor )
@@ -271,7 +270,7 @@ FUNCTION lMessage( cMsg )
 
    RETURN .T.
 
-FUNCTION lYesNo( cMsg )
+STATIC FUNCTION lYesNo( cMsg )
 
    // display cmsg with Yes/No option, returns .T. if Yes selected
    LOCAL nTopLine, ;
@@ -306,7 +305,7 @@ FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -358,7 +357,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
 // wtype       : Window border type, eg. "┌─┐│┘─└│"
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
-FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
+STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )
    LOCAL cScreen := SaveScreen( r1, c1, r2, c2 )
@@ -390,7 +389,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    RETURN i + 1
 
 // Closes the last window and remove it from window list
-FUNCTION ZREVWINDOW()
+STATIC FUNCTION ZREVWINDOW()
 
    LOCAL i := Len( s_zwin )
 
@@ -411,5 +410,5 @@ FUNCTION ZREVWINDOW()
 
    RETURN NIL
 
-FUNCTION nCeiling( nNumber )
+STATIC FUNCTION nCeiling( nNumber )
    RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )

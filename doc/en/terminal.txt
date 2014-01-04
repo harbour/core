@@ -725,7 +725,7 @@
       SET DEVICE TO PRINTER
       CurPos := 0
       DO WHILE ! Eof()
-         ? Clientes->NAME, Clientes->ADDRESS
+         ? clients->NAME, clients->ADDRESS
          Curpos++
          IF Curpos > 59
             Curpos := 0

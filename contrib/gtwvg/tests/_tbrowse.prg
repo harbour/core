@@ -44,7 +44,7 @@ FUNCTION WvtMyBrowse()
 
    RETURN NIL
 
-FUNCTION ExecBrowser( oCrt )
+STATIC FUNCTION ExecBrowser( oCrt )
 
    LOCAL nKey, bBlock, oBrowse, aLastPaint, i, pGT
    LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ // , oLB
@@ -81,7 +81,7 @@ FUNCTION ExecBrowser( oCrt )
 
    cRDD       := "DBFCDX"
    cFileDbf   := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
-   cFileIndex := "test.z01"
+   cFileIndex := "test.cdx"
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
    IF NetErr()
@@ -503,7 +503,7 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 
    RETURN NIL
 
-FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
+STATIC FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
    oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -( oBrw:nLeft ) } }, ;
       { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
@@ -673,7 +673,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 
-FUNCTION Vou_NavigateToCell( oBrowse )
+STATIC FUNCTION Vou_NavigateToCell( oBrowse )
 
    LOCAL nCount
 
@@ -791,7 +791,7 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 
    RETURN NIL
 
-FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
+STATIC FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
    SWITCH mp1[ 2 ]
 

@@ -41,13 +41,13 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE diminfo()
+STATIC PROCEDURE diminfo()
 
    @ 0, 0 SAY "Window size: " + hb_ntos( MaxRow() + 1 ) + " x " + hb_ntos( MaxCol() + 1 ) + "   "
 
    RETURN
 
-PROCEDURE updatescr()
+STATIC PROCEDURE updatescr()
 
    LOCAL i
 
@@ -77,7 +77,7 @@ PROCEDURE updatescr()
 
 // this function is called by gtwvw AFTER the size is changed
 // WARNING: screen repainting is not performed completely by gtwvw at this point of call
-FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
+FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL cScreen
    LOCAL lNeedReset

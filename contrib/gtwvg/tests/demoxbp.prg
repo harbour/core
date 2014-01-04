@@ -419,7 +419,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()
+FUNCTION hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_GUI_DEFAULT
    REQUEST HB_GT_WVG

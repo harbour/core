@@ -162,9 +162,7 @@ PROCEDURE Main()
 
 // ************** simple wpaint organizer *******
 
-/*********************************************************/
-
-CREATE CLASS wGUIObj
+CREATE CLASS wGUIObj STATIC
 
    VAR nWinNum                      // parent window's number
    VAR lVisible                     // is the object visible
@@ -177,7 +175,7 @@ ENDCLASS
 
 /*********************************************************/
 
-CREATE CLASS wPaintObj FROM wGUIObj
+CREATE CLASS wPaintObj FROM wGUIObj STATIC
 
    // image like wvtimage
    VAR cImage
@@ -283,7 +281,7 @@ METHOD Show() CLASS wPaintObj
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum
-FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
+STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
    hb_default( @nObjNum, 0 )
    hb_default( @lStrict, .F. )
@@ -298,7 +296,7 @@ FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
 // adds a WPaint object oWPaint into window nWinNum
 // returns ::cId if successful. "" if failed.
-FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
+STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    LOCAL i
 
@@ -340,7 +338,7 @@ FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 // returns number of object deleted.
 //
 // NOTE: if cId is NIL, delete all object of type nType
-FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
+STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i
    LOCAL lDelAll := ( cId == NIL )

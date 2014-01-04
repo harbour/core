@@ -635,7 +635,7 @@ PROCEDURE Main_HVMA()
 
    RETURN
 
-FUNCTION RTSTR( nValue )
+STATIC FUNCTION RTSTR( nValue )
    RETURN Str( Len( Str( nValue ) ), 3 ) + " " + Str( nValue )
 
 /* Don't change the position of this #include. */

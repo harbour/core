@@ -58,7 +58,7 @@ PROCEDURE Main()
 
 /* This function must be linked with the application */
 
-FUNCTION Wvt_Paint()
+FUNCTION Wvt_Paint()  /* must be a public function */
 
    WvtPaintObjects()
 
@@ -103,7 +103,7 @@ STATIC FUNCTION ExecForm( aPaint )
 
    RETURN NIL
 
-FUNCTION SetGT( nIndex, pGT )
+STATIC FUNCTION SetGT( nIndex, pGT )
 
    LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
@@ -131,7 +131,7 @@ STATIC FUNCTION MyChoice( aChoices )
 
    RETURN nChoice
 
-FUNCTION DispStatusMsg( cMsg )
+STATIC FUNCTION DispStatusMsg( cMsg )
 
    ClearStatusMsg()
 
@@ -140,7 +140,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    RETURN .T.
 
-FUNCTION ClearStatusMsg()
+STATIC FUNCTION ClearStatusMsg()
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -150,7 +150,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-FUNCTION DoModalDialog()
+STATIC FUNCTION DoModalDialog()
 
    LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
@@ -187,7 +187,7 @@ FUNCTION DoModalDialog()
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()
+FUNCTION hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT

@@ -65,7 +65,7 @@ PROCEDURE Main_MT()
    RETURN
 
 #ifdef __HARBOUR__
-FUNCTION DO_MTTES1()
+STATIC FUNCTION DO_MTTES1()
 
    LOCAL aThreads, aResults, i, nDigit, nSum, nExpected
    LOCAL mtxJobs, mtxResults
@@ -103,7 +103,7 @@ FUNCTION DO_MTTES1()
    RETURN "ERROR, final sum: " + hb_ntos( nSum ) + ;
                  " expected: " + hb_ntos( nExpected )
 
-PROCEDURE thFunc( mtxJobs, mtxResults )
+STATIC PROCEDURE thFunc( mtxJobs, mtxResults )
 
    LOCAL xJob, xResult
 

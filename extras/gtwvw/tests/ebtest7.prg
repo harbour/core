@@ -5,10 +5,10 @@
   multi-field GET session(s) using editboxes
   with a simple sample of @...EBGET command translation
 
-  This sample also shows simple implementation of WVW_INPUTFOCUS
+  This sample also shows simple implementation of WVW_INPUTFOCUS()
   to handle some keyboard inputs on non topmost window
 
-  (The editbox itself always accept input independent of WVW_INPUTFOCUS)
+  (The editbox itself always accept input independent of WVW_INPUTFOCUS())
 
   Some parts of this sample are modifications from MINIGUI's sourcecode
   to handle "masks" during editbox input session:
@@ -126,7 +126,7 @@ PROCEDURE Main()
 // This is the sample of a GET session.
 // This sample is reentrant, can be executed more than once if user clicks
 // "NEW" button in the main window multiple times.
-PROCEDURE GetSession()
+STATIC PROCEDURE GetSession()
 
    STATIC s_nsession := 0
    LOCAL aEBGets := {}
@@ -179,7 +179,7 @@ PROCEDURE GetSession()
 
    RETURN
 
-FUNCTION MyHelp()
+STATIC FUNCTION MyHelp()
 
    LOCAL ccallstack, i
 
@@ -196,7 +196,7 @@ FUNCTION MyHelp()
 
    RETURN NIL
 
-FUNCTION WVW_SETFOCUS( nWinNum, hWnd )
+FUNCTION WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
 
    HB_SYMBOL_UNUSED( hWnd )
 
@@ -213,11 +213,11 @@ FUNCTION WVW_SETFOCUS( nWinNum, hWnd )
  (can be put into separated module)
  ******************************************************/
 
-// 20070525
+// 2007-05-25
 
 // adding one EBGet variable into aEBGets array
 // returns .T. if successful
-FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, mlMultiline, mcPict )
+STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, mlMultiline, mcPict )
 
    LOCAL mcVarType, mbText
 
@@ -261,7 +261,7 @@ FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel,
    RETURN .T.
 
 // generic procedure to run aEBGets, array of editboxes
-PROCEDURE EBReadGets( nwinnum, aEBGets )
+STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    LOCAL nmaxrow, nmincol
    LOCAL i, nlen, lmultiline, clabel, ;
@@ -910,7 +910,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
 
 // this is a simple sample of WVW_INPUTFOCUS
 // only handles WM_CHAR, thus not all input characters are accepted
-FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
+FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL ch
    LOCAL bhandler
@@ -945,7 +945,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 
    RETURN .F.
 
-FUNCTION inp_handler( nwinnum, bhandler )
+STATIC FUNCTION inp_handler( nwinnum, bhandler )
 
    STATIC s_bhandlers := {}
    LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[ nwinnum + 1 ], NIL )

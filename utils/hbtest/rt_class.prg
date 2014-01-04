@@ -51,7 +51,6 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-
 #include "hbclass.ch"
 
 MEMVAR objHolder, cDtorResult

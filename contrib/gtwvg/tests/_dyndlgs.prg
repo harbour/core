@@ -29,9 +29,9 @@ THREAD STATIC t_aSlides := {}
 
 FUNCTION DynWinDialog( nInfo )
 
-   LOCAL hDlg, aDlg, nStyle, cDlgIcon, cDlgProc, lOnTop, hMenu
+   LOCAL hDlg, aDlg, nStyle, cDlgIcon, lOnTop, hMenu
 
-// LOCAL bDlgProc
+   LOCAL bDlgProc
 // LOCAL nTimerTicks
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
@@ -54,11 +54,11 @@ FUNCTION DynWinDialog( nInfo )
    // Icon
    nStyle := WS_CHILD + WS_VISIBLE + SS_ICON //+ SS_CENTERIMAGE
    aDlg   := Wvt_AddDlgItem( aDlg, 18, 2, 2, 6, {}, ID_ICO_VOUCH  , "STATIC" , nStyle, "" )
-/*
+#if 0
    // Bitmap
    nStyle := WS_CHILD + WS_VISIBLE + SS_BITMAP + SS_REALSIZEIMAGE
    aDlg   := Wvt_AddDlgItem( aDlg, 18, 41, 2,8, { -3, 0, 3 }, ID_STA_IMAGE, "STATIC" , nStyle, "" )
-*/
+#endif
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTOCHECKBOX
    aDlg   := Wvt_AddDlgItem( aDlg, 18, 15,  1, 10, {}, ID_CHK_SATIS , "BUTTON" , nStyle, "Satisfied?" )
 
@@ -98,26 +98,21 @@ FUNCTION DynWinDialog( nInfo )
    Wvt_AppendMenu( hMenu, MF_STRING + MF_ENABLED, ID_MNU_CONTROL, "Controls" )
 
    lOnTop      := .F.
-   cDlgProc    := "DynDlgProc"
-// bDlgProc    := {| a, b, c, d | DYNDLGPROC( a, b, c, d ) }
+   bDlgProc    := {| ... | DynDlgProc( ... ) }
    cDlgIcon    := "v_notes.ico"
 // nTimerTicks := 1000  // 1 second
 
    IF nInfo == 2
       // Modal Dialog
-      //hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
-      hDlg := Wvt_DialogBox( aDlg, cDlgProc, Wvt_GetWindowHandle() )
+      hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
    ELSE
       // Modeless Dialog
-      hDlg := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
-
-      // Using Function name.
-      //hDlg  := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, nTimerTicks, hMenu, lModal )
+      hDlg  := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
    ENDIF
 
    RETURN hDlg
 
-FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
+STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    LOCAL lClicked, cPrompt, nIndex, hFont, aHFonts
 
@@ -292,11 +287,11 @@ FUNCTION DlgSlideShow()
 
    aDlg    := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
 
-   hDlg    := Wvt_CreateDialog( aDlg, .F., "DlgSlideShowProc", "vr_1.ico", 5000 )
+   hDlg    := Wvt_CreateDialog( aDlg, .F., {| ... | DlgSlideShowProc( ... ) }, "vr_1.ico", 5000 )
 
    RETURN hDlg
 
-FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
+STATIC FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    THREAD STATIC t_nSlide := 1
 
@@ -325,7 +320,7 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    RETURN 0
 
-FUNCTION DrawSlide( hDlg, nSlide )
+STATIC FUNCTION DrawSlide( hDlg, nSlide )
 
    LOCAL hDC, aRect
 

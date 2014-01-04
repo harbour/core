@@ -52,7 +52,7 @@ PROCEDURE Main()
 
    RETURN // main
 
-PROCEDURE xGet1()
+STATIC PROCEDURE xGet1()
 
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
@@ -89,7 +89,7 @@ PROCEDURE xGet1()
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-FUNCTION xBrowse1()
+STATIC FUNCTION xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -245,7 +245,7 @@ STATIC FUNCTION VouBlockField( i )
 // supporting functions ***************************
 
 // displays a message on MaxRow() and returns .T.
-FUNCTION lMessage( cMsg )
+STATIC FUNCTION lMessage( cMsg )
 
    LOCAL cOldColor := SetColor( s_cStdColor )
 
@@ -255,7 +255,7 @@ FUNCTION lMessage( cMsg )
    RETURN .T.
 
 // display cmsg with Yes/No option, returns .T. if Yes selected
-FUNCTION lYesNo( cMsg )
+STATIC FUNCTION lYesNo( cMsg )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -289,7 +289,7 @@ FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -342,7 +342,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
 
-FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
+STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )
    LOCAL cScreen := SaveScreen( r1, c1, r2, c2 )
@@ -371,7 +371,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    RETURN i + 1
 
 // Closes the last window and remove it from window list
-FUNCTION ZREVWINDOW()
+STATIC FUNCTION ZREVWINDOW()
 
    LOCAL i := Len( s_zwin )
 
@@ -390,5 +390,5 @@ FUNCTION ZREVWINDOW()
 
    RETURN NIL
 
-FUNCTION nCeiling( nNumber )
+STATIC FUNCTION nCeiling( nNumber )
    RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )
