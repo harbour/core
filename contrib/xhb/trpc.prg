@@ -552,49 +552,51 @@ METHOD Run() CLASS TRPCServeCon
 
          /* Execute function */
       CASE cCode == "XHBR20"
-         IF nSafeStatus == RPCS_STATUS_LOGGED
+         DO CASE
+         CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .F. )
             IF aData != NIL
                lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
-         ELSEIF nSafeStatus == RPCS_STATUS_RUNNING
+         CASE nSafeStatus == RPCS_STATUS_RUNNING
             nSafeStatus := RPCS_STATUS_BUSY
-         ELSE
+         OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
-         ENDIF
-
+         ENDCASE
 
          /* Execute function */
       CASE cCode == "XHBR21"
-         IF nSafeStatus == RPCS_STATUS_LOGGED
+         DO CASE
+         CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T., .F. )
             IF aData != NIL
                lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
-         ELSEIF nSafeStatus == RPCS_STATUS_RUNNING
+         CASE nSafeStatus == RPCS_STATUS_RUNNING
             nSafeStatus := RPCS_STATUS_BUSY
-         ELSE
+         OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
-         ENDIF
+         ENDCASE
 
          /* Loop function */
       CASE cCode == "XHBR22"
-         IF nSafeStatus == RPCS_STATUS_LOGGED
+         DO CASE
+         CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .T. )
             IF aData != NIL
                lBreak := ! ::FuncLoopCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
-         ELSEIF nSafeStatus == RPCS_STATUS_RUNNING
+         CASE nSafeStatus == RPCS_STATUS_RUNNING
             nSafeStatus := RPCS_STATUS_BUSY
-         ELSE
+         OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
-         ENDIF
+         ENDCASE
 
          /* Loop function - compressed */
       CASE cCode == "XHBR23"
@@ -613,33 +615,35 @@ METHOD Run() CLASS TRPCServeCon
 
          /* Foreach function */
       CASE cCode == "XHBR24"
-         IF nSafeStatus == RPCS_STATUS_LOGGED
+         DO CASE
+         CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F., .T. )
             IF aData != NIL
                lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
-         ELSEIF nSafeStatus == RPCS_STATUS_RUNNING
+         CASE nSafeStatus == RPCS_STATUS_RUNNING
             nSafeStatus := RPCS_STATUS_BUSY
-         ELSE
+         OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
-         ENDIF
+         ENDCASE
 
          /* Foreach function - compressed*/
       CASE cCode == "XHBR25"
-         IF nSafeStatus == RPCS_STATUS_LOGGED
+         DO CASE
+         CASE nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T., .T. )
             IF aData  != NIL
                lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
-         ELSEIF nSafeStatus == RPCS_STATUS_RUNNING
+         CASE nSafeStatus == RPCS_STATUS_RUNNING
             nSafeStatus := RPCS_STATUS_BUSY
-         ELSE
+         OTHERWISE
             nSafeStatus := RPCS_STATUS_ERROR
-         ENDIF
+         ENDCASE
 
          /* Function execution cancelation request */
       CASE cCode == "XHBR29"

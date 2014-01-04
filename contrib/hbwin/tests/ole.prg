@@ -43,37 +43,38 @@ PROCEDURE Main()
       nOption := Inkey( 0 )
       ?? hb_keyChar( nOption )
 
-      IF     nOption == hb_keyCode( "1" )
+      DO CASE
+      CASE nOption == hb_keyCode( "1" )
          Exm_MSExcel()
-      ELSEIF nOption == hb_keyCode( "2" )
+      CASE nOption == hb_keyCode( "2" )
          Exm_MSWord()
-      ELSEIF nOption == hb_keyCode( "3" )
+      CASE nOption == hb_keyCode( "3" )
          Exm_MSOutlook()
-      ELSEIF nOption == hb_keyCode( "4" )
+      CASE nOption == hb_keyCode( "4" )
          Exm_MSOutlook2()
-      ELSEIF nOption == hb_keyCode( "5" )
+      CASE nOption == hb_keyCode( "5" )
          Exm_IExplorer()
-      ELSEIF nOption == hb_keyCode( "6" )
+      CASE nOption == hb_keyCode( "6" )
          Exm_OOCalc()
-      ELSEIF nOption == hb_keyCode( "7" )
+      CASE nOption == hb_keyCode( "7" )
          Exm_OOWriter()
-      ELSEIF nOption == hb_keyCode( "8" )
+      CASE nOption == hb_keyCode( "8" )
          Exm_OOOpen()
-      ELSEIF nOption == hb_keyCode( "9" )
+      CASE nOption == hb_keyCode( "9" )
          Exm_CDO()
-      ELSEIF nOption == hb_keyCode( "a" )
+      CASE nOption == hb_keyCode( "a" )
          Exm_ADODB()
-      ELSEIF nOption == hb_keyCode( "b" )
+      CASE nOption == hb_keyCode( "b" )
          Exm_SOAP()
-      ELSEIF nOption == hb_keyCode( "c" )
+      CASE nOption == hb_keyCode( "c" )
          Exm_PocketSOAP()
-      ELSEIF nOption == hb_keyCode( "d" )
+      CASE nOption == hb_keyCode( "d" )
          Exm_IExplorer2()
-      ELSEIF nOption == hb_keyCode( "e" )
+      CASE nOption == hb_keyCode( "e" )
          Exm_CreateShortcut()
-      ELSEIF nOption == hb_keyCode( "0" )
+      CASE nOption == hb_keyCode( "0" )
          EXIT
-      ENDIF
+      ENDCASE
    ENDDO
 
    RETURN
@@ -244,7 +245,7 @@ STATIC PROCEDURE Exm_IExplorer2()
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
-      WHILE oIE:ReadyState != 4
+      DO WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO
    ELSE

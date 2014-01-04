@@ -37,7 +37,7 @@
    board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
 
-FUNCTION ft_Pegs()
+PROCEDURE ft_Pegs()
 
    LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2
    LOCAL SCANBLOCK, OLDCOLOR := SetColor( "w/n" )
@@ -153,9 +153,9 @@ FUNCTION ft_Pegs()
    SetColor( oldcolor )
    RestScreen( 0, 0, MaxRow(), MaxCol(), oldscrn )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION DrawBox( board_, nelement )
+STATIC PROCEDURE DrawBox( board_, nelement )
 
    SetColor( iif( board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
 
@@ -169,9 +169,9 @@ STATIC FUNCTION DrawBox( board_, nelement )
       board_[ nelement ][ 1, 1 ] + 1, ;
       board_[ nelement ][ 1, 2 ] + 2, hb_ntos( nelement ) )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION err_msg( msg )
+STATIC PROCEDURE err_msg( msg )
 
    LOCAL buffer := SaveScreen( 23, 33, 23, 47 )
 
@@ -182,7 +182,7 @@ STATIC FUNCTION err_msg( msg )
    SetCursor( SC_NORMAL )
    RestScreen( 23, 33, 23, 47, buffer )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION moremoves( board_ )
 

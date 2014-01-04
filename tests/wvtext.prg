@@ -237,15 +237,12 @@ PROCEDURE Main()
 
       CASE nKey == K_F12
          cFontName := hb_gtInfo( HB_GTI_FONTNAME )
-         IF cFontName == "Lucida Console"
-            hb_gtInfo( HB_GTI_FONTNAME , "Courier New" )
-         ELSEIF cFontName == "Courier New"
-            hb_gtInfo( HB_GTI_FONTNAME , "Terminal" )
-         ELSEIF cFontName == "Terminal"
-            hb_gtInfo( HB_GTI_FONTNAME , "DejaVu Sans Mono" )
-         ELSE
-            hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
-         ENDIF
+         DO CASE
+         CASE cFontName == "Lucida Console" ; hb_gtInfo( HB_GTI_FONTNAME, "Courier New" )
+         CASE cFontName == "Courier New"    ; hb_gtInfo( HB_GTI_FONTNAME, "Terminal" )
+         CASE cFontName == "Terminal"       ; hb_gtInfo( HB_GTI_FONTNAME, "DejaVu Sans Mono" )
+         OTHERWISE                          ; hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" )
+         ENDCASE
          IF hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS
             hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
             SetMode( MaxRow(), MaxCol() )
@@ -346,7 +343,7 @@ PROCEDURE hb_GTSYS()  /* must be a public function */
 
 //
 
-STATIC FUNCTION SetPalette( nMode )
+STATIC PROCEDURE SetPalette( nMode )
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
 
@@ -365,16 +362,16 @@ STATIC FUNCTION SetPalette( nMode )
    hb_gtInfo( HB_GTI_PALETTE, aPalette )
    DispScreen()
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION SetPaletteIndex()
+STATIC PROCEDURE SetPaletteIndex()
 
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
    DispScreen()
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -566,13 +563,13 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
 //
 
-STATIC FUNCTION ChgPalette( lFocus )
+STATIC PROCEDURE ChgPalette( lFocus )
+
+   THREAD STATIC t_aSavePalette
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
    LOCAL cSaveScreen := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL nR, nG, nB, nColor, nI, nDimFactor := 1.5
-
-   THREAD STATIC t_aSavePalette
 
    IF t_aSavePalette == NIL
       t_aSavePalette := AClone( aPalette )
@@ -610,4 +607,4 @@ STATIC FUNCTION ChgPalette( lFocus )
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), cSaveScreen )
 
-   RETURN NIL
+   RETURN

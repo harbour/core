@@ -51,10 +51,10 @@ Clase TMySQLQuery -------------------------------------------
   Bof() verdadero se aplica cuando se intenta ir antes del primer registro logico,
   y no debe usarse para indicar que el puntero esta en el registro 1
   La definicion anterior causa que procesos como:
-     WHILE ! oQuery:Bof()
+     DO WHILE ! oQuery:Bof()
         ...
         oQuery:SKIP( -1 )
-     ENDD
+     ENDDO
   no muestren el registro 1
   Con la nueva definicion se corrige este comportamiento
 
@@ -63,7 +63,7 @@ Clase TMySQLQuery -------------------------------------------
   Eof() verdadero se aplica cuando se intenta ir despues del ultimo registro logico,
   y no debe usarse para indicar que el puntero esta en el ultimo registro
   La definicion anterior causa que procesos como:
-     WHILE ! oQuery:Eof()
+     DO WHILE ! oQuery:Eof()
         ...
         oQuery:SKIP()
      ENDDO

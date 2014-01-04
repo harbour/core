@@ -108,7 +108,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:autolite := .F.
-   oBrwSets:ColorSpec := __Dbg():ClrModal()
+   oBrwSets:ColorSpec := __dbg():ClrModal()
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], hHash )
 
@@ -230,9 +230,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
          IF ::lEditable
             oBrwSets:RefreshCurrent()
             IF HB_ISOBJECT( uValue )
-               __DbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+               __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
             ELSEIF HB_ISARRAY( uValue )
-               __DbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+               __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
             ELSE
                ::doGet( oBrwSets, hHash, nSet )
             ENDIF

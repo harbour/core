@@ -10,22 +10,22 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION SecondOne()
+STATIC PROCEDURE SecondOne()
 
    ? "Ok, this is from SecondOne() function call"
 
    Third()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION Third()
+STATIC PROCEDURE Third()
 
    ? "Ok, this is from Third() function call"
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION Fourth( cText )
+STATIC PROCEDURE Fourth( cText )
 
    ? cText
 
-   RETURN NIL
+   RETURN

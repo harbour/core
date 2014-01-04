@@ -207,7 +207,8 @@ METHOD AddGetForm( xPostData )
    LOCAL y
    LOCAL cRet
 
-   IF HB_ISHASH( xPostData )
+   DO CASE
+   CASE HB_ISHASH( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cData += tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
@@ -216,7 +217,7 @@ METHOD AddGetForm( xPostData )
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
+   CASE HB_ISARRAY( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) ) + "="
@@ -225,9 +226,9 @@ METHOD AddGetForm( xPostData )
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
-   ENDIF
+   ENDCASE
 
    IF ! Empty( cData )
       cRet := ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData

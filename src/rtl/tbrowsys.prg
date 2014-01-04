@@ -54,46 +54,46 @@
 FUNCTION TApplyKey( nKey, oBrowse )
    RETURN oBrowse:applyKey( nKey )
 
-FUNCTION TBAddCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBAddCol() /* TODO */
+   RETURN
 
-FUNCTION TBBBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBBBlock() /* TODO */
+   RETURN
 
-FUNCTION TBClose() /* TODO */
-   RETURN NIL
+PROCEDURE TBClose() /* TODO */
+   RETURN
 
-FUNCTION TBCreate() /* TODO */
-   RETURN NIL
+PROCEDURE TBCreate() /* TODO */
+   RETURN
 
-FUNCTION TBDelCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBDelCol() /* TODO */
+   RETURN
 
-FUNCTION TBDisplay() /* TODO */
-   RETURN NIL
+PROCEDURE TBDisplay() /* TODO */
+   RETURN
 
-FUNCTION TBEditCell() /* TODO */
-   RETURN NIL
+PROCEDURE TBEditCell() /* TODO */
+   RETURN
 
-FUNCTION TBFBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBFBlock() /* TODO */
+   RETURN
 
-FUNCTION TBGoBot() /* TODO */
-   RETURN NIL
+PROCEDURE TBGoBot() /* TODO */
+   RETURN
 
-FUNCTION TBGoTop() /* TODO */
-   RETURN NIL
+PROCEDURE TBGoTop() /* TODO */
+   RETURN
 
-FUNCTION TBInsCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBInsCol() /* TODO */
+   RETURN
 
-FUNCTION TBModal() /* TODO */
-   RETURN NIL
+PROCEDURE TBModal() /* TODO */
+   RETURN
 
-FUNCTION TBSBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBSBlock() /* TODO */
+   RETURN
 
-FUNCTION TBSkip() /* TODO */
-   RETURN NIL
+PROCEDURE TBSkip() /* TODO */
+   RETURN
 
 #endif

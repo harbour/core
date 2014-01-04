@@ -66,14 +66,14 @@ INIT PROCEDURE _CTINIT()
 
    RETURN
 
-FUNCTION ctexit()
+PROCEDURE ctexit()
 
    IF s_bInitialized
       ctcexit()
       s_bInitialized := .F.
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 EXIT PROCEDURE _CTEXIT()
 

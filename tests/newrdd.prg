@@ -147,12 +147,12 @@ PROCEDURE Main()
    Inkey( 0 )
    CLS
 
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? ""
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -164,7 +164,7 @@ PROCEDURE Main()
    ? "SET FILTER TO TESTDBF->AGE == 21"
    ? "? TESTDBF->( dbFilter() )"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
@@ -173,7 +173,7 @@ PROCEDURE Main()
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -185,13 +185,13 @@ PROCEDURE Main()
 
    ? "TESTDBF->( Found() )"
    ? "LOCATE FOR TESTDBF->AGE == 23"
-   ? "WHILE TESTDBF->( Found() )"
+   ? "DO WHILE TESTDBF->( Found() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   CONTINUE"
    ? "ENDDO"
    TESTDBF->( Found() )
    LOCATE FOR TESTDBF->AGE == 23
-   WHILE TESTDBF->( Found() )
+   DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       CONTINUE
    ENDDO
@@ -237,7 +237,7 @@ PROCEDURE Main()
    ? 'Select( "TESTDBF" )'
    ? "SET FILTER TO TESTDBF->SALARY > 120000"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   NEWRDD->( dbAppend() )"
    ? "   NEWRDD->FIRST_NAME := TESTDBF->FIRST"
    ? "   NEWRDD->AGE := TESTDBF->AGE"
@@ -263,7 +263,7 @@ PROCEDURE Main()
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       NEWRDD->( dbAppend() )
       NEWRDD->FIRST_NAME := TESTDBF->FIRST
       NEWRDD->AGE := TESTDBF->AGE

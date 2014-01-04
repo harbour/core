@@ -551,7 +551,7 @@ STATIC FUNCTION NumToStrRaw( nValue, aMsg, nGender, lOrd )
       lOrd := .F.
    ENDIF
 
-   WHILE nValue != 0
+   DO WHILE nValue != 0
       nTemp := nValue % 1000
       IF nTemp != 0
          cTemp := ""

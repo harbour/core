@@ -22,7 +22,7 @@
 // nWait   Wait in seconds between messages
 // cColor  Color of displayed message
 
-FUNCTION ft_Pending( cMsg, nRow, nCol, nWait, cColor )
+PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )
 
    THREAD STATIC t_nRow1 := 24
    THREAD STATIC t_nCol1 := 0
@@ -59,4 +59,4 @@ FUNCTION ft_Pending( cMsg, nRow, nCol, nWait, cColor )
 
    ENDIF
 
-   RETURN NIL
+   RETURN

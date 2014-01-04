@@ -276,11 +276,11 @@ proc main()
    return
 
 
-static function errHandler( oErr )
+static procedure errHandler( oErr )
    ? "[ Error:", hb_ntos( oErr:gencode ), "/", hb_ntos( oErr:subcode ), ;
                  oErr:description, oErr:operation, "]"
    break( oErr )
-   RETURN NIL
+   RETURN
 
 
 STATIC PROCEDURE EXTEVAL( cb, o )

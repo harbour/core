@@ -93,8 +93,9 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 
    LOCAL ii
 
-   IF nTypeCode == 13 .OR. ;
-      nTypeCode == 8
+   DO CASE
+   CASE nTypeCode == 13 .OR. ;
+        nTypeCode == 8
 
       ::LeftHand_Odd  := { "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011", "0001101" }
       ::LeftHand_Even := { "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111", "0100111" }
@@ -102,7 +103,7 @@ METHOD New( nTypeCode ) CLASS GDBarCode
       ::Parity        := { "OOEOEE",  "OOEEOE",  "OOEEEO",  "OEOOEE",  "OEEOOE",  "OEEEOO",  "OEOEOE",  "OEOEEO",  "OEEOEO",  "OOOOOO"  }
       ::keys          := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
-   ELSEIF nTypeCode == 128
+   CASE nTypeCode == 128
 
       ::aCode := { ;
          "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213", ;
@@ -127,7 +128,7 @@ METHOD New( nTypeCode ) CLASS GDBarCode
          ::KeysmodeC[ ii ] := StrZero( ii, 2 )
       NEXT
 
-   ELSEIF nTypeCode == 25
+   CASE nTypeCode == 25
 
       ::keys := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
@@ -144,10 +145,10 @@ METHOD New( nTypeCode ) CLASS GDBarCode
          "00110", ;          // 0 digit
          "10000", ;          // pre-amble
          "100" }             // post-amble
-   ELSE
+   OTHERWISE
       ::DrawError( "Invalid type to barcode." )
       RETURN NIL
-   ENDIF
+   ENDCASE
 
    ::nType := nTypeCode
 
@@ -155,15 +156,16 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 
 METHOD Draw( cText ) CLASS GDBarCode
 
-   IF ::nType == 13
+   DO CASE
+   CASE ::nType == 13
       ::Draw13( cText )
-   ELSEIF ::nType == 8
+   CASE ::nType == 8
       ::Draw8( cText )
-   ELSEIF ::nType == 128
+   CASE ::nType == 128
       ::Draw128( cText )
-   ELSEIF ::nType == 25
+   CASE ::nType == 25
       ::DrawI25( cText )
-   ENDIF
+   ENDCASE
 
    RETURN NIL
 
@@ -244,12 +246,12 @@ METHOD Draw13( cText ) CLASS GDBarCode
                ::DrawSingleBar( iif( SubStr( xParity, ii - 1, 1 ) == "E", ;
                   ::LeftHand_Even[ jj ], ;
                   ::LeftHand_Odd[ jj ] ) )
+
             ELSEIF ii > 1 .AND. ii >= 8
 
                ::DrawSingleBar( ::Right_Hand[ jj ] )
 
             ENDIF
-
          NEXT
 
          jj := Mod( nChkSum, 10 )
@@ -449,7 +451,8 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
    // Checking if all chars are allowed
    FOR i := 1 TO Len( ::text )
 
-      IF cModeCode == "C"
+      DO CASE
+      CASE cModeCode == "C"
 
          nPos := AScan( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i + 1, 1 ) } )
 
@@ -458,22 +461,21 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
             lError := .T.
          ENDIF
 
-      ELSEIF cModeCode == "B"
+      CASE cModeCode == "B"
 
          IF ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
             ::DrawError( "Character " + SubStr( ::text, i, 1 ) + " not allowed." )
             lError := .T.
          ENDIF
 
-      ELSEIF cModeCode == "A"
+      CASE cModeCode == "A"
 
          IF ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
             ::DrawError( "Character " + SubStr( ::text, i, 1 ) + " not allowed." )
             lError := .T.
          ENDIF
 
-      ENDIF
-
+      ENDCASE
    NEXT
 
    IF ! lError
@@ -499,18 +501,19 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
             ENDIF
          ENDIF
       ELSE
-         IF cModeCode == "C"
+         DO CASE
+         CASE cModeCode == "C"
             lTypeCodeC := .T.
             cConc      := ::aCode[ STARTC ]
             nSum       := STARTB
-         ELSEIF cModeCode == "A"
+         CASE cModeCode == "A"
             lTypeCodeA := .T.
             cConc      := ::aCode[ STARTB ]
             nSum       := FNC1
-         ELSE
+         OTHERWISE
             cConc      := ::aCode[ STARTB ]
             nSum       := STARTA
-         ENDIF
+         ENDCASE
       ENDIF
 
       nC := 0

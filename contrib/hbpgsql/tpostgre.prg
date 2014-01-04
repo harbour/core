@@ -274,37 +274,38 @@ METHOD TableStruct( cTable ) CLASS TPQserver
          nSize  := PQgetvalue( res, i, 4 )
          nDec   := PQgetvalue( res, i, 5 )
 
-         IF "char" $ cType
+         DO CASE
+         CASE "char" $ cType
             cType := "C"
             nSize := Val( PQgetvalue( res, i, 3 ) )
             nDec  := 0
 
-         ELSEIF "text" $ cType
+         CASE "text" $ cType
             cType := "M"
             nSize := 10
             nDec := 0
 
-         ELSEIF "boolean" $ cType
+         CASE "boolean" $ cType
             cType := "L"
             nSize := 1
             nDec  := 0
 
-         ELSEIF "smallint" $ cType
+         CASE "smallint" $ cType
             cType := "N"
             nSize := 5
             nDec  := 0
 
-         ELSEIF "integer" $ cType .OR. "serial" $ cType
+         CASE "integer" $ cType .OR. "serial" $ cType
             cType := "N"
             nSize := 9
             nDec  := 0
 
-         ELSEIF "bigint" $ cType .OR. "bigserial" $ cType
+         CASE "bigint" $ cType .OR. "bigserial" $ cType
             cType := "N"
             nSize := 19
             nDec  := 0
 
-         ELSEIF "decimal" $ cType .OR. "numeric" $ cType
+         CASE "decimal" $ cType .OR. "numeric" $ cType
             cType := "N"
             nDec  := Val( nDec )
             /* Postgres doesn't store ".", but .dbf does, it can cause data width problem */
@@ -320,43 +321,43 @@ METHOD TableStruct( cTable ) CLASS TPQserver
                nSize := 15
             ENDIF
 
-         ELSEIF "real" $ cType .OR. "float4" $ cType
+         CASE "real" $ cType .OR. "float4" $ cType
             cType := "N"
             nSize := 15
             nDec  :=  4
 
-         ELSEIF "double precision" $ cType .OR. "float8" $ cType
+         CASE "double precision" $ cType .OR. "float8" $ cType
             cType := "N"
             nSize := 19
             nDec  := 9
 
-         ELSEIF "money" $ cType
+         CASE "money" $ cType
             cType := "N"
             nSize := 9
             nDec  := 2
 
-         ELSEIF "timestamp" $ cType
+         CASE "timestamp" $ cType
             cType := "C"
             nSize := 20
             nDec  := 0
 
-         ELSEIF "date" $ cType
+         CASE "date" $ cType
             cType := "D"
             nSize := 8
             nDec  := 0
 
-         ELSEIF "time" $ cType
+         CASE "time" $ cType
             cType := "C"
             nSize := 10
             nDec  := 0
 
-         ELSE
+         OTHERWISE
             /* Unsuported */
             cType := "U"
             nSize := 0
             nDec  := -1
 
-         ENDIF
+         ENDCASE
 
          IF !( cType == "U" )
             AAdd( result, { cField, cType, nSize, nDec } )
@@ -602,10 +603,11 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
                nSize := aTemp[ i ][ HBPG_META_FIELDLEN ]
                nDec  := aTemp[ i ][ HBPG_META_FIELDDEC ]
 
-               IF "char" $ cType
+               DO CASE
+               CASE "char" $ cType
                   cType := "C"
 
-               ELSEIF "numeric" $ cType .OR. "decimal" $ cType
+               CASE "numeric" $ cType .OR. "decimal" $ cType
                   cType := "N"
 
                   /* Postgres don't store ".", but .dbf does, it can cause data width problem */
@@ -621,56 +623,56 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
                      nSize := 15
                   ENDIF
 
-               ELSEIF "date" $ cType
+               CASE "date" $ cType
                   cType := "D"
                   nSize := 8
 
-               ELSEIF "text" $ cType
+               CASE "text" $ cType
                   cType := "M"
 
-               ELSEIF "boolean" $ cType
+               CASE "boolean" $ cType
                   cType := "L"
                   nSize := 1
 
-               ELSEIF "smallint" $ cType
+               CASE "smallint" $ cType
                   cType := "N"
                   nSize := 5
 
-               ELSEIF "integer" $ cType .OR. "serial" $ cType
+               CASE "integer" $ cType .OR. "serial" $ cType
                   cType := "N"
                   nSize := 9
 
-               ELSEIF "bigint" $ cType .OR. "bigserial" $ cType
+               CASE "bigint" $ cType .OR. "bigserial" $ cType
                   cType := "N"
                   nSize := 19
 
-               ELSEIF "real" $ cType .OR. "float4" $ cType
+               CASE "real" $ cType .OR. "float4" $ cType
                   cType := "N"
                   nSize := 15
                   nDec  :=  4
 
-               ELSEIF "double precision" $ cType .OR. "float8" $ cType
+               CASE "double precision" $ cType .OR. "float8" $ cType
                   cType := "N"
                   nSize := 19
                   nDec  := 9
 
-               ELSEIF "money" $ cType
+               CASE "money" $ cType
                   cType := "N"
                   nSize := 10
                   nDec  := 2
 
-               ELSEIF "timestamp" $ cType
+               CASE "timestamp" $ cType
                   cType := "C"
                   nSize := 20
 
-               ELSEIF "time" $ cType
+               CASE "time" $ cType
                   cType := "C"
                   nSize := 10
 
-               ELSE
+               OTHERWISE
                   /* Unsuported */
                   cType := "K"
-               ENDIF
+               ENDCASE
 
                AAdd( aStruct, { ;
                   aTemp[ i ][ HBPG_META_FIELDNAME ], ;

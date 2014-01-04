@@ -16,7 +16,7 @@
  *
  */
 
-FUNCTION ft_Sleep( nSeconds, nInitial )
+PROCEDURE ft_Sleep( nSeconds, nInitial )
 
    IF HB_ISNUMERIC( nInitial )
       nInitial -= Seconds()
@@ -29,4 +29,4 @@ FUNCTION ft_Sleep( nSeconds, nInitial )
 
    hb_idleSleep( nSeconds )
 
-   RETURN NIL
+   RETURN

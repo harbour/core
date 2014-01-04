@@ -34,8 +34,8 @@ PROCEDURE Main()
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
    MemoEdit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {| o | o:nTicks > 0 } ), 1,,,, .F. )
 
-   // TBrowse all calls greater than 0
-   DrawScreen( "TBrowse all methods/functions called one or more times" )
+   // Browse all calls greater than 0
+   DrawScreen( "Browse all methods/functions called one or more times" )
    Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 }, 1 ) )
 
    // Some closing stats

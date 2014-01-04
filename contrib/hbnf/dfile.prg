@@ -71,7 +71,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    RETURN rval
 
-FUNCTION ft_DFClose()
+PROCEDURE ft_DFClose()
 
    IF t_nHandle != F_ERROR
       _ft_DFClos()
@@ -81,4 +81,4 @@ FUNCTION ft_DFClose()
       t_nHandle := F_ERROR
    ENDIF
 
-   RETURN NIL
+   RETURN

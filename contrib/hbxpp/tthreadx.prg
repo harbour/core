@@ -225,7 +225,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                   Eval( ::_atStart, ... )
                ENDIF
 
-               WHILE .T.
+               DO WHILE .T.
 
                   nTime := hb_MilliSeconds()
 

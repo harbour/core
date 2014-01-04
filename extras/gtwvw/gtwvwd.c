@@ -197,9 +197,8 @@ static int K_Ctrl[] = {
 };
 
 
-/*                                                                   */
-/*                  private functions declaration                    */
-/*                                                                   */
+/* private functions declaration */
+
 HB_EXTERN_BEGIN
 static void    hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1, USHORT usCol1, USHORT usRow2, USHORT usCol2 );
 static void    hb_gt_wvwAddCharToInputQueue( int data );
@@ -333,16 +332,14 @@ static BOOL hb_wvw_Move_Ready( BOOL b_p_IsReady );
 static BOOL hb_wvw_Size_Ready( BOOL b_p_SizeIsReady );
 
 
-/*                                                                   */
-/* mouse initialization was made in cmdarg.c                         */
-/*                                                                   */
+/* mouse initialization was made in cmdarg.c */
 
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapiitm.h"
 
-/* set in mainwin.c                                                  */
-/*                                                                   */
+/* set in mainwin.c */
+
 extern int hb_iCmdShow;
 
 static int s_iCursorStyle;
@@ -390,9 +387,7 @@ LONG  GetFontDialogUnits( HWND h, HFONT f )
 }
 
 
-/*                                                                   */
-/*                     GT Specific Functions                         */
-/*                                                                   */
+/* GT Specific Functions */
 
 
 static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
@@ -463,8 +458,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->s_pWindows[ 0 ]->hWnd = hb_gt_wvwCreateWindow( ( HINSTANCE ) hInstance, ( HINSTANCE ) hPrevInstance, "", iCmdShow );
 
    if( ! s_pWvwData->s_pWindows[ 0 ]->hWnd )
-      /*  Runtime error
-       */
+      /*  Runtime error */
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
    {
@@ -480,16 +474,12 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->s_pWindows[ 0 ]->hdc     = GetDC( s_pWvwData->s_pWindows[ 0 ]->hWnd );
    s_pWvwData->s_pWindows[ 0 ]->hCompDC = CreateCompatibleDC( s_pWvwData->s_pWindows[ 0 ]->hdc );
 
-   /*
-      Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
-      o handle original da PEN e BRUSH do Device Context
-    */
+   /* Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
+      o handle original da PEN e BRUSH do Device Context */
    s_pWvwData->s_sApp->OriginalPen   = ( HPEN ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->penWhite );
    s_pWvwData->s_sApp->OriginalBrush = ( HBRUSH ) SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->currentBrush );
-   /*
-      E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
-      quando for utilizar DeleteObject()
-    */
+   /* E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
+      quando for utilizar DeleteObject() */
    SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->OriginalPen );
    SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->OriginalBrush );
 
@@ -546,22 +536,16 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
 
          DeleteObject( ( HFONT ) pWindowData->hFont );
 
-         /*
-            Faz apenas para a janela 0 (a primeira) ja que existe, na criacao das mesmas, uma condicao para que
+         /* Faz apenas para a janela 0 (a primeira) ja que existe, na criacao das mesmas, uma condicao para que
             apenas a primeira seja criada
-            Obs: A exclusao desses objetos precisa ocorrer antes da Release do Device Context
-          */
+            Obs: A exclusao desses objetos precisa ocorrer antes da Release do Device Context */
          if( j == 0 )
          {
-            /*
-               Seleciona PEN e BRUSH Originais
-             */
+            /* Seleciona PEN e BRUSH Originais */
             SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->OriginalPen );
             SelectObject( s_pWvwData->s_pWindows[ 0 ]->hdc, ( HBRUSH ) s_pWvwData->s_sApp->OriginalBrush );
 
-            /*
-               Com PENs e BRUSHes liberadas, efetua exclusao
-             */
+            /* Com PENs e BRUSHes liberadas, efetua exclusao */
             if( s_pWvwData->s_sApp->penWhite )
                DeleteObject( ( HPEN ) s_pWvwData->s_sApp->penWhite );
             if( s_pWvwData->s_sApp->penWhiteDim )
@@ -872,9 +856,7 @@ static void hb_gt_wvw_SetAttribute( PHB_GT pGT, int iTop, int iLeft, int iBottom
 }
 
 
-/*                                                                   */
-/*    copied from gtwin...                                           */
-/*                                                                   */
+/* copied from gtwin... */
 
 static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight, int bColor, USHORT bChar, int iRows, int iCols )
 {
@@ -922,9 +904,8 @@ static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       iColSize += iCols;
    }
    /* use the ScrollWindowEx() where possible ( Optimised for Terminal Server )
-    * if both iCols & iRows are ZERO then the entire area is to be cleared and
-    * there is no advantage in using ScrollWindowEx()
-    */
+      if both iCols & iRows are ZERO then the entire area is to be cleared and
+      there is no advantage in using ScrollWindowEx() */
 
    s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ]->InvalidateWindow = hb_gt_wvw_usDispCount( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ] ) > 0 || ( ! iRows && ! iCols );
 
@@ -991,9 +972,7 @@ static void hb_gt_wvw_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 }
 
 
-/*                                                                   */
-/*    resize the ( existing ) window                                 */
-/*                                                                   */
+/* resize the ( existing ) window */
 
 static BOOL hb_gt_wvw_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
@@ -1001,10 +980,9 @@ static BOOL hb_gt_wvw_SetMode( PHB_GT pGT, int iRow, int iCol )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   if( s_pWvwData->s_bQuickSetMode ) /*this is eg. done when we are closing window
-                                      * we do nothing here, what we need is performed by GTAPI level
-                                      * ie. setting its s_height and s_width (= MaxRow() and MaxCol() )
-                                      */
+   if( s_pWvwData->s_bQuickSetMode ) /* this is eg. done when we are closing window
+                                        we do nothing here, what we need is performed by GTAPI level
+                                        ie. setting its s_height and s_width (= MaxRow() and MaxCol() ) */
       return TRUE;
 
    return hb_gt_wvw_bSetMode( s_pWvwData->s_pWindows[ s_pWvwData->s_usCurWindow ], ( USHORT ) iRow, ( USHORT ) iCol );
@@ -1232,9 +1210,8 @@ static int hb_gt_wvw_ReadKey( PHB_GT pGT, int eventmask )
 }
 
 
-/*                                                                   */
 /* dDuration is in 'Ticks' (18.2 per second) */
-/*                                                                   */
+
 static void hb_gt_wvw_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Tone(%lf, %lf)", dFrequency, dDuration ) );
@@ -1400,12 +1377,10 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                /* is the window already opened? */
                if( pWindowData->hWnd )
                {
-                  /* resize the window based on new fonts
-                   */
+                  /* resize the window based on new fonts */
                   hb_gt_wvwResetWindowSize( pWindowData, pWindowData->hWnd );
 
-                  /* force resize of caret
-                   */
+                  /* force resize of caret */
                   hb_gt_wvwKillCaret( pWindowData );
                   hb_gt_wvwCreateCaret( pWindowData );
                   HB_GTSELF_REFRESH( hb_gt_Base() );
@@ -1933,32 +1908,30 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
 
             /* eval the codeblock */
 
-            /*
-
-               if (s_pWvwData->s_sApp->pFunc[ iIndex ]->type == HB_IT_BLOCK)
-               {
+#if 0
+            if( s_pWvwData->s_sApp->pFunc[ iIndex ]->type == HB_IT_BLOCK )
+            {
                HB_ITEM hihDlg, himessage, hiwParam, hilParam;
                PHB_ITEM pReturn;
 
                hihDlg.type = HB_IT_NIL;
-               hb_itemPutNL( &hihDlg, (ULONG) hDlg );
+               hb_itemPutNL( &hihDlg, ( ULONG ) hDlg );
 
                himessage.type = HB_IT_NIL;
-               hb_itemPutNL( &himessage, (ULONG) message );
+               hb_itemPutNL( &himessage, ( ULONG ) message );
 
                hiwParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hiwParam, (ULONG) wParam );
+               hb_itemPutNL( &hiwParam, ( ULONG ) wParam );
 
                hilParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hilParam, (ULONG) lParam );
+               hb_itemPutNL( &hilParam, ( ULONG ) lParam );
 
-               pReturn = hb_itemDo( (PHB_ITEM) s_pWvwData->s_sApp->pFunc[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
+               pReturn = hb_itemDo( ( PHB_ITEM ) s_pWvwData->s_sApp->pFunc[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
 
                bReturn = hb_itemGetNL( pReturn );
                hb_itemRelease( pReturn );
-
-               }
-             */
+            }
+#endif
             if( HB_IS_BLOCK( pFunc ) )
             {
                if( hb_vmRequestReenter() )
@@ -2072,29 +2045,29 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
 
          case 2:
             /* eval the codeblock */
-            /*
-               if (s_pWvwData->s_sApp->pFuncModal[ iIndex ]->type == HB_IT_BLOCK )
-               {
+#if 0
+            if( s_pWvwData->s_sApp->pFuncModal[ iIndex ]->type == HB_IT_BLOCK )
+            {
                HB_ITEM hihDlg, himessage, hiwParam, hilParam;
                PHB_ITEM pReturn;
 
                hihDlg.type = HB_IT_NIL;
-               hb_itemPutNL( &hihDlg, (ULONG) hDlg );
+               hb_itemPutNL( &hihDlg, ( ULONG ) hDlg );
 
                himessage.type = HB_IT_NIL;
-               hb_itemPutNL( &himessage, (ULONG) message );
+               hb_itemPutNL( &himessage, ( ULONG ) message );
 
                hiwParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hiwParam, (ULONG) wParam );
+               hb_itemPutNL( &hiwParam, ( ULONG ) wParam );
 
                hilParam.type = HB_IT_NIL;
-               hb_itemPutNL( &hilParam, (ULONG) lParam );
+               hb_itemPutNL( &hilParam, ( ULONG ) lParam );
 
-               pReturn = hb_itemDo( (PHB_ITEM) s_pWvwData->s_sApp->pFuncModal[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
+               pReturn = hb_itemDo( ( PHB_ITEM ) s_pWvwData->s_sApp->pFuncModal[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
                bReturn = hb_itemGetNL( pReturn );
                hb_itemRelease( pReturn );
-               }
-             */
+            }
+#endif
             if( HB_IS_BLOCK( pFunc ) )
             {
                if( hb_vmRequestReenter() )
@@ -2155,11 +2128,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
    return bReturn;
 }
 
-
-/*                                                                   */
-/*                    WVW specific functions                         */
-/*                                                                   */
-
+/* WVW specific functions */
 
 static void hb_gt_wvwCreateObjects( UINT usWinNum )
 {
@@ -2333,8 +2302,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
    pMainWindow = s_pWvwData->s_pWindows[ 0 ];
 
    /* set the font and get it's size to determine the size of the client area
-    * for the required number of rows and columns
-    */
+      for the required number of rows and columns */
    hdc   = GetDC( hWnd );
    hFont = hb_gt_wvwGetFont( pWindowData->fontFace, pWindowData->fontHeight, pWindowData->fontWidth, pWindowData->fontWeight, pWindowData->fontQuality, pWindowData->CodePage );
 
@@ -2351,8 +2319,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
    ReleaseDC( hWnd, hdc );
 
    /* we will need to use the font size to handle the transformations from
-    * row column space in the future, so we keep it around in a static!
-    */
+      row column space in the future, so we keep it around in a static! */
 
    pWindowData->PTEXTSIZE.x = pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : tm.tmAveCharWidth;     /* For fixed FONT should == tm.tmMaxCharWidth */
    pWindowData->PTEXTSIZE.y = tm.tmHeight;                                                                  /*     but seems to be a problem on Win9X so */
@@ -2385,8 +2352,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
    }
    else if( pWindowData->byWinId == 0 )
    {
-      /* resize the window to get the specified number of rows and columns
-       */
+      /* resize the window to get the specified number of rows and columns */
       height = hb_gt_wvwCalcPixelHeight( pWindowData );
       width  = hb_gt_wvwCalcPixelWidth( pWindowData );
 
@@ -2399,8 +2365,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
       height    += diffHeight;
 
       /* Centre the window within the CLIENT area on the screen
-       *                   but only if pWindowData->CentreWindow == TRUE
-       */
+                           but only if pWindowData->CentreWindow == TRUE */
 
 #if 0
       if( pWindowData->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rcWorkArea, 0 ) )
@@ -2428,8 +2393,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
    }
    else
    {
-      /* resize the window to get the specified number of rows and columns
-       */
+      /* resize the window to get the specified number of rows and columns */
       height = hb_gt_wvwCalcPixelHeight( pWindowData );
       width  = hb_gt_wvwCalcPixelWidth( pWindowData );
 
@@ -2442,8 +2406,7 @@ static void hb_gt_wvwResetWindowSize( WIN_DATA * pWindowData, HWND hWnd )
       height    += diffHeight;
 
       /* Centre the window within the area of the MAIN WINDOW
-       *                   but only if pWindowData->CentreWindow == TRUE
-       */
+                           but only if pWindowData->CentreWindow == TRUE */
       GetWindowRect( ( *pMainWindow ).hWnd, &rcWorkArea );
       GetClientRect( ( *pMainWindow ).hWnd, &rcMainClientArea );
 
@@ -2518,9 +2481,8 @@ static void xUserPaintNow( UINT usWinNum )
 {
    static BOOL bRunning = FALSE;
 
-   /*make sure we don't execute it > 1 time
-    * eg. if s_pWvwData->s_uiPaintRefresh is too small
-    */
+   /* make sure we don't execute it > 1 time
+      eg. if s_pWvwData->s_uiPaintRefresh is too small */
    if( bRunning )
       return;
 
@@ -2535,13 +2497,14 @@ static void xUserPaintNow( UINT usWinNum )
          hb_vmPushNil();
          hb_vmPushInteger( ( int ) ( usWinNum ) );
 
-         /* follow WVT convention to not passing coordinates anymore
-            hb_vmPushInteger( ( int ) (rpaint.top)  );
-            hb_vmPushInteger( ( int ) (rpaint.left)  );
-            hb_vmPushInteger( ( int ) (rpaint.bottom)  );
-            hb_vmPushInteger( ( int ) (rpaint.right)  );
-            hb_vmDo( 5 );
-          */
+         /* follow WVT convention to not passing coordinates anymore */
+#if 0
+         hb_vmPushInteger( ( int ) rpaint.top );
+         hb_vmPushInteger( ( int ) rpaint.left );
+         hb_vmPushInteger( ( int ) rpaint.bottom );
+         hb_vmPushInteger( ( int ) rpaint.right );
+         hb_vmDo( 5 );
+#endif
 
          hb_vmDo( 1 );
 
@@ -2559,10 +2522,9 @@ static void xUserTimerNow( UINT usWinNum, HWND hWnd, UINT message, WPARAM wParam
 {
    static BOOL bRunning = FALSE;
 
-   /*make sure we don't execute it > 1 time
-    * eg. if timer interval is too small
-    * the call will be lost in this case
-    */
+   /* make sure we don't execute it > 1 time
+      eg. if timer interval is too small
+      the call will be lost in this case */
    if( bRunning )
       return;
 
@@ -2657,20 +2619,19 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          else
          if( iId <= WVW_ID_MAX_COMBOBOX )
          {
+#if 0
+            int lowordwParam = ( int ) LOWORD( wParam );
+            int hiwordwParam = ( int ) HIWORD( wParam );
+            int lowordlParam = ( int ) LOWORD( lParam );
+            int hiwordlParam = ( int ) HIWORD( lParam );
+            HWND hWndCtrl = ( HWND ) lParam;
 
-            /*
-               int lowordwParam = (int) LOWORD(wParam);
-               int hiwordwParam = (int) HIWORD(wParam);
-               int lowordlParam = (int) LOWORD(lParam);
-               int hiwordlParam = (int) HIWORD(lParam);
-               HWND hWndCtrl = (HWND) lParam;
-
-               TraceLog( NULL, "debugging: WM_COMMAND is processed?\n" );
-               TraceLog( NULL, "  lowordwParam (control id)=%i\n", lowordwParam );
-               TraceLog( NULL, "  hiwordwParam (notification)=%i\n", hiwordwParam );
-               TraceLog( NULL, "  lowordlParam=%i\n", lowordlParam );
-               TraceLog( NULL, "  hiwordlParam=%i\n", hiwordlParam );
-             */
+            TraceLog( NULL, "debugging: WM_COMMAND is processed?\n" );
+            TraceLog( NULL, "  lowordwParam (control id)=%i\n", lowordwParam );
+            TraceLog( NULL, "  hiwordwParam (notification)=%i\n", hiwordwParam );
+            TraceLog( NULL, "  lowordlParam=%i\n", lowordlParam );
+            TraceLog( NULL, "  hiwordlParam=%i\n", hiwordlParam );
+#endif
 
             switch( iEvent )
             {
@@ -2712,20 +2673,19 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          else
          if( iId <= WVW_ID_MAX_EDITBOX )
          {
+#if 0
+            int lowordwParam = ( int ) LOWORD( wParam );
+            int hiwordwParam = ( int ) HIWORD( wParam );
+            int lowordlParam = ( int ) LOWORD( lParam );
+            int hiwordlParam = ( int ) HIWORD( lParam );
+            HWND hWndCtrl = ( HWND ) lParam;
 
-            /*
-               int lowordwParam = (int) LOWORD(wParam);
-               int hiwordwParam = (int) HIWORD(wParam);
-               int lowordlParam = (int) LOWORD(lParam);
-               int hiwordlParam = (int) HIWORD(lParam);
-               HWND hWndCtrl = (HWND) lParam;
-
-               TraceLog( NULL, "debugging: WM_COMMAND is processed?\n" );
-               TraceLog( NULL, "  lowordwParam (control id)=%i\n", lowordwParam );
-               TraceLog( NULL, "  hiwordwParam (notification)=%i\n", hiwordwParam );
-               TraceLog( NULL, "  lowordlParam=%i\n", lowordlParam );
-               TraceLog( NULL, "  hiwordlParam=%i\n", hiwordlParam );
-             */
+            TraceLog( NULL, "debugging: WM_COMMAND is processed?\n" );
+            TraceLog( NULL, "  lowordwParam (control id)=%i\n", lowordwParam );
+            TraceLog( NULL, "  hiwordwParam (notification)=%i\n", hiwordwParam );
+            TraceLog( NULL, "  lowordlParam=%i\n", lowordlParam );
+            TraceLog( NULL, "  hiwordlParam=%i\n", hiwordlParam );
+#endif
 
             switch( iEvent )
             {
@@ -2803,9 +2763,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          GetUpdateRect( hWnd, &updateRect, FALSE );
          /* WARNING!!!
-          * the GetUpdateRect call MUST be made BEFORE the BeginPaint call, since
-          * BeginPaint resets the update rectangle - don't move it or nothing is drawn!
-          */
+            the GetUpdateRect call MUST be made BEFORE the BeginPaint call, since
+            BeginPaint resets the update rectangle - don't move it or nothing is drawn! */
 
          /* 2005-06-25 TODO: MSDN says app should NOT call BeginPaint if GetUpdateRect returns zero */
 
@@ -2824,25 +2783,22 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
          }
          else
-         /*
-          * using the update rect, determine which rows and columns of text
-          * to paint, and do so
-          */
+         /* using the update rect, determine which rows and columns of text
+            to paint, and do so */
          if( pWindowData->pBuffer != NULL && pWindowData->pColors != NULL )
          {
 
             /* need to account for truncation in conversion
-             * i.e. redraw any 'cell' partially covered...
-             */
+               i.e. redraw any 'cell' partially covered... */
             rcRect = hb_gt_wvwGetColRowFromXYRect( pWindowData, updateRect );
 
             /*
                WVT uses global vars as follows:
 
-               _s.rowStart = max( 0, rcRect.top-1 );
-               _s.rowStop  = min( _s.ROWS, rcRect.bottom+1 );
-               _s.colStart = max( 0, rcRect.left -1 );
-               _s.colStop  = min( _s.COLS, rcRect.right+1 );
+               _s.rowStart = max( 0, rcRect.top - 1 );
+               _s.rowStop  = min( _s.ROWS, rcRect.bottom + 1 );
+               _s.colStart = max( 0, rcRect.left - 1 );
+               _s.colStop  = min( _s.COLS, rcRect.right + 1 );
 
                WVW can't do that way, because we use TIMER method to repaint
                WVW's pending repaint rect is stored in rPaintPending
@@ -2868,9 +2824,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                oldColor   = *( pWindowData->pColors + index );
 
                /* colorute may change mid line...
-                * so buffer up text with same color, and output it
-                * then do next section with same color, etc
-                */
+                  so buffer up text with same color, and output it
+                  then do next section with same color, etc */
 
                while( icol <= colStop )
                {
@@ -3489,7 +3444,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                However, if there is no gtSetCloseHandler, ALT+C effect is not produced as it should.
                So for now I put it back to the old behaviour with the following two lines, until hb_gtHandleClose() is fixed.
              */
-/*         hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG ); */
+/*          hb_gt_wvwAddCharToInputQueue( HB_BREAK_FLAG ); */
             hb_gt_wvwAddCharToInputQueue( K_ESC );
 
          else
@@ -3733,20 +3688,20 @@ static HWND hb_gt_wvwCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       return 0;
    }
 
-   hWnd = CreateWindow( s_pWvwData->szAppName,                                      /*classname      */
-                        TEXT( "HARBOUR_WVW" ),                                      /*window name    */
+   hWnd = CreateWindow( s_pWvwData->szAppName,                                      /* classname      */
+                        TEXT( "HARBOUR_WVW" ),                                      /* window name    */
 
-                        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX |  /*style          */
+                        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX |  /* style          */
                         WS_CLIPCHILDREN,
 
-                        0,                                  /*x              */
-                        0,                                  /*y              */
-                        CW_USEDEFAULT,                      /*width          */
-                        CW_USEDEFAULT,                      /*height         */
-                        NULL,                               /*window parent  */
-                        NULL,                               /*menu           */
-                        hInstance,                          /*instance       */
-                        NULL );                             /*lpParam        */
+                        0,                                  /* x              */
+                        0,                                  /* y              */
+                        CW_USEDEFAULT,                      /* width          */
+                        CW_USEDEFAULT,                      /* height         */
+                        NULL,                               /* window parent  */
+                        NULL,                               /* menu           */
+                        hInstance,                          /* instance       */
+                        NULL );                             /* lpParam        */
 
    if( hWnd == NULL )
    {
@@ -4202,9 +4157,7 @@ static BOOL hb_gt_wvwTextOut( WIN_DATA * pWindowData, HDC hdc, USHORT col, USHOR
 }
 
 
-/*                                                                   */
-/* get for and background colours from attribute and set them for window
- */
+/* get for and background colors from attribute and set them for window */
 
 static BOOL hb_gt_wvwSetColors( WIN_DATA * pWindowData, HDC hdc, BYTE attr )
 {
@@ -4221,9 +4174,8 @@ static BOOL hb_gt_wvwSetColors( WIN_DATA * pWindowData, HDC hdc, BYTE attr )
 }
 
 
-/*                                                                   */
-/* compute invalid rect in pixels, from row and col
- */
+/* compute invalid rect in pixels, from row and col */
+
 static void hb_gt_wvwSetInvalidRect( WIN_DATA * pWindowData, USHORT left, USHORT top, USHORT right, USHORT bottom )
 {
    RECT rect = { 0 };
@@ -4312,10 +4264,8 @@ static int hb_gt_wvwJustTranslateKey( int key, int shiftkey, int altkey, int con
 }
 
 
-/*                                                                   */
-/* font stuff                                                        */
-/* use the standard fixed oem font, unless the caller has requested set size fonts
- */
+/* font stuff */
+/* use the standard fixed oem font, unless the caller has requested set size fonts */
 
 HFONT hb_gt_wvwGetFont( const char * pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
@@ -4412,7 +4362,7 @@ static void hb_gtInitStatics( UINT usWinNum, LPCTSTR lpszWinName, USHORT usRow1,
       pWindowData->HCentreWindow = FALSE;                /* horizontally */
       pWindowData->VCentreWindow = FALSE;                /* vertically */
 
-      pWindowData->CodePage = GetACP();                  /* Set code page to default system                         */
+      pWindowData->CodePage = GetACP();                  /* Set code page to default system */
 
       osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
       GetVersionEx( &osvi );
@@ -4726,7 +4676,7 @@ static void hb_gt_wvwSetStringInTextBuffer( WIN_DATA * pWindowData, int col, int
 
       memset( ( pWindowData->pColors + index ), color, length );
 
-      /*  determine bounds of rect around character to refresh
+      /* determine bounds of rect around character to refresh
        */
       end = hb_gt_wvwGetColRowForTextBuffer( pWindowData, index + ( ( ( USHORT ) ( ULONG ) ( length ) ) - 1 ) );
       hb_gt_wvwSetInvalidRect( pWindowData, ( USHORT ) col, ( USHORT ) row, ( USHORT ) end.x, ( USHORT ) end.y );
@@ -5019,7 +4969,7 @@ static void hb_gt_wvwWindowPrologue( void )
    UINT uiWindow;
 
    if( s_pWvwData->s_usNumWindows >= WVW_MAXWINDOWS )
-      /*  Runtime error
+      /* Runtime error
        */
       hb_errRT_TERM( EG_BOUND, 10001, "Maximum Number of Windows Exceeded", "hb_gt_wvwWindowPrologue()", 0, 0 );
 
@@ -5043,10 +4993,10 @@ static void hb_gt_wvwWindowEpilogue( void )
 }
 
 static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int iRow2, int iCol2,
-                                 DWORD dwStyle, int iParentWin ) /*assume s_pWvwData->s_usNumWindows >= 1 (ie. this will be the second or third window)
+                                 DWORD dwStyle, int iParentWin ) /* assume s_pWvwData->s_usNumWindows >= 1 (ie. this will be the second or third window)
                                                                   * this is similar to gt_init(), only gt_init() is for Main Window
                                                                   * usRowx and usColx determine the initial position and initial size of window
-                                                                  *(relative to MAIN window, NOT to parent window)
+                                                                  * (relative to MAIN window, NOT to parent window)
                                                                   */
 {
    HWND hWnd;
@@ -5112,16 +5062,16 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
                            TODO: handle WM_MOVE to simulate behaviour similar to WS_CHILD's
                                  at least to keep subwindow "nearby" the MAIN window */
 
-                        0,                                                       /*x               */
-                        0,                                                       /*y               */
-                        CW_USEDEFAULT,                                           /*width           */
-                        CW_USEDEFAULT,                                           /*height          */
+                        0,                                                       /* x               */
+                        0,                                                       /* y               */
+                        CW_USEDEFAULT,                                           /* width           */
+                        CW_USEDEFAULT,                                           /* height          */
 
-                        ( pParentWindow == NULL ? NULL : pParentWindow->hWnd ),  /*x parent window */
+                        ( pParentWindow == NULL ? NULL : pParentWindow->hWnd ),  /* x parent window */
 
-                        NULL,                                                    /*menu            */
-                        s_pWvwData->hInstance,                                   /*x instance      */
-                        NULL );                                                  /*lpParam         */
+                        NULL,                                                    /* menu            */
+                        s_pWvwData->hInstance,                                   /* x instance      */
+                        NULL );                                                  /* lpParam         */
 
    s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hWnd = hWnd;
 
@@ -5187,7 +5137,7 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
    return s_pWvwData->s_usNumWindows - 1;
 }
 
-static void hb_gt_wvwCloseWindow( void ) /*assume s_pWvwData->s_usNumWindows >= 2 (ie. we are not closing main window)
+static void hb_gt_wvwCloseWindow( void ) /* assume s_pWvwData->s_usNumWindows >= 2 (ie. we are not closing main window)
                                           * similar to gt_exit(), only gt_exit() closes main window
                                           */
 {
@@ -5277,17 +5227,16 @@ static void hb_gt_wvwCloseWindow( void ) /*assume s_pWvwData->s_usNumWindows >= 
 
    hb_gt_wvwWindowEpilogue();
 
-   /*
-
-      if (s_pWvwData->s_usNumWindows == 1)
+#if 0
+   if( s_pWvwData->s_usNumWindows == 1 )
+   {
+      if( ! UnregisterClass( s_pWvwData->szSubWinName, s_pWvwData->hInstance ) )
       {
-      if (!UnregisterClass( s_pWvwData->szSubWinName,s_pWvwData->hInstance ))
-      {
-       MessageBox( NULL, TEXT( "Failed UnregisterClass" ),
-                   s_pWvwData->szAppName, MB_ICONERROR );
+         MessageBox( NULL, TEXT( "Failed UnregisterClass" ),
+                     s_pWvwData->szAppName, MB_ICONERROR );
       }
-      }
-    */
+   }
+#endif
 
    SetFocus( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hWnd );
 
@@ -5586,12 +5535,10 @@ static UINT hb_gt_wvwSetCurWindow( UINT usWinNum )
 }
 
 
-/*                                                                   */
-/*               Supporters of HB_GT_FUNC(...)                       */
-/*               DONE: These all are to be made window selective!    */
-/*                     all row and col are relative to its own window! */
-/*               Budyanto Dj. <budyanto@centrin.net.id>              */
-/*                                                                   */
+/* Supporters of HB_GT_FUNC(...)                       */
+/* DONE: These all are to be made window selective!    */
+/*       all row and col are relative to its own window! */
+/* Budyanto Dj. <budyanto@centrin.net.id>              */
 
 
 /* NOTE:works for topmost window only */
@@ -6067,10 +6014,8 @@ static void  hb_gt_wvw_vSetPos( WIN_DATA * pWindowData, int iRow, int iCol )
 }
 
 
-/*                                                                   */
-/*               Other static functions                              */
-/*               Budyanto Dj. <budyanto@centrin.net.id>              */
-/*                                                                   */
+/* Other static functions                              */
+/* Budyanto Dj. <budyanto@centrin.net.id>              */
 
 
 /*hb_wvw_InitPendingRect( ) is called during init static, or after userpaint */
@@ -6086,8 +6031,8 @@ static void   hb_wvw_InitPendingRect( WIN_DATA * pWindowData )
 }
 
 
-/*hb_wvw_UpdatePendingRect( ) is called by hb_gt_wvwWndProc()        */
-/*This function's job is to update paint pending rect                */
+/* hb_wvw_UpdatePendingRect( ) is called by hb_gt_wvwWndProc()        */
+/* This function's job is to update paint pending rect                */
 
 static void   hb_wvw_UpdatePendingRect( WIN_DATA * pWindowData, USHORT usRow1, USHORT usCol1, USHORT usRow2, USHORT usCol2 )
 {
@@ -6141,10 +6086,7 @@ static void hb_gt_wvwFillLineSpace( WIN_DATA * pWindowData, HDC hdc, USHORT star
 }
 
 
-/*                                                                   */
-/*               Exported functions for API calls                    */
-
-/*                                                                   */
+/* Exported functions for API calls */
 
 
 BOOL hb_gt_wvwSetMenuKeyEvent( UINT usWinNum, int iMenuKeyEvent )
@@ -6539,10 +6481,10 @@ BOOL hb_gt_wvwDrawImage( UINT usWinNum, int x1, int y1, int wd, int ht, const ch
          return FALSE;
 
       /* 2006-07-24 canNOT do it this way:
-         pPic->lpVtbl->get_Width( pPic,&lWidth );
-         pPic->lpVtbl->get_Height( pPic,&lHeight );
-         iWidth = (int) lWidth;
-         iHeight = (int) lHeight;
+         pPic->lpVtbl->get_Width( pPic, &lWidth );
+         pPic->lpVtbl->get_Height( pPic, &lHeight );
+         iWidth = ( int ) lWidth;
+         iHeight = ( int ) lHeight;
        */
 
       pPic->lpVtbl->get_Handle( pPic, &oHtemp );
@@ -6996,10 +6938,8 @@ WVW_DATA * hb_getWvwData( void )
 }
 
 
-/*                                                                   */
-/*               Window Related xHarbour callable functions          */
-/*               Budyanto Dj. <budyanto@centrin.net.id>              */
-/*                                                                   */
+/* Window Related xHarbour callable functions          */
+/* Budyanto Dj. <budyanto@centrin.net.id>              */
 
 
 /* 2004-07-13 this function was named WVW_lOpenWindow()
@@ -7589,10 +7529,8 @@ HB_FUNC( WVW_ENABLEMAXIMIZE )
 }
 
 
-/*                                                                   */
-/*               GTWVW parameter setting from .prg                   */
-/*               Budyanto Dj. <budyanto@centrin.net.id>              */
-/*                                                                   */
+/* GTWVW parameter setting from .prg                   */
+/* Budyanto Dj. <budyanto@centrin.net.id>              */
 
 
 /*wvw_SetPaintRefresh( [nPaintRefresh] )
@@ -7931,15 +7869,13 @@ HB_FUNC( WVW_GETTITLE )
 }
 
 
-/*                                                                   */
-/*   Author.....: Francesco Saverio Giudice <info@fsgiudice.com>     */
-/*   Syntax.....: wvw_GetRGBColor( nColor ) --> nRGBColor            */
-/*   Description: Return the RGB values passing the color positional value */
-/*                0=Black, 1=Blue, etc                               */
-/*                as returned from hb_ColorToN()                     */
-/*   Creat. Date: 2004-01-15                                         */
-/*   Last Modif.: 2004-01-15                                         */
-/*                                                                   */
+/* Author.....: Francesco Saverio Giudice <info@fsgiudice.com>     */
+/* Syntax.....: wvw_GetRGBColor( nColor ) --> nRGBColor            */
+/* Description: Return the RGB values passing the color positional value */
+/*              0=Black, 1=Blue, etc                               */
+/*              as returned from hb_ColorToN()                     */
+/* Creat. Date: 2004-01-15                                         */
+/* Last Modif.: 2004-01-15                                         */
 
 
 HB_FUNC( WVW_GETRGBCOLOR )
@@ -7956,12 +7892,10 @@ HB_FUNC( WVW_GETRGBCOLOR )
 }
 
 
-/*                                                                   */
-/*                       Giancarlo Niccolai                          */
-/*                                                                   */
+/* Giancarlo Niccolai */
 
 
-/*                    Clipboard functions                            */
+/* Clipboard functions */
 
 
 HB_FUNC( WVW_GETCLIPBOARD )
@@ -8084,7 +8018,7 @@ HB_FUNC( WVW_KEYBOARD )
 }
 
 
-/*                    End of Clipboard Functions                     */
+/* End of Clipboard Functions */
 
 
 HB_FUNC( WVW_INVALIDATERECT )
@@ -8142,9 +8076,7 @@ HB_FUNC( WVW_CLIENTTOSCREEN )
 }
 
 
-/*                                                                   */
-/*               Pritpal Bedi <pritpal@vouchcac.com>                 */
-/*                                                                   */
+/* Pritpal Bedi <pritpal@vouchcac.com> */
 
 
 HB_FUNC( WVW_SETFONT )
@@ -8295,9 +8227,7 @@ HB_FUNC( WVW_GETPALETTE )
 }
 
 
-/*                                                                   */
-/*    wvw_SetPalette( aRGBValues ) -> An array of 16 elements with RGB values */
-/*                                                                   */
+/* wvw_SetPalette( aRGBValues ) -> An array of 16 elements with RGB values */
 HB_FUNC( WVW_SETPALETTE )
 {
    int i;
@@ -9193,10 +9123,10 @@ LRESULT CALLBACK hb_gt_wvwTBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 
 
-/* .prg callable functions                                           */
+/* .prg callable functions */
 
 
-/* SCROLLBAR begins                                                  */
+/* SCROLLBAR begins        */
 
 
 /*********************** start control (eg. scrollbar) list handler ***************************/
@@ -9572,7 +9502,7 @@ static void ReposControls( UINT usWinNum, BYTE byCtrlClass )
 /*********************** end control (eg. scrollbar) list handler ***************************/
 
 
-/* SCROLLBAR begins                                                  */
+/* SCROLLBAR begins */
 
 
 LRESULT CALLBACK hb_gt_wvwXBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -9650,7 +9580,7 @@ LRESULT CALLBACK hb_gt_wvwXBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 
 
-/* PUSHBUTTON begins                                                 */
+/* PUSHBUTTON begins */
 
 
 LRESULT CALLBACK hb_gt_wvwBtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -9712,18 +9642,13 @@ LRESULT CALLBACK hb_gt_wvwBtnProc( HWND hWnd, UINT message, WPARAM wParam, LPARA
 
          switch( c )
          {
-
-            /*
-               case VK_RETURN:
-               {
-
-               SendMessage(hWnd, BM_CLICK, 0, 0);
-
+#if 0
+            case VK_RETURN:
+            {
+               SendMessage( hWnd, BM_CLICK, 0, 0 );
                break;
-
-               }
-             */
-
+            }
+#endif
             default:
                SetFocus( hWndParent );
                PostMessage( hWndParent, message, wParam, lParam );
@@ -10096,7 +10021,7 @@ LRESULT CALLBACK hb_gt_wvwCBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 
 
-/* EDITBOX begins (experimental)                                    */
+/* EDITBOX begins (experimental) */
 
 
 LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -10516,14 +10441,12 @@ LRESULT CALLBACK hb_gt_wvwEBProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 }
 
 
-/* EDITBOX ends (experimental)                                       */
+/* EDITBOX ends (experimental) */
 
 
 /*
- *
  *             Direct WinApi Functions - Prefixed WIN_*()
  *            Original work of Pritpal Bedi on wvtutils.c
  *
  * TODO: should be moved to separate modul. totally independent of GT.
- *
  */

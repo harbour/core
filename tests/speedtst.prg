@@ -925,7 +925,7 @@ return
 
    METHOD Notifier:subscribe()
       LOCAL xResult
-      WHILE Len( ::aQueue ) == 0
+      DO WHILE Len( ::aQueue ) == 0
          ::oSignal:wait()
       ENDDO
       xResult := ::aQueue[ 1 ]

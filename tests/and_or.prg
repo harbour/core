@@ -29,7 +29,7 @@ STATIC FUNCTION DispAndReturnNIL()
 
    RETURN NIL
 
-STATIC FUNCTION AndOr( lValue1, lValue2 )
+STATIC PROCEDURE AndOr( lValue1, lValue2 )
 
    IF lValue1 .AND. lValue2
       ? "They are both true"
@@ -43,4 +43,4 @@ STATIC FUNCTION AndOr( lValue1, lValue2 )
       ? "None of them are true"
    ENDIF
 
-   RETURN NIL
+   RETURN

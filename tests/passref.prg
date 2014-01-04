@@ -14,11 +14,11 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION testfun( b, c )
+STATIC PROCEDURE testfun( b, c )
 
    b := b + 10
    c := "A"
    ? 'a pointer + 10 =', b
    ? 'b pointer := "A" =', c
 
-   RETURN NIL
+   RETURN

@@ -18,7 +18,7 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
-   oMail := TIPMail( "This is the body of the mail" )
+   oMail := TIPMail():New( "This is the body of the mail" )
    oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=utf-8"
    oMail:hHeaders[ "Date" ] := tip_TimeStamp()
 
@@ -26,28 +26,27 @@ PROCEDURE Main( ... )
 
       cData := hb_PValue( i )
 
-      IF Lower( cData ) == "-h"
+      DO CASE
+      CASE Lower( cData ) == "-h"
          Usage()
          RETURN
-      ENDIF
-
-      IF Lower( cData ) == "-f"
+      CASE Lower( cData ) == "-f"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "From" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-t"
+      CASE Lower( cData ) == "-t"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "To" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-s"
+      CASE Lower( cData ) == "-s"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "Subject" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-b"
+      CASE Lower( cData ) == "-b"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:SetBody( hb_StrToUTF8( cData ) + e"\r\n" )
          ENDIF
-      ELSEIF Lower( cData ) == "-m"
+      CASE Lower( cData ) == "-m"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             cData := MemoRead( cData )
             IF Empty( cData )
@@ -56,7 +55,7 @@ PROCEDURE Main( ... )
             ENDIF
             oMail:SetBody( cData + e"\r\n" )
          ENDIF
-      ELSE  // it is an attachment file
+      OTHERWISE  // it is an attachment file
          cData := MemoRead( cData )
          IF Empty( cData )
             ? "Fatal: Can't read attachment", hb_PValue( i )
@@ -77,7 +76,7 @@ PROCEDURE Main( ... )
          oAttach:SetBody( cData )
 
          oMail:Attach( oAttach )
-      ENDIF
+      ENDCASE
    NEXT
 
    /* Writing stream */

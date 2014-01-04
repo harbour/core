@@ -672,18 +672,17 @@ METHOD FieldDec( nField ) CLASS TFbQuery
 
 METHOD FieldGet( nField ) CLASS TFbQuery
 
-   LOCAL result, aBlob, i, cType
+   LOCAL result, aBlob, i
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct ) .AND. ! ::closed
 
       /* TODO: Convert to right data type */
 
       result := FBGetData( ::qry, nField )
-      cType := ::aStruct[ nField ][ 2 ]
 
-      IF cType == "M"
+      SWITCH ::aStruct[ nField ][ 2 ]
+      CASE "M"
          /* Blob */
-
          IF result != NIL
             aBlob := FBGetBlob( ::db, result )
 
@@ -696,28 +695,33 @@ METHOD FieldGet( nField ) CLASS TFbQuery
          ELSE
             result := ""
          ENDIF
+         EXIT
 
-      ELSEIF cType == "N"
+      CASE "N"
          IF result != NIL
             result := Val( result )
          ELSE
             result := 0
          ENDIF
+         EXIT
 
-      ELSEIF cType == "D"
+      CASE "D"
          IF result != NIL
             result := hb_SToD( Left( result, 4 ) + SubStr( result, 5, 2 ) + SubStr( result, 7, 2 ) )
          ELSE
             result := hb_SToD()
          ENDIF
+         EXIT
 
-      ELSEIF cType == "L"
+      CASE "L"
          IF result != NIL
             result := ( Val( result ) == 1 )
          ELSE
             result := .F.
          ENDIF
-      ENDIF
+         EXIT
+
+      ENDSWITCH
    ENDIF
 
    RETURN result

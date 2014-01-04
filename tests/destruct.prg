@@ -77,13 +77,13 @@ STATIC PROCEDURE GCFREETEST( type )
 
    RETURN
 
-STATIC FUNCTION myErrorHandler( oErr )
+STATIC PROCEDURE myErrorHandler( oErr )
 
    ? "Error ->", hb_ntos( oErr:gencode ), ;
       oErr:description + ":", oErr:operation
    BREAK oErr
 
-   RETURN NIL
+   RETURN
 
 CREATE CLASS myClass
 
@@ -108,21 +108,22 @@ PROCEDURE dtor() CLASS myClass
 
    ? "   Hi, I'm desturctor of class:", self:classname()
 
-   IF ::type == 1
+   DO CASE
+   CASE ::type == 1
       ? "   I'm storing reference to self in instance variable."
       ? "   Bad practice but safe in Harbour because it will be destroyed."
       ::var1 := self
-   ELSEIF ::Type == 2
+   CASE ::Type == 2
       ? "   I'm storing reference to self in class variable."
       ? "   It's programmer bug which should cause RT error."
       ::var2 := self
-   ELSEIF ::Type == 3
+   CASE ::Type == 3
       ? "   I'm storing reference to self in public variable."
       ? "   It's programmer bug which should cause RT error."
       P := self
-   ELSE
+   OTHERWISE
       ? "   I do not store any references to self."
       ? "   It's a safe destructor."
-   ENDIF
+   ENDCASE
 
    RETURN

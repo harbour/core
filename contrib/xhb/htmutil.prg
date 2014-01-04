@@ -191,7 +191,7 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
       oHtm:TableHead( aFlds[ i, 1 ] )
    NEXT
 
-   WHILE ! Eof()
+   DO WHILE ! Eof()
 
       // each row has a different color...
       IF n == 0

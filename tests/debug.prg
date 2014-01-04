@@ -57,7 +57,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION FuncSecond( nParam, cParam, uParam )
+STATIC PROCEDURE FuncSecond( nParam, cParam, uParam )
 
    LOCAL cWhat   := "Something"
    LOCAL nNumber := 2
@@ -95,7 +95,7 @@ STATIC FUNCTION FuncSecond( nParam, cParam, uParam )
 
    Inkey( 0 )
 
-   RETURN NIL
+   RETURN
 
 /* TForm() -> <oTForm> */
 
@@ -135,13 +135,13 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION Show()
+STATIC PROCEDURE Show()
 
    LOCAL Self := QSelf()
 
    ? "lets show a form from here :-)"
 
-   RETURN NIL
+   RETURN
 
 //
 // <xRet> TForm:Transfer( [<xArg,..>] )

@@ -50,7 +50,7 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION Test()
+STATIC PROCEDURE Test()
 
    LOCAL Self := QSelf()        // We access Self for this method
 
@@ -58,4 +58,4 @@ STATIC FUNCTION Test()
 
    ? ::ClassName()     // :: means Self:  It is a Harbour built-in operator
 
-   RETURN NIL
+   RETURN

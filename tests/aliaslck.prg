@@ -99,7 +99,7 @@ proc main()
    return
 
 static proc setLock( n )
-   ? "locking record: " + hb_ntos( n ) + " ->", dbRLock( n )
+   ? "locking record:", hb_ntos( n ), "->", dbRLock( n )
    return
 
 static proc dspLock()

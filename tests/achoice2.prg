@@ -66,14 +66,14 @@ PROCEDURE Main()
       ENDCASE
 
       nKeyPressed := LastKey()
-      IF nKeyPressed == K_ESC
+      DO CASE
+      CASE nKeyPressed == K_ESC
          lExit := .T.
-      ELSEIF nKeyPressed == K_RIGHT
+      CASE nKeyPressed == K_RIGHT
          nCounter := iif( nCounter == 5, 1, nCounter + 1 )
-      ELSEIF nKeyPressed == K_LEFT
+      CASE nKeyPressed == K_LEFT
          nCounter := iif( nCounter == 1, 5, nCounter - 1 )
-      ENDIF
-
+      ENDCASE
    ENDDO
 
    RETURN

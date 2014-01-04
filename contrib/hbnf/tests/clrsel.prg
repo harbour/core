@@ -8,7 +8,7 @@ PROCEDURE Main( cVidMode )
    LOCAL nColOri := Col()
    LOCAL aEnvOri := ft_SaveSets()
    LOCAL cScrOri := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-   LOCAL lColour
+   LOCAL lColor
    LOCAL aClrs
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
@@ -22,7 +22,7 @@ PROCEDURE Main( cVidMode )
    IF "EGA" $ Upper( cVidMode )
       SetMode( 43, 80 )
    ENDIF
-   lColour := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
+   lColor := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
 
    SET SCOREBOARD OFF
    SetCursor( SC_NONE )
@@ -42,7 +42,7 @@ PROCEDURE Main( cVidMode )
       { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B" }, ;
       { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A" } }
 
-   aClrs := ft_ClrSel( aClrs, lColour )
+   aClrs := ft_ClrSel( aClrs, lColor )
 
    HB_SYMBOL_UNUSED( aClrs )
 

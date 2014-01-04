@@ -138,7 +138,8 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
 
    hb_default( @cVerb, "POST" )
 
-   IF HB_ISHASH( xPostData )
+   DO CASE
+   CASE HB_ISHASH( xPostData )
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
@@ -150,7 +151,7 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
+   CASE HB_ISARRAY( xPostData )
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
@@ -162,11 +163,11 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
    IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
@@ -539,8 +540,9 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
    LOCAL cFilePath, cName, cFile, cType
    LOCAL nFile, cBuf, nBuf, nRead
 
-   IF Empty( xPostData )
-   ELSEIF HB_ISHASH( xPostData )
+   DO CASE
+   CASE Empty( xPostData )
+   CASE HB_ISHASH( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) )
@@ -548,7 +550,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
          cData += cTmp + cCrLf
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
+   CASE HB_ISARRAY( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) )
@@ -556,23 +558,23 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 2 ] ) ) )
          cData += cTmp + cCrLf
       NEXT
-
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
-   ENDIF
+   ENDCASE
 
    FOR EACH oSub IN ::aAttachments
       cName := oSub[ 1 ]
       cFile := oSub[ 2 ]
       cType := oSub[ 3 ]
       cTmp := StrTran( cFile, "/", "\" )
-      IF ( nPos := RAt( "\", cTmp ) ) != 0
+      DO CASE
+      CASE ( nPos := RAt( "\", cTmp ) ) != 0
          cFilePath := Left( cTmp, nPos )
-      ELSEIF ( nPos := RAt( ":", cTmp ) ) != 0
+      CASE ( nPos := RAt( ":", cTmp ) ) != 0
          cFilePath := Left( cTmp, nPos )
-      ELSE
+      OTHERWISE
          cFilePath := ""
-      ENDIF
+      ENDCASE
       cTmp := SubStr( cFile, Len( cFilePath ) + 1 )
       IF Empty( cType )
          cType := "text/html"

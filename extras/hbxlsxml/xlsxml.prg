@@ -148,7 +148,7 @@ METHOD ExcelWriterXML:addStyle( id )
       s_styleNum++
    ENDIF
 
-   WHILE ! ::checkStyleID( id )
+   DO WHILE ! ::checkStyleID( id )
       id := "CustomStyle" + hb_ntos( s_styleNum )
       s_styleNum++
    ENDDO
@@ -169,7 +169,7 @@ METHOD ExcelWriterXML:addSheet( id )
       s_sheetNum++
    ENDIF
 
-   WHILE ! ::checkSheetID( id )
+   DO WHILE ! ::checkSheetID( id )
       id := "Sheet" + hb_ntos( s_sheetNum )
       s_sheetNum++
    ENDDO

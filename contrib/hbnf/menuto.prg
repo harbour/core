@@ -57,7 +57,7 @@ THREAD STATIC t_aRight        := { {} }
 THREAD STATIC t_aExecute      := { {} }
 THREAD STATIC t_nLevel        := 1
 
-FUNCTION ft_Prompt( nRow, nCol, cPrompt, cColor, ;
+PROCEDURE ft_Prompt( nRow, nCol, cPrompt, cColor, ;
       nMsgRow, nMsgCol, cMessage, cMsgColor, ;
       nTrigger, cTriggerColor, nHome, nEnd, ;
       nUp, nDown, nLeft, nRight, bExecute )
@@ -120,7 +120,7 @@ FUNCTION ft_Prompt( nRow, nCol, cPrompt, cColor, ;
    hb_DispOutAt( nRow, nCol - 1 + nTrigger, SubStr( cPrompt, nTrigger, 1 ), cTriggerColor )
    DispEnd()
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 

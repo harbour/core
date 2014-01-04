@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION CheckDate( dDate )
+STATIC PROCEDURE CheckDate( dDate )
 
    ? "Testing date:", dDate
    ? "Days in month..:", DaysInMonth( dDate )
@@ -30,4 +30,4 @@ STATIC FUNCTION CheckDate( dDate )
    ? "End of year....:", EoY( dDate )
    ?
 
-   RETURN NIL
+   RETURN

@@ -718,11 +718,13 @@ FUNCTION tp_keybd()
 // / the global debug level I print the message.  Since I don't have your system globals,
 // / I will ignore the first parameter and always print it.
 // / I recommend you modify this function to suit your own debugging needs
-FUNCTION tp_debug( nDebugLevel, cString )
+PROCEDURE tp_debug( nDebugLevel, cString )
+
+   HB_SYMBOL_UNUSED( nDebugLevel )
 
    ? cString
 
-   RETURN NIL
+   RETURN
 
 #endif
 

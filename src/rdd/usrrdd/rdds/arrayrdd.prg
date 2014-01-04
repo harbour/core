@@ -1687,7 +1687,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
   hb_SetArrayRdd( aArray ) --> NIL
   This function set DBF with aArray like APPEND FROM aArray in an empty DBF
 */
-FUNCTION hb_SetArrayRdd( aArray )
+PROCEDURE hb_SetArrayRdd( aArray )
 
    LOCAL aRecInfo
    LOCAL nWA      := Select()
@@ -1700,7 +1700,7 @@ FUNCTION hb_SetArrayRdd( aArray )
    NEXT
    AR_GOTOP( nWA )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BlankRecord( aStruct )
 
@@ -1933,7 +1933,7 @@ STATIC FUNCTION DecEmptyValue( xVal )
 
    RETURN xRet
 
-STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
+STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
    LOCAL nPos, aOCInfo, lFor, lDel
 
@@ -1977,7 +1977,7 @@ STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
 

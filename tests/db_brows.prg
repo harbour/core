@@ -23,6 +23,7 @@
 
 #include "fileio.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 #define LI_NSTR         mslist[ 1 ]
 #define LI_CLR          mslist[ 2 ]   // Color of a window
@@ -159,7 +160,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ELSE
       predxx := predit := iif( AScan( LI_MSED, 3 ) != 0, 3, iif( AScan( LI_MSED, 2 ) != 0, 2, 1 ) )
    ENDIF
-   SET CURSOR ( predit > 1 )
+   SetCursor( iif( predit > 1, SC_NORMAL, SC_NONE ) )
    IF LI_LSOHR
       wndbuf := SaveScreen( LI_Y1, LI_X1, LI_Y2, LI_X2 )
    ENDIF
@@ -360,7 +361,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                   LOOP
                ENDIF
             ENDIF
-            SET CURSOR ON
+            SetCursor( SC_NORMAL )
             SetColor( LI_CLRV + "," + LI_CLRV )
             IF xkey != K_ENTER
                DO WHILE NextKey() != 0
@@ -377,7 +378,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             READ
             IF LastKey() != K_ESC .AND. Updated()
                IF Eval( LI_BEOF, mslist )
-                  APPEND BLANK
+                  dbAppend()
                   LI_KOLZ := Eval( LI_RCOU, mslist )
                ELSE
                   IF ! Set( _SET_EXCLUSIVE )
@@ -392,7 +393,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                ENDIF
                FieldPut( fipos, varbuf )
                IF ! Set( _SET_EXCLUSIVE )
-                  UNLOCK
+                  dbUnlock()
                ENDIF
             ENDIF
             IF ( LastKey() == K_ESC .OR. ! Updated() ) .AND. Eval( LI_BEOF, mslist )
@@ -406,7 +407,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                ENDIF
             ENDIF
             ReadExit( vartmp )
-            SET CURSOR OFF
+            SetCursor( SC_NONE )
          ENDIF
       CASE xkey == K_ESC
          rez     := .F.
@@ -434,7 +435,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       VIVSTR( mslist, LI_NSTR + LI_Y1, iif( predit > 1, LI_COLPOS, 0 ) )
    ENDIF
    SetColor( oldcolors )
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    RETURN rezproc
 
@@ -469,7 +470,7 @@ STATIC FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 //
 // --------------------------------------------------------------------
 
-STATIC FUNCTION VIVNAMES( mslist )
+STATIC PROCEDURE VIVNAMES( mslist )
 
    LOCAL i := 1, x, oldc, fif
 
@@ -495,7 +496,7 @@ STATIC FUNCTION VIVNAMES( mslist )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // --------------------------------------------------------------------
 //

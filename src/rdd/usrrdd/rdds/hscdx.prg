@@ -176,7 +176,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
 
    RETURN nHsx
 
-FUNCTION HSX_OPEN( cFile, nBufSize )
+PROCEDURE HSX_OPEN( cFile, nBufSize )
 
    LOCAL aWData, nHsx, nOpenMode
 
@@ -193,9 +193,9 @@ FUNCTION HSX_OPEN( cFile, nBufSize )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION HSX_CLOSE( xHSX )
+PROCEDURE HSX_CLOSE( xHSX )
 
    LOCAL aWData, nSlot
 
@@ -214,7 +214,7 @@ FUNCTION HSX_CLOSE( xHSX )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION HSX_HANDLE( cFile )
 

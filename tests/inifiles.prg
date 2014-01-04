@@ -136,7 +136,8 @@ METHOD New( cFileName ) CLASS TIniFile
                cFile := SubStr( cFile, nPos + 1 )
 
                IF ! Empty( cLine )
-                  IF Left( cLine, 1 ) == "[" // new section
+                  DO CASE
+                  CASE Left( cLine, 1 ) == "[" // new section
                      IF ( nPos := At( "]", cLine ) ) > 1
                         cLine := SubStr( cLine, 2, nPos - 2 )
                      ELSE
@@ -146,10 +147,10 @@ METHOD New( cFileName ) CLASS TIniFile
                      AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
                      CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
 
-                  ELSEIF Left( cLine, 1 ) == ";" // preserve comments
+                  CASE Left( cLine, 1 ) == ";" // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
 
-                  ELSE
+                  OTHERWISE
                      IF ( nPos := At( "=", cLine ) ) > 0
                         cIdent := Left( cLine, nPos - 1 )
                         cLine := SubStr( cLine, nPos + 1 )
@@ -159,7 +160,7 @@ METHOD New( cFileName ) CLASS TIniFile
                      ELSE
                         AAdd( CurrArray, { cLine, "" } )
                      ENDIF
-                  ENDIF
+                  ENDCASE
                   cLine := "" // to stop prepend later on
                ENDIF
 

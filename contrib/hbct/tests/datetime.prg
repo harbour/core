@@ -93,7 +93,6 @@ PROCEDURE Main( cLang )
    hb_langSelect( iif( HB_ISSTRING( cLang ), cLang, "en" ) )
 #endif
 
-   SET CURSOR OFF
    SET CONFIRM ON
    SET ESCAPE ON
 

@@ -657,17 +657,18 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
    hb_default( @color, ::pColor )
    hb_default( @nAlign, gdAlignLeft )
 
-   IF     nAlign == gdAlignCenter
+   DO CASE
+   CASE nAlign == gdAlignCenter
       nWidth := ::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen / 2 * nWidth )
-   ELSEIF nAlign == gdAlignRight
+   CASE nAlign == gdAlignRight
       nWidth := ::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
-   ELSE
+   OTHERWISE
       nPosX  := x
-   ENDIF
+   ENDCASE
 
    gdImageString( ::pImage, ::pFont, nPosX, y, cString, color )
 
@@ -685,17 +686,18 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    hb_default( @nPitch    , ::nFontPitch )
    hb_default( @nAngle    , ::nFontAngle )
 
-   IF     nAlign == gdAlignCenter
+   DO CASE
+   CASE nAlign == gdAlignCenter
       nWidth := nPitch // gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( ( nLen / 2 ) * nWidth )
-   ELSEIF nAlign == gdAlignRight
+   CASE nAlign == gdAlignRight
       nWidth := gdImageFTWidth( cFontName, nPitch ) // , ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
-   ELSE
+   OTHERWISE
       nPosX  := x
-   ENDIF
+   ENDCASE
 
    gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
       cString, nLineSpacing, nCharMap, nResolution )

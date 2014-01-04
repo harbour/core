@@ -782,16 +782,17 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       tmp := Lower( tmp )
 
 #ifdef HARBOUR_SUPPORT
-      IF Left( tmp, 1 ) == "x"
+      DO CASE
+      CASE Left( tmp, 1 ) == "x"
          tmp := SubStr( tmp, 2 )
          hb_AIns( aArgsProc, 1, "-xhb", .T. )
-      ELSEIF Right( tmp, 2 ) == "10"
+      CASE Right( tmp, 2 ) == "10"
          hb_AIns( aArgsProc, 1, "-hb10", .T. )
-      ELSEIF Right( tmp, 2 ) == "20"
+      CASE Right( tmp, 2 ) == "20"
          hb_AIns( aArgsProc, 1, "-hb20", .T. )
-      ELSEIF Right( tmp, 2 ) == "30"
+      CASE Right( tmp, 2 ) == "30"
          hb_AIns( aArgsProc, 1, "-hb30", .T. )
-      ENDIF
+      ENDCASE
 #endif
 
       DO CASE
@@ -7916,17 +7917,18 @@ STATIC PROCEDURE ProcEnvOption( cValue )
    LOCAL tmp
 
    IF ! Empty( cValue )
-      IF     ( tmp := At( "=", cValue ) ) > 1
+      DO CASE
+      CASE ( tmp := At( "=", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) )
-      ELSEIF ( tmp := At( "+", cValue ) ) > 1
+      CASE ( tmp := At( "+", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ), GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
-      ELSEIF ( tmp := At( "#", cValue ) ) > 1
+      CASE ( tmp := At( "#", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + GetEnv( Left( cValue, tmp - 1 ) ) )
-      ELSEIF ( tmp := At( "-", cValue ) ) > 1
+      CASE ( tmp := At( "-", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ) )
-      ELSE
+      OTHERWISE
          hb_SetEnv( cValue, "" )
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN
@@ -12595,13 +12597,14 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                   nMode := RTLNK_MODE_SKIPNEXT
                ENDIF
             ELSEIF cWord == ","
-               IF nMode == RTLNK_MODE_FILENEXT
+               DO CASE
+               CASE nMode == RTLNK_MODE_FILENEXT
                   nMode := RTLNK_MODE_FILE
-               ELSEIF nMode == RTLNK_MODE_LIBNEXT
+               CASE nMode == RTLNK_MODE_LIBNEXT
                   nMode := RTLNK_MODE_LIB
-               ELSEIF nMode == RTLNK_MODE_SKIPNEXT
+               CASE nMode == RTLNK_MODE_SKIPNEXT
                   nMode := RTLNK_MODE_SKIP
-               ENDIF
+               ENDCASE
             ELSEIF LEFTEQUAL( cWord, "@" )
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
@@ -12615,32 +12618,33 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
             ELSE
                cWord := Upper( cWord )
                IF Len( cWord ) >= 2
-                  IF LEFTEQUAL( "OUTPUT", cWord )
+                  DO CASE
+                  CASE LEFTEQUAL( "OUTPUT", cWord )
                      nMode := RTLNK_MODE_OUT
-                  ELSEIF LEFTEQUAL( "FILE", cWord )
+                  CASE LEFTEQUAL( "FILE", cWord )
                      nMode := RTLNK_MODE_FILE
-                  ELSEIF LEFTEQUAL( "LIBRARY", cWord )
+                  CASE LEFTEQUAL( "LIBRARY", cWord )
                      nMode := RTLNK_MODE_LIB
-                  ELSEIF LEFTEQUAL( "MODULE", cWord ) .OR. ;
+                  CASE LEFTEQUAL( "MODULE", cWord ) .OR. ;
                          LEFTEQUAL( "EXCLUDE", cWord ) .OR. ;
                          LEFTEQUAL( "REFER", cWord ) .OR. ;
                          LEFTEQUAL( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
                   /* Blinker extension */
-                  ELSEIF LEFTEQUAL( "BLINKER", cWord )
+                  CASE LEFTEQUAL( "BLINKER", cWord )
                      /* skip Blinker commands */
                      EXIT
-                  ELSEIF LEFTEQUAL( "ECHO", cWord )
+                  CASE LEFTEQUAL( "ECHO", cWord )
                      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
                      EXIT
-                  ELSEIF LEFTEQUAL( "MAP", cWord )
+                  CASE LEFTEQUAL( "MAP", cWord )
                      hbmk[ _HBMK_lMAP ] := .T.
                      EXIT
-                  ELSEIF LEFTEQUAL( "NOBELL", cWord )
+                  CASE LEFTEQUAL( "NOBELL", cWord )
                      hbmk[ _HBMK_lBEEP ] := .F.
                      EXIT
-                  ELSE /* TODO: add other Blinker commands */
-                  ENDIF
+                  OTHERWISE /* TODO: add other Blinker commands */
+                  ENDCASE
                ENDIF
             ENDIF
          NEXT
@@ -13382,14 +13386,15 @@ STATIC FUNCTION hbmk_TARGETNAME( hbmk )
 
 STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 
-   IF hbmk[ _HBMK_lContainer ]                                           ; RETURN "hbcontainer"
-   ELSEIF hbmk[ _HBMK_lCreateLib ]                                       ; RETURN "hblib"
-   ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ]          ; RETURN "hbdyn"
-   ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]            ; RETURN "hbdynvm"
-   ELSEIF hbmk[ _HBMK_lCreateImpLib ]                                    ; RETURN "hbimplib"
-   ELSEIF hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_lCreatePPO ] ; RETURN "hbppo"
-   ELSEIF hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_lCreateHRB ] ; RETURN "hbhrb"
-   ENDIF
+   DO CASE
+   CASE hbmk[ _HBMK_lContainer ]                                       ; RETURN "hbcontainer"
+   CASE hbmk[ _HBMK_lCreateLib ]                                       ; RETURN "hblib"
+   CASE hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ]          ; RETURN "hbdyn"
+   CASE hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]            ; RETURN "hbdynvm"
+   CASE hbmk[ _HBMK_lCreateImpLib ]                                    ; RETURN "hbimplib"
+   CASE hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_lCreatePPO ] ; RETURN "hbppo"
+   CASE hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_lCreateHRB ] ; RETURN "hbhrb"
+   ENDCASE
 
    RETURN "hbexe"
 

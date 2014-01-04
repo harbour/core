@@ -146,7 +146,7 @@ FUNCTION ExecBrowser( oCrt )
 
    Wvt_Keyboard( HB_K_RESIZE ) /* Refresh All GUI Controls */
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       DispBegin()
       DO WHILE ( ( nKey := Inkey( , hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) ) ) == 0 .OR. nKey == K_MOVING ) .AND. ! oBrowse:stabilize()
       ENDDO
@@ -686,23 +686,23 @@ FUNCTION Vou_NavigateToCell( oBrowse )
          nCount := oBrowse:mRowPos - oBrowse:RowPos
 
          DispBegin()
-         WHILE nCount < 0
+         DO WHILE nCount < 0
             nCount++
             oBrowse:Up()
          ENDDO
 
-         WHILE nCount > 0
+         DO WHILE nCount > 0
             nCount --
             oBrowse:Down()
          ENDDO
 
          nCount := oBrowse:mColPos - oBrowse:ColPos
-         WHILE nCount < 0
+         DO WHILE nCount < 0
             nCount++
             oBrowse:Left()
          ENDDO
 
-         WHILE nCount > 0
+         DO WHILE nCount > 0
             nCount--
             oBrowse:Right()
          ENDDO

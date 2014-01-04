@@ -217,37 +217,38 @@ PROCEDURE Main( ... )
 
          IF cValue != NIL
             IF dType != sType
-               IF dType == "C" .AND. sType == "N"
+               DO CASE
+               CASE dType == "C" .AND. sType == "N"
                   cValue := hb_ntos( cValue )
 
-               ELSEIF dType == "C" .AND. sType == "D"
+               CASE dType == "C" .AND. sType == "D"
                   cValue := DToC( cValue )
 
-               ELSEIF dType == "C" .AND. sType == "L"
+               CASE dType == "C" .AND. sType == "L"
                   cValue := iif( cValue, "S", "N" )
 
-               ELSEIF dType == "N" .AND. sType == "C"
+               CASE dType == "N" .AND. sType == "C"
                   cValue := Val( cValue )
 
-               ELSEIF dType == "N" .AND. sType == "D"
+               CASE dType == "N" .AND. sType == "D"
                   cValue := Val( DToS( cValue ) )
 
-               ELSEIF dType == "N" .AND. sType == "L"
+               CASE dType == "N" .AND. sType == "L"
                   cValue := iif( cValue, 1, 0 )
 
-               ELSEIF dType == "D" .AND. sType == "C"
+               CASE dType == "D" .AND. sType == "C"
                   cValue := CToD( cValue )
 
-               ELSEIF dType == "D" .AND. sType == "N"
+               CASE dType == "D" .AND. sType == "N"
                   cValue := hb_SToD( Str( cValue ) )
 
-               ELSEIF dType == "L" .AND. sType == "N"
+               CASE dType == "L" .AND. sType == "N"
                   cValue := ! Empty( cValue )
 
-               ELSEIF dType == "L" .AND. sType == "C"
+               CASE dType == "L" .AND. sType == "C"
                   cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
 
-               ENDIF
+               ENDCASE
             ENDIF
 
             IF cValue != NIL

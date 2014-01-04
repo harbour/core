@@ -145,9 +145,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    DO WHILE LastRec() < MAX_TEST_RECS
 
-      // TEST: dbAppend()/APPEND BLANK
+      // TEST: dbAppend()
 
-      APPEND BLANK
+      dbAppend()
 
       // TEST: REPLACE
 

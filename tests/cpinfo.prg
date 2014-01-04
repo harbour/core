@@ -57,82 +57,81 @@ proc main( cdp, info, unicode )
    cUp := cLo := cOrd := ""
    for i := 1 to len( a )
       if i < len(a) .and. a[i] > a[ i + 1 ] .and. ! isalpha( chr( a[ i ] ) )
-         ? "non alpha character " + charval( chr( a[ i ] ) ) + ;
-           " sorted in non ASCII order !!!"
+         ? "non alpha character", charval( chr( a[ i ] ) ), ;
+           "sorted in non ASCII order !!!"
          lBin := lWarn := .t.
       endif
       c := chr( a[ i ] )
       if i < len(a)
          if c + chr( 0 ) > chr( a[ i + 1 ] ) + chr( 0 )
-            ? "character " + charis( c ) + " is wrongly sorted"
+            ? "character", charis( c ), "is wrongly sorted"
             lBin := lWarn := .t.
          elseif ! lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )
-            ? "character " + charis( c ) + " and " + chr( a[ i + 1 ] ) + ;
-              " have the same weight"
+            ? "character", charis( c ), "and", chr( a[ i + 1 ] ), ;
+              "have the same weight"
             lWarn := .t.
          endif
       endif
       cOrd += c
       if isdigit( c )
          if asc( c ) < asc( "0" ) .or. asc( c ) > asc( "9" )
-            ? "character " + charis( c ) + " defined as digit"
+            ? "character", charis( c ), "defined as digit"
             lBin := lWarn := .t.
          endif
       elseif asc( c ) >= asc( "0" ) .and. asc( c ) <= asc( "9" )
-         ? "character " + charis( c ) + " is not defined as digit"
+         ? "character", charis( c ), "is not defined as digit"
          lBin := lWarn := .t.
       endif
       if isalpha( c )
          if isupper( c )
             cUp += c
             if islower( c )
-               ? "character " + charis( c ) + " defined as upper and lower"
+               ? "character", charis( c ), "defined as upper and lower"
                lWarn := .t.
             endif
             if lower( c ) == c
-               ? "character " + charis( c ) + ;
-                 " is the same as upper and lower"
+               ? "character", charis( c ), ;
+                 "is the same as upper and lower"
                lWarn := .t.
             elseif ! islower( lower( c ) )
-               ? "character " + charis( c ) + ;
-                 " has lower character " + charis( lower( c ) ) + ;
-                 " not marked as lower"
+               ? "character", charis( c ), ;
+                 "has lower character", charis( lower( c ) ), ;
+                 "not marked as lower"
                lBin := lWarn := .t.
             endif
          elseif islower( c )
             cLo += c
             if isupper( c )
-               ? "character " + charis( c ) + " defined as upper and lower"
+               ? "character", charis( c ), "defined as upper and lower"
                lWarn := .t.
             endif
             if upper( c ) == c
-               ? "character " + charis( c ) + ;
-                 " is the same as upper and lower"
+               ? "character", charis( c ), "is the same as upper and lower"
                lWarn := .t.
             elseif ! isupper( upper( c ) )
-               ? "character " + charis( c ) + ;
-                 " has upper character " + charis( upper( c ) ) + ;
-                 " not marked as upper"
+               ? "character", charis( c ), ;
+                 "has upper character", charis( upper( c ) ), ;
+                 "not marked as upper"
                lBin := lWarn := .t.
             endif
          else
-            ? "character " + charis( c ) + " not defined as upper or lower"
+            ? "character", charis( c ), "not defined as upper or lower"
             lBin := lWarn := .t.
          endif
       else
          if islower( c ) .or. isupper( c )
-            ? "wrongly defined character " + ;
+            ? "wrongly defined character", ;
               charval( c ) + ":" + charinfo( c )
             lBin := lWarn := .t.
          endif
          if ! c == lower( c )
-            ? "non alpha character " + charis( c ) + " has corresponding " + ;
-              "lower character " + charis( lower( c ) )
+            ? "non alpha character", charis( c ), ;
+              "has corresponding lower character", charis( lower( c ) )
             lBin := lWarn := .t.
          endif
          if ! c == upper( c )
-            ? "non alpha character " + charis( c ) + " has corresponding " + ;
-              "upper character " + charis( upper( c ) )
+            ? "non alpha character", charis( c ), ;
+              "has corresponding upper character", charis( upper( c ) )
             lBin := lWarn := .t.
          endif
       endif
@@ -140,14 +139,14 @@ proc main( cdp, info, unicode )
    for i := 1 to len( cUp ) - 1
       c := substr( cUp, i, 1 )
       if c + chr( 0 ) > substr( cUp, i + 1, 1 ) + chr( 0 )
-         ? "letter " + charis( c ) + " is wrongly sorted"
+         ? "letter", charis( c ), "is wrongly sorted"
          lBin := lWarn := .t.
       endif
    next
    for i := 1 to len( cLo ) - 1
       c := substr( cLo, i, 1 )
       if c + chr( 0 ) > substr( cLo, i + 1, 1 ) + chr( 0 )
-         ? "letter " + charis( c ) + " is wrongly sorted"
+         ? "letter", charis( c ), "is wrongly sorted"
          lBin := lWarn := .t.
       endif
    next
@@ -253,11 +252,11 @@ proc main( cdp, info, unicode )
          ? "         readable definition in Harbour"
       endif
    endif
-   ? '      upper: "' + cUp + '"'
-   ? '      lower: "' + cLo + '"'
+   ? "      upper:", '"' + cUp + '"'
+   ? "      lower:", '"' + cLo + '"'
    if pad_letters( @cUp, @cLo, @lBin )
-      ? 'HB_CP_UPPER: "' + cUp + '"'
-      ? 'HB_CP_LOWER: "' + cLo + '"'
+      ? "HB_CP_UPPER:", '"' + cUp + '"'
+      ? "HB_CP_LOWER:", '"' + cLo + '"'
    endif
    ? replicate( "=", 50 )
    ?

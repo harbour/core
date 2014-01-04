@@ -60,9 +60,10 @@ PROCEDURE Main()
    dDate      := Date() - 500
 
    CLS
-   ? "Given         Date:", dDate
-   ?? " cFY_Start:", cFY_Start
-   ?? " nDOW_Start:", hb_ntos( nDOW_Start )
+   ? "Given   ", ;
+      "     Date:", dDate, ;
+      "cFY_Start:", cFY_Start, ;
+      "nDOW_Start:", hb_ntos( nDOW_Start )
    ? "---- Fiscal Year Data -----------"
 
    aTestData := ft_Year( dDate )
@@ -161,9 +162,9 @@ STATIC PROCEDURE FT_CAL( dGivenDate, nType )
 
    IF nType == 0
       IF SubStr( cFY_Start, 6, 5 ) == "01.01"
-         ? "          Calendar Month Calendar containing", DToC( dGivenDate )
+         ? "          Calendar Month Calendar containing", dGivenDate
       ELSE
-         ? "            Fiscal Month Calendar containing", DToC( dGivenDate )
+         ? "            Fiscal Month Calendar containing", dGivenDate
       ENDIF
 
       aTemp    := ft_Month( dGivenDate )
@@ -172,7 +173,7 @@ STATIC PROCEDURE FT_CAL( dGivenDate, nType )
       aTemp[ 2 ] -= ft_DayToBoW( aTemp[ 2 ] )
       aTemp[ 3 ] += 6 - ft_DayToBoW( aTemp[ 3 ] )
    ELSE
-      ? "            Accounting Month Calendar containing", DToC( dGivenDate )
+      ? "            Accounting Month Calendar containing", dGivenDate
       aTemp := ft_AcctMonth( dGivenDate )
    ENDIF
 
@@ -184,7 +185,7 @@ STATIC PROCEDURE FT_CAL( dGivenDate, nType )
    NEXT
 
    ?
-   WHILE dTemp <= aTemp[ 3 ]
+   DO WHILE dTemp <= aTemp[ 3 ]
       FOR nTemp := 1 TO 7
          ?? " "
          IF nType == 0 .AND. ( dTemp < dStart .OR. dTemp > dEnd )

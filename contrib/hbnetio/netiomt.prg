@@ -111,7 +111,7 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
 
    LOCAL pConnectionSocket
 
-   WHILE .T.
+   DO WHILE .T.
       pConnectionSocket := netio_Accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT

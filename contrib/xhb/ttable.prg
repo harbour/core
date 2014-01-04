@@ -175,7 +175,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
    s_lNetOk := .F.
 
-   WHILE lContinue
+   DO WHILE lContinue
 
 #if 0
       IF ( nKey := Inkey() ) == K_ESC
@@ -184,7 +184,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
       ENDIF
 #endif
 
-      WHILE nSeconds > 0 .AND. lContinue
+      DO WHILE nSeconds > 0 .AND. lContinue
          IF Eval( bOperation, xIdentifier )
             nSeconds  := 0
             lSuccess  := .T.
@@ -192,15 +192,16 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
             s_lNetOk  := .T.
             EXIT
          ELSE
-            IF nType == 1
+            DO CASE
+            CASE nType == 1
                cWord := "( " + dbInfo( DBI_ALIAS ) + " - Record Lock )"
-            ELSEIF nType == 2
+            CASE nType == 2
                cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Lock )"
-            ELSEIF nType == 3
+            CASE nType == 3
                cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Append )"
-            ELSE
+            OTHERWISE
                cWord := "( " + dbInfo( DBI_ALIAS ) + " -  ??? "
-            ENDIF
+            ENDCASE
 
             hb_DispOutAt( MaxRow(), 0, ;
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;

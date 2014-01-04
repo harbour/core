@@ -334,8 +334,8 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    nLen := SSL_read( hSSL, @cBuf )
    IF nLen < 0
-      nErr := SSL_get_error( hSSL, nLen )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nLen )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -343,7 +343,7 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
          RETURN -1
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -351,11 +351,11 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
          RETURN -1
-      ELSE
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_read() error", nErr )
          nError := 1000 + nErr
          RETURN -1
-      ENDIF
+      ENDSWITCH
    ENDIF
 
    RETURN nLen
@@ -366,8 +366,8 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    nLen := SSL_write( hSSL, cBuf )
    IF nLen <= 0
-      nErr := SSL_get_error( hSSL, nLen )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nLen )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -375,7 +375,7 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data received and timeout
             RETURN 0
          ENDIF
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -383,11 +383,11 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data sent and timeout
             RETURN 0
          ENDIF
-      ELSE
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_write() error", nErr )
          nError := 1000 + nErr
          RETURN -1
-      ENDIF
+      ENDSWITCH
    ENDIF
 
    RETURN nLen
@@ -400,25 +400,27 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
    IF nErr > 0
       RETURN 0
    ELSEIF nErr < 0
-      nErr := SSL_get_error( hSSL, nErr )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nErr )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nErr := hb_socketGetError()
          ELSE
             nErr := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+         EXIT
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nErr := hb_socketGetError()
          ELSE
             nErr := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-      ELSE
+         EXIT
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_accept() error", nErr )
          nErr := 1000 + nErr
-      ENDIF
+      ENDSWITCH
    ELSE /* nErr == 0 */
       nErr := SSL_get_error( hSSL, nErr )
       Eval( hConfig[ "Trace" ], "SSL_accept() shutdown error", nErr )
@@ -706,11 +708,12 @@ STATIC PROCEDURE ProcessRequest( oServer )
       bEval := aMount[ cMount ]
       BEGIN SEQUENCE WITH {| oErr | UErrorHandler( oErr, oServer ) }
          xRet := Eval( bEval, cPath )
-         IF HB_ISSTRING( xRet )
+         DO CASE
+         CASE HB_ISSTRING( xRet )
             UWrite( xRet )
-         ELSEIF HB_ISHASH( xRet )
+         CASE HB_ISHASH( xRet )
             UWrite( UParse( xRet ) )
-         ENDIF
+         ENDCASE
       RECOVER
          USetStatusCode( 500 )
          UAddHeader( "Connection", "close" )
@@ -945,8 +948,10 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 STATIC FUNCTION UErrorHandler( oErr, oServer )
 
    Eval( oServer:hConfig[ "Trace" ], "UErrorHandler" )
-   IF oErr:genCode == EG_ZERODIV;  RETURN 0
-   ELSEIF oErr:genCode == EG_LOCK;     RETURN .T.
+   IF oErr:genCode == EG_ZERODIV
+      RETURN 0
+   ELSEIF oErr:genCode == EG_LOCK
+      RETURN .T.
    ELSEIF ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
          oErr:genCode == EG_APPENDLOCK ) .AND. oErr:canDefault
       NetErr( .T. )
@@ -1076,23 +1081,25 @@ STATIC FUNCTION cvt2str( xI, lLong )
 
    LOCAL cValtype, cI, xJ
 
-   cValtype := ValType( xI )
    lLong := ! Empty( lLong )
-   IF cValtype == "U"
+
+   SWITCH cValtype := ValType( xI )
+   CASE "U"
       RETURN iif( lLong, "[U]:NIL", "NIL" )
-   ELSEIF cValtype == "N"
+   CASE "N"
       RETURN iif( lLong, "[N]:" + Str( xI ), hb_ntos( xI ) )
-   ELSEIF cValtype $ "CM"
+   CASE "M"
+   CASE "C"
       IF Len( xI ) <= 260
          RETURN iif( lLong, "[" + cValtype + hb_ntos( Len( xI ) ) + "]:", "" ) + '"' + xI + '"'
       ELSE
          RETURN iif( lLong, "[" + cValtype + hb_ntos( Len( xI ) ) + "]:", "" ) + '"' + Left( xI, 100 ) + '"...'
       ENDIF
-   ELSEIF cValtype == "A"
+   CASE "A"
       RETURN "[A" + hb_ntos( Len( xI ) ) + "]"
-   ELSEIF cValtype == "H"
+   CASE "H"
       RETURN "[H" + hb_ntos( Len( xI ) ) + "]"
-   ELSEIF cValtype == "O"
+   CASE "O"
       cI := ""
       IF __objHasMsg( xI, "ID" )
          xJ := xI:ID
@@ -1113,17 +1120,15 @@ STATIC FUNCTION cvt2str( xI, lLong )
          ENDIF
       ENDIF
       RETURN "[O:" + xI:ClassName() + cI + "]"
-   ELSEIF cValtype == "D"
+   CASE "D"
       RETURN iif( lLong, "[D]:", "" ) + DToC( xI )
-   ELSEIF cValtype == "L"
+   CASE "L"
       RETURN iif( lLong, "[L]:", "" ) + iif( xI, ".T.", ".F." )
-   ELSEIF cValtype == "P"
+   CASE "P"
       RETURN iif( lLong, "[P]:", "" ) + "0p" + hb_NumToHex( xI )
-   ELSE
-      RETURN "[" + cValtype + "]" // BS,etc
-   ENDIF
+   ENDSWITCH
 
-   RETURN NIL
+   RETURN "[" + cValtype + "]" // BS,etc
 
 
 /********************************************************************
@@ -1280,17 +1285,18 @@ FUNCTION UHtmlEncode( cString )
 
    FOR nI := 1 TO Len( cString )
       cI := SubStr( cString, nI, 1 )
-      IF cI == "<"
+      DO CASE
+      CASE cI == "<"
          cRet += "&lt;"
-      ELSEIF cI == ">"
+      CASE cI == ">"
          cRet += "&gt;"
-      ELSEIF cI == "&"
+      CASE cI == "&"
          cRet += "&amp;"
-      ELSEIF cI == '"'
+      CASE cI == '"'
          cRet += "&quot;"
-      ELSE
+      OTHERWISE
          cRet += cI
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cRet
@@ -1301,13 +1307,14 @@ FUNCTION UUrlEncode( cString )
 
    FOR nI := 1 TO Len( cString )
       cI := SubStr( cString, nI, 1 )
-      IF cI == " "
+      DO CASE
+      CASE cI == " "
          cRet += "+"
-      ELSEIF Asc( cI ) >= 127 .OR. Asc( cI ) <= 31 .OR. cI $ '=&%+'
+      CASE Asc( cI ) >= 127 .OR. Asc( cI ) <= 31 .OR. cI $ '=&%+'
          cRet += "%" + hb_StrToHex( cI )
-      ELSE
+      OTHERWISE
          cRet += cI
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cRet
@@ -1445,16 +1452,17 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
       aDir := Directory( UOsFileName( cFileName ), "D" )
       IF hb_HHasKey( get, "s" )
-         IF get[ "s" ] == "s"
+         DO CASE
+         CASE get[ "s" ] == "s"
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
-         ELSEIF get[ "s" ] == "m"
+         CASE get[ "s" ] == "m"
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., DToS( X[ 3 ] ) + X[ 4 ] < DToS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
-         ELSE
+         OTHERWISE
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
-         ENDIF
+         ENDCASE
       ELSE
          ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
             iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
@@ -1545,19 +1553,20 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
          CASE "="
             IF hb_HHasKey( aData, aInstr[ 2 ] )
                xValue := aData[ aInstr[ 2 ] ]
-               IF HB_ISSTRING( xValue )
+               DO CASE
+               CASE HB_ISSTRING( xValue )
                   cRet += UHtmlEncode( xValue )
-               ELSEIF HB_ISNUMERIC( xValue )
+               CASE HB_ISNUMERIC( xValue )
                   cRet += UHtmlEncode( Str( xValue ) )
-               ELSEIF HB_ISDATE( xValue )
+               CASE HB_ISDATE( xValue )
                   cRet += UHtmlEncode( DToC( xValue ) )
-               ELSEIF HB_ISTIMESTAMP( xValue )
+               CASE HB_ISTIMESTAMP( xValue )
                   cRet += UHtmlEncode( hb_TToC( xValue ) )
-               ELSEIF HB_ISOBJECT( xValue )
+               CASE HB_ISOBJECT( xValue )
                   cRet += UHtmlEncode( xValue:Output() )
-               ELSE
+               OTHERWISE
                   Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
-               ENDIF
+               ENDCASE
             ELSE
                Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
             ENDIF
@@ -1566,19 +1575,20 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
          CASE ":"
             IF hb_HHasKey( aData, aInstr[ 2 ] )
                xValue := aData[ aInstr[ 2 ] ]
-               IF HB_ISSTRING( xValue )
+               DO CASE
+               CASE HB_ISSTRING( xValue )
                   cRet += xValue
-               ELSEIF HB_ISNUMERIC( xValue )
+               CASE HB_ISNUMERIC( xValue )
                   cRet += Str( xValue )
-               ELSEIF HB_ISDATE( xValue )
+               CASE HB_ISDATE( xValue )
                   cRet += DToC( xValue )
-               ELSEIF HB_ISTIMESTAMP( xValue )
+               CASE HB_ISTIMESTAMP( xValue )
                   cRet += hb_TToC( xValue )
-               ELSEIF HB_ISOBJECT( xValue )
+               CASE HB_ISOBJECT( xValue )
                   cRet += xValue:Output()
-               ELSE
+               OTHERWISE
                   Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
-               ENDIF
+               ENDCASE
             ELSE
                Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
             ENDIF

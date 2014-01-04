@@ -80,25 +80,26 @@ PROCEDURE Main( ... )
    FOR n := 1 TO Len( aParams )
       IF LEFTEQUAL( aParams[ n ], "-" )
          cParam := SubStr( aParams[ n ], 2 )
-         IF cParam == "m"
+         DO CASE
+         CASE cParam == "m"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_MERGE
             ENDIF
-         ELSEIF cParam == "g"
+         CASE cParam == "g"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_GENHBL
             ENDIF
-         ELSEIF cParam == "a"
+         CASE cParam == "a"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_TRANS
             ENDIF
-         ELSEIF LEFTEQUAL( cParam, "o" )
+         CASE LEFTEQUAL( cParam, "o" )
             IF ! Empty( cParam := SubStr( cParam, 2 ) )
                cFileOut := cParam
             ELSEIF n < Len( aParams ) .AND. ! LEFTEQUAL( aParams[ n + 1 ], "-" )
@@ -106,13 +107,13 @@ PROCEDURE Main( ... )
             ELSE
                lError := .T.
             ENDIF
-         ELSEIF cParam == "e"
+         CASE cParam == "e"
             lEmpty := .T.
-         ELSEIF cParam == "q"
+         CASE cParam == "q"
             lQuiet := .T.
-         ELSE
+         OTHERWISE
             lError := .T.
-         ENDIF
+         ENDCASE
       ELSE
          AAdd( aFiles, aParams[ n ] )
       ENDIF

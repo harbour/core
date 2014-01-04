@@ -22,11 +22,10 @@
 THREAD STATIC t_aRgnStack := {}
 
 FUNCTION ft_SavRgn( nTop, nLeft, nBottom, nRight )
-
    RETURN hb_BChar( nTop ) + hb_BChar( nLeft ) + hb_BChar( nBottom ) + hb_BChar( nRight ) + ;
       SaveScreen( nTop, nLeft, nBottom, nRight )
 
-FUNCTION ft_RstRgn( cScreen, nTop, nLeft )
+PROCEDURE ft_RstRgn( cScreen, nTop, nLeft )
 
    IF PCount() == 3
       RestScreen( nTop, nLeft, ;
@@ -42,13 +41,13 @@ FUNCTION ft_RstRgn( cScreen, nTop, nLeft )
          hb_BSubStr( cScreen, 5 ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* NOTE: original NF accepted "pop all" if it contained
          extra character and _SET_EXACT was set to .F.
          Harbour version accepts "pop all" only. [vszakats] */
 
-FUNCTION ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
+PROCEDURE ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
    THREAD STATIC t_nStackPtr := 0
 
@@ -71,4 +70,4 @@ FUNCTION ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
    ENDIF
 
-   RETURN NIL
+   RETURN

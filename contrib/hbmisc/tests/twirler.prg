@@ -6,6 +6,8 @@
 
 #require "hbmisc"
 
+#include "setcurs.ch"
+
 PROCEDURE Main()
 
    LOCAL counter := 0, start_time, stop_time
@@ -18,7 +20,7 @@ PROCEDURE Main()
    LOCAL twirl7 := Twirler():new( 4, 15, "Seven: ", ".oOo", 0.2 )
 
    CLS
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
    @ 1, 1 SAY "Twirler test program - press any key to stop"
    twirl1:show()
    twirl2:show()
@@ -28,7 +30,7 @@ PROCEDURE Main()
    twirl6:show()
    twirl7:show()
    start_time := Seconds()
-   WHILE Inkey() == 0
+   DO WHILE Inkey() == 0
       counter++
       twirl1:twirl()
       twirl2:twirl()
@@ -52,6 +54,6 @@ PROCEDURE Main()
    twirl1:hide()
    @ 2, 5 SAY counter
    @ 3, 5 SAY stop_time - start_time
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    RETURN

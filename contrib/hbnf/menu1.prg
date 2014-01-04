@@ -45,7 +45,7 @@ THREAD STATIC t_nVPos
 THREAD STATIC t_nMaxRow
 THREAD STATIC t_nMaxCol
 
-FUNCTION ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
+PROCEDURE ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    LOCAL nTtlUsed
    LOCAL sMainScrn, lCancMode, lLooping := .T.
@@ -189,7 +189,7 @@ FUNCTION ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
    AltD( ENABLE )
    RESTORE SCREEN FROM sMainScrn
 
-   RETURN NIL
+   RETURN
 
 // AChoice() user function
 
@@ -215,19 +215,19 @@ STATIC FUNCTION __ftAcUdf( nMode )
 
    RETURN nRtnVal
 
-STATIC FUNCTION _ftWidest( i, t_aChoices, aBarWidth )
+STATIC PROCEDURE _ftWidest( i, t_aChoices, aBarWidth )
 
    AEval( t_aChoices[ i, 1 ], {| a, b | HB_SYMBOL_UNUSED( a ), aBarWidth[ i ] := ;
       Max( aBarWidth[ i ], Len( t_aChoices[ i, 1, b ] ) ) } )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, t_nMaxCol )
+STATIC PROCEDURE _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, t_nMaxCol )
 
    aBoxLoc[ i ] := iif( aBarCol[ i ] + aBarWidth[ i ] + 4 > t_nMaxCol + 1, ;
       t_nMaxCol - 3 - aBarWidth[ i ], aBarCol[ i ] )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION _ftBailOut( cBorder, cBox )
 
@@ -245,16 +245,16 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
 
    RETURN nKeyPress != K_ESC
 
-STATIC FUNCTION _ftValKeys( nNum, t_aChoices, t_aValidKeys )
+STATIC PROCEDURE _ftValKeys( nNum, t_aChoices, t_aValidKeys )
 
    AEval( t_aChoices[ nNum, 1 ], {| x | t_aValidKeys[ nNum ] += Left( x, 1 ) } )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ft_Fill( aArray, cMenuOption, bBlock, lAvailable )
+PROCEDURE ft_Fill( aArray, cMenuOption, bBlock, lAvailable )
 
    AAdd( aArray[ 1 ], cMenuOption )
    AAdd( aArray[ 2 ], bBlock )
    AAdd( aArray[ 3 ], lAvailable )
 
-   RETURN NIL
+   RETURN

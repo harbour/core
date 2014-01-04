@@ -42,10 +42,10 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION Show()
+STATIC PROCEDURE Show()
 
    LOCAL Self := QSelf()
 
    ? "lets show a form from here :-)"
 
-   RETURN NIL
+   RETURN

@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    LOCAL GetList := {}
 
-   SET COLOR TO GR+/B, W+/BG
+   SetColor( "GR+/B, W+/BG" )
    CLS
 
    SET KEY K_F2 TO ShowVar()

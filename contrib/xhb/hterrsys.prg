@@ -109,7 +109,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    ENDIF
 
-   // for lock error during APPEND BLANK, set NetErr() and subsystem default
+   // for lock error during dbAppend(), set NetErr() and subsystem default
    IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
       NetErr( .T. )

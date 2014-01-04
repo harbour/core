@@ -186,7 +186,7 @@ FUNCTION dbMerge( xSource, lAppend )
 
    // Temp working record
    IF LastRec() == 0
-      APPEND BLANK
+      dbAppend()
    ENDIF
 
    // Create translation plan
@@ -230,7 +230,7 @@ FUNCTION dbMerge( xSource, lAppend )
 
    // Reset
    IF LastRec() == 1 .AND. ! lAppend
-      DELETE
+      dbDelete()
       ZAP
    ENDIF
 
@@ -238,8 +238,8 @@ FUNCTION dbMerge( xSource, lAppend )
    nRecNo := ( nSource )->( RecNo() )
    ( nSource )->( dbGoTop() )
 
-   WHILE ! ( nSource )->( Eof() )
-      APPEND BLANK
+   DO WHILE ! ( nSource )->( Eof() )
+      dbAppend()
 
       FOR EACH aTranslation IN aTranslate
          FieldPut( aTranslation[ 1 ], Eval( aTranslation[ 3 ], ( nSource )->( FieldGet( aTranslation[ 2 ] ) ) ) )

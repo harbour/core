@@ -177,7 +177,8 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-      IF aNM[ 1 ] == LBN_SELCHANGE
+      DO CASE
+      CASE aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -191,7 +192,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_DBLCLK
+      CASE aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -205,13 +206,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_KILLFOCUS
+      CASE aNM[ 1 ] == LBN_KILLFOCUS
          ::killInputFocus()
 
-      ELSEIF aNM[ 1 ] == LBN_SETFOCUS
+      CASE aNM[ 1 ] == LBN_SETFOCUS
          ::setInputFocus()
 
-      ENDIF
+      ENDCASE
 
    CASE nMessage == HB_GTE_KEYTOITEM
       IF aNM[ 1 ] == K_ENTER
@@ -242,7 +243,8 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
-      IF aNM[ 1 ] == WM_LBUTTONUP
+      DO CASE
+      CASE aNM[ 1 ] == WM_LBUTTONUP
          ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF HB_ISBLOCK( ::sl_itemMarked )
             IF ::isParentCrt()
@@ -254,7 +256,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK
+      CASE aNM[ 1 ] == WM_LBUTTONDBLCLK
          ::editBuffer := ::nCurSelected
          IF HB_ISBLOCK( ::sl_itemSelected )
             IF ::isParentCrt()
@@ -267,7 +269,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             RETURN EVENT_HANDELLED
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_KEYUP
+      CASE aNM[ 1 ] == WM_KEYUP
          IF ::nCurSelected != Wvg_LBGetCurSel( ::hWnd ) + 1
             ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
             IF HB_ISBLOCK( ::sl_itemMarked )
@@ -281,7 +283,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ENDIF
+      ENDCASE
    ENDCASE
 
    RETURN EVENT_UNHANDELLED

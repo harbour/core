@@ -159,7 +159,7 @@
          USE test NEW
          ? "Is Bof()", Bof()
          dbGoTop()
-         WHILE ! Bof()
+         DO WHILE ! Bof()
             dbSkip( -1 )
          ENDDO
          ? "Is Bof()", Bof()
@@ -279,7 +279,7 @@
          dbGoTop()
          ? "Is Eof()", Eof()
          dbGoBottom()
-         WHILE ! Eof()
+         DO WHILE ! Eof()
             dbSkip()
          ENDDO
          ? "Is Eof()", Eof()
@@ -703,11 +703,11 @@
       <lError> A value based on the success of a network operation or
       function.
    $DESCRIPTION$
-      This function return a logical true (.T.) is a USE, APPEND BLANK, or
+      This function return a logical true (.T.) is a USE, dbAppend(), or
       a USE...EXCLUSIVE command is issue and fails in a network environment.
       In the case of USE and USE...EXCLUSIVE commands, a NetErr() value
       of .T. would be returned if another node of the network has the
-      exclusive use of a file. And the case of the APPEND BLANK command,
+      exclusive use of a file. And the case of the dbAppend() command,
       NetErr() will return a logical true (.T.) if the file or record
       is locked by another node or the value of LastRec() has been advanced
       The value of NetErr() may be changed via the value of <lNewError>.

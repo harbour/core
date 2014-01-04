@@ -124,15 +124,16 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
                cType := ValType( ar[ nDim, nElem ] )
                cVal  := ar[ nDim, nElem ]
                hb_AIns( ar[ nDim ], nElem,, .T. )
-               IF cType == "C"
+               DO CASE
+               CASE cType == "C"
                   ar[ nDim, nElem ] := Space( Len( cVal ) )
-               ELSEIF cType == "N"
+               CASE cType == "N"
                   ar[ nDim, nElem ] := 0
-               ELSEIF cType == "L"
+               CASE cType == "L"
                   ar[ nDim, nElem ] := .F.
-               ELSEIF cType == "D"
+               CASE cType == "D"
                   ar[ nDim, nElem ] := hb_SToD()
-               ENDIF
+               ENDCASE
             NEXT
             b:refreshAll()
 

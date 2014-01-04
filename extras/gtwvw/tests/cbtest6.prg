@@ -214,38 +214,39 @@ FUNCTION CBreader( oGet )
    oGet:setfocus()
    nKey := Inkey( 0 )
 
-   IF nKey == K_ENTER
+   DO CASE
+   CASE nKey == K_ENTER
       // NOTE that in WVW_CB_KBD_CLIPPER mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_UP
+   CASE nKey == K_UP
       oGet:exitState := GE_UP
 
-   ELSEIF nKey == K_SH_TAB
+   CASE nKey == K_SH_TAB
       oGet:exitState := GE_UP
 
-   ELSEIF nKey == K_DOWN
+   CASE nKey == K_DOWN
       // NOTE that in WVW_CB_KBD_STANDARD mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_TAB
+   CASE nKey == K_TAB
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_ESC
+   CASE nKey == K_ESC
       IF Set( _SET_ESCAPE )
          oGet:exitState := GE_ESCAPE
       ENDIF
 
-   ELSEIF nKey == K_PGUP
+   CASE nKey == K_PGUP
       oGet:exitState := GE_WRITE
 
-   ELSEIF nKey == K_PGDN
+   CASE nKey == K_PGDN
       oGet:exitState := GE_WRITE
 
-   ELSEIF nKey == K_CTRL_HOME
+   CASE nKey == K_CTRL_HOME
       oGet:exitState := GE_TOP
 
-   ELSEIF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+   CASE nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
       // is there any GET object hit?
       IF ! Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
          oGet:exitState := GE_MOUSEHIT
@@ -253,11 +254,11 @@ FUNCTION CBreader( oGet )
          oGet:exitState := GE_NOEXIT
       ENDIF
 
-   ELSEIF HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
+   CASE HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
       oGetList:GetDoSetKey( bKeyBlock )  // Eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 
-   ENDIF
+   ENDCASE
 
    IF oGet:exitState != GE_NOEXIT
       SetWinFocus( NIL )  // assume current window

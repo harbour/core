@@ -56,7 +56,7 @@
 
    Simple example
 
-   TODO: Colour printing
+   TODO: Color printing
          etc....
 
    Peter Rees 2004-01-21 <peter@rees.co.nz>
@@ -136,7 +136,7 @@ CREATE CLASS win_Prn
 
    METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;     // Print text string at location
                       nWidth, nBold, lUnderLine, lItalic, nCharSet, ; // in specified font and color.
-                      lNewLine, lUpdatePosX, nColor, nAlign )         // Restore original font and colour
+                      lNewLine, lUpdatePosX, nColor, nAlign )         // Restore original font and color
                                                                       // after printing.
 
    METHOD GetDeviceCaps( nCaps )
@@ -268,7 +268,7 @@ METHOD Create() CLASS win_Prn
          // Set .T. if can print bitmaps
          ::BitMapsOk := win_BitmapsOK( ::hPrinterDC )
 
-         // supports Colour
+         // supports Color
          ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
 
          // Set the standard font

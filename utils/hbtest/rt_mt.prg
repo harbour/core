@@ -107,7 +107,7 @@ PROCEDURE thFunc( mtxJobs, mtxResults )
 
    LOCAL xJob, xResult
 
-   WHILE .T.
+   DO WHILE .T.
       hb_mutexSubscribe( mtxJobs,, @xJob )
       IF xJob == NIL
          EXIT

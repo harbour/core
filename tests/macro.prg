@@ -73,7 +73,7 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-FUNCTION SubFun()
+STATIC PROCEDURE SubFun()
 
    ? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
@@ -95,7 +95,7 @@ FUNCTION SubFun()
 
    ? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
 
-   RETURN NIL
+   RETURN
 
 STATIC PROCEDURE TEST_Type()
 

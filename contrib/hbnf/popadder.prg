@@ -92,10 +92,10 @@ THREAD STATIC t_aStdColor
 // Pop Up Adder / Calculator with Tape Display
 // NOTE: To make ft_Adder() pop up from any wait state in your
 //       application just insert the line:
-//         SET KEY K_ALT_A  TO FT_Adder
+//         SET KEY K_ALT_A TO {|| ft_Adder() }
 //       at the top of your application
 
-FUNCTION ft_Adder()
+PROCEDURE ft_Adder()
 
    LOCAL nOldDecim, cMoveTotSubTot, cTotal, lDone, nKey
    LOCAL oGet        := GetActive()
@@ -113,7 +113,7 @@ FUNCTION ft_Adder()
    // Must prevent recursive calls
 
    IF t_lAdderOpen
-      RETURN NIL
+      RETURN
    ELSE
       t_lAdderOpen := .T.
    ENDIF
@@ -267,11 +267,11 @@ FUNCTION ft_Adder()
    // Reset the STATICS to NIL
    t_aKeys := t_aWindow := t_aWinColor := t_aStdColor := NIL
 
-   RETURN NIL
+   RETURN
 
 // Display the Adder
 
-STATIC FUNCTION _ftAddScreen( aAdder )
+STATIC PROCEDURE _ftAddScreen( aAdder )
 
    LOCAL nCol
 
@@ -318,11 +318,11 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    _ftSetWinColor( W_CURR, W_PROMPT )
    hb_DispBox( 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace, FT_B_DOUBLE )
 
-   RETURN NIL
+   RETURN
 
 // Change the decimal position in the display
 
-STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
+STATIC PROCEDURE _ftChangeDec( aAdder, nNumDec )
 
    LOCAL cDefTotPict  := "9999999999999999999"
 
@@ -347,11 +347,11 @@ STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Display total number to Adder Window
 
-STATIC FUNCTION _ftDispTotal( aAdder )
+STATIC PROCEDURE _ftDispTotal( aAdder )
 
    LOCAL cTotStr
 
@@ -370,11 +370,11 @@ STATIC FUNCTION _ftDispTotal( aAdder )
       hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Display subtotal number
 
-STATIC FUNCTION _ftDispSubTot( aAdder )
+STATIC PROCEDURE _ftDispSubTot( aAdder )
 
    LOCAL cStotStr
 
@@ -393,11 +393,11 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
       hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nNumTotal, cTotPict ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Act on NUMBER key pressed
 
-STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
+STATIC PROCEDURE _ftProcessNumb( aAdder, nKey )
 
    LOCAL nNum
 
@@ -427,11 +427,11 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
 
    _ftDispSubTot( aAdder )
 
-   RETURN NIL
+   RETURN
 
 // Enter key - SUBTOTAL\TOTAL
 
-STATIC FUNCTION _ftAddTotal( aAdder )
+STATIC PROCEDURE _ftAddTotal( aAdder )
 
    _ftEraseTotSubTot( aAdder )
    lDecSet   := .F.
@@ -466,19 +466,20 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          IF ! lMultDiv
             lSubRtn := .T.                  // total key
          ENDIF
-         IF nAddMode == 1                  // Add
+         DO CASE
+         CASE nAddMode == 1                  // Add
             nTotal += nNumTotal
-         ELSEIF nAddMode == 2              // Subtract
+         CASE nAddMode == 2              // Subtract
             nTotal -= nNumTotal
-         ELSEIF nAddMode == 3              // Multiply
+         CASE nAddMode == 3              // Multiply
             nTotal *= nNumTotal
-         ELSEIF nAddMode == 4              // Divide
+         CASE nAddMode == 4              // Divide
             nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
             IF lDivError
                _ftError( "you can't divide by ZERO!" )
                lDivError := .F.
             ENDIF
-         ENDIF
+         ENDCASE
       ENDIF
       _ftDispTotal( aAdder )
       IF lMultDiv                         // This was a multiply or divide
@@ -501,11 +502,11 @@ STATIC FUNCTION _ftAddTotal( aAdder )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Process + or - keypress
 
-STATIC FUNCTION _ftAddSub( aAdder, nKey )
+STATIC PROCEDURE _ftAddSub( aAdder, nKey )
 
    lMultDiv  := .F.
    _ftEraseTotSubTot( aAdder )
@@ -518,7 +519,8 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       nNumTotal := nSavTotal
       lNewNum   := .T.
    ENDIF
-   IF nKey == hb_keyCode( "+" )                 // Add
+   DO CASE
+   CASE nKey == hb_keyCode( "+" )          // Add
       nAddMode := 1
       IF ! lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
@@ -528,7 +530,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
       nNumTotal  := 0
-   ELSEIF nKey == hb_keyCode( "-" )          // Subtract
+   CASE nKey == hb_keyCode( "-" )          // Subtract
       nAddMode := 2
       IF ! lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
@@ -539,15 +541,15 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
       nNumTotal  := 0
-   ENDIF
+   ENDCASE
 
    _ftDispTotal( aAdder )
 
-   RETURN NIL
+   RETURN
 
 // Process * or / keypress
 
-STATIC FUNCTION _ftMultDiv( aAdder, nKey )
+STATIC PROCEDURE _ftMultDiv( aAdder, nKey )
 
    lMultDiv  := .T.
    _ftEraseTotSubTot( aAdder )
@@ -561,22 +563,24 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
    ENDIF
    // Get the first number of the product or division
    IF _ftRoundIt( nTotal, nMaxDeci ) == 0
-      IF nKey == hb_keyCode( "*" )            // Setup mode
+      DO CASE
+      CASE nKey == hb_keyCode( "*" )       // Setup mode
          nAddMode := 3
          _ftUpdateTrans( aAdder, .F., nNumTotal )
-      ELSEIF nKey == hb_keyCode( "/" )
+      CASE nKey == hb_keyCode( "/" )
          nAddMode := 4
          _ftUpdateTrans( aAdder, .F., nNumTotal )
-      ENDIF
+      ENDCASE
       nTotal    := nNumTotal
       nNumTotal := 0
    ELSE
-      IF nKey == hb_keyCode( "*" )           // Multiply
+      DO CASE
+      CASE nKey == hb_keyCode( "*" )       // Multiply
          nAddMode  := 3
          _ftUpdateTrans( aAdder, .F., nNumTotal )
          nTotal    := nTotal * nNumTotal
          nNumTotal := 0
-      ELSEIF nKey == hb_keyCode( "/" )       // Divide
+      CASE nKey == hb_keyCode( "/" )       // Divide
          nAddMode := 4
          _ftUpdateTrans( aAdder, .F., nNumTotal )
          nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
@@ -585,16 +589,16 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
             lDivError := .F.
          ENDIF
          nNumTotal := 0
-      ENDIF
+      ENDCASE
    ENDIF
 
    _ftDispTotal( aAdder )
 
-   RETURN NIL
+   RETURN
 
 // Help window
 
-STATIC FUNCTION _ftAddHelp
+STATIC PROCEDURE _ftAddHelp()
 
    LOCAL cMess := "This Adder works like a desk top calculator. You may add," + ;
       " subtract, multiply, or divide. "           + hb_eol() + hb_eol() + ;
@@ -617,11 +621,11 @@ STATIC FUNCTION _ftAddHelp
    _ftPushMessage( cMess, .T., "ADDER HELP", "press any key to continue...", ;
       "QUIET" )
 
-   RETURN NIL
+   RETURN
 
 // Clear entry / Clear Adder
 
-STATIC FUNCTION _ftClearAdder( aAdder )
+STATIC PROCEDURE _ftClearAdder( aAdder )
 
    _ftEraseTotSubTot( aAdder )
    lDecSet   := .F.
@@ -638,11 +642,11 @@ STATIC FUNCTION _ftClearAdder( aAdder )
       _ftDispSubTot( aAdder )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Update transactions array
 
-STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
+STATIC PROCEDURE _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    LOCAL lUseTotal := ( nAmount == NIL )
 
@@ -653,7 +657,7 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
       IF lTape                            // If there is a tape Show Clear
          _ftDisplayTape( aAdder )
       ENDIF
-      RETU NIL
+      RETURN
    ENDIF
 
    IF lTypeTotal                         // If lTypeTotal == .T. Update from total
@@ -674,17 +678,17 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
       _ftDisplayTape( aAdder )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Clear the <TOTAL> and <SUBTOTAL> from Adder
 
-STATIC FUNCTION _ftEraseTotSubTot( aAdder )
+STATIC PROCEDURE _ftEraseTotSubTot( aAdder )
 
    _ftSetWinColor( W_CURR, W_SCREEN )
    hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "          " )
    _ftSetWinColor( W_CURR, W_PROMPT )
 
-   RETURN NIL
+   RETURN
 
 // Adder Rounding function
 
@@ -723,14 +727,14 @@ STATIC FUNCTION _ftValDeci( oGet )
 
 // Display the Tape
 
-STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
+STATIC PROCEDURE _ftDisplayTape( aAdder, nKey )
 
    LOCAL nDispTape, nTopTape := 1
 
    IF ( nKey == hb_keyCode( "T" ) .OR. nKey == hb_keyCode( "t" ) ) .AND. lTape  // Stop displaying tape
       lTape := .F.
       RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
-      RETURN NIL
+      RETURN
    ENDIF
    IF lTape                              // Are we in the display mode
       SetColor( "N/W" )
@@ -757,24 +761,24 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
    ENDIF
    _ftSetWinColor( W_CURR, W_PROMPT )
 
-   RETURN NIL
+   RETURN
 
 // Sets the LastKey() value to value of nLastKey
 // NOTE: I use this in most of my Pop-Up routines to reset the
 //       original value of LastKey() when quitting.
 
-STATIC FUNCTION _ftSetLastKey( nLastKey )
+STATIC PROCEDURE _ftSetLastKey( nLastKey )
 
    _ftPushKeys()
    hb_keySetLast( nLastKey )
    _ftPopKeys()
 
-   RETURN NIL
+   RETURN
 
 // Push any keys in the Keyboard buffer on the array t_aKeys[]
 // NOTE: Save any keys in the buffer... for FAST typists <g>.
 
-STATIC FUNCTION _ftPushKeys()
+STATIC PROCEDURE _ftPushKeys()
 
    LOCAL nKey
 
@@ -782,23 +786,23 @@ STATIC FUNCTION _ftPushKeys()
       AAdd( t_aKeys, nKey )
    ENDDO
 
-   RETURN NIL
+   RETURN
 
 // Restore the keyboard with any keystrokes that were saved with _ftPushKeys
 
-STATIC FUNCTION _ftPopKeys
+STATIC PROCEDURE _ftPopKeys()
 
    IF ! Empty( t_aKeys )
       hb_keyPut( t_aKeys )
    ENDIF
    t_aKeys := {}
 
-   RETURN NIL
+   RETURN
 
 // Display a message on the screen in a window
 // See Also: _ftPopMessage()
 
-STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop )
+STATIC PROCEDURE _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop )
 
    LOCAL nMessLen, nNumRows, nWide, nLeft, nBottom, nRight, cOldDevic
    LOCAL lOldPrint
@@ -842,16 +846,16 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    Set( _SET_PRINTER, lOldPrint )
    _ftSetLastKey( nOldLastKey )
 
-   RETURN NIL
+   RETURN
 
 // Pop off the Message Box
 // See Also: _ftPushMessage()
 
-STATIC FUNCTION _ftPopMessage
+STATIC PROCEDURE _ftPopMessage()
 
    _ftPopWin()
 
-   RETURN NIL
+   RETURN
 
 // Push a Question Box on the Screen
 // NOTE: This function will work for all Data Types
@@ -909,13 +913,14 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    IF cPict != NIL                       // Use the picture they passed
       oNewGet:Picture := cPict
    ELSE                                  // Else setup default pictures
-      IF HB_ISDATE( xVarVal )
-         oNewGet:Picture   := "9999-99-99"
-      ELSEIF HB_ISLOGICAL( xVarVal )
-         oNewGet:Picture   := "Y"
-      ELSEIF HB_ISNUMERIC( xVarVal )
-         oNewGet:Picture   := "999999.99"  // Guess that they are inputting dollars
-      ENDIF
+      DO CASE
+      CASE HB_ISDATE( xVarVal )
+         oNewGet:Picture := "9999-99-99"
+      CASE HB_ISLOGICAL( xVarVal )
+         oNewGet:Picture := "Y"
+      CASE HB_ISNUMERIC( xVarVal )
+         oNewGet:Picture := "999999.99"  // Guess that they are inputting dollars
+      ENDCASE
    ENDIF
 
    oNewGet:PostBlock := iif( bValid == NIL, NIL, bValid )
@@ -977,7 +982,7 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
 
 // Display an ERROR message in a window
 
-STATIC FUNCTION _ftError( cMessage, xDontReset )
+STATIC PROCEDURE _ftError( cMessage, xDontReset )
 
    LOCAL nOldRow, nOldCol, nOldCurs, nTop, nLeft, nBot, nRight, cOldColor
    LOCAL nOldLastKey, cErrorScr, nMessLen, nWide, nNumRows
@@ -1020,7 +1025,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    Set( _SET_DEVICE, cOldDevic )
    Set( _SET_PRINTER, lOldPrint )
 
-   RETURN NIL
+   RETURN
 
 // Stuff a Comma in a string
 
@@ -1096,7 +1101,7 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
 //       the window off.
 //          nWinColor DEFAULT == _ftNextWinColor()
 
-STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
+STATIC PROCEDURE _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
    LOCAL lAutoWindow := ( nWinColor == NIL )
 
@@ -1119,7 +1124,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    _ftSetWinColor( nWinColor, W_SCREEN, W_VARIAB )
    hb_Scroll( t + 1, l + 1, b - 1, r - 1 )
 
-   RETURN NIL
+   RETURN
 
 // Pop a Window off the screen
 // NOTE: Pop the currently active window off the screen by restoring
@@ -1128,7 +1133,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 //       current window setting using _ftLastWinColor() and reset
 //       the color to the color setting when window was pushed.
 
-STATIC FUNCTION _ftPopWin()
+STATIC PROCEDURE _ftPopWin()
 
    LOCAL nNumWindow := Len( t_aWindow )
 
@@ -1148,7 +1153,7 @@ STATIC FUNCTION _ftPopWin()
       _ftSetSCRColor( STD_SCREEN, STD_VARIABLE )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Set the Color to the Window Colors requested
 // See Also: _ftSetSCRColor()
@@ -1191,7 +1196,7 @@ STATIC FUNCTION _ftNextWinColor()
 // Print the top or bottom titles on the border of the currently
 // active window.
 
-STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
+STATIC PROCEDURE _ftWinTitle( cTheTitle, cTopOrBot )
 
    LOCAL nCurWin  := Len( t_aWindow )
    LOCAL nLenTitle := Len( cTheTitle )
@@ -1199,11 +1204,11 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
    hb_DispOutAt( t_aWindow[ nCurWin, iif( cTopOrBot == NIL, 1, 3 ) ], ( t_aWindow[ nCurWin, 4 ] - ;
       t_aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin, 2 ], " " + cTheTitle + " " )
 
-   RETURN NIL
+   RETURN
 
 // Initilize the colors for the Adder
 
-STATIC FUNCTION _ftInitColors()
+STATIC PROCEDURE _ftInitColors()
 
    t_aWinColor := { ;
       { "GR+/BG", "GR+/G", "B+/RB",  "G+/R" }, ;
@@ -1226,7 +1231,7 @@ STATIC FUNCTION _ftInitColors()
       "GR+/B", "BG+/B", "B+/B", "G+/B" }, ;
       "N/N" }
 
-   RETURN NIL
+   RETURN
 
 // Replace the Character at nPosit in cString with cChar
 

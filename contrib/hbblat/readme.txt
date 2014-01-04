@@ -1,4 +1,4 @@
-Blat v3.1.1 (build : Feb 27 2013 20:04:55)
+Blat v3.2.0 (build : Dec 27 2013 14:38:01)
 64-bit Windows, Full, Unicode
 
 Windows console utility to send mail via SMTP or post to usenet via NNTP

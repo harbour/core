@@ -201,18 +201,19 @@ Page handler functions receives a parameter indicating received
 event/method. Handler has a structure:
 
 STATIC FUNCTION proc_handler( cMethod )
-   IF cMethod == "INIT"
+   DO CASE
+   CASE cMethod == "INIT"
       // This code is executed on entering URL (first call to this URL)
       // Here we open databases used to process queries
-   ELSEIF cMethod == "POST"
+   CASE cMethod == "POST"
       // Process HTTP POST request
-   ELSEIF cMethod == "GET"
+   CASE cMethod == "GET"
       // Process HTTP GET request
-   ELSEIF cMethod == "EXIT"
+   CASE cMethod == "EXIT"
       // This code is executed on leaving URL (before first call to
       // another URL)
       // Here we close databases opened in INIT method, etc.
-   ENDIF
+   ENDCASE
    RETURN .T.
 
 As you can see this handler reminds the structure of traditional GUI
@@ -220,10 +221,11 @@ based application message/event handler, for example in windows, we
 have:
 
 STATIC FUNCTION WndProc( hWnd, uMsg, wParam, lParam )
-   IF uMsg == WM_CREATE
-   ELSEIF uMsg == WM_PAINT
-   ELSEIF uMsg == WM_DESTROY
-   ENDIF
+   DO CASE
+   CASE uMsg == WM_CREATE
+   CASE uMsg == WM_PAINT
+   CASE uMsg == WM_DESTROY
+   ENDCASE
    RETURN ...
 
 I hope this similarity will help to develop (or convert) event based

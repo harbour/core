@@ -291,7 +291,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ? "@ - interrupt, keycodes checking: "
    ?
 
-   WHILE .T.
+   DO WHILE .T.
       kX := Inkey( 0 )
       k := hb_keyStd( kX )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
@@ -314,22 +314,23 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ENDIF
 //    ?? "  (" + hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ) + ")"
 
-      IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
+      DO CASE
+      CASE k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT
-      ELSEIF k == K_INS
+      CASE k == K_INS
          Set( _SET_CURSOR, ( Set( _SET_CURSOR ) + 1 ) % 5 )
          ?? "  cursor:" + hb_ntos( Set( _SET_CURSOR ) )
-      ELSEIF k == HB_K_RESIZE
+      CASE k == HB_K_RESIZE
          ?? "  (" + hb_ntos( MaxRow() + 1 ) + "," + hb_ntos( MaxCol() + 1 ) + ")"
-      ELSEIF k >= 1000 .AND. k < 1100
+      CASE k >= 1000 .AND. k < 1100
          ?? "  mpos(" + hb_ntos( MRow() ) + "," + hb_ntos( MCol() ) + ")"
 #ifdef __HARBOUR__
-      ELSEIF k == K_CTRL_INS
+      CASE k == K_CTRL_INS
          IF Alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
             s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
             ? "Clipboard text: [" + s + "]"
          ENDIF
-      ELSEIF k == K_CTRL_END
+      CASE k == K_CTRL_END
          IF Alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
             s := hb_TSToStr( hb_DateTime() ) + hb_eol() + ;
                "Harbour GT" + hb_gtVersion() + " clipboard test" + hb_eol()
@@ -337,7 +338,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
             hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
          ENDIF
 #endif
-      ENDIF
+      ENDCASE
    ENDDO
    ?
 

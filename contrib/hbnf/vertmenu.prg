@@ -18,7 +18,7 @@
 
 /* display vertical menu */
 
-FUNCTION ft_Menu2( aMenuInfo, cColors )
+PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1
    LOCAL nOptions    := Len( aMenuInfo )
@@ -76,4 +76,4 @@ FUNCTION ft_Menu2( aMenuInfo, cColors )
    Set( _SET_WRAP,    lOldwrap )
    SetColor( cOldcolor )
 
-   RETURN NIL
+   RETURN

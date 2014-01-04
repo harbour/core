@@ -491,9 +491,9 @@ typedef struct win_data
    int      FixedSize[ WVW_MAX_COLS ];             /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    USHORT   ROWS;                                  /* number of displayable rows in window */
    USHORT   COLS;                                  /* number of displayable columns in window */
-   COLORREF foreground;                            /* foreground colour */
+   COLORREF foreground;                            /* foreground color */
 
-   COLORREF background;                            /* background colour */
+   COLORREF background;                            /* background color */
 
    USHORT BUFFERSIZE;                              /* size of the screen text buffer */
    BYTE   byBuffer[ WVW_MAX_ROWS * WVW_MAX_COLS ]; /* buffer with the text to be displayed on the screen */

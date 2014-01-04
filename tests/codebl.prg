@@ -43,11 +43,11 @@ STATIC FUNCTION TestBlocks()
 
    RETURN { {|| nFoo }, {| n | nFoo := n } }
 
-STATIC FUNCTION myout( nExpected, nGot )
+STATIC PROCEDURE myout( nExpected, nGot )
 
    ? nExpected, nGot
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -81,7 +81,7 @@ STATIC PROCEDURE PrintArray( a )
 
 //
 
-STATIC FUNCTION DetachWithRefer()
+STATIC PROCEDURE DetachWithRefer()
 
    LOCAL nTest
    LOCAL bBlock1 := MakeBlock()
@@ -90,7 +90,7 @@ STATIC FUNCTION DetachWithRefer()
    Eval( bBlock1 )
    Eval( bBlock2 )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION MakeBlock()
 
@@ -98,23 +98,23 @@ STATIC FUNCTION MakeBlock()
 
    RETURN {|| DoThing( @nTest ), QOut( nTest ) }
 
-STATIC FUNCTION DoThing( n )
+STATIC PROCEDURE DoThing( n )
 
    n := 42
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION DetachToStatic( n )
+STATIC PROCEDURE DetachToStatic( n )
 
    s_cbStatic := {| x | n + x }
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION ReferParam()
+STATIC PROCEDURE ReferParam()
 
    LOCAL bResult
 
@@ -155,7 +155,7 @@ STATIC FUNCTION ReferParam()
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION PassByValue( bBlock )
 
@@ -175,11 +175,11 @@ STATIC FUNCTION PassByRef( bBlock )
 
    RETURN .T.
 
-STATIC FUNCTION SetByRef( lVar )
+STATIC PROCEDURE SetByRef( lVar )
 
    lVar := .F.
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION GetBlock( lVar )
    RETURN {|| lVar }

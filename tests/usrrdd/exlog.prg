@@ -39,7 +39,7 @@ PROCEDURE Main()
    // Open a table without logging
 
    USE test VIA "DBFCDX"
-   APPEND BLANK
+   dbAppend()
    field->name := "Francesco"
 
    RETURN

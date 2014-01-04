@@ -31,7 +31,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
       SQLOpen( "nomes", "SELECT * FROM test" )
 
       FOR i := 1 TO 50
-         APPEND BLANK
+         dbAppend()
          REPLACE codigo WITH i
          REPLACE descri WITH "test " + hb_ntos( i )
       NEXT
@@ -430,24 +430,25 @@ FUNCTION SQLPrepare( cQuery, ... )
       FOR i := 2 TO PCount()
          x := hb_PValue( i )
 
-         IF x != NIL .AND. Empty( x )
+         DO CASE
+         CASE x != NIL .AND. Empty( x )
             x := "null"
 
-         ELSEIF HB_ISNUMERIC( x )
+         CASE HB_ISNUMERIC( x )
             x := hb_ntos( x )
 
-         ELSEIF HB_ISDATE( x )
+         CASE HB_ISDATE( x )
             x := DToQ( x )
 
-         ELSEIF HB_ISLOGICAL( x )
+         CASE HB_ISLOGICAL( x )
             x := iif( x, "'t'", "'f'" )
 
-         ELSEIF HB_ISSTRING( x )
+         CASE HB_ISSTRING( x )
             x := SToQ( RTrim( x ) )
 
-         ELSE
+         OTHERWISE
             x := "null"
-         ENDIF
+         ENDCASE
 
          cQuery := StrTran( cQuery, "{:" + hb_ntos( i - 1 ) + "}", x )
       NEXT
@@ -524,32 +525,6 @@ FUNCTION QuickQuery( cQuery )
    ENDIF
 
    RETURN result
-
-
-STATIC PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
-
-   LOCAL cFile, i, cIndex, cKey
-
-   hb_default( @aIndex, {} )
-
-   cFile := TempFile()
-   dbCreate( cFile, aStructure )
-
-   /* Open table */
-   dbUseArea( .T., NIL, cFile, cAlias, .F. )
-
-   FOR i := 1 TO Len( aIndex )
-      cKey := aIndex[ i ]
-      cIndex := TempFile()
-
-      INDEX ON &cKey TO ( cIndex )
-
-      AAdd( s_aTempDBF, cIndex )
-   NEXT
-
-   AAdd( s_aTempDBF, cFile )
-
-   RETURN
 
 
 FUNCTION TempFile( cPath, cExt )

@@ -377,7 +377,7 @@ METHOD GoTop() CLASS HBDbMenu
 
 METHOD LoadColors() CLASS HBDbMenu
 
-   LOCAL aColors := __DbgColors()
+   LOCAL aColors := __dbgColors()
    LOCAL n
 
    ::cClrPopup    := aColors[  8 ]

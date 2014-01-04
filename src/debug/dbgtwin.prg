@@ -118,7 +118,7 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
-   hb_default( @cColor, __DbgColors()[ 1 ] )
+   hb_default( @cColor, __dbgColors()[ 1 ] )
 
    ::nTop     := nTop
    ::nLeft    := nLeft
@@ -348,7 +348,7 @@ METHOD KeyPressed( nKey ) CLASS HBDbWindow
 
 METHOD LoadColors() CLASS HBDbWindow
 
-   LOCAL aClr := __DbgColors()
+   LOCAL aClr := __dbgColors()
 
    ::cColor := aClr[ 1 ]
 

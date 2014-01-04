@@ -96,13 +96,13 @@ FUNCTION DesignHaruPDF( cFileToSave )
    /* set compression mode */
    HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
 
-   /*
+#if 0
    // Passwords and Permissions
    //
    HPDF_SetPassword( pdf, "owner", "user" )
    HPDF_SetPermission( pdf, HPDF_ENABLE_READ )  // cannot print
    HPDF_SetEncryptionMode( pdf, HPDF_ENCRYPT_R3, 16 )
-   */
+#endif
 
    page := HPDF_AddPage( pdf )
    height := HPDF_Page_GetHeight( page )
@@ -173,7 +173,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
 //
 
-STATIC FUNCTION Page_Lines( pdf )
+STATIC PROCEDURE Page_Lines( pdf )
 
    LOCAL page_title := "Line Example"
    LOCAL font, page
@@ -424,11 +424,11 @@ STATIC FUNCTION Page_Lines( pdf )
    HPDF_Page_CurveTo( page, x1, y1, x2, y2, x3, y3 )
    HPDF_Page_Stroke( page )
 
-   RETURN  NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_rect( page, x, y, label )
+STATIC PROCEDURE draw_rect( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y - 10 )
@@ -437,11 +437,11 @@ STATIC FUNCTION draw_rect( page, x, y, label )
 
    HPDF_Page_Rectangle( page, x, y - 40, 220, 25 )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_line( page, x, y, label )
+STATIC PROCEDURE draw_line( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y - 10 )
@@ -452,11 +452,11 @@ STATIC FUNCTION draw_line( page, x, y, label )
    HPDF_Page_LineTo( page, x + 220, y - 15 )
    HPDF_Page_Stroke( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_line2( page, x, y, label )
+STATIC PROCEDURE draw_line2( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y )
@@ -467,11 +467,11 @@ STATIC FUNCTION draw_line2( page, x, y, label )
    HPDF_Page_LineTo( page, x + 160, y - 25 )
    HPDF_Page_Stroke( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Text( pdf )
+STATIC PROCEDURE Page_Text( pdf )
 
    LOCAL page, font, rect := Array( 4 )
    LOCAL SAMP_TXT := "The quick brown fox jumps over the lazy dog. "
@@ -668,11 +668,11 @@ STATIC FUNCTION Page_Text( pdf )
 
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_TextScaling( pdf )
+STATIC PROCEDURE Page_TextScaling( pdf )
 
    LOCAL font, page, tw, angle1, angle2, buf, len, fsize, i, r, b, g, yPos, rad1, rad2
    LOCAL samp_text  := "abcdefgABCDEFG123!#$%&+-@?"
@@ -925,11 +925,11 @@ STATIC FUNCTION Page_TextScaling( pdf )
 
    // HPDF_SetCompressionMode( pdf, nComp )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_stripe_pattern( page, x, y )
+STATIC PROCEDURE show_stripe_pattern( page, x, y )
 
    LOCAL iy := 0
 
@@ -944,11 +944,11 @@ STATIC FUNCTION show_stripe_pattern( page, x, y )
 
    HPDF_Page_SetLineWidth( page, 2.5 )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_description( page, x, y, text )
+STATIC PROCEDURE show_description( page, x, y, text )
 
    LOCAL fsize := HPDF_Page_GetCurrentFontSize( page )
    LOCAL font  := HPDF_Page_GetCurrentFont( page )
@@ -964,7 +964,7 @@ STATIC FUNCTION show_description( page, x, y, text )
    HPDF_Page_SetFontAndSize( page, font, fsize )
    HPDF_Page_SetRGBFill( page, c[ 1 ], c[ 2 ], c[ 3 ] )
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -974,7 +974,7 @@ STATIC FUNCTION show_description( page, x, y, text )
 #define CELL_HEIGHT  20
 #define CELL_HEADER  10
 
-STATIC FUNCTION Page_CodePages( pdf )
+STATIC PROCEDURE Page_CodePages( pdf )
 
    LOCAL page, outline, font2, font_name, root, i, font, dst
    LOCAL cResPath := "files" + hb_ps()
@@ -1051,11 +1051,11 @@ STATIC FUNCTION Page_CodePages( pdf )
       draw_fonts( page )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_graph( page )
+STATIC PROCEDURE draw_graph( page )
 
    LOCAL buf, i, x, y
 
@@ -1097,11 +1097,11 @@ STATIC FUNCTION draw_graph( page )
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_fonts( page )
+STATIC PROCEDURE draw_fonts( page )
 
    LOCAL i, j, buf, x, y, d
 
@@ -1123,11 +1123,11 @@ STATIC FUNCTION draw_fonts( page )
 
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Graphics( pdf )
+STATIC PROCEDURE Page_Graphics( pdf )
 
    LOCAL page, pos
 
@@ -1190,11 +1190,11 @@ STATIC FUNCTION Page_Graphics( pdf )
    HPDF_Page_Circle( page, 100, 100, 30 )
    HPDF_Page_Fill( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Annotation( pdf )
+STATIC PROCEDURE Page_Annotation( pdf )
 
    LOCAL rect1 := { 50, 350, 150, 400 }
    LOCAL rect2 := { 210, 350, 350, 400 }
@@ -1294,13 +1294,13 @@ STATIC FUNCTION Page_Annotation( pdf )
    HPDF_Page_ShowText( page, "Text Icon(ISO8859-2 text)" )
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
 #define NULL  NIL
 //
 
-STATIC FUNCTION Page_Images( pdf )
+STATIC PROCEDURE Page_Images( pdf )
 
    LOCAL font, page, dst, image, image1, image2, image3
    LOCAL x, y, angle, angle1, angle2, rad, rad1, rad2,  iw,  ih
@@ -1429,11 +1429,11 @@ STATIC FUNCTION Page_Images( pdf )
 
    show_description_1( page, x, y, "Color Mask" )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_description_1( page, x, y, text )
+STATIC PROCEDURE show_description_1( page, x, y, text )
 
    LOCAL buf
 
@@ -1459,4 +1459,4 @@ STATIC FUNCTION show_description_1( page, x, y, text )
    HPDF_Page_ShowText( page, text )
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN

@@ -191,7 +191,8 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-      IF aNM[ 1 ] == CBN_SELCHANGE
+      DO CASE
+      CASE aNM[ 1 ] == CBN_SELCHANGE
          ::nCurSelected := ::editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -203,7 +204,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == CBN_DBLCLK
+      CASE aNM[ 1 ] == CBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -215,13 +216,13 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == CBN_KILLFOCUS
+      CASE aNM[ 1 ] == CBN_KILLFOCUS
          ::killInputFocus()
 
-      ELSEIF aNM[ 1 ] == CBN_SETFOCUS
+      CASE aNM[ 1 ] == CBN_SETFOCUS
          ::setInputFocus()
 
-      ENDIF
+      ENDCASE
 
    CASE nMessage == HB_GTE_KEYTOITEM
       IF aNM[ 1 ] == K_ENTER

@@ -4,6 +4,8 @@
 #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
+#include "setcurs.ch"
+
 // Pass valid row and column values for different video modes to change modes
 
 PROCEDURE Main( nRow, nCol )
@@ -39,7 +41,7 @@ PROCEDURE Main( nRow, nCol )
       RETURN
    ENDIF
 
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
 
    // ..... Set up the screen
    cSavClr := SetColor( "w/n" )

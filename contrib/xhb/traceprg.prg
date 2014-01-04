@@ -59,15 +59,16 @@ FUNCTION xhb_SetTrace( xTrace )
 
    LOCAL lTrace := s_lSET_TRACE
 
-   IF HB_ISLOGICAL( xTrace )
+   DO CASE
+   CASE HB_ISLOGICAL( xTrace )
       s_lSET_TRACE := xTrace
-   ELSEIF HB_ISSTRING( xTrace )
+   CASE HB_ISSTRING( xTrace )
       IF Upper( xTrace ) == "ON"
          s_lSET_TRACE := .T.
       ELSEIF Upper( xTrace ) == "OFF"
          s_lSET_TRACE := .F.
       ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN lTrace
 
@@ -88,19 +89,21 @@ FUNCTION xhb_SetTraceStack( xLevel )
 
    LOCAL nTraceLevel := s_nSET_TRACESTACK
 
-   IF HB_ISSTRING( xLevel )
-      IF Upper( xLevel ) == "NONE"
+   DO CASE
+   CASE HB_ISSTRING( xLevel )
+      DO CASE
+      CASE Upper( xLevel ) == "NONE"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_NONE
-      ELSEIF Upper( xLevel ) == "CURRENT"
+      CASE Upper( xLevel ) == "CURRENT"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_CURRENT
-      ELSEIF Upper( xLevel ) == "ALL"
+      CASE Upper( xLevel ) == "ALL"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
-      ENDIF
-   ELSEIF HB_ISNUMERIC( xLevel )
+      ENDCASE
+   CASE HB_ISNUMERIC( xLevel )
       IF xLevel >= 0
          s_nSET_TRACESTACK := xLevel
       ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN nTraceLevel
 

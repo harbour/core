@@ -56,7 +56,7 @@ STATIC FUNCTION MaskEMail( cEMail )
 
    RETURN cEMail
 
-STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ nPos, cLang )
+STATIC PROCEDURE ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ nPos, cLang )
 
    STATIC sc_hEmpty := { ;
       3  => { "", "UTF8", "" }, ;
@@ -104,7 +104,7 @@ STATIC FUNCTION ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION ConvToC( cStr )
    RETURN '"' + hb_StrReplace( cStr, { '"' => '\"' } ) + '"'

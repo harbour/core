@@ -428,22 +428,22 @@
       // then CREATE FROM this file a new database file
 
       CREATE template
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "CHANNEL"
       FIELD->FIELD_TYPE := "N"
       FIELD->FIELD_LEN  := 2
       FIELD->FIELD_DEC  := 0
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "PROGRAM"
       FIELD->FIELD_TYPE := "C"
       FIELD->FIELD_LEN  := 20
       FIELD->FIELD_DEC  := 0
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "REVIEW"
       FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
       FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
       FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
-      CLOSE
+      dbCloseArea()
       CREATE TV_Guide FROM template
    $STATUS$
       R

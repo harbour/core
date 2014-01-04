@@ -77,7 +77,6 @@ METHOD new( nValue, nDec ) CLASS Money
    RETURN Self
 
 METHOD value( ) CLASS Money
-
    RETURN ::nValue / ::nMul
 
 METHOD getMoney( oMoney ) CLASS Money
@@ -107,7 +106,6 @@ METHOD normalize( xArg ) CLASS Money
    RETURN nValue
 
 METHOD Equal( xArg ) CLASS Money
-
    RETURN ::nValue == ::normalize( xArg )
 
 METHOD Plus( xArg ) CLASS Money
@@ -170,7 +168,6 @@ METHOD Str( nLen, nDec ) CLASS Money
    RETURN cStr
 
 STATIC FUNCTION IsMoney( xArg )
-
    RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() = "MONEY"
 
 STATIC FUNCTION GenError( xArg )

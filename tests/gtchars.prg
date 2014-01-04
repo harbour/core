@@ -76,7 +76,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    RETURN
 
-STATIC FUNCTION dspboxch( cStr )
+STATIC PROCEDURE dspboxch( cStr )
 
    LOCAL i, r, c
 
@@ -86,4 +86,4 @@ STATIC FUNCTION dspboxch( cStr )
       SetPos( r, c + 1 )
    NEXT
 
-   RETURN NIL
+   RETURN

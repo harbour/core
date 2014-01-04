@@ -510,7 +510,7 @@ STATIC FUNCTION GoogleMap()
    mfrom2  := mto2  := Space( 40 )
    mfrom3  := mto3  := Space( 50 )
 
-   WHILE .T.
+   DO WHILE .T.
       @  5, 01 SAY "FROM :"
       @  7, 01 SAY "State ...:" GET mfrom1  PICTURE "@!"
       @  8, 01 SAY "City ....:" GET mfrom2  PICTURE "@!"

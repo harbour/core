@@ -365,7 +365,7 @@ METHOD Goto( nLine ) CLASS TCgiFile
       RETURN nPos
    ENDIF
 
-   WHILE ! ::Eof()
+   DO WHILE ! ::Eof()
 
       ::ReadLine()
 
@@ -398,7 +398,7 @@ METHOD Skip( nLines ) CLASS TCgiFile
 
    ENDIF
 
-   WHILE ! ::Eof()
+   DO WHILE ! ::Eof()
 
       IF nCount == nLines
          EXIT

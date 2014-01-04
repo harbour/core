@@ -25,7 +25,7 @@ PROCEDURE Main()
 
    /* Look for all records which have 'SHERMAN' string inside */
    hs_Set( hs, "SHERMAN" )
-   WHILE ( n := hs_Next( hs ) ) > 0
+   DO WHILE ( n := hs_Next( hs ) ) > 0
       dbGoto( n )
       IF hs_Verify( hs ) > 0
          ? RTrim( FIRST + LAST + STREET + CITY )

@@ -185,7 +185,7 @@ FUNCTION xBrowse1()
    AddMiscObjects( nWin, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 #endif
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       oBrowse:ForceStable()
 
       lMessage( "Record #" + hb_ntos( RecNo() ) )

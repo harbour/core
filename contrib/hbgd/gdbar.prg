@@ -134,12 +134,13 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
    ::Setfont( "Arial" )
 
    // configures Fontes
-   IF     ::textfont == 1; ::SetFontSmall()
-   ELSEIF ::textfont == 2; ::SetFontLarge()
-   ELSEIF ::textfont == 3; ::SetFontMediumBold()
-   ELSEIF ::textfont == 4; ::SetFontGiant()
-   ELSEIF ::textfont == 5; ::SetFontTiny()
-   ENDIF
+   DO CASE
+   CASE ::textfont == 1; ::SetFontSmall()
+   CASE ::textfont == 2; ::SetFontLarge()
+   CASE ::textfont == 3; ::SetFontMediumBold()
+   CASE ::textfont == 4; ::SetFontGiant()
+   CASE ::textfont == 5; ::SetFontTiny()
+   ENDCASE
 
    ::SetFontPitch( ::textfont )
 
@@ -312,25 +313,27 @@ METHOD Finish( image_style, quality, nFG ) CLASS GDBar
       // Output std handle == 1
 
       // ::filename := ::text
-      IF image_style == IMG_FORMAT_PNG
+      DO CASE
+      CASE image_style == IMG_FORMAT_PNG
          ::OutputPng()
-      ELSEIF image_style == IMG_FORMAT_JPEG
+      CASE image_style == IMG_FORMAT_JPEG
          ::OutputJpeg( , quality )
-      ELSEIF image_style == IMG_FORMAT_WBMP
+      CASE image_style == IMG_FORMAT_WBMP
          ::OutputWBmp( , nFG )
-      ELSEIF image_style == IMG_FORMAT_GIF
+      CASE image_style == IMG_FORMAT_GIF
          ::OutputGif()
-      ENDIF
+      ENDCASE
    ELSE
-      IF image_style == IMG_FORMAT_PNG
+      DO CASE
+      CASE image_style == IMG_FORMAT_PNG
          ::SavePng(  ::filename )
-      ELSEIF image_style == IMG_FORMAT_JPEG
+      CASE image_style == IMG_FORMAT_JPEG
          ::Savejpeg( ::filename, quality )
-      ELSEIF image_style == IMG_FORMAT_WBMP
+      CASE image_style == IMG_FORMAT_WBMP
          ::SaveWBmp( ::filename, nFG )
-      ELSEIF image_style == IMG_FORMAT_GIF
+      CASE image_style == IMG_FORMAT_GIF
          ::SaveGif( ::filename )
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN .T.

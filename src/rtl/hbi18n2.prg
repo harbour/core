@@ -186,7 +186,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
                   cErrorMsg := "wrong plural form index"
                   EXIT
                ENDIF
-               WHILE IsDigit( SubStr( cLine, n, 1 ) )
+               DO WHILE IsDigit( SubStr( cLine, n, 1 ) )
                   ++n
                ENDDO
             ENDIF
@@ -219,11 +219,11 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
             n := 8
             IF IsDigit( SubStr( cLine, n, 1 ) )
                nIndex := Val( SubStr( cLine, n ) )
-               WHILE IsDigit( SubStr( cLine, n, 1 ) )
+               DO WHILE IsDigit( SubStr( cLine, n, 1 ) )
                   ++n
                ENDDO
             ENDIF
-            WHILE SubStr( cLine, n, 1 ) == " "
+            DO WHILE SubStr( cLine, n, 1 ) == " "
                ++n
             ENDDO
             IF ! SubStr( cLine, n, 1 ) == "]"

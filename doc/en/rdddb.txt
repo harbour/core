@@ -303,7 +303,7 @@
          READ
          //
          IF Updated()
-            APPEND BLANK
+            dbAppend()
             REPLACE tests->Name WITH cName
             REPLACE tests->Id WITH nId
             tests->( dbCommit() )
@@ -349,11 +349,11 @@
          READ
          //
          IF Updated()
-            APPEND BLANK
+            dbAppend()
             REPLACE tests->Name WITH cName
             REPLACE tests->Id WITH nId
             IF ! testid->( dbSeek( nId ) )
-               APPEND BLANK
+               dbAppend()
                REPLACE tests->Id WITH nId
             ENDIF
          ENDIF

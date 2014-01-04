@@ -86,12 +86,12 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include "error.ch"
+#include "setcurs.ch"
 #include "hbmemory.ch"
 #include "hbgtinfo.ch"
+#include "hbsocket.ch"
 
 REQUEST __HB_EXTERN__
-
-#include "hbsocket.ch"
 
 #if defined( HBMK_HAS_HBGD )
 // adding GD support
@@ -502,7 +502,7 @@ PROCEDURE Main( ... )
    // --------------------- MAIN PART ------------------------------------------
 
    IF s_lConsole
-      SET CURSOR OFF
+      SetCursor( SC_NONE )
       SetMode( nConsoleRows, nConsoleCols )
       // hb_ToOutDebug( "nConsoleRows = %s, nConsoleCols = %s", nConsoleRows, nConsoleCols )
       // hb_ToOutDebug( "nCmdConsoleRows = %s, nCmdConsoleCols = %s", nCmdConsoleRows, nCmdConsoleCols )
@@ -635,7 +635,7 @@ PROCEDURE Main( ... )
    FClose( s_hfileLogAccess )
    FClose( s_hfileLogError )
 
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    RETURN
 
@@ -1720,7 +1720,7 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
              * data after CR_LF + CR_LF
              */
             nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
-            WHILE nPos > 0
+            DO WHILE nPos > 0
                cBuf := Space( nPos )
                nLen := hb_socketRecv( hSocket, @cBuf, nPos )
                IF nLen <= 0

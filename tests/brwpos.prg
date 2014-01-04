@@ -1,4 +1,4 @@
-/* Test TBrowse :rowPos for compiler in Clipper and Harbour */
+/* Test TBrowse():rowPos for compiler in Clipper and Harbour */
 
 #include "inkey.ch"
 
@@ -13,7 +13,7 @@ PROCEDURE Main()
    CLS
    @ 0, 4        SAY "Is current RecNo but not repositioned until FixPos .T. <F2> Change FixPos"
    @ MaxRow(), 1 SAY "Please press <Enter> to select or <Esc> to exit and <F2> to FixPos is"
-   WHILE LastKey() != K_ESC
+   DO WHILE LastKey() != K_ESC
       @ 0, 0 SAY s_nRecNo PICTURE "###"
       @ MaxRow(), 68 SAY iif( s_lFixPos, ".T.", ".F." )
       nRow := TestBrw( nRow  )
@@ -37,31 +37,32 @@ STATIC FUNCTION TestBrw( nRowIni )
    ENDIF
 
    oBrw:rowPos := nRowIni
-   WHILE .T.
+   DO WHILE .T.
       oBrw:forceStable()
       nKey := Inkey( 0 )
-      IF nKey == K_ESC .OR. nKey == K_ENTER
+      DO CASE
+      CASE nKey == K_ESC .OR. nKey == K_ENTER
          EXIT
-      ELSEIF nKey == K_F2
+      CASE nKey == K_F2
          s_lFixPos := ! s_lFixPos
          EXIT
-      ELSEIF nKey == K_DOWN
+      CASE nKey == K_DOWN
          oBrw:Down()
-      ELSEIF nKey == K_UP
+      CASE nKey == K_UP
          oBrw:Up()
-      ELSEIF nKey == K_PGDN
+      CASE nKey == K_PGDN
          oBrw:pageDown()
-      ELSEIF nKey == K_PGUP
+      CASE nKey == K_PGUP
          oBrw:pageUp()
-      ELSEIF nKey == K_CTRL_HOME .OR. nKey == K_CTRL_PGUP
+      CASE nKey == K_CTRL_HOME .OR. nKey == K_CTRL_PGUP
          oBrw:goTop()
-      ELSEIF nKey == K_CTRL_END .OR. nKey == K_CTRL_PGDN
+      CASE nKey == K_CTRL_END .OR. nKey == K_CTRL_PGDN
          oBrw:goBottom()
-      ELSEIF nKey == K_HOME
+      CASE nKey == K_HOME
          oBrw:rowPos := 1
-      ELSEIF nKey == K_END
+      CASE nKey == K_END
          oBrw:rowPos := s_nLastRec
-      ENDIF
+      ENDCASE
    ENDDO
 
    RETURN oBrw:rowPos

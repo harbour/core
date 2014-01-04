@@ -1,5 +1,4 @@
 //
-//
 //                      Test/Demo Program for
 //                       GTWVW GUI Interface
 //                   with multiple window support
@@ -16,12 +15,9 @@
 //
 //   parts of this program are copyrights of their respective owners
 //
-//
 
-/*
-   Compile/Link info:
-   You may use 'hbmk2 wvwtest9.hbp' to build this program.
- */
+/* Compile/Link info:
+   You may use 'hbmk2 wvwtest9.hbp' to build this program. */
 
 #require "gtwvw"
 
@@ -574,7 +570,7 @@ FUNCTION DEMO_Browse()
    RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 20040704
    RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 20040704
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       nKey := Inkey( 0 )
 
       DO CASE

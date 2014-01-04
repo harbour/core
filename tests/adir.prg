@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION TestIt( cSpec )
+STATIC PROCEDURE TestIt( cSpec )
 
    LOCAL a
    LOCAL a1
@@ -47,4 +47,4 @@ STATIC FUNCTION TestIt( cSpec )
 
    ADir( cSpec, 10, "A", NIL, NIL, NIL )
 
-   RETURN NIL
+   RETURN

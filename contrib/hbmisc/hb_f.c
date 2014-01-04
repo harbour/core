@@ -384,7 +384,7 @@ HB_FUNC( HB_FINFO )  /* used for debugging */
    reader that presumes all hard returns are record separators.
 
    This function is useful right now to loop through a CSV file
-   WHILE ! hb_FAtEof(), but it does NOT recognize the same record count
+   DO WHILE ! hb_FAtEof(), but it does NOT recognize the same record count
    and positioning that the other functions in this file use.
    It does its own skip and read, so an entire file can be read
    sequentially with just this function.

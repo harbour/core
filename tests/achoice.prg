@@ -139,8 +139,6 @@ PROCEDURE Main()
 
    SetColor( "GB+/B,GR+/R,,,W/N" )
 
-   SET CURSOR ON
-
    ASize( aPermits, Len( aPrompts ) )
 
    FOR x := 1 TO Len( aPrompts )

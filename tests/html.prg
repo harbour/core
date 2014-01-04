@@ -83,7 +83,7 @@ METHOD AddHead( cDescr ) CLASS THTML
 
    ::cBody += "<h1>" + cDescr + "</h1>"
 
-   RETURN NIL
+   RETURN Self
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 

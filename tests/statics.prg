@@ -30,13 +30,13 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION Two()
+STATIC PROCEDURE Two()
 
    STATIC a := "Test"
 
    ? a
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION Three( p )
 

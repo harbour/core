@@ -81,14 +81,14 @@ PROCEDURE Main()
    ? '    TokenInit( @cStr1, ",", 1 ) == .T. ? ---->', TokenInit( @cStr1, ",", 1 )
    ? '    TokenNum() == 6 ? ----------------------->', TokenNum()
    ? '      TokenEnd() ? -------------------------->', TokenEnd()
-   WHILE ! TokenEnd()
+   DO WHILE ! TokenEnd()
       ? '      TokenNext(@cStr1)  ----------------->', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ----------------------->', TokenEnd()
    ENDDO
    ?
    ? '    rewind with TokenInit() == .T. ? -------->', TokenInit()
    ? '      TokenEnd() ? -------------------------->', TokenEnd()
-   WHILE ! TokenEnd()
+   DO WHILE ! TokenEnd()
       ? '      TokenNext( @cStr1 ) ---------------->', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ----------------------->', TokenEnd()
    ENDDO
@@ -106,14 +106,14 @@ PROCEDURE Main()
    ? '  token environment of cStr1 !'
    ? '    rewind with TokenInit() == .T. ? ------->', TokenInit()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
-   WHILE ! TokenEnd()
+   DO WHILE ! TokenEnd()
       ? '      TokenNext( @cStr3 ) ------------------>', '"' + TokenNext( @cStr3 ) + '"'
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
    ENDDO
    ?
    ? '    rewind with TokenInit() == .T. ? ------->', TokenInit()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
-   WHILE ! TokenEnd()
+   DO WHILE ! TokenEnd()
       ? '      start / end with TokenAt( .F./.T. ) -->', TokenAt(), TokenAt( .T. )
       TokenNext( @cStr1 )
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
@@ -139,7 +139,7 @@ PROCEDURE Main()
    TokenInit()
    ? '    TokenNum() == 6 ? ---------------------->', TokenNum()
    ? '      TokenEnd() ? ------------------------->', TokenEnd()
-   WHILE ! TokenEnd()
+   DO WHILE ! TokenEnd()
       ? '      TokenNext( @cStr1 ) ------------------>', '"' + TokenNext( @cStr1 ) + '"'
       ? '      TokenEnd() ? ------------------------->', TokenEnd()
    ENDDO
@@ -159,7 +159,7 @@ PROCEDURE Main()
    ? '    TokenNum( @cTE2 ) == 4 ? -------------------->', TokenNum( @cTE2 )
    ? '        TokenEnd( @cTE1 ) ? --------------------->', TokenEnd( @cTE1 )
    ? '        TokenEnd( @cTE2 ) ? --------------------->', TokenEnd( @cTE2 )
-   WHILE ! TokenEnd( @cTE1 ) .AND. ! TokenEnd( @cTE2 )
+   DO WHILE ! TokenEnd( @cTE1 ) .AND. ! TokenEnd( @cTE2 )
       ? '      next train at ' + TokenNext( cStr4,, @cTE1 ) + ":" + TokenNext( cStr5,, @cTE2 )
       ? '          compiled with TokenNext( cStr4,, @cTE1 ) + ":" + TokenNext( cStr5,, @cTE2 )'
       ? '        TokenEnd( @cTE1 ) ? --------------------->', TokenEnd( @cTE1 )

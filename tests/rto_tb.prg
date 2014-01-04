@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Regression tests for classes TBrowse/TBColumn
+ * Regression tests for classes TBrowse()/TBColumn()
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
@@ -290,7 +290,7 @@ STATIC PROCEDURE TBRAssign( xVar )
 
    s_xVar := xVar
 
-   s_cTest := "TBrowse (empty) assigning: " + XToStr( xVar )
+   s_cTest := "TBrowse() (empty) assigning: " + XToStr( xVar )
 
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:AutoLite      := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:Cargo         := xVar )

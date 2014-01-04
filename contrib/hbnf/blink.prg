@@ -22,7 +22,7 @@
 /* NOTE: In its original version, this function changed cursor position,
          in Harbour it doesn't. */
 
-FUNCTION ft_Blink( cMsg, nRow, nCol )
+PROCEDURE ft_Blink( cMsg, nRow, nCol )
 
    LOCAL cSavColor
 
@@ -38,4 +38,4 @@ FUNCTION ft_Blink( cMsg, nRow, nCol )
          iif( "*" $ Left( cSavColor, 4 ), cSavColor, "*" + cSavColor ) )
    ENDIF
 
-   RETURN NIL
+   RETURN

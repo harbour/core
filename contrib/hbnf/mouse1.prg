@@ -78,12 +78,12 @@ FUNCTION ft_MInRegion( nTR, nLC, nBR, nRC )
       MRow() >= nTR .AND. MRow() <= nBR .AND. ;
       MCol() >= nLC .AND. MCol() <= nRC
 
-FUNCTION ft_MMickeys( /* @ */ nX, /* @ */ nY )
+PROCEDURE ft_MMickeys( /* @ */ nX, /* @ */ nY )
 
    nX := MRow() * 8
    nY := MCol() * 8
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ft_MGetPos( /* @ */ nX, /* @ */ nY )
 
@@ -111,7 +111,7 @@ FUNCTION ft_MGetCoord( /* @ */ nX, /* @ */ nY )
 FUNCTION ft_MSetCoord( nX, nY )
    RETURN MSetPos( nX, nY )
 
-FUNCTION ft_MSetSens( nHoriz, nVert, nDouble )
+PROCEDURE ft_MSetSens( nHoriz, nVert, nDouble )
 
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
@@ -126,7 +126,7 @@ FUNCTION ft_MSetSens( nHoriz, nVert, nDouble )
    // Fill the registers
    _ft_MSetSensitive( nHoriz, nVert, nDouble )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ft_MVersion( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
@@ -171,39 +171,39 @@ FUNCTION ft_MCursor( lState )
 
    RETURN lSavState
 
-FUNCTION ft_MShowCrs()
+PROCEDURE ft_MShowCrs()
 
    MShow()
 
    t_lCrsState := .T.
 
-   RETURN NIL                // no output from function
+   RETURN
 
-FUNCTION ft_MHideCrs() // decrement internal cursor flag and hide cursor
+PROCEDURE ft_MHideCrs() // decrement internal cursor flag and hide cursor
 
    MHide()
 
    t_lCrsState := .F.
 
-   RETURN NIL                // no output from function
+   RETURN
 
-FUNCTION ft_MXLimit( nMin, nMax )
+PROCEDURE ft_MXLimit( nMin, nMax )
 
    LOCAL nTop, nBottom
 
    hb_MGetBounds( @nTop,, @nBottom )
    MSetBounds( nTop, nMin, nBottom, nMax )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ft_MYLimit( nMin, nMax )
+PROCEDURE ft_MYLimit( nMin, nMax )
 
    LOCAL nLeft, nRight
 
    hb_MGetBounds(, @nLeft,, @nRight )
    MSetBounds( nMin, nLeft, nMax, nRight )
 
-   RETURN NIL
+   RETURN
 
 /* NOTE: This is what original NFLib did, returned
          vertical position (row) as X and
@@ -220,8 +220,8 @@ FUNCTION ft_MGetPage()
 
 /* NOTE: Page is ignored in Harbour */
 
-FUNCTION ft_MSetPage( nPage )
+PROCEDURE ft_MSetPage( nPage )
 
    HB_SYMBOL_UNUSED( nPage )
 
-   RETURN NIL
+   RETURN

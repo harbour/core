@@ -264,7 +264,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
       dbSkip( 0 )  // significant on a network
 
    ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
-      WHILE i < n
+      DO WHILE i < n
          dbSkip()
          IF Eof() .OR. ! Eval( bWhileCond )
             dbSkip( -1 )
@@ -288,11 +288,11 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    RETURN i
 
-STATIC FUNCTION TbWhileTop( cKey )
+STATIC PROCEDURE TbWhileTop( cKey )
 
    dbSeek( cKey )
 
-   RETURN NIL
+   RETURN
 
 // SeekLast: Finds Last Record For Matching Key
 // Developed By Jon Cole
@@ -301,9 +301,9 @@ STATIC FUNCTION TbWhileTop( cKey )
 // string cKey by one ascii character.  After SEEKing the new string,
 // back up one record to get to the last record which matches cKey.
 
-STATIC FUNCTION TbWhileBot( cKey )
+STATIC PROCEDURE TbWhileBot( cKey )
 
    dbSeek( Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )
    dbSkip( -1 )
 
-   RETURN NIL
+   RETURN

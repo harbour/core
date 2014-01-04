@@ -123,7 +123,7 @@ STATIC FUNCTION xhb_DefError( oError )
    LOCAL n
 
    n := 0
-   WHILE ! Empty( ProcName( ++n ) )
+   DO WHILE ! Empty( ProcName( ++n ) )
       IF ProcName( n ) == ProcName()
          n := 3
          TraceLog( "Error system failure!", err_ProcName( oError, n ), err_ProcLine( oError, n ), err_ModuleName( oError, n ), oError:description )
@@ -234,7 +234,7 @@ STATIC FUNCTION xhb_DefError( oError )
    ?
    ? "Error at ...:", ProcName() + "(" + hb_ntos( ProcLine() ) + ") in Module:", ProcFile()
    n := 2
-   WHILE ! Empty( ProcName( ++n ) )
+   DO WHILE ! Empty( ProcName( ++n ) )
       ? "Called from :", ProcName( n ) + ;
          "(" + hb_ntos( ProcLine( n ) ) + ") in Module:", ProcFile( n )
    ENDDO
@@ -535,7 +535,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, PadR( ProcName(), 21 ) + " : " + Transform( ProcLine(), "999,999" ) + " in Module: " + ProcFile() )
 
       nCount := 3
-      WHILE ! Empty( ProcName( ++nCount ) )
+      DO WHILE ! Empty( ProcName( ++nCount ) )
          FWriteLine( nHandle, PadR( ProcName( nCount ), 21 ) + " : " + Transform( ProcLine( nCount ), "999,999" ) + " in Module: " + ProcFile( nCount ) )
       ENDDO
 
@@ -585,7 +585,7 @@ STATIC FUNCTION LogError( oerr )
          cBuff := Space( 10 )
          FSeek( nHandle2, 0, FS_SET )
 
-         WHILE nBytes > 0
+         DO WHILE nBytes > 0
             nRead := FRead( nHandle2, @cBuff, hb_BLen( cBuff ) )
             FWrite( nHandle, cBuff, nRead )
             nBytes -= nRead
@@ -746,7 +746,7 @@ FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
    IF __objHasMsg( oError, "AASTACK" )
       aStack := {}
       n := 0
-      WHILE ! Empty( ProcName( ++n ) )
+      DO WHILE ! Empty( ProcName( ++n ) )
          AAdd( aStack, { ProcFile( n ), ProcName( n ), ProcLine( n ) } )
       ENDDO
       oError:aAStack := aStack

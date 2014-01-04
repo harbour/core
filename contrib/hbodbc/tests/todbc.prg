@@ -8,7 +8,7 @@ PROCEDURE Main()
    LOCAL nOp
    LOCAL i
 
-   SET COLOR TO "W+/B"
+   SetColor( "W+/B" )
    CLS
 
    DO WHILE .T.

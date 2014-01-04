@@ -45,7 +45,7 @@ PROCEDURE Main()
    NEXT
 
    ? "Done.."
-   ? "Testing long string via QOUT. 50 characters follow here: 98765432109876543210987654321098765432109876543210"
+   ? "Testing long string via QOut(). 50 characters follow here: 98765432109876543210987654321098765432109876543210"
    ? "Done.. testing end of screen scroll"
 
    FOR n := 1 TO 25
@@ -56,8 +56,8 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION PosNow()
+STATIC PROCEDURE PosNow()
 
    ?? "[" + hb_ntos( Row() ) + "," + hb_ntos( Col() ) + "]"
 
-   RETURN NIL
+   RETURN

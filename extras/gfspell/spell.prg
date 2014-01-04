@@ -279,11 +279,11 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 //
 //    Static:  CACHE_WORDS  - String of cache words
 
-FUNCTION Sp_Clear()
+PROCEDURE Sp_Clear()
 
    CACHE_WORDS := ""
 
-   RETURN NIL
+   RETURN
 
 //   Function: Sp_GetSet()
 //    Purpose: To get/set a parameter for the spell check function
@@ -1313,7 +1313,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 //             used English words.  They are stored in RAM to prevent a
 //             dictionary lookup for 70-80% of the words.
 
-STATIC FUNCTION Sp_Common()
+STATIC PROCEDURE Sp_Common()
 
    t_aGlobal[ 1 ] := ;
       "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS|WITH|ON|HIS|BE|AT|BY" + ;
@@ -1375,7 +1375,7 @@ STATIC FUNCTION Sp_Common()
       "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE" + ;
       "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
 
-   RETURN NIL
+   RETURN
 
 FUNCTION WildCard( cPattern, cString )
 
@@ -1445,7 +1445,7 @@ FUNCTION AWords( cLine )
          cWord   := Chr( y )
          z++
          y := Asc( SubStr( cLine, z, 1 ) )
-         WHILE ( y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" + Chr( 127 ) ) .OR. y == "'"
+         DO WHILE ( y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" + Chr( 127 ) ) .OR. y == "'"
             cWord += Chr( y )
             z++
             IF z > nSize
