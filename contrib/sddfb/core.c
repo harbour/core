@@ -80,7 +80,7 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea );
 static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
-static SDDNODE firebirddd = {
+static SDDNODE s_firebirddd = {
    NULL,
    "FIREBIRD",
    ( SDDFUNC_CONNECT ) fbConnect,
@@ -98,7 +98,7 @@ static void hb_firebirddd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
+   if( ! hb_sddRegister( &s_firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 

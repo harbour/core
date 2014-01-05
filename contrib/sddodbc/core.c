@@ -108,7 +108,7 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea );
 static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
 
-static SDDNODE odbcdd =
+static SDDNODE s_odbcdd =
 {
    NULL,
    "ODBC",
@@ -127,7 +127,7 @@ static void hb_odbcdd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &odbcdd ) )
+   if( ! hb_sddRegister( &s_odbcdd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
