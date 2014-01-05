@@ -26,7 +26,7 @@ PROCEDURE Main()
    DO WHILE ! Eof()
       aI := Array( FCount() )
       FOR nI := 1 TO FCount()
-         aI[nI] := FieldGet( nI )
+         aI[ nI ] := FieldGet( nI )
       NEXT
       ? RecNo(), hb_ValToExp( aI )
       dbSkip()

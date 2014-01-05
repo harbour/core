@@ -4,7 +4,8 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-REQUEST SDDMY, SQLMIX
+REQUEST SDDMY
+REQUEST SQLMIX
 
 ANNOUNCE RDDSYS
 
@@ -20,7 +21,7 @@ PROCEDURE Main()
 
    rddSetDefault( "SQLMIX" )
 
-   AEval( rddList(), {| x | QOut( x ) } )
+   ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
    IF rddInfo( RDDI_CONNECT, { "MYSQL", "localhost", "test", , "test" } ) == 0
       ? "Unable connect to the server"

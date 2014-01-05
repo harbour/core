@@ -3,11 +3,13 @@
 
 #include "simpleio.ch"
 
-REQUEST SDDSQLITE3, SQLMIX
+REQUEST SDDSQLITE3
+REQUEST SQLMIX
 
-PROCEDURE Main()
+PROCEDURE Main( cFileName )
 
    LOCAL tmp
+   LOCAL cTable
 
 #if defined( __HBSCRIPT__HBSHELL )
    rddRegister( "SQLBASE" )
@@ -15,34 +17,56 @@ PROCEDURE Main()
    hb_SDDSQLITE3_Register()
 #endif
 
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-
    rddSetDefault( "SQLMIX" )
 
-   AEval( rddList(), {| X | QOut( X ) } )
+   ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
-   ? "-1-"
-   ? "Connect:", tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", hb_DirBase() + "test.sq3" } )
+   cTable := iif( HB_ISSTRING( cFileName ), "attachment", "t1" )
+   hb_default( @cFileName, hb_DirBase() + "test.sq3" )
+
+   ? "Connect:", hb_ntos( tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", cFileName } ) )
    IF tmp == 0
-      ? "Unable connect to the server"
+      ? "Error connecting"
+      RETURN
    ENDIF
-   ? "-2-"
-   ? "Use:", dbUseArea( .T., , "select * from t1", "t1" )
-   ? "-3-"
+
+   IF Empty( cTable )
+      dbUseArea( .T.,, "SELECT name FROM sqlite_master WHERE type='table'", "tables" )
+      cTable := tables->name
+      dbCloseArea()
+   ENDIF
+
+   ? "Use:", dbUseArea( .T.,, "SELECT * FROM " + cTable, "table" )
    ? "Alias:", Alias()
-   ? "-4-"
-   ? "DB struct:", hb_ValToExp( dbStruct() )
-   ? "-5-"
+   ? "Struct:", hb_ValToExp( dbStruct() )
    FOR tmp := 1 TO FCount()
-      ? FieldName( tmp ), hb_FieldType( tmp )
+      ? tmp, hb_FieldType( tmp ), FieldName( tmp )
    NEXT
-   ? "-6-"
    Inkey( 0 )
+
+   CLS
+   dbGoTop()
+   DO WHILE ! Eof() .AND. RecNo() < MaxRow()
+      ?
+      FOR tmp := 1 TO FCount()
+         ?? "", FieldGet( tmp )
+      NEXT
+      dbSkip()
+   ENDDO
+   Inkey( 0 )
+
+   /* NOTE: TBrowse() will automatically set column widths (if not
+            explicitly set by the caller) according to the width of
+            the value received when displaying the first row/record.
+            In classic .dbf tables, data has the same width for every
+            row of a column/field, so above method works reliably.
+            In SQLite3 though, data can have any width for each row,
+            thus the legacy automatism won't work well. IOW you'll
+            need to use some UI method that sets metrics independely
+            of one specific value coming from the database. [vszakats] */
+   CLS
    Browse()
 
-   INDEX ON FIELD->age TO age
-   dbGoTop()
-   Browse()
    dbCloseArea()
 
    RETURN

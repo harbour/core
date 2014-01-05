@@ -49,6 +49,7 @@
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbdate.h"
+#include "hbset.h"
 #include "hbvm.h"
 
 #include "hbrddsql.h"
@@ -298,40 +299,49 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    {
       DBFIELDINFO pFieldInfo;
 
-      PHB_ITEM pName;
+      int iDataType = sqlite3_column_type( st, uiIndex );
+      PHB_ITEM pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
 
-      int iDataType;
-      int iSize;
-      int iDec;
+      if( ( ( AREAP ) pArea )->uiMaxFieldNameLength < hb_itemGetCLen( pName ) )
+         ( ( AREAP ) pArea )->uiMaxFieldNameLength = hb_itemGetCLen( pName );
 
-      pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
-      iDataType = sqlite3_column_type( st, uiIndex );
-
-      iSize = sqlite3_column_bytes( st, uiIndex );
-      iDec  = 0;
-
-      pFieldInfo.uiLen = ( HB_USHORT ) iSize;
-      pFieldInfo.uiDec = ( HB_USHORT ) iDec;
-
 #if 0
-      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, iDataType, iSize, iDec ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d", pFieldInfo.atomName, iDataType, sqlite3_column_bytes( st, uiIndex ) ) );
 #endif
+
+      /* There are no field length limits stored in the SQLite3 database,
+         so we're resorting to setting some arbitrary default values to
+         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         better. For better results, update apps to untie UI metrics from
+         any database field/value widths. [vszakats] */
 
       switch( iDataType )
       {
-         case SQLITE_TEXT:
+         case SQLITE3_TEXT:
             pFieldInfo.uiType = HB_FT_STRING;
+            pFieldInfo.uiLen = 10;
+            pFieldInfo.uiDec = 0;
             break;
 
          case SQLITE_FLOAT:
+            pFieldInfo.uiType = HB_FT_LONG;
+            pFieldInfo.uiLen = ( HB_USHORT ) hb_setGetDecimals() + 11;
+            pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+            break;
+
          case SQLITE_INTEGER:
             pFieldInfo.uiType = HB_FT_LONG;
+            pFieldInfo.uiLen = 10;
+            pFieldInfo.uiDec = 0;
             break;
 
          case SQLITE_BLOB:
+         case SQLITE_NULL:
             pFieldInfo.uiType = HB_FT_BLOB;
+            pFieldInfo.uiLen = 10;
+            pFieldInfo.uiDec = 0;
             break;
 
          default:
@@ -341,7 +351,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;
-            pFieldInfo.uiType = HB_FT_STRING;
             break;
       }
 
