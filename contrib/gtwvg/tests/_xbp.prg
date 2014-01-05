@@ -13,7 +13,7 @@
 //                     A Pure Xbase++ Implementation
 //
 
-FUNCTION demoxbp()
+PROCEDURE demoxbp()
 
    LOCAL oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
    LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE, oAddr
@@ -253,7 +253,7 @@ FUNCTION demoxbp()
 
    oCrt:Destroy()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
 
@@ -282,7 +282,7 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
 
    RETURN 1
 
-STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
+STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    LOCAL oMenuBar, oSubMenu
 
@@ -320,7 +320,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
@@ -354,7 +354,7 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    RETURN oTBar
 
-STATIC FUNCTION MyFunctionXbp( nMode )
+STATIC PROCEDURE MyFunctionXbp( nMode )
 
    DO CASE
    CASE nMode == 1
@@ -380,9 +380,9 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeFontDialogXbp( oCrt )
+STATIC PROCEDURE ExeFontDialogXbp( oCrt )
 
    LOCAL oFontDlg
 
@@ -410,4 +410,4 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
 
    oFontDlg:destroy()
 
-   RETURN NIL
+   RETURN

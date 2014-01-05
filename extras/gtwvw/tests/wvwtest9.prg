@@ -492,7 +492,7 @@ STATIC PROCEDURE Demo_Get()
 
 //
 
-STATIC FUNCTION DEMO_Browse()
+STATIC PROCEDURE DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -514,7 +514,7 @@ STATIC FUNCTION DEMO_Browse()
    nCurWindow := wvw_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
    IF nCurWindow == 0
       lboxmessage( "Failed Opening new window!" )
-      RETURN NIL
+      RETURN
    ENDIF
 
    ResetMiscObjects( nCurWindow )
@@ -527,7 +527,7 @@ STATIC FUNCTION DEMO_Browse()
    USE "..\..\..\tests\test" NEW
    IF NetErr()
       wvw_lCloseWindow()
-      RETURN NIL
+      RETURN
    ENDIF
 
    INDEX ON FIELD->LAST TO test1  // 2004-07-07
@@ -662,11 +662,11 @@ STATIC FUNCTION DEMO_Browse()
    SetColor( cColor )
    // SetCursor( nCursor )
 
-   RETURN NIL
+   RETURN
 
 /* generic Vertical Scrollbar handler for tbrowse */
 
-STATIC FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
+STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
@@ -707,11 +707,11 @@ STATIC FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    wvw_nSetCurWindow( nOldWin )
 
-   RETURN NIL
+   RETURN
 
 /* generic Horizontal Scrollbar handler for tbrowse */
 
-STATIC FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
+STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
@@ -751,7 +751,7 @@ STATIC FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    wvw_nSetCurWindow( nOldWin )
 
-   RETURN NIL
+   RETURN
 
 /**
 2004-07-04 notes:
@@ -762,7 +762,7 @@ nPage :: pagesize
 nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
 **/
 
-STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
+STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
    LOCAL nRatio
@@ -787,9 +787,9 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
 
    wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
+STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
 
@@ -801,7 +801,7 @@ STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
 
    wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -933,7 +933,7 @@ FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )  /* must be a publi
 
    RETURN NIL
 
-STATIC FUNCTION CreateToolbar( nWinNum )
+STATIC PROCEDURE CreateToolbar( nWinNum )
 
    // for toolbar:
    LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
@@ -955,7 +955,7 @@ STATIC FUNCTION CreateToolbar( nWinNum )
 
    IF hWndTB == 0
       lboxmessage( "FAILED create toolbar" )
-      RETURN NIL
+      RETURN
    ENDIF
 
    /* system bitmaps use constants in commctrl.h */
@@ -983,9 +983,9 @@ STATIC FUNCTION CreateToolbar( nWinNum )
    wvw_tbAddButton( nWinNum, IDM_HELP_INFO, 10 /*STD_PROPERTIES*/, "Info", 1 )
    wvw_tbAddButton( nWinNum, IDM_HELP_HELP, 11 /*STD_HELP*/, "Help", 1 )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION xDisableToolbar( nWinNum )
+STATIC PROCEDURE xDisableToolbar( nWinNum )
 
    LOCAL i
 
@@ -993,9 +993,9 @@ STATIC FUNCTION xDisableToolbar( nWinNum )
       wvw_tbEnableButton( nWinNum, i, .F. )
    NEXT
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION xEnableToolbar( nWinNum )
+STATIC PROCEDURE xEnableToolbar( nWinNum )
 
    LOCAL i
 
@@ -1003,7 +1003,7 @@ STATIC FUNCTION xEnableToolbar( nWinNum )
       wvw_tbEnableButton( nWinNum, i, .T. )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -1122,7 +1122,7 @@ STATIC FUNCTION lYesNo( cMsg, cTitle )
 STATIC FUNCTION lDebug( cMsg )
    RETURN lBoxMessage( cMsg, "Debug" )
 
-STATIC FUNCTION xDebugInfo()
+STATIC PROCEDURE xDebugInfo()
 
    STATIC s_nfh := 0
 
@@ -1149,9 +1149,9 @@ STATIC FUNCTION xDebugInfo()
       hb_eol() + ;
       "BTW, mouse pointer now sits on MaxRow(),MaxCol(), doesn't it?" )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION xHelp()
+STATIC PROCEDURE xHelp()
 
    lboxmessage( "GTWVW test/demo" + hb_eol() + ;
       "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
@@ -1178,7 +1178,7 @@ STATIC FUNCTION xHelp()
       "Other info:" + hb_eol() + ;
       "Window repainting is checked at 100msec interval" )
 
-   RETURN NIL
+   RETURN
 
 /* Modified from SetDefaultWindowSize() sample from Peter Rees */
 /* Note: width < 0 appears better, but mouse caption will look bad */
@@ -1611,7 +1611,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 // *******************************************************
 // interface functions
 
-STATIC FUNCTION wvwm_paint( nWinNum )
+STATIC PROCEDURE wvwm_paint( nWinNum )
 
    // normally called by WVW_Paint()
    // redraw every mouse object in window nWinNum
@@ -1619,7 +1619,7 @@ STATIC FUNCTION wvwm_paint( nWinNum )
       AEval( s_amouseobjlist[ nWinNum + 1 ], {| o | o[ 2 ]:draw( nWinNum ) } )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // clears all mouse objects from window nWinNum
 STATIC FUNCTION wvwm_ResetMouseObjects( nWinNum )

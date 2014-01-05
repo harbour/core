@@ -26,7 +26,7 @@
 #define K_SBTHUMBTRACKVERT      1059
 #define K_SBTHUMBTRACKHORZ      1060
 
-FUNCTION WvtMyBrowse()
+PROCEDURE WvtMyBrowse()
 
    IF hb_mtvm()
       hb_threadStart( {| oCrt | oCrt := WvgCrt():new( , , { -1, -2 }, { 34, 69 }, , .T. ), ;
@@ -42,9 +42,9 @@ FUNCTION WvtMyBrowse()
       ExecBrowser()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExecBrowser( oCrt )
+STATIC PROCEDURE ExecBrowser( oCrt )
 
    LOCAL nKey, bBlock, oBrowse, aLastPaint, i, pGT
    LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ // , oLB
@@ -85,7 +85,7 @@ STATIC FUNCTION ExecBrowser( oCrt )
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
    IF NetErr()
-      RETURN NIL
+      RETURN
    ENDIF
    IF FLock()
       INDEX ON Test->FIRST TAG "001" TO ( cFileIndex )
@@ -213,7 +213,7 @@ STATIC FUNCTION ExecBrowser( oCrt )
    Wvt_SetPopupMenu( hPopup )
    SetGT( 2, pGT )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
 
@@ -259,7 +259,7 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
 
    RETURN .T.
 
-STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
+STATIC PROCEDURE BrwShowColumn( oBrw, cHeading )
 
    LOCAL i, j, nCur
 
@@ -281,7 +281,7 @@ STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
    oBrw:refreshCurrent()
    oBrw:forceStable()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
 
@@ -345,13 +345,13 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
 
    RETURN oXbp
 
-STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
+STATIC PROCEDURE BrwSetThisOrder( oBrw, nOrd )
 
    dbSetOrder( nOrd )
    oBrw:refreshAll()
    oBrw:forceStable()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
@@ -442,7 +442,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
 
    RETURN oXbp
 
-STATIC FUNCTION BrwReposButtons( oCrt )
+STATIC PROCEDURE BrwReposButtons( oCrt )
 
    LOCAL oXbp, nOff, nTtl, nG, i
    LOCAL aW   := { 10, 10, 10, 10, 10 }
@@ -462,9 +462,9 @@ STATIC FUNCTION BrwReposButtons( oCrt )
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
+STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
 
    LOCAL oPB, nOff, nTtl, nG, i
    LOCAL aPmt := { "Modal Window", "Maximize", "Go Top", "Go Bottom", "Right Most" }
@@ -501,9 +501,9 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
       nOff += aW[ i ] + nG
    NEXT
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
+STATIC PROCEDURE Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
    oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -( oBrw:nLeft ) } }, ;
       { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
@@ -519,7 +519,7 @@ STATIC FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
    oVBar:create()
    oVBar:scroll := {| mp1 | Vou_BrwSetVScroll( mp1, oBrw ) }
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildMenu( oCrt )
 
@@ -733,7 +733,7 @@ STATIC FUNCTION DbSkipBlock( n )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 STATIC FUNCTION TBNext()
 
@@ -767,10 +767,9 @@ STATIC FUNCTION TBPrev()
    RETURN lMoved
 
 STATIC FUNCTION VouBlockField( i )
+   RETURN {|| FieldGet( i ) }
 
-   RETURN  {|| FieldGet( i ) }
-
-STATIC FUNCTION Vou_ExecTBarAction( oBtn )
+STATIC PROCEDURE Vou_ExecTBarAction( oBtn )
 
    SWITCH oBtn:caption
    CASE "New"
@@ -789,9 +788,9 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
       Wvt_Keyboard( K_CTRL_HOME ); EXIT
    ENDSWITCH
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
+STATIC PROCEDURE Vou_BrwSetVScroll( mp1, oBrowse )
 
    SWITCH mp1[ 2 ]
 
@@ -830,7 +829,7 @@ STATIC FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
    oBrowse:forceStable()
 
-   RETURN NIL
+   RETURN
 
 /* For brosers inside WvtDialog() */
 

@@ -293,7 +293,7 @@ STATIC FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHi
 
    RETURN oCrt
 
-FUNCTION DoModalWindow()
+PROCEDURE DoModalWindow()
 
    LOCAL oCrt, nSel, pGT
    LOCAL aLastPaint := WvtSetBlocks( {} )
@@ -335,4 +335,4 @@ FUNCTION DoModalWindow()
 
    WvtSetBlocks( aLastPaint )
 
-   RETURN NIL
+   RETURN

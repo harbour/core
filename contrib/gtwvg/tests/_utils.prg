@@ -35,7 +35,7 @@
 THREAD STATIC t_keys_ := {, , , , , , , , , , , , , , , , , , , }
 THREAD STATIC t_pic_ := {, , , , , , , , , , , , , , , , , , , }
 
-FUNCTION WvtSetKeys( lSet )
+PROCEDURE WvtSetKeys( lSet )
 
    IF lSet
       t_keys_[  2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
@@ -59,7 +59,7 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F10, t_keys_[ 10 ] )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Wvt_Paint() must be a FUNCTION in your application
 // as it is called when Window gets WM_PAINT message.
@@ -447,7 +447,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-FUNCTION WvtPictures( nSlot, cFilePic )
+PROCEDURE WvtPictures( nSlot, cFilePic )
 
    IF nSlot != NIL .AND. nSlot <= 20 .AND. hb_FileExists( cFilePic )
       IF !( t_pic_[ nSlot ] == cFilePic )
@@ -457,21 +457,20 @@ FUNCTION WvtPictures( nSlot, cFilePic )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
+PROCEDURE WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    IF t_pic_[ nSlot ] != NIL
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION GetResource( cName )
-
    RETURN hb_DirBase() + cName
 
-FUNCTION uiDebug( ... )
+PROCEDURE uiDebug( ... )
 
    LOCAL aP := hb_AParams()
    LOCAL s := ""
@@ -480,9 +479,9 @@ FUNCTION uiDebug( ... )
 
    wapi_OutputDebugString( s )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION MyError( oError )
+PROCEDURE MyError( oError )
 
    ? oError:description
    ? oError:operation
@@ -494,4 +493,4 @@ FUNCTION MyError( oError )
    DO WHILE Inkey() != K_ESC
    ENDDO
 
-   RETURN NIL
+   RETURN

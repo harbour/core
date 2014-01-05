@@ -64,7 +64,7 @@ FUNCTION Wvt_Paint()  /* must be a public function */
 
    RETURN NIL
 
-STATIC FUNCTION ExecForm( aPaint )
+STATIC PROCEDURE ExecForm( aPaint )
 
    LOCAL cColor    := SetColor()
    LOCAL aPnt
@@ -101,7 +101,7 @@ STATIC FUNCTION ExecForm( aPaint )
    SetColor( cColor )
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION SetGT( nIndex, pGT )
 
@@ -150,7 +150,7 @@ STATIC FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-STATIC FUNCTION DoModalDialog()
+STATIC PROCEDURE DoModalDialog()
 
    LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
@@ -183,16 +183,16 @@ STATIC FUNCTION DoModalDialog()
 
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()  /* must be a public function */
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif

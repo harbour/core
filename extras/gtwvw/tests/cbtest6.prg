@@ -125,7 +125,7 @@ PROCEDURE Main()
  * CBN_SELCHANGE: (1)
  * (do nothing)
  */
-STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
+STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    LOCAL i, ccursel
    LOCAL oGet := GetActive()
@@ -138,7 +138,7 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    IF Empty( GetList )
       MyAlert( "Bad practice: you left an active combobox, but READ already ended" )
-      RETURN NIL // ignore this event
+      RETURN  // ignore this event
    ENDIF
 
    DO CASE
@@ -178,7 +178,7 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
             hb_keyPut( K_LBUTTONDOWN )
          ENDIF // oGet:HasFocus
 
-      ELSE  // i==0
+      ELSE
          /* there's no GET object beneath the combobox.
           * This must be a combobox living in the wild.
           * Do what you want with it, we do nothing here.
@@ -193,7 +193,7 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
 /************* custom get reader ******************/
 
@@ -202,7 +202,7 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 // Some notes:
 // oGet:cargo stores combobox id over this oGet
 //
-STATIC FUNCTION CBreader( oGet )
+STATIC PROCEDURE CBreader( oGet )
 
    LOCAL nKey, bKeyBlock
    LOCAL oGetList := __GetListActive()
@@ -265,7 +265,7 @@ STATIC FUNCTION CBreader( oGet )
       oGet:killfocus()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 #if 0
 // move focus to GET object at GetList[nPos]
@@ -298,13 +298,13 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
 /* miscellaneous */
 
 // Set FOCUS to window nWinNum
-STATIC FUNCTION SetWinFocus( nWinNum )
+STATIC PROCEDURE SetWinFocus( nWinNum )
 
    LOCAL hWnd := wvw_GetWindowHandle( nWinNum )
 
    win_SetFocus( hWnd )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION MyAlert( cMsg, par2, par3, par4, par5, par6 )
 

@@ -283,7 +283,7 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
 
    RETURN 1
 
-STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
+STATIC PROCEDURE ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    LOCAL oMenuBar, oSubMenu
 
@@ -321,7 +321,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
@@ -355,9 +355,9 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    RETURN oTBar
 
-STATIC FUNCTION MyFunctionXbp( nMode )
+STATIC PROCEDURE MyFunctionXbp( nMode )
 
-#define MUSIC_WAITON          {800, 1600}
+#define MUSIC_WAITON          { 800, 1600 }
 
    DO CASE
    CASE nMode == 1
@@ -383,9 +383,9 @@ STATIC FUNCTION MyFunctionXbp( nMode )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeFontDialog( oCrt )
+STATIC PROCEDURE ExeFontDialog( oCrt )
 
    LOCAL oFontDlg, oWvgFont
 
@@ -415,17 +415,17 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    oFontDlg:destroy()
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()  /* must be a public function */
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_GUI_DEFAULT
    REQUEST HB_GT_WVG
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif

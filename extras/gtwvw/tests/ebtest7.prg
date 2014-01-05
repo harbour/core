@@ -179,7 +179,7 @@ STATIC PROCEDURE GetSession()
 
    RETURN
 
-STATIC FUNCTION MyHelp()
+STATIC PROCEDURE MyHelp()
 
    LOCAL ccallstack, i
 
@@ -194,7 +194,7 @@ STATIC FUNCTION MyHelp()
       "Call stack:" + hb_eol() + ;
       ccallstack )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
 
@@ -507,7 +507,7 @@ STATIC FUNCTION nFocused( aEBGets )
    RETURN AScan( aEBGets, {| x | x[ __GET_LFOCUSED ] } )
 
 // callback function called by GTWVW during some events on editbox
-STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
+STATIC PROCEDURE MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
    STATIC s_bBusy := .F.
    LOCAL ctext
@@ -516,10 +516,10 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
    LOCAL nwasfocus
 
    IF s_bBusy
-      RETURN NIL
+      RETURN
    ENDIF
    IF nIndex == 0
-      RETURN NIL
+      RETURN
    ENDIF
    s_bBusy := .T.
    mcvaltype := aEBGets[ nIndex ][ __GET_CVALTYPE ]
@@ -555,7 +555,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
    ENDCASE
    s_bBusy := .F.
 
-   RETURN NIL
+   RETURN
 
 /************* borrowed and modified from minigui *************/
 

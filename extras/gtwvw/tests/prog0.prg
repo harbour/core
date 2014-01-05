@@ -50,7 +50,7 @@ PROCEDURE Main()
    // restore state
    SetCursor( SC_NORMAL )
 
-   RETURN // main
+   RETURN
 
 STATIC PROCEDURE xGet1()
 
@@ -89,7 +89,7 @@ STATIC PROCEDURE xGet1()
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-STATIC FUNCTION xBrowse1()
+STATIC PROCEDURE xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -102,7 +102,7 @@ STATIC FUNCTION xBrowse1()
 
    USE "..\..\..\tests\test" NEW
    IF NetErr()
-      RETURN NIL
+      RETURN
    ENDIF
    info_ := dbStruct()
 
@@ -174,7 +174,7 @@ STATIC FUNCTION xBrowse1()
 
    dbCloseArea()
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -196,7 +196,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 //
 
@@ -239,8 +239,7 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION VouBlockField( i )
-
-   RETURN  {|| FieldGet( i ) }
+   RETURN {|| FieldGet( i ) }
 
 // supporting functions ***************************
 
@@ -371,13 +370,13 @@ STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    RETURN i + 1
 
 // Closes the last window and remove it from window list
-STATIC FUNCTION ZREVWINDOW()
+STATIC PROCEDURE ZREVWINDOW()
 
    LOCAL i := Len( s_zwin )
 
    IF i == 0
       // no window to close
-      RETURN NIL
+      RETURN
    ENDIF
 
    // restore states
@@ -388,7 +387,7 @@ STATIC FUNCTION ZREVWINDOW()
    // remove window from list
    hb_ADel( s_zwin, i, .T. )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION nCeiling( nNumber )
    RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )

@@ -317,7 +317,7 @@ STATIC PROCEDURE WvtNextGets_X()
 
    RETURN
 
-STATIC FUNCTION WvtPartialScreen()
+STATIC PROCEDURE WvtPartialScreen()
 
    LOCAL scr        := SaveScreen( 7, 20, 15, 60 )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -357,9 +357,9 @@ STATIC FUNCTION WvtPartialScreen()
    WvtSetBlocks( aLastPaint )
    Wvt_SetPopupMenu( hPopup )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION WvtLines()
+STATIC PROCEDURE WvtLines()
 
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL clr        := SetColor( "N/W" )
@@ -416,7 +416,7 @@ STATIC FUNCTION WvtLines()
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BuildMainMenu()
 
@@ -495,7 +495,7 @@ STATIC FUNCTION BuildMainMenu()
 
    RETURN oMenu  /* The last submenu item */
 
-STATIC FUNCTION GoogleMap()
+STATIC PROCEDURE GoogleMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
    LOCAL nCursor := SetCursor()
@@ -533,9 +533,9 @@ STATIC FUNCTION GoogleMap()
       hb_threadStart( {|| ExecuteActiveX( 1, mweb ) } )
    ENDDO
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION BuildButtons()
+STATIC PROCEDURE BuildButtons()
 
    LOCAL oXbp
 
@@ -586,17 +586,17 @@ STATIC FUNCTION BuildButtons()
    oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) }
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()  /* must be a public function */
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif
 

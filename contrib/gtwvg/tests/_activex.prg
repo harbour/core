@@ -7,7 +7,7 @@
 
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 
-FUNCTION ExecuteActiveX( nActiveX, xParam )
+PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
    LOCAL oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
    LOCAL oListBox, oStatic2, oDA
@@ -228,7 +228,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    oCrt:Destroy()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
@@ -258,7 +258,7 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
    RETURN 1
 
-STATIC FUNCTION ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
+STATIC PROCEDURE ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
 
    LOCAL oMenuBar, oSubMenu
 
@@ -293,7 +293,7 @@ STATIC FUNCTION ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oSubMenu:addItem( { "~Show My Panel", {|| oStatic2:show() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
@@ -360,7 +360,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    RETURN oCom
 
-STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
+STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    LOCAL nKey, sData
 
@@ -573,9 +573,9 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
       ENDIF
    ENDDO
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ConfigureRMChart( RMChart )
+STATIC PROCEDURE ConfigureRMChart( RMChart )
 
    LOCAL oRegion
    LOCAL oCaption
@@ -616,9 +616,9 @@ STATIC FUNCTION ConfigureRMChart( RMChart )
    oChart:StartAngle       := 0
    oChart:DataString       := "10*5*20*25"
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION MyFunction( nMode )
+STATIC PROCEDURE MyFunction( nMode )
 
 #define MUSIC_WAITON          { 800, 1600 }
 
@@ -646,4 +646,4 @@ STATIC FUNCTION MyFunction( nMode )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN

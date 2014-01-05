@@ -11,7 +11,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-FUNCTION DialogWvgClassesOne( nMode )
+PROCEDURE DialogWvgClassesOne( nMode )
 
    LOCAL bBlock
 
@@ -34,9 +34,9 @@ FUNCTION DialogWvgClassesOne( nMode )
       MyDialogOne()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION MyDialogOne( oCrt )
+STATIC PROCEDURE MyDialogOne( oCrt )
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL nWinRows, nWinCols, cWinTitle, cFont, nHeight
@@ -325,9 +325,9 @@ STATIC FUNCTION MyDialogOne( oCrt )
    Wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION DialogWvgClassesTwo()
+PROCEDURE DialogWvgClassesTwo()
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL oDlg     := WvtDialog():New( 30, 90, "My Dialog Two" )
@@ -385,9 +385,9 @@ FUNCTION DialogWvgClassesTwo()
 
    WvtSetBlocks( aObjects )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
+STATIC PROCEDURE ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    LOCAL i
 
@@ -411,9 +411,9 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
    oPBar3:DeActivate()
    oPBar4:DeActivate()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
+STATIC PROCEDURE ExeProgressBar( oPBar, oPBar3 )
 
    LOCAL i
 
@@ -427,4 +427,4 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    oPBar:DeActivate()
    oPBar3:DeActivate()
 
-   RETURN NIL
+   RETURN

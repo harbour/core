@@ -115,7 +115,7 @@ STATIC FUNCTION CreateStatusbar( nWinNum )
 
 // Handle Menu/Toolbar actions
 
-STATIC FUNCTION MenuAction( nWinNum, nCommand )
+STATIC PROCEDURE MenuAction( nWinNum, nCommand )
 
    DO CASE
    CASE nCommand == IDM_OPENWIN
@@ -128,7 +128,7 @@ STATIC FUNCTION MenuAction( nWinNum, nCommand )
       wvw_MessageBox( nWinNum, "Unknown menu command", "Internal Error", MB_OK + MB_ICONEXCLAMATION )
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
 // opens a new typewriter window
 STATIC FUNCTION OpenNewWindow()
@@ -188,25 +188,25 @@ STATIC FUNCTION OpenNewWindow()
 // closes the last window. If no window left, Main Window will be closed too.
 // Closing is done indirectly by stuffing K_ESC into kbd buffer of the
 // designated window.
-STATIC FUNCTION CloseLastWindow()
+STATIC PROCEDURE CloseLastWindow()
 
    LOCAL nWinNum := wvw_nNumWindows() - 1
 
    wvw_nSetCurWindow( nWinNum )
    hb_keyPut( K_ESC )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION KeyHandler( nWinNum, ch )
+STATIC PROCEDURE KeyHandler( nWinNum, ch )
 
    LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )
 
    typing( ch )
    wvw_nSetCurWindow( nOldWin )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION typing( ch )
+STATIC PROCEDURE typing( ch )
 
    IF ch >= 0 .AND. ch <= 255 // TOFIX for unicode
       ?? hb_keyChar( ch )
@@ -217,7 +217,7 @@ STATIC FUNCTION typing( ch )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // from winuser.h
 #define WM_COMMAND                      0x0111

@@ -320,7 +320,7 @@ STATIC FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    RETURN 0
 
-STATIC FUNCTION DrawSlide( hDlg, nSlide )
+STATIC PROCEDURE DrawSlide( hDlg, nSlide )
 
    LOCAL hDC, aRect
 
@@ -333,4 +333,4 @@ STATIC FUNCTION DrawSlide( hDlg, nSlide )
 
    Wvg_ReleaseDC( hDlg, hDC )
 
-   RETURN NIL
+   RETURN
