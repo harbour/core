@@ -1,7 +1,7 @@
 /*
  * SQLite3 Database Driver
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -79,7 +79,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-static SDDNODE sqlt3dd =
+static SDDNODE s_sqlt3dd =
 {
    NULL,
    "SQLITE3",
@@ -97,7 +97,7 @@ static void hb_sqlt3dd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &sqlt3dd ) )
+   if( ! hb_sddRegister( &s_sqlt3dd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -407,7 +407,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -422,7 +421,6 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {

@@ -8,6 +8,7 @@ REQUEST SQLMIX
 
 PROCEDURE Main()
 
+   LOCAL cDB
    LOCAL tmp
 
 #if defined( __HBSCRIPT__HBSHELL )
@@ -22,13 +23,18 @@ PROCEDURE Main()
 
    ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
-   ? "Connect:", tmp := rddInfo( RDDI_CONNECT, { "OCILIB", "ORCL", "scott", "tiger" } )
+   FOR EACH cDB IN { "ORCL", "XE" }
+      IF ( tmp := rddInfo( RDDI_CONNECT, { "OCILIB", cDB, "scott", "tiger" } ) ) != 0
+         EXIT
+      ENDIF
+   NEXT
    IF tmp == 0
       ? "Unable connect to the server"
       RETURN
    ENDIF
 
-   ? "Use:", dbUseArea( .T.,, "select * from emp", "emp" )
+   ? "Connect:", tmp
+   ? "Use:", dbUseArea( .T.,, "SELECT * FROM emp", "emp" )
    ? "Alias:", Alias()
    ? "DB struct:", hb_ValToExp( dbStruct() )
    FOR tmp := 1 TO FCount()
@@ -37,7 +43,7 @@ PROCEDURE Main()
    Inkey( 0 )
    Browse()
 
-   INDEX ON FIELD->SAL TO salary
+   INDEX ON FIELD->sal TO salary
    dbGoTop()
    Browse()
    dbCloseArea()
