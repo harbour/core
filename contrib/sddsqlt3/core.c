@@ -79,7 +79,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-
 static SDDNODE sqlt3dd =
 {
    NULL,
@@ -94,14 +93,9 @@ static SDDNODE sqlt3dd =
    ( SDDFUNC_GETVARLEN ) NULL
 };
 
-
 static void hb_sqlt3dd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-#if SQLITE_VERSION_NUMBER >= 3006000
-   sqlite3_initialize();
-#endif
 
    if( ! hb_sddRegister( &sqlt3dd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -110,10 +104,6 @@ static void hb_sqlt3dd_init( void * cargo )
 static void hb_sqlt3dd_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-#if SQLITE_VERSION_NUMBER >= 3006000
-   sqlite3_shutdown();
-#endif
 }
 
 HB_FUNC( HB_SDDSQLITE3_REGISTER )
@@ -145,25 +135,23 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT uiAction;
    PHB_ITEM  pError;
+   HB_USHORT uiAction;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDSQLITE3", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
+
    return uiAction;
 }
-
 
 static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 {
    char * szRet;
-
-   int iNativeErr = 9999;
+   int iNativeErr;
 
    if( pDb )
    {
@@ -174,14 +162,16 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
       iNativeErr = sqlite3_errcode( pDb );
    }
    else
+   {
       szRet = hb_strdup( "Unable to get error message" );
+      iNativeErr = 9999;
+   }
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
 
    return szRet;
 }
-
 
 /*============= SDD METHODS =============================================================*/
 
@@ -199,9 +189,9 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
       sqlite3_close( db );
 
    hb_strfree( hConn );
+
    return db ? HB_SUCCESS : HB_FAILURE;
 }
-
 
 static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 {
@@ -290,7 +280,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
 
 #if 0
-   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", uiFields ) );
 #endif
 
    errCode = 0;
@@ -301,9 +291,10 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
       int iDataType = sqlite3_column_type( st, uiIndex );
       PHB_ITEM pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
+      HB_USHORT uiNameLen = ( HB_USHORT ) hb_itemGetCLen( pName );
 
-      if( ( ( AREAP ) pArea )->uiMaxFieldNameLength < hb_itemGetCLen( pName ) )
-         ( ( AREAP ) pArea )->uiMaxFieldNameLength = hb_itemGetCLen( pName );
+      if( ( ( AREAP ) pArea )->uiMaxFieldNameLength < uiNameLen )
+         ( ( AREAP ) pArea )->uiMaxFieldNameLength = uiNameLen;
 
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
@@ -317,31 +308,28 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
          better. For better results, update apps to untie UI metrics from
          any database field/value widths. [vszakats] */
 
+      pFieldInfo.uiLen = 10;
+      pFieldInfo.uiDec = 0;
+
       switch( iDataType )
       {
          case SQLITE3_TEXT:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = 10;
-            pFieldInfo.uiDec = 0;
             break;
 
          case SQLITE_FLOAT:
             pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiLen = ( HB_USHORT ) hb_setGetDecimals() + 11;
             pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+            pFieldInfo.uiLen += pFieldInfo.uiDec + 1;
             break;
 
          case SQLITE_INTEGER:
             pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiLen = 10;
-            pFieldInfo.uiDec = 0;
             break;
 
          case SQLITE_BLOB:
          case SQLITE_NULL:
             pFieldInfo.uiType = HB_FT_BLOB;
-            pFieldInfo.uiLen = 10;
-            pFieldInfo.uiDec = 0;
             break;
 
          default:
