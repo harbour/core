@@ -106,15 +106,15 @@ HB_FUNC( TIP_TIMESTAMP )
    hb_retc( szRet );
 }
 
-/* Detects the mimetype of a given file */
+/* Detects the MIME type of a given file */
 
 typedef struct tag_mime
 {
    HB_ISIZ            pos;       /* Position in stream from which the match begins */
    const char *       pattern;   /* String to match */
-   const char *       mime_type; /* Mimetype if complete */
-   int                next;      /* following entry to determine a mimetype, relative to current position (or 0) */
-   int                alternate; /* alternative entry to determine a mimetype, relative to current position (or 0) */
+   const char *       mime_type; /* MIME type if complete */
+   int                next;      /* following entry to determine a MIME type, relative to current position (or 0) */
+   int                alternate; /* alternative entry to determine a MIME type, relative to current position (or 0) */
    short unsigned int flags;     /* flags for confrontation */
 } MIME_ENTRY;
 
@@ -249,16 +249,16 @@ static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
 };
 
-/* Find mime by extension */
+/* Find MIME by extension */
 
 typedef struct tag_mime_ext
 {
    const char * pattern;   /* Extension to match */
    HB_USHORT    flags;     /* flags for confrontation */
-   const char * mime_type; /* Mimetype if complete */
+   const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  314
+#define EXT_MIME_TABLE_SIZE  316
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
@@ -278,6 +278,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "aiff"    , MIME_FLAG_CASEINSENS, "audio/x-aiff" },
    { "alt"     , MIME_FLAG_CASEINSENS, "application/x-up-alert" },
    { "arj"     , MIME_FLAG_CASEINSENS, "application/x-arj" },
+   { "asc"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "asd"     , MIME_FLAG_CASEINSENS, "application/astound" },
    { "asf"     , MIME_FLAG_CASEINSENS, "video/x-ms-asf" },
    { "asn"     , MIME_FLAG_CASEINSENS, "application/astound" },
@@ -436,6 +437,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "ogg"     , MIME_FLAG_CASEINSENS, "audio/ogg" },
    { "oth"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.text-web" },
    { "oxt"     , MIME_FLAG_CASEINSENS, "application/vnd.openofficeorg.extension" },
+   { "p7s"     , MIME_FLAG_CASEINSENS, "application/pkcs7-signature" },
    { "page"    , MIME_FLAG_CASEINSENS, "application/x-coda" },
    { "pbm"     , MIME_FLAG_CASEINSENS, "image/x-portable-bitmap" },
    { "pdb"     , MIME_FLAG_CASEINSENS, "application/x-pilot" },

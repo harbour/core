@@ -150,12 +150,10 @@ METHOD SetBody( cBody ) CLASS TIPMail
    IF ::oEncoder != NIL
       ::cBody := ::oEncoder:Encode( cBody )
       ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
-      ::lBodyEncoded := .T.  // GD needed to prevent an extra crlf from being appended
+      ::lBodyEncoded := .T.  // needed to prevent an extra crlf from being appended [GD]
    ELSE
       ::cBody := cBody
    ENDIF
-   // not needed
-   // ::hHeaders[ "Content-Length" ] := hb_ntos( Len( cBody ) )
 
    RETURN .T.
 
@@ -238,10 +236,10 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TIPMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", cEnc, .F. )
       IF Empty( aMatch )
-         ::hHeaders[ cPart ] := cEnc += "; " + cOption + '="' + cValue + '"'
+         ::hHeaders[ cPart ] := cEnc + "; " + cOption + "=" + '"' + cValue + '"'
       ELSE
-         ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + '="' + ;
-            cValue + '"' + aMatch[ 3 ]
+         ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + "=" + '"' + cValue + '"' + ;
+            aMatch[ 3 ]
       ENDIF
    ENDIF
 
@@ -265,11 +263,9 @@ METHOD NextAttachment() CLASS TIPMail
 
    IF ::nAttachPos > Len( ::aAttachments )
       RETURN NIL
-   ELSE
-      ::nAttachPos++
    ENDIF
 
-   RETURN ::aAttachments[ ::nAttachPos - 1 ]
+   RETURN ::aAttachments[ ::nAttachPos++ ]
 
 METHOD GetAttachment() CLASS TIPMail
 
@@ -301,7 +297,7 @@ METHOD ToString() CLASS TIPMail
          cBoundary := ::MakeBoundary()
          IF ! ::SetFieldOption( "Content-Type", "Boundary", cBoundary )
             ::hHeaders[ "Content-Type" ] := ;
-               'multipart/mixed; boundary="' + cBoundary + '"'
+               "multipart/mixed; boundary=" + '"' + cBoundary + '"'
          ENDIF
       ENDIF
    ENDIF
@@ -330,7 +326,7 @@ METHOD ToString() CLASS TIPMail
       cRet += "Subject: " + ::hHeaders[ "Subject" ] + e"\r\n"
    ENDIF
    IF Len( ::aAttachments ) > 0
-      cRet += "Mime-Version:" + ::hHeaders[ "Mime-Version" ] + e"\r\n"
+      cRet += "Mime-Version: " + ::hHeaders[ "Mime-Version" ] + e"\r\n"
    ENDIF
 
    FOR i := 1 TO Len( ::hHeaders )
@@ -357,20 +353,19 @@ METHOD ToString() CLASS TIPMail
          // cRet += ::cBody + iif( lAttachment, "", e"\r\n" )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
-         // GD - if there are attachements the body of the message has to be treated as an attachment.
+         // if there are attachements the body of the message has to be treated as an attachment. [GD]
          cRet += "--" + cBoundary + e"\r\n"
+         cRet += "Content-Disposition: inline" + e"\r\n" + e"\r\n"
          cRet += "Content-Type: text/plain; charset=" + ::cCharset + "; format=flowed" + e"\r\n"
          cRet += "Content-Transfer-Encoding: 7bit" + e"\r\n"
-         cRet += "Content-Disposition: inline" + e"\r\n" + e"\r\n"
-         cRet += ::cBody + e"\r\n"
+         cRet += e"\r\n" + ::cBody + e"\r\n"
       ENDIF
    ENDIF
 
    IF ! Empty( ::aAttachments )
-      // Eventually go with mime multipart
+      // Eventually go with MIME multipart
       FOR i := 1 TO Len( ::aAttachments )
-         cRet += "--" + cBoundary + e"\r\n"
-         cRet += ::aAttachments[ i ]:ToString()
+         cRet += "--" + cBoundary + e"\r\n" + ::aAttachments[ i ]:ToString() + e"\r\n"
       NEXT
       cRet += "--" + cBoundary + "--" + e"\r\n"
    ENDIF
@@ -402,8 +397,9 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    nLinePos := hb_At( e"\r\n", cMail, nPos )
    DO WHILE nLinePos > nPos
       // going on with last field?
-      IF ( SubStr( cMail, nPos, 1 ) == " " .OR. SubStr( cMail, nPos, 1 ) == e"\t" );
-               .AND. cLastField != NIL
+      IF ( SubStr( cMail, nPos, 1 ) == " " .OR. SubStr( cMail, nPos, 1 ) == e"\t" ) .AND. ;
+         cLastField != NIL
+
          cValue := LTrim( SubStr( cMail, nPos, nLinePos - nPos ) )
          IF Lower( cLastField ) == "received"
             ::aReceived[ Len( ::aReceived ) ] += " " + cValue
@@ -466,7 +462,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
 
       // Have we met a section?
       IF cSubBoundary != NIL .AND. ;
-            hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
+         hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
 
          // is it the last subsection?
          IF hb_At( "--", cMail, nPos + Len( cSubBoundary ) + 2, nLinePos ) > 0
@@ -491,7 +487,6 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
          ENDIF
          // I must stay on the boundary found by the subsection to
          // enter in this part of the loop again.
-
       ELSE
          // nPos := nLinePos + 2
          /* 2004-05-04 - <maurilio.longo@libero.it>
@@ -513,22 +508,24 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
 
 METHOD MakeBoundary() CLASS TIPMail
 
-   LOCAL cBound := "=_0" + Space( 17 )
+   LOCAL cBound := "=_0"
    LOCAL i
 
-   FOR i := 4 TO 20
-      cBound := Stuff( cBound, i, 1, Chr( hb_Random( 0, 25 ) + Asc( "A" ) ) )
+   FOR i := 1 TO 17
+      cBound += Chr( Asc( "A" ) + hb_Random( 0, 25 ) )
    NEXT
 
-   cBound += "_TIP_" + DToS( Date() ) + ;
-      "_" + StrTran( Time(), ":" )
-
-   RETURN cBound
+   RETURN cBound + "_TIP_" + DToS( Date() ) + StrTran( Time(), ":" )
 
 METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
 
-   LOCAL aTo, aCC, aBCC, i, imax
+   LOCAL aTo, aCC, aBCC
    LOCAL cTo, cCC, cBCC
+
+   LOCAL cName
+   LOCAL cAddr
+
+   LOCAL i, imax
 
    hb_default( @cSubject, "" )
 
@@ -567,9 +564,11 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
    ENDIF
 
    cTo := ""
-   imax := Len( aTO )
+   imax := Len( aTo )
    FOR i := 1 TO imax
-      cTo += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aTo[ i ] ) ) + ">" )
+      cName := tip_GetNameEmail( AllTrim( aTo[ i ] ) )
+      cAddr := tip_GetRawEmail( AllTrim( aTo[ i ] ) )
+      cTo += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
       IF i < imax
          cTo += "," + tip_CRLF() + " "
       ENDIF
@@ -587,7 +586,9 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
       cCC := ""
       imax := Len( aCC )
       FOR i := 2 TO imax
-         cCC += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aCC[ i ] ) ) + ">" )
+         cName := tip_GetNameEmail( AllTrim( aCC[ i ] ) )
+         cAddr := tip_GetRawEmail( AllTrim( aCC[ i ] ) )
+         cCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
          IF i < imax
             cCC += "," + tip_CRLF() + " "
          ENDIF
@@ -602,7 +603,9 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
       cBCC := ""
       imax := Len( aBCC )
       FOR i := 2 TO imax
-         cBCC += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aBCC[ i ] ) ) + ">" )
+         cName := tip_GetNameEmail( AllTrim( aBCC[ i ] ) )
+         cAddr := tip_GetRawEmail( AllTrim( aBCC[ i ] ) )
+         cBCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
          IF i < imax
             cBCC += "," + tip_CRLF() + " "
          ENDIF
@@ -630,11 +633,11 @@ METHOD attachFile( cFileName ) CLASS TIPMail
    oAttach   := TIPMail():new( cContent, "base64" )
    cFileName := SubStr( cFileName, RAt( cFileName, cDelim ) + 1 )
 
-   oAttach:setFieldPart( "Content-Type", cMimeType )
-   oAttach:setFieldOption( "Content-Type", "name", cFileName )
-
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
    oAttach:setFieldOption( "Content-Disposition", "filename", cFileName )
+
+   oAttach:setFieldPart( "Content-Type", cMimeType )
+   oAttach:setFieldOption( "Content-Type", "name", cFileName )
 
    RETURN ::attach( oAttach )
 
@@ -729,7 +732,7 @@ FUNCTION tip_GetRawEmail( cAddress )
 
    IF ( tmp := At( "<", cAddress ) ) > 0
       IF ( tmp1 := hb_At( ">", cAddress, tmp + 1 ) ) > 0
-         RETURN SubStr( cAddress, tmp + 1, tmp1 - tmp - 1 )
+         RETURN AllTrim( SubStr( cAddress, tmp + 1, tmp1 - tmp - 1 ) )
       ENDIF
    ENDIF
 

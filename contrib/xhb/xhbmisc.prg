@@ -52,16 +52,17 @@
 FUNCTION Occurs( s1, s2 )
 
    LOCAL nCount := 0
-   LOCAL nPos := 0
+   LOCAL nPos
 
    IF HB_ISSTRING( s1 ) .AND. HB_ISSTRING( s2 )
+      nPos := 0
 #if defined( HB_CLP_STRICT )
       DO WHILE ( nPos := hb_At( s1, s2, nPos + 1 ) ) != 0
-         nCount++
+         ++nCount
       ENDDO
 #else
       DO WHILE ( nPos := hb_At( s1, s2, nPos ) ) != 0
-         nCount++
+         ++nCount
          nPos += Len( s1 )
       ENDDO
 #endif

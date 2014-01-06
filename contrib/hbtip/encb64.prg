@@ -69,7 +69,7 @@ METHOD New() CLASS TIPEncoderBase64
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
-   RETURN hb_base64Encode( cData, iif( ::bHttpExcept, NIL, 72 ) )
+   RETURN hb_base64Encode( cData, iif( ::bHttpExcept, NIL, 76 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
    RETURN hb_base64Decode( cData )

@@ -166,12 +166,10 @@ FUNCTION tip_MailAssemble( ;
          IF HB_ISSTRING( aThisFile[ 2 ] )
             cData := aThisFile[ 2 ]
             hb_default( @cFile, "unnamed" )
+         ELSEIF HB_ISSTRING( cFile )
+            cData := hb_MemoRead( cFile )
          ELSE
-            IF HB_ISSTRING( cFile )
-               cData := hb_MemoRead( cFile )
-            ELSE
-               LOOP /* No filename and no content. */
-            ENDIF
+            LOOP /* No filename and no content. */
          ENDIF
          IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
             cMimeText := aThisFile[ 3 ]
@@ -181,8 +179,6 @@ FUNCTION tip_MailAssemble( ;
       ENDIF
 
       hb_default( @cMimeText, tip_FileNameMimeType( cFile ) )
-
-      cData += Chr( 13 ) + Chr( 10 )
 
       cFileCP := iif( Empty( cCharsetCP ), cFile, hb_Translate( cFile,, cCharsetCP ) )
 
@@ -210,7 +206,7 @@ FUNCTION tip_MailAssemble( ;
    ENDIF
 
    IF nPriority != 3
-      oMail:hHeaders[ "X-Priority" ] := Str( nPriority, 1 )
+      oMail:hHeaders[ "X-Priority" ] := hb_ntos( Int( nPriority ) )
    ENDIF
 
    RETURN oMail:ToString()

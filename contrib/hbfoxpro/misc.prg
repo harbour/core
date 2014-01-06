@@ -105,15 +105,18 @@ FUNCTION AElement( aValue, ... )
    RETURN aValue[ ... ]
 
 FUNCTION Occurs( cSub, cStr )
+
    LOCAL nCount := 0, nFrom, nPos
 
-   FOR nFrom := 1 to Len( cStr )
-      IF ( nPos := hb_At( cSub, cStr, nFrom ) ) == 0
-         EXIT
-      ENDIF
-      ++nCount
-      nFrom := nPos
-   NEXT
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      FOR nFrom := 1 to Len( cStr )
+         IF ( nPos := hb_At( cSub, cStr, nFrom ) ) == 0
+            EXIT
+         ENDIF
+         ++nCount
+         nFrom := nPos
+      NEXT
+   ENDIF
 
    RETURN nCount
 
