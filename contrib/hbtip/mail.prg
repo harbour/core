@@ -353,12 +353,14 @@ METHOD ToString() CLASS TIPMail
          // cRet += ::cBody + iif( lAttachment, "", e"\r\n" )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
-         // if there are attachements the body of the message has to be treated as an attachment. [GD]
-         cRet += "--" + cBoundary + e"\r\n"
-         cRet += "Content-Disposition: inline" + e"\r\n" + e"\r\n"
-         cRet += "Content-Type: text/plain; charset=" + ::cCharset + "; format=flowed" + e"\r\n"
-         cRet += "Content-Transfer-Encoding: 7bit" + e"\r\n"
-         cRet += e"\r\n" + ::cBody + e"\r\n"
+         // if there are attachements, the body of the message has to be treated as an attachment. [GD]
+         cRet += ;
+            "--" + cBoundary + e"\r\n" + ;
+            "Content-Disposition: inline" + e"\r\n" + ;
+            "Content-Type: text/plain; charset=" + ::cCharset + "; format=flowed" + e"\r\n" + ;
+            "Content-Transfer-Encoding: 7bit" + e"\r\n" + ;
+            e"\r\n" + ;
+            ::cBody + e"\r\n"
       ENDIF
    ENDIF
 
