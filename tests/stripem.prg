@@ -1,6 +1,3 @@
-#include "fileio.ch"
-#include "hbclass.ch"
-
 /*
  * Written by Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
@@ -8,15 +5,17 @@
  * Placed in the public domain
  */
 
-//
+#include "fileio.ch"
+#include "hbclass.ch"
+
 // The Harbour stripping command
 //
-// Usage: Strip( FileFrom, FileTo )
+// Usage: stripem FileFrom FileTo
 //
 // The output from FileFrom is copied to FileTo except for the empty lines
 //
-// Default files: From = strip.prg To = strip.out
-//
+// Default files: From: stripem.prg To: stripem.out
+
 PROCEDURE Main( cFrom, cTo )
 
    LOCAL oFrom
@@ -35,7 +34,9 @@ PROCEDURE Main( cFrom, cTo )
          oTo:Run( cOut )
       ENDIF
    ENDDO
+
    ? "Number of lines", oTo:nLine
+
    oFrom:Dispose()
    oTo:Dispose()
 

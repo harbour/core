@@ -14,7 +14,7 @@ PROCEDURE Main()
    LOCAL m2 := Money():new( 7.8 )
    LOCAL m3 := m1 - m2
 
-   ? "(12.2 - 7.8) == 4.4", ( 12.2 - 7.8 ) == 4.4
+   ? "( 12.2 - 7.8 ) == 4.4", ( 12.2 - 7.8 ) == 4.4
    ? m1:value
    ? m2:value
    ? ( m1 - m2 ) == 4.4
@@ -168,7 +168,7 @@ METHOD Str( nLen, nDec ) CLASS Money
    RETURN cStr
 
 STATIC FUNCTION IsMoney( xArg )
-   RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() = "MONEY"
+   RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() == "MONEY"
 
 STATIC FUNCTION GenError( xArg )
 

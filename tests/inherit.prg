@@ -16,7 +16,7 @@ PROCEDURE Main()
    LOCAL oTo
    LOCAL cOut
 
-   oFrom := TOnTop()   :New( __FILE__, "R" )
+   oFrom := TOnTop():New( __FILE__, "R" )
    oTo   := TTextFile():New( hb_FNameExtSet( __FILE__, ".out" ), "W" )
 
    ? "What's in oFrom"
@@ -42,6 +42,7 @@ PROCEDURE Main()
       ? cOut
       oTo:Run( cOut )
    ENDDO
+
    oFrom:Dispose()
    oTo:Dispose()
 
@@ -105,8 +106,7 @@ FUNCTION TTextFile()  /* must be a public function */
       s_oFile:AddData( "lEoF"       )             // End of file
       s_oFile:AddData( "cBlock"     )             // Storage block
       s_oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      s_oFile:AddData( "cMode"      )             // Mode of file use
-      // R = read, W = write
+      s_oFile:AddData( "cMode"      )             // Mode of file use: R = read, W = write
 
       s_oFile:AddMethod( "New"    , @New()     )  // Constructor
       s_oFile:AddMethod( "Run"    , @Run()     )  // Get/set data

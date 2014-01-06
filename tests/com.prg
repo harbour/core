@@ -3,7 +3,7 @@
 PROCEDURE Main( cPortName )
 
    LOCAL cString := "ATE0" + Chr( 13 ) + "ATI3" + Chr( 13 )
-   LOCAL nTimeOut := 3000 // 3000 miliseconds = 3 sec.
+   LOCAL nTimeOut := 3000 // 3000 miliseconds is 3 sec.
    LOCAL nResult
    LOCAL nPort := 1
 
@@ -30,7 +30,7 @@ PROCEDURE Main( cPortName )
 
          WAIT "Press any key to begin reading..."
          cString := Space( 32 )
-         nTimeOut := 500 // 500 milliseconds = 0.5 sec.
+         nTimeOut := 500 // 500 milliseconds is 0.5 sec.
          nResult := hb_comRecv( nPort, @cString, hb_BLen( cString ), nTimeOut )
          IF nResult == -1
             ? "RECV() failed,", ;

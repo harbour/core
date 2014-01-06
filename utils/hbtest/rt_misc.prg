@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Regression tests for the runtime library (misc)
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,27 @@ PROCEDURE Main_MISC()
    LOCAL cEOL
 #endif
    LOCAL o, tmp := 0
+
+#ifdef __HARBOUR__
+
+   /* SHA-1 */
+
+   HBTEST              hb_SHA1( "hello" )                    IS "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
+   HBTEST              hb_SHA1( "hello", .F. )               IS "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
+   HBTEST hb_StrToHex( hb_SHA1( "hello", .T. ) )             IS "AAF4C61DDCC5E8A2DABEDE0F3B482CD9AEA9434D"
+
+   HBTEST              hb_HMAC_SHA1( "hello", "key" )        IS "b34ceac4516ff23a143e61d79d0fa7a4fbe5f266"
+   HBTEST              hb_HMAC_SHA1( "hello", "key", .F. )   IS "b34ceac4516ff23a143e61d79d0fa7a4fbe5f266"
+   HBTEST hb_StrToHex( hb_HMAC_SHA1( "hello", "key", .T. ) ) IS "B34CEAC4516FF23A143E61D79D0FA7A4FBE5F266"
+
+   /* https://www.ietf.org/rfc/rfc3174.txt */
+
+   HBTEST Lower( hb_SHA1( "abc"                                                                               ) ) IS "a9993e364706816aba3e25717850c26c9cd0d89d"
+   HBTEST Lower( hb_SHA1( "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"                          ) ) IS "84983e441c3bd26ebaae4aa1f95129e5e54670f1"
+   HBTEST Lower( hb_SHA1( Replicate( "a", 1000000 )                                                           ) ) IS "34aa973cd4c4daa4f61eeb2bdbad27316534016f"
+   HBTEST Lower( hb_SHA1( Replicate( "0123456701234567012345670123456701234567012345670123456701234567", 10 ) ) ) IS "dea356a2cddd90c7a7ecedc5ebb563934f460452"
+
+#endif
 
    /* Some random error object tests taken from the separate test source */
 
@@ -817,6 +838,10 @@ PROCEDURE Main_MISC()
 
 #ifndef __XPP__
 
+   /* SORT /D */
+
+   HBTEST RDD_SORT_D() IS "7.00 6.00 5.00 -5.00 -5.12"
+
    /* __Run() */
 
    /* NOTE: Only error cases are tested. */
@@ -1233,6 +1258,48 @@ STATIC FUNCTION BADFNAME2()
 #else
    return "*INVALI*.TMP"
 #endif
+
+STATIC FUNCTION RDD_SORT_D()
+
+   LOCAL nOldArea := Select()
+
+   LOCAL cSource := "$$SOURCE.DBF"
+   LOCAL cSorted := "$$SORTED.DBF"
+
+   LOCAL cResult
+
+   dbCreate( cSource, { { "ITEM", "N", 10, 2 } } )
+
+   USE ( cSource ) ALIAS w_TEMP NEW
+
+   dbAppend(); FIELD->ITEM := 5.00
+   dbAppend(); FIELD->ITEM := -5.12
+   dbAppend(); FIELD->ITEM := 6.00
+   dbAppend(); FIELD->ITEM := 7.00
+   dbAppend(); FIELD->ITEM := -5.00
+
+   /* Command to be tested */
+   SORT TO ( cSorted ) ON FIELD->ITEM /D
+
+   USE ( cSorted ) ALIAS w_TEMP
+
+   cResult := ""
+   dbEval( {|| cResult += LTrim( Str( FIELD->ITEM ) ) + " " } )
+   cResult := RTrim( cResult )
+
+   dbCloseArea()
+
+   dbSelectArea( nOldArea )
+
+#ifdef __HARBOUR__
+   hb_dbDrop( cSource )
+   hb_dbDrop( cSorted )
+#else
+   FErase( cSource )
+   FErase( cSorted )
+#endif
+
+   RETURN cResult
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"
