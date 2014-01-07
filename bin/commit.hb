@@ -1000,12 +1000,14 @@ STATIC FUNCTION EOLDetect( cFile, /* @ */ nLines )
    LOCAL tmp
 
    FOR EACH tmp IN cFile
-      DO CASE
-      CASE tmp == Chr( 13 )
+      SWITCH tmp
+      CASE Chr( 13 )
          ++nCR
-      CASE tmp == Chr( 10 )
+         EXIT
+      CASE Chr( 10 )
          ++nLF
-      ENDCASE
+         EXIT
+      ENDSWITCH
    NEXT
 
    DO CASE
