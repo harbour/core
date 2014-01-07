@@ -89,6 +89,7 @@
 #include "hbclass.ch"
 
 #include "directry.ch"
+#include "fileio.ch"
 
 #include "tip.ch"
 
@@ -431,29 +432,26 @@ METHOD ReadAuxPort( cLocalFile ) CLASS TIPClientFTP
 
    LOCAL cRet
    LOCAL cList := ""
-   LOCAL nFile := 0
+   LOCAL nFile := F_ERROR
 
    IF ! ::TransferStart()
       RETURN NIL
    ENDIF
    IF ! Empty( cLocalFile )
       nFile := FCreate( cLocalFile )
-      /* TOFIX: missing error checking on nFile */
    ENDIF
-   cRet := ::super:Read( 512 )
-   DO WHILE cRet != NIL .AND. Len( cRet ) > 0
-      IF nFile > 0
+   DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. Len( cRet ) > 0
+      IF nFile != F_ERROR
          FWrite( nFile, cRet )
       ELSE
          cList += cRet
       ENDIF
-      cRet := ::super:Read( 512 )
    ENDDO
 
    hb_inetClose( ::SocketCon )
    ::SocketCon := ::SocketControl
    IF ::GetReply()
-      IF nFile > 0
+      IF nFile != F_ERROR
          FClose( nFile )
          RETURN .T.
       ENDIF
@@ -626,11 +624,13 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
 
    FOR EACH aFile IN Directory( cPath + cFile + cExt, cAttr )
       IF ::uploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
-         cStr += tip_CRLF() + aFile[ F_NAME ]
+         cStr += e"\r\n" + aFile[ F_NAME ]
       ENDIF
    NEXT
 
-   RETURN SubStr( cStr, Len( tip_CRLF() ) + 1 )
+   /* QUESTION: Shouldn't this return an array?
+                Why emulate a platform specific and ill-defined format? */
+   RETURN SubStr( cStr, Len( e"\r\n" ) + 1 )
 
 
 METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP

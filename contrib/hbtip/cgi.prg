@@ -161,17 +161,19 @@ METHOD New() CLASS TIPCgi
 
 METHOD Header( cValue ) CLASS TIPCgi
 
-   IF Empty( cValue )
-      ::cCgiHeader += "Content-Type: text/html" + _CRLF
-   ELSE
+   IF HB_ISSTRING( cValue ) .AND. ! Empty( cValue )
       ::cCgiHeader += cValue + _CRLF
+   ELSE
+      ::cCgiHeader += "Content-Type: text/html" + _CRLF
    ENDIF
 
    RETURN Self
 
 METHOD Redirect( cUrl ) CLASS TIPCgi
 
-   ::cCgiHeader += "Location: " + cUrl + _CRLF
+   IF HB_ISSTRING( cUrl ) .AND. ! Empty( cUrl )
+      ::cCgiHeader += "Location: " + cUrl + _CRLF
+   ENDIF
 
    RETURN Self
 
@@ -369,9 +371,7 @@ METHOD StartHtml( hOptions ) CLASS TIPCgi
       HtmlStyle( hOptions ) + ;
       HtmlLinkRel( hOptions ) + ;
       "</head>" + ;
-      "<body " + ;
-      HtmlAllOption( hOptions ) + ;
-      ">"
+      "<body " + HtmlAllOption( hOptions ) + ">"
 
    RETURN Self
 
@@ -433,7 +433,7 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
             cVal := cPre + cVal
          ENDIF
          IF cPost != NIL
-            cVal := cVal + cPost
+            cVal += cPost
          ENDIF
       ENDIF
    ENDIF

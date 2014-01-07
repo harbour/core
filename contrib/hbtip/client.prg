@@ -86,7 +86,7 @@
 CREATE CLASS TIPClient
 
    CLASS VAR bInitSocks  INIT .F.
-   CLASS VAR cCRLF       INIT tip_CRLF()
+   CLASS VAR cCRLF       INIT e"\r\n"
 
    VAR oUrl                      /* url to wich to connect */
    VAR oCredentials              /* credential needed to access the service */
@@ -415,11 +415,9 @@ METHOD Read( nLen ) CLASS TIPClient
       // read till end of stream
       cStr1 := Space( RCV_BUF_SIZE )
       cStr0 := ""
-      ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
-      DO WHILE ::nLastRead > 0
+      DO WHILE ( ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE ) ) > 0
          ::nRead += ::nLastRead
          cStr0 += hb_BLeft( cStr1, ::nLastRead )
-         ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
       ENDDO
       ::bEof := .T.
    ELSE

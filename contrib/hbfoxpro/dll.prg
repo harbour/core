@@ -59,10 +59,10 @@ FUNCTION __fox_DynCall( cCommand, ... )
 
    LOCAL cFunction
    LOCAL cLibrary
-   LOCAL nFuncFlags := hb_bitOr( HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW )
+   LOCAL nFuncFlags
 
-   LOCAL aCommand := hb_ATokens( cCommand )
-   LOCAL nPos := 1
+   LOCAL aCommand
+   LOCAL nPos
 
    LOCAL aType := { ;
       "SHORT"   => HB_DYN_CTYPE_SHORT, ;
@@ -72,6 +72,15 @@ FUNCTION __fox_DynCall( cCommand, ... )
       "LONG"    => HB_DYN_CTYPE_LONG, ;
       "STRING"  => HB_DYN_CTYPE_CHAR_PTR, ;
       "OBJECT"  => HB_DYN_CTYPE_VOID_PTR }
+
+   IF ! HB_ISSTRING( cCommand ) .OR. Empty( cCommand )
+      RETURN NIL
+   ENDIF
+
+   aCommand := hb_ATokens( cCommand )
+
+   nFuncFlags := hb_bitOr( HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW )
+   nPos := 1
 
    IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "DECLARE"
       ++nPos

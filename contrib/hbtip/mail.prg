@@ -154,7 +154,7 @@ METHOD SetBody( cBody ) CLASS TIPMail
    IF ::oEncoder != NIL
       ::cBody := ::oEncoder:Encode( cBody )
       ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
-      ::lBodyEncoded := .T.  // needed to prevent an extra crlf from being appended [GD]
+      ::lBodyEncoded := .T.  // needed to prevent an extra CRLF from being appended [GD]
    ELSE
       ::cBody := cBody
    ENDIF
@@ -363,7 +363,6 @@ METHOD ToString() CLASS TIPMail
    // Body
    IF ! Empty( ::cBody )
       IF Empty( ::aAttachments )
-         // cRet += ::cBody + iif( lAttachment, "", e"\r\n" )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
          // if there are attachements, the body of the message has to be treated as an attachment. [GD]
@@ -373,7 +372,8 @@ METHOD ToString() CLASS TIPMail
             "Content-Type: text/plain; charset=" + ::cCharset + "; format=flowed" + e"\r\n" + ;
             "Content-Transfer-Encoding: 7bit" + e"\r\n" + ;
             e"\r\n" + ;
-            ::cBody + e"\r\n"
+            ::cBody + ;
+            e"\r\n"
       ENDIF
    ENDIF
 
@@ -574,7 +574,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
          cName := tip_GetNameEmail( i )
          cAddr := tip_GetRawEmail( i )
          IF ! Empty( cTo )
-            cTo += "," + tip_CRLF() + " "
+            cTo += "," + e"\r\n" + " "
          ENDIF
          cTo += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
       ENDIF
@@ -594,7 +594,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
             cName := tip_GetNameEmail( i )
             cAddr := tip_GetRawEmail( i )
             IF ! Empty( cCC )
-               cCC += "," + tip_CRLF() + " "
+               cCC += "," + e"\r\n" + " "
             ENDIF
             cCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
          ENDIF

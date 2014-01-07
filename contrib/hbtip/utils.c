@@ -258,7 +258,7 @@ typedef struct tag_mime_ext
    const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  316
+#define EXT_MIME_TABLE_SIZE  317
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
@@ -533,6 +533,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "ustar"   , MIME_FLAG_CASEINSENS, "application/x-ustar" },
    { "vbd"     , MIME_FLAG_CASEINSENS, "application/activexdocument" },
    { "vcd"     , MIME_FLAG_CASEINSENS, "application/x-cdlink" },
+   { "vcf"     , MIME_FLAG_CASEINSENS, "text/directory" },
    { "vgm"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
    { "vgp"     , MIME_FLAG_CASEINSENS, "video/x-videogram-plugin" },
    { "vgx"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
