@@ -66,7 +66,6 @@ FUNCTION tip_GenerateSID( cCRCKey )
    LOCAL nLenSID     := SID_LENGTH
    LOCAL cBaseKeys   := BASE_KEY_STRING
    LOCAL nLenKeys    := Len( cBaseKeys )
-   LOCAL cRet
    LOCAL nRand, nKey := 0
 
    hb_default( @cCRCKey, CRC_KEY_STRING )
@@ -74,11 +73,11 @@ FUNCTION tip_GenerateSID( cCRCKey )
    cCRCKey := Left( cCRCKey, 10 )      // Max Length must to be of 10 chars
 
    /* Let's generate the sequence */
-   cSID := Space( nLenSID )
+   cSID := ""
    FOR n := 1 TO nLenSID
-      nRand     := hb_RandomInt( 1, nLenKeys )
-      cSID      := Stuff( cSID, n, 1, SubStr( cBaseKeys, nRand, 1 ) )
-      nKey      += nRand
+      nRand := hb_RandomInt( 1, nLenKeys )
+      cSID  += SubStr( cBaseKeys, nRand, 1 )
+      nKey  += nRand
    NEXT
 
    nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
@@ -88,9 +87,7 @@ FUNCTION tip_GenerateSID( cCRCKey )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    NEXT
 
-   cRet := cSID + cSIDCRC
-
-   RETURN cRet
+   RETURN cSID + cSIDCRC
 
 FUNCTION tip_CheckSID( cSID, cCRCKey )
 

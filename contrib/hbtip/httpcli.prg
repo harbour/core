@@ -506,25 +506,25 @@ METHOD Boundary( nType ) CLASS TIPClientHTTP
           1=as found as the last one in the stdin stream
           2=as found in the CGI enviroment
    Examples:
-   -----------------------------41184676334  //in the body or stdin stream
-   -----------------------------41184676334--   //last one of the stdin stream
-   ---------------------------41184676334 //in the header or CGI envirnment
+   -----------------------------41184676334     // in the body or stdin stream
+   -----------------------------41184676334--   // last one of the stdin stream
+   ---------------------------41184676334       // in the header or CGI envirnment
    */
 
    LOCAL cBound := ::cBoundary
    LOCAL i
 
    hb_default( @nType, 0 )
+
    IF Empty( cBound )
-      cBound := Replicate( "-", 27 ) + Space( 11 )
-      FOR i := 28 TO 38
-         cBound := Stuff( cBound, i, 1, Str( Int( hb_Random( 0, 9 ) ), 1, 0 ) )
+      cBound := Replicate( "-", 27 )
+      FOR i := 1 TO 11
+         cBound += hb_ntos( Int( hb_Random( 0, 9 ) ) )
       NEXT
       ::cBoundary := cBound
    ENDIF
-   cBound := iif( nType < 2, "--", "" ) + cBound + iif( nType == 1, "--", "" )
 
-   RETURN cBound
+   RETURN iif( nType < 2, "--", "" ) + cBound + iif( nType == 1, "--", "" )
 
 METHOD Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
 
