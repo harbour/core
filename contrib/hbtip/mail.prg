@@ -98,7 +98,7 @@ CREATE CLASS TIPMail
    METHOD isMultiPart()
    METHOD getMultiParts( aParts )
 
-   METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC )
+   METHOD setHeader( cSubject, cFrom, xTo, xCC )
    METHOD attachFile( cFileName )
    METHOD detachFile( cPath )
    METHOD getFileName()
@@ -196,10 +196,10 @@ METHOD GetFieldOption( cPart, cOption ) CLASS TIPMail
       cEnc := hb_HValueAt( ::hHeaders, nPos )
       // Case insensitive check
       aMatch := hb_regex( ";\s*" + cOption + "\s*=\s*([^;]*)", cEnc, .F. )
-      IF ! Empty( aMatch )
-         cEnc := aMatch[ 2 ]
-      ELSE
+      IF Empty( aMatch )
          RETURN ""
+      ELSE
+         cEnc := aMatch[ 2 ]
       ENDIF
    ENDIF
 
@@ -329,19 +329,19 @@ METHOD ToString() CLASS TIPMail
       cRet += "Mime-Version: " + ::hHeaders[ "Mime-Version" ] + e"\r\n"
    ENDIF
 
-   FOR i := 1 TO Len( ::hHeaders )
-      cElem := Lower( hb_HKeyAt( ::hHeaders, i ) )
-      IF !( cElem == "return-path" ) .AND. ;
-         !( cElem == "delivered-to" ) .AND. ;
-         !( cElem == "date" ) .AND. ;
-         !( cElem == "from" ) .AND. ;
-         !( cElem == "to" ) .AND. ;
-         !( cElem == "subject" ) .AND. ;
-         !( cElem == "mime-version" )
-         cRet += ;
-            hb_HKeyAt( ::hHeaders, i ) + ": " + ;
-            hb_HValueAt( ::hHeaders, i ) + e"\r\n"
-      ENDIF
+   FOR EACH i IN ::hHeaders
+      SWITCH Lower( cElem := i:__enumKey() )
+      CASE "return-path"
+      CASE "delivered-to"
+      CASE "date"
+      CASE "from"
+      CASE "to"
+      CASE "subject"
+      CASE "mime-version"
+         EXIT
+      OTHERWISE
+         cRet += cElem + ": " + i + e"\r\n"
+      ENDSWITCH
    NEXT
 
    // end of Header
@@ -366,8 +366,8 @@ METHOD ToString() CLASS TIPMail
 
    IF ! Empty( ::aAttachments )
       // Eventually go with MIME multipart
-      FOR i := 1 TO Len( ::aAttachments )
-         cRet += "--" + cBoundary + e"\r\n" + ::aAttachments[ i ]:ToString() + e"\r\n"
+      FOR EACH i IN ::aAttachments
+         cRet += "--" + cBoundary + e"\r\n" + i:ToString() + e"\r\n"
       NEXT
       cRet += "--" + cBoundary + "--" + e"\r\n"
    ENDIF
@@ -519,19 +519,17 @@ METHOD MakeBoundary() CLASS TIPMail
 
    RETURN cBound + "_TIP_" + DToS( Date() ) + StrTran( Time(), ":" )
 
-METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
+METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
 
-   LOCAL aTo, aCC, aBCC
-   LOCAL cTo, cCC, cBCC
+   LOCAL aTo, aCC
+   LOCAL cTo, cCC
 
    LOCAL cName
    LOCAL cAddr
 
-   LOCAL i, imax
+   LOCAL i
 
-   hb_default( @cSubject, "" )
-
-   IF ! HB_ISSTRING( cFrom )
+   IF ! HB_ISSTRING( cFrom ) .OR. Empty( cFrom )
       RETURN .F.
    ENDIF
 
@@ -551,28 +549,21 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
       aCC := xCC
    ENDIF
 
-   IF HB_ISSTRING( xBCC )
-      aBCC := { xBCC }
-   ELSEIF HB_ISARRAY( xBCC )
-      aBCC := xBCC
-   ENDIF
+   hb_default( @cSubject, "" )
 
-   IF ! ::setFieldPart( "Subject", WordEncodeQ( cSubject, ::cCharset ) )
-      RETURN .F.
-   ENDIF
-
-   IF ! ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( cFrom ) ) + ">" ) )
-      RETURN .F.
-   ENDIF
+   ::setFieldPart( "Subject", WordEncodeQ( cSubject, ::cCharset ) )
+   ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( cFrom ) ) + ">" ) )
 
    cTo := ""
-   imax := Len( aTo )
-   FOR i := 1 TO imax
-      cName := tip_GetNameEmail( AllTrim( aTo[ i ] ) )
-      cAddr := tip_GetRawEmail( AllTrim( aTo[ i ] ) )
-      cTo += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
-      IF i < imax
-         cTo += "," + tip_CRLF() + " "
+   FOR EACH i IN aTo
+      IF ! Empty( i )
+         i := AllTrim( i )
+         cName := tip_GetNameEmail( i )
+         cAddr := tip_GetRawEmail( i )
+         IF ! Empty( cTo )
+            cTo += "," + tip_CRLF() + " "
+         ENDIF
+         cTo += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
       ENDIF
    NEXT
 
@@ -580,41 +571,24 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
       RETURN .F.
    ENDIF
 
-   IF ! ::setFieldPart( "To", cTo )
-      RETURN .F.
-   ENDIF
+   ::setFieldPart( "To", cTo )
 
    IF ! Empty( aCC )
       cCC := ""
-      imax := Len( aCC )
-      FOR i := 2 TO imax
-         cName := tip_GetNameEmail( AllTrim( aCC[ i ] ) )
-         cAddr := tip_GetRawEmail( AllTrim( aCC[ i ] ) )
-         cCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
-         IF i < imax
-            cCC += "," + tip_CRLF() + " "
+      FOR EACH i IN aCC
+         IF ! Empty( i )
+            i := AllTrim( i )
+            cName := tip_GetNameEmail( i )
+            cAddr := tip_GetRawEmail( i )
+            IF ! Empty( cCC )
+               cCC += "," + tip_CRLF() + " "
+            ENDIF
+            cCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
          ENDIF
       NEXT
 
-      IF ! Empty( cCC ) .AND. ! ::setFieldPart( "Cc", cCC )
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   IF ! Empty( aBCC )
-      cBCC := ""
-      imax := Len( aBCC )
-      FOR i := 2 TO imax
-         cName := tip_GetNameEmail( AllTrim( aBCC[ i ] ) )
-         cAddr := tip_GetRawEmail( AllTrim( aBCC[ i ] ) )
-         cBCC += iif( cName == cAddr, cAddr, LTrim( WordEncodeQ( cName, ::cCharset ) ) + " <" + cAddr + ">" )
-         IF i < imax
-            cBCC += "," + tip_CRLF() + " "
-         ENDIF
-      NEXT
-
-      IF ! Empty( cBCC ) .AND. ! ::setFieldPart( "Bcc", cBCC )
-         RETURN .F.
+      IF ! Empty( cCC )
+         ::setFieldPart( "Cc", cCC )
       ENDIF
    ENDIF
 
@@ -647,26 +621,16 @@ METHOD detachFile( cPath ) CLASS TIPMail
 
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
-   LOCAL cDelim := hb_ps()
-   LOCAL nFileHandle
 
    IF Empty( cFileName )
       RETURN .F.
    ENDIF
 
    IF HB_ISSTRING( cPath )
-      cFileName := StrTran( cPath + cDelim + cFileName, cDelim + cDelim, cDelim )
+      cFileName := hb_DirSepAdd( cPath ) + cFileName
    ENDIF
 
-   nFileHandle := FCreate( cFileName )
-   IF FError() != 0
-      RETURN .F.
-   ENDIF
-
-   FWrite( nFileHandle, cContent )
-   FClose( nFileHandle )
-
-   RETURN FError() == 0
+   RETURN hb_MemoWrit( cFileName, cContent )
 
 METHOD getFileName() CLASS TIPMail
    RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"' )
