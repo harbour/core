@@ -58,11 +58,8 @@
  */
 
 #xtranslate Default( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
-#xtranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  //"&#32;"
+#xtranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  // "&#32;"
 #xtranslate CRLF()               => Chr( 13 ) + Chr( 10 )
-
-#define STD_IN       0
-#define STD_OUT      1
 
 #define _WHITE_BLUE_STYLE   "<!-- "+;
                                 " A:visited {text-decoration:none;color:blue;background:none;} "+;

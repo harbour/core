@@ -66,7 +66,7 @@
 
 CREATE CLASS TJSList
 
-   VAR nH INIT STD_OUT
+   VAR nH INIT hb_GetStdOut()
    VAR aScript INIT {}
    VAR aItems INIT {}
    VAR cScript INIT ""
@@ -309,10 +309,10 @@ METHOD Build( xPos, yPos ) CLASS TJSList
 
 METHOD Put( cFile ) CLASS TJSList
 
-   IF cFile == NIL
-      ::nH := STD_OUT
-   ELSE
+   IF HB_ISSTRING( cFile )
       ::nH := FCreate( cFile )
+   ELSE
+      ::nH := hb_GetStdOut()
    ENDIF
 
    AEval( ::aScript, {| e | FWrite( ::nH, e ) } )

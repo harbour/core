@@ -60,6 +60,10 @@
 
 #xtranslate hb_gtVersion( [<n>] )          => "DOS"
 
+#xtranslate hb_GetStdIn()                  => 0
+#xtranslate hb_GetStdOut()                 => 1
+#xtranslate hb_GetStdErr()                 => 2
+
 #xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
 #xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_Compiler()                  => "C"

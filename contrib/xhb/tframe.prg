@@ -97,7 +97,7 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
       ::nH := FCreate( ::FName )
    ELSE
       cStr := "Content-Type: text/html" + CRLF() + CRLF()
-      ::nH := STD_OUT
+      ::nH := hb_GetStdOut()
    ENDIF
 
    cStr += "<html>" + CRLF() + ;

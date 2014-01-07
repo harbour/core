@@ -1,10 +1,10 @@
-// Testing Harbour file io features
+// Testing Harbour file I/O features
 
 PROCEDURE Main()
 
    LOCAL h
-   LOCAL cstr := " "
-   LOCAL ntmp := 1
+   LOCAL cStr := Space( 1 )
+   LOCAL tmp
 
    h := FCreate( "test.txt" )
    ? "create handle", h
@@ -13,17 +13,27 @@ PROCEDURE Main()
 
    FClose( h )
 
+   /* using FRead() */
+
    h := FOpen( "test.txt" )
    ? "open handle", h
    ?
    /* try to read what is there */
-   DO WHILE ntmp != 0
-      ntmp := FRead( h, @cstr, 1 )
-      IF ntmp > 0
-         ?? cstr
-      ENDIF
+   DO WHILE ( tmp := FRead( h, @cStr, Len( cStr ) ) ) != 0
+      ?? cStr
    ENDDO
+
+   FClose( h )
+
+   /* using FReadStr() */
+
+   h := FOpen( "test.txt" )
+   ? "open handle", h
    ?
+   /* try to read what is there */
+   DO WHILE Asc( cStr := FReadStr( h, 1 ) ) != 0
+      ?? cStr
+   ENDDO
 
    FClose( h )
 

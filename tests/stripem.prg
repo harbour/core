@@ -190,11 +190,11 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
       IF lCRLF
          cBlock += hb_eol()
       ENDIF
-      FWrite( ::hFile, cBlock, Len( cBlock ) )
+      FWrite( ::hFile, cBlock )
       IF FError() != 0
          ::nError := FError()                   // Not completely written !
       ENDIF
-      ::nLine := ::nLine + 1
+      ::nLine++
    ENDIF
 
    RETURN self

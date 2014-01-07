@@ -339,7 +339,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
 
-   ::nH    := STD_OUT
+   ::nH    := hb_GetStdOut()
    ::Title := cTitle
    IF lCgi
       ::FName := "cgiout.htm"
@@ -522,7 +522,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
 METHOD NewAlt( cType ) CLASS THtml
 
-   ::nH    := STD_OUT
+   ::nH    := hb_GetStdOut()
    ::cStr += 'Content-Type: ' + cType + CRLF() + CRLF()
 
    t_nHtm := ::nH

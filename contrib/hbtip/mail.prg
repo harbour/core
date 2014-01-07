@@ -103,6 +103,9 @@ CREATE CLASS TIPMail
    METHOD detachFile( cPath )
    METHOD getFileName()
 
+   METHOD GetSMIME( cField )         INLINE hb_HGetDef( ::hSMIME, cField, NIL )
+   METHOD SetSMIME( cField, cValue ) INLINE ::hSMIME[ cField ] := cValue
+
    HIDDEN:
 
    VAR cBody
@@ -111,6 +114,7 @@ CREATE CLASS TIPMail
    VAR aAttachments
    VAR nAttachPos   INIT 1
    VAR cCharset
+   VAR hSMIME       INIT { => }
 
 ENDCLASS
 
@@ -226,24 +230,22 @@ METHOD SetFieldPart( cPart, cValue ) CLASS TIPMail
 
 METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TIPMail
 
-   LOCAL nPos, aMatch
-   LOCAL cEnc
+   LOCAL aMatch
 
-   nPos := hb_HPos( ::hHeaders, cPart )
-   IF nPos == 0
-      RETURN .F.
-   ELSE
-      cEnc := hb_HValueAt( ::hHeaders, nPos )
-      aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", cEnc, .F. )
+   IF cPart $ ::hHeaders
+
+      aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", ::hHeaders[ cPart ], .F. )
+
       IF Empty( aMatch )
-         ::hHeaders[ cPart ] := cEnc + "; " + cOption + "=" + '"' + cValue + '"'
+         ::hHeaders[ cPart ] += "; " + cOption + "=" + '"' + cValue + '"'
       ELSE
-         ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + "=" + '"' + cValue + '"' + ;
-            aMatch[ 3 ]
+         ::hHeaders[ cPart ] := aMatch[ 2 ] + cOption + "=" + '"' + cValue + '"' + aMatch[ 3 ]
       ENDIF
+
+      RETURN .T.
    ENDIF
 
-   RETURN .T.
+   RETURN .F.
 
 METHOD Attach( oSubPart ) CLASS TIPMail
 
@@ -296,10 +298,21 @@ METHOD ToString() CLASS TIPMail
       IF Empty( cBoundary )
          cBoundary := ::MakeBoundary()
          IF ! ::SetFieldOption( "Content-Type", "Boundary", cBoundary )
-            ::hHeaders[ "Content-Type" ] := ;
-               "multipart/mixed; boundary=" + '"' + cBoundary + '"'
+            ::hHeaders[ "Content-Type" ] := "multipart/mixed; boundary=" + '"' + cBoundary + '"'
          ENDIF
       ENDIF
+   ENDIF
+
+   FOR EACH i IN ::aAttachments
+      IF i:getFieldPart( "Content-Type" ) == "application/pkcs7-signature"
+         ::hSMIME[ "signature" ] := .T.
+         EXIT
+      ENDIF
+   NEXT
+   IF ! Empty( ::hSMIME )
+      ::SetFieldPart( "Content-Type", "multipart/signed" )
+      ::SetFieldOption( "Content-Type", "protocol", hb_HGetDef( ::hSMIME, "protocol", "application/pkcs7-signature" ) )
+      ::SetFieldOption( "Content-Type", "micalg", hb_HGetDef( ::hSMIME, "micalg", "sha1" ) )
    ENDIF
 
    // Begin output the fields

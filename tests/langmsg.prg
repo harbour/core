@@ -32,9 +32,9 @@ PROCEDURE Main( cLng )
    ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT   ) + "]"
    ? "hb_langErrMsg(0)", hb_langErrMsg( 0 )
    ?
-   ? "date format: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
-   ? "   TRUE val: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + " (" + cTrue + ")"
-   ? "  FALSE val: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) + " (" + cFalse + ")"
+   ? "date format:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
+   ? "   TRUE val:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + " (" + cTrue + ")"
+   ? "  FALSE val:", hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) + " (" + cFalse + ")"
    ?
    Inkey( 0 )
 
@@ -103,10 +103,7 @@ STATIC FUNCTION GET_MONTHS()
    RETURN aMonths
 
 STATIC FUNCTION GET_ERR()
-
-   LOCAL aErr
-
-   aErr := { ;
+   RETURN { ;
       { "EG_ARG         ", hb_langErrMsg(  1 ) }, ;
       { "EG_BOUND       ", hb_langErrMsg(  2 ) }, ;
       { "EG_STROVERFLOW ", hb_langErrMsg(  3 ) }, ;
@@ -158,17 +155,11 @@ STATIC FUNCTION GET_ERR()
       { "EG_NOTARRAY    ", hb_langErrMsg( 49 ) }, ;
       { "EG_CONDITION   ", hb_langErrMsg( 50 ) } }
 
-   RETURN aErr
-
 STATIC FUNCTION HB_LANGERRINTR( n )
-
    RETURN hb_langMessage( HB_LANG_ITEM_BASE_ERRINTR + n - 9000 )
 
 STATIC FUNCTION GET_IERR()
-
-   LOCAL aErr
-
-   aErr := { ;
+   RETURN { ;
       { "HB_EI_ERRUNRECOV      ", HB_LANGERRINTR( 9000 ) }, ;
       { "HB_EI_ERRRECFAILURE   ", HB_LANGERRINTR( 9001 ) }, ;
       { "HB_EI_ERRNOBLOCK      ", HB_LANGERRINTR( 9002 ) }, ;
@@ -195,5 +186,3 @@ STATIC FUNCTION GET_IERR()
       { "HB_EI_XGRABNULLSIZE   ", HB_LANGERRINTR( 9023 ) }, ;
       { "HB_EI_XREALLOCNULLSIZE", HB_LANGERRINTR( 9024 ) }, ;
       { "HB_EI_XALLOCNULLSIZE  ", HB_LANGERRINTR( 9025 ) } }
-
-   RETURN aErr

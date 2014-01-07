@@ -105,10 +105,10 @@ STATIC PROCEDURE TEST_Type()
    ?
    ? "=========== Type() function ================="
    v1 := "UDF()"
-   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF()')        - should be 'UI':", Type( v1 )
    v2 := "UDF_STATIC()"
-   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
-   ? "Test for &" + "'UDF()'  - should print 'udf': ", &v1
+   ? "Test for Type('UDF_STATIC()') - should be 'U':", Type( v2 )
+   ? "Test for &" + "'UDF()'  - should print 'udf':", &v1
    ? "Test for &" + "'UDF_STATIC()'  - should print 'ERROR: undefined function': "
    BEGIN SEQUENCE
       ?? &v2
@@ -118,38 +118,38 @@ STATIC PROCEDURE TEST_Type()
    ErrorBlock( bErr )
 
    v1 := "UDF"
-   ? "Test for Type('UDF')        - should be 'U': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'U':", Type( v1 )
    v2 := "UDF_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'U':", Type( v2 )
 
    v1a := "UDF := 1"
-   ? "Test for Type('UDF := 1')        - should be 'N': ", Type( v1a )
+   ? "Test for Type('UDF := 1')        - should be 'N':", Type( v1a )
    v2a := "UDF_STATIC := 1"
-   ? "Test for Type('UDF_STATIC := 1') - should be 'N': ", Type( v2a )
+   ? "Test for Type('UDF_STATIC := 1') - should be 'N':", Type( v2a )
 
    ? "=== after the assignment ==="
    v1 := "UDF"
-   ? "Test for Type('UDF')        - should be 'N': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'N':", Type( v1 )
    v2 := "UDF_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'N': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'N':", Type( v2 )
 
    v1 := "UDF()"
-   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF()')        - should be 'UI':", Type( v1 )
    v2 := "UDF_STATIC()"
-   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC()') - should be 'U':", Type( v2 )
 
 
    ? "=== declared public variable ==="
    PUBLIC UDF2, UDF2_STATIC
    v1 := "UDF2()"
-   ? "Test for Type('UDF2()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF2()')        - should be 'UI':", Type( v1 )
    v2 := "UDF2_STATIC()"
-   ? "Test for Type('UDF2_STATIC()') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF2_STATIC()') - should be 'U':", Type( v2 )
 
    v1 := "UDF2"
-   ? "Test for Type('UDF')        - should be 'L': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'L':", Type( v1 )
    v2 := "UDF2_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'L': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'L':", Type( v2 )
 
    ?
 

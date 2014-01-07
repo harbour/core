@@ -133,7 +133,7 @@ METHOD New( cInBuffer ) CLASS TCgi
       ::Query_String := RTrim( cInBuffer )
    ELSE
       IF "POST" $ Upper( ::Request_Method )
-         ::Query_String := RTrim( FReadStr( STD_IN, Val( ::CONTENT_LENGTH ) ) )
+         ::Query_String := RTrim( FReadStr( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
       ENDIF
    ENDIF
 
@@ -209,7 +209,7 @@ METHOD ToObject() CLASS TCgi
    oNew:Content_Type      := ::Content_Type
    oNew:Content_Length    := ::Content_Length
    oNew:Annotation_Server := ::Annotation_Server
-   oNew:nH                := iif( HtmlPageHandle() == NIL, STD_OUT, HtmlPageHandle() )
+   oNew:nH                := iif( HtmlPageHandle() == NIL, hb_GetStdOut(), HtmlPageHandle() )
 
    RETURN oNew
 

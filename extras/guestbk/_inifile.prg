@@ -95,7 +95,7 @@ METHOD New( cFileName ) CLASS TIniFile
       lDone := .F.
       DO WHILE ! lDone
          cFile := Space( 256 )
-         lDone := ( FRead( hFile, @cFile, 256 ) <= 0 )
+         lDone := ( FRead( hFile, @cFile, hb_BLen( cFile ) ) <= 0 )
 
          cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
 

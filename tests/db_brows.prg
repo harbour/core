@@ -486,7 +486,7 @@ STATIC PROCEDURE VIVNAMES( mslist )
          IF LI_NAMES[ fif ] != NIL
             hb_DispOutAt( LI_Y1, x, LI_NAMES[ fif ] )
          ENDIF
-         x   := x + Max( Len( FLDSTR( mslist, fif ) ), Len( LI_NAMES[ fif ] ) ) + 1
+         x   += Max( Len( FLDSTR( mslist, fif ) ), Len( LI_NAMES[ fif ] ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
          // DO MSFNEXT WITH mslist, fif
          i++
@@ -562,7 +562,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
             sviv := FLDSTR( mslist, fif )
             sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
          ENDIF
-         x   := x + Max( Len( sviv ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
+         x   += Max( Len( sviv ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
       NEXT
       // DO MSFNEXT WITH mslist, fif

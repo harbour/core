@@ -8,9 +8,6 @@
 
 #require "hbtip"
 
-#define hSTDIN   0
-#define hSTDOUT  1
-
 PROCEDURE Main( ... )
 
    LOCAL oEncoder
@@ -18,8 +15,9 @@ PROCEDURE Main( ... )
    LOCAL cBuffer := Space( 1024 )
    LOCAL nLen
    LOCAL lHelp := .F., lDecode := .F., lQp := .F., lUrl := .F.
-   LOCAL hInput := hSTDIN
-   LOCAL hOutput := hSTDOUT
+
+   LOCAL hInput := hb_GetStdIn()
+   LOCAL hOutput := hb_GetStdOut()
 
    /* Parameter parsing */
    FOR nLen := 1 TO PCount()
@@ -40,9 +38,9 @@ PROCEDURE Main( ... )
          lUrl := .T.
          EXIT
       OTHERWISE
-         IF hb_FileExists( cData ) .AND. hInput == hSTDIN
+         IF hb_FileExists( cData ) .AND. hInput == hb_GetStdIn()
             hInput := FOpen( cData )
-         ELSEIF hOutput == hSTDOUT
+         ELSEIF hOutput == hb_GetStdOut()
             hOutput := FCreate( cData )
          ELSE
             ? "Wrong parameter", cData
@@ -78,7 +76,7 @@ PROCEDURE Main( ... )
    DO WHILE ( nLen := FRead( hInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
       cData += hb_BLeft( cBuffer, nLen )
    ENDDO
-   IF hInput != hSTDIN
+   IF hInput != hb_GetStdIn()
       FClose( hInput )
    ENDIF
 
@@ -91,7 +89,7 @@ PROCEDURE Main( ... )
 
    /* Writing stream */
    FWrite( hOutput, cData )
-   IF hOutput != hSTDOUT
+   IF hOutput != hb_GetStdOut()
       FClose( hOutput )
    ENDIF
 

@@ -60,10 +60,7 @@
 
 #include "fileio.ch"
 
-#define CGI_IN  0
-#define CGI_OUT 1
 #define _CRLF Chr( 13 ) + Chr( 10 )
-#define _BR "<br />"
 
 CREATE CLASS TIPCgi
 
@@ -121,34 +118,30 @@ METHOD New() CLASS TIPCgi
    IF lPost
       nLen := Val( GetEnv( "CONTENT_LENGTH" ) )
       cTemp := Space( nLen )
-      IF ( ( nRead := FRead( CGI_IN, @cTemp, nLen ) ) != nLen )
+      IF ( ( nRead := FRead( hb_GetStdIn(), @cTemp, nLen ) ) != nLen )
          ::ErrHandler( "post error read " + hb_ntos( nRead ) + " instead of " + hb_ntos( nLen ) )
       ELSE
          ::HTTP_RAW_POST_DATA := cTemp
          aTemp := hb_ATokens( cTemp, "&" )
          nLen := Len( aTemp )
-         IF nLen > 0
-            FOR nCount := 1 TO nLen
-               aVar := hb_ATokens( aTemp[ nCount ], "=" )
-               IF Len( aVar ) == 2
-                  ::hPosts[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
-               ENDIF
-            NEXT
-         ENDIF
+         FOR nCount := 1 TO nLen
+            aVar := hb_ATokens( aTemp[ nCount ], "=" )
+            IF Len( aVar ) == 2
+               ::hPosts[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
+            ENDIF
+         NEXT
       ENDIF
    ELSE
       cTemp := GetEnv( "QUERY_STRING" )
       IF ! Empty( cTemp )
          aTemp := hb_ATokens( cTemp, "&" )
          nLen := Len( aTemp )
-         IF nLen > 0
-            FOR nCount := 1 TO nLen
-               aVar := hb_ATokens( aTemp[ nCount ], "=" )
-               IF Len( aVar ) == 2
-                  ::hGets[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
-               ENDIF
-            NEXT
-         ENDIF
+         FOR nCount := 1 TO nLen
+            aVar := hb_ATokens( aTemp[ nCount ], "=" )
+            IF Len( aVar ) == 2
+               ::hGets[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
+            ENDIF
+         NEXT
       ENDIF
    ENDIF
 
@@ -156,14 +149,12 @@ METHOD New() CLASS TIPCgi
    IF ! Empty( cTemp )
       aTemp := hb_ATokens( cTemp, ";" )
       nLen := Len( aTemp )
-      IF nLen > 0
-         FOR nCount := 1 TO nLen
-            aVar := hb_ATokens( aTemp[ nCount ], "=" )
-            IF Len( aVar ) == 2
-               ::hCookies[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
-            ENDIF
-         NEXT
-      ENDIF
+      FOR nCount := 1 TO nLen
+         aVar := hb_ATokens( aTemp[ nCount ], "=" )
+         IF Len( aVar ) == 2
+            ::hCookies[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
+         ENDIF
+      NEXT
    ENDIF
 
    RETURN Self
@@ -199,16 +190,13 @@ METHOD Flush() CLASS TIPCgi
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
-   lRet := ( FWrite( CGI_OUT, cStream ) == hb_BLen( cStream ) )
+   lRet := ( FWrite( hb_GetStdOut(), cStream ) == hb_BLen( cStream ) )
 
    IF ::lDumpHtml
       IF Empty( ::cDumpSavePath )
          ::cDumpSavePath := hb_DirTemp()
       ENDIF
-      IF ( nH := FCreate( ::cDumpSavePath + "dump.html", FC_NORMAL ) ) != F_ERROR
-         FWrite( nH, ::cHtmlPage )
-      ENDIF
-      FClose( nH )
+      hb_MemoWrit( ::cDumpSavePath + "dump.html", ::cHtmlPage )
    ENDIF
 
    ::cCgiHeader := ""
@@ -221,33 +209,18 @@ METHOD Flush() CLASS TIPCgi
       IF ( nH := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
          cSession := ::SessionEncode()
          IF FWrite( nH, cSession ) != hb_BLen( cSession )
-            ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+            ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
          ENDIF
          FClose( nH )
       ELSE
-         ::Write( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+         ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ENDIF
    ENDIF
 
    RETURN lRet
 
 METHOD SaveHtmlPage( cFile ) CLASS TIPCgi
-
-   LOCAL nFile
-   LOCAL lSuccess
-   LOCAL cStream
-
-   nFile := FCreate( cFile )
-
-   IF nFile != F_ERROR
-      cStream := ::cHtmlPage + _CRLF
-      lSuccess := ( FWrite( nFile, cStream ) == hb_BLen( cStream ) )
-      FClose( nFile )
-   ELSE
-      lSuccess := .F.
-   ENDIF
-
-   RETURN lSuccess
+   RETURN hb_MemoWrit( cFile, ::cHtmlPage + _CRLF )
 
 METHOD StartSession( cSID ) CLASS TIPCgi
 
@@ -258,13 +231,14 @@ METHOD StartSession( cSID ) CLASS TIPCgi
 
    IF Empty( cSID )
 
-      IF ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
+      DO CASE
+      CASE ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hGets, nH )
-      ELSEIF ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
+      CASE ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hPosts, nH )
-      ELSEIF ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
+      CASE ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hCookies, nH )
-      ENDIF
+      ENDCASE
 
    ENDIF
 
@@ -284,21 +258,18 @@ METHOD StartSession( cSID ) CLASS TIPCgi
             FSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
             IF ( FRead( nH, @cBuffer, nFileSize ) ) != nFileSize
-               ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+               ::ErrHandler( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                ::SessionDecode( cBuffer )
             ENDIF
             FClose( nH )
          ENDIF
       ELSE
-         ::ErrHandler( "ERROR: On opening session file : " + cFile + ", file not exist." )
+         ::ErrHandler( "ERROR: On opening session file: " + cFile + ", file not exist." )
       ENDIF
-
    ELSE
-
       ::CreateSID()
       ::hSession := { => }
-
    ENDIF
 
    ::hCookies[ "SESSIONID" ] := ::cSID
@@ -306,7 +277,6 @@ METHOD StartSession( cSID ) CLASS TIPCgi
    RETURN Self
 
 METHOD SessionEncode() CLASS TIPCgi
-
    RETURN hb_Serialize( ::hSession )
 
 METHOD SessionDecode( cData ) CLASS TIPCgi
@@ -332,7 +302,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
       IF !( lRet := ( FErase( cFile ) == 0 ) )
-         ::Write( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+         ::Write( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ELSE
          ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
          ::CreateSID()
@@ -434,7 +404,7 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    RETURN cVal
 
-/*
+#if 0
 STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    LOCAL cVal := ""
@@ -444,7 +414,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
    hb_HEval( hTags, {| k | cVal += HtmlTag( hTags, k ) + cSep } )
 
    RETURN cVal
-*/
+#endif
 
 STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
@@ -482,7 +452,7 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
    RETURN cVal
 
-/*
+#if 0
 STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
    LOCAL cVal := ""
@@ -513,7 +483,7 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
    ENDIF
 
    RETURN cVal
-*/
+#endif
 
 STATIC FUNCTION HtmlScript( hVal, cKey )
 

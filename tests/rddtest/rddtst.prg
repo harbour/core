@@ -102,7 +102,7 @@ rddSetDefault(rdd)
     ? "Syntax: <outfile.prg> [<rddname>]"
     quit
   elseif ( s_hMake := fcreate( cOutFile ) ) == F_ERROR
-    ? "Cannot create file: ", cOutFile
+    ? "Cannot create file:", cOutFile
     quit
   endif
   cOut:=""
@@ -176,25 +176,26 @@ return { recno(), bof(), eof(), found() }
 
 static function itm2str( itm )
 local cStr := "", i
-if itm == NIL
+do case
+case itm == NIL
   cStr += "NIL"
-elseif valtype( itm ) == "C"
+case valtype( itm ) == "C"
   cStr += '"' + strtran( itm, '"', '" + chr( 34 ) + "') + '"'
-elseif valtype( itm ) == "N"
+case valtype( itm ) == "N"
   cStr += ltrim( str( itm ) )
-elseif valtype( itm ) == "L"
+case valtype( itm ) == "L"
   cStr += iif( itm, ".T.", ".F." )
-elseif valtype( itm ) == "D"
+case valtype( itm ) == "D"
   cStr += "CTOD(" + DTOC( itm ) + ")"
-elseif valtype( itm ) == "B"
+case valtype( itm ) == "B"
   cStr += "{||" + itm2str( eval( itm ) ) + "}"
-elseif valtype( itm ) == "A"
+case valtype( itm ) == "A"
   cStr += "{"
   for i:=1 to len( itm )
     cStr += iif( i == 1, "", "," ) + itm2str( itm[ i ] )
   next
   cStr += "}"
-endif
+endcase
 return cStr
 
 
@@ -207,9 +208,9 @@ return cStr
   endif
   aState := rdd_state()
   if pcount() > 1
-    cOut:="RDDTESTF " + itm2str( xRet ) + ", " + itm2str( aState ) + ", " + cAction + EOL
+    cOut := "RDDTESTF " + itm2str( xRet ) + ", " + itm2str( aState ) + ", " + cAction + EOL
   else
-    cOut:="RDDTESTC " + itm2str( aState ) + ", " + cAction + EOL
+    cOut := "RDDTESTC " + itm2str( aState ) + ", " + cAction + EOL
   endif
   if ! fwrite( s_hMake, cOut ) == len( cOut )
     ? "write error."

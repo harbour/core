@@ -19,18 +19,18 @@ PROCEDURE Main()
    ?
 
    ? "-OBJECT additions-"
-   ? "What is in oForm ? "
+   ? "What is in oForm ?"
    ? hb_ValToExp( oForm:Transfer() )
 
-   ? "Does transfer exists ? ", __objHasMsg(    oForm, "Transfer" )
-   ? "Is   transfer DATA   ? ", __objHasData(   oForm, "Transfer" )
-   ? "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" )
-   ? "Does nLeft    exists ? ", __objHasMsg(    oForm, "nLeft"    )
-   ? "Is   nLeft    DATA   ? ", __objHasData(   oForm, "nLeft"    )
-   ? "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    )
-   ? "Does unknown  exists ? ", __objHasMsg(    oForm, "Unknown"  )
-   ? "Is   unknown  DATA   ? ", __objHasData(   oForm, "Unknown"  )
-   ? "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  )
+   ? "Does transfer exists ?", __objHasMsg(    oForm, "Transfer" )
+   ? "Is   transfer DATA   ?", __objHasData(   oForm, "Transfer" )
+   ? "Is   transfer METHOD ?", __objHasMethod( oForm, "Transfer" )
+   ? "Does nLeft    exists ?", __objHasMsg(    oForm, "nLeft"    )
+   ? "Is   nLeft    DATA   ?", __objHasData(   oForm, "nLeft"    )
+   ? "Is   nLeft    METHOD ?", __objHasMethod( oForm, "nLeft"    )
+   ? "Does unknown  exists ?", __objHasMsg(    oForm, "Unknown"  )
+   ? "Is   unknown  DATA   ?", __objHasData(   oForm, "Unknown"  )
+   ? "Is   unknown  METHOD ?", __objHasMethod( oForm, "Unknown"  )
 
    ? "Set nLeft to 50 and nRight to 100"
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
@@ -227,7 +227,7 @@ STATIC FUNCTION Transfer( ... )
          ELSEIF HB_ISOBJECT( xData )            // Object passed
             xRet := ::Transfer( xData:Transfer() )
          ELSEIF !( ValType( xData ) == "U" )
-            ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ") ", xData
+            ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ")", xData
          ENDIF
       NEXT
    ENDIF

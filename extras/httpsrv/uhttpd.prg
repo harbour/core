@@ -549,7 +549,7 @@ PROCEDURE Main( ... )
 
       IF s_lConsole
          hb_DispOutAt( 1, 5, APP_NAME + " - web server - v. " + APP_VERSION )
-         hb_DispOutAt( 4, 5, "Server listening (Port: " + hb_ntos( nPort ) + ") : ..." )
+         hb_DispOutAt( 4, 5, "Server listening (Port: " + hb_ntos( nPort ) + "): ..." )
          hb_DispOutAt( 10, 9, "Waiting." )
       ENDIF
 
@@ -940,7 +940,7 @@ STATIC FUNCTION ProcessConnection()
       END SEQUENCE
 
       nParseTime := hb_MilliSeconds() - nMsecs
-      WriteToConsole( "Page served in : " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
+      WriteToConsole( "Page served in: " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
 
       hb_socketShutdown( hSocket )
       hb_socketClose( hSocket )
@@ -1085,7 +1085,7 @@ STATIC FUNCTION ServiceConnection()
       END SEQUENCE
 
       nParseTime := hb_MilliSeconds() - nMsecs
-      WriteToConsole( "Page served in : " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
+      WriteToConsole( "Page served in: " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
 
       hb_socketShutdown( hSocket )
       hb_socketClose( hSocket )

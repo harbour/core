@@ -2552,20 +2552,20 @@ STATIC FUNCTION WriteData( hFile, xData )
 
    DO CASE
    CASE HB_ISSTRING( xData )
-      cData += I2Bin( Len( xData ) ) + xData
+      cData += I2Bin( hb_BLen( xData ) ) + xData
    CASE HB_ISNUMERIC( xData )
-      cData += I2Bin( Len( hb_ntos( xData ) ) ) + hb_ntos( xData )
+      cData += I2Bin( hb_BLen( hb_ntos( xData ) ) ) + hb_ntos( xData )
    CASE HB_ISDATE( xData )
       cData += I2Bin( 8 ) + DToS( xData )
    CASE HB_ISLOGICAL( xData )
       cData += I2Bin( 1 ) + iif( xData, "T", "F" )
    CASE HB_ISARRAY( xData )
-      cData += I2Bin( Len( xData ) )
+      cData += I2Bin( hb_BLen( xData ) )
    OTHERWISE
       cData += I2Bin( 0 )   // NIL
    ENDCASE
 
-   RETURN FWrite( hFile, cData, Len( cData ) )
+   RETURN FWrite( hFile, cData )
 
 STATIC FUNCTION File2Array( cFile, nLen, hFile )
 

@@ -199,7 +199,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
 
-   // TraceLog( "Active Sessions : " + hb_CStr( ::nActiveSessions ) )
+   // TraceLog( "Active Sessions: " + hb_CStr( ::nActiveSessions ) )
 
    IF ::nActiveSessions != 0
       RETURN .F.
@@ -644,7 +644,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
                FSeek( nH, 0, FS_SET )
                cBuffer := Space( nFileSize )
                IF FRead( nH, @cBuffer,  nFileSize ) != nFileSize
-                  // uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+                  // uhttpd_Die( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
                   hb_idleSleep( ::nFileWait / 1000 )
                   LOOP
                ENDIF
@@ -653,7 +653,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
             ENDDO
 
          ELSE
-            // uhttpd_Die( "ERROR: On opening session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+            // uhttpd_Die( "ERROR: On opening session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
             LOOP
          ENDIF
@@ -668,7 +668,6 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
 
    LOCAL nH
    LOCAL cFile
-   LOCAL nFileSize
    LOCAL lOk := .F.
    LOCAL nRetry  := 0
 
@@ -676,21 +675,19 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    __defaultNIL( @cID, ::cSID )
    __defaultNIL( @cData, "" )
 
-   nFileSize := Len( cData )
-
    cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
    // TraceLog( "SessionWrite() - cFile", cFile )
-   IF nFileSize > 0
+   IF ! Empty( cData )
       DO WHILE nRetry++ <= ::nFileRetry
          IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) != F_ERROR
-            IF FWrite( nH, @cData,  nFileSize ) != nFileSize
-               uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+            IF FWrite( nH, @cData ) != hb_BLen( cData )
+               uhttpd_Die( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                lOk := .T.
             ENDIF
             FClose( nH )
          ELSE
-            // uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+            // uhttpd_Die( "ERROR: On WRITING session file. I can not create session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
             LOOP
          ENDIF
@@ -699,7 +696,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    ELSE
       // If session data is empty, I will delete the file if exist
       // IF hb_FileExists( cFile )
-      //   FErase( cFile )
+      //    FErase( cFile )
       // ENDIF
       // Return that all is ok
       lOk := .T.
@@ -734,7 +731,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
 #if 0
    IF !( lOk := ( FErase( cFile ) == 0 ) )
-      uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+      uhttpd_Die( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
    ELSE
 #endif
 

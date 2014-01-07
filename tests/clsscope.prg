@@ -160,7 +160,7 @@
 proc main()
    local cbErr, self, o
 
-   ? DATE(), TIME(), VERSION(), OS()
+   ? Date(), Time(), Version(), OS()
    ?
 
    o := clsX():new()

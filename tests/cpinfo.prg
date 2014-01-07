@@ -329,9 +329,10 @@ return cInfo
 
 #ifdef __HARBOUR__
    #include "hbextcdp.ch"
-   #define EOL    hb_eol()
+   #define EOL          hb_eol()
 #else
-   #define EOL    chr( 13 ) + chr( 10 )
+   #define EOL          chr( 13 ) + chr( 10 )
+   #define hb_BLen( s ) len( s )
 #endif
 
 #define HB_CDP_DIGIT    1
@@ -345,7 +346,7 @@ static function write_file( cName, cBody )
 
    hFile := fcreate( cName )
    if hFile != F_ERROR
-      lRet := fwrite( hFile, cBody, len( cBody ) ) == len( cBody )
+      lRet := fwrite( hFile, cBody ) == hb_BLen( cBody )
       fclose( hFile )
    endif
 

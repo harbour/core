@@ -16,7 +16,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE testfun( b, c )
 
-   b := b + 10
+   b += 10
    c := "A"
    ? 'a pointer + 10 =', b
    ? 'b pointer := "A" =', c

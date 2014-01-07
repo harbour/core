@@ -248,10 +248,7 @@ METHOD ShowResult() CLASS THTML
 
 METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL hFile := FCreate( cFile )
-
-   FWrite( hFile, ::cContent )
-   FClose( hFile )
+   hb_MemoWrit( cFile, ::cContent )
 
    RETURN Self
 
