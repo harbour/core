@@ -280,4 +280,9 @@ PROCEDURE Main()
    HBTEST CToMonth( "Au" )      IS 8
    HBTEST CToMonth( "A" )       IS 4
 
+   HBTEST SecToTime( 1000, .F. )     IS "00:16:40"
+   HBTEST SecToTime( 1000, .T. )     IS "00:16:40:00"
+   HBTEST SecToTime( 3656 - 170 )    IS "00:58:06"
+   HBTEST SecToTime( 45873.22, .T. ) IS "12:44:33:22"
+
    RETURN

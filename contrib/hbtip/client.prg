@@ -407,11 +407,11 @@ METHOD Read( nLen ) CLASS TIPClient
       RETURN NIL
    ENDIF
 
-   IF Empty( nLen ) .OR. nLen < 0 .OR. ( ::nLength > 0 .AND. nLen > ::nLength - ::nRead )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0 .OR. ( ::nLength > 0 .AND. nLen > ::nLength - ::nRead )
       nLen := ::nLength - ::nRead
    ENDIF
 
-   IF Empty( nLen ) .OR. nLen < 0
+   IF nLen <= 0
       // read till end of stream
       cStr1 := Space( RCV_BUF_SIZE )
       cStr0 := ""
@@ -571,7 +571,7 @@ METHOD Data( cData ) CLASS TIPClient
 
 METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
 
-   IF Empty( nLen )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0
       nLen := hb_BLen( cData )
    ENDIF
 
@@ -589,7 +589,7 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF Empty( nLen )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0
       nLen := hb_BLen( cData )
    ENDIF
 

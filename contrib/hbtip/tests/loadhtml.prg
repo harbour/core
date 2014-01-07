@@ -33,7 +33,7 @@ PROCEDURE Main()
    /* download the Google response */
    cHtml := oHttp:readAll()
    oHttp:close()
-   ? hb_ntos( Len( cHtml ) ), "bytes received "
+   ? hb_ntos( Len( cHtml ) ), "bytes received"
 
    oDoc := THtmlDocument():New( cHtml )
 

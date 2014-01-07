@@ -61,15 +61,15 @@
 
 CREATE CLASS TUrl
 
-   VAR cAddress
-   VAR cProto
-   VAR cServer
-   VAR cPath
-   VAR cQuery
-   VAR cFile
-   VAR nPort
-   VAR cUserid
-   VAR cPassword
+   VAR cAddress  INIT ""
+   VAR cProto    INIT ""
+   VAR cUserid   INIT ""
+   VAR cPassword INIT ""
+   VAR cServer   INIT ""
+   VAR cPath     INIT ""
+   VAR cQuery    INIT ""
+   VAR cFile     INIT ""
+   VAR nPort     INIT -1
 
    METHOD New( cUrl )
    METHOD SetAddress( cUrl )
@@ -95,6 +95,10 @@ METHOD New( cUrl ) CLASS TUrl
 METHOD SetAddress( cUrl ) CLASS TUrl
 
    LOCAL aMatch, cServer, cPath
+
+   IF ! HB_ISSTRING( cUrl )
+      RETURN .F.
+   ENDIF
 
    ::cAddress := cUrl
    ::cProto := ""
@@ -123,7 +127,7 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    cPath := aMatch[ 4 ]
    ::cQuery := aMatch[ 5 ]
 
-   // server parsing (can't fail)
+   // server parsing (never fails)
    aMatch := hb_regex( ::cREServ, cServer )
    ::cUserId := aMatch[ 2 ]
    ::cPassword := aMatch[ 3 ]
@@ -133,7 +137,7 @@ METHOD SetAddress( cUrl ) CLASS TUrl
       ::nPort := -1
    ENDIF
 
-   // Parse path and file (can't fail)
+   // Parse path and file (never fails)
    aMatch := hb_regex( ::cREFile, cPath )
    ::cPath := aMatch[ 2 ]
    ::cFile := aMatch[ 3 ]
@@ -203,26 +207,24 @@ METHOD BuildQuery() CLASS TUrl
 METHOD AddGetForm( xPostData )
 
    LOCAL cData := ""
-   LOCAL nI
-   LOCAL y
-   LOCAL cRet
+   LOCAL item
 
    DO CASE
    CASE HB_ISHASH( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
-         IF nI != y
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumKey() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
    CASE HB_ISARRAY( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 2 ] ) ) )
-         IF nI != y
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumIndex() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
@@ -230,8 +232,8 @@ METHOD AddGetForm( xPostData )
       cData := xPostData
    ENDCASE
 
-   IF ! Empty( cData )
-      cRet := ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData
+   IF Empty( cData )
+      RETURN NIL
    ENDIF
 
-   RETURN cRet
+   RETURN ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData

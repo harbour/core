@@ -159,12 +159,13 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientFTP
    ::nConnTimeout := 3000
    ::bUsePasv     := .T.
    ::nAccessMode  := TIP_RW  // a read-write protocol
+
    ::nDefaultSndBuffSize := 65536
    ::nDefaultRcvBuffSize := 65536
 
    // precompilation of regex for better prestations
    ::RegBytes := hb_regexComp( "\(([0-9]+)[ )a-zA-Z]" )
-   ::RegPasv :=  hb_regexComp( "([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*)" )
+   ::RegPasv  := hb_regexComp( "([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*) *, *([0-9]*)" )
 
    RETURN Self
 
@@ -174,7 +175,8 @@ METHOD Open( cUrl ) CLASS TIPClientFTP
       ::oUrl := TUrl():New( cUrl )
    ENDIF
 
-   IF Len( ::oUrl:cUserid ) == 0 .OR. Len( ::oUrl:cPassword ) == 0
+   IF Len( ::oUrl:cUserid ) == 0 .OR. ;
+      Len( ::oUrl:cPassword ) == 0
       RETURN .F.
    ENDIF
 
@@ -198,11 +200,7 @@ METHOD Open( cUrl ) CLASS TIPClientFTP
 METHOD GetReply() CLASS TIPClientFTP
 
    LOCAL nLen
-   LOCAL cRep
-
-   ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-
-   cRep := ::cReply
+   LOCAL cRep := ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
 
    IF cRep == NIL
       RETURN .F.
@@ -296,7 +294,6 @@ METHOD PWD() CLASS TIPClientFTP
       RAt( '"', ::cReply ) - At( '"', ::cReply ) - 1 )
 
    RETURN .T.
-
 
 METHOD DELE( cPath ) CLASS TIPClientFTP
 
@@ -701,16 +698,13 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
 /* Rename a traves del ftp */
 METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
 
-   LOCAL lResult := .F.
-
    ::inetSendAll( ::SocketCon, "RNFR " + cFrom + ::cCRLF )
-
    IF ::GetReply()
       ::inetSendAll( ::SocketCon, "RNTO " + cTo + ::cCRLF )
-      lResult := ::GetReply()
+      RETURN ::GetReply()
    ENDIF
 
-   RETURN lResult
+   RETURN .F.
 
 METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
@@ -800,9 +794,9 @@ METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
 
       ELSE
 
-         aFile         := Array( F_LEN + 3 )
-         nStart        := 1
-         nEnd          := hb_At( " ", cEntry, nStart )
+         aFile  := Array( F_LEN + 3 )
+         nStart := 1
+         nEnd   := hb_At( " ", cEntry, nStart )
 
          // file permissions (attributes)
          aFile[ F_ATTR ] := SubStr( cEntry, nStart, nEnd - nStart )
@@ -876,7 +870,6 @@ METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
          aList[ cEntry:__enumIndex() ] := aFile
 
       ENDIF
-
    NEXT
 
    RETURN aList

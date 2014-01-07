@@ -687,13 +687,14 @@ STATIC FUNCTION BADFNAME()
 
 STATIC PROCEDURE OutMsg( hFile, cMsg )
 
-   IF hFile == 1
+   DO CASE
+   CASE hFile == 1
       OutStd( cMsg )
-   ELSEIF hFile == 2
+   CASE hFile == 2
       OutErr( cMsg )
-   ELSE
+   OTHERWISE
       FWrite( hFile, cMsg )
-   ENDIF
+   ENDCASE
 
    RETURN
 

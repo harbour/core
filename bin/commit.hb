@@ -1000,26 +1000,28 @@ STATIC FUNCTION EOLDetect( cFile, /* @ */ nLines )
    LOCAL tmp
 
    FOR EACH tmp IN cFile
-      IF tmp == Chr( 13 )
+      DO CASE
+      CASE tmp == Chr( 13 )
          ++nCR
-      ELSEIF tmp == Chr( 10 )
+      CASE tmp == Chr( 10 )
          ++nLF
-      ENDIF
+      ENDCASE
    NEXT
 
-   IF nCR > 0 .AND. nLF == 0
+   DO CASE
+   CASE nCR > 0 .AND. nLF == 0
       nLines := nCR
       RETURN Chr( 13 )
-   ELSEIF nCR == 0 .AND. nLF > 0
+   CASE nCR == 0 .AND. nLF > 0
       nLines := nLF
       RETURN Chr( 10 )
-   ELSEIF nCR == 0 .AND. nLF == 0
+   CASE nCR == 0 .AND. nLF == 0
       nLines := 0
       RETURN "binary"
-   ELSEIF nCR == nLF
+   CASE nCR == nLF
       nLines := nCR
       RETURN Chr( 13 ) + Chr( 10 )
-   ENDIF
+   ENDCASE
 
    nLines := -1
 
@@ -1188,11 +1190,12 @@ STATIC PROCEDURE ProcFile( cFileName )
 
    IF HB_ISARRAY( aProc )
       FOR EACH xCmd IN aProc
-         IF HB_ISSTRING( xCmd )
+         DO CASE
+         CASE HB_ISSTRING( xCmd )
             hb_run( hb_StrFormat( hb_DirSepToOS( xCmd ), '"' + _HBROOT_ + cFileName + '"' ) )
-         ELSEIF HB_ISEVALITEM( xCmd )
+         CASE HB_ISEVALITEM( xCmd )
             Eval( xCmd, cFileName )
-         ENDIF
+         ENDCASE
       NEXT
    ENDIF
 

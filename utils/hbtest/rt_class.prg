@@ -1094,13 +1094,14 @@ STATIC FUNCTION INSTANCE_DATA( oValue )
 
    cData := "[" + hb_ntos( Len( oValue ) ) + "]:"
    FOR i := 1 TO Len( oValue )
-      IF HB_ISSTRING( oValue[ i ] )
+      DO CASE
+      CASE HB_ISSTRING( oValue[ i ] )
          cData += " " + oValue[ i ]
-      ELSEIF oValue[ i ] == NIL
+      CASE oValue[ i ] == NIL
          cData += " NIL"
-      ELSE
+      OTHERWISE
          cData += " ..."
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cData
@@ -1121,18 +1122,20 @@ METHOD INIT( type ) CLASS DTORCLASS
 RETURN self
 
 METHOD PROCEDURE DTOR CLASS DTORCLASS
-   IF ::type == 1
+
+   DO CASE
+   CASE ::Type == 1
       cDtorResult += "Reference to self in instance variable."
       ::var1 := self
-   ELSEIF ::Type == 2
+   CASE ::Type == 2
       cDtorResult += "Reference to self in class variable."
       ::var2 := self
-   ELSEIF ::Type == 3
+   CASE ::Type == 3
       cDtorResult += "Reference to self in private memvar."
       objHolder := self
-   ELSE
+   OTHERWISE
       cDtorResult += "No references to self."
-   ENDIF
+   ENDCASE
 
    RETURN
 
