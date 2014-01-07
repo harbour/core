@@ -2094,17 +2094,27 @@ static void hb_compUpdateFunctionNames( HB_COMP_DECL )
       {
          if( ( pFunc->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) != 0 )
          {
-            HB_BOOL fGlobal = HB_FALSE;
-            PHB_HFUNC pSeek = HB_COMP_PARAM->functions.pFirst;
+            PHB_HSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst, pFuncSym = NULL;
+            HB_BOOL fExists = HB_FALSE;
 
-            while( pSeek )
+            while( pSym )
             {
-               if( pFunc == pSeek )
-                  fGlobal = HB_TRUE;
-               else if( ( ! fGlobal || ( pSeek->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) == 0 ) &&
-                   strcmp( pFunc->szName, pSeek->szName ) == 0 )
-                  pFunc->iFuncSuffix++;
-               pSeek = pSeek->pNext;
+               if( pSym->iFunc )
+               {
+                  if( pSym->pFunc == pFunc )
+                     pFuncSym = pSym;
+                  else if( ( ( pSym->cScope & HB_FS_LOCAL ) != 0 ||
+                        ( pSym->cScope & HB_FS_DEFERRED ) == 0 ) &&
+                      strcmp( pFunc->szName, pSym->szName ) == 0 )
+                     fExists = HB_TRUE;
+
+                  if( pFuncSym && fExists )
+                  {
+                     pFunc->iFuncSuffix = pFuncSym->iFunc;
+                     break;
+                  }
+               }
+               pSym = pSym->pNext;
             }
          }
          pFunc = pFunc->pNext;

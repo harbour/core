@@ -9,6 +9,7 @@ ${hb_name}.hbx
 
 dll.prg
 misc.prg
+occurs.prg
 
 dbfunc.c
 miscfunc.c

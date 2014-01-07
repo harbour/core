@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- *    StrOccurs( <cSub>, <cStr> ) -> <nCount>
+ *    StrOccurs( <cSub>, <cStr>, [<lAny>] ) -> <nCount>
  * Undocumented FlagShip compatible function
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -48,16 +48,19 @@
  */
 
 FUNCTION StrOccurs( cSub, cStr, lAny )
-   LOCAL nCount := 0, nFrom, nPos
+   LOCAL nCount := 0, nPos := 0
 
-   hb_default( @lAny, .T. )
-
-   FOR nFrom := 1 to Len( cStr )
-      IF ( nPos := hb_At( cSub, cStr, nFrom ) ) == 0
-         EXIT
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      IF hb_defaultValue( lAny, PCount() < 3 )
+         DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+            nCount++
+         ENDDO
+      ELSE
+         DO WHILE ( nPos := hb_At( cSub, cStr, nPos ) ) != 0
+            nCount++
+            nPos += Len( cSub )
+         ENDDO
       ENDIF
-      ++nCount
-      nFrom := iif( lAny, nPos, nPos + Len( cSub ) - 1 )
-   NEXT
+   ENDIF
 
    RETURN nCount

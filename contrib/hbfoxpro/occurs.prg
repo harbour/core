@@ -1,9 +1,8 @@
 /*
  * Harbour Project source code:
- * Misc FoxPro functions (feel free to expand/fix it as you like)
+ * FoxPro compatible Occurs() function
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * Copyright 2010-2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,62 +46,13 @@
  *
  */
 
-#include "setcurs.ch"
-#include "dbinfo.ch"
+FUNCTION Occurs( cSub, cStr )
+   LOCAL nCount := 0, nPos := 0
 
-FUNCTION Sys( nValue, xPar1 )
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+         ++nCount
+      ENDDO
+   ENDIF
 
-   SWITCH nValue
-   CASE 0
-      RETURN NetName() + " # " + hb_UserName()
-   CASE 2
-      RETURN hb_ntos( Seconds() )
-   CASE 5
-      RETURN Set( _SET_DEFAULT )
-   CASE 6
-      RETURN Set( _SET_PRINTFILE )
-   CASE 10
-      hb_default( @xPar1, 0 )
-      RETURN CToD( "" ) + xPar1
-   CASE 100
-      RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
-   CASE 101
-      RETURN Set( _SET_DEVICE )
-   CASE 102
-      RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
-   CASE 2002
-      hb_default( @xPar1, SC_NONE )
-      RETURN SetCursor( xPar1 )
-   CASE 2011
-      RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
-             iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
-             iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
-                                               "Not locked" ) ) )
-   OTHERWISE
-      /* Throw RTE? */
-   ENDSWITCH
-
-   RETURN NIL
-
-STATIC FUNCTION AFillNested( aValue, xVal )
-
-   LOCAL item
-
-   FOR EACH item IN aValue
-      IF HB_ISARRAY( item )
-         AFillNested( item, xVal )
-      ELSE
-         item := xVal
-      ENDIF
-   NEXT
-
-   RETURN aValue
-
-FUNCTION __fox_Array( ... )
-   RETURN AFillNested( Array( ... ), .F. )
-
-FUNCTION AElement( aValue, ... )
-   RETURN aValue[ ... ]
-
-FUNCTION InsMode( ... )
-   RETURN Set( _SET_INSERT, ... )
+   RETURN nCount

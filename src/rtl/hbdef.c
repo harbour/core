@@ -113,6 +113,18 @@ HB_FUNC( HB_DEFAULT )
       hb_itemParamStore( 1, pDefault );
 }
 
+HB_FUNC( HB_DEFAULTVALUE )
+{
+   PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
+
+   if( pDefault &&
+       s_hb_itemTypeBasic( pParam ) != s_hb_itemTypeBasic( pDefault ) )
+      pParam = pDefault;
+
+   hb_itemReturn( pParam );
+}
+
 /* For compatibility with legacy DEFAULT ... TO ... command.
    Not recommended for new code. */
 HB_FUNC( __DEFAULTNIL )

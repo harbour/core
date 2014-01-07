@@ -392,6 +392,7 @@ DYNAMIC hb_dbRename
 DYNAMIC hb_dbRequest
 DYNAMIC hb_dbZap
 DYNAMIC hb_default
+DYNAMIC hb_defaultValue
 DYNAMIC hb_Deserialize
 DYNAMIC hb_DirBase
 DYNAMIC hb_DirBuild
