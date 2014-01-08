@@ -817,7 +817,11 @@ STATIC PROCEDURE hbmk_local_entry( ... )
            Left(  tmp, 5 ) == "hblib"      ; AAdd( aArgsProc, "-hblib" )
       CASE Right( tmp, 5 ) == "hbdyn" .OR. ;
            Left(  tmp, 5 ) == "hbdyn"      ; AAdd( aArgsProc, "-hbdyn" )
+#ifdef HARBOUR_SUPPORT
+      CASE Right( tmp, 5 ) == "hbhrb" .OR. ;
+           Left(  tmp, 5 ) == "hbhrb"      ; AAdd( aArgsProc, "-hbhrb" )
       ENDCASE
+#endif
    ENDIF
 
    /* Handle multitarget command lines */
@@ -1387,6 +1391,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cLIB_BASE_PCRE
    LOCAL cLIB_BASE_ZLIB
 
+   LOCAL l_cPRGSTUB
    LOCAL l_cCSTUB
    LOCAL l_cCPPSTUB
 #endif
@@ -2718,32 +2723,64 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F.
+            lStopAfterCComp := .F.
+            hbmk[ _HBMK_lCreateLib ] := .F.
+            Set_lCreateDyn( hbmk, .F. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
          ENDIF
 
       CASE cParamL == "-hblib"
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F.
+            lStopAfterCComp := .T.
+            hbmk[ _HBMK_lCreateLib ] := .T.
+            Set_lCreateDyn( hbmk, .F. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lCreateHRB ] := .F.
          ENDIF
 
       CASE cParamL == "-hbdyn"
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .F.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F.
+            lStopAfterCComp := .T.
+            hbmk[ _HBMK_lCreateLib ] := .F.
+            Set_lCreateDyn( hbmk, .T. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lDynVM ] := .F.
 #ifdef HARBOUR_SUPPORT
             l_lNOHBLIB := .T.
 #endif
          ENDIF
 
 #ifdef HARBOUR_SUPPORT
+      CASE cParamL == "-hbhrb"
+
+         IF ! l_lTargetSelected
+            l_lTargetSelected := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .T.
+            lStopAfterCComp := .T.
+            hbmk[ _HBMK_lCreateLib ] := .T.
+            Set_lCreateDyn( hbmk, .T. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lDynVM ] := .F.
+            hbmk[ _HBMK_lCreateHRB ] := .T.
+         ENDIF
+
       CASE cParamL == "-hbdynvm"
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .T.
+            hbmk[ _HBMK_lStopAfterHarbour ] := .F.
+            lStopAfterCComp := .T.
+            hbmk[ _HBMK_lCreateLib ] := .F.
+            Set_lCreateDyn( hbmk, .T. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lDynVM ] := .T.
             l_lNOHBLIB := .F.
          ENDIF
 #endif
@@ -2752,14 +2789,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lContainer ] := .T. ; hbmk[ _HBMK_lStopAfterInit ] := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+            hbmk[ _HBMK_lContainer ] := .T.
+            hbmk[ _HBMK_lStopAfterInit ] := .T.
+            hbmk[ _HBMK_lCreateLib ] := .F.
+            Set_lCreateDyn( hbmk, .F. )
+            hbmk[ _HBMK_lCreateImpLib ] := .F.
          ENDIF
 
       CASE cParamL == "-hbimplib"
 
          IF ! l_lTargetSelected
             l_lTargetSelected := .T.
-            hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
+            hbmk[ _HBMK_lCreateImpLib ] := .T.
+            lAcceptIFlag := .T.
          ENDIF
 
       CASE cParamL == "-gui"             ; hbmk[ _HBMK_lGUI ]       := .T. ; hbmk[ _HBMK_lCLI ] := .F.
@@ -3935,7 +3977,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    /* Decide about output name */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
-      IF ! hbmk[ _HBMK_lCreateHRB ]
+      IF ! hbmk[ _HBMK_lCreateHRB ] .OR. ;
+         ( hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lCreateHRB ] )
          /* If -o with full name was not specified, let us
             make it the first source file specified. */
          hb_default( @hbmk[ _HBMK_cPROGNAME ], hb_FNameName( hbmk[ _HBMK_cFIRST ] ) )
@@ -5981,7 +6024,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
          l_cLIBSELF := cName
-         hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
+         IF hbmk[ _HBMK_lCreateHRB ]
+            hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, ".hrb" )
+         ELSE
+            hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
+         ENDIF
       ENDCASE
    ENDIF
 
@@ -6086,6 +6133,47 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 
 #ifdef HARBOUR_SUPPORT
+
+   IF hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lCreateHRB ]
+
+      DO CASE
+      CASE Empty( hbmk[ _HBMK_aPRG ] )
+         _hbmk_OutErr( hbmk, I_( "Error: No Harbour source files found for -hbhrb output" ) )
+         RETURN _EXIT_UNSUPPORTED
+      CASE ! Empty( hbmk[ _HBMK_aC ] ) .OR. ;
+           ! Empty( hbmk[ _HBMK_aCPP ] ) .OR. ;
+           ! Empty( hbmk[ _HBMK_aRESSRC ] ) .OR. ;
+           ! Empty( hbmk[ _HBMK_aRESCMP ] ) .OR. ;
+           ! Empty( hbmk[ _HBMK_aOBJUSER ] )
+         _hbmk_OutErr( hbmk, I_( "Warning: Non-Harbour source files ignored for -hbhrb output" ) )
+      ENDCASE
+
+      fhnd := hb_FTempCreateEx( @l_cPRGSTUB, NIL, "hbmk_", ".prg" )
+      IF fhnd == F_ERROR
+         _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .prg program could not be created." ) )
+         RETURN _EXIT_STUBCREATE
+      ENDIF
+
+      cFile := ;
+         "/* This temp source file was generated by " + _SELF_NAME_ + " tool. */"  + _FIL_EOL + ;
+         "/* You can safely delete it. */"                                         + _FIL_EOL + ;
+         ""                                                                        + _FIL_EOL
+      FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
+         cFile += "SET PROCEDURE TO " + '"' + tmp + '"' + _FIL_EOL
+      NEXT
+
+      FWrite( fhnd, cFile )
+      FClose( fhnd )
+      IF hbmk[ _HBMK_lDEBUGSTUB ]
+         OutStd( ".prg stub dump:" + _OUT_EOL )
+         OutStd( cFile )
+      ENDIF
+
+      AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-gh" )
+      AAddNewAtTop( hbmk[ _HBMK_aOPTPRG ], "-o" + hbmk[ _HBMK_cPROGNAME ] )
+      hbmk[ _HBMK_aPRG ] := { l_cPRGSTUB }
+   ENDIF
+
    /* Create incremental file list for .prg files */
 
    IF ( ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C ) .OR. ;
@@ -6174,6 +6262,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    IF hbmk[ _HBMK_lDumpInfo ]
 
+#ifdef HARBOUR_SUPPORT
+      IF ! Empty( l_cPRGSTUB )
+         FErase( l_cPRGSTUB )
+      ENDIF
+#endif
+
       IF ! lDumpInfoNested .AND. nLevel > 1
          RETURN _EXIT_OK
       ENDIF
@@ -6210,6 +6304,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lBEEP ]
             DoBeep( .F. )
          ENDIF
+#ifdef HARBOUR_SUPPORT
+         IF ! Empty( l_cPRGSTUB )
+            FErase( l_cPRGSTUB )
+         ENDIF
+#endif
          RETURN _EXIT_MISSDEPT
       ENDIF
    ENDIF
@@ -6294,6 +6393,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         IF hbmk[ _HBMK_lBEEP ]
                            DoBeep( .F. )
                         ENDIF
+#ifdef HARBOUR_SUPPORT
+                        IF ! Empty( l_cPRGSTUB )
+                           FErase( l_cPRGSTUB )
+                        ENDIF
+#endif
                         RETURN _EXIT_COMPPRG
                      ENDIF
                   ENDIF
@@ -6319,6 +6423,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cPRGSTUB )
+                     FErase( l_cPRGSTUB )
+                  ENDIF
+#endif
                   RETURN _EXIT_COMPPRG
                ENDIF
             ENDIF
@@ -6363,6 +6472,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cPRGSTUB )
+                     FErase( l_cPRGSTUB )
+                  ENDIF
+#endif
                   RETURN _EXIT_COMPPRG
                ENDIF
             ENDIF
@@ -6566,6 +6680,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cPRGSTUB )
+                     FErase( l_cPRGSTUB )
+                  ENDIF
+#endif
                   RETURN _EXIT_STUBCREATE
                ENDIF
                /* Do not delete stub in workdir in incremental mode. */
@@ -6675,6 +6794,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cPRGSTUB )
+                     FErase( l_cPRGSTUB )
+                  ENDIF
+#endif
                   RETURN _EXIT_STUBCREATE
                ENDIF
                /* Do not delete stub in workdir in incremental mode. */
@@ -7518,7 +7642,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   l_lIMPLIBToProcess := .T.
                ENDIF
 
-            CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib )
+            CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib ) .AND. ! hbmk[ _HBMK_lCreateHRB ]
 
                PlugIn_Execute_All( hbmk, "pre_lib" )
 
@@ -7632,13 +7756,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lMAP ]
             FErase( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
          ENDIF
-         IF lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
+         IF lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateHRB ]
             /* bcc is known to create it for static libs */
             FErase( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".bak" ) )
          ENDIF
          DoLinkDelete( hbmk )
       ENDIF
 #ifdef HARBOUR_SUPPORT
+      IF ! Empty( l_cPRGSTUB )
+         FErase( l_cPRGSTUB )
+      ENDIF
       IF ! Empty( l_cCSTUB )
          FErase( l_cCSTUB )
          FErase( FNameDirExtSet( l_cCSTUB, hbmk[ _HBMK_cWorkDir ], cObjExt ) )
@@ -7672,7 +7799,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
 #endif
       ENDIF
-      IF ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ]
+      IF ! lStopAfterCComp .OR. ( hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateHRB ] ) .OR. hbmk[ _HBMK_lCreateDyn ]
          IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
             IF ! Empty( cResExt )
                AEval( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), {| tmp | FErase( tmp ) } )
@@ -7699,7 +7826,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
       IF hbmk[ _HBMK_nExitCode ] == _EXIT_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ! lTargetUpToDate .AND. ;
-         ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ] )
+         ( ! lStopAfterCComp .OR. ( hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateHRB ] ) .OR. hbmk[ _HBMK_lCreateDyn ] )
 
          IF ! Empty( cBin_Post )
 
@@ -10389,7 +10516,6 @@ STATIC FUNCTION AAddNewNotEmpty( array, xItem )
 
    RETURN array
 
-#if 0
 STATIC FUNCTION AAddNewAtTop( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
@@ -10397,7 +10523,6 @@ STATIC FUNCTION AAddNewAtTop( array, xItem )
    ENDIF
 
    RETURN array
-#endif
 
 STATIC FUNCTION AAddNew( array, xItem )
 
@@ -13389,7 +13514,7 @@ STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 
    DO CASE
    CASE hbmk[ _HBMK_lContainer ]                                       ; RETURN "hbcontainer"
-   CASE hbmk[ _HBMK_lCreateLib ]                                       ; RETURN "hblib"
+   CASE hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateHRB ]      ; RETURN "hblib"
    CASE hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ]          ; RETURN "hbdyn"
    CASE hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]            ; RETURN "hbdynvm"
    CASE hbmk[ _HBMK_lCreateImpLib ]                                    ; RETURN "hbimplib"

@@ -57,7 +57,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
-   LOCAL nDim, cType, cVal
+   LOCAL dim, cType, cVal
    LOCAL tb_methods := ;
       { ;
       { K_DOWN,       {| b | b:down() } }, ;
@@ -113,26 +113,22 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       ELSE
          DO CASE
          CASE nKey == K_F7
-            FOR nDim := 1 TO Len( ar )
-               hb_ADel( ar[ nDim ], nElem, .T. )
+            FOR EACH dim IN ar
+               hb_ADel( dim, nElem, .T. )
             NEXT
             b:refreshAll()
 
          CASE nKey == K_F8
-            FOR nDim := 1 TO Len( ar )
-               // check valtype of current element before AIns()
-               cType := ValType( ar[ nDim, nElem ] )
-               cVal  := ar[ nDim, nElem ]
-               hb_AIns( ar[ nDim ], nElem,, .T. )
+            FOR EACH dim IN ar
+               // check type of current element before hb_AIns()
+               cType := ValType( dim[ nElem ] )
+               cVal  := dim[ nElem ]
+               hb_AIns( dim, nElem,, .T. )
                DO CASE
-               CASE cType == "C"
-                  ar[ nDim, nElem ] := Space( Len( cVal ) )
-               CASE cType == "N"
-                  ar[ nDim, nElem ] := 0
-               CASE cType == "L"
-                  ar[ nDim, nElem ] := .F.
-               CASE cType == "D"
-                  ar[ nDim, nElem ] := hb_SToD()
+               CASE cType == "C" ; dim[ nElem ] := Space( Len( cVal ) )
+               CASE cType == "N" ; dim[ nElem ] := 0
+               CASE cType == "L" ; dim[ nElem ] := .F.
+               CASE cType == "D" ; dim[ nElem ] := hb_SToD()
                ENDCASE
             NEXT
             b:refreshAll()

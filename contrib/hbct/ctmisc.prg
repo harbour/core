@@ -71,10 +71,8 @@ FUNCTION Center( c, n, p, lMode )
    IF HB_ISLOGICAL( p )
       lMode := p
       p := NIL
-   ELSE
-      IF ! HB_ISLOGICAL( lMode )
-         lMode := .F.
-      ENDIF
+   ELSEIF ! HB_ISLOGICAL( lMode )
+      lMode := .F.
    ENDIF
 
    cRet := PadC( RTrim( c ), n, p )
@@ -90,15 +88,12 @@ FUNCTION CSetCurs( l )
    RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
 
 FUNCTION CSetKey( n )
-
    RETURN SetKey( n )
 
 FUNCTION CSetCent( nCentury )
-
    RETURN __SetCentury( nCentury )
 
 FUNCTION LToC( l )
-
    RETURN iif( l, "T", "F" )
 
 FUNCTION DosParam()
@@ -113,5 +108,4 @@ FUNCTION DosParam()
    RETURN cRet
 
 FUNCTION ExeName()
-
    RETURN hb_ProgName()

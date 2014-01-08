@@ -45,10 +45,8 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL aLeft
 
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      AAdd( aPos, {} )
-   NEXT
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
+      AAdd( aPos, {} )
 
       DO WHILE At( "[", aInfo[ 1, i ] ) > 0
          x := At( "[", aInfo[ 1, i ] )
@@ -57,7 +55,6 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
          aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
          aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
       ENDDO
-
    NEXT
 
    AEval( aInfo[ 1 ], {| x | nWidest := Max( nWidest, Len( x ) ) } )

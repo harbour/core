@@ -57,7 +57,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
 
    LOCAL b, column, i
-   LOCAL cHead, bField, lKeepScrn, cScrnSave
+   LOCAL lKeepScrn, cScrnSave
    LOCAL cColorSave, cColorBack, nCursSave
    LOCAL lMore, nKey, nPassRec
 
@@ -97,20 +97,20 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    b:colorSpec := cColorList
 
    /* add a column for each field in the current workarea */
-   FOR i := 1 TO Len( aFields )
-      cHead  := aFields[ i, 1 ]
-      bField := aFields[ i, 2 ]
+   FOR EACH i IN aFields
 
       /* make the new column */
-      column := TBColumnNew( cHead, bField )
+      column := TBColumnNew( i[ 1 ], i[ 2 ] )
 
+#if 0
       /* these are color setups from tbdemo.prg from Nantucket */
-      // IF cType == "N"
-      //   column:defColor := { 5, 6 }
-      //   column:colorBlock := {| x | iif( x < 0, { 7, 8 }, { 5, 6 } ) }
-      // ELSE
-      //   column:defColor := { 3, 4 }
-      // ENDIF
+      IF cType == "N"
+        column:defColor := { 5, 6 }
+        column:colorBlock := {| x | iif( x < 0, { 7, 8 }, { 5, 6 } ) }
+      ELSE
+        column:defColor := { 3, 4 }
+      ENDIF
+#endif
 
       /* To simplify I just used 3rd and 4th colors from passed cColorList */
       /* This way 1st is SAY, 2nd is GET, 3rd and 4th are used here,

@@ -372,10 +372,10 @@ STATIC PROCEDURE _ftShowIt( aOpt )
 STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
    LOCAL nR
-   LOCAL nC     := 1
-   LOCAL lFound := .F.
+   LOCAL nC      := 1
+   LOCAL lFound  := .F.
    LOCAL nKey
-   LOCAL nDim   := Len( aClrPal )
+   LOCAL nDim    := Len( aClrPal )
    LOCAL nTop    := 0
    LOCAL nLeft   := 28
    LOCAL nBottom := nTop  + nDim + 1
@@ -389,7 +389,7 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
    // .... find the starting row and column for the current color
    FOR nR := 1 TO nDim
       FOR nC := 1 TO nDim
-         IF aClrPal[ nR, nC ] == AllTrim( cClr )
+         IF aClrPal[ nR ][ nC ] == AllTrim( cClr )
             lFound := .T.
             EXIT
          ENDIF
@@ -563,7 +563,7 @@ STATIC PROCEDURE _ftShowPal( aClrPal, cChr )
    Single( nTop, nLeft, nBottom, nRight )
    FOR nF := 1 TO Len( aClrPal )
       FOR nB := 1 TO  Len( aClrPal[ nF ] )
-         SetColor( aClrPal[ nF, nB ] )
+         SetColor( aClrPal[ nF ][ nB ] )
          hb_DispOutAt( nF, nB * 3 + 27, cChr )
       NEXT
    NEXT
@@ -583,7 +583,7 @@ STATIC FUNCTION _ftInitPal( aClrTab )
 
    FOR nF := 1 TO nDim * 2
       FOR nB := 1 TO nDim * 2
-         aClrPal[ nF, nB ] := ;
+         aClrPal[ nF ][ nB ] := ;
             iif( nF <= nDim, aClrTab[ nF ], aClrTab[ nF - nDim ] + "+" ) + "/" + ;
             iif( nB <= nDim, aClrTab[ nB ], aClrTab[ nB - nDim ] + "*" )
       NEXT
