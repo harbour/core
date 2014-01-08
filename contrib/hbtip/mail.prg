@@ -69,12 +69,6 @@ CREATE CLASS TIPMail
    METHOD GetRawBody()              INLINE ::cBody
    METHOD SetEncoder( cEncoder )
 
-#if 0
-   METHOD FWrite( nFile )
-   METHOD FRead( nFile )
-   METHOD Send( sSocket )
-   METHOD Recv( sSocket )
-#endif
    METHOD FromString( cMail, cBoundary, nPos )
    METHOD ToString()
 

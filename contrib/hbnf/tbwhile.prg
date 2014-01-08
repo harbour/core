@@ -21,7 +21,7 @@
  *  2.  Added Nantucket's cleaner code for:
  *        - Cleaned up logic around line 334 while loop section
  *        - Added refreshCurrent and another stabilize around line 349
- *        - TbSkipWhile was redone
+ *        - TbSkipWhil() was redone
  *             Note: Leo's line was changed to:
  *                 ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
  *
@@ -42,12 +42,12 @@
  */
 
 /* The tricks are:
- *
- * 1. Setting up functions for goTop() and goBottom() so that you can
- *    quickly move to the right record when the user presses the
- *    Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
- *
- * 2. Passing and evaluating the block for the TbSkipWhil().
+
+   1. Setting up functions for goTop() and goBottom() so that you can
+      quickly move to the right record when the user presses the
+      Ctrl-PgUp ( goTop() ) and Ctrl-PgDn ( goBottom() ) keys.
+
+   2. Passing and evaluating the block for the TbSkipWhil().
  */
 
 #include "inkey.ch"
@@ -85,11 +85,11 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    b:colSep  := hb_UTF8ToStrBox( " │ " )
    b:footSep := hb_UTF8ToStrBox( "═╧═" )
 
-   /* add custom 'TbSkipWhil' (to handle passed condition) */
+   /* add custom TbSkipWhil() (to handle passed condition) */
    b:skipBlock := {| x | TbSkipWhil( x, bWhileCond ) }
 
-   /* Set up substitute goto top and goto bottom */
-   /* with While's top and bottom records        */
+   /* Set up substitute goto top and goto bottom
+      with While's top and bottom records */
    b:goTopBlock    := {|| TbWhileTop( cKey ) }
    b:goBottomBlock := {|| TbWhileBot( cKey ) }
 
@@ -104,17 +104,17 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
 #if 0
       /* these are color setups from tbdemo.prg from Nantucket */
-      IF cType == "N"
-        column:defColor := { 5, 6 }
-        column:colorBlock := {| x | iif( x < 0, { 7, 8 }, { 5, 6 } ) }
+      IF HB_ISNUMERIC( Eval( i[ 2 ] )
+         column:defColor := { 5, 6 }
+         column:colorBlock := {| x | iif( x < 0, { 7, 8 }, { 5, 6 } ) }
       ELSE
-        column:defColor := { 3, 4 }
+         column:defColor := { 3, 4 }
       ENDIF
 #endif
 
-      /* To simplify I just used 3rd and 4th colors from passed cColorList */
-      /* This way 1st is SAY, 2nd is GET, 3rd and 4th are used here,
-      /* 5th is Unselected Get, extras can be used as in tbdemo.prg */
+      /* To simplify I just used 3rd and 4th colors from passed cColorList
+         This way 1st is SAY, 2nd is GET, 3rd and 4th are used here,
+         5th is Unselected Get, extras can be used as in tbdemo.prg */
       column:defColor := { 3, 4 }
 
       b:addColumn( column )
@@ -165,8 +165,8 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
             Tone( 125, 0 )
          ENDIF
 
-         // Make sure that the current record is showing
-         // up-to-date data in case we are on a network.
+         /* Make sure that the current record is showing
+            up-to-date data in case we are on a network. */
          DispBegin()
          b:refreshCurrent()
          b:forceStable()
@@ -261,7 +261,7 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
    LOCAL i := 0
 
    IF n == 0 .OR. LastRec() == 0
-      dbSkip( 0 )  // significant on a network
+      dbSkip( 0 )  /* significant on a network */
 
    ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
       DO WHILE i < n
@@ -294,13 +294,13 @@ STATIC PROCEDURE TbWhileTop( cKey )
 
    RETURN
 
-// SeekLast: Finds Last Record For Matching Key
-// Developed By Jon Cole
-// With softseek set on, seek the first record after condition.
-// This is accomplished by incrementing the right most character of the
-// string cKey by one ascii character.  After SEEKing the new string,
-// back up one record to get to the last record which matches cKey.
-
+/* SeekLast: Finds Last Record For Matching Key
+   Developed By Jon Cole
+   With softseek set on, seek the first record after condition.
+   This is accomplished by incrementing the right most character of the
+   string cKey by one ascii character.  After SEEKing the new string,
+   back up one record to get to the last record which matches cKey.
+ */
 STATIC PROCEDURE TbWhileBot( cKey )
 
    dbSeek( Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )

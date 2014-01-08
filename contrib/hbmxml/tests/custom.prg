@@ -38,7 +38,7 @@ PROCEDURE Main()
    ENDIF
 
    xData := mxmlGetCustom( node )
-   IF HB_ISHASH( xData ) .AND. hb_HHasKey( xData, "Today" )
+   IF HB_ISHASH( xData ) .AND. "Today" $ xData
       OutStd( xData[ "Today" ], hb_eol() )
    ENDIF
 

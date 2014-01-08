@@ -186,7 +186,6 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 
 #if 0
-
    LOCAL cEvents := hb_ValToStr( nEvent ) + ", "
    LOCAL aEvents := { ... }
 
@@ -194,7 +193,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
    hb_traceLog( cEvents )
 #endif
 
-   IF hb_HHasKey( ::hEvents, nEvent )
+   IF nEvent $ ::hEvents
       Eval( ::hEvents[ nEvent ], ... )
    ENDIF
 
@@ -227,7 +226,6 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 METHOD WvgActiveXControl:OnError()
 
 #if 0
-
    hb_traceLog( "HI: " + hb_ValToStr( __GetMessage() ) + " : " + hb_ntos( Len( hb_AParams() ) ) )
 #endif
 

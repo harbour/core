@@ -800,7 +800,7 @@ HB_FUNC( FT_FGOTO )
    ft_text->error[ ft_text->area ] = hb_fsError();
 }
 
-/*----------------------------------------------------------------------
+/*
    In-line assembler routine to parse a buffer
    for an EOL
 
@@ -838,7 +838,7 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
    return 0;
 }
 
-/*----------------------------------------------------------------------
+/*
    In-line assembler routine to parse a buffer
    for a EOL
 
@@ -896,7 +896,6 @@ static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
    return buf_len;
 }
 
-/*--------------------------------------------------------------------------*/
 /* inserts xxx bytes into the current file, beginning at the current record */
 /* the contents of the inserted bytes are indeterminate, i.e. you'll have to
      write to them before they mean anything */
@@ -991,7 +990,6 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    return ft_text->error[ ft_text->area ];
 }
 
-/*--------------------------------------------------------------------------*/
 /* deletes xxx bytes from the current file, beginning at the current record */
 static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 {
@@ -1046,7 +1044,6 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    return ft_text->error[ ft_text->area ];
 }
 
-/*--------------------------------------------------------------------------*/
 /* writes a line of data to the file, including the terminating EOL */
 static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen )
 {

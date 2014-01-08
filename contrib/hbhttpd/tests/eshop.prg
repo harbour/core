@@ -154,7 +154,7 @@ STATIC FUNCTION proc_login()
       ENDIF
       dbCloseArea()
    ELSE
-      IF hb_HHasKey( get, "err" )
+      IF "err" $ get
          RETURN { "errtext" => "Invalid user name or password!" }
       ENDIF
       RETURN { => }
@@ -172,7 +172,7 @@ STATIC FUNCTION proc_logout()
 STATIC FUNCTION proc_main()
 
    USessionStart()
-   IF ! hb_HHasKey( session, "user" )
+   IF !( "user" $ session )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -184,7 +184,7 @@ STATIC FUNCTION proc_shopping()
    LOCAL oW, nT, cCode
 
    USessionStart()
-   IF ! hb_HHasKey( session, "user" )
+   IF !( "user" $ session )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -194,7 +194,7 @@ STATIC FUNCTION proc_shopping()
    dbUseArea( .T., , "items", "items", .T., .T. )
    ordSetFocus( "code" )
 
-   IF hb_HHasKey( get, "add" )
+   IF "add" $ get
       cCode := PadR( get[ "add" ], 16 )
       IF items->( dbSeek( cCode ) ) .AND. carts->( FLock() )
          IF ! carts->( dbSeek( session[ "user" ] + cCode ) )
@@ -222,7 +222,7 @@ STATIC FUNCTION proc_shopping()
    oW:AddColumn( 103, "Price",       "PRICE" )
    oW:AddColumn( 104, "",            {|| ULink( "Add to cart", "?add=" + RTrim( FIELD->CODE ) ) }, .T. )
    oW:nPageSize := 10
-   IF hb_HHasKey( get, "_pos" )
+   IF "_pos" $ get
       oW:nPos := Val( get[ "_pos" ] )
    ENDIF
 
@@ -233,7 +233,7 @@ STATIC FUNCTION proc_cart()
    LOCAL oW, nT, cCode
 
    USessionStart()
-   IF ! hb_HHasKey( session, "user" )
+   IF !( "user" $ session )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -243,7 +243,7 @@ STATIC FUNCTION proc_cart()
    dbUseArea( .T., , "carts", "carts", .T., .F. )
    ordSetFocus( "user" )
 
-   IF hb_HHasKey( get, "del" )
+   IF "del" $ get
       cCode := PadR( get[ "del" ], 16 )
       IF items->( dbSeek( cCode ) ) .AND. carts->( FLock() )
          IF carts->( dbSeek( session[ "user" ] + cCode ) )
@@ -269,7 +269,7 @@ STATIC FUNCTION proc_cart()
    oW:AddColumn( 104, "Total",       "TOTAL" )
    oW:AddColumn( 104, "",            {|| ULink( "Delete", "?del=" + RTrim( FIELD->CODE ) ) }, .T. )
    oW:nPageSize := 10
-   IF hb_HHasKey( get, "_pos" )
+   IF "_pos" $ get
       oW:nPos := Val( get[ "_pos" ] )
    ENDIF
 
@@ -278,7 +278,7 @@ STATIC FUNCTION proc_cart()
 STATIC FUNCTION proc_account()
 
    USessionStart()
-   IF ! hb_HHasKey( session, "user" )
+   IF !( "user" $ session )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -293,7 +293,7 @@ STATIC FUNCTION proc_account_edit()
    LOCAL cName, cPassword1, cPassword2, aRet
 
    USessionStart()
-   IF ! hb_HHasKey( session, "user" )
+   IF !( "user" $ session )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -302,7 +302,7 @@ STATIC FUNCTION proc_account_edit()
    dbSeek( session[ "user" ], .F. )
 
    cName := users->NAME
-   IF hb_HHasKey( session, "formdata_account/edit" )
+   IF "formdata_account/edit" $ session
       cName := session[ "formdata_account/edit", "name" ]
    ENDIF
    IF server[ "REQUEST_METHOD" ] == "POST"
@@ -322,7 +322,7 @@ STATIC FUNCTION proc_account_edit()
             FIELD->PASSWORD := cPassword1
          ENDIF
          dbUnlock()
-         IF hb_HHasKey( session, "formdata_account/edit" )
+         IF "formdata_account/edit" $ session
             hb_HDel( session, "formdata_account/edit" )
          ENDIF
          URedirect( "/app/account" )
@@ -331,12 +331,13 @@ STATIC FUNCTION proc_account_edit()
    ENDIF
 
    aRet := { "user" => users->USER, "name" => cName }
-   IF hb_HHasKey( get, "err" )
-      IF get[ "err" ] == "1"
+   IF "err" $ get
+      DO CASE
+      CASE get[ "err" ] == "1"
          aRet[ "errtext" ] := "Name value should not be empty!"
-      ELSEIF get[ "err" ] == "2"
+      CASE get[ "err" ] == "2"
          aRet[ "errtext" ] := "Passwords do not match!"
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN aRet
@@ -348,7 +349,7 @@ STATIC FUNCTION proc_register()
    USessionStart()
    cUser := ""
    cName := ""
-   IF hb_HHasKey( session, "formdata_register" )
+   IF "formdata_register" $ session
       cUser := session[ "formdata_register", "user" ]
       cName := session[ "formdata_register", "name" ]
    ENDIF
@@ -384,14 +385,15 @@ STATIC FUNCTION proc_register()
       RETURN NIL
    ENDIF
    aRet := { "user" => cUser, "name" => cName }
-   IF hb_HHasKey( get, "err" )
-      IF get[ "err" ] == "1"
+   IF "err" $ get
+      DO CASE
+      CASE get[ "err" ] == "1"
          aRet[ "errtext" ] := "All fields are required!"
-      ELSEIF get[ "err" ] == "2"
+      CASE get[ "err" ] == "2"
          aRet[ "errtext" ]  := "Passwords does not match!"
-      ELSEIF get[ "err" ] == "3"
+      CASE get[ "err" ] == "3"
          aRet[ "errtext" ]  := "This user already exists!"
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN aRet

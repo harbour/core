@@ -383,19 +383,17 @@ METHOD EndHtml() CLASS TIPCgi
 
 STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
-   LOCAL cVal := ""
+   LOCAL cVal
 
-   hb_default( @cDefault, "" )
-
-   IF ! Empty( xVal ) .AND. ! Empty( cKey )
-      IF hb_HHasKey( xVal, cKey )
-         cVal := xVal[ cKey ]
-         hb_HDel( xVal, cKey )
-      ENDIF
+   IF HB_ISHASH( xVal ) .AND. ! Empty( cKey ) .AND. cKey $ xVal
+      cVal := xVal[ cKey ]
+      hb_HDel( xVal, cKey )
+   ELSE
+      cVal := ""
    ENDIF
 
    IF cVal == ""
-      cVal := cDefault
+      cVal := hb_defaultValue( cDefault, "" )
    ENDIF
 
    IF !( cVal == "" )
@@ -423,7 +421,7 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
    IF ! Empty( xVal )
       IF Empty( cKey )
          cVal := xVal
-      ELSEIF hb_HHasKey( xVal, cKey )
+      ELSEIF cKey $ xVal
          cVal := xVal[ cKey ]
          IF Empty( lScan )
             hb_HDel( xVal, cKey )
@@ -455,19 +453,17 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 #if 0
 STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
-   LOCAL cVal := ""
+   LOCAL cVal
 
-   hb_default( @cDefault, "" )
-
-   IF ! Empty( xVal ) .AND. ! Empty( cKey )
-      IF hb_HHasKey( xVal, cKey )
-         cVal := xVal[ cKey ]
-         hb_HDel( xVal, cKey )
-      ENDIF
+   IF HB_ISHASH( xVal ) .AND. ! Empty( cKey ) .AND. cKey $ xVal
+      cVal := xVal[ cKey ]
+      hb_HDel( xVal, cKey )
+   ELSE
+      cVal := ""
    ENDIF
 
    IF cVal == ""
-      cVal := cDefault
+      cVal := hb_defaultValue( cDefault, "" )
    ENDIF
 
    RETURN cVal

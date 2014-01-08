@@ -767,7 +767,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
    LOCAL cResult
    LOCAL idx
 
-   IF cKey != NIL .AND. hsBlock != NIL .AND. hb_HHasKey( hsBlock, cKey )
+   IF cKey != NIL .AND. hsBlock != NIL .AND. cKey $ hsBlock
       cCode := hsBlock[ cKey ]
    ELSE
       cCode := cKey
@@ -837,7 +837,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
    CASE cType == "NAME"
       IF hsBlock == NIL
          RETURN cCode
-      ELSEIF ! hb_HHasKey( hsBlock, "RETURNS" )
+      ELSEIF !( "RETURNS" $ hsBlock )
          RETURN hsBlock[ "NAME" ]
       ELSEIF Empty( hsBlock[ "RETURNS" ] ) .OR. ;
          Upper( hsBlock[ "RETURNS" ] ) == "NIL" .OR. ;

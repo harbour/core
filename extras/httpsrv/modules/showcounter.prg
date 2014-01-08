@@ -60,7 +60,7 @@ FUNCTION HRBMAIN()
 
    LOCAL cHtml
 
-   IF hb_HHasKey( _REQUEST, "w" )
+   IF "w" $ _REQUEST
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
       IF ! Empty( cHtml )

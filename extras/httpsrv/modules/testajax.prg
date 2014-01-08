@@ -53,9 +53,9 @@ FUNCTION HRBMAIN()
    LOCAL cW
    LOCAL cHtml := ""
 
-   IF hb_HHasKey( _REQUEST, "w" )
+   IF "w" $ _REQUEST
       IF ! Empty( cW := _REQUEST[ "w" ] )
-         cHtml += "This is a reply from testajax : " + cW
+         cHtml += "This is a reply from testajax: " + cW
       ENDIF
    ENDIF
 

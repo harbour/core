@@ -429,10 +429,10 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
    IF ! Empty( cName )
       // cookies are stored in hashes as host.path.name
       // check if we have a host hash yet
-      IF ! hb_HHasKey( ::hCookies, cHost )
+      IF !( cHost $ ::hCookies )
          ::hCookies[ cHost ] := { => }
       ENDIF
-      IF ! hb_HHasKey( ::hCookies[ cHost ], cPath )
+      IF !( cPath $ ::hCookies[ cHost ] )
          ::hCookies[ cHost ][ cPath ] := { => }
       ENDIF
       ::hCookies[ cHost ][ cPath ][ cName ] := cValue

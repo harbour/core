@@ -2069,7 +2069,7 @@ STATIC PROCEDURE ShowFolder( cDir )
    uhttpd_SetHeader( "Content-Type", "text/html" )
 
    aDir := Directory( uhttpd_OSFileName( cDir ), "D" )
-   IF hb_HHasKey( _GET, "s" )
+   IF "s" $ _GET
       IF _GET[ "s" ] == "s"
          ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
             iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
@@ -2403,7 +2403,7 @@ STATIC FUNCTION FileUnAlias( cScript )
    LOCAL cFileName, x
 
    // Checking if the request contains a Script Alias
-   IF hb_HHasKey( s_hScriptAliases, cScript )
+   IF cScript $ s_hScriptAliases
       // in this case I have to substitute the alias with the real file name
       cFileName := s_hScriptAliases[ cScript ]
 
@@ -2694,7 +2694,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
          BEGIN SEQUENCE
             IF HRB_ACTIVATE_CACHE
                // caching modules
-               IF ! hb_HHasKey( s_hHRBModules, cFileName )
+               IF !( cFileName $ s_hHRBModules )
                   s_hHRBModules[ cFileName ] := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
                ENDIF
                cHRBBody := s_hHRBModules[ cFileName ]

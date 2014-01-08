@@ -469,7 +469,7 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
       RETURN .F.
    ENDIF
 
-   IF ::cAttribute != NIL .AND. ! hb_HHasKey( oFound:getAttributes(), ::cAttribute )
+   IF ::cAttribute != NIL .AND. !( ::cAttribute $ oFound:getAttributes() )
       RETURN .F.
    ENDIF
 
@@ -1448,7 +1448,7 @@ METHOD isAttribute( cName ) CLASS THtmlNode
    LOCAL lRet
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      lRet := hb_HHasKey( ::getAttributes(), cName )
+      lRet := cName $ ::getAttributes()
    RECOVER
       lRet := .F.
    END SEQUENCE
@@ -1472,7 +1472,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
       cName := SubStr( cName, 2 )
    ENDIF
 
-   IF hb_HHasKey( t_hTagTypes, cName )
+   IF cName $ t_hTagTypes
       // message identifies a html tag
       oNode := ::findNodeByTagName( cName )
 
@@ -1486,7 +1486,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
       RETURN oNode
 
-   ELSEIF Right( cName, 1 ) == "s" .AND. hb_HHasKey( t_hTagTypes, Left( cName, Len( cName ) - 1 ) )
+   ELSEIF Right( cName, 1 ) == "s" .AND. Left( cName, Len( cName ) - 1 ) $ t_hTagTypes
       // message is the plural of a html tag -> oNode:forms -> Array of <FORM> tags
       RETURN ::findNodesByTagName( Left( cName, Len( cName ) - 1 ), ATail( aValue ) )
    ENDIF
@@ -1580,8 +1580,8 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
       RETURN ::error( "Cannot add HTML tag to: <" + ::htmlTagName + ">", ::className(), "+", EG_ARG, { cName } )
    ENDIF
 
-   IF ! hb_HHasKey( t_hTagTypes, cName )
-      IF Left( cName, 1 ) == "/" .AND. hb_HHasKey( t_hTagTypes, SubStr( cName, 2 ) )
+   IF !( cName $ t_hTagTypes )
+      IF Left( cName, 1 ) == "/" .AND. SubStr( cName, 2 ) $ t_hTagTypes
          IF ! Lower( SubStr( cName, 2 ) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
          ENDIF

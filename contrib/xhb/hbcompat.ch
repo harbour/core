@@ -168,7 +168,7 @@
 
    /* Hash item functions */
    #xtranslate hb_Hash( [<x,...>] )            => Hash( <x> )
-   #xtranslate hb_HHasKey( [<x,...>] )         => HHasKey( <x> )
+   #xtranslate hb_HHasKey( <x>, <y> )          => HHasKey( <x>, <y> )
    #xtranslate hb_HPos( [<x,...>] )            => HGetPos( <x> )
    #xtranslate hb_HGet( [<x,...>] )            => HGet( <x> )
    #xtranslate hb_HSet( [<x,...>] )            => HSet( <x> )

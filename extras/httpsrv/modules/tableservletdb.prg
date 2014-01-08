@@ -61,7 +61,7 @@ FUNCTION HRBMAIN()
 
    hb_default( @hGets, { => } )
 
-   IF hb_HHasKey( hGets, "page" )
+   IF "page" $ hGets
 
       cPage := hGets[ "page" ]
 
@@ -72,7 +72,7 @@ FUNCTION HRBMAIN()
          oTM:Close()
       ENDIF
 
-   ELSEIF hb_HHasKey( hGets, "count" )
+   ELSEIF "count" $ hGets
 
       cCount := hGets[ "count" ]
 

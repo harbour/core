@@ -91,7 +91,7 @@ METHOD Run( hConfig ) CLASS UHttpd
       "FirewallFilter"       => "0.0.0.0/0" }
 
    FOR EACH xValue IN hConfig
-      IF ! hb_HHasKey( Self:hConfig, xValue:__enumKey ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
+      IF !( xValue:__enumKey $ Self:hConfig ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
          Self:cError := "Invalid config option '" + xValue:__enumKey + "'"
          RETURN .F.
       ENDIF
@@ -682,17 +682,17 @@ STATIC FUNCTION ProcessConnection( oServer )
 
 STATIC PROCEDURE ProcessRequest( oServer )
 
-   LOCAL nI, aMount, cMount, cPath, bEval, xRet, nT := hb_MilliSeconds()
+   LOCAL nI, hMount, cMount, cPath, bEval, xRet, nT := hb_MilliSeconds()
 
    // Search mounting table
-   aMount := oServer:hConfig[ "Mount" ]
+   hMount := oServer:hConfig[ "Mount" ]
    cMount := server[ "SCRIPT_NAME" ]
-   IF hb_HHasKey( aMount, cMount )
+   IF cMount $ hMount
       cPath := ""
    ELSE
       nI := Len( cMount )
       DO WHILE ( nI := hb_RAt( "/", cMount,, nI ) ) > 0
-         IF hb_HHasKey( aMount, Left( cMount, nI ) + "*" )
+         IF ( Left( cMount, nI ) + "*" ) $ hMount
             Eval( oServer:hConfig[ "Trace" ], "HAS", Left( cMount, nI ) + "*" )
             cMount := Left( cMount, nI ) + "*"
             cPath := SubStr( server[ "SCRIPT_NAME" ], nI + 1 )
@@ -705,7 +705,7 @@ STATIC PROCEDURE ProcessRequest( oServer )
    ENDIF
 
    IF cPath != NIL
-      bEval := aMount[ cMount ]
+      bEval := hMount[ cMount ]
       BEGIN SEQUENCE WITH {| oErr | UErrorHandler( oErr, oServer ) }
          xRet := Eval( bEval, cPath )
          DO CASE
@@ -822,8 +822,9 @@ STATIC FUNCTION ParseRequestBody( cRequest )
 
    LOCAL nI, cPart, cEncoding
 
-   IF hb_HHasKey( server, "CONTENT_TYPE" ) .AND. ;
-         Left( server[ "CONTENT_TYPE" ], 33 ) == "application/x-www-form-urlencoded"
+   IF "CONTENT_TYPE" $ server .AND. ;
+      Left( server[ "CONTENT_TYPE" ], 33 ) == "application/x-www-form-urlencoded"
+
       IF ( nI := At( "CHARSET=", Upper( server[ "CONTENT_TYPE" ] ) ) ) > 0
          cEncoding := Upper( SubStr( server[ "CONTENT_TYPE" ], nI + 8 ) )
       ENDIF
@@ -1203,12 +1204,12 @@ PROCEDURE USessionStart()
 
    LOCAL cSID
 
-   IF hb_HHasKey( cookie, "SESSID" )
+   IF "SESSID" $ cookie
       cSID := cookie[ "SESSID" ]
    ENDIF
 
    hb_mutexLock( httpd:hmtxSession )
-   IF cSID == NIL .OR. ! hb_HHasKey( httpd:hSession, cSID )
+   IF cSID == NIL .OR. !( cSID $ httpd:hSession )
       // Session does not exist
       USessionCreateInternal()
    ELSE
@@ -1235,7 +1236,7 @@ PROCEDURE USessionStart()
 
          // Check if session is not destroyed
          hb_mutexLock( httpd:hmtxSession )
-         IF hb_HHasKey( httpd:hSession, cSID )
+         IF cSID $ httpd:hSession
             // Session exists
             IF t_aSessionData[ 3 ] > hb_MilliSeconds()
                t_aSessionData[ 3 ] := hb_MilliSeconds() + SESSION_TIMEOUT * 1000
@@ -1374,15 +1375,18 @@ PROCEDURE UProcFiles( cFileName, lIndex )
    ENDIF
 
    IF hb_FileExists( UOsFileName( cFileName ) )
-      IF hb_HHasKey( server, "HTTP_IF_MODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
-            hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
-            tDate <= tHDate
+      IF "HTTP_IF_MODIFIED_SINCE" $ server .AND. ;
+         HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
+         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         tDate <= tHDate
+
          USetStatusCode( 304 )
-      ELSEIF hb_HHasKey( server, "HTTP_IF_UNMODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
-            hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
-            tDate > tHDate
+
+      ELSEIF "HTTP_IF_UNMODIFIED_SINCE" $ server .AND. ;
+         HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
+         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         tDate > tHDate
+
          USetStatusCode( 412 )
       ELSE
          IF ( nI := RAt( ".", cFileName ) ) > 0
@@ -1451,7 +1455,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       UAddHeader( "Content-Type", "text/html" )
 
       aDir := Directory( UOsFileName( cFileName ), "D" )
-      IF hb_HHasKey( get, "s" )
+      IF "s" $ get
          DO CASE
          CASE get[ "s" ] == "s"
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
@@ -1551,19 +1555,14 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "="
-            IF hb_HHasKey( aData, aInstr[ 2 ] )
+            IF aInstr[ 2 ] $ aData
                xValue := aData[ aInstr[ 2 ] ]
                DO CASE
-               CASE HB_ISSTRING( xValue )
-                  cRet += UHtmlEncode( xValue )
-               CASE HB_ISNUMERIC( xValue )
-                  cRet += UHtmlEncode( Str( xValue ) )
-               CASE HB_ISDATE( xValue )
-                  cRet += UHtmlEncode( DToC( xValue ) )
-               CASE HB_ISTIMESTAMP( xValue )
-                  cRet += UHtmlEncode( hb_TToC( xValue ) )
-               CASE HB_ISOBJECT( xValue )
-                  cRet += UHtmlEncode( xValue:Output() )
+               CASE HB_ISSTRING( xValue )    ; cRet += UHtmlEncode( xValue )
+               CASE HB_ISNUMERIC( xValue )   ; cRet += UHtmlEncode( Str( xValue ) )
+               CASE HB_ISDATE( xValue )      ; cRet += UHtmlEncode( DToC( xValue ) )
+               CASE HB_ISTIMESTAMP( xValue ) ; cRet += UHtmlEncode( hb_TToC( xValue ) )
+               CASE HB_ISOBJECT( xValue )    ; cRet += UHtmlEncode( xValue:Output() )
                OTHERWISE
                   Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
                ENDCASE
@@ -1573,7 +1572,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE ":"
-            IF hb_HHasKey( aData, aInstr[ 2 ] )
+            IF aInstr[ 2 ] $ aData
                xValue := aData[ aInstr[ 2 ] ]
                DO CASE
                CASE HB_ISSTRING( xValue )
@@ -1595,7 +1594,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "if"
-            xValue := iif( hb_HHasKey( aData, aInstr[ 2 ] ), aData[ aInstr[ 2 ] ], NIL )
+            xValue := iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL )
             IF ! Empty( xValue )
                cRet += parse_data( aData, aInstr[ 3 ], hConfig )
             ELSE
@@ -1604,7 +1603,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "loop"
-            IF hb_HHasKey( aData, aInstr[ 2 ] ) .AND. HB_ISARRAY( aValue := aData[ aInstr[ 2 ] ] )
+            IF aInstr[ 2 ] $ aData .AND. HB_ISARRAY( aValue := aData[ aInstr[ 2 ] ] )
                FOR EACH xValue IN aValue
                   aData2 := hb_HClone( aData )
                   hb_HEval( xValue, {| k, v | aData2[ aInstr[ 2 ] + "." + k ] := v } )
