@@ -237,7 +237,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    /* Feedback */
 
    OutMsg( s_nFhnd, ;
-      "---------------------------------------------------------------------------" + hb_eol() + ;
+      Replicate( "-", 75 ) + hb_eol() + ;
       "      Version: " + Version() + hb_eol() )
 #ifdef __HARBOUR__
    OutMsg( s_nFhnd, ;
@@ -248,7 +248,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
       "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() + ;
       "Shortcut opt.: " + iif( s_lShortcut, "On", "Off" ) + hb_eol() + ;
       "     Switches: " + cParam + hb_eol() + ;
-      "===========================================================================" + hb_eol() )
+      Replicate( "=", 75 ) + hb_eol() )
 
    OutMsg( s_nFhnd, ;
       PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " + ;
@@ -256,7 +256,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
       PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " + ;
       PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " + ;
             "Expected" + hb_eol() + ;
-      "---------------------------------------------------------------------------" + hb_eol() )
+      Replicate( "-", 75 ) + hb_eol() )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
@@ -435,7 +435,7 @@ STATIC PROCEDURE TEST_END()
    s_nEndTime := Seconds()
 
    OutMsg( s_nFhnd, ;
-      "===========================================================================" + hb_eol() + ;
+      Replicate( "=", 75 ) + hb_eol() + ;
       "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() + ;
       "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() + ;
       "                   ----------" + hb_eol() + ;

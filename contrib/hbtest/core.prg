@@ -105,8 +105,7 @@ EXIT PROCEDURE __hbtest_Exit()
          "Test calls failed: " + Str( s_nFail ) + " ( " + hb_ntos( Round( ( s_nFail / s_nPass ) * 100, 2 ) ) + " % )" + hb_eol() + ;
          "                   ----------" + hb_eol() + ;
          "            Total: " + Str( s_nPass + s_nFail ) + ;
-         " ( Time elapsed: " + hb_ntos( hb_milliSeconds() - s_nStartTime ) + " ms )" + hb_eol() + ;
-         hb_eol() )
+         " ( Time elapsed: " + hb_ntos( hb_milliSeconds() - s_nStartTime ) + " ms )" + hb_eol() )
 
       ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
    ENDIF
@@ -248,9 +247,9 @@ STATIC FUNCTION ErrorMessage( oError )
 
    IF HB_ISARRAY( oError:Args )
       cMessage += "A:" + hb_ntos( Len( oError:Args ) ) + ":"
-      FOR tmp := 1 TO Len( oError:Args )
-         cMessage += ValType( oError:Args[ tmp ] ) + ":" + XToStr( oError:Args[ tmp ], .T. )
-         IF tmp < Len( oError:Args )
+      FOR EACH tmp IN oError:Args
+         cMessage += ValType( tmp ) + ":" + XToStr( tmp, .T. )
+         IF ! tmp:__enumIsLast()
             cMessage += ";"
          ENDIF
       NEXT
@@ -299,26 +298,14 @@ STATIC FUNCTION XToStr( xValue, lInString )
 STATIC FUNCTION __StrToExp( cStr )
 
    LOCAL cResult := ""
-
-   LOCAL nLen, nPos
    LOCAL cByte
 
-   nLen := hb_BLen( cStr )
-   FOR nPos := 1 TO nLen
-      cByte := hb_BSubStr( cStr, nPos, 1 )
-      IF ! __ByteIsDisplayable( cByte ) .OR. cByte == '"'
-         cResult += "\" + __ByteEscape( hb_BCode( cByte ) )
-      ELSE
-         cResult += cByte
-      ENDIF
+   FOR EACH cByte IN cStr  /* FOR EACH on byte stream */
+      cResult += iif( hb_BCode( cByte ) < 32 .OR. hb_BCode( cByte ) >= 128 .OR. cByte == '"', ;
+         "\" + __ByteEscape( hb_BCode( cByte ) ), cByte )
    NEXT
 
    RETURN cResult
-
-STATIC FUNCTION __ByteIsDisplayable( cByte )
-   RETURN ;
-      hb_BCode( cByte ) >= 32 .AND. ;
-      hb_BCode( cByte ) < 128
 
 STATIC FUNCTION __ByteEscape( nByte )
 
