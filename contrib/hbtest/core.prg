@@ -55,6 +55,64 @@
 
 THREAD STATIC t_hParams := { => }
 
+STATIC s_lBanner
+STATIC s_nStartTime
+STATIC s_nCount
+STATIC s_nPass
+STATIC s_nFail
+
+INIT PROCEDURE __hbtest_Init()
+
+   s_lBanner := .F.
+   s_nStartTime := hb_milliSeconds()
+   s_nCount := 0
+   s_nPass := 0
+   s_nFail := 0
+
+   RETURN
+
+STATIC PROCEDURE hbtest_Banner()
+
+   LOCAL bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
+
+   Eval( bOut, ;
+      Replicate( "-", 75 ) + hb_eol() + ;
+      "    Version: " + Version() + hb_eol() + ;
+      "   Compiler: " + hb_Compiler() + hb_eol() + ;
+      "         OS: " + OS() + hb_eol() + ;
+      " Date, Time: " + hb_TToC( hb_DateTime() ) + hb_eol() + ;
+      Replicate( "=", 75 ) + hb_eol() + ;
+      PadR( "", TEST_RESULT_COL1_WIDTH ) + " " + ;
+      PadR( "Location", TEST_RESULT_COL2_WIDTH ) + " " + ;
+      PadR( "Test", TEST_RESULT_COL3_WIDTH ) + " -> " + ;
+      PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " + ;
+            "Expected" + hb_eol() + ;
+      Replicate( "-", 75 ) + hb_eol() )
+
+   RETURN
+
+EXIT PROCEDURE __hbtest_Exit()
+
+   LOCAL bOut
+
+   IF s_lBanner
+
+      bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
+
+      Eval( bOut, ;
+         Replicate( "=", 75 ) + hb_eol() + ;
+         "Test calls passed: " + Str( s_nPass ) + " ( " + hb_ntos( Round( ( 1 - ( s_nFail / s_nPass ) ) * 100, 2 ) ) + " % )" + hb_eol() + ;
+         "Test calls failed: " + Str( s_nFail ) + " ( " + hb_ntos( Round( ( s_nFail / s_nPass ) * 100, 2 ) ) + " % )" + hb_eol() + ;
+         "                   ----------" + hb_eol() + ;
+         "            Total: " + Str( s_nPass + s_nFail ) + ;
+         " ( Time elapsed: " + hb_ntos( hb_milliSeconds() - s_nStartTime ) + " ms )" + hb_eol() + ;
+         hb_eol() )
+
+      ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
+   ENDIF
+
+   RETURN
+
 PROCEDURE hbtest_Setup( cName, xValue )
 
    IF HB_ISSTRING( cName ) .AND. ! Empty( cName )
@@ -79,6 +137,8 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
 
    LOCAL cLangOld
 
+   s_nCount++
+
    IF HB_ISSTRING( cBlock )
       lPPError := .F.
    ELSE
@@ -87,6 +147,11 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    ENDIF
 
    cLangOld := hb_langSelect( "en" ) /* to always have RTEs in one language */
+
+   IF ! s_lBanner
+      s_lBanner := .T.
+      hbtest_Banner()
+   ENDIF
 
    BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
       xResult := Eval( bBlock )
@@ -133,6 +198,12 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
             XToStr( xResultExpected, .F. ) + ;
             hb_eol() )
       ENDIF
+   ENDIF
+
+   IF lFailed
+      s_nFail++
+   ELSE
+      s_nPass++
    ENDIF
 
    RETURN

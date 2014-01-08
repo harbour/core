@@ -12627,9 +12627,9 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                   CASE LEFTEQUAL( "LIBRARY", cWord )
                      nMode := RTLNK_MODE_LIB
                   CASE LEFTEQUAL( "MODULE", cWord ) .OR. ;
-                         LEFTEQUAL( "EXCLUDE", cWord ) .OR. ;
-                         LEFTEQUAL( "REFER", cWord ) .OR. ;
-                         LEFTEQUAL( "INTO", cWord )
+                       LEFTEQUAL( "EXCLUDE", cWord ) .OR. ;
+                       LEFTEQUAL( "REFER", cWord ) .OR. ;
+                       LEFTEQUAL( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
                   /* Blinker extension */
                   CASE LEFTEQUAL( "BLINKER", cWord )
@@ -13163,15 +13163,15 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
    RETURN nResult
 
-#define _VCS_UNKNOWN            0
-#define _VCS_SVN                1
-#define _VCS_GIT                2
-#define _VCS_GIT_SUB            3
-#define _VCS_MERCURIAL          4
-#define _VCS_CVS                5
-#define _VCS_BAZAAR             6
-#define _VCS_FOSSIL             7
-#define _VCS_MONOTONE           8
+#define _VCS_UNKNOWN        0
+#define _VCS_SVN            1
+#define _VCS_GIT            2
+#define _VCS_GIT_SUB        3
+#define _VCS_MERCURIAL      4
+#define _VCS_CVS            5
+#define _VCS_BAZAAR         6
+#define _VCS_FOSSIL         7
+#define _VCS_MONOTONE       8
 
 STATIC FUNCTION VCSDetect( cDir )
 

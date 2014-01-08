@@ -1235,9 +1235,9 @@ STATIC FUNCTION TESTFNAME( cFull )
 
    RETURN ;
       hb_FNameMerge( cPath, cName, cExt ) + ";" + ;
-      cPath + ";" +;
-      cName + ";" +;
-      cExt + ";" +;
+      cPath + ";" + ;
+      cName + ";" + ;
+      cExt + ";" + ;
       ""
 
 #endif

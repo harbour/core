@@ -50,12 +50,12 @@
 
 CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
 
-   // Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
-   // RFC 2045 (MIME) base64 format. This exception consists in
-   // not applying CRLF after each 76 output bytes.
-   VAR bHttpExcept
+   /* Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
+      RFC 2045 (MIME) base64 format. This exception consists in
+      not applying CRLF after each 76 output bytes. */
+   VAR bHttpExcept INIT .F.
 
-   METHOD New()      CONSTRUCTOR
+   METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
 
@@ -64,7 +64,6 @@ ENDCLASS
 METHOD New() CLASS TIPEncoderBase64
 
    ::cName := "base64"
-   ::bHttpExcept := .F.
 
    RETURN Self
 

@@ -13,7 +13,6 @@ utils.c
 
 cgi.prg
 client.prg
-credent.prg
 encb64.prg
 encoder.prg
 encqp.prg

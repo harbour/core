@@ -46,13 +46,10 @@
  *
  */
 
-/*
- Internet Messaging: https://www.ietf.org/rfc/rfc2045.txt
- */
+/* Internet Messaging: https://www.ietf.org/rfc/rfc2045.txt */
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added Function: tip_GetEncoder()
-*/
+   Added Function: tip_GetEncoder() */
 
 #include "hbclass.ch"
 
