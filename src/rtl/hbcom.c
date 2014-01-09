@@ -1182,6 +1182,9 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
 #ifdef B921600
                case   921600: iBaud = B921600; break;
 #endif
+#ifdef B1000000
+               case  1000000: iBaud = B1000000; break;
+#endif
                default:
                   iResult = -1;
             }

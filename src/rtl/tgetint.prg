@@ -57,18 +57,21 @@ FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
    IF ! HB_ISBLOCK( bSetGet )
       IF FieldPos( cVarName ) > 0
          bSetGet := FieldWBlock( cVarName, Select() )
-      ELSE
+      ELSEIF ( bSetGet := MemVarBlock( cVarName ) ) == NIL
          /* If cVarName is not a field name in current workarea then
           * CA-Cl*pper always tries to create SET/GET block for memvar.
-          * Simple loop below with __mvGet() inside is small trick to
-          * force the same RTE as in CA-Cl*pper so user can create
-          * memvar dynamically in his custom error handler. [druzus]
+          * If it cannot (i.e. cVarName is complex expression) then it
+          * macrocompile simple SET/GET block for it. [druzus]
           */
-         DO WHILE ( bSetGet := MemVarBlock( cVarName ) ) == NIL
-            __mvGet( cVarName )
-         ENDDO
+         bSetGet := hb_macroBlock( "iif(HB_PValue(1)==NIL," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
       ENDIF
    ENDIF
+
+   /* The Eval() below is executed to force the same RTE as in
+    * CA-Cl*pper so user can create memvar dynamically in his
+    * custom error handler. [druzus]
+    */
+   Eval( bSetGet )
 
    oGet := GetNew(,, bSetGet, cVarName, cPicture )
 
@@ -96,7 +99,7 @@ FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
       ENDIF
    ENDIF
 
-   IF ! HB_ISARRAY( Eval( bGetArray ) )
+   IF ! ValType( Eval( bGetArray ) ) $ "AH"
       RETURN NIL
    ENDIF
 
