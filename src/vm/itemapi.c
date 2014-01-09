@@ -130,7 +130,7 @@ HB_BOOL hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem )
       if( pItem )
          hb_itemCopyToRef( pDest, pItem );
       else
-         hb_itemSetNil( pDest );
+         hb_itemSetNil( hb_itemUnRef( pDest ) );
       return HB_TRUE;
    }
 
@@ -149,7 +149,7 @@ HB_BOOL hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem )
       if( pItem )
          hb_itemMoveToRef( pDest, pItem );
       else
-         hb_itemSetNil( pDest );
+         hb_itemSetNil( hb_itemUnRef( pDest ) );
       return HB_TRUE;
    }
 
@@ -171,7 +171,7 @@ HB_BOOL hb_itemParamStoreRelease( HB_USHORT uiParam, PHB_ITEM pItem )
          hb_itemRelease( pItem );
       }
       else
-         hb_itemSetNil( pDest );
+         hb_itemSetNil( hb_itemUnRef( pDest ) );
       return HB_TRUE;
    }
 
