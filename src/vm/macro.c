@@ -920,16 +920,25 @@ static void hb_macroSetGetBlock( PHB_DYNS pVarSym, PHB_ITEM pItem,
 
 HB_FUNC( MEMVARBLOCK )
 {
-   const char * szVarName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
 
-   if( szVarName )
+   if( szName )
    {
-      PHB_DYNS pVarSym = hb_dynsymFindName( szVarName );
+      char szVarName[ HB_SYMBOL_NAME_LEN + 1 ];
 
-      if( pVarSym && hb_dynsymIsMemvar( pVarSym ) )
+      while( HB_ISSPACE( *szName ) )
+         ++szName;
+      hb_strncpyUpperTrim( szVarName, szName, sizeof( szVarName ) - 1 );
+
+      if( *szVarName )
       {
-         HB_STACK_TLS_PRELOAD
-         hb_macroSetGetBlock( pVarSym, hb_stackReturnItem(), 0, HB_TRUE );
+         PHB_DYNS pVarSym = hb_dynsymFind( szVarName );
+
+         if( pVarSym && hb_dynsymIsMemvar( pVarSym ) )
+         {
+            HB_STACK_TLS_PRELOAD
+            hb_macroSetGetBlock( pVarSym, hb_stackReturnItem(), 0, HB_TRUE );
+         }
       }
    }
 }
