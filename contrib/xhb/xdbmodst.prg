@@ -199,28 +199,28 @@ FUNCTION dbMerge( xSource, lAppend )
       IF nSourcePos > 0
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
             // Save
-            xField := FieldGet( cField:__EnumIndex() )
+            xField := FieldGet( cField:__enumIndex() )
 
             // Test type compatability
-            FieldPut( cField:__EnumIndex(), ( nSource )->( FieldGet( nSourcePos ) ) )
+            FieldPut( cField:__enumIndex(), ( nSource )->( FieldGet( nSourcePos ) ) )
 
             // Restore
-            FieldPut( cField:__EnumIndex(), xField )
+            FieldPut( cField:__enumIndex(), xField )
 
             // Ok to process
-            AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | xSource } } )
+            AAdd( aTranslate, { cField:__enumIndex(), nSourcePos, {| xSource | xSource } } )
          RECOVER
-            cTargetType := ValType( FieldGet( cField:__EnumIndex() ) )
+            cTargetType := ValType( FieldGet( cField:__enumIndex() ) )
 
             BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
                // Test type compatability
-               FieldPut( cField:__EnumIndex(), ValToType( ( nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
+               FieldPut( cField:__enumIndex(), ValToType( ( nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
 
                // Restore
-               FieldPut( cField:__EnumIndex(), xField )
+               FieldPut( cField:__enumIndex(), xField )
 
                // Ok to process
-               AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
+               AAdd( aTranslate, { cField:__enumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
             RECOVER
                // TraceLog( oErr:Description, oErr:Operation )
             END SEQUENCE

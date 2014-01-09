@@ -8832,8 +8832,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
       /* TODO: Module handling. */
       FOR EACH cModule IN hb_ATokens( tmp, Chr( 9 ) )
          IF ! Empty( cModule )
-            FOR EACH cDependency IN hb_ATokens( cModule, " " )
-               IF ( cDependency:__enumIndex() > 1 .OR. ; /* Skip own (module) name */
+            FOR EACH cDependency IN hb_ATokens( cModule )
+               IF ( ! cDependency:__enumIsFirst() .OR. ; /* Skip own (module) name */
                     ( LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp" ) ) .AND. ;
                     ! Empty( cDependency )
                   IF hbmk[ _HBMK_lDEBUGINC ]
@@ -8874,7 +8874,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 
       FOR EACH cModule IN hb_ATokens( tmp, Chr( 10 ) )
          IF ! Empty( cModule )
-            FOR EACH cDependency IN hb_ATokens( cModule, " " )
+            FOR EACH cDependency IN hb_ATokens( cModule )
                IF cDependency:__enumIndex() > 2 .AND. ; /* Skip own (module) name as object and source */
                   ! Empty( cDependency )
                   IF hbmk[ _HBMK_lDEBUGINC ]
@@ -12793,7 +12793,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
    LOCAL aUpd := {}
 
    FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
-      IF cLNG:__enumIndex() == 1
+      IF cLNG:__enumIsFirst()
          fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" )
          IF fhnd != F_ERROR
             FClose( fhnd )
@@ -14815,12 +14815,11 @@ STATIC PROCEDURE __disp( context, cText )
 STATIC FUNCTION __command( context, cCommand )
 
    LOCAL aCommand
-   LOCAL nPos
 
    IF ! Empty( context )
-      aCommand := hb_ATokens( cCommand, " " )
-      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( context[ 2 ], Lower( aCommand[ 1 ] ) ) ) > 0
-         Eval( hb_HValueAt( context[ 2 ], nPos )[ 3 ], context, cCommand )
+      aCommand := hb_ATokens( cCommand )
+      IF ! Empty( aCommand ) .AND. Lower( aCommand[ 1 ] ) $ context[ 2 ]
+         Eval( context[ 2 ][ Lower( aCommand[ 1 ] ) ][ 3 ], context, cCommand )
          RETURN .T.
       ENDIF
    ENDIF
@@ -14831,7 +14830,7 @@ STATIC FUNCTION __command( context, cCommand )
 
 STATIC PROCEDURE load( context, cCommand )
 
-   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL aToken := hb_ATokens( cCommand )
    LOCAL tmp
 
    FOR tmp := 2 TO Len( aToken )
@@ -14842,7 +14841,7 @@ STATIC PROCEDURE load( context, cCommand )
 
 STATIC PROCEDURE unload( context, cCommand )
 
-   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL aToken := hb_ATokens( cCommand )
    LOCAL tmp
 
    FOR tmp := 2 TO Len( aToken )
@@ -15139,7 +15138,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
       ENDIF
       nHistIndex := Len( hbsh[ _HBSH_aHistory ] ) + 1
 
-      cCommand := AllTrim( cLine, " " )
+      cCommand := AllTrim( cLine )
       cLine := NIL
       hb_Scroll( nMaxRow, 0 )
       __hbshell_Info( cCommand )

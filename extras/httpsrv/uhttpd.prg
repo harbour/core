@@ -1191,7 +1191,7 @@ STATIC FUNCTION ParseRequest( cRequest )
 
    // Load _HTTP_REQUEST
    FOR EACH cReq IN aRequest
-      IF cReq:__enumIndex() == 1 // GET request
+      IF cReq:__enumIsFirst()  // GET request
          _HTTP_REQUEST[ "HTTP Request" ] := cReq
       ELSEIF Empty( cReq )
          EXIT
@@ -1202,7 +1202,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    NEXT
 
    // check if Host field is provided
-   IF hb_HPos( _HTTP_REQUEST, "Host" ) == 0
+   IF !( "Host" $ _HTTP_REQUEST )
 
       // Try to determine Host name
       IF ! Empty( hUrl[ "HOST" ] )
@@ -1516,7 +1516,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // Sending POST variables to CGI via STD_IN
          cSend := ""
          FOR EACH v IN _POST
-            cSend += v:__enumKey() + "=" + LTrim( hb_CStr( v ) ) + iif( v:__enumIndex() < Len( _POST ), "&", "" )
+            cSend += v:__enumKey() + "=" + LTrim( hb_CStr( v ) ) + iif( v:__enumIsLast(), "", "&" )
          NEXT
          FWrite( hIn, cSend )
          // hb_ToOutDebug( "Sending: %s\n\r", cSend )
@@ -1674,10 +1674,8 @@ FUNCTION uhttpd_GetHeader( cType )
 
 PROCEDURE uhttpd_DelHeader( cType )
 
-   LOCAL nPos := hb_HPos( _HTTP_RESPONSE, cType )
-
-   IF nPos > 0
-      hb_HDelAt( _HTTP_RESPONSE, nPos )
+   IF cType $ _HTTP_RESPONSE
+      hb_HDel( _HTTP_RESPONSE, cType )
    ENDIF
 
    RETURN

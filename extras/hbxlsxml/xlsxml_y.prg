@@ -240,13 +240,13 @@ METHOD ExcelWriterXML_Style:getStyleXML()
          IF Empty( pData )
             LOOP
          ENDIF
-         bLinestyle := iif( hb_HPos( pData, "LineStyle" ) > 0, ;
+         bLinestyle := iif( "LineStyle" $ pData, ;
             'ss:LineStyle="' + pData[ "LineStyle" ] + '"', ;
             "" )
-         bColor := iif( hb_HPos( pData, "Color" ) > 0, ;
+         bColor := iif( "Color" $ pData, ;
             'ss:Color="' + pData[ "Color" ] + '"', ;
             "" )
-         bWeight := iif( hb_HPos( pData, "Weight" ) > 0, ;
+         bWeight := iif( "Weight" $ pData, ;
             'ss:Weight="' + hb_ntos( pData[ "Weight" ] ) + '"', ;
             "" )
          borders += '<Border ss:Position="' + AllTrim( position + '" ' + bLinestyle + " " + bColor + " " + bWeight ) + "/>" + hb_eol()
@@ -296,7 +296,7 @@ METHOD ExcelWriterXML_Style:checkColor( color )
 
    IF Left( color, 1 ) == "#"
       RETURN COLOR
-   ELSEIF hb_HPos( ::namedColorsIE, Lower( color ) ) > 0
+   ELSEIF Lower( color ) $ ::namedColorsIE
       color := ::namedColorsIE[ Lower( color ) ]
       RETURN COLOR
    ELSE

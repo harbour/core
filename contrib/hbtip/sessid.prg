@@ -94,7 +94,7 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
    LOCAL nSIDCRC, cSIDCRC, n, cTemp
    LOCAL nLenSID     := SID_LENGTH
    LOCAL cBaseKeys   := BASE_KEY_STRING
-   LOCAL nRand, nKey := 0
+   LOCAL nKey := 0
 
    hb_default( @cCRCKey, CRC_KEY_STRING )
 
@@ -102,8 +102,7 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    /* Calculate the key */
    FOR n := 1 TO nLenSID
-      nRand := At( SubStr( cSID, n, 1 ), cBaseKeys )
-      nKey  += nRand
+      nKey += At( SubStr( cSID, n, 1 ), cBaseKeys )
    NEXT
 
    // Recalculate the CRC

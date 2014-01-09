@@ -982,11 +982,12 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
 STATIC FUNCTION ArrayToString( aArray )
 
    LOCAL cString := ""
-   LOCAL nLen    := Len( aArray )
    LOCAL cElem
 
    FOR EACH cElem IN aArray
-      cString += iif( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + iif( cElem:__enumIndex() < nLen, ",", "" )
+      cString += ;
+         iif( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + ;
+         iif( cElem:__enumIsLast(), "", "," )
    NEXT
 
    RETURN cString

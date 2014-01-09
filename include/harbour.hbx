@@ -507,6 +507,7 @@ DYNAMIC hb_HexToStr
 DYNAMIC hb_HFill
 DYNAMIC hb_HGet
 DYNAMIC hb_HGetDef
+DYNAMIC hb_HGetRef
 DYNAMIC hb_HHasKey
 DYNAMIC hb_HKeepOrder
 DYNAMIC hb_HKeyAt

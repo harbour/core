@@ -85,7 +85,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       ELSE
          // now check if variable already exists. If yes and I have already another element
          // with same name, then I will change it to an array
-         IF hb_HPos( hHashVars, cName ) > 0
+         IF cName $ hHashVars
             IF ! HB_ISARRAY( hHashVars[ cName ] )
                // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }
@@ -702,14 +702,12 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
 FUNCTION uhttpd_GetField( cVar, cType )
 
    LOCAL xVal
-   LOCAL nPos := hb_HPos( _Request, cVar )
 
-   IF nPos > 0 // cVar IN ::h_Request:Keys
-      xVal := hb_HValueAt( _Request, nPos ) // ::h_Request[ cVar ]
+   IF hb_HGetRef( _Request, cVar, @xVal )
       IF Empty( xVal )
          xVal := NIL
       ENDIF
-      IF cType != NIL .AND. cType $ "NLD"
+      IF HB_ISSTRING( cType ) .AND. cType $ "NLD"
          xVal := uhttpd_CStrToVal( xVal, cType )
       ENDIF
    ENDIF
@@ -725,13 +723,4 @@ FUNCTION uhttpd_SetField( cVar, cVal )
    RETURN xVal
 
 FUNCTION uhttpd_HGetValue( hHash, cKey )
-
-   LOCAL nPos
-   LOCAL xVal
-
-   IF hHash != NIL
-      xVal := iif( ( nPos := hb_HPos( hHash, cKey ) ) == 0, NIL, hb_HValueAt( hHash, nPos ) )
-   ENDIF
-   // RETURN iif( cKey $ hHash:Keys, hHash[ cKey ], NIL )
-
-   RETURN xVal
+   RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )

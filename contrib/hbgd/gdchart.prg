@@ -320,7 +320,7 @@ METHOD VerticalBarChart() CLASS GDChart
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -507,7 +507,7 @@ METHOD HorizontalBarChart() CLASS GDChart
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -698,7 +698,7 @@ METHOD LineChart() CLASS GDChart
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -711,7 +711,7 @@ METHOD LineChart() CLASS GDChart
    nMinLabel := 0
    nMin      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMin := hElement[ "VALUE" ]
       ELSE
          nMin := Min( nMin, hElement[ "VALUE" ] )

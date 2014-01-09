@@ -181,7 +181,6 @@ METHOD List() CLASS TIPClientPOP
       ELSE
          ::bEof := .T.
       ENDIF
-
    ENDDO
 
    IF ::inetErrorCode( ::SocketCon ) != 0
@@ -380,29 +379,23 @@ METHOD Read( nLen ) CLASS TIPClientPOP
 
 METHOD retrieveAll( lDelete )
 
-   LOCAL aMails, i, imax, cMail
+   LOCAL aMails, oMail
 
-   hb_default( @lDelete, .F. )
+   IF ::isOpen
 
-   IF ! ::isOpen
-      RETURN NIL
-   ENDIF
+      hb_default( @lDelete, .F. )
 
-   imax := ::countMail()
-   aMails := Array( imax )
-
-   FOR i := 1 TO imax
-      ::reset()
-      aMails[ i ] := TIPMail():new()
-      /* NOTE: cMail might get assigned NIL here, so this hack is added to avoid RTE. */
-      IF HB_ISSTRING( cMail := ::retrieve( i ) )
-         aMails[ i ]:fromString( cMail )
-      ENDIF
-
-      IF lDelete
+      FOR EACH oMail IN aMails := Array( ::countMail() )
          ::reset()
-         ::delete( i )
-      ENDIF
-   NEXT
+
+         oMail := TIPMail():new()
+         oMail:fromString( ::retrieve( oMail:__enumIndex() ) )
+
+         IF lDelete
+            ::reset()
+            ::delete( oMail:__enumIndex() )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN aMails

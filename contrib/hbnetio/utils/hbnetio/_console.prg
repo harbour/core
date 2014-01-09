@@ -33,7 +33,6 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL GetList := {}
    LOCAL hCommands
    LOCAL nSavedRow
-   LOCAL nPos
    LOCAL aCommand
    LOCAL cCommand
 
@@ -138,10 +137,10 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       ENDIF
       nHistIndex := Len( aHistory ) + 1
 
-      aCommand := hb_ATokens( cCommand, " " )
+      aCommand := hb_ATokens( cCommand )
       IF ! Empty( aCommand )
-         IF ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
-            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
+         IF Lower( aCommand[ 1 ] ) $ hCommands
+            Eval( hCommands[ Lower( aCommand[ 1 ] ) ][ 3 ], cCommand )
          ELSE
             IF Left( cCommand, Len( netcliID ) + 1 ) == netcliID + "."
                IF ! Eval( netclictrl[ "cmd" ], netclictx, SubStr( cCommand, Len( netcliID ) + 2 ) )

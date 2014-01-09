@@ -159,7 +159,7 @@ METHOD ExcelWriterXML_Sheet:writeData( type, row, column, xData, style, formula 
       "data"      => xData, ;
       "formula"   => formula }
 
-   IF hb_HPos( ::cells, row ) > 0
+   IF row $ ::cells
       hcol := ::cells[ row ]
       hcol[ column ] := cell
       ::cells[ row ] := hcol
@@ -206,7 +206,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
       row     := ir:__enumKey()
       rowData := ir:__enumValue()
 
-      IF hb_HPos( ::rowHeight, row ) > 0
+      IF row $ ::rowHeight
          rowHeight := 'ss:AutoFitHeight="0" ss:Height="' + AllTrim( Str( ::rowHeight[ row ], 14, 2 ) ) + '"'
       ELSE
          rowHeight := ""
@@ -228,14 +228,14 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
          ENDIF
          URL := ""
          mergeCell := ""
-         IF hb_HPos( ::mergeCells, row ) > 0
-            IF hb_HPos( ::mergeCells[ row ], column ) > 0
+         IF row $ ::mergeCells
+            IF column $ ::mergeCells[ row ]
                mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
             ENDIF
          ENDIF
          comment := ""
-         IF hb_HPos( ::comments, row ) > 0
-            IF hb_HPos( ::comments[ row ], column ) > 0
+         IF row $ ::comments
+            IF column $ ::comments[ row ]
                comment := '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol()
                comment += '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol()
                comment += '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol()
@@ -311,7 +311,7 @@ METHOD ExcelWriterXML_Sheet:cellMerge( row, col, width, height )
 
    LOCAL haux := { => }
 
-   IF hb_HPos( ::mergeCells, row ) > 0
+   IF row $ ::mergeCells
       haux := ::mergeCells[ row ]
    ENDIF
 

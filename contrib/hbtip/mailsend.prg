@@ -93,7 +93,6 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    LOCAL lBodyHTML     := .F.
    LOCAL lConnectPlain := .F.
-   LOCAL lReturn       := .T.
    LOCAL lAuthLogin    := .F.
    LOCAL lAuthPlain    := .F.
    LOCAL lAuthTLS      := .F.
@@ -125,20 +124,16 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             hb_ADel( xTo, tmp, .T. )
          ENDIF
       NEXT
+      IF Empty( xTo )
+         RETURN .F.
+      ENDIF
       cTo := ""
-      cTmp := ""
-      IF Len( xTo ) > 1
-         FOR EACH cTo IN xTo
-            IF cTo:__enumIndex() != 1
-               cTmp += tip_GetRawEmail( AllTrim( cTo ) ) + ","
-            ENDIF
-         NEXT
-         cTmp := SubStr( cTmp, 1, Len( cTmp ) - 1 )
-      ENDIF
-      cTo := tip_GetRawEmail( AllTrim( xTo[ 1 ] ) )
-      IF Len( cTmp ) > 0
-         cTo += "," + cTmp
-      ENDIF
+      FOR EACH cTmp IN xTo
+         cTo += tip_GetRawEmail( AllTrim( cTmp ) )
+         IF ! cTmp:__enumIsLast()
+            cTo += ","
+         ENDIF
+      NEXT
    ELSEIF HB_ISSTRING( xTo )
       cTo := tip_GetRawEmail( AllTrim( xTo ) )
    ENDIF
@@ -151,12 +146,12 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          ENDIF
       NEXT
       cCC := ""
-      IF Len( xCC ) > 0
-         FOR EACH cTmp IN xCC
-            cCC += tip_GetRawEmail( AllTrim( cTmp ) ) + ","
-         NEXT
-         cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
-      ENDIF
+      FOR EACH cTmp IN xCC
+         cCC += tip_GetRawEmail( AllTrim( cTmp ) )
+         IF ! cTmp:__enumIsLast()
+            cCC += ","
+         ENDIF
+      NEXT
    ELSEIF HB_ISSTRING( xCC )
       cCC := tip_GetRawEmail( AllTrim( xCC ) )
    ENDIF
@@ -169,61 +164,54 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          ENDIF
       NEXT
       cBCC := ""
-      IF Len( xBCC ) > 0
-         FOR EACH cTmp IN xBCC
-            cBCC += tip_GetRawEmail( AllTrim( cTmp ) ) + ","
-         NEXT
-         cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
-      ENDIF
+      FOR EACH cTmp IN xBCC
+         cBCC += tip_GetRawEmail( AllTrim( cTmp ) )
+         IF ! cTmp:__enumIsLast()
+            cBCC += ","
+         ENDIF
+      NEXT
    ELSEIF HB_ISSTRING( xBCC )
       cBCC := tip_GetRawEmail( AllTrim( xBCC ) )
    ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
 
-   IF cPopServer != NIL .AND. lPopAuth
-      BEGIN SEQUENCE
+   IF HB_ISSTRING( cPopServer ) .AND. lPopAuth
+
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          oUrl1 := TUrl():New( iif( lTLS, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
          oPop := TIPClientPOP():New( oUrl1, xTrace )
-         IF oPop:Open()
-            oPop:Close()
-         ELSE
-            lReturn := .F.
-         ENDIF
       RECOVER
-         lReturn := .F.
+         RETURN .F.
       END SEQUENCE
+
+      IF oPop:Open()
+         oPop:Close()
+      ELSE
+         RETURN .F.
+      ENDIF
    ENDIF
 
-   IF ! lReturn
-      RETURN .F.
-   ENDIF
-
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oUrl := TUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
    RECOVER
-      lReturn := .F.
-   END SEQUENCE
-
-   IF ! lReturn
       RETURN .F.
-   ENDIF
+   END SEQUENCE
 
    oUrl:nPort   := nPort
    oUrl:cUserid := StrTran( cUser, "&at;", "@" )
 
-   oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
+   oUrl:cFile := ;
+      cTo + ;
+      iif( Empty( cCC ), "", "," + cCC ) + ;
+      iif( Empty( cBCC ), "", "," + cBCC )
 
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
    RECOVER
-      lReturn := .F.
-   END SEQUENCE
-
-   IF ! lReturn
       RETURN .F.
-   ENDIF
+   END SEQUENCE
 
    oInmail:nConnTimeout := nTimeOut
 
@@ -235,17 +223,18 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             IF ! oInMail:GetOk()
                EXIT
             ENDIF
-            IF oInMail:cReply == NIL
+            DO CASE
+            CASE oInMail:cReply == NIL
                EXIT
-            ELSEIF "LOGIN" $ oInMail:cReply
+            CASE "LOGIN" $ oInMail:cReply
                lAuthLogin := .T.
-            ELSEIF "PLAIN" $ oInMail:cReply
+            CASE "PLAIN" $ oInMail:cReply
                lAuthPlain := .T.
-            ELSEIF oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
+            CASE oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
                lAuthTLS := .T.
-            ELSEIF Left( oInMail:cReply, 4 ) == "250 "
+            CASE Left( oInMail:cReply, 4 ) == "250 "
                EXIT
-            ENDIF
+            ENDCASE
          ENDDO
 
          IF lAuthLogin
@@ -278,10 +267,10 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          oInMail:Close()
       ENDIF
 
-      BEGIN SEQUENCE
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
       RECOVER
-         lReturn := .F.
+         RETURN .F.
       END SEQUENCE
 
       oInmail:nConnTimeout := nTimeOut
@@ -302,7 +291,6 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
             EXIT
          ENDIF
       ENDDO
-
    ENDIF
 
    /* If the string is an existing HTML filename, load it. */
@@ -319,4 +307,4 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    oInMail:Commit()
    oInMail:Close()
 
-   RETURN lReturn
+   RETURN .T.

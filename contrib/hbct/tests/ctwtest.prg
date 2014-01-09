@@ -49,12 +49,10 @@ PROCEDURE Main()
       WBox()
 
       @ -1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
-      ? hb_ntos( Row() ) + ":" + hb_ntos( Col() ), "/", hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ), ""
-      ? hb_ntos( WRow() ) + ":" + hb_ntos( WCol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
-      ? hb_ntos( WFRow() ) + ":" + hb_ntos( WFCol() ), "/", ;
-         hb_ntos( WFLastRow() ) + ":" + hb_ntos( WFLastCol() ), ""
-      ? hb_ntos( WFRow( .T. ) ) + ":" + hb_ntos( WFCol( .T. ) ), "/", ;
-         hb_ntos( WFLastRow( .T. ) ) + ":" + hb_ntos( WFLastCol( .T. ) ), ""
+      ? hb_ntos( Row()        ) + ":" + hb_ntos( Col()        ), "/", hb_ntos( MaxRow()         ) + ":" + hb_ntos( MaxCol()         ), ""
+      ? hb_ntos( WRow()       ) + ":" + hb_ntos( WCol()       ), "/", hb_ntos( MaxRow( .T. )    ) + ":" + hb_ntos( MaxCol( .T. )    ), ""
+      ? hb_ntos( WFRow()      ) + ":" + hb_ntos( WFCol()      ), "/", hb_ntos( WFLastRow()      ) + ":" + hb_ntos( WFLastCol()      ), ""
+      ? hb_ntos( WFRow( .T. ) ) + ":" + hb_ntos( WFCol( .T. ) ), "/", hb_ntos( WFLastRow( .T. ) ) + ":" + hb_ntos( WFLastCol( .T. ) ), ""
       ? "window:", hb_ntos( aWin[ i ] ), ""
       SetCursor( Int( i % 5 ) )
 

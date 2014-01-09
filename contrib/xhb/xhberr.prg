@@ -644,7 +644,7 @@ STATIC FUNCTION Arguments( oErr )
 
    IF HB_ISARRAY( oErr:Args )
       FOR EACH xArg IN oErr:Args
-         cArguments += " [" + Str( xArg:__EnumIndex(), 2 ) + "] = Type: " + ValType( xArg )
+         cArguments += " [" + Str( xArg:__enumIndex(), 2 ) + "] = Type: " + ValType( xArg )
 
          IF xArg != NIL
             cArguments += " Val: " + hb_CStr( xArg )

@@ -36,6 +36,8 @@ PROCEDURE Main()
 
    AFill( aKeys, 0 )
 
+   SET SCOREBOARD OFF
+
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )
    hb_gtInfo( HB_GTI_FONTSIZE , nHeight )
@@ -52,7 +54,7 @@ PROCEDURE Main()
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4 )
+         hb_DispOutAt( nI, MaxCol() - 5, Str( aKeys[ nI ], 4 ) )
       NEXT
 
       IF nMSec != NIL .AND. hb_MilliSeconds() > nMSec + 2000
@@ -71,7 +73,7 @@ PROCEDURE Main()
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4 )
+         hb_DispOutAt( nI, MaxCol() - 5, Str( aKeys[ nI ], 4 ) )
       NEXT
 
       IF nKey == K_ESC
@@ -88,10 +90,10 @@ PROCEDURE Main()
          DO WHILE .T.
             nModeCols := MaxCol() + 1
             nModeRows := MaxRow() + 1
-            @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-            @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-            @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-            @ MaxRow() / 2, 2     SAY "SetMode( 99, 999 )  <Esc>-Cancels"
+            hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2    , 2, "SetMode( 99, 999 )  <Esc>-Cancels" )
             @ MaxRow() / 2, 11 GET nModeRows PICTURE "99" RANGE 10, 99
             @ MaxRow() / 2, 16 GET nModeCols PICTURE "999" RANGE 20, 300
             READ
@@ -110,10 +112,10 @@ PROCEDURE Main()
          nWndHeight := hb_gtInfo( HB_GTI_SCREENHEIGHT )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Height: 9999 (Max: " + hb_ntos( nMaxWHeight ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Height: 9999 (Max: " + hb_ntos( nMaxWHeight ) + ")" )
          @ MaxRow() / 2, 25 GET nWndHeight PICTURE "9999" RANGE 100, nMaxWHeight
          READ
          IF LastKey() != K_ESC
@@ -125,10 +127,10 @@ PROCEDURE Main()
          nWndWIDTH := hb_gtInfo( HB_GTI_SCREENWIDTH )
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window WIDTH: 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window WIDTH: 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + ")" )
          @ MaxRow() / 2, 24 GET nWndWIDTH PICTURE "9999" RANGE 100, nMaxWWIDTH
          READ
          IF LastKey() != K_ESC
@@ -141,10 +143,10 @@ PROCEDURE Main()
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + " x " + hb_ntos( nMaxWHeight ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + " x " + hb_ntos( nMaxWHeight ) + ")" )
          @ MaxRow() / 2, 28 GET aWndSize[ 1 ] PICTURE "9999" RANGE 100, nMaxWWIDTH
          @ MaxRow() / 2, 35 GET aWndSize[ 2 ] PICTURE "9999" RANGE 100, nMaxWHeight
          READ
@@ -156,10 +158,10 @@ PROCEDURE Main()
       CASE nKey == hb_keyCode( "4" ) // set Window-Position by pixels
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_XY )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Position in pixels(Left/Top): 9999 / 9999 "
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Position in pixels(Left/Top): 9999 / 9999 " )
          @ MaxRow() / 2, 47 GET aWndSize[ 1 ] PICTURE "9999"
          @ MaxRow() / 2, 54 GET aWndSize[ 2 ] PICTURE "9999"
          READ
@@ -171,10 +173,10 @@ PROCEDURE Main()
       CASE nKey == hb_keyCode( "5" ) // set Window-Position by row/col
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_ROWCOL )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Position by Row/Col: 999 / 999 "
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Position by Row/Col: 999 / 999 " )
          @ MaxRow() / 2, 38 GET aWndSize[ 1 ] PICTURE "999"
          @ MaxRow() / 2, 44 GET aWndSize[ 2 ] PICTURE "999"
          READ

@@ -821,19 +821,20 @@ METHOD Log( ... ) CLASS TIPClient
       FOR EACH xVar IN hb_AParams()
 
          // Preserves CRLF on result
-         IF xVar:__enumIndex() < PCount()
-            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ), "<cr>" ), Chr( 10 ), "<lf>" )
-         ELSE
+         IF xVar:__enumIsLast()
             cMsg += hb_CStr( xVar )
+         ELSE
+            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ), "<cr>" ), Chr( 10 ), "<lf>" )
          ENDIF
 
-         cMsg += iif( xVar:__enumIndex() < PCount() - 1, ", ", "" )
-
-         IF xVar:__enumIndex() == PCount() - 1
+         DO CASE
+         CASE xVar:__enumIndex() < Len( xVar:__enumBase() ) - 1
+            cMsg += ", "
+         CASE xVar:__enumIndex() == Len( xVar:__enumBase() ) - 1
             cMsg += " )" + hb_eol() + ">> "
-         ELSEIF xVar:__enumIndex() == PCount()
+         CASE xVar:__enumIsLast()
             cMsg += " <<" + hb_eol() + hb_eol()
-         ENDIF
+         ENDCASE
       NEXT
 
       Eval( ::bTrace, cMsg )

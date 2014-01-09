@@ -68,6 +68,10 @@ PROCEDURE Main_MISC()
 
 #ifdef __HARBOUR__
 
+   /* Hashes */
+
+   Test_Hash()
+
    /* SHA-1 */
 
    HBTEST              hb_SHA1( "hello" )                    IS "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
@@ -1307,6 +1311,25 @@ STATIC FUNCTION RDD_SORT_D()
    RETURN cResult
 
 #ifdef __HARBOUR__
+
+STATIC PROCEDURE Test_Hash()
+
+   LOCAL h := { "a" => 1, "b" => 2 }
+   LOCAL v
+
+   HBTEST ( hb_HGetRef()                           ) IS "E 1 BASE 1123 Argument error (HB_HGETREF) OS:0 #:0 "
+   HBTEST ( hb_HGetRef( h, "a" )                   ) IS .T.
+   HBTEST ( hb_HGetRef( h, "a", v ), v             ) IS NIL
+   HBTEST ( hb_HGetRef( h, "a", @v ), v            ) IS 1
+   HBTEST ( hb_HGetRef( h, "b" )                   ) IS .T.
+   v := NIL
+   HBTEST ( hb_HGetRef( h, "b", v ), v             ) IS NIL
+   HBTEST ( hb_HGetRef( h, "b", @v ), v            ) IS 2
+   HBTEST ( v := "zz", hb_HGetRef( h, "c" )        ) IS .F.
+   HBTEST ( v := "zz", hb_HGetRef( h, "c", v ), v  ) IS "zz"
+   HBTEST ( v := "zz", hb_HGetRef( h, "c", @v ), v ) IS NIL
+
+   RETURN
 
 /* SHA-2 FIPS 180-2 Validation tests */
 STATIC PROCEDURE Test_SHA2()

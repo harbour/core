@@ -238,9 +238,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClientSMTP
       ::bInitialized := .T.
    ENDIF
 
-   ::nLastWrite := ::super:Write( cData, nLen, bCommit )
-
-   RETURN ::nLastWrite
+   RETURN ::nLastWrite := ::super:Write( cData, nLen, bCommit )
 
 METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPClientSMTP
 
@@ -250,13 +248,14 @@ METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPCli
    IF ::OpenSecure()
       DO WHILE .T.
          ::GetOk()
-         IF ::cReply == NIL
+         DO CASE
+         CASE ::cReply == NIL
             EXIT
-         ELSEIF "LOGIN" $ ::cReply
+         CASE "LOGIN" $ ::cReply
             lAuthLogin := .T.
-         ELSEIF "PLAIN" $ ::cReply
+         CASE "PLAIN" $ ::cReply
             lAuthPlain := .T.
-         ENDIF
+         ENDCASE
       ENDDO
       ::Close()
    ENDIF

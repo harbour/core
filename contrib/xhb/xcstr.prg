@@ -152,7 +152,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       cPad := Space( nPad )
 
       FOR EACH aVar IN xVal
-         cRet += cPad + cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]", nPad, aObjs ) + hb_eol()
+         cRet += cPad + cName + "[" + hb_ntos( aVar:__enumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__enumIndex() ) + "]", nPad, aObjs ) + hb_eol()
       NEXT
 
       nPad -= 3
@@ -165,12 +165,10 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       ELSE
          cRet := "{ "
          FOR EACH aVar IN xVal
-            IF aVar:__enumIndex() != 1
+            IF ! aVar:__enumIsFirst()
                cRet += ", "
             ENDIF
-            cRet += ValToPrg( aVar:__enumKey() )
-            cRet += " => "
-            cRet += ValToPrg( aVar )
+            cRet += ValToPrg( aVar:__enumKey() ) + " => " + ValToPrg( aVar )
          NEXT
          cRet += " }"
       ENDIF

@@ -301,7 +301,7 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
    lChangeLog := .F.
 
    FOR EACH cLine IN hb_ATokens( StrTran( cLog, Chr( 13 ) ), Chr( 10 ) )
-      IF cLine:__enumIndex() != 1
+      IF ! cLine:__enumIsFirst()
          IF Empty( Left( cLine, 2 ) ) .AND. ! Empty( SubStr( cLine, 3, 1 ) )
             IF SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName )
                lChangeLog := .T.
@@ -1415,7 +1415,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
 STATIC FUNCTION ProperCase( hAll, cName )
 
    IF cName $ hAll
-      RETURN hb_HKeyAt( hAll, hb_HPos( hAll, cName ) )
+      RETURN hb_HKeyAt( hAll, hb_HPos( hAll, cName ) )  /* Return the function name in original casing */
    ENDIF
 
    RETURN cName

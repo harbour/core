@@ -872,18 +872,19 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
       oGUI:setFocus()
 
       IF oGet:exitState == GE_NOEXIT  // Added.
-         IF ::nHitCode > 0
+         DO CASE
+         CASE ::nHitCode > 0
             oGUI:Select( ::nHitCode )
-         ELSEIF ::nHitCode == HTCAPTION
+         CASE ::nHitCode == HTCAPTION
             oGUI:Select()
-         ELSEIF ::nHitCode == HTCLIENT
+         CASE ::nHitCode == HTCLIENT
             oGUI:Select( K_LBUTTONDOWN )
-         ELSEIF ::nHitCode == HTDROPBUTTON
+         CASE ::nHitCode == HTDROPBUTTON
             oGUI:Open()
-         ELSEIF ::nHitCode >= HTSCROLLFIRST .AND. ;
-                ::nHitCode <= HTSCROLLLAST
+         CASE ::nHitCode >= HTSCROLLFIRST .AND. ;
+              ::nHitCode <= HTSCROLLLAST
             oGUI:Scroll( ::nHitCode )
-         ENDIF
+         ENDCASE
       ENDIF
 
       ::nHitCode := 0
@@ -1414,22 +1415,14 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
    LOCAL nIteration
    LOCAL lGUI
 
-   IF nKey >= K_ALT_Q .AND. nKey <= K_ALT_P
-      cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_A .AND. nKey <= K_ALT_L
-      cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_Z .AND. nKey <= K_ALT_M
-      cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_1 .AND. nKey <= K_ALT_0
-      cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
-
-   ELSE
+   DO CASE
+   CASE nKey >= K_ALT_Q .AND. nKey <= K_ALT_P ; cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
+   CASE nKey >= K_ALT_A .AND. nKey <= K_ALT_L ; cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
+   CASE nKey >= K_ALT_Z .AND. nKey <= K_ALT_M ; cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
+   CASE nKey >= K_ALT_1 .AND. nKey <= K_ALT_0 ; cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
+   OTHERWISE
       RETURN 0
-
-   ENDIF
+   ENDCASE
 
    nStart := ::nPos + 1
    nEnd   := Len( ::aGetList )

@@ -175,14 +175,15 @@ FUNCTION sx_Compress( xVal )
 
    LOCAL cType := ValType( xVal ), xRetVal
 
-   IF cType $ "CM"
+   DO CASE
+   CASE cType $ "CM"
       xRetVal := _sx_StrCompress( xVal )
-   ELSEIF cType == "A"
+   CASE cType == "A"
       xRetVal := Array( Len( xVal ) )
       AEval( xVal, {| x | xRetVal := sx_Compress( x ) } )
-   ELSE
+   OTHERWISE
       xRetVal := xVal
-   ENDIF
+   ENDCASE
 
    RETURN xRetVal
 
@@ -190,14 +191,15 @@ FUNCTION sx_Decompress( xVal )
 
    LOCAL cType := ValType( xVal ), xRetVal
 
-   IF cType $ "CM"
+   DO CASE
+   CASE cType $ "CM"
       xRetVal := _sx_StrDecompress( xVal )
-   ELSEIF cType == "A"
+   CASE cType == "A"
       xRetVal := Array( Len( xVal ) )
       AEval( xVal, {| x | xRetVal := sx_Decompress( x ) } )
-   ELSE
+   OTHERWISE
       xRetVal := xVal
-   ENDIF
+   ENDCASE
 
    RETURN xRetVal
 

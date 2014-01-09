@@ -545,7 +545,7 @@ METHOD NEW( cAlias ) CLASS HBRecord
    aStruc := ( ::alias )->( dbStruct() )
 
    FOR EACH aItem in ::aFields
-      i          := aItem:__EnumIndex()
+      i          := aItem:__enumIndex()
       oFld       := HBField()
       oFld:order := i
       oFld:Name  := ( ::alias )->( FieldName( i ) )
@@ -564,7 +564,7 @@ METHOD PROCEDURE Get() CLASS HBRecord
 
    FOR EACH xField IN ::aFields
       xField:Get()
-      ::buffer[ xField:__EnumIndex() ] := xField:value
+      ::buffer[ xField:__enumIndex() ] := xField:value
    NEXT
 
    RETURN
@@ -574,9 +574,9 @@ METHOD PROCEDURE Put() CLASS HBRecord
    LOCAL xField
 
    FOR EACH xField IN ::aFields
-      IF !( xField:Value == ::buffer[ xField:__EnumIndex() ] )
-         xField:PUT( ::buffer[ xField:__EnumIndex() ] )
-         ::buffer[ xField:__EnumIndex() ] := xField:value
+      IF !( xField:Value == ::buffer[ xField:__enumIndex() ] )
+         xField:PUT( ::buffer[ xField:__enumIndex() ] )
+         ::buffer[ xField:__enumIndex() ] := xField:value
       ENDIF
    NEXT
 
@@ -937,7 +937,7 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
 
    FOR EACH Buffer in ::Buffer
 
-      i      := Buffer:__EnumIndex()
+      i      := Buffer:__enumIndex()
       Buffer := ( ::Alias )->( FieldGet( i ) )
 
       adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
@@ -968,7 +968,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    ( ::Alias )->( dbSkip( 1 ) )         // go EOF
 
    FOR EACH Buffer in ::Buffer
-      i      := Buffer:__EnumIndex()
+      i      := Buffer:__enumIndex()
       Buffer := ( ::Alias )->( FieldGet( i ) )
 
       adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
@@ -1002,7 +1002,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
 
       // --> save old record in temp buffer
       FOR EACH xBuffer IN aOldBuffer
-         xBuffer := ( ::Alias )->( FieldGet( xBuffer:__EnumIndex() ) )
+         xBuffer := ( ::Alias )->( FieldGet( xBuffer:__enumIndex() ) )
       NEXT
 
       AAdd( ::WriteBuffers, { ( ::Alias )->( RecNo() ), aOldBuffer } )
@@ -1048,7 +1048,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
    ( ::Alias )->( ordSetFocus( 0 ) )
 
    FOR EACH Buffer in aBuffer
-      ( ::Alias )->( FieldPut( Buffer:__EnumIndex(), Buffer ) )
+      ( ::Alias )->( FieldPut( Buffer:__enumIndex(), Buffer ) )
    NEXT
 
    ( ::Alias )->( dbSkip( 0 ) )
@@ -1144,7 +1144,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
          ELSE       // DO CONTROLLED...
 
             FOR EACH aBuffers IN ::deleteBuffers
-               IF aBuffers:__EnumIndex() > ( nLen - nLevel )
+               IF aBuffers:__enumIndex() > ( nLen - nLevel )
 
                   ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 
@@ -1192,7 +1192,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
          ELSE       // do controlled...
 
             FOR EACH aBuffers IN ::writeBuffers
-               IF aBuffers:__EnumIndex() > ( nLen - nLevel )
+               IF aBuffers:__enumIndex() > ( nLen - nLevel )
 
                   ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 

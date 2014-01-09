@@ -184,15 +184,16 @@ FUNCTION hb_BldLogMsg( ... )
    LOCAL cMsg := ""
 
    FOR EACH xVar IN hb_AParams()
-      IF HB_ISNUMERIC( xVar )
+      DO CASE
+      CASE HB_ISNUMERIC( xVar )
          cMsg += AllTrim( hb_CStr( xVar ) )
-      ELSEIF ! HB_ISSTRING( xVar )
+      CASE ! HB_ISSTRING( xVar )
          cMsg += hb_CStr( xVar )
-      ELSE
+      OTHERWISE
          cMsg += xVar
-      ENDIF
+      ENDCASE
 
-      IF xVar:__enumIndex() < PCount()
+      IF ! xVar:__enumIsLast()
          cMsg += " "
       ENDIF
    NEXT
@@ -468,11 +469,10 @@ METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogConsole
 METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 
    LOCAL cMsg := "", xPar
-   LOCAL nLen := Len( hb_AParams() )
 
    FOR EACH xPar IN hb_AParams()
       cMsg += hb_CStr( xPar )
-      IF xPar:__EnumIndex() < nLen
+      IF ! xPar:__enumIsLast()
          cMsg += " "
       ENDIF
    NEXT

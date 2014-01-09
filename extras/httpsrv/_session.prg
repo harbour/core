@@ -190,7 +190,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    LOCAL lSendCookie := .T.
    LOCAL lDefine_SID := .T.
-   LOCAL xVal, nRand, nPos
+   LOCAL xVal, nRand
    LOCAL hUrl
 
    IF cSID != NIL
@@ -206,9 +206,8 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    ENDIF
 
    // Start checking ID from global vars
-   IF ( nPos := hb_HPos( _REQUEST, ::cName ) ) > 0
-      // ::cSID := ::oCGI:h_Request[ ::cName ]
-      ::cSID := hb_HValueAt( _REQUEST, nPos )
+   IF ::cName $ _REQUEST
+      ::cSID := _REQUEST[ ::cName ]
       IF HB_ISARRAY( ::cSID )
          ::cSID := ::cSID[ 1 ] // Get Only 1-st
       ENDIF
@@ -708,7 +707,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
    LOCAL cFile
    LOCAL lOk
-   LOCAL nRetry  := 0
+   LOCAL nRetry := 0
 
    // TraceLog( "SessionDestroy() - cID", cID )
    __defaultNIL( @cID, ::cSID )

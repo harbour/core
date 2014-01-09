@@ -226,7 +226,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
       // i.e. if Len( aVar ) == 99, then nChar := 2
       cString += Space( nIndent ) + "{" + hb_eol()
       FOR EACH xVal IN aVar
-         cString += Space( nIndent ) + " [" + LTrim( StrZero( xVal:__EnumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
+         cString += Space( nIndent ) + " [" + LTrim( StrZero( xVal:__enumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
          IF lRecursive .AND. ValType( xVal ) $ "AOH"
             cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
             cString += __HB_DumpVar( xVal, , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )

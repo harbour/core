@@ -131,12 +131,11 @@ STATIC PROCEDURE hbnetiocon_exit( netiocli )
 STATIC FUNCTION hbnetiocon_command( netiocli, cCommand )
 
    LOCAL aCommand
-   LOCAL nPos
 
    IF ! Empty( netiocli )
-      aCommand := hb_ATokens( cCommand, " " )
-      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( netiocli[ _NETIOCLI_hCommands ], Lower( aCommand[ 1 ] ) ) ) > 0
-         Eval( hb_HValueAt( netiocli[ _NETIOCLI_hCommands ], nPos )[ 3 ], netiocli, cCommand )
+      aCommand := hb_ATokens( cCommand )
+      IF ! Empty( aCommand ) .AND. Lower( aCommand[ 1 ] ) $ netiocli[ _NETIOCLI_hCommands ]
+         Eval( netiocli[ _NETIOCLI_hCommands ][ Lower( aCommand[ 1 ] ) ][ 3 ], netiocli, cCommand )
          RETURN .T.
       ENDIF
    ENDIF
@@ -370,7 +369,7 @@ STATIC PROCEDURE cmdConnect( netiocli, cCommand )
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
 
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
 
       IF Len( aToken ) >= 2
          nPortOld := nPort
@@ -449,7 +448,7 @@ STATIC PROCEDURE cmdConnStop( netiocli, cCommand )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_stop", aToken[ 2 ] )
       ELSE
@@ -467,7 +466,7 @@ STATIC PROCEDURE cmdConnClientInfo( netiocli, cCommand )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          xCargo := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_clientinfo", aToken[ 2 ] )
          IF xCargo == NIL
@@ -549,7 +548,7 @@ STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          lResult := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
          IF HB_ISLOGICAL( lResult )

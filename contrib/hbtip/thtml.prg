@@ -1378,7 +1378,6 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
 
    LOCAL aAttr
    LOCAL nPos
-   LOCAL nType
    LOCAL hHash := ::getAttributes()
 
    IF ! HB_ISHASH( hHash )
@@ -1398,8 +1397,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   nType := aAttr[ nPos, 2 ]
-   IF nType == HTML_ATTR_TYPE_BOOL
+   IF aAttr[ nPos, 2 ] == HTML_ATTR_TYPE_BOOL
       hHash[ cName ] := ""
    ELSE
       hHash[ cName ] := cValue

@@ -121,7 +121,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' rows="'
 
       FOR EACH cItem in aRows
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
@@ -135,7 +135,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' cols="'
 
       FOR EACH cItem IN aCols
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
