@@ -46,6 +46,8 @@
  *
  */
 
+REQUEST HB_PValue
+
 FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
