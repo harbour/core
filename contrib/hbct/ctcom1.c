@@ -149,7 +149,7 @@ HB_FUNC( COM_RTS )
          iClr = HB_COM_MCR_RTS;
    }
    hb_comMCR( hb_parni( 1 ), &iMCR, iClr, iSet );
-   hb_retl( ( iMCR & HB_COM_MCR_DTR ) != 0 );
+   hb_retl( ( iMCR & HB_COM_MCR_RTS ) != 0 );
 }
 
 /* com_DTR( <nComPort>, [<lNewDTRStatus>] ) -> <lOldDTRStatus>
