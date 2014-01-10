@@ -11,8 +11,7 @@ PROCEDURE Main()
    PosNow()
    ?? "Output test. First line, no newlines."
 
-   ? "Press a key to continue: "
-   ?? Inkey( 0 )
+   ? "Press a key to continue: "; ?? Inkey( 0 )
 
    ? "This is row", hb_ntos( Row() )
 
@@ -49,8 +48,7 @@ PROCEDURE Main()
    ? "Done.. testing end of screen scroll"
 
    FOR n := 1 TO 25
-      ? "This line is on row "
-      ?? hb_ntos( Row() )
+      ? "This line is on row", hb_ntos( Row() )
       Inkey( 0 )
    NEXT
 

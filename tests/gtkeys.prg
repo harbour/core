@@ -288,7 +288,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ? hb_gtVersion( 1 ), "GT" + hb_gtVersion()
    ? "Host codpage:", hb_cdpSelect() + ", terminal codepage:", cTermCP
 #endif
-   ? "@ - interrupt, keycodes checking: "
+   ? "@ - interrupt, keycodes checking:"
    ?
 
    DO WHILE .T.

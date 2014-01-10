@@ -122,7 +122,7 @@ proc main()
 #endif
    n := min_size( aVal, @nMin, nMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nMin ) + ")"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nMin ) + ")"
    calc_size( aVal, nMin, nMax, nBit, @hVal, @aInd, @nn )
    aVal2 := hash_to_array( hVal )
 
@@ -163,7 +163,7 @@ proc main()
 #endif
    n := min_size( aValU, @nUMin, nUMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nUMin ) + ")"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nUMin ) + ")"
    calc_size( aValU, nUMin, nUMax, nBit, @hVal, @aInd, @nn )
    aValU2 := hash_to_array( hVal )
 

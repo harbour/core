@@ -144,7 +144,7 @@ proc main()
 #endif
    n := min_size16( aLower, @nMinLo, nMaxLo, @nBitLo )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBitLo ) ), "byte blocks, (from: "+hb_ntos( nMinLo ) + ")"
+     "for", hb_ntos( hb_bitshift( 1, nBitLo ) ), "byte blocks, (from: " + hb_ntos( nMinLo ) + ")"
    ?
 
    ? "min char:", nMinCh

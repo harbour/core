@@ -46,7 +46,7 @@
  *
  */
 
-REQUEST HB_PValue
+REQUEST hb_PValue
 
 FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 

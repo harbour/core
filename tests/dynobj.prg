@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    /* Let's add an inline at run-time. Should already be possible */
@@ -23,7 +23,7 @@ PROCEDURE Main()
    __objAddInline( oForm, "CalcArea", ;
       {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "What is the Form area ?"
@@ -33,7 +33,7 @@ PROCEDURE Main()
 
    __objAddMethod( oForm, "Smile", @Smile() )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Smile please "
@@ -70,19 +70,19 @@ PROCEDURE Main()
    ? "What is the Form area ?"
    ? oForm:CalcArea()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete CalcArea"
    __objDelInline( oForm, "CalcArea" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete Smile"
    __objDelMethod( oForm, "Smile" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    Pause()

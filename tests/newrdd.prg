@@ -296,7 +296,7 @@ PROCEDURE Main()
    ? "FOR nI := 1 TO Len( aArray )"
    ? "   ? aArray[ nI ]"
    ? "NEXT"
-   ? "dbRLockList(): "
+   ? "dbRLockList():"
    FOR nI := 1 TO Len( aArray )
       ? aArray[ nI ]
    NEXT

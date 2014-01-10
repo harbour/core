@@ -116,7 +116,7 @@ PROCEDURE Main( cName )
 
    cIni := hb_iniWriteStr( hIni )
 
-   ? "Content of hIni : "
+   ? "Content of hIni:"
    ?
    ? cIni
    ?
@@ -133,7 +133,7 @@ PROCEDURE Main( cName )
             , ; /* default key indicators */
             , .F. )
 
-   ? "Content: "
+   ? "Content:"
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -164,7 +164,7 @@ PROCEDURE Main( cName )
    nRow := 3
    @ nRow, 0 CLEAR
    ?
-   ? "WRITING INI FILE TO A STRING "
+   ? "WRITING INI FILE TO A STRING"
    ?
 
    cIni := hb_iniWriteStr( hb_iniRead( cName ) )
