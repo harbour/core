@@ -110,12 +110,11 @@ METHOD NewFile() CLASS GenerateHTML
 
    FWrite( ::nHandle, "<!DOCTYPE html>" + hb_eol() )
 
-   ::OpenTag( "html", "xmlns", "http://www.w3.org/1999/xhtml", "lang", "en" )
+   ::OpenTag( "html", "lang", "en" )
    ::OpenTag( "head" )
-
-   ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
-   ::OpenTag( "meta", "http-equiv", "content-type", "content", "text/html; charset=UTF-8" )
+   ::OpenTag( "meta", "charset", "UTF-8" )
    ::CloseTag( "meta" )
+   ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::CloseTag( "meta" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )

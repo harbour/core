@@ -102,7 +102,6 @@ ENDCLASS
 METHOD New() CLASS TIPCgi
 
    LOCAL aVar
-   LOCAL lPost
    LOCAL nLen
    LOCAL nRead
    LOCAL cTemp
@@ -113,8 +112,7 @@ METHOD New() CLASS TIPCgi
    ::cCgiHeader := ""
    ::cHtmlPage := ""
 
-   lPost := ( "POST" $ Upper( GetEnv( "REQUEST_METHOD" ) ) )
-   IF lPost
+   IF "POST" $ Upper( GetEnv( "REQUEST_METHOD" ) )
       nLen := Val( GetEnv( "CONTENT_LENGTH" ) )
       cTemp := Space( nLen )
       IF ( nRead := FRead( hb_GetStdIn(), @cTemp, nLen ) ) != nLen
@@ -218,7 +216,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
    LOCAL nFileSize
    LOCAL cBuffer
 
-   IF Empty( cSID )
+   IF ! HB_ISSTRING( cSID ) .OR. Empty( cSID )
       DO CASE
       CASE hb_HGetRef( ::hGets, "SESSIONID", @cSID )
       CASE hb_HGetRef( ::hPosts, "SESSIONID", @cSID )
@@ -264,10 +262,7 @@ METHOD SessionEncode() CLASS TIPCgi
    RETURN hb_Serialize( ::hSession )
 
 METHOD SessionDecode( cData ) CLASS TIPCgi
-
-   ::hSession := hb_Deserialize( cData )
-
-   RETURN HB_ISHASH( ::hSession )
+   RETURN HB_ISHASH( ::hSession := hb_Deserialize( cData ) )
 
 METHOD DestroySession( cID ) CLASS TIPCgi
 
@@ -301,26 +296,25 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 METHOD ErrHandler( xError ) CLASS TIPCgi
 
    LOCAL nCalls
-   LOCAL cErrMsg := ""
 
-   cErrMsg += '<table border="1">'
-
-   cErrMsg += "<tr><td>SCRIPT NAME:</td><td>" + GetEnv( "SCRIPT_NAME" ) + "</td></tr>"
+   LOCAL cErrMsg := ;
+      '<table border="1">' + ;
+      "<tr><td>SCRIPT NAME:</td><td>" + GetEnv( "SCRIPT_NAME" ) + "</td></tr>"
 
    DO CASE
    CASE HB_ISOBJECT( xError )
-      cErrMsg += "<tr><td>CRITICAL ERROR:</td><td>" + xError:Description + "</td></tr>"
-      cErrMsg += "<tr><td>OPERATION:</td><td>" + xError:Operation + "</td></tr>"
-      cErrMsg += "<tr><td>OS ERROR:</td><td>" + hb_ntos( xError:OsCode ) + " IN " + xError:SubSystem + "/" + hb_ntos( xError:SubCode ) + "</td></tr>"
-      cErrMsg += "<tr><td>FILENAME:</td><td>" + Right( xError:FileName, 40 ) + "</td></tr>"
+      cErrMsg += ;
+         "<tr><td>CRITICAL ERROR:</td><td>" + xError:Description + "</td></tr>" + ;
+         "<tr><td>OPERATION:</td><td>" + xError:Operation + "</td></tr>" + ;
+         "<tr><td>OS ERROR:</td><td>" + hb_ntos( xError:OsCode ) + " IN " + xError:SubSystem + "/" + hb_ntos( xError:SubCode ) + "</td></tr>" + ;
+         "<tr><td>FILENAME:</td><td>" + Right( xError:FileName, 40 ) + "</td></tr>"
    CASE HB_ISSTRING( xError )
       cErrMsg += "<tr><td>ERROR MESSAGE:</td><td>" + tip_HtmlSpecialChars( xError ) + "</td></tr>"
    ENDCASE
 
-   nCalls := 1
-   DO WHILE ! Empty( ProcName( nCalls ) )
+   nCalls := 0
+   DO WHILE ! Empty( ProcName( ++nCalls ) )
       cErrMsg += "<tr><td>PROC/LINE:</td><td>" + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + "</td></tr>"
-      nCalls++
    ENDDO
 
    cErrMsg += "</table>"
@@ -344,11 +338,9 @@ METHOD Write( cString ) CLASS TIPCgi
 METHOD StartHtml( hOptions ) CLASS TIPCgi
 
    ::cHtmlPage += ;
-      '<?xml version="1.0"' + HtmlOption( hOptions, "encoding", " " ) + "?>" + _CRLF + ;
-      '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
-      '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
-      '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
-      "<head>" + ;
+      "<!DOCTYPE html>" + _CRLF + ;
+      "<html>" + ;
+      '<head><meta charset="' + HtmlOption( hOptions, "encoding" ) + '" />' + ;
       HtmlTag( hOptions, "title", "title" ) + ;
       HtmlScript( hOptions ) + ;
       HtmlStyle( hOptions ) + ;
@@ -385,18 +377,6 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    RETURN cVal
 
-#if 0
-STATIC FUNCTION HtmlAllTag( hTags, cSep )
-
-   LOCAL cVal := ""
-
-   hb_default( @cSep, " " )
-
-   hb_HEval( hTags, {| k | cVal += HtmlTag( hTags, k ) + cSep } )
-
-   RETURN cVal
-#endif
-
 STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
    LOCAL cVal := ""
@@ -409,11 +389,11 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
          IF Empty( lScan )
             hb_HDel( xVal, cKey )
          ENDIF
-         cVal := cKey + '="' + cVal + '"'
-         IF cPre != NIL
+         cVal := cKey + "=" + '"' + cVal + '"'
+         IF HB_ISSTRING( cPre )
             cVal := cPre + cVal
          ENDIF
-         IF cPost != NIL
+         IF HB_ISSTRING( cPost )
             cVal += cPost
          ENDIF
       ENDIF
@@ -433,37 +413,6 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
    RETURN cVal
 
-#if 0
-STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
-
-   LOCAL cVal
-
-   IF HB_ISHASH( xVal ) .AND. ! Empty( cKey ) .AND. cKey $ xVal
-      cVal := xVal[ cKey ]
-      hb_HDel( xVal, cKey )
-   ELSE
-      cVal := ""
-   ENDIF
-
-   IF cVal == ""
-      cVal := hb_defaultValue( cDefault, "" )
-   ENDIF
-
-   RETURN cVal
-
-STATIC FUNCTION HtmlAllValue( hValues, cSep )
-
-   LOCAL cVal := ""
-
-   IF HB_ISHASH( hValues )
-      hb_default( @cSep, " " )
-
-      hb_HEval( hValues, {| k | cVal += HtmlValue( hValues, k ) + cSep } )
-   ENDIF
-
-   RETURN cVal
-#endif
-
 STATIC FUNCTION HtmlScript( hVal, cKey )
 
    LOCAL hTmp
@@ -473,32 +422,28 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
 
    hb_default( @cKey, "script" )
 
-   IF HB_ISHASH( hVal )
-      IF hb_HGetRef( hVal, cKey, @hTmp )
-         IF HB_ISHASH( hTmp )
-            IF hb_HGetRef( hTmp, "src", @cVal )
-               IF HB_ISSTRING( cVal )
-                  cVal := { cVal }
-               ENDIF
-               IF HB_ISARRAY( cVal )
-                  cTmp := ""
-                  AScan( cVal, {| cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
-                  cRet += cTmp
-               ENDIF
-            ENDIF
-            IF hb_HGetRef( hTmp, "var", @cVal )
-               IF HB_ISSTRING( cVal )
-                  cVal := { cVal }
-               ENDIF
-               IF HB_ISARRAY( cVal )
-                  cTmp := ""
-                  AScan( cVal, {| cVar | cTmp += cVar } )
-                  cRet += '<script type="text/javascript">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</script>" + _CRLF
-               ENDIF
-            ENDIF
+   IF hb_HGetRef( hVal, cKey, @hTmp )
+      IF hb_HGetRef( hTmp, "src", @cVal )
+         IF HB_ISSTRING( cVal )
+            cVal := { cVal }
          ENDIF
-         hb_HDel( hVal, cKey )
+         IF HB_ISARRAY( cVal )
+            cTmp := ""
+            AScan( cVal, {| cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
+            cRet += cTmp
+         ENDIF
       ENDIF
+      IF hb_HGetRef( hTmp, "var", @cVal )
+         IF HB_ISSTRING( cVal )
+            cVal := { cVal }
+         ENDIF
+         IF HB_ISARRAY( cVal )
+            cTmp := ""
+            AScan( cVal, {| cVar | cTmp += cVar } )
+            cRet += '<script type="text/javascript">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</script>" + _CRLF
+         ENDIF
+      ENDIF
+      hb_HDel( hVal, cKey )
    ENDIF
 
    RETURN cRet
@@ -511,35 +456,30 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
    LOCAL cVal
    LOCAL cTmp
 
-   IF HB_ISHASH( hVal )
+   hb_default( @cKey, "style" )
 
-      hb_default( @cKey, "style" )
-
-      IF hb_HGetRef( hVal, cKey, @hTmp )
-         IF HB_ISHASH( hTmp )
-            IF hb_HGetRef( hTmp, "src", @cVal )
-               IF HB_ISSTRING( cVal )
-                  cVal := { cVal }
-               ENDIF
-               IF HB_ISARRAY( cVal )
-                  cTmp := ""
-                  AScan( cVal, {| cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
-                  cRet += cTmp
-               ENDIF
-            ENDIF
-            IF hb_HGetRef( hTmp, "var", @cVal )
-               IF HB_ISSTRING( cVal )
-                  cVal := { cVal }
-               ENDIF
-               IF HB_ISARRAY( cVal )
-                  cTmp := ""
-                  AScan( cVal, {| cVar | cTmp += cVar } )
-                  cRet += '<style type="text/css">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</style>" + _CRLF
-               ENDIF
-            ENDIF
+   IF hb_HGetRef( hVal, cKey, @hTmp )
+      IF hb_HGetRef( hTmp, "src", @cVal )
+         IF HB_ISSTRING( cVal )
+            cVal := { cVal }
          ENDIF
-         hb_HDel( hVal, cKey )
+         IF HB_ISARRAY( cVal )
+            cTmp := ""
+            AScan( cVal, {| cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
+            cRet += cTmp
+         ENDIF
       ENDIF
+      IF hb_HGetRef( hTmp, "var", @cVal )
+         IF HB_ISSTRING( cVal )
+            cVal := { cVal }
+         ENDIF
+         IF HB_ISARRAY( cVal )
+            cTmp := ""
+            AScan( cVal, {| cVar | cTmp += cVar } )
+            cRet += '<style type="text/css">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</style>" + _CRLF
+         ENDIF
+      ENDIF
+      hb_HDel( hVal, cKey )
    ENDIF
 
    RETURN cRet
@@ -551,23 +491,18 @@ STATIC FUNCTION HtmlLinkRel( hVal, cKey )
    LOCAL hTmp
    LOCAL cVal
 
-   IF HB_ISHASH( hVal )
+   hb_default( @cKey, "link" )
 
-      hb_default( @cKey, "link" )
-
-      IF hb_HGetRef( hVal, cKey, @hTmp )
-         IF HB_ISHASH( hTmp )
-            IF hb_HGetRef( hTmp, "rel", @cVal )
-               IF HB_ISSTRING( cVal )
-                  cVal := { cVal, cVal }
-               ENDIF
-               IF HB_ISARRAY( cVal )
-                  AScan( cVal, {| aVal | cRet += '<link rel="' + aVal[ 1 ] + '" href="' + aVal[ 2 ] + '"/>' + _CRLF } )
-               ENDIF
-            ENDIF
+   IF hb_HGetRef( hVal, cKey, @hTmp )
+      IF hb_HGetRef( hTmp, "rel", @cVal )
+         IF HB_ISSTRING( cVal )
+            cVal := { cVal, cVal }
          ENDIF
-         hb_HDel( hVal, cKey )
+         IF HB_ISARRAY( cVal )
+            AScan( cVal, {| aVal | cRet += '<link rel="' + aVal[ 1 ] + '" href="' + aVal[ 2 ] + '"/>' + _CRLF } )
+         ENDIF
       ENDIF
+      hb_HDel( hVal, cKey )
    ENDIF
 
    RETURN cRet

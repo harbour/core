@@ -1,90 +1,90 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Part 4 Example</title>
-        <meta http-equiv="Pragma" content="no-cache">
-        <link rel="stylesheet" type="text/css" href="/css/base.css" />
-        <script type="text/javascript" src="/js/ajax.js"></script>
-        <script type="text/javascript">
-            // <![CDATA[
+<head>
+	<meta charset="UTF-8" />
+	<title>Part 4 Example</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<link rel="stylesheet" type="text/css" href="/css/base.css" />
+	<script type="text/javascript" src="/js/ajax.js"></script>
+	<script type="text/javascript">
+		// <![CDATA[
 
-            var divpart;
+		var divpart;
 
-            /**
-             * Requests table data for a specific page.
-             *
-             * @param pageNum the page number to request data for
-             */
-            function getTableData(pageNum)
-            {
-                xslGet( "/xsl/based.xsl" );
-                xmlGet( '/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.random(), tableResponseHandler);
-                divpart = 'tableSection';
-            }
+		/**
+		 * Requests table data for a specific page.
+		 *
+		 * @param pageNum the page number to request data for
+		 */
+		function getTableData(pageNum)
+		{
+			xslGet( "/xsl/based.xsl" );
+			xmlGet( '/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.random(), tableResponseHandler);
+			divpart = 'tableSection';
+		}
 
-            function getTablePages()
-            {
-                xslGet( "/xsl/basep.xsl" );
-                xmlGet( '/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.random(), tableResponseHandler);
-                divpart = 'pageSection';
-            }
+		function getTablePages()
+		{
+			xslGet( "/xsl/basep.xsl" );
+			xmlGet( '/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.random(), tableResponseHandler);
+			divpart = 'pageSection';
+		}
 
 
-            /**
-             * Handler for server's response to table requests.
-             * Table content is pulled from response XML and a HTML
-             * table is built.  The table is then inserted into the
-             * 'tableSection' DIV.
-             */
-            function tableResponseHandler()
-            {
-                // Make sure the request is loaded (readyState = 4)
-                if (req.readyState == 4)
-                {
-                    // Make sure the status is "OK"
-                    if (req.status == 200)
-                    {
-                        // shutdown Ajax loading progress
-                        EndProgress();
+		/**
+		 * Handler for server's response to table requests.
+		 * Table content is pulled from response XML and a HTML
+		 * table is built.  The table is then inserted into the
+		 * 'tableSection' DIV.
+		 */
+		function tableResponseHandler()
+		{
+			// Make sure the request is loaded (readyState = 4)
+			if (req.readyState == 4)
+			{
+				// Make sure the status is "OK"
+				if (req.status == 200)
+				{
+					// shutdown Ajax loading progress
+					EndProgress();
 
-                        // Make sure the XSL document is loaded
-                        if (!xsldocloaded)
-                        {
-                            alert('Unable to transform data.  XSL is not yet loaded.');
-                            // break out of the function
-                            return;
-                        }
+					// Make sure the XSL document is loaded
+					if (!xsldocloaded)
+					{
+						alert('Unable to transform data.  XSL is not yet loaded.');
+						// break out of the function
+						return;
+					}
 
-                        // transform
-                        //document.write( xsldoc );
-                        combine_XLM_XSLT_HTML( req, xsldoc, document, divpart );
+					// transform
+					//document.write( xsldoc );
+					combine_XLM_XSLT_HTML( req, xsldoc, document, divpart );
 
-                        xsldocloaded = null;
-                        xsldoc = null;
+					xsldocloaded = null;
+					xsldoc = null;
 
-                    }
-                    else
-                    {
-                        alert("There was a problem retrieving the XML data:\n" +
-                            req.statusText);
-                    }
-                }
-            }
-            // ]]>
-        </script>
-    </head>
-    <body onload="getTablePages()">
-        <big>Simple XML servlet</big>
-        <br />
-        <br />Tested with IE6+, Firefox 2+ and Opera 9+. Not working with Google Chrome, Safari.
-        <br />Please note that tableservletdb.prg simulates a slow reply of 0.5 seconds.
-        If you want to check real speed please comment #define SIMULATE_SLOW_REPLY in source.
-        <br />Return to <a href="/">Main Page</a>
-        <br />
-        <br />Select a Page&nbsp;
-        <div style="border: 1px solid black; padding: 10px;" id="pageSection">&nbsp;</div>
-        <br />
-
-        <div style="border: 1px solid black; padding: 10px;" id="tableSection">&nbsp;</div>
-    </body>
+				}
+				else
+				{
+					alert("There was a problem retrieving the XML data:\n" +
+						req.statusText);
+				}
+			}
+		}
+		// ]]>
+	</script>
+</head>
+<body onload="getTablePages()">
+	<big>Simple XML servlet</big>
+	<br />
+	<br />Tested with IE6+, Firefox 2+ and Opera 9+. Not working with Google Chrome, Safari.
+	<br />Please note that tableservletdb.prg simulates a slow reply of 0.5 seconds.
+	If you want to check real speed please comment #define SIMULATE_SLOW_REPLY in source.
+	<br />Return to <a href="/">Main Page</a>
+	<br />
+	<br />Select a Page&nbsp;
+	<div style="border: 1px solid black; padding: 10px;" id="pageSection">&nbsp;</div>
+	<br />
+	<div style="border: 1px solid black; padding: 10px;" id="tableSection">&nbsp;</div>
+</body>
 </html>

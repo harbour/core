@@ -1317,7 +1317,12 @@ STATIC PROCEDURE Test_Hash()
    LOCAL h := { "a" => 1, "b" => 2 }
    LOCAL v
 
-   HBTEST ( hb_HGetRef()                           ) IS "E 1 BASE 1123 Argument error (HB_HGETREF) OS:0 #:0 "
+   HBTEST ( hb_HGetRef()                           ) IS .F.
+   HBTEST ( hb_HGetRef( 1 )                        ) IS .F.
+   HBTEST ( hb_HGetRef( , 2 )                      ) IS .F.
+   HBTEST ( hb_HGetRef( h )                        ) IS .F.
+   HBTEST ( hb_HGetRef( h, h )                     ) IS .F.
+   HBTEST ( hb_HGetRef( h, 2 )                     ) IS .F.
    HBTEST ( hb_HGetRef( h, "a" )                   ) IS .T.
    HBTEST ( hb_HGetRef( h, "a", v ), v             ) IS NIL
    HBTEST ( hb_HGetRef( h, "a", @v ), v            ) IS 1

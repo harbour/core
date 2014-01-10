@@ -15096,11 +15096,9 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
       bKeyIns  := SetKey( K_INS, ;
-         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
-                          SC_NORMAL, SC_INSERT ) ) } )
+         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), SC_NORMAL, SC_INSERT ) ) } )
       bKeyUp   := SetKey( K_UP, ;
-         {|| iif( nHistIndex > 1, ;
-                  cLine := hbsh[ _HBSH_aHistory ][ --nHistIndex ], ) } )
+         {|| iif( nHistIndex > 1, cLine := hbsh[ _HBSH_aHistory ][ --nHistIndex ], ) } )
       bKeyDown := SetKey( K_DOWN, ;
          {|| cLine := iif( nHistIndex < Len( hbsh[ _HBSH_aHistory ] ), ;
              hbsh[ _HBSH_aHistory ][ ++nHistIndex ], ;

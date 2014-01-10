@@ -49,15 +49,15 @@
 #include "hbclass.ch"
 
 /*
-* An URL:
-* http://gian:passwd@www.niccolai.ws/mypages/mysite/page.html?avar=0&avar1=1
-* ^--^   ^--^ ^----^ ^-------------^ ^----------------------^ ^------------^
-* cProto  UID  PWD      cServer             cPath                 cQuery
-*                                    ^------------^ ^-------^
-*                                      cDirectory     cFile
-*                                                   ^--^ ^--^
-*                                                 cFname cExt
-*/
+ * An URL:
+ * http://gian:passwd@www.niccolai.ws/mypages/mysite/page.html?avar=0&avar1=1
+ * ^--^   ^--^ ^----^ ^-------------^ ^----------------------^ ^------------^
+ * cProto  UID  PWD      cServer             cPath                 cQuery
+ *                                    ^------------^ ^-------^
+ *                                      cDirectory     cFile
+ *                                                   ^--^ ^--^
+ *                                                 cFname cExt
+ */
 
 CREATE CLASS TUrl
 

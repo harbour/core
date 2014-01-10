@@ -53,7 +53,7 @@
 // The current implementation of FOR EACH is not suitable for the HTML classes
 
 // Directives for a light weight html parser
-#xtrans P_PARSER( <c> )       =>    { <c>, 0, Len( <c> ), 0 }
+#xtrans P_PARSER( <c> )       =>   { <c>, 0, Len( <c> ), 0 }
 #define P_STR                 1    // the string to parse
 #define P_POS                 2    // current parser position
 #define P_LEN                 3    // length of string
@@ -94,7 +94,6 @@ THREAD STATIC t_aHtmlEntities              // HTML character entities
 THREAD STATIC t_aHtmlAnsiEntities          // HTML character entities (ANSI character set)
 THREAD STATIC t_lInit := .F.               // initilization flag for HTML data
 
-// #define _DEBUG_
 #ifdef _DEBUG_
 #xtranslate HIDDEN: => EXPORTED:   // debugger can't see HIDDEN iVars
 #endif
@@ -135,7 +134,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    LOCAL cEmptyHtmlDoc, oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
 
    cEmptyHtmlDoc := ;
-      '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() + ;
+      "<!DOCTYPE html>" + hb_eol() + ;
       "<html>" + hb_eol() + ;
       " <head>" + hb_eol() + ;
       " </head>" + hb_eol() + ;

@@ -159,7 +159,7 @@ HB_FUNC( HB_HGETREF )
       hb_retl( pDest != NULL );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( HB_HSET )
