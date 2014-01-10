@@ -588,7 +588,7 @@ METHOD overStrike( cChar ) CLASS Get
             ENDIF
 
             DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-               ::pos++
+               ++::nPos
             ENDDO
 
             IF ::nPos > ::nMaxEdit
@@ -644,7 +644,7 @@ METHOD insert( cChar ) CLASS Get
             ENDIF
 
             DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-               ::pos++
+               ++::nPos
             ENDDO
 
             IF ::nPos > ::nMaxEdit
@@ -1941,9 +1941,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    IF nCol == NIL
       nCol := Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
    ENDIF
-   IF cVarName == NIL
-      cVarName := ""
-   ENDIF
+   __defaultNIL( @cVarName, "" )
    IF bVarBlock == NIL
       bVarBlock := iif( HB_ISSTRING( cVarName ), MemVarBlock( cVarName ), NIL )
    ENDIF

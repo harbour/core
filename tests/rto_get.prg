@@ -51,6 +51,7 @@
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 #ifndef __HARBOUR__
    #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
@@ -101,6 +102,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   SetCursor( SC_NONE )
 
    //
 
@@ -438,6 +440,22 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    o:setFocus()
    TGetTOVS( o, { "12" } )
    TEST_LINE( o:Assign() )
+
+   // Heinz V Bergen
+
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@R 999-",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "." ) )
+   TEST_LINE( o:OverStrike( "," ) )
+   TEST_LINE( o:OverStrike( "0" ) )
+
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@R 999-",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:Insert( "." ) )
+   TEST_LINE( o:Insert( "," ) )
+   TEST_LINE( o:Insert( "0" ) )
 
    // Overstrike/Insert
 
