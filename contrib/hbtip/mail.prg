@@ -65,7 +65,7 @@ CREATE CLASS TIPMail
    // received fields may be more than once.
    VAR aReceived INIT {}
 
-   METHOD New( cBody, oEncoder )    CONSTRUCTOR
+   METHOD New( cBody, xEncoder )    CONSTRUCTOR
    METHOD SetBody( cBody )
    METHOD GetBody()
    METHOD GetRawBody()              INLINE ::cBody
@@ -79,7 +79,7 @@ CREATE CLASS TIPMail
    METHOD GetFieldOption( cPart, cOption )
    METHOD SetFieldPart( cPart, cValue )
    METHOD SetFieldOption( cPart, cOption, cValue )
-   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( HB_ISSTRING( cCharset ), cCharset, "UTF-8" )
+   METHOD SetCharset( cCharset ) INLINE ::cCharset := hb_defaultValue( cCharset, "UTF-8" )
 
    METHOD GetContentType() INLINE ::GetFieldPart( "Content-Type" )
    METHOD GetCharEncoding() INLINE ::GetFieldOption( "Content-Type", "encoding" )
@@ -111,22 +111,14 @@ CREATE CLASS TIPMail
 
 ENDCLASS
 
-METHOD New( cBody, oEncoder ) CLASS TIPMail
+METHOD New( cBody, xEncoder ) CLASS TIPMail
 
-   // Set header fileds to non-sensitive
    ::hHeaders := { => }
+   hb_HCaseMatch( ::hHeaders, .F. )
    ::aAttachments := {}
 
-   hb_HCaseMatch( ::hHeaders, .F. )
-
-   IF ValType( oEncoder ) $ "CO"
-      ::setEncoder( oEncoder )
-   ENDIF
-
-   IF HB_ISSTRING( cBody )
-      ::setBody( cBody )
-   ENDIF
-
+   ::setEncoder( xEncoder )
+   ::setBody( cBody )
    ::SetCharset()
 
    RETURN Self
@@ -138,11 +130,13 @@ METHOD SetEncoder( xEncoder ) CLASS TIPMail
    ELSE
       ::oEncoder := xEncoder
    ENDIF
+
    IF HB_ISOBJECT( ::oEncoder )
       ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
+      RETURN .T.
    ENDIF
 
-   RETURN .T.
+   RETURN .F.
 
 METHOD SetBody( cBody ) CLASS TIPMail
 
@@ -150,21 +144,14 @@ METHOD SetBody( cBody ) CLASS TIPMail
       ::cBody := ::oEncoder:Encode( cBody )
       ::hHeaders[ "Content-Transfer-Encoding" ] := ::oEncoder:cName
       ::lBodyEncoded := .T.  // needed to prevent an extra CRLF from being appended [GD]
-   ELSE
+   ELSEIF HB_ISSTRING( cBody ) .OR. cBody == NIL
       ::cBody := cBody
    ENDIF
 
    RETURN .T.
 
 METHOD GetBody() CLASS TIPMail
-
-   IF ::cBody == NIL
-      RETURN NIL
-   ELSEIF HB_ISOBJECT( ::oEncoder )
-      RETURN ::oEncoder:Decode( ::cBody )
-   ENDIF
-
-   RETURN ::cBody
+   RETURN iif( HB_ISOBJECT( ::oEncoder ), ::oEncoder:Decode( ::cBody ), ::cBody )
 
 METHOD GetFieldPart( cPart ) CLASS TIPMail
 
@@ -197,11 +184,13 @@ METHOD SetFieldPart( cPart, cValue ) CLASS TIPMail
    LOCAL nPos
    LOCAL cEnc
 
-   IF hb_HGetRef( ::hHeaders, cPart, @cEnc ) .AND. ;
-      ( nPos := At( ";", cEnc ) ) > 0
-      ::hHeaders[ cPart ] := cValue + SubStr( cEnc, nPos )
-   ELSE
-      ::hHeaders[ cPart ] := cValue
+   IF HB_ISSTRING( cValue ) .AND. ! Empty( cValue )
+      IF hb_HGetRef( ::hHeaders, cPart, @cEnc ) .AND. ;
+         ( nPos := At( ";", cEnc ) ) > 0
+         ::hHeaders[ cPart ] := cValue + SubStr( cEnc, nPos )
+      ELSE
+         ::hHeaders[ cPart ] := cValue
+      ENDIF
    ENDIF
 
    RETURN .T.
@@ -210,7 +199,8 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TIPMail
 
    LOCAL aMatch
 
-   IF cPart $ ::hHeaders
+   IF HB_ISSTRING( cPart ) .AND. cPart $ ::hHeaders .AND. ;
+      HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
 
       aMatch := hb_regex( "(.*?;\s*)" + cOption + "\s*=[^;]*(.*)?", ::hHeaders[ cPart ], .F. )
 
