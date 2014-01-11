@@ -203,8 +203,9 @@ FUNCTION tip_MailAssemble( ;
       oMail:Attach( oAttach )
    NEXT
 
-   IF HB_ISEVALITEM( bSMIME )
-      tmp := Eval( bSMIME, oMail:ToString() )
+   IF HB_ISEVALITEM( bSMIME ) .AND. ;
+      HB_ISSTRING( tmp := Eval( bSMIME, oMail:ToString() ) )
+
       oMail := TIPMail():New()
       oMail:SetCharset( cCharset )
    ELSE
