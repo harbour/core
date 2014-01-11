@@ -76,14 +76,14 @@ FUNCTION HBObject()
 
          oClass:SetOnError( @HBObject_DftonError() )
 
-         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", Self:className(), cMsg, iif( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", ::className(), cMsg, iif( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
 #if 0
          oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. )
 
-         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __classH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
-         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__classH( Self ) ,     cVar , uidata := __cls_IncData( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
-                                                                                     __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __classH( Self ), cMeth, pFunc, HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass := __classH( Self ),     cVar , uidata := __cls_IncData( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
+                                                                                     __clsAddMsg( hClass                    , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
 
          /* These ones exist within Class(y), so we will probably try to implement it */
 

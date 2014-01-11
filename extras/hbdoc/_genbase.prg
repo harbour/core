@@ -84,13 +84,13 @@ ENDCLASS
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+   ::New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
 
    RETURN self
 
 METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   ::New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
 
    RETURN self
 

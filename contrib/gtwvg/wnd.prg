@@ -904,7 +904,7 @@ METHOD WvgWindow:wheel( xParam )
 
 METHOD WvgWindow:close( xParam )
 
-   if ::objType == objTypeCrt
+   IF ::objType == objTypeCrt
       IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_close )
          Eval( ::sl_close, NIL, NIL, Self )
          RETURN Self
@@ -948,7 +948,7 @@ METHOD WvgWindow:keyboard( xParam )
 
 METHOD WvgWindow:killDisplayFocus( xParam )
 
-   if ::objType == objTypeCrt
+   IF ::objType == objTypeCrt
       IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_killDisplayFocus )
          Eval( ::sl_killDisplayFocus, NIL, NIL, Self )
          RETURN Self
@@ -1034,7 +1034,7 @@ METHOD WvgWindow:resize( xParam, xParam1 )
 
 METHOD WvgWindow:setDisplayFocus( xParam )
 
-   if ::objType == objTypeCrt
+   IF ::objType == objTypeCrt
       IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::setDisplayFocus )
          Eval( ::setDisplayFocus, NIL, NIL, Self )
          RETURN Self

@@ -65,6 +65,7 @@ DYNAMIC tip_TimeStamp
 DYNAMIC tip_URLDecode
 DYNAMIC tip_URLEncode
 DYNAMIC TUrl
+DYNAMIC __tip_FAttrToUmask
 DYNAMIC __tip_PStrCompI
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTIP__REQUEST )

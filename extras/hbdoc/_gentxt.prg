@@ -129,8 +129,8 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
 
    LOCAL idx
 
-   IF self:IsIndex()
-      self:AddIndex( oEntry )
+   IF ::IsIndex()
+      ::AddIndex( oEntry )
    ELSE
       FOR idx := 1 TO Len( oEntry:Fields )
          IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0

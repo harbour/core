@@ -81,7 +81,7 @@ PROCEDURE Main( ... )
    IF oRef:nErr > 0
       OutStd( hb_StrFormat( iif( oRef:nLineErr == 0, ;
          I_( "Initialization error %1$d in parameter: %2$s" ), ;
-         I_( "Initialization error %1$d on line %3%d: %2$s" ) ), oRef:nErr, oRef:cLineErr, oRef:nLineErr ) + hb_eol() )
+         I_( "Initialization error %1$d on line %3$d: %2$s" ) ), oRef:nErr, oRef:cLineErr, oRef:nLineErr ) + hb_eol() )
    ENDIF
 
    oRef:bCallBack := {| a, i | FCallBack( a, i ) }

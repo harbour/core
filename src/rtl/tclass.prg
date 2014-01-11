@@ -214,7 +214,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    LOCAL ahSuper := {}
 
 #if 0
-   Self:Class := MetaClass
+   ::Class := MetaClass
 #endif
 
    FOR EACH n IN ::asSuper

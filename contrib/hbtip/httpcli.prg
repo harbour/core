@@ -379,7 +379,6 @@ METHOD ReadAll() CLASS TIPClientHTTP
 METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
    // docs from https://www.ietf.org/rfc/rfc2109.txt
-   LOCAL aParam
    LOCAL cHost, cPath, cName, cValue, aElements
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x
@@ -390,11 +389,10 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
    // this function currently ignores expires, secure and other tags that may be in the cookie for now...
    //   ? "Setting COOKIE:", cLine
-   aParam := hb_regexSplit( ";", cLine )
    cName := cValue := ""
    cHost := cDefaultHost
    cPath := cDefaultPath
-   FOR EACH x IN aParam
+   FOR EACH x IN hb_regexSplit( ";", cLine )
       IF Len( aElements := hb_regexSplit( "=", x, 1 ) ) == 2
          IF x:__enumIsFirst()
             cName := AllTrim( aElements[ 1 ] )
@@ -431,7 +429,7 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
 METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
-   LOCAL x, aDomKeys := {}, aKeys, z, cKey, aPathKeys, nPath
+   LOCAL x, aDomKeys := {}, z, cKey, aPathKeys, nPath
    LOCAL a, cOut := "", c
 
    hb_default( @cHost, ::oUrl:cServer )
@@ -447,10 +445,9 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
    ENDIF
 
    // tail matching the domain
-   aKeys := hb_HKeys( ::hCookies )
    z := Len( cHost )
    cHost := Upper( cHost )
-   FOR EACH x IN aKeys
+   FOR EACH x IN hb_HKeys( ::hCookies )
       IF Upper( Right( x, z ) ) == cHost .AND. ( Len( x ) == z .OR. SubStr( x, -z, 1 ) == "." )
          AAdd( aDomKeys, x )
       ENDIF
@@ -460,17 +457,15 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
    // now that we have the domain matches we have to do path matchine
    nPath := Len( cPath )
    FOR EACH x IN aDomKeys
-      aKeys := hb_HKeys( ::hCookies[ x ] )
       aPathKeys := {}
-      FOR EACH cKey IN aKeys
+      FOR EACH cKey IN hb_HKeys( ::hCookies[ x ] )
          IF cKey == "/" .OR. ( Len( cKey ) <= nPath .AND. Left( cKey, nPath ) == cKey )
             AAdd( aPathKeys, cKey )
          ENDIF
       NEXT
       ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
       FOR EACH a IN aPathKeys
-         aKeys := hb_HKeys( ::hCookies[ x ][ a ] )
-         FOR EACH c IN aKeys
+         FOR EACH c IN hb_HKeys( ::hCookies[ x ][ a ] )
             IF ! Empty( cOut )
                cOut += "; "
             ENDIF
@@ -562,7 +557,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
       // hope this is not a big file....
       nFile := FOpen( cFile )
       /* TOFIX: Error checking on nFile. [vszakats] */
-      nbuf := 8192
+      nBuf := 8192
       nRead := nBuf
       // cBuf := Space( nBuf )
       DO WHILE nRead == nBuf

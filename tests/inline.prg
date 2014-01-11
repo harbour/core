@@ -27,7 +27,7 @@ STATIC FUNCTION TForm()
       s_oClass:AddData( "nRight" )
 
       s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      s_oClass:AddInline( "Show", {| self | QOut( self:cText ) } )
+      s_oClass:AddInline( "Show", {| self | QOut( ::cText ) } )
 
       s_oClass:Create()                     // builds this class
    ENDIF

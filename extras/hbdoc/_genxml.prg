@@ -118,8 +118,8 @@ METHOD AddEntry( oEntry ) CLASS GenerateXML
 
    LOCAL idx
 
-   IF self:IsIndex()
-      self:AddIndex( oEntry )
+   IF ::IsIndex()
+      ::AddIndex( oEntry )
    ELSE
       FWrite( ::nHandle, '<Entry>' + hb_eol() )
       ::Depth++

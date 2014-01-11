@@ -1582,7 +1582,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
          IF ! Lower( SubStr( cName, 2 ) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
          ENDIF
-         RETURN Self:parent
+         RETURN ::parent
       ENDIF
       RETURN ::error( "Invalid HTML tag", ::className(), "+", EG_ARG, { cName } )
    ENDIF
@@ -1627,7 +1627,7 @@ METHOD popNode( cName ) CLASS THtmlNode
       ENDIF
    ENDIF
 
-   RETURN Self:parent
+   RETURN ::parent
 
 // Generic parsing function
 

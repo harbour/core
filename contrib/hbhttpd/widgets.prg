@@ -34,14 +34,14 @@ METHOD Paint() CLASS UWMain
    UWrite( '<meta http-equiv="content-type" content="text/html; charset=UTF-8">' )
    UWrite( '<script language="javascript" src="/files/main.js"></script>' )
    UWrite( '<body>' )
-   AEval( Self:aChilds, {| x | x:Paint() } )
+   AEval( ::aChilds, {| x | x:Paint() } )
    UWrite( '</body></html>' )
 
    RETURN Self
 
 METHOD Add( oWidget ) CLASS UWMain
 
-   AAdd( Self:aChilds, oWidget )
+   AAdd( ::aChilds, oWidget )
 
    RETURN Self
 
@@ -67,7 +67,7 @@ METHOD Paint() CLASS UWLayoutGrid
    LOCAL aRow, aCell
 
    UWrite( '<table>' )
-   FOR EACH aRow IN Self:aChilds
+   FOR EACH aRow IN ::aChilds
       UWrite( '<tr>' )
       FOR EACH aCell IN aRow
          UWrite( '<td>' )
@@ -84,21 +84,21 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
 
    LOCAL nI, nJ, aI
 
-   IF nRow > Len( Self:aChilds )
-      FOR nI := Len( Self:aChilds ) + 1 TO nRow
-         aI := Array( Len( Self:aChilds[ 1 ] ) )
-         FOR nJ := 1 TO Len( Self:aChilds[ 1 ] )
+   IF nRow > Len( ::aChilds )
+      FOR nI := Len( ::aChilds ) + 1 TO nRow
+         aI := Array( Len( ::aChilds[ 1 ] ) )
+         FOR nJ := 1 TO Len( ::aChilds[ 1 ] )
             aI[ nJ ] := {}
          NEXT
-         AAdd( Self:aChilds, aI )
+         AAdd( ::aChilds, aI )
       NEXT
    ENDIF
-   IF nCol > Len( Self:aChilds[ 1 ] )
-      FOR nI := Len( Self:aChilds[ 1 ] ) + 1 TO nCol
-         AEval( Self:aChilds, {| x | AAdd( x, {} ) } )
+   IF nCol > Len( ::aChilds[ 1 ] )
+      FOR nI := Len( ::aChilds[ 1 ] ) + 1 TO nCol
+         AEval( ::aChilds, {| x | AAdd( x, {} ) } )
       NEXT
    ENDIF
-   AAdd( Self:aChilds[ nRow, nCol ], oWidget )
+   AAdd( ::aChilds[ nRow, nCol ], oWidget )
 
    RETURN Self
 
@@ -122,7 +122,7 @@ FUNCTION UWHtmlNew( cText )
 
 METHOD Paint() CLASS UWHtml
 
-   UWrite( Self:cText )
+   UWrite( ::cText )
 
    RETURN Self
 
@@ -150,9 +150,9 @@ FUNCTION UWLabelNew( cText, cID, cStyle )
 
 METHOD Paint() CLASS UWLabel
 
-   UWrite( '<div' + iif( Self:cID != NIL, ' id="' + Self:cID + '"', "" ) + ;
-      iif( Self:cStyle != NIL, ' style="' + Self:cStyle + '"', "" ) + '>' + ;
-      UHtmlEncode( Self:cText ) + '</span>' )
+   UWrite( '<div' + iif( ::cID != NIL, ' id="' + ::cID + '"', "" ) + ;
+      iif( ::cStyle != NIL, ' style="' + ::cStyle + '"', "" ) + '>' + ;
+      UHtmlEncode( ::cText ) + '</span>' )
 
    RETURN Self
 
@@ -179,14 +179,14 @@ FUNCTION UWFormNew( cAction )
 
 METHOD Add( oWidget ) CLASS UWForm
 
-   AAdd( Self:aChilds, oWidget )
+   AAdd( ::aChilds, oWidget )
 
    RETURN Self
 
 METHOD Paint() CLASS UWForm
 
-   UWrite( '<form action="' + Self:cAction + '" method="' + Self:cMethod + '">' )
-   AEval( Self:aChilds, {| x | x:Paint() } )
+   UWrite( '<form action="' + ::cAction + '" method="' + ::cMethod + '">' )
+   AEval( ::aChilds, {| x | x:Paint() } )
    UWrite( '</form>' )
 
    RETURN Self
@@ -217,8 +217,8 @@ FUNCTION UWInputNew( cName, cValue, cID, cStyle )
 
 METHOD Paint() CLASS UWInput
 
-   UWrite( '<input type="text" name="' + iif( Self:cName != NIL, Self:cName, "" ) + ;
-      '" value="' + iif( Self:cValue != NIL, UHtmlEncode( Self:cValue ), "" ) + '">' )
+   UWrite( '<input type="text" name="' + iif( ::cName != NIL, ::cName, "" ) + ;
+      '" value="' + iif( ::cValue != NIL, UHtmlEncode( ::cValue ), "" ) + '">' )
 
    RETURN Self
 
@@ -243,8 +243,8 @@ FUNCTION UWPasswordNew( cName )
 
 METHOD Paint() CLASS UWPassword
 
-   UWrite( '<input type="password" name="' + iif( Self:cName != NIL, Self:cName, "" ) + ;
-      '" value="' + iif( Self:cValue != NIL, Self:cValue, "" ) + '">' )
+   UWrite( '<input type="password" name="' + iif( ::cName != NIL, ::cName, "" ) + ;
+      '" value="' + iif( ::cValue != NIL, ::cValue, "" ) + '">' )
 
    RETURN Self
 
@@ -270,8 +270,8 @@ FUNCTION UWSubmitNew( cName, cValue )
 
 METHOD Paint() CLASS UWSubmit
 
-   UWrite( '<input type="submit" name="' + iif( Self:cName != NIL, Self:cName, "" ) + ;
-      '" value="' + iif( Self:cValue != NIL, UHtmlEncode( Self:cValue ), "" ) + '">' )
+   UWrite( '<input type="submit" name="' + iif( ::cName != NIL, ::cName, "" ) + ;
+      '" value="' + iif( ::cValue != NIL, UHtmlEncode( ::cValue ), "" ) + '">' )
 
    RETURN Self
 
@@ -314,7 +314,7 @@ FUNCTION UWMenuNew()
 
 METHOD AddItem( cTitle, cLink ) CLASS UWMenu
 
-   AAdd( Self:aItems, { cTitle, cLink } )
+   AAdd( ::aItems, { cTitle, cLink } )
 
    RETURN Self
 
@@ -323,11 +323,11 @@ METHOD Paint() CLASS UWMenu
    LOCAL nI
 
    UWrite( '<div>' )
-   FOR nI := 1 TO Len( Self:aItems )
+   FOR nI := 1 TO Len( ::aItems )
       IF nI != 1
          UWrite( '&nbsp;|&nbsp;' )
       ENDIF
-      UWrite( '<a href="' + Self:aItems[ nI, 2 ] + '">' + UHtmlEncode( Self:aItems[ nI, 1 ] ) + '</a>' )
+      UWrite( '<a href="' + ::aItems[ nI, 2 ] + '">' + UHtmlEncode( ::aItems[ nI, 1 ] ) + '</a>' )
    NEXT
    UWrite( '</div>' )
 
@@ -351,7 +351,7 @@ FUNCTION UWBrowseNew()
 
 METHOD AddColumn( nID, cTitle, cField, lRaw ) CLASS UWBrowse
 
-   AAdd( Self:aColumns, { nID, cTitle, cField, ! Empty( lRaw ) } )
+   AAdd( ::aColumns, { nID, cTitle, cField, ! Empty( lRaw ) } )
 
    RETURN Self
 
@@ -363,21 +363,21 @@ METHOD Output() CLASS UWBrowse
 
    // Header
    cRet += '<tr>'
-   FOR nI := 1 TO Len( Self:aColumns )
-      cRet += '<th>' + UHtmlEncode( Self:aColumns[ nI, 2 ] ) + '</th>'
+   FOR nI := 1 TO Len( ::aColumns )
+      cRet += '<th>' + UHtmlEncode( ::aColumns[ nI, 2 ] ) + '</th>'
    NEXT
    cRet += '</tr>'
 
    // Body
    nPos := 0
    dbGoTop()
-   IF Self:nPageSize > 0 .AND. Self:nPos > 0
-      dbSkip( Self:nPos )
+   IF ::nPageSize > 0 .AND. ::nPos > 0
+      dbSkip( ::nPos )
    ENDIF
    DO WHILE ! Eof()
       cRet += '<tr>'
-      FOR nI := 1 TO Len( Self:aColumns )
-         xField := Self:aColumns[ nI, 3 ]
+      FOR nI := 1 TO Len( ::aColumns )
+         xField := ::aColumns[ nI, 3 ]
          IF HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
          ELSEIF HB_ISEVALITEM( xField )
@@ -389,19 +389,19 @@ METHOD Output() CLASS UWBrowse
          CASE "D"  ; xI := DToC( xI ); EXIT
          OTHERWISE ; xI := "ValType()==" + ValType( xI )
          ENDSWITCH
-         IF ! Self:aColumns[ nI, 4 ]
+         IF ! ::aColumns[ nI, 4 ]
             xI := UHtmlEncode( xI )
          ENDIF
          cRet += '<td><nobr>' + xI + '</nobr></td>'
       NEXT
       cRet += '</tr>'
       dbSkip()
-      IF ++nPos >= Self:nPageSize
+      IF ++nPos >= ::nPageSize
          EXIT
       ENDIF
    ENDDO
    cRet += '</table>'
-   IF ! Eof() .OR. Self:nPos > 0
+   IF ! Eof() .OR. ::nPos > 0
       cUrl := server[ "REQUEST_URI" ]
       IF ( nI := At( "?_ucs=", cUrl ) ) == 0
          nI := At( "&_ucs=", cUrl )
@@ -418,11 +418,11 @@ METHOD Output() CLASS UWBrowse
       cUrl += iif( "?" $ cUrl, "&", "?" ) + "_pos="
       cRet := '<br />' + cRet
       IF ! Eof()
-         cI := cUrl + hb_ntos( Self:nPos + Self:nPageSize )
+         cI := cUrl + hb_ntos( ::nPos + ::nPageSize )
          cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&gt;&gt;</a>' + cRet
       ENDIF
-      IF Self:nPos > 0
-         cI := cUrl + hb_ntos( Max( 0, Self:nPos - Self:nPageSize ) )
+      IF ::nPos > 0
+         cI := cUrl + hb_ntos( Max( 0, ::nPos - ::nPageSize ) )
          cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&lt;&lt;</a>&nbsp;&nbsp;' + cRet
       ENDIF
    ENDIF
@@ -446,7 +446,7 @@ FUNCTION UWOptionNew()
 
 METHOD Add( cTitle, cCode, lRaw ) CLASS UWOption
 
-   AAdd( Self:aOption, { iif( ! Empty( lRaw ), cTitle, UHtmlEncode( cTitle ) ), cCode } )
+   AAdd( ::aOption, { iif( ! Empty( lRaw ), cTitle, UHtmlEncode( cTitle ) ), cCode } )
 
    RETURN Self
 
@@ -454,7 +454,7 @@ METHOD Output() CLASS UWOption
 
    LOCAL cRet := ""
 
-   AEval( Self:aOption, {| X | cRet += hb_StrFormat( '<option value="%s"%s>%s</option>', UHtmlEncode( X[ 2 ] ), iif( X[ 2 ] == Self:cValue, " selected", "" ), X[ 1 ] ) } )
+   AEval( ::aOption, {| X | cRet += hb_StrFormat( '<option value="%s"%s>%s</option>', UHtmlEncode( X[ 2 ] ), iif( X[ 2 ] == ::cValue, " selected", "" ), X[ 1 ] ) } )
 
    RETURN cRet
 

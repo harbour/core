@@ -99,14 +99,14 @@ END CLASS
 
 METHOD init( type ) CLASS myClass
 
-   ? "Hi, I'm INIT method of class:", self:classname()
+   ? "Hi, I'm INIT method of class:", ::classname()
    ::type := type
 
    RETURN self
 
 PROCEDURE dtor() CLASS myClass
 
-   ? "   Hi, I'm desturctor of class:", self:classname()
+   ? "   Hi, I'm desturctor of class:", ::classname()
 
    DO CASE
    CASE ::type == 1

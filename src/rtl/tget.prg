@@ -587,8 +587,8 @@ METHOD overStrike( cChar ) CLASS Get
                ::pos := 1
             ENDIF
 
-            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-               ++::nPos
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit .AND. ! ::typeOut
+               ::pos++
             ENDDO
 
             IF ::nPos > ::nMaxEdit
@@ -643,8 +643,8 @@ METHOD insert( cChar ) CLASS Get
                ::pos := 1
             ENDIF
 
-            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-               ++::nPos
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit .AND. ! ::typeOut
+               ::pos++
             ENDDO
 
             IF ::nPos > ::nMaxEdit

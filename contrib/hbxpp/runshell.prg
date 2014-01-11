@@ -84,4 +84,4 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
 #endif
    ENDIF
 
-   RETURN hb_processRun( LTrim( cProgram ), NIL, NIL, NIL, lAsync )
+   RETURN hb_processRun( LTrim( cProgram ),,,, lAsync )

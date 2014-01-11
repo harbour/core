@@ -57,6 +57,8 @@
 
 #include "hbclass.ch"
 
+#include "fileio.ch"
+
 CREATE CLASS TIPMail
 
    VAR hHeaders
@@ -70,6 +72,7 @@ CREATE CLASS TIPMail
    METHOD SetEncoder( xEncoder )
 
    METHOD FromString( cMail, cBoundary, nPos )
+   METHOD HeadersToString()
    METHOD ToString()
 
    METHOD GetFieldPart( cPart )
@@ -97,9 +100,6 @@ CREATE CLASS TIPMail
    METHOD detachFile( cPath )
    METHOD getFileName()
 
-   METHOD GetSMIME( cField )         INLINE hb_HGetDef( ::hSMIME, cField, NIL )
-   METHOD SetSMIME( cField, cValue ) INLINE ::hSMIME[ cField ] := cValue
-
    HIDDEN:
 
    VAR cBody
@@ -108,7 +108,6 @@ CREATE CLASS TIPMail
    VAR aAttachments
    VAR nAttachPos   INIT 1
    VAR cCharset
-   VAR hSMIME       INIT { => }
 
 ENDCLASS
 
@@ -124,7 +123,7 @@ METHOD New( cBody, oEncoder ) CLASS TIPMail
       ::setEncoder( oEncoder )
    ENDIF
 
-   IF cBody != NIL
+   IF HB_ISSTRING( cBody )
       ::setBody( cBody )
    ENDIF
 
@@ -230,7 +229,7 @@ METHOD Attach( oSubPart ) CLASS TIPMail
 
    IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName() == "TIPMAIL"
       // reset wrong content-type
-      IF !( "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) ) )
+      IF ! ::isMultiPart()
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
       ENDIF
 
@@ -256,68 +255,29 @@ METHOD GetAttachment() CLASS TIPMail
 
    RETURN ::aAttachments[ ::nAttachPos ]
 
-METHOD ToString() CLASS TIPMail
+METHOD HeadersToString() CLASS TIPMail
 
-   LOCAL cBoundary, cElem, i
    LOCAL cRet := ""
+   LOCAL cElem, i
 
-   // this is a multipart message; we need a boundary
-   IF Len( ::aAttachments ) > 0
-      ::hHeaders[ "Mime-Version" ] := "1.0"
-   ENDIF
-
-   IF Len( ::aAttachments ) > 0
-      // reset failing content type
-      IF !( "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) ) )
-         ::hHeaders[ "Content-Type" ] := "multipart/mixed"
-      ENDIF
-
-      // have we got it already?
-      cBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
-      IF Empty( cBoundary )
-         cBoundary := ::MakeBoundary()
-         IF ! ::SetFieldOption( "Content-Type", "Boundary", cBoundary )
-            ::hHeaders[ "Content-Type" ] := "multipart/mixed; boundary=" + '"' + cBoundary + '"'
-         ENDIF
-      ENDIF
-   ENDIF
-
-   FOR EACH i IN ::aAttachments
-      IF i:getFieldPart( "Content-Type" ) == "application/pkcs7-signature"
-         ::hSMIME[ "signature" ] := .T.
-         EXIT
+   // Begin output the fields, presenting them in a "well-known" order
+   FOR EACH cElem IN { "Return-Path", "Delivered-To" }
+      IF cElem $ ::hHeaders
+         cRet += cElem + ": " + ::hHeaders[ cElem ] + e"\r\n"
       ENDIF
    NEXT
-   IF ! Empty( ::hSMIME )
-      ::SetFieldPart( "Content-Type", "multipart/signed" )
-      ::SetFieldOption( "Content-Type", "protocol", hb_HGetDef( ::hSMIME, "protocol", "application/pkcs7-signature" ) )
-      ::SetFieldOption( "Content-Type", "micalg", hb_HGetDef( ::hSMIME, "micalg", "sha1" ) )
-   ENDIF
 
-   // Begin output the fields
-   // Presenting them in a "well-known" order
-   IF "Return-Path" $ ::hHeaders
-      cRet += "Return-Path: " + ::hHeaders[ "Return-Path" ] + e"\r\n"
-   ENDIF
-   IF "Delivered-To" $ ::hHeaders
-      cRet += "Delivered-To: " + ::hHeaders[ "Delivered-To" ] + e"\r\n"
-   ENDIF
    FOR EACH cElem IN ::aReceived
       cRet += "Received: " + cElem + e"\r\n"
    NEXT
-   IF "Date" $ ::hHeaders
-      cRet += "Date: " + ::hHeaders[ "Date" ] + e"\r\n"
-   ENDIF
-   IF "From" $ ::hHeaders
-      cRet += "From: " + ::hHeaders[ "From" ] + e"\r\n"
-   ENDIF
-   IF "To" $ ::hHeaders
-      cRet += "To: " + ::hHeaders[ "To" ] + e"\r\n"
-   ENDIF
-   IF "Subject" $ ::hHeaders
-      cRet += "Subject: " + ::hHeaders[ "Subject" ] + e"\r\n"
-   ENDIF
-   IF Len( ::aAttachments ) > 0
+
+   FOR EACH cElem IN { "Date", "From", "To", "Subject" }
+      IF cElem $ ::hHeaders
+         cRet += cElem + ": " + ::hHeaders[ cElem ] + e"\r\n"
+      ENDIF
+   NEXT
+
+   IF ! Empty( ::aAttachments )
       cRet += "Mime-Version: " + ::hHeaders[ "Mime-Version" ] + e"\r\n"
    ENDIF
 
@@ -336,8 +296,34 @@ METHOD ToString() CLASS TIPMail
       ENDSWITCH
    NEXT
 
-   // end of Header
-   cRet += e"\r\n"
+   RETURN cRet
+
+METHOD ToString() CLASS TIPMail
+
+   LOCAL cBoundary, i
+   LOCAL cRet
+
+   // this is a multipart message; we need a boundary
+   IF ! Empty( ::aAttachments )
+      ::hHeaders[ "Mime-Version" ] := "1.0"
+
+      // reset failing content type
+      IF ! ::isMultiPart()
+         ::hHeaders[ "Content-Type" ] := "multipart/mixed"
+      ENDIF
+
+      // have we got it already?
+      cBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
+      IF Empty( cBoundary )
+         cBoundary := ::MakeBoundary()
+         IF ! ::SetFieldOption( "Content-Type", "Boundary", cBoundary )
+            ::hHeaders[ "Content-Type" ] := "multipart/mixed; boundary=" + '"' + cBoundary + '"'
+         ENDIF
+      ENDIF
+   ENDIF
+
+   // Header
+   cRet := ::HeadersToString() + e"\r\n"
 
    // Body
    IF ! Empty( ::cBody )
@@ -433,7 +419,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    ENDIF
 
    // se if we have subparts:
-   IF "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) )
+   IF ::isMultiPart()
       cSubBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
       // strip " on boundary
       IF Left( cSubBoundary, 1 ) == '"'
@@ -443,13 +429,11 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
 
    nPos := nLinePos + 2
    nBodyPos := nPos
-   nLinePos := hb_At( e"\r\n", cMail, nPos )
 
-   DO WHILE nLinePos >= nPos
+   DO WHILE ( nLinePos := hb_At( e"\r\n", cMail, nPos ) ) >= nPos
       // Avoid useless tests for empty lines
       IF nLinePos == nPos
          nPos += 2
-         nLinePos := hb_At( e"\r\n", cMail, nPos )
          LOOP
       ENDIF
 
@@ -493,8 +477,6 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
          */
          nPos := iif( ! Empty( cSubBoundary ), hb_At( "--" + cSubBoundary, cMail, nPos ), iif( ! Empty( cBoundary ), hb_At( "--" + cBoundary, cMail, nPos ), nLinePos + 2 ) )
       ENDIF
-
-      nLinePos := hb_At( e"\r\n", cMail, nPos )
    ENDDO
 
    // set our body if needed
@@ -595,8 +577,8 @@ METHOD attachFile( cFileName ) CLASS TIPMail
    LOCAL cContent := hb_MemoRead( cFileName )
    LOCAL cMimeType := tip_FileMimeType( cFileName )
    LOCAL cDelim := hb_ps()
-
    LOCAL oAttach
+   LOCAL nAttr
 
    IF Empty( cContent )
       RETURN .F.
@@ -607,9 +589,11 @@ METHOD attachFile( cFileName ) CLASS TIPMail
 
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
    oAttach:setFieldOption( "Content-Disposition", "filename", cFileName )
-
    oAttach:setFieldPart( "Content-Type", cMimeType )
    oAttach:setFieldOption( "Content-Type", "name", cFileName )
+   IF hb_FGetAttr( cFileName, @nAttr ) .AND. nAttr != 0
+      oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
+   ENDIF
 
    RETURN ::attach( oAttach )
 
@@ -658,44 +642,36 @@ METHOD getMultiParts( aParts ) CLASS TIPMail
 
 STATIC FUNCTION WordEncodeQ( cData, cCharset )
 
-   LOCAL nPos
    LOCAL c
    LOCAL cString
-   LOCAL nLineLen := 0
    LOCAL lToEncode := .F.
 
-   IF Empty( cCharset )
-      RETURN cData
+   IF ! Empty( cCharset )
+
+      /* TOFIX: Add support to handle long string. */
+
+      cString := ""
+      FOR EACH c IN cData  /* FOR EACH on byte stream */
+         IF hb_BCode( c ) > 126 .OR. ;
+            c $ '=?!"#$@[\]^`{|}~_' .OR. ;
+            hb_BCode( c ) <= 32
+            cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
+            lToEncode := .T.
+         ELSE
+            cString += c
+         ENDIF
+      NEXT
    ENDIF
 
-   /* TOFIX: Add support to handle long string. */
-
-   cString := "=?" + cCharset + "?" + "Q" + "?"
-
-   FOR nPos := 1 TO hb_BLen( cData )
-      c := hb_BSubStr( cData, nPos, 1 )
-      IF hb_BCode( c ) > 126 .OR. ;
-         c $ '=?!"#$@[\]^`{|}~_' .OR. ;
-         hb_BCode( c ) <= 32
-         cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
-         nLineLen += 3
-         lToEncode := .T.
-      ELSE
-         cString += c
-         nLineLen += 1
-      ENDIF
-   NEXT
-
-   RETURN iif( lToEncode, cString + "?=", cData )
+   RETURN iif( lToEncode, "=?" + cCharset + "?Q?" + cString + "?=", cData )
 
 FUNCTION tip_GetRawEmail( cAddress )
 
    LOCAL tmp, tmp1
 
-   IF ( tmp := At( "<", cAddress ) ) > 0
-      IF ( tmp1 := hb_At( ">", cAddress, tmp + 1 ) ) > 0
-         RETURN AllTrim( SubStr( cAddress, tmp + 1, tmp1 - tmp - 1 ) )
-      ENDIF
+   IF ( tmp := At( "<", cAddress ) ) > 0 .AND. ;
+      ( tmp1 := hb_At( ">", cAddress, tmp + 1 ) ) > 0
+      RETURN AllTrim( SubStr( cAddress, tmp + 1, tmp1 - tmp - 1 ) )
    ENDIF
 
    RETURN cAddress
@@ -704,10 +680,24 @@ FUNCTION tip_GetNameEmail( cAddress )
 
    LOCAL tmp
 
-   IF ( tmp := At( "<", cAddress ) ) > 0
-      IF hb_At( ">", cAddress, tmp + 1 ) > 0
-         RETURN RTrim( Left( cAddress, tmp - 1 ) )
-      ENDIF
+   IF ( tmp := At( "<", cAddress ) ) > 0 .AND. ;
+      hb_At( ">", cAddress, tmp + 1 ) > 0
+      RETURN RTrim( Left( cAddress, tmp - 1 ) )
    ENDIF
 
    RETURN cAddress
+
+FUNCTION __tip_FAttrToUmask( nAttr )
+   RETURN hb_bitOr( ;
+      Min( hb_bitAnd( nAttr, HB_FA_SUID ), 1 ) * 0x4000, ;
+      Min( hb_bitAnd( nAttr, HB_FA_SGID ), 1 ) * 0x2000, ;
+      Min( hb_bitAnd( nAttr, HB_FA_SVTX ), 1 ) * 0x1000, ;
+      Min( hb_bitAnd( nAttr, HB_FA_RUSR ), 1 ) * 0x0400, ;
+      Min( hb_bitAnd( nAttr, HB_FA_WUSR ), 1 ) * 0x0200, ;
+      Min( hb_bitAnd( nAttr, HB_FA_XUSR ), 1 ) * 0x0100, ;
+      Min( hb_bitAnd( nAttr, HB_FA_RGRP ), 1 ) * 0x0040, ;
+      Min( hb_bitAnd( nAttr, HB_FA_WGRP ), 1 ) * 0x0020, ;
+      Min( hb_bitAnd( nAttr, HB_FA_XGRP ), 1 ) * 0x0010, ;
+      Min( hb_bitAnd( nAttr, HB_FA_ROTH ), 1 ) * 0x0004, ;
+      Min( hb_bitAnd( nAttr, HB_FA_WOTH ), 1 ) * 0x0002, ;
+      Min( hb_bitAnd( nAttr, HB_FA_XOTH ), 1 ) * 0x0001 )

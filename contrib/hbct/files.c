@@ -2,7 +2,7 @@
  * Harbour Project source code:
  *   CT3 files functions
  *
- * SetFattr()
+ * SetFAttr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *
  * SetFDaTi(), FileSMax(), FileDelete()

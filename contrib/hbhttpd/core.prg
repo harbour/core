@@ -73,11 +73,11 @@ METHOD Run( hConfig ) CLASS UHttpd
    LOCAL hSocket, nI, aI, xValue, aThreads, nJobs, nWorkers
 
    IF ! hb_mtvm()
-      Self:cError := "Multithread support required"
+      ::cError := "Multithread support required"
       RETURN .F.
    ENDIF
 
-   Self:hConfig := { ;
+   ::hConfig := { ;
       "SSL"                  => .F., ;
       "Port"                 => 80, ;
       "BindAddress"          => "0.0.0.0", ;
@@ -91,67 +91,67 @@ METHOD Run( hConfig ) CLASS UHttpd
       "FirewallFilter"       => "0.0.0.0/0" }
 
    FOR EACH xValue IN hConfig
-      IF !( xValue:__enumKey $ Self:hConfig ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
-         Self:cError := "Invalid config option '" + xValue:__enumKey + "'"
+      IF !( xValue:__enumKey $ ::hConfig ) .OR. !( ValType( xValue ) == ValType( ::hConfig[ xValue:__enumKey ] ) )
+         ::cError := "Invalid config option '" + xValue:__enumKey + "'"
          RETURN .F.
       ENDIF
-      Self:hConfig[ xValue:__enumKey ] := xValue
+      ::hConfig[ xValue:__enumKey ] := xValue
    NEXT
 
 
-   IF Self:hConfig[ "SSL" ]
-      IF Self:lHasSSL
+   IF ::hConfig[ "SSL" ]
+      IF ::lHasSSL
          SSL_init()
          DO WHILE RAND_status() != 1
             RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_MilliSeconds(), 20 ), 1 )
          ENDDO
 
-         Self:hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
-         SSL_CTX_set_options( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
-         IF SSL_CTX_use_PrivateKey_file( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid private key file"
+         ::hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
+         SSL_CTX_set_options( ::hSSLCtx, HB_SSL_OP_NO_TLSv1 )
+         IF SSL_CTX_use_PrivateKey_file( ::hSSLCtx, ::hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid private key file"
             RETURN .F.
          ENDIF
-         IF SSL_CTX_use_certificate_file( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid certificate file"
+         IF SSL_CTX_use_certificate_file( ::hSSLCtx, ::hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid certificate file"
             RETURN .F.
          ENDIF
       ELSE
-         Self:cError := "SSL not supported"
+         ::cError := "SSL not supported"
          RETURN .F.
       ENDIF
    ENDIF
 
-   IF Self:hConfig[ "Port" ] < 1 .OR. Self:hConfig[ "Port" ] > 65535
-      Self:cError := "Invalid port number"
+   IF ::hConfig[ "Port" ] < 1 .OR. ::hConfig[ "Port" ] > 65535
+      ::cError := "Invalid port number"
       RETURN .F.
    ENDIF
 
-   IF ParseFirewallFilter( Self:hConfig[ "FirewallFilter" ], @aI )
-      Self:aFirewallFilter := aI
+   IF ParseFirewallFilter( ::hConfig[ "FirewallFilter" ], @aI )
+      ::aFirewallFilter := aI
    ELSE
-      Self:cError := "Invalid firewall filter"
+      ::cError := "Invalid firewall filter"
       RETURN .F.
    ENDIF
 
-   Self:hmtxQueue   := hb_mutexCreate()
-   Self:hmtxLog     := hb_mutexCreate()
-   Self:hmtxSession := hb_mutexCreate()
+   ::hmtxQueue   := hb_mutexCreate()
+   ::hmtxLog     := hb_mutexCreate()
+   ::hmtxSession := hb_mutexCreate()
 
-   IF Empty( Self:hListen := hb_socketOpen() )
-      Self:cError := "Socket create error: " + hb_socketErrorString()
+   IF Empty( ::hListen := hb_socketOpen() )
+      ::cError := "Socket create error: " + hb_socketErrorString()
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketBind( Self:hListen, { HB_SOCKET_AF_INET, Self:hConfig[ "BindAddress" ], Self:hConfig[ "Port" ] } )
-      Self:cError := "Bind error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketBind( ::hListen, { HB_SOCKET_AF_INET, ::hConfig[ "BindAddress" ], ::hConfig[ "Port" ] } )
+      ::cError := "Bind error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketListen( Self:hListen )
-      Self:cError := "Listen error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketListen( ::hListen )
+      ::cError := "Listen error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
@@ -160,49 +160,49 @@ METHOD Run( hConfig ) CLASS UHttpd
       AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
    NEXT
 
-   Self:lStop := .F.
-   Self:hSession := { => }
+   ::lStop := .F.
+   ::hSession := { => }
 
    DO WHILE .T.
-      IF Empty( hSocket := hb_socketAccept( Self:hListen,, 1000 ) )
+      IF Empty( hSocket := hb_socketAccept( ::hListen,, 1000 ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-            Eval( Self:hConfig[ "Idle" ], Self )
-            IF Self:lStop
+            Eval( ::hConfig[ "Idle" ], Self )
+            IF ::lStop
                EXIT
             ENDIF
          ELSE
-            Self:LogError( "[error] Accept error: " + hb_socketErrorString() )
+            ::LogError( "[error] Accept error: " + hb_socketErrorString() )
          ENDIF
       ELSE
-         Eval( Self:hConfig[ "Trace" ], "New connection", hSocket )
-         IF hb_mutexQueueInfo( Self:hmtxQueue, @nWorkers, @nJobs ) .AND. ;
+         Eval( ::hConfig[ "Trace" ], "New connection", hSocket )
+         IF hb_mutexQueueInfo( ::hmtxQueue, @nWorkers, @nJobs ) .AND. ;
                Len( aThreads ) < THREAD_COUNT_MAX .AND. ;
                nJobs >= nWorkers
             AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
          ENDIF
-         hb_mutexNotify( Self:hmtxQueue, hSocket )
+         hb_mutexNotify( ::hmtxQueue, hSocket )
       ENDIF
    ENDDO
-   hb_socketClose( Self:hListen )
+   hb_socketClose( ::hListen )
 
    /* End child threads */
-   AEval( aThreads, {|| hb_mutexNotify( Self:hmtxQueue, NIL ) } )
+   AEval( aThreads, {|| hb_mutexNotify( ::hmtxQueue, NIL ) } )
    AEval( aThreads, {| h | hb_threadJoin( h ) } )
 
    RETURN .T.
 
 METHOD Stop() CLASS UHttpd
 
-   Eval( Self:hConfig[ "Trace" ], "stopping" )
-   Self:lStop := .T.
+   Eval( ::hConfig[ "Trace" ], "stopping" )
+   ::lStop := .T.
 
    RETURN NIL
 
 METHOD LogError( cError ) CLASS UHttpd
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -210,15 +210,15 @@ METHOD LogAccess() CLASS UHttpd
 
    LOCAL cDate := DToS( Date() ), cTime := Time()
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogAccess" ], ;
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogAccess" ], ;
       server[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
       "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
       ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -1564,10 +1564,10 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                CASE HB_ISTIMESTAMP( xValue ) ; cRet += UHtmlEncode( hb_TToC( xValue ) )
                CASE HB_ISOBJECT( xValue )    ; cRet += UHtmlEncode( xValue:Output() )
                OTHERWISE
-                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
+                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%1$s'", ValType( xValue ) ) )
                ENDCASE
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
@@ -1586,10 +1586,10 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                CASE HB_ISOBJECT( xValue )
                   cRet += xValue:Output()
                OTHERWISE
-                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
+                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%1$s'", ValType( xValue ) ) )
                ENDCASE
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
@@ -1612,7 +1612,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                   aData2 := NIL
                NEXT
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: loop variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: loop variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
@@ -1648,11 +1648,11 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
             Break( nPos )
          ENDIF
       RECOVER USING nPos
-         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %s(%d,%d)", cFileName, SubStrCount( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
+         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %1$s(%2$d,%3$d)", cFileName, SubStrCount( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
          aCode := {}
       END SEQUENCE
    ELSE
-      Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: file '%s' not found", cFileName ) )
+      Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: file '%1$s' not found", cFileName ) )
    ENDIF
 
    RETURN aCode

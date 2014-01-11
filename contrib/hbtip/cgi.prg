@@ -415,8 +415,9 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
 STATIC FUNCTION HtmlScript( hVal, cKey )
 
-   LOCAL hTmp
    LOCAL cRet := ""
+
+   LOCAL hTmp
    LOCAL cVal
    LOCAL cTmp
 

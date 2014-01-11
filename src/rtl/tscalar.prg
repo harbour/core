@@ -82,7 +82,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN hb_ntos( Self )
-   CASE "S" ; RETURN "@" + Self:name + "()"
+   CASE "S" ; RETURN "@" + ::name + "()"
    CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
    ENDSWITCH
@@ -392,7 +392,7 @@ CREATE CLASS Symbol INHERIT HBScalar FUNCTION __HBSymbol
 ENDCLASS
 
 METHOD AsString() CLASS Symbol
-   RETURN "@" + Self:name + "()"
+   RETURN "@" + ::name + "()"
 
 /* -------------------------------------------- */
 

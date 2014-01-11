@@ -133,11 +133,11 @@ ENDCLASS
 METHOD New( cType ) CLASS Entry
 
    ::uid_ := hb_ntos( ++::uid__ )
-   IF ! __objHasData( self, self:Fields[ 1 ][ 1 ] )
-      AEval( self:Fields, {| a | __objAddData( self, a[ 1 ] ) } )
+   IF ! __objHasData( self, ::Fields[ 1 ][ 1 ] )
+      AEval( ::Fields, {| a | __objAddData( self, a[ 1 ] ) } )
    ENDIF
    IF cType != NIL
-      self:Group := self:Templates[ AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) ][ 2 ]
+      ::Group := ::Templates[ AScan( ::Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) ][ 2 ]
    ENDIF
 
    RETURN self
@@ -147,10 +147,10 @@ METHOD IsField( c, nType ) CLASS Entry
    LOCAL idx
    LOCAL lResult
 
-   IF ( lResult := ( idx := AScan( self:Fields, {| a | Upper( a[ 1 ] ) == Upper( c ) } ) ) > 0 )
-      IF self:Group[ idx ] == 0
+   IF ( lResult := ( idx := AScan( ::Fields, {| a | Upper( a[ 1 ] ) == Upper( c ) } ) ) > 0 )
+      IF ::Group[ idx ] == 0
          lResult := .F.
-      ELSEIF nType != NIL .AND. hb_bitAnd( self:Group[ idx ], nType ) != nType
+      ELSEIF nType != NIL .AND. hb_bitAnd( ::Group[ idx ], nType ) != nType
          lResult := .F.
       ENDIF
    ENDIF
@@ -158,19 +158,19 @@ METHOD IsField( c, nType ) CLASS Entry
    RETURN lResult
 
 METHOD IsTemplate( cType ) CLASS Entry
-   RETURN AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) > 0
+   RETURN AScan( ::Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) > 0
 
 METHOD SetTemplate( cTemplate ) CLASS Entry
 
-   LOCAL aData := Array( Len( self:Fields ) )
+   LOCAL aData := Array( Len( ::Fields ) )
    LOCAL idx
 
-   self:Group := self:Templates[ AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } ) ][ 2 ]
+   ::Group := ::Templates[ AScan( ::Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } ) ][ 2 ]
    FOR idx := 1 TO Len( aData )
-      IF self:Fields[ idx ][ 1 ] == "TEMPLATE"
-         aData[ idx ] := { self:Fields[ idx ][ 1 ], cTemplate }
+      IF ::Fields[ idx ][ 1 ] == "TEMPLATE"
+         aData[ idx ] := { ::Fields[ idx ][ 1 ], cTemplate }
       ELSE
-         aData[ idx ] := { self:Fields[ idx ][ 1 ], iif( self:Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
+         aData[ idx ] := { ::Fields[ idx ][ 1 ], iif( ::Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
       ENDIF
    NEXT
    __objSetValueList( self, aData )
@@ -180,9 +180,9 @@ METHOD SetTemplate( cTemplate ) CLASS Entry
 METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
 
    LOCAL lResult
-   LOCAL idx := AScan( self:Fields, {| a | a[ 1 ] == cSectionName } )
+   LOCAL idx := AScan( ::Fields, {| a | a[ 1 ] == cSectionName } )
 
-   IF hb_bitAnd( self:Group[ idx ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
+   IF hb_bitAnd( ::Group[ idx ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
       lResult := .T.
    ELSEIF Type( "p_a" + cSectionName ) == "A"
       lResult := ;
@@ -201,9 +201,9 @@ METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
 
    cIncompleteFielsList := ""
 
-   FOR idx := 1 TO Len( self:Fields )
-      IF hb_bitAnd( self:Group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( self:&( self:Fields[ idx ][ 1 ] ) )
-         cIncompleteFielsList += "," + self:Fields[ idx ][ 1 ]
+   FOR idx := 1 TO Len( ::Fields )
+      IF hb_bitAnd( ::Group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( ::&( ::Fields[ idx ][ 1 ] ) )
+         cIncompleteFielsList += "," + ::Fields[ idx ][ 1 ]
          lResult := .F.
       ENDIF
    NEXT
@@ -213,19 +213,19 @@ METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
    RETURN lResult
 
 METHOD IsPreformatted( cField ) CLASS Entry
-   RETURN hb_bitAnd( self:Group[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_PREFORMATTED ) != 0
+   RETURN hb_bitAnd( ::Group[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ], TPL_PREFORMATTED ) != 0
 
 METHOD IsRequired( cField ) CLASS Entry
-   RETURN hb_bitAnd( self:Group[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_REQUIRED ) != 0
+   RETURN hb_bitAnd( ::Group[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ], TPL_REQUIRED ) != 0
 
 METHOD IsOptional( cField ) CLASS Entry
-   RETURN hb_bitAnd( self:Group[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_OPTIONAL ) != 0
+   RETURN hb_bitAnd( ::Group[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ], TPL_OPTIONAL ) != 0
 
 METHOD IsOutput( cField ) CLASS Entry
-   RETURN hb_bitAnd( self:Group[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_OUTPUT ) != 0
+   RETURN hb_bitAnd( ::Group[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ], TPL_OUTPUT ) != 0
 
 METHOD FieldName( cField ) CLASS Entry
-   RETURN self:Fields[ AScan( self:Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
+   RETURN ::Fields[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
 
 METHOD CategoryIndex( cCategory ) CLASS Entry
    RETURN AScan( p_aCategories, {| a | HB_ISARRAY( a ) .AND. Len( a ) >= 1 .AND. a[ 1 ] == cCategory } )

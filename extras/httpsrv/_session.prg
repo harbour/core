@@ -766,14 +766,12 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
 
 STATIC FUNCTION TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
 
-   LOCAL aRetVal
+   hb_default( @dDateEnd, Date() )
+   hb_default( @cTimeEnd, Time() )
 
-   __defaultNIL( @dDateEnd, Date() )
-   __defaultNIL( @cTimeEnd, Time() )
-
-   aRetVal := ft_Elapsed( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
-
-   RETURN aRetVal[ 4, 2 ]
+   RETURN 86400 * ( ;
+      hb_SToT( DToS( dDateEnd   ) + StrTran( cTimeEnd  , ":" ) ) - ;
+      hb_SToT( DToS( dDateStart ) + StrTran( cTimeStart, ":" ) ) )
 
 // ------------------------------
 
