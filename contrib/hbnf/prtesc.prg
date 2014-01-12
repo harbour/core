@@ -21,34 +21,35 @@
 
 FUNCTION ft_EscCode( cInput )
 
-   LOCAL cOutput  := ""
+   LOCAL cOutput := ""
    LOCAL cCurrent
-   LOCAL nPointer := 1
-   LOCAL nLen     := Len( cInput )
+   LOCAL nPointer
+   LOCAL nLen := hb_BLen( cInput )
 
-   DO WHILE nPointer <= nLen
+   FOR nPointer := 1 TO nLen
 
-      cCurrent := SubStr( cInput, nPointer, 1 )
+      cCurrent := hb_BSubStr( cInput, nPointer, 1 )
 
       DO CASE
+      CASE cCurrent == "\" .AND. ;
+           IsDigit( hb_BSubStr( cInput, nPointer + 1, 1 ) ) .AND. ;
+           IsDigit( hb_BSubStr( cInput, nPointer + 2, 1 ) ) .AND. ;
+           IsDigit( hb_BSubStr( cInput, nPointer + 3, 1 ) )
+
+         cOutput  += hb_BChar( Val( hb_BSubStr( cInput, nPointer + 1, 3 ) ) )
+         nPointer += 3
 
       CASE cCurrent == "\" .AND. ;
-            IsDigit( SubStr( cInput, nPointer + 1, 1 ) ) .AND. ;
-            IsDigit( SubStr( cInput, nPointer + 2, 1 ) ) .AND. ;
-            IsDigit( SubStr( cInput, nPointer + 3, 1 ) )
-         cOutput  += Chr( Val( SubStr( cInput, nPointer + 1, 3 ) ) )
-         nPointer += 4
+           hb_BSubStr( cInput, nPointer + 1, 1 ) == "\"
 
-      CASE cCurrent == "\" .AND. ;
-            SubStr( cInput, nPointer + 1, 1 ) == "\"
          cOutput += "\"
-         nPointer += 2
-
-      OTHERWISE
-         cOutput += cCurrent
          nPointer++
 
+      OTHERWISE
+
+         cOutput += cCurrent
+
       ENDCASE
-   ENDDO
+   NEXT
 
    RETURN cOutput

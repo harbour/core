@@ -23,5 +23,4 @@
  */
 
 FUNCTION ft_Hex2Dec( cHexNum )
-
    RETURN hb_HexToNum( cHexNum )

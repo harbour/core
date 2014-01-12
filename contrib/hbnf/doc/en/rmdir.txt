@@ -24,8 +24,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      ft_RmDir( "C:\clipper" )
-      ft_RmDir( "\example" )
-      ft_RmDir( "..\source" )
+      ? ft_RmDir( "C:\harbour" )
+      ? ft_RmDir( "\example" )
+      ? ft_RmDir( "..\source" )
    $END$
  */

@@ -24,10 +24,11 @@
  *
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
+#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, HB_B_DOUBLE_UNI + " " )
 
 /*
    here's the board array -- structure of which is:
@@ -84,7 +85,7 @@ PROCEDURE ft_Pegs()
    scanblock := {| a | a[ 2 ] == move2 }
    hb_Scroll()
    SetColor( "w/r" )
-   hb_DispBox( 22, 31, 24, 48, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+   hb_DispBox( 22, 31, 24, 48, HB_B_SINGLE_UNI + " " )
    hb_DispOutAt( 23, 33, "Your move:" )
    AEval( board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( board_, x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves( board_ )
@@ -163,7 +164,7 @@ STATIC PROCEDURE DrawBox( board_, nelement )
       board_[ nelement ][ 1, 1 ], ;
       board_[ nelement ][ 1, 2 ], ;
       board_[ nelement ][ 1, 3 ], ;
-      board_[ nelement ][ 1, 4 ], hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+      board_[ nelement ][ 1, 4 ], HB_B_SINGLE_UNI + " " )
 
    hb_DispOutAt( ;
       board_[ nelement ][ 1, 1 ] + 1, ;

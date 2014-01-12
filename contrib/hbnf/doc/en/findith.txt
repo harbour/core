@@ -27,7 +27,7 @@
       // the 10th Occurrence of "the", case
       // insensitive
 
-      nNextPosition := ft_FindITh( "the", cMemoString, 10 )
+      ? ft_FindITh( "the", cMemoString, 10 )
    $SEEALSO$
       ft_At2()
    $END$

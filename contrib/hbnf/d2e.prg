@@ -19,28 +19,28 @@
  *
  */
 
-#define _LOG10( num )         ( Log( num ) / Log( 10 ) )
-#define DEFAULT_PRECISION     6
+#define _LOG10( num )   ( Log( num ) / Log( 10 ) )
 
 FUNCTION ft_D2E( nDec, nPrecision )
 
    LOCAL nExp
 
-   __defaultNIL( @nPrecision, DEFAULT_PRECISION )
+   __defaultNIL( @nPrecision, 6 )
 
-   IF nDec == 0
+   DO CASE
+   CASE nDec == 0
       nExp := 0
-   ELSEIF Abs( nDec ) < 1
+   CASE Abs( nDec ) < 1
       nExp := Int( _LOG10( nDec ) ) - 1
-   ELSE
-      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
-   ENDIF           /* for imprecise logs */
+   OTHERWISE
+      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )  /* 0.00001 == kludge for imprecise logs */
+   ENDCASE
 
    nDec /= 10 ^ nExp
 
    IF Round( Abs( nDec ), nPrecision ) >= 10
       nDec /= 10
       nExp++
-   ENDIF // another kludge FOR stuff LIKE "999999999"
+   ENDIF  /* another kludge FOR stuff LIKE "999999999" */
 
    RETURN LTrim( Str( nDec, nPrecision + 3, nPrecision ) ) + "E" + hb_ntos( nExp )

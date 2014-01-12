@@ -88,19 +88,15 @@ FUNCTION ft_NWSemEx( nHandle, nValue, nOpenCnt )
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
 FUNCTION ft_NWSemWait( nHandle, nTimeout )
-
    RETURN _ftnwsem( WAIT_SEMAPHORE, nHandle, nTimeout )
 
 FUNCTION ft_NWSemSig( nHandle )
-
    RETURN _ftnwsem( SIGNAL_SEMAPHORE, nHandle )
 
 FUNCTION ft_NWSemClose( nHandle )
-
    RETURN _ftnwsem( CLOSE_SEMAPHORE, nHandle )
 
-// -----------------------------------------------
-// _ftnwsem() - internal for the semaphore package
+// internal for the semaphore package
 
 /* TODO: rewrite in C */
 
@@ -137,5 +133,4 @@ FUNCTION ft_NWSemLock( cSemaphore, nHandle )
    RETURN nOpenCnt == 1
 
 FUNCTION ft_NWSemUnlock( nHandle )
-
    RETURN ft_NWSemClose( nHandle ) == 0

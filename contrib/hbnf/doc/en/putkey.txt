@@ -38,7 +38,7 @@
       and make any other necessary changes to the source code.
    $EXAMPLES$
       ft_PutKey( -9 )   //  Stuff the F10 key
-      ft_PutKey( 276 )  //  Stuff the Alt T key
-      KEYSTROKE 28      //  Stuff the F1 key using a User-Defined Command
+      ft_PutKey( 276 )  //  Stuff the Alt+T key
+      KEYBOARD 28       //  Stuff the F1 key using a User-Defined Command
    $END$
  */

@@ -31,15 +31,12 @@
       This function requires ft_int86().
    $EXAMPLES$
       // Create a unique file in the root of the current drive:
-
-      myFile := ft_TempFil()
+      ? ft_TempFil()
 
       // Create a unique file in the current directory and hide it:
-
-      myFile := ft_TempFil( "." + hb_ps(), .T. )
+      ? ft_TempFil( "." + hb_ps(), .T. )
 
       // Create a unique file on another drive, but do not hide it:
-
-      myFile := ft_TempFil( "E:\nanfor\src\" )
+      ? ft_TempFil( "E:\nanfor\src\" )
    $END$
  */

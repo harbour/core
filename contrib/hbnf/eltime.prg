@@ -21,20 +21,16 @@
 
 FUNCTION ft_ElTime( cTIME1, cTIME2 )
 
-   LOCAL  nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
+   LOCAL nSECS1 := ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
+                   ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + ;
+                     Val( SubStr( cTIME1, 7 ) )
+   LOCAL nSECS2 := ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
+                   ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + ;
+                     Val( SubStr( cTIME2, 7 ) )
 
-   nSECS1   := ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
-      ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + Val( SubStr( cTIME1, 7 ) )
-   nSECS2   := ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
-      ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + Val( SubStr( cTIME2, 7 ) )
-   nDELSECS := Abs( nSECS2 - nSECS1 )
-   nHRS     := Int( nDELSECS / 3600 )
-   nMINS    := Int( ( nDELSECS - nHRS * 3600 ) / 60 )
-   nSECS    := nDELSECS - ( nHRS * 3600 ) - ( nMINS * 60 )
+   LOCAL nDELSECS := Abs( nSECS2 - nSECS1 )
+   LOCAL nHRS     := Int( nDELSECS / 3600 )
+   LOCAL nMINS    := Int( ( nDELSECS - nHRS * 3600 ) / 60 )
+   LOCAL nSECS    := nDELSECS - ( nHRS * 3600 ) - ( nMINS * 60 )
 
-   RETURN ;
-      Right( "00" + hb_ntos( nHRS ), 2 ) + ;
-      ":" + ;
-      Right( "00" + hb_ntos( nMINS ), 2 ) + ;
-      ":" + ;
-      Right( "00" + hb_ntos( nSECS ), 2 )
+   RETURN StrZero( nHRS, 2 ) + ":" + StrZero( nMINS, 2 ) + ":" + StrZero( nSECS, 2 )

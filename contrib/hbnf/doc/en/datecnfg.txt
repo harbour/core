@@ -4,7 +4,7 @@
    $CATEGORY$
       Date/Time
    $ONELINER$
-      Set beginning of year/week for FT_ date functions
+      Set beginning of year/week for ft_*() date functions
    $SYNTAX$
       ft_DateCnfg( [ <cFYStart> ], [ <nDow> ] ) -> aDateInfo
    $ARGUMENTS$

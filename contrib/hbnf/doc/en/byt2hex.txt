@@ -26,9 +26,7 @@
 
       ? ft_Byt2Hex( hb_BChar( 20 ) )    // byte1: '14h'
       ? ft_Byt2Hex( hb_BChar( 36 ) )    // byte2: '24h'
-
-      ? ft_Byt2Hex( ft_ByteAnd( hb_BChar( 20 ), hb_BChar( 36 ) ) )
-      // result: '04h'
+      ? ft_Byt2Hex( ft_ByteAnd( hb_BChar( 20 ), hb_BChar( 36 ) ) )  // result: '04h'
    $SEEALSO$
       ft_Byt2Bit()
    $END$

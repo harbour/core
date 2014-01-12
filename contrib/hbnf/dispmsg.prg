@@ -22,6 +22,7 @@
  *
  */
 
+#include "box.ch"
 #include "setcurs.ch"
 
 // beginning of demo program
@@ -87,9 +88,9 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // consistent with DispBox()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
-      cnBoxString := hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+      cnBoxString := HB_B_DOUBLE_UNI + " "
    ELSEIF cnBoxString == 1
-      cnBoxString := hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+      cnBoxString := HB_B_SINGLE_UNI + " "
    ENDIF
 
    __defaultNIL( @lShadow, .T. )

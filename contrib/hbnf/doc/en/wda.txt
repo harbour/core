@@ -34,7 +34,7 @@
       // Postdate 5 working days from the first of January
       dPost := hb_SToD( "19910101" )
       dPost += ft_AddWkDy( dPost, 5 )   // returns 7 true days
-      ? dPost                           //  1991-01-08
+      ? dPost                           // 1991-01-08
    $SEEALSO$
       ft_Workdays()
    $END$

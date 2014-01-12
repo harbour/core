@@ -115,7 +115,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
 
    LOCAL cValType, nLen, cLenStr, xMemVar, cMemVar, nk
 
-   cValType := " "
+   cValType := Space( 1 )
    FRead( nHandle, @cValType, 1 )
    cLenStr := Space( 4 )
    FRead( nHandle, @cLenStr, 4 )
@@ -126,7 +126,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "A"
          xMemVar := {}
          FOR nk := 1 TO nLen
-            AAdd( xMemVar, _ftrestsub( nHandle ) )      // Recursive call
+            AAdd( xMemVar, _ftrestsub( nHandle ) )  /* Recursive call */
          NEXT
          EXIT
       CASE "C"
@@ -136,10 +136,10 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "D"
          cMemVar := Space( 8 )
          FRead( nHandle, @cMemVar, 8 )
-         xMemVar := CToD( cMemVar ) /* TOFIX: It's not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
+         xMemVar := CToD( cMemVar )  /* TOFIX: It's not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
          EXIT
       CASE "L"
-         cMemVar := " "
+         cMemVar := Space( 1 )
          FRead( nHandle, @cMemVar, 1 )
          xMemVar := ( cMemVar == "T" )
          EXIT

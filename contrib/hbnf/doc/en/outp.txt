@@ -24,7 +24,7 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      lOk := ft_outp( 0x64, 0 )  // send a hb_BChar( 0 ) to port 100 (0x64)
+      ? ft_outp( 0x64, 0 )  // send a hb_BChar( 0 ) to port 100 (0x64)
    $SEEALSO$
       ft_inp()
    $END$

@@ -43,11 +43,11 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ nHandle )
    LOCAL cFile
 
    hb_default( @cPath, "." + hb_ps() )
-   hb_default( @lHide, .F. )
 
    cPath := AllTrim( cPath )
 
-   nHandle := hb_FTempCreate( cPath, NIL, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
+   nHandle := hb_FTempCreate( cPath, NIL, ;
+      iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ), @cFile )
 
    IF PCount() <= 2
       FClose( nHandle )

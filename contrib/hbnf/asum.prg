@@ -33,9 +33,7 @@ FUNCTION ft_ASum( aArray, nStartIndex, nEndIndex )
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )
    FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 
-   AEval( aArray, ;
-      {| xElement | ;
-      nSumTotal += ;
+   AEval( aArray, {| xElement | nSumTotal += ;
       CASE_AT( ValType( xElement ), "NC", ;
       { 0, xElement, ;
       iif( HB_ISSTRING( xElement ), Len( xElement ), 0 ) } ) }, ;

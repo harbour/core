@@ -7,7 +7,7 @@
       Find the number of times one string occurs in another
    $SYNTAX$
       ft_NoOccur( <cCheckFor>, <cCheckIn> ;
-                  [, <lIgnoreCase> ] )      -> <nOccurrences>
+                  [, <lIgnoreCase> ] ) -> <nOccurrences>
    $ARGUMENTS$
       <cCheckFor> is the string to search for
 
@@ -23,12 +23,10 @@
    $EXAMPLES$
       // Find the number of times "the" appears in cMemoString, case
       // insensitive
-
-      nNoOfOccurrences := ft_NoOccur( "the", cMemoString )
+      ? ft_NoOccur( "the", cMemoString )
 
       // Find the number of times "the" appears in cMemoString, case
       // sensitive
-
-      nNoOfOccurrences := ft_NoOccur( "the", cMemoString, .T. )
+      ? ft_NoOccur( "the", cMemoString, .T. )
    $END$
  */

@@ -45,6 +45,7 @@
  *
  */
 
+#include "box.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 
@@ -53,8 +54,8 @@
 #define C_TYPE   3
 #define C_CHAR   4
 
-#translate Single( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "┌─┐│┘─└│" ) )
-#translate Double( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "╔═╗║╝═╚║" ) )
+#translate Single( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_SINGLE_UNI )
+#translate Double( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_DOUBLE_UNI )
 #translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) => hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
 
 // Color selection routine
@@ -97,9 +98,7 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
 
    // .... prepare an array for use with AChoice(); truncate names at 20 chrs.
    aPrompt := Array( Len( aClrs ) )
-   AEval( aClrs, ;
-      {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " };
-      )
+   AEval( aClrs, {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " } )
 
    // .... determine co-ordinates for the achoice window
    nT := Max( Int( ( 18 - Len( aPrompt ) ) / 2 ) - 1, 1 )

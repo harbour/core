@@ -248,7 +248,7 @@
    $ONELINER$
       Perform a semaphore "lock"
    $SYNTAX$
-      FT_NWSEMLOCK ( <cSemaphore>, <@nHandle> ) -> lRet
+      ft_NWSemLock( <cSemaphore>, <@nHandle> ) -> lRet
    $ARGUMENTS$
       <cSemaphore> is the name of a semaphore you want to "lock."
       <nHandle> is the semaphore's handle, if you get the lock.

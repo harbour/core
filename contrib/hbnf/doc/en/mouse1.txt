@@ -98,7 +98,7 @@
       This is a mouse meta function that checks for the presence
       of a double click.
    $EXAMPLES$
-      IF FT_MISREGION( 10, 10, 11, 20 ) .AND. ;
+      IF ft_MIsRegion( 10, 10, 11, 20 ) .AND. ;
          ft_MDblClk( 0, 1,, ft_MGetX(), ft_MGetY() ) // double click, right button
                                                      // at current location with
                                                      // default interval
@@ -127,10 +127,10 @@
    $DESCRIPTION$
       This function tells the mouse driver to hide the cursor if it is in
       the given region. The driver hides the cursor by decrementing the cursor
-      flag. A call to FT_MSHOWCRS is required to turn the cursor back on.
-      Calling FT_MSHOWCRS also disables this function.
+      flag. A call to ft_MShowCrs() is required to turn the cursor back on.
+      Calling ft_MShowCrs() also disables this function.
 
-      See FT_MSHOWCRS for a discussion of the cursor display flag.
+      See ft_MShowCrs() for a discussion of the cursor display flag.
    $EXAMPLES$
       ft_MCOnOff( 10, 10, 11, 20 )
    $SEEALSO$

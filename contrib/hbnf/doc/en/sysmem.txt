@@ -20,6 +20,6 @@
       to the IBM PC_ (Brady).
 
    $EXAMPLES$
-      ? "Conventional memory installed: " + hb_ntos( ft_SysMem() ) + "K"
+      ? "Conventional memory installed:", hb_ntos( ft_SysMem() ) + "K"
    $END$
  */

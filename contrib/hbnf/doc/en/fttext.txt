@@ -4,10 +4,9 @@
    $CATEGORY$
       File I/O
    $ONELINER$
-      Open or close a text file for use by the FT_F* functions
+      Open or close a text file for use by the ft_F*() functions
    $SYNTAX$
       ft_FUse( [ <cFile> ] [, <nMode> ] ) -> nHandle | 0
-
    $ARGUMENTS$
       ^b<cFile>^n is the text file you want to open.  If not specified,
       the file currently open, if any, will be closed.
@@ -17,7 +16,6 @@
       and fileio.ch for a list of allowable open modes.  If not
       specified, the file will be opened with a mode of
       FO_READ + FO_SHARED (64).
-
    $RETURNS$
       If ^b<cFile>^n is passed and the file is opened successfully, an
       integer containing the text file's workarea.  If the file cannot be
@@ -28,9 +26,8 @@
       text file in the current "text area" and return 0.
 
       If a read error occurs ^ft_FError()^n will contain the error code.
-
    $DESCRIPTION$
-      The FT_F*() file functions are for reading text files, that is,
+      The ft_F*() file functions are for reading text files, that is,
       files where each line (record) is delimited by a CRLF/LF.
 
       Each file is opened in its own "workarea", similar to the concept
@@ -38,7 +35,6 @@
       workareas) can be opened (assuming there are sufficient file
       handles available).  That number may be increased by modifying
       the #define TEXT_WORKAREAS in the C source code and recompiling.
-
    $EXAMPLES$
       #include "fileio.ch"
 
@@ -50,7 +46,6 @@
 
       // close file
       ft_FUse()
-
    $SEEALSO$
       ft_FUse() ft_FSelect()
    $END$
@@ -65,13 +60,10 @@
       Select a text file workarea
    $SYNTAX$
       ft_FSelect( [ <nNewArea> ] ) -> nPreviousArea
-
    $ARGUMENTS$
       ^b<nNewArea>^n is the text file workarea to select.
-
    $RETURNS$
       The current selected text file area.
-
    $DESCRIPTION$
       This function selects a text file "workarea" from 1 to 10.  A
       file may or may not be open in the selected area.
@@ -86,12 +78,11 @@
       handles available).  That number may be increased by modifying
       the #define TEXT_WORKAREAS in the C source code and recompiling.
 
-      All the FT_F*() file functions operate on the file in the currently
+      All the ft_F*() file functions operate on the file in the currently
       selected text file workarea.
 
       Text file workareas are separate from and independent of Clipper's
       database workareas.
-
    $EXAMPLES$
       ft_FSelect( 1 )
 
@@ -118,28 +109,21 @@
       Go to the first record in a text file
    $SYNTAX$
       ft_FGoTop() -> NIL
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       NIL
-
    $DESCRIPTION$
       This function moves the record pointer to the first record
       in the currently selected text file workarea.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       ft_FUse( "test.txt" )      // open text file
 
       DO WHILE ! ft_FEof()
-
          ? ft_FReadLn()        // read thru file
-
          ft_FSkip()
-
       ENDDO
 
       ft_FGoTop()              // go back to top
@@ -159,21 +143,17 @@
       Return the error code for a text file operation
    $SYNTAX$
       ft_FError() -> nErrorNo
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       The DOS error code if one occurred.  See a reference on DOS error
       codes for an explanation of what the code means.
-
    $DESCRIPTION$
       This function returns the DOS error code associated with a file
       operation on the currently selected text file.
 
       Errors could stem from any open, create, read or write operation,
       among others.
-
    $EXAMPLES$
       IF ft_FUse( "test.txt" ) < 0     // open text file
          err := ft_FError()
@@ -194,28 +174,21 @@
       Return the current record number of a text file
    $SYNTAX$
       ft_FRecNo() -> nRecNo
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       The current record number of a text file or 0 if no file is open.
-
    $DESCRIPTION$
       This function returns the current record number of the file open
       in the currently selected text file workarea.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       ft_FUse( "test.txt" )      // open text file
 
       DO WHILE ! ft_FEof()
-
          ? ft_FReadLn()        // read thru file
-
          ft_FSkip()
-
       ENDDO
 
       ft_FGoTop()              // go back to top
@@ -235,13 +208,10 @@
       Go to the last record in a text file
    $SYNTAX$
       ft_FGoBot() -> NIL
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       NIL
-
    $DESCRIPTION$
       This function moves the record pointer to the last record of the
       file in the currently selected text file workarea.
@@ -249,7 +219,6 @@
       If a read error occurs ^bft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       // read last line
       ft_FUse( "test.txt" )
@@ -271,16 +240,13 @@
       Move the record pointer to a new position in a text file
    $SYNTAX$
       ft_FSkip( [ <nLines> ] ) -> nLinesSkipped
-
    $ARGUMENTS$
       <nLines> is the number of lines to skip.  Defaults to 1 if
       not specified.
-
    $RETURNS$
       The number of lines actually skipped.  If the file's EOF or
       BOF was encountered before ^b<nLines>^n could be skipped, the
       return value will be less than ^b<nLines>^n.
-
    $DESCRIPTION$
       This function moves the text file record pointer, similar to
       the CLIPPER SKIP command.
@@ -292,18 +258,14 @@
       If a read error occurs ^ft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       // display each record of a text file
 
       ft_FUse( "test.txt" )
 
       DO WHILE ! ft_FEof()
-
          ? ft_FReadLn()
-
          ft_FSkip()
-
       ENDDO
    $SEEALSO$
       ft_FRecNo() ft_FGoTop()
@@ -319,13 +281,10 @@
       Read a line from the currently selected text file
    $SYNTAX$
       ft_FReadLn() -> cLine
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       A string containing the current record in a text file.
-
    $DESCRIPTION$
       This function returns a line of text read from the file in the
       currently selected text file workarea.  Text lines are delimited
@@ -340,18 +299,14 @@
       If a read error occurs ^ft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       // display each record of a text file
 
       ft_FUse( "test.txt" )
 
       DO WHILE ! ft_FEof()
-
          ? ft_FReadLn()
-
          ft_FSkip()
-
       ENDDO
    $SEEALSO$
       ft_FUse() ft_FWriteLn() ft_FRecNo() ft_FGoTop()
@@ -367,16 +322,13 @@
       Deletes a line from the currently selected text file
    $SYNTAX$
       ft_FDelete( [ <nLines> ] ) -> lSuccess
-
    $ARGUMENTS$
       ^b<nLines>^n is the number of lines to be eliminated, beginning with
       the current record position.
 
       If ^b<nLines>^n is omitted, the current record is deleted only.
-
    $RETURNS$
       TRUE if successful, otherwise check ^bft_FError()^n for error code.
-
    $DESCRIPTION$
       This function deletes one or several lines of text from the file
       in the currently selected text file workarea.  Text lines are
@@ -384,7 +336,6 @@
       unless the deleted lines occur at the end of the file, in which
       case ^bft_FRecNo()^n will equal ^bft_FLastRe()^n and ^bft_FEof()^n
       will be set to TRUE.
-
    $EXAMPLES$
       // delete the next 4 lines from a file
       ft_FUse( "test.txt" )
@@ -404,17 +355,14 @@
       Inserts a line in the currently selected text file
    $SYNTAX$
       ft_FInsert( [ <nLines> ] ) -> lSuccess
-
    $ARGUMENTS$
       ^b<nLines>^n is the number of lines that should be inserted at the
       current record position.
 
       If ^b<nLines>^n is omitted, one record is inserted.
-
    $RETURNS$
       ^blSuccess^n is TRUE if the insert succeeded, FALSE if not.  If
       false check the return value of ^bft_FError()^n for the reason.
-
    $DESCRIPTION$
       This function inserts a line of text in the file in the currently
       selected text file workarea.  Text lines are delimited with a
@@ -424,7 +372,6 @@
 
       A text file "record" is a line of text terminated by a CRLF/LF.
       Each line inserted with this function will be empty.
-
    $EXAMPLES$
       // add a couple of blank lines of text to a file
       ft_FUse( "test.txt" )
@@ -446,16 +393,13 @@
       Appends a line to the currently selected text file
    $SYNTAX$
       ft_FAppend( [ < nLines > ] ) -> NIL
-
    $ARGUMENTS$
       <nLines> is the number of lines that should be appended to the
       end of the currently selected text file.
 
       If <nLines> is omitted, one record is appended.
-
    $RETURNS$
       lSuccess.  If FALSE, check ^bft_FError()^n for the error code.
-
    $DESCRIPTION$
       This function appends a line of text to the file in the currently
       selected text file workarea.  Text lines are delimited with a
@@ -474,7 +418,6 @@
       last line in the text file is not terminated with a CRLF/LF prior
       to calling ft_FAppend(), the function will terminate that last line
       before appending any new lines.
-
    $EXAMPLES$
       // add a blank line of text to a file
       ft_FUse( "test.txt" )
@@ -498,7 +441,6 @@
       Write a line to the currently selected text file
    $SYNTAX$
       ft_FWriteLn( < cData >, [ < lInsert > ] ) -> lSuccess
-
    $ARGUMENTS$
       <cData> is a string of data to write to the file at the current
        record position.
@@ -510,10 +452,8 @@
 
       If lInsert is .F. or omitted, the current record is replaced by
       cData.
-
    $RETURNS$
       TRUE if successful, otherwise check ^ft_FError()^n for error code.
-
    $DESCRIPTION$
       This function writes a line of text to the file in the currently
       selected text file workarea.  Text lines are delimited with a
@@ -527,16 +467,13 @@
       ft_FInsert()).
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       // write a line of text to a file
 
       ft_FUse( "config.sys" )
 
       DO WHILE !( Left( Upper( ft_FReadLn() ), Len( "FILES=" ) ) == "FILES=" ) .AND. ! ft_FEof()
-
          ft_FSkip()
-
       ENDDO
 
       ft_FWriteLn( "FILES=30", ft_FEof() )
@@ -554,20 +491,16 @@
       Get the no. of records in the currently selected text file
    $SYNTAX$
       ft_FLastRe() -> nLastRecordNum
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       An integer containing the number of records in the text file in
       the currently selected text file workarea, or zero if no file
       is currently open in the workarea.
-
    $DESCRIPTION$
       This function returns the number of the last record in a text file.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       ft_FUse( "test.txt" )
 
@@ -586,19 +519,15 @@
       Determine if end of text file has been encountered
    $SYNTAX$
       ft_FEof() -> lResult
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       .T. if an attempt was made to skip past the last record of
       the currently selected text file, otherwise .F.
-
    $DESCRIPTION$
       This function is similar to the CLIPPER Eof() function.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       ft_FUse( "test.txt" )
 
@@ -621,19 +550,15 @@
       Determine if attempt to skip past beginning of text file
    $SYNTAX$
       ft_FBof() -> lResult
-
    $ARGUMENTS$
       None
-
    $RETURNS$
       .T. if an attempt was made to skip past the first record of
       the currently selected text file, otherwise .F.
-
    $DESCRIPTION$
       This function is similar to the Clipper Bof() function.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       ft_FUse( "test.txt" )
 
@@ -658,13 +583,10 @@
       Move record pointer to specific record in a text file
    $SYNTAX$
       ft_FGoto( nLine ) -> NIL
-
    $ARGUMENTS$
       <nLine> is the record number to go to.
-
    $RETURNS$
       NIL
-
    $DESCRIPTION$
       This function moves the record pointer to a specific record
       in the file in the currently selected text file workarea.  If
@@ -682,7 +604,6 @@
       delay as ft_FGoto( 0 ) skips through the file.
 
       A text file "record" is a line of text terminated by a CRLF/LF.
-
    $EXAMPLES$
       // read 5th line of text from file
 
@@ -690,7 +611,7 @@
 
       ft_FGoto( 5 )
 
-      cText := ft_FReadLn()
+      ? ft_FReadLn()
    $SEEALSO$
       ft_FRecNo() ft_FGoTop() ft_FReadLn()
    $END$

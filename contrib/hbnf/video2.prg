@@ -47,19 +47,10 @@
  */
 
 FUNCTION ft_CLS( nTop, nLeft, nBottom, nRight, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, nColor )
+   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, hb_defaultValue( nColor, 0 ) )
 
 FUNCTION ft_VidStr( nRow, nCol, cString, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_DispOutAt( nRow, nCol, cString, nColor )
+   RETURN hb_DispOutAt( nRow, nCol, cString, hb_defaultValue( nColor, 0 ) )
 
 FUNCTION ft_WrtChr( nRow, nCol, cChar, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )
+   RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), hb_defaultValue( nColor, 0 ) )

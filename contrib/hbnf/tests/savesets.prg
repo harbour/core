@@ -4,7 +4,7 @@ PROCEDURE Main()
 
    LOCAL aSets := ft_SaveSets()
 
-   HB_SYMBOL_UNUSED( aSets )
+   ? hb_ValToExp( aSets )
 
    Inkey( 0 )
 

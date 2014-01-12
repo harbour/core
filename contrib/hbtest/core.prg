@@ -50,8 +50,7 @@
 
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  11
-#define TEST_RESULT_COL3_WIDTH  44
-#define TEST_RESULT_COL4_WIDTH  85
+#define TEST_RESULT_COL3_WIDTH  40
 
 THREAD STATIC t_hParams := { => }
 
@@ -82,11 +81,10 @@ STATIC PROCEDURE hbtest_Banner()
       "         OS: " + OS() + hb_eol() + ;
       " Date, Time: " + hb_TToC( hb_DateTime() ) + hb_eol() + ;
       Replicate( "=", 75 ) + hb_eol() + ;
-      PadR( "", TEST_RESULT_COL1_WIDTH ) + " " + ;
+      Space( TEST_RESULT_COL1_WIDTH ) + " " + ;
       PadR( "Location", TEST_RESULT_COL2_WIDTH ) + " " + ;
-      PadR( "Test", TEST_RESULT_COL3_WIDTH ) + " -> " + ;
-      PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " + ;
-            "Expected" + hb_eol() + ;
+      PadR( "Test", TEST_RESULT_COL3_WIDTH ) + ;
+            " -> " + "Result" + hb_eol() + ;
       Replicate( "-", 75 ) + hb_eol() )
 
    RETURN
@@ -193,9 +191,7 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
             PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
             PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
             PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
-            PadR( XToStr( xResult, .F. ), TEST_RESULT_COL4_WIDTH ) + " | " + ;
-            XToStr( xResultExpected, .F. ) + ;
-            hb_eol() )
+            XToStr( xResult, .F. ) + hb_eol() )
       ENDIF
    ENDIF
 

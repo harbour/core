@@ -24,19 +24,20 @@
 
 FUNCTION ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd )
 
-   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4 ][ 2 ]
+   LOCAL aRetVal[ 4 ]
+   LOCAL nTotalSec, nConst, nTemp, tmp
 
    IF HB_ISSTRING( dStart )
       cTimeStart := dStart
-      dStart := Date()
-   ELSEIF ! HB_ISDATE( dStart )
-      dStart := Date()
    ENDIF
-
    IF HB_ISSTRING( dEnd )
       cTimeEnd := dEnd
-      dEnd := Date()
-   ELSEIF ! HB_ISDATE( dEnd )
+   ENDIF
+
+   IF ! HB_ISDATE( dStart )
+      dStart := Date()
+   ENDIF
+   IF ! HB_ISDATE( dEnd )
       dEnd := Date()
    ENDIF
 
@@ -44,11 +45,9 @@ FUNCTION ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd )
       hb_SToT( DToS( dEnd   ) + StrTran( hb_defaultValue( cTimeEnd  , "" ), ":" ) ) - ;
       hb_SToT( DToS( dStart ) + StrTran( hb_defaultValue( cTimeStart, "" ), ":" ) ) )
 
-   FOR nCtr := 1 TO 4
-      nConstant := iif( nCtr == 1, 86400, iif( nCtr == 2, 3600, iif( nCtr == 3, 60, 1 ) ) )
-      aRetVal[ nCtr ][ 1 ] := Int( nTemp / nConstant )
-      aRetval[ nCtr ][ 2 ] := nTotalSec / nConstant
-      nTemp -= aRetVal[ nCtr ][ 1 ] * nConstant
+   FOR EACH nConst IN { 86400, 3600, 60, 1 }
+      aRetVal[ nConst:__enumIndex() ] := { tmp := Int( nTemp / nConst ), nTotalSec / nConst }
+      nTemp -= tmp * nConst
    NEXT
 
    RETURN aRetVal

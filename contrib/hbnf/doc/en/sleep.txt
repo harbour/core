@@ -1,6 +1,6 @@
 /* $DOC$
    $NAME$
-      FT_SLEEP
+      ft_Sleep()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$

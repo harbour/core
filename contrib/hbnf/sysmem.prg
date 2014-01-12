@@ -28,5 +28,4 @@
 #include "hbmemory.ch"
 
 FUNCTION ft_SysMem()
-
    RETURN Memory( HB_MEM_FM )

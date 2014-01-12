@@ -21,8 +21,8 @@
 
 #define CASE_AT( x, y, z )           z[ At( x, y ) + 1 ]
 #define NULL                         ""
-#define EARLIEST_DATE                hb_SToD( "01000101" )
-#define BLANK_DATE                   hb_SToD()
+#define EARLIEST_DATE                0d01000101
+#define BLANK_DATE                   0d0
 
 #define _XTOC( x )           CASE_AT( ValType( x ), "CNDLM", ;
       { NULL, ;
@@ -41,7 +41,6 @@ FUNCTION ft_XToY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
    __defaultNIL( @lWantYesNo, .F. )
 
    DO CASE
-
    CASE cTypeToConvertTo == "C" .AND. ; // They Want a Character String
       ! HB_ISSTRING( xValueToConvert )
 

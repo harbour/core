@@ -27,8 +27,8 @@ FUNCTION ft_Min2Mil( nMin )
    nMin := nMin % 1440
 
    RETURN ;
-      Right( "00" + hb_ntos( Int( nMin / 60 ) ), 2 ) + ;
-      Right( "00" + hb_ntos( Int( nMin % 60 ) ), 2 )
+      StrZero( Int( nMin / 60 ), 2 ) + ;
+      StrZero( Int( nMin % 60 ), 2 )
 
 FUNCTION ft_Mil2Civ( cMILTIME )
 
@@ -49,20 +49,18 @@ FUNCTION ft_Mil2Civ( cMILTIME )
       IF nHRS == 0
          cHRS := "12"
       ELSE
-         cHRS := Right( "  " + hb_ntos( Int( nHRS ) ), 2 )
+         cHRS := Str( Int( nHRS ), 2 )
       ENDIF
       RETURN cHRS + ":" + cMINS + " am"
    OTHERWISE                                           // PM
-      RETURN Right( "  " + hb_ntos( Int( nHRS - 12 ) ), 2 ) + ;
-         ":" + cMINS + " pm"
+      RETURN Str( Int( nHRS - 12 ), 2 ) + ":" + cMINS + " pm"
    ENDCASE
 
-   RETURN ""  // never reached
+   RETURN NIL  // never reached
 
 FUNCTION ft_Civ2Mil( cTIME )
 
    // ** Ensure leading 0's
-
    cTIME := Replicate( "0", 3 - At( ":", LTrim( cTIME ) ) ) + LTrim( cTIME )
 
    // ** Adjust for popular use of '12' for first hour after noon and midnight
@@ -85,11 +83,9 @@ FUNCTION ft_Civ2Mil( cTIME )
          RETURN "    "
       ENDIF
    CASE "A"                           // am
-      RETURN Right( "00" + hb_ntos( Val( Left( cTIME, 2 ) ) ), 2 ) + ;
-         SubStr( cTIME, 4, 2 )
+      RETURN StrZero( Val( Left( cTIME, 2 ) ), 2 ) + SubStr( cTIME, 4, 2 )
    CASE "P"                           // pm
-      RETURN Right( "00" + hb_ntos( Val( Left( cTIME, 2 ) ) + 12 ), 2 ) + ;
-         SubStr( cTIME, 4, 2 )
+      RETURN StrZero( Val( Left( cTIME, 2 ) ) + 12, 2 ) + SubStr( cTIME, 4, 2 )
    ENDSWITCH
 
    RETURN "    "                      // error

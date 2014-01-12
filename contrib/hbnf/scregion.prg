@@ -53,12 +53,15 @@ PROCEDURE ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
    LOCAL nPopTop
 
-   IF cAction == "push"
+   SWITCH cAction
+   CASE "push"
 
       ASize( t_aRgnStack, ++t_nStackPtr )[ t_nStackPtr ] := ;
          ft_SavRgn( nTop, nLeft, nBottom, nRight )
+      EXIT
 
-   ELSEIF cAction == "pop" .OR. cAction == "pop all"
+   CASE "pop"
+   CASE "pop all"
 
       nPopTop := iif( "all" $ cAction, 0, t_nStackPtr - 1 )
 
@@ -67,7 +70,8 @@ PROCEDURE ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
       ENDDO
 
       ASize( t_aRgnStack, t_nStackPtr )
+      EXIT
 
-   ENDIF
+   ENDSWITCH
 
    RETURN

@@ -19,7 +19,7 @@
 
 FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
 
-   LOCAL i, nLast, nMaxlen := 0
+   LOCAL i, nLast, nLen, nMaxlen := 0
 
    __defaultNIL( @nDimension, 1 )
    __defaultNIL( @nStart, 1 )
@@ -30,21 +30,17 @@ FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
    FOR i := nStart TO nLast
 
       SWITCH ValType( aArray[ i ] )
-
       CASE "C"
-         nMaxlen := Max( nMaxlen, Len( aArray[ i ] ) )
+         nLen := Len( aArray[ i ] )
          EXIT
-
       CASE "A"
-         nMaxlen := Max( nMaxlen, ;
-            Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) )
+         nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
          EXIT
-
       OTHERWISE
-         nMaxlen := Max( nMaxlen, ;
-            Len( LTrim( Transform( aArray[ i ], "@X" ) ) ) )
-
+         nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
       ENDSWITCH
+
+      nMaxlen := Max( nMaxlen, nLen )
    NEXT
 
    RETURN nMaxlen

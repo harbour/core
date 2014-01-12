@@ -27,12 +27,12 @@
       it will return the EOM of calculated month.  Otherwise it will
       return the same day as the day of the passed date.
    $EXAMPLES$
-      dDate := hb_SToD( "19900915" )
+      dDate := 0d19900915
       ? ft_MAdd( dDate, 1 )        // 1990-10-15
       ? ft_MAdd( dDate, -2 )       // 1990-07-15
 
       // force EOM
-      dDate := hb_SToD( "19910430" )
+      dDate := 0d19910430
       ? ft_MAdd( dDate, 1 )        // 1991-05-30
       ? ft_MAdd( dDate, 1, .T. )   // 1991-05-31  <- forced EOM
       ? ft_MAdd( dDate, 2 )        // 1991-06-30

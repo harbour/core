@@ -59,7 +59,6 @@ FUNCTION ft_Workdays( dStart, dStop )
          nWorkDays := 1
 
       ENDIF
-
    ENDIF
 
    RETURN iif( nWorkDays > 0, nWorkDays, 0 )

@@ -59,7 +59,7 @@
       aBlocks[ 2 ] := {|| ar[ 2, nElem ] }
       aBlocks[ 3 ] := {|| ar[ 3, nElem ] }
 
-      // set up TestGet() as the passed Get Function so FT_ArEdit knows how
+      // set up TestGet() as the passed Get Function so ft_ArEdit() knows how
       // to edit the individual gets.
 
       bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }

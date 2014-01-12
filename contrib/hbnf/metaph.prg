@@ -233,11 +233,7 @@ STATIC FUNCTION _ftConvVowel( cStr ) //  Converts all vowels to letter 'v'
    LOCAL x, cConverted := ""
 
    FOR x := 1 TO Len( cStr )
-      IF SubStr( cStr, x, 1 ) $ "AEIOU"
-         cConverted += "v"
-      ELSE
-         cConverted += SubStr( cStr, x, 1 )
-      ENDIF
+      cConverted += iif( SubStr( cStr, x, 1 ) $ "AEIOU", "v", SubStr( cStr, x, 1 ) )
    NEXT
 
    RETURN cConverted

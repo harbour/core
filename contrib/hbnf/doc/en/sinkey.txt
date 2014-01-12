@@ -26,6 +26,6 @@
       respond to any keys set with SET KEY TO or SetKey().
    $EXAMPLES$
       SetKey( K_F1, {| n, l, r | HELP( n, l, r ) } )
-      nKey := ft_SInkey( 0 )       // HELP() will be called if F1 pressed
+      ? ft_SInkey( 0 )       // HELP() will be called if F1 pressed
    $END$
  */

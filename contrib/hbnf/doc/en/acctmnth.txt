@@ -36,16 +36,16 @@
       'quarter' will contain 14 weeks and the year will contain 53
       weeks.
    $EXAMPLES$
-      // get info about accounting month containing 9/15/90
+      // get info about accounting month containing 1990-09-15
       aDateInfo := ft_AcctMonth( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199009       (9th month)
       ? aDateInfo[ 2 ]   //  1990-09-02   beginning of month 9
       ? aDateInfo[ 3 ]   //  1990-09-29   end of month 9
 
-      // get info about accounting month 5 in year containing 9/15/90
+      // get info about accounting month 5 in year containing 1990-09-15
       aDateInfo := ft_AcctMonth( hb_SToD( "19900915" ), 5 )
       ? aDateInfo[ 1 ]   //  199005
-      ? aDateInfo[ 2 ]   //  1989-04-29   beginning of month 5
+      ? aDateInfo[ 2 ]   //  1990-04-29   beginning of month 5
       ? aDateInfo[ 3 ]   //  1990-06-02   end of month 5
    $SEEALSO$
       ft_DateCnfg() ft_AcctWeek() ft_AcctQtr() ft_AcctYear()

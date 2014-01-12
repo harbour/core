@@ -27,9 +27,10 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
    LOCAL nYTemp, nQTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
-      nQtrNum    := dGivenDate
-      dGivenDate := Date()
-   ELSEIF ! HB_ISDATE( dGivenDate )
+      nQtrNum := dGivenDate
+   ENDIF
+
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
@@ -39,7 +40,8 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
    aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
    aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   IF dGivenDate < aRetVal[ 2 ]
+   DO CASE
+   CASE dGivenDate < aRetVal[ 2 ]
 
       dGivenDate := ft_MAdd( dGivenDate, - 1 )
       aRetVal    := ft_Qtr( dGivenDate )
@@ -51,7 +53,7 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ELSEIF dGivenDate > aRetVal[ 3 ]
+   CASE dGivenDate > aRetVal[ 3 ]
 
       dGivenDate := ft_MAdd( dGivenDate, 1 )
       aRetVal    := ft_Qtr( dGivenDate )
@@ -63,7 +65,7 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ENDIF
+   ENDCASE
 
    IF HB_ISNUMERIC( nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
@@ -76,6 +78,6 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
    ENDIF
 
-   aRetVal[ 1 ] := Str( nYTemp, 4 ) + StrZero( nQTemp, 2 )
+   aRetVal[ 1 ] := StrZero( nYTemp, 4 ) + StrZero( nQTemp, 2 )
 
    RETURN aRetVal

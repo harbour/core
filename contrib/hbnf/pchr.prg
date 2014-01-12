@@ -38,7 +38,7 @@ FUNCTION ft_PChr( c_nums )
    c_nums := RTrim( c_nums ) + ",~,"
    c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
 
-   DO WHILE ! ( c_part == "~" .OR. c_part == "" )
+   DO WHILE !( c_part == "~" .OR. c_part == "" )
 
       IF Left( c_part, 1 ) == '"'
 

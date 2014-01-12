@@ -16,6 +16,8 @@
  *
  */
 
+#include "box.ch"
+
 /* display vertical menu */
 
 PROCEDURE ft_Menu2( aMenuInfo, cColors )
@@ -48,7 +50,7 @@ PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
       cOldscreen := SaveScreen( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth )
 
-      hb_DispBox( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+      hb_DispBox( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, HB_B_SINGLE_UNI + " " )
       SetPos( nTop, nLeft )
       FOR EACH x IN aMenuInfo
          IF Len( x ) > 1 .AND. HB_ISSTRING( x[ 2 ] )

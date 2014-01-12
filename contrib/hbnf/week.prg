@@ -27,9 +27,10 @@ FUNCTION ft_Week( dGivenDate, nWeekNum )
    LOCAL nTemp, aRetVal, dTemp
 
    IF HB_ISNUMERIC( dGivenDate )
-      nWeekNum   := dGivenDate
-      dGivenDate := Date()
-   ELSEIF ! HB_ISDATE( dGivenDate )
+      nWeekNum := dGivenDate
+   ENDIF
+
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

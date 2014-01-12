@@ -67,7 +67,7 @@
       LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
       LOCAL cColorShad := "N/N"
 
-      USE TBNames INDEX TBNames NEW // indexed on Last + First
+      USE tbnames INDEX tbnames NEW // indexed on Last + First
 
       // Pass Heading as character and Field as Block including Alias
       // To eliminate the need to use FieldWBlock() function in ft_BrwsWhl()
@@ -77,10 +77,10 @@
 
       IF ft_BrwsWhl( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
          cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 ) == 0
-         ? "Sorry, NO Records Were Selected"
+         ? "Sorry, No records were selected"
       ELSE
-         ? "You Selected: " + TBNames->Last + " " + ;
-            TBNames->First + " " + TBNames->City
+         ? "You Selected:", TBNames->Last, ;
+            TBNames->First, TBNames->City
       ENDIF
    $END$
  */

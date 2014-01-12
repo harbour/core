@@ -63,13 +63,14 @@ FUNCTION ft_FlopTst( nDriveNum )
    LOCAL cFileName
    LOCAL fhnd
 
-   IF HB_ISNUMERIC( nDriveNum )
+   DO CASE
+   CASE HB_ISNUMERIC( nDriveNum )
       cFileName := Chr( Asc( "A" ) + nDriveNum ) + hb_osDriveSeparator()
-   ELSEIF HB_ISSTRING( nDriveNum )
+   CASE HB_ISSTRING( nDriveNum )
       cFileName := nDriveNum
-   ELSE
+   OTHERWISE
       RETURN ERR_WRONG_PARAMETERS
-   ENDIF
+   ENDCASE
 
    cFileName := hb_DirSepAdd( cFileName ) + "nf$rwtst.tmp"
 

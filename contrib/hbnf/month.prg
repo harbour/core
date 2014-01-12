@@ -27,9 +27,10 @@ FUNCTION ft_Month( dGivenDate, nMonthNum )
    LOCAL nTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
-      nMonthNum  := dGivenDate
-      dGivenDate := Date()
-   ELSEIF ! HB_ISDATE( dGivenDate )
+      nMonthNum := dGivenDate
+   ENDIF
+
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

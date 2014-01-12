@@ -29,9 +29,7 @@
 
       ? ft_Byt2Bit( hb_BChar( 20 ) )    // byte1: '0001 0100'
       ? ft_Byt2Bit( hb_BChar( 36 ) )    // byte2: '0010 0100'
-
-      ? ft_Byt2Bit( ft_ByteAnd( hb_BChar( 20 ), hb_BChar( 36 ) ) )
-      // result: '0000 0100'
+      ? ft_Byt2Bit( ft_ByteAnd( hb_BChar( 20 ), hb_BChar( 36 ) ) )  // result: '0000 0100'
    $SEEALSO$
       ft_Byt2Hex()
    $END$

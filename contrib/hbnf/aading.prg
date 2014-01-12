@@ -27,22 +27,16 @@ FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
 
    // Assign code blocks according to case sensitivity and trim.
    IF lCaseSens
-      IF lTrimmer // Ignore spaces
-         bScanCode := {| x | ;
-            AllTrim( x ) == ;
-            AllTrim( element ) }
+      IF lTrimmer
+         bScanCode := {| x | AllTrim( x ) == AllTrim( element ) }
       ELSE
-         bScanCode := {| x | x == ( element ) }
+         bScanCode := {| x | x == element }
       ENDIF
    ELSE // Ignore case
-      IF lTrimmer // Ignore spaces
-         bScanCode := {| x | ;
-            Upper( AllTrim( x ) ) == ;
-            Upper( AllTrim( element ) ) }
+      IF lTrimmer
+         bScanCode := {| x | Upper( AllTrim( x ) ) == Upper( AllTrim( element ) ) }
       ELSE
-         bScanCode := {| x | ;
-            Upper( x ) == ;
-            Upper( element ) }
+         bScanCode := {| x | Upper( x ) == Upper( element ) }
       ENDIF
    ENDIF
 
