@@ -269,6 +269,7 @@ PHB_COMP hb_comp_new( void )
       pComp->fAutoMemvarAssume = HB_FALSE;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
       pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accesing undeclared variable (-v)*/
       pComp->fDebugInfo        = HB_FALSE;   /* holds if generate debugger required info */
+      pComp->fHideSource       = ! pComp->fDebugInfo;
       pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
       pComp->fCredits          = HB_FALSE;   /* print credits */
       pComp->fBuildInfo        = HB_FALSE;   /* print build info */

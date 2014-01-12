@@ -140,7 +140,10 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          case 'b':
          case 'B':
             if( fSet )
+            {
                HB_COMP_PARAM->fDebugInfo = iValue != 0;
+               HB_COMP_PARAM->fHideSource = ! HB_COMP_PARAM->fDebugInfo;
+            }
             else
                iValue = HB_COMP_PARAM->fDebugInfo ? 1 : 0;
             break;

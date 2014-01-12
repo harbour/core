@@ -4105,6 +4105,7 @@ static void hb_compGenIncluded( HB_COMP_DECL )
 static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    pSwitches->fDebugInfo        = HB_COMP_PARAM->fDebugInfo;
+   pSwitches->fHideSource       = HB_COMP_PARAM->fHideSource;
    pSwitches->fAutoMemvarAssume = HB_COMP_PARAM->fAutoMemvarAssume;
    pSwitches->fI18n             = HB_COMP_PARAM->fI18n;
    pSwitches->fLineNumbers      = HB_COMP_PARAM->fLineNumbers;
@@ -4122,6 +4123,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    HB_COMP_PARAM->fDebugInfo        = pSwitches->fDebugInfo;
+   HB_COMP_PARAM->fHideSource       = pSwitches->fHideSource;
    HB_COMP_PARAM->fAutoMemvarAssume = pSwitches->fAutoMemvarAssume;
    HB_COMP_PARAM->fI18n             = pSwitches->fI18n;
    HB_COMP_PARAM->fLineNumbers      = pSwitches->fLineNumbers;
