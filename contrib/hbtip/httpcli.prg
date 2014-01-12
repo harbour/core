@@ -303,7 +303,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       The chunk header is read each time nLength is -1; While reading the chunk,
       nLength is set to nRead plus the expected chunk size. After reading the
       chunk, the footer is discarded, and nLength is reset to -1.
-   */
+    */
    IF ::nLength == -1 .AND. ::bChunked
 
       cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
@@ -478,14 +478,14 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
 METHOD Boundary( nType ) CLASS TIPClientHTTP
    /*
-   nType: 0=as found as the separator in the stdin stream
-          1=as found as the last one in the stdin stream
-          2=as found in the CGI enviroment
-   Examples:
-   -----------------------------41184676334     // in the body or stdin stream
-   -----------------------------41184676334--   // last one of the stdin stream
-   ---------------------------41184676334       // in the header or CGI envirnment
-   */
+      nType: 0=as found as the separator in the stdin stream
+             1=as found as the last one in the stdin stream
+             2=as found in the CGI enviroment
+      Examples:
+      -----------------------------41184676334     // in the body or stdin stream
+      -----------------------------41184676334--   // last one of the stdin stream
+      ---------------------------41184676334       // in the header or CGI envirnment
+    */
 
    LOCAL cBound := ::cBoundary
    LOCAL i

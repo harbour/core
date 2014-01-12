@@ -62,7 +62,7 @@
       Added data ::nWrite to work like ::nRead
    2009-06-29, Luiz Rafael Culik (luiz at xharbour dot com dot br)
       Added support for proxy connection
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -80,9 +80,8 @@
 #define RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
 #define SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
 
-/**
-* Inet Client class
-*/
+/* Inet Client class */
+
 CREATE CLASS TIPClient
 
    CLASS VAR bInitSocks  INIT .F.
@@ -143,7 +142,9 @@ CREATE CLASS TIPClient
    METHOD Reset()
    METHOD Close()
 
-   /* METHOD Data( cData ) */                   // commented: calls undeclared METHOD :getOk
+#if 0
+   METHOD Data( cData )                   // commented: calls undeclared METHOD :getOk
+#endif
 
    METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword )
 
@@ -558,7 +559,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
 #if 0
 
-/* HZ: METHOD :getOk() is not declared in TIPClient */
+/* :GetOk() is not declared in TIPClient() [HZ] */
 METHOD Data( cData ) CLASS TIPClient
    ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
    IF ! ::GetOk()
@@ -805,8 +806,7 @@ METHOD InetTimeOut( SocketCon, nConnTimeout ) CLASS TIPClient
 /* Called from another method with list of parameters and, as last parameter, return code
    of function being logged.
    Example, I want to log MyFunc( a, b, c ) which returns m,
-            ::Log( a, b, c, m )
-*/
+            ::Log( a, b, c, m ) */
 METHOD Log( ... ) CLASS TIPClient
 
    LOCAL xVar

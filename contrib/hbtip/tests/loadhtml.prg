@@ -1,6 +1,4 @@
-/*
- * Sends a query to Google and displays the links from the response HTML page
- */
+/* Sends a query to Google and displays the links from the response HTML page */
 
 #require "hbssl"
 #require "hbtip"

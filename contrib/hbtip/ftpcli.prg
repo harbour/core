@@ -84,7 +84,7 @@
      ! Fixed MGet() due to changes in hb_ATokens()
      ! Fixed listFiles() due to changes in hb_ATokens()
      ! listFiles() is still buggy. Needs to be fixed.
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -329,9 +329,8 @@ METHOD TransferStart() CLASS TIPClientFTP
 
          ::InetTimeOut( skt )
 
-         /* Set internal socket send buffer to 64k,
-         * this should fix the speed problems some users have reported
-         */
+         /* Set internal socket send buffer to 64KB,
+            this should fix the speed problems some users have reported */
          IF ! Empty( ::nDefaultSndBuffSize )
             ::InetSndBufSize( skt, ::nDefaultSndBuffSize )
          ENDIF
@@ -695,7 +694,7 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
 
    RETURN cStr
 
-/* Rename a traves del ftp */
+/* Rename file on FTP */
 METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "RNFR " + cFrom + ::cCRLF )

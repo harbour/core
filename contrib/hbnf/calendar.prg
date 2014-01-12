@@ -81,7 +81,7 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
       CASE nKey == K_F1
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.
-            cSaveHelp := SaveScreen( nHelpRow - 1, 1, nHelpRow + 7, 80 )
+            cSaveHelp := SaveScreen( nHelpRow - 1, 1, nHelpRow + 7, MaxCol() + 1 )
             ft_XBox( "L",,, cColor, cColor, nHelpRow, 1, ;
                "Home, Up_Arrow or PgUp keys page by day, month or year to a past date.", ;
                "End, Dn_Arrow or PgDn keys page by day, month or year to a future date.", ;
@@ -121,7 +121,7 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
    SetCursor( cSaveCursor )
    RestScreen( nRow - 1, nCol - 1, nRow + 3, nCol + 17, cSaveScreen )
    IF lHelpIsDisplayed
-      RestScreen( nHelpRow - 1, 1, nHelpRow + 7, 80, cSaveHelp )
+      RestScreen( nHelpRow - 1, 1, nHelpRow + 7, MaxCol() + 1, cSaveHelp )
    ENDIF
 
    RETURN aRetVal

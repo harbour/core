@@ -60,15 +60,15 @@ FUNCTION ft_Mil2Civ( cMILTIME )
 
 FUNCTION ft_Civ2Mil( cTIME )
 
-   // ** Ensure leading 0's
+   // Ensure leading 0's
    cTIME := Replicate( "0", 3 - At( ":", LTrim( cTIME ) ) ) + LTrim( cTIME )
 
-   // ** Adjust for popular use of '12' for first hour after noon and midnight
+   // Adjust for popular use of '12' for first hour after noon and midnight
    IF Left( LTrim( cTIME ), 2 ) == "12"
       cTIME := Stuff( cTIME, 1, 2, "00" )
    ENDIF
 
-   // ** am, pm, noon or midnight
+   // am, pm, noon or midnight
    SWITCH Upper( SubStr( LTrim( cTIME ), 7, 1 ) )
    CASE "N"                           // noon
       IF Left( cTIME, 2 ) + SubStr( cTIME, 4, 2 ) == "0000"

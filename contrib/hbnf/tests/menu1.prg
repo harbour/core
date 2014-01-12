@@ -24,6 +24,7 @@ PROCEDURE Main( cCmdLine )
    LOCAL aOptions[ Len( aBar ) ]
 
    LOCAL nMaxRow
+   LOCAL nOldRow, nOldCol
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
@@ -88,6 +89,8 @@ PROCEDURE Main( cCmdLine )
    CLS
    NoSnow( "NOSNOW" $ Upper( cCmdLine ) )
    IF "VGA" $ Upper( cCmdLine )
+      nOldRow := MaxRow() + 1
+      nOldCol := MaxCol() + 1
       SetMode( 50, 80 )
    ENDIF
    nMaxRow := MaxRow()
@@ -96,9 +99,9 @@ PROCEDURE Main( cCmdLine )
    CLS
    SetColor( cNormN )
    @ nMaxRow,  0
-   @ nMaxRow,  0 SAY hb_UTF8ToStr( " ft_menu1 1.0 │ " )
-   @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
-   @ nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
+   @ nMaxRow,  0 SAY hb_UTF8ToStr( " ft_menu1 1.0 │" )
+   @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556]"
+   @ nMaxRow, MaxCol() - 12 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
    SetColor( cErrH )
    @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
@@ -118,7 +121,7 @@ PROCEDURE Main( cCmdLine )
    SetCursor( SC_NORMAL )
    SetBlink( .T. )
    IF "VGA" $ Upper( cCmdLine )
-      SetMode( 25, 80 )
+      SetMode( nOldRow, nOldCol )
    ENDIF
    RESTORE SCREEN FROM sDosScrn
    SetPos( nDosRow, nDosCol )

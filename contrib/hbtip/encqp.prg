@@ -109,7 +109,7 @@ FUNCTION tip_QPDecode( cData )
 
    /* delete soft line break. */
    cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
-   cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
+   cData := StrTran( cData, "=" + Chr( 10 ) )  /* also delete non-standard line breaks */
 
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen

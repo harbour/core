@@ -1,6 +1,4 @@
-/*
- * Download a file from an FTP server
- */
+/* Download a file from an FTP server */
 
 #require "hbtip"
 

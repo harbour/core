@@ -49,6 +49,8 @@ PROCEDURE Main( cFileName )
    ? "DONE"
    ?
    /* Writing stream */
-   /* OutStd( oMail:ToString() ) */
+#if 0
+   OutStd( oMail:ToString() )
+#endif
 
    RETURN

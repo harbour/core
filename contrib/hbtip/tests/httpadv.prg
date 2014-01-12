@@ -1,6 +1,4 @@
-/*
- * TIP HTTP advanced operations Test
- */
+/* TIP HTTP advanced operations Test */
 
 #require "hbssl"
 #require "hbtip"
@@ -14,7 +12,6 @@ PROCEDURE Main( cUrl )
    oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
       ? "Invalid URL", cUrl
-      ?
       RETURN
    ENDIF
 
@@ -22,7 +19,6 @@ PROCEDURE Main( cUrl )
       !( oUrl:cProto == "https" )
       ? "This is a header test for http/https."
       ? "Use an http/https address."
-      ?
       RETURN
    ENDIF
 
@@ -60,6 +56,5 @@ PROCEDURE Main( cUrl )
    ENDIF
 
    ? "Done"
-   ?
 
    RETURN

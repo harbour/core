@@ -4277,10 +4277,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                CASE hbmk[ _HBMK_nCOMPVer ] >= 49
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
                CASE hbmk[ _HBMK_nCOMPVer ] >= 41
-                  // too slow
-                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
-                  // too weak
-                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
+#if 0
+                  /* too slow */
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
+                  /* too weak */
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
+#endif
                ENDCASE
             ENDIF
          ENDCASE
@@ -4296,6 +4298,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             CASE _WARN_NO
             ENDSWITCH
          ELSE
+            /* clang:
+                  -Wextra -Wpointer-arith -Wconditional-uninitialized
+             */
             SWITCH hbmk[ _HBMK_nWARN ]
             CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
             CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
@@ -4636,11 +4641,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-strong" )
                   AAdd( l_aLIBSYS, "ssp" )
                CASE hbmk[ _HBMK_nCOMPVer ] >= 41
-                  // too slow
-                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
-                  // too weak
-                  //AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
-                  //AAdd( l_aLIBSYS, "ssp" )
+#if 0
+                  /* too slow */
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector-all" )
+                  /* too weak */
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-fstack-protector" )
+                  AAdd( l_aLIBSYS, "ssp" )
+#endif
                ENDCASE
                /* It is also supported by official mingw 4.4.x and mingw64 4.4.x,
                   but not supported by mingw tdm 4.4.x, so I only enable it on or
@@ -17052,7 +17059,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       NIL, ;
       { "Viktor Szakáts (vszakats.net/harbour)", "" } }
 
-   // Examples
+   /* Examples */
 
 #ifdef HARBOUR_SUPPORT
    LOCAL aHdr_ExampleBasic := { ;
@@ -17105,8 +17112,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_Config := { ;
       NIL }
-
-   //
 
    hb_default( @lMore, .F. )
    hb_default( @lLong, .F. )

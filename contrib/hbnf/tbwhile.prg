@@ -16,7 +16,7 @@
  * Jim's modifications:
  *
  *  1.  Changed SaveScreen() and RestScreen() to use MaxRow(), MaxCol()
- *      instead of 24,79
+ *      instead of fixed dimensions
  *
  *  2.  Added Nantucket's cleaner code for:
  *        - Cleaned up logic around line 334 while loop section

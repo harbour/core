@@ -16,7 +16,7 @@ PROCEDURE Main()
 
    // Simple sample of program data entry!
 
-   @ 12, 5 SAY "Please enter the total Sick, Personal, and Vacation hours."
+   @ 12,  5 SAY "Please enter the total Sick, Personal, and Vacation hours."
    @ 15, 22 SAY "Sick hrs."
    @ 15, 40 SAY "Pers. hrs."
    @ 15, 60 SAY "Vaca. hrs."

@@ -75,7 +75,7 @@ FUNCTION hb_SendMail( ... )
    cReplyTo    -> Optional.
    cClientHost -> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
                             Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
-*/
+ */
 FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
       xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;

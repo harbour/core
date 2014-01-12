@@ -49,13 +49,11 @@
 /* 2007-04-10, Hannes Ziegler <hz AT knowlexbase.com>
    Added method :countMail()
    Added method :retrieveAll()
-*/
+ */
 
 #include "hbclass.ch"
 
-/**
-* Inet service manager: pop3
-*/
+/* Inet service manager: pop3 */
 
 CREATE CLASS TIPClientPOP FROM TIPClient
 
@@ -88,8 +86,6 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientPOP
 
    RETURN Self
 
-/**
-*/
 METHOD Open( cUrl ) CLASS TIPClientPOP
 
    IF ! ::super:Open( cUrl )
@@ -155,8 +151,6 @@ METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
    RETURN ::super:Close()
 
-/**
-*/
 METHOD Delete( nId ) CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "DELE " + hb_ntos( nId ) + ::cCRLF )
@@ -215,7 +209,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
    /* 2004-05-04 - <maurilio.longo@libero.it>
       Instead of receiving a single char at a time until after we have the full mail, let's receive as
       much as we can and stop when we reach EOM (end of mail :)) sequence. This way is _a lot_ faster
-   */
+    */
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
 
       cBuffer := Space( 1024 )
@@ -228,7 +222,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
                       "- Len( cEOM )" to be sure to always find a full EOM,
                       otherwise if response breaks EOM in two, it will never
                       be found
-      */
+       */
       IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) != 0
          // Remove ".CRLF"
          cRet := Left( cRet, nPos + 1 )
@@ -331,8 +325,6 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
 
    RETURN cRet
 
-/**
-*/
 METHOD countMail() CLASS TIPClientPop
 
    LOCAL cStat

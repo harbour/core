@@ -1,6 +1,4 @@
-/*
- * Demonstrating operator overloading for creating an HTML document
- */
+/* Demonstrating operator overloading for creating an HTML document */
 
 #require "hbtip"
 
@@ -10,8 +8,6 @@ PROCEDURE Main()
    LOCAL i, j
 
    LOCAL cFileName := hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" )
-
-   CLS
 
    BEGIN SEQUENCE WITH {| oError | Break( oError ) }
       USE ( cFileName )
@@ -35,28 +31,28 @@ PROCEDURE Main()
    oNode         := oDoc:body + "p"
 
    /* Operator "+" creates a new <font> node with attribute */
-   oNode         := oNode   + 'font size="5"'
+   oNode         := oNode + 'font size="5"'
    oNode:text    := "This is a "
 
    /* Operator "+" creates a new <b> node */
-   oNode         := oNode   + "b"
+   oNode         := oNode + "b"
 
    /* Operator "+" creates a new <font> node with attribute */
-   oNode         := oNode   + 'font color="blue"'
+   oNode         := oNode + 'font color="blue"'
    oNode:text    := "sample "
 
    /* Operator "-" closes 2nd <font>, result is <b> node */
-   oNode         := oNode   - "font"
+   oNode         := oNode - "font"
 
    /* Operator "-" closes <b> node, result is 1st <font> node */
-   oNode         := oNode   - "b"
+   oNode         := oNode - "b"
 
    oNode:text    := "database!"
 
    /* Operator "-" closes 1st <font> node, result is <p> node */
-   oNode         := oNode   - "font"
+   oNode         := oNode - "font"
 
-   oNode         := oNode   + "hr"
+   oNode         := oNode + "hr"
    HB_SYMBOL_UNUSED( oNode )
 
    /* Operator ":" returns first "table" from body (creates if not existent) */
@@ -65,9 +61,9 @@ PROCEDURE Main()
 
    oRow          := oTable  + 'tr bgcolor="lightcyan"'
    FOR i := 1 TO FCount()
-      oCell     := oRow + "th"
+      oCell      := oRow + "th"
       oCell:text := FieldName( i )
-      oCell     := oCell - "th"
+      oCell      := oCell - "th"
       HB_SYMBOL_UNUSED( oCell )
    NEXT
 
@@ -91,9 +87,9 @@ PROCEDURE Main()
       SKIP
    NEXT
 
-   oNode := oDoc:body  + "hr"
+   oNode := oDoc:body + "hr"
    HB_SYMBOL_UNUSED( oNode )
-   oNode := oDoc:body  + "p"
+   oNode := oDoc:body + "p"
 
    oNode:text := "10 records from database " + Alias() + ".dbf"
 
@@ -109,5 +105,7 @@ PROCEDURE Main()
    ? tip_HtmlToStr( oDoc:body:getText() )
 
    hb_run( "address.html" )
+
+   FErase( "address.html" )
 
    RETURN

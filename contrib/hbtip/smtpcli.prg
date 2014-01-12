@@ -49,7 +49,7 @@
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
    Added method :sendMail()
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -71,8 +71,8 @@ CREATE CLASS TIPClientSMTP FROM TIPClient
 
    /* Methods for smtp server that require login */
    METHOD OpenSecure( cUrl, lTLS )
-   METHOD Auth( cUser, cPass ) // Auth by login method
-   METHOD AuthPlain( cUser, cPass ) // Auth by plain method
+   METHOD Auth( cUser, cPass )      /* Auth by login method */
+   METHOD AuthPlain( cUser, cPass ) /* Auth by plain method */
    METHOD ServerSuportSecure( lAuthPlain, lAuthLogin )
 
    HIDDEN:

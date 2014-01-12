@@ -89,7 +89,7 @@ METHOD Add( cMsg ) CLASS TIPLog
       DO WHILE .T.
          ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n ), cExt ), NIL, FO_EXCL )
          IF ::fhnd != F_ERROR .OR. ;
-            FError() == 3 /* path not found */
+            FError() == 3  /* path not found */
             EXIT
          ENDIF
          n++

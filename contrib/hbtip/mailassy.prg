@@ -169,7 +169,7 @@ FUNCTION tip_MailAssemble( ;
             cData := hb_MemoRead( cFile )
             hb_FGetAttr( cFile, @nAttr )
          ELSE
-            LOOP /* No filename and no content. */
+            LOOP  /* No filename and no content. */
          ENDIF
          IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
             cMimeType := aThisFile[ 3 ]

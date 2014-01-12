@@ -98,9 +98,8 @@ THREAD STATIC t_lInit := .F.               // initilization flag for HTML data
 #xtranslate HIDDEN: => EXPORTED:   // debugger can't see HIDDEN iVars
 #endif
 
-/*
- * Class for handling an entire HTML document
- */
+/* Class for handling an entire HTML document */
+
 CREATE CLASS THtmlDocument MODULE FRIENDLY
 
    HIDDEN:
@@ -319,11 +318,8 @@ METHOD findFirstRegex( cName, cAttrib, cValue, cData ) CLASS THtmlDocument
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
-/*
- * Abstract super class for THtmlIteratorScan and THtmlIteratorScanRegEx
- *
- * (Adopted from TXMLIterator -> source\rtl\txml.prg)
- */
+/* Abstract super class for THtmlIteratorScan and THtmlIteratorScanRegEx
+   (Adopted from TXMLIterator -> contrib/xhb/txml.prg) */
 
 CREATE CLASS THtmlIterator MODULE FRIENDLY
 
@@ -532,10 +528,8 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorRegex
 
    RETURN .T.
 
-/*
- * Class representing a HTML node tree.
- * It parses a HTML formatted string
- */
+/* Class representing a HTML node tree.
+   It parses a HTML formatted string */
 
 CREATE CLASS THtmlNode MODULE FRIENDLY
 
@@ -735,7 +729,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
             // ending tag of previous node
             cText := Lower( AllTrim( SubStr( CutStr( ">", @cText ), 3 ) ) )
             oLastTag := oThisTag:parent
-            DO WHILE oLastTag != NIL .AND. !( Lower( oLastTag:htmlTagName ) == cText ) /* NOTE: != changed to !( == ) */
+            DO WHILE oLastTag != NIL .AND. !( Lower( oLastTag:htmlTagName ) == cText )  /* NOTE: != changed to !( == ) */
                oLastTag := oLastTag:parent
             ENDDO
             IF oLastTag != NIL
@@ -775,7 +769,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          ELSE
 
             oNextTag := oThisTag:parent
-            DO WHILE oNextTag != NIL .AND. !( Lower( oNextTag:htmlTagName ) == Lower( SubStr( cTagName, 2 ) ) ) /* NOTE: != changed to !( == ) */
+            DO WHILE oNextTag != NIL .AND. !( Lower( oNextTag:htmlTagName ) == Lower( SubStr( cTagName, 2 ) ) )  /* NOTE: != changed to !( == ) */
                oNextTag := oNextTag:parent
             ENDDO
 
@@ -892,7 +886,7 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
    ENDIF
 
    // back to "<"
-   DO WHILE !( P_PREV( parser ) == "<" ) /* NOTE: != changed to !( == ) */
+   DO WHILE !( P_PREV( parser ) == "<" )  /* NOTE: != changed to !( == ) */
    ENDDO
 
    nEnd  := parser:p_pos
@@ -1836,7 +1830,6 @@ STATIC PROCEDURE _Init_Html_TagTypes
    t_hTagTypes[ "xmp"        ] := { @THtmlAttr_XMP()            , hb_bitOr( CM_BLOCK, CM_OBSOLETE )                           }
 
    RETURN
-
 
 /* HTML Tag attribute data are adopted for Harbour from Tidy
    https://sourceforge.net/projects/tidy/ */

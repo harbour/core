@@ -1,6 +1,4 @@
-/*
- * TIP FTP advanced operations Test
- */
+/* TIP FTP advanced operations Test */
 
 #require "hbtip"
 
@@ -11,14 +9,12 @@ PROCEDURE Main( cUrl )
    oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
       ? "Invalid URL", cUrl
-      ?
       RETURN
    ENDIF
 
    IF !( oUrl:cProto == "ftp" )
       ? "This is a 'DELE' test for FTP."
       ? "Use an FTP address with a file that you can delete."
-      ?
       RETURN
    ENDIF
 
@@ -52,6 +48,5 @@ PROCEDURE Main( cUrl )
    ENDIF
 
    ? "Done"
-   ?
 
    RETURN
