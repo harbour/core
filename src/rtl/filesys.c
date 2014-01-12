@@ -857,7 +857,17 @@ HB_BOOL hb_fsPipeUnblock( HB_FHANDLE hPipeHandle )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsPipeUnblock(%p)", ( void * ) ( HB_PTRDIFF ) hPipeHandle ) );
 
-#if defined( HB_OS_UNIX ) && ! defined( HB_OS_MINIX )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   {
+      DWORD dwMode = PIPE_NOWAIT;
+
+      if( SetNamedPipeHandleState( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ),
+                                   &dwMode, NULL, NULL ) )
+         return HB_TRUE;
+      else
+         return HB_FALSE;
+   }
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_MINIX )
    {
       int ret = fcntl( hPipeHandle, F_GETFL, 0 );
 
