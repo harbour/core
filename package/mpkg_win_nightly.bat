@@ -12,11 +12,11 @@ rem   - Windows XP or higher (server preferred)
 rem   - 8GB free disk space
 rem   - downstream internet traffic 100MB per day
 rem   - upstream internet traffic 100MB per day
-rem   - 1-5hours CPU time per day
-rem   - multicore CPU recommended
+rem   - 1-5 hours CPU time per day
+rem   - multi-core CPU recommended
 rem   - admin rights for MSVC setup
 rem   - admin rights for Scheduled Task setup
-rem   - remote admin (via RDC or VNC protocol, RDC preferred)
+rem   - remote admin (via RDP or VNC protocol, RDP preferred)
 rem
 rem NOTES:
 rem   - The first run under a new (or reinstalled) user account
