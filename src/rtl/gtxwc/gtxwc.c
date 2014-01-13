@@ -4206,7 +4206,12 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       if( fSync )
          XSync( wnd->dpy, False );
 
-      while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
+      while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) ||
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, ClientMessage, &evt ) ||
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, MappingNotify, &evt ) ||
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, SelectionClear, &evt ) ||
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, SelectionNotify, &evt ) ||
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, SelectionRequest, &evt ) )
       {
          hb_gt_xwc_WndProc( wnd, &evt );
          fRepeat = HB_TRUE;
