@@ -47,7 +47,7 @@ STATIC PROCEDURE DrawFlake( lOpenPoly )
 
    ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
-   /** In green */
+   /* In green */
    gdColor := gdImageColorAllocate( gdImage, 0, 255, 0 )
 
    IF lOpenPoly

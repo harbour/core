@@ -60,7 +60,7 @@
          etc....
 
    Peter Rees 2004-01-21 <peter@rees.co.nz>
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -106,8 +106,8 @@ CREATE CLASS win_Prn
    METHOD SetColor( nClrText, nClrPane, nAlign )
    METHOD SetBkMode( nMode )                          // Set Background mode: WIN_TRANSPARENT or WIN_OPAQUE
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) // nAlign : WIN_TA_*
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )  // nAlign : WIN_TA_*
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // Warning: ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor )
@@ -253,7 +253,9 @@ METHOD Create() CLASS win_Prn
          ENDIF
          // Set mapping mode to pixels, topleft down
          win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
-//       win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+#if 0
+         win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+#endif
          // Get Margins etc... here
          ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
          ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )

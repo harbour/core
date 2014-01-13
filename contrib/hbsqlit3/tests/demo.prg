@@ -111,8 +111,8 @@ STATIC PROCEDURE t2()
       ? "INSERT INTO t1( name, age ) VALUES( 'Ivet', 28 )"
       ? "COMMIT"
 
-      ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
-      ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
+      ? "The number of database rows that were changed:", hb_ntos( sqlite3_changes( db ) )
+      ? "Total changes:", hb_ntos( sqlite3_total_changes( db ) )
 
       sqlite3_sleep( 3000 )
 
@@ -136,10 +136,10 @@ STATIC PROCEDURE t2()
          sqlite3_finalize( stmt )
       ENDIF
 
-      ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
-      ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
-      ? "Last _ROWID_: " + hb_ntos( sqlite3_last_insert_rowid( db ) )
-      ? ""
+      ? "The number of database rows that were changed:", hb_ntos( sqlite3_changes( db ) )
+      ? "Total changes:", hb_ntos( sqlite3_total_changes( db ) )
+      ? "Last _ROWID_:", hb_ntos( sqlite3_last_insert_rowid( db ) )
+      ?
 
       stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE name == :name " )
       sqlite3_bind_text( stmt, 1, "Andy" )
@@ -151,13 +151,13 @@ STATIC PROCEDURE t2()
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + hb_ntos( nJ )
+         ? "Record #", hb_ntos( nJ )
 
          IF nCCount > 0
             FOR nI := 0 TO nCCount - 1
                nCType := sqlite3_column_type( stmt, nI )
-               ? "Column name : " + sqlite3_column_name( stmt, nI )
-               ? "Column type : " + aCType[ nCType ]
+               ? "Column name :", sqlite3_column_name( stmt, nI )
+               ? "Column type :", aCType[ nCType ]
                ? "Column value: "
 
                SWITCH nCType
@@ -181,7 +181,7 @@ STATIC PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + hb_ntos( nJ )
+      ? "Total records -", hb_ntos( nJ )
 
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
@@ -192,18 +192,18 @@ STATIC PROCEDURE t2()
       sqlite3_bind_int( stmt, 5, 40 )
 
       ?
-      ? "SELECT * FROM t1 WHERE age >= 40 "
+      ? "SELECT * FROM t1 WHERE age >= 40"
       nJ := 0
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + hb_ntos( nJ )
+         ? "Record #", hb_ntos( nJ )
 
          IF nCCount > 0
             FOR nI := 1 TO nCCount
                nCType := sqlite3_column_type( stmt, nI )
-               ? "Column name : " + sqlite3_column_name( stmt, nI )
-               ? "Column type : " + aCType[ nCType ]
+               ? "Column name :", sqlite3_column_name( stmt, nI )
+               ? "Column type :", aCType[ nCType ]
                ? "Column value: "
 
                SWITCH nCType
@@ -227,7 +227,7 @@ STATIC PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + hb_ntos( nJ )
+      ? "Total records -", hb_ntos( nJ )
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
 
@@ -259,7 +259,7 @@ STATIC PROCEDURE t2()
       aTable := sqlite3_get_table( db, "SELECT name, age  FROM t1 WHERE age BETWEEN 10 AND 20" )
       FOR nI := 1 TO Len( aTable )
          FOR nJ := 1 TO Len( aTable[ nI ] )
-            ?? aTable[ nI ][ nJ ], " "
+            ?? aTable[ nI ][ nJ ], ""
          NEXT
          ?
       NEXT

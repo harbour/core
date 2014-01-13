@@ -59,19 +59,19 @@ PROCEDURE Main()
    sqlite3_commit_hook( pDb, "HookCommitY" )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? Replicate( "-", Len( cSQLTEXT ) )
 
@@ -81,19 +81,19 @@ PROCEDURE Main()
    sqlite3_rollback_hook( pDb, @HookRollback() )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    pDb := NIL
 
@@ -107,7 +107,7 @@ STATIC FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
@@ -167,7 +167,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
+      ? "Can't open/create database:", cFile
 
       RETURN NIL
    ENDIF
@@ -176,7 +176,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    IF !( cMsg == "SQLITE_OK" )
-      ? "Can't create table : person"
+      ? "Can't create table: person"
       pDb := NIL // close database
 
       RETURN NIL
@@ -185,7 +185,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+      ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
 
       RETURN NIL

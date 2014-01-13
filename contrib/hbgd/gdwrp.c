@@ -85,7 +85,7 @@
  * adapted also to gdFontPtr
  */
 
-/* gdImage ----------------------- */
+/* gdImage */
 
 /* gdImage destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
@@ -148,7 +148,7 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 }
 #endif
 
-/* gdFont ----------------------- */
+/* gdFont */
 
 /* gdFont destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
@@ -457,7 +457,7 @@ static void GDImageSaveTo( int nType )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ************************* WRAPPED FUNCTIONS ****************************** */
+/* WRAPPER FUNCTIONS */
 
 HB_FUNC( HB_GD_VERSION )
 {

@@ -67,19 +67,19 @@ STATIC PROCEDURE test( db )
       ? "TABLE t1"
 
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
-      ? "Column name :                id"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
+      ? "Column name:                id"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
 
-      ? "Column name :                name"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
+      ? "Column name:                name"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
 #endif
 
       sqlite3_sleep( 3000 )

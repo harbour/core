@@ -6,8 +6,7 @@
 
 #require "hbgd"
 
-#command WRITE <c> => FWrite( 1, <c> + hb_eol() )
-#command OutHTML <c> => WRITE <c>
+#command WRITE <c> => OutStd( <c> + hb_eol() )
 
 PROCEDURE Main( ... )
 
@@ -73,29 +72,29 @@ PROCEDURE Main( ... )
    ELSEIF cPhoto != NIL
       StartHTML()
 #if 0
-      OutHTML ValToPrg( hParams ) + "<br />"
-      OutHTML ValToPrg( cParams ) + "<br />"
-      OutHTML ValToPrg( cQuery ) + "<br />"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br />"
+      WRITE ValToPrg( hParams ) + "<br />"
+      WRITE ValToPrg( cParams ) + "<br />"
+      WRITE ValToPrg( cQuery ) + "<br />"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br />"
 #endif
-      OutHTML "<table border=1>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br />"
-      OutHTML "</td></tr>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
+      WRITE "<table border=1>"
+      WRITE "<tr><td align='center'>"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br />"
+      WRITE "</td></tr>"
+      WRITE "<tr><td align='center'>"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + ;
          iif( nWidth != NIL, "&width="  + hb_ntos( nWidth ), "" ) + ;
          iif( nHeight != NIL, "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br />"
-      OutHTML "</td></tr>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML cPhoto
-      OutHTML "</td></tr>"
-      OutHTML "</table>"
-      OutHTML "<br />"
+      WRITE "</td></tr>"
+      WRITE "<tr><td align='center'>"
+      WRITE cPhoto
+      WRITE "</td></tr>"
+      WRITE "</table>"
+      WRITE "<br />"
 #if 0
-      OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br />"
-      OutHTML OS() + "<br />"
+      WRITE "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br />"
+      WRITE OS() + "<br />"
 #endif
       EndHTML()
    ELSE

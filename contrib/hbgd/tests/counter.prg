@@ -12,7 +12,7 @@
 /* Some digits images from:
    http://www.digitmania.holowww.com/all.html */
 
-#define IMAGES_IN  "digits" + hb_ps()
+#define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
 
 #define DISPLAY_NUM  10
@@ -29,10 +29,10 @@ PROCEDURE Main( cValue, cBaseImage )
 
    // A value if not passed
    hb_default( @cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
-   hb_default( @cBaseImage, "57chevy.gif" )
+   hb_default( @cBaseImage, "d57chevy.gif" )
 
    IF ! hb_FileExists( IMAGES_IN + cBaseImage )
-      ? "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found"
+      ? "ERROR: Base Image File", "'" + IMAGES_IN + cBaseImage + "'", "not found"
       RETURN
    ENDIF
 
@@ -45,14 +45,12 @@ PROCEDURE Main( cValue, cBaseImage )
 
    cValue := StrZero( nValue, DISPLAY_NUM )
 
-   ? "Value = ", cValue
+   ? "Value =", cValue
 
    // Check output directory
-#if 0
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
@@ -76,7 +74,7 @@ PROCEDURE Main( cValue, cBaseImage )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
-   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+   ? "nNumWidth, nWidth, nHeight, nDigits =", nNumWidth, nWidth, nHeight, nDigits
 
    /* extracts single digits */
    FOR n := 1 TO nDigits
@@ -89,7 +87,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
-   ? "Image dimensions: ", oI:Width(), oI:Height()
+   ? "Image dimensions:", oI:Width(), oI:Height()
 
    /* Allocate drawing color */
 #if 0
@@ -108,7 +106,7 @@ PROCEDURE Main( cValue, cBaseImage )
       // Retrieve the number from array in memory
       oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
       // Save it to show the number for a position
-      oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
+      oTemp:SaveGif( IMAGES_OUT + "pos_" + StrZero( n, 2 ) + ".gif" )
       // Set the digit as tile that I have to use to fill position in counter
       oI:SetTile( oTemp )
       // Fill the position with the image digit
@@ -122,7 +120,6 @@ PROCEDURE Main( cValue, cBaseImage )
    // Class does it automatically
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

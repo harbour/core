@@ -17,12 +17,10 @@ PROCEDURE Main()
    LOCAL oI5
    LOCAL oB
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    /* Create an image in memory */
    oI := GDImage():Create( 200, 200 )
@@ -111,9 +109,9 @@ PROCEDURE Main()
    /* Query functions */
 
    color := oI:GetPixel( oI:Width() / 2, oI:Height() / 2 )
-   ? "Pixel Color is: ", color
-   ? "RGB Values: ", oI:Red( color ), oI:Green( color ), oI:Blue( color )
-   ? "Alpha Value: ",  oI:Alpha( color )
+   ? "Pixel Color is:", color
+   ? "RGB Values:", oI:Red( color ), oI:Green( color ), oI:Blue( color )
+   ? "Alpha Value:", oI:Alpha( color )
 
    /* Write Images on files */
    oI:SavePng( IMAGES_OUT + "rect.png" )
@@ -296,7 +294,6 @@ PROCEDURE Main()
    // Class does it auto
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

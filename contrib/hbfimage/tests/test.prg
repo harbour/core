@@ -24,7 +24,7 @@ PROCEDURE Main()
 #endif
    LOCAL bkcolor
    LOCAL bmpinfo
-   LOCAL nH, nLen, cStr
+   LOCAL cStr
 
 #if 0
    ? "Press Alt-D + Enter to activate debug"
@@ -175,13 +175,8 @@ PROCEDURE Main()
 
    //
 
-   IF ( nH := FOpen( IMAGES_IN + "sample1.jpg" ) ) != F_ERROR
-      nLen := FSeek( nH, 0, FS_END )
-      FSeek( nH, 0, FS_SET )
-      cStr := Space( nLen )
-      FRead( nH, @cStr, nLen )
-      FClose( nH )
-
+   cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" )
+   IF FError() == 0
       ? "Load JPEG from memory"
       im := fi_LoadFromMemory( FIF_JPEG, cStr, JPEG_DEFAULT )
 
@@ -196,16 +191,15 @@ PROCEDURE Main()
    fi_DeInitialise()
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN
 
 STATIC PROCEDURE fi_Error( cFormat, cMessage )
 
-   ? "ERROR!.."
-   ? "Format : ", cFormat
-   ? "Message: ", cMessage
+   ? "ERROR!..."
+   ? "Format :", cFormat
+   ? "Message:", cMessage
    ?
 
    RETURN

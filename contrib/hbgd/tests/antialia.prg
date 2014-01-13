@@ -14,12 +14,10 @@ PROCEDURE Main()
    LOCAL im
    LOCAL white, blue
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    /*
      This sample shows differences on use of antiliased command between a
@@ -33,7 +31,6 @@ PROCEDURE Main()
      may not give satisfactory results, due to the limited number of colors available in the
      palette. Antialiased line-drawing on simple backgrounds should work well with palette-based
      images; otherwise create or fetch a truecolor image instead.
-
    */
 
    /* ***** DRAW A LINE IN A PALETTE BASED IMAGE ***** */
@@ -84,7 +81,6 @@ PROCEDURE Main()
    gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

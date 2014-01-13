@@ -53,7 +53,6 @@ PROCEDURE Main()
    IF ! Empty( db )
       IF sqlite3_exec( db, "VACUUM" ) == SQLITE_OK
          ? "PACK - Done"
-
          sqlite3_sleep( 3000 )
       ENDIF
    ENDIF

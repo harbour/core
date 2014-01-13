@@ -13,12 +13,10 @@ PROCEDURE Main()
 
    LOCAL oI
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    /* Load an image from file */
    oI := GDImage():LoadFromFile( IMAGES_IN + "conv_tst.jpg" )
@@ -32,7 +30,6 @@ PROCEDURE Main()
    oI:SaveToFile( IMAGES_OUT + "testtofile" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

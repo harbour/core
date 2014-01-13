@@ -700,9 +700,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    LOCAL aForcedLF := { ;
       "*.sh" }
 
-   /* TOFIX: Harbour repo specific */
    LOCAL aNoProc := { ;
-      "maskimag.png" }  /* libharu demo will fail if optimized */
+      "contrib/hbhpdf/tests/files/*" }
 
    /* TOFIX: Harbour repo specific */
    LOCAL aNoCopyrightOk := { ;

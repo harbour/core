@@ -16,6 +16,11 @@ PROCEDURE Main()
 
    LOCAL black := oI:SetColor( 50, 0, 0 )
 
+   // Check output directory
+   IF ! hb_DirExists( IMAGES_OUT )
+      DirMake( IMAGES_OUT )
+   ENDIF
+
    oI:SetColor( black )
    oI:SetFontName( "Arial" ) // TOFIX
    oI:SetFontPitch( 10 )

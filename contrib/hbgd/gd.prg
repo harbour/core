@@ -225,7 +225,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   hb_default( @nHandle, 1 )
+   hb_default( @nHandle, hb_GetStdOut() )
 
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
       IF oImage:cType != NIL

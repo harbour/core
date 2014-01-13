@@ -1,7 +1,7 @@
 /*
  * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *
- * GD API anim gif test file - from GD official documantation, adapted to porting
+ * GD API anim gif test file - from GD official documentation, adapted to porting
  *
  * This test shows how handle either file handle than file name
  */
@@ -82,7 +82,6 @@ PROCEDURE Main()
    FClose( hFile )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

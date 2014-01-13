@@ -15,12 +15,10 @@ PROCEDURE Main()
    LOCAL black, blue, red, green, cyan
    LOCAL color, font
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    ? gdVersion()
 
@@ -80,9 +78,9 @@ PROCEDURE Main()
 
    /* Query functions */
    color := gdImageGetPixel( im, gdImageSX( im ) / 2, gdImageSY( im ) / 2 )
-   ? "Pixel Color is: ", color
-   ? "RGB Values: ", gdImageRed( im, color ), gdImageGreen( im, color ), gdImageBlue( im, color )
-   ? "Alpha Value: ",  gdImageAlpha( im, color )
+   ? "Pixel Color is:", color
+   ? "RGB Values:", gdImageRed( im, color ), gdImageGreen( im, color ), gdImageBlue( im, color )
+   ? "Alpha Value:",  gdImageAlpha( im, color )
 
    /* Write Images on files */
    gdImagePng( im, IMAGES_OUT + "rect.png" )
@@ -91,7 +89,6 @@ PROCEDURE Main()
    gdImageJpeg( im2, IMAGES_OUT + "conv_tst.jpg" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN
