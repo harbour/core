@@ -1,65 +1,56 @@
 @charset "UTF-8";
 
-body { color:black; font-size:10pt; font-family:Tahoma,Helvetica,Arial; }
+body {
+	color: black;
+	font-size: 10pt;
+	font-family: Tahoma, Helvetica, Arial;
+}
 
-a.pageSection:link { color: #ff0000; }
+a.pageSection:link    { color: #ff0000; }
 a.pageSection:visited { color: #0000ff; }
-a.pageSection:hover { background: #66ff66; }
+a.pageSection:hover   { background: #66ff66; }
 
-/* a:link { color: #ff0000; } */
-/* a:visited { color: #0000ff; } */
-/* a:hover { background: #66ff66; } */
-
-A {
-	color: #0000FF;
+a {
+	color: #0000ff;
 	text-decoration: none;
 }
 
-A:hover      { color: #6699cc; text-decoration: underline; }
-A.urls       { color: #0A68B6; text-decoration: none;      }
-A.urls:hover { color: #6699cc; text-decoration: underline; }
-A.tags       { color: #008080; text-decoration: none;      }
-A.tags:hover { color: #6699cc; text-decoration: underline; }
+a:hover      { color: #6699cc; text-decoration: underline; }
+a.urls       { color: #0a68b6; text-decoration: none;      }
+a.urls:hover { color: #6699cc; text-decoration: underline; }
+a.tags       { color: #008080; text-decoration: none;      }
+a.tags:hover { color: #6699cc; text-decoration: underline; }
 
-
-
-table.pagetable td
-{
+table.pagetable td {
 	padding: 3px;
 }
 
-table.datatable
-{
+table.datatable {
 	width: 100%;
 	font-size: 12px;
 	font-family: Verdana;
 }
 
-table.datatable tr th
-{
+table.datatable tr th {
 	padding: 2px;
-	border-bottom:1px solid black;
+	border-bottom: 1px solid black;
 	text-align: left;
 }
 
-table.datatable tr td
-{
+table.datatable tr td {
 	padding: 2px;
 	border-bottom: 1px solid white;
 	vertical-align: top;
 }
 
-table.datatable tr.odd
-{
-	background-color: #7FFFD4;
+table.datatable tr.odd {
+	background-color: #7fffd4;
 }
 
-table.datatable tr.even
-{
-	background-color: #F0F0F0;
+table.datatable tr.even {
+	background-color: #f0f0f0;
 }
 
-table.datatable tr.blank
-{
-	background-color: #FFFFFF;
+table.datatable tr.blank {
+	background-color: #ffffff;
 }

@@ -48,7 +48,7 @@
 
 #include "hbclass.ch"
 
-#define TABLE_NAME_PATH hb_DirSepToOS( "../../../tests/test.dbf" )
+#define TABLE_NAME_PATH  hb_DirSepToOS( "../../../tests/test.dbf" )
 #define SIMULATE_SLOW_REPLY
 
 MEMVAR _REQUEST // defined in uHTTPD
@@ -77,7 +77,7 @@ FUNCTION HRBMAIN()
       cCount := hGets[ "count" ]
 
       IF cCount == "true"
-         oTM  := TableManager():New()
+         oTM := TableManager():New()
          IF oTM:Open()
             nCount := oTM:getLastRec()
             cXml := oTM:getXmlCount( nCount )
@@ -265,12 +265,10 @@ METHOD getXmlData( page ) CLASS TableManager
          cString += "</cell>"
 
          xml:append( cString )
-
       NEXT
 
       // Add the closing </row> tag
       xml:append( "</row>" )
-
    NEXT
 
    // Add the closing </table> tag
@@ -284,7 +282,7 @@ METHOD getXmlCount( nCount ) CLASS TableManager
    LOCAL nPages := nCount / ::ROWS_PER_PAGE
 
    IF Int( nPages ) < nPages
-      nPages ++
+      nPages++
    ENDIF
 
    xml := BasicXML():New()
@@ -356,7 +354,7 @@ METHOD xmlEncode( input ) CLASS TableManager
          out += c
          EXIT
       OTHERWISE
-         // All non-ascii
+         // All non-ASCII
          IF Asc( c ) < 32 .OR. Asc( c ) >= 128
             out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
          ELSE

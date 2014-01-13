@@ -51,12 +51,9 @@ MEMVAR _REQUEST
 FUNCTION HRBMAIN()
 
    LOCAL cW
-   LOCAL cHtml := ""
 
-   IF "w" $ _REQUEST
-      IF ! Empty( cW := _REQUEST[ "w" ] )
-         cHtml += "This is a reply from testajax: " + cW
-      ENDIF
+   IF hb_HGetRef( _REQUEST, "w", @cW )
+      RETURN "This is a reply from testajax: " + cW
    ENDIF
 
-   RETURN cHtml
+   RETURN ""

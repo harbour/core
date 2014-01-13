@@ -108,7 +108,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    cValue := StrZero( nValue, DISPLAY_NUM )
 
 #if 0
-   ? "Value = ", cValue
+   ? "Value =", cValue
 
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
@@ -139,7 +139,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    nNumWidth := nWidth / nDigits
 
 #if 0
-   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+   ? "nNumWidth, nWidth, nHeight, nDigits =", nNumWidth, nWidth, nHeight, nDigits
 #endif
 
    /* extracts single digits */
@@ -153,7 +153,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
 #if 0
-   ? "Image dimensions: ", oI:Width(), oI:Height()
+   ? "Image dimensions:", oI:Width(), oI:Height()
 
    /* Allocate background */
    white := oI:SetColor( 255, 255, 255 )
@@ -186,7 +186,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
+   ? "Look at", IMAGES_OUT, "folder for output images"
    ?
 #endif
 
