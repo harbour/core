@@ -22,10 +22,11 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    IF SQLConnect( cServer, cDatabase, cUser, cPass )
       QuickQuery( "DROP TABLE test" )
 
-      cQuery := "CREATE TABLE test ( "
-      cQuery += "  codigo integer primary key, "
-      cQuery += "  descri char(50), "
-      cQuery += "  email varchar(50) ) "
+      cQuery := ;
+         "CREATE TABLE test (" + ;
+         "  codigo integer primary key," + ;
+         "  descri char(50)," + ;
+         "  email varchar(50) )"
       SQLQuery( cQuery )
 
       SQLOpen( "nomes", "SELECT * FROM test" )

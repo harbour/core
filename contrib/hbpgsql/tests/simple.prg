@@ -33,17 +33,18 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    ENDIF
 
    ? "Creating test table..."
-   cQuery := "CREATE TABLE test("
-   cQuery += "     Code integer not null primary key, "
-   cQuery += "     dept Integer, "
-   cQuery += "     Name Varchar(40), "
-   cQuery += "     Sales boolean, "
-   cQuery += "     Tax Float4, "
-   cQuery += "     Salary Double Precision, "
-   cQuery += "     Budget Numeric(12,2), "
-   cQuery += "     Discount Numeric(5,2), "
-   cQuery += "     Creation Date, "
-   cQuery += "     Description text ) "
+   cQuery := ;
+      "CREATE TABLE test(" + ;
+      "     Code integer not null primary key," + ;
+      "     dept Integer," + ;
+      "     Name Varchar(40)," + ;
+      "     Sales boolean," + ;
+      "     Tax Float4," + ;
+      "     Salary Double Precision," + ;
+      "     Budget Numeric(12,2)," + ;
+      "     Discount Numeric(5,2)," + ;
+      "     Creation Date," + ;
+      "     Description text )"
 
    oQuery := oServer:Query( cQuery )
 

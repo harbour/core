@@ -228,7 +228,7 @@ STATIC PROCEDURE WvtNextGetsConsole()
 
    RETURN
 
-STATIC PROCEDURE WvtNextGets()
+PROCEDURE WvtNextGets()  /* must be a public function */
 
    IF hb_mtvm()
       hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_SetFont( "Terminal", 20 ), ;
@@ -317,7 +317,7 @@ STATIC PROCEDURE WvtNextGets_X()
 
    RETURN
 
-STATIC PROCEDURE WvtPartialScreen()
+PROCEDURE WvtPartialScreen()  /* must be a public function */
 
    LOCAL scr        := SaveScreen( 7, 20, 15, 60 )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -359,7 +359,7 @@ STATIC PROCEDURE WvtPartialScreen()
 
    RETURN
 
-STATIC PROCEDURE WvtLines()
+PROCEDURE WvtLines()  /* must be a public function */
 
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL clr        := SetColor( "N/W" )
@@ -696,14 +696,17 @@ STATIC FUNCTION FetchText( nMode )
 
    DO CASE
    CASE nMode == 1
-      cText := "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! "
-      cText += "Enjoy it."
+      cText := ;
+         "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! " + ;
+         "Enjoy it."
    CASE nMode == 2
-      cText := "Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? "
-      cText += "This demonstration is a proof of that."
+      cText := ;
+         "Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? " + ;
+         "This demonstration is a proof of that."
    CASE nMode == 3
-      cText := "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! "
-      cText += "And is FREE."
+      cText := ;
+         "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! " + ;
+         "And is FREE."
    CASE nMode == 4
       cText := "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"
    ENDCASE

@@ -157,8 +157,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
          ::oParent:setFocus()
       ENDIF
 
-      IF ! HB_ISBLOCK( ::sl_xbeSB_Scroll )
-         RETURN EVENT_UNHANDELLED
+      IF ! HB_ISEVALITEM( ::sl_xbeSB_Scroll )
+         RETURN EVENT_UNHANDLED
       ENDIF
 
       nScrMsg := aNM[ 1 ]
@@ -221,7 +221,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
       ::sl_editBuffer := nScrPos
       Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
 
    CASE nMessage == HB_GTE_VSCROLL
@@ -236,8 +236,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
          nScrPos := wapi_GetScrollPos( ::pWnd, SB_CTL )
       ENDIF
 
-      IF ! HB_ISBLOCK( ::sl_xbeSB_Scroll )
-         RETURN EVENT_UNHANDELLED
+      IF ! HB_ISEVALITEM( ::sl_xbeSB_Scroll )
+         RETURN EVENT_UNHANDLED
       ENDIF
 
       DO CASE
@@ -293,11 +293,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
       ::sl_editBuffer := nScrPos
       Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD destroy() CLASS WvgScrollBar
 
@@ -307,7 +307,7 @@ METHOD destroy() CLASS WvgScrollBar
 
 METHOD Scroll( xParam ) CLASS WvgScrollBar
 
-   IF HB_ISBLOCK( xParam )
+   IF HB_ISEVALITEM( xParam )
       ::sl_xbeSB_Scroll := xParam
    ENDIF
 

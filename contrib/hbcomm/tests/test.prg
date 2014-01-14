@@ -18,7 +18,7 @@ PROCEDURE Main()
    LOCAL nOption
 
    DO WHILE .T.
-      ? ""
+      ?
       ? "Select test:"
       ? "O) Open"
       ? "C) Close"
@@ -28,9 +28,9 @@ PROCEDURE Main()
       ? "> "
 
       nOption := Inkey( 0 )
-      ?? Chr( nOption )
+      ?? hb_keyChar( nOption )
 
-      SWITCH Upper( Chr( nOption ) )
+      SWITCH Upper( hb_keyChar( nOption ) )
       CASE "O" ; FConnect() ; EXIT
       CASE "C" ; FDisconnect() ; EXIT
       CASE "S" ; FSend() ; EXIT

@@ -14,7 +14,7 @@ PROCEDURE Main( cParam )
    ENDIF
 
    IF cParam == NIL
-      ? "udpdstst {c|s|cs}"
+      ? "udpds {c|s|cs}"
       ? "Parameter:"
       ? "   s - run as a server"
       ? "   c - run as a client"

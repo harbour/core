@@ -108,7 +108,9 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
    IF ::clipSiblings
       ::style += WS_CLIPSIBLINGS
    ENDIF
-   /* ::style += WS_DLGFRAME */
+#if 0
+   ::style += WS_DLGFRAME
+#endif
 
    ::style += TCS_FOCUSNEVER
 
@@ -138,9 +140,9 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    DO CASE
    CASE nMessage == HB_GTE_SETFOCUS
-      IF HB_ISBLOCK( ::sl_tabActivate )
+      IF HB_ISEVALITEM( ::sl_tabActivate )
 
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
@@ -148,13 +150,13 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    CASE nMessage == HB_GTE_RESIZED
       ::sendMessage( WM_SIZE, 0, 0 )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_NOTIFY
       aHdr := Wvg_GetNMHdrInfo( aNM[ 2 ] )
 
       DO CASE
-      CASE aHdr[ NMH_code ] == - 551 /* TCN_SELCHANGE */
+      CASE aHdr[ NMH_code ] == -551 /* TCN_SELCHANGE */
 
       ENDCASE
 
@@ -163,11 +165,11 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD tabActivate( xParam ) CLASS WvgTabPage
 
-   IF HB_ISBLOCK( xParam )
+   IF HB_ISEVALITEM( xParam )
       ::sl_tabActivate := xParam
    ENDIF
 

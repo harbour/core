@@ -21,7 +21,7 @@ PROCEDURE Main()
    CLS
 
    DO WHILE .T.
-      ? ""
+      ?
       ? "Select OLE test:"
       ? "1) MS Excel"
       ? "2) MS Word"
@@ -44,36 +44,21 @@ PROCEDURE Main()
       ?? hb_keyChar( nOption )
 
       DO CASE
-      CASE nOption == hb_keyCode( "1" )
-         Exm_MSExcel()
-      CASE nOption == hb_keyCode( "2" )
-         Exm_MSWord()
-      CASE nOption == hb_keyCode( "3" )
-         Exm_MSOutlook()
-      CASE nOption == hb_keyCode( "4" )
-         Exm_MSOutlook2()
-      CASE nOption == hb_keyCode( "5" )
-         Exm_IExplorer()
-      CASE nOption == hb_keyCode( "6" )
-         Exm_OOCalc()
-      CASE nOption == hb_keyCode( "7" )
-         Exm_OOWriter()
-      CASE nOption == hb_keyCode( "8" )
-         Exm_OOOpen()
-      CASE nOption == hb_keyCode( "9" )
-         Exm_CDO()
-      CASE nOption == hb_keyCode( "a" )
-         Exm_ADODB()
-      CASE nOption == hb_keyCode( "b" )
-         Exm_SOAP()
-      CASE nOption == hb_keyCode( "c" )
-         Exm_PocketSOAP()
-      CASE nOption == hb_keyCode( "d" )
-         Exm_IExplorer2()
-      CASE nOption == hb_keyCode( "e" )
-         Exm_CreateShortcut()
-      CASE nOption == hb_keyCode( "0" )
-         EXIT
+      CASE nOption == hb_keyCode( "1" ) ; Exm_MSExcel()
+      CASE nOption == hb_keyCode( "2" ) ; Exm_MSWord()
+      CASE nOption == hb_keyCode( "3" ) ; Exm_MSOutlook()
+      CASE nOption == hb_keyCode( "4" ) ; Exm_MSOutlook2()
+      CASE nOption == hb_keyCode( "5" ) ; Exm_IExplorer()
+      CASE nOption == hb_keyCode( "6" ) ; Exm_OOCalc()
+      CASE nOption == hb_keyCode( "7" ) ; Exm_OOWriter()
+      CASE nOption == hb_keyCode( "8" ) ; Exm_OOOpen()
+      CASE nOption == hb_keyCode( "9" ) ; Exm_CDO()
+      CASE nOption == hb_keyCode( "a" ) ; Exm_ADODB()
+      CASE nOption == hb_keyCode( "b" ) ; Exm_SOAP()
+      CASE nOption == hb_keyCode( "c" ) ; Exm_PocketSOAP()
+      CASE nOption == hb_keyCode( "d" ) ; Exm_IExplorer2()
+      CASE nOption == hb_keyCode( "e" ) ; Exm_CreateShortcut()
+      CASE nOption == hb_keyCode( "0" ) ; EXIT
       ENDCASE
    ENDDO
 

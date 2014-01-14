@@ -1027,10 +1027,11 @@ STATIC FUNCTION GetErrorDesc( oErr )
 
       BEGIN SEQUENCE WITH {| o | Break( o ) }
          IF Used()
-            cRet += "    Filter: " + dbFilter() + hb_eol()
-            cRet += "    Relation: " + dbRelation() + hb_eol()
-            cRet += "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol()
-            cRet += hb_eol()
+            cRet += ;
+               "    Filter: " + dbFilter() + hb_eol() + ;
+               "    Relation: " + dbRelation() + hb_eol() + ;
+               "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol() + ;
+               hb_eol()
             BEGIN SEQUENCE WITH {| o | Break( o ) }
                FOR nI := 1 TO FCount()
                   cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + hb_ValToExp( FieldGet( nI ) ) + hb_eol()

@@ -183,7 +183,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             Eval( ::sl_itemMarked, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -197,7 +197,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -219,7 +219,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -246,7 +246,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       DO CASE
       CASE aNM[ 1 ] == WM_LBUTTONUP
          ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -258,7 +258,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
       CASE aNM[ 1 ] == WM_LBUTTONDBLCLK
          ::editBuffer := ::nCurSelected
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -266,13 +266,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
-            RETURN EVENT_HANDELLED
+            RETURN EVENT_HANDLED
          ENDIF
 
       CASE aNM[ 1 ] == WM_KEYUP
          IF ::nCurSelected != Wvg_LBGetCurSel( ::hWnd ) + 1
             ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
-            IF HB_ISBLOCK( ::sl_itemMarked )
+            IF HB_ISEVALITEM( ::sl_itemMarked )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
@@ -286,7 +286,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ENDCASE
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgListBox:clear()
 

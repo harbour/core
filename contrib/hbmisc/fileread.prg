@@ -8,13 +8,13 @@
 
 #include "fileio.ch"
 
-#define oF_ERROR_MIN          1
-#define oF_CREATE_OBJECT      1
-#define oF_OPEN_FILE          2
-#define oF_READ_FILE          3
-#define oF_CLOSE_FILE         4
-#define oF_ERROR_MAX          4
-#define oF_DEFAULT_READ_SIZE  4096
+#define O_F_ERROR_MIN           1
+#define O_F_CREATE_OBJECT       1
+#define O_F_OPEN_FILE           2
+#define O_F_READ_FILE           3
+#define O_F_CLOSE_FILE          4
+#define O_F_ERROR_MAX           4
+#define O_F_DEFAULT_READ_SIZE   4096
 
 CREATE CLASS TFileRead
 
@@ -48,16 +48,16 @@ METHOD New( cFile, nSize ) CLASS TFileRead
    IF nSize == NIL .OR. nSize < 1
       // The readahead size can be set to as little as 1 byte, or as much as
       // 65535 bytes, but venturing out of bounds forces the default size.
-      nSize := oF_DEFAULT_READ_SIZE
+      nSize := O_F_DEFAULT_READ_SIZE
    ENDIF
 
-   ::cFile     := cFile             // Save the file name
-   ::nHan      := F_ERROR           // It's not open yet
-   ::lEOF      := .T.               // So it must be at EOF
-   ::nError    := 0                 // But there haven't been any errors
-   ::nLastOp   := oF_CREATE_OBJECT  // Because we just created the class
-   ::cBuffer   := ""                // and nothing has been read yet
-   ::nReadSize := nSize             // But will be in this size chunks
+   ::cFile     := cFile              // Save the file name
+   ::nHan      := F_ERROR            // It's not open yet
+   ::lEOF      := .T.                // So it must be at EOF
+   ::nError    := 0                  // But there haven't been any errors
+   ::nLastOp   := O_F_CREATE_OBJECT  // Because we just created the class
+   ::cBuffer   := ""                 // and nothing has been read yet
+   ::nReadSize := nSize              // But will be in this size chunks
 
    RETURN Self
 
@@ -68,7 +68,7 @@ METHOD Open( nMode ) CLASS TFileRead
       IF nMode == NIL
          nMode := FO_READ + FO_SHARED   // Default to shared read-only mode
       ENDIF
-      ::nLastOp := oF_OPEN_FILE
+      ::nLastOp := O_F_OPEN_FILE
       ::nHan := FOpen( ::cFile, nMode )   // Try to open the file
       IF ::nHan == F_ERROR
          ::nError := FError()       // It didn't work
@@ -94,7 +94,7 @@ METHOD ReadLine() CLASS TFileRead
    LOCAL cLine := ""
    LOCAL nPos
 
-   ::nLastOp := oF_READ_FILE
+   ::nLastOp := O_F_READ_FILE
 
    IF ::nHan == F_ERROR
       ::nError := F_ERROR           // Set unknown error if file not open
@@ -179,7 +179,7 @@ METHOD EOL_pos() CLASS TFileRead
 
 METHOD Close() CLASS TFileRead
 
-   ::nLastOp := oF_CLOSE_FILE
+   ::nLastOp := O_F_CLOSE_FILE
    ::lEOF := .T.
    // Is the file already closed.
    IF ::nHan == F_ERROR
@@ -238,7 +238,7 @@ METHOD ErrorMsg( cText ) CLASS TFileRead
       cMessage := "No errors have been recorded for " + ::cFile
    ELSE
       // Yes, so format a nice error message, while avoiding a bounds error.
-      IF ::nLastOp < oF_ERROR_MIN .OR. ::nLastOp > oF_ERROR_MAX
+      IF ::nLastOp < O_F_ERROR_MIN .OR. ::nLastOp > O_F_ERROR_MAX
          nTemp := 1
       ELSE
          nTemp := ::nLastOp + 1

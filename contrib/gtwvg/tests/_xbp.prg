@@ -397,7 +397,7 @@ STATIC PROCEDURE ExeFontDialogXbp( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
-// oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handelled in Windows!" ) }
+// oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handled in Windows!" ) }
    oFontDlg:nominalPointSize := 12
 
 // oFontDlg:size             := .F.

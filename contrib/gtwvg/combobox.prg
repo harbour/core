@@ -126,13 +126,14 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( Self )
 
-   IF ::type == WVGCOMBO_DROPDOWNLIST
+   DO CASE
+   CASE ::type == WVGCOMBO_DROPDOWNLIST
       ::style += CBS_DROPDOWNLIST
-   ELSEIF ::type == WVGCOMBO_SIMPLE
+   CASE ::type == WVGCOMBO_SIMPLE
       ::style += CBS_SIMPLE
-   ELSE
+   OTHERWISE
       ::style += CBS_DROPDOWN
-   ENDIF
+   ENDCASE
 
    ::createControl()
 
@@ -250,7 +251,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgComboBox:addItem( cItem )
 
@@ -297,9 +298,9 @@ METHOD WvgComboBox:itemMarked( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemMarked )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemMarked )
       Eval( ::sl_itemMarked, NIL, NIL, Self )
    ENDIF
 
@@ -309,9 +310,9 @@ METHOD WvgComboBox:itemSelected( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemSelected )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemSelected )
       Eval( ::sl_itemSelected, NIL, NIL, Self )
    ENDIF
 
@@ -321,9 +322,9 @@ METHOD WvgComboBox:drawItem( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_xbePDrawItem )
+   ELSEIF Len( a_ ) >= 2 .AND. HB_ISEVALITEM( ::sl_xbePDrawItem )
       Eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
 

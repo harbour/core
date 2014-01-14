@@ -106,7 +106,7 @@ CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
    METHOD setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
    METHOD setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-      iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
+      iif( lExpanded == NIL, .F., lExpanded ), nLevels )
 
 ENDCLASS
 
@@ -115,7 +115,7 @@ METHOD WvgTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_TABSTOP + WS_CLIPSIBLINGS
-   ::exStyle     := WS_EX_CLIENTEDGE // WS_EX_STATICEDGE /*+ TVS_EX_FADEINOUTEXPANDOS */
+   ::exStyle     := WS_EX_CLIENTEDGE // WS_EX_STATICEDGE /* + TVS_EX_FADEINOUTEXPANDOS */
 
    ::className   := "SysTreeView32"
    ::objType     := objTypeTreeView
@@ -168,9 +168,9 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE HB_GTE_COMMAND
-      IF HB_ISBLOCK( ::sl_lbClick )
+      IF HB_ISEVALITEM( ::sl_lbClick )
          Eval( ::sl_lbClick, NIL, NIL, self )
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
       ENDIF
       EXIT
 
@@ -183,7 +183,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, ::oItemSelected, { 0, 0, 0, 0 }, Self )
          ENDIF
          IF ::isParentCrt()
@@ -200,7 +200,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             Eval( ::sl_itemMarked, ::oItemSelected, { 0, 0, 0, 0 }, Self )
          ENDIF
          IF ::isParentCrt()
@@ -223,7 +223,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       IF aNM[ 1 ] == WM_LBUTTONDOWN
          aHdr := Wvg_GetNMTreeViewInfo( aNM[ 3 ] )
          ::getSelectionInfo( aNM[ 2 ] )
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -232,11 +232,11 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
 
       ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
          ::editBuffer := ::oItemSelected
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -252,7 +252,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 #endif
    ENDSWITCH
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgTreeView:destroy()
 
@@ -294,7 +294,7 @@ METHOD WvgTreeView:itemFromPos( aPos )
 
 METHOD WvgTreeView:itemCollapsed( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_paint := xParam
    ENDIF
 
@@ -302,7 +302,7 @@ METHOD WvgTreeView:itemCollapsed( xParam )
 
 METHOD WvgTreeView:itemExpanded( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemExpanded := xParam
    ENDIF
 
@@ -310,7 +310,7 @@ METHOD WvgTreeView:itemExpanded( xParam )
 
 METHOD WvgTreeView:itemMarked( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemMarked := xParam
    ENDIF
 
@@ -320,7 +320,7 @@ METHOD WvgTreeView:itemMarked( xParam )
 
 METHOD WvgTreeView:itemSelected( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemSelected := xParam
    ENDIF
 

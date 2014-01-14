@@ -346,6 +346,15 @@ HB_FUNC( HB_ISBYREF )
 
 #endif
 
+#if ! defined( HB_LEGACY_LEVEL5 )
+
+HB_FUNC( HB_ISNIL )
+{
+   hb_retl( HB_ISNIL( 1 ) );
+}
+
+#endif
+
 HB_FUNC_TRANSLATE( METHODNAME     , HB_METHODNAME )
 HB_FUNC_TRANSLATE( LIBLOAD        , HB_LIBLOAD    )
 HB_FUNC_TRANSLATE( LIBFREE        , HB_LIBFREE    )

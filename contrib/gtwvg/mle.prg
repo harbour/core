@@ -172,22 +172,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_HSCROLL
-         IF HB_ISBLOCK( ::sl_hScroll )
+         IF HB_ISEVALITEM( ::sl_hScroll )
             Eval( ::sl_hScroll, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_VSCROLL
-         IF HB_ISBLOCK( ::sl_vScroll )
+         IF HB_ISEVALITEM( ::sl_vScroll )
             Eval( ::sl_vScroll, NIL, NIL, Self )
          ENDIF
 
@@ -215,26 +215,26 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
          CASE aNM[ NMH_code ] == WM_KEYDOWN
             IF aNM[ 2 ] == VK_TAB
                ::oParent:setFocus()
-               RETURN EVENT_HANDELLED
+               RETURN EVENT_HANDLED
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_KILLFOCUS
-            IF HB_ISBLOCK( ::sl_killInputFocus )
+            IF HB_ISEVALITEM( ::sl_killInputFocus )
                Eval( ::sl_killInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_SETFOCUS
-            IF HB_ISBLOCK( ::sl_setInputFocus )
+            IF HB_ISEVALITEM( ::sl_setInputFocus )
                Eval( ::sl_setInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_HSCROLL
-            IF HB_ISBLOCK( ::sl_hScroll )
+            IF HB_ISEVALITEM( ::sl_hScroll )
                Eval( ::sl_hScroll, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_VSCROLL
-            IF HB_ISBLOCK( ::sl_vScroll )
+            IF HB_ISEVALITEM( ::sl_vScroll )
                Eval( ::sl_vScroll, NIL, NIL, Self )
             ENDIF
 
@@ -243,7 +243,7 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgMLE:destroy()
 

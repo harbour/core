@@ -132,7 +132,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       RETURN 0
 
    CASE nMessage == HB_GTE_COMMAND
-      IF HB_ISBLOCK( ::sl_lbClick )
+      IF HB_ISEVALITEM( ::sl_lbClick )
          Eval( ::sl_lbClick, NIL, NIL, self )
          RETURN 0
       ENDIF
@@ -144,7 +144,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
       CASE aNMH[ NMH_code ] == NM_CLICK
 
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF aNMH[ NMH_dwItemSpec ] >= 0
                nObj := aNMH[ NMH_dwItemSpec ] + 1
 
@@ -176,11 +176,10 @@ METHOD WvgStatusBar:destroy()
 
    LOCAL i, nItems
 
-   IF ( nItems := Len( ::aItems ) ) > 0
-      FOR i := 1 TO nItems
-
-      NEXT
-   ENDIF
+   nItems := Len( ::aItems )
+   FOR i := 1 TO nItems
+      /* TOFIX: Why was this left empty? */
+   NEXT
 
    ::wvgWindow:destroy()
 
@@ -220,11 +219,12 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
 
    LOCAL nIndex := 0
 
-   IF HB_ISNUMERIC( nItemORcKey )
+   DO CASE
+   CASE HB_ISNUMERIC( nItemORcKey )
       nIndex := AScan( ::aItems, {| o | o:key == nItemORcKey } )
-   ELSEIF HB_ISNUMERIC( nItemORcKey )
+   CASE HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
-   ENDIF
+   ENDCASE
 
    IF nIndex > 0
       /* Delete panel by window */
@@ -237,13 +237,12 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
 
    LOCAL nIndex := 0, oPanel
 
-   IF HB_ISSTRING( nItemORcKey  )
+   DO CASE
+   CASE HB_ISSTRING( nItemORcKey )
       nIndex := AScan( ::aItems, {| o | o:key == nItemORcKey } )
-
-   ELSEIF HB_ISNUMERIC(  nItemORcKey  )
+   CASE HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
-
-   ENDIF
+   ENDCASE
 
    IF nIndex > 0
       oPanel := ::aItems[ nIndex ]
@@ -257,7 +256,6 @@ METHOD WvgStatusBar:clear()
 
    FOR i := 1 TO ::numItems
       /* Remove off window */
-
    NEXT
 
    ::aItems := {}
@@ -266,7 +264,7 @@ METHOD WvgStatusBar:clear()
 
 METHOD WvgStatusBar:panelClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_lbClick := xParam
    ENDIF
 
@@ -274,15 +272,13 @@ METHOD WvgStatusBar:panelClick( xParam )
 
 METHOD WvgStatusBar:panelDblClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_lbDblClick := xParam
    ENDIF
 
    RETURN Self
 
-/*
- *       WvgToolBarButton() Class compatible with XbpToolbarButton()
- */
+/* WvgToolBarButton() Class compatible with XbpToolbarButton() */
 CREATE CLASS WvgStatusBarPanel
 
    VAR    alignment                             INIT WVGALIGN_LEFT
@@ -323,7 +319,6 @@ METHOD WvgStatusBarPanel:caption( cCaption )
 
    IF cCaption == NIL
       RETURN ::sl_caption
-
    ELSE
       __defaultNIL( @cCaption, ::sl_caption )
 

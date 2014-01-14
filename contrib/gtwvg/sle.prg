@@ -182,12 +182,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       CASE aNM[ NMH_code ] == EN_MAXTEXT
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
@@ -207,37 +207,39 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
    CASE nMessage == HB_GTE_ANY
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_KEYDOWN
-         IF aNM[ 2 ] == K_ENTER
+
+         DO CASE
+         CASE aNM[ 2 ] == K_ENTER
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            IF HB_ISBLOCK( ::sl_returnPressed )
+            IF HB_ISEVALITEM( ::sl_returnPressed )
                Eval( ::sl_returnPressed, NIL, NIL, Self )
             ENDIF
-         ELSEIF aNM[ 2 ] == VK_TAB
+         CASE aNM[ 2 ] == VK_TAB
             IF ::isParentCrt()
                ::oParent:setFocus()
-               RETURN EVENT_HANDELLED
+               RETURN EVENT_HANDLED
             ENDIF
-         ELSEIF aNM[ 2 ] == 65
-            // RETURN EVENT_HANDELLED
-         ENDIF
+         CASE aNM[ 2 ] == 65
+            // RETURN EVENT_HANDLED
+         ENDCASE
 
       ENDCASE
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD destroy() CLASS WvgSLE
 
@@ -296,9 +298,9 @@ METHOD WvgSLE:returnPressed( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_returnPressed )
       Eval( ::sl_returnPressed, NIL, NIL, Self )
    ENDIF
 

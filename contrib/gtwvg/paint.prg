@@ -44,17 +44,13 @@
  *
  */
 
-/*
- *            Routines to manage Wvt*Classes Gui Painting
- */
+/* Routines to manage Wvt*Classes Gui Painting */
 
 #include "wvtwin.ch"
 
 THREAD STATIC t_paint_ := { { "", {} } }
 
-/*
- * This function must have to be defined in your appls
- */
+/* This function must have to be defined in your applications */
 #if 0
 
 FUNCTION Wvt_Paint()
@@ -79,8 +75,8 @@ FUNCTION WvtPaintObjects()
          lExe := .T.
 
          IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
-            /*  Check parameters against tlbr_ depending upon the
-             *  type of object and attributes contained in aAttr
+            /* Check parameters against tlbr_ depending upon the
+             * type of object and attributes contained in aAttr
              */
             DO CASE
             CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GRID_V
@@ -107,9 +103,9 @@ FUNCTION WvtPaintObjects()
                ENDIF
 
             OTHERWISE
-               /* If refreshing rectangle's top is less than objects' bottom    */
-               /* and left is less than objects' right                          */
-               /*                                                               */
+               /* If refreshing rectangle's top is less than objects' bottom
+                * and left is less than objects' right
+                */
                IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   <= bottom  */
                   tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm >= top     */
                   tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < right    */
@@ -133,13 +129,13 @@ FUNCTION WvtSetPaint( a_ )
 
    THREAD STATIC t
 
-   IF t == nil
+   IF t == NIL
       t := {}
    ENDIF
 
    o := t
 
-   IF a_ != nil
+   IF a_ != NIL
       t := a_
    ENDIF
 
@@ -149,7 +145,7 @@ FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
 
    LOCAL n, n1, oldData
 
-   IF xData != nil
+   IF xData != NIL
       IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
          IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n, 2, n1, 2 ]
@@ -226,9 +222,8 @@ FUNCTION Wvg_InsertPaint( cID, aPaint, lSet )
    RETURN NIL
 
 /*
- *               RunTime Dialog Generation Routines
- *
- *                      Courtesy What32.lib
+ * RunTime Dialog Generation Routines
+ * Courtesy hbwhat library
  */
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
 FUNCTION Wvt_SetDlgCoMode( nMode )
@@ -314,10 +309,10 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    AAdd( aDlg[ 1 ], 0       )
    AAdd( aDlg[ 1 ], iif( HB_ISSTRING( cTitle ), cTitle, "" ) )
 
-   IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8               ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F.             ) )
+   IF hb_bitAnd( nStyle, DS_SETFONT ) != 0
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8 ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400 ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F. ) )
       AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName, "MS Sans Serif" ) )
    ENDIF
 
@@ -408,21 +403,17 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
    hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
    IF hDlg != 0
-      IF ncIcon != nil
+      IF ncIcon != NIL
          Wvt_DlgSetIcon( hDlg, ncIcon )
-
       ENDIF
 
       IF HB_ISNUMERIC( nTimerTicks )
          Wvg_SetTimer( hDlg, 1001, nTimerTicks )
-
       ENDIF
 
-      IF hMenu != nil
+      IF hMenu != NIL
          Wvg_SetMenu( hDlg, hMenu )
-
       ENDIF
-
    ENDIF
 
    RETURN hDlg
@@ -480,7 +471,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
-   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
    IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
@@ -538,9 +529,7 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    RETURN xRet
 
-/*
- * C Functions to PRG Ports
- */
+/* C functions to PRG Ports */
 
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -557,13 +546,14 @@ FUNCTION Wvt_GetTitle()
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
-   IF HB_ISNUMERIC( ncIconRes )
+   DO CASE
+   CASE HB_ISNUMERIC( ncIconRes )
       hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
-   ELSEIF HB_ISSTRING( cIconName )
+   CASE HB_ISSTRING( cIconName )
       hb_gtInfo( HB_GTI_ICONRES, cIconName )
-   ELSEIF HB_ISSTRING( ncIconRes )
+   CASE HB_ISSTRING( ncIconRes )
       hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
-   ENDIF
+   ENDCASE
 
    RETURN NIL
 
@@ -702,11 +692,11 @@ FUNCTION Wvt_PasteFromClipboard()
    LOCAL cText, nLen, i
 
    cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-   IF ( nLen := Len( cText ) ) > 0
-      FOR i := 1 TO nLen
-         Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
-      NEXT
-   ENDIF
+
+   nLen := Len( cText )
+   FOR i := 1 TO nLen
+      Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
+   NEXT
 
    RETURN NIL
 

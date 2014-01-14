@@ -87,8 +87,13 @@
 
 /*-*/
 
-#define EVENT_HANDELLED                           0
-#define EVENT_UNHANDELLED                         1
+#define EVENT_HANDLED                             0
+#define EVENT_UNHANDLED                           1
+
+#ifdef HB_LEGACY_LEVEL4
+#define EVENT_HANDELLED                           EVENT_HANDLED    /* for compatibility */
+#define EVENT_UNHANDELLED                         EVENT_UNHANDLED  /* for compatibility */
+#endif
 
 /*-*/
 

@@ -247,35 +247,31 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    RETURN 0
 
 STATIC FUNCTION GetEditText()
-
-   LOCAL cText := ""
-
-   cText += "Welcome in the Wonderful World of Harbour!"
-   cText += hb_eol() + hb_eol()
-   cText += "When Peter Rees first published GTWVT, a Windows "
-   cText += "Terminal Driver, on 22 Dec 2003, everybody took it "
-   cText += "lightly, except for me, as I was aware that what "
-   cText += "wonderful contribution to Harbour he has made, "
-   cText += "what immense possibilities he has opened for Harbour "
-   cText += "developers, what limitations he has cleared for Clipper "
-   cText += "savvy user base."
-   cText += hb_eol() + hb_eol()
-   cText += "With a little effort I could extend GTWVT "
-   cText += "to give it a GUI look. I also tried to give it "
-   cText += "an event driven functionality, and up came Wvt*Classes."
-   cText += hb_eol() + hb_eol()
-   cText += "And yet another feather is added in the cap of GTWVT "
-   cText += "as it is now capable of firing modeless dialogs like the one "
-   cText += "you are viewing. These dialogs can be constructed dynamically ( Courtesy hbwhat32 ) "
-   cText += "at run time or can be one of resources. At present 20 such dialogs "
-   cText += "can be active at any given time. Also note that dialogs created "
-   cText += "dynamically respect Top, Left, Rows, Cols coordinates, which is an "
-   cText += "undisputed productivity boost!"
-   cText += hb_eol() + hb_eol()
-   cText += "Enjoy!" + hb_eol()
-   cText += "Pritpal Bedi, INDIA"
-
-   RETURN cText
+   RETURN ;
+      "Welcome in the Wonderful World of Harbour!" + ;
+      hb_eol() + hb_eol() + ;
+      "When Peter Rees first published GTWVT, a Windows " + ;
+      "Terminal Driver, on 22 Dec 2003, everybody took it " + ;
+      "lightly, except for me, as I was aware that what " + ;
+      "wonderful contribution to Harbour he has made, " + ;
+      "what immense possibilities he has opened for Harbour " + ;
+      "developers, what limitations he has cleared for Clipper " + ;
+      "savvy user base." + ;
+      hb_eol() + hb_eol() + ;
+      "With a little effort I could extend GTWVT " + ;
+      "to give it a GUI look. I also tried to give it " + ;
+      "an event driven functionality, and up came Wvt*Classes." + ;
+      hb_eol() + hb_eol() + ;
+      "And yet another feather is added in the cap of GTWVT " + ;
+      "as it is now capable of firing modeless dialogs like the one " + ;
+      "you are viewing. These dialogs can be constructed dynamically ( Courtesy hbwhat ) " + ;
+      "at run time or can be one of resources. At present 20 such dialogs " + ;
+      "can be active at any given time. Also note that dialogs created " + ;
+      "dynamically respect Top, Left, Rows, Cols coordinates, which is an " + ;
+      "undisputed productivity boost!" + ;
+      hb_eol() + hb_eol() + ;
+      "Enjoy!" + hb_eol() + ;
+      "Pritpal Bedi, INDIA"
 
 FUNCTION DlgSlideShow()
 
