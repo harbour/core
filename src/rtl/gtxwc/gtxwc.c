@@ -4196,8 +4196,11 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 
    for( ;; )
    {
+      const int event_types[] = { 0, ClientMessage, MappingNotify,
+                                  SelectionClear, SelectionNotify, SelectionRequest };
       HB_BOOL fRepeat = HB_FALSE;
       XEvent evt;
+      int i;
 
       hb_gt_xwc_UpdateSize( wnd );
       hb_gt_xwc_UpdatePts( wnd );
@@ -4206,10 +4209,15 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       if( fSync )
          XSync( wnd->dpy, False );
 
-      while( XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) )
+      for( i = 0; i < ( int ) HB_SIZEOFARRAY( event_types ); ++i )
       {
-         hb_gt_xwc_WndProc( wnd, &evt );
-         fRepeat = HB_TRUE;
+         if( event_types[ i ] == 0 ?
+             XCheckWindowEvent( wnd->dpy, wnd->window, XWC_STD_MASK, &evt ) :
+             XCheckTypedWindowEvent( wnd->dpy, wnd->window, event_types[ i ], &evt ) )
+         {
+            hb_gt_xwc_WndProc( wnd, &evt );
+            fRepeat = HB_TRUE;
+         }
       }
 
       if( !fRepeat )
