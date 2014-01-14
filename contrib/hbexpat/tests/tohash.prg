@@ -72,6 +72,9 @@ PROCEDURE Main( cFileName )
 
    DUMP( aUserData[ _D_aTree ], 0 )
 
+   hb_MemoWrit( "json_raw.txt", hb_jsonEncode( aUserData[ _D_aTree ], .F. ) )
+   hb_MemoWrit( "json_hum.txt", hb_jsonEncode( aUserData[ _D_aTree ], .T. ) )
+
    RETURN
 
 STATIC PROCEDURE DUMP( hTree, n )
