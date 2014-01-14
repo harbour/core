@@ -153,7 +153,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
       {
          if( pCtx->pId[ nIndex ] == id )
          {
-            if( !fEOL && pCtx->fHuman )
+            if( ! fEOL && pCtx->fHuman )
                _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
             _hb_jsonCtxAdd( pCtx, "null", 4 );
             return;

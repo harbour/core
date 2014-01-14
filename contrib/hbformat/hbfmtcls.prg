@@ -120,14 +120,14 @@ CREATE CLASS HBFormatCode
    VAR cCommands      INIT ","
    VAR cClauses       INIT ","
    VAR cFunctions     INIT ","
-   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "endif"     }, ;
-                             { "do"    , "while"   , ""                , "enddo"     }, ;
-                             { "while" , ""        , ""                , "enddo"     }, ;
-                             { "for"   , ""        , ""                , "next"      }, ;
-                             { "do"    , "case"    , "|case|otherwise|", "endcase"   }, ;
-                             { "with"  , "object"  , ""                , "end"       }, ;
-                             { "begin" , "sequence", "|recover|always|", "end"       }, ;
-                             { "switch", ""        , "|case|otherwise|", "endswitch" } }
+   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "|endif|"       }, ;
+                             { "do"    , "while"   , ""                , "|enddo|"       }, ;
+                             { "while" , ""        , ""                , "|enddo|"       }, ;
+                             { "for"   , ""        , ""                , "|next|endfor|" }, ;
+                             { "do"    , "case"    , "|case|otherwise|", "|endcase|"     }, ;
+                             { "with"  , "object"  , ""                , "|end|"         }, ;
+                             { "begin" , "sequence", "|recover|always|", "|end|"         }, ;
+                             { "switch", ""        , "|case|otherwise|", "|endswitch|"   } }
 
    VAR bCallback
 
@@ -199,13 +199,14 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
       __hbformat_BuildListOfFunctions( @::cFunctions, ::cHBXList )
    ENDIF
 
-   IF ::nEol == 2
+   DO CASE
+   CASE ::nEol == 2
       ::cEol := Chr( 10 )
-   ELSEIF ::nEol == 1
+   CASE ::nEol == 1
       ::cEol := Chr( 13 ) + Chr( 10 )
-   ELSEIF ::nEol == 0
+   CASE ::nEol == 0
       ::cEol := hb_eol()
-   ENDIF
+   ENDCASE
 
    RETURN Self
 
@@ -377,10 +378,10 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                         ENDIF
                         aDeep[ nDeep ] := nContrState
                      ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 3 ] } ) ) == 0
-                        IF ( nPos := AScan( ::aContr, {| a | a[ 4 ] == cToken1 } ) ) > 0 .OR. ;
+                        IF ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] } ) ) > 0 .OR. ;
                               cToken1 == "end"
                            IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
-                              DO WHILE ( nPos := AScan( ::aContr, {| a | a[ 4 ] == cToken1 }, ;
+                              DO WHILE ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] }, ;
                                     nPos + 1 ) ) != 0 .AND. aDeep[ nDeep ] != nPos
                               ENDDO
                            ENDIF
