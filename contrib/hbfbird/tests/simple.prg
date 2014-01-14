@@ -2,7 +2,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
+   LOCAL oServer, oQuery, oRow, i, x, aStruct, aKey
 
    LOCAL cServer := "localhost:"
    LOCAL cDatabase
@@ -33,12 +33,8 @@ PROCEDURE Main()
 
    ? "Tables..."
 
-   FOR x := 1 TO 1
-      aTables := oServer:ListTables()
-
-      FOR i := 1 TO Len( aTables )
-         ? aTables[ i ]
-      NEXT
+   FOR EACH i IN oServer:ListTables()
+      ? i
    NEXT
 
    ? "Using implicit transaction..."
@@ -53,17 +49,18 @@ PROCEDURE Main()
 
    oServer:StartTransaction()
    ? "Creating test table..."
-   cQuery := "CREATE TABLE test("
-   cQuery += "     Code SmallInt not null primary key, "
-   cQuery += "     dept Integer, "
-   cQuery += "     Name Varchar(40), "
-   cQuery += "     Sales boolean_field, "
-   cQuery += "     Tax Float, "
-   cQuery += "     Salary Double Precision, "
-   cQuery += "     Budget Numeric(12,2), "
-   cQuery += "     Discount Decimal(5,2), "
-   cQuery += "     Creation Date, "
-   cQuery += "     Description blob sub_type 1 segment size 40 ) "
+   cQuery := ;
+      "CREATE TABLE test(" + ;
+      "     Code SmallInt not null primary key," + ;
+      "     dept Integer," + ;
+      "     Name Varchar(40)," + ;
+      "     Sales boolean_field," + ;
+      "     Tax Float," + ;
+      "     Salary Double Precision," + ;
+      "     Budget Numeric(12,2)," + ;
+      "     Discount Decimal(5,2)," + ;
+      "     Creation Date," + ;
+      "     Description blob sub_type 1 segment size 40 )"
 
    oServer:Execute( cQuery )
 
@@ -80,10 +77,10 @@ PROCEDURE Main()
    ? "Structure of test table"
    aStruct := oServer:TableStruct( "test" )
 
-   FOR i := 1 TO Len( aStruct )
+   FOR EACH i IN aStruct
       ?
-      FOR x := 1 TO Len( aStruct[ i ] )
-         ?? aStruct[ i, x ]
+      FOR EACH x IN i
+         ?? x
       NEXT
    NEXT
 
@@ -107,8 +104,8 @@ PROCEDURE Main()
 
    aStruct := oQuery:Struct()
 
-   FOR i := 1 TO Len( aStruct )
-      ? aStruct[ i, 1 ], aStruct[ i, 2 ], aStruct[ i, 3 ], aStruct[ i, 4 ]
+   FOR EACH i IN aStruct
+      ? i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ]
    NEXT
 
    aKey := oQuery:GetKeyField()

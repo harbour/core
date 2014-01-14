@@ -68,7 +68,7 @@ PROCEDURE Main()
    tp_send( 1, "Hi there Bob", 1 )    // One second timeout
    tp_inkey( .5 )
    ? tp_recv( 1 )
-   ?
    tp_close( 1 )
+   ? "end"
 
    RETURN

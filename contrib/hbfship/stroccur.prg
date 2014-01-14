@@ -48,6 +48,7 @@
  */
 
 FUNCTION StrOccurs( cSub, cStr, lAny )
+
    LOCAL nCount := 0, nPos := 0
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )

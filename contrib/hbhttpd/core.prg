@@ -998,9 +998,9 @@ STATIC FUNCTION GetErrorDesc( oErr )
       cI := PadR( cI, Max( 32, Len( cI ) + 1 ) )
       cI += "("
       aPar := __dbgVMParLList( nI )
-      FOR nJ := 1 TO Len( aPar )
-         cI += cvt2str( aPar[ nJ ] )
-         IF nJ < Len( aPar )
+      FOR EACH nJ IN aPar
+         cI += cvt2str( nJ )
+         IF ! nJ:__enumIsLast()
             cI += ", "
          ENDIF
       NEXT

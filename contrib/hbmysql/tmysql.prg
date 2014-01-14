@@ -1290,18 +1290,18 @@ METHOD sql_version() CLASS TMySQLServer
    RETURN mysql_get_server_version( ::nSocket )
 
 
+#if 0
+METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
-// METHOD SelectDB( cDBName ) CLASS TMySQLServer
-//
-//   IF mysql_select_db( ::nSocket, cDBName ) == 0
-//      ::cDBName := cDBName
-//      RETURN .T.
-//   ELSE
-//      ::cDBName := ""
-//   ENDIF
-//
-//   RETURN .F.
+  IF mysql_select_db( ::nSocket, cDBName ) == 0
+     ::cDBName := cDBName
+     RETURN .T.
+  ELSE
+     ::cDBName := ""
+  ENDIF
 
+  RETURN .F.
+#endif
 
 // === alterado ===
 METHOD SelectDB( cDBName ) CLASS TMySQLServer
@@ -1338,69 +1338,69 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
 
    /* NOTE: all table names are created with lower case */
 
-   LOCAL i
+   LOCAL fld
 
    // returns NOT NULL if extended structure has DBS_NOTNULL field to true
    LOCAL cNN := {| aArr | iif( Len( aArr ) > DBS_DEC, iif( aArr[ DBS_NOTNULL ], " NOT NULL ", "" ), "" ) }
 
    ::cCreateQuery := "CREATE TABLE " + Lower( cTable ) + " ("
 
-   FOR i := 1 TO Len( aStruct )
+   FOR EACH fld IN aStruct
 
-      SWITCH aStruct[ i ][ DBS_TYPE ]
+      SWITCH fld[ DBS_TYPE ]
       CASE "C"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " char(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")" + Eval( cNN, aStruct[ i ] ) + iif( aStruct[ i ][ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " char(" + hb_ntos( fld[ DBS_LEN ] ) + ")" + Eval( cNN, fld ) + iif( fld[ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + ","
          EXIT
 
       CASE "M"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " text" + Eval( cNN, aStruct[ i ] ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " text" + Eval( cNN, fld ) + ","
          EXIT
 
       CASE "N"
 #if 0
-         IF aStruct[ i ][ DBS_DEC ] == 0
-            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " int(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")" + Eval( cNN, aStruct[ i ] ) + iif( aStruct[ i ][ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( aStruct[ i ][ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
+         IF fld[ DBS_DEC ] == 0
+            ::cCreateQuery += fld[ DBS_NAME ] + " int(" + hb_ntos( fld[ DBS_LEN ] ) + ")" + Eval( cNN, fld ) + iif( fld[ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( fld[ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
          ELSE
-            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " real(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + "," + hb_ntos( aStruct[ i ][ DBS_DEC ] ) + ")" + Eval( cNN, aStruct[ i ] ) + ","
+            ::cCreateQuery += fld[ DBS_NAME ] + " real(" + hb_ntos( fld[ DBS_LEN ] ) + "," + hb_ntos( fld[ DBS_DEC ] ) + ")" + Eval( cNN, fld ) + ","
          ENDIF
 #endif
-         IF aStruct[ i ][ DBS_DEC ] == 0 .AND. aStruct[ i ][ DBS_LEN ] <= 18
+         IF fld[ DBS_DEC ] == 0 .AND. fld[ DBS_LEN ] <= 18
             DO CASE
-            CASE aStruct[ i ][ DBS_LEN ] <= 2
-               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " tinyint(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")"
-            CASE aStruct[ i ][ DBS_LEN ] <= 4
-               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " smallint(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")"
-            CASE aStruct[ i ][ DBS_LEN ] <= 6
-               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " mediumint(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")"
-            CASE aStruct[ i ][ DBS_LEN ] <= 9
-               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " int(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")"
+            CASE fld[ DBS_LEN ] <= 2
+               ::cCreateQuery += fld[ DBS_NAME ] + " tinyint(" + hb_ntos( fld[ DBS_LEN ] ) + ")"
+            CASE fld[ DBS_LEN ] <= 4
+               ::cCreateQuery += fld[ DBS_NAME ] + " smallint(" + hb_ntos( fld[ DBS_LEN ] ) + ")"
+            CASE fld[ DBS_LEN ] <= 6
+               ::cCreateQuery += fld[ DBS_NAME ] + " mediumint(" + hb_ntos( fld[ DBS_LEN ] ) + ")"
+            CASE fld[ DBS_LEN ] <= 9
+               ::cCreateQuery += fld[ DBS_NAME ] + " int(" + hb_ntos( fld[ DBS_LEN ] ) + ")"
             OTHERWISE
-               ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " bigint(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")"
+               ::cCreateQuery += fld[ DBS_NAME ] + " bigint(" + hb_ntos( fld[ DBS_LEN ] ) + ")"
             ENDCASE
-            ::cCreateQuery += Eval( cNN, aStruct[ i ] ) + iif( aStruct[ i ][ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( aStruct[ i ][ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
+            ::cCreateQuery += Eval( cNN, fld ) + iif( fld[ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( fld[ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
          ELSE
-            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " real(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + "," + hb_ntos( aStruct[ i ][ DBS_DEC ] ) + ")" + Eval( cNN, aStruct[ i ] ) + ","
+            ::cCreateQuery += fld[ DBS_NAME ] + " real(" + hb_ntos( fld[ DBS_LEN ] ) + "," + hb_ntos( fld[ DBS_DEC ] ) + ")" + Eval( cNN, fld ) + ","
          ENDIF
          EXIT
 
       CASE "D"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " date " + Eval( cNN, aStruct[ i ] ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " date " + Eval( cNN, fld ) + ","
          EXIT
 
       CASE "B"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " mediumblob "  + Eval( cNN, aStruct[ i ] ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " mediumblob "  + Eval( cNN, fld ) + ","
          EXIT
 
       CASE "I"
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " mediumint " + Eval( cNN, aStruct[ i ] ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " mediumint " + Eval( cNN, fld ) + ","
          EXIT
 
       OTHERWISE
-         ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " char(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")" + Eval( cNN, aStruct[ i ] ) + ","
+         ::cCreateQuery += fld[ DBS_NAME ] + " char(" + hb_ntos( fld[ DBS_LEN ] ) + ")" + Eval( cNN, fld ) + ","
 
       ENDSWITCH
-
    NEXT
+
    IF cPrimarykey != NIL
       ::cCreateQuery += " PRIMARY KEY (" + cPrimaryKey + "),"
    ENDIF

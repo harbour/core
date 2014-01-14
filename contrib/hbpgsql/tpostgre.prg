@@ -204,9 +204,10 @@ METHOD TableExists( cTable ) CLASS TPQserver
    LOCAL cQuery
    LOCAL res
 
-   cQuery := "SELECT table_name "
-   cQuery += "  FROM information_schema.tables "
-   cQuery += " WHERE table_type = 'BASE TABLE' AND table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) )
+   cQuery := ;
+      "SELECT table_name" + ;
+      "  FROM information_schema.tables" + ;
+      " WHERE table_type = 'BASE TABLE' AND table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) )
 
    res := PQexec( ::pDB, cQuery )
 
@@ -228,9 +229,10 @@ METHOD ListTables() CLASS TPQserver
    LOCAL res
    LOCAL i
 
-   cQuery := "SELECT table_name "
-   cQuery += "  FROM information_schema.tables "
-   cQuery += " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_type = 'BASE TABLE' "
+   cQuery := ;
+      "SELECT table_name" + ;
+      "  FROM information_schema.tables" + ;
+      " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_type = 'BASE TABLE'"
 
    res := PQexec( ::pDB, cQuery )
 
@@ -258,10 +260,11 @@ METHOD TableStruct( cTable ) CLASS TPQserver
    LOCAL nSize
    LOCAL nDec
 
-   cQuery := "SELECT column_name, data_type, character_maximum_length, numeric_precision, numeric_scale "
-   cQuery += "  FROM information_schema.columns "
-   cQuery += " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) )
-   cQuery += "ORDER BY ordinal_position "
+   cQuery := ;
+      "SELECT column_name, data_type, character_maximum_length, numeric_precision, numeric_scale" + ;
+      "  FROM information_schema.columns" + ;
+      " WHERE table_schema = " + DataToSql( ::Schema ) + " AND table_name = " + DataToSql( Lower( cTable ) ) + ;
+      " ORDER BY ordinal_position"
 
    res := PQexec( ::pDB, cQuery )
 
@@ -378,23 +381,23 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
    LOCAL result := .T.
    LOCAL cQuery
    LOCAL res
-   LOCAL i
+   LOCAL fld
 
    cQuery := "CREATE TABLE " + ::Schema + "." + cTable + "( "
 
-   FOR i := 1 TO Len( aStruct )
+   FOR EACH fld IN aStruct
 
-      cQuery += aStruct[ i ][ _STRU_FIELDNAME ]
+      cQuery += fld[ _STRU_FIELDNAME ]
 
-      SWITCH aStruct[ i ][ _STRU_FIELDTYPE ]
+      SWITCH fld[ _STRU_FIELDTYPE ]
       CASE "C"
-         cQuery += " Char(" + hb_ntos( aStruct[ i ][ _STRU_FIELDLEN ] ) + ")"
+         cQuery += " Char(" + hb_ntos( fld[ _STRU_FIELDLEN ] ) + ")"
          EXIT
       CASE "D"
          cQuery += " Date "
          EXIT
       CASE "N"
-         cQuery += " Numeric(" + hb_ntos( aStruct[ i ][ _STRU_FIELDLEN ] ) + "," + hb_ntos( aStruct[ i ][ _STRU_FIELDDEC ] ) + ")"
+         cQuery += " Numeric(" + hb_ntos( fld[ _STRU_FIELDLEN ] ) + "," + hb_ntos( fld[ _STRU_FIELDDEC ] ) + ")"
          EXIT
       CASE "L"
          cQuery += " boolean "
@@ -404,7 +407,7 @@ METHOD CreateTable( cTable, aStruct ) CLASS TPQserver
          EXIT
       ENDSWITCH
 
-      IF i == Len( aStruct )
+      IF fld:__enumIsLast()
          cQuery += ")"
       ELSE
          cQuery += ","
@@ -597,11 +600,11 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
 
          IF HB_ISARRAY( aTemp )
 
-            FOR i := 1 TO Len( aTemp )
+            FOR EACH i IN aTemp
 
-               cType := aTemp[ i ][ HBPG_META_FIELDTYPE ]
-               nSize := aTemp[ i ][ HBPG_META_FIELDLEN ]
-               nDec  := aTemp[ i ][ HBPG_META_FIELDDEC ]
+               cType := i[ HBPG_META_FIELDTYPE ]
+               nSize := i[ HBPG_META_FIELDLEN ]
+               nDec  := i[ HBPG_META_FIELDDEC ]
 
                DO CASE
                CASE "char" $ cType
@@ -675,12 +678,12 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
                ENDCASE
 
                AAdd( aStruct, { ;
-                  aTemp[ i ][ HBPG_META_FIELDNAME ], ;
+                  i[ HBPG_META_FIELDNAME ], ;
                   cType, ;
                   nSize, ;
                   nDec, ;
-                  aTemp[ i ][ HBPG_META_TABLE ], ;
-                  aTemp[ i ][ HBPG_META_TABLECOL ] } )
+                  i[ HBPG_META_TABLE ], ;
+                  i[ HBPG_META_TABLECOL ] } )
             NEXT
 
             ::nFields := PQfcount( res )
@@ -719,7 +722,11 @@ METHOD Struct() CLASS TPQquery
    LOCAL i
 
    FOR i := 1 TO Len( ::aStruct )
-      result[ i ] := { ::aStruct[ i ][ _STRU_FIELDNAME ], ::aStruct[ i ][ _STRU_FIELDTYPE ], ::aStruct[ i ][ _STRU_FIELDLEN ], ::aStruct[ i ][ _STRU_FIELDDEC ] }
+      result[ i ] := { ;
+         ::aStruct[ i ][ _STRU_FIELDNAME ], ;
+         ::aStruct[ i ][ _STRU_FIELDTYPE ], ;
+         ::aStruct[ i ][ _STRU_FIELDLEN ], ;
+         ::aStruct[ i ][ _STRU_FIELDDEC ] }
    NEXT
 
    RETURN result
@@ -850,15 +857,15 @@ METHOD Delete( oRow ) CLASS TPQquery
    ::SetKey()
 
    IF ! Empty( ::Tablename ) .AND. ! Empty( ::aKeys )
-      FOR i := 1 TO Len( ::aKeys )
-         nField := oRow:FieldPos( ::aKeys[ i ] )
+      FOR EACH i IN ::aKeys
+         nField := oRow:FieldPos( i )
          xField := oRow:FieldGetOld( nField )
 
-         cWhere += ::aKeys[ i ] + " = $" + hb_ntos( i )
+         cWhere += i + " = $" + hb_ntos( i:__enumIndex() )
 
          AAdd( aParams, ValueToString( xField ) )
 
-         IF i != Len( ::aKeys )
+         IF ! i:__enumIsLast()
             cWhere += " AND "
          ENDIF
       NEXT
@@ -955,14 +962,14 @@ METHOD Update( oRow ) CLASS TPQquery
 
    IF ! Empty( ::Tablename ) .AND. ! Empty( ::aKeys )
       cWhere := ""
-      FOR i := 1 TO Len( ::aKeys )
+      FOR EACH i IN ::aKeys
 
-         nField := oRow:FieldPos( ::aKeys[ i ] )
+         nField := oRow:FieldPos( i )
          xField := oRow:FieldGetOld( nField )
 
-         cWhere += ::aKeys[ i ] + "=" + DataToSql( xField )
+         cWhere += i + "=" + DataToSql( xField )
 
-         IF i != Len( ::aKeys )
+         IF ! i:__enumIsLast()
             cWhere += " AND "
          ENDIF
       NEXT
@@ -1132,9 +1139,9 @@ METHOD SetKey() CLASS TPQquery
    IF ::nResultStatus == PGRES_TUPLES_OK
       IF ::Tablename == NIL
          /* set the table name looking for table oid */
-         FOR i := 1 TO Len( ::aStruct )
+         FOR EACH i IN ::aStruct
             /* Store table codes oid */
-            nTableId := ::aStruct[ i ][ _STRU_TABLE ]
+            nTableId := i[ _STRU_TABLE ]
 
             IF nTableId != xTableId
                xTableId := nTableId
@@ -1175,15 +1182,16 @@ METHOD SetKey() CLASS TPQquery
 
       IF ::aKeys == NIL .AND. ! Empty( ::Tablename )
          /* Set the table primary keys */
-         cQuery := "SELECT c.attname "
-         cQuery += "  FROM pg_class a, pg_class b, pg_attribute c, pg_index d, pg_namespace e "
-         cQuery += " WHERE a.oid = d.indrelid "
-         cQuery += "   AND a.relname = '" + ::Tablename + "'"
-         cQuery += "   AND b.oid = d.indexrelid "
-         cQuery += "   AND c.attrelid = b.oid "
-         cQuery += "   AND d.indisprimary "
-         cQuery += "   AND e.oid = a.relnamespace "
-         cQuery += "   AND e.nspname = " + DataToSql( ::Schema )
+         cQuery := ;
+            "SELECT c.attname" + ;
+            "  FROM pg_class a, pg_class b, pg_attribute c, pg_index d, pg_namespace e" + ;
+            " WHERE a.oid = d.indrelid" + ;
+            "   AND a.relname = '" + ::Tablename + "'" + ;
+            "   AND b.oid = d.indexrelid" + ;
+            "   AND c.attrelid = b.oid" + ;
+            "   AND d.indisprimary" + ;
+            "   AND e.oid = a.relnamespace" + ;
+            "   AND e.nspname = " + DataToSql( ::Schema )
 
          res := PQexec( ::pDB, cQuery )
 

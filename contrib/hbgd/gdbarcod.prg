@@ -48,13 +48,13 @@
 
 #include "hbclass.ch"
 
-#define CODEC            100
-#define CODEB            101
-#define CODEA            102
-#define FNC1             103
-#define STARTA           104
-#define STARTB           105
-#define STARTC           106
+#define CODEC       100
+#define CODEB       101
+#define CODEA       102
+#define FNC1        103
+#define STARTA      104
+#define STARTB      105
+#define STARTC      106
 
 CREATE CLASS GDBarCode FROM GDBar
 
@@ -116,8 +116,7 @@ METHOD New( nTypeCode ) CLASS GDBarCode
          "112412", "122114", "122411", "142112", "142211", "241211", "221114", "213111", "241112", "134111", ;
          "111242", "121142", "121241", "114212", "124112", "124211", "411212", "421112", "421211", "212141", ;
          "214121", "412121", "111143", "111341", "131141", "114113", "114311", "411113", "411311", "113141", ;
-         "114131", "311141", "411131", "211412", "211214", "211232", "2331112";
-         }
+         "114131", "311141", "411131", "211412", "211214", "211232", "2331112" }
 
       ::KeysmodeA := ' !"#$%&\()*+-.,/0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'
       ::KeysmodeB := ' !"#$%&\()*+-.,/0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~'
@@ -133,18 +132,18 @@ METHOD New( nTypeCode ) CLASS GDBarCode
       ::keys := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
       ::aCode := { ;
-         "10001", ;          // 1 digit
-         "01001", ;          // 2 digit
-         "11000", ;          // 3 digit
-         "00101", ;          // 4 digit
-         "10100", ;          // 5 digit
-         "01100", ;          // 6 digit
-         "00011", ;          // 7 digit
-         "10010", ;          // 8 digit
-         "01010", ;          // 9 digit
-         "00110", ;          // 0 digit
-         "10000", ;          // pre-amble
-         "100" }             // post-amble
+         "10001", ;   // 1 digit
+         "01001", ;   // 2 digit
+         "11000", ;   // 3 digit
+         "00101", ;   // 4 digit
+         "10100", ;   // 5 digit
+         "01100", ;   // 6 digit
+         "00011", ;   // 7 digit
+         "10010", ;   // 8 digit
+         "01010", ;   // 9 digit
+         "00110", ;   // 0 digit
+         "10000", ;   // pre-amble
+         "100" }      // post-amble
    OTHERWISE
       ::DrawError( "Invalid type to barcode." )
       RETURN NIL
@@ -157,14 +156,10 @@ METHOD New( nTypeCode ) CLASS GDBarCode
 METHOD Draw( cText ) CLASS GDBarCode
 
    DO CASE
-   CASE ::nType == 13
-      ::Draw13( cText )
-   CASE ::nType == 8
-      ::Draw8( cText )
-   CASE ::nType == 128
-      ::Draw128( cText )
-   CASE ::nType == 25
-      ::DrawI25( cText )
+   CASE ::nType == 8   ; ::Draw8( cText )
+   CASE ::nType == 13  ; ::Draw13( cText )
+   CASE ::nType == 25  ; ::DrawI25( cText )
+   CASE ::nType == 128 ; ::Draw128( cText )
    ENDCASE
 
    RETURN NIL
@@ -555,9 +550,9 @@ METHOD Draw128( cText, cModeCode ) CLASS GDBarCode
             ENDIF
 
          ENDIF
+
          nSum += ( nValChar - 1 ) * nC
          cConc += ::aCode[ nValChar ]
-
       NEXT
 
       nSum := nSum % 103 + 1
@@ -623,9 +618,7 @@ METHOD GenCodei25() CLASS GDBarCode
 
    RETURN NIL
 
-/*
-   It makes mixe of the value to be codified by the Bar code I25
-*/
+/* It makes mixe of the value to be codified by the Bar code I25 */
 
 METHOD MixCode( value ) CLASS GDBarCode
 
@@ -640,7 +633,6 @@ METHOD MixCode( value ) CLASS GDBarCode
    IF ( l % 2 ) != 0
       ::DrawError( "Code cannot be intercalated: Invalid length (mix)" )
    ELSE
-
       i := 1
       s := ""
 
@@ -657,15 +649,12 @@ METHOD MixCode( value ) CLASS GDBarCode
          NEXT
 
          i += 2
-
       ENDDO
 
       bar_string :=  s
-
    ENDIF
 
    RETURN bar_string
 
 METHOD Findcode( uVal ) CLASS GDBarCode
-
    RETURN ::acode[ AScan( ::keys, {| x | Left( x, 1 ) == uVal } ) ]

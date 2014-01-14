@@ -43,17 +43,18 @@ PROCEDURE Main()
    ? oServer:Execute( "create domain boolean_field as smallint default 0 not null check (value in (0,1))" )
 
    ? "Creating test table..."
-   cQuery := "CREATE TABLE test("
-   cQuery += "     Code SmallInt not null primary key, "
-   cQuery += "     dept Integer, "
-   cQuery += "     Name Varchar(40), "
-   cQuery += "     Sales boolean_field, "
-   cQuery += "     Tax Float, "
-   cQuery += "     Salary Double Precision, "
-   cQuery += "     Budget Numeric(12,2), "
-   cQuery += "     Discount Decimal(5,2), "
-   cQuery += "     Creation Date, "
-   cQuery += "     Description blob sub_type 1 segment size 40 ) "
+   cQuery := ;
+      "CREATE TABLE test(" + ;
+      "     Code SmallInt not null primary key," + ;
+      "     dept Integer," + ;
+      "     Name Varchar(40)," + ;
+      "     Sales boolean_field," + ;
+      "     Tax Float," + ;
+      "     Salary Double Precision," + ;
+      "     Budget Numeric(12,2)," + ;
+      "     Discount Decimal(5,2)," + ;
+      "     Creation Date," + ;
+      "     Description blob sub_type 1 segment size 40 )"
 
    ? "CREATE TABLE:", oServer:Execute( cQuery )
 

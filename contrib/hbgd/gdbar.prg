@@ -151,22 +151,14 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
 
 METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
 
-   hb_default( @lBook      , .F. )
-   hb_default( @lDrawValue , .T. )
-   hb_default( @nMaxHeight , 25 )
-   hb_default( @nTextFont  , 2 )
-   hb_default( @nRes       , 2 )
-   hb_default( @aBackColor , { 255, 255, 255 } )
-   hb_default( @aFillColor , { 0, 0, 0 } )
+   ::book       := hb_defaultValue( lBook, .F. )
+   ::maxHeight  := hb_defaultValue( nMaxHeight, 25 )
+   ::res        := hb_defaultValue( nRes, 2 )
+   ::textfont   := hb_defaultValue( nTextFont, 2 )
+   ::lDrawValue := hb_defaultValue( lDrawValue, .T. )
 
-   ::book       := lBook
-   ::maxHeight  := nMaxHeight
-   ::res        := nRes
-   ::textfont   := nTextFont
-   ::lDrawValue := lDrawValue
-
-   ::color_b    := AClone( aBackColor )
-   ::color_f    := AClone( aFillColor )
+   ::color_b    := AClone( hb_defaultValue( aBackColor, { 255, 255, 255 } ) )
+   ::color_f    := AClone( hb_defaultValue( aFillColor, { 0, 0, 0 } ) )
 
    RETURN NIL
 
@@ -250,9 +242,7 @@ METHOD DrawError( ptext ) CLASS GDBar
 
 METHOD nextX( lI25 ) CLASS GDBar
 
-   hb_default( @li25, .F. )
-
-   IF li25
+   IF hb_defaultValue( li25, .F. )
       ::positionX++
    ELSE
       ::positionX += ::res
@@ -264,9 +254,7 @@ METHOD DrawText( lIsI25 ) CLASS GDBar
 
    LOCAL xPosition
 
-   hb_default( @lIsI25, .F. )
-
-   IF lIsI25
+   IF hb_defaultValue( lIsI25, .F. )
       If ::textfont != 0
          xPosition := 10 * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
@@ -298,42 +286,44 @@ METHOD CheckCode() CLASS GDBar
 
 METHOD CheckValInArray( cChar ) CLASS GDBar
 
-   LOCAL nPos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cChar } )
+   LOCAL nPos := AScan( ::keys, {| x | Left( x, 1 ) == cChar } )
 
    RETURN iif( nPos > 0, nPos, NIL )
 
 METHOD Finish( image_style, quality, nFG ) CLASS GDBar
 
    hb_default( @image_style, IMG_FORMAT_PNG )
-   hb_default( @quality    , 95 )
-   hb_default( @nFG        , { 255, 255, 255 } )
 
    IF Empty( ::filename ) .OR. ::filename == NIL
-
-      // Output std handle == 1
-
-      // ::filename := ::text
-      DO CASE
-      CASE image_style == IMG_FORMAT_PNG
+      SWITCH image_style
+      CASE IMG_FORMAT_PNG
          ::OutputPng()
-      CASE image_style == IMG_FORMAT_JPEG
+         EXIT
+      CASE IMG_FORMAT_JPEG
          ::OutputJpeg( , quality )
-      CASE image_style == IMG_FORMAT_WBMP
+         EXIT
+      CASE IMG_FORMAT_WBMP
          ::OutputWBmp( , nFG )
-      CASE image_style == IMG_FORMAT_GIF
+         EXIT
+      CASE IMG_FORMAT_GIF
          ::OutputGif()
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ELSE
-      DO CASE
-      CASE image_style == IMG_FORMAT_PNG
-         ::SavePng(  ::filename )
-      CASE image_style == IMG_FORMAT_JPEG
-         ::Savejpeg( ::filename, quality )
-      CASE image_style == IMG_FORMAT_WBMP
-         ::SaveWBmp( ::filename, nFG )
-      CASE image_style == IMG_FORMAT_GIF
+      SWITCH image_style
+      CASE IMG_FORMAT_PNG
+         ::SavePng( ::filename )
+         EXIT
+      CASE IMG_FORMAT_JPEG
+         ::Savejpeg( ::filename, hb_defaultValue( quality, 95 ) )
+         EXIT
+      CASE IMG_FORMAT_WBMP
+         ::SaveWBmp( ::filename, hb_defaultValue( nFG, { 255, 255, 255 } ) )
+         EXIT
+      CASE IMG_FORMAT_GIF
          ::SaveGif( ::filename )
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN .T.

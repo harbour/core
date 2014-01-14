@@ -668,9 +668,9 @@ INIT PROCEDURE _tpinit()
 
    IF t_aPorts == NIL
       t_aPorts := Array( TP_MAXPORTS )
-      FOR x := 1 TO Len( t_aPorts )
+      FOR EACH x IN t_aPorts
          // / port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
-         t_aPorts[ x ] := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
+         x := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
       NEXT
    ENDIF
 

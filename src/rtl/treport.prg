@@ -334,8 +334,7 @@ METHOD New( cFrmName AS STRING, ;
 
          // Print the first line
          ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + ;
-            iif( nGroup == 1, __natMsg( _RFRM_SUBTOTAL ), ;
-            __natMsg( _RFRM_SUBSUBTOTAL ) ) )
+            __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
 
          // Print the second line
          QQOut( Space( ::aReportData[ RPT_LMARGIN ] ) )
@@ -619,8 +618,7 @@ METHOD ExecuteReport() CLASS HBReportForm
          IF lGroupChanged .OR. MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
                ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
 
-            AAdd( aRecordHeader, iif( nGroup == 1, __natMsg( _RFRM_SUBTOTAL ), ;
-               __natMsg( _RFRM_SUBSUBTOTAL ) ) )
+            AAdd( aRecordHeader, __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
 
 

@@ -226,11 +226,12 @@ METHOD ListTables() CLASS TFbServer
    LOCAL cQuery
    LOCAL qry
 
-   cQuery := "select rdb$relation_name"
-   cQuery += "  from rdb$relations"
-   cQuery += ' where rdb$relation_name not like "RDB$%"'
-   cQuery += "   and rdb$view_blr is null"
-   cQuery += " order by 1"
+   cQuery := ;
+      "select rdb$relation_name" + ;
+      "  from rdb$relations" + ;
+      ' where rdb$relation_name not like "RDB$%"' + ;
+      "   and rdb$view_blr is null" + ;
+      " order by 1"
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
@@ -250,19 +251,20 @@ METHOD TableStruct( cTable ) CLASS TFbServer
    LOCAL cQuery, cType, nSize, cDomain, cField, nType, nDec
    LOCAL qry
 
-   cQuery := "select"
-   cQuery += "   a.rdb$field_name,"
-   cQuery += "   b.rdb$field_type,"
-   cQuery += "   b.rdb$field_length,"
-   cQuery += "   b.rdb$field_scale * -1,"
-   cQuery += "   a.rdb$field_source"
-   cQuery += " from"
-   cQuery += "   rdb$relation_fields a, rdb$fields b"
-   cQuery += " where"
-   cQuery += "   a.rdb$field_source = b.rdb$field_name"
-   cQuery += '   and a.rdb$relation_name = "' + Upper( ctable ) + '"'
-   cQuery += " order by"
-   cQuery += "   a.rdb$field_position"
+   cQuery := ;
+      "select" + ;
+      "   a.rdb$field_name," + ;
+      "   b.rdb$field_type," + ;
+      "   b.rdb$field_length," + ;
+      "   b.rdb$field_scale * -1," + ;
+      "   a.rdb$field_source" + ;
+      " from" + ;
+      "   rdb$relation_fields a, rdb$fields b" + ;
+      " where" + ;
+      "   a.rdb$field_source = b.rdb$field_name" + ;
+      '   and a.rdb$relation_name = "' + Upper( ctable ) + '"' + ;
+      " order by" + ;
+      "   a.rdb$field_position"
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
@@ -366,13 +368,13 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
-         FOR i := 1 TO Len( aKeys )
-            nField := oRow:FieldPos( aKeys[ i ] )
+         FOR EACH i IN aKeys
+            nField := oRow:FieldPos( i )
             xField := oRow:FieldGet( nField )
 
-            cWhere += aKeys[ i ] + "=" + DataToSql( xField )
+            cWhere += i + "=" + DataToSql( xField )
 
-            IF i != Len( aKeys )
+            IF ! i:__enumIsLast()
                cWhere += ","
             ENDIF
          NEXT
@@ -434,13 +436,13 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
-         FOR i := 1 TO Len( aKeys )
-            nField := oRow:FieldPos( aKeys[ i ] )
+         FOR EACH i IN aKeys
+            nField := oRow:FieldPos( i )
             xField := oRow:FieldGet( nField )
 
-            cWhere += aKeys[ i ] + "=" + DataToSql( xField )
+            cWhere += i + "=" + DataToSql( xField )
 
-            IF i != Len( aKeys )
+            IF ! i:__enumIsLast()
                cWhere += ", "
             ENDIF
          NEXT
@@ -555,9 +557,9 @@ METHOD Refresh() CLASS TFbQuery
       ::qry := qry
 
       /* Tables in query */
-      FOR i := 1 TO Len( ::aStruct )
-         IF hb_AScan( aTable, ::aStruct[ i ][ 5 ], , , .T. ) == 0
-            AAdd( aTable, ::aStruct[ i ][ 5 ] )
+      FOR EACH i IN ::aStruct
+         IF hb_AScan( aTable, i[ 5 ], , , .T. ) == 0
+            AAdd( aTable, i[ 5 ] )
          ENDIF
       NEXT
 
@@ -613,8 +615,8 @@ METHOD Struct() CLASS TFbQuery
    LOCAL i
 
    IF ! ::lError
-      FOR i := 1 TO Len( ::aStruct )
-         AAdd( result, { ::aStruct[ i ][ 1 ], ::aStruct[ i ][ 2 ], ::aStruct[ i ][ 3 ], ::aStruct[ i ][ 4 ] } )
+      FOR EACH i IN ::aStruct
+         AAdd( result, { i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ] } )
       NEXT
    ENDIF
 
@@ -687,8 +689,8 @@ METHOD FieldGet( nField ) CLASS TFbQuery
             aBlob := FBGetBlob( ::db, result )
 
             result := ""
-            FOR i := 1 TO Len( aBlob )
-               result += aBlob[ i ]
+            FOR EACH i IN aBlob
+               result += i
             NEXT
 
             // result := FBGetBlob( ::db, result )
@@ -915,18 +917,19 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
    IF Len( aTables ) == 1
       cTable := aTables[ 1 ]
 
-      cQuery := "select"
-      cQuery += "   a.rdb$field_name"
-      cQuery += " from"
-      cQuery += "   rdb$index_segments a,"
-      cQuery += "   rdb$relation_constraints b"
-      cQuery += " where"
-      cQuery += "   a.rdb$index_name = b.rdb$index_name and"
-      cQuery += '   b.rdb$constraint_type = "PRIMARY KEY" and'
-      cQuery += "   b.rdb$relation_name = " + DataToSql( cTable )
-      cQuery += " order by"
-      cQuery += "   b.rdb$relation_name,"
-      cQuery += "   a.rdb$field_position"
+      cQuery := ;
+         "select" + ;
+         "   a.rdb$field_name" + ;
+         " from" + ;
+         "   rdb$index_segments a," + ;
+         "   rdb$relation_constraints b" + ;
+         " where" + ;
+         "   a.rdb$index_name = b.rdb$index_name and" + ;
+         '   b.rdb$constraint_type = "PRIMARY KEY" and' + ;
+         "   b.rdb$relation_name = " + DataToSql( cTable ) + ;
+         " order by" + ;
+         "   b.rdb$relation_name," + ;
+         "   a.rdb$field_position"
 
       qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
@@ -973,22 +976,23 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
    /* create table list and field list */
 
-   FOR i := 1 TO Len( aStru )
-      xTables += DataToSql( aStru[ i ][ 5 ] )
-      xFields += DataToSql( aStru[ i ][ 1 ] )
+   FOR EACH i IN aStru
+      xTables += DataToSql( i[ 5 ] )
+      xFields += DataToSql( i[ 1 ] )
 
-      IF i != Len( aStru )
+      IF ! i:__enumIsLast()
          xTables += ","
          xFields += ","
       ENDIF
    NEXT
 
    /* Look for domains */
-   cQuery := "select rdb$relation_name, rdb$field_name, rdb$field_source"
-   cQuery += "  from rdb$relation_fields"
-   cQuery += ' where rdb$field_name not like "RDB$%"'
-   cQuery += "   and rdb$relation_name in (" + xTables + ")"
-   cQuery += "   and rdb$field_name in (" + xFields + ")"
+   cQuery := ;
+      "select rdb$relation_name, rdb$field_name, rdb$field_source" + ;
+      "  from rdb$relation_fields" + ;
+      ' where rdb$field_name not like "RDB$%"' + ;
+      "   and rdb$relation_name in (" + xTables + ")" + ;
+      "   and rdb$field_name in (" + xFields + ")"
 
    qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
@@ -1003,12 +1007,12 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
       FBFree( qry )
 
-      FOR i := 1 TO Len( aStru )
-         cField := RTrim( aStru[ i ][ 7 ] )
-         nType := aStru[ i ][ 2 ]
-         nSize := aStru[ i ][ 3 ]
-         nDec := aStru[ i ][ 4 ] * -1
-         cTable := RTrim( aStru[ i ][ 5 ] )
+      FOR EACH i IN aStru
+         cField := RTrim( i[ 7 ] )
+         nType  := i[ 2 ]
+         nSize  := i[ 3 ]
+         nDec   := i[ 4 ] * -1
+         cTable := RTrim( i[ 5 ] )
 
          nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
 

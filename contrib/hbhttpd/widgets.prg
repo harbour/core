@@ -320,14 +320,14 @@ METHOD AddItem( cTitle, cLink ) CLASS UWMenu
 
 METHOD Paint() CLASS UWMenu
 
-   LOCAL nI
+   LOCAL item
 
    UWrite( '<div>' )
-   FOR nI := 1 TO Len( ::aItems )
-      IF nI != 1
+   FOR EACH item IN ::aItems
+      IF ! item:__enumIsFirst()
          UWrite( '&nbsp;|&nbsp;' )
       ENDIF
-      UWrite( '<a href="' + ::aItems[ nI, 2 ] + '">' + UHtmlEncode( ::aItems[ nI, 1 ] ) + '</a>' )
+      UWrite( '<a href="' + item[ 2 ] + '">' + UHtmlEncode( item[ 1 ] ) + '</a>' )
    NEXT
    UWrite( '</div>' )
 
@@ -357,14 +357,14 @@ METHOD AddColumn( nID, cTitle, cField, lRaw ) CLASS UWBrowse
 
 METHOD Output() CLASS UWBrowse
 
-   LOCAL cRet := "", nI, xI, xField, nPos, cUrl, cI, lValidate
+   LOCAL cRet := "", nI, xI, xField, nPos, cUrl, cI, lValidate, col
 
    cRet += '<table class="ubr"><tr>'
 
    // Header
    cRet += '<tr>'
-   FOR nI := 1 TO Len( ::aColumns )
-      cRet += '<th>' + UHtmlEncode( ::aColumns[ nI, 2 ] ) + '</th>'
+   FOR EACH col IN ::aColumns
+      cRet += '<th>' + UHtmlEncode( col[ 2 ] ) + '</th>'
    NEXT
    cRet += '</tr>'
 
@@ -376,8 +376,8 @@ METHOD Output() CLASS UWBrowse
    ENDIF
    DO WHILE ! Eof()
       cRet += '<tr>'
-      FOR nI := 1 TO Len( ::aColumns )
-         xField := ::aColumns[ nI, 3 ]
+      FOR EACH col IN ::aColumns
+         xField := col[ 3 ]
          IF HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
          ELSEIF HB_ISEVALITEM( xField )
@@ -389,7 +389,7 @@ METHOD Output() CLASS UWBrowse
          CASE "D"  ; xI := DToC( xI ); EXIT
          OTHERWISE ; xI := "ValType()==" + ValType( xI )
          ENDSWITCH
-         IF ! ::aColumns[ nI, 4 ]
+         IF ! col[ 4 ]
             xI := UHtmlEncode( xI )
          ENDIF
          cRet += '<td><nobr>' + xI + '</nobr></td>'
@@ -578,19 +578,19 @@ STATIC FUNCTION uhttpd_split( cSeparator, cString )
 STATIC FUNCTION uhttpd_join( cSeparator, aData )
 
    LOCAL cRet := ""
-   LOCAL nI
+   LOCAL xData
 
-   FOR nI := 1 TO Len( aData )
+   FOR EACH xData IN aData
 
-      IF nI > 1
+      IF ! xData:__enumIsFirst()
          cRet += cSeparator
       ENDIF
 
-      SWITCH ValType( aData[ nI ] )
+      SWITCH ValType( xData )
       CASE "C"
-      CASE "M" ; cRet += aData[ nI ]; EXIT
-      CASE "N" ; cRet += hb_ntos( aData[ nI ] ); EXIT
-      CASE "D" ; cRet += iif( Empty( aData[ nI ] ), "", DToC( aData[ nI ] ) ); EXIT
+      CASE "M" ; cRet += xData; EXIT
+      CASE "N" ; cRet += hb_ntos( xData ); EXIT
+      CASE "D" ; cRet += iif( Empty( xData ), "", DToC( xData ) ); EXIT
       ENDSWITCH
    NEXT
 

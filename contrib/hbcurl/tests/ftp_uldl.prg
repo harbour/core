@@ -30,7 +30,7 @@ PROCEDURE Main( cDL, cUL )
       IF tmp == 8
          ? tmp, ""
          FOR tmp1 := 1 TO Len( info[ 8 ] )
-            ?? info[ 8 ][ tmp1 ] + " "
+            ?? info[ 8 ][ tmp1 ], ""
          NEXT
       ELSE
          ? tmp, info[ tmp ]
@@ -73,7 +73,7 @@ PROCEDURE Main( cDL, cUL )
       info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES, @tmp )
       ? "SSL ENGINES: ", tmp, Len( info )
       FOR tmp := 1 TO Len( info )
-         ?? info[ tmp ] + " "
+         ?? info[ tmp ], ""
       NEXT
 
       curl_easy_reset( curl )
@@ -161,7 +161,7 @@ PROCEDURE Main( cDL, cUL )
       ? "DOWNLOAD FILE TO MEM:", curl_easy_perform( curl )
 
       tmp := "test_dlm.bin"
-      ? "WRITING TO FILE: ", tmp
+      ? "WRITING TO FILE:", tmp
       f := FCreate( tmp, FC_NORMAL )
       IF f != F_ERROR
          FWrite( f, curl_easy_dl_buff_get( curl ) )
@@ -189,9 +189,9 @@ PROCEDURE Main( cDL, cUL )
 
       ? "DOWNLOAD DIRLIST TO STRING:", curl_easy_perform( curl )
 
-      ? "RESULT 1: " + curl_easy_dl_buff_get( curl )
+      ? "RESULT 1:", curl_easy_dl_buff_get( curl )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_GET, @tmp )
-      ? "RESULT 2: " + tmp
+      ? "RESULT 2:", tmp
 
       /* Cleanup session */
 

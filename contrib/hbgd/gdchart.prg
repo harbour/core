@@ -164,10 +164,10 @@ METHOD PieChart() CLASS GDChart
    ENDSWITCH
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   // Before sum of values to determine perentual
+   // Before sum of values to determine percentual
    FOR EACH hElement IN aPieDataOfHash
       nTot += hElement[ "VALUE" ]
       // Check extrution
@@ -182,8 +182,8 @@ METHOD PieChart() CLASS GDChart
    FOR EACH hElement IN aPieDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       IF nExtrude != NIL
          lExtruded := .T.
       ELSE
@@ -255,7 +255,7 @@ METHOD VerticalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
 // LOCAL nDegree := 0
-   LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
+   LOCAL pTile, lFilled //, lExtruded, nExtrude
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -304,7 +304,7 @@ METHOD VerticalBarChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
    SWITCH cFontPitch
@@ -315,8 +315,7 @@ METHOD VerticalBarChart() CLASS GDChart
    CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
    ENDSWITCH
 
-
-   // Before sum of values to determine perentual
+   // Before sum of values to determine percentual
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
@@ -402,13 +401,15 @@ METHOD VerticalBarChart() CLASS GDChart
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //   lExtruded := .T.
-      // ELSE
-      //   lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      IF nExtrude != NIL
+         lExtruded := .T.
+      ELSE
+         lExtruded := .F.
+      ENDIF
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nHeight
@@ -443,7 +444,7 @@ METHOD VerticalBarChart() CLASS GDChart
 METHOD HorizontalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-   LOCAL lFilled, /* lExtruded, nExtrude, */ pTile
+   LOCAL pTile, lFilled //, lExtruded, nExtrude
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -492,7 +493,7 @@ METHOD HorizontalBarChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
    SWITCH cFontPitch
@@ -592,13 +593,15 @@ METHOD HorizontalBarChart() CLASS GDChart
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //    lExtruded := .T.
-      // ELSE
-      //    lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      IF nExtrude != NIL
+         lExtruded := .T.
+      ELSE
+         lExtruded := .F.
+      ENDIF
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nWidth
@@ -632,7 +635,7 @@ METHOD HorizontalBarChart() CLASS GDChart
 METHOD LineChart() CLASS GDChart
 
    LOCAL hElement
-   LOCAL /* lFilled, lExtruded, nExtrude, */ pTile
+   LOCAL pTile //, lFilled, lExtruded, nExtrude
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -683,7 +686,7 @@ METHOD LineChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
    SWITCH cFontPitch
@@ -820,13 +823,15 @@ METHOD LineChart() CLASS GDChart
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       // lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //   lExtruded := .T.
-      // ELSE
-      //   lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      IF nExtrude != NIL
+         lExtruded := .T.
+      ELSE
+         lExtruded := .F.
+      ENDIF
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( ( nVal + Abs( nMinValue ) ) / nTotRange ) * nHeight
@@ -861,16 +866,18 @@ METHOD LineChart() CLASS GDChart
    // Draw lines
    nThick := ::SetThickness( 3 )
 
-   // ::ResetStyles()
-   // ::AddStyle( color )
-   // ::AddStyle( color )
-   // ::AddStyle( color )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::SetStyle()
+#if 0
+   ::ResetStyles()
+   ::AddStyle( color )
+   ::AddStyle( color )
+   ::AddStyle( color )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::SetStyle()
+#endif
    FOR n := 1 TO Len( aPoints ) - 1
       ::Line( aPoints[ n ][ 1 ], aPoints[ n ][ 2 ], aPoints[ n + 1 ][ 1 ], aPoints[ n + 1 ][ 2 ], colorp )
    NEXT
@@ -895,15 +902,15 @@ METHOD Clone() CLASS GDChart
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
-
-   // pImage := oDestImage:pImage
-   // // Signal that this image must not be destroyed
-   // oDestImage:lDestroy := .F.
-   // oDestImage := NIL
-   // oDestImage:pImage := pImage
+#if 0
+   pImage := oDestImage:pImage
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
+   oDestImage:pImage := pImage
+#endif
 
    RETURN oDestImage
-
 
 METHOD CloneDataFrom( oSrc )
 
@@ -925,7 +932,6 @@ METHOD CloneDataFrom( oSrc )
    ::hDefs         := hb_HClone( oSrc:hDefs )
 
    RETURN Self
-
 
 STATIC FUNCTION __HGetValue( hHash, cKey )
    RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )
