@@ -46,10 +46,10 @@
  *
  */
 
-#include <math.h>
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapistr.h"
+#include "hbset.h"
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)
@@ -99,16 +99,10 @@ typedef struct
    void ** pId;
    HB_SIZE nAllocId;
    HB_BOOL fHuman;
+   int     iEolLen;
+   const char * szEol;
 } HB_JSON_ENCODE_CTX, * PHB_JSON_ENCODE_CTX;
 
-
-#if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
-   static const char s_szEol[ 2 ] = { HB_CHAR_LF, 0 };
-   static const int  s_iEolLen = 1;
-#else
-   static const char s_szEol[ 3 ] = { HB_CHAR_CR, HB_CHAR_LF, 0 };
-   static const int  s_iEolLen = 2;
-#endif
 
 #define INDENT_SIZE  2
 
@@ -146,16 +140,11 @@ static void _hb_jsonCtxAddIndent( PHB_JSON_ENCODE_CTX pCtx, HB_SIZE nCount )
    }
 }
 
-static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE nLevel )
+static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
+                            HB_SIZE nLevel, HB_BOOL fEOL )
 {
-   if( nLevel >= pCtx->nAllocId )
-   {
-      pCtx->nAllocId += 8;
-      pCtx->pId = ( void ** ) hb_xrealloc( pCtx->pId, sizeof( void * ) * pCtx->nAllocId );
-   }
-
    /* Protection against recursive structures */
-   if( HB_IS_ARRAY( pValue ) || HB_IS_HASH( pValue ) )
+   if( ( HB_IS_ARRAY( pValue ) || HB_IS_HASH( pValue ) ) && hb_itemSize( pValue ) > 0 )
    {
       void * id = HB_IS_HASH( pValue ) ? hb_hashId( pValue ) : hb_arrayId( pValue );
       HB_SIZE nIndex;
@@ -164,11 +153,24 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
       {
          if( pCtx->pId[ nIndex ] == id )
          {
+            if( !fEOL )
+               _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
             _hb_jsonCtxAdd( pCtx, "null", 4 );
             return;
          }
       }
+      if( nLevel >= pCtx->nAllocId )
+      {
+         pCtx->nAllocId += 8;
+         pCtx->pId = ( void ** ) hb_xrealloc( pCtx->pId, sizeof( void * ) * pCtx->nAllocId );
+      }
       pCtx->pId[ nLevel ] = id;
+   }
+
+   if( fEOL )
+   {
+      --pCtx->pHead;
+      _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
    }
 
    if( HB_IS_STRING( pValue ) )
@@ -293,18 +295,18 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
                _hb_jsonCtxAdd( pCtx, ",", 1 );
 
             if( pCtx->fHuman )
-               _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+               _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
 
             if( pCtx->fHuman &&
                 ! ( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) &&
                     hb_itemSize( pItem ) > 0 ) )
                _hb_jsonCtxAddIndent( pCtx, ( nLevel + 1 ) * INDENT_SIZE );
 
-            _hb_jsonEncode( pItem, pCtx, nLevel + 1 );
+            _hb_jsonEncode( pItem, pCtx, nLevel + 1, HB_FALSE );
          }
          if( pCtx->fHuman )
          {
-            _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+            _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
             _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
          }
          _hb_jsonCtxAdd( pCtx, "]", 1 );
@@ -332,31 +334,32 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
             if( HB_IS_STRING( pKey ) )
             {
                PHB_ITEM pItem = hb_hashGetValueAt( pValue, nIndex );
+               HB_BOOL fEOL = HB_FALSE;
+
                if( nIndex > 1 )
                   _hb_jsonCtxAdd( pCtx, ",", 1 );
 
                if( pCtx->fHuman )
                {
-                  _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+                  _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
                   _hb_jsonCtxAddIndent( pCtx, ( nLevel + 1 ) * INDENT_SIZE );
                }
-               _hb_jsonEncode( pKey, pCtx, nLevel + 1 );
+               _hb_jsonEncode( pKey, pCtx, nLevel + 1, HB_FALSE );
 
                if( pCtx->fHuman )
                {
                   _hb_jsonCtxAdd( pCtx, " : ", 3 );
-                  if( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0 )
-                     _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+                  fEOL = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
                }
                else
                   _hb_jsonCtxAdd( pCtx, ":", 1 );
 
-               _hb_jsonEncode( pItem, pCtx, nLevel + 1 );
+               _hb_jsonEncode( pItem, pCtx, nLevel + 1, fEOL );
             }
          }
          if( pCtx->fHuman )
          {
-            _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+            _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
             _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
          }
          _hb_jsonCtxAdd( pCtx, "}", 1 );
@@ -523,13 +526,13 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
             dblValue = ( double ) nValue;
             fDbl = HB_TRUE;
          }
-         dblValue *= pow( 10.0, ( double ) ( fNegExp ? -iExp : iExp ) );
          if( fNegExp )
             iDec += iExp;
+         dblValue = hb_numExpConv( dblValue, fNegExp ? iExp : -iExp );
       }
 
       if( fDbl )
-         hb_itemPutNDDec( pValue, fNeg ? -dblValue : dblValue, iDec );
+         hb_itemPutNDDec( pValue, hb_numRound( fNeg ? -dblValue : dblValue, iDec ), iDec );
       else
          hb_itemPutNInt( pValue, fNeg ? -nValue : nValue );
       return szSource;
@@ -645,8 +648,12 @@ char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman )
    pCtx->nAllocId = 8;
    pCtx->pId = ( void ** ) hb_xgrab( sizeof( void * ) * pCtx->nAllocId );
    pCtx->fHuman = fHuman;
+   pCtx->szEol = hb_setGetEOL();
+   if( ! pCtx->szEol || ! pCtx->szEol[ 0 ] )
+      pCtx->szEol = hb_conNewLine();
+   pCtx->iEolLen = ( int ) strlen( pCtx->szEol );
 
-   _hb_jsonEncode( pValue, pCtx, 0 );
+   _hb_jsonEncode( pValue, pCtx, 0, HB_FALSE );
 
    nLen = pCtx->pHead - pCtx->pBuffer;
    szRet = ( char * ) hb_xrealloc( pCtx->pBuffer, nLen + 1 );

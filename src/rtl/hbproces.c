@@ -1143,7 +1143,7 @@ int hb_fsProcessRun( const char * pszFilename,
             }
             prfds = &rfds;
          }
-         if( nStdInLen && hStdin != FS_ERROR )
+         if( hStdin != FS_ERROR )
          {
             FD_ZERO( &wfds );
             FD_SET( hStdin, &wfds );
@@ -1197,7 +1197,7 @@ int hb_fsProcessRun( const char * pszFilename,
                   nErrBuf += ul;
             }
 
-            if( nStdInLen && hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
+            if( hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds ) )
             {
                ul = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
                pStdInBuf += ul;
