@@ -198,6 +198,7 @@
 #if defined( HB_OS_WIN )
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
+#  include <iphlpapi.h>
 #else
 #  include <errno.h>
 #  if defined( HB_OS_DOS )
@@ -3233,6 +3234,22 @@ static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
    }
 }
 #endif
+#if defined( HB_OS_WIN ) && !defined( SIOCGIFCONF )
+static HB_SIZE hb_socketArrayFindInetAddr( const char * szAddr,
+                                           PHB_ITEM pArray, HB_SIZE nPos )
+{
+   HB_SIZE nLen = hb_arrayLen( pArray );
+
+   for( ; nPos <= nLen; ++nPos )
+   {
+      PHB_ITEM pIfItem = hb_arrayGetItemPtr( pArray, nPos );
+
+      if( strcmp( hb_arrayGetCPtr( pIfItem, HB_SOCKET_IFINFO_ADDR ), szAddr ) == 0 )
+         return nPos;
+   }
+   return 0;
+}
+#endif
 
 PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 {
@@ -3496,6 +3513,9 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                                              sizeof( pIfInfo->iiBroadcastAddress ) );
 
                /* TODO:
+                *       use GetAdaptersInfo() and bind interafcaes by 
+                *       printf("\tIP Mask: \t%s\n", pAdapter->IpAddressList.IpMask.String);
+                *
                 *       hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
                 */
 
@@ -3522,6 +3542,61 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                hb_arrayAddForward( pArray, pItem );
             }
             pIfInfo++;
+         }
+
+         if( pArray && hb_arrayLen( pArray ) > 0 )
+         {
+            PIP_ADAPTER_INFO pAdapterInfo;
+            ULONG ulBufLen = sizeof( IP_ADAPTER_INFO );
+            DWORD dwResult;
+
+            pAdapterInfo = ( PIP_ADAPTER_INFO ) hb_xgrab( ulBufLen );
+            dwResult = GetAdaptersInfo( pAdapterInfo, &ulBufLen );
+            if( dwResult == ERROR_BUFFER_OVERFLOW )
+            {
+               hb_xfree( pAdapterInfo );
+               pAdapterInfo = ( PIP_ADAPTER_INFO ) hb_xgrab( ulBufLen );
+               dwResult = GetAdaptersInfo( pAdapterInfo, &ulBufLen );
+            }
+            if( dwResult == NO_ERROR )
+            {
+               PIP_ADAPTER_INFO pAdapter = pAdapterInfo;
+
+               do
+               {
+                  PIP_ADDR_STRING pIpAddress = &pAdapter->IpAddressList;
+
+                  do
+                  {
+                     HB_SIZE nPos = 0;
+
+                     while( ( nPos = hb_socketArrayFindInetAddr( pIpAddress->IpAddress.String,
+                                                                 pArray, nPos + 1 ) ) != 0 )
+                     {
+                        PHB_ITEM pIfItem = hb_arrayGetItemPtr( pArray, nPos );
+                        if( ! hb_arrayGetCPtr( pIfItem, HB_SOCKET_IFINFO_HWADDR )[ 0 ] )
+                        {
+                           char hwaddr[ 3 * MAX_ADAPTER_ADDRESS_LENGTH ];
+                           UINT count, size = 0;
+
+                           for( count = 0; count < pAdapter->AddressLength; ++count )
+                           {
+                              if( count )
+                                 hwaddr[ size++ ] = ':';
+                              size += hb_snprintf( hwaddr + size, sizeof( hwaddr ) - size,
+                                                   "%02X", ( int ) pAdapter->Address[ count ] );
+                           }
+                           hb_arraySetCL( pIfItem, HB_SOCKET_IFINFO_HWADDR, hwaddr, size );
+                        }
+                     }
+                     pIpAddress = pIpAddress->Next;
+                  }
+                  while( pIpAddress );
+
+                  pAdapter = pAdapter->Next;
+               }
+               while( pAdapter );
+            }
          }
       }
       else
