@@ -3513,7 +3513,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                                              sizeof( pIfInfo->iiBroadcastAddress ) );
 
                /* TODO:
-                *       use GetAdaptersInfo() and bind interafcaes by 
+                *       use GetAdaptersInfo() and bind interfaces by
                 *       printf("\tIP Mask: \t%s\n", pAdapter->IpAddressList.IpMask.String);
                 *
                 *       hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );

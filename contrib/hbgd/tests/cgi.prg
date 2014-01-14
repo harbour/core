@@ -4,7 +4,7 @@
  * CGI test application
  */
 
-/* run with paramter like:
+/* run with parameter like:
      photo=imgs_in/conv_tst.jpg
  */
 
