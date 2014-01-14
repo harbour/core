@@ -919,13 +919,18 @@ STATIC FUNCTION MakeResponse( hConfig )
 
 STATIC FUNCTION HttpDateFormat( tDate )
 
-   tDate -= hb_UTCOffset() / ( 3600 * 24 )
+   LOCAL nOffset := hb_UTCOffset()
 
    RETURN ;
       { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
       PadL( Day( tDate ), 2, "0" ) + " " + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + ;
-      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // TOFIX: time zone
+      " " + PadL( Year( tDate ), 4, "0" ) + ;
+      " " + hb_TToC( tDate, "", "HH:MM:SS" ) + ;
+      " " + hb_StrFormat( "UTC%1$s%2$02d%3$02d", ;
+         iif( nOffset < 0, "-", "+" ), ;
+         Int( Abs( nOffset ) / 3600 ), ;
+         Int( ( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 ) )
 
 STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 

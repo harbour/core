@@ -22,7 +22,7 @@ PROCEDURE Main()
    ENDIF
 
    oI:SetColor( black )
-   oI:SetFontName( "Arial" ) // TOFIX
+   oI:SetFontName( "Arial" )
    oI:SetFontPitch( 10 )
 
    // Resolution = 96 dpi, default

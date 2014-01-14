@@ -11,29 +11,29 @@ PROCEDURE Main()
    LOCAL cCode, cFunc, cState, cComm
    LOCAL cError1, nError, cError2
 
-   ? "Version: " + hb_NumToHex( hb_odbcVer() )
+   ? "Version:", hb_NumToHex( hb_odbcVer() )
 
    cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? PadC( "*** ODBC ACCESS TEST ***", 80 )
    ?
-   ? "Allocating environment... "
+   ? "Allocating environment..."
    SQLAllocEnv( @hEnv )
-   ? "Allocating connection... "
+   ? "Allocating connection..."
    SQLAllocConnect( hEnv, @hDbc )
    ? "-- 1st"
-   ? "Connecting to driver " + cConnStr + "... "
+   ? "Connecting to driver", cConnStr + "..."
    ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
    ? cConstrout
    ? "-- 2nd (test)"
    cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test_nothere.mdb" ) + ";Driver={Not here (*.non)}"
-   ? "Connecting to driver " + cConnStr + "... "
+   ? "Connecting to driver", cConnStr + "..."
    ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
    ? cConstrout
    ? SQLError( , hDbc,, @cError1, @nError, @cError2 )
    ? "SQLError", cError1, nError, cError2
    ? "--"
-   ? "Allocating statement... "
+   ? "Allocating statement..."
    SQLAllocStmt( hDbc, @hStmt )
 
    ? SQLError( hEnv,,, @cError1, @nError, @cError2 )
@@ -53,7 +53,7 @@ PROCEDURE Main()
    ? "SQL: SELECT * FROM test"
    SQLExecDirect( hStmt, "SELECT * FROM test" )
 
-   ?
+   ? Replicate( "-", 70 )
 
    DO WHILE SQLFetch( hStmt ) == 0
       SQLGetData( hStmt, 1, SQL_CHAR, 128, @cCode )
@@ -64,8 +64,8 @@ PROCEDURE Main()
       nRows++
    ENDDO
 
-   ? "------------------------------------------------------------------------------"
-   ? hb_ntos( nRows ), " Row(s) affected."
+   ? Replicate( "-", 70 )
+   ? hb_ntos( nRows ), "row(s) affected."
 
    SQLDisconnect( hDbc )
 

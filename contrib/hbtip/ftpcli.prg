@@ -93,8 +93,10 @@
 
 #include "tip.ch"
 
-/* TOFIX: This won't work in MT programs. [vszakats] */
-STATIC s_nPort := 16000
+#define _PORT_MIN  16000
+#define _PORT_MAX  24000
+
+STATIC s_nPort := _PORT_MIN
 
 CREATE CLASS TIPClientFTP FROM TIPClient
 
@@ -477,15 +479,18 @@ METHOD Stor( cFile ) CLASS TIPClientFTP
 
 METHOD Port() CLASS TIPClientFTP
 
+   LOCAL nPort
+
    ::SocketPortServer := hb_inetCreate( ::nConnTimeout )
-   s_nPort++
-   DO WHILE s_nPort < 24000
-      hb_inetServer( s_nPort, ::SocketPortServer )
+
+   DO WHILE ( nPort := ++s_nPort ) < _PORT_MAX
+      hb_inetServer( nPort, ::SocketPortServer )
       IF ::inetErrorCode( ::SocketPortServer ) == 0
          RETURN ::SendPort()
       ENDIF
-      s_nPort++
    ENDDO
+
+   s_nPort := _PORT_MIN
 
    RETURN .F.
 

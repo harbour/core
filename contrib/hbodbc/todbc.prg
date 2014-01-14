@@ -163,10 +163,8 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    LOCAL nRet
 
-   hb_default( @lCache, .T. )
-
    ::cODBCStr := cODBCStr
-   ::lCacheRS := lCache
+   ::lCacheRS := hb_defaultValue( lCache, .T. )
 
    // Allocates SQL Environment
    IF ( nRet := SQLAllocEnv( @::hEnv ) ) != SQL_SUCCESS
@@ -305,7 +303,7 @@ METHOD Open() CLASS TODBC
 
       // Get number of rows in result set
       nResult := SQLRowCount( ::hStmt, @nRows )
-      IF nResult  == SQL_SUCCESS
+      IF nResult == SQL_SUCCESS
          ::nRecCount := nRows
       ENDIF
 

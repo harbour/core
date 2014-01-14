@@ -556,22 +556,27 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
       cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cName + '"; filename="' + cTmp + '"' + cCrlf + 'Content-Type: ' + cType + cCrLf + cCrLf
       // hope this is not a big file....
       nFile := FOpen( cFile )
-      /* TOFIX: Error checking on nFile. [vszakats] */
-      nBuf := 8192
-      nRead := nBuf
-      // cBuf := Space( nBuf )
-      DO WHILE nRead == nBuf
-         // nRead := FRead( nFile, @cBuf, nBuf )
-         cBuf := FReadStr( nFile, nBuf )
-         nRead := hb_BLen( cBuf )
+      IF nFile != F_ERROR
+         nBuf := 8192
+         nRead := nBuf
 #if 0
-         IF nRead < nBuf
-            cBuf := PadR( cBuf, nRead )
-         ENDIF
+         cBuf := Space( nBuf )
 #endif
-         cData += cBuf
-      ENDDO
-      FClose( nFile )
+         DO WHILE nRead == nBuf
+#if 0
+            nRead := FRead( nFile, @cBuf, nBuf )
+#endif
+            cBuf := FReadStr( nFile, nBuf )
+            nRead := hb_BLen( cBuf )
+#if 0
+            IF nRead < nBuf
+               cBuf := PadR( cBuf, nRead )
+            ENDIF
+#endif
+            cData += cBuf
+         ENDDO
+         FClose( nFile )
+      ENDIF
       cData += cCrlf
    NEXT
    cData += cBound + "--" + cCrlf

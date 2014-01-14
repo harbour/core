@@ -4,6 +4,10 @@
  * CGI test application
  */
 
+/* run with paramter like:
+     photo=imgs_in/conv_tst.jpg
+ */
+
 #require "hbgd"
 
 #command WRITE <c> => OutStd( <c> + hb_eol() )
@@ -56,7 +60,7 @@ PROCEDURE Main( ... )
       NEXT
    ENDIF
 
-   // __OutDebug( cQuery, ValToPrg( hParams ) )
+   // __OutDebug( cQuery, hb_ValToExp( hParams ) )
 
 #if 0
    hb_default( @cText, "Testo di Prova" )
@@ -72,9 +76,9 @@ PROCEDURE Main( ... )
    ELSEIF cPhoto != NIL
       StartHTML()
 #if 0
-      WRITE ValToPrg( hParams ) + "<br />"
-      WRITE ValToPrg( cParams ) + "<br />"
-      WRITE ValToPrg( cQuery ) + "<br />"
+      WRITE hb_ValToExp( hParams ) + "<br />"
+      WRITE hb_ValToExp( cParams ) + "<br />"
+      WRITE hb_ValToExp( cQuery ) + "<br />"
       WRITE "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br />"
 #endif
       WRITE "<table border=1>"
@@ -184,7 +188,7 @@ STATIC PROCEDURE OutJpg( cText, nPitch )
    oI:SetTransparent( blue )
 #endif
 
-   oI:SetFontName( "Verdana" ) // TOFIX
+   oI:SetFontName( "Arial" )
    oI:SetFontPitch( nPitch )
 #if 0
    __OutDebug( oI:GetFTFontHeight() )
@@ -196,10 +200,9 @@ STATIC PROCEDURE OutJpg( cText, nPitch )
    nY      := aSize[ 4 ]
    oI:Resize( nWidth, nHeight )
 
-
    /* Allocate drawing color */
    blue := oI:SetColor( 0, 0, 200 )
-   oI:SetFontName( "Verdana" ) // TOFIX
+   oI:SetFontName( "Arial" )
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
 #if 0
@@ -243,8 +246,8 @@ STATIC FUNCTION GetVars( cFields, cSeparator )
       // TraceLog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
+      IF Right( cName, 2 ) == "[]"
+         cName := Left( cName, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
       ELSE
@@ -276,8 +279,8 @@ STATIC FUNCTION GetParams( aParams )
       // TraceLog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
+      IF Right( cName, 2 ) == "[]"
+         cName := Left( cName, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
       ELSE
@@ -298,27 +301,26 @@ STATIC FUNCTION URLDecode( cStr )
 
    LOCAL cRet := "", i, cCar
 
-   // LOCAL lNumeric := .T.
+#if 0
+   LOCAL lNumeric := .T.
+#endif
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[ i ]
+
+      cCar := SubStr( cStr, i, 1 )
 
       DO CASE
       CASE cCar == "+"
          cRet += " "
-
       CASE cCar == "%"
          i++
-         cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
-         i++
-
+         cRet += Chr( hb_HexToNum( SubStr( cStr, i++, 2 ) ) )
       OTHERWISE
          cRet += cCar
-
       ENDCASE
 
 #if 0
-      IF ( cRet[ i ] > "9" .OR. cRet[ i ] < "0" ) .AND. !( cRet[ i ] == "." )
+      IF ( SubStr( cRet, i, 1 ) > "9" .OR. SubStr( cRet, i, 1 ) < "0" ) .AND. !( SubStr( cRet, i, 1 ) == "." )
          lNumeric := .F.
       ENDIF
 #endif
@@ -337,20 +339,18 @@ STATIC FUNCTION URLEncode( cStr )
    LOCAL cRet := "", i, nVal, cCar
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[ i ]
+
+      cCar := SubStr( cStr, i, 1 )
+
       DO CASE
       CASE cCar == " "
          cRet += "+"
-
       CASE cCar >= "A" .AND. cCar <= "Z"
          cRet += cCar
-
       CASE cCar >= "a" .AND. cCar <= "z"
          cRet += cCar
-
       CASE cCar >= "0" .AND. cCar <= "9"
          cRet += cCar
-
       OTHERWISE
          nVal := Asc( cCar )
          cRet += "%" + hb_NumToHex( nVal )

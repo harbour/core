@@ -549,7 +549,6 @@ METHOD Refresh() CLASS TFbQuery
    IF HB_ISARRAY( qry )
       ::numcols := qry[ 4 ]
 
-      /* TOFIX: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
       ::aStruct := StructConvert( qry[ 6 ], ::db, ::dialect )
 
       ::lError := .F.
@@ -958,6 +957,7 @@ STATIC FUNCTION DataToSql( xField )
 STATIC FUNCTION StructConvert( aStru, db, dialect )
 
    LOCAL aNew := {}
+
    LOCAL cField
    LOCAL nType
    LOCAL cType
@@ -971,18 +971,17 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    LOCAL aDomains := {}
    LOCAL nVal
 
-   LOCAL xTables := ""
-   LOCAL xFields := ""
+   LOCAL cTables := ""
+   LOCAL cFields := ""
 
    /* create table list and field list */
-
    FOR EACH i IN aStru
-      xTables += DataToSql( i[ 5 ] )
-      xFields += DataToSql( i[ 1 ] )
+      cTables += DataToSql( i[ 5 ] )
+      cFields += DataToSql( i[ 1 ] )
 
       IF ! i:__enumIsLast()
-         xTables += ","
-         xFields += ","
+         cTables += ","
+         cFields += ","
       ENDIF
    NEXT
 
@@ -991,12 +990,10 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
       "select rdb$relation_name, rdb$field_name, rdb$field_source" + ;
       "  from rdb$relation_fields" + ;
       ' where rdb$field_name not like "RDB$%"' + ;
-      "   and rdb$relation_name in (" + xTables + ")" + ;
-      "   and rdb$field_name in (" + xFields + ")"
+      "   and rdb$relation_name in (" + cTables + ")" + ;
+      "   and rdb$field_name in (" + cFields + ")"
 
-   qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
-
-   IF HB_ISARRAY( qry )
+   IF HB_ISARRAY( qry := FBQuery( db, RemoveSpaces( cQuery ), dialect ) )
 
       DO WHILE FBFetch( qry ) == 0
          AAdd( aDomains, { ;
@@ -1006,82 +1003,79 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
       ENDDO
 
       FBFree( qry )
-
-      FOR EACH i IN aStru
-         cField := RTrim( i[ 7 ] )
-         nType  := i[ 2 ]
-         nSize  := i[ 3 ]
-         nDec   := i[ 4 ] * -1
-         cTable := RTrim( i[ 5 ] )
-
-         nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
-
-         IF nVal != 0
-            cDomain := aDomains[ nVal, 3 ]
-         ELSE
-            cDomain := ""
-         ENDIF
-
-         SWITCH nType
-         CASE SQL_TEXT
-            cType := "C"
-            EXIT
-         CASE SQL_VARYING
-            cType := "C"
-            EXIT
-         CASE SQL_SHORT
-            /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
-               create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
-
-            IF "BOOL" $ cDomain
-               cType := "L"
-               nSize := 1
-               nDec := 0
-            ELSE
-               cType := "N"
-               nSize := 5
-            ENDIF
-            EXIT
-         CASE SQL_LONG
-            cType := "N"
-            nSize := 9
-            EXIT
-         CASE SQL_INT64
-            cType := "N"
-            nSize := 9
-            EXIT
-         CASE SQL_FLOAT
-            cType := "N"
-            nSize := 15
-            EXIT
-         CASE SQL_DOUBLE
-            cType := "N"
-            nSize := 15
-            EXIT
-         CASE SQL_TIMESTAMP
-            cType := "T"
-            nSize := 8
-            EXIT
-         CASE SQL_TYPE_DATE
-            cType := "D"
-            nSize := 8
-            EXIT
-         CASE SQL_TYPE_TIME
-            cType := "C"
-            nSize := 8
-            EXIT
-         CASE SQL_BLOB
-            cType := "M"
-            nSize := 10
-            EXIT
-         OTHERWISE
-            cType := "C"
-            nDec := 0
-         ENDSWITCH
-
-         AAdd( aNew, { cField, cType, nSize, nDec, cTable, cDomain } )
-      NEXT
    ENDIF
+
+   FOR EACH i IN aStru
+
+      cField := RTrim( i[ 7 ] )
+      nType  := i[ 2 ]
+      nSize  := i[ 3 ]
+      nDec   := i[ 4 ] * -1
+      cTable := RTrim( i[ 5 ] )
+
+      nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
+
+      cDomain := iif( nVal > 0, aDomains[ nVal, 3 ], "" )
+
+      SWITCH nType
+      CASE SQL_TEXT
+         cType := "C"
+         EXIT
+      CASE SQL_VARYING
+         cType := "C"
+         EXIT
+      CASE SQL_SHORT
+         /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
+            create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
+
+         IF "BOOL" $ cDomain
+            cType := "L"
+            nSize := 1
+            nDec := 0
+         ELSE
+            cType := "N"
+            nSize := 5
+         ENDIF
+         EXIT
+      CASE SQL_LONG
+         cType := "N"
+         nSize := 9
+         EXIT
+      CASE SQL_INT64
+         cType := "N"
+         nSize := 9
+         EXIT
+      CASE SQL_FLOAT
+         cType := "N"
+         nSize := 15
+         EXIT
+      CASE SQL_DOUBLE
+         cType := "N"
+         nSize := 15
+         EXIT
+      CASE SQL_TIMESTAMP
+         cType := "T"
+         nSize := 8
+         EXIT
+      CASE SQL_TYPE_DATE
+         cType := "D"
+         nSize := 8
+         EXIT
+      CASE SQL_TYPE_TIME
+         cType := "C"
+         nSize := 8
+         EXIT
+      CASE SQL_BLOB
+         cType := "M"
+         nSize := 10
+         EXIT
+      OTHERWISE
+         cType := "C"
+         nDec := 0
+      ENDSWITCH
+
+      AAdd( aNew, { cField, cType, nSize, nDec, cTable, cDomain } )
+   NEXT
 
    RETURN aNew
 
