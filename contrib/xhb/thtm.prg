@@ -88,6 +88,7 @@ CREATE CLASS THtml
    VAR cStr    Init ""
    VAR BaseURL, BaseTarget
    VAR lFont INIT .F.
+   VAR cEncoding
 
 #if 0
    METHOD New( cFile, cTitle, cLinkTitle, cCharSet, cScriptSRC, ;
@@ -144,6 +145,7 @@ CREATE CLASS THtml
    METHOD QOut( c ) INLINE hb_default( @c, "" ), ::cStr += CRLF() + c + "<br />" + CRLF()
 
    METHOD Write( c ) INLINE hb_default( @c, "" ), ::cStr += c
+   METHOD WriteData( c ) INLINE hb_default( @c, "" ), iif( ::cEncoding == NIL, ::cStr += c, ::cStr += hb_Translate( c,, ::cEncoding ) )
 
    METHOD WriteLN( c ) INLINE hb_default( @c, "" ), ::cStr += CRLF() + c + "<br />" + CRLF()
 
@@ -390,18 +392,16 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    IF aScriptSrc != NIL
 
-      FOR i := 1 TO Len( aScriptSrc )
-         ::cStr += ;
-            '<script language=JavaScript src="' + aScriptSrc[ i ] + '" />' + CRLF()
+      FOR EACH i IN aScriptSrc
+         ::cStr += '<script language=JavaScript src="' + i + '" />' + CRLF()
       NEXT
 
    ENDIF
 
    IF aServerSrc != NIL
 
-      FOR i := 1 TO Len( aServerSrc )
-         ::cStr += ;
-            '<script language=JavaScript src="' + aServerSrc[ i ] + '" runat=SERVER />' + CRLF()
+      FOR EACH i IN aServerSrc
+         ::cStr += '<script language=JavaScript src="' + i + '" runat=SERVER />' + CRLF()
       NEXT
 
    ENDIF
@@ -414,9 +414,9 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       ::cStr += "<!--" + CRLF()
       ::cStr += "if(document.images)" + CRLF()
       ::cStr += "{" + CRLF()
-      FOR i := 1 TO Len( aImages )
-         ::cStr += Space( 5 ) + aImages[ i, 1 ] + "=new Image(100,50);" + CRLF()
-         ::cStr += Space( 5 ) + aImages[ i, 1 ] + '.src="' + aImages[ i, 2 ] + '";' + CRLF()
+      FOR EACH i IN aImages
+         ::cStr += Space( 5 ) + i[ 1 ] + "=new Image(100,50);" + CRLF()
+         ::cStr += Space( 5 ) + i[ 1 ] + '.src="' + i[ 2 ] + '";' + CRLF()
       NEXT
       ::cStr += "}" + CRLF()
 
@@ -2309,37 +2309,19 @@ FUNCTION HtmlPadR( cStr, n )
 //
 
 FUNCTION Any2Str( xVal )
-
    RETURN  HtmlAny2Str( xVal )
 
 FUNCTION HtmlAny2Str( xVal )
 
-   LOCAL xRet := NIL
+   SWITCH ValType( xVal )
+   CASE "M"
+   CASE "C" ; RETURN iif( Empty( xVal ), ".", xVal )
+   CASE "N" ; RETURN hb_ntos( xVal )
+   CASE "O" ; RETURN "<" + xVal:CLASSNAME() + ">"
+   CASE "D" ; RETURN DToC( xVal )
+   CASE "L" ; RETURN iif( xVal, "T", "F" )
+   CASE "B" ; RETURN "{||...}"
+   CASE "U" ; RETURN "NIL"
+   ENDSWITCH
 
-   IF HB_ISSTRING( xVal )
-      xRet := iif( Empty( xVal ), ".", xVal )
-
-   ELSEIF HB_ISNUMERIC( xVal )
-      xRet := hb_ntos( xVal )
-
-   ELSEIF HB_ISOBJECT( xVal )
-      xRet := "<" + xVal:CLASSNAME() + ">"
-
-   ELSEIF HB_ISDATE( xVal )
-      xRet := DToC( xVal )
-
-   ELSEIF HB_ISLOGICAL( xVal )
-      xRet := iif( xVal, "T", "F" )
-
-   ELSEIF HB_ISBLOCK( xVal )
-      xRet := "{||...}"
-
-   ELSEIF ValType( xVal ) == NIL
-      xRet := "NIL"
-
-   ELSEIF ValType( xVal ) == "U"
-      xRet := "<Unknown Value>"
-
-   ENDIF
-
-   RETURN xRet
+   RETURN "<Unknown Value>"

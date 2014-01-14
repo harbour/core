@@ -100,7 +100,6 @@ ENDCLASS
 METHOD New( cInBuffer ) CLASS TCgi
 
    LOCAL i
-   LOCAL aTemp
    LOCAL aVar
 
    ::nH := HtmlPageHandle()
@@ -141,10 +140,8 @@ METHOD New( cInBuffer ) CLASS TCgi
 
       ::aQueryFields := {}
 
-      aTemp := hb_ATokens( ::Query_String, "&" )           // separate fields
-
-      FOR i := 1 TO Len( aTemp )
-         aVar := hb_ATokens( aTemp[ i ], "=" )
+      FOR EACH i IN hb_ATokens( ::Query_String, "&" )   // separate fields
+         aVar := hb_ATokens( i, "=" )
          IF Len( aVar ) == 2
             AAdd( ::aQueryFields, { aVar[ 1 ], HtmlDecodeUrl( aVar[ 2 ] ) } )
          ENDIF
@@ -176,13 +173,13 @@ METHOD ToObject() CLASS TCgi
    // --> create new oObject class from this one...
    aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
 
-   FOR i := 1 TO Len( ::aQueryFields )
+   FOR EACH i IN ::aQueryFields
 
-      IF ::aQueryFields[ i, 2 ] == NIL .OR. Empty( ::aQueryFields[ i, 2 ] )
-         ::aQueryFields[ i, 2 ] := ""
+      IF i[ 2 ] == NIL .OR. Empty( i[ 2 ] )
+         i[ 2 ] := ""
       ENDIF
 
-      adb:AddData( ::aQueryFields[ i, 1 ], ::aQueryFields[ i, 2 ], , nScope )
+      adb:AddData( i[ 1 ], i[ 2 ], , nScope )
    NEXT
 
    adb:Create()
@@ -233,24 +230,21 @@ FUNCTION ParseString( cString, cDelim, nRet )
    LOCAL cBuf
    LOCAL aElem
    LOCAL nPosFim
-   LOCAL nSize
    LOCAL i
 
-   nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
-   aElem := Array( nSize )
+   aElem := Array( Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1 )
 
    cBuf := cString
-   FOR i := 1 TO nSize
-      nPosFim := At( cDelim, cBuf )
+   FOR EACH i IN aElem
 
+      nPosFim := At( cDelim, cBuf )
       IF nPosFim > 0
-         aElem[ i ] := SubStr( cBuf, 1, nPosFim - 1 )
+         i := SubStr( cBuf, 1, nPosFim - 1 )
       ELSE
-         aElem[ i ] := cBuf
+         i := cBuf
       ENDIF
 
       cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
-
    NEXT
 
    RETURN aElem[ nRet ]

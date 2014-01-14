@@ -68,7 +68,6 @@ DYNAMIC GetThreadId
 DYNAMIC GetVolInfo
 DYNAMIC GfxPrimitive
 DYNAMIC GfxText
-DYNAMIC Greek2Html
 DYNAMIC gtGetClipboard
 DYNAMIC gtGetClipboardSize
 DYNAMIC gtPasteClipboard
@@ -287,7 +286,6 @@ DYNAMIC inetSetPeriodCallback
 DYNAMIC inetSetTimeLimit
 DYNAMIC inetSetTimeout
 DYNAMIC inetStatus
-DYNAMIC InitGreek
 DYNAMIC IsAlNum
 DYNAMIC IsAscii
 DYNAMIC IsCntrl

@@ -370,16 +370,14 @@ METHOD Begin() CLASS TJSWindow
    ENDIF
 
    IF ::aScriptSrc != NIL
-      FOR i := 1 TO Len( ::aScriptSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aScriptSrc[ i ] + '"></script>' )
+      FOR EACH i IN ::aScriptSrc
+         ::QOut( '<script language=JavaScript src="' + i + '"></script>' )
       NEXT
    ENDIF
 
    IF ::aServerSrc != NIL
-      FOR i := 1 TO Len( ::aServerSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
+      FOR EACH i IN ::aServerSrc
+         ::QOut( '<script language=JavaScript src="' + i + '" runat=SERVER></script>' )
       NEXT
    ENDIF
 

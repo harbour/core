@@ -124,9 +124,9 @@ FUNCTION hb_Decode( ... )
                   aParams := Array( Len( xDefault ) * 2 )
 
                   n := 1
-                  FOR i := 1 TO Len( xDefault )
-                     aParams[ n++ ] := xDefault[ i ][ 1 ]
-                     aParams[ n++ ] := xDefault[ i ][ 2 ]
+                  FOR EACH i IN xDefault
+                     aParams[ n++ ] := i[ 1 ]
+                     aParams[ n++ ] := i[ 2 ]
                   NEXT
 
                ENDIF

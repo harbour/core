@@ -463,11 +463,9 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
 
 METHOD BuildChallengePwd( cPassword ) CLASS TRPCClient
 
-   LOCAL nLen, nCount, cRet
-
-   nLen := 10 + Int( hb_Random( 1, 60 ) )
-
-   cRet := ""
+   LOCAL nLen := 10 + Int( hb_Random( 1, 60 ) )
+   LOCAL nCount
+   LOCAL cRet := ""
 
    FOR nCount := 1 TO nLen
       cRet += hb_BChar( Int( hb_Random( 2, 254 ) ) )
@@ -478,9 +476,7 @@ METHOD BuildChallengePwd( cPassword ) CLASS TRPCClient
       cRet += hb_BChar( Int( hb_Random( 2, 254 ) ) )
    ENDDO
 
-   cRet := ::Encrypt( cRet )
-
-   RETURN cRet
+   RETURN ::Encrypt( cRet )
 
 METHOD ManageChallenge() CLASS TRPCClient
 

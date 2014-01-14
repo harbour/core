@@ -346,13 +346,11 @@ FUNCTION hb_CStructure( cStructure, nAlign )
 
 STATIC PROCEDURE AllocateMembers( oStructure )
 
-   LOCAL aCTypes, CType
-
-   aCTypes := oStructure:aCTypes
+   LOCAL CType
 
    // TraceLog( "Scaning: " + oStructure:className() )
 
-   FOR EACH CType IN aCTypes
+   FOR EACH CType IN oStructure:aCTypes
       IF CType > CTYPE_STRUCTURE .AND. CType < CTYPE_STRUCTURE_PTR
          oStructure[ CType:__enumIndex() ] := hb_CStructureFromId( CType, , .F. )
          AllocateMembers( oStructure[ CType:__enumIndex() ] )
@@ -442,13 +440,13 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
       __clsAddMsg( hClass,  "CopyTo"    , @__CStr_CopyTo() , HB_OO_MSG_METHOD )
 
       // IF Abs( CType ) == 1
-      __clsAddMsg( hClass, "AsString", @AsString()   , HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass, "AsString", @AsString(), HB_OO_MSG_METHOD )
       // ENDIF
 
       FOR Counter := 1 TO nLen
          cMember := hb_ntos( Counter )
          acMembers[ Counter ] := cMember
-         __clsAddMsg( hClass,       cMember, Counter, HB_OO_MSG_PROPERTY )
+         __clsAddMsg( hClass, cMember, Counter, HB_OO_MSG_PROPERTY )
       NEXT
 
       __clsAddMsg( hClass,  "aCTypes"       , Counter++, HB_OO_MSG_PROPERTY, aCTypes )
@@ -469,7 +467,6 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
 //
 
 FUNCTION hb_Is_CStructure( x )
-
    RETURN Left( x:ClassName(), 11 ) == "C Structure"
 
 //
@@ -478,15 +475,9 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    LOCAL xProperty, cOut := ""
 
-   IF cPad == NIL
-      cPad := ""
-   ENDIF
-   IF lShowMembers == NIL
-      lShowMembers := .F.
-   ENDIF
-   IF lReturnString == NIL
-      lReturnString := .F.
-   ENDIF
+   __defaultNIL( @cPad, "" )
+   __defaultNIL( @lShowMembers, .F. )
+   __defaultNIL( @lReturnString, .F. )
 
 #if 0
    QOut( cPad + SubStr( QSelf():className(), 13 ) )

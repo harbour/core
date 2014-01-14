@@ -60,8 +60,6 @@
 #include "html.ch"
 #include "hbclass.ch"
 
-THREAD STATIC t_aGreek := {}
-
 /****
 *
 *     BackButton()
@@ -221,7 +219,7 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
       FOR i := 1 TO Len( aFlds )
          cAlign := iif( aFlds[ i, 2 ] == "N", "RIGHT", "CENTER" )
          oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( Greek2Html( HtmlAny2Str( FieldGet( i ) ) ) )
+         oHtm:WriteData( HtmlAny2Str( FieldGet( i ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
@@ -257,7 +255,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
    oHtm:endTable()
 #endif
 
-   oquery := oServer:query( 'Select * from rafael' )
+   oquery := oServer:query( 'select * from rafael' )
 
    oHtm:defineTable( oQuery:FCount(), 1, 98 )
    oCurRow := oQuery:getRow( 1 )
@@ -298,7 +296,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
 
          cAlign := iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" )
          oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( Greek2Html( HtmlAny2Str( oCurRow:FieldGet( i ) ) ) )
+         oHtm:WriteDate( HtmlAny2Str( oCurRow:FieldGet( i ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
@@ -633,16 +631,14 @@ METHOD Begin() CLASS JWindow
    ENDIF
 
    IF ::aScriptSrc != NIL
-      FOR i := 1 TO Len( ::aScriptSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aScriptSrc[ i ] + '"></script>' )
+      FOR EACH i IN ::aScriptSrc
+         ::QOut( '<script language=JavaScript src="' + i + '"></script>' )
       NEXT
    ENDIF
 
    IF ::aServerSrc != NIL
-      FOR i := 1 TO Len( ::aServerSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
+      FOR EACH i IN ::aServerSrc
+         ::QOut( '<script language=JavaScript src="' + i + '" runat=SERVER></script>' )
       NEXT
    ENDIF
 
@@ -743,130 +739,3 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    ENDIF
 
    RETURN Self
-
-/****
-*
-*     InitGreek()
-*
-*     Initializes the international languages support.
-*
-*     Uses GREEK_ALPHABET array as a match pattern. Replace with your
-*     own character set.
-*/
-
-FUNCTION InitGreek()
-
-   LOCAL aGreek := { ;
-      hb_BChar( 193 ), ;
-      hb_BChar( 194 ), ;
-      hb_BChar( 195 ), ;
-      hb_BChar( 196 ), ;
-      hb_BChar( 197 ), ;
-      hb_BChar( 198 ), ;
-      hb_BChar( 199 ), ;
-      hb_BChar( 200 ), ;
-      hb_BChar( 201 ), ;
-      hb_BChar( 202 ), ;
-      hb_BChar( 203 ), ;
-      hb_BChar( 204 ), ;
-      hb_BChar( 205 ), ;
-      hb_BChar( 206 ), ;
-      hb_BChar( 207 ), ;
-      hb_BChar( 208 ), ;
-      hb_BChar( 209 ), ;
-      hb_BChar( 211 ), ;
-      hb_BChar( 212 ), ;
-      hb_BChar( 213 ), ;
-      hb_BChar( 214 ), ;
-      hb_BChar( 215 ), ;
-      hb_BChar( 216 ), ;
-      hb_BChar( 217 ), ;
-      hb_BChar( 225 ), ;
-      hb_BChar( 226 ), ;
-      hb_BChar( 227 ), ;
-      hb_BChar( 228 ), ;
-      hb_BChar( 229 ), ;
-      hb_BChar( 230 ), ;
-      hb_BChar( 231 ), ;
-      hb_BChar( 232 ), ;
-      hb_BChar( 233 ), ;
-      hb_BChar( 234 ), ;
-      hb_BChar( 235 ), ;
-      hb_BChar( 236 ), ;
-      hb_BChar( 237 ), ;
-      hb_BChar( 238 ), ;
-      hb_BChar( 239 ), ;
-      hb_BChar( 240 ), ;
-      hb_BChar( 241 ), ;
-      hb_BChar( 243 ), ;
-      hb_BChar( 242 ), ;
-      hb_BChar( 244 ), ;
-      hb_BChar( 245 ), ;
-      hb_BChar( 246 ), ;
-      hb_BChar( 247 ), ;
-      hb_BChar( 248 ), ;
-      hb_BChar( 249 ), ;
-      hb_BChar( 220 ), ;
-      hb_BChar( 221 ), ;
-      hb_BChar( 222 ), ;
-      hb_BChar( 250 ), ;
-      hb_BChar( 223 ), ;
-      hb_BChar( 252 ), ;
-      hb_BChar( 253 ), ;
-      hb_BChar( 251 ), ;
-      hb_BChar( 254 ), ;
-      hb_BChar( 162 ), ;
-      hb_BChar( 184 ), ;
-      hb_BChar( 185 ), ;
-      hb_BChar( 186 ), ;
-      hb_BChar( 188 ), ;
-      hb_BChar( 190 ), ;
-      hb_BChar( 191 ), ;
-      hb_BChar( 218 ), ;
-      hb_BChar( 219 )  ;
-      }
-
-   LOCAL i
-   LOCAL n
-   LOCAL aArr := Array( 255 )
-
-   FOR i := 1 TO 255
-      aArr[ i ] := hb_BChar( i )
-   NEXT
-
-   n := 1
-   FOR i := 128 TO 175
-      aArr[ i ] := aGreek[ n ]
-      n++
-   NEXT
-
-   FOR i := 224 TO 240
-      aArr[ i ] := aGreek[ n ]
-      n++
-   NEXT
-   aArr[ 244 ] := aGreek[ n ]
-   n++
-   aArr[ 245 ] := aGreek[ n ]
-
-   RETURN aArr
-
-/****
-*
-*     Greek2Html()
-*
-*     Converts International characters to HTML
-*/
-
-FUNCTION Greek2Html( cText )
-
-   LOCAL i
-   LOCAL cStr := ""
-
-   IF Empty( t_aGreek )
-      t_aGreek := InitGreek()
-   ENDIF
-   FOR I := 1 TO Len( cText )
-      cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
-   NEXT
-
-   RETURN cStr

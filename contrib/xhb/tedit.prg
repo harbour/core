@@ -206,7 +206,7 @@ ENDCLASS
 METHOD Put() CLASS THtmlControl
 
    LOCAL i
-   LOCAL cStr := ""
+   LOCAL cStr
 
    ::nH := HtmlPageHandle()
    ::form := HtmlFormName()
@@ -360,17 +360,14 @@ METHOD Put() CLASS THtmlControl
 
    IF ::Type == "SELECT"
 
-      FOR i := 1 TO Len( ::aOptions )
-         cStr := "<option"
-         cStr += iif( ::aOptions[ i, _OPTION_VALUE ] != NIL, ;
-            " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
-         cStr += iif( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
-            " label=" + ::aOptions[ i, _OPTION_LABEL ], "" )
-         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] != NIL .AND. ::aOptions[ i, _OPTION_SELECTED ], ;
-            " SELECTED ", "" )
-         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] != NIL .AND. ::aOptions[ i, _OPTION_DISABLED ], ;
-            " DISABLED ", "" )
-         cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</option>" + CRLF()
+      FOR EACH i IN ::aOptions
+         cStr := ;
+            "<option" + ;
+            iif( i[ _OPTION_VALUE ] != NIL, " value=" + i[ _OPTION_VALUE ], "" ) + ;
+            iif( i[ _OPTION_LABEL ] != NIL, " label=" + i[ _OPTION_LABEL ], "" ) + ;
+            iif( i[ _OPTION_SELECTED ] != NIL .AND. i[ _OPTION_SELECTED ], " SELECTED ", "" ) + ;
+            iif( i[ _OPTION_DISABLED ] != NIL .AND. i[ _OPTION_DISABLED ], " DISABLED ", "" ) + ;
+            ">" + i[ _OPTION_TEXT ] + "</option>" + CRLF()
 //       FWrite( ::nH, cStr )
          ::oHtm:cStr += cStr
       NEXT

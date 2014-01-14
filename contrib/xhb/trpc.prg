@@ -296,7 +296,7 @@ METHOD SetCallable( oExec, oMeth ) CLASS TRPCFunction
 
 METHOD Run( aParams, oClient ) CLASS TRPCFunction
 
-   LOCAL nStart, nCount, xRet
+   LOCAL nStart, xParam
 
    IF ! ::CheckTypes( aParams )
       RETURN NIL
@@ -304,16 +304,13 @@ METHOD Run( aParams, oClient ) CLASS TRPCFunction
 
    nStart := iif( HB_ISOBJECT( ::aCall[ 1 ] ), 3, 2 )
 
-   FOR nCount := 1 TO Len( aParams )
-      ::aCall[ nStart ] := aParams[ nCount ]
-      nStart++
+   FOR EACH xParam IN aParams
+      ::aCall[ nStart++ ] := xParam
    NEXT
 
    ::aCall[ nStart ] := oClient
 
-   xRet := hb_ExecFromArray( ::aCall )
-
-   RETURN xRet
+   RETURN hb_ExecFromArray( ::aCall )
 
 METHOD CheckParam( cParam ) CLASS TRPCFunction
 
@@ -348,14 +345,14 @@ METHOD CheckTypes( aParams ) CLASS TRPCFunction
 METHOD Describe() CLASS TRPCFunction
 
    LOCAL cRet := ::cName + "("
-   LOCAL nCount
+   LOCAL xParam
 
-   IF Len( ::aParameters ) > 0
-      FOR nCount := 1 TO Len( ::aParameters ) - 1
-         cRet += ::aParameters[ nCount ] + ","
-      NEXT
-      cRet += ATail( ::aParameters )
-   ENDIF
+   FOR EACH xParam IN ::aParameters
+      cRet += xParam
+      IF ! xParam:__enumIsLast()
+         cRet += ","
+      ENDIF
+   NEXT
 
    cRet += ")-->" + ::cReturn
 
