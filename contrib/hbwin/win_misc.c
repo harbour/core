@@ -133,6 +133,8 @@ HB_FUNC( WIN_LOADRESOURCE )
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
    {
+      HRSRC hRes;
+
       LPCTSTR szName;
       LPCTSTR szType;
 
@@ -155,7 +157,7 @@ HB_FUNC( WIN_LOADRESOURCE )
       else
          szType = HB_PARSTRDEF( 2, &hType, NULL );
 
-      HRSRC hRes = FindResource( ( HMODULE ) hInstance, szName, szType );
+      hRes = FindResource( ( HMODULE ) hInstance, szName, szType );
 
       if( hRes )
       {
