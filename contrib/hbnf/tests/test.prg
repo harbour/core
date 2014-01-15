@@ -1,3 +1,5 @@
+/* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
+
 #require "hbnf"
 #require "hbtest"
 

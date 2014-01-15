@@ -165,16 +165,16 @@ STATIC PROCEDURE Show()
 //                                      one class to another
 //
 // If <xArg> is not present, the current object will be returned as an array
-// for description see __objSetValueList / __objGetValueList.
+// for description see __objSetValueList() / __objGetValueList().
 //
 // The method aExcept() is called to determine the DATA which should not
-// be returned. Eg. hWnd ( do not copy this DATA from external source )
+// be returned. Eg. hWnd (do not copy this DATA from external source)
 //
 // Say we want to copy oSource into oTarget we say:
 //
 // oTarget:Transfer( oSource )
 //
-// If we do not want 'cName' duplicated we have to use __objGetValueList:
+// If we do not want 'cName' duplicated we have to use __objGetValueList():
 //
 // aNewExcept := AClone( oSource:aExcept() )
 // AAdd( aNewExcept, "cName" )  /* Add cName to exception list               */

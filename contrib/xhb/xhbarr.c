@@ -50,7 +50,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* ASplice( <aArray> [, <nPos>] [, <nCount>] [,<xVal1>] [, ...] [, <xValN>]  ) => <aDeleted>
+/* ASplice( <aArray> [, <nPos>] [, <nCount>] [, <xVal1>] [, ...] [, <xValN>]  ) => <aDeleted>
  * Removes elements and return them as array, optionally add items
  */
 HB_FUNC( ASPLICE )
@@ -149,10 +149,6 @@ HB_FUNC( ASPLICE )
       }
    }
 }
-
-/* TOFIX: Move this to hbxpp library */
-/* Synonym of ASplice() Xbase++ compatibility (extended with optional replacemenet values) */
-HB_FUNC_TRANSLATE( AREMOVE, ASPLICE )
 
 /* AMerge( <aTarget>, <aSource> [, <nPos>] ) => aTarget */
 HB_FUNC( AMERGE )

@@ -14,7 +14,6 @@ PROCEDURE Main()
       ? "Fine, you have just tested the /d compiler flag"
    #else
       ? "Please use /dTEST compiler flag"
-      ? "Or run 'set HB_USER_PRGFLAGS=/dTEST' if you are using the GNU Make System"
    #endif
 
    #ifdef FIRST

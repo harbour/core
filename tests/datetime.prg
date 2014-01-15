@@ -10,6 +10,8 @@
 
 PROCEDURE Main()
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    ? hb_DateTime( 1974 )
 
    ? " ValType( hb_DateTime() ) =>", ValType( hb_DateTime() )
