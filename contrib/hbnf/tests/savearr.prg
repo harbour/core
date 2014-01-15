@@ -8,9 +8,7 @@ PROCEDURE Main()
       { "Invoice-3", Date() + 1, 0, .T. } }, aSave
    LOCAL nErrorCode
 
-   Set( _SET_DATEFORMAT, "yy-mm-dd" ) /* TOFIX: RTEs with "yyyy-mm-dd" */
-
-   ft_SaveArr( aArray, "invoice.dat", @nErrorCode )
+   ft_SaveArr( aArray, "invoice.dat", @nErrorCode, .T. )
    IF nErrorCode == 0
       DispArray( aArray )
 

@@ -50,7 +50,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* ASplice( <aArray> [, <nPos>] [, <nCount>] [, <xVal1>] [, ...] [, <xValN>]  ) => <aDeleted>
+/* ASplice( <aArray> [, <nPos>] [, <nCount>] [, <xVal1>] [, ...] [, <xValN>] ) --> <aDeleted>
  * Removes elements and return them as array, optionally add items
  */
 HB_FUNC( ASPLICE )
