@@ -36,6 +36,7 @@
 
       NetPresentValue := SUM( CashFlow[ i ] / ( ( 1 + InterestRate ) ^ i ) )
       FOR i := 1 TO NoOfCashFlows
+         //
       NEXT
    $EXAMPLES$
       ? ft_NetPV( 10000, 10, { 10000, 15000, 16000, 17000 } )

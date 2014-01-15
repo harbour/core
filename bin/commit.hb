@@ -630,6 +630,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    /* TOFIX: Harbour repo specific */
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
+      "CONTRIBUTING.md", ;
       "README.md", ;
       "COPYING.txt", ;
       "*/RELNOTES.txt", ;

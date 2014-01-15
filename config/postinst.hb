@@ -65,6 +65,7 @@ PROCEDURE Main( ... )
                NEXT
 
                mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
+               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps() )
                mk_hb_FCopy( "README.md", tmp + hb_ps() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )

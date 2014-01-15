@@ -74,6 +74,7 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING.txt"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\CONTRIBUTING.md"
   File /nonfatal "$%HB_INSTALL_PREFIX%\README.md"
   ; Let it work also for MS-DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"

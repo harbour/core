@@ -81,8 +81,9 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
 
-  File /nonfatal "$%HB_ABSROOT%README.md"
   File /nonfatal "$%HB_ABSROOT%COPYING.txt"
+  File /nonfatal "$%HB_ABSROOT%CONTRIBUTING.md"
+  File /nonfatal "$%HB_ABSROOT%README.md"
   File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
 
   SetOutPath $INSTDIR\bin

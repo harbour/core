@@ -10,22 +10,20 @@ and interfaces to many popular APIs.
 # Table of Content
 
 1. [How to Donate](#how-to-donate)
-2. [How to Participate](#how-to-participate)
-3. [How to Get](#how-to-get)
-4. [How to Build](#how-to-build)
-5. [How to Do a Partial Build](#how-to-do-a-partial-build)
-6. [How to Create Distributable Packages](#how-to-create-distributable-packages)
-7. [How to Enable Optional Components](#how-to-enable-optional-components)
-8. [Build Options](#build-options)
-9. [Build Examples](#build-examples)
-10. [Build Your Own Harbour App](#build-your-own-harbour-app)
-11. [Debugging Options](#debugging-options)
-12. [Troubleshooting](#troubleshooting)
-13. [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
-14. [Platform Matrix](#platform-matrix)
-15. [External links](#external-links)
-16. [Harbour Links](#harbour-links)
-17. [Guarantees and Liability](#guarantees-and-liability)
+2. [How to Get](#how-to-get)
+3. [How to Build](#how-to-build)
+4. [How to Do a Partial Build](#how-to-do-a-partial-build)
+5. [How to Create Distributable Packages](#how-to-create-distributable-packages)
+6. [How to Enable Optional Components](#how-to-enable-optional-components)
+7. [Build Options](#build-options)
+8. [Build Examples](#build-examples)
+9. [Build Your Own Harbour App](#build-your-own-harbour-app)
+10. [Debugging Options](#debugging-options)
+11. [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
+12. [Platform Matrix](#platform-matrix)
+13. [External links](#external-links)
+14. [Harbour Links](#harbour-links)
+15. [Guarantees and Liability](#guarantees-and-liability)
 
 ---
 
@@ -35,42 +33,6 @@ and interfaces to many popular APIs.
 
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
   * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
-
-
-# How to Participate
-
-There are several ways to help making Harbour better:
-
-- You can give feedback/suggestions to developers on available
-  channels, see [Harbour Links](#harbour-links).
-- Submit a change:
-  1. Fork Harbour
-  2. Create a branch: `git checkout -b my_mod`
-  3. Do commit pre-check and new log entry: `hbrun bin/commit`
-  4. Commit your changes: `git commit -am "Added my feature"`
-  5. Push to the branch: `git push origin my_mod`
-  6. Open a Pull Request
-- Always use the same coding/formatting style as you find in
-  the files you're modifying. The easiest way to achieve this
-  is to use these commands to format the sources:
-
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
-        $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
-
-- Text editor setting for Harbour files
-  - Encoding is either 7-bit ASCII or UTF-8 (without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark))
-  - Always use spaces, never tabs
-  - Remove trailing spaces from lines
-  - Always keep one (not zero or multiple) newline at the end of file
-  - Use platform native newline (CRLF or LF)
-- In the rare case you need to send something large (> 100kB),
-  use this [free service](http://dropcanvas.com).
-- There is more into Harbour contribution than writing code,
-  so you're welcome to do so in other areas like documentation,
-  helping fellow users, giving input on decisions, testing in
-  various environments, volunteering in administration tasks, etc.
-- Participate in localization:<br />
-  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
 
 
 # How to Get
@@ -98,8 +60,8 @@ Download source archive from this page and unpack:
 > Recommended
 > [for](https://groups.google.com/forum/#!msg/harbour-users/2fwUzdKwpKA/32nI4WhZLfYJ)
 > [users](https://groups.google.com/forum/#!msg/harbour-users/Ro99f8S6my0/KvfjhCx_jE4J)
-> contributing to Harbour development, following the development mailing list,
-> commits and reading [ChangeLog.txt](ChangeLog.txt?raw=true).
+> contributing to development, following commits and reading
+> [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
 
@@ -1440,8 +1402,7 @@ Press `<Alt+D>` in the app.
 
 # Troubleshooting
 
-Always evaluate these points before reporting an issue on the developers'
-mailing list.
+Evaluate these points before reporting an issue:
 
 1.  Make sure to have carefully read this document.
 2.  Make sure to do a ``make clean`` before doing a build after refreshing
@@ -1479,7 +1440,7 @@ mailing list.
     variables and verbose log output containing **both stderr and stdout in
     one combined stream** (use `make > log.txt 2>&1`). Enable verbose
     mode using `HB_BUILD_VERBOSE=yes`.
-    Complete log output is rarely necessary, but always make sure to include
+    Complete log output is rarely necessary, but make sure to include
     the top of the output (lines starting with ``!``) and the area where
     problematic behavior occurred _first_. Make sure to not only include
     a link failure or a make tool failure, as it's most of the time not
@@ -1501,7 +1462,7 @@ mailing list.
     your configuration. If you need to, the problem is most probably
     elsewhere. It's also good idea to try with Harbour nightly binary or
     official stable release first.
-12. If you are to report a problem with Harbour itself, always provide
+12. If you are to report a problem with Harbour itself, provide
     self-contained, minimal source code example. Do not use xhb contrib
     library, or any 3rd party Harbour libraries. The example shall reproduce
     the problem using official stable or nightly Harbour build.
