@@ -10,7 +10,7 @@
 
 # How to Donate
 
-  You can donate to support the time that goes into responding to issues.
+  You can donate to support the effort that goes into responding to issues.
 
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
   * [Bitcoin](https://coinbase.com/checkouts/b90e7d8467c3d17f0083f9ad186c3c36)
