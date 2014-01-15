@@ -116,8 +116,8 @@ METHOD addItem( oItem ) CLASS TopBarMenu
 METHOD delItem( nPos ) CLASS TopBarMenu
 
    LOCAL nLen
-   LOCAL aItems
    LOCAL nWidth
+   LOCAL item
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
@@ -127,11 +127,9 @@ METHOD delItem( nPos ) CLASS TopBarMenu
       ::nItemCount--
 
       IF ::nWidth == nLen + 2
-         aItems := ::aItems
-         nLen := ::nItemCount
          nWidth := 0
-         FOR nPos := 1 TO nLen
-            nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+         FOR EACH item IN ::aItems
+            nWidth := Max( __CapMetrics( item ), nWidth )
          NEXT
          ::nWidth := nWidth
       ENDIF
@@ -144,15 +142,13 @@ METHOD display() CLASS TopBarMenu
    LOCAL nRow := ::nRow
    LOCAL nLeft := ::nLeft
    LOCAL nRight := ::nRight
-   LOCAL aItems := ::aItems
-   LOCAL nItemCount := ::nItemCount
    LOCAL nCurrent := ::nCurrent
+   LOCAL item
 
    LOCAL cColor1 := hb_ColorIndex( ::cColorSpec, 0 )
    LOCAL cColor2 := hb_ColorIndex( ::cColorSpec, 1 )
 
    LOCAL oPopUp
-   LOCAL nItem
    LOCAL cCaption
    LOCAL nCaptionLen
    LOCAL nPos
@@ -161,9 +157,9 @@ METHOD display() CLASS TopBarMenu
 
    hb_DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
 
-   FOR nItem := 1 TO nItemCount
+   FOR EACH item IN ::aItems
 
-      cCaption := " " + RTrim( aItems[ nItem ]:caption ) + " "
+      cCaption := " " + RTrim( item:caption ) + " "
       nCaptionLen := Len( cCaption )
 
       IF nCaptionLen == 0
@@ -174,11 +170,11 @@ METHOD display() CLASS TopBarMenu
          nLeft := nRight - nCaptionLen
       ENDIF
 
-      aItems[ nItem ]:__row := nRow
-      aItems[ nItem ]:__col := nLeft
+      item:__row := nRow
+      item:__col := nLeft
 
-      IF aItems[ nItem ]:isPopUp()
-         oPopUp := aItems[ nItem ]:data
+      IF item:isPopUp()
+         oPopUp := item:data
          oPopUp:top := nRow + 1
          oPopUp:left := nLeft
          oPopUp:bottom := NIL
@@ -195,12 +191,12 @@ METHOD display() CLASS TopBarMenu
       ENDIF
 
       hb_DispOutAt( nRow, nLeft, cCaption, ;
-         iif( nItem == nCurrent, cColor2, ;
-            iif( aItems[ nItem ]:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
+         iif( item:__enumIndex() == nCurrent, cColor2, ;
+            iif( item:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
-      IF aItems[ nItem ]:enabled .AND. nPos > 0
+      IF item:enabled .AND. nPos > 0
          hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
-            iif( nItem == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
+            iif( item:__enumIndex() == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
       nLeft += nCaptionLen
@@ -219,11 +215,11 @@ METHOD display() CLASS TopBarMenu
 
 METHOD getFirst() CLASS TopBarMenu
 
-   LOCAL n
+   LOCAL item
 
-   FOR n := 1 TO ::nItemCount
-      IF ::aItems[ n ]:enabled
-         RETURN n
+   FOR EACH item IN ::aItems
+      IF item:enabled
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -234,11 +230,11 @@ METHOD getItem( nPos ) CLASS TopBarMenu
 
 METHOD getLast() CLASS TopBarMenu
 
-   LOCAL n
+   LOCAL item
 
-   FOR n := ::nItemCount TO 1 STEP -1
-      IF ::aItems[ n ]:enabled
-         RETURN n
+   FOR EACH item IN ::aItems DESCEND
+      IF item:enabled
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -248,13 +244,11 @@ METHOD getNext() CLASS TopBarMenu
 
    LOCAL n
 
-   IF ::nCurrent < ::nItemCount
-      FOR n := ::nCurrent + 1 TO ::nItemCount
-         IF ::aItems[ n ]:enabled
-            RETURN n
-         ENDIF
-      NEXT
-   ENDIF
+   FOR n := ::nCurrent + 1 TO ::nItemCount
+      IF ::aItems[ n ]:enabled
+         RETURN n
+      ENDIF
+   NEXT
 
    RETURN 0
 
@@ -262,13 +256,11 @@ METHOD getPrev() CLASS TopBarMenu
 
    LOCAL n
 
-   IF ::nCurrent > 1
-      FOR n := ::nCurrent - 1 TO 1 STEP -1
-         IF ::aItems[ n ]:enabled
-            RETURN n
-         ENDIF
-      NEXT
-   ENDIF
+   FOR n := ::nCurrent - 1 TO 1 STEP -1
+      IF ::aItems[ n ]:enabled
+         RETURN n
+      ENDIF
+   NEXT
 
    RETURN 0
 
@@ -303,11 +295,11 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
 
 METHOD getShortCt( nKey ) CLASS TopBarMenu
 
-   LOCAL n
+   LOCAL item
 
-   FOR n := 1 TO ::nItemCount
-      IF ::aItems[ n ]:shortcut == nKey
-         RETURN n
+   FOR EACH item IN ::aItems
+      IF item:shortcut == nKey
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -322,20 +314,17 @@ METHOD getShortCt( nKey ) CLASS TopBarMenu
 
 METHOD hitTest( nMRow, nMCol ) CLASS TopBarMenu
 
-   LOCAL aItems
    LOCAL nColumn
-   LOCAL n
+   LOCAL item
 
    IF nMRow == ::nRow
 
-      aItems := ::aItems
+      FOR EACH item IN ::aItems
 
-      FOR n := 1 TO ::nItemCount
+         nColumn := item:__col
 
-         nColumn := aItems[ n ]:__col
-
-         IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( aItems[ n ]:caption )
-            RETURN n
+         IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( item:caption )
+            RETURN item:__enumIndex()
          ENDIF
       NEXT
    ENDIF

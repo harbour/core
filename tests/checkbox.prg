@@ -1,3 +1,5 @@
+#include "inkey.ch"
+
 PROCEDURE Main()
 
    LOCAL GetList := {}
@@ -13,6 +15,12 @@ PROCEDURE Main()
    aItems[ 3 ] := RadioButto( 5, 3, "&OS X" )
 
    CLS
+
+#ifdef _SET_EVENTMASK
+   Set( _SET_EVENTMASK, INKEY_ALL )
+   MSetCursor( .T. )
+#endif
+
    SetColor( "W/B+,R/B,G+/R,B+/R+,BG/N+,W/BG,RB/BG" )
 
    @  2,  2, 6, 40 GET cItem RADIOGROUP aItems COLOR "W/B+,R/B,G/B+" MESSAGE "Select your OS"

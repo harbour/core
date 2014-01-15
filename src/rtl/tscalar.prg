@@ -162,15 +162,12 @@ METHOD Add( x ) CLASS Array
 
 METHOD Collect( b ) CLASS Array
 
-   LOCAL i
-   LOCAL currElem
+   LOCAL elem
    LOCAL result := {}
-   LOCAL nElems := Len( Self )
 
-   FOR i := 1 TO nElems
-      currElem := Self[ i ]
-      IF Eval( b, currElem )
-         AAdd( result, currElem )
+   FOR EACH elem IN Self
+      IF Eval( b, elem )
+         AAdd( result, elem )
       ENDIF
    NEXT
 

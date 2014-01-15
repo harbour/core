@@ -1480,15 +1480,14 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
 METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
 
-   LOCAL nCount
-   LOCAL nTotal := Len( ::aGetList )
+   LOCAL oGet
    LOCAL lGUI
 
    ::nNextGet := 0
 
-   FOR nCount := 1 TO nTotal
-      IF ( ::nHitCode := ::aGetList[ nCount ]:hitTest( nMRow, nMCol ) ) != HTNOWHERE
-         ::nNextGet := nCount
+   FOR EACH oGet IN ::aGetList
+      IF ( ::nHitCode := oGet:hitTest( nMRow, nMCol ) ) != HTNOWHERE
+         ::nNextGet := oGet:__enumIndex()
          EXIT
       ENDIF
    NEXT

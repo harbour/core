@@ -82,16 +82,17 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
    LOCAL oItem
    LOCAL i
 
+   DO CASE
    // Test for top menu item not a TopBar Menu:
-   IF !( oMenu:ClassName() == "TOPBARMENU" )
+   CASE !( oMenu:ClassName() == "TOPBARMENU" )
 
       RETURN IsQuick( oMenu, nKey, @nID )
 
    // Test and assign top menu item shortCut, enabled, and ! PopUp:
    // Changed by enclosing assignment before ':Enabled':
-   ELSEIF ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
-          ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
-          ! oItem:isPopUp()
+   CASE ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
+        ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
+        ! oItem:isPopUp()
 
       oMenu:select( nShortCut )
       Eval( oItem:data, oItem )
@@ -100,7 +101,7 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
       RETURN .T.
 
    // Test and assignment for TopBar MenuItem:
-   ELSEIF nShortCut == 0
+   CASE nShortCut == 0
 
       nTotal := oMenu:itemCount
       nItem  := oMenu:current
@@ -124,7 +125,7 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
          ENDIF
       NEXT
 
-   ENDIF
+   ENDCASE
 
    RETURN .F.
 
