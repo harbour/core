@@ -56,7 +56,11 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE  8192
+#ifdef HB_CLP_STRICT
+   #define BUFFER_SIZE  8192
+#else
+   #define BUFFER_SIZE  65536
+#endif
 
 static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 {
@@ -106,15 +110,15 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
          void * buffer;
-         HB_USHORT usRead;
+         HB_SIZE nRead;
 
          buffer = hb_xgrab( BUFFER_SIZE );
 
          bRetVal = HB_TRUE;
 
-         while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
+         while( ( nRead = hb_fsReadLarge( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
-            while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
+            while( hb_fsWriteLarge( fhndDest, buffer, nRead ) != nRead )
             {
                pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, szDest );
                if( hb_errLaunch( pError ) != E_RETRY )

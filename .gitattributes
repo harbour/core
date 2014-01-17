@@ -43,6 +43,7 @@ ChangeLog.txt ident
 *.ucf     text
 *.vbs     text
 *.xml     text
+*.xpm     text
 *.xsl     text
 *.y       text
 *.yml     text

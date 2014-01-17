@@ -57,7 +57,7 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE  8192
+#define BUFFER_SIZE  65536
 
 static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
 {
@@ -93,16 +93,16 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
          int         iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
          HB_BYTE * buffer = ( HB_BYTE * ) hb_xgrab( BUFFER_SIZE );
-         HB_USHORT usRead;
+         HB_SIZE nRead;
 
          bRetVal = HB_TRUE;
 
          if( hb_itemType( pBlock ) != HB_IT_BLOCK )
             pBlock = NULL;
 
-         while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
+         while( ( nRead = hb_fsReadLarge( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
          {
-            while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
+            while( hb_fsWriteLarge( fhndDest, buffer, nRead ) != nRead )
             {
                HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
 
@@ -115,7 +115,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
 
             if( pBlock )
             {
-               PHB_ITEM pCnt = hb_itemPutNL( NULL, usRead );
+               PHB_ITEM pCnt = hb_itemPutNS( NULL, nRead );
 
                hb_vmEvalBlockV( pBlock, 1, pCnt );
 

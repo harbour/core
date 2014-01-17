@@ -21,8 +21,7 @@ hbmk2.prg
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs
-#-icon={allwin}../../package/harb_win.ico
-#-icon={os2}../../package/harb_os2.ico
+#-icon={allwin}../../package/harbour.ico
 hbmk2.rc{!HBMK_GENERIC}
 
 # localization
