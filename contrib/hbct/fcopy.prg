@@ -78,19 +78,17 @@ THREAD STATIC t_fileTime
 FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
-
-   hb_default( @lMode, .F. )
 
    IF t_hSrcFile != F_ERROR
       FClose( t_hSrcFile )
    ENDIF
-   t_hSrcFile := FOpen( cSource, FO_READ )
-   IF t_hSrcFile != F_ERROR
-      hDstFile := FCreate( cDest )
-      IF hDstFile != F_ERROR
+   IF ( t_hSrcFile := FOpen( cSource, FO_READ ) ) != F_ERROR
+      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+         hb_default( @lMode, .F. )
+         cBuffer := Space( F_BLOCK )
          DO WHILE ! lDone
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
@@ -139,13 +137,13 @@ FUNCTION FileCDaTi( lNewMode )
 FUNCTION FileCCont( cDest )
 
    LOCAL hDstFile
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
    IF t_hSrcFile != F_ERROR
-      hDstFile := FCreate( cDest )
-      IF hDstFile != F_ERROR
+      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+         cBuffer := Space( F_BLOCK )
          DO WHILE ! lDone
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
@@ -185,12 +183,12 @@ FUNCTION FileCCLose()
 
 FUNCTION FileAppend( cSrc, cDest )
 
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL hSrcFile, hDstFile
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   hSrcFile := FOpen( cSrc, FO_READ )
-   IF hSrcFile != F_ERROR
+   IF ( hSrcFile := FOpen( cSrc, FO_READ ) ) != F_ERROR
+
       IF hb_FileExists( cDest )
          hDstFile := FOpen( cDest, FO_WRITE )
          FSeek( hDstFile, 0, FS_END )
@@ -199,6 +197,7 @@ FUNCTION FileAppend( cSrc, cDest )
       ENDIF
 
       IF hDstFile != F_ERROR
+         cBuffer := Space( F_BLOCK )
          DO WHILE .T.
             nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0

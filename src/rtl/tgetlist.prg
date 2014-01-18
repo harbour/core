@@ -65,6 +65,8 @@
 #include "setcurs.ch"
 #include "tbrowse.ch"
 
+#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+
 #define SCORE_ROW       0
 #define SCORE_COL       60
 
@@ -911,7 +913,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
       ENDDO
 
       // De-activate the GET
-      IF oGUI:ClassName() $ "LISTBOX|RADIOGROUP" .AND. HB_ISNUMERIC( oGet:varGet() )
+      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
          oGet:varPut( oGUI:value )
       ELSE
          oGet:varPut( oGUI:buffer )
@@ -1180,7 +1182,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
 
    IF !( oGUI:ClassName() == "TBROWSE" )
       xOldValue := oGet:varGet()
-      IF oGUI:ClassName() $ "LISTBOX|RADIOGROUP" .AND. HB_ISNUMERIC( oGet:varGet() )
+      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
          xNewValue := oGUI:Value
       ELSE
          xNewValue := oGUI:Buffer

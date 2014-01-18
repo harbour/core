@@ -50,6 +50,8 @@
 
 #include "button.ch"
 
+#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
@@ -122,7 +124,7 @@ METHOD data( boData ) CLASS MenuItem
       IF HB_ISBLOCK( boData )
          ::boData := boData
       ELSE
-         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() $ "POPUPMENU|HB_POPUPMENU" } )
+         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| IS_IN( boData:ClassName(), "POPUPMENU|HB_POPUPMENU" ) } )
       ENDIF
    ENDIF
 
@@ -169,7 +171,7 @@ METHOD style( cStyle ) CLASS MenuItem
    RETURN ::cStyle
 
 METHOD isPopUp() CLASS MenuItem
-   RETURN HB_ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+   RETURN HB_ISOBJECT( ::data ) .AND. IS_IN( ::data:ClassName(), "POPUPMENU|HB_POPUPMENU" )
 
 METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MenuItem
 
