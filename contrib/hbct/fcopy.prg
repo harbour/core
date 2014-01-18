@@ -191,11 +191,11 @@ FUNCTION FileAppend( cSrc, cDest )
 
    hSrcFile := FOpen( cSrc, FO_READ )
    IF hSrcFile != F_ERROR
-      IF ! hb_FileExists( cDest )
-         hDstFile := FCreate( cDest )
-      ELSE
+      IF hb_FileExists( cDest )
          hDstFile := FOpen( cDest, FO_WRITE )
          FSeek( hDstFile, 0, FS_END )
+      ELSE
+         hDstFile := FCreate( cDest )
       ENDIF
 
       IF hDstFile != F_ERROR

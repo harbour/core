@@ -64,9 +64,6 @@ FUNCTION Center( c, n, p, lMode )
    IF ! HB_ISNUMERIC( n )
       n := MaxCol() + 1 - Col() * 2
    ENDIF
-   IF ! HB_ISSTRING( c )
-      c := ""
-   ENDIF
 
    IF HB_ISLOGICAL( p )
       lMode := p
@@ -75,7 +72,7 @@ FUNCTION Center( c, n, p, lMode )
       lMode := .F.
    ENDIF
 
-   cRet := PadC( RTrim( c ), n, p )
+   cRet := PadC( RTrim( hb_defaultValue( c, "" ) ), n, p )
 
    RETURN iif( lMode, cRet, RTrim( cRet ) )
 
@@ -94,7 +91,7 @@ FUNCTION CSetCent( nCentury )
    RETURN __SetCentury( nCentury )
 
 FUNCTION LToC( l )
-   RETURN iif( l, "T", "F" )
+   RETURN iif( hb_defaultValue( l, .F. ), "T", "F" )
 
 FUNCTION DosParam()
 
