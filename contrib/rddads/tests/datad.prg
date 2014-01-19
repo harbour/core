@@ -68,7 +68,7 @@ PROCEDURE Main()
    ENDIF
 
    // now the magic
-   IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
+   IF AdsConnect60( "harbour.add", 7; /* All types of connection */
       , "ADSSYS", "", , @hConnection1 )
       // The connection handle to harbour.add is now stored in hConnection1,
       // and this is now the default connection
@@ -110,7 +110,7 @@ PROCEDURE Main()
 
    // now open the tables and put some data
 
-   IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
+   IF AdsConnect60( "harbour.add", 7; /* All types of connection */
       , "Luiz", "papael", , @hConnection1 )
       ? "Default connection is now this handle:", AdsConnection()
       ? "Connection type?", AdsGetHandleType()
@@ -138,6 +138,7 @@ PROCEDURE Main()
 
       // Open the "long table name" for table2
       dbUseArea( .T., , "Customer Data", "custom", .T., .F. )
+      ? "AdsGetRecordCount():", AdsGetRecordCount( ,, @n ), n
       ? "Press a key to browse", Alias()
       Inkey( 0 )
       Browse()

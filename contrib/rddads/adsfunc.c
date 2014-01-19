@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Advantage Database Server RDD (additional functions)
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour) (cleanups)
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour) (cleanups, AdsGetRecordCount())
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
  *
@@ -579,6 +579,37 @@ HB_FUNC( ADSFILE2BLOB )
    }
    else
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( ADSGETRECORDCOUNT )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea )
+   {
+      ADSHANDLE hHandle;
+      UNSIGNED32 ulKey = 0;
+
+      switch( hb_parnidef( 1, ADS_TABLE ) )
+      {
+         case ADS_INDEX_ORDER:
+            hHandle = pArea->hOrdCurrent;
+            break;
+         case ADS_STATEMENT:
+            hHandle = pArea->hStatement;
+            break;
+         default:
+            hHandle = pArea->hTable;
+      }
+
+      hb_retnl( ( long ) AdsGetRecordCount( hHandle,
+                                            ( UNSIGNED16 ) hb_parnidef( 2, ADS_RESPECTFILTERS ) /* usFilterOption */,
+                                            &ulKey ) );
+
+      hb_stornl( ( long ) ulKey, 3 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
 
 /* 2nd parameter: unsupported Bag Name. */
@@ -2130,9 +2161,9 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
 
 /*
    Verify if a username/password combination is valid for this database
-   Call :    AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
+   Call:     AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
                           [ nUserProperty, @cBuffer ] )
-   Returns : True if login succeeds
+   Returns:  True if login succeeds
 
    Notes:    This creates a temporary connection only during the execution of this
              function, without disturbing the stored one for any existing connection

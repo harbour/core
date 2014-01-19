@@ -92,6 +92,7 @@ DYNAMIC AdsGetMemoDataType
 DYNAMIC AdsGetNumActiveLinks
 DYNAMIC AdsGetNumIndexes
 DYNAMIC AdsGetNumOpenTables
+DYNAMIC AdsGetRecordCount
 DYNAMIC AdsGetRelKeyPos
 DYNAMIC AdsGetServerName
 DYNAMIC AdsGetServerTime

@@ -53,7 +53,7 @@
    to the *latest* version you want to allow/require, as in
       -DADS_LIB_VERSION=500
 
-   As of 6/7/2004, the default supports linking to v6 and v7,
+   As of 2004-06-07, the default supports linking to v6 and v7,
    as there are no v7-specific features yet.
    It does cover v6 data dictionary support, built-in
    Internet Server capabilities, etc.
@@ -91,15 +91,17 @@
 
 /* For retrieving scope settings
    In the Harbour RDD, use TOPSCOPE and BOTTOMSCOPE as the values are
-   different (Top = 0, Bottom = 1)
+   different (Top = 0, Bottom = 1) */
+#if 0
    #define ADS_TOP                        1
    #define ADS_BOTTOM                     2
-*/
+#endif
 
 /* for calls that can optionally use filters */
 #define ADS_RESPECTFILTERS                1
 #define ADS_IGNOREFILTERS                 2
 #define ADS_RESPECTSCOPES                 3
+#define ADS_REFRESHCOUNT                  4
 
 /* Server type constants for ORing with AdsSetServerType() */
 #define ADS_LOCAL_SERVER                  1
@@ -122,7 +124,7 @@
 #define ADS_MGMT_NETWARE5_OR_NEWER_SERVER 5
 #define ADS_MGMT_LINUX_SERVER             6
 
-/* ACE Handle types */
+/* ACE handle types */
 #define ADS_CONNECTION                    1
 #define ADS_TABLE                         2
 #define ADS_INDEX_ORDER                   3
@@ -141,13 +143,13 @@
 #define ADS_DD_COLUMN_OBJECT              4
 #define ADS_DD_INDEX_OBJECT               5
 #define ADS_DD_VIEW_OBJECT                6
-#define ADS_DD_VIEW_OR_TABLE_OBJECT       7  /* Used in AdsFindFirst/NextTable */
+#define ADS_DD_VIEW_OR_TABLE_OBJECT       7  /* Used in AdsFindFirstTable()/AdsFindNextTable() */
 #define ADS_DD_USER_OBJECT                8
 #define ADS_DD_USER_GROUP_OBJECT          9
 #define ADS_DD_PROCEDURE_OBJECT           10
 #define ADS_DD_DATABASE_OBJECT            11
 #define ADS_DD_LINK_OBJECT                12
-#define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT  13  /* Used in v6.2 AdsFindFirst/NextTable */
+#define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT  13  /* Used in 6.2 AdsFindFirstTable()/AdsFindNextTable() */
 
 /* Common properties numbers < 100 */
 #define ADS_DD_COMMENT                    1
@@ -166,7 +168,7 @@
 #define ADS_DD_INTERNET_SECURITY_LEVEL    108
 #define ADS_DD_MAX_FAILED_ATTEMPTS        109
 #define ADS_DD_ALLOW_ADSSYS_NET_ACCESS    110
-#define ADS_DD_VERSION_MAJOR              111  /* properties for customer dd version */
+#define ADS_DD_VERSION_MAJOR              111  /* properties for customer DD version */
 #define ADS_DD_VERSION_MINOR              112
 
 /* Table properties between 200 and 299 */
@@ -188,7 +190,7 @@
 #define ADS_DD_TABLE_MEMO_BLOCK_SIZE      215
 #define ADS_DD_TABLE_PERMISSION_LEVEL     216
 
-/* Field properties between 300 - 399 */
+/* Field properties between 300-399 */
 #define ADS_DD_FIELD_DEFAULT_VALUE        300
 #define ADS_DD_FIELD_CAN_NULL             301
 #define ADS_DD_FIELD_MIN_VALUE            302
@@ -199,7 +201,7 @@
 #define ADS_DD_FIELD_LENGTH               307
 #define ADS_DD_FIELD_DECIMAL              308
 
-/* Index tag properties between 400 - 499 */
+/* Index tag properties between 400-499 */
 #define ADS_DD_INDEX_FILE_NAME            400
 #define ADS_DD_INDEX_EXPRESSION           401
 #define ADS_DD_INDEX_CONDITION            402
@@ -237,7 +239,7 @@
 #define ADS_DD_INDEX_FILE_PAGESIZE        901
 
 /*
- * Object rights properties 1001 - 1099 .  They can be used
+ * Object rights properties 1001-1099. They can be used
  * with either user or user group objects.
  */
 #define ADS_DD_TABLES_RIGHTS              1001
@@ -246,15 +248,15 @@
 #define ADS_DD_OBJECTS_RIGHTS             1004
 #define ADS_DD_FREE_TABLES_RIGHTS         1005
 
-/* User Properties 1101 - 1199 */
+/* User Properties 1101-1199 */
 #define ADS_DD_USER_PASSWORD              1101
 #define ADS_DD_USER_GROUP_MEMBERSHIP      1102
 #define ADS_DD_USER_BAD_LOGINS            1103
 
-/* User group Properties 1201 - 1299 */
+/* User group Properties 1201-1299 */
 /* None at this moment. */
 
-/* Link properties 1301 - 1399 */
+/* Link properties 1301-1399 */
 #define ADS_DD_LINK_PATH                  1300
 #define ADS_DD_LINK_OPTIONS               1301
 #define ADS_DD_LINK_USERNAME              1302
