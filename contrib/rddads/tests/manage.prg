@@ -111,32 +111,32 @@ PROCEDURE Main()
    ?    "    Item          In Use     MaxUsed    Rejected"
    aRay := AdsMgGetActivityInfo( 4 )
    IF Len( aRay ) > 2
-      ? "Users:         ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Users:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 5 )
    IF Len( aRay ) > 2
-      ? "Connections:   ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Connections:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 6 )
    IF Len( aRay ) > 2
-      ? "WorkAreas:     ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "WorkAreas:    ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 7 )
    IF Len( aRay ) > 2
-      ? "Tables:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Tables:       ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 8 )
    IF Len( aRay ) > 2
-      ? "Indexes:       ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Indexes:      ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 9 )
    IF Len( aRay ) > 2
-      ? "Locks:         ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Locks:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 10 )
@@ -146,17 +146,17 @@ PROCEDURE Main()
 
    aRay := AdsMgGetActivityInfo( 11 )
    IF Len( aRay ) > 2
-      ? "TpsVisElems:   ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "TpsVisElems:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 12 )
    IF Len( aRay ) > 2
-      ? "TpsMemoElems:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "TpsMemoElems: ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 13 )
    IF Len( aRay ) > 2
-      ? "WorkerThreads: ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "WorkerThreads:", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    WAIT

@@ -15750,21 +15750,21 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
                EXIT
             CASE "CFILES"
                FOR EACH tmp IN aValue
-                  IF !( tmp == "$(CF)" )
+                  IF !( tmp == "$(CF)" ) .AND. !( tmp == "$(OB)" )
                      AAdd( aDst, tmp )
                   ENDIF
                NEXT
                EXIT
             CASE "OBJFILES"
                FOR EACH tmp IN aValue
-                  IF !( tmp == "$(OB)" )
+                  IF !( tmp == "$(OB)" ) .AND. !( "$(OBJDIR)" $ tmp )
                      AAdd( aDst, tmp )
                   ENDIF
                NEXT
                EXIT
             CASE "OBJCFILES"
                FOR EACH tmp IN aValue
-                  IF !( tmp == "$(OBC)" )
+                  IF !( tmp == "$(OBC)" ) .AND. !( "$(OBJDIR)" $ tmp )
                      AAdd( aDst, tmp )
                   ENDIF
                NEXT
