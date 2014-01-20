@@ -749,8 +749,8 @@ static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
 
       return conn->login;
    }
-   else
-      return HB_FALSE;
+
+   return HB_FALSE;
 }
 
 /* netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>

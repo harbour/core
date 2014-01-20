@@ -67,7 +67,6 @@
 
 THREAD STATIC t_hSrcFile := F_ERROR
 THREAD STATIC t_lSetDaTi := .T.
-THREAD STATIC t_fileDate
 THREAD STATIC t_fileTime
 
 /*
@@ -98,6 +97,9 @@ FUNCTION FileCopy( cSource, cDest, lMode )
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
+               IF lMode
+                  FSeek( t_hSrcFile, nDstBytes - nSrcBytes, FS_RELATIVE )
+               ENDIF
                EXIT
             ENDIF
          ENDDO
@@ -106,10 +108,9 @@ FUNCTION FileCopy( cSource, cDest, lMode )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         t_fileDate := FileDate( cSource )
-         t_fileTime := FileTime( cSource )
-         IF t_lSetDaTi
-            SetFDaTi( cDest, t_fileDate, t_fileTime )
+         hb_FGetDateTime( cSource, @t_fileTime )
+         IF t_lSetDaTi .and. ! Empty( t_fileTime )
+            hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ELSE
          FClose( t_hSrcFile )
@@ -159,8 +160,8 @@ FUNCTION FileCCont( cDest )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         IF t_lSetDaTi
-            SetFDaTi( cDest, t_fileDate, t_fileTime )
+         IF t_lSetDaTi .and. ! Empty( t_fileTime )
+            hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ENDIF
    ENDIF

@@ -77,23 +77,20 @@ HB_FUNC( STRSWAP )
          hb_xmemcpy( pcRet2, pcString2, sStrLen2 );
       }
 
-      if( pcRet1 && pcRet2 )
+      sCmpLen = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 );
+      for( sIndex = 0; sIndex < sCmpLen; sIndex++ )
       {
-         sCmpLen = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 );
-         for( sIndex = 0; sIndex < sCmpLen; sIndex++ )
-         {
-            char cExchange;
+         char cExchange;
 
-            if( iChange1 )
-            {
-               cExchange = *( pcString1 + sIndex );
-               *( pcRet1 + sIndex ) = *( pcString2 + sIndex );
-               if( iChange2 )
-                  *( pcRet2 + sIndex ) = cExchange;
-            }
-            else
-               *( pcRet2 + sIndex ) = *( pcString1 + sIndex );
+         if( iChange1 )
+         {
+            cExchange = *( pcString1 + sIndex );
+            *( pcRet1 + sIndex ) = *( pcString2 + sIndex );
+            if( iChange2 )
+               *( pcRet2 + sIndex ) = cExchange;
          }
+         else if( iChange2 )
+            *( pcRet2 + sIndex ) = *( pcString1 + sIndex );
       }
 
       /* strings */

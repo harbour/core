@@ -110,7 +110,6 @@ ctdummy.prg
 ctmisc.prg
 ctrand.prg
 cttime.prg
-datetim4.prg
 fcopy.prg
 getinfo.prg
 getinput.prg

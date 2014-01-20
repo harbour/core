@@ -7,31 +7,20 @@
  */
 
 #require "hbmisc"
+#require "hbtest"
 
 PROCEDURE Main()
 
-   ? "(empty)"
-   ? BubbleBabbleEncode_prg( "" )
-   ? BubbleBabbleEncode( "" )
-   ? "xexax"
-
-   ? "1234567890"
-   ? BubbleBabbleEncode_prg( "1234567890" )
-   ? BubbleBabbleEncode( "1234567890" )
-   ? "xesef-disof-gytuf-katof-movif-baxux"
-
-   ? "Pineapple"
-   ? BubbleBabbleEncode_prg( "Pineapple" )
-   ? BubbleBabbleEncode( "Pineapple" )
-   ? "xigak-nyryk-humil-bosek-sonax"
-
-   ? "hello"
-   ? BubbleBabbleEncode_prg( "hello" )
-   ? BubbleBabbleEncode( "hello" )
-
-   ? "vszakats"
-   ? BubbleBabbleEncode_prg( "vszakats" )
-   ? BubbleBabbleEncode( "vszakats" )
+   HBTEST BubbleBabbleEncode_prg( "" )           IS "xexax"
+   HBTEST BubbleBabbleEncode( "" )               IS "xexax"
+   HBTEST BubbleBabbleEncode_prg( "1234567890" ) IS "xesef-disof-gytuf-katof-movif-baxux"
+   HBTEST BubbleBabbleEncode( "1234567890" )     IS "xesef-disof-gytuf-katof-movif-baxux"
+   HBTEST BubbleBabbleEncode_prg( "Pineapple" )  IS "xigak-nyryk-humil-bosek-sonax"
+   HBTEST BubbleBabbleEncode( "Pineapple" )      IS "xigak-nyryk-humil-bosek-sonax"
+   HBTEST BubbleBabbleEncode_prg( "hello" )      IS "xipak-herek-serix"
+   HBTEST BubbleBabbleEncode( "hello" )          IS "xipak-herek-serix"
+   HBTEST BubbleBabbleEncode_prg( "vszakats" )   IS "xitil-fyvok-capek-citol-fixix"
+   HBTEST BubbleBabbleEncode( "vszakats" )       IS "xitil-fyvok-capek-citol-fixix"
 
    RETURN
 

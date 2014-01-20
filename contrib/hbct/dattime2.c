@@ -98,6 +98,47 @@ static int ct_doy( long lDate )
    return ( int ) ( lDate - lFirst + 1 );
 }
 
+HB_FUNC( CTODOW )
+{
+   HB_SIZE nLen = hb_parclen( 1 );
+   int iDow = 0;
+
+   if( nLen )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      const char * szParam = hb_parc( 1 );
+
+      for( iDow = 1; iDow <= 7; ++iDow )
+      {
+         const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
+         if( hb_cdpicmp( szDow, strlen( szDow ), szParam, nLen, cdp, HB_FALSE ) == 0 )
+            break;
+      }
+   }
+
+   hb_retnl( iDow );
+}
+
+HB_FUNC( CTOMONTH )
+{
+   HB_SIZE nLen = hb_parclen( 1 );
+   int iMonth = 0;
+
+   if( nLen )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      const char * szParam = hb_parc( 1 );
+      for( iMonth = 1; iMonth <= 12; ++iMonth )
+      {
+         const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+         if( hb_cdpicmp( szMonth, strlen( szMonth ), szParam, nLen, cdp, HB_FALSE ) == 0 )
+            break;
+      }
+   }
+
+   hb_retnl( iMonth );
+}
+
 HB_FUNC( DMY )
 {
    int iYear, iMonth, iDay;
