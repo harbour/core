@@ -59,9 +59,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
       t_nHandle := FOpen( cInFile )
 
-      rval := FError()
-
-      IF rval == 0
+      IF ( rval := FError() ) == 0
          rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
             nStart, nCNormal, nCHighlight, cExitKeys, ;
             lBrowse, nColSkip, nRMargin, nBuffSize )
