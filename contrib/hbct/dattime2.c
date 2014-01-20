@@ -83,10 +83,10 @@ static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )
 
 static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
 {
-   static const int iMonthes[] = {
+   static const int sc_iMonthes[] = {
       0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
-   return ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[ iMonth - 1 ] +
+   return ( iMonth < 1 && iMonth > 12 ) ? 0 : sc_iMonthes[ iMonth - 1 ] +
           ( ( bLeap && iMonth > 2 ) ? 1 : 0 );
 }
 
@@ -107,12 +107,13 @@ HB_FUNC( CTODOW )
 
    if( nLen )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
 
       for( iDow = 7; iDow > 0; iDow-- )
       {
          const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
-         if( hb_strnicmp( szDow, szParam, nLen ) == 0 )
+         if( hb_cdpicmp( szDow, strlen( szDow ), szParam, nLen, cdp, HB_FALSE ) == 0 )
             break;
       }
    }
@@ -127,11 +128,12 @@ HB_FUNC( CTOMONTH )
 
    if( nLen )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
       for( iMonth = 12; iMonth > 0; iMonth-- )
       {
          const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
-         if( hb_strnicmp( szMonth, szParam, nLen ) == 0 )
+         if( hb_cdpicmp( szMonth, strlen( szMonth ), szParam, nLen, cdp, HB_FALSE ) == 0 )
             break;
       }
    }

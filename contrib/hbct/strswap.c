@@ -89,7 +89,7 @@ HB_FUNC( STRSWAP )
             if( iChange2 )
                *( pcRet2 + sIndex ) = cExchange;
          }
-         else
+         else if( iChange2 )
             *( pcRet2 + sIndex ) = *( pcString1 + sIndex );
       }
 

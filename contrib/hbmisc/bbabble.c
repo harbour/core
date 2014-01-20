@@ -62,7 +62,7 @@ HB_FUNC( BUBBLEBABBLEENCODE )
 
    const char * pszInput  = hb_parcx( 1 );
    HB_ISIZ      nInputLen = hb_parclen( 1 );
-   char *       pszResult = ( char * ) hb_xgrab( ( nInputLen * 4 ) + 1 );
+   char *       pszResult = ( char * ) hb_xgrab( nInputLen * 3 + 6 );
 
    HB_ISIZ nPos = 0;
    HB_ISIZ i;
@@ -103,7 +103,6 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    }
 
    pszResult[ nPos++ ] = 'x';
-   pszResult[ nPos ]   = '\0';
 
-   hb_retc_buffer( pszResult );
+   hb_retclen_buffer( pszResult, nPos );
 }

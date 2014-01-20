@@ -796,7 +796,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
                           ( SQLTCHAR * ) buffer,
                           ( SQLINTEGER * ) &lError,
                           ( SQLTCHAR * ) szErrorMsg,
-                          ( SQLSMALLINT ) sizeof( szErrorMsg ),
+                          ( SQLSMALLINT ) HB_SIZEOFARRAY( szErrorMsg ),
                           ( SQLSMALLINT * ) &iLen ) );
 
       O_HB_STORSTR( ( O_HB_CHAR * ) buffer, 4 );
@@ -845,7 +845,7 @@ HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nErro
                                ( SQLTCHAR * ) szSQLState,
                                ( SQLINTEGER * ) &lError,
                                ( SQLTCHAR * ) szErrorMsg,
-                               ( SQLSMALLINT ) sizeof( szErrorMsg ),
+                               ( SQLSMALLINT ) HB_SIZEOFARRAY( szErrorMsg ),
                                ( SQLSMALLINT * ) &iLen ) );
 
       O_HB_STORSTR( ( O_HB_CHAR * ) szSQLState, 4 );

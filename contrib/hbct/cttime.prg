@@ -77,14 +77,14 @@ FUNCTION TimeToSec( cTime )
 
    RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
 
-FUNCTION SecToTime( nSec, lHundr )
+FUNCTION SecToTime( nSec, lHundredth )
 
    LOCAL i, h, n
 
    n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
 
-   IF HB_ISLOGICAL( lHundr ) .AND. lHundr
-      h := ":" + StrZero( ( nSec * 100 ) % 100, 2 )
+   IF HB_ISLOGICAL( lHundredth ) .AND. lHundredth
+      h := StrZero( ( nSec * 100 ) % 100, 2 )
    ELSE
       h := ""
    ENDIF
@@ -92,7 +92,7 @@ FUNCTION SecToTime( nSec, lHundr )
    n := Int( n % 86400 )
 
    FOR i := 1 TO 3
-      h := StrZero( n % 60, 2 ) + iif( Len( h ) == 0, "", ":" ) + h
+      h := StrZero( n % 60, 2 ) + iif( h == "", "", ":" + h )
       n := Int( n / 60 )
    NEXT
 

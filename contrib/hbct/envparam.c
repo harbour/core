@@ -131,9 +131,9 @@ HB_FUNC( ENVPARAM )
             *lpDst++ = '\n';
          }
       }
-   }
 
-   FreeEnvironmentStrings( lpEnviron );
+      FreeEnvironmentStrings( lpEnviron );
+   }
 
    if( lpResult )
    {

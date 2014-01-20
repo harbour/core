@@ -2291,7 +2291,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                PHB_CODEPAGE cdp = hb_vmCDP();
                for( i = 1; i <= iOptions; ++i )
                {
-                  HB_SIZE nOptLen = hb_arrayGetCLen( pOptions, i );
+                  nOptLen = hb_arrayGetCLen( pOptions, i );
                   if( nOptLen > 0 )
                   {
                      HB_SIZE nIdx1 = 0, nIdx2 = 0;
