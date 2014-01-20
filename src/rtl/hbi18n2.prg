@@ -93,7 +93,7 @@ STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
 #define _BOM_VALUE      0xFEFF
 #define _UTF8_BOM       hb_utf8Chr( _BOM_VALUE ) /* e"\xEF\xBB\xBF" */
 
-FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
+FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 
    LOCAL cLine, cValue
    LOCAL nMode, nIndex, nOldIndex, nLine, n
@@ -102,8 +102,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    LOCAL hFile
 
    __i18n_fileName( @cFile )
-   hFile := FOpen( cFile, FO_READ )
-   IF hFile == F_ERROR
+   IF ( hFile := FOpen( cFile, FO_READ ) ) == F_ERROR
       cErrorMsg := hb_StrFormat( "cannot open file: %1$s", cFile )
       RETURN NIL
    ENDIF
@@ -127,6 +126,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    ENDIF
    aLines := hb_ATokens( cValue, _I18N_EOL )
 
+   cErrorMsg := NIL
    lCont := .F.
    nLine := 0
    nIndex := 1
@@ -294,11 +294,11 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
 
 STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
 
-   LOCAL fhnd := FOpen( cFileName, FO_READ )
+   LOCAL fhnd
    LOCAL cBuffer
    LOCAL nLen
 
-   IF fhnd != F_ERROR
+   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
       nLen := hb_BLen( _UTF8_BOM )
       cBuffer := Space( nLen )
       FRead( fhnd, @cBuffer, nLen )
@@ -376,7 +376,7 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
 
    RETURN aTrans
 
-FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
+FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSourceRef )
 
    LOCAL aItem
    LOCAL hFile
@@ -431,12 +431,12 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    NEXT
 
    __i18n_fileName( @cFile )
-   hFile := FCreate( cFile )
-   IF hFile == F_ERROR
+   IF ( hFile := FCreate( cFile ) ) == F_ERROR
       cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
    ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )
       cErrorMsg := hb_StrFormat( "cannot write to file: %1$s", cFile )
    ELSE
+      cErrorMsg := NIL
       lRet := .T.
    ENDIF
    FClose( hFile )
@@ -584,8 +584,7 @@ FUNCTION hb_i18n_LoadPOT( cFile, pI18N, cErrorMsg )
    LOCAL aTrans
    LOCAL hI18N
 
-   aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg )
-   IF aTrans != NIL
+   IF ( aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg ) ) != NIL
       IF HB_ISPOINTER( pI18N )
          hI18N := __i18n_hashTable( pI18N )
       ENDIF
@@ -598,7 +597,7 @@ FUNCTION hb_i18n_LoadPOT( cFile, pI18N, cErrorMsg )
 
    RETURN pI18N
 
-FUNCTION hb_i18n_SavePOT( cFile, pI18N, cErrorMsg )
+FUNCTION hb_i18n_SavePOT( cFile, pI18N, /* @ */ cErrorMsg )
 
    LOCAL hI18N
    LOCAL hFile
@@ -647,13 +646,14 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, cErrorMsg )
       NEXT
 
       __i18n_fileName( @cFile )
-      hFile := FCreate( cFile )
-      IF hFile == F_ERROR
+      IF ( hFile := FCreate( cFile ) ) == F_ERROR
          cErrorMsg := hb_StrFormat( "cannot create translation file: %1$s", cFile )
          lRet := .F.
       ELSEIF FWrite( hFile, cPOT ) != hb_BLen( cPOT )
          cErrorMsg := hb_StrFormat( "cannot write to file: %1$s", cFile )
          lRet := .F.
+      ELSE
+         cErrorMsg := NIL
       ENDIF
       FClose( hFile )
 

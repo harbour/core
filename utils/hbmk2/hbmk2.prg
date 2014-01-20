@@ -6680,6 +6680,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .c program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
                      AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+                     IF ! Empty( hbmk[ _HBMK_cPO ] )
+                        AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
+                     ENDIF
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -6794,6 +6797,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .cpp program could not be created." ) )
                   IF ! hbmk[ _HBMK_lINC ]
                      AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+                  ENDIF
+                  IF ! Empty( hbmk[ _HBMK_cPO ] )
+                     AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
                   ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
@@ -7789,6 +7795,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #ifdef HARBOUR_SUPPORT
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
          AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
+         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
       ENDIF
 #endif
       IF hbmk[ _HBMK_lCLEAN ]
