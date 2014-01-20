@@ -92,7 +92,7 @@ FUNCTION SecToTime( nSec, lHundredth )
    n := Int( n % 86400 )
 
    FOR i := 1 TO 3
-      h := StrZero( n % 60, 2 ) + iif( Empty( h ), "", ":" + h )
+      h := StrZero( n % 60, 2 ) + iif( h == "", "", ":" + h )
       n := Int( n / 60 )
    NEXT
 

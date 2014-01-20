@@ -189,10 +189,17 @@ HB_FUNC( HB_DISKSPACE )
 
             ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
 
+#if ! defined( HB_OS_WIN_CE ) && ! defined( HB_OS_WIN_64 )
+            fResult = s_pGetDiskFreeSpaceEx( lpPath,
+                                             ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                             ( PULARGE_INTEGER ) &i64TotalBytes,
+                                             ( PULARGE_INTEGER ) &i64FreeBytes );
+#else
             fResult = GetDiskFreeSpaceEx( lpPath,
                                           ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
                                           ( PULARGE_INTEGER ) &i64TotalBytes,
                                           ( PULARGE_INTEGER ) &i64FreeBytes );
+#endif
             hb_fsSetIOError( fResult, 0 );
 
             if( fResult )

@@ -3512,13 +3512,6 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
                                              &pIfInfo->iiBroadcastAddress,
                                              sizeof( pIfInfo->iiBroadcastAddress ) );
 
-               /* TODO:
-                *       use GetAdaptersInfo() and bind interfaces by
-                *       printf("\tIP Mask: \t%s\n", pAdapter->IpAddressList.IpMask.String);
-                *
-                *       hb_arraySetC( pItem, HB_SOCKET_IFINFO_HWADDR, hwaddr );
-                */
-
                flags = ( ( flags & IFF_UP ) ?
                          HB_SOCKET_IFF_UP : 0 ) |
                        ( ( flags & IFF_BROADCAST ) ?

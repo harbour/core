@@ -103,7 +103,6 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    }
 
    pszResult[ nPos++ ] = 'x';
-   pszResult[ nPos ]   = '\0';
 
    hb_retclen_buffer( pszResult, nPos );
 }
