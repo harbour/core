@@ -89,14 +89,12 @@ FUNCTION FileCopy( cSource, cDest, lMode )
       IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
          hb_default( @lMode, .F. )
          cBuffer := Space( F_BLOCK )
-         DO WHILE ! lDone
-            nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+         DO WHILE .T.
+            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes > 0
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
@@ -144,14 +142,12 @@ FUNCTION FileCCont( cDest )
    IF t_hSrcFile != F_ERROR
       IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
          cBuffer := Space( F_BLOCK )
-         DO WHILE ! lDone
-            nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+         DO WHILE .T.
+            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes > 0
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
@@ -190,8 +186,9 @@ FUNCTION FileAppend( cSrc, cDest )
    IF ( hSrcFile := FOpen( cSrc, FO_READ ) ) != F_ERROR
 
       IF hb_FileExists( cDest )
-         hDstFile := FOpen( cDest, FO_WRITE )
-         FSeek( hDstFile, 0, FS_END )
+         IF ( hDstFile := FOpen( cDest, FO_WRITE ) ) != F_ERROR
+            FSeek( hDstFile, 0, FS_END )
+         ENDIF
       ELSE
          hDstFile := FCreate( cDest )
       ENDIF
@@ -199,12 +196,10 @@ FUNCTION FileAppend( cSrc, cDest )
       IF hDstFile != F_ERROR
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+            IF ( nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes < nSrcBytes
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) < nSrcBytes
                EXIT
             ENDIF
             nTotBytes += nDstBytes

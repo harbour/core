@@ -61,11 +61,9 @@ FUNCTION TempFile( cDir, cExt, nAttr )
       cExt := "." + cExt
    ENDIF
 
-   hb_default( @nAttr, SetFCreate() )
+   IF ( fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, ;
+      hb_defaultValue( nAttr, SetFCreate() ) ) ) != F_ERROR
 
-   fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, nAttr )
-
-   IF fhnd != F_ERROR
       FClose( fhnd )
       RETURN cName
    ENDIF

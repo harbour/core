@@ -47,7 +47,6 @@
  */
 
 FUNCTION SaveSetKey()
-
    RETURN hb_SetKeySave()
 
 FUNCTION RestSetKey( aSavedTraps )

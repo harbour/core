@@ -66,5 +66,4 @@ FUNCTION ClEol( nRow, nCol )
    RETURN ClearWin( nRow, nCol, nRow, /* MaxCol() */, 7 /* "W/N" */, " " )
 
 FUNCTION ClWin( nRow, nCol )
-
    RETURN ClearWin( nRow, nCol, /* MaxRow() */, /* MaxCol() */, 7 /* "W/N" */, " " )

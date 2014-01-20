@@ -61,11 +61,9 @@ FUNCTION SaveGets()
    RETURN aGetList
 
 FUNCTION RestGets( aGetList )
-
    RETURN ( GetList := aGetList ) != NIL
 
 FUNCTION CountGets()
-
    RETURN Len( GetList )
 
 FUNCTION CurrentGet()
