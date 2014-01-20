@@ -90,7 +90,7 @@ void ct_charlist( int iMode )
       {
          case CT_CHARLIST_CHARSLIST:
          {
-            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) );
+            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) + 1 );
             HB_SIZE sRetStrLen = 0;
 
             for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
@@ -104,7 +104,7 @@ void ct_charlist( int iMode )
          }
          case CT_CHARLIST_CHARNOLIST:
          {
-            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) );
+            char * pcRet = ( char * ) hb_xgrab( HB_SIZEOFARRAY( asCharCnt ) + 1 );
             HB_SIZE sRetStrLen = 0;
 
             for( sCnt = 0; sCnt < HB_SIZEOFARRAY( asCharCnt ); ++sCnt )
