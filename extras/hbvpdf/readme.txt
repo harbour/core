@@ -1,4 +1,3 @@
-
 Welcome to _pure_ Clipper Pdf Library!
 
 Changes in Release 0.08

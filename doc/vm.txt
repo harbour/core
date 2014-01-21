@@ -1,4 +1,3 @@
-
 The Harbour virtual machine (VM)
 
 Question :

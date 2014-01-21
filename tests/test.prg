@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    LOCAL s := " " + Chr( 0 ) + "  mab  " + Chr( 0 ) + " "

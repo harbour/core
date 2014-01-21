@@ -1,4 +1,3 @@
-
 #require "hbmxml"
 
 #xtranslate _ENCODE( <xData> ) => ( hb_base64Encode( hb_Serialize( mxmlGetCustom( <xData> ) ) ) )

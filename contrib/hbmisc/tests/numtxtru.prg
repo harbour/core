@@ -1,4 +1,3 @@
-
 #require "hbmisc"
 
 #include "inkey.ch"

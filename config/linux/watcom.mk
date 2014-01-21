@@ -1,4 +1,3 @@
-
 OBJ_EXT := .o
 LIB_PREF :=
 LIB_EXT := .lib

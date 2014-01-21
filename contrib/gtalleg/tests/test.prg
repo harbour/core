@@ -1,4 +1,3 @@
-
 #require "gtalleg"
 
 PROCEDURE Main()

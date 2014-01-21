@@ -1,4 +1,3 @@
-
 -stop{hbdyn}
 
 # pocc64 version 6.0 is OK, version 5.0 is not (->internal error).

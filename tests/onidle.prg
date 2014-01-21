@@ -1,4 +1,3 @@
-
 #include "hbmemory.ch"
 
 PROCEDURE Main()

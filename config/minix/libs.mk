@@ -1,4 +1,3 @@
-
 SYSLIBPATHS := /usr/lib /usr/pkg/lib
 
 ifneq ($(HB_LINKING_RTL),)

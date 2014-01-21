@@ -1,4 +1,3 @@
-
 # Keep them at top
 -depimplibs=openssl:../out32dll/libeay32.dll
 -depimplibs=openssl:../out32dll/ssleay32.dll

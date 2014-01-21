@@ -1,4 +1,3 @@
-
 gtalleg/gtalleg.hbp
 gtqtc/gtqtc.hbp
 gtwvg/gtwvg.hbp

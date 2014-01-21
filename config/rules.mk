@@ -1,4 +1,3 @@
-
 # How to run yacc.
 YACC := bison
 YACC_FLAGS := -d $(YACC_FLAGS)

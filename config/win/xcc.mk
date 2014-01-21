@@ -1,4 +1,3 @@
-
 # GNU Make file for xHarbour.com POCC compiler
 
 OBJ_EXT := .obj

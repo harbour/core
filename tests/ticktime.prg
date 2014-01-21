@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    LOCAL nTime0, nTime, nTimeLast, nMin := 9999, nMax := - 9999, nTick := 0, nLoop := 0

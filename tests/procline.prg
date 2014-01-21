@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    ? "hello 1", ProcLine(), "Expected: ", 8

@@ -1,4 +1,3 @@
-
 GT API functions
 ================
 By Bil Simser (1999-05-14)

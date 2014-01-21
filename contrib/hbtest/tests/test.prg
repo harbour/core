@@ -1,4 +1,3 @@
-
 #require "hbtest"
 
 PROCEDURE Main()

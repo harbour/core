@@ -1,4 +1,3 @@
-
 This document attempts to describe the features separating Harbour from
 CA-Cl*pper.
 

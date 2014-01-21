@@ -1,4 +1,3 @@
-
 INIT PROCEDURE Init()
 
    ? "In Init"

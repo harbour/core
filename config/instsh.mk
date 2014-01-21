@@ -1,4 +1,3 @@
-
 INSTALL_RULE :=
 
 INSTALL_FILES := $(strip $(INSTALL_FILES))

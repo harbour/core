@@ -1,4 +1,3 @@
-
 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 Harbour compile time optimizations.
 

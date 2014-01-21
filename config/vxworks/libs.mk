@@ -1,4 +1,3 @@
-
 SYSLIBPATHS :=
 
 ifeq ($(HB_CPU),x86)

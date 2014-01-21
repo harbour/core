@@ -1,4 +1,3 @@
-
 To run samples:
 
 (1) Make sure you have GTWVW library

@@ -1,4 +1,3 @@
-
 * amf3enc.c
 * amf3dec.c
   ; amf3_Encode(), amf3_Decode()

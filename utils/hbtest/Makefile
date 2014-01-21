@@ -1,4 +1,3 @@
-
 ROOT := ../../
 
 PRG_SOURCES := \

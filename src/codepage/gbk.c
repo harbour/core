@@ -1,4 +1,3 @@
-
 #include "hbapi.h"
 
 #define HB_GBK_FIRST   0x8140

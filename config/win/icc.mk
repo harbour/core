@@ -1,4 +1,3 @@
-
 # Intel(R) C/C++ Compiler (usage is largely compatible with msvc)
 
 OBJ_EXT := .obj

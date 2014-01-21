@@ -1,4 +1,3 @@
-
 Harbour library project template
 ================================
 

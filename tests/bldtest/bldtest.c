@@ -1,4 +1,3 @@
-
 #include "hbdefs.h"
 
 int main( void )

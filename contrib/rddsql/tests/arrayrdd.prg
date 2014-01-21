@@ -1,4 +1,3 @@
-
 #require "rddsql"
 
 REQUEST SQLMIX

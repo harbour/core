@@ -1,4 +1,3 @@
-
 How to create and tag a new release
 ===================================
 By Przemyslaw Czerpak (druzus/at/priv.onet.pl)

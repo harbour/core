@@ -1,4 +1,3 @@
-
 #require "hbpgsql"
 
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )

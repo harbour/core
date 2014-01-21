@@ -1,4 +1,3 @@
-
 /*
  * Harbour Project source code:
  * SuperLib rewritten parts

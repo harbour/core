@@ -1,4 +1,3 @@
-
 #include "hbmath.ch"
 
 PROCEDURE Main()

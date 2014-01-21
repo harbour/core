@@ -1,4 +1,3 @@
-
 # TODO: No autodetection
 
 ifeq ($(HB_BUILD_MODE),cpp)

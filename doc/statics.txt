@@ -1,4 +1,3 @@
-
   I just started implementing Classes and objects creation when I realized
 Harbour is not managing static variables yet (Harbour recognizes them but
 does not generate the proper pcode for them).
