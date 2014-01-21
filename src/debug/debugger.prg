@@ -1067,14 +1067,14 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ::FindNext()
 
    CASE cCommand == "NUM"
-      DO CASE
-      CASE Upper( cParam ) == "OFF"
-         ::LineNumbers( .F. )
-      CASE Upper( cParam ) == "ON"
-         ::LineNumbers( .T. )
+      SWITCH Upper( cParam )
+      CASE "OFF"
+         ::LineNumbers( .F. ) ; EXIT
+      CASE "ON"
+         ::LineNumbers( .T. ) ; EXIT
       OTHERWISE
          cResult := "Command error"
-      ENDCASE
+      ENDSWITCH
 
    CASE starts( "OPTIONS", cCommand )
 
@@ -1801,24 +1801,27 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
          CASE K_ENTER
 
-            DO CASE
-            CASE cType == "A"
+            SWITCH cType
+            CASE "A"
                IF Len( uValue ) == 0
                   __dbgAlert( "Array is empty" )
                ELSE
                   __dbgArrays( uValue, cMsg )
                ENDIF
-            CASE cType == "H"
+               EXIT
+            CASE "H"
                IF Len( uValue ) == 0
                   __dbgAlert( "Hash is empty" )
                ELSE
                   __dbgHashes( uValue, cMsg )
                ENDIF
-            CASE cType == "O"
+               EXIT
+            CASE "O"
                __dbgObject( uValue, cMsg )
+               EXIT
             OTHERWISE
                __dbgAlert( "Value cannot be edited" )
-            ENDCASE
+            ENDSWITCH
             EXIT
 
          OTHERWISE
@@ -2162,15 +2165,16 @@ METHOD Open() CLASS HBDebugger
    hb_AIns( aFiles, 1, "(Another file)", .T. )
 
    nFileName := ::ListBox( "Please choose a source file", aFiles )
-   DO CASE
-   CASE nFileName == 0
+   SWITCH nFileName
+   CASE 0
       RETURN NIL
-   CASE nFileName == 1
+   CASE 1
       cFileName := ::InputBox( "Please enter the filename", Space( 255 ) )
       cFileName := AllTrim( cFileName )
+      EXIT
    OTHERWISE
       cFileName := aFiles[ nFileName ]
-   ENDCASE
+   ENDSWITCH
 
    IF ! Empty( cFileName ) ;
       .AND. ( ValType( ::cPrgName ) == "U" .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
