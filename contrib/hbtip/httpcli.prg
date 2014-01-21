@@ -607,7 +607,6 @@ METHOD WriteAll( cFile ) CLASS TIPClientHTTP
 
    LOCAL nFile
    LOCAL lSuccess
-
    LOCAL cStream
 
    IF ( nFile := FCreate( cFile ) ) != F_ERROR

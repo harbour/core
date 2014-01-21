@@ -122,13 +122,10 @@ METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
    ENDIF
 
    IF ::GetOk()
-      nPos := At( "<", ::cReply )
-      IF nPos > 0
-         nPos2 := hb_At( ">", ::cReply, nPos + 1 )
-         IF nPos2 > nPos
+      IF ( nPos := At( "<", ::cReply ) ) > 0
+         IF ( nPos2 := hb_At( ">", ::cReply, nPos + 1 ) ) > nPos
             cDigest := hb_MD5( SubStr( ::cReply, nPos, ( nPos2 - nPos ) + 1 ) + ::oUrl:cPassword )
-            ::inetSendAll( ::SocketCon, "APOP " + ::oUrl:cUserid + " " ;
-               + cDigest + ::cCRLF )
+            ::inetSendAll( ::SocketCon, "APOP " + ::oUrl:cUserid + " " + cDigest + ::cCRLF )
             IF ::GetOK()
                ::isOpen := .T.
                RETURN .T.
@@ -141,11 +138,9 @@ METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
 
 METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
-   hb_default( @lAutoQuit, .T. )
-
    ::InetTimeOut( ::SocketCon )
 
-   IF lAutoQuit
+   IF hb_defaultValue( lAutoQuit, .T. )
       ::Quit()
    ENDIF
 
@@ -360,7 +355,7 @@ METHOD Read( nLen ) CLASS TIPClientPOP
    ENDIF
 
    IF Val( ::oUrl:cFile ) < 0
-      IF ::Delete( - Val( ::oUrl:cFile ) )
+      IF ::Delete( -Val( ::oUrl:cFile ) )
          RETURN ::Quit()
       ELSE
          RETURN .F.

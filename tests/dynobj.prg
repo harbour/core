@@ -157,6 +157,6 @@ STATIC FUNCTION BigSmile()
 
 STATIC PROCEDURE Pause()
 
-   WAIT "Pause:"
+   WAIT
 
    RETURN

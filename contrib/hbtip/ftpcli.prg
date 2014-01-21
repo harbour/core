@@ -384,17 +384,12 @@ METHOD List( cSpec ) CLASS TIPClientFTP
    ELSE
       cSpec := " " + cSpec
    ENDIF
-   IF ::bUsePasv
-      IF ! ::Pasv()
-         // ::bUsePasv := .F.
-         RETURN NIL
-      ENDIF
+   IF ::bUsePasv .AND. ! ::Pasv()
+      // ::bUsePasv := .F.
+      RETURN NIL
    ENDIF
-
-   IF ! ::bUsePasv
-      IF ! ::Port()
-         RETURN NIL
-      ENDIF
+   IF ! ::bUsePasv .AND. ! ::Port()
+      RETURN NIL
    ENDIF
 
    ::inetSendAll( ::SocketCon, "LIST" + cSpec + ::cCRLF )
@@ -405,22 +400,17 @@ METHOD List( cSpec ) CLASS TIPClientFTP
 
 METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS TIPClientFTP
 
-   hb_default( @cCommand, "" )
-   hb_default( @lPasv, .T. )
-   hb_default( @lReadPort, .T. )
-   hb_default( @lGetReply, .F. )
-
-   IF ::bUsePasv .AND. lPasv .AND. ! ::Pasv()
+   IF ::bUsePasv .AND. hb_defaultValue( lPasv, .T. ) .AND. ! ::Pasv()
       RETURN .F.
    ENDIF
 
-   ::inetSendAll( ::SocketCon, cCommand )
+   ::inetSendAll( ::SocketCon, hb_defaultValue( cCommand, "" ) )
 
-   IF lReadPort
+   IF hb_defaultValue( lReadPort, .T. )
       lReadPort := ::ReadAuxPort()
    ENDIF
 
-   IF lGetReply
+   IF hb_defaultValue( lGetReply, .F. )
       lGetReply := ::GetReply()
    ENDIF
 
@@ -460,11 +450,9 @@ METHOD ReadAuxPort( cLocalFile ) CLASS TIPClientFTP
 
 METHOD Stor( cFile ) CLASS TIPClientFTP
 
-   IF ::bUsePasv
-      IF ! ::Pasv()
-         // ::bUsePasv := .F.
-         RETURN .F.
-      ENDIF
+   IF ::bUsePasv .AND. ! ::Pasv()
+      // ::bUsePasv := .F.
+      RETURN .F.
    ENDIF
 
    ::inetSendAll( ::SocketCon, "STOR " + cFile + ::cCRLF )
@@ -513,11 +501,9 @@ METHOD Read( nLen ) CLASS TIPClientFTP
 
    IF ! ::bInitialized
 
-      IF ! Empty( ::oUrl:cPath )
-         IF ! ::CWD( ::oUrl:cPath )
-            ::bEof := .T.  // no data for this transaction
-            RETURN NIL
-         ENDIF
+      IF ! Empty( ::oUrl:cPath ) .AND. ! ::CWD( ::oUrl:cPath )
+         ::bEof := .T.  // no data for this transaction
+         RETURN NIL
       ENDIF
 
       IF Empty( ::oUrl:cFile )
@@ -533,9 +519,7 @@ METHOD Read( nLen ) CLASS TIPClientFTP
       ::bInitialized := .T.
    ENDIF
 
-   cRet := ::super:Read( nLen )
-
-   IF cRet == NIL
+   IF ( cRet := ::super:Read( nLen ) ) == NIL
       ::Commit()
       ::bEof := .T.
    ENDIF
@@ -551,10 +535,8 @@ METHOD Write( cData, nLen ) CLASS TIPClientFTP
          RETURN -1
       ENDIF
 
-      IF ! Empty( ::oUrl:cPath )
-         IF ! ::CWD( ::oUrl:cPath )
-            RETURN -1
-         ENDIF
+      IF ! Empty( ::oUrl:cPath ) .AND. ! ::CWD( ::oUrl:cPath )
+         RETURN -1
       ENDIF
 
       IF ! ::Stor( ::oUrl:cFile )
@@ -569,11 +551,9 @@ METHOD Write( cData, nLen ) CLASS TIPClientFTP
 
 METHOD Retr( cFile ) CLASS TIPClientFTP
 
-   IF ::bUsePasv
-      IF ! ::Pasv()
-         // ::bUsePasv := .F.
-         RETURN .F.
-      ENDIF
+   IF ::bUsePasv .AND. ! ::Pasv()
+      // ::bUsePasv := .F.
+      RETURN .F.
    ENDIF
 
    ::inetSendAll( ::SocketCon, "RETR " + cFile + ::cCRLF )
@@ -589,33 +569,29 @@ METHOD MGET( cSpec, cLocalPath ) CLASS TIPClientFTP
 
    LOCAL cStr, cFile
 
-   hb_default( @cSpec, "" )
+   IF ::bUsePasv .AND. ! ::Pasv()
+      // ::bUsePasv := .F.
+      RETURN .F.
+   ENDIF
+
    hb_default( @cLocalPath, "" )
 
-   IF ::bUsePasv
-      IF ! ::Pasv()
-         // ::bUsePasv := .F.
-         RETURN .F.
-      ENDIF
-   ENDIF
+   ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
 
-   ::inetSendAll( ::SocketCon, "NLST " + cSpec + ::cCRLF )
    cStr := ::ReadAuxPort()
 
-   IF ! Empty( cStr )
-      FOR EACH cFile IN hb_ATokens( StrTran( cStr, Chr( 13 ) ), Chr( 10 ) )
-         IF ! Empty( cFile )
-            ::downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
-         ENDIF
-      NEXT
-   ENDIF
+   FOR EACH cFile IN hb_ATokens( StrTran( cStr, Chr( 13 ) ), Chr( 10 ) )
+      IF ! Empty( cFile )
+         ::downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
+      ENDIF
+   NEXT
 
    RETURN cStr
 
 METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
 
    LOCAL cPath, cFile, cExt, aFile
-   LOCAL cStr := ""
+   LOCAL cStr
 
    IF ! HB_ISSTRING( cFileSpec )
       RETURN 0
@@ -623,6 +599,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
 
    hb_FNameSplit( cFileSpec, @cPath, @cFile, @cExt  )
 
+   cStr := ""
    FOR EACH aFile IN Directory( cPath + cFile + cExt, cAttr )
       IF ::uploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
          cStr += e"\r\n" + aFile[ F_NAME ]
@@ -633,7 +610,6 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
                 Why emulate a platform specific and ill-defined format? */
    RETURN SubStr( cStr, Len( e"\r\n" ) + 1 )
 
-
 METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    LOCAL cPath
@@ -642,10 +618,8 @@ METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    hb_FNameSplit( cLocalFile, @cPath, @cFile, @cExt  )
 
-   hb_default( @cRemoteFile, cFile + cExt )
-
    ::bEof := .F.
-   ::oUrl:cFile := cRemoteFile
+   ::oUrl:cFile := hb_defaultValue( cRemoteFile, cFile + cExt )
 
    IF ! ::bInitialized
 
@@ -653,12 +627,8 @@ METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
          RETURN .F.
       ENDIF
 
-      IF ! Empty( ::oUrl:cPath )
-
-         IF ! ::CWD( ::oUrl:cPath )
-            RETURN .F.
-         ENDIF
-
+      IF ! Empty( ::oUrl:cPath ) .AND. ! ::CWD( ::oUrl:cPath )
+         RETURN .F.
       ENDIF
 
       IF ! ::bUsePasv .AND. ! ::Port()
@@ -679,8 +649,6 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
 
    LOCAL cStr
 
-   hb_default( @cSpec, "" )
-
    IF ::bUsePasv .AND. ! ::Pasv()
       // ::bUsePasv := .F.
       RETURN .F.
@@ -690,7 +658,7 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
       RETURN .F.
    ENDIF
 
-   ::inetSendAll( ::SocketCon, "NLST " + cSpec + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
    IF ::GetReply()
       cStr := ::ReadAuxPort()
    ELSE
@@ -699,12 +667,11 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
 
    RETURN cStr
 
-/* Rename file on FTP */
 METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
 
-   ::inetSendAll( ::SocketCon, "RNFR " + cFrom + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "RNFR " + hb_defaultValue( cFrom, "" ) + ::cCRLF )
    IF ::GetReply()
-      ::inetSendAll( ::SocketCon, "RNTO " + cTo + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "RNTO " + hb_defaultValue( cTo, "" ) + ::cCRLF )
       RETURN ::GetReply()
    ENDIF
 
@@ -718,10 +685,8 @@ METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    hb_FNameSplit( cLocalFile, @cPath, @cFile, @cExt  )
 
-   hb_default( @cRemoteFile, cFile + cExt )
-
    ::bEof := .F.
-   ::oUrl:cFile := cRemoteFile
+   ::oUrl:cFile := hb_defaultValue( cRemoteFile, cFile + cExt )
 
    IF ! ::bInitialized
 

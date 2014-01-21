@@ -217,7 +217,7 @@ STATIC PROCEDURE Exm_IExplorer()
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -234,7 +234,7 @@ STATIC PROCEDURE Exm_IExplorer2()
          hb_idleSleep( 0 )
       ENDDO
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -386,15 +386,15 @@ STATIC PROCEDURE Exm_CDO()
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // cdoSendUsingPort
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "localhost"
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "smtp.example.com"
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 25
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
       oCDOMsg:BodyPart:Charset := "utf-8" // "iso-8859-1" "iso-8859-2"
-      oCDOMsg:To := "test@localhost"
-      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:To := "to@example.com"
+      oCDOMsg:From := "from@example.com"
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 

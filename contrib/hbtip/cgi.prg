@@ -125,14 +125,12 @@ METHOD New() CLASS TIPCgi
             ENDIF
          NEXT
       ENDIF
-   ELSE
-      IF ! Empty( cTemp := GetEnv( "QUERY_STRING" ) )
-         FOR EACH item IN hb_ATokens( cTemp, "&" )
-            IF Len( aVar := hb_ATokens( item, "=" ) ) == 2
-               ::hGets[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
-            ENDIF
-         NEXT
-      ENDIF
+   ELSEIF ! Empty( cTemp := GetEnv( "QUERY_STRING" ) )
+      FOR EACH item IN hb_ATokens( cTemp, "&" )
+         IF Len( aVar := hb_ATokens( item, "=" ) ) == 2
+            ::hGets[ AllTrim( tip_URLDecode( aVar[ 1 ] ) ) ] := tip_URLDecode( aVar[ 2 ] )
+         ENDIF
+      NEXT
    ENDIF
 
    IF ! Empty( cTemp := GetEnv( "HTTP_COOKIE" ) )

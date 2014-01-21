@@ -454,7 +454,7 @@ METHOD Read( nLen ) CLASS TIPClient
 
 METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
 
-   LOCAL nFout
+   LOCAL nFOut
    LOCAL cData
    LOCAL nSent
 
@@ -470,23 +470,21 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
    ::nStatus := 1
 
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
-      cData := ::Read( RCV_BUF_SIZE )
-      IF cData == NIL
-         IF nFout != NIL
-            FClose( nFout )
+      IF ( cData := ::Read( RCV_BUF_SIZE ) ) == NIL
+         IF nFOut != NIL
+            FClose( nFOut )
          ENDIF
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
-      IF nFout == NIL
-         nFout := FCreate( cFile, nMode )
-         IF nFout == F_ERROR
+      IF nFOut == NIL
+         IF ( nFOut := FCreate( cFile, nMode ) ) == F_ERROR
             ::nStatus := 0
             RETURN .F.
          ENDIF
       ENDIF
 
-      IF FWrite( nFout, cData ) != hb_BLen( cData )
-         FClose( nFout )
+      IF FWrite( nFOut, cData ) != hb_BLen( cData )
+         FClose( nFOut )
          RETURN .F.
       ENDIF
 
@@ -502,7 +500,9 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   FClose( nFout )
+   IF nFOut != NIL
+      FClose( nFOut )
+   ENDIF
    IF ::inetErrorCode( ::SocketCon ) != 0
       RETURN .F.
    ENDIF

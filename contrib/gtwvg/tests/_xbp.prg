@@ -7,7 +7,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-#define MUSIC_WAITON          {800, 1600}
+#define MUSIC_WAITON          { 800, 1600 }
 
 //
 //                     A Pure Xbase++ Implementation

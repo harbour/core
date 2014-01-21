@@ -36,21 +36,21 @@ PROCEDURE Main()
    HB_SYMBOL_UNUSED( main )
 
    Test1()
-   WAIT "press any key..."
+   WAIT
    Test2()
-   WAIT "press any key..."
+   WAIT
    Test3()
-   WAIT "press any key..."
+   WAIT
    Test4()
-   WAIT "press any key..."
+   WAIT
    Test5()
-   WAIT "press any key..."
+   WAIT
    Test6()
-   WAIT "press any key..."
+   WAIT
    Test7( "value1", 2, .T. )
-   WAIT "press any key..."
+   WAIT
    Test8()
-   WAIT "press any key..."
+   WAIT
    Test9()
 
    RETURN

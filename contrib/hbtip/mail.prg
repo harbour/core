@@ -517,9 +517,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
       aCC := xCC
    ENDIF
 
-   hb_default( @cSubject, "" )
-
-   ::setFieldPart( "Subject", WordEncodeQ( cSubject, ::cCharset ) )
+   ::setFieldPart( "Subject", WordEncodeQ( hb_defaultValue( cSubject, "" ), ::cCharset ) )
    ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( cFrom ) ) + ">" ) )
 
    cTo := ""

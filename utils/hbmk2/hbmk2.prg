@@ -6690,11 +6690,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-#ifdef HARBOUR_SUPPORT
                   IF ! Empty( l_cPRGSTUB )
                      FErase( l_cPRGSTUB )
                   ENDIF
-#endif
                   RETURN _EXIT_STUBCREATE
                ENDIF
                /* Do not delete stub in workdir in incremental mode. */
@@ -6807,11 +6805,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-#ifdef HARBOUR_SUPPORT
                   IF ! Empty( l_cPRGSTUB )
                      FErase( l_cPRGSTUB )
                   ENDIF
-#endif
                   RETURN _EXIT_STUBCREATE
                ENDIF
                /* Do not delete stub in workdir in incremental mode. */

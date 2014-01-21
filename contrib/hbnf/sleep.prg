@@ -23,8 +23,7 @@ PROCEDURE ft_Sleep( nSeconds, nInitial )
       IF nInitial > 0
          nInitial -= 86399
       ENDIF
-      // calculate final time
-      nSeconds += ninitial
+      nSeconds += ninitial  // calculate final time
    ENDIF
 
    hb_idleSleep( nSeconds )
