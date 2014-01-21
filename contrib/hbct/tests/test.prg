@@ -4,6 +4,7 @@
 PROCEDURE Main()
 
    LOCAL nTotal
+   LOCAL a, b
 
    HBTEST AddAscii( "0000", 1, 1 )         IS "1000"
    HBTEST AddAscii( "0000", 1 )            IS "0001"
@@ -284,5 +285,15 @@ PROCEDURE Main()
    HBTEST SecToTime( 1000, .T. )     IS "00:16:40:00"
    HBTEST SecToTime( 3656 - 170 )    IS "00:58:06"
    HBTEST SecToTime( 45873.22, .T. ) IS "12:44:33:22"
+
+   HBTEST ( a := "a", b := "b", StrSwap( @a, @b ) )        IS ""
+   HBTEST ( a := "a", b := "b", StrSwap( @a, @b ), a + b ) IS "ba"
+   HBTEST ( a := "a", b := "b", StrSwap(  a, @b ), a + b ) IS "aa"
+   HBTEST ( a := "a", b := "b", StrSwap( @a,  b ), a + b ) IS "bb"
+   HBTEST ( a := "a", b := "b", StrSwap(  a,  b ), a + b ) IS "ab"
+   HBTEST ( a := NIL, b := NIL, StrSwap( @a, @b ), a + b ) IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST ( a := 100, b := 200, StrSwap( @a, @b ), a / b ) IS 0.5
+   HBTEST StrSwap()                                        IS ""
+   HBTEST StrSwap( NIL, NIL )                              IS ""
 
    RETURN
