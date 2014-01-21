@@ -90,7 +90,7 @@ static void hb_pp_writeToken( FILE * fout, PHB_PP_TOKEN pToken,
          fprintf( fout, ", NULL%*s", i, "" );
 
       i = 16 - ( int ) strlen( pToken->value );
-      fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %d }%s\n",
+      fprintf( fout, ", \"%s\", %*s %2d,%2d, 0x%04x, %u }%s\n",
                pToken->value,
                i < 0 ? 0 : i, "",
                ( int ) pToken->len, ( int ) pToken->spaces,
@@ -171,7 +171,7 @@ static int hb_pp_writeRules( FILE * fout, PHB_PP_RULE pFirst, const char * szNam
          if( pRule->pMarkers[ u ].canrepeat )
             ulRepeatBits |= ulBit;
       }
-      fprintf( fout, "   { %s, %s, %d,%2d, 0x%04lx }%s\n",
+      fprintf( fout, "   { %s, %s, %d,%2u, 0x%04lx }%s\n",
                szMatch, szResult, HB_PP_CMP_MODE( pRule->mode ),
                pRule->markers, ulRepeatBits, pRule->pPrev ? "," : "" );
       pRule = pRule->pPrev;
@@ -199,7 +199,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
             " * Harbour Project source code:\n"
             " *    Build in preprocessor rules.\n"
             " *\n"
-            " * Copyright 2006-2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+            " * Copyright 2006-2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
             " * www - http://harbour-project.org\n"
             " *\n"
             " * This file is generated automatically by Harbour preprocessor\n"
@@ -344,7 +344,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
                " * Harbour Project source code:\n"
                " *    Version information and build time switches.\n"
                " *\n"
-               " * Copyright 2008-2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+               " * Copyright 2008-2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
                " * www - http://harbour-project.org\n"
                " *\n"
                " * This file is generated automatically by Harbour preprocessor\n"
@@ -792,7 +792,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
               HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2013, http://harbour-project.org/\n" );
+      printf( "Copyright (c) 1999-2014, http://harbour-project.org/\n" );
    }
 
    if( szFile )

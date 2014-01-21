@@ -52,6 +52,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
@@ -155,7 +157,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       DO WHILE nSelection <= 0
 
-         nKey := Inkey( 0, INKEY_KEYBOARD + INKEY_LDOWN )
+         nKey := Inkey( 0, hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ) )
 
          IF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
             nSelection := oTopMenu:hitTest( MRow(), MCol() )
@@ -203,9 +205,9 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          IF lLeftDown
 
-            IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) // ; hit nowhere.
+            IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )  // hit nowhere.
 
-            ELSEIF nNewLevel != ::nMenuLevel // ; menu level change.
+            ELSEIF nNewLevel != ::nMenuLevel  // menu level change.
 
                IF nNewItem != oNewMenu:current .AND. oNewMenu:GetItem( nNewItem ):enabled
                   ::oMenu := oNewMenu
@@ -216,7 +218,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                   ::ShowMsg( .T. )
                ENDIF
 
-            ELSEIF nNewItem != oNewMenu:Current() // ; menu item change.
+            ELSEIF nNewItem != oNewMenu:Current()  // menu item change.
 
                ::PopChild( ::nMenuLevel )
 
@@ -316,7 +318,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::ShowMsg( .T. )
          ELSE
 
-            IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+            IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
                ::oMenu:close()
             ENDIF
 
@@ -332,14 +334,14 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             IF GetList != NIL .AND. HitTest( GetList, MRow(), MCol(), ::GetMsgArray() ) != 0
                GetActive():ExitState := GE_MOUSEHIT
                ReadStats( SNLASTEXIT, GE_MOUSEHIT ) // Reset Get System values
-               IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+               IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
                   ::PopMenu()
                ENDIF
                nReturn := -1
                EXIT
             ENDIF
 
-            IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+            IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
                ::PopMenu()
             ENDIF
 
@@ -411,15 +413,15 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
       CASE GetList != NIL .AND. ( nNewItem := Accelerator( GetList, nKey, ::GetMsgArray() ) ) != 0
 
          GetActive():ExitState := GE_SHORTCUT
-         ReadStats( SNNEXTGET, nNewItem ) // Reset Get System values
-         IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+         ReadStats( SNNEXTGET, nNewItem )  // reset get system values
+         IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
             ::PopMenu()
          ENDIF
 
          nReturn := -1
          EXIT
 
-      CASE ( nNewItem := oTopMenu:getAccel( nKey ) ) != 0 // ; check for the top menu item accelerator key
+      CASE ( nNewItem := oTopMenu:getAccel( nKey ) ) != 0  // check for the top menu item accelerator key
 
          IF oTopMenu:getItem( nNewItem ):enabled
             ::PopAll()
@@ -545,7 +547,7 @@ METHOD Execute() CLASS HBMenuSys
    // Execute the Data block if selected MenuItem is ! IsPopUp:
    IF HB_ISOBJECT( oNewMenu ) .AND. ! oNewMenu:IsPopUp
 
-      IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU|HB_POPUPMENU"
+      IF IS_IN( ::oMenu:ClassName(), "TOPBARMENU|POPUPMENU|HB_POPUPMENU" )
          SetPos( ::nOldRow, ::nOldCol )
          SetCursor( ::nOldCursor )
          Eval( oNewMenu:data, oNewMenu )
@@ -557,7 +559,7 @@ METHOD Execute() CLASS HBMenuSys
       ::oMenu:select( iif( ::PopMenu(), ::oMenu:current, 0 ) )
 
       // Display newly selected current menu item:
-      IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU" .AND. ;
+      IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" ) .AND. ;
          ::nMenuLevel == 1 .AND. ;
          ! ::oMenu:isOpen
 

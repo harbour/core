@@ -95,7 +95,7 @@ CREATE CLASS Get
 
    EXPORTED:
 
-   VAR decPos         INIT 0   READONLY /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
+   VAR decPos         INIT 0   READONLY /* CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
    VAR hasFocus       INIT .F. READONLY
    VAR original                READONLY
    VAR rejected       INIT .F. READONLY
@@ -276,7 +276,7 @@ METHOD display() CLASS Get
       cBuffer := SubStr( cBuffer, 1, ::decPos - 2 ) + "-." + SubStr( cBuffer, ::decPos + 1 )
    ENDIF
 
-   IF ::nDispLen != ::nMaxLen .AND. ::nPos != 0 /* ; has scroll? */
+   IF ::nDispLen != ::nMaxLen .AND. ::nPos != 0 /* has scroll? */
       IF ::nDispLen > 8
          nDispPos := Max( 1, Min( ::nPos - ::nDispLen + 4       , ::nMaxLen - ::nDispLen + 1 ) )
       ELSE
@@ -410,12 +410,12 @@ METHOD reset() CLASS Get
       ::cBuffer  := ::PutMask( ::varGet(), .F. )
       ::xVarGet  := ::original
       ::cType    := ValType( ::xVarGet )
-      ::pos      := ::FirstEditable() /* ; Simple 0 in CA-Cl*pper [vszakats] */
+      ::pos      := ::FirstEditable() /* Simple 0 in CA-Cl*pper [vszakats] */
       ::lClear   := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
       ::lEdit    := .F.
       ::lMinus   := .F.
       ::rejected := .F.
-      ::typeOut  := !( ::type $ "CNDTL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
+      ::typeOut  := !( ::type $ "CNDTL" ) .OR. ( ::nPos == 0 ) /* Simple .F. in CA-Cl*pper [vszakats] */
       ::display()
    ENDIF
 
@@ -464,7 +464,7 @@ METHOD setFocus() CLASS Get
          ENDIF
          ::lMinus2 := ( ::xVarGet < 0 )
       ELSE
-         ::decPos := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
+         ::decPos := 0 /* CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
       ENDIF
 
       ::display()
@@ -481,7 +481,7 @@ METHOD killFocus() CLASS Get
    ::lClear   := .F.
    ::lMinus   := .F.
    ::lChanged := .F.
-   ::decPos   := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
+   ::decPos   := 0 /* CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
    ::typeOut  := .F.
 
    IF lHadFocus
@@ -587,7 +587,7 @@ METHOD overStrike( cChar ) CLASS Get
                ::pos := 1
             ENDIF
 
-            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit .AND. ! ::typeOut
                ::pos++
             ENDDO
 
@@ -643,7 +643,7 @@ METHOD insert( cChar ) CLASS Get
                ::pos := 1
             ENDIF
 
-            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit .AND. ! ::typeOut
                ::pos++
             ENDDO
 
@@ -1463,7 +1463,7 @@ METHOD reform() CLASS Get
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::unTransform(), .F. )
-      ::nDispLen := iif( ::nPicLen == NIL, ::nMaxLen, ::nPicLen ) // ; ?
+      ::nDispLen := iif( ::nPicLen == NIL, ::nMaxLen, ::nPicLen ) // ?
    ENDIF
 
    RETURN Self
@@ -1685,10 +1685,10 @@ METHOD IsEditable( nPos ) CLASS Get
       RETURN .T.
    ENDIF
 
-   /* ; This odd behaviour helps to be more compatible with CA-Cl*pper in some rare situations.
-        xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result
-        We're still not 100% compatible in slighly different situations because the CA-Cl*pper
-        behaviour is pretty much undefined here. [vszakats] */
+   /* This odd behaviour helps to be more compatible with CA-Cl*pper in some rare situations.
+      xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result
+      We're still not 100% compatible in slighly different situations because the CA-Cl*pper
+      behaviour is pretty much undefined here. [vszakats] */
    IF nPos > Len( ::cPicMask ) .AND. nPos <= ::nMaxLen
       RETURN .T.
    ENDIF
@@ -1941,9 +1941,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    IF nCol == NIL
       nCol := Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
    ENDIF
-   IF cVarName == NIL
-      cVarName := ""
-   ENDIF
+   __defaultNIL( @cVarName, "" )
    IF bVarBlock == NIL
       bVarBlock := iif( HB_ISSTRING( cVarName ), MemVarBlock( cVarName ), NIL )
    ENDIF

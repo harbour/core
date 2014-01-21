@@ -144,8 +144,6 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
       bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, hb_macroBlock( cBlock ) )
 
-      /* ; */
-
       IF HB_ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. HB_ISSTRING( xColumnHeaders[ nPos ] )
          cHeading := xColumnHeaders[ nPos ]
       ELSEIF HB_ISSTRING( xColumnHeaders )

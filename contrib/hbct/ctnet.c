@@ -194,7 +194,7 @@ HB_FUNC( NETRMTNAME )
 
    if( WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == ERROR_MORE_DATA )
    {
-      if( dwSize > 0 && dwSize <= dwLen && WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == NO_ER
+      if( dwSize > 0 && dwSize <= dwLen && WNetGetConnection( lpLocalName, lpRemoteDevice, &dwSize ) == NO_ERROR )
          HB_RETSTRLEN( lpRemoteDevice, ( HB_SIZE ) ( dwSize - 1 ) );
       else
          hb_retc_null();

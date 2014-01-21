@@ -91,7 +91,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
       hb_dateTimeStr( szTime );
 
       fprintf( hLog, "Application Internal Error - %s\n", hb_cmdargARGVN( 0 ) );
-      fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+      fprintf( hLog, "Terminated at: %04d-%02d-%02d %s\n", iYear, iMonth, iDay, szTime );
       szInfo = fStack ? hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) : NULL;
       if( szInfo && *szInfo )
          fprintf( hLog, "Info: %s\n", szInfo );

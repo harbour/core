@@ -173,33 +173,35 @@ FUNCTION sxLog( xKeyVal )
 
 FUNCTION sx_Compress( xVal )
 
-   LOCAL cType := ValType( xVal ), xRetVal
+   LOCAL xRetVal
 
-   IF cType $ "CM"
-      xRetVal := _sx_StrCompress( xVal )
-   ELSEIF cType == "A"
+   SWITCH ValType( xVal )
+   CASE "C"
+   CASE "M"
+      RETURN _sx_StrCompress( xVal )
+   CASE "A"
       xRetVal := Array( Len( xVal ) )
-      AEval( xVal, {| x | xRetVal := sx_Compress( x ) } )
-   ELSE
-      xRetVal := xVal
-   ENDIF
+      AEval( xVal, {| x, i | xRetVal[ i ] := sx_Compress( x ) } )
+      RETURN xRetVal
+   ENDSWITCH
 
-   RETURN xRetVal
+   RETURN xVal
 
 FUNCTION sx_Decompress( xVal )
 
-   LOCAL cType := ValType( xVal ), xRetVal
+   LOCAL xRetVal
 
-   IF cType $ "CM"
-      xRetVal := _sx_StrDecompress( xVal )
-   ELSEIF cType == "A"
+   SWITCH ValType( xVal )
+   CASE "C"
+   CASE "M"
+      RETURN _sx_StrDecompress( xVal )
+   CASE "A"
       xRetVal := Array( Len( xVal ) )
-      AEval( xVal, {| x | xRetVal := sx_Decompress( x ) } )
-   ELSE
-      xRetVal := xVal
-   ENDIF
+      AEval( xVal, {| x, i | xRetVal[ i ] := sx_Decompress( x ) } )
+      RETURN xRetVal
+   ENDSWITCH
 
-   RETURN xRetVal
+   RETURN xVal
 
 FUNCTION sx_TagInfo( cIndex )
 

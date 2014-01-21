@@ -82,7 +82,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN hb_ntos( Self )
-   CASE "S" ; RETURN "@" + Self:name + "()"
+   CASE "S" ; RETURN "@" + ::name + "()"
    CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
    ENDSWITCH
@@ -162,15 +162,12 @@ METHOD Add( x ) CLASS Array
 
 METHOD Collect( b ) CLASS Array
 
-   LOCAL i
-   LOCAL currElem
+   LOCAL elem
    LOCAL result := {}
-   LOCAL nElems := Len( Self )
 
-   FOR i := 1 TO nElems
-      currElem := Self[ i ]
-      IF Eval( b, currElem )
-         AAdd( result, currElem )
+   FOR EACH elem IN Self
+      IF Eval( b, elem )
+         AAdd( result, elem )
       ENDIF
    NEXT
 
@@ -392,7 +389,7 @@ CREATE CLASS Symbol INHERIT HBScalar FUNCTION __HBSymbol
 ENDCLASS
 
 METHOD AsString() CLASS Symbol
-   RETURN "@" + Self:name + "()"
+   RETURN "@" + ::name + "()"
 
 /* -------------------------------------------- */
 

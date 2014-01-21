@@ -334,8 +334,7 @@ METHOD New( cFrmName AS STRING, ;
 
          // Print the first line
          ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + ;
-            iif( nGroup == 1, __natMsg( _RFRM_SUBTOTAL ), ;
-            __natMsg( _RFRM_SUBSUBTOTAL ) ) )
+            __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
 
          // Print the second line
          QQOut( Space( ::aReportData[ RPT_LMARGIN ] ) )
@@ -471,7 +470,6 @@ METHOD ReportHeader() CLASS HBReportForm
    IF ! ::aReportData[ RPT_PLAIN ]
       IF ::aReportData[ RPT_HEADING ] == ""
          AAdd( aPageHeader, __natMsg( _RFRM_PAGENO ) + Str( ::nPageNumber, 6 ) )
-
       ELSE
          aTempPgHeader := ParseHeader( ::aReportData[ RPT_HEADING ], ;
             Occurs( ";", ::aReportData[ RPT_HEADING ] ) + 1 )
@@ -487,14 +485,16 @@ METHOD ReportHeader() CLASS HBReportForm
 
             NEXT
          NEXT
+
          aPageHeader[ 1 ] := Stuff( aPageHeader[ 1 ], 1, 14, ;
             __natMsg( _RFRM_PAGENO ) + Str( ::nPageNumber, 6 ) )
-
       ENDIF
-      AAdd( aPageHeader, DToC( Date() ) )
 
+      AAdd( aPageHeader, DToC( Date() ) )
    ENDIF
+
    FOR nLine := 1 TO Len( ::aReportData[ RPT_HEADER ] )
+
       nLinesInHeader := Max( XMLCOUNT( LTrim( ::aReportData[ RPT_HEADER, ;
          nLine ] ) ), 1 )
 
@@ -504,9 +504,7 @@ METHOD ReportHeader() CLASS HBReportForm
             nHeadLine ) )
          AAdd( aPageHeader, Space( ( nRPageSize - ::aReportData[ RPT_LMARGIN ] - ;
             Len( cHeader ) ) / 2 ) + cHeader )
-
       NEXT
-
    NEXT
 
    AAdd( aPageHeader, "" ) // S87 compat.
@@ -620,8 +618,7 @@ METHOD ExecuteReport() CLASS HBReportForm
          IF lGroupChanged .OR. MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
                ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
 
-            AAdd( aRecordHeader, iif( nGroup == 1, __natMsg( _RFRM_SUBTOTAL ), ;
-               __natMsg( _RFRM_SUBSUBTOTAL ) ) )
+            AAdd( aRecordHeader, __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
 
 
@@ -647,9 +644,7 @@ METHOD ExecuteReport() CLASS HBReportForm
                Len( aRecordHeader[ Len( aRecordHeader ) ] ) - 1 )
          ENDIF
       NEXT
-
    ENDIF
-
 
    IF Len( aRecordHeader ) > 0 .AND. lEjectGrp .AND. lGroupChanged
       IF Len( aRecordHeader ) > ::nLinesLeft
@@ -672,12 +667,9 @@ METHOD ExecuteReport() CLASS HBReportForm
 
       IF ::aReportData[ RPT_PLAIN ]
          ::nLinesLeft := 1000
-
       ELSE
          ::ReportHeader()
-
       ENDIF
-
    ENDIF
 
    // Add to aRecordHeader in the event that the group has changed and
@@ -839,20 +831,14 @@ METHOD ExecuteReport() CLASS HBReportForm
             ELSE
                ::ReportHeader()
             ENDIF
-            AEval( aRecordToPrint, ;
-               {| RecordLine | ;
-               ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + RecordLine ) ;
-               } ;
-               )
+            AEval( aRecordToPrint, {| RecordLine | ;
+               ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + RecordLine ) } )
             ::nLinesLeft -= Len( aRecordToPrint )
          ENDIF
       ELSE
          // Send aRecordToPrint to the output device, resetting ::nLinesLeft
-         AEval( aRecordToPrint, ;
-            {| RecordLine | ;
-            ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + RecordLine ) ;
-            } ;
-            )
+         AEval( aRecordToPrint, {| RecordLine | ;
+            ::PrintIt( Space( ::aReportData[ RPT_LMARGIN ] ) + RecordLine ) } )
          ::nLinesLeft -= Len( aRecordToPrint )
       ENDIF
 
@@ -937,9 +923,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          IF Empty( nFileError := FError() )
             EXIT
          ENDIF
-
       NEXT
-
    ENDIF
 
    // File error

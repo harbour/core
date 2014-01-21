@@ -117,7 +117,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
             cVal := "{"
             FOR EACH tmp IN xVal
                cKey := s_valToExp( tmp:__enumKey(), lRaw )
-               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
+               cVal += iif( tmp:__enumIsFirst(), "", ", " ) + ;
                   cKey + "=>" + ;
                   s_valToExp( tmp, lRaw, cInd + cKey, hRefs, @cRefs, @cObjs )
             NEXT
@@ -127,7 +127,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
          cVal := "{"
          IF ! lRaw .AND. v == "O"
             FOR EACH tmp IN __objGetIVars( xVal )
-               cVal += iif( tmp:__enumIndex() == 1, '{"', ', {"' ) + ;
+               cVal += iif( tmp:__enumIsFirst(), '{"', ', {"' ) + ;
                        tmp[ 1 ] + '", ' + ;
                        s_valToExp( tmp[ 2 ], lRaw, ;
                                    cInd + hb_ntos( tmp:__enumIndex() ) + ",2", ;
@@ -135,7 +135,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
             NEXT
          ELSE
             FOR EACH tmp IN xVal
-               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
+               cVal += iif( tmp:__enumIsFirst(), "", ", " ) + ;
                   s_valToExp( tmp, lRaw, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs, @cObjs )
             NEXT
          ENDIF

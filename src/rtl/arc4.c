@@ -172,7 +172,7 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 #if defined( HB_OS_WIN ) && ! defined( __DMC__ ) && ! defined( __TINYC__ )
 
 #define TRY_SEED_MS_CRYPTOAPI
-static int arc4_seed_win32( void )
+static int arc4_seed_win( void )
 {
    /* This is adapted from Tor's crypto_seed_rng() */
    static int        provider_set = 0;
@@ -435,7 +435,7 @@ static void arc4_seed( void )
     */
 
 #if defined( TRY_SEED_MS_CRYPTOAPI )
-   if( arc4_seed_win32() == 0 )
+   if( arc4_seed_win() == 0 )
       ok = 1;
 #endif
 

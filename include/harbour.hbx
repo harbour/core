@@ -334,6 +334,7 @@ DYNAMIC hb_ByteSwapLL
 DYNAMIC hb_ByteSwapU
 DYNAMIC hb_ByteSwapW
 DYNAMIC hb_cdpCharMax
+DYNAMIC hb_cdpExists
 DYNAMIC hb_cdpInfo
 DYNAMIC hb_cdpIsUTF8
 DYNAMIC hb_cdpList
@@ -508,6 +509,7 @@ DYNAMIC hb_HexToStr
 DYNAMIC hb_HFill
 DYNAMIC hb_HGet
 DYNAMIC hb_HGetDef
+DYNAMIC hb_HGetRef
 DYNAMIC hb_HHasKey
 DYNAMIC hb_HKeepOrder
 DYNAMIC hb_HKeyAt
@@ -726,6 +728,7 @@ DYNAMIC hb_Random
 DYNAMIC hb_RandomInt
 DYNAMIC hb_RandomIntMax
 DYNAMIC hb_RandomSeed
+DYNAMIC hb_randStr
 DYNAMIC hb_RAScan
 DYNAMIC hb_RAt
 DYNAMIC hb_rddGetTempAlias

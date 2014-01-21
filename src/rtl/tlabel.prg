@@ -165,7 +165,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       ::aLabelData := ::LoadLabel( cLBLName )  // Load the (.lbl) into an array
 
       // Add to the left margin if a SET MARGIN has been defined
-      ::aLabelData[ LBL_LMARGIN ] := ::aLabelData[ LBL_LMARGIN ] + OldMargin
+      ::aLabelData[ LBL_LMARGIN ] += OldMargin
 
       ASize( ::aBandToPrint, Len( ::aLabelData[ LBL_FIELDS ] ) )
       AFill( ::aBandToPrint, Space( ::aLabelData[ LBL_LMARGIN ] ) )
@@ -230,8 +230,9 @@ METHOD ExecuteLabel() CLASS HBLabelForm
 
          v := Eval( ::aLabelData[ LBL_FIELDS, nField, LF_EXP ] )
 
-         cBuffer := PadR( v, ::aLabelData[ LBL_WIDTH ] )
-         cBuffer := cBuffer + Space( ::aLabelData[ LBL_SPACES ] )
+         cBuffer := ;
+            PadR( v, ::aLabelData[ LBL_WIDTH ] ) + ;
+            Space( ::aLabelData[ LBL_SPACES ] )
 
          IF ::aLabelData[ LBL_FIELDS, nField, LF_BLANK ]
             IF ! Empty( cBuffer )
@@ -240,24 +241,17 @@ METHOD ExecuteLabel() CLASS HBLabelForm
          ELSE
             AAdd( aBuffer, cBuffer )
          ENDIF
-
       ELSE
-
          AAdd( aBuffer, NIL )
-
       ENDIF
-
    NEXT
 
    ASize( aBuffer, Len( ::aLabelData[ LBL_FIELDS ] ) )
 
    // Add aBuffer to ::aBandToPrint
    FOR nField := 1 TO Len( ::aLabelData[ LBL_FIELDS ] )
-      IF aBuffer[ nField ] == NIL
-         ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ] + ::cBlank
-      ELSE
-         ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ] + aBuffer[ nField ]
-      ENDIF
+      ::aBandToPrint[ nField ] += ;
+         iif( aBuffer[ nField ] == NIL, ::cBlank, aBuffer[ nField ] )
    NEXT
 
    IF ::nCurrentCol == ::aLabelData[ LBL_ACROSS ]
@@ -268,7 +262,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       NEXT
 
       ::lOneMoreBand := .F.
-      ::nCurrentCol  := 1
+      ::nCurrentCol := 1
 
       // Print the band
       AEval( ::aBandToPrint, {| BandLine | PrintIt( BandLine ) } )
@@ -285,14 +279,13 @@ METHOD ExecuteLabel() CLASS HBLabelForm
          FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
             PrintIt()
          NEXT
-
       ENDIF
 
       // Clear out the band
       AFill( ::aBandToPrint, Space( ::aLabelData[ LBL_LMARGIN ] ) )
    ELSE
       ::lOneMoreBand := .T.
-      ::nCurrentCol := ::nCurrentCol + 1
+      ::nCurrentCol++
    ENDIF
 
    RETURN Self
@@ -306,10 +299,8 @@ METHOD SampleLabels() CLASS HBLabelForm
 
    ASize( aBand, ::aLabelData[ LBL_HEIGHT ] )
    AFill( aBand, Space( ::aLabelData[ LBL_LMARGIN ] ) + ;
-      Replicate( Replicate( "*", ;
-      ::aLabelData[ LBL_WIDTH ] ) + ;
-      Space( ::aLabelData[ LBL_SPACES ] ), ;
-      ::aLabelData[ LBL_ACROSS ] ) )
+      Replicate( Replicate( "*", ::aLabelData[ LBL_WIDTH ] ) + ;
+      Space( ::aLabelData[ LBL_SPACES ] ), ::aLabelData[ LBL_ACROSS ] ) )
 
    // Prints sample labels
    DO WHILE lMoreSamples
@@ -384,9 +375,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          IF Empty( nFileError := FError() )
             EXIT
          ENDIF
-
       NEXT
-
    ENDIF
 
    // File error
@@ -426,7 +415,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
          // Get the text of the expression
          cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
-         nOffset := nOffSet + 60
+         nOffset += 60
 
          IF ! Empty( cFieldText )
 
@@ -440,13 +429,9 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
             // Compression option
             AAdd( aLabel[ LBL_FIELDS, i ], .T. )
-
          ELSE
-
             AAdd( aLabel[ LBL_FIELDS ], NIL )
-
          ENDIF
-
       NEXT
 
       // Close file

@@ -192,8 +192,8 @@ METHOD delItem( nPos )
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
-      ADel( ::aItems, nPos )
-      ASize( ::aItems, --::nItemCount )
+      hb_ADel( ::aItems, nPos, .T. )
+      ::nItemCount--
 
       IF ::nValue > ::nItemCount
          ::nValue := ::nItemCount
@@ -491,9 +491,8 @@ METHOD insItem( nPos, cText, cData )
       HB_ISNUMERIC( nPos ) .AND. ;
       nPos < ::nItemCount
 
-      ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos )
-      ::aItems[ nPos ] := { cText, cData }
+      hb_AIns( ::aItems, nPos, { cText, cData }, .T. )
+      ::nItemCount++
 
       IF ::nItemCount == 1
          ::nTopItem := 1
@@ -548,10 +547,10 @@ METHOD open() CLASS ListBox
    IF ! ::lIsOpen
 
       ::aSaveScr := { ;
-         ::nTop + 1,;
-         ::nLeft,;
-         ::nBottom,;
-         ::nRight,;
+         ::nTop + 1, ;
+         ::nLeft, ;
+         ::nBottom, ;
+         ::nRight, ;
          SaveScreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
 
       ::lIsOpen := .T.
@@ -1086,7 +1085,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
 FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
+FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
    LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )

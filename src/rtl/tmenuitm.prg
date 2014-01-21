@@ -50,6 +50,8 @@
 
 #include "button.ch"
 
+#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
 
@@ -70,8 +72,9 @@ CREATE CLASS MenuItem FUNCTION HBMenuItem
    METHOD shortcut( nShortcut ) SETGET
    METHOD style( cStyle ) SETGET
 
-   VAR __col      INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
-   VAR __row      INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
+   VAR __col      INIT -1  AS NUMERIC                   /* NOTE: This is a Harbour extension. */
+   VAR __row      INIT -1  AS NUMERIC                   /* NOTE: This is a Harbour extension. */
+   VAR __issep    INIT .F. AS LOGICAL                   /* NOTE: This is a Harbour extension. */
 
    METHOD isPopUp()
 
@@ -96,12 +99,12 @@ METHOD caption( cCaption ) CLASS MenuItem
 
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
 
-      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-      //          to use it for flag purposes.
       IF ::cCaption == HB_MENU_SEPARATOR_UNI
+         ::__issep  := .T.
          ::boData   := NIL
-         ::lChecked := .F.
-         ::lEnabled := .F.
+         ::lChecked := ::lEnabled := .F.
+      ELSE
+         ::__issep  := .F.
       ENDIF
    ENDIF
 
@@ -109,9 +112,7 @@ METHOD caption( cCaption ) CLASS MenuItem
 
 METHOD checked( lChecked ) CLASS MenuItem
 
-   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-   //          to use it for flag purposes.
-   IF lChecked != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
+   IF lChecked != NIL .AND. ! ::__issep
       ::lChecked := __eInstVar53( Self, "CHECKED", lChecked, "L", 1001 )
    ENDIF
 
@@ -123,7 +124,7 @@ METHOD data( boData ) CLASS MenuItem
       IF HB_ISBLOCK( boData )
          ::boData := boData
       ELSE
-         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() $ "POPUPMENU|HB_POPUPMENU" } )
+         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| IS_IN( boData:ClassName(), "POPUPMENU|HB_POPUPMENU" ) } )
       ENDIF
    ENDIF
 
@@ -131,9 +132,7 @@ METHOD data( boData ) CLASS MenuItem
 
 METHOD enabled( lEnabled ) CLASS MenuItem
 
-   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-   //          to use it for flag purposes.
-   IF lEnabled != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
+   IF lEnabled != NIL .AND. ! ::__issep
       ::lEnabled := __eInstVar53( Self, "ENABLED", lEnabled, "L", 1001 )
    ENDIF
 
@@ -172,18 +171,14 @@ METHOD style( cStyle ) CLASS MenuItem
    RETURN ::cStyle
 
 METHOD isPopUp() CLASS MenuItem
-   RETURN HB_ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+   RETURN HB_ISOBJECT( ::data ) .AND. IS_IN( ::data:ClassName(), "POPUPMENU|HB_POPUPMENU" )
 
 METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MenuItem
 
-   hb_default( @nShortcut, 0 )
-   hb_default( @cMessage, "" )
-   hb_default( @nID, 0 )
-
    ::data      := boData
-   ::nID       := nID
-   ::cMessage  := cMessage
-   ::nShortcut := nShortcut
+   ::nID       := hb_defaultValue( nID, 0 )
+   ::cMessage  := hb_defaultValue( cMessage, "" )
+   ::nShortcut := hb_defaultValue( nShortcut, 0 )
    ::caption   := cCaption
 
    RETURN Self

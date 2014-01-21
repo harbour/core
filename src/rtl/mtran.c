@@ -51,7 +51,7 @@
 
 /* NOTE: pszResult must have an allocated buffer of at least nStringLen */
 
-HB_SIZE hb_strMemotran( char * pszResult, const char * pszString, HB_SIZE nStringLen, char cHardCR, char cSoftCR )
+static HB_SIZE hb_strMemotran( char * pszResult, const char * pszString, HB_SIZE nStringLen, char cHardCR, char cSoftCR )
 {
    HB_SIZE nStringPos = 0;
    HB_SIZE nResultPos = 0;

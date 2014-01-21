@@ -82,12 +82,12 @@
           encoder still allows to use same structure in the leaves, in
           this case content will be duplicate.
           I.e.:
-             xI := {1, NIL}
-             xI[2] := xI
+             xI := { 1, NIL }
+             xI[ 2 ] := xI
              ? hb_jsonEncode( xI )  // [1,null]
           but:
-             xI := {1, .T.}
-             xI := {2, xI, xI}
+             xI := { 1, .T. }
+             xI := { 2, xI, xI }
              ? hb_jsonEncode( xI )  // [2,[1,true],[1,true]]
  */
 
@@ -153,7 +153,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
       {
          if( pCtx->pId[ nIndex ] == id )
          {
-            if( !fEOL && pCtx->fHuman )
+            if( ! fEOL && pCtx->fHuman )
                _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
             _hb_jsonCtxAdd( pCtx, "null", 4 );
             return;
@@ -348,7 +348,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
 
                if( pCtx->fHuman )
                {
-                  _hb_jsonCtxAdd( pCtx, " : ", 3 );
+                  _hb_jsonCtxAdd( pCtx, ": ", 2 );
                   fEOL = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
                }
                else

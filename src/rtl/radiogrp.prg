@@ -143,8 +143,8 @@ METHOD addItem( oRadioButton ) CLASS RadioGroup
 METHOD delItem( nPos ) CLASS RadioGroup
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
-      ADel( ::aItems[ nPos ] )
-      ASize( ::aItems, --::nItemCount )
+      hb_ADel( ::aItems, nPos, .T. )
+      ::nItemCount--
    ENDIF
 
    IF ::lHasFocus .AND. ::nItemCount < ::nValue
@@ -228,7 +228,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
 
    LOCAL nLen
    LOCAL nPos
-   LOCAL aItems
+   LOCAL item
 
    DO CASE
    CASE Empty( ::cColdbox + ::cHotBox )
@@ -282,11 +282,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
    CASE nMRow > ::nBottom
    CASE nMCol < ::nLeft
    CASE nMCol <= ::nRight
-      aItems := ::aItems
-      nLen := ::nItemCount
-      FOR nPos := 1 TO nLen
-         IF aItems[ nPos ]:hitTest( nMRow, nMCol ) != HTNOWHERE
-            RETURN nPos
+      FOR EACH item IN ::aItems
+         IF item:hitTest( nMRow, nMCol ) != HTNOWHERE
+            RETURN item:__enumIndex()
          ENDIF
       NEXT
       RETURN HTCLIENT
@@ -299,18 +297,15 @@ METHOD insItem( nPos, oRadioButton ) CLASS RadioGroup
    IF HB_ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN" .AND. ;
       nPos < ::nItemCount
 
-      ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos, oRadioButton )
-      ::aItems[ nPos ] := oRadioButton
+      hb_AIns( ::aItems, nPos, oRadioButton, .T. )
+      ::nItemCount++
    ENDIF
 
    RETURN ::aItems[ nPos ]
 
 METHOD killFocus() CLASS RadioGroup
 
-   LOCAL nPos
-   LOCAL nLen
-   LOCAL aItems
+   LOCAL item
 
    LOCAL nOldMCur
 
@@ -322,15 +317,12 @@ METHOD killFocus() CLASS RadioGroup
          Eval( ::bFBlock )
       ENDIF
 
-      aItems := ::aItems
-      nLen := ::nItemCount
-
       nOldMCur := MSetCursor( .F. )
 
       DispBegin()
 
-      FOR nPos := 1 TO nLen
-         aItems[ nPos ]:killFocus()
+      FOR EACH item IN ::aItems
+         item:killFocus()
       NEXT
 
       ::display()
@@ -346,9 +338,7 @@ METHOD killFocus() CLASS RadioGroup
 
 METHOD setFocus() CLASS RadioGroup
 
-   LOCAL nPos
-   LOCAL nLen
-   LOCAL aItems
+   LOCAL item
 
    LOCAL nOldMCur
 
@@ -357,15 +347,12 @@ METHOD setFocus() CLASS RadioGroup
       ::nCursor := SetCursor( SC_NONE )
       ::lHasFocus := .T.
 
-      aItems := ::aItems
-      nLen := ::nItemCount
-
       nOldMCur := MSetCursor( .F. )
 
       DispBegin()
 
-      FOR nPos := 1 TO nLen
-         aItems[ nPos ]:setFocus()
+      FOR EACH item IN ::aItems
+         item:setFocus()
       NEXT
 
       ::display()
@@ -452,24 +439,20 @@ METHOD select( xValue ) CLASS RadioGroup
 
 METHOD setColor( cColorSpec ) CLASS RadioGroup
 
-   LOCAL nPos
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
+   LOCAL item
 
-   FOR nPos := 1 TO nLen
-      aItems[ nPos ]:colorSpec := cColorSpec
+   FOR EACH item IN ::aItems
+      item:colorSpec := cColorSpec
    NEXT
 
    RETURN Self
 
 METHOD setStyle( cStyle ) CLASS RadioGroup
 
-   LOCAL nPos
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
+   LOCAL item
 
-   FOR nPos := 1 TO nLen
-      aItems[ nPos ]:style := cStyle
+   FOR EACH item IN ::aItems
+      item:style := cStyle
    NEXT
 
    RETURN Self

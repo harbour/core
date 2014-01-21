@@ -341,10 +341,9 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    hRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
 
-   IF hb_HHasKey( hRDDData, cFullName )
+   IF cFullName $ hRDDData
       aDBFData := hRDDData[ cFullName ]
       aStruct  := aDBFData[ DATABASE_STRUCT ]
-
    ELSE
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
@@ -355,7 +354,6 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
       NetErr( .T. )
       UR_SUPER_ERROR( nWA, oError )
       RETURN HB_FAILURE
-
    ENDIF
 
    /* Set WorkArea Infos */
@@ -1566,7 +1564,7 @@ FUNCTION hb_EraseArrayRdd( cFullName )
          IF HB_ISSTRING( cFullName )
             cFullName := Upper( cFullName )
             /* First search if memory dbf exists */
-            IF hb_HHasKey( hRDDData, cFullName )
+            IF cFullName $ hRDDData
 
                /* Get ARRAY DATA */
                aDBFData := hRDDData[ cFullName ]
@@ -1645,9 +1643,8 @@ FUNCTION hb_FileArrayRdd( cFullName )
          IF HB_ISSTRING( cFullName )
             cFullName := Upper( cFullName )
             /* First search if memory dbf exists */
-            IF hb_HHasKey( hRDDData, cFullName )
+            IF cFullName $ hRDDData
                nReturn := HB_SUCCESS
-
             ENDIF
          ENDIF
 
@@ -1663,7 +1660,6 @@ FUNCTION hb_FileArrayRdd( cFullName )
          Throw( oError )
 
          nReturn := HB_FAILURE
-
       ENDIF
 
    ELSE
@@ -1687,7 +1683,7 @@ FUNCTION hb_FileArrayRdd( cFullName )
   hb_SetArrayRdd( aArray ) --> NIL
   This function set DBF with aArray like APPEND FROM aArray in an empty DBF
 */
-FUNCTION hb_SetArrayRdd( aArray )
+PROCEDURE hb_SetArrayRdd( aArray )
 
    LOCAL aRecInfo
    LOCAL nWA      := Select()
@@ -1700,7 +1696,7 @@ FUNCTION hb_SetArrayRdd( aArray )
    NEXT
    AR_GOTOP( nWA )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BlankRecord( aStruct )
 
@@ -1933,7 +1929,7 @@ STATIC FUNCTION DecEmptyValue( xVal )
 
    RETURN xRet
 
-STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
+STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
    LOCAL nPos, aOCInfo, lFor, lDel
 
@@ -1977,7 +1973,7 @@ STATIC FUNCTION ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION Seek( xSeek, lSoft, lLast, aIndexInfo, nRec )
 

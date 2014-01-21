@@ -101,7 +101,7 @@ FUNCTION _sx_IniInit( nArea )
    hIni := hb_iniRead( cFile, .F.,, .F. )
 
    IF ! Empty( hIni )
-      IF hb_HHasKey( hIni, HB_SIX_SECTION )
+      IF HB_SIX_SECTION $ hIni
          FOR EACH item IN hIni[ HB_SIX_SECTION ]
             SWITCH item:__enumKey()
             CASE "SHARED"
@@ -147,8 +147,8 @@ FUNCTION sx_IniHeader( cHeaderName, nArea )
       nArea := Select()
    ENDIF
 
-   IF hb_HHasKey( SxIniInfo, nArea )
-      IF hb_HHasKey( SxIniInfo[ nArea ], cHeaderName )
+   IF nArea $ SxIniInfo
+      IF cHeaderName $ SxIniInfo[ nArea ]
          RETURN SxIniInfo[ nArea, cHeaderName ]
       ENDIF
    ENDIF

@@ -167,22 +167,17 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
    RETURN Self
 
 METHOD GetLine() CLASS HBBrwText
-
-   RETURN iif( ::lLineNumbers, padr( hb_ntos( ::nRow ) + ":", ::nLineNoLen ), "" ) + ;
-          MemoLine( ::aRows[ ::nRow ], ::nMaxLineLen, 1, ::nTabWidth, .F. )
+   RETURN iif( ::lLineNumbers, PadR( hb_ntos( ::nRow ) + ":", ::nLineNoLen ), "" ) + ;
+      MemoLine( ::aRows[ ::nRow ], ::nMaxLineLen, 1, ::nTabWidth, .F. )
 
 METHOD GetLineText() CLASS HBBrwText
-
    RETURN PadR( SubStr( ::GetLine(), ::nLineOffset ), ::nWidth )
 
 METHOD GetLineColor() CLASS HBBrwText
 
    LOCAL aColor
-   LOCAL lBreak
 
-   lBreak := __dbgIsBreak( __Dbg():pInfo, ::cFileName, ::nRow ) >= 0
-
-   IF lBreak
+   IF __dbgIsBreak( __Dbg():pInfo, ::cFileName, ::nRow ) >= 0
       aColor := iif( ::nRow == ::nActiveLine, { 4, 4 }, { 3, 3 } )
    ELSE
       aColor := iif( ::nRow == ::nActiveLine, { 2, 2 }, { 1, 1 } )

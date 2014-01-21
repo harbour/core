@@ -136,7 +136,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
       AEval( aFields, {| cField | AAdd( aGetField, __GetField( cField ) ) } )
       aFieldsSum := Array( Len( aGetField ) )
 
-      /* ; Keep it open after creating it. */
+      /* Keep it open after creating it. */
       dbCreate( cFile, aNewDbStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
       nNewArea := Select()
 
@@ -195,7 +195,7 @@ STATIC FUNCTION __GetField( cField )
    LOCAL oError
    LOCAL lError
 
-   /* ; Is the field aliased? */
+   /* Is the field aliased? */
    IF ( nPos := At( "->", cField ) ) > 0
 
       IF Select( Left( cField, nPos - 1 ) ) != nCurrArea

@@ -62,13 +62,13 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    LOCAL cName
    LOCAL cExt
 
-   // ; CA-Cl*pper would fail on this case.
+   // CA-Cl*pper would fail on this case.
 
    IF ! HB_ISSTRING( cFileMask )
       RETURN 0
    ENDIF
 
-   // ; If no drive/dir specified, use the SET DEFAULT setting.
+   // If no drive/dir specified, use the SET DEFAULT setting.
 
    hb_FNameSplit( cFileMask, @cDir, @cName, @cExt )
 
@@ -76,7 +76,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       cFileMask := hb_FNameMerge( __DefPath(), cName, cExt )
    ENDIF
 
-   // ;
+   //
 
    IF HB_ISARRAY( aAttr )
       aDir := Directory( cFileMask, "HSD" )
@@ -100,7 +100,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       nAttrLen := Len( aAttr )
    ENDIF
 
-   // ;
+   //
 
    nDirLen := Len( aDir )
 

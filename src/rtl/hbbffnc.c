@@ -92,7 +92,6 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
       if( nLen )
       {
          char * pszData;
-         const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
          HB_BOOL fRaw = hb_parl( 3 );
 
          /* In raw mode passed string is padded to 8 bytes with '\0'
@@ -140,7 +139,6 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
       {
          const char * pszSource;
          char * pszData;
-         const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
          HB_BOOL fRaw = hb_parl( 3 );
 
          pszData = ( char * ) hb_xgrab( nSize + ( fRaw ? 1 : 0 ) );

@@ -1296,7 +1296,7 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
       case FD_TEST:
          iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
          if( iRet != -1 )
-            _setmode( ( int ) hFileHandle, iRet );
+            ( void ) _setmode( ( int ) hFileHandle, iRet );
          break;
 
       case FD_BINARY:

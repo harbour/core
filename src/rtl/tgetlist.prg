@@ -65,6 +65,8 @@
 #include "setcurs.ch"
 #include "tbrowse.ch"
 
+#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+
 #define SCORE_ROW       0
 #define SCORE_COL       60
 
@@ -872,18 +874,19 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
       oGUI:setFocus()
 
       IF oGet:exitState == GE_NOEXIT  // Added.
-         IF ::nHitCode > 0
+         DO CASE
+         CASE ::nHitCode > 0
             oGUI:Select( ::nHitCode )
-         ELSEIF ::nHitCode == HTCAPTION
+         CASE ::nHitCode == HTCAPTION
             oGUI:Select()
-         ELSEIF ::nHitCode == HTCLIENT
+         CASE ::nHitCode == HTCLIENT
             oGUI:Select( K_LBUTTONDOWN )
-         ELSEIF ::nHitCode == HTDROPBUTTON
+         CASE ::nHitCode == HTDROPBUTTON
             oGUI:Open()
-         ELSEIF ::nHitCode >= HTSCROLLFIRST .AND. ;
-                ::nHitCode <= HTSCROLLLAST
+         CASE ::nHitCode >= HTSCROLLFIRST .AND. ;
+              ::nHitCode <= HTSCROLLLAST
             oGUI:Scroll( ::nHitCode )
-         ENDIF
+         ENDCASE
       ENDIF
 
       ::nHitCode := 0
@@ -910,7 +913,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
       ENDDO
 
       // De-activate the GET
-      IF oGUI:ClassName() $ "LISTBOX|RADIOGROUP" .AND. HB_ISNUMERIC( oGet:varGet() )
+      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
          oGet:varPut( oGUI:value )
       ELSE
          oGet:varPut( oGUI:buffer )
@@ -1179,7 +1182,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
 
    IF !( oGUI:ClassName() == "TBROWSE" )
       xOldValue := oGet:varGet()
-      IF oGUI:ClassName() $ "LISTBOX|RADIOGROUP" .AND. HB_ISNUMERIC( oGet:varGet() )
+      IF IS_IN( oGUI:ClassName(), "LISTBOX|RADIOGROUP" ) .AND. HB_ISNUMERIC( oGet:varGet() )
          xNewValue := oGUI:Value
       ELSE
          xNewValue := oGUI:Buffer
@@ -1414,22 +1417,14 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
    LOCAL nIteration
    LOCAL lGUI
 
-   IF nKey >= K_ALT_Q .AND. nKey <= K_ALT_P
-      cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_A .AND. nKey <= K_ALT_L
-      cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_Z .AND. nKey <= K_ALT_M
-      cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
-
-   ELSEIF nKey >= K_ALT_1 .AND. nKey <= K_ALT_0
-      cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
-
-   ELSE
+   DO CASE
+   CASE nKey >= K_ALT_Q .AND. nKey <= K_ALT_P ; cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
+   CASE nKey >= K_ALT_A .AND. nKey <= K_ALT_L ; cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
+   CASE nKey >= K_ALT_Z .AND. nKey <= K_ALT_M ; cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
+   CASE nKey >= K_ALT_1 .AND. nKey <= K_ALT_0 ; cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
+   OTHERWISE
       RETURN 0
-
-   ENDIF
+   ENDCASE
 
    nStart := ::nPos + 1
    nEnd   := Len( ::aGetList )
@@ -1487,15 +1482,14 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
 METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
 
-   LOCAL nCount
-   LOCAL nTotal := Len( ::aGetList )
+   LOCAL oGet
    LOCAL lGUI
 
    ::nNextGet := 0
 
-   FOR nCount := 1 TO nTotal
-      IF ( ::nHitCode := ::aGetList[ nCount ]:hitTest( nMRow, nMCol ) ) != HTNOWHERE
-         ::nNextGet := nCount
+   FOR EACH oGet IN ::aGetList
+      IF ( ::nHitCode := oGet:hitTest( nMRow, nMCol ) ) != HTNOWHERE
+         ::nNextGet := oGet:__enumIndex()
          EXIT
       ENDIF
    NEXT

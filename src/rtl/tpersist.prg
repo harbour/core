@@ -136,7 +136,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    LOCAL oNew := &( ::ClassName() + "()" ):CreateNew()
    LOCAL aProperties
-   LOCAL n
+   LOCAL prop
    LOCAL uValue
    LOCAL uNewValue
    LOCAL cObject
@@ -158,28 +158,28 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    aProperties := __clsGetProperties( ::ClassH )
 
-   FOR n := 1 TO Len( aProperties )
-      uValue := __objSendMsg( Self, aProperties[ n ] )
-      uNewValue := __objSendMsg( oNew, aProperties[ n ] )
-      cType  := ValType( uValue )
+   FOR EACH prop IN aProperties
+      uValue := __objSendMsg( Self, prop )
+      uNewValue := __objSendMsg( oNew, prop )
+      cType := ValType( uValue )
 
       IF !( cType == ValType( uNewValue ) ) .OR. !( uValue == uNewValue )
 
          SWITCH cType
          CASE "A"
             nIndent += 3
-            cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+            cObject += ArrayToText( uValue, prop, nIndent )
             nIndent -= 3
-            IF n < Len( aProperties )
+            IF ! prop:__enumIsLast()
                cObject += hb_eol()
             ENDIF
             EXIT
 
          CASE "O"
             IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-               cObject += uValue:SaveToText( aProperties[ n ], nIndent )
+               cObject += uValue:SaveToText( prop, nIndent )
             ENDIF
-            IF n < Len( aProperties )
+            IF ! prop:__enumIsLast()
                cObject += hb_eol()
             ENDIF
             EXIT
@@ -190,11 +190,11 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
             EXIT
 
          OTHERWISE
-            IF n == 1
+            IF prop:__enumIsFirst()
                cObject += hb_eol()
             ENDIF
             cObject += Space( nIndent ) + "   ::" + ;
-                       aProperties[ n ] + " := " + hb_ValToExp( uValue ) + ;
+                       prop + " := " + hb_ValToExp( uValue ) + ;
                        hb_eol()
          ENDSWITCH
 
@@ -208,12 +208,13 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
+   LOCAL nLen := Len( aArray )
    LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
+                   " LEN " + hb_ntos( nLen ) + hb_eol()
    LOCAL n
    LOCAL uValue
 
-   FOR n := 1 TO Len( aArray )
+   FOR n := 1 TO nLen
       uValue := aArray[ n ]
 
       SWITCH ValType( uValue )

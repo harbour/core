@@ -342,12 +342,12 @@ HB_BOOL hb_compI18nSave( HB_COMP_DECL, HB_BOOL fFinal )
       PHB_I18NSTRING pString = &pI18n->pString[ uiIndex ];
       HB_UINT        uiLine;
 
-      fprintf( file, "#: %s:%d",
+      fprintf( file, "#: %s:%u",
                hb_compI18nFileName( szFileName, pString->pPos.szFile ),
                pString->pPos.uiLine );
 
       for( uiLine = 0; uiLine < pString->uiPosCount; ++uiLine )
-         fprintf( file, " %s:%d",
+         fprintf( file, " %s:%u",
                   hb_compI18nFileName( szFileName, pString->pPosLst[ uiLine ].szFile ),
                   pString->pPosLst[ uiLine ].uiLine );
 
@@ -367,7 +367,7 @@ HB_BOOL hb_compI18nSave( HB_COMP_DECL, HB_BOOL fFinal )
          if( uiLine == 0 )
             fprintf( file, "\"\nmsgid_plural \"" );
          else
-            fprintf( file, "\"\nmsgid_plural%d \"", uiLine + 1 );
+            fprintf( file, "\"\nmsgid_plural%u \"", uiLine + 1 );
          hb_compI18nEscapeString( file, pString->szPlurals[ uiLine ] );
       }
       fprintf( file, "\"\nmsgstr%s \"\"\n\n", pString->uiPlurals ? "[0]" : "" );

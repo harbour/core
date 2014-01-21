@@ -108,7 +108,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:autolite := .F.
-   oBrwSets:ColorSpec := __Dbg():ClrModal()
+   oBrwSets:ColorSpec := __dbg():ClrModal()
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], hHash )
 
@@ -229,13 +229,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
       ELSE
          IF ::lEditable
             oBrwSets:RefreshCurrent()
-            IF HB_ISOBJECT( uValue )
-               __DbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
-            ELSEIF HB_ISARRAY( uValue )
-               __DbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
-            ELSE
+            DO CASE
+            CASE HB_ISOBJECT( uValue )
+               __dbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            CASE HB_ISARRAY( uValue )
+               __dbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
+            OTHERWISE
                ::doGet( oBrwSets, hHash, nSet )
-            ENDIF
+            ENDCASE
             oBrwSets:RefreshCurrent()
             oBrwSets:ForceStable()
          ELSE
@@ -284,13 +285,12 @@ STATIC FUNCTION HashBrowseSkip( nPos, oBrwSets )
 
 STATIC FUNCTION HashKeyString( hHash, nAt )
 
-   LOCAL xVal  := hb_HKeyAt( hHash, nAt )
-   LOCAL cType := ValType( xVal )
+   LOCAL xVal := hb_HKeyAt( hHash, nAt )
 
-   DO CASE
-   CASE cType == "C" ; RETURN '"' + xVal + '"'
-   CASE cType == "D" ; RETURN '"' + DToC( xVal ) + '"'
-   CASE cType == "N" ; RETURN hb_ntos( xVal )
-   ENDCASE
+   SWITCH ValType( xVal )
+   CASE "C" ; RETURN '"' + xVal + '"'
+   CASE "D" ; RETURN '"' + DToC( xVal ) + '"'
+   CASE "N" ; RETURN hb_ntos( xVal )
+   ENDSWITCH
 
    RETURN AllTrim( __dbgCStr( xVal ) )

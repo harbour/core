@@ -288,6 +288,7 @@
 #define DBI_POSITIONED          144  /* Is cursor positioned to valid record */
 #define DBI_ISTEMPORARY         145  /* Is the table a temporary one? */
 #define DBI_LOCKTEST            146  /* record / file lock test */
+#define DBI_CODEPAGE            147  /* Codepage used */
 
 /* RECORD MAP (RM) support */
 #define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */
