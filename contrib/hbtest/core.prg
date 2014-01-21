@@ -72,40 +72,34 @@ INIT PROCEDURE __hbtest_Init()
 
 STATIC PROCEDURE hbtest_Banner()
 
-   LOCAL bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
-
-   Eval( bOut, ;
+   Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
       Replicate( "-", 75 ) + hb_eol() + ;
-      "    Version: " + Version() + hb_eol() + ;
-      "   Compiler: " + hb_Compiler() + hb_eol() + ;
-      "         OS: " + OS() + hb_eol() + ;
-      " Date, Time: " + hb_TToC( hb_DateTime() ) + hb_eol() + ;
+      "    Version:", Version() + hb_eol() + ;
+      "   Compiler:", hb_Compiler() + hb_eol() + ;
+      "         OS:", OS() + hb_eol() + ;
+      " Date, Time:", hb_TToC( hb_DateTime() ) + hb_eol() + ;
       Replicate( "=", 75 ) + hb_eol() + ;
-      Space( TEST_RESULT_COL1_WIDTH ) + " " + ;
-      PadR( "Location", TEST_RESULT_COL2_WIDTH ) + " " + ;
-      PadR( "Test", TEST_RESULT_COL3_WIDTH ) + ;
-            " -> " + "Result" + hb_eol() + ;
+      Space( TEST_RESULT_COL1_WIDTH ), ;
+      PadR( "Location", TEST_RESULT_COL2_WIDTH ), ;
+      PadR( "Test", TEST_RESULT_COL3_WIDTH ), ;
+            "->", "Result" + hb_eol() + ;
       Replicate( "-", 75 ) + hb_eol() )
 
    RETURN
 
 EXIT PROCEDURE __hbtest_Exit()
 
-   LOCAL bOut
-
    IF s_lBanner
 
-      bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
-
-      Eval( bOut, ;
+      Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
          Replicate( "=", 75 ) + hb_eol() + ;
-         "Test calls passed: " + Str( s_nPass ) + " ( " + hb_ntos( Round( ( 1 - ( s_nFail / s_nPass ) ) * 100, 2 ) ) + " % )" + hb_eol() + ;
-         "Test calls failed: " + Str( s_nFail ) + " ( " + hb_ntos( Round( ( s_nFail / s_nPass ) * 100, 2 ) ) + " % )" + hb_eol() + ;
+         "Test calls passed:", Str( s_nPass ), "(", hb_ntos( Round( ( 1 - ( s_nFail / s_nPass ) ) * 100, 2 ) ), "% )" + hb_eol() + ;
+         "Test calls failed:", Str( s_nFail ), "(", hb_ntos( Round( ( s_nFail / s_nPass ) * 100, 2 ) ), "% )" + hb_eol() + ;
          "                   ----------" + hb_eol() + ;
-         "            Total: " + Str( s_nPass + s_nFail ) + ;
-         " ( Time elapsed: " + hb_ntos( hb_milliSeconds() - s_nStartTime ) + " ms )" + hb_eol() )
+         "            Total:", Str( s_nPass + s_nFail ), ;
+         "( Time elapsed:", hb_ntos( hb_milliSeconds() - s_nStartTime ), "ms )" + hb_eol() )
 
-      ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
+      ErrorLevel( iif( s_nFail == 0, 0, 1 ) )
    ENDIF
 
    RETURN
@@ -161,11 +155,11 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    hb_langSelect( cLangOld )
 
    IF lRTE
-      lFailed := !( XToStr( xResult, .F. ) == XToStr( xResultExpected, .F. ) )
+      lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
    ELSE
       IF !( ValType( xResult ) == ValType( xResultExpected ) )
          IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
-            lFailed := !( XToStr( xResult, .F. ) == xResultExpected )
+            lFailed := !( XToStr( xResult ) == xResultExpected )
          ELSE
             lFailed := .T.
          ENDIF
@@ -175,23 +169,20 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    ENDIF
 
    IF lFailed .OR. lPPError .OR. hb_HGetDef( t_hParams, "showall", .T. )
-      bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
+      bOut := hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } )
       IF lFailed
          Eval( bOut, ;
             PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
             PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
-            RTrim( cBlock ) + ;
-            hb_eol() + ;
-            Space( 5 ) + "  Result: " + XToStr( xResult, .F. ) + ;
-            hb_eol() + ;
-            Space( 5 ) + "Expected: " + XToStr( xResultExpected, .F. ) + ;
-            hb_eol() )
+            RTrim( cBlock ) + hb_eol() + ;
+            Space( 5 ) + "  Result:", XToStr( xResult ) + hb_eol() + ;
+            Space( 5 ) + "Expected:", XToStr( xResultExpected ) + hb_eol() )
       ELSE
          Eval( bOut, ;
             PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
             PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
             PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
-            XToStr( xResult, .F. ) + hb_eol() )
+            XToStr( xResult ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -206,7 +197,6 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
 STATIC FUNCTION ErrorMessage( oError )
 
    LOCAL cMessage := ""
-   LOCAL tmp
 
    IF HB_ISNUMERIC( oError:severity )
       SWITCH oError:severity
@@ -241,17 +231,6 @@ STATIC FUNCTION ErrorMessage( oError )
       cMessage += "#:" + hb_ntos( oError:tries ) + " "
    ENDIF
 
-   IF HB_ISARRAY( oError:Args )
-      cMessage += "A:" + hb_ntos( Len( oError:Args ) ) + ":"
-      FOR EACH tmp IN oError:Args
-         cMessage += ValType( tmp ) + ":" + XToStr( tmp, .T. )
-         IF ! tmp:__enumIsLast()
-            cMessage += ";"
-         ENDIF
-      NEXT
-      cMessage += " "
-   ENDIF
-
    IF oError:canDefault .OR. ;
       oError:canRetry .OR. ;
       oError:canSubstitute
@@ -268,25 +247,17 @@ STATIC FUNCTION ErrorMessage( oError )
       ENDIF
    ENDIF
 
-   RETURN cMessage
+   RETURN RTrim( cMessage )
 
-STATIC FUNCTION XToStr( xValue, lInString )
+STATIC FUNCTION XToStr( xValue )
 
    SWITCH ValType( xValue )
    CASE "N" ; RETURN hb_ntos( xValue )
-   CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD( "' + DToS( xValue ) + '" )' )
-   CASE "U" ; RETURN "NIL"
    CASE "C"
-   CASE "M"
-      xValue := __StrToExp( xValue )
-      RETURN iif( lInString, xValue, '"' + xValue + '"' )
+   CASE "M" ; RETURN '"' + __StrToExp( xValue ) + '"'
    CASE "A"
    CASE "H"
-   CASE "O"
-      IF ! lInString
-         RETURN hb_ValToExp( xValue, .T. )
-      ENDIF
-      EXIT
+   CASE "O" ; RETURN hb_ValToExp( xValue, .T. )
    ENDSWITCH
 
    RETURN hb_CStr( xValue )

@@ -8,16 +8,16 @@ PROCEDURE Main()
    /* TODO: verify results against Xbase++ */
    HBTEST ARemove()                      IS NIL
    HBTEST ARemove( { 1, 2, 3 } )         IS "{3}"
-   HBTEST ARemove( { 1, 2, 3 }, -1 )     IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0 A:2:A:{ Array of 3 Items };N:-1 "
+   HBTEST ARemove( { 1, 2, 3 }, -1 )     IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0"
    HBTEST ARemove( { 1, 2, 3 }, 1 )      IS "{1}"
    HBTEST ARemove( { 1, 2, 3 }, 2 )      IS "{2}"
-   HBTEST ARemove( { 1, 2, 3 }, 2, -1 )  IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0 A:3:A:{ Array of 3 Items };N:2;N:-1 "
+   HBTEST ARemove( { 1, 2, 3 }, 2, -1 )  IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0"
    HBTEST ARemove( { 1, 2, 3 }, 2, 0 )   IS "{}"
    HBTEST ARemove( { 1, 2, 3 }, 2, 1 )   IS "{2}"
    HBTEST ARemove( { 1, 2, 3 }, 2, 2 )   IS "{2, 3}"
    HBTEST ARemove( { 1, 2, 3 }, 2, 3 )   IS "{2, 3}"
    HBTEST ARemove( { 1, 2, 3 }, 1, 3 )   IS "{1, 2, 3}"
    HBTEST ARemove( { 1, 2, 3 }, 1, 2 )   IS "{1, 2}"
-   HBTEST ARemove( { 1, 2, 3 }, -1, -2 ) IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0 A:3:A:{ Array of 3 Items };N:-1;N:-2 "
+   HBTEST ARemove( { 1, 2, 3 }, -1, -2 ) IS "E 1 BASE 1003 Argument error (AREMOVE) OS:0 #:0"
 
    RETURN

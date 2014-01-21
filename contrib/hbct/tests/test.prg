@@ -291,7 +291,7 @@ PROCEDURE Main()
    HBTEST ( a := "a", b := "b", StrSwap(  a, @b ), a + b ) IS "aa"
    HBTEST ( a := "a", b := "b", StrSwap( @a,  b ), a + b ) IS "bb"
    HBTEST ( a := "a", b := "b", StrSwap(  a,  b ), a + b ) IS "ab"
-   HBTEST ( a := NIL, b := NIL, StrSwap( @a, @b ), a + b ) IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST ( a := NIL, b := NIL, StrSwap( @a, @b ), a + b ) IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 F:S"
    HBTEST ( a := 100, b := 200, StrSwap( @a, @b ), a / b ) IS 0.5
    HBTEST StrSwap()                                        IS ""
    HBTEST StrSwap( NIL, NIL )                              IS ""
