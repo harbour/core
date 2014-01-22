@@ -9,4 +9,4 @@ HB_CFLAGS += -DUNDER_CE
 
 HB_GT_LIBS += gtwvt gtgui
 
-SYSLIBS += coredll ws2
+SYSLIBS += coredll ws2 iphlpapi
