@@ -882,7 +882,7 @@ FUNCTION Sp_Expand( cWord )
    LOCAL cExpand
 
    cWord := Upper( AllTrim( cWord ) )
-   x := AScan( sc_aContracts, {| jj | Left( jj[ 1 ], Len( cWord ) ) == cWord } ) // LEFTEQUAL()
+   x := AScan( sc_aContracts, {| jj | hb_LeftIs( jj[ 1 ], cWord ) } )
    IF x > 0
       cExpand := sc_aContracts[ x, 2 ]
    ENDIF

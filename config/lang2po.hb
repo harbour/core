@@ -58,8 +58,6 @@ STATIC FUNCTION Translatable( cString )
 
    RETURN .F.
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 STATIC FUNCTION CoreLangList()
 
    LOCAL aList := {}
@@ -70,7 +68,7 @@ STATIC FUNCTION CoreLangList()
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF LEFTEQUAL( cName, "HB_LANG_" )
+      IF hb_LeftIs( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF ( Len( cName ) != 5 .OR. "_" $ cName ) .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"

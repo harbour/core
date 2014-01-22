@@ -65,7 +65,7 @@
 
 #xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
-#define LEFTEQUAL( l, r )    iif( ValType( l ) $ "CM", Left( l, Len( r ) ) == r, l == r )
+#define LEFTEQUAL( l, r )    iif( ValType( l ) $ "CM", hb_LeftIs( l, r ), l == r )
 
 ANNOUNCE ARRAYRDD
 

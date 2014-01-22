@@ -362,8 +362,6 @@ EXTERNAL hbmk_KEYW
 #define HB_ISFIRSTIDCHAR( c )   ( HB_ISALPHA( c ) .OR. ( c ) == "_" )
 #define HB_ISNEXTIDCHAR( c )    ( HB_ISFIRSTIDCHAR( c ) .OR. hb_asciiIsDigit( c ) )
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 /* Logic (hack) to automatically add some libs to their
    right place in the liblist. In case of 'unicows' lib,
    this should be after all app lib and before any Windows
@@ -1353,15 +1351,15 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
       /* Detect system locations to enable shared library option by default */
       IF hbmk[ _HBMK_cPLAT ] == "beos"
          hbmk[ _HBMK_lSysLoc ] := ;
-            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
-            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
-            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
-            AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+            hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
+            hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
+            hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
+            AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
       ELSE
          hbmk[ _HBMK_lSysLoc ] := ;
-            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
-            LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
-            AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+            hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
+            hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
+            AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | hb_LeftIs( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
       ENDIF
    #endif
 
@@ -6208,7 +6206,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDCASE
          l_aPRG_TO_DO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
-            IF LEFTEQUAL( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
+            IF hb_LeftIs( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
                tmp3 := SubStr( tmp, 2 )
             ELSE
                tmp3 := tmp
@@ -7159,7 +7157,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             l_aPRG_TO_DO := {}
 
             FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
-               IF LEFTEQUAL( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
+               IF hb_LeftIs( tmp, "@" ) .AND. Lower( hb_FNameExt( tmp ) ) == ".clp"
                   tmp3 := SubStr( tmp, 2 )
                ELSE
                   tmp3 := tmp
@@ -8846,7 +8844,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          IF ! Empty( cModule )
             FOR EACH cDependency IN hb_ATokens( cModule )
                IF ( ! cDependency:__enumIsFirst() .OR. ; /* Skip own (module) name */
-                    ( LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp" ) ) .AND. ;
+                    ( hb_LeftIs( cFileName, "@" ) .AND. cExt == ".clp" ) ) .AND. ;
                     ! Empty( cDependency )
                   IF hbmk[ _HBMK_lDEBUGINC ]
                      _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER (NATIVE) %1$s", cDependency ) )
@@ -8900,7 +8898,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          ENDIF
       NEXT
    ELSE
-      IF ! lCMode .AND. LEFTEQUAL( cFileName, "@" ) .AND. cExt == ".clp"
+      IF ! lCMode .AND. hb_LeftIs( cFileName, "@" ) .AND. cExt == ".clp"
          FOR EACH cDependency IN clpfile_read( SubStr( cFileName, 2 ) )
             IF ! Empty( cDependency )
                IF hbmk[ _HBMK_lDEBUGINC ]
@@ -11841,7 +11839,7 @@ STATIC FUNCTION hbmk_builtin_Is( cFileName )
 
    cFileName := hb_FNameNameExt( cFileName )
 
-   RETURN LEFTEQUAL( cFileName, _HBMK_BUILTIN_FILENAME_MARKER_ ) .AND. ;
+   RETURN hb_LeftIs( cFileName, _HBMK_BUILTIN_FILENAME_MARKER_ ) .AND. ;
       Len( cFileName ) > Len( _HBMK_BUILTIN_FILENAME_MARKER_ )
 
 STATIC FUNCTION hbmk_builtin_Exists( cFileName )
@@ -12326,7 +12324,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
             cLine := AllTrim( cLine )
-            IF LEFTEQUAL( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine .AND. !( "HB_FS_STATIC" $ cLine )
+            IF hb_LeftIs( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine .AND. !( "HB_FS_STATIC" $ cLine )
                n := 4
                WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
                   cFuncName += c
@@ -12707,7 +12705,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
       IF ! Empty( cLine )
          FOR EACH cWord IN rtlnk_tokens( cLine )
             DO CASE
-            CASE LEFTEQUAL( cWord, "#" )
+            CASE hb_LeftIs( cWord, "#" )
                EXIT
             CASE nMode == RTLNK_MODE_OUT
                cFileOut := hb_DirSepToOS( cWord )
@@ -12743,7 +12741,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                CASE nMode == RTLNK_MODE_SKIPNEXT
                   nMode := RTLNK_MODE_SKIP
                ENDCASE
-            CASE LEFTEQUAL( cWord, "@" )
+            CASE hb_LeftIs( cWord, "@" )
                cWord := SubStr( cWord, 2 )
                cCommands := rtlnk_read( @cWord, aPrevFiles )
                IF cCommands == NIL
@@ -12757,28 +12755,28 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
                cWord := Upper( cWord )
                IF Len( cWord ) >= 2
                   DO CASE
-                  CASE LEFTEQUAL( "OUTPUT", cWord )
+                  CASE hb_LeftIs( "OUTPUT", cWord )
                      nMode := RTLNK_MODE_OUT
-                  CASE LEFTEQUAL( "FILE", cWord )
+                  CASE hb_LeftIs( "FILE", cWord )
                      nMode := RTLNK_MODE_FILE
-                  CASE LEFTEQUAL( "LIBRARY", cWord )
+                  CASE hb_LeftIs( "LIBRARY", cWord )
                      nMode := RTLNK_MODE_LIB
-                  CASE LEFTEQUAL( "MODULE", cWord ) .OR. ;
-                       LEFTEQUAL( "EXCLUDE", cWord ) .OR. ;
-                       LEFTEQUAL( "REFER", cWord ) .OR. ;
-                       LEFTEQUAL( "INTO", cWord )
+                  CASE hb_LeftIs( "MODULE", cWord ) .OR. ;
+                       hb_LeftIs( "EXCLUDE", cWord ) .OR. ;
+                       hb_LeftIs( "REFER", cWord ) .OR. ;
+                       hb_LeftIs( "INTO", cWord )
                      nMode := RTLNK_MODE_SKIP
                   /* Blinker extension */
-                  CASE LEFTEQUAL( "BLINKER", cWord )
+                  CASE hb_LeftIs( "BLINKER", cWord )
                      /* skip Blinker commands */
                      EXIT
-                  CASE LEFTEQUAL( "ECHO", cWord )
+                  CASE hb_LeftIs( "ECHO", cWord )
                      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Blinker ECHO: %1$s" ), SubStr( cLine, 6 ) ) )
                      EXIT
-                  CASE LEFTEQUAL( "MAP", cWord )
+                  CASE hb_LeftIs( "MAP", cWord )
                      hbmk[ _HBMK_lMAP ] := .T.
                      EXIT
-                  CASE LEFTEQUAL( "NOBELL", cWord )
+                  CASE hb_LeftIs( "NOBELL", cWord )
                      hbmk[ _HBMK_lBEEP ] := .F.
                      EXIT
                   OTHERWISE /* TODO: add other Blinker commands */
@@ -14683,7 +14681,7 @@ STATIC PROCEDURE __hbshell_ext_static_init()
    nCount := __dynsCount()
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF LEFTEQUAL( cName, "__HBEXTERN__" ) .AND. ;
+      IF hb_LeftIs( cName, "__HBEXTERN__" ) .AND. ;
          ! HBMK_IS_IN( cName, "__HBEXTERN__HBCPAGE__" )
          hbsh[ _HBSH_hLibExt ][ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
       ENDIF

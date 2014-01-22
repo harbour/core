@@ -55,8 +55,6 @@
 #define RF_STATE_CODE   3
 #define RF_STATE_RET    4
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 // TOFIX:
 //   1. 'var ++'
 //   2. '- 1' for numeric literals.
@@ -325,10 +323,10 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                   cToken2 := Lower( hb_tokenGet( cLine, 2 ) )
                   IF Left( cToken1, 1 ) == "#"
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        ( LEFTEQUAL( "static", cToken1 ) .AND. ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
-                        ( Len( cToken2 ) >= 4 .AND. LEFTEQUAL( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
-                        LEFTEQUAL( "function", cToken1 ) .OR. ;
-                        LEFTEQUAL( "procedure", cToken1 ) .OR. ;
+                        ( hb_LeftIs( "static", cToken1 ) .AND. ( hb_LeftIs( "function", cToken2 ) .OR. hb_LeftIs( "procedure", cToken2 ) ) ) .OR. ;
+                        ( Len( cToken2 ) >= 4 .AND. hb_LeftIs( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
+                        hb_LeftIs( "function", cToken1 ) .OR. ;
+                        hb_LeftIs( "procedure", cToken1 ) .OR. ;
                         ( "method" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "class" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "create" == cToken1 .AND. "class" == cToken2 .AND. ! lClass ) )
@@ -344,21 +342,21 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                         RETURN .F.
                      ENDIF
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        LEFTEQUAL( "request", cToken1 ) .OR. ;
-                        LEFTEQUAL( "announce", cToken1 ) .OR. ;
-                        LEFTEQUAL( "dynamic", cToken1 ) .OR. ;
-                        LEFTEQUAL( "external", cToken1 ) .OR. ;
-                        LEFTEQUAL( "thread", cToken1 ) )
+                        hb_LeftIs( "request", cToken1 ) .OR. ;
+                        hb_LeftIs( "announce", cToken1 ) .OR. ;
+                        hb_LeftIs( "dynamic", cToken1 ) .OR. ;
+                        hb_LeftIs( "external", cToken1 ) .OR. ;
+                        hb_LeftIs( "thread", cToken1 ) )
                      nState := 0
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        LEFTEQUAL( "local", cToken1 ) .OR. ;
-                        LEFTEQUAL( "private", cToken1 ) .OR. ;
-                        LEFTEQUAL( "public", cToken1 ) .OR. ;
-                        LEFTEQUAL( "field", cToken1 ) .OR. ;
-                        LEFTEQUAL( "static", cToken1 ) .OR. ;
-                        LEFTEQUAL( "memvar", cToken1 ) .OR. ;
-                        LEFTEQUAL( "parameters", cToken1 ) .OR. ;
-                        LEFTEQUAL( "declare", cToken1 ) )
+                        hb_LeftIs( "local", cToken1 ) .OR. ;
+                        hb_LeftIs( "private", cToken1 ) .OR. ;
+                        hb_LeftIs( "public", cToken1 ) .OR. ;
+                        hb_LeftIs( "field", cToken1 ) .OR. ;
+                        hb_LeftIs( "static", cToken1 ) .OR. ;
+                        hb_LeftIs( "memvar", cToken1 ) .OR. ;
+                        hb_LeftIs( "parameters", cToken1 ) .OR. ;
+                        hb_LeftIs( "declare", cToken1 ) )
                      IF nStatePrev == RF_STATE_FUNC
                         nState := RF_STATE_VAR
                      ENDIF

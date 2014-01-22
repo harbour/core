@@ -61,7 +61,7 @@ proc main()
    nMax  := nUMax := 0x0000
 
    for each cLine in hb_aTokens( hb_memoRead( "BIG5.TXT" ), hb_eol() )
-      if left( cLine, Len( "0x" ) ) == "0x" .and. ( n := hb_at( "0x", cLine, 7 ) ) != 0  /* LEFTEQUAL() */
+      if hb_leftis( cLine, "0x" ) .and. ( n := hb_at( "0x", cLine, 7 ) ) != 0
          nBG5 := hb_hexToNum( substr( cLine, 3, 4 ) )
          nU16 := hb_hexToNum( substr( cLine, n + 2, 4 ) )
          if nBG5 == 0 .or. nU16 == 0
@@ -258,7 +258,7 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if left( c, Len( cLine ) ) == cLine  /* LEFTEQUAL() */
+         if hb_leftis( c, cLine )
             cLine := c
             exit
          endif

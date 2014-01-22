@@ -285,13 +285,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
    SET ORDER TO 0
 
    SET EXACT ON
-   LOCATE for FIELD->CHAR = "J RECORD"  /* LEFTEQUAL() */
+   LOCATE for FIELD->CHAR = "J RECORD"  /* hb_LeftIs() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
    SET EXACT OFF
-   LOCATE for FIELD->CHAR = "J RECORD"  /* LEFTEQUAL() */
+   LOCATE for FIELD->CHAR = "J RECORD"  /* hb_LeftIs() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
    ENDIF
@@ -300,16 +300,16 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* LEFTEQUAL() */
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* LEFTEQUAL() */
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
    SET EXACT OFF
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* LEFTEQUAL() */
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* LEFTEQUAL() */
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF

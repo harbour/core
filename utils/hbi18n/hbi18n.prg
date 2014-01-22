@@ -54,8 +54,6 @@
 #define _HB_I18N_GENHBL 2
 #define _HB_I18N_TRANS  3
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 #define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
 
 ANNOUNCE HB_GTSYS
@@ -78,7 +76,7 @@ PROCEDURE Main( ... )
    aFiles := {}
    nMode := 0
    FOR n := 1 TO Len( aParams )
-      IF LEFTEQUAL( aParams[ n ], "-" )
+      IF hb_LeftIs( aParams[ n ], "-" )
          cParam := SubStr( aParams[ n ], 2 )
          DO CASE
          CASE cParam == "m"
@@ -99,10 +97,10 @@ PROCEDURE Main( ... )
             ELSE
                nMode := _HB_I18N_TRANS
             ENDIF
-         CASE LEFTEQUAL( cParam, "o" )
+         CASE hb_LeftIs( cParam, "o" )
             IF ! Empty( cParam := SubStr( cParam, 2 ) )
                cFileOut := cParam
-            ELSEIF n < Len( aParams ) .AND. ! LEFTEQUAL( aParams[ n + 1 ], "-" )
+            ELSEIF n < Len( aParams ) .AND. ! hb_LeftIs( aParams[ n + 1 ], "-" )
                cFileOut := aParams[ ++n ]
             ELSE
                lError := .T.

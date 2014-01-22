@@ -66,7 +66,7 @@ proc main( cdp, info, unicode )
          if c + chr( 0 ) > chr( a[ i + 1 ] ) + chr( 0 )
             ? "character", charis( c ), "is wrongly sorted"
             lBin := lWarn := .t.
-         elseif ! lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )  /* LEFTEQUAL() */
+         elseif ! lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )  /* hb_LeftIs() */
             ? "character", charis( c ), "and", chr( a[ i + 1 ] ), ;
               "have the same weight"
             lWarn := .t.
@@ -178,8 +178,8 @@ proc main( cdp, info, unicode )
       endif
    next
    if ! cOrd == cOrd2
-      if cUp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" .and. ;  /* LEFTEQUAL() */
-         cLo = "abcdefghijklmnopqrstuvwxyz"          /* LEFTEQUAL() */
+      if cUp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" .and. ;  /* hb_LeftIs() */
+         cLo = "abcdefghijklmnopqrstuvwxyz"          /* hb_LeftIs() */
          cUp2 := substr( cUp, 27 )
          cLo2 := substr( cLo, 27 )
          cOrd2 := ""
@@ -363,13 +363,13 @@ static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
    if empty( unicode )
 #ifdef __HARBOUR__
       unicode := hb_cdpUniID()
-      if unicode = "cp"  /* LEFTEQUAL() */
+      if unicode = "cp"  /* hb_LeftIs() */
          unicode := substr( unicode, 3 )
-      elseif unicode = "iso" .or. unicode = "bg-"  /* LEFTEQUAL() */
+      elseif unicode = "iso" .or. unicode = "bg-"  /* hb_LeftIs() */
          unicode := substr( unicode, 4 )
       endif
       unicode := upper( strtran( unicode, "-", "_" ) )
-      if unicode = "KAM" .or. unicode = "MAZ" .or. unicode = "MIC"  /* LEFTEQUAL() */
+      if unicode = "KAM" .or. unicode = "MAZ" .or. unicode = "MIC"  /* hb_LeftIs() */
          unicode := left( unicode, 3 )
       endif
 #else
