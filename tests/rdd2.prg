@@ -45,9 +45,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       NotifyUser( "Usage: TESTRDD2 RDDTYPE [ADSMODE]" + hb_eol() + ;
          hb_eol() + ;
-         "RDDTYPE = DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
+         "RDDTYPE: DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
          hb_eol() + ;
-         "ADSMODE = LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + hb_eol() + ;
+         "ADSMODE: LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + hb_eol() + ;
          "(If specify SERVER, must be run from a drive suported by ADS server)", .T. )
 
 #ifdef WITH_ADS
@@ -285,13 +285,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
    SET ORDER TO 0
 
    SET EXACT ON
-   LOCATE for FIELD->CHAR = "J RECORD"
+   LOCATE for FIELD->CHAR = "J RECORD"  /* LEFTEQUAL() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
    SET EXACT OFF
-   LOCATE for FIELD->CHAR = "J RECORD"
+   LOCATE for FIELD->CHAR = "J RECORD"  /* LEFTEQUAL() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
    ENDIF
@@ -300,16 +300,16 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* LEFTEQUAL() */
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* LEFTEQUAL() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
    SET EXACT OFF
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* LEFTEQUAL() */
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* LEFTEQUAL() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF

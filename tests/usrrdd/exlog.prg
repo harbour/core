@@ -50,39 +50,38 @@ STATIC FUNCTION MyToString( cCmd, nWA, xPar1, xPar2, xPar3 )
 
    DO CASE
    CASE cCmd == "CREATE"
-      // Parameters received: xPar1 = aOpenInfo
+      // Parameters received: xPar1: aOpenInfo
       cString := xPar1[ UR_OI_NAME ]
    CASE cCmd == "CREATEFIELDS"
-      // Parameters received: xPar1 = aStruct
+      // Parameters received: xPar1: aStruct
       cString := hb_ValToExp( xPar1 )
    CASE cCmd == "OPEN"
-      // Parameters received: xPar1 = aOpenInfo
-      // cString := 'Table : "' + xPar1[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + hb_ntos( nWA )
+      // Parameters received: xPar1: aOpenInfo
+      // cString := 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
       // In this example I don't want to log Open Command
    CASE cCmd == "CLOSE"
-      // Parameters received: xPar1 = cTableName, xPar2 = cAlias
-      // cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + hb_ntos( nWA )
+      // Parameters received: xPar1: cTableName, xPar2: cAlias
+      // cString := 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
       // In this example I don't want to log Close Command
    CASE cCmd == "APPEND"
-      // Parameters received: xPar1 = lUnlockAll
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      // Parameters received: xPar1: lUnlockAll
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "DELETE"
       // Parameters received: none
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "RECALL"
       // Parameters received: none
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "PUTVALUE"
-      // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
+      // Parameters received: xPar1: nField, xPar2: xValue, xPar3: xOldValue
       HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
       cString := Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
    CASE cCmd == "ZAP"
       // Parameters received: none
-      cString := 'Alias : "' + Alias() + ' Table : "' + dbInfo( DBI_FULLPATH ) + '"'
+      cString := 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
    ENDCASE
 
    RETURN cString
 
 FUNCTION hb_LogRddInherit()
-
    RETURN "DBFCDX"

@@ -9,8 +9,8 @@ PROCEDURE Main()
    ? 'b := "X"', b
 
    testfun( @a, @b )
-   ? 'return of "a" should = 20', a, iif( a == 20, "worked", "failed" )
-   ? 'return of "b" should = A', b, iif( b == "A", "worked", "failed" )
+   ? 'return of "a" should == 20', a, iif( a == 20, "worked", "failed" )
+   ? 'return of "b" should == A', b, iif( b == "A", "worked", "failed" )
 
    RETURN
 

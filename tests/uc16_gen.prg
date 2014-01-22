@@ -343,7 +343,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    nLine := int( 2 ^ ( nBit + 1 ) )
 
    cLine := ""
-   hVal := {=>}
+   hVal := { => }
    aInd := {}
    for n := nMin to nMax
       cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
@@ -355,7 +355,7 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if c = cLine
+         if Left( c, Len( cLine ) ) == cLine  /* LEFTEQUAL() */
             cLine := c
             exit
          endif
@@ -410,7 +410,7 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if c = cLine
+         if Left( c, Len( cLine ) ) == cLine  /* LEFTEQUAL() */
             cLine := c
             exit
          endif

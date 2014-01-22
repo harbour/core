@@ -106,7 +106,7 @@ FUNCTION TTextFile()  /* must be a public function */
       s_oFile:AddData( "lEoF"       )             // End of file
       s_oFile:AddData( "cBlock"     )             // Storage block
       s_oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      s_oFile:AddData( "cMode"      )             // Mode of file use: R = read, W = write
+      s_oFile:AddData( "cMode"      )             // Mode of file use: R: read, W: write
 
       s_oFile:AddMethod( "New"    , @New()     )  // Constructor
       s_oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
@@ -219,7 +219,7 @@ STATIC FUNCTION READ()
          ::nLine++
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
-            cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
+            cRet     := Left( ::cBlock, nCRPos - 1 )
             ::cBlock := SubStr( ::cBlock, nCRPos + 1 )
          ELSE                                   // No complete line
             cRet     := ::cBlock
@@ -231,7 +231,7 @@ STATIC FUNCTION READ()
          ENDIF
          nEoFPos := hb_BAt( Chr( 26 ), cRet )
          IF nEoFPos != 0                        // End of file read
-            cRet   := hb_BSubStr( cRet, 1, nEoFPos - 1 )
+            cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
          cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR
@@ -280,7 +280,7 @@ STATIC FUNCTION Write( xTxt )
 //
 // Go to a specified line number
 //
-STATIC FUNCTION GOTO( nLine )
+STATIC FUNCTION Goto( nLine )
 
    LOCAL self   := QSelf()
    LOCAL nWhere := 1

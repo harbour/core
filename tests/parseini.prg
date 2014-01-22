@@ -43,7 +43,7 @@ PROCEDURE Main( cName )
    ENDIF
 
    ?
-   ? "Adding section 'Added', with key NEW = new"
+   ? "Adding section 'Added', with key NEW := new"
    hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 
@@ -92,7 +92,7 @@ PROCEDURE Main( cName )
    ENDIF
 
    ?
-   ? "Adding section 'Added', with key NEW = new"
+   ? "Adding section 'Added', with key NEW := new"
    hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 

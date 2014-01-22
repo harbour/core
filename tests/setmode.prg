@@ -2,7 +2,10 @@
 
 // Test SetMode() for Harbour
 
-#define HB_NOT_SUPPORTED  "Video mode not supported on this system.."
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 #define HB_VROW   1
 #define HB_VCOL   2
 #define HB_PROMPT 3
@@ -41,7 +44,7 @@ PROCEDURE Main()
          IF SetMode( aVModes[ nMode ][ HB_VROW ], aVModes[ nMode ][ HB_VCOL ] )
             TESTBOX( aVModes[ nMode ][ HB_PROMPT ] )
          ELSE
-            @ MaxRow(), 0 SAY HB_NOT_SUPPORTED
+            @ MaxRow(), 0 SAY "Video mode not supported on this system.."
             Inkey( 0 )
          ENDIF
       ENDIF
@@ -68,8 +71,8 @@ STATIC PROCEDURE TESTBOX( cMode )
       @ nRow, 18 SAY nRow
    NEXT
 
-   @ 4, 2 SAY "MaxRow() = " + Str( MaxRow(), 3 )
-   @ 5, 2 SAY "MaxCol() = " + Str( MaxCol(), 3 )
+   @ 4, 2 SAY "MaxRow() == " + hb_ntos( MaxRow() )
+   @ 5, 2 SAY "MaxCol() == " + hb_ntos( MaxCol() )
    Inkey( 0 )
 
    RETURN

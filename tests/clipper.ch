@@ -44,6 +44,8 @@
 #xtranslate HB_ISBLOCK( <v> )              => ( ValType( <v> ) == "B" )
 #xtranslate HB_ISEVALITEM( <v> )           => ( ValType( <v> ) == "B" )
 
+#xtranslate hb_LeftIs( l, r )              ( Left( l, Len( r ) ) == r )
+
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
 #xtranslate hb_keyChar( <c> )              => iif( <c> >= 32 .AND. <c> <= 255, Chr( <c> ), "" )
 #xtranslate hb_keyPut( <n> )               => __Keyboard( Chr( <n> ) )

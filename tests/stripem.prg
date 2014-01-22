@@ -54,7 +54,7 @@ CREATE CLASS TTextFile
    VAR lEoF                    // End of file
    VAR cBlock                  // Storage block
    VAR nBlockSize              // Size of read-ahead buffer
-   VAR cMode                   // Mode of file use  R = read, W = write
+   VAR cMode                   // Mode of file use: R: read, W: write
 
    METHOD New( cFileName, cMode, nBlock ) // Constructor
    METHOD Dispose()                       // Clean up code
@@ -148,7 +148,7 @@ METHOD Read() CLASS TTextFile
          ::nLine++
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
-            cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
+            cRet     := Left( ::cBlock, nCRPos - 1 )
             ::cBlock := SubStr( ::cBlock, nCRPos + 1 )
          ELSE                                   // No complete line
             cRet     := ::cBlock
@@ -160,7 +160,7 @@ METHOD Read() CLASS TTextFile
          ENDIF
          nEoFPos := hb_BAt( Chr( 26 ), cRet )
          IF nEoFPos != 0                        // End of file read
-            cRet   := hb_BSubStr( cRet, 1, nEoFPos - 1 )
+            cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
          cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR

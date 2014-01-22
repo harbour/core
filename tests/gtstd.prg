@@ -11,7 +11,8 @@ PROCEDURE Main()
    PosNow()
    ?? "Output test. First line, no newlines."
 
-   ? "Press a key to continue: "; ?? Inkey( 0 )
+   ? "Press a key to continue:"
+   ?? "", hb_ntos( Inkey( 0 ) )
 
    ? "This is row", hb_ntos( Row() )
 
@@ -23,10 +24,10 @@ PROCEDURE Main()
    PosNow()
 
    ?
-   ? "Scroll test: pre = "
+   ? "Scroll test: pre =", ""
    PosNow()
 // Scroll( 0, 0, MaxRow(), MaxCol(), -3, 0 )
-   ?? " post = "
+   ?? " post =", ""
    PosNow()
 
    ?

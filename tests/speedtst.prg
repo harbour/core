@@ -166,7 +166,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    nMT := 0
    for j := 1 to len( aParams )
       cParam := lower( aParams[ j ] )
-      if cParam = "--thread"
+      if left( cParam, len( "--thread" ) ) == "--thread"  /* LEFTEQUAL() */
          if substr( cParam, 9, 1 ) == "="
             if isdigit( substr( cParam, 10, 1 ) )
                nMT := val( substr( cParam, 10 ) )
@@ -180,14 +180,14 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
          else
             lSyntax := .t.
          endif
-      elseif cParam = "--exclude="
+      elseif left( cParam, len( "--exclude=" ) ) == "--exclude="  /* LEFTEQUAL() */
          if substr( cParam, 11 ) == "mem"
             cExclude += cMemTests
          else
             cExclude += strtran( strtran( strtran( substr( cParam, 11 ), ;
                         ".", " " ), ".", " " ), "/", " " ) + " "
          endif
-      elseif cParam = "--only="
+      elseif left( cParam, len( "--only=" ) ) == "--only="  /* LEFTEQUAL() */
          cExclude := ""
          if substr( cParam, 8 ) == "mem"
             cParam := cMemTests
@@ -380,7 +380,7 @@ TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
 
 TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
-          CODE x := a[ i % ARR_LEN + 1 ] = s
+          CODE x := a[ i % ARR_LEN + 1 ] = s  /* LEFTEQUAL() */
 
 TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
@@ -1020,8 +1020,8 @@ return
       {
          #include <sys/time.h>
          struct timeval tv;
-         if( gettimeofday(&tv, NULL) == 0 )
-            nret = (double) tv.tv_sec + (double) (tv.tv_usec) / 1000000;
+         if( gettimeofday( &tv, NULL ) == 0 )
+            nret = ( double ) tv.tv_sec + ( double ) ( tv.tv_usec ) / 1000000;
       }
       #endCinline
    return nret

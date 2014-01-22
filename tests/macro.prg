@@ -43,7 +43,7 @@ PROCEDURE Main()
 
    SubFun()
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
 
    ? M->NewPublicVar
 
@@ -75,7 +75,7 @@ STATIC FUNCTION New()
 
 STATIC PROCEDURE SubFun()
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
    // Testing conflict with KEY WORDS
    PRIVATE PRIVATE := "I am a Var named PRIVATE ", &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate := "I was born in Run Time"
@@ -93,7 +93,7 @@ STATIC PROCEDURE SubFun()
 
    &cMainPrivate := "In SubFun()"
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] in SubFun() PRIVATE'
 
    RETURN
 

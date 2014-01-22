@@ -397,7 +397,7 @@ void hb_vmLock( void ) {}
 void hb_vmUnlock( void ) {}
 HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait ) { HB_SYMBOL_UNUSED( fWait ); return HB_TRUE; }
 void hb_vmResumeThreads( void ) {}
-/*
+#if 0
 HB_BOOL hb_vmThreadRegister( void * Cargo ) { HB_SYMBOL_UNUSED( Cargo ); return HB_FALSE; }
 void hb_vmThreadRelease( void * Cargo )
 {
@@ -407,7 +407,7 @@ void hb_vmThreadRelease( void * Cargo )
    if( pThItm )
       hb_itemRelease( pThItm );
 }
-*/
+#endif
 #else
 
 static HB_CRITICAL_NEW( s_vmMtx );
@@ -3918,7 +3918,7 @@ static void hb_vmEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
-/*
+#if 0
    else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
    {
       HB_BOOL fResult = pItem1->item.asHash.value == pItem2->item.asHash.value;
@@ -3927,7 +3927,7 @@ static void hb_vmEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
- */
+#endif
    else if( hb_objOperatorCall( HB_OO_OP_EQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
    else
@@ -7445,10 +7445,10 @@ HB_BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
    {
       PHB_SYMBOLS pLastSymbols = s_pSymbols;
 
-/*
+#if 0
       if( pSym->scope.value & HB_FS_PCODEFUNC )
          * pSymbols = pSym->value.pCodeFunc->pSymbols;
-*/
+#endif
 
       while( pLastSymbols )
       {
@@ -7928,7 +7928,9 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
       hSymScope = pSymbol->scope.value;
       pNewSymbols->hScope |= hSymScope;
-      /* fPublic = ( hSymScope & ( HB_FS_PUBLIC | HB_FS_MESSAGE | HB_FS_MEMVAR ) ) != 0; */
+#if 0
+      fPublic = ( hSymScope & ( HB_FS_PUBLIC | HB_FS_MESSAGE | HB_FS_MEMVAR ) ) != 0;
+#endif
       fPublic = ( hSymScope & ( HB_FS_INITEXIT | HB_FS_STATIC | HB_FS_FRAME ) ) == 0;
       if( fStatics )
       {

@@ -29,7 +29,7 @@ PROCEDURE Main()
 
    MENU TO testvar
 
-   @  9, 10 SAY "Your Choice = " + hb_ntos( testvar )
+   @  9, 10 SAY "Your Choice: " + hb_ntos( testvar )
 
    Inkey( 0 )
 
@@ -47,7 +47,7 @@ PROCEDURE Main()
 
    MENU TO m_testvar
 
-   @  9, 10 SAY "Your Choice = " + hb_ntos( m_testvar )
+   @  9, 10 SAY "Your Choice: " + hb_ntos( m_testvar )
 
    RETURN
 
@@ -68,7 +68,7 @@ STATIC PROCEDURE Recurse()
 
    @  7, 10 SAY "Press <F8> to recurse into MENU TO"
 
-   @  9, 50 SAY "Your Choice = " + hb_ntos( testvar )
+   @  9, 50 SAY "Your Choice: " + hb_ntos( testvar )
 
    SetKey( K_F8, {|| Recurse() } )
 
