@@ -55,6 +55,7 @@
 #include "fileio.ch"
 #include "hbgtinfo.ch"
 #include "hbhash.ch"
+#include "hbserial.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
