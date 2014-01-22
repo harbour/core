@@ -2461,7 +2461,10 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
 
    setAttribute( Qt::WA_StaticContents );
    setAttribute( Qt::WA_OpaquePaintEvent );
-   setAttribute( Qt::WA_KeyCompression );
+   /* Warning! Qt::WA_KeyCompression attribute creates problems when
+    * barcode readers are used - some characters are eaten [druzus]
+    */
+   /* setAttribute( Qt::WA_KeyCompression ); */
 
    /* Qt::WA_InputMethodEnabled disables support for
     * national characters in few European countries
