@@ -18,8 +18,8 @@
 
 {!HBMK_HAS_QT5&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
-{!HBMK_HAS_QT5}-depcontrol=qt:no{HB_BUILD_3RDEXT='no'}
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
+{!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
 {!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include/qt4
 {!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/lib/qt4/include
 {!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include
