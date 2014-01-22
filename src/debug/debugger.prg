@@ -445,15 +445,15 @@ METHOD Activate() CLASS HBDebugger
    ::LoadCallStack()
    ::SaveAppState()
 
-   IF ! ::lActive
+   IF ::lActive
+      ::SaveAppScreen()
+   ELSE
       ::lActive := .T.
       ::Show()
       IF ::lShowCallStack
          ::ShowCallStack()
       ENDIF
       lFirst := .T.
-   ELSE
-      ::SaveAppScreen()
    ENDIF
 
    ::LoadVars()
@@ -880,11 +880,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE Empty( cCommand )
       RETURN ""
 
-   CASE starts( cCommand, "??" )
+   CASE hb_LeftIs( cCommand, "??" )
       cParam := AllTrim( SubStr( cCommand, 3 ) )
       cCommand := "??"
 
-   CASE starts( cCommand, "?" )
+   CASE hb_LeftIs( cCommand, "?" )
       cParam := SubStr( cCommand, 2 )
       cCommand := "?"
 
@@ -918,7 +918,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ENDIF
       ::RefreshVars()
 
-   CASE starts( "ANIMATE", cCommand, 4 )
+   CASE hb_LeftIsN( "ANIMATE", cCommand, 4 )
       IF ::lActive
          ::lAnimate := .T.
          ::Animate()
@@ -927,7 +927,9 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
 
    CASE cCommand == "BP"
       /* TODO: Support BP <cFuncName> */
-      IF ! Empty( cParam )
+      IF Empty( cParam )
+         ::ToggleBreakPoint()
+      ELSE
          IF ( n := At( " ", cParam ) ) > 0
             cParam1 := AllTrim( SubStr( cParam, n + 1 ) )
             cParam := Left( cParam, n - 1 )
@@ -935,14 +937,12 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             cParam1 := ::cPrgName
          ENDIF
          ::ToggleBreakPoint( Val( cParam ), cParam1 )
-      ELSE
-         ::ToggleBreakPoint()
       ENDIF
 
-   CASE starts( "CALLSTACK", cCommand, 4 )
+   CASE hb_LeftIsN( "CALLSTACK", cCommand, 4 )
       ::Stack( Upper( cParam ) == "ON" )
 
-   CASE starts( "DELETE", cCommand, 3 )
+   CASE hb_LeftIsN( "DELETE", cCommand, 3 )
       IF ( n := At( " ", cParam ) ) > 0
          cParam1 := Upper( AllTrim( SubStr( cParam, n + 1 ) ) )
          cParam := Left( cParam, n - 1 )
@@ -950,7 +950,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       cParam := Upper( cParam )
 
       DO CASE
-      CASE cParam == "ALL" .AND. starts( cParam1, "B" )
+      CASE cParam == "ALL" .AND. hb_LeftIs( cParam1, "B" )
          ::DeleteBreakPoint( cParam )
       CASE cParam == "BP"
          ::DeleteBreakPoint( cParam1 )
@@ -963,18 +963,18 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ::OsShell()
       SetCursor( SC_NORMAL )
 
-   CASE starts( "FILE", cCommand )
+   CASE hb_LeftIs( "FILE", cCommand )
       cParam := Upper( cParam )
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "OPEN", cParam )
+      CASE hb_LeftIs( "OPEN", cParam )
          ::Open()
-      CASE starts( "RESUME", cParam )
+      CASE hb_LeftIs( "RESUME", cParam )
          ::Resume()
-      CASE starts( "OSSHELL", cParam )
+      CASE hb_LeftIs( "OSSHELL", cParam )
          ::OSShell()
-      CASE starts( "EXIT", cParam )
+      CASE hb_LeftIs( "EXIT", cParam )
          ::Quit()
       OTHERWISE
          cResult := "Command error"
@@ -983,16 +983,16 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE cCommand == "FIND"
       ::Locate( 0, cParam )
 
-   CASE starts( "GOTO", cCommand, 4 ) .AND. Val( cParam ) > 0
+   CASE hb_LeftIsN( "GOTO", cCommand, 4 ) .AND. Val( cParam ) > 0
       ::GoToLine( Val( cParam ) )
 
-   CASE starts( "GO", cCommand )
+   CASE hb_LeftIs( "GO", cCommand )
       ::Go()
 
    CASE cCommand == "HELP"
       ::ShowHelp()
 
-   CASE starts( "INPUT", cCommand, 4 )
+   CASE hb_LeftIsN( "INPUT", cCommand, 4 )
       IF Empty( cParam )
          cParam := AllTrim( ::InputBox( "File name" ) )
          IF LastKey() == K_ESC
@@ -1017,47 +1017,47 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          cResult := "Command error"
       ENDCASE
 
-   CASE starts( "LOCATE", cCommand )
+   CASE hb_LeftIs( "LOCATE", cCommand )
       cParam := Upper( cParam )
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "FIND", cParam )
+      CASE hb_LeftIs( "FIND", cParam )
          ::Locate()
-      CASE starts( "NEXT", cParam )
+      CASE hb_LeftIs( "NEXT", cParam )
          ::FindNext()
-      CASE starts( "PREVIOUS", cParam )
+      CASE hb_LeftIs( "PREVIOUS", cParam )
          ::FindPrevious()
-      CASE starts( "GOTOLINE", cParam )
+      CASE hb_LeftIs( "GOTOLINE", cParam )
          ::SearchLine()
-      CASE starts( "CASESENSITIVE", cParam )
+      CASE hb_LeftIs( "CASESENSITIVE", cParam )
          ::ToggleCaseSensitive()
       OTHERWISE
          cResult := "Command error"
       ENDCASE
 
-   CASE starts( "MONITOR", cCommand )
+   CASE hb_LeftIs( "MONITOR", cCommand )
 
       cParam := Upper( cParam )
 
       /* Here the order of CASEs makes sense: M P is Public, while M Pr is
        * Private, etc. */
       DO CASE
-      CASE starts( "PUBLIC", cParam )
+      CASE hb_LeftIs( "PUBLIC", cParam )
          ::Public()
-      CASE starts( "PRIVATE", cParam )
+      CASE hb_LeftIs( "PRIVATE", cParam )
          ::Private()
-      CASE starts( "STATIC", cParam )
+      CASE hb_LeftIs( "STATIC", cParam )
          ::Static()
-      CASE starts( "LOCAL", cParam )
+      CASE hb_LeftIs( "LOCAL", cParam )
          ::Local()
-      CASE starts( "GLOBAL", cParam )
+      CASE hb_LeftIs( "GLOBAL", cParam )
          ::Global()
-      CASE starts( "ALL", cParam )
+      CASE hb_LeftIs( "ALL", cParam )
          ::All()
-      CASE starts( "SORT", cParam )
+      CASE hb_LeftIs( "SORT", cParam )
          ::Sort()
-      CASE starts( "SHOWALLGLOBALS", cParam )
+      CASE hb_LeftIs( "SHOWALLGLOBALS", cParam )
          ::ShowAllGlobals()
       OTHERWISE
          cResult := "Command error"
@@ -1076,7 +1076,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          cResult := "Command error"
       ENDSWITCH
 
-   CASE starts( "OPTIONS", cCommand )
+   CASE hb_LeftIs( "OPTIONS", cCommand )
 
       IF ( n := At( " ", cParam ) ) > 0
          cParam1 := AllTrim( SubStr( cParam, n + 1 ) )
@@ -1088,19 +1088,19 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "PREPROCESSEDCODE", cParam )
+      CASE hb_LeftIs( "PREPROCESSEDCODE", cParam )
          ::OpenPPO()
-      CASE starts( "LINENUMBERS", cParam )
+      CASE hb_LeftIs( "LINENUMBERS", cParam )
          ::LineNumbers()
-      CASE starts( "EXCHANGESCREENS", cParam ) ;
-           .OR. starts( "SWAPONINPUT", cParam ) ;
-           .OR. starts( "MENUBAR", cParam )
+      CASE hb_LeftIs( "EXCHANGESCREENS", cParam ) .OR. ;
+           hb_LeftIs( "SWAPONINPUT", cParam ) .OR. ;
+           hb_LeftIs( "MENUBAR", cParam )
          ::NotSupported()
-      CASE starts( "CODEBLOCKTRACE", cParam )
+      CASE hb_LeftIs( "CODEBLOCKTRACE", cParam )
          ::CodeblockTrace()
-      CASE starts( "MONODISPLAY", cParam )
+      CASE hb_LeftIs( "MONODISPLAY", cParam )
          ::MonoDisplay()
-      CASE starts( "COLORS", cParam )
+      CASE hb_LeftIs( "COLORS", cParam )
          IF Empty( cParam1 )
             ::Colors()
          ELSE
@@ -1117,43 +1117,43 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             NEXT
             ::LoadColors()
          ENDIF
-      CASE starts( "TABWIDTH", cParam )
+      CASE hb_LeftIs( "TABWIDTH", cParam )
          IF Empty( cParam1 )
             ::TabWidth()
          ELSE
             ::nTabWidth := Val( Left( cParam1, 3 ) )
          ENDIF
-      CASE starts( "PATHFORFILES", cParam )
+      CASE hb_LeftIs( "PATHFORFILES", cParam )
          ::PathForFiles( AllTrim( cParam1 ) )
-      CASE starts( "RUNATSTARTUP", cParam )
+      CASE hb_LeftIs( "RUNATSTARTUP", cParam )
          ::RunAtStartup( .T. )
-      CASE starts( "NORUNATSTARTUP", cParam )
+      CASE hb_LeftIs( "NORUNATSTARTUP", cParam )
          ::RunAtStartup( .F. )
-      CASE starts( "SAVESETTINGS", cParam )
+      CASE hb_LeftIs( "SAVESETTINGS", cParam )
          ::SaveSettings( AllTrim( cParam1 ) )
-      CASE starts( "RESTORESETTINGS", cParam )
+      CASE hb_LeftIs( "RESTORESETTINGS", cParam )
          ::RestoreSettings( AllTrim( cParam1 ) )
       OTHERWISE
          cResult := "Command error"
       ENDCASE
 
-   CASE starts( "OUTPUT", cCommand, 4 )
+   CASE hb_LeftIsN( "OUTPUT", cCommand, 4 )
       SetCursor( SC_NONE )
       ::ShowAppScreen()
       SetCursor( SC_NORMAL )
 
-   CASE starts( "POINT", cCommand )
+   CASE hb_LeftIs( "POINT", cCommand )
       cParam := Upper( cParam )
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "WATCHPOINT", cParam )
+      CASE hb_LeftIs( "WATCHPOINT", cParam )
          ::WatchpointAdd()
-      CASE starts( "TRACEPOINT", cParam )
+      CASE hb_LeftIs( "TRACEPOINT", cParam )
          ::TracepointAdd()
-      CASE starts( "BREAKPOINT", cParam )
+      CASE hb_LeftIs( "BREAKPOINT", cParam )
          ::ToggleBreakPoint()
-      CASE starts( "DELETE", cParam )
+      CASE hb_LeftIs( "DELETE", cParam )
          ::WatchpointDel()
       OTHERWISE
          cResult := "Command error"
@@ -1162,43 +1162,43 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE cCommand == "PREV"
       ::FindPrevious()
 
-   CASE starts( "QUIT", cCommand )
+   CASE hb_LeftIs( "QUIT", cCommand )
       ::Quit()
 
    /* TODO: Support RESTART */
 
-   CASE starts( "RESUME", cCommand, 4 )
+   CASE hb_LeftIsN( "RESUME", cCommand, 4 )
       ::Resume()
 
-   CASE starts( "RUN", cCommand )
+   CASE hb_LeftIs( "RUN", cCommand )
       cParam := Upper( cParam )
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "ANIMATE", cParam )
+      CASE hb_LeftIs( "ANIMATE", cParam )
          ::ToggleAnimate()
          ::Animate()
-      CASE starts( "STEP", cParam )
+      CASE hb_LeftIs( "STEP", cParam )
          ::Step()
-      CASE starts( "TRACE", cParam )
+      CASE hb_LeftIs( "TRACE", cParam )
          ::Trace()
-      CASE starts( "GO", cParam )
+      CASE hb_LeftIs( "GO", cParam )
          ::Go()
-      CASE starts( "TOCURSOR", cParam )
+      CASE hb_LeftIs( "TOCURSOR", cParam )
          ::ToCursor()
-      CASE starts( "NEXTROUTINE", cParam )
+      CASE hb_LeftIs( "NEXTROUTINE", cParam )
          ::NextRoutine()
-      CASE starts( "SPEED", cParam )
+      CASE hb_LeftIs( "SPEED", cParam )
          ::Speed()
       OTHERWISE
          cResult := "Command error"
       ENDCASE
 
-   CASE starts( "SPEED", cCommand, 4 )
-      IF ! Empty( cParam )
-         ::nSpeed := Val( cParam )
-      ELSE
+   CASE hb_LeftIsN( "SPEED", cCommand, 4 )
+      IF Empty( cParam )
          ::nSpeed := 0
+      ELSE
+         ::nSpeed := Val( cParam )
       ENDIF
 
    CASE cCommand == "STEP"
@@ -1207,24 +1207,24 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE cCommand == "TP"
       ::TracepointAdd( cParam )
 
-   CASE starts( "VIEW", cCommand )
+   CASE hb_LeftIs( "VIEW", cCommand )
       cParam := Upper( cParam )
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "SETS", cParam )
+      CASE hb_LeftIs( "SETS", cParam )
          ::ViewSets()
-      CASE starts( "WORKAREAS", cParam )
+      CASE hb_LeftIs( "WORKAREAS", cParam )
          ::ShowWorkAreas()
-      CASE starts( "APPSCREEN", cParam )
+      CASE hb_LeftIs( "APPSCREEN", cParam )
          ::ShowAppScreen()
-      CASE starts( "CALLSTACK", cParam )
+      CASE hb_LeftIs( "CALLSTACK", cParam )
          ::Stack()
       OTHERWISE
          cResult := "Command error"
       ENDCASE
 
-   CASE starts( "WINDOW", cCommand )
+   CASE hb_LeftIs( "WINDOW", cCommand )
 
       IF ( n := At( " ", cParam ) ) > 0
          cParam1 := AllTrim( SubStr( cParam, n + 1 ) )
@@ -1235,11 +1235,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       DO CASE
       CASE Empty( cParam )
          ::OpenMenu( cCommand )
-      CASE starts( "NEXT", cParam )
+      CASE hb_LeftIs( "NEXT", cParam )
          ::NextWindow()
-      CASE starts( "PREV", cParam )
+      CASE hb_LeftIs( "PREV", cParam )
          ::PrevWindow()
-      CASE starts( "MOVE", cParam )
+      CASE hb_LeftIs( "MOVE", cParam )
          IF Empty( cParam1 )
             ::NotSupported()
          ELSE
@@ -1253,7 +1253,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
                oWindow:nRight + n - oWindow:nLeft )
             ::lWindowsAutoSized := .F.
          ENDIF
-      CASE starts( "SIZE", cParam )
+      CASE hb_LeftIs( "SIZE", cParam )
          IF Empty( cParam1 )
             ::NotSupported()
          ELSE
@@ -1266,8 +1266,9 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
                ::lWindowsAutoSized := .F.
             ENDIF
          ENDIF
-      CASE starts( "ZOOM", cParam ) .OR. starts( "ICONIZE", cParam) ;
-           .OR. starts( "TILE", cParam )
+      CASE hb_LeftIs( "ZOOM", cParam ) .OR. ;
+           hb_LeftIs( "ICONIZE", cParam ) .OR. ;
+           hb_LeftIs( "TILE", cParam )
          ::NotSupported()
       OTHERWISE
          cResult := "Command error"
@@ -1306,7 +1307,7 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
       nLen := MLCount( cInfo, 16384, NIL, .F., .T. )
       FOR n := 1 TO nLen
          cLine := AllTrim( MemoLine( cInfo, 16384, n, NIL, .F., .T. ) )
-         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. starts( "OPTIONS", Upper( Left( cLine, nPos - 1 ) ) ) )
+         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. hb_LeftIs( "OPTIONS", Upper( Left( cLine, nPos - 1 ) ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
@@ -1996,7 +1997,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
          FOR n := nCount TO 1 STEP -1
             xValue := __mvDbgInfo( HB_MV_PRIVATE, n, @cName )
             IF ! cName $ hSkip
-               AAdd( aBVars, { cName, xValue,  iif( m > 0, "Private", "Private^" ) } )
+               AAdd( aBVars, { cName, xValue, iif( m > 0, "Private", "Private^" ) } )
                hSkip[ cName ] := NIL
             ENDIF
             --m
@@ -2554,12 +2555,12 @@ METHOD SaveSettings( cFileName ) CLASS HBDebugger
    LOCAL aBreak, aWatch
 
    IF Empty( cFileName )
-     ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
-     IF LastKey() == K_ESC
-        RETURN NIL
-     ENDIF
+      ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
+      IF LastKey() == K_ESC
+         RETURN NIL
+      ENDIF
    ELSE
-     ::cSettingsFileName := cFileName
+      ::cSettingsFileName := cFileName
    ENDIF
 
    IF ! Empty( ::cPathForFiles )
@@ -3215,7 +3216,7 @@ METHOD ViewSets() CLASS HBDebugger
    AAdd( oBrwSets:Cargo[ 2 ], aSets )
    ocol:defcolor := { 1, 2 }
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", ;
-      {|| PadR( __dbgValToStr( Set( oBrwSets:cargo[ 1 ]  ) ), nWidth - 13 ) } ) )
+      {|| PadR( __dbgValToStr( Set( oBrwSets:cargo[ 1 ] ) ), nWidth - 13 ) } ) )
    ocol:defcolor := { 1, 3 }
    ocol:width := 40
    oWndSets:bPainted := {|| oBrwSets:ForceStable(), RefreshVarsS( oBrwSets ) }
@@ -3598,16 +3599,15 @@ STATIC FUNCTION PathToArray( cList )
       AAdd( aList, cList )              // Add final element
 
       /* Strip ending delimiters */
-      AEval( aList, {| x, i | iif( Right( x, 1 ) $ cDirSep,  aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
+      AEval( aList, {| x, i | iif( Right( x, 1 ) $ cDirSep, aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
    ENDIF
 
    RETURN aList
 
 
-/* Check if a string starts with another string */
-STATIC FUNCTION starts( cLine, cStart, nMin )
-   RETURN cStart == Left( cLine, Len( cStart ) ) .AND. ;
-          ( nMin == NIL .OR. Len( cStart ) >= nMin )
+/* Check if a string starts with another string with a min length */
+STATIC FUNCTION hb_LeftIsN( cLine, cStart, nMin )
+   RETURN Len( cStart ) >= nMin .AND. hb_LeftIs( cLine, cStart )
 
 
 FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )

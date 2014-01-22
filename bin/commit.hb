@@ -163,7 +163,7 @@ STATIC FUNCTION cli_Options()
       t_hOptions := { => }
       nArg := 1
       FOR tmp := 1 TO hb_argc()
-         IF Left( hb_argv( tmp ), 1 ) == "-"
+         IF hb_LeftIs( hb_argv( tmp ), "-" )
             t_hOptions[ hb_argv( tmp ) ] := nArg
          ELSE
             ++nArg
@@ -182,7 +182,7 @@ STATIC FUNCTION cli_Values()
    IF t_aValues == NIL
       t_aValues := {}
       FOR tmp := 1 TO hb_argc()
-         IF !( Left( hb_argv( tmp ), 1 ) == "-" )
+         IF ! hb_LeftIs( hb_argv( tmp ), "-" )
             AAdd( t_aValues, hb_argv( tmp ) )
          ENDIF
       NEXT
@@ -738,7 +738,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
          AAdd( aErr, "filename: non-8.3" )
       ENDIF
 
-      IF "msdosfs" $ hFLags .AND. Left( hb_FNameName( cName ), 1 ) == "." .AND. ! FNameExc( cName, aCanBeDot )
+      IF "msdosfs" $ hFLags .AND. hb_LeftIs( hb_FNameName( cName ), "." ) .AND. ! FNameExc( cName, aCanBeDot )
          AAdd( aErr, "filename: non MS-DOS compatible" )
       ENDIF
 
@@ -1154,10 +1154,10 @@ STATIC FUNCTION FNameExc( cName, aList )
    LOCAL tmp, tmp1
 
    FOR EACH tmp IN aList
-      IF !( Left( tmp, 1 ) == "!" ) .AND. ;
+      IF ! hb_LeftIs( tmp, "!" ) .AND. ;
          ( hb_FileMatch( cName, hb_DirSepToOS( tmp ) ) .OR. hb_FileMatch( hb_FNameNameExt( cName ), hb_DirSepToOS( tmp ) ) )
          FOR EACH tmp1 IN aList
-            IF Left( tmp1, 1 ) == "!" .AND. hb_FileMatch( cName, hb_DirSepToOS( SubStr( tmp1, 2 ) ) )
+            IF hb_LeftIs( tmp1, "!" ) .AND. hb_FileMatch( cName, hb_DirSepToOS( SubStr( tmp1, 2 ) ) )
                RETURN .F.
             ENDIF
          NEXT
@@ -1226,7 +1226,7 @@ STATIC FUNCTION LoadGitignore( cFileName )
          "!*/3rd/*/Makefile" }
 
       FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
-         IF ! Empty( cLine ) .AND. !( Left( cLine, 1 ) == "#" )
+         IF ! Empty( cLine ) .AND. ! hb_LeftIs( cLine, "#" )
             /* TODO: clean this */
             AAdd( t_aIgnore, ;
                iif( Left( cLine, 1 ) $ "?*/!", "", "*/" ) + ;
@@ -1234,7 +1234,7 @@ STATIC FUNCTION LoadGitignore( cFileName )
                iif( Right( cLine, 1 ) == "/", "*", ;
                iif( Empty( hb_FNameExt( cLine ) ) .AND. !( Right( cLine, 2 ) == "*/" ), "/*", "" ) ) )
             IF !( ATail( t_aIgnore ) == cLine )
-               IF Left( ATail( t_aIgnore ), 2 ) == "*/"
+               IF hb_LeftIs( ATail( t_aIgnore ), "*/" )
                   AAdd( t_aIgnore, SubStr( ATail( t_aIgnore ), 3 ) )
                ENDIF
                AAdd( t_aIgnore, cLine )
@@ -1259,7 +1259,7 @@ STATIC FUNCTION LoadGitattributes( cFileName, /* @ */ aIdent, /* @ */ hFlags )
       t_aIdent := {}
       t_hFlags := { => }
       FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
-         IF Left( cLine, 2 ) == "*."
+         IF hb_LeftIs( cLine, "*." )
              cLine := SubStr( cLine, 2 )
              IF ( tmp := At( " ", cLine ) ) > 0
                 t_hExt[ RTrim( Left( cLine, tmp - 1 ) ) ] := NIL
@@ -1268,7 +1268,7 @@ STATIC FUNCTION LoadGitattributes( cFileName, /* @ */ aIdent, /* @ */ hFlags )
          IF ( tmp := At( " ", cLine ) ) > 0 .AND. "ident" $ SubStr( cLine, tmp + 1 )
             AAdd( t_aIdent, RTrim( Left( cLine, tmp - 1 ) ) )
          ENDIF
-         IF Left( cLine, 3 ) == "## "
+         IF hb_LeftIs( cLine, "## " )
             t_hFlags[ Lower( SubStr( cLine, 4 ) ) ] := NIL
          ENDIF
       NEXT
@@ -1443,12 +1443,10 @@ STATIC PROCEDURE WalkDir( cDir, hFunctions )
 
    FOR EACH file IN hb_DirScan( cDir, "*.hbx" )
       FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cDir + file[ F_NAME ] ), Chr( 13 ) ), Chr( 10 ) )
-         IF Left( cLine, Len( "DYNAMIC " ) ) == "DYNAMIC "
+         IF hb_LeftIs( cLine, "DYNAMIC " )
             hFunctions[ SubStr( cLine, Len( "DYNAMIC " ) + 1 ) ] := NIL
          ENDIF
       NEXT
    NEXT
 
    RETURN
-
-/* ---- */

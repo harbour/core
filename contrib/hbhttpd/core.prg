@@ -243,7 +243,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
    aDeny := {}
    FOR EACH cExpr IN hb_ATokens( cFilter, " " )
       IF ! Empty( cExpr )
-         IF lDeny := ( Left( cExpr, 1 ) == "!" )
+         IF ( lDeny := hb_LeftIs( cExpr, "!" ) )
             cExpr := SubStr( cExpr, 2 )
          ENDIF
          IF ( nI := At( "/", cExpr ) ) > 0
@@ -615,7 +615,7 @@ STATIC FUNCTION ProcessConnection( oServer )
             cRequest := SubStr( cRequest, nReqLen + 1 )
 
             /* Deal with supported protocols and methods */
-            IF !( Left( server[ "SERVER_PROTOCOL" ], 5 ) == "HTTP/" )
+            IF ! hb_LeftIs( server[ "SERVER_PROTOCOL" ], "HTTP/" )
                USetStatusCode( 400 ) /* Bad request */
                UAddHeader( "Connection", "close" )
             ELSEIF !( SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1" )
@@ -743,7 +743,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    aLine := hb_ATokens( aRequest[ 1 ], " " )
 
    server[ "REQUEST_ALL" ] := aRequest[ 1 ]
-   IF Len( aLine ) == 3 .AND. Left( aLine[ 3 ], 5 ) == "HTTP/"
+   IF Len( aLine ) == 3 .AND. hb_LeftIs( aLine[ 3 ], "HTTP/" )
       server[ "REQUEST_METHOD" ] := aLine[ 1 ]
       server[ "REQUEST_URI" ] := aLine[ 2 ]
       server[ "SERVER_PROTOCOL" ] := aLine[ 3 ]
@@ -755,7 +755,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    ENDIF
 
    // Fix invalid queries: bind to root
-   IF !( Left( server[ "REQUEST_URI" ], 1 ) == "/" )
+   IF ! hb_LeftIs( server[ "REQUEST_URI" ], "/" )
       server[ "REQUEST_URI" ] := "/" + server[ "REQUEST_URI" ]
    ENDIF
 
@@ -823,7 +823,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
    LOCAL nI, cPart, cEncoding
 
    IF "CONTENT_TYPE" $ server .AND. ;
-      Left( server[ "CONTENT_TYPE" ], 33 ) == "application/x-www-form-urlencoded"
+      hb_LeftIs( server[ "CONTENT_TYPE" ], "application/x-www-form-urlencoded" )
 
       IF ( nI := At( "CHARSET=", Upper( server[ "CONTENT_TYPE" ] ) ) ) > 0
          cEncoding := Upper( SubStr( server[ "CONTENT_TYPE" ], nI + 8 ) )
@@ -1483,7 +1483,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       UWrite( '<a href="?s=m">Modified</a>             ' )
       UWrite( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
       FOR EACH aF IN aDir
-         IF Left( aF[ 1 ], 1 ) == "."
+         IF hb_LeftIs( aF[ 1 ], "." )
          ELSEIF "D" $ aF[ 5 ]
             UWrite( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
                DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )

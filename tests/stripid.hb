@@ -70,10 +70,10 @@ PROCEDURE Main()
          tmp := StrTran( tmp, cHdr7 )
 
          IF ! "|" + cExt + "|" $ "|.hbm|.hbp|.hbc|.txt|"
-            IF Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "//" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "/*" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + ";" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + "#"
+            IF hb_LeftIs( tmp, hb_eol() + "//" ) .OR. ;
+               hb_LeftIs( tmp, hb_eol() + "/*" ) .OR. ;
+               hb_LeftIs( tmp, hb_eol() + ";" ) .OR. ;
+               hb_LeftIs( tmp, hb_eol() + "#" )
                tmp := SubStr( tmp, Len( hb_eol() ) + 1 )
             ENDIF
          ENDIF

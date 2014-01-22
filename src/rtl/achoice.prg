@@ -459,13 +459,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          // Find next selectable item
          FOR nNewPos := nPos + 1 TO nItems
-            IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], Len( cKey ) ) ) == cKey
+            IF Ach_Select( alSelect, nNewPos ) .AND. hb_LeftIs( Upper( acItems[ nNewPos ] ), cKey )
                EXIT
             ENDIF
          NEXT
          IF nNewPos == nItems + 1
             FOR nNewPos := 1 TO nPos - 1
-               IF Ach_Select( alSelect, nNewPos ) .AND. Upper( Left( acItems[ nNewPos ], Len( cKey ) ) ) == cKey
+               IF Ach_Select( alSelect, nNewPos ) .AND. hb_LeftIs( Upper( acItems[ nNewPos ] ), cKey )
                   EXIT
                ENDIF
             NEXT

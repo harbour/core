@@ -105,7 +105,7 @@ PROCEDURE Main( ... )
             tmp := GetEnvC( "HB_INSTALL_ETC" ) + "/../ld.so.conf.d"
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
-               IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
+               IF hb_LeftIs( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
                hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )

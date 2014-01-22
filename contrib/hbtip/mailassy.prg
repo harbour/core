@@ -184,7 +184,7 @@ FUNCTION tip_MailAssemble( ;
 
       oAttach := TIPMail():New()
       oAttach:SetCharset( cCharset )
-      oAttach:SetEncoder( iif( Left( cMimeType, Len( "text/" ) ) == "text/", cEncoding, "base64" ) )
+      oAttach:SetEncoder( iif( hb_LeftIs( cMimeType, "text/" ), cEncoding, "base64" ) )
       oAttach:SetFieldPart( "Content-Disposition", "attachment" )
       oAttach:SetFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileCP ) )  // Usually, original filename is set here
       IF cMimeType == "unknown"

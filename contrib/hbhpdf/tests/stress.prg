@@ -24,11 +24,9 @@ STATIC FUNCTION FuncList( cPrefix )
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF Left( cName, Len( cPrefix ) ) == hb_asciiUpper( cPrefix )
+      IF hb_LeftIs( cName, hb_asciiUpper( cPrefix ) )
          AAdd( aList, cName )
       ENDIF
    NEXT
 
-   ASort( aList )
-
-   RETURN aList
+   RETURN ASort( aList )

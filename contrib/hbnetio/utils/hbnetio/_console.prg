@@ -142,7 +142,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
          IF Lower( aCommand[ 1 ] ) $ hCommands
             Eval( hCommands[ Lower( aCommand[ 1 ] ) ][ 3 ], cCommand )
          ELSE
-            IF Left( cCommand, Len( netcliID ) + 1 ) == netcliID + "."
+            IF hb_LeftIs( cCommand, netcliID + "." )
                IF ! Eval( netclictrl[ "cmd" ], netclictx, SubStr( cCommand, Len( netcliID ) + 2 ) )
                   hbnetiocon_ToConsole( hb_StrFormat( "Error: Unknown command '%1$s'.", cCommand ) )
                ENDIF
@@ -178,7 +178,7 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
    /* We need at least one character to search */
    IF Len( s ) > 1
       FOR EACH n IN hCommands
-         IF s == Lower( Left( n:__enumKey(), Len( s ) ) )
+         IF hb_LeftIs( Lower( n:__enumKey() ), s )
             cCommand := PadR( n:__enumKey(), Len( cCommand ) )
             ManageCursor( cCommand )
             RETURN

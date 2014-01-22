@@ -1130,11 +1130,11 @@ STATIC FUNCTION ParseRequest( cRequest )
    WriteToConsole( aRequest[ 1 ] )
    aLine := uhttpd_split( " ", aRequest[ 1 ] )
    IF Len( aLine ) != 3 .OR. ;
-      ( !( Left( aLine[ 1 ], 3 ) == "GET" ) .AND. ;
-        !( Left( aLine[ 1 ], 4 ) == "POST" ) ) .OR. ; // Sorry, we support GET and POST only
-        !( Left( aLine[ 3 ], 5 ) == "HTTP/" )
+      ( ! hb_LeftIs( aLine[ 1 ], "GET" ) .AND. ;
+        ! hb_LeftIs( aLine[ 1 ], "POST" ) ) .OR. ; // Sorry, we support GET and POST only
+        ! hb_LeftIs( aLine[ 3 ], "HTTP/" )
       // Set status code
-      t_nStatusCode := 501 // Not Implemented
+      t_nStatusCode := 501  // Not Implemented
       RETURN .F.
    ENDIF
 
@@ -2103,7 +2103,7 @@ STATIC PROCEDURE ShowFolder( cDir )
       IF aF[ 1 ] == "<parent>"
          uhttpd_Write( '[DIR] <a href="' + cParentDir + '">..</a>' + ;
             CR_LF )
-      ELSEIF Left( aF[ 1 ], 1 ) == "."
+      ELSEIF hb_LeftIs( aF[ 1 ], "." )
       ELSEIF "D" $ aF[ 5 ]
          uhttpd_Write( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
             DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )
@@ -2413,7 +2413,7 @@ STATIC FUNCTION FileUnAlias( cScript )
 
       // Checking if the request contains an alias
       FOR EACH x IN s_hAliases
-         IF x:__enumKey() == Left( cScript, Len( x:__enumKey() ) )
+         IF hb_LeftIs( cScript, x:__enumKey() )
             cFileName := x + SubStr( cScript, Len( x:__enumKey() ) + 1 )
 
             // substitute macros

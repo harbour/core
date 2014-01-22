@@ -240,10 +240,7 @@ METHOD reset() CLASS HBProfile
    RETURN Self
 
 METHOD ignoreSymbol( cSymbol ) CLASS HBProfile
-
-   LOCAL cProfPrefix := "HBPROFILE"
-
-   RETURN Left( cSymbol, Len( cProfPrefix ) ) == cProfPrefix .OR. cSymbol == "__SETPROFILER"
+   RETURN hb_LeftIs( cSymbol, "HBPROFILE" ) .OR. cSymbol == "__SETPROFILER"
 
 METHOD gatherFunctions() CLASS HBProfile
 

@@ -55,7 +55,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       hbmk[ "vars" ][ "aBIS_Src" ] := {}
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF Left( cSrc, Len( "-bisonflag=" ) ) == "-bisonflag="
+         IF hb_LeftIs( cSrc, "-bisonflag=" )
             /* TODO: process bison flags */
          ELSE
             SWITCH Lower( hb_FNameExt( cSrc ) )

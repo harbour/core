@@ -363,13 +363,15 @@ static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
    if empty( unicode )
 #ifdef __HARBOUR__
       unicode := hb_cdpUniID()
-      if unicode = "cp"  /* hb_LeftIs() */
+      if hb_LeftIs( unicode, "cp" )
          unicode := substr( unicode, 3 )
-      elseif unicode = "iso" .or. unicode = "bg-"  /* hb_LeftIs() */
+      elseif hb_LeftIs( unicode, "iso" ) .or. hb_LeftIs( unicode, "bg-" )
          unicode := substr( unicode, 4 )
       endif
       unicode := upper( strtran( unicode, "-", "_" ) )
-      if unicode = "KAM" .or. unicode = "MAZ" .or. unicode = "MIC"  /* hb_LeftIs() */
+      if hb_LeftIs( unicode, "KAM" ) .or. ;
+         hb_LeftIs( unicode, "MAZ" ) .or. ;
+         hb_LeftIs( unicode, "MIC" )
          unicode := left( unicode, 3 )
       endif
 #else

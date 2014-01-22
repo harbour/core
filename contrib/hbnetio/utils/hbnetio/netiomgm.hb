@@ -67,12 +67,12 @@ STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
 
    FOR EACH cParam IN aParam
       DO CASE
-      CASE Lower( Left( cParam, Len( "--netio.addr=" ) ) ) == "--netio.addr="
+      CASE hb_LeftIs( Lower( cParam ), "--netio.addr=" )
          hbnetiocon_IPPortSplit( SubStr( cParam, Len( "--netio.addr=" ) + 1 ), @cIP, @nPort )
          IF Empty( nPort )
             nPort := _NETIOMGM_PORT_DEF
          ENDIF
-      CASE Lower( Left( cParam, Len( "--netio.pass=" ) ) ) == "--netio.pass="
+      CASE hb_LeftIs( Lower( cParam ), "--netio.pass=" )
          cPassword := SubStr( cParam, Len( "--netio.pass=" ) + 1 )
          hb_StrClear( @cParam )
       ENDCASE

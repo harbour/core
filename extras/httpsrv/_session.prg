@@ -441,7 +441,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
       // TraceLog( "SESSION: cSessVarName, cSessPrefix, Left( cSessVarName, Len( cSessPrefix ) )", ;
       //                    cSessVarName, cSessPrefix, Left( cSessVarName, Len( cSessPrefix ) ) )
 
-      IF Left( cSessVarName, Len( cSessPrefix ) ) == cSessPrefix // IF Left part of var is equal to session prefixname i.e. "SESSION"
+      IF hb_LeftIs( cSessVarName, cSessPrefix )  // If left part of var is equal to session prefixname i.e. "SESSION"
 
          cName  := SubStr( cSessVarName, Len( cSessPrefix ) + 1 )
          xValue := uhttpd_UrlDecode( aField[ 2 ] )

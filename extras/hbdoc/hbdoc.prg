@@ -207,7 +207,7 @@ PROCEDURE Main( ... )
 
    // load hbextern.ch
    FileEval( p_hsSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
-      {| c | iif( Left( c, Len( "EXTERNAL " ) ) == "EXTERNAL ", ;
+      {| c | iif( hb_LeftIs( c, "EXTERNAL " ), ;
                   AAdd( p_hsSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
                   ) } )
    ASort( p_hsSwitches[ "hbextern.ch" ] )
@@ -678,7 +678,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
       RETURN .F.
    ENDIF
 
-   DO WHILE Left( cSection, Len( hb_eol() ) ) == hb_eol()
+   DO WHILE hb_LeftIs( cSection, hb_eol() )
       cSection := SubStr( cSection, Len( hb_eol() ) + 1 )
    ENDDO
 

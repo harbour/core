@@ -1102,7 +1102,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
-         DO WHILE Left( DICT->word, 1 ) == Chr( i + 64 ) .AND. ! Eof()
+         DO WHILE hb_LeftIs( DICT->word, Chr( i + 64 ) ) .AND. ! Eof()
             FOR j := 1 TO 26
                temp  := ""
                cBits := FOUR_BYTES
@@ -1401,9 +1401,9 @@ FUNCTION WildCard( cPattern, cString )
       CASE Empty( cBefore )
          lMatch := Right( cString, Len( cAfter ) ) == cAfter
       CASE Empty( cAfter )
-         lMatch := Left( cString, Len( cBefore ) ) == cBefore
+         lMatch := hb_LeftIs( cString, cBefore )
       OTHERWISE
-         lMatch := ( Left( cString, Len( cBefore ) ) == cBefore ) .AND. ;
+         lMatch := hb_LeftIs( cString, cBefore ) .AND. ;
             Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
    ELSE
@@ -1422,7 +1422,7 @@ FUNCTION WildCard( cPattern, cString )
             NEXT
          ENDIF
       ELSE
-         lMatch := Left( Upper( cPattern ), Len( Upper( cString ) ) ) == Upper( cString )
+         lMatch := hb_LeftIs( Upper( cPattern ), Upper( cString ) )
       ENDIF
    ENDIF
 
