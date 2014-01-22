@@ -425,12 +425,14 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       DWORD dwFlags = 0;
       LPTSTR lpCommand = HB_CHARDUP( pszFilename );
 
+#  if ! defined( HB_OS_WIN_CE )
       if( phStdin != NULL )
          SetHandleInformation( ( HANDLE ) hb_fsGetOsHandle( hPipeIn [ 1 ] ), HANDLE_FLAG_INHERIT, 0 );
       if( phStdout != NULL )
          SetHandleInformation( ( HANDLE ) hb_fsGetOsHandle( hPipeOut[ 0 ] ), HANDLE_FLAG_INHERIT, 0 );
       if( phStderr != NULL && phStdout != phStderr )
          SetHandleInformation( ( HANDLE ) hb_fsGetOsHandle( hPipeErr[ 0 ] ), HANDLE_FLAG_INHERIT, 0 );
+#  endif
 
       memset( &pi, 0, sizeof( pi ) );
       memset( &si, 0, sizeof( si ) );
