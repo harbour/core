@@ -60,35 +60,35 @@ PROCEDURE Main()
 
    ?? "Test of Numeric functions - part 1"
 
-   ? "Celsius( 33.8 ) =   1             // CT3"
-   ?  Space( 10 ),  Celsius( 33.8 ), " <-- CT for Harbour "
+   ? "Celsius( 33.8 ) == 1               // CT3"
+   ?  Space( 9 ), Celsius( 33.8 ), " <-- CT for Harbour "
    ?
 
-   ? "Celsius( 338.0 ) = 170             // CT3"
-   ?  Space( 11 ),  Celsius( 338.0 ), " <-- CT for Harbour "
+   ? "Celsius( 338.0 ) == 170             // CT3"
+   ?  Space( 12 ), Celsius( 338.0 ), " <-- CT for Harbour "
    ?
 
-   ? "Celsius( 3380.0 ) = 1860             // CT3"
-   ?  Space( 12 ),  Celsius( 3380.0 ), " <-- CT for Harbour "
+   ? "Celsius( 3380.0 ) == 1860             // CT3"
+   ?  Space( 14 ), Celsius( 3380.0 ), " <-- CT for Harbour "
    ?
 
-   ? "Celsius( -33.8 ) = -36.5555..      // CT3"
-   ?  Space( 10 ), Celsius( -33.8 ), " <-- CT for Harbour "
+   ? "Celsius( -33.8 ) == -36.5555..      // CT3"
+   ?  Space( 12 ), Celsius( -33.8 ), " <-- CT for Harbour "
    ?
 
-   ? "Fahrenheit( 12.5 ) = 54.5           // CT3"
-   ?  Space( 12 ), Fahrenheit( 12.5 ), " <-- CT for Harbour "
+   ? "Fahrenheit( 12.5 ) == 54.5           // CT3"
+   ?  Space( 13 ), Fahrenheit( 12.5 ), " <-- CT for Harbour "
    ?
 
-   ? "Fahrenheit( 125 ) = 257             // CT3"
-   ?  Space( 12 ), Fahrenheit( 125 ), " <-- CT for Harbour "
+   ? "Fahrenheit( 125 ) == 257             // CT3"
+   ?  Space( 13 ), Fahrenheit( 125 ), " <-- CT for Harbour "
    ?
 
-   ? "Fahrenheit( 1250 ) = 2282             // CT3"
-   ?  Space( 14 ), Fahrenheit( 1250 ), " <-- CT for Harbour "
+   ? "Fahrenheit( 1250 ) == 2282             // CT3"
+   ?  Space( 15 ), Fahrenheit( 1250 ), " <-- CT for Harbour "
    ?
-   ? "Fahrenheit( -155 ) = -247             // CT3"
-   ?  Space( 14 ), Fahrenheit( -155 ), " <-- CT for Harbour "
+   ? "Fahrenheit( -155 ) == -247             // CT3"
+   ?  Space( 15 ), Fahrenheit( -155 ), " <-- CT for Harbour "
    ?
 
    ?  "Infinity()       // CT3"

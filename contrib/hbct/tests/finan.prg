@@ -64,22 +64,22 @@ PROCEDURE Main()
    ?
    ? "Calculate how loan summs if you make deposits for $175.00 for 24 months,"
    ? "if the annual rate of the Bank for this mortage is 9.5% fixed"
-   ? "PV( 175, 0.095 / 12, 24 ) = 3811.433   // CT3"
-   ? Space( 21 ), PV( 175, 0.095 / 12, 24 ), "  <-- CT for Harbour"
+   ? "PV( 175, 0.095 / 12, 24 ) == 3811.433   // CT3"
+   ? Space( 22 ), PV( 175, 0.095 / 12, 24 ), "  <-- CT for Harbour"
    ?
    ?
 
    ? "Calculate the amount in your account after 3 years, if you make deposits"
    ? "for $150.00 per month, and the annual rate of the Bank for this is 6%"
-   ? "Capital = FV( 150, 0.06 / 12, 36 ) = 5900.416    // CT3"
-   ? Space( 30 ), FV( 150, 0.06 / 12, 36 ), "  <-- CT for Harbour"
+   ? "Capital == FV( 150, 0.06 / 12, 36 ) == 5900.416    // CT3"
+   ? Space( 32 ), FV( 150, 0.06 / 12, 36 ), "  <-- CT for Harbour"
    ?
    ?
 
    ? "Calculate the monthly payment for a loan of $2000.00 at an annual rate"
    ? "of 10%, within 24 month "
-   ? "Payment( 2000.00, 0.10 / 12, 24 ) =  92.290    // CT3"
-   ? Space( 28 ), Payment( 2000.00, 0.10 / 12, 24 ), "  <-- CT for Harbour"
+   ? "Payment( 2000.00, 0.10 / 12, 24 ) ==  92.290    // CT3"
+   ? Space( 29 ), Payment( 2000.00, 0.10 / 12, 24 ), "  <-- CT for Harbour"
    ?
    ? "  PRESS ANY KEY"
 
@@ -88,15 +88,15 @@ PROCEDURE Main()
    ?
    ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
    ? "an annual rate of 9.5% with payments of $200.00 max"
-   ? "Periods( 4000.00, 200.00, 0.095 / 12 ) =  21.859    // CT3"
-   ? Space( 33 ), Periods( 4000.00, 200.00, 0.095 / 12 ), "  <-- CT for Harbour"
+   ? "Periods( 4000.00, 200.00, 0.095 / 12 ) ==  21.859    // CT3"
+   ? Space( 34 ), Periods( 4000.00, 200.00, 0.095 / 12 ), "  <-- CT for Harbour"
    ?
    ?
 
    ? "Calculate which is the effective anual rate of your Bank, for a loan"
    ? "of $2500.00 if you pay $86.67 per month for 3 years"
-   ? "Rate( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
-   ? Space( 24 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
+   ? "Rate( 2500.00, 86.67, 36 ) * 12 == 0.1501  // CT3"
+   ? Space( 25 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
    ?
    ? "  PRESS ANY KEY"
    Inkey( 0 )

@@ -271,11 +271,11 @@ FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
-   aMyFunc[ UR_NEW    ] := ( @_HSX_NEW()    )
-   aMyFunc[ UR_CLOSE  ] := ( @_HSX_CLOSE()  )
-   aMyFunc[ UR_GOCOLD ] := ( @_HSX_GOCOLD() )
-   aMyFunc[ UR_GOHOT  ] := ( @_HSX_GOHOT()  )
-   aMyFunc[ UR_APPEND ] := ( @_HSX_APPEND() )
+   aMyFunc[ UR_NEW    ] := @_HSX_NEW()
+   aMyFunc[ UR_CLOSE  ] := @_HSX_CLOSE()
+   aMyFunc[ UR_GOCOLD ] := @_HSX_GOCOLD()
+   aMyFunc[ UR_GOHOT  ] := @_HSX_GOHOT()
+   aMyFunc[ UR_APPEND ] := @_HSX_APPEND()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )

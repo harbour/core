@@ -63,100 +63,100 @@ PROCEDURE Main()
    ? "Test of mathematical functions"
    ?
 
-   ? "Floor( 1.9 ) = 1       // CT3"
-   ? Space( 5 ), Floor( 1.9 ), "  <-- CT for Harbour"
+   ? "Floor( 1.9 ) == 1       // CT3"
+   ? Space( 6 ), Floor( 1.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "Floor( 1.1 ) = 1       // CT3"
-   ? Space( 5 ), Floor( 1.1 ), "  <-- CT for Harbour"
+   ? "Floor( 1.1 ) == 1       // CT3"
+   ? Space( 6 ), Floor( 1.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "Floor( 0.9 ) = 0       // CT3"
-   ? Space( 5 ), Floor( 0.9 ), "  <-- CT for Harbour"
+   ? "Floor( 0.9 ) == 0       // CT3"
+   ? Space( 6 ), Floor( 0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "Floor( -0.1 ) = -1       // CT3"
-   ? Space( 7 ), Floor( -0.1 ), "  <-- CT for Harbour"
+   ? "Floor( -0.1 ) == -1       // CT3"
+   ? Space( 8 ), Floor( -0.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "Floor( -0.9 ) = -1       // CT3"
-   ? Space( 7 ), Floor( -0.9 ), "  <-- CT for Harbour"
+   ? "Floor( -0.9 ) == -1       // CT3"
+   ? Space( 8 ), Floor( -0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "Floor( -1.1 ) = -2       // CT3"
-   ? Space( 7 ), Floor( -1.1 ), "  <-- CT for Harbour"
-   ?
-
-   WAIT4()
-
-   ? "Ceiling( 1.9 ) = 2       // CT3"
-   ? Space( 7 ), Ceiling( 1.9 ), "  <-- CT for Harbour"
-   ?
-
-   ? "Ceiling( 1.1 ) = 2       // CT3"
-   ? Space( 7 ), Ceiling( 1.1 ), "  <-- CT for Harbour"
-   ?
-
-   ? "Ceiling( 0.9 ) = 1       // CT3"
-   ? Space( 7 ), Ceiling( 0.9 ), "  <-- CT for Harbour"
-   ?
-
-   ? "Ceiling( -0.1 ) = 0       // CT3"
-   ? Space( 8 ), Ceiling( -0.1 ), "  <-- CT for Harbour"
-   ?
-
-   ? "Ceiling( -0.9 ) = 0       // CT3"
-   ? Space( 8 ), Ceiling( -0.9 ), "  <-- CT for Harbour"
-   ?
-
-   ? "Ceiling( -1.1 ) = -1       // CT3"
-   ? Space( 9 ), Ceiling( -1.1 ), "  <-- CT for Harbour"
+   ? "Floor( -1.1 ) == -2       // CT3"
+   ? Space( 8 ), Floor( -1.1 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
 
-   ? "Log10( 0.01 ) = -2.00    // CT3"
-   ?  Space( 7 ), Log10( 0.01 ), "  <-- CT for Harbour"
+   ? "Ceiling( 1.9 ) == 2       // CT3"
+   ? Space( 8 ), Ceiling( 1.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "Log10( 2 ) = 0.30    // CT3"
-   ?  Space( 3 ), Log10( 2 ), "  <-- CT for Harbour"
+   ? "Ceiling( 1.1 ) == 2       // CT3"
+   ? Space( 8 ), Ceiling( 1.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "Log10( 100 ) = 2.00    // CT3"
-   ?  Space( 5 ), Log10( 100 ), "  <-- CT for Harbour"
+   ? "Ceiling( 0.9 ) == 1       // CT3"
+   ? Space( 8 ), Ceiling( 0.9 ), "  <-- CT for Harbour"
+   ?
+
+   ? "Ceiling( -0.1 ) == 0       // CT3"
+   ? Space( 9 ), Ceiling( -0.1 ), "  <-- CT for Harbour"
+   ?
+
+   ? "Ceiling( -0.9 ) == 0       // CT3"
+   ? Space( 9 ), Ceiling( -0.9 ), "  <-- CT for Harbour"
+   ?
+
+   ? "Ceiling( -1.1 ) == -1       // CT3"
+   ? Space( 10 ), Ceiling( -1.1 ), "  <-- CT for Harbour"
+   ?
+
+   WAIT4()
+
+   ? "Log10( 0.01 ) == -2.00    // CT3"
+   ?  Space( 8 ), Log10( 0.01 ), "  <-- CT for Harbour"
+   ?
+
+   ? "Log10( 2 ) == 0.30    // CT3"
+   ?  Space( 4 ), Log10( 2 ), "  <-- CT for Harbour"
+   ?
+
+   ? "Log10( 100 ) == 2.00    // CT3"
+   ?  Space( 6 ), Log10( 100 ), "  <-- CT for Harbour"
    ?
    ?
 
-   ? "Sign( 48335 ) = 1    // CT3"
-   ? Space( 6 ), Sign( 48335 ), "  <-- CT for Harbour"
+   ? "Sign( 48335 ) == 1    // CT3"
+   ? Space( 7 ), Sign( 48335 ), "  <-- CT for Harbour"
    ?
 
-   ? "Sign( -258 ) = -1    // CT3"
-   ? Space( 6 ), Sign( -258 ), "  <-- CT for Harbour"
+   ? "Sign( -258 ) == -1    // CT3"
+   ? Space( 7 ), Sign( -258 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
 
    SET DECIMALS TO 0
-   ? "Fact( 1 ) = 1    // CT3"
-   ? Space( 2 ), Fact( 1 ), "  <-- CT for Harbour"
+   ? "Fact( 1 ) == 1    // CT3"
+   ? Space( 3 ), Fact( 1 ), "  <-- CT for Harbour"
    ?
 
-   ? "Fact( 5 ) = 120    // CT3"
-   ? Space( 4 ), Fact( 5 ), "  <-- CT for Harbour"
+   ? "Fact( 5 ) == 120    // CT3"
+   ? Space( 5 ), Fact( 5 ), "  <-- CT for Harbour"
    ?
 
-   ? "Fact( 21 ) = 51090942171709440000    // CT3"
-   ? Space( 12 ), Fact( 21 ), "  <-- CT for Harbour"
+   ? "Fact( 21 ) == 51090942171709440000    // CT3"
+   ? Space( 13 ), Fact( 21 ), "  <-- CT for Harbour"
    ?
 
-   ? "Fact( 25 ) = -1    // CT3"
-   ? Space( 4 ), Fact( 25 ), "  <-- CT for Harbour"
+   ? "Fact( 25 ) == -1    // CT3"
+   ? Space( 5 ), Fact( 25 ), "  <-- CT for Harbour"
    ?
 
-   ? "Fact( 0 ) = 1    // CT3"
-   ? Space( 2 ), Fact( 0 ), "  <-- CT for Harbour"
+   ? "Fact( 0 ) == 1    // CT3"
+   ? Space( 3 ), Fact( 0 ), "  <-- CT for Harbour"
    ?
 
    ctexit()

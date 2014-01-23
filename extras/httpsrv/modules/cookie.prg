@@ -55,7 +55,7 @@ FUNCTION HRBMAIN()
    LOCAL cAction := uhttpd_GetField( "action" )
    LOCAL oCookie
 
-   // hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
+   // hb_ToOutDebug( "cCookie: %s, cAction: %s\n\r", hb_ValToExp( cCookie ), cAction )
 
    hb_default( @cCookie, "" )
    hb_default( @cAction, "" )

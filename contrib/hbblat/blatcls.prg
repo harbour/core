@@ -126,7 +126,7 @@ CREATE CLASS HBBlat
    VAR cCharSet                AS STRING
    VAR cUserHeader1            AS STRING
    VAR cUserHeader2            AS STRING
-   VAR cDSN                    AS STRING                 // Delivery Status Notifications (RFC 3461): n = never, s = successful, f = failure, d = delayed - can be used together, however N takes precedence
+   VAR cDSN                    AS STRING                 // Delivery Status Notifications (RFC 3461): n: never, s: successful, f: failure, d: delayed - can be used together, however N takes precedence
    VAR lEHBase64               AS LOGICAL INIT .F.       // use base64 for encoding headers, if necessary
    VAR lEHQuoted               AS LOGICAL INIT .F.       // use quoted-printable for encoding headers, if necessary
    VAR lLowPriority            AS LOGICAL INIT .F.

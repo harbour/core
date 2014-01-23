@@ -1883,25 +1883,25 @@ FUNCTION pdfTIFFInfo( cFile )
          nTag := Bin2W( SubStr( cTemp, 1, 2 ) )
          nFieldType := Bin2W( SubStr( cTemp, 3, 2 ) )
       /*
-      1 = BYTE       8-bit unsigned integer.
-      2 = ASCII      8-bit byte that contains a 7-bit ASCII code; the last byte
+      1 : BYTE       8-bit unsigned integer.
+      2 : ASCII      8-bit byte that contains a 7-bit ASCII code; the last byte
                      must be NUL (binary zero).
-      3 = SHORT      16-bit (2-byte) unsigned integer.
-      4 = LONG       32-bit (4-byte) unsigned integer.
-      5 = RATIONAL   Two LONGs: the first represents the numerator of a
+      3 : SHORT      16-bit (2-byte) unsigned integer.
+      4 : LONG       32-bit (4-byte) unsigned integer.
+      5 : RATIONAL   Two LONGs: the first represents the numerator of a
                      fraction; the second, the denominator.
 
       In TIFF 6.0, some new field types have been defined:
 
-      6 = SBYTE      An 8-bit signed (twos-complement) integer.
-      7 = UNDEFINED  An 8-bit byte that may contain anything, depending on
+      6 : SBYTE      An 8-bit signed (twos-complement) integer.
+      7 : UNDEFINED  An 8-bit byte that may contain anything, depending on
                      the definition of the field.
-      8 = SSHORT     A 16-bit (2-byte) signed (twos-complement) integer.
-      9 = SLONG      A 32-bit (4-byte) signed (twos-complement) integer.
-      10 = SRATIONAL Two SLONG's: the first represents the numerator of a
+      8 : SSHORT     A 16-bit (2-byte) signed (twos-complement) integer.
+      9 : SLONG      A 32-bit (4-byte) signed (twos-complement) integer.
+      10 : SRATIONAL Two SLONG's: the first represents the numerator of a
                      fraction, the second the denominator.
-      11 = FLOAT     Single precision (4-byte) IEEE format.
-      12 = DOUBLE    Double precision (8-byte) IEEE format.
+      11 : FLOAT     Single precision (4-byte) IEEE format.
+      12 : DOUBLE    Double precision (8-byte) IEEE format.
       */
          nCount := Bin2L( SubStr( cTemp, 5, 4 ) )
          nOffset := Bin2L( SubStr( cTemp, 9, 4 ) )
@@ -1928,8 +1928,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 256
                /*
                ImageWidth
-               Tag = 256 (100.H)
-               Type = SHORT or LONG
+               Tag : 256 (100.H)
+               Type : SHORT or LONG
                The number of columns in the image, i.e., the number of pixels per scanline.
                */
             // ?? "ImageWidth"
@@ -1949,8 +1949,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 257
                /*
                ImageLength
-               Tag = 257 (101.H)
-               Type = SHORT or LONG
+               Tag : 257 (101.H)
+               Type : SHORT or LONG
                The number of rows (sometimes described as scanlines) in the image.
                */
             // ?? "ImageLength"
@@ -1970,8 +1970,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 258
                /*
                BitsPerSample
-               Tag = 258 (102.H)
-               Type = SHORT
+               Tag : 258 (102.H)
+               Type : SHORT
                The number of bits per component.
                Allowable values for Baseline TIFF grayscale images are 4 and 8, allowing either
                16 or 256 distinct shades of gray.
@@ -1991,15 +1991,15 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 259
                /*
                Compression
-               Tag = 259 (103.H)
-               Type = SHORT
+               Tag : 259 (103.H)
+               Type : SHORT
                Values:
-               1 = No compression, but pack data into bytes as tightly as possible, leaving no unused
+               1 : No compression, but pack data into bytes as tightly as possible, leaving no unused
                bits (except at the end of a row). The component values are stored as an array of
                type BYTE. Each scan line (row) is padded to the next BYTE boundary.
-               2 = CCITT Group 3 1-Dimensional Modified Huffman run length encoding. See
+               2 : CCITT Group 3 1-Dimensional Modified Huffman run length encoding. See
                Section 10 for a description of Modified Huffman Compression.
-               32773 = PackBits compression, a simple byte-oriented run length scheme. See the
+               32773 : PackBits compression, a simple byte-oriented run length scheme. See the
                PackBits section for details.
                Data compression applies only to raster image data. All other TIFF fields are
                unaffected.
@@ -2019,12 +2019,12 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 262
                /*
                PhotometricInterpretation
-               Tag = 262 (106.H)
-               Type = SHORT
+               Tag : 262 (106.H)
+               Type : SHORT
                Values:
-               0 = WhiteIsZero. For bilevel and grayscale images: 0 is imaged as white. The maxi-mum
+               0 : WhiteIsZero. For bilevel and grayscale images: 0 is imaged as white. The maxi-mum
                value is imaged as black. This is the normal value for Compression=2.
-               1 = BlackIsZero. For bilevel and grayscale images: 0 is imaged as black. The maxi-mum
+               1 : BlackIsZero. For bilevel and grayscale images: 0 is imaged as black. The maxi-mum
                value is imaged as white. If this value is specified for Compression=2, the
                image should display and print reversed.
                */
@@ -2043,9 +2043,9 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                CellWidth
                The width of the dithering or halftoning matrix used to create a dithered or
-               halftoned bilevel file.Tag = 264 (108.H)
-               Type = SHORT
-               N = 1
+               halftoned bilevel file.Tag : 264 (108.H)
+               Type : SHORT
+               N : 1
                No default. See also Threshholding.
                */
             // ?? "CellWidth"
@@ -2058,10 +2058,10 @@ FUNCTION pdfTIFFInfo( cFile )
                CellLength
                The length of the dithering or halftoning matrix used to create a dithered or
                halftoned bilevel file.
-               Tag = 265 (109.H)
-               Type = SHORT
-               N = 1
-               This field should only be present if Threshholding = 2
+               Tag : 265 (109.H)
+               Type : SHORT
+               N : 1
+               This field should only be present if Threshholding : 2
                No default. See also Threshholding.
                */
             // ?? "CellLength"
@@ -2073,9 +2073,9 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                FillOrder
                The logical order of bits within a byte.
-               Tag = 266 (10A.H)
-               Type = SHORT
-               N = 1
+               Tag : 266 (10A.H)
+               Type : SHORT
+               N : 1
                */
             // ?? "FillOrder"
             // cTag := "FillOrder"
@@ -2085,8 +2085,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 273
                /*
                StripOffsets
-               Tag = 273 (111.H)
-               Type = SHORT or LONG
+               Tag : 273 (111.H)
+               Type : SHORT or LONG
                For each strip, the byte offset of that strip.
                */
             // ?? "StripOffsets"
@@ -2105,8 +2105,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 277
                /*
                SamplesPerPixel
-               Tag = 277 (115.H)
-               Type = SHORT
+               Tag : 277 (115.H)
+               Type : SHORT
                The number of components per pixel. This number is 3 for RGB images, unless
                extra samples are present. See the ExtraSamples field for further information.
                */
@@ -2118,8 +2118,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 278
                /*
                RowsPerStrip
-               Tag = 278 (116.H)
-               Type = SHORT or LONG
+               Tag : 278 (116.H)
+               Type : SHORT or LONG
                The number of rows in each strip (except possibly the last strip.)
                For example, if ImageLength is 24, and RowsPerStrip is 10, then there are 3
                strips, with 10 rows in the first strip, 10 rows in the second strip, and 4 rows in the
@@ -2134,8 +2134,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 279
                /*
                StripByteCounts
-               Tag = 279 (117.H)
-               Type = SHORT or LONG
+               Tag : 279 (117.H)
+               Type : SHORT or LONG
                For each strip, the number of bytes in that strip after any compression.
                */
             // ?? "StripByteCounts"
@@ -2156,8 +2156,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 282
                /*
                XResolution
-               Tag = 282 (11A.H)
-               Type = RATIONAL
+               Tag : 282 (11A.H)
+               Type : RATIONAL
                The number of pixels per ResolutionUnit in the ImageWidth (typically, horizontal
                - see Orientation) direction.
                */
@@ -2170,8 +2170,8 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 283
                /*
                YResolution
-               Tag = 283 (11B.H)
-               Type = RATIONAL
+               Tag : 283 (11B.H)
+               Type : RATIONAL
                The number of pixels per ResolutionUnit in the ImageLength (typically, vertical)
                direction.
                */
@@ -2192,8 +2192,8 @@ FUNCTION pdfTIFFInfo( cFile )
                FreeOffsets
                For each string of contiguous unused bytes in a TIFF file, the byte offset of the
                string.
-               Tag = 288 (120.H)
-               Type = LONG
+               Tag : 288 (120.H)
+               Type : LONG
                Not recommended for general interchange.
                See also FreeByteCounts.
                */
@@ -2207,8 +2207,8 @@ FUNCTION pdfTIFFInfo( cFile )
                FreeByteCounts
                For each string of contiguous unused bytes in a TIFF file, the number of bytes in
                the string.
-               Tag = 289 (121.H)
-               Type = LONG
+               Tag : 289 (121.H)
+               Type : LONG
                Not recommended for general interchange.
                See also FreeOffsets.
                */
@@ -2220,14 +2220,14 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 296
                /*
                ResolutionUnit
-               Tag = 296 (128.H)
-               Type = SHORT
+               Tag : 296 (128.H)
+               Type : SHORT
                Values:
-               1 = No absolute unit of measurement. Used for images that may have a non-square
+               1 : No absolute unit of measurement. Used for images that may have a non-square
                aspect ratio but no meaningful absolute dimensions.
-               2 = Inch.
-               3 = Centimeter.
-               Default = 2 (inch).
+               2 : Inch.
+               3 : Centimeter.
+               Default : 2 (inch).
                */
             // ?? "ResolutionUnit"
             // cTag := "ResolutionUnit"
@@ -2250,9 +2250,9 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                DateTime
                Date and time of image creation.
-               Tag = 306 (132.H)
-               Type = ASCII
-               N = 2 0
+               Tag : 306 (132.H)
+               Type : ASCII
+               N : 2 0
                The format is: YYYY:MM:DD HH:MM:SS, with hours like those on a 24-hour
                clock, and one space character between the date and the time. The length of the
                string, including the terminating NUL, is 20 bytes.
@@ -2266,8 +2266,8 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                Artist
                Person who created the image.
-               Tag = 315 (13B.H)
-               Type = ASCII
+               Tag : 315 (13B.H)
+               Type : ASCII
                Note: some older TIFF files used this tag for storing Copyright information.
                */
             // ?? "Artist"
@@ -2278,9 +2278,9 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nTag == 320
                /*
                ColorMap
-               Tag = 320 (140.H)
-               Type = SHORT
-               N = 3 * (2**BitsPerSample)
+               Tag : 320 (140.H)
+               Type : SHORT
+               N : 3 * (2**BitsPerSample)
                This field defines a Red-Green-Blue color map (often called a lookup table) for
                palette color images. In a palette-color image, a pixel value is used to index into an
                RGB-lookup table. For example, a palette-color pixel having a value of 0 would
@@ -2298,9 +2298,9 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                ExtraSamples
                Description of extra components.
-               Tag = 338 (152.H)
-               Type = SHORT
-               N = m
+               Tag : 338 (152.H)
+               Type : SHORT
+               N : m
                */
             // ?? "ExtraSamples"
             // cTag := "ExtraSamples"
@@ -2311,8 +2311,8 @@ FUNCTION pdfTIFFInfo( cFile )
                /*
                Copyright
                Copyright notice.
-               Tag = 33432 (8298.H)
-               Type = ASCII
+               Tag : 33432 (8298.H)
+               Type : ASCII
                Copyright notice of the person or organization that claims the copyright to the
                image. The complete copyright statement should be listed in this field including
                any dates and statements of claims. For example, Copyright, John Smith, 19xx.

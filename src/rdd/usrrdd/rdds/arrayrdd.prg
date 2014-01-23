@@ -233,7 +233,7 @@ STATIC FUNCTION AR_CREATEFIELDS( nWA, aStruct )
    LOCAL nResult := HB_SUCCESS
    LOCAL aFieldStruct, aField
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aStruct = %2$s", nWA, hb_ValToExp( aStruct ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aStruct: %2$s", nWA, hb_ValToExp( aStruct ) ) )
 
    /* Setting WA number to current WorkArea */
    aWAData[ WADATA_WORKAREA ] := nWA
@@ -272,7 +272,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    LOCAL cName
    LOCAL cFullName, aDBFData, nResult /*, aFieldStruct, aField, aStruct */
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aOpenInfo = %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOpenInfo: %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
 
    /* getting database infos from current workarea */
    aDBFData := aWAData[ WADATA_DATABASE ]
@@ -325,7 +325,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
    LOCAL aStruct, oError, aFieldStruct, aField, nResult
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aOpenInfo = %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOpenInfo: %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
 
    cFullName := Upper( aOpenInfo[ UR_OI_NAME ] )
 
@@ -430,7 +430,7 @@ STATIC FUNCTION AR_CLOSE( nWA )
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF HB_ISARRAY( aDBFData )
       /* decrease open number */
@@ -450,7 +450,7 @@ STATIC FUNCTION AR_GETVALUE( nWA, nField, xValue )
    LOCAL aStruct  := aDBFData[ DATABASE_STRUCT  ]
    LOCAL nRecNo   := aWAData[ WADATA_RECNO ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nField = %2$d, xValue = %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nField: %2$d, xValue: %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
    IF nField > 0 .AND. nField <= Len( aStruct )
       IF aWAData[ WADATA_EOF ]
@@ -475,7 +475,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    LOCAL aKeys[ Len( aIndexes ) ]
    LOCAL xVal
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nField = %2$d, xValue = %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nField: %2$d, xValue: %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
    IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
       iif( HB_ISSTRING( xValue ) .AND. aStruct[ nField ][ DBS_TYPE ] == "M", .T., ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
@@ -503,7 +503,7 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL nRecCount := Len( aRecords )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecord = %2$d, nRecCount = %3$d", nWA, nRecord, nRecCount ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecord: %2$d, nRecCount: %3$d", nWA, nRecord, nRecCount ) )
 
    IF nRecord >= 1 .AND. nRecord <= nRecCount
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .F.
@@ -527,14 +527,14 @@ STATIC FUNCTION AR_GOTO( nWA, nRecord )
 
    AR_UNLOCK( nWA )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_BOF ] = %1$s, aWAData[ WADATA_EOF ] = %2$s, aWAData[ WADATA_RECNO ] = %3$d", ;
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_BOF ]: %1$s, aWAData[ WADATA_EOF ]: %2$s, aWAData[ WADATA_RECNO ]: %3$d", ;
       hb_ValToExp( aWAData[ WADATA_BOF ] ), hb_ValToExp( aWAData[ WADATA_EOF ] ), aWAData[ WADATA_RECNO ] ) )
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION AR_GOTOID( nWA, nRecord )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecord = %2$d", nWA, nRecord ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecord: %2$d", nWA, nRecord ) )
 
    RETURN AR_GOTO( nWA, nRecord )
 
@@ -549,7 +549,7 @@ STATIC FUNCTION AR_GOTOP( nWA )
    LOCAL nIndex    := aWAData[ WADATA_INDEX ]
    LOCAL nResult   := HB_SUCCESS
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF nRecCount == 0
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
@@ -591,7 +591,7 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
    LOCAL nIndex   := aWAData[ WADATA_INDEX ]
    LOCAL nResult  := HB_SUCCESS
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF Len( aRecords ) == 0
       aWAData[ WADATA_EOF ]   := aWAData[ WADATA_BOF ] := .T.
@@ -626,7 +626,7 @@ STATIC FUNCTION AR_GOBOTTOM( nWA )
 
 STATIC FUNCTION AR_SETFILTER( nWa, aDbFilterInfo )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aDbFilterInfo = %2$s", nWA, hb_ValToExp( aDbFilterInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aDbFilterInfo: %2$s", nWA, hb_ValToExp( aDbFilterInfo ) ) )
 
    USRRDD_AREADATA( nWA )[ WADATA_FILTERINFO ] := aDbFilterInfo
 
@@ -634,7 +634,7 @@ STATIC FUNCTION AR_SETFILTER( nWa, aDbFilterInfo )
 
 STATIC FUNCTION AR_CLEARFILTER( nWA )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    USRRDD_AREADATA( nWA )[ WADATA_FILTERINFO ] := NIL
 
@@ -647,7 +647,7 @@ STATIC FUNCTION AR_SKIPFILTER( nWA, nRecords )
    LOCAL aRecInfo := aDBFData[ DATABASE_RECINFO ]
    LOCAL lBof, nToSkip
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecords = %2$d", nWA, nRecords ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecords: %2$d", nWA, nRecords ) )
 
    nToSkip := iif( nRecords > 0, 1, iif( nRecords < 0, -1, 0 ) )
 
@@ -689,7 +689,7 @@ STATIC FUNCTION AR_SKIPRAW( nWA, nRecords )
    LOCAL nResult, nRec, nEnd, lScope0, lScope1
    LOCAL nIni := 0
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecords = %2$d", nWA, nRecords ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecords: %2$d", nWA, nRecords ) )
 
    IF nRecords == 0
       lBof := aWAData[ WADATA_BOF ]
@@ -762,7 +762,7 @@ STATIC FUNCTION AR_BOF( nWA, lBof )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lBof = %2$s", nWA, hb_ValToExp( lBof ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, lBof: %2$s", nWA, hb_ValToExp( lBof ) ) )
 
    /* This is a hack to protect from dbf1.c skipraw hack */
    IF aWAData[ WADATA_FORCEBOF ] .AND. lBof
@@ -778,7 +778,7 @@ STATIC FUNCTION AR_EOF( nWA, lEof )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lEof = %2$s", nWA, hb_ValToExp( lEof ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, lEof: %2$s", nWA, hb_ValToExp( lEof ) ) )
 
    lEof := aWAData[ WADATA_EOF ]
 
@@ -794,7 +794,7 @@ STATIC FUNCTION AR_DELETE( nWA )
    LOCAL aKeys[ Len( aIndexes ) ]
    LOCAL oError
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
@@ -838,7 +838,7 @@ STATIC FUNCTION AR_DELETED( nWA, lDeleted )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
    LOCAL aRecInfo := aDBFData[ DATABASE_RECINFO ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lDeleted = %2$s", nWA, hb_ValToExp( lDeleted ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, lDeleted: %2$s", nWA, hb_ValToExp( lDeleted ) ) )
 
    IF Len( aRecInfo ) > 0 .AND. aWAData[ WADATA_RECNO ] <= Len( aRecInfo )
       lDeleted := aRecInfo[ aWAData[ WADATA_RECNO ] ][ RECDATA_DELETED ]
@@ -858,7 +858,7 @@ STATIC FUNCTION AR_RECALL( nWA )
    LOCAL aKeys[ Len( aIndexes ) ]
    LOCAL oError
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
@@ -903,7 +903,7 @@ STATIC FUNCTION AR_APPEND( nWA, nRecords )
 
    HB_SYMBOL_UNUSED( nRecords )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecords = %2$s", nWA, hb_ValToExp( nRecords ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecords: %2$s", nWA, hb_ValToExp( nRecords ) ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
@@ -945,7 +945,7 @@ STATIC FUNCTION AR_LOCK( nWA, aLock )
    LOCAL nRec    := iif( aLock[ UR_LI_RECORD ] == NIL, aWAData[ WADATA_RECNO ], aLock[ UR_LI_RECORD ] )
    LOCAL aRecInfo
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aLock = %2$s", nWA, hb_ValToExp( aLock ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aLock: %2$s", nWA, hb_ValToExp( aLock ) ) )
 
    IF aWAData[ WADATA_EOF ]
       aLock[ UR_LI_RESULT ] := .T.
@@ -976,7 +976,7 @@ STATIC FUNCTION AR_UNLOCK( nWA, nRec )
    LOCAL aRecInfo := aWAData[ WADATA_DATABASE, DATABASE_RECINFO ]
    LOCAL nPos
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRec = %2$d", nWA, nRec ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRec: %2$d", nWA, nRec ) )
 
    IF ! Empty( aRecords )
       IF nRec == NIL            /* Unlock All */
@@ -1002,7 +1002,7 @@ STATIC FUNCTION AR_RECID( nWA, nRecNo )
    LOCAL aRecords  := aDBFData[ DATABASE_RECORDS ]
    LOCAL nRecCount := Len( aRecords )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecNo = %2$s", nWA, hb_ValToExp( nRecNo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecNo: %2$s", nWA, hb_ValToExp( nRecNo ) ) )
 
    IF aWAData[ WADATA_EOF ]
       nRecNo := nRecCount + 1
@@ -1018,11 +1018,11 @@ STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords := aDBFData[ DATABASE_RECORDS ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nRecords = %2$s", nWA, hb_ValToExp( nRecords ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nRecords: %2$s", nWA, hb_ValToExp( nRecords ) ) )
 
    nRecords := Len( aRecords )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nRecords = %1$d", nRecords ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nRecords: %1$d", nRecords ) )
 
    RETURN HB_SUCCESS
 
@@ -1036,7 +1036,7 @@ STATIC FUNCTION AR_PACK( nWA )
    LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
    LOCAL nDel     := 0
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF ! aDBFData[ DATABASE_LOCKED ]
       oError := ErrorNew()
@@ -1084,7 +1084,7 @@ STATIC FUNCTION AR_ZAP( nWA )
    LOCAL aOpenInfo := aWAData[ WADATA_OPENINFO ]
    LOCAL oError
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
 
    IF aOpenInfo[ UR_OI_READONLY ]
       oError := ErrorNew()
@@ -1123,7 +1123,7 @@ STATIC FUNCTION AR_GOCOLD( nWA )
 
 STATIC FUNCTION AR_FOUND( nWa, lFound )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lFound = %2$s", nWa, hb_ValToExp( lFound ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, lFound: %2$s", nWa, hb_ValToExp( lFound ) ) )
 
    lFound := USRRDD_AREADATA( nWA )[ WADATA_FOUND ]
 
@@ -1136,7 +1136,7 @@ STATIC FUNCTION AR_SEEK( nWa, lSoftSeek, xSeek, lLast )
    LOCAL nIndex   := aWAData[ WADATA_INDEX ]
    LOCAL nResult  /* := HB_SUCCESS */
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lSoftSeek = %2$s, xSeek = %3$s, lLast = %4$s", nWa, hb_ValToExp( lSoftSeek ), hb_ValToExp( xSeek ), hb_ValToExp( lLast ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, lSoftSeek: %2$s, xSeek: %3$s, lLast: %4$s", nWa, hb_ValToExp( lSoftSeek ), hb_ValToExp( xSeek ), hb_ValToExp( lLast ) ) )
 
    aWAData[ WADATA_ORDRECNO ] := Seek( xSeek, lSoftSeek, lLast, aIndexes[ nIndex ] )
    IF aWAData[ WADATA_ORDRECNO ] == 0 .OR. aWAData[ WADATA_ORDRECNO ] > Len( aIndexes[ nIndex, INDEX_RECORDS ] )
@@ -1154,7 +1154,7 @@ STATIC FUNCTION AR_INFO( nWA, nMsg, xValue )
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nMsg = %2$s, xValue = %3$s", nWA, hb_ValToExp( nMsg ), hb_ValToExp( xValue ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nMsg: %2$s, xValue: %3$s", nWA, hb_ValToExp( nMsg ), hb_ValToExp( xValue ) ) )
 
    SWITCH nMsg
    CASE DBI_TABLEEXT
@@ -1177,7 +1177,7 @@ STATIC FUNCTION AR_ORDLSTADD( nWA, aOrderInfo )
 
    HB_SYMBOL_UNUSED( aOrderInfo )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aOrderInfo = %2$s", nWA, hb_ValToExp( aOrderInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOrderInfo: %2$s", nWA, hb_ValToExp( aOrderInfo ) ) )
 
    IF Empty( aIndexes )
       aWAData[ WADATA_INDEX ] := 0
@@ -1199,7 +1199,7 @@ STATIC FUNCTION AR_ORDLSTFOCUS( nWA, aOrderInfo )
    LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
    LOCAL xIndex   := aOrderInfo[ UR_ORI_TAG ]
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aOrderInfo = %2$s", nWA, hb_ValToExp( aOrderInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOrderInfo: %2$s", nWA, hb_ValToExp( aOrderInfo ) ) )
 
    aOrderInfo[ UR_ORI_RESULT ] := iif( aWAData[ WADATA_INDEX ] > 0, aIndexes[ aWAData[ WADATA_INDEX ], INDEX_TAG ], "" )
 
@@ -1221,7 +1221,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    LOCAL aIndexes, nContNext, nContStep
    LOCAL bWhile, nRec, bNext, bEval, bEvalOCI, nStep, nIndex, cIndex, aIndex
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, aOrderCreate = %2$s", nWA, hb_ValToExp( aOrderCreate ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOrderCreate: %2$s", nWA, hb_ValToExp( aOrderCreate ) ) )
 
    aWAData  := USRRDD_AREADATA( nWA )
    aDBFData := aWAData[ WADATA_DATABASE ]
@@ -1294,25 +1294,25 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
       bNext := {|| nContNext++ <= nNext }
    ENDIF
    IF aOCInfo[ UR_ORC_BEVAL ] == NIL
-      HB_TRACE( HB_TR_DEBUG, "bEval = {|| .T. }" )
+      HB_TRACE( HB_TR_DEBUG, "bEval: {|| .T. }" )
       bEval := {|| .T. }
    ELSEIF aOCInfo[ UR_ORC_STEP ] == NIL
       bEval := aOCInfo[ UR_ORC_BEVAL ]
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEval = %1$s", hb_ValToExp( bEval ) ) )
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEval: %1$s", hb_ValToExp( bEval ) ) )
    ELSE
       bEvalOCI := aOCInfo[ UR_ORC_BEVAL ]
       nStep    := aOCInfo[ UR_ORC_STEP ]
       bEval    := {|| iif( ++nContStep == nStep, ( nContStep := 0, Eval( bEvalOCI ) ), .T. ) }
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEvalOCI = %1$s, nStep = %2$d, bEval = %3$s", hb_ValToExp( bEvalOCI ), nStep, hb_ValToExp( bEval ) ) )
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEvalOCI: %1$s, nStep: %2$d, bEval: %3$s", hb_ValToExp( bEvalOCI ), nStep, hb_ValToExp( bEval ) ) )
    ENDIF
 
    AAdd( aWAData[ WADATA_WAORDINFO ], AR_WAOIINIT() )
    aWAData[ WADATA_INDEX ] := Len( aIndexes )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_EOF ] = %1$s", hb_ValToExp( aWAData[ WADATA_EOF ] ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_EOF ]: %1$s", hb_ValToExp( aWAData[ WADATA_EOF ] ) ) )
 
    DO WHILE ! aWAData[ WADATA_EOF ] .AND. Eval( bEval ) .AND. Eval( bNext ) .AND. Eval( bWhile )
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_INDEX ] = %1$s, Eval( aIndex[ INDEX_ORCR, UR_ORCR_BKEY ] ) = %2$s, aIndex = %3$s, aWAData = %4$s", ;
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_INDEX ]: %1$s, Eval( aIndex[ INDEX_ORCR, UR_ORCR_BKEY ] ): %2$s, aIndex: %3$s, aWAData: %4$s", ;
          hb_ValToExp( aWAData[ WADATA_INDEX ] ), hb_ValToExp( Eval( aIndex[ INDEX_ORCR, UR_ORCR_BKEY ] ) ), ;
          hb_ValToExp( hb_ValToExp( aIndex ) ), hb_ValToExp( aWAData ) ) )
       ModifyIndex( aWAData[ WADATA_INDEX ], Eval( aIndex[ INDEX_ORCR, UR_ORCR_BKEY ] ), aIndex, aWAData )
@@ -1327,7 +1327,7 @@ STATIC FUNCTION AR_ORDINFO( nWA, nMsg, aOrderInfo )
    LOCAL aIndexes := aWAData[ WADATA_DATABASE, DATABASE_INDEX ]
    LOCAL nIndex, nPos
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nMsg = %2$s, aOrderInfo = %3$s", nWA, hb_ValToExp( nMsg ), hb_ValToExp( aOrderInfo ) ) )
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, nMsg: %2$s, aOrderInfo: %3$s", nWA, hb_ValToExp( nMsg ), hb_ValToExp( aOrderInfo ) ) )
 
    IF Empty( aOrderInfo[ UR_ORI_TAG ] )
       aOrderInfo[ UR_ORI_TAG ] := aOrderInfo[ UR_ORI_BAG ]
@@ -1493,46 +1493,46 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSu
 
    s_nRddID := nRddID
 
-   aMyFunc[ UR_INIT         ] := ( @AR_INIT()         )
-   aMyFunc[ UR_NEW          ] := ( @AR_NEW()          )
-   aMyFunc[ UR_FLUSH        ] := ( @AR_DUMMY()        )
-   aMyFunc[ UR_CREATE       ] := ( @AR_CREATE()       )
-   aMyFunc[ UR_CREATEFIELDS ] := ( @AR_CREATEFIELDS() )
-   aMyFunc[ UR_OPEN         ] := ( @AR_OPEN()         )
-   aMyFunc[ UR_CLOSE        ] := ( @AR_CLOSE()        )
-   aMyFunc[ UR_BOF          ] := ( @AR_BOF()          )
-   aMyFunc[ UR_EOF          ] := ( @AR_EOF()          )
-   aMyFunc[ UR_APPEND       ] := ( @AR_APPEND()       )
-   aMyFunc[ UR_DELETE       ] := ( @AR_DELETE()       )
-   aMyFunc[ UR_DELETED      ] := ( @AR_DELETED()      )
-   aMyFunc[ UR_RECALL       ] := ( @AR_RECALL()       )
-   aMyFunc[ UR_SETFILTER    ] := ( @AR_SETFILTER()    )
-   aMyFunc[ UR_CLEARFILTER  ] := ( @AR_CLEARFILTER()  )
-   aMyFunc[ UR_SKIPFILTER   ] := ( @AR_SKIPFILTER()   )
-   aMyFunc[ UR_SKIPRAW      ] := ( @AR_SKIPRAW()      )
-   aMyFunc[ UR_GOTO         ] := ( @AR_GOTO()         )
-   aMyFunc[ UR_GOTOID       ] := ( @AR_GOTOID()       )
-   aMyFunc[ UR_GOTOP        ] := ( @AR_GOTOP()        )
-   aMyFunc[ UR_GOBOTTOM     ] := ( @AR_GOBOTTOM()     )
-   aMyFunc[ UR_RECID        ] := ( @AR_RECID()        )
-   aMyFunc[ UR_LOCK         ] := ( @AR_LOCK()         )
-   aMyFunc[ UR_UNLOCK       ] := ( @AR_UNLOCK()       )
-   aMyFunc[ UR_RECCOUNT     ] := ( @AR_RECCOUNT()     )
-   aMyFunc[ UR_GETVALUE     ] := ( @AR_GETVALUE()     )
-   aMyFunc[ UR_PUTVALUE     ] := ( @AR_PUTVALUE()     )
-   aMyFunc[ UR_PACK         ] := ( @AR_PACK()         )
-   aMyFunc[ UR_ZAP          ] := ( @AR_ZAP()          )
-   aMyFunc[ UR_GOCOLD       ] := ( @AR_GOCOLD()       )
-   aMyFunc[ UR_FOUND        ] := ( @AR_FOUND()        )
-   aMyFunc[ UR_SEEK         ] := ( @AR_SEEK()         )
-   aMyFunc[ UR_INFO         ] := ( @AR_INFO()         )
-   aMyFunc[ UR_ORDLSTADD    ] := ( @AR_ORDLSTADD()    )
-   aMyFunc[ UR_ORDLSTFOCUS  ] := ( @AR_ORDLSTFOCUS()  )
-   aMyFunc[ UR_ORDCREATE    ] := ( @AR_ORDCREATE()    )
-   aMyFunc[ UR_ORDINFO      ] := ( @AR_ORDINFO()      )
-   aMyFunc[ UR_CLEARLOCATE  ] := ( @AR_CLEARLOCATE()  )
-   aMyFunc[ UR_SETLOCATE    ] := ( @AR_SETLOCATE()    )
-   aMyFunc[ UR_LOCATE       ] := ( @AR_LOCATE()       )
+   aMyFunc[ UR_INIT         ] := @AR_INIT()
+   aMyFunc[ UR_NEW          ] := @AR_NEW()
+   aMyFunc[ UR_FLUSH        ] := @AR_DUMMY()
+   aMyFunc[ UR_CREATE       ] := @AR_CREATE()
+   aMyFunc[ UR_CREATEFIELDS ] := @AR_CREATEFIELDS()
+   aMyFunc[ UR_OPEN         ] := @AR_OPEN()
+   aMyFunc[ UR_CLOSE        ] := @AR_CLOSE()
+   aMyFunc[ UR_BOF          ] := @AR_BOF()
+   aMyFunc[ UR_EOF          ] := @AR_EOF()
+   aMyFunc[ UR_APPEND       ] := @AR_APPEND()
+   aMyFunc[ UR_DELETE       ] := @AR_DELETE()
+   aMyFunc[ UR_DELETED      ] := @AR_DELETED()
+   aMyFunc[ UR_RECALL       ] := @AR_RECALL()
+   aMyFunc[ UR_SETFILTER    ] := @AR_SETFILTER()
+   aMyFunc[ UR_CLEARFILTER  ] := @AR_CLEARFILTER()
+   aMyFunc[ UR_SKIPFILTER   ] := @AR_SKIPFILTER()
+   aMyFunc[ UR_SKIPRAW      ] := @AR_SKIPRAW()
+   aMyFunc[ UR_GOTO         ] := @AR_GOTO()
+   aMyFunc[ UR_GOTOID       ] := @AR_GOTOID()
+   aMyFunc[ UR_GOTOP        ] := @AR_GOTOP()
+   aMyFunc[ UR_GOBOTTOM     ] := @AR_GOBOTTOM()
+   aMyFunc[ UR_RECID        ] := @AR_RECID()
+   aMyFunc[ UR_LOCK         ] := @AR_LOCK()
+   aMyFunc[ UR_UNLOCK       ] := @AR_UNLOCK()
+   aMyFunc[ UR_RECCOUNT     ] := @AR_RECCOUNT()
+   aMyFunc[ UR_GETVALUE     ] := @AR_GETVALUE()
+   aMyFunc[ UR_PUTVALUE     ] := @AR_PUTVALUE()
+   aMyFunc[ UR_PACK         ] := @AR_PACK()
+   aMyFunc[ UR_ZAP          ] := @AR_ZAP()
+   aMyFunc[ UR_GOCOLD       ] := @AR_GOCOLD()
+   aMyFunc[ UR_FOUND        ] := @AR_FOUND()
+   aMyFunc[ UR_SEEK         ] := @AR_SEEK()
+   aMyFunc[ UR_INFO         ] := @AR_INFO()
+   aMyFunc[ UR_ORDLSTADD    ] := @AR_ORDLSTADD()
+   aMyFunc[ UR_ORDLSTFOCUS  ] := @AR_ORDLSTFOCUS()
+   aMyFunc[ UR_ORDCREATE    ] := @AR_ORDCREATE()
+   aMyFunc[ UR_ORDINFO      ] := @AR_ORDINFO()
+   aMyFunc[ UR_CLEARLOCATE  ] := @AR_CLEARLOCATE()
+   aMyFunc[ UR_SETLOCATE    ] := @AR_SETLOCATE()
+   aMyFunc[ UR_LOCATE       ] := @AR_LOCATE()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )
@@ -1933,7 +1933,7 @@ STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
 
    LOCAL nPos, aOCInfo, lFor, lDel
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nIndex = %1$d, xValue = %2$s, aIndex = %3$s, aWAData = %4$s, xValorAnt = %5$s", ;
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nIndex: %1$d, xValue: %2$s, aIndex: %3$s, aWAData: %4$s, xValorAnt: %5$s", ;
       nIndex, hb_ValToExp( xValue ), hb_ValToExp( aIndex ), hb_ValToExp( aWAData ), hb_ValToExp( xValorAnt ) ) )
 
    aOCInfo := aIndex[ INDEX_ORCR, UR_ORCR_CONDINFO ]

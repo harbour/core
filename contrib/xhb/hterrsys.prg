@@ -70,7 +70,7 @@ REQUEST HardCR
 REQUEST MemoWrit
 
 STATIC s_bFixCorrupt
-STATIC s_cErrFooter  := " "
+STATIC s_cErrFooter := " "
 
 
 /***
@@ -131,31 +131,31 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    cErrString += '<table bgcolor="white" border CellPadding=1 CellSpacing=1 cols=2 width=80%>'
 
    cErrString += '<tr><td bgcolor="black" align="center">'
-   cErrstring += '<font face = "verdana" size ="5" color="white">' + CRLF()
+   cErrstring += '<font face="verdana" size="5" color="white">' + CRLF()
    cErrString += "<b>ERROR REPORT</b>"
    cErrString += "</td></tr>"
 
    cErrString += '<tr><td bgcolor="blue">'
-   cErrstring += '<font face = "verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
    cErrString += DEF_ERR_HEADER
    cErrString += "</td></tr>"
 
    cErrString += '<tr><td bgcolor="red">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
    cErrString += '<em>' + cMessage + '</em>'
 
    cErrString += '</td></tr><tr><td bgcolor="cyan">' + CRLF()
-   cErrstring += '<font face ="verdana" size ="2" color="black">' + CRLF()
-   cErrString += "ERRORCODE...... :" + hb_ntos( e:GenCode ) + "<br />" + CRLF()
-   cErrString += "SUBSYSTEM..... :" + e:SubSystem + "<br />" + CRLF()
+   cErrstring += '<font face="verdana" size="2" color="black">' + CRLF()
+   cErrString += "ERRORCODE......:" + hb_ntos( e:GenCode ) + "<br />" + CRLF()
+   cErrString += "SUBSYSTEM.....:" + e:SubSystem + "<br />" + CRLF()
    cErrString += "DESCRIPTION...:" + e:Description + "<br />" + CRLF()
    cErrString += "OPERATION......:" + e:Operation + "<br />" + CRLF()
-   cErrString += "FILENAME........ :" + e:FileName + "<br />" + CRLF()
-   cErrString += "TRIES............. :" + hb_ntos( e:Tries ) + CRLF()
+   cErrString += "FILENAME........:" + e:FileName + "<br />" + CRLF()
+   cErrString += "TRIES.............:" + hb_ntos( e:Tries ) + CRLF()
 
    cErrString += '</td></tr>'
    cErrString += '<tr><td bgcolor="red">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
    cErrstring += '<em>'
 
    i := 2
@@ -171,7 +171,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    cErrstring += '</em>'
    cErrString += '</td></tr>'
    cErrString += '<tr><td bgcolor="black">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
    cErrstring += "Extra Notes..."
 
    cErrString += "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()

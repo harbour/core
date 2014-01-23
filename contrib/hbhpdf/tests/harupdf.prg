@@ -209,13 +209,13 @@ STATIC PROCEDURE Page_Lines( pdf )
 
    /* Draw verious widths of lines. */
    HPDF_Page_SetLineWidth( page, 0 )
-   draw_line( page, 60, 770, "line width = 0" )
+   draw_line( page, 60, 770, "line width: 0" )
 
    HPDF_Page_SetLineWidth( page, 1.0 )
-   draw_line( page, 60, 740, "line width = 1.0" )
+   draw_line( page, 60, 740, "line width: 1.0" )
 
    HPDF_Page_SetLineWidth( page, 2.0 )
-   draw_line( page, 60, 710, "line width = 2.0" )
+   draw_line( page, 60, 710, "line width: 2.0" )
 
    /* Line dash pattern */
    HPDF_Page_SetLineWidth( page, 1.0 )

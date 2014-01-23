@@ -464,7 +464,7 @@ FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
    ELSE
       cHtml := uhttpd_TranslateStrings( cString, aTranslate )
    ENDIF
-   // TraceLog( "OutputString() = cHtml", cHtml )
+   // TraceLog( "OutputString(): cHtml", cHtml )
 
    RETURN cHtml
 

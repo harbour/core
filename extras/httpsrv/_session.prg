@@ -104,22 +104,22 @@ CLASS uhttpd_Session
    VAR cSID
    VAR cSavePath               INIT "/tmp"
    VAR cName                   // INIT "SESSIONID"
-   VAR lAuto_Start             INIT .F.       // .F. = no autostart
+   VAR lAuto_Start             INIT .F.       // .F.: no autostart
    VAR nGc_Probability         INIT 33        // Every 1/3 of checks i'll lunch Session GC
    VAR nGc_MaxLifeTime         INIT 1440      // seconds - Number of seconds after gc can delete a session
    // VAR cSerialize_Handler      INIT "HBHTMLLIB"
-   VAR nCookie_LifeTime        INIT 3600 // 0         // Number of seconds to keep cookie, 0 = until browser is closed
+   VAR nCookie_LifeTime        INIT 3600 // 0         // Number of seconds to keep cookie, 0: until browser is closed
    VAR cCookie_Path            INIT "/"
    VAR cCookie_Domain
    VAR lCookie_Secure          INIT .F.
-   VAR lUse_Cookies            INIT .T.       // .T. = Use cookies to store session id on client side
+   VAR lUse_Cookies            INIT .T.       // .T.: Use cookies to store session id on client side
    VAR lUse_Only_Cookies       INIT .F.
    VAR cReferrer_Check                        // If is set check if referrer is equal to, if it isn't block
    // VAR cEntropy_File
    // VAR nEntropy_Length
    VAR cCache_Limiter          INIT "nocache" // Possible values are: none, nocache, private, private_no_expire, public
    VAR nCache_Expire           INIT 180       // in minutes, not checked if cCache_Limiter == none or nocache
-   VAR lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
+   VAR lUse_Trans_SID          INIT .F.       // .F.: no SID appended to URL
 
    // Session Storage code blocks
    VAR bOpen                   // INIT {| cPath, cName | ::SessionOpen( cPath, cName ) }
@@ -152,7 +152,7 @@ ENDCLASS
 
 METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
 
-   // hb_ToOutDebug( "cSessionName = %s, cSessionPath = %s\n\r", cSessionName, cSessionPath )
+   // hb_ToOutDebug( "cSessionName: %s, cSessionPath: %s\n\r", cSessionName, cSessionPath )
 
    __defaultNIL( @cSessionName, "SESSION" )
    __defaultNIL( @cSessionPath, ::cSavePath )
@@ -197,7 +197,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       ::cSID := cSID
    ENDIF
 
-   // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
+   // hb_ToOutDebug( "cSID: %s, ::cSID: %s\n\r", cSID, ::cSID )
 
    // TraceLog( "Active Sessions: " + hb_CStr( ::nActiveSessions ) )
 
@@ -213,12 +213,12 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       ENDIF
       lSendCookie := .F.
       lDefine_SID := .F.
-      // ::oCGI:ToLogFile( "::cSID = " + hb_CStr( ::cSID ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::cSID: " + hb_CStr( ::cSID ), "/pointtoit/tmp/log.txt" )
    ENDIF
 
    IF ! Empty( ::cSID ) .AND. ! ::CheckSID()
       // Check if the SID is NOT valid, someone altered it
-      // ::oCGI:ToLogFile( "::cSID = " + hb_CStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::cSID: " + hb_CStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
       ::cSID      := NIL   // invalidate current SID, i'll generate a new one
       lSendCookie := .T.
       lDefine_SID := .T.
@@ -230,7 +230,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       // oUrl := TUrl():New( ::cReferrer_Check )
       hUrl := uhttpd_SplitUrl( ::cReferrer_Check )
 
-      // hb_ToOutDebug( "hUrl = %s\n\r", hb_ValToExp( hUrl ) )
+      // hb_ToOutDebug( "hUrl: %s\n\r", hb_ValToExp( hUrl ) )
 
       // Check whether the current request was referred to by
       // an external site which invalidates the previously found ID
@@ -277,7 +277,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    // Read session data
    IF !( ( xVal := ::Read( ::cSID  ) ) == NIL )
       // TraceLog( "Read session data - xVal", xVal )
-      // ::oCGI:ToLogFile( "xval = " + hb_CStr( xVal ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "xval: " + hb_CStr( xVal ), "/pointtoit/tmp/log.txt" )
       // Decode session data
       ::Decode( xVal )
       // ::oCGI:ToLogFile( "decoded", "/pointtoit/tmp/log.txt" )
@@ -287,10 +287,10 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    ::SendCacheLimiter()
 
    // Check if we should clean up (call the garbage collection routines)
-   // TraceLog( "::nGc_probability = " + hb_CStr( ::nGc_probability ) )
+   // TraceLog( "::nGc_probability: " + hb_CStr( ::nGc_probability ) )
    IF ::nGc_probability > 0
       nRand := hb_RandomInt( 1, 100 )
-      // TraceLog( "::nGc_probability - nRand = " + hb_CStr( nRand ) )
+      // TraceLog( "::nGc_probability - nRand: " + hb_CStr( nRand ) )
       IF nRand <= ::nGc_Probability
          ::GC( ::nGc_MaxLifeTime )
       ENDIF
@@ -487,7 +487,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
 
 
 /*
- * SID = 25 random chars + 5 CRC chars
+ * SID == 25 random chars + 5 CRC chars
  */
 
 METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
@@ -509,7 +509,7 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
    /* Let's generate the sequence */
    // cSID := Space( nLenSID )
    cSID := ""
-   FOR n := 1 TO nLenSID - 5 // 5 = CRC Length
+   FOR n := 1 TO nLenSID - 5 // 5 -> CRC Length
       nRand     := hb_RandomInt( 1, nLenKeys )
       // cSID[ n ] := cBaseKeys[ nRand ]
       cSID += SubStr( cBaseKeys, nRand, 1 )
@@ -523,11 +523,11 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
    FOR n := 1 TO nLenTemp
       // cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-      // ::oCGI:ToLogFile( "cCRCKey = " + hb_CStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "cCRCKey: " + hb_CStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
    NEXT
 
    cRet := cSID + cSIDCRC
-   // ::oCGI:ToLogFile( "::GenerateSID() = " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+   // ::oCGI:ToLogFile( "::GenerateSID(): " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
 
    // TraceLog( "Generate SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
 
@@ -549,12 +549,12 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
    // Max Length must to be 10
    __defaultNIL( @cCRCKey, MY_CRCKEY )
 
-   // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_ValToExp( cSID ), hb_ValToExp( ::cSID ) )
+   // hb_ToOutDebug( "cSID: %s, ::cSID: %s\n\r", hb_ValToExp( cSID ), hb_ValToExp( ::cSID ) )
 
    IF ! Empty( cSID )
 
       /* Calculate the key */
-      FOR n := 1 TO nLenSID - 5 // 5 = CRC Length
+      FOR n := 1 TO nLenSID - 5 // 5 -> CRC Length
          // nRand     := At( cSID[ n ], cBaseKeys )
          nRand     := At( SubStr( cSID, n, 1 ), cBaseKeys )
          nKey += nRand
@@ -573,7 +573,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
       lOk := ( Right( cSID, 5 ) == cSIDCRC )
 
       // TraceLog( "Check SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
-      // ::oCGI:ToLogFile( "::CheckSID() = " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::CheckSID(): " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
    ENDIF
 
    RETURN lOk
@@ -802,11 +802,11 @@ METHOD Decode( cData ) CLASS uhttpd_Session
    // LOCAL cKey
 
    // TraceLog( "Decode - cSerial", cSerial )
-   // ::oCGI:ToLogFile( "Decode - cSerial = " + hb_CStr( cSerial ), "/pointtoit/tmp/log.txt" )
+   // ::oCGI:ToLogFile( "Decode - cSerial: " + hb_CStr( cSerial ), "/pointtoit/tmp/log.txt" )
 
    DO WHILE ( xVal := hb_Deserialize( @cSerial ) ) != NIL
       // TraceLog( "Decode - xVal", DumpValue( xVal ) )
-      // ::oCGI:ToLogFile( "Decode - xVal = " + hb_CStr( xVal ) + ", ValType( xVal ) = " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "Decode - xVal: " + hb_CStr( xVal ) + ", ValType( xVal ): " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
 
       SWITCH ValType( xVal )
 #if 0
@@ -824,9 +824,9 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 
       CASE "A"  // Le variabili sono conservate come array { VarName, Value }
          // TraceLog( "Decode - xVal - Array", xVal )
-         // ::oCGI:ToLogFile( "Decode - xVal - Array = " + hb_CStr( xVal ) + ", Len = " + hb_CStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
+         // ::oCGI:ToLogFile( "Decode - xVal - Array: " + hb_CStr( xVal ) + ", Len: " + hb_CStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
          FOR EACH aElem IN xVal
-            // ::oCGI:ToLogFile( "Decode - aElem = " + hb_CStr( hb_ValToExp( aElem ) ), "/pointtoit/tmp/log.txt" )
+            // ::oCGI:ToLogFile( "Decode - aElem: " + hb_CStr( hb_ValToExp( aElem ) ), "/pointtoit/tmp/log.txt" )
             _SESSION[ aElem[ 1 ] ] := aElem[ 2 ]
          NEXT
          EXIT

@@ -132,15 +132,15 @@ METHOD Open() CLASS TableManager
 
    LOCAL cDBF := ::cTable
 
-   // hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+   // hb_ToOutDebug( "CurPath: %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
-   // hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
+   // hb_ToOutDebug( "before: cDBF: %s, Used(): %s\n", cDBF, Used() )
 
    IF ! ::lOpened
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
-      // hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
+      // hb_ToOutDebug( "after: cDBF: %s, Used(): %s\n", cDBF, Used() )
       ::lOpened := Used()
 
    ENDIF

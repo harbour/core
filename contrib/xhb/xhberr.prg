@@ -292,7 +292,7 @@ STATIC FUNCTION LogError( oerr )
 
    LOCAL cScreen
    LOCAL cLogFile    := s_cErrorLog       // error log file name
-   LOCAL lAppendLog  := s_lErrorLogAppend // .F. = create a new error log (default) .T. = append to a existing one.
+   LOCAL lAppendLog  := s_lErrorLogAppend // .F. create a new error log (default), .T. append to a existing one.
    LOCAL nCols
    LOCAL nRows
 
@@ -644,7 +644,7 @@ STATIC FUNCTION Arguments( oErr )
 
    IF HB_ISARRAY( oErr:Args )
       FOR EACH xArg IN oErr:Args
-         cArguments += " [" + Str( xArg:__enumIndex(), 2 ) + "] = Type: " + ValType( xArg )
+         cArguments += " [" + Str( xArg:__enumIndex(), 2 ) + "] == Type: " + ValType( xArg )
 
          IF xArg != NIL
             cArguments += " Val: " + hb_CStr( xArg )

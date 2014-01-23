@@ -287,7 +287,7 @@ FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
 // Start the editor
 //
 // oEdit - the editor object
-// lEdit - .T. = edit allowed, .F. = view only mode
+// lEdit - .T. edit allowed, .F. view only mode
 // lFrame - specifies if the frame around the editor should be displayed
 // nHelp - the help index into help subsystem
 //

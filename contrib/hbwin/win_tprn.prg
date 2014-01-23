@@ -156,7 +156,7 @@ CREATE CLASS win_Prn
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
-   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 == 10cm
    VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.

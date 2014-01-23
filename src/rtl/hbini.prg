@@ -51,7 +51,7 @@
  *    ; A line starting with a ';' is a comment
  *    # Also, a '#' marks a comment up to the end of the line
  *    [NewSection]
- *    Variable = Value
+ *    Variable=Value
  *    OtherVariable: Value
  *
  * You can pass a list of "potential" .ini files in a ';' separated path;

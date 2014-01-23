@@ -874,11 +874,11 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    IF lShade
       ::cStr += CRLF() + ;
-         "<hr size = " + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width= " + hb_ntos( nWidth ) + '%>' + ;
+         "<hr size=" + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ELSE
       ::cStr += CRLF() + ;
-         "<hr noshade size = " + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width= " + hb_ntos( nWidth ) + '%>' + ;
+         "<hr noshade size=" + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width=" + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ENDIF
 
@@ -1016,27 +1016,27 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    __defaultNIL( @lbreak, .F. )
 
    IF cName != NIL
-      cStr += ' name= "' + cName + '"' + CRLF()
+      cStr += ' name="' + cName + '"' + CRLF()
    ENDIF
 
    IF cAlt != NIL
-      cStr += ' alt= "' + cAlt + '"' + CRLF()
+      cStr += ' alt="' + cAlt + '"' + CRLF()
    ENDIF
 
    IF nBorder != NIL
-      cStr += " border = " + iif( HB_ISNUMERIC( nBorder ), hb_ntos( nBorder ), nBorder ) + CRLF()
+      cStr += " border=" + iif( HB_ISNUMERIC( nBorder ), hb_ntos( nBorder ), nBorder ) + CRLF()
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " height = " + hb_ntos( nHeight ) + " " + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + " " + CRLF()
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " height = " + nHeight + " " + CRLF()
+      cStr += " height=" + nHeight + " " + CRLF()
    ENDIF
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " width = " + hb_ntos( nWidth ) + " " + CRLF()
+      cStr += " width=" + hb_ntos( nWidth ) + " " + CRLF()
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " width = " + nWidth + " " + CRLF()
+      cStr += " width=" + nWidth + " " + CRLF()
    ENDIF
 
    IF cOnClick != NIL
@@ -1088,19 +1088,19 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF nBorder != NIL
-      cStr += " border = " + hb_ntos( nBorder )
+      cStr += " border=" + hb_ntos( nBorder )
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " height = " + hb_ntos( nHeight ) + " "
+      cStr += " height=" + hb_ntos( nHeight ) + " "
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " height = " + nHeight + " "
+      cStr += " height=" + nHeight + " "
    ENDIF
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " width = " + hb_ntos( nWidth ) + " "
+      cStr += " width=" + hb_ntos( nWidth ) + " "
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " width = " + nWidth + " "
+      cStr += " width=" + nWidth + " "
    ENDIF
 
    IF cOnClick != NIL
@@ -1275,7 +1275,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += " bgcolor=" + ColorBG + " "
    ENDIF
 
-   cStr += iif( nBorder = NIL, "border ", "border=" + hb_ntos( nBorder ) + " " )
+   cStr += iif( nBorder == NIL, "border ", "border=" + hb_ntos( nBorder ) + " " )
 
    IF ncellpadding != NIL
       cStr += ' CellPadding=' + hb_ntos( nCellPadding )
@@ -1332,7 +1332,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += ' background="' + bgImage + '" '
    ENDIF
    IF cStyle != NIL
-      cStr += ' style ="' + cStyle + '" '
+      cStr += ' style="' + cStyle + '" '
    ENDIF
 
    IF Id != NIL
@@ -1517,7 +1517,7 @@ METHOD NewTableCell( cAlign, cColor, ;
    ENDIF
 
    IF cClass != NIL
-      cStr += ' Class ="' + cClass + '" '
+      cStr += ' Class="' + cClass + '" '
    ENDIF
 
    IF nRowspan != NIL .AND. HB_ISNUMERIC( nRowspan )
@@ -2015,7 +2015,7 @@ METHOD Span( c, Style ) CLASS THtml
    LOCAL cStr := "<span "
 
    IF style != NIL
-      cStr += ' style ="' + Style + '"'
+      cStr += ' style="' + Style + '"'
    ENDIF
    cStr += ">" + c + '</span>'
    ::cStr += cStr
@@ -2044,11 +2044,11 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
    ENDIF
 
    IF cAling != NIL
-      cStr += ' aling ="' + cAling + '"' + CRLF()
+      cStr += ' aling="' + cAling + '"' + CRLF()
    ENDIF
 
    IF cCode != NIL
-      cStr += ' code ="' + cCode + '"' + CRLF()
+      cStr += ' code="' + cCode + '"' + CRLF()
    ENDIF
 
    IF lDisable
@@ -2056,23 +2056,23 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
    ENDIF
 
    IF cCodebase != NIL
-      cStr += ' codebase ="' + cCodebase + '"' + CRLF()
+      cStr += ' codebase="' + cCodebase + '"' + CRLF()
    ENDIF
 
    IF cName != NIL
-      cStr += ' Name ="' + cName + '"' + CRLF()
+      cStr += ' name="' + cName + '"' + CRLF()
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " height = " + hb_ntos( nHeight ) + " " + CRLF()
+      cStr += " height=" + hb_ntos( nHeight ) + " " + CRLF()
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " height = " + nHeight + " " + CRLF()
+      cStr += " height=" + nHeight + " " + CRLF()
    ENDIF
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " width = " + hb_ntos( nWidth ) + " " + CRLF()
+      cStr += " width=" + hb_ntos( nWidth ) + " " + CRLF()
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " width = " + nWidth + " " + CRLF()
+      cStr += " width=" + nWidth + " " + CRLF()
    ENDIF
 
    cStr += " >"

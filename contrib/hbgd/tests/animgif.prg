@@ -44,7 +44,7 @@ PROCEDURE Main()
    /* Write GIF header.  Use global color map.  Loop a few times */
    gdImageGifAnimBegin( im, hFile, 1, 3 )
    gdImageGifAnimBegin( im, IMAGES_OUT + "anim2.gif", 1, 3 )
-   /* Write the first frame.  No local color map.  Delay = 1s */
+   /* Write the first frame.  No local color map.  Delay == 1s */
    gdImageGifAnimAdd( im, hFile, 0, 0, 0, 100, 1, NIL )
    gdImageGifAnimAdd( im, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, NIL )
    /* construct the second frame */

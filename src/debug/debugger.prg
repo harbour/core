@@ -98,7 +98,7 @@
 #define VAR_LEVEL               4  // eval stack level of the function
 
 /* Information structure stored in ::aWatch (watchpoints) */
-#define WP_TYPE                 1  // wp = watchpoint, tr = tracepoint
+#define WP_TYPE                 1  // wp: watchpoint, tr: tracepoint
 #define WP_EXPR                 2  // source of an expression
 
 /* Information structure stored in ::aModules */

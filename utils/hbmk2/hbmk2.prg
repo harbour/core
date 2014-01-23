@@ -1908,7 +1908,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       { cLIB_BASE_ZLIB } } )
 #endif
 
-   hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] = <major><minor>[.<revision>] */
+   hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) ) /* Format: <15><00>[.<00>] == <major><minor>[.<revision>] */
 
    /* Autodetect platform */
 

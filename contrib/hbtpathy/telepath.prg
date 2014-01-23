@@ -515,7 +515,7 @@ FUNCTION tp_ctrlrts( nPort, nNewCtrl )
 
 // telepathy says...
 // returns old dtr value 0,1,2
-// sets to 0 = dtr off, 1 dtr on, 2 = dtr flow control autotoggle
+// sets to 0: dtr off, 1: dtr on, 2: dtr flow control autotoggle
 // I don't support 2.  who uses dtr for flow control anyway...
 FUNCTION tp_ctrldtr( nPort, nNewCtrl )
 

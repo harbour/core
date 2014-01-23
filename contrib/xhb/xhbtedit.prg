@@ -1233,7 +1233,7 @@ METHOD WordRight() CLASS XHBEditor
       ENDDO
    ENDIF
 
-   // mod = move to next line
+   // mod: move to next line
    //
 
    IF ::lRightScroll

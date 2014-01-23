@@ -106,7 +106,7 @@ PROCEDURE Main()
    hConnection1 := NIL     // you should always reset a variable holding a handle that is no longer valid
 
    ? "Default connection is back to 0:", AdsConnection()
-   ? "Is a Data Dict connection? (AE_INVALID_HANDLE = 5018):", AdsGetHandleType()
+   ? "Is a Data Dict connection? (AE_INVALID_HANDLE == 5018):", AdsGetHandleType()
 
    // now open the tables and put some data
 

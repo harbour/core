@@ -214,10 +214,10 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMethods[ UR_METHODCOUNT ]
 
-   aMethods[ UR_NEW  ]   := ( @RLCDX_NEW()    )
-   aMethods[ UR_LOCK ]   := ( @RLCDX_LOCK()   )
-   aMethods[ UR_UNLOCK ] := ( @RLCDX_UNLOCK() )
-   aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
+   aMethods[ UR_NEW  ]   := @RLCDX_NEW()
+   aMethods[ UR_LOCK ]   := @RLCDX_LOCK()
+   aMethods[ UR_UNLOCK ] := @RLCDX_UNLOCK()
+   aMethods[ UR_APPEND ] := @RLCDX_APPEND()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMethods, pSuperRddID )

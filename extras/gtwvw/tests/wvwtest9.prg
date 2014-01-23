@@ -880,8 +880,8 @@ STATIC FUNCTION VouBlockField( i )
 FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    // ldebug( "WVW_Paint:" + hb_eol() +;
-   //        "hWnd = " + hb_ntos( hWnd ) + hb_eol() +;
-   //        "nWinNum = " + hb_ntos( nWinNum ) )
+   //        "hWnd: " + hb_ntos( hWnd ) + hb_eol() +;
+   //        "nWinNum: " + hb_ntos( nWinNum ) )
    IF Len( s_amiscobjlist ) >= nWinNum + 1
       AEval( s_amiscobjlist[ nWinNum + 1 ], {| e | Eval( e, nWinNum ) } )
    ENDIF
@@ -1137,15 +1137,15 @@ STATIC PROCEDURE xDebugInfo()
       hb_eol() + ;
       "Topmost Window is Window #" + hb_ntos( wvw_nNumWindows() - 1 ) + hb_eol() + ;
       "Current Window is Window #" + hb_ntos( wvw_nSetCurWindow() ) + hb_eol() + ;
-      "MaxRow() = " + hb_ntos( MaxRow() ) + ", MaxCol() = " + hb_ntos( MaxCol() ) + hb_eol() + ;
-      "Row() = " + hb_ntos( Row() ) + ", Col() = " + hb_ntos( Col() ) + hb_eol() + ;
-      "WVW_RowOfs() = " + hb_ntos( wvw_nRowOfs() ) + ", WVW_ColOfs() = " + hb_ntos( wvw_nColOfs() ) + hb_eol() + ;
-      "Line Spacing = " + hb_ntos( wvw_SetLineSpacing() ) + hb_eol() + ;
-      "Default Line Spacing = " + hb_ntos( wvw_SetDefLineSpacing() ) + hb_eol() + ;
+      "MaxRow(): " + hb_ntos( MaxRow() ) + ", MaxCol(): " + hb_ntos( MaxCol() ) + hb_eol() + ;
+      "Row(): " + hb_ntos( Row() ) + ", Col(): " + hb_ntos( Col() ) + hb_eol() + ;
+      "WVW_RowOfs(): " + hb_ntos( wvw_nRowOfs() ) + ", WVW_ColOfs(): " + hb_ntos( wvw_nColOfs() ) + hb_eol() + ;
+      "Line Spacing: " + hb_ntos( wvw_SetLineSpacing() ) + hb_eol() + ;
+      "Default Line Spacing: " + hb_ntos( wvw_SetDefLineSpacing() ) + hb_eol() + ;
       hb_eol() + ;
-      "Font Face = '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
-      "Font Height = " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
-      "Font Width = " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
+      "Font Face: '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
+      "Font Height: " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
+      "Font Width: " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
       hb_eol() + ;
       "BTW, mouse pointer now sits on MaxRow(),MaxCol(), doesn't it?" )
 
