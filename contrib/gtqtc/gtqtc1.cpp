@@ -2889,6 +2889,10 @@ void QTConsole::focusInEvent( QFocusEvent * event )
 {
    hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_GOTFOCUS );
    QWidget::focusInEvent( event );
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+   QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
+   QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
+#endif
 }
 
 void QTConsole::focusOutEvent( QFocusEvent * event )
@@ -2978,6 +2982,12 @@ void QTConsole::mousePressEvent( QMouseEvent * event )
    switch( event->button() )
    {
       case Qt::LeftButton:
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+         {
+            QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
+            QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
+         }
+#endif
          iKey = K_LBUTTONDOWN;
          break;
 
