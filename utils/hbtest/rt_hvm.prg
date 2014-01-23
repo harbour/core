@@ -396,14 +396,6 @@ PROCEDURE Main_HVM()
    HBTEST "Z" == "A"                      IS .F.
    HBTEST "A" == "A "                     IS .F.
    HBTEST "AA" == "A"                     IS .F.
-#ifdef __HARBOUR__
-   HBTEST hb_LeftIs( "123", "123  " )     IS .F.
-   HBTEST hb_LeftIs( " 123", "123" )      IS .F.
-   HBTEST hb_LeftIs( "123", "12345" )     IS .F.
-   HBTEST hb_LeftIs( "12345", "123" )     IS .T.
-   HBTEST hb_LeftIs( "123", "" )          IS .T.
-   HBTEST hb_LeftIs( "", "123" )          IS .F.
-#endif
    SET EXACT OFF
    HBTEST "123" = "123  "                 IS .F.
    HBTEST " 123" = "123"                  IS .F.
@@ -415,14 +407,6 @@ PROCEDURE Main_HVM()
    HBTEST "Z" == "A"                      IS .F.
    HBTEST "A" == "A "                     IS .F.
    HBTEST "AA" == "A"                     IS .F.
-#ifdef __HARBOUR__
-   HBTEST hb_LeftIs( "123", "123  " )     IS .F.
-   HBTEST hb_LeftIs( " 123", "123" )      IS .F.
-   HBTEST hb_LeftIs( "123", "12345" )     IS .F.
-   HBTEST hb_LeftIs( "12345", "123" )     IS .T.
-   HBTEST hb_LeftIs( "123", "" )          IS .T.
-   HBTEST hb_LeftIs( "", "123" )          IS .F.
-#endif
    HBTEST "Hallo"          == "Hello"     IS .F.
    HBTEST "Hello"          == "Hello"     IS .T.
    HBTEST "Hell"           == "Hello"     IS .F.

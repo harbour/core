@@ -299,11 +299,8 @@
       Order.
    $EXAMPLES$
       USE tests NEW VIA "DBFCDX"
-      INDEX ON tests->ID ;
-         TO tests          ;
-         FOR tests->ID > 100
-
-      ordFor( "tests" )      // Returns: tests->ID > 100
+      INDEX ON field->ID TO tests FOR field->ID > 100
+      ordFor( "tests" )   // Returns: field->ID > 100
    $STATUS$
       S
    $COMPLIANCE$
@@ -343,14 +340,12 @@
 
    $EXAMPLES$
       USE tests NEW VIA "DBFCDX"
-      INDEX ON tests->fName ;
-         TO tests           ;
-         FOR tests->fName > "CK"
-      INDEX ON tests->Id TO TestId
+      INDEX ON field->fName TO tests FOR field->fName > "CK"
+      INDEX ON field->Id    TO testid
 
-      ordKey( "tests" )      // Returns: tests->fName
+      ordKey( "tests" )      // Returns: field->fName
       SET ORDER TO 2
-      ordKey()               // Returns: tests->Id
+      ordKey()               // Returns: field->Id
    $STATUS$
       S
    $COMPLIANCE$

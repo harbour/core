@@ -88,9 +88,9 @@ STATIC PROCEDURE ExecBrowser( oCrt )
       RETURN
    ENDIF
    IF FLock()
-      INDEX ON Test->FIRST TAG "001" TO ( cFileIndex )
-      INDEX ON Test->LAST  TAG "002" TO ( cFileIndex )
-      INDEX ON Test->CITY  TAG "003" TO ( cFileIndex )
+      INDEX ON field->FIRST TAG "001" TO ( cFileIndex )
+      INDEX ON field->LAST  TAG "002" TO ( cFileIndex )
+      INDEX ON field->CITY  TAG "003" TO ( cFileIndex )
       dbUnlock()
    ENDIF
    SET INDEX TO

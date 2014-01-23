@@ -703,7 +703,7 @@
          /* The above codeblock will be called approximately
             every 2 seconds while indexing.
             The codeblock can return .T. to abort. */
-         INDEX ON First + LAST + LABEL1 + LABEL2 TAG First
+         INDEX ON FIRST + LAST + LABEL1 + LABEL2 TAG First
          AdsClrCallback()
          RETURN
 

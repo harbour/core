@@ -6,7 +6,7 @@
  *     - Payment()
  *     - Periods()
  *     - Rate()
- * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ PROCEDURE Main()
    ? "Payment( 2000.00, 0.10 / 12, 24 ) ==  92.290    // CT3"
    ? Space( 29 ), Payment( 2000.00, 0.10 / 12, 24 ), "  <-- CT for Harbour"
    ?
-   ? "  PRESS ANY KEY"
+   ? "Press any key"
 
    Inkey( 0 )
    ? "Continue Testing Financial functions...."
@@ -98,7 +98,7 @@ PROCEDURE Main()
    ? "Rate( 2500.00, 86.67, 36 ) * 12 == 0.1501  // CT3"
    ? Space( 25 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
    ?
-   ? "  PRESS ANY KEY"
+   ? "Press any key"
    Inkey( 0 )
 
    ctexit()

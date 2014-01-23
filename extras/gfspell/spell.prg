@@ -1074,7 +1074,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_Metafone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
+   INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( "$$temp" )
    dbGoTop()
 
    IF lTalk

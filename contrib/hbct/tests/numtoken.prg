@@ -68,12 +68,12 @@ PROCEDURE Main()
    ?
 
    ? '  # of tokens in the string', '"' + cStr + '"'
-   ? '      separator list == ".,!" and skip width == 1: ', NumToken( cStr, ".,!", 1 )
-   ? '                                  skip width == 3: ', NumToken( cStr, ".,!", 3 )
-   ? '      separator list == ",!"  and skip width == 1: ', NumToken( cStr, ",!", 1 )
-   ? '                                  skip width == 3: ', NumToken( cStr, ",!", 3 )
-   ? '      separator list == "!"   and skip width == 1: ', NumToken( cStr, "!", 1 )
-   ? '                                  skip width == 3: ', NumToken( cStr, "!", 3 )
+   ? '      separator list == ".,!" and skip width == 1:', NumToken( cStr, ".,!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, ".,!", 3 )
+   ? '      separator list == ",!"  and skip width == 1:', NumToken( cStr, ",!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, ",!", 3 )
+   ? '      separator list == "!"   and skip width == 1:', NumToken( cStr, "!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, "!", 3 )
 
    ?
    ? "End test of NumToken()"

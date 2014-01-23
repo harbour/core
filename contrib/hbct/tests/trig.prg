@@ -13,7 +13,7 @@
  *   - Sinh()
  *   - Cosh()
  *   - Tanh()
- * Copyright 2001   Alejandro de garate  <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de garate <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -250,7 +250,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE WAIT4()
 
-   ? "  PRESS ANY KEY"
+   ? "Press any key"
    Inkey( 0 )
    CLS
 

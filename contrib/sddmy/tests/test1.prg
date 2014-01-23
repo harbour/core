@@ -37,7 +37,7 @@ PROCEDURE Main()
 
    ? "Let's browse table ordered by resident count (press any key)"
    Inkey( 0 )
-   INDEX ON RESIDENTS TAG residents TO country
+   INDEX ON field->RESIDENTS TAG residents TO country
    Browse()
 
    dbCloseAll()

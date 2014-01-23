@@ -23,7 +23,7 @@
       together, and forgive shortcomings in spelling ability.
    $EXAMPLES$
       USE persons
-      INDEX ON ft_Metaph( LastName ) TO field->lastname
+      INDEX ON ft_Metaph( LastName ) TO lastname
       SEEK ft_Metaph( "Philmore" )
       ? Found(), field->LastName       // Result: .T. Philmore
       SEEK ft_Metaph( "Fillmore" )

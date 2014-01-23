@@ -26,7 +26,7 @@ PROCEDURE Main()
    USE tbnames
 
    IF ! hb_dbExists( "tbnames.ntx" )
-      INDEX ON LAST + FIRST TO tbnames.ntx
+      INDEX ON FIELD->LAST + FIELD->FIRST TO tbnames.ntx
    ENDIF
 
    SET INDEX TO tbnames.ntx

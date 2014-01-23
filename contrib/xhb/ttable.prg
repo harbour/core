@@ -97,7 +97,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
       IF ! lFirstPass
          hb_DispOutAt( MaxRow(), 0, ;
             PadC( "Network retry | " + ;
-            LTrim( Str( nSeconds, 4, 1 ) ) + " | ESCape = Exit ", ;
+            LTrim( Str( nSeconds, 4, 1 ) ) + " | ESCape : Exit ", ;
             MaxCol() + 1 ), ;
             s_cNetMsgColor )
          lFirstPass := .F.

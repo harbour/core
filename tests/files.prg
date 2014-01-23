@@ -44,7 +44,7 @@ PROCEDURE Main()
       USE ( "file" + hb_ntos( n ) ) NEW
 
 #ifdef WITH_ADS
-      INDEX ON CODIGO TAG CODIGO TO ( "file" + hb_ntos( n ) )
+      INDEX ON field->CODIGO TAG CODIGO TO ( "file" + hb_ntos( n ) )
 #endif
 
       CLOSE DATA

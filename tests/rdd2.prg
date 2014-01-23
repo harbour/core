@@ -6,10 +6,10 @@
 #include "ord.ch"
 
 #define MAX_TEST_RECS   100
-#define INDEX_KEY_CHAR  CHAR + Str( NUM ) + DToS( DATE )
-#define INDEX_KEY_NUM   NUM
-#define INDEX_KEY_DATE  DATE
-#define INDEX_KEY_LOG   LOG
+#define INDEX_KEY_CHAR  field->CHAR + Str( field->NUM ) + DToS( field->DATE )
+#define INDEX_KEY_NUM   field->NUM
+#define INDEX_KEY_DATE  field->DATE
+#define INDEX_KEY_LOG   field->LOG
 
 #ifdef WITH_ADS
 #include "ads.ch"
@@ -36,7 +36,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       "long text. What is the point to all of this you'd say. " + ;
       "Well I am coming to the point right now, the constant " + ;
       "string is limited to 256 characters and this string is " + ;
-      "a lot bigger. Do you get my drift ? If there is somebody " + ;
+      "a lot bigger. Do you get my drift? If there is somebody " + ;
       "who has read this line upto the very end: Esto es un " + ;
       "sombrero grande ridiculo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
 
@@ -48,7 +48,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
          "RDDTYPE: DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
          hb_eol() + ;
          "ADSMODE: LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + hb_eol() + ;
-         "(If specify SERVER, must be run from a drive suported by ADS server)", .T. )
+         "(If specify SERVER, must be run from a drive suported by ADS server)" )
 
 #ifdef WITH_ADS
 
@@ -157,8 +157,8 @@ PROCEDURE Main( cRDDType, cAdsMode )
       // TEST: Direct field assigment
 
       MYTEST->NUM  := ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
-      MYTEST->DATE := Date() + Int( FIELD->NUM )
-      MYTEST->LOG  := ( FIELD->NUM < 0 )
+      MYTEST->DATE := Date() + Int( field->NUM )
+      MYTEST->LOG  := ( field->NUM < 0 )
       MYTEST->MEMO := Eval( bMemoText )
 
    ENDDO
@@ -171,7 +171,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: dbGoBottom()/GO BOTTOM
 
-   GO BOTTOM
+   dbGoBottom()
 
    IF ! RecNo() == MAX_TEST_RECS
       NotifyUser( "dbGoBottom() failed" )
@@ -179,7 +179,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: dbGoTop()/GO TOP
 
-   GO TOP
+   dbGoTop()
 
    IF ! RecNo() == 1
       NotifyUser( "dbGoTop() failed" )
@@ -191,12 +191,12 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       // TEST: Field access
 
-      IF ! RTrim( FIELD->CHAR ) == Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
+      IF ! RTrim( field->CHAR ) == Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
             " RECORD " + hb_ntos( RecNo() ) .OR. ;
-            ! FIELD->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
-            ! FIELD->DATE == Date() + Int( FIELD->NUM ) .OR. ;
-            ! FIELD->LOG == ( FIELD->NUM < 0 ) .OR. ;
-            ! FIELD->MEMO == Eval( bMemoText )
+            ! field->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
+            ! field->DATE == Date() + Int( field->NUM ) .OR. ;
+            ! field->LOG == ( field->NUM < 0 ) .OR. ;
+            ! field->MEMO == Eval( bMemoText )
 
          NotifyUser( "Data in table is incorrect" )
 
@@ -250,14 +250,14 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: Positive index key
    SET ORDER TO 2
-   LOCATE for FIELD->NUM > 0
+   LOCATE FOR field->NUM > 0
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
       NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
    ENDIF
 
    // TEST: Negative index key
    SET ORDER TO 2
-   LOCATE for FIELD->NUM < 0
+   LOCATE FOR field->NUM < 0
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
       NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
    ENDIF
@@ -285,13 +285,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
    SET ORDER TO 0
 
    SET EXACT ON
-   LOCATE for FIELD->CHAR = "J RECORD"  /* hb_LeftIs() */
+   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftIs() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
    SET EXACT OFF
-   LOCATE for FIELD->CHAR = "J RECORD"  /* hb_LeftIs() */
+   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftIs() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
    ENDIF
@@ -300,16 +300,16 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
+   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
+   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
    SET EXACT OFF
    SET ORDER TO 0
-   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
-   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
+   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
+   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF
@@ -326,7 +326,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "Failed to close table" )
    ENDIF
 
-   NotifyUser( "Test PASSED! :-)", .T. )
+   NotifyUser( "Test PASSED! :-)" )
 
    RETURN
 
@@ -356,27 +356,21 @@ STATIC FUNCTION CompareArray( a1, a2 )
 
    LOCAL i, j
 
-   IF ! Len( a1 ) == Len( a2 )
+   IF Len( a1 ) != Len( a2 )
       RETURN .F.
    ENDIF
 
    FOR i := 1 TO Len( a1 )
-
       FOR j := 1 TO Len( a1[ i ] )
-
          IF ! a1[ i, j ] == a2[ i, j ]
             RETURN .F.
          ENDIF
-
       NEXT
-
    NEXT
 
    RETURN .T.
 
-STATIC PROCEDURE NotifyUser( cErr, lNotError )
-
-   HB_SYMBOL_UNUSED( lNotError )
+STATIC PROCEDURE NotifyUser( cErr )
 
    ? cErr
 

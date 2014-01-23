@@ -26,8 +26,8 @@ you do a simple loop
 
 RDD usualy will read SQL rows in portions, let's say 100 records per query.
 So, hidden queries are generated. If you are using indexes these queries
-are really complicated. Let's have index on FIELD1 + Str(FIELD2). A seek to
-value cValue1 + Str(nValue2) will generate a query like:
+are really complicated. Let's have index on FIELD1 + Str( FIELD2 ). A seek
+to value cValue1 + Str( nValue2 ) will generate a query like:
 
  SELECT * FROM my_table
      WHERE (FIELD1 == cValue1 and FIELD2 >= nValue2) or FIELD1 > cValue1

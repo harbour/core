@@ -359,6 +359,15 @@ PROCEDURE Comp_Str()
    HBTEST "DEF" > "ABCD"   IS .T.
    HBTEST "DEF" >= "ABCD"  IS .T.
 
+#ifdef __HARBOUR__
+   HBTEST hb_LeftIs( "123", "123  " )  IS .F.
+   HBTEST hb_LeftIs( " 123", "123" )   IS .F.
+   HBTEST hb_LeftIs( "123", "12345" )  IS .F.
+   HBTEST hb_LeftIs( "12345", "123" )  IS .T.
+   HBTEST hb_LeftIs( "123", "" )       IS .T.
+   HBTEST hb_LeftIs( "", "123" )       IS .F.
+#endif
+
    Set( _SET_EXACT, old_exact )
    RETURN
 
@@ -471,6 +480,15 @@ PROCEDURE Exact_Str()
    HBTEST "DEF" <= "ABCD"  IS .F.
    HBTEST "DEF" > "ABCD"   IS .T.
    HBTEST "DEF" >= "ABCD"  IS .T.
+
+#ifdef __HARBOUR__
+   HBTEST hb_LeftIs( "123", "123  " )  IS .F.
+   HBTEST hb_LeftIs( " 123", "123" )   IS .F.
+   HBTEST hb_LeftIs( "123", "12345" )  IS .F.
+   HBTEST hb_LeftIs( "12345", "123" )  IS .T.
+   HBTEST hb_LeftIs( "123", "" )       IS .T.
+   HBTEST hb_LeftIs( "", "123" )       IS .F.
+#endif
 
    Set( _SET_EXACT, old_exact )
 
