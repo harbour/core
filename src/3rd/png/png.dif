@@ -1,7 +1,7 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	2013-04-27 16:42:08.881059927 +0200
-+++ png/png.h	2013-04-27 16:42:08.881059927 +0200
-@@ -431,7 +431,7 @@
+--- png.orig/png.h	2014-01-24 12:33:19.608065250 +0100
++++ png/png.h	2014-01-24 12:33:19.608065250 +0100
+@@ -448,7 +448,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,9 +11,20 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2013-04-27 16:42:08.881059927 +0200
-+++ png/pnglconf.h	2013-04-27 16:42:08.881059927 +0200
-@@ -114,7 +114,9 @@
+--- png.orig/pnglconf.h	2014-01-24 12:33:19.592065248 +0100
++++ png/pnglconf.h	2014-01-24 12:33:19.592065248 +0100
+@@ -26,8 +26,8 @@
+ #define PNG_BUILD_GRAYSCALE_PALETTE_SUPPORTED
+ #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
+ #define PNG_COLORSPACE_SUPPORTED
+-#define PNG_CONSOLE_IO_SUPPORTED
+-#define PNG_CONVERT_tIME_SUPPORTED
++/*#define PNG_CONSOLE_IO_SUPPORTED*/
++/*#define PNG_CONVERT_tIME_SUPPORTED*/
+ #define PNG_EASY_ACCESS_SUPPORTED
+ /*#undef PNG_ERROR_NUMBERS_SUPPORTED*/
+ #define PNG_ERROR_TEXT_SUPPORTED
+@@ -113,7 +113,9 @@
  #define PNG_SIMPLIFIED_WRITE_AFIRST_SUPPORTED
  #define PNG_SIMPLIFIED_WRITE_BGR_SUPPORTED
  #define PNG_SIMPLIFIED_WRITE_SUPPORTED
@@ -23,7 +34,7 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED
  #define PNG_TEXT_SUPPORTED
  #define PNG_TIME_RFC1123_SUPPORTED
-@@ -187,7 +189,11 @@
+@@ -186,7 +188,11 @@
  #define PNG_zTXt_SUPPORTED
  /* end of options */
  /* settings */
@@ -37,8 +48,8 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
 diff -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	2013-04-27 16:42:08.881059927 +0200
-+++ png/pngpriv.h	2013-04-27 16:42:08.881059927 +0200
+--- png.orig/pngpriv.h	2014-01-24 12:33:19.616065250 +0100
++++ png/pngpriv.h	2014-01-24 12:33:19.616065250 +0100
 @@ -69,7 +69,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
