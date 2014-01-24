@@ -1,6 +1,6 @@
 diff -urN zlib.orig/crc32.c zlib/crc32.c
---- zlib.orig/crc32.c	2012-09-09 18:31:49.628000777 +0200
-+++ zlib/crc32.c	2012-09-09 18:31:49.628000777 +0200
+--- zlib.orig/crc32.c	2014-01-24 13:47:54.784020679 +0100
++++ zlib/crc32.c	2014-01-24 13:47:54.784020679 +0100
 @@ -21,6 +21,8 @@
    DYNAMIC_CRC_TABLE and MAKECRCH can be #defined to write out crc32.h.
   */
@@ -11,8 +11,8 @@ diff -urN zlib.orig/crc32.c zlib/crc32.c
  #  include <stdio.h>
  #  ifndef DYNAMIC_CRC_TABLE
 diff -urN zlib.orig/deflate.c zlib/deflate.c
---- zlib.orig/deflate.c	2012-09-09 18:31:49.636000776 +0200
-+++ zlib/deflate.c	2012-09-09 18:31:49.636000776 +0200
+--- zlib.orig/deflate.c	2014-01-24 13:47:54.796020679 +0100
++++ zlib/deflate.c	2014-01-24 13:47:54.796020679 +0100
 @@ -51,6 +51,10 @@
  
  #include "deflate.h"
@@ -22,9 +22,9 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
 +#endif
 +
  const char deflate_copyright[] =
-    " deflate 1.2.7 Copyright 1995-2012 Jean-loup Gailly and Mark Adler ";
+    " deflate 1.2.8 Copyright 1995-2013 Jean-loup Gailly and Mark Adler ";
  /*
-@@ -1399,6 +1403,7 @@
+@@ -1401,6 +1405,7 @@
          more = (unsigned)(s->window_size -(ulg)s->lookahead -(ulg)s->strstart);
  
          /* Deal with !@#$% 64K limit: */
@@ -32,7 +32,7 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
          if (sizeof(int) <= 2) {
              if (more == 0 && s->strstart == 0 && s->lookahead == 0) {
                  more = wsize;
-@@ -1410,6 +1415,7 @@
+@@ -1412,6 +1417,7 @@
                  more--;
              }
          }
@@ -40,7 +40,7 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
  
          /* If the window is almost full and there is insufficient lookahead,
           * move the upper half to the lower one to make room in the upper half.
-@@ -1861,7 +1867,7 @@
+@@ -1863,7 +1869,7 @@
      int flush;
  {
      int bflush;             /* set if current block must be flushed */
@@ -50,8 +50,8 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
  
      for (;;) {
 diff -urN zlib.orig/gzguts.h zlib/gzguts.h
---- zlib.orig/gzguts.h	2012-09-09 18:31:49.636000776 +0200
-+++ zlib/gzguts.h	2012-09-09 18:31:49.636000776 +0200
+--- zlib.orig/gzguts.h	2014-01-24 13:47:54.796020679 +0100
++++ zlib/gzguts.h	2014-01-24 13:47:54.796020679 +0100
 @@ -31,7 +31,8 @@
  #  include <stddef.h>
  #endif
@@ -62,7 +62,7 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
  #  include <io.h>
  #endif
  
-@@ -39,7 +40,8 @@
+@@ -46,7 +47,8 @@
  #  define NO_GZCOMPRESS
  #endif
  
@@ -73,8 +73,8 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
  #    define HAVE_VSNPRINTF
  #  endif
 diff -urN zlib.orig/gzlib.c zlib/gzlib.c
---- zlib.orig/gzlib.c	2012-09-09 18:31:49.640000776 +0200
-+++ zlib/gzlib.c	2012-09-09 18:31:49.640000776 +0200
+--- zlib.orig/gzlib.c	2014-01-24 13:47:54.796020679 +0100
++++ zlib/gzlib.c	2014-01-24 13:47:54.796020679 +0100
 @@ -5,7 +5,11 @@
  
  #include "gzguts.h"
@@ -89,9 +89,9 @@ diff -urN zlib.orig/gzlib.c zlib/gzlib.c
  #else
  #if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
 diff -urN zlib.orig/inflate.c zlib/inflate.c
---- zlib.orig/inflate.c	2012-09-09 18:31:49.648000777 +0200
-+++ zlib/inflate.c	2012-09-09 18:31:49.648000777 +0200
-@@ -428,6 +428,7 @@
+--- zlib.orig/inflate.c	2014-01-24 13:47:54.808020680 +0100
++++ zlib/inflate.c	2014-01-24 13:47:54.808020680 +0100
+@@ -429,6 +429,7 @@
  /* Macros for inflate(): */
  
  /* check function to use adler32() for zlib or crc32() for gzip */
@@ -100,9 +100,9 @@ diff -urN zlib.orig/inflate.c zlib/inflate.c
  #  define UPDATE(check, buf, len) \
      (state->flags ? crc32(check, buf, len) : adler32(check, buf, len))
 diff -urN zlib.orig/zconf.h zlib/zconf.h
---- zlib.orig/zconf.h	2012-09-09 18:31:49.656000777 +0200
-+++ zlib/zconf.h	2012-09-09 18:31:49.656000777 +0200
-@@ -158,7 +158,18 @@
+--- zlib.orig/zconf.h	2014-01-24 13:47:54.816020680 +0100
++++ zlib/zconf.h	2014-01-24 13:47:54.816020680 +0100
+@@ -161,7 +161,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
  #endif
@@ -122,7 +122,7 @@ diff -urN zlib.orig/zconf.h zlib/zconf.h
  #  ifndef WIN32
  #    define WIN32
  #  endif
-@@ -346,6 +357,16 @@
+@@ -349,6 +360,16 @@
  #    endif
  #  endif
  #endif
@@ -140,9 +140,9 @@ diff -urN zlib.orig/zconf.h zlib/zconf.h
  #ifndef ZEXTERN
  #  define ZEXTERN extern
 diff -urN zlib.orig/zlib.h zlib/zlib.h
---- zlib.orig/zlib.h	2012-09-09 18:31:49.660000777 +0200
-+++ zlib/zlib.h	2012-09-09 18:31:49.660000777 +0200
-@@ -1711,6 +1711,8 @@
+--- zlib.orig/zlib.h	2014-01-24 13:47:54.820020680 +0100
++++ zlib/zlib.h	2014-01-24 13:47:54.820020680 +0100
+@@ -1728,6 +1728,8 @@
     ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile));
     ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));
     ZEXTERN uLong ZEXPORT crc32_combine OF((uLong, uLong, z_off_t));
@@ -152,8 +152,8 @@ diff -urN zlib.orig/zlib.h zlib/zlib.h
  
  #else /* Z_SOLO */
 diff -urN zlib.orig/zutil.c zlib/zutil.c
---- zlib.orig/zutil.c	2012-09-09 18:31:49.660000777 +0200
-+++ zlib/zutil.c	2012-09-09 18:31:49.660000777 +0200
+--- zlib.orig/zutil.c	2014-01-24 13:47:54.820020680 +0100
++++ zlib/zutil.c	2014-01-24 13:47:54.820020680 +0100
 @@ -139,7 +139,7 @@
      return ERR_MSG(err);
  }
@@ -164,8 +164,8 @@ diff -urN zlib.orig/zutil.c zlib/zutil.c
       * errno.  We define it as a global variable to simplify porting.
       * Its value is always 0 and should not be used.
 diff -urN zlib.orig/zutil.h zlib/zutil.h
---- zlib.orig/zutil.h	2012-09-09 18:31:49.664000777 +0200
-+++ zlib/zutil.h	2012-09-09 18:31:49.664000777 +0200
+--- zlib.orig/zutil.h	2014-01-24 13:47:54.824020680 +0100
++++ zlib/zutil.h	2014-01-24 13:47:54.824020680 +0100
 @@ -22,7 +22,7 @@
  #include "zlib.h"
  

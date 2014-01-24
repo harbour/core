@@ -55,8 +55,8 @@ else
 endif
 
 # ORIGIN http://zlib.net/
-# VER    1.2.7
-# URL    http://prdownloads.sourceforge.net/libpng/zlib127.zip?download
+# VER    1.2.8
+# URL    http://downloads.sourceforge.net/libpng/zlib128.zip
 # DIFF   zlib.dif
 #
 # MAP    README
