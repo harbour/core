@@ -1275,7 +1275,7 @@ export WATCOM="/opt/lng/watcom"
 export PATH="${WATCOM}/binl:$PATH"
 export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
 export HB_BUILD_3RDEXT=no
-make "$@"
+make
 ```
 
 ```bash
@@ -1867,7 +1867,7 @@ Supported shells per host platforms:
    Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
    If you think you can make Harbour better: contribute.
-   See [How to Participate](#how-to-participate).
+   See [How](CONTRIBUTING.md).
 
    The information this document is subject to change without notice
    and does not represent any future commitment by the participants
