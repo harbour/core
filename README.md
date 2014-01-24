@@ -1021,12 +1021,9 @@ win-make
 
 ```batchfile
 rem Open Watcom C/C++
-SET WATCOM=C:\watcom
-SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
-SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
-SET EDPATH=%WATCOM%\EDDAT
-SET WHTMLHELP=%WATCOM%\BINNT\HELP
-SET WIPFC=%WATCOM%\WIPFC
+set WATCOM=C:\watcom
+set PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+set INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
 win-make
 ```
 
@@ -1034,7 +1031,6 @@ win-make
 rem Open Watcom C/C++ for MS-DOS
 set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINNT;%PATH%
-set EDPATH=%WATCOM%\EDDAT
 set INCLUDE=%WATCOM%\H
 win-make
 ```
@@ -1044,9 +1040,8 @@ rem Open Watcom C/C++ for OS/2
 rem (requires preceding build for Windows target)
 set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
-set BEGINLIBPATH=%WATCOM%\BINP\DLL
-set EDPATH=%WATCOM%\EDDAT
 set INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
+set BEGINLIBPATH=%WATCOM%\BINP\DLL
 win-make
 ```
 
@@ -1055,7 +1050,6 @@ rem Open Watcom C/C++ for Linux
 rem (requires preceding build for Windows target)
 set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
-set EDPATH=%WATCOM%\EDDAT
 set INCLUDE=%WATCOM%\LH
 win-make
 ```
@@ -1214,12 +1208,9 @@ win-make
 
 ```batchfile
 rem Open Watcom C/C++
-SET WATCOM=C:\watcom
-SET PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%
-SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
-SET EDPATH=%WATCOM%\EDDAT
-SET WHTMLHELP=%WATCOM%\BINNT\HELP
-SET WIPFC=%WATCOM%\WIPFC
+set WATCOM=C:\watcom
+set PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%
+set INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
 win-make
 ```
 
@@ -1236,7 +1227,6 @@ dos-make
 rem Open Watcom C/C++
 set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINW;%PATH%
-set EDPATH=%WATCOM%\EDDAT
 set INCLUDE=%WATCOM%\H
 dos-make
 ```
@@ -1271,11 +1261,8 @@ os2-make
 rem Open Watcom C/C++
 set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINP;%WATCOM%\BINW;%PATH%
-set BEGINLIBPATH=%WATCOM%\BINP\DLL
-set EDPATH=%WATCOM%\EDDAT
 set INCLUDE=%WATCOM%\H;%WATCOM%\H\OS2
-set HELP=%WATCOM%\BINP\HELP;%HELP%
-set BOOKSHELF=%WATCOM%\BINP\HELP;%BOOKSHELF%
+set BEGINLIBPATH=%WATCOM%\BINP\DLL
 os2-make
 ```
 
@@ -1285,8 +1272,8 @@ os2-make
 # Open Watcom C/C++ for OS/2
 # (requires preceding build for Linux target)
 export WATCOM="/opt/lng/watcom"
-export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
 export PATH="${WATCOM}/binl:$PATH"
+export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
 export HB_BUILD_3RDEXT=no
 make "$@"
 ```
