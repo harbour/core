@@ -46,9 +46,6 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          # requirement for wce and for win/msvc with -sdl option
          HB_CFLAGS += -DPNG_NO_STDIO
 
-         ifneq ($(filter $(HB_COMPILER),djgpp dmc),)
-            HB_CFLAGS += -DPNG_NO_SNPRINTF
-         endif
          ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
             HB_CFLAGS += -DPNG_ALLOCATED
          endif
