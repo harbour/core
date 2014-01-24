@@ -367,8 +367,8 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    LOCAL cPrefix := ""
 
-   IF hb_bitAnd( nStyle, HB_LOG_ST_DATE ) > 0
-      IF hb_bitAnd( nStyle, HB_LOG_ST_ISODATE ) > 0
+   IF hb_bitAnd( nStyle, HB_LOG_ST_DATE ) != 0
+      IF hb_bitAnd( nStyle, HB_LOG_ST_ISODATE ) != 0
          cPrefix += hb_LogDateStamp()
       ELSE
          cPrefix += DToC( Date() )
@@ -376,15 +376,15 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
       cPrefix += " "
    ENDIF
 
-   IF hb_bitAnd( nStyle, HB_LOG_ST_NAME ) > 0
+   IF hb_bitAnd( nStyle, HB_LOG_ST_NAME ) != 0
       cPrefix += cName + " "
    ENDIF
 
-   IF hb_bitAnd( nStyle, HB_LOG_ST_TIME ) > 0
+   IF hb_bitAnd( nStyle, HB_LOG_ST_TIME ) != 0
       cPrefix += Time() + " "
    ENDIF
 
-   IF hb_bitAnd( nStyle, HB_LOG_ST_LEVEL ) > 0
+   IF hb_bitAnd( nStyle, HB_LOG_ST_LEVEL ) != 0
       SWITCH nPriority
       CASE HB_LOG_CRITICAL
          cPrefix += "CRITICAL: "

@@ -124,10 +124,10 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
    IF nNum > 0 .AND. nNum <= Len( ::aRow )
 
-      IF ValType( Value ) == ValType( ::aRow[ nNum ] ) .OR. ::aRow[ nNum ] == NIL
+      IF StrTran( ValType( Value ), "M", "C" ) == StrTran( ValType( ::aRow[ nNum ] ), "M", "C" ) .OR. ::aRow[ nNum ] == NIL
 
-         // if it is a char field remove trailing spaces
-         IF HB_ISSTRING( Value )
+         // if it is a char field remove trailing spaces, but not for memos
+         IF HB_ISCHAR( Value )
             Value := RTrim( Value )
          ENDIF
 
@@ -226,8 +226,9 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
    FOR nI := 1 TO Len( ::aFieldStruct )
 
       // search for fields part of a primary key
-      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) == PRI_KEY_FLAG .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) == MULTIPLE_KEY_FLAG
+      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
 
          IF ! Empty( cWhere )
             cWhere += " AND "
@@ -1120,7 +1121,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
       NEXT
    ENDIF
 
-   RETURN TMySQLRow():New( aRow, ::aFieldStruct, ::cTable, .F. )
+   RETURN TMySQLRow():New( aRow, ::aFieldStruct, ::cTable )
 
 
 METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
@@ -1200,8 +1201,9 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
    FOR nI := 1 TO Len( ::aFieldStruct )
 
       // search for fields part of a primary key
-      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) == PRI_KEY_FLAG .OR. ;
-         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) == MULTIPLE_KEY_FLAG
+      IF hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], PRI_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], MULTIPLE_KEY_FLAG ) != 0 .OR. ;
+         hb_bitAnd( ::aFieldStruct[ nI ][ MYSQL_FS_FLAGS ], UNIQUE_KEY_FLAG ) != 0
 
          IF ! Empty( cWhere )
             cWhere += " AND "

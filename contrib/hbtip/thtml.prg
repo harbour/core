@@ -662,7 +662,7 @@ METHOD isType( nType ) CLASS THtmlNode
    LOCAL lRet
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      lRet := hb_bitAnd( ::htmlTagType[ 2 ], nType ) > 0
+      lRet := hb_bitAnd( ::htmlTagType[ 2 ], nType ) != 0
    RECOVER
       lRet := .F.
    END SEQUENCE
@@ -672,17 +672,17 @@ METHOD isType( nType ) CLASS THtmlNode
 // checks if this is a node that is always empty and never has HTML text, e.g. <img>,<link>,<meta>
 
 METHOD isEmpty() CLASS THtmlNode
-   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_EMPTY ) > 0
+   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_EMPTY ) != 0
 
 // checks if this is a node that may occur inline, eg. <b>,<font>
 
 METHOD isInline() CLASS THtmlNode
-   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_INLINE ) > 0
+   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_INLINE ) != 0
 
 // checks if this is a node that may appear without a closing tag, eg. <p>,<tr>,<td>
 
 METHOD isOptional() CLASS THtmlNode
-   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_OPT ) > 0
+   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_OPT ) != 0
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br />,<hr>,_text_)
 
@@ -692,7 +692,7 @@ METHOD isNode() CLASS THtmlNode
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
 
 METHOD isBlock() CLASS THtmlNode
-   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_BLOCK ) > 0
+   RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_BLOCK ) != 0
 
 // checks if this is a node whose text line formatting must be preserved: <pre>,<script>,<textarea>
 

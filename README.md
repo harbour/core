@@ -1021,10 +1021,12 @@ win-make
 
 ```batchfile
 rem Open Watcom C/C++
-set WATCOM=C:\watcom
-set PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
-set EDPATH=%WATCOM%\EDDAT
-set INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
+SET WATCOM=C:\watcom
+SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW;%PATH%
+SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
+SET EDPATH=%WATCOM%\EDDAT
+SET WHTMLHELP=%WATCOM%\BINNT\HELP
+SET WIPFC=%WATCOM%\WIPFC
 win-make
 ```
 
@@ -1207,6 +1209,17 @@ win-make
 rem MSVC 2008 (Team Suite) for Windows IA-64 Itanium
 rem (requires preceding build for native target)
 call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
+win-make
+```
+
+```batchfile
+rem Open Watcom C/C++
+SET WATCOM=C:\watcom
+SET PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%
+SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
+SET EDPATH=%WATCOM%\EDDAT
+SET WHTMLHELP=%WATCOM%\BINNT\HELP
+SET WIPFC=%WATCOM%\WIPFC
 win-make
 ```
 
@@ -1644,7 +1657,7 @@ Supported shells per host platforms:
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
-        * <http://openwatcom.org/>
+        * <https://github.com/open-watcom>, <http://openwatcom.org/>
      * Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
