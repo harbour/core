@@ -80,7 +80,7 @@ PROCEDURE Main( cInputFile )
             "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
             "" + hb_eol() + ;
             "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
-            "      RETURN 'HBWIN_INVALID_' + hb_ntos( nCode )" + hb_eol() + ;
+            "      RETURN 'HBWIN_INVALID_'" + hb_eol() + ;
             "   ENDIF" + hb_eol() + ;
             "" + hb_eol() + ;
             "   SWITCH nCode" + hb_eol()
@@ -121,7 +121,7 @@ PROCEDURE Main( cInputFile )
 FUNCTION win_ErrorString( nCode )
 
    IF ! HB_ISNUMERIC( nCode )
-      RETURN 'HBWIN_INVALID_' + hb_ntos( nCode )
+      RETURN 'HBWIN_INVALID_'
    ENDIF
 
    SWITCH nCode
