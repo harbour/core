@@ -31,6 +31,7 @@
 #xtranslate hb_MemoRead( <x> )             => MemoRead( <x> )
 #xtranslate hb_MemoWrit( [<x,...>] )       => MemoWrit( <x> )
 #xtranslate hb_FileExists( <t> )           => File( <t> )
+#xtranslate hb_FileMatch( <x>, <y> )       => ( Upper( <x> ) == Upper( <x> ) )  /* ~ */
 
 #xtranslate hb_dbExists( <t> )             => File( <t> )
 #xtranslate hb_dbDrop( <t> )               => FErase( <t> )
@@ -46,6 +47,7 @@
 
 #xtranslate hb_LeftIs( l, r )              ( Left( l, Len( r ) ) == r )
 
+#xtranslate hb_keyStd( <n> )               => ( n )
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
 #xtranslate hb_keyChar( <c> )              => iif( <c> >= 32 .AND. <c> <= 255, Chr( <c> ), "" )
 #xtranslate hb_keyPut( <n> )               => __Keyboard( Chr( <n> ) )
@@ -59,6 +61,22 @@
 #xtranslate hb_BLeft( <c>, <l> )           => Left( <c>, <l> )
 #xtranslate hb_BRight( <c>, <l> )          => Right( <c>, <l> )
 #xtranslate hb_BStrTran( <c>, <s>[, <r>] ) => StrTran( <c>, <s>, <r> )
+
+#ifdef B_SINGLE
+#define HB_B_SINGLE_UNI                    B_SINGLE
+#define HB_B_DOUBLE_UNI                    B_DOUBLE
+#define HB_B_SINGLE_DOUBLE_UNI             B_SINGLE_DOUBLE
+#define HB_B_DOUBLE_SINGLE_UNI             B_DOUBLE_SINGLE
+#endif
+
+#ifdef MENU_SEPARATOR
+#define HB_MENU_SEPARATOR_UNI              MENU_SEPARATOR
+#define HB_SEPARATOR_DOUBLE_UNI            SEPARATOR_DOUBLE
+#define HB_SEPARATOR_SINGLE_UNI            SEPARATOR_SINGLE
+#define HB_SEPARATOR_DOUBLE_SINGLE_UNI     SEPARATOR_DOUBLE_SINGLE
+#endif
+
+#xtranslate hb_DispBox( [<x,...>] )        => DispBox( <x> )
 
 #xtranslate hb_gtVersion( [<n>] )          => "DOS"
 

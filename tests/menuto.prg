@@ -1,8 +1,8 @@
-#ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
-#endif
-
 #include "inkey.ch"
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main()
 

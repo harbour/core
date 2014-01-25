@@ -1,7 +1,7 @@
 /* gtstd test */
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()

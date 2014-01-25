@@ -3,19 +3,18 @@
 PROCEDURE Main( cFile )
 
    LOCAL cText
-   LOCAL lEdit := .T.
+   LOCAL lEdit
 
-   IF cFile == NIL
-      cText := Example_Text()
-   ELSE
-      IF hb_FileMatch( cFile, __FILE__ )
-         lEdit := .F.
-      ENDIF
+   IF HB_ISSTRING( cFile )
+      lEdit := ! hb_FileMatch( cFile, __FILE__ )
       cText := MemoRead( cFile )
+   ELSE
+      lEdit := .T.
+      cText := Example_Text()
    ENDIF
 
-   cText := MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
-   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
+   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), ;
+      MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit ) )
 
    RETURN
 

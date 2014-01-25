@@ -8,20 +8,18 @@
  */
 
 #include "inkey.ch"
+
 #ifdef __HARBOUR__
 #include "hbgtinfo.ch"
-
 REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
 REQUEST HB_CODEPAGE_UTF8EX
 #else
-#define hb_keyStd( n )  ( n )
-#define hb_keyCode( n ) Asc( n )
-#define hb_keyChar( c ) iif( c >= 32 .AND. c <= 255, Chr( c ), "" )
-#define hb_ntos( n )    LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
+
 #ifndef HB_K_RESIZE
 #define HB_K_RESIZE 1101
 #endif

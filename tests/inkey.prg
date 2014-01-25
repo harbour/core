@@ -11,7 +11,7 @@
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main( cSkip, cRaw )

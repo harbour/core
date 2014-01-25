@@ -80,7 +80,7 @@ PROCEDURE Main( cInputFile )
             "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
             "" + hb_eol() + ;
             "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
-            "      RETURN 'HBWIN_INVALID'" + hb_eol() + ;
+            "      RETURN " + '"' + "HBWIN_INVALID" + '"' + hb_eol() + ;
             "   ENDIF" + hb_eol() + ;
             "" + hb_eol() + ;
             "   SWITCH nCode" + hb_eol()
@@ -98,7 +98,7 @@ PROCEDURE Main( cInputFile )
          cOutput += ;
             "   ENDSWITCH" + hb_eol() + ;
             "" + hb_eol() + ;
-            "   RETURN 'HBWIN_UNKNOWN_' + hb_ntos( nCode )" + hb_eol()
+            "   RETURN " + '"' + "HBWIN_UNKNOWN_" + '"' + " + hb_ntos( nCode )" + hb_eol()
 
          IF Empty( hWas )
             ? "No error definitions found in input file"
@@ -121,7 +121,7 @@ PROCEDURE Main( cInputFile )
 FUNCTION win_ErrorString( nCode )
 
    IF ! HB_ISNUMERIC( nCode )
-      RETURN 'HBWIN_INVALID'
+      RETURN "HBWIN_INVALID"
    ENDIF
 
    SWITCH nCode
@@ -2902,4 +2902,4 @@ FUNCTION win_ErrorString( nCode )
    CASE 15864 ; RETURN "STORE_ERROR_LICENSE_REVOKED"
    ENDSWITCH
 
-   RETURN 'HBWIN_UNKNOWN_' + hb_ntos( nCode )
+   RETURN "HBWIN_UNKNOWN_" + hb_ntos( nCode )
