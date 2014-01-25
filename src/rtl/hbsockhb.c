@@ -674,8 +674,7 @@ HB_FUNC( HB_SOCKETGETHOSTS )
 }
 
 #if 0
-This function is not implemented at C level, yet [Mindaugas]
-
+/* This function is not implemented at C level, yet [Mindaugas] */
 HB_FUNC( HB_SOCKETGETALIASES )
 {
    PHB_ITEM pItem;
