@@ -64,6 +64,7 @@ win_svc.c
 oleauto.prg
 axfunc.prg
 wce_sim.prg
+win_err.prg
 win_os.prg
 win_reg.prg
 win_tbmp.prg

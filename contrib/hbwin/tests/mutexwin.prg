@@ -13,7 +13,8 @@ PROCEDURE Main()
    IF ! Empty( s_hMutex ) .AND. wapi_GetLastError() == 0
       ? cAppName, "=> Hello World! OK."
    ELSE
-      ? cAppName, "=> Application is running. Error", wapi_GetLastError()
+      ? cAppName, "=> Application is running. Error", ;
+         hb_ntos( wapi_GetLastError() ), win_ErrorString( wapi_GetLastError() )
    ENDIF
 
    WAIT

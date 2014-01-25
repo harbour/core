@@ -320,6 +320,7 @@ DYNAMIC win_EndDoc
 DYNAMIC win_EndPage
 DYNAMIC win_EnumFontFamilies
 DYNAMIC win_EnumFonts
+DYNAMIC win_ErrorString
 DYNAMIC win_FillRect
 DYNAMIC win_GetCharSize
 DYNAMIC win_GetCommandLineParam

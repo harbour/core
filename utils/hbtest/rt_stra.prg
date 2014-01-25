@@ -485,6 +485,8 @@ PROCEDURE Exact_Str()
    HBTEST hb_LeftIs()                  IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 F:S"
    HBTEST hb_LeftIs( "1", 2 )          IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 A:2:C:1;N:2 F:S"
    HBTEST hb_LeftIs( 1, 2 )            IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 A:2:N:1;N:2 F:S"
+   HBTEST hb_LeftIs( "ABC", "abc" )    IS .F.
+   HBTEST hb_LeftIs( "ABC", "ABC" )    IS .T.
    HBTEST hb_LeftIs( "123", "123  " )  IS .F.
    HBTEST hb_LeftIs( " 123", "123" )   IS .F.
    HBTEST hb_LeftIs( "123", "12345" )  IS .F.
