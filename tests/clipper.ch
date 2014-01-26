@@ -31,7 +31,7 @@
 #xtranslate hb_MemoRead( <x> )             => MemoRead( <x> )
 #xtranslate hb_MemoWrit( [<x,...>] )       => MemoWrit( <x> )
 #xtranslate hb_FileExists( <t> )           => File( <t> )
-#xtranslate hb_FileMatch( <x>, <y> )       => ( Upper( <x> ) == Upper( <x> ) )  /* ~ */
+#xtranslate hb_FileMatch( <x>, <y> )       => ( Upper( <x> ) == Upper( <y> ) )  /* ~ */
 
 #xtranslate hb_dbExists( <t> )             => File( <t> )
 #xtranslate hb_dbDrop( <t> )               => FErase( <t> )

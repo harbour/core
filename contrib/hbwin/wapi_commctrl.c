@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Windows API functions (commctrl)
  *
- * Pritpal Bedi <pritpal@vouchcac.com> 14Feb2009
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,9 +52,9 @@
 #include <commctrl.h>
 
 #if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-    #undef MAKELONG
-    #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                           ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
+   #undef MAKELONG
+   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
+                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
 #endif
 
 /*----------------------------------------------------------------------*/

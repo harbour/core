@@ -14,7 +14,7 @@ PROCEDURE Main()
       ? cAppName, "=> Hello World! OK."
    ELSE
       ? cAppName, "=> Application is running. Error", ;
-         hb_ntos( wapi_GetLastError() ), win_ErrorString( wapi_GetLastError() )
+         hb_ntos( wapi_GetLastError() ), win_ErrorString()
    ENDIF
 
    WAIT

@@ -61,7 +61,8 @@ PROCEDURE Main( cInputFile )
    LOCAL tmp
 
    hb_default( @cInputFile, ;
-      GetEnv( "ProgramFiles(x86)" ) + "\Windows Kits\8.1\Include\shared\winerror.h" )
+      hb_GetEnv( "ProgramFiles(x86)", hb_GetEnv( "ProgramFiles" ) ) + ;
+      "\Windows Kits\8.1\Include\shared\winerror.h" )
 
    ? "Input file:", cInputFile
 
@@ -72,15 +73,15 @@ PROCEDURE Main( cInputFile )
          ? "Invalid regexp"
       ELSE
          cOutput := hb_MemoRead( __FILE__ )
-         IF ( tmp := RAt( "<<<", cOutput ) ) > 0
-            cOutput := Left( cOutput, tmp - 1 ) + "<<<" + hb_eol() + hb_eol()
+         IF ( tmp := RAt( "<<< */", cOutput ) ) > 0
+            cOutput := Left( cOutput, tmp - 1 ) + "<<< */" + hb_eol() + hb_eol()
          ENDIF
 
          cOutput += ;
             "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
             "" + hb_eol() + ;
             "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
-            "      RETURN " + '"' + "HBWIN_INVALID" + '"' + hb_eol() + ;
+            "      nCode := wapi_GetLastError()" + hb_eol() + ;
             "   ENDIF" + hb_eol() + ;
             "" + hb_eol() + ;
             "   SWITCH nCode" + hb_eol()
@@ -116,12 +117,25 @@ PROCEDURE Main( cInputFile )
 
 #endif
 
-// DO NOT REMOVE OR MODIFY THIS LINE, OR ANY CODE BELOW <<<
+FUNCTION win_ErrorDesc( nCode )
+
+   LOCAL cMsg := Space( 2048 )
+
+   wapi_FormatMessage( ,, nCode,, @cMsg )
+
+   cMsg := RTrim( cMsg )
+   IF Right( cMsg, Len( hb_eol() ) ) == hb_eol()
+      cMsg := hb_StrShrink( cMsg, Len( hb_eol() ) )
+   ENDIF
+
+   RETURN RTrim( cMsg )
+
+/* DO NOT REMOVE OR MODIFY THIS LINE, OR ANY CODE BELOW <<< */
 
 FUNCTION win_ErrorString( nCode )
 
    IF ! HB_ISNUMERIC( nCode )
-      RETURN "HBWIN_INVALID"
+      nCode := wapi_GetLastError()
    ENDIF
 
    SWITCH nCode

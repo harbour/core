@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Windows Service API test code
  *
- * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
+ * Copyright 2010 Jose Luis Capel <jlcapel at hotmail . com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,9 +52,6 @@
 
 PROCEDURE Main( cMode )
 
-   LOCAL nError
-   LOCAL cMsg
-
    hb_default( @cMode, "S" ) /* NOTE: Must be the default action */
 
    SWITCH Upper( cMode )
@@ -63,10 +60,7 @@ PROCEDURE Main( cMode )
       IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Test Service" )
          ? "Service has been successfully installed"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Error installing service: " + hb_ntos( nError ) + " " + cMsg
+         ? "Error installing service:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 
@@ -75,10 +69,7 @@ PROCEDURE Main( cMode )
       IF win_serviceDelete( _SERVICE_NAME )
          ? "Service has been deleted"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Error deleting service: " + hb_ntos( nError ) + " " + cMsg
+         ? "Error deleting service:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 
@@ -90,10 +81,7 @@ PROCEDURE Main( cMode )
       IF win_serviceStart( _SERVICE_NAME, @SrvMain() )
          ? "Service has started OK"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Service has had some problems: " + hb_ntos( nError ) + " " + cMsg
+         ? "Service has had some problems:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 

@@ -259,7 +259,7 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE
-      RETURN ::Super:MoveCursor( nKey )
+      RETURN ::super:MoveCursor( nKey )
    ENDIF
 
    RETURN .F.

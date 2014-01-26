@@ -291,13 +291,8 @@ HB_FUNC( WAPI_FORMATMESSAGE )
       hbwapi_SetLastError( GetLastError() );
       hb_retnl( dwRetVal );
 
-      if( lpBuffer )
-      {
-         HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
-         hb_xfree( lpBuffer );
-      }
-      else
-         hb_storc( NULL, 5 );
+      HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
+      hb_xfree( lpBuffer );
 
       hb_strfree( hSource );
    }

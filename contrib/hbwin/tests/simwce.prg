@@ -55,7 +55,7 @@ PROCEDURE Main()
    ENDIF
 
    IF ! o:lDeInitialize()
-      Alert( "Not de-initialized SIM API. Error:" + hb_ntos( o:nLastError ) )
+      Alert( "Not de-initialized SIM API. Error: " + hb_ntos( o:nLastError ) )
    ELSE
       Alert( "API SIM deinitialized!!!" )
    ENDIF

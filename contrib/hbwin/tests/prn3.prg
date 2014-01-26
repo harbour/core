@@ -33,7 +33,9 @@ STATIC PROCEDURE Dump( a )
          FOR EACH c IN b
             ?? c:__enumIndex(), c
             IF c:__enumIndex() == 2
-               ?? ">>" + win_printerPortToName( c ) + "<<",  "|>>" + win_printerPortToName( c, .T. ) + "<<|"
+               ?? ;
+                  ">>" + win_printerPortToName( c ) + "<<", ;
+                  "|>>" + win_printerPortToName( c, .T. ) + "<<|"
             ENDIF
             ?
          NEXT
