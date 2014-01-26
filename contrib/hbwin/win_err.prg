@@ -117,11 +117,11 @@ PROCEDURE Main( cInputFile )
 
 #endif
 
-FUNCTION win_ErrorDesc( nCode )
+FUNCTION win_ErrorDesc( nCode, nLangID )
 
    LOCAL cMsg := Space( 2048 )
 
-   wapi_FormatMessage( ,, nCode,, @cMsg )
+   wapi_FormatMessage( ,, nCode, nLangID, @cMsg )
 
    cMsg := RTrim( cMsg )
    IF Right( cMsg, Len( hb_eol() ) ) == hb_eol()
