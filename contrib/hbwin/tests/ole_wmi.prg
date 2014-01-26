@@ -12,13 +12,13 @@ PROCEDURE Main()
    LOCAL i, nIndex
    LOCAL tmp
 
-   ? "Win32_OperatingSystem"
+   ? "Win_OperatingSystem"
    FOR EACH i IN oWMI:ExecQuery( "SELECT * FROM Win32_OperatingSystem" )
       ? i:SerialNumber
    NEXT
    ?
 
-   ? "Win32_LogicalDisk"
+   ? "Win_LogicalDisk"
    FOR EACH i IN oWMI:ExecQuery( "SELECT * FROM Win32_LogicalDisk" )
       IF HB_ISSTRING( i:VolumeSerialNumber )
          ? i:VolumeSerialNumber, i:Description
@@ -26,7 +26,7 @@ PROCEDURE Main()
    NEXT
    ?
 
-   ? "Win32_NetworkAdapter"
+   ? "Win_NetworkAdapter"
    FOR EACH i IN oWMI:ExecQuery( "SELECT * FROM Win32_NetworkAdapter" )
       IF HB_ISSTRING( i:MACAddress )
          ? i:MACAddress, i:Description
@@ -37,7 +37,7 @@ PROCEDURE Main()
    nIndex := 1
    FOR EACH i IN oWMI:ExecQuery( "SELECT * FROM Win32_Bios" )
 
-      ? "Win32_Bios #" + hb_ntos( nIndex++ )
+      ? "Win_Bios #" + hb_ntos( nIndex++ )
 
       ? "BiosCharacteristics . :", TypeAndValue( i:BiosCharacteristics )
       IF HB_ISARRAY( i:BiosCharacteristics )

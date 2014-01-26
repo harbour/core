@@ -40,9 +40,10 @@ clipper rt_math.prg  /w /n %HB_CLIPOPT%
 clipper rt_misc.prg  /w /n %HB_CLIPOPT%
 clipper rt_str.prg   /w /n %HB_CLIPOPT%
 clipper rt_stra.prg  /w /n %HB_CLIPOPT%
+clipper rt_tran2.prg /w /n %HB_CLIPOPT%
 clipper rt_trans.prg /w /n %HB_CLIPOPT%
 
-%HB_LINKER% out %HB_HBTEST% fi hbtest,rt_array,rt_date,rt_file,rt_hvm,rt_hvma,rt_math,rt_misc,rt_str,rt_stra,rt_trans %HB_LINKOPT%
+%HB_LINKER% out %HB_HBTEST% fi hbtest,rt_array,rt_date,rt_file,rt_hvm,rt_hvma,rt_math,rt_misc,rt_str,rt_stra,rt_tran2,rt_trans %HB_LINKOPT%
 
 rem ---------------------------------------------------------------
 

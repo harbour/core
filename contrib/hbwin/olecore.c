@@ -1661,12 +1661,7 @@ HB_FUNC( WIN_OLEERROR )
 
 HB_FUNC( WIN_OLEERRORTEXT )
 {
-   HRESULT lOleError;
-
-   if( HB_ISNUM( 1 ) )
-      lOleError = hb_parnl( 1 );
-   else
-      lOleError = hb_oleGetError();
+   HRESULT lOleError = HB_ISNUM( 1 ) ? hb_parnl( 1 ) : hb_oleGetError();
 
    switch( lOleError )
    {

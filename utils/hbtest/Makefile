@@ -12,6 +12,7 @@ PRG_SOURCES := \
    rt_mt.prg \
    rt_str.prg \
    rt_stra.prg \
+   rt_tran2.prg \
    rt_trans.prg \
    rt_class.prg \
 

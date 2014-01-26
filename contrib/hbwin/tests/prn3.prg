@@ -17,8 +17,8 @@ PROCEDURE Main()
    Dump( win_printerList( .T., .F. ) )
    Dump( win_printerList( .T., .T. ) )
 
-   ? "WIN_PRINTERGETDEFAULT:", ">" + win_printerGetDefault() + "<"
-   ? "WIN_PRINTERSTATUS:", win_printerStatus()
+   ? "win_printerGetDefault():", ">" + win_printerGetDefault() + "<"
+   ? "win_printerStatus():", win_printerStatus()
 
    RETURN
 

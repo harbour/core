@@ -13,8 +13,9 @@ xpp rt_math.prg  /w /n %HB_CLIPOPT%
 xpp rt_misc.prg  /w /n %HB_CLIPOPT%
 xpp rt_str.prg   /w /n %HB_CLIPOPT%
 xpp rt_stra.prg  /w /n %HB_CLIPOPT%
+xpp rt_tran2.prg /w /n %HB_CLIPOPT%
 xpp rt_trans.prg /w /n %HB_CLIPOPT%
 
-alink hbtest rt_array rt_date rt_file rt_hvm rt_hvma rt_math rt_misc rt_str rt_stra rt_trans
+alink hbtest rt_array rt_date rt_file rt_hvm rt_hvma rt_math rt_misc rt_str rt_stra rt_tran2 rt_trans
 
 del *.obj

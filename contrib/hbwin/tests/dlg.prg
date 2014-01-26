@@ -34,8 +34,6 @@ PROCEDURE Main()
 // Main function to control the user interaction
 STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
 
-   LOCAL cText
-
    HB_SYMBOL_UNUSED( wParam )
    HB_SYMBOL_UNUSED( lParam )
    HB_SYMBOL_UNUSED( wPHigh )
@@ -62,8 +60,7 @@ STATIC FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
    CASE WM_COMMAND
       SWITCH wPLow
       CASE IDC_BUTTON1
-         cText := wapi_GetDlgItemText( hWnd, IDC_EDIT1 )
-         wapi_MessageBox( 0, "Hello [" + cText + "]!" + Chr( 13 ) + "How are you?", "Hi!", MB_ICONASTERISK )
+         wapi_MessageBox( 0, "Hello [" + wapi_GetDlgItemText( hWnd, IDC_EDIT1 ) + "]!" + Chr( 13 ) + "How are you?", "Hi!", MB_ICONASTERISK )
          RETURN .T.
       ENDSWITCH
    ENDSWITCH
