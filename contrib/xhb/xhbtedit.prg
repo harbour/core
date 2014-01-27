@@ -2934,16 +2934,14 @@ STATIC FUNCTION WhichEOL( cString )
    LOCAL nCRPos := At( Chr( 13 ), cString )
    LOCAL nLFPos := At( Chr( 10 ), cString )
 
-   IF nCRPos > 0 .AND. nLFPos == 0
+   DO CASE
+   CASE nCRPos > 0 .AND. nLFPos == 0
       RETURN Chr( 13 )
-
-   ELSEIF nCRPos == 0 .AND. nLFPos >  0
+   CASE nCRPos == 0 .AND. nLFPos >  0
       RETURN Chr( 10 )
-
-   ELSEIF nCRPos > 0 .AND. nLFPos == nCRPos + 1
+   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
       RETURN Chr( 13 ) + Chr( 10 )
-
-   ENDIF
+   ENDKCASE
 
    RETURN hb_eol()
 
