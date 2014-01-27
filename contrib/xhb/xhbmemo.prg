@@ -57,7 +57,6 @@ CREATE CLASS xhb_TMemoEditor FROM XHBEditor
    VAR    xUserFunction   // User Function called to change default MemoEdit() behaviour
 
    VAR    aEditKeys
-   VAR    aAsciiKeys
    VAR    aConfigurableKeys
    VAR    aMouseKeys
    VAR    aExtKeys                                 // Extended keys. For HB_EXT_INKEY use only.
@@ -100,9 +99,6 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       K_CTRL_BS, ;
       K_TAB, ;
       K_SH_TAB }
-
-   ::aAsciiKeys := Array( 255 - 31 ) // asc codes greater than space.
-   AEval( ::aAsciiKeys, {| c, i | iif( Empty( c ), ::aAsciiKeys[ i ] := i + 31, ) } )
 
    // Save/Init object internal representation of user function
 
@@ -204,8 +200,8 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
       IF ::bKeyBlock == NIL
 
-         IF ( AScan( ::aEditKeys, nKey ) > 0 .OR. ;
-              AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+         IF ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+              AScan( ::aEditKeys, nKey ) > 0 .OR. ;
               AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
               AScan( ::aExtKeys, nKey ) > 0 .OR. ;
               ( nKey == K_INS .AND. ! ::ExistUdf() ) .OR. ;
@@ -227,8 +223,8 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
       IF ::ExistUdf()
 
-         IF AScan( ::aEditKeys, nKey ) > 0 .OR. ;
-            AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+         IF Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+            AScan( ::aEditKeys, nKey ) > 0 .OR. ;
             AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
             AScan( ::aExtKeys, nKey ) > 0 .OR. ;
             nKey == K_F1
@@ -294,7 +290,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
       // HBEditor is not able to handle keys with a value higher than 256 or lower than 1
 
       IF ! lEdited .AND. ;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+         ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
            AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
            nKey == K_ESC .OR. ;
@@ -315,7 +311,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
    CASE ME_DATA
 
       IF ! lEdited .AND. ;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+         ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
            nKey == K_ESC .OR. ;
            nKey == K_INS )

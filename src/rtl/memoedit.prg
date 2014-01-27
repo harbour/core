@@ -166,7 +166,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
             RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
             SetPos( nRow, nCol )
 
-            IF nYesNoKey == Asc( "Y" ) .OR. nYesNoKey == Asc( "y" )
+            IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
                hb_keySetLast( K_ESC ) /* Cl*pper compatibility */
                ::lSaved := .F.
                ::lExitEdit := .T.

@@ -124,7 +124,7 @@ CREATE CLASS XHBEditor
    VAR   nNumCols       INIT 1      // How many columns / rows can be displayed inside editor window
    VAR   nNumRows       INIT 1
 
-   VAR   nTabWidth      INIT 5      // Size of Tab chars
+   VAR   nTabWidth      INIT 4      // Size of Tab chars
    VAR   lEditAllow     INIT .T.    // Are changes to text allowed?
    VAR   lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
    VAR   lWordWrap      INIT .T.    // .F. earlier, True if word wrapping is active
@@ -1694,7 +1694,8 @@ METHOD K_Return() CLASS XHBEditor
          ENDIF
 
          IF ::nRow == ::LastRow() .AND. ;
-               ::nCol > ::LineLen( ::nRow )
+            ::nCol > ::LineLen( ::nRow )
+
             ::AddLine( "", .F. )
          ELSE
             ::InsertLine( SubStr( ::aText[ ::nRow ]:cText, ::nCol ), .F., ::nRow + 1 )
@@ -1733,18 +1734,21 @@ METHOD K_Esc() CLASS XHBEditor
    IF ::lEditAllow .AND. ::lChanged .AND. Set( _SET_SCOREBOARD )
       nCurCol    := ::Col()
       nCurRow    := ::Row()
-      cScreenMsg := SaveScreen( 0, 60, 0, 77 )
+      cScreenMsg := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
       nCursor := SetCursor( SC_NORMAL )
-      hb_DispOutAt( 0, 60, "(Abort Edit? Y/N)" )
+      hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
+      SetPos( 0, MaxCol() - 1 )
       nKey := Inkey( 0 )
       Inkey()
-      RestScreen( 0, 60, 0, 77, cScreenMsg )
+      RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cScreenMsg )
       SetCursor( nCursor )
       SetPos( nCurRow, nCurCol )
 
       // 2006-07-21 - E.F - Exit only if "Y" is pressed.
       //
-      ::lExitEdit := ( Upper( hb_keyChar( nKey ) ) == "Y" )
+      IF ( ::lExitEdit := ( Upper( hb_keyChar( nKey ) ) == "Y" ) )
+         hb_keySetLast( K_ESC ) /* Cl*pper compatibility */
+      ENDIF
    ENDIF
 
    IF ::lExitEdit
@@ -2345,12 +2349,12 @@ METHOD DisplayInsert( lInsert ) CLASS XHBEditor
 
       IF lInsert
          IF ::cInsLabel == NIL
-            ::cInsLabel := SaveScreen( 0, 60, 0, 67 )
+            ::cInsLabel := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() - 18 + 8 - 1 )
          ENDIF
-         hb_DispOutAt( 0, 60, "<insert>" )
+         hb_DispOutAt( 0, MaxCol() - 18, "<insert>" )
       ELSE
          IF ::cInsLabel != NIL
-            RestScreen( 0, 60, 0, 67, ::cInsLabel )
+            RestScreen( 0, MaxCol() - 18, 0, MaxCol() - 18 + 8 - 1, ::cInsLabel )
             ::cInsLabel := NIL
          ENDIF
       ENDIF
