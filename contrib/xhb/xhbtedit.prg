@@ -262,8 +262,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    __defaultNIL( @nBottom, MaxRow() )
    __defaultNIL( @nRight, MaxCol() )
    __defaultNIL( @lEditMode, .T. )
-   __defaultNIL( @nLineLength, NIL )
-   __defaultNIL( @nTabSize, NIL )
    __defaultNIL( @nTextRow, 1 )
    __defaultNIL( @nTextCol, 0 )
    __defaultNIL( @nWndRow, 0 )
@@ -271,7 +269,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // 2006-07-22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
    ENDIF
 
 
@@ -325,7 +323,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::lChanged := .F.
 
    // how many spaces for each tab?
-   IF nTabSize != NIL
+   IF HB_ISNUMERIC( nTabSize )
       ::nTabWidth := nTabSize
    ENDIF
 

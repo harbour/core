@@ -285,18 +285,18 @@ FUNCTION MemoEdit( ;
 
    LOCAL nOldCursor
 
-   hb_default( @nTop            , 0                  )
-   hb_default( @nLeft           , 0                  )
-   hb_default( @nBottom         , MaxRow()           )
-   hb_default( @nRight          , MaxCol()           )
-   hb_default( @lEditMode       , .T.                )
+   hb_default( @nTop            , 0 )
+   hb_default( @nLeft           , 0 )
+   hb_default( @nBottom         , MaxRow() )
+   hb_default( @nRight          , MaxCol() )
+   hb_default( @lEditMode       , .T. )
    hb_default( @nLineLength     , nRight - nLeft + 1 )
-   hb_default( @nTabSize        , 4                  )
-   hb_default( @nTextBuffRow    , 1                  )
-   hb_default( @nTextBuffColumn , 0                  )
-   hb_default( @nWindowRow      , 0                  )
-   hb_default( @nWindowColumn   , nTextBuffColumn    )
-   hb_default( @cString         , ""                 )
+   hb_default( @nTabSize        , 4 )
+   hb_default( @nTextBuffRow    , 1 )
+   hb_default( @nTextBuffColumn , 0 )
+   hb_default( @nWindowRow      , 0 )
+   hb_default( @nWindowColumn   , nTextBuffColumn )
+   hb_default( @cString         , "")
 
    // Original MemoEdit() converts Tabs into spaces;
    oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )

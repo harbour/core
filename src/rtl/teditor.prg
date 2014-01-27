@@ -57,6 +57,9 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
+/* TOFIX: Leave this here, until this code is cleaned off of RTEs */
+#pragma linenumber=on
+
 CREATE CLASS HBEditor
 
    EXPORTED:

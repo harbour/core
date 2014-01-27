@@ -50,8 +50,6 @@
 
 #include "fileio.ch"
 
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-
 #define BUFFER_SIZE 16384
 
 FUNCTION FileReader( cFile, nMode )

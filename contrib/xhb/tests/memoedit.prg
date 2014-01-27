@@ -1,0 +1,35 @@
+#require "xhb"
+
+#include "box.ch"
+
+PROCEDURE Main( cFile )
+
+   LOCAL cText := iif( HB_ISSTRING( cFile ), MemoRead( cFile ), Example_Text() )
+
+   hb_DispBox( 0, 0, MaxRow(), MaxCol(), HB_B_SINGLE_UNI )
+
+   cText := xhb_MemoEdit( cText, 1, 1, MaxRow() - 1, MaxCol() - 1, .T. )
+
+   IF ! hb_FileMatch( cFile, __FILE__ )
+      hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION Example_Text()
+#pragma __cstream | RETURN %s
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam
+lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam
+viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent
+et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt
+congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed
+arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet,
+consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis,
+pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi
+id magna consequat sagittis. Curabitur dapibus enim sit amet elit
+pharetra tincidunt feugiat nisl imperdiet. Ut convallis libero in urna
+ultrices accumsan. Donec sed odio eros. Donec viverra mi quis quam
+pulvinar at malesuada arcu rhoncus. Cum sociis natoque penatibus et
+magnis dis parturient montes, nascetur ridiculus mus. In rutrum accumsan
+ultricies. Mauris vitae nisi at sem facilisis semper ac in est.
+#pragma __endtext

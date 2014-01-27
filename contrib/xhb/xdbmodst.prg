@@ -55,8 +55,6 @@
 #define EG_RENAME       26
 #endif
 
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-
 FUNCTION dbModifyStructure( cFile )
 
    LOCAL lRet

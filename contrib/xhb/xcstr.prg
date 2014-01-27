@@ -49,10 +49,6 @@
 
 #include "hbclass.ch"
 
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-
-//
-
 FUNCTION CStrToVal( cExp, cType )
 
    IF ! HB_ISSTRING( cExp )
