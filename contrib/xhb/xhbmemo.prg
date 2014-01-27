@@ -104,7 +104,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    ::xUserFunction := xUDF
 
-   // NOTE: K_ALT_W is not compatible with clipper exit memo and save key,
+   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key,
    //       but I cannot discriminate K_CTRL_W and K_CTRL_END from harbour
    //       code.
 
@@ -118,14 +118,12 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
    ::aExtKeys := {}
 #endif
 
-
    ::aMouseKeys := { K_LBUTTONUP, K_MWFORWARD, K_MWBACKWARD }
-
 
    IF ::ExistUdf()
       /* Keep calling user function until it returns 0
          2004-08-05 - <maurilio.longo@libero.it>
-                      Clipper 5.2 MemoEdit() treats a NIL as ME_DEFAULT */
+                      Cl*pper 5.2 MemoEdit() treats a NIL as ME_DEFAULT */
       DO WHILE AScan( { ME_DEFAULT, NIL }, nUdfReturn := ::CallUdf( ME_INIT ) ) == 0
 
          // At this time there is no input from user of MemoEdit() only handling
@@ -133,9 +131,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
          // parameters of ::HandleUdf()
 
          ::HandleUdf( nUdfReturn, nUdfReturn, .F. )
-
       ENDDO
-
    ENDIF
 
    RETURN Self
@@ -174,11 +170,10 @@ METHOD Edit() CLASS xhb_TMemoEditor
          IF nNextKey != 0
             Inkey()
          ENDIF
-
       ENDIF
 
       /* 2005-10-24 - <maurilio.longo@libero.it>
-                      Taken from clipper norton guide:
+                      Taken from Cl*pper norton guide:
 
                         The user function: <cUserFunction>, a user-defined function
                         specified as an argument, handles key exceptions and reconfigures
@@ -216,9 +211,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
                 ( nKey == K_ESC .AND. ::ExistUdf() )
 
             ::KeyboardHook( nKey )
-
          ENDIF
-
       ENDIF
 
       IF ::ExistUdf()
@@ -233,30 +226,21 @@ METHOD Edit() CLASS xhb_TMemoEditor
                AScan( ::aConfigurableKeys, nKey ) == 0 .AND. nKey != K_F1
 
                nUdfReturn := ::CallUdf( ME_IDLE )
-
             ELSE
-
                IF AScan( ::aConfigurableKeys, nKey ) == 0
                   nUdfReturn := ::CallUdf( iif( ::lChanged, ME_UNKEYX, ME_UNKEY ) )
                ELSE
                   nUdfReturn := ::CallUdf( ME_UNKEY )
                ENDIF
-
-
             ENDIF
 
             ::HandleUdf( nKey, nUdfReturn, ::bKeyBlock == NIL )
-
          ENDIF
-
       ENDIF
-
    ENDDO
 
    RETURN Self
 
-
-//
 // I come here if I have an unknown key and it is not a configurable key
 // if there is an user function I leave to it its handling
 //
@@ -270,7 +254,6 @@ METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
    ENDIF
 
    RETURN Self
-
 
 METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
 
@@ -298,7 +281,6 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
            AScan( ::aMouseKeys, nKey ) > 0 )
 
          ::Super:Edit( nKey )
-
       ENDIF
       EXIT
 
@@ -317,7 +299,6 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
            nKey == K_INS )
 
          ::Super:Edit( nKey )
-
       ENDIF
       EXIT
 
@@ -376,7 +357,6 @@ METHOD CallUdf( nMode ) CLASS xhb_TMemoEditor
       xResult := Do( ::xUserFunction, nMode, ::nRow, ::nCol - 1, Self )
 
       ::SetPos( nCurRow, nCurCol )
-
    ENDIF
 
    RETURN xResult
@@ -462,7 +442,7 @@ FUNCTION xhb_MemoEdit( ;
    ENDIF
 
    /* 2005-10-24 - <maurilio.longo@libero.it>
-                   Clipper MemoEdit() converts tabs into spaces */
+                   Cl*pper MemoEdit() converts tabs into spaces */
    oEd := xhb_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ), ;
       nTop, nLeft, nBottom, nRight, ;
       lEditMode, ;
@@ -479,15 +459,14 @@ FUNCTION xhb_MemoEdit( ;
    oEd:MemoInit( xUDF )
    oEd:RefreshWindow()
 
-   // 2006-08-06 - E.F. Clipper's  <cUserFunction> in .T. or. F. means the same.
+   // 2006-08-06 - E.F. Cl*pper's <cUserFunction> in .T. or. F. means the same.
    IF ! HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
 
       oEd:Edit()
 
       IF oEd:lSaved
-         cString := oEd:GetText( .T. )  // Clipper inserts Soft CR
+         cString := oEd:GetText( .T. )  // Cl*pper inserts Soft CR
       ENDIF
-
    ELSE
       /* 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
                              so we have to repos the cursor at bottom of memoedit

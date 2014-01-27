@@ -301,7 +301,7 @@ METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    HB_SYMBOL_UNUSED( lCgi )
 
-   return ::new( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
+   RETURN ::new( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
       onLoad, onUnload, ;
       cLinkClr, cVLinkClr, cALinkClr, ;
