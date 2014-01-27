@@ -93,7 +93,7 @@ STATIC FUNCTION Meta()
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
-   hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@foobaz>"
+   hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@example.org>"
    hMeta[ "Language-Team:"             ] := "https://www.transifex.com/projects/p/harbour/"
    hMeta[ "MIME-Version:"              ] := "1.0"
    hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"

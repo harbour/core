@@ -98,8 +98,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL cMessage
    LOCAL cColorHigh
    LOCAL aOptionsOK
-   LOCAL cOption
-   LOCAL nEval
+   LOCAL cString
 
 #ifdef HB_CLP_UNDOC
 
@@ -119,8 +118,8 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    IF HB_ISARRAY( xMessage )
       cMessage := ""
-      FOR nEval := 1 TO Len( xMessage )
-         cMessage += iif( nEval == 1, "", Chr( 10 ) ) + hb_CStr( xMessage[ nEval ] )
+      FOR EACH cString IN xMessage
+         cMessage += iif( cString:__enumIsFirst(), "", Chr( 10 ) ) + hb_CStr( cString )
       NEXT
    ELSEIF HB_ISSTRING( xMessage )
       cMessage := StrTran( xMessage, ";", Chr( 10 ) )
@@ -141,9 +140,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    aOptionsOK := {}
-   FOR EACH cOption IN aOptions
-      IF HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
-         AAdd( aOptionsOK, cOption )
+   FOR EACH cString IN aOptions
+      IF HB_ISSTRING( cString ) .AND. ! Empty( cString )
+         AAdd( aOptionsOK, cString )
       ENDIF
    NEXT
 

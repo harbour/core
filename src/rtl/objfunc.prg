@@ -128,11 +128,8 @@ FUNCTION __objGetMethodList( oObject )
 
 FUNCTION __objGetValueList( oObject, aExcept )
 
-   LOCAL aDataSymbol
-   LOCAL nLen
    LOCAL aData
    LOCAL cSymbol
-   LOCAL n
 
    IF ! HB_ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
@@ -140,12 +137,8 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
    hb_default( @aExcept, {} )
 
-   aDataSymbol := __objGetMsgList( oObject )
-   nLen        := Len( aDataSymbol )
-   aData       := {}
-
-   FOR n := 1 TO nLen
-      cSymbol := aDataSymbol[ n ]
+   aData := {}
+   FOR EACH cSymbol IN __objGetMsgList( oObject )
       IF AScan( aExcept, {| tmp | tmp == cSymbol } ) == 0
          AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
       ENDIF
@@ -155,10 +148,10 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
 FUNCTION __objSetValueList( oObject, aData )
 
-   IF ! HB_ISOBJECT( oObject )
-      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSE
+   IF HB_ISOBJECT( oObject )
       AEval( aData, {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
+   ELSE
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
    RETURN oObject

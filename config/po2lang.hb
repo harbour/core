@@ -79,26 +79,26 @@ STATIC PROCEDURE ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, 
    ENDSWITCH
 
    IF tmp != NIL
-      cContent += iif( nPos > 0, hb_eol(), "" ) + Space( 6 ) + tmp + hb_eol() + hb_eol()
+      cContent += iif( nPos > 0, hb_eol(), "" ) + Space( 2 * 3 ) + tmp + hb_eol() + hb_eol()
    ENDIF
 
    IF nPos == 0
       cTranslator := hb_regexAll( "Last-Translator: ([^\n]*)", cTrs,,,,, .T. )[ 1 ][ 2 ]
-      IF cTranslator == "foo bar <foo.bar@foobaz>"
+      IF cTranslator == "foo bar <foo.bar@example.org>"
          cTranslator := ""
       ENDIF
-      cContent += Space( 6 ) + ConvToC( cLang ) + "," + hb_eol()
+      cContent += Space( 2 * 3 ) + ConvToC( cLang ) + "," + hb_eol()
       ++nPos
    ELSE
       IF Len( cTrs ) == 0
          cTrs := cOri
       ENDIF
-      cContent += Space( 6 ) + ConvToC( cTrs ) + "," + hb_eol()
+      cContent += Space( 2 * 3 ) + ConvToC( cTrs ) + "," + hb_eol()
       ++nPos
 
       IF nPos $ sc_hEmpty
-         FOR tmp := 1 TO Len( sc_hEmpty[ nPos ] )
-            cContent += Space( 6 ) + ConvToC( sc_hEmpty[ nPos ][ tmp ] ) + "," + hb_eol()
+         FOR EACH tmp IN sc_hEmpty[ nPos ]
+            cContent += Space( 2 * 3 ) + ConvToC( tmp ) + "," + hb_eol()
          NEXT
          nPos += Len( sc_hEmpty[ nPos ] )
       ENDIF

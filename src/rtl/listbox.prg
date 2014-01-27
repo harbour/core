@@ -1090,8 +1090,6 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
 
    LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-   LOCAL nPos
-   LOCAL nLen
    LOCAL xItem
 
    IF o != NIL
@@ -1106,11 +1104,7 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
       o:fBlock    := bFBlock
       o:sBlock    := bSBlock
 
-      nLen := Len( aItems )
-      FOR nPos := 1 TO nLen
-
-         xItem := aItems[ nPos ]
-
+      FOR EACH xItem IN aItems
          IF ! HB_ISARRAY( xItem )
             o:addItem( xItem )
          ELSEIF Len( xItem ) == _ITEM_cTEXT
