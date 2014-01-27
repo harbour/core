@@ -7,7 +7,7 @@
  *
  */
 
-#if defined( __HBSCRIPT__HBSHELL )
+#ifdef __HBSCRIPT__HBSHELL
 #require "hbtest"
 #else
 #include "rt_main.ch"

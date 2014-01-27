@@ -18,7 +18,7 @@ PROCEDURE Main()
    Dump( win_printerList( .T., .T. ) )
 
    ? "win_printerGetDefault():", ">" + win_printerGetDefault() + "<"
-   ? "win_printerStatus():", win_printerStatus()
+   ? "win_printerStatus():", hb_ntos( win_printerStatus() )
 
    RETURN
 
@@ -33,7 +33,7 @@ STATIC PROCEDURE Dump( a )
          FOR EACH c IN b
             ?? c:__enumIndex(), c
             IF c:__enumIndex() == 2
-               ?? ;
+               ?? "", ;
                   ">>" + win_printerPortToName( c ) + "<<", ;
                   "|>>" + win_printerPortToName( c, .T. ) + "<<|"
             ENDIF

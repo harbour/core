@@ -4,7 +4,7 @@
  * readhrb <hrb file>
  *
  * Eddie Runia <eddie@runia.com>
- * Vailton Renato <vailtom@gmail.com> (Updated to support current harbour implementation)
+ * Vailton Renato <vailtom@gmail.com> (Updated to support current Harbour implementation)
  * www - http://harbour-project.org
  *
  * Placed in the public domain
@@ -116,7 +116,7 @@ PROCEDURE Main( cFrom )
 
                ? "Symbol:", cSymbol
                ? "Length:", hb_ntos( nLenCount ), "byte(s)"
-               ? "PCode: "
+               ? "PCode:", ""
 
                FOR m := 1 TO nLenCount
                   cBlock := FReadStr( hFile, 1 )

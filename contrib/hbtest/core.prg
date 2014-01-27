@@ -81,8 +81,8 @@ STATIC PROCEDURE hbtest_Banner()
       Replicate( "=", 75 ) + hb_eol() + ;
       Space( TEST_RESULT_COL1_WIDTH ), ;
       PadR( "Location", TEST_RESULT_COL2_WIDTH ), ;
-      PadR( "Test", TEST_RESULT_COL3_WIDTH ), ;
-            "->", "Result" + hb_eol() + ;
+      PadR( "Test", TEST_RESULT_COL3_WIDTH ), "->", ;
+      "Result" + hb_eol() + ;
       Replicate( "-", 75 ) + hb_eol() )
 
    RETURN
@@ -172,16 +172,16 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       bOut := hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } )
       IF lFailed
          Eval( bOut, ;
-            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
-            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
+            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ), ;
+            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ), ;
             RTrim( cBlock ) + hb_eol() + ;
             Space( 5 ) + "  Result:", XToStr( xResult ) + hb_eol() + ;
             Space( 5 ) + "Expected:", XToStr( xResultExpected ) + hb_eol() )
       ELSE
          Eval( bOut, ;
-            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
-            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
-            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
+            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ), ;
+            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ), ;
+            PadR( cBlock, TEST_RESULT_COL3_WIDTH ), "->", ;
             XToStr( xResult ) + hb_eol() )
       ENDIF
    ENDIF
