@@ -113,10 +113,10 @@ Evaluate these points before reporting an issue:
     non-ASCII (national, accented, special) chars, make sure to mark the
     codepage/encoding used (UTF-8 recommended) and attach the files
     compressed with zip. (use the extension `.zip`)<br />
-    See more on self-contained examples:
-       <http://sscce.org/>
-    See more on how to report issues in an effective and useful way:
-       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
+    * See more on self-contained examples:
+      <http://sscce.org/>
+    * See more on how to report issues in an effective and useful way:
+      <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
 13. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Clipper
     core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
