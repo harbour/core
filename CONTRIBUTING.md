@@ -39,6 +39,8 @@
   - Remove trailing spaces from lines
   - Keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
+- See this good guideline on how to contribute:
+  <https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md>
 
 
 # Troubleshooting
@@ -113,6 +115,8 @@ Evaluate these points before reporting an issue:
     compressed with zip. (use the extension `.zip`)<br />
     See more on self-contained examples:
        <http://sscce.org/>
+    See more on how to report issues in an effective and useful way:
+       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
 13. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Clipper
     core language elements against real CA-Clipper 5.2e or 5.3b, or hbct

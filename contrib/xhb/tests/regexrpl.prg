@@ -17,7 +17,6 @@ PROCEDURE Main()
 
    ? "*** hb_regexReplace() test ***"
    ?
-   ?
    ? "A simple replace, return is a single match, without submatches."
    ? "Using 1 to retrieve matches"
    cString  := "aaabbbcccddd111222333aaabbbcccddd111222333"

@@ -127,7 +127,7 @@ CREATE CLASS TStreamFileReader FROM TStream
 
    METHOD New( cFile, nMode ) CONSTRUCTOR
 
-   METHOD Close() INLINE iif( ::Handle > 0, FClose( ::Handle ), ), ::Handle := -2
+   METHOD Close() INLINE iif( ::Handle != F_ERROR, FClose( ::Handle ), ), ::Handle := F_ERROR
    METHOD Seek( nOffset Origin ) INLINE FSeek( ::Handle, nOffset, Origin )
 
    METHOD Read( sBuffer, nOffset, nCount )
@@ -143,9 +143,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::cFile := cFile
 
-   IF nMode == NIL
-      nMode := 2
-   ENDIF
+   __defaultNIL( @nMode, FO_READWRITE )
 
    ::Handle := FOpen( cFile, nMode )
    IF ::Handle == F_ERROR
@@ -169,11 +167,11 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
    LOCAL nRead
 
-/*
+#if 0
    IF ! HB_ISBYREF( @sBuffer )
       Throw( xhb_ErrorNew( "Stream", 0, 1002, ProcName(), "Buffer not BYREF.", hb_AParams() ) )
    ENDIF
-*/
+#endif
 
    nRead := FRead( ::Handle, @sBuffer, nCount, nOffset )
 
@@ -199,7 +197,7 @@ CREATE CLASS TStreamFileWriter FROM TStream
 
    METHOD New( cFile, nMode ) CONSTRUCTOR
 
-   METHOD Close() INLINE iif( ::Handle > 0, FClose( ::Handle ), ), ::Handle := -2
+   METHOD Close() INLINE iif( ::Handle != F_ERROR, FClose( ::Handle ), ), ::Handle := F_ERROR
    METHOD Seek( nOffset Origin ) INLINE ::nPosition := FSeek( ::Handle, nOffset, Origin )
 
    METHOD Write( sBuffer, nOffset, nCount )

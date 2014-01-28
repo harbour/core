@@ -220,7 +220,7 @@ METHOD Field( cQueryName ) CLASS TCgi
    nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
 
    IF nRet > 0
-      cRet := ::aQueryFields[ nRet, 2 ]
+      cRet := ::aQueryFields[ nRet ][ 2 ]
    ENDIF
 
    RETURN cRet

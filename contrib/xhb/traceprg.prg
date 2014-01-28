@@ -63,11 +63,12 @@ FUNCTION xhb_SetTrace( xTrace )
    CASE HB_ISLOGICAL( xTrace )
       s_lSET_TRACE := xTrace
    CASE HB_ISSTRING( xTrace )
-      IF Upper( xTrace ) == "ON"
+      DO CASE
+      CASE Upper( xTrace ) == "ON"
          s_lSET_TRACE := .T.
-      ELSEIF Upper( xTrace ) == "OFF"
+      CASE Upper( xTrace ) == "OFF"
          s_lSET_TRACE := .F.
-      ENDIF
+      ENDCASE
    ENDCASE
 
    RETURN lTrace
@@ -165,8 +166,6 @@ FUNCTION TraceLog( ... )
    FClose( FileHandle )
 
    RETURN .T.
-
-//
 
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
 STATIC FUNCTION cWithPath( cFilename )
