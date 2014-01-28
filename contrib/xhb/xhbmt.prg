@@ -88,7 +88,7 @@ FUNCTION IsValidThread( pThID )
 
    BEGIN SEQUENCE WITH {|| Break() }
       lValid := hb_threadID( pThID ) != 0
-   recover
+   RECOVER
       lValid := .F.
    END SEQUENCE
 

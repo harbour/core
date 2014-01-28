@@ -304,7 +304,7 @@
    #xtranslate hb_enumIndex( <!v!> ) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   #xcommand TRY => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 

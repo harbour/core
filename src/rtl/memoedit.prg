@@ -98,8 +98,8 @@ METHOD Edit() CLASS HBMemoEditor
 
    LOCAL nKey
 
-   // NOTE: K_ALT_W is not compatible with clipper exit memo and save key, but I cannot discriminate
-   //       K_CTRL_W and K_CTRL_END from harbour code.
+   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key, but I cannot discriminate
+   //       K_CTRL_W and K_CTRL_END from Harbour code.
    LOCAL aConfigurableKeys := { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }
    LOCAL bKeyBlock
 
@@ -298,12 +298,14 @@ FUNCTION MemoEdit( ;
    hb_default( @nWindowColumn   , nTextBuffColumn )
    hb_default( @cString         , "")
 
-   // Original MemoEdit() converts Tabs into spaces;
+   /* Original MemoEdit() converts tabs into spaces */
    oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction
+   /* Contrary to what the NG says, any logical value will make it pass
+      through without any editing. */
+   IF ! HB_ISLOGICAL( xUserFunction )
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()

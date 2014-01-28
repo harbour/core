@@ -54,20 +54,20 @@
 
 CREATE CLASS xhb_TMemoEditor FROM XHBEditor
 
-   VAR    xUserFunction   // User Function called to change default MemoEdit() behaviour
+   VAR xUserFunction   // User Function called to change default MemoEdit() behaviour
 
-   VAR    aEditKeys
-   VAR    aConfigurableKeys
-   VAR    aMouseKeys
-   VAR    aExtKeys                                 // Extended keys. For HB_EXT_INKEY use only.
+   VAR aEditKeys
+   VAR aConfigurableKeys
+   VAR aMouseKeys
+   VAR aExtKeys                                    // Extended keys. For HB_EXT_INKEY use only.
 
    METHOD MemoInit( xUDF )                         // This method is called after ::New() returns to perform ME_INIT actions
-   METHOD Edit()                                   // Calls ::Super:Edit(nKey) but is needed to handle configurable keys
+   METHOD Edit()                                   // Calls ::Super:Edit( nKey ) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )                     // Gets called every time there is a key not handled directly by HBEditor
 
    METHOD ExistUdf() INLINE HB_ISSTRING( ::xUserFunction )
-   METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by udf
-   METHOD CallUdf( nMode )                         // Call user function. ( old xDo )
+   METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by UDF
+   METHOD CallUdf( nMode )                         // Call user function. (old xDo)
 
 ENDCLASS
 
@@ -460,18 +460,17 @@ FUNCTION xhb_MemoEdit( ;
    oEd:RefreshWindow()
 
    // 2006-08-06 - E.F. Cl*pper's <cUserFunction> in .T. or. F. means the same.
-   IF ! HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
-
+   IF HB_ISLOGICAL( xUDF )
+      /* 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
+                             so we have to repos the cursor at bottom of memoedit
+                             screen after that. */
+      SetPos( Min( nBottom, MaxRow() ), 0 )
+   ELSE
       oEd:Edit()
 
       IF oEd:lSaved
          cString := oEd:GetText( .T. )  // Cl*pper inserts Soft CR
       ENDIF
-   ELSE
-      /* 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
-                             so we have to repos the cursor at bottom of memoedit
-                             screen after that. */
-      SetPos( Min( nBottom, MaxRow() ), 0 )
    ENDIF
 
    RETURN cString

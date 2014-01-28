@@ -72,17 +72,9 @@ FUNCTION CStrToVal( cExp, cType )
       RETURN Val( cExp )
    CASE "U"
       RETURN NIL
-#if 0
-   CASE "A"
-      Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-   CASE "B"
-      Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-   CASE "O"
-      Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-#endif
-   OTHERWISE
-      Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
    RETURN NIL
 
@@ -131,7 +123,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          nPad := 0
          cName := "M->__ValToPrg_Array"
          aObjs := {}
-         cRet  := cName + " := "
+         cRet := cName + " := "
       ELSE
          IF ( nObj := AScan( aObjs, {| a | hb_ArrayId( a[ 1 ] ) == hb_ArrayId( xVal ) } ) ) > 0
             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
@@ -184,7 +176,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          cName := "M->__ValToPrg_Object"
          nPad := 0
          aObjs := {}
-         cRet  := cName + " := "
+         cRet := cName + " := "
       ELSE
          IF ( nObj := AScan( aObjs, {| a | hb_ArrayId( a[ 1 ] ) == hb_ArrayId( xVal ) } ) ) > 0
             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
@@ -272,9 +264,9 @@ FUNCTION ValToDate( xVal )
    CASE "N"
    CASE "P"
       RETURN 0d19000101 + xVal
-   OTHERWISE
-      Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTODATE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN hb_SToD()
 
@@ -311,9 +303,9 @@ FUNCTION ValToLogical( xVal )
       RETURN xVal
    CASE "U"
       RETURN .F.
-   OTHERWISE
-      Throw( xhb_ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTOLOGICAL", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN .F.
 
@@ -339,9 +331,9 @@ FUNCTION ValToNumber( xVal )
       RETURN xVal - 0
    CASE "U"
       RETURN 0
-   OTHERWISE
-      Throw( xhb_ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN 0
 
@@ -377,37 +369,27 @@ FUNCTION ValToObject( xVal )
    CASE "U"
       ENABLE TYPE CLASS NIL
       EXIT
-   OTHERWISE
-      Throw( xhb_ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTOOBJECT", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN 0
 
 FUNCTION ValToType( xVal, cType )
 
    SWITCH cType
-   CASE "A"
-      RETURN ValToArray( xVal )
-   CASE "B"
-      RETURN ValToBlock( xVal )
-   CASE "C"
-      RETURN ValToCharacter( xVal )
-   CASE "D"
-      RETURN ValToDate( xVal )
-   CASE "H"
-      RETURN ValToHash( xVal )
-   CASE "L"
-      RETURN ValToLogical( xVal )
-   CASE "N"
-      RETURN ValToNumber( xVal )
-   CASE "O"
-      RETURN ValToObject( xVal )
-   CASE "P"
-      RETURN ValToNumber( xVal )
-   CASE "U"
-      RETURN NIL
-   OTHERWISE
-      Throw( xhb_ErrorNew( "VALTOTYPE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
+   CASE "A" ; RETURN ValToArray( xVal )
+   CASE "B" ; RETURN ValToBlock( xVal )
+   CASE "C" ; RETURN ValToCharacter( xVal )
+   CASE "D" ; RETURN ValToDate( xVal )
+   CASE "H" ; RETURN ValToHash( xVal )
+   CASE "L" ; RETURN ValToLogical( xVal )
+   CASE "N" ; RETURN ValToNumber( xVal )
+   CASE "O" ; RETURN ValToObject( xVal )
+   CASE "P" ; RETURN ValToNumber( xVal )
+   CASE "U" ; RETURN NIL
    ENDSWITCH
+
+   Throw( xhb_ErrorNew( "VALTOTYPE", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )
 
    RETURN NIL

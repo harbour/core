@@ -49,14 +49,12 @@
 #ifndef _TBROWSE_CH
 #define _TBROWSE_CH
 
-/* tBrowse ApplyKey() method return codes */
+/* TBrowse ApplyKey() method return codes */
 #define TBR_EXIT        -1
 #define TBR_CONTINUE     0
 #define TBR_EXCEPTION    1
 
-
-/* tBrowse Styles */
-
+/* TBrowse styles */
 #define TBR_APPEND       1
 #define TBR_APPENDING    2
 #define TBR_MODIFY       3
@@ -64,9 +62,7 @@
 #define TBR_SIZE         5
 #define TBR_CUSTOM       6
 
-
-/* tBcolumn Styles */
-
+/* TBColumn styles */
 #define TBC_READWRITE    1
 #define TBC_MOVE         2
 #define TBC_SIZE         3
