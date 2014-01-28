@@ -116,7 +116,7 @@ static HB_USHORT s_uiBackgroundMaxTask = 0;
 
 #endif
 
-/* ------------------------  C  LEVEL ------------------------------ */
+/* ------------------------- C LEVEL ------------------------- */
 
 HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
 {
@@ -166,7 +166,6 @@ HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bActive )
    ++s_uiBackgroundMaxTask;
 
    return pBkgTask->ulTaskID;
-
 }
 
 /* RUN all tasks defined in background state but only if SET BACKGROUND TASKS is ON*/
@@ -343,7 +342,6 @@ HB_BOOL hb_backgroundActive( HB_ULONG ulID, HB_BOOL bActive )
       pBkgTask->bActive = bActive;
    }
    return bOldState;
-
 }
 
 /* Set task time */
@@ -362,8 +360,7 @@ int hb_backgroundTime( HB_ULONG ulID, int nMillisec )
    return nOldState;
 }
 
-
-/* ------------------------ PRG LEVEL ------------------------------ */
+/* ------------------------ PRG LEVEL ------------------------ */
 
 /* forces to run Background functions */
 HB_FUNC( HB_BACKGROUNDRUN )
@@ -394,7 +391,6 @@ HB_FUNC( HB_BACKGROUNDRESET )
 {
    hb_backgroundReset();
 }
-
 
 /* add a new background task and return its handle */
 HB_FUNC( HB_BACKGROUNDADD )
@@ -441,7 +437,6 @@ HB_FUNC( HB_BACKGROUNDACTIVE )
    }
 
    hb_retl( bOldActive ); /* return old active value */
-
 }
 
 /* Set milliseconds after which a task will be executed */

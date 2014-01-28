@@ -117,7 +117,9 @@ Evaluate these points before reporting an issue:
       <http://sscce.org/>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
-13. If your example involves compatibility components, make sure to test
+13. If your example or report contains any human readable text, use
+    English only.
+14. If your example involves compatibility components, make sure to test
     it against original implementation (for example, test legacy Clipper
     core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
     functions against CT3 library, etc)

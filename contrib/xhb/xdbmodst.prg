@@ -149,7 +149,6 @@ FUNCTION dbModifyStructure( cFile )
    RETURN lRet
 
 FUNCTION dbImport( xSource )
-
    RETURN dbMerge( xSource )
 
 FUNCTION dbMerge( xSource, lAppend )
@@ -162,25 +161,24 @@ FUNCTION dbMerge( xSource, lAppend )
    LOCAL cTargetType
 
    // Safety
-   IF LastRec() > 0
-      IF ! lAppend
-         RETURN .F.
-      ENDIF
+   IF LastRec() > 0 .AND. ! lAppend
+      RETURN .F.
    ENDIF
 
    // Validate args
-   IF HB_ISSTRING( xSource )
+   DO CASE
+   CASE HB_ISSTRING( xSource )
       nArea := Select()
 
       USE ( xSource ) ALIAS MergeSource EXCLUSIVE NEW
       nSource := Select()
 
       SELECT ( nArea )
-   ELSEIF HB_ISNUMERIC( xSource )
+   CASE HB_ISNUMERIC( xSource )
       nSource := xSource
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
    // Temp working record
    IF LastRec() == 0
