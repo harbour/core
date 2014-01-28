@@ -211,9 +211,9 @@ STATIC FUNCTION xhb_DefError( oError )
          "(" + hb_ntos( ProcLine( n ) ) + ") in module:", ProcFile( n )
    ENDDO
 
-   // For some strange reason, the DOS prompt gets written on the first line
-   // *of* the message instead of on the first line *after* the message after
-   // the program quits, unless the screen has scrolled. - dgh
+   /* For some strange reason, the DOS prompt gets written on the first line
+      *of* the message instead of on the first line *after* the message after
+      the program quits, unless the screen has scrolled. [dgh] */
    LogError( oError )
 
    ErrorLevel( 1 )
@@ -428,29 +428,8 @@ STATIC PROCEDURE LogError( oerr )
       AddLine( @cReport, "Screen Dump Not Available" )
    ENDIF
 
-#if 0
-   /* NOTE: Adapted from hb_mvSave() source in Harbour RTL. [vszakats] */
-   LOCAL nScope, nCount, tmp, cName, xValue
-
-   AddLine( @cReport, "" )
-   AddLine( @cReport, PadC( " Available Memory Variables ", 80, "+" ) )
-   AddLine( @cReport, "" )
-
-   FOR EACH nScope IN { HB_MV_PUBLIC, HB_MV_PRIVATE }
-      nCount := __mvDbgInfo( nScope )
-      FOR tmp := 1 TO nCount
-         xValue := __mvDbgInfo( nScope, tmp, @cName )
-         IF ValType( xValue ) $ "CNDTL"
-            AddLine( @cReport, "      " + cName + " TYPE " + ValType( xValue ) + " " + hb_ValToExp( xValue ) )
-         ENDIF
-      NEXT
-   NEXT
-#endif
-
    AddLine( @cReport, "" )
    AddLine( @cReport, "" )
-
-   // Alert( "An error occured, Information will be;written to error.log" )
 
    IF lAppendLog .AND. hb_FileExists( cLogFile )
       nHandle := FOpen( cLogFile, FO_WRITE )
@@ -459,8 +438,7 @@ STATIC PROCEDURE LogError( oerr )
    ENDIF
 
    IF nHandle == F_ERROR .AND. !( Lower( cLogFile ) == "error.log" )
-      // Force creating error.log in case supplied log file cannot
-      // be created for any reason
+      // Force creating error.log in case supplied log file cannot be created for any reason
       nHandle := FCreate( "error.log", FC_NORMAL )
    ENDIF
 

@@ -13,8 +13,6 @@ PROCEDURE Main()
 
    LOCAL cString, cRegex, cReplace
 
-   CLS
-
    ? "*** hb_regexReplace() test ***"
    ?
    ? "A simple replace, return is a single match, without submatches."

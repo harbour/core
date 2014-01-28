@@ -58,6 +58,7 @@
 FUNCTION dbModifyStructure( cFile )
 
    LOCAL lRet
+   LOCAL cDir
    LOCAL cExt
    LOCAL cTable
    LOCAL cBakFile
@@ -66,7 +67,7 @@ FUNCTION dbModifyStructure( cFile )
    LOCAL oErr
    LOCAL nPresetArea := Select()
    LOCAL nSourceArea
-   LOCAL cDateTime   := SubStr( DToS( Date() ), 3 ) + "." + StrTran( Left( Time(), 5 ), ":", "." )
+   LOCAL cDateTime
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 
@@ -76,41 +77,40 @@ FUNCTION dbModifyStructure( cFile )
 
       cFile := dbInfo( DBI_FULLPATH )
       cExt  := dbInfo( DBI_TABLEEXT )
+      cDateTime := DToS( Date() ) + "_" + StrTran( Left( Time(), 5 ), ":", "_" )
 
-      hb_FNameSplit( cFile, , @cTable )
+      hb_FNameSplit( cFile, @cDir, @cTable )
 
-      cBakFile       := cTable + ".bak." + cDateTime + cExt
-      cStructureFile := cTable + ".str." + cDateTime + cExt
-      cNewFile       := cTable + ".new." + cDateTime + cExt
+      /* TOFIX: long filenames, not MS-DOS compatible */
+      cBakFile       := cDir + cTable + "_bak_" + cDateTime + cExt
+      cStructureFile := cDir + cTable + "_str_" + cDateTime + cExt
+      cNewFile       := cDir + cTable + "_new_" + cDateTime + cExt
 
       COPY STRUCTURE EXTENDED TO ( cStructureFile )
 
       // Let user modify the structure.
       USE ( cStructureFile ) ALIAS NewStructure EXCLUSIVE NEW
 
-      Browse( 0, 0, Min( 20, MaxRow() - 1 ), Min( MaxCol() - 30, 50 ) )
+      Browse( 0, 0, Min( 20, MaxRow() - 1 ), Min( 50, MaxCol() - 30 ) )
 
-      PACK
-      CLOSE
+      hb_dbPack()
+      dbCloseArea()
 
       CREATE ( cNewFile ) FROM ( cStructureFile ) ALIAS NEW_MODIFIED NEW
 
-
       // Import data into the new file, and close it
-      lRet := dbImport( nSourceArea )
-      CLOSE
+      lRet := dbMerge( nSourceArea )
+      dbCloseArea()
 
-      SELECT ( nSourceArea )
-      CLOSE
+      ( nSourceArea )->( dbCloseArea() )
 
-      SELECT ( nPresetArea )
+      dbSelectArea( nPresetArea )
 
       // Rename original as backup, and new file as the new original.
       IF lRet
          IF FRename( cFile, cBakFile ) == -1
             BREAK
          ENDIF
-
          IF FRename( cNewFile, cFile ) == -1
             // If we can't then try to restore backup as original
             IF FRename( cBakFile, cFile ) == -1
@@ -144,7 +144,17 @@ FUNCTION dbModifyStructure( cFile )
       ENDIF
    END SEQUENCE
 
-   SELECT ( nPresetArea )
+   IF cBakFile != NIL
+      FErase( cBakFile )
+   ENDIF
+   IF cStructureFile != NIL
+      FErase( cStructureFile )
+   ENDIF
+   IF cNewFile != NIL
+      FErase( cNewFile )
+   ENDIF
+
+   dbSelectArea( nPresetArea )
 
    RETURN lRet
 
@@ -160,6 +170,8 @@ FUNCTION dbMerge( xSource, lAppend )
 
    LOCAL cTargetType
 
+   hb_default( @lAppend, .F. )
+
    // Safety
    IF LastRec() > 0 .AND. ! lAppend
       RETURN .F.
@@ -173,7 +185,7 @@ FUNCTION dbMerge( xSource, lAppend )
       USE ( xSource ) ALIAS MergeSource EXCLUSIVE NEW
       nSource := Select()
 
-      SELECT ( nArea )
+      dbSelectArea( nArea )
    CASE HB_ISNUMERIC( xSource )
       nSource := xSource
    OTHERWISE
@@ -227,7 +239,7 @@ FUNCTION dbMerge( xSource, lAppend )
    // Reset
    IF LastRec() == 1 .AND. ! lAppend
       dbDelete()
-      ZAP
+      hb_dbZap()
    ENDIF
 
    // Process
@@ -248,9 +260,8 @@ FUNCTION dbMerge( xSource, lAppend )
 
    // Reset
    IF ! Empty( nArea )
-      SELECT ( nSource )
-      CLOSE
-      SELECT ( nArea )
+      ( nSource )->( dbCloseArea() )
+      dbSelectArea( nArea )
    ENDIF
 
    RETURN .T.

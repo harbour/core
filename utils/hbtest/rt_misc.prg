@@ -94,6 +94,8 @@ PROCEDURE Main_MISC()
    Test_SHA2()
    Test_SHA2_HMAC()
 
+   Test_Base64()
+
 #endif
 
    /* Some random error object tests taken from the separate test source */
@@ -1434,6 +1436,28 @@ STATIC PROCEDURE Test_SHA2_HMAC()
          mac_512_size := 128 / 8
 #endif
       ENDIF
+   NEXT
+
+   RETURN
+
+/* RFC4648 test vectors for base64 */
+STATIC PROCEDURE Test_Base64()
+
+   LOCAL hTestVectors := { ;
+      ""       => "", ;
+      "f"      => "Zg==", ;
+      "fo"     => "Zm8=", ;
+      "foo"    => "Zm9v", ;
+      "foob"   => "Zm9vYg==", ;
+      "fooba"  => "Zm9vYmE=", ;
+      "foobar" => "Zm9vYmFy" }
+
+   LOCAL cSrc, cVector
+
+   FOR EACH cVector IN hTestVectors
+      cSrc := cVector:__enumKey()
+      HBTEST hb_base64Encode( cSrc )    IS cVector
+      HBTEST hb_base64Decode( cVector ) IS cSrc
    NEXT
 
    RETURN
