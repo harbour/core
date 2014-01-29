@@ -426,9 +426,9 @@ HB_FUNC( XDL_DIFF )
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
-      else if( HB_ISBLOCK( 5 ) || HB_ISSYMBOL( 5 ) )
+      else if( HB_ISEVALITEM( 5 ) )
       {
-         PHB_ITEM pCallback = hb_param( 5, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 5, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -498,9 +498,9 @@ HB_FUNC( XDL_BDIFF )
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
-      else if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
+      else if( HB_ISEVALITEM( 4 ) )
       {
-         PHB_ITEM pCallback = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 4, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -536,9 +536,9 @@ HB_FUNC( XDL_RABDIFF )
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -570,9 +570,9 @@ HB_FUNC( XDL_BPATCH )
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;

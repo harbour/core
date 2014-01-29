@@ -146,8 +146,8 @@ HB_EXTERN_BEGIN
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_EVALITEM ) != 0 )
-#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )
 #define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
@@ -238,6 +238,7 @@ HB_EXTERN_BEGIN
 #define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )
 #define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )
 #define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )
+#define HB_ISEVALITEM( n )    ( hb_param( n, HB_IT_EVALITEM ) != NULL )
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )
 
 /* Compatibility #defines, deprecated */

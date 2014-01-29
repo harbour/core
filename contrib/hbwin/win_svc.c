@@ -298,7 +298,7 @@ HB_FUNC( WIN_SERVICESTART )
       s_pHarbourEntryFunc = NULL;
    }
 
-   pEntryFunc = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+   pEntryFunc = hb_param( 2, HB_IT_EVALITEM );
 
    if( pEntryFunc )
       s_pHarbourEntryFunc = hb_itemNew( pEntryFunc );

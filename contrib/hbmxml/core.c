@@ -756,9 +756,9 @@ HB_FUNC( MXMLLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+   if( HB_ISEVALITEM( 3 ) )
    {
-      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->type_cb = hb_param( 3, HB_IT_EVALITEM );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -816,9 +816,9 @@ HB_FUNC( MXMLLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+   if( HB_ISEVALITEM( 3 ) )
    {
-      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->type_cb = hb_param( 3, HB_IT_EVALITEM );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1157,9 +1157,9 @@ HB_FUNC( MXMLSAXLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+   if( HB_ISEVALITEM( 3 ) )
    {
-      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->type_cb = hb_param( 3, HB_IT_EVALITEM );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1176,9 +1176,9 @@ HB_FUNC( MXMLSAXLOADFILE )
       }
    }
 
-   if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
+   if( HB_ISEVALITEM( 4 ) )
    {
-      pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->sax_cb = hb_param( 4, HB_IT_EVALITEM );
       cb_sax       = sax_cb;
    }
 
@@ -1230,9 +1230,9 @@ HB_FUNC( MXMLSAXLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+   if( HB_ISEVALITEM( 3 ) )
    {
-      pCbs->type_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->type_cb = hb_param( 3, HB_IT_EVALITEM );
       cb = type_cb;
    }
    else if( HB_ISNUM( 3 ) )
@@ -1249,9 +1249,9 @@ HB_FUNC( MXMLSAXLOADSTRING )
       }
    }
 
-   if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
+   if( HB_ISEVALITEM( 4 ) )
    {
-      pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+      pCbs->sax_cb = hb_param( 4, HB_IT_EVALITEM );
       cb_sax       = sax_cb;
    }
 
@@ -1318,9 +1318,9 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
       char buffer[ BUFFER_SIZE ];
       int  bytes;
 
-      if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
+      if( HB_ISEVALITEM( 2 ) )
       {
-         pCbs->save_cb = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+         pCbs->save_cb = hb_param( 2, HB_IT_EVALITEM );
          cb = save_cb;
       }
 
@@ -1364,9 +1364,9 @@ HB_FUNC( MXMLSAVEFILE )
       mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
-      if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      if( HB_ISEVALITEM( 3 ) )
       {
-         pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         pCbs->save_cb = hb_param( 3, HB_IT_EVALITEM );
          cb = save_cb;
       }
 
@@ -1409,9 +1409,9 @@ HB_FUNC( MXMLSAVESTRING )
 
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
-            if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+            if( HB_ISEVALITEM( 3 ) )
             {
-               pCbs->save_cb = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+               pCbs->save_cb = hb_param( 3, HB_IT_EVALITEM );
                cb = save_cb;
             }
 
@@ -1496,7 +1496,7 @@ static void error_cb( const char * pszErrorMsg )
 
 HB_FUNC( MXMLSETERRORCALLBACK )
 {
-   PHB_ITEM pError = hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL );
+   PHB_ITEM pError = hb_param( 1, HB_IT_EVALITEM );
 
    if( pError )
    {
@@ -1796,8 +1796,8 @@ static char * custom_save_cb( mxml_node_t * node )
 
 HB_FUNC( MXMLSETCUSTOMHANDLERS )
 {
-   PHB_ITEM pLoad = hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ),
-            pSave = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+   PHB_ITEM pLoad = hb_param( 1, HB_IT_EVALITEM ),
+            pSave = hb_param( 2, HB_IT_EVALITEM );
 
    if( pLoad && pSave )
    {

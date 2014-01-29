@@ -47,9 +47,9 @@
 
 #include "fileio.ch"
 
-#define HB_SET_TRACESTACK_NONE    0
-#define HB_SET_TRACESTACK_CURRENT 1
-#define HB_SET_TRACESTACK_ALL     2
+#define HB_SET_TRACESTACK_NONE     0
+#define HB_SET_TRACESTACK_CURRENT  1
+#define HB_SET_TRACESTACK_ALL      2
 
 STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
@@ -108,28 +108,19 @@ FUNCTION xhb_SetTraceStack( xLevel )
 
    RETURN nTraceLevel
 
-// --------------------------------------------------------------//
+// -------------------------------------------------------------- //
 
 FUNCTION TraceLog( ... )
 
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
    LOCAL cFile, FileHandle, nLevel, ProcName, xParam
 
-#ifdef __XHARBOUR__
-   IF ! Set( _SET_TRACE )
-      RETURN .T.
-   ENDIF
-
-   cFile := Set( _SET_TRACEFILE )
-   nLevel := Set( _SET_TRACESTACK )
-#else
    IF ! s_lSET_TRACE
       RETURN .T.
    ENDIF
 
    cFile := s_cSET_TRACEFILE
    nLevel := s_nSET_TRACESTACK
-#endif
 
    /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
       so we have to make sure cFile contains path to avoid ambiguity */
@@ -141,29 +132,32 @@ FUNCTION TraceLog( ... )
       FileHandle := FCreate( cFile )
    ENDIF
 
-   FSeek( FileHandle, 0, FS_END )
+   IF FileHandle != F_ERROR
 
-   IF nLevel > 0
-      FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
-   ENDIF
+      FSeek( FileHandle, 0, FS_END )
 
-   IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
-      FWrite( FileHandle, " Called from:" + hb_eol() )
-      nLevel := 1
-      DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
-         FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
-      ENDDO
-   ELSE
+      IF nLevel > 0
+         FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
+      ENDIF
+
+      IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
+         FWrite( FileHandle, " Called from:" + hb_eol() )
+         nLevel := 1
+         DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
+            FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+         ENDDO
+      ELSE
+         FWrite( FileHandle, hb_eol() )
+      ENDIF
+
+      FOR EACH xParam IN hb_AParams()
+         FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+      NEXT
+
       FWrite( FileHandle, hb_eol() )
+
+      FClose( FileHandle )
    ENDIF
-
-   FOR EACH xParam IN hb_AParams()
-      FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
-   NEXT
-
-   FWrite( FileHandle, hb_eol() )
-
-   FClose( FileHandle )
 
    RETURN .T.
 

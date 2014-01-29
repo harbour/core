@@ -1533,7 +1533,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 
       if( ssl )
       {
-         PHB_ITEM pCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 2, HB_IT_EVALITEM );
 
          if( pCallback )
          {

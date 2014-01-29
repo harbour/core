@@ -49,8 +49,6 @@
 
 #define CRLF Chr( 13 ) + Chr( 10 )
 
-#define HB_THREAD_SUPPORT
-
 CREATE CLASS HB_LogEmail FROM HB_LogChannel
 
    VAR cServer
@@ -222,11 +220,9 @@ CREATE CLASS HB_LogInetPort FROM HB_LogChannel
    VAR aListeners      INIT {}
    VAR skIn
 
-#ifdef HB_THREAD_SUPPORT
    VAR bTerminate      INIT .F.
    VAR nThread
    VAR mtxBusy
-#endif
 
    METHOD New( nLevel, nPort )
    METHOD Open( cName )
@@ -235,10 +231,8 @@ CREATE CLASS HB_LogInetPort FROM HB_LogChannel
    PROTECTED:
    METHOD Send( nStyle, cMessage, cName, nPriority )
 
-#ifdef HB_THREAD_SUPPORT
    HIDDEN:
    METHOD AcceptCon()
-#endif
 
 ENDCLASS
 
@@ -264,14 +258,8 @@ METHOD Open( cName ) CLASS HB_LogInetPort
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    ::mtxBusy := hb_mutexCreate()
    ::nThread := hb_threadStart( Self, "AcceptCon" )
-#else
-   // If we have not threads, we have to sync accept incoming connection
-   // when we log a message
-   hb_inetTimeout( ::skIn, 50 )
-#endif
 
    RETURN .T.
 
@@ -285,11 +273,9 @@ METHOD Close( cName ) CLASS HB_LogInetPort
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    // kind termination request
    ::bTerminate := .T.
    hb_threadJoin( ::nThread )
-#endif
 
    hb_inetClose( ::skIn )
 
@@ -309,18 +295,8 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
 
    LOCAL sk, nCount
 
-#ifdef HB_THREAD_SUPPORT
-
    // be sure thread is not busy now
    hb_mutexLock( ::mtxBusy )
-#else
-   // IF we have not a thread, we must see if there is a new connection
-   sk := hb_inetAccept( ::skIn )  // timeout should be short
-
-   IF sk != NIL
-      AAdd( ::aListeners, sk )
-   ENDIF
-#endif
 
    // now we transmit the message to all the available channels
    cMessage := ::Format( nStyle, cMessage, cName, nPriority )
@@ -337,13 +313,9 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
       ENDIF
    ENDDO
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexUnlock( ::mtxBusy )
-#endif
 
    RETURN .T.
-
-#ifdef HB_THREAD_SUPPORT
 
 METHOD AcceptCon() CLASS HB_LogInetPort
 
@@ -361,5 +333,3 @@ METHOD AcceptCon() CLASS HB_LogInetPort
    ENDDO
 
    RETURN .T.
-
-#endif

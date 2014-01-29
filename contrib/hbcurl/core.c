@@ -1671,7 +1671,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             case HB_CURLOPT_XFERINFOBLOCK:
             {
-               PHB_ITEM pXferInfoCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+               PHB_ITEM pXferInfoCallback = hb_param( 3, HB_IT_EVALITEM );
 
                if( hb_curl->pXferInfoCallback )
                {

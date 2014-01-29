@@ -272,13 +272,13 @@ static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
 /* implementation: void FreeImage_SetOutputMessage( pFunctionPointer ) */
 HB_FUNC( FI_SETOUTPUTMESSAGE )
 {
-   if( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) )
+   if( HB_ISEVALITEM( 1 ) )
    {
       HB_FI_ERROR * pError = ( HB_FI_ERROR * ) hb_stackGetTSD( &s_fi_error );
 
       if( pError->pErrorCallback )
          hb_itemRelease( pError->pErrorCallback );
-      pError->pErrorCallback = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      pError->pErrorCallback = hb_itemNew( hb_param( 1, HB_IT_EVALITEM ) );
 
       FreeImage_SetOutputMessage( FreeImageErrorHandler );
    }

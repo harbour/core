@@ -399,7 +399,7 @@ STATIC PROCEDURE LogError( oerr )
    ENDIF
 
    AddLine( @cReport, "" )
-   AddLine( @cReport, PadC( " Call stack ", 80, "-" ) )
+   AddLine( @cReport, PadC( " Call Stack ", 80, "-" ) )
    AddLine( @cReport, "" )
 
    nCount := 3

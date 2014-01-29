@@ -54,12 +54,7 @@
  * Static standard logger access
  */
 
-#define HB_THREAD_SUPPORT
-
-#ifdef HB_THREAD_SUPPORT
 STATIC s_StdLogMutex := hb_mutexCreate()
-#endif
-
 STATIC s_StdLogger
 
 PROCEDURE hb_InitStandardLog( ... )
@@ -69,26 +64,18 @@ PROCEDURE hb_InitStandardLog( ... )
    s_StdLogger := HB_Logger():New()
 
    FOR EACH PARAM in hb_AParams()
-#ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
-#endif
 
       s_StdLogger:AddChannel( Param )
 
-#ifdef HB_THREAD_SUPPORT
       hb_mutexUnlock( s_StdLogMutex )
-#endif
    NEXT
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexLock( s_StdLogMutex )
-#endif
 
    s_StdLogger:SetStyle( HB_LOG_ST_DATE + HB_LOG_ST_ISODATE + HB_LOG_ST_TIME + HB_LOG_ST_LEVEL )
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexUnlock( s_StdLogMutex )
-#endif
 
    RETURN
 
@@ -101,15 +88,11 @@ PROCEDURE hb_OpenStandardLog()
 PROCEDURE hb_StandardLogAdd( oChannel )
 
    IF s_StdLogger != NIL
-#ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
-#endif
 
       s_StdLogger:AddChannel( oChannel )
 
-#ifdef HB_THREAD_SUPPORT
       hb_mutexUnlock( s_StdLogMutex )
-#endif
    ENDIF
 
    RETURN
@@ -118,15 +101,11 @@ PROCEDURE hb_CloseStandardLog()
 
    // If the logger is NIL also the mutex is NIL
    IF s_StdLogger != NIL
-#ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
-#endif
 
       s_StdLogger:Close()
 
-#ifdef HB_THREAD_SUPPORT
       hb_mutexUnlock( s_StdLogMutex )
-#endif
    ENDIF
 
    RETURN
@@ -134,46 +113,33 @@ PROCEDURE hb_CloseStandardLog()
 PROCEDURE hb_SetStandardLogStyle( nStyle )
 
    IF s_StdLogger != NIL
-#ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
-#endif
 
       s_StdLogger:SetStyle( nStyle )
 
-#ifdef HB_THREAD_SUPPORT
       hb_mutexUnlock( s_StdLogMutex )
-#endif
    ENDIF
 
    RETURN
 
 PROCEDURE hb_StandardLogName( cName )
 
-#ifdef HB_THREAD_SUPPORT
-
    hb_mutexLock( s_StdLogMutex )
-#endif
 
    s_StdLogger:cProgName := cName
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexUnlock( s_StdLogMutex )
-#endif
 
    RETURN
 
 PROCEDURE hb_StandardLog( cMsg, nPrio )
 
    IF s_StdLogger != NIL
-#ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
-#endif
 
       s_StdLogger:Log( cMsg, nPrio )
 
-#ifdef HB_THREAD_SUPPORT
       hb_mutexUnlock( s_StdLogMutex )
-#endif
    ENDIF
 
    RETURN

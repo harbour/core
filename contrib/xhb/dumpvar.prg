@@ -49,12 +49,8 @@
 #include "hbclass.ch"
 
 /*
- * (C) 2003 - Francesco Saverio Giudice
- *
  * Send to hb_OutDebug() more parameters
- *
-*/
-
+ */
 PROCEDURE __OutDebug( ... )
 
    LOCAL xVal
@@ -66,15 +62,12 @@ PROCEDURE __OutDebug( ... )
    RETURN
 
 /*
- * (C) 2003 - Francesco Saverio Giudice
- *
  * return a string containing a dump of a variable
  *
  * 2006-09-24
  * - Added recursion limit
  * - Added front function with limited parameters and removed support for TAssociative Array
-*/
-
+ */
 FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
 
    LOCAL nRecursionLevel := 1
@@ -274,33 +267,33 @@ STATIC FUNCTION DecodeScope( nScope AS NUMERIC )
 
    LOCAL cString := ""
 
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) != 0  //   1
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) != 0
       cString += "Ex,"
    ENDIF
 #ifdef __XHARBOUR__
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) != 0  //   2
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) != 0
       cString += "Pu,"
    ENDIF
 #endif
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) != 0  //   4
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) != 0
       cString += "Pr,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) != 0  //   8
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) != 0
       cString += "Hi,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) != 0  //  16
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) != 0
       cString += "Ct,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) != 0  //  32
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) != 0
       cString += "Ro,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) != 0  //  64
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) != 0
       cString += "Sh,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) != 0  // 128
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) != 0
       cString += "Cl,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) != 0  // 256
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) != 0
       cString += "Su,"
    ENDIF
 
@@ -337,11 +330,8 @@ STATIC FUNCTION asString( x )
 #include "error.ch"
 
 /*
- * (C) 2003 - Francesco Saverio Giudice
- *
  * return all informations about classes, included type and scope
-*/
-
+ */
 STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    LOCAL aMessages
@@ -378,11 +368,8 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    RETURN aReturn
 
 /*
- * (C) 2003 - Francesco Saverio Giudice
- *
  * return all values from classes, included type and scope
-*/
-
+ */
 STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 
    LOCAL aVars

@@ -108,7 +108,7 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
 
    if( bio )
    {
-      PHB_ITEM pPassCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+      PHB_ITEM pPassCallback = hb_param( 2, HB_IT_EVALITEM );
 
       if( pPassCallback )
       {
