@@ -117,15 +117,12 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
 FUNCTION tip_DateToGMT( dDate, cTime )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-
    hb_default( @dDate, Date() )
    hb_default( @cTime, Time() )
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + ", " + ;
       StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + " " + ;
       StrZero( Year( dDate ), 4 ) + " " + ;
       cTime + " GMT"

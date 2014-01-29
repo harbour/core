@@ -75,13 +75,13 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
 
    hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
    cMask += cExt
-   hb_default( @cAttr, "" )
+
    /* The trick with StrTran() below if for strict xHarbour
     * compatibility though it should be reverted when it will
     * be fixed in xHarbour
     */
    aResult := hb_DirScan( cFilePath, cMask, ;
-      StrTran( Upper( cAttr ), "D" ) )
+      StrTran( Upper( hb_defaultValue( cAttr, "" ) ), "D" ) )
 
    AEval( aResult, {| x | x[ F_NAME ] := cFilePath + x[ F_NAME ] } )
 

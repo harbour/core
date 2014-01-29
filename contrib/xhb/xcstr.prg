@@ -313,24 +313,15 @@ FUNCTION ValToNumber( xVal )
 
    SWITCH ValType( xVal )
    CASE "A"
-   CASE "H"
-      RETURN Len( xVal )
-   CASE "B"
-      RETURN ValToNumber( Eval( xVal ) )
-   CASE "C"
-      RETURN Val( xVal )
-   CASE "D"
-      RETURN xVal - 0d19000101
-   CASE "L"
-      RETURN iif( xVal, 1, 0 )
-   CASE "O"
-      RETURN xVal:hClass
-   CASE "N"
-      RETURN xVal
-   CASE "P"
-      RETURN xVal - 0
-   CASE "U"
-      RETURN 0
+   CASE "H" ; RETURN Len( xVal )
+   CASE "B" ; RETURN ValToNumber( Eval( xVal ) )
+   CASE "C" ; RETURN Val( xVal )
+   CASE "D" ; RETURN xVal - 0d19000101
+   CASE "L" ; RETURN iif( xVal, 1, 0 )
+   CASE "O" ; RETURN xVal:hClass
+   CASE "N" ; RETURN xVal
+   CASE "P" ; RETURN xVal - 0
+   CASE "U" ; RETURN 0
    ENDSWITCH
 
    Throw( xhb_ErrorNew( "VALTONUMBER", 0, 3103, ProcName(), "Unsupported type", { xVal } ) )

@@ -823,7 +823,7 @@ METHOD listFiles( cFileSpec ) CLASS TIPClientFTP
 
          IF ":" $ cYear
             cTime := cYear
-            cYear := Str( Year( Date() ), 4, 0 )
+            cYear := StrZero( Year( Date() ), 4 )
          ELSE
             cTime := ""
          ENDIF

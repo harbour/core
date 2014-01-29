@@ -1613,7 +1613,7 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
    RETURN aStruct
 
 
-// Returns an SQL string with clipper value converted ie. Date() -> "'YYYY-MM-DD'"
+// Returns an SQL string with Cl*pper value converted ie. Date() -> "'YYYY-MM-DD'"
 STATIC FUNCTION ClipValue2SQL( Value )
 
    SWITCH ValType( Value )
@@ -1624,8 +1624,7 @@ STATIC FUNCTION ClipValue2SQL( Value )
       IF Empty( Value )
          RETURN "''"
       ELSE
-         /* MySQL dates are like YYYY-MM-DD */
-         RETURN "'" + StrZero( Year( Value ), 4 ) + "-" + StrZero( Month( Value ), 2 ) + "-" + StrZero( Day( Value ), 2 ) + "'"
+         RETURN "'" + hb_DToC( Value, "yyyy-mm-dd" ) + "'"  /* MySQL dates are like YYYY-MM-DD */
       ENDIF
 
    CASE "C"

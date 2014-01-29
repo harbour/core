@@ -94,18 +94,8 @@ ENDCLASS
 
 METHOD New( nType, cName, aAttributes, cData ) CLASS TXmlNode
 
-   IF nType == NIL
-      ::nType := HBXML_TYPE_TAG
-   ELSE
-      ::nType := nType
-   ENDIF
-
-   IF aAttributes == NIL
-      ::aAttributes := { => }
-   ELSE
-      ::aAttributes := aAttributes
-   ENDIF
-
+   ::nType := hb_defaultValue( nType, HBXML_TYPE_TAG )
+   ::aAttributes := hb_defaultValue( aAttributes, { => } )
    ::cName := cName
    ::cData := cData
 
@@ -412,8 +402,7 @@ METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
    LOCAL nResult := HBXML_STATUS_ERROR
 
    IF HB_ISSTRING( fHandle )  // It's a filename!
-      fHandle := FCreate( fHandle )
-      IF fHandle != F_ERROR
+      IF ( fHandle := FCreate( fHandle ) ) != F_ERROR
          IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
             IF Empty( ::cHeader )
                FWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )

@@ -4,11 +4,11 @@
 
 #require "hbpgsql"
 
-#define DB_ALIAS                        1
-#define DB_FILE                         2
-#define DB_QUERY                        3
-#define DB_ROW                          4
-#define DB_FETCH                        5
+#define DB_ALIAS            1
+#define DB_FILE             2
+#define DB_QUERY            3
+#define DB_ROW              4
+#define DB_FETCH            5
 
 STATIC s_oServer
 STATIC s_aTableTemp := {}
@@ -439,7 +439,7 @@ FUNCTION SQLPrepare( cQuery, ... )
             x := hb_ntos( x )
 
          CASE HB_ISDATE( x )
-            x := DToQ( x )
+            x := "'" + hb_DToC( x, "yyyy-mm-dd" ) + "'"
 
          CASE HB_ISLOGICAL( x )
             x := iif( x, "'t'", "'f'" )
@@ -543,9 +543,6 @@ FUNCTION TempFile( cPath, cExt )
 
    RETURN cString
 
-
-FUNCTION DToQ( cData )
-   RETURN "'" + Str( Year( cData ), 4 ) + "-" + StrZero( Month( cData ), 2 ) + "-" + StrZero( Day( cData ), 2 ) + "'"
 
 FUNCTION SToQ( cData )
    RETURN "'" + cData + "'"

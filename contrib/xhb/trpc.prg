@@ -226,7 +226,7 @@ ENDCLASS
 METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
 
    LOCAL cParam
-   LOCAL aParams, aFuncDef
+   LOCAL aFuncDef
 
    // Analyze the function definition
    aFuncDef := hb_regex( "^([a-zA-Z0-9_-]+)\(([^)]*)\) *(-->)? *(.*)$", cFname )
@@ -242,9 +242,8 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
 
    // analyze parameter list
    IF Len( RTrim( cParam ) ) > 0
-      aParams := hb_ATokens( cParam, "," )
       ::aParameters := {}
-      FOR EACH cParam IN aParams
+      FOR EACH cParam IN hb_ATokens( cParam, "," )
          cParam := AllTrim( Upper( cParam ) )
          ::CheckParam( cParam )
          AAdd( ::aParameters, cParam )

@@ -396,9 +396,6 @@ FUNCTION uhttpd_URLDecode( cString )
 
 FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-
    __defaultNIL( @dDate, Date() )
    __defaultNIL( @cTime, Time() )
    __defaultNIL( @nDayToAdd, 0 )
@@ -410,9 +407,9 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
    dDate += nDayToAdd
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + ", " + ;
       StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + " " + ;
       StrZero( Year( dDate ), 4 ) + " " + ;
       cTime + " GMT"
 

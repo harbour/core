@@ -67,14 +67,6 @@ CREATE CLASS TStream
    VAR nLength   INIT 0
    VAR nPosition INIT 0
 
-#if 0
-   METHOD BeginRead( sBuffer, nOffset, nCount, bCallback, oState )
-   METHOD EndRead( oAsync ) VIRTUAL
-
-   METHOD BeginWrite( sBuffer, nOffset, nCount, bCallback, oState )
-   METHOD EndWrite( oAsync ) VIRTUAL
-#endif
-
    METHOD Close() VIRTUAL
    METHOD Flush() VIRTUAL
    METHOD Seek( nOffset, Origin ) VIRTUAL
@@ -100,7 +92,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
       Throw( xhb_ErrorNew( "Stream", 0, 1001, ProcName(), "Target not writable.", hb_AParams() ) )
    ENDIF
 
-   // Save.
+   // Save
    nPosition := ::nPosition
 
    ::Seek( 0, FS_SET )
@@ -112,10 +104,10 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
       nBytesToRead -= nRead
    ENDDO
 
-   // Truncate incase it was a bigger file.
+   // Truncate in case it was a bigger file
    oTargetStream:Write( "", 0, 0 )
 
-   // Restore.
+   // Restore
    ::Seek( nPosition, FS_SET )
 
    RETURN
@@ -143,10 +135,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::cFile := cFile
 
-   __defaultNIL( @nMode, FO_READWRITE )
-
-   ::Handle := FOpen( cFile, nMode )
-   IF ::Handle == F_ERROR
+   IF ( ::Handle := FOpen( cFile, hb_defaultValue( nMode, FO_READWRITE ) ) ) == F_ERROR
       Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
 
@@ -165,15 +154,7 @@ METHOD PROCEDURE Finalize CLASS TStreamFileReader
 
 METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
-   LOCAL nRead
-
-#if 0
-   IF ! HB_ISBYREF( @sBuffer )
-      Throw( xhb_ErrorNew( "Stream", 0, 1002, ProcName(), "Buffer not BYREF.", hb_AParams() ) )
-   ENDIF
-#endif
-
-   nRead := FRead( ::Handle, @sBuffer, nCount, nOffset )
+   LOCAL nRead := FRead( ::Handle, @sBuffer, nCount, nOffset )
 
    ::nPosition += nRead
 
@@ -181,7 +162,7 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
 METHOD ReadByte()  CLASS TStreamFileReader
 
-   LOCAL sBuffer := " "
+   LOCAL sBuffer := Space( 1 )
 
    IF FRead( ::Handle, @sBuffer, 1 ) == 1
       ::nPosition++
@@ -214,20 +195,14 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
    ::cFile := cFile
 
    IF hb_FileExists( cFile )
-      __defaultNIL( @nMode, FO_READWRITE )
-
-      ::Handle := FOpen( cFile, nMode )
-      IF ::Handle == F_ERROR
+      IF ( ::Handle := FOpen( cFile, hb_defaultValue( nMode, FO_READWRITE ) ) ) == F_ERROR
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 
       ::nLength := FSeek( ::Handle, 0, FS_END )
       ::nPosition := ::nLength
    ELSE
-      __defaultNIL( @nMode, FC_NORMAL )
-
-      ::Handle := FCreate( cFile, nMode )
-      IF ::Handle == F_ERROR
+      IF ( ::Handle := FCreate( cFile, hb_defaultValue( nMode, FC_NORMAL ) ) ) == F_ERROR
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 

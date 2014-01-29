@@ -947,7 +947,7 @@ STATIC FUNCTION DataToSql( xField )
 
    SWITCH ValType( xField )
    CASE "C" ; RETURN '"' + StrTran( xField, '"', " " ) + '"'
-   CASE "D" ; RETURN '"' + StrZero( Month( xField ), 2 ) + "/" + StrZero( Day( xField ), 2 ) + "/" + StrZero( Year( xField ), 4 ) + '"'
+   CASE "D" ; RETURN '"' + hb_DToC( xField, "mm/dd/yyyy" ) + '"'
    CASE "N" ; RETURN hb_ntos( xField )
    CASE "L" ; RETURN iif( xField, "1", "0" )
    ENDSWITCH

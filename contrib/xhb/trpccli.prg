@@ -199,8 +199,8 @@ METHOD New( cNetwork, nTcpPort, nUdpPort ) CLASS TRPCClient
    ::nErrorCode := 0 // no RPC error
    ::cServer := NIL // no server
 
-   ::nUdpPort := iif( nUdpPort == NIL, 1139, nUdpPort )
-   ::nTcpPort := iif( nTcpPort == NIL, 1140, nTcpPort )
+   ::nUdpPort := hb_defaultValue( nUdpPort, 1139 )
+   ::nTcpPort := hb_defaultValue( nTcpPort, 1140 )
 
    ::skTcp := hb_inetCreate()
    ::skUdp := hb_inetDGram( .T. )
@@ -294,9 +294,8 @@ METHOD ScanFunctions( cFunc, cSerial ) CLASS TRPCClient
       RETURN .F.
    ENDIF
 
-   IF cSerial == NIL
-      cSerial := "00000000.0"
-   ENDIF
+   hb_default( @cSerial, "00000000.0" )
+
    hb_mutexLock( ::mtxBusy )
    ::aFunctions := {}
    ::aServers := {}

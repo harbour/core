@@ -63,15 +63,15 @@
 
 CREATE CLASS TCgiFile
 
-   VAR Buffer INIT ""
-   VAR Name INIT ""
-   VAR Handle
-   VAR FileSize INIT 0
+   VAR Buffer    INIT ""
+   VAR Name      INIT ""
+   VAR Handle    INIT F_ERROR
+   VAR FileSize  INIT 0
    VAR BytesRead INIT 0
-   VAR cPage INIT ""
-   VAR nPage INIT 0
+   VAR cPage     INIT ""
+   VAR nPage     INIT 0
    VAR nPageSize INIT 1024
-   VAR nRecord INIT 0
+   VAR nRecord   INIT 0
 
    METHOD New( cName )
    METHOD Open( nMode )
@@ -112,22 +112,12 @@ ENDCLASS
 
 METHOD New( cName ) CLASS TCgiFile
 
-   ::Name      := cName
-   ::Buffer    := ""
-   ::Handle    := F_ERROR
-   ::FileSize  := 0
-   ::BytesRead := 0
-   ::cPage     := ""
-   ::nPage     := 0
-   ::nPageSize := 1024
-   ::nRecord   := 0
+   ::Name := cName
 
    RETURN Self
 
-/*
-**   ::Open( [<nMode>] ) --> lSuccess
+/* ::Open( [<nMode>] ) --> lSuccess
 */
-
 METHOD Open( nMode ) CLASS TCgiFile
 
    IF ( ::Handle := FOpen( ::Name, hb_defaultValue( nMode, FO_EXCLUSIVE ) ) ) != F_ERROR
@@ -136,22 +126,17 @@ METHOD Open( nMode ) CLASS TCgiFile
 
    RETURN ::Handle != F_ERROR
 
-/*
-**   ::Create( [<nAttrib>] ) --> lSuccess
+/* ::Create( [<nAttrib>] ) --> lSuccess
 */
-
 METHOD Create( nAttr ) CLASS TCgiFile
 
    ::Handle := FCreate( ::Name, hb_defaultValue( nAttr, FC_NORMAL ) )
 
    RETURN ::Handle != F_ERROR
 
-/*
-**   ::Size() --> nFileSize
-**
-**   RETURNs the size in bytes of the current file.
+/* ::Size() --> nFileSize
+** RETURNs the size in bytes of the current file.
 */
-
 METHOD Size() CLASS TCgiFile
 
    LOCAL nCurrent := FSeek( ::Handle, 0, FS_RELATIVE )
@@ -162,10 +147,8 @@ METHOD Size() CLASS TCgiFile
 
    RETURN nLength
 
-/*
-**   ::Read( [<nSize>], [@<cBuff>] ) --> nBytesRead
+/* ::Read( [<nSize>], [@<cBuff>] ) --> nBytesRead
 */
-
 METHOD _Read( nSize, cBuff ) CLASS TCgiFile
 
    __defaultNIL( @nSize, 1024 )
@@ -176,12 +159,9 @@ METHOD _Read( nSize, cBuff ) CLASS TCgiFile
 
    RETURN cBuff    // nBytesRead
 
-/*
-**   ::ReadAhead( [<nSize>], [@<cBuff>] ) --> nBytesRead
-**
-**    Read forward in the file without moving the pointer.
+/* ::ReadAhead( [<nSize>], [@<cBuff>] ) --> nBytesRead
+** Read forward in the file without moving the pointer.
 */
-
 METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
 
    LOCAL nCurrent
@@ -200,10 +180,8 @@ METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
 
    RETURN cBuff
 
-/*
-**   ::ReadLine( [<nBytes>] ) --> cLine
+/* ::ReadLine( [<nBytes>] ) --> cLine
 */
-
 METHOD Readline( nSize ) CLASS TCgiFile
 
    LOCAL cString
@@ -228,10 +206,8 @@ METHOD Readline( nSize ) CLASS TCgiFile
 
    RETURN ::Buffer
 
-/*
-**   ::ReadByte() --> nByte or -1 if unsuccessfull
+/* ::ReadByte() --> nByte or -1 if unsuccessfull
 */
-
 METHOD ReadByte() CLASS TCgiFile
 
    LOCAL cBuff := Space( 1 )
@@ -239,10 +215,8 @@ METHOD ReadByte() CLASS TCgiFile
 
    RETURN iif( nBytes > 0, hb_BCode( cBuff ), -1 )
 
-/*
-**   ::ReadInt() --> nUnsignedInt or -1 if unsuccessfull
+/* ::ReadInt() --> nUnsignedInt or -1 if unsuccessfull
 */
-
 METHOD ReadInt() CLASS TCgiFile
 
    LOCAL cBuff  := Space( 2 )
@@ -250,10 +224,8 @@ METHOD ReadInt() CLASS TCgiFile
 
    RETURN iif( nBytes > 0, Bin2I( cBuff ), -1 )
 
-/*
-**   ::ReadLong() --> nLong or -1 if unsuccessfull
+/* ::ReadLong() --> nLong or -1 if unsuccessfull
 */
-
 METHOD ReadLong() CLASS TCgiFile
 
    LOCAL cBuff  := Space( 4 )
@@ -261,34 +233,24 @@ METHOD ReadLong() CLASS TCgiFile
 
    RETURN iif( nBytes > 0, Bin2L( cBuff ), -1 )
 
-/*
-**   ::WriteByte( nByte ) --> lSuccess
+/* ::WriteByte( nByte ) --> lSuccess
 */
-
 METHOD WriteByte( nByte ) CLASS TCgiFile
    RETURN FWrite( ::nHandle, hb_BCode( nByte ), 1 ) == 1
 
-/*
-**   ::WriteInt( nInt ) --> lSuccess
+/* ::WriteInt( nInt ) --> lSuccess
 */
-
 METHOD WriteInt( nInt ) CLASS TCgiFile
    RETURN FWrite( ::nHandle, I2Bin( nInt ), 2 ) == 2
 
-/*
-**   ::WriteLong( nLong ) --> lSuccess
+/* ::WriteLong( nLong ) --> lSuccess
 */
-
 METHOD WriteLong( nLong ) CLASS TCgiFile
    RETURN FWrite( ::nHandle, L2Bin( nLong ), 4 ) == 4
 
-/*
-**   ::GOTO( <nLine> ) --> nPrevPos
-**
-**   Skips to line <nLine> from top. RETURNs previous position in file.
-**
+/* ::GOTO( <nLine> ) --> nPrevPos
+** Skips to line <nLine> from top. RETURNs previous position in file.
 */
-
 METHOD Goto( nLine ) CLASS TCgiFile
 
    LOCAL nCount := 1
@@ -318,13 +280,9 @@ METHOD Goto( nLine ) CLASS TCgiFile
 
    RETURN nPos
 
-/*
-**   ::Skip( [<nLines>] ) --> nPrevPos
-**
-**   Skips to line <nLine> from top. RETURNs previous position in file.
-**
+/* ::Skip( [<nLines>] ) --> nPrevPos
+** Skips to line <nLine> from top. RETURNs previous position in file.
 */
-
 METHOD Skip( nLines ) CLASS TCgiFile
 
    LOCAL nCount := 0
@@ -348,20 +306,16 @@ METHOD Skip( nLines ) CLASS TCgiFile
 
    RETURN nPos
 
-/*
-**   ::MaxPages( <nPageSize> ) --> nMaxPages
+/* ::MaxPages( <nPageSize> ) --> nMaxPages
 */
-
 METHOD MaxPages( nPageSize ) CLASS TCgiFile
 
    __defaultNIL( @nPageSize, ::nPageSize )
 
    RETURN ::Size() / nPageSize
 
-/*
-**   ::PrevPage( [<nBytes>] ) --> cPage
+/* ::PrevPage( [<nBytes>] ) --> cPage
 */
-
 METHOD PrevPage( nBytes ) CLASS TCgiFile
 
    __defaultNIL( @nBytes, 1024 )
@@ -379,10 +333,8 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 
    RETURN ::cPage
 
-/*
-**   ::NextPage( [<nBytes>] ) --> cPage
+/* ::NextPage( [<nBytes>] ) --> cPage
 */
-
 METHOD NextPage( nBytes ) CLASS TCgiFile
 
    __defaultNIL( @nBytes, 1024 )
@@ -398,10 +350,8 @@ METHOD NextPage( nBytes ) CLASS TCgiFile
 
    RETURN ::cPage
 
-/*
-**   ::PrevLine( [<nBytes>] ) --> ::Buffer
+/* ::PrevLine( [<nBytes>] ) --> ::Buffer
 */
-
 METHOD PrevLine( nBytes ) CLASS TCgiFile
 
    LOCAL fHandle := ::Handle
@@ -439,15 +389,11 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       FRead( fHandle, @cBuff, nMaxRead )
       nWhereCrLf := RAt( CRLF(), cBuff )  /* TOFIX: should be hb_BRAt() */
       IF nWhereCrLf == 0
-
          nPrev    := nNewPos
          ::Buffer := cBuff
-
       ELSE
-
          nPrev    := nNewPos + nWhereCrLf + 1
          ::Buffer := SubStr( cBuff, nWhereCrLf + 2 )  /* TOFIX: should be hb_BSubStr() */
-
       ENDIF
 
       FSeek( fHandle, nPrev, FS_SET )

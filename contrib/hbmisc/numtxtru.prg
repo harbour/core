@@ -481,7 +481,7 @@ FUNCTION DateToTxtRU( dDate, cLang, lWord )
       ENDIF
 
       cRetVal += " " + aMsg[ NTSR_MONTH, Month( dDate ) ] + " " + ;
-         Str( Year( dDate ), 4 ) + " " + aMsg[ NTSR_YEAR, 2 ]
+         StrZero( Year( dDate ), 4 ) + " " + aMsg[ NTSR_YEAR, 2 ]
    ELSE
       cRetVal := ""
    ENDIF

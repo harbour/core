@@ -49,7 +49,6 @@
 #include "hblog.ch"
 #include "fileio.ch"
 
-
 /*****
  * Static standard logger access
  */
@@ -59,14 +58,14 @@ STATIC s_StdLogger
 
 PROCEDURE hb_InitStandardLog( ... )
 
-   LOCAL PARAM
+   LOCAL xPar
 
    s_StdLogger := HB_Logger():New()
 
-   FOR EACH PARAM in hb_AParams()
+   FOR EACH xPar in hb_AParams()
       hb_mutexLock( s_StdLogMutex )
 
-      s_StdLogger:AddChannel( Param )
+      s_StdLogger:AddChannel( xPar )
 
       hb_mutexUnlock( s_StdLogMutex )
    NEXT
@@ -167,10 +166,7 @@ FUNCTION hb_BldLogMsg( ... )
    RETURN cMsg
 
 FUNCTION hb_LogDateStamp()
-
-   LOCAL dToday := Date()
-
-   RETURN  Str( Year( dToday ), 4 ) + "-" + PadL( Month( dToday ), 2, "0" ) + "-" + PadL( Day( dToday ), 2, "0" )
+   RETURN hb_DToC( Date(), "yyyy-mm-dd" )
 
 /*****
  * Logger class
@@ -179,9 +175,9 @@ FUNCTION hb_LogDateStamp()
 CREATE CLASS HB_Logger
 
    VAR cProgName
-   VAR aLogToChannel                   INIT  {}
-   VAR nStyle                          INIT  -1
-   VAR nDefaultPriority                INIT  HB_LOG_INFO
+   VAR aLogToChannel                   INIT {}
+   VAR nStyle                          INIT -1
+   VAR nDefaultPriority                INIT HB_LOG_INFO
 
    METHOD New()
    METHOD AddChannel( oChannel )       INLINE AAdd( ::aLogToChannel, oChannel )
@@ -281,7 +277,7 @@ CREATE CLASS HB_LogChannel
    METHOD close( cName )         VIRTUAL
 
    METHOD Log( nStyle, cMessage, cName, nPriority )
-   METHOD SetActive( lAct )      INLINE   ::lActive := lAct
+   METHOD SetActive( lAct )      INLINE ::lActive := lAct
 
    METHOD Format( nStyle, cMessage, cName, nPriority )
 
@@ -540,11 +536,11 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
          FClose( ::nFileHandle )
 
          IF ::nBackup > 1
-            IF hb_FileExists( ::cFileName + "." + PadL( ::nBackup - 1, 3, "0" ) )
-               FErase( ::cFileName + "." + PadL( ::nBackup - 1, 3, "0" ) )
+            IF hb_FileExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+               FErase( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
             ENDIF
             FOR nCount := ::nBackup - 1 TO 1 STEP -1
-               FRename( ::cFileName + "." + PadL( nCount - 1, 3, "0" ), ::cFileName + "." + PadL( nCount, 3, "0" ) )
+               FRename( ::cFileName + "." + StrZero( nCount - 1, 3 ), ::cFileName + "." + StrZero( nCount, 3 ) )
             NEXT
          ENDIF
 
@@ -585,36 +581,18 @@ ENDCLASS
 
 METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
 
-   LOCAL cPath, cName, cExt, cDrive
-
    ::Super:New( nLevel )
+
    IF HB_ISSTRING( cDBFName )
-      hb_FNameSplit( cDBFName, @cPath, @cName, @cExt, @cDrive )
-      IF Empty( cExt )
-         cExt := "dbf"
-      ENDIF
-      ::cDBFName := iif( ! Empty( cDrive ), cDrive + ":\", "" ) + ;
-         iif( ! Empty( cPath ), cPath + "\", "" ) + ;
-         cName + cExt
-      // __OutDebug( "::cDBFName", ::cDBFName )
+      ::cDBFName := hb_FNameExtSetDef( cDBFName, ".dbf" )
    ENDIF
-
    IF HB_ISSTRING( cIndexName )
-      hb_FNameSplit( cIndexName, @cPath, @cName, @cExt, @cDrive )
-      IF Empty( cExt )
-         cExt := "cdx"
-      ENDIF
-      ::cIndexName := iif( ! Empty( cDrive ), cDrive + ":\", "" ) + ;
-         iif( ! Empty( cPath ), cPath + "\", "" ) + ;
-         cName + cExt
-      // __OutDebug( "::cCDXName", ::cCDXName )
+      ::cIndexName := hb_FNameExtSetDef( cIndexName, ".cdx" )
    ENDIF
-
-   IF aStruct != NIL
+   IF HB_ISARRAY( aStruct )
       ::aStruct := aStruct
    ENDIF
-
-   IF cDriver != NIL
+   IF HB_ISSTRING( cDriver )
       ::cDriver := cDriver
    ENDIF
 
@@ -710,15 +688,11 @@ METHOD New( nLevel, nId ) CLASS HB_LogSysLog
    ::Super:New( nLevel )
    ::nId := nId
 
-   RETURN SELF
+   RETURN Self
 
 METHOD Open( cName ) CLASS HB_LogSysLog
 
-   IF ::lOpened
-      RETURN .F.
-   ENDIF
-
-   IF hb_SysLogOpen( cName )
+   IF ! ::lOpened .AND. hb_SysLogOpen( cName )
       ::lOpened := .T.
       RETURN .T.
    ENDIF
@@ -727,11 +701,7 @@ METHOD Open( cName ) CLASS HB_LogSysLog
 
 METHOD close( cName ) CLASS HB_LogSysLog
 
-   IF ! ::lOpened
-      RETURN .F.
-   ENDIF
-
-   IF hb_SysLogClose( cName )
+   IF ::lOpened .AND. hb_SysLogClose( cName )
       ::lOpened := .F.
       RETURN .T.
    ENDIF
@@ -744,7 +714,6 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSysLog
    // Syslog does not need timestamp, nor priority
 
    RETURN hb_SysLogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPriority ), nPriority, ::nId )
-
 
 /*****
  * Debug channel
@@ -772,10 +741,8 @@ METHOD New( nLevel, nMaxLevel ) CLASS HB_LogDebug
 
 METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogDebug
 
-   IF ! Empty( ::nMaxLevel )
-      IF nPriority < ::nMaxLevel
-         RETURN
-      ENDIF
+   IF ! Empty( ::nMaxLevel ) .AND. nPriority < ::nMaxLevel
+      RETURN
    ENDIF
 
    hb_OutDebug( ::Format( nStyle, cMessage, cName, nPriority ) )

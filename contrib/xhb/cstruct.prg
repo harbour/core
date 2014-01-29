@@ -70,8 +70,6 @@ STATIC PROCEDURE __init_LONGLONGs()
 
    RETURN
 
-//
-
 FUNCTION __ActiveStructure( cStructure, nAlign )
 
 #if 0
@@ -155,8 +153,6 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
 
    RETURN t_aActiveStructure
 
-//
-
 PROCEDURE hb_Member( cMember, CType )
 
    LOCAL nLen, nAt
@@ -175,8 +171,6 @@ PROCEDURE hb_Member( cMember, CType )
    ENDIF
 
    RETURN
-
-//
 
 FUNCTION hb_CStructureId( cStructure, lInplace )
 
@@ -214,8 +208,6 @@ FUNCTION hb_CStructureId( cStructure, lInplace )
    // TraceLog( cStructure, nID )
 
    RETURN nID
-
-//
 
 PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAlign )
 
@@ -308,8 +300,6 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    RETURN
 
-//
-
 FUNCTION hb_CStructure( cStructure, nAlign )
 
    LOCAL hClass
@@ -342,8 +332,6 @@ FUNCTION hb_CStructure( cStructure, nAlign )
 
    RETURN oStructure
 
-//
-
 STATIC PROCEDURE AllocateMembers( oStructure )
 
    LOCAL CType
@@ -360,8 +348,6 @@ STATIC PROCEDURE AllocateMembers( oStructure )
    // TraceLog( "Finished: " + oStructure:className() )
 
    RETURN
-
-//
 
 FUNCTION hb_CStructureFromId( nID, nAlign )
 
@@ -399,8 +385,6 @@ FUNCTION hb_CStructureFromId( nID, nAlign )
    ENDIF
 
    RETURN oStructure
-
-//
 
 FUNCTION hb_CTypeArrayId( CType, nLen )
 
@@ -464,12 +448,8 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
 
    RETURN nID + CTYPE_STRUCTURE
 
-//
-
 FUNCTION hb_Is_CStructure( x )
-   RETURN Left( x:ClassName(), 11 ) == "C Structure"
-
-//
+   RETURN hb_LeftIs( x:ClassName(), "C Structure" )
 
 STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
@@ -506,8 +486,6 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    RETURN iif( lReturnString, cOut, QSelf() )
 
-//
-
 STATIC FUNCTION Reset()
 
    LOCAL xProperty, nProperties := Len( QSelf() ) - CLASS_PROPERTIES
@@ -525,8 +503,6 @@ STATIC FUNCTION Reset()
    NEXT
 
    RETURN QSelf()
-
-//
 
 STATIC FUNCTION Buffer( Buffer, lAdopt )
 
@@ -546,15 +522,11 @@ STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION GetPointer()
 
    QSelf():InternalBuffer := hb_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN hb_String2Pointer( QSelf():InternalBuffer )
-
-//
 
 STATIC FUNCTION Value()
 
@@ -567,8 +539,6 @@ STATIC FUNCTION Value()
    QSelf():InternalBuffer := hb_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN QSelf():InternalBuffer
-
-//
 
 STATIC FUNCTION DeValue( lAdopt )
 
@@ -594,8 +564,6 @@ STATIC FUNCTION DeValue( lAdopt )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION ArrayMethod()
 
    LOCAL aValues := {}
@@ -603,8 +571,6 @@ STATIC FUNCTION ArrayMethod()
    AEval( QSelf(), {| xVal | AAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    RETURN aValues
-
-//
 
 STATIC FUNCTION Init( aValues )
 
@@ -624,8 +590,6 @@ STATIC FUNCTION Init( aValues )
 
    RETURN QSelf()
 
-//
-
 STATIC FUNCTION Pointer( nNewPointer, lAdopt )
 
    IF nNewPointer != NIL
@@ -633,8 +597,6 @@ STATIC FUNCTION Pointer( nNewPointer, lAdopt )
    ENDIF
 
    RETURN QSelf()
-
-//
 
 STATIC FUNCTION AsString()
 

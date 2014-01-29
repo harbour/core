@@ -49,13 +49,11 @@
 
 /**
  * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
- * Author .........: Francesco Saverio Giudice
  * Date of creation: 1991-01-25
  * Last revision ..: 2006-01-24 1.13 - rewritten for xHarbour and renamed in hb_Decode()
  *
  *                   Decode a value from a list.
  */
-
 FUNCTION hb_Decode( ... )
 
    LOCAL aParams, nParams, xDefault
@@ -203,24 +201,16 @@ FUNCTION hb_DecodeOrEmpty( ... )
 STATIC FUNCTION EmptyValue( xVal )
 
    SWITCH ValType( xVal )
-   CASE "C"  // Char
-   CASE "M"  // Memo
-      RETURN ""
-   CASE "D"  // Date
-      RETURN hb_SToD()
-   CASE "L"  // Logical
-      RETURN .F.
-   CASE "N"  // Number
-      RETURN 0
-   CASE "B"  // code block
-      RETURN {|| NIL }
-   CASE "A"  // array
-      RETURN {}
-   CASE "H"  // hash
-      RETURN { => }
-   CASE "U"  // undefined
-   CASE "O"  // Object
-      RETURN NIL   // Or better another value ?
+   CASE "C"
+   CASE "M" ; RETURN ""
+   CASE "D" ; RETURN hb_SToD()
+   CASE "L" ; RETURN .F.
+   CASE "N" ; RETURN 0
+   CASE "B" ; RETURN {|| NIL }
+   CASE "A" ; RETURN {}
+   CASE "H" ; RETURN { => }
+   CASE "U"
+   CASE "O" ; RETURN NIL   // Or better another value ?
    ENDSWITCH
 
-   RETURN ( "" == 0 ) // BANG! Create a runtime error for new datatypes
+   RETURN "" == 0 // BANG! Create a runtime error for new datatypes

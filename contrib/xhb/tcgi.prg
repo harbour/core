@@ -90,9 +90,7 @@ CREATE CLASS TCgi FROM THtml
    VAR aQueryFields INIT {}
 
    METHOD New( cInBuffer )
-
    METHOD Field( cQueryName )
-
    METHOD ToObject()
 
 ENDCLASS
@@ -128,12 +126,10 @@ METHOD New( cInBuffer ) CLASS TCgi
    ::Content_Length    := GetEnv( "CONTENT_LENGTH" )
    ::Annotation_Server := GetEnv( "ANNOTATION_SERVER" )
 
-   IF cInBuffer != NIL
+   IF HB_ISSTRING( cInBuffer )
       ::Query_String := RTrim( cInBuffer )
-   ELSE
-      IF "POST" $ Upper( ::Request_Method )
-         ::Query_String := RTrim( FReadStr( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
-      ENDIF
+   ELSEIF "POST" $ Upper( ::Request_Method )
+      ::Query_String := RTrim( FReadStr( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
    ENDIF
 
    IF ! Empty( ::Query_String )
@@ -151,27 +147,21 @@ METHOD New( cInBuffer ) CLASS TCgi
 
    RETURN ::ToObject()
 
-/****
-*
-*        TCGI():ToObject()
-*
-*        Creates instance variables out of CGI FORM return values
-*        or URL encoded content.
-*
-*        It subclasses the TCgi class to a *new* class
-*/
-
+/*
+ * Creates instance variables out of CGI FORM return values
+ * or URL encoded content.
+ *
+ * It subclasses the TCgi class to a *new* class
+ */
 METHOD ToObject() CLASS TCgi
-
-   LOCAL i
-   LOCAL nScope := 1
-   LOCAL aDb
-   LOCAL oNew
 
    STATIC s_n := 0
 
    // --> create new oObject class from this one...
-   aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
+   LOCAL aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
+
+   LOCAL i
+   LOCAL oNew
 
    FOR EACH i IN ::aQueryFields
 
@@ -179,7 +169,7 @@ METHOD ToObject() CLASS TCgi
          i[ 2 ] := ""
       ENDIF
 
-      adb:AddData( i[ 1 ], i[ 2 ], , nScope )
+      adb:AddData( i[ 1 ], i[ 2 ] )
    NEXT
 
    adb:Create()
@@ -212,33 +202,27 @@ METHOD ToObject() CLASS TCgi
 
 METHOD Field( cQueryName ) CLASS TCgi
 
-   LOCAL cRet := ""
    LOCAL nRet
 
    __defaultNIL( @cQueryName, "" )
 
-   nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
-
-   IF nRet > 0
-      cRet := ::aQueryFields[ nRet ][ 2 ]
+   IF ( nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } ) ) > 0
+      RETURN ::aQueryFields[ nRet ][ 2 ]
    ENDIF
 
-   RETURN cRet
+   RETURN ""
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
-   LOCAL cBuf
-   LOCAL aElem
+   LOCAL aElem := Array( Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1 )
+   LOCAL cBuf := cString
+
    LOCAL nPosFim
    LOCAL i
 
-   aElem := Array( Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1 )
-
-   cBuf := cString
    FOR EACH i IN aElem
 
-      nPosFim := At( cDelim, cBuf )
-      IF nPosFim > 0
+      IF ( nPosFim := At( cDelim, cBuf ) ) > 0
          i := Left( cBuf, nPosFim - 1 )
       ELSE
          i := cBuf
@@ -249,14 +233,8 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    RETURN aElem[ nRet ]
 
-/****
-*
-*     CgiParseVar()
-*
-*     Separates elements of a CGI query environment variable
-*
+/* Separates elements of a CGI query environment variable
 */
-
 FUNCTION CgiParseVar( cEnvVar )
 
    cEnvVar := HtmlDecodeUrl( cEnvVar )

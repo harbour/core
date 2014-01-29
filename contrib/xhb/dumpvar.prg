@@ -48,8 +48,7 @@
 
 #include "hbclass.ch"
 
-/*
- * Send to hb_OutDebug() more parameters
+/* Send to hb_OutDebug() more parameters
  */
 PROCEDURE __OutDebug( ... )
 
@@ -61,8 +60,7 @@ PROCEDURE __OutDebug( ... )
 
    RETURN
 
-/*
- * return a string containing a dump of a variable
+/* Return a string containing a dump of a variable
  *
  * 2006-09-24
  * - Added recursion limit
@@ -329,8 +327,7 @@ STATIC FUNCTION asString( x )
 
 #include "error.ch"
 
-/*
- * return all informations about classes, included type and scope
+/* return all informations about classes, included type and scope
  */
 STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
@@ -367,8 +364,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    RETURN aReturn
 
-/*
- * return all values from classes, included type and scope
+/* return all values from classes, included type and scope
  */
 STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 

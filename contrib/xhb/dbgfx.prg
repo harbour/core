@@ -100,27 +100,24 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
 
    __defaultNIL( @cLogFile, "logfile.log" )
 
-   IF cLogFile != NIL
-
-      IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
-         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
-      ELSE
-         nHandle := FCreate( cLogFile )
-         s_lEmptyLogFile := .F.
-         // After I have create it I have to close and open in shared way
-         IF FError() == 0 .AND. nHandle != F_ERROR
-            FClose( nHandle )
-            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
-         ENDIF
-      ENDIF
-
-      // Writing
-      IF nHandle != F_ERROR
-         FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, sprintf( ... ) )
-         FWrite( nHandle, hb_eol() )
+   IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
+      nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
+   ELSE
+      nHandle := FCreate( cLogFile )
+      s_lEmptyLogFile := .F.
+      // After I have create it I have to close and open in shared way
+      IF FError() == 0 .AND. nHandle != F_ERROR
          FClose( nHandle )
+         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
       ENDIF
+   ENDIF
+
+   // Writing
+   IF nHandle != F_ERROR
+      FSeek( nHandle, 0, FS_END )
+      FWrite( nHandle, sprintf( ... ) )
+      FWrite( nHandle, hb_eol() )
+      FClose( nHandle )
    ENDIF
 
    RETURN
