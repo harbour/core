@@ -100,7 +100,6 @@ FUNCTION hb_iniNew( lAutoMain )
    RETURN hIni
 
 FUNCTION hb_iniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-
    RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_iniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
@@ -193,7 +192,7 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Get the current line */
-      cLine += AllTrim( SubStr( cData, 1, nLineEnd - 1 ) )
+      cLine += AllTrim( Left( cData, nLineEnd - 1 ) )
       /* remove current line */
       cData := SubStr( cData, nLineEnd + nLen )
 
@@ -205,7 +204,7 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       /* Sum up lines terminating with "<space>||" ...*/
       IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
 
-         cLine := SubStr( cLine, 1, Len( cLine ) - 2 )
+         cLine := Left( cLine, Len( cLine ) - 2 )
          /* ... but proceed if stream over */
          IF Len( cData ) > 0
             LOOP
