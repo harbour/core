@@ -3592,7 +3592,7 @@ STATIC FUNCTION PathToArray( cList )
    IF cList != NIL
 
       DO WHILE ( nPos := At( cSep, cList ) ) != 0
-         AAdd( aList, SubStr( cList, 1, nPos - 1 ) )        // Add a new element
+         AAdd( aList, Left( cList, nPos - 1 ) )        // Add a new element
          cList := SubStr( cList, nPos + 1 )
       ENDDO
 

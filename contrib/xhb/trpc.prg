@@ -704,7 +704,7 @@ METHOD RecvAuth( lEncrypt ) CLASS TRPCServeCon
       RETURN .F.
    ENDIF
 
-   cUserID := hb_BSubStr( cReadin, 1, nPos - 1 )
+   cUserID := hb_BLeft( cReadin, nPos - 1 )
    cPassword := hb_BSubStr( cReadin, nPos + 1 )
 
    IF ! lEncrypt
@@ -1098,13 +1098,13 @@ METHOD SendResult( oRet, cFuncName )
       hb_inetSendAll( ::skRemote, "XHBR4010" )
    ELSE
       cData := hb_Serialize( oRet )
-      cOrigLen := hb_CreateLen8( Len( cData ) )
+      cOrigLen := hb_CreateLen8( hb_BLen( cData ) )
       ::oServer:OnFunctionReturn( Self, cData )
       // should we compress it ?
 
-      IF Len( cData ) > 512
+      IF hb_BLen( cData ) > 512
          cData := hb_Compress( cData )
-         cCompLen := hb_CreateLen8( Len( cData ) )
+         cCompLen := hb_CreateLen8( hb_BLen( cData ) )
          hb_inetSendAll( ::skRemote, "XHBR31" + cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
          hb_inetSendAll( ::skRemote, "XHBR30" + cOrigLen + ::Encrypt( cData ) )
@@ -1135,11 +1135,11 @@ METHOD SendProgress( nProgress, oData ) CLASS TRPCServeCon
       hb_inetSendAll( ::skRemote, "XHBR33" + hb_Serialize( nProgress ) )
    ELSE
       cData := hb_Serialize( oData )
-      cOrigLen := hb_CreateLen8( Len( cData ) )
+      cOrigLen := hb_CreateLen8( hb_BLen( cData ) )
       // do we should compress it ?
-      IF Len( cData ) > 512
+      IF hb_BLen( cData ) > 512
          cData := hb_Compress( cData )
-         cCompLen := hb_CreateLen8( Len( cData ) )
+         cCompLen := hb_CreateLen8( hb_BLen( cData ) )
          hb_inetSendAll( ::skRemote, "XHBR35" + hb_Serialize( nProgress ) + ;
             cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
@@ -1534,16 +1534,16 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS TRPCService
    ENDIF
 
    cData := hb_Decrypt( cData, cKey )
-   IF ( nPos := At( cMarker, cData ) ) == 0
+   IF ( nPos := hb_BAt( cMarker, cData ) ) == 0
       RETURN NIL
    ENDIF
 
-   cData := SubStr( cData, nPos + Len( cMarker ) )
-   IF ( nPos := At( ":", cData ) ) == 0
+   cData := hb_BSubStr( cData, nPos + hb_BLen( cMarker ) )
+   IF ( nPos := hb_BAt( ":", cData ) ) == 0
       RETURN NIL
    ENDIF
 
-   cData := SubStr( cData, 1, nPos - 1 )
+   cData := hb_BLeft( cData, nPos - 1 )
 
    IF ::Authorize( cUserId, cData ) > 0
       RETURN cKey

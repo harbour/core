@@ -611,7 +611,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
    IF HB_ISSTRING( cColor )
       IF ( n := At( "/", cColor ) ) > 0
          IF nForeBack == 0
-            s := SubStr( cColor, 1, n - 1 )
+            s := Left( cColor, n - 1 )
          ELSE
             s := SubStr( cColor, n + 1 )
          ENDIF

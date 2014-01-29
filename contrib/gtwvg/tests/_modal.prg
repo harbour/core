@@ -118,7 +118,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
 
    aTrg_ := Array( Len( aButtons_ ) )
    FOR i := 1 TO Len( aButtons_ )
-      aTrg_[ i ] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
+      aTrg_[ i ] := Upper( Left( aButtons_[ i ], 1 ) )
    NEXT
 
    // Create a new Window
@@ -160,7 +160,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
       SetColor( pal_[ DLG_CLR_BTN ] )
       @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
       SetColor( pal_[ DLG_CLR_TRG ] )
-      @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
+      @ nBtnRow, nBtnCol_[ i ] + 2 SAY Left( aButtons_[ i ], 1 )
 
       AAdd( x_, { nBtnRow, nBtnCol_[ i ], nBtnRow, nBtnCol_[ i ] + Len( aButtons_[ i ] ) + 3 } )
    NEXT
@@ -169,7 +169,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
    @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
 
    SetColor( pal_[ DLG_CLR_HISEL ] )
-   @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
+   @ nBtnRow, nBtnCol_[ sel ] + 2 SAY Left( aButtons_[ sel ], 1 )
 
    AEval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
@@ -235,13 +235,13 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, 
          SetColor( pal_[ DLG_CLR_BTN ] )
          @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
          SetColor( pal_[ DLG_CLR_TRG ] )
-         @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
+         @ nBtnRow, nBtnCol_[ i ] + 2 SAY Left( aButtons_[ i ], 1 )
       NEXT
       IF sel > 0
          SetColor( pal_[ DLG_CLR_HILITE ] )
          @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
          SetColor( pal_[ DLG_CLR_HISEL ] )
-         @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
+         @ nBtnRow, nBtnCol_[ sel ] + 2 SAY Left( aButtons_[ sel ], 1 )
       ENDIF
 
       DispEnd()

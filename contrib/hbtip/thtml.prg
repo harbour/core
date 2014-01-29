@@ -1214,7 +1214,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
       cText += oNode:getText( cEOL )
       IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
-         cText := SubStr( cText, 1, Len( cText ) - Len( cEol ) )
+         cText := Left( cText, Len( cText ) - Len( cEol ) )
          cText += Chr( 9 )
       ENDIF
    NEXT

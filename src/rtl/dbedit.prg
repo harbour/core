@@ -123,7 +123,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
       IF HB_ISARRAY( acColumns )
          cBlock := acColumns[ nPos ]
          IF ( nAliasPos := At( "->", cBlock ) ) > 0
-            cHeading := SubStr( cBlock, 1, nAliasPos - 1 ) + "->;" + ;
+            cHeading := Left( cBlock, nAliasPos - 1 ) + "->;" + ;
                SubStr( cBlock, nAliasPos + 2 )
          ELSE
             cHeading := cBlock

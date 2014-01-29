@@ -451,7 +451,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
 
          // is it an array entry?
          IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-            cName := SubStr( cName, 1, Len( cName ) - 2 )
+            cName := Left( cName, Len( cName ) - 2 )
             // aHashVars[ cName ] := { xValue }
 
             aHashVars[ cName ] := { xValue }

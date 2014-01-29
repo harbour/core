@@ -274,10 +274,10 @@ METHOD CheckServer( cRemote )
       hb_inetRecvAll( skRemote, @cData, 6 + 9 )
       IF hb_inetErrorCode( skRemote ) == 0
          cData2 := Space( 256 )
-         nLen := hb_GetLen8( SubStr( cData, 8, 8 ) )
+         nLen := hb_GetLen8( hb_BSubStr( cData, 8, 8 ) )
          hb_inetRecvAll( skRemote, @cData2, nLen )
          IF hb_inetErrorCode( skRemote ) == 0
-            cData := SubStr( cData + cData2, 7 )
+            cData := hb_BSubStr( cData + cData2, 7 )
             cData2 := hb_Deserialize( cData )
             AAdd( ::aServers, { hb_inetAddress( skRemote ), cData2 } )
             RETURN .T.
@@ -377,12 +377,12 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
       RETURN .F.
    ENDIF
 
-   cCode := SubStr( cData, 1, 6 )
+   cCode := hb_BLeft( cData, 6 )
 
    DO CASE
       /* XHRB00 - server scan */
    CASE cCode == "XHBR10"
-      cData := SubStr( cData, 7 )
+      cData := hb_BSubStr( cData, 7 )
       cData := hb_Deserialize( cData, 512 )
       // deserialization error checking
       IF cData != NIL
@@ -395,7 +395,7 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
 
 
    CASE cCode == "XHBR11"
-      cData := SubStr( cData, 7 )
+      cData := hb_BSubStr( cData, 7 )
       cSer := hb_DeserialBegin( cData )
       cName := hb_DeserialNext( @cSer, 64 )
       cFunc := hb_DeserialNext( @cSer, 64 )
@@ -436,10 +436,10 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
       IF ::bEncrypted
          cAuth := ::BuildChallengePwd( cPassword )
          cAuth := cUserId + ":" + cAuth
-         hb_inetSendAll( ::skTcp, "XHBR93" + hb_CreateLen8( Len( cAuth ) ) + cAuth )
+         hb_inetSendAll( ::skTcp, "XHBR93" + hb_CreateLen8( hb_BLen( cAuth ) ) + cAuth )
       ELSE
          cAuth := cUserId + ":" + cPassword
-         hb_inetSendAll( ::skTcp, "XHBR90" + hb_CreateLen8( Len( cAuth ) ) + cAuth )
+         hb_inetSendAll( ::skTcp, "XHBR90" + hb_CreateLen8( hb_BLen( cAuth ) ) + cAuth )
       ENDIF
 
       IF hb_inetErrorCode( ::skTcp ) == 0
@@ -867,7 +867,7 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
       /* We have a reply */
    CASE cCode == "XHBR30"
-      IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
+      IF hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
          nDataLen := hb_GetLen8( cDataLen )
          cData := Space( nDataLen )
          IF hb_inetRecvAll( ::skTCP, @cData, nDataLen ) == nDataLen
@@ -881,9 +881,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
       /* We have a reply */
    CASE cCode == "XHBR31"
-      IF hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
+      IF hb_inetRecvAll( ::skTCP, @cOrigLen ) == hb_BLen( cOrigLen )
          nOrigLen := hb_GetLen8( cOrigLen )
-         IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
+         IF hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
             nDataLen := hb_GetLen8( cDataLen )
             cData := Space( nDataLen )
             IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
@@ -910,9 +910,9 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
       /* We have a progress with data*/
    CASE cCode == "XHBR34"
-      IF hb_inetRecvAll( ::skTCP, @cProgress ) == Len( cProgress )
-         nProgress := hb_Deserialize( cProgress, Len( cProgress ) )
-         IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
+      IF hb_inetRecvAll( ::skTCP, @cProgress ) == hb_BLen( cProgress )
+         nProgress := hb_Deserialize( cProgress, hb_BLen( cProgress ) )
+         IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
             nDataLen := hb_GetLen8( cDataLen )
             cData := Space( nDataLen )
             IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
@@ -927,11 +927,11 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
 
       /* We have a progress with compressed data*/
    CASE cCode == "XHBR35"
-      IF hb_inetRecvAll( ::skTCP, @cProgress ) == Len( cProgress )
-         nProgress := hb_Deserialize( cProgress, Len( cProgress ) )
-         IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
+      IF hb_inetRecvAll( ::skTCP, @cProgress ) == hb_BLen( cProgress )
+         nProgress := hb_Deserialize( cProgress, hb_BLen( cProgress ) )
+         IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cOrigLen ) == hb_BLen( cOrigLen )
             nOrigLen := hb_GetLen8( cOrigLen )
-            IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
+            IF hb_inetRecvAll( ::skTCP, @cDataLen ) == hb_BLen( cDataLen )
                nDataLen := hb_GetLen8( cDataLen )
                cData := Space( nDataLen )
                IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
@@ -968,8 +968,8 @@ METHOD GetFunctionName( xId ) CLASS TRPCClient
    ENDIF
 
    IF ! Empty( cData )
-      nPos := At( "(", cData )
-      cData := SubStr( cData, 1, nPos - 1 )
+      nPos := hb_BAt( "(", cData )
+      cData := hb_BLeft( cData, nPos - 1 )
    ENDIF
 
    RETURN cData

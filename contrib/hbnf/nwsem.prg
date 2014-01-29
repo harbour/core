@@ -48,7 +48,7 @@ FUNCTION ft_NWSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    __defaultNIL( @nHandle, 0 )
    __defaultNIL( @nOpenCnt, 0 )
 
-   cName    := iif( hb_BLen( cName ) > 127, hb_BSubStr( cName, 1, 127 ), cName )
+   cName    := iif( hb_BLen( cName ) > 127, hb_BLeft( cName, 127 ), cName )
    cRequest := hb_BChar( Len( cName ) ) + cName
 
    aRegs[ AX ] := MAKEHI( 197 )                       // C5h

@@ -283,7 +283,8 @@ FUNCTION pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
    // version 0.02
    cBoxColor := ""
    IF ! Empty( cColor )
-      cBoxColor := " " + Chr_RGB( SubStr( cColor, 2, 1 ) ) + " " + ;
+      cBoxColor := " " + ;
+         Chr_RGB( SubStr( cColor, 2, 1 ) ) + " " + ;
          Chr_RGB( SubStr( cColor, 3, 1 ) ) + " " + ;
          Chr_RGB( SubStr( cColor, 4, 1 ) ) + " rg "
       IF Empty( AllTrim( cBoxColor ) )

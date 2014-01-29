@@ -525,11 +525,11 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
          ENDIF
          IF vybfld == 0 .OR. vybfld == i
             sviv := FLDSTR( mslist, fif )
-            sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
+            sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, Left( sviv, LI_X2 - 1 - x ) )
             hb_DispOutAt( nstroka, x, sviv )
          ELSE
             sviv := FLDSTR( mslist, fif )
-            sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
+            sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, Left( sviv, LI_X2 - 1 - x ) )
          ENDIF
          x   += Max( Len( sviv ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
@@ -537,7 +537,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
       IF fif <= LI_COLCOUNT .AND. vybfld == 0
          IF LI_X2 - 1 - x > 0
             sviv := FLDSTR( mslist, fif )
-            hb_DispOutAt( nstroka, x, SubStr( sviv, 1, LI_X2 - 1 - x ) )
+            hb_DispOutAt( nstroka, x, Left( sviv, LI_X2 - 1 - x ) )
          ENDIF
          hb_DispOutAt( nstroka, LI_X2 - 1, ">" )
       ENDIF

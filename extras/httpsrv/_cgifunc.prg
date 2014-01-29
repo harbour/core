@@ -80,7 +80,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
 
       // Is it an array entry?
       IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
+         cName := Left( cName, Len( cName ) - 2 )
          hHashVars[ cName ] := { xValue }
       ELSE
          // now check if variable already exists. If yes and I have already another element
@@ -185,7 +185,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cFragment := SubStr( cTemp, nPos + 1 )
 
       // delete anchor from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cFragment := ""
@@ -200,7 +200,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cQuery := SubStr( cTemp, nPos + 1 )
 
       // delete query from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cQuery := ""
@@ -217,7 +217,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cPath := SubStr( cTemp, nPos )
 
       // delete path from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cPath := "/"
@@ -636,7 +636,7 @@ FUNCTION uhttpd_AppFullPath()
    cSep := hb_ps()
 
    IF Right( cPrgFullPath, Len( cSep ) ) == cSep
-      cPath := SubStr( cPrgFullPath, 1, Len( cPrgFullPath ) - Len( cSep ) )
+      cPath := Left( cPrgFullPath, Len( cPrgFullPath ) - Len( cSep ) )
    ELSE
       cPath := cPrgFullPath
    ENDIF

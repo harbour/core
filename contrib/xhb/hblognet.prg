@@ -83,7 +83,7 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
    nPos := At( ":", cServer )
    IF nPos > 0
       ::nPort := Val( SubStr( cServer, nPos + 1 ) )
-      cServer := SubStr( cServer, 1, nPos - 1 )
+      cServer := Left( cServer, nPos - 1 )
    ENDIF
 
    ::cServer := cServer
@@ -182,7 +182,7 @@ METHOD GetOk( skCon ) CLASS HB_LogEmail
    LOCAL nLen, cReply
 
    cReply := hb_inetRecvLine( skCon, @nLen, 128 )
-   IF hb_inetErrorCode( skcon ) != 0 .OR. SubStr( cReply, 1, 1 ) == "5"
+   IF hb_inetErrorCode( skcon ) != 0 .OR. hb_LeftIs( cReply, "5" )
       RETURN .F.
    ENDIF
 

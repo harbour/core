@@ -239,7 +239,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
       nPosFim := At( cDelim, cBuf )
       IF nPosFim > 0
-         i := SubStr( cBuf, 1, nPosFim - 1 )
+         i := Left( cBuf, nPosFim - 1 )
       ELSE
          i := cBuf
       ENDIF

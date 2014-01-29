@@ -84,7 +84,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
       nPosFim := At( cDelim, cBuf )
 
       IF nPosFim > 0
-         aElem[ i ] := SubStr( cBuf, 1, nPosFim - 1 )
+         aElem[ i ] := Left( cBuf, nPosFim - 1 )
       ELSE
          aElem[ i ] := cBuf
       ENDIF
@@ -293,7 +293,7 @@ METHOD ProcessCGI() CLASS THTML
             IF i > Len( cQuery ) .OR. SubStr( cQuery, i, 1 ) == "&"
 
                AAdd( ::aQueryFields, { ;
-                  SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
+                  Left( cBuff, At( "=", cBuff ) - 1 ), ;
                   StrTran( SubStr( cBuff, At( "=", cBuff ) + 1, ;
                   Len( cBuff ) - At( "=", cBuff ) + 1 ), "+", " " ) } )
                cBuff := ""

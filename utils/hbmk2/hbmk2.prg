@@ -13443,8 +13443,14 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             cResult := aResult[ 1 ]
             hCustom[ "COMMIT_HASH" ] := aResult[ 2 ]
             hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 3 ]
-            hCustom[ "AUTHOR_DATE" ] := SubStr( aResult[ 3 ], 1, 4 ) + SubStr( aResult[ 3 ], 6, 2 ) + SubStr( aResult[ 3 ], 9, 2 )
-            hCustom[ "AUTHOR_TIME" ] := SubStr( aResult[ 3 ], 12, 2 ) + SubStr( aResult[ 3 ], 15, 2 ) + SubStr( aResult[ 3 ], 18, 2 )
+            hCustom[ "AUTHOR_DATE" ] := ;
+               SubStr( aResult[ 3 ], 1, 4 ) + ;
+               SubStr( aResult[ 3 ], 6, 2 ) + ;
+               SubStr( aResult[ 3 ], 9, 2 )
+            hCustom[ "AUTHOR_TIME" ] := ;
+               SubStr( aResult[ 3 ], 12, 2 ) + ;
+               SubStr( aResult[ 3 ], 15, 2 ) + ;
+               SubStr( aResult[ 3 ], 18, 2 )
             hCustom[ "AUTHOR_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "AUTHOR_MAIL" ] := aResult[ 5 ] /* UTF-8 */
          ENDIF

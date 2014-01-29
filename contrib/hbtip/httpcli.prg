@@ -333,7 +333,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       // Remove the extensions
       nPos := At( ";", cLine )
       IF nPos > 0
-         cLine := SubStr( cLine, 1, nPos - 1 )
+         cLine := Left( cLine, nPos - 1 )
       ENDIF
 
       // Convert to length

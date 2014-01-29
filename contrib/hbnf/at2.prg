@@ -79,7 +79,7 @@ FUNCTION ft_RAt2( cSearch, cTarget, nOccurs, lCaseSens )
       nPos2 := nPos
 
       // Resize cSubstr
-      cSubstr := SubStr( cSubstr, 1, RAt( cSearch, cSubstr ) - 1 )
+      cSubstr := Left( cSubstr, RAt( cSearch, cSubstr ) - 1 )
 
       // Breakout if there are no occurences here
       IF nPos == 0

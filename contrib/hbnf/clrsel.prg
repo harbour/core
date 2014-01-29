@@ -98,7 +98,7 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
 
    // .... prepare an array for use with AChoice(); truncate names at 20 chrs.
    aPrompt := Array( Len( aClrs ) )
-   AEval( aClrs, {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " } )
+   AEval( aClrs, {| aOpt, nE | aPrompt[ nE ] := " " + Left( aOpt[ C_NAME ], nLen - 2 ) + " " } )
 
    // .... determine co-ordinates for the achoice window
    nT := Max( Int( ( 18 - Len( aPrompt ) ) / 2 ) - 1, 1 )

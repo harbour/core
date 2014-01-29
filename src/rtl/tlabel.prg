@@ -474,10 +474,10 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
       IF SubStr( cList, nPos, 1 ) == cDelimiter
          lDelimLast := .T.
-         AAdd( aList, SubStr( cList, 1, nPos - 1 ) ) // Add a new element
+         AAdd( aList, Left( cList, nPos - 1 ) ) // Add a new element
       ELSE
          lDelimLast := .F.
-         AAdd( aList, SubStr( cList, 1, nPos ) ) // Add a new element
+         AAdd( aList, Left( cList, nPos ) ) // Add a new element
       ENDIF
 
       cList := SubStr( cList, nPos + 1 )

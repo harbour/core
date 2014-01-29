@@ -2088,8 +2088,8 @@ STATIC PROCEDURE ShowFolder( cDir )
    uhttpd_Write( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
 
    // Adding Upper Directory
-   nPos := RAt( "/", SubStr( cDir, 1, Len( cDir ) - 1 ) )
-   cParentDir := SubStr( cDir, 1, nPos )
+   nPos := RAt( "/", Left( cDir, Len( cDir ) - 1 ) )
+   cParentDir := Left( cDir, nPos )
    cParentDir := SubStr( cParentDir, Len( _SERVER[ "DOCUMENT_ROOT" ] ) + 1 )
 
    // hb_ToOutDebug( "cDir: %s, nPos: %i, cParentDir: %s\n\r", cDir, nPos, cParentDir )

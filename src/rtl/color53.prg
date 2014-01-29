@@ -104,7 +104,7 @@ FUNCTION GetClrFore( cColor )
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, 1, nPos - 1 )
+   RETURN Left( cColor, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
 

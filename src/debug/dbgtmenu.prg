@@ -327,7 +327,7 @@ METHOD GoLeft() CLASS HBDbMenu
       IF ::nOpenPopup > 1
          --::nOpenPopup
          DO WHILE ::nOpenPopup > 1 .AND. ;
-            SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
+            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             --::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )
@@ -351,7 +351,7 @@ METHOD GoRight() CLASS HBDbMenu
       IF ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
          DO WHILE ::nOpenPopup < Len( ::aItems ) .AND. ;
-            SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
+            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             ++::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )

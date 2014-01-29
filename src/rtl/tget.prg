@@ -273,7 +273,7 @@ METHOD display() CLASS Get
 
       /* Display "-." only in case when value on the left side of
          the decimal point is equal 0 */
-      cBuffer := SubStr( cBuffer, 1, ::decPos - 2 ) + "-." + SubStr( cBuffer, ::decPos + 1 )
+      cBuffer := Left( cBuffer, ::decPos - 2 ) + "-." + SubStr( cBuffer, ::decPos + 1 )
    ENDIF
 
    IF ::nDispLen != ::nMaxLen .AND. ::nPos != 0 /* has scroll? */
@@ -594,7 +594,7 @@ METHOD overStrike( cChar ) CLASS Get
             IF ::nPos > ::nMaxEdit
                ::pos := ::FirstEditable()
             ENDIF
-            ::cBuffer := SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos + 1 )
+            ::cBuffer := Left( ::cBuffer, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos + 1 )
 
             ::lChanged := .T.
 
@@ -659,11 +659,14 @@ METHOD insert( cChar ) CLASS Get
                   ENDIF
                NEXT
                nMaxEdit := nFor
-               ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar +;
-                            SubStr( ::cBuffer, ::nPos, nMaxEdit - 1 - ::nPos ) +;
-                            SubStr( ::cBuffer, nMaxEdit ), ::nMaxLen )
+               ::cBuffer := ;
+                  Left( Left( ::cBuffer, ::nPos - 1 ) + cChar +;
+                  SubStr( ::cBuffer, ::nPos, nMaxEdit - 1 - ::nPos ) +;
+                  SubStr( ::cBuffer, nMaxEdit ), ::nMaxLen )
             ELSE
-               ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos ), ::nMaxEdit )
+               ::cBuffer := ;
+                  Left( Left( ::cBuffer, ::nPos - 1 ) + cChar + ;
+                  SubStr( ::cBuffer, ::nPos ), ::nMaxEdit )
             ENDIF
 
             ::lChanged := .T.
@@ -1032,7 +1035,7 @@ METHOD picture( cPicture ) CLASS Get
                   ::cPicFunc := hb_asciiUpper( cPicture )
                   ::cPicMask := ""
                ELSE
-                  ::cPicFunc := hb_asciiUpper( SubStr( cPicture, 1, nAt - 1 ) )
+                  ::cPicFunc := hb_asciiUpper( Left( cPicture, nAt - 1 ) )
                   ::cPicMask := SubStr( cPicture, nAt + 1 )
                ENDIF
 
@@ -1063,7 +1066,7 @@ METHOD picture( cPicture ) CLASS Get
                   IF Val( cNum ) > 0
                      ::nPicLen := Val( cNum )
                   ENDIF
-                  ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
+                  ::cPicFunc := Left( ::cPicFunc, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
                ENDIF
 
                IF "Z" $ ::cPicFunc
@@ -1206,7 +1209,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
             IF "E" $ cPicFunc
                cChar := iif( cChar == ",", ".", "," )
             ENDIF
-            cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
+            cBuffer := Left( cBuffer, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          ENDIF
       NEXT
       IF ::lEdit .AND. Empty( xValue )
@@ -1596,11 +1599,11 @@ METHOD backSpaceLow() CLASS Get
 
       /* To delete the parenthesis (negative indicator) in a non editable position */
 
-      nMinus := At( "(", SubStr( ::cBuffer, 1, nPos - 1 ) )
+      nMinus := At( "(", Left( ::cBuffer, nPos - 1 ) )
 
       IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
-         ::cBuffer := SubStr( ::cBuffer, 1, nMinus - 1 ) + " " + ;
+         ::cBuffer := Left( ::cBuffer, nMinus - 1 ) + " " + ;
                       SubStr( ::cBuffer, nMinus + 1 )
 
          ::lEdit := .T.
@@ -1641,9 +1644,10 @@ METHOD deleteLow() CLASS Get
       ::lMinus2 := .F.
    ENDIF
 
-   ::cBuffer := PadR( SubStr( ::cBuffer, 1, ::nPos - 1 ) + ;
-                SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " + ;
-                SubStr( ::cBuffer, nMaxLen + 1 ), ::nMaxLen )
+   ::cBuffer := ;
+      PadR( Left( ::cBuffer, ::nPos - 1 ) + ;
+      SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " + ;
+      SubStr( ::cBuffer, nMaxLen + 1 ), ::nMaxLen )
 
    ::lChanged := .T.
 

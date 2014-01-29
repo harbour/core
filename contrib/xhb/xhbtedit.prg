@@ -1428,7 +1428,7 @@ METHOD K_Bs() CLASS XHBEditor
 
             // remove a SINGLE trailing space, if it exists
             IF Right( ::aText[ ::nRow ]:cText, 1 ) == " "
-               ::aText[ ::nRow ]:cText := SubStr( ::aText[ ::nRow ]:cText, 1, ::LineLen( ::nRow ) - 1 )
+               ::aText[ ::nRow ]:cText := Left( ::aText[ ::nRow ]:cText, ::LineLen( ::nRow ) - 1 )
             ENDIF
 
             ::aText[ ::nRow ]:cText += ::aText[ ::nRow + 1 ]:cText
@@ -1443,7 +1443,7 @@ METHOD K_Bs() CLASS XHBEditor
 
             // 2006-07-21 - E.F. - Delete the rightmost char and pos the cursor on it.
             IF ::LineLen( ::nRow ) >= ::nWordWrapCol
-               ::aText[ ::nRow ]:cText := SubStr( ::aText[ ::nRow ]:cText, 1, ::LineLen( ::nRow ) - 1 ) + " "
+               ::aText[ ::nRow ]:cText := Left( ::aText[ ::nRow ]:cText, ::LineLen( ::nRow ) - 1 ) + " "
                ::nCol := Min( ::nCol + 1, ::nWordWrapCol + 1 )
             ENDIF
 
