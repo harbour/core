@@ -1283,6 +1283,7 @@ DYNAMIC __clsPreallocate
 DYNAMIC __clsSyncSignal
 DYNAMIC __clsSyncWait
 DYNAMIC __clsUnlockDef
+DYNAMIC __clsVerify
 DYNAMIC __cls_CntClsData
 DYNAMIC __cls_CntData
 DYNAMIC __cls_CntShrData
@@ -1370,6 +1371,7 @@ DYNAMIC __dynsIsFun
 DYNAMIC __dynsN2Ptr
 DYNAMIC __dynsN2Sym
 DYNAMIC __dynsP2Name
+DYNAMIC __dynsVerify
 DYNAMIC __eInstVar52
 DYNAMIC __eInstVar53
 DYNAMIC __Eject
@@ -1499,6 +1501,7 @@ DYNAMIC __TextSave
 DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __vmItemID
+DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait
 DYNAMIC __wapi_GetACP
