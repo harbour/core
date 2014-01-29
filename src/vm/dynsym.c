@@ -772,3 +772,43 @@ HB_FUNC( __DYNSP2NAME )
 
    hb_retc( pDynSym != NULL ? pDynSym->pSymbol->szName : NULL );
 }
+
+/* internal function used to debug dynamic symbol integrity */
+static int hb_dynsymVerify( void )
+{
+   HB_USHORT uiPos = 0;
+   int iResult = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymVerify()" ) );
+
+   HB_DYNSYM_LOCK();
+
+   while( iResult == 0 && uiPos < s_uiDynSymbols )
+   {
+      PHB_DYNS pDynSym = s_pDynItems[ uiPos ].pDynSym;
+      HB_UINT uiAt;
+      int iCmp;
+
+      if( uiPos > 0 &&
+          ( iCmp = strcmp( s_pDynItems[ uiPos - 1 ].pDynSym->pSymbol->szName,
+                           pDynSym->pSymbol->szName ) ) <= 0 )
+         iResult = iCmp == 0 ? -1 : -2;
+      else if( hb_dynsymPos( pDynSym->pSymbol->szName, &uiAt ) != pDynSym )
+         iResult = -3;
+      else if( uiAt != uiPos )
+         iResult = -4;
+      else
+         ++uiPos;
+   }
+
+   HB_DYNSYM_UNLOCK();
+
+   return iResult;
+}
+
+HB_FUNC( __DYNSVERIFY )
+{
+   HB_STACK_TLS_PRELOAD
+
+   hb_retni( hb_dynsymVerify() );
+}

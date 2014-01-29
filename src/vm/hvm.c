@@ -8010,6 +8010,40 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
    return pNewSymbols;
 }
 
+static void hb_vmVerifySymbols( PHB_ITEM pArray )
+{
+   PHB_SYMBOLS pLastSymbols = s_pSymbols;
+   PHB_ITEM pItem = NULL;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_vmVerifySymbols(%p)", pArray ) );
+
+   hb_arrayNew( pArray, 0 );
+
+   while( pLastSymbols )
+   {
+      HB_USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+
+      for( ui = 0; ui < uiSymbols; ++ui )
+      {
+         PHB_SYMB pSym = pLastSymbols->pModuleSymbols + ui;
+
+         if( pSym->pDynSym &&
+             hb_dynsymFind( pSym->szName ) != pSym->pDynSym )
+         {
+            char szText[ 256 ];
+
+            hb_snprintf( szText, sizeof( szText ), "%s->%s",
+                         pLastSymbols->szModuleName, pSym->szName );
+            pItem = hb_itemPutC( pItem, szText );
+            hb_arrayAddForward( pArray, pItem );
+         }
+      }
+      pLastSymbols = pLastSymbols->pNext;
+   }
+   if( pItem )
+      hb_itemRelease( pItem );
+}
+
 static void hb_vmVerifyPCodeVersion( const char * szModuleName, HB_USHORT uiPCodeVer )
 {
    if( uiPCodeVer != 0 )
@@ -8025,7 +8059,6 @@ static void hb_vmVerifyPCodeVersion( const char * szModuleName, HB_USHORT uiPCod
                          "Please recompile.", szModuleName, szPCode );
       }
    }
-
 }
 
 /*
@@ -12138,6 +12171,13 @@ HB_FUNC( __VMITEMID )
       else if( HB_IS_BLOCK( pItem ) )
          hb_retptr( hb_codeblockId( pItem ) );
    }
+}
+
+HB_FUNC( __VMMODULESVERIFY )
+{
+   HB_STACK_TLS_PRELOAD
+
+   hb_vmVerifySymbols( hb_stackReturnItem() );
 }
 
 HB_FUNC( HB_ARRAYTOPARAMS )

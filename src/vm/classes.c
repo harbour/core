@@ -1917,7 +1917,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
 #else
             {
-               PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
+               PMETHOD pMethod = b_clsFindMsg( pClass, pMsg );
                if( pMethod )
                {
                   pStack->uiMethod = ( HB_USHORT ) ( pMethod - pClass->pMethods );
@@ -5679,6 +5679,39 @@ void hb_clsAssociate( HB_USHORT usClassH )
       HB_STACK_TLS_PRELOAD
       hb_ret();
    }
+}
+
+HB_FUNC( __CLSVERIFY )
+{
+   HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );
+   PHB_ITEM pReturn = hb_itemNew( NULL );
+
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PCLASS pClass = s_pClasses[ uiClass ];
+      PMETHOD pMethod = pClass->pMethods;
+      HB_SIZE nLimit = hb_clsMthNum( pClass ), nPos = 0;
+
+      hb_arrayNew( pReturn, pClass->uiMethods );
+      do
+      {
+         if( pMethod->pMessage )
+         {
+            PHB_DYNS pDynSym = hb_dynsymFind( pMethod->pMessage->pSymbol->szName );
+
+            if( pMethod->pMessage != pDynSym ||
+                hb_clsFindMsg( pClass, pDynSym ) != pMethod )
+               hb_arraySetC( pReturn, ++nPos, pMethod->pMessage->pSymbol->szName );
+         }
+         ++pMethod;
+      }
+      while( --nLimit );
+
+      if( nPos < ( HB_SIZE ) pClass->uiMethods )
+         hb_arraySize( pReturn, nPos );
+   }
+
+   hb_itemReturnRelease( pReturn );
 }
 
 #if 0
