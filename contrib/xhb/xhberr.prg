@@ -277,7 +277,7 @@ STATIC PROCEDURE LogError( oerr )
    AddLine( @cReport, PadC( " Harbour Error Log ", 80, "-" ) )
    AddLine( @cReport, "" )
 
-   AddLine( @cReport, "Date, time ........: " + hb_TToC( hb_DateTime() ) )
+   AddLine( @cReport, "Date, time ........: " + hb_TToC( hb_DateTime(), "yyyy-mm-dd" ) )
    AddLine( @cReport, "" )
    AddLine( @cReport, "Application name ..: " + hb_CmdArgArgV() )
    AddLine( @cReport, "Workstation name ..: " + NetName() )

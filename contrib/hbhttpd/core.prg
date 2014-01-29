@@ -1094,7 +1094,7 @@ STATIC FUNCTION cvt2str( xI, lLong )
    CASE "U"
       RETURN iif( lLong, "[U]:NIL", "NIL" )
    CASE "N"
-      RETURN iif( lLong, "[N]:" + Str( xI ), hb_ntos( xI ) )
+      RETURN iif( lLong, "[N]:" + hb_ntos( xI ), hb_ntos( xI ) )
    CASE "M"
    CASE "C"
       IF Len( xI ) <= 260
@@ -1128,7 +1128,7 @@ STATIC FUNCTION cvt2str( xI, lLong )
       ENDIF
       RETURN "[O:" + xI:ClassName() + cI + "]"
    CASE "D"
-      RETURN iif( lLong, "[D]:", "" ) + DToC( xI )
+      RETURN iif( lLong, "[D]:", "" ) + hb_DToC( xI, "yyyy-mm-dd" )
    CASE "L"
       RETURN iif( lLong, "[L]:", "" ) + iif( xI, ".T.", ".F." )
    CASE "P"

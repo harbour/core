@@ -60,21 +60,10 @@
 #include "error.ch"
 #include "cgi.ch"
 
-#define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<br />" + "Time : " + Time() + "<br />"
-
-// put messages to STDERR
-#command ? <list,...>   =>  ?? Chr( 13 ) + Chr( 10 ) ; ?? <list>
-#command ?? <list,...>  =>  OutErr( <list> )
-
-REQUEST HardCR
-REQUEST MemoWrit
-
 STATIC s_bFixCorrupt
 STATIC s_cErrFooter := " "
 
-
-/***
-* DefError()
+/* DefError()
 */
 
 #if 0
@@ -137,7 +126,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    cErrString += '<tr><td bgcolor="blue">'
    cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
-   cErrString += DEF_ERR_HEADER
+   cErrString += "Date: " + hb_DToC( Date(), "yyyy-mm-dd" ) + "<br />" + "Time: " + Time() + "<br />"
    cErrString += "</td></tr>"
 
    cErrString += '<tr><td bgcolor="red">'
@@ -172,12 +161,12 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    cErrString += '</td></tr>'
    cErrString += '<tr><td bgcolor="black">'
    cErrstring += '<font face="verdana" size="2" color="white">' + CRLF()
-   cErrstring += "Extra Notes..."
+   cErrstring += "Extra notes..."
 
    cErrString += "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()
    FWrite( nH, "<br />" + cErrString + CRLF() )
-   MemoWrit( "Error.Log", HardCR( cErrString ) + CRLF() + ;
-      HardCR( MemoRead( "Error.Log" ) ) )
+   hb_MemoWrit( "error.Log", HardCR( cErrString ) + CRLF() + ;
+      HardCR( MemoRead( "error.Log" ) ) )
 
    FWrite( nH, "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF() )
 

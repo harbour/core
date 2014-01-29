@@ -320,7 +320,7 @@ FUNCTION ValToNumber( xVal )
    CASE "L" ; RETURN iif( xVal, 1, 0 )
    CASE "O" ; RETURN xVal:hClass
    CASE "N" ; RETURN xVal
-   CASE "P" ; RETURN xVal - 0
+   CASE "P" ; RETURN hb_HexToNum( hb_NumToHex( xVal ) )
    CASE "U" ; RETURN 0
    ENDSWITCH
 
