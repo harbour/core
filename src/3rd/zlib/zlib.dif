@@ -1,6 +1,6 @@
 diff -urN zlib.orig/crc32.c zlib/crc32.c
---- zlib.orig/crc32.c	2014-01-27 15:01:38.484007408 +0100
-+++ zlib/crc32.c	2014-01-27 15:01:38.504007407 +0100
+--- zlib.orig/crc32.c	2014-01-30 11:49:00.316035024 +0100
++++ zlib/crc32.c	2014-01-30 11:49:00.316035024 +0100
 @@ -21,6 +21,8 @@
    DYNAMIC_CRC_TABLE and MAKECRCH can be #defined to write out crc32.h.
   */
@@ -11,8 +11,8 @@ diff -urN zlib.orig/crc32.c zlib/crc32.c
  #  include <stdio.h>
  #  ifndef DYNAMIC_CRC_TABLE
 diff -urN zlib.orig/deflate.c zlib/deflate.c
---- zlib.orig/deflate.c	2014-01-27 15:01:38.512007409 +0100
-+++ zlib/deflate.c	2014-01-27 15:01:38.544007409 +0100
+--- zlib.orig/deflate.c	2014-01-30 11:49:00.324035023 +0100
++++ zlib/deflate.c	2014-01-30 11:49:00.324035023 +0100
 @@ -51,6 +51,10 @@
  
  #include "deflate.h"
@@ -50,8 +50,8 @@ diff -urN zlib.orig/deflate.c zlib/deflate.c
  
      for (;;) {
 diff -urN zlib.orig/gzguts.h zlib/gzguts.h
---- zlib.orig/gzguts.h	2014-01-27 15:01:38.544007409 +0100
-+++ zlib/gzguts.h	2014-01-27 15:01:38.544007409 +0100
+--- zlib.orig/gzguts.h	2014-01-30 11:49:00.328035024 +0100
++++ zlib/gzguts.h	2014-01-30 11:49:00.328035024 +0100
 @@ -31,7 +31,8 @@
  #  include <stddef.h>
  #endif
@@ -73,8 +73,8 @@ diff -urN zlib.orig/gzguts.h zlib/gzguts.h
  #    define HAVE_VSNPRINTF
  #  endif
 diff -urN zlib.orig/gzlib.c zlib/gzlib.c
---- zlib.orig/gzlib.c	2014-01-27 15:01:38.548007409 +0100
-+++ zlib/gzlib.c	2014-01-27 15:01:38.548007409 +0100
+--- zlib.orig/gzlib.c	2014-01-30 11:49:00.328035024 +0100
++++ zlib/gzlib.c	2014-01-30 11:49:00.328035024 +0100
 @@ -5,7 +5,11 @@
  
  #include "gzguts.h"
@@ -89,8 +89,8 @@ diff -urN zlib.orig/gzlib.c zlib/gzlib.c
  #else
  #if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
 diff -urN zlib.orig/inflate.c zlib/inflate.c
---- zlib.orig/inflate.c	2014-01-27 15:01:38.560007409 +0100
-+++ zlib/inflate.c	2014-01-27 15:01:38.560007409 +0100
+--- zlib.orig/inflate.c	2014-01-30 11:49:00.340035025 +0100
++++ zlib/inflate.c	2014-01-30 11:49:00.340035025 +0100
 @@ -429,6 +429,7 @@
  /* Macros for inflate(): */
  
@@ -100,8 +100,8 @@ diff -urN zlib.orig/inflate.c zlib/inflate.c
  #  define UPDATE(check, buf, len) \
      (state->flags ? crc32(check, buf, len) : adler32(check, buf, len))
 diff -urN zlib.orig/zconf.h zlib/zconf.h
---- zlib.orig/zconf.h	2014-01-27 15:01:38.568007410 +0100
-+++ zlib/zconf.h	2014-01-27 15:01:38.568007410 +0100
+--- zlib.orig/zconf.h	2014-01-30 11:49:00.348035025 +0100
++++ zlib/zconf.h	2014-01-30 11:49:00.348035025 +0100
 @@ -161,7 +161,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
@@ -140,8 +140,8 @@ diff -urN zlib.orig/zconf.h zlib/zconf.h
  #ifndef ZEXTERN
  #  define ZEXTERN extern
 diff -urN zlib.orig/zlib.h zlib/zlib.h
---- zlib.orig/zlib.h	2014-01-27 15:01:38.572007410 +0100
-+++ zlib/zlib.h	2014-01-27 15:01:38.584007410 +0100
+--- zlib.orig/zlib.h	2014-01-30 11:49:00.356035025 +0100
++++ zlib/zlib.h	2014-01-30 11:49:00.356035025 +0100
 @@ -1728,6 +1728,8 @@
     ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile));
     ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));
@@ -152,8 +152,8 @@ diff -urN zlib.orig/zlib.h zlib/zlib.h
  
  #else /* Z_SOLO */
 diff -urN zlib.orig/zutil.c zlib/zutil.c
---- zlib.orig/zutil.c	2014-01-27 15:01:38.584007410 +0100
-+++ zlib/zutil.c	2014-01-27 15:01:38.584007410 +0100
+--- zlib.orig/zutil.c	2014-01-30 11:49:00.356035025 +0100
++++ zlib/zutil.c	2014-01-30 11:49:00.356035025 +0100
 @@ -139,7 +139,7 @@
      return ERR_MSG(err);
  }
@@ -164,8 +164,8 @@ diff -urN zlib.orig/zutil.c zlib/zutil.c
       * errno.  We define it as a global variable to simplify porting.
       * Its value is always 0 and should not be used.
 diff -urN zlib.orig/zutil.h zlib/zutil.h
---- zlib.orig/zutil.h	2014-01-27 15:01:38.584007410 +0100
-+++ zlib/zutil.h	2014-01-27 15:01:38.584007410 +0100
+--- zlib.orig/zutil.h	2014-01-30 11:49:00.356035025 +0100
++++ zlib/zutil.h	2014-01-30 11:49:00.356035025 +0100
 @@ -22,7 +22,7 @@
  #include "zlib.h"
  
@@ -175,12 +175,13 @@ diff -urN zlib.orig/zutil.h zlib/zutil.h
  #    include <stddef.h>
  #  endif
  #  include <string.h>
-@@ -150,7 +150,7 @@
+@@ -150,8 +150,7 @@
  #endif
  
  #if (defined(_MSC_VER) && (_MSC_VER > 600)) && !defined __INTERIX
 -#  if defined(_WIN32_WCE)
+-#    define fdopen(fd,mode) NULL /* No fdopen() */
 +#  if defined(_WINCE)
- #    define fdopen(fd,mode) NULL /* No fdopen() */
  #    ifndef _PTRDIFF_T_DEFINED
         typedef int ptrdiff_t;
+ #      define _PTRDIFF_T_DEFINED

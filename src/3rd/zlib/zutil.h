@@ -151,7 +151,6 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 
 #if (defined(_MSC_VER) && (_MSC_VER > 600)) && !defined __INTERIX
 #  if defined(_WINCE)
-#    define fdopen(fd,mode) NULL /* No fdopen() */
 #    ifndef _PTRDIFF_T_DEFINED
        typedef int ptrdiff_t;
 #      define _PTRDIFF_T_DEFINED
