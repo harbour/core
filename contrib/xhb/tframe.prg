@@ -87,7 +87,7 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @cTitle, "" )
+   hb_default( @cTitle, "" )
 
    ::FName := cFName
    ::Title := cTitle
@@ -184,8 +184,6 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
 
    LOCAL cStr
 
-   __defaultNIL( @lBorder, .T. )
-   __defaultNIL( @lResize, .T. )
    __defaultNIL( @lScrolling, .F. )
    __defaultNIL( @cScrolling, "AUTO" )
    __defaultNIL( @cTarget, "_self" )
@@ -204,24 +202,22 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += ' target="' + cTarget + '"'
    ENDIF
 
-   IF ! lBorder
-      cStr += ' frameborder="0"'
-   ELSE
+   IF hb_defaultValue( lBorder, .T. )
       cStr += ' frameborder="1"'
+   ELSE
+      cStr += ' frameborder="0"'
    ENDIF
 
-   IF ! lResize
+   IF ! hb_defaultValue( lResize, .T. )
       cStr += " noresize"
    ENDIF
 
    IF HB_ISSTRING( cScrolling )
       cStr += ' scrolling="' + cScrolling + '"'
+   ELSEIF lScrolling != NIL
+      cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
    ELSE
-      IF lScrolling != NIL
-         cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
-      ELSE
-         cStr += ' scrolling="auto"'
-      ENDIF
+      cStr += ' scrolling="auto"'
    ENDIF
 
    IF HB_ISNUMERIC( marginwidth )

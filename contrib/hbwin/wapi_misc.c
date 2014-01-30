@@ -48,6 +48,18 @@
 
 #include "hbwapi.h"
 
+HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
+
+   while( pText[ nLen ] != TEXT( '\0' ) )
+      ++nLen;
+
+   return nLen;
+}
+
 /* NOTE: Based on hb_strdup() */
 TCHAR * hbwapi_tstrdup( const TCHAR * pszText )
 {
@@ -83,18 +95,6 @@ TCHAR * hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
       nLen--;
 
    return pBuf;
-}
-
-HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
-
-   while( pText[ nLen ] != TEXT( '\0' ) )
-      ++nLen;
-
-   return nLen;
 }
 
 static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )

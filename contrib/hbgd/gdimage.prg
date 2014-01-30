@@ -111,11 +111,11 @@ CREATE CLASS GDImage
    METHOD SaveToFile( cFile )              INLINE gdImageToFile( Self, cFile )
 
    // Output To a specified File handle
-   METHOD OutputPng( nHandle, nLevel )     INLINE __defaultNIL( @nHandle, hb_GetStdOut() ), gdImagePng( ::pImage, nHandle, nLevel )
-   METHOD OutputJpeg( nHandle, nLevel )    INLINE __defaultNIL( @nHandle, hb_GetStdOut() ), gdImageJpeg( ::pImage, nHandle, nLevel )
-   METHOD OutputWBmp( nHandle, nFG )       INLINE __defaultNIL( @nHandle, hb_GetStdOut() ), gdImageWBmp( ::pImage, nHandle, nFG )
-   METHOD OutputGd( nHandle )              INLINE __defaultNIL( @nHandle, hb_GetStdOut() ), gdImageGD( ::pImage, nHandle )
-   METHOD OutputGif( nHandle )             INLINE __defaultNIL( @nHandle, hb_GetStdOut() ), gdImageGif( ::pImage, nHandle )
+   METHOD OutputPng( nHandle, nLevel )     INLINE gdImagePng( ::pImage, hb_defaultValue( nHandle, hb_GetStdOut() ), nLevel )
+   METHOD OutputJpeg( nHandle, nLevel )    INLINE gdImageJpeg( ::pImage, hb_defaultValue( nHandle, hb_GetStdOut() ), nLevel )
+   METHOD OutputWBmp( nHandle, nFG )       INLINE gdImageWBmp( ::pImage, hb_defaultValue( nHandle, hb_GetStdOut() ), nFG )
+   METHOD OutputGd( nHandle )              INLINE gdImageGD( ::pImage, hb_defaultValue( nHandle, hb_GetStdOut() ) )
+   METHOD OutputGif( nHandle )             INLINE gdImageGif( ::pImage, hb_defaultValue( nHandle, hb_GetStdOut() ) )
 
    METHOD Output( nHandle )                INLINE gdImageToHandle( ::pImage, nHandle )
 
@@ -170,9 +170,9 @@ CREATE CLASS GDImage
    METHOD ResetStyles()                    INLINE ::aStyles := {}
    METHOD StyleLength()                    INLINE Len( ::aStyles )
 
-   METHOD SetThickness( nThickness )       INLINE gdImageSetThickness( ::pImage, nThickness )
+   METHOD SetThickness( nThickness )          INLINE gdImageSetThickness( ::pImage, nThickness )
    METHOD SetAlphaBlending( lAlphaBlending )  INLINE gdImageAlphaBlending( ::pImage, lAlphaBlending )
-   METHOD SetSaveAlpha( lSaveAlpha )       INLINE gdImageSaveAlpha( ::pImage, lSaveAlpha )
+   METHOD SetSaveAlpha( lSaveAlpha )          INLINE gdImageSaveAlpha( ::pImage, lSaveAlpha )
    METHOD SetClippingArea( x1, y1, x2, y2 )   INLINE gdImageSetClip( ::pImage, x1, y1, x2, y2 )
 
    /* QUERY FUNCTIONS */
@@ -228,33 +228,33 @@ CREATE CLASS GDImage
    METHOD GetFontHeight( pFont )           INLINE __defaultNIL( @pFont, ::pFont ), gdFontGetHeight( pFont )
 
    METHOD GetFTFontWidth( cFontName, nPitch )  INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch )  , ;
+                                                      hb_default( @nPitch, ::nFontPitch ), ;
                                                       gdImageFTWidth( cFontName, nPitch )
 
    METHOD GetFTFontHeight( cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch )  , ;
+                                                      hb_default( @nPitch, ::nFontPitch ), ;
                                                       gdImageFTHeight( cFontName, nPitch )
 
    METHOD GetFTStringSize( cString, cFontName, nPitch ) INLINE hb_default( @cFontName, ::cFontName ), ;
-                                                      hb_default( @nPitch, ::nFontPitch )  , ;
+                                                      hb_default( @nPitch, ::nFontPitch ), ;
                                                       gdImageFTSize( cString, cFontName, nPitch )
 
    /* COLOR HANDLING FUNCTIONS */
 
-   METHOD SetColor( r, g, b )              INLINE iif( PCount() == 2, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
-   METHOD DelColor( pColor )               INLINE ::pColor := NIL, gdImageColorDeallocate( ::pImage, pColor )
-   METHOD SetColorAlpha( r, g, b, a )      INLINE ::pColor := gdImageColorAllocateAlpha( ::pImage, r, g, b, a)
-   METHOD SetColorClosest( r, g, b )       INLINE ::pColor := gdImageColorClosest( ::pImage, r, g, b )
+   METHOD SetColor( r, g, b )                INLINE iif( PCount() == 1, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
+   METHOD DelColor( pColor )                 INLINE ::pColor := NIL, gdImageColorDeallocate( ::pImage, pColor )
+   METHOD SetColorAlpha( r, g, b, a )        INLINE ::pColor := gdImageColorAllocateAlpha( ::pImage, r, g, b, a)
+   METHOD SetColorClosest( r, g, b )         INLINE ::pColor := gdImageColorClosest( ::pImage, r, g, b )
    METHOD SetColorClosestAlpha( r, g, b, a ) INLINE ::pColor := gdImageColorClosestAlpha( ::pImage, r, g, b, a)
-   METHOD SetColorClosestHWB( r, g, b )    INLINE ::pColor := gdImageColorClosestHWB( ::pImage, r, g, b )
-   METHOD SetColorExact( r, g, b )         INLINE ::pColor := gdImageColorExact( ::pImage, r, g, b )
-   METHOD SetColorResolve( r, g, b )       INLINE ::pColor := gdImageColorResolve( ::pImage, r, g, b )
+   METHOD SetColorClosestHWB( r, g, b )      INLINE ::pColor := gdImageColorClosestHWB( ::pImage, r, g, b )
+   METHOD SetColorExact( r, g, b )           INLINE ::pColor := gdImageColorExact( ::pImage, r, g, b )
+   METHOD SetColorResolve( r, g, b )         INLINE ::pColor := gdImageColorResolve( ::pImage, r, g, b )
    METHOD SetColorResolveAlpha( r, g, b, a ) INLINE ::pColor := gdImageColorResolveAlpha( ::pImage, r, g, b, a)
-   METHOD SetTransparent( pColor )         INLINE gdImageColorTransparent( ::pImage, pColor )
-   METHOD SetSharpen( nPerc )              INLINE gdImageSharpen( ::pImage, nPerc )
-   METHOD SetInterlace( lOnOff )           INLINE gdImageInterlace( ::pImage, lOnOff )
-   METHOD SetInterlaceOn()                 INLINE gdImageInterlace( ::pImage, .T. )
-   METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, .F. )
+   METHOD SetTransparent( pColor )           INLINE gdImageColorTransparent( ::pImage, pColor )
+   METHOD SetSharpen( nPerc )                INLINE gdImageSharpen( ::pImage, nPerc )
+   METHOD SetInterlace( lOnOff )             INLINE gdImageInterlace( ::pImage, lOnOff )
+   METHOD SetInterlaceOn()                   INLINE gdImageInterlace( ::pImage, .T. )
+   METHOD SetInterlaceOff()                  INLINE gdImageInterlace( ::pImage, .F. )
 
    /* COPY AND RESIZING FUNCTIONS */
 

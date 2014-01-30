@@ -89,58 +89,35 @@ CREATE CLASS TJSWindow
    VAR onUnLoad
 
    METHOD New( cVarName, cUrl, cName, x, y, w, h )
-
    METHOD setOnLoad( c ) INLINE ::onLoad := c
-
    METHOD setOnUnLoad( c ) INLINE ::onUnLoad := c
-
    METHOD Alert( c ) INLINE ::QOut( "Alert('" + c + "')" )
-
    METHOD confirm( c ) INLINE ::QOut( "confirm('" + c + "')" )
-
    METHOD SetSize( x, y, h, w )
-
    METHOD Write( c )
-
    METHOD lineBreak() INLINE ::QOut( "<br />" )
-
    METHOD Paragraph() INLINE ::QOut( "<p></p>" )
-
    METHOD Center( l ) INLINE ::QOut( iif( l, "<center>", "</center>" ) )
-
    METHOD bold( l ) INLINE ::QOut( iif( l, "<b>", "</b>" ) )
-
    METHOD Italic( l ) INLINE ::QOut( iif( l, "<i>", "</i>" ) )
-
    METHOD ULine( l ) INLINE ::QOut( iif( l, "<u>", "</u>" ) )
-
    METHOD Put()
-
    METHOD Begin()
-
    METHOD End()
-
    METHOD QOut( c )
-
    METHOD WriteLN( c ) INLINE ::QOut( c )
-
    METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
       Scrollbars, Status, TitleBar, Toolbar, copyHistory )
-
    METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt )
 
 ENDCLASS
 
-/****
-*
-*     Start a new window definition
-*
+/* Start a new window definition
 */
-
 METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJSWindow
 
    __defaultNIL( @cVarName, "newWin" )
@@ -164,12 +141,8 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJSWindow
 
    RETURN Self
 
-/****
-*
-*     Set the properties of the window
-*
+/* Set the properties of the window
 */
-
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
@@ -261,12 +234,8 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    RETURN Self
 
-/****
-*
-*     set the size for the window
-*
+/* set the size for the window
 */
-
 METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 
    LOCAL cStr := ""
@@ -291,12 +260,8 @@ METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 
    RETURN Self
 
-/****
-*
-*     Open the window from within the current document
-*
+/* Open the window from within the current document
 */
-
 METHOD Put() CLASS TJSWindow
 
    LOCAL cStr := ""
@@ -324,39 +289,26 @@ METHOD Put() CLASS TJSWindow
 
    RETURN Self
 
-/****
-*
-*     Output stand alone Javascript code in the current document
-*
+/* Output stand alone Javascript code in the current document
 */
-
 METHOD Write( c ) CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
    RETURN Self
 
-/****
-*
-*     Output Javascript (or HTML) code in the current document and
-*     in the current script
-*
+/* Output Javascript (or HTML) code in the current document and
+*  in the current script
 */
-
 METHOD QOut( c ) CLASS TJSWindow
 
    FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
    RETURN Self
 
-/****
-*
-*     Begin HTML output to the window from within the current document
-*     and the current script
-*
-*
+/* Begin HTML output to the window from within the current document
+*  and the current script
 */
-
 METHOD Begin() CLASS TJSWindow
 
    LOCAL i
@@ -414,24 +366,16 @@ METHOD Begin() CLASS TJSWindow
 
    RETURN Self
 
-/****
-*
-*     End HTML output to the window
-*
+/* End HTML output to the window
 */
-
 METHOD End() CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
 
    RETURN Self
 
-/****
-*
-*     Place an image link to the window
-*
+/* Place an image link to the window
 */
-
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt ) CLASS TJSWindow

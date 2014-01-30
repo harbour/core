@@ -474,7 +474,7 @@ FUNCTION DateToTxtRU( dDate, cLang, lWord )
 
    IF ! Empty( dDate )
       nTemp := Day( dDate )
-      IF lWord != NIL
+      IF HB_ISLOGICAL( lWord ) .AND. lWord
          cRetVal := NumToStrRaw( nTemp, aMsg, NTSR_MIDD, .T. )
       ELSE
          cRetVal := hb_ntos( nTemp )
@@ -494,9 +494,8 @@ STATIC FUNCTION MnyToStrRaw( nValue, aMsg, aCur, nMode )
    LOCAL cTemp, nTemp
    LOCAL lShort := nMode == 2 .OR. nMode == 4
 
-   IF nMode == NIL
-      nMode := 1
-   ENDIF
+   hb_default( @nMode, 1 )
+
    IF nMode <= 2
       IF nValue == 0
          cRetVal := aMsg[ NTSR_MALE, 1 ]
@@ -526,17 +525,13 @@ STATIC FUNCTION MnyToStrRaw( nValue, aMsg, aCur, nMode )
 
 STATIC FUNCTION GetLangMsg( cLang )
 
-   LOCAL aMsg
+   SWITCH Lower( hb_defaultValue( cLang, "ru" ) )
+   CASE "ru" ; RETURN sc_aRus
+   CASE "uk" ; RETURN sc_aUkr
+   CASE "be" ; RETURN sc_aBel
+   ENDSWITCH
 
-   IF cLang == NIL .OR. Lower( cLang ) == "ru"
-      aMsg := sc_aRus
-   ELSEIF Lower( cLang ) == "uk"
-      aMsg := sc_aUkr
-   ELSEIF Lower( cLang ) == "be"
-      aMsg := sc_aBel
-   ENDIF
-
-   RETURN aMsg
+   RETURN NIL
 
 STATIC FUNCTION NumToStrRaw( nValue, aMsg, nGender, lOrd )
 
@@ -544,12 +539,8 @@ STATIC FUNCTION NumToStrRaw( nValue, aMsg, nGender, lOrd )
    LOCAL cRetVal := "", cTemp
    LOCAL lLast := .T.
 
-   IF nGender == NIL
-      nGender := NTSR_MALE
-   ENDIF
-   IF lOrd == NIL
-      lOrd := .F.
-   ENDIF
+   hb_default( @nGender, NTSR_MALE )
+   hb_default( @lOrd, .F. )
 
    DO WHILE nValue != 0
       nTemp := nValue % 1000

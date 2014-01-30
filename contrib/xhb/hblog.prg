@@ -98,8 +98,7 @@ PROCEDURE hb_StandardLogAdd( oChannel )
 
 PROCEDURE hb_CloseStandardLog()
 
-   // If the logger is NIL also the mutex is NIL
-   IF s_StdLogger != NIL
+   IF s_StdLogger != NIL  // If the logger is NIL also the mutex is NIL
       hb_mutexLock( s_StdLogMutex )
 
       s_StdLogger:Close()
@@ -197,7 +196,6 @@ ENDCLASS
  * where to log.
  * Channels can be called at a second time.
  */
-
 METHOD New() CLASS HB_Logger
 
    LOCAL nCount
@@ -208,10 +206,8 @@ METHOD New() CLASS HB_Logger
 
    RETURN Self
 
-/**
- * Open all the channels calling their ::Open() method
+/* Open all the channels calling their ::Open() method
  */
-
 METHOD PROCEDURE Open() CLASS HB_Logger
 
    LOCAL oChannel
@@ -226,10 +222,8 @@ METHOD PROCEDURE Open() CLASS HB_Logger
 
    RETURN
 
-/**
- * Close all the channels calling their ::Close() method
+/* Close all the channels calling their ::Close() method
  */
-
 METHOD PROCEDURE close() CLASS HB_Logger
 
    LOCAL oChannel
@@ -244,17 +238,13 @@ METHOD PROCEDURE close() CLASS HB_Logger
 
    RETURN
 
-/**
- * Send a log message to all the channels
+/* Send a log message to all the channels
  */
-
 METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
 
    LOCAL oChannel
 
-   IF nPriority == NIL
-      nPriority := ::nDefaultPriority
-   ENDIF
+   hb_default( @nPriority, ::nDefaultPriority )
 
    FOR EACH oChannel IN ::aLogToChannel
       /* Channels may want to have something to say about the format,
@@ -290,27 +280,18 @@ CREATE CLASS HB_LogChannel
 
 ENDCLASS
 
-/**
- *  Creates a new channel. nLeven can be nil ( and will log all ),
- *  cName is the "program name" and must be given
+/* Creates a new channel. nLeven can be nil ( and will log all ),
+ * cName is the "program name" and must be given
  */
-
 METHOD New( nLevel ) CLASS HB_LogChannel
 
-   IF nLevel == NIL
-      // log everything by default
-      nLevel := HB_LOG_ALL
-   ENDIF
-
-   ::nLevel := nLevel
+   ::nLevel := hb_defaultValue( nLevel, HB_LOG_ALL )
 
    RETURN Self
 
-/**
- * Log the message: it send a request to the subclass "send" method
+/* Log the message: it send a request to the subclass "send" method
  * if the log level is higher or equal than the channel setting
  */
-
 METHOD PROCEDURE Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    IF nPriority <= ::nLevel .AND. ::lActive
@@ -319,12 +300,10 @@ METHOD PROCEDURE Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    RETURN
 
-/**
- * This is an utility functions for subclasses, used to
+/* This is an utility functions for subclasses, used to
  * have a standard formatting for the message. Subclasses
  * may or may not call it.
  */
-
 METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    LOCAL cPrefix := ""

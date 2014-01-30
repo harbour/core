@@ -45,7 +45,7 @@ END CLASS
 
 METHOD New( cFile, nSize ) CLASS TFileRead
 
-   IF nSize == NIL .OR. nSize < 1
+   IF ! HB_ISNUMERIC( nSize ) .OR. nSize < 1
       // The readahead size can be set to as little as 1 byte, or as much as
       // 65535 bytes, but venturing out of bounds forces the default size.
       nSize := O_F_DEFAULT_READ_SIZE
@@ -65,11 +65,8 @@ METHOD Open( nMode ) CLASS TFileRead
 
    IF ::nHan == F_ERROR
       // Only open the file if it isn't already open.
-      IF nMode == NIL
-         nMode := FO_READ + FO_SHARED   // Default to shared read-only mode
-      ENDIF
       ::nLastOp := O_F_OPEN_FILE
-      ::nHan := FOpen( ::cFile, nMode )   // Try to open the file
+      ::nHan := FOpen( ::cFile, hb_defaultValue( nMode, FO_READ + FO_SHARED ) )   // Try to open the file
       IF ::nHan == F_ERROR
          ::nError := FError()       // It didn't work
          ::lEOF   := .T.            // So force EOF

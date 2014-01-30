@@ -52,6 +52,8 @@ FUNCTION NumToTxtHU( nValue )
    LOCAL cRetVal
    LOCAL tmp, tmp1, tmp2
 
+   hb_default( @nValue, 0 )
+
    IF nValue < 0
       nValue := -nValue
       cRetVal := "mínusz "

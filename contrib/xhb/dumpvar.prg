@@ -73,7 +73,7 @@ FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
 
    // TraceLog( "HB_DumpVariable: xVar, lAssocAsObj, lRecursive", xVar, lAssocAsObj, lRecursive )
 
-   __defaultNIL( @nMaxRecursionLevel, 0 )
+   hb_default( @nMaxRecursionLevel, 0 )
 
    RETURN __HB_DumpVar( xVar, , lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
 
@@ -82,8 +82,8 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    LOCAL cString := "", cKey
    LOCAL nEolLen
 
-   __defaultNIL( @lAssocAsObj, .F. )
-   __defaultNIL( @lRecursive, .F. )
+   hb_default( @lAssocAsObj, .F. )
+   hb_default( @lRecursive, .F. )
 
    // TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
 
@@ -164,7 +164,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
    LOCAL aMethods, aMth
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    IF HB_ISOBJECT( oVar )
 #if 0
@@ -207,7 +207,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
    LOCAL xVal, nChar, nEolLen
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    // TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
 
@@ -238,7 +238,7 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
    LOCAL nEolLen
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    // TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
 

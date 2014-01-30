@@ -96,7 +96,7 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
 
    IF s_lToLogFile
 
-      __defaultNIL( @cLogFile, "logfile.log" )
+      hb_default( @cLogFile, "logfile.log" )
 
       IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
          nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )

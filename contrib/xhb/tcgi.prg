@@ -204,7 +204,7 @@ METHOD Field( cQueryName ) CLASS TCgi
 
    LOCAL nRet
 
-   __defaultNIL( @cQueryName, "" )
+   hb_default( @cQueryName, "" )
 
    IF ( nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } ) ) > 0
       RETURN ::aQueryFields[ nRet ][ 2 ]

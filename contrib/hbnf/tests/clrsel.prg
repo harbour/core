@@ -13,7 +13,7 @@ PROCEDURE Main( cVidMode )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   __defaultNIL( @cVidMode, "" )
+   hb_default( @cVidMode, "" )
 
    NoSnow( ( "NOSNOW" $ Upper( cVidMode ) ) )
    IF "VGA" $ Upper( cVidMode )

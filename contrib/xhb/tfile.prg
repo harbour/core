@@ -151,8 +151,8 @@ METHOD Size() CLASS TCgiFile
 */
 METHOD _Read( nSize, cBuff ) CLASS TCgiFile
 
-   __defaultNIL( @nSize, 1024 )
-   __defaultNIL( @cBuff, Space( nSize ) )
+   hb_default( @nSize, 1024 )
+   hb_default( @cBuff, Space( nSize ) )
 
    ::BytesRead := FRead( ::Handle, @cBuff, nSize )
    ::Buffer    := cBuff
@@ -166,8 +166,8 @@ METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
 
    LOCAL nCurrent
 
-   __defaultNIL( @nSize, 1024 )
-   __defaultNIL( @cBuff, Space( nSize ) )
+   hb_default( @nSize, 1024 )
+   hb_default( @cBuff, Space( nSize ) )
 
    // --> save position in file
    nCurrent := FSeek( ::Handle, 0, FS_RELATIVE )
@@ -188,7 +188,7 @@ METHOD Readline( nSize ) CLASS TCgiFile
    LOCAL nCurrent
    LOCAL nCr
 
-   __defaultNIL( @nSize, 1024 )
+   hb_default( @nSize, 1024 )
 
    IF nSize <= 0
       RETURN ""
@@ -288,7 +288,7 @@ METHOD Skip( nLines ) CLASS TCgiFile
    LOCAL nCount := 0
    LOCAL nPos   := FSeek( ::Handle, 0, FS_RELATIVE )
 
-   __defaultNIL( @nLines, 1 )
+   hb_default( @nLines, 1 )
 
    IF nLines <= 0   // don't accept < 0
       RETURN nPos
@@ -310,7 +310,7 @@ METHOD Skip( nLines ) CLASS TCgiFile
 */
 METHOD MaxPages( nPageSize ) CLASS TCgiFile
 
-   __defaultNIL( @nPageSize, ::nPageSize )
+   hb_default( @nPageSize, ::nPageSize )
 
    RETURN ::Size() / nPageSize
 
@@ -318,7 +318,7 @@ METHOD MaxPages( nPageSize ) CLASS TCgiFile
 */
 METHOD PrevPage( nBytes ) CLASS TCgiFile
 
-   __defaultNIL( @nBytes, 1024 )
+   hb_default( @nBytes, 1024 )
 
    IF nBytes <= 0
       RETURN ""
@@ -337,7 +337,7 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 */
 METHOD NextPage( nBytes ) CLASS TCgiFile
 
-   __defaultNIL( @nBytes, 1024 )
+   hb_default( @nBytes, 1024 )
 
    IF nBytes <= 0
       RETURN ""
@@ -363,8 +363,6 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    LOCAL nPrev
    LOCAL cTemp
 
-   __defaultNIL( @nBytes, 256 )
-
    IF FSeek( fHandle, 0, FS_RELATIVE ) == 0
 
       lMoved := .F.
@@ -382,7 +380,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
          FSeek( fHandle, -2, FS_RELATIVE )
       ENDIF
 
-      nMaxRead := Min( nBytes, FSeek( fHandle, 0, FS_RELATIVE ) )
+      nMaxRead := Min( hb_defaultValue( nBytes, 256 ), FSeek( fHandle, 0, FS_RELATIVE ) )
 
       cBuff   := Space( nMaxRead )
       nNewPos := FSeek( fHandle, -nMaxRead, FS_RELATIVE )

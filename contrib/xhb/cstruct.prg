@@ -455,9 +455,9 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    LOCAL xProperty, cOut := ""
 
-   __defaultNIL( @cPad, "" )
-   __defaultNIL( @lShowMembers, .F. )
-   __defaultNIL( @lReturnString, .F. )
+   hb_default( @cPad, "" )
+   hb_default( @lShowMembers, .F. )
+   hb_default( @lReturnString, .F. )
 
 #if 0
    QOut( cPad + SubStr( QSelf():className(), 13 ) )
