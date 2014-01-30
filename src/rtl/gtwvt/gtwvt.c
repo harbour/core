@@ -2524,7 +2524,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                if( iFlags & HB_KF_CTRL )
                {
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
-                  iKey = wParam - VK_NUMPAD0 + '0';
+                  iKey = ( int ) wParam - VK_NUMPAD0 + '0';
                }
                else if( iFlags == HB_KF_ALT )
                   iFlags = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */

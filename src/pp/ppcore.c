@@ -6315,7 +6315,7 @@ void hb_pp_tokenToString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
-                               int * piType, int * piLen )
+                               int * piType, HB_SIZE * pnLen )
 {
    *piType = 0;
    hb_membufFlush( pState->pBuffer );
@@ -6345,7 +6345,7 @@ char * hb_pp_tokenBlockString( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       }
       while( iBraces && ! HB_PP_TOKEN_ISEOC( pToken ) );
    }
-   *piLen = ( int ) hb_membufLen( pState->pBuffer );
+   *pnLen = hb_membufLen( pState->pBuffer );
    hb_membufAddCh( pState->pBuffer, '\0' );
    return hb_membufPtr( pState->pBuffer );
 }

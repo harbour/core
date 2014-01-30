@@ -145,13 +145,13 @@ static void hb_compDebugStart( void ) { }
    struct
    {
       char *   string;
-      int      length;
+      HB_SIZE  length;
       HB_BOOL  dealloc;
    } valChar;
    struct
    {
       char *   string;
-      int      length;
+      HB_SIZE  length;
       int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
    } asCodeblock;
    PHB_VARTYPE asVarType;
