@@ -29,7 +29,7 @@ FUNCTION ft_PChr( c_nums )
    LOCAL c_ret := "", c_st := 0, c_part, c_st2, c_hex := "0123456789ABCDEF"
    LOCAL c_upper, c_t1, c_t2
 
-   IF Left( c_nums, 1 ) == "," .OR. RTrim( c_nums ) == ""
+   IF hb_LeftIs( c_nums, "," ) .OR. RTrim( c_nums ) == ""
       RETURN ""
    ENDIF
 
@@ -38,12 +38,12 @@ FUNCTION ft_PChr( c_nums )
 
    DO WHILE !( c_part == "~" .OR. c_part == "" )
 
-      IF Left( c_part, 1 ) == '"'
+      IF hb_LeftIs( c_part, '"' )
 
          c_st2 := At( '"', SubStr( c_part, 2 ) ) + 1
          c_ret += SubStr( c_part, 2, c_st2 - 2 )
 
-      ELSEIF Left( c_part, 1 ) == "&"
+      ELSEIF hb_LeftIs( c_part, "&" )
 
          c_upper := Upper( c_part )
          c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1
@@ -61,7 +61,7 @@ FUNCTION ft_PChr( c_nums )
 
       ELSE
 
-         IF Left( c_part, 1 ) == "/"
+         IF hb_LeftIs( c_part, "/" )
 
             c_upper := Upper( c_part )
 

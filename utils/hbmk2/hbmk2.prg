@@ -736,7 +736,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
         hb_LeftIs( Lower( hb_FNameName( hb_argv( 0 ) ) ), "hbrun" ) .OR. ;
         cParam1L == "." .OR. ;
         hb_FNameExt( cParam1L ) == ".dbf" .OR. ;
-        ( HBMK_IS_IN( hb_FNameExt( cParam1L ), ".hb|.hrb" ) .AND. !( Left( cParam1L, 1 ) == "-" ) ) ) .AND. ;
+        ( HBMK_IS_IN( hb_FNameExt( cParam1L ), ".hb|.hrb" ) .AND. ! hb_LeftIs( cParam1L, "-" ) ) ) .AND. ;
       !( ! Empty( cParam1L ) .AND. ;
          ( hb_LeftIs( cParam1L, "-hbreg" ) .OR. ;
            hb_LeftIs( cParam1L, "-hbunreg" ) ) )

@@ -347,17 +347,15 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    aMessages := ASort( oObject:ClassSel( nRange, nScope, .T. ), , , {| x, y | x[ HB_OO_DATA_SYMBOL ] < y[ HB_OO_DATA_SYMBOL ] } )
    aReturn   := {}
 
-   nFirstProperty := AScan( aMessages, {| aElement | Left( aElement[ HB_OO_DATA_SYMBOL ], 1 ) == "_" } )
+   nFirstProperty := AScan( aMessages, {| aElement | hb_LeftIs( aElement[ HB_OO_DATA_SYMBOL ], "_" ) } )
 
    FOR EACH aMsg IN aMessages
 
-      IF Left( aMsg[ HB_OO_DATA_SYMBOL ], 1 ) == "_"
-         LOOP
-      ENDIF
-
-      IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) != 0 ) == lData
-         IF nNoScope == 0 .OR. hb_bitAnd( aMsg[ HB_OO_DATA_SCOPE ], nNoScope ) == 0
-            AAdd( aReturn, aMsg )
+      IF ! hb_LeftIs( aMsg[ HB_OO_DATA_SYMBOL ], "_" )
+         IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) != 0 ) == lData
+            IF nNoScope == 0 .OR. hb_bitAnd( aMsg[ HB_OO_DATA_SCOPE ], nNoScope ) == 0
+               AAdd( aReturn, aMsg )
+            ENDIF
          ENDIF
       ENDIF
    NEXT

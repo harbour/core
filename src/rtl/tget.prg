@@ -1027,7 +1027,7 @@ METHOD picture( cPicture ) CLASS Get
 
             cNum := ""
 
-            IF Left( cPicture, 1 ) == "@"
+            IF hb_LeftIs( cPicture, "@" )
 
                nAt := At( " ", cPicture )
 

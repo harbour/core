@@ -725,7 +725,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
       cTagName := CutStr( " ", @cAttr )
 
       IF !( cText == "" )
-         IF Left( cText, 2 ) == "</"
+         IF hb_LeftIs( cText, "</" )
             // ending tag of previous node
             cText := Lower( AllTrim( SubStr( CutStr( ">", @cText ), 3 ) ) )
             oLastTag := oThisTag:parent
@@ -1248,7 +1248,7 @@ METHOD getAttributes() CLASS THtmlNode
       // Tag has no valid attributes
       RETURN NIL
 
-   ELSEIF Left( ::htmlTagName, 1 ) == "!"
+   ELSEIF hb_LeftIs( ::htmlTagName, "!" )
       // <!DOCTYPE > and <!-- comments --> have no HTML attributes
       RETURN ::htmlAttributes
 
@@ -1459,8 +1459,8 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
    cName := Lower( cName )
 
-   IF Left( cName, 1 ) == "_"
-      cName := SubStr( cName, 2 )
+   IF hb_LeftIs( cName, "_" )
+      cName := SubStr( cName, 1 + 1 )
    ENDIF
 
    IF cName $ t_hTagTypes
@@ -1572,7 +1572,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    ENDIF
 
    IF !( cName $ t_hTagTypes )
-      IF Left( cName, 1 ) == "/" .AND. SubStr( cName, 2 ) $ t_hTagTypes
+      IF hb_LeftIs( cName, "/" ) .AND. SubStr( cName, 2 ) $ t_hTagTypes
          IF ! Lower( SubStr( cName, 2 ) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
          ENDIF
@@ -1602,7 +1602,7 @@ METHOD popNode( cName ) CLASS THtmlNode
 
    cName := Lower( LTrim( cName ) )
 
-   IF Left( cName, 1 ) == "/"
+   IF hb_LeftIs( cName, "/" )
       cName := SubStr( cName, 2 )
    ENDIF
 

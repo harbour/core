@@ -64,7 +64,7 @@ FUNCTION ft_Civ2Mil( cTIME )
    cTIME := Replicate( "0", 3 - At( ":", LTrim( cTIME ) ) ) + LTrim( cTIME )
 
    // Adjust for popular use of '12' for first hour after noon and midnight
-   IF Left( LTrim( cTIME ), 2 ) == "12"
+   IF hb_LeftIs( LTrim( cTIME ), "12" )
       cTIME := Stuff( cTIME, 1, 2, "00" )
    ENDIF
 

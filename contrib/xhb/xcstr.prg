@@ -291,7 +291,7 @@ FUNCTION ValToLogical( xVal )
    CASE "B"
       RETURN ValToLogical( Eval( xVal ) )
    CASE "C"
-      IF Left( xVal, 1 ) == "." .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
+      IF hb_LeftIs( xVal, "." ) .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
          RETURN Upper( SubStr( xVal, 2, 1 ) ) $ "TY"
       ELSEIF Len( xVal ) == 1 .AND. Upper( xVal ) $ "TFYN"
          RETURN Upper( xVal ) $ "TY"

@@ -41,9 +41,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
       "sombrero grande ridiculo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
 
    DO CASE
-   CASE Empty( cRDDType )
+   CASE ! HB_ISSTRING( cRDDType )
 
-      NotifyUser( "Usage: TESTRDD2 RDDTYPE [ADSMODE]" + hb_eol() + ;
+      NotifyUser( "Usage: rdd2 RDDTYPE [ADSMODE]" + hb_eol() + ;
          hb_eol() + ;
          "RDDTYPE: DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
          hb_eol() + ;
@@ -52,12 +52,12 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
 #ifdef WITH_ADS
 
-   CASE Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
+   CASE hb_LeftIs( cRDDType := Upper( AllTrim( cRDDType ) ), "ADS" )
 
       rddRegister( "ADS", 1 )
       rddSetDefault( "ADS" )
 
-      IF Empty( cADSMode )
+      IF ! HB_ISSTRING( cADSMode )
          NotifyUser( "Missing ADS mode" )
       ENDIF
 

@@ -108,7 +108,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
                IF ! Empty( cLine )
                   DO CASE
-                  CASE Left( cLine, 1 ) == "[" // new section
+                  CASE hb_LeftIs( cLine, "[" )  // new section
                      IF ( nPos := At( "]", cLine ) ) > 1
                         cLine := SubStr( cLine, 2, nPos - 2 )
                      ELSE
@@ -118,7 +118,7 @@ METHOD New( cFileName ) CLASS TIniFile
                      AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
                      CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
 
-                  CASE Left( cLine, 1 ) == ";" // preserve comments
+                  CASE hb_LeftIs( cLine, ";" )  // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
 
                   OTHERWISE

@@ -412,7 +412,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    IF ::isMultiPart()
       cSubBoundary := ::GetFieldOption( "Content-Type", "Boundary" )
       // strip " on boundary
-      IF Left( cSubBoundary, 1 ) == '"'
+      IF hb_LeftIs( cSubBoundary, '"' )
          cSubBoundary := SubStr( cSubBoundary, 2, Len( cSubBoundary ) - 2 )
       ENDIF
    ENDIF

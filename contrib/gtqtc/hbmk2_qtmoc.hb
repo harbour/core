@@ -31,6 +31,8 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
+#if defined( __HBSCRIPT__HBMK_PLUGIN )
+
 FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL cRetVal := ""
 
@@ -57,7 +59,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
       hbmk[ "vars" ][ "aMOC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF ! Left( cSrc, 1 ) == "-" .AND. ;
+         IF ! hb_LeftIs( cSrc, "-" ) .AND. ;
             Lower( hb_FNameExt( cSrc ) ) == ".h"
 
             AAdd( hbmk[ "vars" ][ "aMOC_Src" ], cSrc )
@@ -213,3 +215,14 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    ENDIF
 
    RETURN cBIN
+
+#else
+
+PROCEDURE Main()
+
+   ?? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?
+
+   RETURN
+
+#endif

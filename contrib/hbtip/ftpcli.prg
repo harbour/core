@@ -369,7 +369,7 @@ METHOD Commit() CLASS TIPClientFTP
    ENDIF
 
    // error code?
-   IF Left( ::cReply, 1 ) == "5"
+   IF hb_LeftIs( ::cReply, "5" )
       RETURN .F.
    ENDIF
 

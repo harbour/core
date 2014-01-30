@@ -155,7 +155,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
 
          /* If anything else is passed than options or GNU Make keywords,
             consider it a custom project build, f.e. in tests */
-         IF !( Left( tmp, 1 ) == "-" )
+         IF ! hb_LeftIs( tmp, "-" )
             lCustom := .T.
          ENDIF
       ENDIF

@@ -44,6 +44,8 @@
 #xtranslate HB_ISOBJECT( <v> )             => ( ValType( <v> ) == "O" )
 #xtranslate HB_ISBLOCK( <v> )              => ( ValType( <v> ) == "B" )
 #xtranslate HB_ISEVALITEM( <v> )           => ( ValType( <v> ) == "B" )
+#xtranslate HB_ISCHAR( <v> )               => ( ValType( <v> ) == "C" )
+#xtranslate HB_ISMEMO( <v> )               => ( ValType( <v> ) == "M" )
 
 #xtranslate hb_LeftIs( l, r )              ( Left( l, Len( r ) ) == r )
 

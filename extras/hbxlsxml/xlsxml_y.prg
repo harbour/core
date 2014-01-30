@@ -294,7 +294,7 @@ METHOD ExcelWriterXML_Style:getStyleXML()
 
 METHOD ExcelWriterXML_Style:checkColor( color )
 
-   IF Left( color, 1 ) == "#"
+   IF hb_LeftIs( color, "#" )
       RETURN COLOR
    ELSEIF Lower( color ) $ ::namedColorsIE
       color := ::namedColorsIE[ Lower( color ) ]
@@ -386,7 +386,7 @@ METHOD ExcelWriterXML_Style:setFontSize( fontSize )
 METHOD ExcelWriterXML_Style:setFontColor( fontColor )
 
    fontColor := ::checkColor( fontColor )
-   IF !( Left( fontColor, 1 ) == "#" )
+   IF ! hb_LeftIs( fontColor, "#" )
       fontColor := "Automatic"
    ENDIF
    ::fontColor := fontColor
@@ -497,7 +497,7 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
    ENDIF
 
    color := ::checkColor( color )
-   IF !( Left( color, 1 ) == "#" )
+   IF ! hb_LeftIs( color, "#" )
       color := "Automatic"
    ENDIF
 
@@ -547,7 +547,7 @@ METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
    hb_default( @pattern, "Solid" )
 
    color := ::checkColor( color )
-   IF !( Left( color, 1 ) == "#" )
+   IF ! hb_LeftIs( color, "#" )
       color := "Yellow"
    ENDIF
    ::interiorColor := color
@@ -599,7 +599,7 @@ METHOD ExcelWriterXML_Style:bgPatternColor( color )
 
    IF !( color == "Automatic" )
       color := ::checkColor( color )
-      IF !( Left( color, 1 ) == "#" )
+      IF ! hb_LeftIs( color, "#" )
          color := "Automatic"
       ENDIF
    ENDIF

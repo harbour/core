@@ -139,26 +139,26 @@ PROCEDURE netiosrv_Main( lUI, ... )
       DO CASE
       CASE Lower( cParam ) == "-a"
          /* Ignore */
-      CASE Lower( Left( cParam, 5 ) ) == "-noui"
+      CASE hb_LeftIs( Lower( cParam ), "-noui" )
          lUI := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-port="
-         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
-      CASE Lower( Left( cParam, 7 ) ) == "-iface="
-         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 8 )
-      CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
-         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
-      CASE Lower( Left( cParam, 6 ) ) == "-pass="
-         cPassword := SubStr( cParam, 7 )
+      CASE hb_LeftIs( Lower( cParam ), "-port=" )
+         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-port=" ) + 1 ) )
+      CASE hb_LeftIs( Lower( cParam ), "-iface=" )
+         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-iface=" ) + 1 )
+      CASE hb_LeftIs( Lower( cParam ), "-rootdir=" )
+         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, Len( "-rootdir=" ) + 1 )
+      CASE hb_LeftIs( Lower( cParam ), "-pass=" )
+         cPassword := SubStr( cParam, Len( "-pass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminport="
-         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 12 ) )
-      CASE Lower( Left( cParam, 12 ) ) == "-adminiface="
-         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 13 )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminpass="
-         cPasswordManagement := SubStr( cParam, 12 )
+      CASE hb_LeftIs( Lower( cParam ), "-adminport=" )
+         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-adminport=" ) + 1 ) )
+      CASE hb_LeftIs( Lower( cParam ), "-adminiface=" )
+         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-adminiface=" ) + 1 )
+      CASE hb_LeftIs( Lower( cParam ), "-adminpass=" )
+         cPasswordManagement := SubStr( cParam, Len( "-adminpass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 5 ) ) == "-rpc="
-         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
+      CASE hb_LeftIs( Lower( cParam ), "-rpc=" )
+         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, Len( "-rpc=" ) + 1 )
 
          hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
 

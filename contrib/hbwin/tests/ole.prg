@@ -366,7 +366,7 @@ STATIC PROCEDURE Exm_OOOpen()
 STATIC FUNCTION OO_ConvertToURL( cString )
 
    // Handle UNC paths
-   IF !( Left( cString, 2 ) == "\\" )
+   IF ! hb_LeftIs( cString, "\\" )
       cString := StrTran( cString, ":", "|" )
       cString := "///" + cString
    ENDIF

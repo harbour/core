@@ -591,7 +591,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    pFlag := .F. // x for clarity
    IF mcvaltype == "N"
       // RL 104
-      IF Left( AllTrim( InBuffer ), 1 ) == "-" .AND. Val( InBuffer ) == 0
+      IF hb_LeftIs( AllTrim( InBuffer ), "-" ) .AND. Val( InBuffer ) == 0
          NegativeZero := .T.
       ENDIF
 
@@ -605,7 +605,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          NEXT
 
          // RL 89
-         IF Left( InBuffer, 1 ) == "." .OR. Left( InBuffer, 1 ) == ","
+         IF hb_LeftIs( InBuffer, "." ) .OR. hb_LeftIs( InBuffer, "," )
             pFlag := .T.
          ENDIF
 
@@ -841,7 +841,7 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
       ENDIF
    NEXT
 
-   IF Left( AllTrim( Text ), 1 ) == "(" .OR.  Right( AllTrim( Text ), 2 ) == "DB"
+   IF hb_LeftIs( AllTrim( Text ), "(" ) .OR. Right( AllTrim( Text ), 2 ) == "DB"
       s := "-" + s
    ENDIF
 
@@ -857,18 +857,17 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
    // eg. GetNumMask( "999,999.99" ) --> "999999.99"
    LOCAL i, c, s
 
-   IF mcvaltype == "D" .OR. mcvaltype == "C"
-      s := Text
-      RETURN s
+   IF mcvaltype $ "DC"
+      RETURN Text
    ENDIF
 
    s := ""
    FOR i := 1 TO Len( Text )
       c := SubStr( Text, i, 1 )
-      IF c == "9" .OR. c == "."
+      IF c $ "9."
          s += c
       ENDIF
-      IF c == "$" .OR. c == "*"
+      IF c $ "$*"
          s += "9"
       ENDIF
    NEXT

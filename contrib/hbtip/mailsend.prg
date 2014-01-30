@@ -232,7 +232,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
                lAuthPlain := .T.
             CASE oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
                lAuthTLS := .T.
-            CASE Left( oInMail:cReply, 4 ) == "250 "
+            CASE hb_LeftIs( oInMail:cReply, "250 " )
                EXIT
             ENDCASE
          ENDDO
@@ -281,7 +281,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       DO WHILE .T.
-         IF Left( oInMail:cReply, 4 ) == "250 "
+         IF hb_LeftIs( oInMail:cReply, "250 " )
             EXIT
          ENDIF
          IF ! oInMail:GetOk()

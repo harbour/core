@@ -910,9 +910,9 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
       cMemoLine := SubStr( cFile, nStart, nEnd )
 
-      IF ( Left( cMemoLine, 5 ) == "diff " .OR. ;
-           Left( cMemoLine, 4 ) == "+++ " .OR. ;
-           Left( cMemoLine, 4 ) == "--- " ) .AND. ;
+      IF ( hb_LeftIs( cMemoLine, "diff " ) .OR. ;
+           hb_LeftIs( cMemoLine, "+++ " ) .OR. ;
+           hb_LeftIs( cMemoLine, "--- " ) ) .AND. ;
          At( "\", cMemoLine ) > 0
             cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
             s_nErrors++

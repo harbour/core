@@ -76,7 +76,7 @@ FUNCTION HBObject()
 
          oClass:SetOnError( @HBObject_DftonError() )
 
-         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", ::className(), cMsg, iif( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", ::className(), cMsg, iif( hb_LeftIs( cMsg, "_" ), 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
 #if 0
          oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. )

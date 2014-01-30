@@ -2988,7 +2988,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
          aItem := { MF_POPUP, bAction:hMenu, cCaption, bAction }   /* bAction is a wvtMenu object reference */
       ELSEIF HB_ISEVALITEM( bAction )
          aItem := { MF_STRING, ::MenuItemId++, cCaption, bAction } /* bAction is a code block to execute */
-      ELSEIF Left( cCaption, 1 ) == "-"
+      ELSEIF hb_LeftIs( cCaption, "-" )
          aItem := { MF_SEPARATOR, 0, 0, NIL }
       ELSE
 #if 0

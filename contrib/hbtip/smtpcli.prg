@@ -142,7 +142,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS TIPClientSMTP
 METHOD GetOk() CLASS TIPClientSMTP
 
    ::cReply := ::inetRecvLine( ::SocketCon,, 512 )
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
+   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. hb_LeftIs( ::cReply, "5" )
       RETURN .F.
    ENDIF
 

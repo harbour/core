@@ -1385,7 +1385,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
             __dbgAlert( "Array is empty" )
          ENDIF
 
-      CASE Upper( Left( cVarStr, 5 ) ) == "CLASS"
+      CASE hb_LeftIs( Upper( cVarStr ), "CLASS" )
          __dbgObject( uVarValue, cVarName )
 
       OTHERWISE
@@ -2042,7 +2042,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
          FOR EACH n IN ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_LOCALS ]
             cName := n[ VAR_NAME ]
             m := AScan( aBVars, ; // Is there another var with this name ?
-               {| aVar | aVar[ VAR_NAME ] == cName .AND. Left( aVar[ VAR_TYPE ], 1 ) == "S" } )
+               {| aVar | aVar[ VAR_NAME ] == cName .AND. hb_LeftIs( aVar[ VAR_TYPE ], "S" ) } )
             IF m > 0
                aBVars[ m ] := n
             ELSE

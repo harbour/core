@@ -161,14 +161,14 @@ FUNCTION sprintf( ... )
                cTok := hb_ntos( iif( lUnsigned, Abs( xVal ), xVal ) )
             ENDIF
             IF l0
-               IF "-" $ cTok .AND. !( Left( cTok, 1 ) == "-" )
+               IF "-" $ cTok .AND. ! hb_LeftIs( cTok, "-" )
                   cTok := StrTran( cTok, "-", " " )
                   cTok := "-" + SubStr( cTok, 2 )
                ENDIF
                cTok := StrTran( cTok, " ", "0" )
                l0   := .F.
             ENDIF
-            IF lSign .AND. !( Left( cTok, 1 ) == "-" )
+            IF lSign .AND. ! hb_LeftIs( cTok, "-" )
                IF nLen == 0
                   cTok := "+" + cTok
                ELSE

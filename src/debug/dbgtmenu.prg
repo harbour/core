@@ -181,7 +181,7 @@ METHOD Build() CLASS HBDbMenu
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       FOR EACH oMenuItem IN ::aItems
-         IF !( Left( oMenuItem:cPrompt, 1 ) == "-" )
+         IF ! hb_LeftIs( oMenuItem:cPrompt, "-" )
             oMenuItem:cPrompt := " " + PadR( oMenuItem:cPrompt, ::nRight - ::nLeft - 1 )
          ENDIF
       NEXT

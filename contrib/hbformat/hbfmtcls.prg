@@ -155,7 +155,7 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
          RETURN Self
       ENDIF
       FOR EACH cParam IN aParams
-         IF Left( cParam, 1 ) == "@"
+         IF hb_LeftIs( cParam, "@" )
             IF ! ::ReadIni( SubStr( cParam, 2 ) )
                RETURN Self
             ENDIF
@@ -249,7 +249,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
          ENDIF
       ELSE
          cLineAll := LTrim( aFile[ i ] )
-         IF Left( cLineAll, 1 ) == "#"
+         IF hb_LeftIs( cLineAll, "#" )
             cToken1 := Lower( hb_tokenGet( cLineAll, 1 ) )
             cToken2 := Lower( hb_tokenGet( cLineAll, 2 ) )
             IF Len( cToken1 ) == 1
@@ -264,7 +264,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                ENDIF
             ENDIF
          ENDIF
-         IF Left( cLineAll, 1 ) == "*"
+         IF hb_LeftIs( cLineAll, "*" )
             nPosComment := 1
             IF ::lCnvAst
                cLineAll := "//" + SubStr( cLineAll, 2 )
@@ -299,7 +299,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                nLineSegment := 1
                DO WHILE .T.
                   nPos := nPosSep
-                  IF !( Left( aFile[ i ], 1 ) == "#" ) .AND. ;
+                  IF ! hb_LeftIs( aFile[ i ], "#" ) .AND. ;
                         ( nPosSep := FindNotQuoted( ";", aFile[ i ], nPosSep ) ) != 0 .AND. ;
                         nPosSep < Len( aFile[ i ] ) .AND. ( nPosComment == 0 .OR. nPosSep < nPosComment )
                      cLine := SubStr( aFile[ i ], nPos, nPosSep - nPos + 1 )
@@ -321,7 +321,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      cToken1 := Left( cToken1, nLenToken )
                   ENDIF
                   cToken2 := Lower( hb_tokenGet( cLine, 2 ) )
-                  IF Left( cToken1, 1 ) == "#"
+                  IF hb_LeftIs( cToken1, "#" )
                   ELSEIF nLenToken >= 4 .AND. ( ;
                         ( hb_LeftIs( "static", cToken1 ) .AND. ( hb_LeftIs( "function", cToken2 ) .OR. hb_LeftIs( "procedure", cToken2 ) ) ) .OR. ;
                         ( Len( cToken2 ) >= 4 .AND. hb_LeftIs( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
@@ -406,7 +406,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      ELSE
                         nIndent := ::nIndLeft + ::nIndNext * iif( nContrState == 0, nDeep, nDeep - 1 )
                      ENDIF
-                     IF Left( cLine, 1 ) == "#" .AND. ! ::lIndDrt
+                     IF hb_LeftIs( cLine, "#" ) .AND. ! ::lIndDrt
                         nIndent := 0
                      ENDIF
                      cLineAll := Space( nIndent ) + ::FormatLine( cLine )
@@ -494,7 +494,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
       nPos++
    ENDDO
 
-   IF ! lContinued .AND. Left( cLine, 1 ) == "#"
+   IF ! lContinued .AND. hb_LeftIs( cLine, "#" )
       IF ::lSpaces .AND. ::nSpaceDrt != -1
          cLine := Left( cLine, nPos ) + Space( ::nSpaceDrt ) + LTrim( SubStr( cLine, nPos + 1 ) )
       ENDIF
@@ -791,7 +791,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFormatCode
       IF __objHasMsg( Self, cToken1 )
          IF Empty( cToken2 )
             xRes := ""
-         ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2, 1 ) == "-" .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
+         ELSEIF IsDigit( cToken2 ) .OR. ( hb_LeftIs( cToken2, "-" ) .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
             xRes := Val( cToken2 )
          ELSE
             cTemp := Upper( cToken2 )
@@ -898,14 +898,14 @@ METHOD Array2File( cFileName, aSource ) CLASS HBFormatCode
 
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, Left( cFileName, i - 1 ) )
    IF Empty( ::cExtSave )
-      cBakName := cName + iif( Left( ::cExtBack, 1 ) == ".", "", "." ) + ::cExtBack
+      cBakName := cName + iif( hb_LeftIs( ::cExtBack, "." ), "", "." ) + ::cExtBack
       IF hb_FCopy( cFileName, cBakName ) == F_ERROR
          RETURN .F.
       ENDIF
    ENDIF
 
    IF ! Empty( ::cExtSave )
-      cFileName := cName + iif( Left( ::cExtSave, 1 ) == ".", "", "." ) + ::cExtSave
+      cFileName := cName + iif( hb_LeftIs( ::cExtSave, "." ), "", "." ) + ::cExtSave
    ENDIF
    IF ::lFCaseLow
       cPath := iif( ( i := RAt( "\", cFileName ) ) == 0, ;
