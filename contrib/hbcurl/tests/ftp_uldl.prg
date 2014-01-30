@@ -17,7 +17,6 @@ PROCEDURE Main( cDL, cUL )
    LOCAL tmp
    LOCAL tmp1
    LOCAL f
-   LOCAL a
 
    LOCAL lVerbose := .F.
 
@@ -60,7 +59,7 @@ PROCEDURE Main( cDL, cUL )
       /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
 #endif
-      ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "RNFR " + UPLOAD_FILE_AS, "RNTO " + RENAME_FILE_TO } )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
@@ -113,7 +112,7 @@ PROCEDURE Main( cDL, cUL )
       /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
 #endif
-      ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
@@ -136,7 +135,7 @@ PROCEDURE Main( cDL, cUL )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, "test_dl.bin" )
-      ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
@@ -154,7 +153,7 @@ PROCEDURE Main( cDL, cUL )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
-      ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
@@ -183,7 +182,7 @@ PROCEDURE Main( cDL, cUL )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
-      ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
@@ -200,14 +199,5 @@ PROCEDURE Main( cDL, cUL )
    ENDIF
 
    curl_global_cleanup()
-
-   RETURN
-
-STATIC FUNCTION CurGet()
-   RETURN { Row(), Col() }
-
-STATIC PROCEDURE CurSet( a )
-
-   SetPos( a[ 1 ], a[ 2 ] )
 
    RETURN

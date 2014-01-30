@@ -91,10 +91,12 @@ PROCEDURE Main()
                      hb_MemoWrit( cli_Values()[ 1 ], EntryToCommitMsg( cLog ) + hb_MemoRead( cli_Values()[ 1 ] ) )
                   ELSE
                      hbshell_gtSelect()
+#if 0
                      /* if clipboard already contains part of the entry, do not overwrite it */
                      IF ! hb_StrReplace( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 13 ) + Chr( 10 ) ) $ hb_StrReplace( cLog, Chr( 13 ) + Chr( 10 ) )
                         hb_gtInfo( HB_GTI_CLIPBOARDDATA, EntryToCommitMsg( cLog ) )
                      ENDIF
+#endif
                   ENDIF
                ENDIF
             ENDIF

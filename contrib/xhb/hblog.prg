@@ -369,7 +369,7 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
          EXIT
 
       OTHERWISE
-         cPrefix += "DEBUG" + hb_ntos( nPriority - HB_LOG_DEBUG ) +  ": "
+         cPrefix += "DEBUG" + hb_ntos( nPriority - HB_LOG_DEBUG ) + ": "
       ENDSWITCH
    ENDIF
 
@@ -471,11 +471,11 @@ METHOD New( nLevel, cFilename, nMaxSize, nBackup ) CLASS HB_LogFile
    ::Super:New( nLevel )
    ::cFileName := cFileName
 
-   IF nMaxSize != NIL
+   IF HB_ISNUMERIC( nMaxSize )
       ::nFileLimit := nMaxSize
    ENDIF
 
-   IF nBackup != NIL
+   IF HB_ISNUMERIC( nBackup )
       ::nBackup := nBackup
    ENDIF
 
