@@ -407,7 +407,7 @@ STATIC FUNCTION GitEditor()
    cValue := hb_StrReplace( cValue, Chr( 10 ) + Chr( 13 ), "" )
 
    IF Left( cValue, 1 ) == "'" .AND. Right( cValue, 1 ) == "'"
-      cValue := hb_StrShrink( SubStr( cValue, 2 ), 1 )
+      cValue := hb_StrShrink( SubStr( cValue, 2 ) )
    ENDIF
 
    IF Lower( cValue ) == "notepad.exe" /* banned, use notepad2.exe or else */
@@ -786,7 +786,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
          IF Right( cFile, 1 ) == Chr( 26 )
             AAdd( aErr, "content: has legacy EOF char" )
             IF lApplyFixes
-               cFile := hb_StrShrink( cFile, 1 )
+               cFile := hb_StrShrink( cFile )
             ENDIF
          ENDIF
 
@@ -905,7 +905,7 @@ STATIC FUNCTION IsBinary( cFile )
 STATIC FUNCTION RTrimEOL( cFile )
 
    DO WHILE Right( cFile, 1 ) $ Chr( 13 ) + Chr( 10 )
-      cFile := hb_StrShrink( cFile, 1 )
+      cFile := hb_StrShrink( cFile )
    ENDDO
 
    RETURN cFile

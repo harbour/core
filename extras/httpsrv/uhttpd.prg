@@ -1419,11 +1419,9 @@ STATIC FUNCTION DecodeStatusCode()
 
 STATIC PROCEDURE WriteToLog( cRequest )
 
-   LOCAL cTime, cDate
-   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
+   LOCAL cTime
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-   LOCAL cAccess, cError, nDoW, dDate, nDay, nMonth, nYear, nSize, cBias
-   LOCAL cErrorMsg
+   LOCAL cAccess, cError, dDate, nSize
    LOCAL cReferer
 
    IF hb_mutexLock( s_hmtxLog )
@@ -1432,14 +1430,12 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       cTime    := Time()
       dDate    := Date()
-      cDate    := DToS( dDate )
       nSize    := Len( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
-      cBias    := uhttpd_UTCOffset()
 
-      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
-         aMonths[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
-         "/" + Left( cDate, 4 ) + ":" + cTime + " " + cBias + '] "' + ;
+      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + StrZero( Day( dDate ), 2 ) + "/" + ;
+         aMonths[ Month( dDate ) ] + ;
+         "/" + StrZero( Year( dDate ), 4 ) + ":" + cTime + " " + uhttpd_UTCOffset() + '] "' + ;
          Left( cRequest, At( CR_LF, cRequest ) - 1 ) + '" ' + ;
          hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
          ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
@@ -1449,17 +1445,15 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       FWrite( s_hfileLogAccess, cAccess )
 
-      IF !( t_nStatusCode == 200 ) // ok
+      IF t_nStatusCode != 200  // ok
 
-         nDoW   := DoW( dDate )
-         nDay   := Day( dDate )
-         nMonth := Month( dDate )
-         nYear  := Year( dDate )
-         cErrorMsg := t_cErrorMsg
-
-         cError := "[" + Left( aDays[ nDoW ], 3 ) + " " + aMonths[ nMonth ] + " " + StrZero( nDay, 2 ) + " " + ;
-            PadL( LTrim( cTime ), 8, "0" ) + " " + StrZero( nYear, 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
-            cErrorMsg + hb_eol()
+         cError := "[" + ;
+            { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + " " + ;
+            aMonths[ Month( dDate ) ] + " " + ;
+            StrZero( Day( dDate ), 2 ) + " " + ;
+            PadL( LTrim( cTime ), 8, "0" ) + " " + ;
+            StrZero( Year( dDate ), 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
+            t_cErrorMsg + hb_eol()
 
          // hb_ToOutDebug( "ErrorLog: %s \n\r", cError )
 
