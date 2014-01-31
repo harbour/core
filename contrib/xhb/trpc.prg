@@ -1551,11 +1551,11 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS TRPCService
    RETURN NIL
 
 /* Default authorization will ALWAYS return 1 if a bAuthorize block is not provided */
-/* IF cPassword is NIL, must return the level of the given userid */
+/* If cPassword is NIL, must return the level of the given userid */
 
 METHOD Authorize( cUserid, cPassword ) CLASS TRPCService
 
-   IF ::bAuthorize != NIL
+   IF HB_ISEVALITEM( ::bAuthorize )
       RETURN Eval( ::bAuthorize, cUserid, cPassword )
    ENDIF
 
@@ -1565,7 +1565,7 @@ METHOD Authorize( cUserid, cPassword ) CLASS TRPCService
 
 METHOD GetEncryption( cUserId ) CLASS TRPCService
 
-   IF ::bGetEncryption != NIL
+   IF HB_ISEVALITEM( ::bGetEncryption )
       RETURN Eval( ::bGetEncryption, cUserId )
    ENDIF
 
@@ -1573,7 +1573,7 @@ METHOD GetEncryption( cUserId ) CLASS TRPCService
 
 METHOD OnFunctionScan() CLASS TRPCService
 
-   IF ::bOnFunctionScan != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionScan )
       RETURN Eval( ::bOnFunctionScan, Self )
    ENDIF
 
@@ -1581,7 +1581,7 @@ METHOD OnFunctionScan() CLASS TRPCService
 
 METHOD OnServerScan() CLASS TRPCService
 
-   IF ::bOnServerScan != NIL
+   IF HB_ISEVALITEM( ::bOnServerScan )
       RETURN Eval( ::bOnServerScan, Self )
    ENDIF
 
@@ -1589,7 +1589,7 @@ METHOD OnServerScan() CLASS TRPCService
 
 METHOD OnClientConnect( oClient ) CLASS TRPCService
 
-   IF ::bOnClientConnect != NIL
+   IF HB_ISEVALITEM( ::bOnClientConnect )
       RETURN Eval( ::bOnClientConnect, oClient )
    ENDIF
 
@@ -1597,7 +1597,7 @@ METHOD OnClientConnect( oClient ) CLASS TRPCService
 
 METHOD OnClientLogin( oClient ) CLASS TRPCService
 
-   IF ::bOnClientLogin != NIL
+   IF HB_ISEVALITEM( ::bOnClientLogin )
       Eval( ::bOnClientLogin, oClient )
    ENDIF
 
@@ -1605,7 +1605,7 @@ METHOD OnClientLogin( oClient ) CLASS TRPCService
 
 METHOD OnClientRequest( oClient, nRequest, cData ) CLASS TRPCService
 
-   IF ::bOnClientRequest != NIL
+   IF HB_ISEVALITEM( ::bOnClientRequest )
       RETURN Eval( ::bOnClientRequest, oClient, nRequest, cData )
    ENDIF
 
@@ -1613,7 +1613,7 @@ METHOD OnClientRequest( oClient, nRequest, cData ) CLASS TRPCService
 
 METHOD OnFunctionProgress( oClient, nProgress, aData ) CLASS TRPCService
 
-   IF ::bOnFunctionProgress != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionProgress )
       RETURN Eval( ::bOnFunctionProgress, oClient, nProgress, aData )
    ENDIF
 
@@ -1621,7 +1621,7 @@ METHOD OnFunctionProgress( oClient, nProgress, aData ) CLASS TRPCService
 
 METHOD OnFunctionError( oClient, cFunction, nError ) CLASS TRPCService
 
-   IF ::bOnFunctionError != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionError )
       RETURN Eval( ::bOnFunctionError, oClient, cFunction, nError )
    ENDIF
 
@@ -1629,7 +1629,7 @@ METHOD OnFunctionError( oClient, cFunction, nError ) CLASS TRPCService
 
 METHOD OnFunctionReturn( oClient, aData ) CLASS TRPCService
 
-   IF ::bOnFunctionReturn != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionReturn )
       RETURN Eval( ::bOnFunctionReturn, oClient, aData )
    ENDIF
 
@@ -1637,7 +1637,7 @@ METHOD OnFunctionReturn( oClient, aData ) CLASS TRPCService
 
 METHOD OnFunctionCanceled( oClient, cFuncName ) CLASS TRPCService
 
-   IF ::bOnFunctionCanceled != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionCanceled )
       RETURN Eval( ::bOnFunctionCanceled, oClient, cFuncName )
    ENDIF
 
@@ -1645,7 +1645,7 @@ METHOD OnFunctionCanceled( oClient, cFuncName ) CLASS TRPCService
 
 METHOD OnClientLogout( oClient ) CLASS TRPCService
 
-   IF ::bOnClientLogout != NIL
+   IF HB_ISEVALITEM( ::bOnClientLogout )
       RETURN Eval( ::bOnClientLogout, oClient )
    ENDIF
 
@@ -1653,7 +1653,7 @@ METHOD OnClientLogout( oClient ) CLASS TRPCService
 
 METHOD OnClientTerminate( oClient ) CLASS TRPCService
 
-   IF ::bOnClientTerminate != NIL
+   IF HB_ISEVALITEM( ::bOnClientTerminate )
       RETURN Eval( ::bOnClientTerminate, oClient )
    ENDIF
 

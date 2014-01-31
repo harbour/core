@@ -19,14 +19,24 @@
 
 #ifdef __CLIPPER__
    #ifndef __PLATFORM__DOS
-   #define __PLATFORM__DOS
+      #define __PLATFORM__DOS
+   #endif
+   #ifndef __ARCH16BIT__
+      #define __ARCH16BIT__
+   #endif
+   #ifndef __LITTLE_ENDIAN__
+      #define __LITTLE_ENDIAN__
    #endif
 #endif
 
 #xtranslate hb_eol()                       => ( Chr( 13 ) + Chr( 10 ) )
 #xtranslate hb_ps()                        => "\"
-#xtranslate hb_osFileMask()                => "*.*"
 #xtranslate hb_run( <c> )                  => __Run( <c> )
+#xtranslate hb_osFileMask()                => "*.*"
+#xtranslate hb_osDriveSeparator()          => ":"
+#xtranslate hb_osError()                   => DOSError()
+#xtranslate hb_osPathDelimiters()          => "\:"
+#xtranslate hb_osPathListSeparator()       => ";"
 
 #xtranslate hb_MemoRead( <x> )             => MemoRead( <x> )
 #xtranslate hb_MemoWrit( [<x,...>] )       => MemoWrit( <x> )
@@ -35,6 +45,12 @@
 
 #xtranslate hb_dbExists( <t> )             => File( <t> )
 #xtranslate hb_dbDrop( <t> )               => FErase( <t> )
+#xtranslate hb_dbZap()                     => __dbZap()
+#xtranslate hb_dbPack()                    => __dbPack()
+
+#xtranslate hb_default( @<v>, <x> )        => iif( StrTran( ValType( <v> ), "M", "C" ) == StrTran( ValType( <x> ), "M", "C" ),, <v> := <x>, )
+#xtranslate hb_defaultValue( <v>, <x> )    => iif( StrTran( ValType( <v> ), "M", "C" ) == StrTran( ValType( <x> ), "M", "C" ), <v>, <x> )
+#xtranslate __defaultNIL( <v>, <x> )       => iif( <v> == NIL, <x>, <v> )
 
 #xtranslate HB_ISSTRING( <v> )             => ( ValType( <v> ) $ "CM" )
 #xtranslate HB_ISNUMERIC( <v> )            => ( ValType( <v> ) == "N" )
@@ -47,7 +63,9 @@
 #xtranslate HB_ISCHAR( <v> )               => ( ValType( <v> ) == "C" )
 #xtranslate HB_ISMEMO( <v> )               => ( ValType( <v> ) == "M" )
 
-#xtranslate hb_LeftIs( l, r )              ( Left( l, Len( r ) ) == r )
+#xtranslate hb_LeftIs( <l>, <r> )          => ( Left( <l>, Len( <r> ) ) == <r> )
+#xtranslate hb_StrShrink( <l> )            => Left( <l>, Len( <l> ) - 1 )
+#xtranslate hb_StrShrink( <l>, <r> )       => Left( <l>, Len( <l> ) - <r> )
 
 #xtranslate hb_keyStd( <n> )               => ( n )
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )

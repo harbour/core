@@ -87,8 +87,8 @@ PROCEDURE Main( ... )
       WRITE "</td></tr>"
       WRITE "<tr><td align='center'>"
       WRITE "<img src='test_out.exe?img=" + cPhoto + ;
-         iif( nWidth != NIL, "&width="  + hb_ntos( nWidth ), "" ) + ;
-         iif( nHeight != NIL, "&height=" + hb_ntos( nHeight ), "" ) + ;
+         iif( HB_ISNUMERIC( nWidth ), "&width="  + hb_ntos( nWidth ), "" ) + ;
+         iif( HB_ISNUMERIC( nHeight ), "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br />"
       WRITE "</td></tr>"
       WRITE "<tr><td align='center'>"
@@ -136,15 +136,16 @@ STATIC PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    LOCAL oImage := GDImage():LoadFromFile( cPhoto )
 
-   IF nWidth != NIL .AND. nHeight != NIL
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth ) .AND. HB_ISNUMERIC( nHeight )
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth != NIL .AND. nHeight == NIL
+   CASE HB_ISNUMERIC( nWidth ) .AND. ! HB_ISNUMERIC( nHeight )
       nHeight := oImage:Height() * ( nWidth / oImage:Width() )
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth == NIL .AND. nHeight != NIL
+   CASE ! HB_ISNUMERIC( nWidth ) .AND. HB_ISNUMERIC( nHeight )
       nWidth := oImage:Width() * ( nHeight / oImage:Height() )
       oImage:Resize( nWidth, nHeight )
-   ENDIF
+   ENDCASE
 
 #if 0
    __OutDebug( hb_DumpVar( oImage ) )

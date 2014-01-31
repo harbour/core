@@ -263,9 +263,7 @@ METHOD CheckServer( cRemote )
    LOCAL cData, skRemote, nLen, cData2
 
    cData := "XHBR00"
-   IF cRemote == NIL
-      cRemote := ::cNetwork
-   ENDIF
+   __defaultNIL( @cRemote, ::cNetwork )
    skRemote := hb_inetConnect( cRemote, ::nTcpPort )
    IF hb_inetErrorCode( skRemote ) == 0
       hb_inetTimeout( skRemote, 10000 )
@@ -1032,7 +1030,7 @@ METHOD Decrypt( cDataIn ) CLASS TRPCClient
 
 METHOD OnScanComplete() CLASS TRPCClient
 
-   IF ::bOnScanComplete != NIL
+   IF HB_ISEVALITEM( ::bOnScanComplete )
       RETURN Eval( ::bOnScanComplete )
    ENDIF
 
@@ -1040,7 +1038,7 @@ METHOD OnScanComplete() CLASS TRPCClient
 
 METHOD OnScanServersProgress( aLoc ) CLASS TRPCClient
 
-   IF ::bOnScanServersProgress != NIL
+   IF HB_ISEVALITEM( ::bOnScanServersProgress )
       RETURN Eval( ::bOnScanServersProgress, aLoc )
    ENDIF
 
@@ -1048,7 +1046,7 @@ METHOD OnScanServersProgress( aLoc ) CLASS TRPCClient
 
 METHOD OnScanFunctionsProgress( aLoc ) CLASS TRPCClient
 
-   IF ::bOnScanFunctionsProgress != NIL
+   IF HB_ISEVALITEM( ::bOnScanFunctionsProgress )
       RETURN Eval( ::bOnScanFunctionsProgress, aLoc )
    ENDIF
 
@@ -1056,7 +1054,7 @@ METHOD OnScanFunctionsProgress( aLoc ) CLASS TRPCClient
 
 METHOD OnFunctionFail( nReason, cReason ) CLASS TRPCClient
 
-   IF ::bOnFunctionFail != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionFail )
       RETURN Eval( ::bOnFunctionFail, nReason, cReason )
    ENDIF
 
@@ -1064,7 +1062,7 @@ METHOD OnFunctionFail( nReason, cReason ) CLASS TRPCClient
 
 METHOD OnFunctionReturn( oReturn ) CLASS TRPCClient
 
-   IF ::bOnFunctionReturn != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionReturn )
       RETURN Eval( ::bOnFunctionReturn, oReturn )
    ENDIF
 
@@ -1072,7 +1070,7 @@ METHOD OnFunctionReturn( oReturn ) CLASS TRPCClient
 
 METHOD OnFunctionProgress( nProgress, oData ) CLASS TRPCClient
 
-   IF ::bOnFunctionProgress != NIL
+   IF HB_ISEVALITEM( ::bOnFunctionProgress )
       RETURN Eval( ::bOnFunctionProgress, nProgress, oData )
    ENDIF
 

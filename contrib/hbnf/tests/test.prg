@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    HBTEST ft_Easter( 1990 ) IS 0d19900415
 
-   HBTEST ft_ElapMin( "1718", "2040" ) IS  202
+   HBTEST ft_ElapMin( "1718", "2040" ) IS 202
    HBTEST ft_ElapMin( "2040", "1718" ) IS -202
 
    HBTEST ft_ElTime( "22:40:12", "23:55:17" ) IS "01:15:05"

@@ -688,7 +688,7 @@ CREATE CLASS HBTable
 
    METHOD dbFilter() INLINE ( ::Alias )->( dbFilter() )
    METHOD SetFilter( c ) INLINE ;
-      iif( c != NIL, ( ::Alias )->( dbSetFilter( hb_macroBlock( c ), c ) ), ;
+      iif( HB_ISSTRING( c ), ( ::Alias )->( dbSetFilter( hb_macroBlock( c ), c ) ), ;
       ( ::Alias )->( dbClearFilter() ) )
 
    METHOD AddChild( oChild, cKey )
@@ -750,7 +750,7 @@ METHOD Open() CLASS HBTable
 
    Select( ::Alias )
    ::Area := Select()
-   IF ::cOrderBag != NIL .AND. hb_dbExists( ::cPath + ::cOrderFile )
+   IF HB_ISSTRING( ::cOrderBag ) .AND. hb_dbExists( ::cPath + ::cOrderFile )
 
       SET INDEX TO ( ::cPath + ::cOrderBag )
       ( ::Alias )->( ordSetFocus( 1 ) )
@@ -846,7 +846,7 @@ METHOD FldInit() CLASS HBTable
 
    oNew:Read()
 
-   IF oNew:cOrderBag != NIL .AND. hb_dbExists( oNew:cPath + oNew:cOrderFile )
+   IF HB_ISSTRING( oNew:cOrderBag ) .AND. hb_dbExists( oNew:cPath + oNew:cOrderFile )
       SET INDEX TO ( oNew:cPath + oNew:cOrderBag )
       ( oNew:Alias )->( ordSetFocus( 1 ) )
    ENDIF
@@ -972,7 +972,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
    LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
    LOCAL Buffer
 
-   __defaultNIL( @aBuffer, ::Buffer )
+   hb_default( @aBuffer, ::Buffer )
 
    IF ::isNet .AND. !( ::Alias )->( NetRecLock() )
       RETURN .F.

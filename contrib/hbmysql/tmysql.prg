@@ -1403,10 +1403,10 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
       ENDSWITCH
    NEXT
 
-   IF cPrimarykey != NIL
+   IF HB_ISSTRING( cPrimarykey )
       ::cCreateQuery += " PRIMARY KEY (" + cPrimaryKey + "),"
    ENDIF
-   IF cUniquekey != NIL
+   IF HB_ISSTRING( cUniquekey )
       ::cCreateQuery += " UNIQUE " + cUniquekey + " (" + cUniqueKey + "),"
    ENDIF
 
@@ -1426,18 +1426,13 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    LOCAL cCreateQuery := "CREATE "
    LOCAL i
 
-   hb_default( @lUnique, .F. )
-
-   IF lUnique
-      cCreateQuery += "UNIQUE INDEX "
-   ELSE
-      cCreateQuery += "INDEX "
+   IF hb_defaultValue( lUnique, .F. )
+      cCreateQuery += "UNIQUE "
    ENDIF
+   cCreateQuery += "INDEX " + cName + " ON " + Lower( cTable ) + " ("
 
-   cCreateQuery += cName + " ON " + Lower( cTable ) + " ("
-
-   FOR i := 1 TO Len( aFNames )
-      cCreateQuery += aFNames[ i ] + ","
+   FOR EACH i IN aFNames
+      cCreateQuery += i + ","
    NEXT
 
    // remove last comma from list

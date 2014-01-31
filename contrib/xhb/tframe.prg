@@ -60,6 +60,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
+#include "fileio.ch"
 
 CREATE CLASS THtmlFrameSet
 
@@ -70,27 +71,20 @@ CREATE CLASS THtmlFrameSet
    VAR TITLE INIT "FrameSet01"
 
    METHOD New( cFName, cTitle )
-
    METHOD StartSet( aRows, aCols, onLoad, onUnload )
-
    METHOD EndSet()
-
    METHOD End()
-
    METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling )
 
 ENDCLASS
 
-
 METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   hb_default( @cTitle, "" )
-
    ::FName := cFName
-   ::Title := cTitle
+   ::Title := hb_defaultValue( cTitle, "" )
 
    IF HB_ISSTRING( ::FName )
       cStr := ""
@@ -158,34 +152,31 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    RETURN Self
 
-
 METHOD Endset() CLASS THtmlFrameSet
 
    ::cStr += " </frameset>" + CRLF()
 
    RETURN Self
 
-
 METHOD End() CLASS THtmlFrameSet
 
    ::cStr += "</html>" + CRLF()
 
-   FWrite( ::nH, ::cStr )
+   IF ::nH != F_ERROR
+      FWrite( ::nH, ::cStr )
 
-   IF ::FName != NIL
-      FClose( ::nH )
+      IF HB_ISSTRING( ::FName )
+         FClose( ::nH )
+      ENDIF
    ENDIF
 
    RETURN Self
-
 
 METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @lScrolling, .F. )
-   __defaultNIL( @cScrolling, "AUTO" )
    __defaultNIL( @cTarget, "_self" )
 
    cStr := "  <frame "
@@ -214,7 +205,7 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
 
    IF HB_ISSTRING( cScrolling )
       cStr += ' scrolling="' + cScrolling + '"'
-   ELSEIF lScrolling != NIL
+   ELSEIF HB_ISLOGICAL( lScrolling )
       cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
    ELSE
       cStr += ' scrolling="auto"'

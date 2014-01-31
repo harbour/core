@@ -462,8 +462,6 @@ METHOD GetDocumentProperties() CLASS win_Prn
 // If nDiv is < 0 then Fixed width printing is forced via ExtTextOut()
 METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet, lManualSize ) CLASS win_Prn
 
-   LOCAL cType
-
    IF cFontName != NIL
       ::FontName := cFontName
    ENDIF
@@ -471,10 +469,9 @@ METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nChar
       ::FontPointSize := nPointSize
    ENDIF
    IF xWidth != NIL
-      cType := ValType( xWidth )
-      IF cType == "A"
+      IF HB_ISARRAY( xWidth )
          ::FontWidth := xWidth
-      ELSEIF cType == "N" .AND. ! Empty( xWidth )
+      ELSEIF HB_ISNUMERIC( xWidth ) .AND. xWidth != 0
          ::FontWidth := { 1, xWidth }
       ELSE
          ::FontWidth := { 0, 0 }
@@ -671,7 +668,6 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
    LOCAL lResult
    LOCAL nDiv := 0
-   LOCAL cType
    LOCAL hFont
 
    IF ::CheckPage()
@@ -681,11 +677,10 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       ENDIF
 
       IF cFont != NIL
-         cType := ValType( nWidth )
-         IF cType == "A"
+         IF HB_ISARRAY( nWidth )
             nDiv   := nWidth[ 1 ]
             nWidth := nWidth[ 2 ]
-         ELSEIF cType == "N" .AND. ! Empty( nWidth )
+         ELSEIF HB_ISNUMERIC( nWidth ) .AND. nWidth != 0
             nDiv := 1
          ENDIF
          hFont := ::hFont

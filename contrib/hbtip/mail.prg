@@ -394,7 +394,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
       nPos := nLinePos + 2
       nLinePos := hb_At( e"\r\n", cMail, nPos )
       // Prevents malformed body to affect us
-      IF cBoundary != NIL .AND. hb_At( "--" + cBoundary, cMail, nPos ) == 1
+      IF HB_ISSTRING( cBoundary ) .AND. hb_At( "--" + cBoundary, cMail, nPos ) == 1
          RETURN 0
       ENDIF
    ENDDO
@@ -428,13 +428,12 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
       ENDIF
 
       // have we met the boundary?
-      IF cBoundary != NIL .AND. hb_At( "--" + cBoundary, cMail, nPos ) == nPos
+      IF HB_ISSTRING( cBoundary ) .AND. hb_At( "--" + cBoundary, cMail, nPos ) == nPos
          EXIT
       ENDIF
 
       // Have we met a section?
-      IF cSubBoundary != NIL .AND. ;
-         hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
+      IF HB_ISSTRING( cSubBoundary ) .AND. hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
 
          // is it the last subsection?
          IF hb_At( "--", cMail, nPos + Len( cSubBoundary ) + 2, nLinePos ) > 0

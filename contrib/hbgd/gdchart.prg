@@ -184,11 +184,7 @@ METHOD PieChart() CLASS GDChart
       lFilled   := __HGetValue( hElement, "FILLED" )
       pTile     := __HGetValue( hElement, "TILE" )
       nExtrude  := __HGetValue( hElement, "EXTRUDE" )
-      IF nExtrude != NIL
-         lExtruded := .T.
-      ELSE
-         lExtruded := .F.
-      ENDIF
+      lExtruded := ( nExtrude != NIL )
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := 360 * ( ( nVal / nTot ) * 100 ) / 100
@@ -404,11 +400,7 @@ METHOD VerticalBarChart() CLASS GDChart
       pTile     := __HGetValue( hElement, "TILE" )
 #if 0
       nExtrude  := __HGetValue( hElement, "EXTRUDE" )
-      IF nExtrude != NIL
-         lExtruded := .T.
-      ELSE
-         lExtruded := .F.
-      ENDIF
+      lExtruded := ( nExtrude != NIL )
 #endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
@@ -596,11 +588,7 @@ METHOD HorizontalBarChart() CLASS GDChart
       pTile     := __HGetValue( hElement, "TILE" )
 #if 0
       nExtrude  := __HGetValue( hElement, "EXTRUDE" )
-      IF nExtrude != NIL
-         lExtruded := .T.
-      ELSE
-         lExtruded := .F.
-      ENDIF
+      lExtruded := ( nExtrude != NIL )
 #endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
@@ -826,11 +814,7 @@ METHOD LineChart() CLASS GDChart
       pTile     := __HGetValue( hElement, "TILE" )
 #if 0
       nExtrude  := __HGetValue( hElement, "EXTRUDE" )
-      IF nExtrude != NIL
-         lExtruded := .T.
-      ELSE
-         lExtruded := .F.
-      ENDIF
+      lExtruded := ( nExtrude != NIL )
 #endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
