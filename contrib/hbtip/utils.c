@@ -258,7 +258,9 @@ typedef struct tag_mime_ext
    const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  317
+#define EXT_MIME_TABLE_SIZE  318
+
+/* https://www.iana.org/assignments/media-types/media-types.xhtml */
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
@@ -365,6 +367,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "hxx"     , MIME_FLAG_CASEINSENS, "text/x-c" },
    { "ica"     , MIME_FLAG_CASEINSENS, "application/x-ica" },
    { "ico"     , MIME_FLAG_CASEINSENS, "image/x-icon" },
+   { "ics"     , MIME_FLAG_CASEINSENS, "text/calendar" },
    { "ief"     , MIME_FLAG_CASEINSENS, "image/ief" },
    { "img"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "ins"     , MIME_FLAG_CASEINSENS, "application/x-NET-Install" },
