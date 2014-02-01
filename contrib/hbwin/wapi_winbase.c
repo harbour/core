@@ -398,8 +398,8 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    {
       HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
       if( hModule )
-        s_getPathNameAddr = ( _HB_GETPATHNAME )
-           HB_WINAPI_GETPROCADDRESST( hModule, "GetLongPathName" );
+         s_getPathNameAddr = ( _HB_GETPATHNAME )
+            HB_WINAPI_GETPROCADDRESST( hModule, "GetLongPathName" );
 
       if( ! s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;
