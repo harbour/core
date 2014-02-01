@@ -79,7 +79,7 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pCreateHardLink = ( _HB_CREATEHARDLINK )
-                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "CreateHardLink" ) );
+                  HB_WINAPI_GETPROCADDRESST( hModule, "CreateHardLink" );
          }
 
          if( s_pCreateHardLink )
@@ -163,7 +163,7 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pCreateSymbolicLink = ( _HB_CREATESYMBOLICLINK )
-                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "CreateSymbolicLink" ) );
+                  HB_WINAPI_GETPROCADDRESST( hModule, "CreateSymbolicLink" );
          }
 
          if( s_pCreateSymbolicLink )
@@ -269,7 +269,7 @@ char * hb_fsLinkRead( const char * pszFile )
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE )
-                  GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "GetFinalPathNameByHandle" ) );
+                  HB_WINAPI_GETPROCADDRESST( hModule, "GetFinalPathNameByHandle" );
          }
 
          if( s_pGetFinalPathNameByHandle )

@@ -84,6 +84,7 @@
 #  if ! defined( __TINYC__ )
 #     include <tlhelp32.h>
 #  endif
+#  include "hbwinuni.h"
 #  if defined( HB_OS_WIN_CE )
 #     include "hbwince.h"
 #  endif
@@ -374,9 +375,9 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
          typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
 
-         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hToolhelp, "CreateToolhelp32Snapshot" );
-         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hToolhelp, "Module32First" );
-         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hToolhelp, "Module32Next" );
+         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "CreateToolhelp32Snapshot" );
+         P_M32F     pModule32First            = ( P_M32F     ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "Module32First" );
+         P_M32N     pModule32Next             = ( P_M32N     ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "Module32Next" );
 
          if( pCreateToolhelp32Snapshot &&
              pModule32First &&

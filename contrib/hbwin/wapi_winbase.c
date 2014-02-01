@@ -229,9 +229,20 @@ HB_FUNC( WAPI_GETPROCADDRESS )
 {
    FARPROC pProc;
    DWORD dwLastError;
-   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
-                           hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+#if defined( HB_OS_WIN_CE )
+   void * hProcName;
+   LPCTSTR lpProcName = HB_PARSTR( 2, &hProcName, NULL );
+   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
+                           lpProcName ? lpProcName :
+                           ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
+   hb_strfree( hProcName );
+#else
+   pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
+                           HB_ISCHAR( 2 ) ? hb_parc( 2 ) :
+                           ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+   dwLastError = GetLastError();
+#endif
    hbwapi_SetLastError( dwLastError );
    hb_retptr( ( void * ) ( HB_PTRDIFF ) pProc );
 }
@@ -381,8 +392,8 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    {
       s_getPathNameAddr =
          ( _HB_GETPATHNAME )
-            GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
-                            HB_WINAPI_FUNCTION_NAME( "GetLongPathName" ) );
+            HB_WINAPI_GETPROCADDRESST( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
+                                       "GetLongPathName" );
 
       if( ! s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;

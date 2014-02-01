@@ -54,12 +54,6 @@
 
 #include <windows.h>
 
-/* use ASCII version of GetProcAddress() to keep the same code for desktop
- * windows and WinCE/Mobile. It's supported by WinCE 3.0 and later versions.
- */
-#undef  GetProcAddress
-#define GetProcAddress  GetProcAddressA
-
 HB_EXTERN_BEGIN
 
 #if defined( _MSC_VER )

@@ -3123,10 +3123,12 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
  */
 #if 0
 #ifdef MONITOR_DEFAULTTONEAREST
-   pMonitorFromWindow = ( P_MFW ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                                  "MonitorFromWindow" );
-   pGetMonitorInfo = ( P_GMI ) GetProcAddress( GetModuleHandle( TEXT( "user32.dll" ) ),
-                                               "GetMonitorInfo" );
+   pMonitorFromWindow = ( P_MFW )
+      HB_WINAPI_GETPROCADDRESS( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                "MonitorFromWindow" );
+   pGetMonitorInfo = ( P_GMI )
+      HB_WINAPI_GETPROCADDRESS( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                "GetMonitorInfo" );
 
    if( pMonitorFromWindow && pGetMonitorInfo )
    {

@@ -109,8 +109,8 @@ HB_BOOL hb_oleAxInit( void )
          s_hLib = NULL;
          return HB_FALSE;
       }
-      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, "AtlAxWinInit" );
-      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, "AtlAxGetControl" );
+      pAtlAxWinInit      = ( PHB_AX_WININIT ) HB_WINAPI_GETPROCADDRESS( s_hLib, "AtlAxWinInit" );
+      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) HB_WINAPI_GETPROCADDRESS( s_hLib, "AtlAxGetControl" );
 
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();

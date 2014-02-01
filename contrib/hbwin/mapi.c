@@ -93,7 +93,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
 #endif
             ) ) >= ( HINSTANCE ) 32 )
    {
-      LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiDll, "MAPISendMail" );
+      LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) HB_WINAPI_GETPROCADDRESS( hMapiDll, "MAPISendMail" );
 
       if( MAPISendMail )
       {

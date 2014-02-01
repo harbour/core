@@ -87,7 +87,7 @@ HB_FUNC( WAPI_ISUSERANADMIN )
    {
       typedef int ( WINAPI * ISUSERANADMIN )( void );
       ISUSERANADMIN pIsUserAnAdmin = ( ISUSERANADMIN )
-                                     GetProcAddress( hLib, "IsUserAnAdmin" );
+                                     HB_WINAPI_GETPROCADDRESS( hLib, "IsUserAnAdmin" );
       if( pIsUserAnAdmin )
          bResult = ( pIsUserAnAdmin )();
 

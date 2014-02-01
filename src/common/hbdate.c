@@ -77,6 +77,7 @@
 #  include <sys/time.h>
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
+#  include "hbwinuni.h"
 #  if defined( HB_OS_WIN_CE )
 #    include "hbwince.h"
 #  endif
@@ -960,7 +961,7 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
          HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
          if( hModule )
             s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME )
-               GetProcAddress( hModule, "TzSpecificLocalTimeToSystemTime" );
+               HB_WINAPI_GETPROCADDRESS( hModule, "TzSpecificLocalTimeToSystemTime" );
          s_fInit = HB_FALSE;
       }
 

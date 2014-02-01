@@ -1036,7 +1036,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
    h = GetModuleHandle( TEXT( "user32.dll" ) );
    if( h )
    {
-      pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+      pfnLayered = ( wvtSetLayeredWindowAttributes ) HB_WINAPI_GETPROCADDRESS( h, "SetLayeredWindowAttributes" );
       if( pfnLayered )
       {
          HWND     hWnd = hbwapi_par_raw_HWND( 1 );
