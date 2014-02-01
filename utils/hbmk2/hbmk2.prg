@@ -16067,7 +16067,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                   ENDIF
                   EXIT
                CASE "Include"
-                  FOR EACH tmp IN aValue
+                  FOR EACH tmp IN hb_ATokens( cValue, ";" )
                      IF !( "%HB_INSTALL%\" $ tmp )
                         IF hb_LeftIs( tmp, "-I" )
                            tmp := SubStr( tmp, 2 + 1 )
