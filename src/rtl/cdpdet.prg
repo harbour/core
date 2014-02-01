@@ -74,7 +74,7 @@ FUNCTION hb_cdpTerm()
    cLang := NIL
 #endif
 
-   IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
+   IF ! Empty( cCP := __CPStdToHb( cCP, cLang ) )
       RETURN cCP
    ENDIF
 
@@ -106,7 +106,7 @@ FUNCTION hb_cdpOS()
    cLang := NIL
 #endif
 
-   IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
+   IF ! Empty( cCP := __CPStdToHb( cCP, cLang ) )
       RETURN cCP
    ENDIF
 
@@ -218,7 +218,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
    RETURN ""
 #endif
 
-STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
+STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
 
    LOCAL cCP
    LOCAL cCtryHb

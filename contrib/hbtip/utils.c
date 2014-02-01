@@ -258,7 +258,7 @@ typedef struct tag_mime_ext
    const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  318
+#define EXT_MIME_TABLE_SIZE  325
 
 /* https://www.iana.org/assignments/media-types/media-types.xhtml */
 
@@ -294,6 +294,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "bcpio"   , MIME_FLAG_CASEINSENS, "application/x-bcpio" },
    { "bin"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "bmp"     , MIME_FLAG_CASEINSENS, "image/x-ms-bmp" },
+   { "bz2"     , MIME_FLAG_CASEINSENS, "application/x-bzip2" },
    { "c"       , MIME_FLAG_CASEINSENS, "text/x-c" },
    { "c++"     , MIME_FLAG_CASEINSENS, "text/x-c" },
    { "cco"     , MIME_FLAG_CASEINSENS, "application/x-cocoa" },
@@ -323,6 +324,8 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "der"     , MIME_FLAG_CASEINSENS, "application/x-x509-ca-cert" },
    { "dig"     , MIME_FLAG_CASEINSENS, "multipart/mixed" },
    { "dir"     , MIME_FLAG_CASEINSENS, "application/x-director" },
+   { "djv"     , MIME_FLAG_CASEINSENS, "image/vnd.djvu" },
+   { "djvu"    , MIME_FLAG_CASEINSENS, "image/vnd.djvu" },
    { "dll"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "dmg"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "doc"     , MIME_FLAG_CASEINSENS, "application/msword" },
@@ -390,6 +393,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "kmz"     , MIME_FLAG_CASEINSENS, "application/vnd.google-earth.kmz" },
    { "latex"   , MIME_FLAG_CASEINSENS, "application/x-latex" },
    { "lha"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "log"     , MIME_FLAG_CASEINSENS, "text/plain" },
    { "lzh"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "lzx"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
    { "m3u"     , MIME_FLAG_CASEINSENS, "audio/x-mpegurl" },
@@ -397,9 +401,10 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "m4v"     , MIME_FLAG_CASEINSENS, "video/x-m4v" },
    { "man"     , MIME_FLAG_CASEINSENS, "application/x-troff-man" },
    { "map"     , MIME_FLAG_CASEINSENS, "application/x-httpd-imap" },
+   { "markdown", MIME_FLAG_CASEINSENS, "text/x-markdown" },
    { "mbd"     , MIME_FLAG_CASEINSENS, "application/mbedlet" },
    { "mcf"     , MIME_FLAG_CASEINSENS, "image/vasa" },
-   { "md"      , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "md"      , MIME_FLAG_CASEINSENS, "text/x-markdown" },
    { "me"      , MIME_FLAG_CASEINSENS, "application/x-troff-me" },
    { "mfp"     , MIME_FLAG_CASEINSENS, "application/mirage" },
    { "mid"     , MIME_FLAG_CASEINSENS, "audio/midi" },
@@ -460,7 +465,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "ppm"     , MIME_FLAG_CASEINSENS, "image/x-portable-pixmap" },
    { "pps"     , MIME_FLAG_CASEINSENS, "application/mspowerpoint" },
    { "ppsx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.presentationml.slideshow" },
-   { "ppt"     , MIME_FLAG_CASEINSENS, "application/vnd.ms-powerpoint" },
+   { "ppt"     , MIME_FLAG_CASEINSENS, "application/powerpoint" },
    { "pptx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
    { "ppz"     , MIME_FLAG_CASEINSENS, "application/mspowerpoint" },
    { "pqf"     , MIME_FLAG_CASEINSENS, "application/x-cprplayer" },
@@ -486,7 +491,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "rss"     , MIME_FLAG_CASEINSENS, "application/rss+xml" },
    { "rst"     , MIME_FLAG_CASEINSENS, "text/plain" },
    { "rtc"     , MIME_FLAG_CASEINSENS, "application/rtc" },
-   { "rtf"     , MIME_FLAG_CASEINSENS, "application/rtf" },
+   { "rtf"     , MIME_FLAG_CASEINSENS, "text/rtf" },
    { "rtx"     , MIME_FLAG_CASEINSENS, "text/richtext" },
    { "run"     , MIME_FLAG_CASEINSENS, "application/x-makeself" },
    { "sca"     , MIME_FLAG_CASEINSENS, "application/x-supercard" },
@@ -523,6 +528,8 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "tex"     , MIME_FLAG_CASEINSENS, "application/x-tex" },
    { "texi"    , MIME_FLAG_CASEINSENS, "application/x-texinfo" },
    { "texinfo" , MIME_FLAG_CASEINSENS, "application/x-texinfo" },
+   { "text"    , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "tgz"     , MIME_FLAG_CASEINSENS, "application/x-gtar" },
    { "tif"     , MIME_FLAG_CASEINSENS, "image/tiff" },
    { "tiff"    , MIME_FLAG_CASEINSENS, "image/tiff" },
    { "tk"      , MIME_FLAG_CASEINSENS, "application/x-tcl" },
@@ -572,7 +579,7 @@ static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
    { "xbm"     , MIME_FLAG_CASEINSENS, "image/x-xbitmap" },
    { "xdr"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
    { "xhtml"   , MIME_FLAG_CASEINSENS, "application/xhtml+xml" },
-   { "xls"     , MIME_FLAG_CASEINSENS, "application/vnd.ms-excel" },
+   { "xls"     , MIME_FLAG_CASEINSENS, "application/excel" },
    { "xlsx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
    { "xlt"     , MIME_FLAG_CASEINSENS, "application/xlt" },
    { "xml"     , MIME_FLAG_CASEINSENS, "text/xml" },

@@ -1293,16 +1293,11 @@ FUNCTION UHtmlEncode( cString )
    FOR nI := 1 TO Len( cString )
       cI := SubStr( cString, nI, 1 )
       DO CASE
-      CASE cI == "<"
-         cRet += "&lt;"
-      CASE cI == ">"
-         cRet += "&gt;"
-      CASE cI == "&"
-         cRet += "&amp;"
-      CASE cI == '"'
-         cRet += "&quot;"
-      OTHERWISE
-         cRet += cI
+      CASE cI == "<" ; cRet += "&lt;"
+      CASE cI == ">" ; cRet += "&gt;"
+      CASE cI == "&" ; cRet += "&amp;"
+      CASE cI == '"' ; cRet += "&quot;"
+      OTHERWISE      ; cRet += cI
       ENDCASE
    NEXT
 
@@ -1333,12 +1328,11 @@ FUNCTION UUrlDecode( cString )
    cString := StrTran( cString, "+", " " )
    nI := 1
    DO WHILE nI <= Len( cString )
-      nI := hb_At( "%", cString, nI )
-      IF nI == 0
+      IF( nI := hb_At( "%", cString, nI ) ) == 0
          EXIT
       ENDIF
       IF Upper( SubStr( cString, nI + 1, 1 ) ) $ "0123456789ABCDEF" .AND. ;
-            Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
+         Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
          cString := Stuff( cString, nI, 3, hb_HexToStr( SubStr( cString, nI + 1, 2 ) ) )
       ENDIF
       nI++
@@ -1368,7 +1362,7 @@ FUNCTION UUrlValidate( cUrl )
 
 PROCEDURE UProcFiles( cFileName, lIndex )
 
-   LOCAL aDir, aF, nI, cI, tDate, tHDate
+   LOCAL aDir, aF, cI, tDate, tHDate
 
    hb_default( @lIndex, .F. )
 
@@ -1395,45 +1389,53 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
          USetStatusCode( 412 )
       ELSE
-         IF ( nI := RAt( ".", cFileName ) ) > 0
-            SWITCH Lower( SubStr( cFileName, nI + 1 ) )
-            CASE "css";                                 cI := "text/css";  EXIT
-            CASE "htm";   CASE "html";                  cI := "text/html";  EXIT
-            CASE "txt";   CASE "text";  CASE "asc"
-            CASE "c";     CASE "h";     CASE "cpp"
-            CASE "hpp";   CASE "log";                   cI := "text/plain";  EXIT
-            CASE "rtf";                                 cI := "text/rtf";  EXIT
-            CASE "xml";                                 cI := "text/xml";  EXIT
-            CASE "bmp";                                 cI := "image/bmp";  EXIT
-            CASE "gif";                                 cI := "image/gif";  EXIT
-            CASE "jpg";   CASE "jpe";   CASE "jpeg";    cI := "image/jpeg";  EXIT
-            CASE "png";                                 cI := "image/png";   EXIT
-            CASE "tif";   CASE "tiff";                  cI := "image/tiff";  EXIT
-            CASE "djv";   CASE "djvu";                  cI := "image/vnd.djvu";  EXIT
-            CASE "ico";                                 cI := "image/x-icon";  EXIT
-            CASE "xls";                                 cI := "application/excel";  EXIT
-            CASE "doc";                                 cI := "application/msword";  EXIT
-            CASE "pdf";                                 cI := "application/pdf";  EXIT
-            CASE "ps";    CASE "eps";                   cI := "application/postscript";  EXIT
-            CASE "ppt";                                 cI := "application/powerpoint";  EXIT
-            CASE "bz2";                                 cI := "application/x-bzip2";  EXIT
-            CASE "gz";                                  cI := "application/x-gzip";  EXIT
-            CASE "tgz";                                 cI := "application/x-gtar";  EXIT
-            CASE "js";                                  cI := "application/x-javascript";  EXIT
-            CASE "tar";                                 cI := "application/x-tar";  EXIT
-            CASE "tex";                                 cI := "application/x-tex";  EXIT
-            CASE "zip";                                 cI := "application/zip";  EXIT
-            CASE "midi";                                cI := "audio/midi";  EXIT
-            CASE "mp3";                                 cI := "audio/mpeg";  EXIT
-            CASE "wav";                                 cI := "audio/x-wav";  EXIT
-            CASE "qt";    CASE "mov";                   cI := "video/quicktime";  EXIT
-            CASE "avi";                                 cI := "video/x-msvideo";  EXIT
-            OTHERWISE
-               cI := "application/octet-stream"
-            ENDSWITCH
-         ELSE
-            cI := "application/octet-stream"
-         ENDIF
+         SWITCH Lower( hb_FNameExt( cFileName ) )
+         CASE ".css";  cI := "text/css"; EXIT
+         CASE ".htm"
+         CASE ".html"; cI := "text/html"; EXIT
+         CASE ".txt"
+         CASE ".text"
+         CASE ".asc"
+         CASE ".c"
+         CASE ".h"
+         CASE ".cpp"
+         CASE ".hpp"
+         CASE ".log";  cI := "text/plain"; EXIT
+         CASE ".rtf";  cI := "text/rtf"; EXIT
+         CASE ".xml";  cI := "text/xml"; EXIT
+         CASE ".bmp";  cI := "image/bmp"; EXIT
+         CASE ".gif";  cI := "image/gif"; EXIT
+         CASE ".jpg"
+         CASE ".jpe"
+         CASE ".jpeg"; cI := "image/jpeg"; EXIT
+         CASE ".png";  cI := "image/png";   EXIT
+         CASE ".tif"
+         CASE ".tiff"; cI := "image/tiff"; EXIT
+         CASE ".djv"
+         CASE ".djvu"; cI := "image/vnd.djvu"; EXIT
+         CASE ".ico";  cI := "image/x-icon"; EXIT
+         CASE ".xls";  cI := "application/excel"; EXIT
+         CASE ".doc";  cI := "application/msword"; EXIT
+         CASE ".pdf";  cI := "application/pdf"; EXIT
+         CASE ".ps"
+         CASE ".eps";  cI := "application/postscript"; EXIT
+         CASE ".ppt";  cI := "application/powerpoint"; EXIT
+         CASE ".bz2";  cI := "application/x-bzip2"; EXIT
+         CASE ".gz";   cI := "application/x-gzip"; EXIT
+         CASE ".tgz";  cI := "application/x-gtar"; EXIT
+         CASE ".js";   cI := "application/x-javascript"; EXIT
+         CASE ".tar";  cI := "application/x-tar"; EXIT
+         CASE ".tex";  cI := "application/x-tex"; EXIT
+         CASE ".zip";  cI := "application/zip"; EXIT
+         CASE ".midi"; cI := "audio/midi"; EXIT
+         CASE ".mp3";  cI := "audio/mpeg"; EXIT
+         CASE ".wav";  cI := "audio/x-wav"; EXIT
+         CASE ".qt"
+         CASE ".mov";  cI := "video/quicktime"; EXIT
+         CASE ".avi";  cI := "video/x-msvideo"; EXIT
+         OTHERWISE ;   cI := "application/octet-stream"
+         ENDSWITCH
+
          UAddHeader( "Content-Type", cI )
 
          IF hb_FGetDateTime( UOsFileName( cFileName ), @tDate )
@@ -1478,9 +1480,9 @@ PROCEDURE UProcFiles( cFileName, lIndex )
             iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
       ENDIF
 
-      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
-      UWrite( '<a href="?s=n">Name</a>                                                  ' )
-      UWrite( '<a href="?s=m">Modified</a>             ' )
+      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>' )
+      UWrite( '<a href="?s=n">Name</a>' )
+      UWrite( '<a href="?s=m">Modified</a>' )
       UWrite( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
       FOR EACH aF IN aDir
          IF hb_LeftIs( aF[ 1 ], "." )
@@ -1544,7 +1546,6 @@ PROCEDURE UProcInfo()
    RETURN
 
 FUNCTION UParse( aData, cFileName, hConfig )
-
    RETURN parse_data( aData, compile_file( cFileName, hConfig ), hConfig )
 
 STATIC FUNCTION parse_data( aData, aCode, hConfig )
