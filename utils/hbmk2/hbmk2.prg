@@ -15489,10 +15489,12 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
       "HB_KEYCLEAR"      =>, ;
       "HB_KEYINS"        =>, ;
       "HB_KEYLAST"       =>, ;
+      "HB_KEYMOD"        =>, ;
       "HB_KEYNEXT"       =>, ;
       "HB_KEYPUT"        =>, ;
       "HB_KEYSETLAST"    =>, ;
       "HB_KEYSTD"        =>, ;
+      "HB_KEYVAL"        =>, ;
       "HB_MGETBOUNDS"    =>, ;
       "HB_MMIDDLEDOWN"   =>, ;
       "HB_SCRMAXCOL"     =>, ;
