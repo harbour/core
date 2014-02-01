@@ -208,7 +208,12 @@ void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
 
    if( hDynLib )
    {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN_CE )
+      LPTSTR lpSymbol = hb_mbtowc( pszSymbol );
+      void * hFuncAddr = ( void * ) GetProcAddress( ( HMODULE ) hDynLib, lpSymbol );
+      hb_xfree( lpSymbol );
+      return hFuncAddr;
+#elif defined( HB_OS_WIN )
       return ( void * ) GetProcAddress( ( HMODULE ) hDynLib, pszSymbol );
 #elif defined( HB_OS_OS2 )
       PFN pProcAddr = NULL;

@@ -151,7 +151,7 @@ static HB_BOOL s_win_iswow64( void )
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
 
       if( hModule )
-         pIsWow64Process = ( P_ISWOW64PROCESS ) GetProcAddress( hModule, "IsWow64Process" );
+         pIsWow64Process = ( P_ISWOW64PROCESS ) HB_WINAPI_GETPROCADDRESS( hModule, "IsWow64Process" );
       else
          pIsWow64Process = NULL;
 
@@ -363,7 +363,7 @@ char * hb_verPlatform( void )
          const char * pszWine = "";
          const char * pszName = "";
 
-         if( hntdll && GetProcAddress( hntdll, "wine_get_version" ) )
+         if( hntdll && HB_WINAPI_GETPROCADDRESS( hntdll, "wine_get_version" ) )
             pszWine = " (Wine)";
 
          switch( osVer.dwPlatformId )

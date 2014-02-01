@@ -750,8 +750,8 @@ static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
       if( hModule )
       {
-         s_pGetConsoleScreenBufferInfoEx = ( P_GETCONSOLESCREENBUFFERINFOEX ) GetProcAddress( hModule, "GetConsoleScreenBufferInfoEx" );
-         s_pSetConsoleScreenBufferInfoEx = ( P_SETCONSOLESCREENBUFFERINFOEX ) GetProcAddress( hModule, "SetConsoleScreenBufferInfoEx" );
+         s_pGetConsoleScreenBufferInfoEx = ( P_GETCONSOLESCREENBUFFERINFOEX ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleScreenBufferInfoEx" );
+         s_pSetConsoleScreenBufferInfoEx = ( P_SETCONSOLESCREENBUFFERINFOEX ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleScreenBufferInfoEx" );
       }
       s_bChecked = HB_TRUE;
    }
@@ -839,9 +839,9 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
       if( hModule )
       {
-         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) GetProcAddress( hModule, "GetConsoleWindow" );
+         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
 #if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-         s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) GetProcAddress( hModule, "SetConsoleMenuClose" );
+         s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
 #endif
       }
       s_bChecked = HB_TRUE;
@@ -1766,7 +1766,7 @@ static HB_BOOL hb_gt_win_IsFullScreen( void )
    HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
 
    if( hModule )
-      pGetConsoleDisplayMode = ( P_GCDM ) GetProcAddress( hModule, "GetConsoleDisplayMode" );
+      pGetConsoleDisplayMode = ( P_GCDM ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleDisplayMode" );
    else
       pGetConsoleDisplayMode = NULL;
 
@@ -1789,7 +1789,7 @@ static HB_BOOL hb_gt_win_FullScreen( HB_BOOL bFullScreen )
    HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
 
    if( hModule )
-      pSetConsoleDisplayMode = ( P_SCDM ) GetProcAddress( hModule, "SetConsoleDisplayMode" );
+      pSetConsoleDisplayMode = ( P_SCDM ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleDisplayMode" );
    else
       pSetConsoleDisplayMode = NULL;
 

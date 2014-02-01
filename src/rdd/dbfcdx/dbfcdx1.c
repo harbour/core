@@ -7677,7 +7677,7 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
                                     NULL, pError );
          }
          if( ! pFile )
-            bRetry = hb_cdxErrorRT( pArea, EG_CREATE, EDBF_CREATE, szFileName,
+            bRetry = hb_cdxErrorRT( pArea, EG_CREATE, EDBF_CREATE_INDEX, szFileName,
                                     hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,
                                     &pError ) == E_RETRY;
          else

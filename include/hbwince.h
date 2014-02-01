@@ -54,12 +54,6 @@
 
 #include <windows.h>
 
-/* use ASCII version of GetProcAddress() to keep the same code for desktop
- * windows and WinCE/Mobile. It's supported by WinCE 3.0 and later versions.
- */
-#undef  GetProcAddress
-#define GetProcAddress  GetProcAddressA
-
 HB_EXTERN_BEGIN
 
 #if defined( _MSC_VER )
@@ -85,37 +79,37 @@ HB_EXTERN_BEGIN
       #endif
    #endif
 
-   BOOL WINAPI GetProcessTimes( HANDLE hprocess,
-                                LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
-                                LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
-   BOOL WINAPI LockFile( HANDLE hFile,
-                         DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                         DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
-   BOOL WINAPI LockFileEx( HANDLE hFile,
-                           DWORD dwFlags, DWORD dwReserved,
-                           DWORD nNumberOfBytesToLockLow,
-                           DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
-   BOOL WINAPI UnlockFile( HANDLE hFile,
-                           DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
-                           DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
-   BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
-                             DWORD nNumberOfBytesToUnlockLow,
-                             DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
-   UINT WINAPI SetErrorMode( UINT mode );
-   HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
-   DWORD WINAPI GetFileType( HANDLE handle );
-   BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
-   int WINAPI SetTextCharacterExtra( HDC hdc, int i );
-   BOOL WINAPI GetKeyboardState( PBYTE p );
-   BOOL WINAPI SetKeyboardState( PBYTE p );
+   WINBASEAPI BOOL WINAPI GetProcessTimes( HANDLE hprocess,
+                                           LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
+                                           LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
+   WINBASEAPI BOOL WINAPI LockFile( HANDLE hFile,
+                                    DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                                    DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
+   WINBASEAPI BOOL WINAPI LockFileEx( HANDLE hFile,
+                                      DWORD dwFlags, DWORD dwReserved,
+                                      DWORD nNumberOfBytesToLockLow,
+                                      DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
+   WINBASEAPI BOOL WINAPI UnlockFile( HANDLE hFile,
+                                      DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                                      DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
+   WINBASEAPI BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
+                                        DWORD nNumberOfBytesToUnlockLow,
+                                        DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
+   WINBASEAPI UINT WINAPI SetErrorMode( UINT mode );
+   WINBASEAPI HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
+   WINBASEAPI DWORD WINAPI GetFileType( HANDLE handle );
+   WINBASEAPI BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
+   WINBASEAPI int WINAPI SetTextCharacterExtra( HDC hdc, int i );
+   WINBASEAPI BOOL WINAPI GetKeyboardState( PBYTE p );
+   WINBASEAPI BOOL WINAPI SetKeyboardState( PBYTE p );
 
-   int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
-   BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
-   BOOL WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
+   WINBASEAPI int WINAPI FrameRect( HDC hDC, CONST RECT * lprc, HBRUSH hbr );
+   WINBASEAPI BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
+   WINBASEAPI BOOL WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
 #endif /* _MSC_VER */
 
 #if defined( _MSC_VER ) && ( _MSC_VER <= 1310 )
-   int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator );
+   WINBASEAPI int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator );
 #endif
 
 #if defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) )

@@ -166,7 +166,7 @@ HB_FUNC( DISKSPACE )
                HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
                if( hModule )
                   s_pGetDiskFreeSpaceEx = ( P_GDFSE )
-                     GetProcAddress( hModule, HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
+                     HB_WINAPI_GETPROCADDRESST( hModule, "GetDiskFreeSpaceEx" );
                s_fInit = HB_TRUE;
             }
 

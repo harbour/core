@@ -27,15 +27,21 @@
 
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-common 2>/dev/null) && echo "mdv$release"|tr -d ".")
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
-%if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release"|tr -d ".")
+%if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' centos-release 2>/dev/null) && echo "el$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release"|tr -d ".")
 %if "%{platform}" == ""
 %define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release"|tr -d ".")
 %if "%{platform}" == ""
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
+%if "%{platform}" == ""
 %define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
+%if "%{platform}" == ""
+%undefine platform
+%endif
+%endif
 %endif
 %endif
 %endif
@@ -50,7 +56,8 @@
 %define name      harbour
 %define dname     Harbour
 %define version   3.4.0
-%define releasen  dev
+%define releasen  0.1
+%define alphatag  dev
 %define hb_etcdir /etc/%{name}
 %define hb_plat   export HB_PLATFORM=linux
 %define hb_cc     export HB_COMPILER=gcc
@@ -87,7 +94,7 @@ Summary(ru):    ????????? ??????????, ??????????? ? ?????? Clipper.
 Summary(hu):    Szabad szoftver Clipper kompatibilis fordító
 Name:           %{name}
 Version:        %{version}
-Release:        %{releasen}%{platform}
+Release:        %{releasen}%{?alphatag:.%{alphatag}}%{?platform:.%{platform}}
 License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/

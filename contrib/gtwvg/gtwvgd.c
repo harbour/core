@@ -2703,30 +2703,21 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
    rt.bottom = 0;
 
 #ifdef MONITOR_DEFAULTTONEAREST
+   pMonitorFromWindow = ( P_MFW ) HB_WINAPI_GETPROCADDRESS( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                                            "MonitorFromWindow" );
+   pGetMonitorInfo = ( P_GMI ) HB_WINAPI_GETPROCADDRESS( GetModuleHandle( TEXT( "user32.dll" ) ),
+                                                         "GetMonitorInfo" );
+
+   if( pMonitorFromWindow && pGetMonitorInfo )
    {
-      HMODULE hModule = GetModuleHandle( TEXT( "user32.dll" ) );
-
-      if( hModule )
-      {
-         pMonitorFromWindow = ( P_MFW ) GetProcAddress( hModule, "MonitorFromWindow" );
-         pGetMonitorInfo = ( P_GMI ) GetProcAddress( hModule, "GetMonitorInfo" );
-      }
-      else
-      {
-         pMonitorFromWindow = NULL;
-         pGetMonitorInfo = NULL;
-      }
-
-      if( pMonitorFromWindow && pGetMonitorInfo )
-      {
-         mon = pMonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
-         mi.cbSize = sizeof( mi );
-         pGetMonitorInfo( mon, &mi );
-         rt = mi.rcMonitor;
-      }
-      else
-         GetClientRect( GetDesktopWindow(), &rt );
+      mon = pMonitorFromWindow( pWVT->hWnd, MONITOR_DEFAULTTONEAREST );
+      mi.cbSize = sizeof( mi );
+      pGetMonitorInfo( mon, &mi );
+      rt = mi.rcMonitor;
    }
+   else
+      GetClientRect( GetDesktopWindow(), &rt );
+
 #else
    GetClientRect( GetDesktopWindow(), &rt );
 #endif
@@ -4326,7 +4317,7 @@ static void hb_wvt_gtLoadGuiData( void )
    if( h )
    {
       /* workaround for wrong declarations in some old C compilers */
-      s_guiData->pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
+      s_guiData->pfnGF = ( wvtGradientFill ) HB_WINAPI_GETPROCADDRESS( h, "GradientFill" );
       if( s_guiData->pfnGF )
          s_guiData->hMSImg32 = h;
    }
@@ -4334,7 +4325,7 @@ static void hb_wvt_gtLoadGuiData( void )
    h = GetModuleHandle( TEXT( "user32.dll" ) );
    if( h )
    {
-      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) GetProcAddress( h, "SetLayeredWindowAttributes" );
+      s_guiData->pfnLayered = ( wvtSetLayeredWindowAttributes ) HB_WINAPI_GETPROCADDRESS( h, "SetLayeredWindowAttributes" );
       if( s_guiData->pfnLayered )
          s_guiData->hUser32 = h;
    }
