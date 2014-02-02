@@ -97,7 +97,7 @@ PROCEDURE Main( ... )
       IF ! Empty( cComment )
          ? "global comment:", cComment
       ENDIF
-      ? ""
+      ?
       ? "Filename                          Date      Time         Size Compressed  Action"
       ? "-----------------------------------------------------------------------------------"
       nErr := hb_unzipFileFirst( hUnzip )

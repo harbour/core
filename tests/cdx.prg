@@ -17,8 +17,7 @@ PROCEDURE Main()
    dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
 
    ? "RddName:", rddName()
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
@@ -40,8 +39,7 @@ PROCEDURE Main()
       ? TESTCDX->( RecNo() ), TESTCDX->NUMERIC
       ? TESTCDX->MEMO
       TESTCDX->( dbSkip() )
-      ? "Press any key to continue..."
-      Inkey( 0 )
+      WAIT
    ENDDO
 
    hb_dbDrop( "testcdx.cdx" )

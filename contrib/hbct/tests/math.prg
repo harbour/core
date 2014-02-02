@@ -165,8 +165,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE WAIT4()
 
-   ? "Press any key"
-   Inkey( 0 )
+   WAIT
    CLS
 
    RETURN

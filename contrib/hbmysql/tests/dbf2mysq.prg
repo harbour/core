@@ -181,6 +181,6 @@ STATIC PROCEDURE Help()
    ? "-c delete existing table and create a new one"
    ? "-f name of .dbf file to import"
    ? "all parameters but -h -u -p -c are mandatory"
-   ? ""
+   ?
 
    RETURN

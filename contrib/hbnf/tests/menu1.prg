@@ -133,8 +133,7 @@ STATIC FUNCTION fubar()
    LOCAL OldColor := SetColor( "W/N" )
 
    CLS
-   ? "Press Any Key"
-   Inkey( 0 )
+   WAIT
    SetColor( OldColor )
 
    RETURN .T.

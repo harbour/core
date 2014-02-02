@@ -79,9 +79,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WHOCARES on argument error
    ?
@@ -93,9 +93,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WARNING on argument error
    ?
@@ -107,9 +107,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_ERROR on argument error
    ?
@@ -121,9 +121,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
@@ -135,9 +135,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    ?
    ? "Standard error handler: "
@@ -148,9 +148,9 @@ PROCEDURE Main()
    ? "Standard behaviour"
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WHOCARES on argument error
    ?
@@ -158,9 +158,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_WHOCARES )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WARNING on argument error
    ?
@@ -168,9 +168,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_WARNING )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_ERROR on argument error
    ?
@@ -178,9 +178,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_ERROR )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
@@ -188,9 +188,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_CATASTROPHIC )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    ? "End test of CSetArgErr()"
 
@@ -241,7 +241,7 @@ STATIC FUNCTION myerrhandler( oerr )
          DO CASE
          CASE nDigit == 0
             ?? "NIL."
-            cInput  := NIL
+            cInput := NIL
 
          CASE nDigit == 1
             ?? "String."

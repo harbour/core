@@ -298,7 +298,8 @@ PROCEDURE Main( ... )
 
    FClose( nHandle )
 
-   CLOSE ALL
+   dbCloseAll()
+
    oTable:Destroy()
    oServer:Destroy()
 
@@ -319,7 +320,6 @@ STATIC PROCEDURE Help()
    ? "-m commit interval"
    ? "-r insert only record number"
    ? "-e search path"
-
-   ? ""
+   ?
 
    RETURN

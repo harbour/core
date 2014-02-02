@@ -349,8 +349,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
                                "Second argument must be NIL or numeric or a string.",
-                               HB_ERR_FUNCNAME, 2,
-                               hb_paramError( 2 ) );
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
          return;
       }
 
@@ -361,8 +360,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
                                "Third argument must be NIL or numeric.",
-                               HB_ERR_FUNCNAME, 1,
-                               hb_paramError( 3 ) );
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
          return;
       }
 
@@ -374,8 +372,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 95.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -387,8 +384,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 9.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -398,8 +394,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Foreground color nedeed",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
          fg = hb_parni( 3 );

@@ -239,7 +239,6 @@ STATIC PROCEDURE Summary( aResult )
       ? aResult[ i ]
    NEXT
    ?
-   ? "press any key to continue"
-   Inkey( 0 )
+   WAIT
 
    RETURN

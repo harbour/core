@@ -54,8 +54,7 @@ PROCEDURE Main( cName )
       ? "Can't write file"
    ENDIF
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -105,8 +104,7 @@ PROCEDURE Main( cName )
       ? "Can't write file"
    ENDIF
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -120,8 +118,7 @@ PROCEDURE Main( cName )
    ?
    ? cIni
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -158,8 +155,7 @@ PROCEDURE Main( cName )
    ENDIF
 
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -173,7 +169,6 @@ PROCEDURE Main( cName )
    ?
    ? cIni
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    RETURN

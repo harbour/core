@@ -23,8 +23,7 @@ PROCEDURE Main()
    ? "RecNo:", TESTDBF->( RecNo() )
    ? "NetErr:", TESTDBF->( NetErr() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    aArray := rddList( 0 )
@@ -46,8 +45,7 @@ PROCEDURE Main()
       ? PadR( aArray[ nI ][ 1 ], 10 ), aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "dbGoTop():"
@@ -129,8 +127,7 @@ PROCEDURE Main()
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "dbGoto( 490 ):"
@@ -143,22 +140,20 @@ PROCEDURE Main()
       ? "FieldGet( " + hb_ntos( nI ) + " ):", TESTDBF->( FieldGet( nI ) )
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
-   ? ""
+   ?
    DO WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "SET FILTER TO TESTDBF->AGE == 21"
@@ -169,7 +164,7 @@ PROCEDURE Main()
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? "SET FILTER TO"
-   ? ""
+   ?
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
@@ -179,8 +174,7 @@ PROCEDURE Main()
    ENDDO
    SET FILTER TO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "TESTDBF->( Found() )"
@@ -196,20 +190,18 @@ PROCEDURE Main()
       CONTINUE
    ENDDO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;"
    ? "                   {|| TESTDBF->AGE == 23 } ) )"
-   ? ""
+   ?
    ? "dbCommit()"
    TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;
       {|| TESTDBF->AGE == 23 } ) )
    TESTDBF->( dbCommit() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'dbCreate( "newrdd", { ;'
@@ -230,8 +222,7 @@ PROCEDURE Main()
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( LUpdate() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'Select( "TESTDBF" )'
@@ -287,8 +278,7 @@ PROCEDURE Main()
    ? NEWRDD->( Deleted() )
    NEWRDD->( dbRLock( 3 ) )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    aArray := NEWRDD->( dbRLockList() )
@@ -301,8 +291,7 @@ PROCEDURE Main()
       ? aArray[ nI ]
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
@@ -310,32 +299,29 @@ PROCEDURE Main()
    ? 'nI := 1'
    ? 'NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
-   ? ""
+   ?
    NEWRDD->( dbCloseArea() )
    dbUseArea( .T., "DBFCDX", "newrdd", "NEWRDD", .F., .F. )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    nI := 1
    NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )
    ? "RecCount:", NEWRDD->( RecCount() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? 'NEWRDD->( __dbZap() )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
-   ? ""
+   ?
    ? "RecCount:", NEWRDD->( RecCount() )
    NEWRDD->( __dbZap() )
    ? "RecCount:", NEWRDD->( RecCount() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
@@ -354,8 +340,7 @@ PROCEDURE Main()
    ? '   NEWRDD->( dbSkip() )'
    ? 'NEXT'
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    NEWRDD->( dbCloseArea() )

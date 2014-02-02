@@ -5,9 +5,8 @@ PROCEDURE Main()
    ? "DEFAULT IDLEREPEAT =", Set( _SET_IDLEREPEAT )
    ?
    ? "Idle Block should be displayed multiple times until key or 10 seconds elapsed!"
-   ? "Press any key to begin..."
+   WAIT
    ?
-   Inkey( 0 )
 
    hb_idleAdd( {|| QOut( "Idle Block" ) } )
    Inkey( 2 )

@@ -303,7 +303,7 @@ STATIC PROCEDURE Test8()
    ? "In Test8 after UsePriv"
    ? "Private1 :", private1
 
-   WAIT "press any key..."
+   WAIT
 
    ? "In Test8 before UsePriv with reference"
    ? "Private1 :", private1

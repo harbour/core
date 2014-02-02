@@ -81,9 +81,8 @@ PROCEDURE Main()
    ? "Payment( 2000.00, 0.10 / 12, 24 ) ==  92.290    // CT3"
    ? Space( 29 ), Payment( 2000.00, 0.10 / 12, 24 ), "  <-- CT for Harbour"
    ?
-   ? "Press any key"
+   WAIT
 
-   Inkey( 0 )
    ? "Continue Testing Financial functions...."
    ?
    ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
@@ -98,8 +97,7 @@ PROCEDURE Main()
    ? "Rate( 2500.00, 86.67, 36 ) * 12 == 0.1501  // CT3"
    ? Space( 25 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
    ?
-   ? "Press any key"
-   Inkey( 0 )
+   WAIT
 
    ctexit()
 

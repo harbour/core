@@ -98,10 +98,9 @@ PROCEDURE Main()
    ? '      TokenNext( @cStr1, 4 ) == "DDDD" ? ---->', '"' + TokenNext( @cStr1, 4 ) + '"'
    ?
 
-   ? "...Press any key..."
-   ?
-   Inkey( 0 )
+   WAIT
 
+   ?
    ? '  Incremental tokenizing the string', '"' + cStr3 + '"', 'with the'
    ? '  token environment of cStr1 !'
    ? '    rewind with TokenInit() == .T. ? ------->', TokenInit()
@@ -124,10 +123,9 @@ PROCEDURE Main()
    ? '      TokenAt( .T., 4 ) == 14 ? -------------->', TokenAt( .T., 4 )
    ?
 
-   ? "...Press any key..."
-   ?
-   Inkey( 0 )
+   WAIT
 
+   ?
    ? '  Save global token environment with SaveToken()'
    cTE1 := SaveToken()
    ? '    TokenInit() a different string, cStr4 :=', '"' + cStr4 + '"', 'with TokenInit()'
@@ -146,10 +144,9 @@ PROCEDURE Main()
    ? '  Release global TE with TokenExit() ---->', TokenExit()
    ?
 
-   ? "...Press any key..."
-   ?
-   Inkey( 0 )
+   WAIT
 
+   ?
    ? '  Now tokenize cStr4 :=', '"' + cStr4 + '"', "and"
    ? '  cStr5 :=', '"' + cStr5 + '"'
    ? '  and store the token environment locally to cTE1 and cTE2:'
@@ -170,9 +167,7 @@ PROCEDURE Main()
    ? "End test of incremental tokenizer function family"
    ?
 
-   ? "...Press any key..."
-   ?
-   Inkey( 0 )
+   WAIT
 
    ctexit()
 
