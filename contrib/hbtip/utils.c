@@ -631,7 +631,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
       nPos++;
    }
 
-   if( ( nPos < nLen ) && ( nLen - nPos >= nDataLen ) )
+   if( nPos < nLen && ( nLen - nPos ) >= nDataLen )
    {
       if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
       {
@@ -829,9 +829,14 @@ HB_FUNC( __TIP_PSTRCOMPI )
    PHB_ITEM pSubstr = hb_param( 3, HB_IT_STRING );
 
    if( pString && pStart && pSubstr )
-      hb_retl( hb_strnicmp( hb_itemGetCPtr( pString ) + hb_itemGetNS( pStart ) - 1,
+   {
+      HB_ISIZ nStart = hb_itemGetNS( pStart );
+
+      hb_retl( nStart < ( HB_ISIZ ) hb_itemGetCLen( pString ) && nStart >= 1 &&
+               hb_strnicmp( hb_itemGetCPtr( pString ) + nStart - 1,
                             hb_itemGetCPtr( pSubstr ),
                             hb_itemGetCLen( pSubstr ) ) == 0 );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

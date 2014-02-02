@@ -65,7 +65,6 @@ CREATE CLASS UHttpd MODULE FRIENDLY
 ENDCLASS
 
 FUNCTION UHttpdNew()
-
    RETURN UHttpd()
 
 METHOD Run( hConfig ) CLASS UHttpd
@@ -862,47 +861,47 @@ STATIC FUNCTION MakeResponse( hConfig )
 
    cRet := iif( server[ "SERVER_PROTOCOL" ] == "HTTP/1.0", "HTTP/1.0 ", "HTTP/1.1 " )
    SWITCH t_nStatusCode
-   CASE 100 ;  cStatus := "100 Continue"                        ;  EXIT
-   CASE 101 ;  cStatus := "101 Switching Protocols"             ;  EXIT
-   CASE 200 ;  cStatus := "200 OK"                              ;  EXIT
-   CASE 201 ;  cStatus := "201 Created"                         ;  EXIT
-   CASE 202 ;  cStatus := "202 Accepted"                        ;  EXIT
-   CASE 203 ;  cStatus := "203 Non-Authoritative Information"   ;  EXIT
-   CASE 204 ;  cStatus := "204 No Content"                      ;  EXIT
-   CASE 205 ;  cStatus := "205 Reset Content"                   ;  EXIT
-   CASE 206 ;  cStatus := "206 Partial Content"                 ;  EXIT
-   CASE 300 ;  cStatus := "300 Multiple Choices"                ;  EXIT
-   CASE 301 ;  cStatus := "301 Moved Permanently"               ;  EXIT
-   CASE 302 ;  cStatus := "302 Found"                           ;  EXIT
-   CASE 303 ;  cStatus := "303 See Other"                       ;  EXIT
-   CASE 304 ;  cStatus := "304 Not Modified"                    ;  EXIT
-   CASE 305 ;  cStatus := "305 Use Proxy"                       ;  EXIT
-   CASE 307 ;  cStatus := "307 Temporary Redirect"              ;  EXIT
-   CASE 400 ;  cStatus := "400 Bad Request"                     ;  EXIT
-   CASE 401 ;  cStatus := "401 Unauthorized"                    ;  EXIT
-   CASE 402 ;  cStatus := "402 Payment Required"                ;  EXIT
-   CASE 403 ;  cStatus := "403 Forbidden"                       ;  EXIT
-   CASE 404 ;  cStatus := "404 Not Found"                       ;  EXIT
-   CASE 405 ;  cStatus := "405 Method Not Allowed"              ;  EXIT
-   CASE 406 ;  cStatus := "406 Not Acceptable"                  ;  EXIT
-   CASE 407 ;  cStatus := "407 Proxy Authentication Required"   ;  EXIT
-   CASE 408 ;  cStatus := "408 Request Timeout"                 ;  EXIT
-   CASE 409 ;  cStatus := "409 Conflict"                        ;  EXIT
-   CASE 410 ;  cStatus := "410 Gone"                            ;  EXIT
-   CASE 411 ;  cStatus := "411 Length Required"                 ;  EXIT
-   CASE 412 ;  cStatus := "412 Precondition Failed"             ;  EXIT
-   CASE 413 ;  cStatus := "413 Request Entity Too Large"        ;  EXIT
-   CASE 414 ;  cStatus := "414 Request-URI Too Long"            ;  EXIT
-   CASE 415 ;  cStatus := "415 Unsupprted Media Type"           ;  EXIT
-   CASE 416 ;  cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
-   CASE 417 ;  cStatus := "417 Expectation Failed"              ;  EXIT
-   CASE 500 ;  cStatus := "500 Internal Server Error"           ;  EXIT
-   CASE 501 ;  cStatus := "501 Not Implemented"                 ;  EXIT
-   CASE 502 ;  cStatus := "502 Bad Gateway"                     ;  EXIT
-   CASE 503 ;  cStatus := "503 Service Unavailable"             ;  EXIT
-   CASE 504 ;  cStatus := "504 Gateway Timeout"                 ;  EXIT
-   CASE 505 ;  cStatus := "505 HTTP Version Not Supported"      ;  EXIT
-   OTHERWISE;  cStatus := "500 Internal Server Error"
+   CASE 100 ; cStatus := "100 Continue"                        ;  EXIT
+   CASE 101 ; cStatus := "101 Switching Protocols"             ;  EXIT
+   CASE 200 ; cStatus := "200 OK"                              ;  EXIT
+   CASE 201 ; cStatus := "201 Created"                         ;  EXIT
+   CASE 202 ; cStatus := "202 Accepted"                        ;  EXIT
+   CASE 203 ; cStatus := "203 Non-Authoritative Information"   ;  EXIT
+   CASE 204 ; cStatus := "204 No Content"                      ;  EXIT
+   CASE 205 ; cStatus := "205 Reset Content"                   ;  EXIT
+   CASE 206 ; cStatus := "206 Partial Content"                 ;  EXIT
+   CASE 300 ; cStatus := "300 Multiple Choices"                ;  EXIT
+   CASE 301 ; cStatus := "301 Moved Permanently"               ;  EXIT
+   CASE 302 ; cStatus := "302 Found"                           ;  EXIT
+   CASE 303 ; cStatus := "303 See Other"                       ;  EXIT
+   CASE 304 ; cStatus := "304 Not Modified"                    ;  EXIT
+   CASE 305 ; cStatus := "305 Use Proxy"                       ;  EXIT
+   CASE 307 ; cStatus := "307 Temporary Redirect"              ;  EXIT
+   CASE 400 ; cStatus := "400 Bad Request"                     ;  EXIT
+   CASE 401 ; cStatus := "401 Unauthorized"                    ;  EXIT
+   CASE 402 ; cStatus := "402 Payment Required"                ;  EXIT
+   CASE 403 ; cStatus := "403 Forbidden"                       ;  EXIT
+   CASE 404 ; cStatus := "404 Not Found"                       ;  EXIT
+   CASE 405 ; cStatus := "405 Method Not Allowed"              ;  EXIT
+   CASE 406 ; cStatus := "406 Not Acceptable"                  ;  EXIT
+   CASE 407 ; cStatus := "407 Proxy Authentication Required"   ;  EXIT
+   CASE 408 ; cStatus := "408 Request Timeout"                 ;  EXIT
+   CASE 409 ; cStatus := "409 Conflict"                        ;  EXIT
+   CASE 410 ; cStatus := "410 Gone"                            ;  EXIT
+   CASE 411 ; cStatus := "411 Length Required"                 ;  EXIT
+   CASE 412 ; cStatus := "412 Precondition Failed"             ;  EXIT
+   CASE 413 ; cStatus := "413 Request Entity Too Large"        ;  EXIT
+   CASE 414 ; cStatus := "414 Request-URI Too Long"            ;  EXIT
+   CASE 415 ; cStatus := "415 Unsupprted Media Type"           ;  EXIT
+   CASE 416 ; cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
+   CASE 417 ; cStatus := "417 Expectation Failed"              ;  EXIT
+   CASE 500 ; cStatus := "500 Internal Server Error"           ;  EXIT
+   CASE 501 ; cStatus := "501 Not Implemented"                 ;  EXIT
+   CASE 502 ; cStatus := "502 Bad Gateway"                     ;  EXIT
+   CASE 503 ; cStatus := "503 Service Unavailable"             ;  EXIT
+   CASE 504 ; cStatus := "504 Gateway Timeout"                 ;  EXIT
+   CASE 505 ; cStatus := "505 HTTP Version Not Supported"      ;  EXIT
+   OTHERWISE; cStatus := "500 Internal Server Error"
    ENDSWITCH
 
    cRet += cStatus + CR_LF
@@ -1323,14 +1322,10 @@ FUNCTION UUrlEncode( cString )
 
 FUNCTION UUrlDecode( cString )
 
-   LOCAL nI
+   LOCAL nI := 1
 
    cString := StrTran( cString, "+", " " )
-   nI := 1
-   DO WHILE nI <= Len( cString )
-      IF( nI := hb_At( "%", cString, nI ) ) == 0
-         EXIT
-      ENDIF
+   DO WHILE nI <= Len( cString ) .AND. ( nI := hb_At( "%", cString, nI ) ) > 0
       IF Upper( SubStr( cString, nI + 1, 1 ) ) $ "0123456789ABCDEF" .AND. ;
          Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
          cString := Stuff( cString, nI, 3, hb_HexToStr( SubStr( cString, nI + 1, 2 ) ) )
@@ -1341,11 +1336,9 @@ FUNCTION UUrlDecode( cString )
    RETURN cString
 
 FUNCTION ULink( cText, cUrl )
-
    RETURN '<a href="' + cUrl + '">' + UHtmlEncode( cText ) + '</a>'
 
 FUNCTION UUrlChecksum( cUrl )
-
    RETURN cUrl + iif( "?" $ cUrl, "&", "?" ) + "_ucs=" + hb_MD5( session[ "_unique" ] + cUrl + session[ "_unique" ] )
 
 FUNCTION UUrlValidate( cUrl )
