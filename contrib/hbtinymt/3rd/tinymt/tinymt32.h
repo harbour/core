@@ -229,7 +229,7 @@ _HB_INLINE_ static float tinymt32_generate_floatOC(tinymt32_t * random) {
  * This function outputs floating point number from internal state.
  * This function returns neither 0.0 nor 1.0.
  * @param random tinymt internal status
- * @return floating point number r (0.0 < r < 0.0)
+ * @return floating point number r (0.0 < r < 1.0)
  */
 _HB_INLINE_ static float tinymt32_generate_floatOO(tinymt32_t * random) {
     tinymt32_next_state(random);
@@ -242,7 +242,7 @@ _HB_INLINE_ static float tinymt32_generate_floatOO(tinymt32_t * random) {
  * In other words, this function makes one double precision floating point
  * number from one 32-bit unsigned integer.
  * @param random tinymt internal status
- * @return floating point number r (1.0 < r < 2.0)
+ * @return floating point number r (0.0 < r <= 1.0)
  */
 _HB_INLINE_ static double tinymt32_generate_32double(tinymt32_t * random) {
     tinymt32_next_state(random);

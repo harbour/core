@@ -20,6 +20,9 @@
 -cpp=no
 -pic
 
+-cflag=-DSQLITE_ENABLE_FTS3
+-cflag=-DSQLITE_ENABLE_FTS3_PARENTHESIS
+
 -cflag=-DSQLITE_OMIT_DEPRECATED
 -cflag=-DSQLITE_ENABLE_COLUMN_METADATA
 -cflag=-D_WIN32_WCE=0x0300{wce}
@@ -42,8 +45,8 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.16.2
-# URL    http://sqlite.org/2013/sqlite-amalgamation-3071602.zip
+# VER    3.8.2
+# URL    http://sqlite.org/2013/sqlite-amalgamation-3080200.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
