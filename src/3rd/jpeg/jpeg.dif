@@ -1,7 +1,7 @@
 diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
---- jpeg.orig/jmorecfg.h	Sat Feb 02 19:37:33 2013
-+++ jpeg/jmorecfg.h	Sat Feb 02 19:37:33 2013
-@@ -138,7 +138,9 @@
+--- jpeg.orig/jmorecfg.h	Sun Feb 02 22:13:53 2014
++++ jpeg/jmorecfg.h	Sun Feb 02 22:13:54 2014
+@@ -189,7 +189,9 @@
  #ifdef CHAR_IS_UNSIGNED
  typedef char UINT8;
  #else /* not CHAR_IS_UNSIGNED */
@@ -11,7 +11,7 @@ diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
  #endif /* CHAR_IS_UNSIGNED */
  #endif /* HAVE_UNSIGNED_CHAR */
  
-@@ -147,7 +149,9 @@
+@@ -198,7 +200,9 @@
  #ifdef HAVE_UNSIGNED_SHORT
  typedef unsigned short UINT16;
  #else /* not HAVE_UNSIGNED_SHORT */
@@ -21,7 +21,7 @@ diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
  #endif /* HAVE_UNSIGNED_SHORT */
  
  /* INT16 must hold at least the values -32768..32767. */
-@@ -162,11 +166,13 @@
+@@ -213,11 +217,13 @@
  #ifndef _BASETSD_H_		/* Microsoft defines it in basetsd.h */
  #ifndef _BASETSD_H		/* MinGW is slightly different */
  #ifndef QGLOBAL_H		/* Qt defines it in qglobal.h */
@@ -35,7 +35,7 @@ diff -urN jpeg.orig/jmorecfg.h jpeg/jmorecfg.h
  
  /* Datatype used for image dimensions.  The JPEG standard only supports
   * images up to 64K*64K due to 16-bit fields in SOF markers.  Therefore
-@@ -190,6 +196,9 @@
+@@ -241,6 +247,9 @@
  /* a function called through method pointers: */
  #define METHODDEF(type)		static type
  /* a function used only in its module: */

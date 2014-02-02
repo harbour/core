@@ -101,8 +101,8 @@ else
 endif
 
 # ORIGIN http://ijg.org/
-# VER    9
-# URL    http://ijg.org/files/jpegsrc.v9.tar.gz
+# VER    9a
+# URL    http://ijg.org/files/jpegsrc.v9a.tar.gz
 # DIFF   jpeg.dif
 #
 # MAP    README
