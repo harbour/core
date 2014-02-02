@@ -264,7 +264,7 @@ STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, m
 STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    LOCAL nmaxrow, nmincol
-   LOCAL i, nlen, lmultiline, clabel, ;
+   LOCAL aGet, nlen, lmultiline, clabel, ;
       nrow1, ncol1, nrow2, ncol2
    LOCAL nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
    LOCAL lclosePermitted := .F.
@@ -279,25 +279,25 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
    wvw_nSetCurWindow( nwinnum )
    nmaxrow := 0
    nmincol := 99999
-   FOR i := 1 TO nNumGets
-      lmultiline := aEBGets[ i ][ __GET_LMULTILINE ]
-      IF ! lmultiline
-         nlen := Len( aEBGets[ i ][ __GET_CPICT ] )
-      ELSE
+   FOR EACH aGet IN aEBGets
+      lmultiline := aGet[ __GET_LMULTILINE ]
+      IF lmultiline
          nlen := 30
+      ELSE
+         nlen := Len( aGet[ __GET_CPICT ] )
       ENDIF
-      clabel := aEBGets[ i ][ __GET_CLABEL ]
-      nrow1 := aEBGets[ i ][ __GET_NROW ]
-      ncol1 := aEBGets[ i ][ __GET_NCOL ]
-      nrow2 := iif( aEBGets[ i ][ __GET_LMULTILINE ], nrow1 + 3, nrow1 )
+      clabel := aGet[ __GET_CLABEL ]
+      nrow1 := aGet[ __GET_NROW ]
+      ncol1 := aGet[ __GET_NCOL ]
+      nrow2 := iif( aGet[ __GET_LMULTILINE ], nrow1 + 3, nrow1 )
       ncol2 := ncol1 + nlen - 1
 
       @ nrow1, ncol1 - Len( clabel ) - 1 SAY clabel
 
-      aEBGets[ i ][ __GET_NEBID ] := wvw_ebCreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
-         Transform( aEBGets[ i ][ __GET_XINIT ], aEBGets[ i ][ __GET_CPICT ] ), ;
+      aGet[ __GET_NEBID ] := wvw_ebCreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
+         Transform( aGet[ __GET_XINIT ], aGet[ __GET_CPICT ] ), ;
          {| nWinNum, nId, nEvent | MaskEditBox( nWinNum, nId, nEvent, @aEBGets ) }, ;
-         aEBGets[ i ][ __GET_LMULTILINE ], ;  // EBtype
+         aGet[ __GET_LMULTILINE ], ;  // EBtype
       0, ;  // nmorestyle
       iif( lmultiline, NIL, nlen + 1 ), ; // nMaxChar
       NIL, NIL )
@@ -431,11 +431,11 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
 
 STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButton )
 
-   LOCAL i
+   LOCAL aGet
 
    // session ended
-   FOR i := 1 TO Len( aEBGets )
-      wvw_ebEnable( nwinnum, aEBGets[ i ][ __GET_NEBID ], .F. )
+   FOR EACH aGet IN aEBGets
+      wvw_ebEnable( nwinnum, aGet[ __GET_NEBID ], .F. )
    NEXT
    wvw_pbEnable( nwinnum, nOKbutton, .F. )
    wvw_pbEnable( nwinnum, nCancelbutton, .F. )
@@ -451,12 +451,12 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
 // save values into variables
 STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
 
-   LOCAL i, cdebugreport
+   LOCAL aGet, cdebugreport
 
-   FOR i := 1 TO Len( aEBGets )
+   FOR EACH aGet IN aEBGets
       // do some validation if necessary
-      Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
-         GetValFromText( wvw_ebGetText( nwinnum, aEBGets[ i ][ __GET_NEBID ] ), aEBGets[ i ][ __GET_CVALTYPE ] ) )
+      Eval( aGet[ __GET_BASSIGN ], ;
+         GetValFromText( wvw_ebGetText( nwinnum, aGet[ __GET_NEBID ] ), aGet[ __GET_CVALTYPE ] ) )
    NEXT
    lDone := .T.
 
@@ -470,11 +470,10 @@ STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
 // restore initial values into variables
 STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 
-   LOCAL i, cdebugreport
+   LOCAL aGet, cdebugreport
 
-   FOR i := 1 TO Len( aEBGets )
-      Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
-         aEBGets[ i ][ __GET_XINIT ] )
+   FOR EACH aGet IN aEBGets
+      Eval( aGet[ __GET_BASSIGN ], aGet[ __GET_XINIT ] )
    NEXT
    lDone := .T.
 

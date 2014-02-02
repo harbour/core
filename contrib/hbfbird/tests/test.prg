@@ -75,7 +75,7 @@ PROCEDURE Main()
 
    ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
 
-   // FIX WINDOWS GPF BELOW
+   // TOFIX: Windows GPF below
 
    qry := FBQuery( db, "SELECT * FROM customer", nDialect )
    IF HB_ISNUMERIC( qry )
@@ -86,8 +86,8 @@ PROCEDURE Main()
 
       FOR x := 1 TO num_cols
          ? x, "> "
-         FOR y := 1 TO Len( columns[ x ] )
-            ?? columns[ x, y ], ""
+         FOR EACH y IN columns[ x ]
+            ?? y, ""
          NEXT
       NEXT
 

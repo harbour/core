@@ -96,7 +96,6 @@ METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
 METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
 
-   ::nHandle := 0
    ::cFolder := cFolder
    ::cFilename := cFilename
    ::cTitle := cTitle

@@ -52,6 +52,8 @@
 #include "hbclass.ch"
 #include "hbdoc.ch"
 
+#include "fileio.ch"
+
 #ifdef __PLATFORM__DOS
 #  define EXTENSION ".htm"
 #else
@@ -187,13 +189,13 @@ METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
 
 METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
-   LOCAL idx
+   LOCAL item
 
-   FOR idx := 1 TO Len( oEntry:Fields )
-      IF oEntry:Fields[ idx ][ 1 ] == "NAME"
+   FOR EACH item IN oEntry:Fields
+      IF item[ 1 ] == "NAME"
          ::OpenTag( "div", "id", oEntry:filename ):OpenTag( "h4" ):Append( oEntry:Name ):CloseTag( "h4" ):CloseTag( "div" )
-      ELSEIF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-         ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry, oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      ELSEIF oEntry:IsField( item[ 1 ] ) .AND. oEntry:IsOutput( item[ 1 ] ) .AND. Len( oEntry:&( item[ 1 ] ) ) > 0
+         ::WriteEntry( item[ 1 ], oEntry, oEntry:IsPreformatted( item[ 1 ] ) )
       ENDIF
    NEXT
 
@@ -201,11 +203,11 @@ METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
 METHOD Generate() CLASS GenerateHTML
 
-   IF ! Empty( ::nHandle )
+   IF ::nHandle != F_ERROR
       ::CloseTag( "body" )
       ::CloseTag( "html" )
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self
@@ -285,7 +287,7 @@ METHOD CloseTag( cText ) CLASS GenerateHTML
 
    IF cText == "html"
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self
@@ -306,9 +308,9 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
       NEXT
 
       aFormat := hb_ATokens( cFormat, "," )
-      FOR idx := Len( aFormat ) TO 1 STEP -1
-         IF ! Empty( aFormat[ idx ] )
-            cResult := "<" + aFormat[ idx ] + ">" + cResult + "</" + aFormat[ idx ] + ">"
+      FOR EACH idx IN aFormat DESCEND
+         IF ! Empty( idx )
+            cResult := "<" + idx + ">" + cResult + "</" + idx + ">"
          ENDIF
       NEXT
 

@@ -215,47 +215,47 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
-   LOCAL n
+   LOCAL field
 
    aWAData[ WA_SQLSTRUCT ] := ""
 
-   FOR n := 1 TO Len( aStruct )
-      IF n > 1
+   FOR EACH field IN aStruct
+      IF ! field:__enumIsFirst()
          aWAData[ WA_SQLSTRUCT ] += ", "
       ENDIF
-      aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
+      aWAData[ WA_SQLSTRUCT ] += "[" + field[ DBS_NAME ] + "]"
       DO CASE
-      CASE aStruct[ n ][ DBS_TYPE ] $ "C,Character"
-         aWAData[ WA_SQLSTRUCT ] += " CHAR(" + hb_ntos( aStruct[ n ][ DBS_LEN ] ) + ") NULL"
+      CASE field[ DBS_TYPE ] $ "C,Character"
+         aWAData[ WA_SQLSTRUCT ] += " CHAR(" + hb_ntos( field[ DBS_LEN ] ) + ") NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "V"
-         aWAData[ WA_SQLSTRUCT ] += " VARCHAR(" + hb_ntos( aStruct[ n ][ DBS_LEN ] ) + ") NULL"
+      CASE field[ DBS_TYPE ] == "V"
+         aWAData[ WA_SQLSTRUCT ] += " VARCHAR(" + hb_ntos( field[ DBS_LEN ] ) + ") NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "B"
+      CASE field[ DBS_TYPE ] == "B"
          aWAData[ WA_SQLSTRUCT ] += " DOUBLE NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "Y"
+      CASE field[ DBS_TYPE ] == "Y"
          aWAData[ WA_SQLSTRUCT ] += " SMALLINT NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "I"
+      CASE field[ DBS_TYPE ] == "I"
          aWAData[ WA_SQLSTRUCT ] += " MEDIUMINT NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "D"
+      CASE field[ DBS_TYPE ] == "D"
          aWAData[ WA_SQLSTRUCT ] += " DATE NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "T"
+      CASE field[ DBS_TYPE ] == "T"
          aWAData[ WA_SQLSTRUCT ] += " DATETIME NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "@"
+      CASE field[ DBS_TYPE ] == "@"
          aWAData[ WA_SQLSTRUCT ] += " TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "M"
+      CASE field[ DBS_TYPE ] == "M"
          aWAData[ WA_SQLSTRUCT ] += " TEXT NULL"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "N"
-         aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + hb_ntos( aStruct[ n ][ DBS_LEN ] ) + ")"
+      CASE field[ DBS_TYPE ] == "N"
+         aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + hb_ntos( field[ DBS_LEN ] ) + ")"
 
-      CASE aStruct[ n ][ DBS_TYPE ] == "L"
+      CASE field[ DBS_TYPE ] == "L"
          aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
       ENDCASE
    NEXT

@@ -1737,15 +1737,15 @@ STATIC FUNCTION wvwm_nMouseChecker( nkey )
 
    s_ncurkey := nkey   // 2004-03-03
 
-   FOR i := 1 TO Len( s_amouseobjlist[ nCurWindow + 1 ] )
-      oMouseObj := s_amouseobjlist[ nCurWindow + 1 ][ i ][ 2 ]
+   FOR EACH i IN s_amouseobjlist[ nCurWindow + 1 ]
+      oMouseObj := i[ 2 ]
 
       DO CASE
-      CASE s_amouseobjlist[ nCurWindow + 1 ][ i ][ 1 ] == _MOBJECT_BUTTON
+      CASE i[ 1 ] == _MOBJECT_BUTTON
          nButtonChecker( nkey, oMouseObj )
-      CASE s_amouseobjlist[ nCurWindow + 1 ][ i ][ 1 ] == _MOBJECT_HSCROLL
+      CASE i[ 1 ] == _MOBJECT_HSCROLL
          nScrollChecker( nkey, "H", oMouseObj )
-      CASE s_amouseobjlist[ nCurWindow + 1 ][ i ][ 1 ] == _MOBJECT_VSCROLL
+      CASE i[ 1 ] == _MOBJECT_VSCROLL
          nScrollChecker( nkey, "V", oMouseObj )
       OTHERWISE
          // runtime error!

@@ -236,7 +236,7 @@ METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
 
 PROCEDURE init_Templates()
 
-   LOCAL idx
+   LOCAL item
    LOCAL aSubCategories := { ;
       "Application", ;
       "Array", ;
@@ -293,10 +293,10 @@ PROCEDURE init_Templates()
       { "Run time errors", { "" } }, ;
    }
 
-   FOR idx := 1 TO Len( p_aCategories )
-      IF ! Empty( p_aCategories[ idx ] )
-         AAdd( p_aCategories[ idx ], Array( Len( p_aCategories[ idx ][ 2 ] ) ) ) // holder array of sub-category entries
-         AAdd( p_aCategories[ idx ], "" ) // holder for sub-category file name
+   FOR EACH item IN p_aCategories
+      IF ! Empty( item )
+         AAdd( item, Array( Len( item[ 2 ] ) ) ) // holder array of sub-category entries
+         AAdd( item, "" ) // holder for sub-category file name
       ENDIF
    NEXT
 
@@ -398,11 +398,11 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
 
 PROCEDURE ShowComplianceHelp()
 
-   LOCAL idx
+   LOCAL item
 
-   FOR idx := 1 TO Len( p_aCompliance )
-      ShowSubHelp( p_aCompliance[ idx ][ 1 ], 1, 0, idx )
-      ShowSubHelp( Decode( "COMPLIANCE", NIL, p_aCompliance[ idx ][ 1 ] ), 1, 6, idx )
+   FOR EACH item IN p_aCompliance
+      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
+      ShowSubHelp( Decode( "COMPLIANCE", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 
@@ -410,11 +410,11 @@ PROCEDURE ShowComplianceHelp()
 
 PROCEDURE ShowPlatformsHelp
 
-   LOCAL idx
+   LOCAL item
 
-   FOR idx := 1 TO Len( p_aPlatforms )
-      ShowSubHelp( p_aPlatforms[ idx ][ 1 ], 1, 0, idx )
-      ShowSubHelp( Decode( "PLATFORMS", NIL, p_aPlatforms[ idx ][ 1 ] ), 1, 6, idx )
+   FOR EACH item IN p_aPlatforms
+      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
+      ShowSubHelp( Decode( "PLATFORMS", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 

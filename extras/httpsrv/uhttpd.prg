@@ -555,7 +555,7 @@ PROCEDURE Main( ... )
       DO WHILE .T.
 
 #ifdef __PLATFORM__WINDOWS
-         // windows resource releasing - 1 millisecond wait
+         // Windows resource releasing - 1 millisecond wait
          IF win_SysRefresh( 1 ) != 0
             EXIT
          ENDIF
@@ -1814,17 +1814,17 @@ FUNCTION uhttpd_split( cSeparator, cString, nMax )
 
 FUNCTION uhttpd_join( cSeparator, aData )
 
-   LOCAL cRet := "", nI
+   LOCAL cRet := "", xData
 
-   FOR nI := 1 TO Len( aData )
-      IF nI > 1
+   FOR EACH xData IN aData
+      IF ! xData:__enumIsFirst()
          cRet += cSeparator
       ENDIF
-      SWITCH ValType( aData[ nI ] )
+      SWITCH ValType( xData )
       CASE "C"
-      CASE "M" ; cRet += aData[ nI ]; EXIT
-      CASE "N" ; cRet += hb_ntos( aData[ nI ] ); EXIT
-      CASE "D" ; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
+      CASE "M" ; cRet += xData; EXIT
+      CASE "N" ; cRet += hb_ntos( xData ); EXIT
+      CASE "D" ; cRet += iif( ! Empty( xData ), DToC( xData ), "" ); EXIT
       ENDSWITCH
    NEXT
 

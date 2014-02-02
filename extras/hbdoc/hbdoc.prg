@@ -114,7 +114,7 @@ MEMVAR p_hsSwitches
 PROCEDURE Main( ... )
 
    LOCAL aArgs := hb_AParams()
-   LOCAL idx, idx2, idx3, idx4
+   LOCAL idx, idx2, item, item4
    LOCAL arg
    LOCAL cArgName
    LOCAL cFormat
@@ -221,7 +221,7 @@ PROCEDURE Main( ... )
       }, ;
       {| c | iif( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
 
-   OutStd( hb_ntos( Len( aContent ) ) + " items found" + hb_eol() )
+   OutStd( hb_ntos( Len( aContent ) ), "items found" + hb_eol() )
    OutStd( hb_eol() )
 
    ASort( aContent, , , {| oL, oR | ;
@@ -231,24 +231,24 @@ PROCEDURE Main( ... )
       } )
 
    // TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why?
-   FOR idx := 1 TO Len( p_aCategories )
-      IF ! Empty( p_aCategories[ idx ] )
-         IF Len( p_aCategories[ idx ] ) == 4 // category, list of subcategory, list of entries, handle
-            FOR idx2 := Len( p_aCategories[ idx ][ 3 ] ) TO 1 STEP -1
-               IF HB_ISARRAY( p_aCategories[ idx ][ 3 ][ idx2 ] )
-                  ASort( p_aCategories[ idx ][ 3 ][ idx2 ], , , ;
+   FOR EACH item IN p_aCategories
+      IF ! Empty( item )
+         IF Len( item ) == 4  // category, list of subcategory, list of entries, handle
+            FOR idx2 := Len( item[ 3 ] ) TO 1 STEP -1
+               IF HB_ISARRAY( item[ 3 ][ idx2 ] )
+                  ASort( item[ 3 ][ idx2 ], , , ;
                      {| oL, oR | ;
                         hb_ntos( oL:CategoryIndex( oL:Category ) ) + " " + hb_ntos( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + " " + oL:Name ;
                         <= ;
                         hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + " " + oR:Name ;
                         } )
                ELSE
-                  hb_ADel( p_aCategories[ idx ][ 2 ], idx2, .T. )
-                  hb_ADel( p_aCategories[ idx ][ 3 ], idx2, .T. )
+                  hb_ADel( item[ 2 ], idx2, .T. )
+                  hb_ADel( item[ 3 ], idx2, .T. )
                ENDIF
             NEXT
          ELSE
-            OutStd( "Index", idx, " is not length 4 but rather", Len( p_aCategories[ idx ] ), hb_eol() )
+            OutStd( "Index", item:__enumIndex(), "is not length 4 but rather", Len( item ), hb_eol() )
          ENDIF
       ENDIF
    NEXT
@@ -257,26 +257,25 @@ PROCEDURE Main( ... )
       p_hsSwitches[ "format" ] := { "text" }
    ENDIF
 
-   FOR idx2 := 1 TO Len( p_hsSwitches[ "format" ] )
-      cFormat := p_hsSwitches[ "format" ][ idx2 ]
+   FOR EACH cFormat IN p_hsSwitches[ "format" ]
       IF !( cFormat == "all" )
-         OutStd( "Output as " + cFormat + hb_eol() )
+         OutStd( "Output as", cFormat + hb_eol() )
 
          DO CASE
          CASE p_hsSwitches[ "output" ] == "single"
 
             oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, "harbour", "Harbour Reference Guide" )
 
-            FOR idx := 1 TO Len( aContent )
-               IF Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
-                  oDocument:AddEntry( aContent[ idx ] )
-                  idx := Len( aContent )
+            FOR EACH item IN aContent
+               IF Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
+                  oDocument:AddEntry( item )
+                  EXIT
                ENDIF
             NEXT
 
-            FOR idx := 1 TO Len( aContent )
-               IF !( Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
-                  oDocument:AddEntry( aContent[ idx ] )
+            FOR EACH item IN aContent
+               IF !( Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
+                  oDocument:AddEntry( item )
                ENDIF
             NEXT
 
@@ -287,81 +286,80 @@ PROCEDURE Main( ... )
 
             oIndex := &( "Generate" + cFormat + "()" ):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
 
-            FOR idx := 1 TO Len( aContent )
-               IF Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
+            FOR EACH item IN aContent
+               IF Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
                   IF oIndex != NIL
-                     oIndex:AddEntry( aContent[ idx ] )
+                     oIndex:AddEntry( item )
                   ENDIF
-                  idx := Len( aContent )
+                  EXIT
                ENDIF
             NEXT
 
-            FOR idx3 := 1 TO Len( p_aCategories )
-               IF ! Empty( p_aCategories[ idx3 ] )
-                  p_aCategories[ idx3 ][ 4 ] := Filename( p_aCategories[ idx3 ][ 1 ] )
-                  // ~ oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
-                  // ~ oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
+            FOR EACH item IN p_aCategories
+               IF ! Empty( item )
+                  item[ 4 ] := Filename( item[ 1 ] )
+                  // ~ oIndex:BeginSection( item[ 1 ], item[ 4 ] )
+                  // ~ oIndex:EndSection( item[ 1 ], item[ 4 ] )
                ENDIF
             NEXT
 
-            FOR idx3 := 1 TO Len( p_aCategories )
-               IF ! Empty( p_aCategories[ idx3 ] )
-                  oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, p_aCategories[ idx3 ][ 4 ], "Harbour Reference Guide - " + p_aCategories[ idx3 ][ 1 ] )
+            FOR EACH item IN p_aCategories
+               IF ! Empty( item )
+                  oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, item[ 4 ], "Harbour Reference Guide - " + item[ 1 ] )
 
                   IF oIndex != NIL
-                     oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                     oIndex:BeginSection( item[ 1 ], oDocument:cFilename )
                   ENDIF
-                  oDocument:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  oDocument:BeginSection( item[ 1 ], oDocument:cFilename )
 
-                  FOR idx := 1 TO Len( p_aCategories[ idx3 ][ 3 ] )
-                     IF ! Empty( p_aCategories[ idx3 ][ 3 ][ idx ] )
-                        ASort( p_aCategories[ idx3 ][ 3 ][ idx ], , , {| oL, oR | oL:Name <= oR:Name } )
-                        IF Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 1 .OR. Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 0
+                  FOR idx := 1 TO Len( item[ 3 ] )
+                     IF ! Empty( item[ 3 ][ idx ] )
+                        ASort( item[ 3 ][ idx ], , , {| oL, oR | oL:Name <= oR:Name } )
+                        IF Len( item[ 2 ][ idx ] ) > 1 .OR. Len( item[ 2 ][ idx ] ) > 0
                            IF oIndex != NIL
-                              oIndex:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                              oIndex:BeginSection( item[ 2 ][ idx ], oDocument:cFilename )
                            ENDIF
-                           oDocument:BeginSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           oDocument:BeginSection( item[ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
-                        FOR idx4 := 1 TO Len( p_aCategories[ idx3 ][ 3 ][ idx ] )
-                           IF ! Empty( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
-                              IF Right( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
-                              ELSE
+                        FOR EACH item4 IN item[ 3 ][ idx ]
+                           IF ! Empty( item4 )
+                              IF !( Right( item4:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
                                  IF oIndex != NIL
-                                    oIndex:AddReference( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
+                                    oIndex:AddReference( item4 )
                                  ENDIF
-                                 oDocument:AddEntry( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
+                                 oDocument:AddEntry( item4 )
                                  IF oIndex != NIL
                                     oDocument:AddReference( "Index", oIndex:cFilename )
                                     // this kind of works; the reference is outputed but it is not what I meant
-                                    oDocument:AddReference( p_aCategories[ idx3 ][ 1 ], oIndex:cFilename, p_aCategories[ idx3 ][ 4 ] )
+                                    oDocument:AddReference( item[ 1 ], oIndex:cFilename, item[ 4 ] )
                                  ENDIF
                               ENDIF
                            ENDIF
                         NEXT
-                        IF Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 1 .OR. Len( p_aCategories[ idx3 ][ 2 ][ idx ] ) > 0
+                        IF Len( item[ 2 ][ idx ] ) > 1 .OR. Len( item[ 2 ][ idx ] ) > 0
                            IF oIndex != NIL
-                              oIndex:EndSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                              oIndex:EndSection( item[ 2 ][ idx ], oDocument:cFilename )
                            ENDIF
-                           oDocument:EndSection( p_aCategories[ idx3 ][ 2 ][ idx ], oDocument:cFilename )
+                           oDocument:EndSection( item[ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
                      ENDIF
                   NEXT
                   IF oIndex != NIL
-                     oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                     oIndex:EndSection( item[ 1 ], oDocument:cFilename )
                   ENDIF
-                  oDocument:EndSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
+                  oDocument:EndSection( item[ 1 ], oDocument:cFilename )
                   oDocument:Generate()
                ENDIF
             NEXT
 
          CASE p_hsSwitches[ "output" ] == "entry"
 
-            FOR idx := 1 TO Len( aContent )
-               oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, aContent[ idx ]:filename, "Harbour Reference Guide" )
+            FOR EACH item IN aContent
+               oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, item:filename, "Harbour Reference Guide" )
                IF oIndex != NIL
-                  oIndex:AddEntry( aContent[ idx ] )
+                  oIndex:AddEntry( item )
                ENDIF
-               oDocument:AddEntry( aContent[ idx ] )
+               oDocument:AddEntry( item )
                oDocument:Generate()
             NEXT
 
@@ -383,37 +381,32 @@ PROCEDURE Main( ... )
 
 STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive procedure
 
-   LOCAL aFiles
-   LOCAL nLen
-   LOCAL idx
+   LOCAL file
    LOCAL cExt
 
    // ~ OutStd( ">>> " + cFolder + hb_eol() )
 
    cFolder += hb_ps()
 
-   aFiles := Directory( cFolder + hb_osFileMask(), "D" )
-   IF ( nLen := Len( aFiles ) ) > 0
-      FOR idx := 1 TO nLen
-         IF aFiles[ idx ][ F_ATTR ] == "D"
-            IF !( aFiles[ idx ][ F_NAME ] == "." ) .AND. ;
-               !( aFiles[ idx ][ F_NAME ] == ".." )
+   FOR EACH file IN Directory( cFolder + hb_osFileMask(), "D" )
+      IF file[ F_ATTR ] == "D"
+         IF !( file[ F_NAME ] == "." ) .AND. ;
+            !( file[ F_NAME ] == ".." )
 
-               IF p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ]
-                  /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
-                  ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
-               ENDIF
-            ENDIF
-         ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0
-            hb_FNameSplit( aFiles[ idx ][ F_NAME ], , , @cExt )
-            IF Lower( cExt ) == ".txt"
-               IF ! ProcessFile( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
-                  EXIT
-               ENDIF
+            IF p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ]
+               /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( file[ F_NAME ] ) } ) == 0 */
+               ProcessFolder( cFolder + file[ F_NAME ], @aContent )
             ENDIF
          ENDIF
-      NEXT
-   ENDIF
+      ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( file[ F_NAME ] ) } ) == 0
+         hb_FNameSplit( file[ F_NAME ], , , @cExt )
+         IF Lower( cExt ) == ".txt"
+            IF ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
+               EXIT
+            ENDIF
+         ENDIF
+      ENDIF
+   NEXT
 
    RETURN
 
@@ -442,8 +435,8 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    ENDDO
    FClose( aHandle[ 1 ] )
 
-   IF ( Len( aContent ) - nOldContentLen ) > 0
-      OutStd( "> " + cFile + " (" + hb_ntos( Len( aContent ) - nOldContentLen ) + " items)" + hb_eol() )
+   IF Len( aContent ) > nOldContentLen
+      OutStd( ">", cFile, "(" + hb_ntos( Len( aContent ) - nOldContentLen ) + " items)" + hb_eol() )
    ENDIF
 
    RETURN .T.
@@ -731,7 +724,8 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
 
    STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
-   LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, idx
+
+   LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, cEOL
 
    hb_default( @nMaxLine, 256 )
 
@@ -743,9 +737,9 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
    cLine := hb_BLeft( cLine, nNumRead )
 
    nEol := 0
-   FOR idx := 1 TO Len( s_aEOL )
-      IF ( nEol := At( s_aEOL[ idx ], cLine ) ) > 0
-         nLenEol := hb_BLen( s_aEOL[ idx ] ) - 1
+   FOR EACH cEOL IN s_aEOL
+      IF ( nEol := hb_BAt( cEOL, cLine ) ) > 0
+         nLenEol := hb_BLen( cEOL ) - 1
          EXIT
       ENDIF
    NEXT
@@ -753,7 +747,7 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
    IF nEol == 0
       cBuffer := cLine
    ELSE
-      cBuffer := Left( cLine, nEol - 1 )
+      cBuffer := hb_BLeft( cLine, nEol - 1 )
       FSeek( aHandle[ 1 ], nSavePos + hb_BLen( cBuffer ) + 1 + nLenEol, FS_SET )
    ENDIF
 
@@ -891,7 +885,7 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
          DO CASE
          CASE nMode == 1 ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
          CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
-         OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
+         OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ); OutStd( xLine ); OutStd( hb_eol() )
          ENDCASE
       ENDCASE
    ENDIF
@@ -1013,7 +1007,7 @@ FUNCTION Join( aVar, cDelimiter )
 STATIC PROCEDURE AddErrorCondition( cFile, cMessage, nLine )
 
    IF p_hsSwitches[ "immediate-errors" ]
-      OutStd( cFile + ":" + hb_ntos( nLine ) + ": " + cMessage + hb_eol() )
+      OutStd( cFile + ":" + hb_ntos( nLine ) + ":", cMessage + hb_eol() )
    ENDIF
 
    RETURN

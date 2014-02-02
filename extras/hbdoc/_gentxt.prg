@@ -53,6 +53,8 @@
 #include "hbclass.ch"
 #include "hbdoc.ch"
 
+#include "fileio.ch"
+
 CREATE CLASS GenerateAscii FROM GenerateText
 
    METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
@@ -127,14 +129,14 @@ METHOD AddIndex( oEntry ) CLASS GenerateText
 
 METHOD AddEntry( oEntry ) CLASS GenerateText
 
-   LOCAL idx
+   LOCAL item
 
    IF ::IsIndex()
       ::AddIndex( oEntry )
    ELSE
-      FOR idx := 1 TO Len( oEntry:Fields )
-         IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-            ::WriteEntry( oEntry:FieldName( oEntry:Fields[ idx ][ 1 ] ), oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      FOR EACH item IN oEntry:Fields
+         IF oEntry:IsField( item[ 1 ] ) .AND. oEntry:IsOutput( item[ 1 ] ) .AND. Len( oEntry:&( item[ 1 ] ) ) > 0
+            ::WriteEntry( oEntry:FieldName( item[ 1 ] ), oEntry:&( item[ 1 ] ), oEntry:IsPreformatted( item[ 1 ] ) )
          ENDIF
       NEXT
 
@@ -168,9 +170,9 @@ METHOD Generate() CLASS GenerateText
       ENDIF
    ENDIF
 
-   IF ! Empty( ::nHandle )
+   IF ::nHandle != F_ERROR
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self

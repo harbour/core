@@ -3,7 +3,7 @@
 PROCEDURE Main()
 
    LOCAL aReport
-   LOCAL nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts
+   LOCAL nWidth, nTab, nI, nJ, nK, nCol, nRow, aStyle, aFonts, aFont
    LOCAL nTop, nLeft, nBottom, nRight, cTestFile
    LOCAL aColor := { ;
       "FF0000", "8B0000", "800000", "FF4500", "D2691E", "B8860B", "FF8C00", "FFA500", "DAA520", "808000", "FFD700", "FFFF00", "ADFF2F", "9ACD32", "7FFF00", "7CFC00", "00FF00", "32CD32", "008000", "006400", ;
@@ -114,12 +114,12 @@ PROCEDURE Main()
    pdfBookAdd( "Fonts", 1, aReport[ REPORTPAGE ], 0 )
    pdfBookAdd( "Different Styles", 2, aReport[ REPORTPAGE ], 0 )
    nK := 6
-   FOR nI := 1 TO Len( aFonts )
+   FOR EACH aFont IN aFonts
       ++nK
       FOR nJ := 1 TO 4
-         IF aFonts[ nI ][ nJ + 1 ]
-            pdfSetFont( aFonts[ nI ][ 1 ], nJ - 1, aReport[ FONTSIZE ] )
-            pdfRJust( "0123456789 This is a test for " + aFonts[ nI ][ 1 ] + " " + ;
+         IF aFont[ nJ + 1 ]
+            pdfSetFont( aFont[ 1 ], nJ - 1, aReport[ FONTSIZE ] )
+            pdfRJust( "0123456789 This is a test for " + aFont[ 1 ] + " " + ;
                aStyle[ nJ ], nK++, aReport[ REPORTWIDTH ], "R" )
          ENDIF
       NEXT

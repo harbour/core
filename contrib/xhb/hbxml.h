@@ -72,7 +72,7 @@
    #define MXML_LINE_TERMINATOR       '\r'
    #define MXML_SOFT_LINE_TERMINATOR  '\n'
 #else
-/*Notice, this works for unix AND windows */
+/* Notice, this works for both UNIX and Windows */
    #define MXML_LINE_TERMINATOR       '\n'
    #define MXML_SOFT_LINE_TERMINATOR  '\r'
 #endif

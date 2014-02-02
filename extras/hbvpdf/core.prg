@@ -1377,7 +1377,7 @@ PROCEDURE pdfOpenHeader( cFile )
             At( " ", cFile ) > 0 .OR. ;
             ( At( " ", cFile ) == 0 .AND. Len( cFile ) > 8 ) .OR. ;
             ( ( nAt := At( ".", cFile ) ) > 0 .AND. Len( SubStr( cFile, nAt + 1 ) ) > 3 )
-         COPY File ( cFile ) TO temp.tmp
+         hb_FCopy( cFile, "temp.tmp" )
          cFile := "temp.tmp"
       ENDIF
       t_aReport[ HEADER ] := File2Array( cFile )
@@ -1452,7 +1452,7 @@ PROCEDURE pdfDisableHeader( cId )
 PROCEDURE pdfSaveHeader( cFile )
 
    Array2File( "temp.tmp", t_aReport[ HEADER ] )
-   COPY FILE temp.tmp to ( cFile )
+   hb_FCopy( "temp.tmp", cFile )
 
    RETURN
 
@@ -2536,8 +2536,8 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )
    nDepth++
    nBytes += WriteData( hFile, aRay )
    IF HB_ISARRAY( aRay )
-      FOR i := 1 TO Len( aRay )
-         nBytes += Array2File( cFile, aRay[ i ], nDepth, hFile )
+      FOR EACH i IN aRay
+         nBytes += Array2File( cFile, i, nDepth, hFile )
       NEXT
    ENDIF
    nDepth--

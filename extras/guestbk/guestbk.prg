@@ -130,9 +130,8 @@ PROCEDURE Main()
             cCode += "<tr><td bgcolor='" + cColor + "'>"
 
             cLine := oIni:ReadString( "Format", "Format" + hb_ntos( j ), "" )
-            FOR l := 1 TO Len( aEntries[ i ] )
-               cLine := StrTran( cLine, "<#" + aEntries[ i, l, 1 ] + ">", ;
-                  aEntries[ i, l, 2 ] )
+            FOR EACH l IN aEntries[ i ]
+               cLine := StrTran( cLine, "<#" + l[ 1 ] + ">", l[ 2 ] )
             NEXT
 
             cLine := StrTran( cLine, "<#DateTime>", ;
