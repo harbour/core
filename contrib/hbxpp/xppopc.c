@@ -144,9 +144,7 @@ HB_FUNC( XPP_INCLUDE )
    PHB_ITEM pKey  = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_ARRAY( pSelf ) )
-   {
       hb_retl( hb_arrayScan( pSelf, pKey, NULL, NULL, HB_FALSE ) != 0 );
-   }
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1109, NULL, "$", 2, pKey, pSelf );

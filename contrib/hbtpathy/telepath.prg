@@ -732,10 +732,10 @@ PROCEDURE tp_uninstall()
 
    RETURN
 
-STATIC FUNCTION __TP_INFREE()
+STATIC FUNCTION __tp_infree()
    RETURN -1
 
-STATIC FUNCTION __TP_OUTFREE()
+STATIC FUNCTION __tp_outfree()
    RETURN -1
 
 FUNCTION bin_and( ... )

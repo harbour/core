@@ -95,7 +95,7 @@
 
 /* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
          missing the entry for wide version of one function,
-         so we turn off UNICODE, until its fixed in OpenWatcom:
+         so we turn off UNICODE, until it's fixed in OpenWatcom:
             Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
          [vszakats] */
 #  if defined( __WATCOMC__ ) && defined( UNICODE )

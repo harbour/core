@@ -180,9 +180,9 @@ HB_FUNC( XDL_INIT_MMFILE )
       hb_xfree( mmf );
 }
 
-/*
-   HB_FUNC( XDL_FREE_MMFILE )
-   {
+#if 0
+HB_FUNC( XDL_FREE_MMFILE )
+{
    HB_MMF * phb_mmf = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
    if( phb_mmf && phb_mmf->mmf )
@@ -192,8 +192,8 @@ HB_FUNC( XDL_INIT_MMFILE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
- */
+}
+#endif
 
 /* int xdl_mmfile_iscompact(mmfile_t *mmf) */
 

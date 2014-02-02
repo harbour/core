@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * XBASE++ compatibility header
+ * Xbase++ compatibility header
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
