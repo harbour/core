@@ -229,17 +229,14 @@ static void hb_backgroundRunForced( void )
 static PHB_BACKGROUNDTASK hb_backgroundFind( HB_ULONG ulID )
 {
    PHB_BKG bkg = ( PHB_BKG ) hb_stackGetTSD( &s_bkg );
+   int iTask;
 
-   int iTask = 0;
-
-   while( iTask < bkg->uiBackgroundMaxTask )
+   for( iTask = 0; iTask < bkg->uiBackgroundMaxTask; ++iTask )
    {
       PHB_BACKGROUNDTASK pBkgTask = bkg->pBackgroundTasks[ iTask ];
 
       if( ulID == pBkgTask->ulTaskID )
          return pBkgTask;
-
-      ++iTask;
    }
 
    return NULL;
@@ -391,11 +388,12 @@ HB_FUNC( HB_BACKGROUNDRESET )
 HB_FUNC( HB_BACKGROUNDADD )
 {
    PHB_ITEM pBlock    = hb_param( 1, HB_IT_EVALITEM );
-   PHB_ITEM pMillisec = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pActive   = hb_param( 3, HB_IT_LOGICAL );
 
    if( pBlock )
    {
+      PHB_ITEM pMillisec = hb_param( 2, HB_IT_NUMERIC );
+      PHB_ITEM pActive   = hb_param( 3, HB_IT_LOGICAL );
+
       hb_retnl( hb_backgroundAddFunc( pBlock,
                                       pMillisec == NULL ? 0 : hb_itemGetNI( pMillisec ),
                                       pActive == NULL ? HB_TRUE : hb_itemGetL( pActive ) ) );

@@ -3,7 +3,6 @@
  * FileStats() function
  *
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai [dot] ws>
- *
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -76,8 +75,7 @@ HB_FUNC( FILESTATS )
    /* Parameter checking */
    if( hb_parclen( 1 ) == 0 )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
@@ -120,33 +118,33 @@ HB_FUNC( FILESTATS )
          }
 
          /* Standard characters */
-         if( ( usAttr & 4 ) == 0 ) /* Hidden (can't read)*/
+         if( ( usAttr & 4 ) == 0 ) /* Hidden (can't read) */
             ushbAttr |= HB_FA_HIDDEN;
 
-         if( ( usAttr & 2 ) == 0 ) /* read only (can't write)*/
+         if( ( usAttr & 2 ) == 0 ) /* read only (can't write) */
             ushbAttr |= HB_FA_READONLY;
 
-         if( ( usAttr & 1 ) == 1 ) /* executable?  (xbit)*/
+         if( ( usAttr & 1 ) == 1 ) /* executable? (xbit) */
             ushbAttr |= HB_FA_SYSTEM;
 
          /* Extension characters */
 
          if( ( statbuf.st_mode & S_IFLNK ) == S_IFLNK )
-            *pszAttr++ = 'Z';  /* Xharbour extension */
+            *pszAttr++ = 'Z';  /* xHarbour extension */
 
          if( ( statbuf.st_mode & S_IFSOCK ) == S_IFSOCK )
-            *pszAttr++ = 'K';  /* Xharbour extension */
+            *pszAttr++ = 'K';  /* xHarbour extension */
 
          /* device */
          if( ( statbuf.st_mode & S_IFBLK ) == S_IFBLK ||
              ( statbuf.st_mode & S_IFCHR ) == S_IFCHR )
-            ushbAttr |= HB_FA_DEVICE;  /* Xharbour extension */
+            ushbAttr |= HB_FA_DEVICE;  /* xHarbour extension */
 
          if( ( statbuf.st_mode & S_IFIFO ) == S_IFIFO )
-            *pszAttr++ = 'Y';  /* Xharbour extension */
+            *pszAttr++ = 'Y';  /* xHarbour extension */
 
          if( S_ISDIR( statbuf.st_mode ) )
-            ushbAttr |= HB_FA_DIRECTORY;  /* Xharbour extension */
+            ushbAttr |= HB_FA_DIRECTORY;  /* xHarbour extension */
          /* Give the ARCHIVE if readwrite, not executable and not special */
          else if( S_ISREG( statbuf.st_mode ) && ushbAttr == 0 )
             ushbAttr |= HB_FA_ARCHIVE;

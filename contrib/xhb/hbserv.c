@@ -788,16 +788,12 @@ HB_FUNC( HB_STARTSERVICE )
    /* in windows, we just detach from console */
    #ifdef HB_OS_WIN
    if( hb_parl( 1 ) )
-   {
       FreeConsole();
-   }
    #endif
 
    /* Initialize only if the service has not yet been initialized */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 }
 
 /**
@@ -870,8 +866,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
        ( ! HB_IS_POINTER( pFunc ) && ! HB_IS_STRING( pFunc ) && ! HB_IS_BLOCK( pFunc ) )
        )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", NULL,
-                            2, hb_param( 1, HB_IT_ANY ), hb_param( 2, HB_IT_ANY ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", NULL, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
@@ -881,9 +876,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
 
    /* if the hook is not initialized, initialize it */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 
    hb_threadEnterCriticalSection( &s_ServiceMutex );
 
@@ -917,15 +910,12 @@ HB_FUNC( HB_POPSIGNALHANDLER )
          }
       }
       else
-      {
          hb_retl( HB_FALSE );
-      }
+
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
    }
    else
-   {
       hb_retl( HB_FALSE );
-   }
 }
 
 /**

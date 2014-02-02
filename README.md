@@ -787,7 +787,7 @@ sensitive.
      compiler/linker tool name suffix &ndash; usually
      version number.
 
-## Cross-building
+## Cross-builds
 
 You can build Harbour for target platforms different than host
 platform. F.e. you can create Windows build on *nix systems, Linux

@@ -288,9 +288,7 @@ void nxs_xordecode(
          keypos = 0;
          /* last block */
          if( keylen > cipherlen - pos )
-         {
             keylen = ( HB_USHORT ) ( cipherlen - pos );
-         }
 
          c_bitleft = ( cipher[ pos + keylen - 1 ] ^ key[ keylen - 1 ] ) << 5;
       }

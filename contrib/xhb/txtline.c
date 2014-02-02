@@ -171,7 +171,7 @@ static HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ nEnd, 
    for( nPos = 0; nPos <= nEnd; nPos++ )
    {
       if( szString[ nPos ] == HB_CHAR_HT )
-         nSpAdded += ( ( nTabLen > 0 ) ? nTabLen - ( ( nPos + nSpAdded ) % nTabLen ) - 1 : 0 );
+         nSpAdded += ( nTabLen > 0 ? nTabLen - ( ( nPos + nSpAdded ) % nTabLen ) - 1 : 0 );
       else if( ( nPos < nEnd && szString[ nPos ] == HB_CHAR_SOFT1 && szString[ nPos + 1 ] == HB_CHAR_SOFT2 ) || szString[ nPos ] == HB_CHAR_LF )
          nSpAdded--;
       else
@@ -196,7 +196,7 @@ HB_FUNC( HB_TABEXPAND )
          ++nTabCount;
    }
 
-   if( ( nStrLen == 0 ) || ( nTabCount == 0 ) || ( nTabLen == 0 ) )
+   if( nStrLen == 0 || nTabCount == 0 || nTabLen == 0 )
       hb_retc( szText );
    else
    {
@@ -228,7 +228,7 @@ HB_FUNC( HB_READLINE )
 
    if( ! HB_ISCHAR( 1 ) )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 9, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 ), hb_paramError( 8 ), hb_paramError( 9 ), hb_paramError( 10 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 

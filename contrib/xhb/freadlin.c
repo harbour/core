@@ -169,13 +169,9 @@ HB_FUNC( HB_FREADLINE )
    HB_ISIZ       i, nTerms;
    HB_BOOL       bFound, bEOF;
 
-   if( ( ! HB_ISBYREF( 2 ) ) || ( ! HB_ISNUM( 1 ) ) )
+   if( ! HB_ISBYREF( 2 ) || ! HB_ISNUM( 1 ) )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-                            hb_paramError( 1 ),
-                            hb_paramError( 2 ),
-                            hb_paramError( 3 ),
-                            hb_paramError( 4 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
@@ -188,11 +184,7 @@ HB_FUNC( HB_FREADLINE )
 
          if( nTerms <= 0 )
          {
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-                                  hb_paramError( 1 ),
-                                  hb_paramError( 2 ),
-                                  hb_paramError( 3 ),
-                                  hb_paramError( 4 ) );
+            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             return;
          }
 

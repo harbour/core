@@ -85,9 +85,7 @@ HB_FUNC( TIMEOFDAY )
    char szResult[ 9 ];
 
    if( hb_pcount() == 0 )
-   {
       hb_dateTimeStr( szResult );
-   }
    else
    {
       int iSeconds = hb_parni( 1 );
@@ -95,6 +93,7 @@ HB_FUNC( TIMEOFDAY )
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
                    iSeconds / 3600, ( iSeconds % 3600 ) / 60, iSeconds % 60 );
    }
+
    hb_retclen( szResult, 8 );
 }
 
@@ -112,5 +111,5 @@ HB_FUNC( TTOD )
    if( HB_ISDATE( 1 ) )
       hb_retdl( hb_pardl( 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

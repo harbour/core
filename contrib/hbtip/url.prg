@@ -84,7 +84,6 @@ CREATE CLASS TUrl
 
 ENDCLASS
 
-
 METHOD New( cUrl ) CLASS TUrl
 
    ::SetAddress( cUrl )
@@ -142,7 +141,6 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    ::cFile := aMatch[ 3 ]
 
    RETURN .T.
-
 
 METHOD BuildAddress() CLASS TUrl
 

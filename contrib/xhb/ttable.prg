@@ -50,10 +50,9 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- *
- * Copyright 2000 -2002 Luiz Rafael Culik
- * Methods CreateTable(),Gentable(),AddField()
- * Plus optimization for Xharbour
+ * Copyright 2000-2002 Luiz Rafael Culik
+ * Methods CreateTable(), Gentable(), AddField()
+ * Plus optimization for xHarbour
  *
  */
 
