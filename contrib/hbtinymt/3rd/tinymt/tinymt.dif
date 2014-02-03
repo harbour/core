@@ -1,6 +1,6 @@
 diff -urN tinymt.orig/tinymt32.c tinymt/tinymt32.c
---- tinymt.orig/tinymt32.c	Fri Dec 27 02:32:40 2013
-+++ tinymt/tinymt32.c	Fri Dec 27 02:32:40 2013
+--- tinymt.orig/tinymt32.c	2014-02-03 13:10:38.023625500 +0100
++++ tinymt/tinymt32.c	2014-02-03 13:10:38.023625500 +0100
 @@ -60,17 +60,18 @@
   * @param seed a 32-bit unsigned integer used as a seed.
   */
@@ -23,8 +23,8 @@ diff -urN tinymt.orig/tinymt32.c tinymt/tinymt32.c
      }
  }
 diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
---- tinymt.orig/tinymt32.h	Fri Dec 27 02:32:40 2013
-+++ tinymt/tinymt32.h	Fri Dec 27 02:32:40 2013
+--- tinymt.orig/tinymt32.h	2014-02-03 13:10:38.023625500 +0100
++++ tinymt/tinymt32.h	2014-02-03 13:10:38.023625500 +0100
 @@ -16,8 +16,17 @@
   * LICENSE.txt
   */
@@ -160,8 +160,8 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      return tinymt32_temper(random) * (1.0 / 4294967296.0);
  }
 diff -urN tinymt.orig/tinymt64.c tinymt/tinymt64.c
---- tinymt.orig/tinymt64.c	Fri Dec 27 02:32:40 2013
-+++ tinymt/tinymt64.c	Fri Dec 27 02:32:40 2013
+--- tinymt.orig/tinymt64.c	2014-02-03 13:10:38.023625500 +0100
++++ tinymt/tinymt64.c	2014-02-03 13:10:38.023625500 +0100
 @@ -56,9 +56,10 @@
   * @param seed a 64-bit unsigned integer used as a seed.
   */
@@ -175,8 +175,8 @@ diff -urN tinymt.orig/tinymt64.c tinymt/tinymt64.c
  	    * (random->status[(i - 1) & 1]
  	       ^ (random->status[(i - 1) & 1] >> 62));
 diff -urN tinymt.orig/tinymt64.h tinymt/tinymt64.h
---- tinymt.orig/tinymt64.h	Fri Dec 27 02:32:40 2013
-+++ tinymt/tinymt64.h	Fri Dec 27 02:32:40 2013
+--- tinymt.orig/tinymt64.h	2014-02-03 13:10:38.023625500 +0100
++++ tinymt/tinymt64.h	2014-02-03 13:10:38.023625500 +0100
 @@ -16,8 +16,23 @@
   * LICENSE.txt
   */

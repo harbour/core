@@ -88,7 +88,8 @@ PROCEDURE Main()
    ? "Str( Sin( Pi() / 9 ), 18, 15 ) == 0.342020143325669   // CT3"
    ? Space( 32 ), Str( Sin( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Str( Cos( 0 ), 18, 15 ) == 1.000000000000000   // CT3"
    ? Space( 25 ), Str( Cos( 0 ), 18, 15 ), " <-- CT for Harbour"
@@ -110,7 +111,8 @@ PROCEDURE Main()
    ? Space( 32 ), Str( Cos( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Str( Tan( 0 ), 18, 15 ) == 1.000000000000000   // CT3 wrong ! "
    ? Space( 25 ), Str( Tan( 0 ), 18, 15 ), " <-- CT for Harbour"
@@ -138,7 +140,8 @@ PROCEDURE Main()
    ? Space( 33 ), Str( Atan( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Str( Cot( Pi() / 4 ), 18, 15 ) == 1.000000000000000   // CT3"
    ? Space( 32 ), Str( Cot( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
@@ -152,7 +155,8 @@ PROCEDURE Main()
    ? Space( 32 ), Str( Cot( Pi() / 9 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ?? "Testing Hiperbolic Sine..."
    ?
@@ -183,7 +187,8 @@ PROCEDURE Main()
    ? Space( 33 ), Str( Tanh( Pi() / 4 ), 18, 15 ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Testing Degree TO Radian..."
    ?
@@ -206,7 +211,8 @@ PROCEDURE Main()
    ? "Str( DToR( -180 ), 18, 15 ) == -3.141592653589794   // CT3"
    ?  Space( 30 ), Str( DToR( -180 ), 18, 15 ), " <-- CT for Harbour"
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Testing Radian TO Degree..."
    ?
@@ -223,7 +229,8 @@ PROCEDURE Main()
    ? Space( 10 ), RToD( -Pi() ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    /* NOTE: Atn2( x, y) have the parameters inverted, when
             comparing with the standard C languaje ATAN2( y, x) */
@@ -242,15 +249,9 @@ PROCEDURE Main()
    ? "RToD( Atn2( x, y ) ) ==", Str( RToD( Atn2( x, y ) ), 18, 4 ), " <-- CT for Harbour"
    ?
 
-   WAIT4()
-
-   ctexit()
-
-   RETURN
-
-STATIC PROCEDURE WAIT4()
-
    WAIT
    CLS
+
+   ctexit()
 
    RETURN

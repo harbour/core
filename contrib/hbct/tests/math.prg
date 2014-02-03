@@ -87,7 +87,8 @@ PROCEDURE Main()
    ? Space( 8 ), Floor( -1.1 ), "  <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Ceiling( 1.9 ) == 2       // CT3"
    ? Space( 8 ), Ceiling( 1.9 ), "  <-- CT for Harbour"
@@ -113,7 +114,8 @@ PROCEDURE Main()
    ? Space( 10 ), Ceiling( -1.1 ), "  <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    ? "Log10( 0.01 ) == -2.00    // CT3"
    ?  Space( 8 ), Log10( 0.01 ), "  <-- CT for Harbour"
@@ -136,7 +138,8 @@ PROCEDURE Main()
    ? Space( 7 ), Sign( -258 ), "  <-- CT for Harbour"
    ?
 
-   WAIT4()
+   WAIT
+   CLS
 
    SET DECIMALS TO 0
    ? "Fact( 1 ) == 1    // CT3"
@@ -160,12 +163,5 @@ PROCEDURE Main()
    ?
 
    ctexit()
-
-   RETURN
-
-STATIC PROCEDURE WAIT4()
-
-   WAIT
-   CLS
 
    RETURN

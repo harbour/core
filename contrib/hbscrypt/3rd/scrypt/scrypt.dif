@@ -1,6 +1,6 @@
 diff -urN scrypt.orig/config.h scrypt/config.h
---- scrypt.orig/config.h	Tue Nov 26 00:08:49 2013
-+++ scrypt/config.h	Tue Nov 26 00:08:49 2013
+--- scrypt.orig/config.h	2014-02-03 13:10:00.457632200 +0100
++++ scrypt/config.h	2014-02-03 13:10:00.457632200 +0100
 @@ -1,5 +1,7 @@
  /* config.h.in.  Generated from configure.ac by autoheader.  */
  
@@ -10,8 +10,8 @@ diff -urN scrypt.orig/config.h scrypt/config.h
  #undef HAVE_CLOCK_GETTIME
  
 diff -urN scrypt.orig/sha256.c scrypt/sha256.c
---- scrypt.orig/sha256.c	Tue Nov 26 00:08:49 2013
-+++ scrypt/sha256.c	Tue Nov 26 00:08:49 2013
+--- scrypt.orig/sha256.c	2014-02-03 13:10:00.473240100 +0100
++++ scrypt/sha256.c	2014-02-03 13:10:00.473240100 +0100
 @@ -34,6 +34,13 @@
  
  #include "sha256.h"
@@ -81,8 +81,8 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  {
  	unsigned char ihash[32];
 diff -urN scrypt.orig/sha256.h scrypt/sha256.h
---- scrypt.orig/sha256.h	Tue Nov 26 00:08:49 2013
-+++ scrypt/sha256.h	Tue Nov 26 00:08:49 2013
+--- scrypt.orig/sha256.h	2014-02-03 13:10:00.473240100 +0100
++++ scrypt/sha256.h	2014-02-03 13:10:00.473240100 +0100
 @@ -44,13 +44,6 @@
  	SHA256_CTX octx;
  } HMAC_SHA256_CTX;
@@ -98,8 +98,8 @@ diff -urN scrypt.orig/sha256.h scrypt/sha256.h
   * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
   * Compute PBKDF2(passwd, salt, c, dkLen) using HMAC-SHA256 as the PRF, and
 diff -urN scrypt.orig/u_sysend.h scrypt/u_sysend.h
---- scrypt.orig/u_sysend.h	Tue Nov 26 00:08:49 2013
-+++ scrypt/u_sysend.h	Tue Nov 26 00:08:49 2013
+--- scrypt.orig/u_sysend.h	2014-02-03 13:10:00.473240100 +0100
++++ scrypt/u_sysend.h	2014-02-03 13:10:00.473240100 +0100
 @@ -44,7 +44,7 @@
  
  #include <stdint.h>

@@ -2535,7 +2535,7 @@ static HB_GENC_FUNC( hb_p_pushaparams )
    return 1;
 }
 
-/* NOTE: The  order of functions have to match the order of opcodes
+/* NOTE: The order of functions have to match the order of opcodes
  *       mnemonics
  */
 static const PHB_GENC_FUNC s_verbose_table[] = {

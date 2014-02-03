@@ -1,6 +1,6 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	Wed Dec 11 07:09:46 2013
-+++ sqlite3/sqlite3.c	Wed Dec 11 07:09:46 2013
+--- sqlite3.orig/sqlite3.c	2014-02-03 13:07:29.008016700 +0100
++++ sqlite3/sqlite3.c	2014-02-03 13:07:29.759912700 +0100
 @@ -27008,7 +27008,11 @@
        ** is the same technique used by glibc to implement posix_fallocate()
        ** on systems that do not have a real fallocate() system call.

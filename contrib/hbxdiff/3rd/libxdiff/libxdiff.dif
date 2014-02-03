@@ -1,6 +1,6 @@
 diff -urN libxdiff.orig/xinclude.h libxdiff/xinclude.h
---- libxdiff.orig/xinclude.h	Sat May 18 04:20:42 2013
-+++ libxdiff/xinclude.h	Sat May 18 04:20:42 2013
+--- libxdiff.orig/xinclude.h	2014-02-03 13:10:58.464210500 +0100
++++ libxdiff/xinclude.h	2014-02-03 13:10:58.464210500 +0100
 @@ -23,6 +23,9 @@
  #if !defined(XINCLUDE_H)
  #define XINCLUDE_H
