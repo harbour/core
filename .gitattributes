@@ -56,7 +56,6 @@ ChangeLog.txt ident
 
 # Binary files
 *.a       binary
-*.afm     binary
 *.bmp     binary
 *.dat     binary
 *.dbf     binary
@@ -72,9 +71,9 @@ ChangeLog.txt ident
 *.ng      binary
 *.odt     binary
 *.pdf     binary
-*.pfb     binary
 *.png     binary
 *.sq3     binary
+*.ttf     binary
 *.tif     binary
 
 # TOTEST:

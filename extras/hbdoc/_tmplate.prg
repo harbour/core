@@ -124,7 +124,7 @@ CREATE CLASS Entry
    VAR sourcefile_ AS STRING
    VAR sourcefileversion_ AS STRING
    VAR uid_ AS STRING
-   VAR hConstraint
+   VAR hConstraint AS HASH
 
    CLASS VAR uid__ AS INTEGER INIT 0
 
