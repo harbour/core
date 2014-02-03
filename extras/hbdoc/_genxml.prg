@@ -150,18 +150,18 @@ METHOD Generate() CLASS GenerateXML
 
 METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
 
-   LOCAL cResult
-   LOCAL idx
-
    IF ! Empty( cEntry )
-      cResult := iif( hb_eol() $ cEntry, hb_eol() + cEntry, cEntry )
-      FOR idx := 1 TO Len( p_aConversionList ) STEP 2
-         cResult := StrTran( cResult, p_aConversionList[ idx ], "&" + p_aConversionList[ idx + 1 ] + ";" )
-      NEXT
-      cEntry := cResult
+
+      IF hb_eol() $ cEntry
+         cEntry := hb_eol() + cEntry
+      ENDIF
 
       FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "" ) + ">" )
-      FWrite( ::nHandle, cEntry )
+      FWrite( ::nHandle, hb_StrReplace( cEntry, { ;
+         "&" => "&amp;", ;
+         '"' => "&quot;", ;
+         "<" => "&lt;", ;
+         ">" => "&gt;" } ) )
       FWrite( ::nHandle, /* Replicate( Chr( 9 ), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
    ENDIF
 

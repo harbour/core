@@ -298,20 +298,19 @@ METHOD CloseTag( cText ) CLASS GenerateHTML
 
 METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
-   LOCAL cResult := cText
+   LOCAL cResult
    LOCAL aFormat
    LOCAL idx
 
-   IF Len( cResult ) > 0
+   IF Len( cText ) > 0
 
-      hb_default( @cFormat, "" )
+      cResult := hb_StrReplace( cText, { ;
+         "&" => "&amp;", ;
+         '"' => "&quot;", ;
+         "<" => "&lt;", ;
+         ">" => "&gt;" } )
 
-      aFormat := p_aConversionList
-      FOR idx := 1 TO Len( aFormat ) STEP 2
-         cResult := StrTran( cResult, aFormat[ idx ], "&" + aFormat[ idx + 1 ] + ";" )
-      NEXT
-
-      aFormat := hb_ATokens( cFormat, "," )
+      aFormat := hb_ATokens( hb_defaultValue( cFormat, "" ), "," )
       FOR EACH idx IN aFormat DESCEND
          IF ! Empty( idx )
             cResult := "<" + idx + ">" + cResult + "</" + idx + ">"

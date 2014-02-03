@@ -56,7 +56,6 @@ MEMVAR p_aCategories
 MEMVAR p_aCompliance
 MEMVAR p_aPlatforms
 MEMVAR p_aStatus
-MEMVAR p_aConversionList
 
 // Template definitions
 #define TPL_START            1

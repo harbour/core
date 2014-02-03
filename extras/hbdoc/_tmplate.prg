@@ -283,8 +283,7 @@ PROCEDURE init_Templates()
             "Definition", ;
             "Destructor", ;
             "Method", ;
-            "Var", ;
-            } }, ;
+            "Var" } }, ;
       { "Command", AClone( aSubCategories ) }, ;
       /* { "Compile time errors", { {} } }, */ ;
       { "Run time errors", { "" } } }
@@ -334,12 +333,6 @@ PROCEDURE init_Templates()
       { "R", "Ready" }, ;
       { "S", "Started" }, ;
       { "N", "Not started" } }
-
-   PUBLIC p_aConversionList := { ;
-      "&", "amp", ;
-      '"', "quot", ;
-      "<", "lt", ;
-      ">", "gt" }
 
    RETURN
 
