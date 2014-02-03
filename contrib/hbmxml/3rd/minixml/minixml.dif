@@ -1,7 +1,7 @@
 diff -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	Sat Jan 11 12:49:05 2014
-+++ minixml/config.h	Sat Jan 11 12:49:05 2014
-@@ -18,62 +18,89 @@
+--- minixml.orig/config.h	2014-02-03 09:42:00.428080633 +0100
++++ minixml/config.h	2014-02-03 09:42:00.428080633 +0100
+@@ -18,62 +18,87 @@
   * Include necessary headers...
   */
  
@@ -97,61 +97,34 @@ diff -urN minixml.orig/config.h minixml/config.h
 +
  #  ifndef HAVE_STRDUP
  extern char	*_mxml_strdup(const char *);
-+#    if defined( strdup )
-+#      undef strdup
-+#    endif
++#    undef strdup
  #    define strdup _mxml_strdup
  #  endif /* !HAVE_STRDUP */
  
-@@ -82,13 +109,23 @@
+@@ -82,14 +107,20 @@
  
  #  ifndef HAVE_SNPRINTF
  extern int	_mxml_snprintf(char *, size_t, const char *, ...);
-+#    if defined( snprintf )
-+#      undef snprintf
-+#    endif
++#    undef snprintf
  #    define snprintf _mxml_snprintf
  #  endif /* !HAVE_SNPRINTF */
  
  #  ifndef HAVE_VSNPRINTF
  extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
-+#    if defined( vsnprintf )
-+#      undef vsnprintf
-+#    endif
++#    undef vsnprintf
  #    define vsnprintf _mxml_vsnprintf
  #  endif /* !HAVE_VSNPRINTF */
-+
+ 
 +#  ifdef __cplusplus
 +}
 +#  endif /* __cplusplus */
- 
++
  /*
   * End of "$Id: config.h.in 451 2014-01-04 21:50:06Z msweet $".
-diff -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	Sat Jan 11 12:49:05 2014
-+++ minixml/mxml.h	Sat Jan 11 12:49:05 2014
-@@ -29,8 +29,16 @@
- #  include <stdlib.h>
- #  include <string.h>
- #  include <ctype.h>
--#  include <errno.h>
--
-+#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
-+      defined( _WINCE )
-+#     include <io.h>
-+#     if !defined( UNDER_CE )
-+#        define UNDER_CE
-+#     endif
-+#     define strerror(e)      ""
-+#  else
-+#     include <errno.h>
-+#  endif
- 
- /*
-  * Constants...
+  */
 diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	Sat Jan 11 12:49:05 2014
-+++ minixml/mxml_fil.c	Sat Jan 11 12:49:05 2014
+--- minixml.orig/mxml_fil.c	2014-02-03 09:42:00.432080632 +0100
++++ minixml/mxml_fil.c	2014-02-03 09:42:00.432080632 +0100
 @@ -294,8 +294,14 @@
      return (-1);
  
@@ -248,9 +221,31 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  	    if ((*putc_cb)('\n', p) < 0)
  	      return (-1);
  
+diff -urN minixml.orig/mxml.h minixml/mxml.h
+--- minixml.orig/mxml.h	2014-02-03 09:42:00.436080633 +0100
++++ minixml/mxml.h	2014-02-03 09:42:00.436080633 +0100
+@@ -29,8 +29,16 @@
+ #  include <stdlib.h>
+ #  include <string.h>
+ #  include <ctype.h>
+-#  include <errno.h>
+-
++#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
++      defined( _WINCE )
++#     include <io.h>
++#     if !defined( UNDER_CE )
++#        define UNDER_CE
++#     endif
++#     define strerror(e)      ""
++#  else
++#     include <errno.h>
++#  endif
+ 
+ /*
+  * Constants...
 diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	Sat Jan 11 12:49:05 2014
-+++ minixml/mxml_nod.c	Sat Jan 11 12:49:05 2014
+--- minixml.orig/mxml_nod.c	2014-02-03 09:42:00.436080633 +0100
++++ minixml/mxml_nod.c	2014-02-03 09:42:00.436080633 +0100
 @@ -202,7 +202,11 @@
    */
  
@@ -265,8 +260,8 @@ diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
   /*
    * Now delete any node data...
 diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	Sat Jan 11 12:49:05 2014
-+++ minixml/mxml_set.c	Sat Jan 11 12:49:05 2014
+--- minixml.orig/mxml_set.c	2014-02-03 09:42:00.436080633 +0100
++++ minixml/mxml_set.c	2014-02-03 09:42:00.436080633 +0100
 @@ -25,7 +25,7 @@
  /*
   * 'mxmlSetCDATA()' - Set the element name of a CDATA node.
@@ -398,20 +393,20 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
   */
  
  int					/* O - 0 on success, -1 on failure */
-@@ -280,10 +254,6 @@
-  /*
+@@ -281,10 +255,6 @@
    * Range check input...
    */
--
+ 
 -  if (node && node->type == MXML_ELEMENT &&
 -      node->child && node->child->type == MXML_TEXT)
 -    node = node->child;
- 
+-
    if (!node || node->type != MXML_TEXT || !format)
      return (-1);
+ 
 diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	Sat Jan 11 12:49:05 2014
-+++ minixml/mxml_str.c	Sat Jan 11 12:49:05 2014
+--- minixml.orig/mxml_str.c	2014-02-03 09:42:00.436080633 +0100
++++ minixml/mxml_str.c	2014-02-03 09:42:00.436080633 +0100
 @@ -20,6 +20,9 @@
  
  #include "config.h"
