@@ -297,8 +297,10 @@ PROCEDURE Main( ... )
             FOR EACH item IN p_aCategories
                IF ! Empty( item )
                   item[ 4 ] := Filename( item[ 1 ] )
-                  // ~ oIndex:BeginSection( item[ 1 ], item[ 4 ] )
-                  // ~ oIndex:EndSection( item[ 1 ], item[ 4 ] )
+#if 0
+                  oIndex:BeginSection( item[ 1 ], item[ 4 ] )
+                  oIndex:EndSection( item[ 1 ], item[ 4 ] )
+#endif
                ENDIF
             NEXT
 
@@ -381,9 +383,10 @@ PROCEDURE Main( ... )
 STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive procedure
 
    LOCAL file
-   LOCAL cExt
 
-   // ~ OutStd( ">>> " + cFolder + hb_eol() )
+#if 0
+   OutStd( ">>> " + cFolder + hb_eol() )
+#endif
 
    cFolder += hb_ps()
 
@@ -398,8 +401,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
             ENDIF
          ENDIF
       ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( file[ F_NAME ] ) } ) == 0
-         hb_FNameSplit( file[ F_NAME ], , , @cExt )
-         IF Lower( cExt ) == ".txt"
+         IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt"
             IF ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
                EXIT
             ENDIF
@@ -449,6 +451,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    LOCAL idxCategory := -1
    LOCAL idxSubCategory := -1
    LOCAL cSourceFile
+   LOCAL aBase
 
    cSourceFile := StrTran( ".." + hb_ps() + cFile /* SubStr( cFile, Len( s_hSwitches[ "basedir" ] + hb_ps() ) ) */, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
@@ -460,8 +463,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
    DO WHILE FReadSection( aHandle, @cSectionName, @cSection, @o )
 
-      DO CASE
-      CASE cSectionName == "TEMPLATE"
+      IF cSectionName == "TEMPLATE"
          IF o:IsTemplate( cSection )
             o:SetTemplate( cSection )
          ELSE
@@ -470,87 +472,91 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             EXIT
          ENDIF
 
-      OTHERWISE
+      ELSEIF Len( cSectionName ) == 0
 
-         IF Len( cSectionName ) == 0
+      ELSEIF o:IsField( cSectionName )
 
-         ELSEIF o:IsField( cSectionName )
+         DO CASE
+         CASE o:IsField( cSectionName, TPL_START )
 
-            DO CASE
-            CASE o:IsField( cSectionName, TPL_START )
+            AddErrorCondition( cFile, "Encountered another section '" + cSection, aHandle[ 2 ] )
+            lAccepted := .F.
+            EXIT
 
-               AddErrorCondition( cFile, "Encountered another section '" + cSection, aHandle[ 2 ] )
-               lAccepted := .F.
-               EXIT
+         CASE o:IsField( cSectionName, TPL_END )
 
-            CASE o:IsField( cSectionName, TPL_END )
+            EXIT
 
-               EXIT
+         CASE ! Empty( o:&cSectionName )
 
-            CASE ! Empty( o:&cSectionName )
-
-               AddErrorCondition( cFile, "Duplicate " + cSectionName, aHandle[ 2 ] )
-               lAccepted := .F.
-
-            CASE cSectionName == "CATEGORY"
-
-               IF ( idxCategory := AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
-                  AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
-                  // lAccepted := .F.
-               ENDIF
-
-            CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
-
-               IF idxCategory <= 0 .OR. o:Category == ""
-
-                  AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
-                  // lAccepted := .F.
-
-               ELSEIF ( idxSubCategory := AScan( p_aCategories[ idxCategory ][ 2 ], {| c | c != NIL .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
-
-                  AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
-                  // lAccepted := .F.
-
-               ENDIF
-
-            CASE o:IsField( "RETURNS" ) .AND. cSectionName == "RETURNS" .AND. ( ;
-                     Empty( cSection ) .OR. ;
-                     Lower( cSection ) == "nil" .OR. ;
-                     Lower( cSection ) == "none" .OR. ;
-                     Lower( cSection ) == "none." )
-
-               AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
-               // lAccepted := .F.
-
-            CASE ! o:IsConstraint( cSectionName, cSection )
-
-               cSource := cSectionName + " is '" + iif( Len( cSection ) <= 20, cSection, Left( StrTran( cSection, hb_eol() ), 20 ) + "..." ) + "', should be one of: "
-               // ~ cSource := hb_HKeyAt( hsTemplate, idx ) + " should be one of: "
-               AEval( &( "p_a" + cSectionName ), {| c, n | cSource += iif( n == 1, "", "," ) + c } )
-               AddErrorCondition( cFile, cSource, aHandle[ 2 ] - 1 )
-
-            OTHERWISE
-
-            ENDCASE
-
-            IF lAccepted
-               o:&cSectionName := Decode( cSectionName, , cSection )
-            ENDIF
-
-         ELSE
-
-            AddErrorCondition( cFile, "Using template '" + o:Template + "' encountered an unexpected section '" + cSectionName, aHandle[ 2 ] )
+            AddErrorCondition( cFile, "Duplicate " + cSectionName, aHandle[ 2 ] )
             lAccepted := .F.
 
+         CASE cSectionName == "CATEGORY"
+
+            IF ( idxCategory := AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
+               AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
+               // lAccepted := .F.
+            ENDIF
+
+         CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
+
+            IF idxCategory <= 0 .OR. o:Category == ""
+
+               AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
+               // lAccepted := .F.
+
+            ELSEIF ( idxSubCategory := AScan( p_aCategories[ idxCategory ][ 2 ], {| c | c != NIL .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
+
+               AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
+               // lAccepted := .F.
+
+            ENDIF
+
+         CASE o:IsField( "RETURNS" ) .AND. cSectionName == "RETURNS" .AND. ( ;
+                  Empty( cSection ) .OR. ;
+                  Lower( cSection ) == "nil" .OR. ;
+                  Lower( cSection ) == "none" .OR. ;
+                  Lower( cSection ) == "none." )
+
+            AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
+            // lAccepted := .F.
+
+         CASE ! o:IsConstraint( cSectionName, cSection )
+
+            SWITCH cSectionName
+            CASE "Categories"    ; aBase := p_aCategories     ; EXIT
+            CASE "Compliance"    ; aBase := p_aCompliance     ; EXIT
+            CASE "Platforms"     ; aBase := p_aPlatforms      ; EXIT
+            CASE "Status"        ; aBase := p_aStatus         ; EXIT
+            CASE "ConversionList"; aBase := p_aConversionList ; EXIT
+            ENDSWITCH
+
+            cSource := cSectionName + " is '" + iif( Len( cSection ) <= 20, cSection, Left( StrTran( cSection, hb_eol() ), 20 ) + "..." ) + "', should be one of: "
+#if 0
+            cSource := hb_HKeyAt( hsTemplate, idx ) + " should be one of: "
+#endif
+            AEval( aBase, {| c, n | cSource += iif( n == 1, "", "," ) + c } )
+            AddErrorCondition( cFile, cSource, aHandle[ 2 ] - 1 )
+
+         OTHERWISE
+
+         ENDCASE
+
+         IF lAccepted
+            o:&cSectionName := Decode( cSectionName, , cSection )
          ENDIF
-      ENDCASE
+      ELSE
+         AddErrorCondition( cFile, "Using template '" + o:Template + "' encountered an unexpected section '" + cSectionName, aHandle[ 2 ] )
+         lAccepted := .F.
+      ENDIF
    ENDDO
 
-   IF lAccepted
-      IF ! o:IsComplete( @cSource )
-         AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
-         // lAccepted := .F.
-      ENDIF
+   IF lAccepted .AND. ! o:IsComplete( @cSource )
+      AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
+#if 0
+      lAccepted := .F.
+#endif
    ENDIF
 
    IF ! lAccepted
@@ -561,7 +567,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                      Lower( o:Returns ) == "none." )
 
       AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + o:Returns + ")", aHandle[ 2 ] )
-      // ~ lAccepted := .F.
+#if 0
+      lAccepted := .F.
+#endif
 
    ELSE
 
@@ -578,7 +586,9 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             AAdd( s_hSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
          ENDIF
 
-         // ~ OutStd( "    > " + cSectionName + hb_eol() )
+#if 0
+         OutStd( "    > " + cSectionName + hb_eol() )
+#endif
 
       ENDIF
 
@@ -766,8 +776,8 @@ FUNCTION Decode( cType, hsBlock, cKey )
       cCode := cKey
    ENDIF
 
-   DO CASE
-   CASE cType == "STATUS"
+   SWITCH cType
+   CASE "STATUS"
       IF "," $ cCode .AND. hb_AScan( p_aStatus, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
@@ -786,7 +796,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN ATail( p_aStatus )[ 2 ]
       ENDIF
 
-   CASE cType == "PLATFORMS"
+   CASE "PLATFORMS"
       IF "," $ cCode .AND. hb_AScan( p_aPlatforms, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
@@ -801,7 +811,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN cCode
       ENDIF
 
-   CASE cType == "COMPLIANCE"
+   CASE "COMPLIANCE"
       IF "," $ cCode .AND. hb_AScan( p_aCompliance, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
@@ -815,19 +825,20 @@ FUNCTION Decode( cType, hsBlock, cKey )
       ELSE
          RETURN cCode
       ENDIF
-      DO CASE
-      CASE cCode == "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
-      CASE cCode == "C(array)" ; RETURN "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements"
-      CASE cCode == "C(menu)" ;  RETURN "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements"
-      CASE cCode == "C52U" ;     RETURN "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_CLP_UNDOC flag"
-      CASE cCode == "C52S" ;     RETURN "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_CLP_STRICT flag"
-      CASE cCode == "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
-      CASE cCode == "H" ;        RETURN "This is Harbour specific"
-      CASE cCode == "NA" ;       RETURN "Not applicable"
-      OTHERWISE ;                RETURN cCode
-      ENDCASE
 
-   CASE cType == "NAME"
+      SWITCH cCode
+      CASE "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
+      CASE "C(array)" ; RETURN "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements"
+      CASE "C(menu)" ;  RETURN "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements"
+      CASE "C52U" ;     RETURN "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_CLP_UNDOC flag"
+      CASE "C52S" ;     RETURN "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_CLP_STRICT flag"
+      CASE "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
+      CASE "H" ;        RETURN "This is Harbour specific"
+      CASE "NA" ;       RETURN "Not applicable"
+      OTHERWISE ;       RETURN cCode
+      ENDSWITCH
+
+   CASE "NAME"
       IF hsBlock == NIL
          RETURN cCode
       ELSEIF !( "RETURNS" $ hsBlock )
@@ -842,12 +853,11 @@ FUNCTION Decode( cType, hsBlock, cKey )
          DO CASE
          CASE Lower( hsBlock[ "CATEGORY" ] ) == "document"
             RETURN hsBlock[ "NAME" ]
+         CASE Lower( hsBlock[ "TEMPLATE" ] ) == "function" .OR. ;
+              Lower( hsBlock[ "TEMPLATE" ] ) == "procedure"
+            RETURN "Procedure " + hsBlock[ "NAME" ]
          OTHERWISE
-            IF Lower( hsBlock[ "TEMPLATE" ] ) == "function" .OR. Lower( hsBlock[ "TEMPLATE" ] ) == "procedure"
-               RETURN "Procedure " + hsBlock[ "NAME" ]
-            ELSE
-               RETURN LTrim( hsBlock[ "SUBCATEGORY" ] + " " ) + hsBlock[ "CATEGORY" ] + " " + hsBlock[ "NAME" ]
-            ENDIF
+            RETURN LTrim( hsBlock[ "SUBCATEGORY" ] + " " ) + hsBlock[ "CATEGORY" ] + " " + hsBlock[ "NAME" ]
          ENDCASE
       ELSE
          DO CASE
@@ -858,9 +868,9 @@ FUNCTION Decode( cType, hsBlock, cKey )
          ENDCASE
       ENDIF
 
-   ENDCASE
+   ENDSWITCH
 
-   RETURN /* cType + "=" +  */cCode
+   RETURN /* cType + "=" + */ cCode
 
 PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
 
@@ -882,7 +892,7 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
          ENDIF
       OTHERWISE
          DO CASE
-         CASE nMode == 1 ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
+         CASE nMode == 1 ; OutStd( cIndent + xLine ); OutStd( hb_eol() )
          CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
          OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ); OutStd( xLine ); OutStd( hb_eol() )
          ENDCASE
@@ -932,36 +942,31 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
             "-output-entry // output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
             "-source=<folder> // source folder, default is .." + hb_ps() + "..", ;
             "-include-doc-source // output is to indicate the document source file name", ;
-            "-include-doc-version // output is to indicate the document source file version", ;
-         } ;
-      }
+            "-include-doc-version // output is to indicate the document source file version" ;
+         } }
 
    CASE aArgs[ 2 ] == "Categories"
       aHelp := { ;
          "Defined categories and sub-categories are:", ;
-         p_aCategories, ;
-      }
+         p_aCategories }
 
    CASE aArgs[ 2 ] == "Templates"
       aHelp := { ;
          iif( Len( aArgs ) >= 3, aArgs[ 3 ] + " template is:", "Defined templates are:" ), ;
          "", ;
-         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ), s_hSwitches[ "DELIMITER" ] ) } ;
-      }
+         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ), s_hSwitches[ "DELIMITER" ] ) } }
 
    CASE aArgs[ 2 ] == "Compliance"
       aHelp := { ;
          "Defined 'COMPLIANCE' are:", ;
          "", ;
-         {|| ShowComplianceHelp() } ;
-      }
+         {|| ShowComplianceHelp() } }
 
    CASE aArgs[ 2 ] == "Platforms"
       aHelp := { ;
          "Defined 'PLATFORMS' are:", ;
          "", ;
-         {|| ShowPlatformsHelp() } ;
-      }
+         {|| ShowPlatformsHelp() } }
 
    OTHERWISE
 

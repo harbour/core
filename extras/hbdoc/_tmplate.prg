@@ -80,8 +80,7 @@ CREATE CLASS Entry
       { "PLATFORMS",    "Platform(s)" }, ; /* p_aPlatforms is the constraint list */
       { "FILES",        "File(s)" }, ;
       { "SEEALSO",      "See also" }, ;
-      { "END",          "End" } ;
-   }
+      { "END",          "End" } }
 
 #define _S TPL_START
 #define _E TPL_END
@@ -103,8 +102,7 @@ CREATE CLASS Entry
       { "Class"         , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U, _R+_U, _R+_U, _R+_U, _O+_U, _O+_U, _O+_U, _O+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
       { "Class method"  , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U, _R+_U, _R+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
       { "Class data"    , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
-      { "Run time error", { _S, _T, _R+_U, _R,  0   , _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U, _O+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
-   }
+      { "Run time error", { _S, _T, _R+_U, _R,  0   , _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U, _O+_U,  0+_U,  0+_U, _O+_U, _E } } }
 
    METHOD New( cType ) CONSTRUCTOR
    METHOD IsField( c, nType )
@@ -269,8 +267,7 @@ PROCEDURE init_Templates()
       "Undocumented", ;
       "User interface", ;
       "Variable management", ;
-      "Virtual machine", ;
-   }
+      "Virtual machine" }
 
    PUBLIC p_aCategories := { ;
       { "Document", { "License", "Compiler", "" } }, ;
@@ -290,8 +287,7 @@ PROCEDURE init_Templates()
             } }, ;
       { "Command", AClone( aSubCategories ) }, ;
       /* { "Compile time errors", { {} } }, */ ;
-      { "Run time errors", { "" } }, ;
-   }
+      { "Run time errors", { "" } } }
 
    FOR EACH item IN p_aCategories
       IF ! Empty( item )
@@ -310,8 +306,7 @@ PROCEDURE init_Templates()
       { "C52U",     "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_C52_UNDOC flag" }, ;
       { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
       { "H",        "This is Harbour specific" }, ;
-      { "NA",       "Not applicable" } ;
-   }
+      { "NA",       "Not applicable" } }
 
    PUBLIC p_aPlatforms := { ;
       { "",          "" }, ;
@@ -332,22 +327,19 @@ PROCEDURE init_Templates()
       { "SUNOS",     "This is available on the SunOS platform" }, ;
       { "Unix",      "This is available on the Unix platform(s)" }, ;
       { "Win",       "This is available on the Windows platform(s)" }, ;
-      { "WinCE",     "This is available on the Windows CE platform" } ;
-   }
+      { "WinCE",     "This is available on the Windows CE platform" } }
 
    PUBLIC p_aStatus := { ;
       { "",  "" }, ;
       { "R", "Ready" }, ;
       { "S", "Started" }, ;
-      { "N", "Not started" } ;
-   }
+      { "N", "Not started" } }
 
    PUBLIC p_aConversionList := { ;
       "&", "amp", ;
       '"', "quot", ;
       "<", "lt", ;
-      ">", "gt" ;
-   }
+      ">", "gt" }
 
    RETURN
 

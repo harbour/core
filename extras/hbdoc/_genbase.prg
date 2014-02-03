@@ -58,14 +58,6 @@
 
 CREATE CLASS TPLGenerate
 
-   EXPORTED:
-   // ~ PROTECTED:
-   VAR nHandle AS NUMERIC
-   VAR cFolder AS STRING
-   VAR cFilename AS STRING
-   VAR cTitle AS STRING
-   VAR cExtension AS STRING
-
    METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
    METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
    METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
@@ -76,9 +68,17 @@ CREATE CLASS TPLGenerate
    METHOD IsIndex() INLINE ( ::nType == INDEX_ )
 
    PROTECTED:
+
    METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
+
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
+
+   VAR nHandle AS NUMERIC
+   VAR cFolder AS STRING
+   VAR cFilename AS STRING
+   VAR cTitle AS STRING
+   VAR cExtension AS STRING
 
 ENDCLASS
 

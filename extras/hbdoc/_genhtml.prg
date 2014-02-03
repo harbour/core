@@ -224,8 +224,10 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 
       hb_default( @cCaption, "" )
       hb_default( @nIndent, 0 )
-      // ~ hb_default( @lPreformatted, .F. )
-      // ~ hb_default( @cTagClass, "itemtext" )
+#if 0
+      hb_default( @lPreformatted, .F. )
+      hb_default( @cTagClass, "itemtext" )
+#endif
 
       IF Len( cCaption ) > 0 /* .AND. nIndent > 0 */
          ::Tagged( cCaption, "div", "class", "itemtitle" )
@@ -239,9 +241,11 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
             ELSE
                ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             ENDIF
-            // ~ IF Len( cEntry ) > 0 .AND. ! lPreformatted
-            // ~    FWrite( ::nHandle, hb_eol() )
-            // ~ ENDIF
+#if 0
+            IF Len( cEntry ) > 0 .AND. ! lPreformatted
+               FWrite( ::nHandle, hb_eol() )
+            ENDIF
+#endif
          ENDDO
          ::CloseTag( "pre" )
       ELSE
