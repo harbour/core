@@ -2395,7 +2395,7 @@ static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
    }
 }
 
-/* PUBLIC FUNCTIONS */
+/* Public functions */
 
 HB_BOOL hb_ctwInit( void )
 {
