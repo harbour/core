@@ -591,8 +591,8 @@ STATIC PROCEDURE Page_Text( pdf )
 
    angle1 := 5
    angle2 := 10
-   rad1   := angle1 / 180 * 3.141592
-   rad2   := angle2 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
+   rad2   := angle2 / 180 * Pi()
 
    HPDF_Page_Concat( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 25, 350 )
    rect[ rLEFT   ] := 0
@@ -622,7 +622,7 @@ STATIC PROCEDURE Page_Text( pdf )
    HPDF_Page_GSave( page )
 
    angle1 := 5
-   rad1   := angle1 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
 
    HPDF_Page_Concat( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), 220, 350 )
    rect[ rLEFT   ] := 0
@@ -662,8 +662,8 @@ STATIC PROCEDURE Page_Text( pdf )
    HPDF_Page_SetFontAndSize( page, font, 30 )
 
    FOR i := 1 TO Len( SAMP_TXT )
-      rad1 := ( angle2 - 90 ) / 180 * 3.141592
-      rad2 := angle2 / 180 * 3.141592
+      rad1 := ( angle2 - 90 ) / 180 * Pi()
+      rad2 := angle2 / 180 * Pi()
 
       x := 210 + Cos( rad2 ) * 122
       y := 190 + Sin( rad2 ) * 122
@@ -862,7 +862,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
     * Rotating text
     */
    angle1 := 30                   /* A rotation of 30 degrees. */
-   rad1 := angle1 / 180 * 3.141592 /* Calcurate the radian value. */
+   rad1 := angle1 / 180 * Pi()    /* Calcurate the radian value. */
 
    show_description( page, 320, ypos - 60, "Rotating text" )
    HPDF_Page_BeginText( page )
@@ -879,8 +879,8 @@ STATIC PROCEDURE Page_TextScaling( pdf )
 
    angle1 := 10
    angle2 := 20
-   rad1 := angle1 / 180 * 3.141592
-   rad2 := angle2 / 180 * 3.141592
+   rad1 := angle1 / 180 * Pi()
+   rad2 := angle2 / 180 * Pi()
 
    HPDF_Page_SetTextMatrix( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 320, ypos - 120 )
    HPDF_Page_ShowText( page, "ABCabc123" )
@@ -1386,8 +1386,8 @@ STATIC PROCEDURE Page_Images( pdf )
    /* Skewing image. */
    angle1 := 10
    angle2 := 20
-   rad1   := angle1 / 180 * 3.141592
-   rad2   := angle2 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
+   rad2   := angle2 / 180 * Pi()
 
    HPDF_Page_GSave( page )
    HPDF_Page_Concat( page, iw, Tan( rad1 ) * iw, Tan( rad2 ) * ih, ih, x, y )
@@ -1400,7 +1400,7 @@ STATIC PROCEDURE Page_Images( pdf )
 
    /* Rotating image */
    angle := 30     /* rotation of 30 degrees. */
-   rad := angle / 180 * 3.141592 /* Calcurate the radian value. */
+   rad := angle / 180 * Pi() /* Calcurate the radian value. */
 
    HPDF_Page_GSave( page )
    HPDF_Page_Concat( page, iw * Cos( rad ), ;
