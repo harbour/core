@@ -164,9 +164,13 @@ static const HB_LEX_KEY s_keytable[] =
 #define _AS_CHARACTER  3
 #define _AS_CLASS      4
 #define _AS_DATE       5
+#define _AS_DATETIME   5
+#define _AS_HASH       9
 #define _AS_LOGICAL    6
 #define _AS_NUMERIC    7
 #define _AS_OBJECT     8
+#define _AS_POINTER    9
+#define _AS_SYMBOL     9
 #define _AS_VARIANT    9
 
 static const int s_asTypes[] =
@@ -201,14 +205,20 @@ static const HB_LEX_KEY s_typetable[] =
 {
    { "ANYTYPE",   4, 7, _AS_VARIANT   },
    { "ARRAY",     4, 5, _AS_ARRAY     },
+   { "BLOCK",     4, 5, _AS_BLOCK     },
    { "CHARACTER", 4, 9, _AS_CHARACTER },
    { "CLASS",     4, 5, _AS_CLASS     },
    { "CODEBLOCK", 4, 9, _AS_BLOCK     },
    { "DATE",      4, 4, _AS_DATE      },
+   { "DATETIME",  5, 8, _AS_DATETIME  },
+   { "HASH",      4, 4, _AS_HASH      },
    { "LOGICAL",   4, 7, _AS_LOGICAL   },
    { "NUMERIC",   4, 7, _AS_NUMERIC   },
    { "OBJECT",    4, 6, _AS_OBJECT    },
+   { "POINTER",   4, 7, _AS_POINTER   },
    { "STRING",    4, 6, _AS_CHARACTER },
+   { "SYMBOL",    4, 6, _AS_SYMBOL    },
+   { "TIMESTAMP", 4, 8, _AS_DATETIME  },
    { "USUAL",     4, 5, _AS_VARIANT   }
 };
 

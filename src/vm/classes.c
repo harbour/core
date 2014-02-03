@@ -1917,7 +1917,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
 #else
             {
-               PMETHOD pMethod = b_clsFindMsg( pClass, pMsg );
+               PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
                if( pMethod )
                {
                   pStack->uiMethod = ( HB_USHORT ) ( pMethod - pClass->pMethods );
@@ -2801,11 +2801,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
          {
             case 'C':
             case 'c':
-            case '\0':
                if( hb_strnicmp( hb_itemGetCPtr( pItem ), "code", 4 ) == 0 )
                   return HB_IT_BLOCK;
-               else
-                  return HB_IT_STRING;
+            case '\0':
+               return HB_IT_STRING;
 
             case 'S':
             case 's':
@@ -2820,7 +2819,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
 
             case 'D':
             case 'd':
-               return HB_IT_DATE;
+               if( hb_strnicmp( hb_itemGetCPtr( pItem ), "datet", 5 ) == 0 )
+                  return HB_IT_TIMESTAMP;
+               else
+                  return HB_IT_DATE;
 
             case 'T':
             case 't':
