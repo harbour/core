@@ -108,8 +108,7 @@ REQUEST HB_GT_CGI_DEFAULT
 #define IsDefault( b ) iif( b, "; default", "" )
 
 STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
-
-MEMVAR p_hsSwitches
+STATIC s_hSwitches
 
 PROCEDURE Main( ... )
 
@@ -130,7 +129,7 @@ PROCEDURE Main( ... )
 
    init_Templates()
 
-   PUBLIC p_hsSwitches := { ;
+   s_hSwitches := { ;
       /* configuration settings, values, etc */ ;
       "basedir"             => BASE_DIR, ;
       "doc"                 => .T., ;
@@ -150,10 +149,10 @@ PROCEDURE Main( ... )
       "<eol>"               => NIL }
 
    // remove formats that have not been implemented yet
-   FOR idx := Len( p_hsSwitches[ "format-list" ] ) TO 1 STEP -1
-      IF p_hsSwitches[ "format-list" ][ idx ] == "all"
-      ELSEIF ! hb_IsFunction( "Generate" + p_hsSwitches[ "format-list" ][ idx ] )
-         hb_ADel( p_hsSwitches[ "format-list" ], idx, .T. )
+   FOR idx := Len( s_hSwitches[ "format-list" ] ) TO 1 STEP -1
+      IF s_hSwitches[ "format-list" ][ idx ] == "all"
+      ELSEIF ! hb_IsFunction( "Generate" + s_hSwitches[ "format-list" ][ idx ] )
+         hb_ADel( s_hSwitches[ "format-list" ], idx, .T. )
       ENDIF
    NEXT
 
@@ -173,29 +172,29 @@ PROCEDURE Main( ... )
          ENDIF
 
          DO CASE
-         CASE cArgName == "-source" ; p_hsSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
+         CASE cArgName == "-source" ; s_hSwitches[ "basedir" ] := arg + iif( Right( arg, 1 ) == hb_ps(), "", hb_ps() )
          CASE cArgName == "-format"
-            IF arg == "" .OR. hb_AScan( p_hsSwitches[ "format-list" ], arg, , , .T. ) == 0
+            IF arg == "" .OR. hb_AScan( s_hSwitches[ "format-list" ], arg, , , .T. ) == 0
                ShowHelp( "Unknown format option '" + arg + "'" )
                RETURN
             ELSE
                IF arg == "all"
-                  p_hsSwitches[ "format" ] := p_hsSwitches[ "format-list" ]
+                  s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
                ELSE
-                  AAdd( p_hsSwitches[ "format" ], arg )
+                  AAdd( s_hSwitches[ "format" ], arg )
                ENDIF
             ENDIF
-         CASE cArgName == "-output-single" ;          p_hsSwitches[ "output" ] := "single"
-         CASE cArgName == "-output-category" ;        p_hsSwitches[ "output" ] := "category"
-         CASE cArgName == "-output-entry" ;           p_hsSwitches[ "output" ] := "entry"
-         CASE cArgName == "-include-doc-source" ;     p_hsSwitches[ "include-doc-source" ] := .T.
-         CASE cArgName == "-include-doc-version" ;    p_hsSwitches[ "include-doc-version" ] := .T.
+         CASE cArgName == "-output-single" ;          s_hSwitches[ "output" ] := "single"
+         CASE cArgName == "-output-category" ;        s_hSwitches[ "output" ] := "category"
+         CASE cArgName == "-output-entry" ;           s_hSwitches[ "output" ] := "entry"
+         CASE cArgName == "-include-doc-source" ;     s_hSwitches[ "include-doc-source" ] := .T.
+         CASE cArgName == "-include-doc-version" ;    s_hSwitches[ "include-doc-version" ] := .T.
          OTHERWISE
-            IF hb_AScan( p_hsSwitches[ "format-list" ], SubStr( cArgName, 2 ), , , .T. ) > 0
+            IF hb_AScan( s_hSwitches[ "format-list" ], SubStr( cArgName, 2 ), , , .T. ) > 0
                IF SubStr( cArgName, 2 ) == "all"
-                  p_hsSwitches[ "format" ] := p_hsSwitches[ "format-list" ]
+                  s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
                ELSE
-                  AAdd( p_hsSwitches[ "format" ], SubStr( cArgName, 2 ) )
+                  AAdd( s_hSwitches[ "format" ], SubStr( cArgName, 2 ) )
                ENDIF
             ELSE
                ShowHelp( "Unknown option:" + cArgName + iif( Len( arg ) > 0, "=" + arg, "" ) )
@@ -206,18 +205,18 @@ PROCEDURE Main( ... )
    NEXT
 
    // load hbextern.ch
-   FileEval( p_hsSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
+   FileEval( s_hSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
       {| c | iif( hb_LeftIs( c, "EXTERNAL " ), ;
-                  AAdd( p_hsSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
+                  AAdd( s_hSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
                   ) } )
-   ASort( p_hsSwitches[ "hbextern.ch" ] )
+   ASort( s_hSwitches[ "hbextern.ch" ] )
 
    aContent := {}
    AEval( ;
       {;
-         p_hsSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
-         iif( p_hsSwitches[ "source" ], p_hsSwitches[ "basedir" ] + "src", NIL ), ;
-         iif( p_hsSwitches[ "contribs" ], p_hsSwitches[ "basedir" ] + "contrib", NIL ), ;
+         s_hSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
+         iif( s_hSwitches[ "source" ], s_hSwitches[ "basedir" ] + "src", NIL ), ;
+         iif( s_hSwitches[ "contribs" ], s_hSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
       {| c | iif( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
 
@@ -253,16 +252,16 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   IF Len( p_hsSwitches[ "format" ] ) == 0
-      p_hsSwitches[ "format" ] := { "text" }
+   IF Len( s_hSwitches[ "format" ] ) == 0
+      s_hSwitches[ "format" ] := { "text" }
    ENDIF
 
-   FOR EACH cFormat IN p_hsSwitches[ "format" ]
+   FOR EACH cFormat IN s_hSwitches[ "format" ]
       IF !( cFormat == "all" )
          OutStd( "Output as", cFormat + hb_eol() )
 
          DO CASE
-         CASE p_hsSwitches[ "output" ] == "single"
+         CASE s_hSwitches[ "output" ] == "single"
 
             oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, "harbour", "Harbour Reference Guide" )
 
@@ -282,7 +281,7 @@ PROCEDURE Main( ... )
             oDocument:Generate()
             oDocument := NIL
 
-         CASE p_hsSwitches[ "output" ] == "category"
+         CASE s_hSwitches[ "output" ] == "category"
 
             oIndex := &( "Generate" + cFormat + "()" ):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
 
@@ -352,7 +351,7 @@ PROCEDURE Main( ... )
                ENDIF
             NEXT
 
-         CASE p_hsSwitches[ "output" ] == "entry"
+         CASE s_hSwitches[ "output" ] == "entry"
 
             FOR EACH item IN aContent
                oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, item:filename, "Harbour Reference Guide" )
@@ -393,7 +392,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
          IF !( file[ F_NAME ] == "." ) .AND. ;
             !( file[ F_NAME ] == ".." )
 
-            IF p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ]
+            IF s_hSwitches[ "source" ] .OR. s_hSwitches[ "contribs" ]
                /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( file[ F_NAME ] ) } ) == 0 */
                ProcessFolder( cFolder + file[ F_NAME ], @aContent )
             ENDIF
@@ -451,7 +450,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    LOCAL idxSubCategory := -1
    LOCAL cSourceFile
 
-   cSourceFile := StrTran( ".." + hb_ps() + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+   cSourceFile := StrTran( ".." + hb_ps() + cFile /* SubStr( cFile, Len( s_hSwitches[ "basedir" ] + hb_ps() ) ) */, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
    o:type_ := cType
    o:sourcefile_ := cSourceFile
@@ -573,18 +572,18 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
          cSectionName := Parse( Upper( o:Name ), "(" )
 
-         IF hb_AScan( p_hsSwitches[ "hbextern.ch" ], cSectionName, , , .T. ) > 0
-            AAdd( p_hsSwitches[ "in hbextern" ], cSectionName )
+         IF hb_AScan( s_hSwitches[ "hbextern.ch" ], cSectionName, , , .T. ) > 0
+            AAdd( s_hSwitches[ "in hbextern" ], cSectionName )
          ELSE
-            AAdd( p_hsSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
+            AAdd( s_hSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
          ENDIF
 
          // ~ OutStd( "    > " + cSectionName + hb_eol() )
 
       ENDIF
 
-      IF p_hsSwitches[ "include-doc-source" ]
-         o:Files += hb_eol() + o:sourcefile_ + iif( p_hsSwitches[ "include-doc-version" ], " (" + o:sourcefileversion_ + ")", "" )
+      IF s_hSwitches[ "include-doc-source" ]
+         o:Files += hb_eol() + o:sourcefile_ + iif( s_hSwitches[ "include-doc-version" ], " (" + o:sourcefileversion_ + ")", "" )
       ENDIF
 
       o:filename := Filename( o:Name )
@@ -618,18 +617,18 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
 
    IF FReadLn( @aHandle, @cSectionName )
       cSectionName := LTrim( SubStr( cSectionName, 3 ) )
-      IF Left( cSectionName, 1 ) == p_hsSwitches[ "DELIMITER" ] .AND. ;
-         Right( cSectionName, 1 ) == p_hsSwitches[ "DELIMITER" ]
+      IF Left( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
+         Right( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ]
 
-         cSectionName := SubStr( cSectionName, 1 + Len( p_hsSwitches[ "DELIMITER" ] ), Len( cSectionName ) - ( 2 * Len( p_hsSwitches[ "DELIMITER" ] ) ) )
+         cSectionName := SubStr( cSectionName, 1 + Len( s_hSwitches[ "DELIMITER" ] ), Len( cSectionName ) - ( 2 * Len( s_hSwitches[ "DELIMITER" ] ) ) )
          IF o:IsField( cSectionName )
             lLastPreformatted := lPreformatted := o:IsPreformatted( cSectionName )
             nLastIndent := -1
             DO WHILE ( nPosition := FSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( @aHandle, @cBuffer )
                // TOFIX: this assumes that every line starts with " *"
                cBuffer := RTrim( SubStr( cBuffer, 3 ) )
-               IF Left( LTrim( cBuffer ), 1 ) == p_hsSwitches[ "DELIMITER" ] .AND. ;
-                  Right( cBuffer, 1 ) == p_hsSwitches[ "DELIMITER" ]
+               IF Left( LTrim( cBuffer ), 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
+                  Right( cBuffer, 1 ) == s_hSwitches[ "DELIMITER" ]
                   FSeek( aHandle[ 1 ], nPosition, FS_SET )
                   aHandle[ 2 ]-- // decrement the line number when rewinding the file
                   EXIT
@@ -926,11 +925,11 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
             1, ;
             "-[format=]<type> // output type, default is text, or one of:", ;
             2, ;
-            p_hsSwitches[ "format-list" ], ;
+            s_hSwitches[ "format-list" ], ;
             1, ;
-            "-output-single // output is one file" + IsDefault( p_hsSwitches[ "output" ] == "single" ), ;
-            "-output-category // output is one file per category" + IsDefault( p_hsSwitches[ "output" ] == "category" ), ;
-            "-output-entry // output is one file per entry (function, command, etc)" + IsDefault( p_hsSwitches[ "output" ] == "entry" ), ;
+            "-output-single // output is one file" + IsDefault( s_hSwitches[ "output" ] == "single" ), ;
+            "-output-category // output is one file per category" + IsDefault( s_hSwitches[ "output" ] == "category" ), ;
+            "-output-entry // output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
             "-source=<folder> // source folder, default is .." + hb_ps() + "..", ;
             "-include-doc-source // output is to indicate the document source file name", ;
             "-include-doc-version // output is to indicate the document source file version", ;
@@ -947,7 +946,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
       aHelp := { ;
          iif( Len( aArgs ) >= 3, aArgs[ 3 ] + " template is:", "Defined templates are:" ), ;
          "", ;
-         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ), p_hsSwitches[ "DELIMITER" ] ) } ;
+         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ), s_hSwitches[ "DELIMITER" ] ) } ;
       }
 
    CASE aArgs[ 2 ] == "Compliance"
@@ -1006,7 +1005,7 @@ FUNCTION Join( aVar, cDelimiter )
 
 STATIC PROCEDURE AddErrorCondition( cFile, cMessage, nLine )
 
-   IF p_hsSwitches[ "immediate-errors" ]
+   IF s_hSwitches[ "immediate-errors" ]
       OutStd( cFile + ":" + hb_ntos( nLine ) + ":", cMessage + hb_eol() )
    ENDIF
 
@@ -1099,31 +1098,27 @@ FUNCTION Filename( cFile, cFormat, nLength )
    LOCAL idx
    LOCAL char
 
-   hb_default( @cFormat, "alnum" )
-
 #ifdef __PLATFORM__DOS
    hb_default( @nLength, 8 )
 #else
    hb_default( @nLength, 0 )
 #endif
 
-   DO CASE
-   CASE Lower( cFormat ) == "alnum"
-
+   IF Lower( hb_defaultValue( cFormat, "alnum" ) ) == "alnum"
       FOR idx := 1 TO Len( cFile )
          char := Lower( SubStr( cFile, idx, 1 ) )
-         IF "0" <= char .AND. char <= "9" .OR. "a" <= char .AND. char <= "z" .OR. char == "_"
+         IF ( "0" <= char .AND. char <= "9" ) .OR. ;
+            ( "a" <= char .AND. char <= "z" ) .OR. ;
+            char == "_"
             cResult += char
             IF nLength > 0 .AND. Len( cResult ) == nLength
                EXIT
             ENDIF
          ENDIF
       NEXT
-
-   OTHERWISE
+   ELSE
       cResult := cFile
-
-   ENDCASE
+   ENDIF
 
    IF hb_AScan( s_Files, cResult, , , .T. ) == 0
       AAdd( s_Files, cResult )

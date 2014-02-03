@@ -17,3 +17,9 @@ _tmplate.prg
 # NOTE: hbdoc doesn't work from other locations than
 #       the current one, so we don't install it yet.
 # $hb_pkg_install.hbm
+
+# default -run params usefaul to update the docs
+# on the Harbour website
+-runflag=-format=html
+-runflag=-output-single
+-cli
