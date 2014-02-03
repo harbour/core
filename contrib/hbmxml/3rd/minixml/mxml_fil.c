@@ -1,9 +1,9 @@
 /*
- * "$Id: mxml-file.c 438 2011-03-24 05:47:51Z mike $"
+ * "$Id: mxml-file.c 455 2014-01-05 03:28:03Z msweet $"
  *
  * File loading code for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2011 by Michael R Sweet.
+ * Copyright 2003-2014 by Michael R Sweet.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
@@ -11,42 +11,7 @@
  * which should have been included with this file.  If this file is
  * missing or damaged, see the license at:
  *
- *     http://www.minixml.org/
- *
- * Contents:
- *
- *   mxmlLoadFd()            - Load a file descriptor into an XML node tree.
- *   mxmlLoadFile()          - Load a file into an XML node tree.
- *   mxmlLoadString()        - Load a string into an XML node tree.
- *   mxmlSaveAllocString()   - Save an XML tree to an allocated string.
- *   mxmlSaveFd()            - Save an XML tree to a file descriptor.
- *   mxmlSaveFile()          - Save an XML tree to a file.
- *   mxmlSaveString()        - Save an XML node tree to a string.
- *   mxmlSAXLoadFd()         - Load a file descriptor into an XML node tree
- *                             using a SAX callback.
- *   mxmlSAXLoadFile()       - Load a file into an XML node tree
- *                             using a SAX callback.
- *   mxmlSAXLoadString()     - Load a string into an XML node tree
- *                             using a SAX callback.
- *   mxmlSetCustomHandlers() - Set the handling functions for custom data.
- *   mxmlSetErrorCallback()  - Set the error message callback.
- *   mxmlSetWrapMargin()     - Set the wrap margin when saving XML data.
- *   mxml_add_char()         - Add a character to a buffer, expanding as needed.
- *   mxml_fd_getc()          - Read a character from a file descriptor.
- *   mxml_fd_putc()          - Write a character to a file descriptor.
- *   mxml_fd_read()          - Read a buffer of data from a file descriptor.
- *   mxml_fd_write()         - Write a buffer of data to a file descriptor.
- *   mxml_file_getc()        - Get a character from a file.
- *   mxml_file_putc()        - Write a character to a file.
- *   mxml_get_entity()       - Get the character corresponding to an entity...
- *   mxml_load_data()        - Load data into an XML node tree.
- *   mxml_parse_element()    - Parse an element for any attributes...
- *   mxml_string_getc()      - Get a character from a string.
- *   mxml_string_putc()      - Write a character to a string.
- *   mxml_write_name()       - Write a name string.
- *   mxml_write_node()       - Save an XML node to a file.
- *   mxml_write_string()     - Write a string, escaping & and < as needed.
- *   mxml_write_ws()         - Do whitespace callback...
+ *     http://www.msweet.org/projects.php/Mini-XML
  */
 
 /*
@@ -128,7 +93,7 @@ static int		mxml_write_node(mxml_node_t *node, void *p,
 					_mxml_global_t *global);
 static int		mxml_write_string(const char *s, void *p,
 					  _mxml_putc_cb_t putc_cb);
-static int		mxml_write_ws(mxml_node_t *node, void *p, 
+static int		mxml_write_ws(mxml_node_t *node, void *p,
 			              mxml_save_cb_t cb, int ws,
 				      int col, _mxml_putc_cb_t putc_cb);
 
@@ -584,7 +549,7 @@ mxmlSAXLoadString(
  *
  * The save function accepts a node pointer and must return a malloc'd
  * string on success and NULL on error.
- * 
+ *
  */
 
 void
@@ -773,7 +738,7 @@ mxml_fd_getc(void *p,			/* I  - File descriptor buffer */
 	      return (EOF);
 
 	  ch = *(buf->current)++;
-          
+
 	  if (ch != 0xff)
 	    return (EOF);
 
@@ -792,7 +757,7 @@ mxml_fd_getc(void *p,			/* I  - File descriptor buffer */
 	      return (EOF);
 
 	  ch = *(buf->current)++;
-          
+
 	  if (ch != 0xfe)
 	    return (EOF);
 
@@ -1304,7 +1269,8 @@ mxml_file_getc(void *p,			/* I  - Pointer to file */
 	  * Multi-word UTF-16 char...
 	  */
 
-          int lch = (getc(fp) << 8) | getc(fp);
+          int lch = getc(fp);
+          lch = (lch << 8) | getc(fp);
 
           if (lch < 0xdc00 || lch >= 0xdfff)
 	    return (EOF);
@@ -1332,7 +1298,8 @@ mxml_file_getc(void *p,			/* I  - Pointer to file */
 	  * Multi-word UTF-16 char...
 	  */
 
-          int lch = getc(fp) | (getc(fp) << 8);
+          int lch = getc(fp);
+          lch |= (getc(fp) << 8);
 
           if (lch < 0xdc00 || lch >= 0xdfff)
 	    return (EOF);
@@ -1478,8 +1445,10 @@ mxml_load_data(
 
   if (cb && parent)
     type = (*cb)(parent);
-  else
+  else if (parent)
     type = MXML_TEXT;
+  else
+    type = MXML_IGNORE;
 
   while ((ch = (*getc_cb)(p, &encoding)) != EOF)
   {
@@ -1533,7 +1502,7 @@ mxml_load_data(
         default : /* Ignore... */
 	    node = NULL;
 	    break;
-      }	  
+      }
 
       if (*bufptr)
       {
@@ -1676,9 +1645,9 @@ mxml_load_data(
 	  * There can only be one root element!
 	  */
 
-	  mxml_error("<%s> cannot be a second root node after <%s>", 
+	  mxml_error("<%s> cannot be a second root node after <%s>",
 	             buffer, first->value.element.name);
-          goto error; 		     
+          goto error;
 	}
 
 	if ((node = mxmlNewElement(parent, buffer)) == NULL)
@@ -1744,9 +1713,9 @@ mxml_load_data(
 	  * There can only be one root element!
 	  */
 
-	  mxml_error("<%s> cannot be a second root node after <%s>", 
+	  mxml_error("<%s> cannot be a second root node after <%s>",
 	             buffer, first->value.element.name);
-          goto error; 		     
+          goto error;
 	}
 
 	if ((node = mxmlNewElement(parent, buffer)) == NULL)
@@ -1811,9 +1780,9 @@ mxml_load_data(
 	  * There can only be one root element!
 	  */
 
-	  mxml_error("<%s> cannot be a second root node after <%s>", 
+	  mxml_error("<%s> cannot be a second root node after <%s>",
 	             buffer, first->value.element.name);
-          goto error; 		     
+          goto error;
 	}
 
 	if ((node = mxmlNewElement(parent, buffer)) == NULL)
@@ -1897,9 +1866,9 @@ mxml_load_data(
 	  * There can only be one root element!
 	  */
 
-	  mxml_error("<%s> cannot be a second root node after <%s>", 
+	  mxml_error("<%s> cannot be a second root node after <%s>",
 	             buffer, first->value.element.name);
-          goto error; 		     
+          goto error;
 	}
 
 	if ((node = mxmlNewElement(parent, buffer)) == NULL)
@@ -1989,9 +1958,9 @@ mxml_load_data(
 	  * There can only be one root element!
 	  */
 
-	  mxml_error("<%s> cannot be a second root node after <%s>", 
+	  mxml_error("<%s> cannot be a second root node after <%s>",
 	             buffer, first->value.element.name);
-          goto error; 		     
+          goto error;
 	}
 
         if ((node = mxmlNewElement(parent, buffer)) == NULL)
@@ -2301,7 +2270,7 @@ mxml_parse_element(
 	    if (ch == '&')
 	      if ((ch = mxml_get_entity(node, p, encoding, getc_cb)) == EOF)
 	        goto error;
-	      
+
 	    if (mxml_add_char(ch, &ptr, &value, &valsize))
 	      goto error;
 	  }
@@ -2325,7 +2294,7 @@ mxml_parse_element(
 	    if (ch == '&')
 	      if ((ch = mxml_get_entity(node, p, encoding, getc_cb)) == EOF)
 	        goto error;
-	      
+
 	    if (mxml_add_char(ch, &ptr, &value, &valsize))
 	      goto error;
 	  }
@@ -3109,5 +3078,5 @@ mxml_write_ws(mxml_node_t     *node,	/* I - Current node */
 
 
 /*
- * End of "$Id: mxml-file.c 438 2011-03-24 05:47:51Z mike $".
+ * End of "$Id: mxml-file.c 455 2014-01-05 03:28:03Z msweet $".
  */
