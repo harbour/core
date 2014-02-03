@@ -52,11 +52,6 @@
 #ifndef HBDOC_CH_
 #define HBDOC_CH_
 
-MEMVAR p_aCategories
-MEMVAR p_aCompliance
-MEMVAR p_aPlatforms
-MEMVAR p_aStatus
-
 // Template definitions
 #define TPL_START            1
 #define TPL_END              2

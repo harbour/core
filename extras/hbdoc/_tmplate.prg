@@ -75,9 +75,9 @@ CREATE CLASS Entry
       { "METHODSNOLINK","Methods no link" }, ;
       { "EXAMPLES",     "Example(s)" }, ;
       { "TESTS",        "Test(s)" }, ;
-      { "STATUS",       "Status" }, ;      /* p_aStatus is the constraint list */
-      { "COMPLIANCE",   "Compliance" }, ;  /* p_aCompliance is the constraint list */
-      { "PLATFORMS",    "Platform(s)" }, ; /* p_aPlatforms is the constraint list */
+      { "STATUS",       "Status" }, ;      /* ::hConstraint[ "status" ] is the constraint list */
+      { "COMPLIANCE",   "Compliance" }, ;  /* ::hConstraint[ "compliance" ] is the constraint list */
+      { "PLATFORMS",    "Platform(s)" }, ; /* ::hConstraint[ "platforms" ] is the constraint list */
       { "FILES",        "File(s)" }, ;
       { "SEEALSO",      "See also" }, ;
       { "END",          "End" } }
@@ -104,7 +104,7 @@ CREATE CLASS Entry
       { "Class data"    , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
       { "Run time error", { _S, _T, _R+_U, _R,  0   , _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U, _O+_U,  0+_U,  0+_U, _O+_U, _E } } }
 
-   METHOD New( cType ) CONSTRUCTOR
+   METHOD New( cType, hConstraint ) CONSTRUCTOR
    METHOD IsField( c, nType )
    METHOD IsTemplate( cType )
    METHOD SetTemplate( cTemplate )
@@ -124,17 +124,21 @@ CREATE CLASS Entry
    VAR sourcefile_ AS STRING
    VAR sourcefileversion_ AS STRING
    VAR uid_ AS STRING
+   VAR hConstraint
+
    CLASS VAR uid__ AS INTEGER INIT 0
 
 ENDCLASS
 
-METHOD New( cType ) CLASS Entry
+METHOD New( cType, hConstraint ) CLASS Entry
+
+   ::hConstraint := hConstraint
 
    ::uid_ := hb_ntos( ++::uid__ )
    IF ! __objHasData( self, ::Fields[ 1 ][ 1 ] )
       AEval( ::Fields, {| a | __objAddData( self, a[ 1 ] ) } )
    ENDIF
-   IF cType != NIL
+   IF HB_ISSTRING( cType )
       ::Group := ::Templates[ AScan( ::Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) ][ 2 ]
    ENDIF
 
@@ -182,10 +186,10 @@ METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
 
    IF hb_bitAnd( ::Group[ idx ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
       lResult := .T.
-   ELSEIF Type( "p_a" + cSectionName ) == "A"
+   ELSEIF cSectionName $ ::hConstraint
       lResult := ;
-         hb_AScan( &( "p_a" + cSectionName ), cSection, , , .T. ) .OR. ;
-         hb_AScan( &( "p_a" + cSectionName ), Parse( cSection, "," ), , , .T. )
+         hb_AScan( ::hConstraint[ cSectionName ], cSection, , , .T. ) .OR. ;
+         hb_AScan( ::hConstraint[ cSectionName ], Parse( cSection, "," ), , , .T. )
    ELSE
       lResult := .T.
    ENDIF
@@ -226,181 +230,8 @@ METHOD FieldName( cField ) CLASS Entry
    RETURN ::Fields[ AScan( ::Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
 
 METHOD CategoryIndex( cCategory ) CLASS Entry
-   RETURN AScan( p_aCategories, {| a | HB_ISARRAY( a ) .AND. Len( a ) >= 1 .AND. a[ 1 ] == cCategory } )
+   RETURN AScan( ::hConstraint[ "categories" ], {| a | HB_ISARRAY( a ) .AND. Len( a ) >= 1 .AND. a[ 1 ] == cCategory } )
 
 METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
    RETURN ::CategoryIndex( cCategory ) >= 1 .AND. ;
-      hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
-
-PROCEDURE init_Templates()
-
-   LOCAL item
-   LOCAL aSubCategories := { ;
-      "Application", ;
-      "Array", ;
-      "Classes", ;
-      "Conversion", ;
-      "Database", ;
-      "Date/Time", ;
-      "Environment", ;
-      "Error", ;
-      "Events", ;
-      "Execute and execution", ; /* replace w/ "Environment"? */
-      "Extend", ;
-      "FileSys", ;
-      "Fixed memory", ;
-      "Garbage collector", ;
-      "Hash table", ;
-      "Idle states", ;
-      "INET", ;
-      "Internal", ;
-      "Item", ;
-      "Language and Nation", ;
-      "Legacy", ;
-      "Macro", ;
-      "Math", ;
-      "Objects", ;
-      "Printer", ;
-      "RDD", ;
-      "Strings", ;
-      "Terminal", ;
-      "Undocumented", ;
-      "User interface", ;
-      "Variable management", ;
-      "Virtual machine" }
-
-   PUBLIC p_aCategories := { ;
-      { "Document", { "License", "Compiler", "" } }, ;
-      { "API", AClone( aSubCategories ) }, ;
-      { "C level API", AClone( aSubCategories ) }, ;
-      { "C level API compatability", AClone( aSubCategories ) }, ;
-      { "Class", { ;
-            "", ;
-            "Access", ;
-            "Assign", ;
-            "Constructor", ;
-            "Data", ;
-            "Definition", ;
-            "Destructor", ;
-            "Method", ;
-            "Var" } }, ;
-      { "Command", AClone( aSubCategories ) }, ;
-      /* { "Compile time errors", { {} } }, */ ;
-      { "Run time errors", { "" } } }
-
-   FOR EACH item IN p_aCategories
-      IF ! Empty( item )
-         AAdd( item, Array( Len( item[ 2 ] ) ) ) // holder array of sub-category entries
-         AAdd( item, "" ) // holder for sub-category file name
-      ENDIF
-   NEXT
-
-   PUBLIC p_aCompliance := { ;
-      { "",         "" }, ;
-      { "C",        "This is CA-Cl*pper v5.2 compliant" }, ;
-      { "C(array)", "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements" }, ;
-      { "C(menu)",  "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements" }, ;
-      { "C(arrayblock)",  "Codeblock calling frequency and order differs from  CA-Cl*pper, since Harbour uses a different (faster) sorting algorithm (quicksort)" }, ;
-      { "C52S",     "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_C52_STRICT flag" }, ;
-      { "C52U",     "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_C52_UNDOC flag" }, ;
-      { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
-      { "H",        "This is Harbour specific" }, ;
-      { "NA",       "Not applicable" } }
-
-   PUBLIC p_aPlatforms := { ;
-      { "",          "" }, ;
-      { "All",       "This is available on all platforms" }, ;
-      { "All(GT)",   "This part of the GT API and supported only by some platforms." }, ;
-      { "All(LFN)",  "This is available on all platforms." + hb_eol() + ;
-                     "If long file names are available Harbour will use/display the first 15 characters " +;
-                     "else Harbour will use/display a 8.3 file name consistent with CA-Cl*pper" }, ;
-      { "Linux(GT)", "Under Linux the number of columns avaliable depends of the current Terminal screen size." }, ;
-      { "OS2(GT)",   "Under OS/2 the number of columns avaliable depends of the current Terminal screen size." }, ;
-      { "Win(GT)",   "Under Windows, the return value of MaxRow() function is only affected if called after an SetMode() function" }, ;
-      { "BSD",       "This is available on the BSD platform" }, ;
-      { "DARWIN",    "This is available on the Darwin platform" }, ;
-      { "DOS",       "This is available on the MS-DOS platform" }, ;
-      { "HPUX",      "This is available on the HPUX platform" }, ;
-      { "LINUX",     "This is available on the Linux platform" }, ;
-      { "OS2",       "This is available on the OS/2 platform" }, ;
-      { "SUNOS",     "This is available on the SunOS platform" }, ;
-      { "Unix",      "This is available on the Unix platform(s)" }, ;
-      { "Win",       "This is available on the Windows platform(s)" }, ;
-      { "WinCE",     "This is available on the Windows CE platform" } }
-
-   PUBLIC p_aStatus := { ;
-      { "",  "" }, ;
-      { "R", "Ready" }, ;
-      { "S", "Started" }, ;
-      { "N", "Not started" } }
-
-   RETURN
-
-PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
-
-   LOCAL o := Entry():New()
-   LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
-   LOCAL idx
-
-   IF ! Empty( cTemplate ) .AND. !( cTemplate == "Template" )
-      IF o:IsTemplate( cTemplate )
-         nFrom := nTo := AScan( o:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } )
-      ELSE
-         ShowHelp( "Unknown template '" + cTemplate + "'" )
-         RETURN
-      ENDIF
-   ENDIF
-
-   FOR idxTemplates := nFrom TO nTo
-      IF ! Empty( o:Templates[ idxTemplates ] ) .AND. ;
-         ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
-         !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
-
-#if 0
-         IF nFrom != nTo
-            ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
-         ENDIF
-#endif
-
-         o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
-
-         FOR idx := 1 TO Len( o:Fields )
-            IF o:Group[ idx ] != 0
-               ShowSubHelp( iif( idx == 1, "/", " " ) + "*  " + cDelimiter + o:Fields[ idx ][ 1 ] + cDelimiter, 1, 0 )
-               IF o:Fields[ idx ][ 1 ] == "TEMPLATE"
-                  ShowSubHelp( " *      " + o:Template, 1, 0 )
-               ELSEIF o:Group[ idx ] != TPL_START .AND. o:Group[ idx ] != TPL_END .AND. .T.
-                  ShowSubHelp( " *      " + iif( o:IsRequired( o:Fields[ idx ][ 1 ] ), "<required>", "<optional>" ), 1, 0 )
-               ENDIF
-            ENDIF
-         NEXT
-         ShowSubHelp( " */", 1, 0 )
-         ShowSubHelp( "", 1, 0 )
-      ENDIF
-   NEXT
-
-   RETURN
-
-PROCEDURE ShowComplianceHelp()
-
-   LOCAL item
-
-   FOR EACH item IN p_aCompliance
-      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "COMPLIANCE", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
-      ShowSubHelp( "", 1, 0 )
-   NEXT
-
-   RETURN
-
-PROCEDURE ShowPlatformsHelp
-
-   LOCAL item
-
-   FOR EACH item IN p_aPlatforms
-      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "PLATFORMS", NIL, item[ 1 ] ), 1, 6, item:__enumIndex() )
-      ShowSubHelp( "", 1, 0 )
-   NEXT
-
-   RETURN
+      hb_AScan( ::hConstraint[ "categories" ][ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
