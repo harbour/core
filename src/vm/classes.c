@@ -1917,7 +1917,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             }
 #else
             {
-               PMETHOD pMethod = b_clsFindMsg( pClass, pMsg );
+               PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
                if( pMethod )
                {
                   pStack->uiMethod = ( HB_USHORT ) ( pMethod - pClass->pMethods );

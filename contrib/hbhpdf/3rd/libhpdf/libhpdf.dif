@@ -1,6 +1,6 @@
 diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
---- libhpdf.orig/hpdf.h	2013-06-12 13:30:26.932035572 +0200
-+++ libhpdf/hpdf.h	2013-06-12 13:30:26.932035572 +0200
+--- libhpdf.orig/hpdf.h	2014-02-03 17:57:08.252031640 +0100
++++ libhpdf/hpdf.h	2014-02-03 17:57:08.252031640 +0100
 @@ -17,7 +17,7 @@
  #ifndef _HPDF_H
  #define _HPDF_H
@@ -20,8 +20,8 @@ diff -urN libhpdf.orig/hpdf.h libhpdf/hpdf.h
  								HPDF_Rect      rect,
  								const char     *text,
 diff -urN libhpdf.orig/hpdfimac.c libhpdf/hpdfimac.c
---- libhpdf.orig/hpdfimac.c	2013-06-12 13:30:26.856035571 +0200
-+++ libhpdf/hpdfimac.c	2013-06-12 13:30:26.856035571 +0200
+--- libhpdf.orig/hpdfimac.c	2014-02-03 17:57:08.168031638 +0100
++++ libhpdf/hpdfimac.c	2014-02-03 17:57:08.168031638 +0100
 @@ -78,7 +78,7 @@
  
  #define	Fax3State(tif)		(&(tif)->tif_data->b)
@@ -31,20 +31,9 @@ diff -urN libhpdf.orig/hpdfimac.c libhpdf/hpdfimac.c
  
  /* NB: the uint32 casts are to silence certain ANSI-C compilers */
  #define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
-diff -urN libhpdf.orig/hpdfimap.c libhpdf/hpdfimap.c
---- libhpdf.orig/hpdfimap.c	2013-06-12 13:30:26.860035571 +0200
-+++ libhpdf/hpdfimap.c	2013-06-12 13:30:26.860035571 +0200
-@@ -21,6 +21,7 @@
- 
- #ifndef LIBHPDF_HAVE_NOPNGLIB
- #include <png.h>
-+#include <string.h>
- 
- static void
- PngErrorFunc  (png_structp       png_ptr,
 diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
---- libhpdf.orig/hpdfutil.h	2013-06-12 13:30:26.968035573 +0200
-+++ libhpdf/hpdfutil.h	2013-06-12 13:30:26.968035573 +0200
+--- libhpdf.orig/hpdfutil.h	2014-02-03 17:57:08.288031641 +0100
++++ libhpdf/hpdfutil.h	2014-02-03 17:57:08.288031641 +0100
 @@ -18,7 +18,7 @@
  #ifndef _HPDF_UTILS_H
  #define _HPDF_UTILS_H
@@ -55,8 +44,8 @@ diff -urN libhpdf.orig/hpdfutil.h libhpdf/hpdfutil.h
  
  #ifdef __cplusplus
 diff -urN libhpdf.orig/t4.h libhpdf/t4.h
---- libhpdf.orig/t4.h	2013-06-12 13:30:26.920035572 +0200
-+++ libhpdf/t4.h	2013-06-12 13:30:26.920035572 +0200
+--- libhpdf.orig/t4.h	2014-02-03 17:57:08.244031640 +0100
++++ libhpdf/t4.h	2014-02-03 17:57:08.244031640 +0100
 @@ -1,4 +1,4 @@
 -/* $Id: t4.h,v 1.20 2007/11/10 18:40:44 drolon Exp $ */
 +/* $Id$ */

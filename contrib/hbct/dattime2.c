@@ -83,10 +83,10 @@ static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )
 
 static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
 {
-   static const int sc_iMonthes[] = {
+   static const int sc_iMonths[] = {
       0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
-   return ( iMonth < 1 && iMonth > 12 ) ? 0 : sc_iMonthes[ iMonth - 1 ] +
+   return ( iMonth < 1 || iMonth > 12 ) ? 0 : sc_iMonths[ iMonth - 1 ] +
           ( ( bLeap && iMonth > 2 ) ? 1 : 0 );
 }
 

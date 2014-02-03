@@ -115,7 +115,7 @@
 #define HPDF_LIMIT_MAX_STRING_LEN      65535
 #define HPDF_LIMIT_MAX_NAME_LEN        127
 
-#define HPDF_LIMIT_MAX_ARRAY           8191
+#define HPDF_LIMIT_MAX_ARRAY           32767
 #define HPDF_LIMIT_MAX_DICT_ELEMENT    4095
 #define HPDF_LIMIT_MAX_XREF_ELEMENT    8388607
 #define HPDF_LIMIT_MAX_GSTATE          28
@@ -142,7 +142,7 @@
 #define HPDF_MAX_WORDSPACE          300
 #define HPDF_MIN_CHARSPACE          -30
 #define HPDF_MAX_CHARSPACE          300
-#define HPDF_MAX_FONTSIZE           300
+#define HPDF_MAX_FONTSIZE           600
 #define HPDF_MAX_ZOOMSIZE           10
 #define HPDF_MAX_LEADING            300
 #define HPDF_MAX_LINEWIDTH          100
