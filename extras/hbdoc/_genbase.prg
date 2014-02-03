@@ -51,10 +51,9 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
-#define DOCUMENT_ 1
-#define INDEX_ 2
+#define DOCUMENT_  1
+#define INDEX_     2
 
 CREATE CLASS TPLGenerate
 

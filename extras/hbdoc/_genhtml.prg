@@ -50,7 +50,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
 #include "fileio.ch"
 
@@ -260,28 +259,27 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 METHOD OpenTag( cText, ... ) CLASS GenerateHTML
 
    LOCAL aArgs := hb_AParams()
-   LOCAL cTag := cText
    LOCAL idx
 
    FOR idx := 2 TO Len( aArgs ) STEP 2
-      cTag += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
+      cText += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, "<" + cTag + ">" + hb_eol() )
+   FWrite( ::nHandle, "<" + cText + ">" + hb_eol() )
 
    RETURN self
 
 METHOD Tagged( cText, cTag, ... ) CLASS GenerateHTML
 
    LOCAL aArgs := hb_AParams()
-   LOCAL cResult := "<" + cTag
+   LOCAL cResult := ""
    LOCAL idx
 
    FOR idx := 3 TO Len( aArgs ) STEP 2
       cResult += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, cResult + ">" + cText + "</" + cTag + ">" + /* "4" + */ hb_eol() )
+   FWrite( ::nHandle, "<" + cTag + cResult + ">" + cText + "</" + cTag + ">" + hb_eol() )
 
    RETURN self
 
@@ -298,30 +296,27 @@ METHOD CloseTag( cText ) CLASS GenerateHTML
 
 METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
-   LOCAL cResult
-   LOCAL aFormat
    LOCAL idx
 
    IF Len( cText ) > 0
 
-      cResult := hb_StrReplace( cText, { ;
+      cText := hb_StrReplace( cText, { ;
          "&" => "&amp;", ;
          '"' => "&quot;", ;
          "<" => "&lt;", ;
          ">" => "&gt;" } )
 
-      aFormat := hb_ATokens( hb_defaultValue( cFormat, "" ), "," )
-      FOR EACH idx IN aFormat DESCEND
+      FOR EACH idx IN hb_ATokens( hb_defaultValue( cFormat, "" ), "," ) DESCEND
          IF ! Empty( idx )
-            cResult := "<" + idx + ">" + cResult + "</" + idx + ">"
+            cText := "<" + idx + ">" + cText + "</" + idx + ">"
          ENDIF
       NEXT
 
-      DO WHILE Right( cResult, Len( hb_eol() ) ) == hb_eol()
-         cResult := Left( cResult, Len( cResult ) - Len( hb_eol() ) )
+      DO WHILE Right( cText, Len( hb_eol() ) ) == hb_eol()
+         cText := hb_StrShrink( cText, Len( hb_eol() ) )
       ENDDO
 
-      FWrite( ::nHandle, cResult + hb_eol() )
+      FWrite( ::nHandle, cText + hb_eol() )
 
    ENDIF
 

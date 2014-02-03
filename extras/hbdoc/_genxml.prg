@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
 #include "fileio.ch"
 
@@ -137,9 +136,6 @@ METHOD AddEntry( oEntry ) CLASS GenerateXML
 METHOD Generate() CLASS GenerateXML
 
    FWrite( ::nHandle, '</HarbourReference>' + hb_eol() )
-
-   IF ::IsIndex()
-   ENDIF
 
    IF ::nHandle != F_ERROR
       FClose( ::nHandle )

@@ -8043,7 +8043,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cCommand += ".app"
          ENDIF
       #endif
-      IF ! hbmk[ _HBMK_lCLI ]
+      IF ! hbmk[ _HBMK_lCLI ] .AND. !( Lower( hbmk[ _HBMK_cGT ] ) == "gtcgi" )
          cCommand := LaunchCommand( cCommand )
       ENDIF
       cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )

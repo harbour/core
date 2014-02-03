@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
 #include "fileio.ch"
 
@@ -166,10 +165,8 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
 
 METHOD Generate() CLASS GenerateText
 
-   IF ::IsIndex()
-      IF ! ::lContinuous
-         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
-      ENDIF
+   IF ::IsIndex() .AND. ! ::lContinuous
+      FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
    ENDIF
 
    IF ::nHandle != F_ERROR

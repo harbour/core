@@ -101,11 +101,11 @@ done - validate sources against these templates
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
-#define BASE_DIR ".." + hb_ps() + ".." + hb_ps()
+#define BASE_DIR        ".." + hb_ps() + ".." + hb_ps()
 
-#define OnOrOff( b )   iif( b, "excluded", "included" )
-#define YesOrNo( b )   iif( b, "yes", "no" )
-#define IsDefault( b ) iif( b, "; default", "" )
+#define OnOrOff( b )    iif( b, "excluded", "included" )
+#define YesOrNo( b )    iif( b, "yes", "no" )
+#define IsDefault( b )  iif( b, "; default", "" )
 
 STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 STATIC sc_hConstraint
@@ -402,10 +402,9 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
             ENDIF
          ENDIF
       ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( file[ F_NAME ] ) } ) == 0
-         IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt"
-            IF ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
-               EXIT
-            ENDIF
+         IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt" .AND. ;
+            ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
+            EXIT
          ENDIF
       ENDIF
    NEXT
@@ -666,7 +665,6 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
                ENDIF
             ENDDO
          ENDIF
-
       ENDIF
    ELSE
       RETURN .F.
@@ -868,28 +866,27 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
 
    LOCAL cIndent := Space( nIndent )
 
-   IF xLine != NIL
+   DO CASE
+   CASE xLine == NIL
+   CASE HB_ISNUMERIC( xLine )
+      nMode := xLine
+   CASE HB_ISBLOCK( xLine )
+      Eval( xLine )
+   CASE HB_ISARRAY( xLine )
+      IF nMode == 2
+         OutStd( cIndent + Space( 2 ) )
+      ENDIF
+      AEval( xLine, {| x, n | ShowSubHelp( x, @nMode, nIndent + 2, n ) } )
+      IF nMode == 2
+         OutStd( hb_eol() )
+      ENDIF
+   OTHERWISE
       DO CASE
-      CASE HB_ISNUMERIC( xLine )
-         nMode := xLine
-      CASE HB_ISBLOCK( xLine )
-         Eval( xLine )
-      CASE HB_ISARRAY( xLine )
-         IF nMode == 2
-            OutStd( cIndent + Space( 2 ) )
-         ENDIF
-         AEval( xLine, {| x, n | ShowSubHelp( x, @nMode, nIndent + 2, n ) } )
-         IF nMode == 2
-            OutStd( hb_eol() )
-         ENDIF
-      OTHERWISE
-         DO CASE
-         CASE nMode == 1 ; OutStd( cIndent + xLine ); OutStd( hb_eol() )
-         CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
-         OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ); OutStd( xLine ); OutStd( hb_eol() )
-         ENDCASE
+      CASE nMode == 1 ; OutStd( cIndent + xLine ); OutStd( hb_eol() )
+      CASE nMode == 2 ; OutStd( iif( n > 1, ", ", "" ) + xLine )
+      OTHERWISE       ; OutStd( "(" + hb_ntos( nMode ) + ") " ); OutStd( xLine ); OutStd( hb_eol() )
       ENDCASE
-   ENDIF
+   ENDCASE
 
    RETURN
 
