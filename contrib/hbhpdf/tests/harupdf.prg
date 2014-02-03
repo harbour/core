@@ -96,7 +96,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
    IF pdf == NIL
       Alert( "PDF could not be created!" )
-      RETURN NIL
+      RETURN .F.
    ENDIF
 
    /* set compression mode */
@@ -910,7 +910,6 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    /*
     * char spacing, word spacing
     */
-
    show_description( page, 60, 140, "char-spacing 0" )
    show_description( page, 60, 100, "char-spacing 1.5" )
    show_description( page, 60, 60, "char-spacing 1.5, word-spacing 2.5" )
@@ -945,16 +944,15 @@ STATIC PROCEDURE Page_TextScaling( pdf )
 
 STATIC PROCEDURE show_stripe_pattern( page, x, y )
 
-   LOCAL iy := 0
+   LOCAL iy
 
-   DO WHILE iy < 50
+   FOR iy := 0 TO 50 STEP 3
       HPDF_Page_SetRGBStroke( page, 0.0, 0.0, 0.5 )
       HPDF_Page_SetLineWidth( page, 1 )
       HPDF_Page_MoveTo( page, x, y + iy )
       HPDF_Page_LineTo( page, x + HPDF_Page_TextWidth( page, "ABCabc123" ), y + iy )
       HPDF_Page_Stroke( page )
-      iy += 3
-   ENDDO
+   NEXT
 
    HPDF_Page_SetLineWidth( page, 2.5 )
 
