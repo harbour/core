@@ -7,6 +7,8 @@ PROCEDURE Main()
    LOCAL oTest := Test():New()
    LOCAL oTest2 := Test2():New()
 
+   LOCAL tmp
+
    oTest:One   := "hello"
    oTest:Two   := 123
    oTest:Three := "this value is not persistent"
@@ -14,9 +16,16 @@ PROCEDURE Main()
 
    oTest2:Five := "some more text"
 
-   ? oTest:SaveToText()            // We save it to a text
+   ? tmp := oTest:SaveToText()     // We save it to a text
 
    oTest:SaveToFile( "test.txt" )  // We save it to a file
+
+   tmp := StrTran( tmp, "some more text", "changed text" )
+   tmp := StrTran( tmp, "hello", "welcome" )
+
+   ? "before load:", oTest:Four:Five
+   ? "load:", oTest:LoadFromText( tmp, .T. )
+   ? "after load:", oTest:Four:Five
 
    RETURN
 
