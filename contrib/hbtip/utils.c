@@ -814,33 +814,6 @@ HB_FUNC( TIP_MIMETYPE )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
-   Case insensitive string comparison to optimize this expression:
-   IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
-   <cString> must be provided as a pointer to the character string containing a substring
-   <nStart> is the numeric position to start comparison in <cString>
-   <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
- */
-
-HB_FUNC( __TIP_PSTRCOMPI )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pStart  = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pSubstr = hb_param( 3, HB_IT_STRING );
-
-   if( pString && pStart && pSubstr )
-   {
-      HB_ISIZ nStart = hb_itemGetNS( pStart );
-
-      hb_retl( nStart < ( HB_ISIZ ) hb_itemGetCLen( pString ) && nStart >= 1 &&
-               hb_strnicmp( hb_itemGetCPtr( pString ) + nStart - 1,
-                            hb_itemGetCPtr( pSubstr ),
-                            hb_itemGetCLen( pSubstr ) ) == 0 );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( TIP_HTMLSPECIALCHARS )
 {
    if( HB_ISCHAR( 1 ) )

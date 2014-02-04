@@ -1163,7 +1163,7 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
       // dBASE does this so we must do it too
       // Character following character pointed to by pointer is NULL
-      IF Chr( 0 ) == hb_BLeft( cString, 1 ) .AND. Len( hb_BLeft( cString, 1 ) ) == 1
+      IF hb_BLeft( cString, 1 ) == Chr( 0 )
          cString := ""
       ENDIF
    ENDIF

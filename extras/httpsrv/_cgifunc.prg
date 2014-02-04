@@ -284,7 +284,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   __defaultNIL( @cDelim, ( Chr( 13 ) + Chr( 10 ) ) )
+   __defaultNIL( @cDelim, Chr( 13 ) + Chr( 10 ) )
    __defaultNIL( @lRemDelim, .T. )
    __defaultNIL( @nCount, -1 )
 
@@ -295,7 +295,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
       IF lRemDelim
          cLine := Left( cBuffer, nEOLPos - 1 )
       ELSE
-         cLine := Left( cBuffer, ( nEOLPos + Len( cDelim ) ) - 1 )
+         cLine := Left( cBuffer, nEOLPos - 1 + Len( cDelim ) )
       ENDIF
       // WriteToLogFile( "cBuffer, cDelim, nEOLPos, cLine: " + CStr( cBuffer ) + "," + CStr( cDelim ) + "," + CStr( nEOLPos ) + "," + CStr( cLine ) )
       AAdd( aLines, cLine )
@@ -601,51 +601,11 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
 /*********************************************************************************/
 
-FUNCTION uhttpd_SplitFileName( cFile )
-
-   LOCAL hFile
-   LOCAL cPath, cName, cExt, cDrive, cSep
-
-   hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-   hFile := { ;
-      "FILE"     => cFile, ;
-      "DRIVE"    => cDrive, ;
-      "PATH"     => cPath, ;
-      "NAME"     => cName, ;
-      "EXT"      => cExt, ;
-      "FULLPATH" => NIL, ;
-      "FULLNAME" => cName + cExt, ;
-      "UNC"      => NIL }
-
-   cSep := hb_ps()
-
-   hFile:FULLPATH := iif( ! Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
-   hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
-
-   RETURN hFile
-
 FUNCTION uhttpd_AppFullPath()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-   LOCAL cPrgFullPath := hExeFile:FULLPATH
-   LOCAL cPath, cSep
-
-   cSep := hb_ps()
-
-   IF Right( cPrgFullPath, Len( cSep ) ) == cSep
-      cPath := Left( cPrgFullPath, Len( cPrgFullPath ) - Len( cSep ) )
-   ELSE
-      cPath := cPrgFullPath
-   ENDIF
-
-   RETURN cPath
+   RETURN hb_DirBase()
 
 FUNCTION uhttpd_AppFullName()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-
-   RETURN hExeFile:FULLNAME
-
+   RETURN hb_FNameNameExt( hb_ProgName() )
 
 FUNCTION uhttpd_CStrToVal( cExp, cType )
 

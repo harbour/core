@@ -93,3 +93,15 @@ HB_FUNC( HB_LEFTIS )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1071, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( HB_LEFTISI )
+{
+   PHB_ITEM pItem1 = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pItem2 = hb_param( 2, HB_IT_STRING );
+
+   if( pItem1 && pItem2 )
+      hb_retl( hb_cdpicmp( hb_itemGetCPtr( pItem1 ), hb_itemGetCLen( pItem1 ),
+                           hb_itemGetCPtr( pItem2 ), hb_itemGetCLen( pItem2 ), hb_vmCDP(), HB_FALSE ) == 0 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1071, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

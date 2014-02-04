@@ -493,6 +493,12 @@ PROCEDURE Exact_Str()
    HBTEST hb_LeftIs( "12345", "123" )  IS .T.
    HBTEST hb_LeftIs( "123", "" )       IS .T.
    HBTEST hb_LeftIs( "", "123" )       IS .F.
+
+   HBTEST hb_LeftIsI( "ABC", "abc" )   IS .T.
+   HBTEST hb_LeftIsI( "ABcD", "abcd" ) IS .T.
+   HBTEST hb_LeftIsI( "ABcD", "abce" ) IS .F.
+   HBTEST hb_LeftIsI( "ABcD", "abc" )  IS .T.
+   HBTEST hb_LeftIsI( "ABC", "ABC" )   IS .T.
 #endif
 
    Set( _SET_EXACT, old_exact )
