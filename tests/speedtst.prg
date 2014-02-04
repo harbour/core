@@ -258,7 +258,7 @@ STATIC FUNCTION spd_logfile()
    RETURN "speedtst.txt"
 #else
    LOCAL cName
-   hb_FNameSplit( hb_ArgV( 0 ),, @cName )
+   hb_FNameSplit( hb_argv( 0 ),, @cName )
    RETURN hb_FNameMerge( , cName, ".txt" )
 #endif
 

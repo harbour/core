@@ -261,7 +261,6 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL hRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
-   LOCAL cName
    LOCAL cFullName, aDBFData, nResult /*, aFieldStruct, aField, aStruct */
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOpenInfo: %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
@@ -274,8 +273,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL
-      hb_FNameSplit( cFullName,, @cName )
-      aOpenInfo[ UR_OI_ALIAS ] := cName
+      aOpenInfo[ UR_OI_ALIAS ] := hb_FNameName( cFullName )
    ENDIF
 
    /* Check if database is already present in memory slots */
@@ -314,7 +312,7 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
 
 STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
-   LOCAL cFullName, cName, hRDDData, aWAData, aDBFData
+   LOCAL cFullName, hRDDData, aWAData, aDBFData
    LOCAL aStruct, oError, aFieldStruct, aField, nResult
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOpenInfo: %2$s", nWA, hb_ValToExp( aOpenInfo ) ) )
@@ -327,8 +325,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL
-      hb_FNameSplit( cFullName,, @cName )
-      aOpenInfo[ UR_OI_ALIAS ] := cName
+      aOpenInfo[ UR_OI_ALIAS ] := hb_FNameName( cFullName )
    ENDIF
 
    hRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )

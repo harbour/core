@@ -2160,7 +2160,6 @@ METHOD Open() CLASS HBDebugger
    LOCAL cFileName
    LOCAL cRealName
    LOCAL aFiles := ::GetSourceFiles()
-   LOCAL cExt
 
    ASort( aFiles )
    hb_AIns( aFiles, 1, "(Another file)", .T. )
@@ -2189,8 +2188,7 @@ METHOD Open() CLASS HBDebugger
          cFileName := cRealName
       ENDIF
       ::cPrgName := cFileName
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      ::lPPO := ( Lower( cExt ) == ".ppo" )
+      ::lPPO := ( Lower( hb_FNameExt( cFileName ) ) == ".ppo" )
       ::oPulldown:GetItemByIdent( "PPO" ):Checked := ::lPPO
       ::oBrwText := HBBrwText():New( ::oWndCode:nTop + 1, ::oWndCode:nLeft + 1, ;
          ::oWndCode:nBottom - 1, ::oWndCode:nRight - 1, cFileName, ;

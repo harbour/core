@@ -160,9 +160,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       CASE hb_LeftIs( Lower( cParam ), "-rpc=" )
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, Len( "-rpc=" ) + 1 )
 
-         hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
-
-         cExt := Lower( cExt )
+         cExt := Lower( hb_FNameExt( netiosrv[ _NETIOSRV_cRPCFFileName ] ) )
 
          SWITCH cExt
          CASE ".prg"
@@ -176,7 +174,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
          CASE ".prg"
          CASE ".hb"
-            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0", ;
+            cFile := hb_compileBuf( hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
             IF cFile != NIL
                netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )

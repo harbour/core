@@ -265,13 +265,12 @@ STATIC FUNCTION ADO_CREATEFIELDS( nWA, aStruct )
 STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
 
    LOCAL aWAData := USRRDD_AREADATA( nWA )
-   LOCAL cName, aField, oError, nResult
+   LOCAL aField, oError, nResult
    LOCAL oRecordSet, nTotalFields, n
 
    /* When there is no ALIAS we will create new one using file name */
    IF Empty( aOpenInfo[ UR_OI_ALIAS ] )
-      hb_FNameSplit( aOpenInfo[ UR_OI_NAME ],, @cName )
-      aOpenInfo[ UR_OI_ALIAS ] := cName
+      aOpenInfo[ UR_OI_ALIAS ] := hb_FNameName( aOpenInfo[ UR_OI_NAME ] )
    ENDIF
 
    IF Empty( aOpenInfo[ UR_OI_CONNECT ] )

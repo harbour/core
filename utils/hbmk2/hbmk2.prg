@@ -732,8 +732,8 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
 #ifdef HARBOUR_SUPPORT
    cParam1L := iif( PCount() >= 1, Lower( hb_PValue( 1 ) ), "" )
-   IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), Len( "hbrun" ) ) == "hbrun" .OR. ;
-        hb_LeftIs( Lower( hb_FNameName( hb_argv( 0 ) ) ), "hbrun" ) .OR. ;
+   IF ( Right( Lower( hb_FNameName( hb_ProgName() ) ), Len( "hbrun" ) ) == "hbrun" .OR. ;
+        hb_LeftIs( Lower( hb_FNameName( hb_ProgName() ) ), "hbrun" ) .OR. ;
         cParam1L == "." .OR. ;
         hb_FNameExt( cParam1L ) == ".dbf" .OR. ;
         ( HBMK_IS_IN( hb_FNameExt( cParam1L ), ".hb|.hrb" ) .AND. ! hb_LeftIs( cParam1L, "-" ) ) ) .AND. ;
@@ -775,9 +775,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
    IF ! Empty( aArgsProc )
 
-      hb_FNameSplit( hb_argv( 0 ),, @tmp )
-
-      tmp := Lower( tmp )
+      tmp := Lower( hb_FNameName( hb_ProgName() ) )
 
 #ifdef HARBOUR_SUPPORT
       DO CASE
@@ -6993,8 +6991,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             /* Combine target dir with .hbl output name. */
 
-            hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ], @tmp )
-            IF Empty( tmp )
+            IF Empty( tmp := hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
                hbmk[ _HBMK_cHBL ] := PathMakeAbsolute( hbmk[ _HBMK_cHBL ], hbmk[ _HBMK_cHBLDir ] )
             ELSE
                hbmk[ _HBMK_cHBL ] := PathMakeAbsolute( hbmk[ _HBMK_cHBL ], tmp )
@@ -9959,7 +9956,7 @@ STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
 
       /* Look for the second filename in the same dir the first one was found. */
 
-      hb_FNameSplit( cFileName, @cDir )
+      cDir := hb_FNameDir( cFileName )
       hb_FNameSplit( cFileName2,, @cName, @cExt )
 
       #if defined( __PLATFORM__WINDOWS ) .OR. ;
@@ -9992,7 +9989,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       hrb := NIL
 
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+      cExt := hb_FNameExt( cFileName )
 
       cFile := hb_MemoRead( cFileName )
 
@@ -10630,15 +10627,13 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew, lStripClpAt )
 /* Forms the list of libs as to appear on the command line */
 STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
 
-   LOCAL cDir
    LOCAL cLibName
    LOCAL cLibNameCooked
    LOCAL cName, cExt
 
    IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|djgpp|gccomf|clang|open64" )
       FOR EACH cLibName IN array
-         hb_FNameSplit( cLibName, @cDir )
-         IF Empty( cDir )
+         IF Empty( hb_FNameDir( cLibName ) )
             cLibNameCooked := cLibName
 #if 0
             /* Do not attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
@@ -10874,10 +10869,7 @@ STATIC FUNCTION FNameNameGetNoExt( cFileName )
 
    LOCAL cName := cFileName
 
-   hb_FNameSplit( cFileName,, @cName )
-
-   WHILE ! Empty( cName ) .AND. ! Empty( hb_FNameExt( cName ) )
-      hb_FNameSplit( cName,, @cName )
+   WHILE ! Empty( cName := hb_FNameName( cName ) ) .AND. ! Empty( hb_FNameExt( cName ) )
    ENDDO
 
    RETURN cName
@@ -12338,7 +12330,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
 
    cFuncName := ""
    IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|gccomf|clang" )
-      hb_FNameSplit( cFile,,, @cExt )
+      cExt := hb_FNameExt( cFile )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cFile ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
             cLine := AllTrim( cLine )
@@ -14387,7 +14379,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    /* get this before doing anything else */
    LOCAL lDebug := ;
       hb_argCheck( "debug" ) .OR. ;
-      Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 1 ) == "d"
+      Right( Lower( hb_FNameName( hb_ProgName() ) ), 1 ) == "d"
 
    #if ! __pragma( b )
       IF ! lDebug

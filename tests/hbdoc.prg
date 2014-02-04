@@ -83,11 +83,7 @@ PROCEDURE Main( cRoot )
 
 STATIC FUNCTION DirGetName( cDir )
 
-   LOCAL cName
-
-   cDir := hb_DirSepDel( cDir )
-
-   hb_FNameSplit( cDir,, @cName )
+   LOCAL cName := hb_FNameName( hb_DirSepDel( cDir ) )
 
    IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
       RETURN ""

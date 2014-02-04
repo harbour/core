@@ -11,7 +11,7 @@
 PROCEDURE Main( ... )
 
    LOCAL oMail, cData, i, oAttach
-   LOCAL cFname, cFExt
+   LOCAL cFname
 
    IF PCount() == 0
       Usage()
@@ -65,14 +65,13 @@ PROCEDURE Main( ... )
 
          oAttach:SetEncoder( "base64" )
          // TODO: mime type magic auto-finder
-         hb_FNameSplit( hb_PValue( i ), , @cFname, @cFext )
+         cFName := hb_FNameNameExt( hb_PValue( i ) )
          // Some EMAIL readers use Content-Type to check for filename
          oAttach:hHeaders[ "Content-Type" ] := ;
-            "application/X-TIP-Attachment; filename=";
-            + cFname + cFext
+            "application/X-TIP-Attachment; filename=" + cFName
          // But usually, original filename is set here
          oAttach:hHeaders[ "Content-Disposition" ] := ;
-            "attachment; filename=" + cFname + cFext
+            "attachment; filename=" + cFname
          oAttach:SetBody( cData )
 
          oMail:Attach( oAttach )

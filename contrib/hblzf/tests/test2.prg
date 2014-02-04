@@ -5,7 +5,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cStr := Replicate( hb_MemoRead( hb_argv( 0 ) ), _NREPL_ )
+   LOCAL cStr := Replicate( hb_MemoRead( hb_ProgName() ), _NREPL_ )
    LOCAL aCompressedData := { NIL, NIL, NIL, NIL }
 
    LOCAL hFuncs := { ;

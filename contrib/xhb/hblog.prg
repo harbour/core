@@ -212,9 +212,7 @@ METHOD PROCEDURE Open() CLASS HB_Logger
 
    LOCAL oChannel
 
-   IF ::cProgName == NIL
-      hb_FNameSplit( hb_argv( 0 ), , @::cProgName )
-   ENDIF
+   __defaultNIL( @::cProgName, hb_FNameName( hb_ProgName() ) )
 
    FOR EACH oChannel IN ::aLogToChannel
       oChannel:Open( ::cProgName )
@@ -228,9 +226,7 @@ METHOD PROCEDURE close() CLASS HB_Logger
 
    LOCAL oChannel
 
-   IF ::cProgName == NIL
-      hb_FNameSplit( hb_argv( 0 ), , @::cProgName )
-   ENDIF
+   __defaultNIL( @::cProgName, hb_FNameName( hb_ProgName() ) )
 
    FOR EACH oChannel IN ::aLogToChannel
       oChannel:Close( ::cProgName )

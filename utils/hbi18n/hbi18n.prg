@@ -62,7 +62,7 @@ REQUEST HB_GT_CGI_DEFAULT
 PROCEDURE Main( ... )
 
    LOCAL aParams, aFiles
-   LOCAL cFileOut, cFileIn, cExt
+   LOCAL cFileOut, cFileIn
    LOCAL lError, lEmpty, lQuiet
    LOCAL nMode, n
    LOCAL cParam
@@ -124,8 +124,7 @@ PROCEDURE Main( ... )
 
    IF nMode == _HB_I18N_TRANS
       FOR n := 1 TO Len( aFiles )
-         hb_FNameSplit( aFiles[ n ],,, @cExt )
-         IF ! Lower( cExt ) == ".hbl"
+         IF ! Lower( hb_FNameExt( aFiles[ n ] ) ) == ".hbl"
             cFileIn := aFiles[ n ]
             hb_ADel( aFiles, n, .T. )
             EXIT
@@ -262,17 +261,16 @@ STATIC FUNCTION LoadFiles( aFiles )
 
 STATIC FUNCTION LoadFilesAsHash( aFiles )
 
-   LOCAL cTrans, cExt, cErrorMsg
+   LOCAL cTrans, cErrorMsg
    LOCAL hTrans
    LOCAL aTrans
-   LOCAL n
+   LOCAL cFile
 
-   FOR n := 1 TO Len( aFiles )
-      hb_FNameSplit( aFiles[ n ],,, @cExt )
-      IF Lower( cExt ) == ".hbl"
-         cTrans := hb_MemoRead( aFiles[ n ] )
+   FOR EACH cFile IN aFiles
+      IF Lower( hb_FNameExt( cFile ) ) == ".hbl"
+         cTrans := hb_MemoRead( cFile )
          IF ! hb_i18n_Check( cTrans )
-            ErrorMsg( hb_StrFormat( I_( "Wrong file format: %1$s" ), aFiles[ n ] ) )
+            ErrorMsg( hb_StrFormat( I_( "Wrong file format: %1$s" ), cFile ) )
          ENDIF
          IF hTrans == NIL
             hTrans := __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) )
@@ -280,7 +278,7 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
             __i18n_hashJoin( hTrans, __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) ) )
          ENDIF
       ELSE
-         aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
+         aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg )
          IF aTrans == NIL
             ErrorMsg( cErrorMsg )
          ENDIF

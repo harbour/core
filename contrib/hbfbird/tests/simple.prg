@@ -11,10 +11,9 @@ PROCEDURE Main()
    LOCAL nPageSize := 1024
    LOCAL cCharSet := "ASCII"
    LOCAL nDialect := 1
-   LOCAL cQuery, cName
+   LOCAL cQuery
 
-   hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
-   cDatabase := hb_DirTemp() + cName + ".fdb"
+   cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
 
    IF hb_FileExists( cDatabase )
       FErase( cDatabase )

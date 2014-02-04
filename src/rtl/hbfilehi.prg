@@ -118,9 +118,7 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
       RETURN cPathR
    ENDIF
 
-   hb_FNameSplit( cPathA, @cDirA )
-
-   IF Empty( cDirA )
+   IF Empty( cDirA := hb_FNameDir( cPathA ) )
       RETURN cPathR
    ENDIF
 

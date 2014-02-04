@@ -2141,10 +2141,10 @@ STATIC FUNCTION HRB_LoadFromFile( cFile )
 STATIC PROCEDURE Help()
 
 #if 0
-   LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( "\", cPrg )
+   LOCAL cPrg := hb_ProgName()
+   LOCAL nPos := RAt( hb_ps(), cPrg )
 
-   __OutDebug( hb_argv( 0 ) )
+   __OutDebug( hb_ProgName() )
 
    IF nPos > 0
       cPrg := SubStr( cPrg, nPos + 1 )

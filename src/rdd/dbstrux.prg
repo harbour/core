@@ -52,6 +52,7 @@ FUNCTION __dbCopyStruct( cFileName, aFieldList )
    RETURN dbCreate( cFileName, __dbStructFilter( dbStruct(), aFieldList ) )
 
 FUNCTION __dbCopyXStruct( cFileName )
+
    LOCAL nOldArea
    LOCAL aStruct
 
@@ -99,16 +100,14 @@ FUNCTION __dbCopyXStruct( cFileName )
          (cCodePage, nConnection). */
 
 FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
+
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
 
    LOCAL oError
 
    __defaultNIL( @lNew, .F. )
-
-   IF cAlias == NIL
-      hb_FNameSplit( cFileName, NIL, @cAlias )
-   ENDIF
+   __defaultNIL( @cAlias, hb_FNameName( cFileName ) )
 
    IF Used() .AND. ! lNew
       dbCloseArea()
@@ -159,6 +158,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLedit() */
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )
+
    LOCAL aStructFiltered
    LOCAL bFindName
    LOCAL cName

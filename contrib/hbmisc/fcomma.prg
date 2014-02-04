@@ -121,8 +121,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL
-      hb_FNameSplit( aOpenInfo[ UR_OI_NAME ], , @cName )
-      aOpenInfo[ UR_OI_ALIAS ] := cName
+      aOpenInfo[ UR_OI_ALIAS ] := hb_FNameName( aOpenInfo[ UR_OI_NAME ] )
    ENDIF
 
    nMode := ;

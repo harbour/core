@@ -855,13 +855,13 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
    CASE ::cCache_Limiter == "private"
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
       uhttpd_SetHeader( "Cache-Control", "private, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
-      IF hb_FGetDateTime( hb_argv( 0 ), @dDate )
+      IF hb_FGetDateTime( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
    CASE ::cCache_Limiter == "public"
       uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
       uhttpd_SetHeader( "Cache-Control", "public, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
-      IF hb_FGetDateTime( hb_argv( 0 ), @dDate )
+      IF hb_FGetDateTime( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
    OTHERWISE

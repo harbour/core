@@ -164,8 +164,6 @@ FUNCTION TraceLog( ... )
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
 STATIC FUNCTION cWithPath( cFilename )
 
-   LOCAL cPath
-
-   hb_FNameSplit( cFilename, @cPath )
+   LOCAL cPath := hb_FNameDir( cFilename )
 
    RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename

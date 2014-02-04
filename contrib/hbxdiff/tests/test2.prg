@@ -18,8 +18,7 @@ PROCEDURE Main()
 
    ? xdl_mmfile_cmp( pMMFOld, pMMFNew )
 
-   hb_FNameSplit( __FILE__, NIL, @cDiffName, NIL )
-   cDiffName := hb_FNameMerge( NIL, cDiffName, ".dif" )
+   cDiffName := hb_FNameName( __FILE__ ) + ".dif"
 
    hDif := FCreate( cDiffName, FC_NORMAL )
    IF hDif != F_ERROR

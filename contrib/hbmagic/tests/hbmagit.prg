@@ -117,7 +117,7 @@ PROCEDURE Main()
    T( "Plain text", cText )
 
    OutStd( hb_StrFormat( "hb_magic_simple(): t: [%1$s] m: [%2$s]", ;
-      hb_magic_simple( hb_argv( 0 ), MAGIC_NONE ), ;
-      hb_magic_simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) ) + hb_eol() )
+      hb_magic_simple( hb_ProgName(), MAGIC_NONE ), ;
+      hb_magic_simple( hb_ProgName(), MAGIC_MIME_TYPE ) ) + hb_eol() )
 
    RETURN

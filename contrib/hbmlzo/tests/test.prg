@@ -92,7 +92,7 @@ PROCEDURE Main()
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
 
-   cStr := Replicate( hb_MemoRead( hb_argv( 0 ) ), 50 )
+   cStr := Replicate( hb_MemoRead( hb_ProgName() ), 50 )
    ?
    ? "BZ2 ", hb_ntos( Len( hb_bz2_Compress( cStr, NIL, @nResult ) ) )
    ? "GZIP", hb_ntos( Len( hb_gzCompress( cStr, NIL, @nResult ) ) )

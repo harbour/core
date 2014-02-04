@@ -491,8 +491,6 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    LOCAL cStdOut
-   LOCAL cDir
-   LOCAL cName
    LOCAL tmp
    LOCAL hInfo
 
@@ -515,10 +513,9 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), Chr( 10 ) )
          IF ! Empty( tmp )
-            hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
 #ifdef __PLATFORM__DOS
             /* Ignore long filenames on MS-DOS hosts */
-            IF Len( cName ) > 8
+            IF Len( hb_FNameName( LTrim( tmp ) ) ) > 8
                LOOP
             ENDIF
 #endif
@@ -625,11 +622,7 @@ STATIC FUNCTION AScanL( aArray, cString )
 
 STATIC FUNCTION DirGetName( cDir )
 
-   LOCAL cName
-
-   cDir := hb_DirSepDel( cDir )
-
-   hb_FNameSplit( cDir,, @cName )
+   LOCAL cName := hb_FNameName( hb_DirSepDel( cDir ) )
 
    IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
       RETURN ""

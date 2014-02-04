@@ -48,7 +48,7 @@ proc main()
    alert( OS() + ";" + Version() + ";GT" + hb_gtVersion() )
 
    /* database test */
-   hb_FNameSplit( hb_argv( 0 ), @cPath, @cName, @cExt, @cDrive )
+   hb_FNameSplit( hb_ProgName(), @cPath, @cName, @cExt, @cDrive )
    cPath += "data" + hb_ps()
 
    Alert( "Database path:;;" + cPath )

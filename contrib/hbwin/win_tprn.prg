@@ -311,7 +311,7 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
    LOCAL lResult
 
    IF ! HB_ISSTRING( cDocName )
-      cDocName := hb_argv( 0 ) + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
+      cDocName := hb_ProgName() + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
    ENDIF
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
