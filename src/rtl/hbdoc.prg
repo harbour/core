@@ -364,8 +364,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
-      IF fhnd != F_ERROR
+      IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
          FWrite( fhnd, _HBDOC_SIGNATURE )
          FWrite( fhnd, hb_ZCompress( hb_Serialize( aEntry ) ) )
          FClose( fhnd )
@@ -388,8 +387,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      fhnd := FOpen( cFileName, FO_READ )
-      IF fhnd != F_ERROR
+      IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
 
          cBuffer := Space( _HBDOC_SIG_LEN )
          FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )

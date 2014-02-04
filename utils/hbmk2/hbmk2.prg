@@ -12965,14 +12965,10 @@ STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
    ENDIF
 
    FOR EACH cFileName IN aFiles
-      aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg )
-      IF aTrans2 != NIL
+      IF ( aTrans2 := __i18n_potArrayLoad( cFileName, @cErrorMsg ) ) != NIL
          __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
-      ELSE
-         IF ! lIgnoreError
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
-         ENDIF
-         cErrorMsg := NIL
+      ELSEIF ! lIgnoreError
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot error: %1$s" ), cErrorMsg ) )
       ENDIF
    NEXT
 
@@ -12990,9 +12986,7 @@ STATIC FUNCTION LoadPOTFilesAsHash( hbmk, aFiles )
    LOCAL cFileName
 
    FOR EACH cFileName IN aFiles
-      cErrorMsg := NIL
-      aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg )
-      IF aTrans != NIL
+      IF ( aTrans := __i18n_potArrayLoad( cFileName, @cErrorMsg ) ) != NIL
          IF hbmk[ _HBMK_lDEBUGI18N ]
             _hbmk_OutStd( hbmk, hb_StrFormat( "LoadPOTFilesAsHash(): %1$s", cFileName ) )
          ENDIF
@@ -13007,12 +13001,11 @@ STATIC FUNCTION LoadPOTFilesAsHash( hbmk, aFiles )
 STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 
    LOCAL cErrorMsg
-   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. )
+   LOCAL aTrans
 
-   IF aTrans != NIL
-      IF ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
-      ENDIF
+   IF ( aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. ) ) != NIL .AND. ;
+      ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
    ENDIF
 
    RETURN
@@ -13020,29 +13013,25 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 
    LOCAL cErrorMsg
-   LOCAL hTrans := LoadPOTFilesAsHash( hbmk, aFiles )
+   LOCAL hTrans
 
-   IF hTrans != NIL
-      IF ! __i18n_potArraySave( cFileOut, ;
-             __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                                   hTrans ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
-      ENDIF
+   IF ( hTrans := LoadPOTFilesAsHash( hbmk, aFiles ) ) != NIL .AND. ;
+      ! __i18n_potArraySave( cFileOut, ;
+         __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
+                               hTrans ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
    RETURN
 
 STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
 
-   LOCAL cHBLBody
-   LOCAL pI18N
-   LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. )
+   LOCAL aTrans
    LOCAL lRetVal := .F.
 
-   IF HB_ISARRAY( aTrans )
-      pI18N := __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) )
-      cHBLBody := hb_i18n_SaveTable( pI18N )
-      IF hb_MemoWrit( cFileOut, cHBLBody )
+   IF HB_ISARRAY( aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. ) )
+      IF hb_MemoWrit( cFileOut, hb_i18n_SaveTable( ;
+            __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) ) ) )
          lRetVal := .T.
       ELSE
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot create file: %1$s" ), cFileOut ) )
@@ -13080,10 +13069,10 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
 
 STATIC FUNCTION IsCOFFLib( cFileName )
 
-   LOCAL fhnd := FOpen( cFileName, FO_READ )
+   LOCAL fhnd
    LOCAL cBuffer
 
-   IF fhnd != F_ERROR
+   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
       cBuffer := Space( hb_BLen( _COFF_LIB_SIGNATURE ) )
       FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
       FClose( fhnd )
@@ -13098,10 +13087,10 @@ STATIC FUNCTION IsCOFFLib( cFileName )
 
 STATIC FUNCTION IsOMFLib( cFileName )
 
-   LOCAL fhnd := FOpen( cFileName, FO_READ )
+   LOCAL fhnd
    LOCAL cBuffer
 
-   IF fhnd != F_ERROR
+   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
       cBuffer := Space( hb_BLen( _OMF_LIB_SIGNATURE ) )
       FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
       FClose( fhnd )
@@ -13117,13 +13106,13 @@ STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
    LOCAL cSourceLib
 
    /* Try to find COFF .lib with the same name */
-   IF hb_FileExists( cSourceLib := hb_FNameExtSet( cSourceDLL, ".lib" ) )
-      IF IsCOFFLib( cSourceLib )
-         IF ! hbmk[ _HBMK_lQuiet ]
-            _hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
-         ENDIF
-         RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+   IF hb_FileExists( cSourceLib := hb_FNameExtSet( cSourceDLL, ".lib" ) ) .AND. ;
+      IsCOFFLib( cSourceLib )
+
+      IF ! hbmk[ _HBMK_lQuiet ]
+         _hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
+      RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13133,13 +13122,13 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
    LOCAL cSourceLib
 
    /* Try to find COFF .lib with the same name */
-   IF hb_FileExists( cSourceLib := hb_FNameExtSet( cSourceDLL, ".lib" ) )
-      IF IsOMFLib( cSourceLib )
-         IF ! hbmk[ _HBMK_lQuiet ]
-            _hbmk_OutStd( hbmk, I_( "Found OMF .lib with the same name, falling back to using it instead of the .dll." ) )
-         ENDIF
-         RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+   IF hb_FileExists( cSourceLib := hb_FNameExtSet( cSourceDLL, ".lib" ) ) .AND. ;
+      IsOMFLib( cSourceLib )
+
+      IF ! hbmk[ _HBMK_lQuiet ]
+         _hbmk_OutStd( hbmk, I_( "Found OMF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
+      RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND

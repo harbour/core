@@ -395,26 +395,24 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
    FOR EACH aItem IN aTrans
       cPOT += cEol
       IF lSourceRef .AND. ! Empty( aItem[ _I18N_SOURCE ] )
-         cPOT += "#: "
-         cPOT += aItem[ _I18N_SOURCE ]
-         cPOT += cEol
+         cPOT += "#: " + ;
+            aItem[ _I18N_SOURCE ] + cEol
       ENDIF
       cPOT += cFlg
       IF ! aItem[ _I18N_CONTEXT ] == ""
-         cPOT += "msgctxt "
-         cPOT += __i18n_strEncode( aItem[ _I18N_CONTEXT ] )
-         cPOT += cEol
+         cPOT += "msgctxt " + ;
+            __i18n_strEncode( aItem[ _I18N_CONTEXT ] ) + cEol
       ENDIF
       FOR EACH msg IN aItem[ _I18N_MSGID ]
-         IF msg:__enumIndex() == 1
+         DO CASE
+         CASE msg:__enumIndex() == 1
             cPOT += "msgid "
-         ELSEIF msg:__enumIndex() == 2
+         CASE msg:__enumIndex() == 2
             cPOT += "msgid_plural "
-         ELSE
+         OTHERWISE
             cPOT += "msgid_plural" + hb_ntos( msg:__enumIndex() - 1 ) + " "
-         ENDIF
-         cPOT += __i18n_strEncode( msg )
-         cPOT += cEol
+         ENDCASE
+         cPOT += __i18n_strEncode( msg ) + cEol
       NEXT
       lPlural := aItem[ _I18N_PLURAL ] .OR. Len( aItem[ _I18N_MSGSTR ] ) > 1
       FOR EACH msg IN aItem[ _I18N_MSGSTR ]
@@ -423,8 +421,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
          ELSE
             cPOT += "msgstr "
          ENDIF
-         cPOT += __i18n_strEncode( msg )
-         cPOT += cEol
+         cPOT += __i18n_strEncode( msg ) + cEol
       NEXT
    NEXT
 
@@ -560,8 +557,7 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
                aSrc := hb_ATokens( aDest[ _I18N_SOURCE ] )
                FOR EACH ctx IN hb_ATokens( aItem[ _I18N_SOURCE ] )
                   IF hb_AScan( aSrc, ctx,,, .T. ) == 0
-                     aDest[ _I18N_SOURCE ] += " "
-                     aDest[ _I18N_SOURCE ] += ctx
+                     aDest[ _I18N_SOURCE ] += " " + ctx
                   ENDIF
                NEXT
             ENDIF
@@ -624,21 +620,18 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, /* @ */ cErrorMsg )
             IF msgctxt != NIL
                cPOT += msgctxt
             ENDIF
-            cPOT += "msgid "
-            cPOT += __i18n_strEncode( trans:__enumKey() )
-            cPOT += cEol
+            cPOT += "msgid " + ;
+               __i18n_strEncode( trans:__enumKey() ) + cEol
             IF HB_ISARRAY( trans )
                FOR EACH msgstr IN trans
-                  cPOT += "msgstr["
-                  cPOT += hb_ntos( msgstr:__enumIndex() - 1 )
-                  cPOT += "] "
-                  cPOT += __i18n_strEncode( msgstr )
-                  cPOT += cEol
+                  cPOT += "msgstr[" + ;
+                     hb_ntos( msgstr:__enumIndex() - 1 ) + ;
+                     "] " + ;
+                     __i18n_strEncode( msgstr ) + cEol
                NEXT
             ELSE
-               cPOT += "msgstr "
-               cPOT += __i18n_strEncode( trans )
-               cPOT += cEol
+               cPOT += "msgstr " + ;
+                  __i18n_strEncode( trans ) + cEol
             ENDIF
          NEXT
       NEXT

@@ -245,13 +245,11 @@ STATIC FUNCTION LoadFiles( aFiles )
    LOCAL cErrorMsg
    LOCAL n
 
-   aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
-   IF aTrans == NIL
+   IF ( aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg ) ) == NIL
       ErrorMsg( cErrorMsg )
    ENDIF
    FOR n := 2 TO Len( aFiles )
-      aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-      IF aTrans2 == NIL
+      IF ( aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg ) ) == NIL
          ErrorMsg( cErrorMsg )
       ENDIF
       __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
@@ -268,8 +266,7 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
 
    FOR EACH cFile IN aFiles
       IF Lower( hb_FNameExt( cFile ) ) == ".hbl"
-         cTrans := hb_MemoRead( cFile )
-         IF ! hb_i18n_Check( cTrans )
+         IF ! hb_i18n_Check( cTrans := hb_MemoRead( cFile ) )
             ErrorMsg( hb_StrFormat( I_( "Wrong file format: %1$s" ), cFile ) )
          ENDIF
          IF hTrans == NIL
