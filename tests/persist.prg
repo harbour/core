@@ -1,4 +1,4 @@
-// Class HBPersistent test
+/* Class HBPersistent test */
 
 #include "hbclass.ch"
 
@@ -13,6 +13,7 @@ PROCEDURE Main()
    oTest:Two   := 123
    oTest:Three := "this value is not persistent"
    oTest:Four  := oTest2   // We store another persistent object here
+   oTest:Four2 := oTest2
 
    oTest2:Five := "some more text"
 
@@ -31,13 +32,15 @@ PROCEDURE Main()
 
 CREATE CLASS Test FROM HBPersistent
 
-   VAR    One       PROPERTY
-   VAR    Two       PROPERTY
+   VAR    One        PROPERTY
+   VAR    Two        PROPERTY
    VAR    Three
-   VAR    Four      PROPERTY
+   VAR    Four       PROPERTY
+   VAR    Four2      PROPERTY
 
-   METHOD Another() INLINE { 1, { "One", "Two" }, Date() } PROPERTY
-   METHOD More()    VIRTUAL
+   METHOD Another()  INLINE { 1, { "One", "Two" }, 0d20121231 } PROPERTY
+   METHOD Another2() INLINE { 2, { "AAA", "BBB" }, 0d20121231 } PROPERTY
+   METHOD More()     VIRTUAL
 
 ENDCLASS
 

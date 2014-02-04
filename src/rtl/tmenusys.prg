@@ -267,6 +267,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          IF ( lSubMenu := ( ::nMenuLevel > 1 ) )
             ::PopMenu()
          ENDIF
+
          IF ::oMenu:ClassName() == "TOPBARMENU"
             nTemp := ::oMenu:getPrev()
             IF nTemp == 0

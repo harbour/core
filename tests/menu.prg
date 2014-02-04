@@ -74,9 +74,9 @@ STATIC FUNCTION Create( cColor )
 
    oPopUp:AddItem( MenuItem( "Iva", oPopUp1 ) )
 
-   oTopBar:AddItem( MenuItem( "Movimenti", oPopUp ) )
+   oTopBar:AddItem( MenuItem( "&Movimenti", oPopUp ) )
 
-   oPopUp := Popup()
+   oPopUp := hb_PopUpMenu():New()
    oPopUp:colorSpec := cColor
    oPopUp:AddItem( MenuItem( "Contabile generale", {|| NIL } ) )
 
@@ -131,7 +131,7 @@ STATIC FUNCTION Create( cColor )
 
    oPopUp:AddItem( MenuItem( "Chiusura ed apertura", oPopUp1 ) )
 
-   oTopBar:AddItem( MenuItem( "Situazione", oPopUp ) )
+   oTopBar:AddItem( MenuItem( "&Situazione", oPopUp ) )
 
    oPopUp := Popup()
    oPopUp:colorSpec := cColor
