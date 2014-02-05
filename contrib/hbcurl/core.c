@@ -236,7 +236,7 @@ HB_FUNC( CURL_GLOBAL_INIT )
                                             hb_curl_strdup,
                                             hb_curl_calloc ) );
 #else
-   hb_retnl( ( long ) curl_global_init_mem( hb_parnldef( 1, CURL_GLOBAL_ALL ) ) );
+   hb_retnl( ( long ) curl_global_init( hb_parnldef( 1, CURL_GLOBAL_ALL ) ) );
 #endif
 }
 

@@ -853,11 +853,16 @@ HB_FUNC( SQLITE3_PREPARE )
 
 HB_FUNC( SQLITE3_COMPLETE )
 {
-   void * hSQLText;
+   if( HB_ISCHAR( 1 ) )
+   {
+      void * hSQLText;
 
-   hb_retl( sqlite3_complete( hb_parstr_utf8( 1, &hSQLText, NULL ) ) );
+      hb_retl( sqlite3_complete( hb_parstr_utf8( 1, &hSQLText, NULL ) ) );
 
-   hb_strfree( hSQLText );
+      hb_strfree( hSQLText );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /**
@@ -2224,7 +2229,7 @@ HB_FUNC( SQLITE3_LIMIT )
 HB_FUNC( SQLITE3_COMPILEOPTION_USED )
 {
 #if SQLITE_VERSION_NUMBER >= 3006023
-   hb_retl( ( HB_BOOL ) sqlite3_compileoption_used( hb_parc( 1 ) ) );
+   hb_retl( ( HB_BOOL ) sqlite3_compileoption_used( hb_parcx( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
 #endif

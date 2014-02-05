@@ -336,26 +336,32 @@ HB_FUNC( XDL_MMFILE_CMP )
 
 HB_FUNC( XDL_MMFILE_COMPACT )
 {
-   HB_MMF *   phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
-   mmfile_t * mmfc     = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
+   HB_MMF * phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
-   if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
-                           ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+   if( phb_mmfo )
    {
-      HB_MMF * phb_mmf;
+      mmfile_t * mmfc = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
 
-      phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-      hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
-      phb_mmf->mmf = mmfc;
-      hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+      if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
+                              ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+      {
+         HB_MMF * phb_mmf;
 
-      hb_stornl( 0, 4 );
+         phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
+         hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
+         phb_mmf->mmf = mmfc;
+         hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+
+         hb_stornl( 0, 4 );
+      }
+      else
+      {
+         hb_xfree( mmfc );
+         hb_stornl( -1, 4 );
+      }
    }
    else
-   {
-      hb_xfree( mmfc );
-      hb_stornl( -1, 4 );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* callbacks */
