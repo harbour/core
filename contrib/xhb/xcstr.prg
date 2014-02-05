@@ -88,9 +88,10 @@ FUNCTION StringToLiteral( cString )
         ( lSingle := "'" $ cString ) .AND. ;
       hb_regexHas( "\[|\]", cString ) )
 
-      cString := StrTran( cString, '"', '\"' )
-      cString := StrTran( cString, Chr( 10 ), "\n" )
-      cString := StrTran( cString, Chr( 13 ), "\r" )
+      cString := hb_StrReplace( cString, { ;
+         '"'       => '\"' , ;
+         Chr( 10 ) => "\n" , ;
+         Chr( 13 ) => "\r" } )
 
       // TraceLog( cString )
 

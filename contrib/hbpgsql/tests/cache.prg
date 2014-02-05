@@ -455,13 +455,12 @@ FUNCTION SQLPrepare( cQuery, ... )
       NEXT
    ENDIF
 
-   cQuery := StrTran( cQuery, "==", "=" )
-   cQuery := StrTran( cQuery, "!=", "<>" )
-   cQuery := StrTran( cQuery, ".and.", "and" )
-   cQuery := StrTran( cQuery, ".or.", "or" )
-   cQuery := StrTran( cQuery, ".not.", "not" )
-
-   RETURN cQuery
+   RETURN hb_StrReplace( cQuery, { ;
+      "=="    => "="   , ;
+      "!="    => "<>"  , ;
+      ".and." => "and" , ;
+      ".or."  => "or"  , ;
+      ".not." => "not" } )
 
 
 /* Pega resultado de uma sequence */

@@ -1153,11 +1153,9 @@ PROCEDURE pdfSetLPI( _nLpi )
 
 // ---------------------------
 FUNCTION pdfStringB( cString )
-
-   cString := StrTran( cString, "(", "\(" )
-   cString := StrTran( cString, ")", "\)" )
-
-   RETURN cString
+   RETURN hb_StrReplace( cString, { ;
+      "(" => "\(" , ;
+      ")" => "\)" } )
 
 // ---------------------------------------------------------------------------
 FUNCTION pdfTextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )

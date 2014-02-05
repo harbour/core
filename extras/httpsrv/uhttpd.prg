@@ -2401,8 +2401,9 @@ STATIC FUNCTION FileUnAlias( cScript )
       cFileName := s_hScriptAliases[ cScript ]
 
       // substitute macros
-      cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-      cFileName := StrTran( cFileName, "$(APP_DIR)", s_cApplicationRoot )
+      cFileName := hb_StrReplace( cFileName, { ;
+         "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
+         "$(APP_DIR)"     => s_cApplicationRoot } )
    ENDIF
 
    IF cFileName == NIL
@@ -2413,8 +2414,9 @@ STATIC FUNCTION FileUnAlias( cScript )
             cFileName := x + SubStr( cScript, Len( x:__enumKey() ) + 1 )
 
             // substitute macros
-            cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-            cFileName := StrTran( cFileName, "$(APP_DIR)", s_cApplicationRoot )
+            cFileName := hb_StrReplace( cFileName, { ;
+               "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
+               "$(APP_DIR)"     => s_cApplicationRoot } )
             EXIT
          ENDIF
       NEXT

@@ -889,9 +889,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
    ENDIF
 #endif
 
-   cBuffer2 := StrTran( cBuffer, "/" )
-   cBuffer2 := StrTran( cBuffer2, "-" )
-   cBuffer2 := StrTran( cBuffer2, "." )
+   cBuffer2 := hb_StrReplace( cBuffer, "/-." )
 
    IF Empty( cBuffer2 )
       RETURN .F.

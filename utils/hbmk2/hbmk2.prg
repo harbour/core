@@ -12589,8 +12589,8 @@ STATIC PROCEDURE rtlnk_libtrans( aLibList )
    LOCAL cLib
 
    FOR EACH cLib IN aLibList DESCEND
-      IF Lower( Right( cLib, Len( ".lib" ) ) ) == ".lib"
-         cLib := hb_StrShrink( cLib, Len( ".lib" ) )
+      IF Lower( hb_FNameExt( cLib ) ) == ".lib"
+         cLib := FNameDirName( cLib )
       ENDIF
       IF Upper( cLib ) $ s_hTrans
          cLib := s_hTrans[ Upper( cLib ) ]
@@ -12629,8 +12629,8 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
    LOCAL cFile
 
    FOR EACH cFile IN aFileList DESCEND
-      IF Lower( Right( cFile, Len( ".obj" ) ) ) == ".obj"
-         cFile := hb_StrShrink( cFile, Len( ".obj" ) )
+      IF Lower( hb_FNameExt( cFile ) ) == ".obj"
+         cFile := FNameDirName( cFile )
       ENDIF
       IF Upper( cFile ) $ s_hTrans
          cFile := s_hTrans[ Upper( cFile ) ]

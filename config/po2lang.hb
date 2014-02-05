@@ -49,12 +49,10 @@ STATIC FUNCTION POToLang( cFileIn, cFileOut, cLang )
    RETURN .F.
 
 STATIC FUNCTION MaskEMail( cEMail )
-
-   cEMail := StrTran( cEMail, "@", " " )
-   cEMail := StrTran( cEMail, "<", "(" )
-   cEMail := StrTran( cEMail, ">", ")" )
-
-   RETURN cEMail
+   RETURN hb_StrReplace( cEMail, { ;
+      "@" => " " , ;
+      "<" => "(" , ;
+      ">" => ")" } )
 
 STATIC PROCEDURE ProcessTrs( /* @ */ cContent, cTrs, cOri, /* @ */ cTranslator, /* @ */ nPos, cLang )
 

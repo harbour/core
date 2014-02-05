@@ -78,30 +78,30 @@
 
 #include "hbusrrdd.ch"
 
-#define WA_RECORDSET   1
-#define WA_BOF         2
-#define WA_EOF         3
-#define WA_CONNECTION  4
-#define WA_CATALOG     5
-#define WA_TABLENAME   6
-#define WA_ENGINE      7
-#define WA_SERVER      8
-#define WA_USERNAME    9
-#define WA_PASSWORD   10
-#define WA_QUERY      11
-#define WA_LOCATEFOR  12
-#define WA_SCOPEINFO  13
-#define WA_SQLSTRUCT  14
-#define WA_CONNOPEN   15
-#define WA_PENDINGREL 16
-#define WA_FOUND      17
+#define WA_RECORDSET    1
+#define WA_BOF          2
+#define WA_EOF          3
+#define WA_CONNECTION   4
+#define WA_CATALOG      5
+#define WA_TABLENAME    6
+#define WA_ENGINE       7
+#define WA_SERVER       8
+#define WA_USERNAME     9
+#define WA_PASSWORD     10
+#define WA_QUERY        11
+#define WA_LOCATEFOR    12
+#define WA_SCOPEINFO    13
+#define WA_SQLSTRUCT    14
+#define WA_CONNOPEN     15
+#define WA_PENDINGREL   16
+#define WA_FOUND        17
 
-#define WA_SIZE       17
+#define WA_SIZE         17
 
-#define RDD_CONNECTION 1
-#define RDD_CATALOG    2
+#define RDD_CONNECTION  1
+#define RDD_CATALOG     2
 
-#define RDD_SIZE       2
+#define RDD_SIZE        2
 
 ANNOUNCE ADORDD
 
@@ -145,30 +145,36 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL oError, n
 
+   LOCAL cParam
+
    DO CASE
-   CASE Lower( Right( cDataBase, 4 ) ) == ".mdb"
+   CASE Lower( hb_FNameExt( cDatabase ) ) == ".mdb"
+      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase
       IF ! hb_FileExists( cDataBase )
-         oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
+         oCatalog:Create( cParam )
       ENDIF
-      oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
+      oConnection:Open( cParam )
 
-   CASE Lower( Right( cDataBase, 4 ) ) == ".xls"
+   CASE Lower( hb_FNameExt( cDatabase ) ) == ".xls"
+      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False"
       IF ! hb_FileExists( cDataBase )
-         oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
+         oCatalog:Create( cParam )
       ENDIF
-      oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
+      oConnection:Open( cParam )
 
-   CASE Lower( Right( cDataBase, 3 ) ) == ".db"
+   CASE Lower( hb_FNameExt( cDatabase ) ) == ".db"
+      cParam := "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';"
       IF ! hb_FileExists( cDataBase )
-         oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
+         oCatalog:Create( cParam )
       ENDIF
-      oConnection:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase + ";Extended Properties='Paradox 3.x';" )
+      oConnection:Open( cParam )
 
-   CASE Lower( Right( cDataBase, 4 ) ) == ".fdb"
+   CASE Lower( hb_FNameExt( cDatabase ) ) == ".fdb"
+      cParam := "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";"
       IF ! hb_FileExists( cDataBase )
-         oCatalog:Create( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
+         oCatalog:Create( cParam )
       ENDIF
-      oConnection:Open( "Driver=Firebird/InterBase(r) driver;Uid=" + cUserName + ";Pwd=" + cPassword + ";DbName=" + cDataBase + ";" )
+      oConnection:Open( cParam )
       oConnection:CursorLocation := adUseClient
 
    CASE Upper( cDbEngine ) == "MYSQL"
@@ -187,7 +193,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    END SEQUENCE
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      IF Lower( Right( cDataBase, 4 ) ) == ".fdb"
+      IF Lower( hb_FNameExt( cDataBase ) ) == ".fdb"
          oConnection:Execute( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
       ELSE
          oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
@@ -284,20 +290,20 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       aWAData[ WA_CONNOPEN ] := .T.
 
       DO CASE
-      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
+      CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".mdb"
          IF Empty( aWAData[ WA_PASSWORD ] )
             aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] )
          ELSE
             aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Jet OLEDB:Database Password=" + AllTrim( aWAData[ WA_PASSWORD ] ) )
          ENDIF
 
-      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".xls"
+      CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".xls"
          aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Excel 8.0;HDR=YES';Persist Security Info=False" )
 
-      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".dbf"
+      CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".dbf"
          aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties=dBASE IV;User ID=Admin;Password=;" )
 
-      CASE Lower( Right( aOpenInfo[ UR_OI_NAME ], 3 ) ) == ".db"
+      CASE Lower( hb_FNameExt( aOpenInfo[ UR_OI_NAME ] ) ) == ".db"
          aWAData[ WA_CONNECTION ]:Open( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + aOpenInfo[ UR_OI_NAME ] + ";Extended Properties='Paradox 3.x';" )
 
       CASE aWAData[ WA_ENGINE ] == "MYSQL"
@@ -1555,16 +1561,15 @@ STATIC FUNCTION SQLTranslate( cExpr )
       cExpr := SubStr( cExpr, 2, Len( cExpr ) - 2 )
    ENDIF
 
-   cExpr := StrTran( cExpr, '""' )
-   cExpr := StrTran( cExpr, '"', "'" )
-   cExpr := StrTran( cExpr, "''", "'" )
-   cExpr := StrTran( cExpr, "==", "=" )
-   cExpr := StrTran( cExpr, ".and.", "AND" )
-   cExpr := StrTran( cExpr, ".or.", "OR" )
-   cExpr := StrTran( cExpr, ".AND.", "AND" )
-   cExpr := StrTran( cExpr, ".OR.", "OR" )
-
-   RETURN cExpr
+   RETURN hb_StrReplace( cExpr, { ;
+      '""'    => ""    , ;
+      '"'     => "'"   , ;
+      "''"    => "'"   , ;
+      "=="    => "="   , ;
+      ".and." => "AND" , ;
+      ".or."  => "OR"  , ;
+      ".AND." => "AND" , ;
+      ".OR."  => "OR"  } )
 
 FUNCTION hb_adoRddGetConnection( nWA )
 

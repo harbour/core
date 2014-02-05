@@ -109,9 +109,9 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::style += BS_BITMAP
    CASE HB_ISSTRING( ::caption )
       DO CASE
-      CASE ".ico" == Lower( Right( ::caption, 4 ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
          ::style += BS_ICON
-      CASE ".bmp" == Lower( Right( ::caption, 4 ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
          ::style += BS_BITMAP
       ENDCASE
    CASE HB_ISARRAY( ::caption )
@@ -225,9 +225,9 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
    CASE HB_ISSTRING( xCaption )
 
       DO CASE
-      CASE ".ico" == Lower( Right( ::caption, 4 ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
          Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_ICON ) )
-      CASE ".bmp" == Lower( Right( ::caption, 4 ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
          Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_BITMAP ) )
       OTHERWISE
          Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )

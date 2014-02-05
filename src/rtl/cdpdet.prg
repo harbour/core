@@ -173,8 +173,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
 
    IF HB_ISSTRING( cCPUnix )
 
-      cCPUnix := StrTran( cCPUnix, "_" )
-      cCPUnix := StrTran( cCPUnix, "-" )
+      cCPUnix := hb_StrReplace( cCPUnix, "_-" )
 
       /* TOFIX: update the list of std unix cp names */
       SWITCH Lower( cCPUnix )
