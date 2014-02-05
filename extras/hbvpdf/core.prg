@@ -61,12 +61,12 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
       cString := pdfStringB( cString )
       DO CASE
       CASE Right( cString, 1 ) == Chr( 255 ) // reverse
-         cString := Left( cString, Len( cString ) - 1 )
+         cString := hb_StrShrink( cString )
          pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0, nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString ) ) + 1,, 100, "D" )
          t_aReport[ PAGEBUFFER ] += " 1 g "
          lReverse := .T.
       CASE Right( cString, 1 ) == Chr( 254 ) // underline
-         cString := Left( cString, Len( cString ) - 1 )
+         cString := hb_StrShrink( cString )
          pdfBox( t_aReport[ PAGEY ] - nRow + 0.5,  nCol, t_aReport[ PAGEY ] - nRow + 1, nCol + pdfM2X( pdfLen( cString ) ) + 1,, 100, "D" )
       ENDCASE
 
@@ -383,6 +383,7 @@ FUNCTION pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )
    ENDIF
 
    nLen := pdfLen( cString ) / 2
+
    IF cUnits == "R"
       IF ! lExact
          pdfCheckLine( nRow )
@@ -684,7 +685,7 @@ STATIC PROCEDURE pdfClosePage()
             "/Type /XObject" + CRLF + ;
             "/Subtype /Image" + CRLF + ;
             "/Name /Image" + hb_ntos( nI ) + CRLF + ;
-            "/Filter [" + iif( At( ".jpg", Lower( t_aReport[ IMAGES ][ nI ][ 1 ] ) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
+            "/Filter [" + iif( ".jpg" $ Lower( t_aReport[ IMAGES ][ nI ][ 1 ] ), " /DCTDecode", "" ) + " ]" + CRLF + ;
             "/Width " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] ) + CRLF + ;
             "/Height " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] ) + CRLF + ;
             "/BitsPerComponent " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] ) + CRLF + ;
@@ -1368,19 +1369,10 @@ STATIC FUNCTION TimeAsAMPM( cTime )
 
 PROCEDURE pdfOpenHeader( cFile )
 
-   LOCAL nAt // , nErrorCode:=0
+   hb_default( @cFile, "" )
 
-   __defaultNIL( @cFile, "" )
    IF ! Empty( cFile )
-      cFile := AllTrim( cFile )
-      IF Len( cFile ) > 12 .OR. ;
-            At( " ", cFile ) > 0 .OR. ;
-            ( At( " ", cFile ) == 0 .AND. Len( cFile ) > 8 ) .OR. ;
-            ( ( nAt := At( ".", cFile ) ) > 0 .AND. Len( SubStr( cFile, nAt + 1 ) ) > 3 )
-         hb_FCopy( cFile, "temp.tmp" )
-         cFile := "temp.tmp"
-      ENDIF
-      t_aReport[ HEADER ] := File2Array( cFile )
+      t_aReport[ HEADER ] := File2Array( AllTrim( cFile ) )
    ELSE
       t_aReport[ HEADER ] := {}
    ENDIF

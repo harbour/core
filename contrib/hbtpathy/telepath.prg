@@ -300,21 +300,20 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
       IF hb_BLen( cDelim ) == 1
 
-         nAt := hb_BAt( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
-
-         IF nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
+         IF ( nAt := hb_BAt( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+            iif( nFirst > 0, nAt < nFirst, .T. )
             nFirst := nAt
          ENDIF
 
       ELSE
+
          FOR EACH cChar IN cDelim
-
-            nAt := hb_BAt( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
-
-            IF nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
+            IF ( nAt := hb_BAt( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+               iif( nFirst > 0, nAt < nFirst, .T. )
                nFirst := nAt
             ENDIF
          NEXT
+
       ENDIF
 
       // I've found it

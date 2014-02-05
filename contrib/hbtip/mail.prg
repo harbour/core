@@ -368,8 +368,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    // Part 1: parsing header
    hb_default( @nPos, 1 )
 
-   nLinePos := hb_At( e"\r\n", cMail, nPos )
-   DO WHILE nLinePos > nPos
+   DO WHILE ( nLinePos := hb_At( e"\r\n", cMail, nPos ) ) > nPos
       // going on with last field?
       IF ( SubStr( cMail, nPos, 1 ) == " " .OR. SubStr( cMail, nPos, 1 ) == e"\t" ) .AND. ;
          cLastField != NIL
@@ -392,7 +391,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
       ENDIF
 
       nPos := nLinePos + 2
-      nLinePos := hb_At( e"\r\n", cMail, nPos )
+
       // Prevents malformed body to affect us
       IF HB_ISSTRING( cBoundary ) .AND. hb_At( "--" + cBoundary, cMail, nPos ) == 1
          RETURN 0

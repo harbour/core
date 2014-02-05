@@ -199,7 +199,7 @@ CREATE CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD setPosAndSize( aPos, aSize, lPaint )
    METHOD setSize( aSize, lPaint )
    METHOD setFont()
-   METHOD setFontCompoundName( xFont )
+   METHOD setFontCompoundName( cFont )
    METHOD setPresParam()
    METHOD show()
    METHOD toBack()
@@ -608,41 +608,34 @@ METHOD WvgWindow:SetFont()
 
    RETURN Self
 
-METHOD WvgWindow:setFontCompoundName( xFont )
+METHOD WvgWindow:setFontCompoundName( cFont )
 
-   LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
+   LOCAL cOldFont, n, nPoint, cAttr, cFace
    LOCAL aAttr := { "normal", "italic", "bold" }
 
    cOldFont := ::fnt_COMMPOUNDNAME
 
-   IF HB_ISNUMERIC( cFont )
+   IF ! Empty( cFont )
 
-   ELSE
-      IF ! Empty( xFont )
-         cFont := xFont
-         s := Lower( cFont )
-         n := AScan( aAttr, {| e | At( e, cFont ) > 0 } )
-         IF n > 0
-            cAttr := aAttr[ n ]
-            n := At( cAttr, s )
-            cFont := Left( cFont, n - 1 )
-         ELSE
-            cAttr := "normal"
-         ENDIF
-
-         IF ( n := At( ".", cFont ) ) > 0
-            nPoint := Val( Left( cFont, n - 1 ) )
-            cFont  := SubStr( cFont, n + 1 )
-         ELSE
-            nPoint := 0
-         ENDIF
-
-         cFace := AllTrim( cFont )
-
-         HB_SYMBOL_UNUSED( cFace )
-         HB_SYMBOL_UNUSED( cAttr )
-         HB_SYMBOL_UNUSED( nPoint )
+      IF ( n := AScan( aAttr, {| e | e $ cFont } ) ) > 0
+         cAttr := aAttr[ n ]
+         cFont := Left( cFont, At( cAttr, Lower( cFont ) ) - 1 )
+      ELSE
+         cAttr := "normal"
       ENDIF
+
+      IF ( n := At( ".", cFont ) ) > 0
+         nPoint := Val( Left( cFont, n - 1 ) )
+         cFont  := SubStr( cFont, n + 1 )
+      ELSE
+         nPoint := 0
+      ENDIF
+
+      cFace := AllTrim( cFont )
+
+      HB_SYMBOL_UNUSED( cFace )
+      HB_SYMBOL_UNUSED( cAttr )
+      HB_SYMBOL_UNUSED( nPoint )
    ENDIF
 
    RETURN cOldFont

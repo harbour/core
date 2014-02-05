@@ -155,11 +155,11 @@ METHOD ReadLine() CLASS TFileRead
 
 METHOD EOL_pos() CLASS TFileRead
 
-   LOCAL nCRpos, nLFpos, nPos
-
    // Look for both CR and LF in the file read buffer.
-   nCRpos := At( Chr( 13 ), ::cBuffer )
-   nLFpos := At( Chr( 10 ), ::cBuffer )
+   LOCAL nCRpos := At( Chr( 13 ), ::cBuffer )
+   LOCAL nLFpos := At( Chr( 10 ), ::cBuffer )
+   LOCAL nPos
+
    DO CASE
    CASE nCRpos == 0
       // If there's no CR, use the LF position.

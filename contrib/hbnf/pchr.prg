@@ -46,10 +46,8 @@ FUNCTION ft_PChr( c_nums )
       ELSEIF hb_LeftIs( c_part, "&" )
 
          c_upper := Upper( c_part )
-         c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1
-         IF c_t1 > -1
-            c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1
-            IF c_t2 > -1
+         IF ( c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1 ) > -1
+            IF ( c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1 ) > -1
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
             c_ret += Chr( c_t1 )

@@ -36,7 +36,7 @@ STATIC FUNCTION POToLang( cFileIn, cFileOut, cLang )
       __i18n_potArrayClean( aTrans,,, {| cTrs, cOri | ProcessTrs( @cContent, cTrs, cOri, @cTranslator, @nPos, cLang ) } )
 
       cContent := "/* Last Translator: " + MaskEMail( cTranslator ) + " */" + hb_eol() + ;
-         Left( cContent, Len( cContent ) - Len( "," ) - Len( hb_eol() ) ) + hb_eol() + ;
+         hb_StrShrink( cContent, Len( "," ) + Len( hb_eol() ) ) + hb_eol() + ;
          StrTran( StrTran( _end(), e"\n", hb_eol() ), "{LNG}", Upper( cLang ) )
 
       hb_MemoWrit( cFileOut, cContent )

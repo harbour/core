@@ -405,7 +405,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
    LOCAL lSuccess := .F.
 
-   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
       lSuccess := Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 

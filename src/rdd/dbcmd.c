@@ -453,10 +453,16 @@ HB_FUNC( HB_DBCREATETEMP )
 }
 
 /*
- * I'm not sure if lKeepOpen open works exactly like in DBCREATE, I haven't
+ * I'm not sure if lKeepOpen open works exactly like in dbCreate(), I haven't
  * tested it with Clipper yet. If it doesn't then please inform me about it
  * and I'll update the code. [druzus]
  */
+
+/* NOTE: The created table will be kept open if lOpenMode parameter
+         is of logical type. If .T. it will be opened in a new workarea,
+         if .F. it will be opened in the current one. */
+/* NOTE: Has an identical parameter list with dbCreate() */
+
 /* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
 HB_FUNC( __DBOPENSDF )
 {

@@ -42,6 +42,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL cOption
+   LOCAL nPos
 
 #ifdef HB_CLP_UNDOC
 
@@ -69,8 +70,9 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := StrTran( StrTran( ;
-         iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
-         iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
+         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
+            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+            "N/" + cColorNorm ), "+", "" ), "*", "" )
    ENDIF
 
    aOptionsOK := {}
@@ -99,6 +101,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL cString
+   LOCAL nPos
 
 #ifdef HB_CLP_UNDOC
 
@@ -135,8 +138,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := StrTran( StrTran( ;
-         iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
-         iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
+         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
+            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+            "N/" + cColorNorm ), "+", "" ), "*", "" )
    ENDIF
 
    aOptionsOK := {}

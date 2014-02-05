@@ -4016,8 +4016,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                RETURN _EXIT_WORKDIRCREATE
             ENDIF
             #if ! defined( __PLATFORM__UNIX )
-               tmp := hb_AtI( _WORKDIR_BASE_ + hb_ps(), hbmk[ _HBMK_cWorkDir ] + hb_ps() )
-               IF tmp > 0
+               IF ( tmp := hb_AtI( _WORKDIR_BASE_ + hb_ps(), hbmk[ _HBMK_cWorkDir ] + hb_ps() ) ) > 0
                   hb_FSetAttr( Left( hbmk[ _HBMK_cWorkDir ], tmp - 1 ) + _WORKDIR_BASE_, FC_HIDDEN )
                ENDIF
             #endif
@@ -9332,7 +9331,7 @@ STATIC FUNCTION deplst_read( hbmk, hDeps, cFileName )
       ++nLine
       cLine := AllTrim( cLine )
       IF cLine == "\" .OR. Right( cLine, 2 ) == " \"
-         cList += Left( cLine, Len( cLine ) - 1 )
+         cList += hb_StrShrink( cLine )
       ELSE
          cList += cLine
          IF ! deplst_add( hDeps, cList )
@@ -9357,8 +9356,10 @@ STATIC FUNCTION deplst_add( hDeps, cList )
    LOCAL n
 
    IF ! Empty( cList )
-      n := At( ": ", cList )
-      IF n != 0 .AND. ! Empty( cFile := AllTrim( Left( cList, n - 1 ) ) )
+
+      IF ( n := At( ": ", cList ) ) != 0 .AND. ;
+         ! Empty( cFile := AllTrim( Left( cList, n - 1 ) ) )
+
          aList := hb_ATokens( SubStr( cList, n + 1 ) )
          IF cFile $ hDeps
             AMerge( hDeps[ cFile ], aList )
@@ -12122,7 +12123,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL cStdOut
 
    WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
+         ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
 
       cMacro := MacroGet( hbmk, SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ), cFileName )
 
@@ -12130,7 +12131,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    ENDDO
 
    WHILE ( nStart := At( _CMDSUBST_OPEN, cString ) ) > 0 .AND. ;
-            ( nEnd := hb_At( _CMDSUBST_CLOSE, cString, nStart + Len( _CMDSUBST_OPEN ) ) ) > 0
+         ( nEnd := hb_At( _CMDSUBST_CLOSE, cString, nStart + Len( _CMDSUBST_OPEN ) ) ) > 0
       cMacro := SubStr( cString, nStart + Len( _CMDSUBST_OPEN ), nEnd - nStart - Len( _CMDSUBST_OPEN ) )
       cStdOut := ""
       IF ! Empty( cMacro )
@@ -12588,8 +12589,8 @@ STATIC PROCEDURE rtlnk_libtrans( aLibList )
    LOCAL cLib
 
    FOR EACH cLib IN aLibList DESCEND
-      IF Lower( Right( cLib, 4 ) ) == ".lib"
-         cLib := Left( cLib, Len( cLib ) - 4 )
+      IF Lower( Right( cLib, Len( ".lib" ) ) ) == ".lib"
+         cLib := hb_StrShrink( cLib, Len( ".lib" ) )
       ENDIF
       IF Upper( cLib ) $ s_hTrans
          cLib := s_hTrans[ Upper( cLib ) ]
@@ -12628,8 +12629,8 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
    LOCAL cFile
 
    FOR EACH cFile IN aFileList DESCEND
-      IF Lower( Right( cFile, 4 ) ) == ".obj"
-         cFile := Left( cFile, Len( cFile ) - 4 )
+      IF Lower( Right( cFile, Len( ".obj" ) ) ) == ".obj"
+         cFile := hb_StrShrink( cFile, Len( ".obj" ) )
       ENDIF
       IF Upper( cFile ) $ s_hTrans
          cFile := s_hTrans[ Upper( cFile ) ]
@@ -13270,8 +13271,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
       cExports := StrTran( cExports, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
 
-      tmp := At( "ordinal hint", cExports )
-      IF tmp > 0
+      IF ( tmp := At( "ordinal hint", cExports ) ) > 0
          cExports := SubStr( cExports, tmp + Len( "ordinal hint" ) )
       ENDIF
 
@@ -13284,8 +13284,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
          ENDIF
       NEXT
 
-      fhnd := hb_FTempCreateEx( @cSourceDef )
-      IF fhnd != F_ERROR
+      IF ( fhnd := hb_FTempCreateEx( @cSourceDef ) ) != F_ERROR
          FWrite( fhnd, cFuncList )
          FClose( fhnd )
 
@@ -13350,11 +13349,9 @@ STATIC FUNCTION SeqID( cHEAD, cIDName )
 
    cStdOut := hb_MemoRead( cHEAD )
    tmp1 := "#define " + cIDName
-   tmp := At( tmp1, cStdOut )
-   IF tmp > 0
+   IF ( tmp := At( tmp1, cStdOut ) ) > 0
       cStdOut := SubStr( cStdOut, tmp + Len( tmp1 ) + 1 )
-      tmp := At( Chr( 10 ), cStdOut )
-      IF tmp > 0
+      IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
          cStdOut := Left( cStdOut, tmp - 1 )
          cResult := hb_ntos( Val( AllTrim( StrTran( cStdOut, '"' ) ) ) + 1 )
       ENDIF
@@ -13456,8 +13453,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
          EXIT
       CASE _VCS_MERCURIAL
          /* changeset:   696:9e33729cafae<n>... */
-         tmp := At( Chr( 10 ), cStdOut )
-         IF tmp > 0
+         IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
             cStdOut := Left( cStdOut, tmp - 1 )
             cResult := AllTrim( StrTran( cStdOut, "changeset:" ) )
          ENDIF
@@ -13468,11 +13464,9 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             build-date: 2009-08-13 16:53:32 +0200
             revno: 4602
             branch-nick: bzr */
-         tmp := At( "revno: ", cStdOut )
-         IF tmp > 0
+         IF ( tmp := At( "revno: ", cStdOut ) ) > 0
             cStdOut := SubStr( cStdOut, tmp + Len( "revno: " ) )
-            tmp := At( Chr( 10 ), cStdOut )
-            IF tmp > 0
+            IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
                cResult := Left( cStdOut, tmp - 1 )
             ENDIF
          ENDIF
@@ -13487,11 +13481,9 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             parent:       0eb08b860c5b851c074113fd459d1cd0671f4805 2009-09-16 21:29:18 UTC
             tags:         trunk
           */
-         tmp := At( "checkout:", cStdOut )
-         IF tmp > 0
+         IF ( tmp := At( "checkout:", cStdOut ) ) > 0
             cStdOut := LTrim( SubStr( cStdOut, tmp + Len( "checkout:" ) ) )
-            tmp := At( " ", cStdOut )
-            IF tmp > 0
+            IF ( tmp := At( " ", cStdOut ) ) > 0
                cResult := Left( cStdOut, tmp - 1 )
             ENDIF
          ENDIF
@@ -13508,11 +13500,9 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
 
             no changes
           */
-         tmp := At( "Revision:", cStdOut )
-         IF tmp > 0
+         IF ( tmp := At( "Revision:", cStdOut ) ) > 0
             cStdOut := StrTran( LTrim( SubStr( cStdOut, tmp + Len( "Revision:" ) ) ), Chr( 13 ) )
-            tmp := At( Chr( 10 ), cStdOut )
-            IF tmp > 0
+            IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
                cResult := Left( cStdOut, tmp - 1 )
             ENDIF
          ENDIF
@@ -13787,12 +13777,14 @@ STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
 
    LOCAL hAll := GetListOfFunctionsKnown( hbmk, lGenericFind )
+   LOCAL hCore
    LOCAL cFunction
    LOCAL lFound
    LOCAL aLib
    LOCAL tmp, tmp1
 
    LOCAL hNeeded := { => }
+   LOCAL aInLongForm := {}
 
    LOCAL bAdd := ;
       {| cFunction |
@@ -13806,11 +13798,25 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
          RETURN NIL
       }
 
+   IF ! lGenericFind
+      hCore := GetListOfFunctionsKnown( hbmk, .T. )
+   ENDIF
+
    FOR EACH cFunction IN aFunction DESCEND
       lFound := .F.
       IF ( tmp := hb_HPos( hAll, cFunction ) ) > 0
-         Eval( bAdd, hb_HKeyAt( hAll, tmp ) /* Get the function name in original .hbx casing */ )
+         Eval( bAdd, hb_HKeyAt( hAll, tmp )  /* Get the function name in original .hbx casing */ )
          lFound := .T.
+      ELSEIF ! lGenericFind .AND. Len( cFunction ) <= 10  /* find functions with short names that have a long equivalent (Cl*pper heritage) */
+         FOR EACH tmp1 IN hCore
+            IF Len( tmp1:__enumKey() ) > 10 .AND. ;
+               hb_LeftIsI( tmp1:__enumKey(), cFunction ) .AND. ;
+               "(hbcore)" $ tmp1  /* sloppy */
+               AAdd( aInLongForm, hb_StrFormat( "%1$s() -> %2$s()", cFunction, tmp1:__enumKey() ) )
+               lFound := .T.
+               EXIT
+            ENDIF
+         NEXT
       ENDIF
       IF lGenericFind
          FOR EACH tmp1 IN hAll
@@ -13856,8 +13862,14 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
             hb_FNameName( aLib[ 1 ] ) ) )
       NEXT
 
+      IF ! Empty( aInLongForm )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( e"Hint: Update Cl*pper abbreviated function name(s) to complete form:\n%1$s" ), ;
+            ArrayToList( aInLongForm, _OUT_EOL ) ) )
+      ENDIF
+
       IF ! Empty( aFunction )
-         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown Harbour function(s): %1$s" ), ArrayToList( aFunction, ", ",,,, "()" ) ) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown Harbour function(s): %1$s" ), ;
+            ArrayToList( aFunction, ", ",,,, "()" ) ) )
       ENDIF
    ENDIF
 
@@ -15716,8 +15728,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
    cSrc := StrTran( cSrc, Chr( 9 ), " " )
 
    FOR EACH cLine IN hb_ATokens( cSrc, Chr( 10 ) )
-      tmp := At( " =", cLine )
-      IF tmp > 0
+      IF ( tmp := At( " =", cLine ) ) > 0
          cSetting := AllTrim( Left( cLine, tmp - 1 ) )
          cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
          aValue := hb_ATokens( cValue )
@@ -15860,8 +15871,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
          lGlobalSection := .F.
          AAdd( aDst, SubStr( cLine, 2, Len( cLine ) - 2 ) )
       ELSEIF lGlobalSection
-         tmp := At( " =", cLine )
-         IF tmp > 0
+         IF ( tmp := At( " =", cLine ) ) > 0
             cSetting := AllTrim( Left( cLine, tmp - 1 ) )
             cValue := AllTrim( SubStr( cLine, tmp + Len( " =" ) ) )
             aValue := hb_ATokens( cValue )
@@ -15985,8 +15995,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
       IF cLine == "[Files]"
          lFileSection := .T.
       ELSEIF lFileSection
-         tmp := At( "=", cLine )
-         IF tmp > 0
+         IF ( tmp := At( "=", cLine ) ) > 0
             cFile := AllTrim( Left( cLine, tmp - 1 ) )
             SWITCH Lower( hb_FNameExt( cFile ) )
             CASE ".c"
@@ -16032,8 +16041,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
             ENDSWITCH
          ENDIF
       ELSE
-         tmp := At( "=", cLine )
-         IF tmp > 0
+         IF ( tmp := At( "=", cLine ) ) > 0
             cSetting := AllTrim( Left( cLine, tmp - 1 ) )
             cValue := AllTrim( SubStr( cLine, tmp + Len( "=" ) ) )
             aValue := hb_ATokens( cValue )

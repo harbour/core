@@ -113,18 +113,11 @@ STATIC FUNCTION DefError( oError )
 
    // Show alert box
 
-   nChoice := 0
-   DO WHILE nChoice == 0
-
-      IF cDOSError == NIL
-         nChoice := Alert( cMessage, aOptions )
-      ELSE
-         nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
-      ENDIF
-
+   DO WHILE ( nChoice := Alert( cMessage + ;
+      iif( cDOSError == NIL, "", ";" + cDOSError ), aOptions ) ) == 0
    ENDDO
 
-   IF ! Empty( nChoice )
+   IF ! Empty( nChoice )  /* Alert() may return NIL */
       SWITCH aOptions[ nChoice ]
       CASE "Break"
          Break( oError )

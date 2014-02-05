@@ -1509,7 +1509,7 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
           * does not calculate it as separator
           */
          IF Right( cName, 1 ) == _TBR_CHR_LINEDELIMITER
-            cName := Left( cName, Len( cName ) - 1 )
+            cName := hb_StrShrink( cName )
          ENDIF
          nHeight := hb_tokenCount( cName, _TBR_CHR_LINEDELIMITER )
          FOR i := 1 TO nHeight

@@ -253,16 +253,13 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
       cHit := ""
    ENDIF
 
-   nStart := At( AllTrim( cHit ), cLog )
-   IF nStart > 0
+   IF ( nStart := At( AllTrim( cHit ), cLog ) ) > 0
 
-      cHit := hb_AtX( cLogHeaderExp, cLog,, nStart + Len( cHit ) )
-      IF Empty( cHit )
+      IF Empty( cHit := hb_AtX( cLogHeaderExp, cLog,, nStart + Len( cHit ) ) )
          cHit := ""
       ENDIF
 
-      nEnd := At( AllTrim( cHit ), cLog )
-      IF nEnd == 0
+      IF ( nEnd := At( AllTrim( cHit ), cLog ) ) == 0
          nEnd := Len( cLog )
       ENDIF
 

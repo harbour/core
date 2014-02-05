@@ -39,8 +39,6 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL i
    LOCAL j
    LOCAL nOption
-   LOCAL x
-   LOCAL y
    LOCAL aPos := {}
    LOCAL nLeft
    LOCAL aLeft
@@ -49,10 +47,10 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
       AAdd( aPos, {} )
 
-      DO WHILE At( "[", aInfo[ 1, i ] ) > 0
-         x := At( "[", aInfo[ 1, i ] )
-         y := At( "]", aInfo[ 1, i ] ) - 2
-         AAdd( aPos[ i ], { x, y } )
+      DO WHILE "[" $ aInfo[ 1, i ]
+         AAdd( aPos[ i ], { ;
+            At( "[", aInfo[ 1, i ] ), ;
+            At( "]", aInfo[ 1, i ] ) - 2 } )
          aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
          aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
       ENDDO

@@ -407,7 +407,7 @@ METHOD Append( oRow ) CLASS TFbServer
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1 ) +  ") VALUES ("
+      cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
 
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
@@ -415,7 +415,7 @@ METHOD Append( oRow ) CLASS TFbServer
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1  ) + ")"
+      cQuery := hb_StrShrink( cQuery ) + ")"
 
       result := ::Execute( cQuery )
    ENDIF
@@ -456,7 +456,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
       NEXT
 
       IF !( cWhere == "" )
-         cQuery := Left( cQuery, Len( cQuery ) - 1 ) + " WHERE " + cWhere
+         cQuery := hb_StrShrink( cQuery ) + " WHERE " + cWhere
 
          result := ::Execute( cQuery )
       ENDIF

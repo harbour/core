@@ -362,7 +362,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    // Open the label file
    nHandle := FOpen( cLblFile )
 
-   IF ! Empty( nFileError := FError() ) .AND. !( "\" $ cLblFile .OR. ":" $ cLblFile )
+   IF ( nFileError := FError() ) != 0 .AND. !( "\" $ cLblFile .OR. ":" $ cLblFile )
 
       // Search through default path; attempt to open label file
       cDefPath := Set( _SET_DEFAULT )
@@ -372,7 +372,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       FOR nPathIndex := 1 TO Len( aPaths )
          nHandle := FOpen( aPaths[ nPathIndex ] + "\" + cLblFile )
          // if no error is reported, we have our label file
-         IF Empty( nFileError := FError() )
+         IF ( nFileError := FError() ) == 0
             EXIT
          ENDIF
       NEXT
@@ -466,9 +466,7 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    DO WHILE Len( cList ) != 0
 
-      nPos := At( cDelimiter, cList )
-
-      IF nPos == 0
+      IF ( nPos := At( cDelimiter, cList ) ) == 0
          nPos := Len( cList )
       ENDIF
 

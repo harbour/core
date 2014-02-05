@@ -110,7 +110,7 @@ STATIC PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
          wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )

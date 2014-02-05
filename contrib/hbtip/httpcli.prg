@@ -227,8 +227,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
    LOCAL aHead
 
    // Now reads the fields and set the content length
-   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
-   IF Empty( cLine )
+   IF Empty( cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 ) )
       // In case of timeout or error on receiving
       RETURN .F.
    ENDIF
@@ -251,10 +250,10 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
 
    ::nLength := -1
    ::bChunked := .F.
-   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    IF HB_ISLOGICAL( lClear ) .AND. lClear .AND. ! Empty( ::hHeaders )
       ::hHeaders := { => }
    ENDIF
+   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! Empty( cLine )
 
       IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) != 2
@@ -331,8 +330,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       // A normal chunk here
 
       // Remove the extensions
-      nPos := At( ";", cLine )
-      IF nPos > 0
+      IF ( nPos := At( ";", cLine ) ) > 0
          cLine := Left( cLine, nPos - 1 )
       ENDIF
 

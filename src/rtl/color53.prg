@@ -92,9 +92,9 @@ FUNCTION GetPairLen( cColor, nColor )
       RETURN 0
    ENDIF
 
-   nLen := At( ",", SubStr( cColor, nPos ) )
-
-   RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
+   RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
+      Len( cColor ) - nPos + 1, ;
+      nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 

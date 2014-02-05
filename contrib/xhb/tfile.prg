@@ -385,8 +385,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       cBuff   := Space( nMaxRead )
       nNewPos := FSeek( fHandle, -nMaxRead, FS_RELATIVE )
       FRead( fHandle, @cBuff, nMaxRead )
-      nWhereCrLf := RAt( CRLF(), cBuff )  /* TOFIX: should be hb_BRAt() */
-      IF nWhereCrLf == 0
+      IF ( nWhereCrLf := RAt( CRLF(), cBuff ) ) == 0  /* TOFIX: should be hb_BRAt() */
          nPrev    := nNewPos
          ::Buffer := cBuff
       ELSE

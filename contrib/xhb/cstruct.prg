@@ -274,7 +274,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
          hb_Member( aDefinitions[ Counter + 1 ], Val( aDefinitions[ Counter ] ) )
       ELSE
          IF Right( CType, 1 ) == "*"
-            CType := hb_CStructureId( Left( CType, Len( CType ) - 1 ), .F. )
+            CType := hb_CStructureId( hb_StrShrink( CType ), .F. )
          ELSE
             CType := hb_CStructureId( CType, .T. )
 

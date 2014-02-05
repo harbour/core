@@ -81,9 +81,8 @@ FUNCTION ParseString( cString, cDelim, nRet )
    cBuf := cString
 
    FOR i := 1 TO nSize
-      nPosFim := At( cDelim, cBuf )
 
-      IF nPosFim > 0
+      IF ( nPosFim := At( cDelim, cBuf ) ) > 0
          aElem[ i ] := Left( cBuf, nPosFim - 1 )
       ELSE
          aElem[ i ] := cBuf

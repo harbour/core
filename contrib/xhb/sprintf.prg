@@ -150,7 +150,7 @@ FUNCTION sprintf( ... )
                IF nLen - Int( nLen ) > 0.0
                   nDec := hb_ntos( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
-                     nDec := Left( nDec, Len( nDec ) - 1 )
+                     nDec := hb_StrShrink( nDec )
                   ENDDO
                   nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
                ELSE

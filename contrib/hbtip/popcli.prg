@@ -209,21 +209,21 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
       cBuffer := Space( 1024 )
 
-      nRead := ::inetRecv( ::SocketCon, @cBuffer, 1024 )
+      nRead := ::inetRecv( ::SocketCon, @cBuffer, hb_BLen( cBuffer ) )
 
-      cRet += Left( cBuffer, nRead )
+      cRet += hb_BLeft( cBuffer, nRead )
 
       /* 2005-11-24 - <maurilio.longo@libero.it>
                       "- Len( cEOM )" to be sure to always find a full EOM,
                       otherwise if response breaks EOM in two, it will never
                       be found
        */
-      IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) != 0
+      IF ( nPos := hb_BAt( cEOM, cRet, Max( nRetLen - hb_BLen( cEOM ), 1 ) ) ) != 0
          // Remove ".CRLF"
-         cRet := Left( cRet, nPos + 1 )
+         cRet := hb_BLeft( cRet, nPos + 1 )
          ::bEof := .T.
 
-      ELSEIF ! Empty( nLen ) .AND. nLen < Len( cRet )
+      ELSEIF HB_ISNUMERIC( nLen ) .AND. nLen < hb_BLen( cRet )  /* TOFIX: might break UTF-8 chars */
          EXIT
       ELSE
          nRetLen += nRead
@@ -289,7 +289,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   IF ! Empty( nMsgId )
+   IF HB_ISNUMERIC( nMsgId ) .AND. nMsgId > 0
       ::inetSendAll( ::SocketCon, "UIDL " + hb_ntos( nMsgId ) + ::cCRLF )
    ELSE
       ::inetSendAll( ::SocketCon, "UIDL" + ::cCRLF )
@@ -299,10 +299,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
       RETURN NIL
    ENDIF
 
-   IF ! Empty( nMsgId )
-      // +OK Space( 1 ) nMsg Space( 1 ) UID
-      RETURN SubStr( ::cReply, RAt( Space( 1 ), ::cReply ) + 1 )
-   ELSE
+   IF Empty( nMsgId )
       cRet := ""
       DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
          cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
@@ -312,6 +309,9 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
             ::bEof := .T.
          ENDIF
       ENDDO
+   ELSE
+      // +OK Space( 1 ) nMsg Space( 1 ) UID
+      RETURN SubStr( ::cReply, RAt( Space( 1 ), ::cReply ) + 1 )
    ENDIF
 
    IF ::inetErrorCode( ::SocketCon ) != 0

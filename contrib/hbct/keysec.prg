@@ -81,7 +81,7 @@ STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
 
    LOCAL nSec := hb_MilliSeconds()
 
-   IF lMode .AND. ! Empty( NextKey() )
+   IF lMode .AND. NextKey() != 0
       nSeconds := nSec
    ELSEIF nCounter != 0 .AND. nSec - nSeconds >= nTime
       hb_keyPut( nKey )

@@ -75,7 +75,7 @@ STATIC PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
          HPDF_Page_BeginText( page )

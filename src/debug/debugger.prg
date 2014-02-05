@@ -1244,8 +1244,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             ::NotSupported()
          ELSE
             oWindow := ::aWindows[ ::nCurrentWindow ]
-            n := At( " ", cParam1 )
-            IF n > 0
+            IF ( n := At( " ", cParam1 ) ) > 0
                n := Val( SubStr( cParam1, n ) )
             ENDIF
             oWindow:Resize( Val( cParam1 ), n, ;
@@ -1257,8 +1256,8 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          IF Empty( cParam1 )
             ::NotSupported()
          ELSE
-            n := At( " ", cParam1 )
-            IF Val( cParam1 ) >= 2 .AND. n > 0 .AND. Val( SubStr( cParam1, n ) ) > 0
+            IF Val( cParam1 ) >= 2 .AND. ;
+              ( n := At( " ", cParam1 ) ) > 0 .AND. Val( SubStr( cParam1, n ) ) > 0
                oWindow := ::aWindows[ ::nCurrentWindow ]
                oWindow:Resize( oWindow:nTop, oWindow:nLeft, ;
                   Val( cParam1 ) - 1 + oWindow:nTop, ;
@@ -3597,7 +3596,7 @@ STATIC FUNCTION PathToArray( cList )
       AAdd( aList, cList )              // Add final element
 
       /* Strip ending delimiters */
-      AEval( aList, {| x, i | iif( Right( x, 1 ) $ cDirSep, aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
+      AEval( aList, {| x, i | iif( Right( x, 1 ) $ cDirSep, aList[ i ] := hb_StrShrink( x ), ) } )
    ENDIF
 
    RETURN aList

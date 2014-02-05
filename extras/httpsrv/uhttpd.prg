@@ -82,6 +82,7 @@
 
 #define FIXED_THREADS         // This force application to use fixed number of running threads and no service threads
 
+#include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "error.ch"
@@ -395,7 +396,7 @@ PROCEDURE Main( ... )
       cI := cApplicationRoot
       IF hb_DirExists( cI )
          IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cApplicationRoot := Left( cI, Len( cI ) - 1 )
+            s_cApplicationRoot := hb_StrShrink( cI )
          ELSE
             s_cApplicationRoot := cI
          ENDIF
@@ -417,11 +418,13 @@ PROCEDURE Main( ... )
 #endif
 
    IF HB_ISSTRING( cDocumentRoot )
-      // cI := StrTran( SubStr( cDocumentRoot, 2 ), "\", "/" )
+#if 0
+      cI := StrTran( SubStr( cDocumentRoot, 2 ), "\", "/" )
+#endif
       cI := cDocumentRoot
       IF hb_DirExists( cI )
          IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cDocumentRoot := Left( cI, Len( cI ) - 1 )
+            s_cDocumentRoot := hb_StrShrink( cI )
          ELSE
             s_cDocumentRoot := cI
          ENDIF
@@ -482,6 +485,12 @@ PROCEDURE Main( ... )
 
    // --------------------- Open log files -------------------------------------
 
+   hb_DirBuild( hb_FNameDir( cLogAccess ) )
+
+   IF ! hb_FileExists( cLogAccess )
+      hb_MemoWrit( cLogAccess, "" )
+   ENDIF
+
    IF ( s_hfileLogAccess := FOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == F_ERROR
       ? "Can't open access log file"
       WAIT
@@ -489,6 +498,10 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
    FSeek( s_hfileLogAccess, 0, FS_END )
+
+   IF ! hb_FileExists( cLogError )
+      hb_MemoWrit( cLogError, "" )
+   ENDIF
 
    IF ( s_hfileLogError := FOpen( cLogError, FO_CREAT + FO_WRITE ) ) == F_ERROR
       ? "Can't open error log file"
@@ -1691,11 +1704,10 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    cRequest := ""
    DO WHILE .T.
       cBuf := Space( 4096 )
-      nLen := hb_socketRecv( hSocket, @cBuf )
-      IF nLen <= 0
+      IF ( nLen := hb_socketRecv( hSocket, @cBuf ) ) <= 0
          EXIT
       ENDIF
-      cRequest += Left( cBuf, nLen )
+      cRequest += hb_BLeft( cBuf, nLen )
       IF CR_LF + CR_LF $ cRequest
          EXIT
       ENDIF
@@ -1703,21 +1715,18 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
 
    /* receive CONTENT-LENGTH data */
    IF nLen > 0
-      nPos := hb_AtI( CR_LF + "CONTENT-LENGTH:", cRequest )
-      IF nPos > 0
-         nPos := Val( SubStr( cRequest, nPos + 17, 10 ) )
-         IF nPos > 0
+      IF ( nPos := hb_BAt( CR_LF + "CONTENT-LENGTH:", hb_asciiUpper( cRequest ) ) ) > 0
+         IF ( nPos := Val( hb_BSubStr( cRequest, nPos + 17, 10 ) ) ) > 0
             /* we have to decrease number of bytes to read by already read
              * data after CR_LF + CR_LF
              */
-            nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
+            nPos -= hb_BLen( cRequest ) - hb_BAt( CR_LF + CR_LF, cRequest ) - 3
             DO WHILE nPos > 0
                cBuf := Space( nPos )
-               nLen := hb_socketRecv( hSocket, @cBuf, nPos )
-               IF nLen <= 0
+               IF ( nLen := hb_socketRecv( hSocket, @cBuf, nPos ) ) <= 0
                   EXIT
                ENDIF
-               cRequest += Left( cBuf, nPos )
+               cRequest += hb_BLeft( cBuf, nPos )
                nPos -= nLen
             ENDDO
          ENDIF
@@ -1735,13 +1744,13 @@ STATIC FUNCTION sendReply( hSocket, cSend )
    LOCAL nError := 0
    LOCAL nLen
 
-   DO WHILE Len( cSend ) > 0
+   DO WHILE hb_BLen( cSend ) > 0
       IF ( nLen := hb_socketSend( hSocket, cSend ) ) == -1
          ? "send() error:", hb_socketGetError()
          WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend: %s, hSocket: %s", hb_socketGetError(), cSend, hSocket ) )
          EXIT
       ELSEIF nLen > 0
-         cSend := SubStr( cSend, nLen + 1 )
+         cSend := hb_BSubStr( cSend, nLen + 1 )
       ENDIF
    ENDDO
 
@@ -2028,7 +2037,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br />Total Connections: ' + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
       uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2038,7 +2047,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br />Total Service Connections: ' + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
       uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
@@ -2055,25 +2064,25 @@ STATIC PROCEDURE ShowServerStatus()
 STATIC PROCEDURE ShowFolder( cDir )
 
    LOCAL aDir, aF
-   LOCAL cParentDir, nPos
+   LOCAL cParentDir
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
 
    aDir := Directory( uhttpd_OSFileName( cDir ), "D" )
    IF "s" $ _GET
       IF _GET[ "s" ] == "s"
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_SIZE ] < Y[ F_SIZE ] ) ) } )
       ELSEIF _GET[ "s" ] == "m"
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., DToS( X[ 3 ] ) + X[ 4 ] < DToS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., DToS( X[ F_DATE ] ) + X[ F_TIME ] < DToS( Y[ F_DATE ] ) + Y[ F_TIME ] ) ) } )
       ELSE
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
       ENDIF
    ELSE
-      ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-         iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+      ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+         iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
    ENDIF
 
    uhttpd_Write( '<html><body><h1>Index of ' + _SERVER[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
@@ -2082,11 +2091,8 @@ STATIC PROCEDURE ShowFolder( cDir )
    uhttpd_Write( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
 
    // Adding Upper Directory
-   nPos := RAt( "/", Left( cDir, Len( cDir ) - 1 ) )
-   cParentDir := Left( cDir, nPos )
+   cParentDir := Left( cDir, RAt( "/", hb_StrShrink( cDir ) ) )
    cParentDir := SubStr( cParentDir, Len( _SERVER[ "DOCUMENT_ROOT" ] ) + 1 )
-
-   // hb_ToOutDebug( "cDir: %s, nPos: %i, cParentDir: %s\n\r", cDir, nPos, cParentDir )
 
    IF ! Empty( cParentDir )
       // Add parent directory
@@ -2094,16 +2100,16 @@ STATIC PROCEDURE ShowFolder( cDir )
    ENDIF
 
    FOR EACH aF IN aDir
-      IF aF[ 1 ] == "<parent>"
+      IF aF[ F_NAME ] == "<parent>"
          uhttpd_Write( '[DIR] <a href="' + cParentDir + '">..</a>' + ;
             CR_LF )
-      ELSEIF hb_LeftIs( aF[ 1 ], "." )
-      ELSEIF "D" $ aF[ 5 ]
-         uhttpd_Write( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-            DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )
+      ELSEIF hb_LeftIs( aF[ F_NAME ], "." )
+      ELSEIF "D" $ aF[ F_ATTR ]
+         uhttpd_Write( '[DIR] <a href="' + aF[ F_NAME ] + '/">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+            DToC( aF[ F_DATE ] ) + ' ' + aF[ F_TIME ] + CR_LF )
       ELSE
-         uhttpd_Write( '      <a href="' + aF[ 1 ] + '">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-            DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + Str( aF[ 2 ], 12 ) + CR_LF )
+         uhttpd_Write( '      <a href="' + aF[ F_NAME ] + '">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+            DToC( aF[ F_DATE ] ) + ' ' + aF[ F_TIME ] + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
       ENDIF
    NEXT
    uhttpd_Write( "<hr></pre></body></html>" )
@@ -2195,14 +2201,10 @@ STATIC PROCEDURE Progress( /*@*/ nProgress )
    LOCAL cString := "["
 
    DO CASE
-   CASE nProgress == 0
-      cString += "-"
-   CASE nProgress == 1
-      cString += "\"
-   CASE nProgress == 2
-      cString += "|"
-   CASE nProgress == 3
-      cString += "/"
+   CASE nProgress == 0 ; cString += "-"
+   CASE nProgress == 1 ; cString += "\"
+   CASE nProgress == 2 ; cString += "|"
+   CASE nProgress == 3 ; cString += "/"
    ENDCASE
 
    cString += "]"
@@ -2495,15 +2497,8 @@ STATIC FUNCTION uhttpd_DefError( oError )
    hb_ToOutDebug( "ERROR: %s\n\r", cMessage + " " + cCallstack )
 #endif
 
-   nChoice := 0
-   DO WHILE nChoice == 0
-
-      IF cDOSError == NIL
-         nChoice := Alert( cMessage + ";" + cCallstack, aOptions )
-      ELSE
-         nChoice := Alert( cMessage + " " + cDOSError + ";" + cCallstack, aOptions )
-      ENDIF
-
+   DO WHILE ( nChoice := Alert( cMessage + ;
+      iif( cDOSError == NIL, "", " " + cDOSError ) + ";" + cCallstack, aOptions ) ) == 0
    ENDDO
 
    IF ! Empty( nChoice )
@@ -2641,23 +2636,23 @@ STATIC FUNCTION Handler_ServerStatus()
    uhttpd_Write( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
    uhttpd_Write( '<br />' )
    IF hb_mutexLock( s_hmtxBusy )
-      uhttpd_Write( '<br />Thread: ' + Str( s_nThreads ) )
-      uhttpd_Write( '<br />Connections: ' + Str( s_nConnections ) )
-      uhttpd_Write( '<br />Max Connections: ' + Str( s_nMaxConnections ) )
-      uhttpd_Write( '<br />Total Connections: ' + Str( s_nTotConnections ) )
+      uhttpd_Write( '<br />Thread: ' + hb_ntos( s_nThreads ) )
+      uhttpd_Write( '<br />Connections: ' + hb_ntos( s_nConnections ) )
+      uhttpd_Write( '<br />Max Connections: ' + hb_ntos( s_nMaxConnections ) )
+      uhttpd_Write( '<br />Total Connections: ' + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
       uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
-      uhttpd_Write( '<br />Service Thread: ' + Str( s_nServiceThreads ) )
-      uhttpd_Write( '<br />Service Connections: ' + Str( s_nServiceConnections ) )
-      uhttpd_Write( '<br />Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
-      uhttpd_Write( '<br />Total Service Connections: ' + Str( s_nTotServiceConnections ) )
+      uhttpd_Write( '<br />Service Thread: ' + hb_ntos( s_nServiceThreads ) )
+      uhttpd_Write( '<br />Service Connections: ' + hb_ntos( s_nServiceConnections ) )
+      uhttpd_Write( '<br />Max Service Connections: ' + hb_ntos( s_nMaxServiceConnections ) )
+      uhttpd_Write( '<br />Total Service Connections: ' + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), hb_StrShrink( cThreads ), "<empty>" ) + " }"
       uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 

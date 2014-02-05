@@ -519,12 +519,11 @@ STATIC FUNCTION ProcessConnection( oServer )
          nLen := 1
          nTime := hb_MilliSeconds()
          cBuf := Space( 4096 )
-         DO WHILE At( CR_LF + CR_LF, cRequest ) == 0
+         DO WHILE !( CR_LF + CR_LF $ cRequest )
             IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
             ELSE
-               nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
-               IF nLen < 0
+               IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 ) ) < 0
                   nErr := hb_socketGetError()
                ENDIF
             ENDIF
@@ -580,8 +579,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                   nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
                ELSE
-                  nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
-                  IF nLen < 0
+                  IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 ) ) < 0
                      nErr := hb_socketGetError()
                   ENDIF
                ENDIF
@@ -1665,8 +1663,7 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
       IF nS > nStart
          AAdd( aCode, { "txt", SubStr( cTpl, nStart, nS - nStart ) } )
       ENDIF
-      nE := hb_At( "}}", cTpl, nS )
-      IF nE > 0
+      IF ( nE := hb_At( "}}", cTpl, nS ) ) > 0
          IF ( nI := hb_At( " ", cTpl, nS, nE ) ) == 0
             nI := nE
          ENDIF

@@ -188,7 +188,7 @@ METHOD Draw13( cText ) CLASS GDBarCode
 
       // book, we changed the code to the right
       IF ::book .AND. Len( ::text ) == 10
-         ::text := "978" + SubStr( ::text, 1, Len( ::text ) - 1 )
+         ::text := "978" + hb_StrShrink( ::text )
       ENDIF
 
       //  contain only 12 characters ?
@@ -202,7 +202,7 @@ METHOD Draw13( cText ) CLASS GDBarCode
          // If we have to write text, we moved the barcode to the right to have space to put digit
          ::positionX := iif( ::textfont == 0, 0, 10 )
 
-         xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
+         xParity := ::Parity[ Val( Left( ::text, 1 ) ) ]
 
          // First Bar
          ::positionX := 10
@@ -286,7 +286,7 @@ METHOD DrawText13() CLASS GDBarCode
 
    IF ::textfont != 0
 
-      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), SubStr( ::text, 1, 1 ), ::FillColor )
+      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), Left( ::text, 1 ), ::FillColor )
       ::Say( ( 10 + ( 3 * ::res + 48 * ::res ) / 2 ) - ( ::GetFontWidth() * ( 6 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 2, 6 ), ::FillColor )
       ::Say( 10 + 46 * ::res + ( 3 * ::res + 46 * ::res ) / 2 - ::GetFontWidth() * ( 6 / 2 ), ::maxHeight + 1, SubStr( ::text, 8, 6 ), ::FillColor )
 
@@ -389,7 +389,7 @@ METHOD Draw8( cText ) CLASS GDBarCode
 
 METHOD DrawText8() CLASS GDBarCode
 
-   ::say( 10 + ( ( 3 * ::res + 34 * ::res ) / 2 - ::GetFontWidth() * ( 4 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 1, 4 ), ::fillcolor )
+   ::say( 10 + ( ( 3 * ::res + 34 * ::res ) / 2 - ::GetFontWidth() * ( 4 / 2 ) ), ::maxHeight + 1, Left( ::text, 4 ), ::fillcolor )
    ::say( 10 + ( 32 * ::res + ( 3 * ::res + 32 * ::res ) / 2 - ::GetFontWidth() * ( 4 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 5, 4 ), ::fillcolor )
 
    ::lastY := ::maxHeight + ::GetFontHeight()

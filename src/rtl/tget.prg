@@ -1029,9 +1029,7 @@ METHOD picture( cPicture ) CLASS Get
 
             IF hb_LeftIs( cPicture, "@" )
 
-               nAt := At( " ", cPicture )
-
-               IF nAt == 0
+               IF ( nAt := At( " ", cPicture ) ) == 0
                   ::cPicFunc := hb_asciiUpper( cPicture )
                   ::cPicMask := ""
                ELSE
@@ -1599,9 +1597,8 @@ METHOD backSpaceLow() CLASS Get
 
       /* To delete the parenthesis (negative indicator) in a non editable position */
 
-      nMinus := At( "(", Left( ::cBuffer, nPos - 1 ) )
-
-      IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
+      IF ( nMinus := At( "(", Left( ::cBuffer, nPos - 1 ) ) ) > 0 .AND. ;
+         !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
          ::cBuffer := Left( ::cBuffer, nMinus - 1 ) + " " + ;
                       SubStr( ::cBuffer, nMinus + 1 )

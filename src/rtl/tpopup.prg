@@ -247,10 +247,10 @@ METHOD display() CLASS PopupMenu
                IF ( nCharPos := RAt( SubStr( item:style, 2, 1 ), cCaption ) ) > 0
                   cCaption := Stuff( cCaption, nCharPos - 1, 1, "" )
                ELSE
-                  cCaption := Left( cCaption, Len( cCaption ) - 1 )
+                  cCaption := hb_StrShrink( cCaption )
                ENDIF
             ELSEIF nHotKeyPos == Len( RTrim( cCaption ) )
-               cCaption := Left( cCaption, Len( cCaption ) - 1 )
+               cCaption := hb_StrShrink( cCaption )
                nHotKeyPos := 0
             ELSE
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )

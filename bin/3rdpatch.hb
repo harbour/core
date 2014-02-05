@@ -705,10 +705,9 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
             cMatchedPattern := cFrag
             cExtractor := aActionMap[ cPattern ][ "Extractor" ]
             cExtractorArgs := aActionMap[ cPattern ][ "ExtractorArgs" ]
-            cExtractedFileName := iif( aActionMap[ cPattern ][ "ExtractedFile" ] == NIL,  ;
-                                    NIL,                                                  ;
-                                    Left( cFileName, Len( cFileName ) -                   ;
-                                       Len( cMatchedPattern ) ) +                         ;
+            cExtractedFileName := iif( aActionMap[ cPattern ][ "ExtractedFile" ] == NIL, ;
+                                    NIL, ;
+                                    hb_StrShrink( cFileName, Len( cMatchedPattern ) ) + ;
                                        aActionMap[ cPattern ][ "ExtractedFile" ] )
             cArchiver := aActionMap[ cPattern ][ "Archiver" ]
             cArchiverArgs := aActionMap[ cPattern ][ "ArchiverArgs" ]
@@ -897,8 +896,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
    DO WHILE .T.
 
-      nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1
-      IF nEnd < 1
+      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) < 1
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */
@@ -912,10 +910,10 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
       IF ( hb_LeftIs( cMemoLine, "diff " ) .OR. ;
            hb_LeftIs( cMemoLine, "+++ " ) .OR. ;
-           hb_LeftIs( cMemoLine, "--- " ) ) .AND. ;
-         At( "\", cMemoLine ) > 0
-            cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
-            s_nErrors++
+           hb_LeftIs( cMemoLine, "--- " ) ) .AND. "\" $ cMemoLine
+
+         cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
+         s_nErrors++
       ELSE
          cNewFile += cMemoLine + cLookFor
       ENDIF

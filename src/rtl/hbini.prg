@@ -176,18 +176,12 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    cLine := ""
    DO WHILE Len( cData ) > 0
       nLen := 2
-      nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData )
-      IF nLineEnd == 0
-         nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData )
-         IF nLineEnd == 0
-            nLen := 1
-            nLineEnd := At( Chr( 10 ), cData )
-            IF nLineEnd == 0
-               nLineEnd := At( Chr( 13 ), cData )
-               IF nLineEnd == 0
-                  nLineEnd := Len( cData ) + 1
-               ENDIF
-            ENDIF
+      IF ( nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData ) ) == 0 .AND. ;
+         ( nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData ) ) == 0
+         nLen := 1
+         IF ( nLineEnd := At( Chr( 10 ), cData ) ) == 0 .AND. ;
+            ( nLineEnd := At( Chr( 13 ), cData ) ) == 0
+            nLineEnd := Len( cData ) + 1
          ENDIF
       ENDIF
 
@@ -202,9 +196,9 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Sum up lines terminating with "<space>||" ...*/
-      IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
+      IF Len( cLine ) > 3 .AND. Right( cLine, 3 ) == " ||"
 
-         cLine := Left( cLine, Len( cLine ) - 2 )
+         cLine := hb_StrShrink( cLine, 2 )
          /* ... but proceed if stream over */
          IF Len( cData ) > 0
             LOOP

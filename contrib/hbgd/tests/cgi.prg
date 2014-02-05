@@ -248,7 +248,7 @@ STATIC FUNCTION GetVars( cFields, cSeparator )
 
       // is it an array entry?
       IF Right( cName, 2 ) == "[]"
-         cName := Left( cName, Len( cName ) - 2 )
+         cName := hb_StrShrink( cName, 2 )
 
          hHashVars[ cName ] := { xValue }
       ELSE
@@ -281,7 +281,7 @@ STATIC FUNCTION GetParams( aParams )
 
       // is it an array entry?
       IF Right( cName, 2 ) == "[]"
-         cName := Left( cName, Len( cName ) - 2 )
+         cName := hb_StrShrink( cName, 2 )
 
          hHashVars[ cName ] := { xValue }
       ELSE

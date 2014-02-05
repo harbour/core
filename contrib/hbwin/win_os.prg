@@ -122,8 +122,8 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
    nResult := 0
 
    IF hb_osIsWin9x()
-      aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
-      IF ! Empty( aFiles )
+      /* Check for faulty files. */
+      IF Len( aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
          IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"
             nResult := 1111
          ELSEIF aFiles[ 1 ][ F_SIZE ] == 140343 .AND. aFiles[ 1 ][ F_TIME ] == "09:50:00"
@@ -132,4 +132,4 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
       ENDIF
    ENDIF
 
-   RETURN Empty( nResult )
+   RETURN nResult == 0

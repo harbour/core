@@ -79,8 +79,8 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       xValue := uhttpd_UrlDecode( aField[ 2 ] )
 
       // Is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := Left( cName, Len( cName ) - 2 )
+      IF Right( cName, 2 ) == "[]"
+         cName := hb_StrShrink( cName, 2 )
          hHashVars[ cName ] := { xValue }
       ELSE
          // now check if variable already exists. If yes and I have already another element
@@ -142,8 +142,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read protocol
-   nPos := At( "://", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "://", cTemp ) ) > 0
       cProto := Left( cTemp, nPos - 1 )
       // delete protocol from temp string
       cTemp := SubStr( cTemp, nPos + 3 )
@@ -157,14 +156,12 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read username and password
-   nPos := At( "@", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "@", cTemp ) ) > 0
       cUserNamePassword := Left( cTemp, nPos - 1 )
       // delete Username and Password from temp string
       cTemp := SubStr( cTemp, nPos + 1 )
       // Split username and password
-      nPos := At( ":", cUserNamePassword )
-      IF nPos > 0
+      IF ( nPos := At( ":", cUserNamePassword ) ) > 0
          cUser := Left( cUserNamePassword, nPos - 1 )
          cPass := SubStr( cUserNamePassword, nPos + 1 )
       ELSE
@@ -180,8 +177,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Search for anchor using # char from right
-   nPos := RAt( "#", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "#", cTemp ) ) > 0
       cFragment := SubStr( cTemp, nPos + 1 )
 
       // delete anchor from temp string
@@ -195,8 +191,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]]]
 
    // Search for Query part using ? char from right
-   nPos := RAt( "?", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "?", cTemp ) ) > 0
       cQuery := SubStr( cTemp, nPos + 1 )
 
       // delete query from temp string
@@ -212,8 +207,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cUri += cTemp
 
    // Search for Path part using / char from right
-   nPos := RAt( "/", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "/", cTemp ) ) > 0
       cPath := SubStr( cTemp, nPos )
 
       // delete path from temp string
@@ -229,8 +223,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cHostnamePort := cTemp
 
    // Searching port number
-   nPos := At( ":", cHostnamePort )
-   IF nPos > 0
+   IF ( nPos := At( ":", cHostnamePort ) ) > 0
       cHost := Left( cHostnamePort, nPos - 1 )
       cPort := SubStr( cHostnamePort, nPos + 1 )
       nPort := Val( cPort )

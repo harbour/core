@@ -912,7 +912,7 @@ METHOD Append( oRow ) CLASS TPQquery
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1 ) + ") VALUES ("
+      cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
 
       FOR i := 1 TO oRow:FCount()
          IF ::lallCols .OR. oRow:Changed( i )
@@ -922,7 +922,7 @@ METHOD Append( oRow ) CLASS TPQquery
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1  ) + ")"
+      cQuery := hb_StrShrink( cQuery ) + ")"
 
       IF lChanged
          res := PQexecParams( ::pDB, cQuery, aParams )
@@ -986,7 +986,7 @@ METHOD Update( oRow ) CLASS TPQquery
 
       IF !( cWhere == "" ) .AND. lChanged
 
-         cQuery := Left( cQuery, Len( cQuery ) - 1 ) + " WHERE " + cWhere
+         cQuery := hb_StrShrink( cQuery ) + " WHERE " + cWhere
 
          res := PQexecParams( ::pDB, cQuery, aParams )
 

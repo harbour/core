@@ -653,7 +653,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
                   lPreformatted := lLastPreformatted
                ELSEIF nLastIndent != ( Len( cBuffer ) - Len( LTrim( cBuffer ) ) ) .OR. lPreformatted .OR. Right( cBuffer, Len( "</par>" ) ) == "</par>"
                   IF Right( cBuffer, Len( "</par>" ) ) == "</par>"
-                     cBuffer := Left( cBuffer, Len( cBuffer ) - Len( "</par>" ) )
+                     cBuffer := hb_StrShrink( cBuffer, Len( "</par>" ) )
                   ENDIF
                   nLastIndent := ( Len( cBuffer ) - Len( LTrim( cBuffer ) ) )
                   IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
@@ -675,13 +675,13 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
    ENDDO
 
    DO WHILE Right( cSection, Len( hb_eol() ) ) == hb_eol()
-      cSection := Left( cSection, Len( cSection ) - Len( hb_eol() ) )
+      cSection := hb_StrShrink( cSection, Len( hb_eol() ) )
    ENDDO
 
    IF lPreformatted .AND. Lower( Right( cSection, Len( "</fixed>" ) ) ) == "</fixed>"
-      cSection := Left( cSection, Len( cSection ) - Len( "</fixed>" ) )
+      cSection := hb_StrShrink( cSection, Len( "</fixed>" ) )
       DO WHILE Right( cSection, Len( hb_eol() ) ) == hb_eol()
-         cSection := Left( cSection, Len( cSection ) - Len( hb_eol() ) )
+         cSection := hb_StrShrink( cSection, Len( hb_eol() ) )
       ENDDO
    ENDIF
 
@@ -1037,7 +1037,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
                DO WHILE idx > 0
                   idx--
                   DO CASE
-                  CASE At( SubStr( cLine, idx, 1 ), " ,;.!?" ) == 0
+                  CASE ! SubStr( cLine, idx, 1 ) $ " ,;.!?"
                      //
                   CASE Upper( SubStr( cLine, idx, 3 ) ) == ".T." .OR. Upper( SubStr( cLine, idx, 3 ) ) == ".F."
                      idx--
@@ -1118,7 +1118,7 @@ FUNCTION Filename( cFile, cFormat, nLength )
       AAdd( s_Files, cResult )
    ELSE
 #ifdef __PLATFORM__DOS
-      cResult := Left( cResult, Len( cResult ) - 3 )
+      cResult := hb_StrShrink( cResult, 3 )
 #endif
       idx := 0
       DO WHILE hb_AScan( s_Files, cResult + PadL( hb_ntos( ++idx ), 3, "0" ), , , .T. ) > 0

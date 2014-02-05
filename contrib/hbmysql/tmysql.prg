@@ -793,7 +793,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ENDIF
 
       // remove last comma
-      cUpdateQuery := Left( cUpdateQuery, Len( cUpdateQuery ) - 1 )
+      cUpdateQuery := hb_StrShrink( cUpdateQuery )
 
       IF lOldRecord
          // based in matching of ALL fields of old record
@@ -803,7 +803,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             cWhere += ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( ::aOldValue[ nI ] ) + " AND "
          NEXT
          // remove last " AND "
-         cWhere := Left( cWhere, Len( cWhere ) - 5 )
+         cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
          cUpdateQuery += cWhere
 
       ELSE
@@ -838,7 +838,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          NEXT
 
          // remove last comma
-         cUpdateQuery := Left( cUpdateQuery, Len( cUpdateQuery ) - 1 )
+         cUpdateQuery := hb_StrShrink( cUpdateQuery )
 
          IF lOldRecord
             // based in matching of ALL fields of old record
@@ -848,7 +848,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
                cWhere += oRow:aFieldStruct[ nI ][ MYSQL_FS_NAME ] + "=" + ClipValue2SQL( oRow:aOriValue[ nI ] ) + " AND "
             NEXT
             // remove last " AND "
-            cWhere := Left( cWhere, Len( cWhere ) - 5 )
+            cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
             cUpdateQuery += cWhere
 
          ELSE
@@ -904,7 +904,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             cWhere += " AND "
          NEXT
          // remove last " AND "
-         cWhere := Left( cWhere, Len( cWhere ) - 5 )
+         cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
          cDeleteQuery += cWhere
 
       ELSE
@@ -943,7 +943,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
                cWhere += " AND "
             NEXT
             // remove last " AND "
-            cWhere := Left( cWhere, Len( cWhere ) - 5 )
+            cWhere := hb_StrShrink( cWhere, Len( " AND " ) )
             cDeleteQuery += cWhere
 
          ELSE
@@ -986,7 +986,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          ENDIF
       NEXT
       // remove last comma from list
-      cInsertQuery := Left( cInsertQuery, Len( cInsertQuery ) - 1 ) + ") VALUES ("
+      cInsertQuery := hb_StrShrink( cInsertQuery ) + ") VALUES ("
 
       // field values
       FOR i := 1 TO ::nNumFields
@@ -996,7 +996,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
       NEXT
 
       // remove last comma from list of values and add closing parenthesis
-      cInsertQuery := Left( cInsertQuery, Len( cInsertQuery ) - 1 ) + ")"
+      cInsertQuery := hb_StrShrink( cInsertQuery ) + ")"
 
       IF mysql_query( ::nSocket, cInsertQuery ) == 0
          ::lError := .F.
@@ -1031,7 +1031,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
             ENDIF
          NEXT
          // remove last comma from list
-         cInsertQuery := Left( cInsertQuery, Len( cInsertQuery ) - 1 ) + ") VALUES ("
+         cInsertQuery := hb_StrShrink( cInsertQuery ) + ") VALUES ("
 
          // field values
          FOR i := 1 TO Len( oRow:aRow )
@@ -1041,7 +1041,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          NEXT
 
          // remove last comma from list of values and add closing parenthesis
-         cInsertQuery := Left( cInsertQuery, Len( cInsertQuery ) - 1 ) + ")"
+         cInsertQuery := hb_StrShrink( cInsertQuery ) + ")"
 
          IF mysql_query( ::nSocket, cInsertQuery ) == 0
             ::lError := .F.
@@ -1411,7 +1411,7 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
    ENDIF
 
    // remove last comma from list
-   ::cCreateQuery := Left( ::cCreateQuery, Len( ::cCreateQuery ) - 1 ) + ");"
+   ::cCreateQuery := hb_StrShrink( ::cCreateQuery ) + ");"
    IF mysql_query( ::nSocket, ::cCreateQuery ) == 0
       RETURN .T.
    ELSE
@@ -1436,7 +1436,7 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    NEXT
 
    // remove last comma from list
-   cCreateQuery := Left( cCreateQuery, Len( cCreateQuery ) - 1 ) + ")"
+   cCreateQuery := hb_StrShrink( cCreateQuery ) + ")"
 
    IF mysql_query( ::nSocket, cCreateQuery ) == 0
       RETURN .T.
@@ -1541,15 +1541,15 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 
 #if 0
    /* TODO: rewrite for MySQL */
-   LOCAL nRes, aField, aStruct, aSField, i
+   LOCAL res, aField, aStruct, aSField, i
 
    aStruct := {}
-   nRes := mysql_list_fields( ::nSocket, cTable )
+   res := mysql_list_fields( ::nSocket, cTable )
 
-   IF ! Empty( nRes )
-      FOR i := 1 TO mysql_num_fields( nRes )
+   IF ! Empty( res )
+      FOR i := 1 TO mysql_num_fields( res )
 
-         aField := mysql_fetch_field( nRes )
+         aField := mysql_fetch_field( res )
          aSField := Array( DBS_DEC )
 
          // don't count indexes as real fields

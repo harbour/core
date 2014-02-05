@@ -303,7 +303,7 @@ STATIC PROCEDURE TbWhileTop( cKey )
  */
 STATIC PROCEDURE TbWhileBot( cKey )
 
-   dbSeek( Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )
+   dbSeek( hb_StrShrink( cKey ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )
    dbSkip( -1 )
 
    RETURN

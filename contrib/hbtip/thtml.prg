@@ -753,7 +753,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
       SWITCH Left( cTagName, 1 )
       CASE "!"
          // comment or PI
-         oThisTag:addNode( THtmlNode():new( oThisTag, cTagName, Left( cAttr, Len( cAttr ) - 1 ) ) )
+         oThisTag:addNode( THtmlNode():new( oThisTag, cTagName, hb_StrShrink( cAttr ) ) )
          EXIT
 
       CASE "/"
@@ -816,7 +816,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
                oNextTag := THtmlNode():new( oThisTag, cTagName )
             ELSE
                // attribute string has ">" at the end. Remove ">"
-               oNextTag := THtmlNode():new( oThisTag, cTagName, Left( cAttr, Len( cAttr ) - 1 ) )
+               oNextTag := THtmlNode():new( oThisTag, cTagName, hb_StrShrink( cAttr ) )
             ENDIF
 
             oThisTag:addNode( oNextTag )
@@ -1202,7 +1202,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
       cText += oNode:getText( cEOL )
       IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
-         cText := Left( cText, Len( cText ) - Len( cEol ) ) + Chr( 9 )
+         cText := hb_StrShrink( cText, Len( cEol ) ) + Chr( 9 )
       ENDIF
    NEXT
 
@@ -1464,9 +1464,9 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
       RETURN oNode
 
-   ELSEIF Right( cName, 1 ) == "s" .AND. Left( cName, Len( cName ) - 1 ) $ t_hHT
+   ELSEIF Right( cName, 1 ) == "s" .AND. hb_StrShrink( cName ) $ t_hHT
       // message is the plural of a html tag -> oNode:forms -> Array of <FORM> tags
-      RETURN ::findNodesByTagName( Left( cName, Len( cName ) - 1 ), ATail( aValue ) )
+      RETURN ::findNodesByTagName( hb_StrShrink( cName ), ATail( aValue ) )
    ENDIF
 
    IF ! Empty( aValue )

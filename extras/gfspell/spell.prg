@@ -187,11 +187,11 @@ FUNCTION Sp_Check( cWord )
          RETURN .T.
       ENDIF
       IF Right( cLookup, 2 ) == "'S"
-         cLookUp := Left( cLookup, Len( cLookup ) - 2 )
+         cLookUp := hb_StrShrink( cLookup, 2 )
       ENDIF
       cTemp := "|" + cLookup + "|"
-      IF At( cTemp, COMMON_WORDS ) == 0    // Check the common words first
-         IF At( cTemp, CACHE_WORDS ) == 0   // then check the cache words
+      IF ! cTemp $ COMMON_WORDS      // Check the common words first
+         IF ! cTemp $ CACHE_WORDS    // then check the cache words
             ok   := .F.
             nRow := Asc( SubStr( cLookup, 1, 1 ) ) - 64
             nCol := Asc( SubStr( cLookup, 2, 1 ) ) - 64
@@ -217,8 +217,7 @@ FUNCTION Sp_Check( cWord )
                   ELSEIF y > 4
                      cTemp := XForm( cLookup )
                      DO WHILE z < y
-                        z := bfat( cTemp, t_cBuf, z )
-                        IF z < 6
+                        IF ( z := hb_BAt( cTemp, t_cBuf, z ) ) < 6
                            EXIT
                         ELSEIF hb_BSubStr( t_cBuf, z - 1, 1 ) < hb_BChar( 128 )
                            z++
@@ -518,7 +517,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
          IF sc_aParts_[ jj, 1 ] $ cWord
             IF sc_aParts_[ jj, 1 ] $ "AEIOUT"
                ii := 0
-               DO WHILE ( ii := fat( sc_aParts_[ jj, 1 ], cWord, ii ) ) > 0
+               DO WHILE ( ii := hb_At( sc_aParts_[ jj, 1 ], cWord, ii ) ) > 0
                   FOR kk := 1 TO Len( sc_aParts_[ jj, 2 ] )
                      cHold := Left( cWord, ii - 1 ) + sc_aParts_[ jj, 2, kk ] + SubStr( cWord, ii + 1 )
                      IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
@@ -574,7 +573,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             // Accomodate words ending in C
             //
 
-            IF SubStr( cHold, -1, 1 ) == "C"
+            IF Right( cHold, 1 ) == "C"
                FOR kk := 1 TO nSuffix
                   cTemp := cHold + "K" + sc_aEnds[ kk ]
                   IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
@@ -587,7 +586,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             // Accomodate words ending in ND
             //
 
-            IF SubStr( cHold, -2, 2 ) == "ND"
+            IF Right( cHold, 2 ) == "ND"
                cTemp := Left( cHold, zz - 1 ) + "SE"
                IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                   Sp_Check( cTemp )
@@ -834,11 +833,10 @@ FUNCTION Sp_Quick( cWord )
 
    FOR jj := 1 TO 6
       IF SubStr( "AEIOUT", jj, 1 ) $ cWord
-         ii   := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
          nold := 1
-         DO WHILE ii > 0
+         DO WHILE ( ii := hb_At( SubStr( "AEIOUT", jj, 1 ), cWord, ii ) ) > 0
             FOR kk := 1 TO ChrCount( "$", sc_aTryThese[ jj ] )
-               ll    := fat( "$", sc_aTryThese[ jj ], nOld )
+               ll    := hb_At( "$", sc_aTryThese[ jj ], nOld )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
                nOld  := ll + 1
                cHold := Left( cWord, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
@@ -847,7 +845,6 @@ FUNCTION Sp_Quick( cWord )
                ENDIF
             NEXT
             ii++
-            ii := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
          ENDDO
       ENDIF
    NEXT
@@ -905,8 +902,7 @@ FUNCTION Sp_WildCard( cPattern )
    cPattern := Upper( cPattern )
 
    IF Sp_Init()
-      x := At( "*", cPattern )
-      IF x == 0
+      IF ( x := At( "*", cPattern ) ) == 0
          x := At( "?", cPattern )
       ENDIF
       IF x == 1                 // Can't handle wildcards in first position
@@ -1380,7 +1376,7 @@ STATIC PROCEDURE Sp_Common()
 FUNCTION WildCard( cPattern, cString )
 
    LOCAL lMatch := .F.
-   LOCAL x      := At( "*", cPattern )
+   LOCAL x
    LOCAL cBefore
    LOCAL cAfter
    LOCAL y
@@ -1394,7 +1390,7 @@ FUNCTION WildCard( cPattern, cString )
    //
    // Do a * match
    //
-   IF x > 0
+   IF ( x := At( "*", cPattern ) ) > 0
       cBefore := Upper( Left( cPattern, x - 1 ) )
       cAfter  := Upper( SubStr( cPattern, x + 1 ) )
       DO CASE
@@ -1407,8 +1403,7 @@ FUNCTION WildCard( cPattern, cString )
             Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
    ELSE
-      x := At( "?", cPattern )
-      IF x > 0
+      IF ( x := At( "?", cPattern ) ) > 0
          nPatSize := Len( cPattern )
          nStrSize := Len( cString )
          IF nPatSize == nStrSize
@@ -1458,10 +1453,3 @@ FUNCTION AWords( cLine )
    ENDDO
 
    RETURN aWords_
-
-// Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
-FUNCTION fat( f_str, l_str, f_rom )
-   RETURN At( f_str, SubStr( l_str, iif( PCount() < 3, 1, f_rom ) ) )
-
-STATIC FUNCTION bfat( f_str, l_str, f_rom )
-   RETURN hb_BAt( f_str, hb_BSubStr( l_str, f_rom ) )

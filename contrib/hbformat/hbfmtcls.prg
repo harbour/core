@@ -801,10 +801,10 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFormatCode
                xRes := .F.
             ELSE
                IF Right( cToken2, 1 ) == ";" .AND. aIni != NIL
-                  xRes := RTrim( Left( cToken2, Len( cToken2 ) - 1 ) )
+                  xRes := RTrim( hb_StrShrink( cToken2 ) )
                   DO WHILE ++i < Len( aIni )
                      IF Right( aIni[ i ], 1 ) == ";"
-                        xRes += AllTrim( Left( aIni[ i ], Len( aIni ) - 1 ) )
+                        xRes += AllTrim( hb_StrShrink( aIni[ i ] ) )
                      ELSE
                         xRes += AllTrim( aIni[ i ] )
                         EXIT

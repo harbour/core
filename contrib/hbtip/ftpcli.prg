@@ -276,7 +276,7 @@ METHOD NoOp() CLASS TIPClientFTP
 
 METHOD Rest( nPos ) CLASS TIPClientFTP
 
-   ::inetSendAll( ::SocketCon, "REST " + hb_ntos( iif( Empty( nPos ), 0, nPos ) ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "REST " + hb_ntos( hb_defaultValue( nPos, 0 ) ) + ::cCRLF )
 
    RETURN ::GetReply()
 

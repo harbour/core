@@ -415,7 +415,7 @@ FUNCTION SQLPrepare( cQuery, ... )
 
    IF PCount() >= 2
       /* Limpa espacos desnecessarios */
-      DO WHILE At( Space( 2 ), cQuery ) != 0
+      DO WHILE Space( 2 ) $ cQuery
          cQuery := StrTran( cQuery, Space( 2 ), Space( 1 ) )
       ENDDO
 

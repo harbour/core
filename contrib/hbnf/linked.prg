@@ -36,19 +36,17 @@ FUNCTION ft_Linked( cFuncs )
          AAdd( aFuncArray, Left( cFuncs, nFEnd ) + ")" )
          // Remove the current function from the string
          cFuncs := SubStr( cFuncs, nFEnd + 1 )
-         nSpace := At( " ", cFuncs )
-         nComma := At( ",", cFuncs )
-         DO WHILE ( nComma > 0 .AND. nComma < nFEnd ) .OR. ;
-               ( nSpace > 0 .AND. nSpace < nFEnd )
+         DO WHILE ;
+               ( ( nComma := At( ",", cFuncs ) ) > 0 .AND. nComma < nFEnd ) .OR. ;
+               ( ( nSpace := At( " ", cFuncs ) ) > 0 .AND. nSpace < nFEnd )
             // We have extra parameters or spaces prior to the start
             // of the function. Strip them out.
-            IF nComma > 0
+            DO CASE
+            CASE nComma > 0
                cFuncs := SubStr( cFuncs, nComma + 1 )
-            ELSEIF nSpace > 0
+            CASE nSpace > 0
                cFuncs := SubStr( cFuncs, nSpace + 1 )
-            ENDIF
-            nSpace := At( " ", cFuncs )
-            nComma := At( ",", cFuncs )
+            ENDCASE
          ENDDO
       ENDDO
       // Scan through the array of functions, stop after the first occurence

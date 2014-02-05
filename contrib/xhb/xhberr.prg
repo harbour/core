@@ -168,13 +168,8 @@ STATIC FUNCTION xhb_DefError( oError )
       // Show alert box
       // TraceLog( cMessage )
 
-      nChoice := 0
-      DO WHILE nChoice == 0
-         IF Empty( oError:osCode )
-            nChoice := Alert( cMessage, aOptions )
-         ELSE
-            nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
-         ENDIF
+      DO WHILE ( nChoice := Alert( cMessage + ;
+         iif( cDOSError == NIL, "", ";" + cDOSError ), aOptions ) ) == 0
       ENDDO
 
       IF ! Empty( nChoice )

@@ -117,7 +117,7 @@ STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
 
 STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
-   LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
+   LOCAL nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL

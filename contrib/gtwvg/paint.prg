@@ -297,8 +297,8 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
          WS_VISIBLE + WS_POPUP   + DS_3DLOOK
    ENDIF
 
-   AAdd( aDlg[ 1 ], iif( Empty( nHelpId  ), 0, nHelpId  ) )
-   AAdd( aDlg[ 1 ], iif( Empty( nExStyle ), 0, nExStyle ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
    AAdd( aDlg[ 1 ], nStyle  )
    AAdd( aDlg[ 1 ], 0       )
    AAdd( aDlg[ 1 ], nX      )
@@ -307,7 +307,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    AAdd( aDlg[ 1 ], nH      )
    AAdd( aDlg[ 1 ], 0       )
    AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], iif( HB_ISSTRING( cTitle ), cTitle, "" ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( cTitle, "" ) )
 
    IF hb_bitAnd( nStyle, DS_SETFONT ) != 0
       AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8 ) )

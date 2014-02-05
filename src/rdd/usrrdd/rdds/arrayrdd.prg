@@ -320,7 +320,7 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
    cFullName := Upper( aOpenInfo[ UR_OI_NAME ] )
 
    IF Right( cFullName, 1 ) == "."
-      cFullName := Left( cFullName, Len( cFullName ) - 1 )
+      cFullName := hb_StrShrink( cFullName )
    ENDIF
 
    /* When there is no ALIAS we will create new one using file name */

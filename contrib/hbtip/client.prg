@@ -321,11 +321,10 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
       cRequest += Chr( 13 ) + Chr( 10 )
       ::inetSendAll( ::SocketCon, cRequest )
       cResp := ""
-      IF ::ReadHTTPProxyResponse( @cResp )
-         tmp := At( " ", cResp )
-         IF tmp > 0 .AND. Val( SubStr( cResp, tmp + 1 ) ) == 200
-            lRet := .T.
-         ENDIF
+      IF ::ReadHTTPProxyResponse( @cResp ) .AND. ;
+         ( tmp := At( " ", cResp ) ) > 0 .AND. ;
+         Val( SubStr( cResp, tmp + 1 ) ) == 200
+         lRet := .T.
       ENDIF
       IF ! lRet
          ::close()
@@ -340,14 +339,13 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
 METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
 
    LOCAL bMoreDataToRead := .T.
-   LOCAL nLength, nData
+   LOCAL nLength
    LOCAL szResponse
 
    DO WHILE bMoreDataToRead
 
       szResponse := Space( 1 )
-      nData := ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) )
-      IF nData == 0
+      IF ::inetRecv( ::SocketCon, @szResponse, hb_BLen( szResponse ) ) == 0
          RETURN .F.
       ENDIF
       sResponse += szResponse
@@ -358,7 +356,7 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
             hb_BSubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. ;
             hb_BSubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
             hb_BSubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. ;
-            hb_BSubStr( sResponse, nLength, 1 ) == Chr( 10 ) )
+            hb_BSubStr( sResponse, nLength - 0, 1 ) == Chr( 10 ) )
       ENDIF
    ENDDO
 
@@ -778,7 +776,7 @@ METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 /* Methods to manage buffers */
 METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
-   IF ! Empty( nSizeBuff )
+   IF HB_ISNUMERIC( nSizeBuff ) .AND. nSizeBuff > 0
       hb_inetSetRcvBufSize( SocketCon, nSizeBuff )
    ENDIF
 
@@ -786,7 +784,7 @@ METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
 METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
-   IF ! Empty( nSizeBuff )
+   IF HB_ISNUMERIC( nSizeBuff ) .AND. nSizeBuff > 0
       hb_inetSetSndBufSize( SocketCon, nSizeBuff )
    ENDIF
 

@@ -399,11 +399,8 @@ FUNCTION SwpSetEnv( cString )
    LOCAL tmp
 
    FOR EACH cPair IN hb_ATokens( cString, hb_BChar( 255 ) )
-      IF ! Empty( cPair )
-         tmp := At( "=", cPair )
-         IF tmp > 0
-            hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
-         ENDIF
+      IF ( tmp := At( "=", cPair ) ) > 0
+         hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
       ENDIF
    NEXT
 

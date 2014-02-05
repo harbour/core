@@ -439,7 +439,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
       // cName  := LTrim( aField[ 1 ] )   // ERROR ON VAR NAME WITH LEN 1. X
 
       // TraceLog( "SESSION: cSessVarName, cSessPrefix, Left( cSessVarName, Len( cSessPrefix ) )", ;
-      //                    cSessVarName, cSessPrefix, Left( cSessVarName, Len( cSessPrefix ) ) )
+      //                     cSessVarName, cSessPrefix, Left( cSessVarName, Len( cSessPrefix ) ) )
 
       IF hb_LeftIs( cSessVarName, cSessPrefix )  // If left part of var is equal to session prefixname i.e. "SESSION"
 
@@ -450,8 +450,8 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
          // TraceLog( "cName, xValue", cName, xValue )
 
          // is it an array entry?
-         IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-            cName := Left( cName, Len( cName ) - 2 )
+         IF Right( cName, 2 ) == "[]"
+            cName := hb_StrShrink( cName, 2 )
             // aHashVars[ cName ] := { xValue }
 
             aHashVars[ cName ] := { xValue }
@@ -477,7 +477,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
          cFieldsNotInSession += aField[ 1 ] + "=" + aField[ 2 ] + "&"
       NEXT
       // Delete last '&' char
-      cFieldsNotInSession := Left( cFieldsNotInSession, Len( cFieldsNotInSession ) - 1 )
+      cFieldsNotInSession := hb_StrShrink( cFieldsNotInSession )
    ENDIF
 
    // TraceLog( "SESSION: cFieldsNotInSession", cFieldsNotInSession )
@@ -521,7 +521,9 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
    cSIDCRC  := ""
    nLenTemp := Len( cTemp )
    FOR n := 1 TO nLenTemp
-      // cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
+#if 0
+      cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
+#endif
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
       // ::oCGI:ToLogFile( "cCRCKey: " + hb_CStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
    NEXT
@@ -555,7 +557,9 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
       /* Calculate the key */
       FOR n := 1 TO nLenSID - 5 // 5 -> CRC Length
-         // nRand     := At( cSID[ n ], cBaseKeys )
+#if 0
+         nRand     := At( cSID[ n ], cBaseKeys )
+#endif
          nRand     := At( SubStr( cSID, n, 1 ), cBaseKeys )
          nKey += nRand
       NEXT
@@ -566,7 +570,9 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
       cSIDCRC  := ""
       nLenTemp := Len( cTemp )
       FOR n := 1 TO nLenTemp
-         // cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
+#if 0
+         cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
+#endif
          cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
       NEXT
 
@@ -846,11 +852,15 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
 
    DO CASE
    CASE ::cCache_Limiter == "nocache"
-      // uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
+#if 0
+      uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
+#endif
       uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,, -1, ) )
       uhttpd_SetHeader( "Cache-Control", "no-cache" )
-      // uhttpd_SetHeader( "Cache-Control", "no-store, no-cache, must-revalidate" )  // HTTP/1.1
-      // uhttpd_SetHeader( "Cache-Control", "post-check=0, pre-check=0", .F. )
+#if 0
+      uhttpd_SetHeader( "Cache-Control", "no-store, no-cache, must-revalidate" )  // HTTP/1.1
+      uhttpd_SetHeader( "Cache-Control", "post-check=0, pre-check=0", .F. )
+#endif
       uhttpd_SetHeader( "Pragma", "no-cache" )
    CASE ::cCache_Limiter == "private"
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )

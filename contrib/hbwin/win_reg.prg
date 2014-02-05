@@ -66,13 +66,11 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
    cKey := ""
    cEntry := ""
 
-   tmp := At( "\", cRegPath )
-   IF tmp > 0
+   IF ( tmp := At( "\", cRegPath ) ) > 0
       cHKEY := Left( cRegPath, tmp - 1 )
       cRegPath := SubStr( cRegPath, tmp + 1 )
 
-      tmp := RAt( "\", cRegPath )
-      IF tmp > 0
+      IF ( tmp := RAt( "\", cRegPath ) ) > 0
          cKey := Left( cRegPath, tmp - 1 )
          cEntry := SubStr( cRegPath, tmp + 1 )
       ELSE

@@ -910,7 +910,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    // Open the report file
    nFrmHandle := FOpen( cFrmFile )
 
-   IF ! Empty( nFileError := FError() ) .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
+   IF ( nFileError := FError() ) != 0 .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
 
       // Search through default path; attempt to open report file
       cDefPath := Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH )
@@ -920,7 +920,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       FOR nPathIndex := 1 TO Len( aPaths )
          nFrmHandle := FOpen( aPaths[ nPathIndex ] + "\" + cFrmFile )
          // if no error is reported, we have our report file
-         IF Empty( nFileError := FError() )
+         IF ( nFileError := FError() ) == 0
             EXIT
          ENDIF
       NEXT
@@ -1048,7 +1048,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          nHeaderIndex--
       ENDDO
 
-      aReport[ RPT_HEADER ] := iif( Empty( nHeaderIndex ), {}, ;
+      aReport[ RPT_HEADER ] := iif( nHeaderIndex == 0, {}, ;
          ASize( aHeader, nHeaderIndex ) )
 
       // Process Groups
@@ -1231,9 +1231,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
       cItem := Left( cHeaderString, nHeaderLen )
 
       // check for explicit delimiter
-      nPos := At( ";", cItem )
-
-      IF ! Empty( nPos )
+      IF ( nPos := At( ";", cItem ) ) != 0
          // delimiter present
          AAdd( aPageHeader, Left( cItem, nPos - 1 ) )
       ELSE
@@ -1243,7 +1241,6 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
          ELSE
             // exception
             AAdd( aPageHeader, cItem )
-
          ENDIF
          // empty or not, we jump past the field
          nPos := nHeaderLen
@@ -1353,9 +1350,7 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    DO WHILE Len( cList ) != 0
 
-      nPos := At( cDelimiter, cList )
-
-      IF nPos == 0
+      IF ( nPos := At( cDelimiter, cList ) ) == 0
          nPos := Len( cList )
       ENDIF
 

@@ -31,13 +31,13 @@ STATIC PROCEDURE path_debug( hCairo, nTolerance )
 
    cairo_save( hCairo )
 
-   IF Empty( nTolerance )
-      hPath := cairo_copy_path( hCairo )
-   ELSE
+   IF HB_ISNUMERIC( nTolerance )
       cairo_save( hCairo )
       cairo_set_tolerance( hCairo, nTolerance )
       hPath := cairo_copy_path_flat( hCairo )
       cairo_restore( hCairo )
+   ELSE
+      hPath := cairo_copy_path( hCairo )
    ENDIF
 
    // Draw lines

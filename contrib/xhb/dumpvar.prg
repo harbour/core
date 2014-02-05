@@ -105,12 +105,12 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
             FOR EACH cKey IN xVar:Keys
                cString += Space( nIndent ) + " '" + cKey + "' => " + asString( xVar:SendKey( cKey ) ) + ", " + hb_eol()
                IF lRecursive .AND. ValType( xVar:SendKey( cKey ) ) $ "AOH"
-                  cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+                  cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
                   cString += __HB_DumpVar( xVar:SendKey( cKey ), , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-                  cString := Left( cString, Len( cString ) - nEolLen ) + ", " + hb_eol()
+                  cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
                ENDIF
             NEXT
-            cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += Space( nIndent ) + "}" + hb_eol()
          ENDIF
       ELSE
@@ -219,13 +219,13 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
       FOR EACH xVal IN aVar
          cString += Space( nIndent ) + " [" + LTrim( StrZero( xVal:__enumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
          IF lRecursive .AND. ValType( xVal ) $ "AOH"
-            cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += __HB_DumpVar( xVal, , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-            cString := Left( cString, Len( cString ) - nEolLen ) + ", " + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
          ENDIF
       NEXT
       IF Len( aVar ) > 0
-         cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+         cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
       ENDIF
       cString += Space( nIndent ) + "}" + hb_eol()
    ENDIF
@@ -248,13 +248,13 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
       FOR EACH xVal IN hVar
          cString += Space( nIndent ) + " [" + LTrim( AsString( xVal:__enumKey() ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
          IF lRecursive .AND. ValType( xVal ) $ "AOH"
-            cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += __HB_DumpVar( xVal, , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-            cString := Left( cString, Len( cString ) - nEolLen ) + ", " + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
          ENDIF
       NEXT
       IF Len( hVar ) > 0
-         cString := Left( cString, Len( cString ) - 2 - nEolLen ) + hb_eol()
+         cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
       ENDIF
       cString += Space( nIndent ) + "}" + hb_eol()
    ENDIF

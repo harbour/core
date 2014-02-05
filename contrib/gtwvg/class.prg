@@ -671,7 +671,7 @@ METHOD WvtDialog:ActivateMenu()
    LOCAL nMenu := Wvt_GetLastMenuEvent()
    LOCAL aMenuItem
 
-   IF ! Empty( nMenu )
+   IF nMenu != 0
       IF HB_ISOBJECT( ::oMenu )
          IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( nMenu ) )
             IF HB_ISEVALITEM( aMenuItem[ WVT_MENU_ACTION ] )
@@ -3044,7 +3044,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 
    LOCAL nPrevious := -1
 
-   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -3054,7 +3054,7 @@ METHOD wvtMenu:DisableItem( nItemNum )
 
    LOCAL nPrevious := -1
 
-   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 

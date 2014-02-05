@@ -188,7 +188,7 @@ METHOD PurgeTX() CLASS win_Com
    RETURN win_comPurge( ::nPort, .F., .T. )
 
 METHOD Close( nDrain ) CLASS win_Com
-   RETURN win_comClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+   RETURN win_comClose( ::nPort, hb_defaultValue( nDrain, 0 ) )
 
 METHOD DebugDCB( nDebug ) CLASS win_Com
    RETURN win_comDebugDCB( ::nPort, nDebug )

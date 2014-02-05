@@ -1154,7 +1154,7 @@ METHOD WordRight() CLASS XHBEditor
 
    IF ! ::lWordWrap .AND. ::IsEmptyLine( ::nRow ) .OR. ;
       ::LastRow() == 0 .OR. ;
-      ( At( " ", ::aText[ ::nRow ]:cText ) == 0 .AND. ::LineLen( ::nRow ) >= ::nWordWrapCol )
+      ( ! " " $ ::aText[ ::nRow ]:cText .AND. ::LineLen( ::nRow ) >= ::nWordWrapCol )
       RETURN Self
    ENDIF
 
@@ -2892,8 +2892,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
          DO WHILE .T.
             // Split line at nWordWrapCol boundary
             IF Len( cLine ) > nWordWrapCol
-               nFirstSpace := RAt( " ", Left( cLine, nWordWrapCol + 1 ) )
-               IF nFirstSpace > 1
+               IF ( nFirstSpace := RAt( " ", Left( cLine, nWordWrapCol + 1 ) ) ) > 1
                   cSplittedLine := Left( cLine, nFirstSpace )
                   cLine := SubStr( cLine, nFirstSpace + 1 )
                ELSE
