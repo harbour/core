@@ -2114,9 +2114,8 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_ctw_gt_Alert(%p,%p,%p,%d,%d,%f)", pGT, pMessage, pOptions, iClrNorm, iClrHigh, dDelay ) );
 
-   iOptions = ( int ) hb_arrayLen( pOptions );
-
-   if( HB_IS_STRING( pMessage ) && iOptions > 0 )
+   if( pMessage && HB_IS_STRING( pMessage ) &&
+       pOptions && ( iOptions = ( int ) hb_arrayLen( pOptions ) ) > 0 )
    {
       int iRows, iCols;
       HB_BOOL fScreen;
