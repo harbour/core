@@ -174,7 +174,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 
    /* Preselect the default template based on source filename */
    FOR EACH tmp IN aFilenameTemplateMap
-      IF hb_LeftIs( Lower( cFileName ), tmp )
+      IF hb_LeftIsI( cFileName, tmp )
          hMeta[ "TEMPLATE" ] := tmp:__enumKey()
       ENDIF
    NEXT

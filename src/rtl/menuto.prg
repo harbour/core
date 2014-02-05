@@ -241,7 +241,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             // did user hit a hot key?
             IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
                FOR y := 1 TO nArrLen
-                  IF hb_LeftIs( Upper( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ) ), cKey )
+                  IF hb_LeftIsI( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), cKey )
                      n := y
                      lExit := .T.
                      EXIT

@@ -178,7 +178,7 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
    /* We need at least one character to search */
    IF Len( s ) > 1
       FOR EACH n IN hCommands
-         IF hb_LeftIs( Lower( n:__enumKey() ), s )
+         IF hb_LeftIsI( n:__enumKey(), s )
             cCommand := PadR( n:__enumKey(), Len( cCommand ) )
             ManageCursor( cCommand )
             RETURN

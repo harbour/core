@@ -39,7 +39,7 @@ PROCEDURE Main()
    ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
-      IF hb_LeftIs( Upper( enum ), "TWO" )
+      IF hb_LeftIsI( enum, "TWO" )
          enum := Upper( enum )
          ? "before passing by @ | ENUM=", enum, ;
             "| index:", enum:__enumIndex(), ;

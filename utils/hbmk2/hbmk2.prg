@@ -733,7 +733,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 #ifdef HARBOUR_SUPPORT
    cParam1L := iif( PCount() >= 1, Lower( hb_PValue( 1 ) ), "" )
    IF ( Right( Lower( hb_FNameName( hb_ProgName() ) ), Len( "hbrun" ) ) == "hbrun" .OR. ;
-        hb_LeftIs( Lower( hb_FNameName( hb_ProgName() ) ), "hbrun" ) .OR. ;
+        hb_LeftIsI( hb_FNameName( hb_ProgName() ), "hbrun" ) .OR. ;
         cParam1L == "." .OR. ;
         hb_FNameExt( cParam1L ) == ".dbf" .OR. ;
         ( HBMK_IS_IN( hb_FNameExt( cParam1L ), ".hb|.hrb" ) .AND. ! hb_LeftIs( cParam1L, "-" ) ) ) .AND. ;
@@ -760,7 +760,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
          NEXT
       CASE Empty( hb_FNameExt( tmp ) ) .AND. hb_FileExists( hb_FNameExtSet( tmp, ".hbp" ) )
          AAdd( aArgsProc, hb_FNameExtSet( tmp, ".hbp" ) )
-      CASE hb_LeftIs( Lower( tmp ), "-target=" )
+      CASE hb_LeftIsI( tmp, "-target=" )
          FOR EACH tmp1 IN FN_Expand( SubStr( tmp, Len( "-target=" ) + 1 ), .F. )
             AAdd( aArgsProc, "-target=" + tmp1 )
          NEXT
@@ -845,7 +845,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
                nTargetPos := Len( aArgsTarget )
                cTargetName := hb_FNameName( tmp )
             ENDIF
-         CASE hb_LeftIs( Lower( tmp ), "-target=" )
+         CASE hb_LeftIsI( tmp, "-target=" )
             ++nTarget
             IF nTarget == nTargetTO_DO
                AAdd( aArgsTarget, SubStr( tmp, Len( "-target=" ) + 1 ) )
@@ -8231,7 +8231,7 @@ STATIC FUNCTION CheckParamLib( hbmk, cLibName, lHBC, aParam )
       IF Right( hb_FNameNameExt( cLibName ), 1 ) == "."
          cOpt += "."
       ENDIF
-      IF cExtL == ".a" .AND. hb_LeftIs( Lower( cOpt ), "lib" )
+      IF cExtL == ".a" .AND. hb_LeftIsI( cOpt, "lib" )
          cOpt := SubStr( cOpt, Len( "lib" ) + 1 )
       ENDIF
       /* never suggest core libs */
@@ -16290,7 +16290,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    Eval( hbmk[ _HBMK_bOut ], cText )
 #endif
 
-   IF ! hb_LeftIs( Lower( hbmk[ _HBMK_cUILNG ] ), "en" )
+   IF ! hb_LeftIsI( hbmk[ _HBMK_cUILNG ], "en" )
       cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" /*, _SELF_NAME_ */ )
       cTrsTextI := hb_UTF8ToStr( hb_i18n_gettext( cTrsText ) )
       IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )

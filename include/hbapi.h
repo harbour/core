@@ -939,7 +939,6 @@ extern HB_EXPORT char *    hb_strndup( const char * pszText, HB_SIZE nLen ); /* 
 extern HB_EXPORT char *    hb_strduptrim( const char * pszText ); /* returns a pointer to a newly allocated copy of the trimmed source string */
 extern HB_EXPORT HB_SIZE   hb_strlentrim( const char * pszText ); /* like strlen() but result is the length of trimmed text */
 extern HB_EXPORT HB_SIZE   hb_strnlen( const char * pszText, HB_SIZE nLen ); /* like strlen() but result is limited to nLen */
-extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT HB_BOOL   hb_compStrToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
 extern HB_EXPORT HB_BOOL   hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by Val() */

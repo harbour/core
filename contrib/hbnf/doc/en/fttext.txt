@@ -472,7 +472,7 @@
 
       ft_FUse( "config.sys" )
 
-      DO WHILE ! hb_LeftIs( Upper( ft_FReadLn() ), "FILES=" ) .AND. ! ft_FEof()
+      DO WHILE ! hb_LeftIsI( ft_FReadLn(), "FILES=" ) .AND. ! ft_FEof()
          ft_FSkip()
       ENDDO
 

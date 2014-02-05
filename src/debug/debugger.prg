@@ -1306,7 +1306,7 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
       nLen := MLCount( cInfo, 16384, NIL, .F., .T. )
       FOR n := 1 TO nLen
          cLine := AllTrim( MemoLine( cInfo, 16384, n, NIL, .F., .T. ) )
-         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. hb_LeftIs( "OPTIONS", Upper( Left( cLine, nPos - 1 ) ) ) )
+         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. hb_LeftIsI( "OPTIONS", Left( cLine, nPos - 1 ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
@@ -1384,7 +1384,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
             __dbgAlert( "Array is empty" )
          ENDIF
 
-      CASE hb_LeftIs( Upper( cVarStr ), "CLASS" )
+      CASE hb_LeftIsI( cVarStr, "CLASS" )
          __dbgObject( uVarValue, cVarName )
 
       OTHERWISE

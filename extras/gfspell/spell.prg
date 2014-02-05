@@ -1417,7 +1417,7 @@ FUNCTION WildCard( cPattern, cString )
             NEXT
          ENDIF
       ELSE
-         lMatch := hb_LeftIs( Upper( cPattern ), Upper( cString ) )
+         lMatch := hb_LeftIsI( cPattern, cString )
       ENDIF
    ENDIF
 

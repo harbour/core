@@ -22,9 +22,11 @@ STATIC FUNCTION FuncList( cPrefix )
    LOCAL cName
    LOCAL tmp
 
+   cPrefix := hb_asciiUpper( cPrefix )
+
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF hb_LeftIs( cName, hb_asciiUpper( cPrefix ) )
+      IF hb_LeftIs( cName, cPrefix )
          AAdd( aList, cName )
       ENDIF
    NEXT

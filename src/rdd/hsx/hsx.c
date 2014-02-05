@@ -2016,11 +2016,14 @@ HB_FUNC( HS_VERIFY )
 /* hs_Version() -> <cVersion> */
 HB_FUNC( HS_VERSION )
 {
-   static const char szVer[] = "HiPer-SEEK / FTS library emulation";
-   char * pszHBVersion, * pszVersion;
+   static const char sc_szVer[] = "HiPer-SEEK / FTS library emulation";
 
-   pszHBVersion = hb_verHarbour();
-   pszVersion = hb_xstrcat( NULL, szVer, ": ", pszHBVersion );
-   hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
+   char * pszHBVersion = hb_verHarbour();
+   HB_SIZE nLen = strlen( sc_szVer ) + 2 + strlen( pszHBVersion );
+   char * pszVersion = ( char * ) hb_xgrab( nLen + 1 );
+
+   hb_snprintf( pszVersion, nLen + 1, "%s: %s", sc_szVer, pszHBVersion );
+   hb_retclen_buffer( pszVersion, nLen );
+
    hb_xfree( pszHBVersion );
 }
