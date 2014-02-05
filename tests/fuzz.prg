@@ -2,12 +2,14 @@
 
 /* Call all public functions. They should not GPF. */
 
+REQUEST __HB_EXTERN__
+
 PROCEDURE Main()
 
    LOCAL cFunc
 
    FOR EACH cFunc IN FuncList()
-      OutStd( cFunc + hb_eol() )
+      OutStd( cFunc:__enumIndex(), Len( cFunc:__enumBase() ), cFunc + hb_eol() )
       BEGIN SEQUENCE WITH {| e | Break( e ) }
          Do( cFunc )
       END SEQUENCE
@@ -24,14 +26,21 @@ STATIC FUNCTION FuncList()
    LOCAL tmp
 
    LOCAL aExclude := { ;
-      "__ERRINHANDLER", ;
-      "ERRINHANDLER", ;
-      "ERRINHAN", ;
-      "__QUIT" }
+      "Main", ;
+      "__errInHandler", ;
+      "ErrorInHandler", ;
+      "ErrorInHan", ;
+      "__Quit", ;
+      "_WSTACK", "CTWINIT", "CTWLASTKEY", ;
+      "hb_trace", ;
+      "MemoEdit", ;
+      "__Accept", ;
+      "__Input", ;
+      "__Wait" }
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF hb_IsFunction( cName ) .AND. AScan( aExclude, {| tmp | tmp == cName } ) == 0
+      IF hb_IsFunction( cName ) .AND. AScan( aExclude, {| tmp | hb_LeftIsI( tmp, cName ) } ) == 0
          AAdd( aList, cName )
       ENDIF
    NEXT

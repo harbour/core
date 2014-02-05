@@ -640,7 +640,7 @@ HB_FUNC( HB_SOCKETRESOLVEADDR )
    if( szAddr )
       hb_retc_buffer( szAddr );
    else
-      hb_retc( "" );
+      hb_retc_null();
 }
 
 HB_FUNC( HB_SOCKETGETHOSTNAME )
@@ -665,26 +665,36 @@ HB_FUNC( HB_SOCKETGETHOSTS )
 {
    PHB_ITEM pItem;
 
-   socket_init();
-   pItem = hb_socketGetHosts( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
-   if( pItem )
-      hb_itemReturnRelease( pItem );
+   if( HB_ISCHAR( 1 ) )
+   {
+      socket_init();
+      pItem = hb_socketGetHosts( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      if( pItem )
+         hb_itemReturnRelease( pItem );
+      else
+         hb_reta( 0 );
+   }
    else
-      hb_reta( 0 );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if 0
 /* This function is not implemented at C level, yet [Mindaugas] */
 HB_FUNC( HB_SOCKETGETALIASES )
 {
-   PHB_ITEM pItem;
+   if( HB_ISCHAR( 1 ) )
+   {
+      PHB_ITEM pItem;
 
-   socket_init();
-   pItem = hb_socketGetAliases( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
-   if( pItem )
-      hb_itemReturnRelease( pItem );
+      socket_init();
+      pItem = hb_socketGetAliases( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
+      if( pItem )
+         hb_itemReturnRelease( pItem );
+      else
+         hb_reta( 0 );
+   }
    else
-      hb_reta( 0 );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 #endif
 
