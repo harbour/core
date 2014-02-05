@@ -1735,6 +1735,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
+   if( uiClass == 0 )
+      return;
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
@@ -1862,6 +1864,8 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
+   if( uiClass == 0 )
+      return;
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
