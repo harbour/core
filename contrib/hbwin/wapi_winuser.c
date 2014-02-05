@@ -268,14 +268,22 @@ HB_FUNC( WAPI_GETSCROLLINFO )
    LPSCROLLINFO si = ( LPSCROLLINFO ) hbwapi_par_raw_STRUCT( 3 );
    BOOL         bSuccess;
 
-   bSuccess = GetScrollInfo( hbwapi_par_raw_HWND( 1 ),
-                             hbwapi_par_INT( 2 ),
-                             si );
+   if( si )
+   {
+      bSuccess = GetScrollInfo( hbwapi_par_raw_HWND( 1 ),
+                                hbwapi_par_INT( 2 ),
+                                si );
 
-   hbwapi_SetLastError( GetLastError() );
+      hbwapi_SetLastError( GetLastError() );
 
-   if( bSuccess )
-      hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
+      if( bSuccess )
+         hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
+   }
+   else
+   {
+      bSuccess = HB_FALSE;
+      hb_storc( "", 3 );
+   }
 
    hbwapi_ret_L( bSuccess );
 }
