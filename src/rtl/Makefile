@@ -154,6 +154,7 @@ C_SOURCES := \
    replic.c \
    right.c \
    round.c \
+   rtlshort.c \
    run.c \
    samples.c \
    saverest.c \

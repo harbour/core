@@ -36,6 +36,11 @@ PROCEDURE Main( ... )
    LOCAL cDynVersionComp
    LOCAL cDynVersionless
 
+   IF HB_ISSTRING( hb_PValue( 1 ) ) .AND. Lower( hb_PValue( 1 ) ) == "-rehbx"
+      mk_extern_core_manual( hb_PValue( 2 ), hb_PValue( 3 ) )
+      RETURN
+   ENDIF
+
    IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
       Empty( GetEnvC( "HB_HOST_BIN_DIR" ) )
@@ -497,6 +502,16 @@ STATIC FUNCTION unix_name()
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
 
+STATIC PROCEDURE mk_extern_core_manual( cDynLib, cHarbourHBX )
+
+   LOCAL aExtern
+
+   IF ( aExtern := __hb_extern_get_list( hb_DirSepToOS( cDynLib ) ) ) != NIL
+      __hb_extern_gen( aExtern, hb_DirSepToOS( hb_defaultValue( cHarbourHBX, "../include/harbour.hbx" ) ) )
+   ENDIF
+
+   RETURN
+
 STATIC FUNCTION mk_extern_core()
 
    LOCAL aExtern
@@ -647,6 +662,17 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                tmp := hb_cdpSelect( "EN" )
                ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
                hb_cdpSelect( tmp )
+
+               /* Filter out Cl*pper short names (not foolproof method,
+                  but works correctly for all practical cases). */
+               FOR tmp := Len( aExtern ) TO 2 STEP -1
+                  IF Len( aExtern[ tmp ] ) > 10 .AND. ;
+                     Len( aExtern[ tmp - 1 ] ) == 10 .AND. ;
+                     ! hb_LeftIsI( aExtern[ tmp - 1 ], "hb_" ) .AND. ;
+                     hb_LeftIsI( aExtern[ tmp ], aExtern[ tmp - 1 ] )
+                     hb_ADel( aExtern, --tmp, .T. )
+                  ENDIF
+               NEXT
             ENDIF
          ENDIF
          IF ! Empty( cTempFile )

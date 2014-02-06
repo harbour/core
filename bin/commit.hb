@@ -248,8 +248,7 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
    nEnd := 0
 
-   cHit := hb_AtX( cLogHeaderExp, cLog )
-   IF Empty( cHit )
+   IF Empty( cHit := hb_AtX( cLogHeaderExp, cLog ) )
       cHit := ""
    ENDIF
 

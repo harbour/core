@@ -433,8 +433,9 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       cOptions += " -jobs=8"
    ENDIF
 
-   lInstall := nAction == _ACT_INC_INST .OR. ;
-               nAction == _ACT_INC_REBUILD_INST
+   lInstall := ;
+      nAction == _ACT_INC_INST .OR. ;
+      nAction == _ACT_INC_REBUILD_INST
 
    hb_SetEnv( iif( lStdAlone, "_HB_BUILD_INSTALL_STDALONE", "_HB_BUILD_INSTALL" ), iif( lInstall, "yes", NIL ) )
 
@@ -592,8 +593,7 @@ STATIC FUNCTION mk_hbd( cDir )
 
    IF ! Empty( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
 
-      cName := DirGetName( cDir )
-      IF Empty( cName )
+      IF Empty( cName := DirGetName( cDir ) )
          cName := "harbour"
       ENDIF
 
