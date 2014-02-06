@@ -2874,7 +2874,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
       DBENTRYP_V * pFunction;
       const DBENTRYP_V * pUsrFunction, * pRddFunction;
 
-      * puiCount = RDDFUNCSCOUNT;
+      *puiCount = RDDFUNCSCOUNT;
       uiSize = ( HB_USHORT ) hb_arrayLen( pMethods );
 
       pUsrFunction = usrFuncTable.funcentries;
@@ -2883,11 +2883,11 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
 
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
-         * pFunction = * pRddFunction;
+         *pFunction = *pRddFunction;
          if( * pFunction == NULL && * pUsrFunction && uiCount <= uiSize &&
              hb_usrIsMethod( pMethods, uiCount ) )
          {
-            * pFunction = * pUsrFunction;
+            *pFunction = *pUsrFunction;
          }
          ++pUsrFunction;
          ++pRddFunction;

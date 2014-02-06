@@ -105,7 +105,7 @@ HB_FUNC( HB_NTOCOLOR )
 
       colors[ 0 ] = hb_parni( 1 );
 
-      hb_gtColorsToString( colors, 1, szColorString, 10 );
+      hb_gtColorsToString( colors, HB_SIZEOFARRAY( colors ), szColorString, sizeof( szColorString ) );
 
       hb_retc( szColorString );
    }
