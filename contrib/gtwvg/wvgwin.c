@@ -574,10 +574,12 @@ HB_FUNC( WVG_CHOOSECOLOR )
    COLORREF    crCustClr[ 16 ];
    int         i;
 
+   memset( &cc, 0, sizeof( cc ) );
+
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
       crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
 
-   cc.lStructSize  = sizeof( CHOOSECOLOR );
+   cc.lStructSize  = sizeof( cc );
    cc.hwndOwner    = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
    cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
    cc.lpCustColors = crCustClr;
@@ -709,8 +711,8 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
    BOOL lSuccess;
    MENUITEMINFO lpmii;
 
-   memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
-   lpmii.cbSize = sizeof( MENUITEMINFO );
+   memset( &lpmii, 0, sizeof( lpmii ) );
+   lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
    lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
@@ -725,7 +727,9 @@ HB_FUNC( WVG_ISMENUITEMENABLED )
    BOOL lSuccess;
    MENUITEMINFO lpmii;
 
-   lpmii.cbSize = sizeof( MENUITEMINFO );
+   memset( &lpmii, 0, sizeof( lpmii ) );
+
+   lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = MIIM_STATE;
 
    lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
@@ -741,8 +745,8 @@ HB_FUNC( WVG_SETMENUITEM )
    MENUITEMINFO lpmii;
    void *       hText = NULL;
 
-   memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
-   lpmii.cbSize = sizeof( MENUITEMINFO );
+   memset( &lpmii, 0, sizeof( lpmii ) );
+   lpmii.cbSize = sizeof( lpmii );
    lpmii.fMask  = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
    if( hb_parl( 5 ) )
       lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
@@ -1215,7 +1219,9 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          PHB_ITEM    info = hb_itemArrayNew( 2 );
          COLORSCHEME colorScheme;
 
-         colorScheme.dwSize = sizeof( COLORSCHEME );
+         memset( &colorScheme, 0, sizeof( colorScheme ) );
+
+         colorScheme.dwSize = sizeof( colorScheme );
          SendMessage( hTB, TB_GETCOLORSCHEME, ( WPARAM ) 0, ( LPARAM ) &colorScheme );
 
          hb_arraySetNInt( info, 1, colorScheme.clrBtnHighlight );
@@ -1288,8 +1294,8 @@ HB_FUNC( WVG_SENDCBMESSAGE )
          PHB_ITEM     pRc1 = hb_itemNew( NULL );
          PHB_ITEM     pRc2 = hb_itemNew( NULL );
 
-         memset( &cbi, 0, sizeof( COMBOBOXINFO ) );
-         cbi.cbSize = sizeof( COMBOBOXINFO );
+         memset( &cbi, 0, sizeof( cbi ) );
+         cbi.cbSize = sizeof( cbi );
 
          if( GetComboBoxInfo( hCB, &cbi ) )
          {

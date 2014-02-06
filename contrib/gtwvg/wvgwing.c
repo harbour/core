@@ -859,7 +859,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    if( hb_parl( 6 ) )
       Flags = Flags | CF_PRINTERFONTS;
 
-   cf.lStructSize = sizeof( CHOOSEFONT );
+   cf.lStructSize = sizeof( cf );
    cf.hwndOwner   = hWnd;
    cf.hDC         = ( HDC ) NULL;           /* only when ::oPrinterPS is defined */
    cf.lpLogFont   = &lf;
@@ -1060,7 +1060,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    WNDCLASS wndclass;
    void *   hClass;
 
-   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
    wndclass.hInstance     = ( HINSTANCE ) wvg_hInstance();
@@ -1097,7 +1097,7 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 #if ! defined( HB_OS_WIN_CE )
    TRACKMOUSEEVENT tmi;
 
-   tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
+   tmi.cbSize      = sizeof( tmi );
    tmi.dwFlags     = TME_LEAVE | TME_HOVER;
    tmi.hwndTrack   = hbwapi_par_raw_HWND( 1 );
    tmi.dwHoverTime = 1;

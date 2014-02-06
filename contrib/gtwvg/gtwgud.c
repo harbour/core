@@ -515,7 +515,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          if( ! pWVT->bTracking )
          {
             TRACKMOUSEEVENT tmi;
-            tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
+            tmi.cbSize      = sizeof( tmi );
             tmi.dwFlags     = TME_LEAVE | TME_HOVER;
             tmi.hwndTrack   = pWVT->hWnd;
             tmi.dwHoverTime = 1;
@@ -960,7 +960,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             if( lParam == WM_RBUTTONUP )
             {
                NOTIFYICONDATA tnid;
-               tnid.cbSize           = sizeof( NOTIFYICONDATA );
+               tnid.cbSize           = sizeof( tnid );
                tnid.hWnd             = hWnd;
                tnid.uID              = HB_ID_NOTIFYICON;
                tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
@@ -1813,7 +1813,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                           MAKEINTRESOURCE( ( HB_MAXINT )
                                                       hb_arrayGetNInt( pInfo->pNewVal2, 3 ) ) );
                   }
-                  tnid.cbSize           = sizeof( NOTIFYICONDATA );
+                  tnid.cbSize           = sizeof( tnid );
                   tnid.hWnd             = pWVT->hWnd;
                   tnid.uID              = HB_ID_NOTIFYICON;
                   tnid.uFlags           = NIF_MESSAGE | NIF_ICON | NIF_TIP;
