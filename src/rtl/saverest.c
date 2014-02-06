@@ -111,15 +111,27 @@ HB_FUNC( RESTSCREEN )
    if( HB_ISCHAR( 5 ) )
    {
       int iTop, iLeft, iBottom, iRight;
-      HB_SIZE nSize;
+      HB_SIZE nSize, nLen;
+      void * pBuffer = NULL;
+      const char * pBufStr = hb_parc( 5 );
       HB_BOOL fNoCheck = HB_FALSE;
 
       hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
       hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
+      nLen = hb_parclen( 5 );
       hb_gtRectSize( iTop, iLeft, iBottom, iRight, &nSize );
+      if( nLen < nSize )
+      {
+         pBuffer = hb_xgrab( nSize );
+         memcpy( pBuffer, pBufStr, nLen );
+         memset( pBuffer + nLen, 0, nSize - nLen );
+         pBufStr = pBuffer;
+      }
 
-      if( hb_parclen( 5 ) >= nSize )
-         hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
+      hb_gtRest( iTop, iLeft, iBottom, iRight, pBufStr );
+
+      if( pBuffer )
+         hb_xfree( pBuffer );
    }
 }
