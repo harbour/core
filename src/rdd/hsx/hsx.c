@@ -2019,11 +2019,8 @@ HB_FUNC( HS_VERSION )
    static const char sc_szVer[] = "HiPer-SEEK / FTS library emulation";
 
    char * pszHBVersion = hb_verHarbour();
-   HB_SIZE nLen = strlen( sc_szVer ) + 2 + strlen( pszHBVersion );
-   char * pszVersion = ( char * ) hb_xgrab( nLen + 1 );
+   char * pszVersion = hb_xstrcpy( NULL, sc_szVer, ": ", pszHBVersion, NULL );
 
-   hb_snprintf( pszVersion, nLen + 1, "%s: %s", sc_szVer, pszHBVersion );
-   hb_retclen_buffer( pszVersion, nLen );
-
+   hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
    hb_xfree( pszHBVersion );
 }
