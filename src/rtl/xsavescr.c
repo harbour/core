@@ -67,6 +67,8 @@ typedef struct
 {
    int    row;
    int    col;
+   int    maxrow;
+   int    maxcol;
    void * buffer;
 } HB_SCRDATA, * PHB_SCRDATA;
 
@@ -86,11 +88,13 @@ HB_FUNC( __XSAVESCREEN )
    HB_SIZE nSize;
 
    hb_gtGetPos( &pScrData->row, &pScrData->col );
-   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
+   pScrData->maxrow = hb_gtMaxRow();
+   pScrData->maxcol = hb_gtMaxCol();
+   hb_gtRectSize( 0, 0, pScrData->maxrow, pScrData->maxcol, &nSize );
    if( pScrData->buffer )
       hb_xfree( pScrData->buffer );
    pScrData->buffer = hb_xgrab( nSize );
-   hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
+   hb_gtSave( 0, 0, pScrData->maxrow, pScrData->maxcol, pScrData->buffer );
 }
 
 /* NOTE: There's no check about the screen size on restore, so this will
@@ -100,11 +104,11 @@ HB_FUNC( __XSAVESCREEN )
 
 HB_FUNC( __XRESTSCREEN )
 {
-   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
+   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackTestTSD( &s_scrData );
 
-   if( pScrData->buffer )
+   if( pScrData && pScrData->buffer )
    {
-      hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
+      hb_gtRest( 0, 0, pScrData->maxrow, pScrData->maxcol, pScrData->buffer );
       hb_xfree( pScrData->buffer );
       pScrData->buffer = NULL;
 
