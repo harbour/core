@@ -63,13 +63,13 @@ HB_FUNC( STRTOKEN )
 {
    const char * szText;
    HB_ISIZ      nIndex     = hb_parns( 2 );
-   char         cDelimiter = *hb_parc( 3 );
+   char         cDelimiter = *hb_parcx( 3 );
    HB_ISIZ      nLen;
 
    if( ! cDelimiter )
       cDelimiter = ' ';
 
-   szText = hb_strtoken( hb_parc( 1 ), hb_parclen( 1 ), nIndex, cDelimiter, &nLen );
+   szText = hb_strtoken( hb_parcx( 1 ), hb_parclen( 1 ), nIndex, cDelimiter, &nLen );
 
    hb_storns( nLen, 4 );
    hb_retclen( szText, nLen );

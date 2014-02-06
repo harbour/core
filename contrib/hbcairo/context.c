@@ -409,7 +409,8 @@ HB_FUNC( CAIRO_SET_SOURCE_SURFACE )
    cairo_t * pCairo = hb_cairo_param( 1 );
    cairo_surface_t * pSurface = hb_cairo_surface_param( 2 );
 
-   cairo_set_source_surface( pCairo, pSurface, hb_parnd( 3 ), hb_parnd( 4 ) );
+   if( pCairo )
+      cairo_set_source_surface( pCairo, pSurface, hb_parnd( 3 ), hb_parnd( 4 ) );
 }
 
 

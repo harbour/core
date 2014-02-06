@@ -157,6 +157,11 @@ static void s_ft_text_init( void * cargo )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) cargo;
 
+   int tmp;
+
+   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( ft_text->handles ); ++tmp )
+      ft_text->handles[ tmp ] = FS_ERROR;
+
    ft_text->area = 0;
 }
 
@@ -202,13 +207,13 @@ HB_FUNC( FT_FUSE )
    }
    else
    {
-      if( ft_text->handles[ ft_text->area ] != 0 )
+      if( ft_text->handles[ ft_text->area ] != FS_ERROR )
       {
          hb_fsClose( ft_text->handles[ ft_text->area ] );
          hb_retnint( 0 );
          ft_text->recno[ ft_text->area ]    = 0L;
          ft_text->offset[ ft_text->area ]   = 0L;
-         ft_text->handles[ ft_text->area ]  = 0;
+         ft_text->handles[ ft_text->area ]  = FS_ERROR;
          ft_text->last_rec[ ft_text->area ] = 0L;
          ft_text->last_off[ ft_text->area ] = 0L;
          ft_text->lastbyte[ ft_text->area ] = 0L;
@@ -234,7 +239,7 @@ HB_FUNC( FT_FSELECT )
          {
             for(; newArea < TEXT_WORKAREAS - 1; newArea++ )
             {
-               if( ft_text->handles[ newArea ] == 0 )
+               if( ft_text->handles[ newArea ] == FS_ERROR )
                {
                   ft_text->area = newArea;
                   break;

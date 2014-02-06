@@ -278,13 +278,18 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 /* irmExecute( aFilterTree ) --> pMap */
 HB_FUNC( IRMEXECUTE )
 {
-   PHB_IRMMAP pMap = hb_irmExecute( hb_param( 1, HB_IT_ANY ) );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( pMap )
+   if( pItem )
    {
-      PHB_IRMMAP * ppMap = ( PHB_IRMMAP * ) hb_gcAllocate( sizeof( PHB_IRMMAP ), &s_irmMapFuncs );
-      *ppMap = pMap;
-      hb_retptrGC( ppMap );
+      PHB_IRMMAP pMap = hb_irmExecute( pItem );
+
+      if( pMap )
+      {
+         PHB_IRMMAP * ppMap = ( PHB_IRMMAP * ) hb_gcAllocate( sizeof( PHB_IRMMAP ), &s_irmMapFuncs );
+         *ppMap = pMap;
+         hb_retptrGC( ppMap );
+      }
    }
 }
 

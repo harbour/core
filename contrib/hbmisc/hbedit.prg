@@ -296,7 +296,8 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL lSaveAllowed, lSaved := .F.
 
-   oBox := SaveBox( oEdit[ E_TOP ], oEdit[ E_LEFT ], ;
+   oBox := SaveBox( ;
+      oEdit[ E_TOP ], oEdit[ E_LEFT ], ;
       oEdit[ E_BOTTOM ], oEdit[ E_RIGHT ], ;
       oEdit[ E_COLOR ], oEdit[ E_FRAME ] )
 
@@ -487,20 +488,17 @@ STATIC FUNCTION EditorSave( oEdit )
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 
-   LOCAL cBox, cClr, nBottom, nRight
+   LOCAL cBox := SaveScreen( top, left, bott, right )
+   LOCAL cClr
 
    IF PCount() > 4
-      cClr    := SetColor( color )
-      cBox    := SaveScreen( top, left, bott, right )
+      cClr := SetColor( color )
       hb_DispBox( top, left, bott, right, patt )
    ELSE
-      cClr    := SetColor()
-      cBox    := SaveScreen( top, left, bott, right )
-      nBottom := bott
-      nRight  := right
+      cClr := SetColor()
    ENDIF
 
-   RETURN { top, left, nBottom, nRight, cBox, cClr }
+   RETURN { top, left, bott, right, cBox, cClr }
 
 PROCEDURE RestBox( oBox )
 

@@ -70,6 +70,11 @@ static void s_fttext_init_init( void * cargo )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) cargo;
 
+   int tmp;
+
+   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( ft_text->handles ); ++tmp )
+      ft_text->handles[ tmp ] = FS_ERROR;
+
    ft_text->area = 0;
 }
 
@@ -94,7 +99,7 @@ HB_FUNC( HB_FUSE )
       hb_retnint( 1 );
       ft_text->recno[ ft_text->area ]    = 0;
       ft_text->offset[ ft_text->area ]   = 0;
-      ft_text->handles[ ft_text->area ]  = 0;
+      ft_text->handles[ ft_text->area ]  = FS_ERROR;
       ft_text->last_rec[ ft_text->area ] = 0;
       ft_text->last_off[ ft_text->area ] = 0;
       ft_text->lastbyte[ ft_text->area ] = 0;
