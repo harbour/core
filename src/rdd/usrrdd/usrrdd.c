@@ -3078,7 +3078,15 @@ static HB_ERRCODE hb_usrErrorRT( AREAP pArea, HB_ERRCODE errGenCode, HB_ERRCODE 
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( errGenCode ) );
-      iRet = SELF_ERROR( pArea, pError );
+      if( pArea )
+         iRet = SELF_ERROR( pArea, pError );
+      else
+      {
+         hb_errPutSeverity( pError, ES_ERROR );
+         hb_errPutSubSystem( pError, "???DRIVER" );
+         hb_errPutOperation( pError, HB_ERR_FUNCNAME );
+         iRet = hb_errLaunch( pError );
+      }
       hb_errRelease( pError );
    }
    return iRet;

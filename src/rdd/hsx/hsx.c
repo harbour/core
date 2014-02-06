@@ -2020,7 +2020,7 @@ HB_FUNC( HS_VERSION )
    char * pszHBVersion, * pszVersion;
 
    pszHBVersion = hb_verHarbour();
-   pszVersion = hb_xstrcat( NULL, szVer, ": ", pszHBVersion );
+   pszVersion = hb_xstrcpy( NULL, szVer, ": ", pszHBVersion, NULL );
    hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
    hb_xfree( pszHBVersion );
 }
