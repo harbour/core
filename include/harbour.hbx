@@ -1271,7 +1271,7 @@ DYNAMIC __dbArrange
 DYNAMIC __dbClearIndex
 DYNAMIC __dbClearRelation
 DYNAMIC __dbClose
-DYNAMIC __dbClosearea
+DYNAMIC __dbCloseArea
 DYNAMIC __dbCommitAll
 DYNAMIC __dbContinue
 DYNAMIC __dbCopy
