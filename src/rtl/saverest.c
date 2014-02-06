@@ -111,11 +111,15 @@ HB_FUNC( RESTSCREEN )
    if( HB_ISCHAR( 5 ) )
    {
       int iTop, iLeft, iBottom, iRight;
+      HB_SIZE nSize;
       HB_BOOL fNoCheck = HB_FALSE;
 
       hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
       hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-      hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
+      hb_gtRectSize( iTop, iLeft, iBottom, iRight, &nSize );
+
+      if( hb_parclen( 5 ) >= nSize )
+         hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
    }
 }
