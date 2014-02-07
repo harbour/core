@@ -67,7 +67,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
       endif
    endif
    ifeq ($(HB_COMPILER),mingw)
-      CFLAGS += -march=i586 -mtune=pentiumpro
+      CFLAGS += -march=i586 -mtune=generic
    endif
 endif
 

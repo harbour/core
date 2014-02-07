@@ -25,7 +25,7 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
-   CFLAGS += -fomit-frame-pointer -march=i586 -mtune=pentiumpro
+   CFLAGS += -fomit-frame-pointer -march=i586 -mtune=generic
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)

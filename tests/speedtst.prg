@@ -30,6 +30,8 @@
          #endif
       #endif
    #endif
+#else
+   #pragma -w1
 #endif
 
 
