@@ -4301,7 +4301,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
             IF hbmk[ _HBMK_cPLAT ] == "cygwin"
-               cOpt_CompC += " -march=i586 -mtune=generic"
+               cOpt_CompC += " -march=i686 -mtune=generic"
                IF ! hbmk[ _HBMK_lDEBUG ]
                   cOpt_CompC += " -fomit-frame-pointer"
                ENDIF
@@ -4620,7 +4620,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
             IF HBMK_ISCOMP( "gcc|mingw" )
-               cOpt_CompC += " -march=i586 -mtune=generic"
+               cOpt_CompC += " -march=i686 -mtune=generic"
             ENDIF
             IF ! hbmk[ _HBMK_lDEBUG ] .AND. !( hbmk[ _HBMK_cCOMP ] == "mingw64" )
                cOpt_CompC += " -fomit-frame-pointer"
