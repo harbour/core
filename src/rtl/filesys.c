@@ -1517,7 +1517,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
       fResult = hFile != FS_ERROR;
       if( fResult )
       {
-         FILETIME ft, local_ft;
+         FILETIME local_ft;
          SYSTEMTIME st;
 
          if( lJulian <= 0 || lMillisec < 0 )
@@ -1541,13 +1541,14 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 
          if( SystemTimeToFileTime( &st, &local_ft ) )
          {
+            FILETIME ft;
             LocalFileTimeToFileTime( &local_ft, &ft );
             fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
-            hb_fsSetIOError( fResult, 0 );
          }
          else
             fResult = HB_FALSE;
 
+         hb_fsSetIOError( fResult, 0 );
          hb_fsClose( hFile );
       }
    }
