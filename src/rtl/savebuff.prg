@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * SaveScreen() buffer help functions
+ * SaveScreen() buffer helper functions
  *
  * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org

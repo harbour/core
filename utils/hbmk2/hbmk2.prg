@@ -8659,32 +8659,32 @@ STATIC FUNCTION hbmk_MemoRead( cFileName )
 #ifdef HARBOUR_SUPPORT
 STATIC FUNCTION hbmk_hb_compile( hbmk, ... )
 
-   LOCAL cSaveCP
+   LOCAL cOldCP
    LOCAL xRetVal
 
    IF Empty( hbmk[ _HBMK_cCPPRG ] )
       RETURN hb_compile( ... )
    ELSE
-      cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      cOldCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
       /* We can use this function as this is a GPL licenced application */
       xRetVal := hb_compile( ... )
-      hb_cdpSelect( cSaveCP )
+      hb_cdpSelect( cOldCP )
    ENDIF
 
    RETURN xRetVal
 
 STATIC FUNCTION hbmk_hb_compileBuf( hbmk, ... )
 
-   LOCAL cSaveCP
+   LOCAL cOldCP
    LOCAL xRetVal
 
    IF Empty( hbmk[ _HBMK_cCPPRG ] )
       RETURN hb_compileBuf( ... )
    ELSE
-      cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      cOldCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
       /* We can use this function as this is a GPL licenced application */
       xRetVal := hb_compileBuf( ... )
-      hb_cdpSelect( cSaveCP )
+      hb_cdpSelect( cOldCP )
    ENDIF
 
    RETURN xRetVal

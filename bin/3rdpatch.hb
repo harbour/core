@@ -376,10 +376,10 @@ PROCEDURE Main( ... )
              * constructed, in this case the last backref will contain the only
              * file name, so shuffle arguments around accordingly
              */
-            AAdd( s_aChangeMap, {                                                         ;
-               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                                  ;
-               aRegexMatch[ TWOARG_ARG2 ],                                                ;
-               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]                   ;
+            AAdd( s_aChangeMap, { ;
+               iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ), ;
+               aRegexMatch[ TWOARG_ARG2 ], ;
+               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ] ;
                } )
             /* If this is the first MAP entry, treat the original part as the
              * source tree root indicator */
@@ -494,9 +494,9 @@ PROCEDURE Main( ... )
    IF cDiffFile != NIL
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
-         cCommand := hb_StrFormat( "%1$s --no-backup-if-mismatch -d %2$s -p 1 -i %3$s",   ;
-            s_aTools[ "patch" ],                                                          ;
-            CombinePath( s_cTempDir, cThisComponent ),                                    ;
+         cCommand := hb_StrFormat( "%1$s --no-backup-if-mismatch -d %2$s -p 1 -i %3$s", ;
+            s_aTools[ "patch" ], ;
+            CombinePath( s_cTempDir, cThisComponent ), ;
             CombinePath( cCWD, cDiffFile ) )
          TRACE( "Running " + cCommand )
          nRunResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
@@ -661,35 +661,35 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    /* Any given package is surely available in at least one of these formats,
     * pick one of these, refrain from the more exotic ones. */
 
-   LOCAL aActionMap := {                                                                  ;
-      ".tar.gz|.tgz" => {                                                                 ;
-         "Extractor"          => "gzip",                                                  ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".tar.bz2|.tbz|.tbz2" => {                                                          ;
-         "Extractor"          => "bzip2",                                                 ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".tar.xz|.txz" => {                                                                 ;
-         "Extractor"          => "xz",                                                    ;
-         "ExtractorArgs"      => "-d",                                                    ;
-         "ExtractedFile"      => ".tar",                                                  ;
-         "Archiver"           => "tar",                                                   ;
-         "ArchiverArgs"       => "--force-local -xvf"                                     ;
-      },                                                                                  ;
-      ".zip" => {                                                                         ;
-         "Extractor"          => NIL,                                                     ;
-         "ExtractorArgs"      => NIL,                                                     ;
-         "ExtractedFile"      => NIL,                                                     ;
-         "Archiver"           => "unzip",                                                 ;
-         "ArchiverArgs"       => ""                                                       ;
-      }                                                                                   ;
+   LOCAL aActionMap := { ;
+      ".tar.gz|.tgz" => { ;
+         "Extractor"          => "gzip", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".tar.bz2|.tbz|.tbz2" => { ;
+         "Extractor"          => "bzip2", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".tar.xz|.txz" => { ;
+         "Extractor"          => "xz", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
+      ".zip" => { ;
+         "Extractor"          => NIL, ;
+         "ExtractorArgs"      => NIL, ;
+         "ExtractedFile"      => NIL, ;
+         "Archiver"           => "unzip", ;
+         "ArchiverArgs"       => "" ;
+      } ;
    }
 
    IF Empty( cArchiveURL )
@@ -821,7 +821,7 @@ STATIC FUNCTION URL_GetFileName( cURL )
 
    DO WHILE !( "." $ cName )
       cName := aComponents[ --nIdx ]
-      IF nIdx < 4 /* don't drain all components */
+      IF nIdx < 4  /* don't drain all components */
          RETURN ""
       ENDIF
    ENDDO
@@ -852,13 +852,13 @@ STATIC FUNCTION hb_FileTran( cFileName )
       cChangeTo := aChange[ 2 ]
 
       /* Local-style includes */
-      cTransformedContent := StrTran( cTransformedContent,                                ;
-         '"' + cChangeFrom + '"',                                                         ;
+      cTransformedContent := StrTran( cTransformedContent, ;
+         '"' + cChangeFrom + '"', ;
          '"' + cChangeTo + '"' )
 
       /* System-style include */
-      cTransformedContent := StrTran( cTransformedContent,                                ;
-         "<" + cChangeFrom + ">",                                                         ;
+      cTransformedContent := StrTran( cTransformedContent, ;
+         "<" + cChangeFrom + ">", ;
          "<" + cChangeTo + ">" )
 
    NEXT

@@ -243,7 +243,7 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
    LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*" + hb_eol()
 
-   LOCAL cOldLang := hb_cdpSelect( "EN" )
+   LOCAL cOldCP := hb_cdpSelect( "EN" )
    LOCAL cHit
 
    nEnd := 0
@@ -267,7 +267,7 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
       cLog := ""
    ENDIF
 
-   hb_cdpSelect( cOldLang )
+   hb_cdpSelect( cOldCP )
 
    RETURN cLog
 
@@ -406,7 +406,7 @@ STATIC FUNCTION GitEditor()
       cValue := hb_StrShrink( SubStr( cValue, 2 ) )
    ENDIF
 
-   IF Lower( cValue ) == "notepad.exe" /* banned, use notepad2.exe or else */
+   IF Lower( cValue ) == "notepad.exe"  /* banned, use notepad2.exe or else */
       cValue := ""
    ENDIF
 
@@ -1114,7 +1114,7 @@ STATIC FUNCTION StripCComments( cFile )
    RETURN cFile
 
 /* retains positions in file */
-/* same as StripCComments() but gathers the comments in a new strings */
+/* similar to StripCComments() but gathers the comments in a new string */
 STATIC FUNCTION GetCComments( cFile )
 
    LOCAL nPos := 1
@@ -1341,10 +1341,8 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    LOCAL cFile
    LOCAL cFileStripped
 
-   LOCAL aMatchList
    LOCAL match
    LOCAL cProper
-   LOCAL cOldCP
 
    LOCAL lInCommentOnly
    LOCAL nChanged := 0
@@ -1368,11 +1366,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    #define _MATCH_nStart  2
    #define _MATCH_nEnd    3
 
-   cOldCP := hb_cdpSelect( "EN" )
-   aMatchList := hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
-   hb_cdpSelect( cOldCP )
-
-   FOR EACH match IN aMatchList
+   FOR EACH match IN en_hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
       IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
          IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
@@ -1390,11 +1384,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    NEXT
 
    IF ! lInCommentOnly
-      cOldCP := hb_cdpSelect( "EN" )
-      aMatchList := hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
-      hb_cdpSelect( cOldCP )
-
-      FOR EACH match IN aMatchList
+      FOR EACH match IN en_hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
             cFile := Left( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
@@ -1410,6 +1400,15 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
    ENDIF
 
    RETURN .T.
+
+STATIC FUNCTION en_hb_regexAll( ... )
+
+   LOCAL cOldCP := hb_cdpSelect( "EN" )
+   LOCAL aMatch := hb_regexAll( ... )
+
+   hb_cdpSelect( cOldCP )
+
+   RETURN aMatch
 
 STATIC FUNCTION ProperCase( hAll, cName )
 
