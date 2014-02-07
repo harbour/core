@@ -795,7 +795,7 @@ static int hb_dynsymVerify( void )
          iResult = iCmp == 0 ? -1 : -2;
       else if( hb_dynsymPos( pDynSym->pSymbol->szName, &uiAt ) != pDynSym )
          iResult = -3;
-      else if( uiAt != uiPos )
+      else if( uiAt != ( HB_UINT ) uiPos )
          iResult = -4;
       else
          ++uiPos;
