@@ -1538,10 +1538,16 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
             st.wSecond = ( WORD ) iSecond;
             st.wMilliseconds = ( WORD ) iMSec;
          }
-         SystemTimeToFileTime( &st, &local_ft );
-         LocalFileTimeToFileTime( &local_ft, &ft );
-         fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
-         hb_fsSetIOError( fResult, 0 );
+
+         if( SystemTimeToFileTime( &st, &local_ft ) )
+         {
+            LocalFileTimeToFileTime( &local_ft, &ft );
+            fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+            hb_fsSetIOError( fResult, 0 );
+         }
+         else
+            fResult = HB_FALSE;
+
          hb_fsClose( hFile );
       }
    }

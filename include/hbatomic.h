@@ -85,12 +85,14 @@ HB_EXTERN_BEGIN
 
 
 /* Inline assembler version of atomic operations on memory reference counters */
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) || ( defined( HB_OS_WIN ) && defined( __clang__ ) )
 
 #  if defined( HB_USE_GCCATOMIC_OFF )
 #     undef HB_USE_GCCATOMIC
 #  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) ) && \
         ! defined( __MINGW32CE__ ) && ! defined( HB_USE_GCCATOMIC )
+#     define HB_USE_GCCATOMIC
+#  elif defined( HB_OS_WIN ) && defined( __clang__ )
 #     define HB_USE_GCCATOMIC
 #  endif
 

@@ -178,7 +178,7 @@ typedef struct _FPTHEADER
 {
    HB_BYTE  nextBlock[ 4 ];            /* Next free block in the file */
    HB_BYTE  blockSize[ 4 ];            /* Size of block */
-   HB_BYTE  signature1[ 10 ];          /* Signature: "SixMemo", "Harbour", "Made by CLIP"-overwrites next bytes*/
+   HB_BYTE  signature1[ 10 ];          /* Signature: "SixMemo", "Harbour", "Made by CLIP"-overwrites next bytes */
    HB_BYTE  nGCitems[ 2 ];             /* number of GC items in reserved2 (max 82)*/
    HB_BYTE  reserved2[ 492 ];          /* */
    HB_BYTE  signature2[ 12 ];          /* Signature: "FlexFile3\003" */

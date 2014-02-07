@@ -29,7 +29,9 @@ ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600),)
 endif
 # enable this only for users of MSVS 2013 and upper
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600 1700),)
-   CFLAGS += -analyze
+   ifneq ($(HB_COMPILER),clang)
+      CFLAGS += -analyze
+   endif
 endif
 
 ifeq ($(HB_BUILD_MODE),c)
