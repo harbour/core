@@ -126,7 +126,7 @@ HB_FUNC( RESTSCREEN )
          pBuffer = hb_xgrab( nSize );
          memcpy( pBuffer, pBufStr, nLen );
          memset( ( char * ) pBuffer + nLen, 0, nSize - nLen );
-         pBufStr = pBuffer;
+         pBufStr = ( const char * ) pBuffer;
       }
 
       hb_gtRest( iTop, iLeft, iBottom, iRight, pBufStr );
