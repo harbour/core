@@ -745,7 +745,7 @@ HB_FUNC( DBSEEK )
       {
          PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
          HB_BOOL bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-         HB_BOOL bFindLast = hb_parl( 3 ), fFound = HB_FALSE;
+         HB_BOOL bFindLast = hb_parl( 3 ) /* HB_EXTENSION */, fFound = HB_FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == HB_SUCCESS )
          {
             if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )

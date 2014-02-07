@@ -610,13 +610,13 @@ METHOD ExecuteReport() CLASS HBReportForm
 
          //  For subgroup processing: check if group has been changed
          IF MakeAStr( Eval( ::aReportData[ RPT_GROUPS, 1, RGT_EXP ] ), ;
-               ::aReportData[ RPT_GROUPS, 1, RGT_TYPE ] ) != ::aGroupTotals[ 1 ]
+            ::aReportData[ RPT_GROUPS, 1, RGT_TYPE ] ) != ::aGroupTotals[ 1 ]
             lGroupChanged := .T.
          ENDIF
 
          //  If this (sub)group has changed since the last record
          IF lGroupChanged .OR. MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
-               ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
+            ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
 
             AAdd( aRecordHeader, __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
@@ -678,9 +678,9 @@ METHOD ExecuteReport() CLASS HBReportForm
    // Cycle through the groups
    FOR nGroup := 1 TO Len( ::aReportData[ RPT_GROUPS ] )
       // If the group has changed
-      IF MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
-            ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) == ::aGroupTotals[ nGroup ]
-      ELSE
+      IF !( MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
+         ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) == ::aGroupTotals[ nGroup ] )
+
          AAdd( aRecordHeader, "" )   // The blank line
 
          // page eject after group
@@ -1267,7 +1267,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
 METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportForm
 
-   LOCAL nPointer, aColumn[ RCT_COUNT ], cType, cExpr
+   LOCAL nPointer, aColumn[ RCT_COUNT ], cExpr
 
    // Column width
 
@@ -1301,9 +1301,7 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
    // Column picture
    // Setup picture only if a database file is open
    IF Used()
-      cType := ValType( Eval( aColumn[ RCT_EXP ] ) )
-      aColumn[ RCT_TYPE ] := cType
-      SWITCH cType
+      SWITCH aColumn[ RCT_TYPE ] := ValType( Eval( aColumn[ RCT_EXP ] ) )
       CASE "C"
       CASE "M"
          aColumn[ RCT_PICT ] := Replicate( "X", aColumn[ RCT_WIDTH ] )
@@ -1316,7 +1314,7 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
          EXIT
       CASE "N"
          IF aColumn[ RCT_DECIMALS ] != 0
-            aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] -1 ) + "." + ;
+            aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] - 1 ) + "." + ;
                Replicate( "9", aColumn[ RCT_DECIMALS ] )
          ELSE
             aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] )
@@ -1374,36 +1372,22 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
 STATIC FUNCTION MakeAStr( uVar, cType )
 
-   LOCAL cString
-
    SWITCH Asc( cType )
    CASE Asc( "D" )
-   CASE Asc( "d" )
-      cString := DToC( uVar )
-      EXIT
+   CASE Asc( "d" ) ; RETURN DToC( uVar )
    CASE Asc( "T" )
-   CASE Asc( "t" )
-      cString := hb_TToC( uVar )
-      EXIT
+   CASE Asc( "t" ) ; RETURN hb_TToC( uVar )
    CASE Asc( "L" )
-   CASE Asc( "l" )
-      cString := iif( uVar, "T", "F" )
-      EXIT
+   CASE Asc( "l" ) ; RETURN iif( uVar, "T", "F" )
    CASE Asc( "N" )
-   CASE Asc( "n" )
-      cString := Str( uVar )
-      EXIT
+   CASE Asc( "n" ) ; RETURN Str( uVar )
    CASE Asc( "C" )
    CASE Asc( "c" )
    CASE Asc( "M" )
-   CASE Asc( "m" )
-      cString := uVar
-      EXIT
-   OTHERWISE
-      cString := "INVALID EXPRESSION"
+   CASE Asc( "m" ) ; RETURN uVar
    ENDSWITCH
 
-   RETURN cString
+   RETURN "INVALID EXPRESSION"
 
 FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;

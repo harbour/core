@@ -112,7 +112,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
 
    FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i,1 ], bBlock ) )
+      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
    NEXT
    oBrowse:configure()
 

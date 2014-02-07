@@ -60,15 +60,15 @@ STATIC PROCEDURE draw( hSurface )
 
 STATIC PROCEDURE map_path_onto( hCairo, hPath )
 
-   LOCAL hCurrentPath, aLengths, hIterator, nI, aPoints
+   LOCAL hCurrentPath, aLengths, hIterator, pt, aPoints
 
    hCurrentPath := cairo_copy_path( hCairo )
    aLengths := path_lengths( hPath )
    hIterator := cairo_path_iterator_create( hCurrentPath )
    DO WHILE cairo_path_iterator_next( hIterator ) != NIL
       IF Len( aPoints := cairo_path_iterator_get_points( hIterator ) ) > 0
-         FOR nI := 1 TO Len( aPoints )
-            transform_point( @aPoints[ nI, 1 ], @aPoints[ nI, 2 ], hPath, aLengths )
+         FOR EACH pt IN aPoints
+            transform_point( @pt[ 1 ], @pt[ 2 ], hPath, aLengths )
          NEXT
          cairo_path_iterator_set_points( hIterator, aPoints )
       ENDIF

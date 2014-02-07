@@ -23,16 +23,14 @@ PROCEDURE Main( cDL, cUL )
    ? curl_version()
    ? curl_getdate( "Sun, 1 Jun 2008 02:10:58 +0200" )
 
-   info := curl_version_info()
-
-   FOR tmp := 1 TO Len( info )
-      IF tmp == 8
-         ? tmp, ""
-         FOR tmp1 := 1 TO Len( info[ 8 ] )
-            ?? info[ 8 ][ tmp1 ], ""
+   FOR EACH tmp IN curl_version_info()
+      IF tmp:__enumIndex() == 8
+         ? tmp:__enumIndex(), ""
+         FOR EACH tmp1 IN tmp
+            ?? tmp1, ""
          NEXT
       ELSE
-         ? tmp, info[ tmp ]
+         ? tmp:__enumIndex(), tmp
       ENDIF
    NEXT
 
@@ -69,8 +67,8 @@ PROCEDURE Main( cDL, cUL )
 
       info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES, @tmp )
       ? "SSL ENGINES: ", tmp, Len( info )
-      FOR tmp := 1 TO Len( info )
-         ?? info[ tmp ], ""
+      FOR EACH tmp IN info
+         ?? tmp, ""
       NEXT
 
       curl_easy_reset( curl )

@@ -43,16 +43,16 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL nLeft
    LOCAL aLeft
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
+   FOR EACH i IN aInfo[ 1 ]
 
       AAdd( aPos, {} )
 
-      DO WHILE "[" $ aInfo[ 1, i ]
-         AAdd( aPos[ i ], { ;
-            At( "[", aInfo[ 1, i ] ), ;
-            At( "]", aInfo[ 1, i ] ) - 2 } )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
+      DO WHILE "[" $ i
+         AAdd( aPos[ i:__enumIndex() ], { ;
+            At( "[", i ), ;
+            At( "]", i ) - 2 } )
+         i := StrTran( i, "[", "", 1, 1 )
+         i := StrTran( i, "]", "", 1, 1 )
       ENDDO
    NEXT
 

@@ -415,7 +415,7 @@
 
       - The second subscript value in the second dimension-which contains
         the field data type-must contain a proper value: C, D, L, M or N
-        It is possible to use additional letters (or clarity (e.g., 'Numeric'
+        It is possible to use additional letters for clarity (e.g., 'Numeric'
         for 'N'): however, the first letter of this array element must
         be a proper value.
 
@@ -608,10 +608,10 @@
       is a unique primary key while in other formats, <xRecordNumber> could
       be an array offset if the data set was an array.
 
-      Issuing a dbGoto(RecNo()) call in a network enviroment will refresh
+      Issuing a dbGoto( RecNo() ) call in a network enviroment will refresh
       the database and index buffers. This is the same as a dbSkip(0) call.
    $EXAMPLES$
-      The following example uses dbGoto() TO iteratively process
+      The following example uses dbGoto() to iteratively process
       every fourth record:
 
       dbUseArea( .T., "DBFNTX", "sales", "sales", .T. )
@@ -776,16 +776,15 @@
       work area.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL aList := {}
-         LOCAL x := 0
+         LOCAL aList, x
          USE tests NEW
          dbGoto( 10 )
          RLock()
          dbGoto( 100 )
          RLock()
          aList := dbRLockList()
-         FOR x := 1 TO Len( aList )
-            ? aList[ x ]
+         FOR EACH x IN aList
+            ? x
          NEXT
          USE
          RETURN
@@ -936,7 +935,7 @@
       select the numeric work area; if <xArea> is character, then it will
       select the work area with the alias name.
 
-      dbSelectArea(0) will select the next avaliable and unused work area.
+      dbSelectArea( 0 ) will select the next avaliable and unused work area.
       Up to 255 work areas are supported. Each work area has its own alias
       and record pointer, as well as its own Found(), dbFilter(),
       dbRSelect() and dbRelation() function values.
@@ -1018,7 +1017,7 @@
    $DESCRIPTION$
       This function moves the record pointer <nRecords> in the selected or
       aliased work area. The default value for <nRecords> will be 1.
-      A dbSkip(0) will flush and refresh the internal database bufer and
+      A dbSkip( 0 ) will flush and refresh the internal database bufer and
       make any changes made to the record visible without moving the record
       pointer in either direction.
    $EXAMPLES$
@@ -1102,7 +1101,7 @@
       pointers to other arrays, each of which contains the characteristic
       of a field in the active work area. The length of this array is based
       in the number of fields in that particular work area. In other words,
-      Len(dbStruct()) is equal to the value obtained from FCount().
+      Len( dbStruct() ) is equal to the value obtained from FCount().
       Each subscript position
    $EXAMPLES$
       #include "dbstruct.ch"
@@ -1110,8 +1109,8 @@
          LOCAL aStru, x
          USE tests NEW
          aStru := dbStruct()
-         FOR x := 1 TO Len( aStru )
-            ? aStru[ x ][ DBS_NAME ]
+         FOR EACH x IN aStru
+            ? x[ DBS_NAME ]
          NEXT
          USE
          RETURN
@@ -1219,7 +1218,7 @@
       Opens a work area and uses a database file.
    $SYNTAX$
       dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
-      [<lShared>], [<lReadonly>])
+      [<lShared>], [<lReadonly>] )
    $ARGUMENTS$
       <lNewArea>  A optional logical expression for the new work area
 

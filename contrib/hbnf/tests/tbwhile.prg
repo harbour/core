@@ -104,9 +104,9 @@ STATIC PROCEDURE make_dbf()
 
    USE tbnames
 
-   FOR x := 1 TO Len( aData )
+   FOR EACH x IN aData
       dbAppend()
-      AEval( aData[ x ], {| e, n | FieldPut( n, e ) } )
+      AEval( x, {| e, n | FieldPut( n, e ) } )
    NEXT
 
    USE

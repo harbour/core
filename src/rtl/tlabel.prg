@@ -220,7 +220,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 METHOD ExecuteLabel() CLASS HBLabelForm
 
    LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
-   LOCAL v
+   LOCAL item
 
    // Load the current record into aBuffer
 
@@ -228,10 +228,8 @@ METHOD ExecuteLabel() CLASS HBLabelForm
 
       IF ::aLabelData[ LBL_FIELDS, nField ] != NIL
 
-         v := Eval( ::aLabelData[ LBL_FIELDS, nField, LF_EXP ] )
-
          cBuffer := ;
-            PadR( v, ::aLabelData[ LBL_WIDTH ] ) + ;
+            PadR( Eval( ::aLabelData[ LBL_FIELDS, nField, LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
             Space( ::aLabelData[ LBL_SPACES ] )
 
          IF ::aLabelData[ LBL_FIELDS, nField, LF_BLANK ]
@@ -257,8 +255,8 @@ METHOD ExecuteLabel() CLASS HBLabelForm
    IF ::nCurrentCol == ::aLabelData[ LBL_ACROSS ]
 
       // trim
-      FOR nField := 1 TO Len( ::aBandToPrint )
-         ::aBandToPrint[ nField ] := RTrim( ::aBandToPrint[ nField ] )
+      FOR EACH item IN ::aBandToPrint
+         item := RTrim( item )
       NEXT
 
       ::lOneMoreBand := .F.
@@ -268,18 +266,14 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       AEval( ::aBandToPrint, {| BandLine | PrintIt( BandLine ) } )
 
       nMoreLines := ::aLabelData[ LBL_HEIGHT ] - Len( ::aBandToPrint )
-      IF nMoreLines > 0
-         FOR nField := 1 TO nMoreLines
-            PrintIt()
-         NEXT
-      ENDIF
-      IF ::aLabelData[ LBL_LINES ] > 0
+      FOR nField := 1 TO nMoreLines
+         PrintIt()
+      NEXT
 
-         // Add the spaces between the label lines
-         FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
-            PrintIt()
-         NEXT
-      ENDIF
+      // Add the spaces between the label lines
+      FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
+         PrintIt()
+      NEXT
 
       // Clear out the band
       AFill( ::aBandToPrint, Space( ::aLabelData[ LBL_LMARGIN ] ) )
@@ -308,12 +302,10 @@ METHOD SampleLabels() CLASS HBLabelForm
       // Print the samples
       AEval( aBand, {| BandLine | PrintIt( BandLine ) } )
 
-      IF ::aLabelData[ LBL_LINES ] > 0
-         // Add the spaces between the label lines
-         FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
-            PrintIt()
-         NEXT
-      ENDIF
+      // Add the spaces between the label lines
+      FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
+         PrintIt()
+      NEXT
 
       // Prompt for more
       DispOutAt( Row(), 0, __natMsg( _LF_SAMPLES ) + " (" + __natMsg( _LF_YN ) + ")" )
