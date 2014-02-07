@@ -2473,11 +2473,11 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                Here is the Test Ueed - Clipper produced NO R/T Error -
                indicating MEMVAR was created.
                  PROCEDURE Main()
-                    USE Test
+                    USE test.dbf
                     First := First
-                    CLOSE
+                    dbCloseArea()
                     ? First
-                 RETURN
+                    RETURN
              */
 #if 0
             /* Pops a value from the eval stack and uses it to set

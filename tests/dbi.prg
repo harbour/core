@@ -1,5 +1,5 @@
 #ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()
@@ -7,7 +7,7 @@ PROCEDURE Main()
    LOCAL i
    LOCAL cStr
 
-   USE test NEW
+   USE test.dbf READONLY
 
    cStr := ""
    FOR i := 1 TO 100

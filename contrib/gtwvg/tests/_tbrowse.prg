@@ -95,7 +95,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    ENDIF
    SET INDEX TO
    SET INDEX TO ( cFileIndex )
-   SET ORDER TO 1
+   ordSetFocus( 1 )
    dbGoto( 50 )
 
    info_ := dbStruct()
@@ -180,7 +180,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
          IF nIndex > 3
             nIndex := 1
          ENDIF
-         SET ORDER TO ( nIndex )
+         ordSetFocus( nIndex )
          oBrowse:RefreshAll()
          oBrowse:ForceStable()
 

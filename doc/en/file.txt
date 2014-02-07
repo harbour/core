@@ -713,7 +713,7 @@
       The file must be considered closed by the operating system before it
       may be deleted.
    $EXAMPLES$
-      ERASE C:\temp\read.txt
+      ERASE test.txt
    $STATUS$
       R
    $COMPLIANCE$
@@ -747,7 +747,7 @@
       The file must be considered closed by the operating system before it
       may be deleted.
    $EXAMPLES$
-      DELETE FILE C:\temp\read.txt
+      DELETE FILE test.txt
    $STATUS$
       R
    $COMPLIANCE$

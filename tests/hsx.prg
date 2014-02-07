@@ -20,7 +20,7 @@ PROCEDURE Main()
       rddSetDefault( "RMDBFCDX" )
    ENDIF
 
-   USE test shared
+   USE test.dbf READONLY SHARED
    hs := hs_Index( "test", "FIRST+LAST+STREET+CITY", 2, 0, , .T., 3 )
 
    /* Look for all records which have 'SHERMAN' string inside */

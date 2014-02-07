@@ -100,7 +100,7 @@ STATIC PROCEDURE xBrowse1()
    LOCAL nRight  := MaxCol() - 3
    LOCAL nCursor := SetCursor( SC_NONE )
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
       RETURN
    ENDIF

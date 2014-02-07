@@ -614,13 +614,13 @@
       Note that FieldBlock() works on the current work area, if you need
       a specific work area code block use FieldWBlock() instead.
    $EXAMPLES$
-      // open a file named Test that have a field named "name"
+      // open a file named test.dbf that have a field named "name"
       LOCAL bField
       bFiled := FieldBlock( "name" )
-      USE Test
-      ? "Original value of field 'name' :", Eval( bField )
+      USE test
+      ? "Original value of field 'name':", Eval( bField )
       Eval( bField, "Mr X new name" )
-      ? "New value for the field 'name' :", Eval( bField )
+      ? "New value for the field 'name':", Eval( bField )
    $STATUS$
       R
    $COMPLIANCE$

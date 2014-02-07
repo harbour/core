@@ -5,15 +5,16 @@
 PROCEDURE Main()
 
    LOCAL i := 0
+
    FIELD Last, First
 
-   USE test
-   INDEX ON Left( field->Last, 8 ) + Left( field->First, 8 ) TO test1
-   INDEX ON Left( field->Last, 8 ) TO test2
-   INDEX ON field->Last TO test3
-   SET INDEX TO test1, test2, test3
+   USE test.dbf READONLY
+   INDEX ON Left( field->Last, 8 ) + Left( field->First, 8 ) TO test1.ntx
+   INDEX ON Left( field->Last, 8 ) TO test2.ntx
+   INDEX ON field->Last TO test3.ntx
+   SET INDEX TO test1.ntx, test2.ntx, test3.ntx
 
-   SET ORDER TO 1
+   ordSetFocus( 1 )
    ? IndexKey()
    Inkey( 0 )
    dbGoTop()
@@ -32,7 +33,7 @@ PROCEDURE Main()
    ENDDO
 
    i := 0
-   SET ORDER TO 2
+   ordSetFocus( 2 )
    ? IndexKey()
    Inkey( 0 )
    dbGoTop()
@@ -51,7 +52,7 @@ PROCEDURE Main()
    ENDDO
 
    i := 0
-   SET ORDER TO 3
+   ordSetFocus( 3 )
    ? IndexKey()
    Inkey( 0 )
    dbGoTop()
@@ -69,7 +70,7 @@ PROCEDURE Main()
       dbSkip( -1 )
    ENDDO
 
-   USE
+   dbCloseArea()
 
    hb_dbDrop( "test1.ntx" )
    hb_dbDrop( "test2.ntx" )

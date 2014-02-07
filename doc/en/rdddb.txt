@@ -151,7 +151,6 @@
          USE test
          test->( dbAppend() )
          REPLACE test->Name WITH cName, test->Id WITH nId
-         USE
          RETURN
    $STATUS$
       R
@@ -188,7 +187,6 @@
          SET FILTER TO hb_LeftIs( test->Name, "An" )
          dbEdit()
          Test->( dbClearFilter() )
-         USE
          RETURN
    $STATUS$
       R
@@ -227,7 +225,6 @@
          USE test1 NEW
          dbEdit()
          dbCloseAll()
-         USE
          RETURN
    $STATUS$
       R
@@ -261,7 +258,6 @@
          USE test
          dbEdit()
          Test->( dbCloseArea() )
-         USE
          RETURN
    $STATUS$
       R
@@ -304,9 +300,9 @@
          //
          IF Updated()
             dbAppend()
-            REPLACE tests->Name WITH cName
-            REPLACE tests->Id WITH nId
-            tests->( dbCommit() )
+            REPLACE test->Name WITH cName
+            REPLACE test->Id   WITH nId
+            test->( dbCommit() )
          ENDIF
          RETURN
    $STATUS$
@@ -350,11 +346,11 @@
          //
          IF Updated()
             dbAppend()
-            REPLACE tests->Name WITH cName
-            REPLACE tests->Id WITH nId
+            REPLACE test->Name WITH cName
+            REPLACE test->Id WITH nId
             IF ! testid->( dbSeek( nId ) )
                dbAppend()
-               REPLACE tests->Id WITH nId
+               REPLACE test->Id WITH nId
             ENDIF
          ENDIF
          dbCommitAll()
@@ -494,7 +490,6 @@
             dbDelete()
          ENDIF
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -565,12 +560,11 @@
       condition. Otherwise, if no index is active or if no filter condition
       is present, the value of the record pointer will be LastRec().
    $EXAMPLES$
-      USE tests
+      USE test
       dbGoTop()
       ? RecNo()
       dbGoBottom()
       ? RecNo()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -652,12 +646,11 @@
       condition. Otherwise, if no index is active or if no filter condition
       is present, the value of RecNo() will be 1.
    $EXAMPLES$
-      USE tests
+      USE test
       dbGoTop()
       ? RecNo()
       dbGoBottom()
       ? RecNo()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -697,7 +690,6 @@
       ? Deleted()
       dbRecall()
       ? Deleted()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -736,13 +728,12 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL x := 0
-         USE tests NEW
+         USE test NEW
          FOR x := 1 TO RecCount()
             IF ! dbRLock()
                dbUnlock()
             ENDIF
          NEXT
-         USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -777,7 +768,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL aList, x
-         USE tests NEW
+         USE test NEW
          dbGoto( 10 )
          RLock()
          dbGoto( 100 )
@@ -786,7 +777,6 @@
          FOR EACH x IN aList
             ? x
          NEXT
-         USE
          RETURN
    $STATUS$
       R
@@ -821,13 +811,12 @@
       unlocked
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          dbGoto( 10 )
          IF RLock()
-            ? tests->ID
+            ? test->ID
             dbRUnlock()
          ENDIF
-         USE
          RETURN
    $STATUS$
       R
@@ -885,16 +874,15 @@
       <lSoftSeek> is a logical false (.F.)
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW INDEX tests
+         USE test NEW INDEX test
          dbGoto( 10 )
-         nId := tests->nId
-         IF tests->( dbSeek( nId ) )
+         nId := test->nId
+         IF test->( dbSeek( nId ) )
             IF RLock()
-               ? tests->Name
+               ? test->Name
                dbRUnlock()
             ENDIF
          ENDIF
-         USE
          RETURN
 
       ACCEPT "Employee name: " TO cName
@@ -942,13 +930,13 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL nId
-         USE tests NEW INDEX tests
-         USE tests1 NEW INDEX tests1
+         USE test NEW INDEX test
+         USE test1 NEW INDEX test1
          dbSelectArea( 1 )
-         nId := tests->Id
+         nId := test->Id
          dbSelectArea( 2 )
          IF dbSeek( nId )
-            ? tests1->cName
+            ? test1->cName
          ENDIF
          dbCloseAll()
          RETURN
@@ -1022,13 +1010,12 @@
       pointer in either direction.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          dbGoTop()
          DO WHILE ! Eof()
-            ? tests->Id, tests->Name
+            ? test->Id, test->Name
             dbSkip()
          ENDDO
-         USE
          RETURN
    $STATUS$
       R
@@ -1067,8 +1054,8 @@
       area which in fact, would be not correct.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
-         dbSetFilter( {|| tests->Id < 100 }, "tests->Id <100" )
+         USE test NEW
+         dbSetFilter( {|| test->Id < 100 }, "test->Id <100" )
          dbGoTop()
    $STATUS$
       R
@@ -1107,12 +1094,11 @@
       #include "dbstruct.ch"
       PROCEDURE Main()
          LOCAL aStru, x
-         USE tests NEW
+         USE test NEW
          aStru := dbStruct()
          FOR EACH x IN aStru
             ? x[ DBS_NAME ]
          NEXT
-         USE
          RETURN
    $STATUS$
       R
@@ -1153,7 +1139,6 @@
             dbUnlock()
          ENDIF
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -1182,8 +1167,7 @@
       This function will remove all file and record locks in all work area.
    $EXAMPLES$
       nId := 10
-      USE tests INDEX testid NEW
-      USE tests1 INDEX tests NEW
+      USE test INDEX testid NEW
       IF testid->( dbSeek( nId ) )
          IF testid->( RLock() )
             dbDelete()
@@ -1193,7 +1177,6 @@
       ELSE
          dbUnlockAll()
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -1255,7 +1238,7 @@
       If it is not specified, the file will he opened in normal read-write
       mode.
    $EXAMPLES$
-      dbUseArea( .T.,, "tests" )
+      dbUseArea( .T.,, "test" )
    $STATUS$
       R
    $COMPLIANCE$

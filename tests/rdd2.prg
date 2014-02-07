@@ -169,7 +169,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "dbAppend() and/or LastRec() failed" )
    ENDIF
 
-   // TEST: dbGoBottom()/GO BOTTOM
+   // TEST: dbGoBottom()
 
    dbGoBottom()
 
@@ -177,7 +177,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "dbGoBottom() failed" )
    ENDIF
 
-   // TEST: dbGoTop()/GO TOP
+   // TEST: dbGoTop()
 
    dbGoTop()
 
@@ -202,7 +202,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       ENDIF
 
-      SKIP
+      dbSkip()
 
    ENDDO
 
@@ -221,68 +221,68 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: DBOI_KEYCOUNT
 
-   SET ORDER TO 1
+   ordSetFocus( 1 )
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/1" )
    ENDIF
 
-   SET ORDER TO 2
+   ordSetFocus( 2 )
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/2" )
    ENDIF
 
-   SET ORDER TO 3
+   ordSetFocus( 3 )
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/3" )
    ENDIF
 
-   SET ORDER TO 4
+   ordSetFocus( 4 )
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
       NotifyUser( "Bad DBOI_KEYCOUNT/4" )
    ENDIF
 
    // TEST: Character index
-   SET ORDER TO 1
+   ordSetFocus( 1 )
    GO TOP
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
       NotifyUser( "Bad DBOI_KEYVAL (CHAR)" )
    ENDIF
 
    // TEST: Positive index key
-   SET ORDER TO 2
+   ordSetFocus( 2 )
    LOCATE FOR field->NUM > 0
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
       NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
    ENDIF
 
    // TEST: Negative index key
-   SET ORDER TO 2
+   ordSetFocus( 2 )
    LOCATE FOR field->NUM < 0
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
       NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
    ENDIF
 
    // TEST: Date index
-   SET ORDER TO 3
-   GO BOTTOM
+   ordSetFocus( 3 )
+   dbGoBottom()
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_DATE
       NotifyUser( "Bad DBOI_KEYVAL (DATE)" )
    ENDIF
 
    // TEST: Logical index
-   SET ORDER TO 4
-   GO TOP
+   ordSetFocus( 4 )
+   dbGoTop()
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
       NotifyUser( "Bad DBOI_KEYVAL (LOG/1)" )
    ENDIF
-   GO BOTTOM
+   dbGoBottom()
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
       NotifyUser( "Bad DBOI_KEYVAL (LOG/2)" )
    ENDIF
 
    // TEST: EXACT with a locate
 
-   SET ORDER TO 0
+   ordSetFocus( 0 )
 
    SET EXACT ON
    LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftIs() */
@@ -299,7 +299,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    // TEST: EXACT with an index (also tests COUNT)
 
    SET EXACT ON
-   SET ORDER TO 0
+   ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
@@ -307,7 +307,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    SET EXACT OFF
-   SET ORDER TO 0
+   ordSetFocus( 0 )
    COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
    INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp

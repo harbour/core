@@ -84,7 +84,7 @@ PROCEDURE Main()
       oRow := oRow - "tr"
       HB_SYMBOL_UNUSED( oRow )
 
-      SKIP
+      dbSkip()
    NEXT
 
    oNode := oDoc:body + "hr"
@@ -96,7 +96,7 @@ PROCEDURE Main()
    dbCloseArea()
 
    IF oDoc:writeFile( "address.html" )
-      ? "File created: address.html"
+      ? "File created:", "address.html"
    ELSE
       ? "Error:", FError()
    ENDIF

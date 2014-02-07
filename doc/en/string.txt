@@ -1333,7 +1333,7 @@
          cBigString := Space( 100000 ) // create a memory variable with 100000
                                        // blank spaces
          ? Len( cBigString )
-         USE tests NEW
+         USE test NEW
          cFirst := MakeEmpty( 1 )
          ? Len( cFirst )
          RETURN

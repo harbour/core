@@ -35,10 +35,10 @@
 
       This function replaces the IndexOrd() function.
    $EXAMPLES$
-      USE tests NEW VIA "DBFNTX"
+      USE test NEW VIA "DBFNTX"
       ? ordBagExt()      //  Returns .ntx
       dbCloseArea()
-      USE tests NEW VIA "DBFCDX"
+      USE test NEW VIA "DBFCDX"
       ? ordBagExt()      //  Returns .cdx
       dbCloseArea()
    $STATUS$
@@ -82,12 +82,12 @@
       index name or index order number. If <cOrderName> is not specified
       or <nOrder> is 0, the Current active order will be used.
    $EXAMPLES$
-      USE tests VIA "DBFCDX" NEW
-      SET INDEX TO tests
+      USE test VIA "DBFCDX" NEW
+      SET INDEX TO test
       ordBagName( "TeName" )        // Returns: Customer
       ordBagName( "TeLast" )        // Returns: Customer
       ordBagName( "teZip" )         // Returns: Customer
-      SET ORDER TO TAG TeName
+      ordSetFocus( "TeName" )
       ? OrderBagName()              // Returns: Custumer
    $STATUS$
       S
@@ -206,11 +206,11 @@
       added. It is does exist, then the <cOrderBagName> replaces the former
       name in the order list in the current or specified work area.
    $EXAMPLES$
-      USE tests VIA "DBFNDX" NEW
-      ordCreate( "FNAME",, "Tests->fName" )
+      USE test VIA "DBFNDX" NEW
+      ordCreate( "FNAME",, "test->fName" )
 
-      USE tests VIA "DBFCDX" NEW
-      ordCreate( , "lName", "tests->lName" )
+      USE test VIA "DBFCDX" NEW
+      ordCreate( , "lName", "test->lName" )
    $STATUS$
       S
    $COMPLIANCE$
@@ -255,8 +255,8 @@
       for those drivers with support multiple orders bags (e.q. DBFCDX
       and RDDADS drivers).
    $EXAMPLES$
-      USE tests VIA "DBFCDX" NEW
-      ordDestroy( "lName", "tests" )
+      USE test VIA "DBFCDX" NEW
+      ordDestroy( "lName", "test" )
    $STATUS$
       S
    $COMPLIANCE$
@@ -298,9 +298,9 @@
       numeric which represent the position in the order list of the desired
       Order.
    $EXAMPLES$
-      USE tests NEW VIA "DBFCDX"
-      INDEX ON field->ID TO tests FOR field->ID > 100
-      ordFor( "tests" )   // Returns: field->ID > 100
+      USE test NEW VIA "DBFCDX"
+      INDEX ON field->ID TO test FOR field->ID > 100
+      ordFor( "test" )   // Returns: field->ID > 100
    $STATUS$
       S
    $COMPLIANCE$
@@ -339,12 +339,12 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-      USE tests NEW VIA "DBFCDX"
-      INDEX ON field->fName TO tests FOR field->fName > "CK"
+      USE test NEW VIA "DBFCDX"
+      INDEX ON field->fName TO test FOR field->fName > "CK"
       INDEX ON field->Id    TO testid
 
-      ordKey( "tests" )      // Returns: field->fName
-      SET ORDER TO 2
+      ordKey( "test" )      // Returns: field->fName
+      ordSetFocus( 2 )
       ordKey()               // Returns: field->Id
    $STATUS$
       S
@@ -427,7 +427,7 @@
       corresnponding index key at the specified order position, a NULL
       byte will be returned.
    $EXAMPLES$
-      USE tests NEW INDEX test1
+      USE test NEW INDEX test1
       ? IndexKey( 1 )
    $STATUS$
       R
@@ -465,7 +465,7 @@
       A returned value of 0 indicated that no active index is controlling
       the database, which therefore is in the natural order.
    $EXAMPLES$
-      USE tests NEW INDEX test1
+      USE test NEW INDEX test1
       IF IndexOrd() > 0
          ? "Current order is", IndexOrd()
       ENDIF

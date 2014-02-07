@@ -524,7 +524,7 @@ STATIC PROCEDURE DEMO_Browse()
    CLS
    SetColor( "N/W*,N/GR*,,,N/W* " )
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
       wvw_lCloseWindow()
       RETURN

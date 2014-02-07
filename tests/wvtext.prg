@@ -420,7 +420,7 @@ STATIC PROCEDURE thFunc()
 
    hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) // this does not work until something is displayed
 
-   USE test NEW SHARED
+   USE test.dbf READONLY SHARED NEW
    aStruct := dbStruct()
 
    oBrowse := TBrowse():New( 1, 0, MaxRow(), MaxCol() )

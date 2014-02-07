@@ -67,7 +67,7 @@ PROCEDURE Main( OPTIONAL )
 
    PRIVATE TEST AS STRING
 
-   USE TEMP
+   USE temp
 
    s_oMyObj:MyMethod( 2, 3, 4 )
 

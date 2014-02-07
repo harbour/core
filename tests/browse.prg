@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    CLS
 
-   USE test
+   USE test.dbf READONLY
    Browse()
 
    SetColor( cColor )

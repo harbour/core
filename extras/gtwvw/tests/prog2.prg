@@ -143,7 +143,7 @@ STATIC FUNCTION xBrowse1()
    LOCAL aColumnsSep, tmp
 #endif
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
       RETURN NIL
    ENDIF

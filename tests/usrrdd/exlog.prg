@@ -10,6 +10,8 @@ REQUEST DBFCDX
 
 PROCEDURE Main()
 
+   hb_FCopy( hb_DirSepToOS( "../test.dbf" ), "test.dbf" )
+
    // Set LOGRDD as default RDD otherwise I have to set explicitly use
    // with DRIVER option
    rddSetDefault( "LOGRDD" )
@@ -17,7 +19,7 @@ PROCEDURE Main()
    rddInfo( RDDI_MEMOVERSION, DB_MEMOVER_CLIP, "LOGRDD" )
 
    // Define Log File Name and position
-   hb_LogRddLogFileName( "logs\changes.log" )
+   hb_LogRddLogFileName( "changes.log" )
    // Define Tag to add for each line logged
    hb_LogRddTag( NetName() + "\" + hb_UserName() )
    // Activate Logging, it can be stopped/started at any moment
@@ -32,15 +34,15 @@ PROCEDURE Main()
    // Start program logic
 
    // Open a table with logging (default RDD is LOGRDD)
-   USE test
-   field->name := "Francesco"
-   CLOSE
+   USE test.dbf
+   field->first := "Francesco"
+   dbCloseArea()
 
    // Open a table without logging
 
-   USE test VIA "DBFCDX"
+   USE test.dbf VIA "DBFCDX"
    dbAppend()
-   field->name := "Francesco"
+   field->first := "Francesco"
 
    RETURN
 

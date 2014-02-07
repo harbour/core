@@ -168,7 +168,7 @@
       TBrowse class and there for not recommended for new applications.
    $EXAMPLES$
       // Browse a file using default values
-      USE Test
+      USE test
       dbEdit()
    $STATUS$
       S
@@ -261,7 +261,7 @@
       1, 0, MaxRow(), MaxCol().
    $EXAMPLES$
       // this one shows you how to browse around
-      USE Around
+      USE around
       Browse()
    $STATUS$
       S
@@ -344,7 +344,7 @@
       actual records skipped.
    $EXAMPLES$
       // open a file and find if we've got enough records in it
-      USE MonthSales
+      USE month_sales
       IF dbSkipper( 100 ) == 100
          ? "Good work! You can party now"
       ELSE
