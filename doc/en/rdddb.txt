@@ -150,7 +150,8 @@
          LOCAL cName := "Harbour", nId := 10
          USE test
          test->( dbAppend() )
-         REPLACE test->Name WITH cName, test->Id WITH nId
+         REPLACE test->Name WITH cName
+         REPLACE test->Id   WITH nId
          RETURN
    $STATUS$
       R
@@ -292,17 +293,18 @@
       PROCEDURE Main()
          LOCAL cName := Space( 40 )
          LOCAL nId := 0
+
          USE test EXCLUSIVE NEW
-         //
+
          @ 10, 10 GET cName
          @ 11, 10 GET nId
          READ
-         //
+
          IF Updated()
             dbAppend()
             REPLACE test->Name WITH cName
             REPLACE test->Id   WITH nId
-            test->( dbCommit() )
+            dbCommit()
          ENDIF
          RETURN
    $STATUS$
@@ -337,20 +339,21 @@
       PROCEDURE Main()
          LOCAL cName := Space( 40 )
          LOCAL nId := 0
+
          USE test EXCLUSIVE NEW
          USE testid NEW INDEX testid
-         //
+
          @ 10, 10 GET cName
          @ 11, 10 GET nId
          READ
-         //
+
          IF Updated()
             dbAppend()
             REPLACE test->Name WITH cName
-            REPLACE test->Id WITH nId
+            REPLACE test->Id   WITH nId
             IF ! testid->( dbSeek( nId ) )
-               dbAppend()
-               REPLACE test->Id WITH nId
+               testid->( dbAppend() )
+               REPLACE testid->Id WITH nId
             ENDIF
          ENDIF
          dbCommitAll()
@@ -435,7 +438,7 @@
       database.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL nI, aStruct := { ;
+         LOCAL aStruct := { ;
             { "CHARACTER", "C", 25, 0 }, ;
             { "NUMERIC",   "N",  8, 0 }, ;
             { "DOUBLE",    "N",  8, 2 }, ;
@@ -485,10 +488,8 @@
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
-      IF testid->( dbSeek( nId ) )
-         IF testid->( RLock() )
-            dbDelete()
-         ENDIF
+      IF dbSeek( nId ) .AND. RLock()
+         dbDelete()
       ENDIF
    $STATUS$
       R
@@ -525,8 +526,8 @@
       SET FILTER TO Name == "Harbour"
       USE testid INDEX testid NEW
       SET FILTER TO Id == 1
-      SELECT Test
-      //
+      SELECT test
+
       ? dbFilter()
       ? testid->( dbFilter() )
    $STATUS$
@@ -609,7 +610,7 @@
       every fourth record:
 
       dbUseArea( .T., "DBFNTX", "sales", "sales", .T. )
-      //
+
       // toggle every fourth record
       DO WHILE ! Eof()
          dbGoto( RecNo() + 4 )
@@ -727,7 +728,7 @@
       item.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL x := 0
+         LOCAL x
          USE test NEW
          FOR x := 1 TO RecCount()
             IF ! dbRLock()
@@ -877,11 +878,9 @@
          USE test NEW INDEX test
          dbGoto( 10 )
          nId := test->nId
-         IF test->( dbSeek( nId ) )
-            IF RLock()
-               ? test->Name
-               dbRUnlock()
-            ENDIF
+         IF dbSeek( nId ) .AND. RLock()
+            ? test->Name
+            dbRUnlock()
          ENDIF
          RETURN
 
@@ -1223,7 +1222,7 @@
       the file <cName> that is opened. The default for this will be the
       value of dbSetDriver().
 
-      IF used, <xcAlias> contains the alias name for that work area, If not
+      If used, <xcAlias> contains the alias name for that work area, If not
       specified, the root name of the database specified in <cName> will be
       used.
 

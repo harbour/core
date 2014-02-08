@@ -80,8 +80,9 @@
       IF nChoice == 0
          ? "You did not choose an item"
       ELSE
-         ? "You chose element " + hb_ntos( nChoice )
-         ?? " which has a value of " + aItems[ nChoice ]
+         ? ;
+            "You chose element", hb_ntos( nChoice ), ;
+            "which has a value of", aItems[ nChoice ]
       ENDIF
    $FILES$
       Library is core

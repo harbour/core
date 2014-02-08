@@ -37,7 +37,7 @@
       If information is requested on a disk that is not available, a runtime
       error 2018 will be raised.
    $EXAMPLES$
-      ? "You can use : " + hb_ntos( DiskSpace() ) + " bytes "
+      ? "You can use:", hb_ntos( DiskSpace() ), "bytes"
 
       // NOTE: See tests/diskspac.prg for another example
    $STATUS$
@@ -98,8 +98,8 @@
       error 2018 will be raised.
    $EXAMPLES$
       #include "fileio.ch"
-      ? "You can use : " + hb_ntos( hb_DiskSpace() ) + " bytes " +;
-        "Out of a total of " + hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
+      ? "You can use:", hb_ntos( hb_DiskSpace() ), "bytes", ;
+        "Out of a total of", hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
 
       // NOTE: See tests/diskspac.prg for another example
    $STATUS$

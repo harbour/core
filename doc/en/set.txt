@@ -1055,7 +1055,7 @@
    $EXAMPLES$
       SET ALTERNATE TO test.txt
       SET ALTERNATE ON
-      ? 'Harbour'
+      ? "Harbour"
       ? "is"
       ? "Power"
       SET ALTERNATE TO

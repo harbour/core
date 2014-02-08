@@ -38,8 +38,8 @@
       in <cString> is an alphabetic character. If not, the function will
       return a logical false (.F.).
    $EXAMPLES$
-      ? 'IsAlpha( "hello" ) = ', IsAlpha( "hello" )
-      ? 'IsAlpha( "12345" ) = ', IsAlpha( "12345" )
+      ? 'IsAlpha( "hello" ) =', IsAlpha( "hello" )
+      ? 'IsAlpha( "12345" ) =', IsAlpha( "12345" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -227,7 +227,7 @@
       the first string <cSearch>. If the substring is not contained within
       the second expression, the function will return 0.
    $EXAMPLES$
-      ? 'At( "cde", "abcdefgfedcba" ) =',
+      ? 'At( "cde", "abcdefgfedcba" ) =', ;
          At( "cde", "abcdefgfedcba" )    // 3
    $STATUS$
       R
@@ -272,9 +272,9 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'hb_At( "cde", "abcdefgfedcba" ) =',
+      ? 'hb_At( "cde", "abcdefgfedcba" ) =', ;
          hb_At( "cde", "abcdefgfedcba" )       // 3
-      ? 'hb_At( "cde", "abcdefgfedcba" ) =',
+      ? 'hb_At( "cde", "abcdefgfedcba" ) =', ;
          hb_At( "cde", "abcdefgfedcba", 4 )    // 0
    $STATUS$
       R
@@ -378,8 +378,7 @@
       nLen := Len( cString )
       FOR y := 1 TO nLen
          FOR i := 1 TO nLen
-            r := hb_RAt( cSearch, cString, y, i )
-            IF r != 0
+            IF ( r := hb_RAt( cSearch, cString, y, i ) ) != 0
             ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
                hb_ntos( r )
             ENDIF
@@ -511,9 +510,9 @@
       characters from <nStart> to the end of the string is less than <nLen>
       the rest are ignored.
    $EXAMPLES$
-      ? SubStr( "Hello Harbour" ,  7, 4 )      // Harb
-      ? SubStr( "Hello Harbour" , -3, 3 )      // our
-      ? SubStr( "Hello Harbour" ,  7    )      // Harbour
+      ? SubStr( "Hello Harbour",  7, 4 )      // Harb
+      ? SubStr( "Hello Harbour", -3, 3 )      // our
+      ? SubStr( "Hello Harbour",  7    )      // Harbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -1542,8 +1541,8 @@
       ? "working with String"
       ? "Current String is", cString
       ? "All uppercased", Transform( cString, "@!" )
-      ? "Date is", ddate
-      ? "Date is ", Transform( ddate, "@D" )
+      ? "Date is", dDate
+      ? "Date is", Transform( dDate, "@D" )
       ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
       ? Transform( 0      , "@L 9999"     )  //  "0000"
    $STATUS$

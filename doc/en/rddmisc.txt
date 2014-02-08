@@ -55,7 +55,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
+         LOCAL nCount
          USE test
 
          nCount := FCount()
@@ -73,12 +73,11 @@
          aDecs   := Array( nCount )
          nFields := AFields( aNames, aTypes, aLens, aDecs )
 
-         ? "Number of items :", nFields
+         ? "Number of items:", nFields
          FOR i := 1 TO nFields
-            ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
-            ?? aLens[ i ], aDecs[ i ]
+            ? i, PadR( aNames[ i ], 12 ), aTypes[ i ], aLens[ i ], aDecs[ i ]
          NEXT
-         ?
+
          RETURN
    $STATUS$
       R
@@ -318,7 +317,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         ? "This database have", test->( FCount() ), "Fields"
+         ? "This database have", test->( FCount() ), "fields"
          USE
          RETURN
    $STATUS$
@@ -398,7 +397,7 @@
          LOCAL x
          USE test NEW
          FOR x := 1 TO test->( FCount() )
-            ? "Field Name", FieldName( x )
+            ? "Field Name:", FieldName( x )
          NEXT
          USE
          RETURN
@@ -764,7 +763,7 @@
       USE harbour NEW
       ? RecCount()
       ? Test->( RecCount() )
-      CLOSE ALL
+      dbCloseAll()
    $STATUS$
       R
    $COMPLIANCE$
@@ -976,10 +975,10 @@
       USE names NEW
       ? Used()    // .T.
       ? TESTS->( Used() ) //.T.
-      CLOSE
-      ? Used()  // .F.
+      dbCloseArea()
+      ? Used()    // .F.
       SELECT test
-      ? Used() //.T.
+      ? Used()    // .T.
    $STATUS$
       R
    $COMPLIANCE$

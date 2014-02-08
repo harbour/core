@@ -179,8 +179,8 @@
       be inserted.
    $EXAMPLES$
       // Stuff an Alt+PgDn key into the keyboard buffer
-      hb_keyPut( K_ALT_PGDN ) ; ? Inkey() // ==> 417
-      hb_keyPut( K_F11 ) ; ? Inkey() // ==> -40
+      hb_keyPut( K_ALT_PGDN ); ? Inkey() // ==> 417
+      hb_keyPut( K_F11 ); ? Inkey() // ==> -40
    $STATUS$
       R
    $COMPLIANCE$

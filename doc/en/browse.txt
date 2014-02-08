@@ -350,7 +350,7 @@
       ELSE
          ? "Too bad, you should really work harder"
       ENDIF
-      CLOSE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$

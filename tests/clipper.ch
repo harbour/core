@@ -66,6 +66,7 @@
 #xtranslate HB_ISMEMO( <v> )               => ( ValType( <v> ) == "M" )
 
 #xtranslate hb_LeftIs( <l>, <r> )          => ( Left( <l>, Len( <r> ) ) == <r> )
+#xtranslate hb_LeftIsI( <l>, <r> )         => ( Left( Lower( <l> ), Len( <r> ) ) == Lower( <r> ) )
 #xtranslate hb_StrShrink( <l> )            => Left( <l>, Len( <l> ) - 1 )
 #xtranslate hb_StrShrink( <l>, <r> )       => Left( <l>, Len( <l> ) - <r> )
 

@@ -311,7 +311,7 @@
       #include "fileio.ch"
       nHandle := FCreate( "test.txt", FC_NORMAL )
       IF FError() != 0
-         ? "Cannot create file, OS error ", FError()
+         ? "Cannot create file, OS error", FError()
       ENDIF
    $STATUS$
       R
@@ -389,7 +389,7 @@
 
       If the function is able to successfully delete the file from the
       disk, the value of the function will be 0; otherwise a -1 will
-      be returned. If not successfull, additional information may be
+      be returned. If not successful, additional information may be
       obtained by calling the FError() function.
 
       Note: Any file to be removed by FErase() must still be closed.
@@ -457,7 +457,7 @@
       #include "fileio.ch"
       nResult := FRename( "test.txt", "test1.txt" )
       IF nResult != 0
-         ? "File could not be renamed."
+         ? "File could not be renamed"
       ENDIF
    $STATUS$
       R
@@ -990,7 +990,7 @@
       nH := FOpen( "test.txt" )
       ? FReadStr( nH, 80 )
       IF hb_FEof( nH )
-         ? "End-of-file reached."
+         ? "End-of-file reached"
       ELSE
          ? FReadStr( nH, 80 )
       ENDIF
@@ -1030,7 +1030,7 @@
    $EXAMPLES$
       cDir := ".\backup"
       IF DirRemove( cDir ) == 0
-         ? "Remove of directory", cDir, "was successfull"
+         ? "Remove of directory", cDir, "was successful"
       ENDIF
    $STATUS$
       R
@@ -1070,7 +1070,7 @@
       description of the error.
    $EXAMPLES$
       IF DirChange( "\temp" ) == 0
-         ? "Change to diretory was successfull"
+         ? "Change to diretory was successful"
       ENDIF
    $STATUS$
       R
@@ -1145,12 +1145,12 @@
       <lSuccess>  .T. is the drive is ready, otherwise .F.
    $DESCRIPTION$
       This function attempts to access a drive. If the access to the drive
-      was successfull, it will return true (.T.), otherwise false(.F.). This
+      was successful, it will return true (.T.), otherwise false(.F.). This
       function is usefull for backup function, so you can determine if the
       drive that will receive the backup data is ready or not.
    $EXAMPLES$
       IF IsDisk( "A" )
-         ? "Drive is ready "
+         ? "Drive is ready"
       ENDIF
    $STATUS$
       R

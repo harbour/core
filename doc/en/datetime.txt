@@ -110,7 +110,7 @@
       This function returns the current system date.
    $EXAMPLES$
       ? Date()
-      ? "Today is ", Day( Date() ), " of ", CMonth( Date() ), " of ", Year( Date() )
+      ? "Today is", hb_ntos( Day( Date() ) ), "of", CMonth( Date() ), "of", hb_ntos( Year( Date() ) )
    $STATUS$
       R
    $COMPLIANCE$

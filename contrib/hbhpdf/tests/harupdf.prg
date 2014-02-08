@@ -75,20 +75,20 @@ FUNCTION DesignHaruPDF( cFileToSave )
    LOCAL cFont, page, height, width, def_font, tw, samp_text, font
    LOCAL page_title := "hbhpdf demo"
    LOCAL font_list  := { ;
-      "Courier",                  ;
-      "Courier-Bold",             ;
-      "Courier-Oblique",          ;
-      "Courier-BoldOblique",      ;
-      "Helvetica",                ;
-      "Helvetica-Bold",           ;
-      "Helvetica-Oblique",        ;
-      "Helvetica-BoldOblique",    ;
-      "Times-Roman",              ;
-      "Times-Bold",               ;
-      "Times-Italic",             ;
-      "Times-BoldItalic",         ;
-      "Symbol",                   ;
-      "ZapfDingbats"              }
+      "Courier"               , ;
+      "Courier-Bold"          , ;
+      "Courier-Oblique"       , ;
+      "Courier-BoldOblique"   , ;
+      "Helvetica"             , ;
+      "Helvetica-Bold"        , ;
+      "Helvetica-Oblique"     , ;
+      "Helvetica-BoldOblique" , ;
+      "Times-Roman"           , ;
+      "Times-Bold"            , ;
+      "Times-Italic"          , ;
+      "Times-BoldItalic"      , ;
+      "Symbol"                , ;
+      "ZapfDingbats"          }
 
    LOCAL pdf := HPDF_New()
 
@@ -499,10 +499,10 @@ STATIC PROCEDURE Page_Text( pdf )
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
    HPDF_Page_SetTextLeading( page, 20 )
 
-#define rLEFT   1
-#define rTOP    2
-#define rRIGHT  3
-#define rBOTTOM 4
+   #define rLEFT    1
+   #define rTOP     2
+   #define rRIGHT   3
+   #define rBOTTOM  4
 
    /* text_rect method */
 
@@ -646,7 +646,6 @@ STATIC PROCEDURE Page_Text( pdf )
    HPDF_Page_EndText( page )
 
    HPDF_Page_GRestore( page )
-
 
    /* text along a circle */
    HPDF_Page_SetGrayStroke( page, 0 )
@@ -887,9 +886,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * scaling text(X direction)
-    */
+   /* scaling text(X direction) */
    show_description( page, 320, ypos - 175, "Scaling text(X direction)" )
    HPDF_Page_BeginText( page )
    HPDF_Page_SetTextMatrix( page, 1.5, 0, 0, 1, 320, ypos - 175 )
@@ -897,9 +894,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * scaling text(Y direction)
-    */
+   /* scaling text(Y direction) */
    show_description( page, 320, ypos - 250, "Scaling text(Y direction)" )
    HPDF_Page_BeginText( page )
    HPDF_Page_SetTextMatrix( page, 1, 0, 0, 2, 320, ypos - 250 )
@@ -907,9 +902,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * char spacing, word spacing
-    */
+   /* char spacing, word spacing */
    show_description( page, 60, 140, "char-spacing 0" )
    show_description( page, 60, 100, "char-spacing 1.5" )
    show_description( page, 60, 60, "char-spacing 1.5, word-spacing 2.5" )
@@ -936,7 +929,9 @@ STATIC PROCEDURE Page_TextScaling( pdf )
    HPDF_Page_TextOut( page, 60, 60, samp_text2 )
    HPDF_Page_EndText( page )
 
-   // HPDF_SetCompressionMode( pdf, nComp )
+#if 0
+   HPDF_SetCompressionMode( pdf, nComp )
+#endif
 
    RETURN
 

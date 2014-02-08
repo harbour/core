@@ -67,8 +67,7 @@ PROCEDURE Main( ... )
    LOCAL nMode, n
    LOCAL cParam
 
-   aParams := hb_AParams()
-   IF Empty( aParams )
+   IF Empty( aParams := hb_AParams() )
       Syntax()
    ENDIF
 
@@ -275,8 +274,7 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
             __i18n_hashJoin( hTrans, __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) ) )
          ENDIF
       ELSE
-         aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg )
-         IF aTrans == NIL
+         IF ( aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg ) ) == NIL
             ErrorMsg( cErrorMsg )
          ENDIF
          hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
@@ -303,7 +301,6 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
 STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
 
-   LOCAL cHBLBody
    LOCAL pI18N
 
    IF Empty( cFileOut )
@@ -314,8 +311,7 @@ STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
 
    pI18N := __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), ;
       lEmpty ) )
-   cHBLBody := hb_i18n_SaveTable( pI18N )
-   IF ! hb_MemoWrit( cFileOut, cHBLBody )
+   IF ! hb_MemoWrit( cFileOut, hb_i18n_SaveTable( pI18N ) )
       ErrorMsg( hb_StrFormat( I_( "cannot create file: %1$s" ), cFileOut ) )
    ENDIF
 
