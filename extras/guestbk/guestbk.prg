@@ -47,9 +47,11 @@
  *
  */
 
+#define _WWW_ROOT_DIR_  hb_DirSepAdd( hb_DirSepToOS( "" ) )
+
 PROCEDURE Main()
 
-   LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
+   LOCAL oIni  := TIniFile():New( _WWW_ROOT_DIR_ + "guestbk.ini" )
    LOCAL oHTML := THtml():New()
    LOCAL cOddColor, cEvenColor
    LOCAL cCode, i, j, l, cField, nEntry, cColor
@@ -87,7 +89,7 @@ PROCEDURE Main()
    ELSE
 
       // Sets the metahtml file
-      oHTML:SetHTMLFile( "C:\inetpub\wwwroot\guestbk.html" )
+      oHTML:SetHTMLFile( _WWW_ROOT_DIR_ + "guestbk.html" )
 
       // Retrieves odd and even entries color
       cOddColor := oIni:ReadString( "Header", "OddColor", "#FFFFFF" )

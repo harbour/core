@@ -24,8 +24,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      ? ft_MkDir( "C:\harbour" )
-      ? ft_MkDir( "\example" )
-      ? ft_MkDir( "..\source" )
+      ? ft_MkDir( "harbour" )
+      ? ft_MkDir( hb_ps() + "example" )
+      ? ft_MkDir( ".." + hb_ps() + "source" )
    $END$
  */

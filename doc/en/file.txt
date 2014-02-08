@@ -580,8 +580,8 @@
       searched and the current drive/directory is only searched if
       SET DEFAULT is blank.
    $EXAMPLES$
-      ? File( "C:\harbour\doc\compiler.txt" )
-      ? File( "C:/harbour/doc/subcodes.txt" )
+      ? File( "C:\hb\doc\pp.txt" )
+      ? File( "*.txt" )
    $STATUS$
       S (wild card support is missing)
    $COMPLIANCE$
@@ -952,8 +952,8 @@
       device (e.g. LPT1). This command does not observe the SET PATH TO or
       SET DEFAULT TO settings.
    $EXAMPLES$
-      COPY FILE C:\harbour\tests\adir.prg TO C:\temp\adir.prg
-      COPY FILE C:\harbour\tests\adir.prg TO LPT1
+      COPY FILE /path/to/adir.prg TO /tmp/adir.prg
+      COPY FILE adir.prg TO LPT1
    $STATUS$
       R
    $COMPLIANCE$

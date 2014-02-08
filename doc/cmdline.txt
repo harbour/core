@@ -70,7 +70,7 @@ whitespace. (or just walk through all argv[])
 The Harbour switches are always case insensitive.
 
 In the Harbour commandline the two style can be used together:
-harbour -wnes2 /gc0/q0 -iC:\hello
+harbour -wnes2 /gc0/q0 -iC:\include
 
 Exceptions:
 
@@ -84,8 +84,7 @@ Exceptions:
 
   Just some examples for the various accepted forms:
   //F20 == /F20 == F20 == F:20 == F20X
-  //TMPPATH:C:\hello
-  F20//TMPPATH:/temp///F:30000000 NOIDLE
+  F20//F:30000000 NOIDLE
   F0NOIDLEX10
   SQUAWKNOIDLE
 

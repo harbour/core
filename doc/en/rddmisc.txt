@@ -317,7 +317,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         ? "This database have", test->( FCount() ), "fields"
+         ? "This database has", test->( FCount() ), "fields"
          USE
          RETURN
    $STATUS$

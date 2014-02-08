@@ -1048,7 +1048,7 @@ extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return applicat
 extern           int           hb_cmdargPushArgs( void ); /* places application parameters on the HVM stack */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:gtcgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )

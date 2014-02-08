@@ -54,8 +54,8 @@
          ? "Check the device on COM2.  Something is wrong."
       ENDIF
 
-      IF ! ft_IsPrint( "A:\nul" )
-         ? "Oops, better check drive A!"
+      IF ! ft_IsPrint( "/dev/lp0" )
+         ? "Oops, not available."
       ENDIF
    $END$
  */
