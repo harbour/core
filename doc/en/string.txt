@@ -977,7 +977,7 @@
       any character expression passed as <cCharacter>.
    $EXAMPLES$
       ? Asc( "A" )
-      ? Asc( "¹" )
+      ? Asc( "ą" )
    $STATUS$
       R
    $COMPLIANCE$
