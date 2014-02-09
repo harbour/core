@@ -13280,8 +13280,8 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
       FOR EACH cLine IN hb_ATokens( cExports, Chr( 10 ) )
          IF ! Empty( cLine ) .AND. Len( aCols := hb_ATokens( cLine ) ) >= 4
-               cFuncList += aCols[ 4 ] + hb_eol()
-            ENDIF
+            cFuncList += aCols[ 4 ] + hb_eol()
+         ENDIF
       NEXT
 
       IF ( fhnd := hb_FTempCreateEx( @cSourceDef ) ) != F_ERROR
