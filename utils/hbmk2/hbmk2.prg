@@ -6411,17 +6411,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            " " + ArrayToList( aCommand ) + _OUT_EOL )
                      ENDIF
                      IF ! hbmk[ _HBMK_lIGNOREERROR ]
+#ifdef HARBOUR_SUPPORT
+                        IF ! Empty( l_cHRBSTUB )
+                           FErase( l_cHRBSTUB )
+                        ENDIF
+#endif
                         IF lDeleteWorkDir
                            hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
                         ENDIF
                         IF hbmk[ _HBMK_lBEEP ]
                            DoBeep( .F. )
                         ENDIF
-#ifdef HARBOUR_SUPPORT
-                        IF ! Empty( l_cHRBSTUB )
-                           FErase( l_cHRBSTUB )
-                        ENDIF
-#endif
                         RETURN _EXIT_COMPPRG
                      ENDIF
                   ENDIF
@@ -6441,17 +6441,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   OutErr( ArrayToList( thread[ 2 ] ) + _OUT_EOL )
                ENDIF
                IF ! hbmk[ _HBMK_lIGNOREERROR ]
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
+                  ENDIF
+#endif
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-#ifdef HARBOUR_SUPPORT
-                  IF ! Empty( l_cHRBSTUB )
-                     FErase( l_cHRBSTUB )
-                  ENDIF
-#endif
                   RETURN _EXIT_COMPPRG
                ENDIF
             ENDIF
@@ -6490,17 +6490,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   OutErr( cCommand + _OUT_EOL )
                ENDIF
                IF ! hbmk[ _HBMK_lIGNOREERROR ]
+#ifdef HARBOUR_SUPPORT
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
+                  ENDIF
+#endif
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-#ifdef HARBOUR_SUPPORT
-                  IF ! Empty( l_cHRBSTUB )
-                     FErase( l_cHRBSTUB )
-                  ENDIF
-#endif
                   RETURN _EXIT_COMPPRG
                ENDIF
             ENDIF
@@ -6701,14 +6701,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
                      ENDIF
                   ENDIF
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
+                  ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
-                  ENDIF
-                  IF ! Empty( l_cHRBSTUB )
-                     FErase( l_cHRBSTUB )
                   ENDIF
                   RETURN _EXIT_STUBCREATE
                ENDIF
@@ -6816,14 +6816,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! Empty( hbmk[ _HBMK_cPO ] )
                      AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".pot", .T. ), {| tmp | FErase( tmp ) } )
                   ENDIF
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
+                  ENDIF
                   IF lDeleteWorkDir
                      hb_DirDelete( hbmk[ _HBMK_cWorkDir ] )
                   ENDIF
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
-                  ENDIF
-                  IF ! Empty( l_cHRBSTUB )
-                     FErase( l_cHRBSTUB )
                   ENDIF
                   RETURN _EXIT_STUBCREATE
                ENDIF
