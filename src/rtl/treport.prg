@@ -1015,7 +1015,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          SUMMARY_RPT_OFFSET, 1 ) $ "YyTt", .T., .F. )
 
       // Process report eject and plain attributes option byte
-      cOptionByte := Asc( hb_BSubStr( cParamsBuff, OPTION_OFFSET, 1 ) )
+      cOptionByte := hb_BCode( hb_BSubStr( cParamsBuff, OPTION_OFFSET, 1 ) )
 
       IF Int( cOptionByte / 4 ) == 1
          aReport[ RPT_PLAIN ] := .T.          // Plain page
