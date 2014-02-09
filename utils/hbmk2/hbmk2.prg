@@ -90,7 +90,7 @@
 
 #ifndef HBMK_GENERIC
    #define HARBOUR_SUPPORT
-   #define HARBOUR_INCLUDE_GPL_ONLY_PARTS
+   #define HARBOUR_INCLUDE_PURE_GPL_PARTS
 #endif
 
 #include "directry.ch"
@@ -1402,7 +1402,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cLIB_BASE_PCRE
    LOCAL cLIB_BASE_ZLIB
 
-   LOCAL l_cPRGSTUB
+   LOCAL l_cHRBSTUB
    LOCAL l_cCSTUB
    LOCAL l_cCPPSTUB
 #endif
@@ -6172,7 +6172,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          _hbmk_OutErr( hbmk, I_( "Warning: Non-Harbour source files ignored for -hbhrb output" ) )
       ENDCASE
 
-      fhnd := hb_FTempCreateEx( @l_cPRGSTUB, NIL, "hbmk_", ".prg" )
+      fhnd := hb_FTempCreateEx( @l_cHRBSTUB, NIL, "hbmk_", ".prg" )
       IF fhnd == F_ERROR
          _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .prg program could not be created." ) )
          RETURN _EXIT_STUBCREATE
@@ -6195,7 +6195,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], "-gh" )
       AAddNewAtTop( hbmk[ _HBMK_aOPTPRG ], "-o" + hbmk[ _HBMK_cPROGNAME ] )
-      hbmk[ _HBMK_aPRG ] := { l_cPRGSTUB }
+      hbmk[ _HBMK_aPRG ] := { l_cHRBSTUB }
    ENDIF
 
    /* Create incremental file list for .prg files */
@@ -6287,8 +6287,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    IF hbmk[ _HBMK_lDumpInfo ]
 
 #ifdef HARBOUR_SUPPORT
-      IF ! Empty( l_cPRGSTUB )
-         FErase( l_cPRGSTUB )
+      IF ! Empty( l_cHRBSTUB )
+         FErase( l_cHRBSTUB )
       ENDIF
 #endif
 
@@ -6329,8 +6329,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             DoBeep( .F. )
          ENDIF
 #ifdef HARBOUR_SUPPORT
-         IF ! Empty( l_cPRGSTUB )
-            FErase( l_cPRGSTUB )
+         IF ! Empty( l_cHRBSTUB )
+            FErase( l_cHRBSTUB )
          ENDIF
 #endif
          RETURN _EXIT_MISSDEPT
@@ -6418,8 +6418,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            DoBeep( .F. )
                         ENDIF
 #ifdef HARBOUR_SUPPORT
-                        IF ! Empty( l_cPRGSTUB )
-                           FErase( l_cPRGSTUB )
+                        IF ! Empty( l_cHRBSTUB )
+                           FErase( l_cHRBSTUB )
                         ENDIF
 #endif
                         RETURN _EXIT_COMPPRG
@@ -6448,8 +6448,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      DoBeep( .F. )
                   ENDIF
 #ifdef HARBOUR_SUPPORT
-                  IF ! Empty( l_cPRGSTUB )
-                     FErase( l_cPRGSTUB )
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
                   ENDIF
 #endif
                   RETURN _EXIT_COMPPRG
@@ -6497,8 +6497,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      DoBeep( .F. )
                   ENDIF
 #ifdef HARBOUR_SUPPORT
-                  IF ! Empty( l_cPRGSTUB )
-                     FErase( l_cPRGSTUB )
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
                   ENDIF
 #endif
                   RETURN _EXIT_COMPPRG
@@ -6707,8 +6707,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-                  IF ! Empty( l_cPRGSTUB )
-                     FErase( l_cPRGSTUB )
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
                   ENDIF
                   RETURN _EXIT_STUBCREATE
                ENDIF
@@ -6822,8 +6822,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-                  IF ! Empty( l_cPRGSTUB )
-                     FErase( l_cPRGSTUB )
+                  IF ! Empty( l_cHRBSTUB )
+                     FErase( l_cHRBSTUB )
                   ENDIF
                   RETURN _EXIT_STUBCREATE
                ENDIF
@@ -7788,8 +7788,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          DoLinkDelete( hbmk )
       ENDIF
 #ifdef HARBOUR_SUPPORT
-      IF ! Empty( l_cPRGSTUB )
-         FErase( l_cPRGSTUB )
+      IF ! Empty( l_cHRBSTUB )
+         FErase( l_cHRBSTUB )
       ENDIF
       IF ! Empty( l_cCSTUB )
          FErase( l_cCSTUB )
@@ -10012,7 +10012,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
             END /* SEQUENCE */
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Do not try to load it as .prg if the extension is .hrb */
-#ifdef HARBOUR_INCLUDE_GPL_ONLY_PARTS
+#ifdef HARBOUR_INCLUDE_PURE_GPL_PARTS
             cType := I_( "(source)" )
             /* We can use this function as this is a GPL licenced application */
             cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_PLUGIN )
