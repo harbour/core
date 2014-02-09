@@ -8977,7 +8977,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
       ! Empty( t_pRegexRequire ) .AND. ;
       ! Empty( t_pRegexSETPROC )
 
-      cFileBody := MemoRead( cFile )
+      cFileBody := hbmk_MemoRead( cFile )
 
       IF ! Empty( cFileBody )
          FOR EACH tmp IN hb_regexAll( t_pRegexInclude, cFileBody, ;
@@ -14662,7 +14662,7 @@ STATIC PROCEDURE __hbshell_LoadExtFromString( aExtension, cString )
 
 STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
 
-   LOCAL cFile := MemoRead( cFileName )
+   LOCAL cFile := hbmk_MemoRead( cFileName )
    LOCAL pRegex
    LOCAL tmp
 
