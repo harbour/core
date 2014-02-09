@@ -162,7 +162,7 @@ CREATE CLASS TIPClient
 
    VAR nLastError INIT 0
 
-   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent )
+   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassword, cUserAgent )
    METHOD ReadHTTPProxyResponse( sResponse )
 
    /* Methods to log data if needed */
@@ -184,8 +184,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
    LOCAL oErr
    LOCAL oLog
 
-   LOCAL aProtoAccepted := { "ftp", "http", "pop", "smtp" }
-   LOCAL aProtoAcceptedSSL := iif( ::lHasSSL, { "ftps", "https", "pop3s", "pops", "smtps" }, {} )
+   LOCAL aProtoSSL := { "ftps", "https", "pop3s", "pops", "smtps" }
 
    IF HB_ISSTRING( xTrace ) .OR. ;
       ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
@@ -199,8 +198,8 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oUrl := TUrl():New( oUrl )
    ENDIF
 
-   IF AScan( aProtoAccepted   , {| tmp | tmp == oURL:cProto } ) == 0 .AND. ;
-      AScan( aProtoAcceptedSSL, {| tmp | tmp == oURL:cProto } ) == 0
+   IF AScan( { "ftp", "http", "pop", "smtp" }, {| tmp | tmp == oURL:cProto } ) == 0 .AND. ;
+      ( ! ::lHasSSL .OR. AScan( aProtoSSL, {| tmp | tmp == oURL:cProto } ) == 0 )
 
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
@@ -225,13 +224,8 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       ::bInitSocks := .T.
    ENDIF
 
-   IF ::lHasSSL
-      IF oURL:cProto == "ftps" .OR. ;
-         oURL:cProto == "https" .OR. ;
-         oURL:cProto == "pop3s" .OR. oURL:cProto == "pops" .OR. ;
-         oURL:cProto == "smtps"
-         ::EnableTLS( .T. )
-      ENDIF
+   IF ::lHasSSL .AND. AScan( aProtoSSL, {| tmp | tmp == oURL:cProto } ) > 0
+      ::EnableTLS( .T. )
    ENDIF
 
    ::oUrl         := oUrl
@@ -302,7 +296,7 @@ METHOD EnableTLS( lEnable ) CLASS TIPClient
 
    RETURN lSuccess
 
-METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent ) CLASS TIPClient
+METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassword, cUserAgent ) CLASS TIPClient
 
    LOCAL cRequest
    LOCAL lRet := .F.
@@ -312,11 +306,11 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
 
    IF ( tmp := ::inetErrorCode( ::SocketCon ) ) == 0
       cRequest := "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 )
-      IF ! Empty( cUserAgent )
+      IF HB_ISSTRING( cUserAgent ) .AND. ! Empty( cUserAgent )
          cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
-      IF ! Empty( cUserName )
-         cRequest += "Proxy-authorization: Basic " + hb_base64Encode( cUserName + ":" + cPassWord ) + Chr( 13 ) + Chr( 10 )
+      IF HB_ISSTRING( cUserName ) .AND. ! Empty( cUserName )
+         cRequest += "Proxy-authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
       ::inetSendAll( ::SocketCon, cRequest )
@@ -331,7 +325,6 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
       ENDIF
    ELSE
       cResp := hb_ntos( tmp )
-      lRet := .F.
    ENDIF
 
    RETURN lRet
