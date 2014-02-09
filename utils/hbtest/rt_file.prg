@@ -59,15 +59,13 @@
 PROCEDURE Main_FILE()
 
    LOCAL cFileName := "$$FILEIO.TMP"
-   LOCAL nFlags
 
    LOCAL cBuff4   := Space( 4 )
    LOCAL cBuff100 := Space( 100 )
 
    LOCAL fhnd
 
-   nFlags := FC_NORMAL
-   fhnd := FCreate( cFileName, nFlags )
+   fhnd := FCreate( cFileName, FC_NORMAL )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
@@ -136,8 +134,7 @@ PROCEDURE Main_FILE()
    HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )                 IS 'E: 2      R: -1'
    HBTEST TESTFIER( FOpen( "NOT_HERE.$$$" ) )                        IS 'E: 2      R: -1'
 
-   nFlags := FO_READWRITE
-   fhnd := FOpen( cFileName, nFlags )
+   fhnd := FOpen( cFileName, FO_READWRITE )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"

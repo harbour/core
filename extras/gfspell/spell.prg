@@ -1088,9 +1088,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       t_nHandle := F_ERROR
    ENDIF                                  // END OF ADDITION
 
-   nH := FCreate( cDictionary )
-
-   IF nH != F_ERROR
+   IF ( nH := FCreate( cDictionary ) ) != F_ERROR
       //
       // Write out enough bytes to hold the index information
       //

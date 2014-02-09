@@ -266,7 +266,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
    LOCAL cFile
    LOCAL cSID
-   LOCAL lRet
+   LOCAL lOk
 
    IF HB_ISSTRING( cID ) .AND. ! Empty( cID )
       cSID := cID
@@ -280,7 +280,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      IF ( lRet := ( FErase( cFile ) != F_ERROR ) )
+      IF ( lOk := ( FErase( cFile ) != F_ERROR ) )
          ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
          ::CreateSID()
          ::hCookies[ "SESSIONID" ] := ::cSID
@@ -289,7 +289,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
       ENDIF
    ENDIF
 
-   RETURN lRet
+   RETURN lOk
 
 METHOD ErrHandler( xError ) CLASS TIPCgi
 

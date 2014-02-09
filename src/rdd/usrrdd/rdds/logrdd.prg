@@ -383,14 +383,9 @@ STATIC PROCEDURE OpenLogFile( nWA )
       IF hb_FileExists( cFileName )
          nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
       ELSE
-         nHandle := FCreate( cFileName )
-         /* Close and reopen in shared mode */
-         IF FError() == 0 .AND. nHandle != F_ERROR
-            FClose( nHandle )
-            nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
-         ENDIF
+         nHandle := hb_FCreate( cFileName, FC_NORMAL, FO_READWRITE + FO_SHARED )
       ENDIF
-      IF FError() == 0 .AND. nHandle != F_ERROR
+      IF nHandle != F_ERROR
          /* Move to end of file */
          FSeek( nHandle, 0, FS_END )
       ELSE

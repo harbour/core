@@ -478,8 +478,7 @@ STATIC FUNCTION EditorSave( oEdit )
       RETURN .F.
    ENDIF
 
-   nHandle := FCreate( cFile, FC_NORMAL )
-   IF nHandle != F_ERROR
+   IF ( nHandle := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
       FWrite( nHandle, EditorGetText( oEdit ) )
       FClose( nHandle )
    ENDIF

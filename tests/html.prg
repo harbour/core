@@ -24,7 +24,9 @@ PROCEDURE Main()
    // Uncomment the following if you don't have a Web Server to test
    // this sample
 
-   // oHTML:SaveToFile( "test.htm" )
+#if 0
+   oHTML:SaveToFile( "test.htm" )
+#endif
 
    // If the above is uncommented, you may comment this line:
 
@@ -119,9 +121,6 @@ METHOD ShowResult() CLASS THTML
 
 METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL hFile := FCreate( cFile )
-
-   FWrite( hFile, ::cContent )
-   FClose( hFile )
+   hb_MemoWrit( cFile, ::cContent )
 
    RETURN Self
