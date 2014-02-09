@@ -4004,7 +4004,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 
    /* Decide about working dir */
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ] .AND. ;
+      !( hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lCreateHRB ] )
       IF hbmk[ _HBMK_lINC ]
          hb_default( @hbmk[ _HBMK_cWorkDir ], hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hbmk[ _HBMK_cWorkDirDynSub ] )
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -6002,7 +6003,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    hb_default( @hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ]
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. !( hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lCreateHRB ] )
       IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
          /* NOTE: Ending path sep is important. */
          /* Different escaping for internal and external compiler. */
@@ -8991,6 +8992,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
             /* Do not spend time on known system headers */
             IF lSystemHeader
 
+               /* Reference: https://en.wikipedia.org/wiki/ISO_C_library */
+
                IF t_hExclStd == NIL
                   t_hExclStd := { ;
                      "assert.h"       =>, ; /* Standard C */
@@ -9017,6 +9020,11 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                      "stdbool.h"      =>, ;
                      "stdint.h"       =>, ;
                      "tgmath.h"       =>, ;
+                     "stdalign.h"     =>, ; /* ISO C C11 */
+                     "stdatomic.h"    =>, ;
+                     "stdnoreturn.h"  =>, ;
+                     "threads.h"      =>, ;
+                     "uchar.h"        =>, ;
                      "unistd.h"       =>, ; /* Standard C POSIX */
                      "aio.h"          =>, ;
                      "arpa/inet.h"    =>, ;
@@ -9137,7 +9145,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                ENDIF
                cHeader := hb_FNameExtSetDef( cHeader, ".prg" )
 
-               IF ( cHeader := FindHeader( hbmk, cHeader, cParentDir, .F., .F. ) ) != NIL
+               IF ( cHeader := FindHeader( hbmk, cHeader,, .F., .F. ) ) != NIL
 
                   IF hbmk[ _HBMK_lDEBUGINC ]
                      _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: SET PROCEDURE TO %1$s", cHeader ) )
