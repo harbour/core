@@ -6172,8 +6172,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          _hbmk_OutErr( hbmk, I_( "Warning: Non-Harbour source files ignored for -hbhrb output" ) )
       ENDCASE
 
-      fhnd := hb_FTempCreateEx( @l_cHRBSTUB, NIL, "hbmk_", ".prg" )
-      IF fhnd == F_ERROR
+      IF ( fhnd := hb_FTempCreateEx( @l_cHRBSTUB, NIL, "hbmk_", ".prg" ) ) == F_ERROR
          _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .prg program could not be created." ) )
          RETURN _EXIT_STUBCREATE
       ENDIF
@@ -7130,8 +7129,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* Handle moving the whole command line to a script, if requested. */
             cScriptFile := NIL
             IF "{SCRIPT}" $ cOpt_Res
-               fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-               IF fhnd != F_ERROR
+               IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                   FWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}" ) )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
@@ -7304,8 +7302,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         /* Handle moving the whole command line to a script, if requested. */
                         cScriptFile := NIL
                         IF "{SCRIPT}" $ cOpt_CompCLoop
-                           fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" )
-                           IF fhnd != F_ERROR
+                           IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" ) ) != F_ERROR
                               FWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}" ) )
                               FClose( fhnd )
                               cOpt_CompCLoop := "@" + cScriptFile
@@ -7496,8 +7493,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Link
-                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-                  IF fhnd != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
@@ -7588,8 +7584,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                cScriptFile := NIL
                IF "{SCRIPT_MINGW}" $ cOpt_Dyn
-                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-                  IF fhnd != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, ArrayToList( aOBJLIST, hb_eol(), nOpt_Esc, nOpt_FNF, "INPUT(" + iif( cDynObjPrefix == NIL, "", cDynObjPrefix ), ")" ) )
                      FClose( fhnd )
                      cOpt_Dyn := StrTran( cOpt_Dyn, "{SCRIPT_MINGW}" )
@@ -7618,8 +7613,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                /* Handle moving the whole command line to a script, if requested. */
                IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
-                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-                  IF fhnd != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
@@ -7692,8 +7686,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Lib
-                  fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" )
-                  IF fhnd != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
@@ -9818,8 +9811,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
          ENDIF
       ELSE
          /* Check in parent dir */
-         tmp := hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ) + hb_DirSepToOS( cFileName )
-         IF hb_FileExists( tmp )
+         IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ) + hb_DirSepToOS( cFileName ) )
             RETURN tmp
          ENDIF
       ENDIF
@@ -9829,16 +9821,14 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
    IF lSkipDept
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
          IF !( cDir $ hbmk[ _HBMK_hDEPTSDIR ] )
-            tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
-            IF hb_FileExists( tmp )
+            IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName ) )
                RETURN tmp
             ENDIF
          ENDIF
       NEXT
    ELSE
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
-         tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
-         IF hb_FileExists( tmp )
+         IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName ) )
             RETURN tmp
          ENDIF
       NEXT
@@ -12821,8 +12811,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
 
    FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
       IF cLNG:__enumIsFirst()
-         fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" )
-         IF fhnd != F_ERROR
+         IF ( fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" ) ) != F_ERROR
             FClose( fhnd )
             IF hbmk[ _HBMK_lDEBUGI18N ]
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
@@ -13282,12 +13271,9 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
       ENDIF
 
       FOR EACH cLine IN hb_ATokens( cExports, Chr( 10 ) )
-         IF ! Empty( cLine )
-            aCols := hb_ATokens( cLine )
-            IF Len( aCols ) >= 4
+         IF ! Empty( cLine ) .AND. Len( aCols := hb_ATokens( cLine ) ) >= 4
                cFuncList += aCols[ 4 ] + hb_eol()
             ENDIF
-         ENDIF
       NEXT
 
       IF ( fhnd := hb_FTempCreateEx( @cSourceDef ) ) != F_ERROR
@@ -13440,8 +13426,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             2013-04-26 02:12:08 +0200
             Foo Bar
             foobar@foobaz */
-         aResult := hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )
-         IF Len( aResult ) >= 5
+         IF Len( aResult := hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) ) ) >= 5
             cResult := aResult[ 1 ]
             hCustom[ "COMMIT_HASH" ] := aResult[ 2 ]
             hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 3 ]
@@ -13624,11 +13609,8 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
    CASE "hb30"     ; RETURN hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB30
    ENDSWITCH
 
-   IF cKeyword == hbmk_CPU( hbmk )
-      RETURN .T.
-   ENDIF
-
-   IF cKeyword == hbmk_TARGETTYPE( hbmk )
+   IF cKeyword == hbmk_CPU( hbmk ) .OR. ;
+      cKeyword == hbmk_TARGETTYPE( hbmk )
       RETURN .T.
    ENDIF
 
@@ -14605,8 +14587,7 @@ STATIC FUNCTION __hbshell_FileSig( cFile )
    LOCAL cBuff, cSig, cExt
 
    cExt := ".hb"
-   hFile := FOpen( cFile, FO_READ )
-   IF hFile != F_ERROR
+   IF ( hFile := FOpen( cFile, FO_READ ) ) != F_ERROR
       cSig := hb_hrbSignature()
       cBuff := Space( hb_BLen( cSig ) )
       FRead( hFile, @cBuff, hb_BLen( cBuff ) )
