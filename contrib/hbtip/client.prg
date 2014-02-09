@@ -350,13 +350,12 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
       ENDIF
       sResponse += szResponse
 
-      nLength := hb_BLen( sResponse )
-      IF nLength >= 4
-         bMoreDataToRead := !( ;
-            hb_BSubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. ;
-            hb_BSubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
-            hb_BSubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. ;
-            hb_BSubStr( sResponse, nLength - 0, 1 ) == Chr( 10 ) )
+      IF ( nLength := hb_BLen( sResponse ) ) >= 4
+         bMoreDataToRead := ;
+            hb_BPeek( sResponse, nLength - 3 ) != 13 .OR. ;
+            hb_BPeek( sResponse, nLength - 2 ) != 10 .OR. ;
+            hb_BPeek( sResponse, nLength - 1 ) != 13 .OR. ;
+            hb_BPeek( sResponse, nLength - 0 ) != 10
       ENDIF
    ENDDO
 

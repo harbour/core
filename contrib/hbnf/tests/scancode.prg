@@ -10,8 +10,8 @@ PROCEDURE Main()
 
    DO WHILE !( ( cKey := ft_ScanCode() ) == SCANCODE_ESCAPE )
       ? ;
-         Str( hb_BCode( hb_BSubStr( cKey, 1, 1 ) ), 3 ), ;
-         Str( hb_BCode( hb_BSubStr( cKey, 2, 1 ) ), 3 )
+         Str( hb_BPeek( cKey, 1 ), 3 ), ;
+         Str( hb_BPeek( cKey, 2 ), 3 )
    ENDDO
 
    RETURN

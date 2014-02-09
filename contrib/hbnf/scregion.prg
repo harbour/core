@@ -29,15 +29,15 @@ PROCEDURE ft_RstRgn( cScreen, nTop, nLeft )
 
    IF PCount() == 3
       RestScreen( nTop, nLeft, ;
-         ( nTop  - hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ), ;
-         ( nLeft - hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ), ;
+         ( nTop  - hb_BPeek( cScreen, 1 ) ) + hb_BPeek( cScreen, 3 ), ;
+         ( nLeft - hb_BPeek( cScreen, 2 ) ) + hb_BPeek( cScreen, 4 ), ;
          hb_BSubStr( cScreen, 5 ) )
    ELSE
       RestScreen( ;
-         hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ), ;
-         hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ), ;
-         hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ), ;
-         hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ), ;
+         hb_BPeek( cScreen, 1 ), ;
+         hb_BPeek( cScreen, 2 ), ;
+         hb_BPeek( cScreen, 3 ), ;
+         hb_BPeek( cScreen, 4 ), ;
          hb_BSubStr( cScreen, 5 ) )
    ENDIF
 

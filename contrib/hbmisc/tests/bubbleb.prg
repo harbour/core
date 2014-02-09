@@ -49,7 +49,7 @@ STATIC FUNCTION BubbleBabbleEncode_prg( cString )
          EXIT
       ENDIF
 
-      byte1 := hb_BCode( hb_BSubStr( cString, i, 1 ) )
+      byte1 := hb_BPeek( cString, i )
 
       cResult += ;
          SubStr( vo, ( ( hb_bitAnd( hb_bitShift( byte1, -6 ), 3 ) + nSeed ) % 6 ) + 1, 1 ) + ;
@@ -60,7 +60,7 @@ STATIC FUNCTION BubbleBabbleEncode_prg( cString )
          EXIT
       ENDIF
 
-      byte2 := hb_BCode( hb_BSubStr( cString, i + 1, 1 ) )
+      byte2 := hb_BPeek( cString, i + 1 )
 
       cResult += ;
          SubStr( co, hb_bitAnd( hb_bitShift( byte2, -4 ), 15 ) + 1, 1 ) + ;

@@ -874,7 +874,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL nBytesRead                 // Read/write and content record counter
    LOCAL nPointer                   // Points to an offset into EXPR_BUFF string
    LOCAL nFileError                 // Contains current file error
-   LOCAL cOptionByte                // Contains option byte
+   LOCAL nOptionByte                // Contains option byte
 
    LOCAL aReport[ RPT_COUNT ]       // Create report array
    LOCAL err                        // error object
@@ -1015,22 +1015,23 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          SUMMARY_RPT_OFFSET, 1 ) $ "YyTt", .T., .F. )
 
       // Process report eject and plain attributes option byte
-      cOptionByte := hb_BCode( hb_BSubStr( cParamsBuff, OPTION_OFFSET, 1 ) )
+      nOptionByte := hb_BPeek( cParamsBuff, OPTION_OFFSET )
 
-      IF Int( cOptionByte / 4 ) == 1
-         aReport[ RPT_PLAIN ] := .T.          // Plain page
-         cOptionByte -= 4
+#ifdef HB_CLP_STRICT
+      IF nOptionByte <= 8  /* Bug compatibility with CA-Cl*pper with corrupted input files */
+#endif
+         IF hb_bitAnd( nOptionByte, 4 ) != 0
+            aReport[ RPT_PLAIN ] := .T.          // Plain page
+         ENDIF
+         IF hb_bitAnd( nOptionByte, 2 ) != 0
+            aReport[ RPT_AEJECT ] := .T.         // Page eject after report
+         ENDIF
+         IF hb_bitAnd( nOptionByte, 1 ) != 0
+            aReport[ RPT_BEJECT ] := .F.         // Page eject before report
+         ENDIF
+#ifdef HB_CLP_STRICT
       ENDIF
-
-      IF Int( cOptionByte / 2 ) == 1
-         aReport[ RPT_AEJECT ] := .T.         // Page eject after report
-         cOptionByte -= 2
-      ENDIF
-
-      IF Int( cOptionByte / 1 ) == 1
-         aReport[ RPT_BEJECT ] := .F.         // Page eject before report
-         // cOptionByte -= 1
-      ENDIF
+#endif
 
       // Page heading, report title
       nPointer := Bin2W( hb_BSubStr( cParamsBuff, PAGE_HDR_OFFSET, 2 ) )

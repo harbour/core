@@ -70,7 +70,7 @@ PROCEDURE Main()
          nRetVal := libusb_bulk_transfer( pDeviceHandle, LIBUSB_ENDPOINT_IN, 100, @cData, @nLength )
          HB_SYMBOL_UNUSED( nRetVal )
          IF hb_BLen( cData ) > 0
-            SWITCH hb_BCode( hb_BSubStr( cData, -2, 1 ) )
+            SWITCH hb_BPeek( cData, hb_BLen( cData ) - 1 )
             CASE 0
                ? "Clear"
                EXIT

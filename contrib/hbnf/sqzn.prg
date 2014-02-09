@@ -52,7 +52,7 @@ FUNCTION ft_Unsqzn( cCompressed, nSize, nDecimals )
    ENDIF
 
    FOR k := 2 TO hb_BLen( cCompressed )
-      tmp += Str( hb_BCode( hb_BSubStr( cCompressed, k, 1 ) ), 2 )
+      tmp += Str( hb_BPeek( cCompressed, k ), 2 )
    NEXT
 
    tmp    := StrTran( tmp, " ", "0" )

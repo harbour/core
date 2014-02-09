@@ -66,10 +66,10 @@ PROCEDURE Main( cFrom )
          FReadStr( hFile, 2 )
          cBlock := FReadStr( hFile, 4 )
          nSymbols := ;
-            hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
-            hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
-            hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
-            hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
+            hb_BPeek( cBlock, 1 ) + ;
+            hb_BPeek( cBlock, 2 ) * 256 + ;
+            hb_BPeek( cBlock, 3 ) * 65536 + ;
+            hb_BPeek( cBlock, 4 ) * 16777216
 
          ?? "+--------------------------+------------+---------------------------------+"
          ? "| Symbol Name              |  Type      | Scope                           |"
@@ -95,10 +95,10 @@ PROCEDURE Main( cFrom )
             ?
             cBlock := FReadStr( hFile, 4 )
             nFuncs := ;
-               hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
-               hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
-               hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
-               hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
+               hb_BPeek( cBlock, 1 ) + ;
+               hb_BPeek( cBlock, 2 ) * 256 + ;
+               hb_BPeek( cBlock, 3 ) * 65536 + ;
+               hb_BPeek( cBlock, 4 ) * 16777216
             FOR n := 1 TO nFuncs
                cSymbol := ""
                DO WHILE hb_BCode( cBlock := FReadStr( hFile, 1 ) ) != 0
@@ -106,10 +106,10 @@ PROCEDURE Main( cFrom )
                ENDDO
                cBlock := FReadStr( hFile, 4 )
                nLenCount := ;
-                  hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
-                  hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
-                  hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
-                  hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
+                  hb_BPeek( cBlock, 1 ) + ;
+                  hb_BPeek( cBlock, 2 ) * 256 + ;
+                  hb_BPeek( cBlock, 3 ) * 65536 + ;
+                  hb_BPeek( cBlock, 4 ) * 16777216
 
                ? "Symbol:", cSymbol
                ? "Length:", hb_ntos( nLenCount ), "byte(s)"
