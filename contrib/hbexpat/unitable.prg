@@ -46,6 +46,7 @@
  *
  */
 
+#undef __HBEXTREQ__
 #include "hbextcdp.ch"
 
 #define _UNI_NAME_NORM( s ) StrTran( StrTran( StrTran( s, "-" ), "." ), " " )
