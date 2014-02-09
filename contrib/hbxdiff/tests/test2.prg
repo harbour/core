@@ -20,8 +20,7 @@ PROCEDURE Main()
 
    cDiffName := hb_FNameName( __FILE__ ) + ".dif"
 
-   hDif := FCreate( cDiffName, FC_NORMAL )
-   IF hDif != F_ERROR
+   IF ( hDif := FCreate( cDiffName, FC_NORMAL ) ) != F_ERROR
       FWrite( hDif, "diff ---" + hb_eol() )
       xdl_diff( pMMFOld, pMMFNew, 0, 3, hDif )
       FClose( hDif )
@@ -36,7 +35,9 @@ PROCEDURE Main()
    hNew := FCreate( hb_FNameMerge( NIL, cDiffName, ".new" ), FC_NORMAL )
    hErr := FCreate( hb_FNameMerge( NIL, cDiffName, ".err" ), FC_NORMAL )
    hOld := FCreate( hb_FNameMerge( NIL, cDiffName, ".old" ), FC_NORMAL )
-   IF hNew != F_ERROR .AND. hErr != F_ERROR .AND. hOld != F_ERROR
+   IF hNew != F_ERROR .AND. ;
+      hErr != F_ERROR .AND. ;
+      hOld != F_ERROR
       ? xdl_patch( pMMFOld, pDiff, XDL_PATCH_NORMAL, hNew, hErr )
       ? xdl_patch( pMMFNew, pDiff, XDL_PATCH_REVERSE, hOld, hErr )
    ELSE

@@ -344,8 +344,7 @@ static function write_file( cName, cBody )
    local lRet := .f.
    local hFile
 
-   hFile := fcreate( cName )
-   if hFile != F_ERROR
+   if ( hFile := fcreate( cName ) ) != F_ERROR
       lRet := fwrite( hFile, cBody ) == hb_BLen( cBody )
       fclose( hFile )
    endif

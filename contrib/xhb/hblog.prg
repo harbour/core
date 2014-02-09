@@ -463,8 +463,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
    ENDIF
 
    IF hb_FileExists( ::cFileName )
-      ::nFileHandle := FOpen( ::cFileName, FO_READWRITE )
-      IF ::nFileHandle != F_ERROR
+      IF ( ::nFileHandle := FOpen( ::cFileName, FO_READWRITE ) ) != F_ERROR
          FSeek( ::nFileHandle, 0, FS_END )
       ENDIF
    ELSE

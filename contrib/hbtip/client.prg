@@ -516,8 +516,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    ::nWrite  := 0
    ::nStatus := 0
-   nFin := FOpen( cFile, FO_READ )
-   IF nFin == F_ERROR
+   IF ( nFin := FOpen( cFile, FO_READ ) ) == F_ERROR
       RETURN .F.
    ENDIF
    nSize := FSeek( nFin, 0, FS_END )

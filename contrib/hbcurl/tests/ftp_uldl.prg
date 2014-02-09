@@ -153,8 +153,8 @@ PROCEDURE Main( cDL, cUL )
 
       tmp := "test_dlm.bin"
       ? "WRITING TO FILE:", tmp
-      f := FCreate( tmp, FC_NORMAL )
-      IF f != F_ERROR
+
+      IF ( f := FCreate( tmp, FC_NORMAL ) ) != F_ERROR
          FWrite( f, curl_easy_dl_buff_get( curl ) )
          FClose( f )
       ENDIF

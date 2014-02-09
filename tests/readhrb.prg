@@ -58,13 +58,10 @@ PROCEDURE Main( cFrom )
 
    cFrom := hb_FNameExtSetDef( cFrom, ".hrb" )
 
-   hFile := FOpen( cFrom )
-   IF hFile == F_ERROR
+   IF ( hFile := FOpen( cFrom ) ) == F_ERROR
       ? "No such file:", cFrom
    ELSE
-      cBlock := FReadStr( hFile, 4 )
-
-      IF cBlock == HRB_HEADER
+      IF FReadStr( hFile, 4 ) == HRB_HEADER
 
          FReadStr( hFile, 2 )
          cBlock := FReadStr( hFile, 4 )
