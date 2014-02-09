@@ -421,7 +421,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
    ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
-   IF hb_FCopy( cSrc, cDst ) == 0
+   IF hb_FCopy( cSrc, cDst ) != F_ERROR
 #if 0
       OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
@@ -440,17 +440,17 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
 
    FErase( cSrc ) /* remove old links if any */
-   IF hb_FLinkSym( cDst, cSrc ) == 0
+   IF hb_FLinkSym( cDst, cSrc ) != F_ERROR
       OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Creating symlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
       IF FError() == 5 .AND. Empty( hb_FNameDir( cDst ) )
          cDst := hb_FnameMerge( hb_FNameDir( cSrc ), cDst )
-         IF hb_FLink( cDst, cSrc ) == 0
+         IF hb_FLink( cDst, cSrc ) != F_ERROR
             OutStd( hb_StrFormat( "! Hardlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
          ELSE
             OutStd( hb_StrFormat( "! Error: Creating hardlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
-            IF hb_FCopy( cDst, cSrc ) == 0
+            IF hb_FCopy( cDst, cSrc ) != F_ERROR
                OutStd( hb_StrFormat( "! Copyfile: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Copying file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )

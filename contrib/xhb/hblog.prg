@@ -518,7 +518,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
             NEXT
          ENDIF
 
-         IF FRename( ::cFileName, ::cFileName + ".000" ) == 0
+         IF FRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
             ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
             FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
          ENDIF

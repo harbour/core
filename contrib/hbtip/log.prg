@@ -110,4 +110,4 @@ METHOD Close() CLASS TIPLog
    RETURN .F.
 
 METHOD Clear() CLASS TIPLog
-   RETURN ::Close() .AND. FErase( ::cFileName ) == 0
+   RETURN ::Close() .AND. FErase( ::cFileName ) != F_ERROR

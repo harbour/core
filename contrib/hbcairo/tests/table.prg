@@ -48,7 +48,7 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
    dbGoTop()
    aWidth := Array( Len( aCol ) )
    FOR nI := 1 TO Len( aCol )
-      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", FieldLen( FieldPos( aCol[ nI, 2 ] ) ) ) )[ 5 ]
+      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", hb_FieldLen( FieldPos( aCol[ nI, 2 ] ) ) ) )[ 5 ]
       aWidth[ nI ] := Max( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI, 1 ] )[ 5 ] ) + 20
    NEXT
    nW := 0

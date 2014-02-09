@@ -1,4 +1,4 @@
-/* TEST FOR USING VARIABLE NUMBER OF PARAMETERS */
+/* Test for using variable number of parameters */
 
 MEMVAR m_iLoop
 
@@ -125,7 +125,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE TEST_0_0v( ... )
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    FOR m_iLoop := 1 TO PCount()
       ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
@@ -136,7 +136,7 @@ STATIC PROCEDURE TEST_0_0v( ... )
 
 STATIC PROCEDURE TEST_0_0()
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    FOR m_iLoop := 1 TO PCount()
       ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
@@ -149,7 +149,7 @@ STATIC PROCEDURE TEST_1_0v( ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    FOR i := 1 TO PCount()
       ? i, "=", hb_PValue( i )
@@ -163,7 +163,7 @@ STATIC PROCEDURE TEST_1_0()
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    FOR i := 1 TO PCount()
       ? i, "=", hb_PValue( i )
@@ -177,7 +177,7 @@ STATIC PROCEDURE TEST_1_3v( a, b, c, ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    ? "b=", b
@@ -198,7 +198,7 @@ STATIC PROCEDURE TEST_1_3( a, b, c )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    ? "b=", b
@@ -219,7 +219,7 @@ STATIC PROCEDURE TEST_1_1( a )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    FOR i := 1 TO PCount()
@@ -234,7 +234,7 @@ STATIC PROCEDURE TEST_1_1v( a, ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    FOR i := 1 TO PCount()
@@ -249,7 +249,7 @@ STATIC PROCEDURE TEST_3_3v( a, b, c, ... )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -270,7 +270,7 @@ STATIC PROCEDURE TEST_3_3( a, b, c )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -291,7 +291,7 @@ STATIC PROCEDURE TEST_3_0()
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -307,7 +307,7 @@ STATIC PROCEDURE TEST_3_0v( ... )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received:", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -324,7 +324,7 @@ STATIC PROCEDURE TEST_REF( a, ... )
    LOCAL b
 
    ? "@@@"
-   ? ProcName( 0 ), " received:", PCount()
+   ? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "a=", a
    ? "b=", b
    FOR EACH b IN hb_AParams( 0 )

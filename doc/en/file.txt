@@ -396,7 +396,7 @@
 
    $EXAMPLES$
       #include "fileio.ch"
-      IF FErase( "test.txt" ) == 0
+      IF FErase( "test.txt" ) != F_ERROR
          ? "File successfully erased"
       ELSE
          ? "File can not be deleted"

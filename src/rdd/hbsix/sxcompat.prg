@@ -78,6 +78,7 @@
  */
 
 #include "dbinfo.ch"
+#include "fileio.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
 
@@ -336,10 +337,8 @@ FUNCTION sx_KillTag( xTag, xIndex )
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
          ENDIF
-         IF ! Empty( cIndex )
-            IF ordBagClear( cIndex )
-               lRet := FErase( cIndex ) != -1
-            ENDIF
+         IF ! Empty( cIndex ) .AND. ordBagClear( cIndex )
+            lRet := FErase( cIndex ) != F_ERROR
          ENDIF
       ENDIF
    ELSE
@@ -510,8 +509,8 @@ FUNCTION sx_VSigLen( xField )
          nField := xField
       ENDIF
       IF nField >= 1 .AND. nField <= FCount()
-         nResult := FieldLen( nField )
-         IF FieldType( nField ) == "V" .AND. nResult >= 6
+         nResult := hb_FieldLen( nField )
+         IF hb_FieldType( nField ) == "V" .AND. nResult >= 6
             nResult -= 6
          ENDIF
       ENDIF

@@ -211,7 +211,7 @@ PROCEDURE Main( ... )
 
       FOR i := 1 TO oTable:FCount()
          cField := Lower( oTable:FieldName( i ) )
-         sType := FieldType( FieldPos( cField ) )
+         sType := hb_FieldType( FieldPos( cField ) )
          dType := oRecord:FieldType( i )
          cValue := FieldGet( FieldPos( cField ) )
 

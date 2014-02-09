@@ -280,12 +280,12 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
-      IF !( lRet := ( FErase( cFile ) == 0 ) )
-         ::Write( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
-      ELSE
+      IF ( lRet := ( FErase( cFile ) != F_ERROR ) )
          ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
          ::CreateSID()
          ::hCookies[ "SESSIONID" ] := ::cSID
+      ELSE
+         ::Write( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ENDIF
    ENDIF
 

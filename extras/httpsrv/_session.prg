@@ -700,9 +700,11 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
       ENDDO
    ELSE
       // If session data is empty, I will delete the file if exist
-      // IF hb_FileExists( cFile )
-      //    FErase( cFile )
-      // ENDIF
+#if 0
+      IF hb_FileExists( cFile )
+         FErase( cFile )
+      ENDIF
+#endif
       // Return that all is ok
       lOk := .T.
    ENDIF
@@ -726,7 +728,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
    lOk := .F.
    DO WHILE nRetry++ <= ::nFileRetry
-      IF ( lOk := ( FErase( cFile ) == 0 ) )
+      IF ( lOk := ( FErase( cFile ) != F_ERROR ) )
          EXIT
       ELSE
          hb_idleSleep( ::nFileWait / 1000 )
@@ -735,7 +737,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
    ENDDO
 
 #if 0
-   IF !( lOk := ( FErase( cFile ) == 0 ) )
+   IF !( lOk := ( FErase( cFile ) != F_ERROR ) )
       uhttpd_Die( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
    ELSE
 #endif

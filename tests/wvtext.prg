@@ -80,7 +80,6 @@ PROCEDURE Main()
          EXIT
       ENDIF
 
-
       DO CASE
       CASE nKey == K_ENTER
          Alert( "<Enter> Pressed" )
@@ -541,7 +540,9 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    DO CASE
    CASE nKey == K_ESC        ; lEnd := .T.
-// CASE nKey == K_ENTER      ; lEnd := .T.
+#if 0
+   CASE nKey == K_ENTER      ; lEnd := .T.
+#endif
    CASE nKey == K_DOWN       ; oBrowse:Down()
    CASE nKey == K_UP         ; oBrowse:Up()
    CASE nKey == K_LEFT       ; oBrowse:Left()

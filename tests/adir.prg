@@ -4,6 +4,8 @@
 
 PROCEDURE Main()
 
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
    TestIt( hb_osFileMask() )
    TestIt( hb_ps() )
    TestIt( ".." + hb_ps() )
@@ -26,8 +28,6 @@ STATIC PROCEDURE TestIt( cSpec )
    // ADir( cSpec, , , , , {} )
 
    a := ADir( cSpec, , , , , {} )
-
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    a1 := Array( a )
    a2 := Array( a )

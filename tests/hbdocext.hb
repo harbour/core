@@ -19,15 +19,11 @@ PROCEDURE Main()
    LOCAL cFile
    LOCAL cDst
 
-   LOCAL cHdr := ""
-
    FOR EACH aFile IN Directory( hb_osFileMask() )
-      cFile := __hbdoc_ToSource( __hbdoc_FromSource( MemoRead( aFile[ F_NAME ] ) ) )
-      IF ! Empty( cFile )
-         cDst := hb_FNameExtSet( aFile[ F_NAME ], ".txt" )
-         IF ! hb_FileExists( cDst )
+      IF ! Empty( cFile := __hbdoc_ToSource( __hbdoc_FromSource( MemoRead( aFile[ F_NAME ] ) ) ) )
+         IF ! hb_FileExists( cDst := hb_FNameExtSet( aFile[ F_NAME ], ".txt" ) )
             ? "Saving", cDst
-            hb_MemoWrit( cDst, cHdr + cFile )
+            hb_MemoWrit( cDst, cFile )
          ENDIF
       ENDIF
    NEXT

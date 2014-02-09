@@ -76,8 +76,8 @@ CREATE CLASS TCgiFile
    METHOD New( cName )
    METHOD Open( nMode )
    METHOD Close() INLINE FClose( ::Handle ), ::Handle := F_ERROR
-   METHOD Rename( c ) INLINE FRename( ::File, c ) == 0
-   METHOD Erase() INLINE FErase( ::File ) == 0
+   METHOD Rename( c ) INLINE FRename( ::File, c ) != F_ERROR
+   METHOD Erase() INLINE FErase( ::File ) != F_ERROR
    METHOD Exists() INLINE hb_FileExists( ::File )
    METHOD Error() INLINE FError() != 0
    METHOD Tell() INLINE FSeek( ::handle, 0, FS_RELATIVE )
