@@ -207,7 +207,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
          IF ! hbmk[ "lDONTEXEC" ]
             hb_processRun( cBIN + " -v",,, @cStdErr )
             IF ! Empty( cStdErr )
-               cStdErr := " [" + StrTran( StrTran( cStdErr, Chr( 13 ) ), Chr( 10 ) ) + "]"
+               cStdErr := " [" + hb_StrReplace( cStdErr, Chr( 13 ) + Chr( 10 ) ) + "]"
             ENDIF
          ENDIF
          hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s%3$s (autodetected)", cName, cBIN, cStdErr ) )

@@ -69,10 +69,10 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
-      cColorHigh := StrTran( StrTran( ;
+      cColorHigh := hb_StrReplace( ;
          iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
             SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
-            "N/" + cColorNorm ), "+", "" ), "*", "" )
+            "N/" + cColorNorm ), "+*" )
    ENDIF
 
    aOptionsOK := {}
@@ -137,10 +137,10 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
-      cColorHigh := StrTran( StrTran( ;
+      cColorHigh := hb_StrReplace( ;
          iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
             SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
-            "N/" + cColorNorm ), "+", "" ), "*", "" )
+            "N/" + cColorNorm ), "+*" )
    ENDIF
 
    aOptionsOK := {}

@@ -194,7 +194,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF Lower( hb_FNameExt( cDataBase ) ) == ".fdb"
-         oConnection:Execute( "CREATE TABLE " + cTableName + " (" + StrTran( StrTran( aWAData[ WA_SQLSTRUCT ], "[", '"' ), "]", '"' ) + ")" )
+         oConnection:Execute( "CREATE TABLE " + cTableName + " (" + hb_StrReplace( aWAData[ WA_SQLSTRUCT ], "[]", '""' ) + ")" )
       ELSE
          oConnection:Execute( "CREATE TABLE [" + cTableName + "] (" + aWAData[ WA_SQLSTRUCT ] + ")" )
       ENDIF

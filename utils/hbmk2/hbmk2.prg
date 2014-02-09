@@ -16058,7 +16058,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
                         IF hb_LeftIs( tmp, "-I" )
                            tmp := SubStr( tmp, 2 + 1 )
                         ENDIF
-                        tmp := StrTran( StrTran( tmp, '"' ), "%HOME%\" )
+                        tmp := hb_StrReplace( tmp, { '"', "%HOME%\" } )
                         FOR EACH tmp1 IN hb_ATokens( tmp, ";" )
                            IF ! Empty( tmp1 )
                               AAdd( aDst, "-incpath=" + tmp1 )

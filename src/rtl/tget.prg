@@ -1173,7 +1173,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    IF lEdit .AND. ::lEdit
       IF "*" $ cPicMask .OR. ;
          "$" $ cPicMask
-         cPicMask := StrTran( StrTran( cPicMask, "*", "9" ), "$", "9" )
+         cPicMask := hb_StrReplace( cPicMask, "*$", "99" )
       ENDIF
    ENDIF
 
@@ -1297,11 +1297,11 @@ METHOD unTransform() CLASS Get
             ELSE
                IF "E" $ ::cPicFunc
                   cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
-                             StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) + ;
+                             hb_StrReplace( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".,", " ." ) + ;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ELSE
                   cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
-                                      StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) + ;
+                                   StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) + ;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ENDIF
 

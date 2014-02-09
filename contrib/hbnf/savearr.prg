@@ -144,7 +144,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "D"
          cMemVar := Space( 8 )
          FRead( nHandle, @cMemVar, 8 )
-         IF Empty( hb_StrReplace( cMemVar, "0123456789", "" ) )
+         IF Empty( hb_StrReplace( cMemVar, "0123456789" ) )
             xMemVar := hb_SToD( cMemVar )
          ELSE
             /* Original Cl*pper NFLIB format:

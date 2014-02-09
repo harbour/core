@@ -822,7 +822,7 @@ METHOD Log( ... ) CLASS TIPClient
          IF xVar:__enumIsLast()
             cMsg += hb_CStr( xVar )
          ELSE
-            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ), "<cr>" ), Chr( 10 ), "<lf>" )
+            cMsg += hb_StrReplace( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) + Chr( 10 ), { "<cr>", "<lf>" } )
          ENDIF
 
          DO CASE

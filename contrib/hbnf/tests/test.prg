@@ -24,4 +24,7 @@ PROCEDURE Main()
    HBTEST ft_EscCode( "\015" ) IS hb_BChar( 15 )
    HBTEST ft_EscCode( "\\" )   IS "\"
 
+   HBTEST ft_InvClr( "GR+/B*" ) IS "B*+/GR"
+   HBTEST ft_InvClr( "GR/B" )   IS "B/GR"
+
    RETURN

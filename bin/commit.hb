@@ -391,8 +391,8 @@ STATIC FUNCTION GitUser()
    hb_processRun( Shell() + " " + CmdEscape( "git config user.email" ),, @cEMail )
 
    RETURN hb_StrFormat( "%s (%s)", ;
-      AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ), "" ) ), ;
-      StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ), "" ) ), "@", " " ) )
+      AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ) ) ), ;
+      StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ) ) ), "@", " " ) )
 
 STATIC FUNCTION GitEditor()
 
@@ -400,7 +400,7 @@ STATIC FUNCTION GitEditor()
 
    hb_processRun( Shell() + " " + CmdEscape( "git config --global core.editor" ),, @cValue )
 
-   cValue := hb_StrReplace( cValue, Chr( 10 ) + Chr( 13 ), "" )
+   cValue := hb_StrReplace( cValue, Chr( 10 ) + Chr( 13 ) )
 
    IF Left( cValue, 1 ) == "'" .AND. Right( cValue, 1 ) == "'"
       cValue := hb_StrShrink( SubStr( cValue, 2 ) )

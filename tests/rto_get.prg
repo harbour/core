@@ -836,8 +836,10 @@ STATIC PROCEDURE TGetTOVS( o, aKeys, lInsert )
 
    RETURN
 
+#ifdef _COMMENT_
 STATIC FUNCTION TGetTIns( o, aKeys )
    RETURN TGetTOVS( o, aKeys, .T. )
+#endif
 
 STATIC PROCEDURE TGetAssign( xVar )
    LOCAL o
