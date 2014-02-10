@@ -154,8 +154,6 @@ PROCEDURE Main( cUrl, cFile )
 
 STATIC PROCEDURE ShowGauge( nSent, nSize )
 
-   hb_default( @nSize, 0 )
-
    SetPos( Row(), 0 )
    ?? "Sending:", nSent, "/", nSize
 

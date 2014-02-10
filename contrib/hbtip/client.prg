@@ -442,15 +442,19 @@ METHOD Read( nLen ) CLASS TIPClient
 
    RETURN cStr0
 
-METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
+METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
    LOCAL nFOut
    LOCAL cData
-   LOCAL nSent
+   LOCAL nSent := 0
 
-   hb_default( @nMode, FC_NORMAL )
+   LOCAL lToMemory := hb_PIsByRef( 1 )
 
-   nSent := 0
+   hb_default( @nSize, 0 )
+
+   IF lToMemory
+      cFile := ""
+   ENDIF
 
    IF HB_ISEVALITEM( ::exGauge )
       Eval( ::exGauge, nSent, nSize, Self )
@@ -466,14 +470,16 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
          ENDIF
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
-      IF nFOut == NIL
-         IF ( nFOut := FCreate( cFile, nMode ) ) == F_ERROR
+      IF ! lToMemory .AND. nFOut == NIL
+         IF ( nFOut := FCreate( cFile, hb_defaultValue( nMode, FC_NORMAL ) ) ) == F_ERROR
             ::nStatus := 0
             RETURN .F.
          ENDIF
       ENDIF
 
-      IF FWrite( nFOut, cData ) != hb_BLen( cData )
+      IF lToMemory
+         cFile += cData
+      ELSEIF FWrite( nFOut, cData ) != hb_BLen( cData )
          FClose( nFOut )
          RETURN .F.
       ENDIF
