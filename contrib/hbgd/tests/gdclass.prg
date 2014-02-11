@@ -190,13 +190,11 @@ PROCEDURE Main()
    // oI2:CopyRotated( , , , , , , 90, oI4 )
    oI4:SaveJpeg( IMAGES_OUT + "rotatein.jpg" )
 
-
    oI5:Zoom( 40 )
    // oI5:Rotate( 90 )
    blue := oI5:SetColor( 0, 0, 200 )
    oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "GD", "verdana", 20, 0, blue )
    oI5:SaveJpeg( IMAGES_OUT + "gd_zoom.jpg" )
-
 
    oI5 := GDChart():New( 400, 400 )
    // Define piece colors
@@ -246,9 +244,9 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
    oI5:AddDef( "COLOR", blue )
 
-   // oI5:AddSeries( "LABEL"  => "Primo", ;
-   //                "VALUES" => { 10, 23, 54, 11, 32, 25 }, ;
-   //                "COLOR"  => blue )
+#if 0
+   oI5:AddSeries( { "LABEL"  => "Primo", "VALUES" => { 10, 23, 54, 11, 32, 25 }, "COLOR"  => blue } )
+#endif
 
 #if 0
    oI5:SetData( { ;

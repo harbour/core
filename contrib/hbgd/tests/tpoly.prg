@@ -14,6 +14,11 @@ STATIC s_nAngle, s_nCoordX, s_nCoordY
 
 PROCEDURE Main()
 
+   // Check output directory
+   IF ! hb_DirExists( IMAGES_OUT )
+      DirMake( IMAGES_OUT )
+   ENDIF
+
    DrawFlake( .T. )
    DrawFlake( .F. )
 
@@ -69,7 +74,7 @@ STATIC PROCEDURE DrawFlake( lOpenPoly )
 
    ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
-   /** In yellow */
+   /* In yellow */
    gdColor := gdImageColorAllocate( gdImage, 255, 255, 0 )
 
    IF lOpenPoly
@@ -90,28 +95,28 @@ STATIC PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
          s_nCoordY += Sin( s_nAngle ) * nSideLen;
          } )
    ELSE
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnRight( 2 )
       ELSE
          TurnLeft( 2 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
    ENDIF
 
    RETURN

@@ -85,15 +85,12 @@ ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDChart
 
-   hb_default( @sx, 320 )
-   hb_default( @sy, 200 )
-
    ::cTitle := "Chart"
    ::aSeries        := {}
    ::hDefs          := { => }
    ::aDataOfHashes  := {}
 
-   ::Create( sx, sy )
+   ::Create( hb_defaultValue( sx, 320 ), hb_defaultValue( sy, 200 ) )
 
    RETURN Self
 
@@ -178,7 +175,7 @@ METHOD PieChart() CLASS GDChart
 
    nWidth -= ( nTotExtr + 2 ) * 2
 
-   // Second,
+   // Second
    FOR EACH hElement IN aPieDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
@@ -234,7 +231,9 @@ METHOD PieChart() CLASS GDChart
             colorp    := ::GetPixel( nPosX, nPosY )
             textcolor := ::SetColor( 255 - ::Red( colorp ), 255 - ::Green( colorp ), 255 - ::Blue( colorp ) )
          ENDIF
-         // cTitle := hb_ntos( nVal )
+#if 0
+         cTitle := hb_ntos( nVal )
+#endif
          IF hFont == NIL
             ::Say( nPosX, nPosY, cLabel, textcolor, gdAlignCenter )
          ELSE
@@ -250,8 +249,11 @@ METHOD PieChart() CLASS GDChart
 METHOD VerticalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-// LOCAL nDegree := 0
-   LOCAL pTile, lFilled //, lExtruded, nExtrude
+   LOCAL pTile, lFilled
+#if 0
+   LOCAL nExtrude
+   LOCAL lExtruded
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -393,7 +395,7 @@ METHOD VerticalBarChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
@@ -407,7 +409,9 @@ METHOD VerticalBarChart() CLASS GDChart
       nDim      := ( nVal / nMaxValue ) * nHeight
 
       hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
@@ -436,7 +440,11 @@ METHOD VerticalBarChart() CLASS GDChart
 METHOD HorizontalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-   LOCAL pTile, lFilled //, lExtruded, nExtrude
+   LOCAL pTile, lFilled
+#if 0
+   LOCAL nExtrude
+   LOCAL lExtruded
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -581,7 +589,7 @@ METHOD HorizontalBarChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
@@ -594,7 +602,9 @@ METHOD HorizontalBarChart() CLASS GDChart
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nWidth
       hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x
@@ -623,7 +633,12 @@ METHOD HorizontalBarChart() CLASS GDChart
 METHOD LineChart() CLASS GDChart
 
    LOCAL hElement
-   LOCAL pTile //, lFilled, lExtruded, nExtrude
+   LOCAL pTile
+#if 0
+   LOCAL lFilled
+   LOCAL lExtruded
+   LOCAL nExtrude
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -806,11 +821,13 @@ METHOD LineChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    aPoints := {}
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
-      // lFilled   := __HGetValue( hElement, "FILLED" )
+#if 0
+      lFilled   := __HGetValue( hElement, "FILLED" )
+#endif
       pTile     := __HGetValue( hElement, "TILE" )
 #if 0
       nExtrude  := __HGetValue( hElement, "EXTRUDE" )
@@ -820,8 +837,10 @@ METHOD LineChart() CLASS GDChart
       nVal      := hElement[ "VALUE" ]
       nDim      := ( ( nVal + Abs( nMinValue ) ) / nTotRange ) * nHeight
 
-      // hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @lFilled, .F. )
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
@@ -835,7 +854,9 @@ METHOD LineChart() CLASS GDChart
             colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
          ENDIF
       ENDIF
-      // ::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
+#if 0
+      ::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
+#endif
       AAdd( aPoints, { nPosX, ::Height() - ( nPosY + nDim ) } )
 
       IF lShowAxis
@@ -882,7 +903,9 @@ METHOD Clone() CLASS GDChart
 
    pImage := oDestImage:pImage
    oDestImage := oDestImage:CloneDataFrom( Self )
-   // oDestImage := __objClone( Self )
+#if 0
+   oDestImage := __objClone( Self )
+#endif
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 

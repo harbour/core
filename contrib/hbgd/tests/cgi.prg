@@ -110,14 +110,12 @@ PROCEDURE Main( ... )
 
 STATIC PROCEDURE StartHTML( cTitle )
 
-   hb_default( @cTitle, "" )
-
    WRITE "content-type: text/html"
    WRITE "Pragma: no-cache"
    WRITE hb_eol()
    WRITE "<html>"
    WRITE "<head>"
-   WRITE "<title>" + cTitle + "</title>"
+   WRITE "<title>" + hb_defaultValue( cTitle, "" ) + "</title>"
    WRITE "</head>"
    WRITE "<body>"
 
@@ -228,33 +226,28 @@ STATIC PROCEDURE OutJpg( cText, nPitch )
 STATIC FUNCTION GetVars( cFields, cSeparator )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   hb_default( @cSeparator, "&" )
+   FOR EACH cField in hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
 
-   aFields := hb_regexSplit( cSeparator, cFields )
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
 
-   FOR EACH cField in aFields
-      aField := hb_regexSplit( "=", cField, 2 )
-      IF Len( aField ) != 2
-         LOOP
+         cName  := LTrim( aField[ 1 ] )
+         xValue := UrlDecode( aField[ 2 ] )
+
+         // TraceLog( "cName, xValue", cName, xValue )
+
+         // is it an array entry?
+         IF Right( cName, 2 ) == "[]"
+            cName := hb_StrShrink( cName, 2 )
+
+            hHashVars[ cName ] := { xValue }
+         ELSE
+            hHashVars[ cName ] := xValue
+         ENDIF
+         // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
       ENDIF
-
-      cName  := LTrim( aField[ 1 ] )
-      xValue := UrlDecode( aField[ 2 ] )
-
-      // TraceLog( "cName, xValue", cName, xValue )
-
-      // is it an array entry?
-      IF Right( cName, 2 ) == "[]"
-         cName := hb_StrShrink( cName, 2 )
-
-         hHashVars[ cName ] := { xValue }
-      ELSE
-         hHashVars[ cName ] := xValue
-      ENDIF
-      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 
@@ -263,31 +256,28 @@ STATIC FUNCTION GetVars( cFields, cSeparator )
 STATIC FUNCTION GetParams( aParams )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   aFields := aParams
+   FOR EACH cField in aParams
 
-   FOR EACH cField in aFields
-      aField := hb_regexSplit( "=", cField, 2 )
-      IF Len( aField ) != 2
-         LOOP
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
+
+          cName  := LTrim( aField[ 1 ] )
+          xValue := UrlDecode( aField[ 2 ] )
+
+          // TraceLog( "cName, xValue", cName, xValue )
+
+          // is it an array entry?
+          IF Right( cName, 2 ) == "[]"
+             cName := hb_StrShrink( cName, 2 )
+
+             hHashVars[ cName ] := { xValue }
+          ELSE
+             hHashVars[ cName ] := xValue
+          ENDIF
+          // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
       ENDIF
-
-      cName  := LTrim( aField[ 1 ] )
-      xValue := UrlDecode( aField[ 2 ] )
-
-      // TraceLog( "cName, xValue", cName, xValue )
-
-      // is it an array entry?
-      IF Right( cName, 2 ) == "[]"
-         cName := hb_StrShrink( cName, 2 )
-
-         hHashVars[ cName ] := { xValue }
-      ELSE
-         hHashVars[ cName ] := xValue
-      ENDIF
-      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 

@@ -134,7 +134,7 @@ CREATE CLASS GDImage
    DESTRUCTOR Destruct()
 #endif
 
-   /* DRAWING FUNCTIONS */
+   /* Drawing functions */
 
    METHOD SetPixel( x, y, color )          INLINE __defaultNIL( @color, ::pColor ), gdImageSetPixel( ::pImage, x, y, color )
    METHOD Line( x1, y1, x2, y2, color )    INLINE __defaultNIL( @color, ::pColor ), gdImageLine( ::pImage, x1, y1, x2, y2, color )
@@ -164,7 +164,7 @@ CREATE CLASS GDImage
    METHOD SetBrush( pBrush )               INLINE gdImageSetBrush( ::pImage, pBrush:pImage ), ::pBrush := pBrush
    METHOD SetTile( pTile )                 INLINE gdImageSetTile( ::pImage, pTile:pImage ), ::pTile := pTile
 
-   // Functions usefull for style
+   // Functions useful for style
    METHOD SetStyle( aStyle )               INLINE hb_default( @aStyle, ::aStyles ), gdImageSetStyle( ::pImage, aStyle )
    METHOD AddStyle( pColor )               INLINE AAdd( ::aStyles, pColor )
    METHOD ResetStyles()                    INLINE ::aStyles := {}
@@ -175,7 +175,7 @@ CREATE CLASS GDImage
    METHOD SetSaveAlpha( lSaveAlpha )          INLINE gdImageSaveAlpha( ::pImage, lSaveAlpha )
    METHOD SetClippingArea( x1, y1, x2, y2 )   INLINE gdImageSetClip( ::pImage, x1, y1, x2, y2 )
 
-   /* QUERY FUNCTIONS */
+   /* Query functions */
 
    METHOD ColorsTotal()                    INLINE gdImageColorsTotal( ::pImage )
    METHOD Alpha( color )                   INLINE __defaultNIL( @color, ::pColor ), gdImageAlpha( ::pImage, color )
@@ -204,7 +204,8 @@ CREATE CLASS GDImage
    METHOD GetTrueColor( x, y )             INLINE gdImageTrueColorPixel( ::pImage, x, y )
    METHOD GetThickness()                   INLINE gdImageGetThickness( ::pImage )
 
-   /* FONTS AND TEXT-HANDLING FUNCTIONS */
+   /* Fonts and text-handling functions */
+
    METHOD SetFontSmall()                   INLINE ::pFont := gdFontGetSmall()
    METHOD SetFontLarge()                   INLINE ::pFont := gdFontGetLarge()
    METHOD SetFontMediumBold()              INLINE ::pFont := gdFontGetMediumBold()
@@ -239,9 +240,9 @@ CREATE CLASS GDImage
                                                       hb_default( @nPitch, ::nFontPitch ), ;
                                                       gdImageFTSize( cString, cFontName, nPitch )
 
-   /* COLOR HANDLING FUNCTIONS */
+   /* Color handling functions */
 
-   METHOD SetColor( r, g, b )                INLINE iif( PCount() == 1, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
+   METHOD SetColor( r, g, b )                INLINE iif( PCount() == 2, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
    METHOD DelColor( pColor )                 INLINE ::pColor := NIL, gdImageColorDeallocate( ::pImage, pColor )
    METHOD SetColorAlpha( r, g, b, a )        INLINE ::pColor := gdImageColorAllocateAlpha( ::pImage, r, g, b, a)
    METHOD SetColorClosest( r, g, b )         INLINE ::pColor := gdImageColorClosest( ::pImage, r, g, b )
@@ -256,7 +257,7 @@ CREATE CLASS GDImage
    METHOD SetInterlaceOn()                   INLINE gdImageInterlace( ::pImage, .T. )
    METHOD SetInterlaceOff()                  INLINE gdImageInterlace( ::pImage, .F. )
 
-   /* COPY AND RESIZING FUNCTIONS */
+   /* Copy and resizing functions */
 
    METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage )
    METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage )
@@ -265,7 +266,7 @@ CREATE CLASS GDImage
    METHOD CopyMerge( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage )
    METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestImage )
 
-   /* New implemented */
+   /* Newly implemented */
    METHOD Clone()
    METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight )
    METHOD Crop( nX, nY, nWidth, nHeight )
@@ -306,10 +307,9 @@ METHOD PROCEDURE Destruct() CLASS GDImage
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
 
    hb_default( @aPoints, ::aPoints )
-   hb_default( @lFilled, .F. )
    __defaultNIL( @color, ::pColor )
 
-   IF lFilled
+   IF hb_defaultValue( lFilled, .F. )
       gdImageFilledPolygon( ::pImage, aPoints, color )
    ELSE
       gdImagePolygon( ::pImage, aPoints, color )
@@ -328,10 +328,9 @@ METHOD OpenPolygon( aPoints, color ) CLASS GDImage
 
 METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
 
-   hb_default( @lFilled, .F. )
    __defaultNIL( @color, ::pColor )
 
-   IF lFilled
+   IF hb_defaultValue( lFilled, .F. )
       gdImageFilledRectangle( ::pImage, x1, y1, x2, y2, color )
    ELSE
       gdImageRectangle( ::pImage, x1, y1, x2, y2, color )
@@ -341,11 +340,10 @@ METHOD Rectangle( x1, y1, x2, y2, lFilled, color ) CLASS GDImage
 
 METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nStyle ) CLASS GDImage
 
-   hb_default( @lFilled, .F. )
    __defaultNIL( @color, ::pColor )
    hb_default( @nStyle, gdArc )
 
-   IF lFilled
+   IF hb_defaultValue( lFilled, .F. )
       gdImageFilledArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color, nStyle )
    ELSE
       gdImageArc( ::pImage, x, y, nWidth, nHeight, nStartDegree, nEndDegree, color )
@@ -355,10 +353,9 @@ METHOD Arc( x, y, nWidth, nHeight, nStartDegree, nEndDegree, lFilled, color, nSt
 
 METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
 
-   hb_default( @lFilled, .F. )
    __defaultNIL( @color, ::pColor )
 
-   IF lFilled
+   IF hb_defaultValue( lFilled, .F. )
       gdImageFilledEllipse( ::pImage, x, y, nWidth, nHeight, color )
    ELSE
       gdImageEllipse( ::pImage, x, y, nWidth, nHeight, color )
@@ -371,9 +368,7 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
    LOCAL aLoad
 
    aLoad := gdImageFromFile( cFile )
-   // Self  := aLoad[ 1 ]:Clone()
    Self := ::CloneDataFrom( aLoad[ 1 ] )
-   // Self := __objClone( aLoad[ 1 ] )
    aLoad[ 1 ] := NIL
 
    ::hFile := aLoad[ 2 ]
@@ -561,12 +556,12 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
 
    hb_default( @lInside, .F. )
 
-   IF ! lInside
-      nWidth  := ::Width * Cos( nAngRad ) + ::Height * Sin( nAngRad )
-      nHeight := ::Width * Sin( nAngRad ) + ::Height * Cos( nAngRad )
-   ELSE
+   IF lInside
       nWidth  := ::Width
       nHeight := ::Height
+   ELSE
+      nWidth  := ::Width * Cos( nAngRad ) + ::Height * Sin( nAngRad )
+      nHeight := ::Width * Sin( nAngRad ) + ::Height * Cos( nAngRad )
    ENDIF
 
    IF ::IsTrueColor()
@@ -574,13 +569,12 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    ELSE
       oDestImage := GDImage():Create( nWidth, nHeight )
    ENDIF
-   IF ! lInside
-      ::CopyRotated( ,,,, nWidth - nWidth / 2, nHeight - nHeight / 2, nAngle, oDestImage )
-   ELSE
+   IF lInside
       ::CopyRotated( ,,,,,, nAngle, oDestImage )
+   ELSE
+      ::CopyRotated( ,,,, nWidth - nWidth / 2, nHeight - nHeight / 2, nAngle, oDestImage )
    ENDIF
    Self := ::CloneDataFrom( oDestImage )
-   // Self := __objClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    oDestImage := NIL
@@ -593,7 +587,6 @@ METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
 
    oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
    Self := ::CloneDataFrom( oDestImage )
-   // Self := __objClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    oDestImage := NIL
@@ -606,7 +599,6 @@ METHOD Resize( nWidth, nHeight ) CLASS GDImage
 
    oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
    Self := ::CloneDataFrom( oDestImage )
-   // Self := __objClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    oDestImage := NIL
@@ -619,7 +611,6 @@ METHOD Zoom( nPerc ) CLASS GDImage
 
    oDestImage := ::CopyZoomed( nPerc )
    Self := ::CloneDataFrom( oDestImage )
-   // Self := __objClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    oDestImage := NIL
@@ -639,13 +630,14 @@ METHOD Clone() CLASS GDImage
 
    pImage := oDestImage:pImage
    oDestImage := oDestImage:CloneDataFrom( Self )
-   // oDestImage := __objClone( Self )
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
-   // pImage := oDestImage:pImage
-   // oDestImage := NIL
-   // oDestImage:pImage := pImage
+#if 0
+   pImage := oDestImage:pImage
+   oDestImage := NIL
+   oDestImage:pImage := pImage
+#endif
 
    RETURN oDestImage
 
@@ -655,20 +647,21 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
    LOCAL nPosX
 
    __defaultNIL( @color, ::pColor )
-   hb_default( @nAlign, gdAlignLeft )
 
-   DO CASE
-   CASE nAlign == gdAlignCenter
+   SWITCH hb_defaultValue( nAlign, gdAlignLeft )
+   CASE gdAlignCenter
       nWidth := ::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen / 2 * nWidth )
-   CASE nAlign == gdAlignRight
+      EXIT
+   CASE gdAlignRight
       nWidth := ::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
+      EXIT
    OTHERWISE
       nPosX  := x
-   ENDCASE
+   ENDSWITCH
 
    gdImageString( ::pImage, ::pFont, nPosX, y, cString, color )
 
@@ -680,24 +673,25 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    LOCAL nWidth, nLen
    LOCAL nPosX
 
-   hb_default( @nAlign    , gdAlignLeft )
    __defaultNIL( @color   , ::pColor )
    hb_default( @cFontName , ::cFontName )
    hb_default( @nPitch    , ::nFontPitch )
    hb_default( @nAngle    , ::nFontAngle )
 
-   DO CASE
-   CASE nAlign == gdAlignCenter
+   SWITCH hb_defaultValue( nAlign, gdAlignLeft )
+   CASE gdAlignCenter
       nWidth := nPitch // gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( ( nLen / 2 ) * nWidth )
-   CASE nAlign == gdAlignRight
+      EXIT
+   CASE gdAlignRight
       nWidth := gdImageFTWidth( cFontName, nPitch ) // , ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
+      EXIT
    OTHERWISE
       nPosX  := x
-   ENDCASE
+   ENDSWITCH
 
    gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
       cString, nLineSpacing, nCharMap, nResolution )

@@ -61,7 +61,7 @@
 CREATE CLASS GDBar FROM GDImage
 
    // class attributes
-   VAR positionX      AS NUMERIC INIT  4
+   VAR positionX      AS NUMERIC INIT 4
    VAR positionY      AS NUMERIC
    VAR maxHeight      AS NUMERIC INIT 25
    VAR maxHDefa       AS NUMERIC INIT 25
@@ -134,13 +134,15 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
    ::Setfont( "Arial" )
 
    // configures Fontes
-   DO CASE
-   CASE ::textfont == 1; ::SetFontSmall()
-   CASE ::textfont == 2; ::SetFontLarge()
-   CASE ::textfont == 3; ::SetFontMediumBold()
-   CASE ::textfont == 4; ::SetFontGiant()
-   CASE ::textfont == 5; ::SetFontTiny()
-   ENDCASE
+   IF ::textfont != NIL
+      SWITCH ::textfont
+      CASE 1; ::SetFontSmall(); EXIT
+      CASE 2; ::SetFontLarge(); EXIT
+      CASE 3; ::SetFontMediumBold(); EXIT
+      CASE 4; ::SetFontGiant(); EXIT
+      CASE 5; ::SetFontTiny(); EXIT
+      ENDSWITCH
+   ENDIF
 
    ::SetFontPitch( ::textfont )
 
@@ -176,12 +178,7 @@ METHOD ResetColor() CLASS GDBar
    RETURN NIL
 
 METHOD Allocate() CLASS GDBar
-
-   LOCAL R := ::color_b[ 1 ]
-   LOCAL G := ::color_b[ 2 ]
-   LOCAL B := ::color_b[ 3 ]
-
-   RETURN ::SetColor( R, G, B )
+   RETURN ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
 METHOD DrawSingleBar( pcode ) CLASS GDBar
 
@@ -255,13 +252,13 @@ METHOD DrawText( lIsI25 ) CLASS GDBar
    LOCAL xPosition
 
    IF hb_defaultValue( lIsI25, .F. )
-      If ::textfont != 0
+      IF ! Empty( ::textfont )
          xPosition := 10 * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
          ::lastY := ::maxHeight + ::GetFontHeight()
       ENDIF
    ELSE
-      If ::textfont != 0
+      IF ! Empty( ::textfont )
          xPosition := ( ::positionX / 2 ) - ( Len( ::text ) / 2 ) * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, ::text, ::FillColor )
          ::lastY := ::maxHeight + ::GetFontHeight()
@@ -294,7 +291,7 @@ METHOD Finish( image_style, quality, nFG ) CLASS GDBar
 
    hb_default( @image_style, IMG_FORMAT_PNG )
 
-   IF Empty( ::filename ) .OR. ::filename == NIL
+   IF ::filename == NIL
       SWITCH image_style
       CASE IMG_FORMAT_PNG
          ::OutputPng()

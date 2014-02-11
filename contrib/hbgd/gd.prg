@@ -60,11 +60,11 @@ FUNCTION gdImageFTWidth( fontname, ptsize, angle )
    LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   IF gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" ) == ""
       nWidth := aRect[ 3 ] - aRect[ 1 ]
    ELSE
       nWidth := 0
@@ -77,11 +77,11 @@ FUNCTION gdImageFTHeight( fontname, ptsize, angle )
    LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   IF gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" ) == ""
       nWidth := aRect[ 2 ] - aRect[ 8 ]
    ELSE
       nWidth := 0
@@ -96,11 +96,11 @@ FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
    LOCAL nX, nY
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, string ) == ""
 
-   IF gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string ) == ""
       nWidth  := aRect[ 3 ] - aRect[ 1 ]
       nHeight := aRect[ 2 ] - aRect[ 8 ]
       nX      := aRect[ 1 ]
@@ -211,8 +211,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
          cExt := ""
       ENDSWITCH
       IF cString != NIL
-         hb_default( @cFile, "image" )
-         hb_MemoWrit( cFile + cExt, cString )
+         hb_MemoWrit( hb_defaultValue( cFile, "image" ) + cExt, cString )
       ENDIF
    ENDIF
 

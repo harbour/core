@@ -29,7 +29,6 @@ PROCEDURE Main()
 
    oI:SaveToFile( IMAGES_OUT + "testtofile" )
 
-   ?
    ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

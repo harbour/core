@@ -116,9 +116,6 @@ PROCEDURE Main( cValue, cBaseImage )
    /* Write Final Counter Image */
    oI:SaveGif( IMAGES_OUT + "counter.gif" )
 
-   /* Destroy images in memory */
-   // Class does it automatically
-
    ?
    ? "Look at", IMAGES_OUT, "folder for output images"
 

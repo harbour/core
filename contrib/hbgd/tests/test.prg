@@ -6,6 +6,11 @@ PROCEDURE Main()
 
    LOCAL im, im2, col, i
 
+   // Check output directory
+   IF ! hb_DirExists( IMAGES_OUT )
+      DirMake( IMAGES_OUT )
+   ENDIF
+
    im := gdImageCreateTrueColor( 100, 100 )
    col := gdImageColorAllocate( im, 255, 255, 255 )
 
