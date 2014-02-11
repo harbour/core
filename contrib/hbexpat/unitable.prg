@@ -46,7 +46,6 @@
  *
  */
 
-#undef __HBEXTREQ__
 #include "hbextcdp.ch"
 
 FUNCTION hb_XML_get_unicode_table( cCP )

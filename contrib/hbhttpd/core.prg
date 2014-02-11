@@ -10,7 +10,6 @@
 #include "hbver.ch"
 
 #include "hbssl.ch"
-#undef __HBEXTREQ__
 #include "hbssl.hbx"
 
 #pragma -km+

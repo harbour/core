@@ -3903,7 +3903,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cParam := hb_FNameExtSet( cParam, ".prg" )
          ELSEIF hb_FNameExt( cParamL ) == ".hbx"
             IF hb_FileExists( cParam )
-               AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D" + _HBMK_HBEXTREQ )
                AAdd( hbmk[ _HBMK_aPRG ], cParam )
             ENDIF
             LOOP
@@ -6377,14 +6376,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          /* Use integrated compiler */
 
          aThreads := {}
-         FOR EACH aTO_DO IN ArraySplit( l_aPRG_TO_DO, l_nJOBS )
+         FOR EACH aTO_DO IN ArraySplitHBX( l_aPRG_TO_DO, l_nJOBS, @tmp1 )
 
             aCommand := ArrayAJoin( { ;
                { iif( hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ], "-n1", "-n2" ) }, ;
                aTO_DO, ;
                iif( hbmk[ _HBMK_lBLDFLGP ], { hb_Version( HB_VERSION_FLAG_PRG ) }, {} ), ;
                ListToArray( iif( Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), "", " " + GetEnv( "HB_USER_PRGFLAGS" ) ) ), ;
-               hbmk[ _HBMK_aOPTPRG ] } )
+               hbmk[ _HBMK_aOPTPRG ], ;
+               iif( tmp1 .AND. aTO_DO:__enumIsLast(), { "-D" + _HBMK_HBEXTREQ }, {} ) } )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
@@ -10507,6 +10507,51 @@ STATIC FUNCTION ArrayAJoin( arrayList )
    NEXT
 
    RETURN array
+
+#ifdef HARBOUR_SUPPORT
+/* Split our own .hbx file (if any) into a separate last chunk,
+   so that we can compile it with a special -D option. */
+STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
+
+   LOCAL cFileName
+   LOCAL arrayHBX := {}
+
+   /* TODO: Ideally we should only split off the .hbx file if it's
+            the same one as speficied in hbmk[ _HBMK_cHBX ]
+            (-hbx= option) (aka "our own"), instead of any .hbx
+            file added to the project (not that it would make too
+            much sense to add extra .hbx files to a project).
+            Or even better, we should add hbmk[ _HBMK_cHBX ]
+            to the list of input files automatically, if it
+            exists, this way we can precisely detect it here.
+            This leads to another problem: How to ensure that
+            the .c/.o filename of the .hbx doesn't collide
+            with any normal object name of the project? To solve
+            it, it will be no longer true that the source and
+            target files only differ in their extensions.
+            Make a copy of it in workdir? It breaks incremental
+            change detection. Best would be to solve the tracking
+            of traget files (.c/.o) even if they differ in their
+            name, not only their extension. */
+
+   FOR EACH cFileName IN arrayIn DESCEND
+      IF hb_FNameExt( cFileName ) == ".hbx"
+         AAdd( arrayHBX, cFileName )
+         hb_ADel( arrayIn, cFileName:__enumIndex(), .T. )
+      ENDIF
+   NEXT
+
+   IF ! Empty( arrayHBX )
+      arrayIn := ArraySplit( arrayIn, nChunksReq )
+      AAdd( arrayIn, arrayHBX )
+      lLastIsHBX := .T.
+      RETURN arrayIn
+   ELSE
+      lLastIsHBX := .F.
+   ENDIF
+
+   RETURN ArraySplit( arrayIn, nChunksReq )
+#endif
 
 STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
 

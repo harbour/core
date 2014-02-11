@@ -70,15 +70,14 @@
 #include "fileio.ch"
 
 #if defined( _SSL_DEBUG_TEMP )
-#  include "simpleio.ch"
+   #include "simpleio.ch"
 #endif
 
 #include "hbssl.ch"
-#undef __HBEXTREQ__
 #include "hbssl.hbx"
 
-#define RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
-#define SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
+#define RCV_BUF_SIZE  Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
+#define SND_BUF_SIZE  Int( ::InetSndBufSize( ::SocketCon ) / 2 )
 
 /* Inet Client class */
 
@@ -362,7 +361,7 @@ METHOD Close() CLASS TIPClient
 
       nRet := hb_inetClose( ::SocketCon )
 
-      IF ::lHasSSL .AND. ::lTLS
+      IF ::lTLS .AND. ::lHasSSL
          SSL_shutdown( ::ssl )
          ::ssl := NIL
          ::ssl_ctx := NIL
@@ -415,12 +414,10 @@ METHOD Read( nLen ) CLASS TIPClient
       // read an amount of data
       cStr0 := Space( nLen )
 
-      IF ::lTLS
-         IF ::lHasSSL
-            /* Getting around implementing the hack used in non-SSL branch for now.
-               IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
-            ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
-         ENDIF
+      IF ::lTLS .AND. ::lHasSSL
+         /* Getting around implementing the hack used in non-SSL branch for now.
+            IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
+         ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
       ELSE
          // S.R. if len of file is less than RCV_BUF_SIZE hb_inetRecvAll return 0
          //      ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
@@ -757,7 +754,7 @@ METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
-   IF ::lHasSSL .AND. ::lTLS
+   IF ::lTLS .AND. ::lHasSSL
       SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
       SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )
       SSL_connect( ::ssl )
