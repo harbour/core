@@ -61,7 +61,7 @@ PROCEDURE Main()
    LOCAL cUser
    LOCAL cPassword
    LOCAL cDatabase := "postgres", cTable, cFile
-   LOCAL aDbfStruct, i
+   LOCAL i
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
    LOCAL cField
@@ -115,8 +115,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   USE ( cFile ) SHARED
-   aDbfStruct := dbStruct()
+   USE ( cFile ) SHARED READONLY
 
    oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassword, NIL, cPath )
    IF oServer:NetErr()
@@ -136,7 +135,7 @@ PROCEDURE Main()
             RETURN
          ENDIF
       ENDIF
-      oServer:CreateTable( cTable, aDbfStruct )
+      oServer:CreateTable( cTable, dbStruct() )
 
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
@@ -227,7 +226,7 @@ PROCEDURE Main()
 
       IF ( nCount % nCommit ) == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs: " + Str( nCount ) )
+         DevOut( "imported recs: " + hb_ntos( nCount ) )
 
          IF lUseTrans
             oServer:commit()

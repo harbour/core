@@ -57,7 +57,7 @@ PROCEDURE Main()
    LOCAL cUser := "root"
    LOCAL cPassword := ""
    LOCAL cDatabase, cTable, cFile
-   LOCAL aDbfStruct, i
+   LOCAL i
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
 
@@ -91,8 +91,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   dbUseArea( .T.,, cFile, "dbffile",, .T. )
-   aDbfStruct := dbffile->( dbStruct() )
+   USE ( cFile ) SHARED READONLY
 
    oServer := TMySQLServer():New( cHostName, cUser, cPassword )
    IF oServer:NetErr()
@@ -114,7 +113,7 @@ PROCEDURE Main()
             RETURN
          ENDIF
       ENDIF
-      oServer:CreateTable( cTable, aDbfStruct )
+      oServer:CreateTable( cTable, dbStruct() )
       IF oServer:NetErr()
          ? oServer:Error()
          RETURN
@@ -128,12 +127,12 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   DO WHILE ! dbffile->( Eof() ) .AND. Inkey() != K_ESC
+   DO WHILE ! Eof() .AND. Inkey() != K_ESC
 
       oRecord := oTable:GetBlankRow()
 
-      FOR i := 1 TO dbffile->( FCount() )
-         oRecord:FieldPut( i, dbffile->( FieldGet( i ) ) )
+      FOR i := 1 TO FCount()
+         oRecord:FieldPut( i, FieldGet( i ) )
       NEXT
 
       oTable:Append( oRecord )
@@ -141,15 +140,16 @@ PROCEDURE Main()
          ? oTable:Error()
       ENDIF
 
-      dbffile->( dbSkip() )
+      dbSkip()
 
-      IF ( dbffile->( RecNo() ) % 100 ) == 0
+      IF ( RecNo() % 100 ) == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs: " + Str( dbffile->( RecNo() ) ) )
+         DevOut( "imported recs: " + hb_ntos( RecNo() ) )
       ENDIF
    ENDDO
 
-   dbffile->( dbCloseArea() )
+   dbCloseArea()
+
    oTable:Destroy()
    oServer:Destroy()
 
