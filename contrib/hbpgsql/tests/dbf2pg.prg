@@ -135,8 +135,8 @@ PROCEDURE Main()
             RETURN
          ENDIF
       ENDIF
-      oServer:CreateTable( cTable, dbStruct() )
 
+      oServer:CreateTable( cTable, dbStruct() )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
          FWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
