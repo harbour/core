@@ -2,18 +2,16 @@
 
 PROCEDURE Main()
 
-   LOCAL oServer, oQuery, oRow, i, x, aStruct, aKey
+   LOCAL oServer, oQuery, oRow, i, x, aKey
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase
+   LOCAL cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
-   LOCAL cCharSet := "ASCII"
+   LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
    LOCAL cQuery
-
-   cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
 
    IF hb_FileExists( cDatabase )
       FErase( cDatabase )
@@ -50,16 +48,16 @@ PROCEDURE Main()
    ? "Creating test table..."
    cQuery := ;
       "CREATE TABLE test(" + ;
-      "     Code SmallInt not null primary key," + ;
-      "     dept Integer," + ;
-      "     Name Varchar(40)," + ;
-      "     Sales boolean_field," + ;
-      "     Tax Float," + ;
-      "     Salary Double Precision," + ;
-      "     Budget Numeric(12,2)," + ;
-      "     Discount Decimal(5,2)," + ;
-      "     Creation Date," + ;
-      "     Description blob sub_type 1 segment size 40 )"
+      "   Code SmallInt not null primary key," + ;
+      "   dept Integer," + ;
+      "   Name Varchar(40)," + ;
+      "   Sales boolean_field," + ;
+      "   Tax Float," + ;
+      "   Salary Double Precision," + ;
+      "   Budget Numeric(12,2)," + ;
+      "   Discount Decimal(5,2)," + ;
+      "   Creation Date," + ;
+      "   Description blob sub_type 1 segment size 40 )"
 
    oServer:Execute( cQuery )
 
@@ -72,14 +70,12 @@ PROCEDURE Main()
    oServer:Query( "SELECT code, dept, name, sales, salary, creation FROM test" )
    WAIT
 
-
    ? "Structure of test table"
-   aStruct := oServer:TableStruct( "test" )
 
-   FOR EACH i IN aStruct
+   FOR EACH i IN oServer:TableStruct( "test" )
       ?
       FOR EACH x IN i
-         ?? x
+         ?? x, ""
       NEXT
    NEXT
 
@@ -101,15 +97,14 @@ PROCEDURE Main()
 
    oQuery := oServer:Query( "SELECT code, name, description, sales FROM test" )
 
-   aStruct := oQuery:Struct()
-
-   FOR EACH i IN aStruct
+   FOR EACH i IN oQuery:Struct()
       ? i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ]
    NEXT
 
    aKey := oQuery:GetKeyField()
 
-   ? "Fields:", oQuery:FCount(), "Primary Key:", aKey[ 1 ]
+   ? "Fields:", oQuery:FCount()
+   ? "Primary Key:", aKey[ 1 ]
 
    oRow := oQuery:Blank()
 

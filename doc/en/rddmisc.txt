@@ -162,7 +162,7 @@
             dbSkip( -1 )
          ENDDO
          ? "Is Bof()", Bof()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -200,7 +200,7 @@
    $EXAMPLES$
       USE test NEW INDEX test
       ZAP
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -238,7 +238,7 @@
          dbDelete()
          ? "Is Record Deleted", Test->( Deleted() )
          dbRecall()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -282,7 +282,7 @@
             dbSkip()
          ENDDO
          ? "Is Eof()", Eof()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -318,7 +318,7 @@
       PROCEDURE Main()
          USE test NEW
          ? "This database has", test->( FCount() ), "fields"
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -357,7 +357,7 @@
       PROCEDURE Main()
          USE test NEW
          ? test->( FieldGet( 1 ) )
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -399,7 +399,7 @@
          FOR x := 1 TO test->( FCount() )
             ? "Field Name:", FieldName( x )
          NEXT
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -438,7 +438,7 @@
       PROCEDURE Main()
          USE test NEW
          ? test->( FieldPos( "ID" ) )
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -479,7 +479,7 @@
    $EXAMPLES$
       USE test NEW
       FieldPut( 1, "Mr. Jones" )
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -517,7 +517,7 @@
       IF FLock()
          SUM test->Ammount
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -558,7 +558,7 @@
       IF Found()
          ? test->Name
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -668,7 +668,7 @@
       PROCEDURE Main()
          USE test NEW
          ? LUpdate()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -723,7 +723,7 @@
             ? test->First
          ENDIF
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -897,7 +897,7 @@
             dbDelete()
          ENDIF
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -1018,7 +1018,7 @@
       dbGoto( 10 )
       DELETE NEXT 10
       PACK
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$

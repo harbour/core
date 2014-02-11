@@ -20,9 +20,8 @@
       the original number from the compressed string.
 
    $EXAMPLES$
-      REPLACE ;
-         TRANS->cust_id WITH ft_Sqzn( mcust_id, 8 ), ;
-         TRANS->amount  WITH ft_Sqzn( mamount, 12, 2 )
+      TRANS->cust_id := ft_Sqzn( mcust_id, 8 )
+      TRANS->amount  := ft_Sqzn( mamount, 12, 2 )
    $SEEALSO$
       ft_Unsqzn()
    $INCLUDE$

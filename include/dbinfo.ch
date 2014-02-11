@@ -52,7 +52,7 @@
 #define HB_DBINFO_CH_
 
 /*
-   Constants for SELF_RDDINFO ()
+   Constants for SELF_RDDINFO()
 */
 
 #define RDDI_ISDBF                1   /* Does this RDD support DBFs? */
@@ -107,7 +107,7 @@
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
 
 /*
-   Constants for SELF_ORDINFO ()
+   Constants for SELF_ORDINFO()
 */
 
 #define DBOI_CONDITION            1   /* The order's conditional expression     */

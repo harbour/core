@@ -16,7 +16,7 @@
 
 #define USER               "sysdba"
 #define PASSWORD           "masterkey"
-#define DATABASE           "127.0.0.1:d:\\fontes\\lixo\\test.gdb"
+#define DATABASE           "127.0.0.1:d:\\fb\\test.gdb"
 #define ERREXIT( status, rc )  { isc_print_status( status ); return rc; }
 #define MAX_BUFFER         1024
 
@@ -152,9 +152,7 @@ int query( char * sel_str )
             break;
       }
       if( var->sqltype & 1 )
-      {
          var->sqlind = ( short * ) malloc( sizeof( short ) );
-      }
    }
 
    if( ! sqlda->sqld )
@@ -169,11 +167,8 @@ int query( char * sel_str )
       trans = NULL;
 
    }
-   else
-   {
-      if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
-         ERREXIT( status, 1 );
-   }
+   else if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
+      ERREXIT( status, 1 );
 
    return 1;
 }
@@ -326,47 +321,32 @@ char * getdata( int pos )
                   tens *= 10;
 
                   if( value >= 0 )
-                  {
-
-                     sprintf( p,
-                              "%*" ISC_INT64_FORMAT "d.%0*"
+                     sprintf( p, "%*" ISC_INT64_FORMAT "d.%0*"
                               ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               ( ISC_INT64 ) ( value / tens ), -dscale,
                               ( ISC_INT64 ) ( value % tens ) );
-                  }
                   else if( ( value / tens ) != 0 )
-                  {
-
-                     sprintf( p,
-                              "%*" ISC_INT64_FORMAT "d.%0*"
+                     sprintf( p, "%*" ISC_INT64_FORMAT "d.%0*"
                               ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               ( ISC_INT64 ) ( value / tens ), -dscale,
                               ( ISC_INT64 ) -( value % tens ) );
-                  }
                   else
-                  {
-
                      sprintf( p, "%*s.%0*" ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               "-0", -dscale,
                               ( ISC_INT64 ) -( value % tens ) );
-                  }
                }
             }
             else if( dscale )
-            {
                sprintf( p, "%*" ISC_INT64_FORMAT "d%0*d",
                         field_width, ( ISC_INT64 ) value, dscale, 0 );
-            }
             else
-            {
                sprintf( p, "%*" ISC_INT64_FORMAT "d",
                         field_width, ( ISC_INT64 ) value );
-            }
-         };
             break;
+         }
 
          case SQL_FLOAT:
             sprintf( p, "%15g ", *( float ISC_FAR * ) ( var->sqldata ) );

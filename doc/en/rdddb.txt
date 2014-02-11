@@ -150,8 +150,8 @@
          LOCAL cName := "Harbour", nId := 10
          USE test
          test->( dbAppend() )
-         REPLACE test->Name WITH cName
-         REPLACE test->Id   WITH nId
+         test->Name := cName
+         test->Id   := nId
          RETURN
    $STATUS$
       R
@@ -302,8 +302,8 @@
 
          IF Updated()
             dbAppend()
-            REPLACE test->Name WITH cName
-            REPLACE test->Id   WITH nId
+            test->Name := cName
+            test->Id   := nId
             dbCommit()
          ENDIF
          RETURN
@@ -349,11 +349,11 @@
 
          IF Updated()
             dbAppend()
-            REPLACE test->Name WITH cName
-            REPLACE test->Id   WITH nId
+            test->Name := cName
+            test->Id   := nId
             IF ! testid->( dbSeek( nId ) )
                testid->( dbAppend() )
-               REPLACE testid->Id WITH nId
+               testid->Id := nId
             ENDIF
          ENDIF
          dbCommitAll()

@@ -243,7 +243,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: Character index
    ordSetFocus( 1 )
-   GO TOP
+   dbGoTop()
    IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
       NotifyUser( "Bad DBOI_KEYVAL (CHAR)" )
    ENDIF

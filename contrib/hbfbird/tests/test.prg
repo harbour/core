@@ -3,11 +3,11 @@
 PROCEDURE Main()
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase
+   LOCAL cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
-   LOCAL cCharSet := "ASCII"
+   LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
 
    LOCAL trans, qry
@@ -17,8 +17,6 @@ PROCEDURE Main()
    LOCAL columns
    LOCAL fetch_stat
    LOCAL tmp
-
-   cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
 
    IF hb_FileExists( cDatabase )
       FErase( cDatabase )

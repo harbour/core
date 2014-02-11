@@ -4032,7 +4032,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                FClose( hb_FTempCreateEx( @hbmk[ _HBMK_cWorkDir ], NIL, "hbmk_", ".dir" ) )
                FErase( hbmk[ _HBMK_cWorkDir ] )
                IF hb_DirCreate( hbmk[ _HBMK_cWorkDir ] ) != 0
-                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Temporary Working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Temporary working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF

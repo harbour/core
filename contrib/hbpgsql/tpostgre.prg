@@ -60,14 +60,14 @@ CREATE CLASS TPQServer
 
    VAR      pDb
    VAR      lTrans
-   VAR      lallCols  INIT .T.
+   VAR      lAllCols  INIT .T.
    VAR      Schema    INIT "public"
    VAR      lError    INIT .F.
    VAR      cError    INIT ""
    VAR      lTrace    INIT .F.
    VAR      pTrace
 
-   METHOD   New( cHost, cDatabase, cUser, cPass, nPort, Schema )
+   METHOD   New( cHost, cDatabase, cUser, cPass, nPort, cSchema )
    METHOD   Destroy()
    METHOD   Close()              INLINE ::Destroy()
 
@@ -95,26 +95,27 @@ CREATE CLASS TPQServer
 ENDCLASS
 
 
-METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
+METHOD New( cHost, cDatabase, cUser, cPass, nPort, cSchema ) CLASS TPQserver
 
    LOCAL res
 
-   hb_default( @nPort, 5432 )
-
-   ::pDB := PQconnectdb( "dbname = " + cDatabase + " host = " + cHost + " user = " + cUser + " password = " + cPass + " port = " +  hb_ntos( nPort ) )
+   ::pDB := PQconnectdb( "dbname = " + cDatabase + ;
+      " host = " + cHost + ;
+      " user = " + cUser + ;
+      " password = " + cPass + ;
+      " port = " + hb_ntos( hb_defaultValue( nPort, 5432 ) ) )
 
    IF PQstatus( ::pDb ) != CONNECTION_OK
       ::lError := .T.
       ::cError := PQerrorMessage( ::pDb )
    ELSE
-      IF ! Empty( Schema )
-         ::SetSchema( Schema )
+      IF HB_ISSTRING( cSchema )
+         ::SetSchema( cSchema )
       ELSE
          res := PQexec( ::pDB, "SELECT current_schema()" )
          IF PQresultStatus( res ) == PGRES_TUPLES_OK
             ::Schema := PQgetvalue( res, 1, 1 )
          ENDIF
-         res := NIL
       ENDIF
    ENDIF
 
@@ -136,7 +137,6 @@ METHOD SetSchema( cSchema ) CLASS TPQserver
       ::Schema := cSchema
       res := PQexec( ::pDB, "SET search_path TO " + cSchema )
       result := ( PQresultStatus( res ) == PGRES_COMMAND_OK )
-      res := NIL
    ENDIF
 
    RETURN result
@@ -196,7 +196,7 @@ METHOD Rollback() CLASS TPQserver
    RETURN lError
 
 METHOD Query( cQuery ) CLASS TPQserver
-   RETURN TPQQuery():New( ::pDB, cQuery, ::lallCols, ::Schema )
+   RETURN TPQQuery():New( ::pDB, cQuery, ::lAllCols, ::Schema )
 
 METHOD TableExists( cTable ) CLASS TPQserver
 
@@ -494,7 +494,7 @@ CREATE CLASS TPQQuery
    VAR      Schema
    VAR      rows     INIT 0
 
-   METHOD   New( pDB, cQuery, lallCols, cSchema, res )
+   METHOD   New( pDB, cQuery, lAllCols, cSchema, res )
    METHOD   Destroy()
    METHOD   Close()            INLINE ::Destroy()
 
@@ -535,12 +535,12 @@ CREATE CLASS TPQQuery
 ENDCLASS
 
 
-METHOD New( pDB, cQuery, lallCols, cSchema, res ) CLASS TPQquery
+METHOD New( pDB, cQuery, lAllCols, cSchema, res ) CLASS TPQquery
 
    ::pDB := pDB
    ::nResultStatus := -1
    ::cQuery := cQuery
-   ::lallCols := lallCols
+   ::lAllCols := lAllCols
    ::Schema := cSchema
 
    IF res != NIL
@@ -592,8 +592,8 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
 
       IF lMeta
 
-         ::aStruct  := {}
-         ::nFields  := 0
+         ::aStruct := {}
+         ::nFields := 0
 
          /* Get some information about metadata */
          aTemp := PQmetadata( res )
@@ -883,7 +883,6 @@ METHOD Delete( oRow ) CLASS TPQquery
             ::cError := ""
             ::rows   := Val( PQcmdTuples( res ) )
          ENDIF
-         res := NIL
       ENDIF
    ELSE
       ::lError := .T.
@@ -906,7 +905,7 @@ METHOD Append( oRow ) CLASS TPQquery
    IF ! Empty( ::Tablename )
       cQuery := "INSERT INTO " + ::Schema + "." + ::Tablename + "("
       FOR i := 1 TO oRow:FCount()
-         IF ::lallCols .OR. oRow:changed( i )
+         IF ::lAllCols .OR. oRow:changed( i )
             lChanged := .T.
             cQuery += oRow:FieldName( i ) + ","
          ENDIF
@@ -915,7 +914,7 @@ METHOD Append( oRow ) CLASS TPQquery
       cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
 
       FOR i := 1 TO oRow:FCount()
-         IF ::lallCols .OR. oRow:Changed( i )
+         IF ::lAllCols .OR. oRow:Changed( i )
             nParams++
             cQuery += "$" + hb_ntos( nParams ) + ","
             AAdd( aParams, ValueToString( oRow:FieldGet( i ) ) )
@@ -936,8 +935,6 @@ METHOD Append( oRow ) CLASS TPQquery
             ::cError := ""
             ::rows   := Val( PQcmdTuples( res ) )
          ENDIF
-
-         res := NIL
       ENDIF
    ELSE
       ::lError := .T.
@@ -976,7 +973,7 @@ METHOD Update( oRow ) CLASS TPQquery
 
       cQuery := "UPDATE " + ::Schema + "." + ::Tablename + " SET "
       FOR i := 1 TO oRow:FCount()
-         IF ::lallcols .OR. oRow:Changed( i )
+         IF ::lAllCols .OR. oRow:Changed( i )
             lChanged := .T.
             nParams++
             cQuery += oRow:FieldName( i ) + " = $" + hb_ntos( nParams ) + ","
@@ -999,8 +996,6 @@ METHOD Update( oRow ) CLASS TPQquery
             ::cError := ""
             ::rows   := Val( PQcmdTuples( res ) )
          ENDIF
-
-         res := NIL
       ENDIF
    ELSE
       ::lError := .T.
@@ -1174,8 +1169,6 @@ METHOD SetKey() CLASS TPQquery
                IF PQresultStatus( res ) == PGRES_TUPLES_OK .AND. PQlastrec( res ) != 0
                   ::Tablename := RTrim( PQgetvalue( res, 1, 1 ) )
                ENDIF
-
-               res := NIL
             ENDIF
          ENDIF
       ENDIF
@@ -1202,8 +1195,6 @@ METHOD SetKey() CLASS TPQquery
                AAdd( ::aKeys, PQgetvalue( res, x, 1 ) )
             NEXT
          ENDIF
-
-         res := NIL
       ENDIF
    ENDIF
 

@@ -7,7 +7,7 @@ PROCEDURE Main()
    LOCAL oServer, oQuery, oRow, i, x
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase
+   LOCAL cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
@@ -16,8 +16,6 @@ PROCEDURE Main()
    LOCAL cQuery
 
    CLS
-
-   cDatabase := hb_DirBase() + hb_FNameName( hb_ProgName() ) + ".fdb"
 
    IF ! hb_FileExists( cDatabase )
       ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
@@ -44,16 +42,16 @@ PROCEDURE Main()
    ? "Creating test table..."
    cQuery := ;
       "CREATE TABLE test(" + ;
-      "     Code SmallInt not null primary key," + ;
-      "     dept Integer," + ;
-      "     Name Varchar(40)," + ;
-      "     Sales boolean_field," + ;
-      "     Tax Float," + ;
-      "     Salary Double Precision," + ;
-      "     Budget Numeric(12,2)," + ;
-      "     Discount Decimal(5,2)," + ;
-      "     Creation Date," + ;
-      "     Description blob sub_type 1 segment size 40 )"
+      "   Code SmallInt not null primary key," + ;
+      "   dept Integer," + ;
+      "   Name Varchar(40)," + ;
+      "   Sales boolean_field," + ;
+      "   Tax Float," + ;
+      "   Salary Double Precision," + ;
+      "   Budget Numeric(12,2)," + ;
+      "   Discount Decimal(5,2)," + ;
+      "   Creation Date," + ;
+      "   Description blob sub_type 1 segment size 40 )"
 
    ? "CREATE TABLE:", oServer:Execute( cQuery )
 
@@ -62,7 +60,7 @@ PROCEDURE Main()
    oServer:StartTransaction()
 
    FOR i := 1 TO 10000
-      @ 15, 0 SAY "Inserting values.... " + Str( i )
+      @ 15, 0 SAY "Inserting values.... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
 
@@ -82,7 +80,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 5000 TO 7000
-      @ 16, 0 SAY "Deleting values.... " + Str( i )
+      @ 16, 0 SAY "Deleting values.... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
       oServer:Delete( oRow, "Code = " + hb_ntos( i ) )
@@ -94,7 +92,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 2000 TO 3000
-      @ 17, 0 SAY "Updating values.... " + Str( i )
+      @ 17, 0 SAY "Updating values.... " + hb_ntos( i )
 
       oRow := oQuery:Blank()
       oRow:FieldPut( 5, 4000 + i )
@@ -110,13 +108,13 @@ PROCEDURE Main()
 
    IF ! oQuery:NetErr()
       oQuery:Fetch()
-      @ 18, 0 SAY "Sum values.... " + Str( oQuery:FieldGet( 1 ) )
+      @ 18, 0 SAY "Sum values.... " + hb_ntos( oQuery:FieldGet( 1 ) )
       oQuery:Destroy()
    ENDIF
 
    x := 0
    FOR i := 1 TO 4000
-      oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + Str( i ) )
+      oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + hb_ntos( i ) )
 
       IF ! oQuery:NetErr()
          oQuery:Fetch()
@@ -125,7 +123,7 @@ PROCEDURE Main()
          oQuery:destroy()
          x += oRow:FieldGet( oRow:FieldPos( "salary" ) )
 
-         @ 19, 0 SAY "Sum values.... " + Str( x )
+         @ 19, 0 SAY "Sum values.... " + hb_ntos( x )
       ENDIF
    NEXT
 

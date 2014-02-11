@@ -218,36 +218,16 @@ PROCEDURE Main( ... )
          IF cValue != NIL
             IF dType != sType
                DO CASE
-               CASE dType == "C" .AND. sType == "N"
-                  cValue := hb_ntos( cValue )
-
-               CASE dType == "C" .AND. sType == "D"
-                  cValue := DToC( cValue )
-
-               CASE dType == "C" .AND. sType == "L"
-                  cValue := iif( cValue, "S", "N" )
-
-               CASE dType == "N" .AND. sType == "C"
-                  cValue := Val( cValue )
-
-               CASE dType == "N" .AND. sType == "D"
-                  cValue := Val( DToS( cValue ) )
-
-               CASE dType == "N" .AND. sType == "L"
-                  cValue := iif( cValue, 1, 0 )
-
-               CASE dType == "D" .AND. sType == "C"
-                  cValue := CToD( cValue )
-
-               CASE dType == "D" .AND. sType == "N"
-                  cValue := hb_SToD( Str( cValue ) )
-
-               CASE dType == "L" .AND. sType == "N"
-                  cValue := ! Empty( cValue )
-
-               CASE dType == "L" .AND. sType == "C"
-                  cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
-
+               CASE dType == "C" .AND. sType == "N" ; cValue := hb_ntos( cValue )
+               CASE dType == "C" .AND. sType == "D" ; cValue := DToC( cValue )
+               CASE dType == "C" .AND. sType == "L" ; cValue := iif( cValue, "S", "N" )
+               CASE dType == "N" .AND. sType == "C" ; cValue := Val( cValue )
+               CASE dType == "N" .AND. sType == "D" ; cValue := Val( DToS( cValue ) )
+               CASE dType == "N" .AND. sType == "L" ; cValue := iif( cValue, 1, 0 )
+               CASE dType == "D" .AND. sType == "C" ; cValue := CToD( cValue )
+               CASE dType == "D" .AND. sType == "N" ; cValue := hb_SToD( hb_ntos( cValue ) )
+               CASE dType == "L" .AND. sType == "N" ; cValue := ! Empty( cValue )
+               CASE dType == "L" .AND. sType == "C" ; cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
                ENDCASE
             ENDIF
 
@@ -276,7 +256,7 @@ PROCEDURE Main( ... )
 
       IF ( nCount % nCommit ) == 0
          DevPos( Row(), 1 )
-         DevOut( "imported recs:", Str( nCount ) )
+         DevOut( "imported recs: " + Str( nCount ) )
 
          IF lUseTrans
             oServer:commit()
