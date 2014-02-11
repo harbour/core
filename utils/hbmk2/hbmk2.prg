@@ -10534,10 +10534,8 @@ STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
             of traget files (.c/.o) even if they differ in their
             name, not only their extension. */
 
-      OUTSTD( ">>>", hb_eol() )
    FOR EACH cFileName IN arrayIn DESCEND
       IF hb_FNameExt( cFileName ) == ".hbx"
-      OUTSTD( ">", cFileName, hb_eol() )
          AAdd( arrayHBX, cFileName )
          hb_ADel( arrayIn, cFileName:__enumIndex(), .T. )
       ENDIF
@@ -10546,7 +10544,6 @@ STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
    arrayIn := ArraySplit( arrayIn, nChunksReq )
 
    IF ( lLastIsHBX := ! Empty( arrayHBX ) )
-      OUTSTD( ">", hb_ValToExp( arrayHBX ), hb_eol() )
       AAdd( arrayIn, arrayHBX )
    ENDIF
 
