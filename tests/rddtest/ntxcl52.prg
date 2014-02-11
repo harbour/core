@@ -11,7 +11,7 @@ REQUEST dbfntx
 #define _TESTRDD "dbfntx"
 #include "rddtst.prg"
 
-FUNCTION test_main()
+PROCEDURE test_main()
 
 RDDTESTC {0,.t.,.t.,.f.}, LOCAL n
 RDDTESTF "DBFNTX", {0,.t.,.t.,.f.}, RDDSETDEFAULT()
@@ -456,4 +456,4 @@ RDDTESTF .t., {13,.f.,.f.,.t.}, DBSEEK(padr("5",10)+"*",.T.,.T.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.F.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.T.)
 
-RETURN NIL
+RETURN

@@ -447,15 +447,15 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
       FetchChars( nPort )
 
-      FOR x := 1 TO Len( acList )
+      FOR EACH x IN acList
          IF lIgnorecase
-            nAt := hb_BAt( Upper( acList[ x ] ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
+            nAt := hb_BAt( Upper( x ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
          ELSE
-            nAt := hb_BAt( acList[ x ], t_aPorts[ nPort, TPFP_INBUF ] )
+            nAt := hb_BAt( x, t_aPorts[ nPort, TPFP_INBUF ] )
          ENDIF
          IF nAt > 0 .AND. nAt < nFirst
             nFirst := nAt
-            nRet := x
+            nRet := x:__enumIndex()
          ENDIF
       NEXT
 

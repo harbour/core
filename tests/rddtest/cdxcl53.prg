@@ -11,7 +11,7 @@ REQUEST dbfcdx
 #define _TESTRDD "dbfcdx"
 #include "rddtst.prg"
 
-FUNCTION test_main()
+PROCEDURE test_main()
 
 RDDTESTC {0,.t.,.t.,.f.}, LOCAL n
 RDDTESTF "DBFCDX", {0,.t.,.t.,.f.}, RDDSETDEFAULT()
@@ -679,4 +679,4 @@ RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("5",10)+"*",.T.,.T.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.F.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.T.)
 
-RETURN NIL
+RETURN
