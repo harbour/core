@@ -6,8 +6,8 @@ PROCEDURE Main()
    LOCAL hDbc
    LOCAL hStmt
    LOCAL cConnStr
-   LOCAL cConstrout := Space( 1024 )
-   LOCAL nRows := 0
+   LOCAL cConstrout
+   LOCAL nRows
    LOCAL cCode, cFunc, cState, cComm
    LOCAL cError1, nError, cError2
 
@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
-   ? PadC( "*** ODBC ACCESS TEST ***", 80 )
+   ? PadC( "*** ODBC ACCESS TEST ***", 70 )
    ?
    ? "Allocating environment..."
    SQLAllocEnv( @hEnv )
@@ -55,6 +55,7 @@ PROCEDURE Main()
 
    ? Replicate( "-", 70 )
 
+   nRows := 0
    DO WHILE SQLFetch( hStmt ) == 0
       SQLGetData( hStmt, 1, SQL_CHAR, 128, @cCode )
       SQLGetData( hStmt, 2, SQL_CHAR, 128, @cFunc )

@@ -188,7 +188,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
       AAdd( aObjs, { xVal, cName } )
 
-      cRet += xVal:ClassName + "():New()" + hb_eol()
+      cRet += xVal:ClassName() + "():New()" + hb_eol()
 
       nPad += 3
       cPad := Space( nPad )

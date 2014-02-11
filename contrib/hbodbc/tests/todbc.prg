@@ -56,7 +56,7 @@ PROCEDURE Main()
       ENDDO
 
       @ MaxRow(), 0
-      @ MaxRow(), 1         SAY "Statement:" COLOR "GR+/B"
+      @ MaxRow(), 1 SAY "Statement:" COLOR "GR+/B"
       @ MaxRow(), Col() + 1 SAY dsFunctions:cSQL
 
       dsFunctions:Close()
