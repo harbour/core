@@ -13,7 +13,7 @@
  *     Open: Excel files
  *           Paradox files
  *           Access with password
- *           FireBird
+ *           Firebird
  *  ADO_CLOSE( nWA )
  *  ADO_ZAP( nWA )
  *  ADO_ORDINFO( nWA, nIndex, aOrderInfo ) some modifications

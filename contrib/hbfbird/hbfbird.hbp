@@ -17,7 +17,7 @@
 -depimplibs=firebird:../lib/fbclient_ms.lib{(allgcc|allmsvc|allpocc)&!hbdyn}
 -depimplibd=firebird:fbclient
 
-# For FireBird headers
+# For Firebird headers
 -c=gnu90
 
 ${hb_name}.hbx

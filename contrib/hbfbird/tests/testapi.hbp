@@ -1,0 +1,14 @@
+-nohblib
+
+-stop{pocc64|poccarm}
+
+-depkeyhead=firebird:ibase.h
+-depcontrol=firebird:${HB_WITH_FIREBIRD}
+-depincpath=firebird:/usr/include
+-depincpath=firebird:/opt/firebird/include
+-depincpath=firebird:/Library/Frameworks/Firebird.framework/Headers
+
+# For Firebird headers
+-c=gnu90
+
+testapi.c

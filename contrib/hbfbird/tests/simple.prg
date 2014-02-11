@@ -83,8 +83,9 @@ PROCEDURE Main()
    oServer:StartTransaction()
 
    FOR i := 1 TO 100
-      cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-      cQuery += 'VALUES( ' + hb_ntos( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "2003-12-22", "Short Description about what ? ")'
+      cQuery := ;
+         "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
+         'VALUES( ' + hb_ntos( i ) + ', 2, "TEST", 1, 5, 3000, 1500.2, 7.5, "2003-12-22", "Short Description about what ?")'
 
       oServer:Execute( cQuery )
 

@@ -17,6 +17,8 @@ PROCEDURE Main()
 
    CLS
 
+   ? cDatabase
+
    IF ! hb_FileExists( cDatabase )
       ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
    ENDIF

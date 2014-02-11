@@ -50,53 +50,52 @@
 
 #include "hbclass.ch"
 
-#define SQL_TEXT                        452
-#define SQL_VARYING                     448
-#define SQL_SHORT                       500
-#define SQL_LONG                        496
-#define SQL_FLOAT                       482
-#define SQL_DOUBLE                      480
-#define SQL_D_FLOAT                     530
-#define SQL_TIMESTAMP                   510
-#define SQL_BLOB                        520
-#define SQL_ARRAY                       540
-#define SQL_QUAD                        550
-#define SQL_TYPE_TIME                   560
-#define SQL_TYPE_DATE                   570
-#define SQL_INT64                       580
-#define SQL_DATE                        SQL_TIMESTAMP
+#define SQL_TEXT            452
+#define SQL_VARYING         448
+#define SQL_SHORT           500
+#define SQL_LONG            496
+#define SQL_FLOAT           482
+#define SQL_DOUBLE          480
+#define SQL_D_FLOAT         530
+#define SQL_TIMESTAMP       510
+#define SQL_BLOB            520
+#define SQL_ARRAY           540
+#define SQL_QUAD            550
+#define SQL_TYPE_TIME       560
+#define SQL_TYPE_DATE       570
+#define SQL_INT64           580
 
 CREATE CLASS TFbServer
 
-   VAR      db
-   VAR      trans
-   VAR      StartedTrans
-   VAR      nError
-   VAR      lError
-   VAR      dialect
+   VAR    db
+   VAR    trans
+   VAR    StartedTrans
+   VAR    nError
+   VAR    lError
+   VAR    dialect
 
-   METHOD   New( cServer, cUser, cPassword, nDialect )
-   METHOD   Destroy()  INLINE FBClose( ::db )
-   METHOD   Close()    INLINE FBClose( ::db )
+   METHOD New( cServer, cUser, cPassword, nDialect )
+   METHOD Destroy()  INLINE FBClose( ::db )
+   METHOD Close()    INLINE FBClose( ::db )
 
-   METHOD   TableExists( cTable )
-   METHOD   ListTables()
-   METHOD   TableStruct( cTable )
+   METHOD TableExists( cTable )
+   METHOD ListTables()
+   METHOD TableStruct( cTable )
 
-   METHOD   StartTransaction()
-   METHOD   Commit()
-   METHOD   Rollback()
+   METHOD StartTransaction()
+   METHOD Commit()
+   METHOD Rollback()
 
-   METHOD   Execute( cQuery )
-   METHOD   Query( cQuery )
+   METHOD Execute( cQuery )
+   METHOD Query( cQuery )
 
-   METHOD   Update( oRow, cWhere )
-   METHOD   Delete( oRow, cWhere )
-   METHOD   Append( oRow )
+   METHOD Update( oRow, cWhere )
+   METHOD Delete( oRow, cWhere )
+   METHOD Append( oRow )
 
-   METHOD   NetErr()   INLINE ::lError
-   METHOD   Error()    INLINE FBError( ::nError )
-   METHOD   ErrorNo()  INLINE ::nError
+   METHOD NetErr()   INLINE ::lError
+   METHOD Error()    INLINE FBError( ::nError )
+   METHOD ErrorNo()  INLINE ::nError
 
 ENDCLASS
 
@@ -466,50 +465,50 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
 CREATE CLASS TFbQuery
 
-   VAR      nError
-   VAR      lError
-   VAR      Dialect
-   VAR      lBof
-   VAR      lEof
-   VAR      nRecno
-   VAR      qry
-   VAR      aStruct
-   VAR      numcols
-   VAR      closed
-   VAR      db
-   VAR      query
-   VAR      aKeys
-   VAR      aTables
+   VAR    nError
+   VAR    lError
+   VAR    Dialect
+   VAR    lBof
+   VAR    lEof
+   VAR    nRecno
+   VAR    qry
+   VAR    aStruct
+   VAR    numcols
+   VAR    closed
+   VAR    db
+   VAR    query
+   VAR    aKeys
+   VAR    aTables
 
-   METHOD   New( nDB, cQuery, nDialect )
-   METHOD   Destroy()
-   METHOD   Close()            INLINE ::Destroy()
+   METHOD New( nDB, cQuery, nDialect )
+   METHOD Destroy()
+   METHOD Close()            INLINE ::Destroy()
 
-   METHOD   Refresh()
-   METHOD   Fetch()
-   METHOD   Skip()             INLINE ::Fetch()
+   METHOD Refresh()
+   METHOD Fetch()
+   METHOD Skip()             INLINE ::Fetch()
 
-   METHOD   Bof()              INLINE ::lBof
-   METHOD   Eof()              INLINE ::lEof
-   METHOD   RecNo()            INLINE ::nRecno
+   METHOD Bof()              INLINE ::lBof
+   METHOD Eof()              INLINE ::lEof
+   METHOD RecNo()            INLINE ::nRecno
 
-   METHOD   NetErr()           INLINE ::lError
-   METHOD   Error()            INLINE FBError( ::nError )
-   METHOD   ErrorNo()          INLINE ::nError
+   METHOD NetErr()           INLINE ::lError
+   METHOD Error()            INLINE FBError( ::nError )
+   METHOD ErrorNo()          INLINE ::nError
 
-   METHOD   FCount()           INLINE ::numcols
-   METHOD   Struct()
-   METHOD   FieldName( nField )
-   METHOD   FieldPos( cField )
-   METHOD   FieldLen( nField )
-   METHOD   FieldDec( nField )
-   METHOD   FieldType( nField )
+   METHOD FCount()           INLINE ::numcols
+   METHOD Struct()
+   METHOD FieldName( nField )
+   METHOD FieldPos( cField )
+   METHOD FieldLen( nField )
+   METHOD FieldDec( nField )
+   METHOD FieldType( nField )
 
-   METHOD   FieldGet( nField )
-   METHOD   GetRow()
-   METHOD   GetBlankRow()
-   METHOD   Blank()            INLINE ::GetBlankRow()
-   METHOD   GetKeyField()
+   METHOD FieldGet( nField )
+   METHOD GetRow()
+   METHOD GetBlankRow()
+   METHOD Blank()            INLINE ::GetBlankRow()
+   METHOD GetKeyField()
 
 ENDCLASS
 
@@ -789,26 +788,26 @@ METHOD GetKeyField() CLASS TFbQuery
 
 CREATE CLASS TFbRow
 
-   VAR      aRow
-   VAR      aStruct
-   VAR      aChanged
-   VAR      aKeys
-   VAR      db
-   VAR      dialect
-   VAR      aTables
+   VAR    aRow
+   VAR    aStruct
+   VAR    aChanged
+   VAR    aKeys
+   VAR    db
+   VAR    dialect
+   VAR    aTables
 
-   METHOD   New( row, struct, nDB, nDialect, aTable )
-   METHOD   Changed( nField )
-   METHOD   GetTables()        INLINE ::aTables
-   METHOD   FCount()           INLINE Len( ::aRow )
-   METHOD   FieldGet( nField )
-   METHOD   FieldPut( nField, Value )
-   METHOD   FieldName( nField )
-   METHOD   FieldPos( cField )
-   METHOD   FieldLen( nField )
-   METHOD   FieldDec( nField )
-   METHOD   FieldType( nField )
-   METHOD   GetKeyField()
+   METHOD New( row, struct, nDB, nDialect, aTable )
+   METHOD Changed( nField )
+   METHOD GetTables()        INLINE ::aTables
+   METHOD FCount()           INLINE Len( ::aRow )
+   METHOD FieldGet( nField )
+   METHOD FieldPut( nField, Value )
+   METHOD FieldName( nField )
+   METHOD FieldPos( cField )
+   METHOD FieldLen( nField )
+   METHOD FieldDec( nField )
+   METHOD FieldType( nField )
+   METHOD GetKeyField()
 
 ENDCLASS
 

@@ -1,5 +1,10 @@
 #require "hbfbird"
 
+/* NOTE: If firebird server is not installed, you can run
+         it as a standalone application using:
+            fbserver -a
+ */
+
 PROCEDURE Main()
 
    LOCAL cServer := "localhost:"
