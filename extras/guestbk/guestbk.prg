@@ -125,7 +125,7 @@ PROCEDURE Main()
       FOR i := 1 TO Len( aEntries )
 
          cCode += "<table width=100% cellspacing=0>" + hb_eol()
-         cColor := iif( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
+         cColor := iif( i % 2 == 0, cEvenColor, cOddColor )
 
          FOR j := 1 TO oIni:ReadNumber( "Format", "FormatLines", 0 )
 

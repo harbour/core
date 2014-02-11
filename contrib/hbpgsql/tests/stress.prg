@@ -57,7 +57,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
       PQexec( conn, cQuery )
 
-      IF Mod( i, 100 ) == 0
+      IF i % 100 == 0
          ? PQexec( conn, "COMMIT" )
          ? PQexec( conn, "BEGIN" )
       ENDIF
@@ -69,7 +69,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
       cQuery := "DELETE FROM test WHERE code = " + hb_ntos( i )
       PQexec( conn, cQuery )
 
-      IF Mod( i, 100 ) == 0
+      IF i % 100 == 0
          PQexec( conn, "COMMIT" )
          PQexec( conn, "BEGIN" )
       ENDIF
@@ -81,7 +81,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
       cQuery := "UPDATE FROM test SET salary = 400 WHERE code = " + hb_ntos( i )
       PQexec( conn, cQuery )
 
-      IF Mod( i, 100 ) == 0
+      IF i % 100 == 0
          PQexec( conn, "COMMIT" )
          PQexec( conn, "BEGIN" )
       ENDIF
