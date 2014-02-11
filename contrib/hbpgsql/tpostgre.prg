@@ -58,14 +58,14 @@
 
 CREATE CLASS TPQServer
 
-   VAR    pDb
-   VAR    lTrans
-   VAR    lAllCols  INIT .T.
-   VAR    Schema    INIT "public"
-   VAR    lError    INIT .F.
-   VAR    cError    INIT ""
-   VAR    lTrace    INIT .F.
-   VAR    pTrace
+   VAR pDb
+   VAR lTrans
+   VAR lAllCols  INIT .T.
+   VAR Schema    INIT "public"
+   VAR lError    INIT .F.
+   VAR cError    INIT ""
+   VAR lTrace    INIT .F.
+   VAR pTrace
 
    METHOD New( cHost, cDatabase, cUser, cPass, nPort, cSchema, hCustom )
    METHOD Destroy()
@@ -434,29 +434,29 @@ METHOD TraceOff() CLASS TPQserver
 
 CREATE CLASS TPQQuery
 
-   VAR    pQuery
-   VAR    pDB
+   VAR pQuery
+   VAR pDB
 
-   VAR    nResultStatus
+   VAR nResultStatus
 
-   VAR    lBof
-   VAR    lEof
-   VAR    lRead
-   VAR    lAllCols INIT .T.
+   VAR lBof
+   VAR lEof
+   VAR lRead
+   VAR lAllCols INIT .T.
 
-   VAR    lError   INIT .F.
-   VAR    cError   INIT ""
+   VAR lError   INIT .F.
+   VAR cError   INIT ""
 
-   VAR    cQuery
-   VAR    nRecno
-   VAR    nFields
-   VAR    nLastrec
+   VAR cQuery
+   VAR nRecno
+   VAR nFields
+   VAR nLastrec
 
-   VAR    aStruct
-   VAR    aKeys
-   VAR    TableName
-   VAR    Schema
-   VAR    rows     INIT 0
+   VAR aStruct
+   VAR aKeys
+   VAR TableName
+   VAR Schema
+   VAR rows     INIT 0
 
    METHOD New( pDB, cQuery, lAllCols, cSchema, res )
    METHOD Destroy()
@@ -1163,9 +1163,9 @@ METHOD SetKey() CLASS TPQquery
 
 CREATE CLASS TPQRow
 
-   VAR    aRow
-   VAR    aOld
-   VAR    aStruct
+   VAR aRow
+   VAR aOld
+   VAR aStruct
 
    METHOD New( row, old, struct )
 

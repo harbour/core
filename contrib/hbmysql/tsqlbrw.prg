@@ -73,16 +73,16 @@
 
 CREATE CLASS TBColumnSQL FROM TBColumn
 
-   VAR   oBrw                 // pointer to Browser containing this column, needed to be able to
-                              // retreive field values from Browse instance variable oCurRow
-// VAR   Picture              // From clipper 5.3
-   VAR   nFieldNum            // This column maps field num from query
+   VAR oBrw                 // pointer to Browser containing this column, needed to be able to
+                            // retreive field values from Browse instance variable oCurRow
+// VAR Picture              // From clipper 5.3
+   VAR nFieldNum            // This column maps field num from query
 
-   MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method
-                                          // gets called. I need this since inside TBColumn Block I cannot
-                                          // reference Column or Browser instance variables
+   MESSAGE Block METHOD Block()          // When evaluating code block to get data from source this method
+                                         // gets called. I need this since inside TBColumn Block I cannot
+                                         // reference Column or Browser instance variables
 
-   METHOD   New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
+   METHOD  New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
 
 ENDCLASS
 
@@ -137,20 +137,20 @@ METHOD Block() CLASS TBColumnSQL
 */
 CREATE CLASS TBrowseSQL FROM TBrowse
 
-   VAR      oCurRow                       // Active row inside table / sql query
-   VAR      oQuery                        // Query / table object which we are browsing
+   VAR oCurRow                       // Active row inside table / sql query
+   VAR oQuery                        // Query / table object which we are browsing
 
-   METHOD   New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
+   METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
 
-   METHOD   EditField()                   // Editing of hilighted field, after editing does an update of
-                                          // corresponding row inside table
+   METHOD EditField()                   // Editing of hilighted field, after editing does an update of
+                                        // corresponding row inside table
 
-   METHOD   BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
-                                               // allows editing of field. It is the stock ApplyKey() moved inside a table
-                                               // if lCanEdit K_DEL deletes current row
-                                               // When a key is pressed which is present inside aExitKeys it leaves editing loop
+   METHOD BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
+                                             // allows editing of field. It is the stock ApplyKey() moved inside a table
+                                             // if lCanEdit K_DEL deletes current row
+                                             // When a key is pressed which is present inside aExitKeys it leaves editing loop
 
-   METHOD   KeyboardHook( nKey )               // Where do all unknown keys go?
+   METHOD KeyboardHook( nKey )               // Where do all unknown keys go?
 
 ENDCLASS
 

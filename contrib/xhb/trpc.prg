@@ -396,7 +396,7 @@ CREATE CLASS TRPCServeCon
    METHOD GetStatus()         INLINE ::nStatus
    HIDDEN:
    /* Current status */
-   VAR  nStatus              INIT RPCS_STATUS_NONE
+   VAR nStatus               INIT RPCS_STATUS_NONE
    /* Is this connection encrypted? */
    VAR bEncrypted
    /* crc for challenge handshake */

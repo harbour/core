@@ -13,7 +13,7 @@ MEMVAR session, server, get, post
 
 CREATE CLASS UWMain
 
-   VAR  aChilds     INIT {}
+   VAR aChilds     INIT {}
 
    METHOD Add( oWidget )
    METHOD Paint()
@@ -49,7 +49,7 @@ METHOD Add( oWidget ) CLASS UWMain
 
 CREATE CLASS UWLayoutGrid
 
-   VAR  aChilds     INIT { { {} } }     // {{{}}, {{}}} ;   {{{}, {}}}
+   VAR aChilds     INIT { { {} } }     // {{{}}, {{}}} ;   {{{}, {}}}
 
    METHOD Add( oWidget, nRow, nCol )
    METHOD Paint()
@@ -106,7 +106,7 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
 
 CREATE CLASS UWHtml
 
-   VAR  cText
+   VAR cText
 
    METHOD Paint()
 
@@ -130,9 +130,9 @@ METHOD Paint() CLASS UWHtml
 
 CREATE CLASS UWLabel
 
-   VAR  cText
-   VAR  cID
-   VAR  cStyle
+   VAR cText
+   VAR cID
+   VAR cStyle
 
    METHOD Paint()
 
@@ -160,9 +160,9 @@ METHOD Paint() CLASS UWLabel
 
 CREATE CLASS UWForm
 
-   VAR  cAction
-   VAR  cMethod   INIT "POST"
-   VAR  aChilds   INIT {}
+   VAR cAction
+   VAR cMethod   INIT "POST"
+   VAR aChilds   INIT {}
 
    METHOD Add( oWidget )
    METHOD Paint()
@@ -195,10 +195,10 @@ METHOD Paint() CLASS UWForm
 
 CREATE CLASS UWInput
 
-   VAR  cName
-   VAR  cValue
-   VAR  cID
-   VAR  cStyle
+   VAR cName
+   VAR cValue
+   VAR cID
+   VAR cStyle
 
    METHOD Paint()
 
@@ -226,8 +226,8 @@ METHOD Paint() CLASS UWInput
 
 CREATE CLASS UWPassword
 
-   VAR  cName
-   VAR  cValue
+   VAR cName
+   VAR cValue
 
    METHOD Paint()
 
@@ -252,8 +252,8 @@ METHOD Paint() CLASS UWPassword
 
 CREATE CLASS UWSubmit
 
-   VAR  cName
-   VAR  cValue
+   VAR cName
+   VAR cValue
 
    METHOD Paint()
 
@@ -299,7 +299,7 @@ METHOD Paint() CLASS UWSeparator
 
 CREATE CLASS UWMenu
 
-   VAR  aItems    INIT {}
+   VAR aItems    INIT {}
 
    METHOD AddItem( cTitle, cLink )
    METHOD Paint()

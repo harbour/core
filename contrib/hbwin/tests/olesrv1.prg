@@ -113,7 +113,7 @@ CREATE CLASS OleNetioSrv
 
    HIDDEN:
 
-   VAR    pConn
+   VAR pConn
 
    EXPORTED:
 

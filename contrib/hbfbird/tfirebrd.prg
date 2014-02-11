@@ -67,12 +67,12 @@
 
 CREATE CLASS TFbServer
 
-   VAR    db
-   VAR    trans
-   VAR    StartedTrans
-   VAR    nError
-   VAR    lError
-   VAR    dialect
+   VAR db
+   VAR trans
+   VAR StartedTrans
+   VAR nError
+   VAR lError
+   VAR dialect
 
    METHOD New( cServer, cUser, cPassword, nDialect )
    METHOD Destroy()  INLINE FBClose( ::db )
@@ -465,20 +465,20 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
 CREATE CLASS TFbQuery
 
-   VAR    nError
-   VAR    lError
-   VAR    Dialect
-   VAR    lBof
-   VAR    lEof
-   VAR    nRecno
-   VAR    qry
-   VAR    aStruct
-   VAR    numcols
-   VAR    closed
-   VAR    db
-   VAR    query
-   VAR    aKeys
-   VAR    aTables
+   VAR nError
+   VAR lError
+   VAR Dialect
+   VAR lBof
+   VAR lEof
+   VAR nRecno
+   VAR qry
+   VAR aStruct
+   VAR numcols
+   VAR closed
+   VAR db
+   VAR query
+   VAR aKeys
+   VAR aTables
 
    METHOD New( nDB, cQuery, nDialect )
    METHOD Destroy()
@@ -788,13 +788,13 @@ METHOD GetKeyField() CLASS TFbQuery
 
 CREATE CLASS TFbRow
 
-   VAR    aRow
-   VAR    aStruct
-   VAR    aChanged
-   VAR    aKeys
-   VAR    db
-   VAR    dialect
-   VAR    aTables
+   VAR aRow
+   VAR aStruct
+   VAR aChanged
+   VAR aKeys
+   VAR db
+   VAR dialect
+   VAR aTables
 
    METHOD New( row, struct, nDB, nDialect, aTable )
    METHOD Changed( nField )

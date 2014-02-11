@@ -22,12 +22,11 @@
   HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
 */
 
-
 #define THREAD_COUNT_PREALLOC    3
-#define THREAD_COUNT_MAX        50
-#define SESSION_TIMEOUT        600
+#define THREAD_COUNT_MAX         50
+#define SESSION_TIMEOUT          600
 
-#define CR_LF                       ( Chr( 13 ) + Chr( 10 ) )
+#define CR_LF                    ( Chr( 13 ) + Chr( 10 ) )
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_aSessionData
 
