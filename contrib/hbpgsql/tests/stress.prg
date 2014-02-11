@@ -15,10 +15,10 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    hb_default( @cHost, "localhost" )
    hb_default( @cDatabase, "postgres" )
    hb_default( @cUser, hb_UserName() )
-   hb_default( @cPass, "pass" )
+   hb_default( @cPass, "" )
 
    ? "Connecting..."
-   conn := PQconnectdb( "dbname = " + cDatabase + " host = " + cHost + " user = " + cUser + " password = " + cPass + " port = 5432" )
+   conn := PQconnectdb( "dbname = '" + cDatabase + "' host = '" + cHost + "' user = '" + cUser + "' password = '" + cPass + "' port = 5432" )
 
    ? PQstatus( conn ), PQerrorMessage( conn )
 

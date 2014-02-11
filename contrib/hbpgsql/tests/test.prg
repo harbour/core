@@ -9,12 +9,12 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    hb_default( @cHost, "localhost" )
    hb_default( @cDatabase, "postgres" )
    hb_default( @cUser, hb_UserName() )
-   hb_default( @cPass, "pass" )
+   hb_default( @cPass, "" )
 
    conn := PQsetdbLogin( cHost, "5432", NIL, NIL, cDatabase, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
-   conn := PQconnectdb( "dbname = " + cDatabase + " host = localhost user = " + cUser + " password = " + cPass + " port = 5432" )
+   conn := PQconnectdb( "dbname = '" + cDatabase + "' host = '" + cHost + "' user = '" + cUser + "' password = '" + cPass + "' port = 5432" )
 
    ? PQstatus( conn ), PQerrorMessage( conn )
 

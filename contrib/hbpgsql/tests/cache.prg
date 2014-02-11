@@ -17,10 +17,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL i
 
-   hb_default( @cHost, "localhost" )
    hb_default( @cDatabase, "postgres" )
-   hb_default( @cUser, hb_UserName() )
-   hb_default( @cPass, "pass" )
 
    IF SQLConnect( cHost, cDatabase, cUser, cPass )
       QuickQuery( "DROP TABLE test" )
@@ -320,7 +317,7 @@ FUNCTION SQLConnect( cHost, cDatabase, cUser, cPassword, cSchema )
 
    LOCAL lRetval := .T.
 
-   s_oServer := TPQServer():New( cHost, cDatabase, cUser, cPassWord, 5432, cSchema )
+   s_oServer := TPQServer():New( cHost, cDatabase, cUser, cPassword, 5432, cSchema )
    IF s_oServer:NetErr()
       ? s_oServer:ErrorMsg()
       lRetval := .F.

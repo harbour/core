@@ -50,13 +50,13 @@
 
 #include "inkey.ch"
 
-PROCEDURE Main( ... )
+PROCEDURE Main()
 
    LOCAL cTok
    LOCAL cHostName := "localhost"
    LOCAL cUser := "root"
-   LOCAL cPassWord := ""
-   LOCAL cDataBase, cTable, cFile
+   LOCAL cPassword := ""
+   LOCAL cDatabase, cTable, cFile
    LOCAL aDbfStruct, i
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
@@ -67,55 +67,40 @@ PROCEDURE Main( ... )
    // now DBF (I mean the one able to handle .dbt-s :-))
    rddSetDefault( "DBF" )
 
-   IF PCount() < 6
-      help()
-      RETURN
-   ENDIF
-
-   i := 1
    // Scan parameters and setup workings
-   DO WHILE i <= PCount()
+   FOR i := 1 TO PCount()
 
-      cTok := hb_PValue( i++ )
+      cTok := hb_PValue( i )
 
       DO CASE
-      CASE cTok == "-h"
-         cHostName := hb_PValue( i++ )
-
-      CASE cTok == "-d"
-         cDataBase := hb_PValue( i++ )
-
-      CASE cTok == "-t"
-         cTable := hb_PValue( i++ )
-
-      CASE cTok == "-f"
-         cFile := hb_PValue( i++ )
-
-      CASE cTok == "-u"
-         cUser := hb_PValue( i++ )
-
-      CASE cTok == "-p"
-         cPassWord := hb_PValue( i++ )
-
-      CASE cTok == "-c"
-         lCreateTable := .T.
-
+      CASE cTok == "-h" ; cHostName := hb_PValue( ++i )
+      CASE cTok == "-d" ; cDatabase := hb_PValue( ++i )
+      CASE cTok == "-t" ; cTable := AllTrim( hb_PValue( ++i ) )
+      CASE cTok == "-f" ; cFile := hb_PValue( ++i )
+      CASE cTok == "-u" ; cUser := hb_PValue( ++i )
+      CASE cTok == "-p" ; cPassword := hb_PValue( ++i )
+      CASE cTok == "-c" ; lCreateTable := .T.
       OTHERWISE
          help()
          RETURN
       ENDCASE
-   ENDDO
+   NEXT
+
+   IF Empty( cTable ) .OR. Empty( cFile ) .OR. Empty( cDatabase )
+      help()
+      RETURN
+   ENDIF
 
    dbUseArea( .T.,, cFile, "dbffile",, .T. )
    aDbfStruct := dbffile->( dbStruct() )
 
-   oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
+   oServer := TMySQLServer():New( cHostName, cUser, cPassword )
    IF oServer:NetErr()
       ? oServer:Error()
       RETURN
    ENDIF
 
-   oServer:SelectDB( cDataBase )
+   oServer:SelectDB( cDatabase )
    IF oServer:NetErr()
       ? oServer:Error()
       RETURN
@@ -172,14 +157,14 @@ PROCEDURE Main( ... )
 
 STATIC PROCEDURE Help()
 
-   ? "dbf2mysql - dbf file to MySQL table conversion utility"
+   ? "dbf2mysq - dbf file to MySQL table conversion utility"
    ? "-h hostname (default: localhost)"
    ? "-u user (default: root)"
    ? "-p password (default no password)"
-   ? "-d name of database to use"
-   ? "-t name of table to add records to"
+   ? "-d name of database to use (required)"
+   ? "-t name of table to add records to (required)"
    ? "-c delete existing table and create a new one"
-   ? "-f name of .dbf file to import"
+   ? "-f name of .dbf file to import (required)"
    ? "all parameters but -h -u -p -c are mandatory"
    ?
 

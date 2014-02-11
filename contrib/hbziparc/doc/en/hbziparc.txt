@@ -473,7 +473,7 @@
    $ONELINER$
       Unzip a compressed file
    $SYNTAX$
-      hb_UnzipFile( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+      hb_UnzipFile( <cFile>, <bBlock>, <lWithPath>, <cPassword>, <cPath>,
                     <cFile> | <aFile>, <pFileProgress> ) --> lCompress
    $ARGUMENTS$
       <cFile>   Name of the zip file to extract
@@ -482,7 +482,7 @@
 
       <lWithPath> Toggle to create directory if needed
 
-      <cPassWord> Password to use to extract files
+      <cPassword> Password to use to extract files
 
       <cPath>    Path to extract the files to - mandatory
 

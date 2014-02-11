@@ -1235,7 +1235,7 @@ HB_FUNC( ORDCONDSET )
          be removed on index close operation */
       lpdbOrdCondInfo->fTemporary    = hb_parl( 18 );
       /* 19th parameter is CL5.2 USEFILTER parameter which means
-         that RDD should respect SET FILTER and SET DELETE flag */
+         that RDD should respect SET FILTER and SET DELETED flag */
       lpdbOrdCondInfo->fUseFilter    = hb_parl( 19 );
       /* 20th parameter is Harbour extenstion and informs RDD that
          index is not shared between other clients */

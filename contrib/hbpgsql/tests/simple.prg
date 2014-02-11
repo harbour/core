@@ -6,10 +6,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL cQuery
 
-   hb_default( @cHost, "localhost" )
    hb_default( @cDatabase, "postgres" )
-   hb_default( @cUser, hb_UserName() )
-   hb_default( @cPass, "pass" )
 
    oServer := TPQServer():New( cHost, cDatabase, cUser, cPass )
 

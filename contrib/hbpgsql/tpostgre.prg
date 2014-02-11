@@ -67,7 +67,7 @@ CREATE CLASS TPQServer
    VAR      lTrace    INIT .F.
    VAR      pTrace
 
-   METHOD   New( cHost, cDatabase, cUser, cPass, nPort, cSchema )
+   METHOD   New( cHost, cDatabase, cUser, cPass, nPort, cSchema, hCustom )
    METHOD   Destroy()
    METHOD   Close()              INLINE ::Destroy()
 
@@ -94,16 +94,33 @@ CREATE CLASS TPQServer
 
 ENDCLASS
 
+STATIC FUNCTION EscapeValue( cString )
 
-METHOD New( cHost, cDatabase, cUser, cPass, nPort, cSchema ) CLASS TPQserver
+   cString := hb_StrReplace( cString, { ;
+      "'" => "\'", ;
+      "\" => "\\" } )
+
+   RETURN iif( Empty( cString ) .OR. " " $ cString, "'" + cString + "'", cString )
+
+METHOD New( cHost, cDatabase, cUser, cPass, nPort, cSchema, hCustom ) CLASS TPQserver
 
    LOCAL res
+   LOCAL item
 
-   ::pDB := PQconnectdb( "dbname = " + cDatabase + ;
-      " host = " + cHost + ;
-      " user = " + cUser + ;
-      " password = " + cPass + ;
-      " port = " + hb_ntos( hb_defaultValue( nPort, 5432 ) ) )
+   LOCAL cConnect := ;
+      iif( HB_ISSTRING( cDatabase ), "dbname = " + EscapeValue( cDatabase ), "" ) + ;
+      iif( HB_ISSTRING( cHost ), " host = " + EscapeValue( cHost ), "" ) + ;
+      iif( HB_ISSTRING( cUser ), " user = " + EscapeValue( cUser ), "" ) + ;
+      iif( HB_ISSTRING( cPass ), " password = " + EscapeValue( cPass ), "" ) + ;
+      iif( HB_ISNUMERIC( nPort ), " port = " + hb_ntos( nPort ), "" )
+
+   IF HB_ISHASH( hCustom )
+      FOR EACH item IN hCustom
+         cConnect += " " + item:__enumKey() + " = " + EscapeValue( item )
+      NEXT
+   ENDIF
+
+   ::pDB := PQconnectdb( cConnect )
 
    IF PQstatus( ::pDb ) != CONNECTION_OK
       ::lError := .T.
