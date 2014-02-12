@@ -151,10 +151,20 @@ HB_FUNC( POSIX_GETPWNAM )
 
       hb_retnl( result != NULL && s == 0 ? pwd.pw_uid : 0 );
 
-      hb_stornl( pwd.pw_gid, 2 );
-      hb_storc( pwd.pw_gecos, 3 );
-      hb_storc( pwd.pw_dir, 4 );
-      hb_storc( pwd.pw_shell, 5 );
+      if( result != NULL && s == 0 )
+      {
+         hb_stornl( pwd.pw_gid, 2 );
+         hb_storc( pwd.pw_gecos, 3 );
+         hb_storc( pwd.pw_dir, 4 );
+         hb_storc( pwd.pw_shell, 5 );
+      }
+      else
+      {
+         hb_stornl( 0, 2 );
+         hb_storc( "", 3 );
+         hb_storc( "", 4 );
+         hb_storc( "", 5 );
+      }
 
       hb_xfree( buf );
    }

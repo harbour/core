@@ -1,10 +1,4 @@
-/*
- * Harbour Project source code:
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbunix"
 
