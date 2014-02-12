@@ -847,7 +847,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
          IF ! FNameExc( cName, aCanHaveAnyEncoding )
             tmp := -1
-            IF ! IsASCII7( cFile, @tmp ) .AND. ! IsUTF8( cFile )
+            IF ! IsASCII7( cFile, @tmp ) .AND. ! hb_StrIsUTF8( cFile )
                AAdd( aErr, hb_StrFormat( "content: is non-UTF-8/ASCII-7: %1$d", tmp ) )
             ENDIF
          ENDIF
@@ -905,78 +905,6 @@ STATIC FUNCTION RTrimEOL( cFile )
    ENDDO
 
    RETURN cFile
-
-/*
- * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
- * Harbour adaptation Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- */
-
-/*
-Copyright (c) 1996 Eugene Roshal
-Copyright (c) 2000 Far Group
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-3. The name of the authors may not be used to endorse or promote products
-   derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-STATIC FUNCTION IsUTF8( cString )
-
-   LOCAL lASCII := .T.
-   LOCAL nOctets := 0
-   LOCAL nChar
-   LOCAL tmp
-
-   FOR EACH tmp IN cString
-
-      nChar := hb_BCode( tmp )
-
-      IF hb_bitAnd( nChar, 0x80 ) != 0
-         lASCII := .F.
-      ENDIF
-
-      IF nOctets != 0
-
-         IF hb_bitAnd( nChar, 0xC0 ) != 0x80
-            RETURN .F.
-         ENDIF
-
-         --nOctets
-
-      ELSEIF hb_bitAnd( nChar, 0x80 ) != 0
-
-         DO WHILE hb_bitAnd( nChar, 0x80 ) != 0
-            nChar := hb_bitAnd( hb_bitShift( nChar, 1 ), 0xFF )
-            ++nOctets
-         ENDDO
-
-         --nOctets
-
-         IF nOctets == 0
-            RETURN .F.
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN !( nOctets > 0 .OR. lASCII )
 
 STATIC FUNCTION IsASCII7( cString, /* @ */ nChar )
 

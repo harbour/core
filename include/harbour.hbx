@@ -792,6 +792,7 @@ DYNAMIC hb_SToT
 DYNAMIC hb_StrCDecode
 DYNAMIC hb_StrClear
 DYNAMIC hb_StrDecodEscape
+DYNAMIC hb_StrIsUTF8
 DYNAMIC hb_StrFormat
 DYNAMIC hb_StrReplace
 DYNAMIC hb_StrShrink

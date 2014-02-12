@@ -47,7 +47,7 @@ proc main()
    aEval( s_aCounters, {| x | nSum += x } )
    ? "Sum of thread local counters:", nSum
    ? "Protected item result.......:", s_nVar2, ;
-     iif( nSum == s_nVar2, "OK", "ERROR" )
+      iif( nSum == s_nVar2, "OK", "ERROR" )
    ? "Unprotected item result.....:", s_nVar1, "*"
    ? " * - can be different then local sum on real multi-CPU systems"
    ? "End of main"

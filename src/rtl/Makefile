@@ -183,6 +183,7 @@ C_SOURCES := \
    strrepl.c \
    strtoexp.c \
    strtran.c \
+   strutf8.c \
    strxor.c \
    strzero.c \
    stuff.c \

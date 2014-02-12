@@ -172,11 +172,8 @@ STATIC PROCEDURE __UnixParseLangCP( cString, /* @ */ cCP, /* @ */ cLang )
 STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
 
    IF HB_ISSTRING( cCPUnix )
-
-      cCPUnix := hb_StrReplace( cCPUnix, "_-" )
-
       /* TOFIX: update the list of std unix cp names */
-      SWITCH Lower( cCPUnix )
+      SWITCH Lower( hb_StrReplace( cCPUnix, "_-" ) )
       CASE "ibm437"
       CASE "cp437"       ; RETURN "cp437"
       CASE "ibm737"
@@ -254,8 +251,6 @@ STATIC FUNCTION __CPStdToHb( cCPStd, cCtryStd )
 
 STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
 
-   LOCAL cCtryHb := Left( hb_cdpSelect(), 2 )
-
    IF HB_ISSTRING( cCtryStd )
       SWITCH Lower( cCtryStd )
       CASE "af-za"      ; EXIT
@@ -283,24 +278,24 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "be-by"      ; EXIT
       CASE "be"         ; EXIT
       CASE "bg-bg"
-      CASE "bg"         ; cCtryHb := "BG" ; EXIT
+      CASE "bg"         ; RETURN "BG"
       CASE "ca-es"      ; EXIT
       CASE "ca"         ; EXIT
       CASE "cy-gb"      ; EXIT
       CASE "cs-cz"
-      CASE "cs"         ; cCtryHb := "CS" ; EXIT
+      CASE "cs"         ; RETURN "CS"
       CASE "da-dk"
-      CASE "da"         ; cCtryHb := "DK" ; EXIT
+      CASE "da"         ; RETURN "DK"
       CASE "de-at"
       CASE "de-ch"
       CASE "de-de"
       CASE "de-li"
       CASE "de-lu"
-      CASE "de"         ; cCtryHb := "DE" ; EXIT
+      CASE "de"         ; RETURN "DE"
       CASE "div-mv"     ; EXIT
       CASE "div"        ; EXIT
       CASE "el-gr"
-      CASE "el"         ; cCtryHb := "EL" ; EXIT
+      CASE "el"         ; RETURN "EL"
       CASE "en-au"
       CASE "en-bz"
       CASE "en-ca"
@@ -314,7 +309,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "en-us"
       CASE "en-za"
       CASE "en-zw"
-      CASE "en"         ; cCtryHb := "EN" ; EXIT
+      CASE "en"         ; RETURN "EN"
       CASE "eo"         ; EXIT
       CASE "es-419"
       CASE "es-ar"
@@ -336,7 +331,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "es-sv"
       CASE "es-uy"
       CASE "es-ve"
-      CASE "es"         ; cCtryHb := "ES" ; EXIT
+      CASE "es"         ; RETURN "ES"
       CASE "et-ee"      ; EXIT
       CASE "et"         ; EXIT
       CASE "eu-es"      ; EXIT
@@ -344,7 +339,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "fa-ir"      ; EXIT
       CASE "fa"         ; EXIT
       CASE "fi-fi"
-      CASE "fi"         ; cCtryHb := "FI" ; EXIT
+      CASE "fi"         ; RETURN "FI"
       CASE "fo-fo"      ; EXIT
       CASE "fo"         ; EXIT
       CASE "fr-be"
@@ -353,28 +348,28 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "fr-fr"
       CASE "fr-lu"
       CASE "fr-mc"
-      CASE "fr"         ; cCtryHb := "FR" ; EXIT
+      CASE "fr"         ; RETURN "FR"
       CASE "gl-es"      ; EXIT
       CASE "gl"         ; EXIT
       CASE "gu-in"      ; EXIT
       CASE "gu"         ; EXIT
       CASE "he-il"
-      CASE "he"         ; cCtryHb := "HE" ; EXIT
+      CASE "he"         ; RETURN "HE"
       CASE "hi-in"      ; EXIT
       CASE "hi"         ; EXIT
       CASE "hr-hr"
-      CASE "hr"         ; cCtryHb := "HR" ; EXIT
+      CASE "hr"         ; RETURN "HR"
       CASE "hu-hu"
-      CASE "hu"         ; cCtryHb := "HU" ; EXIT
+      CASE "hu"         ; RETURN "HU"
       CASE "hy-am"      ; EXIT
       CASE "hy"         ; EXIT
       CASE "id-id"      ; EXIT
       CASE "id"         ; EXIT
       CASE "is-is"
-      CASE "is"         ; cCtryHb := "IS" ; EXIT
+      CASE "is"         ; RETURN "IS"
       CASE "it-ch"
       CASE "it-it"
-      CASE "it"         ; cCtryHb := "IT" ; EXIT
+      CASE "it"         ; RETURN "IT"
       CASE "ja-jp"      ; EXIT
       CASE "ja"         ; EXIT
       CASE "ka-ge"      ; EXIT
@@ -390,7 +385,7 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "ky-kz"      ; EXIT
       CASE "ky"         ; EXIT
       CASE "lt-lt"
-      CASE "lt"         ; cCtryHb := "LT" ; EXIT
+      CASE "lt"         ; RETURN "LT"
       CASE "lv-lv"      ; EXIT
       CASE "lv"         ; EXIT
       CASE "mk-mk"      ; EXIT
@@ -405,33 +400,33 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "nb-no"      ; EXIT
       CASE "nl-be"
       CASE "nl-nl"
-      CASE "nl"         ; cCtryHb := "NL" ; EXIT
+      CASE "nl"         ; RETURN "NL"
       CASE "nn-no"      ; EXIT
-      CASE "no"         ; cCtryHb := "NO" ; EXIT
+      CASE "no"         ; RETURN "NO"
       CASE "pa-in"      ; EXIT
       CASE "pa"         ; EXIT
       CASE "pl-pl"
-      CASE "pl"         ; cCtryHb := "PL" ; EXIT
+      CASE "pl"         ; RETURN "PL"
       CASE "pt-br"
       CASE "pt-pt"
-      CASE "pt"         ; cCtryHb := "PT" ; EXIT
+      CASE "pt"         ; RETURN "PT"
       CASE "ro-ro"
-      CASE "ro"         ; cCtryHb := "RO" ; EXIT
+      CASE "ro"         ; RETURN "RO"
       CASE "ru-ru"
-      CASE "ru"         ; cCtryHb := "RU" ; EXIT
+      CASE "ru"         ; RETURN "RU"
       CASE "sa-in"      ; EXIT
       CASE "sa"         ; EXIT
       CASE "sk-sk"
-      CASE "sk"         ; cCtryHb := "SK" ; EXIT
+      CASE "sk"         ; RETURN "SK"
       CASE "sl-si"
-      CASE "sl"         ; cCtryHb := "SL" ; EXIT
+      CASE "sl"         ; RETURN "SL"
       CASE "sq-al"      ; EXIT
       CASE "sq"         ; EXIT
       CASE "sr-sp-cyrl"
-      CASE "sr-sp-latn" ; cCtryHb := "SR" ; EXIT
+      CASE "sr-sp-latn" ; RETURN "SR"
       CASE "sv-fi"
       CASE "sv-se"
-      CASE "sv"         ; cCtryHb := "SV" ; EXIT
+      CASE "sv"         ; RETURN "SV"
       CASE "sw-ke"      ; EXIT
       CASE "sw"         ; EXIT
       CASE "syr-sy"     ; EXIT
@@ -443,11 +438,11 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       CASE "th-th"      ; EXIT
       CASE "th"         ; EXIT
       CASE "tr-tr"
-      CASE "tr"         ; cCtryHb := "TR" ; EXIT
+      CASE "tr"         ; RETURN "TR"
       CASE "tt-ru"      ; EXIT
       CASE "tt"         ; EXIT
       CASE "uk-ua"
-      CASE "uk"         ; cCtryHb := "UA" ; EXIT
+      CASE "uk"         ; RETURN "UA"
       CASE "ur-pk"      ; EXIT
       CASE "ur"         ; EXIT
       CASE "uz-uz-cyrl" ; EXIT
@@ -466,4 +461,4 @@ STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
       ENDSWITCH
    ENDIF
 
-   RETURN cCtryHb
+   RETURN Left( hb_cdpSelect(), 2 )
