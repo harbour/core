@@ -70,7 +70,6 @@
 
 */
 
-
 CREATE CLASS TBColumnSQL FROM TBColumn
 
    VAR oBrw                 // pointer to Browser containing this column, needed to be able to
@@ -306,8 +305,10 @@ METHOD EditField() CLASS TBrowseSQL
 
    // Check exit key from get
    nKey := LastKey()
-   IF nKey == K_UP   .OR. nKey == K_DOWN .OR. ;
-      nKey == K_PGUP .OR. nKey == K_PGDN
+   IF nKey == K_UP   .OR. ;
+      nKey == K_DOWN .OR. ;
+      nKey == K_PGUP .OR. ;
+      nKey == K_PGDN
 
       // Ugh
       hb_keyIns( nKey )
@@ -320,15 +321,11 @@ METHOD EditField() CLASS TBrowseSQL
 METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
    LOCAL nKey
-   LOCAL lKeepGoing := .T.
 
-   IF ! HB_ISNUMERIC( nKey )
-      nKey := NIL
-   ENDIF
    hb_default( @lCanEdit, .F. )
    hb_default( @aExitKeys, { K_ESC } )
 
-   DO WHILE lKeepGoing
+   DO WHILE .T.
 
       DO WHILE .T.
          nKey := Inkey()
@@ -342,52 +339,24 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
       ENDIF
 
       IF AScan( aExitKeys, nKey ) > 0
-         lKeepGoing := .F.
-         LOOP
+         EXIT
       ENDIF
 
       DO CASE
-      CASE nKey == K_DOWN
-         ::down()
-
-      CASE nKey == K_PGDN
-         ::pageDown()
-
-      CASE nKey == K_CTRL_PGDN
-         ::goBottom()
-
-      CASE nKey == K_UP
-         ::up()
-
-      CASE nKey == K_PGUP
-         ::pageUp()
-
-      CASE nKey == K_CTRL_PGUP
-         ::goTop()
-
-      CASE nKey == K_RIGHT
-         ::right()
-
-      CASE nKey == K_LEFT
-         ::left()
-
-      CASE nKey == K_HOME
-         ::home()
-
-      CASE nKey == K_END
-         ::end()
-
-      CASE nKey == K_CTRL_LEFT
-         ::panLeft()
-
-      CASE nKey == K_CTRL_RIGHT
-         ::panRight()
-
-      CASE nKey == K_CTRL_HOME
-         ::panHome()
-
-      CASE nKey == K_CTRL_END
-         ::panEnd()
+      CASE nKey == K_DOWN       ; ::down()
+      CASE nKey == K_PGDN       ; ::pageDown()
+      CASE nKey == K_CTRL_PGDN  ; ::goBottom()
+      CASE nKey == K_UP         ; ::up()
+      CASE nKey == K_PGUP       ; ::pageUp()
+      CASE nKey == K_CTRL_PGUP  ; ::goTop()
+      CASE nKey == K_RIGHT      ; ::right()
+      CASE nKey == K_LEFT       ; ::left()
+      CASE nKey == K_HOME       ; ::home()
+      CASE nKey == K_END        ; ::end()
+      CASE nKey == K_CTRL_LEFT  ; ::panLeft()
+      CASE nKey == K_CTRL_RIGHT ; ::panRight()
+      CASE nKey == K_CTRL_HOME  ; ::panHome()
+      CASE nKey == K_CTRL_END   ; ::panEnd()
 
       CASE nKey == K_ENTER .AND. lCanEdit
          ::EditField()

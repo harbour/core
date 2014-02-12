@@ -169,14 +169,28 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
    const char * szHost = hb_parc( 1 );
    const char * szUser = hb_parc( 2 );
    const char * szPass = hb_parc( 3 );
+   unsigned int port   = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
+   unsigned int flags  = ( unsigned int ) hb_parni( 5 );
 
 #if MYSQL_VERSION_ID > 32200
-   MYSQL *      mysql;
-   unsigned int port  = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
-   unsigned int flags = ( unsigned int ) hb_parnidef( 5, 0 );
+   MYSQL * mysql;
 
    if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) != NULL )
    {
+      PHB_ITEM pSSL = hb_param( 6, HB_IT_HASH );
+
+      if( pSSL )
+      {
+         flags |= CLIENT_SSL;
+
+         mysql_ssl_set( mysql,
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "key" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "cert" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "ca" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "capath" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "cipher" ) ) );
+      }
+
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
       if( mysql_real_connect( mysql, szHost, szUser, szPass, 0, port, NULL, flags ) )
@@ -190,7 +204,7 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
    else
       hb_retptr( NULL );
 #else
-   hb_MYSQL_ret( mysql_real_connect( NULL, szHost, szUser, szPass, 0, NULL, 0 ) );
+   hb_MYSQL_ret( mysql_real_connect( NULL, szHost, szUser, szPass, port, NULL, flags ) );
 #endif
 }
 
@@ -215,6 +229,16 @@ HB_FUNC( MYSQL_GET_SERVER_VERSION ) /* long mysql_get_server_version( MYSQL * ) 
       hb_retnl( lVer );
 #endif
    }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_GET_SSL_CIPHER )
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retc( mysql_get_ssl_cipher( mysql ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -287,6 +311,26 @@ HB_FUNC( MYSQL_USE_RESULT ) /* MYSQL_RES * mysql_use_result( MYSQL * ) */
 
    if( mysql )
       hb_MYSQL_RES_ret( mysql_use_result( mysql ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_NEXT_RESULT ) /* bool mysql_next_result( MYSQL * mysql ) */
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retl( mysql_next_result( mysql ) != 0 );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_MORE_RESULTS ) /* bool mysql_more_results( MYSQL * mysql ) */
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retl( mysql_more_results( mysql ) != 0 );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

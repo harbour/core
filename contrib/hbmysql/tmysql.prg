@@ -1233,7 +1233,7 @@ CREATE CLASS TMySQLServer
    VAR lError                                              // .T. if occurred an error
    VAR cCreateQuery
 
-   METHOD New( cServer, cUser, cPassword, nPort )          // Opens connection to a server, returns a server object
+   METHOD New( cServer, cUser, cPassword, nPort, nFlags, hSSL )  // Opens connection to a server, returns a server object
    METHOD Destroy()                                        // Closes connection to server
 
    METHOD SelectDB( cDBName )                              // Which data base I will use for subsequent queries
@@ -1254,20 +1254,21 @@ CREATE CLASS TMySQLServer
    METHOD CreateDatabase( cDataBase )                      // Create an New Mysql Database
    METHOD DeleteDatabase( cDataBase )                      // Delete database
 
-   METHOD sql_Commit()                                     // Commits transaction [mitja]
-   METHOD sql_Rollback()                                   // Rollbacks transaction [mitja]
-   METHOD sql_Version()                                    // server version as numeric [mitja]
+   METHOD sql_commit()                                     // Commits transaction [mitja]
+   METHOD sql_rollback()                                   // Rollbacks transaction [mitja]
+   METHOD sql_version()                                    // server version as numeric [mitja]
+   METHOD ssl_cipher()                                     // check if SSL connection is established [mitja]
 
 ENDCLASS
 
 
-METHOD New( cServer, cUser, cPassword, nPort ) CLASS TMySQLServer
+METHOD New( cServer, cUser, cPassword, nPort, nFlags, hSSL ) CLASS TMySQLServer
 
    ::cServer := cServer
    ::nPort := nPort
    ::cUser := cUser
    ::cPassword := cPassword
-   ::nSocket := mysql_real_connect( cServer, cUser, cPassword, nPort )
+   ::nSocket := mysql_real_connect( cServer, cUser, cPassword, nPort, nFlags, hSSL )
    ::lError := .F.
 
    IF Empty( ::nSocket )
@@ -1290,6 +1291,9 @@ METHOD sql_rollback() CLASS TMySQLServer
 
 METHOD sql_version() CLASS TMySQLServer
    RETURN mysql_get_server_version( ::nSocket )
+
+METHOD ssl_cipher() CLASS TMySQLServer
+   RETURN mysql_get_ssl_cipher( ::nSocket )
 
 
 #if 0

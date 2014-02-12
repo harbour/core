@@ -238,7 +238,7 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
 
 DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
 {
-   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_HASH );
    void ** h = ( void ** ) hb_xgrabz( 3 * sizeof( void * ) );
 
    *ph = h;
@@ -247,7 +247,7 @@ DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void 
 
    p->cbSize = sizeof( DOCINFO );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
       p->lpszDocName  = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszDocName"  ), &h[ 0 ], NULL );
       p->lpszOutput   = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszOutput"   ), &h[ 1 ], NULL );
@@ -311,9 +311,9 @@ HB_FUNC( __WAPI_DEVMODE_SET )
 {
 #if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
-   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_HASH );
 
-   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   if( pDevMode && pStru )
    {
       pDevMode->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
       pDevMode->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
@@ -345,9 +345,9 @@ HB_FUNC( __WAPI_DEVMODE_GET )
 {
 #if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
-   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_HASH );
 
-   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   if( pDevMode && pStru )
    {
       s_hb_hashSetCItemNL( pStru, "dmOrientation"  , pDevMode->dmOrientation   );
       s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , pDevMode->dmPaperSize     );
