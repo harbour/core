@@ -95,7 +95,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    oBrowse := TBrowseDB( nTop, nLeft, nBottom, nRight )
    oBrowse:headSep   := iif( HB_ISSTRING( xHeadingSeparators ), xHeadingSeparators, hb_UTF8ToStrBox( "═╤═" ) )
    oBrowse:colSep    := iif( HB_ISSTRING( xColumnSeparators ), xColumnSeparators, hb_UTF8ToStrBox( " │ " ) )
-   oBrowse:footSep   := iif( HB_ISSTRING( xFootingSeparators ), xFootingSeparators, "" )
+   oBrowse:footSep   := hb_defaultValue( xFootingSeparators, "" )
    oBrowse:skipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
    oBrowse:autoLite  := .F. /* Set to .F. just like in CA-Cl*pper. [vszakats] */
 
