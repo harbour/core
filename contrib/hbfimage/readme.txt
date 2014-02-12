@@ -16,7 +16,7 @@ FreeImage Project's web site is http://freeimage.sourceforge.net/
 USAGE
 =====
 
-Add hbfimage.hbc to your hbmk2 project.
+Add 'hbfimage.hbc' (without quotes) to your hbmk2 project.
 
 DOCUMENTATION
 =============
@@ -28,4 +28,3 @@ SAMPLES
 =======
 
 For samples look at tests dir.
-fitest.prg is an API test application.

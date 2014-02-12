@@ -21,22 +21,22 @@ PROCEDURE Main( cSkip, cRaw )
    IF Empty( cSkip )
 
       TEST1()
-      NextTest()
+      WAIT
 
       TEST2()
-      NextTest()
+      WAIT
 
       TEST3()
-      NextTest()
+      WAIT
 
       TEST4()
-      NextTest()
+      WAIT
 
       TEST5()
-      NextTest()
+      WAIT
 
       TEST6()
-      NextTest()
+      WAIT
    ENDIF
 
    TEST7( cSkip, cRaw )
@@ -48,13 +48,6 @@ STATIC PROCEDURE Results()
 
    ? "Wait 2 seconds or press most any key to see the results of this test."
    Inkey( 2 )
-
-   RETURN
-
-STATIC PROCEDURE NextTest()
-
-   ? "Press any key to continue on to the next test."
-   Inkey( 0 )
 
    RETURN
 

@@ -39,7 +39,7 @@ PROCEDURE Main()
    ? "Smile please "
    oForm:Smile()
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -53,7 +53,7 @@ PROCEDURE Main()
    ? "Data items after"
    ? hb_ValToExp( oForm )
 
-   Pause()
+   WAIT
 
    ? "Let's attach a bigger smile"
 
@@ -85,7 +85,7 @@ PROCEDURE Main()
    ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -154,9 +154,3 @@ STATIC FUNCTION BigSmile()
    ? ":-)))"
 
    RETURN self
-
-STATIC PROCEDURE Pause()
-
-   WAIT
-
-   RETURN

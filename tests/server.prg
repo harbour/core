@@ -14,6 +14,8 @@ PROCEDURE Main( cPort )
    LOCAL nTurn := 0, nTurn1 := 0
    LOCAL bCont := .T.
 
+   SET CURSOR OFF
+
    CLS
 
    hb_default( @cPort, "2000" )
@@ -87,8 +89,7 @@ PROCEDURE Main( cPort )
          OTHERWISE
             @ 7, 5 SAY "Received Error " + Str( hb_inetErrorCode( s ) ) + ": " + hb_inetErrorDesc( s )
             @ 8, 5 SAY Space( 70 )
-            @ 9, 5 SAY Space( 70 )
-            @ 9, 5 SAY "Press a key to continue"
+            @ 9, 5 SAY PadR( "Press a key to continue", 70 )
             Inkey( 0 )
             EXIT
 

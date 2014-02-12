@@ -6,9 +6,9 @@
 #include "clipper.ch"
 #endif
 
-#define HB_VROW   1
-#define HB_VCOL   2
-#define HB_PROMPT 3
+#define HB_VROW    1
+#define HB_VCOL    2
+#define HB_PROMPT  3
 
 PROCEDURE Main()
 
@@ -28,7 +28,7 @@ PROCEDURE Main()
    DO WHILE nMode != 0
 
       CLS
-      @ 0, 0 SAY "Select the video mode you want to test.."
+      @ 0, 0 SAY "Select the video mode you want to test."
 
       FOR nRow := 1 TO 5
          @ 2 + nRow, 10 PROMPT aVModes[ nRow ][ HB_PROMPT ]
@@ -44,7 +44,7 @@ PROCEDURE Main()
          IF SetMode( aVModes[ nMode ][ HB_VROW ], aVModes[ nMode ][ HB_VCOL ] )
             TESTBOX( aVModes[ nMode ][ HB_PROMPT ] )
          ELSE
-            @ MaxRow(), 0 SAY "Video mode not supported on this system.."
+            @ MaxRow(), 0 SAY "Video mode not supported on this system."
             Inkey( 0 )
          ENDIF
       ENDIF
@@ -64,7 +64,7 @@ STATIC PROCEDURE TESTBOX( cMode )
    @ 0, 3 SAY cMode
    @ MaxRow(), 3 SAY " Press a key "
 
-   @ 8, 0 SAY Replicate( Chr( 25 ) /* LOW-ASCII "↓" */ + "         ", 20 )
+   @ 8, 0 SAY Replicate( "|         ", 20 )
    @ 9, 0 SAY Replicate( "0123456789", 20 )
 
    FOR nRow := 0 TO MaxRow()

@@ -20,7 +20,6 @@ STATIC PROCEDURE Two( n )
    CASE n == 1
       ? "n == 1"
       RETURN
-
    CASE n == 2
       ? "n == 2"
       RETURN
