@@ -17,7 +17,7 @@ _tmplate.prg
 #       the current one, so we don't install it yet.
 # $hb_pkg_install.hbm
 
-# default -run params usefaul to update the docs
+# default -run params useful to update the online docs
 # on the Harbour website
 -runflag=-format=html
 -runflag=-output-single
