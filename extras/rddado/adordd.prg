@@ -887,7 +887,9 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
 
    HB_SYMBOL_UNUSED( nWA )
    HB_SYMBOL_UNUSED( aOrderInfo )
-/* TODO
+
+   /* TODO */
+#if 0
    LOCAL nRecNo
    LOCAL aWAData    := USRRDD_AREADATA( nWA )
    LOCAL oRecordSet := aWAData[ WA_RECORDSET ]
@@ -898,14 +900,14 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
    IF aOrderInfo[ UR_ORI_TAG ] == 0
        oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ] , hb_QWith(), adOpenDynamic, adLockPessimistic )
    ELSE
-    // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + " ORDER BY " + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
+    // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + " ORDER BY " + ::OrdKey( uTag ), QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
        oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ], hb_QWith(), adOpenDynamic, adLockPessimistic )
    ENDIF
    aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
 
    ADO_GOTOP( nWA )
    ADO_GOTO( nWA, nRecNo )
-*/
+#endif
 
    RETURN HB_SUCCESS
 
@@ -1093,9 +1095,7 @@ STATIC FUNCTION ADO_RELEVAL( nWA, aRelInfo )
    nReturn := ADO_EVALBLOCK( aRelInfo[ UR_RI_PARENT ], aRelInfo[ UR_RI_BEXPR ], @uResult )
 
    IF nReturn == HB_SUCCESS
-      /*
-       *  Check the current order
-       */
+      /* Check the current order */
       aInfo := Array( UR_ORI_SIZE )
       nReturn := ADO_ORDINFO( nWA, DBOI_NUMBER, @aInfo )
 
@@ -1215,7 +1215,9 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
 
 STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 
-   // LOCAL n
+#if 0
+   LOCAL n
+#endif
    LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1223,13 +1225,17 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         // n := aRData[ WA_CATALOG ]:Tables( cTable )
+#if 0
+         n := aRData[ WA_CATALOG ]:Tables( cTable )
+#endif
          lRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-            // n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
+#if 0
+            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
+#endif
             lRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
@@ -1240,7 +1246,9 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 
 STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 
-   // LOCAL n
+#if 0
+   LOCAL n
+#endif
    LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1248,13 +1256,17 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         // n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
+#if 0
+         n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
+#endif
          lRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-            // n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
+#if 0
+            n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
+#endif
             lRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
@@ -1349,167 +1361,102 @@ INIT PROCEDURE ADORDD_INIT()
 
 STATIC FUNCTION ADO_GETFIELDSIZE( nDBFFieldType, nADOFieldSize )
 
-   LOCAL nDBFFieldSize := 0
+   IF HB_ISNUMERIC( nDBFFieldType )
 
-   DO CASE
-   CASE nDBFFieldType == HB_FT_STRING
-      nDBFFieldSize := nADOFieldSize
-
-   CASE nDBFFieldType == HB_FT_INTEGER
-      nDBFFieldSize := nADOFieldSize
-
-   CASE nDBFFieldType == HB_FT_DATE
-      nDBFFieldSize := 8
-
-   CASE nDBFFieldType == HB_FT_DOUBLE
-      nDBFFieldSize := nADOFieldSize
-
+      SWITCH nDBFFieldType
+      CASE HB_FT_STRING
+      CASE HB_FT_INTEGER
+      CASE HB_FT_DOUBLE
+         RETURN nADOFieldSize
 #ifdef HB_FT_DATETIME
-   CASE nDBFFieldType == HB_FT_DATETIME
-      nDBFFieldSize := 8
+      CASE HB_FT_DATETIME
 #endif
-
-   CASE nDBFFieldType == HB_FT_TIMESTAMP
-      nDBFFieldSize := 8
-
-   CASE nDBFFieldType == HB_FT_OLE
-      nDBFFieldSize := 10
-
+      CASE HB_FT_DATE
+      CASE HB_FT_TIMESTAMP
+         RETURN 8
 #ifdef HB_FT_PICTURE
-   CASE nDBFFieldType == HB_FT_PICTURE
-      nDBFFieldSize := 10
+      CASE HB_FT_PICTURE
 #endif
+      CASE HB_FT_OLE
+      CASE HB_FT_MEMO
+         RETURN 10
+      CASE HB_FT_LOGICAL
+         RETURN 1
+      ENDSWITCH
+   ENDIF
 
-   CASE nDBFFieldType == HB_FT_LOGICAL
-      nDBFFieldSize := 1
-
-   CASE nDBFFieldType == HB_FT_MEMO
-      nDBFFieldSize := 10
-
-   ENDCASE
-
-   RETURN nDBFFieldSize
+   RETURN 0
 
 STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
 
-   LOCAL nDBFFieldType := 0
+   IF HB_ISNUMERIC( nADOFieldType )
 
-   DO CASE
-
-   CASE nADOFieldType == adEmpty
-   CASE nADOFieldType == adTinyInt
-      nDBFFieldType := HB_FT_INTEGER
-
-   CASE nADOFieldType == adSmallInt
-      nDBFFieldType := HB_FT_INTEGER
-
-   CASE nADOFieldType == adInteger
-      nDBFFieldType := HB_FT_INTEGER
-
-   CASE nADOFieldType == adBigInt
-      nDBFFieldType := HB_FT_INTEGER
-
-   CASE nADOFieldType == adUnsignedTinyInt
-   CASE nADOFieldType == adUnsignedSmallInt
-   CASE nADOFieldType == adUnsignedInt
-   CASE nADOFieldType == adUnsignedBigInt
-   CASE nADOFieldType == adSingle
-
-   CASE nADOFieldType == adDouble
-      nDBFFieldType := HB_FT_DOUBLE
-
-   CASE nADOFieldType == adCurrency
-      nDBFFieldType := HB_FT_INTEGER
-
-   CASE nADOFieldType == adDecimal
-      nDBFFieldType := HB_FT_LONG
-
-   CASE nADOFieldType == adNumeric
-      nDBFFieldType := HB_FT_LONG
-
-
-   CASE nADOFieldType == adError
-   CASE nADOFieldType == adUserDefined
-   CASE nADOFieldType == adVariant
-      nDBFFieldType := HB_FT_ANY
-
-   CASE nADOFieldType == adIDispatch
-
-   CASE nADOFieldType == adIUnknown
-
-   CASE nADOFieldType == adGUID
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adDate
+      SWITCH nADOFieldType
+      CASE adTinyInt
+      CASE adSmallInt
+      CASE adInteger
+      CASE adBigInt
+      CASE adCurrency
+         RETURN HB_FT_INTEGER
+      CASE adDouble
+         RETURN HB_FT_DOUBLE
+      CASE adDecimal
+      CASE adNumeric
+         RETURN HB_FT_LONG
+      CASE adVariant
+         RETURN HB_FT_ANY
 #ifdef HB_FT_DATETIME
-      nDBFFieldType := HB_FT_DATETIME
+      CASE adDate
+      CASE adDBDate
+      CASE adFileTime
+         RETURN HB_FT_DATETIME
 #else
-      nDBFFieldType := HB_FT_DATE
+      CASE adFileTime
+         EXIT
+      CASE adDate
+      CASE adDBDate
+         RETURN HB_FT_DATE
 #endif
+      CASE adDBTimeStamp
+         RETURN HB_FT_TIMESTAMP
+      CASE adGUID
+      CASE adBSTR
+      CASE adChar
+      CASE adVarChar
+      CASE adLongVarChar
+      CASE adWChar
+      CASE adVarWChar
+         RETURN HB_FT_STRING
+      CASE adBinary
+      CASE adVarBinary
+      CASE adLongVarBinary
+         RETURN HB_FT_OLE
+      CASE adBoolean
+         RETURN HB_FT_LOGICAL
+      CASE adLongVarWChar
+      CASE adPropVariant
+         RETURN HB_FT_MEMO
 
-   CASE nADOFieldType == adDBDate
-#ifdef HB_FT_DATETIME
-      nDBFFieldType := HB_FT_DATETIME
-#else
-      nDBFFieldType := HB_FT_DATE
-#endif
-
-   CASE nADOFieldType == adDBTime
-
-   CASE nADOFieldType == adDBTimeStamp
-      nDBFFieldType := HB_FT_TIMESTAMP
-
-   CASE nADOFieldType == adFileTime
-#ifdef HB_FT_DATETIME
-      nDBFFieldType := HB_FT_DATETIME
-#endif
-
-   CASE nADOFieldType == adBSTR
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adChar
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adVarChar
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adLongVarChar
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adWChar
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adVarWChar
-      nDBFFieldType := HB_FT_STRING
-
-   CASE nADOFieldType == adBinary
-      nDBFFieldType := HB_FT_OLE
-
-   CASE nADOFieldType == adVarBinary
-      nDBFFieldType := HB_FT_OLE
-
-   CASE nADOFieldType == adLongVarBinary
-      nDBFFieldType := HB_FT_OLE
-
-   CASE nADOFieldType == adChapter
-
-   CASE nADOFieldType == adVarNumeric
+      CASE adEmpty
+      CASE adUnsignedTinyInt
+      CASE adUnsignedSmallInt
+      CASE adUnsignedInt
+      CASE adUnsignedBigInt
+      CASE adSingle
+      CASE adError
+      CASE adUserDefined
+      CASE adIDispatch
+      CASE adIUnknown
+      CASE adDBTime
+      CASE adChapter
+      CASE adVarNumeric
 #if 0
-   CASE nADOFieldType == adArray
+      CASE adArray
 #endif
+      ENDSWITCH
+   ENDIF
 
-   CASE nADOFieldType == adBoolean
-      nDBFFieldType := HB_FT_LOGICAL
-
-   CASE nADOFieldType == adLongVarWChar
-      nDBFFieldType := HB_FT_MEMO
-
-   CASE nADOFieldType == adPropVariant
-      nDBFFieldType := HB_FT_MEMO
-
-   ENDCASE
-
-   RETURN nDBFFieldType
+   RETURN 0
 
 PROCEDURE hb_adoSetTable( cTableName )
 
