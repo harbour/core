@@ -115,9 +115,7 @@ PROCEDURE SOMEPROC()  /* must be a public function */
    REPLACE a WITH 1
 
    M->public_var := 0
-
    b := 0
-
    Var1 := 1
 
    IF s_lGlobal == 0
@@ -131,7 +129,6 @@ PROCEDURE Main1()  /* must be a public function */
    PRIVATE OTHER, TEST AS STRING
 
    Var1 := M->TEST
-
    Var2 := Test()
 
    ? Var1 + 2
@@ -165,21 +162,13 @@ FUNCTION Test3()  /* must be a public function */
    cVar := a[1]
 
    n := &SomeFun( 2, 3 )
-
    n := ExtFun()
-
    cVar := cOtherFunc( 3 )
-
    n := nMyFunc( a, cVar ) + 3
-
    n := &(cVar)
-
    n := "&SomeVar"
-
    n := &Var.1
-
    n := V&SomeVar.1
-
    n[ 2 ] := 4
 
    cVar := {| nb AS NUMERIC, cb AS STRING, db AS DATE | n := .F., nb := "A", cb := 1, db := 0, n := "wrong type", 0 }
@@ -187,11 +176,8 @@ FUNCTION Test3()  /* must be a public function */
    ? "This is a compiler test."
 
    n := "C is Wrong Type for n"
-
    n := { 1, 2, 3 }
-
    n := a
-
    iif( n, 2, 3 )
 
    RETURN NIL
@@ -202,29 +188,17 @@ FUNCTION SomeTest( lVar AS LOGICAL )  /* must be a public function */
    PRIVATE cMemVar1 AS STRING
 
    nVar := .T.
-
    nVar := 1
-
    nVar := "A"
-
    cVar := 2
-
    cVar := "B"
-
    cVar := 2
-
    lVar := .T.
-
    lVar := nNoType
-
    cVar := nVar
-
    M->cMemVar1 := 2
-
    NondDeclared := 2
-
    cVar := {| n AS NUMERIC, c AS STRING, d AS DATE | n := nMyFunc( n, c, d ), c := 2  }
-
    nVar := 8 + cVar
 
    IF 1

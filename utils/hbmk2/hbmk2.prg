@@ -10240,13 +10240,11 @@ FUNCTION hbmk_Register_Input_File_Extension( ctx, cExt )
 
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
-   IF hbmk != NIL .AND. HB_ISSTRING( cExt )
-      IF ! Empty( cExt )
-         IF ! hb_LeftIs( cExt, "." )
-            cExt := "." + cExt
-         ENDIF
-         hbmk[ _HBMK_hPLUGINExt ][ Lower( cExt ) ] := NIL
+   IF hbmk != NIL .AND. HB_ISSTRING( cExt ) .AND. ! Empty( cExt )
+      IF ! hb_LeftIs( cExt, "." )
+         cExt := "." + cExt
       ENDIF
+      hbmk[ _HBMK_hPLUGINExt ][ Lower( cExt ) ] := NIL
    ENDIF
 
    RETURN NIL

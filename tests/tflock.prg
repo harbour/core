@@ -3,12 +3,12 @@
 #include "fileio.ch"
 #include "inkey.ch"
 
-#define FLX_EXCLUSIVE 0x0000   /* Exclusive lock */
-#define FLX_SHARED    0x0100   /* Shared lock */
-#define FLX_NO_WAIT   0x0000   /* Immediate return */
-#define FLX_WAIT      0x0200   /* Wait for lock until success */
+#define FLX_EXCLUSIVE    0x0000  /* Exclusive lock */
+#define FLX_SHARED       0x0100  /* Shared lock */
+#define FLX_NO_WAIT      0x0000  /* Immediate return */
+#define FLX_WAIT         0x0200  /* Wait for lock until success */
 
-#define hb_keyCode( x ) Asc( x )
+#define hb_keyCode( x )  Asc( x )
 
 STATIC s_lLocked
 STATIC s_lExclusive
@@ -128,8 +128,9 @@ PROCEDURE Main()
 
 STATIC PROCEDURE ShowStatus()
 
-   ? "Lock:", iif( s_lLocked, "Held", "Released" ), " ", ;
-     "Type:", iif( s_lExclusive, "Exclusive", "Shared" ), " ", ;
-     "Request is:", iif( s_lBlocking, "Blocking", "Non-Blocking" )
+   ? ;
+      "Lock:", iif( s_lLocked, "Held", "Released" ), " ", ;
+      "Type:", iif( s_lExclusive, "Exclusive", "Shared" ), " ", ;
+      "Request is:", iif( s_lBlocking, "Blocking", "Non-Blocking" )
 
    RETURN
