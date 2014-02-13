@@ -45,7 +45,7 @@
  *
  */
 
-/* TODO: change raw pointers to GC collected ones? */
+/* TODO: change raw pointers to GC collected ones */
 
 #include "hbapi.h"
 
@@ -62,7 +62,7 @@ HB_FUNC( LIBUSB_INIT )
 
    if( HB_ISBYREF( 1 ) )
    {
-      libusb_context * context;
+      libusb_context * context = NULL;
       success = libusb_init( &context );
       hb_storptr( success == 0 ? context : NULL, 1 );
    }
@@ -90,10 +90,8 @@ HB_FUNC( LIBUSB_SET_DEBUG )
 /* Returns a list of USB devcices attached to your system. */
 HB_FUNC( LIBUSB_GET_DEVICE_LIST )
 {
-   libusb_device ** devicelist;
-   ssize_t          count;
-
-   count = libusb_get_device_list( ( libusb_context * ) hb_parptr( 1 ), &devicelist );
+   libusb_device ** devicelist = NULL;
+   ssize_t          count = libusb_get_device_list( ( libusb_context * ) hb_parptr( 1 ), &devicelist );
 
    hb_storptr( devicelist, 2 );
 
@@ -109,25 +107,17 @@ HB_FUNC( LIBUSB_FREE_DEVICE_LIST )
 /* Gets the number of the bus that a device is attached to. */
 HB_FUNC( LIBUSB_GET_BUS_NUMBER )
 {
-   uint8_t busnumber;
-   libusb_device ** devicelist;
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
 
-   devicelist = ( libusb_device ** ) hb_parptr( 1 );
-   busnumber  = libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] );
-
-   hb_retni( busnumber );
+   hb_retni( libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] ) );
 }
 
 /* Gets the address on the bus that a device is attached to. */
 HB_FUNC( LIBUSB_GET_DEVICE_ADDRESS )
 {
-   uint8_t deviceaddress;
-   libusb_device ** devicelist;
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
 
-   devicelist    = ( libusb_device ** ) hb_parptr( 1 );
-   deviceaddress = libusb_get_device_address( devicelist[ hb_parni( 2 ) ] );
-
-   hb_retni( deviceaddress );
+   hb_retni( libusb_get_device_address( devicelist[ hb_parni( 2 ) ] ) );
 }
 
 /* Gets the negotiated connection speed for a device.
@@ -135,36 +125,25 @@ HB_FUNC( LIBUSB_GET_DEVICE_ADDRESS )
 #if 0
 HB_FUNC( LIBUSB_GET_DEVICE_SPEED )
 {
-   int devicespeed;
-   libusb_device ** devicelist;
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
 
-   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
-   devicespeed = libusb_get_device_speed( devicelist[ hb_parni( 2 ) ] );
-
-   hb_retni( devicespeed );
+   hb_retni( libusb_get_device_speed( devicelist[ hb_parni( 2 ) ] ) );
 }
 #endif
 
 /* Gets the maximum packet size for a particular endpoint in the active device configuration. */
 HB_FUNC( LIBUSB_GET_MAX_PACKET_SIZE )
 {
-   int maxpacketsize;
-   libusb_device ** devicelist;
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
 
-   devicelist    = ( libusb_device ** ) hb_parptr( 1 );
-   maxpacketsize = libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char ) hb_parni( 3 ) );
-
-   hb_retni( maxpacketsize );
+   hb_retni( libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char ) hb_parni( 3 ) ) );
 }
 
 /* Increments the reference count of a device. */
 HB_FUNC( LIBUSB_REF_DEVICE )
 {
-   libusb_device *  device;
-   libusb_device ** devicelist;
-
-   devicelist = ( libusb_device ** ) hb_parptr( 1 );
-   device     = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   libusb_device *  device = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
 
    HB_SYMBOL_UNUSED( device );
 }
@@ -172,21 +151,17 @@ HB_FUNC( LIBUSB_REF_DEVICE )
 /* Decrements the reference count of a device  */
 HB_FUNC( LIBUSB_UNREF_DEVICE )
 {
-   libusb_device ** devicelist;
+   libusb_device ** devicelist = ( libusb_device ** ) hb_parptr( 1 );
 
-   devicelist = ( libusb_device ** ) hb_parptr( 1 );
    libusb_unref_device( devicelist[ hb_parni( 2 ) ] );
 }
 
 /* Open a device and obtain a device handle  */
 HB_FUNC( LIBUSB_OPEN )
 {
-   int success;
-   libusb_device_handle * handle;
-   libusb_device **       devicelist;
-
-   devicelist = ( libusb_device ** ) hb_parptr( 1 );
-   success    = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
+   libusb_device_handle * handle = NULL;
+   libusb_device **       devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   int success = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
 
    hb_storptr( success == 0 ? handle : NULL, 3 );
 
@@ -196,11 +171,7 @@ HB_FUNC( LIBUSB_OPEN )
 /* Find a device with known Vendor IID and Product ID. */
 HB_FUNC( LIBUSB_OPEN_DEVICE_WITH_VID_PID )
 {
-   libusb_device_handle * handle;
-
-   handle = libusb_open_device_with_vid_pid( ( libusb_context * ) hb_parptr( 1 ), ( uint16_t ) hb_parni( 2 ), ( uint16_t ) hb_parni( 3 ) );
-
-   hb_retptr( handle );
+   hb_retptr( libusb_open_device_with_vid_pid( ( libusb_context * ) hb_parptr( 1 ), ( uint16_t ) hb_parni( 2 ), ( uint16_t ) hb_parni( 3 ) ) );
 }
 
 /* Close a device handle. */
@@ -212,21 +183,14 @@ HB_FUNC( LIBUSB_CLOSE )
 /* Get the underlying device for a handle. */
 HB_FUNC( LIBUSB_GET_DEVICE )
 {
-   libusb_device * device;
-
-   device = libusb_get_device( ( libusb_device_handle * ) hb_parptr( 1 ) );
-
-   hb_retptr( device );
+   hb_retptr( libusb_get_device( ( libusb_device_handle * ) hb_parptr( 1 ) ) );
 }
 
 /* Get the configuration value of the currently active configuration. */
 HB_FUNC( LIBUSB_GET_CONFIGURATION )
 {
-   int configuration;
-   int success;
-
-   configuration = 0;
-   success       = libusb_get_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), &configuration );
+   int configuration = 0;
+   int success = libusb_get_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), &configuration );
 
    hb_storni( success == 0 ? configuration : 0, 2 );
 
@@ -236,72 +200,44 @@ HB_FUNC( LIBUSB_GET_CONFIGURATION )
 /* Set the active configuration for a device. */
 HB_FUNC( LIBUSB_SET_CONFIGURATION )
 {
-   int success;
-
-   success = libusb_set_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_set_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Claim an interface on a given device handle.
    Required before you can perform I/O on any of its endpoints. */
 HB_FUNC( LIBUSB_CLAIM_INTERFACE )
 {
-   int success;
-
-   success = libusb_claim_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_claim_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Release a previously claimed interface. */
 HB_FUNC( LIBUSB_RELEASE_INTERFACE )
 {
-   int success;
-
-   success = libusb_release_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_release_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Activate an alternate setting for an interface. */
 HB_FUNC( LIBUSB_SET_INTERFACE_ALT_SETTING )
 {
-   int success;
-
-   success = libusb_set_interface_alt_setting( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_set_interface_alt_setting( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
 /* Clear the halt / stall condition for an endpoint  */
 HB_FUNC( LIBUSB_CLEAR_HALT )
 {
-   int success;
-
-   success = libusb_clear_halt( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_clear_halt( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ) ) );
 }
 
 /* Perform a USB port reset to reinitialise a device. */
 HB_FUNC( LIBUSB_RESET_DEVICE )
 {
-   int success;
-
-   success = libusb_reset_device( ( libusb_device_handle * ) hb_parptr( 1 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_reset_device( ( libusb_device_handle * ) hb_parptr( 1 ) ) );
 }
 
 /* Determine if a kernel driver is active on an interfacc. */
 HB_FUNC( LIBUSB_KERNEL_DRIVER_ACTIVE )
 {
-   int isactive;
-
-   isactive = libusb_kernel_driver_active( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
-
-   hb_retni( isactive );
+   hb_retni( libusb_kernel_driver_active( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
 /* Detach a kernel driver from an interface. */
@@ -313,11 +249,7 @@ HB_FUNC( LIBUSB_DETACH_KERNEL_DRIVER )
 /* Reattach a kernel driver which was previously detached. */
 HB_FUNC( LIBUSB_ATTACH_KERNEL_DRIVER )
 {
-   int success;
-
-   success = libusb_attach_kernel_driver( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
-
-   hb_retni( success );
+   hb_retni( libusb_attach_kernel_driver( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
 /* ------------------------------ USB descriptors ------------------------------ */
@@ -326,11 +258,12 @@ HB_FUNC( LIBUSB_ATTACH_KERNEL_DRIVER )
 HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
 {
    struct libusb_device_descriptor desc;
-   libusb_device **                devicelist;
+   libusb_device **                devicelist = ( libusb_device ** ) hb_parptr( 1 );
    int success;
 
-   devicelist = ( libusb_device ** ) hb_parptr( 1 );
-   success    = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
+   memset( &desc, 0, sizeof( desc ) );
+
+   success = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
 
    hb_storptr( &desc, 3 );
    hb_storni( desc.idVendor, 4 );
@@ -345,9 +278,11 @@ HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
 /* Perform a USB bulk transfer. */
 HB_FUNC( LIBUSB_BULK_TRANSFER )
 {
-   int success;
    unsigned char data[ 512 ];
-   int transferred;
+   int transferred = 0;
+   int success;
+
+   memset( data, 0, sizeof( data ) );
 
    success = libusb_bulk_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
 
@@ -360,9 +295,11 @@ HB_FUNC( LIBUSB_BULK_TRANSFER )
 /* Perform a USB interrupt transfer. */
 HB_FUNC( LIBUSB_INTERRUPT_TRANSFER )
 {
-   int success;
    unsigned char data[ 512 ];
-   int transferred;
+   int transferred = 0;
+   int success;
+
+   memset( data, 0, sizeof( data ) );
 
    success = libusb_interrupt_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
 
