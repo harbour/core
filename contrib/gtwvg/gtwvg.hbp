@@ -13,6 +13,8 @@ hbwin.hbc
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
 
+-hbx=${hb_name}
+
 gtwvgd.c
 gtwgud.c
 
@@ -21,8 +23,6 @@ wvgcuig.c
 wvgutils.c
 wvgwin.c
 wvgwing.c
-
-${hb_name}.hbx
 
 3state.prg
 activex.prg

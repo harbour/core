@@ -448,10 +448,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lPrimary := cProject $ hProjectReqList
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) + ;
-               iif( ( lPrimary .OR. lContainer ) .AND. ;
-               hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
-               GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
+         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -501,7 +498,7 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
+   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo",,, @cStdOut ) ) == 0
 
       IF hb_jsonDecode( cStdOut, @hInfo ) == 0
          OutStd( "! Warning: Received invalid result from 'hbmk2 --hbinfo'" + hb_eol() )
@@ -639,7 +636,7 @@ STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
 
    AddDeptPair( aPairList, "", cParent )
 
-   hNode := { "child" => {}, "name" => cParent, "parent" => NIL }
+   hNode := { "child" => {}, "name" => cParent, "parent" => }
    nLevel := 0
    FOR EACH hFlatTreeElement IN aFlatTree
       /* Min() protects against jumping more than one level down in one step */

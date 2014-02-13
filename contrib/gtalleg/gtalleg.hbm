@@ -20,7 +20,5 @@
 # For allegro headers
 -c=gnu90
 
-${hb_name}.hbx
-
 gtallegd.c
 ssf.c

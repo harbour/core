@@ -12,7 +12,7 @@
 -depincpathlocal=xdiff:3rd/libxdiff
 -depfinish=xdiff
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 

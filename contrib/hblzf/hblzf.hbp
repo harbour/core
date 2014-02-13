@@ -12,7 +12,7 @@
 -depincpathlocal=lzf:3rd/liblzf
 -depfinish=lzf
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 

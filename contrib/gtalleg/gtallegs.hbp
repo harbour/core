@@ -1,5 +1,7 @@
 gtalleg.hbm
 
+gtalleg.hbx
+
 -stop{!msvc}
 
 -cflag=-DALLEGRO_STATICLINK

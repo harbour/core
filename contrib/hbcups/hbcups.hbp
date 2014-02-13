@@ -12,6 +12,6 @@
 -depcontrol=cups:${HB_WITH_CUPS}
 -depincpath=cups:/usr/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c

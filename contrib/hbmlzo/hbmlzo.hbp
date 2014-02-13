@@ -12,7 +12,7 @@
 -depincpathlocal=minilzo:3rd/minilzo
 -depfinish=minilzo
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 

@@ -17,6 +17,6 @@ rddsql.hbc
 -depimplibs=mysql:../lib/libmySQL.dll
 -depimplibs=mysql:../lib/opt/libmySQL.dll
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c

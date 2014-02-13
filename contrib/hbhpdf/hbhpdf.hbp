@@ -15,7 +15,7 @@
 -depimplibs=libharu:../lib_dll/libhpdf.dll
 -depfinish=libharu
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 annot.c

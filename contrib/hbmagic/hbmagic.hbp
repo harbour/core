@@ -12,7 +12,7 @@
 -depincpath=libmagic:/usr/local/include
 -depincpath=libmagic:/opt/local/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 hbmagis.prg

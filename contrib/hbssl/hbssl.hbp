@@ -8,6 +8,8 @@
 
 hbssl.hbm
 
+-hbx=${hb_name}
+
 {allwin&HBMK_HAS_OPENSSL}-cflag=-I${HB_WITH_OPENSSL}/../inc32
 
 -iflag={bcc}-a

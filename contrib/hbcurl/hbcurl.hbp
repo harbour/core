@@ -1,5 +1,7 @@
 hbcurl.hbm
 
+-hbx=${hb_name}
+
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
 -depfinish=curl

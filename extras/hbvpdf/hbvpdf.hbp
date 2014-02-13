@@ -5,10 +5,10 @@
 
 -w3 -es2
 
+-hbx=${hb_name}
+
 core.prg
 fonts.prg
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

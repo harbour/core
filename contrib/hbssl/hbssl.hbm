@@ -35,8 +35,6 @@
 # For _fileno() in openssl/applink.c
 -c=gnu90
 
-hbssl.hbx
-
 ssl_hb.c
 bio.c
 err.c

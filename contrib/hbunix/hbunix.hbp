@@ -9,7 +9,7 @@
 
 -c=gnu90
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 chdir.c
 chroot.c

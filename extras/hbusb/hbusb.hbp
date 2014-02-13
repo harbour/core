@@ -13,10 +13,10 @@
 -depimplibs=libusb:../../MS64/dll/libusb-1.0.dll{win&x86_64}
 -depimplibd=libusb:libusb-1
 
+-hbx=${hb_name}
+
 core.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 {hbdyn}${hb_name}.hbc
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

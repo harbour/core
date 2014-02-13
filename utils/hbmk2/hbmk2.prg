@@ -554,20 +554,21 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_nLevel            150
 
 #define _HBMK_cHBX              151
+#define _HBMK_lHBXUpdate        152
 
-#define _HBMK_aGT               152
-#define _HBMK_cCPPRG            153
+#define _HBMK_aGT               153
+#define _HBMK_cCPPRG            154
 
-#define _HBMK_lSysLoc           154
-#define _HBMK_lDumpInfo         155
-#define _HBMK_lMarkdown         156
-#define _HBMK_lShellMode        157
-#define _HBMK_bOut              158
+#define _HBMK_lSysLoc           155
+#define _HBMK_lDumpInfo         156
+#define _HBMK_lMarkdown         157
+#define _HBMK_lShellMode        158
+#define _HBMK_bOut              159
 
-#define _HBMK_cSignTime         159
-#define _HBMK_lCLI              160
+#define _HBMK_cSignTime         160
+#define _HBMK_lCLI              161
 
-#define _HBMK_MAX_              160
+#define _HBMK_MAX_              161
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -1160,6 +1161,7 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
    hbmk[ _HBMK_aINSTPATH ] := {}
    hbmk[ _HBMK_lWINUNI ] := .F.
    hbmk[ _HBMK_cHBX ] := NIL
+   hbmk[ _HBMK_lHBXUpdate ] := .T.
    hbmk[ _HBMK_cSignTime ] := _HBMK_SIGN_TIMEURL_DEF
 
    RETURN
@@ -3142,8 +3144,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF Empty( cParam )
             hbmk[ _HBMK_cHBX ] := NIL
          ELSE
-            hbmk[ _HBMK_cHBX ] := PathMakeAbsolute( hb_DirSepToOS( cParam ), hb_FNameDir( aParam[ _PAR_cFileName ] ) )
+            hbmk[ _HBMK_cHBX ] := hb_FNameExtSetDef( PathMakeAbsolute( hb_DirSepToOS( cParam ), hb_FNameDir( aParam[ _PAR_cFileName ] ) ), ".hbx" )
          ENDIF
+
+      CASE cParamL == "-hbx"       ; hbmk[ _HBMK_lHBXUpdate ] := .T.
+      CASE cParamL == "-hbx-"      ; hbmk[ _HBMK_lHBXUpdate ] := .F.
 
       CASE hb_LeftIs( cParamL, "-main=" )
 
@@ -6204,6 +6209,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ( hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. ; /* or in HRB mode */
       ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] )        /* or in preprocessor mode */
 
+      /* Add -hbx= file to the list of sources automatically */
+      IF ! Empty( hbmk[ _HBMK_cHBX ] ) .AND. hb_FileExists( hbmk[ _HBMK_cHBX ] )
+#ifdef HB_LEGACY_LEVEL4
+         IF AScan( hbmk[ _HBMK_aPRG ], {| tmp | tmp == hbmk[ _HBMK_cHBX ] } ) > 0
+            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored redundant input file already added automatically by -hbx= option: %1$s" ), hbmk[ _HBMK_cHBX ] ) )
+         ENDIF
+#endif
+         AAddNew( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cHBX ] )
+      ENDIF
+
       IF ! hbmk[ _HBMK_lDumpInfo ]
          PlugIn_Execute_All( hbmk, "pre_prg" )
       ENDIF
@@ -7729,7 +7744,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          IF lTargetUpToDate .OR. hbmk[ _HBMK_nExitCode ] == _EXIT_OK
 
-            IF ! Empty( hbmk[ _HBMK_cHBX ] )
+            IF ! Empty( hbmk[ _HBMK_cHBX ] ) .AND. hbmk[ _HBMK_lHBXUpdate ]
                /* Use the implib, if we created one.
                   It is the safer target to extract exports from.
                   On Windows, .dlls sometimes export stuff
@@ -10570,31 +10585,31 @@ STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
 
    RETURN arrayOut
 
-STATIC FUNCTION AAddNewNotEmpty( array, xItem )
+STATIC PROCEDURE AAddNewNotEmpty( array, xItem )
 
    IF ! Empty( xItem ) .AND. AScan( array, {| tmp | tmp == xItem } ) == 0
       AAdd( array, xItem )
    ENDIF
 
-   RETURN array
+   RETURN
 
-STATIC FUNCTION AAddNewAtTop( array, xItem )
+STATIC PROCEDURE AAddNewAtTop( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
       hb_AIns( array, 1, xItem, .T. )
    ENDIF
 
-   RETURN array
+   RETURN
 
-STATIC FUNCTION AAddNew( array, xItem )
+STATIC PROCEDURE AAddNew( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
       AAdd( array, xItem )
    ENDIF
 
-   RETURN array
+   RETURN
 
-STATIC FUNCTION AAddNewINST( array, xItem, lToTop )
+STATIC PROCEDURE AAddNewINST( array, xItem, lToTop )
 
    IF AScan( array, {| tmp | tmp[ 1 ] == xItem[ 1 ] .AND. tmp[ 2 ] == xItem[ 2 ] } ) == 0
       IF lToTop != NIL .AND. lToTop
@@ -10604,15 +10619,15 @@ STATIC FUNCTION AAddNewINST( array, xItem, lToTop )
       ENDIF
    ENDIF
 
-   RETURN array
+   RETURN
 
-STATIC FUNCTION AAddNotEmpty( array, xItem )
+STATIC PROCEDURE AAddNotEmpty( array, xItem )
 
    IF ! Empty( xItem )
       AAdd( array, xItem )
    ENDIF
 
-   RETURN array
+   RETURN
 
 #if 0
 STATIC FUNCTION DepTreeToList( aTree )
@@ -16191,7 +16206,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
       hb_i18n_Set( NIL )
       hb_langSelect( hbmk[ _HBMK_cUILNG ] := cUILNG )
    ELSE
-      aLang := AAddNew( { cUILNG }, Left( cUILNG, 2 ) )
+      AAddNew( aLang := { cUILNG }, Left( cUILNG, 2 ) )
       AAdd( aLang, Left( cUILNG, 2 ) + "*" )
       FOR EACH cLang IN aLang
          #define _LANG_TO_HBL( cLang )  hb_DirSepAdd( hb_DirBase() ) + _SELF_NAME_ + "." + StrTran( cLang, "-", "_" ) + ".hbl"
@@ -16459,7 +16474,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) }, ;
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
       { "-warn=<level>"      , I_( e"set C compiler warning level\n<level> can be: max, yes, low, no, def (default: yes)" ) }, ;
-      { "-safe[-]"           , I_( e"enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
+      { "-safe[-]"           , I_( "enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
       { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , H_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
@@ -16515,7 +16530,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-minipo[-]"         , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) }, ;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) }, ;
       NIL, ;
-      { "-hbx=[<.ch>]"       , H_( "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it." ) }, ;
+      { "-hbx=<n[.hbx>]>"    , H_( "create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it. Default extension is .hbx. If set, <n> will be automatically added to the list of Harbour input files and built into the project. Therefore, the name part of <n> must not be the same as any other input file present in the project." ) }, ;
+      { "-hbx[-]"            , H_( "update (or don't) .hbx file specified in -hbx= option (default: update)" ) }, ;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) }, ;
       NIL, ;
       { "-deppkgname=<d:n>"      , I_( "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times." ) }, ;

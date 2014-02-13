@@ -22,7 +22,7 @@
 # for ADS headers
 -c=gnu90
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 ads1.c
 adsfunc.c

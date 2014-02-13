@@ -20,7 +20,7 @@ hbfship.hbc
 hbxpp.hbc
 hbwin.hbc{allwin}
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 bkgtsks.c
 cstructc.c

@@ -17,7 +17,7 @@ hbct.hbc
 -depimplibs=gd:../bin/bgd.dll{!(msvc|pocc|mingw)|hbdyn}
 -depimplibs=gd:../lib/bgd.lib{(msvc|pocc|mingw)&!hbdyn}
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 gdwrp.c
 

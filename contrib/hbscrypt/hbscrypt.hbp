@@ -17,7 +17,7 @@
 -depincpathlocal=scrypt:3rd/scrypt
 -depfinish=scrypt
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 pbkdf2.c
 scrypt.c

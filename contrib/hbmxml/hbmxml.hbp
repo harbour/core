@@ -12,7 +12,7 @@
 -depincpathlocal=mxml:3rd/minixml
 -depfinish=mxml
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 format.prg

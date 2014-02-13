@@ -22,7 +22,7 @@
 -instfile=contrib:hbwinole.h
 -instfile=contrib:*.def
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 axcore.c
 mapi.c
