@@ -26,8 +26,6 @@ FUNCTION ft_NetPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows 
    __defaultNIL( @nNoOfCashFlows, Len( aCashFlow ) )
 
    AEval( aCashFlow, {| nElement, nElementNo | ;
-      nNetPresentValue += nElement / ;
-      ( ( 1 + ( nInterestRate / 100 ) ) ^ nElementNo ) }, ;
-      1, nNoOfCashFlows )
+      nNetPresentValue += nElement / ( ( 1 + ( nInterestRate / 100 ) ) ^ nElementNo ) },, nNoOfCashFlows )
 
-   RETURN nNetPresentValue -= nInitialInvestment
+   RETURN nNetPresentValue - nInitialInvestment

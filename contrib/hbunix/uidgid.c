@@ -173,9 +173,9 @@ HB_FUNC( POSIX_GETPWNAM )
       {
          hb_retnl( 0 );
          hb_stornl( 0, 2 );
-         hb_storc( "", 3 );
-         hb_storc( "", 4 );
-         hb_storc( "", 5 );
+         hb_storc( NULL, 3 );
+         hb_storc( NULL, 4 );
+         hb_storc( NULL, 5 );
       }
 
       hb_xfree( buf );
@@ -194,9 +194,9 @@ HB_FUNC( POSIX_GETPWNAM )
       {
          hb_retnl( 0 );
          hb_stornl( 0, 2 );
-         hb_storc( "", 3 );
-         hb_storc( "", 4 );
-         hb_storc( "", 5 );
+         hb_storc( NULL, 3 );
+         hb_storc( NULL, 4 );
+         hb_storc( NULL, 5 );
       }
 #endif
    }

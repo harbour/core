@@ -1191,7 +1191,7 @@ STATIC FUNCTION _ftNextWinColor()
       _ftInitColors()
    ENDIF
 
-   RETURN t_nWinColor := ( iif( t_nWinColor < 4, t_nWinColor + 1, 1 ) )
+   RETURN t_nWinColor := iif( t_nWinColor < 4, t_nWinColor + 1, 1 )
 
 // Print the top or bottom titles on the border of the currently
 // active window.
@@ -1258,8 +1258,7 @@ STATIC FUNCTION _ftInkey( nSecs, cVar )
    LOCAL nVar
 
    DO WHILE .T.
-      nVar := Inkey( nSecs )
-      IF SetKey( nVar ) != NIL
+      IF SetKey( nVar := Inkey( nSecs ) ) != NIL
          Eval( SetKey( nVar ), ProcName(), ProcLine(), cVar )
       ELSE
          EXIT

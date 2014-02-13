@@ -37,8 +37,7 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
    LOCAL nHandle, lRet
 
    nHandle := FCreate( cFileName )
-   nErrorCode := FError()
-   IF nErrorCode == 0
+   IF ( nErrorCode := FError() ) == 0
       lRet := _ftsavesub( aArray, nHandle, @nErrorCode, ;
          hb_defaultValue( lDropCompatibility, .F. ) )
       FClose( nHandle )
@@ -109,8 +108,7 @@ FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
    LOCAL nHandle, aArray
 
    nHandle := FOpen( cFileName )
-   nErrorCode := FError()
-   IF nErrorCode == 0
+   IF ( nErrorCode := FError() ) == 0
       aArray := _ftrestsub( nHandle, @nErrorCode )
       FClose( nHandle )
    ELSE
@@ -128,8 +126,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
    cLenStr := Space( 4 )
    FRead( nHandle, @cLenStr, 4 )
    nLen := Bin2L( cLenStr )
-   nErrorCode := FError()
-   IF nErrorCode == 0
+   IF ( nErrorCode := FError() ) == 0
       SWITCH cValType
       CASE "A"
          xMemVar := {}
