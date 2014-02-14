@@ -13986,12 +13986,15 @@ STATIC FUNCTION GetListOfFunctionsKnown( hbmk, lIncludeCore )
 
    LOCAL hAll := { => }
    LOCAL aFile
+   LOCAL hHash
 
    hb_HCaseMatch( hAll, .F. )
 
    FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
-      /* TOFIX: To handle function names present in multiple containers */
-      hb_HMerge( hAll, hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
+      IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
+         /* TOFIX: To handle function names present in multiple containers */
+         hb_HMerge( hAll, hHash )
+      ENDIF
    NEXT
 
    IF lIncludeCore
