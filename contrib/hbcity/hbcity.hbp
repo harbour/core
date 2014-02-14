@@ -1,0 +1,23 @@
+-stop{win&!allgcc&!allmsvc}
+
+-hblib
+-inc
+
+-cpp=on
+
+-o${hb_targetname}
+
+-w3 -es2
+
+-depkeyhead=cityhash:city.h
+-depcontrol=cityhash:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=cityhash:${HB_WITH_CITYHASH}
+-depincpath=cityhash:/usr/include
+-depincpathlocal=cityhash:3rd/cityhash
+-depfinish=cityhash
+
+-hbx=${hb_name}
+
+core.cpp
+
+3rd/cityhash/cityhash.hbc{HBMK_HAS_CITYHASH_LOCAL}

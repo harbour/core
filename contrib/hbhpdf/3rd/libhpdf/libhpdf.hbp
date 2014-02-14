@@ -8,8 +8,6 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -cpp=no
 -pic

@@ -310,10 +310,10 @@ METHOD display() CLASS Get
        * The above code which can left cursor in the middle of shown screen
        * suggests that we shouldn't. If necessary please fix me.
        */
-      /*
+#if 0
       nRowPos := ::nCapRow
       nColPos := ::nCapCol + Len( cCaption )
-      */
+#endif
 
    ENDIF
 
@@ -324,8 +324,8 @@ METHOD display() CLASS Get
    IF ! ::lSuppDisplay .OR. nDispPos != ::nOldPos
 
       hb_DispOutAt( ::nRow, ::nCol, ;
-                    iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ), ;
-                    hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+         iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ), ;
+         hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
 
       nRowPos := ::nRow
       nColPos := ::nCol + Min( ::nDispLen, Len( cBuffer ) )
@@ -912,13 +912,15 @@ METHOD setColorSpec( cColorSpec ) CLASS Get
    IF HB_ISSTRING( cColorSpec )
 
 #ifdef HB_COMPAT_C53
-      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) + ;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) + ;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != -1, nClrOth, nClrUns ) )
+      ::cColorSpec := ;
+         hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
+         "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) + ;
+         "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) + ;
+         "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != -1, nClrOth, nClrUns ) )
 #else
-      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
+      ::cColorSpec := ;
+         hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
+         "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
 #endif
 
    /* NOTE: CA-Cl*pper oddity. [vszakats] */
@@ -1037,21 +1039,22 @@ METHOD picture( cPicture ) CLASS Get
                   ::cPicMask := SubStr( cPicture, nAt + 1 )
                ENDIF
 
-               IF "D" $ ::cPicFunc
+               DO CASE
+               CASE "D" $ ::cPicFunc
 
                   ::cPicMask := Set( _SET_DATEFORMAT )
                   FOR EACH cChar IN "yYmMdD"
                      ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
                   NEXT
 
-               ELSEIF "T" $ ::cPicFunc
+               CASE "T" $ ::cPicFunc
 
                   ::cPicMask := Set( _SET_TIMEFORMAT )
                   FOR EACH cChar IN "yYmMdDhHsSfF"
                      ::cPicMask := StrTran( ::cPicMask, cChar, "9" )
                   NEXT
 
-               ENDIF
+               ENDCASE
 
                IF ( nAt := At( "S", ::cPicFunc ) ) > 0
                   FOR nFor := nAt + 1 TO Len( ::cPicFunc )
@@ -1177,11 +1180,12 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       ENDIF
    ENDIF
 
-   cBuffer := Transform( xValue, ;
-               iif( Empty( cPicFunc ), ;
-                             iif( ::lPicBlankZero .AND. ! ::hasFocus, "@Z ", "" ), ;
-                  cPicFunc + iif( ::lPicBlankZero .AND. ! ::hasFocus, "Z"  , "" ) + " " ) ;
-               + cPicMask )
+   cBuffer := ;
+      Transform( xValue, ;
+       iif( Empty( cPicFunc ), ;
+                     iif( ::lPicBlankZero .AND. ! ::hasFocus, "@Z ", "" ), ;
+          cPicFunc + iif( ::lPicBlankZero .AND. ! ::hasFocus, "Z"  , "" ) + " " ) ;
+       + cPicMask )
 
    IF ::cType == "N"
       IF ( "(" $ cPicFunc .OR. ")" $ cPicFunc ) .AND. xValue >= 0
@@ -1264,10 +1268,8 @@ METHOD unTransform() CLASS Get
          CASE "N"
 
             lMinus := .F.
-            IF "X" $ ::cPicFunc
-               IF Right( cBuffer, 2 ) == "DB"
-                  lMinus := .T.
-               ENDIF
+            IF "X" $ ::cPicFunc .AND. Right( cBuffer, 2 ) == "DB"
+               lMinus := .T.
             ENDIF
             IF ! lMinus
                FOR nFor := 1 TO ::nMaxLen
@@ -1296,13 +1298,15 @@ METHOD unTransform() CLASS Get
                NEXT
             ELSE
                IF "E" $ ::cPicFunc
-                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
-                             hb_StrReplace( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".,", " ." ) + ;
-                             SubStr( cBuffer, ::LastEditable() + 1 )
+                  cBuffer := ;
+                     Left( cBuffer, ::FirstEditable() - 1 ) + ;
+                     hb_StrReplace( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".,", " ." ) + ;
+                     SubStr( cBuffer, ::LastEditable() + 1 )
                ELSE
-                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
-                                   StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) + ;
-                             SubStr( cBuffer, ::LastEditable() + 1 )
+                  cBuffer := ;
+                     Left( cBuffer, ::FirstEditable() - 1 ) + ;
+                           StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) + ;
+                     SubStr( cBuffer, ::LastEditable() + 1 )
                ENDIF
 
                lHasDec := .F.
@@ -1350,9 +1354,10 @@ METHOD unTransform() CLASS Get
          CASE "L"
 
             cBuffer := Upper( cBuffer )
-            xValue := "T" $ cBuffer .OR. ;
-                      "Y" $ cBuffer .OR. ;
-                      hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
+            xValue := ;
+               "T" $ cBuffer .OR. ;
+               "Y" $ cBuffer .OR. ;
+               hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
             EXIT
 
          CASE "D"
@@ -1448,11 +1453,13 @@ METHOD badDate() CLASS Get
    IF ::hasFocus
       SWITCH ::type
       CASE "D"
-         RETURN ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
-                !( ::cBuffer == Transform( xValue, ::cPicture ) )
+         RETURN ;
+            ( xValue := ::unTransform() ) == hb_SToD() .AND. ;
+            !( ::cBuffer == Transform( xValue, ::cPicture ) )
       CASE "T"
-         RETURN ( xValue := ::unTransform() ) == hb_SToT() .AND. ;
-                !( ::cBuffer == Transform( xValue, ::cPicture ) )
+         RETURN ;
+            ( xValue := ::unTransform() ) == hb_SToT() .AND. ;
+            !( ::cBuffer == Transform( xValue, ::cPicture ) )
       ENDSWITCH
    ENDIF
 
@@ -1600,8 +1607,9 @@ METHOD backSpaceLow() CLASS Get
       IF ( nMinus := At( "(", Left( ::cBuffer, nPos - 1 ) ) ) > 0 .AND. ;
          !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
-         ::cBuffer := Left( ::cBuffer, nMinus - 1 ) + " " + ;
-                      SubStr( ::cBuffer, nMinus + 1 )
+         ::cBuffer := ;
+            Left( ::cBuffer, nMinus - 1 ) + " " + ;
+            SubStr( ::cBuffer, nMinus + 1 )
 
          ::lEdit := .T.
          ::lChanged := .T.
