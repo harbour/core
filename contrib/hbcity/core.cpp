@@ -64,7 +64,7 @@ HB_FUNC( CITYHASH64 )
       hb_retnint( CityHash64( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ) ) );
    else if( p == 2 )
       hb_retnint( CityHash64WithSeed( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ), ( uint64 ) hb_parnint( 2 ) ) );
-   else if( p >= 3 )
+   else
       hb_retnint( CityHash64WithSeeds( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ), ( uint64 ) hb_parnint( 2 ), ( uint64 ) hb_parnint( 3 ) ) );
 }
 
@@ -75,8 +75,8 @@ HB_FUNC( CITYHASH128 )
 
    if( p == 1 )
       hb_retnint( CityHash128( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ) ) );
-   else if( p >= 2 )
-   hb_retnint( CityHash128WithSeed( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ), ( uint128 ) hb_parnint( 2 ) ) );
+   else
+      hb_retnint( CityHash128WithSeed( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ), ( uint128 ) hb_parnint( 2 ) ) );
 #else
    hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
