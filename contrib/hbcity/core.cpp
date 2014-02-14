@@ -71,9 +71,7 @@ HB_FUNC( CITYHASH64 )
 HB_FUNC( CITYHASH128 )
 {
 #if defined( HB_GET_LE_UINT128 )
-   int p = hb_pcount();
-
-   if( p == 1 )
+   if( hb_pcount() == 1 )
       hb_retnint( CityHash128( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ) ) );
    else
       hb_retnint( CityHash128WithSeed( hb_parcx( 1 ), ( size_t ) hb_parclen( 1 ), ( uint128 ) hb_parnint( 2 ) ) );
