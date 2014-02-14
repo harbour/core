@@ -28,7 +28,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, HB_B_DOUBLE_UNI + " " )
+#xtranslate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, HB_B_DOUBLE_UNI + " " )
 
 /*
    here's the board array -- structure of which is:

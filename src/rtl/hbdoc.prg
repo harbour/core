@@ -48,11 +48,14 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbserial.ch"
 
 #define _HBDOC_SRC_SUBDIR       "doc"
 #define _HBDOC_SRC_EXT          ".txt"
 
 #define _HBDOC_ADD_MSG( a, m )  IF HB_ISARRAY( a ); AAdd( a, m ); ENDIF
+
+REQUEST hb_ZCompress
 
 FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
 
@@ -366,7 +369,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
       IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
          FWrite( fhnd, _HBDOC_SIGNATURE )
-         FWrite( fhnd, hb_ZCompress( hb_Serialize( aEntry ) ) )
+         FWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
          FClose( fhnd )
          RETURN .T.
       ENDIF
@@ -398,7 +401,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
             FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
             FClose( fhnd )
 
-            aEntry := hb_Deserialize( hb_ZUncompress( cBuffer ) )
+            aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
 
             IF ! HB_ISARRAY( aEntry )

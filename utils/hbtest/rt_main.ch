@@ -46,7 +46,7 @@
  *
  */
 
-#translate HBTEST <x> IS <result> => TEST_CALL( #<x>, {|| <x> }, <result> )
+#xtranslate HBTEST <x> IS <result> => TEST_CALL( #<x>, {|| <x> }, <result> )
 
 #ifndef __HARBOUR__
    #ifndef __XPP__

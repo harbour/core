@@ -4,8 +4,8 @@
 
 #require "hbgd"
 
-#command TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
-#command TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
+#xcommand TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
+#xcommand TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
 
 #define IMAGES_OUT "imgs_out" + hb_ps()
 

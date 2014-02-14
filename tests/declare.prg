@@ -2,7 +2,7 @@
 
 #include "hbclass.ch"
 
-#translate AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
+#xtranslate AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
 
 DECLARE nMyFun() AS NUMERIC
 

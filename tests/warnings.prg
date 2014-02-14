@@ -2,19 +2,19 @@
 #ifdef __HARBOUR__
    #pragma -es0
 #else
-   #translate AS ARRAY [OF <type>] =>
-   #translate AS STRING =>
-   #translate AS CLASS <ClassName> =>
-   #translate AS NUMERIC =>
-   #translate AS DATE =>
-   #translate AS CODEBLOCK =>
-   #translate AS OBJECT =>
-   #translate AS LOGICAL =>
-   #translate AS USUAL =>
+   #xtranslate AS ARRAY [OF <type>] =>
+   #xtranslate AS STRING =>
+   #xtranslate AS CLASS <ClassName> =>
+   #xtranslate AS NUMERIC =>
+   #xtranslate AS DATE =>
+   #xtranslate AS CODEBLOCK =>
+   #xtranslate AS OBJECT =>
+   #xtranslate AS LOGICAL =>
+   #xtranslate AS USUAL =>
 
-   #translate OPTIONAL =>
+   #xtranslate OPTIONAL =>
 
-   #command DECLARE <*x*> =>
+   #xcommand DECLARE <*x*> =>
 #endif
 
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC

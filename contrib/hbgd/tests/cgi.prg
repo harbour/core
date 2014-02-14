@@ -10,7 +10,7 @@
 
 #require "hbgd"
 
-#command WRITE <c> => OutStd( <c> + hb_eol() )
+#xcommand WRITE <c> => OutStd( <c> + hb_eol() )
 
 PROCEDURE Main( ... )
 

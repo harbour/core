@@ -23,7 +23,7 @@
       You can easily create a User-Defined Command that makes this function
       even more like the KEYBOARD command.  For example,
 
-         #command KEYSTROKE <key> => ft_PutKey( <key> )
+         #xcommand KEYSTROKE <key> => ft_PutKey( <key> )
 
       will create a command called KEYSTROKE that could be used as a
       companion command to KEYBOARD.  The only difference is that it would

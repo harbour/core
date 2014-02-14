@@ -648,6 +648,7 @@ EXTERNAL hb_HKeepOrder
 EXTERNAL hb_FGetAttr
 EXTERNAL hb_FSetAttr
 EXTERNAL hb_ZCompress
+EXTERNAL hb_ZUncompress
 
 /* For hbshell */
 
@@ -6524,6 +6525,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
    ENDCASE
 #endif
+
+   IF hbmk[ _HBMK_lCreateLib ] .AND. hbmk[ _HBMK_lCreateHRB ] .AND. ;
+      hbmk[ _HBMK_nExitCode ] == _EXIT_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ;
+      ! Empty( hbmk[ _HBMK_cHBX ] ) .AND. hbmk[ _HBMK_lHBXUpdate ]
+      mk_extern_hrb( hbmk, hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_cHBX ] )
+   ENDIF
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
@@ -13984,7 +13991,7 @@ STATIC FUNCTION GetListOfFunctionsKnown( hbmk, lIncludeCore )
 
    FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
       /* TOFIX: To handle function names present in multiple containers */
-      hb_HMerge( hAll, hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) ) )
+      hb_HMerge( hAll, hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
    NEXT
 
    IF lIncludeCore
@@ -14043,6 +14050,48 @@ STATIC PROCEDURE GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll, cName )
 
    RETURN
 #endif
+
+STATIC FUNCTION mk_extern_hrb( hbmk, cInputName, cOutputName )
+
+   LOCAL aExtern
+
+   IF ( aExtern := __hb_extern_get_list_hrb( cInputName ) ) != NIL
+      __hb_extern_gen( hbmk, aExtern, cOutputName )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+STATIC FUNCTION __hb_extern_get_list_hrb( cInputName )
+
+   LOCAL aExtern := NIL
+   LOCAL hExtern
+
+   LOCAL hrb
+   LOCAL cFunction
+   LOCAL tmp
+
+   cInputName := hb_FNameExtSetDef( cInputName, ".hrb" )
+
+   IF hb_FileExists( cInputName ) .AND. ;
+      ! Empty( hrb := hb_hrbLoad( HB_HRB_BIND_LOCAL, cInputName ) )
+
+      aExtern := {}
+      hExtern := { => }
+      FOR EACH cFunction IN hb_hrbGetFunList( hrb, HB_HRB_FUNC_PUBLIC )
+         cFunction := hb_asciiUpper( cFunction )
+         IF !( cFunction $ hExtern )
+            AAdd( aExtern, cFunction )
+            hExtern[ cFunction ] := NIL
+         ENDIF
+      NEXT
+
+      tmp := hb_cdpSelect( "EN" )
+      ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+      hb_cdpSelect( tmp )
+   ENDIF
+
+   RETURN aExtern
 
 STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, cOutputName )
 
@@ -14275,8 +14324,8 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       t_hHeaders := { => }
 
       /* command to store header files in hash array */
-      #command ADD HEADER TO <hash> FILE <(cFile)> => ;
-               #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
+      #xcommand ADD HEADER TO <hash> FILE <(cFile)> => ;
+                #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
 #if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
       ADD HEADER TO t_hHeaders FILE "achoice.ch"
@@ -14520,7 +14569,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
              non-portable. */
 
 #if defined( HBMK_WITH_EXTS )
-   #translate _HBMK_STRINGIFY( <x> ) => <"x">
+   #xtranslate _HBMK_STRINGIFY( <x> ) => <"x">
    FOR EACH tmp IN hb_ATokens( _HBMK_STRINGIFY( HBMK_WITH_EXTS ), "|" )
       AAdd( aExtension, tmp )
    NEXT
@@ -14934,10 +14983,10 @@ STATIC PROCEDURE list( context )
 
 #include "directry.ch"
 
-#command ADD PLUGIN TO <hash> FILE <(cFile)> => ;
-         #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
-#command ADD PLUGIN TO <hash> STRING <cExpr> => ;
-         <hash>\[ <"cExpr"> \] := <cExpr>
+#xcommand ADD PLUGIN TO <hash> FILE <(cFile)> => ;
+          #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
+#xcommand ADD PLUGIN TO <hash> STRING <cExpr> => ;
+          <hash>\[ <"cExpr"> \] := <cExpr>
 
 STATIC FUNCTION __hbshell_plugins()
 

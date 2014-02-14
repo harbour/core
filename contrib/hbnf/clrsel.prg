@@ -54,9 +54,9 @@
 #define C_TYPE   3
 #define C_CHAR   4
 
-#translate Single( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_SINGLE_UNI )
-#translate Double( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_DOUBLE_UNI )
-#translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) => hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
+#xtranslate Single( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_SINGLE_UNI )
+#xtranslate Double( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, HB_B_DOUBLE_UNI )
+#xtranslate BkGrnd( <t>, <l>, <b>, <r>, <c> ) => hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
 
 // Color selection routine
 // Return -> the same array that was passed but with modified colors

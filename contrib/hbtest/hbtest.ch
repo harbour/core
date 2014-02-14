@@ -49,7 +49,7 @@
 #ifndef HB_TEST_CH_
 #define HB_TEST_CH_
 
-#translate HBTEST <x> IS <result> => hbtest_Call( #<x>, {|| <x> }, <result> )
+#xtranslate HBTEST <x> IS <result> => hbtest_Call( #<x>, {|| <x> }, <result> )
 
 #pragma linenumber=on
 

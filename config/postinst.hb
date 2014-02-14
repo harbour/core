@@ -13,6 +13,7 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbserial.ch"
 
 PROCEDURE Main( ... )
 
@@ -560,7 +561,7 @@ PROCEDURE mk_hbr( cDestDir )
       ENDIF
    NEXT
 
-   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
+   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
 
    RETURN
 

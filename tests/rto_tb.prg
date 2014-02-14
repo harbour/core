@@ -74,8 +74,8 @@
    #endif
 #endif
 
-#translate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
-#translate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
 STATIC s_xVar := NIL
