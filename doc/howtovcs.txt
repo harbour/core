@@ -58,8 +58,21 @@ by Viktor Szakats
   Describe what you've changed, the reasons, and other comments
   and explanations you find useful.
 
+- To refer to a commit, simply include the commit hash in the
+  text. If you refer to a commit in another fork,
+  include the whole (GitHub) URL of the commit.
+
+- To refer to an issue, inclide issue number prefixed with
+  a # character. If you include the word "fixes", "fixed"
+  or similar, the issue will automatically be closed.
+  See more here:
+     https://help.github.com/articles/writing-on-github#references
+
 - In case of incompatible changes visible on the user-level,
   add the word 'INCOMPATIBLE' to the text.
+
+- In case some translatable strings have changed,
+  add the word '[TRANSLATION]' to the text.
 
 - Mark comments suggesting further fixes with 'TOFIX: ', further
   todos as 'TODO: ', and update these to '[DONE]' when implemented.
@@ -103,7 +116,7 @@ by David G. Holm
    and the commit.
 
 
-[ Copyright (c) 1999-2013 Viktor Szakats (vszakats.net/harbour)
+[ Copyright (c) 1999-2014 Viktor Szakats (vszakats.net/harbour)
   Licensed under Creative Commons Attribution-ShareAlike 4.0:
   https://creativecommons.org/licenses/by-sa/4.0/
   See COPYING.txt. ]
