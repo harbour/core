@@ -7,9 +7,12 @@ REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main()
 
+   LOCAL cURL
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
-   oHttp := TIPClientHTTP():New( iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search" )
+   ? "URL:", cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
+
+   oHttp := TIPClientHTTP():New( cURL )
 
    /* build the Google query */
    hQUery := { => }
