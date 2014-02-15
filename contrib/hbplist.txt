@@ -36,6 +36,7 @@ hbnetio/utils/hbnetio/hbnetio.hbp
 hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hboslib/hboslib.hbp
+hbosx/hbosx.hbp
 hbpgsql/hbpgsql.hbp
 hbrun/hbrun.hbp
 hbscrypt/hbscrypt.hbp            # uses: scrypt (locally hosted)
