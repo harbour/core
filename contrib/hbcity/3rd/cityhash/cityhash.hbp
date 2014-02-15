@@ -8,17 +8,15 @@
 -I.
 
 -warn=low
--cpp=on
+-cpp=yes
 -pic
-
-{allgcc}-cflag=-D_MSC_VER
 
 city.cc
 
 # ORIGIN https://code.google.com/p/cityhash/
 # VER    1.1.1
 # URL    https://cityhash.googlecode.com/files/cityhash-1.1.1.tar.gz
-# -DIFF   cityhash.dif
+# DIFF   cityhash.dif
 #
 # MAP    COPYING
 # MAP    src/city.cc          city.cc

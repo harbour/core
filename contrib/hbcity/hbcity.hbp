@@ -1,9 +1,9 @@
--stop{win&!allgcc&!allmsvc}
+-stop{win&!allgcc&!allmsvc&!watcom}
 
 -hblib
 -inc
 
--cpp=on
+-cpp=yes
 
 -o${hb_targetname}
 

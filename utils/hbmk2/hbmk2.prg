@@ -3027,6 +3027,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE SubStr( cParamL, 5 + 1 ) == "gnu11" ; hbmk[ _HBMK_cCPP ] := "gnu11"
          CASE SubStr( cParamL, 5 + 1 ) == "gnu14" ; hbmk[ _HBMK_cCPP ] := "gnu14"
          CASE SubStr( cParamL, 5 + 1 ) == ""      ; hbmk[ _HBMK_cCPP ] := ""
+         OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
 
          /* dangerous? disable it */
@@ -3035,13 +3036,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_LeftIs( cParamL, "-c=" )
 
          DO CASE
-         CASE SubStr( cParamL, 3 + 1 ) == "iso90"  ; hbmk[ _HBMK_cC ] := "iso90"
-         CASE SubStr( cParamL, 3 + 1 ) == "iso99"  ; hbmk[ _HBMK_cC ] := "iso99"
-         CASE SubStr( cParamL, 3 + 1 ) == "iso11"  ; hbmk[ _HBMK_cC ] := "iso11"
-         CASE SubStr( cParamL, 3 + 1 ) == "gnu90"  ; hbmk[ _HBMK_cC ] := "gnu90"
-         CASE SubStr( cParamL, 3 + 1 ) == "gnu99"  ; hbmk[ _HBMK_cC ] := "gnu99"
-         CASE SubStr( cParamL, 3 + 1 ) == "gnu11"  ; hbmk[ _HBMK_cC ] := "gnu11"
-         CASE SubStr( cParamL, 3 + 1 ) == ""       ; hbmk[ _HBMK_cC ] := ""
+         CASE SubStr( cParamL, 3 + 1 ) == "iso90" ; hbmk[ _HBMK_cC ] := "iso90"
+         CASE SubStr( cParamL, 3 + 1 ) == "iso99" ; hbmk[ _HBMK_cC ] := "iso99"
+         CASE SubStr( cParamL, 3 + 1 ) == "iso11" ; hbmk[ _HBMK_cC ] := "iso11"
+         CASE SubStr( cParamL, 3 + 1 ) == "gnu90" ; hbmk[ _HBMK_cC ] := "gnu90"
+         CASE SubStr( cParamL, 3 + 1 ) == "gnu99" ; hbmk[ _HBMK_cC ] := "gnu99"
+         CASE SubStr( cParamL, 3 + 1 ) == "gnu11" ; hbmk[ _HBMK_cC ] := "gnu11"
+         CASE SubStr( cParamL, 3 + 1 ) == ""      ; hbmk[ _HBMK_cC ] := ""
+         OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
 
          /* dangerous? disable it */

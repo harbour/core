@@ -1,0 +1,15 @@
+diff -urN cityhash.orig/city.cc cityhash/city.cc
+--- cityhash.orig/city.cc	2014-02-15 14:20:13.871549900 +0100
++++ cityhash/city.cc	2014-02-15 14:20:13.871549900 +0100
+@@ -69,6 +69,11 @@
+ #define bswap_64(x) bswap64(x)
+ #endif
+ 
++#elif defined(__HARBOUR__)
++
++#define bswap_32(x) HB_SWAP_UINT32(x)
++#define bswap_64(x) HB_SWAP_UINT64(x)
++
+ #else
+ 
+ #include <byteswap.h>

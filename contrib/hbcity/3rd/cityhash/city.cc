@@ -69,6 +69,11 @@ static uint32 UNALIGNED_LOAD32(const char *p) {
 #define bswap_64(x) bswap64(x)
 #endif
 
+#elif defined(__HARBOUR__)
+
+#define bswap_32(x) HB_SWAP_UINT32(x)
+#define bswap_64(x) HB_SWAP_UINT64(x)
+
 #else
 
 #include <byteswap.h>
