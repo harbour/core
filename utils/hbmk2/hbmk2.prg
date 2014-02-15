@@ -63,7 +63,7 @@
       http://www.linux.org/docs/ldp/howto/Program-Library-HOWTO/index.html
 
    Markdown syntax:
-      http://daringfireball.net/projects/markdown/syntax
+      https://daringfireball.net/projects/markdown/syntax
 
    Markdown to man page converter:
       https://github.com/sunaku/md2man
@@ -86,6 +86,9 @@
 /* needed for -u */
 #ifndef HB_LEGACY_LEVEL4
 /* #define HB_LEGACY_LEVEL4 */
+#endif
+#ifndef HB_LEGACY_LEVEL5
+   #define HB_LEGACY_LEVEL5
 #endif
 
 #ifndef HBMK_GENERIC
@@ -6214,7 +6217,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       /* Add -hbx= file to the list of sources automatically */
       IF ! Empty( hbmk[ _HBMK_cHBX ] ) .AND. hb_FileExists( hbmk[ _HBMK_cHBX ] )
-#ifdef HB_LEGACY_LEVEL4
+#ifdef HB_LEGACY_LEVEL5
          IF AScan( hbmk[ _HBMK_aPRG ], {| tmp | tmp == hbmk[ _HBMK_cHBX ] } ) > 0
             _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored redundant input file already added automatically by -hbx= option: %1$s" ), hbmk[ _HBMK_cHBX ] ) )
          ENDIF
@@ -16322,7 +16325,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "-"        => "\-", ;
       "."        => "\.", ;
       "!"        => "\!", ;
-      "Markdown" => "[Markdown](http://daringfireball.net/projects/markdown/)" }
+      "Markdown" => "[Markdown](https://daringfireball.net/projects/markdown/)" }
 
    cText := hb_StrReplace( cText, sc_hMarkdown )
 
