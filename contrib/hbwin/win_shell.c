@@ -188,7 +188,7 @@ static LPTSTR s_StringList( int iParam )
                      nLen += n1 + 1;
                }
             }
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = TEXT( '\0' );
          }
       }
       else
@@ -196,9 +196,9 @@ static LPTSTR s_StringList( int iParam )
          nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
          if( nLen )
          {
-            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 2 ) * sizeof( TCHAR ) );
             HB_ITEMCOPYSTR( pItem, lpStr, nLen );
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = lpStr[ nLen + 1 ] = TEXT( '\0' );
          }
       }
    }
@@ -222,6 +222,7 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    void * hProgressTitle;
 
+   memset( &fop, 0, sizeof( fop ) );
    fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
    fop.wFunc                 = ( UINT ) hb_parni( 2 );
    fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
