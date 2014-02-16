@@ -9879,8 +9879,7 @@ STATIC FUNCTION HeaderExists( cDir, cFileName )
    LOCAL nPos
 
    IF ( nPos := At( "/", cFileName ) ) > 0
-      tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 )
-      IF hb_FileExists( tmp )
+      IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 ) )
          RETURN tmp
       ENDIF
    ENDIF
@@ -9983,9 +9982,7 @@ STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
 
    LOCAL cDir, cName, cExt
 
-   cFileName := FindInPath( cFileName, cPath )
-
-   IF ! Empty( cFileName )
+   IF ! Empty( cFileName := FindInPath( cFileName, cPath ) )
 
       /* Look for the second filename in the same dir the first one was found. */
 
