@@ -282,9 +282,7 @@ STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    /* Assemble list of projects to be built */
 
-   cFilter := GetEnv( "HB_BUILD_CONTRIBS" )
-
-   IF ! Empty( cFilter )
+   IF ! Empty( cFilter := GetEnv( "HB_BUILD_CONTRIBS" ) )
       OutStd( hb_StrFormat( "! HB_BUILD_CONTRIBS: %1$s", cFilter ) + hb_eol() )
    ENDIF
 

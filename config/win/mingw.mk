@@ -11,7 +11,7 @@ LIB_EXT := .a
 ifneq ($(HB_COMPILER),mingw64)
    ifneq ($(findstring unicows,$(3RDLIBS)),)
       # Required to be able to link harbour-*.dll against unicows lib
-      # without it 'Cannot export <*>: symbol not found' errors occur.
+      # without 'Cannot export <*>: symbol not found' errors.
       HB_DYN_COPT := -DHB_DYNLIB
    endif
 endif

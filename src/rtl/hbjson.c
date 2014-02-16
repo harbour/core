@@ -654,6 +654,8 @@ char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman )
    pCtx->iEolLen = ( int ) strlen( pCtx->szEol );
 
    _hb_jsonEncode( pValue, pCtx, 0, HB_FALSE );
+   if( fHuman )
+      _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
 
    nLen = pCtx->pHead - pCtx->pBuffer;
    szRet = ( char * ) hb_xrealloc( pCtx->pBuffer, nLen + 1 );
