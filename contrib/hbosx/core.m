@@ -51,7 +51,7 @@
 
 #import <Foundation/Foundation.h>
 
-HB_FUNC( OSX_ERASETOTRASH )
+HB_FUNC( OSX_MOVETOTRASH )
 {
    OSStatus status = -1;
 

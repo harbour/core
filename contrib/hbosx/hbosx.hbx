@@ -21,7 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC osx_EraseToTrash
+DYNAMIC osx_MoveToTrash
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBOSX__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

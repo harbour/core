@@ -8,6 +8,6 @@ PROCEDURE Main()
 
    hb_MemoWrit( cFile, "test" )
 
-   ? osx_EraseToTrash( cFile )
+   ? osx_MoveToTrash( cFile )
 
    RETURN
