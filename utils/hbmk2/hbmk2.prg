@@ -236,7 +236,8 @@ EXTERNAL hbmk_KEYW
 #define _COMPR_OFF              0
 #define _COMPR_DEF              1
 #define _COMPR_MIN              2
-#define _COMPR_MAX              3
+#define _COMPR_HIGH             3
+#define _COMPR_MAX              4
 
 #define _HEAD_OFF               0
 #define _HEAD_FULL              1
@@ -1494,6 +1495,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cBin_Cprs
    LOCAL cOpt_Cprs
    LOCAL cOpt_CprsMin
+   LOCAL cOpt_CprsHigh
    LOCAL cOpt_CprsMax
    LOCAL cBin_Post := NIL
    LOCAL cOpt_Post
@@ -2981,16 +2983,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          DO CASE
 #ifdef HB_LEGACY_LEVEL4
-         CASE SubStr( cParamL, 7 + 1 ) == "def" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
+         CASE SubStr( cParamL, 7 + 1 ) == "def"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
 #endif
-         CASE SubStr( cParamL, 7 + 1 ) == "yes" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
-         CASE SubStr( cParamL, 7 + 1 ) == "no"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
-         CASE SubStr( cParamL, 7 + 1 ) == "min" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
-         CASE SubStr( cParamL, 7 + 1 ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
+         CASE SubStr( cParamL, 7 + 1 ) == "yes"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+         CASE SubStr( cParamL, 7 + 1 ) == "no"   ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
+         CASE SubStr( cParamL, 7 + 1 ) == "min"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
+         CASE SubStr( cParamL, 7 + 1 ) == "high" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_HIGH
+         CASE SubStr( cParamL, 7 + 1 ) == "max"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
 #ifdef HB_LEGACY_LEVEL4
-         OTHERWISE                              ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
+         OTHERWISE                               ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
 #else
-         OTHERWISE                              ; InvalidOptionValue( hbmk, aParam )
+         OTHERWISE                               ; InvalidOptionValue( hbmk, aParam )
 #endif
          ENDCASE
 
@@ -7920,7 +7923,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                cOpt_Cprs := "{OB}"
                cOpt_CprsMin := "-1"
-               cOpt_CprsMax := "-9"
+               cOpt_CprsHigh := "-9"
+               cOpt_CprsMax := "-9 --lzma"
                IF hbmk[ _HBMK_cPLAT ] == "linux"
                   /* To avoid error below when creating Linux targets on non-Linux hosts using watcom:
                      upx: t.: CantPackException: invalid Phdr p_offset; try '--force-execve'
@@ -7933,13 +7937,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                cBin_Cprs := "upx"
                cOpt_Cprs := "{OB}"
                cOpt_CprsMin := "-1"
-               cOpt_CprsMax := "-9"
+               cOpt_CprsHigh := "-9"
+               cOpt_CprsMax := "-9 --lzma"
 
             #else
 
                cBin_Cprs := NIL
                cOpt_Cprs := ""
                cOpt_CprsMin := ""
+               cOpt_CprsHigh := ""
                cOpt_CprsMax := ""
 
             #endif
@@ -7952,8 +7958,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
             ELSE
                DO CASE
-               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MIN ; cOpt_Cprs += " " + cOpt_CprsMin
-               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MAX ; cOpt_Cprs += " " + cOpt_CprsMax
+               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MIN  ; cOpt_Cprs += " " + cOpt_CprsMin
+               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_HIGH ; cOpt_Cprs += " " + cOpt_CprsHigh
+               CASE hbmk[ _HBMK_nCOMPR ] == _COMPR_MAX  ; cOpt_Cprs += " " + cOpt_CprsMax
                ENDCASE
 
                cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
@@ -11628,13 +11635,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE hb_LeftIs( cLineL, "compr="        ) ; cLine := SubStr( cLine, Len( "compr="        ) + 1 )
          DO CASE
-         CASE ValueIsT( cLine )       ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
-         CASE ValueIsF( cLine )       ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
+         CASE ValueIsT( cLine )        ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+         CASE ValueIsF( cLine )        ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
 #ifdef HB_LEGACY_LEVEL4
-         CASE Lower( cLine ) == "def" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+         CASE Lower( cLine ) == "def"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
 #endif
-         CASE Lower( cLine ) == "min" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
-         CASE Lower( cLine ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
+         CASE Lower( cLine ) == "min"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
+         CASE Lower( cLine ) == "high" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_HIGH
+         CASE Lower( cLine ) == "max"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
          OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
@@ -16532,7 +16540,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
       { "-warn=<level>"      , I_( e"set C compiler warning level\n<level> can be: max, yes, low, no, def (default: yes)" ) }, ;
       { "-safe[-]"           , I_( "enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
-      { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, max" ) }, ;
+      { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, high, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , H_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
       { "-bldhead=<file>"    , H_( "generate .ch header file with build information, like build sequence number and timestamp. Generated header will define preprocessor constants _HBMK_BUILD_ID_ with sequence number (incremented on each build) and _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
