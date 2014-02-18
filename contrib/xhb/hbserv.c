@@ -248,7 +248,9 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    }
 
    bSignalEnabled = HB_TRUE;
-   /*s_serviceSetHBSig();*/
+   #if 0
+   s_serviceSetHBSig();
+   #endif
 
    #if 0
    if( uiSig != HB_SIGNAL_UNKNOWN )
@@ -351,7 +353,7 @@ static void * s_signalListener( void * my_stack )
 * Windows specific exception filter system.
 *
 * Windows will only catch exceptions; It is necessary to rely on the
-* HB_SERVICELOOP to receive user generated messages.
+* hb_ServiceLoop() to receive user generated messages.
 *****************************************************************************/
 
 #ifdef HB_OS_WIN
@@ -462,13 +464,10 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
          hb_arraySetNI( pRet, HB_SERVICE_OSERROR, GetLastError() );
 
          if( type == 0 ) /* exception */
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, ( void * ) exc->ExceptionAddress );
-         }
          else
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, NULL );
-         }
+
          /* TODO: */
          hb_arraySetNI( pRet, HB_SERVICE_PROCESS, GetCurrentThreadId() );
          /* TODO: */
@@ -613,7 +612,9 @@ static void s_serviceSetHBSig( void )
    act.sa_handler   = NULL;            /* if act.sa.. is a union, we just clean this */
    act.sa_sigaction = s_signalHandler; /* this is what matters */
    /* block al signals, we don't want to be interrupted. */
-   /*sigfillset( &act.sa_mask );*/
+   #if 0
+   sigfillset( &act.sa_mask );
+   #endif
    #endif
 
 
@@ -785,7 +786,7 @@ HB_FUNC( HB_STARTSERVICE )
    /* let's begin */
    sb_isService = HB_TRUE;
 
-   /* in windows, we just detach from console */
+   /* in Windows, we just detach from console */
    #ifdef HB_OS_WIN
    if( hb_parl( 1 ) )
       FreeConsole();
@@ -1071,13 +1072,14 @@ HB_FUNC( HB_SIGNALDESC )
    hb_retc_const( "Unrecognized signal" );
 }
 
+#if 0
 
 /*****************************************************************************
  * Debug help: generates a fault or a math error to see if signal catching
  * is working
  **************************************/
 
-HB_FUNC( HB_SERVICEGENERATEFAULT )
+HB_FUNC( __HB_SERVICEGENERATEFAULT )
 {
 #if defined( _MSC_VER ) && _MSC_VER >= 1800
 #pragma warning(push)
@@ -1093,12 +1095,14 @@ HB_FUNC( HB_SERVICEGENERATEFAULT )
 #endif
 }
 
-HB_FUNC( HB_SERVICEGENERATEFPE )
+HB_FUNC( __HB_SERVICEGENERATEFPE )
 {
    static double a = 100.0, b = 0.0;
 
    a = a / b;
 }
+
+#endif
 
 #else
 
@@ -1108,7 +1112,5 @@ HB_FUNC( HB_SERVICELOOP ) {}
 HB_FUNC( HB_PUSHSIGNALHANDLER ) {}
 HB_FUNC( HB_POPSIGNALHANDLER ) {}
 HB_FUNC( HB_SIGNALDESC ) {}
-HB_FUNC( HB_SERVICEGENERATEFAULT ) {}
-HB_FUNC( HB_SERVICEGENERATEFPE ) {}
 
 #endif

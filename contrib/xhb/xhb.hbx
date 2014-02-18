@@ -173,8 +173,6 @@ DYNAMIC hb_ReadIni
 DYNAMIC hb_ReadLine
 DYNAMIC hb_regexReplace
 DYNAMIC hb_ResetWith
-DYNAMIC hb_ServiceGenerateFault
-DYNAMIC hb_ServiceGenerateFPE
 DYNAMIC hb_ServiceLoop
 DYNAMIC hb_SetCodepage
 DYNAMIC hb_SetIniComment
