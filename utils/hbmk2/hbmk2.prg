@@ -827,7 +827,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 #endif
    ENDIF
 
-   /* Handle multitarget command lines */
+   /* Handle multitarget command-lines */
 
    hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
@@ -866,7 +866,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
          ENDCASE
       NEXT
 
-      /* Exit if there was no more targets found on the command line */
+      /* Exit if there was no more targets found on the command-line */
       IF nTarget < nTargetTO_DO .AND. nTargetTO_DO != 1
          EXIT
       ENDIF
@@ -1712,7 +1712,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
 #endif
 
-      /* -env options used on command line, process only once (=do not process again for subprojects) */
+      /* -env options used on command-line, process only once (=do not process again for subprojects) */
       CASE hb_LeftIs( cParamL, "-env:" ) .AND. hbmk[ _HBMK_nLevel ] == 1
 
          ProcEnvOption( SubStr( cParam, 5 + 1 ) )
@@ -2571,7 +2571,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ENDIF
 
-   /* Process command line */
+   /* Process command-line */
 
    hbmk_init_stage2( hbmk )
 
@@ -2619,7 +2619,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F., _HBMK_AUTOHBM_NAME ) /* Do not allow sub-projects in automatic make file */
    ENDIF
 
-   /* Collect all command line parameters */
+   /* Collect all command-line parameters */
    FOR EACH cParam IN aArgs
       DO CASE
       CASE ! hb_LeftIs( cParam, "-" ) .AND. Len( cParam ) >= 1 .AND. hb_LeftIs( cParam, "@" ) .AND. ;
@@ -2676,7 +2676,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    /* Process automatic control files. */
    HBC_ProcessAuto( hbmk )
 
-   /* Process command line (2nd pass) */
+   /* Process command-line (2nd pass) */
    FOR EACH aParam IN aParams
 
       cParam := ArchCompFilter( hbmk, aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ] )
@@ -2711,7 +2711,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            cParamL          == "-blinker" .OR. ; /* HARBOUR_SUPPORT */
            cParamL          == "-exospace" /* HARBOUR_SUPPORT */
 
-         /* Command line option were already processed in the first pass, ignore those. */
+         /* Command-line option were already processed in the first pass, ignore those. */
 
          IF ! Empty( aParam[ _PAR_cFileName ] )
             _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored option valid only on command-line: %1$s" ), ParamToString( aParam ) ) )
@@ -4091,7 +4091,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          hbmk[ _HBMK_cGT ] := NIL
       ENDIF
 
-      /* Merge user libs from command line and envvar. Command line has priority. */
+      /* Merge user libs from command-line and envvar. Command-line has priority. */
       hbmk[ _HBMK_aLIBUSER ] := ArrayAJoin( { hbmk[ _HBMK_aLIBUSERGT ], hbmk[ _HBMK_aLIBUSER ] } )
 
       IF hbmk[ _HBMK_cPLAT ] == "darwin"
@@ -4172,7 +4172,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          {DB}     dir for binaries
          {DI}     dir for includes
          {DL}     dirs for libs
-         {SCRIPT} save command line to script and pass it to command as @<filename>
+         {SCRIPT} save command-line to script and pass it to command as @<filename>
        */
 
       /* Assemble library list */
@@ -7161,7 +7161,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             cOpt_Res := AllTrim( hb_StrReplace( cOpt_Res, hReplace ) )
 
-            /* Handle moving the whole command line to a script, if requested. */
+            /* Handle moving the whole command-line to a script, if requested. */
             cScriptFile := NIL
             IF "{SCRIPT}" $ cOpt_Res
                IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
@@ -7334,7 +7334,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                         cOpt_CompCLoop := AllTrim( hb_StrReplace( cOpt_CompCPass, hReplace ) )
 
-                        /* Handle moving the whole command line to a script, if requested. */
+                        /* Handle moving the whole command-line to a script, if requested. */
                         cScriptFile := NIL
                         IF "{SCRIPT}" $ cOpt_CompCLoop
                            IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" ) ) != F_ERROR
@@ -7525,7 +7525,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
                   "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
-               /* Handle moving the whole command line to a script, if requested. */
+               /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Link
                   IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
@@ -7646,7 +7646,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
                   "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
-               /* Handle moving the whole command line to a script, if requested. */
+               /* Handle moving the whole command-line to a script, if requested. */
                IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
                   IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
@@ -7718,7 +7718,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
                   "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
-               /* Handle moving the whole command line to a script, if requested. */
+               /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Lib
                   IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
@@ -8170,7 +8170,7 @@ STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L,
 
 STATIC FUNCTION ParamToString( aParam )
    RETURN iif( Empty( aParam[ _PAR_cFileName ] ), ;
-      hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command line */
+      hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command-line */
       hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
 
 STATIC FUNCTION InvalidOptionValue( hbmk, aParam )
@@ -8776,7 +8776,7 @@ STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, hReplace, cO
          ENDIF
          /* Delete output file in case of compile error.
             (only if we know for sure what is the output filename, that is when we
-             speficied it on the command line)
+             speficied it on the command-line)
             This is to protect against compiler bugs (f.e. gcc with -pipe option)
             when dummy or wrong object file is left on the disk, and misleading
             next incremental build pass. [vszakats] */
@@ -10727,7 +10727,7 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew, lStripClpAt )
 
    RETURN array
 
-/* Forms the list of libs as to appear on the command line */
+/* Forms the list of libs as to appear on the command-line */
 STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
 
    LOCAL cLibName
@@ -11009,7 +11009,7 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    ENDIF
 
 #if defined( __PLATFORM__UNIX )
-   /* Disable expansion if this came from the command line */
+   /* Disable expansion if this came from the command-line */
    IF lCommandLine
       RETURN { cFileName }
    ENDIF

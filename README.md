@@ -593,7 +593,7 @@ get the correct permissions:
 
 You can fine-tune Harbour builds with below listed
 environment variables. You can add most of these via the
-GNU Make command line also, using `make VARNAME=value` syntax.
+GNU Make command-line also, using `make VARNAME=value` syntax.
 All of these settings are optional and all settings are case
 sensitive.
 
