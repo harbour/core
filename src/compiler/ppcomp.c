@@ -314,6 +314,19 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             }
          }
       }
+      else if( hb_strnicmp( szSwitch, "gc", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_COMPGENC_REALCODE ||
+                iValue == HB_COMPGENC_VERBOSE ||
+                iValue == HB_COMPGENC_NORMAL ||
+                iValue == HB_COMPGENC_COMPACT )
+               HB_COMP_PARAM->iGenCOutput = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iGenCOutput;
+      }
       else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
       {
          if( fSet )

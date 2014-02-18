@@ -66,7 +66,7 @@ FUNCTION hb_XML_get_unicode_table( cCP )
 
    cCP := _UNI_NAME_NORM( cCP )
    IF cCP $ t_uni
-      RETURN __hb_XML_CdpU16Map( t_uni[ cCP ] )
+      RETURN __hb_XML_cdpU16Map( t_uni[ cCP ] )
    ENDIF
 
    RETURN NIL

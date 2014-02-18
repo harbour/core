@@ -4115,6 +4115,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    pSwitches->fForceMemvars     = HB_COMP_PARAM->fForceMemvars;
    pSwitches->iStartProc        = HB_COMP_PARAM->iStartProc;
    pSwitches->iWarnings         = HB_COMP_PARAM->iWarnings;
+   pSwitches->iGenCOutput       = HB_COMP_PARAM->iGenCOutput;
    pSwitches->iExitLevel        = HB_COMP_PARAM->iExitLevel;
    pSwitches->iHidden           = HB_COMP_PARAM->iHidden;
    pSwitches->supported         = HB_COMP_PARAM->supported;
@@ -4133,6 +4134,7 @@ static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    HB_COMP_PARAM->fForceMemvars     = pSwitches->fForceMemvars;
    HB_COMP_PARAM->iStartProc        = pSwitches->iStartProc;
    HB_COMP_PARAM->iWarnings         = pSwitches->iWarnings;
+   HB_COMP_PARAM->iGenCOutput       = pSwitches->iGenCOutput;
    HB_COMP_PARAM->iExitLevel        = pSwitches->iExitLevel;
    HB_COMP_PARAM->iHidden           = pSwitches->iHidden;
    HB_COMP_PARAM->supported         = pSwitches->supported;

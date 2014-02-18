@@ -844,6 +844,7 @@ typedef struct
    HB_BOOL  fForceMemvars;
    int      iStartProc;
    int      iWarnings;
+   int      iGenCOutput;
    int      iExitLevel;
    int      iHidden;
    int      supported;
