@@ -304,7 +304,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_SPECDIR_CONTRIB   "contrib"
 #define _HBMK_SPECDIR_ADDONS    "addons"
 
-#define _HBMK_SIGN_TIMEURL_DEF  "http://timestamp.verisign.com/scripts/timstamp.dll"
+/* This default value supports both RFC3161 and MS Authenticode. */
+/* Review condition at [BOOKMARK:1] if you change this value. */
+#define _HBMK_SIGN_TIMEURL_DEF  "http://timestamp.globalsign.com/scripts/timstamp.dll"
 
 #define _HBMK_HBEXTREQ          "__HBEXTREQ__"
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
@@ -613,7 +615,7 @@ EXTERNAL hbmk_KEYW
 #define _EXIT_DEEPPROJNESTING   30
 #define _EXIT_STOP              50
 
-#define HBMK_IS_IN( str, list ) ( "|" + str + "|" $ "|" + list + "|" )
+#define HBMK_IS_IN( str, list ) ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
 #define HBMK_ISPLAT( list )     HBMK_IS_IN( hbmk[ _HBMK_cPLAT ], list )
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
@@ -7991,15 +7993,29 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             DO CASE
             CASE HBMK_ISPLAT( "win|wce" )
+               /* On MS Windows, code signing is just as a horrible mess as generally
+                  everything else:
+                     http://www.davidegrayson.com/signing/
+                */
                DO CASE
                CASE ( cBin_Sign := FindInPath( "signtool.exe" ) ) != NIL /* in MS Windows SDK */
-                  cOpt_Sign := "sign {FS} -f {ID} -p {PW} -t {UT} {OB}"
+                  IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "rfc3161"
+                     cOpt_Sign := "sign {FS} -f {ID} -p {PW} -tr {UT} {OB}"
+                  ELSE
+                     cOpt_Sign := "sign {FS} -f {ID} -p {PW} -t {UT} {OB}"
+                  ENDIF
                   IF AScan( hbmk[ _HBMK_aOPTS ], {| tmp | HBMK_IS_IN( Lower( tmp ), "-v|/v" ) } ) == 0
                      AAdd( hbmk[ _HBMK_aOPTS ], "-q" )
                   ENDIF
                CASE ( cBin_Sign := FindInPath( "posign.exe" ) ) != NIL /* in Pelles C 7.00.0 or newer */
-                  cBin_Sign := "posign.exe"
-                  cOpt_Sign := "{FS} -pfx:{ID} -pwd:{PW} -timeurl:{UT} {OB}"
+                  IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "authenticode" .OR. ;
+                     hbmk[ _HBMK_cSignTime ] == _HBMK_SIGN_TIMEURL_DEF  /* [BOOKMARK:1] */
+                     cBin_Sign := "posign.exe"
+                     cOpt_Sign := "{FS} -pfx:{ID} -pwd:{PW} -timeurl:{UT} {OB}"
+                  ELSE
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Code signing skipped, because the signing tool found (%1$s) does not support the timestamping standard (%2$s)." ), cBin_Sign, signts_split_arg( hbmk[ _HBMK_cSignTime ] ) ) )
+                     cBin_Sign := ""
+                  ENDIF
                OTHERWISE
                   _hbmk_OutErr( hbmk, I_( "Warning: Code signing skipped, because no supported code signing tool could be found." ) )
                ENDCASE
@@ -8016,7 +8032,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                hReplace := { ;
                   "{FS}" => ArrayToList( hbmk[ _HBMK_aOPTS ] ), ;
-                  "{UT}" => hbmk[ _HBMK_cSignTime ], ;
+                  "{UT}" => signts_split_arg( hbmk[ _HBMK_cSignTime ], .T. ), ;
                   "{ID}" => cOpt_SignID, ;
                   "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
                   "{PW}" => cOpt_SignPass }
@@ -9408,6 +9424,22 @@ STATIC FUNCTION deplst_add( hDeps, cList )
    ENDIF
 
    RETURN .T.
+
+STATIC FUNCTION signts_split_arg( cParam, lURL )
+
+   LOCAL cType
+   LOCAL cURL
+   LOCAL nPos
+
+   IF ( nPos := At( ":", cParam ) ) > 0 .AND. ;
+      HBMK_IS_IN( cType := Left( cParam, nPos - 1 ), "rfc3161|authenticode" )
+      cURL := SubStr( cParam, nPos + 1 )
+   ELSE
+      cType := "rfc3161"  /* default */
+      cURL := cParam
+   ENDIF
+
+   RETURN iif( hb_defaultValue( lURL, .F. ), cURL, cType )
 
 STATIC FUNCTION inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
 
@@ -13412,7 +13444,7 @@ STATIC FUNCTION SeqID( cHEAD, cIDName )
    LOCAL tmp, tmp1
 
    cStdOut := hb_MemoRead( cHEAD )
-   tmp1 := "#define " + cIDName
+   tmp1 := "#define " + cIDName + " "
    IF ( tmp := At( tmp1, cStdOut ) ) > 0
       cStdOut := SubStr( cStdOut, tmp + Len( tmp1 ) + 1 )
       IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
@@ -16545,7 +16577,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected." ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
-      { "-signts=<url>"      , hb_StrFormat( I_( "use <url> as trusted timestamp server. Empty value resets it to the default: %1$s" ), _HBMK_SIGN_TIMEURL_DEF ) }, ;
+      { "-signts=<[std:]url>", hb_StrFormat( I_( "use <url> as trusted timestamp server. Optional <std> might specify the standard as 'rfc3161' or 'authenticode' (without quotes). The default is 'rfc3161'. Empty value resets it to the default: %1$s" ), _HBMK_SIGN_TIMEURL_DEF ) }, ;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied." ) }, ;
       { "-instpath=<g:path>" , I_( "copy target file(s) to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group. There exist following built-in <g> groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source (.dll) files, both belonging to dependencies." ) }, ;
       { "-instforce[-]"      , I_( "copy target file(s) to install path even if already up to date" ) }, ;

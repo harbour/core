@@ -65,7 +65,7 @@
 #include "setcurs.ch"
 #include "tbrowse.ch"
 
-#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+#define IS_IN( str, list )  ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
 #define SCORE_ROW       0
 #define SCORE_COL       60

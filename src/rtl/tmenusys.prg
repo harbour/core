@@ -52,7 +52,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+#define IS_IN( str, list )  ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
