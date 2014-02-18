@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters
          (cRDD, nConnection, cCodePage). */
 

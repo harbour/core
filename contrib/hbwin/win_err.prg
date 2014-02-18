@@ -79,11 +79,11 @@ PROCEDURE Main( cInputFile )
 
          cOutput += ;
             "FUNCTION win_ErrorString( nCode )" + hb_eol() + ;
-            "" + hb_eol() + ;
+            hb_eol() + ;
             "   IF ! HB_ISNUMERIC( nCode )" + hb_eol() + ;
             "      nCode := wapi_GetLastError()" + hb_eol() + ;
             "   ENDIF" + hb_eol() + ;
-            "" + hb_eol() + ;
+            hb_eol() + ;
             "   SWITCH nCode" + hb_eol()
 
          hWas := { => }

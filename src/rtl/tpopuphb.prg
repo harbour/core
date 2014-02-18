@@ -47,6 +47,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #ifdef HB_COMPAT_C53

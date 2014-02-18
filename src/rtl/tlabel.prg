@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: CA-Cl*pper 5.x uses DevPos(), DevOut() to display messages
          on screen. Harbour uses Disp*() functions only. [vszakats] */
 

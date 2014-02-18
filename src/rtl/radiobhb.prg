@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: This function is a new Harbour functions implemented in the
          original CA-Cl*pper namespace. This should have been marked as
          HB_EXTENSION, but it's not. */

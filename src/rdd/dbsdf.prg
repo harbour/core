@@ -51,6 +51,8 @@
  *
  */
 
+#pragma -gc0
+
 REQUEST SDF
 
 FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cCodePage )

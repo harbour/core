@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "directry.ch"
 
 FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )

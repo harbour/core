@@ -16,6 +16,8 @@
    ---
  */
 
+#pragma -gc0
+
 #include "achoice.ch"
 #include "color.ch"
 #include "inkey.ch"

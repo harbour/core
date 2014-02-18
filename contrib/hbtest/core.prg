@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc3
+
 #include "error.ch"
 
 #define TEST_RESULT_COL1_WIDTH  1

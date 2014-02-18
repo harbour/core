@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "dbedit.ch"
 #include "inkey.ch"
 #include "setcurs.ch"

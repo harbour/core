@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #ifdef HB_COMPAT_C53
 
 FUNCTION GetClrPair( cColor, nColor )

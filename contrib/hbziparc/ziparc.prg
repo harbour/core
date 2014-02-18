@@ -49,6 +49,8 @@
  *
  */
 
+#pragma -gc3
+
 #include "directry.ch"
 #include "fileio.ch"
 

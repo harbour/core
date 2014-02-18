@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "dbstruct.ch"
 
 FUNCTION __dbCopyStruct( cFileName, aFieldList )

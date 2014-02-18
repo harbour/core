@@ -7,6 +7,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: Recursive use is supported. */
 
 #include "color.ch"

@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 /* TODO: add missing support for soft-newlines: hb_BChar( 141 ) + hb_BChar( 10 ) */
 
 #include "hbclass.ch"

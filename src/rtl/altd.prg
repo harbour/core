@@ -51,6 +51,8 @@
  *
  */
 
+#pragma -gc0
+
 #define ALTD_DISABLE  0
 #define ALTD_ENABLE   1
 

@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "inkey.ch"
 
 FUNCTION __Wait( xPrompt )

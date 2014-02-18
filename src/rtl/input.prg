@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #ifdef HB_CLP_UNDOC
 
 FUNCTION __Input( xPrompt )

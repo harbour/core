@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbmemvar.ch"
 #include "error.ch"
 #include "fileio.ch"

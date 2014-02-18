@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc3
+
 #include "hbclass.ch"
 
 CREATE CLASS TIPEncoderQP FROM TIPEncoder
