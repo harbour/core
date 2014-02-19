@@ -311,7 +311,7 @@ FUNCTION hbtest_AllValues()
       "", ;
       "A" + Chr( 0 ) + "B", ;
       Chr( 13 ) + Chr( 10 ) + Chr( 141 ) + Chr( 10 ) + Chr( 9 ), ;
-      "utf8-űŰőŐ", ;
+      "utf8-űŰőŐ©", ;
       0, ;
       0.0, ;
       10, ;

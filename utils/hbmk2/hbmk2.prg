@@ -10577,6 +10577,8 @@ STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
    LOCAL cFileName
    LOCAL arrayHBX := {}
 
+   LOCAL arrayOut := AClone( arrayIn )
+
    /* TODO: Ideally we should only split off the .hbx file if it's
             the same one as speficied in hbmk[ _HBMK_cHBX ]
             (-hbx= option) (aka "our own"), instead of any .hbx
@@ -10595,20 +10597,20 @@ STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
             of traget files (.c/.o) even if they differ in their
             name, not only their extension. */
 
-   FOR EACH cFileName IN arrayIn DESCEND
+   FOR EACH cFileName IN arrayOut DESCEND
       IF hb_FNameExt( cFileName ) == ".hbx"
          AAdd( arrayHBX, cFileName )
-         hb_ADel( arrayIn, cFileName:__enumIndex(), .T. )
+         hb_ADel( arrayOut, cFileName:__enumIndex(), .T. )
       ENDIF
    NEXT
 
-   arrayIn := ArraySplit( arrayIn, nChunksReq )
+   arrayOut := ArraySplit( arrayOut, nChunksReq )
 
    IF ( lLastIsHBX := ! Empty( arrayHBX ) )
-      AAdd( arrayIn, arrayHBX )
+      AAdd( arrayOut, arrayHBX )
    ENDIF
 
-   RETURN arrayIn
+   RETURN arrayOut
 #endif
 
 STATIC FUNCTION ArraySplit( arrayIn, nChunksReq )
