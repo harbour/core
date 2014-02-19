@@ -3,7 +3,7 @@
  * Harbour Project source code:
  * Package build orchestrator script
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,7 +77,7 @@ PROCEDURE Main( ... )
 
    hProjectList := { => }
 
-   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist.txt" )
+   LoadProjectListAutomatic( hProjectList, s_cHome )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    aParams := hb_AParams()
@@ -741,15 +741,22 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
 
    RETURN .F.
 
-STATIC PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
+/* Build all contribs that have a .hbp file matching the
+   name of its contrib subdir. Also support contribs
+   with multiple subprojects if it has a 'projects.hbp'
+   -hbcontainer project. */
+STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
 
-   LOCAL cItem
+   LOCAL aFile
+   LOCAL tmp
 
-   FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
-      IF "#" $ cItem
-         cItem := Left( cItem, At( "#", cItem ) - 1 )
+   FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
+      IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." )
+         IF hb_FileExists( hb_DirSepAdd( cDir ) + ( tmp := aFile[ F_NAME ] + hb_ps() + "projects.hbp" ) ) .OR. ;
+            hb_FileExists( hb_DirSepAdd( cDir ) + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
+            AddProject( hProjectList, tmp )
+         ENDIF
       ENDIF
-      AddProject( hProjectList, cItem )
    NEXT
 
    RETURN
