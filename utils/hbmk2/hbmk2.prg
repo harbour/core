@@ -8180,7 +8180,8 @@ STATIC FUNCTION ParamToString( aParam )
 STATIC FUNCTION InvalidOptionValue( hbmk, aParam )
    RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored invalid option value in: %1$s" ), ParamToString( aParam ) ) )
 
-#ifdef HB_LEGACY_LEVEL4
+#if defined( HB_LEGACY_LEVEL4 ) .OR. ;
+    defined( HB_LEGACY_LEVEL5 )
 /* Do not delete this function when legacy level is reached,
    instead convert above guard to a temporary '#if 0' one. */
 STATIC FUNCTION LegacyWarning( hbmk, aParam, cSuggestion )

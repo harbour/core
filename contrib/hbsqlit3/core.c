@@ -1755,7 +1755,7 @@ static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint
 
       if( hFile )
       {
-         fprintf( hFile, "%s - %"PFLL "u\n", sProfileMsg, uint64 );
+         fprintf( hFile, "%s - %" PFLL "u\n", sProfileMsg, uint64 );
          fclose( hFile );
       }
    }
@@ -1769,7 +1769,7 @@ static void SQL3TraceLog( void * sFile, const char * sTraceMsg )
 
       if( hFile )
       {
-         fprintf( hFile, "%s \n", sTraceMsg );
+         fprintf( hFile, "%s\n", sTraceMsg );
          fclose( hFile );
       }
    }

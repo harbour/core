@@ -1489,7 +1489,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
             lcurs = 8;
             break;
          case SC_SPECIAL2:
-            /* TODO: find a proper sequqnce to set a cursor
+            /* TODO: find a proper sequence to set a cursor
                to SC_SPECIAL2 under Linux console?
                There is no such mode in current stable kernels (2.4.20)
              */
