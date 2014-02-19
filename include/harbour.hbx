@@ -1476,7 +1476,7 @@ DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait
 DYNAMIC __wapi_GetACP
-DYNAMIC __wapi_GetOEMCP
+DYNAMIC __wapi_GetConsoleOutputCP
 DYNAMIC __XHelp
 DYNAMIC __XRestScreen
 DYNAMIC __XSaveGetAttr

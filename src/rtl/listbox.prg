@@ -1090,11 +1090,10 @@ FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
 FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
-   LOCAL o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
-
+   LOCAL o
    LOCAL xItem
 
-   IF o != NIL
+   IF ( o := HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown ) ) != NIL
 
       IF HB_ISSTRING( cCaption )
          o:caption := cCaption

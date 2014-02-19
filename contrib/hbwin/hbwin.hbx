@@ -131,6 +131,7 @@ DYNAMIC wapi_InsertMenu
 DYNAMIC wapi_IsIconic
 DYNAMIC wapi_IsMenu
 DYNAMIC wapi_IsUserAnAdmin
+DYNAMIC wapi_IsValidCodePage
 DYNAMIC wapi_IsWindow
 DYNAMIC wapi_IsZoomed
 DYNAMIC wapi_LineTo

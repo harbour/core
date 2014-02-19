@@ -638,9 +638,9 @@ FUNCTION RadioGroup( nTop, nLeft, nBottom, nRight )
 
 FUNCTION _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
 
-   LOCAL o := RadioGroup( nTop, nLeft, nBottom, nRight )
+   LOCAL o
 
-   IF o != NIL
+   IF ( o := RadioGroup( nTop, nLeft, nBottom, nRight ) ) != NIL
 
       o:caption := cCaption
       o:message := cMessage

@@ -72,6 +72,10 @@
 #include "hbapicdp.h"
 #include "hbdate.h"
 
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   #include <windows.h>
+#endif
+
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER   ( &SuperTable )
@@ -114,6 +118,16 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTLOCAL( pGT ) = pGTCGI;
 
    pGTCGI->hStdout = hFilenoStdout;
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   {
+      if( IsValidCodePage( CP_UTF8 ) )
+      {
+         SetConsoleOutputCP( CP_UTF8 );
+         HB_GTSELF_SETDISPCP( pGT, "UTF8", NULL, HB_FALSE );
+      }
+   }
+#endif
 
    pGTCGI->szCrLf = hb_strdup( hb_conNewLine() );
    pGTCGI->nCrLf = strlen( pGTCGI->szCrLf );

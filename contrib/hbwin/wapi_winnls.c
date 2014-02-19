@@ -57,3 +57,8 @@ HB_FUNC( WAPI_GETOEMCP )
 {
    hb_retnl( GetOEMCP() );
 }
+
+HB_FUNC( WAPI_ISVALIDCODEPAGE )
+{
+   hb_retl( IsValidCodePage( ( UINT ) hb_parnl( 1 ) ) == TRUE );
+}
