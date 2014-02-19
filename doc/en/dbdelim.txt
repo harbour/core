@@ -61,11 +61,11 @@
       text file to a database table.
    $EXAMPLES$
       // Copy delinquent accounts into a delimited text file.
-      USE ACCOUNTS NEW
+      USE accounts NEW
       COPY TO overdue DELIMITED FOR ! Empty( accounts->duedate ) ;
          .AND. Date() - accounts->duedate > 30
       // Import new customer records.
-      USE CUSTOMER NEW
+      USE customer NEW
       APPEND FROM customer DELIMITED
    $STATUS$
       S

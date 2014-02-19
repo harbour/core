@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -117,12 +117,11 @@ STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
 
 STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
-   LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
+   LOCAL nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL
-      hb_FNameSplit( aOpenInfo[ UR_OI_NAME ], , @cName )
-      aOpenInfo[ UR_OI_ALIAS ] := cName
+      aOpenInfo[ UR_OI_ALIAS ] := hb_FNameName( aOpenInfo[ UR_OI_NAME ] )
    ENDIF
 
    nMode := ;
@@ -145,8 +144,8 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
    ENDIF
 
    hb_FSelect( nSlot )
-   nHandle := hb_FUse( aOpenInfo[ UR_OI_NAME ], nMode )
-   IF nHandle == F_ERROR
+
+   IF ( nHandle := hb_FUse( aOpenInfo[ UR_OI_NAME ], nMode ) ) == F_ERROR
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1001

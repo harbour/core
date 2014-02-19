@@ -5,7 +5,6 @@
  * GetSecret()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -21,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,8 +49,8 @@
  */
 
 #include "getexit.ch"
-#include "setcurs.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
@@ -139,16 +138,16 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                LOOP
             ELSEIF nKey == K_BS
                IF oGet:pos > 1
-                  _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 2 ) + ;
-                                       Substr( _cGetSecret, oGet:pos ), nLen )
+                  _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 2 ) + ;
+                     SubStr( _cGetSecret, oGet:pos ), nLen )
                ENDIF
             ELSEIF nKey == K_DEL
-               _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 1 ) + ;
-                                    Substr( _cGetSecret, oGet:pos + 1 ), nLen )
+               _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 1 ) + ;
+                  SubStr( _cGetSecret, oGet:pos + 1 ), nLen )
             ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
                IF Set( _SET_INSERT )
                   _cGetSecret := Stuff( Left( _cGetSecret, nLen - 1 ), ;
-                                        oGet:pos, 0, cKey )
+                     oGet:pos, 0, cKey )
                ELSE
                   _cGetSecret := Stuff( _cGetSecret, oGet:pos, 1, cKey )
                ENDIF

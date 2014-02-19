@@ -11,7 +11,7 @@
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-FUNCTION DialogWvgClassesOne( nMode )
+PROCEDURE DialogWvgClassesOne( nMode )
 
    LOCAL bBlock
 
@@ -34,9 +34,9 @@ FUNCTION DialogWvgClassesOne( nMode )
       MyDialogOne()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION MyDialogOne( oCrt )
+STATIC PROCEDURE MyDialogOne( oCrt )
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL nWinRows, nWinCols, cWinTitle, cFont, nHeight
@@ -289,7 +289,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen := .F.
    cUseAlias := "TEST"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias ) SHARED
+   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias ) SHARED
    IF ! NetErr()
       lOpen := .T.
       oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
@@ -298,7 +298,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    lOpen1 := .F.
    cUseAlias1 := "TEST1"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias1 ) SHARED
+   USE ( hb_DirBase() + hb_DirSepToOS( "../../../tests/test.dbf" ) ) NEW ALIAS ( cUseAlias1 ) SHARED
    IF ! NetErr()
       lOpen1 := .T.
       oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test.dbf - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )
@@ -325,9 +325,9 @@ STATIC FUNCTION MyDialogOne( oCrt )
    Wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION DialogWvgClassesTwo()
+PROCEDURE DialogWvgClassesTwo()
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL oDlg     := WvtDialog():New( 30, 90, "My Dialog Two" )
@@ -385,9 +385,9 @@ FUNCTION DialogWvgClassesTwo()
 
    WvtSetBlocks( aObjects )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
+STATIC PROCEDURE ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    LOCAL i
 
@@ -411,9 +411,9 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
    oPBar3:DeActivate()
    oPBar4:DeActivate()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
+STATIC PROCEDURE ExeProgressBar( oPBar, oPBar3 )
 
    LOCAL i
 
@@ -427,4 +427,4 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    oPBar:DeActivate()
    oPBar3:DeActivate()
 
-   RETURN NIL
+   RETURN

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -214,10 +214,10 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMethods[ UR_METHODCOUNT ]
 
-   aMethods[ UR_NEW  ]   := ( @RLCDX_NEW()    )
-   aMethods[ UR_LOCK ]   := ( @RLCDX_LOCK()   )
-   aMethods[ UR_UNLOCK ] := ( @RLCDX_UNLOCK() )
-   aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
+   aMethods[ UR_NEW  ]   := @RLCDX_NEW()
+   aMethods[ UR_LOCK ]   := @RLCDX_LOCK()
+   aMethods[ UR_UNLOCK ] := @RLCDX_UNLOCK()
+   aMethods[ UR_APPEND ] := @RLCDX_APPEND()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMethods, pSuperRddID )

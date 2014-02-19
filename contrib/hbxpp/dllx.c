@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -105,14 +105,17 @@ HB_FUNC( DLLCALL )
    PHB_ITEM pLibraryHandle = NULL;
    HB_BOOL  bFreeLibrary   = HB_FALSE;
 
-   if( HB_IS_STRING( pLibrary ) )
+   if( pLibrary )
    {
-      pLibraryHandle = hb_libLoad( pLibrary, NULL );
-      if( pLibraryHandle )
-         bFreeLibrary = HB_TRUE;
+      if( HB_IS_STRING( pLibrary ) )
+      {
+         pLibraryHandle = hb_libLoad( pLibrary, NULL );
+         if( pLibraryHandle )
+            bFreeLibrary = HB_TRUE;
+      }
+      else if( hb_libHandle( pLibrary ) )
+         pLibraryHandle = pLibrary;
    }
-   else if( hb_libHandle( pLibrary ) )
-      pLibraryHandle = pLibrary;
 
    if( pLibraryHandle )
    {
@@ -149,19 +152,22 @@ HB_FUNC( DLLPREPARECALL )
 
    memset( xec, 0, sizeof( HB_DLLEXEC ) );
 
-   if( HB_IS_STRING( pLibrary ) )
+   if( pLibrary )
    {
-      xec->pLibraryHandle = hb_libLoad( pLibrary, NULL );
-      if( xec->pLibraryHandle )
+      if( HB_IS_STRING( pLibrary ) )
       {
-         hb_gcRefInc( xec->pLibraryHandle );
-         xec->bFreeLibrary = HB_TRUE;
+         xec->pLibraryHandle = hb_libLoad( pLibrary, NULL );
+         if( xec->pLibraryHandle )
+         {
+            hb_gcRefInc( xec->pLibraryHandle );
+            xec->bFreeLibrary = HB_TRUE;
+         }
       }
-   }
-   else if( hb_libHandle( pLibrary ) )
-   {
-      xec->pLibraryHandle = pLibrary;
-      hb_gcRefInc( xec->pLibraryHandle );
+      else if( hb_libHandle( pLibrary ) )
+      {
+         xec->pLibraryHandle = pLibrary;
+         hb_gcRefInc( xec->pLibraryHandle );
+      }
    }
 
    if( xec->pLibraryHandle )

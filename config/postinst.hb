@@ -13,6 +13,7 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbserial.ch"
 
 PROCEDURE Main( ... )
 
@@ -35,6 +36,11 @@ PROCEDURE Main( ... )
    LOCAL cDynVersionFull
    LOCAL cDynVersionComp
    LOCAL cDynVersionless
+
+   IF HB_ISSTRING( hb_PValue( 1 ) ) .AND. Lower( hb_PValue( 1 ) ) == "-rehbx"
+      mk_extern_core_manual( hb_PValue( 2 ), hb_PValue( 3 ) )
+      RETURN
+   ENDIF
 
    IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
@@ -65,6 +71,7 @@ PROCEDURE Main( ... )
                NEXT
 
                mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
+               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps() )
                mk_hb_FCopy( "README.md", tmp + hb_ps() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
@@ -80,7 +87,6 @@ PROCEDURE Main( ... )
          /* public Harbour scripts */
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
-            "bin/check.hb", ;
             "bin/commit.hb", ;
             "bin/harbour.ucf" }
             mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
@@ -102,13 +108,13 @@ PROCEDURE Main( ... )
 
             OutStd( "! Creating Linux ld config file..." + hb_eol() )
 
-            tmp := GetEnvC( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+            tmp := GetEnvC( "HB_INSTALL_ETC" ) + "/../ld.so.conf.d"
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
-               IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
+               IF hb_LeftIs( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
-               hb_MemoWrit( tmp + hb_ps() + "harbour.conf", tmp1 + hb_eol() )
+               hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -119,11 +125,13 @@ PROCEDURE Main( ... )
 
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
-         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
+         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1" ) )
             FOR EACH tmp IN { ;
                "src/main/harbour.1", ;
                "src/pp/hbpp.1" }
-               mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
+               mk_hb_FCopy( ;
+                  hb_DirSepToOS( tmp ), ;
+                  hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ), .T. )
             NEXT
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_MAN" ) ) + hb_eol() )
@@ -149,9 +157,9 @@ PROCEDURE Main( ... )
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg:
@@ -210,7 +218,7 @@ PROCEDURE Main( ... )
 
             tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
 
-            OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
+            OutStd( hb_StrFormat( "! Making Harbour .zip install package: '%1$s'", tmp ) + hb_eol() )
 
             FErase( tmp )
 
@@ -234,7 +242,7 @@ PROCEDURE Main( ... )
 
                tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
 
-               OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour .exe install package: '%1$s'", tmp ) + hb_eol() )
 
                mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
                   " -V2" + ;
@@ -261,7 +269,7 @@ PROCEDURE Main( ... )
                cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
                cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
-               OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+               OutStd( hb_StrFormat( "! Making Harbour tar install package: '%1$s'", cTar_Path ) + hb_eol() )
 
                FErase( cTar_Path )
 
@@ -286,7 +294,7 @@ PROCEDURE Main( ... )
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
-                  OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+                  OutStd( hb_StrFormat( "! Making Harbour tar installer package: '%1$s'", tmp ) + hb_eol() )
 
                   /* In the generated script always use tar because we can't be sure
                      if cBin_Tar exists in the installation environment */
@@ -323,18 +331,19 @@ PROCEDURE Main( ... )
       /* Executing user postinst configuration script */
 
       IF ! Empty( tmp := GetEnvC( "HB_INSTALL_SCRIPT" ) )
-
          mk_hb_processRun( tmp )
       ENDIF
-
    ELSE
       /* Regenerating extern headers */
 
       mk_extern_core()
    ENDIF
 
-   OutStd( "! postinst script finished" + ;
-      iif( nErrorLevel == 0, "", " with with errorlevel=" + hb_ntos( nErrorLevel ) ) + hb_eol() )
+   IF nErrorLevel == 0
+      OutStd( "! postinst script finished" + hb_eol() )
+   ELSE
+      OutStd( hb_StrFormat( "! postinst script finished with errorlevel=%1$d", nErrorLevel ) + hb_eol() )
+   ENDIF
 
    ErrorLevel( nErrorLevel )
 
@@ -345,16 +354,21 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    LOCAL cErrorMsg
    LOCAL aTrans
 
+   /* do not create .hbl for the base language */
+   IF SubStr( hb_FNameExt( hb_FNameName( cIn ) ), 2 ) == "en"
+      RETURN .T.
+   ENDIF
+
    aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg )
    IF aTrans != NIL
       IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
-         OutStd( "! Created " + cOut + " <= " + cIn + hb_eol() )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cOut, cIn ) + hb_eol() )
          RETURN .T.
       ELSE
-         OutErr( "! Error: Cannot create file: " + cOut + hb_eol() )
+         OutErr( hb_StrFormat( "! Error: Cannot create file: %1$s", cOut ) + hb_eol() )
       ENDIF
    ELSE
-      OutErr( "! Error: Loading translation: " + cIn + " (" + cErrorMsg + ")" + hb_eol() )
+      OutErr( hb_StrFormat( "! Error: Loading translation: %1$s (%2$s)", cIn, cErrorMsg ) + hb_eol() )
    ENDIF
 
    RETURN .F.
@@ -374,7 +388,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         OutStd( "! Created " + cName + " <= " + cDirSource + hb_eol() )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE
          OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
@@ -408,7 +422,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
    ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
-   IF hb_FCopy( cSrc, cDst ) == 0
+   IF hb_FCopy( cSrc, cDst ) != F_ERROR
 #if 0
       OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
@@ -427,17 +441,17 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
 
    FErase( cSrc ) /* remove old links if any */
-   IF hb_FLinkSym( cDst, cSrc ) == 0
+   IF hb_FLinkSym( cDst, cSrc ) != F_ERROR
       OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Creating symlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
       IF FError() == 5 .AND. Empty( hb_FNameDir( cDst ) )
          cDst := hb_FnameMerge( hb_FNameDir( cSrc ), cDst )
-         IF hb_FLink( cDst, cSrc ) == 0
+         IF hb_FLink( cDst, cSrc ) != F_ERROR
             OutStd( hb_StrFormat( "! Hardlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
          ELSE
             OutStd( hb_StrFormat( "! Error: Creating hardlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
-            IF hb_FCopy( cDst, cSrc ) == 0
+            IF hb_FCopy( cDst, cSrc ) != F_ERROR
                OutStd( hb_StrFormat( "! Copyfile: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Copying file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
@@ -453,11 +467,8 @@ STATIC FUNCTION EndsWith( cString, cEnd )
 
 STATIC FUNCTION query_stdout( cName )
 
-   LOCAL cStdOut
-   LOCAL cStdErr
-   LOCAL nRetVal
-
-   nRetVal := hb_processRun( cName,, @cStdOut, @cStdErr )
+   LOCAL cStdOut, cStdErr
+   LOCAL nRetVal := hb_processRun( cName,, @cStdOut, @cStdErr )
 
    RETURN iif( nRetVal == 0, AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
 
@@ -488,6 +499,16 @@ STATIC FUNCTION unix_name()
    ENDCASE
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
+
+STATIC PROCEDURE mk_extern_core_manual( cDynLib, cHarbourHBX )
+
+   LOCAL aExtern
+
+   IF ( aExtern := __hb_extern_get_list( hb_DirSepToOS( cDynLib ) ) ) != NIL
+      __hb_extern_gen( aExtern, hb_DirSepToOS( hb_defaultValue( cHarbourHBX, "../include/harbour.hbx" ) ) )
+   ENDIF
+
+   RETURN
 
 STATIC FUNCTION mk_extern_core()
 
@@ -540,7 +561,7 @@ PROCEDURE mk_hbr( cDestDir )
       ENDIF
    NEXT
 
-   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
+   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
 
    RETURN
 
@@ -639,6 +660,17 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                tmp := hb_cdpSelect( "EN" )
                ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
                hb_cdpSelect( tmp )
+
+               /* Filter out Cl*pper short names (not foolproof method,
+                  but works correctly for all practical cases). */
+               FOR tmp := Len( aExtern ) TO 2 STEP -1
+                  IF Len( aExtern[ tmp ] ) > 10 .AND. ;
+                     Len( aExtern[ tmp - 1 ] ) == 10 .AND. ;
+                     ! hb_LeftIsI( aExtern[ tmp - 1 ], "hb_" ) .AND. ;
+                     hb_LeftIsI( aExtern[ tmp ], aExtern[ tmp - 1 ] )
+                     hb_ADel( aExtern, --tmp, .T. )
+                  ENDIF
+               NEXT
             ENDIF
          ENDIF
          IF ! Empty( cTempFile )

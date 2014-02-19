@@ -16,9 +16,11 @@
  *
  */
 
+#include "box.ch"
+
 /* display vertical menu */
 
-FUNCTION ft_Menu2( aMenuInfo, cColors )
+PROCEDURE ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1
    LOCAL nOptions    := Len( aMenuInfo )
@@ -48,14 +50,13 @@ FUNCTION ft_Menu2( aMenuInfo, cColors )
 
       cOldscreen := SaveScreen( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth )
 
-      hb_DispBox( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+      hb_DispBox( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, HB_B_SINGLE_UNI + " " )
       SetPos( nTop, nLeft )
-      FOR x := 1 TO Len( aMenuInfo )
-         IF Len( aMenuInfo[ x ] ) > 1 .AND. aMenuInfo[ x, 2 ] != NIL
-            @ Row() + 1, nLeft PROMPT PadR( aMenuInfo[ x, 1 ], nMaxwidth ) ;
-               MESSAGE aMenuInfo[ x, 2 ]
+      FOR EACH x IN aMenuInfo
+         IF Len( x ) > 1 .AND. HB_ISSTRING( x[ 2 ] )
+            @ Row() + 1, nLeft PROMPT PadR( x[ 1 ], nMaxwidth ) MESSAGE x[ 2 ]
          ELSE
-            @ Row() + 1, nLeft PROMPT PadR( aMenuInfo[ x, 1 ], nMaxwidth )
+            @ Row() + 1, nLeft PROMPT PadR( x[ 1 ], nMaxwidth )
          ENDIF
       NEXT
 
@@ -67,7 +68,6 @@ FUNCTION ft_Menu2( aMenuInfo, cColors )
       IF nChoice > 0 .AND. Len( aMenuInfo[ nChoice ] ) == 3
          Eval( aMenuInfo[ nChoice, 3 ] )
       ENDIF
-
    ENDDO
 
    /* restore previous message and wrap settings */
@@ -76,4 +76,4 @@ FUNCTION ft_Menu2( aMenuInfo, cColors )
    Set( _SET_WRAP,    lOldwrap )
    SetColor( cOldcolor )
 
-   RETURN NIL
+   RETURN

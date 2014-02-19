@@ -7,6 +7,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: Recursive use is supported. */
 
 #include "color.ch"
@@ -241,7 +243,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             // did user hit a hot key?
             IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
                FOR y := 1 TO nArrLen
-                  IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), Len( cKey ) ) ) == cKey
+                  IF hb_LeftIsI( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), cKey )
                      n := y
                      lExit := .T.
                      EXIT

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,27 +62,27 @@ PROCEDURE Main()
 
    ? "Begin test of AtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  AtNum( "..", cStr )       should be 18,'
-   ? '                               and is ', AtNum( "..", cStr )
+   ? '                               and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2 )    should be 8,'
-   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2 )
    ? '  AtNum( "..", cStr, 2, 2 ) should be 13,'
-   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2, 2 )
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  AtNum( "..", cStr )       should be 18,'
-   ? '                               and is ', AtNum( "..", cStr )
+   ? '                               and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2 )    should be 2,'
-   ? '                               and is ', AtNum( "..", cStr, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2 )
    ? '  AtNum( "..", cStr, 2, 2 ) should be 9,'
-   ? '                               and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                               and is', AtNum( "..", cStr, 2, 2 )
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -91,11 +91,11 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  AtNum( "..", cStr )        should be 23,'
-   ? '                                and is ', AtNum( "..", cStr )
+   ? '                                and is', AtNum( "..", cStr )
    ? '  AtNum( "..", cStr, 2, 2 )  should be 5,'
-   ? '                                and is ', AtNum( "..", cStr, 2, 2 )
+   ? '                                and is', AtNum( "..", cStr, 2, 2 )
    ? '  AtNum( "..", cStr, 2, 10 ) should be 13,'
-   ? '                                and is ', AtNum( "..", cStr, 2, 10 )
+   ? '                                and is', AtNum( "..", cStr, 2, 10 )
    ?
 
    ? "End test of AtNum()"

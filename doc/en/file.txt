@@ -246,8 +246,8 @@
       To truncate a file, a call of FWrite( nHandle, "", 0 ) is needed.
    $EXAMPLES$
       nHandle := FCreate( "test.txt" )
-      FOR X := 1 TO 10
-         FWrite( nHandle, Str( x ) )
+      FOR x := 1 TO 10
+         FWrite( nHandle, hb_ntos( x ) )
       NEXT
       FClose( nHandle )
    $STATUS$
@@ -311,7 +311,7 @@
       #include "fileio.ch"
       nHandle := FCreate( "test.txt", FC_NORMAL )
       IF FError() != 0
-         ? "Cannot create file, OS error ", FError()
+         ? "Cannot create file, OS error", FError()
       ENDIF
    $STATUS$
       R
@@ -389,14 +389,14 @@
 
       If the function is able to successfully delete the file from the
       disk, the value of the function will be 0; otherwise a -1 will
-      be returned. If not successfull, additional information may be
+      be returned. If not successful, additional information may be
       obtained by calling the FError() function.
 
       Note: Any file to be removed by FErase() must still be closed.
 
    $EXAMPLES$
       #include "fileio.ch"
-      IF FErase( "test.txt" ) == 0
+      IF FErase( "test.txt" ) != F_ERROR
          ? "File successfully erased"
       ELSE
          ? "File can not be deleted"
@@ -457,7 +457,7 @@
       #include "fileio.ch"
       nResult := FRename( "test.txt", "test1.txt" )
       IF nResult != 0
-         ? "File could not be renamed."
+         ? "File could not be renamed"
       ENDIF
    $STATUS$
       R
@@ -531,10 +531,10 @@
          cB := ""
          nSavePos := FSeek( nH, 0, FS_RELATIVE )
          nNumRead := FRead( nH, @cLine, nMaxLine )
-         IF ( nEol := hb_BAt( hb_eol(), hb_BSubStr( cLine, 1, nNumRead ) ) ) == 0
+         IF ( nEol := hb_BAt( hb_eol(), hb_BLeft( cLine, nNumRead ) ) ) == 0
             cB := cLine
          ELSE
-            cB := hb_BSubStr( cLine, 1, nEol - 1 )
+            cB := hb_BLeft( cLine, nEol - 1 )
             FSeek( nH, nSavePos + nEol + 1, FS_SET )
          ENDIF
          RETURN nNumRead != 0
@@ -580,8 +580,8 @@
       searched and the current drive/directory is only searched if
       SET DEFAULT is blank.
    $EXAMPLES$
-      ? File( "C:\harbour\doc\compiler.txt" )
-      ? File( "C:/harbour/doc/subcodes.txt" )
+      ? File( "C:\hb\doc\pp.txt" )
+      ? File( "*.txt" )
    $STATUS$
       S (wild card support is missing)
    $COMPLIANCE$
@@ -713,7 +713,7 @@
       The file must be considered closed by the operating system before it
       may be deleted.
    $EXAMPLES$
-      ERASE C:\temp\read.txt
+      ERASE test.txt
    $STATUS$
       R
    $COMPLIANCE$
@@ -747,7 +747,7 @@
       The file must be considered closed by the operating system before it
       may be deleted.
    $EXAMPLES$
-      DELETE FILE C:\temp\read.txt
+      DELETE FILE test.txt
    $STATUS$
       R
    $COMPLIANCE$
@@ -952,8 +952,8 @@
       device (e.g. LPT1). This command does not observe the SET PATH TO or
       SET DEFAULT TO settings.
    $EXAMPLES$
-      COPY FILE C:\harbour\tests\adir.prg TO C:\temp\adir.prg
-      COPY FILE C:\harbour\tests\adir.prg TO LPT1
+      COPY FILE /path/to/adir.prg TO /tmp/adir.prg
+      COPY FILE adir.prg TO LPT1
    $STATUS$
       R
    $COMPLIANCE$
@@ -990,7 +990,7 @@
       nH := FOpen( "test.txt" )
       ? FReadStr( nH, 80 )
       IF hb_FEof( nH )
-         ? "End-of-file reached."
+         ? "End-of-file reached"
       ELSE
          ? FReadStr( nH, 80 )
       ENDIF
@@ -1030,7 +1030,7 @@
    $EXAMPLES$
       cDir := ".\backup"
       IF DirRemove( cDir ) == 0
-         ? "Remove of directory", cDir, "was successfull"
+         ? "Remove of directory", cDir, "was successful"
       ENDIF
    $STATUS$
       R
@@ -1070,7 +1070,7 @@
       description of the error.
    $EXAMPLES$
       IF DirChange( "\temp" ) == 0
-         ? "Change to diretory was successfull"
+         ? "Change to diretory was successful"
       ENDIF
    $STATUS$
       R
@@ -1145,12 +1145,12 @@
       <lSuccess>  .T. is the drive is ready, otherwise .F.
    $DESCRIPTION$
       This function attempts to access a drive. If the access to the drive
-      was successfull, it will return true (.T.), otherwise false(.F.). This
+      was successful, it will return true (.T.), otherwise false(.F.). This
       function is usefull for backup function, so you can determine if the
       drive that will receive the backup data is ready or not.
    $EXAMPLES$
       IF IsDisk( "A" )
-         ? "Drive is ready "
+         ? "Drive is ready"
       ENDIF
    $STATUS$
       R

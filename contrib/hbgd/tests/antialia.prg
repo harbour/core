@@ -12,29 +12,24 @@
 PROCEDURE Main()
 
    LOCAL im
-   LOCAL white, blue
+   LOCAL blue
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
-   /*
-     This sample shows differences on use of antiliased command between a
-     palette based image and a true color image.
-     Normally antialias works better with a true color image.
+   /* This sample shows differences on use of antiliased command between a
+      palette based image and a true color image.
+      Normally antialias works better with a true color image.
 
-     From GD official documentation:
+      From GD official documentation:
 
-     Antialiased lines can be drawn on both truecolor and palette-based images.
-     However, attempts to draw antialiased lines on highly complex palette-based backgrounds
-     may not give satisfactory results, due to the limited number of colors available in the
-     palette. Antialiased line-drawing on simple backgrounds should work well with palette-based
-     images; otherwise create or fetch a truecolor image instead.
-
-   */
+      Antialiased lines can be drawn on both truecolor and palette-based images.
+      However, attempts to draw antialiased lines on highly complex palette-based backgrounds
+      may not give satisfactory results, due to the limited number of colors available in the
+      palette. Antialiased line-drawing on simple backgrounds should work well with palette-based
+      images; otherwise create or fetch a truecolor image instead. */
 
    /* ***** DRAW A LINE IN A PALETTE BASED IMAGE ***** */
 
@@ -42,10 +37,10 @@ PROCEDURE Main()
    im := gdImageCreatePalette( 100, 100 )    // alias of gdImageCreate()
 
    /* First allocate color is Background color */
-   // black := gdImageColorAllocate(im, 0, 0, 0)
+   gdImageFilledRectangle( im, 0, 0, 100, 100, gdImageColorAllocate( im, 0, 0, 0 ) )
 
    /* set foreground color */
-   blue  := gdImageColorAllocate( im, 0, 0, 255 )
+   blue := gdImageColorAllocate( im, 0, 0, 255 )
 
    /* Now we draw an aliased line */
    gdImageLine( im, 0, 0, 99, 40, blue )
@@ -65,8 +60,7 @@ PROCEDURE Main()
    im := gdImageCreateTrueColor( 100, 100 )
 
    /* Background color (true color comes with black background, we have to fill it) */
-   white := gdTrueColor( 255, 255, 255 )
-   gdImageFilledRectangle( im, 0, 0, 100, 100, white )
+   gdImageFilledRectangle( im, 0, 0, 100, 100, gdTrueColor( 255, 255, 255 ) )
 
    /* set foreground color */
    blue := gdImageColorAllocate( im, 0, 0, 255 )
@@ -83,8 +77,6 @@ PROCEDURE Main()
    /* saving the image */
    gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )
 
-   ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

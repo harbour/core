@@ -25,7 +25,7 @@ PROCEDURE Main()
    SetClearB( 35 )
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), NToColor( 10 * 16 + 14 ) )
    SetPos( 0, 0 )
-   ? "GT driver: " + hb_gtVersion()
+   ? "GT driver:", hb_gtVersion()
    ? hb_gtVersion( 1 )
    ?
    ? "ESC - quit "
@@ -49,58 +49,57 @@ PROCEDURE Main()
       WBox()
 
       @ -1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
-      ? hb_ntos( Row() ) + ":" + hb_ntos( Col() ), "/", hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ), ""
-      ? hb_ntos( WRow() ) + ":" + hb_ntos( WCol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
-      ? hb_ntos( WFRow() ) + ":" + hb_ntos( WFCol() ), "/", ;
-         hb_ntos( WFLastRow() ) + ":" + hb_ntos( WFLastCol() ), ""
-      ? hb_ntos( WFRow( .T. ) ) + ":" + hb_ntos( WFCol( .T. ) ), "/", ;
-         hb_ntos( WFLastRow( .T. ) ) + ":" + hb_ntos( WFLastCol( .T. ) ), ""
+      ? hb_ntos( Row()        ) + ":" + hb_ntos( Col()        ), "/", hb_ntos( MaxRow()         ) + ":" + hb_ntos( MaxCol()         ), ""
+      ? hb_ntos( WRow()       ) + ":" + hb_ntos( WCol()       ), "/", hb_ntos( MaxRow( .T. )    ) + ":" + hb_ntos( MaxCol( .T. )    ), ""
+      ? hb_ntos( WFRow()      ) + ":" + hb_ntos( WFCol()      ), "/", hb_ntos( WFLastRow()      ) + ":" + hb_ntos( WFLastCol()      ), ""
+      ? hb_ntos( WFRow( .T. ) ) + ":" + hb_ntos( WFCol( .T. ) ), "/", hb_ntos( WFLastRow( .T. ) ) + ":" + hb_ntos( WFLastCol( .T. ) ), ""
       ? "window:", hb_ntos( aWin[ i ] ), ""
       SetCursor( Int( i % 5 ) )
 
    NEXT
 
    dspcord()
-   WHILE .T.
+   DO WHILE .T.
       k := Inkey( 0, INKEY_ALL )
-      IF k == K_ESC
+      DO CASE
+      CASE k == K_ESC
          EXIT
-      ELSEIF k >= hb_keyCode( "1" ) .AND. k <= hb_keyCode( "9" )
+      CASE k >= hb_keyCode( "1" ) .AND. k <= hb_keyCode( "9" )
          WSelect( aWin[ k - hb_keyCode( "0" ) ] )
-      ELSEIF k == hb_keyCode( "0" )
+      CASE k == hb_keyCode( "0" )
          WSelect( 0 )
-      ELSEIF k == hb_keyCode( "C" ) .OR. k == hb_keyCode( "c" )
+      CASE k == hb_keyCode( "C" ) .OR. k == hb_keyCode( "c" )
          WClose()
-      ELSEIF k == hb_keyCode( "Q" ) .OR. k == hb_keyCode( "q" )
+      CASE k == hb_keyCode( "Q" ) .OR. k == hb_keyCode( "q" )
          CLS
-      ELSEIF k == hb_keyCode( "B" ) .OR. k == hb_keyCode( "b" )
+      CASE k == hb_keyCode( "B" ) .OR. k == hb_keyCode( "b" )
          IF lBoard
             WBoard( 0, 0, MaxRow( .T. ) - 1, MaxCol( .T. ) )
          ELSE
             WBoard( 5, 5, 20, 75 )
          ENDIF
          lBoard := ! lBoard
-      ELSEIF k == hb_keyCode( "P" ) .OR. k == hb_keyCode( "P" )
+      CASE k == hb_keyCode( "P" ) .OR. k == hb_keyCode( "P" )
          y := WFRow()
          x := WFCol()
          i := WSelect()
          WSelect( 0 )
          @ y, x SAY "THIS IS WINDOW 0 OUTPUT"
          WSelect( i )
-      ELSEIF k == K_INS
+      CASE k == K_INS
          lFlag := ! lFlag
          SetCursor( iif( lFlag, 3, 1 ) )
-      ELSEIF k == K_DEL
+      CASE k == K_DEL
          SetCursor( SC_NONE )
-      ELSEIF k == K_LEFT
+      CASE k == K_LEFT
          WMove( WRow(), WCol() - 1 )
-      ELSEIF k == K_RIGHT
+      CASE k == K_RIGHT
          WMove( WRow(), WCol() + 1 )
-      ELSEIF k == K_UP
+      CASE k == K_UP
          WMove( WRow() - 1, WCol() )
-      ELSEIF k == K_DOWN
+      CASE k == K_DOWN
          WMove( WRow() + 1, WCol() )
-      ENDIF
+      ENDCASE
       dspcord()
    ENDDO
 

@@ -12,5 +12,6 @@ headers=${hb_name}.ch
 { allwin& (HB_STATIC_CURL&!hbdyn)&!allmingw}libs=libcurl libssh2
 { allwin& (HB_STATIC_CURL&!hbdyn)& allmingw}libs=curl ssh2
 
-# NOTE: Static mode requires additional libs be linked:
-#       OpenSSL
+# NOTE: Static mode requires additional libs to be linked:
+#       f.e. OpenSSL, NSS, GnuTLS or else, depending on
+#       which TLS backend was chosen when building libcurl.

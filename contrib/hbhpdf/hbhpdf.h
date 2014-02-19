@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,6 +53,9 @@
 #include "hpdf.h"
 
 #define HB_HPDF_VERS( ma, mi, mu )  ( HPDF_MAJOR_VERSION > ma || ( HPDF_MAJOR_VERSION == ma && ( HPDF_MINOR_VERSION > mi || ( HPDF_MINOR_VERSION == mi && HPDF_BUGFIX_VERSION >= mu ) ) ) )
+
+#define HB_HPDF_BADPARAM      -2
+#define HB_HPDF_NOTSUPPORTED  -1
 
 HB_EXTERN_BEGIN
 

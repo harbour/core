@@ -5,8 +5,8 @@
 #include "simpleio.ch"
 
 #define TEST_STRING  "This is test of LZO extension"
-#define FMT_STRING   "Compressed %d bytes into %d bytes (%d)"
-#define FMT2_STRING  "Decompressed %d bytes back into %d bytes (%d)"
+#define FMT_STRING   "Compressed %1$d bytes into %2$d bytes (%3$d)"
+#define FMT2_STRING  "Decompressed %1$d bytes back into %2$d bytes (%3$d)"
 
 PROCEDURE Main()
 
@@ -92,7 +92,7 @@ PROCEDURE Main()
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
 
-   cStr := Replicate( hb_MemoRead( hb_argv( 0 ) ), 50 )
+   cStr := Replicate( hb_MemoRead( hb_ProgName() ), 50 )
    ?
    ? "BZ2 ", hb_ntos( Len( hb_bz2_Compress( cStr, NIL, @nResult ) ) )
    ? "GZIP", hb_ntos( Len( hb_gzCompress( cStr, NIL, @nResult ) ) )
@@ -105,14 +105,15 @@ PROCEDURE Main()
 
 STATIC PROCEDURE ShowResult( cStr, cCompressed, nLen, nResult )
 
-   IF nResult == LZO_E_OK
+   DO CASE
+   CASE nResult == LZO_E_OK
       ? hb_StrFormat( FMT_STRING, Len( cStr ), nLen, Len( cCompressed ) )
-   ELSEIF nResult == LZO_E_OUT_OF_MEMORY
+   CASE nResult == LZO_E_OUT_OF_MEMORY
       ? "Out of memory.."
-   ELSEIF nResult == LZO_E_NOT_COMPRESSIBLE
+   CASE nResult == LZO_E_NOT_COMPRESSIBLE
       ? "This block contains incompressible data", hb_ntos( nLen )
-   ELSE
+   OTHERWISE
       ? "Internal error - compression failed:", hb_ntos( nResult )
-   ENDIF
+   ENDCASE
 
    RETURN

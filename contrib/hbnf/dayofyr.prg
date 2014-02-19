@@ -26,13 +26,14 @@ FUNCTION ft_DayOfYr( dGivenDate, nDayNum, lIsAcct )
 
    LOCAL nTemp, aRetVal
 
-   IF HB_ISNUMERIC( dGivenDate )
-      nDayNum    := dGivenDate
-      dGivenDate := Date()
-   ELSEIF HB_ISLOGICAL( dGivenDate )
-      lIsAcct    := dGivenDate
-      dGivenDate := Date()
-   ELSEIF ! HB_ISDATE( dGivenDate )
+   DO CASE
+   CASE HB_ISNUMERIC( dGivenDate )
+      nDayNum := dGivenDate
+   CASE HB_ISLOGICAL( dGivenDate )
+      lIsAcct := dGivenDate
+   ENDCASE
+
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

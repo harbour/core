@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -146,8 +146,8 @@ HB_EXTERN_BEGIN
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_EVALITEM ) != 0 )
-#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )
 #define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
@@ -238,6 +238,7 @@ HB_EXTERN_BEGIN
 #define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )
 #define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )
 #define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )
+#define HB_ISEVALITEM( n )    ( hb_param( n, HB_IT_EVALITEM ) != NULL )
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )
 
 /* Compatibility #defines, deprecated */
@@ -938,7 +939,6 @@ extern HB_EXPORT char *    hb_strndup( const char * pszText, HB_SIZE nLen ); /* 
 extern HB_EXPORT char *    hb_strduptrim( const char * pszText ); /* returns a pointer to a newly allocated copy of the trimmed source string */
 extern HB_EXPORT HB_SIZE   hb_strlentrim( const char * pszText ); /* like strlen() but result is the length of trimmed text */
 extern HB_EXPORT HB_SIZE   hb_strnlen( const char * pszText, HB_SIZE nLen ); /* like strlen() but result is limited to nLen */
-extern HB_EXPORT char *    hb_xstrcat( char * dest, const char * src, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT char *    hb_xstrcpy( char * szDest, const char * szSrc, ... ); /* Concatenates multiple strings into a single result */
 extern HB_EXPORT HB_BOOL   hb_compStrToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by compiler */
 extern HB_EXPORT HB_BOOL   hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * pnVal, double * pdVal, int * piDec, int * piWidth );  /* converts string to number, sets iDec, iWidth and returns HB_TRUE if results is double, used by Val() */
@@ -1048,7 +1048,7 @@ extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return applicat
 extern           int           hb_cmdargPushArgs( void ); /* places application parameters on the HVM stack */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:gtcgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )

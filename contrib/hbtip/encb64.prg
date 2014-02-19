@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,12 +50,12 @@
 
 CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
 
-   // Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
-   // RFC 2045 (MIME) base64 format. This exception consists in
-   // not applying CRLF after each 76 output bytes.
-   VAR bHttpExcept
+   /* Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
+      RFC 2045 (MIME) base64 format. This exception consists in
+      not applying CRLF after each 76 output bytes. */
+   VAR bHttpExcept INIT .F.
 
-   METHOD New()      Constructor
+   METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
 
@@ -63,33 +63,12 @@ ENDCLASS
 
 METHOD New() CLASS TIPEncoderBase64
 
-   ::cName := "Base64"
-   ::bHttpExcept := .F.
+   ::cName := "base64"
 
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
-   RETURN tip_Base64Encode( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
+   RETURN hb_base64Encode( cData, iif( ::bHttpExcept, NIL, 76 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
    RETURN hb_base64Decode( cData )
-
-FUNCTION tip_Base64Encode( cBinary, nLineLength, cCRLF )
-
-   LOCAL cTextIn := hb_base64Encode( cBinary )
-
-   LOCAL cText
-   LOCAL tmp
-
-   IF ! HB_ISNUMERIC( nLineLength )
-      RETURN cTextIn
-   ENDIF
-
-   hb_default( @cCRLF, hb_eol() )
-
-   cText := ""
-   FOR tmp := 1 TO Len( cTextIn ) STEP nLineLength
-      cText += SubStr( cTextIn, tmp, nLineLength ) + cCRLF
-   NEXT
-
-   RETURN cText

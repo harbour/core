@@ -25,20 +25,19 @@ PROCEDURE Main()
 
    RETURN
 
-
-PROCEDURE path_debug( hCairo, nTolerance )
+STATIC PROCEDURE path_debug( hCairo, nTolerance )
 
    LOCAL hPath, hIterator, nType, aPoints
 
    cairo_save( hCairo )
 
-   IF Empty( nTolerance )
-      hPath := cairo_copy_path( hCairo )
-   ELSE
+   IF HB_ISNUMERIC( nTolerance )
       cairo_save( hCairo )
       cairo_set_tolerance( hCairo, nTolerance )
       hPath := cairo_copy_path_flat( hCairo )
       cairo_restore( hCairo )
+   ELSE
+      hPath := cairo_copy_path( hCairo )
    ENDIF
 
    // Draw lines
@@ -55,13 +54,14 @@ PROCEDURE path_debug( hCairo, nTolerance )
    hIterator := cairo_path_iterator_create( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator ) ) != NIL
       aPoints := cairo_path_iterator_get_points( hIterator )
-      IF nType == CAIRO_PATH_MOVE_TO
+      DO CASE
+      CASE nType == CAIRO_PATH_MOVE_TO
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      ELSEIF nType == CAIRO_PATH_LINE_TO
+      CASE nType == CAIRO_PATH_LINE_TO
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      ELSEIF nType == CAIRO_PATH_CURVE_TO
+      CASE nType == CAIRO_PATH_CURVE_TO
          cairo_stroke( hCairo )
          cairo_set_source_rgb( hCairo, 0.5, 0.5, 0.5 )
          cairo_move_to( hCairo, aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
@@ -72,7 +72,7 @@ PROCEDURE path_debug( hCairo, nTolerance )
          cairo_set_source_rgb( hCairo, 0, 0, 0 )
          cairo_move_to( hCairo, aPoints[ 3, 1 ], aPoints[ 3, 2 ] )
          cairo_rel_line_to( hCairo, 0, 0 )
-      ENDIF
+      ENDCASE
    ENDDO
    cairo_path_iterator_destroy( hIterator )
    cairo_stroke( hCairo )

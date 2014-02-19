@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +48,7 @@
 
 #include "hbclass.ch"
 
-#define TABLE_NAME_PATH ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
+#define TABLE_NAME_PATH  hb_DirSepToOS( "../../../tests/test.dbf" )
 #define SIMULATE_SLOW_REPLY
 
 MEMVAR _REQUEST // defined in uHTTPD
@@ -61,7 +61,7 @@ FUNCTION HRBMAIN()
 
    hb_default( @hGets, { => } )
 
-   IF hb_HHasKey( hGets, "page" )
+   IF "page" $ hGets
 
       cPage := hGets[ "page" ]
 
@@ -72,12 +72,12 @@ FUNCTION HRBMAIN()
          oTM:Close()
       ENDIF
 
-   ELSEIF hb_HHasKey( hGets, "count" )
+   ELSEIF "count" $ hGets
 
       cCount := hGets[ "count" ]
 
       IF cCount == "true"
-         oTM  := TableManager():New()
+         oTM := TableManager():New()
          IF oTM:Open()
             nCount := oTM:getLastRec()
             cXml := oTM:getXmlCount( nCount )
@@ -94,7 +94,7 @@ FUNCTION HRBMAIN()
       uhttpd_Write( cXml )
    ELSE
       uhttpd_SetHeader( "Content-Type", "text/xml" )
-      uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+      uhttpd_Write( '<?xml version="1.0" encoding="UTF-8"?>' )
       uhttpd_Write( "<pages><page>No Data</page></pages>" )
    ENDIF
 
@@ -132,15 +132,15 @@ METHOD Open() CLASS TableManager
 
    LOCAL cDBF := ::cTable
 
-   // hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+   // hb_ToOutDebug( "CurPath: %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
-   // hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
+   // hb_ToOutDebug( "before: cDBF: %s, Used(): %s\n", cDBF, Used() )
 
    IF ! ::lOpened
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
-      // hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
+      // hb_ToOutDebug( "after: cDBF: %s, Used(): %s\n", cDBF, Used() )
       ::lOpened := Used()
 
    ENDIF
@@ -234,7 +234,7 @@ METHOD getXmlData( page ) CLASS TableManager
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    // Add the opening <table> tag
    xml:append( "<table>" )
@@ -265,12 +265,10 @@ METHOD getXmlData( page ) CLASS TableManager
          cString += "</cell>"
 
          xml:append( cString )
-
       NEXT
 
       // Add the closing </row> tag
       xml:append( "</row>" )
-
    NEXT
 
    // Add the closing </table> tag
@@ -284,12 +282,12 @@ METHOD getXmlCount( nCount ) CLASS TableManager
    LOCAL nPages := nCount / ::ROWS_PER_PAGE
 
    IF Int( nPages ) < nPages
-      nPages ++
+      nPages++
    ENDIF
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    xml:append( "<pages>" )
    FOR n := 1 TO nPages
@@ -356,8 +354,8 @@ METHOD xmlEncode( input ) CLASS TableManager
          out += c
          EXIT
       OTHERWISE
-         // All non-ascii
-         IF Asc( c ) <= 0x1F .OR. Asc( c ) >= 0x80
+         // All non-ASCII
+         IF Asc( c ) < 32 .OR. Asc( c ) >= 128
             out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
          ELSE
             out += c

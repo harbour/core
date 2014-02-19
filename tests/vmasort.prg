@@ -1,5 +1,5 @@
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main( nPass )
@@ -7,26 +7,22 @@ PROCEDURE Main( nPass )
    LOCAL aTest
    LOCAL aOrig
 
-   IF nPass == NIL
-      nPass := 1
-   ELSE
-      nPass := Val( nPass )
-   ENDIF
+   nPass := iif( nPass == NIL, 1, Val( nPass ) )
 
-   ? "Testing ASort() with " + hb_ntos( nPass ) + " loops."
+   ? "Testing ASort() with", hb_ntos( nPass ), "loop(s)."
    ?
-   aTest := aMkArray( nPass )
+   aTest := AMkArray( nPass )
    aOrig := AClone( aTest )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   ? "Original.....:", aDump( aOrig )
-   ? "asort.c......:", aDump( ASort( aTest ) )
-// ? "asort.c.block:", aDump( ASort( aTest,,, {| x, y | x < y } ) )
+   ? "Original.....:", ADump( aOrig )
+   ? "asort.c......:", ADump( ASort( aTest ) )
+// ? "asort.c.block:", ADump( ASort( aTest,,, {| x, y | x < y } ) )
 
    RETURN
 
-STATIC FUNCTION aMkArray( nPass )
+STATIC FUNCTION AMkArray( nPass )
 
    LOCAL aData := {}
    LOCAL n
@@ -47,19 +43,19 @@ STATIC FUNCTION aMkArray( nPass )
 
    RETURN aData
 
-STATIC FUNCTION aDump( a )
+STATIC FUNCTION ADump( a )
 
    LOCAL cStr := ""
    LOCAL n := Len( a )
    LOCAL i
 
    FOR i := 1 TO n
-      cStr += AllTrim( xToStr( a[ i ] ) ) + " "
+      cStr += AllTrim( XToStr( a[ i ] ) ) + " "
    NEXT
 
    RETURN cStr
 
-STATIC FUNCTION xToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

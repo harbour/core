@@ -4,6 +4,7 @@
 PROCEDURE Main()
 
    LOCAL nTotal
+   LOCAL a, b
 
    HBTEST AddAscii( "0000", 1, 1 )         IS "1000"
    HBTEST AddAscii( "0000", 1 )            IS "0001"
@@ -259,5 +260,40 @@ PROCEDURE Main()
 
    HBTEST ( CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba" ) )      IS "1abaa"
    HBTEST ( CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba", .T. ) ) IS "1bbba"
+
+   hb_langSelect( "en" )
+
+   HBTEST CToDoW()              IS 0
+   HBTEST CToDoW( 1 )           IS 0
+   HBTEST CToDoW( "" )          IS 0
+   HBTEST CToDoW( "Sunday" )    IS 1
+   HBTEST CToDoW( "WEDNESDAY" ) IS 4
+   HBTEST CToDoW( "Wednesday" ) IS 4
+   HBTEST CToDoW( "Wed" )       IS 4
+   HBTEST CToDoW( "M" )         IS 2
+
+   HBTEST CToMonth()            IS 0
+   HBTEST CToMonth( 1 )         IS 0
+   HBTEST CToMonth( "" )        IS 0
+   HBTEST CToMonth( "January" ) IS 1
+   HBTEST CToMonth( "AUGUST" )  IS 8
+   HBTEST CToMonth( "August" )  IS 8
+   HBTEST CToMonth( "Au" )      IS 8
+   HBTEST CToMonth( "A" )       IS 4
+
+   HBTEST SecToTime( 1000, .F. )     IS "00:16:40"
+   HBTEST SecToTime( 1000, .T. )     IS "00:16:40:00"
+   HBTEST SecToTime( 3656 - 170 )    IS "00:58:06"
+   HBTEST SecToTime( 45873.22, .T. ) IS "12:44:33:22"
+
+   HBTEST ( a := "a", b := "b", StrSwap( @a, @b ) )        IS ""
+   HBTEST ( a := "a", b := "b", StrSwap( @a, @b ), a + b ) IS "ba"
+   HBTEST ( a := "a", b := "b", StrSwap(  a, @b ), a + b ) IS "aa"
+   HBTEST ( a := "a", b := "b", StrSwap( @a,  b ), a + b ) IS "bb"
+   HBTEST ( a := "a", b := "b", StrSwap(  a,  b ), a + b ) IS "ab"
+   HBTEST ( a := NIL, b := NIL, StrSwap( @a, @b ), a + b ) IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 F:S"
+   HBTEST ( a := 100, b := 200, StrSwap( @a, @b ), a / b ) IS 0.5
+   HBTEST StrSwap()                                        IS ""
+   HBTEST StrSwap( NIL, NIL )                              IS ""
 
    RETURN

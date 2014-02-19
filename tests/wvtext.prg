@@ -36,6 +36,8 @@ PROCEDURE Main()
 
    AFill( aKeys, 0 )
 
+   SET SCOREBOARD OFF
+
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )
    hb_gtInfo( HB_GTI_FONTSIZE , nHeight )
@@ -52,7 +54,7 @@ PROCEDURE Main()
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4, 0 )
+         hb_DispOutAt( nI, MaxCol() - 5, Str( aKeys[ nI ], 4 ) )
       NEXT
 
       IF nMSec != NIL .AND. hb_MilliSeconds() > nMSec + 2000
@@ -60,25 +62,23 @@ PROCEDURE Main()
          nMSec := NIL
       ENDIF
 
-      nKey := Inkey( 0.1, 254 + HB_INKEY_GTEVENT )
+      nKey := Inkey( 0.1, hb_bitOr( hb_bitAnd( INKEY_ALL, hb_bitNot( INKEY_MOVE ) ), HB_INKEY_GTEVENT ) )
 
       IF nKey == 0
          LOOP
       ENDIF
 
-      AIns( aKeys, 1 )
-      aKeys[ 1 ] := nKey
+      hb_AIns( aKeys, 1, nKey )
       FOR nI := 1 TO Len( aKeys )
          IF aKeys[ nI ] == 0 .OR. nI > MaxRow() - 1
             EXIT
          ENDIF
-         @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4, 0 )
+         hb_DispOutAt( nI, MaxCol() - 5, Str( aKeys[ nI ], 4 ) )
       NEXT
 
       IF nKey == K_ESC
          EXIT
       ENDIF
-
 
       DO CASE
       CASE nKey == K_ENTER
@@ -89,10 +89,10 @@ PROCEDURE Main()
          DO WHILE .T.
             nModeCols := MaxCol() + 1
             nModeRows := MaxRow() + 1
-            @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-            @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-            @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-            @ MaxRow() / 2, 2     SAY "SetMode( 99, 999 )  <Esc>-Cancels"
+            hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+            hb_DispOutAt( MaxRow() / 2    , 2, "SetMode( 99, 999 )  <Esc>-Cancels" )
             @ MaxRow() / 2, 11 GET nModeRows PICTURE "99" RANGE 10, 99
             @ MaxRow() / 2, 16 GET nModeCols PICTURE "999" RANGE 20, 300
             READ
@@ -111,10 +111,10 @@ PROCEDURE Main()
          nWndHeight := hb_gtInfo( HB_GTI_SCREENHEIGHT )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Height: 9999 (Max: " + hb_ntos( nMaxWHeight ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Height: 9999 (Max: " + hb_ntos( nMaxWHeight ) + ")" )
          @ MaxRow() / 2, 25 GET nWndHeight PICTURE "9999" RANGE 100, nMaxWHeight
          READ
          IF LastKey() != K_ESC
@@ -126,10 +126,10 @@ PROCEDURE Main()
          nWndWIDTH := hb_gtInfo( HB_GTI_SCREENWIDTH )
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window WIDTH: 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window WIDTH: 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + ")" )
          @ MaxRow() / 2, 24 GET nWndWIDTH PICTURE "9999" RANGE 100, nMaxWWIDTH
          READ
          IF LastKey() != K_ESC
@@ -142,10 +142,10 @@ PROCEDURE Main()
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + " x " + hb_ntos( nMaxWHeight ) + ")"
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Size(WxH): 9999 x 9999 (Max: " + hb_ntos( nMaxWWIDTH ) + " x " + hb_ntos( nMaxWHeight ) + ")" )
          @ MaxRow() / 2, 28 GET aWndSize[ 1 ] PICTURE "9999" RANGE 100, nMaxWWIDTH
          @ MaxRow() / 2, 35 GET aWndSize[ 2 ] PICTURE "9999" RANGE 100, nMaxWHeight
          READ
@@ -157,10 +157,10 @@ PROCEDURE Main()
       CASE nKey == hb_keyCode( "4" ) // set Window-Position by pixels
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_XY )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Position in pixels(Left/Top): 9999 / 9999 "
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Position in pixels(Left/Top): 9999 / 9999 " )
          @ MaxRow() / 2, 47 GET aWndSize[ 1 ] PICTURE "9999"
          @ MaxRow() / 2, 54 GET aWndSize[ 2 ] PICTURE "9999"
          READ
@@ -172,10 +172,10 @@ PROCEDURE Main()
       CASE nKey == hb_keyCode( "5" ) // set Window-Position by row/col
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_ROWCOL )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
-         @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 0     SAY Space( MaxCol() )
-         @ MaxRow() / 2 + 1, 0 SAY Space( MaxCol() )
-         @ MaxRow() / 2, 2     SAY "Get/Set Window Position by Row/Col: 999 / 999 "
+         hb_DispOutAt( MaxRow() / 2 - 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2 + 1, 0, Space( MaxCol() ) )
+         hb_DispOutAt( MaxRow() / 2    , 2, "Get/Set Window Position by Row/Col: 999 / 999 " )
          @ MaxRow() / 2, 38 GET aWndSize[ 1 ] PICTURE "999"
          @ MaxRow() / 2, 44 GET aWndSize[ 2 ] PICTURE "999"
          READ
@@ -238,15 +238,12 @@ PROCEDURE Main()
 
       CASE nKey == K_F12
          cFontName := hb_gtInfo( HB_GTI_FONTNAME )
-         IF cFontName == "Lucida Console"
-            hb_gtInfo( HB_GTI_FONTNAME , "Courier New" )
-         ELSEIF cFontName == "Courier New"
-            hb_gtInfo( HB_GTI_FONTNAME , "Terminal" )
-         ELSEIF cFontName == "Terminal"
-            hb_gtInfo( HB_GTI_FONTNAME , "DejaVu Sans Mono" )
-         ELSE
-            hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
-         ENDIF
+         DO CASE
+         CASE cFontName == "Lucida Console" ; hb_gtInfo( HB_GTI_FONTNAME, "Courier New" )
+         CASE cFontName == "Courier New"    ; hb_gtInfo( HB_GTI_FONTNAME, "Terminal" )
+         CASE cFontName == "Terminal"       ; hb_gtInfo( HB_GTI_FONTNAME, "DejaVu Sans Mono" )
+         OTHERWISE                          ; hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" )
+         ENDCASE
          IF hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS
             hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
             SetMode( MaxRow(), MaxCol() )
@@ -277,7 +274,7 @@ PROCEDURE Main()
 
       CASE nKey == HB_K_CLOSE
          IF Alert( "Close Application", { "Yes", "No" } ) == 1
-            QUIT
+            RETURN
          ENDIF
 
       ENDCASE
@@ -336,7 +333,7 @@ STATIC PROCEDURE DispScreen()
 
 #if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
 
-PROCEDURE hb_GTSYS()
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN
@@ -347,7 +344,7 @@ PROCEDURE hb_GTSYS()
 
 //
 
-STATIC FUNCTION SetPalette( nMode )
+STATIC PROCEDURE SetPalette( nMode )
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
 
@@ -366,16 +363,16 @@ STATIC FUNCTION SetPalette( nMode )
    hb_gtInfo( HB_GTI_PALETTE, aPalette )
    DispScreen()
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION SetPaletteIndex()
+STATIC PROCEDURE SetPaletteIndex()
 
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
    DispScreen()
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -422,7 +419,7 @@ STATIC PROCEDURE thFunc()
 
    hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) // this does not work until something is displayed
 
-   USE test NEW SHARED
+   USE test.dbf READONLY SHARED NEW
    aStruct := dbStruct()
 
    oBrowse := TBrowse():New( 1, 0, MaxRow(), MaxCol() )
@@ -533,7 +530,6 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION BlockField( i )
-
    RETURN {|| FieldGet( i ) }
 
 //
@@ -544,7 +540,9 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    DO CASE
    CASE nKey == K_ESC        ; lEnd := .T.
-// CASE nKey == K_ENTER      ; lEnd := .T.
+#if 0
+   CASE nKey == K_ENTER      ; lEnd := .T.
+#endif
    CASE nKey == K_DOWN       ; oBrowse:Down()
    CASE nKey == K_UP         ; oBrowse:Up()
    CASE nKey == K_LEFT       ; oBrowse:Left()
@@ -568,13 +566,13 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
 //
 
-STATIC FUNCTION ChgPalette( lFocus )
+STATIC PROCEDURE ChgPalette( lFocus )
+
+   THREAD STATIC t_aSavePalette
 
    LOCAL aPalette := hb_gtInfo( HB_GTI_PALETTE )
    LOCAL cSaveScreen := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL nR, nG, nB, nColor, nI, nDimFactor := 1.5
-
-   THREAD STATIC t_aSavePalette
 
    IF t_aSavePalette == NIL
       t_aSavePalette := AClone( aPalette )
@@ -612,4 +610,4 @@ STATIC FUNCTION ChgPalette( lFocus )
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), cSaveScreen )
 
-   RETURN NIL
+   RETURN

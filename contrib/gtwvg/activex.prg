@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -186,7 +186,6 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 
 #if 0
-
    LOCAL cEvents := hb_ValToStr( nEvent ) + ", "
    LOCAL aEvents := { ... }
 
@@ -194,7 +193,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
    hb_traceLog( cEvents )
 #endif
 
-   IF hb_HHasKey( ::hEvents, nEvent )
+   IF nEvent $ ::hEvents
       Eval( ::hEvents[ nEvent ], ... )
    ENDIF
 
@@ -212,7 +211,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      IF HB_ISBLOCK( ::sl_resize )
+      IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize, NIL, NIL, Self )
       ENDIF
       EXIT
@@ -227,8 +226,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 METHOD WvgActiveXControl:OnError()
 
 #if 0
-
-   hb_traceLog( "HI: " + hb_ValToStr( __GetMessage() ) + " : " + Str( Len( hb_AParams() ) ) )
+   hb_traceLog( "HI: " + hb_ValToStr( __GetMessage() ) + " : " + hb_ntos( Len( hb_AParams() ) ) )
 #endif
 
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
@@ -247,7 +245,7 @@ METHOD WvgActiveXControl:Destroy()
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
-   IF HB_ISNUMERIC( nEvent ) .AND. HB_ISBLOCK( bBlock )
+   IF HB_ISNUMERIC( nEvent ) .AND. HB_ISEVALITEM( bBlock )
       ::hEvents[ nEvent ] := bBlock
    ENDIF
 

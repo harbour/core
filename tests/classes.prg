@@ -10,12 +10,12 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TForm()
+STATIC FUNCTION TForm()
 
    STATIC s_oClass
 
    IF s_oClass == NIL
-      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
+      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
 
       s_oClass:AddData( "cName" )           // define this class objects datas
       s_oClass:AddData( "nTop" )
@@ -42,10 +42,10 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION Show()
+STATIC PROCEDURE Show()
 
    LOCAL Self := QSelf()
 
    ? "lets show a form from here :-)"
 
-   RETURN NIL
+   RETURN

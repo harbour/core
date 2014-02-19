@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,8 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
+
+#include "fileio.ch"
 
 #ifdef __PLATFORM__DOS
 #  define EXTENSION ".htm"
@@ -110,12 +111,11 @@ METHOD NewFile() CLASS GenerateHTML
 
    FWrite( ::nHandle, "<!DOCTYPE html>" + hb_eol() )
 
-   ::OpenTag( "html", "xmlns", "http://www.w3.org/1999/xhtml", "lang", "en" )
+   ::OpenTag( "html", "lang", "en" )
    ::OpenTag( "head" )
-
-   ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
-   ::OpenTag( "meta", "http-equiv", "content-type", "content", "text/html; charset=UTF-8" )
+   ::OpenTag( "meta", "charset", "UTF-8" )
    ::CloseTag( "meta" )
+   ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::CloseTag( "meta" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
@@ -188,13 +188,13 @@ METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
 
 METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
-   LOCAL idx
+   LOCAL item
 
-   FOR idx := 1 TO Len( oEntry:Fields )
-      IF oEntry:Fields[ idx ][ 1 ] == "NAME"
+   FOR EACH item IN oEntry:Fields
+      IF item[ 1 ] == "NAME"
          ::OpenTag( "div", "id", oEntry:filename ):OpenTag( "h4" ):Append( oEntry:Name ):CloseTag( "h4" ):CloseTag( "div" )
-      ELSEIF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-         ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry, oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      ELSEIF oEntry:IsField( item[ 1 ] ) .AND. oEntry:IsOutput( item[ 1 ] ) .AND. Len( oEntry:&( item[ 1 ] ) ) > 0
+         ::WriteEntry( item[ 1 ], oEntry, oEntry:IsPreformatted( item[ 1 ] ) )
       ENDIF
    NEXT
 
@@ -202,11 +202,11 @@ METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
 METHOD Generate() CLASS GenerateHTML
 
-   IF ! Empty( ::nHandle )
+   IF ::nHandle != F_ERROR
       ::CloseTag( "body" )
       ::CloseTag( "html" )
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self
@@ -223,8 +223,10 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 
       hb_default( @cCaption, "" )
       hb_default( @nIndent, 0 )
-      // ~ hb_default( @lPreformatted, .F. )
-      // ~ hb_default( @cTagClass, "itemtext" )
+#if 0
+      hb_default( @lPreformatted, .F. )
+      hb_default( @cTagClass, "itemtext" )
+#endif
 
       IF Len( cCaption ) > 0 /* .AND. nIndent > 0 */
          ::Tagged( cCaption, "div", "class", "itemtitle" )
@@ -238,9 +240,11 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
             ELSE
                ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             ENDIF
-            // ~ IF Len( cEntry ) > 0 .AND. ! lPreformatted
-            // ~    FWrite( ::nHandle, hb_eol() )
-            // ~ ENDIF
+#if 0
+            IF Len( cEntry ) > 0 .AND. ! lPreformatted
+               FWrite( ::nHandle, hb_eol() )
+            ENDIF
+#endif
          ENDDO
          ::CloseTag( "pre" )
       ELSE
@@ -255,28 +259,27 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
 METHOD OpenTag( cText, ... ) CLASS GenerateHTML
 
    LOCAL aArgs := hb_AParams()
-   LOCAL cTag := cText
    LOCAL idx
 
    FOR idx := 2 TO Len( aArgs ) STEP 2
-      cTag += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
+      cText += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, "<" + cTag + ">" + hb_eol() )
+   FWrite( ::nHandle, "<" + cText + ">" + hb_eol() )
 
    RETURN self
 
 METHOD Tagged( cText, cTag, ... ) CLASS GenerateHTML
 
    LOCAL aArgs := hb_AParams()
-   LOCAL cResult := "<" + cTag
+   LOCAL cResult := ""
    LOCAL idx
 
    FOR idx := 3 TO Len( aArgs ) STEP 2
       cResult += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, cResult + ">" + cText + "</" + cTag + ">" + /* "4" + */ hb_eol() )
+   FWrite( ::nHandle, "<" + cTag + cResult + ">" + cText + "</" + cTag + ">" + hb_eol() )
 
    RETURN self
 
@@ -286,38 +289,34 @@ METHOD CloseTag( cText ) CLASS GenerateHTML
 
    IF cText == "html"
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self
 
 METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
-   LOCAL cResult := cText
-   LOCAL aFormat
    LOCAL idx
 
-   IF Len( cResult ) > 0
+   IF Len( cText ) > 0
 
-      hb_default( @cFormat, "" )
+      cText := hb_StrReplace( cText, { ;
+         "&" => "&amp;", ;
+         '"' => "&quot;", ;
+         "<" => "&lt;", ;
+         ">" => "&gt;" } )
 
-      aFormat := p_aConversionList
-      FOR idx := 1 TO Len( aFormat ) STEP 2
-         cResult := StrTran( cResult, aFormat[ idx ], "&" + aFormat[ idx + 1 ] + ";" )
-      NEXT
-
-      aFormat := hb_ATokens( cFormat, "," )
-      FOR idx := Len( aFormat ) TO 1 STEP -1
-         IF ! Empty( aFormat[ idx ] )
-            cResult := "<" + aFormat[ idx ] + ">" + cResult + "</" + aFormat[ idx ] + ">"
+      FOR EACH idx IN hb_ATokens( hb_defaultValue( cFormat, "" ), "," ) DESCEND
+         IF ! Empty( idx )
+            cText := "<" + idx + ">" + cText + "</" + idx + ">"
          ENDIF
       NEXT
 
-      DO WHILE Right( cResult, Len( hb_eol() ) ) == hb_eol()
-         cResult := Left( cResult, Len( cResult ) - Len( hb_eol() ) )
+      DO WHILE Right( cText, Len( hb_eol() ) ) == hb_eol()
+         cText := hb_StrShrink( cText, Len( hb_eol() ) )
       ENDDO
 
-      FWrite( ::nHandle, cResult + hb_eol() )
+      FWrite( ::nHandle, cText + hb_eol() )
 
    ENDIF
 

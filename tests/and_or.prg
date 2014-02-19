@@ -2,9 +2,11 @@
 
 PROCEDURE Main()
 
+   hb_langSelect( "EN" )
+
    ? "Testing logical shortcuts"
 
-   IF .F. .AND. DispAndReturnNIL() // and it should not break!
+   IF .F. .AND. DispAndReturnNIL()  // and it should not break!
    ENDIF
 
    ? "Testing .T. .T."
@@ -21,13 +23,13 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION DispAndReturnNIL()
+STATIC FUNCTION DispAndReturnNIL()
 
    ? "this should not show!"
 
    RETURN NIL
 
-FUNCTION AndOr( lValue1, lValue2 )
+STATIC PROCEDURE AndOr( lValue1, lValue2 )
 
    IF lValue1 .AND. lValue2
       ? "They are both true"
@@ -41,4 +43,4 @@ FUNCTION AndOr( lValue1, lValue2 )
       ? "None of them are true"
    ENDIF
 
-   RETURN NIL
+   RETURN

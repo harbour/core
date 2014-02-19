@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -102,7 +102,7 @@ ENDCLASS
 METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Com
 
    ::cPortName := Upper( cPortName )
-   IF Left( ::cPortName, 3 ) == "COM"
+   IF hb_LeftIs( ::cPortName, "COM" )
       ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
       IF win_comOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
          ::lOpen := .T.
@@ -188,7 +188,7 @@ METHOD PurgeTX() CLASS win_Com
    RETURN win_comPurge( ::nPort, .F., .T. )
 
 METHOD Close( nDrain ) CLASS win_Com
-   RETURN win_comClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+   RETURN win_comClose( ::nPort, hb_defaultValue( nDrain, 0 ) )
 
 METHOD DebugDCB( nDebug ) CLASS win_Com
    RETURN win_comDebugDCB( ::nPort, nDebug )

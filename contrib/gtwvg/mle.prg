@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -172,22 +172,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_HSCROLL
-         IF HB_ISBLOCK( ::sl_hScroll )
+         IF HB_ISEVALITEM( ::sl_hScroll )
             Eval( ::sl_hScroll, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_VSCROLL
-         IF HB_ISBLOCK( ::sl_vScroll )
+         IF HB_ISEVALITEM( ::sl_vScroll )
             Eval( ::sl_vScroll, NIL, NIL, Self )
          ENDIF
 
@@ -215,26 +215,26 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
          CASE aNM[ NMH_code ] == WM_KEYDOWN
             IF aNM[ 2 ] == VK_TAB
                ::oParent:setFocus()
-               RETURN EVENT_HANDELLED
+               RETURN EVENT_HANDLED
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_KILLFOCUS
-            IF HB_ISBLOCK( ::sl_killInputFocus )
+            IF HB_ISEVALITEM( ::sl_killInputFocus )
                Eval( ::sl_killInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_SETFOCUS
-            IF HB_ISBLOCK( ::sl_setInputFocus )
+            IF HB_ISEVALITEM( ::sl_setInputFocus )
                Eval( ::sl_setInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_HSCROLL
-            IF HB_ISBLOCK( ::sl_hScroll )
+            IF HB_ISEVALITEM( ::sl_hScroll )
                Eval( ::sl_hScroll, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_VSCROLL
-            IF HB_ISBLOCK( ::sl_vScroll )
+            IF HB_ISEVALITEM( ::sl_vScroll )
                Eval( ::sl_vScroll, NIL, NIL, Self )
             ENDIF
 
@@ -243,7 +243,7 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgMLE:destroy()
 
@@ -278,7 +278,7 @@ METHOD WvgMLE:copyMarked()
    nE := Wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
+      hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -293,7 +293,7 @@ METHOD WvgMLE:cutMarked()
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
-      ::setData( SubStr( cText, 1, nB - 1 ) + SubStr( cText, nE ) )
+      ::setData( Left( cText, nB - 1 ) + SubStr( cText, nE ) )
    ENDIF
 
    RETURN n

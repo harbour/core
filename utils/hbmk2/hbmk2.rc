@@ -1,10 +1,7 @@
-
-#if defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 )
-ICON 1 DISCARDABLE "../../package/harb_os2.ico"
-#else
+#if !( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) )
 #if ! defined( __BORLANDC__ )
-1 ICON DISCARDABLE "../../package/harb_win.ico"
+1 ICON DISCARDABLE "../../package/harbour.ico"
 #endif
-#include "../../package/harb_win.rc"
-__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST "../../package/harb_win.mft"
+#include "../../package/harbour.rc"
+__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST "../../package/harbour.mft"
 #endif

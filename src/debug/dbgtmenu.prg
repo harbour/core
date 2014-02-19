@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -181,7 +181,7 @@ METHOD Build() CLASS HBDbMenu
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       FOR EACH oMenuItem IN ::aItems
-         IF !( Left( oMenuItem:cPrompt, 1 ) == "-" )
+         IF ! hb_LeftIs( oMenuItem:cPrompt, "-" )
             oMenuItem:cPrompt := " " + PadR( oMenuItem:cPrompt, ::nRight - ::nLeft - 1 )
          ENDIF
       NEXT
@@ -327,7 +327,7 @@ METHOD GoLeft() CLASS HBDbMenu
       IF ::nOpenPopup > 1
          --::nOpenPopup
          DO WHILE ::nOpenPopup > 1 .AND. ;
-            SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
+            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             --::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )
@@ -351,7 +351,7 @@ METHOD GoRight() CLASS HBDbMenu
       IF ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
          DO WHILE ::nOpenPopup < Len( ::aItems ) .AND. ;
-            SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
+            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             ++::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )

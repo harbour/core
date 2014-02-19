@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- * Calling function from dynamic library (fox___DynCall())
+ * Calling function from dynamic library (__fox_DynCall())
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,16 +53,16 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
    [cParamType1 [@] ParamName1, cParamType2 [@] ParamName2, ...]
 */
 
-FUNCTION fox___DynCall( cCommand, ... )
+FUNCTION __fox_DynCall( cCommand, ... )
 
    LOCAL aParam
 
    LOCAL cFunction
    LOCAL cLibrary
-   LOCAL nFuncFlags := hb_bitOr( HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW )
+   LOCAL nFuncFlags
 
-   LOCAL aCommand := hb_ATokens( cCommand )
-   LOCAL nPos := 1
+   LOCAL aCommand
+   LOCAL nPos
 
    LOCAL aType := { ;
       "SHORT"   => HB_DYN_CTYPE_SHORT, ;
@@ -72,6 +72,15 @@ FUNCTION fox___DynCall( cCommand, ... )
       "LONG"    => HB_DYN_CTYPE_LONG, ;
       "STRING"  => HB_DYN_CTYPE_CHAR_PTR, ;
       "OBJECT"  => HB_DYN_CTYPE_VOID_PTR }
+
+   IF ! HB_ISSTRING( cCommand ) .OR. Empty( cCommand )
+      RETURN NIL
+   ENDIF
+
+   aCommand := hb_ATokens( cCommand )
+
+   nFuncFlags := hb_bitOr( HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW )
+   nPos := 1
 
    IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "DECLARE"
       ++nPos

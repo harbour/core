@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, xHarbour license gives permission for
  * additional uses of the text contained in its release of xHarbour.
@@ -50,7 +50,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* ASplice( <aArray> [, <nPos>] [, <nCount>] [,<xVal1>] [, ...] [, <xValN>]  ) => <aDeleted>
+/* ASplice( <aArray> [, <nPos>] [, <nCount>] [, <xVal1>] [, ...] [, <xValN>] ) -> <aDeleted>
  * Removes elements and return them as array, optionally add items
  */
 HB_FUNC( ASPLICE )
@@ -150,11 +150,7 @@ HB_FUNC( ASPLICE )
    }
 }
 
-/* TOFIX: Move this to hbxpp library */
-/* Synonym of ASplice() Xbase++ compatibility (extended with optional replacemenet values) */
-HB_FUNC_TRANSLATE( AREMOVE, ASPLICE )
-
-/* AMerge( <aTarget>, <aSource> [, <nPos>] ) => aTarget */
+/* AMerge( <aTarget>, <aSource> [, <nPos>] ) -> aTarget */
 HB_FUNC( AMERGE )
 {
    PHB_ITEM pArray1 = hb_param( 1, HB_IT_ARRAY );

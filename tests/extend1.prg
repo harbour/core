@@ -36,7 +36,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Strings:"
    ? "========"
@@ -69,7 +69,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Logicals:"
    ? "========="
@@ -100,7 +100,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Dates: (SET CENTURY ON)"
    ? "======================="
@@ -131,7 +131,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Numbers:"
    ? "========"
@@ -170,7 +170,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Nil:"
    ? "===="
@@ -197,7 +197,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Arrays:"
    ? "======="
@@ -224,7 +224,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Parameters info:"
    ? "================"
@@ -251,7 +251,7 @@ PROCEDURE Main()
    ?
    ?
 
-   WAIT "Press any key to continue..."
+   WAIT
 
    ? "Undocumented features:"
    ? "======================"

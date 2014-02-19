@@ -23,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,7 +63,7 @@
 PROCEDURE __dbgHelp( nTopic )
 
    LOCAL oDlg
-   LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
+   LOCAL cColor := iif( __dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
    LOCAL oBrw
    LOCAL aTopics := GetTopics()
 
@@ -74,7 +74,7 @@ PROCEDURE __dbgHelp( nTopic )
    oBrw := HBDbBrowser():New( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 12 )
    oBrw:Cargo := 1
    oBrw:AddColumn( HBDbColumnNew( "", {|| aTopics[ oBrw:Cargo ][ 1 ] }, 12 ) )
-   oBrw:ColorSpec := StrTran( __Dbg():ClrModal(), ", R/W" )
+   oBrw:ColorSpec := StrTran( __dbg():ClrModal(), ", R/W" )
    oBrw:SkipBlock := {| nSkip, nOld | nOld := oBrw:Cargo, oBrw:Cargo += nSkip, ;
       oBrw:Cargo := Min( Max( oBrw:Cargo, 1 ), Len( aTopics ) ), ;
       oBrw:Cargo - nOld }
@@ -173,7 +173,7 @@ STATIC PROCEDURE ProcessKey( nKey, oDlg, oBrw, aTopics )
 
 STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
 
-   LOCAL oDebug := __Dbg()
+   LOCAL oDebug := __dbg()
    LOCAL nRows  := oDlg:nBottom - oDlg:nTop - 1
    LOCAL nPages := Len( aTopics[ nTopic ][ 2 ] ) / nRows
    LOCAL nRowsToPaint

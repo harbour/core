@@ -15,22 +15,23 @@
  * Initial revision.
  */
 
-#define PV_ROW     1
-#define PV_COL     2
-#define PV_COLOR   3
-#define PV_IMAGE   4
-#define PV_CURSOR  5
-#define PV_BLINK   6
-#define PV_NOSNOW  7
-#define PV_MAXROW  8
-#define PV_MAXCOL  9
-#define PV_SCORE  10
+#define PV_ROW      1
+#define PV_COL      2
+#define PV_COLOR    3
+#define PV_IMAGE    4
+#define PV_CURSOR   5
+#define PV_BLINK    6
+#define PV_NOSNOW   7
+#define PV_MAXROW   8
+#define PV_MAXCOL   9
+#define PV_SCORE    10
 
 THREAD STATIC t_aVideo := {}
 
 FUNCTION ft_PushVid()
 
-   AAdd( t_aVideo, { Row(), ;
+   AAdd( t_aVideo, { ;
+      Row(), ;
       Col(), ;
       SetColor(), ;
       SaveScreen( 0, 0, MaxRow(), MaxCol() ), ;

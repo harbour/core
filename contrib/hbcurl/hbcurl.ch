@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -255,8 +255,10 @@
 #define HB_CURLOPT_TCP_KEEPIDLE               205
 #define HB_CURLOPT_TCP_KEEPINTVL              206
 #define HB_CURLOPT_MAIL_AUTH                  207
+#define HB_CURLOPT_XOAUTH2_BEARER             208
+#define HB_CURLOPT_LOGIN_OPTIONS              209
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
-#define HB_CURLOPT_PROGRESSBLOCK              1002
+#define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
 #define HB_CURLOPT_UL_FILE_CLOSE              1004
 #define HB_CURLOPT_DL_FILE_SETUP              1005
@@ -267,6 +269,7 @@
 #define HB_CURLOPT_UL_NULL_SETUP              1010
 #define HB_CURLOPT_UL_FHANDLE_SETUP           1011
 #define HB_CURLOPT_DL_FHANDLE_SETUP           1012
+#define HB_CURLOPT_PROGRESSBLOCK              HB_CURLOPT_XFERINFOBLOCK
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
@@ -365,6 +368,9 @@
 #define HB_CURL_SSLVERSION_TLSv1              1
 #define HB_CURL_SSLVERSION_SSLv2              2
 #define HB_CURL_SSLVERSION_SSLv3              3
+#define HB_CURL_SSLVERSION_TLSv1_0            4
+#define HB_CURL_SSLVERSION_TLSv1_1            5
+#define HB_CURL_SSLVERSION_TLSv1_2            6
 
 /*  HB_CURLOPT_SSH_AUTH_TYPES option */
 #define HB_CURL_CURLSSH_AUTH_ANY              hb_bitNot( 0 )      /* all types supported by the server */

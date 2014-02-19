@@ -1,5 +1,3 @@
-/* Testing Harbour keyboard input. */
-
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
@@ -8,10 +6,12 @@
    Alejandro de Garate <alex_degarate hotmail com>
 */
 
+/* Testing Harbour keyboard input. */
+
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main( cSkip, cRaw )
@@ -21,23 +21,22 @@ PROCEDURE Main( cSkip, cRaw )
    IF Empty( cSkip )
 
       TEST1()
-      NextTest()
+      WAIT
 
       TEST2()
-      NextTest()
-
+      WAIT
 
       TEST3()
-      NextTest()
+      WAIT
 
       TEST4()
-      NextTest()
+      WAIT
 
       TEST5()
-      NextTest()
+      WAIT
 
       TEST6()
-      NextTest()
+      WAIT
    ENDIF
 
    TEST7( cSkip, cRaw )
@@ -45,21 +44,14 @@ PROCEDURE Main( cSkip, cRaw )
 
    RETURN
 
-PROCEDURE Results()
+STATIC PROCEDURE Results()
 
    ? "Wait 2 seconds or press most any key to see the results of this test."
    Inkey( 2 )
 
    RETURN
 
-PROCEDURE NextTest()
-
-   ? "Press any key to continue on to the next test."
-   Inkey( 0 )
-
-   RETURN
-
-FUNCTION TEST( cText )
+STATIC FUNCTION TEST( cText )
 
    LOCAL cResult := ""
 
@@ -75,7 +67,7 @@ FUNCTION TEST( cText )
 
    RETURN "'" + cResult + "'"
 
-PROCEDURE TEST1
+STATIC PROCEDURE TEST1()
 
    CLS
    ?
@@ -95,7 +87,7 @@ PROCEDURE TEST1
 
    RETURN
 
-PROCEDURE TEST2
+STATIC PROCEDURE TEST2()
 
    CLS
    ?
@@ -114,7 +106,7 @@ PROCEDURE TEST2
 
    RETURN
 
-PROCEDURE TEST3
+STATIC PROCEDURE TEST3()
 
    CLS
    ?
@@ -132,7 +124,7 @@ PROCEDURE TEST3
 
    RETURN
 
-PROCEDURE TEST4
+STATIC PROCEDURE TEST4()
 
    CLS
    ?
@@ -151,7 +143,7 @@ PROCEDURE TEST4
 
    RETURN
 
-PROCEDURE TEST5
+STATIC PROCEDURE TEST5()
 
    LOCAL cText
 
@@ -189,7 +181,7 @@ PROCEDURE TEST5
 
    RETURN
 
-PROCEDURE TEST6
+STATIC PROCEDURE TEST6()
 
    CLS
    ? "For the sixth test"
@@ -203,7 +195,7 @@ PROCEDURE TEST6
 
    RETURN
 
-PROCEDURE TEST7( cSkip, cRaw )
+STATIC PROCEDURE TEST7( cSkip, cRaw )
 
    LOCAL nKey, nMask
 
@@ -216,10 +208,8 @@ PROCEDURE TEST7( cSkip, cRaw )
    ? "Press any key."
    nMask := HB_INKEY_ALL
 
-   IF ! Empty( cRaw )
-      IF Upper( Left( cRaw, 1 ) ) == "R"
-         nMask += HB_INKEY_RAW
-      ENDIF
+   IF HB_ISSTRING( cRaw ) .AND. hb_LeftIsI( cRaw, "R" )
+      nMask += HB_INKEY_RAW
    ENDIF
 
    Set( _SET_EVENTMASK, nMask )
@@ -235,7 +225,6 @@ PROCEDURE TEST7( cSkip, cRaw )
          Tone( 660, 6 )
       ENDIF
    ENDIF
-
 
    DO WHILE ( nKey := Inkey( 0, nMask ) ) != K_TAB
       DO CASE
@@ -255,9 +244,9 @@ PROCEDURE TEST7( cSkip, cRaw )
          ? "The right mouse button was double-clicked."
       OTHERWISE
 #ifdef __HARBOUR__
-         ? "A keyboard key was pressed: ", nKey, hb_keyChar( nKey )
+         ? "A keyboard key was pressed:", nKey, hb_keyChar( nKey )
 #else
-         ? "A keyboard key was pressed: ", nKey, ;
+         ? "A keyboard key was pressed:", nKey, ;
             iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
 #endif
       ENDCASE

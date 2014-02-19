@@ -46,7 +46,7 @@ PROCEDURE Main()
    RETURN
 
 
-PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 
@@ -68,7 +68,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    ENDSWITCH
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )

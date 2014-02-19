@@ -25,15 +25,15 @@ FUNCTION ft_Easter( nYear )
    LOCAL nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon
    LOCAL nMonth := 0, nDay := 0
 
-   IF HB_ISSTRING( nYear )
+   DO CASE
+   CASE HB_ISSTRING( nYear )
       nYear := Val( nYear )
-   ENDIF
-
-   IF HB_ISDATE( nYear )
+   CASE HB_ISDATE( nYear )
       nYear := Year( nYear )
-   ENDIF
+   ENDCASE
 
    IF HB_ISNUMERIC( nYear )
+
       IF nYear > 1582
 
          // <<nGold>> is Golden number of the year in the 19 year Metonic cycle
@@ -73,7 +73,7 @@ FUNCTION ft_Easter( nYear )
          ENDIF
 
          // Advance to Sunday
-         nMoon := Int ( nMoon + 7 - ( ( nSunday + nMoon ) % 7 ) )
+         nMoon := Int( nMoon + 7 - ( ( nSunday + nMoon ) % 7 ) )
 
          // Get Month and Day
          IF nMoon > 31
@@ -88,4 +88,4 @@ FUNCTION ft_Easter( nYear )
       nYear := 0
    ENDIF
 
-   RETURN hb_SToD( Str( nYear, 4 ) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )
+   RETURN hb_SToD( StrZero( nYear, 4 ) + StrZero( nMonth, 2 ) + StrZero( Int( nDay ), 2 ) )

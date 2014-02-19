@@ -22,9 +22,9 @@
 // nWait   Wait in seconds between messages
 // cColor  Color of displayed message
 
-FUNCTION ft_Pending( cMsg, nRow, nCol, nWait, cColor )
+PROCEDURE ft_Pending( cMsg, nRow, nCol, nWait, cColor )
 
-   THREAD STATIC t_nRow1 := 24
+   THREAD STATIC t_nRow1
    THREAD STATIC t_nCol1 := 0
    THREAD STATIC t_nWait1 := 5
    THREAD STATIC t_cColor1 := "W+/R,X"
@@ -32,6 +32,8 @@ FUNCTION ft_Pending( cMsg, nRow, nCol, nWait, cColor )
    THREAD STATIC t_nLast_Time := 0
 
    LOCAL nThis_Time
+
+   hb_default( @t_nRow1, MaxRow() )
 
    IF cMsg != NIL
 
@@ -53,10 +55,10 @@ FUNCTION ft_Pending( cMsg, nRow, nCol, nWait, cColor )
          t_nLast_Time := nThis_Time                 // set time counter for next message.
       ENDIF
 
-      hb_Scroll( t_nRow1, 0, t_nRow1, 80 )          // clear the display line
+      hb_Scroll( t_nRow1, 0, t_nRow1, MaxCol() + 1 )    // clear the display line
 
       hb_DispOutAt( t_nRow1, t_nCol1, cMsg, t_cColor1 ) // display message
 
    ENDIF
 
-   RETURN NIL
+   RETURN

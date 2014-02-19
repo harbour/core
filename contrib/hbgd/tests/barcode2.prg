@@ -23,6 +23,11 @@ PROCEDURE Main()
    LOCAL ccode8     := "P48WBQ7BX3M73X8V3WRT7F9JW"
    LOCAL ccode128   := "P48WBQ7BX3M73X8V3WRT7F9JW"
 
+   // Check output directory
+   IF ! hb_DirExists( IMAGES_OUT )
+      DirMake( IMAGES_OUT )
+   ENDIF
+
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128
    */

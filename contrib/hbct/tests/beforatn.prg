@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,27 +62,27 @@ PROCEDURE Main()
 
    ? "Begin test of BeforAtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  BeforAtNum( "..", cStr )       should be "...This...is...a.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2 )    should be "...This",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 ) should be "...This...is",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  BeforAtNum( "..", cStr )       should be "...This...is...a.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2 )    should be ".",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 ) should be "...This.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -91,11 +91,11 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  BeforAtNum( "..", cStr )        should be "...This...is...a...tes",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 )  should be "...T",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 10 ) should be "...This...is",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr, 2, 10 ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of BeforAtNum()"

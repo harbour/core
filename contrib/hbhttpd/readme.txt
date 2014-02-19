@@ -175,7 +175,7 @@ to use some objects (browse, etc.) instead of plain:
     UWrite('<table>')
     DO WHILE ! Eof()
        UWrite( '<tr><td>' + FIELD->NAME + '</td><td align="right">' +
-               Str( FIELD->AGE ) + '</td></tr>' )
+               hb_ntos( FIELD->AGE ) + '</td></tr>' )
        dbSkip()
     ENDDO
     UWrite('</table>')
@@ -200,31 +200,33 @@ containing the mapping of URL subtree into handler functions. Ex.,
 Page handler functions receives a parameter indicating received
 event/method. Handler has a structure:
 
-STATIC FUNC proc_handler(cMethod)
-   IF cMethod == "INIT"
+STATIC FUNCTION proc_handler( cMethod )
+   DO CASE
+   CASE cMethod == "INIT"
       // This code is executed on entering URL (first call to this URL)
       // Here we open databases used to process queries
-   ELSEIF cMethod == "POST"
+   CASE cMethod == "POST"
       // Process HTTP POST request
-   ELSEIF cMethod == "GET"
+   CASE cMethod == "GET"
       // Process HTTP GET request
-   ELSEIF cMethod == "EXIT"
+   CASE cMethod == "EXIT"
       // This code is executed on leaving URL (before first call to
       // another URL)
       // Here we close databases opened in INIT method, etc.
-   ENDIF
-RETURN .T.
+   ENDCASE
+   RETURN .T.
 
 As you can see this handler reminds the structure of traditional GUI
 based application message/event handler, for example in windows, we
 have:
 
-STATIC FUNC WndProc( hWnd, uMsg, wParam, lParam )
-   IF uMsg == WM_CREATE
-   ELSEIF uMsg == WM_PAINT
-   ELSEIF uMsg == WM_DESTROY
-   ENDIF
-RETURN ...
+STATIC FUNCTION WndProc( hWnd, uMsg, wParam, lParam )
+   DO CASE
+   CASE uMsg == WM_CREATE
+   CASE uMsg == WM_PAINT
+   CASE uMsg == WM_DESTROY
+   ENDCASE
+   RETURN ...
 
 I hope this similarity will help to develop (or convert) event based
 GUI applications to web easier.
@@ -279,7 +281,7 @@ items dialog, and items_edit_handler() function for item_edit dialog.
    PROCEDURE items_handler()
       ...
 
-      IF event = "edit button pressed"
+      IF event == "edit button pressed"
          dialog := create_new_modal_dialog() // create items_edit dialog
          dialog:handler := @items_edit_handler()
          process_event_loop() // until dialog is closed

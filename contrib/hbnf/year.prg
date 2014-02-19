@@ -37,6 +37,6 @@ FUNCTION ft_Year( dGivenDate )
       SubStr( cFY_Start, 6, 2 ) + ;
       SubStr( cFY_Start, 9, 6 ) )
    aRetval[ 3 ] := ft_MAdd( aRetVal[ 2 ], 12 ) - 1
-   aRetVal[ 1 ] := Str( Year( aRetVal[ 3 ] ), 4 )      // End of Year
+   aRetVal[ 1 ] := StrZero( Year( aRetVal[ 3 ] ), 4 )      // End of Year
 
    RETURN aRetVal

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General public License
  * along with this software; see the file COPYING.txt.  if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, xHarbour license gives permission for
  * additional uses of the text contained in its release of xHarbour.
@@ -51,7 +51,7 @@
  *    ; A line starting with a ';' is a comment
  *    # Also, a '#' marks a comment up to the end of the line
  *    [NewSection]
- *    Variable = Value
+ *    Variable=Value
  *    OtherVariable: Value
  *
  * You can pass a list of "potential" .ini files in a ';' separated path;
@@ -100,7 +100,6 @@ FUNCTION hb_iniNew( lAutoMain )
    RETURN hIni
 
 FUNCTION hb_iniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-
    RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_iniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
@@ -177,23 +176,17 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    cLine := ""
    DO WHILE Len( cData ) > 0
       nLen := 2
-      nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData )
-      IF nLineEnd == 0
-         nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData )
-         IF nLineEnd == 0
-            nLen := 1
-            nLineEnd := At( Chr( 10 ), cData )
-            IF nLineEnd == 0
-               nLineEnd := At( Chr( 13 ), cData )
-               IF nLineEnd == 0
-                  nLineEnd := Len( cData ) + 1
-               ENDIF
-            ENDIF
+      IF ( nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData ) ) == 0 .AND. ;
+         ( nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData ) ) == 0
+         nLen := 1
+         IF ( nLineEnd := At( Chr( 10 ), cData ) ) == 0 .AND. ;
+            ( nLineEnd := At( Chr( 13 ), cData ) ) == 0
+            nLineEnd := Len( cData ) + 1
          ENDIF
       ENDIF
 
       /* Get the current line */
-      cLine += AllTrim( SubStr( cData, 1, nLineEnd - 1 ) )
+      cLine += AllTrim( Left( cData, nLineEnd - 1 ) )
       /* remove current line */
       cData := SubStr( cData, nLineEnd + nLen )
 
@@ -203,9 +196,9 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       ENDIF
 
       /* Sum up lines terminating with "<space>||" ...*/
-      IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
+      IF Len( cLine ) > 3 .AND. Right( cLine, 3 ) == " ||"
 
-         cLine := SubStr( cLine, 1, Len( cLine ) - 2 )
+         cLine := hb_StrShrink( cLine, 2 )
          /* ... but proceed if stream over */
          IF Len( cData ) > 0
             LOOP

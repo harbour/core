@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Windows API functions (commctrl)
  *
- * Pritpal Bedi <pritpal@vouchcac.com> 14Feb2009
+ * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,9 +52,9 @@
 #include <commctrl.h>
 
 #if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
-    #undef MAKELONG
-    #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
-                                           ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
+   #undef MAKELONG
+   #define MAKELONG( a, b )  ( ( LONG ) ( ( ( WORD ) ( ( DWORD_PTR ) ( a ) & 0xffff ) ) | \
+                                          ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
 #endif
 
 /*----------------------------------------------------------------------*/
@@ -1002,9 +1002,15 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMPARTRECT )
  */
 HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 {
-   LPRECT prc = NULL;
+   LPRECT prc = ( LPRECT ) hb_xgrab( sizeof( RECT ) );
+
+   memset( prc, 0, sizeof( RECT ) );
 
    hbwapi_ret_L( TreeView_GetItemRect( hbwapi_par_raw_HWND( 1 ), ( HTREEITEM ) hbwapi_par_raw_HANDLE( 2 ), prc, hbwapi_par_BOOL( 4 ) ) );
+
+   /* TODO: return prc in 3rd param */
+
+   hb_xfree( prc );
 }
 
 /* IE 5.0

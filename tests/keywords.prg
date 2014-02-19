@@ -247,8 +247,8 @@ case )
     case =case +1
   CASE case++
 #ifndef HB_CLIPPER_COMPATIBLE
-    case--   //sorry -Clipper & Harbour(flex) doesn't compile this line - but SimpLex does
-    case++   //sorry -Clipper & harbour(flex) doesn't compile this line - but SimpLex does
+    case--   //sorry -Clipper and Harbour(flex) doesn't compile this line - but SimpLex does
+    case++   //sorry -Clipper and harbour(flex) doesn't compile this line - but SimpLex does
 #endif
     ( case++ )
     ( case-- )
@@ -339,8 +339,8 @@ LOCAL with
 
   while while
 #ifndef HB_CLIPPER_COMPATIBLE
-    while++   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
-    while--   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
+    while++   //Clipper and harbour(flex) incomplete statement or unbalanced delimiter
+    while--   //Clipper and harbour(flex) incomplete statement or unbalanced delimiter
 #endif
     ( while++ )
     ( while-- )
@@ -437,7 +437,7 @@ LOCAL end, while
   end :=end++
 
 #ifndef HB_CLIPPER_COMPATIBLE
-  end->end +=1     //in Clipper & Harbour(flex): ENDIF does not match IF
+  end->end +=1     //in Clipper and Harbour(flex): ENDIF does not match IF
 #endif
   end :=end->end
 
@@ -445,7 +445,7 @@ LOCAL end, while
   DO end WITH end++
 
 #ifndef HB_CLIPPER_COMPATIBLE
-  end->( end() )   //in Clipper & harbour(flex): ENDIF does not match IF
+  end->( end() )   //in Clipper and harbour(flex): ENDIF does not match IF
 #endif
   ( end )->( end() )
 

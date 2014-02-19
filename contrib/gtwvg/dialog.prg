@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -106,7 +106,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   if ::lModal
+   IF ::lModal
       ::pGT  := hb_gtCreate( "WGU" )
       ::pGTp := hb_gtSelect( ::pGT )
    ELSE
@@ -117,7 +117,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
       ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F., HB_WNDTYPE_DIALOG } )
 
-   if ::visible
+   IF ::visible
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
    ELSE
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
@@ -139,15 +139,15 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    ENDIF
 
-   if ::lModal
+   IF ::lModal
       hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
    ENDIF
 
-   if ::visible
+   IF ::visible
       ::lHasInputFocus := .T.
    ENDIF
 
-   oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, Self:currentSize(), , .F. )
+   oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, ::currentSize(), , .F. )
    IF ! Empty( oW:hWnd )
       ::drawingArea := oW
    ELSE

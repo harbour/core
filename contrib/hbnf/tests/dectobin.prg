@@ -2,9 +2,9 @@
 
 PROCEDURE Main()
 
-   LOCAL X
+   LOCAL x
 
-   FOR X := 1 TO 255
+   FOR x := 1 TO 255
       ? ft_Dec2Bin( x )
    NEXT
 

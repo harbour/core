@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,15 +60,15 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharSort( "qwert" )                     == "eqrtw"      ? --> "' + CharSort( "qwert" )                   + '"'
-   ? '  CharSort( "qwert", 2 )                  == "erqwt"      ? --> "' + CharSort( "qwert", 2 )                + '"'
-   ? '  CharSort( "b1a4a3a2a1", 2, 1 )          == "a2a1a3a4b1" ? --> "' + CharSort( "b1a4a3a2a1", 2, 1 )        + '"'
+   ? '  CharSort( "qwert" )                     == "eqrtw"      ? -->', '"' + CharSort( "qwert" )                   + '"'
+   ? '  CharSort( "qwert", 2 )                  == "erqwt"      ? -->', '"' + CharSort( "qwert", 2 )                + '"'
+   ? '  CharSort( "b1a4a3a2a1", 2, 1 )          == "a2a1a3a4b1" ? -->', '"' + CharSort( "b1a4a3a2a1", 2, 1 )        + '"'
    ? '  NOTE : The order of equal elements(here the one beginning with the same char) is NOT determined !'
-   ? '  CharSort( "XXXqwert", 1, 1, 3 )         == "XXXeqrtw"   ? --> "' + CharSort( "XXXqwert", 1, 1, 3 )       + '"'
-   ? '  CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )    == "a1b1a2a3a4" ? --> "' + CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )  + '"'
+   ? '  CharSort( "XXXqwert", 1, 1, 3 )         == "XXXeqrtw"   ? -->', '"' + CharSort( "XXXqwert", 1, 1, 3 )       + '"'
+   ? '  CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )    == "a1b1a2a3a4" ? -->', '"' + CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )  + '"'
    ? '  NOTE : The order of equal elements(here the one ending with the same number) is NOT determined !'
-   ? '  CharSort( "384172852", 1, 1, 0, 0, 4 )  == "134872852"  ? --> "' + CharSort( "384172852", 1, 1, 0, 0, 4 ) + '"'
-   ? '  CharSort( "qwert",,,,,, .T. )           == "wtrqe"      ? --> "' + CharSort( "qwert",,,,,, .T. )          + '"'
+   ? '  CharSort( "384172852", 1, 1, 0, 0, 4 )  == "134872852"  ? -->', '"' + CharSort( "384172852", 1, 1, 0, 0, 4 ) + '"'
+   ? '  CharSort( "qwert",,,,,, .T. )           == "wtrqe"      ? -->', '"' + CharSort( "qwert",,,,,, .T. )          + '"'
    ?
 
    ? "End test of CharSort()"

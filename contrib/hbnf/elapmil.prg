@@ -20,7 +20,6 @@
  */
 
 FUNCTION ft_ElapMin( cTime1, cTime2 )
-
    RETURN ;
-      ( ( Val( Left( cTime2, 2 ) ) * 60 ) + ( Val( Right( cTime2, 2 ) ) ) ) - ;
-      ( ( Val( Left( cTime1, 2 ) ) * 60 ) + ( Val( Right( cTime1, 2 ) ) ) )
+      ( ( Val( Left( cTime2, 2 ) ) * 60 ) + Val( Right( cTime2, 2 ) ) ) - ;
+      ( ( Val( Left( cTime1, 2 ) ) * 60 ) + Val( Right( cTime1, 2 ) ) )

@@ -27,35 +27,34 @@
 
 FUNCTION ft_Linked( cFuncs )
 
-   LOCAL aFuncArray := {}, nSpace, nComma, nFEnd, lRetVal := .F.
+   LOCAL aFuncArray, nSpace, nComma, nFEnd, lRetVal := .F.
 
-   IF At( "(", cFuncs ) == 0
-      // No functions in string
-      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
-   ELSE
+   IF "(" $ cFuncs
+      aFuncArray := {}
       DO WHILE ( nFEnd := At( "(", cFuncs ) ) > 0
          // Add the current function to the array of functions
          AAdd( aFuncArray, Left( cFuncs, nFEnd ) + ")" )
          // Remove the current function from the string
          cFuncs := SubStr( cFuncs, nFEnd + 1 )
-         nSpace := At( " ", cFuncs )
-         nComma := At( ",", cFuncs )
-         DO WHILE ( nComma > 0 .AND. nComma < nFEnd ) .OR. ;
-               ( nSpace > 0 .AND. nSpace < nFEnd )
+         DO WHILE ;
+               ( ( nComma := At( ",", cFuncs ) ) > 0 .AND. nComma < nFEnd ) .OR. ;
+               ( ( nSpace := At( " ", cFuncs ) ) > 0 .AND. nSpace < nFEnd )
             // We have extra parameters or spaces prior to the start
             // of the function. Strip them out.
-            IF nComma > 0
+            DO CASE
+            CASE nComma > 0
                cFuncs := SubStr( cFuncs, nComma + 1 )
-            ELSEIF nSpace > 0
+            CASE nSpace > 0
                cFuncs := SubStr( cFuncs, nSpace + 1 )
-            ENDIF
-            nSpace := At( " ", cFuncs )
-            nComma := At( ",", cFuncs )
+            ENDCASE
          ENDDO
       ENDDO
       // Scan through the array of functions, stop after the first occurence
       // of a function which returns a Type() of "U" (hence is not linked in)
       lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
+   ELSE
+      // No functions in string
+      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
    ENDIF
 
    RETURN lRetVal

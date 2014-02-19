@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,16 +46,11 @@
  *
  */
 
+#pragma -gc3
+
 #include "hbclass.ch"
 
-/* TOFIX: Removed TIPEncode as parent class to make it
-          work from a dynamically loaded hbtip library.
-          'VAR cName' was the only inherited item/logic.
-          This should be reverted once derived classes
-          work fine from dynamically loaded libs. */
-CREATE CLASS TIPEncoderQP
-
-   VAR cName
+CREATE CLASS TIPEncoderQP FROM TIPEncoder
 
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
@@ -86,7 +81,7 @@ FUNCTION tip_QPEncode( cData )
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen
       c := hb_BSubStr( cData, nPos, 1 )
-      IF c == Chr( 13 )
+      IF c == Chr( 10 )
          cString += Chr( 13 ) + Chr( 10 )
          nLineLen := 0
       ELSEIF hb_BCode( c ) > 126 .OR. ;
@@ -99,7 +94,7 @@ FUNCTION tip_QPEncode( cData )
          ENDIF
          cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
          nLineLen += 3
-      ELSEIF !( c == Chr( 10 ) )
+      ELSEIF !( c == Chr( 13 ) )
          cString += c
          nLineLen += 1
       ENDIF
@@ -116,7 +111,7 @@ FUNCTION tip_QPDecode( cData )
 
    /* delete soft line break. */
    cData := StrTran( cData, "=" + Chr( 13 ) + Chr( 10 ) )
-   cData := StrTran( cData, "=" + Chr( 10 ) ) /* also delete non-standard line breaks */
+   cData := StrTran( cData, "=" + Chr( 10 ) )  /* also delete non-standard line breaks */
 
    nLen := hb_BLen( cData )
    FOR nPos := 1 TO nLen

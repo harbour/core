@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,21 +63,21 @@ PROCEDURE Main()
 
    ? "  Simple tests:"
    ? '   TokenUpper( "Hello, world, here I am!" )         == "Hello, World, Here I Am!" ?'
-   ? '                                                    -> "' + TokenUpper( "Hello, world, here I am!" ) + '"'
+   ? '                                                   -->', '"' + TokenUpper( "Hello, world, here I am!" ) + '"'
    ? '   TokenUpper( "Hello, world, here I am!",, 3 )     == "Hello, World, Here I am!" ?'
-   ? '                                                    -> "' + TokenUpper( "Hello, world, here I am!",, 3 ) + '"'
+   ? '                                                   -->', '"' + TokenUpper( "Hello, world, here I am!",, 3 ) + '"'
    ? '   TokenUpper( "Hello, world, here I am!", ",", 3 ) == "Hello, world, here I am!" ?'
-   ? '                                                    -> "' + TokenUpper( "Hello, world, here I am!", ",", 3 ) + '"'
+   ? '                                                   -->', '"' + TokenUpper( "Hello, world, here I am!", ",", 3 ) + '"'
    ? '   TokenUpper( "Hello, world, here I am!", " w" )   == "Hello, wOrld, Here I Am!" ?'
-   ? '                                                    -> "' + TokenUpper( "Hello, world, here I am!", " w" ) + '"'
+   ? '                                                   -->', '"' + TokenUpper( "Hello, world, here I am!", " w" ) + '"'
    ?
 
-   ? '  Uppercase the tokens in the string "' + cStr + '"'
+   ? '  Uppercase the tokens in the string', '"' + cStr + '"'
    ? '            with CSetRef( .T. ) and "@"'
    CSetRef( .T. )
    ?
-   ? '    --> return value of TokenUpper( @cStr ): ', TokenUpper( @cStr )
-   ? '    --> cStr is now: "' + cStr + '"'
+   ? '    --> return value of TokenUpper( @cStr ):', TokenUpper( @cStr )
+   ? '    --> cStr is now:', '"' + cStr + '"'
 
    ?
    ? "End test of TokenUpper()"

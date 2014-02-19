@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,19 +85,11 @@ FUNCTION hb_BuildInfo( n )
 #else
    v[ _HB_COMPAT_C53             ] := .F.
 #endif
-   v[ _HB_COMPAT_XPP             ] := .T. /* Converted to library in Harbour. */
-   v[ _HB_COMPAT_VO              ] := .T. /* Converted to library in Harbour. */
-#ifdef HB_COMPAT_FLAGSHIP
-   v[ _HB_COMPAT_FLAGSHIP        ] := .T.
-#else
-   v[ _HB_COMPAT_FLAGSHIP        ] := .F.
-#endif
-#ifdef HB_COMPAT_FOXPRO
-   v[ _HB_COMPAT_FOXPRO          ] := .T.
-#else
-   v[ _HB_COMPAT_FOXPRO          ] := .F.
-#endif
-   v[ _HB_COMPAT_DBASE           ] := .T. /* Converted to library in Harbour. */
+   v[ _HB_COMPAT_XPP             ] := hb_IsFunction( "__HBEXTERN__HBXPP__" )
+   v[ _HB_COMPAT_VO              ] := hb_IsFunction( "__HBEXTERN__HBVO__" )  /* Library doesn't exist yet */
+   v[ _HB_COMPAT_FLAGSHIP        ] := hb_IsFunction( "__HBEXTERN__HBFSHIP__" )
+   v[ _HB_COMPAT_FOXPRO          ] := hb_IsFunction( "__HBEXTERN__HBFOXPRO__" )
+   v[ _HB_COMPAT_DBASE           ] := hb_IsFunction( "__HBEXTERN__HBDBASE__" )  /* Library doesn't exist yet */
    v[ _HB_HARBOUR_OBJ_GENERATION ] := .F. /* Always off in Harbour */
    v[ _HB_HARBOUR_STRICT_ANSI_C  ] := .F. /* Fake value, unlikely it's turned on */
    v[ _HB_CPLUSPLUS              ] := hb_Version( HB_VERSION_COMPILER_CPP )

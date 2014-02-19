@@ -56,7 +56,7 @@ PROCEDURE Main()
       ? " Inside SEQUENCE 6"
       Break1()
    RECOVER USING m_oMemvar
-      ? "  Recovering in 6 using... ", m_oMemvar
+      ? "  Recovering in 6 using...", m_oMemvar
    END SEQUENCE
    ? "After SEQUENCE 6"
 
@@ -65,7 +65,7 @@ PROCEDURE Main()
       ? " Inside SEQUENCE 7"
       Break2()
    RECOVER USING m_oMemvar
-      ? "  Recovering in 7 using... ", m_oMemvar
+      ? "  Recovering in 7 using...", m_oMemvar
    END SEQUENCE
    ? "After SEQUENCE 7"
 
@@ -75,13 +75,13 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE Break1()
+STATIC PROCEDURE Break1()
 
    PRIVATE m_cPrivate := "VALUE from Break1"
 
    BREAK M->m_cPrivate
 
-PROCEDURE Break2()
+STATIC PROCEDURE Break2()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 8"
@@ -94,7 +94,7 @@ PROCEDURE Break2()
 
    RETURN
 
-PROCEDURE Break3()
+STATIC PROCEDURE Break3()
 
    STATIC s_oStatic
 
@@ -119,7 +119,7 @@ PROCEDURE Break3()
 
    RETURN
 
-PROCEDURE Break4( cValue )
+STATIC PROCEDURE Break4( cValue )
 
    LOCAL oLocal := " detached Break4 "
 

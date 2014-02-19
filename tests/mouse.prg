@@ -5,16 +5,18 @@
  */
 
 #include "inkey.ch"
+#include "setcurs.ch"
 
 PROCEDURE Main()
 
-   LOCAL nR := 5, nC := 38
+   LOCAL nR := 5
+   LOCAL nC := 38
 
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
    CLS
    IF ! MPresent()
-      ? " No mouse present !"
-      QUIT
+      ? "No mouse present !"
+      RETURN
    ENDIF
 
    @ 0, 0 TO MaxRow(), MaxCol() DOUBLE
@@ -41,7 +43,6 @@ PROCEDURE Main()
 
    SetPos( MaxRow(), 0 )
 
-   SET CURSOR ON
    ?
 
    RETURN
@@ -156,7 +157,7 @@ STATIC PROCEDURE TEST2( nR, nC )
 
    MUPDATE()
 
-   WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
+   DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
 
       DO CASE
       CASE nKey == K_MOUSEMOVE
@@ -233,7 +234,7 @@ STATIC PROCEDURE TEST2( nR, nC )
    @ MaxRow() - 3, 20 SAY Space( 50 )
    @ 12, 22 SAY "Pass"
 
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    @ 20, 1 SAY "MOUSE TEST FINISH!"
    ?
@@ -245,7 +246,7 @@ STATIC PROCEDURE CHECKEXIT()
    IF ! MINRECT( MaxRow() - 2, MaxCol() - 11, MaxRow(), MaxCol() )
       RETURN
    ENDIF
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
    CLS
    ? "MOUSE TEST FINISH!"
    ?

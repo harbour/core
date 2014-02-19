@@ -15,7 +15,7 @@ rddsql.hbc
 -depincpathlocal=sqlite3:../3rd/sqlite3
 -depfinish=sqlite3
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 

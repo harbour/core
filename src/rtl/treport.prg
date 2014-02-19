@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#pragma -gc0
 
 #include "hbclass.ch"
 
@@ -610,13 +612,13 @@ METHOD ExecuteReport() CLASS HBReportForm
 
          //  For subgroup processing: check if group has been changed
          IF MakeAStr( Eval( ::aReportData[ RPT_GROUPS, 1, RGT_EXP ] ), ;
-               ::aReportData[ RPT_GROUPS, 1, RGT_TYPE ] ) != ::aGroupTotals[ 1 ]
+            ::aReportData[ RPT_GROUPS, 1, RGT_TYPE ] ) != ::aGroupTotals[ 1 ]
             lGroupChanged := .T.
          ENDIF
 
          //  If this (sub)group has changed since the last record
          IF lGroupChanged .OR. MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
-               ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
+            ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) != ::aGroupTotals[ nGroup ]
 
             AAdd( aRecordHeader, __natMsg( iif( nGroup == 1, _RFRM_SUBTOTAL, _RFRM_SUBSUBTOTAL ) ) )
             AAdd( aRecordHeader, "" )
@@ -678,9 +680,9 @@ METHOD ExecuteReport() CLASS HBReportForm
    // Cycle through the groups
    FOR nGroup := 1 TO Len( ::aReportData[ RPT_GROUPS ] )
       // If the group has changed
-      IF MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
-            ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) == ::aGroupTotals[ nGroup ]
-      ELSE
+      IF !( MakeAStr( Eval( ::aReportData[ RPT_GROUPS, nGroup, RGT_EXP ] ), ;
+         ::aReportData[ RPT_GROUPS, nGroup, RGT_TYPE ] ) == ::aGroupTotals[ nGroup ] )
+
          AAdd( aRecordHeader, "" )   // The blank line
 
          // page eject after group
@@ -874,7 +876,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL nBytesRead                 // Read/write and content record counter
    LOCAL nPointer                   // Points to an offset into EXPR_BUFF string
    LOCAL nFileError                 // Contains current file error
-   LOCAL cOptionByte                // Contains option byte
+   LOCAL nOptionByte                // Contains option byte
 
    LOCAL aReport[ RPT_COUNT ]       // Create report array
    LOCAL err                        // error object
@@ -910,7 +912,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    // Open the report file
    nFrmHandle := FOpen( cFrmFile )
 
-   IF ! Empty( nFileError := FError() ) .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
+   IF ( nFileError := FError() ) != 0 .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
 
       // Search through default path; attempt to open report file
       cDefPath := Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH )
@@ -920,7 +922,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       FOR nPathIndex := 1 TO Len( aPaths )
          nFrmHandle := FOpen( aPaths[ nPathIndex ] + "\" + cFrmFile )
          // if no error is reported, we have our report file
-         IF Empty( nFileError := FError() )
+         IF ( nFileError := FError() ) == 0
             EXIT
          ENDIF
       NEXT
@@ -1015,22 +1017,23 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          SUMMARY_RPT_OFFSET, 1 ) $ "YyTt", .T., .F. )
 
       // Process report eject and plain attributes option byte
-      cOptionByte := Asc( hb_BSubStr( cParamsBuff, OPTION_OFFSET, 1 ) )
+      nOptionByte := hb_BPeek( cParamsBuff, OPTION_OFFSET )
 
-      IF Int( cOptionByte / 4 ) == 1
-         aReport[ RPT_PLAIN ] := .T.          // Plain page
-         cOptionByte -= 4
+#ifdef HB_CLP_STRICT
+      IF nOptionByte <= 8  /* Bug compatibility with CA-Cl*pper with corrupted input files */
+#endif
+         IF hb_bitAnd( nOptionByte, 4 ) != 0
+            aReport[ RPT_PLAIN ] := .T.          // Plain page
+         ENDIF
+         IF hb_bitAnd( nOptionByte, 2 ) != 0
+            aReport[ RPT_AEJECT ] := .T.         // Page eject after report
+         ENDIF
+         IF hb_bitAnd( nOptionByte, 1 ) != 0
+            aReport[ RPT_BEJECT ] := .F.         // Page eject before report
+         ENDIF
+#ifdef HB_CLP_STRICT
       ENDIF
-
-      IF Int( cOptionByte / 2 ) == 1
-         aReport[ RPT_AEJECT ] := .T.         // Page eject after report
-         cOptionByte -= 2
-      ENDIF
-
-      IF Int( cOptionByte / 1 ) == 1
-         aReport[ RPT_BEJECT ] := .F.         // Page eject before report
-         // cOptionByte -= 1
-      ENDIF
+#endif
 
       // Page heading, report title
       nPointer := Bin2W( hb_BSubStr( cParamsBuff, PAGE_HDR_OFFSET, 2 ) )
@@ -1048,7 +1051,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          nHeaderIndex--
       ENDDO
 
-      aReport[ RPT_HEADER ] := iif( Empty( nHeaderIndex ), {}, ;
+      aReport[ RPT_HEADER ] := iif( nHeaderIndex == 0, {}, ;
          ASize( aHeader, nHeaderIndex ) )
 
       // Process Groups
@@ -1163,7 +1166,7 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
       // dBASE does this so we must do it too
       // Character following character pointed to by pointer is NULL
-      IF Chr( 0 ) == hb_BLeft( cString, 1 ) .AND. Len( hb_BLeft( cString, 1 ) ) == 1
+      IF hb_BLeft( cString, 1 ) == Chr( 0 )
          cString := ""
       ENDIF
    ENDIF
@@ -1231,9 +1234,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
       cItem := Left( cHeaderString, nHeaderLen )
 
       // check for explicit delimiter
-      nPos := At( ";", cItem )
-
-      IF ! Empty( nPos )
+      IF ( nPos := At( ";", cItem ) ) != 0
          // delimiter present
          AAdd( aPageHeader, Left( cItem, nPos - 1 ) )
       ELSE
@@ -1243,7 +1244,6 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
          ELSE
             // exception
             AAdd( aPageHeader, cItem )
-
          ENDIF
          // empty or not, we jump past the field
          nPos := nHeaderLen
@@ -1270,7 +1270,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
 METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportForm
 
-   LOCAL nPointer, aColumn[ RCT_COUNT ], cType, cExpr
+   LOCAL nPointer, aColumn[ RCT_COUNT ], cExpr
 
    // Column width
 
@@ -1304,9 +1304,7 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
    // Column picture
    // Setup picture only if a database file is open
    IF Used()
-      cType := ValType( Eval( aColumn[ RCT_EXP ] ) )
-      aColumn[ RCT_TYPE ] := cType
-      SWITCH cType
+      SWITCH aColumn[ RCT_TYPE ] := ValType( Eval( aColumn[ RCT_EXP ] ) )
       CASE "C"
       CASE "M"
          aColumn[ RCT_PICT ] := Replicate( "X", aColumn[ RCT_WIDTH ] )
@@ -1319,7 +1317,7 @@ METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC ) CLASS HBReportFo
          EXIT
       CASE "N"
          IF aColumn[ RCT_DECIMALS ] != 0
-            aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] -1 ) + "." + ;
+            aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] - aColumn[ RCT_DECIMALS ] - 1 ) + "." + ;
                Replicate( "9", aColumn[ RCT_DECIMALS ] )
          ELSE
             aColumn[ RCT_PICT ] := Replicate( "9", aColumn[ RCT_WIDTH ] )
@@ -1353,9 +1351,7 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
    DO WHILE Len( cList ) != 0
 
-      nPos := At( cDelimiter, cList )
-
-      IF nPos == 0
+      IF ( nPos := At( cDelimiter, cList ) ) == 0
          nPos := Len( cList )
       ENDIF
 
@@ -1379,36 +1375,22 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
 
 STATIC FUNCTION MakeAStr( uVar, cType )
 
-   LOCAL cString
-
    SWITCH Asc( cType )
    CASE Asc( "D" )
-   CASE Asc( "d" )
-      cString := DToC( uVar )
-      EXIT
+   CASE Asc( "d" ) ; RETURN DToC( uVar )
    CASE Asc( "T" )
-   CASE Asc( "t" )
-      cString := hb_TToC( uVar )
-      EXIT
+   CASE Asc( "t" ) ; RETURN hb_TToC( uVar )
    CASE Asc( "L" )
-   CASE Asc( "l" )
-      cString := iif( uVar, "T", "F" )
-      EXIT
+   CASE Asc( "l" ) ; RETURN iif( uVar, "T", "F" )
    CASE Asc( "N" )
-   CASE Asc( "n" )
-      cString := Str( uVar )
-      EXIT
+   CASE Asc( "n" ) ; RETURN Str( uVar )
    CASE Asc( "C" )
    CASE Asc( "c" )
    CASE Asc( "M" )
-   CASE Asc( "m" )
-      cString := uVar
-      EXIT
-   OTHERWISE
-      cString := "INVALID EXPRESSION"
+   CASE Asc( "m" ) ; RETURN uVar
    ENDSWITCH
 
-   RETURN cString
+   RETURN "INVALID EXPRESSION"
 
 FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;

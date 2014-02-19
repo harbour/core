@@ -497,111 +497,141 @@ HB_FUNC( _FT_DFINIT )
    HB_ISIZ i;
    HB_SIZE nSize;
 
-   rval = 0;
+   int sline = hb_parni( 2 );
+   int scol  = hb_parni( 3 );
+   int eline = hb_parni( 4 );
+   int ecol  = hb_parni( 5 );
 
-   dispc->sline = hb_parni( 2 );                            /* top row of window   */
-   dispc->scol  = hb_parni( 3 );                            /* left col            */
-   dispc->eline = hb_parni( 4 );                            /* bottom row          */
-   dispc->ecol  = hb_parni( 5 );                            /* right col           */
+   int maxlin = hb_parni( 12 );
+   HB_ISIZ buffsize = hb_parns( 13 );
 
-   dispc->width  = dispc->ecol - dispc->scol;               /* calc width of window  */
-   dispc->height = dispc->eline - dispc->sline + 1;         /* calc height of window */
+   hb_gtRectSize( sline, scol, eline, ecol, &nSize );
 
-   hb_gtRectSize( 0, 0, 0, 0, &nSize );
-
-   dispc->iCellSize = ( int ) nSize;
-
-   hb_gtRectSize( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, &nSize );
-   dispc->vseg = ( HB_UCHAR * ) hb_xalloc( nSize );
-   if( dispc->vseg != NULL )
-      hb_gtSave( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
-
-   dispc->maxlin   = hb_parni( 12 );
-   dispc->buffsize = hb_parns( 13 );                                    /* yes - load value */
-
-   dispc->buffer = ( char * ) hb_xalloc( dispc->buffsize );             /* allocate memory  */
-   dispc->lbuff  = ( char * ) hb_xalloc( dispc->maxlin + 1 );           /*  for buffers     */
-
-   dispc->bIsAllocated = ! ( dispc->buffer == NULL || dispc->lbuff == NULL || dispc->vseg == NULL );
-   /* memory allocated? */
-   if( ! dispc->bIsAllocated )
+   if( nSize > 0 && maxlin >= 0 && buffsize > 0 )
    {
-      rval = 8;                     /* return error code 8 (memory) */
-      if( dispc->buffer != NULL )
-         hb_xfree( dispc->buffer );
-      if( dispc->lbuff != NULL )
-         hb_xfree( dispc->lbuff );
-      if( dispc->vseg != NULL )
+      rval = 0;
+
+      dispc->sline = sline;                            /* top row of window   */
+      dispc->scol  = scol;                             /* left col            */
+      dispc->eline = eline;                            /* bottom row          */
+      dispc->ecol  = ecol;                             /* right col           */
+
+      dispc->width  = dispc->ecol - dispc->scol;               /* calc width of window  */
+      dispc->height = dispc->eline - dispc->sline + 1;         /* calc height of window */
+
+      if( dispc->vseg )
          hb_xfree( dispc->vseg );
-   }
-   else                                                     /* get parameters            */
-   {
-      dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle               */
-      j = hb_parni( 6 );                                    /* starting line value       */
-      dispc->norm   = hb_parni( 7 );                        /* normal color attribute    */
-      dispc->hlight = hb_parni( 8 );                        /* highlight color attribute */
 
-      if( HB_ISARRAY( 9 ) )
+      dispc->vseg = ( HB_UCHAR * ) hb_xalloc( nSize );
+      if( dispc->vseg != NULL )
+         hb_gtSave( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
+
+      hb_gtRectSize( 0, 0, 0, 0, &nSize );
+      dispc->iCellSize = ( int ) nSize;
+
+      dispc->maxlin   = maxlin;
+      dispc->buffsize = buffsize;                                          /* yes - load value */
+
+      if( dispc->buffer )
+         hb_xfree( dispc->buffer );
+      if( dispc->lbuff )
+         hb_xfree( dispc->lbuff );
+
+      dispc->buffer = ( char * ) hb_xalloc( dispc->buffsize );             /* allocate memory  */
+      dispc->lbuff  = ( char * ) hb_xalloc( dispc->maxlin + 1 );           /*  for buffers     */
+
+      dispc->bIsAllocated = ! ( dispc->buffer == NULL || dispc->lbuff == NULL || dispc->vseg == NULL );
+      /* memory allocated? */
+      if( ! dispc->bIsAllocated )
       {
-         dispc->keytype = K_LIST;
-         dispc->kcount  = hb_parinfa( 9, 0 );
-         if( dispc->kcount > 24 )
-            dispc->kcount = 24;
-         for( i = 1; i <= dispc->kcount; i++ )
-            dispc->keylist[ i - 1 ] = hb_parvni( 9, i );  /* get exit key list */
+         rval = 8;                     /* return error code 8 (memory) */
+         if( dispc->buffer != NULL )
+         {
+            hb_xfree( dispc->buffer );
+            dispc->buffer = NULL;
+         }
+         if( dispc->lbuff != NULL )
+         {
+            hb_xfree( dispc->lbuff );
+            dispc->lbuff = NULL;
+         }
+         if( dispc->vseg != NULL )
+         {
+            hb_xfree( dispc->vseg );
+            dispc->vseg = NULL;
+         }
       }
-      else
+      else                                                     /* get parameters            */
       {
-         const char * pszKeys = hb_parcx( 9 );
-         dispc->keytype = K_STRING;
-         dispc->kcount  = hb_parclen( 9 );
-         if( dispc->kcount > 24 )
-            dispc->kcount = 24;
-         for( i = 1; i <= dispc->kcount; i++ )
-            dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
+         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );    /* file handle               */
+         j = hb_parni( 6 );                                    /* starting line value       */
+         dispc->norm   = hb_parni( 7 );                        /* normal color attribute    */
+         dispc->hlight = hb_parni( 8 );                        /* highlight color attribute */
+
+         if( HB_ISARRAY( 9 ) )
+         {
+            dispc->keytype = K_LIST;
+            dispc->kcount  = hb_parinfa( 9, 0 );
+            if( dispc->kcount > 24 )
+               dispc->kcount = 24;
+            for( i = 1; i <= dispc->kcount; i++ )
+               dispc->keylist[ i - 1 ] = hb_parvni( 9, i );  /* get exit key list */
+         }
+         else
+         {
+            const char * pszKeys = hb_parcx( 9 );
+            dispc->keytype = K_STRING;
+            dispc->kcount  = hb_parclen( 9 );
+            if( dispc->kcount > 24 )
+               dispc->kcount = 24;
+            for( i = 1; i <= dispc->kcount; i++ )
+               dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
+         }
+
+         dispc->bBrowse = hb_parl( 10 );              /* get browse flag   */
+
+         dispc->colinc = hb_parni( 11 );              /* column skip value */
+
+         dispc->bufftop    = 0;                       /* init buffer top pointer      */
+         dispc->buffbot    = dispc->buffsize;         /* init buffer bottom pointer   */
+         dispc->buffoffset = 0;                       /* curr line offset into buffer */
+         dispc->winrow     = dispc->sline;            /* init window row              */
+         dispc->wincol     = 0;                       /* init window col              */
+         dispc->wintop     = 0;                       /* init window top pointer      */
+         dispc->winbot     = 0;                       /* init window bottom pointer   */
+
+         /* get file size */
+
+         dispc->fsize = hb_fsSeek( dispc->infile, 0, FS_END ) - 1;
+
+         /* get the first block */
+
+         hb_fsSeek( dispc->infile, 0, FS_SET );
+
+         /* if block less than buffsize */
+
+         if( dispc->fsize < dispc->buffbot )
+            dispc->buffbot = ( int ) dispc->fsize;           /* then set buffer bottom */
+
+         /* set the current lines buffer offset pointer */
+
+         dispc->buffoffset = getblock( dispc, dispc->bufftop );
+
+         /* align buffer and window pointer to valid values */
+
+         buff_align( dispc );
+         win_align( dispc );
+
+         /* point line pointer to line passed by caller */
+
+         for( i = 1; i < j; i++ )
+            linedown( dispc );
+
+         hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
       }
-
-      dispc->bBrowse = hb_parl( 10 );              /* get browse flag   */
-
-      dispc->colinc = hb_parni( 11 );              /* column skip value */
-
-      dispc->bufftop    = 0;                       /* init buffer top pointer      */
-      dispc->buffbot    = dispc->buffsize;         /* init buffer bottom pointer   */
-      dispc->buffoffset = 0;                       /* curr line offset into buffer */
-      dispc->winrow     = dispc->sline;            /* init window row              */
-      dispc->wincol     = 0;                       /* init window col              */
-      dispc->wintop     = 0;                       /* init window top pointer      */
-      dispc->winbot     = 0;                       /* init window bottom pointer   */
-
-      /* get file size */
-
-      dispc->fsize = hb_fsSeek( dispc->infile, 0, FS_END ) - 1;
-
-      /* get the first block */
-
-      hb_fsSeek( dispc->infile, 0, FS_SET );
-
-      /* if block less than buffsize */
-
-      if( dispc->fsize < dispc->buffbot )
-         dispc->buffbot = ( int ) dispc->fsize;           /* then set buffer bottom */
-
-      /* set the current lines buffer offset pointer */
-
-      dispc->buffoffset = getblock( dispc, dispc->bufftop );
-
-      /* align buffer and window pointer to valid values */
-
-      buff_align( dispc );
-      win_align( dispc );
-
-      /* point line pointer to line passed by caller */
-
-      for( i = 1; i < j; i++ )
-         linedown( dispc );
-
-      hb_gtRest( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
    }
+   else
+      rval = 8;
 
    hb_retni( rval );
 }
@@ -613,11 +643,20 @@ HB_FUNC( _FT_DFCLOS )
    if( dispc->bIsAllocated )
    {
       if( dispc->buffer != NULL )
-         hb_xfree( dispc->buffer );                /* free up allocated buffer memory */
+      {
+         hb_xfree( dispc->buffer );
+         dispc->buffer = NULL;
+      }
       if( dispc->lbuff != NULL )
+      {
          hb_xfree( dispc->lbuff );
+         dispc->lbuff = NULL;
+      }
       if( dispc->vseg != NULL )
+      {
          hb_xfree( dispc->vseg );
+         dispc->vseg = NULL;
+      }
    }
 }
 

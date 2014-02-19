@@ -4,10 +4,13 @@
  * CGI test application
  */
 
+/* run with parameter like:
+     photo=imgs_in/conv_tst.jpg
+ */
+
 #require "hbgd"
 
-#command WRITE <c> => FWrite( 1, <c> + hb_eol() )
-#command OutHTML <c> => WRITE <c>
+#xcommand WRITE <c> => OutStd( <c> + hb_eol() )
 
 PROCEDURE Main( ... )
 
@@ -34,30 +37,30 @@ PROCEDURE Main( ... )
    IF ! Empty( hParams )
       FOR EACH cPar IN hParams:Keys
 
-         DO CASE
-         CASE cPar == "txt"
+         SWITCH cPar
+         CASE "txt"
             // cText := hParams[ cPar ]
-
-         CASE cPar == "img"
+            EXIT
+         CASE "img"
             cImg := hParams[ cPar ]
-
-         CASE cPar == "photo"
+            EXIT
+         CASE "photo"
             cPhoto := hParams[ cPar ]
-
-         CASE cPar == "width"
+            EXIT
+         CASE "width"
             nWidth := Val( hParams[ cPar ] )
-
-         CASE cPar == "height"
+            EXIT
+         CASE "height"
             nHeight := Val( hParams[ cPar ] )
-
-         CASE cPar == "pt"
+            EXIT
+         CASE "pt"
             nPt := Val( hParams[ cPar ] )
-
-         ENDCASE
+            EXIT
+         ENDSWITCH
       NEXT
    ENDIF
 
-   // __OutDebug( cQuery, ValToPrg( hParams ) )
+   // __OutDebug( cQuery, hb_ValToExp( hParams ) )
 
 #if 0
    hb_default( @cText, "Testo di Prova" )
@@ -73,29 +76,29 @@ PROCEDURE Main( ... )
    ELSEIF cPhoto != NIL
       StartHTML()
 #if 0
-      OutHTML ValToPrg( hParams ) + "<br />"
-      OutHTML ValToPrg( cParams ) + "<br />"
-      OutHTML ValToPrg( cQuery ) + "<br />"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br />"
+      WRITE hb_ValToExp( hParams ) + "<br />"
+      WRITE hb_ValToExp( cParams ) + "<br />"
+      WRITE hb_ValToExp( cQuery ) + "<br />"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br />"
 #endif
-      OutHTML "<table border=1>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br />"
-      OutHTML "</td></tr>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
-         iif( nWidth != NIL, "&width="  + hb_ntos( nWidth ), "" ) + ;
-         iif( nHeight != NIL, "&height=" + hb_ntos( nHeight ), "" ) + ;
+      WRITE "<table border=1>"
+      WRITE "<tr><td align='center'>"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br />"
+      WRITE "</td></tr>"
+      WRITE "<tr><td align='center'>"
+      WRITE "<img src='test_out.exe?img=" + cPhoto + ;
+         iif( HB_ISNUMERIC( nWidth ), "&width="  + hb_ntos( nWidth ), "" ) + ;
+         iif( HB_ISNUMERIC( nHeight ), "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br />"
-      OutHTML "</td></tr>"
-      OutHTML "<tr><td align='center'>"
-      OutHTML cPhoto
-      OutHTML "</td></tr>"
-      OutHTML "</table>"
-      OutHTML "<br />"
+      WRITE "</td></tr>"
+      WRITE "<tr><td align='center'>"
+      WRITE cPhoto
+      WRITE "</td></tr>"
+      WRITE "</table>"
+      WRITE "<br />"
 #if 0
-      OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br />"
-      OutHTML OS() + "<br />"
+      WRITE "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br />"
+      WRITE OS() + "<br />"
 #endif
       EndHTML()
    ELSE
@@ -105,43 +108,42 @@ PROCEDURE Main( ... )
 
    RETURN
 
-PROCEDURE StartHTML( cTitle )
-
-   hb_default( @cTitle, "" )
+STATIC PROCEDURE StartHTML( cTitle )
 
    WRITE "content-type: text/html"
    WRITE "Pragma: no-cache"
    WRITE hb_eol()
    WRITE "<html>"
    WRITE "<head>"
-   WRITE "<title>" + cTitle + "</title>"
+   WRITE "<title>" + hb_defaultValue( cTitle, "" ) + "</title>"
    WRITE "</head>"
    WRITE "<body>"
 
    RETURN
 
-PROCEDURE EndHTML()
+STATIC PROCEDURE EndHTML()
 
    WRITE "</body>"
    WRITE "</html>"
 
    RETURN
 
-PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
+STATIC PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    LOCAL cType
 
    LOCAL oImage := GDImage():LoadFromFile( cPhoto )
 
-   IF nWidth != NIL .AND. nHeight != NIL
+   DO CASE
+   CASE HB_ISNUMERIC( nWidth ) .AND. HB_ISNUMERIC( nHeight )
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth != NIL .AND. nHeight == NIL
+   CASE HB_ISNUMERIC( nWidth ) .AND. ! HB_ISNUMERIC( nHeight )
       nHeight := oImage:Height() * ( nWidth / oImage:Width() )
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth == NIL .AND. nHeight != NIL
+   CASE ! HB_ISNUMERIC( nWidth ) .AND. HB_ISNUMERIC( nHeight )
       nWidth := oImage:Width() * ( nHeight / oImage:Height() )
       oImage:Resize( nWidth, nHeight )
-   ENDIF
+   ENDCASE
 
 #if 0
    __OutDebug( hb_DumpVar( oImage ) )
@@ -161,7 +163,7 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    RETURN
 
-PROCEDURE OutJpg( cText, nPitch )
+STATIC PROCEDURE OutJpg( cText, nPitch )
 
    LOCAL oI
 
@@ -185,9 +187,9 @@ PROCEDURE OutJpg( cText, nPitch )
    oI:SetTransparent( blue )
 #endif
 
-   oI:SetFontName( "Verdana" ) // TOFIX
+   oI:SetFontName( "Arial" )
    oI:SetFontPitch( nPitch )
-#endif
+#if 0
    __OutDebug( oI:GetFTFontHeight() )
 #endif
    aSize := oI:GetFTStringSize( cText )
@@ -197,13 +199,12 @@ PROCEDURE OutJpg( cText, nPitch )
    nY      := aSize[ 4 ]
    oI:Resize( nWidth, nHeight )
 
-
    /* Allocate drawing color */
    blue := oI:SetColor( 0, 0, 200 )
-   oI:SetFontName( "Verdana" ) // TOFIX
+   oI:SetFontName( "Arial" )
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
-#endif
+#if 0
    oI:SayFreeType( 0, 0, cText, , , 0, blue )
 
    oI:Resize( nWidth, nHeight )
@@ -222,75 +223,61 @@ PROCEDURE OutJpg( cText, nPitch )
 
    RETURN
 
-FUNCTION GetVars( cFields, cSeparator )
+STATIC FUNCTION GetVars( cFields, cSeparator )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   hb_default( @cSeparator, "&" )
+   FOR EACH cField in hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
 
-   aFields := hb_regexSplit( cSeparator, cFields )
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
 
-   FOR EACH cField in aFields
-      aField := hb_regexSplit( "=", cField, 2 )
-      IF Len( aField ) != 2
-         LOOP
+         cName  := LTrim( aField[ 1 ] )
+         xValue := UrlDecode( aField[ 2 ] )
+
+         // TraceLog( "cName, xValue", cName, xValue )
+
+         // is it an array entry?
+         IF Right( cName, 2 ) == "[]"
+            cName := hb_StrShrink( cName, 2 )
+
+            hHashVars[ cName ] := { xValue }
+         ELSE
+            hHashVars[ cName ] := xValue
+         ENDIF
+         // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
       ENDIF
-
-      cName  := LTrim( aField[ 1 ] )
-      xValue := UrlDecode( aField[ 2 ] )
-
-      // TraceLog( "cName, xValue", cName, xValue )
-
-      // is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
-
-         hHashVars[ cName ] := { xValue }
-
-      ELSE
-
-         hHashVars[ cName ] := xValue
-
-      ENDIF
-      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 
    RETURN hHashVars
 
-FUNCTION GetParams( aParams )
+STATIC FUNCTION GetParams( aParams )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   aFields := aParams
+   FOR EACH cField in aParams
 
-   FOR EACH cField in aFields
-      aField := hb_regexSplit( "=", cField, 2 )
-      IF Len( aField ) != 2
-         LOOP
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
+
+          cName  := LTrim( aField[ 1 ] )
+          xValue := UrlDecode( aField[ 2 ] )
+
+          // TraceLog( "cName, xValue", cName, xValue )
+
+          // is it an array entry?
+          IF Right( cName, 2 ) == "[]"
+             cName := hb_StrShrink( cName, 2 )
+
+             hHashVars[ cName ] := { xValue }
+          ELSE
+             hHashVars[ cName ] := xValue
+          ENDIF
+          // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
       ENDIF
-
-      cName  := LTrim( aField[ 1 ] )
-      xValue := UrlDecode( aField[ 2 ] )
-
-      // TraceLog( "cName, xValue", cName, xValue )
-
-      // is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
-
-         hHashVars[ cName ] := { xValue }
-
-      ELSE
-
-         hHashVars[ cName ] := xValue
-
-      ENDIF
-      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 
@@ -301,31 +288,30 @@ FUNCTION GetParams( aParams )
 // Can return both a string or a number
 //
 
-FUNCTION URLDecode( cStr )
+STATIC FUNCTION URLDecode( cStr )
 
    LOCAL cRet := "", i, cCar
 
-   // LOCAL lNumeric := .T.
+#if 0
+   LOCAL lNumeric := .T.
+#endif
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[ i ]
+
+      cCar := SubStr( cStr, i, 1 )
 
       DO CASE
       CASE cCar == "+"
          cRet += " "
-
       CASE cCar == "%"
          i++
-         cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
-         i++
-
+         cRet += Chr( hb_HexToNum( SubStr( cStr, i++, 2 ) ) )
       OTHERWISE
          cRet += cCar
-
       ENDCASE
 
 #if 0
-      IF ( cRet[ i ] > "9" .OR. cRet[ i ] < "0" ) .AND. !( cRet[ i ] == "." )
+      IF ( SubStr( cRet, i, 1 ) > "9" .OR. SubStr( cRet, i, 1 ) < "0" ) .AND. !( SubStr( cRet, i, 1 ) == "." )
          lNumeric := .F.
       ENDIF
 #endif
@@ -339,25 +325,23 @@ FUNCTION URLDecode( cStr )
 
    RETURN cRet
 
-FUNCTION URLEncode( cStr )
+STATIC FUNCTION URLEncode( cStr )
 
    LOCAL cRet := "", i, nVal, cCar
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[ i ]
+
+      cCar := SubStr( cStr, i, 1 )
+
       DO CASE
       CASE cCar == " "
          cRet += "+"
-
       CASE cCar >= "A" .AND. cCar <= "Z"
          cRet += cCar
-
       CASE cCar >= "a" .AND. cCar <= "z"
          cRet += cCar
-
       CASE cCar >= "0" .AND. cCar <= "9"
          cRet += cCar
-
       OTHERWISE
          nVal := Asc( cCar )
          cRet += "%" + hb_NumToHex( nVal )

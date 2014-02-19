@@ -4,53 +4,50 @@
 
 #require "hbpgsql"
 
-#define DB_ALIAS                        1
-#define DB_FILE                         2
-#define DB_QUERY                        3
-#define DB_ROW                          4
-#define DB_FETCH                        5
+#define DB_ALIAS            1
+#define DB_FILE             2
+#define DB_QUERY            3
+#define DB_ROW              4
+#define DB_FETCH            5
 
 STATIC s_oServer
 STATIC s_aTableTemp := {}
-STATIC s_aTempDBF   := {}
 
-PROCEDURE Main( cServer, cDatabase, cUser, cPass )
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL i
-   LOCAL cQuery
 
-   IF SQLConnect( cServer, cDatabase, cUser, cPass )
+   hb_default( @cDatabase, "postgres" )
+
+   IF SQLConnect( cHost, cDatabase, cUser, cPass )
       QuickQuery( "DROP TABLE test" )
 
-      cQuery := "CREATE TABLE test ( "
-      cQuery += "  codigo integer primary key, "
-      cQuery += "  descri char(50), "
-      cQuery += "  email varchar(50) ) "
-      SQLQuery( cQuery )
+      SQLQuery( "CREATE TABLE test (" + ;
+         "  codigo integer primary key," + ;
+         "  descri char(50)," + ;
+         "  email varchar(50) )" )
 
       SQLOpen( "nomes", "SELECT * FROM test" )
 
       FOR i := 1 TO 50
-         APPEND BLANK
-         REPLACE codigo WITH i
-         REPLACE descri WITH "test " + Str( i )
+         dbAppend()
+         nomes->codigo := i
+         nomes->descri := "test " + hb_ntos( i )
       NEXT
 
       SQLApplyUpdates()
 
-      cQuery := "SELECT * FROM test WHERE codigo >= :1 ORDER BY codigo"
-      cQuery := SQLPrepare( cQuery, 1 )
-      SQLOpen( "nomes", cQuery )
+      SQLOpen( "nomes", SQLPrepare( "SELECT * FROM test WHERE codigo >= :1 ORDER BY codigo", 1 ) )
 
       DO WHILE ! Eof()
          ? RecNo(), nomes->Codigo, nomes->descri, nomes->email
 
          IF RecNo() == 10
-            DELETE
+            dbDelete()
          ENDIF
 
          IF RecNo() == 20
-            REPLACE email WITH "teste"
+            nomes->email := "teste"
          ENDIF
 
          SQLFetch()
@@ -76,9 +73,7 @@ FUNCTION SQLApplyUpdates()
    LOCAL lError := .F.
    LOCAL cError
 
-   i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
-
-   IF i != 0
+   IF ( i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
 
       oQuery := s_aTableTemp[ i ][ 3 ]
 
@@ -149,7 +144,7 @@ FUNCTION SQLApplyUpdates()
    ENDIF
 
    IF lError
-      Alert( cError )
+      ? cError
    ENDIF
 
    RETURN ! lError
@@ -163,9 +158,7 @@ PROCEDURE SQLCloseTemp( cAlias )
       ( cAlias )->( dbCloseArea() )
    ENDIF
 
-   x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
-
-   IF ! Empty( x )
+   IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
       ADel( s_aTableTemp, x )
       // ASize( s_aTableTemp, Len( s_aTableTemp ) - 1 )
    ENDIF
@@ -175,42 +168,23 @@ PROCEDURE SQLCloseTemp( cAlias )
 
 PROCEDURE SQLGarbageCollector()
 
-   LOCAL i
+   LOCAL item
    LOCAL oQuery
 
    dbCloseAll()
 
-   FOR i := 1 TO Len( s_aTableTemp )
-      /* Apaga arquivos dbfs criados */
-      FErase( s_aTableTemp[ i ][ DB_FILE ] )
-      oQuery := s_aTableTemp[ i ][ DB_QUERY ]
-
-      IF oQuery != NIL
+   FOR EACH item IN s_aTableTemp
+      IF ( oQuery := item[ DB_QUERY ] ) != NIL
          oQuery:Destroy()
       ENDIF
    NEXT
 
-   FOR i := 1 TO Len( s_aTempDBF )
-      IF hb_FileExists( s_aTempDBF[ i ] )
-         FErase( s_aTempDBF[ i ] )
-      ENDIF
-
-      IF hb_FileExists( StrTran( s_aTempDBF[ i ], ".tmp", ".dbf" ) )
-         FErase( StrTran( s_aTempDBF[ i ], ".tmp", ".dbf" ) )
-      ENDIF
-
-      IF hb_FileExists( StrTran( s_aTempDBF[ i ], ".tmp", ".dbt" ) )
-         FErase( StrTran( s_aTempDBF[ i ], ".tmp", ".dbt" ) )
-      ENDIF
-   NEXT
-
-   s_aTableTemp := {}
-   s_aTempDBF   := {}
+   ASize( s_aTableTemp, 0 )
 
    RETURN
 
 
-FUNCTION SQLFetch( fetchall )
+FUNCTION SQLFetch( lFetchAll )
 
    LOCAL oQuery
    LOCAL oRow
@@ -219,18 +193,17 @@ FUNCTION SQLFetch( fetchall )
    LOCAL nPos
    LOCAL lEof := .F.
 
-   hb_default( @Fetchall, .F. )
+   hb_default( @lFetchAll, .F. )
 
    /* Procura pela tabela no array */
-   i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
 
-   IF i != 0
+   IF ( i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
       /* Traz registros da base de dados */
 
       oQuery := s_aTableTemp[ i ][ DB_QUERY ]
       nPos   := s_aTableTemp[ i ][ DB_ROW ] + 1
 
-      IF Fetchall
+      IF lFetchAll
          s_aTableTemp[ i ][ DB_FETCH ] := .T.
       ENDIF
 
@@ -238,7 +211,7 @@ FUNCTION SQLFetch( fetchall )
 
          y := nPos
 
-         DO WHILE nPos <= iif( FetchAll, oQuery:LastRec(), y )
+         DO WHILE nPos <= iif( lFetchAll, oQuery:LastRec(), y )
             oRow := oQuery:GetRow( nPos )
             dbAppend()
 
@@ -276,16 +249,13 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    LOCAL x
    LOCAL s_oServer
    LOCAL oQuery
-   LOCAL aStrudbf
    LOCAL lFetch
 
    s_oServer := SQLCurrentServer()
    cAlias := Upper( cAlias )
 
    /* Procura por query na area temporaria */
-   x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
-
-   IF ! Empty( x )
+   IF ( x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } ) ) != 0
       oQuery := s_aTableTemp[ x ][ 3 ]
       oQuery:Destroy()
    ENDIF
@@ -297,28 +267,18 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
       ENDIF
    ENDIF
 
-   cQuery := cQuery
    oQuery := s_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
-      Alert( oQuery:ErrorMsg() )
+      ? oQuery:ErrorMsg()
       RETURN .F.
    ENDIF
 
    IF Empty( Select( cAlias ) )
-      /* Pega estrutura da base de dados */
-      aStrudbf := oQuery:Struct()
-
-      /* Cria tabela */
-      cFile := TempFile()
-      dbCreate( cFile, aStrudbf )
-
-      /* Abre Tabela */
-      dbUseArea( .T., NIL, cFile, cAlias, .F. )
-
+      hb_dbCreateTemp( cAlias, oQuery:Struct() )
    ELSE
       Select( cAlias )
-      ZAP
+      hb_dbZap()
    ENDIF
 
    IF xFetch != NIL
@@ -328,7 +288,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    ENDIF
 
    /* Se nao houver query na area temporaria entao adiciona, caso contrario, apenas atualiza */
-   IF Empty( x )
+   IF x == 0
       AAdd( s_aTableTemp, { ;
          cAlias, ;  // Table Name
          cFile, ;   // Temporary File Name
@@ -353,13 +313,13 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    RETURN result
 
 
-FUNCTION SQLConnect( cServer, cDatabase, cUser, cPassword, cSchema )
+FUNCTION SQLConnect( cHost, cDatabase, cUser, cPassword, cSchema )
 
    LOCAL lRetval := .T.
 
-   s_oServer := TPQServer():New( cServer, cDatabase, cUser, cPassWord, 5432, cSchema )
+   s_oServer := TPQServer():New( cHost, cDatabase, cUser, cPassword, 5432, cSchema )
    IF s_oServer:NetErr()
-      Alert( s_oServer:ErrorMsg() )
+      ? s_oServer:ErrorMsg()
       lRetval := .F.
    ENDIF
    s_oServer:lAllCols := .F.
@@ -385,7 +345,7 @@ FUNCTION SQLQuery( cQuery )
    LOCAL oQuery := s_oServer:Query( cQuery )
 
    IF oQuery:NetErr()
-      Alert( cQuery + ":" + oQuery:ErrorMsg() )
+      ? cQuery + ":" + oQuery:ErrorMsg()
    ENDIF
 
    RETURN oQuery
@@ -398,7 +358,7 @@ FUNCTION SQLExecQuery( cQuery )
 
    oQuery := s_oServer:Query( cQuery )
    IF oQuery:NetErr()
-      Alert( "Cannot execute " + cQuery + ":" + oQuery:ErrorMsg() )
+      ? "Cannot execute", cQuery + ":" + oQuery:ErrorMsg()
 
       result := .F.
    ELSE
@@ -414,13 +374,13 @@ FUNCTION SQLPrepare( cQuery, ... )
 
    IF PCount() >= 2
       /* Limpa espacos desnecessarios */
-      DO WHILE At( Space( 2 ), cQuery ) != 0
+      DO WHILE Space( 2 ) $ cQuery
          cQuery := StrTran( cQuery, Space( 2 ), Space( 1 ) )
       ENDDO
 
       /* Coloca {} nos parametros */
       FOR i := 1 TO PCount() - 1
-         IF ! Empty( x := At( ":" + hb_ntos( i ), cQuery ) )
+         IF ( x := At( ":" + hb_ntos( i ), cQuery ) ) > 0
             cQuery := Stuff( cQuery, x, 0, "{" )
             cQuery := Stuff( cQuery, x + Len( hb_ntos( i ) ) + 2, 0, "}" )
          ENDIF
@@ -430,36 +390,36 @@ FUNCTION SQLPrepare( cQuery, ... )
       FOR i := 2 TO PCount()
          x := hb_PValue( i )
 
-         IF x != NIL .AND. Empty( x )
+         DO CASE
+         CASE x != NIL .AND. Empty( x )
             x := "null"
 
-         ELSEIF HB_ISNUMERIC( x )
+         CASE HB_ISNUMERIC( x )
             x := hb_ntos( x )
 
-         ELSEIF HB_ISDATE( x )
-            x := DToQ( x )
+         CASE HB_ISDATE( x )
+            x := "'" + hb_DToC( x, "yyyy-mm-dd" ) + "'"
 
-         ELSEIF HB_ISLOGICAL( x )
+         CASE HB_ISLOGICAL( x )
             x := iif( x, "'t'", "'f'" )
 
-         ELSEIF HB_ISSTRING( x )
+         CASE HB_ISSTRING( x )
             x := SToQ( RTrim( x ) )
 
-         ELSE
+         OTHERWISE
             x := "null"
-         ENDIF
+         ENDCASE
 
          cQuery := StrTran( cQuery, "{:" + hb_ntos( i - 1 ) + "}", x )
       NEXT
    ENDIF
 
-   cQuery := StrTran( cQuery, "==", "=" )
-   cQuery := StrTran( cQuery, "!=", "<>" )
-   cQuery := StrTran( cQuery, ".and.", "and" )
-   cQuery := StrTran( cQuery, ".or.", "or" )
-   cQuery := StrTran( cQuery, ".not.", "not" )
-
-   RETURN cQuery
+   RETURN hb_StrReplace( cQuery, { ;
+      "=="    => "="   , ;
+      "!="    => "<>"  , ;
+      ".and." => "and" , ;
+      ".or."  => "or"  , ;
+      ".not." => "not" } )
 
 
 /* Pega resultado de uma sequence */
@@ -525,51 +485,6 @@ FUNCTION QuickQuery( cQuery )
 
    RETURN result
 
-
-PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
-
-   LOCAL cFile, i, cIndex, cKey
-
-   hb_default( @aIndex, {} )
-
-   cFile := TempFile()
-   dbCreate( cFile, aStructure )
-
-   /* Abre Tabela */
-   dbUseArea( .T., NIL, cFile, cAlias, .F. )
-
-   FOR i := 1 TO Len( aIndex )
-      cKey := aIndex[ i ]
-      cIndex := TempFile()
-
-      INDEX ON &cKey TO ( cIndex )
-
-      AAdd( s_aTempDBF, cIndex )
-   NEXT
-
-   AAdd( s_aTempDBF, cFile )
-
-   RETURN
-
-
-FUNCTION TempFile( cPath, cExt )
-
-   LOCAL cString
-
-   hb_default( @cPath, hb_DirTemp() )
-   hb_default( @cExt, "tmp" )
-
-   cString := cPath + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + "." + cExt
-
-   DO WHILE hb_FileExists( cString )
-      cString := cPath + StrZero( Int( hb_Random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + "." + cExt
-   ENDDO
-
-   RETURN cString
-
-
-FUNCTION DToQ( cData )
-   RETURN "'" + Str( Year( cData ), 4 ) + "-" + StrZero( Month( cData ), 2 ) + "-" + StrZero( Day( cData ), 2 ) + "'"
 
 FUNCTION SToQ( cData )
    RETURN "'" + cData + "'"

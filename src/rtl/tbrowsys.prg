@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #ifdef HB_COMPAT_C53
 
 #include "button.ch"
@@ -54,46 +56,46 @@
 FUNCTION TApplyKey( nKey, oBrowse )
    RETURN oBrowse:applyKey( nKey )
 
-FUNCTION TBAddCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBAddCol() /* TODO */
+   RETURN
 
-FUNCTION TBBBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBBBlock() /* TODO */
+   RETURN
 
-FUNCTION TBClose() /* TODO */
-   RETURN NIL
+PROCEDURE TBClose() /* TODO */
+   RETURN
 
-FUNCTION TBCreate() /* TODO */
-   RETURN NIL
+PROCEDURE TBCreate() /* TODO */
+   RETURN
 
-FUNCTION TBDelCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBDelCol() /* TODO */
+   RETURN
 
-FUNCTION TBDisplay() /* TODO */
-   RETURN NIL
+PROCEDURE TBDisplay() /* TODO */
+   RETURN
 
-FUNCTION TBEditCell() /* TODO */
-   RETURN NIL
+PROCEDURE TBEditCell() /* TODO */
+   RETURN
 
-FUNCTION TBFBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBFBlock() /* TODO */
+   RETURN
 
-FUNCTION TBGoBot() /* TODO */
-   RETURN NIL
+PROCEDURE TBGoBot() /* TODO */
+   RETURN
 
-FUNCTION TBGoTop() /* TODO */
-   RETURN NIL
+PROCEDURE TBGoTop() /* TODO */
+   RETURN
 
-FUNCTION TBInsCol() /* TODO */
-   RETURN NIL
+PROCEDURE TBInsCol() /* TODO */
+   RETURN
 
-FUNCTION TBModal() /* TODO */
-   RETURN NIL
+PROCEDURE TBModal() /* TODO */
+   RETURN
 
-FUNCTION TBSBlock() /* TODO */
-   RETURN NIL
+PROCEDURE TBSBlock() /* TODO */
+   RETURN
 
-FUNCTION TBSkip() /* TODO */
-   RETURN NIL
+PROCEDURE TBSkip() /* TODO */
+   RETURN
 
 #endif

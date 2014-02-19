@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -276,38 +276,44 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 
 HB_FUNC( WAPI_FORMATMESSAGE )
 {
-   void * hSource = NULL;
    void * hBuffer;
-
    HB_SIZE nBufferLen;
-
-   LPTSTR lpBuffer;
-   DWORD dwRetVal;
 
    ( void ) HB_PARSTR( 5, &hBuffer, &nBufferLen );
 
-   lpBuffer = nBufferLen > 0 ? ( LPTSTR ) hb_xgrab( nBufferLen * sizeof( TCHAR ) ) : NULL;
-
-   dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
-                             HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
-                             HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : hbwapi_GetLastError() /* dwMessageId */,
-                             ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
-                             lpBuffer,
-                             ( DWORD ) nBufferLen,
-                             NULL /* TODO: Add support for this parameter. */ );
-
-   hbwapi_SetLastError( GetLastError() );
-   hb_retnl( dwRetVal );
-
-   if( lpBuffer )
+   if( nBufferLen > 0 )
    {
+      void * hSource = NULL;
+      LPTSTR lpBuffer;
+      DWORD dwRetVal;
+
+      nBufferLen = HB_MIN( nBufferLen, 64 * 1024 * 1024 );
+
+      lpBuffer = ( LPTSTR ) hb_xgrab( nBufferLen * sizeof( TCHAR ) );
+
+      dwRetVal = FormatMessage( ( DWORD ) hb_parnldef( 1, FORMAT_MESSAGE_FROM_SYSTEM ) /* dwFlags */,
+                                HB_ISCHAR( 2 ) ? ( LPCVOID ) HB_PARSTR( 2, &hSource, NULL ) : hb_parptr( 2 ),
+                                HB_ISNUM( 3 ) ? ( DWORD ) hb_parnl( 3 ) : hbwapi_GetLastError() /* dwMessageId */,
+                                ( DWORD ) hb_parnldef( 4, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) ) /* dwLanguageId */,
+                                lpBuffer,
+                                ( DWORD ) nBufferLen,
+                                NULL /* TODO: Add support for this parameter. */ );
+
+      hbwapi_SetLastError( GetLastError() );
+      hb_retnl( dwRetVal );
+
       HB_STORSTR( dwRetVal ? lpBuffer : NULL, 5 );
       hb_xfree( lpBuffer );
+
+      hb_strfree( hSource );
    }
    else
+   {
       hb_storc( NULL, 5 );
+      hbwapi_SetLastError( ERROR_EMPTY );
+      hb_retnl( -1 );
+   }
 
-   hb_strfree( hSource );
    hb_strfree( hBuffer );
 }
 
@@ -390,10 +396,10 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
 
    if( ! s_getPathNameAddr )
    {
-      s_getPathNameAddr =
-         ( _HB_GETPATHNAME )
-            HB_WINAPI_GETPROCADDRESST( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
-                                       "GetLongPathName" );
+      HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+      if( hModule )
+         s_getPathNameAddr = ( _HB_GETPATHNAME )
+            HB_WINAPI_GETPROCADDRESST( hModule, "GetLongPathName" );
 
       if( ! s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;

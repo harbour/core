@@ -13,19 +13,19 @@ LOCAL a, b
 
   TEST7 ;
   ()
-//  TEST7 ; () //In Clipper: Incomplete statement or unbalanced delimiters
+//  TEST7 ; () // In Clipper: Incomplete statement or unbalanced delimiters
 
   TEST8( ;
   )
-//  TEST8( ; ) //In Clipper: Incomplete statement or...
+//  TEST8( ; ) // In Clipper: Incomplete statement or...
 
   TEST9( a ;
 )
-//  TEST9( a ; ) //In Clipper: Incomplete statement or...
+//  TEST9( a ; ) // In Clipper: Incomplete statement or...
 
   TEST10( a, ;
 )
-//  TEST10( a, ; ) //In Clipper: Incomplete statement or...
+//  TEST10( a, ; ) // In Clipper: Incomplete statement or...
 
   TEST11( a, b ; //////////test
 )
@@ -71,7 +71,7 @@ b ;
 
  a :=TEST1(); TEST2()
 
-// a :=TEST1()+ ; TEST2() //In Clipper: Incomplete statement ...
+// a :=TEST1()+ ; TEST2() // In Clipper: Incomplete statement ...
 
  a :=;
 ; /////// comment

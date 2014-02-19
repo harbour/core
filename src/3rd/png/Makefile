@@ -43,6 +43,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
          HB_CFLAGS_DYN := -DPNG_BUILD_DLL
 
+         # requirement for wce and for win/msvc with -sdl option
          HB_CFLAGS += -DPNG_NO_STDIO
 
          ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
@@ -64,8 +65,8 @@ else
 endif
 
 # ORIGIN http://libpng.org/pub/png/libpng.html
-# VER    1.6.8
-# URL    http://downloads.sourceforge.net/libpng/libpng-1.6.8.tar.gz
+# VER    1.6.9
+# URL    https://downloads.sourceforge.net/libpng/libpng-1.6.9.tar.gz
 # DIFF   png.dif
 #
 # MAP    LICENSE

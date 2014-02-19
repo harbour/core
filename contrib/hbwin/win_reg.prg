@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -66,35 +66,32 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
    cKey := ""
    cEntry := ""
 
-   tmp := At( "\", cRegPath )
-   IF tmp > 0
+   IF ( tmp := At( "\", cRegPath ) ) > 0
       cHKEY := Left( cRegPath, tmp - 1 )
       cRegPath := SubStr( cRegPath, tmp + 1 )
 
-      tmp := RAt( "\", cRegPath )
-      IF tmp > 0
+      IF ( tmp := RAt( "\", cRegPath ) ) > 0
          cKey := Left( cRegPath, tmp - 1 )
          cEntry := SubStr( cRegPath, tmp + 1 )
       ELSE
          cEntry := cRegPath
       ENDIF
 
-      /* Len( <literal> ) is optimized to a number by Harbour at compile time. */
       DO CASE
-      CASE Left( cHKEY, Len( "HKCU"                  ) ) == "HKCU"                  ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKLM"                  ) ) == "HKLM"                  ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKCR"                  ) ) == "HKCR"                  ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKU"                   ) ) == "HKU"                   ; nHKEY := WIN_HKEY_USERS
-      CASE Left( cHKEY, Len( "HKPD"                  ) ) == "HKPD"                  ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKCC"                  ) ) == "HKCC"                  ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKDD"                  ) ) == "HKDD"                  ; nHKEY := WIN_HKEY_DYN_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_USER"     ) ) == "HKEY_CURRENT_USER"     ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKEY_LOCAL_MACHINE"    ) ) == "HKEY_LOCAL_MACHINE"    ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKEY_CLASSES_ROOT"     ) ) == "HKEY_CLASSES_ROOT"     ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKEY_USERS"            ) ) == "HKEY_USERS"            ; nHKEY := WIN_HKEY_USERS
-      CASE Left( cHKEY, Len( "HKEY_PERFORMANCE_DATA" ) ) == "HKEY_PERFORMANCE_DATA" ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_CONFIG"   ) ) == "HKEY_CURRENT_CONFIG"   ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKEY_DYN_DATA"         ) ) == "HKEY_DYN_DATA"         ; nHKEY := WIN_HKEY_DYN_DATA
+      CASE hb_LeftIs( cHKEY, "HKCU"                  ) ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE hb_LeftIs( cHKEY, "HKLM"                  ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE hb_LeftIs( cHKEY, "HKCR"                  ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE hb_LeftIs( cHKEY, "HKU"                   ) ; nHKEY := WIN_HKEY_USERS
+      CASE hb_LeftIs( cHKEY, "HKPD"                  ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE hb_LeftIs( cHKEY, "HKCC"                  ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE hb_LeftIs( cHKEY, "HKDD"                  ) ; nHKEY := WIN_HKEY_DYN_DATA
+      CASE hb_LeftIs( cHKEY, "HKEY_CURRENT_USER"     ) ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE hb_LeftIs( cHKEY, "HKEY_LOCAL_MACHINE"    ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE hb_LeftIs( cHKEY, "HKEY_CLASSES_ROOT"     ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE hb_LeftIs( cHKEY, "HKEY_USERS"            ) ; nHKEY := WIN_HKEY_USERS
+      CASE hb_LeftIs( cHKEY, "HKEY_PERFORMANCE_DATA" ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE hb_LeftIs( cHKEY, "HKEY_CURRENT_CONFIG"   ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE hb_LeftIs( cHKEY, "HKEY_DYN_DATA"         ) ; nHKEY := WIN_HKEY_DYN_DATA
       ENDCASE
    ENDIF
 
@@ -167,7 +164,7 @@ STATIC FUNCTION Bin2U( c )
 
    LOCAL l := Bin2L( c )
 
-   RETURN iif( l < 0, l + 4294967296, l )
+   RETURN iif( l < 0, l + ( 2 ^ 32 ), l )
 
 FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
@@ -184,22 +181,23 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
       win_regQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
 
       IF HB_ISSTRING( xRetVal )
-         DO CASE
-         CASE nValueType == WIN_REG_DWORD .OR. ;
-              nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
+         SWITCH nValueType
+         CASE WIN_REG_DWORD_LITTLE_ENDIAN  /* == WIN_REG_DWORD */
             xRetVal := Bin2U( xRetVal )
-         CASE nValueType == WIN_REG_DWORD_BIG_ENDIAN
+            EXIT
+         CASE WIN_REG_DWORD_BIG_ENDIAN
             xRetVal := Bin2U( hb_BRight( xRetVal, 2 ) + hb_BLeft( xRetVal, 2 ) )
-         CASE nValueType == WIN_REG_QWORD .OR. ;
-              nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
+            EXIT
+         CASE WIN_REG_QWORD_LITTLE_ENDIAN  /* == WIN_REG_QWORD */
             xRetVal := hb_bitShift( Bin2U( hb_BSubStr( xRetVal, 5, 4 ) ), 32 ) +;
                                     Bin2U( hb_BSubStr( xRetVal, 1, 4 ) )
+            EXIT
          OTHERWISE
             /* Strip ending zero byte */
             IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
                xRetVal := hb_BLeft( xRetVal, hb_BLen( xRetVal ) - 1 )
             ENDIF
-         ENDCASE
+         ENDSWITCH
       ELSE
          xRetVal := xDefault
       ENDIF

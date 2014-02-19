@@ -9,7 +9,13 @@
 -prgflag=-i-
 #-prgflag=-u+hbstrict.ch
 
--safe
+-harden
+
+# disable .hbx updates unless requested
+{!(HB_REBUILD_EXTERN='yes')}-hbx-
+
+#{win&allmsvc&HB_COMP_VER>'1600'}-cflag=-sdl
+{win&allmsvc&HB_COMP_VER>'1700'}-cflag=-analyze
 
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows

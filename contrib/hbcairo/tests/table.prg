@@ -7,13 +7,13 @@ PROCEDURE Main()
 
    // Create database
    dbCreate( "country", { { "CODE", "C", 3, 0 }, { "NAME", "C", 30, 0 }, { "RESIDENTS", "N", 10, 0 } },, .T. )
-   dbAppend(); CODE := "LTU";  NAME := "Lithuania";                 RESIDENTS :=   3369600
-   dbAppend(); CODE := "USA";  NAME := "United States of America";  RESIDENTS := 305397000
-   dbAppend(); CODE := "POR";  NAME := "Portugal";                  RESIDENTS :=  10617600
-   dbAppend(); CODE := "POL";  NAME := "Poland";                    RESIDENTS :=  38115967
-   dbAppend(); CODE := "AUS";  NAME := "Australia";                 RESIDENTS :=  21446187
-   dbAppend(); CODE := "FRA";  NAME := "France";                    RESIDENTS :=  64473140
-   dbAppend(); CODE := "RUS";  NAME := "Russia";                    RESIDENTS := 141900000
+   dbAppend(); CODE := "LTU"; NAME := "Lithuania";                 RESIDENTS :=   3369600
+   dbAppend(); CODE := "USA"; NAME := "United States of America";  RESIDENTS := 305397000
+   dbAppend(); CODE := "POR"; NAME := "Portugal";                  RESIDENTS :=  10617600
+   dbAppend(); CODE := "POL"; NAME := "Poland";                    RESIDENTS :=  38115967
+   dbAppend(); CODE := "AUS"; NAME := "Australia";                 RESIDENTS :=  21446187
+   dbAppend(); CODE := "FRA"; NAME := "France";                    RESIDENTS :=  64473140
+   dbAppend(); CODE := "RUS"; NAME := "Russia";                    RESIDENTS := 141900000
 
    // Draw
    hSurface := cairo_pdf_surface_create( "table.pdf", 566.9, 793.7 )  // 200x280 mm in pt
@@ -35,7 +35,6 @@ PROCEDURE Main()
 
    RETURN
 
-
 STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
 
    LOCAL nI, aWidth, nDX, nW, xValue
@@ -49,7 +48,7 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
    dbGoTop()
    aWidth := Array( Len( aCol ) )
    FOR nI := 1 TO Len( aCol )
-      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", FieldLen( FieldPos( aCol[ nI, 2 ] ) ) ) )[ 5 ]
+      aWidth[ nI ] := cairo_text_extents( hCairo, Replicate( "9", hb_FieldLen( FieldPos( aCol[ nI, 2 ] ) ) ) )[ 5 ]
       aWidth[ nI ] := Max( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI, 1 ] )[ 5 ] ) + 20
    NEXT
    nW := 0
@@ -111,14 +110,12 @@ STATIC PROCEDURE draw_table( hCairo, nX, nY, aCol )
 
    RETURN
 
-
 STATIC PROCEDURE show_text_right( hCairo, cText )
 
    cairo_rel_move_to( hCairo, - cairo_text_extents( hCairo, cText )[ 5 ], 0 )
    cairo_show_text( hCairo, cText )
 
    RETURN
-
 
 STATIC PROCEDURE show_text_center( hCairo, cText )
 

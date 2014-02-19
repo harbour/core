@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -240,10 +240,7 @@ METHOD reset() CLASS HBProfile
    RETURN Self
 
 METHOD ignoreSymbol( cSymbol ) CLASS HBProfile
-
-   LOCAL cProfPrefix := "HBPROFILE"
-
-   RETURN Left( cSymbol, Len( cProfPrefix ) ) == cProfPrefix .OR. cSymbol == "__SETPROFILER"
+   RETURN hb_LeftIs( cSymbol, "HBPROFILE" ) .OR. cSymbol == "__SETPROFILER"
 
 METHOD gatherFunctions() CLASS HBProfile
 
@@ -452,7 +449,7 @@ METHOD gatherOPCodes() CLASS HBProfileLowLevel
    // Loop over all the harbour OP codes. Note that they start at 0.
    FOR nOP := 0 TO nMax - 1
       // If we're not ignoring this opcode.
-      IF ! ::ignoreSymbol( cName := "OPCODE( " + PadL( nOP, 3 ) + " )" )
+      IF ! ::ignoreSymbol( cName := "OPCODE( " + Str( nOP, 3 ) + " )" )
          // Add it to the profile.
          AAdd( ::aProfile, HBProfileOpcode():new( cName, __opGetPrf( nOP ) ) )
       ENDIF
@@ -517,8 +514,8 @@ METHOD line( oEntity ) CLASS HBProfileReport
    RETURN { ;
       PadR( oEntity:cName,      35 ) + " " + ;
       PadR( oEntity:describe(),  8 ) + " " + ;
-      PadL( oEntity:nCalls,     10 ) + " " + ;
-      PadL( oEntity:nTicks,     11 ) + " " + ;
+      Str( oEntity:nCalls,      10 ) + " " + ;
+      Str( oEntity:nTicks,      11 ) + " " + ;
       Str( oEntity:nSeconds,    11, 2 ) }
 
 METHOD emitLine( oEntity ) CLASS HBProfileReport

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1241,7 +1241,15 @@ HB_SIZE hb_xquery( int iMode )
    switch( iMode )
    {
       case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1262,7 +1270,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1283,7 +1299,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1304,7 +1328,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailVirtual / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1333,7 +1365,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullTotalPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1369,7 +1409,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPageFile / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );

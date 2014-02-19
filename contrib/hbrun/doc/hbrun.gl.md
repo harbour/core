@@ -1,6 +1,6 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 2007\-2013, Viktor Szakáts  
-Copyright \(c\) 2003\-2007, Przemysław Czerpak  
+Harbour Shell / Script Runner 3\.4\.0dev \(r2014\-01\-01 13:00\)  
+Copyright &copy; 2007\-2014, Viktor Szakáts  
+Copyright &copy; 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
 Traducción \(gl\): JLalín  
 
@@ -35,11 +35,11 @@ Arquivos:
  - **hb\_extension** lista de extensións para cargar no intérprete interactivo\. Unha extensión por liña, ignórase a partir do caracter '\#' \. Nome de arquivo alternativo en MS\-DOS: hb\_ext\.ini\. Reside en \[\*\]: %APPDATA%\\\.harbour\\
 
 
-Constantes predefinidas nos fontes:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** cando unha fonte Harbour se executa coma un guión do intérprete de comandos
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
   
 Variables de ámbito:  
 
@@ -69,11 +69,13 @@ Lista de paquetes cargados\.
 hb\_DirBase\(\) non mapeada para o guión\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) non mapeada para script\.
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
+Name of the script executing\.
   
 Notas:  
 
 
-  - o arquivo \.hb, \.prg, \.hrb ou \.dbf pasado como primeiro parámetro será executado coma un guión de Harbour\. Se o arquivo non inclúe ruta buscarase no directorio actual e na variable de ámbito PATH\. Se o arquivo non ten extensión asumiránse \.hb e \.hrb, nesa mesma orde\. Os arquivos \.dbf ábrense automáticamente en modo compartido e iníciase o intérprete interactivo de Harbour\. Para as extensións non estándar autodetectarase a partir do fonte y tipos de guións predefinidos\. Para os guións de Harbour o código de páxina predefinido é UTF\-8\. A cabeceira predeterminada 'hb\.ch' e incluida \(\#include\) automáticamente\. O formato para datas predeterminado e o estándar ISO: yyyy\-mm\-dd\. O terminal xeral predeterminado é 'gtcgi', non sendo que se detecten chamadas a funcións CUI a pantalla completa, entón selecciónase automáticamente 'gtwin' \[\*\] \(excepto para INIT PROCEDUREs\)\.
+  - \.hb, \.prg, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Pose usar &lt;Alt\+V&gt; no modo de intérprete interactivo de Harbour para pegar texto dende o portapapéis\.
   - Os valores marcados con \[\*\] poden depender da plataforma anfitriona e/ou da configuración\. Esta axuda foi xenerada na plataforma 'win'\.
   
@@ -93,7 +95,7 @@ GNU General Public License for more details\.
 You should have received a copy of the GNU General Public License  
 along with this program; if not, write to the Free Software  
 Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
-their web site at http://www\.gnu\.org/\)\.  
+their web site at https://www\.gnu\.org/\)\.  
   
 License extensions:  
   \- This source code must be kept and distributed as part  
@@ -106,8 +108,8 @@ License extensions:
   \- Source code modifications shall always be made available  
     along with binaries\.  
   \- Help text and documentation is licensed under  
-    Creative Commons Attribution\-ShareAlike 3\.0:  
-    http://creativecommons\.org/licenses/by\-sa/3\.0/  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
 
   
 Autor:  

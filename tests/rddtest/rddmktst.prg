@@ -17,8 +17,8 @@
 //#define _TEST_CMPDIDX_
 
 #ifdef _TEST_ADS_
-  #undef _TEST_DESCEND_
-  #undef _TEST_UNIQUE_
+   #undef _TEST_DESCEND_
+   #undef _TEST_UNIQUE_
 #endif
 
 #define _TEST_CREATE_
@@ -26,19 +26,19 @@
 #include "rddtst.prg"
 
 #ifndef _TEST_CMPDIDX_
-  #command RDDTEST INDEX on <key> tag <tg> to <fi> [ FOR <for> ] [ <desc: DESCENDING> ] => ;
-           RDDTEST INDEX on <key> to <tg> [ FOR <for> ] [ <desc> ]
+   #command RDDTEST INDEX ON <key> TAG <tg> TO <fi> [ FOR <for> ] [ <desc: DESCENDING> ] => ;
+            RDDTEST INDEX ON <key> TO <tg> [ FOR <for> ] [ <desc> ]
 #endif
 
 
-function test_main()
+procedure test_main()
 RDDTEST LOCAL n
 
 RDDTEST RDDSETDEFAULT()
 
 RDDTEST USE _DBNAME SHARED
 
-/* movments in empty DB */
+/* movements in empty DB */
 RDDTEST DBGOTOP()
 RDDTEST DBGOBOTTOM()
 RDDTEST DBSKIP(0)
@@ -46,7 +46,7 @@ RDDTEST DBGOTO(0)
 RDDTEST DBSKIP(1)
 RDDTEST DBSKIP(-1)
 RDDTEST DBSKIP(0)
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST DBGOTOP()
 RDDTEST DBGOBOTTOM()
 RDDTEST DBSKIP(0)
@@ -54,7 +54,7 @@ RDDTEST DBGOTO(0)
 RDDTEST DBSKIP(1)
 RDDTEST DBSKIP(-1)
 RDDTEST DBSKIP(0)
-RDDTEST SET DELETE OFF
+RDDTEST SET DELETED OFF
 
 RDDTEST INDEX on FNUM tag TG_N to _DBNAME
 RDDTEST INDEX on FSTR tag TG_C to _DBNAME
@@ -68,7 +68,7 @@ RDDTEST DBGOTO(0)
 RDDTEST DBSKIP(1)
 RDDTEST DBSKIP(-1)
 RDDTEST DBSKIP(0)
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST DBGOTOP()
 RDDTEST DBGOBOTTOM()
 RDDTEST DBSKIP(0)
@@ -83,13 +83,13 @@ RDDTEST DBSEEK('', .t.,.t.)
 RDDTEST DBSEEK('', .f.,.f.)
 RDDTEST DBSEEK('', .f.,.t.)
 
-RDDTEST SET DELETE OFF
+RDDTEST SET DELETED OFF
 
 RDDTEST ;
-  for n := 1 to N_LOOP                     ;;
-    dbappend()                             ;;
-    replace FNUM with int( ( n + 2 ) / 3 ) ;;
-    replace FSTR with chr( FNUM +48 )      ;;
+  for n := 1 to N_LOOP                      ;;
+     dbappend()                             ;;
+     replace FNUM with int( ( n + 2 ) / 3 ) ;;
+     replace FSTR with chr( FNUM + 48 )     ;;
   next
 
 RDDTEST dbcommit()
@@ -558,7 +558,7 @@ RDDTEST ORDSKIPUNIQUE()
 
 /* filter test and skipping */
 RDDTEST ORDSETFOCUS(0)
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST FLOCK()
 RDDTEST DBGOTO(1)
 RDDTEST DBDELETE()
@@ -631,18 +631,18 @@ RDDTEST DBSKIP(-1)
 RDDTEST DBGOTO(11)
 RDDTEST DBSKIP(1)
 
-RDDTEST SET DELETE OFF
+RDDTEST SET DELETED OFF
 RDDTEST FLOCK()
 RDDTEST RECALL ALL
 RDDTEST DBUNLOCK()
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST DBGOTOP()
 RDDTEST DBGOBOTTOM()
 RDDTEST DBCOMMIT()
 
 /* and the same but with active index */
 RDDTEST ORDSETFOCUS(1)
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST FLOCK()
 RDDTEST DBGOTO(1)
 RDDTEST DBDELETE()
@@ -731,11 +731,11 @@ RDDTEST DBSKIP(-1)
 RDDTEST DBGOTO(11)
 RDDTEST DBSKIP(1)
 
-RDDTEST SET DELETE OFF
+RDDTEST SET DELETED OFF
 RDDTEST FLOCK()
 RDDTEST RECALL ALL
 RDDTEST DBUNLOCK()
-RDDTEST SET DELETE ON
+RDDTEST SET DELETED ON
 RDDTEST DBGOTOP()
 RDDTEST DBGOBOTTOM()
 RDDTEST DBCOMMIT()
@@ -814,4 +814,4 @@ RDDTEST DBSEEK(padr('6',10)+"*",.t.,.f.)
 RDDTEST DBSEEK(padr('6',10)+"*",.t.,.t.)
 #endif
 
-return nil
+return

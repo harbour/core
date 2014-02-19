@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -453,10 +453,16 @@ HB_FUNC( HB_DBCREATETEMP )
 }
 
 /*
- * I'm not sure if lKeepOpen open works exactly like in DBCREATE, I haven't
+ * I'm not sure if lKeepOpen open works exactly like in dbCreate(), I haven't
  * tested it with Clipper yet. If it doesn't then please inform me about it
  * and I'll update the code. [druzus]
  */
+
+/* NOTE: The created table will be kept open if lOpenMode parameter
+         is of logical type. If .T. it will be opened in a new workarea,
+         if .F. it will be opened in the current one. */
+/* NOTE: Has an identical parameter list with dbCreate() */
+
 /* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
 HB_FUNC( __DBOPENSDF )
 {
@@ -739,7 +745,7 @@ HB_FUNC( DBSEEK )
       {
          PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
          HB_BOOL bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-         HB_BOOL bFindLast = hb_parl( 3 ), fFound = HB_FALSE;
+         HB_BOOL bFindLast = hb_parl( 3 ) /* HB_EXTENSION */, fFound = HB_FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == HB_SUCCESS )
          {
             if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )
@@ -1229,7 +1235,7 @@ HB_FUNC( ORDCONDSET )
          be removed on index close operation */
       lpdbOrdCondInfo->fTemporary    = hb_parl( 18 );
       /* 19th parameter is CL5.2 USEFILTER parameter which means
-         that RDD should respect SET FILTER and SET DELETE flag */
+         that RDD should respect SET FILTER and SET DELETED flag */
       lpdbOrdCondInfo->fUseFilter    = hb_parl( 19 );
       /* 20th parameter is Harbour extenstion and informs RDD that
          index is not shared between other clients */

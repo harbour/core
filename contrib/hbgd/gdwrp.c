@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,7 +85,7 @@
  * adapted also to gdFontPtr
  */
 
-/* gdImage ----------------------- */
+/* gdImage */
 
 /* gdImage destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
@@ -148,7 +148,7 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 }
 #endif
 
-/* gdFont ----------------------- */
+/* gdFont */
 
 /* gdFont destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
@@ -230,7 +230,7 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
 
    if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
    {
-      /* get lenght */
+      /* get length */
       *sz = ( int ) hb_fsSeek( fhandle, 0, FS_END );
       /* rewind */
       hb_fsSeek( fhandle, 0, FS_SET );
@@ -349,8 +349,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
                                "Second argument must be NIL or numeric or a string.",
-                               HB_ERR_FUNCNAME, 2,
-                               hb_paramError( 2 ) );
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
          return;
       }
 
@@ -361,8 +360,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
                                "Third argument must be NIL or numeric.",
-                               HB_ERR_FUNCNAME, 1,
-                               hb_paramError( 3 ) );
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
          return;
       }
 
@@ -374,8 +372,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 95.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -387,8 +384,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 9.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -398,8 +394,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Foreground color nedeed",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
          fg = hb_parni( 3 );
@@ -457,7 +452,7 @@ static void GDImageSaveTo( int nType )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ************************* WRAPPED FUNCTIONS ****************************** */
+/* WRAPPER FUNCTIONS */
 
 HB_FUNC( HB_GD_VERSION )
 {

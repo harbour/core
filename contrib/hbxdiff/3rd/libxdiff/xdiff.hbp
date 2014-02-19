@@ -26,14 +26,14 @@ xrabply.c
 xutils.c
 xversion.c
 
-# ORIGIN http://www.xmailserver.org/xdiff-lib.html
+# ORIGIN http://xmailserver.org/xdiff-lib.html
 # VER    0.23
-# URL    http://www.xmailserver.org/libxdiff-0.23.tar.gz
+# URL    http://xmailserver.org/libxdiff-0.23.tar.gz
 # DIFF   libxdiff.dif
 #
 # MAP    AUTHORS
 # MAP    COPYING
-# MAP    winconfig.h
+# MAP    winconfig.h         winconf.h
 # MAP    man/xdiff.txt       xdiff.txt
 # MAP    xdiff/xadler32.c    xadler32.c
 # MAP    xdiff/xadler32.h    xadler32.h

@@ -12,26 +12,26 @@ PROCEDURE Main()
    cString := MemoRead( cFile )
 
    IF Empty( cString )
-      WAIT "xml file unavailable"
+      ? "xml file unavailable"
       RETURN
    ENDIF
 
    oDoc := TXMLDocument():New( cString, HBXML_STYLE_NOESCAPE )
    IF oDoc:nError != HBXML_ERROR_NONE
-      WAIT "xml file parsing error " + hb_ntos( oDoc:nError )
+      ? "xml file parsing error", hb_ntos( oDoc:nError )
       RETURN
    ENDIF
 
    oBook := oDoc:findfirst( "book" )
    IF oBook == NIL
-      WAIT "no books found"
+      ? "no books found"
       RETURN
    ENDIF
 
    DO WHILE .T.
 
       IF "id" $ oBook:aAttributes
-         ? "book ID : " + oBook:aAttributes[ "id" ]
+         ? "book ID:", oBook:aAttributes[ "id" ]
       ELSE
          ? "no attribute book ID"
       ENDIF
@@ -44,10 +44,11 @@ PROCEDURE Main()
          oCurrent := oIterator:Next()
          IF oCurrent == NIL
             ? "end branch"
-            WAIT "values : " + cNote + " " + cDiscount
+            ? "values:", cNote, cDiscount
+            Inkey( 0 )
             EXIT
          ELSE
-            ? "current tag : " + oCurrent:cName
+            ? "current tag:", oCurrent:cName
             IF oCurrent:cName == "note"
                cNote := oCurrent:cData
             ELSEIF oCurrent:cName == "discount"
@@ -58,7 +59,7 @@ PROCEDURE Main()
 
       oBook := oDoc:findnext()
       IF oBook == NIL
-         WAIT "no more books found"
+         ? "no more books found"
          EXIT
       ENDIF
 

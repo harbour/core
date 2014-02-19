@@ -1,21 +1,22 @@
 /*
  * Harbour Project source code:
- *    new Hb_inLine {} test
+ *    new hb_inLine {} test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  */
 
-proc main()
-local hb_inLine := " (var) "
+PROCEDURE Main()
 
-? hb_inLine { hb_retc("inLine"); } + hb_inLine(" parameter ") {
-     hb_retc( hb_parc( 1 ) );
-     } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
-  hb_inLine() + "{}"
+   LOCAL hb_inLine := " (var) "
 
-return
+   ? hb_inLine { hb_retc("inLine"); } + hb_inLine( " parameter " ) {
+        hb_retc( hb_parc( 1 ) );
+        } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
+   hb_inLine() + "{}"
 
-function hb_inLine()
-return " func() "
+   RETURN
+
+STATIC FUNCTION hb_inLine()
+   RETURN " func() "

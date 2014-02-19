@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -223,7 +223,7 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
+   DO WHILE hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
          ( nTimeout < 0 .OR. Seconds() < nDone )
 
       IF ! tp_idle()
@@ -233,12 +233,12 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
       ENDIF
    ENDDO
 
-   IF nLength > Len( t_aPorts[ nPort, TPFP_INBUF ] )
+   IF nLength > hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] )
       cRet := t_aPorts[ nPort, TPFP_INBUF ]
       t_aPorts[ nPort, TPFP_INBUF ] := ""
    ELSE
-      cRet := SubStr( t_aPorts[ nPort, TPFP_INBUF ], 1, nLength )
-      t_aPorts[ nPort, TPFP_INBUF ] := SubStr( t_aPorts[ nPort, TPFP_INBUF ], nLength + 1 )
+      cRet := hb_BLeft( t_aPorts[ nPort, TPFP_INBUF ], nLength )
+      t_aPorts[ nPort, TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort, TPFP_INBUF ], nLength + 1 )
    ENDIF
 
    RETURN cRet
@@ -251,7 +251,7 @@ FUNCTION tp_send( nPort, cString, nTimeout )
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
-   IF Len( cString ) == 0
+   IF hb_BLen( cString ) == 0
       RETURN 0
    ENDIF
 
@@ -262,10 +262,10 @@ FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
 
    hb_default( @nStart, 1 )
    IF ! HB_ISNUMERIC( nLength )
-      nLength := Len( cString )
+      nLength := hb_BLen( cString )
    ENDIF
 
-   RETURN tp_send( nPort, SubStr( cString, nStart, nLength ), nTimeout )
+   RETURN tp_send( nPort, hb_BSubStr( cString, nStart, nLength ), nTimeout )
 
 
 FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
@@ -279,18 +279,18 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       RETURN ""
    ENDIF
 
-   IF ! HB_ISSTRING( cDelim ) .OR. Len( cDelim ) == 0
+   IF ! HB_ISSTRING( cDelim ) .OR. hb_BLen( cDelim ) == 0
       RETURN ""
    ENDIF
 
-   hb_default( @nMaxLen, 64999 ) /* dos telepathy def. on xharbour could be higher */
+   hb_default( @nMaxLen, 64999 ) /* MS-DOS telepathy default. In Harbour could be higher. */
    hb_default( @nTimeout, 0 )
 
    FetchChars( nPort )
 
    /* Telepathy ng: [...] If nTimeout is omitted or zero, reads until finding the
                     delimiter or the input buffer is empty. */
-   IF nTimeout == 0 .AND. Len( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
+   IF nTimeout == 0 .AND. hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ) == 0
       RETURN ""
    ENDIF
 
@@ -298,24 +298,20 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
 
    DO WHILE ( nTimeout < 0 .OR. Seconds() < nDone )
 
-      IF Len( cDelim ) == 1
+      IF hb_BLen( cDelim ) == 1
 
-         nAt := hb_At( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
-
-         IF nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
+         IF ( nAt := hb_BAt( cDelim, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+            iif( nFirst > 0, nAt < nFirst, .T. )
             nFirst := nAt
          ENDIF
 
       ELSE
 
          FOR EACH cChar IN cDelim
-
-            nAt := hb_At( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos )
-
-            IF nAt > 0 .AND. iif( nFirst > 0, nAt < nFirst, .T. )
+            IF ( nAt := hb_BAt( cChar, t_aPorts[ nPort, TPFP_INBUF ], nStartPos ) ) > 0 .AND. ;
+               iif( nFirst > 0, nAt < nFirst, .T. )
                nFirst := nAt
             ENDIF
-
          NEXT
 
       ENDIF
@@ -327,7 +323,7 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       ELSE
          // Next loop I don't need to search that part of the input buffer that
          // I've already just searched for
-         nStartPos := Max( Len( t_aPorts[ nPort, TPFP_INBUF ] ), 1 )
+         nStartPos := Max( hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] ), 1 )
 
          // I've read more characters than I'm allowed to, so I exit
          IF nStartPos >= nMaxLen
@@ -344,8 +340,8 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
    ENDDO
 
    IF nFirst > 0
-      cRet := Left( t_aPorts[ nPort, TPFP_INBUF ], nFirst )
-      t_aPorts[ nPort, TPFP_INBUF ] := SubStr( t_aPorts[ nPort, TPFP_INBUF ], nFirst + 1 )
+      cRet := hb_BLeft( t_aPorts[ nPort, TPFP_INBUF ], nFirst )
+      t_aPorts[ nPort, TPFP_INBUF ] := hb_BSubStr( t_aPorts[ nPort, TPFP_INBUF ], nFirst + 1 )
    ENDIF
 
    RETURN cRet
@@ -355,7 +351,7 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
     here rather than just a char.  yay me.
     of course, if you're using clipper/tp code and you search for a single char it will work
     the same.
-*/
+ */
 FUNCTION tp_lookfor( nPort, cLookfor )
 
    IF ! isopenport( nPort )
@@ -364,7 +360,7 @@ FUNCTION tp_lookfor( nPort, cLookfor )
 
    FetchChars( nPort )
 
-   RETURN At( cLookfor, t_aPorts[ nPort, TPFP_INBUF ] )
+   RETURN hb_BAt( cLookfor, t_aPorts[ nPort, TPFP_INBUF ] )
 
 FUNCTION tp_inchrs( nPort )
 
@@ -374,7 +370,7 @@ FUNCTION tp_inchrs( nPort )
 
    FetchChars( nPort )
 
-   RETURN Len( t_aPorts[ nPort, TPFP_INBUF ] )
+   RETURN hb_BLen( t_aPorts[ nPort, TPFP_INBUF ] )
 
 FUNCTION tp_infree( nPort )
 
@@ -408,13 +404,10 @@ PROCEDURE tp_clrkbd()
    RETURN
 
 FUNCTION tp_crc16( cString )
-
    RETURN hb_ByteSwapW( hb_CRCCT( cString ) )   /* swap lo and hi bytes */
 
 FUNCTION tp_crc32( cString )
-
    RETURN hb_CRC32( cString )
-
 
 FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
@@ -422,15 +415,19 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
    LOCAL nPort // , nTimeout, lIgnorecase
 
    nPort := aParam[ 1 ]
-   // nTimeout := aParam[ 2 ]
-   // lIgnorecase := aParam[ Len( aParam ) ]
+#if 0
+   nTimeout := aParam[ 2 ]
+   lIgnorecase := aParam[ Len( aParam ) ]
+#endif
 
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
 
-   // hb_default( @nTimeout, -1 )
-   // hb_default( @lIgnorecase, .F. )
+#if 0
+   hb_default( @nTimeout, -1 )
+   hb_default( @lIgnorecase, .F. )
+#endif
 
 #if 0
 
@@ -450,15 +447,15 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
       FetchChars( nPort )
 
-      FOR x := 1 TO Len( acList )
+      FOR EACH x IN acList
          IF lIgnorecase
-            nAt := At( Upper( acList[ x ] ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
+            nAt := hb_BAt( Upper( x ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
          ELSE
-            nAt := At( acList[ x ], t_aPorts[ nPort, TPFP_INBUF ] )
+            nAt := hb_BAt( x, t_aPorts[ nPort, TPFP_INBUF ] )
          ENDIF
          IF nAt > 0 .AND. nAt < nFirst
             nFirst := nAt
-            nRet := x
+            nRet := x:__enumIndex()
          ENDIF
       NEXT
 
@@ -473,7 +470,7 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
    ENDDO
 
    IF nFirst < 64000
-      tp_recv( nPort, nAt + Len( acList[ nRet ] ) )
+      tp_recv( nPort, nAt + hb_BLen( acList[ nRet ] ) )
       RETURN nRet
    ENDIF
 #endif
@@ -515,7 +512,7 @@ FUNCTION tp_ctrlrts( nPort, nNewCtrl )
 
 // telepathy says...
 // returns old dtr value 0,1,2
-// sets to 0 = dtr off, 1 dtr on, 2 = dtr flow control autotoggle
+// sets to 0: dtr off, 1: dtr on, 2: dtr flow control autotoggle
 // I don't support 2.  who uses dtr for flow control anyway...
 FUNCTION tp_ctrldtr( nPort, nNewCtrl )
 
@@ -660,7 +657,7 @@ STATIC FUNCTION FetchChars( nPort )
 
    t_aPorts[ nPort, TPFP_INBUF ] += cStr
 
-   RETURN Len( cStr )
+   RETURN hb_BLen( cStr )
 
 INIT PROCEDURE _tpinit()
 
@@ -668,9 +665,9 @@ INIT PROCEDURE _tpinit()
 
    IF t_aPorts == NIL
       t_aPorts := Array( TP_MAXPORTS )
-      FOR x := 1 TO Len( t_aPorts )
+      FOR EACH x IN t_aPorts
          // / port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
-         t_aPorts[ x ] := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
+         x := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
       NEXT
    ENDIF
 
@@ -718,11 +715,13 @@ FUNCTION tp_keybd()
 // / the global debug level I print the message.  Since I don't have your system globals,
 // / I will ignore the first parameter and always print it.
 // / I recommend you modify this function to suit your own debugging needs
-FUNCTION tp_debug( nDebugLevel, cString )
+PROCEDURE tp_debug( nDebugLevel, cString )
+
+   HB_SYMBOL_UNUSED( nDebugLevel )
 
    ? cString
 
-   RETURN NIL
+   RETURN
 
 #endif
 
@@ -732,10 +731,10 @@ PROCEDURE tp_uninstall()
 
    RETURN
 
-STATIC FUNCTION __TP_INFREE()
+STATIC FUNCTION __tp_infree()
    RETURN -1
 
-STATIC FUNCTION __TP_OUTFREE()
+STATIC FUNCTION __tp_outfree()
    RETURN -1
 
 FUNCTION bin_and( ... )

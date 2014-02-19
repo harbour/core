@@ -1,5 +1,5 @@
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,66 +46,49 @@
  *
  */
 
-/*
- Internet Messaging: http://www.ietf.org/rfc/rfc2045.txt
- */
+/* Internet Messaging: https://www.ietf.org/rfc/rfc2045.txt */
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added Function: tip_GetEncoder()
-*/
+   Added Function: tip_GetEncoder() */
 
 #include "hbclass.ch"
 
 #include "fileio.ch"
 
-FUNCTION tip_GetEncoder( cModel )
-
-   LOCAL oEncoder
-
-   hb_default( @cModel, "as-is" )
-
-   cModel := Lower( cModel )
-
-   DO CASE
-   CASE cModel == "base64"
-      oEncoder := TIPEncoderBase64():New()
-
-   CASE cModel == "quoted-printable"
-      oEncoder := TIPEncoderQP():New()
-
-   CASE cModel == "url" .OR. cModel == "urlencoded"
-      oEncoder := TIPEncoderUrl():New()
-
-   CASE cModel == "7bit" .OR. cModel == "8bit"
-      oEncoder := TIPEncoder():New( cModel )
-      oEncoder:cName := cModel
-
-   OTHERWISE
-      oEncoder := TIPEncoder():New()
-
-   ENDCASE
-
-   RETURN oEncoder
-
 CREATE CLASS TIPEncoder
 
    VAR cName
 
-   METHOD New( cModel )
+   METHOD New( cMode )
    METHOD Encode( cData )
    METHOD Decode( cData )
 
 ENDCLASS
 
-METHOD New( cModel ) CLASS TIPEncoder
+#define MODE_PASSTHROUGH  "as-is"
 
-   hb_default( @cModel, "as-is" )
-   ::cName := cModel
+METHOD New( cMode ) CLASS TIPEncoder
+
+   hb_default( @cMode, MODE_PASSTHROUGH )
+   ::cName := cMode
 
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoder
-   RETURN cData
+   RETURN iif( ::cName == MODE_PASSTHROUGH, cData, tip_GetEncoder( ::cName ):Encode( cData ) )
 
 METHOD Decode( cData ) CLASS TIPEncoder
-   RETURN cData
+   RETURN iif( ::cName == MODE_PASSTHROUGH, cData, tip_GetEncoder( ::cName ):Decode( cData ) )
+
+FUNCTION tip_GetEncoder( cMode )
+
+   hb_default( @cMode, MODE_PASSTHROUGH )
+
+   SWITCH Lower( cMode )
+   CASE "base64"           ; RETURN TIPEncoderBase64():New()
+   CASE "quoted-printable" ; RETURN TIPEncoderQP():New()
+   CASE "url"
+   CASE "urlencoded"       ; RETURN TIPEncoderUrl():New()
+   ENDSWITCH
+
+   RETURN TIPEncoder():New()

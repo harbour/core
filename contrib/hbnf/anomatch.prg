@@ -32,9 +32,8 @@ FUNCTION ft_ANoMatches( aArray, bCompareBlock, nStartIndex, nEndIndex )
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )
    FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 
-   AEval( aArray, ;
-      {| xElement | ;
+   AEval( aArray, {| xElement | ;
       iif( Eval( bCompareBlock, xElement ), nNoOfMatches++, NIL ) }, ;
       nStartIndex, nEndIndex - nStartIndex + 1 )
 
-   RETURN nNoOfMatches                // FT_ANoMatches
+   RETURN nNoOfMatches

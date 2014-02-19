@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -111,32 +111,32 @@ PROCEDURE Main()
    ?    "    Item          In Use     MaxUsed    Rejected"
    aRay := AdsMgGetActivityInfo( 4 )
    IF Len( aRay ) > 2
-      ? "Users:         ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Users:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 5 )
    IF Len( aRay ) > 2
-      ? "Connections:   ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Connections:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 6 )
    IF Len( aRay ) > 2
-      ? "WorkAreas:     ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "WorkAreas:    ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 7 )
    IF Len( aRay ) > 2
-      ? "Tables:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Tables:       ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 8 )
    IF Len( aRay ) > 2
-      ? "Indexes:       ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Indexes:      ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 9 )
    IF Len( aRay ) > 2
-      ? "Locks:         ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "Locks:        ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 10 )
@@ -146,17 +146,17 @@ PROCEDURE Main()
 
    aRay := AdsMgGetActivityInfo( 11 )
    IF Len( aRay ) > 2
-      ? "TpsVisElems:   ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "TpsVisElems:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 12 )
    IF Len( aRay ) > 2
-      ? "TpsMemoElems:  ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "TpsMemoElems: ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    aRay := AdsMgGetActivityInfo( 13 )
    IF Len( aRay ) > 2
-      ? "WorkerThreads: ", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
+      ? "WorkerThreads:", aRay[ 1 ], aRay[ 2 ], aRay[ 3 ]
    ENDIF
 
    WAIT
@@ -182,31 +182,31 @@ PROCEDURE Main()
 
    aRay := AdsMgGetConfigInfo( 0 )
    IF Len( aRay ) > 24
-      ? aRay[  1 ], " number connections            "
-      ? aRay[  2 ], " number work areas             "
-      ? aRay[  3 ], " number tables                 "
-      ? aRay[  4 ], " number indexes                "
-      ? aRay[  5 ], " number locks                  "
-      ? aRay[  6 ], " user buffer                   "
-      ? aRay[  7 ], " statistics dump interval      "
-      ? aRay[  8 ], " max size of error log         "
-      ? aRay[  9 ], " number TPS header elems       "
-      ? aRay[ 10 ], " number TPS vis elems          "
-      ? aRay[ 11 ], " number TPS memo elems         "
-      ? aRay[ 12 ], " number rcv ECBs (NLM only)    "
-      ? aRay[ 13 ], " number send ECBs (NLM only)   "
-      ? aRay[ 14 ], " number packets per burst      "
-      ? aRay[ 15 ], " number worker threads         "
-      ? aRay[ 16 ], " index sort buffer size        "
-      ? aRay[ 17 ], " reserved                      "
-      ? aRay[ 18 ], " reserved                      "
-      ? aRay[ 19 ], " error log path                "
-      ? aRay[ 20 ], " semaphore file path           "
-      ? aRay[ 21 ], " TPS log file path             "
-      ? aRay[ 22 ], " reserved                      "
-      ? aRay[ 23 ], " reserved                      "
-      ? aRay[ 24 ], " NT Service IP send port #     "
-      ? aRay[ 25 ], " NT Service IP rcv port #      "
+      ? aRay[  1 ], "number connections            "
+      ? aRay[  2 ], "number work areas             "
+      ? aRay[  3 ], "number tables                 "
+      ? aRay[  4 ], "number indexes                "
+      ? aRay[  5 ], "number locks                  "
+      ? aRay[  6 ], "user buffer                   "
+      ? aRay[  7 ], "statistics dump interval      "
+      ? aRay[  8 ], "max size of error log         "
+      ? aRay[  9 ], "number TPS header elems       "
+      ? aRay[ 10 ], "number TPS vis elems          "
+      ? aRay[ 11 ], "number TPS memo elems         "
+      ? aRay[ 12 ], "number rcv ECBs (NLM only)    "
+      ? aRay[ 13 ], "number send ECBs (NLM only)   "
+      ? aRay[ 14 ], "number packets per burst      "
+      ? aRay[ 15 ], "number worker threads         "
+      ? aRay[ 16 ], "index sort buffer size        "
+      ? aRay[ 17 ], "reserved                      "
+      ? aRay[ 18 ], "reserved                      "
+      ? aRay[ 19 ], "error log path                "
+      ? aRay[ 20 ], "semaphore file path           "
+      ? aRay[ 21 ], "TPS log file path             "
+      ? aRay[ 22 ], "reserved                      "
+      ? aRay[ 23 ], "reserved                      "
+      ? aRay[ 24 ], "NT Service IP send port #     "
+      ? aRay[ 25 ], "NT Service IP rcv port #      "
    ENDIF
 
    WAIT
@@ -214,19 +214,19 @@ PROCEDURE Main()
 
    aRay := AdsMgGetConfigInfo( 1 )
    IF Len( aRay ) > 12
-      ? aRay[  1 ], " Total mem taken by cfg params "
-      ? aRay[  2 ], " memory taken by connections   "
-      ? aRay[  3 ], " memory taken by work areas    "
-      ? aRay[  4 ], " memory taken by tables        "
-      ? aRay[  5 ], " memory taken by indexes       "
-      ? aRay[  6 ], " memory taken by locks         "
-      ? aRay[  7 ], " memory taken by user buffer   "
-      ? aRay[  8 ], " memory taken by TPS hdr elems "
-      ? aRay[  9 ], " memory taken by TPS vis elems "
-      ? aRay[ 10 ], " mem taken by TPS memo elems   "
-      ? aRay[ 11 ], " mem taken by rcv ECBs (NLM)   "
-      ? aRay[ 12 ], " mem taken by send ECBs (NLM)  "
-      ? aRay[ 13 ], " mem taken by worker threads   "
+      ? aRay[  1 ], "Total mem taken by cfg params "
+      ? aRay[  2 ], "memory taken by connections   "
+      ? aRay[  3 ], "memory taken by work areas    "
+      ? aRay[  4 ], "memory taken by tables        "
+      ? aRay[  5 ], "memory taken by indexes       "
+      ? aRay[  6 ], "memory taken by locks         "
+      ? aRay[  7 ], "memory taken by user buffer   "
+      ? aRay[  8 ], "memory taken by TPS hdr elems "
+      ? aRay[  9 ], "memory taken by TPS vis elems "
+      ? aRay[ 10 ], "mem taken by TPS memo elems   "
+      ? aRay[ 11 ], "mem taken by rcv ECBs (NLM)   "
+      ? aRay[ 12 ], "mem taken by send ECBs (NLM)  "
+      ? aRay[ 13 ], "mem taken by worker threads   "
    ENDIF
 
    ?
@@ -235,17 +235,16 @@ PROCEDURE Main()
    // Second arg: Max # of users (required for memory allocation, default is 100)
    aRay := AdsMgGetUserNames()
    IF aRay != NIL
-      ? "Number of connected users: ", Len( aRay )
-      FOR i := 1 TO Len( aRay )
-         ? aRay[ i ]
+      ? "Number of connected users:", hb_ntos( Len( aRay ) )
+      FOR EACH i IN aRay
+         ? i
       NEXT
    ENDIF
 
    ?
-   ? "Disconnect", AdsMgDisconnect()
+   ? "Disconnect:", hb_ntos( AdsMgDisconnect() )
    ?
 
    ? "end"
-   ?
 
    RETURN

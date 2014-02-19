@@ -43,7 +43,7 @@ PROCEDURE Main()
 
    SubFun()
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
 
    ? M->NewPublicVar
 
@@ -73,9 +73,9 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-FUNCTION SubFun()
+STATIC PROCEDURE SubFun()
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
    // Testing conflict with KEY WORDS
    PRIVATE PRIVATE := "I am a Var named PRIVATE ", &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate := "I was born in Run Time"
@@ -93,9 +93,9 @@ FUNCTION SubFun()
 
    &cMainPrivate := "In SubFun()"
 
-   ? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
+   ? '"cVar_1" == [' + M->cVar_1 + '] in SubFun() PRIVATE'
 
-   RETURN NIL
+   RETURN
 
 STATIC PROCEDURE TEST_Type()
 
@@ -105,68 +105,64 @@ STATIC PROCEDURE TEST_Type()
    ?
    ? "=========== Type() function ================="
    v1 := "UDF()"
-   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF()')        - should be 'UI':", Type( v1 )
    v2 := "UDF_STATIC()"
-   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
-   ? "Test for &" + "'UDF()'  - should print 'udf': ", &v1
+   ? "Test for Type('UDF_STATIC()') - should be 'U':", Type( v2 )
+   ? "Test for &" + "'UDF()'  - should print 'udf':", &v1
    ? "Test for &" + "'UDF_STATIC()'  - should print 'ERROR: undefined function': "
    BEGIN SEQUENCE
       ?? &v2
    RECOVER USING oE
-      ? "ERROR: " + oE:Description
+      ? "ERROR:", oE:Description
    END SEQUENCE
    ErrorBlock( bErr )
 
    v1 := "UDF"
-   ? "Test for Type('UDF')        - should be 'U': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'U':", Type( v1 )
    v2 := "UDF_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'U':", Type( v2 )
 
    v1a := "UDF := 1"
-   ? "Test for Type('UDF := 1')        - should be 'N': ", Type( v1a )
+   ? "Test for Type('UDF := 1')        - should be 'N':", Type( v1a )
    v2a := "UDF_STATIC := 1"
-   ? "Test for Type('UDF_STATIC := 1') - should be 'N': ", Type( v2a )
+   ? "Test for Type('UDF_STATIC := 1') - should be 'N':", Type( v2a )
 
    ? "=== after the assignment ==="
    v1 := "UDF"
-   ? "Test for Type('UDF')        - should be 'N': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'N':", Type( v1 )
    v2 := "UDF_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'N': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'N':", Type( v2 )
 
    v1 := "UDF()"
-   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF()')        - should be 'UI':", Type( v1 )
    v2 := "UDF_STATIC()"
-   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC()') - should be 'U':", Type( v2 )
 
 
    ? "=== declared public variable ==="
    PUBLIC UDF2, UDF2_STATIC
    v1 := "UDF2()"
-   ? "Test for Type('UDF2()')        - should be 'UI': ", Type( v1 )
+   ? "Test for Type('UDF2()')        - should be 'UI':", Type( v1 )
    v2 := "UDF2_STATIC()"
-   ? "Test for Type('UDF2_STATIC()') - should be 'U': ", Type( v2 )
+   ? "Test for Type('UDF2_STATIC()') - should be 'U':", Type( v2 )
 
    v1 := "UDF2"
-   ? "Test for Type('UDF')        - should be 'L': ", Type( v1 )
+   ? "Test for Type('UDF')        - should be 'L':", Type( v1 )
    v2 := "UDF2_STATIC"
-   ? "Test for Type('UDF_STATIC') - should be 'L': ", Type( v2 )
+   ? "Test for Type('UDF_STATIC') - should be 'L':", Type( v2 )
 
    ?
 
    RETURN
 
 STATIC FUNCTION UDF_STATIC()
-
    RETURN "udf_static"
 
 FUNCTION UDF()
-
    RETURN "udf"
 
 STATIC FUNCTION UDF2_STATIC()
-
    RETURN "udf2_static"
 
 FUNCTION UDF2()
-
    RETURN "udf2"

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,22 +54,20 @@ FUNCTION hb_zipErrorStr( nStatus )
       RETURN "ZIP_INVALID"
    ENDIF
 
-   DO CASE
-   CASE nStatus == ZIP_OK                  ; RETURN "ZIP_OK"
-   CASE nStatus == ZIP_EOF                 ; RETURN "ZIP_EOF"
-   CASE nStatus == ZIP_ERRNO               ; RETURN "ZIP_ERRNO"
-   CASE nStatus == ZIP_PARAMERROR          ; RETURN "ZIP_PARAMERROR"
-   CASE nStatus == ZIP_BADZIPFILE          ; RETURN "ZIP_BADZIPFILE"
-   CASE nStatus == ZIP_INTERNALERROR       ; RETURN "ZIP_INTERNALERROR"
-   CASE nStatus == 1                       ; RETURN "Z_STREAM_END"
-   CASE nStatus == 2                       ; RETURN "Z_NEED_DICT"
-   CASE nStatus == -1                      ; RETURN "Z_ERRNO"
-   CASE nStatus == -2                      ; RETURN "Z_STREAM_ERROR"
-   CASE nStatus == -3                      ; RETURN "Z_DATA_ERROR"
-   CASE nStatus == -4                      ; RETURN "Z_MEM_ERROR"
-   CASE nStatus == -5                      ; RETURN "Z_BUF_ERROR"
-   CASE nStatus == -6                      ; RETURN "Z_VERSION_ERROR"
-   ENDCASE
+   SWITCH nStatus
+   CASE ZIP_OK                  ; RETURN "ZIP_OK_OR_EOF"
+   CASE ZIP_PARAMERROR          ; RETURN "ZIP_PARAMERROR"
+   CASE ZIP_BADZIPFILE          ; RETURN "ZIP_BADZIPFILE"
+   CASE ZIP_INTERNALERROR       ; RETURN "ZIP_INTERNALERROR"
+   CASE 1                       ; RETURN "Z_STREAM_END"
+   CASE 2                       ; RETURN "Z_NEED_DICT"
+   CASE -1                      ; RETURN "Z_ERRNO"
+   CASE -2                      ; RETURN "Z_STREAM_ERROR"
+   CASE -3                      ; RETURN "Z_DATA_ERROR"
+   CASE -4                      ; RETURN "Z_MEM_ERROR"
+   CASE -5                      ; RETURN "Z_BUF_ERROR"
+   CASE -6                      ; RETURN "Z_VERSION_ERROR"
+   ENDSWITCH
 
    RETURN "ZIP_UNKNOWN_" + hb_ntos( nStatus )
 
@@ -79,23 +77,21 @@ FUNCTION hb_unzipErrorStr( nStatus )
       RETURN "UNZ_INVALID"
    ENDIF
 
-   DO CASE
-   CASE nStatus == UNZ_OK                  ; RETURN "UNZ_OK"
-   CASE nStatus == UNZ_END_OF_LIST_OF_FILE ; RETURN "UNZ_END_OF_LIST_OF_FILE"
-   CASE nStatus == UNZ_ERRNO               ; RETURN "UNZ_ERRNO"
-   CASE nStatus == UNZ_EOF                 ; RETURN "UNZ_EOF"
-   CASE nStatus == UNZ_PARAMERROR          ; RETURN "UNZ_PARAMERROR"
-   CASE nStatus == UNZ_BADZIPFILE          ; RETURN "UNZ_BADZIPFILE"
-   CASE nStatus == UNZ_INTERNALERROR       ; RETURN "UNZ_INTERNALERROR"
-   CASE nStatus == UNZ_CRCERROR            ; RETURN "UNZ_CRCERROR"
-   CASE nStatus == 1                       ; RETURN "Z_STREAM_END"
-   CASE nStatus == 2                       ; RETURN "Z_NEED_DICT"
-   CASE nStatus == -1                      ; RETURN "Z_ERRNO"
-   CASE nStatus == -2                      ; RETURN "Z_STREAM_ERROR"
-   CASE nStatus == -3                      ; RETURN "Z_DATA_ERROR"
-   CASE nStatus == -4                      ; RETURN "Z_MEM_ERROR"
-   CASE nStatus == -5                      ; RETURN "Z_BUF_ERROR"
-   CASE nStatus == -6                      ; RETURN "Z_VERSION_ERROR"
-   ENDCASE
+   SWITCH nStatus
+   CASE UNZ_OK                  ; RETURN "UNZ_OK_OR_EOF"
+   CASE UNZ_END_OF_LIST_OF_FILE ; RETURN "UNZ_END_OF_LIST_OF_FILE"
+   CASE UNZ_PARAMERROR          ; RETURN "UNZ_PARAMERROR"
+   CASE UNZ_BADZIPFILE          ; RETURN "UNZ_BADZIPFILE"
+   CASE UNZ_INTERNALERROR       ; RETURN "UNZ_INTERNALERROR"
+   CASE UNZ_CRCERROR            ; RETURN "UNZ_CRCERROR"
+   CASE 1                       ; RETURN "Z_STREAM_END"
+   CASE 2                       ; RETURN "Z_NEED_DICT"
+   CASE -1                      ; RETURN "Z_ERRNO"
+   CASE -2                      ; RETURN "Z_STREAM_ERROR"
+   CASE -3                      ; RETURN "Z_DATA_ERROR"
+   CASE -4                      ; RETURN "Z_MEM_ERROR"
+   CASE -5                      ; RETURN "Z_BUF_ERROR"
+   CASE -6                      ; RETURN "Z_VERSION_ERROR"
+   ENDSWITCH
 
    RETURN "UNZ_UNKNOWN_" + hb_ntos( nStatus )

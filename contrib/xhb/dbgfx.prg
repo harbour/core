@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -94,24 +94,15 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
 
    LOCAL nHandle
 
-   IF ! s_lToLogFile
-      RETURN
-   ENDIF
+   IF s_lToLogFile
 
-   __defaultNIL( @cLogFile, "logfile.log" )
-
-   IF cLogFile != NIL
+      hb_default( @cLogFile, "logfile.log" )
 
       IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
          nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
       ELSE
-         nHandle := FCreate( cLogFile )
+         nHandle := hb_FCreate( cLogFile, FC_NORMAL, FO_READWRITE + FO_SHARED )
          s_lEmptyLogFile := .F.
-         // After I have create it I have to close and open in shared way
-         IF FError() == 0 .AND. nHandle != F_ERROR
-            FClose( nHandle )
-            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
-         ENDIF
       ENDIF
 
       // Writing

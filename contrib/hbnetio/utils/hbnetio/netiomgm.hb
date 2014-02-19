@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Harbour NETIO server management client engine
  *
- * Copyright 2009-2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -67,12 +67,12 @@ STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
 
    FOR EACH cParam IN aParam
       DO CASE
-      CASE Lower( Left( cParam, Len( "--netio.addr=" ) ) ) == "--netio.addr="
+      CASE hb_LeftIsI( cParam, "--netio.addr=" )
          hbnetiocon_IPPortSplit( SubStr( cParam, Len( "--netio.addr=" ) + 1 ), @cIP, @nPort )
          IF Empty( nPort )
             nPort := _NETIOMGM_PORT_DEF
          ENDIF
-      CASE Lower( Left( cParam, Len( "--netio.pass=" ) ) ) == "--netio.pass="
+      CASE hb_LeftIsI( cParam, "--netio.pass=" )
          cPassword := SubStr( cParam, Len( "--netio.pass=" ) + 1 )
          hb_StrClear( @cParam )
       ENDCASE
@@ -84,32 +84,32 @@ STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
    netiocli[ _NETIOCLI_nStreamID ]   := NIL
    netiocli[ _NETIOCLI_hConIO ]      := hConIO
    netiocli[ _NETIOCLI_hCommands ]   := { ;
-      "?"             => { ""               , "Synonym for 'help'."                            , {| netiocli | cmdHelp( netiocli ) } },;
-      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| netiocli, cCommand | cmdConnect( netiocli, cCommand ) } },;
-      "about"         => { ""               , "About."                                         , {| netiocli | cmdAbout( netiocli ) } },;
-      "disconnect"    => { ""               , "Disconnect."                                    , {| netiocli | cmdDisconnect( netiocli ) } },;
-      "sysinfo"       => { ""               , "Show server system/build information."          , {| netiocli | cmdSysInfo( netiocli ) } },;
-      "showconf"      => { ""               , "Show server configuration."                     , {| netiocli | cmdServerConfig( netiocli ) } },;
-      "show"          => { ""               , "Show list of connections."                      , {| netiocli | cmdConnInfo( netiocli, .F. ) } },;
-      "showadmin"     => { ""               , "Show list of management connections."           , {| netiocli | cmdConnInfo( netiocli, .T. ) } },;
-      "noconn"        => { ""               , "Disable incoming connections."                  , {| netiocli | cmdConnEnable( netiocli, .F. ) } },;
-      "conn"          => { ""               , "Enable incoming connections."                   , {| netiocli | cmdConnEnable( netiocli, .T. ) } },;
-      "nologconn"     => { ""               , "Disable logging incoming connections."          , {| netiocli | cmdConnLogEnable( netiocli, .F. ) } },;
-      "logconn"       => { ""               , "Enable logging incoming connections."           , {| netiocli | cmdConnLogEnable( netiocli, .T. ) } },;
-      "filt"          => { ""               , "Show filters."                                  , {| netiocli | cmdConnFilters( netiocli, .F. ) } },;
-      "filtadmin"     => { ""               , "Show filters for management connections."       , {| netiocli | cmdConnFilters( netiocli, .T. ) } },;
-      "allowadd"      => { "<ip>"           , "Add allow filter"                               , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowadd" ) } },;
-      "allowdel"      => { "<ip>"           , "Remove allow filter"                            , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowdel" ) } },;
-      "blockadd"      => { "<ip>"           , "Add block filter"                               , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockadd" ) } },;
-      "blockdel"      => { "<ip>"           , "Remove block filter"                            , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockdel" ) } },;
-      "allowaddadmin" => { "<ip>"           , "Add allow filter for management connections"    , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowaddadmin" ) } },;
-      "allowdeladmin" => { "<ip>"           , "Remove allow filter for management connections" , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowdeladmin" ) } },;
-      "blockaddadmin" => { "<ip>"           , "Add block filter for management connections"    , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockaddadmin" ) } },;
-      "blockdeladmin" => { "<ip>"           , "Remove block filter for management connections" , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockdeladmin" ) } },;
-      "filtsave"      => { ""               , "Save filters to disk."                          , {| netiocli | cmdConnFilterSave( netiocli ) } },;
-      "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| netiocli, cCommand | cmdConnStop( netiocli, cCommand ) } },;
-      "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| netiocli, cCommand | cmdConnClientInfo( netiocli, cCommand ) } },;
-      "quit"          => { ""               , "Stop server."                                   , {| netiocli | cmdShutdown( netiocli ) } },;
+      "?"             => { ""               , "Synonym for 'help'."                            , {| netiocli | cmdHelp( netiocli ) } }, ;
+      "connect"       => { "[<ip[:port>]]"  , "Connect."                                       , {| netiocli, cCommand | cmdConnect( netiocli, cCommand ) } }, ;
+      "about"         => { ""               , "About."                                         , {| netiocli | cmdAbout( netiocli ) } }, ;
+      "disconnect"    => { ""               , "Disconnect."                                    , {| netiocli | cmdDisconnect( netiocli ) } }, ;
+      "sysinfo"       => { ""               , "Show server system/build information."          , {| netiocli | cmdSysInfo( netiocli ) } }, ;
+      "showconf"      => { ""               , "Show server configuration."                     , {| netiocli | cmdServerConfig( netiocli ) } }, ;
+      "show"          => { ""               , "Show list of connections."                      , {| netiocli | cmdConnInfo( netiocli, .F. ) } }, ;
+      "showadmin"     => { ""               , "Show list of management connections."           , {| netiocli | cmdConnInfo( netiocli, .T. ) } }, ;
+      "noconn"        => { ""               , "Disable incoming connections."                  , {| netiocli | cmdConnEnable( netiocli, .F. ) } }, ;
+      "conn"          => { ""               , "Enable incoming connections."                   , {| netiocli | cmdConnEnable( netiocli, .T. ) } }, ;
+      "nologconn"     => { ""               , "Disable logging incoming connections."          , {| netiocli | cmdConnLogEnable( netiocli, .F. ) } }, ;
+      "logconn"       => { ""               , "Enable logging incoming connections."           , {| netiocli | cmdConnLogEnable( netiocli, .T. ) } }, ;
+      "filt"          => { ""               , "Show filters."                                  , {| netiocli | cmdConnFilters( netiocli, .F. ) } }, ;
+      "filtadmin"     => { ""               , "Show filters for management connections."       , {| netiocli | cmdConnFilters( netiocli, .T. ) } }, ;
+      "allowadd"      => { "<ip>"           , "Add allow filter"                               , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowadd" ) } }, ;
+      "allowdel"      => { "<ip>"           , "Remove allow filter"                            , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowdel" ) } }, ;
+      "blockadd"      => { "<ip>"           , "Add block filter"                               , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockadd" ) } }, ;
+      "blockdel"      => { "<ip>"           , "Remove block filter"                            , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockdel" ) } }, ;
+      "allowaddadmin" => { "<ip>"           , "Add allow filter for management connections"    , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowaddadmin" ) } }, ;
+      "allowdeladmin" => { "<ip>"           , "Remove allow filter for management connections" , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_allowdeladmin" ) } }, ;
+      "blockaddadmin" => { "<ip>"           , "Add block filter for management connections"    , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockaddadmin" ) } }, ;
+      "blockdeladmin" => { "<ip>"           , "Remove block filter for management connections" , {| netiocli, cCommand | cmdConnFilterMod( netiocli, cCommand, "hbnetiomgm_blockdeladmin" ) } }, ;
+      "filtsave"      => { ""               , "Save filters to disk."                          , {| netiocli | cmdConnFilterSave( netiocli ) } }, ;
+      "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| netiocli, cCommand | cmdConnStop( netiocli, cCommand ) } }, ;
+      "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| netiocli, cCommand | cmdConnClientInfo( netiocli, cCommand ) } }, ;
+      "quit"          => { ""               , "Stop server."                                   , {| netiocli | cmdShutdown( netiocli ) } }, ;
       "help"          => { ""               , "Display this help."                             , {| netiocli | cmdHelp( netiocli ) } } }
 
    IF ! Empty( cPassword )
@@ -131,12 +131,11 @@ STATIC PROCEDURE hbnetiocon_exit( netiocli )
 STATIC FUNCTION hbnetiocon_command( netiocli, cCommand )
 
    LOCAL aCommand
-   LOCAL nPos
 
    IF ! Empty( netiocli )
-      aCommand := hb_ATokens( cCommand, " " )
-      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( netiocli[ _NETIOCLI_hCommands ], Lower( aCommand[ 1 ] ) ) ) > 0
-         Eval( hb_HValueAt( netiocli[ _NETIOCLI_hCommands ], nPos )[ 3 ], netiocli, cCommand )
+      aCommand := hb_ATokens( cCommand )
+      IF ! Empty( aCommand ) .AND. Lower( aCommand[ 1 ] ) $ netiocli[ _NETIOCLI_hCommands ]
+         Eval( netiocli[ _NETIOCLI_hCommands ][ Lower( aCommand[ 1 ] ) ][ 3 ], netiocli, cCommand )
          RETURN .T.
       ENDIF
    ENDIF
@@ -263,12 +262,12 @@ STATIC PROCEDURE DisconnectLow( netiocli )
    RETURN
 
 STATIC FUNCTION MyClientInfo()
-
-   RETURN { "OS()"          => OS()          , ;
-            "Version()"     => Version()     , ;
-            "hb_Compiler()" => hb_Compiler() , ;
-            "NetName()"     => NetName()     , ;
-            "hb_UserName()" => hb_UserName() }
+   RETURN { ;
+      "OS()"          => OS()          , ;
+      "Version()"     => Version()     , ;
+      "hb_Compiler()" => hb_Compiler() , ;
+      "NetName()"     => NetName()     , ;
+      "hb_UserName()" => hb_UserName() }
 
 STATIC FUNCTION XToStrX( xValue )
 
@@ -280,13 +279,12 @@ STATIC FUNCTION XToStrX( xValue )
    SWITCH cType
    CASE "C"
 
-      xValue := StrTran( xValue, Chr(  0 ), '" + Chr(  0 ) + "' )
-      xValue := StrTran( xValue, Chr(  9 ), '" + Chr(  9 ) + "' )
-      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
-      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
-      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
-
-      RETURN xValue
+      RETURN hb_StrReplace( xValue, { ;
+         Chr(  0 ) => '" + Chr(  0 ) + "' , ;
+         Chr(  9 ) => '" + Chr(  9 ) + "' , ;
+         Chr( 10 ) => '" + Chr( 10 ) + "' , ;
+         Chr( 13 ) => '" + Chr( 13 ) + "' , ;
+         Chr( 26 ) => '" + Chr( 26 ) + "' } )
 
    CASE "N" ; RETURN hb_ntos( xValue )
    CASE "D" ; RETURN DToC( xValue )
@@ -331,7 +329,7 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2013, Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2014, Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
 
    RETURN
@@ -370,7 +368,7 @@ STATIC PROCEDURE cmdConnect( netiocli, cCommand )
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
 
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
 
       IF Len( aToken ) >= 2
          nPortOld := nPort
@@ -449,7 +447,7 @@ STATIC PROCEDURE cmdConnStop( netiocli, cCommand )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_stop", aToken[ 2 ] )
       ELSE
@@ -467,7 +465,7 @@ STATIC PROCEDURE cmdConnClientInfo( netiocli, cCommand )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          xCargo := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_clientinfo", aToken[ 2 ] )
          IF xCargo == NIL
@@ -549,7 +547,7 @@ STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aToken := hb_ATokens( cCommand, " " )
+      aToken := hb_ATokens( cCommand )
       IF Len( aToken ) > 1
          lResult := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
          IF HB_ISLOGICAL( lResult )

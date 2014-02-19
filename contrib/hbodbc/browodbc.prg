@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,16 +62,13 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
    LOCAL oBrw
    LOCAL cOldScreen
-   LOCAL n, nOldCursor
-   LOCAL nKey := 0
-   LOCAL lExit := .F.
+   LOCAL nOldCursor, f
+   LOCAL nKey
    LOCAL bAction
-   LOCAL oColumn
 
-   // TODO: Check if datasource is open
-   // IF ! Used()
-   //    RETURN .F.
-   // ENDIF
+   IF !( oDataSource:ClassName() == "TODBC" ) .OR. ! oDataSource:Active
+      RETURN .F.
+   ENDIF
 
    IF PCount() < 4
       nTop    := 1
@@ -95,15 +92,14 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    oBrw:HeadSep := "-"
 
    // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
-   FOR n := 1 TO Len( oDataSource:Fields )
-      oColumn := TBColumn():New( oDataSource:Fields[ n ]:FieldName, ODBCFget( oDataSource:Fields[ n ]:FieldName, oDataSource ) )
-      oBrw:AddColumn( oColumn )
+   FOR EACH f IN oDataSource:Fields
+      oBrw:AddColumn( TBColumn():New( f:FieldName, ODBCFget( f:FieldName, oDataSource ) ) )
    NEXT
 
    oBrw:Configure()
    oBrw:ForceStable()
 
-   DO WHILE ! lExit
+   DO WHILE .T.
 
       DO WHILE .T.
          nKey := Inkey()
@@ -126,51 +122,21 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       ENDIF
 
       DO CASE
-      CASE nKey == K_ESC
-         lExit := .T.
-
-      CASE nKey == K_UP
-         oBrw:Up()
-
-      CASE nKey == K_DOWN
-         oBrw:Down()
-
-      CASE nKey == K_END
-         oBrw:End()
-
-      CASE nKey == K_HOME
-         oBrw:Home()
-
-      CASE nKey == K_LEFT
-         oBrw:Left()
-
-      CASE nKey == K_RIGHT
-         oBrw:Right()
-
-      CASE nKey == K_PGUP
-         oBrw:PageUp()
-
-      CASE nKey == K_PGDN
-         oBrw:PageDown()
-
-      CASE nKey == K_CTRL_PGUP
-         oBrw:GoTop()
-
-      CASE nKey == K_CTRL_PGDN
-         oBrw:GoBottom()
-
-      CASE nKey == K_CTRL_LEFT
-         oBrw:panLeft()
-
-      CASE nKey == K_CTRL_RIGHT
-         oBrw:panRight()
-
-      CASE nKey == K_CTRL_HOME
-         oBrw:panHome()
-
-      CASE nKey == K_CTRL_END
-         oBrw:panEnd()
-
+      CASE nKey == K_ESC        ; EXIT
+      CASE nKey == K_UP         ; oBrw:Up()
+      CASE nKey == K_DOWN       ; oBrw:Down()
+      CASE nKey == K_END        ; oBrw:End()
+      CASE nKey == K_HOME       ; oBrw:Home()
+      CASE nKey == K_LEFT       ; oBrw:Left()
+      CASE nKey == K_RIGHT      ; oBrw:Right()
+      CASE nKey == K_PGUP       ; oBrw:PageUp()
+      CASE nKey == K_PGDN       ; oBrw:PageDown()
+      CASE nKey == K_CTRL_PGUP  ; oBrw:GoTop()
+      CASE nKey == K_CTRL_PGDN  ; oBrw:GoBottom()
+      CASE nKey == K_CTRL_LEFT  ; oBrw:panLeft()
+      CASE nKey == K_CTRL_RIGHT ; oBrw:panRight()
+      CASE nKey == K_CTRL_HOME  ; oBrw:panHome()
+      CASE nKey == K_CTRL_END   ; oBrw:panEnd()
       ENDCASE
    ENDDO
 

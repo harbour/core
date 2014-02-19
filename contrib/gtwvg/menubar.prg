@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -155,10 +155,8 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
    ::hMenu := Wvg_CreateMenu()
 
    IF ::hMenu != 0
-      /*  check for if the parent already has a menu
-          we need to destroy that first
-          TO DO
-      */
+      /* TODO: check for if the parent already has a menu
+               we need to destroy that first */
       /* finally set the menu */
 #if 0
       Wvg_SetMenu( ::oParent:getHWND(), ::hMenu )
@@ -239,9 +237,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
 
    RETURN lResult
 
-/*
- * { xCaption, bAction, nStyle, nAttrb }
- */
+/* { xCaption, bAction, nStyle, nAttrb } */
 METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
 
    LOCAL xCaption, bAction, nStyle, nAttrib
@@ -283,7 +279,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
       EXIT
 
    CASE "C"
-      IF Left( xCaption, 1 ) == "-"
+      IF hb_LeftIs( xCaption, "-" )
          aItem := { MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
       ELSE
          aItem := { MF_STRING, ++::nMenuItemID, xCaption, bAction, nStyle, nAttrib }
@@ -409,7 +405,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
    LOCAL lSuccess := .F.
 
-   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0
       lSuccess := Wvg_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
@@ -451,7 +447,7 @@ METHOD WvgMenuBar:setItem( nItemNum, aItem )
 
 METHOD WvgMenuBar:beginMenu( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_beginMenu := xParam
       RETURN NIL
    ENDIF
@@ -460,7 +456,7 @@ METHOD WvgMenuBar:beginMenu( xParam )
 
 METHOD WvgMenuBar:endMenu( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_endMenu := xParam
       RETURN NIL
    ENDIF
@@ -469,7 +465,7 @@ METHOD WvgMenuBar:endMenu( xParam )
 
 METHOD WvgMenuBar:itemMarked( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemMarked := xParam
       RETURN NIL
    ENDIF
@@ -478,7 +474,7 @@ METHOD WvgMenuBar:itemMarked( xParam )
 
 METHOD WvgMenuBar:itemSelected( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemSelected := xParam
       RETURN NIL
    ENDIF
@@ -487,7 +483,7 @@ METHOD WvgMenuBar:itemSelected( xParam )
 
 METHOD WvgMenuBar:drawItem( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_drawItem := xParam
       RETURN NIL
    ENDIF
@@ -496,7 +492,7 @@ METHOD WvgMenuBar:drawItem( xParam )
 
 METHOD WvgMenuBar:measureItem( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_measureItem := xParam
       RETURN NIL
    ENDIF
@@ -505,16 +501,14 @@ METHOD WvgMenuBar:measureItem( xParam )
 
 METHOD WvgMenuBar:onMenuKey( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_onMenuKey := xParam
       RETURN NIL
    ENDIF
 
    RETURN Self
 
-/*
- *                   Xbase++ compatible xbpMenu class
- */
+/* Xbase++ compatible xbpMenu class */
 CREATE CLASS WvgMenu INHERIT WvgMenuBar
 
    VAR    title                                 INIT  ""
@@ -574,7 +568,7 @@ METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )
    nCmd := Wvg_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
 
    aMenuItem := ::findMenuItemById( nCmd )
-   IF HB_ISARRAY( aMenuItem ) .AND. HB_ISBLOCK( aMenuItem[ 2 ] )
+   IF HB_ISARRAY( aMenuItem ) .AND. HB_ISEVALITEM( aMenuItem[ 2 ] )
       Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
    ENDIF
 

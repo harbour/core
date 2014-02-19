@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,7 +59,7 @@ PROCEDURE Main( cArg )
 
    oServer := TMySQLServer():New( "localhost", "root", "" )
    IF oServer:NetErr()
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
    oServer:SelectDB( "ims" )
@@ -71,14 +71,14 @@ PROCEDURE Main( cArg )
    dbUseArea( .T.,, cArg, "wn", .F. )
 
    IF ! oServer:DeleteTable( "test" )
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
    aStru := dbStruct()
    IF oServer:CreateTable( "test", aStru )
-      Alert( "test created successfully" )
+      ? "test created successfully"
    ELSE
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
    oQuery := oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
@@ -103,10 +103,10 @@ PROCEDURE Main( cArg )
          oRow:FieldPut( oRow:FieldPos( "ACQDI" ), oRow:FieldGet( oRow:FieldPos( "ACQDI" ) ) + wn->ACQDI )
 
          IF ! oQuery2:Update( oRow )
-            Alert( oQuery2:Error() )
+            ? oQuery2:Error()
          ENDIF
       ELSE
-         ? wn->CODF + " " + wn->CODP
+         ? wn->CODF, wn->CODP
 
          oRow := oQuery:GetBlankRow()
 
@@ -118,7 +118,7 @@ PROCEDURE Main( cArg )
          oRow:FieldPut( oRow:FieldPos( "ACQDI" ), wn->ACQDI )
 
          IF ! oQuery:Append( oRow )
-            Alert( oQuery:Error() )
+            ? oQuery:Error()
          ENDIF
       ENDIF
 

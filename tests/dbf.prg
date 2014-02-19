@@ -35,11 +35,10 @@ PROCEDURE Main()
    ? "[" + Str( MYALIAS->DOUBLE ) + "]"
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
 
-   ? ""
-   ? "Press any key..."
-   Inkey( 0 )
+   ?
+   WAIT
 
-   ? ""
+   ?
    ? "Append 50 records with memos..."
    FOR nI := 1 TO 50
       MYALIAS->( dbAppend() )
@@ -71,8 +70,7 @@ PROCEDURE Main()
    ? "[" + MYALIAS->MEMO2 + "]"
    ? "[" + Str( MYALIAS->DOUBLE ) + "]"
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
    dbCloseAll()
 
    dbCreate( "testdbf", aStruct, , .T., "MYALIAS" )
@@ -88,10 +86,9 @@ PROCEDURE Main()
    NEXT
    MYALIAS->( dbCommit() )
 
-   ? ""
+   ?
    ? "With SET DELETED OFF"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
@@ -100,10 +97,9 @@ PROCEDURE Main()
    ENDDO
 
    SET DELETED ON
-   ? ""
+   ?
    ? "With SET DELETED ON"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
@@ -111,11 +107,10 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   ? ""
+   ?
    ? "With SET DELETED ON"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
@@ -126,11 +121,10 @@ PROCEDURE Main()
    ENDDO
 
    SET DELETED OFF
-   ? ""
+   ?
    ? "With SET DELETED OFF"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
@@ -140,8 +134,8 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   ? "dbFilter() => " + dbFilter()
-   ? ""
+   ? "dbFilter() =>", dbFilter()
+   ?
 
    ? "Testing __dbPack()"
    ? "Records before PACK:", MYALIAS->( LastRec() )
@@ -153,29 +147,26 @@ PROCEDURE Main()
    ? "Records after PACK:", MYALIAS->( LastRec() )
    ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
       Directory( "testdbf.dbt" )[ 1 ][ 2 ]
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
    ? "Value of fields:"
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
-   ? ""
+   ?
 
    ? "Open test.dbf and LOCATE FOR TESTDBF->SALARY > 145000"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
    dbUseArea( , , "test", "TESTDBF" )
    LOCATE for TESTDBF->SALARY > 145000
    DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->SALARY
       CONTINUE
    ENDDO
-   ? ""
+   ?
    ? "LOCATE FOR TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
    dbUseArea( , , "test", "TESTDBF" )
    LOCATE for TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'
    DO WHILE TESTDBF->( Found() )

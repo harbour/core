@@ -55,7 +55,7 @@
 
 %define name      harbour
 %define dname     Harbour
-%define version   3.2.0
+%define version   3.4.0
 %define releasen  0.1
 %define alphatag  dev
 %define hb_etcdir /etc/%{name}
@@ -285,18 +285,18 @@ statikus szerkesztéshez.
 
 ## firebird library
 %{?_with_firebird:%package firebird}
-%{?_with_firebird:Summary:        FireBird library bindings for %{dname} compiler}
-%{?_with_firebird:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
+%{?_with_firebird:Summary:        Firebird library bindings for %{dname} compiler}
+%{?_with_firebird:Summary(pl):    Bilioteka Firebird dla kompilatora %{dname}}
 %{?_with_firebird:Group:          Development/Languages}
 %{?_with_firebird:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
 %{?_with_firebird:%description firebird}
 %{?_with_firebird:%{dname} is a Clipper compatible compiler.}
-%{?_with_firebird:This package provides %{dname} FireBird library for program linking.}
+%{?_with_firebird:This package provides %{dname} Firebird library for program linking.}
 
 %{?_with_firebird:%description -l pl firebird}
 %{?_with_firebird:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę FireBird dla kompilatora %{dname}.}
+%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę Firebird dla kompilatora %{dname}.}
 
 ## freeimage library
 #%{?_with_freeimage:%package freeimage}

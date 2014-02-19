@@ -19,19 +19,19 @@ PROCEDURE Main()
    LOCAL tmp
 
    LOCAL all := {;
-       @PEM_READ_BIO_PRIVATEKEY()      ,;
-       @PEM_READ_BIO_PUBKEY()          ,; //
-       @PEM_READ_BIO_RSAPRIVATEKEY()   ,;
-       @PEM_READ_BIO_RSAPUBLICKEY()    ,;
-       @PEM_READ_BIO_RSA_PUBKEY()      ,; //
-       @PEM_READ_BIO_DSAPRIVATEKEY()   ,;
-       @PEM_READ_BIO_DSA_PUBKEY()      ,;
-       @PEM_READ_BIO_DSAPARAMS()       ,;
-       @PEM_READ_BIO_DHPARAMS()        ,;
-       @PEM_READ_BIO_X509()            ,;
-       @PEM_READ_BIO_X509_AUX()        ,;
-       @PEM_READ_BIO_X509_REQ()        ,;
-       @PEM_READ_BIO_X509_CRL()        ,;
+       @PEM_READ_BIO_PRIVATEKEY()      , ;
+       @PEM_READ_BIO_PUBKEY()          , ; //
+       @PEM_READ_BIO_RSAPRIVATEKEY()   , ;
+       @PEM_READ_BIO_RSAPUBLICKEY()    , ;
+       @PEM_READ_BIO_RSA_PUBKEY()      , ; //
+       @PEM_READ_BIO_DSAPRIVATEKEY()   , ;
+       @PEM_READ_BIO_DSA_PUBKEY()      , ;
+       @PEM_READ_BIO_DSAPARAMS()       , ;
+       @PEM_READ_BIO_DHPARAMS()        , ;
+       @PEM_READ_BIO_X509()            , ;
+       @PEM_READ_BIO_X509_AUX()        , ;
+       @PEM_READ_BIO_X509_REQ()        , ;
+       @PEM_READ_BIO_X509_CRL()        , ;
        @PEM_READ_BIO_PKCS7()           }
 
    SSL_init()

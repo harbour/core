@@ -4,8 +4,8 @@
  *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()
  *
  *    Author...: Frederic J. Bell
- *    Dated....: Jun,17 94
- *    Revised..: Sep,20 94
+ *    Dated....: 1994-06-17
+ *    Revised..: 1994-09-20
  *    Purpose..: Replaces the following CA-T*ols functions which generate GPF's
  *               FileCopy(), FileCOpen(), FileAppend()!
  *    Relies on: Clipper (can you believe it!)
@@ -33,7 +33,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -74,31 +74,26 @@ THREAD STATIC t_fileTime
  * This is a replacement for the CA-T*ols III function of the
  * same name that causes GPF's.
  */
-
 FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
-
-   hb_default( @lMode, .F. )
 
    IF t_hSrcFile != F_ERROR
       FClose( t_hSrcFile )
    ENDIF
-   t_hSrcFile := FOpen( cSource, FO_READ )
-   IF t_hSrcFile != F_ERROR
-      hDstFile := FCreate( cDest )
-      IF hDstFile != F_ERROR
+   IF ( t_hSrcFile := FOpen( cSource, FO_READ ) ) != F_ERROR
+      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+         hb_default( @lMode, .F. )
+         cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes > 0
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
@@ -114,7 +109,7 @@ FUNCTION FileCopy( cSource, cDest, lMode )
             t_hSrcFile := F_ERROR
          ENDIF
          hb_FGetDateTime( cSource, @t_fileTime )
-         IF t_lSetDaTi .and. !Empty( t_fileTime )
+         IF t_lSetDaTi .and. ! Empty( t_fileTime )
             hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ELSE
@@ -126,7 +121,6 @@ FUNCTION FileCopy( cSource, cDest, lMode )
    RETURN nTotBytes
 
 FUNCTION FileCOpen()
-
    RETURN t_hSrcFile != F_ERROR
 
 FUNCTION FileCDaTi( lNewMode )
@@ -142,21 +136,19 @@ FUNCTION FileCDaTi( lNewMode )
 FUNCTION FileCCont( cDest )
 
    LOCAL hDstFile
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
    IF t_hSrcFile != F_ERROR
-      hDstFile := FCreate( cDest )
-      IF hDstFile != F_ERROR
+      IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
+         cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+            IF ( nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                lDone := .T.
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes > 0
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) > 0
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
@@ -168,7 +160,7 @@ FUNCTION FileCCont( cDest )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         IF t_lSetDaTi .and. !Empty( t_fileTime )
+         IF t_lSetDaTi .and. ! Empty( t_fileTime )
             hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ENDIF
@@ -188,27 +180,27 @@ FUNCTION FileCCLose()
 
 FUNCTION FileAppend( cSrc, cDest )
 
-   LOCAL cBuffer := Space( F_BLOCK )
+   LOCAL cBuffer
    LOCAL hSrcFile, hDstFile
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   hSrcFile := FOpen( cSrc, FO_READ )
-   IF hSrcFile != F_ERROR
-      IF ! hb_FileExists( cDest )
-         hDstFile := FCreate( cDest )
+   IF ( hSrcFile := FOpen( cSrc, FO_READ ) ) != F_ERROR
+
+      IF hb_FileExists( cDest )
+         IF ( hDstFile := FOpen( cDest, FO_WRITE ) ) != F_ERROR
+            FSeek( hDstFile, 0, FS_END )
+         ENDIF
       ELSE
-         hDstFile := FOpen( cDest, FO_WRITE )
-         FSeek( hDstFile, 0, FS_END )
+         hDstFile := FCreate( cDest )
       ENDIF
 
       IF hDstFile != F_ERROR
+         cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK )
-            IF nSrcBytes == 0
+            IF ( nSrcBytes := FRead( hSrcFile, @cBuffer, F_BLOCK ) ) == 0
                EXIT
             ENDIF
-            nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
-            IF nDstBytes < nSrcBytes
+            IF ( nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes ) ) < nSrcBytes
                EXIT
             ENDIF
             nTotBytes += nDstBytes

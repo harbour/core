@@ -21,9 +21,7 @@
       notation is returned.
    $EXAMPLES$
       ? ft_D2E( 12.345, 2 )     // -> 1.23E1
-
       ? ft_D2E( -12.345, 3 )    // -> -1.235E1
-
       ? ft_D2E( 0.00000543, 2 ) // -> 5.43E-6
    $SEEALSO$
       ft_E2D()

@@ -6,38 +6,36 @@
 #include <iberror.h>
 
 #ifndef ISC_INT64_FORMAT
-
-#if ( defined( _MSC_VER ) && defined( WIN32 ) ) || ( defined( __BORLANDC__ ) && defined( __WIN32__ ) )
-#define  ISC_INT64_FORMAT  "I64"
-#else
-#define  ISC_INT64_FORMAT  "ll"
+   #if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __MINGW32__ )
+      #define  ISC_INT64_FORMAT  "I64"
+   #else
+      #define  ISC_INT64_FORMAT  "ll"
+   #endif
 #endif
-#endif
 
-#define USER               "sysdba"
-#define PASSWORD           "masterkey"
-#define DATABASE           "127.0.0.1:d:\\fontes\\lixo\\test.gdb"
+#define USER                     "sysdba"
+#define PASSWORD                 "masterkey"
+#define DATABASE                 "localhost:testapi.gdb"
 #define ERREXIT( status, rc )  { isc_print_status( status ); return rc; }
-#define MAX_BUFFER         1024
+#define MAX_BUFFER               1024
 
-int execute( char * exec_str );
-int query( char * sel_str );
-int fetch( void );
-int qclose( void );
-char * getdata( int pos );
+static int execute( char * exec_str );
+static int query( char * sel_str );
+static int fetch( void );
+static int qclose( void );
+static char * getdata( int pos );
 
+static isc_db_handle db = NULL;
+static int dialect      = 1;
+static XSQLDA ISC_FAR * sqlda;
+static isc_stmt_handle  stmt  = NULL;
+static isc_tr_handle    trans = NULL;
 
-isc_db_handle db = NULL;
-int dialect      = 1;
-XSQLDA ISC_FAR * sqlda;
-isc_stmt_handle  stmt  = NULL;
-isc_tr_handle    trans = NULL;
-
-int main()
+int main( void )
 {
-   char dpb[ 48 ];
-   int  i = 0, len;
-   long status[ 20 ];
+   char       dpb[ 48 ];
+   int        i = 0, len;
+   ISC_STATUS status[ 20 ];
 
    dpb[ i++ ] = isc_dpb_version1;
 
@@ -74,10 +72,10 @@ int main()
    return 1;
 }
 
-int execute( char * exec_str )
+static int execute( char * exec_str )
 {
    isc_tr_handle trans = NULL;
-   long          status[ 20 ];
+   ISC_STATUS    status[ 20 ];
 
    if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       ERREXIT( status, 1 );
@@ -91,7 +89,7 @@ int execute( char * exec_str )
    return 1;
 }
 
-int query( char * sel_str )
+static int query( char * sel_str )
 {
    ISC_STATUS status[ 20 ];
    XSQLVAR *  var;
@@ -152,9 +150,7 @@ int query( char * sel_str )
             break;
       }
       if( var->sqltype & 1 )
-      {
          var->sqlind = ( short * ) malloc( sizeof( short ) );
-      }
    }
 
    if( ! sqlda->sqld )
@@ -169,19 +165,16 @@ int query( char * sel_str )
       trans = NULL;
 
    }
-   else
-   {
-      if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
-         ERREXIT( status, 1 );
-   }
+   else if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
+      ERREXIT( status, 1 );
 
    return 1;
 }
 
-int fetch( void )
+static int fetch( void )
 {
-   long fetch_stat;
-   long status[ 20 ];
+   long       fetch_stat;
+   ISC_STATUS status[ 20 ];
 
    fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
@@ -191,9 +184,9 @@ int fetch( void )
    return fetch_stat;
 }
 
-int qclose( void )
+static int qclose( void )
 {
-   long status[ 20 ];
+   ISC_STATUS status[ 20 ];
 
    if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
       ERREXIT( status, 1 );
@@ -208,13 +201,12 @@ int qclose( void )
    return 1;
 }
 
-char * getdata( int pos )
+static char * getdata( int pos )
 {
    short dtype;
    char  data[ MAX_BUFFER ], * p;
    char  blob_s[ 20 ], date_s[ 25 ];
    short len;
-   long  status[ 20 ];
 
    struct tm times;
    ISC_QUAD  bid;
@@ -272,7 +264,6 @@ char * getdata( int pos )
          case SQL_ARRAY:
          default:
             len = 17;
-            break;
       }
       if( ( dtype == SQL_TEXT ) || ( dtype == SQL_VARYING ) )
          sprintf( p, "%-*s ", len, "NULL" );
@@ -326,47 +317,32 @@ char * getdata( int pos )
                   tens *= 10;
 
                   if( value >= 0 )
-                  {
-
-                     sprintf( p,
-                              "%*" ISC_INT64_FORMAT "d.%0*"
+                     sprintf( p, "%*" ISC_INT64_FORMAT "d.%0*"
                               ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               ( ISC_INT64 ) ( value / tens ), -dscale,
                               ( ISC_INT64 ) ( value % tens ) );
-                  }
                   else if( ( value / tens ) != 0 )
-                  {
-
-                     sprintf( p,
-                              "%*" ISC_INT64_FORMAT "d.%0*"
+                     sprintf( p, "%*" ISC_INT64_FORMAT "d.%0*"
                               ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               ( ISC_INT64 ) ( value / tens ), -dscale,
                               ( ISC_INT64 ) -( value % tens ) );
-                  }
                   else
-                  {
-
                      sprintf( p, "%*s.%0*" ISC_INT64_FORMAT "d",
                               field_width - 1 + dscale,
                               "-0", -dscale,
                               ( ISC_INT64 ) -( value % tens ) );
-                  }
                }
             }
             else if( dscale )
-            {
                sprintf( p, "%*" ISC_INT64_FORMAT "d%0*d",
                         field_width, ( ISC_INT64 ) value, dscale, 0 );
-            }
             else
-            {
                sprintf( p, "%*" ISC_INT64_FORMAT "d",
                         field_width, ( ISC_INT64 ) value );
-            }
-         };
             break;
+         }
 
          case SQL_FLOAT:
             sprintf( p, "%15g ", *( float ISC_FAR * ) ( var->sqldata ) );
@@ -378,7 +354,7 @@ char * getdata( int pos )
 
          case SQL_TIMESTAMP:
             isc_decode_timestamp( ( ISC_TIMESTAMP ISC_FAR * ) var->sqldata, &times );
-            sprintf( date_s, "%04d-%02d-%02d %02d:%02d:%02d.%04lui",
+            sprintf( date_s, "%04d-%02d-%02d %02d:%02d:%02d.%04ui",
                      times.tm_year + 1900,
                      times.tm_mon + 1,
                      times.tm_mday,
@@ -398,7 +374,7 @@ char * getdata( int pos )
 
          case SQL_TYPE_TIME:
             isc_decode_sql_time( ( ISC_TIME ISC_FAR * ) var->sqldata, &times );
-            sprintf( date_s, "%02d:%02d:%02d.%04lui",
+            sprintf( date_s, "%02d:%02d:%02d.%04ui",
                      times.tm_hour,
                      times.tm_min,
                      times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
@@ -412,9 +388,6 @@ char * getdata( int pos )
             sprintf( blob_s, "%08x:%08x", ( unsigned int ) bid.gds_quad_high,
                      ( unsigned int ) bid.gds_quad_low );
             sprintf( p, "%17s ", blob_s );
-            break;
-
-         default:
             break;
       }
    }

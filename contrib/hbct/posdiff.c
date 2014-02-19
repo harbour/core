@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -76,7 +76,7 @@ HB_FUNC( POSDIFF )
       pc1 = pcString1 + sIgnore;
       pc2 = pcString2 + sIgnore;
 
-      while( ( pc1 < pcString1 + sStrLen1 ) && ( pc2 < pcString2 + sStrLen2 ) )
+      while( pc1 < ( pcString1 + sStrLen1 ) && pc2 < ( pcString2 + sStrLen2 ) )
       {
          if( *pc1 != *pc2 )
          {
@@ -128,7 +128,7 @@ HB_FUNC( POSEQUAL )
       else
          sCompare = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) - sIgnore;
 
-      if( ( sCompare == 0 ) || ( sIgnore > sStrLen1 ) || ( sIgnore > sStrLen2 ) )
+      if( sCompare == 0 || sIgnore > sStrLen1 || sIgnore > sStrLen2 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
@@ -140,7 +140,7 @@ HB_FUNC( POSEQUAL )
          return;
       }
 
-      if( ( sStrLen1 < ( sCompare + sIgnore ) ) || ( sStrLen2 < ( sCompare + sIgnore ) ) )
+      if( sStrLen1 < ( sCompare + sIgnore ) || sStrLen2 < ( sCompare + sIgnore ) )
       {
          int iArgErrorMode = ct_getargerrormode();
 

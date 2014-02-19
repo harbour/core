@@ -1,44 +1,33 @@
-/*
- * Download an file from an ftp server
- */
+/* Download a file from an FTP server */
 
 #require "hbtip"
 
-PROCEDURE Main( cFile )
+#include "directry.ch"
 
-   ? TRP20FTPEnv( cFile )
+PROCEDURE Main( cMask )
 
-   RETURN
-
-/**********************************************************************
- *
- *     Static Function TRP20FTPEnv()
- *
- **********************************************************************/
-
-STATIC FUNCTION TRP20FTPEnv( cCarpeta )
+   LOCAL lRetVal := .T.
 
    LOCAL aFiles
    LOCAL cUrl
-   LOCAL cStr
-   LOCAL lRetVal  := .T.
    LOCAL oUrl
    LOCAL oFTP
    LOCAL cUser
    LOCAL cServer
    LOCAL cPassword
-   LOCAL cFile     := ""
+   LOCAL aFile
 
-   cServer   := "ftpserver"   /* change ftpserver to the real name  or ip of your ftp server */
-   cUser     := "ftpuser"     /* change ftpuser to an valid user on ftpserer */
-   cPassword := "ftppass"     /* change ftppass  to an valid password for ftpuser */
+   hb_default( @cMask, __FILE__ )
+
+   cServer   := "ftp.example.com"  /* change this to the real name or IP of your FTP server */
+   cUser     := "ftpuser"          /* change this to a valid user on the server */
+   cPassword := "ftppass"          /* change this to a valid password for the user */
    cUrl      := "ftp://" + cUser + ":" + cPassword + "@" + cServer
 
-   /* Leemos ficheros a enviar */
-   aFiles := { { cCarpeta, 1, 2, 3 } }
-   /* aFiles := Directory( cCarpeta ) */
+   /* fetch files to transfer */
+   aFiles := { { cMask, 1, 2, 3 } }
 
-   IF Len( aFiles ) > 0
+   IF ! Empty( aFiles )
 
       oUrl              := TUrl():New( cUrl )
       oFTP              := TIPClientFTP():New( oUrl, .T. )
@@ -46,34 +35,35 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       oFTP:bUsePasv     := .T.
 
       /* Comprobamos si el usuario contiene una @ para forzar el userid */
-      IF At( "@", cUser ) > 0
+      IF "@" $ cUser
          oFTP:oUrl:cServer   := cServer
          oFTP:oUrl:cUserID   := cUser
          oFTP:oUrl:cPassword := cPassword
       ENDIF
 
       IF oFTP:Open( cUrl )
-         FOR EACH cFile IN afiles
-            IF ! oFtp:DownloadFile( cFile[ 1 ] )
+         FOR EACH aFile IN aFiles
+            IF oFtp:DownloadFile( aFile[ F_NAME ] )
+               lRetVal := .T.
+            ELSE
                lRetVal := .F.
                EXIT
-            ELSE
-               lRetVal := .T.
             ENDIF
          NEXT
          oFTP:Close()
       ELSE
-         cStr := "Could not connect to FTP server " + oURL:cServer
+         ? "Could not connect to FTP server", oURL:cServer
          IF oFTP:SocketCon == NIL
-            cStr += hb_eol() + "Connection not initialized"
+            ? "Connection not initialized"
          ELSEIF hb_inetErrorCode( oFTP:SocketCon ) == 0
-            cStr += hb_eol() + "Server response:" + " " + oFTP:cReply
+            ? "Server response:", oFTP:cReply
          ELSE
-            cStr += hb_eol() + "Error in connection:" + " " + hb_inetErrorDesc( oFTP:SocketCon )
+            ? "Error in connection:", hb_inetErrorDesc( oFTP:SocketCon )
          ENDIF
-         ? cStr
          lRetVal := .F.
       ENDIF
    ENDIF
 
-   RETURN lRetVal
+   ErrorLevel( iif( lRetVal, 0, 1 ) )
+
+   RETURN

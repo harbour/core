@@ -13,16 +13,16 @@ rem - Requires GNU sed tool in PATH
 
 echo ! Self: %0
 
-if "%HB_VS%" == "" set HB_VS=32
-if "%HB_VL%" == "" set HB_VL=320
-if "%HB_VM%" == "" set HB_VM=3.2
-if "%HB_VF%" == "" set HB_VF=3.2.0dev
+if "%HB_VS%" == "" set HB_VS=34
+if "%HB_VL%" == "" set HB_VL=340
+if "%HB_VM%" == "" set HB_VM=3.4
+if "%HB_VF%" == "" set HB_VF=3.4.0dev
 if "%HB_RT%" == "" set HB_RT=C:\hb\
 
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
-rem ; Assemble unified package from per-target builds
+rem Assemble unified package from per-target builds
 
 if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 
@@ -54,11 +54,11 @@ xcopy /y /s    %~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib         
 xcopy /y       %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll           %HB_ABSROOT%bin\
 xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll         %HB_ABSROOT%bin\
 
-rem ; Create special implibs for Borland (requires BCC in PATH)
-rem   NOTE: Using intermediate .def files, because direct .dll to .lib conversion
-rem         is buggy in BCC55 and BCC58 (no other versions tested), leaving off
-rem         leading underscore from certain ("random") symbols, resulting in
-rem         unresolved externals, when trying to use it. [vszakats]
+rem Create special implibs for Borland (requires BCC in PATH)
+rem NOTE: Using intermediate .def files, because direct .dll to .lib conversion
+rem       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
+rem       leading underscore from certain ("random") symbols, resulting in
+rem       unresolved externals, when trying to use it. [vszakats]
 for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do (
    "%HB_DIR_BCC_IMPLIB%impdef.exe" -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" "%%a"
    echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
@@ -85,7 +85,7 @@ xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_sjlj-1.dll"                         
 xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"                                    %HB_ABSROOT%bin\
 xcopy /y       "%HB_DIR_MINGW%\bin\mingwm10.dll"                                          %HB_ABSROOT%bin\
 
-rem ; Create unified installer
+rem Create unified installer
 
 pushd
 
@@ -96,7 +96,7 @@ if exist %HB_RT%harbour-%HB_VF%-win.exe del %HB_RT%harbour-%HB_VF%-win.exe
 
 "%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% %~dp0mpkg_win_uni.nsi >> %HB_RT%harbour-%HB_VF%-win-log.txt 2>&1
 
-rem ; Create unified archive
+rem Create unified archive
 
 echo.> _hbfiles
 echo "%HB_DR%RELNOTES.txt"                          >> _hbfiles

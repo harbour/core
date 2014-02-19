@@ -24,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -115,13 +115,9 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
             {
                /* an '"' after '"' ? */
                if( szText[ i + 1 ] != '"' )
-               {
                   szResult[ ui ] = szText[ i + 1 ];
-               }
                else
-               {
                   szResult[ ui ] = '\0';
-               }
 
                ++i;
 
@@ -173,13 +169,9 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
                      while( ++i < nLen )
                      {
                         if( szText[ i ] == iDelimiter )
-                        {
                            break;
-                        }
                         else
-                        {
                            szResult[ ++ui ] = szText[ i ];
-                        }
                      }
                   }
                }
@@ -218,16 +210,12 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
                               break;
                            }
                            else
-                           {
                               szResult[ ++ui ] = szText[ i ];
-                           }
                         }
                      }
                   }
                   else
-                  {
                      szResult[ ++ui ] = szText[ i ];
-                  }
                }
                word_count++;
                szResult[ ui + 1 ] = '\0';
@@ -272,9 +260,7 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
       if( ( HB_BYTE ) *string == delimiter )
       {
          while( ( HB_BYTE ) *string == delimiter )
-         {
             string++;
-         }
 
          if( bufptr > buffer )
          {
@@ -283,15 +269,11 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
          }
       }
       else
-      {
          last_char = *bufptr++ = *string++;
-      }
    }
 
    if( last_char > 0 )
-   {
       word_count++;
-   }
 
    *bufptr = '\0';
 
@@ -320,7 +302,7 @@ static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
 
    memset( string, ' ', MAX_READ );
 
-   for(;; )
+   for( ;; )
    {
       ch = fgetc( stream );
 
@@ -333,9 +315,7 @@ static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
       else
       {
          if( cnbr < MAX_READ && ch != '\r' )
-         {
             string[ cnbr++ ] = ( char ) ch;
-         }
       }
 
       if( cnbr >= MAX_READ )
@@ -584,9 +564,7 @@ HB_FUNC( FLINECOUNT )
    while( ( ch = fgetc( inFile ) ) != EOF )
    {
       if( ch == '\n' )
-      {
          nLineCount++;
-      }
    }
 
    /* return number of lines */

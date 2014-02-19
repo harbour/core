@@ -1,5 +1,5 @@
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()
@@ -10,34 +10,34 @@ PROCEDURE Main()
    LOCAL b := { 10 }
    LOCAL c := { 2, .T., "B", NIL, { 1 }, {|| b }, oError, Date(), 1, .F., "A", NIL, Date() - 1, { 0 }, {|| a }, oError }
 
-   ? "Original...:", aDump( a )
-   ? "ASort......:", aDump( ASort( AClone( a ) ) )
-   ? "ASort.block:", aDump( ASort( AClone( a ), , , {| x, y | x < y } ) )
+   ? "Original...:", ADump( a )
+   ? "ASort......:", ADump( ASort( AClone( a ) ) )
+   ? "ASort.block:", ADump( ASort( AClone( a ), , , {| x, y | x < y } ) )
    ?
-   ? "Original...:", aDump( b )
-   ? "ASort......:", aDump( ASort( AClone( b ) ) )
-   ? "ASort.block:", aDump( ASort( AClone( b ), , , {| x, y | x < y } ) )
+   ? "Original...:", ADump( b )
+   ? "ASort......:", ADump( ASort( AClone( b ) ) )
+   ? "ASort.block:", ADump( ASort( AClone( b ), , , {| x, y | x < y } ) )
    ?
-   ? "Original...:", aDump( c )
-   ? "ASort......:", aDump( ASort( AClone( c ) ) )
-   ? "ASort.block:", aDump( ASort( AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
+   ? "Original...:", ADump( c )
+   ? "ASort......:", ADump( ASort( AClone( c ) ) )
+   ? "ASort.block:", ADump( ASort( AClone( c ), , , {| x, y | XToStr( x ) < XToStr( y ) } ) )
    ?
 
    RETURN
 
-FUNCTION aDump( a )
+STATIC FUNCTION ADump( a )
 
    LOCAL cStr := ""
    LOCAL n := Len( a )
    LOCAL i
 
    FOR i := 1 TO n
-      cStr += AllTrim( xToStr( a[ i ] ) ) + " "
+      cStr += AllTrim( XToStr( a[ i ] ) ) + " "
    NEXT
 
    RETURN cStr
 
-FUNCTION xToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

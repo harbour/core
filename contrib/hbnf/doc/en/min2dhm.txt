@@ -17,6 +17,9 @@
       Converts numeric minutes into a character array containing
       days, hours & minutes.
    $EXAMPLES$
-      aDHM_ := MIN2DHM( 16789 ) // aDHM_[ 1 ] = 11, aDHM_[ 2 ] = 15, aDHM_[ 3 ] = 49
+      aDHM_ := ft_Min2Dhm( 16789 )
+      ? aDHM_[ 1 ]  // 11
+      ? aDHM_[ 2 ]  // 15
+      ? aDHM_[ 3 ]  // 49
    $END$
  */

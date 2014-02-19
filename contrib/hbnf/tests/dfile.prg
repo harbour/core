@@ -24,14 +24,14 @@ PROCEDURE Main( cInFile )
 
    cInFile := PadR( cInFile, 128 )
 
-   @ 0,  0 SAY "ENTER FILENAME: "   GET cInFile   PICTURE "@S30"
-   @ 1,  0 SAY "    FOREGROUND: "   GET nNColor   PICTURE "999"
-   @ 2,  0 SAY "     HIGHLIGHT: "   GET nHColor   PICTURE "999"
-   @ 3,  0 SAY "     EXIT KEYS: "   GET cEXitKeys
-   @ 4,  0 SAY "   BUFFER SIZE: "   GET nBUffSize PICTURE "9999"
-   @ 1, 40 SAY "COLUMN INCREMENT: " GET nCOlSkip  PICTURE "999"
-   @ 2, 40 SAY "   MAX LINE SIZE: " GET nRMargin  PICTURE "999"
-   @ 3, 40 SAY "     BROWSE MODE? " GET lBRowse   PICTURE "Y"
+   @ 0,  0 SAY "ENTER FILENAME:"   GET cInFile   PICTURE "@S30"
+   @ 1,  0 SAY "    FOREGROUND:"   GET nNColor   PICTURE "999"
+   @ 2,  0 SAY "     HIGHLIGHT:"   GET nHColor   PICTURE "999"
+   @ 3,  0 SAY "     EXIT KEYS:"   GET cEXitKeys
+   @ 4,  0 SAY "   BUFFER SIZE:"   GET nBUffSize PICTURE "9999"
+   @ 1, 40 SAY "COLUMN INCREMENT:" GET nCOlSkip  PICTURE "999"
+   @ 2, 40 SAY "   MAX LINE SIZE:" GET nRMargin  PICTURE "999"
+   @ 3, 40 SAY "     BROWSE MODE?" GET lBRowse   PICTURE "Y"
 
    READ
 
@@ -59,6 +59,6 @@ PROCEDURE Main( cInFile )
 
    ft_DFClose()
 
-   @ 20, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
+   @ MaxRow() - 4, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
 
    RETURN

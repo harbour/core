@@ -1,5 +1,4 @@
 //
-//
 //                      Test/Demo Program for
 //                       GTWVW GUI Interface
 //                   with multiple window support
@@ -16,12 +15,6 @@
 //
 //   parts of this program are copyrights of their respective owners
 //
-//
-
-/*
-   Compile/Link info:
-   You may use 'hbmk2 wvwtest9.hbp' to build this program.
- */
 
 #require "gtwvw"
 
@@ -113,7 +106,7 @@
 #define WVW_MAXWINDOWS    20             // ! must match with hbgtwvw.h
 #define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with hbgtwvw.h
 
-// for Button Types: //20040303
+// for Button Types: // 2004-03-03
 #define _BUTTON_NORMAL 0        // normal button
 #define _BUTTON_FLAT   1        // 'transparent', raised when mouseover
 #define _BUTTON_NONE   2        // no sign even when mouseover or clicked
@@ -152,6 +145,14 @@ STATIC s_afontinfo := {}         // x current font info
 
 //
 
+STATIC s_amouseobjlist := {}
+STATIC s_ncurkey := 0
+STATIC s_nkeyrepeater := NIL
+STATIC s_nrepeatrate  := 0.1
+STATIC s_nrepeatdelay := 0.5
+
+//
+
 PROCEDURE Main()
 
    LOCAL nCurWindow
@@ -162,6 +163,8 @@ PROCEDURE Main()
    LOCAL kF9, kF10, kF11
    LOCAL oMouse
    LOCAL ch
+
+   ErrorBlock( {| e | MyError( e ) } )
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
@@ -307,7 +310,7 @@ PROCEDURE Main()
    SetKey( K_F1, kF1 )
    SetCursor( nCursor )
 
-   RETURN  // main()
+   RETURN
 
 //
 
@@ -337,7 +340,7 @@ STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
 
 //
 
-PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
+STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
    LOCAL cWinName, nCurWindow
    LOCAL nCursor
@@ -413,11 +416,11 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    SetColor( cColor )
    wvw_SetMouseMove( , lMouseMove )
 
-   RETURN // Demo_Console()
+   RETURN
 
 //
 
-PROCEDURE Demo_Get()
+STATIC PROCEDURE Demo_Get()
 
    LOCAL nCurWindow, getlist := {}
    LOCAL cLabel := "This is the GET Demo Window"
@@ -489,7 +492,7 @@ PROCEDURE Demo_Get()
 
 //
 
-FUNCTION DEMO_Browse()
+STATIC PROCEDURE DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -511,7 +514,7 @@ FUNCTION DEMO_Browse()
    nCurWindow := wvw_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
    IF nCurWindow == 0
       lboxmessage( "Failed Opening new window!" )
-      RETURN NIL
+      RETURN
    ENDIF
 
    ResetMiscObjects( nCurWindow )
@@ -521,13 +524,13 @@ FUNCTION DEMO_Browse()
    CLS
    SetColor( "N/W*,N/GR*,,,N/W* " )
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
       wvw_lCloseWindow()
-      RETURN NIL
+      RETURN
    ENDIF
 
-   INDEX ON FIELD->LAST TO test1  // 20040707
+   INDEX ON FIELD->LAST TO test1  // 2004-07-07
 
    info_ := dbStruct()
 
@@ -569,10 +572,10 @@ FUNCTION DEMO_Browse()
    hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ":" + hb_ps() + CurDir() + hb_ps() + "test.dbf", nRight - nLeft + 1 ), "W+/W" )
 
    oBrowse:ForceStable()
-   RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 20040704
-   RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 20040704
+   RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 2004-07-04
+   RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 2004-07-04
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       nKey := Inkey( 0 )
 
       DO CASE
@@ -639,8 +642,8 @@ FUNCTION DEMO_Browse()
       oBrowse:ForceStable()
 
       // refresh the scrollbars due to keyboard navigation
-      RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 20040704
-      RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 20040704
+      RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 2004-07-04
+      RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 2004-07-04
 
    ENDDO
 
@@ -659,11 +662,11 @@ FUNCTION DEMO_Browse()
    SetColor( cColor )
    // SetCursor( nCursor )
 
-   RETURN NIL // DEMO_Browse()
+   RETURN
 
 /* generic Vertical Scrollbar handler for tbrowse */
 
-FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
+STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
@@ -704,11 +707,11 @@ FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    wvw_nSetCurWindow( nOldWin )
 
-   RETURN NIL
+   RETURN
 
 /* generic Horizontal Scrollbar handler for tbrowse */
 
-FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
+STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
@@ -748,10 +751,10 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    wvw_nSetCurWindow( nOldWin )
 
-   RETURN NIL
+   RETURN
 
 /**
-20040704 notes:
+2004-07-04 notes:
 
 0 <= nPage <= ( nMax - nMin + 1 )
 nPage :: pagesize
@@ -759,7 +762,7 @@ nPage :: pagesize
 nMin <= nPos <= ( nMax - Max( nPage - 1, 0 ) )
 **/
 
-STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
+STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
    LOCAL nRatio
@@ -784,9 +787,9 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
 
    wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
+STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
 
@@ -798,7 +801,7 @@ STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
 
    wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -821,7 +824,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 //
 
@@ -865,21 +868,20 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION VouBlockField( i )
-
    RETURN {|| FieldGet( i ) }
 
 //
 //      WVW_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
 //
-// 20040330,was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
-// 20040408,was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
+// 2004-03-30, was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
+// 2004-04-08, was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
 
-FUNCTION WVW_Paint( nWinNum )
+FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    // ldebug( "WVW_Paint:" + hb_eol() +;
-   //        "hWnd = " + hb_ntos( hWnd ) + hb_eol() +;
-   //        "nWinNum = " + hb_ntos( nWinNum ) )
+   //        "hWnd: " + hb_ntos( hWnd ) + hb_eol() +;
+   //        "nWinNum: " + hb_ntos( nWinNum ) )
    IF Len( s_amiscobjlist ) >= nWinNum + 1
       AEval( s_amiscobjlist[ nWinNum + 1 ], {| e | Eval( e, nWinNum ) } )
    ENDIF
@@ -894,7 +896,7 @@ FUNCTION WVW_Paint( nWinNum )
 //      received by the window.
 //
 #if 0
-FUNCTION WVW_SetFocus( hWnd, nWinNum )
+FUNCTION WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
 
    STATIC s_nGotFocus := 0
 
@@ -914,11 +916,11 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
 
-FUNCTION WVW_KillFocus( hWnd )
+FUNCTION WVW_KillFocus( hWnd )  /* must be a public function */
    RETURN NIL
 #endif
 
-FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
+FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    HB_SYMBOL_UNUSED( nWinNum )
    HB_SYMBOL_UNUSED( hWnd )
@@ -931,7 +933,7 @@ FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
 
    RETURN NIL
 
-FUNCTION CreateToolbar( nWinNum )
+STATIC PROCEDURE CreateToolbar( nWinNum )
 
    // for toolbar:
    LOCAL nSysBitmap := 1     // 0:none 1:small 2:large
@@ -953,7 +955,7 @@ FUNCTION CreateToolbar( nWinNum )
 
    IF hWndTB == 0
       lboxmessage( "FAILED create toolbar" )
-      RETURN NIL
+      RETURN
    ENDIF
 
    /* system bitmaps use constants in commctrl.h */
@@ -981,9 +983,9 @@ FUNCTION CreateToolbar( nWinNum )
    wvw_tbAddButton( nWinNum, IDM_HELP_INFO, 10 /*STD_PROPERTIES*/, "Info", 1 )
    wvw_tbAddButton( nWinNum, IDM_HELP_HELP, 11 /*STD_HELP*/, "Help", 1 )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION xDisableToolbar( nWinNum )
+STATIC PROCEDURE xDisableToolbar( nWinNum )
 
    LOCAL i
 
@@ -991,9 +993,9 @@ FUNCTION xDisableToolbar( nWinNum )
       wvw_tbEnableButton( nWinNum, i, .F. )
    NEXT
 
-   RETURN NIL
+   RETURN
 
-FUNCTION xEnableToolbar( nWinNum )
+STATIC PROCEDURE xEnableToolbar( nWinNum )
 
    LOCAL i
 
@@ -1001,11 +1003,11 @@ FUNCTION xEnableToolbar( nWinNum )
       wvw_tbEnableButton( nWinNum, i, .T. )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
-FUNCTION ResetMiscObjects( nWinNum )
+STATIC FUNCTION ResetMiscObjects( nWinNum )
 
    DO WHILE Len( s_amiscobjlist ) < nWinNum + 1
       AAdd( s_amiscobjlist, {} )
@@ -1014,7 +1016,7 @@ FUNCTION ResetMiscObjects( nWinNum )
 
    RETURN .T.
 
-FUNCTION AddMiscObjects( nWinNum, bAction )
+STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
 
    AAdd( s_amiscobjlist[ nWinNum + 1 ], bAction )
 
@@ -1024,7 +1026,7 @@ FUNCTION AddMiscObjects( nWinNum, bAction )
 
 /* this is for use with SetInkeyAfterBlock() */
 
-FUNCTION nAfterInkey( nkey )
+STATIC FUNCTION nAfterInkey( nkey )
 
    // check if nkey is:
    // (1) menu command, or
@@ -1043,11 +1045,11 @@ FUNCTION nAfterInkey( nkey )
       RETURN 0
    ENDIF
 
-   RETURN nkey // nAfterInkey(nkey)
+   RETURN nkey
 
 // MENU handler **************************************
 
-FUNCTION nMenuChecker( nMenuEvent )
+STATIC FUNCTION nMenuChecker( nMenuEvent )
 
    LOCAL nkey := 0
 
@@ -1100,28 +1102,27 @@ FUNCTION nMenuChecker( nMenuEvent )
    // xEnableToolbar( 0 )
    xEnableMenus( 0, 4 )
 
-   RETURN nkey // nMenuChecker()
+   RETURN nkey
 
-// MISCELLANEOUS *******************************************************
+// MISCELLANEOUS
 
-FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
    hb_default( @cTitle, "Info" )
    win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
    RETURN .T.
 
-FUNCTION lYesNo( cMsg, cTitle )
+STATIC FUNCTION lYesNo( cMsg, cTitle )
 
    hb_default( @cTitle, "Konfirmasi" )
 
    RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
-FUNCTION lDebug( cMsg )
-
+STATIC FUNCTION lDebug( cMsg )
    RETURN lBoxMessage( cMsg, "Debug" )
 
-FUNCTION xDebugInfo()
+STATIC PROCEDURE xDebugInfo()
 
    STATIC s_nfh := 0
 
@@ -1136,21 +1137,21 @@ FUNCTION xDebugInfo()
       hb_eol() + ;
       "Topmost Window is Window #" + hb_ntos( wvw_nNumWindows() - 1 ) + hb_eol() + ;
       "Current Window is Window #" + hb_ntos( wvw_nSetCurWindow() ) + hb_eol() + ;
-      "MaxRow() = " + hb_ntos( MaxRow() ) + ", MaxCol() = " + hb_ntos( MaxCol() ) + hb_eol() + ;
-      "Row() = " + hb_ntos( Row() ) + ", Col() = " + hb_ntos( Col() ) + hb_eol() + ;
-      "WVW_RowOfs() = " + hb_ntos( wvw_nRowOfs() ) + ", WVW_ColOfs() = " + hb_ntos( wvw_nColOfs() ) + hb_eol() + ;
-      "Line Spacing = " + hb_ntos( wvw_SetLineSpacing() ) + hb_eol() + ;
-      "Default Line Spacing = " + hb_ntos( wvw_SetDefLineSpacing() ) + hb_eol() + ;
+      "MaxRow(): " + hb_ntos( MaxRow() ) + ", MaxCol(): " + hb_ntos( MaxCol() ) + hb_eol() + ;
+      "Row(): " + hb_ntos( Row() ) + ", Col(): " + hb_ntos( Col() ) + hb_eol() + ;
+      "WVW_RowOfs(): " + hb_ntos( wvw_nRowOfs() ) + ", WVW_ColOfs(): " + hb_ntos( wvw_nColOfs() ) + hb_eol() + ;
+      "Line Spacing: " + hb_ntos( wvw_SetLineSpacing() ) + hb_eol() + ;
+      "Default Line Spacing: " + hb_ntos( wvw_SetDefLineSpacing() ) + hb_eol() + ;
       hb_eol() + ;
-      "Font Face = '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
-      "Font Height = " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
-      "Font Width = " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
+      "Font Face: '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
+      "Font Height: " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
+      "Font Width: " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
       hb_eol() + ;
       "BTW, mouse pointer now sits on MaxRow(),MaxCol(), doesn't it?" )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION xHelp()
+STATIC PROCEDURE xHelp()
 
    lboxmessage( "GTWVW test/demo" + hb_eol() + ;
       "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
@@ -1177,44 +1178,12 @@ FUNCTION xHelp()
       "Other info:" + hb_eol() + ;
       "Window repainting is checked at 100msec interval" )
 
-   RETURN NIL
-
-FUNCTION nCeiling( nNumber, nRoundDec )
-
-   // WARNING!!! tidak bekerja untuk nRoundDec > 0
-   // nRoundDec: 0=satuan, -1=puluhan, -2=ratusan, -3=ribuan
-   LOCAL i
-   LOCAL nTemp
-
-   hb_default( @nRoundDec, 0 )  // SATUAN
-
-   IF nRoundDec > 0
-      nRoundDec := 0
-   ENDIF
-
-   // geser kanan
-   FOR i := nRoundDec TO -1   // artinya kalau SATUAN gak usah
-      nNumber := nNumber / 10
-   NEXT
-
-   nTemp := nNumber - Int( nNumber )  // right of dec point
-   IF nTemp > 0
-      nNumber := Int( nNumber ) + 1
-   ELSE
-      nNumber := Int( nNumber )
-   ENDIF
-
-   // geser kiri
-   FOR i := nRoundDec TO -1   // artinya kalau SATUAN gak usah
-      nNumber := nNumber * 10
-   NEXT
-
-   RETURN nNumber
+   RETURN
 
 /* Modified from SetDefaultWindowSize() sample from Peter Rees */
 /* Note: width < 0 appears better, but mouse caption will look bad */
 
-FUNCTION SetDefaultWindowSize()
+STATIC FUNCTION SetDefaultWindowSize()
 
    // x was: LOCAL Result:= SetMode(32,98), ScreenWidth
    LOCAL Result := .T., ScreenWidth
@@ -1243,13 +1212,7 @@ FUNCTION SetDefaultWindowSize()
 
    RETURN Result
 
-// ERROR handler *******************************************************
-
-PROCEDURE ErrorSys()
-
-   ErrorBlock( {| e | MyError( e ) } )
-
-   RETURN
+// ERROR handler
 
 STATIC PROCEDURE MyError( e )
 
@@ -1276,19 +1239,565 @@ STATIC PROCEDURE MyError( e )
 
    RETURN
 
-PROCEDURE debugging( cMsg, nRow, nCol, nWinNum )
+/*
+  Pseudo mouse object in GTWVW GUI
+  copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
-   HB_SYMBOL_UNUSED( nWinNum )
+  This is a sample of implementation of a pseudo GUI object in GTWVW,
+  using GTWVW GUI primitives.
 
-   ? cmsg + hb_ntos( nrow ) + ", " + hb_ntos( ncol )
+  Example on how to use it is given in wvwtest9.prg.
+  eg. WVWMouseObject():New( "Button1", MaxRow() - 1, 10, , , {|| Tone( 660, 3 ) } )
+
+  NOTES:
+  This is just a sample. You may not want to see it as a 'model'.
+  There are many other ways to handle pseudo GUI objects in GTWVW, just
+  use your imagination :-)
+*/
+
+#include "hbclass.ch"
+
+#define _DEFAULT_CAPTION_FONT   "Tahoma"
+#define _DEFAULT_CAPTION_HEIGHT 16
+
+// CLIPPER COLOR CONSTANTS
+#define _IDX_BLACK               0
+#define _IDX_BLUE                1
+#define _IDX_GREEN               2
+#define _IDX_CYAN                3
+#define _IDX_RED                 4
+#define _IDX_MAGENTA             5
+#define _IDX_BROWN               6
+#define _IDX_WHITE               7
+#define _IDX_LIGHT_GRAY          8
+#define _IDX_BRIGHT_BLUE         9
+#define _IDX_BRIGHT_GREEN       10
+#define _IDX_BRIGHT_CYAN        11
+#define _IDX_BRIGHT_RED         12
+#define _IDX_BRIGHT_MAGENTA     13
+#define _IDX_YELLOW             14
+#define _IDX_BRIGHT_WHITE       15
+
+// mouse object types
+#define _MOBJECT_BUTTON  0      // mouse button
+#define _MOBJECT_HSCROLL 1      // horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_VSCROLL 2      // horiz scrollbar: OBSOLETE, NOT USED HERE
+
+// **************************************************************
+// WVWMouseButton
+// **************************************************************
+
+CREATE CLASS WVWMouseButton STATIC
+
+#if 0
+   VAR nId         /* TODO */       // mouse object id
+   VAR nHotKey     /* TODO */       // hotkey associated with this object
+#endif
+   VAR nWinId                       // 2004-03-03, parent window's number
+   VAR lVisible                     // is the object visible
+   VAR lEnable                      // 2004-03-03, is the object enable
+   VAR lTight                       // allow tight neighboring
+   VAR nType                        // 2004-03-03, appearance of this button
+   VAR nRow1, nCol1, nRow2, nCol2   // mouse object region
+
+   VAR bClickBlock                  // executed on Left Click
+   VAR bPressBlock                  // executed on Left Press
+
+   VAR lRepeatPress                 // repeat Left Press when pressed during mouse over?
+
+   VAR cCaption
+   VAR cCaptionFont                 // font name for caption
+   VAR nCaptionHeight               // height of font for caption, if NIL use current wvw_GetFontInfo()
+   VAR cImage                       // 2004-03-25, image file name
+
+   VAR cNormalColor    // button normal color, pls use single color, eg "W"
+   VAR cPressedColor   // button pressed color, pls use single color, eg "B"
+
+   // private DATA, should be protected
+   VAR lPressed                     // is it being pressed by Left Button?
+   VAR lHover                       // 2004-03-03, is mouse over the button?
+
+   // METHODS
+   METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId )
+
+#if 0
+   METHOD nGetId() INLINE ::nId            /* TODO */
+   METHOD SetHotKey( nKey )                /* TODO */
+   METHOD nGetHotKey() INLINE ::nHotKey    /* TODO */
+#endif
+
+   METHOD Enable( lEnable )
+
+   METHOD SetClickBlock( bBlock )
+   METHOD GetClickBlock() INLINE ::bClickBlock
+
+   METHOD SetPressBlock( bBlock )
+   METHOD GetPressBlock() INLINE ::bPressBlock
+
+   METHOD SetRepeatPress( lRepeat )
+   METHOD GetRepeatPress() INLINE ::lRepeatPress
+
+   METHOD SetCaption( cCaption )
+
+   METHOD OnClick()
+   METHOD OnPress()          // K_LBUTTONDOWN occurs over this mouse object
+   METHOD OnRelease()        // K_LBUTTONUP occurs over this mouse object
+   METHOD OnReleaseOut()     // K_LBUTTONUP occurs outside of this mouse object
+   METHOD OnMouseOut()       // mouse is moved from over the button outside
+   METHOD OnMouseOver()    // TODO
+
+   METHOD Draw( nWinNum )
+
+ENDCLASS   // WVWMouseButton
+
+METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
+
+   hb_default( @cCaption, "" ) // 2004-03-25, was: "Button"
+   hb_default( @nRow1, 0 )
+   hb_default( @nCol1, 0 )
+   hb_default( @nRow2, nRow1 )
+   hb_default( @nCol2, nCol1 + Max( 10, Len( cCaption ) + 2 ) - 1 )
+   hb_default( @nType, _BUTTON_NORMAL )        // 2004-03-03
+   hb_default( @lDraw, .T. )
+   hb_default( @nWinId, wvw_nNumWindows() - 1 )  // 2004-03-03
+
+   // TODO: ::nId := iif( Empty( s_amouseobjlist ), 1, s_amouseobjlist[ Len( s_amouseobjlist ) ]:nGetId() + 1 )
+   // TODO: ::nHotKey := NIL
+   ::nWinId := nWinId  // 2004-03-03
+
+   ::nRow1 := nRow1
+   ::nCol1 := nCol1
+   ::nRow2 := nRow2
+   ::nCol2 := nCol2
+
+   ::bClickBlock   := iif( HB_ISBLOCK( bClickBlock ), bClickBlock, NIL )
+   ::bPressBlock   := NIL
+
+   ::lRepeatPress  := .F.
+
+   ::lPressed  := .F.
+   ::lHover    := .F.  // 2004-03-03
+   ::cCaption := cCaption
+   ::cCaptionFont := _DEFAULT_CAPTION_FONT
+   ::nCaptionHeight := _DEFAULT_CAPTION_HEIGHT
+
+   ::cImage    := NIL  // 2004-03-25
+
+   // TODO: pls use current color
+   ::cNormalColor := "W"
+   ::cPressedColor := "W"
+
+   ::lVisible := .T.
+   ::lEnable  := .T.
+   ::lTight   := .F.
+   ::nType := nType
+
+   IF lDraw  // 2004-03-04
+      ::Draw( ::nWinId )
+   ENDIF
+
+   RETURN Self
+
+METHOD Enable( lEnable ) CLASS WVWMouseButton
+
+   ::lEnable := lEnable
+   ::draw()
+
+   RETURN Self
+
+METHOD SetClickBlock( bBlock ) CLASS WVWMouseButton
+
+   ::bClickBlock := bBlock
+
+   RETURN Self
+
+METHOD SetPressBlock( bBlock ) CLASS WVWMouseButton
+
+   ::bPressBlock := bBlock
+
+   RETURN Self
+
+METHOD SetRepeatPress( lRepeat ) CLASS WVWMouseButton
+
+   ::lRepeatPress := lRepeat
+
+   RETURN Self
+
+METHOD SetCaption( cCaption ) CLASS WVWMouseButton
+
+   ::cCaption := cCaption
+
+   RETURN Self
+
+METHOD OnPress() CLASS WVWMouseButton
+
+   // this is called when LEFT mouse button is pressed on the object
+   LOCAL lWasPressed
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   lWasPressed := ::lPressed
+   ::lPressed := .T.
+   ::Draw()
+
+   IF ::lRepeatPress // .AND. ::lPressed
+      IF ! lWasPressed
+         xKeyRepeater( .T. ) // init it
+      ENDIF
+      wvwm_SetKeyRepeater( .T. )   // activate key repeater
+   ENDIF
+
+   IF HB_ISBLOCK( ::bPressBlock )
+      Eval( ::bPressBlock )
+   ENDIF
+
+   RETURN Self
+
+METHOD OnClick() CLASS WVWMouseButton
+
+   // this is called when LEFT mouse button is clicked on the object
+   // normally (or should it be restricted to be?) called from ::OnRelease()
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   IF HB_ISBLOCK( ::bClickBlock )
+      Eval( ::bClickBlock )
+   ENDIF
+
+   RETURN Self
+
+METHOD OnRelease() CLASS WVWMouseButton
+
+   LOCAL lWasPressed := ::lPressed
+
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   ::lPressed := .F.
+   ::Draw()
+
+   IF ::lRepeatPress // .AND. ::lPressed
+      wvwm_SetKeyRepeater( .F. )   // deactivate key repeater
+   ENDIF
+
+   IF lWasPressed
+      ::OnClick()
+   ENDIF
+
+   RETURN Self
+
+METHOD OnReleaseOut() CLASS WVWMouseButton
+
+   // left button is released outside of mouse region
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   ::lPressed := .F.
+   ::Draw()
+
+   // NOTE: no need to do SetKeyRepeater( .F. ),
+   //       because it was already handled by onMouseOut
+
+   RETURN Self
+
+// 2004-03-03
+
+METHOD OnMouseOut() CLASS WVWMouseButton
+
+   // mouse is moved from over the button outside
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   if ::lRepeatPress .AND. ::lPressed
+      wvwm_SetKeyRepeater( .F. )   // stop key repeater
+   ENDIF
+
+   ::lHover := .F.
+   ::Draw()
+
+   RETURN Self
+
+// 2004-03-03
+
+METHOD OnMouseOver() CLASS WVWMouseButton
+
+   // mouse is moved to over the button from outside
+   IF ! ::lEnable  // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   if ::lRepeatPress .AND. ::lPressed
+      wvwm_SetKeyRepeater( .T. )   // activate key repeater
+   ENDIF
+
+   ::lHover := .T.
+   ::Draw()
+
+   RETURN Self
+
+METHOD DRAW( nWinNum ) CLASS WVWMouseButton
+
+   LOCAL nOldCursor := SetCursor( SC_NONE )
+   LOCAL lMouseOver := ::lHover // 2004-03-03,was: ( MRow() >= ::nrow1 .AND. MRow() <= ::nrow2 .AND. MCol() >= ::ncol1 .AND. MCol() <= ::ncol2 )
+   LOCAL lPressed := ::lPressed .AND. lMouseOver
+   LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_GetFontInfo( nWinNum ), NIL )
+   LOCAL nLabelColor := iif( ! lPressed, RGB( 0, 0, 0 ), RGB( 96, 96, 96 ) )
+   LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 2004-03-25
+
+   IF ! ::lVisible .OR. ::nType == _BUTTON_NONE
+      SetCursor( nOldCursor ) // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   if ::nrow1 > ::nrow2 .OR. ::ncol1 > ::ncol2
+      SetCursor( nOldCursor ) // 2004-03-03
+      RETURN Self
+   ENDIF
+
+   hb_default( @nWinNum, ::nWinId )
+
+   IF lPressed // ::lPressed
+      IF ::nType != _BUTTON_HARD
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
+         wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw
+      ELSE
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
+         wvw_DrawBoxRaised(   nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
+      ENDIF
+
+      IF lUseImage .AND. ::nType != _BUTTON_NONE
+         IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+         ENDIF
+      ENDIF
+
+      IF ! Empty( ::cCaption )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+      ENDIF
+   ELSE
+      IF lMouseOver .OR. ::nType == _BUTTON_NORMAL .OR. ::nType == _BUTTON_HARD
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
+         wvw_DrawBoxRaised( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
+      ELSE
+         // must undraw the box. ideally GTWVW has this function
+         wvw_DrawBoxGroup( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2 )
+      ENDIF
+
+      IF lUseImage .AND. ::nType != _BUTTON_NONE
+         IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
+         ENDIF
+      ENDIF
+
+      IF ! ::lEnable
+         nLabelColor := RGB( 96, 96, 96 )
+      ELSEIF lMouseOver
+         nLabelColor := RGB( 255, 0, 0 )
+      ENDIF
+
+      IF ! Empty( ::cCaption )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+      ENDIF
+   ENDIF
+   SetCursor( nOldCursor )
+
+   RETURN Self
+
+// *******************************************************
+// interface functions
+
+STATIC PROCEDURE wvwm_paint( nWinNum )
+
+   // normally called by WVW_Paint()
+   // redraw every mouse object in window nWinNum
+   IF Len( s_amouseobjlist ) >= nWinNum + 1
+      AEval( s_amouseobjlist[ nWinNum + 1 ], {| o | o[ 2 ]:draw( nWinNum ) } )
+   ENDIF
 
    RETURN
 
-PROCEDURE pause()
+// clears all mouse objects from window nWinNum
+STATIC FUNCTION wvwm_ResetMouseObjects( nWinNum )
 
-   Tone( 660, 2 )
-   Inkey( 0 )
+   DO WHILE Len( s_amouseobjlist ) < nWinNum + 1
+      AAdd( s_amouseobjlist, {} )
+   ENDDO
+   s_amouseobjlist[ nWinNum + 1 ] := {}
+
+   RETURN .T.
+
+STATIC FUNCTION wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
+
+   // adds a mouse object oMouse into window nWinNum
+   hb_default( @nObjType, _MOBJECT_BUTTON )
+   AAdd( s_amouseobjlist[ nWinNum + 1 ], { nObjType, oMouse } )
+
+   RETURN .T.
+
+STATIC FUNCTION wvwm_SetKeyRepeater( lSet )
+
+   // returns .T. if KeyRepeater is active
+   // if lSet is supplied, KeyRepeater is enable/disable accordingly
+   LOCAL lWasSet := ( s_nkeyrepeater != NIL )
+   IF lSet != NIL
+      IF lSet
+         IF ! lWasSet
+            s_nkeyrepeater := hb_idleAdd( {|| xKeyRepeater() } )
+         ENDIF
+      ELSE
+         IF lWasSet
+            hb_idleDel( s_nkeyrepeater )
+            s_nkeyrepeater := NIL
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN lWasSet
+
+STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
+
+   LOCAL nrow := MRow(), ncol := MCol()
+   LOCAL lMouseOver
+
+   lMouseOver := ( nrow >= oMouseObj:nrow1 .AND. nrow <= oMouseObj:nrow2 .AND. ncol >= oMouseObj:ncol1 .AND. ncol <= oMouseObj:ncol2 )
+   IF ! lMouseOver
+      // cursor is somewhere outside of current mouse object area
+
+      IF oMouseObj:lHover
+         // user has just moved the cursor out of this button
+         oMouseObj:OnMouseOut()
+      ELSE
+         DO CASE
+         CASE nkey == K_LBUTTONUP
+            IF oMouseObj:lPressed
+               oMouseObj:OnReleaseOut()
+            ENDIF
+         ENDCASE
+      ENDIF
+
+   ELSE
+      // cursor is over current mouse object area
+
+      IF ! oMouseObj:lHover
+         // user has just moved the cursor into over this button
+         oMouseObj:OnMouseOver()
+      ELSE
+         DO CASE
+         CASE nkey == K_LDBLCLK
+            // currently button not handle this events,
+            // so we will treat it as single key press
+            oMouseObj:OnPress()
+         CASE nkey == K_LBUTTONDOWN
+            oMouseObj:OnPress()
+         CASE nkey == K_LBUTTONUP
+            oMouseObj:OnRelease()
+         ENDCASE
+      ENDIF
+
+   ENDIF
+
+   RETURN nkey
+
+STATIC FUNCTION nScrollChecker( nKey, cType, oMouseObj )
+
+   // cType == "H" or "V"
+
+   HB_SYMBOL_UNUSED( cType )
+
+   nButtonChecker( nkey, oMouseObj:oFirstButton )
+   nButtonChecker( nkey, oMouseObj:oRail1Button )
+   nButtonChecker( nkey, oMouseObj:oMidButton )
+   nButtonChecker( nkey, oMouseObj:oRail2Button )
+   nButtonChecker( nkey, oMouseObj:oSecondButton )
+
+   RETURN nKey
+
+/* HANDLING MULTIPLE MOUSE OBJECTS */
+/* called by SETKEYAFTERBLOCK() function */
+
+STATIC FUNCTION wvwm_nMouseChecker( nkey )
+
+   // check mouse events in relations with registered mouse objects
+   // always return inkey codes as if nothing happens here
+   // (so as to allow GET do something about it)
+   // NOTE: only cares about current (last) window
+   LOCAL i, oMouseObj
+   LOCAL nCurWindow
+
+   nCurWindow := wvw_nNumWindows() - 1
+
+   IF Len( s_amouseobjlist ) < nCurWindow + 1
+      RETURN nkey
+   ENDIF
+
+   s_ncurkey := nkey   // 2004-03-03
+
+   FOR EACH i IN s_amouseobjlist[ nCurWindow + 1 ]
+      oMouseObj := i[ 2 ]
+
+      DO CASE
+      CASE i[ 1 ] == _MOBJECT_BUTTON
+         nButtonChecker( nkey, oMouseObj )
+      CASE i[ 1 ] == _MOBJECT_HSCROLL
+         nScrollChecker( nkey, "H", oMouseObj )
+      CASE i[ 1 ] == _MOBJECT_VSCROLL
+         nScrollChecker( nkey, "V", oMouseObj )
+      OTHERWISE
+         // runtime error!
+      ENDCASE
+
+   NEXT
+
+   s_ncurkey := 0  // 2004-03-03
+
+   RETURN nKey
+
+STATIC PROCEDURE xKeyRepeater( lInit )
+
+   STATIC s_nLastValidCheck := 0
+   STATIC s_lFirstRepeat := .T.
+
+   LOCAL nNow
+   LOCAL nRepeatInterval
+
+   hb_default( @lInit, .F. )
+
+   IF lInit
+      // simply init the locally static var
+      s_lFirstRepeat := .T.
+      s_nLastValidCheck := Seconds()
+      RETURN
+   ENDIF
+
+   nRepeatInterval := iif( s_lFirstRepeat, s_nrepeatdelay, s_nrepeatrate )
+
+   nNow := Seconds()
+   IF nNow - s_nLastValidCheck < nRepeatInterval  // s_nrepeatrate
+      // not yet
+      RETURN
+   ENDIF
+
+   IF ! MLeftDown()
+      // mouse is not pressed
+      RETURN
+   ENDIF
+
+   // mouse is down long enough since last valid check
+   // let's repeat it
+   hb_keyPut( K_LBUTTONDOWN )
+
+   // to be more precise
+   s_nLastValidCheck := Seconds()   // nNow
+
+   // next repeat will be quicker
+   s_lFirstRepeat := .F.
 
    RETURN
 
-SET PROCEDURE TO "_wvwmous.prg"
+STATIC FUNCTION _nCeiling( nNumber )
+   RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )

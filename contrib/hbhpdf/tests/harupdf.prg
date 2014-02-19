@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,13 +45,20 @@
 
 #require "hbhpdf"
 
+REQUEST HB_CODEPAGE_UTF8EX
+REQUEST HB_CODEPAGE_HUISO  /* for iso8859-2 */
+
+STATIC s_lUTF8
+
 //
 
 PROCEDURE Main( cFileToSave )
 
+   hb_cdpSelect( "UTF8EX" )
+
    CLS
 
-   IF Empty( cFileToSave )
+   IF ! HB_ISSTRING( cFileToSave ) .OR. hb_LeftIs( cFileToSave, "-" )
       cFileToSave := "myharu.pdf"
    ENDIF
 
@@ -67,42 +74,48 @@ PROCEDURE Main( cFileToSave )
 
 FUNCTION DesignHaruPDF( cFileToSave )
 
-   LOCAL i, page, height, width, def_font, tw,  samp_text, font
+   LOCAL cFont, page, height, width, def_font, tw, samp_text, font
    LOCAL page_title := "hbhpdf demo"
    LOCAL font_list  := { ;
-      "Courier",                  ;
-      "Courier-Bold",             ;
-      "Courier-Oblique",          ;
-      "Courier-BoldOblique",      ;
-      "Helvetica",                ;
-      "Helvetica-Bold",           ;
-      "Helvetica-Oblique",        ;
-      "Helvetica-BoldOblique",    ;
-      "Times-Roman",              ;
-      "Times-Bold",               ;
-      "Times-Italic",             ;
-      "Times-BoldItalic",         ;
-      "Symbol",                   ;
-      "ZapfDingbats"              ;
-      }
+      "Courier"               , ;
+      "Courier-Bold"          , ;
+      "Courier-Oblique"       , ;
+      "Courier-BoldOblique"   , ;
+      "Helvetica"             , ;
+      "Helvetica-Bold"        , ;
+      "Helvetica-Oblique"     , ;
+      "Helvetica-BoldOblique" , ;
+      "Times-Roman"           , ;
+      "Times-Bold"            , ;
+      "Times-Italic"          , ;
+      "Times-BoldItalic"      , ;
+      "Symbol"                , ;
+      "ZapfDingbats"          }
 
    LOCAL pdf := HPDF_New()
 
+   FErase( cFileToSave )
+
    IF pdf == NIL
       Alert( "PDF could not be created!" )
-      RETURN NIL
+      RETURN .F.
    ENDIF
 
    /* set compression mode */
    HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
 
-   /*
+   IF ( s_lUTF8 := ( hb_HPDF_IsVersion( 2, 3, 0 ) .AND. ! "-noutf8" $ Lower( hb_CmdLine() ) ) )
+      HPDF_UseUTFEncodings( pdf )
+      HPDF_SetCurrentEncoder( pdf, "UTF-8" )
+   ENDIF
+
+#if 0
    // Passwords and Permissions
    //
    HPDF_SetPassword( pdf, "owner", "user" )
    HPDF_SetPermission( pdf, HPDF_ENABLE_READ )  // cannot print
    HPDF_SetEncryptionMode( pdf, HPDF_ENCRYPT_R3, 16 )
-   */
+#endif
 
    page := HPDF_AddPage( pdf )
    height := HPDF_Page_GetHeight( page )
@@ -132,19 +145,17 @@ FUNCTION DesignHaruPDF( cFileToSave )
    HPDF_Page_MoveTextPos( page, 60, height - 105 )
 
 
-   FOR i := 1 TO Len( font_list )
+   FOR EACH cFont IN font_list
       samp_text := "abcdefgABCDEFG12345!#$%&+-@?"
-      font := HPDF_GetFont( pdf, font_list[ i ], NIL )
-
+      font := HPDF_GetFont( pdf, cFont, NIL )
 
       HPDF_Page_SetFontAndSize( page, def_font, 9 )
-      HPDF_Page_ShowText( page, font_list[ i ] )
-      HPDF_Page_MoveTextPos( page, 0, - 18 )
-
+      HPDF_Page_ShowText( page, cFont )
+      HPDF_Page_MoveTextPos( page, 0, -18 )
 
       HPDF_Page_SetFontAndSize( page, font, 20 )
       HPDF_Page_ShowText( page, samp_text )
-      HPDF_Page_MoveTextPos( page, 0, - 20 )
+      HPDF_Page_MoveTextPos( page, 0, -20 )
    NEXT
    HPDF_Page_EndText( page )
 
@@ -160,7 +171,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
    Page_Images( pdf )
 
-   // Commentout the following line if you need ASCII chart by Codepages
+   // Comment out the following line if you need ASCII chart by Codepages
    Page_CodePages( pdf )
 
    IF HPDF_SaveToFile( pdf, cFileToSave ) != 0
@@ -173,7 +184,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
 //
 
-STATIC FUNCTION Page_Lines( pdf )
+STATIC PROCEDURE Page_Lines( pdf )
 
    LOCAL page_title := "Line Example"
    LOCAL font, page
@@ -209,13 +220,13 @@ STATIC FUNCTION Page_Lines( pdf )
 
    /* Draw verious widths of lines. */
    HPDF_Page_SetLineWidth( page, 0 )
-   draw_line( page, 60, 770, "line width = 0" )
+   draw_line( page, 60, 770, "line width: 0" )
 
    HPDF_Page_SetLineWidth( page, 1.0 )
-   draw_line( page, 60, 740, "line width = 1.0" )
+   draw_line( page, 60, 740, "line width: 1.0" )
 
    HPDF_Page_SetLineWidth( page, 2.0 )
-   draw_line( page, 60, 710, "line width = 2.0" )
+   draw_line( page, 60, 710, "line width: 2.0" )
 
    /* Line dash pattern */
    HPDF_Page_SetLineWidth( page, 1.0 )
@@ -424,11 +435,11 @@ STATIC FUNCTION Page_Lines( pdf )
    HPDF_Page_CurveTo( page, x1, y1, x2, y2, x3, y3 )
    HPDF_Page_Stroke( page )
 
-   RETURN  NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_rect( page, x, y, label )
+STATIC PROCEDURE draw_rect( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y - 10 )
@@ -437,11 +448,11 @@ STATIC FUNCTION draw_rect( page, x, y, label )
 
    HPDF_Page_Rectangle( page, x, y - 40, 220, 25 )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_line( page, x, y, label )
+STATIC PROCEDURE draw_line( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y - 10 )
@@ -452,11 +463,11 @@ STATIC FUNCTION draw_line( page, x, y, label )
    HPDF_Page_LineTo( page, x + 220, y - 15 )
    HPDF_Page_Stroke( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_line2( page, x, y, label )
+STATIC PROCEDURE draw_line2( page, x, y, label )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, x, y )
@@ -467,11 +478,11 @@ STATIC FUNCTION draw_line2( page, x, y, label )
    HPDF_Page_LineTo( page, x + 160, y - 25 )
    HPDF_Page_Stroke( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Text( pdf )
+STATIC PROCEDURE Page_Text( pdf )
 
    LOCAL page, font, rect := Array( 4 )
    LOCAL SAMP_TXT := "The quick brown fox jumps over the lazy dog. "
@@ -490,10 +501,10 @@ STATIC FUNCTION Page_Text( pdf )
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
    HPDF_Page_SetTextLeading( page, 20 )
 
-#define rLEFT   1
-#define rTOP    2
-#define rRIGHT  3
-#define rBOTTOM 4
+   #define rLEFT    1
+   #define rTOP     2
+   #define rRIGHT   3
+   #define rBOTTOM  4
 
    /* text_rect method */
 
@@ -582,8 +593,8 @@ STATIC FUNCTION Page_Text( pdf )
 
    angle1 := 5
    angle2 := 10
-   rad1   := angle1 / 180 * 3.141592
-   rad2   := angle2 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
+   rad2   := angle2 / 180 * Pi()
 
    HPDF_Page_Concat( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 25, 350 )
    rect[ rLEFT   ] := 0
@@ -613,7 +624,7 @@ STATIC FUNCTION Page_Text( pdf )
    HPDF_Page_GSave( page )
 
    angle1 := 5
-   rad1   := angle1 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
 
    HPDF_Page_Concat( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), 220, 350 )
    rect[ rLEFT   ] := 0
@@ -638,7 +649,6 @@ STATIC FUNCTION Page_Text( pdf )
 
    HPDF_Page_GRestore( page )
 
-
    /* text along a circle */
    HPDF_Page_SetGrayStroke( page, 0 )
    HPDF_Page_Circle( page, 210, 190, 145 )
@@ -653,8 +663,8 @@ STATIC FUNCTION Page_Text( pdf )
    HPDF_Page_SetFontAndSize( page, font, 30 )
 
    FOR i := 1 TO Len( SAMP_TXT )
-      rad1 := ( angle2 - 90 ) / 180 * 3.141592
-      rad2 := angle2 / 180 * 3.141592
+      rad1 := ( angle2 - 90 ) / 180 * Pi()
+      rad2 := angle2 / 180 * Pi()
 
       x := 210 + Cos( rad2 ) * 122
       y := 190 + Sin( rad2 ) * 122
@@ -668,11 +678,11 @@ STATIC FUNCTION Page_Text( pdf )
 
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_TextScaling( pdf )
+STATIC PROCEDURE Page_TextScaling( pdf )
 
    LOCAL font, page, tw, angle1, angle2, buf, len, fsize, i, r, b, g, yPos, rad1, rad2
    LOCAL samp_text  := "abcdefgABCDEFG123!#$%&+-@?"
@@ -680,7 +690,9 @@ STATIC FUNCTION Page_TextScaling( pdf )
    LOCAL page_title := "Text Demo"
 
    /* set compression mode */
-   // HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
+#if 0
+   HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
+#endif
 
    /* create default-font */
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
@@ -689,14 +701,17 @@ STATIC FUNCTION Page_TextScaling( pdf )
    page := HPDF_AddPage( pdf )
 
    /* draw grid to the page */
-   // print_grid( pdf, page )
+#if 0
+   print_grid( pdf, page )
+#endif
 
-   /* print the lines of the page.
+   /* print the lines of the page */
+#if 0
    HPDF_Page_SetLineWidth( page, 1 )
-   HPDF_Page_Rectangle( page, 50, 50, HPDF_Page_GetWidth( page ) - 100,
-               HPDF_Page_GetHeight( page ) - 110 )
+   HPDF_Page_Rectangle( page, 50, 50, HPDF_Page_GetWidth( page ) - 100, ;
+      HPDF_Page_GetHeight( page ) - 110 )
    HPDF_Page_Stroke( page )
-   */
+#endif
 
    /* print the title of the page(with positioning center). */
    HPDF_Page_SetFontAndSize( page, font, 24 )
@@ -718,7 +733,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
       HPDF_Page_SetFontAndSize( page, font, fsize )
 
       /* set the position of the text. */
-      HPDF_Page_MoveTextPos( page, 0, - 5 - fsize )
+      HPDF_Page_MoveTextPos( page, 0, -5 - fsize )
 
       /* measure the number of characters which included in the page. */
       buf := samp_text
@@ -728,7 +743,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
       HPDF_Page_ShowText( page, buf )
 
       /* print the description. */
-      HPDF_Page_MoveTextPos( page, 0, - 10 )
+      HPDF_Page_MoveTextPos( page, 0, -10 )
       HPDF_Page_SetFontAndSize( page, font, 8 )
       buf := "Fontsize=" + hb_ntos( fsize )
 
@@ -741,11 +756,11 @@ STATIC FUNCTION Page_TextScaling( pdf )
     * font color
     */
    HPDF_Page_SetFontAndSize( page, font, 8 )
-   HPDF_Page_MoveTextPos( page, 0, - 30 )
+   HPDF_Page_MoveTextPos( page, 0, -30 )
    HPDF_Page_ShowText( page, "Font color" )
 
    HPDF_Page_SetFontAndSize( page, font, 18 )
-   HPDF_Page_MoveTextPos( page, 0, - 20 )
+   HPDF_Page_MoveTextPos( page, 0, -20 )
    len := Len( samp_text )
    FOR i := 1 TO len
       r := i / len
@@ -755,7 +770,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
       HPDF_Page_SetRGBFill( page, r, g, 0.0 )
       HPDF_Page_ShowText( page, buf )
    NEXT
-   HPDF_Page_MoveTextPos( page, 0, - 25 )
+   HPDF_Page_MoveTextPos( page, 0, -25 )
 
    FOR i := 1 TO len
       r := i / len
@@ -765,7 +780,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
       HPDF_Page_SetRGBFill( page, r, 0.0, b )
       HPDF_Page_ShowText( page, buf )
    NEXT
-   HPDF_Page_MoveTextPos( page, 0, - 25 )
+   HPDF_Page_MoveTextPos( page, 0, -25 )
 
    FOR i := 1 TO len
       b := i / len
@@ -848,11 +863,11 @@ STATIC FUNCTION Page_TextScaling( pdf )
     * Rotating text
     */
    angle1 := 30                   /* A rotation of 30 degrees. */
-   rad1 := angle1 / 180 * 3.141592 /* Calcurate the radian value. */
+   rad1 := angle1 / 180 * Pi()    /* Calcurate the radian value. */
 
    show_description( page, 320, ypos - 60, "Rotating text" )
    HPDF_Page_BeginText( page )
-   HPDF_Page_SetTextMatrix( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), 330, ypos - 60 )
+   HPDF_Page_SetTextMatrix( page, Cos( rad1 ), Sin( rad1 ), -Sin( rad1 ), Cos( rad1 ), 330, ypos - 60 )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
@@ -865,17 +880,15 @@ STATIC FUNCTION Page_TextScaling( pdf )
 
    angle1 := 10
    angle2 := 20
-   rad1 := angle1 / 180 * 3.141592
-   rad2 := angle2 / 180 * 3.141592
+   rad1 := angle1 / 180 * Pi()
+   rad2 := angle2 / 180 * Pi()
 
    HPDF_Page_SetTextMatrix( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 320, ypos - 120 )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * scaling text(X direction)
-    */
+   /* scaling text(X direction) */
    show_description( page, 320, ypos - 175, "Scaling text(X direction)" )
    HPDF_Page_BeginText( page )
    HPDF_Page_SetTextMatrix( page, 1.5, 0, 0, 1, 320, ypos - 175 )
@@ -883,9 +896,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * scaling text(Y direction)
-    */
+   /* scaling text(Y direction) */
    show_description( page, 320, ypos - 250, "Scaling text(Y direction)" )
    HPDF_Page_BeginText( page )
    HPDF_Page_SetTextMatrix( page, 1, 0, 0, 2, 320, ypos - 250 )
@@ -893,10 +904,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_EndText( page )
 
 
-   /*
-    * char spacing, word spacing
-    */
-
+   /* char spacing, word spacing */
    show_description( page, 60, 140, "char-spacing 0" )
    show_description( page, 60, 100, "char-spacing 1.5" )
    show_description( page, 60, 60, "char-spacing 1.5, word-spacing 2.5" )
@@ -923,32 +931,33 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_TextOut( page, 60, 60, samp_text2 )
    HPDF_Page_EndText( page )
 
-   // HPDF_SetCompressionMode( pdf, nComp )
+#if 0
+   HPDF_SetCompressionMode( pdf, nComp )
+#endif
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_stripe_pattern( page, x, y )
+STATIC PROCEDURE show_stripe_pattern( page, x, y )
 
-   LOCAL iy := 0
+   LOCAL iy
 
-   DO WHILE iy < 50
+   FOR iy := 0 TO 50 STEP 3
       HPDF_Page_SetRGBStroke( page, 0.0, 0.0, 0.5 )
       HPDF_Page_SetLineWidth( page, 1 )
       HPDF_Page_MoveTo( page, x, y + iy )
       HPDF_Page_LineTo( page, x + HPDF_Page_TextWidth( page, "ABCabc123" ), y + iy )
       HPDF_Page_Stroke( page )
-      iy += 3
-   ENDDO
+   NEXT
 
    HPDF_Page_SetLineWidth( page, 2.5 )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_description( page, x, y, text )
+STATIC PROCEDURE show_description( page, x, y, text )
 
    LOCAL fsize := HPDF_Page_GetCurrentFontSize( page )
    LOCAL font  := HPDF_Page_GetCurrentFont( page )
@@ -964,7 +973,7 @@ STATIC FUNCTION show_description( page, x, y, text )
    HPDF_Page_SetFontAndSize( page, font, fsize )
    HPDF_Page_SetRGBFill( page, c[ 1 ], c[ 2 ], c[ 3 ] )
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -974,34 +983,35 @@ STATIC FUNCTION show_description( page, x, y, text )
 #define CELL_HEIGHT  20
 #define CELL_HEADER  10
 
-STATIC FUNCTION Page_CodePages( pdf )
+STATIC PROCEDURE Page_CodePages( pdf )
 
-   LOCAL page, outline, font2, font_name, root, i, font, dst
-   LOCAL cResPath := "files" + hb_ps()
-   LOCAL cAfm := cResPath + "a010013l.afm"
-   LOCAL cPfb := cResPath + "a010013l.pfb"
+   LOCAL page, outline, font2, font_name, root, cEncoding, font, dst
    LOCAL encodings := { ;
-      "StandardEncoding", ;
-      "MacRomanEncoding", ;
-      "WinAnsiEncoding", ;
-      "ISO8859-2",       ;
-      "ISO8859-3",       ;
-      "ISO8859-4",       ;
-      "ISO8859-5",       ;
-      "ISO8859-9",       ;
-      "ISO8859-10",      ;
-      "ISO8859-13",      ;
-      "ISO8859-14",      ;
-      "ISO8859-15",      ;
-      "ISO8859-16",      ;
-      "CP1250",          ;
-      "CP1251",          ;
-      "CP1252",          ;
-      "CP1254",          ;
-      "CP1257",          ;
-      "KOI8-R",          ;
-      "Symbol-Set",      ;
-      "ZapfDingbats-Set" }
+      "Symbol-Set"       , ;
+      "ZapfDingbats-Set" , ;
+      "StandardEncoding" , ;
+      "MacRomanEncoding" , ;
+      "WinAnsiEncoding"  , ;
+      "CP1252"           , ;
+      "ISO8859-2"        , ;
+      "CP1250"           , ;
+      "ISO8859-3"        , ;
+      "ISO8859-4"        , ;
+      "CP1257"           , ;
+      "ISO8859-5"        , ;
+      "CP1251"           , ;
+      "KOI8-R"           , ;
+      "ISO8859-9"        , ;
+      "CP1254"           , ;
+      "ISO8859-10"       , ;
+      "ISO8859-13"       , ;
+      "ISO8859-14"       , ;
+      "ISO8859-15"       , ;
+      "ISO8859-16"       }
+
+   IF s_lUTF8
+      AAdd( encodings, "UTF-8" )
+   ENDIF
 
    /* Set page mode to use outlines. */
    HPDF_SetPageMode( pdf, HPDF_PAGE_MODE_USE_OUTLINE )
@@ -1010,23 +1020,23 @@ STATIC FUNCTION Page_CodePages( pdf )
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
 
    /* load font object */
-   font_name := HPDF_LoadType1FontFromFile( pdf, cAfm, cPfb )
+   font_name := HPDF_LoadTTFontFromFile( pdf, hb_DirBase() + "files" + hb_ps() + "libsanrg.ttf" )
 
    /* create outline root. */
    root := HPDF_CreateOutline( pdf, NIL, "Encoding list", NIL )
    HPDF_Outline_SetOpened( root, .T. )
 
-   FOR i := 1 TO Len( encodings )
+   FOR EACH cEncoding IN encodings
       page := HPDF_AddPage( pdf )
 
       HPDF_Page_SetWidth( page, PAGE_WIDTH )
       HPDF_Page_SetHeight( page, PAGE_HEIGHT )
 
-      outline := HPDF_CreateOutline( pdf, root, encodings[ i ], NIL )
+      outline := HPDF_CreateOutline( pdf, root, cEncoding, NIL )
       dst := HPDF_Page_CreateDestination( page )
       HPDF_Destination_SetXYZ( dst, 0, HPDF_Page_GetHeight( page ), 1 )
 
-      /* HPDF_Destination_SetFitB(dst) */
+      /* HPDF_Destination_SetFitB( dst ) */
       HPDF_Outline_SetDestination( outline, dst )
 
       HPDF_Page_SetFontAndSize( page, font, 15 )
@@ -1035,27 +1045,27 @@ STATIC FUNCTION Page_CodePages( pdf )
       HPDF_Page_BeginText( page )
       HPDF_Page_SetFontAndSize( page, font, 20 )
       HPDF_Page_MoveTextPos( page, 40, PAGE_HEIGHT - 50 )
-      HPDF_Page_ShowText( page, encodings[ i ] )
-      HPDF_Page_ShowText( page, " Encoding" )
+      HPDF_Page_ShowText( page, cEncoding + " Encoding" )
       HPDF_Page_EndText( page )
 
-      IF encodings[ i ] == "Symbol-Set"
+      DO CASE
+      CASE cEncoding == "Symbol-Set"
          font2 := HPDF_GetFont( pdf, "Symbol", NIL )
-      ELSEIF encodings[ i ] == "ZapfDingbats-Set"
+      CASE cEncoding == "ZapfDingbats-Set"
          font2 := HPDF_GetFont( pdf, "ZapfDingbats", NIL )
-      ELSE
-         font2 := HPDF_GetFont( pdf, font_name, encodings[ i ] )
-      ENDIF
+      OTHERWISE
+         font2 := HPDF_GetFont( pdf, font_name, cEncoding )
+      ENDCASE
 
       HPDF_Page_SetFontAndSize( page, font2, 14 )
-      draw_fonts( page )
+      draw_fonts( page, cEncoding == "UTF-8" )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_graph( page )
+STATIC PROCEDURE draw_graph( page )
 
    LOCAL buf, i, x, y
 
@@ -1065,9 +1075,9 @@ STATIC FUNCTION draw_graph( page )
    HPDF_Page_SetLineWidth( page, 0.5 )
 
    FOR i := 0 TO 17
-      x := i * CELL_WIDTH + 40;
+      x := i * CELL_WIDTH + 40
 
-         HPDF_Page_MoveTo( page, x, PAGE_HEIGHT - 60 )
+      HPDF_Page_MoveTo( page, x, PAGE_HEIGHT - 60 )
       HPDF_Page_LineTo( page, x, 40 )
       HPDF_Page_Stroke( page )
 
@@ -1097,13 +1107,13 @@ STATIC FUNCTION draw_graph( page )
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION draw_fonts( page )
+STATIC PROCEDURE draw_fonts( page, lUTF8 )
 
-   LOCAL i, j, buf, x, y, d
+   LOCAL i, j, buf, x, y, d, c
 
    HPDF_Page_BeginText( page )
 
@@ -1113,21 +1123,21 @@ STATIC FUNCTION draw_fonts( page )
          y := PAGE_HEIGHT - 55 - ( ( i - 1 ) * CELL_HEIGHT )
          x := j * CELL_WIDTH + 50
 
-         buf := ( i - 1 ) * 16 + ( j - 1 )
-         IF buf >= 32
-            d  := x - HPDF_Page_TextWidth( page, Chr( buf ) ) / 2
-            HPDF_Page_TextOut( page, d, y, Chr( buf ) )
+         IF ( buf := ( i - 1 ) * 16 + ( j - 1 ) ) >= 32
+            c := iif( lUTF8, Chr( buf ), hb_BChar( buf ) )
+            d := x - HPDF_Page_TextWidth( page, c ) / 2
+            HPDF_Page_TextOut( page, d, y, c )
          ENDIF
       NEXT
    NEXT
 
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Graphics( pdf )
+STATIC PROCEDURE Page_Graphics( pdf )
 
    LOCAL page, pos
 
@@ -1190,11 +1200,11 @@ STATIC FUNCTION Page_Graphics( pdf )
    HPDF_Page_Circle( page, 100, 100, 30 )
    HPDF_Page_Fill( page )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION Page_Annotation( pdf )
+STATIC PROCEDURE Page_Annotation( pdf )
 
    LOCAL rect1 := { 50, 350, 150, 400 }
    LOCAL rect2 := { 210, 350, 350, 400 }
@@ -1205,10 +1215,10 @@ STATIC FUNCTION Page_Annotation( pdf )
    LOCAL rect7 := { 50, 50, 150, 100 }
    LOCAL rect8 := { 210, 50, 350, 100 }
 
-   LOCAL page, font, encoding, annot
+   LOCAL page, font, annot
 
    /* use Times-Roman font. */
-   font := HPDF_GetFont( pdf, "Times-Roman", "WinAnsiEncoding" )
+   font := HPDF_GetFont( pdf, "Times-Roman", NIL )
 
    page := HPDF_AddPage( pdf )
 
@@ -1248,9 +1258,14 @@ STATIC FUNCTION Page_Annotation( pdf )
    annot := HPDF_Page_CreateTextAnnot( page, rect7, "Annotation with Insert Icon", NIL )
    HPDF_TextAnnot_SetIcon( annot, HPDF_ANNOT_ICON_INSERT )
 
-   encoding := HPDF_GetEncoder( pdf, "ISO8859-2" )
-
-   HPDF_Page_CreateTextAnnot( page, rect8, "Annotation with ISO8859 text " + hb_BChar( 211 ) + hb_BChar( 212 ) + hb_BChar( 213 ) + hb_BChar( 214 ) + hb_BChar( 215 ) + hb_BChar( 216 ) + hb_BChar( 217 ), encoding )
+   IF s_lUTF8
+      HPDF_Page_CreateTextAnnot( page, rect8, ;
+         "Annotation with UTF-8 text " + "ÁÄÉÍÓÖŐÔÚÜŰŮŘ", HPDF_GetEncoder( pdf, "UTF-8" ) )
+   ELSE
+      HPDF_Page_CreateTextAnnot( page, rect8, ;
+         "Annotation with ISO8859-2 text " + hb_Translate( "ÁÄÉÍÓÖŐÔÚÜŰŮŘ", "UTF8", "iso8859-2" ), ;
+         HPDF_GetEncoder( pdf, "ISO8859-2" ) )
+   ENDIF
 
    HPDF_Page_SetFontAndSize( page, font, 11 )
 
@@ -1291,23 +1306,21 @@ STATIC FUNCTION Page_Annotation( pdf )
 
    HPDF_Page_BeginText( page )
    HPDF_Page_MoveTextPos( page, rect8[ 1 ] + 35, rect8[ 2 ] - 20 )
-   HPDF_Page_ShowText( page, "Text Icon(ISO8859-2 text)" )
+   HPDF_Page_ShowText( page, "Text Icon (with international text)" )
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN
 
 //
-#define NULL  NIL
-//
 
-STATIC FUNCTION Page_Images( pdf )
+STATIC PROCEDURE Page_Images( pdf )
 
    LOCAL font, page, dst, image, image1, image2, image3
    LOCAL x, y, angle, angle1, angle2, rad, rad1, rad2,  iw,  ih
-   LOCAL cImagePath := "files" + hb_ps()
+   LOCAL cImagePath := hb_DirBase() + "files" + hb_ps()
 
    /* create default-font */
-   font := HPDF_GetFont( pdf, "Helvetica", NULL )
+   font := HPDF_GetFont( pdf, "Helvetica", NIL )
 
    /* add a new page object. */
    page := HPDF_AddPage( pdf )
@@ -1344,9 +1357,9 @@ STATIC FUNCTION Page_Images( pdf )
    HPDF_Page_SetLineWidth( page, 0.5 )
 
    x := 100
-   y := HPDF_Page_GetHeight( page ) - 150;
+   y := HPDF_Page_GetHeight( page ) - 150
 
-      /* Draw image to the canvas.(normal-mode with actual size.)*/
+   /* Draw image to the canvas. (normal-mode with actual size.) */
    HPDF_Page_DrawImage( page, image, x, y, iw, ih )
 
    show_description_1( page, x, y, "Actual Size" )
@@ -1370,8 +1383,8 @@ STATIC FUNCTION Page_Images( pdf )
    /* Skewing image. */
    angle1 := 10
    angle2 := 20
-   rad1   := angle1 / 180 * 3.141592
-   rad2   := angle2 / 180 * 3.141592
+   rad1   := angle1 / 180 * Pi()
+   rad2   := angle2 / 180 * Pi()
 
    HPDF_Page_GSave( page )
    HPDF_Page_Concat( page, iw, Tan( rad1 ) * iw, Tan( rad2 ) * ih, ih, x, y )
@@ -1384,12 +1397,12 @@ STATIC FUNCTION Page_Images( pdf )
 
    /* Rotating image */
    angle := 30     /* rotation of 30 degrees. */
-   rad := angle / 180 * 3.141592 /* Calcurate the radian value. */
+   rad := angle / 180 * Pi() /* Calcurate the radian value. */
 
    HPDF_Page_GSave( page )
    HPDF_Page_Concat( page, iw * Cos( rad ), ;
       iw * Sin( rad ), ;
-      ih * - Sin( rad ), ;
+      ih * -Sin( rad ), ;
       ih * Cos( rad ), ;
       x, y )
    HPDF_Page_ExecuteXObject( page, image )
@@ -1429,11 +1442,11 @@ STATIC FUNCTION Page_Images( pdf )
 
    show_description_1( page, x, y, "Color Mask" )
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION show_description_1( page, x, y, text )
+STATIC PROCEDURE show_description_1( page, x, y, text )
 
    LOCAL buf
 
@@ -1459,4 +1472,4 @@ STATIC FUNCTION show_description_1( page, x, y, text )
    HPDF_Page_ShowText( page, text )
    HPDF_Page_EndText( page )
 
-   RETURN NIL
+   RETURN

@@ -99,7 +99,6 @@ DYNAMIC fi_SetDotsPerMeterY
 DYNAMIC fi_SetOutputMessage
 DYNAMIC fi_SetTransparencyTable
 DYNAMIC fi_SetTransparent
-DYNAMIC fi_Unload
 DYNAMIC fi_UnlockPage
 DYNAMIC fi_winConvFromDIB
 DYNAMIC fi_winConvToDIB

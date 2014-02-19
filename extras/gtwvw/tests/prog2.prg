@@ -27,11 +27,11 @@ STATIC s_amiscobjlist := {}      // x misc object list (actually: list of codebl
 
 PROCEDURE Main()
 
-   LOCAL i, j
 #ifdef __GTWVW__
-   LOCAL lMainCoord
    LOCAL nMaxRow
    LOCAL nMaxCol
+#else
+   LOCAL i, j
 #endif
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
@@ -39,11 +39,11 @@ PROCEDURE Main()
 #endif
 
 #ifdef __GTWVW__
-   lMainCoord := wvw_SetMainCoord( .T. )
+   wvw_SetMainCoord( .T. )
    nMaxRow := MaxRow()
    nMaxCol := MaxCol()
 
-   wvw_SetFont( , "Lucida Console", 16, - 8 )
+   wvw_SetFont( , "Lucida Console", 16, -8 )
    wvw_SetCodepage( , 255 )
    wvw_sbCreate()
 #endif
@@ -78,9 +78,9 @@ PROCEDURE Main()
    // restore state
    SetCursor( SC_NORMAL )
 
-   RETURN // main
+   RETURN
 
-PROCEDURE xGet1()
+STATIC PROCEDURE xGet1()
 
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
@@ -108,10 +108,10 @@ PROCEDURE xGet1()
 #endif
 
    DO WHILE ! lDone
-      @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
-      @ 14, 22 SAY "Address : " GET cAddr  PICT "@!K" WHEN lMessage( "Please enter your address" )
-      @ 16, 22 SAY "Phone   : " GET cPhone PICT "@K"  WHEN lMessage( "Please enter your phone number" )
-      @ 18, 22 SAY "Fax     : " GET cFax   PICT "@K"  WHEN lMessage( "Please enter your fax number" )
+      @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
+      @ 14, 22 SAY "Address : " GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
+      @ 16, 22 SAY "Phone   : " GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
+      @ 18, 22 SAY "Fax     : " GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
       READ
 
       lMessage( "" )
@@ -122,12 +122,12 @@ PROCEDURE xGet1()
 
    SetCursor( oldCurs )
 
-   RETURN // xGet1()
+   RETURN
 
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-FUNCTION xBrowse1()
+STATIC FUNCTION xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -143,7 +143,7 @@ FUNCTION xBrowse1()
    LOCAL aColumnsSep, tmp
 #endif
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
       RETURN NIL
    ENDIF
@@ -185,7 +185,7 @@ FUNCTION xBrowse1()
    AddMiscObjects( nWin, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 #endif
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       oBrowse:ForceStable()
 
       lMessage( "Record #" + hb_ntos( RecNo() ) )
@@ -255,7 +255,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 //
 
@@ -263,6 +263,8 @@ STATIC FUNCTION TBNext( oTbr )
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
+
+   HB_SYMBOL_UNUSED( oTbr )
 
    IF Eof()
       lMoved := .F.
@@ -283,6 +285,8 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    dbSkip( -1 )
    IF Bof()
       dbGoto( nSaveRecNum )
@@ -300,7 +304,7 @@ STATIC FUNCTION VouBlockField( i )
 // supporting functions ***************************
 
 // displays a message on MaxRow() and returns .T.
-FUNCTION lMessage( cMsg )
+STATIC FUNCTION lMessage( cMsg )
 
 #ifndef __GTWVW__
 
@@ -318,14 +322,14 @@ FUNCTION lMessage( cMsg )
 
    RETURN .T.
 
-FUNCTION lYesNo( cMsg )
+STATIC FUNCTION lYesNo( cMsg )
 
    // display cmsg with Yes/No option, returns .T. if Yes selected
    LOCAL nTopLine, ;
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
       nRight := MaxCol() - 5
-   LOCAL nChoice, nWidth, nWinNum
+   LOCAL nChoice, nWidth
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
@@ -339,7 +343,7 @@ FUNCTION lYesNo( cMsg )
    nRight := nLeft + nWidth + 1
 
    // open window
-   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg )
 
    @ nTopLine + 1, nLeft + 1 PROMPT PadR( "Yes", nWidth )
    @ nTopLine + 2, nLeft + 1 PROMPT PadR( "No", nWidth )
@@ -353,13 +357,13 @@ FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
       nRight := MaxCol() - 5
-   LOCAL nwidth, nmaxwidth, i, nNumLines, cAline, nWinNum
+   LOCAL nwidth, nmaxwidth, i, nNumLines, cAline
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
@@ -383,7 +387,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    nRight := nLeft + nMaxWidth + 1
 
    // open window
-   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
@@ -406,7 +410,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
 
-FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
+STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )
    LOCAL cScreen := SaveScreen( r1, c1, r2, c2 )
@@ -429,7 +433,9 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    hb_Scroll( r1, c1, r2, c2 )
 
-#ifndef __GTWVW__
+#ifdef __GTWVW__
+   HB_SYMBOL_UNUSED( wtype )
+#else
    // GTWVW doesn't need box or textual title
    hb_DispBox( r1, c1, r2, c2, wtype )
    IF ! Empty( ctitle )
@@ -442,14 +448,14 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    RETURN i + 1
 
-FUNCTION ZREVWINDOW()
+STATIC PROCEDURE ZREVWINDOW()
 
    // Closes the last window and remove it from window list
    LOCAL i := Len( s_zwin )
 
    IF i == 0
       // no window to close
-      RETURN NIL
+      RETURN
    ENDIF
 
 #ifdef __GTWVW__
@@ -465,20 +471,7 @@ FUNCTION ZREVWINDOW()
    // remove window from list
    hb_ADel( s_zwin, i, .T. )
 
-   RETURN NIL
-
-FUNCTION nCeiling( nNumber )
-
-   LOCAL nTemp
-
-   nTemp := nNumber - Int( nNumber )  // right of dec point
-   IF nTemp > 0
-      nNumber := Int( nNumber ) + 1
-   ELSE
-      nNumber := Int( nNumber )
-   ENDIF
-
-   RETURN nNumber
+   RETURN
 
 #ifdef __GTWVW__
 
@@ -488,7 +481,7 @@ FUNCTION nCeiling( nNumber )
 // WARNING: it now receives only nWinNum parameter
 //
 
-FUNCTION WVW_Paint( nWinNum )
+FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    IF Len( s_amiscobjlist ) >= nWinNum + 1
       AEval( s_amiscobjlist[ nWinNum + 1 ], {| e | Eval( e, nWinNum ) } )
@@ -496,7 +489,7 @@ FUNCTION WVW_Paint( nWinNum )
 
    RETURN 0
 
-FUNCTION ResetMiscObjects( nWinNum )
+STATIC FUNCTION ResetMiscObjects( nWinNum )
 
    hb_default( @nWinNum, wvw_nNumWindows() - 1 )
 
@@ -507,10 +500,15 @@ FUNCTION ResetMiscObjects( nWinNum )
 
    RETURN .T.
 
-FUNCTION AddMiscObjects( nWinNum, bAction )
+STATIC FUNCTION AddMiscObjects( nWinNum, bAction )
 
    AAdd( s_amiscobjlist[ nWinNum + 1 ], bAction )
 
    RETURN .T.
+
+#else
+
+STATIC FUNCTION nCeiling( nNumber )
+   RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )
 
 #endif

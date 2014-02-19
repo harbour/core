@@ -38,7 +38,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -515,7 +515,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          if( ! pWVT->bTracking )
          {
             TRACKMOUSEEVENT tmi;
-            tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
+            tmi.cbSize      = sizeof( tmi );
             tmi.dwFlags     = TME_LEAVE | TME_HOVER;
             tmi.hwndTrack   = pWVT->hWnd;
             tmi.dwHoverTime = 1;
@@ -960,7 +960,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             if( lParam == WM_RBUTTONUP )
             {
                NOTIFYICONDATA tnid;
-               tnid.cbSize           = sizeof( NOTIFYICONDATA );
+               tnid.cbSize           = sizeof( tnid );
                tnid.hWnd             = hWnd;
                tnid.uID              = HB_ID_NOTIFYICON;
                tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
@@ -1180,19 +1180,21 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       RECT rc = { 0, 0, 0, 0 };
 
       pWVT->hWnd = hb_gt_wvt_CreateWindow( pWVT );
-      if( ! pWVT->hWnd )
-         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
-
-      GetClientRect( pWVT->hWnd, &rc );
-      pWVT->width = rc.right - rc.left;
-      pWVT->height = rc.bottom - rc.top;
-
-      /* Set icon */
-      if( pWVT->hIcon )
+      if( pWVT->hWnd )
       {
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon );
-         SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon );
+         GetClientRect( pWVT->hWnd, &rc );
+         pWVT->width = rc.right - rc.left;
+         pWVT->height = rc.bottom - rc.top;
+
+         /* Set icon */
+         if( pWVT->hIcon )
+         {
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon );
+            SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon );
+         }
       }
+      else
+         hb_errInternal( 10001, "Failed to create WVT window", NULL, NULL );
    }
 
    return HB_TRUE;
@@ -1219,20 +1221,22 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
-   if( ! pWVT )
+   if( pWVT )
+   {
+      HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+      /* SUPER GT initialization */
+      HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+      HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+      HB_GTSELF_SEMICOLD( pGT );
+
+      #if 0
+      hb_gt_wvt_CreateConsoleWindow( pWVT );
+      hb_gt_wvt_ProcessMessages( pWVT );
+      #endif
+   }
+   else
       hb_errInternal( 10001, "Maximum number of WGU windows reached, cannot create another one", NULL, NULL );
-
-   HB_GTLOCAL( pGT ) = ( void * ) pWVT;
-
-   /* SUPER GT initialization */
-   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSELF_SEMICOLD( pGT );
-
-   #if 0
-   hb_gt_wvt_CreateConsoleWindow( pWVT );
-   hb_gt_wvt_ProcessMessages( pWVT );
-   #endif
 }
 
 /* ********************************************************************** */
@@ -1809,7 +1813,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                           MAKEINTRESOURCE( ( HB_MAXINT )
                                                       hb_arrayGetNInt( pInfo->pNewVal2, 3 ) ) );
                   }
-                  tnid.cbSize           = sizeof( NOTIFYICONDATA );
+                  tnid.cbSize           = sizeof( tnid );
                   tnid.hWnd             = pWVT->hWnd;
                   tnid.uID              = HB_ID_NOTIFYICON;
                   tnid.uFlags           = NIF_MESSAGE | NIF_ICON | NIF_TIP;

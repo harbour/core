@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -80,7 +80,7 @@ PROCEDURE Main()
    pDbDest := sqlite3_open_v2( cFileDest, nDbFlags )
 
    IF Empty( pDbDest )
-      ? "Can't open database : ", cFileDest
+      ? "Can't open database:", cFileDest
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -93,7 +93,7 @@ PROCEDURE Main()
       ErrorLevel( 1 )
       RETURN
    ELSE
-      ? "Start backup.."
+      ? "Start backup..."
    ENDIF
 
    IF sqlite3_backup_step( pBackup, -1 ) == SQLITE_DONE
@@ -116,34 +116,28 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
+/* */
 FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
 
    RETURN 0
 
-/**
-*/
-
+/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
    hb_default( @lShortMsg, .T. )
 
    RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/**
-*/
-
+/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT
@@ -158,7 +152,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
+      ? "Can't open/create database:", cFile
 
       RETURN NIL
    ENDIF
@@ -167,7 +161,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table : person"
+      ? "Can't create table: person"
       pDb := NIL // close database
 
       RETURN NIL
@@ -176,7 +170,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+      ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
 
       RETURN NIL

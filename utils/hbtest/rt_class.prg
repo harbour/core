@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,6 @@
 
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
-
 
 #include "hbclass.ch"
 
@@ -1095,13 +1094,14 @@ STATIC FUNCTION INSTANCE_DATA( oValue )
 
    cData := "[" + hb_ntos( Len( oValue ) ) + "]:"
    FOR i := 1 TO Len( oValue )
-      IF HB_ISSTRING( oValue[ i ] )
+      DO CASE
+      CASE HB_ISSTRING( oValue[ i ] )
          cData += " " + oValue[ i ]
-      ELSEIF oValue[ i ] == NIL
+      CASE oValue[ i ] == NIL
          cData += " NIL"
-      ELSE
+      OTHERWISE
          cData += " ..."
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cData
@@ -1122,18 +1122,20 @@ METHOD INIT( type ) CLASS DTORCLASS
 RETURN self
 
 METHOD PROCEDURE DTOR CLASS DTORCLASS
-   IF ::type == 1
+
+   DO CASE
+   CASE ::Type == 1
       cDtorResult += "Reference to self in instance variable."
       ::var1 := self
-   ELSEIF ::Type == 2
+   CASE ::Type == 2
       cDtorResult += "Reference to self in class variable."
       ::var2 := self
-   ELSEIF ::Type == 3
+   CASE ::Type == 3
       cDtorResult += "Reference to self in private memvar."
       objHolder := self
-   ELSE
+   OTHERWISE
       cDtorResult += "No references to self."
-   ENDIF
+   ENDCASE
 
    RETURN
 

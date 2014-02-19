@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,10 +62,10 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharAdd( "123456789", hb_BChar( 1 ) ) == "012345678" ? -> "' + CharSub( "123456789", hb_BChar( 1 ) ) + '"'
-   ? '  CharAdd( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) == "002244668" ? -> "' + CharSub( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) + '"'
-   ? '  CharAdd( "012345678", hb_BChar( 255 ) ) == "123456789" ? -> "' + CharSub( "012345678", hb_BChar( 255 ) ) + '"'
-   ? '  CharAdd( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) == "133557799" ? -> "' + CharSub( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 1 ) ) == "012345678" ? -->', '"' + CharSub( "123456789", hb_BChar( 1 ) ) + '"'
+   ? '  CharAdd( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) == "002244668" ? -->', '"' + CharSub( "123456789", hb_BChar( 1 ) + hb_BChar( 2 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 255 ) ) == "123456789" ? -->', '"' + CharSub( "012345678", hb_BChar( 255 ) ) + '"'
+   ? '  CharAdd( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) == "133557799" ? -->', '"' + CharSub( "012345678", hb_BChar( 255 ) + hb_BChar( 254 ) ) + '"'
 
    ? "End test of CharSub()"
    ?

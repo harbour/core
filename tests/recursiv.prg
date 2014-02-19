@@ -11,6 +11,5 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION f( a )
-
+STATIC FUNCTION f( a )
    RETURN iif( a < 2, 1, a * f( a - 1 ) )

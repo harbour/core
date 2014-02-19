@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -81,14 +81,14 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    hb_default( @lEditable, .T. )
 
-   __dbgSetGo( __Dbg():pInfo )
+   __dbgSetGo( __dbg():pInfo )
 
    /* create list of object messages */
    aMessages := oObject:classSel()
    ASort( aMessages,,, {| x, y | PadR( x, 64 ) <= PadR( y, 64 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
-      IF Left( cMsg, 1 ) == "_" .AND. ;
+      IF hb_LeftIs( cMsg, "_" ) .AND. ;
          hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) != 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )
@@ -139,7 +139,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    ::ArrayReference := aArray
 
    oBrwSets:autolite := .T.
-   oBrwSets:ColorSpec := __Dbg():ClrModal()
+   oBrwSets:ColorSpec := __dbg():ClrModal()
    oBrwSets:GoTopBlock := {|| ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := {|| ::arrayindex := Len( ::ArrayReference ) }
    oBrwSets:SkipBlock := {| nSkip, nPos | nPos := ::arrayindex, ;
@@ -311,17 +311,17 @@ STATIC FUNCTION ArrayMaxLen( aArray )
 
 STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
 
-   LOCAL nProcLevel := __Dbg():nProcLevel
+   LOCAL nProcLevel := __dbg():nProcLevel
    LOCAL xResult
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| Break() }
-      xResult := __dbgSENDMSG( nProcLevel, oObject, cVar )
+      xResult := __dbgSendMsg( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
-         xResult := __dbgSENDMSG( 0, oObject, cVar )
+         xResult := __dbgSendMsg( 0, oObject, cVar )
          lCanAcc := .T.
       RECOVER USING oErr
          xResult := oErr:description
@@ -333,15 +333,15 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
 
 STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
 
-   LOCAL nProcLevel := __Dbg():nProcLevel
+   LOCAL nProcLevel := __dbg():nProcLevel
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| Break() }
-      __dbgSENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
+      __dbgSendMsg( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
-         __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
+         __dbgSendMsg( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
       END SEQUENCE

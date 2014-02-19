@@ -1,9 +1,5 @@
 #include "fileio.ch"
 
-//
-// Test of inheritance
-//
-
 /*
  * Written by Eddie Runia <eddie@runia.comu>
  * www - http://harbour-project.org
@@ -11,13 +7,16 @@
  * Placed in the public domain
  */
 
+//
+// Test of inheritance
+//
 PROCEDURE Main()
 
    LOCAL oFrom
    LOCAL oTo
    LOCAL cOut
 
-   oFrom := TOnTop()   :New( __FILE__, "R" )
+   oFrom := TOnTop():New( __FILE__, "R" )
    oTo   := TTextFile():New( hb_FNameExtSet( __FILE__, ".out" ), "W" )
 
    ? "What's in oFrom"
@@ -43,6 +42,7 @@ PROCEDURE Main()
       ? cOut
       oTo:Run( cOut )
    ENDDO
+
    oFrom:Dispose()
    oTo:Dispose()
 
@@ -53,77 +53,73 @@ PROCEDURE Main()
 //
 // Generic Empty Class
 //
+FUNCTION TEmpty()  /* must be a public function */
 
-FUNCTION TEmpty()
+   STATIC s_oEmpty
 
-   STATIC oEmpty
+   IF s_oEmpty == NIL
+      s_oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
-   IF oEmpty == NIL
-      oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
+      s_oEmpty:AddInline( "New", {| self | self } )
 
-      oEmpty:AddInline( "New", {| self | self } )
+      s_oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
+      s_oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
+      s_oEmpty:AddData( "Out", "Hi there" )            // Test command
+      s_oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
-      oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
-      oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
-      oEmpty:AddData( "Out", "Hi there" )            // Test command
-      oEmpty:AddVirtual( "Dispose" )                 // Clean up code
-
-      oEmpty:Create()
+      s_oEmpty:Create()
    ENDIF
 
-   RETURN oEmpty:Instance()
+   RETURN s_oEmpty:Instance()
 
 //
 // Let's add another one on top
 //
+STATIC FUNCTION TOnTop()
 
-FUNCTION TOnTop()
+   STATIC s_oOnTop
 
-   STATIC oOnTop
-
-   IF oOnTop == NIL
-      oOnTop := HBClass():New( "TOnTop", "TTextFile" )
-      oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
-      oOnTop:Create()
+   IF s_oOnTop == NIL
+      s_oOnTop := HBClass():New( "TOnTop", "TTextFile" )
+      s_oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
+      s_oOnTop:Create()
    ENDIF
 
-   RETURN oOnTop:Instance()
+   RETURN s_oOnTop:Instance()
 
 //
 // Generic Text file handler
 //
+FUNCTION TTextFile()  /* must be a public function */
 
-FUNCTION TTextFile()
+   STATIC s_oFile
 
-   STATIC oFile
-
-   IF oFile == NIL
-      oFile := HBClass():New( "TTextFile", "TEmpty" )
+   IF s_oFile == NIL
+      s_oFile := HBClass():New( "TTextFile", "TEmpty" )
       // Create a new class def
       // from TEmpty class
 
-      oFile:AddData( "cFileName"  )             // Filename spec. by user
-      oFile:AddData( "hFile"      )             // File handle
-      oFile:AddData( "nLine"      )             // Current linenumber
-      oFile:AddData( "nError"     )             // Last error
-      oFile:AddData( "lEoF"       )             // End of file
-      oFile:AddData( "cBlock"     )             // Storage block
-      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      oFile:AddData( "cMode"      )             // Mode of file use
-      // R = read, W = write
+      s_oFile:AddData( "cFileName"  )             // Filename spec. by user
+      s_oFile:AddData( "hFile"      )             // File handle
+      s_oFile:AddData( "nLine"      )             // Current linenumber
+      s_oFile:AddData( "nError"     )             // Last error
+      s_oFile:AddData( "lEoF"       )             // End of file
+      s_oFile:AddData( "cBlock"     )             // Storage block
+      s_oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
+      s_oFile:AddData( "cMode"      )             // Mode of file use: R: read, W: write
 
-      oFile:AddMethod( "New"    , @New()     )  // Constructor
-      oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
-      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
-      oFile:AddMethod( "Read"   , @Read()    )  // Read line
-      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
+      s_oFile:AddMethod( "New"    , @New()     )  // Constructor
+      s_oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
+      s_oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
+      s_oFile:AddMethod( "Read"   , @Read()    )  // Read line
+      s_oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
+      s_oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
+      s_oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
-      oFile:Create()
+      s_oFile:Create()
    ENDIF
 
-   RETURN oFile:Instance()
+   RETURN s_oFile:Instance()
 
 //
 // Method TextFile:New -> Create a new text file
@@ -132,8 +128,7 @@ FUNCTION TTextFile()
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-
-FUNCTION New( cFileName, cMode, nBlock )
+STATIC FUNCTION New( cFileName, cMode, nBlock )
 
    LOCAL self := QSelf()                        // Get self
 
@@ -151,19 +146,19 @@ FUNCTION New( cFileName, cMode, nBlock )
    ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
-      ? "DosFile Init: Unknown file mode:", ::cMode
+      ? "File Init: Unknown file mode:", ::cMode
    ENDIF
 
    ::nError := FError()
    IF ::nError != 0
       ::lEoF := .T.
-      ? "Error ", ::nError
+      ? "Error", ::nError
    ENDIF
    ::nBlockSize := nBlock
 
    RETURN self
 
-FUNCTION RUN( xTxt, lCRLF )
+STATIC FUNCTION RUN( xTxt, lCRLF )
 
    LOCAL self := QSelf()
    LOCAL xRet
@@ -179,8 +174,7 @@ FUNCTION RUN( xTxt, lCRLF )
 //
 // Dispose -> Close the file handle
 //
-
-FUNCTION Dispose()
+STATIC FUNCTION Dispose()
 
    LOCAL self := QSelf()
 
@@ -188,7 +182,7 @@ FUNCTION Dispose()
    IF ::hFile != F_ERROR
       IF ! FClose( ::hFile )
          ::nError := FError()
-         ? "Dos Error closing ", ::cFileName, " Code ", ::nError
+         ? "OS Error closing", ::cFileName, " Code", ::nError
       ENDIF
    ENDIF
 
@@ -197,8 +191,7 @@ FUNCTION Dispose()
 //
 // Read a single line
 //
-
-FUNCTION READ()
+STATIC FUNCTION READ()
 
    LOCAL self := QSelf()
    LOCAL cRet := ""
@@ -207,14 +200,13 @@ FUNCTION READ()
    LOCAL nEoFPos
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Read : No file open"
+      ? "File:Read: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
-         cBlock := FReadStr( ::hFile, ::nBlockSize )
-         IF Len( cBlock ) == 0
+         IF Len( cBlock := FReadStr( ::hFile, ::nBlockSize ) ) == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE
@@ -224,9 +216,8 @@ FUNCTION READ()
 
       IF ! ::lEoF
          ::nLine++
-         nCRPos := At( Chr( 10 ), ::cBlock )
-         IF nCRPos != 0                         // More than one line read
-            cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
+         IF ( nCRPos := At( Chr( 10 ), ::cBlock ) ) != 0  // More than one line read
+            cRet     := Left( ::cBlock, nCRPos - 1 )
             ::cBlock := SubStr( ::cBlock, nCRPos + 1 )
          ELSE                                   // No complete line
             cRet     := ::cBlock
@@ -236,9 +227,8 @@ FUNCTION READ()
                ::nLine--                        // Adjust erroneous line count
             ENDIF
          ENDIF
-         nEoFPos := hb_BAt( Chr( 26 ), cRet )
-         IF nEoFPos != 0                        // End of file read
-            cRet   := hb_BSubStr( cRet, 1, nEoFPos - 1 )
+         IF ( nEoFPos := hb_BAt( Chr( 26 ), cRet ) ) != 0  // End of file read
+            cRet   := hb_BLeft( cRet, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
          cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR
@@ -254,32 +244,31 @@ FUNCTION READ()
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-
-FUNCTION WriteLn( xTxt, lCRLF )
+STATIC FUNCTION WriteLn( xTxt, lCRLF )
 
    LOCAL self := QSelf()
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Write : No file open"
+      ? "File:Write: No file open"
    ELSEIF !( ::cMode == "W" )
-      ? "File ", ::cFileName, " not opened for writing"
+      ? "File", ::cFileName, "not opened for writing"
    ELSE
       hb_default( @lCRLF, .T. )
       cBlock := hb_ValToExp( xTxt )                  // Convert to string
       IF lCRLF
          cBlock += hb_eol()
       ENDIF
-      FWrite( ::hFile, cBlock, Len( cBlock ) )
+      FWrite( ::hFile, cBlock )
       IF FError() != 0
          ::nError := FError()                   // Not completely written !
       ENDIF
-      ::nLine := ::nLine + 1
+      ::nLine++
    ENDIF
 
    RETURN self
 
-FUNCTION Write( xTxt )
+STATIC FUNCTION Write( xTxt )
 
    LOCAL self := QSelf()
 
@@ -288,16 +277,15 @@ FUNCTION Write( xTxt )
 //
 // Go to a specified line number
 //
-
-STATIC FUNCTION GOTO( nLine )
+STATIC FUNCTION Goto( nLine )
 
    LOCAL self   := QSelf()
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      ? "DosFile:Goto : No file open"
+      ? "File:Goto: No file open"
    ELSEIF !( ::cMode == "R" )
-      ? "File ", ::cFileName, " not open for reading"
+      ? "File", ::cFileName, "not open for reading"
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -95,7 +95,7 @@
 
 /* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
          missing the entry for wide version of one function,
-         so we turn off UNICODE, until its fixed in OpenWatcom:
+         so we turn off UNICODE, until it's fixed in OpenWatcom:
             Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
          [vszakats] */
 #  if defined( __WATCOMC__ ) && defined( UNICODE )

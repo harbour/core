@@ -22,8 +22,8 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, 15, @nResult )
 
    IF nResult == HB_LZF_OK
-      ? "Lenght of a string is", hb_ntos( Len( cStr ) )
-      ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
+      ? "Length of a string is", hb_ntos( Len( cStr ) )
+      ? "Length of a compressed string is", hb_ntos( Len( str_compressed ) )
    ELSE
       ? "hb_lzf_compress() returns", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -34,8 +34,8 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, @str_compressed, @nResult )
 
    IF nResult == HB_LZF_OK
-      ? "Lenght of a string is", hb_ntos( Len( cStr ) )
-      ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
+      ? "Length of a string is", hb_ntos( Len( cStr ) )
+      ? "Length of a compressed string is", hb_ntos( Len( str_compressed ) )
    ELSE
       ? "hb_lzf_compress() returns", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -47,8 +47,8 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, nLen, @nResult )
 
    IF nResult == HB_LZF_OK
-      ? "Lenght of a string is", hb_ntos( Len( cStr ) )
-      ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
+      ? "Length of a string is", hb_ntos( Len( cStr ) )
+      ? "Length of a compressed string is", hb_ntos( Len( str_compressed ) )
 
       ? iif( hb_base64Encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
@@ -63,8 +63,8 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, @str_compressed, @nResult )
 
    IF nResult == HB_LZF_OK
-      ? "Lenght of a string is", hb_ntos( Len( cStr ) )
-      ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
+      ? "Length of a string is", hb_ntos( Len( cStr ) )
+      ? "Length of a compressed string is", hb_ntos( Len( str_compressed ) )
 
       ? iif( hb_base64Encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
@@ -76,8 +76,8 @@ PROCEDURE Main()
    str_compressed := hb_lzf_compress( cStr, NIL, @nResult )
 
    IF nResult == HB_LZF_OK
-      ? "Lenght of a string is", hb_ntos( Len( cStr ) )
-      ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
+      ? "Length of a string is", hb_ntos( Len( cStr ) )
+      ? "Length of a compressed string is", hb_ntos( Len( str_compressed ) )
    ELSE
       ? "hb_lzf_compress() returns", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF

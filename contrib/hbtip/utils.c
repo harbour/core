@@ -1,5 +1,5 @@
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,8 +65,8 @@
 #include "hbapifs.h"
 #include "hbdate.h"
 
-/************************************************************
- * Useful internet timestamp based on RFC 822 & RFC 2822
+/*
+ * Internet timestamp based on RFC 822 & RFC 2822
  */
 
 HB_FUNC( TIP_TIMESTAMP )
@@ -106,18 +106,19 @@ HB_FUNC( TIP_TIMESTAMP )
    hb_retc( szRet );
 }
 
-/** Detects the mimetype of a given file */
+/* Detects the MIME type of a given file */
 
 typedef struct tag_mime
 {
    HB_ISIZ            pos;       /* Position in stream from which the match begins */
    const char *       pattern;   /* String to match */
-   const char *       mime_type; /* Mimetype if complete */
-   int                next;      /* following entry to determine a mimetype, relative to current position (or 0) */
-   int                alternate; /* alternative entry to determine a mimetype, relative to current position (or 0) */
+   const char *       mime_type; /* MIME type if complete */
+   int                next;      /* following entry to determine a MIME type, relative to current position (or 0) */
+   int                alternate; /* alternative entry to determine a MIME type, relative to current position (or 0) */
    short unsigned int flags;     /* flags for confrontation */
 } MIME_ENTRY;
 
+#define MIME_FLAG_CASESENS    0x0000
 #define MIME_FLAG_TRIMSPACES  0x0001
 #define MIME_FLAG_TRIMTABS    0x0002
 #define MIME_FLAG_CASEINSENS  0x0004
@@ -248,75 +249,346 @@ static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
 };
 
-/* Find mime by extension */
+/* Find MIME by extension */
 
 typedef struct tag_mime_ext
 {
    const char * pattern;   /* Extension to match */
-   const char * mime_type; /* Mimetype if complete */
    HB_USHORT    flags;     /* flags for confrontation */
+   const char * mime_type; /* MIME type if complete */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE  24
+#define EXT_MIME_TABLE_SIZE  325
+
+/* https://www.iana.org/assignments/media-types/media-types.xhtml */
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
-   /* Dos/win executable */
-   /*  0*/ { "EXE",   "application/x-dosexec",                                             MIME_FLAG_CASEINSENS },
-
-   /* HTML file */
-   /*  1*/ { "HTM",   "text/html",                                                         MIME_FLAG_CASEINSENS },
-   /*  2*/ { "HTML",  "text/html",                                                         MIME_FLAG_CASEINSENS },
-
-   /* XLS file */
-   /*  3*/ { "xls",   "application/vnd.ms-excel",                                          MIME_FLAG_CASEINSENS },
-
-   /* XML file */
-   /*  4*/ { "XML",   "text/xml",                                                          MIME_FLAG_CASEINSENS },
-
-   /* text file */
-   /*  5*/ { "TXT",   "text/txt",                                                          MIME_FLAG_CASEINSENS },
-
-   /* PDF file */
-   /*  6*/ { "pdf",   "application/pdf",                                                   MIME_FLAG_CASEINSENS },
-
-   /* PS file */
-   /*  7*/ { "ps",    "application/postscript",                                            MIME_FLAG_CASEINSENS },
-
-   /* C source */
-   /*  8*/ { "c",     "text/x-c",                                                          MIME_FLAG_CASEINSENS },
-   /*  9*/ { "c++",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
-   /* 10*/ { "cpp",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
-   /* 11*/ { "cxx",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
-   /* 12*/ { "h",     "text/x-c-header",                                                   MIME_FLAG_CASEINSENS },
-   /* 13*/ { "hpp",   "text/x-c++-header",                                                 MIME_FLAG_CASEINSENS },
-   /* 14*/ { "hxx",   "text/x-c++-header",                                                 MIME_FLAG_CASEINSENS },
-
-   /* Java */
-   /* 15*/ { "class", "application/java",                                                  0                    }, /* case sensitive! */
-   /* 16*/ { "java",  "text/java",                                                         0                    },
-
-   /* RTF file */
-   /* 17*/ { "rtf",   "application/rtf",                                                   MIME_FLAG_CASEINSENS },
-
-   /* CSV file */
-   /* 18*/ { "csv",   "text/csv",                                                          MIME_FLAG_CASEINSENS },
-
-   /* CSS file */
-   /* 19*/ { "css",   "text/css",                                                          MIME_FLAG_CASEINSENS },
-
-   /* JS file */
-   /* 20*/ { "js",    "application/x-javascript",                                          MIME_FLAG_CASEINSENS },
-
-   /* ODS file */
-   /* 21*/ { "ods",   "application/vnd.oasis.opendocument.spreadsheet",                    MIME_FLAG_CASEINSENS },
-
-   /* XLSX file */
-   /* 22*/ { "xlsx",  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", MIME_FLAG_CASEINSENS },
-
-   /* ZIP file */
-   /* 23*/ { "zip",   "application/x-zip",                                                 MIME_FLAG_CASEINSENS }
-
+   { "3dm"     , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
+   { "3dmf"    , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
+   { "3gp"     , MIME_FLAG_CASEINSENS, "video/3gpp" },
+   { "3gpp"    , MIME_FLAG_CASEINSENS, "video/3gpp" },
+   { "7z"      , MIME_FLAG_CASEINSENS, "application/x-7z-compressed" },
+   { "aab"     , MIME_FLAG_CASEINSENS, "application/x-authorware-bin" },
+   { "aam"     , MIME_FLAG_CASEINSENS, "application/x-authorware-map" },
+   { "aas"     , MIME_FLAG_CASEINSENS, "application/x-authorware-map" },
+   { "adr"     , MIME_FLAG_CASEINSENS, "application/x-msaddr" },
+   { "afl"     , MIME_FLAG_CASEINSENS, "video/animaflex" },
+   { "ai"      , MIME_FLAG_CASEINSENS, "application/postscript" },
+   { "aif"     , MIME_FLAG_CASEINSENS, "audio/x-aiff" },
+   { "aifc"    , MIME_FLAG_CASEINSENS, "audio/x-aiff" },
+   { "aiff"    , MIME_FLAG_CASEINSENS, "audio/x-aiff" },
+   { "alt"     , MIME_FLAG_CASEINSENS, "application/x-up-alert" },
+   { "arj"     , MIME_FLAG_CASEINSENS, "application/x-arj" },
+   { "asc"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "asd"     , MIME_FLAG_CASEINSENS, "application/astound" },
+   { "asf"     , MIME_FLAG_CASEINSENS, "video/x-ms-asf" },
+   { "asn"     , MIME_FLAG_CASEINSENS, "application/astound" },
+   { "asp"     , MIME_FLAG_CASEINSENS, "application/x-asap" },
+   { "asx"     , MIME_FLAG_CASEINSENS, "video/x-ms-asf" },
+   { "asz"     , MIME_FLAG_CASEINSENS, "application/astound" },
+   { "atom"    , MIME_FLAG_CASEINSENS, "application/atom+xml" },
+   { "au"      , MIME_FLAG_CASEINSENS, "audio/basic" },
+   { "avi"     , MIME_FLAG_CASEINSENS, "video/x-msvideo" },
+   { "axs"     , MIME_FLAG_CASEINSENS, "application/olescript" },
+   { "bcpio"   , MIME_FLAG_CASEINSENS, "application/x-bcpio" },
+   { "bin"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "bmp"     , MIME_FLAG_CASEINSENS, "image/x-ms-bmp" },
+   { "bz2"     , MIME_FLAG_CASEINSENS, "application/x-bzip2" },
+   { "c"       , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "c++"     , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "cco"     , MIME_FLAG_CASEINSENS, "application/x-cocoa" },
+   { "cdf"     , MIME_FLAG_CASEINSENS, "application/x-netcdf" },
+   { "chat"    , MIME_FLAG_CASEINSENS, "application/x-chat" },
+   { "che"     , MIME_FLAG_CASEINSENS, "application/x-up-cacheop" },
+   { "cht"     , MIME_FLAG_CASEINSENS, "audio/x-dspeech" },
+   { "class"   , MIME_FLAG_CASESENS  , "application/java-vm" },
+   { "cnc"     , MIME_FLAG_CASEINSENS, "application/x-cnc" },
+   { "cod"     , MIME_FLAG_CASEINSENS, "image/cis-cod" },
+   { "coda"    , MIME_FLAG_CASEINSENS, "application/x-coda" },
+   { "con"     , MIME_FLAG_CASEINSENS, "application/x-connector" },
+   { "cpi"     , MIME_FLAG_CASEINSENS, "image/cpi" },
+   { "cpio"    , MIME_FLAG_CASEINSENS, "application/x-cpio" },
+   { "cpp"     , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "crt"     , MIME_FLAG_CASEINSENS, "application/x-x509-ca-cert" },
+   { "cu"      , MIME_FLAG_CASEINSENS, "application/x-cu-seeme" },
+   { "cxx"     , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "ccs"     , MIME_FLAG_CASEINSENS, "text/ccs" },
+   { "csh"     , MIME_FLAG_CASEINSENS, "application/x-csh" },
+   { "csm"     , MIME_FLAG_CASEINSENS, "application/x-cu-seeme" },
+   { "css"     , MIME_FLAG_CASEINSENS, "text/css" },
+   { "csv"     , MIME_FLAG_CASEINSENS, "text/csv" },
+   { "dbf"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "dcr"     , MIME_FLAG_CASEINSENS, "application/x-director" },
+   { "deb"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "der"     , MIME_FLAG_CASEINSENS, "application/x-x509-ca-cert" },
+   { "dig"     , MIME_FLAG_CASEINSENS, "multipart/mixed" },
+   { "dir"     , MIME_FLAG_CASEINSENS, "application/x-director" },
+   { "djv"     , MIME_FLAG_CASEINSENS, "image/vnd.djvu" },
+   { "djvu"    , MIME_FLAG_CASEINSENS, "image/vnd.djvu" },
+   { "dll"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "dmg"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "doc"     , MIME_FLAG_CASEINSENS, "application/msword" },
+   { "docx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+   { "dsf"     , MIME_FLAG_CASEINSENS, "image/x-mgx-dsf" },
+   { "dst"     , MIME_FLAG_CASEINSENS, "application/tajima" },
+   { "dus"     , MIME_FLAG_CASEINSENS, "audio/x-dspeech" },
+   { "dvi"     , MIME_FLAG_CASEINSENS, "application/x-dvi" },
+   { "dwf"     , MIME_FLAG_CASEINSENS, "drawing/x-dwf" },
+   { "dwg"     , MIME_FLAG_CASEINSENS, "image/vnd" },
+   { "dxf"     , MIME_FLAG_CASEINSENS, "image/vnd" },
+   { "dxr"     , MIME_FLAG_CASEINSENS, "application/x-director" },
+   { "ear"     , MIME_FLAG_CASEINSENS, "application/java-archive" },
+   { "ebk"     , MIME_FLAG_CASEINSENS, "application/x-expandedbook" },
+   { "eot"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "eps"     , MIME_FLAG_CASEINSENS, "application/postscript" },
+   { "es"      , MIME_FLAG_CASEINSENS, "audio/echospeech" },
+   { "etf"     , MIME_FLAG_CASEINSENS, "image/x-etf" },
+   { "etx"     , MIME_FLAG_CASEINSENS, "text/x-setext" },
+   { "evy"     , MIME_FLAG_CASEINSENS, "application/x-envoy" },
+   { "exe"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "fh4"     , MIME_FLAG_CASEINSENS, "image/x-freehand" },
+   { "fh5"     , MIME_FLAG_CASEINSENS, "image/x-freehand" },
+   { "fhc"     , MIME_FLAG_CASEINSENS, "image/x-freehand" },
+   { "fif"     , MIME_FLAG_CASEINSENS, "image/fif" },
+   { "flv"     , MIME_FLAG_CASEINSENS, "video/x-flv" },
+   { "fpx"     , MIME_FLAG_CASEINSENS, "image/x-fpx" },
+   { "frl"     , MIME_FLAG_CASEINSENS, "application/freeloader" },
+   { "gif"     , MIME_FLAG_CASEINSENS, "image/gif" },
+   { "gsd"     , MIME_FLAG_CASEINSENS, "audio/gsm" },
+   { "gsm"     , MIME_FLAG_CASEINSENS, "audio/gsm" },
+   { "gtar"    , MIME_FLAG_CASEINSENS, "application/x-gtar" },
+   { "gz"      , MIME_FLAG_CASEINSENS, "application/gzip" },
+   { "h"       , MIME_FLAG_CASEINSENS, "text/x-c-header" },
+   { "hdf"     , MIME_FLAG_CASEINSENS, "application/x-hdf" },
+   { "hdml"    , MIME_FLAG_CASEINSENS, "text/x-hdml" },
+   { "hpp"     , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "hqx"     , MIME_FLAG_CASEINSENS, "application/mac-binhex40" },
+   { "htc"     , MIME_FLAG_CASEINSENS, "text/x-component" },
+   { "htm"     , MIME_FLAG_CASEINSENS, "text/html" },
+   { "html"    , MIME_FLAG_CASEINSENS, "text/html" },
+   { "hxx"     , MIME_FLAG_CASEINSENS, "text/x-c" },
+   { "ica"     , MIME_FLAG_CASEINSENS, "application/x-ica" },
+   { "ico"     , MIME_FLAG_CASEINSENS, "image/x-icon" },
+   { "ics"     , MIME_FLAG_CASEINSENS, "text/calendar" },
+   { "ief"     , MIME_FLAG_CASEINSENS, "image/ief" },
+   { "img"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "ins"     , MIME_FLAG_CASEINSENS, "application/x-NET-Install" },
+   { "ips"     , MIME_FLAG_CASEINSENS, "application/x-ipscript" },
+   { "ipx"     , MIME_FLAG_CASEINSENS, "application/x-ipix" },
+   { "iso"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "ivr"     , MIME_FLAG_CASEINSENS, "i-world/i-vrml" },
+   { "jad"     , MIME_FLAG_CASEINSENS, "text/vnd.sun.j2me.app-descriptor" },
+   { "jar"     , MIME_FLAG_CASEINSENS, "application/java-archive" },
+   { "jardiff" , MIME_FLAG_CASEINSENS, "application/x-java-archive-diff" },
+   { "java"    , MIME_FLAG_CASESENS  , "text/java" },
+   { "jng"     , MIME_FLAG_CASEINSENS, "image/x-jng" },
+   { "jnlp"    , MIME_FLAG_CASEINSENS, "application/x-java-jnlp-file" },
+   { "jpe"     , MIME_FLAG_CASEINSENS, "image/jpeg" },
+   { "jpeg"    , MIME_FLAG_CASEINSENS, "image/jpeg" },
+   { "jpg"     , MIME_FLAG_CASEINSENS, "image/jpeg" },
+   { "js"      , MIME_FLAG_CASEINSENS, "application/javascript" },
+   { "kar"     , MIME_FLAG_CASEINSENS, "audio/midi" },
+   { "kml"     , MIME_FLAG_CASEINSENS, "application/vnd.google-earth.kml+xml" },
+   { "kmz"     , MIME_FLAG_CASEINSENS, "application/vnd.google-earth.kmz" },
+   { "latex"   , MIME_FLAG_CASEINSENS, "application/x-latex" },
+   { "lha"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "log"     , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "lzh"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "lzx"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "m3u"     , MIME_FLAG_CASEINSENS, "audio/x-mpegurl" },
+   { "m4a"     , MIME_FLAG_CASEINSENS, "audio/x-m4a" },
+   { "m4v"     , MIME_FLAG_CASEINSENS, "video/x-m4v" },
+   { "man"     , MIME_FLAG_CASEINSENS, "application/x-troff-man" },
+   { "map"     , MIME_FLAG_CASEINSENS, "application/x-httpd-imap" },
+   { "markdown", MIME_FLAG_CASEINSENS, "text/x-markdown" },
+   { "mbd"     , MIME_FLAG_CASEINSENS, "application/mbedlet" },
+   { "mcf"     , MIME_FLAG_CASEINSENS, "image/vasa" },
+   { "md"      , MIME_FLAG_CASEINSENS, "text/x-markdown" },
+   { "me"      , MIME_FLAG_CASEINSENS, "application/x-troff-me" },
+   { "mfp"     , MIME_FLAG_CASEINSENS, "application/mirage" },
+   { "mid"     , MIME_FLAG_CASEINSENS, "audio/midi" },
+   { "midi"    , MIME_FLAG_CASEINSENS, "audio/midi" },
+   { "mif"     , MIME_FLAG_CASEINSENS, "application/x-mif" },
+   { "mml"     , MIME_FLAG_CASEINSENS, "text/mathml" },
+   { "mng"     , MIME_FLAG_CASEINSENS, "video/x-mng" },
+   { "mol"     , MIME_FLAG_CASEINSENS, "chemical/x-mdl-molfile" },
+   { "mov"     , MIME_FLAG_CASEINSENS, "video/quicktime" },
+   { "movie"   , MIME_FLAG_CASEINSENS, "video/x-sgi-movie" },
+   { "mp2"     , MIME_FLAG_CASEINSENS, "audio/x-mpeg" },
+   { "mp3"     , MIME_FLAG_CASEINSENS, "audio/mpeg" },
+   { "mp4"     , MIME_FLAG_CASEINSENS, "video/mp4" },
+   { "mpe"     , MIME_FLAG_CASEINSENS, "video/mpeg" },
+   { "mpeg"    , MIME_FLAG_CASEINSENS, "video/mpeg" },
+   { "mpg"     , MIME_FLAG_CASEINSENS, "video/mpeg" },
+   { "mpire"   , MIME_FLAG_CASEINSENS, "application/x-mpire" },
+   { "mpl"     , MIME_FLAG_CASEINSENS, "application/x-mpire" },
+   { "ms"      , MIME_FLAG_CASEINSENS, "application/x-troff-ms" },
+   { "msi"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "msm"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "msp"     , MIME_FLAG_CASEINSENS, "application/octet-stream" },
+   { "n2p"     , MIME_FLAG_CASEINSENS, "application/n2p" },
+   { "nc"      , MIME_FLAG_CASEINSENS, "application/x-netcdf" },
+   { "npx"     , MIME_FLAG_CASEINSENS, "application/x-netfpx" },
+   { "nsc"     , MIME_FLAG_CASEINSENS, "application/x-nschat" },
+   { "oda"     , MIME_FLAG_CASEINSENS, "application/oda" },
+   { "odb"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.database" },
+   { "odc"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.chart" },
+   { "odf"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.formula" },
+   { "odg"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.graphics" },
+   { "odi"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.image" },
+   { "odm"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.text-master" },
+   { "odp"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.presentation" },
+   { "ods"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.spreadsheet" },
+   { "odt"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.text" },
+   { "ofml"    , MIME_FLAG_CASEINSENS, "application/fml" },
+   { "ogg"     , MIME_FLAG_CASEINSENS, "audio/ogg" },
+   { "oth"     , MIME_FLAG_CASEINSENS, "application/vnd.oasis.opendocument.text-web" },
+   { "oxt"     , MIME_FLAG_CASEINSENS, "application/vnd.openofficeorg.extension" },
+   { "p7s"     , MIME_FLAG_CASEINSENS, "application/pkcs7-signature" },
+   { "page"    , MIME_FLAG_CASEINSENS, "application/x-coda" },
+   { "pbm"     , MIME_FLAG_CASEINSENS, "image/x-portable-bitmap" },
+   { "pdb"     , MIME_FLAG_CASEINSENS, "application/x-pilot" },
+   { "pdf"     , MIME_FLAG_CASEINSENS, "application/pdf" },
+   { "pem"     , MIME_FLAG_CASEINSENS, "application/x-x509-ca-cert" },
+   { "pfr"     , MIME_FLAG_CASEINSENS, "application/font-tdpfr" },
+   { "pgm"     , MIME_FLAG_CASEINSENS, "image/x-portable-graymap" },
+   { "pgp"     , MIME_FLAG_CASEINSENS, "application/x-pgp-plugin" },
+   { "pgr"     , MIME_FLAG_CASEINSENS, "text/parsnegar-document" },
+   { "php3"    , MIME_FLAG_CASEINSENS, "application/x-httpd-php3" },
+   { "phtml"   , MIME_FLAG_CASEINSENS, "application/x-httpd-php" },
+   { "pl"      , MIME_FLAG_CASEINSENS, "application/x-perl" },
+   { "pm"      , MIME_FLAG_CASEINSENS, "application/x-perl" },
+   { "png"     , MIME_FLAG_CASEINSENS, "image/png" },
+   { "pnm"     , MIME_FLAG_CASEINSENS, "image/x-portable-anymap" },
+   { "pot"     , MIME_FLAG_CASEINSENS, "application/mspowerpoint" },
+   { "ppm"     , MIME_FLAG_CASEINSENS, "image/x-portable-pixmap" },
+   { "pps"     , MIME_FLAG_CASEINSENS, "application/mspowerpoint" },
+   { "ppsx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.presentationml.slideshow" },
+   { "ppt"     , MIME_FLAG_CASEINSENS, "application/powerpoint" },
+   { "pptx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+   { "ppz"     , MIME_FLAG_CASEINSENS, "application/mspowerpoint" },
+   { "pqf"     , MIME_FLAG_CASEINSENS, "application/x-cprplayer" },
+   { "pqi"     , MIME_FLAG_CASEINSENS, "application/cprplayer" },
+   { "prc"     , MIME_FLAG_CASEINSENS, "application/x-pilot" },
+   { "ps"      , MIME_FLAG_CASEINSENS, "application/postscript" },
+   { "ptlk"    , MIME_FLAG_CASEINSENS, "application/listenup" },
+   { "push"    , MIME_FLAG_CASEINSENS, "multipart/x-mixed-replace" },
+   { "qd3"     , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
+   { "qd3d"    , MIME_FLAG_CASEINSENS, "x-world/x-3dmf" },
+   { "qrt"     , MIME_FLAG_CASEINSENS, "application/quest" },
+   { "qt"      , MIME_FLAG_CASEINSENS, "video/quicktime" },
+   { "ra"      , MIME_FLAG_CASEINSENS, "audio/x-realaudio" },
+   { "ram"     , MIME_FLAG_CASEINSENS, "audio/x-realaudio" },
+   { "rar"     , MIME_FLAG_CASEINSENS, "application/x-rar-compressed" },
+   { "ras"     , MIME_FLAG_CASEINSENS, "image/x-cmu-raster" },
+   { "rgb"     , MIME_FLAG_CASEINSENS, "image/x-rgb" },
+   { "rip"     , MIME_FLAG_CASEINSENS, "image/rip" },
+   { "rmf"     , MIME_FLAG_CASEINSENS, "audio/x-rmf" },
+   { "roff"    , MIME_FLAG_CASEINSENS, "application/x-troff" },
+   { "rpm"     , MIME_FLAG_CASEINSENS, "application/x-redhat-package-manager" },
+   { "rrf"     , MIME_FLAG_CASEINSENS, "application/x-InstallFromTheWeb" },
+   { "rss"     , MIME_FLAG_CASEINSENS, "application/rss+xml" },
+   { "rst"     , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "rtc"     , MIME_FLAG_CASEINSENS, "application/rtc" },
+   { "rtf"     , MIME_FLAG_CASEINSENS, "text/rtf" },
+   { "rtx"     , MIME_FLAG_CASEINSENS, "text/richtext" },
+   { "run"     , MIME_FLAG_CASEINSENS, "application/x-makeself" },
+   { "sca"     , MIME_FLAG_CASEINSENS, "application/x-supercard" },
+   { "sea"     , MIME_FLAG_CASEINSENS, "application/x-sea" },
+   { "sh"      , MIME_FLAG_CASEINSENS, "application/x-sh" },
+   { "shar"    , MIME_FLAG_CASEINSENS, "application/x-shar" },
+   { "shtml"   , MIME_FLAG_CASEINSENS, "text/html" },
+   { "shw"     , MIME_FLAG_CASEINSENS, "application/presentations" },
+   { "sit"     , MIME_FLAG_CASEINSENS, "application/x-stuffit" },
+   { "sml"     , MIME_FLAG_CASEINSENS, "application/fml" },
+   { "smp"     , MIME_FLAG_CASEINSENS, "application/studiom" },
+   { "snd"     , MIME_FLAG_CASEINSENS, "audio/basic" },
+   { "spc"     , MIME_FLAG_CASEINSENS, "text/x-speech" },
+   { "spl"     , MIME_FLAG_CASEINSENS, "application/futuresplash" },
+   { "spr"     , MIME_FLAG_CASEINSENS, "application/x-sprite" },
+   { "sprite"  , MIME_FLAG_CASEINSENS, "application/x-sprite" },
+   { "src"     , MIME_FLAG_CASEINSENS, "application/x-wais-source" },
+   { "stk"     , MIME_FLAG_CASEINSENS, "application/hstu" },
+   { "stream"  , MIME_FLAG_CASEINSENS, "audio/x-qt-stream" },
+   { "sv4cpio" , MIME_FLAG_CASEINSENS, "application/x-sv4cpio" },
+   { "sv4crc"  , MIME_FLAG_CASEINSENS, "application/x-sv4crc" },
+   { "svf"     , MIME_FLAG_CASEINSENS, "image/vnd" },
+   { "svg"     , MIME_FLAG_CASEINSENS, "image/svg+xml" },
+   { "svgz"    , MIME_FLAG_CASEINSENS, "image/svg+xml" },
+   { "svh"     , MIME_FLAG_CASEINSENS, "image/svh" },
+   { "svr"     , MIME_FLAG_CASEINSENS, "x-world/x-svr" },
+   { "swa"     , MIME_FLAG_CASEINSENS, "application/x-director" },
+   { "swf"     , MIME_FLAG_CASEINSENS, "application/x-shockwave-flash" },
+   { "t"       , MIME_FLAG_CASEINSENS, "application/x-troff" },
+   { "talk"    , MIME_FLAG_CASEINSENS, "text/x-speech" },
+   { "tar"     , MIME_FLAG_CASEINSENS, "application/x-tar" },
+   { "tbk"     , MIME_FLAG_CASEINSENS, "application/toolbook" },
+   { "tcl"     , MIME_FLAG_CASEINSENS, "application/x-tcl" },
+   { "tex"     , MIME_FLAG_CASEINSENS, "application/x-tex" },
+   { "texi"    , MIME_FLAG_CASEINSENS, "application/x-texinfo" },
+   { "texinfo" , MIME_FLAG_CASEINSENS, "application/x-texinfo" },
+   { "text"    , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "tgz"     , MIME_FLAG_CASEINSENS, "application/x-gtar" },
+   { "tif"     , MIME_FLAG_CASEINSENS, "image/tiff" },
+   { "tiff"    , MIME_FLAG_CASEINSENS, "image/tiff" },
+   { "tk"      , MIME_FLAG_CASEINSENS, "application/x-tcl" },
+   { "tlk"     , MIME_FLAG_CASEINSENS, "application/x-tlk" },
+   { "tmv"     , MIME_FLAG_CASEINSENS, "application/x-Parable-Thing" },
+   { "tr"      , MIME_FLAG_CASEINSENS, "application/x-troff" },
+   { "tsi"     , MIME_FLAG_CASEINSENS, "audio/tsplayer" },
+   { "tsp"     , MIME_FLAG_CASEINSENS, "application/dsptype" },
+   { "tsv"     , MIME_FLAG_CASEINSENS, "text/tab-separated-values" },
+   { "txt"     , MIME_FLAG_CASEINSENS, "text/plain" },
+   { "ustar"   , MIME_FLAG_CASEINSENS, "application/x-ustar" },
+   { "vbd"     , MIME_FLAG_CASEINSENS, "application/activexdocument" },
+   { "vcd"     , MIME_FLAG_CASEINSENS, "application/x-cdlink" },
+   { "vcf"     , MIME_FLAG_CASEINSENS, "text/directory" },
+   { "vgm"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
+   { "vgp"     , MIME_FLAG_CASEINSENS, "video/x-videogram-plugin" },
+   { "vgx"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
+   { "viv"     , MIME_FLAG_CASEINSENS, "video/vnd.vivo" },
+   { "vivo"    , MIME_FLAG_CASEINSENS, "video/vnd.vivo" },
+   { "vmd"     , MIME_FLAG_CASEINSENS, "application/vocaltec-media-desc" },
+   { "vmf"     , MIME_FLAG_CASEINSENS, "application/vocaltec-media-file" },
+   { "vox"     , MIME_FLAG_CASEINSENS, "audio/voxware" },
+   { "vqe"     , MIME_FLAG_CASEINSENS, "audio/x-twinvq-plugin" },
+   { "vqf"     , MIME_FLAG_CASEINSENS, "audio/x-twinvq" },
+   { "vql"     , MIME_FLAG_CASEINSENS, "audio/x-twinvq" },
+   { "vrt"     , MIME_FLAG_CASEINSENS, "x-world/x-vrt" },
+   { "vts"     , MIME_FLAG_CASEINSENS, "workbook/formulaone" },
+   { "vtts"    , MIME_FLAG_CASEINSENS, "workbook/formulaone" },
+   { "waf"     , MIME_FLAG_CASEINSENS, "plugin/wanimate" },
+   { "wan"     , MIME_FLAG_CASEINSENS, "plugin/wanimate" },
+   { "war"     , MIME_FLAG_CASEINSENS, "application/java-archive" },
+   { "wav"     , MIME_FLAG_CASEINSENS, "audio/x-wav" },
+   { "wbmp"    , MIME_FLAG_CASEINSENS, "image/vnd.wap.wbmp" },
+   { "webm"    , MIME_FLAG_CASEINSENS, "video/webm" },
+   { "webp"    , MIME_FLAG_CASEINSENS, "image/webp" },
+   { "wi"      , MIME_FLAG_CASEINSENS, "image/wavelet" },
+   { "wid"     , MIME_FLAG_CASEINSENS, "application/x-DemoShield" },
+   { "wis"     , MIME_FLAG_CASEINSENS, "application/x-InstallShield" },
+   { "wlt"     , MIME_FLAG_CASEINSENS, "application/x-mswallet" },
+   { "wml"     , MIME_FLAG_CASEINSENS, "text/vnd.wap.wml" },
+   { "wmlc"    , MIME_FLAG_CASEINSENS, "application/vnd.wap.wmlc" },
+   { "wmv"     , MIME_FLAG_CASEINSENS, "video/x-ms-wmv" },
+   { "wri"     , MIME_FLAG_CASEINSENS, "application/write" },
+   { "wrl"     , MIME_FLAG_CASEINSENS, "x-world/x-vrml" },
+   { "wrz"     , MIME_FLAG_CASEINSENS, "x-world/x-vrml" },
+   { "wtx"     , MIME_FLAG_CASEINSENS, "audio/x-wtx" },
+   { "xbm"     , MIME_FLAG_CASEINSENS, "image/x-xbitmap" },
+   { "xdr"     , MIME_FLAG_CASEINSENS, "video/x-videogram" },
+   { "xhtml"   , MIME_FLAG_CASEINSENS, "application/xhtml+xml" },
+   { "xls"     , MIME_FLAG_CASEINSENS, "application/excel" },
+   { "xlsx"    , MIME_FLAG_CASEINSENS, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+   { "xlt"     , MIME_FLAG_CASEINSENS, "application/xlt" },
+   { "xml"     , MIME_FLAG_CASEINSENS, "text/xml" },
+   { "xpi"     , MIME_FLAG_CASEINSENS, "application/x-xpinstall" },
+   { "xpm"     , MIME_FLAG_CASEINSENS, "image/x-xpixmap" },
+   { "xwd"     , MIME_FLAG_CASEINSENS, "image/x-xwindowdump" },
+   { "z"       , MIME_FLAG_CASEINSENS, "application/x-compress" },
+   { "zip"     , MIME_FLAG_CASEINSENS, "application/zip" },
+   { "zpa"     , MIME_FLAG_CASEINSENS, "application/pcphoto" }
 };
 
 static const char * s_findExtMimeType( const char * cExt )
@@ -359,7 +631,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
       nPos++;
    }
 
-   if( ( nPos < nLen ) && ( nLen - nPos >= nDataLen ) )
+   if( nPos < nLen && ( nLen - nPos ) >= nDataLen )
    {
       if( ( elem->flags & MIME_FLAG_CASEINSENS ) == MIME_FLAG_CASEINSENS )
       {
@@ -540,28 +812,6 @@ HB_FUNC( TIP_MIMETYPE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/*
-   Case insensitive string comparison to optimize this expression:
-   IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
-   <cString> must be provided as a pointer to the character string containing a substring
-   <nStart> is the numeric position to start comparison in <cString>
-   <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
- */
-
-HB_FUNC( __TIP_PSTRCOMPI )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pStart  = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pSubstr = hb_param( 3, HB_IT_STRING );
-
-   if( pString && pStart && pSubstr )
-      hb_retl( hb_strnicmp( hb_itemGetCPtr( pString ) + hb_itemGetNS( pStart ) - 1,
-                            hb_itemGetCPtr( pSubstr ),
-                            hb_itemGetCLen( pSubstr ) ) == 0 );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,8 +49,8 @@
 #ifndef TIP_CH
 #define TIP_CH
 
-#define TIP_RO    0   /* Tip read only protocol */
-#define TIP_WO    1   /* Tip write only protocol */
-#define TIP_RW    2   /* Tip read/write protocol */
+#define TIP_RO  0  /* TIP read only protocol */
+#define TIP_WO  1  /* TIP write only protocol */
+#define TIP_RW  2  /* TIP read/write protocol */
 
 #endif

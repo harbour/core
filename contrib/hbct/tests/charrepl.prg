@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,11 +60,11 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharRepl( "1234", "1x2y3z", "abcd" ) ==            "axbycz" ? --> "' + CharRepl( "1234", "1x2y3z", "abcd" )            + '"'
-   ? '  CharRepl( "abcdefghij", "jhfdb", "1234567890" ) == "08642"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
-   ? '  CharRepl( "abcdefghij", "jhfdb", "12345" ) ==      "55542"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "12345" )      + '"'
-   ? '  CharRepl( "1234", "1234", "234A" ) ==              "AAAA"   ? --> "' + CharRepl( "1234", "1234", "234A" )              + '"'
-   ? '  CharRepl( "1234", "1234", "234A", .T. ) ==         "234A"   ? --> "' + CharRepl( "1234", "1234", "234A", .T. )         + '"'
+   ? '  CharRepl( "1234", "1x2y3z", "abcd" ) ==            "axbycz" ? -->', '"' + CharRepl( "1234", "1x2y3z", "abcd" )            + '"'
+   ? '  CharRepl( "abcdefghij", "jhfdb", "1234567890" ) == "08642"  ? -->', '"' + CharRepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
+   ? '  CharRepl( "abcdefghij", "jhfdb", "12345" ) ==      "55542"  ? -->', '"' + CharRepl( "abcdefghij", "jhfdb", "12345" )      + '"'
+   ? '  CharRepl( "1234", "1234", "234A" ) ==              "AAAA"   ? -->', '"' + CharRepl( "1234", "1234", "234A" )              + '"'
+   ? '  CharRepl( "1234", "1234", "234A", .T. ) ==         "234A"   ? -->', '"' + CharRepl( "1234", "1234", "234A", .T. )         + '"'
    ?
 
    ? "End test of CharRepl()"

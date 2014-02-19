@@ -16,12 +16,12 @@ PROCEDURE Main()
    SET DECIMAL TO 12
 
    IF tinymt32_init_by_array( { 0x123, 0x234, 0x345 } )
-      TestMatrix( "Float numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt32_generate_float(), 15 ) } )
-      TestMatrix( "Float numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt32_generate_float01(), 15 ) } )
-      TestMatrix( "Float numbers r, where 1.0 <= r < 2.0", {|| PadL( tinymt32_generate_float12(), 15 ) } )
-      TestMatrix( "Float numbers r, where 0.0 < r <= 1.0", {|| PadL( tinymt32_generate_floatOC(), 15 ) } )
-      TestMatrix( "Float numbers r, where 0.0 < r <  1.0", {|| PadL( tinymt32_generate_floatOO(), 15 ) } )
-      TestMatrix( "32-bit precision double numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt32_generate_32double(), 15 ) } )
+      TestMatrix( "Float numbers r, where 0.0 <= r <  1.0", {|| PadL( tinymt32_generate_float(), 15 ) } )
+      TestMatrix( "Float numbers r, where 0.0 <= r <  1.0", {|| PadL( tinymt32_generate_float01(), 15 ) } )
+      TestMatrix( "Float numbers r, where 1.0 <= r <  2.0", {|| PadL( tinymt32_generate_float12(), 15 ) } )
+      TestMatrix( "Float numbers r, where 0.0 <  r <= 1.0", {|| PadL( tinymt32_generate_floatOC(), 15 ) } )
+      TestMatrix( "Float numbers r, where 0.0 <  r <  1.0", {|| PadL( tinymt32_generate_floatOO(), 15 ) } )
+      TestMatrix( "32-bit precision double numbers r, where 0.0 < r <= 1.0", {|| PadL( tinymt32_generate_32double(), 15 ) } )
    ENDIF
 
    RETURN

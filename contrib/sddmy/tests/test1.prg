@@ -4,7 +4,8 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-REQUEST SDDMY, SQLMIX
+REQUEST SDDMY
+REQUEST SQLMIX
 
 ANNOUNCE RDDSYS
 
@@ -20,7 +21,7 @@ PROCEDURE Main()
 
    rddSetDefault( "SQLMIX" )
 
-   AEval( rddList(), {| x | QOut( x ) } )
+   ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
    IF rddInfo( RDDI_CONNECT, { "MYSQL", "localhost", "test", , "test" } ) == 0
       ? "Unable connect to the server"
@@ -36,7 +37,7 @@ PROCEDURE Main()
 
    ? "Let's browse table ordered by resident count (press any key)"
    Inkey( 0 )
-   INDEX ON RESIDENTS TAG residents TO country
+   INDEX ON field->RESIDENTS TAG residents TO country
    Browse()
 
    dbCloseAll()

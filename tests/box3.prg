@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE MESSAGE( cText )
+STATIC PROCEDURE MESSAGE( cText )
 
    @ 16, 0 CLEAR TO 16, MaxCol()
    @ 16, 0 SAY cText

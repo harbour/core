@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -101,12 +101,12 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
 
    aInfo := oObject:ClassSel( nClassType )
    aData := {}
-   nFirst := AScan( aInfo, {| n | Left( n, 1 ) == "_" } )
+   nFirst := AScan( aInfo, {| n | hb_LeftIs( n, "_" ) } )
 
    FOR EACH cName IN aInfo
 
       /* Set functions begin with a leading underscore */
-      IF !( Left( cName, 1 ) == "_" )
+      IF ! hb_LeftIs( cName, "_" )
 
          /* Find position of matching set function in array with all symbols */
          /* If found: DATA, else: METHOD */
@@ -128,11 +128,8 @@ FUNCTION __objGetMethodList( oObject )
 
 FUNCTION __objGetValueList( oObject, aExcept )
 
-   LOCAL aDataSymbol
-   LOCAL nLen
    LOCAL aData
    LOCAL cSymbol
-   LOCAL n
 
    IF ! HB_ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
@@ -140,12 +137,8 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
    hb_default( @aExcept, {} )
 
-   aDataSymbol := __objGetMsgList( oObject )
-   nLen        := Len( aDataSymbol )
-   aData       := {}
-
-   FOR n := 1 TO nLen
-      cSymbol := aDataSymbol[ n ]
+   aData := {}
+   FOR EACH cSymbol IN __objGetMsgList( oObject )
       IF AScan( aExcept, {| tmp | tmp == cSymbol } ) == 0
          AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
       ENDIF
@@ -155,10 +148,10 @@ FUNCTION __objGetValueList( oObject, aExcept )
 
 FUNCTION __objSetValueList( oObject, aData )
 
-   IF ! HB_ISOBJECT( oObject )
-      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSE
+   IF HB_ISOBJECT( oObject )
       AEval( aData, {| aItem | __objSendMsg( oObject, "_" + aItem[ HB_OO_DATA_SYMBOL ], aItem[ HB_OO_DATA_VALUE ] ) } )
+   ELSE
+      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
    RETURN oObject

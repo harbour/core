@@ -19,11 +19,11 @@
 # NOTE: Uncomment if you store headers in this alternate subdirectory
 # -iinclude
 
+-hbx=${hb_name}
+
 core.prg
 corec.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm
 

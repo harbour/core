@@ -1,7 +1,7 @@
-Blat v2.6.2 w/GSS encryption (build : Feb 25 2007 12:06:19)
+Blat v3.2.0 (build : Dec 27 2013 14:38:01)
+64-bit Windows, Full, Unicode
 
-
-Win32 console utility to send mail via SMTP or post to usenet via NNTP
+Windows console utility to send mail via SMTP or post to usenet via NNTP
 by P.Mendes,M.Neal,G.Vollant,T.Charron,T.Musson,H.Pesonen,A.Donchey,C.Hyde
   http://www.blat.net
 syntax:
@@ -9,7 +9,7 @@ syntax:
 
   Blat -SaveSettings -f <sender email addy> -server <server addr>
        [-port <port>] [-try <try>] [-profile <profile>]
-       [-u <login id>] [-pwd <password>]
+       [-u <login id>] [-pw <password>]
   or
   Blat -install <server addr> <sender's addr> [<try>[<port>[<profile>]]] [-q]
 
@@ -82,11 +82,19 @@ syntax:
 -portPOP3 <port>: port to be used on the POP3 server, defaults to POP3 (110)
 -portIMAP <port>: port to be used on the IMAP server, defaults to IMAP (110)
 -u <username>   : username for AUTH LOGIN (use with -pw)
+                  or for AUTH GSSAPI with -k
 -pw <password>  : password for AUTH LOGIN (use with -u)
 -pu <username>  : username for POP3 LOGIN (use with -ppw)
 -ppw <password> : password for POP3 LOGIN (use with -pu)
 -iu <username>  : username for IMAP LOGIN (use with -ppw)
 -ipw <password> : password for IMAP LOGIN (use with -pu)
+-k              : Use UNKNOWN mutual authentication and AUTH GSSAPI
+-kc             : Use UNKNOWN client-only authentication and AUTH GSSAPI
+-service <name> : Set GSSAPI service name (use with -k), default "smtp@server"
+-level <lev>    : Set GSSAPI protection level to <lev>, which should be one of
+                : None, Integrity, or Privacy (default GSSAPI level is Privacy)
+-nomd5          : Do NOT use CRAM-MD5 authentication.  Use this in cases where
+                  the server's CRAM-MD5 is broken, such as Network Solutions.
 
 ---------------------- Miscellaneous RFC header switches ----------------------
 -organization <organization>
@@ -98,7 +106,7 @@ syntax:
 -noh2           : prevent X-Mailer header entirely
 -d              : request disposition notification
 -r              : request return receipt
--charset <cs>   : user defined charset.  The default is ISO-8859-1
+-charset <cs>   : user defined charset.  The default is iso-8859-1
 -a1 <header>    : add custom header line at the end of the regular headers
 -a2 <header>    : same as -a1, for a second custom header line
 -dsn <nsfd>     : use Delivery Status Notifications (RFC 3461)
@@ -107,7 +115,7 @@ syntax:
 -hdrencb        : use base64 for encoding headers, if necessary
 -hdrencq        : use quoted-printable for encoding headers, if necessary
 -priority <pr>  : set message priority 0 for low, 1 for high
--sensitivity <s>   : set message sensitity 0 for personal, 1 for private,
+-sensitivity <s>: set message sensitivity 0 for personal, 1 for private,
                   2 for company-confidential
 
 ----------------------- Attachment and encoding options -----------------------
@@ -134,7 +142,11 @@ syntax:
 -multipart <size>
                 : send multipart messages, breaking attachments on <size>
                   KB boundaries, where <size> is per 1000 bytes
--nomps                : do not allow multipart messages
+-nomps          : do not allow multipart messages
+-contentType <string>
+                : use <string> in the ContentType header for attachments that
+                  do not have a registered content type for the extension
+                  For example: -contenttype "text/calendar"
 
 ---------------------------- NNTP specific options ----------------------------
 -groups <usenet groups>
@@ -159,7 +171,7 @@ syntax:
 -raw            : do not add CR/LF after headers
 -delay <x>      : wait x seconds between messages being sent when used with
                   -maxnames or -multipart
--comment <char> : use this character to mark the start of commments in
+-comment <char> : use this character to mark the start of comments in
                   options files and recipient list files.  The default is ;
 -superdebug     : hex/ascii dump the data between Blat and the server
 -superdebugT    : ascii dump the data between Blat and the server

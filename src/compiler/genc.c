@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -448,7 +448,10 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE * yyc, const char * szModulname,
    fprintf( yyc,
             "\nHB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_%s%s, ",
             HB_COMP_PARAM->szPrefix, szModulname );
-   hb_compGenCString( yyc, ( const HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
+   if( HB_COMP_PARAM->fHideSource )
+      hb_compGenCString( yyc, ( const HB_BYTE * ) "", 0 );
+   else
+      hb_compGenCString( yyc, ( const HB_BYTE * ) szSourceFile, strlen( szSourceFile ) );
    fprintf( yyc, ", 0x%lx, 0x%04x )\n\n", 0L, HB_PCODE_VER );
 
    fprintf( yyc,
@@ -2532,7 +2535,7 @@ static HB_GENC_FUNC( hb_p_pushaparams )
    return 1;
 }
 
-/* NOTE: The  order of functions have to match the order of opcodes
+/* NOTE: The order of functions have to match the order of opcodes
  *       mnemonics
  */
 static const PHB_GENC_FUNC s_verbose_table[] = {

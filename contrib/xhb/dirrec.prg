@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,13 +75,13 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
 
    hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
    cMask += cExt
-   hb_default( @cAttr, "" )
+
    /* The trick with StrTran() below if for strict xHarbour
     * compatibility though it should be reverted when it will
     * be fixed in xHarbour
     */
    aResult := hb_DirScan( cFilePath, cMask, ;
-      StrTran( Upper( cAttr ), "D" ) )
+      StrTran( Upper( hb_defaultValue( cAttr, "" ) ), "D" ) )
 
    AEval( aResult, {| x | x[ F_NAME ] := cFilePath + x[ F_NAME ] } )
 

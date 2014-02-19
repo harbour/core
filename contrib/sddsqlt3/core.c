@@ -1,7 +1,7 @@
 /*
  * SQLite3 Database Driver
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +49,7 @@
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbdate.h"
+#include "hbset.h"
 #include "hbvm.h"
 
 #include "hbrddsql.h"
@@ -78,8 +79,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-
-static SDDNODE sqlt3dd =
+static SDDNODE s_sqlt3dd =
 {
    NULL,
    "SQLITE3",
@@ -93,26 +93,17 @@ static SDDNODE sqlt3dd =
    ( SDDFUNC_GETVARLEN ) NULL
 };
 
-
 static void hb_sqlt3dd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-#if SQLITE_VERSION_NUMBER >= 3006000
-   sqlite3_initialize();
-#endif
-
-   if( ! hb_sddRegister( &sqlt3dd ) )
+   if( ! hb_sddRegister( &s_sqlt3dd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
 static void hb_sqlt3dd_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-#if SQLITE_VERSION_NUMBER >= 3006000
-   sqlite3_shutdown();
-#endif
 }
 
 HB_FUNC( HB_SDDSQLITE3_REGISTER )
@@ -144,25 +135,23 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT uiAction;
    PHB_ITEM  pError;
+   HB_USHORT uiAction;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDSQLITE3", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
+
    return uiAction;
 }
-
 
 static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 {
    char * szRet;
-
-   int iNativeErr = 9999;
+   int iNativeErr;
 
    if( pDb )
    {
@@ -173,14 +162,16 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
       iNativeErr = sqlite3_errcode( pDb );
    }
    else
+   {
       szRet = hb_strdup( "Unable to get error message" );
+      iNativeErr = 9999;
+   }
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
 
    return szRet;
 }
-
 
 /*============= SDD METHODS =============================================================*/
 
@@ -198,9 +189,9 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
       sqlite3_close( db );
 
    hb_strfree( hConn );
+
    return db ? HB_SUCCESS : HB_FAILURE;
 }
-
 
 static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 {
@@ -289,7 +280,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
 
 #if 0
-   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", uiFields ) );
 #endif
 
    errCode = 0;
@@ -298,39 +289,46 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    {
       DBFIELDINFO pFieldInfo;
 
-      PHB_ITEM pName;
+      int iDataType = sqlite3_column_type( st, uiIndex );
+      PHB_ITEM pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
+      HB_USHORT uiNameLen = ( HB_USHORT ) hb_itemGetCLen( pName );
 
-      int iDataType;
-      int iSize;
-      int iDec;
+      if( ( ( AREAP ) pArea )->uiMaxFieldNameLength < uiNameLen )
+         ( ( AREAP ) pArea )->uiMaxFieldNameLength = uiNameLen;
 
-      pName = S_HB_ITEMPUTSTR( NULL, sqlite3_column_name( st, uiIndex ) );
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
-      iDataType = sqlite3_column_type( st, uiIndex );
-
-      iSize = sqlite3_column_bytes( st, uiIndex );
-      iDec  = 0;
-
-      pFieldInfo.uiLen = ( HB_USHORT ) iSize;
-      pFieldInfo.uiDec = ( HB_USHORT ) iDec;
-
 #if 0
-      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, iDataType, iSize, iDec ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d", pFieldInfo.atomName, iDataType, sqlite3_column_bytes( st, uiIndex ) ) );
 #endif
+
+      /* There are no field length limits stored in the SQLite3 database,
+         so we're resorting to setting some arbitrary default values to
+         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         better. For better results, update apps to untie UI metrics from
+         any database field/value widths. [vszakats] */
+
+      pFieldInfo.uiLen = 10;
+      pFieldInfo.uiDec = 0;
 
       switch( iDataType )
       {
-         case SQLITE_TEXT:
+         case SQLITE3_TEXT:
             pFieldInfo.uiType = HB_FT_STRING;
             break;
 
          case SQLITE_FLOAT:
+            pFieldInfo.uiType = HB_FT_LONG;
+            pFieldInfo.uiDec = ( HB_USHORT ) hb_setGetDecimals();
+            pFieldInfo.uiLen += pFieldInfo.uiDec + 1;
+            break;
+
          case SQLITE_INTEGER:
             pFieldInfo.uiType = HB_FT_LONG;
             break;
 
          case SQLITE_BLOB:
+         case SQLITE_NULL:
             pFieldInfo.uiType = HB_FT_BLOB;
             break;
 
@@ -341,7 +339,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;
-            pFieldInfo.uiType = HB_FT_STRING;
             break;
       }
 
@@ -410,7 +407,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -426,7 +422,6 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    sqlite3_stmt * st = ( ( SDDDATA * ) pArea->pSDDData )->pStmt;
@@ -435,12 +430,6 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
    {
       PHB_ITEM  pArray;
       HB_USHORT ui;
-
-      if( sqlite3_step( st ) != SQLITE_ROW )
-      {
-         pArea->fFetched = HB_TRUE;
-         break;
-      }
 
       pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
 
@@ -488,6 +477,12 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       pArea->ulRecCount++;
       pArea->pRow[ pArea->ulRecCount ]      = pArray;
       pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
+
+      if( sqlite3_step( st ) != SQLITE_ROW )
+      {
+         pArea->fFetched = HB_TRUE;
+         break;
+      }
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )

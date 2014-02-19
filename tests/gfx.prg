@@ -18,7 +18,7 @@ PROCEDURE Main()
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
       ? "You are using a non graphics capable gt:"
       ? "GT" + hb_gtVersion()
-      QUIT
+      RETURN
    ENDIF
 
    IF hb_gtInfo( HB_GTI_DESKTOPWIDTH ) > 1000
@@ -94,11 +94,11 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
+STATIC PROCEDURE PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
 
    hb_gfxRect( nTop, nLeft, nBottom, nRight, nColor1 )
    hb_gfxRect( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1, nColor2 )
    hb_gfxLine( nTop + 1, nLeft + 1, nTop + 1, nRight - 1, nColor2 )
    hb_gfxLine( nTop + 2, nLeft + 1, nBottom - 1, nLeft + 1, nColor2 )
 
-   RETURN NIL
+   RETURN

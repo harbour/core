@@ -2,7 +2,9 @@
 
 PROCEDURE Main( cDrv )
 
-   ? "Disk size:   " + Str( ft_DskSize( cDrv ) )
-   ? "Free bytes:  " + Str( ft_DskFree( cDrv ) )
+   hb_default( @cDrv, hb_CurDrive() )
+
+   ? "Disk size:", hb_ntos( ft_DskSize( cDrv ) )
+   ? "Free bytes:", hb_ntos( ft_DskFree( cDrv ) )
 
    RETURN

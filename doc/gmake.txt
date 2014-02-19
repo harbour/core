@@ -159,7 +159,7 @@ For GCC on Linux:
   HB_COMPILER       gcc
   Notes:
     1)  If you want to take advantage of compiler cache programs
-        (such as http://ccaache.samba.org), you may set environment
+        (such as https://ccache.samba.org), you may set environment
         variable HB_CCACHE with the value containing the name of program.
 
 For GCC on OS/2 for VIO mode:

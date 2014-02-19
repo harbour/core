@@ -30,21 +30,21 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Two()
+STATIC PROCEDURE Two()
 
    STATIC a := "Test"
 
    ? a
 
-   RETURN NIL
+   RETURN
 
-FUNCTION THREE( p )
+STATIC FUNCTION Three( p )
 
    ? p
 
    RETURN p
 
-PROCEDURE NumStat( a )
+STATIC PROCEDURE NumStat( a )
 
    STATIC s_n := 1
 
@@ -61,7 +61,7 @@ PROCEDURE NumStat( a )
 
    RETURN
 
-FUNCTION DetachVar( xLocal )
+STATIC FUNCTION DetachVar( xLocal )
 
    STATIC xStatic := 100
 

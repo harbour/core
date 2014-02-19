@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -222,17 +222,17 @@ FUNCTION LOGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSupe
 
    s_nRddID := nRddID
 
-   aMyFunc[ UR_INIT         ] := ( @LOGRDD_INIT()         )
-   aMyFunc[ UR_EXIT         ] := ( @LOGRDD_EXIT()         )
-   aMyFunc[ UR_CREATE       ] := ( @LOGRDD_CREATE()       )
-   aMyFunc[ UR_CREATEFIELDS ] := ( @LOGRDD_CREATEFIELDS() )
-   aMyFunc[ UR_OPEN         ] := ( @LOGRDD_OPEN()         )
-   aMyFunc[ UR_CLOSE        ] := ( @LOGRDD_CLOSE()        )
-   aMyFunc[ UR_APPEND       ] := ( @LOGRDD_APPEND()       )
-   aMyFunc[ UR_DELETE       ] := ( @LOGRDD_DELETE()       )
-   aMyFunc[ UR_RECALL       ] := ( @LOGRDD_RECALL()       )
-   aMyFunc[ UR_PUTVALUE     ] := ( @LOGRDD_PUTVALUE()     )
-   aMyFunc[ UR_ZAP          ] := ( @LOGRDD_ZAP()          )
+   aMyFunc[ UR_INIT         ] := @LOGRDD_INIT()
+   aMyFunc[ UR_EXIT         ] := @LOGRDD_EXIT()
+   aMyFunc[ UR_CREATE       ] := @LOGRDD_CREATE()
+   aMyFunc[ UR_CREATEFIELDS ] := @LOGRDD_CREATEFIELDS()
+   aMyFunc[ UR_OPEN         ] := @LOGRDD_OPEN()
+   aMyFunc[ UR_CLOSE        ] := @LOGRDD_CLOSE()
+   aMyFunc[ UR_APPEND       ] := @LOGRDD_APPEND()
+   aMyFunc[ UR_DELETE       ] := @LOGRDD_DELETE()
+   aMyFunc[ UR_RECALL       ] := @LOGRDD_RECALL()
+   aMyFunc[ UR_PUTVALUE     ] := @LOGRDD_PUTVALUE()
+   aMyFunc[ UR_ZAP          ] := @LOGRDD_ZAP()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )
@@ -383,14 +383,9 @@ STATIC PROCEDURE OpenLogFile( nWA )
       IF hb_FileExists( cFileName )
          nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
       ELSE
-         nHandle := FCreate( cFileName )
-         /* Close and reopen in shared mode */
-         IF FError() == 0 .AND. nHandle != F_ERROR
-            FClose( nHandle )
-            nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
-         ENDIF
+         nHandle := hb_FCreate( cFileName, FC_NORMAL, FO_READWRITE + FO_SHARED )
       ENDIF
-      IF FError() == 0 .AND. nHandle != F_ERROR
+      IF nHandle != F_ERROR
          /* Move to end of file */
          FSeek( nHandle, 0, FS_END )
       ELSE
@@ -409,33 +404,33 @@ STATIC FUNCTION ToString( cCmd, nWA, xPar1, xPar2, xPar3 )
 
    DO CASE
    CASE cCmd == "CREATE"
-      // Parameters received: xPar1 = aOpenInfo
+      // Parameters received: xPar1: aOpenInfo
       cString := xPar1[ UR_OI_NAME ]
    CASE cCmd == "CREATEFIELDS"
-      // Parameters received: xPar1 = aStruct
+      // Parameters received: xPar1: aStruct
       cString := hb_ValToExp( xPar1 )
    CASE cCmd == "OPEN"
-      // Parameters received: xPar1 = aOpenInfo
-      cString := 'Table : "' + xPar1[ UR_OI_NAME ] + '", Alias : "' + Alias() + '", WorkArea : ' + hb_ntos( nWA )
+      // Parameters received: xPar1: aOpenInfo
+      cString := 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
    CASE cCmd == "CLOSE"
-      // Parameters received: xPar1 = cTableName, xPar2 = cAlias
-      cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + hb_ntos( nWA )
+      // Parameters received: xPar1: cTableName, xPar2: cAlias
+      cString := 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
    CASE cCmd == "APPEND"
-      // Parameters received: xPar1 = lUnlockAll
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      // Parameters received: xPar1: lUnlockAll
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "DELETE"
       // Parameters received: none
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "RECALL"
       // Parameters received: none
-      cString := Alias() + "->RecNo() = " + hb_ntos( RecNo() )
+      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
    CASE cCmd == "PUTVALUE"
-      // Parameters received: xPar1 = nField, xPar2 = xValue, xPar3 = xOldValue
+      // Parameters received: xPar1: nField, xPar2: xValue, xPar3: xOldValue
       HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
       cString := Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
    CASE cCmd == "ZAP"
       // Parameters received: none
-      cString := 'Alias : "' + Alias() + ' Table : "' + dbInfo( DBI_FULLPATH ) + '"'
+      cString := 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
    ENDCASE
 
    RETURN cString

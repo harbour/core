@@ -3,12 +3,12 @@ Hi All,
 Harbour 3.0.0 (r16951) source archives and Windows binary
 releases are available for download on sourceforge.net:
 
-   http://sourceforge.net/projects/harbour-project/files/
+   https://sourceforge.net/projects/harbour-project/files/
 
 Make sure to check README.md "Build Your Own Harbour App"
 section and visit our user' mailing list at:
 
-   http://groups.google.com/group/harbour-users/
+   https://groups.google.com/group/harbour-users/
 
 Release notes:
 -----------------------------------------------------------------------
@@ -78,7 +78,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - hbwin cleanups/fixes (printer handling) and improvements (mutex, MAPI, misc)
 - hbwin OLE2, ActiveX support improved and finalized.
 - hbwin full UNICODE support and cleanups.
-- hbwin basic win64 .dll support.
+- hbwin basic 64-bit .dll support.
 - hbtip POP3/SMTP fixes, encoding/charset support.
 - Added hbmemio contrib.
 - hbnetio finalized.
@@ -88,15 +88,15 @@ Changes since previous (2.0.0beta3 20090905) release:
 - hbmk2 got support to convert xMate, hbmake and xbuild make files to .hbp
   format.
 - Added hbsms contrib library (to send SMS text messages in multiplatform way).
-- gtwvg now builds in win64 mode.
+- gtwvg now builds in 64-bit mode.
 - Rudimentary port of GTWVW (find it in examples)
 - New hbcairo wrapper for cairo lib.
 - Improved code portability for startup code, C++ mode and
   to support for old GCC versions.
 - Added public Harbour C level API to handle GC collected pure pointers.
 - Added workaround fox Pelles C 6.0 bug, so now it can be used
-  with Harbour for win32 and wince. Win64 build still doesn't work,
-  due to other POCC6 bugs.
+  with Harbour for Windows 32-bit and wince. Windows 64-bit
+  build still doesn't work, due to other POCC6 bugs.
 - Fixed to support MSVC 6.0.
 - dlmalloc memory allocator now also optimized for MT mode.
 - DJGPP builds received support for .dxe dynamic libs.
@@ -118,7 +118,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - Embedded libharu made available for MS-DOS Harbour builds,
   plus many other leveling of MS-DOS port.
 - Added Blowfish encryption functions to core.
-- Added experimental win64 binary build of GNU Make.
+- Added experimental Windows 64-bit binary build of GNU Make.
 - Synced with some new features that appeared in xhb, plus some missing
   features from past versions.
 - New Harbour port to Haiku/BeOS.

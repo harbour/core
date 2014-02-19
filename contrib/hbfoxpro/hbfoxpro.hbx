@@ -23,7 +23,6 @@
 
 DYNAMIC AElement
 DYNAMIC Filter
-DYNAMIC fox___DynCall
 DYNAMIC FSize
 DYNAMIC InsMode
 DYNAMIC Key
@@ -37,6 +36,7 @@ DYNAMIC SRows
 DYNAMIC Sys
 DYNAMIC VarRead
 DYNAMIC __fox_Array
+DYNAMIC __fox_DynCall
 DYNAMIC __fox_Seek
 DYNAMIC __fox_Used
 

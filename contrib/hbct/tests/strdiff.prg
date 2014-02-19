@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,12 +61,12 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  StrDiff( "ABC", "ADC" ) == 3 ?  -> ', StrDiff( "ABC", "ADC" )
-   ? '  StrDiff( "ABC", "AEC" ) == 3 ?  -> ', StrDiff( "ABC", "AEC" )
-   ? '  StrDiff( "CBA", "ABC" ) == 6 ?  -> ', StrDiff( "CBA", "ABC" )
-   ? '  StrDiff( "ABC", "AXBC" ) == 1 ? -> ', StrDiff( "ABC", "AXBC" )
-   ? '  StrDiff( "AXBC", "ABC" ) == 6 ? -> ', StrDiff( "AXBC", "ABC" )
-   ? '  StrDiff( "AXBC", "ADC" ) == 9 ? -> ', StrDiff( "AXBC", "ADC" )
+   ? '  StrDiff( "ABC", "ADC" ) == 3 ?  -->', StrDiff( "ABC", "ADC" )
+   ? '  StrDiff( "ABC", "AEC" ) == 3 ?  -->', StrDiff( "ABC", "AEC" )
+   ? '  StrDiff( "CBA", "ABC" ) == 6 ?  -->', StrDiff( "CBA", "ABC" )
+   ? '  StrDiff( "ABC", "AXBC" ) == 1 ? -->', StrDiff( "ABC", "AXBC" )
+   ? '  StrDiff( "AXBC", "ABC" ) == 6 ? -->', StrDiff( "AXBC", "ABC" )
+   ? '  StrDiff( "AXBC", "ADC" ) == 9 ? -->', StrDiff( "AXBC", "ADC" )
 
    ? "End test of StrDiff()"
    ?

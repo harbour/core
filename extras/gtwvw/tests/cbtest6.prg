@@ -75,12 +75,12 @@ PROCEDURE Main()
    // reset combobox list:
    s_aComboList := {}
 
-   @ 0, 0 SAY     "Name :" GET mname PICT "@K"
+   @ 0, 0 SAY     "Name :" GET mname PICTURE "@K"
    @ 1, 0 SAY     "Sex  :"
    @ 1, 7 COMBOBOX msex OPTIONS { "Male", "Female", "Unknown" } WIDTH 10
    @ 2, 0 SAY     "Stat :"
    @ 2, 7 COMBOBOX mstat OPTIONS { "Married", "Unmarried", "Widowed" } WIDTH 15
-   @ 3, 0 SAY     "age  :" GET mage PICT "999"
+   @ 3, 0 SAY     "age  :" GET mage PICTURE "999"
    READ
 
    // disable all comboboxes:
@@ -125,7 +125,7 @@ PROCEDURE Main()
  * CBN_SELCHANGE: (1)
  * (do nothing)
  */
-FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
+STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    LOCAL i, ccursel
    LOCAL oGet := GetActive()
@@ -138,7 +138,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    IF Empty( GetList )
       MyAlert( "Bad practice: you left an active combobox, but READ already ended" )
-      RETURN NIL // ignore this event
+      RETURN  // ignore this event
    ENDIF
 
    DO CASE
@@ -178,7 +178,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
             hb_keyPut( K_LBUTTONDOWN )
          ENDIF // oGet:HasFocus
 
-      ELSE  // i==0
+      ELSE
          /* there's no GET object beneath the combobox.
           * This must be a combobox living in the wild.
           * Do what you want with it, we do nothing here.
@@ -193,7 +193,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
 /************* custom get reader ******************/
 
@@ -202,7 +202,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 // Some notes:
 // oGet:cargo stores combobox id over this oGet
 //
-FUNCTION CBreader( oGet )
+STATIC PROCEDURE CBreader( oGet )
 
    LOCAL nKey, bKeyBlock
    LOCAL oGetList := __GetListActive()
@@ -214,38 +214,39 @@ FUNCTION CBreader( oGet )
    oGet:setfocus()
    nKey := Inkey( 0 )
 
-   IF nKey == K_ENTER
+   DO CASE
+   CASE nKey == K_ENTER
       // NOTE that in WVW_CB_KBD_CLIPPER mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_UP
+   CASE nKey == K_UP
       oGet:exitState := GE_UP
 
-   ELSEIF nKey == K_SH_TAB
+   CASE nKey == K_SH_TAB
       oGet:exitState := GE_UP
 
-   ELSEIF nKey == K_DOWN
+   CASE nKey == K_DOWN
       // NOTE that in WVW_CB_KBD_STANDARD mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_TAB
+   CASE nKey == K_TAB
       oGet:exitState := GE_DOWN
 
-   ELSEIF nKey == K_ESC
+   CASE nKey == K_ESC
       IF Set( _SET_ESCAPE )
          oGet:exitState := GE_ESCAPE
       ENDIF
 
-   ELSEIF nKey == K_PGUP
+   CASE nKey == K_PGUP
       oGet:exitState := GE_WRITE
 
-   ELSEIF nKey == K_PGDN
+   CASE nKey == K_PGDN
       oGet:exitState := GE_WRITE
 
-   ELSEIF nKey == K_CTRL_HOME
+   CASE nKey == K_CTRL_HOME
       oGet:exitState := GE_TOP
 
-   ELSEIF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+   CASE nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
       // is there any GET object hit?
       IF ! Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
          oGet:exitState := GE_MOUSEHIT
@@ -253,18 +254,18 @@ FUNCTION CBreader( oGet )
          oGet:exitState := GE_NOEXIT
       ENDIF
 
-   ELSEIF HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
+   CASE HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
       oGetList:GetDoSetKey( bKeyBlock )  // Eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 
-   ENDIF
+   ENDCASE
 
    IF oGet:exitState != GE_NOEXIT
       SetWinFocus( NIL )  // assume current window
       oGet:killfocus()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 #if 0
 // move focus to GET object at GetList[nPos]
@@ -294,16 +295,16 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
    RETURN .T.
 #endif
 
-/* miscellaneous **********************************/
+/* miscellaneous */
 
 // Set FOCUS to window nWinNum
-STATIC FUNCTION SetWinFocus( nWinNum )
+STATIC PROCEDURE SetWinFocus( nWinNum )
 
    LOCAL hWnd := wvw_GetWindowHandle( nWinNum )
 
    win_SetFocus( hWnd )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION MyAlert( cMsg, par2, par3, par4, par5, par6 )
 

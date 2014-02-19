@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,12 +46,15 @@
  *
  */
 
+#pragma -gc0
+
 #include "dbstruct.ch"
 
 FUNCTION __dbCopyStruct( cFileName, aFieldList )
    RETURN dbCreate( cFileName, __dbStructFilter( dbStruct(), aFieldList ) )
 
 FUNCTION __dbCopyXStruct( cFileName )
+
    LOCAL nOldArea
    LOCAL aStruct
 
@@ -99,16 +102,14 @@ FUNCTION __dbCopyXStruct( cFileName )
          (cCodePage, nConnection). */
 
 FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
+
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
 
    LOCAL oError
 
    __defaultNIL( @lNew, .F. )
-
-   IF cAlias == NIL
-      hb_FNameSplit( cFileName, NIL, @cAlias )
-   ENDIF
+   __defaultNIL( @cAlias, hb_FNameName( cFileName ) )
 
    IF Used() .AND. ! lNew
       dbCloseArea()
@@ -141,7 +142,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
          /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C"
             and padded/continued strings ("C ", "C...") are also accepted. */
 
-         AEval( aStruct, {| aField | iif( Upper( Left( aField[ DBS_TYPE ], 1 ) ) == "C" .AND. aField[ DBS_DEC ] != 0,;
+         AEval( aStruct, {| aField | iif( hb_LeftIsI( aField[ DBS_TYPE ], "C" ) .AND. aField[ DBS_DEC ] != 0,;
             ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
               aField[ DBS_DEC ] := 0 ), NIL ) } )
 
@@ -159,6 +160,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLedit() */
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )
+
    LOCAL aStructFiltered
    LOCAL bFindName
    LOCAL cName

@@ -6,14 +6,13 @@
 
 -w3 -es2
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 encurlc.c
 utils.c
 
 cgi.prg
 client.prg
-credent.prg
 encb64.prg
 encoder.prg
 encqp.prg
@@ -22,8 +21,9 @@ ftpcli.prg
 httpcli.prg
 log.prg
 mail.prg
+mailassy.prg
+mailsend.prg
 popcli.prg
-sendmail.prg
 sessid.prg
 smtpcli.prg
 thtml.prg

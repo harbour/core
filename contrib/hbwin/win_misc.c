@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -133,12 +133,31 @@ HB_FUNC( WIN_LOADRESOURCE )
 
    if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
    {
+      HRSRC hRes;
+
+      LPCTSTR szName;
+      LPCTSTR szType;
+
       void * hName;
       void * hType;
 
-      HRSRC hRes = FindResource( ( HMODULE ) hInstance,
-                                 HB_PARSTRDEF( 1, &hName, NULL ),
-                                 HB_PARSTRDEF( 2, &hType, NULL ) );
+      if( HB_ISNUM( 1 ) )
+      {
+         szName = MAKEINTRESOURCE( hb_parni( 1 ) );
+         hName = NULL;
+      }
+      else
+         szName = HB_PARSTRDEF( 1, &hName, NULL );
+
+      if( HB_ISNUM( 2 ) )
+      {
+         szType = MAKEINTRESOURCE( hb_parni( 2 ) );
+         hType = NULL;
+      }
+      else
+         szType = HB_PARSTRDEF( 2, &hType, NULL );
+
+      hRes = FindResource( ( HMODULE ) hInstance, szName, szType );
 
       if( hRes )
       {
@@ -260,49 +279,53 @@ HB_FUNC( WIN_HIWORD )
 
 HB_FUNC( WIN_SYSREFRESH )
 {
-   DWORD dwMsec = ( DWORD ) hb_parnl( 1 );
-
    HANDLE hDummyEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
-   /* Begin the operation and continue until it is complete
-      or until the user clicks the mouse or presses a key. */
-
-   if( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( dwMsec == 0 ? INFINITE : dwMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
+   if( hDummyEvent )
    {
-      MSG msg;
+      DWORD dwMsec = ( DWORD ) hb_parnl( 1 );
 
-      while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+      /* Begin the operation and continue until it is complete
+         or until the user clicks the mouse or presses a key. */
+
+      if( MsgWaitForMultipleObjects( 1, &hDummyEvent, FALSE, ( dwMsec == 0 ? INFINITE : dwMsec ), QS_ALLINPUT | QS_ALLPOSTMESSAGE ) == WAIT_OBJECT_0 + 1 )
       {
-         switch( msg.message )
+         MSG msg;
+
+         while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
          {
-            case WM_CLOSE:
-               CloseHandle( hDummyEvent );
-               hb_retni( 1 );
-               return;
-            case WM_QUIT:
-               CloseHandle( hDummyEvent );
-               hb_retnint( msg.wParam );
-               return;
+            switch( msg.message )
+            {
+               case WM_CLOSE:
+                  CloseHandle( hDummyEvent );
+                  hb_retni( 1 );
+                  return;
+               case WM_QUIT:
+                  CloseHandle( hDummyEvent );
+                  hb_retnint( msg.wParam );
+                  return;
 #if 0
-            case WM_LBUTTONDOWN:
-            case WM_RBUTTONDOWN:
-            case WM_KEYDOWN:
-            case WM_LBUTTONUP:
-            case WM_RBUTTONUP:
-            case WM_KEYUP:
-               /* Perform any required cleanup. */
-               break;
-               /* exit; */
+               case WM_LBUTTONDOWN:
+               case WM_RBUTTONDOWN:
+               case WM_KEYDOWN:
+               case WM_LBUTTONUP:
+               case WM_RBUTTONUP:
+               case WM_KEYUP:
+                  /* Perform any required cleanup. */
+                  break;
+                  /* exit; */
 
 #endif
-            default:
-               TranslateMessage( &msg );
-               DispatchMessage( &msg );
+               default:
+                  TranslateMessage( &msg );
+                  DispatchMessage( &msg );
+            }
          }
       }
+
+      CloseHandle( hDummyEvent );
    }
 
-   CloseHandle( hDummyEvent );
    hb_retni( 0 );
 }
 

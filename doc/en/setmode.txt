@@ -55,16 +55,16 @@
    $EXAMPLES$
       // The first example change to a 12 lines of display mode:
       IF SetMode( 12, 40 )
-         ? "Hey man are you blind ?"
+         ? "Hey man are you blind?"
       ELSE
-         ? "Mom bring me my glasses!"
+         ? "Mom, bring me my glasses!"
       ENDIF
 
       // Next example change to a 50 lines mode:
       IF SetMode( 50, 80 )
          ? "This wonderful mode was successfully set"
       ELSE
-         ? "Wait. this monitor are not made in rubber !"
+         ? "Wait. this monitor is not made of rubber!"
       ENDIF
    $STATUS$
       R

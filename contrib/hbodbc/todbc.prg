@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -163,10 +163,8 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    LOCAL nRet
 
-   hb_default( @lCache, .T. )
-
    ::cODBCStr := cODBCStr
-   ::lCacheRS := lCache
+   ::lCacheRS := hb_defaultValue( lCache, .T. )
 
    // Allocates SQL Environment
    IF ( nRet := SQLAllocEnv( @::hEnv ) ) != SQL_SUCCESS
@@ -177,10 +175,7 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    SQLAllocConnect( ::hEnv, @::hDbc )  // Allocates SQL Connection
 
    IF HB_ISSTRING( cUserName )
-
-      hb_default( @cPassword, "" )
-
-      IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
+      IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, hb_defaultValue( cPassword, "" ) ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
          // TODO: Some error here
       ENDIF
    ELSE
@@ -305,7 +300,7 @@ METHOD Open() CLASS TODBC
 
       // Get number of rows in result set
       nResult := SQLRowCount( ::hStmt, @nRows )
-      IF nResult  == SQL_SUCCESS
+      IF nResult == SQL_SUCCESS
          ::nRecCount := nRows
       ENDIF
 
@@ -398,9 +393,7 @@ METHOD FieldByName( cField ) CLASS TODBC
    LOCAL xRet := NIL
 
    IF HB_ISSTRING( cField )
-      nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == Upper( cField ) } )
-
-      IF nRet != 0
+      IF ( nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == Upper( cField ) } ) ) != 0
          xRet := ::Fields[ nRet ]
       ELSE
          // TODO: Some error here
@@ -587,17 +580,9 @@ METHOD Skip() CLASS TODBC
 // NOTE: Current implementation usable only with drivers that report number of records in last select
 METHOD Eof() CLASS TODBC
 
-   LOCAL lResult
-
    // Do we have any data in recordset?
 
-   IF ::nRecCount > 0
-      lResult := ( ::nRecNo > ::nRecCount )
-   ELSE
-      lResult := .T.
-   ENDIF
-
-   RETURN lResult
+   RETURN ::nRecCount == 0 .OR. ::nRecNo > ::nRecCount
 
 // Checks for Begining of File
 METHOD Bof() CLASS TODBC
@@ -625,19 +610,19 @@ METHOD LoadData( nPos ) CLASS TODBC
    LOCAL uData
    LOCAL i
 
-   FOR i := 1 TO Len( ::Fields )
+   FOR EACH i IN ::Fields
 
       uData := ""
 
       IF ::lCacheRS .AND. ::Active
          IF nPos > 0 .AND. nPos <= ::nRecCount
-            uData := ::aRecordSet[ nPos, i ]
+            uData := ::aRecordSet[ nPos ][ i:__enumIndex() ]
          ENDIF
       ELSE
 
-         SQLGetData( ::hStmt, ::Fields[ i ]:FieldID, SQL_CHAR, 256, @uData )
+         SQLGetData( ::hStmt, i:FieldID, SQL_CHAR, 256, @uData )
 
-         SWITCH ::Fields[ i ]:DataType
+         SWITCH i:DataType
          CASE SQL_LONGVARCHAR
             uData := AllTrim( uData )
             EXIT
@@ -645,7 +630,7 @@ METHOD LoadData( nPos ) CLASS TODBC
          CASE SQL_CHAR
          CASE SQL_VARCHAR
          CASE SQL_NVARCHAR
-            uData := PadR( uData, ::Fields[ i ]:DataSize )
+            uData := PadR( uData, i:DataSize )
             EXIT
 
          CASE SQL_TIMESTAMP
@@ -666,15 +651,15 @@ METHOD LoadData( nPos ) CLASS TODBC
          CASE SQL_INTEGER
          CASE SQL_FLOAT
          CASE SQL_REAL
-            uData := Round( Val( StrTran( uData, ",", "." ) ), ::Fields[ i ]:DataDecs )
-            uData := hb_odbcNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
+            uData := Round( Val( StrTran( uData, ",", "." ) ), i:DataDecs )
+            uData := hb_odbcNumSetLen( uData, i:DataSize, i:DataDecs )
             EXIT
 
          ENDSWITCH
 
       ENDIF
 
-      ::Fields[ i ]:Value := uData
+      i:Value := uData
 
    NEXT
 

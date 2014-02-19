@@ -10,17 +10,17 @@ PROCEDURE Main()
    ? "Testing math function: Exp(), Log() and Sqrt():"
    ?
    ? "  I) Test with correct arguments:"
-   ? "     Exp(0.0) == 1.00         ? ", Exp( 0.0 )
-   ? "     Exp(1.0) == 2.71(8)...  ? ", Exp( 1.0 )
-   ? "     Exp(-1.0) == 0.36(7)... ? ", Exp( -1.0 )
+   ? "     Exp(0.0) == 1.00        ?", Exp( 0.0 )
+   ? "     Exp(1.0) == 2.71(8)...  ?", Exp( 1.0 )
+   ? "     Exp(-1.0) == 0.36(7)... ?", Exp( -1.0 )
    ?
-   ? "     Log(1.0) == 0.00        ? ", Log( 1.0 )
-   ? "     Log(2.7) == 0.99(3)...  ? ", Log( 2.7 )
-   ? "     Log(0.36) == -1.02(1)... ? ", Log( 0.36 )
+   ? "     Log(1.0) == 0.00         ?", Log( 1.0 )
+   ? "     Log(2.7) == 0.99(3)...   ?", Log( 2.7 )
+   ? "     Log(0.36) == -1.02(1)... ?", Log( 0.36 )
    ?
-   ? "     Sqrt(1.0) == 1.00      ? ", Sqrt( 1.0 )
-   ? "     Sqrt(4.0) == 2.00      ? ", Sqrt( 4.0 )
-   ? "     Sqrt(2.0) == 1.41(4).. ? ", Sqrt( 2.0 )
+   ? "     Sqrt(1.0) == 1.00      ?", Sqrt( 1.0 )
+   ? "     Sqrt(4.0) == 2.00      ?", Sqrt( 4.0 )
+   ? "     Sqrt(2.0) == 1.41(4).. ?", Sqrt( 2.0 )
    ?
    ? "  II) Test with numeric but incorrect arguments:"
    ?
@@ -28,7 +28,7 @@ PROCEDURE Main()
    ? "       Exp(-1000) == 0.00   ?", Exp( -1000 )
    ? "       Exp(1000) == ****... ?", Exp( 1000 )
    ?
-   ? "       Log(0) == ****...  ?", Log( 0 )
+   ? "       Log(0) == ****...    ?", Log( 0 )
    ? "       Log(-10) == *****... ?", Log( -10 )
    ?
    ? "       Sqrt(-4) == 0.00 ?", Sqrt( -4 )
@@ -40,7 +40,7 @@ PROCEDURE Main()
    ? "       Exp(-1000) == 0.00   ?", Exp( -1000 )
    ? "       Exp(1000) == ****... ?", Exp( 1000 )
    ?
-   ? "       Log(0) == ****...  ?", Log( 0 )
+   ? "       Log(0) == ****...    ?", Log( 0 )
    ? "       Log(-10) == *****... ?", Log( -10 )
    ?
    ? "       Sqrt(-4) == 0.00 ?", Sqrt( -4 )
@@ -64,7 +64,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
+STATIC FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
 
    LOCAL cStr := "!! Local handling of math error MATH/"
 
@@ -78,9 +78,9 @@ FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
    ENDIF
    cStr += "):"
    ? cStr
-   ? "!!                              " + cError
+   ? "!!                             ", cError
    IF aInfo[ HB_MATHERRORBLOCK_HANDLED ]
-      ? "!!                               --> already handled with return value: " + ;
+      ? "!!                               --> already handled with return value:", ;
          hb_ntos( aInfo[ HB_MATHERRORBLOCK_RETVAL ] )
       RETURN 1
    ENDIF

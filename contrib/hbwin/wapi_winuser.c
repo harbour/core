@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -268,14 +268,22 @@ HB_FUNC( WAPI_GETSCROLLINFO )
    LPSCROLLINFO si = ( LPSCROLLINFO ) hbwapi_par_raw_STRUCT( 3 );
    BOOL         bSuccess;
 
-   bSuccess = GetScrollInfo( hbwapi_par_raw_HWND( 1 ),
-                             hbwapi_par_INT( 2 ),
-                             si );
+   if( si )
+   {
+      bSuccess = GetScrollInfo( hbwapi_par_raw_HWND( 1 ),
+                                hbwapi_par_INT( 2 ),
+                                si );
 
-   hbwapi_SetLastError( GetLastError() );
+      hbwapi_SetLastError( GetLastError() );
 
-   if( bSuccess )
-      hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
+      if( bSuccess )
+         hb_storclen( ( char * ) &si, 3, sizeof( SCROLLINFO ) );
+   }
+   else
+   {
+      bSuccess = HB_FALSE;
+      hb_storc( "", 3 );
+   }
 
    hbwapi_ret_L( bSuccess );
 }
@@ -560,7 +568,7 @@ HB_FUNC( WAPI_TRACKPOPUPMENU )
                               hbwapi_par_UINT( 2 ),            /* uFlags */
                               hbwapi_par_INT( 3 ),             /* x */
                               hbwapi_par_INT( 4 ),             /* y */
-                              hbwapi_par_INT( 5 ),             /* nReserved */
+                              0,                               /* nReserved */
                               hWnd ? hWnd : GetActiveWindow(), /* hWnd */
                               NULL /* prcRect */ );
    hbwapi_SetLastError( GetLastError() );
@@ -852,4 +860,22 @@ HB_FUNC( WAPI_DESTROYACCELERATORTABLE )
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( fResult );
+}
+
+HB_FUNC( WAPI_GETKEYBOARDLAYOUT )
+{
+   hbwapi_ret_DWORD( ( DWORD ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
+}
+
+HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )
+{
+   TCHAR szName[ KL_NAMELENGTH ];
+   BOOL bResult;
+
+   szName[ 0 ] = TEXT( '\0' );
+   bResult = GetKeyboardLayoutName( szName );
+
+   hbwapi_SetLastError( GetLastError() );
+   HB_STORSTR( szName, 1 );
+   hbwapi_ret_L( bResult );
 }

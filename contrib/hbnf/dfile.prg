@@ -46,21 +46,20 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       hb_default( @nRMargin    , 255 )
       hb_default( @nBuffSize   , 4096 )
 
-      IF HB_ISARRAY( cExitKeys ) /* Harbour extension */
+      DO CASE
+      CASE HB_ISARRAY( cExitKeys ) /* Harbour extension */
          IF Len( cExitKeys ) > 25
             ASize( cExitKeys, 25 )
          ENDIF
-      ELSEIF HB_ISSTRING( cExitKeys )
+      CASE HB_ISSTRING( cExitKeys )
          cExitKeys := Left( cExitKeys, 25 )
-      ELSE
+      OTHERWISE
          cExitKeys := {}
-      ENDIF
+      ENDCASE
 
       t_nHandle := FOpen( cInFile )
 
-      rval := FError()
-
-      IF rval == 0
+      IF ( rval := FError() ) == 0
          rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
             nStart, nCNormal, nCHighlight, cExitKeys, ;
             lBrowse, nColSkip, nRMargin, nBuffSize )
@@ -71,7 +70,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    RETURN rval
 
-FUNCTION ft_DFClose()
+PROCEDURE ft_DFClose()
 
    IF t_nHandle != F_ERROR
       _ft_DFClos()
@@ -81,4 +80,4 @@ FUNCTION ft_DFClose()
       t_nHandle := F_ERROR
    ENDIF
 
-   RETURN NIL
+   RETURN

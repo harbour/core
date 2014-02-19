@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -180,9 +180,9 @@ HB_FUNC( XDL_INIT_MMFILE )
       hb_xfree( mmf );
 }
 
-/*
-   HB_FUNC( XDL_FREE_MMFILE )
-   {
+#if 0
+HB_FUNC( XDL_FREE_MMFILE )
+{
    HB_MMF * phb_mmf = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
    if( phb_mmf && phb_mmf->mmf )
@@ -192,8 +192,8 @@ HB_FUNC( XDL_INIT_MMFILE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
- */
+}
+#endif
 
 /* int xdl_mmfile_iscompact(mmfile_t *mmf) */
 
@@ -336,26 +336,32 @@ HB_FUNC( XDL_MMFILE_CMP )
 
 HB_FUNC( XDL_MMFILE_COMPACT )
 {
-   HB_MMF *   phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
-   mmfile_t * mmfc     = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
+   HB_MMF * phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
-   if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
-                           ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+   if( phb_mmfo )
    {
-      HB_MMF * phb_mmf;
+      mmfile_t * mmfc = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
 
-      phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-      hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
-      phb_mmf->mmf = mmfc;
-      hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+      if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
+                              ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+      {
+         HB_MMF * phb_mmf;
 
-      hb_stornl( 0, 4 );
+         phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
+         hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
+         phb_mmf->mmf = mmfc;
+         hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+
+         hb_stornl( 0, 4 );
+      }
+      else
+      {
+         hb_xfree( mmfc );
+         hb_stornl( -1, 4 );
+      }
    }
    else
-   {
-      hb_xfree( mmfc );
-      hb_stornl( -1, 4 );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* callbacks */
@@ -426,9 +432,9 @@ HB_FUNC( XDL_DIFF )
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
-      else if( HB_ISBLOCK( 5 ) || HB_ISSYMBOL( 5 ) )
+      else if( HB_ISEVALITEM( 5 ) )
       {
-         PHB_ITEM pCallback = hb_param( 5, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 5, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -498,9 +504,9 @@ HB_FUNC( XDL_BDIFF )
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
-      else if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
+      else if( HB_ISEVALITEM( 4 ) )
       {
-         PHB_ITEM pCallback = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 4, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -536,9 +542,9 @@ HB_FUNC( XDL_RABDIFF )
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -570,9 +576,9 @@ HB_FUNC( XDL_BPATCH )
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;

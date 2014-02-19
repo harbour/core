@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,9 +56,9 @@
 #endif
 
 #define HB_VER_MAJOR    3        /* Major version number */
-#define HB_VER_MINOR    2        /* Minor version number */
+#define HB_VER_MINOR    4        /* Minor version number */
 #define HB_VER_RELEASE  0        /* Release number */
 #define HB_VER_STATUS   "dev"    /* Build status (all lowercase) */
-#define __HARBOUR__     0x030200 /* Three bytes: Major + Minor + Release. This is recommented for 3rd party .c and .prg level code. */
+#define __HARBOUR__     0x030400 /* Three bytes: Major + Minor + Release. This is recommented for 3rd party .c and .prg level code. */
 
 #endif /* HB_VER_H_ */

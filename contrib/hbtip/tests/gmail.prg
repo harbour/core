@@ -17,11 +17,11 @@ PROCEDURE Main( cFrom, cPassword, cTo )
       RETURN
    ENDIF
 
-   hb_default( @cFrom    , "<myname@gmail.com>" )
+   hb_default( @cFrom    , "<example@gmail.com>" )
    hb_default( @cPassword, "<mypassword>" )
-   hb_default( @cTo      , "addressee@domain.com" )
+   hb_default( @cTo      , "addressee@example.com" )
 
-   ? hb_SendMail( ;
+   ? tip_MailSend( ;
       "smtp.gmail.com", ;
       465, ;
       cFrom, ;

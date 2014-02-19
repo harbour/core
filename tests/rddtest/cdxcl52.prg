@@ -11,7 +11,7 @@ REQUEST dbfcdx
 #define _TESTRDD "dbfcdx"
 #include "rddtst.prg"
 
-FUNCTION test_main()
+PROCEDURE test_main()
 
 RDDTESTC {0,.t.,.t.,.f.}, LOCAL n
 RDDTESTF "DBFCDX", {0,.t.,.t.,.f.}, RDDSETDEFAULT()
@@ -23,7 +23,7 @@ RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOTO(0)
 RDDTESTF NIL, {1,.f.,.t.,.f.}, DBSKIP(1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(0)
-RDDTESTC {1,.t.,.f.,.f.}, SET DELETE ON
+RDDTESTC {1,.t.,.f.,.f.}, SET DELETED ON
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOTOP()
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOBOTTOM()
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBSKIP(0)
@@ -31,7 +31,7 @@ RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOTO(0)
 RDDTESTF NIL, {1,.f.,.t.,.f.}, DBSKIP(1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(0)
-RDDTESTC {1,.t.,.f.,.f.}, SET DELETE OFF
+RDDTESTC {1,.t.,.f.,.f.}, SET DELETED OFF
 RDDTESTC {1,.t.,.t.,.f.}, INDEX on FNUM tag TG_N to "_tst"
 RDDTESTC {1,.t.,.t.,.f.}, INDEX on FSTR tag TG_C to "_tst"
 RDDTESTF "TG_C", {1,.t.,.t.,.f.}, ORDSETFOCUS()
@@ -42,7 +42,7 @@ RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOTO(0)
 RDDTESTF NIL, {1,.f.,.t.,.f.}, DBSKIP(1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {1,.t.,.f.,.f.}, DBSKIP(0)
-RDDTESTC {1,.t.,.f.,.f.}, SET DELETE ON
+RDDTESTC {1,.t.,.f.,.f.}, SET DELETED ON
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOTOP()
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBGOBOTTOM()
 RDDTESTF NIL, {1,.t.,.t.,.f.}, DBSKIP(0)
@@ -55,7 +55,7 @@ RDDTESTF .f., {1,.t.,.t.,.f.}, DBSEEK("", .T.,.F.)
 RDDTESTF .f., {1,.t.,.t.,.f.}, DBSEEK("", .T.,.T.)
 RDDTESTF .f., {1,.t.,.t.,.f.}, DBSEEK("", .F.,.F.)
 RDDTESTF .f., {1,.t.,.t.,.f.}, DBSEEK("", .F.,.T.)
-RDDTESTC {1,.t.,.t.,.f.}, SET DELETE OFF
+RDDTESTC {1,.t.,.t.,.f.}, SET DELETED OFF
 RDDTESTC {15,.f.,.f.,.f.}, for n:=1 to 15                    ; dbappend()                          ; replace FNUM with int((n+2)/3)      ; replace FSTR with chr(FNUM+48)      ; next
 RDDTESTF NIL, {15,.f.,.f.,.f.}, dbcommit()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, dbunlock()
@@ -264,7 +264,7 @@ RDDTESTF NIL, {6,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {16,.f.,.t.,.f.}, DBSKIP(1)
 RDDTESTF "TG_C", {16,.f.,.t.,.f.}, ORDSETFOCUS(0)
-RDDTESTC {16,.f.,.t.,.f.}, SET DELETE ON
+RDDTESTC {16,.f.,.t.,.f.}, SET DELETED ON
 RDDTESTF .t., {16,.t.,.t.,.f.}, FLOCK()
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBDELETE()
@@ -333,16 +333,16 @@ RDDTESTF NIL, {11,.f.,.f.,.f.}, DBGOTO(11)
 RDDTESTF NIL, {7,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {11,.f.,.f.,.f.}, DBGOTO(11)
 RDDTESTF NIL, {16,.f.,.t.,.f.}, DBSKIP(1)
-RDDTESTC {16,.f.,.t.,.f.}, SET DELETE OFF
+RDDTESTC {16,.f.,.t.,.f.}, SET DELETED OFF
 RDDTESTF .t., {16,.t.,.t.,.f.}, FLOCK()
 RDDTESTC {16,.f.,.t.,.f.}, RECALL ALL
 RDDTESTF NIL, {16,.f.,.t.,.f.}, DBUNLOCK()
-RDDTESTC {16,.f.,.t.,.f.}, SET DELETE ON
+RDDTESTC {16,.f.,.t.,.f.}, SET DELETED ON
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTOP()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, DBGOBOTTOM()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, DBCOMMIT()
 RDDTESTF "", {15,.f.,.f.,.f.}, ORDSETFOCUS(1)
-RDDTESTC {15,.f.,.f.,.f.}, SET DELETE ON
+RDDTESTC {15,.f.,.f.,.f.}, SET DELETED ON
 RDDTESTF .t., {15,.f.,.f.,.f.}, FLOCK()
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBDELETE()
@@ -414,11 +414,11 @@ RDDTESTF NIL, {11,.f.,.f.,.f.}, DBGOTO(11)
 RDDTESTF NIL, {7,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {11,.f.,.f.,.f.}, DBGOTO(11)
 RDDTESTF NIL, {16,.f.,.t.,.f.}, DBSKIP(1)
-RDDTESTC {16,.f.,.t.,.f.}, SET DELETE OFF
+RDDTESTC {16,.f.,.t.,.f.}, SET DELETED OFF
 RDDTESTF .t., {16,.t.,.t.,.f.}, FLOCK()
 RDDTESTC {16,.f.,.t.,.f.}, RECALL ALL
 RDDTESTF NIL, {16,.f.,.t.,.f.}, DBUNLOCK()
-RDDTESTC {16,.f.,.t.,.f.}, SET DELETE ON
+RDDTESTC {16,.f.,.t.,.f.}, SET DELETED ON
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTOP()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, DBGOBOTTOM()
 RDDTESTF NIL, {15,.f.,.f.,.f.}, DBCOMMIT()
@@ -456,4 +456,4 @@ RDDTESTF .t., {13,.f.,.f.,.t.}, DBSEEK(padr("5",10)+"*",.T.,.T.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.F.)
 RDDTESTF .f., {16,.f.,.t.,.f.}, DBSEEK(padr("6",10)+"*",.T.,.T.)
 
-RETURN NIL
+RETURN

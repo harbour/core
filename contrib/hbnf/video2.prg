@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,19 +47,10 @@
  */
 
 FUNCTION ft_CLS( nTop, nLeft, nBottom, nRight, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, nColor )
+   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, hb_defaultValue( nColor, 0 ) )
 
 FUNCTION ft_VidStr( nRow, nCol, cString, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_DispOutAt( nRow, nCol, cString, nColor )
+   RETURN hb_DispOutAt( nRow, nCol, cString, hb_defaultValue( nColor, 0 ) )
 
 FUNCTION ft_WrtChr( nRow, nCol, cChar, nColor )
-
-   hb_default( @nColor, 0 )
-
-   RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )
+   RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), hb_defaultValue( nColor, 0 ) )

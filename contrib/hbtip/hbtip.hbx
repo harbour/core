@@ -21,13 +21,6 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC ANSIToHtml
-DYNAMIC hb_MailAssemble
-DYNAMIC hb_SendMail
-DYNAMIC hb_SetMimeType
-DYNAMIC HtmlToANSI
-DYNAMIC HtmlToOEM
-DYNAMIC OEMToHtml
 DYNAMIC THtmlCleanup
 DYNAMIC THtmlDocument
 DYNAMIC THtmlInit
@@ -43,14 +36,12 @@ DYNAMIC TIPClientFTP
 DYNAMIC TIPClientHTTP
 DYNAMIC TIPClientPOP
 DYNAMIC TIPClientSMTP
-DYNAMIC TIPCredentials
 DYNAMIC TIPEncoder
 DYNAMIC TIPEncoderBase64
 DYNAMIC TIPEncoderQP
 DYNAMIC TIPEncoderUrl
 DYNAMIC TIPLog
 DYNAMIC TIPMail
-DYNAMIC tip_Base64Encode
 DYNAMIC tip_CheckSID
 DYNAMIC tip_CRLF
 DYNAMIC tip_DateToGMT
@@ -63,6 +54,8 @@ DYNAMIC tip_GetRawEmail
 DYNAMIC tip_HtmlSpecialChars
 DYNAMIC tip_HtmlToStr
 DYNAMIC tip_JSONSpecialChars
+DYNAMIC tip_MailAssemble
+DYNAMIC tip_MailSend
 DYNAMIC tip_MimeType
 DYNAMIC tip_QPDecode
 DYNAMIC tip_QPEncode
@@ -72,7 +65,7 @@ DYNAMIC tip_TimeStamp
 DYNAMIC tip_URLDecode
 DYNAMIC tip_URLEncode
 DYNAMIC TUrl
-DYNAMIC __tip_PStrCompI
+DYNAMIC __tip_FAttrToUmask
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTIP__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,6 +60,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
+#include "fileio.ch"
 
 CREATE CLASS THtmlFrameSet
 
@@ -70,34 +71,27 @@ CREATE CLASS THtmlFrameSet
    VAR TITLE INIT "FrameSet01"
 
    METHOD New( cFName, cTitle )
-
    METHOD StartSet( aRows, aCols, onLoad, onUnload )
-
    METHOD EndSet()
-
    METHOD End()
-
    METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling )
 
 ENDCLASS
 
-
 METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @cTitle, "" )
-
    ::FName := cFName
-   ::Title := cTitle
+   ::Title := hb_defaultValue( cTitle, "" )
 
    IF HB_ISSTRING( ::FName )
       cStr := ""
       ::nH := FCreate( ::FName )
    ELSE
       cStr := "Content-Type: text/html" + CRLF() + CRLF()
-      ::nH := STD_OUT
+      ::nH := hb_GetStdOut()
    ENDIF
 
    cStr += "<html>" + CRLF() + ;
@@ -121,7 +115,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' rows="'
 
       FOR EACH cItem in aRows
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
@@ -135,7 +129,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += ' cols="'
 
       FOR EACH cItem IN aCols
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
@@ -158,36 +152,31 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    RETURN Self
 
-
 METHOD Endset() CLASS THtmlFrameSet
 
    ::cStr += " </frameset>" + CRLF()
 
    RETURN Self
 
-
 METHOD End() CLASS THtmlFrameSet
 
    ::cStr += "</html>" + CRLF()
 
-   FWrite( ::nH, ::cStr )
+   IF ::nH != F_ERROR
+      FWrite( ::nH, ::cStr )
 
-   IF ::FName != NIL
-      FClose( ::nH )
+      IF HB_ISSTRING( ::FName )
+         FClose( ::nH )
+      ENDIF
    ENDIF
 
    RETURN Self
-
 
 METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @lBorder, .T. )
-   __defaultNIL( @lResize, .T. )
-   __defaultNIL( @lScrolling, .F. )
-   __defaultNIL( @cScrolling, "AUTO" )
    __defaultNIL( @cTarget, "_self" )
 
    cStr := "  <frame "
@@ -204,24 +193,22 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += ' target="' + cTarget + '"'
    ENDIF
 
-   IF ! lBorder
-      cStr += ' frameborder="0"'
-   ELSE
+   IF hb_defaultValue( lBorder, .T. )
       cStr += ' frameborder="1"'
+   ELSE
+      cStr += ' frameborder="0"'
    ENDIF
 
-   IF ! lResize
+   IF ! hb_defaultValue( lResize, .T. )
       cStr += " noresize"
    ENDIF
 
    IF HB_ISSTRING( cScrolling )
       cStr += ' scrolling="' + cScrolling + '"'
+   ELSEIF HB_ISLOGICAL( lScrolling )
+      cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
    ELSE
-      IF lScrolling != NIL
-         cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
-      ELSE
-         cStr += ' scrolling="auto"'
-      ENDIF
+      cStr += ' scrolling="auto"'
    ENDIF
 
    IF HB_ISNUMERIC( marginwidth )

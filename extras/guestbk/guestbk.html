@@ -1,30 +1,46 @@
+<!DOCTYPE html>
 <html>
 <head>
-<title>The Harbour Guestbook</title>
-<meta name="Author" content="" />
-<meta name="Keywords" content="" />
-<meta name="Description" content="" />
+	<meta charset="UTF-8" />
+	<title>The Harbour Guestbook</title>
 </head>
-
-<!-- Harbour Guestbook Webpage             -->
-<!-- Copyright (C) 1999 by Felipe G. Coury -->
-<body bgcolor="#FFFFFF">
-<center><b>Harbour GuestBook Script</b></center>
-<hr>
-<center>
-<form name="GuestBook" action="/cgi-bin/guestbk.exe" method="GET">
-<table>
-  <tr><td><font size=2><b>Name:</b></td><td><input name="Name" type="text" size="60"></td></tr>
-  <tr><td><font size=2><b>City/State/Country:</td><td><input name="City" TYPE="text" size="20"><input name="State" type="text" size="20"><input name="Country" type="text" size="20"></td></tr>
-  <tr><td><font size=2><b>E-Mail:</td><td><input name="EMail" type="text" size="30"></td></tr>
-  <tr><td><font size=2><b>Homepage:</td><td><input name="Homepage" type="text" size="40"></td></tr>
-  <tr><td valign="top"><font size=2><b>Comments:</td><td><textarea name="Comments" rows="5" cols="60"></textarea></td></tr>
-</table>
-<input type="Submit" value=" Submit Entry ">&nbsp;<input type="Reset" value=" Reset Data "><br />
-<input type="Hidden" name="Oper" value="A">
-</center>
-</form>
-<hr>
-<#Entries>
+<body bgcolor="#ffffff">
+	<center><b>Harbour GuestBook Script</b></center>
+	<hr>
+	<center>
+		<form name="GuestBook" action="/cgi-bin/guestbk.exe" method="GET">
+			<table>
+				<tr>
+					<td><font size=2><b>Name:</b></td>
+					<td><input name="Name" type="text" size="60"></td>
+				</tr>
+				<tr>
+					<td><font size=2><b>City/State/Country:</td>
+					<td>
+						<input name="City" type="text" size="20">
+						<input name="State" type="text" size="20">
+						<input name="Country" type="text" size="20">
+					</td>
+				</tr>
+				<tr>
+					<td><font size=2><b>E-Mail:</td>
+					<td><input name="EMail" type="text" size="30"></td>
+				</tr>
+				<tr>
+					<td><font size=2><b>Homepage:</td>
+					<td><input name="Homepage" type="text" size="40"></td>
+				</tr>
+				<tr>
+					<td valign="top"><font size=2><b>Comments:</td>
+					<td><textarea name="Comments" rows="5" cols="60"></textarea></td>
+				</tr>
+			</table>
+			<input type="Submit" value=" Submit Entry ">&nbsp;
+			<input type="Reset" value=" Reset Data "><br />
+			<input type="Hidden" name="Oper" value="A">
+		</form>
+	</center>
+	<hr>
+	<#Entries>
 </body>
 </html>

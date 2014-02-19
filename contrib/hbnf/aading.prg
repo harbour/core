@@ -19,7 +19,7 @@
 
 FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
 
-   LOCAL nElement, bScanCode
+   LOCAL element, bScanCode
    LOCAL aNewArray := AClone( aList1 )
 
    __defaultNIL( @lCaseSens, .T. )
@@ -27,30 +27,24 @@ FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
 
    // Assign code blocks according to case sensitivity and trim.
    IF lCaseSens
-      IF lTrimmer // Ignore spaces
-         bScanCode := {| x | ;
-            AllTrim( x ) == ;
-            AllTrim( aList2[ nElement ] ) }
+      IF lTrimmer
+         bScanCode := {| x | AllTrim( x ) == AllTrim( element ) }
       ELSE
-         bScanCode := {| x | x == ( aList2[ nElement ] ) }
+         bScanCode := {| x | x == element }
       ENDIF
    ELSE // Ignore case
-      IF lTrimmer // Ignore spaces
-         bScanCode := {| x | ;
-            Upper( AllTrim( x ) ) == ;
-            Upper( AllTrim( aList2[ nElement ] ) ) }
+      IF lTrimmer
+         bScanCode := {| x | Upper( AllTrim( x ) ) == Upper( AllTrim( element ) ) }
       ELSE
-         bScanCode := {| x | ;
-            Upper( x ) == ;
-            Upper( aList2[ nElement ] ) }
+         bScanCode := {| x | Upper( x ) == Upper( element ) }
       ENDIF
    ENDIF
 
    // Add the unique elements of aList2 to aList1.
-   FOR nElement := 1 TO Len( aList2 )
+   FOR EACH element IN aList2
       // If unique, then add element to new array.
       IF AScan( aList1, bScanCode ) == 0
-         AAdd( aNewArray, aList2[ nElement ] )
+         AAdd( aNewArray, element )
       ENDIF
    NEXT
 

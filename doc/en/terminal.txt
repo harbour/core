@@ -721,11 +721,11 @@
 
       On compile time this command is translated into __Eject() function.
    $EXAMPLES$
-      USE Clientes NEW
+      USE clients NEW
       SET DEVICE TO PRINTER
       CurPos := 0
-      WHILE ! Eof()
-         ? Clientes->nome, Clientes->endereco
+      DO WHILE ! Eof()
+         ? clients->NAME, clients->ADDRESS
          Curpos++
          IF Curpos > 59
             Curpos := 0

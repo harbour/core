@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -33,7 +33,6 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL GetList := {}
    LOCAL hCommands
    LOCAL nSavedRow
-   LOCAL nPos
    LOCAL aCommand
    LOCAL cCommand
 
@@ -138,12 +137,12 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
       ENDIF
       nHistIndex := Len( aHistory ) + 1
 
-      aCommand := hb_ATokens( cCommand, " " )
+      aCommand := hb_ATokens( cCommand )
       IF ! Empty( aCommand )
-         IF ( nPos := hb_HPos( hCommands, Lower( aCommand[ 1 ] ) ) ) > 0
-            Eval( hb_HValueAt( hCommands, nPos )[ 3 ], cCommand )
+         IF Lower( aCommand[ 1 ] ) $ hCommands
+            Eval( hCommands[ Lower( aCommand[ 1 ] ) ][ 3 ], cCommand )
          ELSE
-            IF Left( cCommand, Len( netcliID ) + 1 ) == netcliID + "."
+            IF hb_LeftIs( cCommand, netcliID + "." )
                IF ! Eval( netclictrl[ "cmd" ], netclictx, SubStr( cCommand, Len( netcliID ) + 2 ) )
                   hbnetiocon_ToConsole( hb_StrFormat( "Error: Unknown command '%1$s'.", cCommand ) )
                ENDIF
@@ -179,7 +178,7 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
    /* We need at least one character to search */
    IF Len( s ) > 1
       FOR EACH n IN hCommands
-         IF s == Lower( Left( n:__enumKey(), Len( s ) ) )
+         IF hb_LeftIsI( n:__enumKey(), s )
             cCommand := PadR( n:__enumKey(), Len( cCommand ) )
             ManageCursor( cCommand )
             RETURN

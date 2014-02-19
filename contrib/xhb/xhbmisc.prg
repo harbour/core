@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,16 +52,17 @@
 FUNCTION Occurs( s1, s2 )
 
    LOCAL nCount := 0
-   LOCAL nPos := 0
+   LOCAL nPos
 
    IF HB_ISSTRING( s1 ) .AND. HB_ISSTRING( s2 )
+      nPos := 0
 #if defined( HB_CLP_STRICT )
       DO WHILE ( nPos := hb_At( s1, s2, nPos + 1 ) ) != 0
-         nCount++
+         ++nCount
       ENDDO
 #else
       DO WHILE ( nPos := hb_At( s1, s2, nPos ) ) != 0
-         nCount++
+         ++nCount
          nPos += Len( s1 )
       ENDDO
 #endif

@@ -134,9 +134,9 @@
          PRIVATE mPrivate
 
          mPrivate := "PRIVATE from Main()"
-         ? mPrivate     //PRIVATE from Main()
+         ? mPrivate     // PRIVATE from Main()
          Test()
-         ? mPrivate     //PRIVATE from Main()
+         ? mPrivate     // PRIVATE from Main()
 
          RETURN
 
@@ -144,9 +144,9 @@
          PRIVATE mPrivate
 
          mPrivate := "PRIVATE from Main()"
-         ? mPrivate           //PRIVATE from Main()
+         ? mPrivate           // PRIVATE from Main()
          RELEASE mPrivate
-         ? mPrivate           //NIL
+         ? mPrivate           // NIL
          mPrivate := "Again in Main()"
 
          RETURN
@@ -614,13 +614,13 @@
       Note that FieldBlock() works on the current work area, if you need
       a specific work area code block use FieldWBlock() instead.
    $EXAMPLES$
-      // open a file named Test that have a field named "name"
+      // open a file named test.dbf that have a field named "name"
       LOCAL bField
       bFiled := FieldBlock( "name" )
-      USE Test
-      ? "Original value of field 'name' :", Eval( bField )
+      USE test
+      ? "Original value of field 'name':", Eval( bField )
       Eval( bField, "Mr X new name" )
-      ? "New value for the field 'name' :", Eval( bField )
+      ? "New value for the field 'name':", Eval( bField )
    $STATUS$
       R
    $COMPLIANCE$
@@ -680,10 +680,10 @@
       SELECT 2
       USE two
       SELECT 1
-      ? "Original names: ", One->name, Two->name
-      ? "Name value for file Two :", Eval( bField )
+      ? "Original names:", One->name, Two->name
+      ? "Name value for file Two:", Eval( bField )
       Eval( bField, "Two has new name" )
-      ? "and now: ", One->name, Two->name
+      ? "and now:", One->name, Two->name
    $STATUS$
       R
    $COMPLIANCE$

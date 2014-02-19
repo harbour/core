@@ -35,22 +35,23 @@ FUNCTION ft_AcctYear( dGivenDate )
    aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
    aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   IF dGivenDate < aRetVal[ 2 ]
+   DO CASE
+   CASE dGivenDate < aRetVal[ 2 ]
 
-      aRetVal    := ft_Year( ft_MAdd( dGivenDate, -1 ) )
+      aRetVal := ft_Year( ft_MAdd( dGivenDate, -1 ) )
       nYTemp--
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ELSEIF dGivenDate > aRetVal[ 3 ]
+   CASE dGivenDate > aRetVal[ 3 ]
 
-      aRetVal    := ft_Year( ft_MAdd( dGivenDate, 1 ) )
+      aRetVal := ft_Year( ft_MAdd( dGivenDate, 1 ) )
       nYTemp++
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ENDIF
+   ENDCASE
 
-   aRetVal[ 1 ] := Str( nYTemp, 4 )
+   aRetVal[ 1 ] := StrZero( nYTemp, 4 )
 
    RETURN aRetVal

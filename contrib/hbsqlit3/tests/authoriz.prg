@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -84,23 +84,20 @@ PROCEDURE Main()
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   // Authorizer1
-   sqlite3_set_authorizer( pDb, @Authorizer() /*"Authorizer"*/ )
+   sqlite3_set_authorizer( pDb, @Authorizer() )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
-   cb := @CallBack() // "CallBack"
+   cb := @CallBack()
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
-   // Authorizer2
-   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() /*"Authorizer2"*/ ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() ) )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
-   // Authorizer3
-   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() /*"Authorizer3"*/ ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() ) )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. )
@@ -114,7 +111,7 @@ PROCEDURE Main()
 /**
 */
 
-FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    LOCAL oldColor := SetColor( "R/N" )
 
@@ -127,7 +124,7 @@ FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName 
 /**
 */
 
-FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    LOCAL oldColor := SetColor( "R/N" )
 
@@ -140,7 +137,7 @@ FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 /**
 */
 
-FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    HB_SYMBOL_UNUSED( cName1 )
    HB_SYMBOL_UNUSED( cName2 )
@@ -152,7 +149,7 @@ FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 /**
 */
 
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )

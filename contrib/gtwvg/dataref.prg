@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -97,9 +97,9 @@ METHOD WvgDataRef:getData()
 
    DO CASE
    CASE ::className() == "COMBOBOX"
-      IF HB_ISOBJECT( ::XbpListBox ) .AND. HB_ISBLOCK( ::XbpListBox:dataLink )
+      IF HB_ISOBJECT( ::XbpListBox ) .AND. HB_ISEVALITEM( ::XbpListBox:dataLink )
          ::sl_editBuffer := ::XbpListBox:getData()
-      ELSEIF HB_ISOBJECT( ::XbpSLE ) .AND. HB_ISBLOCK( ::XbpSLE:dataLink )
+      ELSEIF HB_ISOBJECT( ::XbpSLE ) .AND. HB_ISEVALITEM( ::XbpSLE:dataLink )
          ::sl_editBuffer := ::XbpSLE:getData()
       ELSEIF HB_ISOBJECT( ::XbpListBox )
          ::sl_editBuffer := ::XbpListBox:getData()
@@ -123,7 +123,7 @@ METHOD WvgDataRef:getData()
 #endif
    ENDCASE
 
-   IF HB_ISBLOCK( ::dataLink )
+   IF HB_ISEVALITEM( ::dataLink )
       Eval( ::dataLink, ::sl_editBuffer )
    ENDIF
 
@@ -135,7 +135,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-   IF HB_ISBLOCK( ::dataLink )
+   IF HB_ISEVALITEM( ::dataLink )
       ::sl_editBuffer := Eval( ::dataLink  )
    ELSEIF xValue != NIL
       ::sl_editBuffer := xValue
@@ -185,9 +185,9 @@ METHOD WvgDataRef:undo()
 
 METHOD WvgDataRef:validate( xParam )
 
-   IF PCount() == 0 .AND. HB_ISBLOCK( ::sl_validate )
+   IF PCount() == 0 .AND. HB_ISEVALITEM( ::sl_validate )
       RETURN Eval( ::sl_validate, self )
-   ELSEIF HB_ISBLOCK( xParam )
+   ELSEIF HB_ISEVALITEM( xParam )
       ::sl_validate := xParam
    ENDIF
 

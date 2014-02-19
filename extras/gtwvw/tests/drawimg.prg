@@ -99,9 +99,9 @@ PROCEDURE Main()
       CLS
       SetCursor( SC_NORMAL )
       cpict := PadR( cpict, 40 )
-      @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID hb_FileExists( AllTrim( cpict ) )
-      @ 1, 0 SAY "Transpar? :" GET ltransp PICT "Y"
-      @ 2, 0 SAY "Max Cache :" GET nMaxCache PICT "999"
+      @ 0, 0 SAY "FileName  :" GET cpict PICTURE "@K" VALID hb_FileExists( AllTrim( cpict ) )
+      @ 1, 0 SAY "Transpar? :" GET ltransp PICTURE "Y"
+      @ 2, 0 SAY "Max Cache :" GET nMaxCache PICTURE "999"
       @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
          ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
       READ
@@ -162,9 +162,7 @@ PROCEDURE Main()
 
 // ************** simple wpaint organizer *******
 
-/*********************************************************/
-
-CREATE CLASS wGUIObj
+CREATE CLASS wGUIObj STATIC
 
    VAR nWinNum                      // parent window's number
    VAR lVisible                     // is the object visible
@@ -177,7 +175,7 @@ ENDCLASS
 
 /*********************************************************/
 
-CREATE CLASS wPaintObj FROM wGUIObj
+CREATE CLASS wPaintObj FROM wGUIObj STATIC
 
    // image like wvtimage
    VAR cImage
@@ -229,7 +227,7 @@ METHOD Draw() CLASS wPaintObj
       // lBoxErrMessage()
    ENDCASE
 
-   RETURN NIL  // DRAW()
+   RETURN NIL
 
 // undraw the object
 // normally this is called with ::lVisible == .F.,
@@ -261,7 +259,7 @@ METHOD Undraw() CLASS wPaintObj
    RestScreen( nRow1, nCol1, nRow2, nCol2, cScreen )
    DispEnd()
 
-   RETURN NIL // undraw()
+   RETURN NIL
 
 METHOD Hide() CLASS wPaintObj
 
@@ -283,7 +281,7 @@ METHOD Show() CLASS wPaintObj
 
 // clears all wPaint objects from window nWinNum
 // if nObjNum specified, clears object >= nObjNum
-FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
+STATIC FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
    hb_default( @nObjNum, 0 )
    hb_default( @lStrict, .F. )
@@ -298,7 +296,7 @@ FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
 // adds a WPaint object oWPaint into window nWinNum
 // returns ::cId if successful. "" if failed.
-FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
+STATIC FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    LOCAL i
 
@@ -340,7 +338,7 @@ FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 // returns number of object deleted.
 //
 // NOTE: if cId is NIL, delete all object of type nType
-FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
+STATIC FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i
    LOCAL lDelAll := ( cId == NIL )
@@ -365,8 +363,8 @@ FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
          ELSE
             s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
          ENDIF
-         ADel( s_aPObjList[ nWinNum + 1 ], i )
-         ASize( s_aPObjList[ nWinNum + 1 ], --nLen )
+         hb_ADel( s_aPObjList[ nWinNum + 1 ], i, .T. )
+         nLen--
          nDeleted++
       ELSE
          i++

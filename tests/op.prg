@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,16 +48,11 @@
 
 #include "hbclass.ch"
 
-// Right now you can overload operators with Harbour
-// as C++ does!!! Not all operators are available. ASAP we will provide all
-// of them.
-
-
-//
+// You can overload operators with Harbour as C++ does!
 
 PROCEDURE Main()
 
-   LOCAL oCar := TCar():New( "red", 2 )
+   LOCAL oCar := TCar():New( "Red", 2 )
    LOCAL oPetrol := NIL
 
    oCar := oCar + oPetrol
@@ -72,39 +67,28 @@ CREATE CLASS TCar
 
    VAR cColor
    VAR nDoors
-   VAR oGas
 
    METHOD New( cColor, nDoors ) CONSTRUCTOR
 
-   METHOD SUM( oObject ) OPERATOR '+'
+   METHOD Sum( oObject ) OPERATOR '+'
 
 ENDCLASS
 
-//
-
 METHOD New( cColor, nDoors ) CLASS TCar
 
-   IF cColor == NIL
-      cColor := "White"
-   ENDIF
-   IF nDoors == NIL
-      nDoors := 4
-   ENDIF
+   hb_default( @cColor, "White" )
+   hb_default( @nDoors, 4 )
 
    ::cColor := cColor
    ::nDoors := nDoors
 
    RETURN Self
 
-//
-
-METHOD SUM( oObject ) CLASS TCar
+METHOD Sum( oObject ) CLASS TCar
 
    HB_SYMBOL_UNUSED( oObject )
 
    Alert( "+ has a special meaning and " + ;
-      "functionality for TCar Class objects!!!" )
+      "functionality for TCar Class objects!" )
 
    RETURN NIL
-
-//

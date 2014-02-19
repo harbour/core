@@ -21,7 +21,10 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hbtest_AllTypes
+DYNAMIC hbtest_AllValues
 DYNAMIC hbtest_Call
+DYNAMIC hbtest_Object
 DYNAMIC hbtest_Setup
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__REQUEST )

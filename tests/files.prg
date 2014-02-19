@@ -40,14 +40,14 @@ PROCEDURE Main()
    DO WHILE n < NFILES
       n++
       @ 10, 0 SAY "Building files.... " + Str( n )
-      dbCreate( "file" + hb_ntos( n ), aCampos )
-      USE ( "file" + hb_ntos( n ) ) NEW
+      dbCreate( "file" + hb_ntos( n ) + ".dbf", aCampos )
+      USE ( "file" + hb_ntos( n ) + ".dbf" ) NEW
 
 #ifdef WITH_ADS
-      INDEX ON CODIGO TAG CODIGO TO ( "file" + hb_ntos( n ) )
+      INDEX ON field->CODIGO TAG CODIGO TO ( "file" + hb_ntos( n ) )
 #endif
 
-      CLOSE DATA
+      dbCloseArea()
    ENDDO
 
    n := 0
@@ -55,15 +55,15 @@ PROCEDURE Main()
    DO WHILE n < NFILES
       n++
       @ 12, 0 SAY "Opening files.... " + Str( n )
-      USE ( "file" + hb_ntos( n ) ) NEW
+      USE ( "file" + hb_ntos( n ) + ".dbf" ) NEW
 
 #ifdef WITH_ADS
-      SET ORDER TO TAG CODIGO
+      ordSetFocus( "CODIGO" )
 #endif
 
    ENDDO
 
-   CLOSE DATA
+   dbCloseAll()
 
    n := 0
 

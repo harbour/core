@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,14 +54,14 @@
 
 static HB_BOOL s_bToOutputDebug = HB_TRUE;
 static HB_BOOL s_bToLogFile     = HB_TRUE;
-
-static HB_BOOL s_bEmptyLogFile = HB_TRUE;
+static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
 
 HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff )
 {
    HB_BOOL bOld = s_bToOutputDebug;
 
    s_bToOutputDebug = bOnOff;
+
    return bOld;
 }
 
@@ -85,6 +85,7 @@ HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff )
    HB_BOOL bOld = s_bToLogFile;
 
    s_bToLogFile = bOnOff;
+
    return bOld;
 }
 
@@ -93,6 +94,7 @@ HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff )
    HB_BOOL bOld = s_bEmptyLogFile;
 
    s_bEmptyLogFile = bOnOff;
+
    return bOld;
 }
 

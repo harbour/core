@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,9 +59,9 @@ PROCEDURE Main()
    ? "Begin test of AscPos()"
    ?
 
-   ? '  AscPos( "0123456789" ) == 57    ? --> ' + Str( AscPos( "0123456789" ) )
-   ? '  AscPos( "0123456789", 1 ) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
-   ? '  AscPos( "0123456789", 11 ) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
+   ? '  AscPos( "0123456789" ) == 57    ? -->', AscPos( "0123456789" )
+   ? '  AscPos( "0123456789", 1 ) == 48 ? -->', AscPos( "0123456789", 1 )
+   ? '  AscPos( "0123456789", 11 ) == 0 ? -->', AscPos( "0123456789", 11 )
 
    ?
    ? "End test of AscPos()"

@@ -21,16 +21,11 @@
 
 FUNCTION ft_Dec2Bin( x )
 
-   LOCAL buffer := { "0", "0", "0", "0", "0", "0", "0", "0" }
+   LOCAL buffer := ""
    LOCAL i
 
-   FOR i := 8 TO 1 STEP -1
-      IF x >= 2 ^ ( i - 1 )
-         x -= 2 ^ ( i - 1 )
-         buffer[ 9 - i ] := "1"
-      ENDIF
+   FOR i := 7 TO 0 STEP -1
+      buffer += iif( hb_bitTest( x, i ), "1", "0" )
    NEXT
 
-   RETURN ;
-      buffer[ 1 ] + buffer[ 2 ] + buffer[ 3 ] + buffer[ 4 ] + ;
-      buffer[ 5 ] + buffer[ 6 ] + buffer[ 7 ] + buffer[ 8 ]
+   RETURN buffer

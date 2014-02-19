@@ -1,4 +1,3 @@
-
 EXPORTS
 DllGetClassObject    = DllGetClassObject@12     PRIVATE
 DllCanUnloadNow      = DllCanUnloadNow@0        PRIVATE

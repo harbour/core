@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,15 +85,12 @@ ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDChart
 
-   hb_default( @sx, 320 )
-   hb_default( @sy, 200 )
-
    ::cTitle := "Chart"
    ::aSeries        := {}
    ::hDefs          := { => }
    ::aDataOfHashes  := {}
 
-   ::Create( sx, sy )
+   ::Create( hb_defaultValue( sx, 320 ), hb_defaultValue( sy, 200 ) )
 
    RETURN Self
 
@@ -155,24 +152,19 @@ METHOD PieChart() CLASS GDChart
    hb_default( @nWidth    , Min( ::Width(), ::Height() ) )
    hb_default( @cFontPitch, "TINY" )
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   // Before sum of values to determine perentual
+   // Before sum of values to determine percentual
    FOR EACH hElement IN aPieDataOfHash
       nTot += hElement[ "VALUE" ]
       // Check extrution
@@ -183,17 +175,13 @@ METHOD PieChart() CLASS GDChart
 
    nWidth -= ( nTotExtr + 2 ) * 2
 
-   // Second,
+   // Second
    FOR EACH hElement IN aPieDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      IF nExtrude != NIL
-         lExtruded := .T.
-      ELSE
-         lExtruded := .F.
-      ENDIF
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      lExtruded := ( nExtrude != NIL )
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := 360 * ( ( nVal / nTot ) * 100 ) / 100
@@ -243,7 +231,9 @@ METHOD PieChart() CLASS GDChart
             colorp    := ::GetPixel( nPosX, nPosY )
             textcolor := ::SetColor( 255 - ::Red( colorp ), 255 - ::Green( colorp ), 255 - ::Blue( colorp ) )
          ENDIF
-         // cTitle := hb_ntos( nVal )
+#if 0
+         cTitle := hb_ntos( nVal )
+#endif
          IF hFont == NIL
             ::Say( nPosX, nPosY, cLabel, textcolor, gdAlignCenter )
          ELSE
@@ -259,8 +249,11 @@ METHOD PieChart() CLASS GDChart
 METHOD VerticalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-// LOCAL nDegree := 0
-   LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
+   LOCAL pTile, lFilled
+#if 0
+   LOCAL nExtrude
+   LOCAL lExtruded
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -309,28 +302,22 @@ METHOD VerticalBarChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
-
-   // Before sum of values to determine perentual
+   // Before sum of values to determine percentual
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -408,23 +395,23 @@ METHOD VerticalBarChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //   lExtruded := .T.
-      // ELSE
-      //   lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      lExtruded := ( nExtrude != NIL )
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nHeight
 
       hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
@@ -453,7 +440,11 @@ METHOD VerticalBarChart() CLASS GDChart
 METHOD HorizontalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-   LOCAL lFilled, /* lExtruded, nExtrude, */ pTile
+   LOCAL pTile, lFilled
+#if 0
+   LOCAL nExtrude
+   LOCAL lExtruded
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -502,27 +493,22 @@ METHOD HorizontalBarChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    // Before sum of values to determine perentual
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -603,22 +589,22 @@ METHOD HorizontalBarChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
       lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //    lExtruded := .T.
-      // ELSE
-      //    lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      lExtruded := ( nExtrude != NIL )
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nWidth
       hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x
@@ -647,7 +633,12 @@ METHOD HorizontalBarChart() CLASS GDChart
 METHOD LineChart() CLASS GDChart
 
    LOCAL hElement
-   LOCAL /* lFilled, lExtruded, nExtrude, */ pTile
+   LOCAL pTile
+#if 0
+   LOCAL lFilled
+   LOCAL lExtruded
+   LOCAL nExtrude
+#endif
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -698,27 +689,22 @@ METHOD LineChart() CLASS GDChart
    hb_default( @nBorder, 4 )
 
    /*
-     hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
+      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
    */
 
-   DO CASE
-   CASE cFontPitch == "TINY"
-      ::SetFontTiny()
-   CASE cFontPitch == "SMALL"
-      ::SetFontSmall()
-   CASE cFontPitch == "MEDIUM"
-      ::SetFontMediumBold()
-   CASE cFontPitch == "LARGE"
-      ::SetFontLarge()
-   CASE cFontPitch == "GIANT"
-      ::SetFontGiant()
-   ENDCASE
+   SWITCH cFontPitch
+   CASE "TINY"   ; ::SetFontTiny()       ; EXIT
+   CASE "SMALL"  ; ::SetFontSmall()      ; EXIT
+   CASE "MEDIUM" ; ::SetFontMediumBold() ; EXIT
+   CASE "LARGE"  ; ::SetFontLarge()      ; EXIT
+   CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
+   ENDSWITCH
 
    // Before sum of values to determine percentual
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMax := hElement[ "VALUE" ]
       ELSE
          nMax := Max( nMax, hElement[ "VALUE" ] )
@@ -731,7 +717,7 @@ METHOD LineChart() CLASS GDChart
    nMinLabel := 0
    nMin      := 0
    FOR EACH hElement IN aDataOfHash
-      IF hElement:__enumIndex() == 1
+      IF hElement:__enumIsFirst()
          nMin := hElement[ "VALUE" ]
       ELSE
          nMin := Min( nMin, hElement[ "VALUE" ] )
@@ -835,24 +821,26 @@ METHOD LineChart() CLASS GDChart
       NEXT
    ENDIF
 
-   // Second,
+   // Second
    aPoints := {}
    FOR EACH hElement IN aDataOfHash
       cLabel    := __HGetValue( hElement, "LABEL" )
-      // lFilled   := __HGetValue( hElement, "FILLED" )
-      // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+#if 0
+      lFilled   := __HGetValue( hElement, "FILLED" )
+#endif
       pTile     := __HGetValue( hElement, "TILE" )
-      // IF nExtrude != NIL
-      //   lExtruded := .T.
-      // ELSE
-      //   lExtruded := .F.
-      // ENDIF
+#if 0
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      lExtruded := ( nExtrude != NIL )
+#endif
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( ( nVal + Abs( nMinValue ) ) / nTotRange ) * nHeight
 
-      // hb_default( @lFilled, .F. )
-      // hb_default( @nExtrude, 0 )
+#if 0
+      hb_default( @lFilled, .F. )
+      hb_default( @nExtrude, 0 )
+#endif
       hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
@@ -866,7 +854,9 @@ METHOD LineChart() CLASS GDChart
             colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
          ENDIF
       ENDIF
-      // ::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
+#if 0
+      ::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
+#endif
       AAdd( aPoints, { nPosX, ::Height() - ( nPosY + nDim ) } )
 
       IF lShowAxis
@@ -881,16 +871,18 @@ METHOD LineChart() CLASS GDChart
    // Draw lines
    nThick := ::SetThickness( 3 )
 
-   // ::ResetStyles()
-   // ::AddStyle( color )
-   // ::AddStyle( color )
-   // ::AddStyle( color )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::AddStyle( gdTransparent )
-   // ::SetStyle()
+#if 0
+   ::ResetStyles()
+   ::AddStyle( color )
+   ::AddStyle( color )
+   ::AddStyle( color )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::AddStyle( gdTransparent )
+   ::SetStyle()
+#endif
    FOR n := 1 TO Len( aPoints ) - 1
       ::Line( aPoints[ n ][ 1 ], aPoints[ n ][ 2 ], aPoints[ n + 1 ][ 1 ], aPoints[ n + 1 ][ 2 ], colorp )
    NEXT
@@ -911,19 +903,21 @@ METHOD Clone() CLASS GDChart
 
    pImage := oDestImage:pImage
    oDestImage := oDestImage:CloneDataFrom( Self )
-   // oDestImage := __objClone( Self )
+#if 0
+   oDestImage := __objClone( Self )
+#endif
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
-
-   // pImage := oDestImage:pImage
-   // // Signal that this image must not be destroyed
-   // oDestImage:lDestroy := .F.
-   // oDestImage := NIL
-   // oDestImage:pImage := pImage
+#if 0
+   pImage := oDestImage:pImage
+   // Signal that this image must not be destroyed
+   oDestImage:lDestroy := .F.
+   oDestImage := NIL
+   oDestImage:pImage := pImage
+#endif
 
    RETURN oDestImage
-
 
 METHOD CloneDataFrom( oSrc )
 
@@ -945,7 +939,6 @@ METHOD CloneDataFrom( oSrc )
    ::hDefs         := hb_HClone( oSrc:hDefs )
 
    RETURN Self
-
 
 STATIC FUNCTION __HGetValue( hHash, cKey )
    RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )

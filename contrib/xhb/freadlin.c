@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -169,13 +169,9 @@ HB_FUNC( HB_FREADLINE )
    HB_ISIZ       i, nTerms;
    HB_BOOL       bFound, bEOF;
 
-   if( ( ! HB_ISBYREF( 2 ) ) || ( ! HB_ISNUM( 1 ) ) )
+   if( ! HB_ISBYREF( 2 ) || ! HB_ISNUM( 1 ) )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-                            hb_paramError( 1 ),
-                            hb_paramError( 2 ),
-                            hb_paramError( 3 ),
-                            hb_paramError( 4 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
@@ -188,11 +184,7 @@ HB_FUNC( HB_FREADLINE )
 
          if( nTerms <= 0 )
          {
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-                                  hb_paramError( 1 ),
-                                  hb_paramError( 2 ),
-                                  hb_paramError( 3 ),
-                                  hb_paramError( 4 ) );
+            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
             return;
          }
 

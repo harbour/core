@@ -1,14 +1,18 @@
-/*
- * Sends a query to Google and displays the Links from the response HTML page
- */
+/* Sends a query to Google and displays the links from the response HTML page */
 
+#require "hbssl"
 #require "hbtip"
+
+REQUEST __HBEXTERN__HBSSL__
 
 PROCEDURE Main()
 
+   LOCAL cURL
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
-   oHttp := TIPClientHTTP():new( "http://www.google.com/search" )
+   ? "URL:", cURL := iif( tip_SSL(), "https://", "http://" ) + "www.google.com/search"
+
+   oHttp := TIPClientHTTP():New( cURL )
 
    /* build the Google query */
    hQUery := { => }
@@ -24,15 +28,15 @@ PROCEDURE Main()
    /* Connect to the HTTP server */
    IF ! oHttp:open()
       ? "Connection error:", oHttp:lastErrorMessage()
-      QUIT
+      RETURN
    ENDIF
 
    /* download the Google response */
-   cHtml   := oHttp:readAll()
+   cHtml := oHttp:readAll()
    oHttp:close()
-   ? Len( cHtml ), "bytes received "
+   ? hb_ntos( Len( cHtml ) ), "bytes received"
 
-   oDoc := THtmlDocument():new( cHtml )
+   oDoc := THtmlDocument():New( cHtml )
 
    oDoc:writeFile( "google.html" )
 

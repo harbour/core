@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
@@ -4105,6 +4105,7 @@ static void hb_compGenIncluded( HB_COMP_DECL )
 static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    pSwitches->fDebugInfo        = HB_COMP_PARAM->fDebugInfo;
+   pSwitches->fHideSource       = HB_COMP_PARAM->fHideSource;
    pSwitches->fAutoMemvarAssume = HB_COMP_PARAM->fAutoMemvarAssume;
    pSwitches->fI18n             = HB_COMP_PARAM->fI18n;
    pSwitches->fLineNumbers      = HB_COMP_PARAM->fLineNumbers;
@@ -4114,6 +4115,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    pSwitches->fForceMemvars     = HB_COMP_PARAM->fForceMemvars;
    pSwitches->iStartProc        = HB_COMP_PARAM->iStartProc;
    pSwitches->iWarnings         = HB_COMP_PARAM->iWarnings;
+   pSwitches->iGenCOutput       = HB_COMP_PARAM->iGenCOutput;
    pSwitches->iExitLevel        = HB_COMP_PARAM->iExitLevel;
    pSwitches->iHidden           = HB_COMP_PARAM->iHidden;
    pSwitches->supported         = HB_COMP_PARAM->supported;
@@ -4122,6 +4124,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    HB_COMP_PARAM->fDebugInfo        = pSwitches->fDebugInfo;
+   HB_COMP_PARAM->fHideSource       = pSwitches->fHideSource;
    HB_COMP_PARAM->fAutoMemvarAssume = pSwitches->fAutoMemvarAssume;
    HB_COMP_PARAM->fI18n             = pSwitches->fI18n;
    HB_COMP_PARAM->fLineNumbers      = pSwitches->fLineNumbers;
@@ -4131,6 +4134,7 @@ static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    HB_COMP_PARAM->fForceMemvars     = pSwitches->fForceMemvars;
    HB_COMP_PARAM->iStartProc        = pSwitches->iStartProc;
    HB_COMP_PARAM->iWarnings         = pSwitches->iWarnings;
+   HB_COMP_PARAM->iGenCOutput       = pSwitches->iGenCOutput;
    HB_COMP_PARAM->iExitLevel        = pSwitches->iExitLevel;
    HB_COMP_PARAM->iHidden           = pSwitches->iHidden;
    HB_COMP_PARAM->supported         = pSwitches->supported;

@@ -2613,7 +2613,7 @@ future.
 Both compilers were ported to many different platforms on different hardware.
 The list of supported platforms is really long: different *nixes (Linux,
 MacOSX, SunOS, HP-UX, *BSD,...) on little and big endian 32 and 64 bit
-machines, DOS, OS2, Win32, Win64 and WinCE (Harbour only).
+machines, DOS, OS2, Windows (32/64-bit) and WinCE (Harbour only).
 In practice they can be ported quite easy to nearly each OS and hardware
 if it passes two important conditions: it's ASCII based machine and has
 support for 8bit bytes. Due to cleaner code it's easier to port Harbour

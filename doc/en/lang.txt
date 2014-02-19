@@ -138,13 +138,13 @@
          ? hb_langName( "<non-existent>" )
          hb_langSelect( "pt" )       // Default language is now Portuguese
          ? CDoW( Date() )            // Segunda-feira
-         ? "Current language is ", hb_langName()             // Portuguese
-         ? "Old language id selected is ", hb_langSelect()   // PT
+         ? "Current language is", hb_langName()              // Portuguese
+         ? "Old language id selected is", hb_langSelect()    // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
          ? CMonth( Date() )          // Mai
-         ? "Old language id selected is ", hb_langSelect()   // RO
+         ? "Old language id selected is", hb_langSelect()    // RO
          hb_langSelect( "es" )       // Default language is now Spanish
-         ? "Current language is ", hb_langName()              // Spanish
+         ? "Current language is", hb_langName()              // Spanish
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes
          RETURN
@@ -236,10 +236,10 @@
       PROCEDURE Main()
          hb_langSelect( "pt" )       // Default language is now Portuguese
          ? CDoW( Date() )            // Segunda-feira
-         ? "Old language id selected is ", hb_langSelect()   // PT
+         ? "Old language id selected is", hb_langSelect()    // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
          ? CMonth( Date() )          // Mai
-         ? "Old language id selected is ", hb_langSelect()   // RO
+         ? "Old language id selected is", hb_langSelect()    // RO
          hb_langSelect( "es" )       // Default language is now Spanish
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -72,7 +72,7 @@
    #define MXML_LINE_TERMINATOR       '\r'
    #define MXML_SOFT_LINE_TERMINATOR  '\n'
 #else
-/*Notice, this works for unix AND windows */
+/* Notice, this works for both UNIX and Windows */
    #define MXML_LINE_TERMINATOR       '\n'
    #define MXML_SOFT_LINE_TERMINATOR  '\r'
 #endif
@@ -159,7 +159,7 @@ typedef struct tag_mxml_refil
    HB_ISIZ         buflen;  /* valid characters in the current buffer */
    HB_ISIZ         bufpos;  /* current position */
 
-   /* lenght of the stream for implementing progress indicators */
+   /* length of the stream for implementing progress indicators */
    HB_ISIZ streampos;
    HB_ISIZ streamlen;
 

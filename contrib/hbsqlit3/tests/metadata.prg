@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,29 +59,27 @@ PROCEDURE Main()
 
    RETURN
 
-/*
+//
 
-*/
-
-PROCEDURE test( db )
+STATIC PROCEDURE test( db )
 
    IF sqlite3_exec( db, "SELECT * FROM t1" ) == SQLITE_OK
       ? "TABLE t1"
 
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
-      ? "Column name :                id"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
+      ? "Column name:                id"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
 
-      ? "Column name :                name"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
+      ? "Column name:                name"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
 #endif
 
       sqlite3_sleep( 3000 )

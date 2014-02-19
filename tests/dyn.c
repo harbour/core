@@ -8,8 +8,8 @@
  */
 
 /* Build with:
-      hbmk2 -hbdyn dyn.c -otest_x86
-      hbmk2 -hbdyn dyn.c -otest_x64
+      hbmk2 -hbdyn dyn.c -otest_32
+      hbmk2 -hbdyn dyn.c -otest_64
  */
 
 #include "hbapi.h"

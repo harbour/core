@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#pragma -gc0
 
 #include "hbclass.ch"
 
@@ -247,10 +249,10 @@ METHOD display() CLASS PopupMenu
                IF ( nCharPos := RAt( SubStr( item:style, 2, 1 ), cCaption ) ) > 0
                   cCaption := Stuff( cCaption, nCharPos - 1, 1, "" )
                ELSE
-                  cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+                  cCaption := hb_StrShrink( cCaption )
                ENDIF
             ELSEIF nHotKeyPos == Len( RTrim( cCaption ) )
-               cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+               cCaption := hb_StrShrink( cCaption )
                nHotKeyPos := 0
             ELSE
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )

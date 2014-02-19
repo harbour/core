@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,15 +60,15 @@ PROCEDURE Main()
    ?
 
    ? "  Simple tests:"
-   ? '    WordRepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"? --> "' + WordRepl( "CC", "AABBCCDDEE", "XX" ) + '"'
-   ? '    WordRepl( "aa", "1aaaa", "ba" )      == "1abaa" ? ------> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    WordRepl( "aa", "1aaaa", "ba", .T. ) == "1baba" ? ------> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   ? '    WordRepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"? -->', '"' + WordRepl( "CC", "AABBCCDDEE", "XX" ) + '"'
+   ? '    WordRepl( "aa", "1aaaa", "ba" )      == "1abaa" ? ------>', '"' + WordRepl( "aa", "1aaaa", "ba" )      + '"'
+   ? '    WordRepl( "aa", "1aaaa", "ba", .T. ) == "1baba" ? ------>', '"' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
    ? "  Testing CSetAtMupa( .T. ) with lMode == .T.:"
    CSetAtMupa( .T. )
-   ? '    WordRepl( "aa", "1aaaa", "ba" )      == "1abaa" ? --> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    WordRepl( "aa", "1aaaa", "ba", .T. ) == "1bbba" ? --> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   ? '    WordRepl( "aa", "1aaaa", "ba" )      == "1abaa" ? -->', '"' + WordRepl( "aa", "1aaaa", "ba" )      + '"'
+   ? '    WordRepl( "aa", "1aaaa", "ba", .T. ) == "1bbba" ? -->', '"' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
    ? "End test of WordRepl()"

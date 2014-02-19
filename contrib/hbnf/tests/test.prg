@@ -1,32 +1,30 @@
-#require "hbnf"
+/* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
 
-#include "inkey.ch"
+#require "hbnf"
+#require "hbtest"
 
 PROCEDURE Main()
 
-   LOCAL nver, nmar, ntype, nir, ppp
+   HBTEST ft_AcctMonth( 0d19900915 )[ 1 ] IS "199009"
+   HBTEST ft_AcctMonth( 0d19900915 )[ 2 ] IS 0d19900902
+   HBTEST ft_AcctMonth( 0d19900915 )[ 3 ] IS 0d19900929
 
-   nmar := ft_MVersion( @nver, @ntype, @nir )
-   ppp := nmar + nver
-   ? Str( nmar, 2, 0 ), ".", Str( nver, 2, 0 )
-   ? ppp / 100
-   Inkey( 0 )
-   ? "is mouse on", ft_MReset()
-   Inkey( 0 )
-   ? ft_MShowCrs()
-   Inkey( 0 )
-   ? ft_MXLimit( 0, 8 * MaxCol() )
-   Inkey( 0 )
-   ? ft_MYLimit( 0, 8 * MaxRow() )
-   Inkey( 0 )
+   HBTEST ft_AcctMonth( 0d19900915, 5 )[ 1 ] IS "199005"
+   HBTEST ft_AcctMonth( 0d19900915, 5 )[ 2 ] IS 0d19900429
+   HBTEST ft_AcctMonth( 0d19900915, 5 )[ 3 ] IS 0d19900602
 
-   DO WHILE LastKey() != K_ESC
-      ? "mouse row is", ft_MGetX()
-      ? "mouse col is", ft_MGetY()
-      IF LastKey() == K_ESC
-         EXIT
-      ENDIF
-   ENDDO
-   ft_MHideCrs()
+   HBTEST ft_Easter( 1990 ) IS 0d19900415
+
+   HBTEST ft_ElapMin( "1718", "2040" ) IS 202
+   HBTEST ft_ElapMin( "2040", "1718" ) IS -202
+
+   HBTEST ft_ElTime( "22:40:12", "23:55:17" ) IS "01:15:05"
+   HBTEST ft_ElTime( "23:55:17", "22:40:12" ) IS "01:15:05"
+
+   HBTEST ft_EscCode( "\015" ) IS hb_BChar( 15 )
+   HBTEST ft_EscCode( "\\" )   IS "\"
+
+   HBTEST ft_InvClr( "GR+/B*" ) IS "B*+/GR"
+   HBTEST ft_InvClr( "GR/B" )   IS "B/GR"
 
    RETURN

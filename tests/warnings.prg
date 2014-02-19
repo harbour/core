@@ -2,24 +2,26 @@
 #ifdef __HARBOUR__
    #pragma -es0
 #else
-   #translate AS ARRAY [OF <type>] =>
-   #translate AS STRING =>
-   #translate AS CLASS <ClassName> =>
-   #translate AS NUMERIC =>
-   #translate AS DATE =>
-   #translate AS CODEBLOCK =>
-   #translate AS OBJECT =>
-   #translate AS LOGICAL =>
-   #translate AS USUAL =>
+   #xtranslate AS ARRAY [OF <type>] =>
+   #xtranslate AS STRING =>
+   #xtranslate AS CLASS <ClassName> =>
+   #xtranslate AS NUMERIC =>
+   #xtranslate AS DATE =>
+   #xtranslate AS CODEBLOCK =>
+   #xtranslate AS OBJECT =>
+   #xtranslate AS LOGICAL =>
+   #xtranslate AS USUAL =>
 
-   #command DECLARE <*x*> =>
+   #xtranslate OPTIONAL =>
+
+   #xcommand DECLARE <*x*> =>
 #endif
 
 DECLARE nMyFunc( cVar AS STRING, @nVar AS NUMERIC ) AS NUMERIC
 
 DECLARE cOtherFunc( ) AS STRING
 
-DECLARE cOtherFunc( @cVar as string, optional nVar as numeric, optional other /*as variant*/ ) AS STRING
+DECLARE cOtherFunc( @cVar AS STRING, OPTIONAL nVar AS NUMERIC, OPTIONAL other /* AS VARIANT */ ) AS STRING
 
 DECLARE Seconds() AS NUMERIC
 
@@ -27,22 +29,22 @@ DECLARE Int( n AS NUMERIC ) AS NUMERIC
 
 DECLARE TEST() AS NUMERIC
 
-DECLARE MyClass                              ;
+DECLARE MyClass ;
         nMyFunc( nVal AS NUMERIC) AS NUMERIC
 
-DECLARE MyClass                              ;
+DECLARE MyClass ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
-        cMyData    ;
-        aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Class MyClass ) As Class MyClass
+        cMyData ;
+        aInstances AS ARRAY OF OBJECT MyClass ;
+        oNext( oInstance AS CLASS MyClass ) AS CLASS MyClass
 
-DECLARE OtherClass                              ;
+DECLARE OtherClass ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
         nMyFunc( nVal AS NUMERIC ) AS NUMERIC ;
-        cMyData    ;
-        aInstances AS Array Of Object MyClass ;
-        oNext( oInstance AS Class OtherClass ) As Class MyClass
+        cMyData ;
+        aInstances AS ARRAY OF OBJECT MyClass ;
+        oNext( oInstance AS CLASS OtherClass ) AS CLASS MyClass
 
 FIELD a AS STRING
 FIELD b AS STRING
@@ -51,13 +53,13 @@ MEMVAR Var1 AS STRING
 
 STATIC s_lGlobal AS LOGICAL
 
-PROCEDURE Main( optional )
+PROCEDURE Main( OPTIONAL )
 
-   STATIC lStatic := 0, oMyObj As Class WrongClass
+   STATIC s_lStatic := 0, s_oMyObj AS CLASS WrongClass
 
    LOCAL cVar AS STRING := [declare function]
 
-   LOCAL a As STRING, oB AS Class MyClass, c AS STRING, oD AS Class OtherClass
+   LOCAL a As STRING, oB AS CLASS MyClass, c AS STRING, oD AS CLASS OtherClass
 
    FIELD b AS NUMERIC
 
@@ -65,9 +67,9 @@ PROCEDURE Main( optional )
 
    PRIVATE TEST AS STRING
 
-   USE TEMP
+   USE temp
 
-   oMyObj:MyMethod( 2, 3, 4 )
+   s_oMyObj:MyMethod( 2, 3, 4 )
 
    a := b:nMyFunc( 2, 3 )
    a := b:nMyFunc( 2 )
@@ -90,7 +92,7 @@ PROCEDURE Main( optional )
 
    oB := "a"
 
-   IF lStatic
+   IF s_lStatic
       Var1 := .F.
    ENDIF
 
@@ -100,7 +102,7 @@ PROCEDURE Main( optional )
 
    RETURN
 
-PROCEDURE SOMEPROC()
+PROCEDURE SOMEPROC()  /* must be a public function */
 
    PRIVATE TEST AS NUMERIC
 
@@ -113,9 +115,7 @@ PROCEDURE SOMEPROC()
    REPLACE a WITH 1
 
    M->public_var := 0
-
    b := 0
-
    Var1 := 1
 
    IF s_lGlobal == 0
@@ -124,12 +124,11 @@ PROCEDURE SOMEPROC()
 
    RETURN
 
-PROCEDURE Main1()
+PROCEDURE Main1()  /* must be a public function */
 
    PRIVATE OTHER, TEST AS STRING
 
    Var1 := M->TEST
-
    Var2 := Test()
 
    ? Var1 + 2
@@ -141,11 +140,12 @@ PROCEDURE Main1()
 
    RETURN
 
-FUNCTION Test()
+STATIC FUNCTION Test()
    RETURN .T.
 
-FUNCTION Test2()
-   Local n As Numeric, lVar AS LOGICAL
+FUNCTION Test2()  /* must be a public function */
+
+   LOCAL n AS NUMERIC, lVar AS LOGICAL
 
    n := iif( lVar, "A", 3 ) // iif() needs to be completed.
    n := 2
@@ -155,28 +155,20 @@ FUNCTION Test2()
 
    RETURN NIL
 
-FUNCTION Test3()
+FUNCTION Test3()  /* must be a public function */
 
-   LOCAL n AS NUMERIC, cVar AS STRING, a[5,5,5] AS ARRAY OF STRING
+   LOCAL n AS NUMERIC, cVar AS STRING, a[ 5, 5, 5 ] AS ARRAY OF STRING
 
    cVar := a[1]
 
    n := &SomeFun( 2, 3 )
-
    n := ExtFun()
-
    cVar := cOtherFunc( 3 )
-
    n := nMyFunc( a, cVar ) + 3
-
    n := &(cVar)
-
    n := "&SomeVar"
-
    n := &Var.1
-
    n := V&SomeVar.1
-
    n[ 2 ] := 4
 
    cVar := {| nb AS NUMERIC, cb AS STRING, db AS DATE | n := .F., nb := "A", cb := 1, db := 0, n := "wrong type", 0 }
@@ -184,44 +176,29 @@ FUNCTION Test3()
    ? "This is a compiler test."
 
    n := "C is Wrong Type for n"
-
    n := { 1, 2, 3 }
-
    n := a
-
    iif( n, 2, 3 )
 
    RETURN NIL
 
-FUNCTION SomeTest( lVar AS LOGICAL )
+FUNCTION SomeTest( lVar AS LOGICAL )  /* must be a public function */
 
    LOCAL nVar AS NUMERIC, cVar AS STRING, lVar2 AS LOGICAL, nNoType := 3
    PRIVATE cMemVar1 AS STRING
 
    nVar := .T.
-
    nVar := 1
-
    nVar := "A"
-
    cVar := 2
-
    cVar := "B"
-
    cVar := 2
-
    lVar := .T.
-
    lVar := nNoType
-
    cVar := nVar
-
    M->cMemVar1 := 2
-
    NondDeclared := 2
-
    cVar := {| n AS NUMERIC, c AS STRING, d AS DATE | n := nMyFunc( n, c, d ), c := 2  }
-
    nVar := 8 + cVar
 
    IF 1
@@ -230,14 +207,14 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
    RETURN NIL
 
-FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
+STATIC FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
 
    nVar := Val( cVar )
 
    RETURN nVar + 1
 
-FUNCTION cOtherFunc( )
+STATIC FUNCTION cOtherFunc( )
    RETURN "Hello"
 
-FUNCTION ExtFun()
+STATIC FUNCTION ExtFun()
    RETURN 1

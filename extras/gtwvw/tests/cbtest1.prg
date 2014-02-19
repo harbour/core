@@ -102,9 +102,9 @@ PROCEDURE Main()
    Inkey( 0 )
    SetCursor( nCursor )
 
-   RETURN  // main
+   RETURN
 
-STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
+STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
 
    DO CASE
    CASE nEvent == 3 // CBN_SETFOCUS
@@ -128,4 +128,4 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
       ENDIF
    ENDCASE
 
-   RETURN NIL
+   RETURN

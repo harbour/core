@@ -30,7 +30,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1489,7 +1489,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
             lcurs = 8;
             break;
          case SC_SPECIAL2:
-            /* TODO: find a proper sequqnce to set a cursor
+            /* TODO: find a proper sequence to set a cursor
                to SC_SPECIAL2 under Linux console?
                There is no such mode in current stable kernels (2.4.20)
              */

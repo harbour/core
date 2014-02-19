@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -321,16 +321,16 @@ STATIC FUNCTION WhichEOL( cString )
    LOCAL nCRPos := At( Chr( 13 ), cString )
    LOCAL nLFPos := At( Chr( 10 ), cString )
 
-   IF nCRPos > 0 .AND. nLFPos == 0
+   DO CASE
+   CASE nCRPos > 0 .AND. nLFPos == 0
       RETURN Chr( 13 )
-   ELSEIF nCRPos == 0 .AND. nLFPos >  0
+   CASE nCRPos == 0 .AND. nLFPos >  0
       RETURN Chr( 10 )
-   ELSEIF nCRPos > 0 .AND. nLFPos == nCRPos + 1
+   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
       RETURN Chr( 13 ) + Chr( 10 )
-   ENDIF
+   ENDCASE
 
    RETURN hb_eol()
 
 STATIC FUNCTION Text2Array( cString )
-
    RETURN hb_ATokens( cString, WhichEOL( cString ) )

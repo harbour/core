@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,10 +48,10 @@
 
 #if defined( HBMK_HAS_HBGD )
 
-MEMVAR _SERVER // defined in uHTTPD
+MEMVAR _SERVER  // defined in uHTTPD
 MEMVAR _REQUEST // defined in uHTTPD
 
-#define IMAGES_IN  ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "contrib" + hb_ps() + "hbgd" + hb_ps() + "tests" + hb_ps() + "digits" + hb_ps()
+#define IMAGES_IN  hb_DirSepToOS( "../../../contrib/hbgd/tests/digits/" )
 #define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
 
 #define DISPLAY_NUM  10
@@ -60,7 +60,7 @@ FUNCTION HRBMAIN()
 
    LOCAL cHtml
 
-   IF hb_HHasKey( _REQUEST, "w" )
+   IF "w" $ _REQUEST
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
       IF ! Empty( cHtml )
@@ -100,7 +100,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    nValue := Val( cValue )
 
-   // Fix num lenght
+   // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM
       nValue := 10 ^ DISPLAY_NUM
    ENDIF
@@ -108,7 +108,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    cValue := StrZero( nValue, DISPLAY_NUM )
 
 #if 0
-   ? "Value = ", cValue
+   ? "Value =", cValue
 
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
@@ -139,7 +139,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    nNumWidth := nWidth / nDigits
 
 #if 0
-   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+   ? "nNumWidth, nWidth, nHeight, nDigits =", nNumWidth, nWidth, nHeight, nDigits
 #endif
 
    /* extracts single digits */
@@ -153,7 +153,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
 #if 0
-   ? "Image dimensions: ", oI:Width(), oI:Height()
+   ? "Image dimensions:", oI:Width(), oI:Height()
 
    /* Allocate background */
    white := oI:SetColor( 255, 255, 255 )
@@ -186,7 +186,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
+   ? "Look at", IMAGES_OUT, "folder for output images"
    ?
 #endif
 

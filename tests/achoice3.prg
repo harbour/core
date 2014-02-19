@@ -40,7 +40,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION HotChoice( nStatus, nCurrent, window_pos )
+FUNCTION HotChoice( nStatus, nCurrent, window_pos )  /* must be a public function */
 
    LOCAL nKey, cKey
 

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General public License
  * along with this software; see the file COPYING.txt.  if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, xHarbour license gives permission for
  * additional uses of the text contained in its release of xHarbour.
@@ -248,7 +248,9 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    }
 
    bSignalEnabled = HB_TRUE;
-   /*s_serviceSetHBSig();*/
+   #if 0
+   s_serviceSetHBSig();
+   #endif
 
    #if 0
    if( uiSig != HB_SIGNAL_UNKNOWN )
@@ -306,7 +308,7 @@ static void * s_signalListener( void * my_stack )
    pthread_setcanceltype( PTHREAD_CANCEL_DEFERRED, NULL );
    pthread_setcancelstate( PTHREAD_CANCEL_ENABLE, NULL );
 
-   for(;; )
+   for( ;; )
    {
       /* allow safe cancelation */
       HB_STACK_UNLOCK;
@@ -351,7 +353,7 @@ static void * s_signalListener( void * my_stack )
 * Windows specific exception filter system.
 *
 * Windows will only catch exceptions; It is necessary to rely on the
-* HB_SERVICELOOP to receive user generated messages.
+* hb_ServiceLoop() to receive user generated messages.
 *****************************************************************************/
 
 #ifdef HB_OS_WIN
@@ -462,13 +464,10 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
          hb_arraySetNI( pRet, HB_SERVICE_OSERROR, GetLastError() );
 
          if( type == 0 ) /* exception */
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, ( void * ) exc->ExceptionAddress );
-         }
          else
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, NULL );
-         }
+
          /* TODO: */
          hb_arraySetNI( pRet, HB_SERVICE_PROCESS, GetCurrentThreadId() );
          /* TODO: */
@@ -613,7 +612,9 @@ static void s_serviceSetHBSig( void )
    act.sa_handler   = NULL;            /* if act.sa.. is a union, we just clean this */
    act.sa_sigaction = s_signalHandler; /* this is what matters */
    /* block al signals, we don't want to be interrupted. */
-   /*sigfillset( &act.sa_mask );*/
+   #if 0
+   sigfillset( &act.sa_mask );
+   #endif
    #endif
 
 
@@ -785,19 +786,15 @@ HB_FUNC( HB_STARTSERVICE )
    /* let's begin */
    sb_isService = HB_TRUE;
 
-   /* in windows, we just detach from console */
+   /* in Windows, we just detach from console */
    #ifdef HB_OS_WIN
    if( hb_parl( 1 ) )
-   {
       FreeConsole();
-   }
    #endif
 
    /* Initialize only if the service has not yet been initialized */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 }
 
 /**
@@ -870,8 +867,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
        ( ! HB_IS_POINTER( pFunc ) && ! HB_IS_STRING( pFunc ) && ! HB_IS_BLOCK( pFunc ) )
        )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", NULL,
-                            2, hb_param( 1, HB_IT_ANY ), hb_param( 2, HB_IT_ANY ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", NULL, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
 
@@ -881,9 +877,7 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
 
    /* if the hook is not initialized, initialize it */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 
    hb_threadEnterCriticalSection( &s_ServiceMutex );
 
@@ -917,15 +911,12 @@ HB_FUNC( HB_POPSIGNALHANDLER )
          }
       }
       else
-      {
          hb_retl( HB_FALSE );
-      }
+
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
    }
    else
-   {
       hb_retl( HB_FALSE );
-   }
 }
 
 /**
@@ -1081,27 +1072,37 @@ HB_FUNC( HB_SIGNALDESC )
    hb_retc_const( "Unrecognized signal" );
 }
 
+#if 0
 
 /*****************************************************************************
  * Debug help: generates a fault or a math error to see if signal catching
  * is working
  **************************************/
 
-HB_FUNC( HB_SERVICEGENERATEFAULT )
+HB_FUNC( __HB_SERVICEGENERATEFAULT )
 {
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(push)
+#pragma warning(disable:6011)
+#endif
    int * pGPF = NULL;
 
    *pGPF = 0;
    /* if it doesn't cause GPF (on some platforms it's possible) try this */
    *( --pGPF ) = 0;
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(pop)
+#endif
 }
 
-HB_FUNC( HB_SERVICEGENERATEFPE )
+HB_FUNC( __HB_SERVICEGENERATEFPE )
 {
    static double a = 100.0, b = 0.0;
 
    a = a / b;
 }
+
+#endif
 
 #else
 
@@ -1111,7 +1112,5 @@ HB_FUNC( HB_SERVICELOOP ) {}
 HB_FUNC( HB_PUSHSIGNALHANDLER ) {}
 HB_FUNC( HB_POPSIGNALHANDLER ) {}
 HB_FUNC( HB_SIGNALDESC ) {}
-HB_FUNC( HB_SERVICEGENERATEFAULT ) {}
-HB_FUNC( HB_SERVICEGENERATEFPE ) {}
 
 #endif

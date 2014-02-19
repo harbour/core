@@ -2,10 +2,13 @@
 
 // Test SetMode() for Harbour
 
-#define HB_NOT_SUPPORTED  "Video mode not supported on this system.."
-#define HB_VROW   1
-#define HB_VCOL   2
-#define HB_PROMPT 3
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
+#define HB_VROW    1
+#define HB_VCOL    2
+#define HB_PROMPT  3
 
 PROCEDURE Main()
 
@@ -25,7 +28,7 @@ PROCEDURE Main()
    DO WHILE nMode != 0
 
       CLS
-      @ 0, 0 SAY "Select the video mode you want to test.."
+      @ 0, 0 SAY "Select the video mode you want to test."
 
       FOR nRow := 1 TO 5
          @ 2 + nRow, 10 PROMPT aVModes[ nRow ][ HB_PROMPT ]
@@ -41,7 +44,7 @@ PROCEDURE Main()
          IF SetMode( aVModes[ nMode ][ HB_VROW ], aVModes[ nMode ][ HB_VCOL ] )
             TESTBOX( aVModes[ nMode ][ HB_PROMPT ] )
          ELSE
-            @ MaxRow(), 0 SAY HB_NOT_SUPPORTED
+            @ MaxRow(), 0 SAY "Video mode not supported on this system."
             Inkey( 0 )
          ENDIF
       ENDIF
@@ -52,7 +55,7 @@ PROCEDURE Main()
 
 // Simple testing screen.
 
-PROCEDURE TESTBOX( cMode )
+STATIC PROCEDURE TESTBOX( cMode )
 
    LOCAL nRow
 
@@ -61,15 +64,15 @@ PROCEDURE TESTBOX( cMode )
    @ 0, 3 SAY cMode
    @ MaxRow(), 3 SAY " Press a key "
 
-   @ 8, 0 SAY Replicate( Chr( 25 ) /* LOW-ASCII "↓" */ + "         ", 20 )
+   @ 8, 0 SAY Replicate( "|         ", 20 )
    @ 9, 0 SAY Replicate( "0123456789", 20 )
 
    FOR nRow := 0 TO MaxRow()
-      @ nRow, 18 SAY Str( nRow, 2 )
+      @ nRow, 18 SAY nRow
    NEXT
 
-   @ 4, 2 SAY "MaxRow() = " + Str( MaxRow(), 3 )
-   @ 5, 2 SAY "MaxCol() = " + Str( MaxCol(), 3 )
+   @ 4, 2 SAY "MaxRow() == " + hb_ntos( MaxRow() )
+   @ 5, 2 SAY "MaxCol() == " + hb_ntos( MaxCol() )
    Inkey( 0 )
 
    RETURN

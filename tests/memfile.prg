@@ -1,5 +1,8 @@
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 MEMVAR m_cLongerNameThen10Chars
 #ifdef __HARBOUR__
@@ -72,8 +75,3 @@ PROCEDURE Main()
    FErase( "memsome.mem" )
 
    RETURN
-
-#ifndef __HARBOUR__
-FUNCTION __mvScope()
-   RETURN -1
-#endif

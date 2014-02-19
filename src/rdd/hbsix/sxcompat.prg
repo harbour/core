@@ -49,7 +49,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,6 +78,7 @@
  */
 
 #include "dbinfo.ch"
+#include "fileio.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
 
@@ -336,10 +337,8 @@ FUNCTION sx_KillTag( xTag, xIndex )
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
          ENDIF
-         IF ! Empty( cIndex )
-            IF ordBagClear( cIndex )
-               lRet := FErase( cIndex ) != -1
-            ENDIF
+         IF ! Empty( cIndex ) .AND. ordBagClear( cIndex )
+            lRet := FErase( cIndex ) != F_ERROR
          ENDIF
       ENDIF
    ELSE
@@ -510,8 +509,8 @@ FUNCTION sx_VSigLen( xField )
          nField := xField
       ENDIF
       IF nField >= 1 .AND. nField <= FCount()
-         nResult := FieldLen( nField )
-         IF FieldType( nField ) == "V" .AND. nResult >= 6
+         nResult := hb_FieldLen( nField )
+         IF hb_FieldType( nField ) == "V" .AND. nResult >= 6
             nResult -= 6
          ENDIF
       ENDIF

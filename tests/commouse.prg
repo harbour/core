@@ -2,7 +2,7 @@
 
 PROCEDURE Main( cParam )
 
-   LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY
+   LOCAL nPort, cBuf, cBuffer, nLen, nType, lL, lM, lR, nX, nY, nI
 
    IF cParam == NIL
       ? "Usage: commouse [ nPort | cDevice ]"
@@ -67,11 +67,11 @@ PROCEDURE Main( cParam )
          ELSEIF hb_BLen( cBuffer ) >= 3
             lR := hb_bitAnd( hb_BCode( cBuffer ), 0x10 ) != 0
             lL := hb_bitAnd( hb_BCode( cBuffer ), 0x20 ) != 0
-            nX := hb_bitAnd( hb_BCode( cBuffer ), 3 ) * 64 + hb_bitAnd( hb_BCode( hb_BSubStr( cBuffer, 2 ) ), 0x3F )
+            nX := hb_bitAnd( hb_BCode( cBuffer ), 3 ) * 64 + hb_bitAnd( hb_BPeek( cBuffer, 2 ), 0x3F )
             IF nX > 127
                nX -= 256
             ENDIF
-            nY := hb_bitAnd( hb_BCode( cBuffer ), 0x0C ) * 16 + hb_bitAnd( hb_BCode( hb_BSubStr( cBuffer, 3 ) ), 0x3F )
+            nY := hb_bitAnd( hb_BCode( cBuffer ), 0x0C ) * 16 + hb_bitAnd( hb_BPeek( cBuffer, 3 ), 0x3F )
             IF nY > 127
                nY -= 256
             ENDIF
@@ -91,22 +91,22 @@ PROCEDURE Main( cParam )
             lR := hb_bitAnd( hb_BCode( cBuffer ), 1 ) == 0
             lM := hb_bitAnd( hb_BCode( cBuffer ), 2 ) == 0
             lL := hb_bitAnd( hb_BCode( cBuffer ), 4 ) == 0
-            nI := hb_BCode( hb_BSubStr( cBuffer, 2 ) )
+            nI := hb_BPeek( cBuffer, 2 )
             IF nI > 127
                nI -= 256
             ENDIF
             nX := nI
-            nI := hb_BCode( hb_BSubStr( cBuffer, 4 ) )
+            nI := hb_BPeek( cBuffer, 4 )
             IF nI > 127
                nI -= 256
             ENDIF
             nX += nI
-            nI := hb_BCode( hb_BSubStr( cBuffer, 3 ) )
+            nI := hb_BPeek( cBuffer, 3 )
             IF nI > 127
                nI -= 256
             ENDIF
             nY := - nI
-            nI := hb_BCode( hb_BSubStr( cBuffer, 5 ) )
+            nI := hb_BPeek( cBuffer, 5 )
             IF nI > 127
                nI -= 256
             ENDIF

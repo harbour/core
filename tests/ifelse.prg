@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE TestValue( x )
+STATIC PROCEDURE TestValue( x )
 
    IF x == 1
       ? "x is 1"

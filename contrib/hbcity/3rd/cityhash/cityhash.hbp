@@ -1,0 +1,24 @@
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-I.
+
+-warn=low
+-cpp=yes
+-pic
+
+city.cc
+
+# ORIGIN https://code.google.com/p/cityhash/
+# VER    1.1.1
+# URL    https://cityhash.googlecode.com/files/cityhash-1.1.1.tar.gz
+# DIFF   cityhash.dif
+#
+# MAP    COPYING
+# MAP    src/city.cc          city.cc
+# MAP    src/city.h           city.h
+# MAP    src/citycrc.h        citycrc.h

@@ -187,11 +187,11 @@ FUNCTION Sp_Check( cWord )
          RETURN .T.
       ENDIF
       IF Right( cLookup, 2 ) == "'S"
-         cLookUp := SubStr( cLookup, 1, Len( cLookup ) -2 )
+         cLookUp := hb_StrShrink( cLookup, 2 )
       ENDIF
       cTemp := "|" + cLookup + "|"
-      IF At( cTemp, COMMON_WORDS ) == 0    // Check the common words first
-         IF At( cTemp, CACHE_WORDS ) == 0   // then check the cache words
+      IF ! cTemp $ COMMON_WORDS      // Check the common words first
+         IF ! cTemp $ CACHE_WORDS    // then check the cache words
             ok   := .F.
             nRow := Asc( SubStr( cLookup, 1, 1 ) ) - 64
             nCol := Asc( SubStr( cLookup, 2, 1 ) ) - 64
@@ -201,7 +201,7 @@ FUNCTION Sp_Check( cWord )
                y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
 
                IF ! Empty( x )
-                  IF !( t_cLast == SubStr( cLookup, 1, 2 ) )
+                  IF !( t_cLast == Left( cLookup, 2 ) )
                      t_cBuf := Space( y )
                      FSeek( t_nHandle, x, FS_SET )
                      FRead( t_nHandle, @t_cBuf, y )
@@ -217,8 +217,7 @@ FUNCTION Sp_Check( cWord )
                   ELSEIF y > 4
                      cTemp := XForm( cLookup )
                      DO WHILE z < y
-                        z := bfat( cTemp, t_cBuf, z )
-                        IF z < 6
+                        IF ( z := hb_BAt( cTemp, t_cBuf, z ) ) < 6
                            EXIT
                         ELSEIF hb_BSubStr( t_cBuf, z - 1, 1 ) < hb_BChar( 128 )
                            z++
@@ -228,7 +227,7 @@ FUNCTION Sp_Check( cWord )
                      ENDDO
                      ok := z > 4 .AND. z < y
                   ENDIF
-                  t_cLast := SubStr( cLookup, 1, 2 )
+                  t_cLast := Left( cLookup, 2 )
                ENDIF
             ENDIF
          ELSE
@@ -279,11 +278,11 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 //
 //    Static:  CACHE_WORDS  - String of cache words
 
-FUNCTION Sp_Clear()
+PROCEDURE Sp_Clear()
 
    CACHE_WORDS := ""
 
-   RETURN NIL
+   RETURN
 
 //   Function: Sp_GetSet()
 //    Purpose: To get/set a parameter for the spell check function
@@ -518,9 +517,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
          IF sc_aParts_[ jj, 1 ] $ cWord
             IF sc_aParts_[ jj, 1 ] $ "AEIOUT"
                ii := 0
-               DO WHILE ( ii := fat( sc_aParts_[ jj, 1 ], cWord, ii ) ) > 0
+               DO WHILE ( ii := hb_At( sc_aParts_[ jj, 1 ], cWord, ii ) ) > 0
                   FOR kk := 1 TO Len( sc_aParts_[ jj, 2 ] )
-                     cHold := SubStr( cWord, 1, ii - 1 ) + sc_aParts_[ jj, 2, kk ] + SubStr( cWord, ii + 1 )
+                     cHold := Left( cWord, ii - 1 ) + sc_aParts_[ jj, 2, kk ] + SubStr( cWord, ii + 1 )
                      IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
                         AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                      ENDIF
@@ -574,7 +573,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             // Accomodate words ending in C
             //
 
-            IF SubStr( cHold, -1, 1 ) == "C"
+            IF Right( cHold, 1 ) == "C"
                FOR kk := 1 TO nSuffix
                   cTemp := cHold + "K" + sc_aEnds[ kk ]
                   IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
@@ -587,19 +586,19 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             // Accomodate words ending in ND
             //
 
-            IF SubStr( cHold, -2, 2 ) == "ND"
-               cTemp := SubStr( cHold, 1, zz - 1 ) + "SE"
+            IF Right( cHold, 2 ) == "ND"
+               cTemp := Left( cHold, zz - 1 ) + "SE"
                IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                   Sp_Check( cTemp )
                   AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
                FOR kk := 1 TO nSuffix
-                  cTemp := SubStr( cHold, 1, zz - 1 ) + "SE" + sc_aEnds[ kk ]
+                  cTemp := Left( cHold, zz - 1 ) + "SE" + sc_aEnds[ kk ]
                   IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                      Sp_Check( cTemp )
                      AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                   ENDIF
-                  cTemp := SubStr( cHold, 1, zz - 1 ) + "S" + sc_aEnds[ kk ]
+                  cTemp := Left( cHold, zz - 1 ) + "S" + sc_aEnds[ kk ]
                   IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                      Sp_Check( cTemp )
                      AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
@@ -612,7 +611,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
             IF SubStr( cHold, zz, 1 ) == "E"
                FOR kk := 1 TO nSuffix
-                  cTemp := SubStr( cHold, 1, zz - 1 ) + sc_aEnds[ kk ]
+                  cTemp := Left( cHold, zz - 1 ) + sc_aEnds[ kk ]
                   IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                      Sp_Check( cTemp )
                      AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
@@ -639,13 +638,13 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             ENDIF
 
             IF SubStr( cHold, zz, 1 ) == "Y"
-               cTemp := SubStr( cHold, 1, zz - 1 ) + "IES"
+               cTemp := Left( cHold, zz - 1 ) + "IES"
                IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                   Sp_Check( cTemp )
                   AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             ELSEIF SubStr( cHold, zz, 1 ) == "F"
-               cTemp := SubStr( cHold, 1, zz - 1 ) + "VES"
+               cTemp := Left( cHold, zz - 1 ) + "VES"
                IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
                   Sp_Check( cTemp )
                   AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
@@ -679,7 +678,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
       ii     := Len( cTemp )
       cMeta  := C_Metafone( cWord, zz )
       zz     := Len( cMeta )
-      cFirst := SubStr( cWord, 1, 2 )
+      cFirst := Left( cWord, 2 )
 
       IF ii > 0
 
@@ -834,20 +833,18 @@ FUNCTION Sp_Quick( cWord )
 
    FOR jj := 1 TO 6
       IF SubStr( "AEIOUT", jj, 1 ) $ cWord
-         ii   := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
          nold := 1
-         DO WHILE ii > 0
+         DO WHILE ( ii := hb_At( SubStr( "AEIOUT", jj, 1 ), cWord, ii ) ) > 0
             FOR kk := 1 TO ChrCount( "$", sc_aTryThese[ jj ] )
-               ll    := fat( "$", sc_aTryThese[ jj ], nOld )
+               ll    := hb_At( "$", sc_aTryThese[ jj ], nOld )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
                nOld  := ll + 1
-               cHold := SubStr( cWord, 1, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
+               cHold := Left( cWord, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
                IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
                   AAdd( arr_, cHold )
                ENDIF
             NEXT
             ii++
-            ii := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
          ENDDO
       ENDIF
    NEXT
@@ -882,7 +879,7 @@ FUNCTION Sp_Expand( cWord )
    LOCAL cExpand
 
    cWord := Upper( AllTrim( cWord ) )
-   x := AScan( sc_aContracts, {| jj | Left( jj[ 1 ], Len( cWord ) ) == cWord } ) // LEFTEQUAL()
+   x := AScan( sc_aContracts, {| jj | hb_LeftIs( jj[ 1 ], cWord ) } )
    IF x > 0
       cExpand := sc_aContracts[ x, 2 ]
    ENDIF
@@ -905,8 +902,7 @@ FUNCTION Sp_WildCard( cPattern )
    cPattern := Upper( cPattern )
 
    IF Sp_Init()
-      x := At( "*", cPattern )
-      IF x == 0
+      IF ( x := At( "*", cPattern ) ) == 0
          x := At( "?", cPattern )
       ENDIF
       IF x == 1                 // Can't handle wildcards in first position
@@ -922,9 +918,9 @@ FUNCTION Sp_WildCard( cPattern )
 
 
       FOR z := nStart TO nEnd
-         cTemp  := Sp_GetBuf( SubStr( cPattern, 1, 1 ) + Chr( z + 64 ) )
+         cTemp  := Sp_GetBuf( Left( cPattern, 1 ) + Chr( z + 64 ) )
          ii     := Len( cTemp )
-         cFirst := SubStr( cPattern, 1, 1 ) + Chr( z + 64 )
+         cFirst := Left( cPattern, 1 ) + Chr( z + 64 )
 
          IF ii > 0
             kk := 1
@@ -969,7 +965,7 @@ FUNCTION Sp_Init()
          cBuf := Space( NSIZE + 6 )
          FRead( t_nHandle, @cBuf, NSIZE + 6 )
 
-         IF SubStr( cBuf, 1, 2 ) == "JJ"
+         IF hb_LeftIs( cBuf, "JJ" )
             nOther := Bin2L( SubStr( cBuf, 3, 4 ) )
             t_cOffsets := hb_BSubStr( cBuf, 7 )
             nFileSize := FSeek( t_nHandle, 0, FS_END )
@@ -1074,7 +1070,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_Metafone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
+   INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( "$$temp" )
    dbGoTop()
 
    IF lTalk
@@ -1092,9 +1088,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       t_nHandle := F_ERROR
    ENDIF                                  // END OF ADDITION
 
-   nH := FCreate( cDictionary )
-
-   IF nH != F_ERROR
+   IF ( nH := FCreate( cDictionary ) ) != F_ERROR
       //
       // Write out enough bytes to hold the index information
       //
@@ -1102,7 +1096,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
-         DO WHILE Left( DICT->word, 1 ) == Chr( i + 64 ) .AND. ! Eof()
+         DO WHILE hb_LeftIs( DICT->word, Chr( i + 64 ) ) .AND. ! Eof()
             FOR j := 1 TO 26
                temp  := ""
                cBits := FOUR_BYTES
@@ -1274,7 +1268,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
             z    := 1
             DO WHILE ! Empty( cBuf )
                IF SubStr( cBuf, z, 1 ) >= hb_BChar( 128 )
-                  cWord := SubStr( cBuf, 1, z )
+                  cWord := Left( cBuf, z )
                   dbAppend()
                   DICT->word := temp + XUnForm( cWord )
                   cWord := ""
@@ -1313,7 +1307,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 //             used English words.  They are stored in RAM to prevent a
 //             dictionary lookup for 70-80% of the words.
 
-STATIC FUNCTION Sp_Common()
+STATIC PROCEDURE Sp_Common()
 
    t_aGlobal[ 1 ] := ;
       "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS|WITH|ON|HIS|BE|AT|BY" + ;
@@ -1375,12 +1369,12 @@ STATIC FUNCTION Sp_Common()
       "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE" + ;
       "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
 
-   RETURN NIL
+   RETURN
 
 FUNCTION WildCard( cPattern, cString )
 
    LOCAL lMatch := .F.
-   LOCAL x      := At( "*", cPattern )
+   LOCAL x
    LOCAL cBefore
    LOCAL cAfter
    LOCAL y
@@ -1394,21 +1388,20 @@ FUNCTION WildCard( cPattern, cString )
    //
    // Do a * match
    //
-   IF x > 0
-      cBefore := Upper( SubStr( cPattern, 1, x - 1 ) )
+   IF ( x := At( "*", cPattern ) ) > 0
+      cBefore := Upper( Left( cPattern, x - 1 ) )
       cAfter  := Upper( SubStr( cPattern, x + 1 ) )
       DO CASE
       CASE Empty( cBefore )
          lMatch := Right( cString, Len( cAfter ) ) == cAfter
       CASE Empty( cAfter )
-         lMatch := Left( cString, Len( cBefore ) ) == cBefore
+         lMatch := hb_LeftIs( cString, cBefore )
       OTHERWISE
-         lMatch := ( Left( cString, Len( cBefore ) ) == cBefore ) .AND. ;
+         lMatch := hb_LeftIs( cString, cBefore ) .AND. ;
             Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
    ELSE
-      x := At( "?", cPattern )
-      IF x > 0
+      IF ( x := At( "?", cPattern ) ) > 0
          nPatSize := Len( cPattern )
          nStrSize := Len( cString )
          IF nPatSize == nStrSize
@@ -1422,7 +1415,7 @@ FUNCTION WildCard( cPattern, cString )
             NEXT
          ENDIF
       ELSE
-         lMatch := Left( Upper( cPattern ), Len( Upper( cString ) ) ) == Upper( cString )
+         lMatch := hb_LeftIsI( cPattern, cString )
       ENDIF
    ENDIF
 
@@ -1445,7 +1438,7 @@ FUNCTION AWords( cLine )
          cWord   := Chr( y )
          z++
          y := Asc( SubStr( cLine, z, 1 ) )
-         WHILE ( y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" + Chr( 127 ) ) .OR. y == "'"
+         DO WHILE ( y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" + Chr( 127 ) ) .OR. y == "'"
             cWord += Chr( y )
             z++
             IF z > nSize
@@ -1458,10 +1451,3 @@ FUNCTION AWords( cLine )
    ENDDO
 
    RETURN aWords_
-
-// Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
-FUNCTION fat( f_str, l_str, f_rom )
-   RETURN At( f_str, SubStr( l_str, iif( PCount() < 3, 1, f_rom ) ) )
-
-STATIC FUNCTION bfat( f_str, l_str, f_rom )
-   RETURN hb_BAt( f_str, hb_BSubStr( l_str, f_rom ) )

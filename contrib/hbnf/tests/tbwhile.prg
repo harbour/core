@@ -19,52 +19,56 @@ PROCEDURE Main()
 
    FIELD last, first
 
-   IF ! hb_dbExists( "tbnames.dbf" )
+   IF ! hb_dbExists( "tbnames" )
       make_dbf()
    ENDIF
 
    USE tbnames
 
    IF ! hb_dbExists( "tbnames.ntx" )
-      INDEX ON last + first TO tbnames
+      INDEX ON FIELD->LAST + FIELD->FIRST TO tbnames.ntx
    ENDIF
 
-   SET INDEX TO tbnames
+   SET INDEX TO tbnames.ntx
 
    // Pass Heading as character and Field as Block including Alias
    // To eliminate the need to use FieldWBlock() function in ft_BrwsWhl()
 
-   AAdd( aFields, { "Last Name" , {|| tbnames->Last }  } )
-   AAdd( aFields, { "First Name", {|| tbnames->First } } )
-   AAdd( aFields, { "City"      , {|| tbnames->City }  } )
+   AAdd( aFields, { "Last Name" , {|| tbnames->LAST }  } )
+   AAdd( aFields, { "First Name", {|| tbnames->FIRST } } )
+   AAdd( aFields, { "City"      , {|| tbnames->CITY }  } )
 
    cOldColor := SetColor( "N/BG" )
    CLS
    @ 5, 10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
    READ
 
-   // tbnames->Last = cKey is the Conditional Block passed to this function
+   // tbnames->LAST = cKey is the Conditional Block passed to this function
    // you can make it as complicated as you want, but you would then
    // have to modify TBWhileSet() to find first and last records
    // matching your key.
-   nRecSel := ft_BrwsWhl( aFields, {|| tbnames->Last = cKey }, cKey, nFreeze, ;
+   nRecSel := ft_BrwsWhl( aFields, {|| tbnames->LAST = cKey }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
    // Note you can use Compound Condition
-   // such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
+   // such as cLast := "Pierce            " and cFirst := "Hawkeye  "
    // by changing above block to:
-   //    {|| tbnames->Last = cLast .AND. tbnames->First = cFirst }
+   //    {|| tbnames->LAST = cLast .AND. tbnames->FIRST = cFirst }
    // and setting cKey := cLast + cFirst
 
    ?
    IF nRecSel == 0
       ? "Sorry, NO Records Were Selected"
    ELSE
-      ? "You Selected " + ;
-         tbnames->Last + " " + ;
-         tbnames->First + " " + ;
-         tbnames->City
+      ? "You Selected", ;
+         tbnames->LAST, ;
+         tbnames->FIRST, ;
+         tbnames->CITY
    ENDIF
    ?
+
+   USE
+   hb_dbDrop( "tbnames" )
+   hb_dbDrop( "tbnames.ntx" )
 
    WAIT
    SetColor( cOldColor )
@@ -72,7 +76,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION make_dbf()
+STATIC PROCEDURE make_dbf()
 
    LOCAL x, aData := { ;
       { "SHAEFER", "KATHRYN", "415 WEST CITRUS ROAD #150", "LOS ANGELES", "CA", "90030" }, ;
@@ -91,17 +95,20 @@ STATIC FUNCTION make_dbf()
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
    dbCreate( "tbnames", { ;
-      { "LAST ", "C", 18, 0, }, ;
+      { "LAST" , "C", 18, 0, }, ;
       { "FIRST", "C",  9, 0, }, ;
-      { "ADDR ", "C", 28, 0, }, ;
-      { "CITY ", "C", 21, 0, }, ;
+      { "ADDR" , "C", 28, 0, }, ;
+      { "CITY" , "C", 21, 0, }, ;
       { "STATE", "C",  2, 0, }, ;
-      { "ZIP  ", "C",  9, 0, } } )
+      { "ZIP"  , "C",  9, 0, } } )
+
    USE tbnames
-   FOR x := 1 TO Len( aData )
-      APPEND BLANK
-      AEval( aData[ x ], {| e, n | FieldPut( n, e ) } )
+
+   FOR EACH x IN aData
+      dbAppend()
+      AEval( x, {| e, n | FieldPut( n, e ) } )
    NEXT
+
    USE
 
-   RETURN NIL
+   RETURN

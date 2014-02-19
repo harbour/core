@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,9 +46,13 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 REQUEST Array
+
+#define _INDENT  3
 
 CREATE CLASS HBPersistent
 
@@ -68,14 +72,14 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    LOCAL aObjects := { Self }
    LOCAL bError
 
-   PRIVATE oSelf
+   PRIVATE m_oSelf
 
    IF Empty( cObjectText )
       RETURN .F.
    ENDIF
 
    bError := iif( HB_ISLOGICAL( lIgnoreErrors ) .AND. lIgnoreErrors, ;
-                  {| e | Break( e ) }, ErrorBlock() )
+      {| e | Break( e ) }, ErrorBlock() )
 
    FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
 
@@ -84,41 +88,34 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
       BEGIN SEQUENCE WITH bError
 
          DO CASE
-         CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
+         CASE Empty( cLine ) .OR. hb_LeftIs( cLine, "//" )
             /* ignore comments and empty lines */
 
          CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "OBJECT"
             IF lStart
                lStart := .F.
             ELSE
-               cLine := SubStr( cLine, At( "::", cLine ) )
-               MEMVAR->oSelf := ATail( aObjects )
-               cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-               cLine := StrTran( cLine, " AS ", " := " ) + "():CreateNew()"
-               AAdd( aObjects, &( cLine ) )
+               MEMVAR->m_oSelf := ATail( aObjects )
+               cLine := StrTran( SubStr( cLine, At( "::", cLine ) ), "::", "m_oSelf:",, 1 )
+               AAdd( aObjects, &( StrTran( cLine, " AS ", " := " ) + "():CreateNew()" ) )
             ENDIF
 
          CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
             ASize( aObjects, Len( aObjects ) - 1 )
 
          CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ARRAY"
-            cLine := SubStr( cLine, At( "::", cLine ) )
-            MEMVAR->oSelf := ATail( aObjects )
-            cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-            cLine := StrTran( cLine, " LEN ", " := Array( " ) + " )"
-            &( cLine )
+            MEMVAR->m_oSelf := ATail( aObjects )
+            cLine := StrTran( SubStr( cLine, At( "::", cLine ) ), "::", "m_oSelf:",, 1 )
+            &( StrTran( cLine, " LEN ", " := Array( " ) + " )" )
 
-         CASE Left( cLine, 2 ) == "::"
+         CASE hb_LeftIs( cLine, "::" )
             /* fix for older versions */
-            nPos := At( "=", cLine )
-            IF nPos > 0
-               IF !( SubStr( cLine, nPos - 1, 1 ) == ":" )
-                  cLine := Stuff( cLine, nPos, 0, ":" )
-               ENDIF
+            IF ( nPos := At( "=", cLine ) ) > 0 .AND. ;
+               !( SubStr( cLine, nPos - 1, 1 ) == ":" )
+               cLine := Stuff( cLine, nPos, 0, ":" )
             ENDIF
-            MEMVAR->oSelf := ATail( aObjects )
-            cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-            &( cLine )
+            MEMVAR->m_oSelf := ATail( aObjects )
+            &( StrTran( cLine, "::", "m_oSelf:",, 1 ) )
 
          ENDCASE
 
@@ -127,7 +124,6 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
       IF Empty( aObjects )
          EXIT
       ENDIF
-
    NEXT
 
    RETURN .T.
@@ -135,52 +131,45 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    LOCAL oNew := &( ::ClassName() + "()" ):CreateNew()
-   LOCAL aProperties
    LOCAL prop
    LOCAL uValue
    LOCAL uNewValue
    LOCAL cObject
    LOCAL cType
+   LOCAL lSpacer := .T.
 
    IF ! HB_ISSTRING( cObjectName )
       cObjectName := "o" + ::ClassName()
    ENDIF
 
    IF HB_ISNUMERIC( nIndent )
-      nIndent += 3
+      nIndent += _INDENT
    ELSE
       nIndent := 0
    ENDIF
 
    cObject := iif( nIndent > 0, hb_eol(), "" ) + Space( nIndent ) + ;
-              "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
-              ::ClassName() + hb_eol()
+      "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+      ::ClassName() + hb_eol()
 
-   aProperties := __clsGetProperties( ::ClassH )
+   FOR EACH prop IN __clsGetProperties( ::ClassH )
 
-   FOR EACH prop IN aProperties
       uValue := __objSendMsg( Self, prop )
       uNewValue := __objSendMsg( oNew, prop )
-      cType := ValType( uValue )
 
-      IF !( cType == ValType( uNewValue ) ) .OR. !( uValue == uNewValue )
+      IF !( ( cType := ValType( uValue ) ) == ValType( uNewValue ) ) .OR. ;
+         !( uValue == uNewValue )
 
          SWITCH cType
          CASE "A"
-            nIndent += 3
-            cObject += ArrayToText( uValue, prop, nIndent )
-            nIndent -= 3
-            IF ! prop:__enumIsLast()
-               cObject += hb_eol()
-            ENDIF
+            cObject += ArrayToText( uValue, prop, nIndent + _INDENT )
+            lSpacer := .T.
             EXIT
 
          CASE "O"
-            IF __objDerivedFrom( uValue, "HBPERSISTENT" )
+            IF __objDerivedFrom( uValue, "HBPersistent" )
                cObject += uValue:SaveToText( prop, nIndent )
-            ENDIF
-            IF ! prop:__enumIsLast()
-               cObject += hb_eol()
+               lSpacer := .T.
             ENDIF
             EXIT
 
@@ -190,45 +179,38 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
             EXIT
 
          OTHERWISE
-            IF prop:__enumIsFirst()
+            IF lSpacer
+               lSpacer := .F.
                cObject += hb_eol()
             ENDIF
-            cObject += Space( nIndent ) + "   ::" + ;
-                       prop + " := " + hb_ValToExp( uValue ) + ;
-                       hb_eol()
+            cObject += Space( nIndent + _INDENT ) + "::" + ;
+               prop + " := " + hb_ValToExp( uValue ) + ;
+               hb_eol()
          ENDSWITCH
-
       ENDIF
-
    NEXT
 
-   cObject += hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
-
-   RETURN cObject
+   RETURN cObject + hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
 
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
-   LOCAL nLen := Len( aArray )
    LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + hb_ntos( nLen ) + hb_eol()
-   LOCAL n
+      " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
    LOCAL uValue
 
-   FOR n := 1 TO nLen
-      uValue := aArray[ n ]
+   FOR EACH uValue IN aArray
 
       SWITCH ValType( uValue )
       CASE "A"
-         nIndent += 3
-         cArray += ArrayToText( uValue, cName + "[ " + ;
-                   hb_ntos( n ) + " ]", nIndent ) + hb_eol()
-         nIndent -= 3
+         cArray += ArrayToText( uValue, cName + ;
+            "[ " +  hb_ntos( uValue:__enumIndex() ) + " ]", nIndent + _INDENT ) + ;
+            hb_eol()
          EXIT
 
       CASE "O"
-         IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-            cArray += uValue:SaveToText( cName + "[ " + hb_ntos( n ) + ;
-                                         " ]", nIndent )
+         IF __objDerivedFrom( uValue, "HBPersistent" )
+            cArray += uValue:SaveToText( cName + ;
+               "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", nIndent )
          ENDIF
          EXIT
 
@@ -238,15 +220,13 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
          EXIT
 
       OTHERWISE
-         IF n == 1
+         IF uValue:__enumIsFirst()
             cArray += hb_eol()
          ENDIF
-         cArray += Space( nIndent ) + "   ::" + cName + ;
-                   + "[ " + hb_ntos( n ) + " ]" + " := " + ;
-                   hb_ValToExp( uValue ) + hb_eol()
+         cArray += Space( nIndent + _INDENT ) + "::" + cName + ;
+            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]" + ;
+            " := " + hb_ValToExp( uValue ) + hb_eol()
       ENDSWITCH
    NEXT
 
-   cArray += hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
-
-   RETURN cArray
+   RETURN cArray + hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()

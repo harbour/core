@@ -25,8 +25,8 @@
       USE persons
       INDEX ON ft_Metaph( LastName ) TO lastname
       SEEK ft_Metaph( "Philmore" )
-      ? Found(), LastName             // Result: .T. Philmore
+      ? Found(), field->LastName       // Result: .T. Philmore
       SEEK ft_Metaph( "Fillmore" )
-      ? Found(), LastName             // Result: .T. Philmore
+      ? Found(), field->LastName       // Result: .T. Philmore
    $END$
  */

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, xHarbour license gives permission for
  * additional uses of the text contained in its release of xHarbour.
@@ -47,9 +47,9 @@
 
 #include "fileio.ch"
 
-#define HB_SET_TRACESTACK_NONE    0
-#define HB_SET_TRACESTACK_CURRENT 1
-#define HB_SET_TRACESTACK_ALL     2
+#define HB_SET_TRACESTACK_NONE     0
+#define HB_SET_TRACESTACK_CURRENT  1
+#define HB_SET_TRACESTACK_ALL      2
 
 STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
@@ -59,15 +59,17 @@ FUNCTION xhb_SetTrace( xTrace )
 
    LOCAL lTrace := s_lSET_TRACE
 
-   IF HB_ISLOGICAL( xTrace )
+   DO CASE
+   CASE HB_ISLOGICAL( xTrace )
       s_lSET_TRACE := xTrace
-   ELSEIF HB_ISSTRING( xTrace )
-      IF Upper( xTrace ) == "ON"
+   CASE HB_ISSTRING( xTrace )
+      DO CASE
+      CASE Upper( xTrace ) == "ON"
          s_lSET_TRACE := .T.
-      ELSEIF Upper( xTrace ) == "OFF"
+      CASE Upper( xTrace ) == "OFF"
          s_lSET_TRACE := .F.
-      ENDIF
-   ENDIF
+      ENDCASE
+   ENDCASE
 
    RETURN lTrace
 
@@ -88,44 +90,37 @@ FUNCTION xhb_SetTraceStack( xLevel )
 
    LOCAL nTraceLevel := s_nSET_TRACESTACK
 
-   IF HB_ISSTRING( xLevel )
-      IF Upper( xLevel ) == "NONE"
+   DO CASE
+   CASE HB_ISSTRING( xLevel )
+      DO CASE
+      CASE Upper( xLevel ) == "NONE"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_NONE
-      ELSEIF Upper( xLevel ) == "CURRENT"
+      CASE Upper( xLevel ) == "CURRENT"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_CURRENT
-      ELSEIF Upper( xLevel ) == "ALL"
+      CASE Upper( xLevel ) == "ALL"
          s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
-      ENDIF
-   ELSEIF HB_ISNUMERIC( xLevel )
+      ENDCASE
+   CASE HB_ISNUMERIC( xLevel )
       IF xLevel >= 0
          s_nSET_TRACESTACK := xLevel
       ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN nTraceLevel
 
-// --------------------------------------------------------------//
+// -------------------------------------------------------------- //
 
 FUNCTION TraceLog( ... )
 
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
    LOCAL cFile, FileHandle, nLevel, ProcName, xParam
 
-#ifdef __XHARBOUR__
-   IF ! Set( _SET_TRACE )
-      RETURN .T.
-   ENDIF
-
-   cFile := Set( _SET_TRACEFILE )
-   nLevel := Set( _SET_TRACESTACK )
-#else
    IF ! s_lSET_TRACE
       RETURN .T.
    ENDIF
 
    cFile := s_cSET_TRACEFILE
    nLevel := s_nSET_TRACESTACK
-#endif
 
    /* hb_FileExists() and FOpen()/FCreate() make different assumptions rgdg path,
       so we have to make sure cFile contains path to avoid ambiguity */
@@ -137,39 +132,38 @@ FUNCTION TraceLog( ... )
       FileHandle := FCreate( cFile )
    ENDIF
 
-   FSeek( FileHandle, 0, FS_END )
+   IF FileHandle != F_ERROR
 
-   IF nLevel > 0
-      FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
-   ENDIF
+      FSeek( FileHandle, 0, FS_END )
 
-   IF nLevel > 1 .AND. ! ( ProcName( 2 ) == "" )
-      FWrite( FileHandle, " Called from: "  + hb_eol() )
-      nLevel := 1
-      DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == "" )
-         FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
-      ENDDO
-   ELSE
+      IF nLevel > 0
+         FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
+      ENDIF
+
+      IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
+         FWrite( FileHandle, " Called from:" + hb_eol() )
+         nLevel := 1
+         DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
+            FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+         ENDDO
+      ELSE
+         FWrite( FileHandle, hb_eol() )
+      ENDIF
+
+      FOR EACH xParam IN hb_AParams()
+         FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+      NEXT
+
       FWrite( FileHandle, hb_eol() )
+
+      FClose( FileHandle )
    ENDIF
-
-   FOR EACH xParam IN hb_AParams()
-      FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
-   NEXT
-
-   FWrite( FileHandle, hb_eol() )
-
-   FClose( FileHandle )
 
    RETURN .T.
-
-//
 
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
 STATIC FUNCTION cWithPath( cFilename )
 
-   LOCAL cPath
-
-   hb_FNameSplit( cFilename, @cPath )
+   LOCAL cPath := hb_FNameDir( cFilename )
 
    RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename

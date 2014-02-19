@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,17 +44,13 @@
  *
  */
 
-/*
- *            Routines to manage Wvt*Classes Gui Painting
- */
+/* Routines to manage Wvt*Classes Gui Painting */
 
 #include "wvtwin.ch"
 
 THREAD STATIC t_paint_ := { { "", {} } }
 
-/*
- *        This function must have to be defined in your appls
- */
+/* This function must have to be defined in your applications */
 #if 0
 
 FUNCTION Wvt_Paint()
@@ -79,8 +75,8 @@ FUNCTION WvtPaintObjects()
          lExe := .T.
 
          IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
-            /*  Check parameters against tlbr_ depending upon the
-             *  type of object and attributes contained in aAttr
+            /* Check parameters against tlbr_ depending upon the
+             * type of object and attributes contained in aAttr
              */
             DO CASE
             CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GRID_V
@@ -107,9 +103,9 @@ FUNCTION WvtPaintObjects()
                ENDIF
 
             OTHERWISE
-               /* If refreshing rectangle's top is less than objects' bottom    */
-               /* and left is less than objects' right                          */
-               /*                                                               */
+               /* If refreshing rectangle's top is less than objects' bottom
+                * and left is less than objects' right
+                */
                IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   <= bottom  */
                   tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm >= top     */
                   tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < right    */
@@ -133,13 +129,13 @@ FUNCTION WvtSetPaint( a_ )
 
    THREAD STATIC t
 
-   IF t == nil
+   IF t == NIL
       t := {}
    ENDIF
 
    o := t
 
-   IF a_ != nil
+   IF a_ != NIL
       t := a_
    ENDIF
 
@@ -149,7 +145,7 @@ FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
 
    LOCAL n, n1, oldData
 
-   IF xData != nil
+   IF xData != NIL
       IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
          IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n, 2, n1, 2 ]
@@ -226,9 +222,8 @@ FUNCTION Wvg_InsertPaint( cID, aPaint, lSet )
    RETURN NIL
 
 /*
- *               RunTime Dialog Generation Routines
- *
- *                      Courtesy What32.lib
+ * RunTime Dialog Generation Routines
+ * Courtesy hbwhat library
  */
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
 FUNCTION Wvt_SetDlgCoMode( nMode )
@@ -302,8 +297,8 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
          WS_VISIBLE + WS_POPUP   + DS_3DLOOK
    ENDIF
 
-   AAdd( aDlg[ 1 ], iif( Empty( nHelpId  ), 0, nHelpId  ) )
-   AAdd( aDlg[ 1 ], iif( Empty( nExStyle ), 0, nExStyle ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
    AAdd( aDlg[ 1 ], nStyle  )
    AAdd( aDlg[ 1 ], 0       )
    AAdd( aDlg[ 1 ], nX      )
@@ -312,12 +307,12 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    AAdd( aDlg[ 1 ], nH      )
    AAdd( aDlg[ 1 ], 0       )
    AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], iif( HB_ISSTRING( cTitle ), cTitle, "" ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( cTitle, "" ) )
 
-   IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8               ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F.             ) )
+   IF hb_bitAnd( nStyle, DS_SETFONT ) != 0
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8 ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400 ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F. ) )
       AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName, "MS Sans Serif" ) )
    ENDIF
 
@@ -408,21 +403,17 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
    hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
    IF hDlg != 0
-      IF ncIcon != nil
+      IF ncIcon != NIL
          Wvt_DlgSetIcon( hDlg, ncIcon )
-
       ENDIF
 
       IF HB_ISNUMERIC( nTimerTicks )
          Wvg_SetTimer( hDlg, 1001, nTimerTicks )
-
       ENDIF
 
-      IF hMenu != nil
+      IF hMenu != NIL
          Wvg_SetMenu( hDlg, hMenu )
-
       ENDIF
-
    ENDIF
 
    RETURN hDlg
@@ -476,11 +467,11 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
    __defaultNIL( @cPath, "" )
    __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
-/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
-   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
    IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
@@ -518,7 +509,7 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
-/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
@@ -538,78 +529,76 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    RETURN xRet
 
-/*
- *                      C Functions to PRG Ports
- */
+/* C functions to PRG Ports */
 
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 
-FUNCTION Wvt_SetTitle( cTitle )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetTitle( cTitle )
    RETURN hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
 FUNCTION Wvt_GetTitle()
-
    RETURN hb_gtInfo( HB_GTI_WINTITLE )
+
+#endif
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
-   IF HB_ISNUMERIC( ncIconRes )
+   DO CASE
+   CASE HB_ISNUMERIC( ncIconRes )
       hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
-
-   ELSEIF HB_ISSTRING( cIconName )
+   CASE HB_ISSTRING( cIconName )
       hb_gtInfo( HB_GTI_ICONRES, cIconName )
-
-   ELSEIF HB_ISSTRING( ncIconRes )
+   CASE HB_ISSTRING( ncIconRes )
       hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
-
-   ENDIF
+   ENDCASE
 
    RETURN NIL
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
-   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME    ) )
-   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH   ) )
-   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
+   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME ) )
+   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH ) )
+   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT ) )
    __defaultNIL( @nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) )
-   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE    ) )
+   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE ) )
 
    RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
-FUNCTION Wvt_SetCodepage( nCodePage )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetCodepage( nCodePage )
    RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
 FUNCTION Wvt_GetPalette()
-
    RETURN hb_gtInfo( HB_GTI_PALETTE )
 
 FUNCTION Wvt_SetPalette( aRGB )
-
    RETURN hb_gtInfo( HB_GTI_PALETTE, aRGB )
 
 FUNCTION Wvt_GetRGBColor( nIndex )
-
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-#define BLACK                                     RGB( 0x0 ,0x0 ,0x0  )
-#define BLUE                                      RGB( 0x0 ,0x0 ,0x85 )
-#define GREEN                                     RGB( 0x0 ,0x85,0x0  )
-#define CYAN                                      RGB( 0x0 ,0x85,0x85 )
-#define RED                                       RGB( 0x85,0x0 ,0x0  )
-#define MAGENTA                                   RGB( 0x85,0x0 ,0x85 )
-#define BROWN                                     RGB( 0x85,0x85,0x0  )
-#define LIGHT_GRAY                                RGB( 0xC6,0xC6,0xC6 )
-#define GRAY                                      RGB( 0x60,0x60,0x60 )
-#define BRIGHT_BLUE                               RGB( 0x00,0x00,0xFF )
-#define BRIGHT_GREEN                              RGB( 0x60,0xFF,0x60 )
-#define BRIGHT_CYAN                               RGB( 0x60,0xFF,0xFF )
-#define BRIGHT_RED                                RGB( 0xF8,0x00,0x26 )
-#define BRIGHT_MAGENTA                            RGB( 0xFF,0x60,0xFF )
-#define YELLOW                                    RGB( 0xFF,0xFF,0x00 )
-#define WHITE                                     RGB( 0xFF,0xFF,0xFF )
+#endif
+
+#define BLACK                                     RGB( 0x00, 0x00, 0x00 )
+#define BLUE                                      RGB( 0x00, 0x00, 0x85 )
+#define GREEN                                     RGB( 0x00, 0x85, 0x00 )
+#define CYAN                                      RGB( 0x00, 0x85, 0x85 )
+#define RED                                       RGB( 0x85, 0x00, 0x00 )
+#define MAGENTA                                   RGB( 0x85, 0x00, 0x85 )
+#define BROWN                                     RGB( 0x85, 0x85, 0x00 )
+#define LIGHT_GRAY                                RGB( 0xC6, 0xC6, 0xC6 )
+#define GRAY                                      RGB( 0x60, 0x60, 0x60 )
+#define BRIGHT_BLUE                               RGB( 0x00, 0x00, 0xFF )
+#define BRIGHT_GREEN                              RGB( 0x60, 0xFF, 0x60 )
+#define BRIGHT_CYAN                               RGB( 0x60, 0xFF, 0xFF )
+#define BRIGHT_RED                                RGB( 0xF8, 0x00, 0x26 )
+#define BRIGHT_MAGENTA                            RGB( 0xFF, 0x60, 0xFF )
+#define YELLOW                                    RGB( 0xFF, 0xFF, 0x00 )
+#define WHITE                                     RGB( 0xFF, 0xFF, 0xFF )
 
 FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
@@ -622,7 +611,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
    IF HB_ISSTRING( cColor )
       IF ( n := At( "/", cColor ) ) > 0
          IF nForeBack == 0
-            s := SubStr( cColor, 1, n - 1 )
+            s := Left( cColor, n - 1 )
          ELSE
             s := SubStr( cColor, n + 1 )
          ENDIF
@@ -646,20 +635,20 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-FUNCTION Wvt_SetAltF4Close( lSetClose )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_SetAltF4Close( lSetClose )
    RETURN hb_gtInfo( HB_GTI_CLOSABLE, lSetClose )
 
 FUNCTION Wvt_GetScreenWidth()
-
    RETURN hb_gtInfo( HB_GTI_DESKTOPWIDTH )
 
 FUNCTION Wvt_GetScreenHeight()
-
    RETURN hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
 
-FUNCTION Wvt_GetWindowHandle()
+#endif
 
+FUNCTION Wvt_GetWindowHandle()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
@@ -688,71 +677,61 @@ FUNCTION Wvt_Keyboard( nKey )
 
    RETURN NIL
 
-FUNCTION Wvt_GetClipboard()
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION Wvt_GetClipboard()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
 FUNCTION Wvt_SetClipboard( cText )
-
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
+
+#endif
 
 FUNCTION Wvt_PasteFromClipboard()
 
    LOCAL cText, nLen, i
 
    cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-   IF ( nLen := Len( cText ) ) > 0
-      FOR i := 1 TO nLen
-         Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
-      NEXT
-   ENDIF
+
+   nLen := Len( cText )
+   FOR i := 1 TO nLen
+      Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
+   NEXT
 
    RETURN NIL
 
 FUNCTION Wvt_ResetWindow()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
 FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
 FUNCTION Wvt_KillTimer( nTimerID )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
 FUNCTION Wvt_SetOnTop()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
 FUNCTION Wvt_SetAsNormal()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
 FUNCTION Wvt_Minimize()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
 FUNCTION Wvt_Maximize()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
 FUNCTION Wvt_Hide()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
 FUNCTION Wvt_Show()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
 FUNCTION Wvt_SetWindowPos( nX, nY )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
 FUNCTION Wvt_ShowWindow( nState )
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
 FUNCTION Wvt_Update()
-
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )

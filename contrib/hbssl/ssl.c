@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -67,7 +67,7 @@
 
 #include "hbssl.h"
 
-/* NOTE: See: http://www.openssl.org/support/faq.html#PROG2
+/* NOTE: See: https://www.openssl.org/support/faq.html#PROG2
          Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
 #if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
@@ -1533,7 +1533,7 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 
       if( ssl )
       {
-         PHB_ITEM pCallback = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 2, HB_IT_EVALITEM );
 
          if( pCallback )
          {

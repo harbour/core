@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,18 +62,18 @@ PROCEDURE Main()
    ?
 
    ? "  Simple tests:"
-   ? '    NumToken( "Hello, World!" ) ==  2 ? --------------------------------> ' + Str( NumToken( "Hello, World!" ), 2 )
-   ? '    NumToken( "This is good. See you! How do you do?", ".!?" ) == 3 ? --> ' + Str( NumToken( "This is good. See you! How do you do?", ".!?" ), 2 )
-   ? '    NumToken( "one,,three,four,,six", ",", 1 ) ==  6 ? -----------------> ' + Str( NumToken( "one,,three,four,,six", ",", 1 ), 2 )
+   ? '    NumToken( "Hello, World!" ) == 2 ? --------------------------------->', NumToken( "Hello, World!" )
+   ? '    NumToken( "This is good. See you! How do you do?", ".!?" ) == 3 ? -->', NumToken( "This is good. See you! How do you do?", ".!?" )
+   ? '    NumToken( "one,,three,four,,six", ",", 1 ) ==  6 ? ----------------->', NumToken( "one,,three,four,,six", ",", 1 )
    ?
 
-   ? '  # of tokens in the string "' + cStr + '"'
-   ? '      separator list = ".,!" and skip width = 1: ' + Str( NumToken( cStr, ".,!", 1 ) )
-   ? '                                 skip width = 3: ' + Str( NumToken( cStr, ".,!", 3 ) )
-   ? '      separator list = ",!"  and skip width = 1: ' + Str( NumToken( cStr, ",!", 1 ) )
-   ? '                                 skip width = 3: ' + Str( NumToken( cStr, ",!", 3 ) )
-   ? '      separator list = "!"   and skip width = 1: ' + Str( NumToken( cStr, "!", 1 ) )
-   ? '                                 skip width = 3: ' + Str( NumToken( cStr, "!", 3 ) )
+   ? '  # of tokens in the string', '"' + cStr + '"'
+   ? '      separator list == ".,!" and skip width == 1:', NumToken( cStr, ".,!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, ".,!", 3 )
+   ? '      separator list == ",!"  and skip width == 1:', NumToken( cStr, ",!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, ",!", 3 )
+   ? '      separator list == "!"   and skip width == 1:', NumToken( cStr, "!", 1 )
+   ? '                                  skip width == 3:', NumToken( cStr, "!", 3 )
 
    ?
    ? "End test of NumToken()"

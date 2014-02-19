@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -193,13 +193,13 @@ static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*, UINT, LCID, ITypeInfo** );
-   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
-   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch *, UINT * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch *, UINT, LCID, ITypeInfo ** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch *, REFIID, LPOLESTR *, UINT, LCID, DISPID * );
+   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch *, DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * );
 } IDispatchVtbl;
 #endif
 
@@ -509,11 +509,11 @@ static const IDispatchVtbl IHbOleServer_Vtbl = {
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory* );
-   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory*, IUnknown*, REFIID, void** );
-   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory*, BOOL );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory * );
+   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory *, IUnknown *, REFIID, void ** );
+   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory *, BOOL );
 } IClassFactoryVtbl;
 #endif
 

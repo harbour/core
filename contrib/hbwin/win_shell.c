@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -188,7 +188,7 @@ static LPTSTR s_StringList( int iParam )
                      nLen += n1 + 1;
                }
             }
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = TEXT( '\0' );
          }
       }
       else
@@ -196,9 +196,9 @@ static LPTSTR s_StringList( int iParam )
          nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
          if( nLen )
          {
-            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 2 ) * sizeof( TCHAR ) );
             HB_ITEMCOPYSTR( pItem, lpStr, nLen );
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = lpStr[ nLen + 1 ] = TEXT( '\0' );
          }
       }
    }
@@ -222,6 +222,7 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    void * hProgressTitle;
 
+   memset( &fop, 0, sizeof( fop ) );
    fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
    fop.wFunc                 = ( UINT ) hb_parni( 2 );
    fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );

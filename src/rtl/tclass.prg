@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -214,7 +214,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    LOCAL ahSuper := {}
 
 #if 0
-   Self:Class := MetaClass
+   ::Class := MetaClass
 #endif
 
    FOR EACH n IN ::asSuper
@@ -253,20 +253,20 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    NEXT
 
    FOR EACH n IN ::aMethods
-      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
                    HB_OO_MSG_METHOD, NIL, n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    nClassBegin := __cls_CntClsData( hClass )
    FOR EACH n IN ::aClsDatas
-      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin,;
+      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin, ;
                    HB_OO_MSG_CLSACCESS, n[ HB_OO_CLSD_VALUE ], n[ HB_OO_CLSD_SCOPE ] )
-      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n:__enumIndex() + nClassBegin,;
+      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n:__enumIndex() + nClassBegin, ;
                    HB_OO_MSG_CLSASSIGN,                      , n[ HB_OO_CLSD_SCOPE ] )
    NEXT
 
    FOR EACH n IN ::aInlines
-      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
                    HB_OO_MSG_INLINE, NIL, n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 

@@ -6,30 +6,30 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Two()
+STATIC PROCEDURE Two()
 
    Three()
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Three()
+STATIC PROCEDURE Three()
 
    Four()
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Four()
+STATIC PROCEDURE Four()
 
    Five()
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Five()
+STATIC PROCEDURE Five()
 
    LOCAL n := 0
 
-   WHILE ! Empty( ProcName( n ) )
-      ?? "Called from: ", ProcName( n ), ProcLine( n++ ), hb_eol()
+   DO WHILE ! Empty( ProcName( n ) )
+      ?? "Called from:", ProcName( n ), ProcLine( n++ ), hb_eol()
    ENDDO
 
-   RETURN NIL
+   RETURN

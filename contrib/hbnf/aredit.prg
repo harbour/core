@@ -22,19 +22,16 @@
  *
  */
 
-/*
+/* Some notes:
 
-    Some notes:
+   The tbmethods section is a short cut from Spence's book instead
+   of using the longer DO CASE method.
 
-       The tbmethods section is a short cut from Spence's book instead
-       of using the longer DO CASE method.
+   Jim Gale showed me the basic array browser and Robert DiFalco
+   showed me the improved skipblock in public messages on Nanforum.
 
-       Jim Gale showed me the basic array browser and Robert DiFalco
-       showed me the improved skipblock in public messages on Nanforum.
-
-       I added the functionality of the "Edit Get" code block
-       (ie bGetFunc), TestGet() demo, and the add/delete rows.
-
+   I added the functionality of the "Edit Get" code block
+   (ie bGetFunc), TestGet() demo, and the add/delete rows.
 */
 
 #include "box.ch"
@@ -57,7 +54,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
-   LOCAL nDim, cType, cVal
+   LOCAL dim, cType, cVal
    LOCAL tb_methods := ;
       { ;
       { K_DOWN,       {| b | b:down() } }, ;
@@ -109,30 +106,27 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
 
       meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } )
       IF meth_no != 0
-         Eval( tb_methods[ meth_no, BLK_ELEM ], b )
+         Eval( tb_methods[ meth_no ][ BLK_ELEM ], b )
       ELSE
          DO CASE
          CASE nKey == K_F7
-            FOR nDim := 1 TO Len( ar )
-               hb_ADel( ar[ nDim ], nElem, .T. )
+            FOR EACH dim IN ar
+               hb_ADel( dim, nElem, .T. )
             NEXT
             b:refreshAll()
 
          CASE nKey == K_F8
-            FOR nDim := 1 TO Len( ar )
-               // check valtype of current element before AIns()
-               cType := ValType( ar[ nDim, nElem ] )
-               cVal  := ar[ nDim, nElem ]
-               hb_AIns( ar[ nDim ], nElem,, .T. )
-               IF cType == "C"
-                  ar[ nDim, nElem ] := Space( Len( cVal ) )
-               ELSEIF cType == "N"
-                  ar[ nDim, nElem ] := 0
-               ELSEIF cType == "L"
-                  ar[ nDim, nElem ] := .F.
-               ELSEIF cType == "D"
-                  ar[ nDim, nElem ] := hb_SToD()
-               ENDIF
+            FOR EACH dim IN ar
+               // check type of current element before hb_AIns()
+               cType := ValType( dim[ nElem ] )
+               cVal  := dim[ nElem ]
+               hb_AIns( dim, nElem,, .T. )
+               DO CASE
+               CASE cType == "C" ; dim[ nElem ] := Space( Len( cVal ) )
+               CASE cType == "N" ; dim[ nElem ] := 0
+               CASE cType == "L" ; dim[ nElem ] := .F.
+               CASE cType == "D" ; dim[ nElem ] := hb_SToD()
+               ENDCASE
             NEXT
             b:refreshAll()
 
@@ -140,7 +134,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
             exit_requested := .T.
 
             // Other exception handling ...
-         CASE HB_ISBLOCK( bGetFunc )
+         CASE HB_ISEVALITEM( bGetFunc )
             IF nKey != K_ENTER
                // want last key to be part of GET edit so KEYBOARD it
                hb_keyPut( LastKey() )
@@ -160,4 +154,4 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    ENDDO
    RestScreen( nTop, nLeft, nBot, nRight, cSaveWin )
 
-   RETURN ar[ b:colPos, nElem ]
+   RETURN ar[ b:colPos ][ nElem ]

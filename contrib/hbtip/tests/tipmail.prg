@@ -1,14 +1,10 @@
-/******************************************
- * TIP test
- * Mail - reading and writing multipart mails
+/*
+ * TIP Mail - reading and writing multipart mails
  *
  * Test for reading a multipart message (that must already
  * be in its canonical form, that is, line terminator is
- * CRLF and it must have no headers other than SMTP/Mime).
- *
- * This test writes data to standard output, and is
- * compiled only under GTCGI;
- ******************************************/
+ * CRLF and it must have no headers other than SMTP/MIME).
+ */
 
 #require "hbtip"
 
@@ -16,11 +12,11 @@ PROCEDURE Main( cFileName )
 
    LOCAL oMail, cData, i
 
-   IF cFileName != NIL
+   IF ! HB_ISSTRING( cFileName )
       cData := MemoRead( cFileName )
       IF FError() > 0
          ? "Can't open", cFileName
-         QUIT
+         RETURN
       ENDIF
    ENDIF
    oMail := TIPMail():New()
@@ -29,8 +25,8 @@ PROCEDURE Main( cFileName )
    ENDIF
 
    ? "-------------============== HEADERS =================--------------"
-   FOR i := 1 TO Len( oMail:hHeaders )
-      ? hb_HKeyAt( oMail:hHeaders, i ), ":", hb_HValueAt( oMail:hHeaders, i )
+   FOR EACH i IN oMail:hHeaders
+      ? i:__enumKey(), ":", i
    NEXT
    ?
 
@@ -53,6 +49,8 @@ PROCEDURE Main( cFileName )
    ? "DONE"
    ?
    /* Writing stream */
-   /* FWrite( 1, oMail:ToString() ) */
+#if 0
+   OutStd( oMail:ToString() )
+#endif
 
    RETURN

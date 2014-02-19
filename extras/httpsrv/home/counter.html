@@ -1,87 +1,87 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Show Graphic Counter</title>
-        <meta http-equiv="Pragma" content="no-cache">
-        <link rel="stylesheet" type="text/css" href="/css/base.css" />
-        <script type="text/javascript" src="/js/ajax.js"></script>
-        <script type="text/javascript">
-            // <![CDATA[
+<head>
+	<meta charset="UTF-8" />
+	<title>Show Graphic Counter</title>
+	<meta http-equiv="pragma" content="no-cache" />
+	<link rel="stylesheet" type="text/css" href="/css/base.css" />
+	<script type="text/javascript" src="/js/ajax.js"></script>
+	<script type="text/javascript">
+		// <![CDATA[
 
-            var divpart;
+		var divpart;
 
-            /**
-             * Requests table data for a specific page.
-             *
-             * @param pageNum the page number to request data for
-             */
-            function sendData( force )
-            {
-                var qstr = getquerystring();
-                if ( force || qstr.length > 4 )
-                {
-                  //qstr = 'w1=' + escape(qstr);  // NOTE: no '?' before querystring
-                  //xmlPost('/cgi-bin/showcounter.hrb', qstr + "&sid=" + Math.random(), tableResponseHandler);
-                  divpart = 'result';
-                  updatepage( escape( qstr ) );
-                }
-                return false;
-            }
+		/**
+		 * Requests table data for a specific page.
+		 *
+		 * @param pageNum the page number to request data for
+		 */
+		function sendData( force )
+		{
+			var qstr = getquerystring();
+			if ( force || qstr.length > 4 )
+			{
+//				qstr = 'w1=' + escape(qstr);  // NOTE: no '?' before querystring
+//				xmlPost('/cgi-bin/showcounter.hrb', qstr + "&sid=" + Math.random(), tableResponseHandler);
+				divpart = 'result';
+				updatepage( escape( qstr ) );
+			}
+			return false;
+		}
 
-            function getquerystring()
-            {
-                var form = document.forms[ 'f1' ];
-                var word = form.word.value;
-                //alert( 'qstr: ' + qstr );
-                return word;
-            }
+		function getquerystring()
+		{
+			var form = document.forms[ 'f1' ];
+			var word = form.word.value;
+//			alert( 'qstr: ' + qstr );
+			return word;
+		}
 
-            function updatepage( str )
-            {
-                //document.getElementById( divpart ).innerHTML = str; /* "<img src='/counter/" + str + "' />"; */
-                document.getElementById( divpart ).innerHTML = "<img src='/cgi-bin/showcounter.hrb?w=" + str + "' />";
-            }
+		function updatepage( str )
+		{
+//			document.getElementById( divpart ).innerHTML = str; /* "<img src='/counter/" + str + "' />"; */
+			document.getElementById( divpart ).innerHTML = "<img src='/cgi-bin/showcounter.hrb?w=" + str + "' />";
+		}
 
-            /**
-             * Handler for server's response to table requests.
-             * Table content is pulled from response XML and a HTML
-             * table is built.  The table is then inserted into the
-             * 'tableSection' DIV.
-             */
-            function tableResponseHandler()
-            {
-                // Make sure the request is loaded (readyState = 4)
-                if (req.readyState == 4)
-                {
-                    // Make sure the status is "OK"
-                    if (req.status == 200)
-                    {
-                        // shutdown Ajax loading progress
-                        EndProgress();
+		/**
+		 * Handler for server's response to table requests.
+		 * Table content is pulled from response XML and a HTML
+		 * table is built.  The table is then inserted into the
+		 * 'tableSection' DIV.
+		 */
+		function tableResponseHandler()
+		{
+			// Make sure the request is loaded (readyState = 4)
+			if (req.readyState == 4)
+			{
+				// Make sure the status is "OK"
+				if (req.status == 200)
+				{
+					// shutdown Ajax loading progress
+					EndProgress();
 
-                        // transform
-                        //document.write( xsldoc );
-                        updatepage( req.responseText );
-
-                    }
-                    else
-                    {
-                        EndProgress();
-                        alert("There was a problem retrieving the XML data:\n" +
-                            req.statusText);
-                    }
-                }
-            }
-            // ]]>
-        </script>
-    </head>
-    <body>
-       This is a simple ajax test. Please type a number (at least 4 digits).
-       <form name="f1"  onsubmit='JavaScript:sendData(true);return false'>
-         <p>Number: <input name="word" type="text" onkeyup='JavaScript:sendData(false);return false'>
-         <input value="Go" type="button" onclick='JavaScript:sendData(true)'></p>
-         <div id="result"></div>
-       </form>
-       Return to <a href="/">Main Page</a>
-    </body>
+					// transform
+					//document.write( xsldoc );
+					updatepage( req.responseText );
+				}
+				else
+				{
+					EndProgress();
+					alert("There was a problem retrieving the XML data:\n" +
+						req.statusText);
+				}
+			}
+		}
+		// ]]>
+	</script>
+</head>
+<body>
+	This is a simple ajax test. Please type a number (at least 4 digits).
+	<form name="f1"  onsubmit='JavaScript:sendData(true);return false'>
+		<p>Number: <input name="word" type="text" onkeyup='JavaScript:sendData(false);return false'>
+		<input value="Go" type="button" onclick='JavaScript:sendData(true)'></p>
+		<div id="result"></div>
+	</form>
+	Return to <a href="/">Main Page</a>
+</body>
 </html>

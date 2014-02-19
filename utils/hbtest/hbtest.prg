@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Regression tests for the runtime library (main)
  *
- * Copyright 1999-2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -103,8 +103,8 @@ STATIC s_lDBFAvail := .F.
 
 PROCEDURE Main( cPar1, cPar2 )
 
-   OutStd( "Harbour Regression Test Suite" + hb_eol() +;
-           "Copyright (c) 1999-2013, Viktor Szakats" + hb_eol() +;
+   OutStd( "Harbour Regression Test Suite" + hb_eol() + ;
+           "Copyright (c) 1999-2014, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() )
 
    IF cPar1 == NIL
@@ -121,11 +121,11 @@ PROCEDURE Main( cPar1, cPar2 )
       "-help" $ Lower( cPar1 ) .OR. ;
       "--help" $ Lower( cPar1 )
 
-      OutStd( hb_eol() +;
-              "Syntax:  hbtest [options]" + hb_eol() +;
-              hb_eol() +;
-              "Options:  -h, -?        Display this help." + hb_eol() +;
-              "          -all          Display all tests, not only the failures." + hb_eol() +;
+      OutStd( hb_eol() + ;
+              "Syntax:  hbtest [options]" + hb_eol() + ;
+              hb_eol() + ;
+              "Options:  -h, -?        Display this help." + hb_eol() + ;
+              "          -all          Display all tests, not only the failures." + hb_eol() + ;
               "          -skip:<list>  Skip the listed test numbers." + hb_eol() )
 
       RETURN
@@ -142,6 +142,7 @@ PROCEDURE Main( cPar1, cPar2 )
    Main_STR()
    Main_STRA()
    Main_TRANS()
+   Main_TRANS2()
    Comp_Str()
    Exact_Str()
    New_STRINGS()
@@ -237,26 +238,26 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    /* Feedback */
 
    OutMsg( s_nFhnd, ;
-      "---------------------------------------------------------------------------" + hb_eol() +;
+      Replicate( "-", 75 ) + hb_eol() + ;
       "      Version: " + Version() + hb_eol() )
 #ifdef __HARBOUR__
    OutMsg( s_nFhnd, ;
       "     Compiler: " + hb_Compiler() + hb_eol() )
 #endif
    OutMsg( s_nFhnd, ;
-      "           OS: " + OS() + hb_eol() +;
-      "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;
-      "Shortcut opt.: " + iif( s_lShortcut, "On", "Off" ) + hb_eol() +;
-      "     Switches: " + cParam + hb_eol() +;
-      "===========================================================================" + hb_eol() )
+      "           OS: " + OS() + hb_eol() + ;
+      "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() + ;
+      "Shortcut opt.: " + iif( s_lShortcut, "On", "Off" ) + hb_eol() + ;
+      "     Switches: " + cParam + hb_eol() + ;
+      Replicate( "=", 75 ) + hb_eol() )
 
    OutMsg( s_nFhnd, ;
-      PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
-      PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
-      PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
-      PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
-            "Expected" + hb_eol() +;
-      "---------------------------------------------------------------------------" + hb_eol() )
+      PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " + ;
+      PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " + ;
+      PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " + ;
+      PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " + ;
+            "Expected" + hb_eol() + ;
+      Replicate( "-", 75 ) + hb_eol() )
 
    /* NOTE: mxNotHere intentionally not declared */
    PUBLIC mcLongerNameThen10Chars := "Long String Name!"
@@ -290,17 +291,17 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    bErrorOld := ErrorBlock( {| oError | Break( oError ) } )
    BEGIN SEQUENCE
       dbCreate( "_hbtmp_.dbf", { ;
-         { "TYPE_C"   , "C", 15, 0 } ,;
-         { "TYPE_C_E" , "C", 15, 0 } ,;
-         { "TYPE_D"   , "D",  8, 0 } ,;
-         { "TYPE_D_E" , "D",  8, 0 } ,;
-         { "TYPE_M"   , "M", 10, 0 } ,;
-         { "TYPE_M_E" , "M", 10, 0 } ,;
-         { "TYPE_N_I" , "N", 11, 0 } ,;
-         { "TYPE_N_IE", "N", 11, 0 } ,;
-         { "TYPE_N_D" , "N", 11, 3 } ,;
-         { "TYPE_N_DE", "N", 11, 3 } ,;
-         { "TYPE_L"   , "L",  1, 0 } ,;
+         { "TYPE_C"   , "C", 15, 0 }, ;
+         { "TYPE_C_E" , "C", 15, 0 }, ;
+         { "TYPE_D"   , "D",  8, 0 }, ;
+         { "TYPE_D_E" , "D",  8, 0 }, ;
+         { "TYPE_M"   , "M", 10, 0 }, ;
+         { "TYPE_M_E" , "M", 10, 0 }, ;
+         { "TYPE_N_I" , "N", 11, 0 }, ;
+         { "TYPE_N_IE", "N", 11, 0 }, ;
+         { "TYPE_N_D" , "N", 11, 3 }, ;
+         { "TYPE_N_DE", "N", 11, 3 }, ;
+         { "TYPE_L"   , "L",  1, 0 }, ;
          { "TYPE_L_E" , "L",  1, 0 } } )
 
       USE ( "_hbtmp_.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
@@ -393,21 +394,21 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
       IF lFailed
          OutMsg( s_nFhnd, ;
-            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-            RTrim( cBlock ) +;
-            hb_eol() +;
-            Space( 5 ) + "  Result: " + XToStr( xResult ) +;
-            hb_eol() +;
-            Space( 5 ) + "Expected: " + XToStr( xResultExpected ) +;
+            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " + ;
+            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
+            RTrim( cBlock ) + ;
+            hb_eol() + ;
+            Space( 5 ) + "  Result: " + XToStr( xResult ) + ;
+            hb_eol() + ;
+            Space( 5 ) + "Expected: " + XToStr( xResultExpected ) + ;
             hb_eol() )
       ELSE
          OutMsg( s_nFhnd, ;
-            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
-            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
-            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
-            PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
-            RTrim( XToStr( xResultExpected ) ) +;
+            PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " + ;
+            PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
+            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
+            PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " + ;
+            RTrim( XToStr( xResultExpected ) ) + ;
             hb_eol() )
       ENDIF
    ENDIF
@@ -435,18 +436,18 @@ STATIC PROCEDURE TEST_END()
    s_nEndTime := Seconds()
 
    OutMsg( s_nFhnd, ;
-      "===========================================================================" + hb_eol() +;
-      "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
-      "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() +;
-      "                   ----------" + hb_eol() +;
-      "            Total: " + Str( s_nPass + s_nFail ) +;
-      " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() +;
+      Replicate( "=", 75 ) + hb_eol() + ;
+      "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + hb_eol() + ;
+      "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + hb_eol() + ;
+      "                   ----------" + hb_eol() + ;
+      "            Total: " + Str( s_nPass + s_nFail ) + ;
+      " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() + ;
       hb_eol() )
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
          OutMsg( s_nFhnd, ;
-            "WARNING ! Failures detected using CA-Cl*pper." + hb_eol() +;
+            "WARNING ! Failures detected using CA-Cl*pper." + hb_eol() + ;
             "Please fix those expected results which are not bugs in CA-Cl*pper itself." + hb_eol() )
       ELSE
          OutMsg( s_nFhnd, ;
@@ -667,9 +668,9 @@ FUNCTION hb_SToD( cDate )
 
 FUNCTION hb_SToD( s )
 
-   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
+   LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
-   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) )
    Set( _SET_DATEFORMAT, cDf )
 
    RETURN dt
@@ -687,13 +688,14 @@ STATIC FUNCTION BADFNAME()
 
 STATIC PROCEDURE OutMsg( hFile, cMsg )
 
-   IF hFile == 1
+   DO CASE
+   CASE hFile == 1
       OutStd( cMsg )
-   ELSEIF hFile == 2
+   CASE hFile == 2
       OutErr( cMsg )
-   ELSE
+   OTHERWISE
       FWrite( hFile, cMsg )
-   ENDIF
+   ENDCASE
 
    RETURN
 

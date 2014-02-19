@@ -1,7 +1,7 @@
 /*
  *                   GTWVT Console GUI Interface
  *
- *               Pritpal Bedi <pritpal@vouchcac.com>
+ *         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
  *
  *       I have tried to simulate the gui controls through GDI
  *        functions and found a way to refresh those controls
@@ -89,7 +89,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
+   Set( _SET_EVENTMASK, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) )
 
    Wvt_SetGUI( .T. )
    WvtSetKeys( .T. )
@@ -124,7 +124,7 @@ PROCEDURE Main()
    Wvt_SetMousePos( 2, 40 )
 
    AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
-   AAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
+   AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Vouch" ) } )
    AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
@@ -181,7 +181,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE WvtConsoleGets( nMode )
+STATIC PROCEDURE WvtConsoleGets( nMode )
 
    hb_default( @nMode, 0 )
 
@@ -194,7 +194,7 @@ PROCEDURE WvtConsoleGets( nMode )
 
    RETURN
 
-PROCEDURE WvtNextGetsConsole()
+STATIC PROCEDURE WvtNextGetsConsole()
 
    LOCAL dDate      := hb_SToD()
    LOCAL cName      := Space( 35 )
@@ -228,7 +228,7 @@ PROCEDURE WvtNextGetsConsole()
 
    RETURN
 
-PROCEDURE WvtNextGets()
+PROCEDURE WvtNextGets()  /* must be a public function */
 
    IF hb_mtvm()
       hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_SetFont( "Terminal", 20 ), ;
@@ -239,7 +239,7 @@ PROCEDURE WvtNextGets()
 
    RETURN
 
-PROCEDURE WvtNextGets_X()
+STATIC PROCEDURE WvtNextGets_X()
 
    LOCAL aLastPaint, clr
    LOCAL dDate      := hb_SToD()
@@ -251,7 +251,7 @@ PROCEDURE WvtNextGets_X()
    LOCAL aBlocks    := {}
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
-   LOCAL aPalette   := Wvt_GetPalette()
+   LOCAL aPalette   := hb_gtInfo( HB_GTI_PALETTE )
    LOCAL aNewPalette := AClone( aPalette )
    LOCAL aObjects   := WvtSetObjects( {} )
    LOCAL nRow       := Row()
@@ -265,9 +265,9 @@ PROCEDURE WvtNextGets_X()
    // these values with realistic values.
    aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++s_nPalletMultiplier )
 
-   Wvt_SetPalette( aNewPalette )
+   hb_gtInfo( HB_GTI_PALETTE, aNewPalette )
 
-   AAdd( aBlocks, {|| Wvt_SetTitle( "Wvt Gets 2nd Window with Different Palette" ) } )
+   AAdd( aBlocks, {|| hb_gtInfo( HB_GTI_WINTITLE, "Wvt Gets 2nd Window with Different Palette" ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
    AAdd( aBlocks, {|| Wvt_SetBrush( 0, RGB( 32, 255, 100 ) )    } )
    AAdd( aBlocks, {|| Wvt_DrawEllipse( 6, 50, 10, 58 )           } )
@@ -306,7 +306,7 @@ PROCEDURE WvtNextGets_X()
    READ
 
    // Restore Environment
-   Wvt_SetPalette( aPalette )
+   hb_gtInfo( HB_GTI_PALETTE, aPalette )
    WvtSetObjects( aObjects )
    WvtSetBlocks( aLastPaint )
    SetColor( clr )
@@ -317,7 +317,7 @@ PROCEDURE WvtNextGets_X()
 
    RETURN
 
-FUNCTION WvtPartialScreen()
+PROCEDURE WvtPartialScreen()  /* must be a public function */
 
    LOCAL scr        := SaveScreen( 7, 20, 15, 60 )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -357,9 +357,9 @@ FUNCTION WvtPartialScreen()
    WvtSetBlocks( aLastPaint )
    Wvt_SetPopupMenu( hPopup )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION WvtLines()
+PROCEDURE WvtLines()  /* must be a public function */
 
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL clr        := SetColor( "N/W" )
@@ -378,12 +378,12 @@ FUNCTION WvtLines()
    AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, RGB( 255, 0, 0 ) ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
 
-   @ 0, 1 SAY "Center Raised"
+   @ 0,  1 SAY "Center Raised"
    @ 1, 11 SAY "Top Recessed"
    @ 2, 21 SAY "Center Plain White 3 Pixels"
    @ 3, 31 SAY "Center Raised Dotted"
    @ 4, 41 SAY "Bottom Recessed"
-   @ 5, 1 SAY "Bottom Checked"
+   @ 5,  1 SAY "Bottom Checked"
 
    @ nRows, 0 SAY PadC( "Press ESC to Quit", nCols + 1 ) COLOR "GR+/W"
 
@@ -416,9 +416,9 @@ FUNCTION WvtLines()
 
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION BuildMainMenu()
+STATIC FUNCTION BuildMainMenu()
 
    LOCAL oMenu
    LOCAL g_oMenuBar := WvgSetAppWindow():menuBar()
@@ -495,7 +495,7 @@ FUNCTION BuildMainMenu()
 
    RETURN oMenu  /* The last submenu item */
 
-STATIC FUNCTION GoogleMap()
+STATIC PROCEDURE GoogleMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
    LOCAL nCursor := SetCursor()
@@ -510,7 +510,7 @@ STATIC FUNCTION GoogleMap()
    mfrom2  := mto2  := Space( 40 )
    mfrom3  := mto3  := Space( 50 )
 
-   WHILE .T.
+   DO WHILE .T.
       @  5, 01 SAY "FROM :"
       @  7, 01 SAY "State ...:" GET mfrom1  PICTURE "@!"
       @  8, 01 SAY "City ....:" GET mfrom2  PICTURE "@!"
@@ -533,9 +533,9 @@ STATIC FUNCTION GoogleMap()
       hb_threadStart( {|| ExecuteActiveX( 1, mweb ) } )
    ENDDO
 
-   RETURN NIL
+   RETURN
 
-FUNCTION BuildButtons()
+STATIC PROCEDURE BuildButtons()
 
    LOCAL oXbp
 
@@ -586,22 +586,134 @@ FUNCTION BuildButtons()
    oXbp:activate := {|| hb_threadStart( {|| demoXbp() } ) }
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif
 
+
+// Simplified Console with GUI Look
+
+STATIC PROCEDURE ExecGCUI()
+
+   IF hb_mtvm()
+      hb_threadStart( {| oCrt | oCrt := WvgCrt():New( , , { 2, 4 }, { 20, 81 }, , .T. ), ;
+         oCrt:icon := GetResource( "dia_excl.ico" ), ;
+         oCrt:create(), ;
+         GCUIConsole( oCrt ), ;
+         oCrt:destroy() } )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE GCUIConsole( oCrt )
+
+   LOCAL dDate      := Date()
+   LOCAL cName      := PadR( "Some Usefule Name", 35 )
+   LOCAL cAdd1      := PadR( "Linda Goldman Avenue", 35 )
+   LOCAL cAdd2      := PadR( "Excellent Street", 35 )
+   LOCAL cAdd3      := PadR( "Suit #415", 35 )
+   LOCAL nSlry      := 9000
+   LOCAL nColGet    := 8
+   LOCAL GetList    := {}
+   LOCAL hBoxR, hTxt
+
+   SET SCOREBOARD OFF
+
+   SetColor( "N/W,N/GR*,,,N/W*" )
+   CLS
+   hb_gtInfo( HB_GTI_WINTITLE, "WVG Simplified yet Powerful CUI-GUI Console!" )
+
+   @ MaxRow(), 0 SAY PadC( "Navigate the Gets", MaxCol() + 1 ) COLOR "W+/B"
+
+   @  2, nColGet SAY "< Date >"
+   @  5, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
+   @  8, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
+   @ 15, nColGet SAY "< Salary >"
+
+   @  3, nColGet GET dDate  ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 0 ) ), .T. }
+   @  6, nColGet GET cName  ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 0 ) ), ;
+      Wvg_SetGObjState( hBoxR, 3 ), .T. }
+   @  9, nColGet GET cAdd1  ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 255 ) ), .T. }
+   @ 11, nColGet GET cAdd2  ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 255 ) ), ;
+      Wvg_SetGObjState( hBoxR, 1 ), .T. }
+   @ 13, nColGet GET cAdd3  ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198, 21, 140 ) ), .T. }
+   @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0, 0, 0 ) ), .T. }
+
+   // The only additional calls to render your console GUI
+   // The GETLIST  : This can be embedded via  @ GET preprocessor command
+   AEval( GetList, {| oGet | Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
+
+   hBoxR := Wvg_BoxRaised( 1, 2, 18, 49, { -5, -5, 5, 5 } )
+
+   Wvg_BoxRecessed( 1, 2, 18, 49 )
+
+   // Wvg_BoxGroup( 2, 4, 17, 47 )
+
+   Wvg_BoxGroupRaised( 2, 4, 17, 47, { -7, -7, 7, 7 } )
+
+   hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
+
+   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "Vouch1.bmp" ) )
+   Wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
+
+   Wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
+
+   Wvg_BoxRaised( 1, 54, 18, 79, { -5, -5, 5, 5 } )
+
+   // Instruct GT to Repaint the Screen with GUI elements.
+   oCrt:refresh()
+
+   // Issue the read
+   READ
+
+   My_Alert( "How did you like the 'Alert' replacement?", { "WOW", "OK", "OOps" } )
+
+   RETURN
+
+STATIC FUNCTION FetchText( nMode )
+
+   LOCAL cText
+
+   DO CASE
+   CASE nMode == 1
+      cText := ;
+         "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! " + ;
+         "Enjoy it."
+   CASE nMode == 2
+      cText := ;
+         "Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? " + ;
+         "This demonstration is a proof of that."
+   CASE nMode == 3
+      cText := ;
+         "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! " + ;
+         "And is FREE."
+   CASE nMode == 4
+      cText := "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"
+   ENDCASE
+
+   RETURN cText
+
 SET PROCEDURE TO "_activex.prg"
-SET PROCEDURE TO "_cuigdlg.prg"
 SET PROCEDURE TO "_dyndlgs.prg"
 SET PROCEDURE TO "_modal.prg"
 SET PROCEDURE TO "_tbrowse.prg"

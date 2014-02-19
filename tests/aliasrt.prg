@@ -1,6 +1,8 @@
 PROCEDURE Main()
 
-   USE test
+   COPY FILE ( "test.dbf" ) TO ( "test1.dbf" )
+
+   USE test1.dbf ALIAS test
 
    REPLACE Age WITH 1
    ? FIELD->Age
@@ -24,7 +26,7 @@ PROCEDURE Main()
 
    SELECT 2
 
-   USE test
+   USE test1.dbf ALIAS test
 
 // ? ( "0" )->FIRST  // RTE
    ? ( "B" )->FIRST
@@ -32,7 +34,7 @@ PROCEDURE Main()
    ? 2->FIRST
    ? B->FIRST
 
-   Inkey( 0 )
+   WAIT
 
 // ? ( "0" )->FIRST  // RTE
    ? Select()
@@ -69,7 +71,7 @@ PROCEDURE Main()
    ? "Y", Select( "Y" )
    ? "Z", Select( "Z" )
 
-   Inkey( 0 )
+   WAIT
 
    ? ""  , dbSelectArea()     , Select()
    ? ""  , dbSelectArea( NIL ), Select()
@@ -93,5 +95,9 @@ PROCEDURE Main()
    ? "M" , dbSelectArea( "M" ), Select()
 // ? "Z" , dbSelectArea( "Z" ), Select()  // RTE
 // ? "AA", dbSelectArea( "AA" ), Select()  // RTE
+
+   dbCloseAll()
+
+   FErase( "test1.dbf" )
 
    RETURN

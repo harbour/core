@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,9 +47,11 @@
  *
  */
 
+#define _WWW_ROOT_DIR_  hb_DirSepAdd( hb_DirSepToOS( "/www/root/" ) )
+
 PROCEDURE Main()
 
-   LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
+   LOCAL oIni  := TIniFile():New( _WWW_ROOT_DIR_ + "guestbk.ini" )
    LOCAL oHTML := THtml():New()
    LOCAL cOddColor, cEvenColor
    LOCAL cCode, i, j, l, cField, nEntry, cColor
@@ -87,7 +89,7 @@ PROCEDURE Main()
    ELSE
 
       // Sets the metahtml file
-      oHTML:SetHTMLFile( "C:\inetpub\wwwroot\guestbk.html" )
+      oHTML:SetHTMLFile( _WWW_ROOT_DIR_ + "guestbk.html" )
 
       // Retrieves odd and even entries color
       cOddColor := oIni:ReadString( "Header", "OddColor", "#FFFFFF" )
@@ -123,16 +125,15 @@ PROCEDURE Main()
       FOR i := 1 TO Len( aEntries )
 
          cCode += "<table width=100% cellspacing=0>" + hb_eol()
-         cColor := iif( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
+         cColor := iif( i % 2 == 0, cEvenColor, cOddColor )
 
          FOR j := 1 TO oIni:ReadNumber( "Format", "FormatLines", 0 )
 
             cCode += "<tr><td bgcolor='" + cColor + "'>"
 
             cLine := oIni:ReadString( "Format", "Format" + hb_ntos( j ), "" )
-            FOR l := 1 TO Len( aEntries[ i ] )
-               cLine := StrTran( cLine, "<#" + aEntries[ i, l, 1 ] + ">", ;
-                  aEntries[ i, l, 2 ] )
+            FOR EACH l IN aEntries[ i ]
+               cLine := StrTran( cLine, "<#" + l[ 1 ] + ">", l[ 2 ] )
             NEXT
 
             cLine := StrTran( cLine, "<#DateTime>", ;

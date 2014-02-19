@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#pragma -gc0
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -104,9 +106,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
          dLastUpdate := hb_SToD( ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 2, 1 ) ) + 1900, 4 ) + ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 3, 1 ) ), 2 ) + ;
-            StrZero( hb_BCode( hb_BSubStr( buffer, 4, 1 ) ), 2 ) )
+            StrZero( hb_BPeek( buffer, 2 ) + 1900, 4 ) + ;
+            StrZero( hb_BPeek( buffer, 3 ), 2 ) + ;
+            StrZero( hb_BPeek( buffer, 4 ), 2 ) )
 
       ENDIF
 

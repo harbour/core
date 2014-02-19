@@ -21,7 +21,7 @@ PROCEDURE Main()
    CLS
 
    DO WHILE .T.
-      ? ""
+      ?
       ? "Select OLE test:"
       ? "1) MS Excel"
       ? "2) MS Word"
@@ -43,37 +43,23 @@ PROCEDURE Main()
       nOption := Inkey( 0 )
       ?? hb_keyChar( nOption )
 
-      IF     nOption == hb_keyCode( "1" )
-         Exm_MSExcel()
-      ELSEIF nOption == hb_keyCode( "2" )
-         Exm_MSWord()
-      ELSEIF nOption == hb_keyCode( "3" )
-         Exm_MSOutlook()
-      ELSEIF nOption == hb_keyCode( "4" )
-         Exm_MSOutlook2()
-      ELSEIF nOption == hb_keyCode( "5" )
-         Exm_IExplorer()
-      ELSEIF nOption == hb_keyCode( "6" )
-         Exm_OOCalc()
-      ELSEIF nOption == hb_keyCode( "7" )
-         Exm_OOWriter()
-      ELSEIF nOption == hb_keyCode( "8" )
-         Exm_OOOpen()
-      ELSEIF nOption == hb_keyCode( "9" )
-         Exm_CDO()
-      ELSEIF nOption == hb_keyCode( "a" )
-         Exm_ADODB()
-      ELSEIF nOption == hb_keyCode( "b" )
-         Exm_SOAP()
-      ELSEIF nOption == hb_keyCode( "c" )
-         Exm_PocketSOAP()
-      ELSEIF nOption == hb_keyCode( "d" )
-         Exm_IExplorer2()
-      ELSEIF nOption == hb_keyCode( "e" )
-         Exm_CreateShortcut()
-      ELSEIF nOption == hb_keyCode( "0" )
-         EXIT
-      ENDIF
+      DO CASE
+      CASE nOption == hb_keyCode( "1" ) ; Exm_MSExcel()
+      CASE nOption == hb_keyCode( "2" ) ; Exm_MSWord()
+      CASE nOption == hb_keyCode( "3" ) ; Exm_MSOutlook()
+      CASE nOption == hb_keyCode( "4" ) ; Exm_MSOutlook2()
+      CASE nOption == hb_keyCode( "5" ) ; Exm_IExplorer()
+      CASE nOption == hb_keyCode( "6" ) ; Exm_OOCalc()
+      CASE nOption == hb_keyCode( "7" ) ; Exm_OOWriter()
+      CASE nOption == hb_keyCode( "8" ) ; Exm_OOOpen()
+      CASE nOption == hb_keyCode( "9" ) ; Exm_CDO()
+      CASE nOption == hb_keyCode( "a" ) ; Exm_ADODB()
+      CASE nOption == hb_keyCode( "b" ) ; Exm_SOAP()
+      CASE nOption == hb_keyCode( "c" ) ; Exm_PocketSOAP()
+      CASE nOption == hb_keyCode( "d" ) ; Exm_IExplorer2()
+      CASE nOption == hb_keyCode( "e" ) ; Exm_CreateShortcut()
+      CASE nOption == hb_keyCode( "0" ) ; EXIT
+      ENDCASE
    ENDDO
 
    RETURN
@@ -208,7 +194,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
 
       FOR i := 1 TO 10
          oMail:Recipients:Add( "Contact" + hb_ntos( i ) + ;
-            "<contact" + hb_ntos( i ) + "@server.com>" )
+            "<contact" + hb_ntos( i ) + "@example.com>" )
       NEXT
 
       oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
@@ -231,7 +217,7 @@ STATIC PROCEDURE Exm_IExplorer()
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -244,11 +230,11 @@ STATIC PROCEDURE Exm_IExplorer2()
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
-      WHILE oIE:ReadyState != 4
+      DO WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -352,18 +338,14 @@ STATIC PROCEDURE Exm_OOOpen()
    LOCAL oOO_PropVal01
    LOCAL oOO_Doc
 
-   LOCAL cDir
-
    IF ( oOO_ServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
-
-      hb_FNameSplit( hb_argv( 0 ), @cDir )
 
       oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
-      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( cDir, "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
+      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_DirBase(), "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
 
-      ? "Press any key to close OpenOffice"
-      Inkey( 0 )
+      ? "About to close OpenOffice"
+      WAIT
 
       oOO_Doc:Close( .T. )
       oOO_Doc := NIL
@@ -379,8 +361,8 @@ STATIC PROCEDURE Exm_OOOpen()
 
 STATIC FUNCTION OO_ConvertToURL( cString )
 
-   // ; Handle UNC paths
-   IF !( Left( cString, 2 ) == "\\" )
+   // Handle UNC paths
+   IF ! hb_LeftIs( cString, "\\" )
       cString := StrTran( cString, ":", "|" )
       cString := "///" + cString
    ENDIF
@@ -399,16 +381,16 @@ STATIC PROCEDURE Exm_CDO()
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // ; cdoSendUsingPort
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "localhost"
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // cdoSendUsingPort
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "smtp.example.com"
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 25
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
-      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
-      oCDOMsg:To := "test@localhost"
-      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:BodyPart:Charset := "utf-8" // "iso-8859-1" "iso-8859-2"
+      oCDOMsg:To := "to@example.com"
+      oCDOMsg:From := "from@example.com"
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 

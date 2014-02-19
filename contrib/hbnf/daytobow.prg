@@ -24,9 +24,8 @@
 
 FUNCTION ft_DayToBoW( dGivenDate )
 
-   LOCAL nRetVal, nDOW_Start
-
-   nDOW_Start := ft_DateCnfg()[ 2 ]
+   LOCAL nDOW_Start := ft_DateCnfg()[ 2 ]
+   LOCAL nRetVal
 
    IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()

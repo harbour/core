@@ -1,6 +1,6 @@
 /* This work is licensed under the Creative Commons Attribution-ShareAlike
-   License. To view a copy of this license, visit
-   http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
+   4.0 International License. To view a copy of this license, visit
+   https://creativecommons.org/licenses/by-sa/4.0/ or send a letter to
    Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305,
    USA.  A summary of the license and the full legal text is included
    in file: COPYING.txt.  If you wish to distribute some or all of this
@@ -110,7 +110,7 @@ General
   Harbour on Windows, so this is now a requirement for a proper build.
 - hb-mkslib.sh renamed to hb-mkdyn.sh. Old name stil works, but it's
   now deprecated.
-- x64 msvc compiler got a distinct HB_COMPILER value: msvc64.
+- x86_64 msvc compiler got a distinct HB_COMPILER value: msvc64.
 - msvcce compiler made compatible with older MSVC/WinCE versions.
 - Added support for Intel(R) C++ compiler (icc) on Linux and Windows.
 - Added new README.md document giving a quick describing of the build
@@ -211,8 +211,8 @@ Core
 - Added hb_osDecode(), hb_osEncode() C APIs.
 - hb_GetEnv() extended with 3rd parameter to control OS codepage
   conversion (on by default).
-- Added CPU dump support for AMD64/x64.
-- Added module listing on GPF for x86 and x64.
+- Added CPU dump support for AMD64/x86_64.
+- Added module listing on GPF for x86 and x86_64.
 - GTXWC potential GPF fixed.
 - Added process handling:
   hb_processOpen(), hb_processValue(), hb_processClose()
@@ -623,7 +623,7 @@ Contrib
 - gtalleg fixed to compile under several non-*nix platforms
   (still needs more work).
 - xhb: hb_ArrayBlock() compatibility function added.
-- hbnf ft_GetE() function bad leak fixed on Win32 systems,
+- hbnf ft_GetE() function bad leak fixed on Windows systems,
   and potential GPF on all systems.
 - hbwhat32 removed wintypes.ch header. Header with the same
   name and identical content can be found in xhb contrib.
@@ -665,7 +665,7 @@ Contrib
   other when building them using the non-GNU make system.
 - Former hbwhat32 lib added to the default contrib list
   under the name of hbwhat, compilation was fully cleaned
-  and fixed to support Win64 platform. INTERNETREADFILE(),
+  and fixed to support Windows 64-bit platform. INTERNETREADFILE(),
   INTERNETWRITEFILE() functions were fixed. what32.ch renamed
   to hbwhat.ch.
 - hbhpdf fixed HPDF_AddPageLabel().
@@ -857,7 +857,7 @@ Version 1.0.0 rc1 (2008-06-04) tag: 1.0.0rc1
 General
 =============================
 - The SourceForge repository was moved from CVS to SVN
-- added docs/howtorep.txt
+- added docs/howtovcs.txt
 - changed pack_src.sh to extract list of files from local SVN copy using
   SVN commands
 - improved CYGWIN compatibility
@@ -879,8 +879,8 @@ Portability
 - eliminated errno access for platforms which do not have it.
 - added support for PocketPC WINCE with MSVC, POCC, CeGCC and MinGWCE.
 - added support for cross WinCE builds
-- extended hb* scripts for cross builds: hbw* - Win32, hbce* - WinCE
-- added support for creating RPMs with Harbour cross build for Win32 and
+- extended hb* scripts for cross builds: hbw* - Windows, hbce* - WinCE
+- added support for creating RPMs with Harbour cross build for Windows and
   WinCE.
 - added support for MS-Windows UNICDE builds.
 - added support for shared libraries (.sl) in HPUX builds
@@ -1426,7 +1426,7 @@ GT:
 - Added GTI_* defintions for hb_gtInfo() function. This function
   works in similar way to dbInfo() in RDD.
 - New driver GTCRS based on xHarbour and Flagship curses code.
-- New driver GTWVT for Win32 using GUI window instead of console.
+- New driver GTWVT for Windows using GUI window instead of console.
 - New driver GTXWC for XWindow Console.
 - New driver GTALLEG for Allegro cross platform graphic libraries.
 - Respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL
@@ -1651,7 +1651,7 @@ The compiler
 - Enabled support for break[].
 - Fixed optimalization of far jumps (this fixes generation of pcode
   for abnormally large (DO CASE/IF/ELSEIF statements)
-- Added support to OpenWatcom DOS/Win32.
+- Added support to OpenWatcom DOS/Windows.
 - Fixed compilation of &(exp) in normal stringify
   markers (this fixes INDEX ON bug).
 - Added missing support for @&macro and @M->memvar (aAdded a new
@@ -1864,7 +1864,7 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - Hbzlib enhacements
 - Some debugger fixes - it is now really usable.
 - Hbmake enhacements
-- On Win32 platforms, Harbour now supports the ability to create and
+- On Windows platforms, Harbour now supports the ability to create and
   use .dll files. These .dll files can be used as pcode storage,
   Harbour Runtime storage, or both, and if both, can be made callable
   from other languages that use .dll's as fully functional standalone
@@ -2141,7 +2141,7 @@ Version 0.29 Alpha Build 29 (1999-07-27)
    MacIntosh
    BC 3.1, 4.0, 4.5, 5.2
    GCC OS/2
-   GCC Win32
+   GCC Windows
    MS VC
    GCC Linux / Unix
    IBM C

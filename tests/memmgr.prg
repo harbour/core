@@ -16,14 +16,13 @@ PROCEDURE Main()
    LOCAL nCPUSec, nRealSec, i, a
 
 #ifdef __HARBOUR__
-
    IF Memory( HB_MEM_USEDMAX ) != 0
       ?
       ? "Warning !!! Memory statistics enabled."
    ENDIF
 #endif
    ?
-   ? Date(), Time(), Version() + build_mode() + ", " + OS()
+   ? Date(), Time(), Version() + build_mode() + ",", OS()
 
    ?
    ? "testing single large memory blocks allocation and freeing..."
@@ -77,7 +76,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION build_mode()
+STATIC FUNCTION build_mode()
 #ifdef __CLIP__
    RETURN " (MT)"
 #else
@@ -100,7 +99,7 @@ FUNCTION build_mode()
 
 #if __HARBOUR__ < 0x010100
 
-FUNCTION hb_mtvm()
+STATIC FUNCTION hb_mtvm()
    RETURN .F.
 
 #endif

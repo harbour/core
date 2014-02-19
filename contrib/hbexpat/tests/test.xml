@@ -78,7 +78,7 @@
    <item row="2" column="5">
     <widget class="QPushButton" name="buttonSaveAs">
      <property name="text">
-      <string>SaveAs</string>
+      <string>Copyright © Text</string>
      </property>
     </widget>
    </item>

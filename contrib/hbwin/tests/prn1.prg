@@ -14,7 +14,7 @@ PROCEDURE Main( cPar1 )
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
-         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICT "@K"
+         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICTURE "@K"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
          nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
@@ -50,7 +50,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
       ELSE
          oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )
          oPrinter:Bold( WIN_FW_EXTRABOLD )
-         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() = " + hb_ntos( oPrinter:MaxCol() ) )
+         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() == " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() == " + hb_ntos( oPrinter:MaxCol() ) )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:NewLine()
          oPrinter:TextOut( "   Partial list of available fonts that are available for OEM_" )
@@ -75,7 +75,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:NewLine()
          FOR x := 1 TO Len( aFonts ) STEP 2
             oPrinter:CharSet( aFonts[ x, 4 ] )
-            IF oPrinter:SetFont( aFonts[ x, 1 ] )       // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
+            IF oPrinter:SetFont( aFonts[ x, 1 ] )      // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
                IF oPrinter:FontName == aFonts[ x, 1 ]  // Make sure Windows didn't pick a different font
                   oPrinter:TextOut( aFonts[ x, 1 ] )
                   oPrinter:SetPos( nColFixed )
@@ -146,7 +146,7 @@ STATIC PROCEDURE PrintBitmap( oPrn, cBitFile )
          ENDIF
          oBMP:Destroy()
       ELSE
-         Alert( hb_StrFormat( "%1$s not found ", cBitFile ) )
+         Alert( hb_StrFormat( "%1$s not found", cBitFile ) )
       ENDIF
    ENDIF
 

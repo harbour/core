@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,19 +70,18 @@
 
 */
 
-
 CREATE CLASS TBColumnSQL FROM TBColumn
 
-   VAR   oBrw                 // pointer to Browser containing this column, needed to be able to
-                              // retreive field values from Browse instance variable oCurRow
-// VAR   Picture              // From clipper 5.3
-   VAR   nFieldNum            // This column maps field num from query
+   VAR oBrw                 // pointer to Browser containing this column, needed to be able to
+                            // retreive field values from Browse instance variable oCurRow
+// VAR Picture              // From clipper 5.3
+   VAR nFieldNum            // This column maps field num from query
 
-   MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method
-                                          // gets called. I need this since inside TBColumn Block I cannot
-                                          // reference Column or Browser instance variables
+   MESSAGE Block METHOD Block()          // When evaluating code block to get data from source this method
+                                         // gets called. I need this since inside TBColumn Block I cannot
+                                         // reference Column or Browser instance variables
 
-   METHOD   New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
+   METHOD  New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
 
 ENDCLASS
 
@@ -98,30 +97,34 @@ METHOD New( cHeading, bBlock, oBrw ) CLASS TBColumnSQL
 METHOD Block() CLASS TBColumnSQL
 
    LOCAL xValue := ::oBrw:oCurRow:FieldGet( ::nFieldNum )
-   LOCAL xType := ::oBrw:oCurRow:FieldType( ::nFieldNum )
 
-   DO CASE
-   CASE xType == "N"
+   SWITCH ::oBrw:oCurRow:FieldType( ::nFieldNum )
+   CASE "N"
       xValue := "'" + Str( xValue, ::oBrw:oCurRow:FieldLen( ::nFieldNum ), ::oBrw:oCurRow:FieldDec( ::nFieldNum ) ) + "'"
+      EXIT
 
-   CASE xType == "D"
+   CASE "D"
       xValue :=  "'" + DToC( xValue ) + "'"
+      EXIT
 
-   CASE xType == "L"
+   CASE "L"
       xValue := iif( xValue, ".T.", ".F." )
+      EXIT
 
-   CASE xType == "C"
+   CASE "C"
       // That is: if there is a double quote inside text substitute it with a string
       // which gets converted back to a double quote by macro operator. If not it would
       // give an error because of unbalanced double quotes.
       xValue := '"' + StrTran( xValue, '"', e"\" + '\"' + \"" ) + '"'
+      EXIT
 
-   CASE xType == "M"
+   CASE "M"
       xValue := "' <MEMO> '"
+      EXIT
 
    OTHERWISE
       xValue := "'" + xValue + "'"
-   ENDCASE
+   ENDSWITCH
 
    RETURN hb_macroBlock( xValue )
 
@@ -133,20 +136,20 @@ METHOD Block() CLASS TBColumnSQL
 */
 CREATE CLASS TBrowseSQL FROM TBrowse
 
-   VAR      oCurRow                       // Active row inside table / sql query
-   VAR      oQuery                        // Query / table object which we are browsing
+   VAR oCurRow                       // Active row inside table / sql query
+   VAR oQuery                        // Query / table object which we are browsing
 
-   METHOD   New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
+   METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
 
-   METHOD   EditField()                   // Editing of hilighted field, after editing does an update of
-                                          // corresponding row inside table
+   METHOD EditField()                   // Editing of hilighted field, after editing does an update of
+                                        // corresponding row inside table
 
-   METHOD   BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
-                                               // allows editing of field. It is the stock ApplyKey() moved inside a table
-                                               // if lCanEdit K_DEL deletes current row
-                                               // When a key is pressed which is present inside aExitKeys it leaves editing loop
+   METHOD BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
+                                             // allows editing of field. It is the stock ApplyKey() moved inside a table
+                                             // if lCanEdit K_DEL deletes current row
+                                             // When a key is pressed which is present inside aExitKeys it leaves editing loop
 
-   METHOD   KeyboardHook( nKey )               // Where do all unknown keys go?
+   METHOD KeyboardHook( nKey )               // Where do all unknown keys go?
 
 ENDCLASS
 
@@ -186,13 +189,16 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
       oCol:nFieldNum := i
 
       // Add a picture
-      DO CASE
-      CASE ::oCurRow:FieldType( i ) == "N"
+      SWITCH ::oCurRow:FieldType( i )
+      CASE "N"
          oCol:picture := Replicate( "9", oCol:Width )
+         EXIT
 
-      CASE ::oCurRow:FieldType( i ) $ "CM"
+      CASE "M"
+      CASE "C"
          oCol:picture := Replicate( "!", oCol:Width )
-      ENDCASE
+         EXIT
+      ENDSWITCH
 
       ::AddColumn( oCol )
    NEXT
@@ -255,9 +261,6 @@ METHOD EditField() CLASS TBrowseSQL
       hb_Scroll( 10, 10, 22, 69, 0 )
       hb_DispBox( 10, 10, 22, 69 )
 
-      /* use fieldspec for title */
-      // @ 10, ( ( 76 - Len( ::oCurRow:FieldName( oCol:nFieldNum ) ) / 2 ) SAY "  " + ( ::oCurRow:FieldName( oCol:nFieldNum ) ) + "  "
-
       /* edit the memo field */
       cMemo := MemoEdit( ::oCurRow:FieldGet( oCol:nFieldNum ), 11, 11, 21, 68, .T. )
 
@@ -276,10 +279,10 @@ METHOD EditField() CLASS TBrowseSQL
       // Create a corresponding GET
       // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
       //       time for write access to instance variables but only for reading them
-      aGetList := { GetNew( Row(), Col(),;
-                            {| xValue | iif( xValue == NIL, Eval( oCol:Block ), ::oCurRow:FieldPut( oCol:nFieldNum, xValue ) ) },;
-                            oCol:heading,;
-                            oCol:picture,;
+      aGetList := { GetNew( Row(), Col(), ;
+                            {| xValue | iif( xValue == NIL, Eval( oCol:Block ), ::oCurRow:FieldPut( oCol:nFieldNum, xValue ) ) }, ;
+                            oCol:heading, ;
+                            oCol:picture, ;
                             ::colorSpec ) }
 
       // Set initial cursor shape
@@ -302,8 +305,10 @@ METHOD EditField() CLASS TBrowseSQL
 
    // Check exit key from get
    nKey := LastKey()
-   IF nKey == K_UP   .OR. nKey == K_DOWN .OR. ;
-      nKey == K_PGUP .OR. nKey == K_PGDN
+   IF nKey == K_UP   .OR. ;
+      nKey == K_DOWN .OR. ;
+      nKey == K_PGUP .OR. ;
+      nKey == K_PGDN
 
       // Ugh
       hb_keyIns( nKey )
@@ -316,15 +321,11 @@ METHOD EditField() CLASS TBrowseSQL
 METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
    LOCAL nKey
-   LOCAL lKeepGoing := .T.
 
-   IF ! HB_ISNUMERIC( nKey )
-      nKey := NIL
-   ENDIF
    hb_default( @lCanEdit, .F. )
    hb_default( @aExitKeys, { K_ESC } )
 
-   DO WHILE lKeepGoing
+   DO WHILE .T.
 
       DO WHILE .T.
          nKey := Inkey()
@@ -338,52 +339,24 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
       ENDIF
 
       IF AScan( aExitKeys, nKey ) > 0
-         lKeepGoing := .F.
-         LOOP
+         EXIT
       ENDIF
 
       DO CASE
-      CASE nKey == K_DOWN
-         ::down()
-
-      CASE nKey == K_PGDN
-         ::pageDown()
-
-      CASE nKey == K_CTRL_PGDN
-         ::goBottom()
-
-      CASE nKey == K_UP
-         ::up()
-
-      CASE nKey == K_PGUP
-         ::pageUp()
-
-      CASE nKey == K_CTRL_PGUP
-         ::goTop()
-
-      CASE nKey == K_RIGHT
-         ::right()
-
-      CASE nKey == K_LEFT
-         ::left()
-
-      CASE nKey == K_HOME
-         ::home()
-
-      CASE nKey == K_END
-         ::end()
-
-      CASE nKey == K_CTRL_LEFT
-         ::panLeft()
-
-      CASE nKey == K_CTRL_RIGHT
-         ::panRight()
-
-      CASE nKey == K_CTRL_HOME
-         ::panHome()
-
-      CASE nKey == K_CTRL_END
-         ::panEnd()
+      CASE nKey == K_DOWN       ; ::down()
+      CASE nKey == K_PGDN       ; ::pageDown()
+      CASE nKey == K_CTRL_PGDN  ; ::goBottom()
+      CASE nKey == K_UP         ; ::up()
+      CASE nKey == K_PGUP       ; ::pageUp()
+      CASE nKey == K_CTRL_PGUP  ; ::goTop()
+      CASE nKey == K_RIGHT      ; ::right()
+      CASE nKey == K_LEFT       ; ::left()
+      CASE nKey == K_HOME       ; ::home()
+      CASE nKey == K_END        ; ::end()
+      CASE nKey == K_CTRL_LEFT  ; ::panLeft()
+      CASE nKey == K_CTRL_RIGHT ; ::panRight()
+      CASE nKey == K_CTRL_HOME  ; ::panHome()
+      CASE nKey == K_CTRL_END   ; ::panEnd()
 
       CASE nKey == K_ENTER .AND. lCanEdit
          ::EditField()

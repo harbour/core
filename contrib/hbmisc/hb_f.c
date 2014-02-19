@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,6 +70,11 @@ static void s_fttext_init_init( void * cargo )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) cargo;
 
+   int tmp;
+
+   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( ft_text->handles ); ++tmp )
+      ft_text->handles[ tmp ] = FS_ERROR;
+
    ft_text->area = 0;
 }
 
@@ -94,7 +99,7 @@ HB_FUNC( HB_FUSE )
       hb_retnint( 1 );
       ft_text->recno[ ft_text->area ]    = 0;
       ft_text->offset[ ft_text->area ]   = 0;
-      ft_text->handles[ ft_text->area ]  = 0;
+      ft_text->handles[ ft_text->area ]  = FS_ERROR;
       ft_text->last_rec[ ft_text->area ] = 0;
       ft_text->last_off[ ft_text->area ] = 0;
       ft_text->lastbyte[ ft_text->area ] = 0;
@@ -384,7 +389,7 @@ HB_FUNC( HB_FINFO )  /* used for debugging */
    reader that presumes all hard returns are record separators.
 
    This function is useful right now to loop through a CSV file
-   WHILE ! hb_FAtEof(), but it does NOT recognize the same record count
+   DO WHILE ! hb_FAtEof(), but it does NOT recognize the same record count
    and positioning that the other functions in this file use.
    It does its own skip and read, so an entire file can be read
    sequentially with just this function.

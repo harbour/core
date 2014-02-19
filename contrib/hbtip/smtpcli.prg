@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +49,7 @@
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
    Added method :sendMail()
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -71,8 +71,8 @@ CREATE CLASS TIPClientSMTP FROM TIPClient
 
    /* Methods for smtp server that require login */
    METHOD OpenSecure( cUrl, lTLS )
-   METHOD Auth( cUser, cPass ) // Auth by login method
-   METHOD AuthPlain( cUser, cPass ) // Auth by plain method
+   METHOD Auth( cUser, cPass )      /* Auth by login method */
+   METHOD AuthPlain( cUser, cPass ) /* Auth by plain method */
    METHOD ServerSuportSecure( lAuthPlain, lAuthLogin )
 
    HIDDEN:
@@ -142,7 +142,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS TIPClientSMTP
 METHOD GetOk() CLASS TIPClientSMTP
 
    ::cReply := ::inetRecvLine( ::SocketCon,, 512 )
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
+   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. hb_LeftIs( ::cReply, "5" )
       RETURN .F.
    ENDIF
 
@@ -238,9 +238,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClientSMTP
       ::bInitialized := .T.
    ENDIF
 
-   ::nLastWrite := ::super:Write( cData, nLen, bCommit )
-
-   RETURN ::nLastWrite
+   RETURN ::nLastWrite := ::super:Write( cData, nLen, bCommit )
 
 METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPClientSMTP
 
@@ -250,13 +248,14 @@ METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPCli
    IF ::OpenSecure()
       DO WHILE .T.
          ::GetOk()
-         IF ::cReply == NIL
+         DO CASE
+         CASE ::cReply == NIL
             EXIT
-         ELSEIF "LOGIN" $ ::cReply
+         CASE "LOGIN" $ ::cReply
             lAuthLogin := .T.
-         ELSEIF "PLAIN" $ ::cReply
+         CASE "PLAIN" $ ::cReply
             lAuthPlain := .T.
-         ENDIF
+         ENDCASE
       ENDDO
       ::Close()
    ENDIF
@@ -281,7 +280,7 @@ METHOD SendMail( oTIpMail ) CLASS TIPClientSmtp
    ::mail( oTIpMail:getFieldPart( "From" ) )
 
    cTo := oTIpMail:getFieldPart( "To" )
-   cTo := StrTran( cTo, tip_CRLF() )
+   cTo := StrTran( cTo, e"\r\n" )
    cTo := StrTran( cTo, Chr( 9 ) )
    cTo := StrTran( cTo, " " )
 

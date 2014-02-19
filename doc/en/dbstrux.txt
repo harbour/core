@@ -44,12 +44,12 @@
       function during compile time.
    $EXAMPLES$
       // Create a new file that contain the same structure
-      USE TEST
+      USE test
       __dbCopyStruct( "mycopy.dbf" )
 
       // Create a new file that contain part of the original structure
       LOCAL aList
-      USE TEST
+      USE test
       aList := { "NAME" }
       __dbCopyStruct( "onlyname.dbf", aList )
    $STATUS$
@@ -98,11 +98,11 @@
       function during compile time.
    $EXAMPLES$
       // Create a new file that contains the same structure
-      USE TEST
+      USE test
       COPY STRUCTURE TO MyCopy
 
       // Create a new file that contains part of the original structure
-      USE TEST
+      USE test
       COPY STRUCTURE TO SomePart FIELDS name, address
    $STATUS$
       R
@@ -176,9 +176,9 @@
    $EXAMPLES$
       // Open a database, then copy its structure to a new file,
       // Open the new file and list all its records
-      USE Test
-      __dbCopyXStruct( "TestStru" )
-      USE TestStru
+      USE test
+      __dbCopyXStruct( "teststru" )
+      USE teststru
       LIST
    $STATUS$
       R
@@ -252,9 +252,9 @@
    $EXAMPLES$
       // Open a database, then copy its structure to a new file,
       // Open the new file and list all its records
-      USE Test
-      COPY STRUCTURE EXTENDED TO TestStru
-      USE TestStru
+      USE test
+      COPY STRUCTURE EXTENDED TO teststru
+      USE teststru
       LIST
    $STATUS$
       R
@@ -428,22 +428,22 @@
       // then CREATE FROM this file a new database file
 
       CREATE template
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "CHANNEL"
       FIELD->FIELD_TYPE := "N"
       FIELD->FIELD_LEN  := 2
       FIELD->FIELD_DEC  := 0
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "PROGRAM"
       FIELD->FIELD_TYPE := "C"
       FIELD->FIELD_LEN  := 20
       FIELD->FIELD_DEC  := 0
-      APPEND BLANK
+      dbAppend()
       FIELD->FIELD_NAME := "REVIEW"
       FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
       FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
       FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
-      CLOSE
+      dbCloseArea()
       CREATE TV_Guide FROM template
    $STATUS$
       R
@@ -594,7 +594,7 @@
 
       // Create a new file that contain part of the original structure
       LOCAL aStruct, aList, aRet
-      USE TEST
+      USE test
       aStruct := dbStruct()
       aList := { "NAME" }
       dbCreate( "onlyname.dbf", __FLedit( aStruct, aList ) )
@@ -686,7 +686,7 @@
 
       // Create a new file that contain part of the original structure
       LOCAL aStruct, aList, aRet
-      USE TEST
+      USE test
       aStruct := dbStruct()
       aList := { "NAME" }
       dbCreate( "onlyname.dbf", __dbStructFilter( aStruct, aList ) )

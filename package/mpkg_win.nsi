@@ -16,7 +16,7 @@
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME 'notepad.exe "$\"$INSTDIR\README.md$\""'
-  !define MUI_ICON "harb_win.ico"
+  !define MUI_ICON "harbour.ico"
   !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 SetDateSave on
@@ -74,6 +74,7 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING.txt"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\CONTRIBUTING.md"
   File /nonfatal "$%HB_INSTALL_PREFIX%\README.md"
   ; Let it work also for MS-DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"
@@ -127,8 +128,8 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
-  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
-  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "https://groups.google.com/group/harbour-users/"
+  WriteINIStr     "$SMPROGRAMS\Harbour\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "https://groups.google.com/group/harbour-devel/"
   WriteINIStr     "$SMPROGRAMS\Harbour\Links\Development.url"                "InternetShortcut" "URL" "https://github.com/harbour"
   WriteINIStr     "$SMPROGRAMS\Harbour\Links\Development Timeline.url"       "InternetShortcut" "URL" "https://github.com/harbour/core/commits/master"
 

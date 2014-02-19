@@ -701,16 +701,15 @@
          ...
          AdsRegCallback( {| nPercent | outputstuff( nPercent ) }  )
          /* The above codeblock will be called approximately
-              every 2 seconds while indexing.
-              The codeblock can return .T. to abort.   */
-         INDEX ON First + LAST + LABEL1 + LABEL2 TAG First
+            every 2 seconds while indexing.
+            The codeblock can return .T. to abort. */
+         INDEX ON FIRST + LAST + LABEL1 + LABEL2 TAG First
          AdsClrCallback()
          RETURN
 
-      FUNCTION outputstuff( nPercent )  /* The "callback" function */
+      STATIC FUNCTION outputstuff( nPercent )  /* The "callback" function */
          ? "output stuff", nPercent
-         RETURN Inkey() == K_ESC
-         /*  If press ESC, returns .T. to abort.   */
+         RETURN Inkey() == K_ESC  /* If press ESC, returns .T. to abort. */
    $STATUS$
       R
    $COMPLIANCE$

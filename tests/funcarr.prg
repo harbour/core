@@ -11,39 +11,39 @@ PROCEDURE Main()
 
    LOCAL a
 
-   ? "Direct reference : ", aFunc()[ 1 ]
+   ? "Direct reference :", aFunc()[ 1 ]
 
    a := aFunc()
-   ? "Ref via array    : ", a[ 1 ]
+   ? "Ref via array    :", a[ 1 ]
 
    aFunc()[ 1 ] := "Something different"
-   ? "Assign new text  : ", aFunc()[ 1 ]
+   ? "Assign new text  :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] := 4
-   ? "Assign 4         : ", aFunc()[ 1 ]
+   ? "Assign 4         :", aFunc()[ 1 ]
 
-   ? "Post increment   : ", aFunc()[ 1 ]++
-   ? "After            : ", aFunc()[ 1 ]
-   ? "Pre decrement    : ", --aFunc()[ 1 ]
-   ? "After            : ", aFunc()[ 1 ]
+   ? "Post increment   :", aFunc()[ 1 ]++
+   ? "After            :", aFunc()[ 1 ]
+   ? "Pre decrement    :", --aFunc()[ 1 ]
+   ? "After            :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] += 2
-   ? "Plus 2           : ", aFunc()[ 1 ]
+   ? "Plus 2           :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] -= 3
-   ? "Minus 3          : ", aFunc()[ 1 ]
+   ? "Minus 3          :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] *= 3
-   ? "Times 3          : ", aFunc()[ 1 ]
+   ? "Times 3          :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] /= 1.5
-   ? "Divide by 1.5    : ", aFunc()[ 1 ]
+   ? "Divide by 1.5    :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] %= 4
-   ? "Modulus 4        : ", aFunc()[ 1 ]
+   ? "Modulus 4        :", aFunc()[ 1 ]
 
    aFunc()[ 1 ] ^= 3
-   ? "To the power 3   : ", aFunc()[ 1 ]
+   ? "To the power 3   :", aFunc()[ 1 ]
 
    ? "Global stack"
    ? hb_ValToExp( __dbgVMStkGList() )        // Please note a is a reference to aArray !
@@ -52,7 +52,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION aFunc()
+STATIC FUNCTION aFunc()
 
    STATIC s_aArray := { [Test] }
 

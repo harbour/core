@@ -1,39 +1,34 @@
 #require "hbnf"
 
-#define INITIAL_SEMAPHORE_VALUE     2
-#define WAIT_SECONDS                1
-
 PROCEDURE Main()
 
-   LOCAL nInitVal, nRc, nHandle, nValue, nOpenCnt
+   LOCAL nRc, nHandle, nValue, nOpenCnt
 
    CLS
 
-   nInitVal := INITIAL_SEMAPHORE_VALUE
-   ft_NWSemOpen( "TEST", nInitVal, @nHandle, @nOpenCnt )
+   ft_NWSemOpen( "TEST", 2, @nHandle, @nOpenCnt )
 
    ? "Waiting ten seconds..."
    nRc := ft_NWSemWait( nHandle, 180 )
-   ? "Final nRc value = " + Str( nRc )
+   ? "Final nRc value =", nRc
    Inkey( 0 )
    IF nRc == 254
       ? "Couldn't get the semaphore.  Try again."
-      QUIT
+      RETURN
    ENDIF
 
    CLS
 
-   @ 24, 0 SAY "Any key to exit"
-   @ 0,  0 SAY "Handle: " + Str( nHandle )
+   @ MaxRow() - 1, 0 SAY "Any key to exit"
+   @ 0, 0 SAY "Handle: " + hb_ntos( nHandle )
 
    ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
-   WHILE .T.
-      @ 23, 0 SAY "Semaphore test -> Open at [" + ;
-         hb_ntos( nOpenCnt )           + ;
-         "] stations, value is ["      + ;
-         hb_ntos( nValue ) + "]"
+   DO WHILE .T.
+      @ 23, 0 SAY "Semaphore test -> " + ;
+         "Open at [" + hb_ntos( nOpenCnt ) + "] " + ;
+         "stations, value is [" + hb_ntos( nValue ) + "]"
 
-      IF Inkey( WAIT_SECONDS ) != 0
+      IF Inkey( 1 ) != 0
          EXIT
       ENDIF
 
@@ -41,7 +36,7 @@ PROCEDURE Main()
       ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
    ENDDO
 
-   ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
-   ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
+   ? "Signal returns:", ft_NWSemSig( nHandle )
+   ? "Close returns: ", ft_NWSemClose( nHandle )
 
    RETURN

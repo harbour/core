@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -71,19 +71,19 @@ PROCEDURE Main()
 
    ? "  Original strings:"
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + aStr[ ni ]
+      ? Space( 3 ), aStr[ ni ]
    NEXT
    ?
 
    ? '  AtAdjust( ":", aStr[ ni ], 21, 1,, "." ) yields'
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 21, 1,, "." )
+      ? Space( 3 ), AtAdjust( ":", aStr[ ni ], 21, 1,, "." )
    NEXT
    ?
 
    ? '  AtAdjust( ":", aStr[ ni ], 10, 1,, "." ) yields'
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
+      ? Space( 3 ), AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 
@@ -91,7 +91,7 @@ PROCEDURE Main()
    ? '  AtAdjust( ":", aStr[ ni ], 10, 1,, "." ) yields now'
    SetAtLike( CT_SETATLIKE_WILDCARD, ":" )
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
+      ? Space( 3 ), AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 

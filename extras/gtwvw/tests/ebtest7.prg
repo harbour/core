@@ -5,10 +5,10 @@
   multi-field GET session(s) using editboxes
   with a simple sample of @...EBGET command translation
 
-  This sample also shows simple implementation of WVW_INPUTFOCUS
+  This sample also shows simple implementation of WVW_INPUTFOCUS()
   to handle some keyboard inputs on non topmost window
 
-  (The editbox itself always accept input independent of WVW_INPUTFOCUS)
+  (The editbox itself always accept input independent of WVW_INPUTFOCUS())
 
   Some parts of this sample are modifications from MINIGUI's sourcecode
   to handle "masks" during editbox input session:
@@ -126,7 +126,7 @@ PROCEDURE Main()
 // This is the sample of a GET session.
 // This sample is reentrant, can be executed more than once if user clicks
 // "NEW" button in the main window multiple times.
-PROCEDURE GetSession()
+STATIC PROCEDURE GetSession()
 
    STATIC s_nsession := 0
    LOCAL aEBGets := {}
@@ -179,7 +179,7 @@ PROCEDURE GetSession()
 
    RETURN
 
-FUNCTION MyHelp()
+STATIC PROCEDURE MyHelp()
 
    LOCAL ccallstack, i
 
@@ -194,9 +194,9 @@ FUNCTION MyHelp()
       "Call stack:" + hb_eol() + ;
       ccallstack )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION WVW_SETFOCUS( nWinNum, hWnd )
+FUNCTION WVW_SETFOCUS( nWinNum, hWnd )  /* must be a public function */
 
    HB_SYMBOL_UNUSED( hWnd )
 
@@ -213,11 +213,11 @@ FUNCTION WVW_SETFOCUS( nWinNum, hWnd )
  (can be put into separated module)
  ******************************************************/
 
-// 20070525
+// 2007-05-25
 
 // adding one EBGet variable into aEBGets array
 // returns .T. if successful
-FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, mlMultiline, mcPict )
+STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, mlMultiline, mcPict )
 
    LOCAL mcVarType, mbText
 
@@ -261,10 +261,10 @@ FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel,
    RETURN .T.
 
 // generic procedure to run aEBGets, array of editboxes
-PROCEDURE EBReadGets( nwinnum, aEBGets )
+STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    LOCAL nmaxrow, nmincol
-   LOCAL i, nlen, lmultiline, clabel, ;
+   LOCAL aGet, nlen, lmultiline, clabel, ;
       nrow1, ncol1, nrow2, ncol2
    LOCAL nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
    LOCAL lclosePermitted := .F.
@@ -279,25 +279,25 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    wvw_nSetCurWindow( nwinnum )
    nmaxrow := 0
    nmincol := 99999
-   FOR i := 1 TO nNumGets
-      lmultiline := aEBGets[ i ][ __GET_LMULTILINE ]
-      IF ! lmultiline
-         nlen := Len( aEBGets[ i ][ __GET_CPICT ] )
-      ELSE
+   FOR EACH aGet IN aEBGets
+      lmultiline := aGet[ __GET_LMULTILINE ]
+      IF lmultiline
          nlen := 30
+      ELSE
+         nlen := Len( aGet[ __GET_CPICT ] )
       ENDIF
-      clabel := aEBGets[ i ][ __GET_CLABEL ]
-      nrow1 := aEBGets[ i ][ __GET_NROW ]
-      ncol1 := aEBGets[ i ][ __GET_NCOL ]
-      nrow2 := iif( aEBGets[ i ][ __GET_LMULTILINE ], nrow1 + 3, nrow1 )
+      clabel := aGet[ __GET_CLABEL ]
+      nrow1 := aGet[ __GET_NROW ]
+      ncol1 := aGet[ __GET_NCOL ]
+      nrow2 := iif( aGet[ __GET_LMULTILINE ], nrow1 + 3, nrow1 )
       ncol2 := ncol1 + nlen - 1
 
       @ nrow1, ncol1 - Len( clabel ) - 1 SAY clabel
 
-      aEBGets[ i ][ __GET_NEBID ] := wvw_ebCreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
-         Transform( aEBGets[ i ][ __GET_XINIT ], aEBGets[ i ][ __GET_CPICT ] ), ;
+      aGet[ __GET_NEBID ] := wvw_ebCreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
+         Transform( aGet[ __GET_XINIT ], aGet[ __GET_CPICT ] ), ;
          {| nWinNum, nId, nEvent | MaskEditBox( nWinNum, nId, nEvent, @aEBGets ) }, ;
-         aEBGets[ i ][ __GET_LMULTILINE ], ;  // EBtype
+         aGet[ __GET_LMULTILINE ], ;  // EBtype
       0, ;  // nmorestyle
       iif( lmultiline, NIL, nlen + 1 ), ; // nMaxChar
       NIL, NIL )
@@ -378,7 +378,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
       Inkey( 0.5 )
    ENDDO
 
-   RETURN // EBReadGets()
+   RETURN
 
 // inp_handler(nwinnum, bhandler)
 
@@ -427,15 +427,15 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
       ENDIF
    ENDIF
 
-   RETURN  // InpKeyHandler()
+   RETURN
 
 STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButton )
 
-   LOCAL i
+   LOCAL aGet
 
    // session ended
-   FOR i := 1 TO Len( aEBGets )
-      wvw_ebEnable( nwinnum, aEBGets[ i ][ __GET_NEBID ], .F. )
+   FOR EACH aGet IN aEBGets
+      wvw_ebEnable( nwinnum, aGet[ __GET_NEBID ], .F. )
    NEXT
    wvw_pbEnable( nwinnum, nOKbutton, .F. )
    wvw_pbEnable( nwinnum, nCancelbutton, .F. )
@@ -451,12 +451,12 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
 // save values into variables
 STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
 
-   LOCAL i, cdebugreport
+   LOCAL aGet, cdebugreport
 
-   FOR i := 1 TO Len( aEBGets )
+   FOR EACH aGet IN aEBGets
       // do some validation if necessary
-      Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
-         GetValFromText( wvw_ebGetText( nwinnum, aEBGets[ i ][ __GET_NEBID ] ), aEBGets[ i ][ __GET_CVALTYPE ] ) )
+      Eval( aGet[ __GET_BASSIGN ], ;
+         GetValFromText( wvw_ebGetText( nwinnum, aGet[ __GET_NEBID ] ), aGet[ __GET_CVALTYPE ] ) )
    NEXT
    lDone := .T.
 
@@ -470,11 +470,10 @@ STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
 // restore initial values into variables
 STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 
-   LOCAL i, cdebugreport
+   LOCAL aGet, cdebugreport
 
-   FOR i := 1 TO Len( aEBGets )
-      Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
-         aEBGets[ i ][ __GET_XINIT ] )
+   FOR EACH aGet IN aEBGets
+      Eval( aGet[ __GET_BASSIGN ], aGet[ __GET_XINIT ] )
    NEXT
    lDone := .T.
 
@@ -499,17 +498,15 @@ STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 // returns index to aEBGets array containing editbox nEBid
 
 STATIC FUNCTION nGetIndex( aEBGets, nEBId )
-
    RETURN AScan( aEBGets, {| x | x[ __GET_NEBID ] == nEBId } )
 
 // returns index to aEBGets array containing editbox that is/was in focus
 
 STATIC FUNCTION nFocused( aEBGets )
-
    RETURN AScan( aEBGets, {| x | x[ __GET_LFOCUSED ] } )
 
 // callback function called by GTWVW during some events on editbox
-STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
+STATIC PROCEDURE MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
    STATIC s_bBusy := .F.
    LOCAL ctext
@@ -518,10 +515,10 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
    LOCAL nwasfocus
 
    IF s_bBusy
-      RETURN NIL
+      RETURN
    ENDIF
    IF nIndex == 0
-      RETURN NIL
+      RETURN
    ENDIF
    s_bBusy := .T.
    mcvaltype := aEBGets[ nIndex ][ __GET_CVALTYPE ]
@@ -557,7 +554,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
    ENDCASE
    s_bBusy := .F.
 
-   RETURN NIL
+   RETURN
 
 /************* borrowed and modified from minigui *************/
 
@@ -593,7 +590,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    pFlag := .F. // x for clarity
    IF mcvaltype == "N"
       // RL 104
-      IF Left( AllTrim( InBuffer ), 1 ) == "-" .AND. Val( InBuffer ) == 0
+      IF hb_LeftIs( AllTrim( InBuffer ), "-" ) .AND. Val( InBuffer ) == 0
          NegativeZero := .T.
       ENDIF
 
@@ -607,7 +604,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          NEXT
 
          // RL 89
-         IF Left( InBuffer, 1 ) == "." .OR. Left( InBuffer, 1 ) == ","
+         IF hb_LeftIs( InBuffer, "." ) .OR. hb_LeftIs( InBuffer, "," )
             pFlag := .T.
          ENDIF
 
@@ -777,12 +774,12 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
          DO CASE
          CASE CM == "9"
             IF IsDigit( CB ) .OR. CB == " "
-               // lPassed:=.T.
+               // lPassed := .T.
             ELSE
                RETURN .F.
             ENDIF
          OTHERWISE
-            // lPassed:=.T.
+            // lPassed := .T.
          ENDCASE
       NEXT
       RETURN .T.
@@ -843,7 +840,7 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
       ENDIF
    NEXT
 
-   IF Left( AllTrim( Text ), 1 ) == "(" .OR.  Right( AllTrim( Text ), 2 ) == "DB"
+   IF hb_LeftIs( AllTrim( Text ), "(" ) .OR. Right( AllTrim( Text ), 2 ) == "DB"
       s := "-" + s
    ENDIF
 
@@ -859,18 +856,17 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
    // eg. GetNumMask( "999,999.99" ) --> "999999.99"
    LOCAL i, c, s
 
-   IF mcvaltype == "D" .OR. mcvaltype == "C"
-      s := Text
-      RETURN s
+   IF mcvaltype $ "DC"
+      RETURN Text
    ENDIF
 
    s := ""
    FOR i := 1 TO Len( Text )
       c := SubStr( Text, i, 1 )
-      IF c == "9" .OR. c == "."
+      IF c $ "9."
          s += c
       ENDIF
-      IF c == "$" .OR. c == "*"
+      IF c $ "$*"
          s += "9"
       ENDIF
    NEXT
@@ -893,9 +889,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
    ENDIF
 #endif
 
-   cBuffer2 := StrTran( cBuffer, "/" )
-   cBuffer2 := StrTran( cBuffer2, "-" )
-   cBuffer2 := StrTran( cBuffer2, "." )
+   cBuffer2 := hb_StrReplace( cBuffer, "/-." )
 
    IF Empty( cBuffer2 )
       RETURN .F.
@@ -912,7 +906,7 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
 
 // this is a simple sample of WVW_INPUTFOCUS
 // only handles WM_CHAR, thus not all input characters are accepted
-FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
+FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 
    LOCAL ch
    LOCAL bhandler
@@ -945,9 +939,9 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
       RETURN .T.
    ENDCASE
 
-   RETURN .F. // WVW_INPUTFOCUS()
+   RETURN .F.
 
-FUNCTION inp_handler( nwinnum, bhandler )
+STATIC FUNCTION inp_handler( nwinnum, bhandler )
 
    STATIC s_bhandlers := {}
    LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[ nwinnum + 1 ], NIL )

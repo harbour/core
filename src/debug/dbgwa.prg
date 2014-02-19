@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,7 +64,7 @@ PROCEDURE __dbgShowWorkAreas()
    LOCAL aStruc
    LOCAL aInfo
 
-   LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
+   LOCAL cColor := iif( __dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
 
    LOCAL n1
    LOCAL n2
@@ -206,7 +206,7 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
 STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 
-   LOCAL oDebug := __Dbg()
+   LOCAL oDebug := __dbg()
    LOCAL nAlias
 
    IF nKey == K_TAB .OR. nKey == K_SH_TAB
@@ -319,7 +319,7 @@ STATIC FUNCTION DbfInfo( aInfo )
 
    FOR nFor := 1 TO FCount()
 
-      xValue := __Dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
+      xValue := __dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
       xType  := ValType( xValue )
 
       SWITCH xType

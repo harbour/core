@@ -2,15 +2,17 @@
 
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
-   LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct
+   LOCAL oServer, oQuery, oRow, i, x
 
    LOCAL cQuery
+
+   hb_default( @cDatabase, "postgres" )
 
    oServer := TPQServer():New( cHost, cDatabase, cUser, cPass )
 
    IF oServer:NetErr()
       ? oServer:ErrorMsg()
-      QUIT
+      RETURN
    ENDIF
 
    oServer:SetVerbosity( 2 )
@@ -18,32 +20,29 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    ? "Tables..."
 
-   FOR x := 1 TO 1
-      aTables := oServer:ListTables()
-
-      FOR i := 1 TO Len( aTables )
-         ? aTables[ i ]
-      NEXT
+   FOR EACH i IN oServer:ListTables()
+      ? i
    NEXT
 
-   IF oServer:TableExists( "TEST" )
-      ? oQuery := oServer:Execute( "DROP TABLE Test" )
+   IF oServer:TableExists( "test" )
+      ? oQuery := oServer:Execute( "DROP TABLE test" )
 
       oQuery:Destroy()
    ENDIF
 
    ? "Creating test table..."
-   cQuery := "CREATE TABLE test("
-   cQuery += "     Code integer not null primary key, "
-   cQuery += "     dept Integer, "
-   cQuery += "     Name Varchar(40), "
-   cQuery += "     Sales boolean, "
-   cQuery += "     Tax Float4, "
-   cQuery += "     Salary Double Precision, "
-   cQuery += "     Budget Numeric(12,2), "
-   cQuery += "     Discount Numeric(5,2), "
-   cQuery += "     Creation Date, "
-   cQuery += "     Description text ) "
+   cQuery := ;
+      "CREATE TABLE test(" + ;
+      "   Code integer not null primary key," + ;
+      "   dept Integer," + ;
+      "   Name Varchar(40)," + ;
+      "   Sales boolean," + ;
+      "   Tax Float4," + ;
+      "   Salary Double Precision," + ;
+      "   Budget Numeric(12,2)," + ;
+      "   Discount Numeric(5,2)," + ;
+      "   Creation Date," + ;
+      "   Description text )"
 
    oQuery := oServer:Query( cQuery )
 
@@ -54,21 +53,20 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    oQuery:Destroy()
 
    ? "Structure of test table"
-   aStruct := oServer:TableStruct( "test" )
 
-   FOR i := 1 TO Len( aStruct )
+   FOR EACH i IN oServer:TableStruct( "test" )
       ?
-      FOR x := 1 TO Len( aStruct[ i ] )
-         ?? aStruct[ i ][ x ], " "
+      FOR EACH x IN i
+         ?? x, ""
       NEXT
    NEXT
 
-   ? "Inserting, declared transaction control "
+   ? "Inserting, declared transaction control"
    oServer:StartTransaction()
 
    FOR i := 1 TO 10
       cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) " + ;
-         "VALUES( " + Str( i ) + ", 2, 'TEST', 'y', 5, 3000, 1500.2, 7.5, '2003-12-17', 'Short Description about what ? ')"
+         "VALUES( " + hb_ntos( i ) + ", 2, 'TEST', 'y', 5, 3000, 1500.2, 7.5, '2003-12-17', 'Short Description about what ?')"
 
       oQuery := oServer:Query( cQuery )
 
@@ -83,13 +81,11 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    oQuery := oServer:Query( "SELECT code, name, description, sales FROM test" )
 
-   aStruct := oQuery:Struct()
-
-   FOR i := 1 TO Len( aStruct )
-      ? aStruct[ i ][ 1 ], aStruct[ i ][ 2 ], aStruct[ i ][ 3 ], aStruct[ i ][ 4 ]
+   FOR EACH i IN oQuery:Struct()
+      ? i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ]
    NEXT
 
-   ? "Fields: ", oQuery:FCount()
+   ? "Fields:", oQuery:FCount()
 
    oRow := oQuery:Blank()
 
@@ -130,12 +126,12 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
          oRow := oQuery:getrow()
 
          oRow:FieldPut( 2, "My Second test" )
-         ? "Update: ", oQuery:Update( oRow )
+         ? "Update:", oQuery:Update( oRow )
       ENDIF
 
       IF oQuery:RecNo() == 60
          oRow := oQuery:getrow()
-         ? "Delete: ", oQuery:Delete( oRow )
+         ? "Delete:", oQuery:Delete( oRow )
       ENDIF
 
       oQuery:Skip()

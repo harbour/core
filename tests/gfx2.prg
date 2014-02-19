@@ -31,10 +31,10 @@ PROCEDURE Main()
    ? "GT" + hb_gtVersion()
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
       ? "You are using a non graphics capable gt"
-      QUIT
+      RETURN
    ENDIF
 
-//   SetMode( 30, 80 )
+// SetMode( 30, 80 )
 
    nRed   := hb_gfxMakeColor( 200, 32, 32 )
    nGreen := hb_gfxMakeColor( 32, 200, 32 )

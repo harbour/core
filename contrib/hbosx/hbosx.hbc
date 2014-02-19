@@ -1,0 +1,10 @@
+description=OS X specific functions
+
+skip={!darwin}
+
+incpaths=.
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+frameworks=Foundation CoreServices
+libs=objc

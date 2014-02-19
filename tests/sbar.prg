@@ -4,11 +4,8 @@
  * Harbour Project source code
  * http://harbour-project.org/
  *
- * Example donated by Diego Pego,
- * modified by Alejandro de Garate
+ * Example donated by Diego Pego, modified by Alejandro de Garate
  */
-
-/* UTF-8 */
 
 #include "directry.ch"
 #include "achoice.ch"
@@ -22,12 +19,6 @@
 #endif
 
 PROCEDURE Main()
-
-   InitScrlBar()
-
-   RETURN
-
-FUNCTION InitScrlBar()
 
    LOCAL tmpFileList, i
 
@@ -56,21 +47,21 @@ FUNCTION InitScrlBar()
    filesScroll:total := Len( aFileList )
 
    filesScroll:colorSpec := "W+/W, W+/W"
-   SET COLOR TO "N/W*, W+/B,,,W/N"
+   SetColor( "N/W*, W+/B,,,W/N" )
 
    filesScroll:display()
 
    i := AChoice( 6, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
 
    @ MaxRow() - 1, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
-   SET COLOR TO
+   SetColor( "" )
    @ MaxRow(), 0
 
-   RETURN 0
+   RETURN
 
 // function used to update scrollbar
 
-STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
+STATIC FUNCTION updateFilesScroll( nMode, aFileList, filesScroll )
 
    LOCAL newPos, valRet := AC_CONT   // Default to continue
    LOCAL nLastKey := LastKey()
@@ -83,18 +74,18 @@ STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
    CASE nLastKey == K_CTRL_PGDN
       newPos := filesScroll:total
    CASE nLastKey == K_CTRL_HOME
-      newPos := newPos - ( filesScroll:barLength + 1 )
+      newPos -= filesScroll:barLength + 1
    CASE nLastKey == K_CTRL_END
-      newPos := newPos + ( filesScroll:barLength + 1 )
+      newPos += filesScroll:barLength + 1
    CASE nLastKey == K_PGUP
-      newPos := newPos - ( filesScroll:barLength + 1 )
+      newPos -= filesScroll:barLength + 1
    CASE nLastKey == K_PGDN
-      newPos := newPos + ( filesScroll:barLength + 1 )
+      newPos += filesScroll:barLength + 1
    CASE nLastKey == K_UP
       newPos--
    CASE nLastKey == K_DOWN
       newPos++
-   CASE modo == AC_EXCEPT
+   CASE nMode == AC_EXCEPT
       DO CASE
       CASE nLastKey == K_ENTER
          valRet := AC_SELECT

@@ -100,9 +100,9 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.ijg.org/
+# ORIGIN http://ijg.org/
 # VER    9a
-# URL    http://www.ijg.org/files/jpegsrc.v9a.tar.gz
+# URL    http://ijg.org/files/jpegsrc.v9a.tar.gz
 # DIFF   jpeg.dif
 #
 # MAP    README

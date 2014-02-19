@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#pragma -gc0
 
 #include "hbclass.ch"
 
@@ -98,8 +100,8 @@ METHOD Edit() CLASS HBMemoEditor
 
    LOCAL nKey
 
-   // NOTE: K_ALT_W is not compatible with clipper exit memo and save key, but I cannot discriminate
-   //       K_CTRL_W and K_CTRL_END from harbour code.
+   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key, but I cannot discriminate
+   //       K_CTRL_W and K_CTRL_END from Harbour code.
    LOCAL aConfigurableKeys := { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }
    LOCAL bKeyBlock
 
@@ -166,7 +168,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
             RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
             SetPos( nRow, nCol )
 
-            IF nYesNoKey == Asc( "Y" ) .OR. nYesNoKey == Asc( "y" )
+            IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
                hb_keySetLast( K_ESC ) /* Cl*pper compatibility */
                ::lSaved := .F.
                ::lExitEdit := .T.
@@ -259,7 +261,7 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE
-      RETURN ::Super:MoveCursor( nKey )
+      RETURN ::super:MoveCursor( nKey )
    ENDIF
 
    RETURN .F.
@@ -267,43 +269,45 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 /* ------------------------------------------ */
 
 FUNCTION MemoEdit( ;
-   cString,;
-   nTop,;
-   nLeft,;
-   nBottom,;
-   nRight,;
-   lEditMode,;
-   xUserFunction,;
-   nLineLength,;
-   nTabSize,;
-   nTextBuffRow,;
-   nTextBuffColumn,;
-   nWindowRow,;
+   cString, ;
+   nTop, ;
+   nLeft, ;
+   nBottom, ;
+   nRight, ;
+   lEditMode, ;
+   xUserFunction, ;
+   nLineLength, ;
+   nTabSize, ;
+   nTextBuffRow, ;
+   nTextBuffColumn, ;
+   nWindowRow, ;
    nWindowColumn )
 
    LOCAL oEd
 
    LOCAL nOldCursor
 
-   hb_default( @nTop            , 0                  )
-   hb_default( @nLeft           , 0                  )
-   hb_default( @nBottom         , MaxRow()           )
-   hb_default( @nRight          , MaxCol()           )
-   hb_default( @lEditMode       , .T.                )
+   hb_default( @nTop            , 0 )
+   hb_default( @nLeft           , 0 )
+   hb_default( @nBottom         , MaxRow() )
+   hb_default( @nRight          , MaxCol() )
+   hb_default( @lEditMode       , .T. )
    hb_default( @nLineLength     , nRight - nLeft + 1 )
-   hb_default( @nTabSize        , 4                  )
-   hb_default( @nTextBuffRow    , 1                  )
-   hb_default( @nTextBuffColumn , 0                  )
-   hb_default( @nWindowRow      , 0                  )
-   hb_default( @nWindowColumn   , nTextBuffColumn    )
-   hb_default( @cString         , ""                 )
+   hb_default( @nTabSize        , 4 )
+   hb_default( @nTextBuffRow    , 1 )
+   hb_default( @nTextBuffColumn , 0 )
+   hb_default( @nWindowRow      , 0 )
+   hb_default( @nWindowColumn   , nTextBuffColumn )
+   hb_default( @cString         , "")
 
-   // Original MemoEdit() converts Tabs into spaces;
+   /* Original MemoEdit() converts tabs into spaces */
    oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction
+   /* Contrary to what the NG says, any logical value will make it pass
+      through without any editing. */
+   IF ! HB_ISLOGICAL( xUserFunction )
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()

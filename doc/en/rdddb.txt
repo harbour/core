@@ -150,8 +150,8 @@
          LOCAL cName := "Harbour", nId := 10
          USE test
          test->( dbAppend() )
-         REPLACE test->Name WITH cName, test->Id WITH nId
-         USE
+         test->Name := cName
+         test->Id   := nId
          RETURN
    $STATUS$
       R
@@ -185,10 +185,9 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test
-         SET FILTER TO Left( test->Name, 2 ) == "An"
+         SET FILTER TO hb_LeftIs( test->Name, "An" )
          dbEdit()
          Test->( dbClearFilter() )
-         USE
          RETURN
    $STATUS$
       R
@@ -227,7 +226,6 @@
          USE test1 NEW
          dbEdit()
          dbCloseAll()
-         USE
          RETURN
    $STATUS$
       R
@@ -261,7 +259,6 @@
          USE test
          dbEdit()
          Test->( dbCloseArea() )
-         USE
          RETURN
    $STATUS$
       R
@@ -296,17 +293,18 @@
       PROCEDURE Main()
          LOCAL cName := Space( 40 )
          LOCAL nId := 0
+
          USE test EXCLUSIVE NEW
-         //
+
          @ 10, 10 GET cName
          @ 11, 10 GET nId
          READ
-         //
+
          IF Updated()
-            APPEND BLANK
-            REPLACE tests->Name WITH cName
-            REPLACE tests->Id WITH nId
-            tests->( dbCommit() )
+            dbAppend()
+            test->Name := cName
+            test->Id   := nId
+            dbCommit()
          ENDIF
          RETURN
    $STATUS$
@@ -341,20 +339,21 @@
       PROCEDURE Main()
          LOCAL cName := Space( 40 )
          LOCAL nId := 0
+
          USE test EXCLUSIVE NEW
          USE testid NEW INDEX testid
-         //
+
          @ 10, 10 GET cName
          @ 11, 10 GET nId
          READ
-         //
+
          IF Updated()
-            APPEND BLANK
-            REPLACE tests->Name WITH cName
-            REPLACE tests->Id WITH nId
+            dbAppend()
+            test->Name := cName
+            test->Id   := nId
             IF ! testid->( dbSeek( nId ) )
-               APPEND BLANK
-               REPLACE tests->Id WITH nId
+               testid->( dbAppend() )
+               testid->Id := nId
             ENDIF
          ENDIF
          dbCommitAll()
@@ -415,7 +414,7 @@
 
       - The second subscript value in the second dimension-which contains
         the field data type-must contain a proper value: C, D, L, M or N
-        It is possible to use additional letters (or clarity (e.g., 'Numeric'
+        It is possible to use additional letters for clarity (e.g., 'Numeric'
         for 'N'): however, the first letter of this array element must
         be a proper value.
 
@@ -439,7 +438,7 @@
       database.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL nI, aStruct := { ;
+         LOCAL aStruct := { ;
             { "CHARACTER", "C", 25, 0 }, ;
             { "NUMERIC",   "N",  8, 0 }, ;
             { "DOUBLE",    "N",  8, 2 }, ;
@@ -489,12 +488,9 @@
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
-      IF testid->( dbSeek( nId ) )
-         IF testid->( RLock() )
-            dbDelete()
-         ENDIF
+      IF dbSeek( nId ) .AND. RLock()
+         dbDelete()
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -530,8 +526,8 @@
       SET FILTER TO Name == "Harbour"
       USE testid INDEX testid NEW
       SET FILTER TO Id == 1
-      SELECT Test
-      //
+      SELECT test
+
       ? dbFilter()
       ? testid->( dbFilter() )
    $STATUS$
@@ -565,12 +561,11 @@
       condition. Otherwise, if no index is active or if no filter condition
       is present, the value of the record pointer will be LastRec().
    $EXAMPLES$
-      USE tests
+      USE test
       dbGoTop()
       ? RecNo()
       dbGoBottom()
       ? RecNo()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -608,14 +603,14 @@
       is a unique primary key while in other formats, <xRecordNumber> could
       be an array offset if the data set was an array.
 
-      Issuing a dbGoto(RecNo()) call in a network enviroment will refresh
+      Issuing a dbGoto( RecNo() ) call in a network enviroment will refresh
       the database and index buffers. This is the same as a dbSkip(0) call.
    $EXAMPLES$
-      The following example uses dbGoto() TO iteratively process
+      The following example uses dbGoto() to iteratively process
       every fourth record:
 
       dbUseArea( .T., "DBFNTX", "sales", "sales", .T. )
-      //
+
       // toggle every fourth record
       DO WHILE ! Eof()
          dbGoto( RecNo() + 4 )
@@ -652,12 +647,11 @@
       condition. Otherwise, if no index is active or if no filter condition
       is present, the value of RecNo() will be 1.
    $EXAMPLES$
-      USE tests
+      USE test
       dbGoTop()
       ? RecNo()
       dbGoBottom()
       ? RecNo()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -697,7 +691,6 @@
       ? Deleted()
       dbRecall()
       ? Deleted()
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -735,14 +728,13 @@
       item.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL x := 0
-         USE tests NEW
+         LOCAL x
+         USE test NEW
          FOR x := 1 TO RecCount()
             IF ! dbRLock()
                dbUnlock()
             ENDIF
          NEXT
-         USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -776,18 +768,16 @@
       work area.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL aList := {}
-         LOCAL x := 0
-         USE tests NEW
+         LOCAL aList, x
+         USE test NEW
          dbGoto( 10 )
          RLock()
          dbGoto( 100 )
          RLock()
          aList := dbRLockList()
-         FOR x := 1 TO Len( aList )
-            ? aList[ x ]
+         FOR EACH x IN aList
+            ? x
          NEXT
-         USE
          RETURN
    $STATUS$
       R
@@ -822,13 +812,12 @@
       unlocked
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          dbGoto( 10 )
          IF RLock()
-            ? tests->ID
+            ? test->ID
             dbRUnlock()
          ENDIF
-         USE
          RETURN
    $STATUS$
       R
@@ -886,16 +875,13 @@
       <lSoftSeek> is a logical false (.F.)
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW INDEX tests
+         USE test NEW INDEX test
          dbGoto( 10 )
-         nId := tests->nId
-         IF tests->( dbSeek( nId ) )
-            IF RLock()
-               ? tests->Name
-               dbRUnlock()
-            ENDIF
+         nId := test->nId
+         IF dbSeek( nId ) .AND. RLock()
+            ? test->Name
+            dbRUnlock()
          ENDIF
-         USE
          RETURN
 
       ACCEPT "Employee name: " TO cName
@@ -936,20 +922,20 @@
       select the numeric work area; if <xArea> is character, then it will
       select the work area with the alias name.
 
-      dbSelectArea(0) will select the next avaliable and unused work area.
+      dbSelectArea( 0 ) will select the next avaliable and unused work area.
       Up to 255 work areas are supported. Each work area has its own alias
       and record pointer, as well as its own Found(), dbFilter(),
       dbRSelect() and dbRelation() function values.
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL nId
-         USE tests NEW INDEX tests
-         USE tests1 NEW INDEX tests1
+         USE test NEW INDEX test
+         USE test1 NEW INDEX test1
          dbSelectArea( 1 )
-         nId := tests->Id
+         nId := test->Id
          dbSelectArea( 2 )
          IF dbSeek( nId )
-            ? tests1->cName
+            ? test1->cName
          ENDIF
          dbCloseAll()
          RETURN
@@ -1018,18 +1004,17 @@
    $DESCRIPTION$
       This function moves the record pointer <nRecords> in the selected or
       aliased work area. The default value for <nRecords> will be 1.
-      A dbSkip(0) will flush and refresh the internal database bufer and
+      A dbSkip( 0 ) will flush and refresh the internal database bufer and
       make any changes made to the record visible without moving the record
       pointer in either direction.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          dbGoTop()
          DO WHILE ! Eof()
-            ? tests->Id, tests->Name
+            ? test->Id, test->Name
             dbSkip()
          ENDDO
-         USE
          RETURN
    $STATUS$
       R
@@ -1068,8 +1053,8 @@
       area which in fact, would be not correct.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
-         dbSetFilter( {|| tests->Id < 100 }, "tests->Id <100" )
+         USE test NEW
+         dbSetFilter( {|| test->Id < 100 }, "test->Id <100" )
          dbGoTop()
    $STATUS$
       R
@@ -1100,20 +1085,19 @@
    $DESCRIPTION$
       This function returns a multidimensional array. This array has array
       pointers to other arrays, each of which contains the characteristic
-      of a field in the active work area. The lenght of this array is based
+      of a field in the active work area. The length of this array is based
       in the number of fields in that particular work area. In other words,
-      Len(dbStruct()) is equal to the value obtained from FCount().
+      Len( dbStruct() ) is equal to the value obtained from FCount().
       Each subscript position
    $EXAMPLES$
       #include "dbstruct.ch"
       PROCEDURE Main()
          LOCAL aStru, x
-         USE tests NEW
+         USE test NEW
          aStru := dbStruct()
-         FOR x := 1 TO Len( aStru )
-            ? aStru[ x ][ DBS_NAME ]
+         FOR EACH x IN aStru
+            ? x[ DBS_NAME ]
          NEXT
-         USE
          RETURN
    $STATUS$
       R
@@ -1154,7 +1138,6 @@
             dbUnlock()
          ENDIF
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -1183,8 +1166,7 @@
       This function will remove all file and record locks in all work area.
    $EXAMPLES$
       nId := 10
-      USE tests INDEX testid NEW
-      USE tests1 INDEX tests NEW
+      USE test INDEX testid NEW
       IF testid->( dbSeek( nId ) )
          IF testid->( RLock() )
             dbDelete()
@@ -1194,7 +1176,6 @@
       ELSE
          dbUnlockAll()
       ENDIF
-      USE
    $STATUS$
       R
    $COMPLIANCE$
@@ -1219,7 +1200,7 @@
       Opens a work area and uses a database file.
    $SYNTAX$
       dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
-      [<lShared>], [<lReadonly>])
+      [<lShared>], [<lReadonly>] )
    $ARGUMENTS$
       <lNewArea>  A optional logical expression for the new work area
 
@@ -1241,7 +1222,7 @@
       the file <cName> that is opened. The default for this will be the
       value of dbSetDriver().
 
-      IF used, <xcAlias> contains the alias name for that work area, If not
+      If used, <xcAlias> contains the alias name for that work area, If not
       specified, the root name of the database specified in <cName> will be
       used.
 
@@ -1256,7 +1237,7 @@
       If it is not specified, the file will he opened in normal read-write
       mode.
    $EXAMPLES$
-      dbUseArea( .T.,, "tests" )
+      dbUseArea( .T.,, "test" )
    $STATUS$
       R
    $COMPLIANCE$

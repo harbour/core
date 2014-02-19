@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -854,6 +854,7 @@ HB_FUNC( WIN_COMDEBUGDCB )
       {
          s_PortData[ iPort ].iFunction = HB_WIN_COM_FUN_GETCOMMPROPERTIES;
          s_PortData[ iPort ].dwError = 0;
+         memset( &CurCOMMPROP, 0, sizeof( CurCOMMPROP ) );
          if( GetCommProperties( hCommPort, &CurCOMMPROP ) )
          {
             hb_snprintf( buffer, sizeof( buffer ), "dwCurrentTxQueue : %lu\n", CurCOMMPROP.dwCurrentTxQueue ); hb_strncat( szDebugString, buffer, sizeof( szDebugString ) - 1 );

@@ -22,8 +22,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      ft_ChDir( "C:\harbour" )
-      ft_ChDir( hb_ps() )
-      ft_ChDir( ".." + hb_ps() + "hbnf" )
+      ? ft_ChDir( "harbour" )
+      ? ft_ChDir( hb_ps() )
+      ? ft_ChDir( ".." + hb_ps() + "hbnf" )
    $END$
  */

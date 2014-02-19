@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -79,13 +79,13 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       xValue := uhttpd_UrlDecode( aField[ 2 ] )
 
       // Is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
+      IF Right( cName, 2 ) == "[]"
+         cName := hb_StrShrink( cName, 2 )
          hHashVars[ cName ] := { xValue }
       ELSE
          // now check if variable already exists. If yes and I have already another element
          // with same name, then I will change it to an array
-         IF hb_HPos( hHashVars, cName ) > 0
+         IF cName $ hHashVars
             IF ! HB_ISARRAY( hHashVars[ cName ] )
                // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }
@@ -142,8 +142,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read protocol
-   nPos := At( "://", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "://", cTemp ) ) > 0
       cProto := Left( cTemp, nPos - 1 )
       // delete protocol from temp string
       cTemp := SubStr( cTemp, nPos + 3 )
@@ -157,14 +156,12 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read username and password
-   nPos := At( "@", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "@", cTemp ) ) > 0
       cUserNamePassword := Left( cTemp, nPos - 1 )
       // delete Username and Password from temp string
       cTemp := SubStr( cTemp, nPos + 1 )
       // Split username and password
-      nPos := At( ":", cUserNamePassword )
-      IF nPos > 0
+      IF ( nPos := At( ":", cUserNamePassword ) ) > 0
          cUser := Left( cUserNamePassword, nPos - 1 )
          cPass := SubStr( cUserNamePassword, nPos + 1 )
       ELSE
@@ -180,12 +177,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Search for anchor using # char from right
-   nPos := RAt( "#", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "#", cTemp ) ) > 0
       cFragment := SubStr( cTemp, nPos + 1 )
 
       // delete anchor from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cFragment := ""
@@ -195,12 +191,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]]]
 
    // Search for Query part using ? char from right
-   nPos := RAt( "?", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "?", cTemp ) ) > 0
       cQuery := SubStr( cTemp, nPos + 1 )
 
       // delete query from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cQuery := ""
@@ -212,12 +207,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cUri += cTemp
 
    // Search for Path part using / char from right
-   nPos := RAt( "/", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "/", cTemp ) ) > 0
       cPath := SubStr( cTemp, nPos )
 
       // delete path from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
+      cTemp := Left( cTemp, nPos - 1 )
 
    ELSE
       cPath := "/"
@@ -229,8 +223,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cHostnamePort := cTemp
 
    // Searching port number
-   nPos := At( ":", cHostnamePort )
-   IF nPos > 0
+   IF ( nPos := At( ":", cHostnamePort ) ) > 0
       cHost := Left( cHostnamePort, nPos - 1 )
       cPort := SubStr( cHostnamePort, nPos + 1 )
       nPort := Val( cPort )
@@ -284,7 +277,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   __defaultNIL( @cDelim, ( Chr( 13 ) + Chr( 10 ) ) )
+   __defaultNIL( @cDelim, Chr( 13 ) + Chr( 10 ) )
    __defaultNIL( @lRemDelim, .T. )
    __defaultNIL( @nCount, -1 )
 
@@ -295,7 +288,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
       IF lRemDelim
          cLine := Left( cBuffer, nEOLPos - 1 )
       ELSE
-         cLine := Left( cBuffer, ( nEOLPos + Len( cDelim ) ) - 1 )
+         cLine := Left( cBuffer, nEOLPos - 1 + Len( cDelim ) )
       ENDIF
       // WriteToLogFile( "cBuffer, cDelim, nEOLPos, cLine: " + CStr( cBuffer ) + "," + CStr( cDelim ) + "," + CStr( nEOLPos ) + "," + CStr( cLine ) )
       AAdd( aLines, cLine )
@@ -396,9 +389,6 @@ FUNCTION uhttpd_URLDecode( cString )
 
 FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-
    __defaultNIL( @dDate, Date() )
    __defaultNIL( @cTime, Time() )
    __defaultNIL( @nDayToAdd, 0 )
@@ -410,9 +400,9 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
    dDate += nDayToAdd
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + ", " + ;
       StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + " " + ;
       StrZero( Year( dDate ), 4 ) + " " + ;
       cTime + " GMT"
 
@@ -464,7 +454,7 @@ FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
    ELSE
       cHtml := uhttpd_TranslateStrings( cString, aTranslate )
    ENDIF
-   // TraceLog( "OutputString() = cHtml", cHtml )
+   // TraceLog( "OutputString(): cHtml", cHtml )
 
    RETURN cHtml
 
@@ -604,51 +594,11 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
 /*********************************************************************************/
 
-FUNCTION uhttpd_SplitFileName( cFile )
-
-   LOCAL hFile
-   LOCAL cPath, cName, cExt, cDrive, cSep
-
-   hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-   hFile := { ;
-      "FILE"     => cFile, ;
-      "DRIVE"    => cDrive, ;
-      "PATH"     => cPath, ;
-      "NAME"     => cName, ;
-      "EXT"      => cExt, ;
-      "FULLPATH" => NIL, ;
-      "FULLNAME" => cName + cExt, ;
-      "UNC"      => NIL }
-
-   cSep := hb_ps()
-
-   hFile:FULLPATH := iif( ! Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
-   hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
-
-   RETURN hFile
-
 FUNCTION uhttpd_AppFullPath()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-   LOCAL cPrgFullPath := hExeFile:FULLPATH
-   LOCAL cPath, cSep
-
-   cSep := hb_ps()
-
-   IF Right( cPrgFullPath, Len( cSep ) ) == cSep
-      cPath := SubStr( cPrgFullPath, 1, Len( cPrgFullPath ) - Len( cSep ) )
-   ELSE
-      cPath := cPrgFullPath
-   ENDIF
-
-   RETURN cPath
+   RETURN hb_DirBase()
 
 FUNCTION uhttpd_AppFullName()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-
-   RETURN hExeFile:FULLNAME
-
+   RETURN hb_FNameNameExt( hb_ProgName() )
 
 FUNCTION uhttpd_CStrToVal( cExp, cType )
 
@@ -702,14 +652,12 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
 FUNCTION uhttpd_GetField( cVar, cType )
 
    LOCAL xVal
-   LOCAL nPos := hb_HPos( _Request, cVar )
 
-   IF nPos > 0 // cVar IN ::h_Request:Keys
-      xVal := hb_HValueAt( _Request, nPos ) // ::h_Request[ cVar ]
+   IF hb_HGetRef( _Request, cVar, @xVal )
       IF Empty( xVal )
          xVal := NIL
       ENDIF
-      IF cType != NIL .AND. cType $ "NLD"
+      IF HB_ISSTRING( cType ) .AND. cType $ "NLD"
          xVal := uhttpd_CStrToVal( xVal, cType )
       ENDIF
    ENDIF
@@ -725,13 +673,4 @@ FUNCTION uhttpd_SetField( cVar, cVal )
    RETURN xVal
 
 FUNCTION uhttpd_HGetValue( hHash, cKey )
-
-   LOCAL nPos
-   LOCAL xVal
-
-   IF hHash != NIL
-      xVal := iif( ( nPos := hb_HPos( hHash, cKey ) ) == 0, NIL, hb_HValueAt( hHash, nPos ) )
-   ENDIF
-   // RETURN iif( cKey $ hHash:Keys, hHash[ cKey ], NIL )
-
-   RETURN xVal
+   RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )

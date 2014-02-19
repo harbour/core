@@ -1,7 +1,7 @@
 If this directory is empty, download package from link below
 and unpack into this directory.
 
-http://sourceforge.net/projects/cegcc/files/
+https://sourceforge.net/projects/cegcc/files/
 
 NOTES: - In order to unpack and *use* this package, you'll
          need Cygwin package (from http://cygwin.com) installed

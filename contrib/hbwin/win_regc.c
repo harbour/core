@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,18 +78,28 @@ HB_FUNC( WIN_REGCREATEKEYEX )
    HKEY hkResult = NULL;
    DWORD dwDisposition = 0;
 
-   hb_retl( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                            HB_PARSTRDEF( 2, &hKey, NULL ),
-                            0,
-                            NULL,
-                            hb_parnl( 5 ) /* dwOptions */,
-                            hb_parnl( 6 ) /* samDesired */,
-                            NULL /* lpSecurityAttributes */,
-                            &hkResult,
-                            &dwDisposition ) == ERROR_SUCCESS );
+   HB_BOOL bSuccess = RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                                      HB_PARSTRDEF( 2, &hKey, NULL ),
+                                      0,
+                                      NULL,
+                                      hb_parnl( 5 ) /* dwOptions */,
+                                      hb_parnl( 6 ) /* samDesired */,
+                                      NULL /* lpSecurityAttributes */,
+                                      &hkResult,
+                                      &dwDisposition ) == ERROR_SUCCESS;
 
-   hb_storptr( hkResult, 8 );
-   hb_stornl( dwDisposition, 9 );
+   hb_retl( bSuccess );
+
+   if( bSuccess )
+   {
+      hb_storptr( hkResult, 8 );
+      hb_stornl( dwDisposition, 9 );
+   }
+   else
+   {
+      hb_storptr( NULL, 8 );
+      hb_stornl( 0, 9 );
+   }
 
    hb_strfree( hKey );
 }
@@ -99,13 +109,15 @@ HB_FUNC( WIN_REGOPENKEYEX )
    void * hKey;
    HKEY hkResult = NULL;
 
-   hb_retl( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                          HB_PARSTRDEF( 2, &hKey, NULL ),
-                          0 /* dwOptions */,
-                          hb_parnl( 4 ) /* samDesired */,
-                          &hkResult ) == ERROR_SUCCESS );
+   HB_BOOL bSuccess = RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                                    HB_PARSTRDEF( 2, &hKey, NULL ),
+                                    0 /* dwOptions */,
+                                    hb_parnl( 4 ) /* samDesired */,
+                                    &hkResult ) == ERROR_SUCCESS;
 
-   hb_storptr( hkResult, 5 );
+   hb_retl( bSuccess );
+
+   hb_storptr( bSuccess ? hkResult : NULL, 5 );
 
    hb_strfree( hKey );
 }
@@ -116,6 +128,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    LPCTSTR lpKey = HB_PARSTRDEF( 2, &hKey, NULL );
    DWORD dwType = 0;
    DWORD dwSize = 0;
+   HB_BOOL bSuccess = HB_FALSE;
 
    if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                         lpKey,
@@ -142,9 +155,9 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
                dwSize /= sizeof( TCHAR );
 
                HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
+
+               bSuccess = HB_TRUE;
             }
-            else
-               hb_stor( 5 );
 
             hb_xfree( lpValue );
          }
@@ -161,22 +174,31 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
             {
                if( ! hb_storclen_buffer( ( char * ) lpValue, dwSize, 5 ) )
                   hb_xfree( lpValue );
+
+               bSuccess = HB_TRUE;
             }
             else
-            {
-               hb_stor( 5 );
                hb_xfree( lpValue );
-            }
          }
       }
       else
+      {
          hb_storc( NULL, 5 );
+         bSuccess = HB_TRUE;
+      }
+   }
+
+   if( bSuccess )
+   {
+      hb_stornl( dwType, 4 );
+      hb_retnl( dwSize );
    }
    else
+   {
       hb_stor( 5 );
-
-   hb_stornl( dwType, 4 );
-   hb_retnl( dwSize );
+      hb_stornl( 0, 4 );
+      hb_retnl( 0 );
+   }
 
    hb_strfree( hKey );
 }

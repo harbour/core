@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,7 +70,7 @@
 #define WVT_BTN_IMAGE_RIGHT                       3
 
 /*
- *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat,;
+ *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat, ;
  *                 nAlign, nStyle, nThick, nColor )
  */
 /*   nOrient   */
@@ -180,9 +180,9 @@
 #define WVT_SCROLLBUTTON_RIGHT                    4
 #define WVT_SCROLL_THUMB                          5
 
-//
-// wvtmenu defines  .  Peter Rees
-//
+/*
+ * WvtMenu() defines [Peter Rees]
+ */
 #define WVT_MENU_TYPE                             1
 #define WVT_MENU_IDENTIFIER                       2
 #define WVT_MENU_CAPTION                          3
@@ -190,16 +190,18 @@
 #define WVT_MENU_MENUOBJ                          4
 
 /*-*/
+
 #ifndef RGB
 #define RGB( nR, nG, nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 #endif
+
 //
 //                          Windows Specific
 //
 
 #define LVM_FIRST                                 0x1000      // ListView messages
 #define TV_FIRST                                  0x1100      // TreeView messages
-#define TVN_FIRST                                 (0-400)
+#define TVN_FIRST                                 -400
 #define HDM_FIRST                                 0x1200      // Header messages
 #define TCM_FIRST                                 0x1300      // Tab control messages
 
@@ -290,7 +292,7 @@
 #define SW_MAX                                    11
 
 /*
- *  Window Messages
+ * Window Messages
  */
 #define WM_USER                                   1024
 

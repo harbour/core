@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -148,9 +148,9 @@ FUNCTION sprintf( ... )
             hb_default( @xVal, 0 )
             IF nLen != 0
                IF nLen - Int( nLen ) > 0.0
-                  nDec := Str( nLen )
+                  nDec := hb_ntos( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
-                     nDec := Left( nDec, Len( nDec ) - 1 )
+                     nDec := hb_StrShrink( nDec )
                   ENDDO
                   nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
                ELSE
@@ -161,14 +161,14 @@ FUNCTION sprintf( ... )
                cTok := hb_ntos( iif( lUnsigned, Abs( xVal ), xVal ) )
             ENDIF
             IF l0
-               IF "-" $ cTok .AND. !( Left( cTok, 1 ) == "-" )
+               IF "-" $ cTok .AND. ! hb_LeftIs( cTok, "-" )
                   cTok := StrTran( cTok, "-", " " )
                   cTok := "-" + SubStr( cTok, 2 )
                ENDIF
                cTok := StrTran( cTok, " ", "0" )
                l0   := .F.
             ENDIF
-            IF lSign .AND. !( Left( cTok, 1 ) == "-" )
+            IF lSign .AND. ! hb_LeftIs( cTok, "-" )
                IF nLen == 0
                   cTok := "+" + cTok
                ELSE

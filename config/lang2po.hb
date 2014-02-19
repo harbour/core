@@ -58,8 +58,6 @@ STATIC FUNCTION Translatable( cString )
 
    RETURN .F.
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 STATIC FUNCTION CoreLangList()
 
    LOCAL aList := {}
@@ -70,7 +68,7 @@ STATIC FUNCTION CoreLangList()
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF LEFTEQUAL( cName, "HB_LANG_" )
+      IF hb_LeftIs( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF ( Len( cName ) != 5 .OR. "_" $ cName ) .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
@@ -90,13 +88,12 @@ STATIC FUNCTION Meta()
 
    LOCAL meta
 
-   /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
    hMeta[ "Project-Id-Version:"        ] := "core-lang"
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
    hMeta[ "PO-Revision-Date:"          ] := cISO_TimeStamp
-   hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@foobaz>"
+   hMeta[ "Last-Translator:"           ] := "foo bar <foo.bar@example.org>"
    hMeta[ "Language-Team:"             ] := "https://www.transifex.com/projects/p/harbour/"
    hMeta[ "MIME-Version:"              ] := "1.0"
    hMeta[ "Content-Type:"              ] := "text/plain; charset=UTF-8"
@@ -119,8 +116,8 @@ STATIC FUNCTION ISO_TimeStamp()
    RETURN hb_StrFormat( "%1$s%2$s%3$02d%4$02d", ;
       hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
       iif( nOffset < 0, "-", "+" ), ;
-      Int( nOffset / 3600 ), ;
-      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
+      Int( Abs( nOffset ) / 3600 ), ;
+      Int( ( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 ) )
 
 STATIC FUNCTION Item( cOri, cTrs, nPos )
 

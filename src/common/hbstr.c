@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -282,35 +282,7 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
- */
-char * hb_xstrcat( char * szDest, const char * szSrc, ... )
-{
-   char * szResult = szDest;
-   va_list va;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcat(%p, %p, ...)", szDest, szSrc ) );
-
-   while( *szDest )
-      szDest++;
-
-   va_start( va, szSrc );
-   while( szSrc )
-   {
-      while( *szSrc )
-         *szDest++ = *szSrc++;
-      szSrc = va_arg( va, char * );
-   }
-   *szDest = '\0';
-   va_end( va );
-
-   return szResult;
-}
-
-/*
-   AJ: 2004-02-23
-   Concatenates multiple strings into a single result.
-   Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcpy( buffer, "A", "B", NULL ) stores "AB" in buffer.
    Returns szDest.
    Any existing contents of szDest are cleared. If the szDest buffer is NULL,
    allocates a new buffer with the required length and returns that. The

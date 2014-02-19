@@ -14,15 +14,15 @@ PROCEDURE Main( cPort )
    LOCAL nTurn := 0, nTurn1 := 0
    LOCAL bCont := .T.
 
+   SET CURSOR OFF
+
    CLS
 
-   IF Empty( cPort )
-      cPort := "2000"
-   ENDIF
+   hb_default( @cPort, "2000" )
 
    hb_inetInit()
 
-   @ 1, 15 SAY "H A R B O U R - Inet Api Server Demo"
+   @ 1, 15 SAY "Harbour - Inet API Server Demo"
    @ 2,  5 SAY "Contact this server using telnet or the Harbour Inet Client demo"
    @ 3,  5 SAY "Press a [KEY] to terminate the program"
    @ 5,  5 SAY "Server listening on port " + cPort + "..."
@@ -55,7 +55,7 @@ PROCEDURE Main( cPort )
 
       hb_inetTimeout( s, 500 )
 
-      @ 6, 5 SAY "Connection from: " + hb_inetAddress( s ) + ":" + Str( hb_inetPort( s ), 5 )
+      @ 6, 5 SAY "Connection from: " + hb_inetAddress( s ) + ":" + hb_ntos( hb_inetPort( s ) )
       @ 7, 5 SAY "Receiving: "
       @ 8, 5
 
@@ -89,8 +89,7 @@ PROCEDURE Main( cPort )
          OTHERWISE
             @ 7, 5 SAY "Received Error " + Str( hb_inetErrorCode( s ) ) + ": " + hb_inetErrorDesc( s )
             @ 8, 5 SAY Space( 70 )
-            @ 9, 5 SAY Space( 70 )
-            @ 9, 5 SAY "Press a key to continue"
+            @ 9, 5 SAY PadR( "Press a key to continue", 70 )
             Inkey( 0 )
             EXIT
 
@@ -106,29 +105,12 @@ PROCEDURE Main( cPort )
 
    RETURN
 
-PROCEDURE Progress( nProgress, nDrow, nDcol )
+STATIC PROCEDURE Progress( nProgress, nDrow, nDcol )
 
-   LOCAL nRow := Row(), nCol := Col()
-
-   @ nDrow, nDcol SAY "[ ]"
-
-   DO CASE
-   CASE nProgress == 0
-      @ nDrow, nDcol + 1 SAY "-"
-   CASE nProgress == 1
-      @ nDrow, nDcol + 1 SAY "\"
-   CASE nProgress == 2
-      @ nDrow, nDcol + 1 SAY "|"
-   CASE nProgress == 3
-      @ nDrow, nDcol + 1 SAY "/"
-   ENDCASE
-
-   nProgress++
+   hb_DispOutAt( nDrow, nDcol, "[" + SubStr( "-\|/", ++nProgress, 1 ) + "]" )
 
    IF nProgress == 4
       nProgress := 0
    ENDIF
-
-   @ nRow, nCol
 
    RETURN

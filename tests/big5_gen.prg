@@ -61,7 +61,7 @@ proc main()
    nMax  := nUMax := 0x0000
 
    for each cLine in hb_aTokens( hb_memoRead( "BIG5.TXT" ), hb_eol() )
-      if cLine = "0x" .and. ( n := hb_at( "0x", cLine, 7 ) ) != 0
+      if hb_leftis( cLine, "0x" ) .and. ( n := hb_at( "0x", cLine, 7 ) ) != 0
          nBG5 := hb_hexToNum( substr( cLine, 3, 4 ) )
          nU16 := hb_hexToNum( substr( cLine, n + 2, 4 ) )
          if nBG5 == 0 .or. nU16 == 0
@@ -122,7 +122,7 @@ proc main()
 #endif
    n := min_size( aVal, @nMin, nMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nMin ) + ")"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nMin ) + ")"
    calc_size( aVal, nMin, nMax, nBit, @hVal, @aInd, @nn )
    aVal2 := hash_to_array( hVal )
 
@@ -163,7 +163,7 @@ proc main()
 #endif
    n := min_size( aValU, @nUMin, nUMax, @nBit )
    ? "minimal size:", hb_ntos( n ), ;
-     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: "+hb_ntos( nUMin ) + ")"
+     "for", hb_ntos( hb_bitshift( 1, nBit ) ), "byte blocks, (from: " + hb_ntos( nUMin ) + ")"
    calc_size( aValU, nUMin, nUMax, nBit, @hVal, @aInd, @nn )
    aValU2 := hash_to_array( hVal )
 
@@ -219,7 +219,7 @@ static function hash_to_array( hVal )
    next
 return aVal
 
-function min_size( aVal, nMin, nMax, nBit )
+static function min_size( aVal, nMin, nMax, nBit )
    local n, nM, nS, nSize, nMinX
    nSize := 0xFFFFFF
    nMinX := nMin
@@ -240,13 +240,13 @@ function min_size( aVal, nMin, nMax, nBit )
    nMin := nMinX
 return nSize
 
-function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ nBit )
 
    cLine := ""
-   hVal := {=>}
+   hVal := { => }
    aInd := {}
    for n := nMin to nMax
       cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
@@ -258,7 +258,7 @@ function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    next
    if ! cLine == ""
       for each c in hVal
-         if c = cLine
+         if hb_leftis( c, cLine )
             cLine := c
             exit
          endif

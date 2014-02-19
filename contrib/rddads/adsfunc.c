@@ -2,7 +2,7 @@
  * Harbour Project source code:
  * Advantage Database Server RDD (additional functions)
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour) (cleanups)
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour) (cleanups, AdsGetRecordCount())
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
  *
@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -579,6 +579,37 @@ HB_FUNC( ADSFILE2BLOB )
    }
    else
       hb_errRT_DBCMD( EG_ARG, 1014, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( ADSGETRECORDCOUNT )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea )
+   {
+      ADSHANDLE hHandle;
+      UNSIGNED32 ulKey = 0;
+
+      switch( hb_parnidef( 1, ADS_TABLE ) )
+      {
+         case ADS_INDEX_ORDER:
+            hHandle = pArea->hOrdCurrent;
+            break;
+         case ADS_STATEMENT:
+            hHandle = pArea->hStatement;
+            break;
+         default:
+            hHandle = pArea->hTable;
+      }
+
+      hb_retnl( ( long ) AdsGetRecordCount( hHandle,
+                                            ( UNSIGNED16 ) hb_parnidef( 2, ADS_RESPECTFILTERS ) /* usFilterOption */,
+                                            &ulKey ) );
+
+      hb_stornl( ( long ) ulKey, 3 );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
 
 /* 2nd parameter: unsupported Bag Name. */
@@ -1807,9 +1838,7 @@ HB_FUNC( ADSDDADDTABLE )
 HB_FUNC( ADSDDREMOVETABLE )
 {
 #if ADS_LIB_VERSION >= 600
-   /* TOFIX: Due to bad and very old typo, the connection handle is
-             taken from 4th parameter instead of 3rd. [vszakats] */
-   hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
+   hb_retl( AdsDDRemoveTable( HB_ADS_PARCONNECTION( 3 ) /* hConnect */,
                               ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                               ( UNSIGNED16 ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : hb_parldef( 2, 0 ) ) /* usDeleteFiles */ ) == AE_SUCCESS );
 #else
@@ -2132,9 +2161,9 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
 
 /*
    Verify if a username/password combination is valid for this database
-   Call :    AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
+   Call:     AdsTestLogin( cServerPath, nServerTypes, cUserName, cPassword, options,
                           [ nUserProperty, @cBuffer ] )
-   Returns : True if login succeeds
+   Returns:  True if login succeeds
 
    Notes:    This creates a temporary connection only during the execution of this
              function, without disturbing the stored one for any existing connection
@@ -2449,18 +2478,12 @@ HB_FUNC( ADSDDDROPLINK )
 
 HB_FUNC( ADSSETINDEXDIRECTION )
 {
+   UNSIGNED32 nRet = 0;
 #if ADS_LIB_VERSION >= 900
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
-   ADSHANDLE hIndex;
-   UNSIGNED32 nRet = 0;
 
-   if( pArea && HB_ISNUM( 1 ) )
-   {
-      hIndex = pArea->hOrdCurrent;
-      nRet = AdsSetIndexDirection( hIndex, ( UNSIGNED16 ) hb_parni( 1 ) );
-   }
-   hb_retnl( nRet );
-#else
-   hb_retnl( 0 );
+   if( pArea )
+      nRet = AdsSetIndexDirection( pArea->hOrdCurrent, ( UNSIGNED16 ) hb_parni( 1 ) );
 #endif
+   hb_retnl( nRet );
 }

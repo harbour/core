@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -80,4 +80,28 @@ HB_FUNC( LEFT )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_LEFTIS )
+{
+   PHB_ITEM pItem1 = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pItem2 = hb_param( 2, HB_IT_STRING );
+
+   if( pItem1 && pItem2 )
+      hb_retl( hb_cdpcmp( hb_itemGetCPtr( pItem1 ), hb_itemGetCLen( pItem1 ),
+                          hb_itemGetCPtr( pItem2 ), hb_itemGetCLen( pItem2 ), hb_vmCDP(), HB_FALSE ) == 0 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1071, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_LEFTISI )
+{
+   PHB_ITEM pItem1 = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pItem2 = hb_param( 2, HB_IT_STRING );
+
+   if( pItem1 && pItem2 )
+      hb_retl( hb_cdpicmp( hb_itemGetCPtr( pItem1 ), hb_itemGetCLen( pItem1 ),
+                           hb_itemGetCPtr( pItem2 ), hb_itemGetCLen( pItem2 ), hb_vmCDP(), HB_FALSE ) == 0 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1071, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

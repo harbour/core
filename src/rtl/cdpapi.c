@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1290,10 +1290,10 @@ HB_BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_UCHAR ch,
          {
             if( HB_CDPCHAR_LEN( cdp, *pwc ) == 1 )
             {
-               HB_SIZE n = 0;
+               HB_SIZE nSize = 0;
                char c;
 
-               if( HB_CDPCHAR_PUT( cdp, &c, 1, &n, *pwc ) )
+               if( HB_CDPCHAR_PUT( cdp, &c, 1, &nSize, *pwc ) )
                   *pwc = ( HB_UCHAR ) c;
             }
          }

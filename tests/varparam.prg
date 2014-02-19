@@ -1,10 +1,11 @@
-/* TEST FOR USING VARIABLE NUMBER OF PARAMETERS */
+/* Test for using variable number of parameters */
 
 MEMVAR m_iLoop
 
 PROCEDURE Main()
 
    LOCAL l1 := 11, l2 := 22, l3 := 33, l4 := 44, l5 := 55, l6 := 66
+
    PRIVATE m_iLoop
 
    ? "passed 0:  "; TEST_0_0()
@@ -97,34 +98,34 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_3_3v( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_0_0( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_0_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_0_0( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_0_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_1_0( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_1_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_0( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_1_1( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_1_1v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_1( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_1v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_1_3( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_1_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_3( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_1_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_3_0( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_3_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_3_0( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_3_0v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    ? "---------------------------------------"
-   ? "Passed 6 by ref:  "; TEST_3_3( @l1, @l2, @l3, @l4, @l5, @l6 )
-   ? "Passed 6 by ref:  "; TEST_3_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_3_3( @l1, @l2, @l3, @l4, @l5, @l6 )
+   ? "passed 6 by ref:  "; TEST_3_3v( @l1, @l2, @l3, @l4, @l5, @l6 )
 
    RETURN
 
-PROCEDURE TEST_0_0v( ... )
+STATIC PROCEDURE TEST_0_0v( ... )
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    FOR m_iLoop := 1 TO PCount()
       ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
@@ -133,9 +134,9 @@ PROCEDURE TEST_0_0v( ... )
 
    RETURN
 
-PROCEDURE TEST_0_0()
+STATIC PROCEDURE TEST_0_0()
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    FOR m_iLoop := 1 TO PCount()
       ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
@@ -144,11 +145,11 @@ PROCEDURE TEST_0_0()
 
    RETURN
 
-PROCEDURE TEST_1_0v( ... )
+STATIC PROCEDURE TEST_1_0v( ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    FOR i := 1 TO PCount()
       ? i, "=", hb_PValue( i )
@@ -158,11 +159,11 @@ PROCEDURE TEST_1_0v( ... )
 
    RETURN
 
-PROCEDURE TEST_1_0()
+STATIC PROCEDURE TEST_1_0()
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    FOR i := 1 TO PCount()
       ? i, "=", hb_PValue( i )
@@ -172,11 +173,11 @@ PROCEDURE TEST_1_0()
 
    RETURN
 
-PROCEDURE TEST_1_3v( a, b, c, ... )
+STATIC PROCEDURE TEST_1_3v( a, b, c, ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    ? "b=", b
@@ -193,11 +194,11 @@ PROCEDURE TEST_1_3v( a, b, c, ... )
 
    RETURN
 
-PROCEDURE TEST_1_3( a, b, c )
+STATIC PROCEDURE TEST_1_3( a, b, c )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    ? "b=", b
@@ -214,11 +215,11 @@ PROCEDURE TEST_1_3( a, b, c )
 
    RETURN
 
-PROCEDURE TEST_1_1( a )
+STATIC PROCEDURE TEST_1_1( a )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    FOR i := 1 TO PCount()
@@ -229,11 +230,11 @@ PROCEDURE TEST_1_1( a )
 
    RETURN
 
-PROCEDURE TEST_1_1v( a, ... )
+STATIC PROCEDURE TEST_1_1v( a, ... )
 
    LOCAL i := "i"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "i=", i
    ? "a=", a
    FOR i := 1 TO PCount()
@@ -244,11 +245,11 @@ PROCEDURE TEST_1_1v( a, ... )
 
    RETURN
 
-PROCEDURE TEST_3_3v( a, b, c, ... )
+STATIC PROCEDURE TEST_3_3v( a, b, c, ... )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -265,11 +266,11 @@ PROCEDURE TEST_3_3v( a, b, c, ... )
 
    RETURN
 
-PROCEDURE TEST_3_3( a, b, c )
+STATIC PROCEDURE TEST_3_3( a, b, c )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -286,11 +287,11 @@ PROCEDURE TEST_3_3( a, b, c )
 
    RETURN
 
-PROCEDURE TEST_3_0()
+STATIC PROCEDURE TEST_3_0()
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -302,11 +303,11 @@ PROCEDURE TEST_3_0()
 
    RETURN
 
-PROCEDURE TEST_3_0v( ... )
+STATIC PROCEDURE TEST_3_0v( ... )
 
    LOCAL x := "x", y := "y", z := "z"
 
-   ?? ProcName( 0 ), " received: ", PCount()
+   ?? ProcName( 0 ), "received:", hb_ntos( PCount() )
    ? "x=", x
    ? "y=", y
    ? "z=", z
@@ -318,14 +319,14 @@ PROCEDURE TEST_3_0v( ... )
 
    RETURN
 
-PROCEDURE TEST_REF( a, ... )
+STATIC PROCEDURE TEST_REF( a, ... )
 
    LOCAL b
 
    ? "@@@"
-   ? ProcName( 0 ), " received: ", PCount()
-   ? "a= ", a
-   ? "b= ", b
+   ? ProcName( 0 ), "received:", hb_ntos( PCount() )
+   ? "a=", a
+   ? "b=", b
    FOR EACH b IN hb_AParams( 0 )
       ? b:__enumindex, "-", b
    NEXT

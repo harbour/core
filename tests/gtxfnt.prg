@@ -45,13 +45,11 @@ proc main()
                   hb_gtInfo( HB_GTI_FONTSEL ) + ";" + cChars, ;
                   { "FINE", "CHANGE" } )
    enddo
-   ? "current font:"
-   ? hb_gtInfo( HB_GTI_FONTSEL )
-   OutStd( hb_gtInfo( HB_GTI_FONTSEL ) )
+   ? "current font:", hb_gtInfo( HB_GTI_FONTSEL )
    wait
-return
+   return
 
-function xfontsel()
+static function xfontsel()
    local cStdOut
    hb_processRun( "xfontsel -print",, @cStdOut )
-return cStdOut
+   return cStdOut

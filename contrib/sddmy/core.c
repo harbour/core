@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,7 +85,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE mysqldd =
+static SDDNODE s_mysqldd =
 {
    NULL,
    "MYSQL",
@@ -104,7 +104,7 @@ static void hb_mysqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &mysqldd ) ||
+   if( ! hb_sddRegister( &s_mysqldd ) ||
        ( sizeof( MYSQL_ROW_OFFSET ) != sizeof( void * ) ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -322,12 +322,12 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiLen  = 4;
             break;
 
-/*
+#if 0
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
- */
+#endif
 
          default:
             bError  = HB_TRUE;
@@ -387,9 +387,10 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
          hb_itemRelease( pItem );
 
-/*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
             pFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );

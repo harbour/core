@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -280,6 +280,7 @@
    Visual Studio 2008, version 9.0         1500
    Visual Studio 2010, version 10.0        1600
    Visual Studio 2012, version 11.0        1700
+   Visual Studio 2013, version 12.0        1800
 */
 
 /* ***********************************************************************

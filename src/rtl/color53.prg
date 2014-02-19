@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#pragma -gc0
 
 #ifdef HB_COMPAT_C53
 
@@ -92,9 +94,9 @@ FUNCTION GetPairLen( cColor, nColor )
       RETURN 0
    ENDIF
 
-   nLen := At( ",", SubStr( cColor, nPos ) )
-
-   RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
+   RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
+      Len( cColor ) - nPos + 1, ;
+      nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 
@@ -104,7 +106,7 @@ FUNCTION GetClrFore( cColor )
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, 1, nPos - 1 )
+   RETURN Left( cColor, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
 

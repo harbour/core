@@ -3,32 +3,32 @@ Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 In Harbour preprocessor can be used in PRG code.
 This is list of PRG functions available for programmer.
 
-   REQUEST __PP_STDRULES
+   REQUEST __pp_StdRules
       It forces including standard std.ch rules in static binaries.
       Dynamic binaries linked with harbour dynamic library always
       includes standard PP rules.
 
 
-   __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] ) -> <pPP>
+   __pp_Init( [<cIncludePath>] [, <cStdChFile> ] ) -> <pPP>
       Initialize new PP context and return pointer to it.
       when <cStdChFile> is empty string ("") then no default rules are
       used and only the dynamically created #defines like __HARBOUR__,
       __DATE__, __TIME__, __PLATFORM__* are registered.
       If <cStdChFile> is missing or NIL and standard PP rules from
-      std.ch are included in binaries (REQUEST __PP_STDRULES) then
+      std.ch are included in binaries (REQUEST __pp_StdRules) then
       they are used.
 
-   __PP_PATH( <pPP>, <cPath> [, <lClearPrev>] ) -> NIL
+   __pp_Path( <pPP>, <cPath> [, <lClearPrev>] ) -> NIL
       Add new (or replace previous) include paths.
 
-   __PP_RESET( <pPP> )
+   __pp_Reset( <pPP> )
       Reset the PP context (remove all rules added by user or
       preprocessed code)
 
-   __PP_ADDRULE( <pPP>, <cDirective> )
+   __pp_AddRule( <pPP>, <cDirective> )
       Preprocess and execute new preprocessor directive
 
-   __PP_PROCESS( <pPP>, <cCode> ) -> <cPreprocessedCode>
+   __pp_Process( <pPP>, <cCode> ) -> <cPreprocessedCode>
       Preprocess given code and return result
 
 User can create more then one PP context and then use each of them
@@ -60,21 +60,21 @@ it's lines by macro compiler:
 
 
    /*** testpp.prg ***/
-   REQUEST __PP_STDRULES
-   REQUEST __WAIT
-   PROC Main()
-      local cLine, pPP, oErr
-      pPP := __PP_INIT()
-      BEGIN SEQUENCE WITH {|oErr| BREAK( oErr ) }
-         FOR EACH cLine IN hb_ATokens( StrTran( __PP_Process( pPP, ;
+   REQUEST __pp_StdRules
+   REQUEST __Wait
+   PROCEDURE Main()
+      LOCAL cLine, pPP, oErr
+      pPP := __pp_Init()
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         FOR EACH cLine IN hb_ATokens( StrTran( __pp_Process( pPP, ;
                hb_MemoRead( "macro.dat" ) ), Chr( 13 ) ), Chr( 10 ) )
             BEGIN SEQUENCE
-               IF !Empty( cLine )
+               IF ! Empty( cLine )
                   &cLine
                ENDIF
             RECOVER USING oErr
                ? "MacroCompiler error at line:", ;
-                 hb_ntos( cLine:__enumIndex() )
+                  hb_ntos( cLine:__enumIndex() )
                ? cLine
                ? ErrMsg( oErr )
             END SEQUENCE
@@ -83,17 +83,17 @@ it's lines by macro compiler:
          ? ErrMsg( oErr )
       END SEQUENCE
       ?
-   RETURN
+      RETURN
 
    STATIC FUNCTION ErrMsg( oErr )
-   RETURN "Error " + ;
-          iif( HB_ISSTRING( oErr:subsystem ), ;
-               oErr:subsystem, "???" ) + ;
-          iif( HB_ISNUMERIC( oErr:subCode ), ;
-               "/" + hb_ntos( oErr:subCode ), "/???" ) + ;
-          iif( HB_ISSTRING( oErr:description ), ;
-               " " + oErr:description, "" ) + ;
-          iif( ! Empty( oErr:filename ), ;
-               " " + oErr:filename, ;
-               iif( ! Empty( oErr:operation ), ;
-                    " " + oErr:operation, "" ) )
+      RETURN "Error " + ;
+         iif( HB_ISSTRING( oErr:subsystem ), ;
+              oErr:subsystem, "???" ) + ;
+         iif( HB_ISNUMERIC( oErr:subCode ), ;
+              "/" + hb_ntos( oErr:subCode ), "/???" ) + ;
+         iif( HB_ISSTRING( oErr:description ), ;
+              " " + oErr:description, "" ) + ;
+         iif( ! Empty( oErr:filename ), ;
+              " " + oErr:filename, ;
+              iif( ! Empty( oErr:operation ), ;
+                   " " + oErr:operation, "" ) )

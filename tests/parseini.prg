@@ -11,9 +11,9 @@ PROCEDURE Main( cName )
    LOCAL cKey
    LOCAL nRow := 1
 
-   SET COLOR TO w+/b
+   SetColor( "W+/B" )
    CLS
-   @ nRow++, 20 SAY "H A R B O U R - .ini file parser test"
+   @ nRow++, 20 SAY "Harbour - .ini file parser test"
    @ nRow++, 5 SAY "Call from command line using a .ini filename as the only parameter"
    nRow++
 
@@ -26,7 +26,7 @@ PROCEDURE Main( cName )
 
    @ nRow, 0
 
-   ? "Content of " + cName
+   ? "Content of", cName
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -37,13 +37,13 @@ PROCEDURE Main( cName )
          aSect := hIni[ cSection ]
 
          FOR EACH cKey IN aSect:Keys
-            ? cKey + " = " + aSect[ cKey ]
+            ? cKey, "=", aSect[ cKey ]
          NEXT
       NEXT
    ENDIF
 
    ?
-   ? "Adding section 'Added', with key NEW = new"
+   ? "Adding section 'Added', with key NEW := new"
    hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 
@@ -54,8 +54,7 @@ PROCEDURE Main( cName )
       ? "Can't write file"
    ENDIF
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -63,11 +62,11 @@ PROCEDURE Main( cName )
    ? "REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
    ?
 
-   hIni := hb_iniRead( cName,; /* default case */
-                       ,; /* default key indicators */
+   hIni := hb_iniRead( cName, ; /* default case */
+                       , ; /* default key indicators */
                        , .F. )
 
-   ? "Content of " + cName
+   ? "Content of", cName
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -82,31 +81,30 @@ PROCEDURE Main( cName )
             ? "Section [" + cSection + "]"
 
             FOR EACH cKey IN aSect:Keys
-               ? cKey + " = " + aSect[ cKey ]
+               ? cKey, "=", aSect[ cKey ]
             NEXT
          ELSE
             /* It's a toplevel option */
-            ? "TOPLEVEL option:", cSection + " = " + aSect
+            ? "TOPLEVEL option:", cSection, "=", aSect
          ENDIF
       NEXT
    ENDIF
 
    ?
-   ? "Adding section 'Added', with key NEW = new"
+   ? "Adding section 'Added', with key NEW := new"
    hIni[ "Added" ] := { => }
    hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out1.ini"
-   IF hb_iniWrite( "parseini_out1.ini", hIni,;
-                   "#Generated file without main auto section; don't touch", "#End of file",;
+   IF hb_iniWrite( "parseini_out1.ini", hIni, ;
+                   "#Generated file without main auto section; don't touch", "#End of file", ;
                    .F. )
       ? "File written"
    ELSE
       ? "Can't write file"
    ENDIF
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -116,12 +114,11 @@ PROCEDURE Main( cName )
 
    cIni := hb_iniWriteStr( hIni )
 
-   ? "Content of hIni : "
+   ? "Content of hIni:"
    ?
    ? cIni
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
@@ -129,11 +126,11 @@ PROCEDURE Main( cName )
    ? "READING INI FILE FROM A STRING"
    ?
 
-   hIni := hb_iniReadStr( cIni,; /*default case*/
-            ,; /*Default key indicators */
+   hIni := hb_iniReadStr( cIni, ; /* default case */
+            , ; /* default key indicators */
             , .F. )
 
-   ? "Content: "
+   ? "Content:"
 
    IF Empty( hIni )
       ? "Not a valid .ini file!"
@@ -148,32 +145,30 @@ PROCEDURE Main( cName )
             ? "Section [" + cSection + "]"
 
             FOR EACH cKey IN aSect:Keys
-               ? cKey + " = " + aSect[ cKey ]
+               ? cKey, "=", aSect[ cKey ]
             NEXT
          ELSE
             /* It's a toplevel option */
-            ? "TOPLEVEL option:", cSection + " = " + aSect
+            ? "TOPLEVEL option:", cSection, "=", aSect
          ENDIF
       NEXT
    ENDIF
 
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    nRow := 3
    @ nRow, 0 CLEAR
    ?
-   ? "WRITING INI FILE TO A STRING "
+   ? "WRITING INI FILE TO A STRING"
    ?
 
    cIni := hb_iniWriteStr( hb_iniRead( cName ) )
 
-   ? "Content of " + cName
+   ? "Content of", cName
    ?
    ? cIni
    ?
-   ? "Press any key to next text."
-   Inkey( 0 )
+   WAIT
 
    RETURN

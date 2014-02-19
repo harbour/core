@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE test()
+STATIC PROCEDURE test()
 
    LOCAL a := 15.1
    LOCAL b := 10.0002575

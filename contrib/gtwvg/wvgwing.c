@@ -32,7 +32,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -157,8 +157,8 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 
    bSuccess = ReadFile( hFile, &bmfh, sizeof( BITMAPFILEHEADER ), &dwBytesRead, NULL );
 
-   if( ! bSuccess || ( dwBytesRead != sizeof( BITMAPFILEHEADER ) )
-       || ( bmfh.bfType != *( WORD * ) "BM" ) )
+   if( ! bSuccess || dwBytesRead != sizeof( BITMAPFILEHEADER ) ||
+       bmfh.bfType != 0x4D42 /* "BM" */ )
    {
       CloseHandle( hFile );
       return NULL;
@@ -171,7 +171,7 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
    bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
    CloseHandle( hFile );
 
-   if( ! bSuccess || ( dwBytesRead != dwPackedDibSize ) )
+   if( ! bSuccess || dwBytesRead != dwPackedDibSize )
    {
       hb_xfree( pbmi );
       return NULL;
@@ -808,7 +808,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 }
 
 /*
- * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize,;
+ * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize, ;
  *                 viewScreenFonts, viewPrinterFonts )
  */
 HB_FUNC( WVG_CHOOSEFONT )
@@ -859,7 +859,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    if( hb_parl( 6 ) )
       Flags = Flags | CF_PRINTERFONTS;
 
-   cf.lStructSize = sizeof( CHOOSEFONT );
+   cf.lStructSize = sizeof( cf );
    cf.hwndOwner   = hWnd;
    cf.hDC         = ( HDC ) NULL;           /* only when ::oPrinterPS is defined */
    cf.lpLogFont   = &lf;
@@ -1023,7 +1023,8 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.dwData    = 0;
          tbb.iString   = iNewString;
 
-         /* TOFIX: Convertion of LRESULT to HB_BOOL */
+         /* Conversion of LRESULT to HB_BOOL:
+            https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
          bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 #if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
@@ -1043,7 +1044,8 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.dwData    = 0;
          tbb.iString   = 0;
 
-         /* TOFIX: Convertion of LRESULT to HB_BOOL */
+         /* Conversion of LRESULT to HB_BOOL:
+            https://msdn.microsoft.com/en-us/library/windows/desktop/bb787291(v=vs.85).aspx */
          bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
          hb_retl( bSuccess );
          return;
@@ -1058,7 +1060,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    WNDCLASS wndclass;
    void *   hClass;
 
-   memset( &wndclass, 0, sizeof( WNDCLASS ) );
+   memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = DefWindowProc;
    wndclass.hInstance     = ( HINSTANCE ) wvg_hInstance();
@@ -1095,7 +1097,7 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 #if ! defined( HB_OS_WIN_CE )
    TRACKMOUSEEVENT tmi;
 
-   tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
+   tmi.cbSize      = sizeof( tmi );
    tmi.dwFlags     = TME_LEAVE | TME_HOVER;
    tmi.hwndTrack   = hbwapi_par_raw_HWND( 1 );
    tmi.dwHoverTime = 1;

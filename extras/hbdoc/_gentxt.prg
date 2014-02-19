@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,8 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
+
+#include "fileio.ch"
 
 CREATE CLASS GenerateAscii FROM GenerateText
 
@@ -87,7 +88,9 @@ CREATE CLASS GenerateText FROM TPLGenerate
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
-   // ~ METHOD EndSection( cSection, cFilename ) // will use inherited method
+#if 0
+   METHOD EndSection( cSection, cFilename )  // will use inherited method
+#endif
    METHOD Generate()
 
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
@@ -127,14 +130,14 @@ METHOD AddIndex( oEntry ) CLASS GenerateText
 
 METHOD AddEntry( oEntry ) CLASS GenerateText
 
-   LOCAL idx
+   LOCAL item
 
-   IF self:IsIndex()
-      self:AddIndex( oEntry )
+   IF ::IsIndex()
+      ::AddIndex( oEntry )
    ELSE
-      FOR idx := 1 TO Len( oEntry:Fields )
-         IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-            ::WriteEntry( oEntry:FieldName( oEntry:Fields[ idx ][ 1 ] ), oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      FOR EACH item IN oEntry:Fields
+         IF oEntry:IsField( item[ 1 ] ) .AND. oEntry:IsOutput( item[ 1 ] ) .AND. Len( oEntry:&( item[ 1 ] ) ) > 0
+            ::WriteEntry( oEntry:FieldName( item[ 1 ] ), oEntry:&( item[ 1 ] ), oEntry:IsPreformatted( item[ 1 ] ) )
          ENDIF
       NEXT
 
@@ -162,15 +165,13 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
 
 METHOD Generate() CLASS GenerateText
 
-   IF ::IsIndex()
-      IF ! ::lContinuous
-         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
-      ENDIF
+   IF ::IsIndex() .AND. ! ::lContinuous
+      FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
    ENDIF
 
-   IF ! Empty( ::nHandle )
+   IF ::nHandle != F_ERROR
       FClose( ::nHandle )
-      ::nHandle := 0
+      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self

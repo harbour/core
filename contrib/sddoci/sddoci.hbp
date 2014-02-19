@@ -26,6 +26,6 @@ rddsql.hbc
 # Required to link against generated implib
 -cflag=-DOCI_API=_stdcall{bcc}
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c

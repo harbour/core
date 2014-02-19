@@ -42,13 +42,13 @@
 
         New()                 Create a new instance of the class
    $EXAMPLES$
-      FUNCTION TestObject()
+      PROCEDURE TestObject()
          LOCAL oObject
 
          oObject := HBClass():New( "TMyClass" )
          oObject:End()
 
-         RETURN NIL
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$

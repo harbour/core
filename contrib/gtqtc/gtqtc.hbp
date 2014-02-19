@@ -29,7 +29,7 @@
 {darwin}-depincpath=qt:/Library/Frameworks
 {darwin}-depincpath=qt:/usr/local/include
 
+-hbx=${hb_name}
+
 gtqtc1.cpp
 gtqtc.h
-
-${hb_name}.hbx

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -113,18 +113,11 @@ STATIC FUNCTION DefError( oError )
 
    // Show alert box
 
-   nChoice := 0
-   DO WHILE nChoice == 0
-
-      IF cDOSError == NIL
-         nChoice := Alert( cMessage, aOptions )
-      ELSE
-         nChoice := Alert( cMessage + ";" + cDOSError, aOptions )
-      ENDIF
-
+   DO WHILE ( nChoice := Alert( cMessage + ;
+      iif( cDOSError == NIL, "", ";" + cDOSError ), aOptions ) ) == 0
    ENDDO
 
-   IF ! Empty( nChoice )
+   IF ! Empty( nChoice )  /* Alert() may return NIL */
       SWITCH aOptions[ nChoice ]
       CASE "Break"
          Break( oError )

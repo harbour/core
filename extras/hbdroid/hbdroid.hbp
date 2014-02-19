@@ -16,11 +16,11 @@
 
 -cflag=-I"${HBMK_DIR_JNI}/win32"{win}
 
+-hbx=${hb_name}
+
 hvminit.c
 msginfo.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 {hbdyn}${hb_name}.hbc
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

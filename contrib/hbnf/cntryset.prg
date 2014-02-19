@@ -27,8 +27,8 @@ FUNCTION ft_SetCentury( lNewSetState )
 
    LOCAL lOldSetState := ( Len( DToC( Date() ) ) == 10 )
 
-   IF HB_ISLOGICAL( lNewSetState )        // Did They Want it Set??
-      SET CENTURY ( lNewSetState )        // Yes, Set it
+   IF HB_ISLOGICAL( lNewSetState )        // Did they want it set?
+      SET CENTURY ( lNewSetState )        // Yes, set it
    ENDIF
 
    RETURN lOldSetState

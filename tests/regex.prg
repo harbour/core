@@ -95,8 +95,6 @@ PROCEDURE Main()
       nRow++
    ENDIF
 
-   @ nRow, 1
-   @ MaxRow(), 25 SAY "Press a key to continue"
-   Inkey( 0 )
+   WAIT
 
    RETURN

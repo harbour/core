@@ -7,9 +7,9 @@
 #include "error.ch"
 #include "hbsocket.ch"
 #include "hbthread.ch"
+#include "hbver.ch"
 
 #include "hbssl.ch"
-#undef __HBEXTREQ__
 #include "hbssl.hbx"
 
 #pragma -km+
@@ -22,12 +22,11 @@
   HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
 */
 
-
 #define THREAD_COUNT_PREALLOC    3
-#define THREAD_COUNT_MAX        50
-#define SESSION_TIMEOUT        600
+#define THREAD_COUNT_MAX         50
+#define SESSION_TIMEOUT          600
 
-#define CR_LF                       ( Chr( 13 ) + Chr( 10 ) )
+#define CR_LF                    ( Chr( 13 ) + Chr( 10 ) )
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_aSessionData
 
@@ -64,7 +63,6 @@ CREATE CLASS UHttpd MODULE FRIENDLY
 ENDCLASS
 
 FUNCTION UHttpdNew()
-
    RETURN UHttpd()
 
 METHOD Run( hConfig ) CLASS UHttpd
@@ -72,11 +70,11 @@ METHOD Run( hConfig ) CLASS UHttpd
    LOCAL hSocket, nI, aI, xValue, aThreads, nJobs, nWorkers
 
    IF ! hb_mtvm()
-      Self:cError := "Multithread support required"
+      ::cError := "Multithread support required"
       RETURN .F.
    ENDIF
 
-   Self:hConfig := { ;
+   ::hConfig := { ;
       "SSL"                  => .F., ;
       "Port"                 => 80, ;
       "BindAddress"          => "0.0.0.0", ;
@@ -90,67 +88,67 @@ METHOD Run( hConfig ) CLASS UHttpd
       "FirewallFilter"       => "0.0.0.0/0" }
 
    FOR EACH xValue IN hConfig
-      IF ! hb_HHasKey( Self:hConfig, xValue:__enumKey ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
-         Self:cError := "Invalid config option '" + xValue:__enumKey + "'"
+      IF !( xValue:__enumKey $ ::hConfig ) .OR. !( ValType( xValue ) == ValType( ::hConfig[ xValue:__enumKey ] ) )
+         ::cError := "Invalid config option '" + xValue:__enumKey + "'"
          RETURN .F.
       ENDIF
-      Self:hConfig[ xValue:__enumKey ] := xValue
+      ::hConfig[ xValue:__enumKey ] := xValue
    NEXT
 
 
-   IF Self:hConfig[ "SSL" ]
-      IF Self:lHasSSL
+   IF ::hConfig[ "SSL" ]
+      IF ::lHasSSL
          SSL_init()
          DO WHILE RAND_status() != 1
             RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_MilliSeconds(), 20 ), 1 )
          ENDDO
 
-         Self:hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
-         SSL_CTX_set_options( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
-         IF SSL_CTX_use_PrivateKey_file( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid private key file"
+         ::hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
+         SSL_CTX_set_options( ::hSSLCtx, HB_SSL_OP_NO_TLSv1 )
+         IF SSL_CTX_use_PrivateKey_file( ::hSSLCtx, ::hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid private key file"
             RETURN .F.
          ENDIF
-         IF SSL_CTX_use_certificate_file( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid certificate file"
+         IF SSL_CTX_use_certificate_file( ::hSSLCtx, ::hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid certificate file"
             RETURN .F.
          ENDIF
       ELSE
-         Self:cError := "SSL not supported"
+         ::cError := "SSL not supported"
          RETURN .F.
       ENDIF
    ENDIF
 
-   IF Self:hConfig[ "Port" ] < 1 .OR. Self:hConfig[ "Port" ] > 65535
-      Self:cError := "Invalid port number"
+   IF ::hConfig[ "Port" ] < 1 .OR. ::hConfig[ "Port" ] > 65535
+      ::cError := "Invalid port number"
       RETURN .F.
    ENDIF
 
-   IF ParseFirewallFilter( Self:hConfig[ "FirewallFilter" ], @aI )
-      Self:aFirewallFilter := aI
+   IF ParseFirewallFilter( ::hConfig[ "FirewallFilter" ], @aI )
+      ::aFirewallFilter := aI
    ELSE
-      Self:cError := "Invalid firewall filter"
+      ::cError := "Invalid firewall filter"
       RETURN .F.
    ENDIF
 
-   Self:hmtxQueue   := hb_mutexCreate()
-   Self:hmtxLog     := hb_mutexCreate()
-   Self:hmtxSession := hb_mutexCreate()
+   ::hmtxQueue   := hb_mutexCreate()
+   ::hmtxLog     := hb_mutexCreate()
+   ::hmtxSession := hb_mutexCreate()
 
-   IF Empty( Self:hListen := hb_socketOpen() )
-      Self:cError := "Socket create error: " + hb_socketErrorString()
+   IF Empty( ::hListen := hb_socketOpen() )
+      ::cError := "Socket create error: " + hb_socketErrorString()
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketBind( Self:hListen, { HB_SOCKET_AF_INET, Self:hConfig[ "BindAddress" ], Self:hConfig[ "Port" ] } )
-      Self:cError := "Bind error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketBind( ::hListen, { HB_SOCKET_AF_INET, ::hConfig[ "BindAddress" ], ::hConfig[ "Port" ] } )
+      ::cError := "Bind error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketListen( Self:hListen )
-      Self:cError := "Listen error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketListen( ::hListen )
+      ::cError := "Listen error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
@@ -159,49 +157,49 @@ METHOD Run( hConfig ) CLASS UHttpd
       AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
    NEXT
 
-   Self:lStop := .F.
-   Self:hSession := { => }
+   ::lStop := .F.
+   ::hSession := { => }
 
    DO WHILE .T.
-      IF Empty( hSocket := hb_socketAccept( Self:hListen,, 1000 ) )
+      IF Empty( hSocket := hb_socketAccept( ::hListen,, 1000 ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-            Eval( Self:hConfig[ "Idle" ], Self )
-            IF Self:lStop
+            Eval( ::hConfig[ "Idle" ], Self )
+            IF ::lStop
                EXIT
             ENDIF
          ELSE
-            Self:LogError( "[error] Accept error: " + hb_socketErrorString() )
+            ::LogError( "[error] Accept error: " + hb_socketErrorString() )
          ENDIF
       ELSE
-         Eval( Self:hConfig[ "Trace" ], "New connection", hSocket )
-         IF hb_mutexQueueInfo( Self:hmtxQueue, @nWorkers, @nJobs ) .AND. ;
+         Eval( ::hConfig[ "Trace" ], "New connection", hSocket )
+         IF hb_mutexQueueInfo( ::hmtxQueue, @nWorkers, @nJobs ) .AND. ;
                Len( aThreads ) < THREAD_COUNT_MAX .AND. ;
                nJobs >= nWorkers
             AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
          ENDIF
-         hb_mutexNotify( Self:hmtxQueue, hSocket )
+         hb_mutexNotify( ::hmtxQueue, hSocket )
       ENDIF
    ENDDO
-   hb_socketClose( Self:hListen )
+   hb_socketClose( ::hListen )
 
    /* End child threads */
-   AEval( aThreads, {|| hb_mutexNotify( Self:hmtxQueue, NIL ) } )
+   AEval( aThreads, {|| hb_mutexNotify( ::hmtxQueue, NIL ) } )
    AEval( aThreads, {| h | hb_threadJoin( h ) } )
 
    RETURN .T.
 
 METHOD Stop() CLASS UHttpd
 
-   Eval( Self:hConfig[ "Trace" ], "stopping" )
-   Self:lStop := .T.
+   Eval( ::hConfig[ "Trace" ], "stopping" )
+   ::lStop := .T.
 
    RETURN NIL
 
 METHOD LogError( cError ) CLASS UHttpd
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -209,15 +207,15 @@ METHOD LogAccess() CLASS UHttpd
 
    LOCAL cDate := DToS( Date() ), cTime := Time()
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogAccess" ], ;
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogAccess" ], ;
       server[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
       "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
       ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -242,7 +240,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
    aDeny := {}
    FOR EACH cExpr IN hb_ATokens( cFilter, " " )
       IF ! Empty( cExpr )
-         IF lDeny := ( Left( cExpr, 1 ) == "!" )
+         IF ( lDeny := hb_LeftIs( cExpr, "!" ) )
             cExpr := SubStr( cExpr, 2 )
          ENDIF
          IF ( nI := At( "/", cExpr ) ) > 0
@@ -333,8 +331,8 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    nLen := SSL_read( hSSL, @cBuf )
    IF nLen < 0
-      nErr := SSL_get_error( hSSL, nLen )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nLen )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -342,7 +340,7 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
          RETURN -1
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -350,11 +348,11 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
             nError := HB_SOCKET_ERR_TIMEOUT
          ENDIF
          RETURN -1
-      ELSE
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_read() error", nErr )
          nError := 1000 + nErr
          RETURN -1
-      ENDIF
+      ENDSWITCH
    ENDIF
 
    RETURN nLen
@@ -365,8 +363,8 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    nLen := SSL_write( hSSL, cBuf )
    IF nLen <= 0
-      nErr := SSL_get_error( hSSL, nLen )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nLen )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -374,7 +372,7 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data received and timeout
             RETURN 0
          ENDIF
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nError := hb_socketGetError()
@@ -382,11 +380,11 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ELSE  // Both cases: data sent and timeout
             RETURN 0
          ENDIF
-      ELSE
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_write() error", nErr )
          nError := 1000 + nErr
          RETURN -1
-      ENDIF
+      ENDSWITCH
    ENDIF
 
    RETURN nLen
@@ -399,25 +397,27 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
    IF nErr > 0
       RETURN 0
    ELSEIF nErr < 0
-      nErr := SSL_get_error( hSSL, nErr )
-      IF nErr == HB_SSL_ERROR_WANT_READ
+      SWITCH nErr := SSL_get_error( hSSL, nErr )
+      CASE HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
             nErr := hb_socketGetError()
          ELSE
             nErr := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-      ELSEIF nErr == HB_SSL_ERROR_WANT_WRITE
+         EXIT
+      CASE HB_SSL_ERROR_WANT_WRITE
          nErr := hb_socketSelectWrite( hSocket, nTimeout )
          IF nErr < 0
             nErr := hb_socketGetError()
          ELSE
             nErr := HB_SOCKET_ERR_TIMEOUT
          ENDIF
-      ELSE
+         EXIT
+      OTHERWISE
          Eval( hConfig[ "Trace" ], "SSL_accept() error", nErr )
          nErr := 1000 + nErr
-      ENDIF
+      ENDSWITCH
    ELSE /* nErr == 0 */
       nErr := SSL_get_error( hSSL, nErr )
       Eval( hConfig[ "Trace" ], "SSL_accept() shutdown error", nErr )
@@ -517,12 +517,11 @@ STATIC FUNCTION ProcessConnection( oServer )
          nLen := 1
          nTime := hb_MilliSeconds()
          cBuf := Space( 4096 )
-         DO WHILE At( CR_LF + CR_LF, cRequest ) == 0
+         DO WHILE !( CR_LF + CR_LF $ cRequest )
             IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
             ELSE
-               nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
-               IF nLen < 0
+               IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 ) ) < 0
                   nErr := hb_socketGetError()
                ENDIF
             ENDIF
@@ -578,8 +577,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                   nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
                ELSE
-                  nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
-                  IF nLen < 0
+                  IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 ) ) < 0
                      nErr := hb_socketGetError()
                   ENDIF
                ENDIF
@@ -612,7 +610,7 @@ STATIC FUNCTION ProcessConnection( oServer )
             cRequest := SubStr( cRequest, nReqLen + 1 )
 
             /* Deal with supported protocols and methods */
-            IF !( Left( server[ "SERVER_PROTOCOL" ], 5 ) == "HTTP/" )
+            IF ! hb_LeftIs( server[ "SERVER_PROTOCOL" ], "HTTP/" )
                USetStatusCode( 400 ) /* Bad request */
                UAddHeader( "Connection", "close" )
             ELSEIF !( SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1" )
@@ -679,17 +677,17 @@ STATIC FUNCTION ProcessConnection( oServer )
 
 STATIC PROCEDURE ProcessRequest( oServer )
 
-   LOCAL nI, aMount, cMount, cPath, bEval, xRet, nT := hb_MilliSeconds()
+   LOCAL nI, hMount, cMount, cPath, bEval, xRet, nT := hb_MilliSeconds()
 
    // Search mounting table
-   aMount := oServer:hConfig[ "Mount" ]
+   hMount := oServer:hConfig[ "Mount" ]
    cMount := server[ "SCRIPT_NAME" ]
-   IF hb_HHasKey( aMount, cMount )
+   IF cMount $ hMount
       cPath := ""
    ELSE
       nI := Len( cMount )
       DO WHILE ( nI := hb_RAt( "/", cMount,, nI ) ) > 0
-         IF hb_HHasKey( aMount, Left( cMount, nI ) + "*" )
+         IF ( Left( cMount, nI ) + "*" ) $ hMount
             Eval( oServer:hConfig[ "Trace" ], "HAS", Left( cMount, nI ) + "*" )
             cMount := Left( cMount, nI ) + "*"
             cPath := SubStr( server[ "SCRIPT_NAME" ], nI + 1 )
@@ -702,14 +700,15 @@ STATIC PROCEDURE ProcessRequest( oServer )
    ENDIF
 
    IF cPath != NIL
-      bEval := aMount[ cMount ]
+      bEval := hMount[ cMount ]
       BEGIN SEQUENCE WITH {| oErr | UErrorHandler( oErr, oServer ) }
          xRet := Eval( bEval, cPath )
-         IF HB_ISSTRING( xRet )
+         DO CASE
+         CASE HB_ISSTRING( xRet )
             UWrite( xRet )
-         ELSEIF HB_ISHASH( xRet )
+         CASE HB_ISHASH( xRet )
             UWrite( UParse( xRet ) )
-         ENDIF
+         ENDCASE
       RECOVER
          USetStatusCode( 500 )
          UAddHeader( "Connection", "close" )
@@ -739,7 +738,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    aLine := hb_ATokens( aRequest[ 1 ], " " )
 
    server[ "REQUEST_ALL" ] := aRequest[ 1 ]
-   IF Len( aLine ) == 3 .AND. Left( aLine[ 3 ], 5 ) == "HTTP/"
+   IF Len( aLine ) == 3 .AND. hb_LeftIs( aLine[ 3 ], "HTTP/" )
       server[ "REQUEST_METHOD" ] := aLine[ 1 ]
       server[ "REQUEST_URI" ] := aLine[ 2 ]
       server[ "SERVER_PROTOCOL" ] := aLine[ 3 ]
@@ -751,7 +750,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    ENDIF
 
    // Fix invalid queries: bind to root
-   IF !( Left( server[ "REQUEST_URI" ], 1 ) == "/" )
+   IF ! hb_LeftIs( server[ "REQUEST_URI" ], "/" )
       server[ "REQUEST_URI" ] := "/" + server[ "REQUEST_URI" ]
    ENDIF
 
@@ -818,8 +817,9 @@ STATIC FUNCTION ParseRequestBody( cRequest )
 
    LOCAL nI, cPart, cEncoding
 
-   IF hb_HHasKey( server, "CONTENT_TYPE" ) .AND. ;
-         Left( server[ "CONTENT_TYPE" ], 33 ) == "application/x-www-form-urlencoded"
+   IF "CONTENT_TYPE" $ server .AND. ;
+      hb_LeftIs( server[ "CONTENT_TYPE" ], "application/x-www-form-urlencoded" )
+
       IF ( nI := At( "CHARSET=", Upper( server[ "CONTENT_TYPE" ] ) ) ) > 0
          cEncoding := Upper( SubStr( server[ "CONTENT_TYPE" ], nI + 8 ) )
       ENDIF
@@ -857,47 +857,47 @@ STATIC FUNCTION MakeResponse( hConfig )
 
    cRet := iif( server[ "SERVER_PROTOCOL" ] == "HTTP/1.0", "HTTP/1.0 ", "HTTP/1.1 " )
    SWITCH t_nStatusCode
-   CASE 100 ;  cStatus := "100 Continue"                        ;  EXIT
-   CASE 101 ;  cStatus := "101 Switching Protocols"             ;  EXIT
-   CASE 200 ;  cStatus := "200 OK"                              ;  EXIT
-   CASE 201 ;  cStatus := "201 Created"                         ;  EXIT
-   CASE 202 ;  cStatus := "202 Accepted"                        ;  EXIT
-   CASE 203 ;  cStatus := "203 Non-Authoritative Information"   ;  EXIT
-   CASE 204 ;  cStatus := "204 No Content"                      ;  EXIT
-   CASE 205 ;  cStatus := "205 Reset Content"                   ;  EXIT
-   CASE 206 ;  cStatus := "206 Partial Content"                 ;  EXIT
-   CASE 300 ;  cStatus := "300 Multiple Choices"                ;  EXIT
-   CASE 301 ;  cStatus := "301 Moved Permanently"               ;  EXIT
-   CASE 302 ;  cStatus := "302 Found"                           ;  EXIT
-   CASE 303 ;  cStatus := "303 See Other"                       ;  EXIT
-   CASE 304 ;  cStatus := "304 Not Modified"                    ;  EXIT
-   CASE 305 ;  cStatus := "305 Use Proxy"                       ;  EXIT
-   CASE 307 ;  cStatus := "307 Temporary Redirect"              ;  EXIT
-   CASE 400 ;  cStatus := "400 Bad Request"                     ;  EXIT
-   CASE 401 ;  cStatus := "401 Unauthorized"                    ;  EXIT
-   CASE 402 ;  cStatus := "402 Payment Required"                ;  EXIT
-   CASE 403 ;  cStatus := "403 Forbidden"                       ;  EXIT
-   CASE 404 ;  cStatus := "404 Not Found"                       ;  EXIT
-   CASE 405 ;  cStatus := "405 Method Not Allowed"              ;  EXIT
-   CASE 406 ;  cStatus := "406 Not Acceptable"                  ;  EXIT
-   CASE 407 ;  cStatus := "407 Proxy Authentication Required"   ;  EXIT
-   CASE 408 ;  cStatus := "408 Request Timeout"                 ;  EXIT
-   CASE 409 ;  cStatus := "409 Conflict"                        ;  EXIT
-   CASE 410 ;  cStatus := "410 Gone"                            ;  EXIT
-   CASE 411 ;  cStatus := "411 Length Required"                 ;  EXIT
-   CASE 412 ;  cStatus := "412 Precondition Failed"             ;  EXIT
-   CASE 413 ;  cStatus := "413 Request Entity Too Large"        ;  EXIT
-   CASE 414 ;  cStatus := "414 Request-URI Too Long"            ;  EXIT
-   CASE 415 ;  cStatus := "415 Unsupprted Media Type"           ;  EXIT
-   CASE 416 ;  cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
-   CASE 417 ;  cStatus := "417 Expectation Failed"              ;  EXIT
-   CASE 500 ;  cStatus := "500 Internal Server Error"           ;  EXIT
-   CASE 501 ;  cStatus := "501 Not Implemented"                 ;  EXIT
-   CASE 502 ;  cStatus := "502 Bad Gateway"                     ;  EXIT
-   CASE 503 ;  cStatus := "503 Service Unavailable"             ;  EXIT
-   CASE 504 ;  cStatus := "504 Gateway Timeout"                 ;  EXIT
-   CASE 505 ;  cStatus := "505 HTTP Version Not Supported"      ;  EXIT
-   OTHERWISE;  cStatus := "500 Internal Server Error"
+   CASE 100 ; cStatus := "100 Continue"                        ;  EXIT
+   CASE 101 ; cStatus := "101 Switching Protocols"             ;  EXIT
+   CASE 200 ; cStatus := "200 OK"                              ;  EXIT
+   CASE 201 ; cStatus := "201 Created"                         ;  EXIT
+   CASE 202 ; cStatus := "202 Accepted"                        ;  EXIT
+   CASE 203 ; cStatus := "203 Non-Authoritative Information"   ;  EXIT
+   CASE 204 ; cStatus := "204 No Content"                      ;  EXIT
+   CASE 205 ; cStatus := "205 Reset Content"                   ;  EXIT
+   CASE 206 ; cStatus := "206 Partial Content"                 ;  EXIT
+   CASE 300 ; cStatus := "300 Multiple Choices"                ;  EXIT
+   CASE 301 ; cStatus := "301 Moved Permanently"               ;  EXIT
+   CASE 302 ; cStatus := "302 Found"                           ;  EXIT
+   CASE 303 ; cStatus := "303 See Other"                       ;  EXIT
+   CASE 304 ; cStatus := "304 Not Modified"                    ;  EXIT
+   CASE 305 ; cStatus := "305 Use Proxy"                       ;  EXIT
+   CASE 307 ; cStatus := "307 Temporary Redirect"              ;  EXIT
+   CASE 400 ; cStatus := "400 Bad Request"                     ;  EXIT
+   CASE 401 ; cStatus := "401 Unauthorized"                    ;  EXIT
+   CASE 402 ; cStatus := "402 Payment Required"                ;  EXIT
+   CASE 403 ; cStatus := "403 Forbidden"                       ;  EXIT
+   CASE 404 ; cStatus := "404 Not Found"                       ;  EXIT
+   CASE 405 ; cStatus := "405 Method Not Allowed"              ;  EXIT
+   CASE 406 ; cStatus := "406 Not Acceptable"                  ;  EXIT
+   CASE 407 ; cStatus := "407 Proxy Authentication Required"   ;  EXIT
+   CASE 408 ; cStatus := "408 Request Timeout"                 ;  EXIT
+   CASE 409 ; cStatus := "409 Conflict"                        ;  EXIT
+   CASE 410 ; cStatus := "410 Gone"                            ;  EXIT
+   CASE 411 ; cStatus := "411 Length Required"                 ;  EXIT
+   CASE 412 ; cStatus := "412 Precondition Failed"             ;  EXIT
+   CASE 413 ; cStatus := "413 Request Entity Too Large"        ;  EXIT
+   CASE 414 ; cStatus := "414 Request-URI Too Long"            ;  EXIT
+   CASE 415 ; cStatus := "415 Unsupprted Media Type"           ;  EXIT
+   CASE 416 ; cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
+   CASE 417 ; cStatus := "417 Expectation Failed"              ;  EXIT
+   CASE 500 ; cStatus := "500 Internal Server Error"           ;  EXIT
+   CASE 501 ; cStatus := "501 Not Implemented"                 ;  EXIT
+   CASE 502 ; cStatus := "502 Bad Gateway"                     ;  EXIT
+   CASE 503 ; cStatus := "503 Service Unavailable"             ;  EXIT
+   CASE 504 ; cStatus := "504 Gateway Timeout"                 ;  EXIT
+   CASE 505 ; cStatus := "505 HTTP Version Not Supported"      ;  EXIT
+   OTHERWISE; cStatus := "500 Internal Server Error"
    ENDSWITCH
 
    cRet += cStatus + CR_LF
@@ -914,13 +914,18 @@ STATIC FUNCTION MakeResponse( hConfig )
 
 STATIC FUNCTION HttpDateFormat( tDate )
 
-   tDate -= hb_UTCOffset() / ( 3600 * 24 )
+   LOCAL nOffset := hb_UTCOffset()
 
    RETURN ;
       { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
-      PadL( Day( tDate ), 2, "0" ) + " " + ;
-      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + ;
-      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // TOFIX: time zone
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "HH:MM:SS" ) + " " + ;
+      hb_StrFormat( "UTC%1$s%2$02d%3$02d", ;
+         iif( nOffset < 0, "-", "+" ), ;
+         Int( Abs( nOffset ) / 3600 ), ;
+         Int( ( Abs( nOffset ) / 3600 ) - Int( Abs( nOffset ) / 3600 ) ) * 60 )
 
 STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 
@@ -944,8 +949,10 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 STATIC FUNCTION UErrorHandler( oErr, oServer )
 
    Eval( oServer:hConfig[ "Trace" ], "UErrorHandler" )
-   IF oErr:genCode == EG_ZERODIV;  RETURN 0
-   ELSEIF oErr:genCode == EG_LOCK;     RETURN .T.
+   IF oErr:genCode == EG_ZERODIV
+      RETURN 0
+   ELSEIF oErr:genCode == EG_LOCK
+      RETURN .T.
    ELSEIF ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
          oErr:genCode == EG_APPENDLOCK ) .AND. oErr:canDefault
       NetErr( .T. )
@@ -991,9 +998,9 @@ STATIC FUNCTION GetErrorDesc( oErr )
       cI := PadR( cI, Max( 32, Len( cI ) + 1 ) )
       cI += "("
       aPar := __dbgVMParLList( nI )
-      FOR nJ := 1 TO Len( aPar )
-         cI += cvt2str( aPar[ nJ ] )
-         IF nJ < Len( aPar )
+      FOR EACH nJ IN aPar
+         cI += cvt2str( nJ )
+         IF ! nJ:__enumIsLast()
             cI += ", "
          ENDIF
       NEXT
@@ -1011,7 +1018,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
    cRet += "Executable:  " + hb_ProgName() + hb_eol()
    cRet += "Versions:" + hb_eol()
    cRet += "  OS: " + OS() + hb_eol()
-   cRet += "  Harbour: " + Version() + ", " + hb_BuildDate() + hb_eol()
+   cRet += "  Harbour: " + Version() + ", " + hb_Version( HB_VERSION_BUILD_DATE_STR ) + hb_eol()
    cRet += hb_eol()
 
    IF oErr:genCode != EG_MEM
@@ -1020,10 +1027,11 @@ STATIC FUNCTION GetErrorDesc( oErr )
 
       BEGIN SEQUENCE WITH {| o | Break( o ) }
          IF Used()
-            cRet += "    Filter: " + dbFilter() + hb_eol()
-            cRet += "    Relation: " + dbRelation() + hb_eol()
-            cRet += "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol()
-            cRet += hb_eol()
+            cRet += ;
+               "    Filter: " + dbFilter() + hb_eol() + ;
+               "    Relation: " + dbRelation() + hb_eol() + ;
+               "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol() + ;
+               hb_eol()
             BEGIN SEQUENCE WITH {| o | Break( o ) }
                FOR nI := 1 TO FCount()
                   cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + hb_ValToExp( FieldGet( nI ) ) + hb_eol()
@@ -1041,7 +1049,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
          BEGIN SEQUENCE WITH {| o | Break( o ) }
             IF Used()
                dbSelectArea( nI )
-               cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + ;
+               cRet += Str( nI, 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
                   Str( RecNo() ) + "/" + Str( LastRec() ) + ;
                   iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()
                dbCloseArea()
@@ -1075,23 +1083,25 @@ STATIC FUNCTION cvt2str( xI, lLong )
 
    LOCAL cValtype, cI, xJ
 
-   cValtype := ValType( xI )
    lLong := ! Empty( lLong )
-   IF cValtype == "U"
+
+   SWITCH cValtype := ValType( xI )
+   CASE "U"
       RETURN iif( lLong, "[U]:NIL", "NIL" )
-   ELSEIF cValtype == "N"
-      RETURN iif( lLong, "[N]:" + Str( xI ), hb_ntos( xI ) )
-   ELSEIF cValtype $ "CM"
+   CASE "N"
+      RETURN iif( lLong, "[N]:" + hb_ntos( xI ), hb_ntos( xI ) )
+   CASE "M"
+   CASE "C"
       IF Len( xI ) <= 260
          RETURN iif( lLong, "[" + cValtype + hb_ntos( Len( xI ) ) + "]:", "" ) + '"' + xI + '"'
       ELSE
          RETURN iif( lLong, "[" + cValtype + hb_ntos( Len( xI ) ) + "]:", "" ) + '"' + Left( xI, 100 ) + '"...'
       ENDIF
-   ELSEIF cValtype == "A"
+   CASE "A"
       RETURN "[A" + hb_ntos( Len( xI ) ) + "]"
-   ELSEIF cValtype == "H"
+   CASE "H"
       RETURN "[H" + hb_ntos( Len( xI ) ) + "]"
-   ELSEIF cValtype == "O"
+   CASE "O"
       cI := ""
       IF __objHasMsg( xI, "ID" )
          xJ := xI:ID
@@ -1112,17 +1122,15 @@ STATIC FUNCTION cvt2str( xI, lLong )
          ENDIF
       ENDIF
       RETURN "[O:" + xI:ClassName() + cI + "]"
-   ELSEIF cValtype == "D"
-      RETURN iif( lLong, "[D]:", "" ) + DToC( xI )
-   ELSEIF cValtype == "L"
+   CASE "D"
+      RETURN iif( lLong, "[D]:", "" ) + hb_DToC( xI, "yyyy-mm-dd" )
+   CASE "L"
       RETURN iif( lLong, "[L]:", "" ) + iif( xI, ".T.", ".F." )
-   ELSEIF cValtype == "P"
+   CASE "P"
       RETURN iif( lLong, "[P]:", "" ) + "0p" + hb_NumToHex( xI )
-   ELSE
-      RETURN "[" + cValtype + "]" // BS,etc
-   ENDIF
+   ENDSWITCH
 
-   RETURN NIL
+   RETURN "[" + cValtype + "]" // BS,etc
 
 
 /********************************************************************
@@ -1159,9 +1167,8 @@ PROCEDURE UAddHeader( cType, cValue )
 
 PROCEDURE URedirect( cURL, nCode )
 
-   IF nCode == NIL
-      nCode := 303
-   ENDIF
+   hb_default( @nCode, 303 )
+
    USetStatusCode( nCode )
    UAddHeader( "Location", cURL )
 
@@ -1198,12 +1205,12 @@ PROCEDURE USessionStart()
 
    LOCAL cSID
 
-   IF hb_HHasKey( cookie, "SESSID" )
+   IF "SESSID" $ cookie
       cSID := cookie[ "SESSID" ]
    ENDIF
 
    hb_mutexLock( httpd:hmtxSession )
-   IF cSID == NIL .OR. ! hb_HHasKey( httpd:hSession, cSID )
+   IF cSID == NIL .OR. !( cSID $ httpd:hSession )
       // Session does not exist
       USessionCreateInternal()
    ELSE
@@ -1230,7 +1237,7 @@ PROCEDURE USessionStart()
 
          // Check if session is not destroyed
          hb_mutexLock( httpd:hmtxSession )
-         IF hb_HHasKey( httpd:hSession, cSID )
+         IF cSID $ httpd:hSession
             // Session exists
             IF t_aSessionData[ 3 ] > hb_MilliSeconds()
                t_aSessionData[ 3 ] := hb_MilliSeconds() + SESSION_TIMEOUT * 1000
@@ -1280,17 +1287,13 @@ FUNCTION UHtmlEncode( cString )
 
    FOR nI := 1 TO Len( cString )
       cI := SubStr( cString, nI, 1 )
-      IF cI == "<"
-         cRet += "&lt;"
-      ELSEIF cI == ">"
-         cRet += "&gt;"
-      ELSEIF cI == "&"
-         cRet += "&amp;"
-      ELSEIF cI == '"'
-         cRet += "&quot;"
-      ELSE
-         cRet += cI
-      ENDIF
+      DO CASE
+      CASE cI == "<" ; cRet += "&lt;"
+      CASE cI == ">" ; cRet += "&gt;"
+      CASE cI == "&" ; cRet += "&amp;"
+      CASE cI == '"' ; cRet += "&quot;"
+      OTHERWISE      ; cRet += cI
+      ENDCASE
    NEXT
 
    RETURN cRet
@@ -1301,30 +1304,26 @@ FUNCTION UUrlEncode( cString )
 
    FOR nI := 1 TO Len( cString )
       cI := SubStr( cString, nI, 1 )
-      IF cI == " "
+      DO CASE
+      CASE cI == " "
          cRet += "+"
-      ELSEIF Asc( cI ) >= 127 .OR. Asc( cI ) <= 31 .OR. cI $ '=&%+'
+      CASE Asc( cI ) >= 127 .OR. Asc( cI ) <= 31 .OR. cI $ '=&%+'
          cRet += "%" + hb_StrToHex( cI )
-      ELSE
+      OTHERWISE
          cRet += cI
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cRet
 
 FUNCTION UUrlDecode( cString )
 
-   LOCAL nI
+   LOCAL nI := 1
 
    cString := StrTran( cString, "+", " " )
-   nI := 1
-   DO WHILE nI <= Len( cString )
-      nI := hb_At( "%", cString, nI )
-      IF nI == 0
-         EXIT
-      ENDIF
+   DO WHILE nI <= Len( cString ) .AND. ( nI := hb_At( "%", cString, nI ) ) > 0
       IF Upper( SubStr( cString, nI + 1, 1 ) ) $ "0123456789ABCDEF" .AND. ;
-            Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
+         Upper( SubStr( cString, nI + 2, 1 ) ) $ "0123456789ABCDEF"
          cString := Stuff( cString, nI, 3, hb_HexToStr( SubStr( cString, nI + 1, 2 ) ) )
       ENDIF
       nI++
@@ -1333,20 +1332,17 @@ FUNCTION UUrlDecode( cString )
    RETURN cString
 
 FUNCTION ULink( cText, cUrl )
-
    RETURN '<a href="' + cUrl + '">' + UHtmlEncode( cText ) + '</a>'
 
 FUNCTION UUrlChecksum( cUrl )
-
    RETURN cUrl + iif( "?" $ cUrl, "&", "?" ) + "_ucs=" + hb_MD5( session[ "_unique" ] + cUrl + session[ "_unique" ] )
 
 FUNCTION UUrlValidate( cUrl )
 
    LOCAL nI
 
-   IF cUrl == NIL
-      cUrl := server[ "REQUEST_URI" ]
-   ENDIF
+   hb_default( @cURL, server[ "REQUEST_URI" ] )
+
    IF ( nI := At( "?_ucs=", cUrl ) ) == 0
       nI := At( "&_ucs=", cUrl )
    ENDIF
@@ -1355,11 +1351,9 @@ FUNCTION UUrlValidate( cUrl )
 
 PROCEDURE UProcFiles( cFileName, lIndex )
 
-   LOCAL aDir, aF, nI, cI, tDate, tHDate
+   LOCAL aDir, aF, cI, tDate, tHDate
 
-   IF ! HB_ISLOGICAL( lIndex )
-      lIndex := .F.
-   ENDIF
+   hb_default( @lIndex, .F. )
 
    cFileName := StrTran( cFileName, "//", "/" )
 
@@ -1370,56 +1364,67 @@ PROCEDURE UProcFiles( cFileName, lIndex )
    ENDIF
 
    IF hb_FileExists( UOsFileName( cFileName ) )
-      IF hb_HHasKey( server, "HTTP_IF_MODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
-            hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
-            tDate <= tHDate
+      IF "HTTP_IF_MODIFIED_SINCE" $ server .AND. ;
+         HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
+         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         tDate <= tHDate
+
          USetStatusCode( 304 )
-      ELSEIF hb_HHasKey( server, "HTTP_IF_UNMODIFIED_SINCE" ) .AND. ;
-            HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
-            hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
-            tDate > tHDate
+
+      ELSEIF "HTTP_IF_UNMODIFIED_SINCE" $ server .AND. ;
+         HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
+         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         tDate > tHDate
+
          USetStatusCode( 412 )
       ELSE
-         IF ( nI := RAt( ".", cFileName ) ) > 0
-            SWITCH Lower( SubStr( cFileName, nI + 1 ) )
-            CASE "css";                                 cI := "text/css";  EXIT
-            CASE "htm";   CASE "html";                  cI := "text/html";  EXIT
-            CASE "txt";   CASE "text";  CASE "asc"
-            CASE "c";     CASE "h";     CASE "cpp"
-            CASE "hpp";   CASE "log";                   cI := "text/plain";  EXIT
-            CASE "rtf";                                 cI := "text/rtf";  EXIT
-            CASE "xml";                                 cI := "text/xml";  EXIT
-            CASE "bmp";                                 cI := "image/bmp";  EXIT
-            CASE "gif";                                 cI := "image/gif";  EXIT
-            CASE "jpg";   CASE "jpe";   CASE "jpeg";    cI := "image/jpeg";  EXIT
-            CASE "png";                                 cI := "image/png";   EXIT
-            CASE "tif";   CASE "tiff";                  cI := "image/tiff";  EXIT
-            CASE "djv";   CASE "djvu";                  cI := "image/vnd.djvu";  EXIT
-            CASE "ico";                                 cI := "image/x-icon";  EXIT
-            CASE "xls";                                 cI := "application/excel";  EXIT
-            CASE "doc";                                 cI := "application/msword";  EXIT
-            CASE "pdf";                                 cI := "application/pdf";  EXIT
-            CASE "ps";    CASE "eps";                   cI := "application/postscript";  EXIT
-            CASE "ppt";                                 cI := "application/powerpoint";  EXIT
-            CASE "bz2";                                 cI := "application/x-bzip2";  EXIT
-            CASE "gz";                                  cI := "application/x-gzip";  EXIT
-            CASE "tgz";                                 cI := "application/x-gtar";  EXIT
-            CASE "js";                                  cI := "application/x-javascript";  EXIT
-            CASE "tar";                                 cI := "application/x-tar";  EXIT
-            CASE "tex";                                 cI := "application/x-tex";  EXIT
-            CASE "zip";                                 cI := "application/zip";  EXIT
-            CASE "midi";                                cI := "audio/midi";  EXIT
-            CASE "mp3";                                 cI := "audio/mpeg";  EXIT
-            CASE "wav";                                 cI := "audio/x-wav";  EXIT
-            CASE "qt";    CASE "mov";                   cI := "video/quicktime";  EXIT
-            CASE "avi";                                 cI := "video/x-msvideo";  EXIT
-            OTHERWISE
-               cI := "application/octet-stream"
-            ENDSWITCH
-         ELSE
-            cI := "application/octet-stream"
-         ENDIF
+         SWITCH Lower( hb_FNameExt( cFileName ) )
+         CASE ".css";  cI := "text/css"; EXIT
+         CASE ".htm"
+         CASE ".html"; cI := "text/html"; EXIT
+         CASE ".txt"
+         CASE ".text"
+         CASE ".asc"
+         CASE ".c"
+         CASE ".h"
+         CASE ".cpp"
+         CASE ".hpp"
+         CASE ".log";  cI := "text/plain"; EXIT
+         CASE ".rtf";  cI := "text/rtf"; EXIT
+         CASE ".xml";  cI := "text/xml"; EXIT
+         CASE ".bmp";  cI := "image/bmp"; EXIT
+         CASE ".gif";  cI := "image/gif"; EXIT
+         CASE ".jpg"
+         CASE ".jpe"
+         CASE ".jpeg"; cI := "image/jpeg"; EXIT
+         CASE ".png";  cI := "image/png";   EXIT
+         CASE ".tif"
+         CASE ".tiff"; cI := "image/tiff"; EXIT
+         CASE ".djv"
+         CASE ".djvu"; cI := "image/vnd.djvu"; EXIT
+         CASE ".ico";  cI := "image/x-icon"; EXIT
+         CASE ".xls";  cI := "application/excel"; EXIT
+         CASE ".doc";  cI := "application/msword"; EXIT
+         CASE ".pdf";  cI := "application/pdf"; EXIT
+         CASE ".ps"
+         CASE ".eps";  cI := "application/postscript"; EXIT
+         CASE ".ppt";  cI := "application/powerpoint"; EXIT
+         CASE ".bz2";  cI := "application/x-bzip2"; EXIT
+         CASE ".gz";   cI := "application/x-gzip"; EXIT
+         CASE ".tgz";  cI := "application/x-gtar"; EXIT
+         CASE ".js";   cI := "application/x-javascript"; EXIT
+         CASE ".tar";  cI := "application/x-tar"; EXIT
+         CASE ".tex";  cI := "application/x-tex"; EXIT
+         CASE ".zip";  cI := "application/zip"; EXIT
+         CASE ".midi"; cI := "audio/midi"; EXIT
+         CASE ".mp3";  cI := "audio/mpeg"; EXIT
+         CASE ".wav";  cI := "audio/x-wav"; EXIT
+         CASE ".qt"
+         CASE ".mov";  cI := "video/quicktime"; EXIT
+         CASE ".avi";  cI := "video/x-msvideo"; EXIT
+         OTHERWISE ;   cI := "application/octet-stream"
+         ENDSWITCH
+
          UAddHeader( "Content-Type", cI )
 
          IF hb_FGetDateTime( UOsFileName( cFileName ), @tDate )
@@ -1447,28 +1452,29 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       UAddHeader( "Content-Type", "text/html" )
 
       aDir := Directory( UOsFileName( cFileName ), "D" )
-      IF hb_HHasKey( get, "s" )
-         IF get[ "s" ] == "s"
+      IF "s" $ get
+         DO CASE
+         CASE get[ "s" ] == "s"
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
-         ELSEIF get[ "s" ] == "m"
+         CASE get[ "s" ] == "m"
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., DToS( X[ 3 ] ) + X[ 4 ] < DToS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
-         ELSE
+         OTHERWISE
             ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
                iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
-         ENDIF
+         ENDCASE
       ELSE
          ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
             iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
       ENDIF
 
-      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
-      UWrite( '<a href="?s=n">Name</a>                                                  ' )
-      UWrite( '<a href="?s=m">Modified</a>             ' )
+      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>' )
+      UWrite( '<a href="?s=n">Name</a>' )
+      UWrite( '<a href="?s=m">Modified</a>' )
       UWrite( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
       FOR EACH aF IN aDir
-         IF Left( aF[ 1 ], 1 ) == "."
+         IF hb_LeftIs( aF[ 1 ], "." )
          ELSEIF "D" $ aF[ 5 ]
             UWrite( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
                DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )
@@ -1494,7 +1500,7 @@ PROCEDURE UProcInfo()
    UWrite( '<table border=1 cellspacing=0>' )
    UWrite( '<tr><td>OS</td><td>' + UHtmlEncode( OS() ) + '</td></tr>' )
    UWrite( '<tr><td>Harbour</td><td>' + UHtmlEncode( Version() ) + '</td></tr>' )
-   UWrite( '<tr><td>Build date</td><td>' + UHtmlEncode( hb_BuildDate() ) + '</td></tr>' )
+   UWrite( '<tr><td>Build date</td><td>' + UHtmlEncode( hb_Version( HB_VERSION_BUILD_DATE_STR ) ) + '</td></tr>' )
    UWrite( '<tr><td>Compiler</td><td>' + UHtmlEncode( hb_Compiler() ) + '</td></tr>' )
    UWrite( '</table>' )
 
@@ -1529,7 +1535,6 @@ PROCEDURE UProcInfo()
    RETURN
 
 FUNCTION UParse( aData, cFileName, hConfig )
-
    RETURN parse_data( aData, compile_file( cFileName, hConfig ), hConfig )
 
 STATIC FUNCTION parse_data( aData, aCode, hConfig )
@@ -1546,49 +1551,46 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "="
-            IF hb_HHasKey( aData, aInstr[ 2 ] )
+            IF aInstr[ 2 ] $ aData
                xValue := aData[ aInstr[ 2 ] ]
-               IF HB_ISSTRING( xValue )
-                  cRet += UHtmlEncode( xValue )
-               ELSEIF HB_ISNUMERIC( xValue )
-                  cRet += UHtmlEncode( Str( xValue ) )
-               ELSEIF HB_ISDATE( xValue )
-                  cRet += UHtmlEncode( DToC( xValue ) )
-               ELSEIF HB_ISTIMESTAMP( xValue )
-                  cRet += UHtmlEncode( hb_TToC( xValue ) )
-               ELSEIF HB_ISOBJECT( xValue )
-                  cRet += UHtmlEncode( xValue:Output() )
-               ELSE
-                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
-               ENDIF
+               DO CASE
+               CASE HB_ISSTRING( xValue )    ; cRet += UHtmlEncode( xValue )
+               CASE HB_ISNUMERIC( xValue )   ; cRet += UHtmlEncode( Str( xValue ) )
+               CASE HB_ISDATE( xValue )      ; cRet += UHtmlEncode( DToC( xValue ) )
+               CASE HB_ISTIMESTAMP( xValue ) ; cRet += UHtmlEncode( hb_TToC( xValue ) )
+               CASE HB_ISOBJECT( xValue )    ; cRet += UHtmlEncode( xValue:Output() )
+               OTHERWISE
+                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%1$s'", ValType( xValue ) ) )
+               ENDCASE
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
          CASE ":"
-            IF hb_HHasKey( aData, aInstr[ 2 ] )
+            IF aInstr[ 2 ] $ aData
                xValue := aData[ aInstr[ 2 ] ]
-               IF HB_ISSTRING( xValue )
+               DO CASE
+               CASE HB_ISSTRING( xValue )
                   cRet += xValue
-               ELSEIF HB_ISNUMERIC( xValue )
+               CASE HB_ISNUMERIC( xValue )
                   cRet += Str( xValue )
-               ELSEIF HB_ISDATE( xValue )
+               CASE HB_ISDATE( xValue )
                   cRet += DToC( xValue )
-               ELSEIF HB_ISTIMESTAMP( xValue )
+               CASE HB_ISTIMESTAMP( xValue )
                   cRet += hb_TToC( xValue )
-               ELSEIF HB_ISOBJECT( xValue )
+               CASE HB_ISOBJECT( xValue )
                   cRet += xValue:Output()
-               ELSE
-                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%s'", ValType( xValue ) ) )
-               ENDIF
+               OTHERWISE
+                  Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: invalid type '%1$s'", ValType( xValue ) ) )
+               ENDCASE
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
          CASE "if"
-            xValue := iif( hb_HHasKey( aData, aInstr[ 2 ] ), aData[ aInstr[ 2 ] ], NIL )
+            xValue := iif( aInstr[ 2 ] $ aData, aData[ aInstr[ 2 ] ], NIL )
             IF ! Empty( xValue )
                cRet += parse_data( aData, aInstr[ 3 ], hConfig )
             ELSE
@@ -1597,7 +1599,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "loop"
-            IF hb_HHasKey( aData, aInstr[ 2 ] ) .AND. HB_ISARRAY( aValue := aData[ aInstr[ 2 ] ] )
+            IF aInstr[ 2 ] $ aData .AND. HB_ISARRAY( aValue := aData[ aInstr[ 2 ] ] )
                FOR EACH xValue IN aValue
                   aData2 := hb_HClone( aData )
                   hb_HEval( xValue, {| k, v | aData2[ aInstr[ 2 ] + "." + k ] := v } )
@@ -1606,7 +1608,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                   aData2 := NIL
                NEXT
             ELSE
-               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: loop variable '%s' not found", aInstr[ 2 ] ) )
+               Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: loop variable '%1$s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
@@ -1632,9 +1634,8 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
 
    LOCAL nPos, cTpl, aCode := {}
 
-   IF cFileName == NIL
-      cFileName := MEMVAR->server[ "SCRIPT_NAME" ]
-   ENDIF
+   hb_default( @cFileName, MEMVAR->server[ "SCRIPT_NAME" ] )
+
    cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
    IF hb_FileExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
@@ -1643,11 +1644,11 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
             Break( nPos )
          ENDIF
       RECOVER USING nPos
-         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %s(%d,%d)", cFileName, SUBSTRCOUNT( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
+         Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: syntax at %1$s(%2$d,%3$d)", cFileName, SubStrCount( Chr( 10 ), cTpl,, nPos ) + 1, nPos - hb_RAt( Chr( 10 ), cTpl,, nPos - 1 ) ) )
          aCode := {}
       END SEQUENCE
    ELSE
-      Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: file '%s' not found", cFileName ) )
+      Eval( hConfig[ "Trace" ], hb_StrFormat( "Template error: file '%1$s' not found", cFileName ) )
    ENDIF
 
    RETURN aCode
@@ -1660,8 +1661,7 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
       IF nS > nStart
          AAdd( aCode, { "txt", SubStr( cTpl, nStart, nS - nStart ) } )
       ENDIF
-      nE := hb_At( "}}", cTpl, nS )
-      IF nE > 0
+      IF ( nE := hb_At( "}}", cTpl, nS ) ) > 0
          IF ( nI := hb_At( " ", cTpl, nS, nE ) ) == 0
             nI := nE
          ENDIF
@@ -1722,13 +1722,12 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
 
    RETURN Len( cTpl ) + 1
 
-STATIC FUNCTION SUBSTRCOUNT( cSub, cString, nStart, nEnd )
+STATIC FUNCTION SubStrCount( cSub, cString, nStart, nEnd )
 
    LOCAL nCount := 0
 
-   IF nStart == NIL
-      nStart := 1
-   ENDIF
+   hb_default( @nStart, 1 )
+
    DO WHILE ( nStart := hb_At( cSub, cString, nStart, nEnd ) ) > 0
       nCount++
       nStart++

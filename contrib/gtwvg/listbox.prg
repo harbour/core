@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -177,12 +177,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-      IF aNM[ 1 ] == LBN_SELCHANGE
+      DO CASE
+      CASE aNM[ 1 ] == LBN_SELCHANGE
          ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             Eval( ::sl_itemMarked, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -191,12 +192,12 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_DBLCLK
+      CASE aNM[ 1 ] == LBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -205,20 +206,20 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == LBN_KILLFOCUS
+      CASE aNM[ 1 ] == LBN_KILLFOCUS
          ::killInputFocus()
 
-      ELSEIF aNM[ 1 ] == LBN_SETFOCUS
+      CASE aNM[ 1 ] == LBN_SETFOCUS
          ::setInputFocus()
 
-      ENDIF
+      ENDCASE
 
    CASE nMessage == HB_GTE_KEYTOITEM
       IF aNM[ 1 ] == K_ENTER
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, NIL, NIL, self )
          ENDIF
          IF ::isParentCrt()
@@ -242,9 +243,10 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
-      IF aNM[ 1 ] == WM_LBUTTONUP
+      DO CASE
+      CASE aNM[ 1 ] == WM_LBUTTONUP
          ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -254,9 +256,9 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK
+      CASE aNM[ 1 ] == WM_LBUTTONDBLCLK
          ::editBuffer := ::nCurSelected
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -264,13 +266,13 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::setFocus()
             ENDIF
-            RETURN EVENT_HANDELLED
+            RETURN EVENT_HANDLED
          ENDIF
 
-      ELSEIF aNM[ 1 ] == WM_KEYUP
+      CASE aNM[ 1 ] == WM_KEYUP
          IF ::nCurSelected != Wvg_LBGetCurSel( ::hWnd ) + 1
             ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
-            IF HB_ISBLOCK( ::sl_itemMarked )
+            IF HB_ISEVALITEM( ::sl_itemMarked )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
@@ -281,10 +283,10 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ENDIF
+      ENDCASE
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgListBox:clear()
 

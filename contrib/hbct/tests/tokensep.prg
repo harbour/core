@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,21 +64,21 @@ PROCEDURE Main()
    ? "Begin test of TokenSep()"
    ?
 
-   ? '  Tokenizing the string "' + cStr + '"'
+   ? '  Tokenizing the string', '"' + cStr + '"'
    ? '    with skip width == 1 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO NumToken( cStr, ".,!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 1 ) + ;
-         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
+         '") is tokenized by', '"' + TokenSep( .F. ) + '"', "and", '"' + TokenSep( .T. ) + '"'
    NEXT
 
    ?
-   ? '  Tokenizing the string "' + cStr + '"'
+   ? '  Tokenizing the string', '"' + cStr + '"'
    ? '    with skip width == 3 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO NumToken( cStr, ".,!", 3 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 3 ) + ;
-         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
+         '") is tokenized by', '"' + TokenSep( .F. ) + '"', "and", '"' + TokenSep( .T. ) + '"'
    NEXT
 
    ?

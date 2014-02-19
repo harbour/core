@@ -1,9 +1,9 @@
-// Testing Harbour long string handling with device output
-
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm jsd-llc com>
  */
+
+// Testing Harbour long string handling with device output
 
 PROCEDURE Main()
 
@@ -16,12 +16,8 @@ PROCEDURE Main()
       cLong += cLong
    NEXT
 
-   // Write the long string to file longdev.prn
-   SET PRINTER TO longdev
-   SET DEVICE TO PRINTER
-   DevOut( cLong )
-   SET PRINTER OFF
-   SET DEVICE TO SCREEN
+   // Write the long string to a file
+   hb_MemoWrit( "longdev.prn", cLong )
 
    // Confirm the string length and that a copy is exactly identical.
    ? "The length of the long string is", iif( Len( cLong ) == 80 * 1024, "correct", "wrong" )
@@ -32,8 +28,11 @@ PROCEDURE Main()
    // Read the string back in and compare it to the original.
    nHandle := FOpen( "longdev.prn" )
    cBuffer := FReadStr( nHandle, 90000 )
-   ? "Original:", Len( cLong )
-   ? "From file:", Len( cBuffer )
+   FClose( nHandle )
+   ? "Original:", hb_ntos( Len( cLong ) )
+   ? "From file:", hb_ntos( Len( cBuffer ) )
    ? "The strings are", iif( cLong == cBuffer, "equal", "not equal" )
+
+   FErase( "longdev.prn" )
 
    RETURN

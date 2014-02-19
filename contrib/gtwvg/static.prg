@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -116,16 +116,16 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) != 0
          ::style += SS_LEFT /*+ SS_LEFTNOWORDWRAP */
       ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) != 0
          ::style += SS_RIGHT
       ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) != 0
          ::style += SS_CENTER
       ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) != 0
          ::style -= SS_LEFTNOWORDWRAP
       ENDIF
       EXIT
@@ -139,13 +139,14 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       EXIT
    CASE WVGSTATIC_TYPE_BITMAP
       ::style += SS_BITMAP
-      IF     ::options == WVGSTATIC_BITMAP_TILED
+      DO CASE
+      CASE ::options == WVGSTATIC_BITMAP_TILED
          ::style += SS_CENTERIMAGE
-      ELSEIF ::options == WVGSTATIC_BITMAP_SCALED
+      CASE ::options == WVGSTATIC_BITMAP_SCALED
 
-      ELSE
+      OTHERWISE
 
-      ENDIF
+      ENDCASE
       EXIT
    CASE WVGSTATIC_TYPE_FGNDRECT
       ::style += SS_WHITERECT
@@ -186,22 +187,22 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 #if 1
    /* Options */
    IF AScan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0
-      IF     hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN
+      DO CASE
+      CASE hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) != 0
          ::style += WS_BORDER
-
-      ELSEIF hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) == WVGSTATIC_FRAMETHICK
+      CASE hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) != 0
          ::style += WS_DLGFRAME
-
-      ENDIF
+      ENDCASE
    ENDIF
 #endif
 #if 0
    IF ::type == WVGSTATIC_TYPE_TEXT
-      IF ::options == WVGSTATIC_FRAMETHIN
+      DO CASE
+      CASE ::options == WVGSTATIC_FRAMETHIN
          ::style += WS_BORDER
-      ELSEIF ::options == WVGSTATIC_FRAMETHICK
+      CASE ::options == WVGSTATIC_FRAMETHICK
          ::style += WS_DLGFRAME
-      ENDIF
+      ENDCASE
    ENDIF
 #endif
 
@@ -209,7 +210,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::createControl()
 
-   ::SetWindowProcCallback() /* Static must not be subject to GT dependent */
+   ::SetWindowProcCallback()  /* Static must not be subject to GT dependent */
 
    IF ::visible
       ::show()
@@ -228,11 +229,11 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      IF HB_ISBLOCK( ::sl_resize )
+      IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
@@ -252,11 +253,11 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgStatic:destroy()
 
-   IF ::hBitmap != nil
+   IF ::hBitmap != NIL
       Wvg_DeleteObject( ::hBitmap )
    ENDIF
    ::wvgWindow:destroy()
@@ -281,7 +282,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
       Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
-      IF ::hBitmap != nil
+      IF ::hBitmap != NIL
          Wvg_DeleteObject( ::hBitmap )
       ENDIF
 

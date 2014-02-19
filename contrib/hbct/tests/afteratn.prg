@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,27 +62,27 @@ PROCEDURE Main()
 
    ? "Begin test of AfterAtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  AfterAtNum( "..", cStr )       should be "test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2 )    should be ".is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 ) should be ".a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  AfterAtNum( "..", cStr )       should be "test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2 )    should be "This...is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 ) should be "is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -91,11 +91,11 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  AfterAtNum( "..", cStr )        should be "",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 )  should be "s...is...a...test!",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 10 ) should be ".a...test!",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr, 2, 10 ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of AfterAtNum()"

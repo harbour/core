@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,6 +47,18 @@
  */
 
 #include "hbwapi.h"
+
+HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
+
+   while( pText[ nLen ] != TEXT( '\0' ) )
+      ++nLen;
+
+   return nLen;
+}
 
 /* NOTE: Based on hb_strdup() */
 TCHAR * hbwapi_tstrdup( const TCHAR * pszText )
@@ -83,18 +95,6 @@ TCHAR * hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
       nLen--;
 
    return pBuf;
-}
-
-HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
-
-   while( pText[ nLen ] != TEXT( '\0' ) )
-      ++nLen;
-
-   return nLen;
 }
 
 static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )

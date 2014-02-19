@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,9 +85,7 @@ HB_FUNC( TIMEOFDAY )
    char szResult[ 9 ];
 
    if( hb_pcount() == 0 )
-   {
       hb_dateTimeStr( szResult );
-   }
    else
    {
       int iSeconds = hb_parni( 1 );
@@ -95,6 +93,7 @@ HB_FUNC( TIMEOFDAY )
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
                    iSeconds / 3600, ( iSeconds % 3600 ) / 60, iSeconds % 60 );
    }
+
    hb_retclen( szResult, 8 );
 }
 
@@ -112,5 +111,5 @@ HB_FUNC( TTOD )
    if( HB_ISDATE( 1 ) )
       hb_retdl( hb_pardl( 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

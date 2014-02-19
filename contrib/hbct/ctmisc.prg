@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,20 +64,15 @@ FUNCTION Center( c, n, p, lMode )
    IF ! HB_ISNUMERIC( n )
       n := MaxCol() + 1 - Col() * 2
    ENDIF
-   IF ! HB_ISSTRING( c )
-      c := ""
-   ENDIF
 
    IF HB_ISLOGICAL( p )
       lMode := p
       p := NIL
-   ELSE
-      IF ! HB_ISLOGICAL( lMode )
-         lMode := .F.
-      ENDIF
+   ELSEIF ! HB_ISLOGICAL( lMode )
+      lMode := .F.
    ENDIF
 
-   cRet := PadC( RTrim( c ), n, p )
+   cRet := PadC( RTrim( hb_defaultValue( c, "" ) ), n, p )
 
    RETURN iif( lMode, cRet, RTrim( cRet ) )
 
@@ -90,16 +85,13 @@ FUNCTION CSetCurs( l )
    RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
 
 FUNCTION CSetKey( n )
-
    RETURN SetKey( n )
 
 FUNCTION CSetCent( nCentury )
-
    RETURN __SetCentury( nCentury )
 
 FUNCTION LToC( l )
-
-   RETURN iif( l, "T", "F" )
+   RETURN iif( hb_defaultValue( l, .F. ), "T", "F" )
 
 FUNCTION DosParam()
 
@@ -113,5 +105,4 @@ FUNCTION DosParam()
    RETURN cRet
 
 FUNCTION ExeName()
-
    RETURN hb_ProgName()

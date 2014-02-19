@@ -28,6 +28,5 @@
       // Issue a warm boot
 
       ft_Reboot( WARM )
-
    $END$
  */

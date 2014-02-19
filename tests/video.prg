@@ -1,13 +1,8 @@
 /*
  * Harbour video test code
- *
  * Program originally by Brian Dukes <bdukes@yellowthingy.co.uk>
- *
  * Redirect the output of this program to a file.
- *
  */
-
-/* UTF-8 */
 
 #include "box.ch"
 #ifdef __HARBOUR__
@@ -33,9 +28,6 @@
    #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
-#command ? => OutStd( hb_eol() ); OutErr( hb_eol() )
-#command ? <xx,...> => OutStd( <xx>, hb_eol() ); OutErr( <xx>, hb_eol() )
-
 #ifdef FlagShip
 
 STATIC s_nDispCount := 0
@@ -50,37 +42,35 @@ PROCEDURE Main( xUtf, xCompatBuf )
    LOCAL aResult := {}
 
 #ifdef __HARBOUR__
-   hb_cdpSelect( iif( !Empty( xUtf ), "UTF8", "EN" ) )
+   hb_cdpSelect( iif( ! Empty( xUtf ), "UTF8", "EN" ) )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
-   hb_gtInfo( HB_GTI_COMPATBUFFER, !Empty( xCompatBuf ) )
-   ? "codepage:", hb_cdpSelect(), "box CP:", hb_gtInfo( HB_GTI_BOXCP ), ;
-     "compat buffer:", hb_gtInfo( HB_GTI_COMPATBUFFER )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, ! Empty( xCompatBuf ) )
 #endif
 
-   Initialise()   // Initialise Screen Display
+   Initialise()
 
-   // Perform Tests
-   AAdd( aResult, StaticText()   )
+   // Perform tests
+   AAdd( aResult, StaticText() )
    AAdd( aResult, WindowBounce() )
-   AAdd( aResult, ColourBoxes()  )
+   AAdd( aResult, ColorBoxes() )
 
-   // Display Results
+   // Display results
    Summary( aResult )
 
    RETURN
 
 // initialise the screen
 
-STATIC FUNCTION Initialise()
+STATIC PROCEDURE Initialise()
 
-   SET COLOUR TO "W+/BG"
+   SetColor( "W+/BG" )
 #ifdef __HARBOUR__
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( hb_UTF8ToStrBox( "░" ), 9 ), "BG/B" )
 #else
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( Chr( 176 ), 9 ), "BG/B" )
 #endif
 
-   RETURN NIL
+   RETURN
 
 // repeatedly display a string in the same position
 // this test determines how well the Screen i/o subsystem is
@@ -88,13 +78,12 @@ STATIC FUNCTION Initialise()
 
 STATIC FUNCTION StaticText()
 
-   LOCAL cResult
-   LOCAL r       := MaxRow() / 2
-   LOCAL str     := Version()
+   LOCAL r := MaxRow() / 2
+   LOCAL str := Version()
    LOCAL c
    LOCAL i
    LOCAL nEnd
-   LOCAL nStart  := hb_SecondsCPU()
+   LOCAL nStart := hb_SecondsCPU()
 
    str := "Hello World - From " + Left( str, At( " ", str ) - 1 )
    c   := ( MaxCol() - Len( str ) ) / 2
@@ -105,17 +94,15 @@ STATIC FUNCTION StaticText()
 
    nEnd := hb_SecondsCPU()
 
-   cResult := "StaticText:  Iterations=5000, Time=" + hb_ntos( nEnd - nStart ) + ;
-      "secs,  Average FPS = " + hb_ntos( Round( 5000 / ( nEnd - nStart ), 0 ) ) + " FPS"
-
-   RETURN cResult
+   RETURN PadR( "StaticText:", 14 ) + ;
+      "Iterations=5000, Time=" + hb_ntos( nEnd - nStart ) + " secs, " + ;
+      "Average FPS=" + hb_ntos( Round( 5000 / ( nEnd - nStart ), 0 ) )
 
 // Bounce a window around the screen a few thousand times
 // timing the duration, and determining the average FPS
 
 STATIC FUNCTION WindowBounce()
 
-   LOCAL cResult
    LOCAL nBoxes  := Min( MaxRow(), MaxCol() - 7 ) - 6 /* keep the box in bounds */
    LOCAL x       := Array( NBOXES )
    LOCAL y       := Array( NBOXES )
@@ -178,18 +165,17 @@ STATIC FUNCTION WindowBounce()
    DispEnd()
    nEnd := hb_SecondsCPU()
 
-   cResult := "WindowBounce:Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
-      "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"
+   RETURN PadR( "WindowBounce:", 14 ) + ;
+      "Iterations=" + hb_ntos( nFrames ) + ", " + ;
+      "Time=" + hb_ntos( nEnd - nStart ) + " secs, " + ;
+      "Average FPS=" + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) )
 
-   RETURN cResult
-
-// Display colour boxes,  repeatedly, this will determine
-// how efficiently the screen i/o subsystem is caching the
+// Display color boxes, repeatedly, this will determine
+// how efficiently the screen I/O subsystem is caching the
 // DispBegin()'s and DispEnd()'s
 
-STATIC FUNCTION ColourBoxes()
+STATIC FUNCTION ColorBoxes()
 
-   LOCAL cResult
    LOCAL nFrames := 0
    LOCAL nStart
    LOCAL nEnd
@@ -230,24 +216,29 @@ STATIC FUNCTION ColourBoxes()
 
    nEnd := hb_SecondsCPU()
 
-   cResult := "ColourBoxes: Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
-      "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"
-
-   RETURN cResult
+   RETURN PadR( "ColorBoxes:", 14 ) + ;
+      "Iterations=" + hb_ntos( nFrames ) + ", " + ;
+      "Time=" + hb_ntos( nEnd - nStart ) + " secs, " + ;
+      "Average FPS=" + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) )
 
 // display results
 
-STATIC FUNCTION Summary( aResult )
+STATIC PROCEDURE Summary( aResult )
 
    LOCAL i
 
    CLS
-   ? "Resolution:  " + hb_ntos( MaxRow() + 1 ) + " x " + hb_ntos( MaxCol() + 1 ) + " " + Version()
+#ifdef __HARBOUR__
+   ? ;
+      "codepage:", hb_cdpSelect(), ;
+      "box CP:", hb_gtInfo( HB_GTI_BOXCP ), ;
+      "compat buffer:", hb_gtInfo( HB_GTI_COMPATBUFFER )
+#endif
+   ? "Resolution:", hb_ntos( MaxRow() + 1 ), "x", hb_ntos( MaxCol() + 1 ), Version()
    FOR i := 1 TO Len( aResult )
       ? aResult[ i ]
    NEXT
    ?
-   ? "press any key to continue"
-   Inkey( 0 )
+   WAIT
 
-   RETURN aResult
+   RETURN

@@ -33,13 +33,12 @@ STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 PROCEDURE Main()
 
    LOCAL i, j
-   LOCAL lMainCoord
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   lMainCoord := wvw_SetMainCoord( .T. )
+   wvw_SetMainCoord( .T. )
 
    wvw_SetCodepage( , 255 )
 
@@ -70,7 +69,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE xGet1()
+STATIC PROCEDURE xGet1()
 
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
@@ -88,10 +87,10 @@ PROCEDURE xGet1()
 #endif
 
    DO WHILE ! lDone
-      @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
-      @ 14, 22 SAY "Address : " GET cAddr  PICT "@!K" WHEN lMessage( "Please enter your address" )
-      @ 16, 22 SAY "Phone   : " GET cPhone PICT "@K"  WHEN lMessage( "Please enter your phone number" )
-      @ 18, 22 SAY "Fax     : " GET cFax   PICT "@K"  WHEN lMessage( "Please enter your fax number" )
+      @ 12, 22 SAY "Name    : " GET cName  PICTURE "@!K" WHEN lMessage( "Please enter your name" )
+      @ 14, 22 SAY "Address : " GET cAddr  PICTURE "@!K" WHEN lMessage( "Please enter your address" )
+      @ 16, 22 SAY "Phone   : " GET cPhone PICTURE "@K"  WHEN lMessage( "Please enter your phone number" )
+      @ 18, 22 SAY "Fax     : " GET cFax   PICTURE "@K"  WHEN lMessage( "Please enter your fax number" )
       READ
 
       lMessage( "" )
@@ -102,12 +101,12 @@ PROCEDURE xGet1()
 
    SetCursor( oldCurs )
 
-   RETURN // xGet1()
+   RETURN
 
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-FUNCTION xBrowse1()
+STATIC PROCEDURE xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
@@ -118,9 +117,9 @@ FUNCTION xBrowse1()
    LOCAL nRight  := MaxCol() - 3
    LOCAL nCursor := SetCursor( SC_NONE )
 
-   USE "..\..\..\tests\test" NEW
+   USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
-      RETURN NIL
+      RETURN
    ENDIF
    info_ := dbStruct()
 
@@ -142,7 +141,7 @@ FUNCTION xBrowse1()
 
    znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
-   WHILE ! lEnd
+   DO WHILE ! lEnd
       oBrowse:ForceStable()
 
       lMessage( "Record #" + hb_ntos( RecNo() ) )
@@ -192,7 +191,7 @@ FUNCTION xBrowse1()
 
    dbCloseArea()
 
-   RETURN NIL
+   RETURN
 
 //
 
@@ -214,7 +213,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 //
 
@@ -257,12 +256,11 @@ STATIC FUNCTION TBPrev( oTbr )
 //
 
 STATIC FUNCTION VouBlockField( i )
-
-   RETURN  {|| FieldGet( i ) }
+   RETURN {|| FieldGet( i ) }
 
 // supporting functions ***************************
 
-FUNCTION lMessage( cMsg )
+STATIC FUNCTION lMessage( cMsg )
 
    // displays a message on MaxRow() and returns .T.
    LOCAL cOldColor := SetColor( s_cStdColor )
@@ -271,7 +269,7 @@ FUNCTION lMessage( cMsg )
 
    RETURN .T.
 
-FUNCTION lYesNo( cMsg )
+STATIC FUNCTION lYesNo( cMsg )
 
    // display cmsg with Yes/No option, returns .T. if Yes selected
    LOCAL nTopLine, ;
@@ -306,7 +304,7 @@ FUNCTION lYesNo( cMsg )
 
    RETURN nChoice == 1
 
-FUNCTION lBoxMessage( cMsg, cTitle )
+STATIC FUNCTION lBoxMessage( cMsg, cTitle )
 
    LOCAL nTopLine, ;
       nLeft := 5, ;
@@ -358,7 +356,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
 // wtype       : Window border type, eg. "┌─┐│┘─└│"
 // r1,c1,r2,c2 : coordinates
 // Return      : Numeric id of the new window
-FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
+STATIC FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    LOCAL i := Len( s_zwin )
    LOCAL cScreen := SaveScreen( r1, c1, r2, c2 )
@@ -390,13 +388,13 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    RETURN i + 1
 
 // Closes the last window and remove it from window list
-FUNCTION ZREVWINDOW()
+STATIC PROCEDURE ZREVWINDOW()
 
    LOCAL i := Len( s_zwin )
 
    IF i == 0
       // no window to close
-      RETURN NIL
+      RETURN
    ENDIF
 
    wvw_lCloseWindow()
@@ -409,17 +407,7 @@ FUNCTION ZREVWINDOW()
    // remove window from list
    hb_ADel( s_zwin, i, .T. )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION nCeiling( nNumber )
-
-   LOCAL nTemp
-
-   nTemp := nNumber - Int( nNumber )  // right of dec point
-   IF nTemp > 0
-      nNumber := Int( nNumber ) + 1
-   ELSE
-      nNumber := Int( nNumber )
-   ENDIF
-
-   RETURN nNumber
+STATIC FUNCTION nCeiling( nNumber )
+   RETURN Int( nNumber ) + iif( ( nNumber - Int( nNumber ) ) > 0, 1, 0 )

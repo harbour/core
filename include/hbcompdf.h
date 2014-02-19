@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -817,6 +817,7 @@ typedef struct _HB_COMP
    HB_BOOL           fAutoMemvarAssume;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
    HB_BOOL           fForceMemvars;       /* holds if memvars are assumed when accesing undeclared variable (-v)*/
    HB_BOOL           fDebugInfo;          /* holds if generate debugger required info */
+   HB_BOOL           fHideSource;         /* do not embed original source filename into generated source code */
    HB_BOOL           fNoStartUp;          /* C code generation embed HB_FS_FIRST or not */
    HB_BOOL           fCredits;            /* print credits */
    HB_BOOL           fBuildInfo;          /* print build info */
@@ -833,6 +834,7 @@ typedef struct _HB_COMP
 typedef struct
 {
    HB_BOOL  fDebugInfo;
+   HB_BOOL  fHideSource;
    HB_BOOL  fAutoMemvarAssume;
    HB_BOOL  fI18n;
    HB_BOOL  fLineNumbers;
@@ -842,6 +844,7 @@ typedef struct
    HB_BOOL  fForceMemvars;
    int      iStartProc;
    int      iWarnings;
+   int      iGenCOutput;
    int      iExitLevel;
    int      iHidden;
    int      supported;

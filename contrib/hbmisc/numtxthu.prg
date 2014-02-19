@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +46,13 @@
  *
  */
 
-/* UTF-8 */
-
 FUNCTION NumToTxtHU( nValue )
 
    LOCAL aTort := { "tized", "század", "ezred", "tízezred", "százezred", "milliomod", "milliárdod" }
    LOCAL cRetVal
    LOCAL tmp, tmp1, tmp2
+
+   hb_default( @nValue, 0 )
 
    IF nValue < 0
       nValue := -nValue
@@ -71,7 +71,7 @@ FUNCTION NumToTxtHU( nValue )
 
       tmp1 := Len( tmp2 := SubStr( Str( tmp, 8, 6 ), 3 ) )
 
-      WHILE SubStr( tmp2, tmp1, 1 ) == "0" .AND. tmp1 > 0
+      DO WHILE SubStr( tmp2, tmp1, 1 ) == "0" .AND. tmp1 > 0
          tmp1--
       ENDDO
 

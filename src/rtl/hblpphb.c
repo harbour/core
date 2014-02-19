@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -97,12 +97,12 @@
    hLPP := hb_lppCreate( hSocket )
    DO WHILE ! ( lI := hb_lppSend( hLPP, cData, nTimeout ) ) .AND. ;
           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-   // draw progressbar using hb_lppSendLen( hLPP )
+      // draw progressbar using hb_lppSendLen( hLPP )
    ENDDO
-   IF lI   // or hb_lppError( hLPP ) == 0
-   // Sent OK
+   IF lI  // or hb_lppError( hLPP ) == 0
+      // Sent OK
    ELSE
-   // error
+      // error
    ENDIF
    hb_hsctpDestroy( hLPP )
 
@@ -113,13 +113,11 @@
    // draw progressbar using hb_lppRecvLen( hLPP )
    ENDDO
    IF lI
-   // Rcvd OK, data in cData
+      // Rcvd OK, data in cData
+   ELSEIF hb_lppError( hLPP ) == 0
+      // remote side shutdown connection
    ELSE
-   IF hb_lppError( hLPP ) == 0
-     // remote side shutdown connection
-   ELSE
-     // error
-   ENDIF
+      // error
    ENDIF
 
  */

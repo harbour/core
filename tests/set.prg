@@ -1,11 +1,10 @@
-// Testing SET
+// Testing Set()
 
 REQUEST DBFNTX
 
 PROCEDURE Main()
 
-   // for Clipper, this drags in the terminal driver
-   @ Row(), Col() SAY ""
+   DevOut( "" )  // for Clipper, this drags in the terminal driver
 
    TestLine( "_SET_EXACT",        1 )
    TestLine( "_SET_FIXED",        2 )
@@ -78,7 +77,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE testline( c, n )
+STATIC PROCEDURE testline( c, n )
 
    ? ;
       Str( n, 3 ),;

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -110,11 +110,11 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
-      IF HB_ISBLOCK( ::sl_resize )
+      IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
@@ -123,12 +123,12 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       IF HB_ISNUMERIC( ::hBrushBG )
          Wvg_SetBkMode( aNM[ 1 ], 1 )
          Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
       ENDIF
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD destroy() CLASS WvgDrawingArea
 

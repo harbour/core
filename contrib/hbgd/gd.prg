@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,58 +57,59 @@ FUNCTION gdImageEllipse( im, cx, cy, w, h, color )
 
 FUNCTION gdImageFTWidth( fontname, ptsize, angle )
 
-   LOCAL nWidth := 0
-   LOCAL cErr
+   LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-
-   IF cErr == ""
       nWidth := aRect[ 3 ] - aRect[ 1 ]
+   ELSE
+      nWidth := 0
    ENDIF
 
    RETURN nWidth
 
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
 
-   LOCAL nWidth := 0
-   LOCAL cErr
+   LOCAL nWidth
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-   IF cErr == ""
       nWidth := aRect[ 2 ] - aRect[ 8 ]
+   ELSE
+      nWidth := 0
    ENDIF
 
    RETURN nWidth
 
 FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
 
-   LOCAL nWidth  := 0
-   LOCAL nHeight := 0
+   LOCAL nWidth
+   LOCAL nHeight
    LOCAL nX, nY
-   LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, string ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
-
-   IF cErr == ""
       nWidth  := aRect[ 3 ] - aRect[ 1 ]
       nHeight := aRect[ 2 ] - aRect[ 8 ]
       nX      := aRect[ 1 ]
       nY      := aRect[ 2 ]
+   ELSE
+      nWidth  := 0
+      nHeight := 0
+      nX      := 0
+      nY      := 0
    ENDIF
 
    RETURN { nWidth, nHeight, nX, nY }
@@ -175,29 +176,22 @@ FUNCTION gdImageFromFile( cFile )
 
 FUNCTION gdImageToString( oImage )
 
-   LOCAL cString
-
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
       SWITCH oImage:cType
       CASE "jpeg"
-         cString := oImage:ToStringJpeg()
-         EXIT
+         RETURN oImage:ToStringJpeg()
       CASE "gif"
-         cString := oImage:ToStringGif()
-         EXIT
+         RETURN oImage:ToStringGif()
       CASE "png"
-         cString := oImage:ToStringPng()
-         EXIT
+         RETURN oImage:ToStringPng()
       ENDSWITCH
    ENDIF
 
-   RETURN cString
+   RETURN NIL
 
 PROCEDURE gdImageToFile( oImage, cFile )
 
    LOCAL cString, cExt
-
-   hb_default( @cFile, "image" )
 
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
       SWITCH oImage:cType
@@ -217,7 +211,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
          cExt := ""
       ENDSWITCH
       IF cString != NIL
-         hb_MemoWrit( cFile + cExt, cString )
+         hb_MemoWrit( hb_defaultValue( cFile, "image" ) + cExt, cString )
       ENDIF
    ENDIF
 
@@ -225,10 +219,11 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   hb_default( @nHandle, 1 )
-
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
       IF oImage:cType != NIL
+
+         hb_default( @nHandle, hb_GetStdOut() )
+
          SWITCH oImage:cType
          CASE "jpeg"
             oImage:OutputJpeg( nHandle )

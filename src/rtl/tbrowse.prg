@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1509,7 +1509,7 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
           * does not calculate it as separator
           */
          IF Right( cName, 1 ) == _TBR_CHR_LINEDELIMITER
-            cName := Left( cName, Len( cName ) - 1 )
+            cName := hb_StrShrink( cName )
          ENDIF
          nHeight := hb_tokenCount( cName, _TBR_CHR_LINEDELIMITER )
          FOR i := 1 TO nHeight
@@ -2624,21 +2624,21 @@ METHOD setKey( nKey, bBlock ) CLASS TBrowse
 
    IF ::keys == NIL
       ::keys := { ;
-         { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } },;
-         { K_END        , {| o | o:End()     , TBR_CONTINUE   } },;
-         { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } },;
-         { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } },;
-         { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } },;
-         { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } },;
-         { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } },;
-         { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } },;
-         { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } },;
-         { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } },;
-         { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } },;
-         { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } },;
-         { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } },;
-         { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } },;
-         { K_ESC        , {|   |               TBR_EXIT       } },;
+         { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } }, ;
+         { K_END        , {| o | o:End()     , TBR_CONTINUE   } }, ;
+         { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } }, ;
+         { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } }, ;
+         { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } }, ;
+         { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } }, ;
+         { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } }, ;
+         { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } }, ;
+         { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } }, ;
+         { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } }, ;
+         { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } }, ;
+         { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } }, ;
+         { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } }, ;
+         { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } }, ;
+         { K_ESC        , {|   |               TBR_EXIT       } }, ;
          { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
 
       #ifndef HB_CLP_STRICT

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -140,7 +140,10 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          case 'b':
          case 'B':
             if( fSet )
+            {
                HB_COMP_PARAM->fDebugInfo = iValue != 0;
+               HB_COMP_PARAM->fHideSource = ! HB_COMP_PARAM->fDebugInfo;
+            }
             else
                iValue = HB_COMP_PARAM->fDebugInfo ? 1 : 0;
             break;
@@ -310,6 +313,19 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                   iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
             }
          }
+      }
+      else if( hb_strnicmp( szSwitch, "gc", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_COMPGENC_REALCODE ||
+                iValue == HB_COMPGENC_VERBOSE ||
+                iValue == HB_COMPGENC_NORMAL ||
+                iValue == HB_COMPGENC_COMPACT )
+               HB_COMP_PARAM->iGenCOutput = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iGenCOutput;
       }
       else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
       {

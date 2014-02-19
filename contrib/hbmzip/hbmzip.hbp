@@ -27,7 +27,7 @@
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../src/3rd/zlib
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 mzip.c
 mziperr.prg

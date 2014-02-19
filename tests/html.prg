@@ -17,14 +17,16 @@ PROCEDURE Main()
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour" )
    oHTML:AddPara( "<b>Harbour</b> is xBase at its best. Have a taste today!", "left" )
-   oHTML:AddPara( "<b>L i n k s</b>", "center" )
+   oHTML:AddPara( "<b>Links</b>", "center" )
    oHTML:AddLink( "http://harbour-project.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
    // Uncomment the following if you don't have a Web Server to test
    // this sample
 
-   // oHTML:SaveToFile( "test.htm" )
+#if 0
+   oHTML:SaveToFile( "test.htm" )
+#endif
 
    // If the above is uncommented, you may comment this line:
 
@@ -83,7 +85,7 @@ METHOD AddHead( cDescr ) CLASS THTML
 
    ::cBody += "<h1>" + cDescr + "</h1>"
 
-   RETURN NIL
+   RETURN Self
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 
@@ -119,9 +121,6 @@ METHOD ShowResult() CLASS THTML
 
 METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL hFile := FCreate( cFile )
-
-   FWrite( hFile, ::cContent )
-   FClose( hFile )
+   hb_MemoWrit( cFile, ::cContent )
 
    RETURN Self

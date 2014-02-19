@@ -28,7 +28,7 @@ proc main()
    ? "Threads joined"
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;
-     iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
+      iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
 return
 
 func thFunc()

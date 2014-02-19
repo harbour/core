@@ -35,7 +35,7 @@
 THREAD STATIC t_keys_ := {, , , , , , , , , , , , , , , , , , , }
 THREAD STATIC t_pic_ := {, , , , , , , , , , , , , , , , , , , }
 
-FUNCTION WvtSetKeys( lSet )
+PROCEDURE WvtSetKeys( lSet )
 
    IF lSet
       t_keys_[  2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
@@ -59,12 +59,12 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F10, t_keys_[ 10 ] )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 // Wvt_Paint() must be a FUNCTION in your application
 // as it is called when Window gets WM_PAINT message.
 
-FUNCTION Wvt_Paint()
+FUNCTION Wvt_Paint()  /* must be a public function */
 
    LOCAL aBlocks := WvtSetBlocks()
 
@@ -80,7 +80,7 @@ FUNCTION Wvt_Paint()
 
 #if 0
 
-FUNCTION Wvt_SetFocus()
+FUNCTION Wvt_SetFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -99,7 +99,7 @@ FUNCTION Wvt_SetFocus()
 
 #if 0
 
-FUNCTION Wvt_KillFocus()
+FUNCTION Wvt_KillFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -115,7 +115,7 @@ FUNCTION Wvt_KillFocus()
 // Wvt_Mouse() must be present if you want to catch and fire
 // mouse call back outside of the Inkey() loop.
 
-FUNCTION Wvt_Mouse( nKey, nRow, nCol )
+FUNCTION Wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    LOCAL nLen, aObjects := WvtSetObjects()
    LOCAL nObj
@@ -447,7 +447,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-FUNCTION WvtPictures( nSlot, cFilePic )
+PROCEDURE WvtPictures( nSlot, cFilePic )
 
    IF nSlot != NIL .AND. nSlot <= 20 .AND. hb_FileExists( cFilePic )
       IF !( t_pic_[ nSlot ] == cFilePic )
@@ -457,21 +457,20 @@ FUNCTION WvtPictures( nSlot, cFilePic )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
+PROCEDURE WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    IF t_pic_[ nSlot ] != NIL
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION GetResource( cName )
-
    RETURN hb_DirBase() + cName
 
-FUNCTION uiDebug( ... )
+PROCEDURE uiDebug( ... )
 
    LOCAL aP := hb_AParams()
    LOCAL s := ""
@@ -480,9 +479,9 @@ FUNCTION uiDebug( ... )
 
    wapi_OutputDebugString( s )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION MyError( oError )
+PROCEDURE MyError( oError )
 
    ? oError:description
    ? oError:operation
@@ -494,4 +493,4 @@ FUNCTION MyError( oError )
    DO WHILE Inkey() != K_ESC
    ENDDO
 
-   RETURN NIL
+   RETURN

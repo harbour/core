@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -2874,7 +2874,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
       DBENTRYP_V * pFunction;
       const DBENTRYP_V * pUsrFunction, * pRddFunction;
 
-      * puiCount = RDDFUNCSCOUNT;
+      *puiCount = RDDFUNCSCOUNT;
       uiSize = ( HB_USHORT ) hb_arrayLen( pMethods );
 
       pUsrFunction = usrFuncTable.funcentries;
@@ -2883,11 +2883,11 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
 
       for( uiCount = 1; uiCount <= RDDFUNCSCOUNT; ++uiCount )
       {
-         * pFunction = * pRddFunction;
+         *pFunction = *pRddFunction;
          if( * pFunction == NULL && * pUsrFunction && uiCount <= uiSize &&
              hb_usrIsMethod( pMethods, uiCount ) )
          {
-            * pFunction = * pUsrFunction;
+            *pFunction = *pUsrFunction;
          }
          ++pUsrFunction;
          ++pRddFunction;

@@ -250,7 +250,7 @@ DYNAMIC Wvt_CreateMenu
 DYNAMIC Wvt_CreatePopupMenu
 DYNAMIC Wvt_DeleteMenu
 DYNAMIC Wvt_DestroyMenu
-DYNAMIC WVT_DESTROYPICTURE
+DYNAMIC Wvt_DestroyPicture
 DYNAMIC Wvt_DialogBox
 DYNAMIC Wvt_DlgSetIcon
 DYNAMIC Wvt_DrawBoxGet
@@ -287,7 +287,6 @@ DYNAMIC Wvt_DrawTextBox
 DYNAMIC Wvt_DrawToolButtonState
 DYNAMIC Wvt_EnableMenuItem
 DYNAMIC Wvt_EnableShortcuts
-DYNAMIC Wvt_GetClipboard
 DYNAMIC Wvt_GetCursorPos
 DYNAMIC Wvt_GetFontHandle
 DYNAMIC Wvt_GetFontInfo
@@ -295,13 +294,8 @@ DYNAMIC Wvt_GetLastMenuEvent
 DYNAMIC Wvt_GetMenu
 DYNAMIC Wvt_GetOpenFileName
 DYNAMIC Wvt_GetPaintRect
-DYNAMIC Wvt_GetPalette
-DYNAMIC Wvt_GetRGBColor
 DYNAMIC Wvt_GetRGBColorByString
 DYNAMIC Wvt_GetSaveFileName
-DYNAMIC Wvt_GetScreenHeight
-DYNAMIC Wvt_GetScreenWidth
-DYNAMIC Wvt_GetTitle
 DYNAMIC Wvt_GetToolTipBkColor
 DYNAMIC Wvt_GetToolTipTextColor
 DYNAMIC Wvt_GetToolTipWidth
@@ -319,7 +313,7 @@ DYNAMIC Wvt_LBSetCurSel
 DYNAMIC Wvt_LoadFont
 DYNAMIC Wvt_LoadPen
 DYNAMIC Wvt_LoadPicture
-DYNAMIC WVT_LOADPICTUREEX
+DYNAMIC Wvt_LoadPictureEx
 DYNAMIC Wvt_LoadPictureFromResource
 DYNAMIC Wvt_LoadPictureFromResourceEx
 DYNAMIC Wvt_MakeDlgTemplate
@@ -331,11 +325,8 @@ DYNAMIC Wvt_ProcessMessages
 DYNAMIC Wvt_ResetWindow
 DYNAMIC Wvt_RestScreen
 DYNAMIC Wvt_SaveScreen
-DYNAMIC Wvt_SetAltF4Close
 DYNAMIC Wvt_SetAsNormal
 DYNAMIC Wvt_SetBrush
-DYNAMIC Wvt_SetClipboard
-DYNAMIC Wvt_SetCodepage
 DYNAMIC Wvt_SetDlgCoMode
 DYNAMIC Wvt_SetFont
 DYNAMIC Wvt_SetGUI
@@ -346,12 +337,10 @@ DYNAMIC Wvt_SetMenuKeyEvent
 DYNAMIC Wvt_SetMouseMove
 DYNAMIC Wvt_SetMousePos
 DYNAMIC Wvt_SetOnTop
-DYNAMIC Wvt_SetPalette
 DYNAMIC Wvt_SetPen
 DYNAMIC Wvt_SetPointer
 DYNAMIC Wvt_SetPopupMenu
 DYNAMIC Wvt_SetTimer
-DYNAMIC Wvt_SetTitle
 DYNAMIC Wvt_SetToolTip
 DYNAMIC Wvt_SetToolTipActive
 DYNAMIC Wvt_SetToolTipBkColor

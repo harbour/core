@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -849,10 +849,13 @@ static int hb_ctw_CloseAllWindows( PHB_GTCTW pCTW )
          pWnd = pCTW->windows[ iWindow ];
          pCTW->windowStack[ i ] = 0;
          pCTW->windows[ iWindow ] = NULL;
-         hb_xfree( pWnd->screenBuffer );
-         if( pWnd->iColorCount )
-            hb_xfree( pWnd->piColors );
-         hb_xfree( pWnd );
+         if( pWnd )
+         {
+            hb_xfree( pWnd->screenBuffer );
+            if( pWnd->iColorCount )
+               hb_xfree( pWnd->piColors );
+            hb_xfree( pWnd );
+         }
       }
       pCTW->iOpenWindows = 0;
       HB_CTW_SETCURRENT( pCTW, 0 );
@@ -2391,7 +2394,7 @@ static void hb_ctw_gt_RedrawDiff( PHB_GT pGT )
    }
 }
 
-/* PUBLIC FUNCTIONS */
+/* Public functions */
 
 HB_BOOL hb_ctwInit( void )
 {

@@ -1,5 +1,4 @@
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
 
 MEMVAR p_cMyPubVar
 
@@ -15,8 +14,8 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Hello()
+STATIC PROCEDURE Hello()
 
    ? "Printed from a codeblock assigned to a static variable."
 
-   RETURN NIL
+   RETURN

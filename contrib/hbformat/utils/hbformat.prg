@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,6 +53,8 @@
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
+#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+
 PROCEDURE Main( ... )
 
    LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
@@ -77,15 +79,16 @@ PROCEDURE Main( ... )
 
    oRef := HBFormatCode():New( aParams, hb_FNameMerge( hb_DirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
-      OutStd( "Initialization error", hb_ntos( oRef:nErr ), iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr, hb_eol() )
-      RETURN
+      OutStd( hb_StrFormat( iif( oRef:nLineErr == 0, ;
+         I_( "Initialization error %1$d in parameter: %2$s" ), ;
+         I_( "Initialization error %1$d on line %3$d: %2$s" ) ), oRef:nErr, oRef:cLineErr, oRef:nLineErr ) + hb_eol() )
    ENDIF
 
    oRef:bCallBack := {| a, i | FCallBack( a, i ) }
 
    IF "*" $ cFileName
       IF ( i := RAt( ".", cFileName ) ) == 0 .OR. SubStr( cFileName, i + 1, 1 ) < "A"
-         OutErr( "Wrong mask" + hb_eol() )
+         OutErr( I_( "Wrong mask" ) + hb_eol() )
       ELSE
          cInitDir := ;
             iif( ( i := RAt( "\", cFileName ) ) == 0, ;
@@ -115,16 +118,16 @@ STATIC PROCEDURE Reformat( oRef, cFileName )
    LOCAL aFile
 
    IF ! Empty( aFile := oRef:File2Array( cFileName ) )
-      OutStd( "Reformatting " + cFileName + " (" + hb_ntos( Len( aFile ) ) + " lines)" + hb_eol() )
+      OutStd( hb_StrFormat( I_( "Reformatting %1$s (%2$d lines)" ), cFileName, Len( aFile ) ) + hb_eol() )
       OutStd( "<" )
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )
          OutStd( ">" + hb_eol() )
       ELSE
-         OutErr( "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr, hb_eol() )
+         OutErr( hb_StrFormat( I_( "Error %1$d on line %2$d: %3$s" ), oRef:nErr, oRef:nLineErr, oRef:cLineErr ) + hb_eol() )
       ENDIF
    ELSE
-      OutErr( cFileName + " isn't found ..." + hb_eol() )
+      OutErr( hb_StrFormat( I_( "'%1$s' is not found..." ), cFileName ) + hb_eol() )
    ENDIF
 
    RETURN
@@ -155,10 +158,12 @@ STATIC PROCEDURE About()
 
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2013, Alexander S.Kresin" + hb_eol() + ;
+      "Copyright (c) 2009-2014, Alexander S.Kresin" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
-      hb_eol() + ;
-      "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;
+      hb_eol() )
+
+   OutStd( ;
+      I_( "Syntax:  hbformat [options] [@config] <file[s]>" ) + hb_eol() + ;
       hb_eol() )
 
    RETURN

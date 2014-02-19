@@ -15,7 +15,7 @@ SetCompressor /solid lzma
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME 'notepad.exe "$\"$INSTDIR\README.md$\""'
-  !define MUI_ICON "..\harb_win.ico"
+  !define MUI_ICON "..\harbour.ico"
   !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 SetDateSave on
@@ -81,8 +81,9 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
 
-  File /nonfatal "$%HB_ABSROOT%README.md"
   File /nonfatal "$%HB_ABSROOT%COPYING.txt"
+  File /nonfatal "$%HB_ABSROOT%CONTRIBUTING.md"
+  File /nonfatal "$%HB_ABSROOT%README.md"
   File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
 
   SetOutPath $INSTDIR\bin
@@ -336,8 +337,8 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
-  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
-  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
+  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "https://groups.google.com/group/harbour-users/"
+  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "https://groups.google.com/group/harbour-devel/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development.url"                "InternetShortcut" "URL" "https://github.com/harbour"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development Timeline.url"       "InternetShortcut" "URL" "https://github.com/harbour/core/commits/master"
 

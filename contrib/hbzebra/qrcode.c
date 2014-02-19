@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,21 +50,21 @@
      QR Code is ISO/IEC18004
 
      JIS-X-0510  QR Code standard in Japaneese language :)
-       http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+       https://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
-   http://en.wikipedia.org/wiki/QR_Code
+   https://en.wikipedia.org/wiki/QR_Code
    http://www.denso-wave.com/qrcode/index-e.html
    http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
    http://www.codeproject.com/KB/cs/qrcode.aspx
-   http://sourceforge.jp/projects/reedsolomon
+   https://sourceforge.jp/projects/reedsolomon
    http://twit88.com/home/
    http://qrcode.sourceforge.jp/
    http://zxing.org/w/decode.jspx                          Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
-   http://code.google.com/p/zxing/                         Java library
+   https://code.google.com/p/zxing/                        Java library
    http://goqr.me/                                         Online encode
    http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
    http://raidenii.net/files/datasheets/misc/qr_code.pdf

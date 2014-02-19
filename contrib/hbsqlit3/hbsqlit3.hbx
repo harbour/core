@@ -22,12 +22,6 @@
 #endif
 
 DYNAMIC hb_sqlite3_errstr_short
-DYNAMIC hdbcSQLTConnection
-DYNAMIC hdbcSQLTDatabaseMetaData
-DYNAMIC hdbcSQLTPreparedStatement
-DYNAMIC hdbcSQLTResultSet
-DYNAMIC hdbcSQLTResultSetMetaData
-DYNAMIC hdbcSQLTStatement
 DYNAMIC sqlite3_backup_finish
 DYNAMIC sqlite3_backup_init
 DYNAMIC sqlite3_backup_pagecount

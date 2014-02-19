@@ -210,7 +210,7 @@ HB_FUNC( C_METAFONE )
       iStrLen    = 0;
       iRetLen    = 4;
    }
-   /* If no return lenght was passed, default to 4. */
+   /* If no return length was passed, default to 4. */
    else if( hb_pcount() == 1 )
    {
       hb_itemGetWriteCL( hb_param( 1, HB_IT_STRING ), &sMeta, &iStrLen );
@@ -754,7 +754,7 @@ HB_FUNC( C_METAFONE )
       }
    }
 
-   /* Return the prepared string.  Return only the lenght that we know
+   /* Return the prepared string.  Return only the length that we know
       is good so we don't return any uninitialized part of memory. */
    hb_retclen( sReturn, iRetPtr );
 

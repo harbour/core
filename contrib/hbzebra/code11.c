@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -141,8 +141,8 @@ PHB_ZEBRA hb_zebra_create_code11( const char * szCode, HB_SIZE nLen, int iFlags 
    {
       int no = _code11_charno( szCode[ i ] );
       _code11_add( pZebra->pBits, s_code[ no ], iFlags, HB_FALSE );
-      ksum += ( ( iLen + 1 - i ) % 9 ? ( iLen + 1 - i ) % 9 : 9 ) * no;
-      csum += ( ( iLen - i ) % 10 ? ( iLen - i ) % 10 : 10 ) * no;
+      ksum += ( ( ( iLen + 1 - i ) % 9 ) ? ( iLen + 1 - i ) % 9 : 9 ) * no;
+      csum += ( ( ( iLen - i ) % 10 ) ? ( iLen - i ) % 10 : 10 ) * no;
    }
 
    /* checksum */

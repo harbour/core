@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,28 +48,27 @@
 
 #include "hbclass.ch"
 
-/*
-* An URL:
-* http://gian:passwd@www.niccolai.ws/mypages/mysite/page.html?avar=0&avar1=1
-* ^--^   ^--^ ^----^ ^-------------^ ^----------------------^ ^------------^
-* cProto  UID  PWD      cServer             cPath                 cQuery
-*                                    ^------------^ ^-------^
-*                                      cDirectory     cFile
-*                                                   ^--^ ^--^
-*                                                 cFname cExt
-*/
+/* An URL:
+   http://gian:passwd@www.niccolai.ws/mypages/mysite/page.html?avar=0&avar1=1
+   ^--^   ^--^ ^----^ ^-------------^ ^----------------------^ ^------------^
+   cProto  UID  PWD      cServer             cPath                 cQuery
+                                      ^------------^ ^-------^
+                                        cDirectory     cFile
+                                                     ^--^ ^--^
+                                                   cFname cExt
+ */
 
 CREATE CLASS TUrl
 
-   VAR cAddress
-   VAR cProto
-   VAR cServer
-   VAR cPath
-   VAR cQuery
-   VAR cFile
-   VAR nPort
-   VAR cUserid
-   VAR cPassword
+   VAR cAddress  INIT ""
+   VAR cProto    INIT ""
+   VAR cUserid   INIT ""
+   VAR cPassword INIT ""
+   VAR cServer   INIT ""
+   VAR cPath     INIT ""
+   VAR cQuery    INIT ""
+   VAR cFile     INIT ""
+   VAR nPort     INIT -1
 
    METHOD New( cUrl )
    METHOD SetAddress( cUrl )
@@ -85,7 +84,6 @@ CREATE CLASS TUrl
 
 ENDCLASS
 
-
 METHOD New( cUrl ) CLASS TUrl
 
    ::SetAddress( cUrl )
@@ -95,6 +93,10 @@ METHOD New( cUrl ) CLASS TUrl
 METHOD SetAddress( cUrl ) CLASS TUrl
 
    LOCAL aMatch, cServer, cPath
+
+   IF ! HB_ISSTRING( cUrl )
+      RETURN .F.
+   ENDIF
 
    ::cAddress := cUrl
    ::cProto := ""
@@ -123,7 +125,7 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    cPath := aMatch[ 4 ]
    ::cQuery := aMatch[ 5 ]
 
-   // server parsing (can't fail)
+   // server parsing (never fails)
    aMatch := hb_regex( ::cREServ, cServer )
    ::cUserId := aMatch[ 2 ]
    ::cPassword := aMatch[ 3 ]
@@ -133,13 +135,12 @@ METHOD SetAddress( cUrl ) CLASS TUrl
       ::nPort := -1
    ENDIF
 
-   // Parse path and file (can't fail)
+   // Parse path and file (never fails)
    aMatch := hb_regex( ::cREFile, cPath )
    ::cPath := aMatch[ 2 ]
    ::cFile := aMatch[ 3 ]
 
    RETURN .T.
-
 
 METHOD BuildAddress() CLASS TUrl
 
@@ -203,34 +204,33 @@ METHOD BuildQuery() CLASS TUrl
 METHOD AddGetForm( xPostData )
 
    LOCAL cData := ""
-   LOCAL nI
-   LOCAL y
-   LOCAL cRet
+   LOCAL item
 
-   IF HB_ISHASH( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
-         IF nI != y
+   DO CASE
+   CASE HB_ISHASH( xPostData )
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumKey() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 2 ] ) ) )
-         IF nI != y
+   CASE HB_ISARRAY( xPostData )
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumIndex() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
+   ENDCASE
+
+   IF Empty( cData )
+      RETURN NIL
    ENDIF
 
-   IF ! Empty( cData )
-      cRet := ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData
-   ENDIF
-
-   RETURN cRet
+   RETURN ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData

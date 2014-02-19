@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -71,7 +71,7 @@
  * Prerequisites:
  * 1) source must be at least 8 bytes long.
  * 2) key must be at least 6 characters long.
- *    Optimal lenght is about 12 to 16 bytes. Maximum keylen is 512 bytes
+ *    Optimal length is about 12 to 16 bytes. Maximum keylen is 512 bytes
  * 3) cipher must be preallocated with srclen bytes
  */
 
@@ -288,9 +288,7 @@ void nxs_xordecode(
          keypos = 0;
          /* last block */
          if( keylen > cipherlen - pos )
-         {
             keylen = ( HB_USHORT ) ( cipherlen - pos );
-         }
 
          c_bitleft = ( cipher[ pos + keylen - 1 ] ^ key[ keylen - 1 ] ) << 5;
       }

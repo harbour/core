@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -118,7 +118,7 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
-   hb_default( @cColor, __DbgColors()[ 1 ] )
+   hb_default( @cColor, __dbgColors()[ 1 ] )
 
    ::nTop     := nTop
    ::nLeft    := nLeft
@@ -348,7 +348,7 @@ METHOD KeyPressed( nKey ) CLASS HBDbWindow
 
 METHOD LoadColors() CLASS HBDbWindow
 
-   LOCAL aClr := __DbgColors()
+   LOCAL aClr := __dbgColors()
 
    ::cColor := aClr[ 1 ]
 

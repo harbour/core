@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 #define HB_DBINFO_CH_
 
 /*
-   Constants for SELF_RDDINFO ()
+   Constants for SELF_RDDINFO()
 */
 
 #define RDDI_ISDBF                1   /* Does this RDD support DBFs? */
@@ -107,7 +107,7 @@
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
 
 /*
-   Constants for SELF_ORDINFO ()
+   Constants for SELF_ORDINFO()
 */
 
 #define DBOI_CONDITION            1   /* The order's conditional expression     */

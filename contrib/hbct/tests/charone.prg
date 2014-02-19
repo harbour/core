@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,11 +60,11 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharOne( "112333a123" )      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
-   ? '  CharOne( "122333a123" )      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
-   ? '  CharOne( "A  B  CCCD" )      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
-   ? '  CharOne( " ", "A  B  A  B" ) == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
-   ? '  CharOne( "o", "122oooB12o" ) == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
+   ? '  CharOne( "112333a123" )      == "123a123"? --->', '"' + CharOne( "112333a123" )      + '"'
+   ? '  CharOne( "122333a123" )      == "123a123"? --->', '"' + CharOne( "122333a123" )      + '"'
+   ? '  CharOne( "A  B  CCCD" )      == "A B CD"? ---->', '"' + CharOne( "A  B  CCCD" )      + '"'
+   ? '  CharOne( " ", "A  B  A  B" ) == "A B A B"? --->', '"' + CharOne( " ", "A  B  A  B" ) + '"'
+   ? '  CharOne( "o", "122oooB12o" ) == "122oB12o"? -->', '"' + CharOne( "o", "122oooB12o" ) + '"'
    ?
 
    ? "End test of CharOne()"

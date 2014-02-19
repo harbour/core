@@ -31,7 +31,7 @@
       PROCEDURE Main()
          FIELD Id
          FIELD Name
-         USE tests NEW
+         USE test NEW
          Name := "Sales"
          Id := 5
          USE

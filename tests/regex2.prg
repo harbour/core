@@ -27,8 +27,8 @@ PROCEDURE Main()
    cSentence := Space( 120 )
    DO WHILE LastKey() != K_ESC
 
-      @ 8, 5 SAY "REGEX : " GET cRegex PICTURE "@S30"
-      @ 9, 5 SAY "PHRASE: " GET cSentence PICTURE "@S60"
+      @ 8, 5 SAY " REGEX:" GET cRegex PICTURE "@S30"
+      @ 9, 5 SAY "PHRASE:" GET cSentence PICTURE "@S60"
       READ
       IF LastKey() != K_ESC
 

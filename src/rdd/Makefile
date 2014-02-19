@@ -28,11 +28,11 @@ C_SOURCES := \
    wacore.c \
    wafunc.c \
    rddinfo.c \
+   rddshort.c \
    sdf1.c \
 
 PRG_SOURCES := \
    dbdelim.prg \
-   dbfuncs.prg \
    dbjoin.prg \
    dblist.prg \
    dbsdf.prg \

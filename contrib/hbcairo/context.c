@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -409,7 +409,8 @@ HB_FUNC( CAIRO_SET_SOURCE_SURFACE )
    cairo_t * pCairo = hb_cairo_param( 1 );
    cairo_surface_t * pSurface = hb_cairo_surface_param( 2 );
 
-   cairo_set_source_surface( pCairo, pSurface, hb_parnd( 3 ), hb_parnd( 4 ) );
+   if( pCairo )
+      cairo_set_source_surface( pCairo, pSurface, hb_parnd( 3 ), hb_parnd( 4 ) );
 }
 
 

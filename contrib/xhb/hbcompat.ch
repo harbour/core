@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -168,7 +168,7 @@
 
    /* Hash item functions */
    #xtranslate hb_Hash( [<x,...>] )            => Hash( <x> )
-   #xtranslate hb_HHasKey( [<x,...>] )         => HHasKey( <x> )
+   #xtranslate hb_HHasKey( <x>, <y> )          => HHasKey( <x>, <y> )
    #xtranslate hb_HPos( [<x,...>] )            => HGetPos( <x> )
    #xtranslate hb_HGet( [<x,...>] )            => HGet( <x> )
    #xtranslate hb_HSet( [<x,...>] )            => HSet( <x> )
@@ -304,7 +304,7 @@
    #xtranslate hb_enumIndex( <!v!> ) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   #xcommand TRY => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 
@@ -314,19 +314,19 @@
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
    #translate ( <exp1> IN <exp2> )     => ( ( <exp1> ) $ ( <exp2> ) )
-   #translate ( <exp1> HAS <exp2> )    => ( hb_regexHas( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> \<\< <exp2> )   => ( hb_bitShift( ( <exp1> ), ( <exp2> ) ) )
-   #translate ( <exp1> >> <exp2> )     => ( hb_bitShift( ( <exp1> ), -( <exp2> ) ) )
+   #translate ( <exp1> HAS <exp2> )    => hb_regexHas( <exp2>, <exp1> )
+   #translate ( <exp1> LIKE <exp2> )   => hb_regexLike( <exp2>, <exp1> )
+   #translate ( <exp1> \<\< <exp2> )   => hb_bitShift( <exp1>, <exp2> )
+   #translate ( <exp1> >> <exp2> )     => hb_bitShift( <exp1>, -( <exp2> ) )
    /* NOTE: These macros can break some valid Harbour/Clipper constructs,
             so they are disabled by default. Enable them with care, or
             even better to switch to use HB_BIT*() functions directly.
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( hb_bitOr( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> & <exp2> )      => ( hb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( hb_bitXor( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> | <exp2> )      => hb_bitOr( <exp1>, <exp2> )
+      #translate ( <exp1> & <exp2> )      => hb_bitAnd( <exp1>, <exp2> )
+      #translate ( <exp1> ^^ <exp2> )     => hb_bitXor( <exp1>, <exp2> )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;

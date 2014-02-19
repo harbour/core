@@ -28,10 +28,8 @@
       For instance: there is no function called SORT() in any of the
       Nantucket Libraries, but it is a valid CLIPPER command because the
       preprocessor will convert it to other function calls.
-
-
    $EXAMPLES$
-      cString := "FT_GoodFunc( BadFunc( 3, 2 ) )"
+      cString := "ft_GoodFunc( BadFunc( 3, 2 ) )"
       IF ft_Linked( cString )
          Eval( &( "{||" + cString + "}" ) )
       ELSE

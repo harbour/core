@@ -1,0 +1,32 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__HBCITY__
+#define __HBEXTERN_CH__HBCITY__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCITY__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBCITY__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCITY__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC cityhash128
+DYNAMIC cityhash32
+DYNAMIC cityhash64
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCITY__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

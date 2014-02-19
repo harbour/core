@@ -1,8 +1,7 @@
 //NOTEST
 
-// ; Pushing Harbour preprocessor to the line length limit.
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+// Pushing Harbour preprocessor to the line length limit.
+// Donated to the public domain by Viktor Szakats (vszakats.net/harbour)
 
 PROCEDURE Main()
 
@@ -10,7 +9,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION LongLine1()
+STATIC FUNCTION LongLine1()
    RETURN { ;
       { I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ), {|| I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ), {|| I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ) }, 99, 9 }, ;
       { I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ), {|| I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ), {|| I_( "XXXXXXXXXXXXXXXXXXXXXXXXXXX" ) }, 99, 9 }, ;

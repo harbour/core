@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +53,7 @@ PROCEDURE Main( cFilename, cSection )
    LOCAL oIni
    LOCAL s, n
 
-   hb_default( @cFilename, "harbour.ini" )
+   hb_default( @cFilename, hb_FNameExtSet( __FILE__, ".ini" ) )
    hb_default( @cSection, "1" )
 
    oIni := TIniFile():New( cFileName )
@@ -106,7 +106,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
    IF Empty( cFileName )
       // raise an error?
-      OutErr( "No filename passed to TIniFile():New()" )
+      ? "No filename passed to TIniFile():New()"
       RETURN NIL
 
    ELSE
@@ -124,7 +124,7 @@ METHOD New( cFileName ) CLASS TIniFile
       lDone := .F.
       DO WHILE ! lDone
          cFile := Space( 256 )
-         lDone := ( FRead( hFile, @cFile, 256 ) <= 0 )
+         lDone := ( FRead( hFile, @cFile, hb_BLen( cFile ) ) <= 0 )
 
          cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
 
@@ -136,7 +136,8 @@ METHOD New( cFileName ) CLASS TIniFile
                cFile := SubStr( cFile, nPos + 1 )
 
                IF ! Empty( cLine )
-                  IF Left( cLine, 1 ) == "[" // new section
+                  DO CASE
+                  CASE hb_LeftIs( cLine, "[" )  // new section
                      IF ( nPos := At( "]", cLine ) ) > 1
                         cLine := SubStr( cLine, 2, nPos - 2 )
                      ELSE
@@ -146,10 +147,10 @@ METHOD New( cFileName ) CLASS TIniFile
                      AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
                      CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
 
-                  ELSEIF Left( cLine, 1 ) == ";" // preserve comments
+                  CASE hb_LeftIs( cLine, ";" )  // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
 
-                  ELSE
+                  OTHERWISE
                      IF ( nPos := At( "=", cLine ) ) > 0
                         cIdent := Left( cLine, nPos - 1 )
                         cLine := SubStr( cLine, nPos + 1 )
@@ -159,7 +160,7 @@ METHOD New( cFileName ) CLASS TIniFile
                      ELSE
                         AAdd( CurrArray, { cLine, "" } )
                      ENDIF
-                  ENDIF
+                  ENDCASE
                   cLine := "" // to stop prepend later on
                ENDIF
 
@@ -209,7 +210,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
    LOCAL i, j, cFind
 
    IF Empty( cIdent )
-      OutErr( "Must specify an identifier" )
+      ? "Must specify an identifier"
 
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )
@@ -218,9 +219,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
       IF j > 0
          ::Contents[ j ][ 2 ] := cString
       ELSE
-         AAdd( ::Contents, NIL )
-         AIns( ::Contents, 1 )
-         ::Contents[ 1 ] := { cIdent, cString }
+         hb_AIns( ::Contents, 1, { cIdent, cString }, .T. )
       ENDIF
 
    ELSE
@@ -243,8 +242,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
    RETURN
 
 METHOD ReadNumber( cSection, cIdent, nDefault ) CLASS TIniFile
-
-   RETURN Val( ::ReadString( cSection, cIdent, Str( nDefault ) ) )
+   RETURN Val( ::ReadString( cSection, cIdent, hb_ntos( nDefault ) ) )
 
 METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
 
@@ -253,7 +251,6 @@ METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
    RETURN
 
 METHOD ReadDate( cSection, cIdent, dDefault ) CLASS TIniFile
-
    RETURN hb_SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
 METHOD PROCEDURE WriteDate( cSection, cIdent, dDate ) CLASS TIniFile

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,19 +65,19 @@ PROCEDURE Main()
    ?
 
    ? "  Simple tests:"
-   ? '    AtToken( "Hello, World!" ) == 8 ? ------------> ' + Str( AtToken( "Hello, World!" ) )
-   ? '    AtToken( "Hello, World!",, 2 ) == 8 ? --------> ' + Str( AtToken( "Hello, World!",, 2 ) )
-   ? '    AtToken( "Hello, World!",, 2, 1 ) == 7 ? -----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
-   ? '    AtToken( "Hello, World!", " ", 2, 1 ) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
+   ? '    AtToken( "Hello, World!" ) == 8 ? ------------>', AtToken( "Hello, World!" )
+   ? '    AtToken( "Hello, World!",, 2 ) == 8 ? -------->', AtToken( "Hello, World!",, 2 )
+   ? '    AtToken( "Hello, World!",, 2, 1 ) == 7 ? ----->', AtToken( "Hello, World!",, 2, 1 )
+   ? '    AtToken( "Hello, World!", " ", 2, 1 ) == 8 ? ->', AtToken( "Hello, World!", " ", 2, 1 )
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
-   ? "    Value of cStr is: " + '"' + cStr + '"'
+   ? "    Value of cStr is:", '"' + cStr + '"'
    ?
    FOR ni := 1 TO NumToken( cStr, ".!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".!", ni, 1 ) + '")'
-      ? "          starts at pos " + Str( npos := AtToken( cStr, ".!", ni, 1 ), 3 ) + ;
-         " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
+      ? "          starts at pos", Str( npos := AtToken( cStr, ".!", ni, 1 ), 3 ), ;
+         "and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
    NEXT
 
    ?

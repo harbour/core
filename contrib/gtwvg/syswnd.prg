@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -175,9 +175,7 @@ METHOD WvgSysWindow:currentSize()
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
-/*
- *                       Class WvgFontDialog()
- */
+/* Class WvgFontDialog() */
 CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
@@ -292,7 +290,9 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
 
    ::WvgSysWindow:create( oParent, oOwner )
 
-   /* ::nWndProc := hb_AsCallBack( "WNDPROC", Self ) */
+#if 0
+   ::nWndProc := hb_AsCallBack( "WNDPROC", Self )
+#endif
 
    RETURN Self
 
@@ -352,17 +352,17 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 
       CASE nL == IDOK
          ::ok := .T.
-         IF HB_ISBLOCK( ::sl_activateOk )
+         IF HB_ISEVALITEM( ::sl_activateOk )
             Eval( ::sl_activateOk, ::GetWvgFont(), NIL, Self )
          ENDIF
 
       CASE nL == IDCANCEL
-         IF HB_ISBLOCK( ::sl_activateCancel )
+         IF HB_ISEVALITEM( ::sl_activateCancel )
             Eval( ::sl_activateCancel, NIL, NIL, Self )
          ENDIF
 
       CASE nL == 1026
-         IF HB_ISBLOCK( ::sl_activateApply )
+         IF HB_ISEVALITEM( ::sl_activateApply )
             Eval( ::sl_activateApply, ::GetWvgFont(), NIL, Self )
          ENDIF
 
@@ -395,13 +395,13 @@ METHOD display( nMode ) CLASS WvgFontDialog
 
 METHOD destroy() CLASS WvgFontDialog
 
-   /* hb_FreeCallBack( ::nWndProc ) */
+#if 0
+   hb_FreeCallBack( ::nWndProc )
+#endif
 
    RETURN Self
 
-/*
- * Only callable from ::activateOK and ::activateApply
- */
+/* Only callable from ::activateOK and ::activateApply */
 METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    LOCAL oWvgFont
@@ -427,9 +427,7 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    RETURN oWvgFont
 
-/*
-                            Class WvgFont()
-*/
+/* Class WvgFont() */
 CREATE CLASS WvgFont
 
    VAR    hFont

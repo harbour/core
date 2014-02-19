@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION Test( n )
+STATIC PROCEDURE Test( n )
 
    ? n
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ReleaseTest()
+STATIC PROCEDURE ReleaseTest()
 
    LOCAL a := { 1, 2, 3 }
 
    HB_SYMBOL_UNUSED( a )
 
-   RETURN NIL
+   RETURN

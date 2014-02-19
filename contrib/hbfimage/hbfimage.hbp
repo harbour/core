@@ -18,6 +18,6 @@
 # For FreeImage headers
 -c=gnu90
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 fi_wrp.c

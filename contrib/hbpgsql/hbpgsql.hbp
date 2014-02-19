@@ -20,7 +20,7 @@
 
 -iflag={bcc}-a
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 postgres.c
 rddcopy.c

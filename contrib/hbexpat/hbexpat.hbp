@@ -14,7 +14,7 @@
 
 -cflag=-DXML_STATIC
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 internal.c

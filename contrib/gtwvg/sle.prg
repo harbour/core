@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -182,12 +182,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       CASE aNM[ NMH_code ] == EN_MAXTEXT
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
@@ -207,37 +207,39 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
    CASE nMessage == HB_GTE_ANY
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
-         IF HB_ISBLOCK( ::sl_killInputFocus )
+         IF HB_ISEVALITEM( ::sl_killInputFocus )
             Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
-         IF HB_ISBLOCK( ::sl_setInputFocus )
+         IF HB_ISEVALITEM( ::sl_setInputFocus )
             Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_KEYDOWN
-         IF aNM[ 2 ] == K_ENTER
+
+         DO CASE
+         CASE aNM[ 2 ] == K_ENTER
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            IF HB_ISBLOCK( ::sl_returnPressed )
+            IF HB_ISEVALITEM( ::sl_returnPressed )
                Eval( ::sl_returnPressed, NIL, NIL, Self )
             ENDIF
-         ELSEIF aNM[ 2 ] == VK_TAB
+         CASE aNM[ 2 ] == VK_TAB
             IF ::isParentCrt()
                ::oParent:setFocus()
-               RETURN EVENT_HANDELLED
+               RETURN EVENT_HANDLED
             ENDIF
-         ELSEIF aNM[ 2 ] == 65
-            // RETURN EVENT_HANDELLED
-         ENDIF
+         CASE aNM[ 2 ] == 65
+            // RETURN EVENT_HANDLED
+         ENDCASE
 
       ENDCASE
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD destroy() CLASS WvgSLE
 
@@ -272,7 +274,7 @@ METHOD WvgSLE:copyMarked()
    nE := Wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
+      hb_gtInfo( HB_GTI_CLIPBOARDDATA, SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -287,7 +289,7 @@ METHOD WvgSLE:cutMarked()
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
-      ::setData( SubStr( cText, 1, nB - 1 ) + SubStr( cText, nE ) )
+      ::setData( Left( cText, nB - 1 ) + SubStr( cText, nE ) )
    ENDIF
 
    RETURN n
@@ -296,9 +298,9 @@ METHOD WvgSLE:returnPressed( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_returnPressed )
       Eval( ::sl_returnPressed, NIL, NIL, Self )
    ENDIF
 

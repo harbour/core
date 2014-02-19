@@ -66,14 +66,14 @@ PROCEDURE Main()
       ENDCASE
 
       nKeyPressed := LastKey()
-      IF nKeyPressed == K_ESC
+      DO CASE
+      CASE nKeyPressed == K_ESC
          lExit := .T.
-      ELSEIF nKeyPressed == K_RIGHT
+      CASE nKeyPressed == K_RIGHT
          nCounter := iif( nCounter == 5, 1, nCounter + 1 )
-      ELSEIF nKeyPressed == K_LEFT
+      CASE nKeyPressed == K_LEFT
          nCounter := iif( nCounter == 1, 5, nCounter - 1 )
-      ENDIF
-
+      ENDCASE
    ENDDO
 
    RETURN
@@ -81,7 +81,7 @@ PROCEDURE Main()
 // Test for current and previous items
 // highliting-dehighliting algoritm
 
-FUNCTION cUF( nMode, nCurElement, nRowPos )
+FUNCTION cUF( nMode, nCurElement, nRowPos )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()
@@ -109,7 +109,7 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )
 // test for AC_NOITEM mode
 // Clipper in AC_NOITEM mode do not call User Function
 
-FUNCTION cUF2( nMode, nCurElement, nRowPos )
+FUNCTION cUF2( nMode, nCurElement, nRowPos )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()

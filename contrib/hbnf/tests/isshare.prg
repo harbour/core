@@ -13,6 +13,6 @@ PROCEDURE Main()
       ? "Share is loaded!"
    ENDCASE
 
-   ? "Retcode: " + Str( nLoaded )
+   ? "Retcode:", nLoaded
 
    RETURN

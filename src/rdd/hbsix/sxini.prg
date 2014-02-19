@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,7 +85,7 @@ FUNCTION _sx_IniInit( nArea )
     * by workarea number. In Harbour we are using hash arrays.
     */
 
-   IF Left( Type( "SxIniInfo" ), 1 ) == "U"
+   IF hb_LeftIs( Type( "SxIniInfo" ), "U" )
       PUBLIC SxIniInfo := { => }
       hb_HCaseMatch( SxIniInfo, .F. )
       hb_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )

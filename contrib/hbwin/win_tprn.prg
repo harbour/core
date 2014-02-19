@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,11 +56,11 @@
 
    Simple example
 
-   TODO: Colour printing
+   TODO: Color printing
          etc....
 
    Peter Rees 2004-01-21 <peter@rees.co.nz>
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -106,8 +106,8 @@ CREATE CLASS win_Prn
    METHOD SetColor( nClrText, nClrPane, nAlign )
    METHOD SetBkMode( nMode )                          // Set Background mode: WIN_TRANSPARENT or WIN_OPAQUE
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) // nAlign : WIN_TA_*
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )  // nAlign : WIN_TA_*
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // Warning: ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor )
@@ -134,10 +134,10 @@ CREATE CLASS win_Prn
    METHOD INCH_TO_POSX( nInch )  // Convert position on page from INCH to pixel location Column
    METHOD INCH_TO_POSY( nInch )  //   "       "      "    "    "   "    "   "       "    Row
 
-   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize,;     // Print text string at location
-                      nWidth, nBold, lUnderLine, lItalic, nCharSet,; // in specified font and color.
-                      lNewLine, lUpdatePosX, nColor, nAlign )        // Restore original font and colour
-                                                                     // after printing.
+   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;     // Print text string at location
+                      nWidth, nBold, lUnderLine, lItalic, nCharSet, ; // in specified font and color.
+                      lNewLine, lUpdatePosX, nColor, nAlign )         // Restore original font and color
+                                                                      // after printing.
 
    METHOD GetDeviceCaps( nCaps )
 
@@ -156,7 +156,7 @@ CREATE CLASS win_Prn
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
-   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 == 10cm
    VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.
@@ -253,7 +253,9 @@ METHOD Create() CLASS win_Prn
          ENDIF
          // Set mapping mode to pixels, topleft down
          win_SetMapMode( ::hPrinterDC, WIN_MM_TEXT )
-//       win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+#if 0
+         win_SetTextCharacterExtra( ::hPrinterDC, 0 ) // do not add extra char spacing even if bold
+#endif
          // Get Margins etc... here
          ::PageWidth        := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
          ::PageHeight       := win_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
@@ -268,7 +270,7 @@ METHOD Create() CLASS win_Prn
          // Set .T. if can print bitmaps
          ::BitMapsOk := win_BitmapsOK( ::hPrinterDC )
 
-         // supports Colour
+         // supports Color
          ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
 
          // Set the standard font
@@ -309,7 +311,7 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
    LOCAL lResult
 
    IF ! HB_ISSTRING( cDocName )
-      cDocName := hb_argv( 0 ) + " [" + DToC( Date() ) + " - " + Time() + "]"
+      cDocName := hb_ProgName() + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
    ENDIF
 
    IF ( lResult := win_StartDoc( ::hPrinterDc, cDocName ) )
@@ -460,8 +462,6 @@ METHOD GetDocumentProperties() CLASS win_Prn
 // If nDiv is < 0 then Fixed width printing is forced via ExtTextOut()
 METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet, lManualSize ) CLASS win_Prn
 
-   LOCAL cType
-
    IF cFontName != NIL
       ::FontName := cFontName
    ENDIF
@@ -469,10 +469,9 @@ METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nChar
       ::FontPointSize := nPointSize
    ENDIF
    IF xWidth != NIL
-      cType := ValType( xWidth )
-      IF cType == "A"
+      IF HB_ISARRAY( xWidth )
          ::FontWidth := xWidth
-      ELSEIF cType == "N" .AND. ! Empty( xWidth )
+      ELSEIF HB_ISNUMERIC( xWidth ) .AND. xWidth != 0
          ::FontWidth := { 1, xWidth }
       ELSE
          ::FontWidth := { 0, 0 }
@@ -669,7 +668,6 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
    LOCAL lResult
    LOCAL nDiv := 0
-   LOCAL cType
    LOCAL hFont
 
    IF ::CheckPage()
@@ -679,11 +677,10 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
       ENDIF
 
       IF cFont != NIL
-         cType := ValType( nWidth )
-         IF cType == "A"
+         IF HB_ISARRAY( nWidth )
             nDiv   := nWidth[ 1 ]
             nWidth := nWidth[ 2 ]
-         ELSEIF cType == "N" .AND. ! Empty( nWidth )
+         ELSEIF HB_ISNUMERIC( nWidth ) .AND. nWidth != 0
             nDiv := 1
          ENDIF
          hFont := ::hFont

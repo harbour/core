@@ -16,7 +16,7 @@
 
 -iflag={bcc}-a
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 context.c
 core.c

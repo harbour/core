@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,7 +64,7 @@
 #define INKEY_MMIDDLE           32  /* Harbour extension middle button mask */
 #define INKEY_MWHEEL            64  /* Harbour extension mouse wheel mask */
 #define INKEY_KEYBOARD          128
-#define INKEY_ALL               255
+#define INKEY_ALL               ( INKEY_KEYBOARD + INKEY_MOVE + INKEY_LDOWN + INKEY_LUP + INKEY_RDOWN + INKEY_RUP + INKEY_MMIDDLE + INKEY_MWHEEL )
 
 #define HB_INKEY_RAW            256 /* Harbour extension */
 #define HB_INKEY_GTEVENT        1024 /* Harbour extension */
@@ -366,6 +366,5 @@
 #define HB_KX_CENTER            27
 #define HB_KX_PRTSCR            28
 #define HB_KX_PAUSE             29
-
 
 #endif /* HB_INKEY_CH_ */

@@ -1,9 +1,9 @@
-// Testing Harbour screen scrolling (requires the GT API)
-
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
+
+// Testing Harbour screen scrolling (requires the GT API)
 
 #include "box.ch"
 
@@ -23,7 +23,7 @@ PROCEDURE Main()
    DispEnd()
    Pause()
 
-   SET COLOR TO "GR+/RB"
+   SetColor( "GR+/RB" )
    CLS
    @ 0, 0, 14, 45 BOX HB_B_SINGLE_UNI
    @ 0, 0  SAY "01234567890123456789012345678901"
@@ -55,15 +55,15 @@ PROCEDURE Main()
    pause()
    Scroll( 1, 1, 11, 30, 7, -12 )
    pause()
-   SET COLOR TO "W+/R"
+   SetColor( "W+/R" )
    Scroll( 1, 1, 11, 30, 0, 0 )
    pause()
 
    RETURN
 
-FUNCTION pause()
+STATIC PROCEDURE pause()
 
    SetPos( MaxRow() - 2, 0 )
    WAIT "pause:"
 
-   RETURN NIL
+   RETURN

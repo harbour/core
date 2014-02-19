@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -66,13 +66,13 @@ PROCEDURE Main()
 
       stmt := sqlite3_prepare( db, "INSERT INTO image( title, image ) VALUES( :title, :image )" )
       IF ! Empty( stmt )
-         buff := sqlite3_file_to_buff( "pngtest.png" )
+         buff := sqlite3_file_to_buff( "test.jpg" )
 
-         IF sqlite3_bind_text( stmt, 1, "pngtest.png" ) == SQLITE_OK .AND. ;
+         IF sqlite3_bind_text( stmt, 1, "test.jpg" ) == SQLITE_OK .AND. ;
             sqlite3_bind_blob( stmt, 2, @buff ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_DONE
-               ? "Save pngtest.png into BLOB"
-               ? "INSERT INTO image( title, image ) VALUES( 'pngtest.png', 'pngtest.png' ) - Done"
+               ? "Save test.jpg into BLOB"
+               ? "INSERT INTO image( title, image ) VALUES( 'test.jpg', 'test.jpg' ) - Done"
             ENDIF
          ENDIF
          buff := NIL
@@ -80,10 +80,10 @@ PROCEDURE Main()
          sqlite3_finalize( stmt )
       ENDIF
 
-      ? ""
-      ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
-      ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
-      ? ""
+      ?
+      ? "The number of database rows that were changed:", hb_ntos( sqlite3_changes( db ) )
+      ? "Total changes:", hb_ntos( sqlite3_total_changes( db ) )
+      ?
       sqlite3_sleep( 3000 )
 
       blob := sqlite3_blob_open( db, NIL, "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ )
@@ -94,7 +94,7 @@ PROCEDURE Main()
 
          /* Call sqlite3_blob_bytes() only after sqlite3_blob_read() */
 
-         ? "The size in bytes of the blob - ", sqlite3_blob_bytes( blob )
+         ? "The size in bytes of the blob -", sqlite3_blob_bytes( blob )
 
          IF sqlite3_buff_to_file( "pngtest1.png", @buff ) == SQLITE_OK
             ? "Save BLOB into pngtest1.png - Done"
@@ -107,7 +107,7 @@ PROCEDURE Main()
       ENDIF
       sqlite3_sleep( 3000 )
 
-      ? ""
+      ?
       ? "Save BLOB using sqlite3_column_blob()"
       stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 " )
       IF ! Empty( stmt )

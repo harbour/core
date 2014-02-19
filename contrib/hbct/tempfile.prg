@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,15 +57,13 @@ FUNCTION TempFile( cDir, cExt, nAttr )
       cDir := hb_DirSepAdd( cDir )
    ENDIF
 
-   IF HB_ISSTRING( cExt ) .AND. !( Left( cExt, 1 ) == "." )
+   IF HB_ISSTRING( cExt ) .AND. ! hb_LeftIs( cExt, "." )
       cExt := "." + cExt
    ENDIF
 
-   hb_default( @nAttr, SetFCreate() )
+   IF ( fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, ;
+      hb_defaultValue( nAttr, SetFCreate() ) ) ) != F_ERROR
 
-   fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, nAttr )
-
-   IF fhnd != F_ERROR
       FClose( fhnd )
       RETURN cName
    ENDIF

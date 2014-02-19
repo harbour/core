@@ -30,11 +30,10 @@ FUNCTION ft_SaveSets()
 
    LOCAL aOldSets := Array( _SET_COUNT + FT_EXTRA_SETS )
 
-   AEval( aOldSets, ;
-      {| xElement, nElementNo | HB_SYMBOL_UNUSED( xElement ), ;
+   AEval( aOldSets, {| xElement, nElementNo | HB_SYMBOL_UNUSED( xElement ), ;
       aOldSets[ nElementNo ] := Set( nElementNo ) } )
 
    aOldSets[ FT_SET_CENTURY ] := ft_SetCentury()
    aOldSets[ FT_SET_BLINK ]   := SetBlink()
 
-   RETURN aOldSets                    // FT_SaveSets
+   RETURN aOldSets

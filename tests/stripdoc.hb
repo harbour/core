@@ -17,9 +17,8 @@ PROCEDURE Main()
    LOCAL aFile
 
    FOR EACH aFile IN Directory( hb_osFileMask() )
-      IF Right( aFile[ F_NAME ], 2 ) == ".c" .OR. ;
-         Right( aFile[ F_NAME ], 4 ) == ".prg"
-
+      IF hb_FNameExt( aFile[ F_NAME ] ) == ".c" .OR. ;
+         hb_FNameExt( aFile[ F_NAME ] ) == ".prg"
          hb_MemoWrit( aFile[ F_NAME ], __hbdoc_FilterOut( MemoRead( aFile[ F_NAME ] ) ) )
       ENDIF
    NEXT

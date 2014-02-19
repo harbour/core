@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -81,10 +81,9 @@ FUNCTION ParseString( cString, cDelim, nRet )
    cBuf := cString
 
    FOR i := 1 TO nSize
-      nPosFim := At( cDelim, cBuf )
 
-      IF nPosFim > 0
-         aElem[ i ] := SubStr( cBuf, 1, nPosFim - 1 )
+      IF ( nPosFim := At( cDelim, cBuf ) ) > 0
+         aElem[ i ] := Left( cBuf, nPosFim - 1 )
       ELSE
          aElem[ i ] := cBuf
       ENDIF
@@ -248,10 +247,7 @@ METHOD ShowResult() CLASS THTML
 
 METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL hFile := FCreate( cFile )
-
-   FWrite( hFile, ::cContent )
-   FClose( hFile )
+   hb_MemoWrit( cFile, ::cContent )
 
    RETURN Self
 
@@ -296,7 +292,7 @@ METHOD ProcessCGI() CLASS THTML
             IF i > Len( cQuery ) .OR. SubStr( cQuery, i, 1 ) == "&"
 
                AAdd( ::aQueryFields, { ;
-                  SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
+                  Left( cBuff, At( "=", cBuff ) - 1 ), ;
                   StrTran( SubStr( cBuff, At( "=", cBuff ) + 1, ;
                   Len( cBuff ) - At( "=", cBuff ) + 1 ), "+", " " ) } )
                cBuff := ""

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -137,7 +137,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -163,7 +163,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_ANY
       IF ::isParentCrt()
          IF aNM[ 1 ] == WM_LBUTTONUP
-            IF HB_ISBLOCK( ::sl_lbClick )
+            IF HB_ISEVALITEM( ::sl_lbClick )
                ::oParent:setFocus()
                ::sendMessage( BM_SETCHECK, iif( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
                ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
@@ -175,7 +175,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgCheckBox:destroy()
 

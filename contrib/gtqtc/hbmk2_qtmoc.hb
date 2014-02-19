@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -30,6 +30,8 @@
 #include "error.ch"
 
 #define I_( x )                 hb_i18n_gettext( x )
+
+#if defined( __HBSCRIPT__HBMK_PLUGIN )
 
 FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL cRetVal := ""
@@ -57,7 +59,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
       hbmk[ "vars" ][ "aMOC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF ! Left( cSrc, 1 ) == "-" .AND. ;
+         IF ! hb_LeftIs( cSrc, "-" ) .AND. ;
             Lower( hb_FNameExt( cSrc ) ) == ".h"
 
             AAdd( hbmk[ "vars" ][ "aMOC_Src" ], cSrc )
@@ -205,7 +207,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
          IF ! hbmk[ "lDONTEXEC" ]
             hb_processRun( cBIN + " -v",,, @cStdErr )
             IF ! Empty( cStdErr )
-               cStdErr := " [" + StrTran( StrTran( cStdErr, Chr( 13 ) ), Chr( 10 ) ) + "]"
+               cStdErr := " [" + hb_StrReplace( cStdErr, Chr( 13 ) + Chr( 10 ) ) + "]"
             ENDIF
          ENDIF
          hbmk_OutStd( hbmk, hb_StrFormat( "Using QT '%1$s' executable: %2$s%3$s (autodetected)", cName, cBIN, cStdErr ) )
@@ -213,3 +215,14 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    ENDIF
 
    RETURN cBIN
+
+#else
+
+PROCEDURE Main()
+
+   ?? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   ?
+
+   RETURN
+
+#endif

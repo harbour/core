@@ -51,10 +51,10 @@ Class TMySQLQuery -------------------------------------------
   Bof() true is applied when is tryed an movement before of first logical record,
   and must not be used to indicate record pointer is placed on record 1
   Previous definition cause processes like this:
-     WHILE ! oQuery:Bof()
+     DO WHILE ! oQuery:Bof()
         ...
         oQuery:SKIP( -1 )
-     ENDD
+     ENDDO
   do not show record 1
   With new definition this behaviour are corrected
 
@@ -63,7 +63,7 @@ Class TMySQLQuery -------------------------------------------
   Eof() true is applied when is tryed an movement beyond of last logical record,
   and must not be used to indicate record pointer is placed on last record
   Previous definition cause processes like this:
-     WHILE ! oQuery:Eof()
+     DO WHILE ! oQuery:Eof()
         ...
         oQuery:SKIP()
      ENDDO

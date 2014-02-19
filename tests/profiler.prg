@@ -34,15 +34,15 @@ PROCEDURE Main()
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
    MemoEdit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {| o | o:nTicks > 0 } ), 1,,,, .F. )
 
-   // TBrowse all calls greater than 0
-   DrawScreen( "TBrowse all methods/functions called one or more times" )
+   // Browse all calls greater than 0
+   DrawScreen( "Browse all methods/functions called one or more times" )
    Browser( HBProfileReportToTBrowse():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 }, 1 ) )
 
    // Some closing stats
    DrawScreen( "Totals" )
-   @ 2, 0 SAY "  Total Calls: " + Str( oProfile:totalCalls() )
-   @ 3, 0 SAY "  Total Ticks: " + Str( oProfile:totalTicks() )
-   @ 4, 0 SAY "Total Seconds: " + Str( oProfile:totalSeconds() )
+   @ 2, 0 SAY "  Total Calls: " + hb_ntos( oProfile:totalCalls() )
+   @ 3, 0 SAY "  Total Ticks: " + hb_ntos( oProfile:totalTicks() )
+   @ 4, 0 SAY "Total Seconds: " + hb_ntos( oProfile:totalSeconds() )
 
    RETURN
 
@@ -54,14 +54,13 @@ STATIC PROCEDURE DrawScreen( cTitle )
 
    RETURN
 
-PROCEDURE DoNothingForTwoSeconds()
+STATIC PROCEDURE DoNothingForTwoSeconds()
 
    Inkey( 2 )
 
    RETURN
 
-PROCEDURE CallMe500Times()
-
+STATIC PROCEDURE CallMe500Times()
    RETURN
 
 STATIC PROCEDURE Browser( oBrowse )

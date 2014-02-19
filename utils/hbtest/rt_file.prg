@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,15 +59,13 @@
 PROCEDURE Main_FILE()
 
    LOCAL cFileName := "$$FILEIO.TMP"
-   LOCAL nFlags
 
    LOCAL cBuff4   := Space( 4 )
    LOCAL cBuff100 := Space( 100 )
 
    LOCAL fhnd
 
-   nFlags := FC_NORMAL
-   fhnd := FCreate( cFileName, nFlags )
+   fhnd := FCreate( cFileName, FC_NORMAL )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
@@ -136,8 +134,7 @@ PROCEDURE Main_FILE()
    HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )                 IS 'E: 2      R: -1'
    HBTEST TESTFIER( FOpen( "NOT_HERE.$$$" ) )                        IS 'E: 2      R: -1'
 
-   nFlags := FO_READWRITE
-   fhnd := FOpen( cFileName, nFlags )
+   fhnd := FOpen( cFileName, FO_READWRITE )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"

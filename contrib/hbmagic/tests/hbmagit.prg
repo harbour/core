@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,12 +47,6 @@
  */
 
 #require "hbmagic"
-
-#xcommand T( <(title)>, <(subject)> ) => ;
-   magic_setflags( hMagic, MAGIC_NONE ) ;;
-   OutStd( hb_StrFormat( <title> + ": t: [%s] ", magic_buffer( hMagic, <subject> ) ) ) ;;
-   magic_setflags( hMagic, MAGIC_MIME_TYPE ) ;;
-   OutStd( hb_StrFormat( "m: [%s]", magic_buffer( hMagic, <subject> ) ) + hb_eol() )
 
 PROCEDURE Main()
 
@@ -99,24 +93,34 @@ PROCEDURE Main()
 
    hMagic := magic_open()
    IF Empty( hMagic ) .OR. magic_load( hMagic ) != 0
-      OutStd( "magic_open()/magic_load() failed" + hb_eol() )
-      QUIT
+      ? "magic_open()/magic_load() failed"
+   ELSE
+      T( hMagic, "JPEG Image", cJpeg )
+      T( hMagic, "PNG Image", cPng )
+      T( hMagic, "GIF Image", cGif )
+      T( hMagic, "ELF binary", cElf )
+      T( hMagic, "EXE binary", cExe )
+      T( hMagic, "COM binary", cCom )
+      T( hMagic, "Short buffer", " " )
+      T( hMagic, "Empty buffer", "" )
+      T( hMagic, "Null buffer", NIL )
+      T( hMagic, "Compressed data", cText )
+      cText := hb_ZUncompress( cText )
+      T( hMagic, "Plain text", cText )
+
+      ? hb_StrFormat( "hb_magic_simple(): t: [%1$s] m: [%2$s]", ;
+         hb_magic_simple( hb_ProgName(), MAGIC_NONE ), ;
+         hb_magic_simple( hb_ProgName(), MAGIC_MIME_TYPE ) )
    ENDIF
 
-   T( "JPEG Image", cJpeg )
-   T( "PNG Image", cPng )
-   T( "GIF Image", cGif )
-   T( "ELF binary", cElf )
-   T( "EXE binary", cExe )
-   T( "COM binary", cCom )
-   T( "Short buffer", " " )
-   T( "Empty buffer", "" )
-   T( "Null buffer", NIL )
-   T( "Compressed data", cText )
-   cText := hb_ZUncompress( cText )
-   T( "Plain text", cText )
+   RETURN
 
-   OutStd( "hb_magic_simple(): t: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_NONE ) + "] " + ;
-      "m: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) + "]" + hb_eol() )
+STATIC PROCEDURE T( hMagic, cTitle, cSubject )
+
+   magic_setflags( hMagic, MAGIC_NONE )
+   ? hb_StrFormat( cTitle + ": t: [%1$s] ", magic_buffer( hMagic, cSubject ) )
+
+   magic_setflags( hMagic, MAGIC_MIME_TYPE )
+   ?? hb_StrFormat( "m: [%1$s]", magic_buffer( hMagic, cSubject ) )
 
    RETURN

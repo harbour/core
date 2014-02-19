@@ -48,8 +48,7 @@
       #include "fileio.ch"
       PROCEDURE Main()
          LOCAL nHandle, cBuffer := Space( 2 )
-         nHandle := FOpen( "test.dbf" )
-         IF nHandle != F_ERROR
+         IF ( nHandle := FOpen( "test.dbf" ) ) != F_ERROR
             FSeek( nHandle, 8 )
             FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
             ? "Length of DBF header in bytes:", Bin2W( cBuffer )
@@ -107,8 +106,7 @@
       #include "fileio.ch"
       PROCEDURE Main()
          LOCAL nHandle, cYear, cMonth, cDay
-         nHandle := FOpen( "test.dbf" )
-         IF nHandle != F_ERROR
+         IF ( nHandle := FOpen( "test.dbf" ) ) != F_ERROR
             FSeek( nHandle, 1 )
             cYear := cMonth := cDay := " "
             FRead( nHandle, @cYear , hb_BLen( cYear ) )
@@ -169,8 +167,7 @@
       #include "fileio.ch"
       PROCEDURE Main()
          LOCAL nHandle, cBuffer := Space( 4 )
-         nHandle := FOpen( "test.dbf" )
-         IF nHandle != F_ERROR
+         IF ( nHandle := FOpen( "test.dbf" ) ) != F_ERROR
             FSeek( nHandle, 4 )
             FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2L( cBuffer )
@@ -228,8 +225,7 @@
       #include "fileio.ch"
       PROCEDURE Main()
          LOCAL nHandle, cBuffer := Space( 4 )
-         nHandle := FOpen( "test.dbf" )
-         IF nHandle != F_ERROR
+         IF ( nHandle := FOpen( "test.dbf" ) ) != F_ERROR
             FSeek( nHandle, 4 )
             FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2U( cBuffer )
@@ -288,9 +284,8 @@
          LOCAL nHandle, cYear, cMonth, cDay
          USE test
          ? "Original update date is:", LUpdate()
-         CLOSE
-         nHandle := FOpen( "test.dbf", FO_READWRITE )
-         IF nHandle != F_ERROR
+         dbCloseArea()
+         IF ( nHandle := FOpen( "test.dbf", FO_READWRITE ) ) != F_ERROR
             FSeek( nHandle, 1 )
             cYear  := I2Bin( 68 )
             cMonth := I2Bin(  8 )
@@ -301,7 +296,7 @@
             FClose( nHandle )
             USE test
             ? "New update date is:", LUpdate()
-            CLOSE
+            dbCloseArea()
          ELSE
             ? "Can not open file"
          ENDIF

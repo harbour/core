@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,35 +52,38 @@
 
 FUNCTION Sys( nValue, xPar1 )
 
-   SWITCH nValue
-   CASE 0
-      RETURN NetName() + " # " + hb_UserName()
-   CASE 2
-      RETURN hb_ntos( Seconds() )
-   CASE 5
-      RETURN Set( _SET_DEFAULT )
-   CASE 6
-      RETURN Set( _SET_PRINTFILE )
-   CASE 10
-      hb_default( @xPar1, 0 )
-      RETURN CToD( "" ) + xPar1
-   CASE 100
-      RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
-   CASE 101
-      RETURN Set( _SET_DEVICE )
-   CASE 102
-      RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
-   CASE 2002
-      hb_default( @xPar1, SC_NONE )
-      RETURN SetCursor( xPar1 )
-   CASE 2011
-      RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
-             iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
-             iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
-                                               "Not locked" ) ) )
-   OTHERWISE
-      /* Throw RTE? */
-   ENDSWITCH
+   IF HB_ISNUMERIC( nValue )
+
+      SWITCH nValue
+      CASE 0
+         RETURN NetName() + " # " + hb_UserName()
+      CASE 2
+         RETURN hb_ntos( Seconds() )
+      CASE 5
+         RETURN Set( _SET_DEFAULT )
+      CASE 6
+         RETURN Set( _SET_PRINTFILE )
+      CASE 10
+         hb_default( @xPar1, 0 )
+         RETURN CToD( "" ) + xPar1
+      CASE 100
+         RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
+      CASE 101
+         RETURN Set( _SET_DEVICE )
+      CASE 102
+         RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
+      CASE 2002
+         hb_default( @xPar1, SC_NONE )
+         RETURN SetCursor( xPar1 )
+      CASE 2011
+         RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
+                iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
+                iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
+                                                  "Not locked" ) ) )
+      OTHERWISE
+         /* Throw RTE? */
+      ENDSWITCH
+   ENDIF
 
    RETURN NIL
 

@@ -1,5 +1,5 @@
 #ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()
@@ -7,20 +7,20 @@ PROCEDURE Main()
    LOCAL i
    LOCAL cStr
 
-   USE test NEW
+   USE test.dbf READONLY
 
    cStr := ""
    FOR i := 1 TO 100
-      cStr += Str( i ) + " " + xToStr( dbInfo( i ) ) + hb_eol()
+      cStr += Str( i ) + " " + XToStr( dbInfo( i ) ) + hb_eol()
    NEXT
-   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101, 2 ) ) + hb_eol()
-   cStr += Str(  102 ) + " " + xToStr( dbInfo(  102 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( dbInfo(  102, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( dbInfo(  102, 2 ) ) + hb_eol()
-   cStr += Str(  999 ) + " " + xToStr( dbInfo(  999 ) ) + hb_eol()
-   cStr += Str( 1000 ) + " " + xToStr( dbInfo( 1000 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101, 1 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + XToStr( dbInfo(  101, 2 ) ) + hb_eol()
+   cStr += Str(  102 ) + " " + XToStr( dbInfo(  102 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + XToStr( dbInfo(  102, 1 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + XToStr( dbInfo(  102, 2 ) ) + hb_eol()
+   cStr += Str(  999 ) + " " + XToStr( dbInfo(  999 ) ) + hb_eol()
+   cStr += Str( 1000 ) + " " + XToStr( dbInfo( 1000 ) ) + hb_eol()
 
 #ifdef __HARBOUR__
    MemoWrit( "dbi_hb.txt", cStr )
@@ -41,7 +41,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION xToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
 
    LOCAL cType := ValType( xValue )
 

@@ -29,26 +29,23 @@
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
-FUNCTION ft_XBox( ;
+PROCEDURE ft_XBox( ;
       cJustType, ; // "L" -> left, otherwise centered
       cRetWait, ; // "W" -> wait for keypress before continuing
       cBorType, ; // "D" -> double, anything else single border
       cBorColor, ; // color string for border
       cBoxColor, ; // color string for text
       nStartRow, ; // upper row of box.  99=center vertically
-      nStartCol, ; // left edge of box.  99=center horizontally
-      cLine1, cLine2, cLine3, cLine4, cLine5, cLine6, cLine7, cLine8 )
+      nStartCol ) // left edge of box.  99=center horizontally
 
-   LOCAL nLLen := 0
+   LOCAL nLLen
    LOCAL nLCol
    LOCAL nRCol
    LOCAL nTRow
    LOCAL nBRow
-   LOCAL nLoop
-   LOCAL nSayRow
-   LOCAL nSayCol
    LOCAL nNumRows
-   LOCAL aLines_[ 8 ]
+   LOCAL aLines
+   LOCAL tmp
 
    hb_default( @cJustType, "" )
    hb_default( @cRetWait, "" )
@@ -62,27 +59,21 @@ FUNCTION ft_XBox( ;
    cRetWait  := Upper( cRetWait )
    cBorType  := Upper( cBorType )
 
-   nNumRows := Min( PCount() - 7, 8 )
-
    // establish array of strings to be displayed
-   aLines_[ 1 ] := iif( HB_ISSTRING( cLine1 ), AllTrim( Left( cLine1, 74 ) ), "" )
-   aLines_[ 2 ] := iif( HB_ISSTRING( cLine2 ), AllTrim( Left( cLine2, 74 ) ), "" )
-   aLines_[ 3 ] := iif( HB_ISSTRING( cLine3 ), AllTrim( Left( cLine3, 74 ) ), "" )
-   aLines_[ 4 ] := iif( HB_ISSTRING( cLine4 ), AllTrim( Left( cLine4, 74 ) ), "" )
-   aLines_[ 5 ] := iif( HB_ISSTRING( cLine5 ), AllTrim( Left( cLine5, 74 ) ), "" )
-   aLines_[ 6 ] := iif( HB_ISSTRING( cLine6 ), AllTrim( Left( cLine6, 74 ) ), "" )
-   aLines_[ 7 ] := iif( HB_ISSTRING( cLine7 ), AllTrim( Left( cLine7, 74 ) ), "" )
-   aLines_[ 8 ] := iif( HB_ISSTRING( cLine8 ), AllTrim( Left( cLine8, 74 ) ), "" )
-   ASize( aLines_, Min( nNumRows, 8 ) )
+   aLines := {}
+   FOR tmp := 8 TO PCount()
+      AAdd( aLines, AllTrim( Left( hb_defaultValue( hb_PValue( tmp ), "" ), MaxCol() - 5 ) ) )
+   NEXT
+   nNumRows := Len( aLines )
 
    // determine longest line
-   nLoop := 1
-   AEval( aLines_, {|| nLLen := Max( nLLen, Len( aLines_[ nLoop ] ) ), nLoop++ } )
+   nLLen := 0
+   AEval( aLines, {| cSayStr | nLLen := Max( nLLen, Len( cSayStr ) ) } )
 
    // calculate corners
-   nLCol := iif( nStartCol == 99, Int( ( 76 - nLLen ) / 2 ), Min( nStartCol, 74 - nLLen ) )
+   nLCol := iif( nStartCol == 99, Int( ( MaxCol() - 3 - nLLen ) / 2 ), Min( nStartCol, MaxCol() - 5 - nLLen ) )
    nRCol := nLCol + nLLen + 3
-   nTRow := iif( nStartRow == 99, Int( ( 24 - nNumRows ) / 2 ), Min( nStartRow, 22 - nNumRows ) )
+   nTRow := iif( nStartRow == 99, Int( ( MaxRow() - nNumRows ) / 2 ), Min( nStartRow, MaxRow() - 2 - nNumRows ) )
    nBRow := nTRow + nNumRows + 1
 
    // form box and border
@@ -92,30 +83,23 @@ FUNCTION ft_XBox( ;
 
    // draw border
    SetColor( cBorColor )
-   IF Left( cBorType, 1 ) == "D"
-      hb_DispBox( nTRow, nLCol, nBRow, nRCol, HB_B_DOUBLE_UNI )
-   ELSE
-      hb_DispBox( nTRow, nLCol, nBRow, nRCol, HB_B_SINGLE_UNI )
-   ENDIF
+   hb_DispBox( nTRow, nLCol, nBRow, nRCol, ;
+      iif( hb_LeftIs( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
 
    // write shadow
    hb_Shadow( nTRow, nLCol, nBRow, nRCol )
 
    // print text in box
    SetColor( cBoxColor )
-   nLoop := 1
-   AEval( aLines_, {| cSayStr | ;
-      nSayRow := nTRow + nLoop, ;
-      nSayCol := iif( Left( cJustType, 1 ) == "L", ;
-      nLCol + 2, ;
-      nLCol + 2 + ( nLLen - Int( Len( aLines_[ nLoop ] ) ) ) / 2 ), ;
-      nLoop++, ;
-      hb_DispOutAt( nSayRow, nSayCol, cSayStr );
-      } )
+   AEval( aLines, {| cSayStr, nLoop | ;
+      hb_DispOutAt( ;
+         nTRow + nLoop, ;
+         nLCol + 2 + iif( hb_LeftIs( cJustType, "L" ), 0, ( nLLen - Int( Len( cSayStr ) ) ) / 2 ), ;
+         cSayStr ) } )
 
    // wait for keypress if desired
-   IF Left( cRetWait, 1 ) == "W"
+   IF hb_LeftIs( cRetWait, "W" )
       Inkey( 0 )
    ENDIF
 
-   RETURN NIL
+   RETURN

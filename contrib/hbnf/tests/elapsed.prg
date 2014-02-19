@@ -2,18 +2,19 @@
 
 PROCEDURE Main()
 
-   LOCAL dStart, dEnd, cTimeStart, cTimeEnd, n, aDataTest
+   LOCAL dStart := 0d19901128, cTimeStart := "08:00:00"
+   LOCAL dEnd   := 0d19901130, cTimeEnd   := "12:10:30"
 
-   dStart := hb_SToD( "19901128" )
-   dEnd   := hb_SToD( "19901130" )
-   cTimeStart := "08:00:00"
-   cTimeEnd   := "12:10:30"
+   LOCAL aData, n, m
 
-   aDataTest := ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd )
-   FOR n := 1 TO 4
-      ? aDataTest[ n, 1 ], Str( aDataTest[ n, 2 ], 12, 4 )
-      ?? " "
-      ?? iif( n == 1, "Days", iif( n == 2, "Hours", iif( n == 3, "Mins.", "Secs." ) ) )
+   FOR EACH aData IN { ;
+      ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd ), ;
+      ft_Elapsed( dStart, dEnd ), ;
+      ft_Elapsed( cTimeStart, cTimeEnd ) }
+
+      FOR EACH n, m IN aData, { "days", "hours", "minutes", "seconds" }
+         ? n[ 1 ], Str( n[ 2 ], 12, 4 ), m
+      NEXT
    NEXT
 
    RETURN

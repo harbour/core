@@ -1,6 +1,6 @@
 /* $DOC$
    $NAME$
-      FT_DOSVER
+      ft_DosVer()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
@@ -21,11 +21,7 @@
       It returns a character string corresponding to the DOS
       version, as follows:  The major version, a period ("."), then
       the minor version.
-
-
    $EXAMPLES$
-      PROCEDURE Main()
-         ? "Dos version: " + ft_DosVer()
-         RETURN
+      ? "OS version:", ft_DosVer()
    $END$
  */

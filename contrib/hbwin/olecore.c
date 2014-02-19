@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -339,10 +339,10 @@ void hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack )
    {
       if( pOle->pCallBack && *pOle->pCallBack )
       {
-         PHB_ITEM pCallBack = *pOle->pCallBack;
+         PHB_ITEM pCallBackPrev = *pOle->pCallBack;
          *pOle->pCallBack = NULL;
          pOle->pCallBack = NULL;
-         hb_itemRelease( pCallBack );
+         hb_itemRelease( pCallBackPrev );
       }
       if( pCallBack )
       {
@@ -739,7 +739,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
                                    int iDim, long * plIndex, VARTYPE vt,
                                    HB_USHORT uiClass )
 {
-   long lFrom, lTo;
+   long lFrom = 0, lTo = 0;
 
    SafeArrayGetLBound( pSafeArray, iDim, &lFrom );
    SafeArrayGetUBound( pSafeArray, iDim, &lTo );
@@ -1015,7 +1015,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
       case VT_CY:
       case VT_CY | VT_BYREF:
       {
-         double dblVal;
+         double dblVal = 0;
          VarR8FromCy( V_VT( pVariant ) == VT_CY ?
                       V_CY( pVariant ) :
                       *V_CYREF( pVariant ), &dblVal );
@@ -1027,7 +1027,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
       case VT_DECIMAL:
       case VT_DECIMAL | VT_BYREF:
       {
-         double dblVal;
+         double dblVal = 0;
          VarR8FromDec( V_VT( pVariant ) == VT_DECIMAL ?
                        &HB_WIN_U1( pVariant, decVal ) :
                        V_DECIMALREF( pVariant ), &dblVal );
@@ -1661,12 +1661,7 @@ HB_FUNC( WIN_OLEERROR )
 
 HB_FUNC( WIN_OLEERRORTEXT )
 {
-   HRESULT lOleError;
-
-   if( HB_ISNUM( 1 ) )
-      lOleError = hb_parnl( 1 );
-   else
-      lOleError = hb_oleGetError();
+   HRESULT lOleError = HB_ISNUM( 1 ) ? hb_parnl( 1 ) : hb_oleGetError();
 
    switch( lOleError )
    {
@@ -1740,6 +1735,8 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
+   if( uiClass == 0 )
+      return;
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
@@ -1867,6 +1864,8 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    hb_oleInit();
 
    uiClass = hb_objGetClass( hb_stackSelfItem() );
+   if( uiClass == 0 )
+      return;
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );

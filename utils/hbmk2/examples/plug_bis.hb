@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -55,7 +55,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       hbmk[ "vars" ][ "aBIS_Src" ] := {}
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF Left( cSrc, Len( "-bisonflag=" ) ) == "-bisonflag="
+         IF hb_LeftIs( cSrc, "-bisonflag=" )
             /* TODO: process bison flags */
          ELSE
             SWITCH Lower( hb_FNameExt( cSrc ) )

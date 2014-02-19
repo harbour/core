@@ -1,129 +1,99 @@
-/******************************************
- * TIP test
- * Mail - reading and writing multipart mails
+/*
+ * TIP Mail - reading and writing multipart mails
  *
  * Creating a mail message.
  * This will create a valid mail message, using
  * the set of files given in the command line.
- *
- * Usage:
- * tipmmail [options] attachment1, attachment2...
- *  options:
- *    -h              Help
- *    -f "from"       Set "mail from" field
- *    -t "to"         Set "mail to" field
- *    -s "subject"    Set mail subject
- *    -b "body"       Set mail body (or message)
- *    -m "bodyfile"   Set mail body using a file
- *
- *
- * This test writes data to standard output, and is
- * compiled only under GTCGI;
- ******************************************/
+ */
 
 #require "hbtip"
 
 PROCEDURE Main( ... )
 
    LOCAL oMail, cData, i, oAttach
-   LOCAL cFname, cFExt
+   LOCAL cFname
 
    IF PCount() == 0
       Usage()
-      QUIT
+      RETURN
    ENDIF
 
-   oMail := TIPMail( "This is the body of the mail" )
+   oMail := TIPMail():New( "This is the body of the mail" )
    oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=utf-8"
    oMail:hHeaders[ "Date" ] := tip_TimeStamp()
 
-   i := 1
-   DO WHILE i < PCount()
+   FOR i := 1 TO PCount()
+
       cData := hb_PValue( i )
 
-      IF Lower( cData ) == "-h"
+      DO CASE
+      CASE Lower( cData ) == "-h"
          Usage()
-         QUIT
-      ENDIF
-
-      IF Lower( cData ) == "-f"
-         i++
-         cData := hb_PValue( i )
-         IF cData != NIL
+         RETURN
+      CASE Lower( cData ) == "-f"
+         IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "From" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-t"
-         i++
-         cData := hb_PValue( i )
-         IF cData != NIL
+      CASE Lower( cData ) == "-t"
+         IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "To" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-s"
-         i++
-         cData := hb_PValue( i )
-         IF cData != NIL
+      CASE Lower( cData ) == "-s"
+         IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:hHeaders[ "Subject" ] := hb_StrToUTF8( cData )
          ENDIF
-      ELSEIF Lower( cData ) == "-b"
-         i++
-         cData := hb_PValue( i )
-         IF cData != NIL
+      CASE Lower( cData ) == "-b"
+         IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             oMail:SetBody( hb_StrToUTF8( cData ) + e"\r\n" )
          ENDIF
-      ELSEIF Lower( cData ) == "-m"
-         i++
-         cData := hb_PValue( i )
-         IF cData != NIL
+      CASE Lower( cData ) == "-m"
+         IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             cData := MemoRead( cData )
             IF Empty( cData )
-               ? "FATAL: Can't read", hb_PValue( i )
-               QUIT
+               ? "Fatal: Can't read", hb_PValue( i )
+               RETURN
             ENDIF
             oMail:SetBody( cData + e"\r\n" )
          ENDIF
-      ELSE  // it is an attachment file
+      OTHERWISE  // it is an attachment file
          cData := MemoRead( cData )
          IF Empty( cData )
-            ? "FATAL: Can't read attachment", hb_PValue( i )
-            QUIT
+            ? "Fatal: Can't read attachment", hb_PValue( i )
+            RETURN
          ENDIF
          oAttach := TIPMail():New()
 
          oAttach:SetEncoder( "base64" )
          // TODO: mime type magic auto-finder
-         hb_FNameSplit( hb_PValue( i ), , @cFname, @cFext )
+         cFName := hb_FNameNameExt( hb_PValue( i ) )
          // Some EMAIL readers use Content-Type to check for filename
          oAttach:hHeaders[ "Content-Type" ] := ;
-            "application/X-TIP-Attachment; filename=";
-            + cFname + cFext
+            "application/X-TIP-Attachment; filename=" + cFName
          // But usually, original filename is set here
          oAttach:hHeaders[ "Content-Disposition" ] := ;
-            "attachment; filename=" + cFname + cFext
+            "attachment; filename=" + cFname
          oAttach:SetBody( cData )
 
          oMail:Attach( oAttach )
-      ENDIF
-
-      i++
-   ENDDO
+      ENDCASE
+   NEXT
 
    /* Writing stream */
-   FWrite( 1, oMail:ToString() )
+   OutStd( oMail:ToString() )
 
    RETURN
 
-PROCEDURE Usage()
+STATIC PROCEDURE Usage()
 
    ? "Usage:"
-   ? "testmmail [options] attachment1, attachment2..."
-   ? "  options:"
-   ? "    -h              Help"
-   ? '    -f "from"       Set "mail from" field'
-   ? '    -t "to"         Set "mail to" field'
-   ? '    -s "subject"    Set mail subject'
-   ? '    -b "body"       Set mail body (or message)'
-   ? '    -m "bodyfile"   Set mail body using a file'
-   ?
+   ? "   tipmmail [options] attachment1, attachment2..."
+   ? "Options:"
+   ? "   -h              Help"
+   ? '   -f "from"       Set "mail from" field'
+   ? '   -t "to"         Set "mail to" field'
+   ? '   -s "subject"    Set mail subject'
+   ? '   -b "body"       Set mail body (or message)'
+   ? '   -m "bodyfile"   Set mail body using a file'
    ?
 
    RETURN

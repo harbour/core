@@ -17,9 +17,9 @@ PROCEDURE Main()
 
    SET EXCLUSIVE OFF
 
-   QOut( "Registered RDD's:", hb_ntos( Len( aRdd ) ), "=>" )
+   ? "Registered RDD's:", hb_ntos( Len( aRdd ) ), "=>"
    AEval( aRdd, {| cDriver | QQOut( "", cDriver ) } )
-   QOut()
+   ?
    rddSetDefault( "DBFCDX" )
    dbCreate( "testdbf", aStruct, "DBFCDX" )
    dbUseArea( , , "testdbf.dbf", "ALIAS_1" )

@@ -16,21 +16,19 @@
  *
  */
 
-STATIC sc_ones  := { ;
-      "",     " One",   " Two",   " Three", " Four", " Five", ;
-      " Six", " Seven", " Eight", " Nine" ;
-      }
+STATIC sc_ones := { ;
+   "",     " One",   " Two",   " Three", " Four", " Five", ;
+   " Six", " Seven", " Eight", " Nine" }
 
 STATIC sc_teens := { ;
-      " Ten",      " Eleven",    " Twelve", ;
-      " Thirteen", " Fourteen",  " Fifteen", ;
-      " Sixteen",  " Seventeen", " Eighteen", ;
-      " Nineteen" ;
-      }
+   " Ten",      " Eleven",    " Twelve", ;
+   " Thirteen", " Fourteen",  " Fifteen", ;
+   " Sixteen",  " Seventeen", " Eighteen", ;
+   " Nineteen" }
 
-STATIC sc_tens  :=  { ;
-      "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
-      " Sixty", " Seventy", " Eighty", " Ninety"  }
+STATIC sc_tens :=  { ;
+   "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
+   " Sixty", " Seventy", " Eighty", " Ninety" }
 
 STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
@@ -73,5 +71,4 @@ STATIC FUNCTION grp_to_words( nGrp, sQual )
    RETURN sResult + sQual
 
 STATIC FUNCTION sol10( nNumber )
-
    RETURN Len( hb_ntos( Int( nNumber ) ) ) - 1

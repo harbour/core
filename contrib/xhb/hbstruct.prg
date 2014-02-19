@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,62 +50,15 @@ PROCEDURE hb_HashAddMember( aName, cType, uInit, oObj )
 
    LOCAL cName
 
-   IF !( cType == NIL )
-
+   IF HB_ISSTRING( cType ) .AND. uInit == NIL
       SWITCH Upper( Left( cType, 1 ) )
-      CASE "S" // STRING
-
-         IF uInit == NIL
-            uInit := ""
-         ENDIF
-
-         EXIT
-
-      CASE "N" // NUMERIC
-
-         IF uInit == NIL
-            uInit := 0
-         ENDIF
-
-         EXIT
-
-      CASE "L" // LOGICAL
-
-         IF uInit == NIL
-            uInit := .F.
-         ENDIF
-
-         EXIT
-
-      CASE "D" // DATE
-
-         IF uInit == NIL
-            uInit := hb_SToD()
-         ENDIF
-
-         EXIT
-
-      CASE "C" // CODEBLOCK
-
-         IF uInit == NIL
-            uInit := {|| NIL }
-         ENDIF
-
-         EXIT
-
-      CASE "A" // ARRAY
-
-         IF uInit == NIL
-            uInit := {}
-         ENDIF
-
-         EXIT
-
-      CASE "O" // OBJECT
-         EXIT
-
+      CASE "S" ; uInit := "" ; EXIT
+      CASE "N" ; uInit := 0 ; EXIT
+      CASE "L" ; uInit := .F. ; EXIT
+      CASE "D" ; uInit := hb_SToD() ; EXIT
+      CASE "C" ; uInit := {|| NIL } ; EXIT
+      CASE "A" ; uInit := {} ; EXIT
       ENDSWITCH
-
    ENDIF
 
    FOR EACH cName IN aName

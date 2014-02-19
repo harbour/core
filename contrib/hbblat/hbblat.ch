@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,29 +46,28 @@
  *
  */
 
-/*
-  Code Description
+/* Code Description
+   ---- --------------------------------------------------------------
+   2    The server actively denied our connection.
+        The mail server doesn't like the sender name.
 
-  2    The server actively denied our connection.
-       The mail server doesn't like the sender name.
+   1    Unable to open SMTP socket
+        SMTP get line did not return 220
+        command unable to write to socket
+        Server does not like To: address
+        Mail server error accepting message data.
 
-  1    Unable to open SMTP socket
-       SMTP get line did not return 220
-       command unable to write to socket
-       Server does not like To: address
-       Mail server error accepting message data.
+   0    OK
+   1    File name (message text) not given
+   1    Bad argument given
+   2    File (message text) does not exist
+   3    Error reading the file (message text) or attached file
+   4    File (message text) not of type FILE_TYPE_DISK
+   5    Error Reading File (message text)
 
-  0    OK
-  1    File name (message text) not given
-  1    Bad argument given
-  2    File (message text) does not exist
-  3    Error reading the file (message text) or attached file
-  4    File (message text) not of type FILE_TYPE_DISK
-  5    Error Reading File (message text)
-
-  12   -server or -f options not specified and not found in registry
-  13   Error opening temporary file in temp directory
-*/
+   12   -server or -f options not specified and not found in registry
+   13   Error opening temporary file in temp directory
+ */
 
 #ifndef _HBBLAT_CH
 #define _HBBLAT_CH
@@ -76,10 +75,8 @@
 /* Numeric Errors */
 
 #define BLAT_ERR_UNKNONW                               -1
-
 #define BLAT_SUCCESS                                   0
 #define BLAT_ERR_MESSAGE_NOT_ACCEPTED                  1
-
 #define BLAT_ERR_MISSING_FROM                          1000
 #define BLAT_ERR_MISSING_TO                            1001
 #define BLAT_ERR_MISSING_TOFILE                        1002
@@ -97,19 +94,15 @@
 #define BLAT_ERR_MISSING_SIGNATUREFILE                 1014
 #define BLAT_ERR_MISSING_TAGFILE                       1015
 #define BLAT_ERR_WRONG_DSN                             1016
-
 #define BLAT_ERR_LOGICAL_EXPECTED                      2000
 #define BLAT_ERR_STRING_EXPECTED                       2001
 
 /* Text Errors */
 
 #define BLAT_TEXT_ERROR                                "Blat Error"
-
 #define BLAT_TEXT_ERR_UNKNOWN                          "Unknown error"
-
 #define BLAT_TEXT_SUCCESS                              "Ok"
 #define BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED             "Message not accepted by server"
-
 #define BLAT_TEXT_ERR_MISSING_FROM                     "Missing From: parameter"
 #define BLAT_TEXT_ERR_MISSING_TO                       "Missing To: parameter"
 #define BLAT_TEXT_ERR_MISSING_TOFILE                   "ToFile file not found"
@@ -127,7 +120,6 @@
 #define BLAT_TEXT_ERR_MISSING_SIGNATUREFILE            "Signature file not found"
 #define BLAT_TEXT_ERR_MISSING_TAGFILE                  "Tag file not found"
 #define BLAT_TEXT_ERR_WRONG_DSN                        "Wrong DSN values (admitted: n, s, f, d)"
-
 #define BLAT_TEXT_ERR_LOGICAL_EXPECTED                 "Logical var expected"
 #define BLAT_TEXT_ERR_STRING_EXPECTED                  "String var expected"
 
@@ -150,10 +142,8 @@
 #define BLAT_ERR_CANT_CONNECT                          4015  // "Can't connect to mailserver (timed out if winsock.dll error 10060)"
 #define BLAT_ERR_NOT_CONNECTED                         4016  // "Connection to mailserver was dropped."
 #define BLAT_ERR_CONNECTION_REFUSED                    4017  // "Mail server refused connection."
+#define BLAT_ERR_NO_ERROR_CODE                         -5000 // this is returned by misbehaving stacks that fail, but don't set an error code
 
-#define BLAT_ERR_NO_ERROR_CODE                         -5000      /* this is returned by misbehaving stacks that
-                                                                   * fail, but don't set an error code
-                                                                   */
 #define BLAT_TRY_INFINITE_KEY                          -1
 #define BLAT_TRY_INFINITE_VALUE                        "INFINITE"
 

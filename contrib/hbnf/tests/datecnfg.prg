@@ -60,79 +60,79 @@ PROCEDURE Main()
    dDate      := Date() - 500
 
    CLS
-   ?    "Given       Date:  "
-   ??   dDate
-   ??   " cFY_Start: " + cFY_Start
-   ??   " nDOW_Start:" + Str( nDOW_Start, 2 )
-   ?    "---- Fiscal Year Data -----------"
+   ? "Given   ", ;
+      "     Date:", dDate, ;
+      "cFY_Start:", cFY_Start, ;
+      "nDOW_Start:", hb_ntos( nDOW_Start )
+   ? "---- Fiscal Year Data -----------"
 
    aTestData := ft_Year( dDate )
-   ? "FYYear     ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYYear      ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_Qtr( dDate )
-   ? "FYQtr      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYQtr       ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_Qtr( dDate, nNum )
-   ? "FYQtr    " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYQtr    ", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_Month( dDate )
-   ? "FYMonth    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYMonth     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_Month( dDate, nNum )
-   ? "FYMonth  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYMonth  ", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_Week( dDate )
-   ? "FYWeek     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYWeek      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_Week( dDate, nNum )
-   ? "FYWeek   " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYWeek   ", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_DayOfYr( dDate )
-   ? "FYDay     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYDay      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
    aTestData := ft_DayOfYr( dDate, nNum )
-   ? "FYDAY   " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "FYDAY   ", Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    ?
    ? "---- Accounting Year Data -------"
 
    aTestData := ft_AcctYear( dDate )
-   ? "ACCTYear   ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ], ;
+   ? "ACCTYear    ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    aTestData := ft_AcctQtr( dDate )
-   ? "ACCTQtr    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
+   ? "ACCTQtr     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_AcctQtr( dDate, nNum )
-   ? "ACCTQtr  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTQtr  ", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_AcctMonth( dDate )
-   ? "ACCTMonth  ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
+   ? "ACCTMonth   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_AcctMonth( dDate, nNum )
-   ? "ACCTMonth" + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTMonth", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_AcctWeek( dDate )
-   ? "ACCTWeek   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTWeek    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := ft_AcctWeek( dDate, nNum )
-   ? "ACCTWeek " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTWeek ", Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := ft_DayOfYr( dDate, , .T. )
-   ? "ACCTDay   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTDay    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
    aTestData := ft_DayOfYr( dDate, nNum, .T. )
-   ? "ACCTDay " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
+   ? "ACCTDay", Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    WAIT
 
@@ -142,9 +142,9 @@ PROCEDURE Main()
    RETURN
 
 // DEMO Monthly Calendar function.
-// nType : 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
+// nType: 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
 
-STATIC FUNCTION FT_CAL( dGivenDate, nType )
+STATIC PROCEDURE FT_CAL( dGivenDate, nType )
 
    LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
 
@@ -162,9 +162,9 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
 
    IF nType == 0
       IF SubStr( cFY_Start, 6, 5 ) == "01.01"
-         ? "          Calendar Month Calendar containing " + DToC( dGivenDate )
+         ? "          Calendar Month Calendar containing", dGivenDate
       ELSE
-         ? "            Fiscal Month Calendar containing " + DToC( dGivenDate )
+         ? "            Fiscal Month Calendar containing", dGivenDate
       ENDIF
 
       aTemp    := ft_Month( dGivenDate )
@@ -173,7 +173,7 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
       aTemp[ 2 ] -= ft_DayToBoW( aTemp[ 2 ] )
       aTemp[ 3 ] += 6 - ft_DayToBoW( aTemp[ 3 ] )
    ELSE
-      ? "            Accounting Month Calendar containing " + DToC( dGivenDate )
+      ? "            Accounting Month Calendar containing", dGivenDate
       aTemp := ft_AcctMonth( dGivenDate )
    ENDIF
 
@@ -185,7 +185,7 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
    NEXT
 
    ?
-   WHILE dTemp <= aTemp[ 3 ]
+   DO WHILE dTemp <= aTemp[ 3 ]
       FOR nTemp := 1 TO 7
          ?? " "
          IF nType == 0 .AND. ( dTemp < dStart .OR. dTemp > dEnd )
@@ -199,4 +199,4 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
       ?
    ENDDO
 
-   RETURN NIL
+   RETURN

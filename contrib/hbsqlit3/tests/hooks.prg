@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,19 +59,19 @@ PROCEDURE Main()
    sqlite3_commit_hook( pDb, "HookCommitY" )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? Replicate( "-", Len( cSQLTEXT ) )
 
@@ -81,19 +81,19 @@ PROCEDURE Main()
    sqlite3_rollback_hook( pDb, @HookRollback() )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    pDb := NIL
 
@@ -101,26 +101,21 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
 
    RETURN 0
 
-/**
-*/
-
-FUNCTION HookCommitY()
+/* */
+STATIC FUNCTION HookCommitY()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -130,7 +125,7 @@ FUNCTION HookCommitY()
 
    RETURN 0
 
-FUNCTION HookCommitN()
+STATIC FUNCTION HookCommitN()
 
    LOCAL oldColor := SetColor( "B+/N" )
 
@@ -140,7 +135,7 @@ FUNCTION HookCommitN()
 
    RETURN 1 // not 0
 
-FUNCTION HookRollback()
+STATIC FUNCTION HookRollback()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -150,17 +145,14 @@ FUNCTION HookRollback()
 
    RETURN 1
 
-/**
-*/
+/* */
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
    hb_default( @lShortMsg, .T. )
 
    RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
-/**
-*/
-
+/* */
 STATIC FUNCTION PrepareDB( cFile )
 
    LOCAL cSQLTEXT, cMsg
@@ -175,7 +167,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
+      ? "Can't open/create database:", cFile
 
       RETURN NIL
    ENDIF
@@ -184,7 +176,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    IF !( cMsg == "SQLITE_OK" )
-      ? "Can't create table : person"
+      ? "Can't create table: person"
       pDb := NIL // close database
 
       RETURN NIL
@@ -193,7 +185,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+      ? "Can't prepare statement:", cSQLTEXT
       pDb := NIL
 
       RETURN NIL

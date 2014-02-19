@@ -1,22 +1,12 @@
-/******************************************
-* TIP test
-* BASE64 (and other) encoding
-*
-* This test writes data to standard output, and is
-* compiled only under GTCGI; this allow to test the
-* input/output file against other OS encoded/decoded data
-*
-* Usage:
-* base64 < file-to-encode >encoded-file
-* base64 -d  < encoded-file  >file-to-decode
-* base64 -q [-d]  to use quoted printable encoding/decoding.
-* base64 -u [-d]  to use url encoding/decoding.
-*****/
+/*
+ * TIP Base64 (and other) encoding
+ *
+ * This test writes data to standard output, and is
+ * compiled only under GTCGI. This allow to test the
+ * input/output file against other OS encoded/decoded data
+ */
 
 #require "hbtip"
-
-#define hSTDIN 0
-#define hSTDOUT 1
 
 PROCEDURE Main( ... )
 
@@ -25,49 +15,51 @@ PROCEDURE Main( ... )
    LOCAL cBuffer := Space( 1024 )
    LOCAL nLen
    LOCAL lHelp := .F., lDecode := .F., lQp := .F., lUrl := .F.
-   LOCAL hInput := hSTDIN
-   LOCAL hOutput := hSTDOUT
+
+   LOCAL hInput := hb_GetStdIn()
+   LOCAL hOutput := hb_GetStdOut()
 
    /* Parameter parsing */
    FOR nLen := 1 TO PCount()
+
       cData := Lower( hb_PValue( nLen ) )
-      DO CASE
-      CASE cData == "-h"
+
+      SWITCH cData
+      CASE "-h"
          lHelp := .T.
-
-      CASE cData == "-d"
+         EXIT
+      CASE "-d"
          lDecode := .T.
-
-      CASE cData == "-q"
+         EXIT
+      CASE "-q"
          lQp := .T.
-
-      CASE cData == "-u"
+         EXIT
+      CASE "-u"
          lUrl := .T.
-
+         EXIT
       OTHERWISE
-         IF hb_FileExists( cData ) .AND. hInput == hSTDIN
+         IF hb_FileExists( cData ) .AND. hInput == hb_GetStdIn()
             hInput := FOpen( cData )
-         ELSEIF hOutput == hSTDOUT
+         ELSEIF hOutput == hb_GetStdOut()
             hOutput := FCreate( cData )
          ELSE
             ? "Wrong parameter", cData
             ?
             lHelp := .T.
-            EXIT
          ENDIF
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    /* Providing help */
    IF lHelp
       ? "Usage:"
-      ? "base64test [<] file-to-encode [>] encoded-file"
-      ? "base64test -d [<] encoded-file  [>] file-to-decode"
-      ? "base64test -q [-d]  to use quoted printable encoding/decoding"
-      ? "base64test -u [-d]  to use url encoding/decoding."
+      ? "base64 [<] file-to-encode [>] encoded-file"
+      ? "base64 -d [<] encoded-file [>] file-to-decode"
+      ? "base64 -q [-d]  to use quoted printable encoding/decoding"
+      ? "base64 -u [-d]  to use URL encoding/decoding."
       ? "input/output redirection is optional"
       ?
-      QUIT
+      RETURN
    ENDIF
 
    /* Selecting the encoder */
@@ -81,16 +73,10 @@ PROCEDURE Main( ... )
 
    /* Reading input stream */
    cData := ""
-   nLen := FRead( hInput, @cBuffer, 1024 )
-   DO WHILE nLen > 0
-      IF nLen < 1024
-         cData += hb_BLeft( cBuffer, nLen )
-      ELSE
-         cData += cBuffer
-      ENDIF
-      nLen := FRead( hInput, @cBuffer, 1024 )
+   DO WHILE ( nLen := FRead( hInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
+      cData += hb_BLeft( cBuffer, nLen )
    ENDDO
-   IF hInput != hSTDIN
+   IF hInput != hb_GetStdIn()
       FClose( hInput )
    ENDIF
 
@@ -103,7 +89,7 @@ PROCEDURE Main( ... )
 
    /* Writing stream */
    FWrite( hOutput, cData )
-   IF hOutput != hSTDOUT
+   IF hOutput != hb_GetStdOut()
       FClose( hOutput )
    ENDIF
 

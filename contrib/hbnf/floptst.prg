@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,13 +63,14 @@ FUNCTION ft_FlopTst( nDriveNum )
    LOCAL cFileName
    LOCAL fhnd
 
-   IF HB_ISNUMERIC( nDriveNum )
+   DO CASE
+   CASE HB_ISNUMERIC( nDriveNum )
       cFileName := Chr( Asc( "A" ) + nDriveNum ) + hb_osDriveSeparator()
-   ELSEIF HB_ISSTRING( nDriveNum )
+   CASE HB_ISSTRING( nDriveNum )
       cFileName := nDriveNum
-   ELSE
+   OTHERWISE
       RETURN ERR_WRONG_PARAMETERS
-   ENDIF
+   ENDCASE
 
    cFileName := hb_DirSepAdd( cFileName ) + "nf$rwtst.tmp"
 

@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -84,7 +84,7 @@ HB_FUNC( HB_POINTER2STRING )
    else if( HB_IS_LONG( pPointer ) && pLen )
       hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), hb_itemGetNS( pLen ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_STRING2POINTER )
@@ -94,7 +94,7 @@ HB_FUNC( HB_STRING2POINTER )
    if( pString )
       hb_retptr( ( void * ) hb_itemGetCPtr( pString ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -303,7 +303,14 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT );
 }
 
-#if ! defined( HB_LEGACY_LEVEL4 )
+#if 0
+
+/* length of buffer for CR/LF characters */
+#if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
+#  define CRLF_BUFFER_LEN  4
+#else
+#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+#endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
    static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
@@ -335,6 +342,15 @@ HB_FUNC( HB_ISBYREF )
       if( HB_IS_BYREF( pItem ) )
          hb_retl( HB_IS_BYREF( hb_itemUnRefOnce( pItem ) ) );
    }
+}
+
+#endif
+
+#if ! defined( HB_LEGACY_LEVEL5 )
+
+HB_FUNC( HB_ISNIL )
+{
+   hb_retl( HB_ISNIL( 1 ) );
 }
 
 #endif

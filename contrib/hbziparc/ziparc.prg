@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not,  write to
  * the Free Software Foundation,  Inc.,  59 Temple Place,  Suite 330,
- * Boston,  MA 02111-1307 USA ( or visit the web site http://www.gnu.org/ ).
+ * Boston,  MA 02111-1307 USA ( or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception,  the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,6 +48,8 @@
  * If you do not wish that,  delete this exception notice.
  *
  */
+
+#pragma -gc3
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -220,7 +222,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
    HB_SYMBOL_UNUSED( nWriteBuffer )
    HB_SYMBOL_UNUSED( nExtractBuffer )
 
-   IF ! Empty( nReadBuffer )
+   IF HB_ISNUMERIC( nReadBuffer ) .AND. nReadBuffer > 0
       t_nReadBuffer := Min( nReadBuffer, 32768 )
    ENDIF
 
@@ -301,11 +303,10 @@ FUNCTION hb_ZipFile( ;
       hb_default( @lWithPath, .F. )
       hb_default( @lWithDrive, .F. )
 
-      // ;
+      //
 
       /* NOTE: Try not to add the .zip file to itself. */
-      hb_FNameSplit( cFileName, NIL, @cName, @cExt )
-      aExclFile := { hb_FNameMerge( NIL, cName, cExt ) }
+      aExclFile := { hb_FNameNameExt( cFileName ) }
       FOR EACH cFN IN acExclude
          IF "?" $ cFN .OR. "*" $ cFN
             tmp := Directory( cFN )
@@ -327,8 +328,8 @@ FUNCTION hb_ZipFile( ;
                ENDIF
             NEXT
          ELSE
-            hb_FNameSplit( cFN, NIL, @cName, @cExt )
-            IF AScan( aExclFile, {| cExclFile | hb_FileMatch( hb_FNameMerge( NIL, cName, cExt ), cExclFile ) } ) == 0
+            cName := hb_FNameNameExt( cFN )
+            IF AScan( aExclFile, {| cExclFile | hb_FileMatch( cName, cExclFile ) } ) == 0
                AAdd( aProcFile, cFN )
             ENDIF
          ENDIF
@@ -336,14 +337,14 @@ FUNCTION hb_ZipFile( ;
 
       aExclFile := NIL
 
-      // ;
+      //
 
       nPos := 1
       FOR EACH cFileToZip IN aProcFile
 
          IF ( hHandle := FOpen( cFileToZip, FO_READ ) ) != F_ERROR
 
-            IF HB_ISBLOCK( bUpdate )
+            IF HB_ISEVALITEM( bUpdate )
                Eval( bUpdate, cFileToZip, nPos++ )
             ENDIF
 
@@ -358,7 +359,7 @@ FUNCTION hb_ZipFile( ;
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
 
-               IF HB_ISBLOCK( bProgress )
+               IF HB_ISEVALITEM( bProgress )
                   nRead += nLen
                   Eval( bProgress, nRead, nSize )
                ENDIF
@@ -421,7 +422,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
       ENDIF
 
       IF Empty( cPath )
-         hb_FNameSplit( cFileName, @cPath )
+         cPath := hb_FNameDir( cFileName )
       ENDIF
 
       cPath := hb_DirSepAdd( cPath )
@@ -449,7 +450,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
                nRead := 0
                DO WHILE ( nLen := hb_unzipFileRead( hUnzip, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
-                  IF HB_ISBLOCK( bProgress )
+                  IF HB_ISEVALITEM( bProgress )
                      nRead += nLen
                      Eval( bProgress, nRead, nSize )
                   ENDIF
@@ -461,7 +462,7 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
 
                hb_FSetDateTime( cPath + cZipName, dDate, cTime )
 
-               IF HB_ISBLOCK( bUpdate )
+               IF HB_ISEVALITEM( bUpdate )
                   Eval( bUpdate, cZipName, nPos )
                ENDIF
             ENDIF

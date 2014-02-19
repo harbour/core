@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    ? "About to compile hello.prg"
    ?
-   hb_run( ".." + hb_ps() + "bin" + hb_ps() + "harbour hello.prg -gh" )
+   hb_run( hb_DirSepToOS( "../bin/harbour" ) + " hello.prg -gh" )
    ? "Finished compiling"
 
    RETURN

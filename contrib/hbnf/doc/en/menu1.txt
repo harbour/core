@@ -31,7 +31,7 @@
    $DESCRIPTION$
       ft_Menu1() is a function that displays a pulldown menu for each item
       on the menu bar and executes the corresponding function for the item
-      selected.  When a called function returns false, FT_MENU1 returns
+      selected.  When a called function returns false, ft_Menu1() returns
       control to the calling program.
 
       Valid keystrokes and their corresponding actions:
@@ -91,16 +91,16 @@
       // <bCodeBlock> should contain one of the following:
 
       //   A function name to execute, which in turn should return .T. or .F.
-      //   FT_MENU1 WILL RETURN CONTROL TO THE CALLING PROGRAM IF .F. IS
+      //   ft_Menu1() WILL RETURN CONTROL TO THE CALLING PROGRAM IF .F. IS
       //   RETURNED OR CONTINUE IF .T. IS RETURNED.
 
-      //   .F. WHICH WILL CAUSE FT_MENU1 TO RETURN CONTROL TO THE CALLING
+      //   .F. WHICH WILL CAUSE ft_Menu1() TO RETURN CONTROL TO THE CALLING
       //   PROGRAM.
 
       //   .T. WHICH WILL DO NOTHING.  THIS ALLOWS THE DEVELOPER TO DESIGN A
       //   SKELETON MENU STRUCTURE PRIOR TO COMPLETING ALL OF THE SUBROUTINES.
 
-      // CALL FT_MENU1
+      // CALL ft_Menu1()
       ft_Menu1( aBar, aOptions, aColors, 0 )
 
       // NOTE: ft_Menu1() disables Alt-C and Alt-D in order to make them
@@ -132,7 +132,7 @@
       <bFunction> is the code block to be executed when that menu
       option is selected.  i.e. {|| MyFunction() } would execute
       the function called MyFunction().  {|| .F. } would exit the
-      FT_MENU1 and return to the calling routine.  {|| .T. } would
+      ft_Menu1() and return to the calling routine.  {|| .T. } would
       do nothing.
 
       <lSelectable> is a logical variable that determines whether

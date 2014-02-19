@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 /* TODO: add missing support for soft-newlines: hb_BChar( 141 ) + hb_BChar( 10 ) */
 
 #include "hbclass.ch"
@@ -56,6 +58,9 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
+
+/* TOFIX: Leave this here, until this code is cleaned off of RTEs */
+#pragma linenumber=on
 
 CREATE CLASS HBEditor
 
@@ -257,17 +262,16 @@ METHOD AddLine( cLine, lSoftCR ) CLASS HBEditor
 // Insert a line of text at a defined row
 METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS HBEditor
 
-   ::AddLine()
-   AIns( ::aText, nRow )
-   ::aText[ nRow ] := HBTextLine():New( cLine, lSoftCR )
+   hb_AIns( ::aText, nRow, HBTextLine():New( cLine, lSoftCR ), .T. )
+   ::naTextLen++
 
    RETURN Self
 
 // Remove a line of text
 METHOD RemoveLine( nRow ) CLASS HBEditor
 
-   ADel( ::aText, nRow )
-   ASize( ::aText, --::naTextLen )
+   hb_ADel( ::aText, nRow, .T. )
+   ::naTextLen--
 
    RETURN Self
 
@@ -277,7 +281,9 @@ METHOD GetLine( nRow ) CLASS HBEditor
 
 // Return text length of line n
 METHOD LineLen( nRow ) CLASS HBEditor
-   RETURN Len( ::aText[ nRow ]:cText )
+   /* TOFIX: bounds checking as a workaround for RTE in:
+             HBEDITOR:LINELEN < HBEDITOR:MOVECURSOR < HBEDITOR:SPLITLINE < HBEDITOR:EDIT */
+   RETURN iif( nRow >= 1 .AND. nRow <= Len( ::aText ), Len( ::aText[ nRow ]:cText ), 0 )
 
 // Converts an array of text lines to a String
 METHOD GetText() CLASS HBEditor
@@ -300,14 +306,12 @@ METHOD GotoLine( nRow ) CLASS HBEditor
 
    IF nRow <= ::naTextLen .AND. nRow > 0
 
-      // Back one line
-      IF ::nRow - nRow == 1
-         ::MoveCursor( K_UP )
-
-      ELSEIF ::nRow - nRow == -1
+      DO CASE
+      CASE ::nRow == nRow + 1
+         ::MoveCursor( K_UP )  // Back one line
+      CASE ::nRow == nRow - 1
          ::MoveCursor( K_DOWN )
-
-      ELSE
+      OTHERWISE
          // I need to move cursor if is past requested line number and if requested line is
          // inside first screen of text otherwise ::nFirstRow would be wrong
          IF ::nFirstRow > 1
@@ -327,7 +331,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
          ENDIF
 
          ::display()
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN Self
@@ -341,7 +345,7 @@ METHOD SplitLine( nRow ) CLASS HBEditor
 
    LOCAL nFirstSpace
    LOCAL cLine
-   LOCAL cSplittedLine
+   LOCAL cSplitLine
    LOCAL nStartRow
    LOCAL nOCol
    LOCAL nORow
@@ -374,21 +378,21 @@ METHOD SplitLine( nRow ) CLASS HBEditor
 
             // If there is a space before beginning of line split there
             IF nFirstSpace > 1
-               cSplittedLine := Left( cLine, nFirstSpace )
+               cSplitLine := Left( cLine, nFirstSpace )
             ELSE
                // else split at current cursor position
-               cSplittedLine := Left( cLine, ::nCol - 1 )
+               cSplitLine := Left( cLine, ::nCol - 1 )
             ENDIF
 
-            ::InsertLine( cSplittedLine, .T., nStartRow++ )
+            ::InsertLine( cSplitLine, .T., nStartRow++ )
 
          ELSE
             // remainder of line
-            cSplittedLine := cLine
-            ::InsertLine( cSplittedLine, .F., nStartRow++ )
+            cSplitLine := cLine
+            ::InsertLine( cSplitLine, .F., nStartRow++ )
          ENDIF
 
-         cLine := Right( cLine, Len( cLine ) - Len( cSplittedLine ) )
+         cLine := Right( cLine, Len( cLine ) - Len( cSplitLine ) )
       ENDDO
 
       IF lMoveToNextLine
@@ -709,7 +713,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                ::aText[ ::nRow ]:cText += Space( ::nCol - ::LineLen( ::nRow ) )
             ENDIF
             // insert char if in insert mode or at end of current line
-            IF Set( _SET_INSERT ) .OR. ( ::nCol > ::LineLen( ::nRow ) )
+            IF Set( _SET_INSERT ) .OR. ::nCol > ::LineLen( ::nRow )
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, cKey )
             ELSE
                ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, cKey )
@@ -1095,13 +1099,14 @@ STATIC FUNCTION WhichEOL( cString )
    LOCAL nCRPos := At( Chr( 13 ), cString )
    LOCAL nLFPos := At( Chr( 10 ), cString )
 
-   IF nCRPos > 0 .AND. nLFPos == 0
+   DO CASE
+   CASE nCRPos > 0 .AND. nLFPos == 0
       RETURN Chr( 13 )
-   ELSEIF nCRPos == 0 .AND. nLFPos >  0
+   CASE nCRPos == 0 .AND. nLFPos >  0
       RETURN Chr( 10 )
-   ELSEIF nCRPos > 0 .AND. nLFPos == nCRPos + 1
+   CASE nCRPos > 0 .AND. nLFPos == nCRPos + 1
       RETURN Chr( 13 ) + Chr( 10 )
-   ENDIF
+   ENDCASE
 
    RETURN hb_eol()
 
@@ -1117,7 +1122,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
    LOCAL cLine
    LOCAL nFirstSpace
-   LOCAL cSplittedLine
+   LOCAL cSplitLine
 
    DO WHILE nRetLen < ncSLen
 
@@ -1137,27 +1142,26 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
                ENDDO
 
                IF nFirstSpace > 1
-                  cSplittedLine := Left( cLine, nFirstSpace )
+                  cSplitLine := Left( cLine, nFirstSpace )
                ELSE
-                  cSplittedLine := Left( cLine, nWordWrapCol )
+                  cSplitLine := Left( cLine, nWordWrapCol )
                ENDIF
 
-               AAdd( aArray, HBTextLine():New( cSplittedLine, .T. ) )
+               AAdd( aArray, HBTextLine():New( cSplitLine, .T. ) )
 
             ELSE
 
                // remainder of line is shorter than split point
-               cSplittedLine := cLine
-               AAdd( aArray, HBTextLine():New( cSplittedLine, .F. ) )
+               cSplitLine := cLine
+               AAdd( aArray, HBTextLine():New( cSplitLine, .F. ) )
 
             ENDIF
 
-            cLine := Right( cLine, Len( cLine ) - Len( cSplittedLine ) )
+            cLine := Right( cLine, Len( cLine ) - Len( cSplitLine ) )
          ENDDO
 
       ELSE
          AAdd( aArray, HBTextLine():New( cLine, .F. ) )
-
       ENDIF
 
    ENDDO

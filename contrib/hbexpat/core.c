@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -114,7 +114,7 @@ typedef struct _HB_EXPAT
       { \
          PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 ); \
          \
-         hb_expat_setvar( hb_expat, _VAR_b##_name_, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) ); \
+         hb_expat_setvar( hb_expat, _VAR_b##_name_, hb_param( 2, HB_IT_EVALITEM ) ); \
          \
          XML_Set##_name_/* do not delete this */ ( hb_expat->parser, hb_expat->pVar[ _VAR_b##_name_ ] ? hb_expat_##_name_ : NULL ); \
          \
@@ -853,8 +853,8 @@ HB_FUNC( XML_SETELEMENTHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartElementHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndElementHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartElementHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndElementHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetElementHandler( hb_expat->parser,
                              hb_expat->pVar[ _VAR_bStartElementHandler ] ? hb_expat_StartElementHandler : NULL,
@@ -872,8 +872,8 @@ HB_FUNC( XML_SETCDATASECTIONHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartCdataSectionHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndCdataSectionHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartCdataSectionHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndCdataSectionHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetCdataSectionHandler( hb_expat->parser,
                                   hb_expat->pVar[ _VAR_bStartCdataSectionHandler ] ? hb_expat_StartCdataSectionHandler : NULL,
@@ -891,8 +891,8 @@ HB_FUNC( XML_SETNAMESPACEDECLHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartNamespaceDeclHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndNamespaceDeclHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartNamespaceDeclHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndNamespaceDeclHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetNamespaceDeclHandler( hb_expat->parser,
                                    hb_expat->pVar[ _VAR_bStartNamespaceDeclHandler ] ? hb_expat_StartNamespaceDeclHandler : NULL,
@@ -910,7 +910,7 @@ HB_FUNC( XML_SETUNKNOWNENCODINGHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bUnknownEncodingHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bUnknownEncodingHandler, hb_param( 2, HB_IT_EVALITEM ) );
       hb_expat_setvar( hb_expat, _VAR_xEncodingHandlerData, hb_param( 3, HB_IT_ANY ) );
 
       XML_SetUnknownEncodingHandler( hb_expat->parser,
@@ -922,8 +922,6 @@ HB_FUNC( XML_SETUNKNOWNENCODINGHANDLER )
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/* ; */
 
 HB_FUNC( XML_PARSE )
 {

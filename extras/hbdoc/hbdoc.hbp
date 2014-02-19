@@ -1,5 +1,4 @@
--w3 -es2
--l
+-w3 -es2 -kmo -l
 
 -o${hb_name}
 
@@ -17,3 +16,8 @@ _tmplate.prg
 # NOTE: hbdoc doesn't work from other locations than
 #       the current one, so we don't install it yet.
 # $hb_pkg_install.hbm
+
+# default -run params useful to update the online docs
+# on the Harbour website
+-runflag=-format=html
+-runflag=-output-single

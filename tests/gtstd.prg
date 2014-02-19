@@ -1,7 +1,7 @@
 /* gtstd test */
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()
@@ -11,10 +11,10 @@ PROCEDURE Main()
    PosNow()
    ?? "Output test. First line, no newlines."
 
-   ? "Press a key to continue: "
-   ?? Inkey( 0 )
+   ? "Press a key to continue:"
+   ?? "", hb_ntos( Inkey( 0 ) )
 
-   ? "This is row " + hb_ntos( Row() )
+   ? "This is row", hb_ntos( Row() )
 
    @ 7, 30 SAY "@ 7, 30"
    @ 7, 10 SAY "@ 7, 10"
@@ -24,10 +24,10 @@ PROCEDURE Main()
    PosNow()
 
    ?
-   ? "Scroll test: pre = "
+   ? "Scroll test: pre =", ""
    PosNow()
 // Scroll( 0, 0, MaxRow(), MaxCol(), -3, 0 )
-   ?? " post = "
+   ?? " post =", ""
    PosNow()
 
    ?
@@ -45,19 +45,18 @@ PROCEDURE Main()
    NEXT
 
    ? "Done.."
-   ? "Testing long string via QOUT. 50 characters follow here: 98765432109876543210987654321098765432109876543210"
+   ? "Testing long string via QOut(). 50 characters follow here: 98765432109876543210987654321098765432109876543210"
    ? "Done.. testing end of screen scroll"
 
    FOR n := 1 TO 25
-      ? "This line is on row "
-      ?? hb_ntos( Row() )
+      ? "This line is on row", hb_ntos( Row() )
       Inkey( 0 )
    NEXT
 
    RETURN
 
-FUNCTION PosNow()
+STATIC PROCEDURE PosNow()
 
    ?? "[" + hb_ntos( Row() ) + "," + hb_ntos( Col() ) + "]"
 
-   RETURN NIL
+   RETURN

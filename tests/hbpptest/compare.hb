@@ -1,3 +1,5 @@
+#!/usr/bin/hbmk2
+
 hb_FCopy( "_pp_test.prg", "_pp_hb.prg" )
 hb_FCopy( "_pp_test.prg", "_pp_cl.prg" )
 

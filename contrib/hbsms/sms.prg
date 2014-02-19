@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -187,7 +187,7 @@ FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
                IF !( ATail( tmp ) == "OK" )
                   RETURN -7
                ENDIF
-               IF !( Left( tmp[ 1 ], Len( "+CSMP: " ) ) == "+CSMP: " )
+               IF ! hb_LeftIs( tmp[ 1 ], "+CSMP: " )
                   RETURN -8
                ENDIF
                tmp := GetList( SubStr( tmp[ 1 ], Len( "+CSMP: " ) + 1 ) )
@@ -208,7 +208,7 @@ FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
             IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "> "
                port_send( smsctx[ _SMSCTX_xHnd ], StrTran( cText, Chr( 13 ) ) + Chr( 26 ) )
                tmp := StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
-               IF Left( tmp, Len( "+CMGS: " ) ) == "+CMGS: "
+               IF hb_LeftIs( tmp, "+CMGS: " )
                   RETURN 0
                ELSE
                   RETURN -10
@@ -272,7 +272,7 @@ STATIC FUNCTION GetLines( cString )
    LOCAL aLine := {}
    LOCAL tmp
 
-   IF Left( cString, 2 ) == Chr( 13 ) + Chr( 10 )
+   IF hb_LeftIs( cString, Chr( 13 ) + Chr( 10 ) )
       cString := SubStr( cString, Len( Chr( 13 ) + Chr( 10 ) ) + 1 )
    ENDIF
    IF Right( cString, 2 ) == Chr( 13 ) + Chr( 10 )

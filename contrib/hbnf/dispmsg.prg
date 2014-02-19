@@ -22,6 +22,7 @@
  *
  */
 
+#include "box.ch"
 #include "setcurs.ch"
 
 // beginning of demo program
@@ -38,26 +39,21 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL i
    LOCAL j
    LOCAL nOption
-   LOCAL x
-   LOCAL y
    LOCAL aPos := {}
    LOCAL nLeft
    LOCAL aLeft
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
+   FOR EACH i IN aInfo[ 1 ]
+
       AAdd( aPos, {} )
-   NEXT
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
-
-      DO WHILE At( "[", aInfo[ 1, i ] ) > 0
-         x := At( "[", aInfo[ 1, i ] )
-         y := At( "]", aInfo[ 1, i ] ) - 2
-         AAdd( aPos[ i ], { x, y } )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
+      DO WHILE "[" $ i
+         AAdd( aPos[ i:__enumIndex() ], { ;
+            At( "[", i ), ;
+            At( "]", i ) - 2 } )
+         i := StrTran( i, "[", "", 1, 1 )
+         i := StrTran( i, "]", "", 1, 1 )
       ENDDO
-
    NEXT
 
    AEval( aInfo[ 1 ], {| x | nWidest := Max( nWidest, Len( x ) ) } )
@@ -90,9 +86,9 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // consistent with DispBox()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
-      cnBoxString := hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+      cnBoxString := HB_B_DOUBLE_UNI + " "
    ELSEIF cnBoxString == 1
-      cnBoxString := hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+      cnBoxString := HB_B_SINGLE_UNI + " "
    ENDIF
 
    __defaultNIL( @lShadow, .T. )

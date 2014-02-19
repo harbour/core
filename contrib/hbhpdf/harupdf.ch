@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,9 +45,7 @@
  *
  */
 
-//--------------------------------------------------//
-// Collected by Pritpal Bedi <pritpal@vouchcac.com>
-//--------------------------------------------------//
+/* Collected by Pritpal Bedi <pritpal@vouchcac.com> */
 
 #ifndef _HARUPDF_CH
 #define _HARUPDF_CH
@@ -774,6 +772,9 @@
 #define HPDF_PDFA_1B                        1
 
 /* Error code */
+
+#define HB_HPDF_BADPARAM                    -2
+#define HB_HPDF_NOTSUPPORTED                -1
 
 /* NOTE: After making any changes in the list below,
          always update hb_HPDF_GetErrorString() accordingly. */

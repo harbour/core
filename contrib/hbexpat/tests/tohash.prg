@@ -1,11 +1,4 @@
-/*
- * Harbour Project source code:
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
- *
- * See COPYING.txt for licensing terms.
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbexpat"
 
@@ -19,7 +12,6 @@
 #define _N_hAttr            4
 #define _N_MAX_             4
 
-REQUEST HB_CODEPAGE_UTF8
 REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main( cFileName )
@@ -30,19 +22,18 @@ PROCEDURE Main( cFileName )
    LOCAL v1, v2, v3
 
    hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( hb_cdpTerm() )
 
-   IF cFileName == NIL
-      cFileName := hb_DirBase() + "test.xml"
-   ENDIF
+   hb_default( @cFileName, hb_DirBase() + "test.xml" )
 
-   OutStd( XML_ExpatVersion() + hb_eol() )
+   ? XML_ExpatVersion()
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
+   ? hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 )
    hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
+   ? hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 )
 
    IF Empty( p )
-      OutErr( "Couldn't allocate memory for parser" + hb_eol() )
+      ? "Couldn't allocate memory for parser"
       ErrorLevel( -1 )
       RETURN
    ENDIF
@@ -58,22 +49,25 @@ PROCEDURE Main( cFileName )
 
    aNode[ _N_aParent ] := aUserData[ _D_aTree ]
 
-   OutStd( XML_GetUserData( p ) ) ; OutStd( hb_eol() )
+   ? XML_GetUserData( p )
    XML_SetUserData( p, aUserData )
-   OutStd( ValType( XML_GetUserData( p ) ) + hb_eol() )
+   ? ValType( XML_GetUserData( p ) )
    XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x | cb_end( x ) } )
    XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
 
    IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
-      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n", ;
-         hb_ntos( XML_GetCurrentLineNumber( p ) ), ;
-         XML_ErrorString( XML_GetErrorCode( p ) ) ) )
+      ? hb_StrFormat( e"Parse error at line %1$d:\n%2$s\n", ;
+         XML_GetCurrentLineNumber( p ), ;
+         XML_ErrorString( XML_GetErrorCode( p ) ) )
       ErrorLevel( -1 )
       RETURN
    ENDIF
 
    DUMP( aUserData[ _D_aTree ], 0 )
+
+   hb_MemoWrit( "json_raw.txt", hb_jsonEncode( aUserData[ _D_aTree ], .F. ) )
+   hb_MemoWrit( "json_hum.txt", hb_jsonEncode( aUserData[ _D_aTree ], .T. ) )
 
    RETURN
 
@@ -84,7 +78,7 @@ STATIC PROCEDURE DUMP( hTree, n )
 
    FOR EACH aEl IN hTree[ _N_hChild ]
       FOR EACH aNode IN aEl
-         OutStd( Replicate( "  ", n ) + aEl:__enumKey() + ": '" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] ) + hb_eol() )
+         ? Replicate( "  ", n ) + aEl:__enumKey() + ":", "'" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] )
          DUMP( aNode, n + 1 )
       NEXT
    NEXT

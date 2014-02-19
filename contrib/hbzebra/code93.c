@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -172,8 +172,8 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
          hb_bitbuffer_cat_int( pZebra->pBits, 1, 1 );
          hb_bitbuffer_cat_int( pZebra->pBits, s_code[ no ], 7 );
          hb_bitbuffer_cat_int( pZebra->pBits, 0, 1 );
-         ksum += ( k % 15 ? k % 15 : 15 ) * no;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no;
       }
       else
       {
@@ -229,10 +229,10 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
          hb_bitbuffer_cat_int( pZebra->pBits, 1, 1 );
          hb_bitbuffer_cat_int( pZebra->pBits, s_code[ no2 ], 7 );
          hb_bitbuffer_cat_int( pZebra->pBits, 0, 1 );
-         ksum += ( k % 15 ? k % 15 : 15 ) * no1;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no1;
-         ksum += ( k % 15 ? k % 15 : 15 ) * no2;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no2;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no1; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no1;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no2; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no2;
       }
    }
 

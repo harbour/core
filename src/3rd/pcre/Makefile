@@ -35,13 +35,9 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE_STATIC
 
-   ifeq ($(filter $(HB_PLATFORM),win wince dos vxworks),)
-      HB_CFLAGS +=  -DHAVE_STDINT_H
-   else
-      ifeq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
-         ifeq ($(filter $(HB_PLATFORM),vxworks),)
-            HB_CFLAGS +=  -DHAVE_STDINT_H
-         endif
+   ifneq ($(filter $(HB_COMPILER),clang gcc mingw mingw64),)
+      ifneq ($(filter $(PLATFORM)-$(HB_COMPILER),win-clang),)
+         HB_CFLAGS += -DHAVE_INTTYPES_H
       endif
    endif
 
@@ -73,7 +69,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.pcre.org/
+# ORIGIN http://pcre.org/
 # VER    8.34
 # URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.34.tar.gz
 # DIFF   pcre.dif

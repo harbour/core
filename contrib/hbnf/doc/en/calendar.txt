@@ -62,6 +62,5 @@
       ? aRetVal[ 8 ]      // Result: 12:45:20
    $SEEALSO$
       ft_DayOfYr()
-
    $END$
  */

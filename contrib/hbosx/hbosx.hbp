@@ -1,0 +1,14 @@
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{!darwin}
+
+-c=gnu99
+
+-hbx=${hb_name}
+
+core.m

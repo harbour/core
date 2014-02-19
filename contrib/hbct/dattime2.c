@@ -1,8 +1,6 @@
 /*
  * Harbour Project source code:
  *   CT3 Date & Time functions, part II: - AddMonth()
- *                                       - CToDoW()
- *                                       - CToMonth()
  *                                       - DaysInMonth()
  *                                       - DaysToMonth()
  *                                       - DMY()
@@ -31,7 +29,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -110,7 +108,7 @@ HB_FUNC( CTODOW )
       PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
 
-      for( iDow = 7; iDow > 0; iDow-- )
+      for( iDow = 1; iDow <= 7; ++iDow )
       {
          const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
          if( hb_cdpicmp( szDow, strlen( szDow ), szParam, nLen, cdp, HB_FALSE ) == 0 )
@@ -130,7 +128,7 @@ HB_FUNC( CTOMONTH )
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
-      for( iMonth = 12; iMonth > 0; iMonth-- )
+      for( iMonth = 1; iMonth <= 12; ++iMonth )
       {
          const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
          if( hb_cdpicmp( szMonth, strlen( szMonth ), szParam, nLen, cdp, HB_FALSE ) == 0 )

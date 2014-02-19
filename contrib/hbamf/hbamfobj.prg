@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -84,7 +84,7 @@ METHOD noMessage( ... ) CLASS amf_Obj
 METHOD msgNotFound( cMessage, ... ) CLASS amf_Obj
 
    IF PCount() == 1 .AND. !( hb_BLeft( cMessage, 1 ) == "_" )
-      IF ! Empty( ::hCachedData ) .AND. hb_HHasKey( ::hCachedData, cMessage )
+      IF ! Empty( ::hCachedData ) .AND. cMessage $ ::hCachedData
          RETURN ::hCachedData[ cMessage ]
       ENDIF
    ELSEIF PCount() > 1 .AND. hb_BLeft( cMessage, 1 ) == "_"

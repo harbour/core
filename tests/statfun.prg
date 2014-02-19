@@ -10,8 +10,8 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION SecondOne()
+STATIC PROCEDURE SecondOne()
 
-   ? "From Second()"
+   ? "From SecondOne()"
 
-   RETURN NIL
+   RETURN

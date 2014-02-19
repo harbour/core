@@ -7,7 +7,6 @@
  *
  */
 
-
 #define CLS_Name  "MyOleRPCServer"
 #define CLS_ID    "{23245C3F-4487-404B-985F-E33886698D23}"
 
@@ -56,11 +55,12 @@ PROCEDURE DllMain()
     * Please remember that using hash array which was initialized to keep
     * original assign order before adding its items you can define strict
     * message numbers (DISPIDs), i.e.:
-    *    hAction := { "OPEN"  => @myole_open()  , ;   // DISPID=1
-    *                 "CLOSE" => @myole_close() , ;   // DISPID=2
-    *                 "SAVE"  => @myole_save()  , ;   // DISPID=3
-    *                 "LOAD"  => @myole_load()  , ;   // DISPID=4
-    *                 "PRINT" => @myole_print() }     // DISPID=5
+    *    hAction := { ;
+    *       "OPEN"  => @myole_open()  , ;   // DISPID=1
+    *       "CLOSE" => @myole_close() , ;   // DISPID=2
+    *       "SAVE"  => @myole_save()  , ;   // DISPID=3
+    *       "LOAD"  => @myole_load()  , ;   // DISPID=4
+    *       "PRINT" => @myole_print() }     // DISPID=5
     * (see example in olesrv2.prg)
     *
     * <oAction> is optional parameter with Harbour object which is used
@@ -113,7 +113,7 @@ CREATE CLASS OleNetioSrv
 
    HIDDEN:
 
-   VAR    pConn
+   VAR pConn
 
    EXPORTED:
 

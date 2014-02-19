@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -104,24 +104,28 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF HB_ISNUMERIC( ::caption )
+   DO CASE
+   CASE HB_ISNUMERIC( ::caption )
       ::style += BS_BITMAP
-   ELSEIF HB_ISSTRING( ::caption )
-      IF ".ICO" == Upper( Right( ::caption, 4 ) )
+   CASE HB_ISSTRING( ::caption )
+      DO CASE
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
          ::style += BS_ICON
-      ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
          ::style += BS_BITMAP
-      ENDIF
-   ELSEIF HB_ISARRAY( ::caption )
+      ENDCASE
+   CASE HB_ISARRAY( ::caption )
       ASize( ::caption, 3 )
       IF HB_ISNUMERIC( ::caption[ 2 ] )
-         IF ::caption[ 2 ] == WVG_IMAGE_ICONFILE .OR. ::caption[ 2 ] == WVG_IMAGE_ICONRESOURCE
+         DO CASE
+         CASE ::caption[ 2 ] == WVG_IMAGE_ICONFILE .OR. ::caption[ 2 ] == WVG_IMAGE_ICONRESOURCE
             ::style += BS_ICON
-         ELSEIF ::caption[ 2 ] == WVG_IMAGE_BITMAPFILE .OR. ::caption[ 2 ] == WVG_IMAGE_BITMAPRESOURCE
+         CASE ::caption[ 2 ] == WVG_IMAGE_BITMAPFILE .OR. ::caption[ 2 ] == WVG_IMAGE_BITMAPRESOURCE
             ::style += BS_BITMAP
-         ENDIF
+         ENDCASE
       ENDIF
-   ENDIF
+   ENDCASE
+
    IF ! ::border
       ::style += BS_FLAT
    ENDIF
@@ -150,13 +154,13 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
          ::rePosition()
       ENDIF
       ::sendMessage( WM_SIZE, 0, 0 )
-      IF HB_ISBLOCK( ::sl_resize )
+      IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == BN_CLICKED
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -165,7 +169,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -183,7 +187,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 #if 0  /* Must not reach here if WndProc is not installed */
    CASE nMessage == HB_GTE_ANY
       IF aNM[ 1 ] == WM_LBUTTONUP
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -193,7 +197,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 #endif
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgPushButton:destroy()
 
@@ -217,19 +221,22 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
    ::caption := xCaption
 
-   IF HB_ISSTRING( xCaption )
-      IF ".ICO" == Upper( Right( ::caption, 4 ) )
-         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_ICON ) )
-      ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
-         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_BITMAP ) )
-      ELSE
-         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
-      ENDIF
+   DO CASE
+   CASE HB_ISSTRING( xCaption )
 
-   ELSEIF HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
+      DO CASE
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".ico"
+         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_ICON ) )
+      CASE Lower( hb_FNameExt( ::caption ) ) == ".bmp"
+         Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, Wvg_LoadImage( ::caption, nLoadFromDiskFile, IMAGE_BITMAP ) )
+      OTHERWISE
+         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      ENDCASE
+
+   CASE HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
       Wvg_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, ::caption )
 
-   ELSEIF HB_ISARRAY( xCaption )
+   CASE HB_ISARRAY( xCaption )
       ASize( xCaption, 4 )
       IF HB_ISCHAR( xCaption[ 1 ] )
          Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, xCaption[ 1 ] )
@@ -258,13 +265,13 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
             EXIT
          ENDSWITCH
       ENDIF
-   ENDIF
+   ENDCASE
 
    RETURN Self
 
 METHOD WvgPushButton:activate( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_lbClick := xParam
    ENDIF
 
@@ -272,7 +279,7 @@ METHOD WvgPushButton:activate( xParam )
 
 METHOD WvgPushButton:draw( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_paint := xParam
    ENDIF
 

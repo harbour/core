@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,17 +49,17 @@
 #ifndef _OTABLE_CH_
 
 // --> Network messages
-#define _NET_USE_FAIL_MSG  "Net Open Fail !!!"
+#define _NET_USE_FAIL_MSG    "Net Open Fail !!!"
 
 
 // --> ::dbMove() constants
-#define _DB_TOP             -999999999999
-#define _DB_BOTTOM          -888888888888
-#define _DB_BOF             -777777777777
-#define _DB_EOF             -666666666666
-#define NET_RECLOCK           1
-#define NET_FILELOCK          2
-#define NET_APPEND            3
+#define _DB_TOP              -999999999999
+#define _DB_BOTTOM           -888888888888
+#define _DB_BOF              -777777777777
+#define _DB_EOF              -666666666666
+#define NET_RECLOCK          1
+#define NET_FILELOCK         2
+#define NET_APPEND           3
 #define NET_OPEN_MODE        .T.
 #define EXCLUSIVE_OPEN_MODE  .F.
 #define RETRY_MSG            "NETWORK ERROR;Continue Attempt to Lock Record/File ?"
@@ -175,13 +175,13 @@
          [<last: LAST>]     in <o>                                         ;
       => <o>:dbSeek( <xpr>, iif( <.soft.>, .T., NIL ), iif( <.last.>, .T., NIL ) )
 
-#translate  CSY_TYPE Character  =>  "C"
-
-#xtranslate CSY_TYPE Numeric    =>  "N"
-#xtranslate CSY_TYPE Date       =>  "D"
-#xtranslate CSY_TYPE Memo    =>  "M"
+#translate  CSY_TYPE Character  => "C"
+#xtranslate CSY_TYPE Numeric    => "N"
+#xtranslate CSY_TYPE Date       => "D"
+#xtranslate CSY_TYPE Memo       => "M"
 #xtranslate CSY_TYPE Logical    => "L"
-#xtranslate CSY_TYPE Auto    => "A"
+#xtranslate CSY_TYPE Auto       => "A"
+
 #xcommand CREATE DATABASE <o> FILE <file> => <o>:=HBTable():CreateTable(<(file)>);#define _TABLE_ <o>
 #xtranslate FIELD [ <oFld> ]                        ;
                 [ NAME <(cName)> ]                  ;

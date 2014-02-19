@@ -6,7 +6,7 @@
  * You should install PDFCreator to be able to run this test
  *
  * Download site:
- * http://sourceforge.net/projects/pdfcreator/
+ * https://sourceforge.net/projects/pdfcreator/
  *
  * COM interface docs:
  * http://www.pdfforge.org/content/com-interface
@@ -69,15 +69,16 @@ PROCEDURE Main()
       oPC:cOption( "UseAutosave" )
    ENDDO
 
-   IF nEvent == 0
+   DO CASE
+   CASE nEvent == 0
       ? "Print timeout"
-   ELSEIF nEvent == 1
+   CASE nEvent == 1
       ? "Printed successfully"
-   ELSEIF nEvent == 2
+   CASE nEvent == 2
       ? "Error:", oPC:cError():Description
-   ELSE
+   OTHERWISE
       ? "Unknown event"
-   ENDIF
+   ENDCASE
 
    oPC:cDefaultPrinter := cDefaultPrinter
    oPC:cClose()

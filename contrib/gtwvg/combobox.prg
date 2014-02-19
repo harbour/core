@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -126,13 +126,14 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oParent:AddChild( Self )
 
-   IF ::type == WVGCOMBO_DROPDOWNLIST
+   DO CASE
+   CASE ::type == WVGCOMBO_DROPDOWNLIST
       ::style += CBS_DROPDOWNLIST
-   ELSEIF ::type == WVGCOMBO_SIMPLE
+   CASE ::type == WVGCOMBO_SIMPLE
       ::style += CBS_SIMPLE
-   ELSE
+   OTHERWISE
       ::style += CBS_DROPDOWN
-   ENDIF
+   ENDCASE
 
    ::createControl()
 
@@ -191,7 +192,8 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
-      IF aNM[ 1 ] == CBN_SELCHANGE
+      DO CASE
+      CASE aNM[ 1 ] == CBN_SELCHANGE
          ::nCurSelected := ::editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -203,7 +205,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == CBN_DBLCLK
+      CASE aNM[ 1 ] == CBN_DBLCLK
          ::editBuffer := ::nCurSelected
          IF ::isParentCrt()
             ::oParent:setFocus()
@@ -215,13 +217,13 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
             ENDIF
          ENDIF
 
-      ELSEIF aNM[ 1 ] == CBN_KILLFOCUS
+      CASE aNM[ 1 ] == CBN_KILLFOCUS
          ::killInputFocus()
 
-      ELSEIF aNM[ 1 ] == CBN_SETFOCUS
+      CASE aNM[ 1 ] == CBN_SETFOCUS
          ::setInputFocus()
 
-      ENDIF
+      ENDCASE
 
    CASE nMessage == HB_GTE_KEYTOITEM
       IF aNM[ 1 ] == K_ENTER
@@ -249,7 +251,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
 METHOD WvgComboBox:addItem( cItem )
 
@@ -296,9 +298,9 @@ METHOD WvgComboBox:itemMarked( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemMarked )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemMarked )
       Eval( ::sl_itemMarked, NIL, NIL, Self )
    ENDIF
 
@@ -308,9 +310,9 @@ METHOD WvgComboBox:itemSelected( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemSelected )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemSelected )
       Eval( ::sl_itemSelected, NIL, NIL, Self )
    ENDIF
 
@@ -320,9 +322,9 @@ METHOD WvgComboBox:drawItem( ... )
 
    LOCAL a_ := hb_AParams()
 
-   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+   IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_xbePDrawItem )
+   ELSEIF Len( a_ ) >= 2 .AND. HB_ISEVALITEM( ::sl_xbePDrawItem )
       Eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
 

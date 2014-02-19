@@ -38,7 +38,7 @@ PROCEDURE Main()
    IF Empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
       WAIT "Press any key to exit..."
-      QUIT
+      RETURN
    ENDIF
 
    ? "NETIO server activated."
@@ -64,7 +64,7 @@ PROCEDURE Main()
    ? "NETIO_GETDATA 1:", hb_ValToExp( netio_GetData( nStream1 ) )
    ? "NETIO_GETDATA 2:", hb_ValToExp( netio_GetData( nStream2 ) )
    nSec := Seconds() + 3
-   WHILE Seconds() < nSec
+   DO WHILE Seconds() < nSec
       xData := netio_GetData( nStream1 )
       IF ! Empty( xData )
          ? hb_ValToExp( xData )
@@ -111,7 +111,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE createdb( cName )
+PROCEDURE createdb( cName )  /* must be a public function */
 
    LOCAL n
 
@@ -123,7 +123,7 @@ PROCEDURE createdb( cName )
    ? "create neterr:", NetErr(), hb_osError()
    USE ( cName )
    ? "use neterr:", NetErr(), hb_osError()
-   WHILE LastRec() < 100
+   DO WHILE LastRec() < 100
       dbAppend()
       n := RecNo() - 1
       field->F1 := Chr( n % 26 + Asc( "A" ) ) + " " + Time()
@@ -139,7 +139,7 @@ PROCEDURE createdb( cName )
 
    RETURN
 
-PROCEDURE testdb( cName )
+PROCEDURE testdb( cName )  /* must be a public function */
 
    LOCAL i, j
 
@@ -155,7 +155,7 @@ PROCEDURE testdb( cName )
    NEXT
    ordSetFocus( 1 )
    dbGoTop()
-   WHILE ! Eof()
+   DO WHILE ! Eof()
       IF ! field->F1 == field->F2
          ? "error at record:", RecNo()
          ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"
@@ -172,14 +172,14 @@ PROCEDURE testdb( cName )
 
    RETURN
 
-FUNCTION reg_stream( pConnSock, nStream )
+FUNCTION reg_stream( pConnSock, nStream )  /* must be a public function */
 
    ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_timer(), pConnSock, nStream ) )
 
    RETURN nStream
 
-FUNCTION reg_charstream( pConnSock, nStream )
+FUNCTION reg_charstream( pConnSock, nStream )  /* must be a public function */
 
    ? ProcName(), nStream
    hb_threadDetach( hb_threadStart( @rpc_charstream(), pConnSock, nStream ) )
@@ -188,7 +188,7 @@ FUNCTION reg_charstream( pConnSock, nStream )
 
 STATIC FUNCTION rpc_timer( pConnSock, nStream )
 
-   WHILE .T.
+   DO WHILE .T.
       IF ! netio_SrvSendItem( pConnSock, nStream, Time() )
          ? "CLOSED STREAM:", nStream
          EXIT
@@ -202,7 +202,7 @@ STATIC FUNCTION rpc_charstream( pConnSock, nStream )
 
    LOCAL n := 0
 
-   WHILE .T.
+   DO WHILE .T.
       IF ! netio_SrvSendData( pConnSock, nStream, Chr( Asc( "A" ) + n ) )
          ? "CLOSED STREAM:", nStream
          EXIT

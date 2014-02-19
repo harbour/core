@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +68,7 @@ PROCEDURE Main()
    ? '  CharRll( hb_BChar( 1 ) + hb_BChar(  2 ) + hb_BChar(  4 ) + hb_BChar(  8 ) + hb_BChar(  16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 ) =='
    ? '           hb_BChar( 8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ) + hb_BChar(  1 ) + hb_BChar(  2 ) + hb_BChar(   4 ) ? -->'
 
-   ? '          '
+   ? '           '
    cStr := CharRll( hb_BChar( 1 ) + hb_BChar( 2 ) + hb_BChar( 4 ) + hb_BChar( 8 ) + hb_BChar( 16 ) + hb_BChar( 32 ) + hb_BChar( 64 ) + hb_BChar( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
       ?? "hb_BChar( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"

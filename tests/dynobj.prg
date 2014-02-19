@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    /* Let's add an inline at run-time. Should already be possible */
@@ -23,7 +23,7 @@ PROCEDURE Main()
    __objAddInline( oForm, "CalcArea", ;
       {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "What is the Form area ?"
@@ -33,13 +33,13 @@ PROCEDURE Main()
 
    __objAddMethod( oForm, "Smile", @Smile() )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Smile please "
    oForm:Smile()
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -53,7 +53,7 @@ PROCEDURE Main()
    ? "Data items after"
    ? hb_ValToExp( oForm )
 
-   Pause()
+   WAIT
 
    ? "Let's attach a bigger smile"
 
@@ -70,22 +70,22 @@ PROCEDURE Main()
    ? "What is the Form area ?"
    ? oForm:CalcArea()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete CalcArea"
    __objDelInline( oForm, "CalcArea" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete Smile"
    __objDelMethod( oForm, "Smile" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -97,16 +97,18 @@ PROCEDURE Main()
    ? "Data items after"
    ? hb_ValToExp( oForm )
 
-/* oForm:cHelp := "Please crash" */
+#if 0
+   oForm:cHelp := "Please crash"
+#endif
 
    RETURN
 
-FUNCTION TForm()
+STATIC FUNCTION TForm()
 
    STATIC s_oClass
 
    IF s_oClass == NIL
-      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
+      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
 
       s_oClass:AddData( "cText" )           // define this class objects datas
       s_oClass:AddData( "nTop" )
@@ -152,9 +154,3 @@ STATIC FUNCTION BigSmile()
    ? ":-)))"
 
    RETURN self
-
-FUNCTION Pause()
-
-   WAIT "Pause:"
-
-   RETURN NIL

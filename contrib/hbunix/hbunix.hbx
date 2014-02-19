@@ -26,7 +26,9 @@ DYNAMIC posix_errno
 DYNAMIC posix_getegid
 DYNAMIC posix_geteuid
 DYNAMIC posix_getgid
+DYNAMIC posix_getgrnam
 DYNAMIC posix_getpid
+DYNAMIC posix_getpwnam
 DYNAMIC posix_getuid
 DYNAMIC posix_setegid
 DYNAMIC posix_seteuid

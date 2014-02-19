@@ -1,13 +1,11 @@
 /*
  * Harbour Project source code:
- *    demonstration/test code for TBrowse class
+ *    demonstration/test code for TBrowse() class
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  */
-
-/* UTF-8 */
 
 #include "inkey.ch"
 #include "button.ch"
@@ -117,19 +115,20 @@ PROCEDURE Main()
    // start at bottom
    oBrw:goBottom()
 
-   WHILE .T.
-      WHILE ! oBrw:stabilize() .AND. NextKey() == 0
+   DO WHILE .T.
+      DO WHILE ! oBrw:stabilize() .AND. NextKey() == 0
       ENDDO
       nKey := Inkey( 0 )
-      IF nKey == K_ESC
+      DO CASE
+      CASE nKey == K_ESC
          EXIT
-      ELSEIF nKey == K_INS
+      CASE nKey == K_INS
          oBrw:colorRect( { oBrw:rowPos, 1, oBrw:rowPos, 4 }, { 7, 6 } )
-      ELSEIF nKey == K_DEL
+      CASE nKey == K_DEL
          oBrw:refreshCurrent()
-      ELSEIF nKey >= hb_keyCode( "0" ) .AND. nKey <= hb_keyCode( "3" )
+      CASE nKey >= hb_keyCode( "0" ) .AND. nKey <= hb_keyCode( "3" )
          oBrw:freeze := nKey - hb_keyCode( "0" )
-      ELSEIF nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKey == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADSEP .AND. ;
             ( ( nCol := oBrw:mColPos ) == 2 .OR. nCol == 3 )
          IF nCol == 2
@@ -138,25 +137,25 @@ PROCEDURE Main()
             oCol3:width := 0
          ENDIF
          oBrw:configure()
-      ELSEIF nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKey == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADING .AND. ;
             oBrw:mColPos == 4
          oCol2:width := 10
          oCol3:width := 7
          oBrw:configure()
-      ELSE
+      OTHERWISE
          oBrw:applyKey( nKey )
-      ENDIF
+      ENDCASE
    ENDDO
 
    RETURN
 
 #ifndef __HARBOUR__
 
-PROCEDURE hb_idleSleep( n )
+STATIC PROCEDURE hb_idleSleep( n )
 
    n += Seconds()
-   WHILE Seconds() < n
+   DO WHILE Seconds() < n
    ENDDO
 
    RETURN

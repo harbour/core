@@ -4,41 +4,41 @@
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
-      User Selectable Colour Routine
+      User Selectable Color Routine
    $SYNTAX$
       ft_ClrSel( <aClrData>, [ <lClrMode> ], [ <cTestChr> ]  -> aClrData
    $ARGUMENTS$
       <aClrData> is an array of subarrays, with each subarray containing
-         information about the colour settings.
+         information about the color settings.
 
          The subarray has the following structure:
 
-          [1]  cName    is the name of this colour setting i.e. "Pick List"
+          [1]  cName    is the name of this color setting i.e. "Pick List"
                   Maximum length is 20 bytes
 
-          [2]  cClrStr  is the current colour string
+          [2]  cClrStr  is the current color string
                   Default is "W/N,N/W,N/N,N/N,N/W"
 
-                  If Setting type is "M" (Menu) the colours are...
-                     1.  Prompt Colour
-                     2.  Message Colour
-                     3.  HotKey Colour
-                     4.  LightBar Colour
-                     5.  LightBar HotKey Colour
+                  If Setting type is "M" (Menu) the colors are...
+                     1.  Prompt Color
+                     2.  Message Color
+                     3.  HotKey Color
+                     4.  LightBar Color
+                     5.  LightBar HotKey Color
 
                   Note: While there are many ways to code the individual
-                     colour combinations,  they should be in the same
+                     color combinations,  they should be in the same
                      format that gets returned from SetColor(), so
-                     the defaults can be found in the colour palette.
+                     the defaults can be found in the color palette.
 
                      foreground [+] / background [*]
                      i.e. "GR+/BG*, N/W*, N+/N, , W/N"
 
-          [3]  cType  is the type of colour setting
+          [3]  cType  is the type of color setting
                   Default is "W" (Window)
 
-                     T = Title     Only 1 colour element
-                     D = Desktop   Background colour and character
+                     T = Title     Only 1 color element
+                     D = Desktop   Background color and character
                      M = Menu      For ft_MenuTo() style menus
                      W = Window    Windows with radio buttons
                      G = Get       For use with @ SAY...
@@ -52,27 +52,27 @@
                   Default is "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
 
 
-      <lClrMode>   .T.  use colour palette
+      <lClrMode>   .T.  use color palette
                   .F.  use monochrome palette
 
                   Default is the IsColor() setting
 
-      <cTestChr>  2 Byte character string for colour test display
+      <cTestChr>  2 Byte character string for color test display
 
                   Default is "■■"
 
    $RETURNS$
-      An array identical to the one passed, with new selected colours
+      An array identical to the one passed, with new selected colors
    $DESCRIPTION$
-      This function allows users to select their own colour combinations
+      This function allows users to select their own color combinations
       for all the different types of screen I/O in a typical application.
       This facilitates an easy implementation of Ted Means' replacement
       of the  @..PROMPT/MENU TO found in the NanForum Toolkit.  If you are
       not using ft_MenuTo(), you can specify "A" for setting type and have
-      a normal colour string returned.
+      a normal color string returned.
    $EXAMPLES$
-      LOCAL aClrs   := {}
-      LOCAL lColour := IsColor()
+      LOCAL aClrs  := {}
+      LOCAL lColor := IsColor()
 
       SET SCOREBOARD OFF
       SetBlink( .F. )       // Allow bright backgrounds
@@ -91,6 +91,6 @@
          { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B"      }, ;
          { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A"      } }
 
-      aClrs := ft_ClrSel( aClrs, lColour )
+      aClrs := ft_ClrSel( aClrs, lColor )
    $END$
  */

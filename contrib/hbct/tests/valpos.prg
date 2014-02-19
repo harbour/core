@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,10 +59,10 @@ PROCEDURE Main()
    ? "Begin test of ValPos()"
    ?
 
-   ? '  ValPos( "1234x56789" ) == 9     ? --> ' + Str( ValPos( "1234x56789" ) )
-   ? '  ValPos( "1234x56789", 1 ) == 1  ? --> ' + Str( ValPos( "1234x56789", 1 ) )
-   ? '  ValPos( "1234x56789", 11 ) == 0 ? --> ' + Str( ValPos( "1234x56789", 11 ) )
-   ? '  ValPos( "1234x56789", 5 ) == 0  ? --> ' + Str( ValPos( "1234x56789", 5 ) )
+   ? '  ValPos( "1234x56789" ) == 9     ? -->', ValPos( "1234x56789" )
+   ? '  ValPos( "1234x56789", 1 ) == 1  ? -->', ValPos( "1234x56789", 1 )
+   ? '  ValPos( "1234x56789", 11 ) == 0 ? -->', ValPos( "1234x56789", 11 )
+   ? '  ValPos( "1234x56789", 5 ) == 0  ? -->', ValPos( "1234x56789", 5 )
 
    ?
    ? "End test of ValPos()"

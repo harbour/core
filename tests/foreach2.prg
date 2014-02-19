@@ -11,7 +11,7 @@
 #include "hbclass.ch"
 
 proc main()
-local e, o
+   local e, o
 
    ? "FOR EACH e IN myclass1()"
    o := myclass1()
@@ -34,14 +34,14 @@ local e, o
       ? e:__enumIndex(), "=>", e
    next
 
-return
+   return
 
 
 /* The first form of FOR EACH overloading
  * Can be use when all values can be calculated when FOR EACH starts
  * It overloads __enumStart() message which set base enumerator values.
- * for ascending iteration it sets: {"A","B","C"}
- * and for descending: {1, 2, 3}
+ * for ascending iteration it sets: { "A", "B", "C" }
+ * and for descending: { 1, 2, 3 }
  */
 CREATE CLASS myclass1
    METHOD __enumStart( enum, lDescend )
@@ -52,7 +52,7 @@ METHOD __enumStart( enum, lDescend ) CLASS myclass1
    /* important: the messages have to be send to the enumerator
     * reference (@enum) not directly to the enumerator enum
     */
-   (@enum):__enumBase( iif( lDescend, {1, 2, 3}, {"A","B","C"} ) )
+   (@enum):__enumBase( iif( lDescend, { 1, 2, 3 }, { "A", "B", "C" } ) )
    return .T. /* .F. means stop iteration */
 
 

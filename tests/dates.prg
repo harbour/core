@@ -1,15 +1,17 @@
-// Testing Harbour dates management.
+// Testing Harbour dates management
 
 PROCEDURE Main()
 
    LOCAL dDate, dDate2, cMask, cDate
+
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? "Testing Harbour dates management on", Date()
 
    TestCentury()
 
    ?
-   ? "dDate := CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" )
+   ? "dDate := CToD( '1999-02-04' ) =>", dDate := CToD( "1999-02-04" )
 
    ? "ValType( dDate ) =", ValType( dDate )
 
@@ -69,7 +71,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE TestCentury()
+STATIC PROCEDURE TestCentury()
 
    ?
    ? __SetCentury()

@@ -57,14 +57,14 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 
    LOCAL pEdit, oEdit
 
-   __defaultNIL( @nSize, t_nESize )
+   hb_default( @nSize, t_nESize )
    hb_default( @nLength, 80 )
 
    pEdit := ed_New( nLength, 4, nSize, nEscape )
    IF ! Empty( pEdit )
 
-      __defaultNIL( @cFrame, HB_B_DOUBLE_UNI )
-      __defaultNIL( @cColor, "W/N,W+/N,W+/R,GR+/N,G+/N" )
+      hb_default( @cFrame, HB_B_DOUBLE_UNI )
+      hb_default( @cColor, "W/N,W+/N,W+/R,GR+/N,G+/N" )
 
       oEdit := Array( E_STRUCT_LEN )
       oEdit[ E_EDIT ]    := pEdit
@@ -129,7 +129,7 @@ FUNCTION EditorSize( nSize )
 
    LOCAL _nSize := t_nESize
 
-   IF nSize != NIL
+   IF HB_ISNUMERIC( nSize )
       t_nESize := nSize
    ENDIF
 
@@ -161,7 +161,7 @@ PROCEDURE EditorSetText( oEdit, cText )
 
 PROCEDURE EditorInsText( oEdit, cText, nLine )
 
-   IF nLine == NIL
+   IF ! HB_ISNUMERIC( nLine )
       nLine := ed_LCount( oEdit[ E_EDIT ] )
    ENDIF
 
@@ -251,8 +251,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
       nSize, nEscape )
 
    IF nHandle != F_ERROR
-      ed_ReadText( oEdit[ E_EDIT ], nHandle, 0, nLen, ;
-         iif( lConv == NIL, .F., lConv ) )
+      ed_ReadText( oEdit[ E_EDIT ], nHandle, 0, nLen, hb_defaultValue( lConv, .F. ) )
       IF lClose
          FClose( nHandle )
       ENDIF
@@ -279,15 +278,14 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
 //
 
 FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
-
    RETURN ed_ReadText( oEditor[ E_EDIT ], nHandle, nOffset, nLen, ;
-      iif( lConv == NIL, .T., lConv ) )
+      hb_defaultValue( lConv, .T. ) )
 
 //
 // Start the editor
 //
 // oEdit - the editor object
-// lEdit - .T. = edit allowed, .F. = view only mode
+// lEdit - .T. edit allowed, .F. view only mode
 // lFrame - specifies if the frame around the editor should be displayed
 // nHelp - the help index into help subsystem
 //
@@ -298,7 +296,8 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL lSaveAllowed, lSaved := .F.
 
-   oBox := SaveBox( oEdit[ E_TOP ], oEdit[ E_LEFT ], ;
+   oBox := SaveBox( ;
+      oEdit[ E_TOP ], oEdit[ E_LEFT ], ;
       oEdit[ E_BOTTOM ], oEdit[ E_RIGHT ], ;
       oEdit[ E_COLOR ], oEdit[ E_FRAME ] )
 
@@ -321,7 +320,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
    nLeft   := oEdit[ E_LEFT ] + 1
    nBottom := oEdit[ E_BOTTOM ] - 1
    nRight  := oEdit[ E_RIGHT ] - 1
-   IF lFrame != NIL .AND. ! lFrame
+   IF HB_ISLOGICAL( lFrame ) .AND. ! lFrame
       nLeft--
       nBottom++
       nRight++
@@ -479,8 +478,7 @@ STATIC FUNCTION EditorSave( oEdit )
       RETURN .F.
    ENDIF
 
-   nHandle := FCreate( cFile, FC_NORMAL )
-   IF nHandle != F_ERROR
+   IF ( nHandle := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
       FWrite( nHandle, EditorGetText( oEdit ) )
       FClose( nHandle )
    ENDIF
@@ -489,20 +487,17 @@ STATIC FUNCTION EditorSave( oEdit )
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 
-   LOCAL cBox, cClr, nBottom, nRight
+   LOCAL cBox := SaveScreen( top, left, bott, right )
+   LOCAL cClr
 
    IF PCount() > 4
-      cClr    := SetColor( color )
-      cBox    := SaveScreen( top, left, bott, right )
+      cClr := SetColor( color )
       hb_DispBox( top, left, bott, right, patt )
    ELSE
-      cClr    := SetColor()
-      cBox    := SaveScreen( top, left, bott, right )
-      nBottom := bott
-      nRight  := right
+      cClr := SetColor()
    ENDIF
 
-   RETURN { top, left, nBottom, nRight, cBox, cClr }
+   RETURN { top, left, bott, right, cBox, cClr }
 
 PROCEDURE RestBox( oBox )
 

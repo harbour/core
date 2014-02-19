@@ -11,33 +11,33 @@
 
 PROCEDURE Main()
 
-   LOCAL oString := TString():New( "Hello" )
+   LOCAL oString := MyTString():New( "Hello" )
 
-   ? "Testing TString with Operator Overloading"
-   ? oString:cValue
-   ? "---"
-
+   ? "Testing MyTString() operator overloading"
    ? ValType( oString )
-
-   ? "Equal........:", oString = "Hello"
-   ? "Exactly Equal:", oString == "Hello"
-   ? "Not Equal != :", oString != "Hello"
-   ? "Not Equal <> :", oString <> "Hello"
-   ? "Not Equal #  :", oString # "Hello"
-   ? "Substring $  :", oString $ "Hello"
-   ? "Less than    :", oString < "Hello"
-   ? "Less than or Equal:", oString <= "Hello"
-   ? "Greater than :", oString > "Hello"
-   ? "Greater than or Equal:", oString >= "Hello"
-   ? "Concatenation + :", oString + "Hello"
-   ? "Concatenation - :", oString - "Hello"
-   ? "Array index[2] :", oString[ 2 ]
-   ? "Array index[3] := 'X' :", oString[ 3 ] := 'X'
-   ? oString:cValue
+   ? "---"
+   ? "Before:", oString:cValue
+   ?
+   ? "Equal                   :", oString =  "Hello"
+   ? "Exactly Equal           :", oString == "Hello"
+   ? "Not Equal !=            :", oString != "Hello"
+   ? "Not Equal <>            :", oString <> "Hello"
+   ? "Not Equal #             :", oString #  "Hello"
+   ? "Substring $             :", oString $  "Hello"
+   ? "Less than               :", oString <  "Hello"
+   ? "Less than or Equal      :", oString <= "Hello"
+   ? "Greater than            :", oString >  "Hello"
+   ? "Greater than or Equal   :", oString >= "Hello"
+   ? "Concatenation +         :", oString +  "Hello"
+   ? "Concatenation -         :", oString -  "Hello"
+   ? "Array index[ 2 ]        :", oString[ 2 ]
+   ? "Array index[ 3 ] := 'X' :", oString[ 3 ] := 'X'
+   ?
+   ? "After:", oString:cValue
 
    RETURN
 
-CREATE CLASS TString
+CREATE CLASS MyTString
 
    VAR cValue
 

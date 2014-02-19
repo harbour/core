@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General public License
  * along with this software; see the file COPYING.txt.  if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, xHarbour license gives permission for
  * additional uses of the text contained in its release of xHarbour.
@@ -49,12 +49,10 @@
 
 #define CRLF Chr( 13 ) + Chr( 10 )
 
-#define HB_THREAD_SUPPORT
-
 CREATE CLASS HB_LogEmail FROM HB_LogChannel
 
    VAR cServer
-   VAR cAddress        INIT "log@xharbour.org"
+   VAR cAddress        INIT "log@example.org"
    VAR cSubject        INIT "Log message from xharbour application"
    VAR cSendTo
    VAR cHelo           INIT "XHarbour E-mail Logger"
@@ -82,33 +80,28 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
 
    ::Super:New( nLevel )
 
-   nPos := At( ":", cServer )
-   IF nPos > 0
+   IF ( nPos := At( ":", cServer ) ) > 0
       ::nPort := Val( SubStr( cServer, nPos + 1 ) )
-      cServer := SubStr( cServer, 1, nPos - 1 )
+      cServer := Left( cServer, nPos - 1 )
    ENDIF
 
    ::cServer := cServer
    ::cSendTo := cSendTo
 
-   IF cHelo != NIL
+   IF HB_ISSTRING( cHelo )
       ::cHelo := cHelo
    ENDIF
-
-   IF cSubject != NIL
+   IF HB_ISSTRING( cSubject )
       ::cSubject := cSubject
    ENDIF
-
-   IF cFrom != NIL
+   IF HB_ISSTRING( cFrom )
       ::cAddress := cFrom
    ENDIF
 
    RETURN SELF
 
-/**
- * Inet init must be called here
+/* Inet init must be called here
  */
-
 METHOD Open( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -116,10 +109,8 @@ METHOD Open( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-/**
- * InetCleanup to be called here
+/* InetCleanup to be called here
  */
-
 METHOD Close( cName ) CLASS HB_LogEmail
 
    HB_SYMBOL_UNUSED( cName )
@@ -127,11 +118,8 @@ METHOD Close( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-
-/**
- * Sends the real message in e-mail
+/* Sends the real message in e-mail
  */
-
 METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    LOCAL skCon := hb_inetCreate()
@@ -175,16 +163,14 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    RETURN ::GetOk( skCon )  // if quit fails, the mail does not go!
 
-/**
- * Get the reply and returns true if it is allright
+/* Get the reply and returns true if it is allright
  */
-
 METHOD GetOk( skCon ) CLASS HB_LogEmail
 
    LOCAL nLen, cReply
 
    cReply := hb_inetRecvLine( skCon, @nLen, 128 )
-   IF hb_inetErrorCode( skcon ) != 0 .OR. SubStr( cReply, 1, 1 ) == "5"
+   IF hb_inetErrorCode( skcon ) != 0 .OR. hb_LeftIs( cReply, "5" )
       RETURN .F.
    ENDIF
 
@@ -210,23 +196,17 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    RETURN cPre
 
-
-
-/*****
- * Channel for monitors listening on a port
+/* Channel for monitors listening on a port
  */
-
 CREATE CLASS HB_LogInetPort FROM HB_LogChannel
 
    VAR nPort           INIT 7761
    VAR aListeners      INIT {}
    VAR skIn
 
-#ifdef HB_THREAD_SUPPORT
    VAR bTerminate      INIT .F.
    VAR nThread
    VAR mtxBusy
-#endif
 
    METHOD New( nLevel, nPort )
    METHOD Open( cName )
@@ -235,10 +215,8 @@ CREATE CLASS HB_LogInetPort FROM HB_LogChannel
    PROTECTED:
    METHOD Send( nStyle, cMessage, cName, nPriority )
 
-#ifdef HB_THREAD_SUPPORT
    HIDDEN:
    METHOD AcceptCon()
-#endif
 
 ENDCLASS
 
@@ -246,7 +224,7 @@ METHOD New( nLevel, nPort ) CLASS HB_LogInetPort
 
    ::Super:New( nLevel )
 
-   IF nPort != NIL
+   IF HB_ISNUMERIC( nPort )
       ::nPort := nPort
    ENDIF
 
@@ -258,20 +236,12 @@ METHOD Open( cName ) CLASS HB_LogInetPort
 
    hb_inetInit()
 
-   ::skIn := hb_inetServer( ::nPort )
-
-   IF ::skIn == NIL
+   IF ( ::skIn := hb_inetServer( ::nPort ) ) == NIL
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    ::mtxBusy := hb_mutexCreate()
    ::nThread := hb_threadStart( Self, "AcceptCon" )
-#else
-   // If we have not threads, we have to sync accept incoming connection
-   // when we log a message
-   hb_inetTimeout( ::skIn, 50 )
-#endif
 
    RETURN .T.
 
@@ -285,11 +255,9 @@ METHOD Close( cName ) CLASS HB_LogInetPort
       RETURN .F.
    ENDIF
 
-#ifdef HB_THREAD_SUPPORT
    // kind termination request
    ::bTerminate := .T.
    hb_threadJoin( ::nThread )
-#endif
 
    hb_inetClose( ::skIn )
 
@@ -309,18 +277,8 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
 
    LOCAL sk, nCount
 
-#ifdef HB_THREAD_SUPPORT
-
    // be sure thread is not busy now
    hb_mutexLock( ::mtxBusy )
-#else
-   // IF we have not a thread, we must see if there is a new connection
-   sk := hb_inetAccept( ::skIn )  // timeout should be short
-
-   IF sk != NIL
-      AAdd( ::aListeners, sk )
-   ENDIF
-#endif
 
    // now we transmit the message to all the available channels
    cMessage := ::Format( nStyle, cMessage, cName, nPriority )
@@ -337,13 +295,9 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
       ENDIF
    ENDDO
 
-#ifdef HB_THREAD_SUPPORT
    hb_mutexUnlock( ::mtxBusy )
-#endif
 
    RETURN .T.
-
-#ifdef HB_THREAD_SUPPORT
 
 METHOD AcceptCon() CLASS HB_LogInetPort
 
@@ -351,9 +305,8 @@ METHOD AcceptCon() CLASS HB_LogInetPort
 
    hb_inetTimeout( ::skIn, 250 )
    DO WHILE ! ::bTerminate
-      sk := hb_inetAccept( ::skIn )
       // A gentle termination request, or an error
-      IF sk != NIL
+      IF ( sk := hb_inetAccept( ::skIn ) ) != NIL
          hb_mutexLock( ::mtxBusy )
          AAdd( ::aListeners, sk )
          hb_mutexUnlock( ::mtxBusy )
@@ -361,5 +314,3 @@ METHOD AcceptCon() CLASS HB_LogInetPort
    ENDDO
 
    RETURN .T.
-
-#endif

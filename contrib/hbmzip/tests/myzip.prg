@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,21 +83,22 @@ PROCEDURE Main( ... )
    hb_ADel( aWild, 1, .T. )
 
    FOR tmp := Len( aWild ) - 1 TO 1 STEP -1
-      IF Lower( aWild[ tmp ] ) == "--pass"
+      DO CASE
+      CASE Lower( aWild[ tmp ] ) == "--pass"
          IF Empty( cPassword )
             cPassword := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
-      ELSEIF Lower( aWild[ tmp ] ) == "--comment"
+      CASE Lower( aWild[ tmp ] ) == "--comment"
          IF Empty( cComment )
             cComment := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
-      ELSEIF Lower( aWild[ tmp ] ) == "--unicode"
+      CASE Lower( aWild[ tmp ] ) == "--unicode"
          /* skip */
-      ENDIF
+      ENDCASE
    NEXT
 
    hZip := hb_zipOpen( cZipName )

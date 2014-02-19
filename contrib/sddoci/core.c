@@ -1,7 +1,7 @@
 /*
  * Oracle (via OCILIB) Database Driver
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  * Originally based on ODBC driver by:
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * www - http://harbour-project.org
@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,6 +58,8 @@
 
 #include <ocilib.h>
 
+#define HB_OCILIB_VERS( ma, mi, mu )  ( OCILIB_MAJOR_VERSION > ma || ( OCILIB_MAJOR_VERSION == ma && ( OCILIB_MINOR_VERSION > mi || ( OCILIB_MINOR_VERSION == mi && OCILIB_REVISION_VERSION >= mu ) ) ) )
+
 #if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE )
    #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
    #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
@@ -90,7 +92,6 @@
    #define D_HB_CHAR  char
 #endif
 
-
 typedef struct
 {
    OCI_Connection * pConn;
@@ -101,7 +102,6 @@ typedef struct
    OCI_Statement * pStmt;
 } SDDDATA;
 
-
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -109,8 +109,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-
-static SDDNODE ocidd =
+static SDDNODE s_ocidd =
 {
    NULL,
    "OCILIB",
@@ -124,22 +123,28 @@ static SDDNODE ocidd =
    ( SDDFUNC_GETVARLEN ) NULL
 };
 
-
 static void hb_ocidd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED );
-
-   if( ! hb_sddRegister( &ocidd ) )
-      hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+   if( ! OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED ) )
+      hb_errInternal( 8000, NULL, NULL, NULL );
+   else
+   {
+      if( ! hb_sddRegister( &s_ocidd ) )
+         hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+   }
 }
 
 static void hb_ocidd_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
+#if 0
+   /* Causes crash most of the time (win7/64-bit/mingw/ocilib 3.12.1).
+      Update if anything is found about the root cause. */
    OCI_Cleanup();
+#endif
 }
 
 HB_FUNC( HB_SDDOCI_REGISTER )
@@ -171,19 +176,18 @@ HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT uiAction;
    PHB_ITEM  pError;
+   HB_USHORT uiAction;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDOCI", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
+
    return uiAction;
 }
-
 
 static char * ocilibGetError( HB_ERRCODE * pErrCode )
 {
@@ -212,7 +216,6 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    return szRet;
 }
 
-
 /*============= SDD METHODS =============================================================*/
 
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
@@ -240,7 +243,6 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    return HB_FAILURE;
 }
 
-
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 {
    HB_ERRCODE errCode;
@@ -249,7 +251,6 @@ static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
    hb_xfree( pConnection->pSDDConn );
    return errCode;
 }
-
 
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
@@ -284,7 +285,6 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    OCI_StatementFree( st );
    return HB_FAILURE;
 }
-
 
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
@@ -514,7 +514,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -529,7 +528,6 @@ static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {

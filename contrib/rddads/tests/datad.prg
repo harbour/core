@@ -36,10 +36,10 @@ PROCEDURE Main()
    FErase( "harbour.add" )
    FErase( "harbour.ai" )
    FErase( "harbour.am" )
-   FErase( "Table1.adt" )
-   FErase( "Table1.adi" )
-   FErase( "Table2.adt" )
-   FErase( "Table2.adi" )
+   FErase( "table1.adt" )
+   FErase( "table1.adi" )
+   FErase( "table2.adt" )
+   FErase( "table2.adi" )
 
    // now Create a Data dictionary and the files if not exist
    IF ! hb_FileExists( "harbour.add" )
@@ -49,14 +49,14 @@ PROCEDURE Main()
       ? "Default connection is now this admin handle:", AdsConnection()
       AdsDisconnect()   // disconnect current default.
       // if you wanted to retain this connection for later, you could use
-      // hAdminCon := AdsConnection(0)
+      // hAdminCon := AdsConnection( 0 )
       // This get/set call would return the current connection, then set it to 0
 
       ? "Default connection is now this handle (zero):", AdsConnection()
 
       // now create two free tables with same structure
-      dbCreate( "Table1", aStru )
-      dbCreate( "Table2", aStru )
+      dbCreate( "table1", aStru )
+      dbCreate( "table2", aStru )
       // now create an index
       USE table1 NEW
       INDEX ON FIELD->id TAG codigo
@@ -68,8 +68,8 @@ PROCEDURE Main()
    ENDIF
 
    // now the magic
-   IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
-      , "ADSSYS", "", , @hConnection1 )
+   IF AdsConnect60( "harbour.add", 7, ; /* All types of connection */
+      "ADSSYS", "", , @hConnection1 )
       // The connection handle to harbour.add is now stored in hConnection1,
       // and this is now the default connection
 
@@ -89,10 +89,10 @@ PROCEDURE Main()
 
 
       ? "Add the tables"
-      AdsDDAddTable( "Table1", "table1.adt", "table1.adi" )
+      AdsDDAddTable( "table1", "table1.adt", "table1.adi" )
       ?
       IF ! AdsDDAddTable( "Customer Data", "table2.adt", "table2.adi" )
-         // notice the "long table name" for file Table2.adt.  Later open it with "Customer Data" as the table name
+         // notice the "long table name" for file table2.adt.  Later open it with "Customer Data" as the table name
          ? "Error adding table:", AdsGetLastError( @cErr ), cErr
       ENDIF
       ? "Set new admin pword on default  connection:", AdsDDSetDatabaseProperty( ADS_DD_ADMIN_PASSWORD, "newPWord"  )
@@ -106,18 +106,18 @@ PROCEDURE Main()
    hConnection1 := NIL     // you should always reset a variable holding a handle that is no longer valid
 
    ? "Default connection is back to 0:", AdsConnection()
-   ? "Is a Data Dict connection? (AE_INVALID_HANDLE = 5018):", AdsGetHandleType()
+   ? "Is a Data Dict connection? (AE_INVALID_HANDLE == 5018):", AdsGetHandleType()
 
    // now open the tables and put some data
 
-   IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
-      , "Luiz", "papael", , @hConnection1 )
+   IF AdsConnect60( "harbour.add", 7, ; /* All types of connection */
+      "Luiz", "papael", , @hConnection1 )
       ? "Default connection is now this handle:", AdsConnection()
       ? "Connection type?", AdsGetHandleType()
 
-      FOR n := 1 TO  100
+      FOR n := 1 TO 100
          IF AdsCreateSQLStatement( "Data2", 3 )
-            IF ! AdsExecuteSQLDirect( " insert into Table1( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
+            IF ! AdsExecuteSQLDirect( " insert into table1( name, address, city, age ) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + hb_ntos( n ) + ")" )
                ShowAdsError()
             ENDIF
             USE
@@ -126,7 +126,7 @@ PROCEDURE Main()
 
       FOR n := 1 TO 100
          IF AdsCreateSQLStatement( "Data1", 3 )
-            IF ! AdsExecuteSQLDirect( " insert into " + '"Customer Data"' + "( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
+            IF ! AdsExecuteSQLDirect( " insert into " + '"Customer Data"' + "( name, address, city, age ) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + hb_ntos( n ) + ")" )
                ShowAdsError()
             ENDIF
             USE
@@ -136,8 +136,9 @@ PROCEDURE Main()
 
       // AdsUseDictionary( .T. )  this function no longer is needed; the system knows if it's using a Data Dictionary connection
 
-      // Open the "long table name" for Table2
+      // Open the "long table name" for table2
       dbUseArea( .T., , "Customer Data", "custom", .T., .F. )
+      ? "AdsGetRecordCount():", AdsGetRecordCount( ,, @n ), n
       ? "Press a key to browse", Alias()
       Inkey( 0 )
       Browse()
@@ -151,7 +152,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE ShowAdsError()
+STATIC PROCEDURE ShowAdsError()
 
    LOCAL cMsg
 

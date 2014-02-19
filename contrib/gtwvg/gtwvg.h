@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -309,7 +309,7 @@ typedef struct
    HBRUSH    solidBrush;                    /* Handle to solid brush                                                      */
    HBRUSH    whiteBrush;                    /* Wvt specific White colored brush                                           */
 #if ! defined( HB_OS_WIN_CE )
-   IPicture  *iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
+   IPicture * iPicture[ WVT_PICTURES_MAX ]; /* Array to hold the Picture Streams to avoid recurring loading and unloading */
 #endif
    HFONT     hUserFonts[ WVT_FONTS_MAX ];   /* User defined font handles                                                  */
    HPEN      hUserPens[ WVT_PENS_MAX ];     /* User defined pens                                                          */

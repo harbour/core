@@ -73,6 +73,8 @@ DYNAMIC wapi_GetDesktopWindow
 DYNAMIC wapi_GetDeviceCaps
 DYNAMIC wapi_GetDlgItem
 DYNAMIC wapi_GetDlgItemText
+DYNAMIC wapi_GetKeyboardLayout
+DYNAMIC wapi_GetKeyboardLayoutName
 DYNAMIC wapi_GetKeyState
 DYNAMIC wapi_GetLastError
 DYNAMIC wapi_GetLongPathName
@@ -129,6 +131,7 @@ DYNAMIC wapi_InsertMenu
 DYNAMIC wapi_IsIconic
 DYNAMIC wapi_IsMenu
 DYNAMIC wapi_IsUserAnAdmin
+DYNAMIC wapi_IsValidCodePage
 DYNAMIC wapi_IsWindow
 DYNAMIC wapi_IsZoomed
 DYNAMIC wapi_LineTo
@@ -318,6 +321,8 @@ DYNAMIC win_EndDoc
 DYNAMIC win_EndPage
 DYNAMIC win_EnumFontFamilies
 DYNAMIC win_EnumFonts
+DYNAMIC win_ErrorDesc
+DYNAMIC win_ErrorString
 DYNAMIC win_FillRect
 DYNAMIC win_GetCharSize
 DYNAMIC win_GetCommandLineParam

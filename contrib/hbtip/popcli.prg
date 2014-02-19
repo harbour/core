@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,13 +49,11 @@
 /* 2007-04-10, Hannes Ziegler <hz AT knowlexbase.com>
    Added method :countMail()
    Added method :retrieveAll()
-*/
+ */
 
 #include "hbclass.ch"
 
-/**
-* Inet service manager: pop3
-*/
+/* Inet service manager: pop3 */
 
 CREATE CLASS TIPClientPOP FROM TIPClient
 
@@ -88,8 +86,6 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientPOP
 
    RETURN Self
 
-/**
-*/
 METHOD Open( cUrl ) CLASS TIPClientPOP
 
    IF ! ::super:Open( cUrl )
@@ -126,13 +122,10 @@ METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
    ENDIF
 
    IF ::GetOk()
-      nPos := At( "<", ::cReply )
-      IF nPos > 0
-         nPos2 := hb_At( ">", ::cReply, nPos + 1 )
-         IF nPos2 > nPos
+      IF ( nPos := At( "<", ::cReply ) ) > 0
+         IF ( nPos2 := hb_At( ">", ::cReply, nPos + 1 ) ) > nPos
             cDigest := hb_MD5( SubStr( ::cReply, nPos, ( nPos2 - nPos ) + 1 ) + ::oUrl:cPassword )
-            ::inetSendAll( ::SocketCon, "APOP " + ::oUrl:cUserid + " " ;
-               + cDigest + ::cCRLF )
+            ::inetSendAll( ::SocketCon, "APOP " + ::oUrl:cUserid + " " + cDigest + ::cCRLF )
             IF ::GetOK()
                ::isOpen := .T.
                RETURN .T.
@@ -145,18 +138,14 @@ METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
 
 METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
-   hb_default( @lAutoQuit, .T. )
-
    ::InetTimeOut( ::SocketCon )
 
-   IF lAutoQuit
+   IF hb_defaultValue( lAutoQuit, .T. )
       ::Quit()
    ENDIF
 
    RETURN ::super:Close()
 
-/**
-*/
 METHOD Delete( nId ) CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "DELE " + hb_ntos( nId ) + ::cCRLF )
@@ -181,7 +170,6 @@ METHOD List() CLASS TIPClientPOP
       ELSE
          ::bEof := .T.
       ENDIF
-
    ENDDO
 
    IF ::inetErrorCode( ::SocketCon ) != 0
@@ -216,26 +204,26 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
    /* 2004-05-04 - <maurilio.longo@libero.it>
       Instead of receiving a single char at a time until after we have the full mail, let's receive as
       much as we can and stop when we reach EOM (end of mail :)) sequence. This way is _a lot_ faster
-   */
+    */
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
 
       cBuffer := Space( 1024 )
 
-      nRead := ::inetRecv( ::SocketCon, @cBuffer, 1024 )
+      nRead := ::inetRecv( ::SocketCon, @cBuffer, hb_BLen( cBuffer ) )
 
-      cRet += Left( cBuffer, nRead )
+      cRet += hb_BLeft( cBuffer, nRead )
 
       /* 2005-11-24 - <maurilio.longo@libero.it>
                       "- Len( cEOM )" to be sure to always find a full EOM,
                       otherwise if response breaks EOM in two, it will never
                       be found
-      */
-      IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) != 0
+       */
+      IF ( nPos := hb_BAt( cEOM, cRet, Max( nRetLen - hb_BLen( cEOM ), 1 ) ) ) != 0
          // Remove ".CRLF"
-         cRet := Left( cRet, nPos + 1 )
+         cRet := hb_BLeft( cRet, nPos + 1 )
          ::bEof := .T.
 
-      ELSEIF ! Empty( nLen ) .AND. nLen < Len( cRet )
+      ELSEIF HB_ISNUMERIC( nLen ) .AND. nLen < hb_BLen( cRet )  /* TOFIX: might break UTF-8 chars */
          EXIT
       ELSE
          nRetLen += nRead
@@ -269,14 +257,14 @@ METHOD Top( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0 " + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0" + ::cCRLF )
    IF ! ::GetOk()
       RETURN NIL
    ENDIF
 
    cRet := ""
    DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
-      cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
+      cStr := ::inetRecvLine( ::SocketCon, @nPos, 512 )
       IF !( cStr == "." )
          cRet += cStr + ::cCRLF
       ELSE
@@ -301,7 +289,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   IF ! Empty( nMsgId )
+   IF HB_ISNUMERIC( nMsgId ) .AND. nMsgId > 0
       ::inetSendAll( ::SocketCon, "UIDL " + hb_ntos( nMsgId ) + ::cCRLF )
    ELSE
       ::inetSendAll( ::SocketCon, "UIDL" + ::cCRLF )
@@ -311,10 +299,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
       RETURN NIL
    ENDIF
 
-   IF ! Empty( nMsgId )
-      // +OK Space(1) nMsg Space(1) UID
-      RETURN SubStr( ::cReply, RAt( Space( 1 ), ::cReply ) + 1 )
-   ELSE
+   IF Empty( nMsgId )
       cRet := ""
       DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
          cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
@@ -324,6 +309,9 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
             ::bEof := .T.
          ENDIF
       ENDDO
+   ELSE
+      // +OK Space( 1 ) nMsg Space( 1 ) UID
+      RETURN SubStr( ::cReply, RAt( Space( 1 ), ::cReply ) + 1 )
    ENDIF
 
    IF ::inetErrorCode( ::SocketCon ) != 0
@@ -332,8 +320,6 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
 
    RETURN cRet
 
-/**
-*/
 METHOD countMail() CLASS TIPClientPop
 
    LOCAL cStat
@@ -341,7 +327,7 @@ METHOD countMail() CLASS TIPClientPop
    IF ::isOpen
       ::reset()
       cStat := ::stat()
-      IF Left( cStat, 3 ) == "+OK"
+      IF hb_LeftIs( cStat, "+OK" )
          RETURN Val( SubStr( cStat, 4, hb_At( " ", cStat, 5 ) - 4 ) )
       ENDIF
    ENDIF
@@ -353,7 +339,7 @@ METHOD GetOk() CLASS TIPClientPOP
    LOCAL nLen
 
    ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. !( Left( ::cReply, 1 ) == "+" )
+   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! hb_LeftIs( ::cReply, "+" )
       RETURN .F.
    ENDIF
 
@@ -369,7 +355,7 @@ METHOD Read( nLen ) CLASS TIPClientPOP
    ENDIF
 
    IF Val( ::oUrl:cFile ) < 0
-      IF ::Delete( - Val( ::oUrl:cFile ) )
+      IF ::Delete( -Val( ::oUrl:cFile ) )
          RETURN ::Quit()
       ELSE
          RETURN .F.
@@ -380,28 +366,23 @@ METHOD Read( nLen ) CLASS TIPClientPOP
 
 METHOD retrieveAll( lDelete )
 
-   LOCAL aMails, i, imax, cMail
+   LOCAL aMails, oMail
 
-   hb_default( @lDelete, .F. )
+   IF ::isOpen
 
-   IF ! ::isOpen
-      RETURN NIL
-   ENDIF
+      hb_default( @lDelete, .F. )
 
-   imax := ::countMail()
-   aMails := Array( imax )
-
-   FOR i := 1 TO imax
-      ::reset()
-      /* TOFIX: cMail might get assigned NIL here, creating RTE later. */
-      cMail := ::retrieve( i )
-      aMails[ i ] := TIPMail():new()
-      aMails[ i ]:fromString( cMail )
-
-      IF lDelete
+      FOR EACH oMail IN aMails := Array( ::countMail() )
          ::reset()
-         ::delete( i )
-      ENDIF
-   NEXT
+
+         oMail := TIPMail():new()
+         oMail:fromString( ::retrieve( oMail:__enumIndex() ) )
+
+         IF lDelete
+            ::reset()
+            ::delete( oMail:__enumIndex() )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN aMails

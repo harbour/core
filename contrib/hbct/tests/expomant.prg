@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,14 +61,13 @@ PROCEDURE Main()
    SET DECIMALS TO 15
 
    FOR n := 1 TO 1000
-      ? Str( n, 20, 15 ) + ": " + Str( Mantissa( n ), 20, 15 ) + " " + Str( Exponent( n ), 4 )
-      ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
+      ? Str( n, 20, 15 ) + ":", Str( Mantissa( n ), 20, 15 ), Str( Exponent( n ), 4 )
+      ? Str( Sqrt( n ), 20, 15 ) + ":", Str( Mantissa( Sqrt( n ) ), 20, 15 ), + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
-   ? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
+   ? Str( Infinity( .T. ) ), Str( Mantissa( Infinity( .T. ) ) ), Str( Exponent( Infinity( .T. ) ) )
 
-   ? "       Infinity( .T. ): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
-   ?? Str( Exponent( Infinity( .T. ) ), 4 )
+   ? "       Infinity( .T. ):", Str( Mantissa( Infinity( .T. ) ), 20, 15 ), Str( Exponent( Infinity( .T. ) ), 4 )
 
    ctexit()
 

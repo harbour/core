@@ -17,8 +17,8 @@
       (time 2 - time 1).
       If time 2 is smaller than time 1, a NEGATIVE value is returned.
    $EXAMPLES$
-      ft_ElapMin( "1718", "2040" ) ->  322
-      ft_ElapMin( "2040", "1718" ) -> -322
+      ? ft_ElapMin( "1718", "2040" )  //  202
+      ? ft_ElapMin( "2040", "1718" )  // -202
    $SEEALSO$
       ft_ElTime() ft_Mil2Min() ft_Min2Mil()
    $END$

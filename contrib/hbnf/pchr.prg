@@ -24,114 +24,106 @@
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 FUNCTION ft_PChr( c_nums )
 
    LOCAL c_ret := "", c_st := 0, c_part, c_st2, c_hex := "0123456789ABCDEF"
    LOCAL c_upper, c_t1, c_t2
 
-   IF Left( c_nums, 1 ) == "," .OR. RTrim( c_nums ) == ""
+   IF hb_LeftIs( c_nums, "," ) .OR. RTrim( c_nums ) == ""
       RETURN ""
    ENDIF
 
    c_nums := RTrim( c_nums ) + ",~,"
    c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
 
-   DO WHILE ! ( c_part == "~" .OR. c_part == "" )
+   DO WHILE !( c_part == "~" .OR. c_part == "" )
 
-      IF Left( c_part, 1 ) == '"'
+      IF hb_LeftIs( c_part, '"' )
 
          c_st2 := At( '"', SubStr( c_part, 2 ) ) + 1
-         c_ret := c_ret + SubStr( c_part, 2, c_st2 - 2 )
+         c_ret += SubStr( c_part, 2, c_st2 - 2 )
 
-      ELSEIF Left( c_part, 1 ) == "&"
+      ELSEIF hb_LeftIs( c_part, "&" )
 
          c_upper := Upper( c_part )
-         c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1
-         IF c_t1 > -1
-            c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1
-            IF c_t2 > -1
+         IF ( c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1 ) > -1
+            IF ( c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1 ) > -1
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
-            c_ret := c_ret + Chr( c_t1 )
+            c_ret += Chr( c_t1 )
          ENDIF
 
       ELSEIF ( Val( c_part ) > 0 .AND. Val( c_part ) < 256 ) .OR. c_part == "0"
 
-         c_ret := c_ret + Chr( Val( c_part ) )
+         c_ret += Chr( Val( c_part ) )
 
       ELSE
 
-         IF Left( c_part, 1 ) == "/"
-
-            c_upper := Upper( c_part )
+         IF hb_LeftIs( c_part, "/" )
 
             DO CASE
-            CASE LEFTEQUAL( c_upper, "/GRAPHIC" )
+            CASE hb_LeftIsI( c_part, "/GRAPHIC" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 )
-            CASE LEFTEQUAL( c_upper, "/ITALIC" )
+            CASE hb_LeftIsI( c_part, "/ITALIC" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/PICTURE" )
+            CASE hb_LeftIsI( c_part, "/PICTURE" )
                c_ret += ;
                   hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 77 ) + hb_BChar( 27 ) + "U"
-            CASE LEFTEQUAL( c_upper, "/COND" ) .OR. LEFTEQUAL( c_upper, "/SI" )
+            CASE hb_LeftIsI( c_part, "/COND" ) .OR. hb_LeftIsI( c_part, "/SI" )
                c_ret += hb_BChar( 15 )
-            CASE LEFTEQUAL( c_upper, "/ROMAN" )
+            CASE hb_LeftIsI( c_part, "/ROMAN" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/SANS" )
+            CASE hb_LeftIsI( c_part, "/SANS" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 )
-            CASE LEFTEQUAL( c_upper, "/NLQ" )
+            CASE hb_LeftIsI( c_part, "/NLQ" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 )
-            CASE LEFTEQUAL( c_upper, "/DRAFT" )
+            CASE hb_LeftIsI( c_part, "/DRAFT" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/ELITE" )
+            CASE hb_LeftIsI( c_part, "/ELITE" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 77 )
-            CASE LEFTEQUAL( c_upper, "/PICA" )
+            CASE hb_LeftIsI( c_part, "/PICA" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 80 )
-            CASE LEFTEQUAL( c_upper, "/EMPHOFF" )
+            CASE hb_LeftIsI( c_part, "/EMPHOFF" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 70 )
-            CASE LEFTEQUAL( c_upper, "/EMPH" )
+            CASE hb_LeftIsI( c_part, "/EMPH" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 69 )
-            CASE LEFTEQUAL( c_upper, "/1/6" )
+            CASE hb_LeftIsI( c_part, "/1/6" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 50 )
-            CASE LEFTEQUAL( c_upper, "/1/8" )
+            CASE hb_LeftIsI( c_part, "/1/8" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 48 )
-            CASE LEFTEQUAL( c_upper, "/SKIPOFF" )
+            CASE hb_LeftIsI( c_part, "/SKIPOFF" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 79 )
-            CASE LEFTEQUAL( c_upper, "/SKIP" )
+            CASE hb_LeftIsI( c_part, "/SKIP" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 78 )
-            CASE LEFTEQUAL( c_upper, "/FF" ) .OR. LEFTEQUAL( c_upper, "/EJECT" )
+            CASE hb_LeftIsI( c_part, "/FF" ) .OR. hb_LeftIsI( c_part, "/EJECT" )
                c_ret += hb_BChar( 12 )
-            CASE LEFTEQUAL( c_upper, "/INIT" ) .OR. LEFTEQUAL( c_upper, "/RESET" )
+            CASE hb_LeftIsI( c_part, "/INIT" ) .OR. hb_LeftIsI( c_part, "/RESET" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 64 )
-            CASE LEFTEQUAL( c_upper, "/SPANISH" )
+            CASE hb_LeftIsI( c_part, "/SPANISH" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 82 ) + hb_BChar( 12 )
-            CASE LEFTEQUAL( c_upper, "/USA" )
+            CASE hb_LeftIsI( c_part, "/USA" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 82 ) + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/ONE" )
+            CASE hb_LeftIsI( c_part, "/ONE" )
                c_ret += hb_BChar( 27 ) + "U" + hb_BChar( 1 )
-            CASE LEFTEQUAL( c_upper, "/TWO" )
+            CASE hb_LeftIsI( c_part, "/TWO" )
                c_ret += hb_BChar( 27 ) + "U" + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/FAST" )
+            CASE hb_LeftIsI( c_part, "/FAST" )
                c_ret += hb_BChar( 27 ) + "s" + hb_BChar( 0 )
-            CASE LEFTEQUAL( c_upper, "/SLOW" )
+            CASE hb_LeftIsI( c_part, "/SLOW" )
                c_ret += hb_BChar( 27 ) + "s" + hb_BChar( 1 )
-            CASE LEFTEQUAL( c_upper, "/OFF" )
+            CASE hb_LeftIsI( c_part, "/OFF" )
                c_ret += hb_BChar( 19 )
-            CASE LEFTEQUAL( c_upper, "/ON" )
+            CASE hb_LeftIsI( c_part, "/ON" )
                c_ret += hb_BChar( 17 )
-            CASE LEFTEQUAL( c_upper, "/BEEP" ) .OR. LEFTEQUAL( c_upper, "/BELL" )
+            CASE hb_LeftIsI( c_part, "/BEEP" ) .OR. hb_LeftIsI( c_part, "/BELL" )
                c_ret += hb_BChar( 7 )
-            CASE LEFTEQUAL( c_upper, "/CAN" )
+            CASE hb_LeftIsI( c_part, "/CAN" )
                c_ret += hb_BChar( 24 )
             ENDCASE
-
          ENDIF
-
       ENDIF
 
       c_st := At( ",", SubStr( c_nums, c_st + 1 ) ) + c_st

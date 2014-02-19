@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,20 +51,11 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
-#define DOCUMENT_ 1
-#define INDEX_ 2
+#define DOCUMENT_  1
+#define INDEX_     2
 
 CREATE CLASS TPLGenerate
-
-   EXPORTED:
-   // ~ PROTECTED:
-   VAR nHandle AS NUMERIC
-   VAR cFolder AS STRING
-   VAR cFilename AS STRING
-   VAR cTitle AS STRING
-   VAR cExtension AS STRING
 
    METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
    METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
@@ -76,27 +67,34 @@ CREATE CLASS TPLGenerate
    METHOD IsIndex() INLINE ( ::nType == INDEX_ )
 
    PROTECTED:
+
    METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
+
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
+
+   VAR nHandle AS NUMERIC
+   VAR cFolder AS STRING
+   VAR cFilename AS STRING
+   VAR cTitle AS STRING
+   VAR cExtension AS STRING
 
 ENDCLASS
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+   ::New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
 
    RETURN self
 
 METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   ::New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
 
    RETURN self
 
 METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
 
-   ::nHandle := 0
    ::cFolder := cFolder
    ::cFilename := cFilename
    ::cTitle := cTitle
@@ -104,7 +102,7 @@ METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
    ::nType := nType
 
    IF ! hb_DirExists( ::cFolder )
-      OutStd( hb_eol() + "Creating folder '" + ::cFolder + "'" )
+      OutStd( hb_eol() + "Creating folder", "'" + ::cFolder + "'" )
       hb_DirCreate( ::cFolder )
    ENDIF
 

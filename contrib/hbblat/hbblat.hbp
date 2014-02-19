@@ -7,14 +7,14 @@
 
 -stop{!win}
 
--depoptional=blat:yes
+-depoptional=blat:yes{!hbdyn}
 -depkeyhead=blat:blat.h
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
 
 -iflag={bcc}-a
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 blatwrp.c
 blatcls.prg

@@ -46,7 +46,7 @@ PROCEDURE Main()
    ? __pp_Process( l_pp, cString )
    ?
 
-   WAIT "Press any key..."
+   WAIT
 
    CLS
 
@@ -57,7 +57,7 @@ PROCEDURE Main()
       '', ;
       '? MYFIELD, YOURFIELD', ;
       '', ;
-      'WAIT "Press any key..."', ;
+      'WAIT', ;
       '', ;
       'CLOSE ALL' }
 
@@ -69,7 +69,7 @@ PROCEDURE Main()
          ? iif( j == 1, aScript[ i ], __pp_Process( l_pp, aScript[ i ] ) )
       NEXT
       ?
-      WAIT "Press any key..."
+      WAIT
       CLS
    NEXT
 

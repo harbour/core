@@ -2,12 +2,12 @@
  * Harbour Project source code:
  *    This code implements BlowFish algorithm designed by Bruce Schneier.
  *    The description of BlowFish algorithm can be found at:
- *       http://www.schneier.com/paper-blowfish-fse.html
+ *       https://www.schneier.com/paper-blowfish-fse.html
  *    This code uses for initial s-boxes and p-array values PI hex digits
  *    taken from tables public at:
- *       http://www.schneier.com/blowfish.html
+ *       https://www.schneier.com/blowfish.html
  *    which can be downloaded from:
- *       http://www.schneier.com/code/constants.txt
+ *       https://www.schneier.com/code/constants.txt
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -25,7 +25,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,12 +61,11 @@ PROCEDURE Main()
 
    ? "Simple tests:"
 
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW" ? --> "' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
-   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) == "ABCDABCDxx" ? '
-   ? '           --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW" ? -->', '"' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
+   ? '  AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) == "ABCDABCDxx" ? -->', '"' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
 
    ? "End test of AtRepl()"
    ?

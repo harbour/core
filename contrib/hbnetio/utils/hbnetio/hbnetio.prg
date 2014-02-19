@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -139,30 +139,28 @@ PROCEDURE netiosrv_Main( lUI, ... )
       DO CASE
       CASE Lower( cParam ) == "-a"
          /* Ignore */
-      CASE Lower( Left( cParam, 5 ) ) == "-noui"
+      CASE hb_LeftIsI( cParam, "-noui" )
          lUI := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-port="
-         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
-      CASE Lower( Left( cParam, 7 ) ) == "-iface="
-         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 8 )
-      CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
-         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
-      CASE Lower( Left( cParam, 6 ) ) == "-pass="
-         cPassword := SubStr( cParam, 7 )
+      CASE hb_LeftIsI( cParam, "-port=" )
+         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-port=" ) + 1 ) )
+      CASE hb_LeftIsI( cParam, "-iface=" )
+         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-iface=" ) + 1 )
+      CASE hb_LeftIsI( cParam, "-rootdir=" )
+         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, Len( "-rootdir=" ) + 1 )
+      CASE hb_LeftIsI( cParam, "-pass=" )
+         cPassword := SubStr( cParam, Len( "-pass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminport="
-         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 12 ) )
-      CASE Lower( Left( cParam, 12 ) ) == "-adminiface="
-         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 13 )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminpass="
-         cPasswordManagement := SubStr( cParam, 12 )
+      CASE hb_LeftIsI( cParam, "-adminport=" )
+         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-adminport=" ) + 1 ) )
+      CASE hb_LeftIsI( cParam, "-adminiface=" )
+         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-adminiface=" ) + 1 )
+      CASE hb_LeftIsI( cParam, "-adminpass=" )
+         cPasswordManagement := SubStr( cParam, Len( "-adminpass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 5 ) ) == "-rpc="
-         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
+      CASE hb_LeftIsI( cParam, "-rpc=" )
+         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, Len( "-rpc=" ) + 1 )
 
-         hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
-
-         cExt := Lower( cExt )
+         cExt := Lower( hb_FNameExt( netiosrv[ _NETIOSRV_cRPCFFileName ] ) )
 
          SWITCH cExt
          CASE ".prg"
@@ -176,7 +174,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
          CASE ".prg"
          CASE ".hb"
-            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0", ;
+            cFile := hb_compileBuf( hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
             IF cFile != NIL
                netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
@@ -835,7 +833,7 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
       "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
-      "Copyright (c) 2009-2013, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      "Copyright (c) 2009-2014, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
       hb_eol() )
 

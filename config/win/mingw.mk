@@ -11,7 +11,7 @@ LIB_EXT := .a
 ifneq ($(HB_COMPILER),mingw64)
    ifneq ($(findstring unicows,$(3RDLIBS)),)
       # Required to be able to link harbour-*.dll against unicows lib
-      # without it 'Cannot export <*>: symbol not found' errors occur.
+      # without 'Cannot export <*>: symbol not found' errors.
       HB_DYN_COPT := -DHB_DYNLIB
    endif
 endif
@@ -22,9 +22,18 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# Equivalent to MSVC -GS (default) option:
+# Similar to MSVC -GS (default) option:
+ifeq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45 46 47 48),)
+   CFLAGS += -fstack-protector-strong
+   SYSLIBS += ssp
+else
 ifeq ($(filter $(HB_COMPILER_VER),29 34 40),)
+   # too weak
    #CFLAGS += -fstack-protector
+   # too slow
+   #CFLAGS += -fstack-protector-all
+   #SYSLIBS += ssp
+endif
 endif
 
 # It is also supported by official mingw 4.4.x and mingw64 4.4.x,
@@ -39,7 +48,7 @@ endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
-   # CFLAGS += -Wextra
+   # CFLAGS += -Wextra -Wformat-security -D_FORTIFY_SOURCE=2
 else
    CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
    ifneq ($(HB_BUILD_MODE),cpp)
@@ -48,7 +57,7 @@ else
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   # -O3 is not recommended for GCC 4.x by some packagers (see http://www.gentoo.org/doc/en/gcc-optimization.xml)
+   # -O3 is not recommended for GCC 4.x by some packagers (see https://wiki.gentoo.org/wiki/GCC_optimization)
    CFLAGS += -O3
    # This option is not needed in x86_64 mode.
    ifneq ($(HB_COMPILER),mingw64)
@@ -58,21 +67,21 @@ ifneq ($(HB_BUILD_OPTIM),no)
       endif
    endif
    ifeq ($(HB_COMPILER),mingw)
-      CFLAGS += -march=i586 -mtune=pentiumpro
+      CFLAGS += -march=i686 -mtune=generic
    endif
 endif
 
-#ifeq ($(HB_COMPILER),mingw64)
-#   CFLAGS += -m64
-#   DFLAGS += -m64
-#   LDFLAGS += -m64
-#   RCFLAGS += -m64
-#else
-#   CFLAGS += -m32
-#   DFLAGS += -m32
-#   LDFLAGS += -m32
-#   RCFLAGS += -m32
-#endif
+ifeq ($(HB_COMPILER),mingw64)
+   CFLAGS += -m64
+   DFLAGS += -m64
+   LDFLAGS += -m64
+   RCFLAGS += --target=pe-x86-64
+else
+   CFLAGS += -m32
+   DFLAGS += -m32
+   LDFLAGS += -m32
+   RCFLAGS += --target=pe-i386
+endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g

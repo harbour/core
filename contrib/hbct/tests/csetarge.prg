@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -79,9 +79,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WHOCARES on argument error
    ?
@@ -93,9 +93,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WARNING on argument error
    ?
@@ -107,9 +107,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_ERROR on argument error
    ?
@@ -121,9 +121,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
@@ -135,9 +135,9 @@ PROCEDURE Main()
    ?
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    ?
    ? "Standard error handler: "
@@ -148,9 +148,9 @@ PROCEDURE Main()
    ? "Standard behaviour"
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WHOCARES on argument error
    ?
@@ -158,9 +158,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_WHOCARES )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_WARNING on argument error
    ?
@@ -168,9 +168,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_WARNING )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_ERROR on argument error
    ?
@@ -178,9 +178,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_ERROR )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
@@ -188,9 +188,9 @@ PROCEDURE Main()
    CSetArgErr( CT_ARGERR_CATASTROPHIC )
    ? "  Call to CharAdd( 'AA', .F. ):"
    cRet := CharAdd( "AA", .F. )
-   ? "  return value was", cRet, "<Press any key>"
+   ? "  return value was", cRet
    ?
-   Inkey( 0 )
+   WAIT
 
    ? "End test of CSetArgErr()"
 
@@ -198,7 +198,7 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION myerrhandler( oerr )
+STATIC FUNCTION myerrhandler( oerr )
 
    LOCAL ni, nDigit
 
@@ -210,7 +210,7 @@ FUNCTION myerrhandler( oerr )
    ? "      err:operation....:", oerr:operation
    ? "      Len(err:args)....:", Len( oerr:args )
    FOR ni := 1 TO Len( oerr:args )
-      ? "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ ni ]
+      ? "          err:args[ " + hb_ntos( ni ) + " ]:", oerr:args[ ni ]
    NEXT
    ? "      err:genCode......:", oerr:genCode
    ? "      err:subCode......:", oerr:subCode
@@ -241,7 +241,7 @@ FUNCTION myerrhandler( oerr )
          DO CASE
          CASE nDigit == 0
             ?? "NIL."
-            cInput  := NIL
+            cInput := NIL
 
          CASE nDigit == 1
             ?? "String."

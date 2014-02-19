@@ -26,7 +26,7 @@ PROCEDURE DllMain()
    RETURN
 
 
-FUNCTION MyMethod( ... )
+FUNCTION MyMethod( ... )  /* must be a public function */
    RETURN "Hello from MyOleServer [" + hb_ValToExp( { ... } ) + "]"
 
 

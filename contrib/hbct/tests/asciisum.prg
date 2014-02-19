@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,9 +59,9 @@ PROCEDURE Main()
    ? "Begin test of AsciiSum()"
    ?
 
-   ? '  AsciiSum( Replicate( "A", 10000 ) ) == 650000 ? --> ' + Str( AsciiSum( Replicate( "A", 10000 ) ) )
-   ? '  AsciiSum( "0123456789" ) == 525               ? --> ' + Str( AsciiSum( "0123456789" ) )
-   ? '  AsciiSum( NIL ) == 0                          ? --> ' + Str( AsciiSum( NIL ) )
+   ? '  AsciiSum( Replicate( "A", 10000 ) ) == 650000 ? -->', AsciiSum( Replicate( "A", 10000 ) )
+   ? '  AsciiSum( "0123456789" ) == 525               ? -->', AsciiSum( "0123456789" )
+   ? '  AsciiSum( NIL ) == 0                          ? -->', AsciiSum( NIL )
 
    ?
    ? "End test of AsciiSum()"

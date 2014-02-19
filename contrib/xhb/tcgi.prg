@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -90,9 +90,7 @@ CREATE CLASS TCgi FROM THtml
    VAR aQueryFields INIT {}
 
    METHOD New( cInBuffer )
-
    METHOD Field( cQueryName )
-
    METHOD ToObject()
 
 ENDCLASS
@@ -100,7 +98,6 @@ ENDCLASS
 METHOD New( cInBuffer ) CLASS TCgi
 
    LOCAL i
-   LOCAL aTemp
    LOCAL aVar
 
    ::nH := HtmlPageHandle()
@@ -129,22 +126,18 @@ METHOD New( cInBuffer ) CLASS TCgi
    ::Content_Length    := GetEnv( "CONTENT_LENGTH" )
    ::Annotation_Server := GetEnv( "ANNOTATION_SERVER" )
 
-   IF cInBuffer != NIL
+   IF HB_ISSTRING( cInBuffer )
       ::Query_String := RTrim( cInBuffer )
-   ELSE
-      IF "POST" $ Upper( ::Request_Method )
-         ::Query_String := RTrim( FReadStr( STD_IN, Val( ::CONTENT_LENGTH ) ) )
-      ENDIF
+   ELSEIF "POST" $ Upper( ::Request_Method )
+      ::Query_String := RTrim( FReadStr( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
    ENDIF
 
    IF ! Empty( ::Query_String )
 
       ::aQueryFields := {}
 
-      aTemp := hb_ATokens( ::Query_String, "&" )           // separate fields
-
-      FOR i := 1 TO Len( aTemp )
-         aVar := hb_ATokens( aTemp[ i ], "=" )
+      FOR EACH i IN hb_ATokens( ::Query_String, "&" )   // separate fields
+         aVar := hb_ATokens( i, "=" )
          IF Len( aVar ) == 2
             AAdd( ::aQueryFields, { aVar[ 1 ], HtmlDecodeUrl( aVar[ 2 ] ) } )
          ENDIF
@@ -154,35 +147,29 @@ METHOD New( cInBuffer ) CLASS TCgi
 
    RETURN ::ToObject()
 
-/****
-*
-*        TCGI():ToObject()
-*
-*        Creates instance variables out of CGI FORM return values
-*        or URL encoded content.
-*
-*        It subclasses the TCgi class to a *new* class
-*/
-
+/*
+ * Creates instance variables out of CGI FORM return values
+ * or URL encoded content.
+ *
+ * It subclasses the TCgi class to a *new* class
+ */
 METHOD ToObject() CLASS TCgi
-
-   LOCAL i
-   LOCAL nScope := 1
-   LOCAL aDb
-   LOCAL oNew
 
    STATIC s_n := 0
 
    // --> create new oObject class from this one...
-   aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
+   LOCAL aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
 
-   FOR i := 1 TO Len( ::aQueryFields )
+   LOCAL i
+   LOCAL oNew
 
-      IF ::aQueryFields[ i, 2 ] == NIL .OR. Empty( ::aQueryFields[ i, 2 ] )
-         ::aQueryFields[ i, 2 ] := ""
+   FOR EACH i IN ::aQueryFields
+
+      IF i[ 2 ] == NIL .OR. Empty( i[ 2 ] )
+         i[ 2 ] := ""
       ENDIF
 
-      adb:AddData( ::aQueryFields[ i, 1 ], ::aQueryFields[ i, 2 ], , nScope )
+      adb:AddData( i[ 1 ], i[ 2 ] )
    NEXT
 
    adb:Create()
@@ -209,65 +196,50 @@ METHOD ToObject() CLASS TCgi
    oNew:Content_Type      := ::Content_Type
    oNew:Content_Length    := ::Content_Length
    oNew:Annotation_Server := ::Annotation_Server
-   oNew:nH                := iif( HtmlPageHandle() == NIL, STD_OUT, HtmlPageHandle() )
+   oNew:nH                := hb_defaultValue( HtmlPageHandle(), hb_GetStdOut() )
 
    RETURN oNew
 
 METHOD Field( cQueryName ) CLASS TCgi
 
-   LOCAL cRet := ""
    LOCAL nRet
 
-   __defaultNIL( @cQueryName, "" )
+   hb_default( @cQueryName, "" )
 
-   nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
-
-   IF nRet > 0
-      cRet := ::aQueryFields[ nRet, 2 ]
+   IF ( nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } ) ) > 0
+      RETURN ::aQueryFields[ nRet ][ 2 ]
    ENDIF
 
-   RETURN cRet
+   RETURN ""
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
-   LOCAL cBuf
-   LOCAL aElem
+   LOCAL aElem := Array( Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1 )
+   LOCAL cBuf := cString
+
    LOCAL nPosFim
-   LOCAL nSize
    LOCAL i
 
-   nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
-   aElem := Array( nSize )
+   FOR EACH i IN aElem
 
-   cBuf := cString
-   FOR i := 1 TO nSize
-      nPosFim := At( cDelim, cBuf )
-
-      IF nPosFim > 0
-         aElem[ i ] := SubStr( cBuf, 1, nPosFim - 1 )
+      IF ( nPosFim := At( cDelim, cBuf ) ) > 0
+         i := Left( cBuf, nPosFim - 1 )
       ELSE
-         aElem[ i ] := cBuf
+         i := cBuf
       ENDIF
 
       cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
-
    NEXT
 
    RETURN aElem[ nRet ]
 
-/****
-*
-*     CgiParseVar()
-*
-*     Separates elements of a CGI query environment variable
-*
+/* Separates elements of a CGI query environment variable
 */
-
 FUNCTION CgiParseVar( cEnvVar )
 
    cEnvVar := HtmlDecodeUrl( cEnvVar )
 
-   IF "=" $ cEnvVar .AND. Len( cEnvVar ) > At( "=", cEnvVar )
+   IF "=" $ cEnvVar
       cEnvVar := AllTrim( SubStr( cEnvVar, At( "=", cEnvVar ) + 1 ) )
    ELSE
       cEnvVar := ""

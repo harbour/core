@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,11 +60,11 @@ PROCEDURE Main()
    ?
 
    ? "Simple tests:"
-   ? '  CharMix( "ABC", "123" )  == "A1B2C3"     ? --> "' + CharMix( "ABC", "123" )  + '"'
-   ? '  CharMix( "ABCDE", "12" ) == "A1B2C1D2E1" ? --> "' + CharMix( "ABCDE", "12" ) + '"'
-   ? '  CharMix( "AB", "12345" ) == "A1B2"       ? --> "' + CharMix( "AB", "12345" ) + '"'
-   ? '  CharMix( "HELLO", " " )  == "H E L L O " ? --> "' + CharMix( "HELLO", " " )  + '"'
-   ? '  CharMix( "HELLO", "" )   == "HELLO"      ? --> "' + CharMix( "HELLO", "" )   + '"'
+   ? '  CharMix( "ABC", "123" )  == "A1B2C3"     ? -->', '"' + CharMix( "ABC", "123" )  + '"'
+   ? '  CharMix( "ABCDE", "12" ) == "A1B2C1D2E1" ? -->', '"' + CharMix( "ABCDE", "12" ) + '"'
+   ? '  CharMix( "AB", "12345" ) == "A1B2"       ? -->', '"' + CharMix( "AB", "12345" ) + '"'
+   ? '  CharMix( "HELLO", " " )  == "H E L L O " ? -->', '"' + CharMix( "HELLO", " " )  + '"'
+   ? '  CharMix( "HELLO", "" )   == "HELLO"      ? -->', '"' + CharMix( "HELLO", "" )   + '"'
    ?
 
    ? "End test of CharMix()"

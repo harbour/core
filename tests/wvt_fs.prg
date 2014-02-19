@@ -15,7 +15,7 @@ PROCEDURE Main()
       hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" )
    ELSE
       ? "launch me under a graphical GT"
-      QUIT
+      RETURN
    ENDIF
 
    ? "GT" + hb_gtVersion() + " test"

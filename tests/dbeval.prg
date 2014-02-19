@@ -2,7 +2,7 @@ PROCEDURE Main()
 
    LOCAL nCount
 
-   USE test
+   USE test.dbf READONLY
 
    dbGoto( 4 )
    ? RecNo()

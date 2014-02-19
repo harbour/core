@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -919,9 +919,17 @@ long hb_timeUTCOffset( void ) /* in seconds */
          return 0;
 #endif
 
+      /* silence warning caused by disabling 'retval' check above */
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(push)
+#pragma warning(disable:6102)
+#endif
       return -( tzInfo.Bias +
             ( retval == TIME_ZONE_ID_DAYLIGHT ? tzInfo.DaylightBias :
                       /*TIME_ZONE_ID_STANDARD*/ tzInfo.StandardBias ) ) * 60;
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(pop)
+#endif
    }
 #else
    {

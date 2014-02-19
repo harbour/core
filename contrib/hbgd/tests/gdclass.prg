@@ -17,12 +17,10 @@ PROCEDURE Main()
    LOCAL oI5
    LOCAL oB
 
-#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-#endif
 
    /* Create an image in memory */
    oI := GDImage():Create( 200, 200 )
@@ -111,9 +109,9 @@ PROCEDURE Main()
    /* Query functions */
 
    color := oI:GetPixel( oI:Width() / 2, oI:Height() / 2 )
-   ? "Pixel Color is: ", color
-   ? "RGB Values: ", oI:Red( color ), oI:Green( color ), oI:Blue( color )
-   ? "Alpha Value: ",  oI:Alpha( color )
+   ? "Pixel Color is:", color
+   ? "RGB Values:", oI:Red( color ), oI:Green( color ), oI:Blue( color )
+   ? "Alpha Value:", oI:Alpha( color )
 
    /* Write Images on files */
    oI:SavePng( IMAGES_OUT + "rect.png" )
@@ -192,13 +190,11 @@ PROCEDURE Main()
    // oI2:CopyRotated( , , , , , , 90, oI4 )
    oI4:SaveJpeg( IMAGES_OUT + "rotatein.jpg" )
 
-
    oI5:Zoom( 40 )
    // oI5:Rotate( 90 )
    blue := oI5:SetColor( 0, 0, 200 )
    oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "GD", "verdana", 20, 0, blue )
    oI5:SaveJpeg( IMAGES_OUT + "gd_zoom.jpg" )
-
 
    oI5 := GDChart():New( 400, 400 )
    // Define piece colors
@@ -248,14 +244,14 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
    oI5:AddDef( "COLOR", blue )
 
-   // oI5:AddSeries( "LABEL"  => "Primo",;
-   //                "VALUES" => { 10, 23, 54, 11, 32, 25 }, ;
-   //                "COLOR"  => blue )
+#if 0
+   oI5:AddSeries( { "LABEL"  => "Primo", "VALUES" => { 10, 23, 54, 11, 32, 25 }, "COLOR"  => blue } )
+#endif
 
 #if 0
    oI5:SetData( { ;
-      { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40 },;
-      { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
+      { "LABEL" => "One", "VALUE" => 1000, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40 }, ;
+      { "LABEL" => "Two", "VALUE" => 3500, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
       { "LABEL" => "Three", "VALUE" => 5500, "COLOR" => green, "FILLED" => .T. }, ;
       { "LABEL" => "Four", "VALUE" => 6500, "FILLED" => .T., "TILE" => oB }, ;
       { "LABEL" => "Five", "VALUE" => 3400, "FILLED" => .T., "COLOR" => green }, ;
@@ -296,7 +292,6 @@ PROCEDURE Main()
    // Class does it auto
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "folder for output images"
 
    RETURN

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -126,7 +126,7 @@ CREATE CLASS HBBlat
    VAR cCharSet                AS STRING
    VAR cUserHeader1            AS STRING
    VAR cUserHeader2            AS STRING
-   VAR cDSN                    AS STRING                 // Delivery Status Notifications (RFC 3461): n = never, s = successful, f = failure, d = delayed - can be used together, however N takes precedence
+   VAR cDSN                    AS STRING                 // Delivery Status Notifications (RFC 3461): n: never, s: successful, f: failure, d: delayed - can be used together, however N takes precedence
    VAR lEHBase64               AS LOGICAL INIT .F.       // use base64 for encoding headers, if necessary
    VAR lEHQuoted               AS LOGICAL INIT .F.       // use quoted-printable for encoding headers, if necessary
    VAR lLowPriority            AS LOGICAL INIT .F.
@@ -187,7 +187,6 @@ CREATE CLASS HBBlat
    // Other
    VAR lIgnoreErrors           AS LOGICAL INIT .F.
 
-
    // Methods
    METHOD Send()
    METHOD Command( cCommand )  VIRTUAL
@@ -211,10 +210,10 @@ METHOD Send() CLASS HBBlat
    IF ::nError == BLAT_SUCCESS
       ::nBlatError := hb_blatSend( ::cCommand )
       IF ::nBlatError != 0
-         ::nError     := ::nBlatError
-         ::cError     := BLAT_TEXT_ERROR
+         ::nError := ::nBlatError
+         ::cError := BLAT_TEXT_ERROR
       ELSE
-         ::cError     := BLAT_TEXT_SUCCESS
+         ::cError := BLAT_TEXT_SUCCESS
       ENDIF
       ::cBlatError := ::TranslateBlatError( ::nBlatError )
    ENDIF
@@ -815,12 +814,13 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -xtndxmit"
       ENDIF
 
-      /* NOT IMPLEMENTED
+#if 0
+      /* NOT IMPLEMENTED */
       // lHelp
       IF ::lHelp
          ::cCommand += " -h"
       ENDIF
-      */
+#endif
 
       // lQuiet
       IF ::lQuiet
@@ -896,10 +896,8 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::cCommand += " -superdebugT"
       ENDIF
 
-
       // Check done
       ::lChecked := .T.
-
    ENDIF
 
    RETURN
@@ -929,8 +927,10 @@ METHOD BlatErrorString() CLASS HBBlat
 
 METHOD TranslateBlatError( nErr ) CLASS HBBlat
 
-   LOCAL cError, nPos
-   // TODO: add function that returns language error array
+   LOCAL nPos
+
+   /* BLAT_TEXT_ERR_UNKNOWN has to be first error */
+   /* TODO: add function that returns language error array */
    LOCAL aErrors := { ;
       { BLAT_ERR_UNKNONW                        , BLAT_TEXT_ERR_UNKNOWN                        }, ;
       { BLAT_SUCCESS                            , BLAT_TEXT_SUCCESS                            }, ;
@@ -957,36 +957,20 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
 
    nPos := AScan( aErrors, {| e | e[ 1 ] == nErr }, 2 )
    IF nPos == 0
-      cError := aErrors[ 1, 2 ]  // BLAT_TEXT_ERR_UNKNOWN has to be first error
-   ELSE
-      cError := aErrors[ nPos, 2 ]
+      nPos := 1
    ENDIF
 
-#if 0
-   SWITCH nErr
-   CASE BLAT_SUCCESS
-      cError := BLAT_TEXT_SUCCESS
-      EXIT
-
-   CASE BLAT_ERR_MESSAGE_NOT_ACCEPTED
-      cError := BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED
-      EXIT
-
-   OTHERWISE
-      cError := BLAT_TEXT_ERR_UNKNOWN
-   ENDSWITCH
-#endif
-
-   RETURN cError
+   RETURN aErrors[ nPos ][ 2 ]
 
 STATIC FUNCTION ArrayToString( aArray )
 
    LOCAL cString := ""
-   LOCAL nLen    := Len( aArray )
    LOCAL cElem
 
    FOR EACH cElem IN aArray
-      cString += iif( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + iif( cElem:__enumIndex() < nLen, ",", "" )
+      cString += ;
+         iif( '"' $ cElem, "'" + cElem + "'", '"' + cElem + '"' ) + ;
+         iif( cElem:__enumIsLast(), "", "," )
    NEXT
 
    RETURN cString

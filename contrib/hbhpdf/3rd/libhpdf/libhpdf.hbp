@@ -8,8 +8,6 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -cpp=no
 -pic
@@ -92,8 +90,10 @@ hpdfu3d.c
 hpdfutil.c
 hpdfxref.c
 
+# For master head, use: https://github.com/libharu/libharu/archive/master.zip
+
 # ORIGIN http://libharu.org/
-# VER    2.3.0RC3
+# VER    head
 # URL    https://github.com/libharu/libharu/archive/RELEASE_2_3_0RC3.zip
 # DIFF   libhpdf.dif
 #

@@ -8,20 +8,18 @@
  */
 
 #include "inkey.ch"
+
 #ifdef __HARBOUR__
 #include "hbgtinfo.ch"
-
 REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
 REQUEST HB_CODEPAGE_UTF8EX
 #else
-#xtranslate hb_keyStd( n )  ( n )
-#xtranslate hb_keyCode( n ) Asc( n )
-#xtranslate hb_keyChar( c ) iif( c >= 32 .AND. c <= 255, Chr( c ), "" )
-#xtranslate hb_ntos( n )    LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
+
 #ifndef HB_K_RESIZE
 #define HB_K_RESIZE 1101
 #endif
@@ -244,7 +242,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
 
 #ifdef __HARBOUR__
-   Set( _SET_EVENTMASK, HB_INKEY_ALL + HB_INKEY_EXT )
+   Set( _SET_EVENTMASK, hb_bitOr( HB_INKEY_ALL, HB_INKEY_EXT ) )
    hb_gtInfo( HB_GTI_CURSORBLINKRATE, 1000 )
    hb_gtInfo( HB_GTI_ESCDELAY, 50 )
    // hb_gtinfo( HB_GTI_FONTATTRIBUTE, 0 )
@@ -286,12 +284,12 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__
    ? hb_gtVersion( 1 ), "GT" + hb_gtVersion()
-   ? "Host codpage: " + hb_cdpSelect() + ", terminal codepage: " + cTermCP
+   ? "Host codpage:", hb_cdpSelect() + ", terminal codepage:", cTermCP
 #endif
-   ? "@ - interrupt, keycodes checking: "
+   ? "@ - interrupt, keycodes checking:"
    ?
 
-   WHILE .T.
+   DO WHILE .T.
       kX := Inkey( 0 )
       k := hb_keyStd( kX )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
@@ -299,37 +297,38 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
              Len( hb_keyChar( k ) ) > 0
 #ifdef __HARBOUR__
-         ? "char:" + iif( k > 256, " U+" + hb_numToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ) + ;
+         ? "char:" + iif( k > 256, " U+" + hb_NumToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ) + ;
            "  " + hb_keyChar( k )
 #else
          ? "char:" + Str( k, 7 ) + "  " + hb_keyChar( k )
 #endif
       ELSE
 #ifdef __HARBOUR__
-         ? " key:" + Str( k, 7 ) + " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
-           hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 )
+         ? " key:" + Str( k, 7 ) + " ext: 0x" + hb_NumToHex( kX, 8 ) + " -> " + ;
+           hb_NumToHex( hb_keyMod( kX ), 2 ) + ":" + hb_NumToHex( hb_keyVal( kX ), 8 )
 #else
          ? " key:" + Str( k, 7 )
 #endif
       ENDIF
 //    ?? "  (" + hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ) + ")"
 
-      IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
+      DO CASE
+      CASE k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT
-      ELSEIF k == K_INS
+      CASE k == K_INS
          Set( _SET_CURSOR, ( Set( _SET_CURSOR ) + 1 ) % 5 )
          ?? "  cursor:" + hb_ntos( Set( _SET_CURSOR ) )
-      ELSEIF k == HB_K_RESIZE
+      CASE k == HB_K_RESIZE
          ?? "  (" + hb_ntos( MaxRow() + 1 ) + "," + hb_ntos( MaxCol() + 1 ) + ")"
-      ELSEIF k >= 1000 .AND. k < 1100
+      CASE k >= 1000 .AND. k < 1100
          ?? "  mpos(" + hb_ntos( MRow() ) + "," + hb_ntos( MCol() ) + ")"
 #ifdef __HARBOUR__
-      ELSEIF k == K_CTRL_INS
+      CASE k == K_CTRL_INS
          IF Alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
             s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
             ? "Clipboard text: [" + s + "]"
          ENDIF
-      ELSEIF k == K_CTRL_END
+      CASE k == K_CTRL_END
          IF Alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
             s := hb_TSToStr( hb_DateTime() ) + hb_eol() + ;
                "Harbour GT" + hb_gtVersion() + " clipboard test" + hb_eol()
@@ -337,7 +336,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
             hb_gtInfo( HB_GTI_CLIPBOARDDATA, s )
          ENDIF
 #endif
-      ENDIF
+      ENDCASE
    ENDDO
    ?
 

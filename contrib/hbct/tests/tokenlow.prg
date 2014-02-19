@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,21 +63,21 @@ PROCEDURE Main()
 
    ? "  Simple tests:"
    ? '   TokenLower( "Hello, World, here I am!" )         == "hello, world, here i am!" ?'
-   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!" ) + '"'
+   ? '                                                   -->', '"' + TokenLower( "Hello, World, here I am!" ) + '"'
    ? '   TokenLower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!" ?'
-   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
+   ? '                                                   -->', '"' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
    ? '   TokenLower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!" ?'
-   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
+   ? '                                                   -->', '"' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
    ? '   TokenLower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!" ?'
-   ? '                                                    -> "' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
+   ? '                                                   -->', '"' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
    ?
 
-   ? '  Lowercase the tokens in the string "' + cStr + '"'
+   ? '  Lowercase the tokens in the string', '"' + cStr + '"'
    ? '            with CSetRef( .T. ) and "@"'
    CSetRef( .T. )
    ?
-   ? '    --> return value of TokenLower( @cStr ): ', TokenLower( @cStr )
-   ? '    --> cStr is now: "' + cStr + '"'
+   ? '    --> return value of TokenLower( @cStr ):', TokenLower( @cStr )
+   ? '    --> cStr is now:', '"' + cStr + '"'
 
    ?
    ? "End test of TokenLower()"

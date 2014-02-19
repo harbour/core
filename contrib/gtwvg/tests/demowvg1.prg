@@ -1,6 +1,6 @@
 //                   GTWVT Console GUI Interface
 //
-//               Pritpal Bedi <bedipritpal@hotmail.com>
+//         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
 
 #require "gtwvg"
 
@@ -26,7 +26,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
+   Set( _SET_EVENTMASK, hb_bitOr( INKEY_ALL, HB_INKEY_GTEVENT ) )
 
    Wvt_SetGUI( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )
@@ -35,7 +35,7 @@ PROCEDURE Main()
    SetColor( "N/W" )
    CLS
    Wvt_ShowWindow( SW_RESTORE )
-   Wvt_SetTitle( "Harbour's GTWVG Demo ( Simplified )" )
+   hb_gtInfo( HB_GTI_WINTITLE, "Harbour's GTWVG Demo ( Simplified )" )
    Wvt_SetIcon( hb_DirBase() +  "vr_1.ico" )
 
    SetGT( 1, hb_gtSelect() )
@@ -58,13 +58,13 @@ PROCEDURE Main()
 
 /* This function must be linked with the application */
 
-FUNCTION Wvt_Paint()
+FUNCTION Wvt_Paint()  /* must be a public function */
 
    WvtPaintObjects()
 
    RETURN NIL
 
-STATIC FUNCTION ExecForm( aPaint )
+STATIC PROCEDURE ExecForm( aPaint )
 
    LOCAL cColor    := SetColor()
    LOCAL aPnt
@@ -101,9 +101,9 @@ STATIC FUNCTION ExecForm( aPaint )
    SetColor( cColor )
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION SetGT( nIndex, pGT )
+STATIC FUNCTION SetGT( nIndex, pGT )
 
    LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
@@ -131,7 +131,7 @@ STATIC FUNCTION MyChoice( aChoices )
 
    RETURN nChoice
 
-FUNCTION DispStatusMsg( cMsg )
+STATIC FUNCTION DispStatusMsg( cMsg )
 
    ClearStatusMsg()
 
@@ -140,7 +140,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    RETURN .T.
 
-FUNCTION ClearStatusMsg()
+STATIC FUNCTION ClearStatusMsg()
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -150,7 +150,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-FUNCTION DoModalDialog()
+STATIC PROCEDURE DoModalDialog()
 
    LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
@@ -183,16 +183,16 @@ FUNCTION DoModalDialog()
 
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif

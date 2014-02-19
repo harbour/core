@@ -28,7 +28,7 @@
 #endif /* #if defined(HAVE_HBCONFIG_H) */
 
 #if defined(HAVE_WINCONFIG_H)
-#include "winconfig.h"
+#include "winconf.h"
 #endif /* #if defined(HAVE_CONFIG_H) */
 
 #if defined(HAVE_CONFIG_H)

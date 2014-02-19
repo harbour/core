@@ -25,7 +25,6 @@ DYNAMIC ALenAlloc
 DYNAMIC AMerge
 DYNAMIC ANSIToWide
 DYNAMIC Any2Str
-DYNAMIC ARemove
 DYNAMIC ASizeAlloc
 DYNAMIC ASplice
 DYNAMIC AtI
@@ -68,7 +67,6 @@ DYNAMIC GetThreadId
 DYNAMIC GetVolInfo
 DYNAMIC GfxPrimitive
 DYNAMIC GfxText
-DYNAMIC Greek2Html
 DYNAMIC gtGetClipboard
 DYNAMIC gtGetClipboardSize
 DYNAMIC gtPasteClipboard
@@ -162,6 +160,8 @@ DYNAMIC hb_MutexTimeOutLock
 DYNAMIC hb_MutexTryLock
 DYNAMIC hb_OpenProcess
 DYNAMIC hb_OpenStandardLog
+DYNAMIC hb_osNewLine
+DYNAMIC hb_osPathSeparator
 DYNAMIC hb_OutDebug
 DYNAMIC hb_OutDebugName
 DYNAMIC hb_Pointer2String
@@ -173,8 +173,6 @@ DYNAMIC hb_ReadIni
 DYNAMIC hb_ReadLine
 DYNAMIC hb_regexReplace
 DYNAMIC hb_ResetWith
-DYNAMIC hb_ServiceGenerateFault
-DYNAMIC hb_ServiceGenerateFPE
 DYNAMIC hb_ServiceLoop
 DYNAMIC hb_SetCodepage
 DYNAMIC hb_SetIniComment
@@ -285,7 +283,6 @@ DYNAMIC inetSetPeriodCallback
 DYNAMIC inetSetTimeLimit
 DYNAMIC inetSetTimeout
 DYNAMIC inetStatus
-DYNAMIC InitGreek
 DYNAMIC IsAlNum
 DYNAMIC IsAscii
 DYNAMIC IsCntrl
@@ -480,7 +477,6 @@ DYNAMIC __ActiveStructure
 DYNAMIC __BreakBlock
 DYNAMIC __CStr_CopyTo
 DYNAMIC __ErrorBlock
-DYNAMIC __init_LONGLONGs
 DYNAMIC __MinimalErrorHandler
 DYNAMIC __mvSymbolInfo
 DYNAMIC __olePDisp

@@ -1,5 +1,3 @@
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
 PROCEDURE Main()
 
    LOCAL A := { "one  ", "two  ", "three" }
@@ -20,7 +18,7 @@ PROCEDURE Main()
    ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
       ? "start: ENUM=", enum
-      IF LEFTEQUAL( enum, "two" )
+      IF hb_LeftIs( enum, "two" )
          enum := Upper( enum )
       ENDIF
       ? "end:   ENUM=", enum, ;
@@ -41,7 +39,7 @@ PROCEDURE Main()
    ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
-      IF LEFTEQUAL( Upper( enum ), "TWO" )
+      IF hb_LeftIsI( enum, "TWO" )
          enum := Upper( enum )
          ? "before passing by @ | ENUM=", enum, ;
             "| index:", enum:__enumIndex(), ;
@@ -90,7 +88,7 @@ PROCEDURE Main()
    BEGIN SEQUENCE
       FOR EACH enum IN c
          ? "start: ENUM=", enum
-         IF LEFTEQUAL( enum, "d" )
+         IF hb_LeftIs( enum, "d" )
             enum := Upper( enum )
          ENDIF
          Testbreak( enum )
@@ -125,7 +123,7 @@ PROCEDURE Main()
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF LEFTEQUAL( enum, "2" )
+         IF hb_LeftIs( enum, "2" )
             BREAK
          ENDIF
       END SEQUENCE
@@ -133,7 +131,7 @@ PROCEDURE Main()
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF LEFTEQUAL( enum, "2" )
+         IF hb_LeftIs( enum, "2" )
             ? "Breaking... enum=", enum
             BREAK enum
          ENDIF
@@ -146,7 +144,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE TESTbreak( v )
 
-   IF LEFTEQUAL( v, "2" ) .OR. LEFTEQUAL( v, "d" )
+   IF hb_LeftIs( v, "2" ) .OR. hb_LeftIs( v, "d" )
       ? "issuing break"
       Break( v )
    ENDIF

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -86,13 +86,8 @@ METHOD Add( cMsg ) CLASS TIPLog
       hb_FNameSplit( ::cFileName, @cDir, @cName, @cExt )
 
       n := 1
-      DO WHILE .T.
-         ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n ), cExt ), NIL, FO_EXCL )
-         IF ::fhnd != F_ERROR .OR. ;
-            FError() == 3 /* path not found */
-            EXIT
-         ENDIF
-         n++
+      DO WHILE ( ::fhnd := hb_FCreate( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ), NIL, FO_EXCL ) ) == F_ERROR .AND. ;
+         FError() != 3 /* path not found */
       ENDDO
    ENDIF
 
@@ -115,4 +110,4 @@ METHOD Close() CLASS TIPLog
    RETURN .F.
 
 METHOD Clear() CLASS TIPLog
-   RETURN ::Close() .AND. FErase( ::cFileName ) == 0
+   RETURN ::Close() .AND. FErase( ::cFileName ) != F_ERROR

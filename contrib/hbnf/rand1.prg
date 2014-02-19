@@ -27,4 +27,4 @@ FUNCTION ft_Rand1( nMax )
 
    t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )
 
-   RETURN nMax * ( ( t_nSeed := Mod( t_nSeed * b + 1, m ) ) / m )
+   RETURN nMax * ( ( t_nSeed := ( ( t_nSeed * b + 1 ) % m ) ) / m )

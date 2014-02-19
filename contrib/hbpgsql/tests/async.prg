@@ -6,13 +6,18 @@
 
 #include "inkey.ch"
 
-PROCEDURE Main( cServer, cDatabase, cUser, cPass )
+PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    LOCAL conn
 
    CLS
 
-   ? "Connect", conn := PQconnectdb( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
+   hb_default( @cHost, "localhost" )
+   hb_default( @cDatabase, "postgres" )
+   hb_default( @cUser, hb_UserName() )
+   hb_default( @cPass, "" )
+
+   ? "Connect", conn := PQconnectdb( "dbname = '" + cDatabase + "' host = '" + cHost + "' user = '" + cUser + "' password = '" + cPass + "' port = 5432" )
 
    ? "Conection status", PQerrorMessage( conn ), PQstatus( conn )
 
@@ -22,9 +27,9 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
 
    RETURN
 
-PROCEDURE Query( conn, cQuery, lCancel )
+STATIC PROCEDURE Query( conn, cQuery, lCancel )
 
-   LOCAL pCancel, cErrMsg := Space( 30 )
+   LOCAL pCancel, cErrMsg := ""
    LOCAL res, x, y, cTime
 
    ? "PQSendQuery", PQsendQuery( conn, cQuery )
@@ -39,13 +44,9 @@ PROCEDURE Query( conn, cQuery, lCancel )
       Inkey( 1 )
 
       IF lCancel
-         IF .T.
-            pCancel := PQgetCancel( conn )
-            ? "Canceled: ", PQcancel( pCancel, @cErrMsg ), cErrMsg
-            pCancel := NIL
-         ELSE
-            ? PQrequestCancel( conn ) /* Deprecated */
-         ENDIF
+         pCancel := PQgetCancel( conn )
+         ? "Canceled:", PQcancel( pCancel, @cErrMsg ), cErrMsg
+         pCancel := NIL
       ENDIF
 
       IF PQconsumeInput( conn )
@@ -58,12 +59,14 @@ PROCEDURE Query( conn, cQuery, lCancel )
    IF Inkey() != K_ESC
       ? "PQgetResult", hb_ValToExp( res := PQgetResult( conn ) )
 
-      FOR x := 1 TO PQlastrec( res )
-         ?
-         FOR y := 1 TO PQfcount( res )
-            ?? PQgetvalue( res, x, y ), " "
+      IF ! Empty( res )
+         FOR x := 1 TO PQlastrec( res )
+            ?
+            FOR y := 1 TO PQfcount( res )
+               ?? PQgetvalue( res, x, y ), " "
+            NEXT
          NEXT
-      NEXT
+      ENDIF
    ELSE
       ? "Canceling Query", PQrequestCancel( conn )
    ENDIF

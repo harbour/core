@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,6 +54,8 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    LOCAL cName
    LOCAL lContribHBR := .F.
 
+   LOCAL hHash
+
    /* from built-in core .hbx file */
    HBXToFuncList( @cFunctions, __harbour_hbx() )
 
@@ -62,9 +64,11 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
       IF hb_FileMatch( hb_FNameName( aFile[ F_NAME ] ), "contrib" )
          lContribHBR := .T.
       ENDIF
-      FOR EACH cName IN hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
-         cFunctions += "," + cName:__enumKey()
-      NEXT
+      IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
+         FOR EACH cName IN hHash
+            cFunctions += "," + cName:__enumKey()
+         NEXT
+      ENDIF
    NEXT
 
    /* from standalone .hbx files in some known locations */
@@ -97,7 +101,7 @@ STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
    LOCAL cLine
 
    FOR EACH cLine IN hb_ATokens( StrTran( cHBX, Chr( 13 ) ), Chr( 10 ) )
-      IF Left( cLine, Len( "DYNAMIC " ) ) == "DYNAMIC "
+      IF hb_LeftIs( cLine, "DYNAMIC " )
          cFunctions += "," + SubStr( cLine, Len( "DYNAMIC " ) + 1 )
       ENDIF
    NEXT

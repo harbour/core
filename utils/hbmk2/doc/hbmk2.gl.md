@@ -1,5 +1,5 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(r2014\-01\-01 13:00\)  
+Copyright &copy; 1999\-2014, Viktor Szakáts  
 <http://harbour\-project\.org/>  
 Traducción \(gl\): JLalín  
 
@@ -30,7 +30,7 @@ Opcións:
 
 
  - **\-mt|\-st** enlazar coa máquina virtual de Harbour para multifío/simple fío
- - **\-gui|\-std** crear executable para GUI/consola
+ - **\-gui|\-std|\-cli** create GUI/console/command\-line executable
  - **\-main=&lt;mainfunc&gt;** substituír o nome da función/procedemento de arranque
  - **\-request=&lt;func&gt;** Forzar enlazado de función/procedemento
  - **\-fullstatic** enlazar con todas as bibliotecas estáticas
@@ -50,7 +50,7 @@ Opcións:
  - **\-beep\[\-\]** permitir \(ou impedir\) un sinal sonoro en caso de éxito e doble en caso de erro
  - **\-ignore\[\-\]** ignorar erros ao executar ferramentas do compilador \(predeterminado: off\)
  - **\-hbcppmm\[\-\]** substituír as funcións estándar de xestión de memoria de C\+\+ coas propias de Harbour
- - **\-winuni\[\-\]** selecciona entre os modos de compilación UNICODE \(WIDE\) ou ANSI \(Predeterminado: ANSI\) \(Só para Windows\. En WinCE é sempre UNICODE\)
+ - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI Windows API usage for C/C\+\+ input files \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
  - **\-nohblib\[\-\]** Non usar as bibliotecas estáticas de Harbour ao enlazar
  - **\-nodefgt\[\-\]** Non enlazar GTs predeterminados \(eficaz en modo \-static\)
  - **\-nolibgrouping\[\-\]** desactivar agrupamento de bibliotecas para compiladores basados en gcc
@@ -64,12 +64,13 @@ Opcións:
   
 &lt;level&gt; pode ser: yes, no, min, max
  - **\-run\[\-\]** executar/non executar o executable de saída
- - **\-vcshead=&lt;file&gt;** xenerar arquivo de cabeceira \.ch con información do repositorio local\. Sopórtanse Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone\. A cabeceira xenerada definirá a constante do preprocesador \_HBMK\_VCS\_TYPE\_ co nome do sistema VCS e \_HBMK\_VCS\_ID\_ co identificador único do repositorio local\. Se non se detecta ningún sistema VCS usarase un número secuencial que será incrementado en cada construcción\.
- - **\-tshead=&lt;file&gt;** xenerar arquivos de cabeceira \.ch con información de data/hora\. A cabeceira definirá as constantes do procesador \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ coa data/hora da construcción
+ - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
  - **\-icon=&lt;file&gt;** usar &lt;file&gt; como icono para a aplicación\. O arquivo &lt;file&gt; debe ser soportado na plataforma destino \(non soportado en algunhas plataformas/compiladores\)\. En Windows impleméntase xenerando e enlazando un arquivo de recursos\.
  - **\-manifest=&lt;file&gt;** Incrustar arquivo de manifesto &lt;file&gt; en executable/biblioteca dinámica \(só Windows\)
  - **\-sign=&lt;key&gt;** asinar executable con &lt;key&gt; \(Só Windows e Darwin\)\. En Windows úsase a ferramenta signtool\.exe \(pertence ao SDK de Windows\) ou posign\.exe \(pertence a Pelles C 7\), nesa orde, ambos autodetectados\.
  - **\-signpw=&lt;pw&gt;** Use &lt;pw&gt; como chave de acceso ao asinar executables \(só en Windows e Darwin\)
+ - **\-signts=&lt;url&gt;** use &lt;url&gt; as trusted timestamp server\. Empty value resets it to the default: http://timestamp\.verisign\.com/scripts/timstamp\.dll
  - **\-instfile=&lt;g:file&gt;** engadir &lt;file&gt; á lista de arquivos para copiar indicados na opción \-instpath=\. &lt;g&gt; é un grupo opcional de copia \(distínguense maiúsculas/minúsculas\) e debe ter polo menos dous caracteres\. Cando non se indica &lt;file&gt; a lista de arquivos nese grupo será vaciada\.
  - **\-instpath=&lt;g:path&gt;** copia arquivo\(s\) de saída a &lt;path&gt;\. Se &lt;path&gt; é un diretorio, debería incluir un caracter separador de rutas ao final, neste caso os arquivos indicados na opción \-instfile tamén serán copiados\. Pode usarse varias veces\. &lt;g&gt; é un grupo opcional de copia e debe ter polo menos dous caracteres\. O arquivo de saída será copiado automáticamente ao grupo \(vacío\) predeterminado\. Existen grupos predefinidos: 'depimplib' para bibliotecas de importación e 'depimplibsrc' para os arquivos \(\.dll\) de bibliotecas de importación, ambos pertencen ás dependencias\.
  - **\-instforce\[\-\]** copiar arquivos xenerados na ruta de instalación aínda que estivesen actualizados
@@ -165,11 +166,11 @@ crear enlace/copia de hbmk2 para hbcc para o mesmo resultado
  - **\-hb30** activar modo de compatibilidade Harbour 3\.0\.x
  - **\-xhb** activar o modo xhb
  - **\-hbc** activar modo C puro
- - \-rtlink 
- - \-blinker 
- - **\-exospace** simular o comportamento de enlazador Clipper  
+ - **\-blinker** simular o comportamento de enlazador Clipper  
   
 crear enlace/copia a hbmk2 para rtlink/blinker/exospace para o mesmo resultado
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** registrar Harbour Script \(\.hb\) con hbmk2 \(Só Windows\)
@@ -285,8 +286,8 @@ Macro variables:
  - **$\{hb\_dynprefix\}** prefixo para bibliotecas dinámicas
  - **$\{hb\_dynsuffix\}** sufixo para bibliotecas dinámicas
  - **$\{hb\_dynext\}** extensión para bibliotecas dinámicas
- - **$\{hb\_ver\}** Versión de Harbour en formato hexadecimal de tres bytes\. Por exemplo: 030200
- - **$\{hb\_verstr\}** Versión de Harbour en formato lexible: &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por exemplo: 3\.2\.0dev
+ - **$\{hb\_ver\}** Versión de Harbour en formato hexadecimal de tres bytes\. Por exemplo: 030400
+ - **$\{hb\_verstr\}** Versión de Harbour en formato lexible: &lt;major&gt;\.&lt;minor&gt;\.&lt;release&gt;&lt;status&gt;\. Por exemplo: 3\.4\.0dev
  - **$\{hb\_major\}** Número de versión principal de Harbour
  - **$\{hb\_minor\}** Número de versión secundario de Harbour
  - **$\{hb\_release\}** Número de versión da publicación de Harbour
@@ -345,7 +346,7 @@ Filtros \(poden combinarse e/ou negarse\):
  - **\{MACRO&lt;'&lt;value&gt;'\}** o filtro pasará se o valor de $\{MACRO\} é menor que &lt;value&gt; \(non se diferencian maiúsculas/minúsculas\)\.
 
 
-Constantes predefinidas nos fontes:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** cando un guión \.hb é compilado como un complemento hbmk2
@@ -355,10 +356,10 @@ Constantes predefinidas nos fontes:
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** cando unha fonte Harbour se executa coma un guión do intérprete de comandos
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
 
 
-Constantes predefinidas en arquivos de construcción \(están dispoñibles despois de '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\) \(do not define them manually\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** cando a dependencia &lt;depname&gt; foi detectada
@@ -455,6 +456,7 @@ directivas \.hbc \(deben ser escritas en liñas separadas\):
  - **depimplibs=** O mesmo que a opción \-depimplibs=
  - **depimplibd=** O mesmo que a opción \-depimplibd=
  - **depfinish=** O mesmo que a opción \-depfinish=
+ - **signts=** O mesmo que a opción \-signts=
  - **name=** Nome do paquete
  - **description=** Descripción do paquete
  - **version=&lt;x\.y\.z&gt;** número de versión do paquete, donde x,y,z son maiores ou iguais a cero e menores ou iguais a 255\. Predeterminado a 0\.0\.1 cando non se especifica\.
@@ -486,9 +488,9 @@ Engadir un arquivo para ser instalado, con un nome de grupo opcional para \-inst
 Enviar texto a saída de estándar 'stdout'\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar texto a saída de erro estándar 'stderr'\.
- - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
+ - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Enviar texto á saída estándar \(stdout\) sen ningún formato\.
- - **hbmk\_OutErrRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
+ - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Enviar texto á saída de erro estándar \(stderr\) sen ningún formato\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Avaliar a macro expresión hbmk2\.
@@ -570,6 +572,8 @@ Lista de paquetes cargados\.
 hb\_DirBase\(\) non mapeada para o guión\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) non mapeada para script\.
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
+Name of the script executing\.
 
 
 Exemplos para empezar con hbmk2:
@@ -629,7 +633,7 @@ Códigos de saída \("errorlevels"\):
  - **2** Compilador descoñecido
  - **3** Fallou a detección de Harbour
  - **5** Fallou a creación do arquivo auxiliar
- - **6** Fallou a compilación \(Harbour, compilador C, compilador de recursos\)
+ - **6** failed in compilation phase
  - **7** Fallo na montaxe final \(o enlazador ou o xestor de bibliotecas\)
  - **8** Non soportado
  - **9** Fallo ao crear directorio de traballo
@@ -655,7 +659,7 @@ Notas:
   - As opcións habituáis do compilador Harbour acéptanse tal cuál\.  
   
 \(ver opción \-harbourhelp\)
-  - o arquivo de opcións hbmk\.hbc no directorio hbmk2 sempre se procesa cando existe\. En plataformas \*nix ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc compróbanse \(nesa mesma orde\) antes do directorio hbmk2\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - o guión de construcción hbmk\.hbm no directorio actual sempre é procesado se existe\.
   - Recoméndase o uso da barra invertida como separador de directorios pero a barra estándar tamén se acepta\.
   - Os filtros poden ser usados en cada liña do arquivo \.hbc e na maioría das opcións\.  
@@ -667,10 +671,10 @@ Tamén se poden combinar os filtros usando os operadores '&amp;' \(and\), '|' \(
   - Bibliotecas e arquivos obxeto compilados con/para CA\-Cl\*pper non funcionarán en ningunha plataforma ou compilador soportados\.
   - Os valores predeterminados e o soporte de características pode variar para cada plataforma/compilador\.
   - Non se necesita GNU Make, ningunha ferramenta de tipo make específica do compilador C, nin MSYS \(en Windows\) para executar hbmk2\.
-  - \.\(dot\) pasado como primeiro parámetro iniciará o intérprete interactivo de Harbour\.
+  - '\.' \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - o arquivo \.hb, \.hrb ou \.dbf pasado como primeiro parámetro será executado coma un guión de Harbour\. Se o arquivo non inclúe ruta buscarase no directorio actual e na variable de ámbito PATH\. Se o arquivo non ten extensión asumiránse \.hb e \.hrb, nesa mesma orde\. Os arquivos \.dbf ábrense automáticamente en modo compartido e iníciase o intérprete interactivo de Harbour\. Para as extensións non estándar autodetectarase a partir do fonte y tipos de guións predefinidos\. Para os guións de Harbour o código de páxina predefinido é UTF\-8\. A cabeceira predeterminada 'hb\.ch' e incluida \(\#include\) automáticamente\. O formato para datas predeterminado e o estándar ISO: yyyy\-mm\-dd\. O terminal xeral predeterminado é 'gtcgi', non sendo que se detecten chamadas a funcións CUI a pantalla completa, entón selecciónase automáticamente 'gtwin' \[\*\] \(excepto para INIT PROCEDUREs\)\.
+  - \.hb, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - Pose usar &lt;Alt\+V&gt; no modo de intérprete interactivo de Harbour para pegar texto dende o portapapéis\.
   - Os valores marcados con \[\*\] poden depender da plataforma anfitriona e/ou da configuración\. Esta axuda foi xenerada na plataforma 'win'\.
 
@@ -712,7 +716,7 @@ GNU General Public License for more details\.
 You should have received a copy of the GNU General Public License  
 along with this program; if not, write to the Free Software  
 Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
-their web site at http://www\.gnu\.org/\)\.  
+their web site at https://www\.gnu\.org/\)\.  
   
 License extensions:  
   \- This source code must be kept and distributed as part  
@@ -725,8 +729,8 @@ License extensions:
   \- Source code modifications shall always be made available  
     along with binaries\.  
   \- Help text and documentation is licensed under  
-    Creative Commons Attribution\-ShareAlike 3\.0:  
-    http://creativecommons\.org/licenses/by\-sa/3\.0/  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
 
   
 Autor:  

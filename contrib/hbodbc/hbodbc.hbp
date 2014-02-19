@@ -15,7 +15,7 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 odbc.c
 

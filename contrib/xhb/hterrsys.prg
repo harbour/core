@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,21 +60,12 @@
 #include "error.ch"
 #include "cgi.ch"
 
-#define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<br />" + "Time : " + Time() + "<br />"
-
-// put messages to STDERR
-#command ? <list,...>   =>  ?? Chr( 13 ) + Chr( 10 ) ; ?? <list>
-#command ?? <list,...>  =>  OutErr( <list> )
-
-REQUEST HardCR
-REQUEST MemoWrit
+#include "fileio.ch"
 
 STATIC s_bFixCorrupt
-STATIC s_cErrFooter  := " "
+STATIC s_cErrFooter := " "
 
-
-/***
-* DefError()
+/* DefError()
 */
 
 #if 0
@@ -84,7 +75,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    LOCAL i
    LOCAL cMessage   := ""
    LOCAL cErrString := ""
-   LOCAL nH         := iif( HtmlPageHandle() == NIL, 0, HtmlPageHandle() )
+   LOCAL nH         := hb_defaultValue( HtmlPageHandle(), F_ERROR )
 
    // by default, division by zero yields zero
    IF e:genCode == EG_ZERODIV
@@ -92,7 +83,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
    ENDIF
 
    IF e:genCode == EG_CORRUPTION
-      IF HB_ISBLOCK( s_bFixCorrupt )
+      IF HB_ISEVALITEM( s_bFixCorrupt )
          Eval( s_bFixCorrupt, e )
          RETURN .F.
       ELSE
@@ -105,16 +96,14 @@ STATIC FUNCTION xhb_cgi_DefError( e )
          .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
-   // for lock error during APPEND BLANK, set NetErr() and subsystem default
+   // for lock error during dbAppend(), set NetErr() and subsystem default
    IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
    // build error message
@@ -122,62 +111,55 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    // display message and traceback
    IF ! Empty( e:osCode )
-      cMessage += " (DOS Error   : " + hb_ntos( e:osCode ) + ")"
+      cMessage += " (DOS Error: " + hb_ntos( e:osCode ) + ")"
    ENDIF
 
-   // RESET System //
-
-   cErrString := CRLF() + "</td></tr></table>" + CRLF()
-   cErrString += '<table bgcolor="white" border CellPadding=1 CellSpacing=1 cols=2 width=80%>'
-
-   cErrString += '<tr><td bgcolor="black" align="center">'
-   cErrstring += '<font face = "verdana" size ="5" color="white">' + CRLF()
-   cErrString += "<b>ERROR REPORT</b>"
-   cErrString += "</td></tr>"
-
-   cErrString += '<tr><td bgcolor="blue">'
-   cErrstring += '<font face = "verdana" size ="2" color="white">' + CRLF()
-   cErrString += DEF_ERR_HEADER
-   cErrString += "</td></tr>"
-
-   cErrString += '<tr><td bgcolor="red">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
-   cErrString += '<em>' + cMessage + '</em>'
-
-   cErrString += '</td></tr><tr><td bgcolor="cyan">' + CRLF()
-   cErrstring += '<font face ="verdana" size ="2" color="black">' + CRLF()
-   cErrString += "ERRORCODE...... :" + hb_ntos( e:GenCode ) + "<br />" + CRLF()
-   cErrString += "SUBSYSTEM..... :" + e:SubSystem + "<br />" + CRLF()
-   cErrString += "DESCRIPTION...:" + e:Description + "<br />" + CRLF()
-   cErrString += "OPERATION......:" + e:Operation + "<br />" + CRLF()
-   cErrString += "FILENAME........ :" + e:FileName + "<br />" + CRLF()
-   cErrString += "TRIES............. :" + hb_ntos( e:Tries ) + CRLF()
-
-   cErrString += '</td></tr>'
-   cErrString += '<tr><td bgcolor="red">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
-   cErrstring += '<em>'
+   cErrString := ;
+      CRLF() + ;
+      "</td></tr></table>" + CRLF() + ;
+      '<table bgcolor="white" border cellpadding=1 cellspacing=1 cols=2 width=80%>' + ;
+      '<tr><td bgcolor="black" align="center">' + ;
+      '<font face="verdana" size="5" color="white">' + CRLF() + ;
+      "<b>ERROR REPORT</b>" + ;
+      "</td></tr>" + ;
+      '<tr><td bgcolor="blue">' + ;
+      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      "Date: " + hb_DToC( Date(), "yyyy-mm-dd" ) + "<br />" + "Time: " + Time() + "<br />" + ;
+      "</td></tr>" + ;
+      '<tr><td bgcolor="red">' + ;
+      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<em>' + cMessage + '</em>' + ;
+      '</td></tr><tr><td bgcolor="cyan">' + CRLF() + ;
+      '<font face="verdana" size="2" color="black">' + CRLF() + ;
+      "ERRORCODE: " + hb_ntos( e:GenCode ) + "<br />" + CRLF() + ;
+      "SUBSYSTEM: " + e:SubSystem + "<br />" + CRLF() + ;
+      "DESCRIPTION: " + e:Description + "<br />" + CRLF() + ;
+      "OPERATION: " + e:Operation + "<br />" + CRLF() + ;
+      "FILENAME: " + e:FileName + "<br />" + CRLF() + ;
+      "TRIES: " + hb_ntos( e:Tries ) + CRLF() + ;
+      '</td></tr>' + ;
+      '<tr><td bgcolor="red">' + ;
+      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      '<em>'
 
    i := 2
-
    DO WHILE ! Empty( ProcName( i ) )
-
       cErrString += "Called from " + RTrim( ProcName( i ) ) + ;
          "(" + hb_ntos( ProcLine( i ) ) + ") <br />" + CRLF()
-
       i++
    ENDDO
 
-   cErrstring += '</em>'
-   cErrString += '</td></tr>'
-   cErrString += '<tr><td bgcolor="black">'
-   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
-   cErrstring += "Extra Notes..."
+   cErrstring += ;
+      '</em>' + ;
+      '</td></tr>' + ;
+      '<tr><td bgcolor="black">' + ;
+      '<font face="verdana" size="2" color="white">' + CRLF() + ;
+      "Extra notes..." + ;
+      "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()
 
-   cErrString += "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()
    FWrite( nH, "<br />" + cErrString + CRLF() )
-   MemoWrit( "Error.Log", HardCR( cErrString ) + CRLF() + ;
-      HardCR( MemoRead( "Error.Log" ) ) )
+   hb_MemoWrit( "error.Log", HardCR( cErrString ) + CRLF() + ;
+      HardCR( MemoRead( "error.Log" ) ) )
 
    FWrite( nH, "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF() )
 
@@ -197,7 +179,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
 FUNCTION SetCorruptFunc( bFunc )
 
-   IF HB_ISBLOCK( bFunc )
+   IF HB_ISEVALITEM( bFunc )
       s_bFixCorrupt := bFunc
    ENDIF
 

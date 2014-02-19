@@ -157,6 +157,11 @@ static void s_ft_text_init( void * cargo )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) cargo;
 
+   int tmp;
+
+   for( tmp = 0; tmp < ( int ) HB_SIZEOFARRAY( ft_text->handles ); ++tmp )
+      ft_text->handles[ tmp ] = FS_ERROR;
+
    ft_text->area = 0;
 }
 
@@ -202,13 +207,13 @@ HB_FUNC( FT_FUSE )
    }
    else
    {
-      if( ft_text->handles[ ft_text->area ] != 0 )
+      if( ft_text->handles[ ft_text->area ] != FS_ERROR )
       {
          hb_fsClose( ft_text->handles[ ft_text->area ] );
          hb_retnint( 0 );
          ft_text->recno[ ft_text->area ]    = 0L;
          ft_text->offset[ ft_text->area ]   = 0L;
-         ft_text->handles[ ft_text->area ]  = 0;
+         ft_text->handles[ ft_text->area ]  = FS_ERROR;
          ft_text->last_rec[ ft_text->area ] = 0L;
          ft_text->last_off[ ft_text->area ] = 0L;
          ft_text->lastbyte[ ft_text->area ] = 0L;
@@ -234,7 +239,7 @@ HB_FUNC( FT_FSELECT )
          {
             for(; newArea < TEXT_WORKAREAS - 1; newArea++ )
             {
-               if( ft_text->handles[ newArea ] == 0 )
+               if( ft_text->handles[ newArea ] == FS_ERROR )
                {
                   ft_text->area = newArea;
                   break;
@@ -800,7 +805,7 @@ HB_FUNC( FT_FGOTO )
    ft_text->error[ ft_text->area ] = hb_fsError();
 }
 
-/*----------------------------------------------------------------------
+/*
    In-line assembler routine to parse a buffer
    for an EOL
 
@@ -838,7 +843,7 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len, HB_ISIZ * eol_len )
    return 0;
 }
 
-/*----------------------------------------------------------------------
+/*
    In-line assembler routine to parse a buffer
    for a EOL
 
@@ -896,7 +901,6 @@ static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
    return buf_len;
 }
 
-/*--------------------------------------------------------------------------*/
 /* inserts xxx bytes into the current file, beginning at the current record */
 /* the contents of the inserted bytes are indeterminate, i.e. you'll have to
      write to them before they mean anything */
@@ -991,7 +995,6 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    return ft_text->error[ ft_text->area ];
 }
 
-/*--------------------------------------------------------------------------*/
 /* deletes xxx bytes from the current file, beginning at the current record */
 static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 {
@@ -1046,7 +1049,6 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
    return ft_text->error[ ft_text->area ];
 }
 
-/*--------------------------------------------------------------------------*/
 /* writes a line of data to the file, including the terminating EOL */
 static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen )
 {

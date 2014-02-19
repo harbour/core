@@ -19,7 +19,7 @@
 
 FUNCTION ft_AEMinLen( aArray, nDimension, nStart, nCount )
 
-   LOCAL i, nLast, nMinlen := NIL, nLen
+   LOCAL i, nLast, nLen, nMinlen := NIL
 
    __defaultNIL( @nDimension, 1 )
    __defaultNIL( @nStart, 1 )
@@ -43,8 +43,6 @@ FUNCTION ft_AEMinLen( aArray, nDimension, nStart, nCount )
       nMinlen := iif( nMinLen == NIL, nLen, Min( nMinlen, nLen ) )
    NEXT
 
-   IF nMinLen == NIL
-      nMinLen := 65519 /* for compatibility */
-   ENDIF
+   __defaultNIL( @nMinLen, 65519 )  /* for compatibility */
 
    RETURN nMinlen
