@@ -120,12 +120,10 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    pGTCGI->hStdout = hFilenoStdout;
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   if( IsValidCodePage( CP_UTF8 ) )
    {
-      if( IsValidCodePage( CP_UTF8 ) )
-      {
-         SetConsoleOutputCP( CP_UTF8 );
-         HB_GTSELF_SETDISPCP( pGT, "UTF8", NULL, HB_FALSE );
-      }
+      SetConsoleOutputCP( CP_UTF8 );
+      HB_GTSELF_SETDISPCP( pGT, "UTF8", NULL, HB_FALSE );
    }
 #endif
 
