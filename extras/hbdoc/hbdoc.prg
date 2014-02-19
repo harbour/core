@@ -101,6 +101,8 @@ done - validate sources against these templates
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
+REQUEST HB_CODEPAGE_UTF8EX
+
 #define BASE_DIR        ".." + hb_ps() + ".." + hb_ps()
 
 #define OnOrOff( b )    iif( b, "excluded", "included" )

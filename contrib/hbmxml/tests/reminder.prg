@@ -16,7 +16,7 @@ PROCEDURE Main()
       xml := simplexml_load_file( cFileName )
 
       IF ! s_mxml_error
-         OutStd( asXML( xml ), hb_eol() )
+         ? asXML( xml )
       ENDIF
 
       mxmlDelete( xml )
@@ -26,9 +26,9 @@ PROCEDURE Main()
       xml := simplexml_load_file( cFileName )
 
       IF s_mxml_error
-         OutErr( "hbmxml:", s_mxml_error_msg, hb_eol() )
+         ? "hbmxml:", s_mxml_error_msg
       ELSE
-         OutStd( asXML( xml ), hb_eol() )
+         ? asXML( xml )
       ENDIF
    ENDIF
 

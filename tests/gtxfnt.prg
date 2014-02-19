@@ -45,9 +45,7 @@ proc main()
                   hb_gtInfo( HB_GTI_FONTSEL ) + ";" + cChars, ;
                   { "FINE", "CHANGE" } )
    enddo
-   ? "current font:"
-   ? hb_gtInfo( HB_GTI_FONTSEL )
-   OutStd( hb_gtInfo( HB_GTI_FONTSEL ) )
+   ? "current font:", hb_gtInfo( HB_GTI_FONTSEL )
    wait
    return
 

@@ -17,14 +17,13 @@ PROCEDURE Main()
    LOCAL tmp
    LOCAL nCount
    LOCAL cName
-   LOCAL cPO
 
-   cPO := ;
-      PadR( "en", 6 ) + ' "' + ;
+   ? ;
+      PadR( "en", 6 ), '"' + ;
       PadR( "", 15, "*" ) + ;
       Str( 999999999999, 12 ) + "    " + ;
       DToC( Date() ) + ;
-      Str( 999999999999, 12 ) + '"' + hb_eol()
+      Str( 999999999999, 12 ) + '"'
 
    nCount := __dynsCount()
    FOR tmp := 1 TO nCount
@@ -33,11 +32,9 @@ PROCEDURE Main()
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF ( Len( cName ) != 5 .OR. "_" $ cName ) .AND. ;
             ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
-            cPO += PadR( Lower( cName ), 6 ) + ' "' + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG, cName ) + '"' + hb_eol()
+            ? PadR( Lower( cName ), 6 ), '"' + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG, cName ) + '"'
          ENDIF
       ENDIF
    NEXT
-
-   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".txt" ), cPO )
 
    RETURN

@@ -22,7 +22,7 @@ PROCEDURE Main()
 
    node := mxmlFindElement( tree, tree, "hash", NIL, NIL, MXML_DESCEND )
    IF Empty( node )
-      OutErr( "Unable to find <hash> element in XML tree!" )
+      ? "Unable to find <hash> element in XML tree!"
       mxmlDelete( tree )
 
       ErrorLevel( -1 )
@@ -30,7 +30,7 @@ PROCEDURE Main()
    ENDIF
 
    IF !( hb_MD5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
-      OutErr( "Custom data of element <hash> is corrupted!" )
+      ? "Custom data of element <hash> is corrupted!"
       mxmlDelete( tree )
 
       ErrorLevel( -1 )
@@ -39,7 +39,7 @@ PROCEDURE Main()
 
    xData := mxmlGetCustom( node )
    IF HB_ISHASH( xData ) .AND. "Today" $ xData
-      OutStd( xData[ "Today" ], hb_eol() )
+      ? xData[ "Today" ]
    ENDIF
 
    mxmlSetErrorCallback( NIL )
@@ -71,7 +71,7 @@ STATIC PROCEDURE create_cust( cFileName )
 
 STATIC PROCEDURE my_mxmlError( cErrorMsg )
 
-   OutErr( cErrorMsg, hb_eol() )
+   ? cErrorMsg
 
    RETURN
 

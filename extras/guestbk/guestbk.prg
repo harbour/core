@@ -47,7 +47,7 @@
  *
  */
 
-#define _WWW_ROOT_DIR_  hb_DirSepAdd( hb_DirSepToOS( "" ) )
+#define _WWW_ROOT_DIR_  hb_DirSepAdd( hb_DirSepToOS( "/www/root/" ) )
 
 PROCEDURE Main()
 

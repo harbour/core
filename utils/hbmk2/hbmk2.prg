@@ -455,7 +455,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_lOPTIM            61
 #define _HBMK_nCOMPR            62
 #define _HBMK_nWARN             63
-#define _HBMK_lSAFE             64
+#define _HBMK_lHARDEN           64
 #define _HBMK_lRUN              65
 #define _HBMK_lINC              66
 #define _HBMK_lREBUILDPO        67
@@ -2575,7 +2575,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    hbmk_init_stage2( hbmk )
 
-   hbmk[ _HBMK_lSAFE ] := HBMK_ISPLAT( "win" ) /* TODO: later enable this for all platforms */
+   hbmk[ _HBMK_lHARDEN ] := HBMK_ISPLAT( "win" ) /* TODO: later enable this for all platforms */
 
    l_aOPTRUN := {}
    l_aOBJA := {}
@@ -2974,8 +2974,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL == "-nowarn"             ; hbmk[ _HBMK_nWARN ] := _WARN_NO ; LegacyWarning( hbmk, aParam, "-warn=no" ) /* Compatibility */
 #endif
 
-      CASE cParamL == "-safe"               ; hbmk[ _HBMK_lSAFE ] := .T.
-      CASE cParamL == "-safe-"              ; hbmk[ _HBMK_lSAFE ] := .F.
+      CASE cParamL == "-harden"             ; hbmk[ _HBMK_lHARDEN ] := .T.
+      CASE cParamL == "-harden-"            ; hbmk[ _HBMK_lHARDEN ] := .F.
+#ifdef HB_LEGACY_LEVEL5
+      CASE cParamL == "-safe"               ; hbmk[ _HBMK_lHARDEN ] := .T. ; LegacyWarning( hbmk, aParam, "-harden" )
+      CASE cParamL == "-safe-"              ; hbmk[ _HBMK_lHARDEN ] := .F. ; LegacyWarning( hbmk, aParam, "-harden-" )
+#endif
 
       CASE cParamL == "-compr"              ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF /* synonym to -compr=yes */
       CASE cParamL == "-compr-"             ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF /* synonym to -compr=no */
@@ -4298,7 +4302,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          OTHERWISE
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] )
-            IF hbmk[ _HBMK_lSAFE ]
+            IF hbmk[ _HBMK_lHARDEN ]
                /* EXPERIMENTAL */
                DO CASE
                CASE hbmk[ _HBMK_nCOMPVer ] >= 49
@@ -4346,7 +4350,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-w" )                 ; EXIT
             ENDSWITCH
          ENDIF
-         IF hbmk[ _HBMK_lSAFE ]
+         IF hbmk[ _HBMK_lHARDEN ]
             IF HBMK_ISPLAT( "linux" )
                AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-z,relro,-z,now" )
                AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-z,relro,-z,now" )
@@ -4667,7 +4671,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTRES ], "--target=pe-i386" )
             EXIT
          ENDSWITCH
-         IF hbmk[ _HBMK_lSAFE ]
+         IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                DO CASE
                CASE hbmk[ _HBMK_nCOMPVer ] >= 49
@@ -5532,7 +5536,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             CASE _WARN_NO  ; AAdd( hbmk[ _HBMK_aOPTC ], "-W0" ) ; EXIT
             ENDSWITCH
          ENDIF
-         IF hbmk[ _HBMK_lSAFE ]
+         IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
                /* MSVS 2005 SP1 also supports it, but we only enable it
                   for 2008 and upper [vszakats] */
@@ -11653,10 +11657,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
-      CASE hb_LeftIs( cLineL, "safe="         ) ; cLine := SubStr( cLine, Len( "safe="         ) + 1 )
+      CASE hb_LeftIs( cLineL, "harden="       ) ; cLine := SubStr( cLine, Len( "harden="       ) + 1 )
          DO CASE
-         CASE ValueIsT( cLine )        ; hbmk[ _HBMK_lSAFE ] := .T.
-         CASE ValueIsF( cLine )        ; hbmk[ _HBMK_lSAFE ] := .F.
+         CASE ValueIsT( cLine )        ; hbmk[ _HBMK_lHARDEN ] := .T.
+         CASE ValueIsF( cLine )        ; hbmk[ _HBMK_lHARDEN ] := .F.
          OTHERWISE ; InvalidOptionValue( hbmk, _PAR_NEW_HBC() )
          ENDCASE
 
@@ -16342,6 +16346,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "&"        => "&amp;", ;
       "<"        => "&lt;", ;
       ">"        => "&gt;", ;
+      "©"        => "&copy;", ;
       "(c)"      => "&copy;", ;
       "..."      => "&hellip;", ;
       e"\n"      => "  " + _OUT_EOL, ;
@@ -16394,13 +16399,13 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF hbmk[ _HBMK_lShellMode ]
       cText := ;
          "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 2007-2014, Viktor Szakáts" + e"\n" + ;
-         "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
+         "Copyright © 2007-2014, Viktor Szakáts" + e"\n" + ;
+         "Copyright © 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
 #endif
       cText := ;
          _SELF_NAME_LONG_ + " (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 1999-2014, Viktor Szakáts" + e"\n"
+         "Copyright © 1999-2014, Viktor Szakáts" + e"\n"
 #ifdef HARBOUR_SUPPORT
    ENDIF
 #endif
@@ -16566,7 +16571,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) }, ;
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
       { "-warn=<level>"      , I_( e"set C compiler warning level\n<level> can be: max, yes, low, no, def (default: yes)" ) }, ;
-      { "-safe[-]"           , I_( "enable safety options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
+      { "-harden[-]"         , I_( "enable hardening options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
       { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, high, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , H_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
@@ -16955,7 +16960,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "strip=<bool>"      , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-strip"     ,"-strip-"   ) }, ;
       { "run=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-run"       ,"-run-"     ) }, ;
       { "inc=<bool>"        , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-inc"       ,"-inc-"     ) }, ;
-      { "safe=<bool>"       , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-safe"      ,"-safe-"    ) }, ;
+      { "harden=<bool>"     , hb_StrFormat( I_( "'yes' = %1$s, 'no' = %2$s option" ), "-harden"    ,"-harden-"  ) }, ;
       { "cpp="              , hb_StrFormat( I_( "same as %1$s option" ), "-cpp="             ) }, ;
       { "warn="             , hb_StrFormat( I_( "same as %1$s option" ), "-warn="            ) }, ;
       { "compr="            , hb_StrFormat( I_( "same as %1$s option" ), "-compr="           ) }, ;

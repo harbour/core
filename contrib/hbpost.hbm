@@ -9,7 +9,7 @@
 -prgflag=-i-
 #-prgflag=-u+hbstrict.ch
 
--safe
+-harden
 
 # disable .hbx updates unless requested
 {!(HB_REBUILD_EXTERN='yes')}-hbx-

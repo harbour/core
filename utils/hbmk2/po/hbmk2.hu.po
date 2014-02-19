@@ -360,7 +360,7 @@ msgstr "Harbour alaprendszer"
 
 #, c-format
 msgid "Translation (%1$s): (add your name here)"
-msgstr "Magyar (%1$s) fordítás: Copyright (c) 2009-2013, Szakáts Viktor"
+msgstr "Magyar (%1$s) fordítás: Copyright © 2009-2013, Szakáts Viktor"
 
 #, c-format
 msgid "unknown platform"

@@ -46,13 +46,15 @@
 #require "hbhpdf"
 
 REQUEST HB_CODEPAGE_UTF8EX
-REQUEST HB_CODEPAGE_HUISO
+REQUEST HB_CODEPAGE_HUISO  /* for iso8859-2 */
 
 STATIC s_lUTF8
 
 //
 
 PROCEDURE Main( cFileToSave )
+
+   hb_cdpSelect( "UTF8EX" )
 
    CLS
 
@@ -1261,7 +1263,7 @@ STATIC PROCEDURE Page_Annotation( pdf )
          "Annotation with UTF-8 text " + "ÁÄÉÍÓÖŐÔÚÜŰŮŘ", HPDF_GetEncoder( pdf, "UTF-8" ) )
    ELSE
       HPDF_Page_CreateTextAnnot( page, rect8, ;
-         "Annotation with ISO8859-2 text " + hb_Translate( "ÁÄÉÍÓÖŐÔÚÜŰŮŘ", "UTF8EX", "iso8859-2" ), ;
+         "Annotation with ISO8859-2 text " + hb_Translate( "ÁÄÉÍÓÖŐÔÚÜŰŮŘ", "UTF8", "iso8859-2" ), ;
          HPDF_GetEncoder( pdf, "ISO8859-2" ) )
    ENDIF
 
