@@ -10594,7 +10594,7 @@ STATIC FUNCTION ArraySplitHBX( arrayIn, nChunksReq, /* @ */ lLastIsHBX )
             target files only differ in their extensions.
             Make a copy of it in workdir? It breaks incremental
             change detection. Best would be to solve the tracking
-            of traget files (.c/.o) even if they differ in their
+            of target files (.c/.o) even if they differ in their
             name, not only their extension. */
 
    FOR EACH cFileName IN arrayOut DESCEND
