@@ -82,7 +82,7 @@ CREATE CLASS TCgiFile
    METHOD Error() INLINE FError() != 0
    METHOD Tell() INLINE FSeek( ::handle, 0, FS_RELATIVE )
    METHOD Pointer() INLINE FSeek( ::handle, 0, FS_RELATIVE )
-   METHOD ReadStr( n ) INLINE ::Buffer := FReadStr( ::Handle, n )
+   METHOD ReadStr( n ) INLINE ::Buffer := hb_FReadStr( ::Handle, n )
    METHOD Write( c, n ) INLINE FWrite( ::Handle, c, n )
    METHOD WriteByte( nByte )
    METHOD WriteInt( nInt )
@@ -184,10 +184,9 @@ METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
 */
 METHOD Readline( nSize ) CLASS TCgiFile
 
-   LOCAL cBuffer
+   LOCAL cString
    LOCAL nCurrent
    LOCAL nCr
-   LOCAL nRead
 
    hb_default( @nSize, 1024 )
 
@@ -196,15 +195,13 @@ METHOD Readline( nSize ) CLASS TCgiFile
    ENDIF
 
    nCurrent := FSeek( ::Handle, 0, FS_RELATIVE )
-   cBuffer  := Space( nSize )
-   nRead    := FRead( ::Handle, @cBuffer, hb_BLen( cBuffer ) )
-   cBuffer  := hb_BLeft( cBuffer, nRead )
-   nCr      := hb_BAt( Chr( 13 ), cBuffer )
+   cString  := hb_FReadStr( ::Handle, nSize )
+   nCr      := hb_BAt( Chr( 13 ), cString )
 
    FSeek( ::Handle, nCurrent, FS_SET )
    FSeek( ::Handle, nCr + 1, FS_RELATIVE )
 
-   ::Buffer := hb_BLeft( cBuffer, nCr - 1 )
+   ::Buffer := hb_BLeft( cString, nCr - 1 )
    ::nRecord++
 
    RETURN ::Buffer
@@ -321,8 +318,6 @@ METHOD MaxPages( nPageSize ) CLASS TCgiFile
 */
 METHOD PrevPage( nBytes ) CLASS TCgiFile
 
-   LOCAL cBuffer, nRead
-
    hb_default( @nBytes, 1024 )
 
    IF nBytes <= 0
@@ -331,9 +326,7 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 
    IF ! ::Bof()
       FSeek( ::Handle, -nBytes, FS_RELATIVE )
-      cBuffer := Space( nBytes )
-      nRead := FRead( ::Handle, @cBuffer, hb_BLen( cBuffer ) )
-      ::cPage := hb_BLeft( cBuffer, nRead )
+      ::cPage := hb_FReadStr( ::Handle, nBytes )
       FSeek( ::Handle, -nBytes, FS_RELATIVE )
       ::nPage--
    ENDIF
@@ -344,8 +337,6 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 */
 METHOD NextPage( nBytes ) CLASS TCgiFile
 
-   LOCAL cBuffer, nRead
-
    hb_default( @nBytes, 1024 )
 
    IF nBytes <= 0
@@ -353,9 +344,7 @@ METHOD NextPage( nBytes ) CLASS TCgiFile
    ENDIF
 
    IF ! ::Eof()
-      cBuffer := Space( nBytes )
-      nRead := FRead( ::Handle, @cBuffer, hb_BLen( cBuffer ) )
-      ::cPage := hb_BLeft( cBuffer, nRead )
+      ::cPage := hb_FReadStr( ::Handle, nBytes )
       ::nPage++
    ENDIF
 

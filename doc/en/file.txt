@@ -621,10 +621,7 @@
 
       The value of <nBytes> is the number of bytes to read from the file.
       The returned string will be the number of characters specified in
-      <nBytes>.
-
-      NOTE: In contrary to Cl*pper implementation, this one will _not_
-      stop on the first Chr( 0 ) or Chr( 26 ) byte.
+      <nBytes> or the number of bytes read before a zero byte is found.
    $EXAMPLES$
       #include "fileio.ch"
       LOCAL cStr

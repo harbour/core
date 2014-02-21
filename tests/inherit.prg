@@ -196,7 +196,6 @@ STATIC FUNCTION READ()
    LOCAL self := QSelf()
    LOCAL cRet := ""
    LOCAL cBlock
-   LOCAL nRead
    LOCAL nCrPos
    LOCAL nEoFPos
 
@@ -207,13 +206,11 @@ STATIC FUNCTION READ()
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
-         cBlock := Space( ::nBlockSize )
-         nRead := FRead( ::hFile, @cBlock, hb_BLen( cBlock ) )
-         IF nRead == 0
+         IF Len( cBlock := hb_FReadStr( ::hFile, ::nBlockSize ) ) == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE
-            ::cBlock := hb_BLeft( cBlock, nRead )
+            ::cBlock := cBlock
          ENDIF
       ENDIF
 

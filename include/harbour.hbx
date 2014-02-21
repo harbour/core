@@ -430,6 +430,7 @@ DYNAMIC hb_FNameName
 DYNAMIC hb_FNameNameExt
 DYNAMIC hb_FNameSplit
 DYNAMIC hb_ForNext
+DYNAMIC hb_FReadStr
 DYNAMIC hb_FSetAttr
 DYNAMIC hb_FSetDateTime
 DYNAMIC hb_FSetDevMode

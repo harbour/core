@@ -260,6 +260,34 @@ HB_FUNC( FREADSTR )
    hb_fsSetFError( uiError );
 }
 
+HB_FUNC( HB_FREADSTR )
+{
+   HB_ERRCODE uiError = 0;
+
+   if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
+   {
+      HB_SIZE nToRead = hb_parns( 2 );
+
+      if( nToRead > 0 )
+      {
+         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
+         char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+         HB_SIZE nRead;
+
+         nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
+         uiError = hb_fsError();
+         buffer[ nRead ] = '\0';
+
+         hb_retclen_buffer( buffer, nRead );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_retc_null();
+   hb_fsSetFError( uiError );
+}
+
 /* NOTE: This function should not return the leading and trailing */
 /*       (back)slashes. [vszakats] */
 
