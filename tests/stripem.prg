@@ -45,7 +45,7 @@ PROCEDURE Main( cFrom, cTo )
 //
 // Generic file handler
 //
-CREATE CLASS TTextFile
+CREATE CLASS TTextFile STATIC
 
    VAR cFileName               // Filename spec. by user
    VAR hFile                   // File handle
@@ -123,7 +123,7 @@ METHOD Dispose() CLASS TTextFile
 //
 METHOD Read() CLASS TTextFile
 
-   LOCAL cRet  := ""
+   LOCAL cRet := ""
    LOCAL cBlock
    LOCAL nCrPos
    LOCAL nEoFPos

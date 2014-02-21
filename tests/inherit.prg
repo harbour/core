@@ -1,11 +1,12 @@
-#include "fileio.ch"
-
 /*
- * Written by Eddie Runia <eddie@runia.comu>
+ * Written by Eddie Runia <eddie@runia.com>
  * www - http://harbour-project.org
  *
  * Placed in the public domain
  */
+
+#include "fileio.ch"
+#include "hbclass.ch"
 
 //
 // Test of inheritance
@@ -53,73 +54,51 @@ PROCEDURE Main()
 //
 // Generic Empty Class
 //
-FUNCTION TEmpty()  /* must be a public function */
+CREATE CLASS TEmpty STATIC /* must be a public function */
 
-   STATIC s_oEmpty
+   METHOD New()         INLINE Self
 
-   IF s_oEmpty == NIL
-      s_oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
+   METHOD Run()         INLINE QOut( "Run !" )     // Test command
+   METHOD Set( xParam ) INLINE ::Out := xParam
 
-      s_oEmpty:AddInline( "New", {| self | self } )
+   VAR Out INIT "Hi there"
 
-      s_oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
-      s_oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
-      s_oEmpty:AddData( "Out", "Hi there" )            // Test command
-      s_oEmpty:AddVirtual( "Dispose" )                 // Clean up code
+   METHOD Dispose() VIRTUAL                        // Clean up code
 
-      s_oEmpty:Create()
-   ENDIF
-
-   RETURN s_oEmpty:Instance()
+END CLASS
 
 //
 // Let's add another one on top
 //
-STATIC FUNCTION TOnTop()
+CREATE CLASS TOnTop STATIC INHERIT TTextFile
 
-   STATIC s_oOnTop
+   METHOD Say( cArg ) INLINE QOut( __objSendMsg( self, cArg ) )
 
-   IF s_oOnTop == NIL
-      s_oOnTop := HBClass():New( "TOnTop", "TTextFile" )
-      s_oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
-      s_oOnTop:Create()
-   ENDIF
-
-   RETURN s_oOnTop:Instance()
+END CLASS
 
 //
 // Generic Text file handler
 //
-FUNCTION TTextFile()  /* must be a public function */
+CREATE CLASS TTextFile STATIC INHERIT TEmpty
 
-   STATIC s_oFile
+   VAR cFileName               // Filename spec. by user
+   VAR hFile                   // File handle
+   VAR nLine                   // Current linenumber
+   VAR nError                  // Last error
+   VAR lEoF                    // End of file
+   VAR cBlock                  // Storage block
+   VAR nBlockSize              // Size of read-ahead buffer
+   VAR cMode                   // Mode of file use: R: read, W: write
 
-   IF s_oFile == NIL
-      s_oFile := HBClass():New( "TTextFile", "TEmpty" )
-      // Create a new class def
-      // from TEmpty class
+   METHOD New( cFileName, cMode, nBlock ) // Constructor
+   METHOD Run( xTxt, lCRLF )              // Get/set data
+   METHOD Dispose()                       // Clean up code
+   METHOD Read()                          // Read line
+   METHOD WriteLn( xTxt, lCRLF )          // Write line
+   METHOD Write( xTxt )                   // Write without CR
+   METHOD Goto( nLine )                   // Go to line
 
-      s_oFile:AddData( "cFileName"  )             // Filename spec. by user
-      s_oFile:AddData( "hFile"      )             // File handle
-      s_oFile:AddData( "nLine"      )             // Current linenumber
-      s_oFile:AddData( "nError"     )             // Last error
-      s_oFile:AddData( "lEoF"       )             // End of file
-      s_oFile:AddData( "cBlock"     )             // Storage block
-      s_oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      s_oFile:AddData( "cMode"      )             // Mode of file use: R: read, W: write
-
-      s_oFile:AddMethod( "New"    , @New()     )  // Constructor
-      s_oFile:AddMethod( "Run"    , @Run()     )  // Get/set data
-      s_oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
-      s_oFile:AddMethod( "Read"   , @Read()    )  // Read line
-      s_oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      s_oFile:AddMethod( "Write"  , @Write()   )  // Write without CR
-      s_oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
-
-      s_oFile:Create()
-   ENDIF
-
-   RETURN s_oFile:Instance()
+END CLASS
 
 //
 // Method TextFile:New -> Create a new text file
@@ -128,9 +107,7 @@ FUNCTION TTextFile()  /* must be a public function */
 // <cMode>      mode for opening. Default "R"
 // <nBlockSize> Optional maximum blocksize
 //
-STATIC FUNCTION New( cFileName, cMode, nBlock )
-
-   LOCAL self := QSelf()                        // Get self
+METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    hb_default( @cMode, "R" )
    hb_default( @nBlock, 4096 )
@@ -158,9 +135,8 @@ STATIC FUNCTION New( cFileName, cMode, nBlock )
 
    RETURN self
 
-STATIC FUNCTION RUN( xTxt, lCRLF )
+METHOD RUN( xTxt, lCRLF ) CLASS TTextFile
 
-   LOCAL self := QSelf()
    LOCAL xRet
 
    IF ::cMode == "R"
@@ -174,9 +150,7 @@ STATIC FUNCTION RUN( xTxt, lCRLF )
 //
 // Dispose -> Close the file handle
 //
-STATIC FUNCTION Dispose()
-
-   LOCAL self := QSelf()
+METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
    IF ::hFile != F_ERROR
@@ -191,9 +165,8 @@ STATIC FUNCTION Dispose()
 //
 // Read a single line
 //
-STATIC FUNCTION READ()
+METHOD Read() CLASS TTextFile
 
-   LOCAL self := QSelf()
    LOCAL cRet := ""
    LOCAL cBlock
    LOCAL nCrPos
@@ -244,9 +217,8 @@ STATIC FUNCTION READ()
 //         one or more strings
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
-STATIC FUNCTION WriteLn( xTxt, lCRLF )
+METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
-   LOCAL self := QSelf()
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
@@ -255,7 +227,7 @@ STATIC FUNCTION WriteLn( xTxt, lCRLF )
       ? "File", ::cFileName, "not opened for writing"
    ELSE
       hb_default( @lCRLF, .T. )
-      cBlock := hb_ValToExp( xTxt )                  // Convert to string
+      cBlock := hb_ValToExp( xTxt )              // Convert to string
       IF lCRLF
          cBlock += hb_eol()
       ENDIF
@@ -268,18 +240,14 @@ STATIC FUNCTION WriteLn( xTxt, lCRLF )
 
    RETURN self
 
-STATIC FUNCTION Write( xTxt )
-
-   LOCAL self := QSelf()
-
+METHOD Write( xTxt ) CLASS TTextFile
    RETURN ::WriteLn( xTxt, .F. )
 
 //
 // Go to a specified line number
 //
-STATIC FUNCTION Goto( nLine )
+METHOD Goto( nLine ) CLASS TTextFile
 
-   LOCAL self   := QSelf()
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )

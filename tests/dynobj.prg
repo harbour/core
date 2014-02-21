@@ -9,6 +9,8 @@
 // Placed in the public domain
 //
 
+#include "hbclass.ch"
+
 PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
@@ -103,30 +105,21 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION TForm()
+CREATE CLASS TForm STATIC
 
-   STATIC s_oClass
+   VAR cText
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
 
-      s_oClass:AddData( "cText" )           // define this class objects datas
-      s_oClass:AddData( "nTop" )
-      s_oClass:AddData( "nLeft" )
-      s_oClass:AddData( "nBottom" )
-      s_oClass:AddData( "nRight" )
+   METHOD New()
+   METHOD Show() INLINE ::cText
 
-      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      s_oClass:AddInline( "Show", {| self | ::cText } )
+END CLASS
 
-      s_oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN s_oClass:Instance()                  // builds an object of this class
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS TForm
 
    ::nTop    := 10
    ::nLeft   := 10
@@ -137,7 +130,7 @@ STATIC FUNCTION New()
 
 STATIC FUNCTION Smile()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    IF ::CalcArea() == 300
       ? ":-)"
@@ -149,7 +142,7 @@ STATIC FUNCTION Smile()
 
 STATIC FUNCTION BigSmile()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? ":-)))"
 

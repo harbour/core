@@ -2,6 +2,8 @@
 // Test of inline function
 //
 
+#include "hbclass.ch"
+
 PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
@@ -13,30 +15,20 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION TForm()
+CREATE CLASS TForm STATIC
 
-   STATIC s_oClass
+   VAR cText
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
+   METHOD New()
+   METHOD Show() INLINE QOut( ::cText )
 
-      s_oClass:AddData( "cText" )           // define this class objects datas
-      s_oClass:AddData( "nTop" )
-      s_oClass:AddData( "nLeft" )
-      s_oClass:AddData( "nBottom" )
-      s_oClass:AddData( "nRight" )
+END CLASS
 
-      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      s_oClass:AddInline( "Show", {| self | QOut( ::cText ) } )
-
-      s_oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN s_oClass:Instance()                  // builds an object of this class
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS TForm
 
    ::nTop    := 10
    ::nLeft   := 10

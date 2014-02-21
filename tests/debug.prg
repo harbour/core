@@ -7,6 +7,8 @@
  * Placed in the public domain
  */
 
+#include "hbclass.ch"
+
 PROCEDURE Main()
 
    LOCAL oForm   := TForm():New()
@@ -99,34 +101,23 @@ STATIC PROCEDURE FuncSecond( nParam, cParam, uParam )
 
 /* TForm() -> <oTForm> */
 
-STATIC FUNCTION TForm()
+CREATE CLASS TForm STATIC
 
-   STATIC s_oClass
+   VAR cName
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TForm" )    // starts a new class definition
+   METHOD aExcept() VIRTUAL
 
-      s_oClass:AddData( "cName" )             // define this class objects datas
-      s_oClass:AddData( "nTop" )
-      s_oClass:AddData( "nLeft" )
-      s_oClass:AddData( "nBottom" )
-      s_oClass:AddData( "nRight" )
+   METHOD New()
+   METHOD Show()
+   METHOD Transfer( ... )
 
-      s_oClass:AddVirtual( "aExcept" )        // Export exceptions
+END CLASS
 
-      s_oClass:AddMethod( "New",  @New() )    // define this class objects methods
-      s_oClass:AddMethod( "Show", @Show() )
-      s_oClass:AddMethod( "Transfer", @Transfer() )
-
-      s_oClass:Create()                       // builds this class
-   ENDIF
-
-   RETURN s_oClass:Instance()                 // builds an object of this class
-
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS TForm
 
    ::nTop    := 10
    ::nLeft   := 10
@@ -135,9 +126,7 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC PROCEDURE Show()
-
-   LOCAL Self := QSelf()
+PROCEDURE Show() CLASS TForm
 
    ? "lets show a form from here :-)"
 
@@ -203,9 +192,8 @@ STATIC PROCEDURE Show()
 // oTarget:Transfer( DbObject->Memo )
 //
 
-STATIC FUNCTION Transfer( ... )
+METHOD Transfer( ... ) CLASS TForm
 
-   LOCAL self   := QSelf()
    LOCAL aParam := __dbgVMParLList()
    LOCAL nLen   := PCount()
    LOCAL xRet

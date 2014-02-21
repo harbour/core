@@ -51,26 +51,15 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TValue()
+CREATE CLASS TValue STATIC
 
-   STATIC s_oClass
+   VAR cVal
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TValue" )
+   METHOD New()
 
-      s_oClass:AddData( "cVal" )
-      s_oClass:AddMethod( "New", @New() ) // New() Method
+END CLASS
 
-      s_oClass:Create()
-
-   ENDIF
-
-   RETURN s_oClass:Instance()
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
-
+METHOD New() CLASS TValue
    RETURN Self
 
 STATIC PROCEDURE SubFun()

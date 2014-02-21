@@ -7,6 +7,8 @@
 // Placed in the public domain
 //
 
+#include "hbclass.ch"
+
 PROCEDURE Main()
 
    LOCAL o := TNumber():New()
@@ -49,23 +51,15 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION TNumber()                       // Very simple class
+CREATE CLASS TNumber STATIC         // Very simple class
 
-   STATIC s_oNumber
+   VAR x
 
-   IF s_oNumber == NIL
-      s_oNumber := HBClass():New( "TNumber" )
+   METHOD New()
 
-      s_oNumber:AddData( "x" )
-      s_oNumber:AddMethod( "New", @New() )
-      s_oNumber:Create()
-   ENDIF
+END CLASS
 
-   RETURN s_oNumber:Instance()
-
-STATIC FUNCTION New()
-
-   LOCAL self := QSelf()
+METHOD New() CLASS TNumber
 
    ::x := 1
 
