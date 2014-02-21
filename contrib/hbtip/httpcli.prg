@@ -506,13 +506,13 @@ METHOD Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
 
    RETURN NIL
 
+/* https://tools.ietf.org/html/rfc2388 */
 METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
 
-   LOCAL cData := "", item, cTmp, cBound := ::boundary()
-   LOCAL cCrlf := ::cCRlf, oSub
-   LOCAL nPos
-   LOCAL cFilePath, cName, cFile, cType
-   LOCAL nFile, cBuf, nBuf, nRead
+   LOCAL cData := "", item, cBound := ::boundary()
+   LOCAL cCrlf := ::cCRlf, aAttachment
+   LOCAL cFile, cType
+   LOCAL nFile, cBuffer, nRead
 
    DO CASE
    CASE Empty( xPostData )
@@ -525,59 +525,46 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
       NEXT
    CASE HB_ISARRAY( xPostData )
       FOR EACH item IN xPostData
-         cData += ;
-            cBound + cCrlf + "Content-Disposition: form-data; name=" + '"' + ;
-            tip_URLEncode( AllTrim( hb_CStr( item[ 1 ] ) ) ) + '"' + cCrlf + cCrLf + ;
-            tip_URLEncode( AllTrim( hb_CStr( item[ 2 ] ) ) ) + cCrLf
+         IF Len( item ) >= 2
+            cData += ;
+               cBound + cCrlf + "Content-Disposition: form-data; name=" + '"' + ;
+               tip_URLEncode( AllTrim( hb_CStr( item[ 1 ] ) ) ) + '"' + cCrlf + cCrLf + ;
+               tip_URLEncode( AllTrim( hb_CStr( item[ 2 ] ) ) ) + cCrLf
+         ENDIF
       NEXT
    CASE HB_ISSTRING( xPostData )
       cData := xPostData
    ENDCASE
 
-   FOR EACH oSub IN ::aAttachments
-      cName := oSub[ 1 ]
-      cFile := oSub[ 2 ]
-      cType := oSub[ 3 ]
-      cTmp := StrTran( cFile, "/", "\" )
-      DO CASE
-      CASE ( nPos := RAt( "\", cTmp ) ) != 0
-         cFilePath := Left( cTmp, nPos )
-      CASE ( nPos := RAt( ":", cTmp ) ) != 0
-         cFilePath := Left( cTmp, nPos )
-      OTHERWISE
-         cFilePath := ""
-      ENDCASE
-      cTmp := SubStr( cFile, Len( cFilePath ) + 1 )
-      IF Empty( cType )
+   FOR EACH aAttachment IN ::aAttachments
+
+      cFile := hb_defaultValue( aAttachment[ 2 ], "" )
+
+      cType := aAttachment[ 3 ]
+      IF ! HB_ISSTRING( cType ) .OR. Empty( cType )
          cType := "text/html"
       ENDIF
-      cData += cBound + cCrlf + 'Content-Disposition: form-data; name="' + cName + '"; filename="' + cTmp + '"' + cCrlf + 'Content-Type: ' + cType + cCrLf + cCrLf
-      // hope this is not a big file....
-      nFile := FOpen( cFile )
-      IF nFile != F_ERROR
-         nBuf := 8192
-         nRead := nBuf
-#if 0
-         cBuf := Space( nBuf )
-#endif
-         DO WHILE nRead == nBuf
-#if 0
-            nRead := FRead( nFile, @cBuf, nBuf )
-#endif
-            cBuf := FReadStr( nFile, nBuf )
-            nRead := hb_BLen( cBuf )
-#if 0
-            IF nRead < nBuf
-               cBuf := PadR( cBuf, nRead )
-            ENDIF
-#endif
-            cData += cBuf
+
+      cData += cBound + cCrlf + ;
+         "Content-Disposition: form-data; " + ;
+         "name=" + '"' + hb_defaultValue( aAttachment[ 1 ], "unspecified" ) + '"' + "; " + ;
+         "filename=" + '"' + hb_FNameNameExt( hb_DirSepToOS( cFile ) ) + '"' + cCrlf + ;
+         "Content-Type: " + cType + cCrLf + ;
+         cCrLf
+
+      IF ( nFile := FOpen( cFile, FO_READ ) ) != F_ERROR
+         cBuffer := Space( 65536 )
+         DO WHILE ( nRead := FRead( nFile, @cBuffer, hb_Blen( cBuffer ) ) ) > 0
+            cData += hb_BLeft( cBuffer, nRead )
          ENDDO
          FClose( nFile )
       ENDIF
-      cData += cCrlf
+
+      cData := cCrlf
    NEXT
+
    cData += cBound + "--" + cCrlf
+
    IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF
