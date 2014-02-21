@@ -125,6 +125,7 @@ METHOD Read() CLASS TTextFile
 
    LOCAL cRet  := ""
    LOCAL cBlock
+   LOCAL nRead
    LOCAL nCrPos
    LOCAL nEoFPos
 
@@ -135,11 +136,13 @@ METHOD Read() CLASS TTextFile
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
-         IF Len( cBlock := FReadStr( ::hFile, ::nBlockSize ) ) == 0
+         cBlock := Space( ::nBlockSize )
+         nRead := FRead( ::hFile, @cBlock, hb_BLen( cBlock ) )
+         IF nRead == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE
-            ::cBlock := cBlock
+            ::cBlock := hb_BLeft( cBlock, nRead )
          ENDIF
       ENDIF
 

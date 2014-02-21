@@ -61,10 +61,10 @@ PROCEDURE Main( cFrom )
    IF ( hFile := FOpen( cFrom ) ) == F_ERROR
       ? "No such file:", cFrom
    ELSE
-      IF FReadStr( hFile, 4 ) == HRB_HEADER
+      IF FReadBytes( hFile, 4 ) == HRB_HEADER
 
-         FReadStr( hFile, 2 )
-         cBlock := FReadStr( hFile, 4 )
+         FReadBytes( hFile, 2 )
+         cBlock := FReadBytes( hFile, 4 )
          nSymbols := ;
             hb_BPeek( cBlock, 1 ) + ;
             hb_BPeek( cBlock, 2 ) * 256 + ;
@@ -77,11 +77,11 @@ PROCEDURE Main( cFrom )
 
          FOR n := 1 TO nSymbols
             cSymbol := ""
-            DO WHILE hb_BCode( cBlock := FReadStr( hFile, 1 ) ) != 0
+            DO WHILE hb_BCode( cBlock := FReadBytes( hFile, 1 ) ) != 0
                cSymbol += cBlock
             ENDDO
-            cScope := FReadStr( hFile, 1 )
-            cBlock := FReadStr( hFile, 1 )
+            cScope := FReadBytes( hFile, 1 )
+            cBlock := FReadBytes( hFile, 1 )
             nIdx   := hb_BCode( cBlock ) + 1
             PrintItem( cSymbol, nIdx, hb_BCode( cScope ) )
          NEXT
@@ -93,7 +93,7 @@ PROCEDURE Main( cFrom )
 
          IF m $ "Yy"
             ?
-            cBlock := FReadStr( hFile, 4 )
+            cBlock := FReadBytes( hFile, 4 )
             nFuncs := ;
                hb_BPeek( cBlock, 1 ) + ;
                hb_BPeek( cBlock, 2 ) * 256 + ;
@@ -101,10 +101,10 @@ PROCEDURE Main( cFrom )
                hb_BPeek( cBlock, 4 ) * 16777216
             FOR n := 1 TO nFuncs
                cSymbol := ""
-               DO WHILE hb_BCode( cBlock := FReadStr( hFile, 1 ) ) != 0
+               DO WHILE hb_BCode( cBlock := FReadBytes( hFile, 1 ) ) != 0
                   cSymbol += cBlock
                ENDDO
-               cBlock := FReadStr( hFile, 4 )
+               cBlock := FReadBytes( hFile, 4 )
                nLenCount := ;
                   hb_BPeek( cBlock, 1 ) + ;
                   hb_BPeek( cBlock, 2 ) * 256 + ;
@@ -116,7 +116,7 @@ PROCEDURE Main( cFrom )
                ? "PCode:", ""
 
                FOR m := 1 TO nLenCount
-                  cBlock := FReadStr( hFile, 1 )
+                  cBlock := FReadBytes( hFile, 1 )
                   nVal   := hb_BCode( cBlock )
                   ?? hb_NumToHex( nVal, 2 )
                   IF nVal > 32 .AND. nVal < 128
@@ -136,6 +136,14 @@ PROCEDURE Main( cFrom )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION FReadBytes( hFile, nLen )
+
+   LOCAL cBuffer := Space( nLen )
+
+   nLen := FRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
+
+   RETURN hb_BLeft( cBuffer, nLen )
 
 STATIC PROCEDURE PrintItem( cSymbol, nType, nScope )
 

@@ -621,17 +621,13 @@
 
       The value of <nBytes> is the number of bytes to read from the file.
       The returned string will be the number of characters specified in
-      <nBytes> or the number of bytes read before an end-of-file charac-
-      ter (ASCII 26) is found.
+      <nBytes>.
 
-      NOTE  This function is similar to the FRead() function, except that
-      it will not read binary characters that may he required as part of
-      a header of a file construct. Characters Such as Chr( 0 ) and Chr( 26 )
-      may keep this function from performing its intended operation. In this
-      event, the FRead() function should he used in place of the FReadStr()
-      function.
+      NOTE: In contrary to Cl*pper implementation, this one will _not_
+      stop on the first Chr( 0 ) or Chr( 26 ) byte.
    $EXAMPLES$
       #include "fileio.ch"
+      LOCAL cStr
       IF ( nH := FOpen( "test.txt" ) ) != F_ERROR
          cStr := FReadStr( nH, 100 )
          ? cStr

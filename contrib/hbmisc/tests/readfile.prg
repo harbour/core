@@ -8,7 +8,7 @@
 
 PROCEDURE Main( cFile )
 
-   LOCAL oFile := TFileRead():New( cFile )
+   LOCAL oFile := TFileRead():New( hb_defaultValue( cFile, __FILE__ ) )
 
    oFile:Open()
    IF oFile:Error()

@@ -8,7 +8,7 @@
 PROCEDURE Main()
 
    LOCAL cShort := "1234567890"
-   LOCAL i, cLong, cBuffer, nHandle
+   LOCAL i, cLong, cBuffer
 
    // Create an 80 KB string (Clipper is limited to 64 KB).
    cLong := cShort
@@ -26,9 +26,7 @@ PROCEDURE Main()
    ? "The copy of the long string is", iif( cLong == cBuffer, "equal", "not equal" ), "to the long string"
 
    // Read the string back in and compare it to the original.
-   nHandle := FOpen( "longdev.prn" )
-   cBuffer := FReadStr( nHandle, 90000 )
-   FClose( nHandle )
+   cBuffer := hb_BLeft( hb_MemoRead( "longdev.prn" ), 90000 )
    ? "Original:", hb_ntos( Len( cLong ) )
    ? "From file:", hb_ntos( Len( cBuffer ) )
    ? "The strings are", iif( cLong == cBuffer, "equal", "not equal" )

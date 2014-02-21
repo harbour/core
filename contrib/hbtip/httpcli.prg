@@ -573,7 +573,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
    ::StandardFields()
 
    IF ! "Content-Type" $ ::hFields
-      ::inetSendAll( ::SocketCon, e"Content-Type: multipart/form-data; boundary=" + ::boundary( 2 ) + ::cCrlf )
+      ::inetSendAll( ::SocketCon, "Content-Type: multipart/form-data; boundary=" + ::boundary( 2 ) + ::cCrlf )
    ENDIF
 
    ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( Len( cData ) ) + ::cCRLF )

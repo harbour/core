@@ -90,6 +90,7 @@ METHOD ReadLine() CLASS TFileRead
 
    LOCAL cLine := ""
    LOCAL nPos
+   LOCAL nRead
 
    ::nLastOp := O_F_READ_FILE
 
@@ -98,13 +99,13 @@ METHOD ReadLine() CLASS TFileRead
    ELSE
       // Is there a whole line in the readahead buffer?
       nPos := ::EOL_pos()
+      cLine := Space( ::nReadSize )
       DO WHILE ( nPos <= 0 .OR. nPos > Len( ::cBuffer ) - 3 ) .AND. ! ::lEOF
          // Either no or maybe, but there is possibly more to be read.
          // Maybe means that we found either a CR or an LF, but we don't
          // have enough characters to discriminate between the three types
          // of end of line conditions that the class recognizes (see below).
-         cLine := FReadStr( ::nHan, ::nReadSize )
-         IF Empty( cLine )
+         IF ( nRead := FRead( ::nHan, @cLine, hb_BLen( cLine ) ) ) == 0
             // There was nothing more to be read. Why? (Error or EOF.)
             ::nError := FError()
             IF ::nError == 0
@@ -113,7 +114,7 @@ METHOD ReadLine() CLASS TFileRead
             ENDIF
          ELSE
             // Add what was read to the readahead buffer.
-            ::cBuffer += cLine
+            ::cBuffer += hb_BLeft( cLine, nRead )
          ENDIF
          // Is there a whole line in the readahead buffer yet?
          nPos := ::EOL_pos()
