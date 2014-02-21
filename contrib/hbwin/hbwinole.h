@@ -74,9 +74,9 @@
  */
 #if defined( __BORLANDC__ ) || \
    ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
-#     if ! defined( NONAMELESSUNION )
-#        define NONAMELESSUNION
-#     endif
+#  if ! defined( NONAMELESSUNION )
+#     define NONAMELESSUNION
+#  endif
 #endif
 
 #include <windows.h>
@@ -141,7 +141,7 @@ HB_EXTERN_BEGIN
 typedef HB_BOOL ( *HB_OLEOBJ_FUNC )( VARIANT *, PHB_ITEM );
 typedef void ( *HB_OLE_DESTRUCTOR_FUNC )( void * );
 
-extern HB_EXPORT HB_BOOL     hb_oleInit( void );
+extern HB_EXPORT void        hb_oleInit( void );
 extern HB_EXPORT HRESULT     hb_oleGetError( void );
 extern HB_EXPORT void        hb_oleSetError( HRESULT lOleError );
 extern HB_EXPORT void        hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch * pdispVal, HB_USHORT uiClass );

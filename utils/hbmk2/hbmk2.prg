@@ -1873,7 +1873,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
       aLIB_BASE_2       := { "hbrtl", "hbvm" }
       aLIB_BASE_2_MT    := iif( hbmk[ _HBMK_nHBMODE ] != _HBMODE_HB10, { "hbrtl", "hbvmmt" }, aLIB_BASE_2 )
-      aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
+      aLIB_BASE_GT      := { "gtcgi", "gtstd", "gtpca" }
       aLIB_BASE_NULRDD  := { "hbnulrdd" }
       /* Double 'hbrdd' is required for linkers which otherwise need lib grouping. */
       IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_HB10
@@ -1898,7 +1898,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       aLIB_BASE_1_MT    := { "vmmt", "rtlmt", "lang", "codepage" }
       aLIB_BASE_2       := { "rtl"  , "vm"   }
       aLIB_BASE_2_MT    := { "rtlmt", "vmmt" }
-      aLIB_BASE_GT      := { "gtcgi", "gtpca", "gtstd" }
+      aLIB_BASE_GT      := { "gtcgi", "gtstd", "gtpca" }
       aLIB_BASE_NULRDD  := { "nulsys" }
       aLIB_BASE_RDD     := { "rdd"  , "usrrdd", "dbfntx", "dbfcdx", "dbfnsx", "dbffpt", "rdd"  , "hsx", "hbsix" }
       aLIB_BASE_RDD_MT  := { "rddmt", "usrrdd", "dbfntx", "dbfcdx", "dbfnsx", "dbffpt", "rddmt", "hsx", "hbsix" }
@@ -8095,7 +8095,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cCommand += ".app"
          ENDIF
       #endif
-      IF ! hbmk[ _HBMK_lCLI ] .AND. hbmk[ _HBMK_cGT ] != NIL .AND. ! HBMK_IS_IN( Lower( hbmk[ _HBMK_cGT ] ), "gtcgi|gtstd" )
+      IF ! hbmk[ _HBMK_lCLI ] .AND. hbmk[ _HBMK_cGT ] != NIL .AND. ! HBMK_IS_IN( Lower( hbmk[ _HBMK_cGT ] ), "gtcgi|gtstd|gtpca" )
          cCommand := LaunchCommand( cCommand )
       ENDIF
       cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )

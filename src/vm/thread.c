@@ -1453,7 +1453,7 @@ HB_FUNC( HB_THREADQUITREQUEST )
       HB_BOOL fResult = HB_FALSE;
 
 #if defined( HB_MT_VM )
-      if( ! pThread->fActive )
+      if( pThread->fActive )
       {
          hb_vmThreadQuitRequest( ( void * ) pThread );
          fResult = HB_TRUE;

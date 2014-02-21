@@ -2494,13 +2494,15 @@ static int hb_ntxPageKeyFind( LPTAGINFO pTag, LPPAGEINFO pPage,
                               char * key, HB_SHORT keylen, HB_BOOL fNext,
                               HB_ULONG ulRecNo, HB_BOOL * fStop )
 {
-   HB_SHORT iLast = -1, iBegin = 0, iEnd = pPage->uiKeys - 1, k, i;
+   HB_SHORT iLast = -1, iBegin = 0, iEnd = pPage->uiKeys - 1, i;
 
    *fStop = HB_FALSE;
    while( iBegin <= iEnd )
    {
+      int k;
+
       i = ( iBegin + iEnd ) >> 1;
-      k = ( HB_SHORTCAST ) hb_ntxValCompare( pTag, key, keylen, hb_ntxGetKeyVal( pPage, i ),
+      k = hb_ntxValCompare( pTag, key, keylen, hb_ntxGetKeyVal( pPage, i ),
                             pTag->KeyLength, HB_FALSE );
       if( k == 0 )
       {

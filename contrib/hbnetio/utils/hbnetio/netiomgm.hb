@@ -109,7 +109,7 @@ STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
       "filtsave"      => { ""               , "Save filters to disk."                          , {| netiocli | cmdConnFilterSave( netiocli ) } }, ;
       "stop"          => { "[<ip:port>|all]", "Stop specified connection(s)."                  , {| netiocli, cCommand | cmdConnStop( netiocli, cCommand ) } }, ;
       "clientinfo"    => { "[<ip:port>"     , "Show client details."                           , {| netiocli, cCommand | cmdConnClientInfo( netiocli, cCommand ) } }, ;
-      "quit"          => { ""               , "Stop server."                                   , {| netiocli | cmdShutdown( netiocli ) } }, ;
+      "shutdown"      => { ""               , "Stop server."                                   , {| netiocli | cmdShutdown( netiocli ) } }, ;
       "help"          => { ""               , "Display this help."                             , {| netiocli | cmdHelp( netiocli ) } } }
 
    IF ! Empty( cPassword )
