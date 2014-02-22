@@ -17,7 +17,7 @@ proc main()
    local aThreads := {}, i, nSum
    ? Version()
    t_var := N_INIT * 25
-   ? "Starting threads: "
+   ? "Starting threads:", ""
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"

@@ -32,7 +32,7 @@ proc main()
    aThreads := {}
    s_hMutex := hb_mutexCreate()
    lEnd := .F.
-   ? "Starting threads: "
+   ? "Starting threads:", ""
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
       ?? "<" + hb_ntos( i ) + ">"

@@ -15,6 +15,7 @@
 #endif
 
 static s_var
+
 proc main()
    local xResult
    ? Version()

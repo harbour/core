@@ -4336,7 +4336,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDSWITCH
          ELSE
             /* clang:
-                  -Wextra -Wpointer-arith -Wconditional-uninitialized
+                  -Wextra -Wpointer-arith -Wconditional-uninitialized -Woverlength-strings
+                  this will result in warnings is some Harbour generated code: -Wunreachable-code
+                  see: https://programmers.stackexchange.com/a/124574
              */
             SWITCH hbmk[ _HBMK_nWARN ]
             CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
@@ -12090,7 +12092,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
 
 /* Filter microformat:
    {[!][<plat|comp>]['&'|'|'][...]}
-*/
+ */
 
 STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
 
@@ -12779,7 +12781,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    /* protection against recursive calls */
    IF AScan( aPrevFiles, {| x | x == cFileName } ) == 0
-      IF ( hFile := FOpen( cFileName ) ) != F_ERROR
+      IF ( hFile := FOpen( cFileName, FO_READ ) ) != F_ERROR
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
          IF FRead( hFile, @cFileBody, hb_BLen( cFileBody ) ) != hb_BLen( cFileBody )

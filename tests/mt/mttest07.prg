@@ -29,13 +29,13 @@ proc main()
    s_mtxJobs := hb_mutexCreate()
    s_mtxResults := hb_mutexCreate()
 
-   ? "Starting threads: "
+   ? "Starting threads:", ""
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
 
-   ? "Sending jobs... "
+   ? "Sending jobs...", ""
    nDigit := 10
    for i := 1 to N_JOBS
       hb_mutexNotify( s_mtxJobs, nDigit )
@@ -49,7 +49,7 @@ proc main()
       ?? "<" + hb_ntos( i ) + ">"
    next
 
-   ? "Collecting results... "
+   ? "Collecting results...", ""
    for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
       //?? "<" + hb_ntos( i ) + ">"

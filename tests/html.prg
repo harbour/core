@@ -34,7 +34,7 @@ PROCEDURE Main()
 
    RETURN
 
-CREATE CLASS THTML
+CREATE CLASS THTML STATIC
 
    VAR cTitle                             // Page Title
    VAR cBody                              // HTML Body Handler

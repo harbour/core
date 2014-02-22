@@ -156,7 +156,7 @@ msgstr "Criando cabeçalho com data e hora: %1$s"
 
 #, c-format
 msgid "Triggered by #require directive: %1$s"
-msgstr "Acionado pelo operador de diretivas \" # \": %1$s"
+msgstr "Acionado pelo operador de diretivas '#require': %1$s"
 
 #, c-format
 msgid "Triggered by '%1$s' header: %2$s"

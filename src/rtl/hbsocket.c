@@ -3234,7 +3234,7 @@ static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
    }
 }
 #endif
-#if defined( HB_OS_WIN ) && !defined( SIOCGIFCONF )
+#if defined( HB_OS_WIN ) && ! defined( SIOCGIFCONF )
 static HB_SIZE hb_socketArrayFindInetAddr( const char * szAddr,
                                            PHB_ITEM pArray, HB_SIZE nPos )
 {

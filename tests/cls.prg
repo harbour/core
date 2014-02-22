@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    RETURN
 
-CREATE CLASS Test
+CREATE CLASS Test STATIC
 
    ON ERROR MyErrorManager( uParam1 )
 

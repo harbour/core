@@ -82,7 +82,8 @@ Evaluate these points before reporting an issue:
     Harbour revision, C compiler name/release and version, environment
     variables and verbose log output containing **both stderr and stdout in
     one combined stream** (use `make > log.txt 2>&1`). Enable verbose
-    mode using `HB_BUILD_VERBOSE=yes`.
+    mode using `HB_BUILD_VERBOSE=yes`. Preferably, configure your tools
+    to output English language messages.
     Complete log output is rarely necessary, but make sure to include
     the top of the output (lines starting with ``!``) and the area where
     problematic behavior occurred _first_. Make sure to not only include
@@ -95,7 +96,7 @@ Evaluate these points before reporting an issue:
 11. If you are to report a build problem with a Harbour application,
     all of the above points apply, plus make sure to use ``-trace``
     command-line option when running hbmk2 and redirect the result to
-    a file (see above how). Include your full command-line in your
+    a file (see above how). Also include your full command-line in your
     report.
     It's good idea to first remove all manual references to Harbour
     core components from makefiles and custom environment. F.e. it's

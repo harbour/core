@@ -9,7 +9,7 @@
  *
  */
 
-STATIC s_mainThreadID
+static s_mainThreadID
 
 proc main()
    field F1
