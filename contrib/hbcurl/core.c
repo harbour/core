@@ -1158,6 +1158,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP_TRANSFER_DECODING, HB_CURL_OPT_BOOL( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072400
+            case HB_CURLOPT_EXPECT_100_TIMEOUT_MS:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_EXPECT_100_TIMEOUT_MS, hb_parnl( 3 ) );
+               break;
+#endif
 
                /* SMTP options */
 
@@ -1593,6 +1598,14 @@ HB_FUNC( CURL_EASY_SETOPT )
 #if LIBCURL_VERSION_NUM >= 0x071900
             case HB_CURLOPT_SSL_OPTIONS:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_OPTIONS, hb_parnl( 3 ) );
+               break;
+#endif
+#if LIBCURL_VERSION_NUM >= 0x072400
+            case HB_CURLOPT_SSL_ENABLE_ALPN:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_CURLOPT_SSL_ENABLE_ALPN, hb_parnl( 3 ) );
+               break;
+            case HB_CURLOPT_SSL_ENABLE_NPN:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_CURLOPT_SSL_ENABLE_NPN, hb_parnl( 3 ) );
                break;
 #endif
 

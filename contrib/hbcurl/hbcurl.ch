@@ -257,6 +257,9 @@
 #define HB_CURLOPT_MAIL_AUTH                  207
 #define HB_CURLOPT_XOAUTH2_BEARER             208
 #define HB_CURLOPT_LOGIN_OPTIONS              209
+#define HB_CURLOPT_EXPECT_100_TIMEOUT_MS      210
+#define HB_CURLOPT_SSL_ENABLE_ALPN            211
+#define HB_CURLOPT_SSL_ENABLE_NPN             212
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -309,6 +312,7 @@
 #define HB_CURL_HTTP_VERSION_NONE             0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
 #define HB_CURL_HTTP_VERSION_1_0              1  /* please use HTTP 1.0 in the request */
 #define HB_CURL_HTTP_VERSION_1_1              2  /* please use HTTP 1.1 in the request */
+#define HB_CURL_HTTP_VERSION_2_0              3  /* please use HTTP 2.0 in the request */
 
 /* HB_CURLOPT_USE_SSL option */
 #define HB_CURLUSESSL_NONE                    0  /* do not attempt to use SSL */
