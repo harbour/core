@@ -4345,9 +4345,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             CASE _WARN_YES
                IF hbmk[ _HBMK_cCOMP ] == "clang"
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W -Weverything" )
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-padded -Wno-missing-prototypes -Wno-cast-align -Wno-float-equal" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-documentation" )
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )
                ENDIF
@@ -4445,11 +4445,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
-            /* It is to avoid warning message generated when 'long double' is used
-               remove it if you have newer compiler version */
-#if 0
-            AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
-#endif
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
             ENDIF
@@ -5540,6 +5535,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      Maybe this is related to the msvc2003 kit I was using. [vszakats] */
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W3" )
                ELSE
+                  IF hbmk[ _HBMK_cCOMP ] == "clang"
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Weverything" )
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes" )
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-documentation" )
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-language-extension-token" )
+                  ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W4 -wd4127" )
                ENDIF
                EXIT

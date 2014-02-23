@@ -7,7 +7,7 @@ PROCEDURE Main( cFile )
    hb_default( @cFile, __FILE__ )
 
    // open a text file here
-   IF hb_FUse( cFile, FO_READ ) > 1
+   IF hb_FUse( cFile, FO_READ ) != F_ERROR
 
       DO WHILE ! hb_FAtEof()
          ? "line", Str( hb_FRecNo(), 2 ), hb_FReadLn()

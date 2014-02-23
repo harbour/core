@@ -15,12 +15,12 @@
       discussion of open modes under FOpen() in the Clipper manual
       and fileio.ch for a list of allowable open modes.  If not
       specified, the file will be opened with a mode of
-      FO_READ + FO_SHARED (64).
+      FO_READ + FO_SHARED.
    $RETURNS$
       If ^b<cFile>^n is passed and the file is opened successfully, an
       integer containing the text file's workarea.  If the file cannot be
-      opened, -1 will be returned.  In this case, check the return value
-      of ^bft_FError()^n for the cause of the error.
+      opened, F_ERROR (-1) will be returned.  In this case, check the
+      return value of ^bft_FError()^n for the cause of the error.
 
       If ft_FUse() is called without any arguments, it will close the
       text file in the current "text area" and return 0.
@@ -155,7 +155,8 @@
       Errors could stem from any open, create, read or write operation,
       among others.
    $EXAMPLES$
-      IF ft_FUse( "test.txt" ) < 0     // open text file
+      #include "fileio.ch"
+      IF ft_FUse( "test.txt" ) != F_ERROR     // open text file
          err := ft_FError()
          ? "Error opening file 'test.txt', error code (" + ;
             hb_ntos( err ) + ")"
@@ -392,7 +393,7 @@
    $ONELINER$
       Appends a line to the currently selected text file
    $SYNTAX$
-      ft_FAppend( [ < nLines > ] ) -> NIL
+      ft_FAppend( [ <nLines> ] ) -> NIL
    $ARGUMENTS$
       <nLines> is the number of lines that should be appended to the
       end of the currently selected text file.
@@ -440,7 +441,7 @@
    $ONELINER$
       Write a line to the currently selected text file
    $SYNTAX$
-      ft_FWriteLn( < cData >, [ < lInsert > ] ) -> lSuccess
+      ft_FWriteLn( <cData>, [ <lInsert> ] ) -> lSuccess
    $ARGUMENTS$
       <cData> is a string of data to write to the file at the current
        record position.

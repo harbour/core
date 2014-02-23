@@ -41,10 +41,6 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
 
-# It's to avoid warning message generated when 'long double' is used
-# remove it if you have newer compiler version
-#CFLAGS += -Wno-long-double
-
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 

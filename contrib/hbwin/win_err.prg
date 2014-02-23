@@ -98,7 +98,7 @@ PROCEDURE Main( cInputFile )
 
          cOutput += ;
             "   ENDSWITCH" + hb_eol() + ;
-            "" + hb_eol() + ;
+            hb_eol() + ;
             "   RETURN " + '"' + "HBWIN_UNKNOWN_" + '"' + " + hb_ntos( nCode )" + hb_eol()
 
          IF Empty( hWas )
