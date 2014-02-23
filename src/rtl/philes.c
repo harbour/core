@@ -260,7 +260,7 @@ HB_FUNC( FREADSTR )
    hb_fsSetFError( uiError );
 }
 
-HB_FUNC( HB_FREADSTR )
+HB_FUNC( HB_FREADLEN )
 {
    HB_ERRCODE uiError = 0;
 

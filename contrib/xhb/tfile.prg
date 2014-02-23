@@ -82,7 +82,7 @@ CREATE CLASS TCgiFile
    METHOD Error() INLINE FError() != 0
    METHOD Tell() INLINE FSeek( ::handle, 0, FS_RELATIVE )
    METHOD Pointer() INLINE FSeek( ::handle, 0, FS_RELATIVE )
-   METHOD ReadStr( n ) INLINE ::Buffer := hb_FReadStr( ::Handle, n )
+   METHOD ReadStr( n ) INLINE ::Buffer := hb_FReadLen( ::Handle, n )
    METHOD Write( c, n ) INLINE FWrite( ::Handle, c, n )
    METHOD WriteByte( nByte )
    METHOD WriteInt( nInt )
@@ -195,7 +195,7 @@ METHOD Readline( nSize ) CLASS TCgiFile
    ENDIF
 
    nCurrent := FSeek( ::Handle, 0, FS_RELATIVE )
-   cString  := hb_FReadStr( ::Handle, nSize )
+   cString  := hb_FReadLen( ::Handle, nSize )
    nCr      := hb_BAt( Chr( 13 ), cString )
 
    FSeek( ::Handle, nCurrent, FS_SET )
@@ -326,7 +326,7 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 
    IF ! ::Bof()
       FSeek( ::Handle, -nBytes, FS_RELATIVE )
-      ::cPage := hb_FReadStr( ::Handle, nBytes )
+      ::cPage := hb_FReadLen( ::Handle, nBytes )
       FSeek( ::Handle, -nBytes, FS_RELATIVE )
       ::nPage--
    ENDIF
@@ -344,7 +344,7 @@ METHOD NextPage( nBytes ) CLASS TCgiFile
    ENDIF
 
    IF ! ::Eof()
-      ::cPage := hb_FReadStr( ::Handle, nBytes )
+      ::cPage := hb_FReadLen( ::Handle, nBytes )
       ::nPage++
    ENDIF
 
@@ -372,7 +372,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
 
       // Check preceeding 2 chars for CR+LF
       FSeek( fHandle, -2, FS_RELATIVE )
-      IF hb_FReadStr( fHandle, 2 ) == CRLF()
+      IF hb_FReadLen( fHandle, 2 ) == CRLF()
          FSeek( fHandle, -2, FS_RELATIVE )
       ENDIF
 

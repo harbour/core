@@ -296,7 +296,7 @@ STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
    LOCAL cBuffer
 
    IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
-      cBuffer := hb_FReadStr( fhnd, hb_BLen( _UTF8_BOM ) )
+      cBuffer := hb_FReadLen( fhnd, hb_BLen( _UTF8_BOM ) )
       FClose( fhnd )
       IF cBuffer == _UTF8_BOM
          RETURN .T.

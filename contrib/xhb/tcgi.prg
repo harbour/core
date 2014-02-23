@@ -129,7 +129,7 @@ METHOD New( cInBuffer ) CLASS TCgi
    IF HB_ISSTRING( cInBuffer )
       ::Query_String := RTrim( cInBuffer )
    ELSEIF "POST" $ Upper( ::Request_Method )
-      ::Query_String := RTrim( hb_FReadStr( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
+      ::Query_String := RTrim( hb_FReadLen( hb_GetStdIn(), Val( ::CONTENT_LENGTH ) ) )
    ENDIF
 
    IF ! Empty( ::Query_String )

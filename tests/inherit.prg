@@ -179,7 +179,7 @@ METHOD Read() CLASS TTextFile
    ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
-         IF Len( cBlock := hb_FReadStr( ::hFile, ::nBlockSize ) ) == 0
+         IF Len( cBlock := hb_FReadLen( ::hFile, ::nBlockSize ) ) == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE
