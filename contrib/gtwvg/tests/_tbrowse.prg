@@ -324,7 +324,7 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    oCom:CLSID := "Shell.Explorer.2"
 // oCom:mapEvent( 269, {|| uiDebug( " E X P L O R E R - 2 6 9" ) } )
    oCom:create()
-   oCom:navigate( "http://hbide.vouch.info" )
+   oCom:navigate( "http://harbour-project.org" )
 
    RETURN oCom
 
@@ -420,7 +420,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
    oXbp:tooltipText := "Type-in a http:// address and press ENTER"
-   oXbp:setData( "http://hbide.vouch.info/" )
+   oXbp:setData( "http://harbour-project.org/" )
 
    RETURN { oLbl, oXbp }
 
@@ -438,7 +438,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp:create( , , { -23, -1 }, { -1, -10 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
-   oXbp:tooltipText  := "Naviagate: http://hbide.vouch.info"
+   oXbp:tooltipText  := "Navigate: http://harbour-project.org"
 
    RETURN oXbp
 

@@ -218,8 +218,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 #endif
 
    FOR EACH n IN ::asSuper
-      hClass := __clsInstSuper( n ) /* Super handle available */
-      IF hClass != 0
+      IF ( hClass := __clsInstSuper( n ) ) != 0  /* Super handle available */
          AAdd( ahSuper, hClass )
       ENDIF
    NEXT
@@ -434,13 +433,14 @@ STATIC PROCEDURE AddDelegate( xMethod, cDelegMsg, cObject, nScope )
 
    LOCAL mth
 
-   IF HB_ISSTRING( xMethod )
+   DO CASE
+   CASE HB_ISSTRING( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, cDelegMsg, cObject, nScope } )
-   ELSEIF HB_ISARRAY( xMethod )
+   CASE HB_ISARRAY( xMethod )
       FOR EACH mth IN xMethod
          AAdd( QSelf():aDelegates, { mth, cDelegMsg, cObject, nScope } )
       NEXT
-   ENDIF
+   ENDCASE
 
    RETURN
 

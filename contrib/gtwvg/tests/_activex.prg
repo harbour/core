@@ -305,7 +305,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    DO CASE
    CASE nActiveX == 1
-      hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "http://harbour.vouch.info" + "  ]" )
+      hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "http://harbour-project.org" + "  ]" )
       oCom:CLSID := "Shell.Explorer.2"
       oCom:mapEvent( 269, {|| wapi_OutputDebugString( " E X P L O R E R - 2 6 9" ) } )
       oCom:mapEvent( 105, {|| wapi_OutputDebugString( " E X P L O R E R - 105"   ) } )
@@ -369,9 +369,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
    // After :Create() Messages
    DO CASE
    CASE nActiveX == 1
-      hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), "http://hbide.vouch.info", xParam ) )
+      hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
       oCom:AddressBar := .T.
-      oCom:Navigate( iif( Empty( xParam ), "http://hbide.vouch.info", xParam ) )
+      oCom:Navigate( iif( Empty( xParam ), "http://harbour-project.org", xParam ) )
 
    CASE nActiveX == 4
       ConfigureRMChart( oCom )
@@ -602,7 +602,7 @@ STATIC PROCEDURE ConfigureRMChart( RMChart )
    RMChart:AddRegion()
 
    oRegion := RMChart:Region( 1 )
-   oRegion:Footer := "http://vouch.info"
+   oRegion:Footer := "http://harbour-project.org"
 
    oRegion:AddCaption()
 

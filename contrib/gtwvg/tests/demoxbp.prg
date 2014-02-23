@@ -133,7 +133,7 @@ PROCEDURE Main()
    oTree:setData( oItem2 )
 
    // --------------------------- Active-X ---------------------------\\
-   hb_gtInfo( HB_GTI_WINTITLE, "http://www.harbour.vouch.info" )
+   hb_gtInfo( HB_GTI_WINTITLE, "http://harbour-project.org" )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:CLSID := "Shell.Explorer.2"
@@ -144,12 +144,12 @@ PROCEDURE Main()
    oCom:statusTextChange := {| cText | oPanel:caption := cText }
 #endif
    oCom:create()
-   oCom:Navigate( "http://www.harbour.vouch.info" )
+   oCom:Navigate( "http://harbour-project.org" )
 
    oAddr := WvgSLE():new()
    oAddr:bufferLength := 500
    oAddr:border       := .T.
-   cNavigate          := "http://www.harbour.vouch.info"
+   cNavigate          := "http://harbour-project.org"
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
    oAddr:setColorFG( RGB( 0, 0, 255   ) )
    oAddr:setColorBG( RGB( 0, 255, 255 ) )
