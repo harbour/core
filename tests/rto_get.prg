@@ -115,9 +115,9 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    //
 
    #ifdef __HARBOUR__
-      s_fhnd := FCreate( "tget_hb.txt", FC_NORMAL )
+      s_fhnd := FCreate( "tget_hb.txt" )
    #else
-      s_fhnd := FCreate( "tget_cl5.txt", FC_NORMAL )
+      s_fhnd := FCreate( "tget_cl5.txt" )
    #endif
 
    IF s_fhnd == F_ERROR

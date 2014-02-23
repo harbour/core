@@ -87,7 +87,7 @@ METHOD Add( cMsg ) CLASS UHttpdLog
    ENDIF
 
    IF ::fhnd == F_ERROR .AND. ! Empty( ::cFileName )
-      ::fhnd := hb_FCreate( ::cFileName, FC_NORMAL, FO_WRITE + FO_DENYNONE )
+      ::fhnd := hb_FCreate( ::cFileName,, FO_WRITE + FO_DENYNONE )
    ENDIF
 
    RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )

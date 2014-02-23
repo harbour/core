@@ -2,8 +2,6 @@
 
 #require "hbcurl"
 
-#include "fileio.ch"
-
 #define UPLOAD_FILE_AS      "test_ul.bin"
 #define RENAME_FILE_TO      "test_ul_renamed.bin"
 #define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
@@ -16,7 +14,6 @@ PROCEDURE Main( cDL, cUL )
    LOCAL info
    LOCAL tmp
    LOCAL tmp1
-   LOCAL f
 
    LOCAL lVerbose := .F.
 
@@ -154,10 +151,7 @@ PROCEDURE Main( cDL, cUL )
       tmp := "test_dlm.bin"
       ? "WRITING TO FILE:", tmp
 
-      IF ( f := FCreate( tmp, FC_NORMAL ) ) != F_ERROR
-         FWrite( f, curl_easy_dl_buff_get( curl ) )
-         FClose( f )
-      ENDIF
+      hb_MemoWrit( tmp, curl_easy_dl_buff_get( curl ) )
 
       curl_easy_reset( curl )
 

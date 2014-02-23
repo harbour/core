@@ -115,7 +115,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
 CREATE CLASS TStreamFileReader FROM TStream
 
    VAR cFile
-   VAR Handle
+   VAR Handle INIT F_ERROR
 
    METHOD New( cFile, nMode ) CONSTRUCTOR
 
@@ -135,7 +135,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::cFile := cFile
 
-   IF ( ::Handle := FOpen( cFile, hb_defaultValue( nMode, FO_READWRITE ) ) ) == F_ERROR
+   IF ( ::Handle := FOpen( cFile, nMode ) ) == F_ERROR
       Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
 
@@ -160,7 +160,7 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
    RETURN nRead
 
-METHOD ReadByte()  CLASS TStreamFileReader
+METHOD ReadByte() CLASS TStreamFileReader
 
    LOCAL sBuffer := Space( 1 )
 
@@ -174,9 +174,9 @@ METHOD ReadByte()  CLASS TStreamFileReader
 CREATE CLASS TStreamFileWriter FROM TStream
 
    VAR cFile
-   VAR Handle
+   VAR Handle INIT F_ERROR
 
-   METHOD New( cFile, nMode ) CONSTRUCTOR
+   METHOD New( cFile, nMode, nAttr ) CONSTRUCTOR
 
    METHOD Close() INLINE iif( ::Handle != F_ERROR, FClose( ::Handle ), ), ::Handle := F_ERROR
    METHOD Seek( nOffset Origin ) INLINE ::nPosition := FSeek( ::Handle, nOffset, Origin )
@@ -188,7 +188,7 @@ CREATE CLASS TStreamFileWriter FROM TStream
 
 ENDCLASS
 
-METHOD New( cFile, nMode ) CLASS TStreamFileWriter
+METHOD New( cFile, nMode, nAttr ) CLASS TStreamFileWriter
 
    ::lCanWrite := .T.
 
@@ -202,7 +202,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
       ::nLength := FSeek( ::Handle, 0, FS_END )
       ::nPosition := ::nLength
    ELSE
-      IF ( ::Handle := FCreate( cFile, hb_defaultValue( nMode, FC_NORMAL ) ) ) == F_ERROR
+      IF ( ::Handle := hb_FCreate( cFile, nAttr, hb_defaultValue( nMode, FO_READWRITE ) ) ) == F_ERROR
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 

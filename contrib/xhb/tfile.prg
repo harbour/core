@@ -130,7 +130,7 @@ METHOD Open( nMode ) CLASS TCgiFile
 */
 METHOD Create( nAttr ) CLASS TCgiFile
 
-   ::Handle := FCreate( ::Name, hb_defaultValue( nAttr, FC_NORMAL ) )
+   ::Handle := FCreate( ::Name, nAttr )
 
    RETURN ::Handle != F_ERROR
 

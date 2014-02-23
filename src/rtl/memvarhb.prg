@@ -122,7 +122,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       nRetries := 0
       DO WHILE .T.
 
-         IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == F_ERROR
+         IF ( fhnd := hb_FCreate( cFileName,, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == F_ERROR
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR

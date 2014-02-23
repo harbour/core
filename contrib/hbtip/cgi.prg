@@ -191,7 +191,7 @@ METHOD Flush() CLASS TIPCgi
 
       cFile := ::cSessionSavePath + "SESSIONID_" + ::cSID
 
-      IF ( nH := FCreate( cFile, FC_NORMAL ) ) != F_ERROR
+      IF ( nH := FCreate( cFile ) ) != F_ERROR
          cSession := ::SessionEncode()
          IF FWrite( nH, cSession ) != hb_BLen( cSession )
             ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )

@@ -2519,7 +2519,7 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )
 
    nDepth := iif( HB_ISNUMERIC( nDepth ), nDepth, 0 )
    IF hFile == NIL
-      IF ( hFile := FCreate( cFile, FC_NORMAL ) ) == F_ERROR
+      IF ( hFile := FCreate( cFile ) ) == F_ERROR
          RETURN nBytes
       ENDIF
    ENDIF

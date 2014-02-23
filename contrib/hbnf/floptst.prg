@@ -80,7 +80,7 @@ FUNCTION ft_FlopTst( nDriveNum )
       ENDIF
       FClose( fhnd )
    ELSE
-      IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
+      IF ( fhnd := hb_FCreate( cFileName,, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
          RETURN ERR_WRITE_PROTECTED
       ENDIF
       FClose( fhnd )

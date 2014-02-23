@@ -308,8 +308,7 @@
       function returns a 0, no error was detected. Below is a table
       of possibles values returned by the FError() function.
    $EXAMPLES$
-      #include "fileio.ch"
-      nHandle := FCreate( "test.txt", FC_NORMAL )
+      nHandle := FCreate( "test.txt" )
       IF FError() != 0
          ? "Cannot create file, OS error", FError()
       ENDIF

@@ -367,7 +367,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
+      IF ( fhnd := hb_FCreate( cFileName,, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
          FWrite( fhnd, _HBDOC_SIGNATURE )
          FWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
          FClose( fhnd )

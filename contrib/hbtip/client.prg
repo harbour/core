@@ -468,7 +468,7 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
       IF ! lToMemory .AND. nFOut == NIL
-         IF ( nFOut := FCreate( cFile, hb_defaultValue( nMode, FC_NORMAL ) ) ) == F_ERROR
+         IF ( nFOut := FCreate( cFile, nMode ) ) == F_ERROR
             ::nStatus := 0
             RETURN .F.
          ENDIF

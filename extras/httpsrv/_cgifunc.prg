@@ -576,7 +576,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
       IF ! lCreate .AND. hb_FileExists( cLog )
          nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
       ELSE
-         nHandle := hb_FCreate( cLog, FC_NORMAL, FO_READWRITE + FO_SHARED )
+         nHandle := hb_FCreate( cLog,, FO_READWRITE + FO_SHARED )
          // __OutDebug( "Create ", nHandle )
       ENDIF
 

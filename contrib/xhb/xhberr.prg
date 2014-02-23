@@ -429,12 +429,12 @@ STATIC PROCEDURE LogError( oerr )
    IF lAppendLog .AND. hb_FileExists( cLogFile )
       nHandle := FOpen( cLogFile, FO_WRITE )
    ELSE
-      nHandle := FCreate( cLogFile, FC_NORMAL )
+      nHandle := FCreate( cLogFile )
    ENDIF
 
    IF nHandle == F_ERROR .AND. !( Lower( cLogFile ) == "error.log" )
       // Force creating error.log in case supplied log file cannot be created for any reason
-      nHandle := FCreate( "error.log", FC_NORMAL )
+      nHandle := FCreate( "error.log" )
    ENDIF
 
    IF nHandle != F_ERROR

@@ -94,7 +94,7 @@ PROCEDURE Main( cMode )
 STATIC PROCEDURE SrvMain( cParam1, cParam2 )
 
    LOCAL n := 0
-   LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ), FC_NORMAL, FO_DENYNONE + FO_WRITE )
+   LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ),, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
    hb_default( @cParam1, "" )

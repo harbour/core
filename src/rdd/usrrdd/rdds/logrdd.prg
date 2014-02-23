@@ -383,7 +383,7 @@ STATIC PROCEDURE OpenLogFile( nWA )
       IF hb_FileExists( cFileName )
          nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
       ELSE
-         nHandle := hb_FCreate( cFileName, FC_NORMAL, FO_READWRITE + FO_SHARED )
+         nHandle := hb_FCreate( cFileName,, FO_READWRITE + FO_SHARED )
       ENDIF
       IF nHandle != F_ERROR
          /* Move to end of file */

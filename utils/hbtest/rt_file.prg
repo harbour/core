@@ -65,7 +65,7 @@ PROCEDURE Main_FILE()
 
    LOCAL fhnd
 
-   fhnd := FCreate( cFileName, FC_NORMAL )
+   fhnd := FCreate( cFileName )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
