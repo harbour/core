@@ -228,7 +228,7 @@ static void * hb_curl_calloc( size_t nelem, size_t elsize )
 
 HB_FUNC( CURL_GLOBAL_INIT )
 {
-#if LIBCURL_VERSION_NUM >= 0x070A08 /* Not documented. GUESS. */
+#if LIBCURL_VERSION_NUM >= 0x070C00
    hb_retnl( ( long ) curl_global_init_mem( hb_parnldef( 1, CURL_GLOBAL_ALL ),
                                             hb_curl_xgrab,
                                             hb_curl_xfree,
@@ -874,11 +874,11 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_HTTPPROXYTUNNEL:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPROXYTUNNEL, HB_CURL_OPT_BOOL( 3 ) );
                break;
-/*
+#if 0
          case HB_CURLOPT_SOCKS5_RESOLVE_LOCAL:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_RESOLVE_LOCAL, HB_CURL_OPT_BOOL( 3 ) );
             break;
- */
+#endif
             case HB_CURLOPT_INTERFACE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_INTERFACE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
@@ -904,7 +904,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_PORT:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PORT, hb_parnl( 3 ) );
                break;
-#if LIBCURL_VERSION_NUM >= 0x070A08 /* Not documented. GUESS. */
+#if LIBCURL_VERSION_NUM >= 0x070B02
             case HB_CURLOPT_TCP_NODELAY:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_NODELAY, HB_CURL_OPT_BOOL( 3 ) );
                break;
@@ -1411,7 +1411,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_DOWNLOAD: /* Harbour extension */
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, ! HB_CURL_OPT_BOOL( 3 ) );
                break;
-#if LIBCURL_VERSION_NUM >= 0x070A08 /* Not documented. GUESS. */
+#if LIBCURL_VERSION_NUM >= 0x070A08
             case HB_CURLOPT_MAXFILESIZE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXFILESIZE, hb_parnl( 3 ) );
                break;
@@ -1472,7 +1472,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECTTIMEOUT_MS, hb_parnl( 3 ) );
                break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x070A08 /* Not documented. GUESS. */
+#if LIBCURL_VERSION_NUM >= 0x070A08
             case HB_CURLOPT_IPRESOLVE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_IPRESOLVE, hb_parnl( 3 ) );
                break;
@@ -2223,7 +2223,6 @@ HB_FUNC( CURL_VERSION_INFO )
 #else
       hb_arraySetNI( pArray, 12, 0 );
 #endif
-/* Just a guess. It's not documented in which libcurl version this member got added. */
 #if defined( CURLVERSION_FOURTH ) && LIBCURL_VERSION_NUM >= 0x071001
       hb_arraySetC(  pArray, 13, data->age >= CURLVERSION_FOURTH ? data->libssh_version : NULL ); /* human readable string */
 #else
