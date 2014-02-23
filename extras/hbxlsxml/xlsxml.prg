@@ -234,8 +234,7 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .T.
       RETURN .F.
    ENDIF
-   handle := hb_FCreate( target,, FO_EXCLUSIVE )
-   IF handle == F_ERROR
+   IF ( handle := hb_FCreate( target,, FO_EXCLUSIVE ) ) == F_ERROR
       ::cError := "Not able to open " + target + " for writing"
       ::errors := .T.
       RETURN .F.

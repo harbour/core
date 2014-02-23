@@ -129,10 +129,7 @@ METHOD Open( nMode ) CLASS TCgiFile
 /* ::Create( [<nAttrib>] ) --> lSuccess
 */
 METHOD Create( nAttr ) CLASS TCgiFile
-
-   ::Handle := FCreate( ::Name, nAttr )
-
-   RETURN ::Handle != F_ERROR
+   RETURN ( ::Handle := FCreate( ::Name, nAttr ) ) != F_ERROR
 
 /* ::Size() --> nFileSize
 ** RETURNs the size in bytes of the current file.
