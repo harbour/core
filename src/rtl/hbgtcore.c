@@ -303,7 +303,7 @@ static void hb_gt_def_ColorSelect( PHB_GT pGT, int iColorIndex )
       pGT->iColorIndex = iColorIndex;
 }
 
-static int  hb_gt_def_GetColor( PHB_GT pGT )
+static int hb_gt_def_GetColor( PHB_GT pGT )
 {
    if( pGT->iColorCount )
       return pGT->pColor[ pGT->iColorIndex ];
@@ -329,7 +329,7 @@ static void hb_gt_def_GetColorData( PHB_GT pGT, int ** pColorsPtr, int * piColor
    }
 }
 
-static int  hb_gt_def_GetClearColor( PHB_GT pGT )
+static int hb_gt_def_GetClearColor( PHB_GT pGT )
 {
    return pGT->iClearColor;
 }
@@ -455,7 +455,7 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
    return NULL;
 }
 
-static int  hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
+static int hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
 {
    int nColor;
 
@@ -588,7 +588,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
 }
 
 
-static int  hb_gt_def_GetCursorStyle( PHB_GT pGT )
+static int hb_gt_def_GetCursorStyle( PHB_GT pGT )
 {
    return pGT->iCursorShape;
 }
@@ -3640,21 +3640,21 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 /* NOTE: Must be in sync with gtsys.c */
 #if defined( HB_GT_LIB )
-   const char * hb_gt_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
+   static const char * s_szNameDefault = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined( HB_OS_WIN_CE )
-   const char * hb_gt_szNameDefault = "wvt";
+   static const char * s_szNameDefault = "wvt";
 #elif defined( HB_OS_WIN )
-   const char * hb_gt_szNameDefault = "win";
+   static const char * s_szNameDefault = "win";
 #elif defined( HB_OS_DOS )
-   const char * hb_gt_szNameDefault = "dos";
+   static const char * s_szNameDefault = "dos";
 #elif defined( HB_OS_OS2 )
-   const char * hb_gt_szNameDefault = "os2";
+   static const char * s_szNameDefault = "os2";
 #elif defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
-   const char * hb_gt_szNameDefault = "std";
+   static const char * s_szNameDefault = "std";
 #elif defined( HB_OS_UNIX )
-   const char * hb_gt_szNameDefault = "trm";
+   static const char * s_szNameDefault = "trm";
 #else
-   const char * hb_gt_szNameDefault = "std";
+   static const char * s_szNameDefault = "std";
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
@@ -3699,7 +3699,7 @@ static int hb_gt_FindEntry( const char * pszID )
 void hb_gtSetDefault( const char * szGtName )
 {
    hb_strncpy( s_gtNameBuf, szGtName, sizeof( s_gtNameBuf ) - 1 );
-   hb_gt_szNameDefault = s_gtNameBuf;
+   s_szNameDefault = s_gtNameBuf;
 }
 
 HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
@@ -3907,7 +3907,7 @@ void hb_gtStartupInit( void )
       return;
    if( hb_gtTryInit( hb_gt_FindDefault(), HB_FALSE ) )
       return;
-   if( hb_gtTryInit( hb_gt_szNameDefault, HB_FALSE ) )
+   if( hb_gtTryInit( s_szNameDefault, HB_FALSE ) )
       return;
 
    if( hb_dynsymFind( "HB_GT_NUL" ) ) /* GTNUL was explicitly REQUESTed */

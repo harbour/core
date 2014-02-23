@@ -29,7 +29,10 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 CFLAGS += -fno-common
 
 ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -W -Wall
+   CFLAGS += -W -Weverything
+   CFLAGS += -Wno-sign-conversion -Wno-padded -Wno-missing-prototypes -Wno-cast-align -Wno-float-equal
+   CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-documentation
+   CFLAGS += -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast
 else
    CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
    ifneq ($(HB_BUILD_MODE),cpp)

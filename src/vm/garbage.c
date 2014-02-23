@@ -71,7 +71,7 @@
 
 #  if defined( HB_SPINLOCK_INIT ) && 1
 
-      HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
+      static HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
 #     define HB_GC_LOCK()       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock )
 #     define HB_GC_UNLOCK()     HB_SPINLOCK_RELEASE( &s_gcSpinLock )
 

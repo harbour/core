@@ -58,7 +58,7 @@
 #define MAX_CHAR_VAL  0xff
 #define HB_CHRMAP( a, c )  ( ( ( a ) << 16 ) | ( c ) )
 
-const char * hb_gt_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
+static const char * s_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
 
 static void chrmap_init( int * piTransTbl )
 {
@@ -424,17 +424,17 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
             hb_xfree( pszFile );
          pszFile = hb_getenv( "HB_ROOT" );
          if( pszFile != NULL && sizeof( szFile ) >
-                        strlen( pszFile ) + strlen( hb_gt_szCharMapFileDefault ) )
+                        strlen( pszFile ) + strlen( s_szCharMapFileDefault ) )
          {
             hb_strncpy( szFile, pszFile, sizeof( szFile ) - 1 );
-            hb_strncat( szFile, hb_gt_szCharMapFileDefault, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, s_szCharMapFileDefault, sizeof( szFile ) - 1 );
             nRet = hb_gt_chrmapread( szFile, pszTerm, piTransTbl );
          }
       }
       if( pszFile )
          hb_xfree( pszFile );
       if( nRet == -1 )
-         nRet = hb_gt_chrmapread( hb_gt_szCharMapFileDefault, pszTerm, piTransTbl );
+         nRet = hb_gt_chrmapread( s_szCharMapFileDefault, pszTerm, piTransTbl );
    }
 
    if( pszFree )

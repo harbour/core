@@ -4342,7 +4342,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
              */
             SWITCH hbmk[ _HBMK_nWARN ]
             CASE _WARN_MAX ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall -pedantic" ) ; EXIT
-            CASE _WARN_YES ; AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )           ; EXIT
+            CASE _WARN_YES
+               IF hbmk[ _HBMK_cCOMP ] == "clang"
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-W -Weverything" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-padded -Wno-missing-prototypes -Wno-cast-align -Wno-float-equal" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-documentation" )
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
+               ELSE
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )
+               ENDIF
+               EXIT
             CASE _WARN_LOW
                AAdd( hbmk[ _HBMK_aOPTC ], "-Wmissing-braces -Wreturn-type -Wformat" )
                IF hbmk[ _HBMK_lCPP ] != NIL .AND. ! hbmk[ _HBMK_lCPP ]

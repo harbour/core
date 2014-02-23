@@ -122,7 +122,7 @@ static HB_CDP_GET_FUNC( hb_cdpUTF8_get );
 static HB_CDP_PUT_FUNC( hb_cdpUTF8_put );
 static HB_CDP_LEN_FUNC( hb_cdpUTF8_len );
 
-HB_UNITABLE hb_uniTbl_UTF8 = { HB_CPID_437, s_uniCodes, NULL, 0 };
+static HB_UNITABLE hb_uniTbl_UTF8 = { HB_CPID_437, s_uniCodes, NULL, 0 };
 
 static HB_UCHAR s_en_buffer[ 0x300 ];
 

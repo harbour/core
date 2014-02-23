@@ -369,7 +369,7 @@ HB_FUNC( SQL_SPRINTF )
 
          if( IsIndP )   /* Get Par Indirectly Precision Item */
          {
-            pItmPar = hb_param( ( iIndPrec ? iIndPrec + 1 :  p++ + 2 ), HB_IT_INTEGER );
+            pItmPar = hb_param( ( iIndPrec ? iIndPrec + 1 : p++ + 2 ), HB_IT_INTEGER );
             if( pItmPar )
             {
                iIndPrec = hb_itemGetNI( pItmPar );
@@ -391,7 +391,7 @@ HB_FUNC( SQL_SPRINTF )
             i--;
          }  /* i == strlen( cParFrm ) */
 
-         pItmPar = hb_param( ( arg ? arg + 1 :  p++ + 2 ), HB_IT_ANY );   /* Get Par Item */
+         pItmPar = hb_param( ( arg ? arg + 1 : p++ + 2 ), HB_IT_ANY );   /* Get Par Item */
          if( ! pItmPar )
          {
             iErrorPar = 1;
