@@ -342,7 +342,7 @@ FUNCTION hb_ZipFile( ;
       nPos := 1
       FOR EACH cFileToZip IN aProcFile
 
-         IF ( hHandle := FOpen( cFileToZip, FO_READ ) ) != F_ERROR
+         IF ( hHandle := FOpen( cFileToZip ) ) != F_ERROR
 
             IF HB_ISEVALITEM( bUpdate )
                Eval( bUpdate, cFileToZip, nPos++ )

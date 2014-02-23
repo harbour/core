@@ -115,7 +115,7 @@ METHOD New( cFileName ) CLASS TIniFile
       CurrArray := ::Contents
 
       IF hb_FileExists( cFileName )
-         hFile := FOpen( cFilename, FO_READ )
+         hFile := FOpen( cFilename )
       ELSE
          hFile := FCreate( cFilename )
       ENDIF

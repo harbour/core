@@ -25,7 +25,7 @@ Detail...: Add support for virtual file handles and registering some
               h := FOpen( "|lpr -PLaserJet", FO_WRITE )
               ...
            or:
-              h := FOpen( "gunzip /tmp/myarchive.gz|", FO_READ )
+              h := FOpen( "gunzip /tmp/myarchive.gz|" )
               ...
            etc.
 Status...: Open.

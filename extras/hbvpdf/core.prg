@@ -2565,7 +2565,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )
    LOCAL aRay   := {}
 
    IF hFile == NIL
-      IF ( hFile := FOpen( cFile, FO_READ ) ) == F_ERROR
+      IF ( hFile := FOpen( cFile ) ) == F_ERROR
          RETURN aRay
       ENDIF
       cData := Space( 3 )

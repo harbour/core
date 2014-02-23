@@ -64,12 +64,9 @@
  *
  */
 
-#include "fileio.ch"
 #include "hbclass.ch"
 
 #include "cgi.ch"
-
-#define IF_BUFFER 65535
 
 FUNCTION ParseString( cString, cDelim, nRet )
 
@@ -127,9 +124,9 @@ END CLASS
 METHOD New() CLASS THTML
 
    ::cTitle       := "Untitled"
-   ::cBGColor     := "#FFFFFF"
-   ::cLinkColor   := "#0000FF"
-   ::cvLinkColor  := "#FF0000"
+   ::cBGColor     := "#ffffff"
+   ::cLinkColor   := "#0000ff"
+   ::cvLinkColor  := "#ff0000"
    ::cContent     := ""
    ::cBody        := ""
    ::aCGIContents := {}
@@ -169,9 +166,10 @@ METHOD AddPara( cPara, cAlign ) CLASS THTML
 
 METHOD Generate() CLASS THTML
 
-   LOCAL cFile, i, hFile, nPos, cRes := ""
+   LOCAL i
 #if 0
    LOCAL lFlag := .F.
+   LOCAL cRes
 #endif
 
    // Is this a meta file or hand generated script?
@@ -191,28 +189,12 @@ METHOD Generate() CLASS THTML
          ::cContent := "<h1>Server Error</h1><p><i>No such file: " + ;
             ::cHTMLFile
       ELSE
-         // Read from file
-         hFile := FOpen( ::cHTMLFile, FO_READ )
-         cFile := Space( IF_BUFFER )
-         DO WHILE ( nPos := FRead( hFile, @cFile, IF_BUFFER ) ) > 0
-
-            cFile := hb_BLeft( cFile, nPos )
-            cRes += cFile
-            cFile := Space( IF_BUFFER )
-
-         ENDDO
-
-         FClose( hFile )
+         ::cContent := hb_MemoRead( ::cHTMLFile )
 
          // Replace matched tags
-         i := 1
-         ::cContent := cRes
-         /* TODO: Replace this DO WHILE with FOR..NEXT */
-         DO WHILE i <= Len( ::aReplaceTags )
-            ::cContent := StrTran( ::cContent, ;
-               "<#" + ::aReplaceTags[ i, 1 ] + ">", ::aReplaceTags[ i, 2 ] )
-            i++
-         ENDDO
+         FOR EACH i IN ::aReplaceTags
+            ::cContent := StrTran( ::cContent, "<#" + i[ 1 ] + ">", i[ 2 ] )
+         NEXT
 
          /* TODO: Clear remaining (not matched) tags */
 #if 0

@@ -12792,7 +12792,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    /* protection against recursive calls */
    IF AScan( aPrevFiles, {| x | x == cFileName } ) == 0
-      IF ( hFile := FOpen( cFileName, FO_READ ) ) != F_ERROR
+      IF ( hFile := FOpen( cFileName ) ) != F_ERROR
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
          IF FRead( hFile, @cFileBody, hb_BLen( cFileBody ) ) != hb_BLen( cFileBody )
@@ -13192,7 +13192,7 @@ STATIC FUNCTION IsCOFFLib( cFileName )
    LOCAL fhnd
    LOCAL cBuffer
 
-   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
+   IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
       cBuffer := hb_FReadLen( fhnd, hb_BLen( _COFF_LIB_SIGNATURE ) )
       FClose( fhnd )
       IF cBuffer == _COFF_LIB_SIGNATURE
@@ -13209,7 +13209,7 @@ STATIC FUNCTION IsOMFLib( cFileName )
    LOCAL fhnd
    LOCAL cBuffer
 
-   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
+   IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
       cBuffer := hb_FReadLen( fhnd, hb_BLen( _OMF_LIB_SIGNATURE ) )
       FClose( fhnd )
       IF cBuffer == _OMF_LIB_SIGNATURE
@@ -14754,7 +14754,7 @@ STATIC FUNCTION __hbshell_FileSig( cFile )
    LOCAL cBuff, cExt
 
    cExt := ".hb"
-   IF ( hFile := FOpen( cFile, FO_READ ) ) != F_ERROR
+   IF ( hFile := FOpen( cFile ) ) != F_ERROR
       cBuff := hb_FReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
       FClose( hFile )
       IF cBuff == hb_hrbSignature()

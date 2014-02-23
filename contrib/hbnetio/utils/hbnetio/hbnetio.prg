@@ -810,7 +810,7 @@ STATIC FUNCTION FileSig( cFile )
    LOCAL cBuff, cExt
 
    cExt := ".prg"
-   IF ( hFile := FOpen( cFile, FO_READ ) ) != F_ERROR
+   IF ( hFile := FOpen( cFile ) ) != F_ERROR
       cBuff := hb_FReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
       FClose( hFile )
       IF cBuff == hb_hrbSignature()

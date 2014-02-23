@@ -233,7 +233,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
       IF hb_FileExists( cFile )
-         IF ( nH := FOpen( cFile, FO_READ ) ) != F_ERROR
+         IF ( nH := FOpen( cFile ) ) != F_ERROR
             nFileSize := FSeek( nH, 0, FS_END )
             FSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )

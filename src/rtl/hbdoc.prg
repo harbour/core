@@ -390,7 +390,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
+      IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
 
          IF hb_FReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 

@@ -84,7 +84,7 @@ FUNCTION FileCopy( cSource, cDest, lMode )
    IF t_hSrcFile != F_ERROR
       FClose( t_hSrcFile )
    ENDIF
-   IF ( t_hSrcFile := FOpen( cSource, FO_READ ) ) != F_ERROR
+   IF ( t_hSrcFile := FOpen( cSource ) ) != F_ERROR
       IF ( hDstFile := FCreate( cDest ) ) != F_ERROR
          hb_default( @lMode, .F. )
          cBuffer := Space( F_BLOCK )
@@ -184,7 +184,7 @@ FUNCTION FileAppend( cSrc, cDest )
    LOCAL hSrcFile, hDstFile
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF ( hSrcFile := FOpen( cSrc, FO_READ ) ) != F_ERROR
+   IF ( hSrcFile := FOpen( cSrc ) ) != F_ERROR
 
       IF hb_FileExists( cDest )
          IF ( hDstFile := FOpen( cDest, FO_WRITE ) ) != F_ERROR
