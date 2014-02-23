@@ -1,3 +1,9 @@
+ifneq ($(HB_COMPILER),clang)
+   ifeq ($(HB_COMPILER_VER),)
+      $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your compiler version.)
+   endif
+endif
+
 OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib

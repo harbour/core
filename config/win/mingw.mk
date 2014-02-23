@@ -1,3 +1,7 @@
+ifeq ($(HB_COMPILER_VER),)
+   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your compiler version.)
+endif
+
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := g++
 else
