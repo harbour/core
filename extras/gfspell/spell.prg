@@ -692,7 +692,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
                   cHold := cFirst + XUnForm( SubStr( cTemp, kk + 1, jj - kk ) )
                   cKey  := C_Metafone( cHold, zz )
                   IF cMeta ==  C_Metafone( cHold, zz )
-                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
+                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) - Len( cHold ) ) <= MAX_DIFFERENCE
                         IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0
                            AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                         ENDIF
@@ -714,7 +714,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
                   cHold := cFirst + XUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
                   cKey  := C_Metafone( cHold, zz )
                   IF cMeta ==  C_Metafone( cHold, zz )
-                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
+                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) - Len( cHold ) ) <= MAX_DIFFERENCE
                         IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0
                            AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                         ENDIF
@@ -972,7 +972,7 @@ FUNCTION Sp_Init()
             IF nFileSize - nOther > 0
                cOther := Space( nFileSize - nOther )
                FSeek( t_nHandle, nOther, FS_SET )
-               FRead( t_nHandle, @cOther, ( nFileSize - nOther ) )
+               FRead( t_nHandle, @cOther, nFileSize - nOther )
             ENDIF
             t_aGlobal[ 2 ] += cOther
             isok := .T.

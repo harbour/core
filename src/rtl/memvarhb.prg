@@ -230,9 +230,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       xValue := NIL
 
-      cBuffer := Space( _HBMEM_SIG_LEN )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
-      IF cBuffer == _HBMEM_SIGNATURE
+      IF hb_FReadStr( fhnd, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
 
          cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
          FSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )

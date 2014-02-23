@@ -392,9 +392,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
 
       IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
 
-         cBuffer := Space( _HBDOC_SIG_LEN )
-         FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
-         IF cBuffer == _HBDOC_SIGNATURE
+         IF hb_FReadStr( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
             cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
             FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )

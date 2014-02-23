@@ -98,9 +98,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
    IF ( fhnd := FOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
 
-      buffer := Space( 8 )
+      buffer := hb_FReadStr( fhnd, 8 )
 
-      IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
+      IF hb_BLen( buffer ) == 8 .AND. ;
          AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
          hb_BCode( buffer ) ) != 0
 

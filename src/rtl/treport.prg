@@ -881,9 +881,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL aReport[ RPT_COUNT ]       // Create report array
    LOCAL err                        // error object
 
-   LOCAL cDefPath                   // contents of SET DEFAULT string
-   LOCAL aPaths                     // array of paths
-   LOCAL nPathIndex                 // iteration counter
+   LOCAL cPath                      // iteration variable
 
    LOCAL aHeader                    // temporary storage for report form headings
    LOCAL nHeaderIndex               // index into temporary header array
@@ -912,15 +910,11 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    // Open the report file
    nFrmHandle := FOpen( cFrmFile )
 
-   IF ( nFileError := FError() ) != 0 .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
+   IF ( nFileError := FError() ) != 0 .AND. Empty( hb_FNameDir( cFrmFile ) )
 
       // Search through default path; attempt to open report file
-      cDefPath := Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH )
-      cDefPath := StrTran( cDefPath, ",", ";" )
-      aPaths := ListAsArray( cDefPath, ";" )
-
-      FOR nPathIndex := 1 TO Len( aPaths )
-         nFrmHandle := FOpen( aPaths[ nPathIndex ] + "\" + cFrmFile )
+      FOR EACH cPath IN ListAsArray( StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" ), ";" )
+         nFrmHandle := FOpen( hb_DirSepAdd( cPath ) + cFrmFile )
          // if no error is reported, we have our report file
          IF ( nFileError := FError() ) == 0
             EXIT

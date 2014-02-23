@@ -13182,8 +13182,7 @@ STATIC FUNCTION IsCOFFLib( cFileName )
    LOCAL cBuffer
 
    IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
-      cBuffer := Space( hb_BLen( _COFF_LIB_SIGNATURE ) )
-      FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+      cBuffer := hb_FReadStr( fhnd, hb_BLen( _COFF_LIB_SIGNATURE ) )
       FClose( fhnd )
       IF cBuffer == _COFF_LIB_SIGNATURE
          RETURN .T.
@@ -13200,8 +13199,7 @@ STATIC FUNCTION IsOMFLib( cFileName )
    LOCAL cBuffer
 
    IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
-      cBuffer := Space( hb_BLen( _OMF_LIB_SIGNATURE ) )
-      FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+      cBuffer := hb_FReadStr( fhnd, hb_BLen( _OMF_LIB_SIGNATURE ) )
       FClose( fhnd )
       IF cBuffer == _OMF_LIB_SIGNATURE
          RETURN .T.
@@ -14742,15 +14740,13 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 STATIC FUNCTION __hbshell_FileSig( cFile )
 
    LOCAL hFile
-   LOCAL cBuff, cSig, cExt
+   LOCAL cBuff, cExt
 
    cExt := ".hb"
    IF ( hFile := FOpen( cFile, FO_READ ) ) != F_ERROR
-      cSig := hb_hrbSignature()
-      cBuff := Space( hb_BLen( cSig ) )
-      FRead( hFile, @cBuff, hb_BLen( cBuff ) )
+      cBuff := hb_FReadStr( hFile, hb_BLen( hb_hrbSignature() ) )
       FClose( hFile )
-      IF cBuff == cSig
+      IF cBuff == hb_hrbSignature()
          cExt := ".hrb"
       ENDIF
    ENDIF

@@ -807,16 +807,13 @@ STATIC FUNCTION AddrToIPPort( aAddr )
 STATIC FUNCTION FileSig( cFile )
 
    LOCAL hFile
-   LOCAL cBuff, cSig, cExt
+   LOCAL cBuff, cExt
 
    cExt := ".prg"
-   hFile := FOpen( cFile, FO_READ )
-   IF hFile != F_ERROR
-      cSig := hb_hrbSignature()
-      cBuff := Space( hb_BLen( cSig ) )
-      FRead( hFile, @cBuff, hb_BLen( cBuff ) )
+   IF ( hFile := FOpen( cFile, FO_READ ) ) != F_ERROR
+      cBuff := hb_FReadStr( hFile, hb_BLen( hb_hrbSignature() ) )
       FClose( hFile )
-      IF cBuff == cSig
+      IF cBuff == hb_hrbSignature()
          cExt := ".hrb"
       ENDIF
    ENDIF

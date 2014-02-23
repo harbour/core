@@ -1873,27 +1873,27 @@ FUNCTION pdfTIFFInfo( cFile )
 
          nTag := Bin2W( SubStr( cTemp, 1, 2 ) )
          nFieldType := Bin2W( SubStr( cTemp, 3, 2 ) )
-      /*
-      1 : BYTE       8-bit unsigned integer.
-      2 : ASCII      8-bit byte that contains a 7-bit ASCII code; the last byte
-                     must be NUL (binary zero).
-      3 : SHORT      16-bit (2-byte) unsigned integer.
-      4 : LONG       32-bit (4-byte) unsigned integer.
-      5 : RATIONAL   Two LONGs: the first represents the numerator of a
-                     fraction; the second, the denominator.
+         /*
+         1 : BYTE       8-bit unsigned integer.
+         2 : ASCII      8-bit byte that contains a 7-bit ASCII code; the last byte
+                        must be NUL (binary zero).
+         3 : SHORT      16-bit (2-byte) unsigned integer.
+         4 : LONG       32-bit (4-byte) unsigned integer.
+         5 : RATIONAL   Two LONGs: the first represents the numerator of a
+                        fraction; the second, the denominator.
 
-      In TIFF 6.0, some new field types have been defined:
+         In TIFF 6.0, some new field types have been defined:
 
-      6 : SBYTE      An 8-bit signed (twos-complement) integer.
-      7 : UNDEFINED  An 8-bit byte that may contain anything, depending on
-                     the definition of the field.
-      8 : SSHORT     A 16-bit (2-byte) signed (twos-complement) integer.
-      9 : SLONG      A 32-bit (4-byte) signed (twos-complement) integer.
-      10 : SRATIONAL Two SLONG's: the first represents the numerator of a
-                     fraction, the second the denominator.
-      11 : FLOAT     Single precision (4-byte) IEEE format.
-      12 : DOUBLE    Double precision (8-byte) IEEE format.
-      */
+         6 : SBYTE      An 8-bit signed (twos-complement) integer.
+         7 : UNDEFINED  An 8-bit byte that may contain anything, depending on
+                        the definition of the field.
+         8 : SSHORT     A 16-bit (2-byte) signed (twos-complement) integer.
+         9 : SLONG      A 32-bit (4-byte) signed (twos-complement) integer.
+         10 : SRATIONAL Two SLONG's: the first represents the numerator of a
+                        fraction, the second the denominator.
+         11 : FLOAT     Single precision (4-byte) IEEE format.
+         12 : DOUBLE    Double precision (8-byte) IEEE format.
+         */
          nCount := Bin2L( SubStr( cTemp, 5, 4 ) )
          nOffset := Bin2L( SubStr( cTemp, 9, 4 ) )
 

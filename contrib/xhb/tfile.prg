@@ -361,7 +361,6 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    LOCAL cBuff
    LOCAL nWhereCrLf
    LOCAL nPrev
-   LOCAL cTemp
 
    IF FSeek( fHandle, 0, FS_RELATIVE ) == 0
 
@@ -371,12 +370,9 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
 
       lMoved := .T.
 
-      //  Check preceeding 2 chars for CR+LF
+      // Check preceeding 2 chars for CR+LF
       FSeek( fHandle, -2, FS_RELATIVE )
-      cTemp := Space( 2 )
-      FRead( fHandle, @cTemp, hb_BLen( cTemp ) )
-
-      IF cTemp == CRLF()
+      IF hb_FReadStr( fHandle, 2 ) == CRLF()
          FSeek( fHandle, -2, FS_RELATIVE )
       ENDIF
 

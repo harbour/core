@@ -337,9 +337,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
 
-   LOCAL cDefPath          // contents of SET DEFAULT string
-   LOCAL aPaths            // array of paths
-   LOCAL nPathIndex        // iteration counter
+   LOCAL cPath             // iteration variable
 
    // Create and initialize default label array
    LOCAL aLabel[ LBL_COUNT ]
@@ -356,15 +354,11 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    // Open the label file
    nHandle := FOpen( cLblFile )
 
-   IF ( nFileError := FError() ) != 0 .AND. !( "\" $ cLblFile .OR. ":" $ cLblFile )
+   IF ( nFileError := FError() ) != 0 .AND. Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
-      cDefPath := Set( _SET_DEFAULT )
-      cDefPath := StrTran( cDefPath, ",", ";" )
-      aPaths := ListAsArray( cDefPath, ";" )
-
-      FOR nPathIndex := 1 TO Len( aPaths )
-         nHandle := FOpen( aPaths[ nPathIndex ] + "\" + cLblFile )
+      FOR EACH cPath IN ListAsArray( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
+         nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile )
          // if no error is reported, we have our label file
          IF ( nFileError := FError() ) == 0
             EXIT
@@ -428,10 +422,10 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          ENDIF
       NEXT
 
-      // Close file
-      FClose( nHandle )
-
    ENDIF
+
+   // Close file
+   FClose( nHandle )
 
    RETURN aLabel
 
