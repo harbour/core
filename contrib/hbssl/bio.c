@@ -47,6 +47,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 
 #include "hbssl.h"
@@ -438,9 +439,11 @@ HB_FUNC( BIO_NEW_FILE )
 
 HB_FUNC( BIO_NEW_MEM_BUF )
 {
-   if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
-      hb_retptr( BIO_new_mem_buf( ( char * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) ) );
+   PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
+
+   if( pBuffer )
+      /* TOFIX: leak. Create a container and free this memory when going out of scope. */
+      hb_retptr( BIO_new_mem_buf( hb_itemGetC( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -565,7 +568,7 @@ HB_FUNC( BIO_FREE_ALL )
 HB_FUNC( BIO_NEW_CONNECT )
 {
    if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
+      /* NOTE: Discarding 'const', OpenSSL will strdup() */
       hb_retptr( BIO_new_connect( ( char * ) hb_parc( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -574,7 +577,7 @@ HB_FUNC( BIO_NEW_CONNECT )
 HB_FUNC( BIO_NEW_ACCEPT )
 {
    if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
+      /* NOTE: Discarding 'const', OpenSSL will strdup() */
       hb_retptr( BIO_new_accept( ( char * ) hb_parc( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
