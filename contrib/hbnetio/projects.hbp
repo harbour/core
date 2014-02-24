@@ -2,3 +2,6 @@
 
 hbnetio.hbp
 utils/hbnetio/hbnetio.hbp
+
+# force hbwin to be built, it will be used by a subproject
+hbwin.hbc

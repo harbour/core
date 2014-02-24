@@ -4,9 +4,9 @@
 
 #define UPLOAD_FILE_AS      "test_ul.bin"
 #define RENAME_FILE_TO      "test_ul_renamed.bin"
-#define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
-#define REMOTE_URL_DEL      "ftp://harbour:power@localhost/" + RENAME_FILE_TO
-#define REMOTE_URL_MEM      "ftp://harbour:power@localhost/from_mem.txt"
+#define REMOTE_URL          "ftp://username:password@localhost/" + UPLOAD_FILE_AS
+#define REMOTE_URL_DEL      "ftp://username:password@localhost/" + RENAME_FILE_TO
+#define REMOTE_URL_MEM      "ftp://username:password@localhost/from_mem.txt"
 
 PROCEDURE Main( cDL, cUL )
 
@@ -50,7 +50,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_FSize( cUL ) ), hb_FSize( cUL )
 #if 0
       /* May use this instead of embedding in URL */
-      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "username:password" )
 #endif
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
@@ -63,7 +63,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_getinfo( curl, HB_CURLINFO_TOTAL_TIME )
 
       info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES, @tmp )
-      ? "SSL ENGINES: ", tmp, Len( info )
+      ? "SSL ENGINES:", tmp, Len( info )
       FOR EACH tmp IN info
          ?? tmp, ""
       NEXT
@@ -79,7 +79,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL_DEL )
 #if 0
       /* May use this instead of embedding in URL */
-      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "username:password" )
 #endif
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "DELE " + RENAME_FILE_TO } )
@@ -101,7 +101,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, Len( tmp ) ), Len( tmp )
 #if 0
       /* May use this instead of embedding in URL */
-      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "username:password" )
 #endif
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
@@ -122,8 +122,6 @@ PROCEDURE Main( cDL, cUL )
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, "test_dl.bin" )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
@@ -139,8 +137,6 @@ PROCEDURE Main( cDL, cUL )
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
@@ -164,8 +160,6 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_DIRLISTONLY )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
