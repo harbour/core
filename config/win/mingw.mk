@@ -70,9 +70,6 @@ ifneq ($(HB_BUILD_OPTIM),no)
          CFLAGS += -fomit-frame-pointer
       endif
    endif
-   ifeq ($(HB_COMPILER),mingw)
-      CFLAGS += -march=i686 -mtune=generic
-   endif
 endif
 
 ifeq ($(HB_COMPILER),mingw64)
