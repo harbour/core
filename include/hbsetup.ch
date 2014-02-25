@@ -58,11 +58,4 @@
 #define HB_CLP_UNDOC              /* Enable Cl*pper 5.2e/5.3b undocumented features */
 #define HB_COMPAT_C53             /* Enable Cl*pper 5.3b extensions */
 
-#ifndef HB_LEGACY_OFF
-/* #define HB_LEGACY_LEVEL4 */
-#endif
-
-/* Future level of legacy cleanup */
-#define HB_LEGACY_LEVEL5
-
 #endif /* HB_SETUP_CH_ */

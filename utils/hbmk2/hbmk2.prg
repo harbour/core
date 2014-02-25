@@ -83,14 +83,6 @@
       http://cm.bell-labs.com/sys/doc/troff.pdf
  */
 
-/* needed for -u */
-#ifndef HB_LEGACY_LEVEL4
-/* #define HB_LEGACY_LEVEL4 */
-#endif
-#ifndef HB_LEGACY_LEVEL5
-   #define HB_LEGACY_LEVEL5
-#endif
-
 #ifndef HBMK_GENERIC
    #define HARBOUR_SUPPORT
    #define HARBOUR_INCLUDE_PURE_GPL_PARTS
