@@ -32,6 +32,7 @@
          - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
+#include "inkey.ch"
 
 #include "hbhrb.ch"
 #include "hbsocket.ch"
@@ -284,7 +285,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .and. inkey() != 27
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. Inkey() != K_ESC
          hb_idleSleep( 5 )
       ENDDO
 

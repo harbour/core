@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -106,7 +106,7 @@ static void hb_fileReturn( PHB_FILE pFile )
       hb_ret();
 }
 
-/* HB_XEXISTS( <cFileName>, [ @<cDestFileName> ] ) -> <lOK> */
+/* hb_XExists( <cFileName>, [ @<cDestFileName> ] ) -> <lOK> */
 HB_FUNC( HB_XEXISTS )
 {
    const char * pszFileName = hb_parc( 1 );
@@ -133,7 +133,7 @@ HB_FUNC( HB_XEXISTS )
    hb_retl( fResult );
 }
 
-/* HB_XERASE( <cFileName> ) -> <nResult> */
+/* hb_XErase( <cFileName> ) -> <nResult> */
 HB_FUNC( HB_XERASE )
 {
    const char * pszFile = hb_parc( 1 );
@@ -151,7 +151,7 @@ HB_FUNC( HB_XERASE )
    hb_retni( iResult );
 }
 
-/* HB_XRENAME( <cFileSrc>, <cFileDst> ) -> <nResult> */
+/* hb_XRename( <cFileSrc>, <cFileDst> ) -> <nResult> */
 HB_FUNC( HB_XRENAME )
 {
    const char * szFileOld = hb_parc( 1 ),
@@ -170,7 +170,7 @@ HB_FUNC( HB_XRENAME )
    hb_retni( iResult );
 }
 
-/* HB_XCOPYFILE( <cFileSrc>, <cFileDst> ) -> <nResult> */
+/* hb_XCopyFile( <cFileSrc>, <cFileDst> ) -> <nResult> */
 HB_FUNC( HB_XCOPYFILE )
 {
    const char * pszSource = hb_parc( 1 ),
@@ -189,7 +189,7 @@ HB_FUNC( HB_XCOPYFILE )
    hb_retni( iResult );
 }
 
-/* HB_XDIREXISTS( <cDirName> ) -> <lExists> */
+/* hb_XDirExists( <cDirName> ) -> <lExists> */
 HB_FUNC( HB_XDIREXISTS )
 {
    const char * pszDirName = hb_parc( 1 );
@@ -206,7 +206,7 @@ HB_FUNC( HB_XDIREXISTS )
    hb_retl( fResult );
 }
 
-/* HB_XDIRMAKE( <cDirName> ) -> <nSuccess> */
+/* hb_XDirMake( <cDirName> ) -> <nSuccess> */
 HB_FUNC( HB_XDIRMAKE )
 {
    const char * pszDirName = hb_parc( 1 );
@@ -224,7 +224,7 @@ HB_FUNC( HB_XDIRMAKE )
    hb_retni( iResult );
 }
 
-/* HB_XDIRREMOVE( <cDirName> ) -> <nSuccess> */
+/* hb_XDirRemove( <cDirName> ) -> <nSuccess> */
 HB_FUNC( HB_XDIRREMOVE )
 {
    const char * pszDirName = hb_parc( 1 );
@@ -242,14 +242,14 @@ HB_FUNC( HB_XDIRREMOVE )
    hb_retni( iResult );
 }
 
-/* HB_XDIRECTORY( [ <cDirSpec> ], [ <cAttr> ] ) -> <aDirectory> */
+/* hb_XDirectory( [ <cDirSpec> ], [ <cAttr> ] ) -> <aDirectory> */
 HB_FUNC( HB_XDIRECTORY )
 {
    hb_itemReturnRelease( hb_fileDirectory( hb_parc( 1 ), hb_parc( 2 ) ) );
    hb_fsSetFError( hb_fsError() );
 }
 
-/* HB_XDIRSPACE( <cDirName>, [ <nInfoType> ] ) -> <nFreeSpace> */
+/* hb_XDirSpace( <cDirName>, [ <nInfoType> ] ) -> <nFreeSpace> */
 HB_FUNC( HB_XDIRSPACE )
 {
    HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
@@ -258,7 +258,7 @@ HB_FUNC( HB_XDIRSPACE )
    hb_fsSetFError( hb_fsError() );
 }
 
-/* HB_XGETATTR( <cFileName>, @<nAttr> ) -> <lOK> */
+/* hb_XGetAttr( <cFileName>, @<nAttr> ) -> <lOK> */
 HB_FUNC( HB_XGETATTR )
 {
    HB_FATTR nAttr = 0;
@@ -269,14 +269,14 @@ HB_FUNC( HB_XGETATTR )
    hb_stornl( nAttr, 2 );
 }
 
-/* HB_XSETATTR( <cFileName>,  <nAttr> ) -> <lOK> */
+/* hb_XSetAttr( <cFileName>,  <nAttr> ) -> <lOK> */
 HB_FUNC( HB_XSETATTR )
 {
    hb_retl( hb_fileSetAttr( hb_parcx( 1 ), ( HB_FATTR ) hb_parnl( 2 ) ) );
    hb_fsSetFError( hb_fsError() );
 }
 
-/* HB_XGETDATETIME( <cFileName>, @<tsDateTime> ) -> <lOK> */
+/* hb_XGetDateTime( <cFileName>, @<tsDateTime> ) -> <lOK> */
 HB_FUNC( HB_XGETDATETIME )
 {
    long lJulian, lMillisec;
@@ -315,7 +315,7 @@ HB_FUNC( HB_XGETDATETIME )
    }
 }
 
-/* HB_XSETDATETIME( <cFileName>,  <tsDateTime> ) -> <lOK> */
+/* hb_XSetDateTime( <cFileName>,  <tsDateTime> ) -> <lOK> */
 HB_FUNC( HB_XSETDATETIME )
 {
    long lDate = -1, lTime = -1;
@@ -338,7 +338,7 @@ HB_FUNC( HB_XSETDATETIME )
    hb_fsSetFError( hb_fsError() );
 }
 
-/* HB_XLINK( <cExistingFileName>, <cNewFileName> ) -> <nSuccess> */
+/* hb_XLink( <cExistingFileName>, <cNewFileName> ) -> <nSuccess> */
 HB_FUNC( HB_XLINK )
 {
    const char * pszExisting = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
@@ -356,7 +356,7 @@ HB_FUNC( HB_XLINK )
    hb_retni( iResult );
 }
 
-/* HB_XLINKSYM( <cTargetFileName>, <cNewFileName> ) -> <nSuccess> */
+/* hb_XLinkSym( <cTargetFileName>, <cNewFileName> ) -> <nSuccess> */
 HB_FUNC( HB_XLINKSYM )
 {
    const char * pszTarget = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
@@ -374,7 +374,7 @@ HB_FUNC( HB_XLINKSYM )
    hb_retni( iResult );
 }
 
-/* HB_XLINKREAD( <cFileName> ) -> <cDestFileName> | "" */
+/* hb_XLinkRead( <cFileName> ) -> <cDestFileName> | "" */
 HB_FUNC( HB_XLINKREAD )
 {
    const char * pszFile = hb_parc( 1 );
@@ -391,7 +391,7 @@ HB_FUNC( HB_XLINKREAD )
    hb_retc_buffer( pszResult );
 }
 
-/* HB_XOPEN( [@]<cFileName>, [ <nModeAttr> ] ) -> <pHandle> | NIL */
+/* hb_XOpen( [@]<cFileName>, [ <nModeAttr> ] ) -> <pHandle> | NIL */
 HB_FUNC( HB_XOPEN )
 {
    const char * pszFile = hb_parc( 1 );
@@ -425,7 +425,7 @@ HB_FUNC( HB_XOPEN )
    }
 }
 
-/* HB_XCLOSE( <pHandle> ) -> <lOK> */
+/* hb_XClose( <pHandle> ) -> <lOK> */
 HB_FUNC( HB_XCLOSE )
 {
    PHB_FILE * pFilePtr = hb_fileParamPtr( 1 );
@@ -440,7 +440,7 @@ HB_FUNC( HB_XCLOSE )
    }
 }
 
-/* HB_XLOCK( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <lOK> */
+/* hb_XLock( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <lOK> */
 HB_FUNC( HB_XLOCK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -463,7 +463,7 @@ HB_FUNC( HB_XLOCK )
    }
 }
 
-/* HB_XUNLOCK( <pHandle>, <nStart>, <nLen> ) -> <lOK> */
+/* hb_XUnlock( <pHandle>, <nStart>, <nLen> ) -> <lOK> */
 HB_FUNC( HB_XUNLOCK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -486,7 +486,7 @@ HB_FUNC( HB_XUNLOCK )
    }
 }
 
-/* HB_XLOCKTEST( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <nPID> | 0 (nolock) | -1 (err) */
+/* hb_XLockTest( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <nPID> | 0 (nolock) | -1 (err) */
 HB_FUNC( HB_XLOCKTEST )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -509,7 +509,7 @@ HB_FUNC( HB_XLOCKTEST )
    }
 }
 
-/* HB_XREAD( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nTimeOut> ] ) -> <nRead> */
+/* hb_XRead( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nTimeOut> ] ) -> <nRead> */
 HB_FUNC( HB_XREAD )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -540,7 +540,35 @@ HB_FUNC( HB_XREAD )
    }
 }
 
-/* HB_XWRITE( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nTimeOut> ] ) -> <nWritten> */
+/* hb_XReadLen( <pHandle>, <nToRead>, [ <nTimeOut> ] ) -> <cBuffer> */
+HB_FUNC( HB_XREADLEN )
+{
+   PHB_FILE pFile = hb_fileParam( 1 );
+
+   if( pFile && HB_ISNUM( 2 ) )
+   {
+      HB_ERRCODE uiError = 0;
+      HB_SIZE nToRead = hb_parns( 2 );
+
+      if( nToRead > 0 )
+      {
+         char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+         HB_SIZE nRead;
+
+         nRead = hb_fileRead( pFile, buffer, nToRead, hb_parnintdef( 3, -1 ) );
+         uiError = hb_fsError();
+         buffer[ nRead ] = '\0';
+
+         hb_retclen_buffer( buffer, nRead );
+      }
+      else
+         hb_retc_null();
+
+      hb_fsSetFError( uiError );
+   }
+}
+
+/* hb_XWrite( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nTimeOut> ] ) -> <nWritten> */
 HB_FUNC( HB_XWRITE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -571,7 +599,7 @@ HB_FUNC( HB_XWRITE )
    }
 }
 
-/* HB_XREADAT( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nAtOffset> ] ) -> <nRead> */
+/* hb_XReadAt( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nAtOffset> ] ) -> <nRead> */
 HB_FUNC( HB_XREADAT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -603,7 +631,7 @@ HB_FUNC( HB_XREADAT )
    }
 }
 
-/* HB_XWRITEAT( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nAtOffset> ] ) -> <nWritten> */
+/* hb_XWriteAt( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nAtOffset> ] ) -> <nWritten> */
 HB_FUNC( HB_XWRITEAT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -635,7 +663,7 @@ HB_FUNC( HB_XWRITEAT )
    }
 }
 
-/* HB_XSEEK( <pHandle>, <nOffset>, [ <nWhence> ] ) -> <nOffset> */
+/* hb_XSeek( <pHandle>, <nOffset>, [ <nWhence> ] ) -> <nOffset> */
 HB_FUNC( HB_XSEEK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -657,7 +685,7 @@ HB_FUNC( HB_XSEEK )
    }
 }
 
-/* HB_XTRUNC( <pHandle>, [ <nAtOffset> ] ) -> <lOK> */
+/* hb_XTrunc( <pHandle>, [ <nAtOffset> ] ) -> <lOK> */
 HB_FUNC( HB_XTRUNC )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -669,7 +697,7 @@ HB_FUNC( HB_XTRUNC )
    }
 }
 
-/* HB_XSIZE( <pHandle> ) -> <nSize> */
+/* hb_XSize( <pHandle> ) -> <nSize> */
 HB_FUNC( HB_XSIZE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -681,7 +709,7 @@ HB_FUNC( HB_XSIZE )
    }
 }
 
-/* HB_XEOF( <pHandle> ) -> <lEOF> */
+/* hb_XEof( <pHandle> ) -> <lEOF> */
 HB_FUNC( HB_XEOF )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -693,7 +721,7 @@ HB_FUNC( HB_XEOF )
    }
 }
 
-/* HB_XFLUSH( <pHandle>, [ <lDirtyOnly> ] ) -> NIL */
+/* hb_XFlush( <pHandle>, [ <lDirtyOnly> ] ) -> NIL */
 HB_FUNC( HB_XFLUSH )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -705,7 +733,7 @@ HB_FUNC( HB_XFLUSH )
    }
 }
 
-/* HB_XCOMMIT( <pHandle> ) -> NIL */
+/* hb_XCommit( <pHandle> ) -> NIL */
 HB_FUNC( HB_XCOMMIT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -717,7 +745,7 @@ HB_FUNC( HB_XCOMMIT )
    }
 }
 
-/* HB_XCONFIG( <pHandle>, <nSet>, [ <nParam> ] ) -> <nResult> */
+/* hb_XConfig( <pHandle>, <nSet>, [ <nParam> ] ) -> <nResult> */
 HB_FUNC( HB_XCONFIG )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -737,7 +765,7 @@ HB_FUNC( HB_XCONFIG )
    }
 }
 
-/* HB_XHANDLE( <pHandle> ) -> <nOsHandle> */
+/* hb_XHandle( <pHandle> ) -> <nOsHandle> */
 HB_FUNC( HB_XHANDLE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
@@ -746,7 +774,7 @@ HB_FUNC( HB_XHANDLE )
       hb_retnint( ( HB_NHANDLE ) hb_fileHandle( pFile ) );
 }
 
-/* HB_XTEMPFILE( @<cFileName>, [ <cDir> ], [ <cPrefix> ], [ <cExt> ], [ <nAttr> ] ) -> <pHandle> | NIL */
+/* hb_XTempFile( @<cFileName>, [ <cDir> ], [ <cPrefix> ], [ <cExt> ], [ <nAttr> ] ) -> <pHandle> | NIL */
 HB_FUNC( HB_XTEMPFILE )
 {
    char szName[ HB_PATH_MAX ];
