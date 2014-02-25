@@ -167,7 +167,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 
 static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
 {
-   HB_FHANDLE * handle_ptr;
+   PHB_FILE * handle_ptr;
 
    HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p,%d)", pSet, ( int ) set_specifier ) );
 
@@ -186,57 +186,72 @@ static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
          return;
    }
 
-   if( *handle_ptr != FS_ERROR )
+   if( *handle_ptr != NULL )
    {
       if( set_specifier != HB_SET_PRINTFILE && pSet->HB_SET_EOF )
-         hb_fsWrite( *handle_ptr, "\x1A", 1 );
-      hb_fsClose( *handle_ptr );
-      *handle_ptr = FS_ERROR;
+         hb_fileWrite( *handle_ptr, "\x1A", 1, -1 );
+      hb_fileClose( *handle_ptr );
+      *handle_ptr = NULL;
    }
 }
 
-static HB_BOOL is_devicename( const char * szFileName )
+static const char * is_devicename( const char * szFileName )
 {
    if( szFileName && *szFileName )
    {
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
-      int iLen = ( int ) strlen( szFileName );
-      if( ( iLen == 3 &&
-            ( hb_stricmp( szFileName, "PRN" ) == 0 ||
-              hb_stricmp( szFileName, "CON" ) == 0 ) ) ||
-          ( iLen == 4 &&
-            ( ( hb_strnicmp( szFileName, "LPT", 3 ) == 0 &&
-                szFileName[ 3 ] >= '1' && szFileName[ 3 ] <= '3' ) ||
-              ( hb_strnicmp( szFileName, "COM", 3 ) == 0 &&
-                szFileName[ 3 ] >= '1' && szFileName[ 3 ] <= '9' ) ) ) )
+      const char * szDevices[] =
+            { "PRN", "CON", "LPT1", "LPT2", "LPT3",
+              "COM1", "COM2", "COM3", "COM4", "COM5",
+              "COM6", "COM7", "COM8", "COM9" };
+      int iLen = ( int ) strlen( szFileName ), iFrom, iTo;
+
+      if( iLen >= 3 && iLen <= 4 )
       {
-         return HB_TRUE;
+         if( iLen == 3 )
+         {
+            iFrom = 0;
+            iTo = 0;
+         }
+         else
+         {
+            iFrom = 2;
+            iTo = HB_SIZEOFARRAY( szDevices );
+         }
+         for( ; iFrom < iTo; ++iFrom )
+         {
+            if( hb_stricmp( szFileName, szDevices[ iFrom ] ) == 0 )
+               return szDevices[ iFrom ];
+         }
       }
 #elif defined( HB_OS_UNIX )
       if( strncmp( szFileName, "/dev/", 5 ) == 0 )
-         return HB_TRUE;
+         return szFileName;
       else
       {
          HB_FATTR ulAttr = 0;
          if( hb_fsGetAttr( szFileName, &ulAttr ) )
          {
             if( ulAttr & ( HB_FA_CHRDEVICE | HB_FA_BLKDEVICE | HB_FA_FIFO | HB_FA_SOCKET ) )
-               return HB_TRUE;
+               return szFileName;
          }
       }
 #endif
    }
-   return HB_FALSE;
+   return NULL;
 }
 
 static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
                          HB_BOOL bAppend, HB_set_enum set_specifier )
 {
+   HB_STACK_TLS_PRELOAD
    PHB_ITEM pError = NULL;
-   HB_FHANDLE handle, * handle_ptr;
+   PHB_FILE handle, * handle_ptr;
    HB_ERRCODE uiError;
-   char * szFileName = NULL, ** set_value;
+   const char * szDevice = NULL;
+   const char * szFileName = NULL;
    const char * def_ext;
+   char ** set_value;
    HB_BOOL bPipe = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) bAppend, ( int ) set_specifier ) );
@@ -269,37 +284,24 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
 
    if( file_name && file_name[ 0 ] != '\0' )
    {
-      /* Create full filename */
 #if defined( HB_OS_UNIX )
       bPipe = file_name[ 0 ] == '|';
       if( bPipe )
       {
-         szFileName = hb_strdup( file_name );
+         szFileName = file_name;
          bAppend = HB_FALSE;
       }
+      else
 #endif
-      if( ! bPipe )
       {
-         char path[ HB_PATH_MAX ];
-         PHB_FNAME pFilename = hb_fsFNameSplit( file_name );
-
-         if( is_devicename( file_name ) )
+         szDevice = is_devicename( file_name );
+         if( szDevice )
          {
-#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
-            hb_strupr( ( char * ) pFilename->szName );
-#endif
+            szFileName = szDevice;
+            def_ext = NULL;
          }
          else
-         {
-            if( pFilename->szExtension == NULL && def_ext && pSet->HB_SET_DEFEXTENSIONS )
-               pFilename->szExtension = def_ext;
-
-            if( pFilename->szPath == NULL && pSet->HB_SET_DEFAULT )
-               pFilename->szPath = pSet->HB_SET_DEFAULT;
-         }
-         hb_fsFNameMerge( path, pFilename );
-         hb_xfree( pFilename );
-         szFileName = hb_strdup( path );
+            szFileName = file_name;
       }
    }
 
@@ -318,73 +320,57 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
 
    /* QUESTION: What sharing mode does Clipper use ? [vszakats] */
 
-   handle = FS_ERROR;
-   while( handle == FS_ERROR )
+   handle = NULL;
+   do
    {
       if( bPipe )
-         handle = hb_fsPOpen( szFileName + 1, "w" );
+      {
+         handle = hb_filePOpen( szFileName + 1, "w" );
+      }
       else
       {
-         HB_BOOL bCreate = HB_FALSE;
+         handle = hb_fileExtOpen( szFileName,
+                                  hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? def_ext : NULL,
+                                  FO_READWRITE | FO_READWRITE | FXO_SHARELOCK |
+                                  ( bAppend ? 0 : FXO_TRUNCATE ) |
+                                  ( szDevice ? 0 : FXO_DEFAULTS ),
+                                  NULL, pError );
 
-         if( bAppend ) /* Append mode */
+         if( handle != NULL && szDevice == NULL && bAppend )
          {
-            if( hb_fsFileExists( szFileName ) )
+            /* Position to EOF */
+            /* Special binary vs. text file handling - even for UN*X, now
+               that there's an HB_SET_EOF flag. */
+            if( set_specifier == HB_SET_PRINTFILE )
             {
-               /* If the file already exists, open it (in read-write mode, in
-                  case of non-Unix and text modes). */
-               handle = hb_fsOpen( szFileName, FO_READWRITE | FO_DENYWRITE );
-               if( handle != FS_ERROR )
-               {
-                  /* Position to EOF */
-                  /* Special binary vs. text file handling - even for UN*X, now
-                     that there's an HB_SET_EOF flag. */
-                  if( set_specifier == HB_SET_PRINTFILE )
-                  {
-                     /* PRINTFILE is always binary and needs no special handling. */
-                     hb_fsSeek( handle, 0, FS_END );
-                  }
-                  else
-                  {
-                     /* All other files are text files and may have an EOF
-                        ('\x1A') character at the end (both UN*X and non-UN*X,
-                        now that theres an HB_SET_EOF flag). */
-                     char cEOF = '\0';
-                     hb_fsSeek( handle, -1, FS_END ); /* Position to last char. */
-                     hb_fsRead( handle, &cEOF, 1 );   /* Read the last char. */
-                     if( cEOF == '\x1A' )             /* If it's an EOF, */
-                     {
-                        hb_fsSeek( handle, -1, FS_END ); /* Then write over it. */
-                     }
-                  }
-               }
+               /* PRINTFILE is always binary and needs no special handling. */
+               hb_fileSeek( handle, 0, FS_END );
             }
             else
-               bCreate = HB_TRUE;  /* Otherwise create a new file. */
+            {
+               /* All other files are text files and may have an EOF
+                  ('\x1A') character at the end (both UN*X and non-UN*X,
+                  now that theres an HB_SET_EOF flag). */
+               char cEOF = '\0';
+               hb_fileSeek( handle, -1, FS_END );     /* Position to last char. */
+               hb_fileRead( handle, &cEOF, 1, -1 );   /* Read the last char. */
+               if( cEOF == '\x1A' )                   /* If it's an EOF, */
+                  hb_fileSeek( handle, -1, FS_END );  /* Then write over it. */
+            }
          }
-         else
-            bCreate = HB_TRUE;  /* Always create a new file for overwrite mode. */
-
-         if( bCreate )
-            handle = hb_fsCreate( szFileName, FC_NORMAL );
       }
 
-      if( handle == FS_ERROR )
+      if( handle == NULL )
       {
          pError = hb_errRT_FileError( pError, HB_ERR_SS_TERMINAL, EG_CREATE, uiError, szFileName );
          if( hb_errLaunch( pError ) != E_RETRY )
             break;
       }
    }
+   while( handle == NULL );
 
    if( pError )
       hb_itemRelease( pError );
-
-   if( handle == FS_ERROR )
-   {
-      hb_xfree( szFileName );
-      szFileName = NULL;
-   }
 
    /* user RT error handler can open it too so we have to
     * close it again if necessary
@@ -393,7 +379,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    *handle_ptr = handle;
    if( *set_value )
       hb_xfree( *set_value );
-   *set_value = szFileName;
+   *set_value = handle != NULL ? hb_strdup( szFileName ) : NULL;
 }
 
 HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
@@ -1058,7 +1044,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
 
    pSet->HB_SET_ALTERNATE = HB_FALSE;
    pSet->HB_SET_ALTFILE = NULL;
-   pSet->hb_set_althan = FS_ERROR;
+   pSet->hb_set_althan = NULL;
    pSet->HB_SET_AUTOPEN = HB_TRUE;
    pSet->HB_SET_AUTORDER = 0;
    pSet->HB_SET_AUTOSHARE = 0;
@@ -1103,7 +1089,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->HB_SET_EXIT = HB_FALSE;
    pSet->HB_SET_EXTRA = HB_FALSE;
    pSet->HB_SET_EXTRAFILE = NULL;
-   pSet->hb_set_extrahan = FS_ERROR;
+   pSet->hb_set_extrahan = NULL;
    pSet->HB_SET_FIXED = HB_FALSE;
    pSet->HB_SET_FORCEOPT = HB_FALSE;
    pSet->HB_SET_HARDCOMMIT = HB_TRUE;
@@ -1120,7 +1106,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->hb_set_path = NULL;
    pSet->HB_SET_PRINTER = HB_FALSE;
    pSet->HB_SET_PRINTFILE = hb_set_PRINTFILE_default();
-   pSet->hb_set_printhan = FS_ERROR;
+   pSet->hb_set_printhan = NULL;
    pSet->HB_SET_SCOREBOARD = HB_TRUE;
    pSet->HB_SET_SCROLLBREAK = HB_TRUE;
    pSet->HB_SET_SOFTSEEK = HB_FALSE;
@@ -1194,7 +1180,7 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
 
    memcpy( pSet, pSrc, sizeof( HB_SET_STRUCT ) );
 
-   pSet->hb_set_althan = pSet->hb_set_extrahan = pSet->hb_set_printhan = FS_ERROR;
+   pSet->hb_set_althan = pSet->hb_set_extrahan = pSet->hb_set_printhan = NULL;
    pSet->hb_set_path = NULL;
    pSet->hb_set_listener = NULL;
 
@@ -2283,7 +2269,7 @@ HB_PATHNAMES * hb_setGetFirstSetPath( void )
    return hb_stackSetStruct()->hb_set_path;
 }
 
-HB_FHANDLE hb_setGetAltHan( void )
+PHB_FILE hb_setGetAltHan( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_althan;
@@ -2295,13 +2281,13 @@ HB_BOOL hb_setGetCentury( void )
    return hb_stackSetStruct()->hb_set_century;
 }
 
-HB_FHANDLE hb_setGetExtraHan( void )
+PHB_FILE hb_setGetExtraHan( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_extrahan;
 }
 
-HB_FHANDLE hb_setGetPrintHan( void )
+PHB_FILE hb_setGetPrintHan( void )
 {
    HB_STACK_TLS_PRELOAD
    return hb_stackSetStruct()->hb_set_printhan;
@@ -2932,7 +2918,7 @@ char * hb_osStrU16Decode2( const HB_WCHAR * pszNameW, char * pszBuffer, HB_SIZE 
 }
 #endif
 
-HB_FHANDLE hb_setGetPrinterHandle( int iType )
+PHB_FILE hb_setGetPrinterHandle( int iType )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
@@ -2941,19 +2927,19 @@ HB_FHANDLE hb_setGetPrinterHandle( int iType )
    {
       case HB_SET_PRN_DEV:
          if( ! pSet->hb_set_prndevice )
-            return FS_ERROR;
+            return NULL;
          break;
       case HB_SET_PRN_CON:
          if( ! pSet->HB_SET_PRINTER )
-            return FS_ERROR;
+            return NULL;
          break;
       case HB_SET_PRN_ANY:
          break;
       default:
-         return FS_ERROR;
+         return NULL;
    }
 
-   if( pSet->hb_set_printhan == FS_ERROR && pSet->HB_SET_PRINTFILE )
+   if( pSet->hb_set_printhan == NULL && pSet->HB_SET_PRINTFILE )
       open_handle( pSet, pSet->HB_SET_PRINTFILE, HB_FALSE, HB_SET_PRINTFILE );
 
    return pSet->hb_set_printhan;

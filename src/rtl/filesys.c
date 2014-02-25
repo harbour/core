@@ -632,11 +632,11 @@ HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
 #endif
 }
 
-HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pMode )
+HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 {
    HB_FHANDLE hFileHandle = FS_ERROR;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPOpen(%p, %s)", pszFileName, pMode ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPOpen(%p, %s)", pszFileName, pszMode ) );
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
    {
@@ -648,8 +648,8 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pMode )
       int iMaxFD, iResult;
 
       nLen = strlen( pszFileName );
-      if( pMode && ( *pMode == 'r' || *pMode == 'w' ) )
-         fRead = ( *pMode == 'r' );
+      if( pszMode && ( *pszMode == 'r' || *pszMode == 'w' ) )
+         fRead = ( *pszMode == 'r' );
       else
       {
          if( pszFileName[ 0 ] == '|' )
@@ -744,7 +744,7 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pMode )
 #else
 
    HB_SYMBOL_UNUSED( pszFileName );
-   HB_SYMBOL_UNUSED( pMode );
+   HB_SYMBOL_UNUSED( pszMode );
 
    hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 

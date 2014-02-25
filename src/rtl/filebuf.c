@@ -1222,3 +1222,15 @@ PHB_FILE hb_fileCreateTempEx( char * pszName,
 
    return pFile;
 }
+
+PHB_FILE hb_filePOpen( const char * pszFileName, const char * pszMode )
+{
+   PHB_FILE pFile = NULL;
+   HB_FHANDLE hFile;
+
+   hFile = hb_fsPOpen( pszFileName, pszMode );
+   if( hFile != FS_ERROR )
+      pFile = hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
+
+   return pFile;
+}

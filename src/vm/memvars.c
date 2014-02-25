@@ -1341,7 +1341,7 @@ typedef struct
    const char * pszMask;
    HB_BOOL      bIncludeMask;
    HB_BYTE *    buffer;
-   HB_FHANDLE   fhnd;
+   PHB_FILE     fhnd;
 } MEMVARSAVE_CARGO;
 
 /* saves a variable to a mem file already open */
@@ -1350,8 +1350,8 @@ static HB_DYNS_FUNC( hb_memvarSave )
 {
    const char * pszMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->pszMask;
    HB_BOOL bIncludeMask = ( ( MEMVARSAVE_CARGO * ) Cargo )->bIncludeMask;
-   HB_BYTE * buffer  = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
-   HB_FHANDLE fhnd   = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
+   HB_BYTE * buffer = ( ( MEMVARSAVE_CARGO * ) Cargo )->buffer;
+   PHB_FILE fhnd    = ( ( MEMVARSAVE_CARGO * ) Cargo )->fhnd;
    PHB_ITEM pMemvar;
 
    /* NOTE: Harbour name lengths are not limited, but the .mem file
@@ -1387,10 +1387,10 @@ static HB_DYNS_FUNC( hb_memvarSave )
             }
             buffer[ 11 ] = 'C' + 128;
             HB_PUT_LE_UINT16( &buffer[ 16 ], nLen );
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN );
-            hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pMemvar ), nLen - iOverFlow );
+            hb_fileWrite( fhnd, buffer, HB_MEM_REC_LEN, -1 );
+            hb_fileWrite( fhnd, hb_itemGetCPtr( pMemvar ), nLen - iOverFlow, -1 );
             if( iOverFlow )
-               hb_fsWrite( fhnd, "\0", 1 );
+               hb_fileWrite( fhnd, "\0", 1, -1 );
          }
          else if( HB_IS_NUMERIC( pMemvar ) )
          {
@@ -1410,7 +1410,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
 #endif
             buffer[ 17 ] = ( HB_BYTE ) iDec;
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
+            hb_fileWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN, -1 );
          }
          else if( HB_IS_DATE( pMemvar ) )
          {
@@ -1420,7 +1420,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
+            hb_fileWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN, -1 );
          }
          else if( HB_IS_TIMESTAMP( pMemvar ) )
          {
@@ -1430,7 +1430,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
             HB_PUT_LE_DOUBLE( &buffer[ HB_MEM_REC_LEN ], dNumber );
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN );
+            hb_fileWrite( fhnd, buffer, HB_MEM_REC_LEN + HB_MEM_NUM_LEN, -1 );
          }
          else if( HB_IS_LOGICAL( pMemvar ) )
          {
@@ -1438,7 +1438,7 @@ static HB_DYNS_FUNC( hb_memvarSave )
             buffer[ 16 ] = 1;
             buffer[ 17 ] = 0;
             buffer[ HB_MEM_REC_LEN ] = hb_itemGetL( pMemvar ) ? 1 : 0;
-            hb_fsWrite( fhnd, buffer, HB_MEM_REC_LEN + 1 );
+            hb_fileWrite( fhnd, buffer, HB_MEM_REC_LEN + 1, -1 );
          }
       }
    }
@@ -1452,41 +1452,28 @@ HB_FUNC( __MVSAVE )
    /* Clipper also checks for the number of arguments here */
    if( hb_pcount() == 3 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISLOG( 3 ) )
    {
+      const char * pszFileName = hb_parc( 1 );
       PHB_ITEM pError = NULL;
-      PHB_FNAME pFileName;
-      char szFileName[ HB_PATH_MAX ];
-      HB_FHANDLE fhnd;
-
-      /* Generate filename */
-
-      pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
-
-      if( pFileName->szExtension == NULL && hb_stackSetStruct()->HB_SET_DEFEXTENSIONS )
-         pFileName->szExtension = ".mem";
-
-      if( ! pFileName->szPath )
-         pFileName->szPath = hb_stackSetStruct()->HB_SET_DEFAULT;
-
-      hb_fsFNameMerge( szFileName, pFileName );
-      hb_xfree( pFileName );
+      PHB_FILE fhnd;
 
       /* Create .mem file */
       do
       {
-         fhnd = hb_fsExtOpen( szFileName, NULL,
-                              FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
-                              FXO_DEFAULTS | FXO_SHARELOCK,
-                              NULL, pError );
-         if( fhnd == FS_ERROR )
+         fhnd = hb_fileExtOpen( pszFileName,
+                                hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? ".mem" : NULL,
+                                FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
+                                FXO_DEFAULTS | FXO_SHARELOCK,
+                                NULL, pError );
+         if( fhnd == NULL )
          {
-            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2006, szFileName );
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2006, pszFileName );
             if( hb_errLaunch( pError ) != E_RETRY )
                break;
          }
       }
-      while( fhnd == FS_ERROR );
+      while( fhnd == NULL );
 
-      if( fhnd != FS_ERROR )
+      if( fhnd != NULL )
       {
          HB_BYTE buffer[ HB_MEM_REC_LEN + HB_MEM_NUM_LEN ];
          MEMVARSAVE_CARGO msc;
@@ -1501,16 +1488,16 @@ HB_FUNC( __MVSAVE )
          hb_dynsymEval( hb_memvarSave, ( void * ) &msc );
 
          buffer[ 0 ] = '\x1A';
-         hb_fsWrite( fhnd, buffer, 1 );
+         hb_fileWrite( fhnd, buffer, 1, -1 );
 
          /* NOTE: Here, we're not CA-Cl*pper compatible by default settings.
                   [vszakats] */
 #ifndef HB_CLP_STRICT
          if( hb_setGetHardCommit() )
-            hb_fsCommit( fhnd );
+            hb_fileCommit( fhnd );
 #endif
 
-         hb_fsClose( fhnd );
+         hb_fileClose( fhnd );
       }
 
       if( pError )
@@ -1536,10 +1523,9 @@ HB_FUNC( __MVRESTORE )
 #endif
    {
       HB_STACK_TLS_PRELOAD
+      const char * pszFileName = hb_parc( 1 );
       PHB_ITEM pError = NULL;
-      PHB_FNAME pFileName;
-      char szFileName[ HB_PATH_MAX ];
-      HB_FHANDLE fhnd;
+      PHB_FILE fhnd;
 
       HB_BOOL bAdditive = hb_parl( 2 );
 
@@ -1548,35 +1534,23 @@ HB_FUNC( __MVRESTORE )
       if( ! bAdditive )
          hb_memvarsClear( HB_FALSE );
 
-      /* Generate filename */
-
-      pFileName = hb_fsFNameSplit( hb_parc( 1 ) );
-
-      if( pFileName->szExtension == NULL && hb_stackSetStruct()->HB_SET_DEFEXTENSIONS )
-         pFileName->szExtension = ".mem";
-
-      if( ! pFileName->szPath )
-         pFileName->szPath = hb_stackSetStruct()->HB_SET_DEFAULT;
-
-      hb_fsFNameMerge( szFileName, pFileName );
-      hb_xfree( pFileName );
-
       /* Open .mem file */
       do
       {
-         fhnd = hb_fsExtOpen( szFileName, NULL,
-                              FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
-                              NULL, pError );
-         if( fhnd == FS_ERROR )
+         fhnd = hb_fileExtOpen( pszFileName,
+                                hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? ".mem" : NULL,
+                                FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
+                                NULL, pError );
+         if( fhnd == NULL )
          {
-            pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2005, szFileName );
+            pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2005, pszFileName );
             if( hb_errLaunch( pError ) != E_RETRY )
                break;
          }
       }
-      while( fhnd == FS_ERROR );
+      while( fhnd == NULL );
 
-      if( fhnd != FS_ERROR )
+      if( fhnd != NULL )
       {
          HB_BOOL bIncludeMask;
          HB_BYTE buffer[ HB_MEM_REC_LEN ];
@@ -1592,7 +1566,7 @@ HB_FUNC( __MVRESTORE )
          bIncludeMask = hb_parldef( 4, 1 );
 #endif
 
-         while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )
+         while( hb_fileRead( fhnd, buffer, HB_MEM_REC_LEN, -1 ) == HB_MEM_REC_LEN )
          {
             /* FoxPro does not add 128 to item type: 'N', 'C', 'D', 'L'
              * CA-Cl*pper respects it and read such files so we also should.
@@ -1614,7 +1588,7 @@ HB_FUNC( __MVRESTORE )
                   uiWidth += uiDec * 256;
                   pbyString = ( HB_BYTE * ) hb_xgrab( uiWidth );
 
-                  if( hb_fsRead( fhnd, pbyString, uiWidth ) == uiWidth )
+                  if( hb_fileRead( fhnd, pbyString, uiWidth, -1 ) == uiWidth )
                      pItem = hb_itemPutCLPtr( pItem, ( char * ) pbyString, uiWidth - 1 );
                   else
                   {
@@ -1629,7 +1603,7 @@ HB_FUNC( __MVRESTORE )
                {
                   HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
-                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                  if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutNLen( pItem, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
                   else
                      szName = NULL;
@@ -1641,7 +1615,7 @@ HB_FUNC( __MVRESTORE )
                {
                   HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
-                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                  if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutDL( pItem, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
                   else
                      szName = NULL;
@@ -1653,7 +1627,7 @@ HB_FUNC( __MVRESTORE )
                {
                   HB_BYTE pbyNumber[ HB_MEM_NUM_LEN ];
 
-                  if( hb_fsRead( fhnd, pbyNumber, HB_MEM_NUM_LEN ) == HB_MEM_NUM_LEN )
+                  if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutTD( pItem, HB_GET_LE_DOUBLE( pbyNumber ) );
                   else
                      szName = NULL;
@@ -1665,7 +1639,7 @@ HB_FUNC( __MVRESTORE )
                {
                   HB_BYTE pbyLogical[ 1 ];
 
-                  if( hb_fsRead( fhnd, pbyLogical, 1 ) == 1 )
+                  if( hb_fileRead( fhnd, pbyLogical, 1, -1 ) == 1 )
                      pItem = hb_itemPutL( pItem, pbyLogical[ 0 ] != 0 );
                   else
                      szName = NULL;
@@ -1697,7 +1671,7 @@ HB_FUNC( __MVRESTORE )
             }
          }
 
-         hb_fsClose( fhnd );
+         hb_fileClose( fhnd );
          hb_memvarUpdatePrivatesBase();
          hb_itemReturnRelease( pItem );
       }
