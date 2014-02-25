@@ -49,13 +49,13 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-HB_BOOL hb_fsFile( const char * pszFilename )
+HB_BOOL hb_fsFile( const char * pszFileName )
 {
    PHB_FFIND ffind;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFile(%s)", pszFilename ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFile(%s)", pszFileName ) );
 
-   if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_ALL ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
       return HB_TRUE;
@@ -64,25 +64,25 @@ HB_BOOL hb_fsFile( const char * pszFilename )
    return HB_FALSE;
 }
 
-HB_BOOL hb_fsIsDirectory( const char * pszFilename )
+HB_BOOL hb_fsIsDirectory( const char * pszFileName )
 {
    HB_BOOL bResult = HB_FALSE;
    PHB_FFIND ffind;
    char * pszFree = NULL;
    int iLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsIsDirectory(%s)", pszFilename ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsIsDirectory(%s)", pszFileName ) );
 
-   iLen = ( int ) strlen( pszFilename );
-   while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFilename[ iLen - 1 ] ) )
+   iLen = ( int ) strlen( pszFileName );
+   while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen - 1 ] ) )
       --iLen;
 
-   if( pszFilename[ iLen ] )
-      pszFilename = pszFree = hb_strndup( pszFilename, iLen );
+   if( pszFileName[ iLen ] )
+      pszFileName = pszFree = hb_strndup( pszFileName, iLen );
 
    if( iLen && iLen <= ( HB_PATH_MAX - 1 ) )
    {
-      if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_DIRECTORY ) ) != NULL )
+      if( ( ffind = hb_fsFindFirst( pszFileName, HB_FA_DIRECTORY ) ) != NULL )
       {
          do
          {

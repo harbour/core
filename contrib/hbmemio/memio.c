@@ -52,10 +52,13 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbthread.h"
 #include "hbvm.h"
 #include "hbinit.h"
+
+#include "directry.ch"
 
 /******************************************************
  *
@@ -360,6 +363,56 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 }
 
 
+HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr )
+{
+   char *   pszFree = NULL;
+   PHB_ITEM pDirArray;
+   HB_SIZE  nLen;
+   HB_ULONG ul;
+
+   HB_SYMBOL_UNUSED( pszAttr );
+
+   if( pszDirSpec && *pszDirSpec )
+   {
+      nLen = strlen( pszDirSpec ) - 1;
+      if( pszDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
+      {
+         if( nLen == 0 )
+            pszDirSpec = HB_OS_ALLFILE_MASK;
+         else
+            pszDirSpec = pszFree = hb_xstrcpy( NULL, pszDirSpec, HB_OS_ALLFILE_MASK, NULL );
+      }
+   }
+   else
+      pszDirSpec = HB_OS_ALLFILE_MASK;
+
+   HB_MEMFSMT_LOCK();
+   pDirArray = hb_itemArrayNew( s_fs.ulInodeCount );
+   nLen = 0;
+   for( ul = 0; ul < s_fs.ulInodeCount; ul++ )
+   {
+      if( hb_strMatchFile( s_fs.pInodes[ ul ]->szName, pszDirSpec ) )
+      {
+         PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ++nLen );
+
+         hb_arrayNew    ( pSubarray, F_LEN );
+         hb_arraySetC   ( pSubarray, F_NAME, s_fs.pInodes[ ul ]->szName );
+         hb_arraySetNInt( pSubarray, F_SIZE, s_fs.pInodes[ ul ]->llSize );
+         hb_arraySetDL  ( pSubarray, F_DATE, 0 );
+         hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
+         hb_arraySetC   ( pSubarray, F_ATTR, "" );
+      }
+   }
+   HB_MEMFSMT_UNLOCK();
+   hb_arraySize( pDirArray, nLen );
+
+   if( pszFree )
+      hb_xfree( pszFree );
+
+   return pDirArray;
+}
+
+
 HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags )
 {
    PHB_MEMFS_FILE pFile = NULL;
@@ -554,18 +607,27 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, H
    return nCount;
 }
 
-#ifdef HB_MEMFS_PUBLIC_API
+
 HB_MEMFS_EXPORT HB_SIZE hb_memfsRead( HB_FHANDLE hFile, void * pBuff, HB_SIZE nCount )
 {
-   return hb_memfsReadAt( hFile, pBuff, nCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
+   PHB_MEMFS_FILE  pFile;
+
+   if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
+      return 0;  /* invalid handle */
+
+   return hb_memfsReadAt( hFile, pBuff, nCount, pFile->llPos );
 }
 
 
 HB_MEMFS_EXPORT HB_SIZE hb_memfsWrite( HB_FHANDLE hFile, const void * pBuff, HB_SIZE nCount )
 {
-   return hb_memfsWriteAt( hFile, pBuff, nCount, ( ( PHB_MEMFS_FILE ) pFile )->llPos );
+   PHB_MEMFS_FILE  pFile;
+
+   if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
+      return 0;  /* invalid handle */
+
+   return hb_memfsWriteAt( hFile, pBuff, nCount, pFile->llPos );
 }
-#endif
 
 
 HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
@@ -642,6 +704,22 @@ HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, 
 }
 
 
+HB_MEMFS_EXPORT HB_FOFFSET hb_memfsEof( HB_FHANDLE hFile )
+{
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
+   HB_BOOL         fEof;
+
+   if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
+      return 0;  /* invalid handle */
+   pInode = pFile->pInode;
+
+   HB_MEMFSMT_LOCK();
+   fEof = pFile->llPos >= pInode->llSize;
+   HB_MEMFSMT_UNLOCK();
+   return fEof;
+}
+
 HB_MEMFS_EXPORT void hb_memfsFlush( HB_FHANDLE hFile, HB_BOOL fDirty )
 {
    HB_SYMBOL_UNUSED( hFile );
@@ -693,28 +771,28 @@ HB_FILE;
 static PHB_FILE s_fileNew( HB_FHANDLE hFile );
 
 
-static HB_BOOL s_fileAccept( const char * pFilename )
+static HB_BOOL s_fileAccept( const char * pszFileName )
 {
-   return hb_strnicmp( pFilename, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
+   return hb_strnicmp( pszFileName, FILE_PREFIX, FILE_PREFIX_LEN ) == 0;
 }
 
 
-static HB_BOOL s_fileExists( const char * pFilename, char * pRetPath )
+static HB_BOOL s_fileExists( const char * pszFileName, char * pRetPath )
 {
-   if( hb_memfsFileExists( pFilename + FILE_PREFIX_LEN ) )
+   if( hb_memfsFileExists( pszFileName + FILE_PREFIX_LEN ) )
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
-      if( pRetPath && pRetPath != pFilename )
-         hb_strncpy( pRetPath, pFilename, HB_PATH_MAX );
+      if( pRetPath && pRetPath != pszFileName )
+         hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX );
       return HB_TRUE;
    }
    return HB_FALSE;
 }
 
 
-static HB_BOOL s_fileDelete( const char * pFilename )
+static HB_BOOL s_fileDelete( const char * pszFileName )
 {
-   return hb_memfsDelete( pFilename + FILE_PREFIX_LEN );
+   return hb_memfsDelete( pszFileName + FILE_PREFIX_LEN );
 }
 
 
@@ -730,6 +808,106 @@ static HB_BOOL s_fileRename( const char * szName, const char * szNewName )
 }
 
 
+static HB_BOOL s_fileCopy( const char * pSrcFile, const char * pszDstFile )
+{
+   /* TODO: optimize it when both points to MEMIO files */
+   return hb_fsCopy( pSrcFile, pszDstFile );
+}
+
+
+static HB_BOOL s_fileDirExists( const char * pszDirName )
+{
+   HB_SYMBOL_UNUSED( pszDirName );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileDirMake( const char * pszDirName )
+{
+   HB_SYMBOL_UNUSED( pszDirName );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileDirRemove( const char * pszDirName )
+{
+   HB_SYMBOL_UNUSED( pszDirName );
+   return HB_FALSE;
+}
+
+
+static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
+{
+   HB_SYMBOL_UNUSED( pszDirName );
+   HB_SYMBOL_UNUSED( uiType );
+   /* TODO: return allocated memory and free memory */
+   return 0.0;
+}
+
+
+static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
+{
+   return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr );
+}
+
+
+static HB_BOOL s_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
+{
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( plJulian );
+   HB_SYMBOL_UNUSED( plMillisec );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
+{
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( lJulian );
+   HB_SYMBOL_UNUSED( lMillisec );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
+{
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( pulAttr );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileSetAttr( const char * pszFileName, HB_FATTR ulAttr )
+{
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( ulAttr );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileLink( const char * pszExisting, const char * pszNewName )
+{
+   HB_SYMBOL_UNUSED( pszExisting );
+   HB_SYMBOL_UNUSED( pszNewName );
+   return HB_FALSE;
+}
+
+
+static HB_BOOL s_fileLinkSym( const char * pszTarget, const char * pszNewName )
+{
+   HB_SYMBOL_UNUSED( pszTarget );
+   HB_SYMBOL_UNUSED( pszNewName );
+   return HB_FALSE;
+}
+
+
+static char * s_fileLinkRead( const char * pszFileName )
+{
+   HB_SYMBOL_UNUSED( pszFileName );
+   return NULL;
+}
+
+
 static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHORT uiExFlags, const char * pPaths, PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
@@ -742,16 +920,19 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHOR
 
    hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX );
 
-   nLen = strlen( szNameNew );
-   do
+   if( szDefExt )
    {
-      if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )
+      nLen = strlen( szNameNew );
+      do
       {
-         hb_strncat( szNameNew, szDefExt, HB_PATH_MAX );
-         break;
+         if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )
+         {
+            hb_strncat( szNameNew, szDefExt, HB_PATH_MAX );
+            break;
+         }
       }
+      while( szNameNew[ --nLen ] != '.' );
    }
-   while( szNameNew[ --nLen ] != '.' );
 
    uiFlags = uiExFlags & 0xff;
    if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
@@ -801,6 +982,22 @@ static int s_fileLockTest( PHB_FILE pFile, HB_FOFFSET ulStart,
 }
 
 
+static HB_SIZE s_fileRead( PHB_FILE pFile, void * buffer,
+                           HB_SIZE nSize, HB_MAXINT nTimeout )
+{
+   HB_SYMBOL_UNUSED( nTimeout );
+   return hb_memfsRead( pFile->hFile, buffer, nSize );
+}
+
+
+static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * buffer,
+                            HB_SIZE nSize, HB_MAXINT nTimeout )
+{
+   HB_SYMBOL_UNUSED( nTimeout );
+   return hb_memfsWrite( pFile->hFile, buffer, nSize );
+}
+
+
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer,
                              HB_SIZE nSize, HB_FOFFSET llOffset )
 {
@@ -821,9 +1018,22 @@ static HB_BOOL s_fileTruncAt( PHB_FILE pFile, HB_FOFFSET llOffset )
 }
 
 
+static HB_FOFFSET s_fileSeek( PHB_FILE pFile, HB_FOFFSET nOffset,
+                              HB_USHORT uiFlags )
+{
+   return hb_memfsSeek( pFile->hFile, nOffset, uiFlags );
+}
+
+
 static HB_FOFFSET s_fileSize( PHB_FILE pFile )
 {
    return hb_memfsSeek( pFile->hFile, 0, FS_END );
+}
+
+
+static HB_BOOL s_fileEof( PHB_FILE pFile )
+{
+   return hb_memfsEof( pFile->hFile );
 }
 
 
@@ -839,6 +1049,16 @@ static void s_fileCommit( PHB_FILE pFile )
 }
 
 
+static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
+{
+   HB_SYMBOL_UNUSED( pFile );
+   HB_SYMBOL_UNUSED( iIndex );
+   HB_SYMBOL_UNUSED( pValue );
+
+   return HB_FALSE;
+}
+
+
 static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
 {
    return pFile ? pFile->hFile : FS_ERROR;
@@ -848,19 +1068,42 @@ static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
 static const HB_FILE_FUNCS s_fileFuncs =
 {
    s_fileAccept,
+
    s_fileExists,
    s_fileDelete,
    s_fileRename,
+   s_fileCopy,
+
+   s_fileDirExists,
+   s_fileDirMake,
+   s_fileDirRemove,
+   s_fileDirSpace,
+   s_fileDirectory,
+
+   s_fileGetFileTime,
+   s_fileSetFileTime,
+   s_fileGetAttr,
+   s_fileSetAttr,
+
+   s_fileLink,
+   s_fileLinkSym,
+   s_fileLinkRead,
+
    s_fileOpen,
    s_fileClose,
    s_fileLock,
    s_fileLockTest,
+   s_fileRead,
+   s_fileWrite,
    s_fileReadAt,
    s_fileWriteAt,
    s_fileTruncAt,
+   s_fileSeek,
    s_fileSize,
+   s_fileEof,
    s_fileFlush,
    s_fileCommit,
+   s_fileConfigure,
    s_fileHandle
 };
 
@@ -880,7 +1123,7 @@ HB_FUNC( HB_MEMIO ) { ; }
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_memio_init_ )
    memfsInit();
-   hb_fileRegister( &s_fileFuncs );
+   hb_fileRegister2( &s_fileFuncs );
 HB_CALL_ON_STARTUP_END( _hb_file_memio_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )

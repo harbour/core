@@ -883,6 +883,10 @@ static int hb_nsxValCompare( LPTAGINFO pTag, const HB_UCHAR * val1, int len1,
          else if( len1 < len2 && iMode == NSX_CMP_EXACT )
             iResult = -1;
       }
+      else if( iResult > 0 )
+         iResult = 1;
+      else
+         iResult = -1;
    }
    else if( iMode == NSX_CMP_DATE && iLimit == 8 )
    {
@@ -906,6 +910,10 @@ static int hb_nsxValCompare( LPTAGINFO pTag, const HB_UCHAR * val1, int len1,
          else if( len1 < len2 )
             iResult = -1;
       }
+      else if( iResult > 0 )
+         iResult = 1;
+      else
+         iResult = -1;
    }
    return iResult;
 }
@@ -6862,7 +6870,8 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          {
             pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
-                                    FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                    FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                                    FXO_NOSEEKPOS,
                                     NULL, pError );
          }
          if( ! pFile )
@@ -7826,7 +7835,8 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
       {
          fRetry = HB_FALSE;
          pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                                 FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                 FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                                 FXO_NOSEEKPOS,
                                  NULL, pError );
          if( ! pFile )
          {

@@ -99,15 +99,12 @@
          this issue is very much platform specific, and this is
          not the only place which may need the conversion [vszakats]. */
 
-HB_FUNC( DIRECTORY )
+PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes )
 {
-   const char * szDirSpec    = hb_parc( 1 );
-   const char * szAttributes = hb_parc( 2 );
-   char *       pszFree      = NULL;
-   HB_FATTR     ulMask;
-
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
+   char *    pszFree = NULL;
    PHB_FFIND ffind;
+   HB_FATTR  ulMask;
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
@@ -123,33 +120,33 @@ HB_FUNC( DIRECTORY )
             HB_FA_ENCRYPTED |
             HB_FA_VOLCOMP;
 
-   if( szAttributes && *szAttributes )
-      ulMask |= hb_fsAttrEncode( szAttributes );
+   if( pszAttributes && *pszAttributes )
+      ulMask |= hb_fsAttrEncode( pszAttributes );
 
-   if( szDirSpec && *szDirSpec )
+   if( pszDirSpec && *pszDirSpec )
    {
       if( ulMask != HB_FA_LABEL )
       {
          /* CA-Cl*pper compatible behavior - add all file mask when
           * last character is directory or drive separator
           */
-         HB_SIZE nLen = strlen( szDirSpec ) - 1;
+         HB_SIZE nLen = strlen( pszDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
-         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
-             szDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
+         if( pszDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
+             pszDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
 #else
-         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
+         if( pszDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
-            szDirSpec = pszFree =
-                           hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+            pszDirSpec = pszFree =
+                           hb_xstrcpy( NULL, pszDirSpec, HB_OS_ALLFILE_MASK, NULL );
       }
    }
    else
-      szDirSpec = HB_OS_ALLFILE_MASK;
+      pszDirSpec = HB_OS_ALLFILE_MASK;
 
    /* Get the file list */
 
-   if( ( ffind = hb_fsFindFirst( szDirSpec, ulMask ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pszDirSpec, ulMask ) ) != NULL )
    {
       PHB_ITEM pSubarray = hb_itemNew( NULL );
 
@@ -157,12 +154,12 @@ HB_FUNC( DIRECTORY )
       {
          char buffer[ 32 ];
 
-         hb_arrayNew(     pSubarray, F_LEN );
-         hb_arraySetC(    pSubarray, F_NAME, ffind->szName );
+         hb_arrayNew    ( pSubarray, F_LEN );
+         hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
-         hb_arraySetDL(   pSubarray, F_DATE, ffind->lDate );
-         hb_arraySetC(    pSubarray, F_TIME, ffind->szTime );
-         hb_arraySetC(    pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
+         hb_arraySetDL  ( pSubarray, F_DATE, ffind->lDate );
+         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
+         hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );
@@ -177,5 +174,10 @@ HB_FUNC( DIRECTORY )
    if( pszFree )
       hb_xfree( pszFree );
 
-   hb_itemReturnRelease( pDir );
+   return pDir;
+}
+
+HB_FUNC( DIRECTORY )
+{
+   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ) ) );
 }

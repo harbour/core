@@ -284,7 +284,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ]
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .and. inkey() != 27
          hb_idleSleep( 5 )
       ENDDO
 

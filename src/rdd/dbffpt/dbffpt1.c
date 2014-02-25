@@ -4097,7 +4097,8 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
          else
             pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL,
                                                FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                                               FXO_NOSEEKPOS,
                                                NULL, pError );
          if( ! pArea->pMemoFile )
          {
@@ -4290,7 +4291,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    do
    {
       pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                                         FXO_DEFAULTS | FXO_SHARELOCK,
+                                         FXO_DEFAULTS | FXO_SHARELOCK | FXO_NOSEEKPOS,
                                          NULL, pError );
       if( ! pArea->pMemoFile )
       {

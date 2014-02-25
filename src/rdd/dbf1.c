@@ -3086,8 +3086,8 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          else
             pArea->pDataFile = hb_fileExtOpen( szFileName, NULL,
                                                FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
-                                               NULL, pError );
+                                               FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                                               FXO_NOSEEKPOS, NULL, pError );
          if( pArea->pDataFile )
             break;
       }
@@ -4083,7 +4083,8 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       do
       {
          pArea->pDataFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                                            FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                            FXO_DEFAULTS | FXO_SHARELOCK |
+                                            FXO_COPYNAME | FXO_NOSEEKPOS,
                                             NULL, pError );
          if( pArea->pDataFile )
             break;
@@ -5276,7 +5277,7 @@ static HB_ERRCODE hb_dbfGetValueFile( DBFAREAP pArea, HB_USHORT uiIndex, const c
       PHB_FILE pFile;
 
       pFile = hb_fileExtOpen( szFile, NULL, FO_WRITE | FO_EXCLUSIVE |
-                              FXO_DEFAULTS | FXO_SHARELOCK |
+                              FXO_DEFAULTS | FXO_SHARELOCK | FXO_NOSEEKPOS |
                               ( uiMode == FILEGET_APPEND ? FXO_APPEND : FXO_TRUNCATE ),
                               NULL, NULL );
       if( ! pFile )
@@ -5361,7 +5362,8 @@ static HB_ERRCODE hb_dbfPutValueFile( DBFAREAP pArea, HB_USHORT uiIndex, const c
       PHB_FILE pFile;
 
       pFile = hb_fileExtOpen( szFile, NULL, FO_READ | FO_DENYNONE |
-                              FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+                              FXO_DEFAULTS | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                              NULL, NULL );
       if( ! pFile )
       {
          errCode = EDBF_OPEN_DBF;

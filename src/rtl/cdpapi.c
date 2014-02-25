@@ -255,6 +255,10 @@ static int hb_cdpBin_cmp( PHB_CODEPAGE cdp,
       else if( fExact && nLenSecond < nLenFirst )
          iRet = 1;
    }
+   else if( iRet > 0 )
+      iRet = 1;
+   else
+      iRet = -1;
 
    return iRet;
 }
