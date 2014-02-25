@@ -140,6 +140,7 @@ DYNAMIC hb_GetLen8
 DYNAMIC hb_HashAddMember
 DYNAMIC hb_HashId
 DYNAMIC hb_InitStandardLog
+DYNAMIC HB_ISNIL
 DYNAMIC hb_IsRegexString
 DYNAMIC hb_IsService
 DYNAMIC hb_Is_CStructure
