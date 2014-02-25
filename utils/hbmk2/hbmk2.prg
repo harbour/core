@@ -14740,7 +14740,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          EXIT
       CASE ".dbf"
          __hbshell_ext_init( aExtension )
-         __hbshell_prompt( hb_AParams(), { "USE " + cFile + " SHARED" } )
+         __hbshell_prompt( hb_AParams(), { "USE " + cFile + " SHARED", "Browse()" } )
          EXIT
       ENDSWITCH
    ELSE
@@ -16302,6 +16302,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    LOCAL aFile
 
    /* Setup input CP of the translation */
+   Set( _SET_DBCODEPAGE, "EN" )  /* do not switch RDD CP to UTF-8 till it's not fully operational */
    hb_cdpSelect( "UTF8EX" )
    hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
