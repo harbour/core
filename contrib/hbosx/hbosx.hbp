@@ -11,4 +11,7 @@
 
 -hbx=${hb_name}
 
-core.m
+proxyc.m
+trash.m
+
+proxy.prg
