@@ -21,7 +21,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
 
-   // --------------------------- Dialog -------------------------------\\
+   // --------------------------- Dialog -------------------------------
 #if 1
    oCrt := WvgDialog():new( , , { 30, 30 }, { 800, 600 }, , .T. )
    oCrt:closable := .T.
@@ -36,13 +36,13 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
    oDA := oCrt:drawingArea
 
-   // --------------------------- Menu --------------------------------\\
+   // --------------------------- Menu --------------------------------
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
-   // --------------------------- ToolBar -----------------------------\\
+   // --------------------------- ToolBar -----------------------------
    oTBar := BuildWvgToolBar( oDA, nActiveX )
 
-   // --------------------------- StatusBar ---------------------------\\
+   // --------------------------- StatusBar ---------------------------
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | Wvg_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -52,7 +52,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oPanel2 := oSBar:addItem()
    oPanel2:caption := "Click on any part!"
 
-   // --------------------------- Static ------------------------------\\
+   // --------------------------- Static ------------------------------
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
@@ -62,7 +62,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oStatic:setColorBG( RGB( 198, 198, 198 ) )
 
 #if 0  // panel
-   // --------------------------- Static + Radio + Checkbox ----------\\
+   // --------------------------- Static + Radio + Checkbox ----------
    oStatic2 := WvgStatic():New( oCrt, , { 150, 150 }, { 500, 310 }, , .F. )
 // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
@@ -138,7 +138,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oMLE:setData()
 #endif
 
-   // --------------------------- ListBox -----------------------------\\
+   // --------------------------- ListBox -----------------------------
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
@@ -164,13 +164,13 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oListBox:itemSelected := {|| Wvg_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )
 
-   // --------------------------- PushButton --------------------------\\
+   // --------------------------- PushButton --------------------------
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   // --------------------------- TreeView ---------------------------\\
+   // --------------------------- TreeView ---------------------------
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
       { 160, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
@@ -201,7 +201,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 
    oTree:setData( oItem2 )
 
-   // --------------------------- Misc Config ------------------------\\
+   // --------------------------- Misc Config ------------------------
    oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
       iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
@@ -210,7 +210,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
 #if 1
-   // --------------------------- Active-X ---------------------------\\
+   // --------------------------- Active-X ---------------------------
    oCom := BuildActiveXControl( nActiveX, oDA )
    IF HB_ISOBJECT( oCom )
       oCrt:sendMessage( WM_SIZE, 0, 0 )
@@ -219,10 +219,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
    ENDIF
 #else
    oCrt:show()
-   DO WHILE .T.
-      IF Inkey() == K_ESC
-         EXIT
-      ENDIF
+   DO WHILE Inkey() != K_ESC
    ENDDO
 #endif
 
@@ -307,13 +304,13 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
    CASE nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "http://harbour-project.org" + "  ]" )
       oCom:CLSID := "Shell.Explorer.2"
-      oCom:mapEvent( 269, {|| wapi_OutputDebugString( " E X P L O R E R - 2 6 9" ) } )
-      oCom:mapEvent( 105, {|| wapi_OutputDebugString( " E X P L O R E R - 105"   ) } )
+      oCom:mapEvent( 269, {|| wapi_OutputDebugString( "EXPLORER-269" ) } )
+      oCom:mapEvent( 105, {|| wapi_OutputDebugString( "EXPLORER-105" ) } )
 
    CASE nActiveX == 11
       hb_gtInfo( HB_GTI_WINTITLE, "Shell.Explorer.2" + "  [  " + "MSHTML Demo" + "  ]" )
       oCom:CLSID := "MSHTML:" + "<html><h1>Stream Test</h1><p>This HTML content is being loaded from a stream.</html>"
-      oCom:mapEvent( 269, {|| QOut( " E X P L O R E R - 2 6 9" ) } )
+      oCom:mapEvent( 269, {|| QOut( "EXPLORER-269" ) } )
 
    CASE nActiveX == 2
 #define evClick     1
@@ -340,7 +337,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
    CASE nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, "file://" + hb_DirBase() + "myharu.pdf" )
       oCom:CLSID := "file://" + hb_DirBase() + "myharu.pdf"
-      oCom:mapEvent( 269, {|| QOut( " E X P L O R E R - 2 6 9" ) } )
+      oCom:mapEvent( 269, {|| QOut( "EXPLORER-269" ) } )
 
    CASE nActiveX == 4
       hb_gtInfo( HB_GTI_WINTITLE, "RM Chart [ <F12> Attributes  <F11> Next Charts ]" )
@@ -390,8 +387,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    ENDCASE
 
-   DO WHILE .T.
-      nKey := Inkey()
+   DO WHILE ( nKey := Inkey() ) != K_ESC
 
       IF nActiveX == 2
          oCom:Value := Seconds() / 86400
@@ -572,11 +568,6 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             oCom:RMCFile := sData
             oCom:Draw( .T. )
          ENDIF
-
-      ENDIF
-
-      IF nKey == K_ESC
-         EXIT
       ENDIF
    ENDDO
 

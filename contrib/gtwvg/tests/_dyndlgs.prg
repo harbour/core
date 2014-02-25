@@ -1,5 +1,5 @@
 /*
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "inkey.ch"
@@ -32,7 +32,7 @@ FUNCTION DynWinDialog( nInfo )
    LOCAL hDlg, aDlg, nStyle, cDlgIcon, lOnTop, hMenu
 
    LOCAL bDlgProc
-// LOCAL nTimerTicks
+   LOCAL nTimerTicks
 
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
@@ -100,14 +100,18 @@ FUNCTION DynWinDialog( nInfo )
    lOnTop      := .F.
    bDlgProc    := {| ... | DynDlgProc( ... ) }
    cDlgIcon    := "v_notes.ico"
-// nTimerTicks := 1000  // 1 second
+#if 0
+   nTimerTicks := 1000  // 1 second
+#else
+   nTimerTicks := NIL
+#endif
 
    IF nInfo == 2
       // Modal Dialog
       hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
    ELSE
       // Modeless Dialog
-      hDlg  := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
+      hDlg  := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, nTimerTicks, hMenu )
    ENDIF
 
    RETURN hDlg
@@ -202,14 +206,14 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
       ENDIF
 
-      /*
+#if 0
       IF t_hImage == NIL
          t_hImage := Wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
       IF t_hImage != NIL .AND. t_hImage != 0
          Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       ENDIF
-      */
+#endif
       Wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
       Wvg_CheckDlgButton( hDlg, ID_CHK_SATIS, .T.           )
 

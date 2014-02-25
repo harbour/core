@@ -1,11 +1,11 @@
 /*
- *    Wvt*Classes Demonstration
+ * Wvt*Classes Demonstration
  *
- *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO
- *    current window.
+ * This protocol can be clubbed with pure console implementation
+ * AND can be called IN a separate thread as well as modal TO
+ * current window.
  *
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "inkey.ch"

@@ -1,19 +1,19 @@
 /*
- *                   GTWVT Console GUI Interface
+ *                 GTWVT Console GUI Interface
  *
- *         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
+ *       Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
  *
- *       I have tried to simulate the gui controls through GDI
- *        functions and found a way to refresh those controls
- *          through WM_PAINT message issued to the Window.
- *                               and
- *             I feel that IF this functionality is built
- *                 into the GT itself, what a wonder!
+ *     I have tried to simulate the gui controls through GDI
+ *      functions and found a way to refresh those controls
+ *        through WM_PAINT message issued to the Window.
+ *                             and
+ *           I feel that IF this functionality is built
+ *               into the GT itself, what a wonder!
  *
- *   This protocol opens up the the distinct possibilities and hope
- *            you all will cooperate to enhance it further.
+ * This protocol opens up the the distinct possibilities and hope
+ *          you all will cooperate to enhance it further.
  *
- *           Thanks Peter Rees! You have laid the foundation!
+ *         Thanks Peter Rees! You have laid the foundation!
  */
 
 #require "gtwvg"

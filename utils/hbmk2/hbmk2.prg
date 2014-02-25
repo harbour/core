@@ -16302,7 +16302,6 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    LOCAL aFile
 
    /* Setup input CP of the translation */
-   Set( _SET_DBCODEPAGE, "EN" )  /* do not switch RDD CP to UTF-8 till it's not fully operational */
    hb_cdpSelect( "UTF8EX" )
    hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
@@ -16310,6 +16309,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    /* Configure terminal and OS codepage */
    hb_SetTermCP( hb_cdpTerm() )
    Set( _SET_OSCODEPAGE, hb_cdpOS() )
+   Set( _SET_DBCODEPAGE, "EN" )  /* do not switch RDD CP to UTF-8 till it's fully operational */
 
    /* Configure language */
    IF cUILNG == "en"

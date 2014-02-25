@@ -1,10 +1,10 @@
-//                                EnOnkar
-//                          ( The Lord is ONE )
-//                                   .
-//            Xbase++ Compatible XbpDialog() based Application
+//                     EnOnkar
+//               ( The Lord is ONE )
+//                        .
+// Xbase++ Compatible XbpDialog() based Application
 //
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              2008-12-08
+//       Pritpal Bedi <pritpal@vouchcac.com>
+//                   2008-12-08
 
 #require "gtwvg"
 
@@ -24,7 +24,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVG" )
 #endif
 
-   // --------------------------- Dialog -------------------------------\\
+   // --------------------------- Dialog -------------------------------
    oCrt := WvgDialog():new( , , { 30, 30 }, { 900, 600 }, , .T. )
    oCrt:closable := .T.
    oCrt:icon := "vr_1.ico"
@@ -34,13 +34,13 @@ PROCEDURE Main()
 
    oDA := oCrt:drawingArea
 
-   // --------------------------- Menu --------------------------------\\
+   // --------------------------- Menu --------------------------------
    ActiveXBuildMenuXbp( oCrt, @oStatic, @oStatic2 )
 
-   // --------------------------- ToolBar -----------------------------\\
+   // --------------------------- ToolBar -----------------------------
    oTBar := ActiveXBuildToolBarXbp( oDA )
 
-   // --------------------------- StatusBar ---------------------------\\
+   // --------------------------- StatusBar ---------------------------
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | Wvg_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -50,7 +50,7 @@ PROCEDURE Main()
    oPanel2 := oSBar:addItem()
    oPanel2:caption := "Click on any part!"
 
-   // --------------------------- Static ------------------------------\\
+   // --------------------------- Static ------------------------------
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
@@ -60,12 +60,14 @@ PROCEDURE Main()
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
    oStatic:setColorBG( RGB( 200, 200, 200 ) )
 
-   // --------------------------- ListBox -----------------------------\\
+   // --------------------------- ListBox -----------------------------
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
    oListBox:setColorFG( RGB( 218, 61, 34 ) )
-// oListBox:setColorBG( RGB( 250,244,182 ) )
+#if 0
+   oListBox:setColorBG( RGB( 250, 244, 182 ) )
+#endif
 
    AAdd( aParts, "XbpDialog"        )
    AAdd( aParts, "XbpMenuBar"       )
@@ -94,13 +96,13 @@ PROCEDURE Main()
    oListBox:itemSelected := {|| Wvg_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected "XbpToolBar"
 
-   // --------------------------- PushButton --------------------------\\
+   // --------------------------- PushButton --------------------------
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   // --------------------------- TreeView ---------------------------\\
+   // --------------------------- TreeView ---------------------------
 
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
       { 160, oCrt:currentSize()[ 2 ] - ;
@@ -132,12 +134,12 @@ PROCEDURE Main()
 
    oTree:setData( oItem2 )
 
-   // --------------------------- Active-X ---------------------------\\
+   // --------------------------- Active-X ---------------------------
    hb_gtInfo( HB_GTI_WINTITLE, "http://harbour-project.org" )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:CLSID := "Shell.Explorer.2"
-   oCom:mapEvent( 269, {|| QOut( " E X P L O R E R - 2 6 9" ) } )
+   oCom:mapEvent( 269, {|| QOut( "EXPLORER-269" ) } )
 #else
    oCom := WvgHtmlViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:beforeNavigate := {| cURL, x, oHTML | x := x, oHTML := oHTML, oPanel:caption := cURL }
@@ -157,7 +159,7 @@ PROCEDURE Main()
    oAddr:setData()
    oAddr:killInputFocus := {| m1, m2, oS | m1 := m1, m2 := m2, oS:getData(), oCom:navigate( cNavigate ) }
 
-   // ----------------- Panel : Static + Radio + Checkbox ----------\\
+   // ----------------- Panel : Static + Radio + Checkbox ----------
    oStatic2 := WvgStatic():New( oDA, , { 150, 150 }, { 500, 310 }, , .F. )
    // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
@@ -233,7 +235,7 @@ PROCEDURE Main()
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
 
-   // --------------------------- Misc Config ------------------------\\
+   // --------------------------- Misc Config ------------------------
    oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide"   , oStatic:hide(), NIL ), ;
       iif( oBtn:caption == "Show"   , oStatic:show(), NIL ), ;
       iif( oBtn:caption == "Tools"  , oStatic2:show():toFront(), NIL ), ;
@@ -246,10 +248,7 @@ PROCEDURE Main()
    oCrt:sendMessage( WM_SIZE, 0, 0 )
    oCrt:show()
 
-   DO WHILE .T.
-      IF Inkey() == K_ESC
-         EXIT
-      ENDIF
+   DO WHILE Inkey() != K_ESC
    ENDDO
 
    oCrt:Destroy()

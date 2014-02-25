@@ -1,6 +1,6 @@
-//                   GTWVT Console GUI Interface
+// GTWVT Console GUI Interface
 //
-//         Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
+// Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
 
 #require "gtwvg"
 

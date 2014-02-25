@@ -234,12 +234,16 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
    oVBar:setPosAndSize()
    oHBar:setPosAndSize()
    oCom:setPosAndSize()
-// oSLE:setPosAndSize()
-// oLBx:setPosAndSize()
-// oIdx:setPosAndSize()
+#if 0
+   oSLE:setPosAndSize()
+   oLBx:setPosAndSize()
+   oIdx:setPosAndSize()
+#endif
 
    oTre:setPosAndSize()
-// oChk:setPosAndSize()
+#if 0
+   oChk:setPosAndSize()
+#endif
 
    BrwReposButtons( oCrt ) /* Because we are repositioning at the center of console width */
 
@@ -322,7 +326,9 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
 
    oCom := WvgActiveXControl():new( oCrt, , { -24, -13 }, { {|| -( MaxRow() - 1 - 24 ) }, {|| -( MaxCol() - 1 - 13 ) } }, , .F. )
    oCom:CLSID := "Shell.Explorer.2"
-// oCom:mapEvent( 269, {|| uiDebug( " E X P L O R E R - 2 6 9" ) } )
+#if 0
+   oCom:mapEvent( 269, {|| uiDebug( "EXPLORER-269" ) } )
+#endif
    oCom:create()
    oCom:navigate( "http://harbour-project.org" )
 
@@ -488,7 +494,7 @@ STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
          oPB:pointerFocus := .F.
       ENDIF
       IF i == Len( aPmt )
-         oPB:caption := hb_DirBase() + "\" + "v_lock.bmp"
+         oPB:caption := hb_DirBase() + "v_lock.bmp"
          oPB:create( , , { {|| -MaxRow() }, -nOff }, { -1, -aW[ i ] } )
       ELSE
          oPB:caption := aPmt[ i ]
@@ -505,14 +511,14 @@ STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
 
 STATIC PROCEDURE Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
-   oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -( oBrw:nLeft ) } }, ;
+   oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -oBrw:nLeft } }, ;
       { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
    oHBar:range := { 1, oBrw:colCount }
    oHBar:type  := WVGSCROLL_HORIZONTAL
    oHBar:create()
    oHBar:scroll := {| mp1 | oBrw:colPos := mp1[ 1 ], oBrw:refreshCurrent(), oBrw:forceStable() }
 
-   oVBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nTop ) }, {|| -( oBrw:nRight + 1 ) } }, ;
+   oVBar := WvgScrollBar():new( oCrt, , { {|| -oBrw:nTop }, {|| -( oBrw:nRight + 1 ) } }, ;
       { {|| -( oBrw:nBottom - oBrw:nTop + 1 ) }, {|| -2 } } )
    oVBar:range := { 1, LastRec() }
    oVBar:type  := WVGSCROLL_VERTICAL
