@@ -207,6 +207,7 @@ C_SOURCES := \
    valtype.c \
    version.c \
    word.c \
+   xfile.c \
    xhelp.c \
    xsavescr.c \
 

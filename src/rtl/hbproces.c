@@ -94,17 +94,17 @@
  * "" and '' can be used to group parameters with blank characters,
  * the escape character is '\', quoting by '' disables escape character.
  */
-static char ** hb_buildArgs( const char *pszFilename )
+static char ** hb_buildArgs( const char *pszFileName )
 {
    const char * src;
    char ** argv, * dst, cQuote = 0, * pszFree = NULL;
    int argc = 0;
 
-   while( HB_ISSPACE( *pszFilename ) )
-      ++pszFilename;
+   while( HB_ISSPACE( *pszFileName ) )
+      ++pszFileName;
 
-   pszFilename = hb_osEncodeCP( pszFilename, &pszFree, NULL );
-   dst = pszFree ? pszFree : hb_strdup( pszFilename );
+   pszFileName = hb_osEncodeCP( pszFileName, &pszFree, NULL );
+   dst = pszFree ? pszFree : hb_strdup( pszFileName );
 
    src = dst;
    while( *src )
@@ -196,17 +196,17 @@ static void hb_freeArgs( char ** argv )
 
 #elif defined( HB_OS_WIN_CE )
 
-static void hb_getCommand( const char * pszFilename,
+static void hb_getCommand( const char * pszFileName,
                            LPTSTR * lpAppName, LPTSTR * lpParams )
 {
    const char * src, * params;
    char cQuote = 0;
 
-   while( HB_ISSPACE( *pszFilename ) )
-      ++pszFilename;
+   while( HB_ISSPACE( *pszFileName ) )
+      ++pszFileName;
 
    params = NULL;
-   src = pszFilename;
+   src = pszFileName;
    while( *src )
    {
       if( *src == cQuote )
@@ -229,18 +229,18 @@ static void hb_getCommand( const char * pszFilename,
    }
 
    *lpParams = params ? HB_CHARDUP( params ) : NULL;
-   *lpAppName = HB_CHARDUPN( pszFilename, src - pszFilename );
+   *lpAppName = HB_CHARDUPN( pszFileName, src - pszFileName );
 }
 #endif
 
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN_CE )
-static int hb_fsProcessExec( const char * pszFilename,
+static int hb_fsProcessExec( const char * pszFileName,
                              HB_FHANDLE hStdin, HB_FHANDLE hStdout,
                              HB_FHANDLE hStderr )
 {
    int iResult = FS_ERROR;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessExec(%s, %p, %p, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessExec(%s, %p, %p, %p)", pszFileName, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr ) );
 
 #if defined( HB_OS_WIN_CE )
 {
@@ -251,7 +251,7 @@ static int hb_fsProcessExec( const char * pszFilename,
    HB_SYMBOL_UNUSED( hStdout );
    HB_SYMBOL_UNUSED( hStderr );
 
-   hb_getCommand( pszFilename, &lpAppName, &lpParams );
+   hb_getCommand( pszFileName, &lpAppName, &lpParams );
 
    hb_vmUnlock();
    fError = ! CreateProcess( lpAppName,      /* lpAppName */
@@ -283,7 +283,7 @@ static int hb_fsProcessExec( const char * pszFilename,
    int iStdIn, iStdOut, iStdErr;
    char ** argv;
 
-   argv = hb_buildArgs( pszFilename );
+   argv = hb_buildArgs( pszFileName );
 
    hb_vmUnlock();
 
@@ -375,7 +375,7 @@ static int hb_fsProcessExec( const char * pszFilename,
 {
    int iTODO; /* TODO: for given platform */
 
-   HB_SYMBOL_UNUSED( pszFilename );
+   HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( hStdin );
    HB_SYMBOL_UNUSED( hStdout );
    HB_SYMBOL_UNUSED( hStderr );
@@ -388,7 +388,7 @@ static int hb_fsProcessExec( const char * pszFilename,
 }
 #endif
 
-HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
+HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
                              HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
                              HB_FHANDLE * phStderr,
                              HB_BOOL fDetach, HB_ULONG * pulPID )
@@ -399,7 +399,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
    HB_FHANDLE hResult = FS_ERROR;
    HB_BOOL fError = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, phStdin, phStdout, phStderr, fDetach, pulPID ) );
 
    if( phStdin != NULL )
       fError = ! hb_fsPipeCreate( hPipeIn );
@@ -423,7 +423,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       PROCESS_INFORMATION pi;
       STARTUPINFO si;
       DWORD dwFlags = 0;
-      LPTSTR lpCommand = HB_CHARDUP( pszFilename );
+      LPTSTR lpCommand = HB_CHARDUP( pszFileName );
 
 #  if ! defined( HB_OS_WIN_CE )
       if( phStdin != NULL )
@@ -574,7 +574,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          {
             char ** argv;
 
-            argv = hb_buildArgs( pszFilename );
+            argv = hb_buildArgs( pszFileName );
 #  if defined( __WATCOMC__ )
             execvp( argv[ 0 ], ( const char ** ) argv );
 #  else
@@ -617,7 +617,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       if( phStderr != NULL )
          dup2( hPipeErr[ 1 ], 2 );
 
-      argv = hb_buildArgs( pszFilename );
+      argv = hb_buildArgs( pszFileName );
 
 #if defined( _MSC_VER ) || defined( __LCC__ ) || \
     defined( __XCC__ ) || defined( __POCC__ )
@@ -665,7 +665,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 #else
    int iTODO; /* TODO: for given platform */
 
-   HB_SYMBOL_UNUSED( pszFilename );
+   HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( fDetach );
    HB_SYMBOL_UNUSED( pulPID );
 
@@ -868,7 +868,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 
 #define HB_STD_BUFFER_SIZE    4096
 
-int hb_fsProcessRun( const char * pszFilename,
+int hb_fsProcessRun( const char * pszFileName,
                      const char * pStdInBuf, HB_SIZE nStdInLen,
                      char ** pStdOutPtr, HB_SIZE * pulStdOut,
                      char ** pStdErrPtr, HB_SIZE * pulStdErr,
@@ -935,7 +935,7 @@ int hb_fsProcessRun( const char * pszFilename,
    else if( fDetach )
       hStderr = _HB_NULLHANDLE();
 
-   iResult = hb_fsProcessExec( pszFilename, hStdin, hStdout, hStderr );
+   iResult = hb_fsProcessExec( pszFileName, hStdin, hStdout, hStderr );
 
    if( hStdin != FS_ERROR )
    {
@@ -984,7 +984,7 @@ int hb_fsProcessRun( const char * pszFilename,
    hb_vmUnlock();
 
    iResult = -1;
-   hProcess = hb_fsProcessOpen( pszFilename, phStdin, phStdout, phStderr,
+   hProcess = hb_fsProcessOpen( pszFileName, phStdin, phStdout, phStderr,
                                 fDetach, NULL );
    if( hProcess != FS_ERROR )
    {

@@ -1290,7 +1290,8 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
    {
       pArea->pFile = hb_fileExtOpen( szFileName, NULL,
                                      FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                                     FXO_NOSEEKPOS,
                                      NULL, pError );
       if( ! pArea->pFile )
       {
@@ -1392,7 +1393,8 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
    do
    {
       pArea->pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                                     FXO_DEFAULTS | FXO_SHARELOCK |
+                                     FXO_COPYNAME | FXO_NOSEEKPOS,
                                      NULL, pError );
       if( ! pArea->pFile )
       {

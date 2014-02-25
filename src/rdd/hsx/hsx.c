@@ -1432,7 +1432,8 @@ static int hb_hsxCreate( const char * szFile, int iBufSize, int iKeySize,
 
    pFile = hb_fileExtOpen( szFileName, HSX_FILEEXT,
                            FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
-                           FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                           FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
+                           FXO_NOSEEKPOS,
                            NULL, NULL );
 
    if( ! pFile )
@@ -1507,7 +1508,8 @@ static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
              ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
    pFile = hb_fileExtOpen( szFileName, HSX_FILEEXT,
-                           uiFlags | FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
+                           uiFlags | FXO_DEFAULTS | FXO_SHARELOCK |
+                           FXO_COPYNAME | FXO_NOSEEKPOS,
                            NULL, NULL );
 
    if( ! pFile )
