@@ -26,7 +26,7 @@ PROCEDURE Main( filespec, attribs )
       ? ;
          PadR( x[ F_NAME ], 20 ), "|", ;
          Transform( x[ F_SIZE ], "9,999,999,999" ), "|", ;
-         x[ F_DATE ], "|", ;
+         x[ HB_F_DATETIME ], "|", ;
          x[ F_ATTR ]
    NEXT
 #endif
