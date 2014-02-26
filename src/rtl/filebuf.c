@@ -597,14 +597,14 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
                            HB_MAXINT nTimeout )
 {
    HB_SYMBOL_UNUSED( nTimeout );
-   return hb_fsRead( pFile->hFile, buffer, nSize );
+   return hb_fsReadLarge( pFile->hFile, buffer, nSize );
 }
 
 static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * buffer, HB_SIZE nSize,
                             HB_MAXINT nTimeout )
 {
    HB_SYMBOL_UNUSED( nTimeout );
-   return hb_fsWrite( pFile->hFile, buffer, nSize );
+   return hb_fsWriteLarge( pFile->hFile, buffer, nSize );
 }
 
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
