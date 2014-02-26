@@ -241,8 +241,8 @@ HB_FUNC( SSL_PENDING )
 
 HB_FUNC( SSL_SET_BIO )
 {
-   BIO * rbio = ( BIO * ) hb_parptr( 2 );
-   BIO * wbio = ( BIO * ) hb_parptr( 2 );
+   BIO * rbio = hb_BIO_par( 2 );
+   BIO * wbio = hb_BIO_par( 3 );
 
    if( hb_SSL_is( 1 ) && rbio && wbio )
    {

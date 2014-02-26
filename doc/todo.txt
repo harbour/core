@@ -3,32 +3,12 @@
                   Harbour TODO list
 
 =======================================================================
-Tasks for after v.1 release:
-----------------------------
+Tasks for after v1.0 release:
+-----------------------------
 
 Assign to: Ryszard
 Detail...: SQLRDD.
 Status...: Working on it.
-
-***
-
-Assign to: <nobody>
-Detail...: Add support for virtual file handles and registering some
-           meta handles so it will be possible to make:
-              h := FOpen( "gzip:/tmp/myarchive.gz", FO_WRITE )
-              FWrite( h, cData )
-              FClose( h )
-           or:
-              h := FOpen( "tcp:some.host:port", FO_WRITE )
-              ...
-           or:
-              h := FOpen( "|lpr -PLaserJet", FO_WRITE )
-              ...
-           or:
-              h := FOpen( "gunzip /tmp/myarchive.gz|" )
-              ...
-           etc.
-Status...: Open.
 
 ***
 

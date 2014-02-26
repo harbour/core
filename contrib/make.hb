@@ -750,11 +750,20 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
    LOCAL aFile
    LOCAL tmp
 
-   FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
+   cDir := hb_DirSepAdd( hb_DirSepToOS( cDir ) )
+
+   FOR EACH aFile IN Directory( cDir, "D" )
       IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." )
-         IF hb_FileExists( hb_DirSepAdd( cDir ) + ( tmp := aFile[ F_NAME ] + hb_ps() + "projects.hbp" ) ) .OR. ;
-            hb_FileExists( hb_DirSepAdd( cDir ) + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
+         IF hb_FileExists( cDir + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
             AddProject( hProjectList, tmp )
+         ENDIF
+         IF hb_FileExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
+            FOR EACH tmp IN hb_ATokens( StrTran( hb_MemoRead( tmp ), Chr( 13 ) ), Chr( 10 ) )
+               IF ! Empty( tmp )
+               ? ">>>", aFile[ F_NAME ] + hb_ps() + tmp
+                  AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + tmp )
+               ENDIF
+            NEXT
          ENDIF
       ENDIF
    NEXT

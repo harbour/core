@@ -97,8 +97,8 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
 {
    BIO * bio;
 
-   if( HB_ISPOINTER( 1 ) )
-      bio = ( BIO * ) hb_parptr( 1 );
+   if( hb_BIO_is( 1 ) )
+      bio = hb_BIO_par( 1 );
    else if( HB_ISCHAR( 1 ) )
       bio = BIO_new_file( hb_parc( 1 ), "r" );
    else if( HB_ISNUM( 1 ) )
@@ -120,7 +120,7 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
          hb_retptr( ( *func )( bio, NULL, NULL, ( void * ) hb_parc( 2 ) ) );
       }
 
-      if( ! HB_ISPOINTER( 1 ) )
+      if( ! hb_BIO_is( 1 ) )
          BIO_free( bio );
    }
    else

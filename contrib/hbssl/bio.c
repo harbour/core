@@ -52,15 +52,80 @@
 
 #include "hbssl.h"
 
-void * hb_BIO_is( int iParam )
+/* */
+
+typedef struct
 {
-   return hb_parptr( iParam );
+   BIO *    bio;
+   char *   pszBuffer;
+} HB_BIO, * PHB_BIO;
+
+static PHB_BIO PHB_BIO_create( BIO * bio, char * pszBuffer )
+{
+   PHB_BIO hb_bio = ( PHB_BIO ) hb_xgrab( sizeof( HB_BIO ) );
+
+   hb_bio->bio       = bio;
+   hb_bio->pszBuffer = pszBuffer;
+
+   return hb_bio;
 }
+
+static void PHB_BIO_free( PHB_BIO hb_bio )
+{
+   if( hb_bio->pszBuffer )
+      hb_itemFreeC( hb_bio->pszBuffer );
+
+   hb_xfree( hb_bio );
+}
+
+/* HB_BIO GC handler */
+
+/* BIO destructor, it's executed automatically */
+static HB_GARBAGE_FUNC( HB_BIO_Destructor )
+{
+   /* Retrieve image pointer holder */
+   HB_BIO ** ptr = ( HB_BIO ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( *ptr )
+   {
+      PHB_BIO_free( *ptr );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      *ptr = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gcBIOFuncs =
+{
+   HB_BIO_Destructor,
+   hb_gcDummyMark
+};
 
 BIO * hb_BIO_par( int iParam )
 {
-   return ( BIO * ) hb_parptr( iParam );
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+
+   return ptr ? ( *ptr )->bio : NULL;
 }
+
+void * hb_BIO_is( int iParam )
+{
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+
+   return ptr ? ( *ptr )->bio : NULL;
+}
+
+static void hb_BIO_ret( BIO * bio, char * pszBuffer )
+{
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_gcAllocate( sizeof( HB_BIO * ), &s_gcBIOFuncs );
+
+   *ptr = PHB_BIO_create( bio, pszBuffer );
+
+   hb_retptrGC( ( void * ) ptr );
+}
+
+/* */
 
 static int hb_BIO_METHOD_is( int iParam )
 {
@@ -142,7 +207,7 @@ static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * p )
 HB_FUNC( BIO_NEW )
 {
    if( hb_BIO_METHOD_is( 1 ) )
-      hb_retptr( BIO_new( hb_BIO_METHOD_par( 1 ) ) );
+      hb_BIO_ret( BIO_new( hb_BIO_METHOD_par( 1 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -404,7 +469,7 @@ HB_FUNC( BIO_GET_CLOSE )
 HB_FUNC( BIO_NEW_SOCKET )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -413,7 +478,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 {
 #ifndef OPENSSL_NO_DGRAM
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
@@ -424,7 +489,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 HB_FUNC( BIO_NEW_FD )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -432,7 +497,7 @@ HB_FUNC( BIO_NEW_FD )
 HB_FUNC( BIO_NEW_FILE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retptr( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ) );
+      hb_BIO_ret( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -442,8 +507,11 @@ HB_FUNC( BIO_NEW_MEM_BUF )
    PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
 
    if( pBuffer )
-      /* TOFIX: leak. Create a container and free this memory when going out of scope. */
-      hb_retptr( BIO_new_mem_buf( hb_itemGetC( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ) );
+   {
+      char * pszBuffer = hb_itemGetC( pBuffer );
+
+      hb_BIO_ret( BIO_new_mem_buf( pszBuffer, ( int ) hb_itemGetCLen( pBuffer ) ), pszBuffer );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -569,7 +637,7 @@ HB_FUNC( BIO_NEW_CONNECT )
 {
    if( HB_ISCHAR( 1 ) )
       /* NOTE: Discarding 'const', OpenSSL will strdup() */
-      hb_retptr( BIO_new_connect( ( char * ) hb_parc( 1 ) ) );
+      hb_BIO_ret( BIO_new_connect( ( char * ) hb_parc( 1 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -578,7 +646,7 @@ HB_FUNC( BIO_NEW_ACCEPT )
 {
    if( HB_ISCHAR( 1 ) )
       /* NOTE: Discarding 'const', OpenSSL will strdup() */
-      hb_retptr( BIO_new_accept( ( char * ) hb_parc( 1 ) ) );
+      hb_BIO_ret( BIO_new_accept( ( char * ) hb_parc( 1 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
