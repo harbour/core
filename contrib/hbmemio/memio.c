@@ -363,7 +363,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 }
 
 
-HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr )
+HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
    char *   pszFree = NULL;
    PHB_ITEM pDirArray;
@@ -398,8 +398,13 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
          hb_arrayNew    ( pSubarray, F_LEN );
          hb_arraySetC   ( pSubarray, F_NAME, s_fs.pInodes[ ul ]->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, s_fs.pInodes[ ul ]->llSize );
-         hb_arraySetDL  ( pSubarray, F_DATE, 0 );
-         hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
+         if( fDateTime )
+            hb_arraySetTDT( pSubarray, HB_F_DATETIME, 0, 0 );
+         else
+         {
+            hb_arraySetDL  ( pSubarray, F_DATE, 0 );
+            hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
+         }
          hb_arraySetC   ( pSubarray, F_ATTR, "" );
       }
    }
@@ -845,9 +850,9 @@ static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
 }
 
 
-static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
+static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
-   return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr );
+   return hb_memfsDirectory( pszDirSpec + FILE_PREFIX_LEN, pszAttr, fDateTime );
 }
 
 

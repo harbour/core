@@ -1019,14 +1019,14 @@ double hb_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
    return hb_fsDiskSpace( pszDirName, uiType );
 }
 
-PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr )
+PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
    int i = s_fileFindDrv( pszDirSpec );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->Directory( pszDirSpec, pszAttr );
+      return s_pFileTypes[ i ]->Directory( pszDirSpec, pszAttr, fDateTime );
 
-   return hb_fsDirectory( pszDirSpec, pszAttr );
+   return hb_fsDirectory( pszDirSpec, pszAttr, fDateTime );
 }
 
 HB_BOOL hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )

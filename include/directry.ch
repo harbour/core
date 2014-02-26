@@ -57,6 +57,7 @@
 #define F_DATE          3       /* File date (write) */
 #define F_TIME          4       /* File time (write) */
 #define F_ATTR          5       /* File attribute */
+#define HB_F_DATETIME   F_DATE
 
 /* Length of Directory() array */
 #define F_LEN           5

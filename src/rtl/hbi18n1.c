@@ -1121,7 +1121,7 @@ HB_FUNC( HB_I18N_CHECK )
    hb_retl( hb_i18n_headercheck( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
-/* unoffical function to access ineternal hash table used by i18n set */
+/* unofficial function to access internal hash table used by i18n set */
 HB_FUNC( __I18N_HASHTABLE )
 {
    PHB_I18N_TRANS pI18N;

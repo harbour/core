@@ -188,7 +188,7 @@ extern HB_EXPORT HB_BOOL    hb_fsFileExists  ( const char * pszFileName ); /* ch
 extern HB_EXPORT HB_BOOL    hb_fsDirExists   ( const char * pszDirName ); /* check if a directory exists (wildcard chars not accepted). */
 extern HB_EXPORT HB_BOOL    hb_fsCopy        ( const char * pszSource, const char * pszDest ); /* copy file */
 extern HB_EXPORT double     hb_fsDiskSpace   ( const char * pszDirName, HB_USHORT uiType );
-extern HB_EXPORT PHB_ITEM   hb_fsDirectory   ( const char * pszDirSpec, const char * pszAttributes );
+extern HB_EXPORT PHB_ITEM   hb_fsDirectory   ( const char * pszDirSpec, const char * pszAttributes, HB_BOOL fDateTime );
 extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const char * pszNewFile ); /* create hard link */
 extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
 extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* returns the link pointed to */
@@ -252,9 +252,10 @@ extern HB_EXPORT HB_FHANDLE hb_spCreateEx( const char * pszFileName, HB_FATTR ul
 typedef struct
 {
    char        szName[ HB_PATH_MAX ];
-   long        lDate;
    char        szDate[ 9 ]; /* in YYYYMMDD format */
    char        szTime[ 9 ]; /* in HH:MM:SS format */
+   long        lDate;
+   long        lTime;
    HB_FATTR    attr;
    HB_FOFFSET  size;
 
@@ -320,7 +321,7 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
       HB_BOOL     ( * DirMake )     ( const char * pszDirName );
       HB_BOOL     ( * DirRemove )   ( const char * pszDirName );
       double      ( * DirSpace )    ( const char * pszDirName, HB_USHORT uiType );
-      PHB_ITEM    ( * Directory )   ( const char * pszDirSpec, const char * pszAttr );
+      PHB_ITEM    ( * Directory )   ( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
 
       HB_BOOL     ( * GetFileTime ) ( const char * pszFileName, long * plJulian, long * plMillisec );
       HB_BOOL     ( * SetFileTime ) ( const char * pszFileName, long lJulian, long lMillisec );
@@ -366,7 +367,7 @@ extern HB_EXPORT HB_BOOL      hb_fileDirExists  ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirMake    ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirRemove  ( const char * pszDirName );
 extern HB_EXPORT double       hb_fileDirSpace   ( const char * pszDirName, HB_USHORT uiType );
-extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr );
+extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
 
 extern HB_EXPORT HB_BOOL      hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec );
 extern HB_EXPORT HB_BOOL      hb_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec );

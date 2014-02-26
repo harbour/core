@@ -1561,7 +1561,7 @@ static double s_fileDirSpace( const char * pszDirName, HB_USHORT uiType )
    return dResult;
 }
 
-static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
+static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime )
 {
    PHB_ITEM pDirArray = NULL;
    PHB_CONCLI conn;
@@ -1577,6 +1577,8 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
          HB_U16 len1 = ( HB_U16 ) strlen( pszDirSpec );
          HB_U16 len2 = ( HB_U16 ) strlen( pszAttr );
          HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( len1 + len2 );
+
+         HB_SYMBOL_UNUSED( fDateTime );
 
          memcpy( pBuffer, pszDirSpec, len1 );
          memcpy( pBuffer + len1, pszAttr, len2 );

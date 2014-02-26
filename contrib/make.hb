@@ -760,7 +760,6 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
          IF hb_FileExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
             FOR EACH tmp IN hb_ATokens( StrTran( hb_MemoRead( tmp ), Chr( 13 ) ), Chr( 10 ) )
                IF ! Empty( tmp )
-               ? ">>>", aFile[ F_NAME ] + hb_ps() + tmp
                   AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + tmp )
                ENDIF
             NEXT

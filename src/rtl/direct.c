@@ -99,7 +99,7 @@
          this issue is very much platform specific, and this is
          not the only place which may need the conversion [vszakats]. */
 
-PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes )
+PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB_BOOL fDateTime )
 {
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
    char *    pszFree = NULL;
@@ -157,9 +157,15 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes )
          hb_arrayNew    ( pSubarray, F_LEN );
          hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
-         hb_arraySetDL  ( pSubarray, F_DATE, ffind->lDate );
-         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
          hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
+
+         if( fDateTime )
+            hb_arraySetTDT( pSubarray, HB_F_DATETIME, ffind->lDate, ffind->lTime );
+         else
+         {
+            hb_arraySetDL( pSubarray, F_DATE, ffind->lDate );
+            hb_arraySetC( pSubarray, F_TIME, ffind->szTime );
+         }
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );
@@ -179,5 +185,10 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes )
 
 HB_FUNC( DIRECTORY )
 {
-   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ) ) );
+   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ), HB_FALSE ) );
+}
+
+HB_FUNC( HB_DIRECTORY )
+{
+   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ), HB_TRUE ) );
 }
