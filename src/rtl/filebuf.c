@@ -1029,42 +1029,42 @@ PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr )
    return hb_fsDirectory( pszDirSpec, pszAttr );
 }
 
-HB_BOOL hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
+HB_BOOL hb_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->GetFileTime( pszFileName, plJulian, plMillisec );
+      return s_pFileTypes[ i ]->TimeGet( pszFileName, plJulian, plMillisec );
 
    return hb_fsGetFileTime( pszFileName, plJulian, plMillisec );
 }
 
-HB_BOOL hb_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
+HB_BOOL hb_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->SetFileTime( pszFileName, lJulian, lMillisec );
+      return s_pFileTypes[ i ]->TimeSet( pszFileName, lJulian, lMillisec );
 
    return hb_fsSetFileTime( pszFileName, lJulian, lMillisec );
 }
 
-HB_BOOL hb_fileGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
+HB_BOOL hb_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->GetAttr( pszFileName, pulAttr );
+      return s_pFileTypes[ i ]->AttrGet( pszFileName, pulAttr );
 
    return hb_fsGetAttr( pszFileName, pulAttr );
 }
 
-HB_BOOL hb_fileSetAttr( const char * pszFileName, HB_FATTR ulAttr )
+HB_BOOL hb_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->SetAttr( pszFileName, ulAttr );
+      return s_pFileTypes[ i ]->AttrSet( pszFileName, ulAttr );
 
    return hb_fsSetAttr( pszFileName, ulAttr );
 }

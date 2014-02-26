@@ -322,10 +322,10 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
       double      ( * DirSpace )    ( const char * pszDirName, HB_USHORT uiType );
       PHB_ITEM    ( * Directory )   ( const char * pszDirSpec, const char * pszAttr );
 
-      HB_BOOL     ( * GetFileTime ) ( const char * pszFileName, long * plJulian, long * plMillisec );
-      HB_BOOL     ( * SetFileTime ) ( const char * pszFileName, long lJulian, long lMillisec );
-      HB_BOOL     ( * GetAttr )     ( const char * pszFileName, HB_FATTR * pulAttr );
-      HB_BOOL     ( * SetAttr )     ( const char * pszFileName, HB_FATTR ulAttr );
+      HB_BOOL     ( * TimeGet )     ( const char * pszFileName, long * plJulian, long * plMillisec );
+      HB_BOOL     ( * TimeSet )     ( const char * pszFileName, long lJulian, long lMillisec );
+      HB_BOOL     ( * AttrGet )     ( const char * pszFileName, HB_FATTR * pulAttr );
+      HB_BOOL     ( * AttrSet )     ( const char * pszFileName, HB_FATTR ulAttr );
 
       HB_BOOL     ( * Link )        ( const char * pszExisting, const char * pszNewName );
       HB_BOOL     ( * LinkSym )     ( const char * pszTarget, const char * pszNewName );
@@ -368,10 +368,10 @@ extern HB_EXPORT HB_BOOL      hb_fileDirRemove  ( const char * pszDirName );
 extern HB_EXPORT double       hb_fileDirSpace   ( const char * pszDirName, HB_USHORT uiType );
 extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr );
 
-extern HB_EXPORT HB_BOOL      hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec );
-extern HB_EXPORT HB_BOOL      hb_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec );
-extern HB_EXPORT HB_BOOL      hb_fileGetAttr    ( const char * pszFileName, HB_FATTR * pulAttr );
-extern HB_EXPORT HB_BOOL      hb_fileSetAttr    ( const char * pszFileName, HB_FATTR ulAttr );
+extern HB_EXPORT HB_BOOL      hb_fileTimeGet    ( const char * pszFileName, long * plJulian, long * plMillisec );
+extern HB_EXPORT HB_BOOL      hb_fileTimeSet    ( const char * pszFileName, long lJulian, long lMillisec );
+extern HB_EXPORT HB_BOOL      hb_fileAttrGet    ( const char * pszFileName, HB_FATTR * pulAttr );
+extern HB_EXPORT HB_BOOL      hb_fileAttrSet    ( const char * pszFileName, HB_FATTR ulAttr );
 
 extern HB_EXPORT HB_BOOL      hb_fileLink       ( const char * pszExisting, const char * pszNewName );
 extern HB_EXPORT HB_BOOL      hb_fileLinkSym    ( const char * pszTarget, const char * pszNewName );

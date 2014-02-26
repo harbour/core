@@ -851,7 +851,7 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
 }
 
 
-static HB_BOOL s_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
+static HB_BOOL s_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
 {
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( plJulian );
@@ -860,7 +860,7 @@ static HB_BOOL s_fileGetFileTime( const char * pszFileName, long * plJulian, lon
 }
 
 
-static HB_BOOL s_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
+static HB_BOOL s_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
 {
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( lJulian );
@@ -869,7 +869,7 @@ static HB_BOOL s_fileSetFileTime( const char * pszFileName, long lJulian, long l
 }
 
 
-static HB_BOOL s_fileGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
+static HB_BOOL s_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
 {
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( pulAttr );
@@ -877,7 +877,7 @@ static HB_BOOL s_fileGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
 }
 
 
-static HB_BOOL s_fileSetAttr( const char * pszFileName, HB_FATTR ulAttr )
+static HB_BOOL s_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
 {
    HB_SYMBOL_UNUSED( pszFileName );
    HB_SYMBOL_UNUSED( ulAttr );
@@ -1080,10 +1080,10 @@ static const HB_FILE_FUNCS s_fileFuncs =
    s_fileDirSpace,
    s_fileDirectory,
 
-   s_fileGetFileTime,
-   s_fileSetFileTime,
-   s_fileGetAttr,
-   s_fileSetAttr,
+   s_fileTimeGet,
+   s_fileTimeSet,
+   s_fileAttrGet,
+   s_fileAttrSet,
 
    s_fileLink,
    s_fileLinkSym,

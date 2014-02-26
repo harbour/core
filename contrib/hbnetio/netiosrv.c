@@ -782,7 +782,7 @@ HB_FUNC( NETIO_SERVER )
          HB_ERRCODE errCode = 0, errFsCode;
          long len = 0, size, size2;
          long lJulian, lMillisec;
-         int iFileNo, iStreamID, iResult;
+         int iFileNo, iStreamID, iIndex, iResult;
          HB_FATTR ulAttr;
          HB_U32 uiMsg;
          HB_USHORT uiFlags;
@@ -1028,8 +1028,8 @@ HB_FUNC( NETIO_SERVER )
                }
                break;
 
-            case NETIO_SETATTR:
-            case NETIO_GETATTR:
+            case NETIO_ATTRSET:
+            case NETIO_ATTRGET:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                ulAttr = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
                if( size <= 0 )
@@ -1047,9 +1047,9 @@ HB_FUNC( NETIO_SERVER )
 
                      if( ! pszName )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
-                     else if( ! ( uiMsg == NETIO_SETATTR ?
-                                  hb_fileSetAttr( pszName, ulAttr ) :
-                                  hb_fileGetAttr( pszName, &ulAttr ) ) )
+                     else if( ! ( uiMsg == NETIO_ATTRSET ?
+                                  hb_fileAttrSet( pszName, ulAttr ) :
+                                  hb_fileAttrGet( pszName, &ulAttr ) ) )
                         errCode = s_srvFsError();
                      else
                      {
@@ -1061,8 +1061,8 @@ HB_FUNC( NETIO_SERVER )
                }
                break;
 
-            case NETIO_SETFTIME:
-            case NETIO_GETFTIME:
+            case NETIO_FTIMESET:
+            case NETIO_FTIMEGET:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                lJulian = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
                lMillisec = HB_GET_LE_UINT32( &msgbuf[ 10 ] );
@@ -1081,9 +1081,9 @@ HB_FUNC( NETIO_SERVER )
 
                      if( ! pszName )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
-                     else if( ! ( uiMsg == NETIO_SETFTIME ?
-                                  hb_fileSetFileTime( pszName, lJulian, lMillisec ) :
-                                  hb_fileGetFileTime( pszName, &lJulian, &lMillisec ) ) )
+                     else if( ! ( uiMsg == NETIO_FTIMESET ?
+                                  hb_fileTimeSet( pszName, lJulian, lMillisec ) :
+                                  hb_fileTimeGet( pszName, &lJulian, &lMillisec ) ) )
                         errCode = s_srvFsError();
                      else
                      {
@@ -1143,6 +1143,77 @@ HB_FUNC( NETIO_SERVER )
                }
                if( szExt )
                   hb_xfree( szExt );
+               break;
+
+            case NETIO_CONFIGURE:
+               iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
+               size = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
+               iIndex = HB_GET_LE_INT32( &msgbuf[ 10 ] );
+               if( size < 0 )
+                  errCode = NETIO_ERR_WRONG_PARAM;
+               else
+               {
+                  if( size >= ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
+                     ptr = msg = ( HB_BYTE * ) hb_xgrab( size + NETIO_MSGLEN );
+                  if( s_srvRecvAll( conn, msg, size ) != size )
+                     errCode = NETIO_ERR_READ;
+                  else
+                  {
+                     pFile = s_srvFileGet( conn, iFileNo );
+                     if( pFile == NULL )
+                        errCode = NETIO_ERR_WRONG_FILE_HANDLE;
+                     else
+                     {
+                        PHB_ITEM pValue = NULL;
+
+                        if( size > 0 )
+                        {
+                           const char * data = ( const char * ) msg;
+                           HB_SIZE nSize = size;
+
+                           pValue = hb_itemDeserialize( &data, &nSize );
+                           if( ! pValue || nSize != 0 )
+                              errCode = NETIO_ERR_WRONG_PARAM;
+                        }
+                        if( errCode == 0 )
+                        {
+                           char * itmData = NULL;
+                           HB_SIZE itmSize = 0;
+
+                           iResult = hb_fileConfigure( pFile, iIndex, pValue ) ? 1 : 0;
+                           if( pValue )
+                              itmData = hb_itemSerialize( pValue, HB_SERIALIZE_NUMSIZE, &itmSize );
+
+                           if( itmSize <= sizeof( buffer ) - NETIO_MSGLEN )
+                              msg = buffer;
+                           else if( ! ptr || itmSize > ( HB_SIZE ) size - NETIO_MSGLEN )
+                           {
+                              if( ptr )
+                                 hb_xfree( ptr );
+                              ptr = msg = ( HB_BYTE * ) hb_xgrab( itmSize + NETIO_MSGLEN );
+                           }
+                           else
+                              msg = ptr;
+
+                           if( itmData )
+                           {
+                              memcpy( msg + NETIO_MSGLEN, itmData, itmSize );
+                              hb_xfree( itmData );
+                           }
+                           len = ( long ) itmSize;
+
+                           errFsCode = hb_fsError();
+                           HB_PUT_LE_UINT32( &msg[ 0 ], uiMsg );
+                           HB_PUT_LE_UINT32( &msg[ 4 ], len );
+                           HB_PUT_LE_UINT32( &msg[ 8 ], iResult );
+                           HB_PUT_LE_UINT32( &msg[ 12 ], errFsCode );
+                           memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
+                        }
+                        if( pValue )
+                           hb_itemRelease( pValue );
+                     }
+                  }
+               }
                break;
 
             case NETIO_READ:
@@ -1320,6 +1391,14 @@ HB_FUNC( NETIO_SERVER )
                }
                break;
 
+            case NETIO_COMMIT:
+               iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
+               pFile = s_srvFileGet( conn, iFileNo );
+               if( pFile )
+                  hb_fileCommit( pFile );
+               fNoAnswer = HB_TRUE;
+               break;
+
             case NETIO_CLOSE:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                pFile = s_srvFileFree( conn, iFileNo );
@@ -1331,14 +1410,6 @@ HB_FUNC( NETIO_SERVER )
                   HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_CLOSE );
                   memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
                }
-               break;
-
-            case NETIO_COMMIT:
-               iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
-               pFile = s_srvFileGet( conn, iFileNo );
-               if( pFile )
-                  hb_fileCommit( pFile );
-               fNoAnswer = HB_TRUE;
                break;
 
             case NETIO_SRVCLOSE:
