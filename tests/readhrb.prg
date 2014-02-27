@@ -53,6 +53,7 @@ PROCEDURE Main( cFrom )
    LOCAL nLenCount
    LOCAL nIdx
    LOCAL cSymbol
+   LOCAL cBorder
 
    hb_default( @cFrom, hb_FNameName( __FILE__ ) )
 
@@ -67,13 +68,13 @@ PROCEDURE Main( cFrom )
          cBlock := hb_FReadLen( hFile, 4 )
          nSymbols := ;
             hb_BPeek( cBlock, 1 ) + ;
-            hb_BPeek( cBlock, 2 ) * 256 + ;
-            hb_BPeek( cBlock, 3 ) * 65536 + ;
-            hb_BPeek( cBlock, 4 ) * 16777216
+            hb_BPeek( cBlock, 2 ) * 0x100 + ;
+            hb_BPeek( cBlock, 3 ) * 0x10000 + ;
+            hb_BPeek( cBlock, 4 ) * 0x1000000
 
-         ?? "+--------------------------+------------+---------------------------------+"
-         ? "| Symbol Name              |  Type      | Scope                           |"
-         ? "+--------------------------+------------+---------------------------------+"
+         ?? cBorder := "+--------------------------+------------+---------------------------------+"
+         PrintItem( "Symbol Name", "Type", "Scope" )
+         ? cBorder
 
          FOR n := 1 TO nSymbols
             cSymbol := ""
@@ -83,9 +84,11 @@ PROCEDURE Main( cFrom )
             cScope := hb_FReadLen( hFile, 1 )
             cBlock := hb_FReadLen( hFile, 1 )
             nIdx   := hb_BCode( cBlock ) + 1
-            PrintItem( cSymbol, nIdx, hb_BCode( cScope ) )
+            PrintItem( cSymbol, ;
+               hb_ntos( nIdx - 1 ) + " (" + { "NOLINK", "FUNC", "EXTERN", "SYM_DEF" }[ nIdx ] + ")", ;
+               DecodeScope( hb_BCode( cScope ) ) )
          NEXT
-         ? "+--------------------------+------------+---------------------------------+"
+         ? cBorder
          ? " ", hb_ntos( nSymbols ), "symbol(s) found."
          ?
 
@@ -96,9 +99,9 @@ PROCEDURE Main( cFrom )
             cBlock := hb_FReadLen( hFile, 4 )
             nFuncs := ;
                hb_BPeek( cBlock, 1 ) + ;
-               hb_BPeek( cBlock, 2 ) * 256 + ;
-               hb_BPeek( cBlock, 3 ) * 65536 + ;
-               hb_BPeek( cBlock, 4 ) * 16777216
+               hb_BPeek( cBlock, 2 ) * 0x100 + ;
+               hb_BPeek( cBlock, 3 ) * 0x10000 + ;
+               hb_BPeek( cBlock, 4 ) * 0x1000000
             FOR n := 1 TO nFuncs
                cSymbol := ""
                DO WHILE hb_BCode( cBlock := hb_FReadLen( hFile, 1 ) ) != 0
@@ -107,9 +110,9 @@ PROCEDURE Main( cFrom )
                cBlock := hb_FReadLen( hFile, 4 )
                nLenCount := ;
                   hb_BPeek( cBlock, 1 ) + ;
-                  hb_BPeek( cBlock, 2 ) * 256 + ;
-                  hb_BPeek( cBlock, 3 ) * 65536 + ;
-                  hb_BPeek( cBlock, 4 ) * 16777216
+                  hb_BPeek( cBlock, 2 ) * 0x100 + ;
+                  hb_BPeek( cBlock, 3 ) * 0x10000 + ;
+                  hb_BPeek( cBlock, 4 ) * 0x1000000
 
                ? "Symbol:", cSymbol
                ? "Length:", hb_ntos( nLenCount ), "byte(s)"
@@ -137,12 +140,12 @@ PROCEDURE Main( cFrom )
 
    RETURN
 
-STATIC PROCEDURE PrintItem( cSymbol, nType, nScope )
+STATIC PROCEDURE PrintItem( cSymbol, cType, cScope )
 
    ? "|", ;
       PadR( cSymbol, 25 ) + "|", ;
-      PadR( hb_ntos( nType - 1 ) + " (" + { "NOLINK", "FUNC", "EXTERN", "SYM_DEF" }[ nType ] + ")", 11 ) + "|", ;
-      PadR( DecodeScope( nScope ), 32 ) + "|"
+      PadR( cType, 11 ) + "|", ;
+      PadR( cScope, 32 ) + "|"
 
    RETURN
 

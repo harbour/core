@@ -31,7 +31,7 @@ PROCEDURE Main()
       IF hb_LeftIs( cName, "HB_LANG_" )
          cName := SubStr( cName, Len( "HB_LANG_" ) + 1 )
          IF ( Len( cName ) != 5 .OR. "_" $ cName ) .AND. ;
-            ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"
+            ! "|" + cName + "|" $ "|RUKOI8|UAKOI8|ZHB5|ZHGB|"  /* HB_LEGACY_LEVEL4 */
             ? PadR( Lower( cName ), 6 ), '"' + hb_langMessage( HB_LANG_ITEM_BASE_NATMSG, cName ) + '"'
          ENDIF
       ENDIF

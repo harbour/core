@@ -880,6 +880,7 @@ DYNAMIC hb_VFLockTest
 DYNAMIC hb_VFOpen
 DYNAMIC hb_VFRead
 DYNAMIC hb_VFReadAt
+DYNAMIC hb_VFReadLen
 DYNAMIC hb_VFRename
 DYNAMIC hb_VFSeek
 DYNAMIC hb_VFSize

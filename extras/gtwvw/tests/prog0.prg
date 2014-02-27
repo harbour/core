@@ -210,7 +210,7 @@ STATIC FUNCTION TBNext( oTbr )
    IF Eof()
       lMoved := .F.
    ELSE
-      dbSkip( 1 )
+      dbSkip()
       IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )

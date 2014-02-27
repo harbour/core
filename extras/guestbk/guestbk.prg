@@ -76,7 +76,7 @@ PROCEDURE Main()
       // Write fields to .ini file
       oIni:WriteString( "Entries", "DateTime" + hb_ntos( nEntry ), ;
          CMonth( Date() ) + " " + hb_ntos( Day( Date() ) ) + ", " + ;
-         hb_ntos( Year( Date() ) ) + " " + Time() )
+         StrZero( Year( Date() ), 4 ) + " " + Time() )
 
       oIni:UpdateFile()
 

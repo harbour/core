@@ -783,7 +783,7 @@ METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
       EXIT
    CASE _DB_EOF
       ( ::Alias )->( dbGoBottom() )
-      ( ::Alias )->( dbSkip( 1 ) )
+      ( ::Alias )->( dbSkip() )
       EXIT
    OTHERWISE
       ( ::Alias )->( dbGoto( nDirection ) )
@@ -901,7 +901,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    hb_default( @lKeepBuffer, .F. )
 
    ( ::Alias )->( dbGoBottom() )
-   ( ::Alias )->( dbSkip( 1 ) )         // go EOF
+   ( ::Alias )->( dbSkip() )         // go EOF
 
    FOR EACH Buffer in ::Buffer
       i      := Buffer:__enumIndex()

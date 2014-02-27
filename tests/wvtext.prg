@@ -2,6 +2,7 @@
 // Pritpal Bedi <pritpal@vouchcac.com>
 
 #include "hbgtinfo.ch"
+#include "dbstruct.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -217,7 +218,7 @@ PROCEDURE Main()
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, DToS(Date() ) + " " + Time() ) )
+         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, DToS( Date() ) + " " + Time() ) )
 
       CASE nKey == K_F9
          hb_gtInfo( HB_GTI_RESIZEMODE, iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )
@@ -391,6 +392,7 @@ STATIC PROCEDURE thFunc()
 
    /* allocate own GT driver */
    hb_gtReload( hb_gtVersion() )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
    IF ( s_nBrowser % 2 ) != 0
@@ -424,14 +426,14 @@ STATIC PROCEDURE thFunc()
 
    oBrowse := TBrowse():New( 1, 0, MaxRow(), MaxCol() )
 
-   oBrowse:ColSep        := " | "
-   oBrowse:HeadSep       := "-+-"
+   oBrowse:HeadSep       := hb_UTF8ToStrBox( "┬─" )
+   oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
-   FOR i := 1 TO Len( aStruct )
-      oBrowse:AddColumn( TBColumnNew( aStruct[ i, 1 ], BlockField( i ) ) )
+   FOR EACH i IN aStruct
+      oBrowse:AddColumn( TBColumnNew( i[ DBS_NAME ], FieldBlock( i[ DBS_NAME ] ) ) )
    NEXT
 
    oBrowse:configure()
@@ -500,7 +502,7 @@ STATIC FUNCTION TBNext( oTbr )
    IF Eof()
       lMoved := .F.
    ELSE
-      dbSkip( 1 )
+      dbSkip()
       IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )
@@ -526,11 +528,6 @@ STATIC FUNCTION TBPrev( oTbr )
    ENDIF
 
    RETURN lMoved
-
-//
-
-STATIC FUNCTION BlockField( i )
-   RETURN {|| FieldGet( i ) }
 
 //
 
@@ -583,16 +580,16 @@ STATIC PROCEDURE ChgPalette( lFocus )
    ELSE
       FOR nI := 2 TO Len( aPalette )
          nColor := aPalette[ nI ]
-         IF nColor >= 65536
-            nB := Int( nColor / 65536 )
-            nColor -= nB * 65536
+         IF nColor >= 0x10000
+            nB := Int( nColor / 0x10000 )
+            nColor -= nB * 0x10000
             nB := Int( nB / nDimFactor )
          ELSE
             nB := 0
          ENDIF
-         IF nColor >= 256
-            nG := Int( nColor / 256 )
-            nColor -= nG * 256
+         IF nColor >= 0x100
+            nG := Int( nColor / 0x100 )
+            nColor -= nG * 0x100
             nG := Int( nG / nDimFactor )
          ELSE
             nG := 0

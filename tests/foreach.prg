@@ -32,7 +32,7 @@ PROCEDURE Main()
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    ? "-----------------"
    ?
-   Inkey( 0 )
+   WAIT
 
    ? "========================================================"
    ? "Testing passing by reference"
@@ -58,7 +58,8 @@ PROCEDURE Main()
    NEXT
    ? "after loop ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
-   Inkey( 0 )
+   ?
+   WAIT
 
    ? "========================================================"
    ? "Testing BREAK"
@@ -80,7 +81,8 @@ PROCEDURE Main()
       ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
       ? "recover variable i=", i
    END SEQUENCE
-   Inkey( 0 )
+   ?
+   WAIT
 
    ? "========================================================"
    ? "before loop: ENUM=", enum
@@ -112,7 +114,8 @@ PROCEDURE Main()
       ? bb, bb:__enumIndex(), bb:__enumValue()
       ? cc, cc:__enumIndex(), cc:__enumValue()
    NEXT
-   Inkey( 0 )
+   ?
+   WAIT
 
    ? "========================================================"
    FOR EACH enum, bb, cc IN A, AA, c DESCEND

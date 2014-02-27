@@ -38,7 +38,7 @@ PROCEDURE Main()
       ? "d) Internet Explorer with callback"
       ? "e) Create shortcut"
       ? "0) Quit"
-      ? "> "
+      ? ">", ""
 
       nOption := Inkey( 0 )
       ?? hb_keyChar( nOption )

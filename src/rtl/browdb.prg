@@ -67,7 +67,7 @@ FUNCTION __dbSkipper( nRecs )
          dbSkip( 0 )
       ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
+            dbSkip()
             IF Eof()
                dbSkip( -1 )
                EXIT
