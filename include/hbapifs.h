@@ -174,7 +174,7 @@ extern HB_EXPORT HB_BOOL    hb_fsTruncAt     ( HB_FHANDLE hFileHandle, HB_FOFFSE
 extern HB_EXPORT HB_USHORT  hb_fsWrite       ( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT uiCount ); /* write to an open file from a buffer (<=64K) */
 extern HB_EXPORT HB_SIZE    hb_fsWriteLarge  ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount ); /* write to an open file from a buffer (>64K) */
 extern HB_EXPORT HB_SIZE    hb_fsWriteAt     ( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset ); /* write to an open file at given offset from a buffer (>64K) */
-extern HB_EXPORT HB_FHANDLE hb_fsPOpen       ( const char * pszFileName, const char * pMode );
+extern HB_EXPORT HB_FHANDLE hb_fsPOpen       ( const char * pszFileName, const char * pszMode );
 extern HB_EXPORT HB_BOOL    hb_fsPipeCreate  ( HB_FHANDLE hPipe[ 2 ] );
 extern HB_EXPORT HB_BOOL    hb_fsPipeUnblock ( HB_FHANDLE hPipeHandle );
 extern HB_EXPORT HB_SIZE    hb_fsPipeIsData  ( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize, HB_MAXINT nTimeOut );
@@ -323,10 +323,10 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
       double      ( * DirSpace )    ( const char * pszDirName, HB_USHORT uiType );
       PHB_ITEM    ( * Directory )   ( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
 
-      HB_BOOL     ( * GetFileTime ) ( const char * pszFileName, long * plJulian, long * plMillisec );
-      HB_BOOL     ( * SetFileTime ) ( const char * pszFileName, long lJulian, long lMillisec );
-      HB_BOOL     ( * GetAttr )     ( const char * pszFileName, HB_FATTR * pulAttr );
-      HB_BOOL     ( * SetAttr )     ( const char * pszFileName, HB_FATTR ulAttr );
+      HB_BOOL     ( * TimeGet )     ( const char * pszFileName, long * plJulian, long * plMillisec );
+      HB_BOOL     ( * TimeSet )     ( const char * pszFileName, long lJulian, long lMillisec );
+      HB_BOOL     ( * AttrGet )     ( const char * pszFileName, HB_FATTR * pulAttr );
+      HB_BOOL     ( * AttrSet )     ( const char * pszFileName, HB_FATTR ulAttr );
 
       HB_BOOL     ( * Link )        ( const char * pszExisting, const char * pszNewName );
       HB_BOOL     ( * LinkSym )     ( const char * pszTarget, const char * pszNewName );
@@ -369,10 +369,10 @@ extern HB_EXPORT HB_BOOL      hb_fileDirRemove  ( const char * pszDirName );
 extern HB_EXPORT double       hb_fileDirSpace   ( const char * pszDirName, HB_USHORT uiType );
 extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr, HB_BOOL fDateTime );
 
-extern HB_EXPORT HB_BOOL      hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec );
-extern HB_EXPORT HB_BOOL      hb_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec );
-extern HB_EXPORT HB_BOOL      hb_fileGetAttr    ( const char * pszFileName, HB_FATTR * pulAttr );
-extern HB_EXPORT HB_BOOL      hb_fileSetAttr    ( const char * pszFileName, HB_FATTR ulAttr );
+extern HB_EXPORT HB_BOOL      hb_fileTimeGet    ( const char * pszFileName, long * plJulian, long * plMillisec );
+extern HB_EXPORT HB_BOOL      hb_fileTimeSet    ( const char * pszFileName, long lJulian, long lMillisec );
+extern HB_EXPORT HB_BOOL      hb_fileAttrGet    ( const char * pszFileName, HB_FATTR * pulAttr );
+extern HB_EXPORT HB_BOOL      hb_fileAttrSet    ( const char * pszFileName, HB_FATTR ulAttr );
 
 extern HB_EXPORT HB_BOOL      hb_fileLink       ( const char * pszExisting, const char * pszNewName );
 extern HB_EXPORT HB_BOOL      hb_fileLinkSym    ( const char * pszTarget, const char * pszNewName );
@@ -404,6 +404,8 @@ extern HB_EXPORT PHB_FILE     hb_fileCreateTempEx( char * pszName,
                                                    const char * pszPrefix,
                                                    const char * pszExt,
                                                    HB_FATTR ulAttr );
+
+extern HB_EXPORT PHB_FILE     hb_filePOpen( const char * pszFileName, const char * pszMode );
 
 /* wrapper to fopen() which calls hb_fsNameConv() */
 extern HB_EXPORT FILE *       hb_fopen( const char *path, const char *mode );

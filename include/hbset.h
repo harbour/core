@@ -144,9 +144,9 @@ typedef struct
    /* Lower case members are indirectly related to a SET */
    HB_BOOL        hb_set_century;
    HB_BOOL        hb_set_prndevice;
-   HB_FHANDLE     hb_set_althan;
-   HB_FHANDLE     hb_set_extrahan;
-   HB_FHANDLE     hb_set_printhan;
+   PHB_FILE       hb_set_althan;
+   PHB_FILE       hb_set_extrahan;
+   PHB_FILE       hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
    void *         hb_set_oscp;
    void *         hb_set_dbcp;
@@ -263,10 +263,10 @@ extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 extern HB_EXPORT HB_BOOL      hb_setGetCentury( void );
 extern HB_EXPORT HB_BOOL      hb_setSetCentury( HB_BOOL );
 
-extern HB_EXPORT HB_FHANDLE   hb_setGetAltHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetExtraHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetPrintHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetPrinterHandle( int );
+extern HB_EXPORT PHB_FILE     hb_setGetAltHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetExtraHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetPrintHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetPrinterHandle( int );
 extern HB_EXPORT HB_BOOL      hb_setGetAlternate( void );
 extern HB_EXPORT const char * hb_setGetAltFile( void );
 extern HB_EXPORT HB_BOOL      hb_setGetAutOpen( void );

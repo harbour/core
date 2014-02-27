@@ -106,8 +106,8 @@ static void hb_fileReturn( PHB_FILE pFile )
       hb_ret();
 }
 
-/* hb_XExists( <cFileName>, [ @<cDestFileName> ] ) -> <lOK> */
-HB_FUNC( HB_XEXISTS )
+/* hb_VFExists( <cFileName>, [ @<cDestFileName> ] ) -> <lOK> */
+HB_FUNC( HB_VFEXISTS )
 {
    const char * pszFileName = hb_parc( 1 );
    HB_BOOL fResult = HB_FALSE;
@@ -133,8 +133,8 @@ HB_FUNC( HB_XEXISTS )
    hb_retl( fResult );
 }
 
-/* hb_XErase( <cFileName> ) -> <nResult> */
-HB_FUNC( HB_XERASE )
+/* hb_VFErase( <cFileName> ) -> <nResult> */
+HB_FUNC( HB_VFERASE )
 {
    const char * pszFile = hb_parc( 1 );
    HB_ERRCODE uiError = 3;
@@ -151,8 +151,8 @@ HB_FUNC( HB_XERASE )
    hb_retni( iResult );
 }
 
-/* hb_XRename( <cFileSrc>, <cFileDst> ) -> <nResult> */
-HB_FUNC( HB_XRENAME )
+/* hb_VFRename( <cFileSrc>, <cFileDst> ) -> <nResult> */
+HB_FUNC( HB_VFRENAME )
 {
    const char * szFileOld = hb_parc( 1 ),
               * szFileNew = hb_parc( 2 );
@@ -170,8 +170,8 @@ HB_FUNC( HB_XRENAME )
    hb_retni( iResult );
 }
 
-/* hb_XCopyFile( <cFileSrc>, <cFileDst> ) -> <nResult> */
-HB_FUNC( HB_XCOPYFILE )
+/* hb_VFCopyFile( <cFileSrc>, <cFileDst> ) -> <nResult> */
+HB_FUNC( HB_VFCOPYFILE )
 {
    const char * pszSource = hb_parc( 1 ),
               * pszDestin = hb_parc( 2 );
@@ -189,8 +189,8 @@ HB_FUNC( HB_XCOPYFILE )
    hb_retni( iResult );
 }
 
-/* hb_XDirExists( <cDirName> ) -> <lExists> */
-HB_FUNC( HB_XDIREXISTS )
+/* hb_VFDirExists( <cDirName> ) -> <lExists> */
+HB_FUNC( HB_VFDIREXISTS )
 {
    const char * pszDirName = hb_parc( 1 );
    HB_BOOL fResult = HB_FALSE;
@@ -206,8 +206,8 @@ HB_FUNC( HB_XDIREXISTS )
    hb_retl( fResult );
 }
 
-/* hb_XDirMake( <cDirName> ) -> <nSuccess> */
-HB_FUNC( HB_XDIRMAKE )
+/* hb_VFDirMake( <cDirName> ) -> <nSuccess> */
+HB_FUNC( HB_VFDIRMAKE )
 {
    const char * pszDirName = hb_parc( 1 );
    HB_ERRCODE uiError = 2;
@@ -224,8 +224,8 @@ HB_FUNC( HB_XDIRMAKE )
    hb_retni( iResult );
 }
 
-/* hb_XDirRemove( <cDirName> ) -> <nSuccess> */
-HB_FUNC( HB_XDIRREMOVE )
+/* hb_VFDirRemove( <cDirName> ) -> <nSuccess> */
+HB_FUNC( HB_VFDIRREMOVE )
 {
    const char * pszDirName = hb_parc( 1 );
    HB_ERRCODE uiError = 2;
@@ -242,15 +242,15 @@ HB_FUNC( HB_XDIRREMOVE )
    hb_retni( iResult );
 }
 
-/* hb_XDirectory( [ <cDirSpec> ], [ <cAttr> ] ) -> <aDirectory> */
-HB_FUNC( HB_XDIRECTORY )
+/* hb_VFDirectory( [ <cDirSpec> ], [ <cAttr> ] ) -> <aDirectory> */
+HB_FUNC( HB_VFDIRECTORY )
 {
    hb_itemReturnRelease( hb_fileDirectory( hb_parc( 1 ), hb_parc( 2 ) ) );
    hb_fsSetFError( hb_fsError() );
 }
 
-/* hb_XDirSpace( <cDirName>, [ <nInfoType> ] ) -> <nFreeSpace> */
-HB_FUNC( HB_XDIRSPACE )
+/* hb_VFDirSpace( <cDirName>, [ <nInfoType> ] ) -> <nFreeSpace> */
+HB_FUNC( HB_VFDIRSPACE )
 {
    HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
 
@@ -258,31 +258,31 @@ HB_FUNC( HB_XDIRSPACE )
    hb_fsSetFError( hb_fsError() );
 }
 
-/* hb_XGetAttr( <cFileName>, @<nAttr> ) -> <lOK> */
-HB_FUNC( HB_XGETATTR )
+/* hb_VFAttrGet( <cFileName>, @<nAttr> ) -> <lOK> */
+HB_FUNC( HB_VFATTRGET )
 {
    HB_FATTR nAttr = 0;
 
-   hb_retl( hb_fileGetAttr( hb_parcx( 1 ), &nAttr ) );
+   hb_retl( hb_fileAttrGet( hb_parcx( 1 ), &nAttr ) );
    hb_fsSetFError( hb_fsError() );
 
    hb_stornl( nAttr, 2 );
 }
 
-/* hb_XSetAttr( <cFileName>,  <nAttr> ) -> <lOK> */
-HB_FUNC( HB_XSETATTR )
+/* hb_VFAttrSet( <cFileName>,  <nAttr> ) -> <lOK> */
+HB_FUNC( HB_VFATTRSET )
 {
-   hb_retl( hb_fileSetAttr( hb_parcx( 1 ), ( HB_FATTR ) hb_parnl( 2 ) ) );
+   hb_retl( hb_fileAttrSet( hb_parcx( 1 ), ( HB_FATTR ) hb_parnl( 2 ) ) );
    hb_fsSetFError( hb_fsError() );
 }
 
-/* hb_XGetDateTime( <cFileName>, @<tsDateTime> ) -> <lOK> */
-HB_FUNC( HB_XGETDATETIME )
+/* hb_VFTimeGet( <cFileName>, @<tsDateTime> ) -> <lOK> */
+HB_FUNC( HB_VFTIMEGET )
 {
    long lJulian, lMillisec;
    HB_BOOL fOK;
 
-   fOK = hb_fileGetFileTime( hb_parcx( 1 ), &lJulian, &lMillisec );
+   fOK = hb_fileTimeGet( hb_parcx( 1 ), &lJulian, &lMillisec );
    hb_fsSetFError( hb_fsError() );
 
    if( fOK )
@@ -315,8 +315,8 @@ HB_FUNC( HB_XGETDATETIME )
    }
 }
 
-/* hb_XSetDateTime( <cFileName>,  <tsDateTime> ) -> <lOK> */
-HB_FUNC( HB_XSETDATETIME )
+/* hb_VFTimeSet( <cFileName>,  <tsDateTime> ) -> <lOK> */
+HB_FUNC( HB_VFTIMESET )
 {
    long lDate = -1, lTime = -1;
 
@@ -334,12 +334,12 @@ HB_FUNC( HB_XSETDATETIME )
       }
    }
 
-   hb_retl( hb_fileSetFileTime( hb_parcx( 1 ), lDate, lTime ) );
+   hb_retl( hb_fileTimeSet( hb_parcx( 1 ), lDate, lTime ) );
    hb_fsSetFError( hb_fsError() );
 }
 
-/* hb_XLink( <cExistingFileName>, <cNewFileName> ) -> <nSuccess> */
-HB_FUNC( HB_XLINK )
+/* hb_VFLink( <cExistingFileName>, <cNewFileName> ) -> <nSuccess> */
+HB_FUNC( HB_VFLINK )
 {
    const char * pszExisting = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
    HB_ERRCODE uiError = 2;
@@ -356,8 +356,8 @@ HB_FUNC( HB_XLINK )
    hb_retni( iResult );
 }
 
-/* hb_XLinkSym( <cTargetFileName>, <cNewFileName> ) -> <nSuccess> */
-HB_FUNC( HB_XLINKSYM )
+/* hb_VFLinkSym( <cTargetFileName>, <cNewFileName> ) -> <nSuccess> */
+HB_FUNC( HB_VFLINKSYM )
 {
    const char * pszTarget = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
    HB_ERRCODE uiError = 2;
@@ -374,8 +374,8 @@ HB_FUNC( HB_XLINKSYM )
    hb_retni( iResult );
 }
 
-/* hb_XLinkRead( <cFileName> ) -> <cDestFileName> | "" */
-HB_FUNC( HB_XLINKREAD )
+/* hb_VFLinkRead( <cFileName> ) -> <cDestFileName> | "" */
+HB_FUNC( HB_VFLINKREAD )
 {
    const char * pszFile = hb_parc( 1 );
    char * pszResult = NULL;
@@ -391,8 +391,8 @@ HB_FUNC( HB_XLINKREAD )
    hb_retc_buffer( pszResult );
 }
 
-/* hb_XOpen( [@]<cFileName>, [ <nModeAttr> ] ) -> <pHandle> | NIL */
-HB_FUNC( HB_XOPEN )
+/* hb_VFOpen( [@]<cFileName>, [ <nModeAttr> ] ) -> <pHandle> | NIL */
+HB_FUNC( HB_VFOPEN )
 {
    const char * pszFile = hb_parc( 1 );
 
@@ -425,8 +425,8 @@ HB_FUNC( HB_XOPEN )
    }
 }
 
-/* hb_XClose( <pHandle> ) -> <lOK> */
-HB_FUNC( HB_XCLOSE )
+/* hb_VFClose( <pHandle> ) -> <lOK> */
+HB_FUNC( HB_VFCLOSE )
 {
    PHB_FILE * pFilePtr = hb_fileParamPtr( 1 );
 
@@ -440,8 +440,8 @@ HB_FUNC( HB_XCLOSE )
    }
 }
 
-/* hb_XLock( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <lOK> */
-HB_FUNC( HB_XLOCK )
+/* hb_VFLock( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <lOK> */
+HB_FUNC( HB_VFLOCK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -463,8 +463,8 @@ HB_FUNC( HB_XLOCK )
    }
 }
 
-/* hb_XUnlock( <pHandle>, <nStart>, <nLen> ) -> <lOK> */
-HB_FUNC( HB_XUNLOCK )
+/* hb_VFUnlock( <pHandle>, <nStart>, <nLen> ) -> <lOK> */
+HB_FUNC( HB_VFUNLOCK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -486,8 +486,8 @@ HB_FUNC( HB_XUNLOCK )
    }
 }
 
-/* hb_XLockTest( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <nPID> | 0 (nolock) | -1 (err) */
-HB_FUNC( HB_XLOCKTEST )
+/* hb_VFLockTest( <pHandle>, <nStart>, <nLen>, [ <nType> ] ) -> <nPID> | 0 (nolock) | -1 (err) */
+HB_FUNC( HB_VFLOCKTEST )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -509,8 +509,8 @@ HB_FUNC( HB_XLOCKTEST )
    }
 }
 
-/* hb_XRead( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nTimeOut> ] ) -> <nRead> */
-HB_FUNC( HB_XREAD )
+/* hb_VFRead( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nTimeOut> ] ) -> <nRead> */
+HB_FUNC( HB_VFREAD )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -540,8 +540,8 @@ HB_FUNC( HB_XREAD )
    }
 }
 
-/* hb_XReadLen( <pHandle>, <nToRead>, [ <nTimeOut> ] ) -> <cBuffer> */
-HB_FUNC( HB_XREADLEN )
+/* hb_VFReadLen( <pHandle>, <nToRead>, [ <nTimeOut> ] ) -> <cBuffer> */
+HB_FUNC( HB_VFREADLEN )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -568,8 +568,8 @@ HB_FUNC( HB_XREADLEN )
    }
 }
 
-/* hb_XWrite( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nTimeOut> ] ) -> <nWritten> */
-HB_FUNC( HB_XWRITE )
+/* hb_VFWrite( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nTimeOut> ] ) -> <nWritten> */
+HB_FUNC( HB_VFWRITE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -599,8 +599,8 @@ HB_FUNC( HB_XWRITE )
    }
 }
 
-/* hb_XReadAt( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nAtOffset> ] ) -> <nRead> */
-HB_FUNC( HB_XREADAT )
+/* hb_VFReadAt( <pHandle>, @<cBuff>, [ <nToRead> ], [ <nAtOffset> ] ) -> <nRead> */
+HB_FUNC( HB_VFREADAT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -631,8 +631,8 @@ HB_FUNC( HB_XREADAT )
    }
 }
 
-/* hb_XWriteAt( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nAtOffset> ] ) -> <nWritten> */
-HB_FUNC( HB_XWRITEAT )
+/* hb_VFWriteAt( <pHandle>, <cBuff>, [ <nToWrite> ], [ <nAtOffset> ] ) -> <nWritten> */
+HB_FUNC( HB_VFWRITEAT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -663,8 +663,8 @@ HB_FUNC( HB_XWRITEAT )
    }
 }
 
-/* hb_XSeek( <pHandle>, <nOffset>, [ <nWhence> ] ) -> <nOffset> */
-HB_FUNC( HB_XSEEK )
+/* hb_VFSeek( <pHandle>, <nOffset>, [ <nWhence> ] ) -> <nOffset> */
+HB_FUNC( HB_VFSEEK )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -685,8 +685,8 @@ HB_FUNC( HB_XSEEK )
    }
 }
 
-/* hb_XTrunc( <pHandle>, [ <nAtOffset> ] ) -> <lOK> */
-HB_FUNC( HB_XTRUNC )
+/* hb_VFTrunc( <pHandle>, [ <nAtOffset> ] ) -> <lOK> */
+HB_FUNC( HB_VFTRUNC )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -697,8 +697,8 @@ HB_FUNC( HB_XTRUNC )
    }
 }
 
-/* hb_XSize( <pHandle> ) -> <nSize> */
-HB_FUNC( HB_XSIZE )
+/* hb_VFSize( <pHandle> ) -> <nSize> */
+HB_FUNC( HB_VFSIZE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -709,8 +709,8 @@ HB_FUNC( HB_XSIZE )
    }
 }
 
-/* hb_XEof( <pHandle> ) -> <lEOF> */
-HB_FUNC( HB_XEOF )
+/* hb_VFEof( <pHandle> ) -> <lEOF> */
+HB_FUNC( HB_VFEOF )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -721,8 +721,8 @@ HB_FUNC( HB_XEOF )
    }
 }
 
-/* hb_XFlush( <pHandle>, [ <lDirtyOnly> ] ) -> NIL */
-HB_FUNC( HB_XFLUSH )
+/* hb_VFFlush( <pHandle>, [ <lDirtyOnly> ] ) -> NIL */
+HB_FUNC( HB_VFFLUSH )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -733,8 +733,8 @@ HB_FUNC( HB_XFLUSH )
    }
 }
 
-/* hb_XCommit( <pHandle> ) -> NIL */
-HB_FUNC( HB_XCOMMIT )
+/* hb_VFCommit( <pHandle> ) -> NIL */
+HB_FUNC( HB_VFCOMMIT )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -745,8 +745,8 @@ HB_FUNC( HB_XCOMMIT )
    }
 }
 
-/* hb_XConfig( <pHandle>, <nSet>, [ <nParam> ] ) -> <nResult> */
-HB_FUNC( HB_XCONFIG )
+/* hb_VFConfig( <pHandle>, <nSet>, [ <nParam> ] ) -> <nResult> */
+HB_FUNC( HB_VFCONFIG )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -765,8 +765,8 @@ HB_FUNC( HB_XCONFIG )
    }
 }
 
-/* hb_XHandle( <pHandle> ) -> <nOsHandle> */
-HB_FUNC( HB_XHANDLE )
+/* hb_VFHandle( <pHandle> ) -> <nOsHandle> */
+HB_FUNC( HB_VFHANDLE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
@@ -774,8 +774,8 @@ HB_FUNC( HB_XHANDLE )
       hb_retnint( ( HB_NHANDLE ) hb_fileHandle( pFile ) );
 }
 
-/* hb_XTempFile( @<cFileName>, [ <cDir> ], [ <cPrefix> ], [ <cExt> ], [ <nAttr> ] ) -> <pHandle> | NIL */
-HB_FUNC( HB_XTEMPFILE )
+/* hb_VFTempFile( @<cFileName>, [ <cDir> ], [ <cPrefix> ], [ <cExt> ], [ <nAttr> ] ) -> <pHandle> | NIL */
+HB_FUNC( HB_VFTEMPFILE )
 {
    char szName[ HB_PATH_MAX ];
 

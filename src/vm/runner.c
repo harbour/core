@@ -579,49 +579,44 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
 
 static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, HB_USHORT usMode )
 {
-   char szFileName[ HB_PATH_MAX ];
    PHRB_BODY pHrbBody = NULL;
-   PHB_FNAME pFileName;
-   HB_FHANDLE hFile;
-
-   /* Create full filename */
-
-   pFileName = hb_fsFNameSplit( szHrb );
-   if( pFileName->szExtension == NULL && hb_stackSetStruct()->HB_SET_DEFEXTENSIONS )
-   {
-      pFileName->szExtension = ".hrb";
-   }
-   hb_fsFNameMerge( szFileName, pFileName );
-   hb_xfree( pFileName );
+   PHB_ITEM pError = NULL;
+   PHB_FILE pFile;
 
    /* Open as binary */
-
    do
    {
-      hFile = hb_fsOpen( szFileName, FO_READ );
+      pFile = hb_fileExtOpen( szHrb,
+                              hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? ".hrb" : NULL,
+                              FO_READ | FXO_SHARELOCK, NULL, pError );
+      if( pFile == NULL )
+      {
+         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 6102, szHrb );
+         if( hb_errLaunch( pError ) != E_RETRY )
+            break;
+      }
    }
-   while( hFile == FS_ERROR &&
-          hb_errRT_BASE_Ext1( EG_OPEN, 6102, NULL, szFileName, hb_fsError(),
-                              EF_CANDEFAULT | EF_CANRETRY,
-                              HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
+   while( pFile == NULL );
 
-   if( hFile != FS_ERROR )
+   if( pError )
+      hb_itemRelease( pError );
+
+   if( pFile != NULL )
    {
-      HB_SIZE nBodySize = hb_fsSeek( hFile, 0, FS_END );
+      HB_SIZE nBodySize = hb_fileSize( pFile );
 
       if( nBodySize )
       {
          char * pbyBuffer;
 
          pbyBuffer = ( char * ) hb_xgrab( nBodySize + sizeof( char ) + 1 );
-         hb_fsSeek( hFile, 0, FS_SET );
-         hb_fsReadLarge( hFile, pbyBuffer, nBodySize );
+         hb_fileReadAt( pFile, pbyBuffer, nBodySize, 0 );
          pbyBuffer[ nBodySize ] = '\0';
 
-         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, nBodySize, usMode, szFileName );
+         pHrbBody = hb_hrbLoad( ( const char * ) pbyBuffer, nBodySize, usMode, szHrb );
          hb_xfree( pbyBuffer );
       }
-      hb_fsClose( hFile );
+      hb_fileClose( pFile );
    }
 
    return pHrbBody;

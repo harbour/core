@@ -114,13 +114,14 @@
 #define NETIO_DIRREMOVE        32
 #define NETIO_DIRECTORY        33
 #define NETIO_DIRSPACE         34
-#define NETIO_GETATTR          35
-#define NETIO_SETATTR          36
-#define NETIO_GETFTIME         37
-#define NETIO_SETFTIME         38
+#define NETIO_ATTRGET          35
+#define NETIO_ATTRSET          36
+#define NETIO_FTIMEGET         37
+#define NETIO_FTIMESET         38
 #define NETIO_LINK             39
 #define NETIO_LINKSYM          40
 #define NETIO_LINKREAD         41
+#define NETIO_CONFIGURE        42
 
 #define NETIO_CONNECTED        0x4321DEAD
 
@@ -134,10 +135,10 @@
 /* { NETIO_EXISTS,    len[ 2 ], ... } + filename[ len ] -> { NETIO_EXISTS, ... } */
 /* { NETIO_DELETE,    len[ 2 ], ... } + filename[ len ] -> { NETIO_DELETE, ... } */
 /* { NETIO_RENAME,    len[ 2 ], len2[ 2 ], ... } + filename[ len ] + filename[ len2 ] -> { NETIO_RENAME, ... } */
-/* { NETIO_GETATTR,   len[ 2 ], ... } + filename[ len ] -> { NETIO_GETATTR, attr[ 4 ], ... } */
-/* { NETIO_SETATTR,   len[ 2 ], attr[ 4 ], ... } + filename[ len ] -> { NETIO_SETATTR, ... } */
-/* { NETIO_GETFTIME,  len[ 2 ], ... } + filename[ len ] -> { NETIO_GETFTIME, julian[ 4 ], msec[ 4 ], ... } */
-/* { NETIO_SETFTIME,  len[ 2 ], julian[ 4 ], msec[ 4 ], ... } + filename[ len ] -> { NETIO_SETFTIME, ... } */
+/* { NETIO_ATTRGET,   len[ 2 ], ... } + filename[ len ] -> { NETIO_ATTRGET, attr[ 4 ], ... } */
+/* { NETIO_ATTRSET,   len[ 2 ], attr[ 4 ], ... } + filename[ len ] -> { NETIO_ATTRSET, ... } */
+/* { NETIO_FTIMEGET,  len[ 2 ], ... } + filename[ len ] -> { NETIO_FTIMEGET, julian[ 4 ], msec[ 4 ], ... } */
+/* { NETIO_FTIMESET,  len[ 2 ], julian[ 4 ], msec[ 4 ], ... } + filename[ len ] -> { NETIO_FTIMESET, ... } */
 /* { NETIO_LINK,      len[ 2 ], len2[ 2 ], ... } + existing[ len ] + newname[ len2 ] -> { NETIO_LINK, ... } */
 /* { NETIO_LINKSYM,   len[ 2 ], len2[ 2 ], ... } + target[ len ] + newname[ len2 ] -> { NETIO_LINKSYM, ... } */
 /* { NETIO_LINKREAD,  len[ 2 ], ... } + filename[ len ] -> { NETIO_LINKREAD, size[ 4 ], err[ 4 ], ... } + data[ size ] */
@@ -156,6 +157,7 @@
 /* { NETIO_COMMIT,    file_no[2], ... } -> { NETIO_SYNC, ... } | NULL */
 /* { NETIO_CLOSE,     file_no[2], ... } -> { NETIO_CLOSE, ... } */
 /* { NETIO_UNLOCK,    file_no[2], start[ 8 ], len[ 8 ], flags[ 2 ], ... } -> { NETIO_SYNC, ... } | NULL */
+/* { NETIO_CONFIGURE, file_no[2], size[ 4 ], index[ 4 ], ... } + itmdata[ size ] -> { NETIO_CONFIGURE, size[ 4 ], result[ 4 ], err[ 4 ], ... } + itmdata[ size ] */
 /* { NETIO_PROCIS,    size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROCIS, ... } */
 /* { NETIO_PROC,      size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_SYNC, ... } | NULL */
 /* { NETIO_PROCW,     size[ 4 ] } + (funcname + \0 + data)[ size ] -> { NETIO_PROC, ... } */

@@ -597,14 +597,14 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
                            HB_MAXINT nTimeout )
 {
    HB_SYMBOL_UNUSED( nTimeout );
-   return hb_fsRead( pFile->hFile, buffer, nSize );
+   return hb_fsReadLarge( pFile->hFile, buffer, nSize );
 }
 
 static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * buffer, HB_SIZE nSize,
                             HB_MAXINT nTimeout )
 {
    HB_SYMBOL_UNUSED( nTimeout );
-   return hb_fsWrite( pFile->hFile, buffer, nSize );
+   return hb_fsWriteLarge( pFile->hFile, buffer, nSize );
 }
 
 static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
@@ -1029,42 +1029,42 @@ PHB_ITEM hb_fileDirectory( const char * pszDirSpec, const char * pszAttr, HB_BOO
    return hb_fsDirectory( pszDirSpec, pszAttr, fDateTime );
 }
 
-HB_BOOL hb_fileGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
+HB_BOOL hb_fileTimeGet( const char * pszFileName, long * plJulian, long * plMillisec )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->GetFileTime( pszFileName, plJulian, plMillisec );
+      return s_pFileTypes[ i ]->TimeGet( pszFileName, plJulian, plMillisec );
 
    return hb_fsGetFileTime( pszFileName, plJulian, plMillisec );
 }
 
-HB_BOOL hb_fileSetFileTime( const char * pszFileName, long lJulian, long lMillisec )
+HB_BOOL hb_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->SetFileTime( pszFileName, lJulian, lMillisec );
+      return s_pFileTypes[ i ]->TimeSet( pszFileName, lJulian, lMillisec );
 
    return hb_fsSetFileTime( pszFileName, lJulian, lMillisec );
 }
 
-HB_BOOL hb_fileGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
+HB_BOOL hb_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->GetAttr( pszFileName, pulAttr );
+      return s_pFileTypes[ i ]->AttrGet( pszFileName, pulAttr );
 
    return hb_fsGetAttr( pszFileName, pulAttr );
 }
 
-HB_BOOL hb_fileSetAttr( const char * pszFileName, HB_FATTR ulAttr )
+HB_BOOL hb_fileAttrSet( const char * pszFileName, HB_FATTR ulAttr )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->SetAttr( pszFileName, ulAttr );
+      return s_pFileTypes[ i ]->AttrSet( pszFileName, ulAttr );
 
    return hb_fsSetAttr( pszFileName, ulAttr );
 }
@@ -1217,6 +1217,18 @@ PHB_FILE hb_fileCreateTempEx( char * pszName,
    HB_FHANDLE hFile;
 
    hFile = hb_fsCreateTempEx( pszName, pszDir, pszPrefix, pszExt, ulAttr );
+   if( hFile != FS_ERROR )
+      pFile = hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
+
+   return pFile;
+}
+
+PHB_FILE hb_filePOpen( const char * pszFileName, const char * pszMode )
+{
+   PHB_FILE pFile = NULL;
+   HB_FHANDLE hFile;
+
+   hFile = hb_fsPOpen( pszFileName, pszMode );
    if( hFile != FS_ERROR )
       pFile = hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
 

@@ -208,8 +208,8 @@ C_SOURCES := \
    valtostr.c \
    valtype.c \
    version.c \
+   vfile.c \
    word.c \
-   xfile.c \
    xhelp.c \
    xsavescr.c \
 

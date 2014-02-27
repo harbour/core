@@ -105,8 +105,8 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
       {
          HB_FATTR ulAttr;
 
-         if( hb_fileGetAttr( pszSource, &ulAttr ) )
-            hb_fileSetAttr( pszDest, ulAttr );
+         if( hb_fileAttrGet( pszSource, &ulAttr ) )
+            hb_fileAttrSet( pszDest, ulAttr );
       }
    }
    else
