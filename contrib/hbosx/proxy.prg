@@ -51,6 +51,6 @@
 FUNCTION osx_ProxyGet( cProto )
 
    LOCAL nPort
-   LOCAL cHost := __osx_proxyget( cProto, @nPort )
+   LOCAL cHost := __osx_ProxyGet( cProto, @nPort )
 
    RETURN cHost + iif( HB_ISNUMERIC( nPort ), ":" + hb_ntos( nPort ), "" )

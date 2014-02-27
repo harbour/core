@@ -36,6 +36,9 @@ FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
       CASE "A"
          nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
          EXIT
+      CASE "U"
+         nLen := 0
+         EXIT
       OTHERWISE
          nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
       ENDSWITCH

@@ -615,16 +615,12 @@ STATIC FUNCTION CombinePath( ... )
 
 STATIC FUNCTION WalkAndFind( cTop, cLookFor )
 
-   LOCAL aDir
    LOCAL aDirEntry
    LOCAL cRetVal := NIL
 
    cTop += iif( Right( cTop, 1 ) $ "/\", "", hb_ps() )
-   aDir := Directory( cTop + hb_osFileMask(), "D" )
 
-   ASort( aDir,,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )   /* Files first */
-
-   FOR EACH aDirEntry IN aDir
+   FOR EACH aDirEntry IN ASort( Directory( cTop + hb_osFileMask(), "D" ),,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )  /* Files first */
       IF !( "D" $ aDirEntry[ F_ATTR ] )
          IF aDirEntry[ F_NAME ] == cLookFor
             cRetVal := cTop

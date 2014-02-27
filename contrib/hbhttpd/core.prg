@@ -3,8 +3,10 @@
  * www - http://harbour-project.org
  */
 
-#include "hbclass.ch"
+#include "directry.ch"
 #include "error.ch"
+
+#include "hbclass.ch"
 #include "hbsocket.ch"
 #include "hbthread.ch"
 #include "hbver.ch"
@@ -1451,22 +1453,22 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
       UAddHeader( "Content-Type", "text/html" )
 
-      aDir := Directory( UOsFileName( cFileName ), "D" )
+      aDir := hb_Directory( UOsFileName( cFileName ), "D" )
       IF "s" $ get
          DO CASE
          CASE get[ "s" ] == "s"
-            ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-               iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
+            ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+               iif( Y[ F_ATTR ] == "D", .F., X[ F_SIZE ] < Y[ F_SIZE ] ) ) } )
          CASE get[ "s" ] == "m"
-            ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-               iif( Y[ 5 ] == "D", .F., DToS( X[ 3 ] ) + X[ 4 ] < DToS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
+            ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+               iif( Y[ F_ATTR ] == "D", .F., X[ HB_F_DATETIME ] < Y[ HB_F_DATETIME ] ) ) } )
          OTHERWISE
-            ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-               iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+            ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+               iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
          ENDCASE
       ELSE
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
       ENDIF
 
       UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>' )
@@ -1474,13 +1476,13 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       UWrite( '<a href="?s=m">Modified</a>' )
       UWrite( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
       FOR EACH aF IN aDir
-         IF hb_LeftIs( aF[ 1 ], "." )
-         ELSEIF "D" $ aF[ 5 ]
-            UWrite( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-               DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )
+         IF hb_LeftIs( aF[ F_NAME ], "." )
+         ELSEIF "D" $ aF[ F_ATTR ]
+            UWrite( '[DIR] <a href="' + aF[ F_NAME ] + '/">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+               hb_TToC( aF[ HB_F_DATETIME ] ) + CR_LF )
          ELSE
-            UWrite( '      <a href="' + aF[ 1 ] + '">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-               DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + Str( aF[ 2 ], 12 ) + CR_LF )
+            UWrite( '      <a href="' + aF[ F_NAME ] + '">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+               hb_TToC( aF[ HB_F_DATETIME ] ) + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
          ENDIF
       NEXT
       UWrite( "<hr></pre></body></html>" )

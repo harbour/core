@@ -306,10 +306,7 @@ STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
    RETURN .F.
 
 FUNCTION __i18n_potArraySort( aTrans )
-
-   ASort( aTrans,,, {| item1, item2 | __i18n_ItemToStr( item1 ) < __i18n_ItemToStr( item2 ) } )
-
-   RETURN aTrans
+   RETURN ASort( aTrans,,, {| item1, item2 | __i18n_ItemToStr( item1 ) < __i18n_ItemToStr( item2 ) } )
 
 STATIC FUNCTION __i18n_ItemToStr( item )
 

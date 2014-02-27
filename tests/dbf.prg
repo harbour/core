@@ -2,6 +2,8 @@
 #include "clipper.ch"
 #endif
 
+#include "directry.ch"
+
 PROCEDURE Main()
 
    LOCAL nI, aStruct := { ;
@@ -58,13 +60,13 @@ PROCEDURE Main()
    MYALIAS->( dbCommit() )
 
    ? "Records before ZAP:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.fpt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      Directory( "testdbf.fpt" )[ 1 ][ F_SIZE ]
    MYALIAS->( __dbZap() )
    MYALIAS->( dbCommit() )
    ? "Records after ZAP:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.fpt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      Directory( "testdbf.fpt" )[ 1 ][ F_SIZE ]
    ? "Value of fields MEMO1, MEMO2, DOUBLE and NUMERIC:"
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
@@ -139,14 +141,14 @@ PROCEDURE Main()
 
    ? "Testing __dbPack()"
    ? "Records before PACK:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.dbt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      Directory( "testdbf.dbt" )[ 1 ][ F_SIZE ]
    SET FILTER TO
    MYALIAS->( __dbPack() )
    MYALIAS->( dbCommit() )
    ? "Records after PACK:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.dbt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      Directory( "testdbf.dbt" )[ 1 ][ F_SIZE ]
    WAIT
    ? "Value of fields:"
    MYALIAS->( dbGoTop() )

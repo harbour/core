@@ -20,6 +20,7 @@
 //             Dic2DBF()       - Convert a DIC file to a DBF file
 //
 
+#include "directry.ch"
 #include "fileio.ch"
 
 #define EACH_WORD              6
@@ -1226,7 +1227,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
       hb_DispOutAt( 11, 31, "  Record:        ", "W/R" )
 
       temp  := Directory( cDictionary )
-      nSize := temp[ 1, 2 ]
+      nSize := temp[ 1 ][ F_SIZE ]
 
    ENDIF
 

@@ -450,19 +450,18 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
          AAdd( aDomKeys, x )
       ENDIF
    NEXT
-   // more specific paths should be sent before lesser generic paths.
-   ASort( aDomKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
-   // now that we have the domain matches we have to do path matchine
+
+   // now that we have the domain matches we have to do path matching
    nPath := Len( cPath )
-   FOR EACH x IN aDomKeys
+   FOR EACH x IN ASort( aDomKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )  // more specific paths should be sent before lesser generic paths
       aPathKeys := {}
       FOR EACH cKey IN hb_HKeys( ::hCookies[ x ] )
          IF cKey == "/" .OR. ( Len( cKey ) <= nPath .AND. Left( cKey, nPath ) == cKey )
             AAdd( aPathKeys, cKey )
          ENDIF
       NEXT
-      ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
-      FOR EACH a IN aPathKeys
+
+      FOR EACH a IN ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
          FOR EACH c IN hb_HKeys( ::hCookies[ x ][ a ] )
             IF ! Empty( cOut )
                cOut += "; "

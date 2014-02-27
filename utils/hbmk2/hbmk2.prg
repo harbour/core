@@ -14951,9 +14951,7 @@ FUNCTION hbshell_ext_get_list()
       aName[ hLib:__enumIndex() ] := iif( Empty( hLib ), Upper( hLib:__enumKey() ), hLib:__enumKey() )
    NEXT
 
-   ASort( aName )
-
-   RETURN aName
+   RETURN ASort( aName )
 
 STATIC FUNCTION __plugin_ext()
 #pragma __cstream | RETURN %s

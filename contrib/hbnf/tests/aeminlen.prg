@@ -1,19 +1,21 @@
 #require "hbnf"
 
+#include "directry.ch"
+
 PROCEDURE Main()
 
-   LOCAL myarray1 := Directory()
+   LOCAL myarray1 := hb_Directory()
 
    ? "TEST TO DEMONSTRATE EXAMPLES OF ft_AEMinLen()"
    ?
-   ? "myarray1 := Directory()"
+   ? "myarray1 := hb_Directory()"
    ?
-   AEval( myarray1, {| v | QOut( v[ 2 ], v[ 3 ], v[ 4 ], v[ 5 ], v[ 1 ] ) } )
+   AEval( myarray1, {| v | QOut( v[ F_SIZE ], v[ HB_F_DATETIME ], v[ F_ATTR ], v[ F_NAME ] ) } )
 
    ? PadR( "ft_AEMinLen( myarray1 ) ->", 35 ), ft_AEMinLen( myarray1 )
-   ? PadR( "ft_AEMinLen( myarray1, 2 ) ->", 35 ), ft_AEMinLen( myarray1, 2 )
+   ? PadR( "ft_AEMinLen( myarray1, F_SIZE ) ->", 35 ), ft_AEMinLen( myarray1, F_SIZE )
    ? PadR( "ft_AEMinLen( myarray1[ 2 ] ) ->", 35 ), ft_AEMinLen( myarray1[ 2 ] )
-   ? PadR( "ft_AEMinLen( myarray1, 3 ) ->", 35 ), ft_AEMinLen( myarray1, 3 )
+   ? PadR( "ft_AEMinLen( myarray1, F_DATE ) ->", 35 ), ft_AEMinLen( myarray1, F_DATE )
    ?
 
    RETURN

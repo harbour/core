@@ -350,9 +350,7 @@ STATIC PROCEDURE cmdHelp( netiocli )
       AAdd( aTexts, " " + PadR( n:__enumKey() + iif( Empty( n[ 1 ] ), "", " " + n[ 1 ] ), m ) + " - " + n[ 2 ] )
    NEXT
 
-   ASort( aTexts, 2 )
-
-   FOR EACH n IN aTexts
+   FOR EACH n IN ASort( aTexts, 2 )
       hbnetiocon_dispevent( netiocli, n )
    NEXT
 
