@@ -245,7 +245,7 @@ HB_FUNC( HB_VFDIRREMOVE )
 /* hb_VFDirectory( [ <cDirSpec> ], [ <cAttr> ] ) -> <aDirectory> */
 HB_FUNC( HB_VFDIRECTORY )
 {
-   hb_itemReturnRelease( hb_fileDirectory( hb_parc( 1 ), hb_parc( 2 ) ) );
+   hb_itemReturnRelease( hb_fileDirectory( hb_parc( 1 ), hb_parc( 2 ), HB_TRUE ) );
    hb_fsSetFError( hb_fsError() );
 }
 

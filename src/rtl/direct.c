@@ -157,15 +157,13 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB
          hb_arrayNew    ( pSubarray, F_LEN );
          hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
+         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
          hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          if( fDateTime )
             hb_arraySetTDT( pSubarray, HB_F_DATETIME, ffind->lDate, ffind->lTime );
          else
-         {
             hb_arraySetDL( pSubarray, F_DATE, ffind->lDate );
-            hb_arraySetC( pSubarray, F_TIME, ffind->szTime );
-         }
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );

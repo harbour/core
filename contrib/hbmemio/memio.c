@@ -398,14 +398,13 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
          hb_arrayNew    ( pSubarray, F_LEN );
          hb_arraySetC   ( pSubarray, F_NAME, s_fs.pInodes[ ul ]->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, s_fs.pInodes[ ul ]->llSize );
+         hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
+         hb_arraySetC   ( pSubarray, F_ATTR, "" );
+
          if( fDateTime )
             hb_arraySetTDT( pSubarray, HB_F_DATETIME, 0, 0 );
          else
-         {
-            hb_arraySetDL  ( pSubarray, F_DATE, 0 );
-            hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
-         }
-         hb_arraySetC   ( pSubarray, F_ATTR, "" );
+            hb_arraySetDL( pSubarray, F_DATE, 0 );
       }
    }
    HB_MEMFSMT_UNLOCK();

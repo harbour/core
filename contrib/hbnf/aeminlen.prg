@@ -29,21 +29,21 @@ FUNCTION ft_AEMinLen( aArray, nDimension, nStart, nCount )
 
    FOR i := nStart TO nLast
 
-      SWITCH ValType( aArray[ i ] )
-      CASE "C"
-         nLen := Len( aArray[ i ] )
-         EXIT
-      CASE "A"
-         nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
-         EXIT
-      CASE "U"
-         nLen := 0
-         EXIT
-      OTHERWISE
-         nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
-      ENDSWITCH
+      IF aArray[ i ] != NIL
 
-      nMinlen := iif( nMinLen == NIL, nLen, Min( nMinlen, nLen ) )
+         SWITCH ValType( aArray[ i ] )
+         CASE "C"
+            nLen := Len( aArray[ i ] )
+            EXIT
+         CASE "A"
+            nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
+            EXIT
+         OTHERWISE
+            nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
+         ENDSWITCH
+
+         nMinlen := iif( nMinLen == NIL, nLen, Min( nMinlen, nLen ) )
+      ENDIF
    NEXT
 
    __defaultNIL( @nMinLen, 65519 )  /* for compatibility */
