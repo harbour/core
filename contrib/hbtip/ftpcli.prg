@@ -50,8 +50,8 @@
    Added method :RMD()
    Added method :listFiles()
    Added method :MPut()
-   Changed method :downloadFile() to enable display of progress
-   Changed method :uploadFile() to enable display of progress
+   Changed method :DownloadFile() to enable display of progress
+   Changed method :UploadFile() to enable display of progress
 
    2007-06-01, Toninho@fwi
    Added method UserCommand( cCommand, lPasv, lReadPort, lGetReply )
@@ -141,7 +141,7 @@ CREATE CLASS TIPClientFTP FROM TIPClient
 
    METHOD LS( cSpec )
    METHOD Rename( cFrom, cTo )
-   METHOD UpLoadFile( cLocalFile, cRemoteFile )    // new method for file upload
+   METHOD UploadFile( cLocalFile, cRemoteFile )    // new method for file upload
    METHOD DownLoadFile( cLocalFile, cRemoteFile )  // new method to download file
    METHOD MKD( cPath )                             // new method to create an directory on ftp server
 
@@ -601,7 +601,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
 
    cStr := ""
    FOR EACH aFile IN Directory( cPath + cFile + cExt, cAttr )
-      IF ::uploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
+      IF ::UploadFile( cPath + aFile[ F_NAME ], aFile[ F_NAME ] )
          cStr += e"\r\n" + aFile[ F_NAME ]
       ENDIF
    NEXT
@@ -610,7 +610,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS TIPClientFTP
                 Why emulate a platform specific and ill-defined format? */
    RETURN SubStr( cStr, Len( e"\r\n" ) + 1 )
 
-METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
+METHOD UploadFile( cLocalFile, cRemoteFile ) CLASS TIPClientFTP
 
    LOCAL cPath
    LOCAL cFile

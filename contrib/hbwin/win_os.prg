@@ -119,17 +119,24 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
 
    LOCAL aFiles
 
+   LOCAL nSize
+   LOCAL cTime
+
    nResult := 0
 
-   IF hb_osIsWin9x()
-      /* Check for faulty files. */
-      IF Len( aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
-         IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"
-            nResult := 1111
-         ELSEIF aFiles[ 1 ][ F_SIZE ] == 140343 .AND. aFiles[ 1 ][ F_TIME ] == "09:50:00"
-            nResult := 950
-         ENDIF
-      ENDIF
+   /* Check for faulty files */
+   IF hb_osIsWin9x() .AND. ;
+      Len( aFiles := hb_Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
+
+      nSize := aFiles[ 1 ][ F_SIZE ]
+      cTime := hb_TToC( aFiles[ 1 ][ HB_F_DATETIME ], "", "hh:mm:ss" )
+
+      DO CASE
+      CASE nSize == 156749 .AND. cTime == "11:11:10"
+         nResult := 1111
+      CASE nSize == 140343 .AND. cTime == "09:50:00"
+         nResult := 950
+      ENDCASE
    ENDIF
 
    RETURN nResult == 0

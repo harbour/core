@@ -2068,14 +2068,14 @@ STATIC PROCEDURE ShowFolder( cDir )
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
 
-   aDir := Directory( uhttpd_OSFileName( cDir ), "D" )
+   aDir := hb_Directory( uhttpd_OSFileName( cDir ), "D" )
    IF "s" $ _GET
       IF _GET[ "s" ] == "s"
          ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
             iif( Y[ F_ATTR ] == "D", .F., X[ F_SIZE ] < Y[ F_SIZE ] ) ) } )
       ELSEIF _GET[ "s" ] == "m"
          ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
-            iif( Y[ F_ATTR ] == "D", .F., DToS( X[ F_DATE ] ) + X[ F_TIME ] < DToS( Y[ F_DATE ] ) + Y[ F_TIME ] ) ) } )
+            iif( Y[ F_ATTR ] == "D", .F., X[ HB_F_DATETIME ] < Y[ HB_F_DATETIME ] ) ) } )
       ELSE
          ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
             iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
@@ -2106,10 +2106,10 @@ STATIC PROCEDURE ShowFolder( cDir )
       ELSEIF hb_LeftIs( aF[ F_NAME ], "." )
       ELSEIF "D" $ aF[ F_ATTR ]
          uhttpd_Write( '[DIR] <a href="' + aF[ F_NAME ] + '/">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
-            DToC( aF[ F_DATE ] ) + ' ' + aF[ F_TIME ] + CR_LF )
+            hb_TToC( aF[ HB_F_DATETIME ] ) + CR_LF )
       ELSE
          uhttpd_Write( '      <a href="' + aF[ F_NAME ] + '">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
-            DToC( aF[ F_DATE ] ) + ' ' + aF[ F_TIME ] + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
+            hb_TToC( aF[ HB_F_DATETIME ] ) + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
       ENDIF
    NEXT
    uhttpd_Write( "<hr></pre></body></html>" )

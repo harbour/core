@@ -7,10 +7,9 @@ PROCEDURE Main( filespec, attribs )
    LOCAL aDir
    LOCAL x
 
-// aDir := ASort( Directory( filespec, attribs ),,, {| x, y | Upper( x[ F_NAME ] ) < Upper( y[ F_NAME ] ) } )
-   aDir := Directory( filespec, attribs )
-
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+
+   aDir := Directory( filespec, attribs )
 
    FOR x := 1 TO Len( aDir )
       ? ;
@@ -22,7 +21,7 @@ PROCEDURE Main( filespec, attribs )
    NEXT
 
 #ifdef __HARBOUR__
-   FOR EACH x IN hb_Directory( filespec, attribs )
+   FOR EACH x IN ASort( hb_Directory( filespec, attribs ),,, {| x, y | x[ HB_F_DATETIME ] < y[ HB_F_DATETIME ] } )
       ? ;
          PadR( x[ F_NAME ], 20 ), "|", ;
          Transform( x[ F_SIZE ], "9,999,999,999" ), "|", ;

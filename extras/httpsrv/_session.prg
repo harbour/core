@@ -752,34 +752,21 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
 METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
 
-   // TraceLog( "SessionGC() - nMaxLifeTime", nMaxLifeTime )
+   LOCAL aFile
+
    // STATIC s_nStartTime
-   LOCAL nSecs
-   LOCAL aDir, aFile
+   // TraceLog( "SessionGC() - nMaxLifeTime", nMaxLifeTime )
 
    __defaultNIL( @nMaxLifeTime, ::nGc_MaxLifeTime )
-   aDir := Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
 
-   FOR EACH aFile IN aDir
-      nSecs := TimeDiffAsSeconds( aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time() )
-      // TraceLog( "GC: aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime", ;
-      //                aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
-      IF nSecs > nMaxLifeTime
+   FOR EACH aFile IN hb_Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
+      IF ( ( hb_DateTime() - aFile[ HB_F_DATETIME ] ) * 86400 ) > nMaxLifeTime
          // No error checking here, because if I cannot delete file now I will find it again on next loop
          FErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
       ENDIF
    NEXT
 
    RETURN .T.
-
-STATIC FUNCTION TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
-
-   hb_default( @dDateEnd, Date() )
-   hb_default( @cTimeEnd, Time() )
-
-   RETURN 86400 * ( ;
-      hb_SToT( DToS( dDateEnd   ) + StrTran( cTimeEnd  , ":" ) ) - ;
-      hb_SToT( DToS( dDateStart ) + StrTran( cTimeStart, ":" ) ) )
 
 // ------------------------------
 
