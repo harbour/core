@@ -52,7 +52,7 @@
 
 PROCEDURE Main( cArg )
 
-   LOCAL oServer, oQuery2, oRow, aStru
+   LOCAL oServer, oQuery2, oRow
    LOCAL oQuery
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
@@ -74,8 +74,7 @@ PROCEDURE Main( cArg )
       ? oServer:Error()
    ENDIF
 
-   aStru := dbStruct()
-   IF oServer:CreateTable( "test", aStru )
+   IF oServer:CreateTable( "test", dbStruct() )
       ? "test created successfully"
    ELSE
       ? oServer:Error()
@@ -94,7 +93,7 @@ PROCEDURE Main( cArg )
 
       IF oQuery2:LastRec() > 0
 
-         ? "found "
+         ? "found"
 
          oRow := oQuery2:GetRow()
 

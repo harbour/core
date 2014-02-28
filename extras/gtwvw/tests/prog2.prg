@@ -11,6 +11,7 @@
 
 #require "gtwvw"
 
+#include "dbstruct.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -127,11 +128,10 @@ STATIC PROCEDURE xGet1()
 /* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
-STATIC FUNCTION xBrowse1()
+STATIC PROCEDURE xBrowse1()
 
-   LOCAL nKey, bBlock, oBrowse, i
+   LOCAL nKey, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_
    LOCAL nTop    :=  6
    LOCAL nLeft   :=  3
    LOCAL nBottom := MaxRow() - 2
@@ -145,9 +145,8 @@ STATIC FUNCTION xBrowse1()
 
    USE "..\..\..\tests\test.dbf" NEW
    IF NetErr()
-      RETURN NIL
+      RETURN
    ENDIF
-   info_ := dbStruct()
 
    SetColor( "N/W*,N/GR*,,,N/W* " )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
@@ -161,11 +160,10 @@ STATIC FUNCTION xBrowse1()
 #endif
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
-   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip ) }
 
-   FOR i := 1 TO Len( info_ )
-      bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
+   FOR EACH i IN dbStruct()
+      oBrowse:AddColumn( TBColumnNew( i[ DBS_NAME ], FieldBlock( i[ DBS_NAME ] ) ) )
    NEXT
 
    oBrowse:configure()
@@ -235,22 +233,22 @@ STATIC FUNCTION xBrowse1()
 
    dbCloseArea()
 
-   RETURN NIL
+   RETURN
 
 //
 
-STATIC FUNCTION DbSkipBlock( n, oTbr )
+STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
 
    IF n == 0
       dbSkip( 0 )
    ELSEIF n > 0
-      DO WHILE nSkipped != n .AND. TBNext( oTbr )
+      DO WHILE nSkipped != n .AND. TBNext()
          nSkipped++
       ENDDO
    ELSE
-      DO WHILE nSkipped != n .AND. TBPrev( oTbr )
+      DO WHILE nSkipped != n .AND. TBPrev()
          nSkipped--
       ENDDO
    ENDIF
@@ -259,20 +257,18 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
 //
 
-STATIC FUNCTION TBNext( oTbr )
+STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    IF Eof()
       lMoved := .F.
    ELSE
       dbSkip()
       IF Eof()
-         lMoved := .F.
          dbGoto( nSaveRecNum )
+         lMoved := .F.
       ENDIF
    ENDIF
 
@@ -280,12 +276,10 @@ STATIC FUNCTION TBNext( oTbr )
 
 //
 
-STATIC FUNCTION TBPrev( oTbr )
+STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    dbSkip( -1 )
    IF Bof()
@@ -295,13 +289,7 @@ STATIC FUNCTION TBPrev( oTbr )
 
    RETURN lMoved
 
-//
-
-STATIC FUNCTION VouBlockField( i )
-
-   RETURN {|| FieldGet( i ) }
-
-// supporting functions ***************************
+// supporting functions
 
 // displays a message on MaxRow() and returns .T.
 STATIC FUNCTION lMessage( cMsg )

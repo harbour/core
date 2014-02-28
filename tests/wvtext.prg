@@ -383,7 +383,7 @@ STATIC PROCEDURE thFunc()
    STATIC s_nZx := 0
    STATIC s_nZy := 0
 
-   LOCAL cTitle, oBrowse, lEnd, nKey, i, aStruct
+   LOCAL cTitle, oBrowse, lEnd, nKey, i
    LOCAL aColor := { "W+/N", "W+/B", "W+/G", "W+/BG", "W+/N*", "W+/RB", "N/W*", "N/GR*" }
 
    s_nBrowser++
@@ -422,7 +422,6 @@ STATIC PROCEDURE thFunc()
    hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) // this does not work until something is displayed
 
    USE test.dbf READONLY SHARED NEW
-   aStruct := dbStruct()
 
    oBrowse := TBrowse():New( 1, 0, MaxRow(), MaxCol() )
 
@@ -430,9 +429,9 @@ STATIC PROCEDURE thFunc()
    oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
-   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip ) }
 
-   FOR EACH i IN aStruct
+   FOR EACH i IN dbStruct()
       oBrowse:AddColumn( TBColumnNew( i[ DBS_NAME ], FieldBlock( i[ DBS_NAME ] ) ) )
    NEXT
 
@@ -471,7 +470,7 @@ STATIC PROCEDURE thFunc()
 
 //
 
-STATIC FUNCTION DbSkipBlock( n, oTbr )
+STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
 
@@ -479,11 +478,11 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       dbSkip( 0 )
 
    ELSEIF n > 0
-      DO WHILE nSkipped != n .AND. TBNext( oTbr )
+      DO WHILE nSkipped != n .AND. TBNext()
          nSkipped++
       ENDDO
    ELSE
-      DO WHILE nSkipped != n .AND. TBPrev( oTbr )
+      DO WHILE nSkipped != n .AND. TBPrev()
          nSkipped--
       ENDDO
    ENDIF
@@ -492,20 +491,18 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
 //
 
-STATIC FUNCTION TBNext( oTbr )
+STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    IF Eof()
       lMoved := .F.
    ELSE
       dbSkip()
       IF Eof()
-         lMoved := .F.
          dbGoto( nSaveRecNum )
+         lMoved := .F.
       ENDIF
    ENDIF
 
@@ -513,12 +510,10 @@ STATIC FUNCTION TBNext( oTbr )
 
 //
 
-STATIC FUNCTION TBPrev( oTbr )
+STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    dbSkip( -1 )
 
@@ -531,9 +526,7 @@ STATIC FUNCTION TBPrev( oTbr )
 
 //
 
-STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
-
-   LOCAL lRet := .T.
+STATIC FUNCTION BrwHandleKey( oBrowse, nKey, /* @ */ lEnd )
 
    DO CASE
    CASE nKey == K_ESC        ; lEnd := .T.
@@ -556,10 +549,10 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    CASE nKey == K_CTRL_END   ; oBrowse:panEnd()
    CASE nKey == K_MWBACKWARD ; oBrowse:down()
    CASE nKey == K_MWFORWARD  ; oBrowse:up()
-   OTHERWISE                 ; lRet := .F.
+   OTHERWISE                 ; RETURN .F.
    ENDCASE
 
-   RETURN lRet
+   RETURN .T.
 
 //
 

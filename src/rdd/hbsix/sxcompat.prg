@@ -78,6 +78,7 @@
  */
 
 #include "dbinfo.ch"
+#include "dbstruct.ch"
 #include "fileio.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
@@ -479,18 +480,18 @@ FUNCTION sx_dbCreate( cFileName, aStruct, cRDD )
 
    aDbStruct := AClone( aStruct )
    FOR EACH aField IN aDbStruct
-      SWITCH aField[ 2 ]
+      SWITCH aField[ DBS_TYPE ]
       CASE "V"
-         aField[ 3 ] += 6
+         aField[ DBS_LEN ] += 6
          EXIT
       CASE "D"
-         IF aField[ 3 ] == 3
-            aField[ 2 ] := "V"
+         IF aField[ DBS_LEN ] == 3
+            aField[ DBS_TYPE ] := "V"
          ENDIF
          EXIT
       CASE "I"
-         IF aField[ 3 ] == 4
-            aField[ 2 ] := "V"
+         IF aField[ DBS_LEN ] == 4
+            aField[ DBS_TYPE ] := "V"
          ENDIF
          EXIT
       ENDSWITCH

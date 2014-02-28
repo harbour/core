@@ -368,7 +368,7 @@
    $EXAMPLES$
       // Get the newline character(s) for the current OS.
       OutStd( "Hello World!" + hb_eol() )
-      ? ValType( hb_eol() ) == "C"
+      ? HB_ISSTRING( hb_eol() )
       ? Len( hb_eol() ) <= 2
    $STATUS$
       R

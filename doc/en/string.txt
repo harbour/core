@@ -1323,7 +1323,10 @@
       This function is useful to declare the length of a character memory
       variable.
    $EXAMPLES$
+      #include "dbstruct.ch"
+
       PROCEDURE Main()
+
          LOCAL cBigString
          LOCAL cFirst
          LOCAL cString := Space( 20 )  // Create an character memory variable
@@ -1335,29 +1338,32 @@
          USE test NEW
          cFirst := MakeEmpty( 1 )
          ? Len( cFirst )
+
          RETURN
 
       FUNCTION MakeEmpty( xField )
+
          LOCAL nRecord
          LOCAL xRetValue
 
          IF ! Empty( Alias() )
             nRecord := RecNo()
             dbGoto( 0 )
-            IF ValType( xField ) == "C"
-               xField := AScan( dbStruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
+            IF HB_ISSTRING( xField )
+               xField := AScan( dbStruct(), {| aFields | aFields[ DBS_NAME ] == Upper( xField ) } )
             ELSE
-               DEFAULT xField TO 0
+               hb_default( @xField, 0 )
                IF xField < 1 .OR. xField > FCount()
-                  xfield := 0
+                  xField := 0
                ENDIF
             ENDIF
-            IF !( xfield == 0 )
-               xRetvalue := FieldGet( xfield )
+            IF xField != 0
+               xRetValue := FieldGet( xField )
             ENDIF
-            dbGoto( nrecord )
+            dbGoto( nRecord )
          ENDIF
-         RETURN xRetvalue
+
+         RETURN xRetValue
    $STATUS$
       R
    $COMPLIANCE$

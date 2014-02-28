@@ -1,23 +1,24 @@
 //
-//                      Test/Demo Program for
-//                       GTWVW GUI Interface
-//                   with multiple window support
-//                      a work in progress by
-//               Budyanto Dj. <budyanto@centrin.net.id>
-//                            based on:
+//         Test/Demo Program for
+//          GTWVW GUI Interface
+//      with multiple window support
+//         a work in progress by
+//  Budyanto Dj. <budyanto@centrin.net.id>
+//               based on:
 //
-//                           wvtgui.prg,
-//                   GTWVT Console GUI Interface
-//              by Pritpal Bedi <pritpal@vouchcac.com>
+//              wvtgui.prg,
+//      GTWVT Console GUI Interface
+// by Pritpal Bedi <pritpal@vouchcac.com>
 //
-//                              GTWVT
-//                by Peter Rees <peter@rees.co.nz>
+//                 GTWVT
+//   by Peter Rees <peter@rees.co.nz>
 //
-//   parts of this program are copyrights of their respective owners
+// parts of this program are copyrights of their respective owners
 //
 
 #require "gtwvw"
 
+#include "dbstruct.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
@@ -494,9 +495,8 @@ STATIC PROCEDURE Demo_Get()
 
 STATIC PROCEDURE DEMO_Browse()
 
-   LOCAL nKey, bBlock, oBrowse, i
+   LOCAL nKey, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_                     // wvw_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nLeft   :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nBottom := MaxRow() - 2   // pls notice that this is relative to PARENT window!
@@ -532,19 +532,16 @@ STATIC PROCEDURE DEMO_Browse()
 
    INDEX ON FIELD->LAST TO test1  // 2004-07-07
 
-   info_ := dbStruct()
-
    oBrowse := TBrowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
 
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
-   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip ) }
 
-   FOR i := 1 TO Len( info_ )
-      bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
+   FOR EACH i IN dbStruct()
+      oBrowse:AddColumn( TBColumnNew( i[ DBS_NAME ], FieldBlock( i[ DBS_NAME ] ) ) )
    NEXT
 
    oBrowse:configure()
@@ -805,21 +802,19 @@ STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
 //
 
-STATIC FUNCTION DbSkipBlock( n, oTbr )
+STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    IF n == 0
       dbSkip( 0 )
 
    ELSEIF n > 0
-      DO WHILE nSkipped != n .AND. TBNext( oTbr )
+      DO WHILE nSkipped != n .AND. TBNext()
          nSkipped++
       ENDDO
    ELSE
-      DO WHILE nSkipped != n .AND. TBPrev( oTbr )
+      DO WHILE nSkipped != n .AND. TBPrev()
          nSkipped--
       ENDDO
    ENDIF
@@ -828,20 +823,18 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
 //
 
-STATIC FUNCTION TBNext( oTbr )
+STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    IF Eof()
       lMoved := .F.
    ELSE
       dbSkip()
       IF Eof()
-         lMoved := .F.
          dbGoto( nSaveRecNum )
+         lMoved := .F.
       ENDIF
    ENDIF
 
@@ -849,12 +842,10 @@ STATIC FUNCTION TBNext( oTbr )
 
 //
 
-STATIC FUNCTION TBPrev( oTbr )
+STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
-
-   HB_SYMBOL_UNUSED( oTbr )
 
    dbSkip( -1 )
 
@@ -864,11 +855,6 @@ STATIC FUNCTION TBPrev( oTbr )
    ENDIF
 
    RETURN lMoved
-
-//
-
-STATIC FUNCTION VouBlockField( i )
-   RETURN {|| FieldGet( i ) }
 
 //
 //      WVW_Paint() must be a FUNCTION in your application

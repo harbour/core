@@ -4,6 +4,8 @@
 
 REQUEST _DBF
 
+#include "dbstruct.ch"
+
 PROCEDURE Main()
 
    LOCAL nI, aArray
@@ -42,7 +44,11 @@ PROCEDURE Main()
    aArray := TESTDBF->( dbStruct() )
    ? "dbStruct:"
    FOR nI := 1 TO Len( aArray )
-      ? PadR( aArray[ nI ][ 1 ], 10 ), aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
+      ? ;
+         PadR( aArray[ nI ][ DBS_NAME ], 10 ), ;
+         aArray[ nI ][ DBS_TYPE ], ;
+         aArray[ nI ][ DBS_LEN ], ;
+         aArray[ nI ][ DBS_DEC ]
    NEXT
 
    WAIT

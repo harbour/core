@@ -58,6 +58,8 @@
  */
 
 #include "html.ch"
+
+#include "dbstruct.ch"
 #include "hbclass.ch"
 
 PROCEDURE BackButton( cImage, oHtm )
@@ -144,9 +146,8 @@ PROCEDURE PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
 
    LOCAL i
-   LOCAL n      := 0
-   LOCAL aFlds  := dbStruct()
-   LOCAL cAlign
+   LOCAL n := 0
+   LOCAL aFlds := dbStruct()
 
    hb_default( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
    hb_default( @lUseLinks, .F. )
@@ -162,11 +163,11 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
    oHtm:endTable()
 #endif
 
-   oHtm:defineTable( FCount(), 1, 98 )
+   oHtm:defineTable( Len( aFlds ), 1, 98 )
 
    oHtm:TableHead( " ? " )
-   FOR i := 1 TO FCount()
-      oHtm:TableHead( aFlds[ i, 1 ] )
+   FOR EACH i IN aFlds
+      oHtm:TableHead( i[ DBS_NAME ] )
    NEXT
 
    DO WHILE ! Eof()
@@ -196,10 +197,9 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
       oHtm:EndTableCell()
 
       // --> put the formatted fields data...
-      FOR i := 1 TO Len( aFlds )
-         cAlign := iif( aFlds[ i, 2 ] == "N", "RIGHT", "CENTER" )
-         oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:WriteData( HtmlAny2Str( FieldGet( i ) ) )
+      FOR EACH i IN aFlds
+         oHtm:newTableCell( iif( i[ DBS_TYPE ] == "N", "RIGHT", "CENTER" ), , , , "black" )
+         oHtm:WriteData( HtmlAny2Str( FieldGet( i:__enumIndex() ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
@@ -218,8 +218,6 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
    LOCAL p
    LOCAL n       := 0
    LOCAL oCurRow
-
-   LOCAL cAlign
 
    hb_default( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
    hb_default( @lUseLinks, .F. )
@@ -273,9 +271,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
       // --> put the formatted fields data...
 
       FOR i := 1 TO oquery:FCount()
-
-         cAlign := iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" )
-         oHtm:newTableCell( cAlign, , , , "black" )
+         oHtm:newTableCell( iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" ), , , , "black" )
          oHtm:WriteDate( HtmlAny2Str( oCurRow:FieldGet( i ) ) )
          oHtm:EndTableCell()
       NEXT

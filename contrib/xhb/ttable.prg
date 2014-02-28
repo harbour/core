@@ -62,11 +62,12 @@
 #include "ord.ch"
 #include "inkey.ch"
 #include "dbinfo.ch"
+#include "dbstruct.ch"
 #include "error.ch"
 
 STATIC s_aTables := {}
 
-/* NetWork Functions */
+/* Network functions */
 STATIC s_nNetDelay    := 30
 STATIC s_lNetOk       := .F.
 STATIC s_cNetMsgColor := "GR+/R"
@@ -512,9 +513,9 @@ METHOD New( cAlias ) CLASS HBRecord
       oFld       := HBField()
       oFld:order := i
       oFld:Name  := ( ::alias )->( FieldName( i ) )
-      oFld:Type  := aStruc[ i, 2 ]
-      oFld:LEN   := aStruc[ i, 3 ]
-      oFld:Dec   := aStruc[ i, 4 ]
+      oFld:Type  := aStruc[ i ][ DBS_TYPE ]
+      oFld:LEN   := aStruc[ i ][ DBS_LEN ]
+      oFld:Dec   := aStruc[ i ][ DBS_DEC ]
       oFld:Alias := ::alias
       aItem      := oFld
    NEXT

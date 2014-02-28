@@ -8,6 +8,7 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
+#include "dbstruct.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -46,8 +47,8 @@ PROCEDURE WvtMyBrowse()
 
 STATIC PROCEDURE ExecBrowser( oCrt )
 
-   LOCAL nKey, bBlock, oBrowse, aLastPaint, i, pGT
-   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ // , oLB
+   LOCAL nKey, oBrowse, aLastPaint, i, pGT
+   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr // , oLB
    LOCAL lEnd       := .F.
    LOCAL aBlocks    := {}
    LOCAL nTop       :=  4
@@ -98,8 +99,6 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    ordSetFocus( 1 )
    dbGoto( 50 )
 
-   info_ := dbStruct()
-
    Popups( 2 )
 
    oBrowse := TBrowseWvg():New( nTop + 2, nLeft + 12, nBottom - 1, nRight - 1 )
@@ -110,9 +109,8 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
-   FOR i := 1 TO Len( info_ )
-      bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
+   FOR EACH i IN dbStruct()
+      oBrowse:AddColumn( TBColumnNew( i[ DBS_NAME ], FieldBlock( i[ DBS_NAME ] ) ) )
    NEXT
    oBrowse:configure()
 
@@ -772,9 +770,6 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-STATIC FUNCTION VouBlockField( i )
-   RETURN {|| FieldGet( i ) }
-
 STATIC PROCEDURE Vou_ExecTBarAction( oBtn )
 
    SWITCH oBtn:caption
@@ -948,7 +943,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
 FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, nID )
 
-   LOCAL info_, oWvtBrw, oBrowse, i, bBlock
+   LOCAL info_, oWvtBrw, oBrowse, i
    LOCAL aPopup := {}
 
    AAdd( aPopup, { "Down"     , {|| oBrowse:Down()    , oBrowse:ForceStable() } } )
@@ -959,7 +954,6 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    AAdd( aPopup, { "Bottom"   , {|| oBrowse:GoBottom(), oBrowse:ForceStable() } } )
 
    Select( cUseAlias )
-   info_ := dbStruct()
 
    oBrowse := TBrowseWvg():New( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
 
@@ -970,9 +964,9 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
-   FOR i := 1 TO Len( aFields )
-      bBlock := VouBlockField( aFields[ i ] )
-      oBrowse:AddColumn( TBColumnNew( info_[ aFields[ i ], 1 ], bBlock ) )
+   info_ := dbStruct()
+   FOR EACH i IN aFields
+      oBrowse:AddColumn( TBColumnNew( info_[ i ][ DBS_NAME ], FieldBlock( info_[ i ][ DBS_NAME ] ) ) )
    NEXT
 
    oBrowse:configure()
