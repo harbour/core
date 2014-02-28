@@ -402,9 +402,9 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
          hb_arraySetC   ( pSubarray, F_ATTR, "" );
 
          if( fDateTime )
-            hb_arraySetTDT( pSubarray, HB_F_DATETIME, 0, 0 );
+            hb_arraySetTDT( pSubarray, F_DATE, 0, 0 );
          else
-            hb_arraySetDL( pSubarray, F_DATE, 0 );
+            hb_arraySetDL ( pSubarray, F_DATE, 0 );
       }
    }
    HB_MEMFSMT_UNLOCK();

@@ -75,7 +75,7 @@ STATIC PROCEDURE ExecBrowser( oCrt )
    oTBar := BrwBuildToolBar( oCrt )
    oTBar:buttonClick := {| oBtn | Vou_ExecTBarAction( oBtn ) }
 
-   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Neccessary because adding menu has reduced the overall size of window */
+   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Necessary because adding menu has reduced the overall size of window */
 
    pGT := SetGT( 2, hb_gtSelect() )
 

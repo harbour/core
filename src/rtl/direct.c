@@ -161,9 +161,9 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB
          hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          if( fDateTime )
-            hb_arraySetTDT( pSubarray, HB_F_DATETIME, ffind->lDate, ffind->lTime );
+            hb_arraySetTDT( pSubarray, F_DATE, ffind->lDate, ffind->lTime );
          else
-            hb_arraySetDL( pSubarray, F_DATE, ffind->lDate );
+            hb_arraySetDL ( pSubarray, F_DATE, ffind->lDate );
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );

@@ -1461,7 +1461,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
                iif( Y[ F_ATTR ] == "D", .F., X[ F_SIZE ] < Y[ F_SIZE ] ) ) } )
          CASE get[ "s" ] == "m"
             ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
-               iif( Y[ F_ATTR ] == "D", .F., X[ HB_F_DATETIME ] < Y[ HB_F_DATETIME ] ) ) } )
+               iif( Y[ F_ATTR ] == "D", .F., X[ F_DATE ] < Y[ F_DATE ] ) ) } )
          OTHERWISE
             ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
                iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
@@ -1479,10 +1479,10 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          IF hb_LeftIs( aF[ F_NAME ], "." )
          ELSEIF "D" $ aF[ F_ATTR ]
             UWrite( '[DIR] <a href="' + aF[ F_NAME ] + '/">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
-               hb_TToC( aF[ HB_F_DATETIME ] ) + CR_LF )
+               hb_TToC( aF[ F_DATE ] ) + CR_LF )
          ELSE
             UWrite( '      <a href="' + aF[ F_NAME ] + '">' + aF[ F_NAME ] + '</a>' + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
-               hb_TToC( aF[ HB_F_DATETIME ] ) + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
+               hb_TToC( aF[ F_DATE ] ) + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
          ENDIF
       NEXT
       UWrite( "<hr></pre></body></html>" )

@@ -760,7 +760,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
    __defaultNIL( @nMaxLifeTime, ::nGc_MaxLifeTime )
 
    FOR EACH aFile IN hb_Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
-      IF ( ( hb_DateTime() - aFile[ HB_F_DATETIME ] ) * 86400 ) > nMaxLifeTime
+      IF ( ( hb_DateTime() - aFile[ F_DATE ] ) * 86400 ) > nMaxLifeTime
          // No error checking here, because if I cannot delete file now I will find it again on next loop
          FErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
       ENDIF

@@ -21,11 +21,11 @@ PROCEDURE Main( filespec, attribs )
    NEXT
 
 #ifdef __HARBOUR__
-   FOR EACH x IN ASort( hb_Directory( filespec, attribs ),,, {| x, y | x[ HB_F_DATETIME ] < y[ HB_F_DATETIME ] } )
+   FOR EACH x IN ASort( hb_Directory( filespec, attribs ),,, {| x, y | x[ F_DATE ] < y[ F_DATE ] } )
       ? ;
          PadR( x[ F_NAME ], 20 ), "|", ;
          Transform( x[ F_SIZE ], "9,999,999,999" ), "|", ;
-         x[ HB_F_DATETIME ], "|", ;
+         x[ F_DATE ], "|", ;
          x[ F_ATTR ]
    NEXT
 #endif

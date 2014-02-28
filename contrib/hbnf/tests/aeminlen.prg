@@ -10,7 +10,7 @@ PROCEDURE Main()
    ?
    ? "myarray1 := hb_Directory()"
    ?
-   AEval( myarray1, {| v | QOut( v[ F_SIZE ], v[ HB_F_DATETIME ], v[ F_ATTR ], v[ F_NAME ] ) } )
+   AEval( myarray1, {| v | QOut( v[ F_SIZE ], v[ F_DATE ], v[ F_ATTR ], v[ F_NAME ] ) } )
 
    ? PadR( "ft_AEMinLen( myarray1 ) ->", 35 ), ft_AEMinLen( myarray1 )
    ? PadR( "ft_AEMinLen( myarray1, F_SIZE ) ->", 35 ), ft_AEMinLen( myarray1, F_SIZE )
