@@ -88,10 +88,10 @@
    #endif
 #endif
 
-/*
+#if 0
 #define HB_CLIPPER_INT_ITEMS
 #define HB_LONG_LONG_OFF
-*/
+#endif
 
 #if defined( HB_OS_WIN )
    #if defined( HB_OS_WIN_64 )
