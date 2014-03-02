@@ -1296,6 +1296,13 @@ static HB_GENC_FUNC( hb_p_pushlong )
 
 static HB_GENC_FUNC( hb_p_pushlonglong )
 {
+/* TOFIX: Harbour compiler should emit C code that is portable,
+          to help cross-compile situations. Till then the C
+          code must be created by a Harbour compile built for
+          the target platform. Example code:
+             #pragma -gc3
+             LOCAL a := 9999999999
+ */
 #ifdef HB_LONG_LONG_OFF
    HB_GENC_LABEL();
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.1f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );

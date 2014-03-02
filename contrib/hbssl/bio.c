@@ -724,18 +724,19 @@ HB_FUNC( BIO_GET_CONN_IP )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if 0
-/* NOTE: Commented due to bugs in OpenSSL declaration. Bug report sent #1989 */
 HB_FUNC( BIO_GET_CONN_INT_PORT )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L  /* fixed here: http://rt.openssl.org/Ticket/Display.html?id=1989 */
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
       hb_retnl( BIO_get_conn_int_port( bio ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
+#else
+   hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
+}
 
 HB_FUNC( BIO_SET_NBIO )
 {
