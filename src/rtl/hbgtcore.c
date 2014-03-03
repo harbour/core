@@ -1972,6 +1972,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_VERSION:
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                   HB_GTSELF_VERSION( pGT, hb_itemGetNI( pInfo->pNewVal ) ) );
+         break;
 
       default:
          return HB_FALSE;

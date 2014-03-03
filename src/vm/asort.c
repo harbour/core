@@ -96,6 +96,14 @@ static HB_BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock,
       return hb_itemGetNInt( pItem1 ) < hb_itemGetNInt( pItem2 );
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       return hb_itemGetND( pItem1 ) < hb_itemGetND( pItem2 );
+   else if( HB_IS_TIMESTAMP( pItem1 ) && HB_IS_TIMESTAMP( pItem2 ) )
+   {
+      long lDate1, lTime1, lDate2, lTime2;
+
+      hb_itemGetTDT( pItem1, &lDate1, &lTime1 );
+      hb_itemGetTDT( pItem2, &lDate2, &lTime2 );
+      return lDate1 == lDate2 ? lTime1 < lTime2 : lDate1 < lDate2;
+   }
    else if( HB_IS_DATETIME( pItem1 ) && HB_IS_DATETIME( pItem2 ) )
       /* it's not exact comparison, compare only julian date */
       return hb_itemGetDL( pItem1 ) < hb_itemGetDL( pItem2 );
