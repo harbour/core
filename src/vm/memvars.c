@@ -1588,7 +1588,7 @@ HB_FUNC( __MVRESTORE )
                   uiWidth += uiDec * 256;
                   pbyString = ( HB_BYTE * ) hb_xgrab( uiWidth );
 
-                  if( hb_fileRead( fhnd, pbyString, uiWidth, -1 ) == uiWidth )
+                  if( hb_fileRead( fhnd, pbyString, uiWidth, -1 ) == ( HB_SIZE ) uiWidth )
                      pItem = hb_itemPutCLPtr( pItem, ( char * ) pbyString, uiWidth - 1 );
                   else
                   {
