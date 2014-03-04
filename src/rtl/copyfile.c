@@ -62,65 +62,64 @@
    #define BUFFER_SIZE  65536
 #endif
 
-static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
+static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
 {
    HB_BOOL bRetVal = HB_FALSE;
-   HB_FHANDLE fhndSource;
+   PHB_FILE pSource;
    PHB_ITEM pError = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", pszSource, pszDest ) );
 
    do
    {
-      fhndSource = hb_fsExtOpen( szSource, NULL,
-                                 FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
-                                 NULL, pError );
-      if( fhndSource == FS_ERROR )
+      pSource = hb_fileExtOpen( pszSource, NULL,
+                                FO_READ | FO_SHARED | FO_PRIVATE |
+                                FXO_DEFAULTS | FXO_SHARELOCK,
+                                NULL, pError );
+      if( pSource == NULL )
       {
-         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, szSource );
+         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, pszSource );
          if( hb_errLaunch( pError ) != E_RETRY )
             break;
       }
    }
-   while( fhndSource == FS_ERROR );
+   while( pSource == NULL );
 
-   if( fhndSource != FS_ERROR )
+   if( pSource != NULL )
    {
-      HB_FHANDLE fhndDest;
+      PHB_FILE pDest;
 
       do
       {
-         fhndDest = hb_fsExtOpen( szDest, NULL,
-                                  FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
-                                  FXO_DEFAULTS | FXO_SHARELOCK,
-                                  NULL, pError );
-         if( fhndDest == FS_ERROR )
+         pDest = hb_fileExtOpen( pszDest, NULL,
+                                 FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                 FXO_TRUNCATE | FXO_DEFAULTS | FXO_SHARELOCK,
+                                 NULL, pError );
+         if( pDest == NULL )
          {
-            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, szDest );
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, pszDest );
             if( hb_errLaunch( pError ) != E_RETRY )
                break;
          }
       }
-      while( fhndDest == FS_ERROR );
+      while( pDest == NULL );
 
-      if( fhndDest != FS_ERROR )
+      if( pDest != NULL )
       {
-#if defined( HB_OS_UNIX )
-         struct stat struFileInfo;
-         int iSuccess = fstat( fhndSource, &struFileInfo );
-#endif
          void * buffer;
          HB_SIZE nRead;
 
          buffer = hb_xgrab( BUFFER_SIZE );
-
          bRetVal = HB_TRUE;
 
-         while( ( nRead = hb_fsReadLarge( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
+         while( ( nRead = hb_fileRead( pSource, buffer, BUFFER_SIZE, -1 ) ) != 0 )
          {
-            while( hb_fsWriteLarge( fhndDest, buffer, nRead ) != nRead )
+            HB_SIZE nWritten = 0;
+
+            while( nWritten < nRead )
             {
-               pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, szDest );
+               nWritten += hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
+               pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );
                if( hb_errLaunch( pError ) != E_RETRY )
                {
                   bRetVal = HB_FALSE;
@@ -131,15 +130,17 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 
          hb_xfree( buffer );
 
-#if defined( HB_OS_UNIX )
-         if( iSuccess == 0 )
-            fchmod( fhndDest, struFileInfo.st_mode );
-#endif
+         if( bRetVal )
+         {
+            HB_FATTR ulAttr;
 
-         hb_fsClose( fhndDest );
+            if( hb_fileAttrGet( pszSource, &ulAttr ) )
+               hb_fileAttrSet( pszDest, ulAttr );
+         }
+         hb_fileClose( pDest );
       }
 
-      hb_fsClose( fhndSource );
+      hb_fileClose( pSource );
    }
 
    if( pError )
@@ -152,9 +153,12 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 
 HB_FUNC( __COPYFILE )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   const char * szSource = hb_parc( 1 );
+   const char * szDest = hb_parc( 2 );
+
+   if( szSource && szDest )
    {
-      if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ) ) )
+      if( ! hb_copyfile( szSource, szDest ) )
          hb_retl( HB_FALSE );
    }
    else

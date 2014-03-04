@@ -56,6 +56,6 @@ extern HB_EXPORT HB_U32 hb_crc32( HB_U32 crc, const void * buf, HB_SIZE len );
 extern HB_EXPORT HB_MAXUINT hb_crc( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT poly );
 extern HB_EXPORT HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT poly );
 extern HB_EXPORT void hb_md5( const void * data, HB_SIZE datalen, char * digest );
-extern HB_EXPORT void hb_md5file( HB_FHANDLE hFile, char * digest );
+extern HB_EXPORT HB_BOOL hb_md5file( const char * pszFileName, char * digest );
 
 HB_EXTERN_END

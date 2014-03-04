@@ -1574,12 +1574,18 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
       if( s_fileConLock( conn ) )
       {
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
-         HB_U16 len1 = ( HB_U16 ) strlen( pszDirSpec );
-         HB_U16 len2 = ( HB_U16 ) strlen( pszAttr );
-         HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( len1 + len2 );
+         HB_U16 len1 = ( HB_U16 ) ( pszDirSpec ? strlen( pszDirSpec ) : 0 );
+         HB_U16 len2 = ( HB_U16 ) ( pszAttr ? strlen( pszAttr ) : 0 );
+         HB_BYTE * pBuffer = NULL;
 
-         memcpy( pBuffer, pszDirSpec, len1 );
-         memcpy( pBuffer + len1, pszAttr, len2 );
+         if( len1 + len2 > 0 )
+         {
+            pBuffer = ( HB_BYTE * ) hb_xgrab( len1 + len2 );
+            if( len1 )
+               memcpy( pBuffer, pszDirSpec, len1 );
+            if( len2 )
+               memcpy( pBuffer + len1, pszAttr, len2 );
+         }
          HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_DIRECTORY );
          HB_PUT_LE_UINT16( &msgbuf[ 4 ], len1 );
          HB_PUT_LE_UINT16( &msgbuf[ 6 ], len2 );
@@ -1614,7 +1620,8 @@ static PHB_ITEM s_fileDirectory( const char * pszDirSpec, const char * pszAttr )
                }
             }
          }
-         hb_xfree( pBuffer );
+         if( pBuffer )
+            hb_xfree( pBuffer );
          s_fileConUnlock( conn );
       }
       s_fileConClose( conn );

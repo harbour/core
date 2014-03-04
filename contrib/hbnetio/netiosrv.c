@@ -869,7 +869,7 @@ HB_FUNC( NETIO_SERVER )
             case NETIO_DIRECTORY:
                size  = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
                size2 = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
-               if( size <= 0 || size2 < 0 )
+               if( size < 0 || size2 < 0 )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
