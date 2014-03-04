@@ -320,7 +320,6 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
 
    /* QUESTION: What sharing mode does Clipper use ? [vszakats] */
 
-   handle = NULL;
    do
    {
       if( bPipe )

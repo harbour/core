@@ -1615,7 +1615,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tdo {\n" );
+   fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tfor( ;; ) {\n" );
    cargo->iNestedBlock++;
    return 4;
 }
@@ -1627,9 +1627,9 @@ static HB_GENC_FUNC( hb_p_seqend )
    HB_GENC_LABEL();
 
    if( nOffset == 4 ) /* no RECOVER clasue */
-      fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd() ) break;\n" );
+      fprintf( cargo->yyc, "\tbreak;\n\t}\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else               /* RECOVER exists */
-      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "u;\n\t} while( 0 );\n",
+      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "u;\n\t}\n",
                HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    cargo->iNestedBlock--;
    return 4;
