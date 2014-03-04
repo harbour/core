@@ -926,11 +926,10 @@ HB_FUNC( HB_POPSIGNALHANDLER )
  */
 HB_FUNC( HB_SIGNALDESC )
 {
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
+
    int iSig    = hb_parni( 1 );
    int iSubSig = hb_parni( 2 );
-
-   /* UNIX MESSGES */
-   #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
    switch( iSig )
    {
@@ -1010,12 +1009,16 @@ HB_FUNC( HB_SIGNALDESC )
          hb_retc_const( "User defined (secondary)" );
          return;
    }
-   #endif
 
-   #ifdef HB_OS_WIN
+#elif defined( HB_OS_WIN )
+
+   int iSig    = hb_parni( 1 );
+
    if( iSig == 0 ) /* exception */
    {
-      switch( iSubSig )
+      DWORD dwSubSig = ( DWORD ) hb_parnl( 2 );
+
+      switch( dwSubSig )
       {
          case EXCEPTION_ACCESS_VIOLATION:
             hb_retc_const( "Memory read/write access violation" ); return;
@@ -1067,7 +1070,7 @@ HB_FUNC( HB_SIGNALDESC )
       }
    }
 
-   #endif
+#endif
 
    hb_retc_const( "Unrecognized signal" );
 }

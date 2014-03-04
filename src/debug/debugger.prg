@@ -804,7 +804,8 @@ METHOD CommandWindowDisplay( cLine, lCmd ) CLASS HBDebugger
    n := Len( ::aHistCommands )
    nRow := ::oWndCommand:nBottom
    nSize := ::oWndCommand:nRight - ::oWndCommand:nLeft - 1
-   hb_DispOutAt( --nRow, ::oWndCommand:nLeft + 1, "> ", __dbgColors()[ 2 ] )
+   hb_DispOutAt( --nRow, ::oWndCommand:nLeft + 1, PadR( "> ", nSize ), ;
+                 __dbgColors()[ 2 ] )
    DO WHILE --nRow > ::oWndCommand:nTop
       hb_DispOutAt( nRow, ::oWndCommand:nLeft + 1, ;
                     PadR( iif( n > 0, ::aHistCommands[ n-- ], "" ), nSize ), ;
