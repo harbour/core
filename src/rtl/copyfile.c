@@ -119,11 +119,14 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
             while( nWritten < nRead )
             {
                nWritten += hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
-               pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );
-               if( hb_errLaunch( pError ) != E_RETRY )
+               if( nWritten < nRead )
                {
-                  bRetVal = HB_FALSE;
-                  break;
+                  pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );
+                  if( hb_errLaunch( pError ) != E_RETRY )
+                  {
+                     bRetVal = HB_FALSE;
+                     break;
+                  }
                }
             }
          }
