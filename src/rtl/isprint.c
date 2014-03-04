@@ -105,7 +105,7 @@ HB_BOOL hb_printerIsReady( const char * pszPrinterName )
             [vszakats] */
 
    {
-      HB_FHANDLE fhnd;
+      PHB_FILE pFile;
 
       if( pszPrinterName == NULL )
 #if defined( HB_OS_UNIX )
@@ -114,9 +114,11 @@ HB_BOOL hb_printerIsReady( const char * pszPrinterName )
          pszPrinterName = "LPT1";
 #endif
 
-      fhnd = hb_fsOpen( pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
-      bIsPrinter = ( fhnd != FS_ERROR );
-      hb_fsClose( fhnd );
+      pFile = hb_fileExtOpen( pszPrinterName, NULL,
+                              FO_WRITE | FO_SHARED | FO_PRIVATE, NULL, NULL );
+      bIsPrinter = ( pFile != NULL );
+      if( bIsPrinter )
+         hb_fileClose( pFile );
    }
 
 #endif

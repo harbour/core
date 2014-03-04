@@ -288,63 +288,73 @@ void hb_md5( const void * data, HB_SIZE nLen, char * digest )
 
 /*
    Parameters:
-      hFile    - file handle
+      pFile    - file handle
       digest   - raw (unformatted) MD5 digest buffer
                  (at least 16 bytes long)
  */
-void hb_md5file( HB_FHANDLE hFile, char * digest )
+HB_BOOL hb_md5file( const char * pszFileName, char * digest )
 {
-   MD5_BUF md5;
-   HB_SIZE n;
-   int i;
-   HB_FOFFSET flen = 0;
-   HB_UCHAR buf[ 128 ];
-   HB_BYTE * readbuf = ( HB_BYTE * ) hb_xgrab( MAX_FBUF );
-
-   hb_md5accinit( md5.accum );
-   n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
-   flen += n;
-   while( n == MAX_FBUF )
+   PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    NULL, NULL );
+   if( pFile != NULL )
    {
-      for( i = 0; i < ( MAX_FBUF >> 6 ); i++ )
+      MD5_BUF md5;
+      HB_SIZE n;
+      int i;
+      HB_FOFFSET flen = 0;
+      HB_UCHAR buf[ 128 ];
+      HB_BYTE * readbuf = ( HB_BYTE * ) hb_xgrab( MAX_FBUF );
+
+      hb_md5accinit( md5.accum );
+      n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 );
+      flen += n;
+      while( n == MAX_FBUF )
       {
-         memcpy( md5.buf, readbuf + ( i << 6 ), 64 );
+         for( i = 0; i < ( MAX_FBUF >> 6 ); i++ )
+         {
+            memcpy( md5.buf, readbuf + ( i << 6 ), 64 );
+            hb_md5go( &md5 );
+         }
+         n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 );
+         flen += n;
+      }
+      hb_fileClose( pFile );
+      i = 0;
+      while( n > 64 )
+      {
+         memcpy( md5.buf, readbuf + i, 64 );
+         hb_md5go( &md5 );
+         i += 64;
+         n -= 64;
+      }
+      memset( buf, 0, sizeof( buf ) );
+      if( n )
+         memcpy( buf, readbuf + i, n );
+      buf[ n ] = 0x80;
+      i = 56;
+      if( n >= 56 )
+      {
+         i += 64;
+         memcpy( md5.buf, buf, 64 );
          hb_md5go( &md5 );
       }
-      n = hb_fsReadLarge( hFile, readbuf, MAX_FBUF );
-      flen += n;
-   }
-   hb_fsClose( hFile );
-   i = 0;
-   while( n > 64 )
-   {
-      memcpy( md5.buf, readbuf + i, 64 );
+      buf[ i++ ] = ( HB_UCHAR ) ( ( flen << 3 ) & 0xF8 );
+      flen >>= 5;
+      for( n = 7; n; --n )
+      {
+         buf[ i++ ] = ( HB_UCHAR ) ( flen & 0xFF );
+         flen >>= 8;
+      }
+      memcpy( md5.buf, buf + i - 64, 64 );
       hb_md5go( &md5 );
-      i += 64;
-      n -= 64;
+      hb_md5val( md5.accum, digest );
+      hb_xfree( readbuf );
+
+      return HB_TRUE;
    }
-   memset( buf, 0, sizeof( buf ) );
-   if( n )
-      memcpy( buf, readbuf + i, n );
-   buf[ n ] = 0x80;
-   i = 56;
-   if( n >= 56 )
-   {
-      i += 64;
-      memcpy( md5.buf, buf, 64 );
-      hb_md5go( &md5 );
-   }
-   buf[ i++ ] = ( HB_UCHAR ) ( ( flen << 3 ) & 0xF8 );
-   flen >>= 5;
-   for( n = 7; n; --n )
-   {
-      buf[ i++ ] = ( HB_UCHAR ) ( flen & 0xFF );
-      flen >>= 8;
-   }
-   memcpy( md5.buf, buf + i - 64, 64 );
-   hb_md5go( &md5 );
-   hb_md5val( md5.accum, digest );
-   hb_xfree( readbuf );
+   return HB_FALSE;
 }
 
 HB_FUNC( HB_MD5 )
@@ -373,28 +383,20 @@ HB_FUNC( HB_MD5 )
 
 HB_FUNC( HB_MD5FILE )
 {
-   const char * pszFile = hb_parc( 1 );
+   const char * pszFileName = hb_parc( 1 );
+   char dststr[ 16 ];
 
-   if( pszFile )
+   if( pszFileName && hb_md5file( pszFileName, dststr ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( pszFile, FO_READ );
-
-      if( hFile != FS_ERROR )
+      if( ! hb_parl( 2 ) )
       {
-         char dststr[ 16 ];
-
-         hb_md5file( hFile, dststr );
-
-         if( ! hb_parl( 2 ) )
-         {
-            char digest[ ( sizeof( dststr ) * 2 ) + 1 ];
-            hb_strtohex( dststr, sizeof( dststr ), digest );
-            hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
-         }
-         else
-            hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
-         return;
+         char digest[ ( sizeof( dststr ) * 2 ) + 1 ];
+         hb_strtohex( dststr, sizeof( dststr ), digest );
+         hb_retclen( digest, HB_SIZEOFARRAY( digest ) - 1 );
       }
+      else
+         hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
    }
-   hb_retc_null(); /* return empty string on wrong call */
+   else
+      hb_retc_null(); /* return empty string on wrong call */
 }
