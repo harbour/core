@@ -85,6 +85,12 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
    }
    while( pSource == NULL );
 
+   if( pError )
+   {
+      hb_itemRelease( pError );
+      pError = NULL;
+   }
+
    if( pSource != NULL )
    {
       PHB_FILE pDest;
@@ -103,6 +109,12 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
          }
       }
       while( pDest == NULL );
+
+      if( pError )
+      {
+         hb_itemRelease( pError );
+         pError = NULL;
+      }
 
       if( pDest != NULL )
       {
@@ -131,23 +143,26 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
             }
          }
 
+         if( pError )
+            hb_itemRelease( pError );
+
          hb_xfree( buffer );
 
-         if( bRetVal )
-         {
-            HB_FATTR ulAttr;
-
-            if( hb_fileAttrGet( pszSource, &ulAttr ) )
-               hb_fileAttrSet( pszDest, ulAttr );
-         }
          hb_fileClose( pDest );
       }
 
       hb_fileClose( pSource );
-   }
 
-   if( pError )
-      hb_itemRelease( pError );
+#if defined( HB_OS_UNIX )
+      if( bRetVal )
+      {
+         HB_FATTR ulAttr;
+
+         if( hb_fileAttrGet( pszSource, &ulAttr ) )
+            hb_fileAttrSet( pszDest, ulAttr );
+      }
+#endif
+   }
 
    return bRetVal;
 }

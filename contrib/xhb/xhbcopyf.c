@@ -59,81 +59,116 @@
 
 #define BUFFER_SIZE  65536
 
-static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
+static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest, PHB_ITEM pBlock )
 {
-   HB_BOOL    bRetVal = HB_FALSE;
-   HB_FHANDLE fhndSource;
+   HB_BOOL bRetVal = HB_FALSE;
+   PHB_FILE pSource;
+   PHB_ITEM pError = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s, %p)", pszSource, pszDest, pBlock ) );
 
-   while( ( fhndSource = hb_spOpen( szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
+   do
    {
-      HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_OPEN, 2012, NULL, szSource, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
-
-      if( uiAction != E_RETRY )
-         break;
-   }
-
-   if( fhndSource != FS_ERROR )
-   {
-      HB_FHANDLE fhndDest;
-
-      while( ( fhndDest = hb_spCreate( szDest, FC_NORMAL ) ) == FS_ERROR )
+      pSource = hb_fileExtOpen( pszSource, NULL,
+                                FO_READ | FO_SHARED | FO_PRIVATE |
+                                FXO_DEFAULTS | FXO_SHARELOCK,
+                                NULL, pError );
+      if( pSource == NULL )
       {
-         HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_CREATE, 2012, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
-
-         if( uiAction != E_RETRY )
+         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, pszSource );
+         if( hb_errLaunch( pError ) != E_RETRY )
             break;
       }
+   }
+   while( pSource == NULL );
 
-      if( fhndDest != FS_ERROR )
+   if( pError )
+   {
+      hb_itemRelease( pError );
+      pError = NULL;
+   }
+
+   if( pSource != NULL )
+   {
+      PHB_FILE pDest;
+
+      do
       {
-#if defined( HB_OS_UNIX )
-         struct stat struFileInfo;
-         int         iSuccess = fstat( fhndSource, &struFileInfo );
-#endif
-         HB_BYTE * buffer = ( HB_BYTE * ) hb_xgrab( BUFFER_SIZE );
+         pDest = hb_fileExtOpen( pszDest, NULL,
+                                 FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                 FXO_TRUNCATE | FXO_DEFAULTS | FXO_SHARELOCK,
+                                 NULL, pError );
+         if( pDest == NULL )
+         {
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, pszDest );
+            if( hb_errLaunch( pError ) != E_RETRY )
+               break;
+         }
+      }
+      while( pDest == NULL );
+
+      if( pError )
+      {
+         hb_itemRelease( pError );
+         pError = NULL;
+      }
+
+      if( pDest != NULL )
+      {
+         PHB_ITEM pCount = NULL;
+         HB_UCHAR * buffer;
          HB_SIZE nRead;
 
+         buffer = ( HB_UCHAR * ) hb_xgrab( BUFFER_SIZE );
          bRetVal = HB_TRUE;
+         if( pBlock && HB_IS_EVALITEM( pBlock ) )
+            pCount = hb_itemNew( NULL );
 
-         if( hb_itemType( pBlock ) != HB_IT_BLOCK )
-            pBlock = NULL;
-
-         while( ( nRead = hb_fsReadLarge( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
+         while( ( nRead = hb_fileRead( pSource, buffer, BUFFER_SIZE, -1 ) ) != 0 )
          {
-            while( hb_fsWriteLarge( fhndDest, buffer, nRead ) != nRead )
-            {
-               HB_USHORT uiAction = hb_errRT_BASE_Ext1( EG_WRITE, 2016, NULL, szDest, hb_fsError(), EF_CANDEFAULT | EF_CANRETRY, 0 );
+            HB_SIZE nWritten = 0;
 
-               if( uiAction != E_RETRY )
+            while( nWritten < nRead )
+            {
+               nWritten += hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
+               if( nWritten < nRead )
                {
-                  bRetVal = HB_FALSE;
-                  break;
+                  pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );
+                  if( hb_errLaunch( pError ) != E_RETRY )
+                  {
+                     bRetVal = HB_FALSE;
+                     break;
+                  }
                }
             }
 
-            if( pBlock )
-            {
-               PHB_ITEM pCnt = hb_itemPutNS( NULL, nRead );
-
-               hb_vmEvalBlockV( pBlock, 1, pCnt );
-
-               hb_itemRelease( pCnt );
-            }
+            if( pCount )
+               hb_vmEvalBlockV( pBlock, 1, hb_itemPutNInt( pCount, nRead ) );
          }
+
+         if( pError )
+            hb_itemRelease( pError );
+
+         if( pCount )
+            hb_itemRelease( pCount );
 
          hb_xfree( buffer );
 
-#if defined( HB_OS_UNIX )
-         if( iSuccess == 0 )
-            fchmod( fhndDest, struFileInfo.st_mode );
-#endif
-
-         hb_fsClose( fhndDest );
+         hb_fileClose( pDest );
       }
 
-      hb_fsClose( fhndSource );
+      hb_fileClose( pSource );
+
+      if( bRetVal )
+      {
+         long lJulian, lMillisec;
+         HB_FATTR ulAttr;
+
+         if( hb_fileAttrGet( pszSource, &ulAttr ) )
+            hb_fileAttrSet( pszDest, ulAttr );
+         if( hb_fileTimeGet( pszSource, &lJulian, &lMillisec ) )
+            hb_fileTimeSet( pszDest, lJulian, lMillisec );
+      }
    }
 
    return bRetVal;
@@ -143,9 +178,12 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
 
 HB_FUNC( XHB_COPYFILE )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   const char * szSource = hb_parc( 1 );
+   const char * szDest = hb_parc( 2 );
+
+   if( szSource && szDest )
    {
-      if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ), hb_param( 3, HB_IT_BLOCK ) ) )
+      if( ! hb_copyfile( szSource, szDest, hb_param( 3, HB_IT_EVALITEM ) ) )
          hb_retl( HB_FALSE );
    }
    else

@@ -219,6 +219,7 @@ static void hb_dbgActivate( HB_DEBUGINFO * info )
       PHB_ITEM aCallStack = hb_itemArrayNew( info->nCallStackLen );
       PHB_ITEM aModules;
       PHB_ITEM aBreak;
+      HB_BOOL bInside = info->bInside;
       int i;
 
       for( i = 0; i < info->nCallStackLen; i++ )
@@ -260,7 +261,9 @@ static void hb_dbgActivate( HB_DEBUGINFO * info )
       hb_itemRelease( aModules );
       hb_itemRelease( aBreak );
 
+      info->bInside = HB_TRUE;
       hb_vmDo( 6 );
+      info->bInside = bInside;
    }
 }
 
@@ -962,13 +965,14 @@ static PHB_ITEM hb_dbgEval( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
    {
       PHB_ITEM aVars = hb_dbgEvalResolve( info, watch );
       PHB_ITEM aNewVars = hb_itemArrayNew( watch->nVars );
+      HB_BOOL bInside = info->bInside;
       int i;
 
       hb_arrayCopy( aVars, aNewVars, NULL, NULL, NULL );
 
       info->bInside = HB_TRUE;
       xResult = hb_itemDo( watch->pBlock, 1, aNewVars );
-      info->bInside = HB_FALSE;
+      info->bInside = bInside;
 
       for( i = 0; i < watch->nVars; i++ )
       {
