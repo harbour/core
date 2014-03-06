@@ -68,7 +68,7 @@ typedef struct _HB_FILE
 }
 HB_FILE;
 
-static PHB_FILE s_fileNew( HB_FHANDLE hFile, int timeout );
+static PHB_FILE s_fileNew( HB_SOCKET sd, int timeout );
 
 static HB_BOOL s_fileAccept( const char * pszFileName )
 {
