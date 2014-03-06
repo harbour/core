@@ -326,7 +326,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
       else
          handle = hb_fileExtOpen( szFileName,
                                   hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? def_ext : NULL,
-                                  ( !fStripEof || set_specifier == HB_SET_PRINTFILE ? FO_WRITE : FO_READWRITE ) |
+                                  ( ! fStripEof || set_specifier == HB_SET_PRINTFILE ? FO_WRITE : FO_READWRITE ) |
                                   FO_DENYWRITE | FXO_SHARELOCK |
                                   ( fAppend ? FXO_APPEND : FXO_TRUNCATE ) |
                                   ( szDevice ? 0 : FXO_DEFAULTS ),
