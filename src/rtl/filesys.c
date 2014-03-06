@@ -1609,7 +1609,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
-      if( lJulian <= 0 && lMillisec )
+      if( lJulian <= 0 && lMillisec < 0 )
       {
 #  if defined( HB_OS_LINUX ) && ! defined( __WATCOMC__ )
          fResult = utimes( pszFileName, NULL ) == 0;
@@ -1620,7 +1620,6 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
       else
       {
          struct tm new_value;
-         time_t tim;
 
          if( lJulian <= 0 || lMillisec < 0 )
          {
@@ -1648,12 +1647,8 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
             new_value.tm_min = iMinute;
             new_value.tm_sec = iSecond;
          }
-         tim = mktime( &new_value );
-#  if defined( HB_HAS_LOCALTIME_R )
-         gmtime_r( &tim, &new_value );
-#  else
-         new_value = *gmtime( &tim );
-#  endif
+         new_value.tm_isdst = 0;
+
 #  if defined( HB_OS_LINUX ) && ! defined( __WATCOMC__ )
          {
             struct timeval times[ 2 ];

@@ -921,7 +921,7 @@ static int s_fileFindDrv( const char * pszFileName )
  * public API functions
  */
 
-HB_BOOL hb_fileRegister2( const HB_FILE_FUNCS * pFuncs )
+HB_BOOL hb_fileRegisterFull( const HB_FILE_FUNCS * pFuncs )
 {
    HB_BOOL fResult = HB_FALSE;
 

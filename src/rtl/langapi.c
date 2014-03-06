@@ -229,8 +229,11 @@ static void hb_langRelease( PHB_LANG_BASE pBase )
    if( pBase->lang )
    {
       if( pBase->buffer )
+      {
          hb_xfree( pBase->buffer );
-      pBase->lang = NULL;
+         pBase->buffer = NULL;
+      }
+      pBase->lang = pBase == s_langList ? &s_lang_en : NULL;
    }
 }
 
