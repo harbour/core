@@ -40,6 +40,7 @@ hbrun/hbrun.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
 hbssl/hbssl.hbp
+hbtcpio/hbtcpio.hbp
 hbtip/hbtip.hbp
 hbtinymt/hbtinymt.hbp
 hbtpathy/hbtpathy.hbp

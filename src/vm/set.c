@@ -242,19 +242,18 @@ static const char * is_devicename( const char * szFileName )
 }
 
 static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
-                         HB_BOOL bAppend, HB_set_enum set_specifier )
+                         HB_BOOL fAppend, HB_set_enum set_specifier )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pError = NULL;
    PHB_FILE handle, * handle_ptr;
    HB_ERRCODE uiError;
-   const char * szDevice = NULL;
-   const char * szFileName = NULL;
-   const char * def_ext;
+   const char * szDevice = NULL, * def_ext;
+   char * szFileName = NULL;
    char ** set_value;
-   HB_BOOL bPipe = HB_FALSE;
+   HB_BOOL fPipe = HB_FALSE, fStripEof;
 
-   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) bAppend, ( int ) set_specifier ) );
+   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) fAppend, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -280,84 +279,58 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
          return;
    }
 
-   close_handle( pSet, set_specifier );
-
    if( file_name && file_name[ 0 ] != '\0' )
    {
 #if defined( HB_OS_UNIX )
-      bPipe = file_name[ 0 ] == '|';
-      if( bPipe )
-      {
-         szFileName = file_name;
-         bAppend = HB_FALSE;
-      }
+      fPipe = file_name[ 0 ] == '|';
+      if( fPipe )
+         szFileName = hb_strdup( file_name );
       else
 #endif
       {
          szDevice = is_devicename( file_name );
          if( szDevice )
          {
-            szFileName = szDevice;
+            szFileName = hb_strdup( szDevice );
             def_ext = NULL;
          }
          else
-            szFileName = file_name;
+            szFileName = hb_strdup( file_name );
       }
    }
 
    /* free the old value before setting the new one (CA-Cl*pper does it).
     * This code must be executed after setting szFileName, [druzus]
     */
+   close_handle( pSet, set_specifier );
    if( *set_value )
+   {
       hb_xfree( *set_value );
-   *set_value = NULL;
+      *set_value = NULL;
+   }
 
    if( ! szFileName )
       return;
 
-   /* Open the file either in append (bAppend) or truncate mode (! bAppend), but
+   fStripEof = fAppend && szDevice == NULL && ! fPipe;
+
+   /* Open the file either in append (fAppend) or truncate mode (! fAppend), but
       always use binary mode */
 
    /* QUESTION: What sharing mode does Clipper use ? [vszakats] */
 
    do
    {
-      if( bPipe )
-      {
+      if( fPipe )
          handle = hb_filePOpen( szFileName + 1, "w" );
-      }
       else
-      {
          handle = hb_fileExtOpen( szFileName,
                                   hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? def_ext : NULL,
-                                  FO_READWRITE | FO_READWRITE | FXO_SHARELOCK |
-                                  ( bAppend ? FXO_APPEND : FXO_TRUNCATE ) |
+                                  ( !fStripEof || set_specifier == HB_SET_PRINTFILE ? FO_WRITE : FO_READWRITE ) |
+                                  FO_DENYWRITE | FXO_SHARELOCK |
+                                  ( fAppend ? FXO_APPEND : FXO_TRUNCATE ) |
                                   ( szDevice ? 0 : FXO_DEFAULTS ),
                                   NULL, pError );
-
-         if( handle != NULL && szDevice == NULL && bAppend )
-         {
-            /* Position to EOF */
-            /* Special binary vs. text file handling - even for UN*X, now
-               that there's an HB_SET_EOF flag. */
-            if( set_specifier == HB_SET_PRINTFILE )
-            {
-               /* PRINTFILE is always binary and needs no special handling. */
-               hb_fileSeek( handle, 0, FS_END );
-            }
-            else
-            {
-               /* All other files are text files and may have an EOF
-                  ('\x1A') character at the end (both UN*X and non-UN*X,
-                  now that theres an HB_SET_EOF flag). */
-               char cEOF = '\0';
-               hb_fileSeek( handle, -1, FS_END );     /* Position to last char. */
-               hb_fileRead( handle, &cEOF, 1, -1 );   /* Read the last char. */
-               if( cEOF == '\x1A' )                   /* If it's an EOF, */
-                  hb_fileSeek( handle, -1, FS_END );  /* Then write over it. */
-            }
-         }
-      }
 
       if( handle == NULL )
       {
@@ -371,14 +344,43 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    if( pError )
       hb_itemRelease( pError );
 
+   if( handle != NULL && fStripEof )
+   {
+      /* Position to EOF */
+      if( hb_fileSeek( handle, 0, FS_END ) > 0 )
+      {
+         /* Special binary vs. text file handling - even for UN*X, now
+            that there's an HB_SET_EOF flag. */
+
+         /* PRINTFILE is always binary and needs no special handling. */
+         if( set_specifier != HB_SET_PRINTFILE )
+         {
+            /* All other files are text files and may have an EOF
+               ('\x1A') character at the end (both UN*X and non-UN*X,
+               now that theres an HB_SET_EOF flag). */
+            char cEOF = '\0';
+            hb_fileSeek( handle, -1, FS_END );     /* Position to last char. */
+            hb_fileRead( handle, &cEOF, 1, -1 );   /* Read the last char. */
+            if( cEOF == '\x1A' )                   /* If it's an EOF, */
+               hb_fileSeek( handle, -1, FS_END );  /* Then write over it. */
+         }
+      }
+   }
+
    /* user RT error handler can open it too so we have to
     * close it again if necessary
     */
+   if( handle == NULL )
+   {
+      hb_xfree( szFileName );
+      szFileName = NULL;
+   }
+
    close_handle( pSet, set_specifier );
    *handle_ptr = handle;
    if( *set_value )
       hb_xfree( *set_value );
-   *set_value = handle != NULL ? hb_strdup( szFileName ) : NULL;
+   *set_value = szFileName;
 }
 
 HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )

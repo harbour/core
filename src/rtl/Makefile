@@ -48,6 +48,7 @@ C_SOURCES := \
    errintlo.c \
    file.c \
    filebuf.c \
+   filebufd.c \
    filehb.c \
    filesys.c \
    fkmax.c \

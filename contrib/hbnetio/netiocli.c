@@ -972,7 +972,7 @@ static void s_netio_init( void * cargo )
    if( s_fInit )
    {
       hb_socketInit();
-      hb_fileRegister2( s_fileMethods() );
+      hb_fileRegisterFull( s_fileMethods() );
       hb_vmAtQuit( s_netio_exit, NULL );
       s_fInit = HB_FALSE;
    }

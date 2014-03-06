@@ -1123,7 +1123,7 @@ HB_FUNC( HB_MEMIO ) { ; }
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_memio_init_ )
    memfsInit();
-   hb_fileRegister2( &s_fileFuncs );
+   hb_fileRegisterFull( &s_fileFuncs );
 HB_CALL_ON_STARTUP_END( _hb_file_memio_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )

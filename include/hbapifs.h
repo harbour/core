@@ -352,7 +352,8 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
    }
    HB_FILE_FUNCS;
 
-   extern HB_EXPORT HB_BOOL hb_fileRegister2( const HB_FILE_FUNCS * pFuncs );
+   extern HB_EXPORT HB_BOOL hb_fileRegisterFull( const HB_FILE_FUNCS * pFuncs );
+   extern HB_EXPORT HB_BOOL hb_fileRegisterPart( HB_FILE_FUNCS * pFuncs );
 #else
    typedef void * PHB_FILE;
 #endif
