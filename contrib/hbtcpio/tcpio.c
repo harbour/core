@@ -65,8 +65,7 @@ typedef struct _HB_FILE
    HB_SOCKET             sd;
    HB_BOOL               fEof;
    int                   timeout;
-}
-HB_FILE;
+} HB_FILE;
 
 static PHB_FILE s_fileNew( HB_SOCKET sd, int timeout );
 
@@ -128,7 +127,7 @@ static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
                hb_socketSetKeepAlive( sd, HB_TRUE );
                if( hb_socketConnect( sd, pSockAddr, uiLen, timeout ) == 0 )
                {
-                  switch( uiExFlags & 0x3 )
+                  switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
                   {
                      case FO_READ:
                         hb_socketShutdown( sd, HB_SOCKET_SHUT_WR );
