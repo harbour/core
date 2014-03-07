@@ -358,7 +358,7 @@ char * hb_verPlatform( void )
       if( GetVersionEx( &osVer ) )
       {
          /* NOTE: Unofficial Wine detection.
-                  http://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
+                  https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
          HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
          const char * pszWine = "";
          const char * pszName = "";
