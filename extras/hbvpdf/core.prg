@@ -742,9 +742,9 @@ STATIC FUNCTION pdfGetFontInfo( cParam )
 
    IF cParam == "NAME"
       DO CASE
-      CASE hb_LeftIs( t_aReport[ TYPE1 ][ t_aReport[ FONTNAME ] ], "Times" )
+      CASE hb_LeftEq( t_aReport[ TYPE1 ][ t_aReport[ FONTNAME ] ], "Times" )
          cRet := "Times"
-      CASE hb_LeftIs( t_aReport[ TYPE1 ][ t_aReport[ FONTNAME ] ], "Helvetica" )
+      CASE hb_LeftEq( t_aReport[ TYPE1 ][ t_aReport[ FONTNAME ] ], "Helvetica" )
          cRet := "Helvetica"
       OTHERWISE
          cRet := "Courier" // 0.04
@@ -2570,7 +2570,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )
       ENDIF
       cData := Space( 3 )
       FRead( hFile, @cData, 3 )
-      IF ! hb_LeftIs( cData, "A" )
+      IF ! hb_LeftEq( cData, "A" )
          RETURN aRay
       ENDIF
       nLen := Bin2I( Right( cData, 2 ) )

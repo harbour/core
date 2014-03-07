@@ -155,7 +155,7 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
          RETURN Self
       ENDIF
       FOR EACH cParam IN aParams
-         IF hb_LeftIs( cParam, "@" )
+         IF hb_LeftEq( cParam, "@" )
             IF ! ::ReadIni( SubStr( cParam, 2 ) )
                RETURN Self
             ENDIF
@@ -249,7 +249,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
          ENDIF
       ELSE
          cLineAll := LTrim( aFile[ i ] )
-         IF hb_LeftIs( cLineAll, "#" )
+         IF hb_LeftEq( cLineAll, "#" )
             cToken1 := Lower( hb_tokenGet( cLineAll, 1 ) )
             cToken2 := Lower( hb_tokenGet( cLineAll, 2 ) )
             IF Len( cToken1 ) == 1
@@ -264,7 +264,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                ENDIF
             ENDIF
          ENDIF
-         IF hb_LeftIs( cLineAll, "*" )
+         IF hb_LeftEq( cLineAll, "*" )
             nPosComment := 1
             IF ::lCnvAst
                cLineAll := "//" + SubStr( cLineAll, 2 )
@@ -299,7 +299,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                nLineSegment := 1
                DO WHILE .T.
                   nPos := nPosSep
-                  IF ! hb_LeftIs( aFile[ i ], "#" ) .AND. ;
+                  IF ! hb_LeftEq( aFile[ i ], "#" ) .AND. ;
                         ( nPosSep := FindNotQuoted( ";", aFile[ i ], nPosSep ) ) != 0 .AND. ;
                         nPosSep < Len( aFile[ i ] ) .AND. ( nPosComment == 0 .OR. nPosSep < nPosComment )
                      cLine := SubStr( aFile[ i ], nPos, nPosSep - nPos + 1 )
@@ -321,12 +321,12 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      cToken1 := Left( cToken1, nLenToken )
                   ENDIF
                   cToken2 := Lower( hb_tokenGet( cLine, 2 ) )
-                  IF hb_LeftIs( cToken1, "#" )
+                  IF hb_LeftEq( cToken1, "#" )
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        ( hb_LeftIs( "static", cToken1 ) .AND. ( hb_LeftIs( "function", cToken2 ) .OR. hb_LeftIs( "procedure", cToken2 ) ) ) .OR. ;
-                        ( Len( cToken2 ) >= 4 .AND. hb_LeftIs( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
-                        hb_LeftIs( "function", cToken1 ) .OR. ;
-                        hb_LeftIs( "procedure", cToken1 ) .OR. ;
+                        ( hb_LeftEq( "static", cToken1 ) .AND. ( hb_LeftEq( "function", cToken2 ) .OR. hb_LeftEq( "procedure", cToken2 ) ) ) .OR. ;
+                        ( Len( cToken2 ) >= 4 .AND. hb_LeftEq( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
+                        hb_LeftEq( "function", cToken1 ) .OR. ;
+                        hb_LeftEq( "procedure", cToken1 ) .OR. ;
                         ( "method" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "class" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "create" == cToken1 .AND. "class" == cToken2 .AND. ! lClass ) )
@@ -342,21 +342,21 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                         RETURN .F.
                      ENDIF
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        hb_LeftIs( "request", cToken1 ) .OR. ;
-                        hb_LeftIs( "announce", cToken1 ) .OR. ;
-                        hb_LeftIs( "dynamic", cToken1 ) .OR. ;
-                        hb_LeftIs( "external", cToken1 ) .OR. ;
-                        hb_LeftIs( "thread", cToken1 ) )
+                        hb_LeftEq( "request", cToken1 ) .OR. ;
+                        hb_LeftEq( "announce", cToken1 ) .OR. ;
+                        hb_LeftEq( "dynamic", cToken1 ) .OR. ;
+                        hb_LeftEq( "external", cToken1 ) .OR. ;
+                        hb_LeftEq( "thread", cToken1 ) )
                      nState := 0
                   ELSEIF nLenToken >= 4 .AND. ( ;
-                        hb_LeftIs( "local", cToken1 ) .OR. ;
-                        hb_LeftIs( "private", cToken1 ) .OR. ;
-                        hb_LeftIs( "public", cToken1 ) .OR. ;
-                        hb_LeftIs( "field", cToken1 ) .OR. ;
-                        hb_LeftIs( "static", cToken1 ) .OR. ;
-                        hb_LeftIs( "memvar", cToken1 ) .OR. ;
-                        hb_LeftIs( "parameters", cToken1 ) .OR. ;
-                        hb_LeftIs( "declare", cToken1 ) )
+                        hb_LeftEq( "local", cToken1 ) .OR. ;
+                        hb_LeftEq( "private", cToken1 ) .OR. ;
+                        hb_LeftEq( "public", cToken1 ) .OR. ;
+                        hb_LeftEq( "field", cToken1 ) .OR. ;
+                        hb_LeftEq( "static", cToken1 ) .OR. ;
+                        hb_LeftEq( "memvar", cToken1 ) .OR. ;
+                        hb_LeftEq( "parameters", cToken1 ) .OR. ;
+                        hb_LeftEq( "declare", cToken1 ) )
                      IF nStatePrev == RF_STATE_FUNC
                         nState := RF_STATE_VAR
                      ENDIF
@@ -406,7 +406,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                      ELSE
                         nIndent := ::nIndLeft + ::nIndNext * iif( nContrState == 0, nDeep, nDeep - 1 )
                      ENDIF
-                     IF hb_LeftIs( cLine, "#" ) .AND. ! ::lIndDrt
+                     IF hb_LeftEq( cLine, "#" ) .AND. ! ::lIndDrt
                         nIndent := 0
                      ENDIF
                      cLineAll := Space( nIndent ) + ::FormatLine( cLine )
@@ -494,7 +494,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
       nPos++
    ENDDO
 
-   IF ! lContinued .AND. hb_LeftIs( cLine, "#" )
+   IF ! lContinued .AND. hb_LeftEq( cLine, "#" )
       IF ::lSpaces .AND. ::nSpaceDrt != -1
          cLine := Left( cLine, nPos ) + Space( ::nSpaceDrt ) + LTrim( SubStr( cLine, nPos + 1 ) )
       ENDIF
@@ -791,7 +791,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFormatCode
       IF __objHasMsg( Self, cToken1 )
          IF Empty( cToken2 )
             xRes := ""
-         ELSEIF IsDigit( cToken2 ) .OR. ( hb_LeftIs( cToken2, "-" ) .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
+         ELSEIF IsDigit( cToken2 ) .OR. ( hb_LeftEq( cToken2, "-" ) .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
             xRes := Val( cToken2 )
          ELSE
             cTemp := Upper( cToken2 )
@@ -898,14 +898,14 @@ METHOD Array2File( cFileName, aSource ) CLASS HBFormatCode
 
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, Left( cFileName, i - 1 ) )
    IF Empty( ::cExtSave )
-      cBakName := cName + iif( hb_LeftIs( ::cExtBack, "." ), "", "." ) + ::cExtBack
+      cBakName := cName + iif( hb_LeftEq( ::cExtBack, "." ), "", "." ) + ::cExtBack
       IF hb_FCopy( cFileName, cBakName ) == F_ERROR
          RETURN .F.
       ENDIF
    ENDIF
 
    IF ! Empty( ::cExtSave )
-      cFileName := cName + iif( hb_LeftIs( ::cExtSave, "." ), "", "." ) + ::cExtSave
+      cFileName := cName + iif( hb_LeftEq( ::cExtSave, "." ), "", "." ) + ::cExtSave
    ENDIF
    IF ::lFCaseLow
       cPath := iif( ( i := RAt( "\", cFileName ) ) == 0, ;

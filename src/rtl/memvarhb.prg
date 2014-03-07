@@ -98,7 +98,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cMask ) .OR. ;
-         Empty( cMask ) .OR. hb_LeftIs( cMask, "*" )
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 
@@ -194,7 +194,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cFileName ) .OR. ;
-         Empty( cMask ) .OR. hb_LeftIs( cMask, "*" )
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 

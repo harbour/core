@@ -170,7 +170,7 @@ METHOD GetOk( skCon ) CLASS HB_LogEmail
    LOCAL nLen, cReply
 
    cReply := hb_inetRecvLine( skCon, @nLen, 128 )
-   IF hb_inetErrorCode( skcon ) != 0 .OR. hb_LeftIs( cReply, "5" )
+   IF hb_inetErrorCode( skcon ) != 0 .OR. hb_LeftEq( cReply, "5" )
       RETURN .F.
    ENDIF
 

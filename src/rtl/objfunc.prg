@@ -101,12 +101,12 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
 
    aInfo := oObject:ClassSel( nClassType )
    aData := {}
-   nFirst := AScan( aInfo, {| n | hb_LeftIs( n, "_" ) } )
+   nFirst := AScan( aInfo, {| n | hb_LeftEq( n, "_" ) } )
 
    FOR EACH cName IN aInfo
 
       /* Set functions begin with a leading underscore */
-      IF ! hb_LeftIs( cName, "_" )
+      IF ! hb_LeftEq( cName, "_" )
 
          /* Find position of matching set function in array with all symbols */
          /* If found: DATA, else: METHOD */

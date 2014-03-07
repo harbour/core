@@ -101,7 +101,7 @@ PROCEDURE Main( cUrl, cFile )
          ? "Connection status:", oClient:cReply
       ENDIF
 
-      IF ! Empty( cFile ) .AND. hb_LeftIs( cFile, "+" )
+      IF ! Empty( cFile ) .AND. hb_LeftEq( cFile, "+" )
          cFile := SubStr( cFile, 2 )
          bWrite := .T.
       ENDIF

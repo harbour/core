@@ -327,7 +327,7 @@ METHOD countMail() CLASS TIPClientPop
    IF ::isOpen
       ::reset()
       cStat := ::stat()
-      IF hb_LeftIs( cStat, "+OK" )
+      IF hb_LeftEq( cStat, "+OK" )
          RETURN Val( SubStr( cStat, 4, hb_At( " ", cStat, 5 ) - 4 ) )
       ENDIF
    ENDIF
@@ -339,7 +339,7 @@ METHOD GetOk() CLASS TIPClientPOP
    LOCAL nLen
 
    ::cReply := ::inetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! hb_LeftIs( ::cReply, "+" )
+   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! hb_LeftEq( ::cReply, "+" )
       RETURN .F.
    ENDIF
 

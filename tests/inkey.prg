@@ -208,7 +208,7 @@ STATIC PROCEDURE TEST7( cSkip, cRaw )
    ? "Press any key."
    nMask := HB_INKEY_ALL
 
-   IF HB_ISSTRING( cRaw ) .AND. hb_LeftIsI( cRaw, "R" )
+   IF HB_ISSTRING( cRaw ) .AND. hb_LeftEqI( cRaw, "R" )
       nMask += HB_INKEY_RAW
    ENDIF
 

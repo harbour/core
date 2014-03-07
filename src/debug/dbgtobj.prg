@@ -88,7 +88,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    ASort( aMessages,,, {| x, y | PadR( x, 64 ) <= PadR( y, 64 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
-      IF hb_LeftIs( cMsg, "_" ) .AND. ;
+      IF hb_LeftEq( cMsg, "_" ) .AND. ;
          hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) != 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )

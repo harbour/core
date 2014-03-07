@@ -29,7 +29,7 @@ PROCEDURE Main()
          tmp := tmp1 := hb_MemoRead( aFile[ F_NAME ] )
 
          FOR EACH eol IN { Chr( 13 ) + Chr( 10 ), Chr( 10 ) }
-            DO WHILE hb_LeftIs( tmp, eol )
+            DO WHILE hb_LeftEq( tmp, eol )
                tmp := SubStr( tmp, Len( eol ) + 1 )
             ENDDO
          NEXT

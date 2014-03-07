@@ -84,7 +84,7 @@ PROCEDURE ft_XBox( ;
    // draw border
    SetColor( cBorColor )
    hb_DispBox( nTRow, nLCol, nBRow, nRCol, ;
-      iif( hb_LeftIs( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
+      iif( hb_LeftEq( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
 
    // write shadow
    hb_Shadow( nTRow, nLCol, nBRow, nRCol )
@@ -94,11 +94,11 @@ PROCEDURE ft_XBox( ;
    AEval( aLines, {| cSayStr, nLoop | ;
       hb_DispOutAt( ;
          nTRow + nLoop, ;
-         nLCol + 2 + iif( hb_LeftIs( cJustType, "L" ), 0, ( nLLen - Int( Len( cSayStr ) ) ) / 2 ), ;
+         nLCol + 2 + iif( hb_LeftEq( cJustType, "L" ), 0, ( nLLen - Int( Len( cSayStr ) ) ) / 2 ), ;
          cSayStr ) } )
 
    // wait for keypress if desired
-   IF hb_LeftIs( cRetWait, "W" )
+   IF hb_LeftEq( cRetWait, "W" )
       Inkey( 0 )
    ENDIF
 

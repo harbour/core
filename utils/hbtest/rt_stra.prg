@@ -360,12 +360,12 @@ PROCEDURE Comp_Str()
    HBTEST "DEF" >= "ABCD"  IS .T.
 
 #ifdef __HARBOUR__
-   HBTEST hb_LeftIs( "123", "123  " )  IS .F.
-   HBTEST hb_LeftIs( " 123", "123" )   IS .F.
-   HBTEST hb_LeftIs( "123", "12345" )  IS .F.
-   HBTEST hb_LeftIs( "12345", "123" )  IS .T.
-   HBTEST hb_LeftIs( "123", "" )       IS .T.
-   HBTEST hb_LeftIs( "", "123" )       IS .F.
+   HBTEST hb_LeftEq( "123", "123  " )  IS .F.
+   HBTEST hb_LeftEq( " 123", "123" )   IS .F.
+   HBTEST hb_LeftEq( "123", "12345" )  IS .F.
+   HBTEST hb_LeftEq( "12345", "123" )  IS .T.
+   HBTEST hb_LeftEq( "123", "" )       IS .T.
+   HBTEST hb_LeftEq( "", "123" )       IS .F.
 #endif
 
    Set( _SET_EXACT, old_exact )
@@ -482,23 +482,23 @@ PROCEDURE Exact_Str()
    HBTEST "DEF" >= "ABCD"  IS .T.
 
 #ifdef __HARBOUR__
-   HBTEST hb_LeftIs()                  IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 F:S"
-   HBTEST hb_LeftIs( "1", 2 )          IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 A:2:C:1;N:2 F:S"
-   HBTEST hb_LeftIs( 1, 2 )            IS "E 1 BASE 1071 Argument error (HB_LEFTIS) OS:0 #:0 A:2:N:1;N:2 F:S"
-   HBTEST hb_LeftIs( "ABC", "abc" )    IS .F.
-   HBTEST hb_LeftIs( "ABC", "ABC" )    IS .T.
-   HBTEST hb_LeftIs( "123", "123  " )  IS .F.
-   HBTEST hb_LeftIs( " 123", "123" )   IS .F.
-   HBTEST hb_LeftIs( "123", "12345" )  IS .F.
-   HBTEST hb_LeftIs( "12345", "123" )  IS .T.
-   HBTEST hb_LeftIs( "123", "" )       IS .T.
-   HBTEST hb_LeftIs( "", "123" )       IS .F.
+   HBTEST hb_LeftEq()                  IS "E 1 BASE 1071 Argument error (HB_LEFTEQ) OS:0 #:0 F:S"
+   HBTEST hb_LeftEq( "1", 2 )          IS "E 1 BASE 1071 Argument error (HB_LEFTEQ) OS:0 #:0 A:2:C:1;N:2 F:S"
+   HBTEST hb_LeftEq( 1, 2 )            IS "E 1 BASE 1071 Argument error (HB_LEFTEQ) OS:0 #:0 A:2:N:1;N:2 F:S"
+   HBTEST hb_LeftEq( "ABC", "abc" )    IS .F.
+   HBTEST hb_LeftEq( "ABC", "ABC" )    IS .T.
+   HBTEST hb_LeftEq( "123", "123  " )  IS .F.
+   HBTEST hb_LeftEq( " 123", "123" )   IS .F.
+   HBTEST hb_LeftEq( "123", "12345" )  IS .F.
+   HBTEST hb_LeftEq( "12345", "123" )  IS .T.
+   HBTEST hb_LeftEq( "123", "" )       IS .T.
+   HBTEST hb_LeftEq( "", "123" )       IS .F.
 
-   HBTEST hb_LeftIsI( "ABC", "abc" )   IS .T.
-   HBTEST hb_LeftIsI( "ABcD", "abcd" ) IS .T.
-   HBTEST hb_LeftIsI( "ABcD", "abce" ) IS .F.
-   HBTEST hb_LeftIsI( "ABcD", "abc" )  IS .T.
-   HBTEST hb_LeftIsI( "ABC", "ABC" )   IS .T.
+   HBTEST hb_LeftEqI( "ABC", "abc" )   IS .T.
+   HBTEST hb_LeftEqI( "ABcD", "abcd" ) IS .T.
+   HBTEST hb_LeftEqI( "ABcD", "abce" ) IS .F.
+   HBTEST hb_LeftEqI( "ABcD", "abc" )  IS .T.
+   HBTEST hb_LeftEqI( "ABC", "ABC" )   IS .T.
 #endif
 
    Set( _SET_EXACT, old_exact )

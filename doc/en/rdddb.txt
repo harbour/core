@@ -185,7 +185,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test
-         SET FILTER TO hb_LeftIs( test->Name, "An" )
+         SET FILTER TO hb_LeftEq( test->Name, "An" )
          dbEdit()
          Test->( dbClearFilter() )
          RETURN

@@ -37,11 +37,11 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
    __defaultNIL( @nAcceptableError, 1 / ( nRoundToAmount ^ 2 ) )
 
    // Are we rounding to the nearest whole number or to zero decimal places?
-   IF ! hb_LeftIs( cRoundType, NEAREST_WHOLE_NUMBER ) .AND. ;
+   IF ! hb_LeftEq( cRoundType, NEAREST_WHOLE_NUMBER ) .AND. ;
       ( nRoundToAmount := Int( nRoundToAmount ) ) != 0
 
       // No, are we rounding to the nearest decimal place?
-      IF hb_LeftIs( cRoundType, NEAREST_DECIMAL )
+      IF hb_LeftEq( cRoundType, NEAREST_DECIMAL )
          // Yes, convert to nearest fraction
          nRoundToAmount := 10 ^ nRoundToAmount
       ENDIF
@@ -49,11 +49,11 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       // Are we already within the acceptable error factor?
       IF Abs( Int( nResult * nRoundToAmount ) - ( nResult * nRoundToAmount ) ) > nAcceptableError
          // No, are we rounding down?
-         nResult -= iif( hb_LeftIs( cRoundDirection, ROUND_DOWN ), ;
+         nResult -= iif( hb_LeftEq( cRoundDirection, ROUND_DOWN ), ;
             ; // Yes, Make Downward Adjustment
          1 / nRoundToAmount / 2, ;
             ; // Are we rounding up?
-         iif( hb_LeftIs( cRoundDirection, ROUND_UP ), ;
+         iif( hb_LeftEq( cRoundDirection, ROUND_UP ), ;
             ; // Yes, make upward adjustment
          -1 / nRoundToAmount / 2, ;
             ; // No, rounding normal, no adjustment
@@ -68,9 +68,9 @@ FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
       // Do "whole" rounding
       DO CASE
-      CASE hb_LeftIs( cRoundDirection, ROUND_UP )
+      CASE hb_LeftEq( cRoundDirection, ROUND_UP )
          nResult := ( Int( nResult / nRoundToAmount ) * nRoundToAmount ) + nRoundToAmount
-      CASE hb_LeftIs( cRoundDirection, ROUND_DOWN )
+      CASE hb_LeftEq( cRoundDirection, ROUND_DOWN )
          nResult := Int( nResult / nRoundToAmount ) * nRoundToAmount
       OTHERWISE  // Round normally
          nResult := Int( ( nResult + nRoundToAmount / 2 ) / nRoundToAmount ) * nRoundToAmount

@@ -880,7 +880,7 @@ FUNCTION Sp_Expand( cWord )
    LOCAL cExpand
 
    cWord := Upper( AllTrim( cWord ) )
-   x := AScan( sc_aContracts, {| jj | hb_LeftIs( jj[ 1 ], cWord ) } )
+   x := AScan( sc_aContracts, {| jj | hb_LeftEq( jj[ 1 ], cWord ) } )
    IF x > 0
       cExpand := sc_aContracts[ x, 2 ]
    ENDIF
@@ -966,7 +966,7 @@ FUNCTION Sp_Init()
          cBuf := Space( NSIZE + 6 )
          FRead( t_nHandle, @cBuf, NSIZE + 6 )
 
-         IF hb_LeftIs( cBuf, "JJ" )
+         IF hb_LeftEq( cBuf, "JJ" )
             nOther := Bin2L( SubStr( cBuf, 3, 4 ) )
             t_cOffsets := hb_BSubStr( cBuf, 7 )
             nFileSize := FSeek( t_nHandle, 0, FS_END )
@@ -1097,7 +1097,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
-         DO WHILE hb_LeftIs( DICT->word, Chr( i + 64 ) ) .AND. ! Eof()
+         DO WHILE hb_LeftEq( DICT->word, Chr( i + 64 ) ) .AND. ! Eof()
             FOR j := 1 TO 26
                temp  := ""
                cBits := FOUR_BYTES
@@ -1396,9 +1396,9 @@ FUNCTION WildCard( cPattern, cString )
       CASE Empty( cBefore )
          lMatch := Right( cString, Len( cAfter ) ) == cAfter
       CASE Empty( cAfter )
-         lMatch := hb_LeftIs( cString, cBefore )
+         lMatch := hb_LeftEq( cString, cBefore )
       OTHERWISE
-         lMatch := hb_LeftIs( cString, cBefore ) .AND. ;
+         lMatch := hb_LeftEq( cString, cBefore ) .AND. ;
             Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
    ELSE
@@ -1416,7 +1416,7 @@ FUNCTION WildCard( cPattern, cString )
             NEXT
          ENDIF
       ELSE
-         lMatch := hb_LeftIsI( cPattern, cString )
+         lMatch := hb_LeftEqI( cPattern, cString )
       ENDIF
    ENDIF
 

@@ -292,7 +292,7 @@ FUNCTION ValToLogical( xVal )
    CASE "B"
       RETURN ValToLogical( Eval( xVal ) )
    CASE "C"
-      IF hb_LeftIs( xVal, "." ) .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
+      IF hb_LeftEq( xVal, "." ) .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
          RETURN Upper( SubStr( xVal, 2, 1 ) ) $ "TY"
       ELSEIF Len( xVal ) == 1 .AND. Upper( xVal ) $ "TFYN"
          RETURN Upper( xVal ) $ "TY"

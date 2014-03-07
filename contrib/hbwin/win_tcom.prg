@@ -102,7 +102,7 @@ ENDCLASS
 METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Com
 
    ::cPortName := Upper( cPortName )
-   IF hb_LeftIs( ::cPortName, "COM" )
+   IF hb_LeftEq( ::cPortName, "COM" )
       ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
       IF win_comOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
          ::lOpen := .T.

@@ -279,7 +279,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
       EXIT
 
    CASE "C"
-      IF hb_LeftIs( xCaption, "-" )
+      IF hb_LeftEq( xCaption, "-" )
          aItem := { MF_SEPARATOR, 0, 0, NIL, nStyle, nAttrib }
       ELSE
          aItem := { MF_STRING, ++::nMenuItemID, xCaption, bAction, nStyle, nAttrib }

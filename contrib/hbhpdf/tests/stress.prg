@@ -26,7 +26,7 @@ STATIC FUNCTION FuncList( cPrefix )
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF hb_LeftIs( cName, cPrefix )
+      IF hb_LeftEq( cName, cPrefix )
          AAdd( aList, cName )
       ENDIF
    NEXT

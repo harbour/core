@@ -1798,7 +1798,7 @@ METHOD DelWordRight() CLASS XHBEditor
    cText := SubStr( ::aText[ ::nRow ]:cText, nCol )
 
    DO WHILE .T.
-      IF hb_LeftIs( cText, " " ) .AND. Len( cText ) > 0
+      IF hb_LeftEq( cText, " " ) .AND. Len( cText ) > 0
          cText := SubStr( cText, 2 )
          nSpacesPre++
       ELSE

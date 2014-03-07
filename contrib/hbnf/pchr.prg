@@ -29,7 +29,7 @@ FUNCTION ft_PChr( c_nums )
    LOCAL c_ret := "", c_st := 0, c_part, c_st2, c_hex := "0123456789ABCDEF"
    LOCAL c_upper, c_t1, c_t2
 
-   IF hb_LeftIs( c_nums, "," ) .OR. RTrim( c_nums ) == ""
+   IF hb_LeftEq( c_nums, "," ) .OR. RTrim( c_nums ) == ""
       RETURN ""
    ENDIF
 
@@ -38,12 +38,12 @@ FUNCTION ft_PChr( c_nums )
 
    DO WHILE !( c_part == "~" .OR. c_part == "" )
 
-      IF hb_LeftIs( c_part, '"' )
+      IF hb_LeftEq( c_part, '"' )
 
          c_st2 := At( '"', SubStr( c_part, 2 ) ) + 1
          c_ret += SubStr( c_part, 2, c_st2 - 2 )
 
-      ELSEIF hb_LeftIs( c_part, "&" )
+      ELSEIF hb_LeftEq( c_part, "&" )
 
          c_upper := Upper( c_part )
          IF ( c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1 ) > -1
@@ -59,68 +59,68 @@ FUNCTION ft_PChr( c_nums )
 
       ELSE
 
-         IF hb_LeftIs( c_part, "/" )
+         IF hb_LeftEq( c_part, "/" )
 
             DO CASE
-            CASE hb_LeftIsI( c_part, "/GRAPHIC" )
+            CASE hb_LeftEqI( c_part, "/GRAPHIC" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 )
-            CASE hb_LeftIsI( c_part, "/ITALIC" )
+            CASE hb_LeftEqI( c_part, "/ITALIC" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/PICTURE" )
+            CASE hb_LeftEqI( c_part, "/PICTURE" )
                c_ret += ;
                   hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 ) + ;
                   hb_BChar( 27 ) + hb_BChar( 77 ) + hb_BChar( 27 ) + "U"
-            CASE hb_LeftIsI( c_part, "/COND" ) .OR. hb_LeftIsI( c_part, "/SI" )
+            CASE hb_LeftEqI( c_part, "/COND" ) .OR. hb_LeftEqI( c_part, "/SI" )
                c_ret += hb_BChar( 15 )
-            CASE hb_LeftIsI( c_part, "/ROMAN" )
+            CASE hb_LeftEqI( c_part, "/ROMAN" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/SANS" )
+            CASE hb_LeftEqI( c_part, "/SANS" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 )
-            CASE hb_LeftIsI( c_part, "/NLQ" )
+            CASE hb_LeftEqI( c_part, "/NLQ" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 )
-            CASE hb_LeftIsI( c_part, "/DRAFT" )
+            CASE hb_LeftEqI( c_part, "/DRAFT" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/ELITE" )
+            CASE hb_LeftEqI( c_part, "/ELITE" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 77 )
-            CASE hb_LeftIsI( c_part, "/PICA" )
+            CASE hb_LeftEqI( c_part, "/PICA" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 80 )
-            CASE hb_LeftIsI( c_part, "/EMPHOFF" )
+            CASE hb_LeftEqI( c_part, "/EMPHOFF" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 70 )
-            CASE hb_LeftIsI( c_part, "/EMPH" )
+            CASE hb_LeftEqI( c_part, "/EMPH" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 69 )
-            CASE hb_LeftIsI( c_part, "/1/6" )
+            CASE hb_LeftEqI( c_part, "/1/6" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 50 )
-            CASE hb_LeftIsI( c_part, "/1/8" )
+            CASE hb_LeftEqI( c_part, "/1/8" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 48 )
-            CASE hb_LeftIsI( c_part, "/SKIPOFF" )
+            CASE hb_LeftEqI( c_part, "/SKIPOFF" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 79 )
-            CASE hb_LeftIsI( c_part, "/SKIP" )
+            CASE hb_LeftEqI( c_part, "/SKIP" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 78 )
-            CASE hb_LeftIsI( c_part, "/FF" ) .OR. hb_LeftIsI( c_part, "/EJECT" )
+            CASE hb_LeftEqI( c_part, "/FF" ) .OR. hb_LeftEqI( c_part, "/EJECT" )
                c_ret += hb_BChar( 12 )
-            CASE hb_LeftIsI( c_part, "/INIT" ) .OR. hb_LeftIsI( c_part, "/RESET" )
+            CASE hb_LeftEqI( c_part, "/INIT" ) .OR. hb_LeftEqI( c_part, "/RESET" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 64 )
-            CASE hb_LeftIsI( c_part, "/SPANISH" )
+            CASE hb_LeftEqI( c_part, "/SPANISH" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 82 ) + hb_BChar( 12 )
-            CASE hb_LeftIsI( c_part, "/USA" )
+            CASE hb_LeftEqI( c_part, "/USA" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 82 ) + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/ONE" )
+            CASE hb_LeftEqI( c_part, "/ONE" )
                c_ret += hb_BChar( 27 ) + "U" + hb_BChar( 1 )
-            CASE hb_LeftIsI( c_part, "/TWO" )
+            CASE hb_LeftEqI( c_part, "/TWO" )
                c_ret += hb_BChar( 27 ) + "U" + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/FAST" )
+            CASE hb_LeftEqI( c_part, "/FAST" )
                c_ret += hb_BChar( 27 ) + "s" + hb_BChar( 0 )
-            CASE hb_LeftIsI( c_part, "/SLOW" )
+            CASE hb_LeftEqI( c_part, "/SLOW" )
                c_ret += hb_BChar( 27 ) + "s" + hb_BChar( 1 )
-            CASE hb_LeftIsI( c_part, "/OFF" )
+            CASE hb_LeftEqI( c_part, "/OFF" )
                c_ret += hb_BChar( 19 )
-            CASE hb_LeftIsI( c_part, "/ON" )
+            CASE hb_LeftEqI( c_part, "/ON" )
                c_ret += hb_BChar( 17 )
-            CASE hb_LeftIsI( c_part, "/BEEP" ) .OR. hb_LeftIsI( c_part, "/BELL" )
+            CASE hb_LeftEqI( c_part, "/BEEP" ) .OR. hb_LeftEqI( c_part, "/BELL" )
                c_ret += hb_BChar( 7 )
-            CASE hb_LeftIsI( c_part, "/CAN" )
+            CASE hb_LeftEqI( c_part, "/CAN" )
                c_ret += hb_BChar( 24 )
             ENDCASE
          ENDIF

@@ -181,7 +181,7 @@ METHOD Build() CLASS HBDbMenu
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       FOR EACH oMenuItem IN ::aItems
-         IF ! hb_LeftIs( oMenuItem:cPrompt, "-" )
+         IF ! hb_LeftEq( oMenuItem:cPrompt, "-" )
             oMenuItem:cPrompt := " " + PadR( oMenuItem:cPrompt, ::nRight - ::nLeft - 1 )
          ENDIF
       NEXT
@@ -327,7 +327,7 @@ METHOD GoLeft() CLASS HBDbMenu
       IF ::nOpenPopup > 1
          --::nOpenPopup
          DO WHILE ::nOpenPopup > 1 .AND. ;
-            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
+            hb_LeftEq( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             --::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )
@@ -351,7 +351,7 @@ METHOD GoRight() CLASS HBDbMenu
       IF ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
          DO WHILE ::nOpenPopup < Len( ::aItems ) .AND. ;
-            hb_LeftIs( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
+            hb_LeftEq( ::aItems[ ::nOpenPopup ]:cPrompt, "-" )
             ++::nOpenPopup
          ENDDO
          ::ShowPopup( ::nOpenPopup )

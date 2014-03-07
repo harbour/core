@@ -590,7 +590,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    pFlag := .F. // x for clarity
    IF mcvaltype == "N"
       // RL 104
-      IF hb_LeftIs( AllTrim( InBuffer ), "-" ) .AND. Val( InBuffer ) == 0
+      IF hb_LeftEq( AllTrim( InBuffer ), "-" ) .AND. Val( InBuffer ) == 0
          NegativeZero := .T.
       ENDIF
 
@@ -604,7 +604,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          NEXT
 
          // RL 89
-         IF hb_LeftIs( InBuffer, "." ) .OR. hb_LeftIs( InBuffer, "," )
+         IF hb_LeftEq( InBuffer, "." ) .OR. hb_LeftEq( InBuffer, "," )
             pFlag := .T.
          ENDIF
 
@@ -840,7 +840,7 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
       ENDIF
    NEXT
 
-   IF hb_LeftIs( AllTrim( Text ), "(" ) .OR. Right( AllTrim( Text ), 2 ) == "DB"
+   IF hb_LeftEq( AllTrim( Text ), "(" ) .OR. Right( AllTrim( Text ), 2 ) == "DB"
       s := "-" + s
    ENDIF
 

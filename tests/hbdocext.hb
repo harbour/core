@@ -11,7 +11,6 @@
 #pragma -ko+
 
 #include "directry.ch"
-#include "simpleio.ch"
 
 PROCEDURE Main()
 

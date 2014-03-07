@@ -111,7 +111,7 @@ PROCEDURE Main( ... )
             tmp := GetEnvC( "HB_INSTALL_ETC" ) + "/../ld.so.conf.d"
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
-               IF hb_LeftIs( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
+               IF hb_LeftEq( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
                hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
@@ -666,8 +666,8 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                FOR tmp := Len( aExtern ) TO 2 STEP -1
                   IF Len( aExtern[ tmp ] ) > 10 .AND. ;
                      Len( aExtern[ tmp - 1 ] ) == 10 .AND. ;
-                     ! hb_LeftIsI( aExtern[ tmp - 1 ], "hb_" ) .AND. ;
-                     hb_LeftIsI( aExtern[ tmp ], aExtern[ tmp - 1 ] )
+                     ! hb_LeftEqI( aExtern[ tmp - 1 ], "hb_" ) .AND. ;
+                     hb_LeftEqI( aExtern[ tmp ], aExtern[ tmp - 1 ] )
                      hb_ADel( aExtern, --tmp, .T. )
                   ENDIF
                NEXT

@@ -88,7 +88,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
       BEGIN SEQUENCE WITH bError
 
          DO CASE
-         CASE Empty( cLine ) .OR. hb_LeftIs( cLine, "//" )
+         CASE Empty( cLine ) .OR. hb_LeftEq( cLine, "//" )
             /* ignore comments and empty lines */
 
          CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "OBJECT"
@@ -108,7 +108,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
             cLine := StrTran( SubStr( cLine, At( "::", cLine ) ), "::", "m_oSelf:",, 1 )
             &( StrTran( cLine, " LEN ", " := Array( " ) + " )" )
 
-         CASE hb_LeftIs( cLine, "::" )
+         CASE hb_LeftEq( cLine, "::" )
             /* fix for older versions */
             IF ( nPos := At( "=", cLine ) ) > 0 .AND. ;
                !( SubStr( cLine, nPos - 1, 1 ) == ":" )

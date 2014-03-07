@@ -138,8 +138,8 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
       IF lCont
          cValue += hb_eol()
       ELSE
-         IF hb_LeftIs( cLine, "#" ) .AND. nMode == _I18N_NONE
-            IF hb_LeftIs( cLine, "#:" )   // source code references
+         IF hb_LeftEq( cLine, "#" ) .AND. nMode == _I18N_NONE
+            IF hb_LeftEq( cLine, "#:" )   // source code references
                IF Empty( aItem[ _I18N_SOURCE ] )
                   aItem[ _I18N_SOURCE ] := ""
                ELSE
@@ -147,7 +147,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
                ENDIF
                aItem[ _I18N_SOURCE ] += StrTran( LTrim( SubStr( cLine, 3 ) ), "\", "/" )
 #if 0
-            ELSEIF hb_LeftIs( cLine, "#," )  // flags
+            ELSEIF hb_LeftEq( cLine, "#," )  // flags
                cLine := LTrim( SubStr( cLine, 3 ) )
                IF cLine == "c-format"
                ELSE
@@ -157,11 +157,11 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 #endif
             ENDIF
             cLine := ""
-         ELSEIF hb_LeftIs( cLine, "msgctxt " ) .AND. nMode == _I18N_NONE
+         ELSEIF hb_LeftEq( cLine, "msgctxt " ) .AND. nMode == _I18N_NONE
             cLine := LTrim( SubStr( cLine, 9 ) )
             nMode := _I18N_CONTEXT
             cValue := NIL
-         ELSEIF hb_LeftIs( cLine, "msgid " ) .AND. ;
+         ELSEIF hb_LeftEq( cLine, "msgid " ) .AND. ;
                ( nMode == _I18N_NONE .OR. nMode == _I18N_CONTEXT )
             nIndex := 1
             cLine := LTrim( SubStr( cLine, 7 ) )
@@ -174,7 +174,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             ENDIF
             nMode := _I18N_MSGID
             cValue := NIL
-         ELSEIF hb_LeftIs( cLine, "msgid_plural" ) .AND. nMode == _I18N_MSGID
+         ELSEIF hb_LeftEq( cLine, "msgid_plural" ) .AND. nMode == _I18N_MSGID
             nOldIndex := nIndex
             nIndex := 2
             n := 13
@@ -200,7 +200,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cLine := LTrim( SubStr( cLine, n ) )
             cValue := NIL
-         ELSEIF hb_LeftIs( cLine, "msgstr " ) .AND. nMode == _I18N_MSGID
+         ELSEIF hb_LeftEq( cLine, "msgstr " ) .AND. nMode == _I18N_MSGID
             nIndex := 0
             cLine := LTrim( SubStr( cLine, 8 ) )
             nMode := _I18N_MSGSTR
@@ -210,7 +210,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             ENDIF
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cValue := NIL
-         ELSEIF hb_LeftIs( cLine, "msgstr[" ) .AND. ;
+         ELSEIF hb_LeftEq( cLine, "msgstr[" ) .AND. ;
                ( nMode == _I18N_MSGID .OR. nMode == _I18N_MSGSTR )
             nOldIndex := iif( nMode == _I18N_MSGSTR, nIndex, -1 )
             nIndex := 0

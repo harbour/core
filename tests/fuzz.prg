@@ -40,7 +40,7 @@ STATIC FUNCTION FuncList()
 
    FOR tmp := 1 TO nCount
       cName := __dynsGetName( tmp )
-      IF hb_IsFunction( cName ) .AND. AScan( aExclude, {| tmp | hb_LeftIsI( cName, tmp ) } ) == 0
+      IF hb_IsFunction( cName ) .AND. AScan( aExclude, {| tmp | hb_LeftEqI( cName, tmp ) } ) == 0
          AAdd( aList, cName )
       ENDIF
    NEXT

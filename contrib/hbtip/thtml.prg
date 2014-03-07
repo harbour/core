@@ -61,7 +61,7 @@
 
 #xtrans P_SEEK( <a>, <c> )    => ( <a>:p_end := <a>:p_pos, <a>:p_pos := hb_At( <c>, <a>:p_str, <a>:p_end + 1 ) )
 #xtrans P_SEEKI( <a>, <c> )   => ( <a>:p_end := <a>:p_pos, <a>:p_pos := hb_AtI( <c>, <a>:p_str, <a>:p_end + 1 ) )
-#xtrans P_PEEK( <a>, <c> )    => ( <a>:p_end := <a>:p_pos, hb_LeftIsI( SubStr( <a>:p_str, <a>:p_pos ), <c> ) )
+#xtrans P_PEEK( <a>, <c> )    => ( <a>:p_end := <a>:p_pos, hb_LeftEqI( SubStr( <a>:p_str, <a>:p_pos ), <c> ) )
 #xtrans P_NEXT( <a> )         => ( <a>:p_end := <a>:p_pos, SubStr( <a>:p_str, ++<a>:p_pos, 1 ) )
 #xtrans P_PREV( <a> )         => ( <a>:p_end := <a>:p_pos, SubStr( <a>:p_str, --<a>:p_pos, 1 ) )
 
@@ -720,7 +720,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
       cTagName := CutStr( " ", @cAttr )
 
       IF !( cText == "" )
-         IF hb_LeftIs( cText, "</" )
+         IF hb_LeftEq( cText, "</" )
             // ending tag of previous node
             cText := Lower( AllTrim( SubStr( CutStr( ">", @cText ), 3 ) ) )
             oLastTag := oThisTag:parent
@@ -1235,7 +1235,7 @@ METHOD getAttributes() CLASS THtmlNode
       // Tag has no valid attributes
       RETURN NIL
 
-   ELSEIF hb_LeftIs( ::htmlTagName, "!" )
+   ELSEIF hb_LeftEq( ::htmlTagName, "!" )
       // <!DOCTYPE > and <!-- comments --> have no HTML attributes
       RETURN ::htmlAttributes
 
@@ -1446,7 +1446,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
    cName := Lower( cName )
 
-   IF hb_LeftIs( cName, "_" )
+   IF hb_LeftEq( cName, "_" )
       cName := SubStr( cName, 1 + 1 )
    ENDIF
 
@@ -1559,7 +1559,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    ENDIF
 
    IF !( cName $ t_hHT )
-      IF hb_LeftIs( cName, "/" ) .AND. SubStr( cName, 2 ) $ t_hHT
+      IF hb_LeftEq( cName, "/" ) .AND. SubStr( cName, 2 ) $ t_hHT
          IF ! Lower( SubStr( cName, 2 ) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
          ENDIF
@@ -1589,7 +1589,7 @@ METHOD popNode( cName ) CLASS THtmlNode
 
    cName := Lower( LTrim( cName ) )
 
-   IF hb_LeftIs( cName, "/" )
+   IF hb_LeftEq( cName, "/" )
       cName := SubStr( cName, 1 + 1 )
    ENDIF
 

@@ -58,7 +58,7 @@ PROCEDURE Main( cFileToSave )
 
    CLS
 
-   IF ! HB_ISSTRING( cFileToSave ) .OR. hb_LeftIs( cFileToSave, "-" )
+   IF ! HB_ISSTRING( cFileToSave ) .OR. hb_LeftEq( cFileToSave, "-" )
       cFileToSave := "myharu.pdf"
    ENDIF
 

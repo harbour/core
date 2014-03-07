@@ -82,7 +82,7 @@ HB_FUNC( LEFT )
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_LEFTIS )
+HB_FUNC( HB_LEFTEQ )
 {
    PHB_ITEM pItem1 = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pItem2 = hb_param( 2, HB_IT_STRING );
@@ -94,7 +94,7 @@ HB_FUNC( HB_LEFTIS )
       hb_errRT_BASE_SubstR( EG_ARG, 1071, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_LEFTISI )
+HB_FUNC( HB_LEFTEQI )
 {
    PHB_ITEM pItem1 = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pItem2 = hb_param( 2, HB_IT_STRING );

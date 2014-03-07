@@ -168,7 +168,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
    nMT := 0
    for j := 1 to len( aParams )
       cParam := lower( aParams[ j ] )
-      if left( cParam, len( "--thread" ) ) == "--thread"  /* hb_LeftIs() */
+      if left( cParam, len( "--thread" ) ) == "--thread"  /* hb_LeftEq() */
          if substr( cParam, 9, 1 ) == "="
             if isdigit( substr( cParam, 10, 1 ) )
                nMT := val( substr( cParam, 10 ) )
@@ -182,14 +182,14 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
          else
             lSyntax := .t.
          endif
-      elseif left( cParam, len( "--exclude=" ) ) == "--exclude="  /* hb_LeftIs() */
+      elseif left( cParam, len( "--exclude=" ) ) == "--exclude="  /* hb_LeftEq() */
          if substr( cParam, 11 ) == "mem"
             cExclude += cMemTests
          else
             cExclude += strtran( strtran( strtran( substr( cParam, 11 ), ;
                         ".", " " ), ".", " " ), "/", " " ) + " "
          endif
-      elseif left( cParam, len( "--only=" ) ) == "--only="  /* hb_LeftIs() */
+      elseif left( cParam, len( "--only=" ) ) == "--only="  /* hb_LeftEq() */
          cExclude := ""
          if substr( cParam, 8 ) == "mem"
             cParam := cMemTests
@@ -382,7 +382,7 @@ TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
 
 TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
-          CODE x := a[ i % ARR_LEN + 1 ] = s  /* hb_LeftIs() */
+          CODE x := a[ i % ARR_LEN + 1 ] = s  /* hb_LeftEq() */
 
 TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
           INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;

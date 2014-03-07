@@ -18,7 +18,7 @@ PROCEDURE Main()
    ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
       ? "start: ENUM=", enum
-      IF hb_LeftIs( enum, "two" )
+      IF hb_LeftEq( enum, "two" )
          enum := Upper( enum )
       ENDIF
       ? "end:   ENUM=", enum, ;
@@ -39,7 +39,7 @@ PROCEDURE Main()
    ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
-      IF hb_LeftIsI( enum, "TWO" )
+      IF hb_LeftEqI( enum, "TWO" )
          enum := Upper( enum )
          ? "before passing by @ | ENUM=", enum, ;
             "| index:", enum:__enumIndex(), ;
@@ -90,7 +90,7 @@ PROCEDURE Main()
    BEGIN SEQUENCE
       FOR EACH enum IN c
          ? "start: ENUM=", enum
-         IF hb_LeftIs( enum, "d" )
+         IF hb_LeftEq( enum, "d" )
             enum := Upper( enum )
          ENDIF
          Testbreak( enum )
@@ -126,7 +126,7 @@ PROCEDURE Main()
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF hb_LeftIs( enum, "2" )
+         IF hb_LeftEq( enum, "2" )
             BREAK
          ENDIF
       END SEQUENCE
@@ -134,7 +134,7 @@ PROCEDURE Main()
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF hb_LeftIs( enum, "2" )
+         IF hb_LeftEq( enum, "2" )
             ? "Breaking... enum=", enum
             BREAK enum
          ENDIF
@@ -147,7 +147,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE TESTbreak( v )
 
-   IF hb_LeftIs( v, "2" ) .OR. hb_LeftIs( v, "d" )
+   IF hb_LeftEq( v, "2" ) .OR. hb_LeftEq( v, "d" )
       ? "issuing break"
       Break( v )
    ENDIF

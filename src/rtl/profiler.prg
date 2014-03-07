@@ -240,7 +240,7 @@ METHOD reset() CLASS HBProfile
    RETURN Self
 
 METHOD ignoreSymbol( cSymbol ) CLASS HBProfile
-   RETURN hb_LeftIs( cSymbol, "HBPROFILE" ) .OR. cSymbol == "__SETPROFILER"
+   RETURN hb_LeftEq( cSymbol, "HBPROFILE" ) .OR. cSymbol == "__SETPROFILER"
 
 METHOD gatherFunctions() CLASS HBProfile
 

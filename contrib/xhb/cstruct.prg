@@ -254,7 +254,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    IF ! Empty( cSynonList )
       FOR EACH cSynon IN hb_ATokens( cSynonList )
-         IF hb_LeftIs( cSynon, "*" )
+         IF hb_LeftEq( cSynon, "*" )
             AAdd( s_aSynonyms, { Upper( SubStr( cSynon, 2 ) ), nID + CTYPE_STRUCTURE_PTR } )
          ELSE
             AAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
@@ -449,7 +449,7 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
    RETURN nID + CTYPE_STRUCTURE
 
 FUNCTION hb_Is_CStructure( x )
-   RETURN hb_LeftIs( x:ClassName(), "C Structure" )
+   RETURN hb_LeftEq( x:ClassName(), "C Structure" )
 
 STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
@@ -581,7 +581,7 @@ STATIC FUNCTION Init( aValues )
          EXIT
       ENDIF
 
-      IF hb_LeftIs( xProperty:className(), "C Structure" )
+      IF hb_LeftEq( xProperty:className(), "C Structure" )
          xProperty:Init( aValues[ xProperty:__enumIndex() ] )
       ELSE
          xProperty := aValues[ xProperty:__enumIndex() ]

@@ -59,7 +59,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
       hbmk[ "vars" ][ "aMOC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF ! hb_LeftIs( cSrc, "-" ) .AND. ;
+         IF ! hb_LeftEq( cSrc, "-" ) .AND. ;
             Lower( hb_FNameExt( cSrc ) ) == ".h"
 
             AAdd( hbmk[ "vars" ][ "aMOC_Src" ], cSrc )

@@ -1029,7 +1029,7 @@ METHOD picture( cPicture ) CLASS Get
 
             cNum := ""
 
-            IF hb_LeftIs( cPicture, "@" )
+            IF hb_LeftEq( cPicture, "@" )
 
                IF ( nAt := At( " ", cPicture ) ) == 0
                   ::cPicFunc := hb_asciiUpper( cPicture )

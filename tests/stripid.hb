@@ -72,10 +72,10 @@ PROCEDURE Main()
          tmp := hb_StrReplace( MemoRead( aFile[ F_NAME ] ), hReplace )
 
          IF ! "|" + cExt + "|" $ "|.hbm|.hbp|.hbc|.txt|"
-            IF hb_LeftIs( tmp, hb_eol() + "//" ) .OR. ;
-               hb_LeftIs( tmp, hb_eol() + "/*" ) .OR. ;
-               hb_LeftIs( tmp, hb_eol() + ";" ) .OR. ;
-               hb_LeftIs( tmp, hb_eol() + "#" )
+            IF hb_LeftEq( tmp, hb_eol() + "//" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + "/*" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + ";" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + "#" )
                tmp := SubStr( tmp, Len( hb_eol() ) + 1 )
             ENDIF
          ENDIF

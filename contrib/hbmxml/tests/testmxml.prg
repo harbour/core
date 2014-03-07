@@ -456,7 +456,7 @@ PROCEDURE Main( cFileArg )
     * Open the file...
     */
 
-   IF hb_LeftIs( cFileArg, "<" )
+   IF hb_LeftEq( cFileArg, "<" )
       hTree := mxmlLoadString( NIL, cFileArg, @type_cb() )
    ELSE
 
@@ -524,7 +524,7 @@ PROCEDURE Main( cFileArg )
     * Test SAX methods...
     */
 
-   IF hb_LeftIs( cFileArg, "<" )
+   IF hb_LeftEq( cFileArg, "<" )
       mxmlSAXLoadString( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ELSE
 
@@ -685,7 +685,7 @@ STATIC FUNCTION whitespace_cb( hNode, nWhere )
       ELSEIF nWhere == MXML_WS_AFTER_CLOSE
          RETURN hb_eol()
       ENDIF
-   ELSEIF hb_LeftIs( cName, "?xml" )
+   ELSEIF hb_LeftEq( cName, "?xml" )
       IF nWhere == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE

@@ -92,7 +92,7 @@ STATIC FUNCTION whitespace_cb( node, where )
 
    name := mxmlGetElement( node )
 
-   IF hb_LeftIs( name, "?xml" )
+   IF hb_LeftEq( name, "?xml" )
       IF where == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE

@@ -52,7 +52,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
 #ifdef WITH_ADS
 
-   CASE hb_LeftIs( cRDDType := Upper( AllTrim( cRDDType ) ), "ADS" )
+   CASE hb_LeftEq( cRDDType := Upper( AllTrim( cRDDType ) ), "ADS" )
 
       rddRegister( "ADS", 1 )
       rddSetDefault( "ADS" )
@@ -285,13 +285,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ordSetFocus( 0 )
 
    SET EXACT ON
-   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftIs() */
+   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
    SET EXACT OFF
-   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftIs() */
+   LOCATE FOR field->CHAR = "J RECORD"  /* hb_LeftEq() */
    IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
    ENDIF
@@ -300,16 +300,16 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    ordSetFocus( 0 )
-   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
-   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
+   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
+   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
    SET EXACT OFF
    ordSetFocus( 0 )
-   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftIs() */
-   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftIs() */
+   COUNT FOR RTrim( field->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count  /* hb_LeftEq() */
+   INDEX ON field->CHAR TO test_e.idx FOR RTrim( field->CHAR ) = "A RECORD 1" ADDITIVE  /* hb_LeftEq() */
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF

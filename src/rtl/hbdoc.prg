@@ -177,7 +177,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 
    /* Preselect the default template based on source filename */
    FOR EACH tmp IN aFilenameTemplateMap
-      IF hb_LeftIsI( cFileName, tmp )
+      IF hb_LeftEqI( cFileName, tmp )
          hMeta[ "TEMPLATE" ] := tmp:__enumKey()
       ENDIF
    NEXT
@@ -274,7 +274,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
          cSource += hb_eol()
          cSource += "/* $DOC$" + hb_eol()
          FOR EACH item IN hEntry
-            IF HB_ISSTRING( item ) .AND. ! hb_LeftIs( item:__enumKey(), "_" )
+            IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
                   cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
