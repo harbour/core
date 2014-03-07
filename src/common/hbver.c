@@ -840,7 +840,7 @@ char * hb_verCompiler( void )
 
 #elif defined( _MSC_VER )
 
-   #if ( _MSC_VER >= 800 )
+   #if _MSC_VER >= 800
       pszName = "Microsoft Visual C";
    #else
       pszName = "Microsoft C";
@@ -854,7 +854,7 @@ char * hb_verCompiler( void )
    iVerMinor = _MSC_VER % 100;
 
    #if defined( _MSC_FULL_VER )
-      #if ( _MSC_VER >= 1400 )
+      #if _MSC_VER >= 1400
          iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 100000 );
       #else
          iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
@@ -865,8 +865,8 @@ char * hb_verCompiler( void )
 
 #elif defined( __BORLANDC__ )
 
-   #if ( __BORLANDC__ >= 0x0590 ) /* Version 5.9 */
-      #if ( __BORLANDC__ >= 0x0620 ) /* Version 6.2 */
+   #if __BORLANDC__ >= 0x0590  /* Version 5.9 */
+      #if __BORLANDC__ >= 0x0620  /* Version 6.2 */
          pszName = "Borland/Embarcadero C++";
       #else
          pszName = "Borland/CodeGear C++";
@@ -874,23 +874,23 @@ char * hb_verCompiler( void )
    #else
       pszName = "Borland C++";
    #endif
-   #if   ( __BORLANDC__ == 0x0400 ) /* Version 3.0 */
+   #if   __BORLANDC__ == 0x0400  /* Version 3.0 */
       iVerMajor = 3;
       iVerMinor = 0;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0410 ) /* Version 3.1 */
+   #elif __BORLANDC__ == 0x0410  /* Version 3.1 */
       iVerMajor = 3;
       iVerMinor = 1;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0452 ) /* Version 4.0 */
+   #elif __BORLANDC__ == 0x0452  /* Version 4.0 */
       iVerMajor = 4;
       iVerMinor = 0;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0460 ) /* Version 4.5 */
+   #elif __BORLANDC__ == 0x0460  /* Version 4.5 */
       iVerMajor = 4;
       iVerMinor = 5;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ >= 0x0500 ) /* Version 5.x */
+   #elif __BORLANDC__ >= 0x0500  /* Version 5.x */
       iVerMajor = __BORLANDC__ >> 8;
       iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
       iVerPatch = __BORLANDC__ & 0xF;

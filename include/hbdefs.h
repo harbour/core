@@ -1476,28 +1476,20 @@ typedef HB_U32 HB_FATTR;
       input to a module definition file. See emxdev.doc
       in the RSXNT doc/ directory for more information. */
    #define HB_EXPORT_ATTR
-
 #elif defined( __GNUC__ ) && defined( HB_OS_WIN )
    #define HB_EXPORT_ATTR     __attribute__ (( dllexport ))
-
 #elif defined( __GNUC__ ) && defined( HB_OS_LINUX ) && __GNUC__ >= 3
    #define HB_EXPORT_ATTR     __attribute__ ((visibility ("default")))
-
 #elif defined( __BORLANDC__ )
    #define HB_EXPORT_ATTR     __declspec( dllexport )
-
 #elif defined( __WATCOMC__ )
    #define HB_EXPORT_ATTR     __declspec( dllexport )
-
 #elif defined( ASANLM ) || defined( ASANT )
    #define HB_EXPORT_ATTR
-
 #elif defined( HB_OS_WIN )
    #define HB_EXPORT_ATTR     _declspec( dllexport )
-
 #else
    #define HB_EXPORT_ATTR
-
 #endif
 
 #if defined( HB_DYNLIB )
@@ -1515,25 +1507,18 @@ typedef HB_U32 HB_FATTR;
       input to a module definition file. See emxdev.doc
       in the RSXNT doc/ directory for more information. */
    #define HB_IMPORT_ATTR
-
 #elif defined( __GNUC__ ) && defined( HB_OS_WIN )
    #define HB_IMPORT_ATTR     __attribute__ (( dllimport ))
-
 #elif defined( __BORLANDC__ )
    #define HB_IMPORT_ATTR     __declspec( dllimport )
-
 #elif defined( __WATCOMC__ )
    #define HB_IMPORT_ATTR     __declspec( dllimport )
-
 #elif defined( ASANLM ) || defined( ASANT )
    #define HB_IMPORT_ATTR
-
 #elif defined( HB_OS_WIN )
    #define HB_IMPORT_ATTR     _declspec( dllimport )
-
 #else
    #define HB_IMPORT_ATTR
-
 #endif
 
 #define HB_IMPORT    HB_IMPORT_ATTR
