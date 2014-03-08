@@ -708,14 +708,14 @@ HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, 
 }
 
 
-HB_MEMFS_EXPORT HB_FOFFSET hb_memfsEof( HB_FHANDLE hFile )
+HB_MEMFS_EXPORT HB_BOOL hb_memfsEof( HB_FHANDLE hFile )
 {
    PHB_MEMFS_FILE  pFile;
    PHB_MEMFS_INODE pInode;
    HB_BOOL         fEof;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return 0;  /* invalid handle */
+      return HB_FALSE;  /* invalid handle */
    pInode = pFile->pInode;
 
    HB_MEMFSMT_LOCK();

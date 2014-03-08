@@ -67,7 +67,7 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 
       if( pFile != NULL )
       {
-         HB_SIZE nSize = hb_fileSize( pFile );
+         HB_SIZE nSize = ( HB_SIZE ) hb_fileSize( pFile );
 
          if( nSize != 0 )
          {
