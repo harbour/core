@@ -3714,7 +3714,7 @@ FUNCTION __dbgCStr( xVal )
    CASE "C"
    CASE "M" ; RETURN xVal
    CASE "N" ; RETURN Str( xVal )
-   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "D" ; RETURN "0d" + iif( Empty( xVal ), "0", DToS( xVal ) )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"

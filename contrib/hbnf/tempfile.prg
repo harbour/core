@@ -49,7 +49,7 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ nHandle )
    nHandle := hb_FTempCreate( cPath, NIL, ;
       iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ), @cFile )
 
-   IF PCount() < 3
+   IF ! hb_PIsByRef( 3 )
       FClose( nHandle )
    ENDIF
 

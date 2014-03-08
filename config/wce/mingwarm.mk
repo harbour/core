@@ -27,7 +27,10 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # Use -O2 instead of -O3 here.
    CFLAGS += -O2
    ifneq ($(HB_BUILD_DEBUG),yes)
-      CFLAGS += -fomit-frame-pointer
+      # It's the default in 4.6 and up
+      ifneq ($(filter $(HB_COMPILER_VER),29 34 40 41 42 43 44 45),)
+         CFLAGS += -fomit-frame-pointer
+      endif
    endif
 endif
 

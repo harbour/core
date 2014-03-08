@@ -319,8 +319,8 @@ static int hb_fsProcessExec( const char * pszFileName,
                hb_fsClose( i );
          }
          /* reset extended process attributes */
-         setuid( getuid() );
-         setgid( getgid() );
+         ( void ) setuid( getuid() );
+         ( void ) setgid( getgid() );
 
          /* execute command */
          execvp( argv[ 0 ], argv );
@@ -567,8 +567,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
          }
 
          /* reset extended process attributes */
-         setuid( getuid() );
-         setgid( getgid() );
+         ( void ) setuid( getuid() );
+         ( void ) setgid( getgid() );
 
          /* execute command */
          {
