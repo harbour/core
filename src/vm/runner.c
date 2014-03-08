@@ -605,7 +605,7 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, HB_USHORT usMode )
 
    if( pFile != NULL )
    {
-      HB_SIZE nBodySize = hb_fileSize( pFile );
+      HB_SIZE nBodySize = ( HB_SIZE ) hb_fileSize( pFile );
 
       if( nBodySize )
       {

@@ -291,6 +291,6 @@ HB_FUNC( HB_READLINE )
    if( bAlloc_Term1 )
       hb_itemRelease( pTerm1 );
 
-   hb_xfree( pTerm );
+   hb_xfree( ( void * ) pTerm );
    hb_xfree( pnTermSizes );
 }

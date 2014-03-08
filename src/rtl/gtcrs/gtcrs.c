@@ -2279,8 +2279,8 @@ static InOutBase * create_newXterm( void )
          if( fd != masterfd )
             close( fd );
 
-      setuid( getuid() );
-      setgid( getgid() );
+      ( void ) setuid( getuid() );
+      ( void ) setgid( getgid() );
       execlp( "xterm", "xterm", buf, "+sb",
               "-fg", "white",
               "-bg", "black", "-fn", "fixed", "-T", "HB-XTERM Window", NULL );

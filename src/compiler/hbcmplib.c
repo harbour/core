@@ -210,7 +210,7 @@ HB_FUNC( HB_COMPILE )
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
    hb_retni( hb_compMainExt( argc, argv, NULL, NULL, NULL, 0, pIncItem, pOpenFunc, pMsgFunc ) );
-   hb_xfree( argv );
+   hb_xfree( ( void * ) argv );
 }
 
 HB_FUNC( HB_COMPILEBUF )
@@ -225,7 +225,7 @@ HB_FUNC( HB_COMPILEBUF )
 
    hb_compGenArgList( 1, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
    iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, NULL, 0, pIncItem, pOpenFunc, pMsgFunc );
-   hb_xfree( argv );
+   hb_xfree( ( void * ) argv );
 
    if( iResult == EXIT_SUCCESS && pBuffer )
       hb_retclen_buffer( ( char * ) pBuffer, nLen );
@@ -247,7 +247,7 @@ HB_FUNC( HB_COMPILEFROMBUF )
    {
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
       iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
-      hb_xfree( argv );
+      hb_xfree( ( void * ) argv );
 
       if( iResult == EXIT_SUCCESS && pBuffer )
          hb_retclen_buffer( ( char * ) pBuffer, nLen );
