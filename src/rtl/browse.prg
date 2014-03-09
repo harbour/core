@@ -373,9 +373,9 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
 
 STATIC FUNCTION ExitKey( lAppend )
 
-   LOCAL nKey := LastKey()
+   LOCAL nKey
 
-   SWITCH nKey
+   SWITCH nKey := LastKey()
    CASE K_PGDN
       nKey := iif( lAppend, 0, K_DOWN )
       EXIT

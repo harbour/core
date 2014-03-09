@@ -591,91 +591,94 @@ METHOD scroll( nMethod ) CLASS ListBox
    LOCAL nKey
    LOCAL nCount
 
-   SWITCH nMethod
-   CASE HTSCROLLTHUMBDRAG
+   IF HB_ISNUMERIC( nMethod )
 
-      nPrevMRow := MRow()
+      SWITCH nMethod
+      CASE HTSCROLLTHUMBDRAG
 
-      DO WHILE ( ( nKey := Inkey( 0 ) ) != K_LBUTTONUP )
+         nPrevMRow := MRow()
 
-         IF nKey == K_MOUSEMOVE
+         DO WHILE ( ( nKey := Inkey( 0 ) ) != K_LBUTTONUP )
 
-            nMRow := MRow()
+            IF nKey == K_MOUSEMOVE
 
-            IF nMRow <= ::oVScroll:start()
-               nMRow := ::oVScroll:start() + 1
-            ENDIF
-            IF nMRow >= ::oVScroll:end()
-               nMRow := ::oVScroll:end() - 1
-            ENDIF
+               nMRow := MRow()
 
-            IF nMRow != nPrevMRow
-               nThumbPos  := ::oVScroll:thumbPos() + ( nMRow - nPrevMRow )
-               nBarLength := ::oVScroll:barLength()
-               nTotal     := ::oVScroll:total()
-               nSize      := Min( Max( ( nThumbPos * ( nTotal - nBarLength - 2 ) + 2 * nBarLength + 1 - nTotal ) / ( nBarLength - 1 ), 1 ), nTotal )
-               nCurrent   := ::oVScroll:current()
-               IF nSize - nCurrent > 0
-                  FOR nCount := 1 TO nSize - nCurrent
-                     ::scroll( HTSCROLLUNITINC )
-                  NEXT
-               ELSE
-                  FOR nCount := 1 TO nCurrent - nSize
-                     ::scroll( HTSCROLLUNITDEC )
-                  NEXT
+               IF nMRow <= ::oVScroll:start()
+                  nMRow := ::oVScroll:start() + 1
+               ENDIF
+               IF nMRow >= ::oVScroll:end()
+                  nMRow := ::oVScroll:end() - 1
                ENDIF
 
-               nPrevMRow := nMRow
+               IF nMRow != nPrevMRow
+                  nThumbPos  := ::oVScroll:thumbPos() + ( nMRow - nPrevMRow )
+                  nBarLength := ::oVScroll:barLength()
+                  nTotal     := ::oVScroll:total()
+                  nSize      := Min( Max( ( nThumbPos * ( nTotal - nBarLength - 2 ) + 2 * nBarLength + 1 - nTotal ) / ( nBarLength - 1 ), 1 ), nTotal )
+                  nCurrent   := ::oVScroll:current()
+                  IF nSize - nCurrent > 0
+                     FOR nCount := 1 TO nSize - nCurrent
+                        ::scroll( HTSCROLLUNITINC )
+                     NEXT
+                  ELSE
+                     FOR nCount := 1 TO nCurrent - nSize
+                        ::scroll( HTSCROLLUNITDEC )
+                     NEXT
+                  ENDIF
+
+                  nPrevMRow := nMRow
+               ENDIF
             ENDIF
+         ENDDO
+         EXIT
+
+      CASE HTSCROLLUNITDEC
+
+         IF ::nTopItem > 1
+            ::nTopItem--
+            ::oVScroll:current := ::scrollbarPos()
+            ::display()
          ENDIF
-      ENDDO
-      EXIT
+         EXIT
 
-   CASE HTSCROLLUNITDEC
+      CASE HTSCROLLUNITINC
 
-      IF ::nTopItem > 1
-         ::nTopItem--
-         ::oVScroll:current := ::scrollbarPos()
-         ::display()
-      ENDIF
-      EXIT
-
-   CASE HTSCROLLUNITINC
-
-      IF ( ::nTopItem + ::nBottom - ::nTop ) <= ::nItemCount + 1
-         ::nTopItem++
-         ::oVScroll:current := ::scrollbarPos()
-         ::display()
-      ENDIF
-      EXIT
-
-   CASE HTSCROLLBLOCKDEC
-
-      nPos     := ::nBottom - ::nTop - iif( ::lDropDown, 2, 1 )
-      nTopItem := ::nTopItem - nPos
-      IF ::nTopItem > 1
-         ::nTopItem := Max( nTopItem, 1 )
-         ::oVScroll:current := ::scrollbarPos()
-         ::display()
-      ENDIF
-      EXIT
-
-   CASE HTSCROLLBLOCKINC
-
-      nPos       := ::nBottom - ::nTop - 1
-      nItemCount := ::nItemCount
-      nTopItem   := ::nTopItem + nPos
-      IF ::nTopItem < nItemCount - nPos + 1
-         IF nTopItem + nPos - 1 > nItemCount
-            nTopItem := nItemCount - nPos + 1
+         IF ( ::nTopItem + ::nBottom - ::nTop ) <= ::nItemCount + 1
+            ::nTopItem++
+            ::oVScroll:current := ::scrollbarPos()
+            ::display()
          ENDIF
-         ::nTopItem := nTopItem
-         ::oVScroll:current := ::scrollbarPos()
-         ::display()
-      ENDIF
-      EXIT
+         EXIT
 
-   ENDSWITCH
+      CASE HTSCROLLBLOCKDEC
+
+         nPos     := ::nBottom - ::nTop - iif( ::lDropDown, 2, 1 )
+         nTopItem := ::nTopItem - nPos
+         IF ::nTopItem > 1
+            ::nTopItem := Max( nTopItem, 1 )
+            ::oVScroll:current := ::scrollbarPos()
+            ::display()
+         ENDIF
+         EXIT
+
+      CASE HTSCROLLBLOCKINC
+
+         nPos       := ::nBottom - ::nTop - 1
+         nItemCount := ::nItemCount
+         nTopItem   := ::nTopItem + nPos
+         IF ::nTopItem < nItemCount - nPos + 1
+            IF nTopItem + nPos - 1 > nItemCount
+               nTopItem := nItemCount - nPos + 1
+            ENDIF
+            ::nTopItem := nTopItem
+            ::oVScroll:current := ::scrollbarPos()
+            ::display()
+         ENDIF
+         EXIT
+
+      ENDSWITCH
+   ENDIF
 
    RETURN Self
 

@@ -817,6 +817,7 @@ METHOD ShowScoreboard() CLASS HBGetList
    RETURN Self
 
 METHOD DateMsg() CLASS HBGetList
+
    LOCAL nKey
 
    IF Set( _SET_SCOREBOARD )

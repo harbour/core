@@ -4414,7 +4414,7 @@ FUNCTION ANSIToHtml( cAnsiText )
       nEnd  := parser:p_pos
       cText := SubStr( parser:p_str, nStart, nEnd - nStart )
 
-      DO WHILE ! ( ( cChr := P_NEXT( parser ) ) $ "; " ) .AND. ! Empty( cChr ) .AND. parser:p_pos != 0
+      DO WHILE !( ( cChr := P_NEXT( parser ) ) $ "; " ) .AND. ! Empty( cChr ) .AND. parser:p_pos != 0
       ENDDO
 
       SWITCH cChr
@@ -4424,7 +4424,7 @@ FUNCTION ANSIToHtml( cAnsiText )
          nEnd    := parser:p_pos + 1
          cEntity := SubStr( parser:p_str, nStart, nEnd - nStart )
          parser:p_end := parser:p_pos
-         parser:p_pos ++
+         parser:p_pos++
          EXIT
       CASE " "
          // "&" character found

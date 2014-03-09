@@ -2176,8 +2176,8 @@ METHOD Open() CLASS HBDebugger
       cFileName := aFiles[ nFileName ]
    ENDSWITCH
 
-   IF ! Empty( cFileName ) ;
-      .AND. ( ValType( ::cPrgName ) == "U" .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
+   IF ! Empty( cFileName ) .AND. ;
+      ( ValType( ::cPrgName ) == "U" .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
       IF ! hb_FileExists( cFileName ) .AND. ! Empty( ::cPathForFiles )
          cRealName := ::LocatePrgPath( cFileName )
@@ -3708,9 +3708,9 @@ FUNCTION __dbgValToStr( uVal )
 
 FUNCTION __dbgCStr( xVal )
 
-   LOCAL v := ValType( xVal )
+   LOCAL v
 
-   SWITCH v
+   SWITCH v := ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN xVal
    CASE "N" ; RETURN Str( xVal )

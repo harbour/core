@@ -145,13 +145,14 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
 
    hb_default( @lSetIt, .F. )
 
-   IF cValType == "L"
+   DO CASE
+   CASE cValType == "L"
       xValue := iif( xValue, 1, 0 )
       cValType := ValType( xValue )
-   ELSEIF cValType == "D"
+   CASE cValType == "D"
       xValue := DToS( xValue )
       cValType := ValType( xValue )
-   ENDIF
+   ENDCASE
 
    lRetVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
    IF ! lRetVal .AND. lSetIt

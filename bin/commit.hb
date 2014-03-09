@@ -674,6 +674,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "*.dif", ;
       "*.htm", ;
       "*.html", ;
+      "*.mft", ;
       "*.plist", ;
       "*.xml", ;
       "*.xsd", ;

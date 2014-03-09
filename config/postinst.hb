@@ -359,8 +359,7 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
       RETURN .T.
    ENDIF
 
-   aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg )
-   IF aTrans != NIL
+   IF ( aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg ) ) != NIL
       IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
          OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cOut, cIn ) + hb_eol() )
          RETURN .T.

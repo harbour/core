@@ -81,7 +81,7 @@ Both compilers support runtime switches for file name conversions.
       SET FILECASE LOWER | UPPER | MIXED
       SET DIRCASE LOWER | UPPER | MIXED
       SET DIRSEPARATOR <cDirSep>
-      set( _SET_TRIMFILENAME, <lOnOff> )
+      Set( _SET_TRIMFILENAME, <lOnOff> )
 which can be used in programs not intended to work with different
 file system(s) and with different OS(s).
 
@@ -1953,8 +1953,8 @@ completely different thing then namespaces in current xHarbour.
 Harbour allows to initialize more then one GT drivers at runtime
 and switch between active GTs in single application. It can be
 done using the following functions:
-      HB_GTCREATE( <cGtName>, [<nStdIn>], [<nStdOut>], [<nStdErr>] ) -> <pGT>
-      HB_GTSELECT( <pGT> ) -> <pPrevGT>
+      hb_gtCreate( <cGtName>, [<nStdIn>], [<nStdOut>], [<nStdErr>] ) -> <pGT>
+      hb_gtSelect( <pGT> ) -> <pPrevGT>
 if all references to allocated GT drivers are cleaned in visible items
 then GT windows is automatically closed.
 
@@ -2165,9 +2165,9 @@ that each thread has its own independent work areas and aliases.
 Anyhow it's possible to move work area from one thread to other one
 using known from Xbase++ zero space. In Xbase++ each thread can
 move his work area to zero space using:
-   DbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
+   dbRelease( [<nWorkArea>|<cAlias>], [<bAreaBlock>] ) --> lSuccess
 Then this work area can be attached by other thread using:
-   DbRequest( [<cAlias>], [<lFreeArea>], ;
+   dbRequest( [<cAlias>], [<lFreeArea>], ;
               [<@bAreaBlock>], [<lWait>] ) --> lSuccess
 In Harbour above functions are available in XPP emulation library.
 There are also core Harbour functions giving this functionality:
@@ -2184,7 +2184,7 @@ and move work area to zero space. Then each thread which wants to make
 some operations on work area has to encapsulate it in lock/unlock code,
 i.e.:
    LOCK WORKAREA "DOCUMENTS"
-      COUNT TO nInvoices FOR year( DOCUMENTS->DATE ) == year( date() )
+      COUNT TO nInvoices FOR Year( DOCUMENTS->DATE ) == Year( Date() )
    UNLOCK WORKAREA
 
 In xHarbour by default work areas are global to the application and there
@@ -2197,10 +2197,10 @@ in xHarbour, i.e. mutexes).
 Later support for thread local work areas was added to xHarbour but
 without any mechanism which allows to move work area from one thread
 to another. This can be controlled by global SET:
-   SET( _SET_WORKAREAS_SHARED, <lOnOff> )
+   Set( _SET_WORKAREAS_SHARED, <lOnOff> )
 or commands:
-   SET WORKAREAS SHARED       => SET( _SET_WORKAREAS_SHARED, .T. )
-   SET WORKAREAS PRIVATE      => SET( _SET_WORKAREAS_SHARED, .F. )
+   SET WORKAREAS SHARED       => Set( _SET_WORKAREAS_SHARED, .T. )
+   SET WORKAREAS PRIVATE      => Set( _SET_WORKAREAS_SHARED, .F. )
 (SETs are global not thread local in xHarbour MT model)
 Setting _SET_WORKAREAS_SHARED to .F. disables global work areas and
 switches to thread local ones.

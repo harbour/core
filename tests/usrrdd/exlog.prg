@@ -26,10 +26,14 @@ PROCEDURE Main()
    hb_LogRddActive( .T. )
 
    // Uncomment next command to change logged string that I have to return to standard LOGRDD file
-   // hb_LogRddMsgLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) } )
+#if 0
+   hb_LogRddMsgLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) } )
+#endif
 
    // Uncomment next command to change standard destination of my logged string
-   // hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_ToOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
+#if 0
+   hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_ToOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
+#endif
 
    // Start program logic
 
@@ -48,42 +52,40 @@ PROCEDURE Main()
 
 STATIC FUNCTION MyToString( cCmd, nWA, xPar1, xPar2, xPar3 )
 
-   LOCAL cString
-
-   DO CASE
-   CASE cCmd == "CREATE"
+   SWITCH cCmd
+   CASE "CREATE"
       // Parameters received: xPar1: aOpenInfo
-      cString := xPar1[ UR_OI_NAME ]
-   CASE cCmd == "CREATEFIELDS"
+      RETURN xPar1[ UR_OI_NAME ]
+   CASE "CREATEFIELDS"
       // Parameters received: xPar1: aStruct
-      cString := hb_ValToExp( xPar1 )
-   CASE cCmd == "OPEN"
+      RETURN hb_ValToExp( xPar1 )
+   CASE "OPEN"
       // Parameters received: xPar1: aOpenInfo
-      // cString := 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
+      // RETURN 'Table: "' + xPar1[ UR_OI_NAME ] + '", Alias: "' + Alias() + '", WorkArea: ' + hb_ntos( nWA )
       // In this example I don't want to log Open Command
-   CASE cCmd == "CLOSE"
+   CASE "CLOSE"
       // Parameters received: xPar1: cTableName, xPar2: cAlias
-      // cString := 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
+      // RETURN 'Table: "' + xPar1 + '", Alias: "' + xPar2 + '", WorkArea: ' + hb_ntos( nWA )
       // In this example I don't want to log Close Command
-   CASE cCmd == "APPEND"
+   CASE "APPEND"
       // Parameters received: xPar1: lUnlockAll
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "DELETE"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "DELETE"
       // Parameters received: none
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "RECALL"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "RECALL"
       // Parameters received: none
-      cString := Alias() + "->RecNo() == " + hb_ntos( RecNo() )
-   CASE cCmd == "PUTVALUE"
+      RETURN Alias() + "->RecNo() == " + hb_ntos( RecNo() )
+   CASE "PUTVALUE"
       // Parameters received: xPar1: nField, xPar2: xValue, xPar3: xOldValue
       HB_SYMBOL_UNUSED( xPar3 ) // Here don't log previous value
-      cString := Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
-   CASE cCmd == "ZAP"
+      RETURN Alias() + "(" + hb_ntos( RecNo() ) + ")->" + PadR( FieldName( xPar1 ), 10 ) + " := " + hb_LogRddValueToText( xPar2 )
+   CASE "ZAP"
       // Parameters received: none
-      cString := 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
-   ENDCASE
+      RETURN 'Alias: "' + Alias() + ' Table: "' + dbInfo( DBI_FULLPATH ) + '"'
+   ENDSWITCH
 
-   RETURN cString
+   RETURN NIL
 
 FUNCTION hb_LogRddInherit()
    RETURN "DBFCDX"

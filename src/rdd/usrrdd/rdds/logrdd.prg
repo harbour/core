@@ -344,23 +344,22 @@ FUNCTION hb_LogRddUserLogBlock( bUserLogBlock )
 
 FUNCTION hb_LogRddValueToText( uValue )
 
-   LOCAL cType := ValType( uValue )
+   LOCAL cType
    LOCAL cText
 
-   DO CASE
-   CASE cType == "C"
+   SWITCH cType := ValType( uValue )
+   CASE "C"
       cText := hb_StrToExp( uValue )
-
-   CASE cType == "N"
+      EXIT
+   CASE "N"
       cText := hb_ntos( uValue )
-
-   CASE cType == "D"
-      cText := DToS( uValue )
-      cText := "0d" + iif( Empty( cText ), "00000000", cText )
-
+      EXIT
+   CASE "D"
+      cText := "0d" + iif( Empty( uValue ), "0", DToS( uValue ) )
+      EXIT
    OTHERWISE
       cText := hb_ValToStr( uValue )
-   ENDCASE
+   ENDSWITCH
 
    RETURN "[" + cType + "]>>>" + cText + "<<<"
 

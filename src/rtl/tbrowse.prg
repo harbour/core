@@ -298,7 +298,6 @@ ENDCLASS
 
 
 FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
-
    RETURN TBrowse():new( nTop, nLeft, nBottom, nRight )
 
 

@@ -50,9 +50,9 @@
 
 FUNCTION ReadKey()
 
-   LOCAL nKey := LastKey()
+   LOCAL nKey
 
-   SWITCH nKey
+   SWITCH nKey := LastKey()
    CASE K_UP        ; nKey :=  4 ; EXIT /* NOTE: NG says 5 incorrectly */
    CASE K_DOWN      ; nKey :=  5 ; EXIT /* NOTE: NG says 2 incorrectly */
    CASE K_PGUP      ; nKey :=  6 ; EXIT

@@ -48,9 +48,9 @@
 
 FUNCTION hb_CStr( xVal )
 
-   LOCAL v := ValType( xVal )
+   LOCAL v
 
-   SWITCH v
+   SWITCH v := ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN xVal
    CASE "N" ; RETURN Str( xVal )
@@ -81,9 +81,9 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
 
    LOCAL cVal, cKey, cClass
    LOCAL tmp
-   LOCAL v := ValType( xVal )
+   LOCAL v
 
-   SWITCH v
+   SWITCH v := ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( xVal )
    CASE "N" ; RETURN hb_ntos( xVal )
