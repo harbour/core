@@ -12,3 +12,6 @@
 -depincpath=curl:/usr/include
 
 core.c
+date.c
+escold.c
+ver.c

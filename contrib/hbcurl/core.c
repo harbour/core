@@ -2183,72 +2183,6 @@ HB_FUNC( CURL_EASY_UNESCAPE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* Harbour interface (session independent) */
-/* --------------------------------------- */
-
-HB_FUNC( CURL_VERSION )
-{
-   hb_retc( curl_version() );
-}
-
-HB_FUNC( CURL_VERSION_INFO )
-{
-   curl_version_info_data * data = curl_version_info( CURLVERSION_NOW );
-
-   if( data )
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 13 );
-
-      hb_arraySetC(  pArray, 1, data->version );                      /* LIBCURL_VERSION */
-      hb_arraySetNI( pArray, 2, data->version_num );                  /* LIBCURL_VERSION_NUM */
-      hb_arraySetC(  pArray, 3, data->host );                         /* OS/host/cpu/machine when configured */
-      hb_arraySetNI( pArray, 4, data->features );                     /* bitmask, see defines below */
-      hb_arraySetC(  pArray, 5, data->ssl_version );                  /* human readable string */
-      hb_arraySetNI( pArray, 6, data->ssl_version_num );              /* not used anymore, always 0 */
-      hb_arraySetC(  pArray, 7, data->libz_version );                 /* human readable string */
-#if defined( CURLVERSION_SECOND )
-      hb_arraySetC(  pArray, 9, data->age >= CURLVERSION_SECOND ? data->ares : NULL );
-      hb_arraySetNI( pArray, 10, data->age >= CURLVERSION_SECOND ? data->ares_num : 0 );
-#else
-      hb_arraySetC(  pArray, 9, NULL );
-      hb_arraySetNI( pArray, 10, 0 );
-#endif
-#if defined( CURLVERSION_THIRD )
-      hb_arraySetC(  pArray, 11, data->age >= CURLVERSION_THIRD ? data->libidn : NULL );
-#else
-      hb_arraySetC(  pArray, 11, NULL );
-#endif
-#if defined( CURLVERSION_FOURTH )
-      hb_arraySetNI( pArray, 12, data->age >= CURLVERSION_FOURTH ? data->iconv_ver_num : 0 ); /* Same as '_libiconv_version' if built with HAVE_ICONV */
-#else
-      hb_arraySetNI( pArray, 12, 0 );
-#endif
-#if defined( CURLVERSION_FOURTH ) && LIBCURL_VERSION_NUM >= 0x071001
-      hb_arraySetC(  pArray, 13, data->age >= CURLVERSION_FOURTH ? data->libssh_version : NULL ); /* human readable string */
-#else
-      hb_arraySetC(  pArray, 13, NULL );
-#endif
-      {
-         PHB_ITEM pProtocols;
-         int      nCount = 0;
-         const char * const * prot = data->protocols;
-
-         while( *( prot++ ) )
-            nCount++;
-
-         pProtocols = hb_arrayGetItemPtr( pArray, 8 );
-         hb_arrayNew( pProtocols, nCount );
-
-         for( prot = data->protocols, nCount = 1; *prot; prot++ )
-            hb_arraySetC( pProtocols, nCount++, *prot );
-      }
-
-      hb_itemReturnRelease( pArray );
-   }
-   else
-      hb_reta( 0 );
-}
-
 HB_FUNC( CURL_EASY_STRERROR )
 {
    if( HB_ISNUM( 1 ) )
@@ -2257,43 +2191,6 @@ HB_FUNC( CURL_EASY_STRERROR )
 #else
       hb_retc_null();
 #endif
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
-HB_FUNC( CURL_GETDATE )
-{
-   if( HB_ISCHAR( 1 ) )
-      hb_retnint( ( HB_MAXINT ) curl_getdate( hb_parc( 1 ), NULL ) );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* Harbour interface (session independent) */
-
-/* NOTE: Obsolete, superceded by curl_easy_escape() */
-HB_FUNC( CURL_ESCAPE )
-{
-   if( HB_ISCHAR( 1 ) )
-   {
-      char * buffer = curl_escape( hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
-      hb_retc( buffer );
-      curl_free( buffer );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* NOTE: Obsolete, superceded by curl_easy_unescape() */
-HB_FUNC( CURL_UNESCAPE )
-{
-   if( HB_ISCHAR( 1 ) )
-   {
-      char * buffer = curl_unescape( hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
-      hb_retc( buffer );
-      curl_free( buffer );
-   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

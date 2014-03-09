@@ -271,12 +271,10 @@ STATIC FUNCTION MyClientInfo()
 
 STATIC FUNCTION XToStrX( xValue )
 
-   LOCAL cType
-
    LOCAL tmp
    LOCAL cRetVal
 
-   SWITCH cType := ValType( xValue )
+   SWITCH ValType( xValue )
    CASE "C"
 
       RETURN hb_StrReplace( xValue, { ;
