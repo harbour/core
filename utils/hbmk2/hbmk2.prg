@@ -16768,8 +16768,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hbunreg[=global]"  , hb_StrFormat( H_( "unregister Harbour Script (.hb) from %1$s (Windows only)" ), _SELF_NAME_ ) }, ;
       NIL, ; /* HARBOUR_SUPPORT */
       { "-find <text>"       , H_( "list all known Harbour functions that contain <text> in their name, along with their package (case insensitive, accepts multiple values, can contain wildcard characters)" ) }, ;
-      { "-man <text>"        , H_( "show documentation for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
-      { "-manjson <text>"    , H_( "output documentation in JSON format for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
+      { "-doc <text>"        , H_( "show documentation for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
+      { "-docjson <text>"    , H_( "output documentation in JSON format for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
       NIL, ; /* HARBOUR_SUPPORT */
       { "-hbmake=<file>"     , H_( "convert hbmake project <file> to .hbp file" ) }, ;
       { "-xbp=<file>"        , H_( "convert .xbp (xbuild) project <file> to .hbp file" ) }, ;
