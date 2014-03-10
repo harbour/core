@@ -350,6 +350,7 @@ DYNAMIC hb_ColorToN
 DYNAMIC hb_comClose
 DYNAMIC hb_comDiscardChar
 DYNAMIC hb_comErrorChar
+DYNAMIC hb_comFindPort
 DYNAMIC hb_comFlowChars
 DYNAMIC hb_comFlowControl
 DYNAMIC hb_comFlowSet

@@ -51,12 +51,6 @@
 #endif
 
 #include "hbapi.h"
-#include "hbapifs.h"
-#include "hbapiitm.h"
-#include "hbapicom.h"
-#include "hbvm.h"
-#include "hbinit.h"
-#include "hbdate.h"
 
 #if defined( HB_OS_UNIX ) && ( ! defined( __WATCOMC__ ) || __WATCOMC__ > 1290 ) && \
     ! defined( HB_OS_SYMBIAN ) /* || defined( __DJGPP__ ) */
@@ -108,6 +102,14 @@
 #  include <os2.h>
 #endif
 
+#include "hbapifs.h"
+#include "hbapiitm.h"
+#include "hbapicom.h"
+#include "hbvm.h"
+#include "hbinit.h"
+#include "hbdate.h"
+#include "hbthread.h"
+
 typedef struct
 {
 #if defined( HB_HAS_TERMIOS )
@@ -132,6 +134,10 @@ typedef struct
 /* struct termios tio; */
 }
 HB_COM, * PHB_COM;
+
+static HB_CRITICAL_NEW( s_comMtx );
+#define HB_COM_LOCK()      do { hb_threadEnterCriticalSection( &s_comMtx )
+#define HB_COM_UNLOCK()    hb_threadLeaveCriticalSection( &s_comMtx ); } while( 0 )
 
 static HB_COM s_comList[ HB_COM_PORT_MAX ];
 
@@ -173,7 +179,7 @@ static PHB_COM hb_comGetPort( int iPort, int iStatus )
    return NULL;
 }
 
-static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
+static const char * hb_comGetNameRaw( PHB_COM pCom, char * buffer, int size )
 {
    const char * name = pCom->name;
 
@@ -186,14 +192,14 @@ static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
       hb_snprintf( buffer, size, "/dev/tty%dp0", pCom->port );
 #  elif defined( HB_OS_AIX )
       hb_snprintf( buffer, size, "/dev/tty%d", pCom->port );
+#  elif defined( HB_OS_MINIX )
+      hb_snprintf( buffer, size, "/dev/tty%02d", pCom->port - 1 );
 #  elif defined( HB_OS_IRIX )
       hb_snprintf( buffer, size, "/dev/ttyf%d", pCom->port );
 #  elif defined( HB_OS_DIGITAL_UNIX )
       hb_snprintf( buffer, size, "/dev/ttyf%02d", pCom->port );
 #  elif defined( HB_OS_DARWIN )
       hb_snprintf( buffer, size, "/dev/cuaa%d", pCom->port - 1 );
-#  elif defined( HB_OS_MINIX )
-      hb_snprintf( buffer, size, "/dev/tty%02d", pCom->port - 1 );
 #  else /* defined( HB_OS_LINUX ) || defined( HB_OS_CYGWIN ) || ... */
       hb_snprintf( buffer, size, "/dev/ttyS%d", pCom->port - 1 );
 #  endif
@@ -206,6 +212,174 @@ static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
       name = buffer;
    }
    return name;
+}
+
+static const char * hb_comGetName( PHB_COM pCom, char * buffer, int size )
+{
+   const char * name;
+
+   HB_COM_LOCK();
+   name = hb_comGetNameRaw( pCom, buffer, size );
+   if( name != buffer )
+         name = hb_strncpy( buffer, name, size - 1 );
+   HB_COM_UNLOCK();
+
+   return name;
+}
+
+static int hb_comGetPortNum( const char * pszName )
+{
+   int iPort = 0;
+
+#if defined( HB_OS_UNIX )
+#  if defined( HB_OS_SUNOS )
+   if( strncmp( pszName, "/dev/tty", 8 ) == 0 &&
+       pszName[ 8 ] >= 'a' && pszName[ 9 ] == '\0' )
+      iPort = pszName[ 8 ] - 'a' + 1;
+#  else
+   int iLen = 0;
+#     if defined( HB_OS_HPUX ) || defined( HB_OS_AIX ) || defined( HB_OS_MINIX )
+   if( strncmp( pszName, "/dev/tty", 8 ) == 0 )
+      iLen = 8;
+#     elif defined( HB_OS_IRIX ) || defined( HB_OS_DIGITAL_UNIX )
+   if( strncmp( pszName, "/dev/ttyf", 9 ) == 0 )
+      iLen = 9;
+#     elif defined( HB_OS_DARWIN )
+   if( strncmp( pszName, "/dev/cuaa", 9 ) == 0 )
+      iLen = 9;
+#     else /* defined( HB_OS_LINUX ) || defined( HB_OS_CYGWIN ) || ... */
+   if( strncmp( pszName, "/dev/ttyS", 9 ) == 0 )
+      iLen = 9;
+#     endif
+   if( iLen > 0 )
+   {
+      pszName += iLen;
+      while( HB_ISDIGIT( *pszName ) )
+         iPort = iPort * 10 + ( *pszName++ - '0' );
+
+#     if ! defined( HB_OS_HPUX ) && \
+         ! defined( HB_OS_AIX ) && \
+         ! defined( HB_OS_IRIX ) && \
+         ! defined( HB_OS_DIGITAL_UNIX )
+      ++iPort;
+#     endif
+
+#     if defined( HB_OS_HPUX )
+      if( strcmp( pszName, "p0" ) != 0 )
+#     else
+      if( *pszName != '\0' )
+#     endif
+         iPort = 0;
+   }
+#  endif
+#else
+   if( pszName[ 0 ] == '\\' && pszName[ 1 ] == '\\' &&
+       pszName[ 2 ] == '.'  && pszName[ 3 ] == '\\' )
+      pszName += 4;
+   if( HB_TOUPPER( pszName[ 0 ] ) == 'C' &&
+       HB_TOUPPER( pszName[ 1 ] ) == 'O' &&
+       HB_TOUPPER( pszName[ 2 ] ) == 'M' &&
+       pszName[ 3 ] >= '1' && pszName[ 3 ] <= '9' )
+   {
+      pszName += 3;
+      while( HB_ISDIGIT( *pszName ) )
+         iPort = iPort * ( 10 + *pszName++ - '0' );
+      if( *pszName != '\0' )
+         iPort = 0;
+   }
+#endif
+
+   return iPort;
+}
+
+static HB_BOOL hb_comPortCmp( const char * pszDevName1, const char * pszDevName2 )
+{
+#if defined( HB_OS_UNIX )
+   return strcmp( pszDevName1, pszDevName2 ) == 0;
+#else
+#  if defined( HB_OS_WIN )
+   if( pszDevName1[ 0 ] == '\\' && pszDevName1[ 1 ] == '\\' &&
+       pszDevName1[ 2 ] == '.'  && pszDevName1[ 3 ] == '\\' )
+      pszDevName1 += 4;
+   if( pszDevName2[ 0 ] == '\\' && pszDevName2[ 1 ] == '\\' &&
+       pszDevName2[ 2 ] == '.'  && pszDevName2[ 3 ] == '\\' )
+      pszDevName2 += 4;
+#  endif
+   return hb_stricmp( pszDevName1, pszDevName2 ) == 0;
+#endif
+}
+
+int hb_comFindPort( const char * pszDevName, HB_BOOL fCreate )
+{
+   char buffer[ HB_COM_DEV_NAME_MAX ];
+   PHB_COM pCom;
+   int iPort;
+
+   if( pszDevName == NULL || *pszDevName == '\0' )
+      return 0;
+
+   iPort = hb_comGetPortNum( pszDevName );
+   HB_COM_LOCK();
+   if( iPort > 0 )
+   {
+      pCom = hb_comGetPort( iPort, HB_COM_ANY );
+      if( pCom == NULL ||
+          ! hb_comPortCmp( hb_comGetNameRaw( pCom, buffer, sizeof( buffer ) ),
+                           pszDevName ) )
+         iPort = 0;
+   }
+
+   if( iPort == 0 )
+   {
+      int iPortFree = 0;
+
+      for( iPort = HB_COM_PORT_MAX; iPort > 0; --iPort )
+      {
+         pCom = &s_comList[ iPort - 1 ];
+         if( pCom->name == NULL )
+         {
+            if( iPortFree == 0 && iPort > 16 )
+               iPortFree = iPort;
+         }
+         else if( hb_comPortCmp( pCom->name, pszDevName ) )
+            break;
+      }
+#if defined( HB_OS_UNIX )
+      if( iPort == 0 && fCreate && access( pszDevName, F_OK ) == 0 )
+#else
+      if( iPort == 0 && fCreate )
+#endif
+      {
+         if( iPortFree != 0 )
+            iPort = iPortFree;
+         else
+         {
+            for( iPort = HB_COM_PORT_MAX; iPort > 0; --iPort )
+            {
+               pCom = &s_comList[ iPort - 1 ];
+               if( ( pCom->status & HB_COM_OPEN ) == 0 )
+               {
+                  if( pCom->name )
+                  {
+                     hb_xfree( pCom->name );
+                     pCom->name = NULL;
+                  }
+                  break;
+               }
+            }
+         }
+         if( iPort != 0 )
+         {
+            pCom = &s_comList[ iPort - 1 ];
+            if( ! hb_comPortCmp( hb_comGetNameRaw( pCom, buffer, sizeof( buffer ) ),
+                                 pszDevName ) )
+               pCom->name = hb_strdup( pszDevName );
+         }
+      }
+   }
+   HB_COM_UNLOCK();
+
+   return iPort;
 }
 
 const char * hb_comGetDevice( int iPort, char * buffer, int size )
@@ -230,9 +404,11 @@ int hb_comSetDevice( int iPort, const char * szDevName )
 
    if( pCom )
    {
+      HB_COM_LOCK();
       if( pCom->name )
          hb_xfree( pCom->name );
-      pCom->name = szDevName ? hb_strdup( szDevName ) : NULL;
+      pCom->name = szDevName && *szDevName ? hb_strdup( szDevName ) : NULL;
+      HB_COM_UNLOCK();
    }
 
    return pCom ? 0 : -1;

@@ -58,6 +58,7 @@
  * hb_comGetDeviceHandle( nPort )  --> nHandle | F_ERROR
  * hb_comGetError( nPort ) --> nError
  * hb_comGetOSError( nPort ) --> nError
+ * hb_comFindPort( cDeviceName [, lCreate = .F. ] ) --> nPort
  * hb_comInit( nPort, nBaud, cParity, nSize, nStop ) --> lSuccess
  * hb_comInputCount( nPort ) --> nCount
  * hb_comInputState( nPort ) --> nState
@@ -142,6 +143,12 @@ HB_FUNC( HB_COMGETOSERROR )
 {
    hb_retni( hb_comGetOsError( hb_parni( 1 ) ) );
 }
+
+HB_FUNC( HB_COMFINDPORT )
+{
+   hb_retni( hb_comFindPort( hb_parc( 1 ), hb_parl( 2 ) ) );
+}
+
 
 HB_FUNC( HB_COMINIT )
 {

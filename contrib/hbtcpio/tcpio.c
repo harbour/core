@@ -187,6 +187,8 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
    if( ! pFile->fEof )
    {
       lRead = nSize > LONG_MAX ? LONG_MAX : ( long ) nSize;
+      if( timeout == -1 )
+         timeout = pFile->timeout;
       lRead = hb_socketRecv( pFile->sd, data, lRead, 0, timeout );
 
       errcode = hb_socketGetError();
@@ -216,6 +218,8 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
 {
    long lSend = nSize > LONG_MAX ? LONG_MAX : ( long ) nSize;
 
+   if( timeout == -1 )
+      timeout = pFile->timeout;
    lSend = hb_socketSend( pFile->sd, data, lSend, 0, timeout );
    hb_fsSetError( hb_socketGetError() );
 
