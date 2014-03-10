@@ -64,6 +64,7 @@ HB_EXTERN_BEGIN
 #define HB_COM_OPEN           2
 
 extern HB_EXPORT int  hb_comLastNum( void );
+extern HB_EXPORT int  hb_comFindPort( const char * pszDevName, HB_BOOL fCreate );
 extern HB_EXPORT int  hb_comOpen( int iPort );
 extern HB_EXPORT int  hb_comClose( int iPort );
 extern HB_EXPORT int  hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop );
@@ -86,7 +87,7 @@ extern HB_EXPORT int  hb_comDiscardChar( int iPort, int iChar );
 extern HB_EXPORT int  hb_comErrorChar( int iPort, int iChar );
 extern HB_EXPORT int  hb_comOutputState( int iPort );
 extern HB_EXPORT int  hb_comInputState( int iPort );
-extern HB_EXPORT int  hb_comSetDevice( int iPort, const char * szDevName );
+extern HB_EXPORT int  hb_comSetDevice( int iPort, const char * pszDevName );
 extern HB_EXPORT const char * hb_comGetDevice( int iPort, char * buffer, int size );
 extern HB_EXPORT HB_FHANDLE hb_comGetDeviceHandle( int iPort );
 
