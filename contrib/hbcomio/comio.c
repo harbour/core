@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,8 +63,7 @@ typedef struct _HB_FILE
    int                   timeout;
    HB_BOOL               fRead;
    HB_BOOL               fWrite;
-}
-HB_FILE;
+} HB_FILE;
 
 static PHB_FILE s_fileNew( int port, int timeout, HB_BOOL fRead, HB_BOOL fWrite );
 
@@ -268,7 +267,7 @@ static PHB_FILE s_fileOpen( const char * pszName, const char * pszDefExt,
           hb_comInit( iPort, iBaud, iParity, iSize, iStop ) == 0 &&
           hb_comFlowControl( iPort, NULL, iFlow ) == 0 )
       {
-         switch( uiExFlags & 0x3 )
+         switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
          {
             case FO_READ:
                fWrite = HB_FALSE;

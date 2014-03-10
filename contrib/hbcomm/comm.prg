@@ -54,24 +54,13 @@ STATIC s_hbcomm_mutex := hb_mutexCreate()
 FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
    LOCAL nPort
-   LOCAL cOldPortName
    LOCAL cParity
 
    hb_mutexLock( s_hbcomm_mutex )
 
-   /* TOFIX: We should get that number from core to avoid
-             getting mixed up with com port access outside this
-             compatibility interface. [vszakats] */
-   nPort := Len( s_hPort ) + 1
-
-   IF HB_ISSTRING( cPort )
-      cOldPortName := hb_comGetDevice( nPort )
-      hb_comSetDevice( nPort, cPort )
-   ENDIF
-
-   hb_comClose( nPort )
-
-   IF hb_comOpen( nPort )
+   IF HB_ISSTRING( cPort ) .AND. ;
+      ( nPort := hb_comFindPort( cPort, .T. ) ) != 0 .AND. ;
+      hb_comOpen( nPort )
 
       hb_default( @nBaud, 9600 )
 
@@ -90,16 +79,12 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
       HB_SYMBOL_UNUSED( nBufferSize )
 
       IF hb_comInit( nPort, nBaud, cParity, nData, nStop )
-         s_hPort[ nPort ] := cOldPortName
+         s_hPort[ nPort ] := NIL
          hb_mutexUnlock( s_hbcomm_mutex )
          RETURN nPort
       ELSE
          hb_comClose( nPort )
       ENDIF
-   ENDIF
-
-   IF cOldPortName != NIL
-      hb_comSetDevice( nPort, cOldPortName )
    ENDIF
 
    hb_mutexUnlock( s_hbcomm_mutex )
@@ -121,7 +106,9 @@ FUNCTION ISWORKING( nPort )
 /* Fetch <nCount> chars into <cData> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cData )
 
-   cData := iif( HB_ISNUMERIC( nCount ), Space( nCount ), "" )
+   hb_default( @nCount, 0 )
+
+   cData := Space( nCount )
 
    RETURN hb_comRecv( nPort, @cData, nCount )
 
@@ -161,10 +148,6 @@ FUNCTION UNINT_PORT( nPort )
 
    IF nPort $ s_hPort
       IF hb_comClose( nPort )
-         /* Restore com port name */
-         IF s_hPort[ nPort ] != NIL
-            hb_comSetDevice( nPort, s_hPort[ nPort ] )
-         ENDIF
          hb_HDel( s_hPort, nPort )
          lRetVal := .T.
       ENDIF

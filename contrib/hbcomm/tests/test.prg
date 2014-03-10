@@ -25,7 +25,7 @@ PROCEDURE Main()
       ? "S) Send"
       ? "R) Receive"
       ? "Q) Quit"
-      ? "> "
+      ? ">", ""
 
       nOption := Inkey( 0 )
       ?? hb_keyChar( nOption )
@@ -50,8 +50,7 @@ STATIC PROCEDURE FConnect()
    LOCAL nStopbit   := 1
    LOCAL nBuff      := 8000
 
-   s_nHandle := INIT_PORT( cCom, nBaudeRate, nDatabits, nParity, nStopbit, nBuff )
-   IF s_nHandle > 0
+   IF ( s_nHandle := INIT_PORT( cCom, nBaudeRate, nDatabits, nParity, nStopbit, nBuff ) ) > 0
       ? "Connecting..."
       s_lConnected := .T.
       OUTBUFCLR( s_nHandle )
@@ -88,12 +87,10 @@ STATIC PROCEDURE FReceive()
    LOCAL cReceive
    LOCAL nSize
 
-   nSize := INBUFSIZE( s_nHandle )
-
-   IF nSize > 0
+   IF ( nSize := INBUFSIZE( s_nHandle ) ) > 0
       cReceive := Space( nSize )
       INCHR( s_nHandle, nSize, @cReceive )
-      ? ">>", Left( cReceive, nSize )
+      ? ">>", hb_BLeft( cReceive, nSize )
    ENDIF
 
    RETURN

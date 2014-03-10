@@ -107,8 +107,7 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 
 #define _SMSCTX_xHnd          1
 #define _SMSCTX_cPIN          2
-#define _SMSCTX_cPrevName     3
-#define _SMSCTX_MAX_          3
+#define _SMSCTX_MAX_          2
 
 FUNCTION smsctx_New( xPort )
 
@@ -116,11 +115,10 @@ FUNCTION smsctx_New( xPort )
 
    IF HB_ISNUMERIC( xPort )
       smsctx[ _SMSCTX_xHnd ] := xPort
-      smsctx[ _SMSCTX_cPrevName ] := NIL
    ELSEIF HB_ISSTRING( xPort )
-      smsctx[ _SMSCTX_xHnd ] := 1
-      smsctx[ _SMSCTX_cPrevName ] := hb_comGetDevice( smsctx[ _SMSCTX_xHnd ] )
-      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], xPort )
+      IF ( smsctx[ _SMSCTX_xHnd ] := hb_comFindPort( xPort, .T. ) ) == 0
+         smsctx[ _SMSCTX_xHnd ] := NIL
+      ENDIF
    ELSE
       smsctx[ _SMSCTX_xHnd ] := NIL
    ENDIF
@@ -145,11 +143,6 @@ FUNCTION smsctx_Close( smsctx )
 
    IF ! hb_comClose( smsctx[ _SMSCTX_xHnd ] )
       RETURN .F.
-   ENDIF
-
-   /* Restore com port name */
-   IF smsctx[ _SMSCTX_cPrevName ] != NIL
-      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], smsctx[ _SMSCTX_cPrevName ] )
    ENDIF
 
    RETURN .T.
