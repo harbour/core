@@ -95,6 +95,9 @@ typedef struct _HB_GTCGI
 #endif
    char *         szCrLf;
    HB_SIZE        nCrLf;
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   UINT           uiOldCP;
+#endif
 } HB_GTCGI, * PHB_GTCGI;
 
 static void hb_gt_cgi_termOut( PHB_GTCGI pGTCGI, const char * szStr, HB_SIZE nLen )
@@ -122,6 +125,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    if( IsValidCodePage( CP_UTF8 ) )
    {
+      pGTCGI->uiOldCP = GetConsoleOutputCP();
       SetConsoleOutputCP( CP_UTF8 );
       HB_GTSELF_SETDISPCP( pGT, "UTF8", NULL, HB_FALSE );
    }
@@ -150,6 +154,11 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 
    if( pGTCGI )
    {
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+      if( IsValidCodePage( CP_UTF8 ) )
+         SetConsoleOutputCP( pGTCGI->uiOldCP );
+#endif
+
       /* update cursor position on exit */
       if( pGTCGI->iLastCol > 0 )
          hb_gt_cgi_newLine( pGTCGI );
