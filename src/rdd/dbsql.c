@@ -62,7 +62,7 @@
 #define HB_FILE_BUF_SIZE  0x10000
 typedef struct _HB_FILEBUF
 {
-   HB_FHANDLE hFile;
+   PHB_FILE   pFile;
    HB_BYTE *  pBuf;
    HB_SIZE    nSize;
    HB_SIZE    nPos;
@@ -73,7 +73,7 @@ static void hb_flushFBuffer( PHB_FILEBUF pFileBuf )
 {
    if( pFileBuf->nPos > 0 )
    {
-      hb_fsWriteLarge( pFileBuf->hFile, pFileBuf->pBuf, pFileBuf->nPos );
+      hb_fileWrite( pFileBuf->pFile, pFileBuf->pBuf, pFileBuf->nPos, -1 );
       pFileBuf->nPos = 0;
    }
 }
@@ -115,11 +115,11 @@ static void hb_destroyFBuffer( PHB_FILEBUF pFileBuf )
    hb_xfree( pFileBuf );
 }
 
-static PHB_FILEBUF hb_createFBuffer( HB_FHANDLE hFile, HB_SIZE nSize )
+static PHB_FILEBUF hb_createFBuffer( PHB_FILE pFile, HB_SIZE nSize )
 {
    PHB_FILEBUF pFileBuf = ( PHB_FILEBUF ) hb_xgrab( sizeof( HB_FILEBUF ) );
 
-   pFileBuf->hFile = hFile;
+   pFileBuf->pFile = pFile;
    pFileBuf->pBuf = ( HB_BYTE * ) hb_xgrab( nSize );
    pFileBuf->nSize = nSize;
    pFileBuf->nPos = 0;
@@ -236,7 +236,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
                            PHB_ITEM pWhile, PHB_ITEM pFor,
                            const char * szDelim, const char * szSep,
                            const char * szEsc, const char * szTable,
-                           HB_FHANDLE hFile, HB_BOOL fInsert, HB_BOOL fRecno )
+                           PHB_FILE pFile, HB_BOOL fInsert, HB_BOOL fRecno )
 {
    PHB_FILEBUF pFileBuf;
    HB_ULONG ulRecords = 0;
@@ -254,7 +254,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
    if( fInsert && szTable )
       szInsert = hb_xstrcpy( NULL, "INSERT INTO ", szTable, " VALUES ( ", NULL );
 
-   pFileBuf = hb_createFBuffer( hFile, HB_FILE_BUF_SIZE );
+   pFileBuf = hb_createFBuffer( pFile, HB_FILE_BUF_SIZE );
    pTmp = hb_itemNew( NULL );
 
    while( llNext-- > 0 )
@@ -335,7 +335,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
    hb_itemRelease( pTmp );
 
    /* Writing EOF */
-   /* hb_fsWrite( hFile, "\x1A", 1 ); */
+   /* hb_fileWrite( pFile, "\x1A", 1, -1 ); */
 
    return ulRecords;
 }
@@ -362,8 +362,8 @@ HB_FUNC( __DBSQL )
       const char * szDelim    = hb_parcx( 14 );
       const char * szEsc      = hb_parcx( 15 );
       HB_MAXINT llNext        = HB_VMLONG_MAX;
-      HB_FHANDLE hFile;
       HB_ERRCODE errCode;
+      PHB_FILE pFile;
 
       if( ! szFileName )
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -375,12 +375,12 @@ HB_FUNC( __DBSQL )
          /* Try to create Dat file */
          do
          {
-            hFile = hb_fsExtOpen( szFileName, NULL,
-                                  ( fAppend ? 0 : FXO_TRUNCATE ) |
-                                  FO_READWRITE | FO_EXCLUSIVE |
-                                  FXO_DEFAULTS | FXO_SHARELOCK,
-                                  NULL, pError );
-            if( hFile == FS_ERROR )
+            pFile = hb_fileExtOpen( szFileName, NULL,
+                                    ( fAppend ? 0 : FXO_TRUNCATE ) |
+                                    FO_READWRITE | FO_EXCLUSIVE |
+                                    FXO_DEFAULTS | FXO_SHARELOCK,
+                                    NULL, pError );
+            if( pFile == NULL )
             {
                if( ! pError )
                {
@@ -413,10 +413,10 @@ HB_FUNC( __DBSQL )
          if( pError )
             hb_itemRelease( pError );
 
-         if( hFile != FS_ERROR )
+         if( pFile != NULL )
          {
             if( fAppend )
-               hb_fsSeekLarge( hFile, 0, FS_END );
+               hb_fileSeek( pFile, 0, FS_END );
 
             errCode = HB_SUCCESS;
             if( pRecord )
@@ -436,9 +436,9 @@ HB_FUNC( __DBSQL )
             {
                hb_retnint( hb_db2Sql( pArea, pFields, llNext, pWhile, pFor,
                                       szDelim, szSep, szEsc,
-                                      szTable, hFile, fInsert, fRecno ) );
+                                      szTable, pFile, fInsert, fRecno ) );
             }
-            hb_fsClose( hFile );
+            hb_fileClose( pFile );
          }
       }
       else

@@ -303,7 +303,7 @@ typedef NTXSWAPPAGE * LPNTXSWAPPAGE;
 typedef struct
 {
    LPTAGINFO  pTag;           /* current Tag */
-   HB_FHANDLE hTempFile;      /* handle to temporary file */
+   PHB_FILE   pTempFile;      /* handle to temporary file */
    char *     szTempFileName; /* temporary file name */
    int        keyLen;         /* key length */
    HB_BOOL    fUnique;        /* HB_TRUE if index is unique */

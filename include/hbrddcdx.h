@@ -419,30 +419,30 @@ typedef CDXSWAPPAGE * LPCDXSWAPPAGE;
 
 typedef struct
 {
-   LPCDXTAG   pTag;             /* current Tag */
-   HB_FHANDLE hTempFile;        /* handle to temporary file */
-   char *     szTempFileName;   /* temporary file name */
-   int        keyLen;           /* key length */
-   HB_BYTE    bTrl;             /* filler char for shorter keys */
-   HB_BOOL    fUnique;          /* HB_TRUE if index is unique */
-   HB_BOOL    fReindex;         /* HB_TRUE if reindexing is in process */
-   HB_ULONG   ulMaxRec;         /* the highest record number */
-   HB_ULONG   ulTotKeys;        /* total number of keys indexed */
-   HB_ULONG   ulKeys;           /* keys in curently created page */
-   HB_ULONG   ulPages;          /* number of pages */
-   HB_ULONG   ulCurPage;        /* current page */
-   HB_ULONG   ulPgKeys;         /* maximum number of key in page memory buffer */
-   HB_ULONG   ulMaxKey;         /* maximum number of keys in single page */
-   HB_BYTE *  pKeyPool;         /* memory buffer for current page then for pages */
-   LPCDXSWAPPAGE pSwapPage;     /* list of pages */
-   LPCDXPAGE  NodeList[ CDX_STACKSIZE ];   /* Stack of pages */
+   LPCDXTAG   pTag;           /* current Tag */
+   PHB_FILE   pTempFile;      /* handle to temporary file */
+   char *     szTempFileName; /* temporary file name */
+   int        keyLen;         /* key length */
+   HB_BYTE    bTrl;           /* filler char for shorter keys */
+   HB_BOOL    fUnique;        /* HB_TRUE if index is unique */
+   HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
+   HB_ULONG   ulMaxRec;       /* the highest record number */
+   HB_ULONG   ulTotKeys;      /* total number of keys indexed */
+   HB_ULONG   ulKeys;         /* keys in curently created page */
+   HB_ULONG   ulPages;        /* number of pages */
+   HB_ULONG   ulCurPage;      /* current page */
+   HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
+   HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
+   HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
+   LPCDXSWAPPAGE pSwapPage;   /* list of pages */
+   LPCDXPAGE  NodeList[ CDX_STACKSIZE ];  /* Stack of pages */
    HB_ULONG   ulFirst;
    HB_ULONG * pSortedPages;
-   HB_BYTE    pLastKey[ CDX_MAXKEY ]; /* last key val */
+   HB_BYTE    pLastKey[ CDX_MAXKEY ];  /* last key val */
    HB_ULONG   ulLastRec;
    HB_BYTE *  pRecBuff;
 #ifndef HB_CDX_PACKTRAIL
-   int        iLastTrl;         /* last key trailing spaces */
+   int        iLastTrl;       /* last key trailing spaces */
 #endif
 } CDXSORTINFO;
 typedef CDXSORTINFO * LPCDXSORTINFO;
