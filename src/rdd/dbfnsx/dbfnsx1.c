@@ -5249,11 +5249,11 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
 
    hb_nsxSortSortPage( pSort );
 
-   if( pSort->hTempFile == FS_ERROR )
+   if( pSort->pTempFile == NULL )
    {
       char szName[ HB_PATH_MAX ];
-      pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
-      if( pSort->hTempFile == FS_ERROR )
+      pSort->pTempFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szName );
+      if( pSort->pTempFile == NULL )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_CREATE, EDBF_CREATE_TEMP,
                         szName, hb_fsError(), 0, NULL );
       else
@@ -5261,10 +5261,11 @@ static void hb_nsxSortWritePage( LPNSXSORTINFO pSort )
    }
 
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
-   if( pSort->hTempFile != FS_ERROR )
+   if( pSort->pTempFile != NULL )
    {
-      pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
-      if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, nSize ) != nSize )
+      pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fileSize( pSort->pTempFile );
+      if( hb_fileWriteAt( pSort->pTempFile, pSort->pStartKey,
+                          nSize, pSort->pSwapPage[ pSort->ulCurPage ].nOffset ) != nSize )
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_WRITE, EDBF_WRITE_TEMP,
                         pSort->szTempFileName, hb_fsError(), 0, NULL );
    }
@@ -5284,9 +5285,9 @@ static void hb_nsxSortGetPageKey( LPNSXSORTINFO pSort, HB_ULONG ulPage,
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
       HB_SIZE nSize = ulKeys * ( iLen + 4 );
 
-      if( pSort->hTempFile != FS_ERROR &&
-          ( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
-            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, nSize ) != nSize ) )
+      if( pSort->pTempFile != NULL &&
+          hb_fileReadAt( pSort->pTempFile, pSort->pSwapPage[ ulPage ].pKeyPool,
+                         nSize, pSort->pSwapPage[ ulPage ].nOffset ) != nSize )
       {
          hb_nsxErrorRT( pSort->pTag->pIndex->pArea, EG_READ, EDBF_READ_TEMP,
                         pSort->szTempFileName, hb_fsError(), 0, NULL );
@@ -5498,7 +5499,7 @@ static LPNSXSORTINFO hb_nsxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    }
 
    pSort->pTag = pTag;
-   pSort->hTempFile = FS_ERROR;
+   pSort->pTempFile = NULL;
    pSort->keyLen = iLen;
    pSort->trailChar = pTag->TrailChar;
    pSort->recSize = hb_nsxGetRecSize( ulRecCount );
@@ -5518,14 +5519,14 @@ static LPNSXSORTINFO hb_nsxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
 
 static void hb_nsxSortFree( LPNSXSORTINFO pSort, HB_BOOL fFull )
 {
-   if( pSort->hTempFile != FS_ERROR )
+   if( pSort->pTempFile != NULL )
    {
-      hb_fsClose( pSort->hTempFile );
-      pSort->hTempFile = FS_ERROR;
+      hb_fileClose( pSort->pTempFile );
+      pSort->pTempFile = NULL;
    }
    if( pSort->szTempFileName )
    {
-      hb_fsDelete( pSort->szTempFileName );
+      hb_fileDelete( pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
       pSort->szTempFileName = NULL;
    }

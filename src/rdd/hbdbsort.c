@@ -51,8 +51,8 @@
 HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, HB_USHORT uiRecordLen )
 {
    /* Create temp file */
-   pQuickSort->hFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, pQuickSort->szTempName );
-   if( pQuickSort->hFile == FS_ERROR )
+   pQuickSort->pFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, pQuickSort->szTempName );
+   if( pQuickSort->pFile == NULL )
       return HB_FALSE;
 
    /* Alloc buffers */
@@ -72,8 +72,8 @@ HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, HB_USH
 void hb_dbQSortExit( LPDBQUICKSORT pQuickSort )
 {
    /* Close and delete temp file */
-   hb_fsClose( pQuickSort->hFile );
-   hb_fsDelete( pQuickSort->szTempName );
+   hb_fileClose( pQuickSort->pFile );
+   hb_fileDelete( pQuickSort->szTempName );
 
    /* Free buffers */
    hb_xfree( pQuickSort->pBuffer );
@@ -89,7 +89,7 @@ HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount )
 
    /* Write chunk */
    uiSize = uiCount * pQuickSort->uiRecordLen;
-   return hb_fsWrite( pQuickSort->hFile, pQuickSort->pBuffer, uiSize ) == uiSize;
+   return hb_fileWrite( pQuickSort->pFile, pQuickSort->pBuffer, uiSize, -1 ) == uiSize;
 }
 
 static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )
@@ -103,10 +103,10 @@ static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB
    pArea = ( DBFAREAP ) pQuickSort->pSortInfo->dbtri.lpaSource;
 
    /* Read records */
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsRead( pQuickSort->hFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen );
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsRead( pQuickSort->hFile, pQuickSort->pSwapBufferB, pQuickSort->uiRecordLen );
+   hb_fileReadAt( pQuickSort->pFile, pQuickSort->pSwapBufferA,
+                  pQuickSort->uiRecordLen, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen );
+   hb_fileReadAt( pQuickSort->pFile, pQuickSort->pSwapBufferB,
+                  pQuickSort->uiRecordLen, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen );
 
    /* Compare fields */
    for( uiCount = 0; uiCount < pQuickSort->pSortInfo->uiItemCount; uiCount++ )
@@ -167,14 +167,14 @@ static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB
 static void hb_dbQSortSwap( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )
 {
    /* Swap records */
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsRead( pQuickSort->hFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen );
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsRead( pQuickSort->hFile, pQuickSort->pSwapBufferB, pQuickSort->uiRecordLen );
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsWrite( pQuickSort->hFile, pQuickSort->pSwapBufferB, pQuickSort->uiRecordLen );
-   hb_fsSeek( pQuickSort->hFile, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen, FS_SET );
-   hb_fsWrite( pQuickSort->hFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen );
+   hb_fileReadAt( pQuickSort->pFile, pQuickSort->pSwapBufferA,
+                  pQuickSort->uiRecordLen, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen );
+   hb_fileReadAt( pQuickSort->pFile, pQuickSort->pSwapBufferB,
+                  pQuickSort->uiRecordLen, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen );
+   hb_fileWriteAt( pQuickSort->pFile, pQuickSort->pSwapBufferB,
+                   pQuickSort->uiRecordLen, ( ulRecNo1 - 1 ) * pQuickSort->uiRecordLen );
+   hb_fileWriteAt( pQuickSort->pFile, pQuickSort->pSwapBufferA,
+                   pQuickSort->uiRecordLen, ( ulRecNo2 - 1 ) * pQuickSort->uiRecordLen );
 }
 
 static void hb_dbQSortDo( LPDBQUICKSORT pQuickSort, HB_ULONG ulFirst, HB_ULONG ulLast )
@@ -223,16 +223,16 @@ void hb_dbQSortComplete( LPDBQUICKSORT pQuickSort )
    HB_ULONG ulRecCount;
    AREAP pArea;
 
-   ulRecCount = hb_fsSeek( pQuickSort->hFile, 0, FS_END ) / pQuickSort->uiRecordLen;
+   ulRecCount = hb_fileSize( pQuickSort->pFile ) / pQuickSort->uiRecordLen;
    if( ulRecCount >= 1 )
    {
       hb_dbQSortDo( pQuickSort, 1, ulRecCount );
       pArea = pQuickSort->pSortInfo->dbtri.lpaDest;
-      hb_fsSeek( pQuickSort->hFile, 0, FS_SET );
+      hb_fileSeek( pQuickSort->pFile, 0, FS_SET );
       while( ulRecCount-- > 0 )
       {
          /* Read sorted record */
-         hb_fsRead( pQuickSort->hFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen );
+         hb_fileRead( pQuickSort->pFile, pQuickSort->pSwapBufferA, pQuickSort->uiRecordLen, -1 );
 
          /* Remove deleted flag */
          pQuickSort->pSwapBufferA[ 0 ] = ' ';

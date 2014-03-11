@@ -66,8 +66,8 @@ void hb_sxDeCrypt( const char * pSrc, char * pDst, const char * pKeyVal, HB_SIZE
 
 HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE nSrcLen, char * pDstBuf, HB_SIZE nDstLen );
 HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE nSrcLen, char * pDstBuf, HB_SIZE nDstLen, HB_SIZE * pnSize );
-HB_BOOL hb_LZSSxCompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput, HB_SIZE * pnSize );
-HB_BOOL hb_LZSSxDecompressFile( HB_FHANDLE hInput, HB_FHANDLE hOutput );
+HB_BOOL hb_LZSSxCompressFile( PHB_FILE pInput, PHB_FILE pOutput, HB_SIZE * pnSize );
+HB_BOOL hb_LZSSxDecompressFile( PHB_FILE pInput, PHB_FILE pOutput );
 
 HB_EXTERN_END
 

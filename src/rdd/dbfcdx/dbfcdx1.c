@@ -8987,19 +8987,20 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
 
    hb_cdxSortSortPage( pSort );
 
-   if( pSort->hTempFile == FS_ERROR )
+   if( pSort->pTempFile == NULL )
    {
       char szName[ HB_PATH_MAX ];
-      pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
-      if( pSort->hTempFile == FS_ERROR )
+      pSort->pTempFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szName );
+      if( pSort->pTempFile == NULL )
       {
          hb_errInternal( 9301, "hb_cdxSortWritePage: Can't create temporary file.", NULL, NULL );
       }
       pSort->szTempFileName = hb_strdup( szName );
    }
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
-   pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
-   if( hb_fsWriteLarge( pSort->hTempFile, pSort->pKeyPool, nSize ) != nSize )
+   pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fileSize( pSort->pTempFile );
+   if( hb_fileWriteAt( pSort->pTempFile, pSort->pKeyPool,
+                       nSize, pSort->pSwapPage[ pSort->ulCurPage ].nOffset ) != nSize )
    {
       hb_errInternal( 9302, "hb_cdxSortWritePage: Write error in temporary file.", NULL, NULL );
    }
@@ -9017,8 +9018,8 @@ static void hb_cdxSortGetPageKey( LPCDXSORTINFO pSort, HB_ULONG ulPage,
       HB_ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
       HB_SIZE nSize = ulKeys * ( iLen + 4 );
 
-      if( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
-          hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, nSize ) != nSize )
+      if( hb_fileReadAt( pSort->pTempFile, pSort->pSwapPage[ ulPage ].pKeyPool,
+                         nSize, pSort->pSwapPage[ ulPage ].nOffset ) != nSize )
       {
          hb_errInternal( 9303, "hb_cdxSortGetPageKey: Read error from temporary file.", NULL, NULL );
       }
@@ -9277,7 +9278,7 @@ static LPCDXSORTINFO hb_cdxSortNew( LPCDXTAG pTag, HB_ULONG ulRecCount )
    }
 
    pSort->pTag = pTag;
-   pSort->hTempFile = FS_ERROR;
+   pSort->pTempFile = NULL;
    pSort->keyLen = iLen;
    pSort->bTrl = pTag->bTrail;
    pSort->fUnique = pTag->UniqueKey;
@@ -9294,13 +9295,13 @@ static LPCDXSORTINFO hb_cdxSortNew( LPCDXTAG pTag, HB_ULONG ulRecCount )
 
 static void hb_cdxSortFree( LPCDXSORTINFO pSort )
 {
-   if( pSort->hTempFile != FS_ERROR )
+   if( pSort->pTempFile != NULL )
    {
-      hb_fsClose( pSort->hTempFile );
+      hb_fileClose( pSort->pTempFile );
    }
    if( pSort->szTempFileName )
    {
-      hb_fsDelete( pSort->szTempFileName );
+      hb_fileDelete( pSort->szTempFileName );
       hb_xfree( pSort->szTempFileName );
    }
    if( pSort->pKeyPool )
