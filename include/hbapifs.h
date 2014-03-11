@@ -404,8 +404,18 @@ extern HB_EXPORT PHB_FILE     hb_fileCreateTempEx( char * pszName,
                                                    const char * pszPrefix,
                                                    const char * pszExt,
                                                    HB_FATTR ulAttr );
-
 extern HB_EXPORT PHB_FILE     hb_filePOpen( const char * pszFileName, const char * pszMode );
+extern HB_EXPORT PHB_FILE     hb_fileFromHandle( HB_FHANDLE hFile );
+extern HB_EXPORT HB_BOOL      hb_fileDetach( PHB_FILE pFile );
+extern HB_EXPORT HB_BOOL      hb_fileIsLocal( PHB_FILE pFile );
+extern HB_EXPORT HB_BOOL      hb_fileIsLocalName( const char * pszFileName );
+
+/* interface to PRG level hb_vf*() file pointer items */
+extern HB_EXPORT PHB_FILE     hb_fileParam( int iParam );
+extern HB_EXPORT PHB_FILE     hb_fileItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM     hb_fileItemPut( PHB_ITEM pItem, PHB_FILE pFile );
+extern HB_EXPORT void         hb_fileItemClear( PHB_ITEM pItem );
+
 
 /* wrapper to fopen() which calls hb_fsNameConv() */
 extern HB_EXPORT FILE *       hb_fopen( const char *path, const char *mode );

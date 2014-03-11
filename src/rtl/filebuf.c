@@ -1223,6 +1223,57 @@ PHB_FILE hb_fileCreateTempEx( char * pszName,
    return pFile;
 }
 
+PHB_FILE hb_fileFromHandle( HB_FHANDLE hFile )
+{
+   return hb_fileNew( hFile, HB_FALSE, HB_FALSE, 0, 0, HB_FALSE );
+}
+
+HB_BOOL hb_fileDetach( PHB_FILE pFile )
+{
+   if( pFile )
+   {
+      if( pFile->pFuncs == s_fileMethods() )
+      {
+         pFile->hFile = FS_ERROR;
+         s_fileClose( pFile );
+         return HB_TRUE;
+      }
+#if defined( HB_OS_UNIX )
+      else if( pFile->pFuncs == s_fileposMethods() )
+      {
+         PHB_FILEPOS pFilePos = ( PHB_FILEPOS ) pFile;
+
+         pFilePos->pFile->hFile = FS_ERROR;
+         s_fileposClose( pFile );
+         return HB_TRUE;
+      }
+#endif
+   }
+
+   return HB_FALSE;
+}
+
+HB_BOOL hb_fileIsLocal( PHB_FILE pFile )
+{
+   if( pFile )
+   {
+#if defined( HB_OS_UNIX )
+      if( pFile->pFuncs == s_fileMethods() ||
+          pFile->pFuncs == s_fileposMethods() )
+#else
+      if( pFile->pFuncs == s_fileMethods() )
+#endif
+         return HB_TRUE;
+   }
+
+   return HB_FALSE;
+}
+
+HB_BOOL hb_fileIsLocalName( const char * pszFileName )
+{
+   return s_fileFindDrv( pszFileName ) >= 0;
+}
+
 PHB_FILE hb_filePOpen( const char * pszFileName, const char * pszMode )
 {
    PHB_FILE pFile = NULL;
