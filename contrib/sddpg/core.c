@@ -96,6 +96,7 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
@@ -107,7 +108,7 @@ static SDDNODE s_pgsqldd = {
    ( SDDFUNC_EXECUTE ) pgsqlExecute,
    ( SDDFUNC_OPEN ) pgsqlOpen,
    ( SDDFUNC_CLOSE ) pgsqlClose,
-   ( SDDFUNC_GOTO ) NULL,
+   ( SDDFUNC_GOTO ) pgsqlGoto,
    ( SDDFUNC_GETVALUE ) pgsqlGetValue,
    ( SDDFUNC_GETVARLEN ) NULL
 };
@@ -472,7 +473,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow = pItemEof;
+   pArea->ulRecMax = pArea->ulRecCount + 1;
+
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 
@@ -496,6 +499,25 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
+{
+   if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
+   {
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+      pArea->fPositioned  = HB_FALSE;
+   }
+   else
+   {
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned  = HB_TRUE;
+   }
+
+   return HB_SUCCESS;
+}
+
+
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -510,7 +532,10 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+   {
+      hb_itemClear( pItem );
       return HB_SUCCESS;
+   }
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
    ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
