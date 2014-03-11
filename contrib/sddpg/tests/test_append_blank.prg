@@ -8,9 +8,10 @@ REQUEST SDDPG, SQLMIX
 
 ANNOUNCE RDDSYS
 
-FIELD RESIDENTS
+FIELD RESIDENTS, CODE, NAME
 
 PROCEDURE Main()
+LOCAL i
 
 #if defined( __HBSCRIPT__HBSHELL )
    rddRegister( "SQLBASE" )
@@ -31,7 +32,13 @@ PROCEDURE Main()
 
    ? "Let's browse table (press any key)"
    Inkey( 0 )
-   dbUseArea( .T., , "SELECT * FROM country", "country" )
+   dbUseArea( .T., "SQLMIX" , "SELECT * FROM country", "country" )
+
+   for i := 1 to 100
+      append blank
+      replace CODE with STR(i, 3), NAME with 'Test country' + STR(i, 3)
+   next
+
    Browse()
 
    ? "Let's browse table ordered by resident count (press any key)"
@@ -49,4 +56,4 @@ STATIC PROCEDURE CreateTable()
    ? rddInfo( RDDI_EXECUTE, "CREATE TABLE country (CODE char(3), NAME char(50), RESIDENTS int)" )
    ? rddInfo( RDDI_EXECUTE, "INSERT INTO country values ('LTU', 'Lithuania', 3369600), ('USA', 'United States of America', 305397000), ('POR', 'Portugal', 10617600), ('POL', 'Poland', 38115967), ('AUS', 'Australia', 21446187), ('FRA', 'France', 64473140), ('RUS', 'Russia', 141900000)" )
 
-   RETURN
+ 
