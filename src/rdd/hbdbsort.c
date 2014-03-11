@@ -85,11 +85,11 @@ void hb_dbQSortExit( LPDBQUICKSORT pQuickSort )
 
 HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount )
 {
-   HB_USHORT uiSize;
+   HB_SIZE nSize;
 
    /* Write chunk */
-   uiSize = uiCount * pQuickSort->uiRecordLen;
-   return hb_fileWrite( pQuickSort->pFile, pQuickSort->pBuffer, uiSize, -1 ) == uiSize;
+   nSize = ( HB_SIZE ) uiCount * pQuickSort->uiRecordLen;
+   return hb_fileWrite( pQuickSort->pFile, pQuickSort->pBuffer, nSize, -1 ) == nSize;
 }
 
 static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )

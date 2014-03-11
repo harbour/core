@@ -71,7 +71,7 @@ static const HB_GC_FUNCS s_gcFileFuncs =
    hb_gcDummyMark
 };
 
-static PHB_FILE hb_fileParam( int iParam )
+PHB_FILE hb_fileParam( int iParam )
 {
    PHB_FILE * fileHolder = ( PHB_FILE * ) hb_parptrGC( &s_gcFileFuncs, iParam );
 
@@ -80,6 +80,29 @@ static PHB_FILE hb_fileParam( int iParam )
 
    hb_errRT_BASE_SubstR( EG_ARG, 2021, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
+}
+
+PHB_FILE hb_fileItemGet( PHB_ITEM pItem )
+{
+   PHB_FILE * fileHolder = ( PHB_FILE * ) hb_itemGetPtrGC( pItem, &s_gcFileFuncs );
+
+   return fileHolder ? *fileHolder : NULL;
+}
+
+PHB_ITEM hb_fileItemPut( PHB_ITEM pItem, PHB_FILE pFile )
+{
+   PHB_FILE * fileHolder = ( PHB_FILE * ) hb_gcAllocate( sizeof( PHB_FILE ),
+                                                         &s_gcFileFuncs );
+   * fileHolder = pFile;
+   return hb_itemPutPtrGC( pItem, fileHolder );
+}
+
+void hb_fileItemClear( PHB_ITEM pItem )
+{
+   PHB_FILE * fileHolder = ( PHB_FILE * ) hb_itemGetPtrGC( pItem, &s_gcFileFuncs );
+
+   if( fileHolder )
+      * fileHolder = NULL;
 }
 
 static PHB_FILE * hb_fileParamPtr( int iParam )
@@ -96,12 +119,7 @@ static PHB_FILE * hb_fileParamPtr( int iParam )
 static void hb_fileReturn( PHB_FILE pFile )
 {
    if( pFile )
-   {
-      PHB_FILE * fileHolder = ( PHB_FILE * ) hb_gcAllocate( sizeof( PHB_FILE ),
-                                                            &s_gcFileFuncs );
-      * fileHolder = pFile;
-      hb_retptrGC( fileHolder );
-   }
+      hb_fileItemPut( hb_param( -1, HB_IT_ANY ), pFile );
    else
       hb_ret();
 }
