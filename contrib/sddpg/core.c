@@ -98,6 +98,8 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
+static HB_ERRCODE pgsqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
+
 
 static SDDNODE pgsqldd = {
    NULL,
@@ -107,7 +109,7 @@ static SDDNODE pgsqldd = {
    ( SDDFUNC_EXECUTE ) pgsqlExecute,
    ( SDDFUNC_OPEN ) pgsqlOpen,
    ( SDDFUNC_CLOSE ) pgsqlClose,
-   ( SDDFUNC_GOTO ) NULL,
+   ( SDDFUNC_GOTO ) pgsqlGoTo,
    ( SDDFUNC_GETVALUE ) pgsqlGetValue,
    ( SDDFUNC_GETVARLEN ) NULL
 };
@@ -197,6 +199,7 @@ static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection )
 {
+   //printf("psql disconnect\n");
    PQfinish( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn );
    hb_xfree( pConnection->pSDDConn );
    return HB_SUCCESS;
@@ -205,6 +208,8 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection )
 
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
+ 
+   //printf("psql execute\n");
    PGconn *       pConn = ( ( SDDCONN * ) pConnection->pSDDConn )->pConn;
    int            iTuples;
    PGresult *     pResult;
@@ -239,6 +244,8 @@ static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 {
+
+   //printf("psql open\n");
    PGconn *       pConn = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pConn;
    SDDDATA *      pSDDData;
    PGresult *     pResult;
@@ -463,22 +470,30 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
+
    pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow = pItemEof;
+   // SEGFAULT without this, "stolen" from sddmy
+   pArea->ulRecMax = pArea->ulRecCount + 1;
+
+
+   pArea->pRow[ 0 ] = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 
    return HB_SUCCESS;
+
 }
 
 
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 {
+
+   //printf("psql close\n");
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
    if( pSDDData )
@@ -493,8 +508,33 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
+static HB_ERRCODE pgsqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
+{
+
+   //printf("pgsqlGoTo %l\n", ulRecNo);
+
+   if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
+   {
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+
+      pArea->fPositioned = HB_FALSE;
+   }
+   else
+   {
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned = HB_TRUE;
+   }
+   return HB_SUCCESS;
+}
+
+
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
+
+   //printf("psql get value %u\n", uiIndex);
+
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
    LPFIELD   pField;
    char *    pValue;
@@ -504,15 +544,19 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    bError = HB_FALSE;
    uiIndex--;
+
    pField = pArea->area.lpFields + uiIndex;
 
-   if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+   
+   if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) ) {
+      // empty record
+      hb_itemClear( pItem );
       return HB_SUCCESS;
-
+   }
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
    ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
-/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
+   //printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen );
 
    switch( pField->uiType )
    {
