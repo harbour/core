@@ -30,19 +30,15 @@ LOCAL i
 
    CreateTable()
 
-   ? "Let's browse table (press any key)"
-   Inkey( 0 )
    dbUseArea( .T., "SQLMIX" , "SELECT * FROM country", "country" )
 
-   for i := 1 to 100
-      append blank
-      replace CODE with STR(i, 3), NAME with 'Test country' + STR(i, 3)
-   next
+   FOR i := 500 to 600
+    append blank
+    replace CODE with STR(i, 3), NAME with 'Test append' + STR(i, 3)
+   NEXT
 
-   Browse()
+   GO 101
 
-   ? "Let's browse table ordered by resident count (press any key)"
-   Inkey( 0 )
    INDEX ON RESIDENTS TAG residents TO country
    Browse()
 
@@ -51,9 +47,10 @@ LOCAL i
    RETURN
 
 STATIC PROCEDURE CreateTable()
-
+LOCAL i
    ? rddInfo( RDDI_EXECUTE, "DROP TABLE country" )
    ? rddInfo( RDDI_EXECUTE, "CREATE TABLE country (CODE char(3), NAME char(50), RESIDENTS int)" )
-   ? rddInfo( RDDI_EXECUTE, "INSERT INTO country values ('LTU', 'Lithuania', 3369600), ('USA', 'United States of America', 305397000), ('POR', 'Portugal', 10617600), ('POL', 'Poland', 38115967), ('AUS', 'Australia', 21446187), ('FRA', 'France', 64473140), ('RUS', 'Russia', 141900000)" )
-
- 
+   FOR i := 1 to 100 
+     rddInfo( RDDI_EXECUTE, "INSERT INTO country values ('" + STR(i, 3) + "', 'TestSQL" + STR(i, 3) + "', 3369600)")
+   NEXT
+  

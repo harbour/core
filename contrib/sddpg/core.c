@@ -487,21 +487,6 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    return HB_SUCCESS;
 
-/*
-   pArea->ulRecCount = 0;
-   pArea->ulRecMax   = SQLDD_ROWSET_INIT;
-
-   pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   memset( pArea->pRow, 0, SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-
-   pArea->pRow[ 0 ]      = pItemEof;
-   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
-
-   return HB_SUCCESS;
-*/
-
 }
 
 
