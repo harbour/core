@@ -1337,12 +1337,11 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 #if defined( HB_OS_WIN )
    {
       HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
+      FILETIME ft, local_ft;
+      SYSTEMTIME st;
 
       if( hFile != FS_ERROR )
       {
-         FILETIME ft, local_ft;
-         SYSTEMTIME st;
-
          if( GetFileTime( DosToWinHandle( hFile ), NULL, NULL, &ft ) &&
              FileTimeToLocalFileTime( &ft, &local_ft ) &&
              FileTimeToSystemTime( &local_ft, &st ) )
@@ -1354,6 +1353,32 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
          }
          hb_fsSetIOError( fResult, 0 );
          hb_fsClose( hFile );
+      }
+      else
+      {
+         WIN32_FIND_DATA findFileData;
+         HANDLE hFindFile;
+         LPCTSTR lpFileName;
+         LPTSTR lpFree;
+
+         lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+         hFindFile = FindFirstFile( lpFileName, &findFileData );
+         if( lpFree )
+            hb_xfree( lpFree );
+
+         if( hFindFile != INVALID_HANDLE_VALUE )
+         {
+            if( FileTimeToLocalFileTime( &findFileData.ftLastWriteTime, &local_ft ) &&
+                FileTimeToSystemTime( &local_ft, &st ) )
+            {
+               *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+               *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+
+               fResult = HB_TRUE;
+            }
+            hb_fsSetIOError( fResult, 0 );
+            FindClose( hFindFile );
+         }
       }
    }
 #elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) || defined( __GNUC__ )
