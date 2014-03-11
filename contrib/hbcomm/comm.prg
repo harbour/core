@@ -62,34 +62,30 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
       ( nPort := hb_comFindPort( cPort, .T. ) ) != 0 .AND. ;
       hb_comOpen( nPort )
 
-      hb_default( @nBaud, 9600 )
+      HB_SYMBOL_UNUSED( nBufferSize )
 
       cParity := "N"
       IF HB_ISNUMERIC( nParity )
          SWITCH nParity
-         CASE 0 ; cParity := "N" ; EXIT
          CASE 1 ; cParity := "O" ; EXIT
          CASE 2 ; cParity := "M" ; EXIT
          CASE 3 ; cParity := "E" ; EXIT
          ENDSWITCH
       ENDIF
 
-      hb_default( @nStop, 1 )
-
-      HB_SYMBOL_UNUSED( nBufferSize )
-
-      IF hb_comInit( nPort, nBaud, cParity, nData, nStop )
+      IF hb_comInit( nPort, hb_defaultValue( nBaud, 9600 ), cParity, nData, hb_defaultValue( nStop, 1 ) )
          s_hPort[ nPort ] := NIL
-         hb_mutexUnlock( s_hbcomm_mutex )
-         RETURN nPort
       ELSE
          hb_comClose( nPort )
+         nPort := 0
       ENDIF
+   ELSE
+      nPort := 0
    ENDIF
 
    hb_mutexUnlock( s_hbcomm_mutex )
 
-   RETURN 0
+   RETURN nPort
 
 /* Purge output buffer */
 FUNCTION OUTBUFCLR( nPort )
@@ -120,9 +116,7 @@ FUNCTION OUTCHR( nPort, cData )
    DO WHILE hb_BLen( cData ) > 0
 
       /* I expect at least some data to be sent in a second */
-      nLen := hb_comSend( nPort, cData,, 1000 )
-
-      IF nLen <= 0
+      IF ( nLen := hb_comSend( nPort, cData,, 1000 ) ) <= 0
          RETURN .F.
       ENDIF
 
@@ -142,15 +136,15 @@ FUNCTION OUTBUFSIZE( nPort )
 /* Close port and clear handle */
 FUNCTION UNINT_PORT( nPort )
 
-   LOCAL lRetVal := .F.
+   LOCAL lRetVal
 
    hb_mutexLock( s_hbcomm_mutex )
 
-   IF nPort $ s_hPort
-      IF hb_comClose( nPort )
-         hb_HDel( s_hPort, nPort )
-         lRetVal := .T.
-      ENDIF
+   IF nPort $ s_hPort .AND. hb_comClose( nPort )
+      hb_HDel( s_hPort, nPort )
+      lRetVal := .T.
+   ELSE
+      lRetVal := .F.
    ENDIF
 
    hb_mutexUnlock( s_hbcomm_mutex )

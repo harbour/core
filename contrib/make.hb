@@ -743,8 +743,8 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
 
 /* Build all contribs that have a .hbp file matching the
    name of its contrib subdir. Also support contribs
-   with multiple subprojects if it has a 'projects.hbp'
-   -hbcontainer project. */
+   with multiple subprojects if it has a 'makesub.txt'
+   text file with a list of those subprojects. */
 STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
 
    LOCAL aFile
