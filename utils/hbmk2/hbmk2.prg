@@ -13193,6 +13193,31 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
 
    RETURN iif( hb_processRun( cCommand ) == 0, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
 
+STATIC FUNCTION win_defgen_command( hbmk, cCommand, cSourceDLL, /* @ */ cDef )
+
+   LOCAL cStdErr
+
+   cDef := ""
+
+   IF ! hb_FileExists( cSourceDLL )
+      IF hbmk[ _HBMK_lInfo ]
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Source dynamic library not found: %1$s" ), cSourceDLL ) )
+      ENDIF
+      RETURN _HBMK_IMPLIB_NOTFOUND
+   ENDIF
+
+   cCommand := AllTrim( hb_StrReplace( cCommand, { ;
+      "{ID}" => FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } ) )
+
+   IF hbmk[ _HBMK_lTRACE ]
+      IF ! hbmk[ _HBMK_lQuiet ]
+         _hbmk_OutStd( hbmk, I_( ".def file generation command:" ) )
+      ENDIF
+      OutStd( cCommand + _OUT_EOL )
+   ENDIF
+
+   RETURN iif( hb_processRun( cCommand,, @cDef, @cStdErr ) == 0, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+
 #define _COFF_LIB_SIGNATURE "!<arch>"
 
 STATIC FUNCTION IsCOFFLib( cFileName )
@@ -13308,12 +13333,39 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
 
    LOCAL nResult
 
-   IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
-      RETURN nResult
+   LOCAL cDef
+   LOCAL cSourceDef
+   LOCAL fhnd
+
+   /* ugly hack to make it configurable to force skip COFF .lib processing and
+      skip to .def lookup, and if that fails, to .def generation */
+   IF hb_FNameExt( cSourceDLL ) == ".def"
+      cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
+   ELSE
+      IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
+         RETURN nResult
+      ENDIF
    ENDIF
 
    IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
       RETURN nResult
+   ENDIF
+
+   /* Try to generate a .def file from the .dll
+      This might help in case the supplied .lib doesn't work. */
+   IF win_defgen_command( hbmk, "gendef - {ID}", cSourceDLL, @cDef ) == _HBMK_IMPLIB_OK
+      IF ( fhnd := hb_FTempCreateEx( @cSourceDef ) ) != F_ERROR
+         FWrite( fhnd, cDef )
+         FClose( fhnd )
+         IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDef, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+            FErase( cSourceDef )
+            RETURN nResult
+         ENDIF
+         FErase( cSourceDef )
+      ELSE
+         _hbmk_OutErr( hbmk, I_( "Warning: Temporary .def could not be created." ) )
+         RETURN nResult
+      ENDIF
    ENDIF
 
    RETURN win_implib_copy( hbmk, cSourceDLL, cTargetLib )
@@ -13381,7 +13433,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
-         _hbmk_OutStd( hbmk, I_( "Import library creation command:" ) )
+         _hbmk_OutStd( hbmk, I_( ".def file generation command:" ) )
       ENDIF
       OutStd( cCommandDump + _OUT_EOL )
    ENDIF
@@ -13413,6 +13465,8 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
          nResult := win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
 
          FErase( cSourceDef )
+      ELSE
+         _hbmk_OutErr( hbmk, I_( "Warning: Temporary .def could not be created." ) )
       ENDIF
    ENDIF
 
