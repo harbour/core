@@ -132,7 +132,7 @@ static RDDFUNCS  adsxSuper;
 
 static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
-                                 char * filename, HB_ERRCODE errOsCode,
+                                 const char * filename, HB_ERRCODE errOsCode,
                                  HB_USHORT uiFlags )
 {
    PHB_ITEM pError;
@@ -497,9 +497,7 @@ static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM
       }
 
       if( pWhileItem && ! mixEvalCond( pWhileItem, NULL ) )
-      {
          break;
-      }
 
       if( pForItem == NULL || mixEvalCond( pForItem, NULL ) )
       {
@@ -1093,44 +1091,94 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    HB_USHORT  uiLen;
    HB_BYTE    bType;
    UNSIGNED16 bValidExpr;
-   HB_BOOL    bUseADS;
+   HB_BOOL    bKeyADS, bForADS, bWhileADS;
+   ADSHANDLE  hIndex = NULL;
+
+   bForADS = bWhileADS = HB_TRUE;
 
    /* Test key expression */
    bValidExpr = 0;
    AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) hb_itemGetCPtr( pOrderInfo->abExpr ), &bValidExpr );
-   bUseADS = bValidExpr;
+   bKeyADS = bValidExpr;
 
-   if( bUseADS && pArea->adsarea.area.lpdbOrdCondInfo )
+   if( pArea->adsarea.area.lpdbOrdCondInfo )
    {
       /* Test FOR expression */
       if( pArea->adsarea.area.lpdbOrdCondInfo->abFor )
       {
          bValidExpr = 0;
          AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abFor, &bValidExpr );
-         bUseADS = bValidExpr;
+         bForADS = bValidExpr;
       }
       else if( pArea->adsarea.area.lpdbOrdCondInfo->itmCobFor )
-      {
-         bUseADS = HB_FALSE;
-      }
+         bForADS = HB_FALSE;
 
       /* Test WHILE expression */
-      if( bUseADS )
+      if( pArea->adsarea.area.lpdbOrdCondInfo->abWhile )
       {
-         if( pArea->adsarea.area.lpdbOrdCondInfo->abWhile )
-         {
-            bValidExpr = 0;
-            AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile, &bValidExpr );
-            bUseADS = ( bValidExpr != 0 );
-         }
-         else if( pArea->adsarea.area.lpdbOrdCondInfo->itmCobWhile )
-            bUseADS = HB_FALSE;
+         bValidExpr = 0;
+         AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile, &bValidExpr );
+         bWhileADS = bValidExpr;
       }
+      else if( pArea->adsarea.area.lpdbOrdCondInfo->itmCobWhile )
+         bWhileADS = HB_FALSE;
    }
 
-   if( bUseADS )
+   if( bKeyADS && bForADS && bWhileADS )
    {
       return SUPER_ORDCREATE( ( AREAP ) pArea, pOrderInfo );
+   }
+
+   if( pArea->adsarea.area.lpdbOrdCondInfo &&
+       ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor || 
+         bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) )
+   {
+      /* We can use server side indexing to filter records. This improves speed */
+      UNSIGNED32 u32RetVal;
+      UNSIGNED8  szKeyExpr[ 1024 ];
+      UNSIGNED16 usLen = sizeof( szKeyExpr );
+
+      if( pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent && pArea->adsarea.hOrdCurrent )
+      {
+         AdsGetIndexExpr( pArea->adsarea.hOrdCurrent, szKeyExpr, &usLen );
+      }
+      else
+         szKeyExpr[ 0 ] = '\0';
+
+      u32RetVal = AdsCreateIndex61( 
+         pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
+         ( UNSIGNED8 * ) pOrderInfo->abBagName,
+         ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+         szKeyExpr[ 0 ] ? ( UNSIGNED8 * ) szKeyExpr : ( UNSIGNED8 * ) "1",
+         ( UNSIGNED8 * ) ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ? pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL ),
+         ( UNSIGNED8 * ) ( ( bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) ? pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL ),
+         ADS_COMPOUND, ADS_DEFAULT, &hIndex );
+
+      if( u32RetVal != AE_SUCCESS )
+      {
+         hb_mixErrorRT( pArea, EG_CREATE, ( HB_ERRCODE ) u32RetVal, pOrderInfo->atomBagName, 0, 0 );
+         return HB_FAILURE;
+      }
+
+      pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent = HB_TRUE;
+
+      /* If while condition is already used, remove it from OrdCondInfo */
+      if( bWhileADS && pArea->adsarea.area.lpdbOrdCondInfo->abWhile )
+      {
+         hb_xfree( pArea->adsarea.area.lpdbOrdCondInfo->abWhile );
+         pArea->adsarea.area.lpdbOrdCondInfo->abWhile = NULL;
+         if( pArea->adsarea.area.lpdbOrdCondInfo->itmCobWhile )
+         {
+            hb_itemRelease( pArea->adsarea.area.lpdbOrdCondInfo->itmCobWhile );
+            pArea->adsarea.area.lpdbOrdCondInfo->itmCobWhile = NULL;
+         }
+         if( pArea->adsarea.area.lpdbOrdCondInfo->itmStartRecID )
+         {
+            hb_itemRelease( pArea->adsarea.area.lpdbOrdCondInfo->itmStartRecID );
+            pArea->adsarea.area.lpdbOrdCondInfo->itmStartRecID = NULL;
+         }
+         pArea->adsarea.area.lpdbOrdCondInfo->fRest = HB_FALSE;
+      }
    }
 
    /* Obtain key codeblock */
@@ -1141,7 +1189,11 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    else
    {
       if( SELF_COMPILE( ( AREAP ) pArea, hb_itemGetCPtr( pOrderInfo->abExpr ) ) == HB_FAILURE )
+      {
+         if( hIndex )
+            AdsDeleteIndex( hIndex );
          return HB_FAILURE;
+      }
       pKeyItem = pArea->adsarea.area.valResult;
       pArea->adsarea.area.valResult = NULL;
    }
@@ -1151,6 +1203,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    SELF_GOTO( ( AREAP ) pArea, 0 );
    if( SELF_EVALBLOCK( ( AREAP ) pArea, pKeyItem ) == HB_FAILURE )
    {
+      if( hIndex )
+         AdsDeleteIndex( hIndex );
       hb_vmDestroyBlockOrMacro( pKeyItem );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       return HB_FAILURE;
@@ -1194,6 +1248,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 
    if( bType == 'U' || uiLen == 0 )
    {
+      if( hIndex )
+         AdsDeleteIndex( hIndex );
       hb_vmDestroyBlockOrMacro( pKeyItem );
       SELF_GOTO( ( AREAP ) pArea, ulRecNo );
       hb_mixErrorRT( pArea, bType == 'U' ? EG_DATATYPE : EG_DATAWIDTH, 1026, NULL, 0, 0 );
@@ -1211,6 +1267,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       {
          if( SELF_COMPILE( ( AREAP ) pArea, pArea->adsarea.area.lpdbOrdCondInfo->abFor ) == HB_FAILURE )
          {
+            if( hIndex )
+               AdsDeleteIndex( hIndex );
             hb_vmDestroyBlockOrMacro( pKeyItem );
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
             return HB_FAILURE;
@@ -1228,6 +1286,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       {
          if( SELF_COMPILE( ( AREAP ) pArea, pArea->adsarea.area.lpdbOrdCondInfo->abWhile ) == HB_FAILURE )
          {
+            if( hIndex )
+               AdsDeleteIndex( hIndex );
             hb_vmDestroyBlockOrMacro( pKeyItem );
             if( pForItem )
                hb_vmDestroyBlockOrMacro( pForItem );
@@ -1244,6 +1304,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    {
       if( SELF_EVALBLOCK( ( AREAP ) pArea, pForItem ) == HB_FAILURE )
       {
+         if( hIndex )
+            AdsDeleteIndex( hIndex );
          hb_vmDestroyBlockOrMacro( pKeyItem );
          hb_vmDestroyBlockOrMacro( pForItem );
          if( pWhileItem )
@@ -1253,6 +1315,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
       }
       if( hb_itemType( pArea->adsarea.area.valResult ) != HB_IT_LOGICAL )
       {
+         if( hIndex )
+            AdsDeleteIndex( hIndex );
          hb_itemRelease( pArea->adsarea.area.valResult );
          pArea->adsarea.area.valResult = 0;
          hb_vmDestroyBlockOrMacro( pKeyItem );
@@ -1271,8 +1335,16 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 
    SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
+   /* Set auxiliary index as current for subindexing */
+   if( hIndex )
+      pArea->adsarea.hOrdCurrent = hIndex;
+
    pTagNew = mixTagCreate( pOrderInfo->atomBagName, pOrderInfo->abExpr, pKeyItem,
                            pForItem, pWhileItem, bType, uiLen, pArea );
+
+   pArea->adsarea.hOrdCurrent = 0;
+   if( hIndex )
+      AdsDeleteIndex( hIndex );
 
    if( pWhileItem )
       hb_vmDestroyBlockOrMacro( pWhileItem );
@@ -1289,10 +1361,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    {
       pArea->pTagList = pTagNew;
    }
-
    pArea->pTagCurrent = pTagNew;
-   pArea->adsarea.hOrdCurrent = 0;
-
    return HB_SUCCESS;
 }
 
