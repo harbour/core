@@ -1,7 +1,7 @@
 diff -urN png.orig/png.h png/png.h
---- png.orig/png.h	2014-02-08 18:43:03.460199600 +0100
-+++ png/png.h	2014-02-08 18:43:03.772179600 +0100
-@@ -451,7 +451,7 @@
+--- png.orig/png.h	2014-03-14 23:45:47.341048800 +0100
++++ png/png.h	2014-03-14 23:45:47.637433600 +0100
+@@ -454,7 +454,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -11,8 +11,8 @@ diff -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2014-02-08 18:43:03.444600600 +0100
-+++ png/pnglconf.h	2014-02-08 18:43:03.772179600 +0100
+--- png.orig/pnglconf.h	2014-03-14 23:45:47.325449600 +0100
++++ png/pnglconf.h	2014-03-14 23:45:47.637433600 +0100
 @@ -26,8 +26,8 @@
  #define PNG_BUILD_GRAYSCALE_PALETTE_SUPPORTED
  #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
@@ -48,8 +48,8 @@ diff -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_COST_SHIFT 3
  #define PNG_DEFAULT_READ_MACROS 1
 diff -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	2014-02-08 18:43:03.475798600 +0100
-+++ png/pngpriv.h	2014-02-08 18:43:03.772179600 +0100
+--- png.orig/pngpriv.h	2014-03-14 23:45:47.372247200 +0100
++++ png/pngpriv.h	2014-03-14 23:45:47.637433600 +0100
 @@ -69,7 +69,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
