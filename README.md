@@ -1868,7 +1868,7 @@ Supported shells per host platforms:
    Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
 
    If you think you can make Harbour better: contribute.
-   See [How](CONTRIBUTING.md).
+   [See how](CONTRIBUTING.md).
 
    The information this document is subject to change without notice
    and does not represent any future commitment by the participants

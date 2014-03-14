@@ -686,7 +686,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "*.css" }
 
    LOCAL aAnyIdent := { ;
-      "*.dif" }
+      hb_osFileMask() }
 
    LOCAL aCanHaveSpaceAtEol := { ;
       "*.dif", ;

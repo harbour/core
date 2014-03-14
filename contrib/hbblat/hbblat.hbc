@@ -1,4 +1,4 @@
-description=Blat wrapper (e-mailing, win-only)
+description=Blat wrapper (e-mailing, SMTP-client, win-only)
 
 skip={!win}
 
