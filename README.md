@@ -412,6 +412,8 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
+See contrib-specific dependencies in their own local readme.txt.
+
 
 > NOTES:
 >
@@ -428,8 +430,6 @@ copy.
 
         $ brew install pcre slang
         $ brew install upx uncrustify ack optipng jpegoptim
-
-## Linux (generic)
 
 ## Linux (.deb based distros: Debian, Ubuntu)
 

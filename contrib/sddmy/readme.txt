@@ -6,6 +6,6 @@ Install (debian):      sudo apt-get install libmysqlclient15-dev
 Install (rpm):         libmysqlclient-devel
                        mysql-devel
                        MySQL-devel
-Install (OS X):        brew install mysql
-                       brew install mariadb
+Install (OS X):        brew install mariadb
+                       brew install mysql
 mpkg_rpm.sh option:    --with mysql
