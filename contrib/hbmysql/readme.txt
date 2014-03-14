@@ -1,3 +1,6 @@
+See component details in readme.txt of sddmy contrib.
+
+
                 +---------------------------------------------------------+
                 | 2001-11-22 - Harbour MySQL access classes - readme file |
                 +---------------------------------------------------------+
@@ -6,30 +9,15 @@
 This is work in progress, so it has to be fully tested and needs a few more methods to cover MySQL possibilities.
 
 
-This set of files gives you a mean to access a MySQL server, I've developed and tested them on a OS/2 platform,
-In their present state MySQL classes are made up of these files:
-
-mysql.c     :  low level wrapper around MySQL client API.
-mysql.ch    :  clipper level defines of MySQL types
-tmysql.prg  :  MySQL access classes
-test.prg    :  a little test program which wont work for you :-) since it uses a .dbf file not
-               provided. Use it as a small tutorial of tmysql.prg provided functions.
-
-
-1) See README on how to obtain/install and configure Harbour build
-   system for mysql.
-
-2) Add hbmysql.hbc to your hbmk2 command line (you can also try to
-   recompile programs in utils and tests subdirs just to test everything)
-   and be sure to have MySQL dynamic libraries configured.
+Add hbmysql.hbc to your hbmk2 command line (you can also try to
+recompile programs in utils and tests subdirs just to test everything)
+and be sure to have MySQL dynamic libraries configured.
 
 
                               +---------------------+
                               |  Available Classes  |
                               +---------------------+
 
-
-tmysql.prg defines four classes:
 
 TMySQLServer:  manages access to a MySQL server and returns an oServer object to which you'll send all your
                queries;
@@ -53,6 +41,6 @@ I'm aware that this brief document doesn't explain a lot about MySQL access clas
 I'll try to update it as work on these classes goes by and I'll like to receive feedback and suggestions
 from users (if any :-))
 
-Excuse my poor english and happy selecting :-)
+Excuse my poor English and happy selecting :-)
 
 Maurilio Longo - <maurilio.longo@libero.it>

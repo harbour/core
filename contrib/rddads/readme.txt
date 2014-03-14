@@ -1,3 +1,10 @@
+Name:                  Advantage Client Engine API [win, linux, free, closed-source]
+URL:                   http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api
+Environment variable:  HB_WITH_ADS=C:\ads\acesdk
+Install (Linux):       Download 'Advantage Client Engine API for Linux' (f.e. 'aceapi-11.10.0.10.tar.gz')
+mpkg_rpm.sh option:    --with ads
+
+
 RDD for Advantage Database Server
 Alexander Kresin <alex@belacy.belgorod.su>
 
@@ -12,6 +19,10 @@ You need to include in your prg file the following lines:
 
    REQUEST ADS
 
+You can also use:
+
+   REQUEST ADT | ADSNTX | ADSCDX | ADSVFP
+
 and then you can set default RDD using one of the following functions:
 
    rddSetDefault( "ADT" )
@@ -19,22 +30,16 @@ and then you can set default RDD using one of the following functions:
    rddSetDefault( "ADSCDX" )
    rddSetDefault( "ADSVFP" )
 
-You can also use:
-
-   REQUEST ADT | ADSNTX | ADSCDX | ADSVFP
-
-instead of REQUEST ADS.
-
-for backward compatibility with old code it's possible to use also:
-   rddSetDefault( "ADS" )
 and then
    #include "ads.ch"
    SET FILETYPE TO NTX | CDX | ADT | VFP
-command or AdsSetFileType() function to set table type (default is CDX)
+command, or function
+   AdsSetFileType()
+to set table type (default is CDX)
 
 By default RDD is tuned for remote server. To change this you may
 use commands, defined in ads.ch:
 
-  SET SERVER LOCAL
-
-or function AdsSetServerType().
+   SET SERVER LOCAL
+command, or function
+   AdsSetServerType()

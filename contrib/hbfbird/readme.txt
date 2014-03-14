@@ -1,28 +1,13 @@
-README 2003-12-23 - Harbour Low Level api for Firebird and Interbase RDBMS
+See component details in readme.txt of sddfb contrib.
 
-This work is not finished yet. It's to be seem like Harbour TMysql routines.
 
-For full firebird documentation look at:
+README 2003-12-23 - Harbour Low Level API for Firebird and Interbase RDBMS
 
-Firebird home: http://firebird.sourceforge.net/index.php
-Api: http://www.ibphoenix.com/downloads/60ApiGuide.zip
-Data Definition: http://www.ibphoenix.com/downloads/60DataDef.zip
-Language Reference: http://www.ibphoenix.com/downloads/60LangRef.zip
-Developers guide: http://www.ibphoenix.com/downloads/60DevGuide.zip
+This work is not finished yet. It's planned to be similar to Harbour TMysql routines.
 
 The Class implementation has no all implementation like TMysql has, because Firebird it's diferent.
 For example, you can't navigate in records like Mysql do, ex: Getrow( number of row ), in firebird you can
 just go forward.
-
-FILES:
-
-firebird.c - Low level api
-TFirebrd.prg - Class implementation, it's to be seems like TMysql.
-
-tests\simple.prg - Simple test class
-tests\stress.prg - Stress test class
-tests\test.prg   - Testing using only low level api
-tests\testapi.c  - Pure C code to test firebird access.
 
 TODO:
 
@@ -43,6 +28,6 @@ BUGS:
 
 Fix a few segment faults. I Need some help to find what's going on here.
 
-That's all folks and sorry my poor english
+That's all folks and sorry my poor English
 
 Rodrigo Moreno - rodrigo_moreno@yahoo.com

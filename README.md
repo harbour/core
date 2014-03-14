@@ -323,17 +323,6 @@ If you want to rebuild one specific contrib package, use this:
 You can fine-tune the build with these options:
 
     --with static      - link all binaries with static libs
-    --with ads         - build components dependent on ads (rddads)
-    --with allegro     - build components dependent on allegro (gtalleg)
-    --with cups        - build components dependent on cups (hbcups)
-    --with cairo       - build components dependent on cairo (hbcairo)
-    --with curl        - build components dependent on libcurl (hbcurl)
-    --with firebird    - build components dependent on firebird (hbfbird, sddfb)
-    --with freeimage   - build components dependent on freeimage (hbfimage)
-    --with gd          - build components dependent on gd (hbgd)
-    --with mysql       - build components dependent on mysql (hbmysql, sddmy)
-    --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
-    --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
     --with localzlib   - build local copy of zlib library
     --with localpcre   - build local copy of pcre library
     --without x11      - do not build components dependent on x11 (gtxwc)
@@ -405,43 +394,15 @@ generation) might not work as expected.
 You can set these environment variables before starting
 the build. Make sure to adjust them to your own directories:
 
-    HB_WITH_ADS=C:\ads\acesdk
-    HB_WITH_ALLEGRO=C:\allegro\include
-    HB_WITH_BLAT=C:\blat\full\source
-    HB_WITH_BZIP2=C:\bzip2 (defaults to locally hosted version if not found)
-    HB_WITH_CAIRO=C:\cairo\include\cairo
-    HB_WITH_CUPS= (on *nix only)
-    HB_WITH_CURL=C:\curl\include
     HB_WITH_CURSES= (on *nix systems and DJGPP, where it's autodetected)
-    HB_WITH_EXPAT=C:\expat\lib (defaults to locally hosted version)
-    HB_WITH_FIREBIRD=C:\Firebird\include
-    HB_WITH_FREEIMAGE=C:\FreeImage\Dist
-    HB_WITH_GD=C:\gd\include
     HB_WITH_GPM= (on Linux only)
-    HB_WITH_GS=C:\ghostscript\psi
-    HB_WITH_GS_BIN=C:\ghostscript\bin (on Windows)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
-    HB_WITH_LIBHARU=C:\libharu\include (defaults to locally hosted version)
-    HB_WITH_LIBMAGIC= (currently on *nix systems)
-    HB_WITH_LZF=C:\liblzf (defaults to locally hosted version if not found)
-    HB_WITH_MINILZO=C:\minilzo\ (defaults to locally hosted version if not found)
-    HB_WITH_MINIZIP=C:\zlib\contrib\minizip (defaults to locally hosted version if not found)
-    HB_WITH_MXML=C:\minixml (defaults to locally hosted version if not found)
-    HB_WITH_MYSQL=C:\mysql\include
-    HB_WITH_OCILIB=C:\ocilib\include
-    HB_WITH_ODBC= (may only be needed on non-Windows systems)
-    HB_WITH_OPENSSL=C:\openssl\include
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
-    HB_WITH_PGSQL=C:\pgsql\include
     HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
-    HB_WITH_QT=C:\Qt\include (version 4.5.0 or upper is required)
     HB_WITH_SLANG= (on *nix systems)
-    HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
     HB_WITH_TIFF=C:\libtiff (defaults to locally hosted version if not found)
-    HB_WITH_TINYMT=C:\tinymt\tinymt (defaults to locally hosted version)
     HB_WITH_WATT= (on MS-DOS systems)
     HB_WITH_X11= (on *nix systems)
-    HB_WITH_XDIFF=C:\libxdiff\xdiff (defaults to locally hosted version if not found)
     HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
 To explicitly disable any given components, use the value `no`.
@@ -451,20 +412,6 @@ locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
-You can override autodetection of QT 'moc' tool by using HB_QTPATH and
-optionally HB_QTPOSTFIX envvars. This may only be necessary on some *nix
-systems. F.e.:
-
-   HB_QTPATH=/opt/qt5/bin/
-   HB_QTPOSTFIX=
-
-Certain contribs can be instructed &ndash; when using .hbc files &ndash; to
-link against static build of their 3rd party lib dependencies (for
-advanced users only):
-
-    HB_STATIC_ALLEGRO=yes
-    HB_STATIC_CURL=yes
-    HB_STATIC_OPENSSL=yes
 
 > NOTES:
 >
@@ -479,17 +426,10 @@ advanced users only):
 1. Install [Homebrew](http://brew.sh/)
 2. Install packages:
 
-        $ brew install pcre slang cairo freeimage libgd mysql postgresql qt5
+        $ brew install pcre slang
         $ brew install upx uncrustify ack optipng jpegoptim
 
 ## Linux (generic)
-
-### For contrib/rddads lib:
-   Download and install *Advantage Client Engine API for Linux* package
-   (f.e. `aceapi-11.10.0.10.tar.gz`)
-
-### For contrib/hbhpdf lib, if you don't wish to use locally hosted version:
-   Download libharu from <http://libharu.org/> -> `./configure` -> `make install`
 
 ## Linux (.deb based distros: Debian, Ubuntu)
 
@@ -505,30 +445,11 @@ You'll need these packages to compile certain contribs and optional Harbour feat
       for gtxwc terminal lib:    $ sudo apt-get install libx11-dev
       for console mouse support: $ sudo apt-get install libgpm-dev OR
                                  $ sudo apt-get install libgpmg1-dev
-      for contrib/gtalleg lib:   $ sudo apt-get install liballegro4.2-dev
-      for contrib/hbcairo lib:   $ sudo apt-get install libcairo2-dev
-      for contrib/hbcups lib:    $ sudo apt-get install libcups2-dev
-      for contrib/hbcurl lib:    $ sudo apt-get install libcurl4-openssl-dev OR
-                                 $ sudo apt-get install libcurl4-gnutls-dev
-      for contrib/hbfbird lib:   $ sudo apt-get install firebird2.1-dev OR
-                                 $ sudo apt-get install libfirebird2.0-dev
-      for contrib/hbfimage lib:  $ sudo apt-get install libfreeimage-dev
-      for contrib/hbgd lib:      $ sudo apt-get install libgd2-xpm-dev OR
-                                 $ sudo apt-get install libgd-xpm-dev
-      for contrib/hbgs lib:      $ sudo apt-get install libgs-dev
-      for contrib/hbmagic lib:   $ sudo apt-get install libmagic-dev
-      for contrib/hbmysql lib:   $ sudo apt-get install libmysqlclient15-dev
-      for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
-      for contrib/hbpgsql lib:   $ sudo apt-get install libpq-dev
-      for contrib/hbqt lib:      $ sudo apt-get install libqt5-dev
 
 Optional, to override locally hosted sources:
 
-      for bzip2 support:         $ sudo apt-get install libbz2-dev
       for zlib support:          $ sudo apt-get install zlib1g-dev
       for pcre (regex) support:  $ sudo apt-get install libpcre3-dev
-      for contrib/hbsqlit3 lib:  $ sudo apt-get install libsqlite3-dev
-      for contrib/hbexpat lib:   $ sudo apt-get install libexpat1-dev
 
 ## Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
 
@@ -544,20 +465,6 @@ You'll need these packages to compile certain contribs and optional Harbour feat
                                  XFree86-devel
       for console mouse support: gpm-devel OR
                                  gpm
-      for contrib/gtalleg lib:   allegro-devel
-      for contrib/hbcairo lib:   cairo-devel
-      for contrib/hbcups lib:    libcups2-devel
-      for contrib/hbcurl lib:    curl-devel
-      for contrib/hbfbird lib:   firebird-devel
-      for contrib/hbfimage lib:  freeimage-devel
-      for contrib/hbgd lib:      gd-devel
-      for contrib/hbmysql lib:   libmysqlclient-devel OR
-                                 mysql-devel OR
-                                 MySQL-devel
-      for contrib/hbodbc lib:    unixodbc-devel OR
-                                 unixODBC-devel
-      for contrib/hbpgsql lib:   postgresql-devel
-      for contrib/hbqt lib:      qt5-devel
 
 > NOTES:
 >
@@ -1097,25 +1004,6 @@ set PATH=C:\cygwin\bin
 sh -c make
 ```
 
-```batchfile
-rem Add these *before* above sample scripts to configure 3rd party dependencies.
-rem When using MSYS or Cygwin shell you'll have to use forward slashes and
-rem also Cygwin drive notation for Cygwin.
-set HB_WITH_ADS=C:\ads\acesdk
-set HB_WITH_ALLEGRO=C:\allegro\include
-set HB_WITH_BLAT=C:\blat\full\source
-set HB_WITH_CAIRO=C:\cairo\include\cairo
-set HB_WITH_CURL=C:\curl\include
-set HB_WITH_FIREBIRD=C:\Firebird\include
-set HB_WITH_FREEIMAGE=C:\FreeImage\Dist
-set HB_WITH_GD=C:\gd\include
-set HB_WITH_MYSQL=C:\mysql\include\mysql
-set HB_WITH_OCILIB=C:\ocilib\include
-set HB_WITH_OPENSSL=C:\openssl\include
-set HB_WITH_PGSQL=C:\pgsql\include
-set HB_WITH_QT=C:\Qt\include
-```
-
 ## on Windows x86-64 (64-bit) hosts
 
 Same as 32-bit Windows, with the difference that you'll have to change
@@ -1229,17 +1117,6 @@ set WATCOM=C:\watcom
 set PATH=%WATCOM%\BINW;%PATH%
 set INCLUDE=%WATCOM%\H
 dos-make
-```
-
-```batchfile
-rem Add these *before* above sample scripts to configure 3rd party dependencies.
-rem You have to use 8.3 path notation.
-set HB_WITH_ALLEGRO=C:\ALLEGR~1.2\include
-set HB_WITH_FIREBIRD=C:\FIREBI~1.4\include
-set HB_WITH_GD=C:\GD-20~1.34\include
-set HB_WITH_MYSQL=C:\MYSQL-~1.67\include\mysql
-set HB_WITH_PGSQL=C:\PGSQL-~1.3\include
-set HB_WITH_WATT=C:\WATT\inc
 ```
 
 ## on OS/2 hosts
@@ -1666,77 +1543,18 @@ Supported shells per host platforms:
 
 * Libraries:
 
-     * HB_WITH_ADS - Advantage Client Engine API [win, linux, free, closed-source]
-        * <http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api>
-     * HB_WITH_ALLEGRO - Allegro (GUI) [multiplatform, free, open-source]
-        * <http://alleg.sourceforge.net/>
-     * HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
-        * <http://www.blat.net/>
-     * HB_WITH_BZIP2 - libbzip2 [multiplatform, free, open-source]
-        * <http://bzip.org/>
-     * HB_WITH_CAIRO - Cairo [multiplatform, open-source]
-        * <http://www.gtk.org/download/index.php><br />
-        Look for these components on page above: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
-     * HB_WITH_CUPS - libcups (printing) [*nix, free, open-source]
-        * <http://cups.org/>
-     * HB_WITH_CURL - libcurl (file transfer) [multiplatform, free, open-source]
-        * <http://curl.haxx.se/>
-     * HB_WITH_EXPAT - Expat (XML parser) [multiplatform, free, open-source]
-        * <http://www.libexpat.org>
-     * HB_WITH_FIREBIRD - firebird SQL [multiplatform, free, open-source]
-        * <http://firebirdsql.org/>
-     * HB_WITH_FREEIMAGE - FreeImage [multiplatform, free, open-source]
-        * <http://freeimage.sourceforge.net/>
-     * HB_WITH_GD - GD Graphics Library [multiplatform, free, open-source]
-        * <http://libgd.org/>
-     * HB_WITH_GS - Ghostscript [multiplatform, free, open-source]
-        * <http://ghostscript.com/>
-        * <http://pages.cs.wisc.edu/~ghost/>
      * HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
         * <http://ijg.org/>
-     * HB_WITH_LIBHARU - libharu (PDF creation) [multiplatform, free, open-source]
-        * <http://libharu.org/>
-     * HB_WITH_LIBMAGIC - libmagic, file recognition [multiplatform, free, open-source]
-        * <ftp://ftp.astron.com/pub/file/>
-     * HB_WITH_LZF - lzf library (RT data compression) [multiplatform, free, open-source]
-        * <http://liblzf.plan9.de/>
-     * HB_WITH_MINILZO - miniLZO library (RT data compression) [multiplatform, free, open-source]
-        * <http://www.oberhumer.com/opensource/lzo/>
-     * HB_WITH_MINIZIP - minizip library [multiplatform, free, open-source]
-        * <http://winimage.com/zLibDll/minizip.html>
-     * HB_WITH_MXML - miniXML library (small XML library) [multiplatform, free, open-source]
-        * <http://www.minixml.org>
-     * HB_WITH_MYSQL - MariaDB/MySQL [multiplatform, free, open-source]
-        * <https://downloads.mariadb.org/mariadb/>
-        * <https://dev.mysql.com/downloads/>
-     * HB_WITH_OCILIB - OCILIB (C Driver for Oracle) [multiplatform, free, open-source]
-        * <http://orclib.sourceforge.net/>
-        * <http://www.oracle.com/technology/tech/oci/instantclient/index.html>
-     * HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
-        * <https://www.openssl.org/>
-        * <https://www.openssl.org/related/binaries.html>
-        * <http://wiki.opensslfoundation.com/>
      * HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
         * <http://pcre.org/>
-     * HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]
-        * <https://www.postgresql.org/>
      * HB_WITH_PNG - libpng [multiplatform, free, open-source]
         * <http://libpng.org/pub/png/libpng.html>
-     * HB_WITH_QT - QT (GUI) [multiplatform, free, open-source]
-        * <https://qt-project.org/>
-        * <https://download.qt-project.org/official_releases/qt/>
-     * HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
-        * <https://sqlite.org/>
      * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
         * <http://remotesensing.org/libtiff/>
-     * HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
-        * <http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
         * <http://home.broadpark.no/~gvanem/>
      * HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
         * <http://zlib.net/>
-     * HB_WITH_XDIFF - libxdiff (file differences/patches) [multiplatform, free, open-source]
-        * <http://xmailserver.org/xdiff-lib.html>
 
      * Windows 95 Winsock2 [win, free, closed-source]
         * Information: Microsoft KB182108 "Availability of Windows Sockets 2.0 for Windows 95"
