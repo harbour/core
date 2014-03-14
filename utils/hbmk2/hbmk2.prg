@@ -1730,7 +1730,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL == "-viewhelp" .OR. cParamL == "--viewhelp" .OR. ;
            cParamL == "-hhh" .OR. cParamL == "-???"
 
-         tmp := hb_FTempCreateEx( @tmp1, , , ".txt" )
+         tmp := hb_FTempCreateEx( @tmp1,,, ".txt" )
          hbmk[ _HBMK_bOut ] := {| cText | FWrite( tmp, StrTran( cText, e"\n", hb_eol() ) ) }
 
          ShowHeader( hbmk )
@@ -2168,7 +2168,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    hbmk[ _HBMK_aLIBCOREGT ] := hbmk[ _HBMK_aLIBCOREGTDEF ]
 
    /* Setup GUI state for Harbour default */
-   SetupForGT( hbmk[ _HBMK_cGTDEFAULT ], NIL, @hbmk[ _HBMK_lGUI ] )
+   SetupForGT( hbmk[ _HBMK_cGTDEFAULT ],, @hbmk[ _HBMK_lGUI ] )
 #endif
 
    /* Autodetect Harbour environment */
@@ -4061,7 +4061,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_cWorkDir ] := ""
          ELSE
             IF hbmk[ _HBMK_cWorkDir ] == NIL
-               FClose( hb_FTempCreateEx( @hbmk[ _HBMK_cWorkDir ], NIL, "hbmk_", ".dir" ) )
+               FClose( hb_FTempCreateEx( @hbmk[ _HBMK_cWorkDir ],, "hbmk_", ".dir" ) )
                FErase( hbmk[ _HBMK_cWorkDir ] )
                IF hb_DirCreate( hbmk[ _HBMK_cWorkDir ] ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Temporary working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
@@ -6215,7 +6215,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          _hbmk_OutErr( hbmk, I_( "Warning: Non-Harbour source files ignored for -hbhrb output" ) )
       ENDCASE
 
-      IF ( fhnd := hb_FTempCreateEx( @l_cHRBSTUB, NIL, "hbmk_", ".prg" ) ) == F_ERROR
+      IF ( fhnd := hb_FTempCreateEx( @l_cHRBSTUB,, "hbmk_", ".prg" ) ) == F_ERROR
          _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .prg program could not be created." ) )
          RETURN _EXIT_STUBCREATE
       ENDIF
@@ -6738,7 +6738,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      fhnd := NIL
                   ENDIF
                ELSE
-                  fhnd := hb_FTempCreateEx( @l_cCSTUB, NIL, "hbmk_", ".c" )
+                  fhnd := hb_FTempCreateEx( @l_cCSTUB,, "hbmk_", ".c" )
                ENDIF
                IF fhnd == NIL
                   AAdd( hbmk[ _HBMK_aC ], l_cCSTUB )
@@ -6853,7 +6853,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      fhnd := NIL
                   ENDIF
                ELSE
-                  fhnd := hb_FTempCreateEx( @l_cCPPSTUB, NIL, "hbmk_", ".cpp" )
+                  fhnd := hb_FTempCreateEx( @l_cCPPSTUB,, "hbmk_", ".cpp" )
                ENDIF
                IF fhnd == NIL
                   AAdd( hbmk[ _HBMK_aCPP ], l_cCPPSTUB )
@@ -7107,7 +7107,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   fhnd := NIL
                ENDIF
             ELSE
-               fhnd := hb_FTempCreateEx( @l_cRESSTUB, NIL, "hbmk_", ".rc" )
+               fhnd := hb_FTempCreateEx( @l_cRESSTUB,, "hbmk_", ".rc" )
             ENDIF
             IF fhnd == NIL
                hb_AIns( hbmk[ _HBMK_aRESSRC ], 1, l_cRESSTUB, .T. )
@@ -7189,7 +7189,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* Handle moving the whole command-line to a script, if requested. */
             cScriptFile := NIL
             IF "{SCRIPT}" $ cOpt_Res
-               IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
+               IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".lnk" ) ) != F_ERROR
                   FWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}" ) )
                   FClose( fhnd )
                   cOpt_Res := "@" + cScriptFile
@@ -7362,7 +7362,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         /* Handle moving the whole command-line to a script, if requested. */
                         cScriptFile := NIL
                         IF "{SCRIPT}" $ cOpt_CompCLoop
-                           IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".cpl" ) ) != F_ERROR
+                           IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".cpl" ) ) != F_ERROR
                               FWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}" ) )
                               FClose( fhnd )
                               cOpt_CompCLoop := "@" + cScriptFile
@@ -7553,7 +7553,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Link
-                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Link := "@" + cScriptFile
@@ -7644,7 +7644,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                cScriptFile := NIL
                IF "{SCRIPT_MINGW}" $ cOpt_Dyn
-                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, ArrayToList( aOBJLIST, hb_eol(), nOpt_Esc, nOpt_FNF, "INPUT(" + iif( cDynObjPrefix == NIL, "", cDynObjPrefix ), ")" ) )
                      FClose( fhnd )
                      cOpt_Dyn := StrTran( cOpt_Dyn, "{SCRIPT_MINGW}" )
@@ -7673,7 +7673,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                /* Handle moving the whole command-line to a script, if requested. */
                IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
-                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Dyn := "@" + cScriptFile
@@ -7746,7 +7746,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Lib
-                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile, NIL, NIL, ".lnk" ) ) != F_ERROR
+                  IF ( fhnd := hb_FTempCreateEx( @cScriptFile,,, ".lnk" ) ) != F_ERROR
                      FWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}" ) )
                      FClose( fhnd )
                      cOpt_Lib := "@" + cScriptFile
@@ -12943,7 +12943,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
 
    FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
       IF cLNG:__enumIsFirst()
-         IF ( fhnd := hb_FTempCreateEx( @cPOTemp, NIL, NIL, ".po" ) ) != F_ERROR
+         IF ( fhnd := hb_FTempCreateEx( @cPOTemp,,, ".po" ) ) != F_ERROR
             FClose( fhnd )
             IF hbmk[ _HBMK_lDEBUGI18N ]
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
@@ -13337,11 +13337,15 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
    LOCAL cSourceDef
    LOCAL fhnd
 
+   LOCAL lDefSource
+
    /* ugly hack to make it configurable to force skip COFF .lib processing and
       skip to .def lookup, and if that fails, to .def generation */
    IF hb_FNameExt( cSourceDLL ) == ".def"
       cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
+      lDefSource := .T.
    ELSE
+      lDefSource := .F.
       IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
          RETURN nResult
       ENDIF
@@ -13351,20 +13355,22 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
       RETURN nResult
    ENDIF
 
-   /* Try to generate a .def file from the .dll
-      This might help in case the supplied .lib doesn't work. */
-   IF win_defgen_command( hbmk, "gendef - {ID}", cSourceDLL, @cDef ) == _HBMK_IMPLIB_OK
-      IF ( fhnd := hb_FTempCreateEx( @cSourceDef ) ) != F_ERROR
-         FWrite( fhnd, cDef )
-         FClose( fhnd )
-         IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDef, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+   IF lDefSource
+      /* Try to generate a .def file from the .dll
+         This might help in case the supplied .lib doesn't work. */
+      IF win_defgen_command( hbmk, "gendef - {ID}", cSourceDLL, @cDef ) == _HBMK_IMPLIB_OK
+         IF ( fhnd := hb_FTempCreateEx( @cSourceDef,,, ".def" ) ) != F_ERROR
+            FWrite( fhnd, cDef )
+            FClose( fhnd )
+            IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDef, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
+               FErase( cSourceDef )
+               RETURN nResult
+            ENDIF
             FErase( cSourceDef )
+         ELSE
+            _hbmk_OutErr( hbmk, I_( "Warning: Temporary .def could not be created." ) )
             RETURN nResult
          ENDIF
-         FErase( cSourceDef )
-      ELSE
-         _hbmk_OutErr( hbmk, I_( "Warning: Temporary .def could not be created." ) )
-         RETURN nResult
       ENDIF
    ENDIF
 
@@ -14699,7 +14705,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE cParamL == "-viewhelp" .OR. cParamL == "--viewhelp" .OR. ;
            cParamL == "-hhh" .OR. cParamL == "-???"
 
-         tmp := hb_FTempCreateEx( @tmp1, , , ".txt" )
+         tmp := hb_FTempCreateEx( @tmp1,,, ".txt" )
          hbmk[ _HBMK_bOut ] := {| cText | FWrite( tmp, StrTran( cText, e"\n", hb_eol() ) ) }
 
          ShowHeader( hbmk )
