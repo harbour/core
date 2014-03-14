@@ -5,11 +5,21 @@ Maintainer: Luis Mayoral <mayoral@linuxadicto.org>
 Build-Depends: debhelper (>= 5.0.0),
  libjpeg62-dev, libpcre3-dev, libpng12-dev, zlib1g-dev,
  libslang2-dev, libncurses5-dev | libncursesw5-dev, libslang2-dev, libx11-dev,
- libsqlite3-dev, liballegro4.2-dev, libbz2-dev,
- libcairo2-dev, libcups2-dev, libexpat1-dev, libfreeimage-dev,
- libcurl4-openssl-dev | libcurl4-gnutls-dev, firebird2.0-dev | firebird2.1-dev,
- libgd2-noxpm-dev | libgd2-xpm-dev, libmagic-dev, libmariadbd-dev | libmysqlclient-dev,
- unixodbc-dev, libpq-dev, libssl-dev
+ liballegro4.2-dev,
+ libbz2-dev,
+ libcairo2-dev,
+ libcups2-dev,
+ libcurl4-openssl-dev | libcurl4-gnutls-dev,
+ libexpat1-dev,
+ libfreeimage-dev,
+ firebird2.0-dev | firebird2.1-dev,
+ libgd2-noxpm-dev | libgd2-xpm-dev,
+ libmagic-dev,
+ libmariadbd-dev | libmysqlclient-dev,
+ libpq-dev,
+ libsqlite3-dev,
+ libssl-dev
+ unixodbc-dev,
 
 Standards-Version: 3.6.2
 
