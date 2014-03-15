@@ -47,8 +47,6 @@ Tool/lib versions used to create this package:
    -------------------------
 
    ACE 11.00
-   Allegro 4.2.2
-   Blat 2.6.2
    Cairo 1.8.8
    libcurl 7.25.0
    Firebird 2.5.0
