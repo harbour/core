@@ -98,6 +98,7 @@ STATIC PROCEDURE WalkDir( cDir, /* @ */ cFunctions )
    RETURN
 
 STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
+
    LOCAL cLine
 
    FOR EACH cLine IN hb_ATokens( StrTran( cHBX, Chr( 13 ) ), Chr( 10 ) )
@@ -109,5 +110,4 @@ STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
    RETURN
 
 STATIC FUNCTION __harbour_hbx()
-
 #pragma __streaminclude "harbour.hbx" | RETURN %s

@@ -1303,7 +1303,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
             !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
             !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
             ( ! lInCommentOnly .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
-            cFile := Left( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
+            cFile := hb_BLeft( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
             IF lVerbose
                OutStd( cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
             ENDIF
@@ -1316,7 +1316,7 @@ STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
       FOR EACH match IN en_hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
          cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
          IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
-            cFile := Left( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + SubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
+            cFile := hb_BLeft( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
             OutStd( cFileName, match[ 2 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
             nChanged++
          ENDIF

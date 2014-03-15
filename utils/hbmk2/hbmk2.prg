@@ -1763,17 +1763,28 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #ifdef HARBOUR_SUPPORT
       CASE cParamL == "-find"
 
-         find_harbour_function( hbmk, aArgs, cParam )
+         __extra_initenv( hbmk, aArgs, cParam )
+         ShowFunctionProviders( hbmk, aArgs, .T. )
          RETURN _EXIT_OK
 
       CASE cParamL == "-doc"
 
-         doc_harbour_function( hbmk, aArgs, cParam, .F. )
+         __extra_initenv( hbmk, aArgs, cParam )
+         ShowDoc( hbmk, aArgs, .F. )
          RETURN _EXIT_OK
 
       CASE cParamL == "-docjson"
 
-         doc_harbour_function( hbmk, aArgs, cParam, .T. )
+         __extra_initenv( hbmk, aArgs, cParam )
+         ShowDoc( hbmk, aArgs, .T. )
+         RETURN _EXIT_OK
+
+      CASE cParamL == "-fixcase"
+
+         __extra_initenv( hbmk, aArgs, cParam )
+         FOR EACH tmp IN aArgs
+            FixFuncCase( hbmk, tmp )
+         NEXT
          RETURN _EXIT_OK
 
       CASE hb_LeftEq( cParamL, "-hbmake=" )
@@ -16378,7 +16389,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
 
    RETURN
 
-STATIC PROCEDURE find_harbour_function( hbmk, aArgs, cSelf )
+STATIC PROCEDURE __extra_initenv( hbmk, aArgs, cSelf )
 
    LOCAL cArg
 
@@ -16395,30 +16406,120 @@ STATIC PROCEDURE find_harbour_function( hbmk, aArgs, cSelf )
       ENDIF
    NEXT
 
-   ShowFunctionProviders( hbmk, aArgs, .T. )
-
    RETURN
 
-STATIC PROCEDURE doc_harbour_function( hbmk, aArgs, cSelf, lJSON )
+STATIC FUNCTION FixFuncCase( hbmk, cFileName )
 
-   LOCAL cArg
+   STATIC sc_hInCommentOnly := { ;
+      ".c"   =>, ;
+      ".m"   =>, ;
+      ".cpp" =>, ;
+      ".cc"  =>, ;
+      ".cxx" =>, ;
+      ".cx"  =>, ;
+      ".mm"  =>, ;
+      ".h"   =>, ;
+      ".hpp" =>, ;
+      ".hh"  =>, ;
+      ".api" => }
 
-   hbmk_init_stage2( hbmk )
-   hbmk_harbour_dirlayout_detect( hbmk, .T. )
-   hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
-   hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
-   hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
-   hbmk_harbour_dirlayout_init( hbmk )
+   LOCAL hAll := GetListOfFunctionsKnown( hbmk, .T. )
+   LOCAL cFile := hb_MemoRead( cFileName )
+   LOCAL lInCommentOnly := hb_FNameExt( cFileName ) $ sc_hInCommentOnly
+   LOCAL cFileStripped := iif( lInCommentOnly, GetCComments( cFile ), cFile )
 
-   FOR EACH cArg IN aArgs DESCEND
-      IF cArg == cSelf
-         hb_ADel( aArgs, cArg:__enumIndex(), .T. )
+   LOCAL match
+   LOCAL cProper
+
+   LOCAL nChanged := 0
+
+   #define _MATCH_cStr    1
+   #define _MATCH_nStart  2
+   #define _MATCH_nEnd    3
+
+   FOR EACH match IN en_hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
+      IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
+         cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
+         IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
+            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
+            !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
+            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
+            ( ! lInCommentOnly .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
+            cFile := hb_BLeft( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
+            #if 0
+               _hbmk_OutStd( hbmk, cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" )
+            #endif
+            nChanged++
+         ENDIF
       ENDIF
    NEXT
 
-   ShowDoc( hbmk, aArgs, lJSON )
+   IF ! lInCommentOnly
+      FOR EACH match IN en_hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
+         cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
+         IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
+            cFile := hb_BLeft( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
+            #if 0
+               _hbmk_OutStd( hbmk, cFileName, match[ 2 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" )
+            #endif
+            nChanged++
+         ENDIF
+      NEXT
+   ENDIF
 
-   RETURN
+   IF nChanged > 0
+      _hbmk_OutStd( hbmk, hb_StrFormat( "%1$s: Harbour function casings fixed: %2$d", cFileName, nChanged ) )
+      hb_MemoWrit( cFileName, cFile )
+   ENDIF
+
+   RETURN .T.
+
+STATIC FUNCTION en_hb_regexAll( ... )
+
+   LOCAL cOldCP := hb_cdpSelect( "EN" )
+   LOCAL aMatch := hb_regexAll( ... )
+
+   hb_cdpSelect( cOldCP )
+
+   RETURN aMatch
+
+STATIC FUNCTION ProperCase( hAll, cName )
+   RETURN iif( cName $ hAll, hb_HKeyAt( hAll, hb_HPos( hAll, cName ) ), cName )
+
+/* retains positions in file */
+/* similar to StripCComments() but gathers the comments in a new string */
+STATIC FUNCTION GetCComments( cFile )
+
+   LOCAL nPos := 1
+   LOCAL aHits := {}
+   LOCAL tmp
+   LOCAL tmp1
+   LOCAL lStart := .T.
+
+   LOCAL cComments
+
+   /* bare bones */
+   DO WHILE ( tmp := hb_BAt( iif( lStart, "/*", "*/" ), cFile, nPos ) ) > 0
+      AAdd( aHits, tmp + iif( lStart, 0, 2 ) )
+      nPos := tmp
+      lStart := ! lStart
+   ENDDO
+
+   /* unbalanced */
+   IF Len( aHits ) % 2 != 0
+      AAdd( aHits, hb_BLen( cFile ) )
+   ENDIF
+
+   cComments := Space( hb_BLen( cFile ) )
+
+   FOR tmp := 1 TO Len( aHits ) STEP 2
+      FOR tmp1 := aHits[ tmp ] TO aHits[ tmp + 1 ]
+         hb_BPoke( @cComments, tmp1, hb_BPeek( cFile, tmp1 ) )
+      NEXT
+   NEXT
+
+   RETURN cComments
+
 #endif
 
 STATIC FUNCTION GetUILang()
@@ -16830,6 +16931,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-find <text>"       , H_( "list all known Harbour functions that contain <text> in their name, along with their package (case insensitive, accepts multiple values, can contain wildcard characters)" ) }, ;
       { "-doc <text>"        , H_( "show documentation for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
       { "-docjson <text>"    , H_( "output documentation in JSON format for function[s]/command[s] in <text> [EXPERIMENTAL]" ) }, ;
+      { "-fixcase <.prg[s]>" , H_( "fix casing of Harbour function names to their 'official' format. Core functions and functions belonging to all active contribs/addons with an .hbx file will be processed. [EXPERIMENTAL]" ) }, ;
       NIL, ; /* HARBOUR_SUPPORT */
       { "-hbmake=<file>"     , H_( "convert hbmake project <file> to .hbp file" ) }, ;
       { "-xbp=<file>"        , H_( "convert .xbp (xbuild) project <file> to .hbp file" ) }, ;
