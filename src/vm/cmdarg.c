@@ -537,7 +537,11 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
       if( pszEnvVar )
          hb_xfree( pszEnvVar );
 
+#ifdef HB_CLP_STRICT
       pszEnvVar = hb_getenv( "CLIPPER" );
+#else
+      pszEnvVar = NULL;
+#endif
    }
 
    if( pszEnvVar && pszEnvVar[ 0 ] != '\0' )

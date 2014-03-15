@@ -50,6 +50,8 @@
 
 ANNOUNCE SYSINIT
 
+#ifdef HB_CLP_STRICT
+
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER520()
    RETURN
@@ -59,6 +61,8 @@ PROCEDURE CLIPPER520()
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER530()
    RETURN
+
+#endif
 
 #endif
 
