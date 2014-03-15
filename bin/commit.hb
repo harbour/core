@@ -570,6 +570,7 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
 
    LOCAL aErr, s
    LOCAL file
+   LOCAL tmp
 
    LOCAL lApplyFixes := "--fixup" $ cli_Options()
 
@@ -578,9 +579,6 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
 
    IF HB_ISSTRING( xName )
       xName := { xName }
-      IF "--fixup-case" $ cli_Options()
-         lRebase := .F.
-      ENDIF
    ENDIF
 
    IF Empty( xName ) .OR. HB_ISARRAY( xName )
@@ -596,11 +594,15 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
          lApplyFixes := .F.  /* do not allow to mass fix all files */
       ENDIF
       IF "--fixup-case" $ cli_Options()
+         tmp := ""
          FOR EACH file IN xName
             IF "|" + hb_FNameExt( file ) + "|" $ "|.c|.cpp|.h|.api|.ch|.hb|.po|.prg|.md|.txt|"
-               FixFuncCase( file, .T., lRebase )
+               tmp += " " + file
             ENDIF
          NEXT
+         IF ! Empty( tmp )
+            hb_run( hbshell_ProgName() + " -fixcase" + tmp )
+         ENDIF
       ELSE
          FOR EACH file IN xName
             IF ! CheckFile( file, @aErr, lApplyFixes, cLocalRoot, lRebase )
@@ -1100,15 +1102,15 @@ STATIC PROCEDURE ProcFile( cFileName )
    LOCAL hProc := { ;
       ".png" => { "advpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
-      ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), @FixFuncCase() }, ;
+      ".c"   => { hb_StrFormat( "uncrustify -c %1$s %%1$s", hb_DirSepToOS( _HBROOT_ + "bin/harbour.ucf" ) ), hbshell_ProgName() + " -fixcase %1$s" }, ;
       ".cpp" => ".c", ;
       ".h"   => ".c", ;
       ".api" => ".c", ;
       ".go"  => { "go fmt %1$s" }, ;
-      ".txt" => { @FixFuncCase() }, ;
+      ".txt" => { hbshell_ProgName() + " -fixcase %1$s" }, ;
       ".md"  => ".txt", ;
       ".po"  => ".txt", ;
-      ".prg" => { @FixFuncCase() /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
+      ".prg" => { hbshell_ProgName() + " -fixcase %1$s" /*, "hbformat %1$s" */ }, ;  /* NOTE: hbformat has bugs which make it unsuitable for unattended use */
       ".hb"  => ".prg", ;
       ".ch"  => ".prg" }
 
@@ -1225,154 +1227,3 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
    ENDIF
 
    RETURN aList
-
-/* ---- */
-
-STATIC FUNCTION FixFuncCase( cFileName, lVerbose, lRebase )
-
-   STATIC sc_hInCommentOnly := { ;
-      ".c"   =>, ;
-      ".cpp" =>, ;
-      ".h"   =>, ;
-      ".api" => }
-
-   /* TOFIX: Harbour repo specific */
-   STATIC sc_hFileExceptions := { ;
-      "ChangeLog.txt" =>, ;
-      "std.ch"        =>, ;  /* compatibility */
-      "big5_gen.prg"  =>, ;  /* new style code */
-      "clsccast.prg"  =>, ;  /* new style code */
-      "clsicast.prg"  =>, ;  /* new style code */
-      "clsscast.prg"  =>, ;  /* new style code */
-      "clsscope.prg"  =>, ;  /* new style code */
-      "cpinfo.prg"    =>, ;  /* new style code */
-      "foreach2.prg"  =>, ;  /* new style code */
-      "keywords.prg"  =>, ;  /* new style code */
-      "speedstr.prg"  =>, ;  /* new style code */
-      "speedtst.prg"  =>, ;  /* new style code */
-      "uc16_gen.prg"  =>, ;  /* new style code */
-      "wcecon.prg"    =>, ;  /* new style code */
-      "c_std.txt"     =>, ;  /* C level doc */
-      "locks.txt"     =>, ;  /* C level doc */
-      "pcode.txt"     =>, ;  /* C level doc */
-      "tracing.txt"   =>, ;  /* C level doc */
-      "xhb-diff.txt"  => }
-
-   /* TOFIX: Harbour repo specific */
-   STATIC sc_aMaskExceptions := { ;
-      "*/3rd/*"          , ;  /* foreign code */
-      "tests/hbpptest/*" , ;  /* test code, must be kept as is */
-      "tests/mt/*"       , ;  /* new style code */
-      "tests/multifnc/*" , ;
-      "tests/rddtest/*"  }
-
-   LOCAL hAll
-   LOCAL cFile
-   LOCAL cFileStripped
-
-   LOCAL match
-   LOCAL cProper
-
-   LOCAL lInCommentOnly
-   LOCAL nChanged := 0
-
-   hb_default( @lVerbose, .F. )
-   hb_default( @lRebase, .T. )
-
-   IF Empty( hb_FNameExt( cFileName ) ) .OR. ;
-      hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .OR. ;
-      AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( cFileName, hb_DirSepToOS( tmp ) ) } ) != 0
-      RETURN .F.
-   ENDIF
-
-   hAll := __hbformat_BuildListOfFunctions()
-   cFile := MemoRead( iif( lRebase, _HBROOT_, "" ) + cFileName )
-
-   lInCommentOnly := hb_FNameExt( cFileName ) $ sc_hInCommentOnly
-   cFileStripped := iif( lInCommentOnly, GetCComments( cFile ), cFile )
-
-   #define _MATCH_cStr    1
-   #define _MATCH_nStart  2
-   #define _MATCH_nEnd    3
-
-   FOR EACH match IN en_hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cFileStripped,,,,, .F. )
-      IF Len( match[ 2 ][ _MATCH_cStr ] ) != 2 .OR. !( Left( match[ 2 ][ _MATCH_cStr ], 1 ) $ "D" /* "METHOD" */ )
-         cProper := ProperCase( hAll, hb_StrShrink( match[ 3 ][ _MATCH_cStr ] ) ) + "("
-         IF !( cProper == match[ 3 ][ _MATCH_cStr ] ) .AND. ;
-            !( Upper( cProper ) == Upper( "FILE(" ) ) .AND. ;   /* interacts with "file(s)" text */
-            !( Upper( cProper ) == Upper( "TOKEN(" ) ) .AND. ;  /* interacts with "token(s)" text */
-            !( Upper( cProper ) == Upper( "INT(" ) ) .AND. ;    /* interacts with SQL statements */
-            ( ! lInCommentOnly .OR. !( "|" + Lower( cProper ) + "|" $ Lower( "|Max(|Min(|FOpen(|Abs(|Log10(|GetEnv(|Sqrt(|Rand(|IsDigit(|IsAlpha(|" ) ) )
-            cFile := hb_BLeft( cFile, match[ 3 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 3 ][ _MATCH_nEnd ] + 1 )
-            IF lVerbose
-               OutStd( cFileName, match[ 3 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
-            ENDIF
-            nChanged++
-         ENDIF
-      ENDIF
-   NEXT
-
-   IF ! lInCommentOnly
-      FOR EACH match IN en_hb_regexAll( "(?:REQUEST|EXTERNAL|EXTERNA|EXTERN)[ \t]+([A-Za-z_][A-Za-z0-9_]+)", cFile,,,,, .F. )
-         cProper := ProperCase( hAll, match[ 2 ][ _MATCH_cStr ] )
-         IF !( cProper == match[ 2 ][ _MATCH_cStr ] )
-            cFile := hb_BLeft( cFile, match[ 2 ][ _MATCH_nStart ] - 1 ) + cProper + hb_BSubStr( cFile, match[ 2 ][ _MATCH_nEnd ] + 1 )
-            OutStd( cFileName, match[ 2 ][ _MATCH_cStr ], cProper, "|" + match[ 1 ][ _MATCH_cStr ] + "|" + hb_eol() )
-            nChanged++
-         ENDIF
-      NEXT
-   ENDIF
-
-   IF nChanged > 0
-      OutStd( cFileName + ": " + hb_StrFormat( "Harbour function casings fixed: %1$d", nChanged ) + hb_eol() )
-      hb_MemoWrit( iif( lRebase, _HBROOT_, "" ) + cFileName, cFile )
-   ENDIF
-
-   RETURN .T.
-
-STATIC FUNCTION en_hb_regexAll( ... )
-
-   LOCAL cOldCP := hb_cdpSelect( "EN" )
-   LOCAL aMatch := hb_regexAll( ... )
-
-   hb_cdpSelect( cOldCP )
-
-   RETURN aMatch
-
-STATIC FUNCTION ProperCase( hAll, cName )
-
-   IF cName $ hAll
-      RETURN hb_HKeyAt( hAll, hb_HPos( hAll, cName ) )  /* Return the function name in original casing */
-   ENDIF
-
-   RETURN cName
-
-STATIC FUNCTION __hbformat_BuildListOfFunctions()
-
-   THREAD STATIC t_hFunctions := NIL
-
-   IF t_hFunctions == NIL
-      t_hFunctions := { => }
-      hb_HCaseMatch( t_hFunctions, .F. )
-
-      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "include/" ), t_hFunctions )
-      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "contrib/" ), t_hFunctions )
-      WalkDir( hb_DirBase() + hb_DirSepToOS( _HBROOT_ + "extras/" ), t_hFunctions )
-   ENDIF
-
-   RETURN t_hFunctions
-
-STATIC PROCEDURE WalkDir( cDir, hFunctions )
-
-   LOCAL file
-   LOCAL cLine
-
-   FOR EACH file IN hb_DirScan( cDir, "*.hbx" )
-      FOR EACH cLine IN hb_ATokens( StrTran( hb_MemoRead( cDir + file[ F_NAME ] ), Chr( 13 ) ), Chr( 10 ) )
-         IF hb_LeftEq( cLine, "DYNAMIC " )
-            hFunctions[ SubStr( cLine, Len( "DYNAMIC " ) + 1 ) ] := NIL
-         ENDIF
-      NEXT
-   NEXT
-
-   RETURN
