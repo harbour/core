@@ -145,11 +145,11 @@ void hb_verBuildInfo( void )
 #if defined( __cplusplus )
    hb_conOutErr( "(C++ mode) ", 0 );
 #endif
-#if defined( HB_COMPAT_C53 )
-   hb_conOutErr( "(Clipper 5.3b) ", 0 );
+#if ! defined( HB_COMPAT_C53 )
+   hb_conOutErr( "(no Clipper 5.3b) ", 0 );
 #endif
-#if defined( HB_CLP_UNDOC )
-   hb_conOutErr( "(Clipper 5.x undoc) ", 0 );
+#if ! defined( HB_CLP_UNDOC )
+   hb_conOutErr( "(no Clipper 5.x undoc) ", 0 );
 #endif
 #if defined( HB_CLP_STRICT )
    hb_conOutErr( "(Clipper 5.x strict) ", 0 );
