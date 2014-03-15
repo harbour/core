@@ -18,6 +18,7 @@
 #define HB_CDP_UPPER    0x08
 
 procedure main()
+
    local cLine, aLine
    local cGenCat
    local nCode, nUpper, nLower, nFlags
@@ -232,9 +233,11 @@ procedure main()
 
 
    hb_MemoWrit( "uc16def.c", cResult )
-return
+
+   return
 
 static function array_to_code( aVal, cName, nn )
+
    local cResult, l, n
 
    cResult := "static const " + ;
@@ -258,66 +261,69 @@ static function array_to_code( aVal, cName, nn )
    next
    cResult += hb_eol()
    cResult += "};" + hb_eol()
-return cResult;
+
+   return cResult
 
 static function hash_to_array16( hVal )
+
    local aVal := {}, cLine, n
+
    for each cLine in hVal
       for n := 1 to Len( cLine ) step( 2 )
          AAdd( aVal, Bin2W( SubStr( cLine, n, 2 ) ) )
       next
    next
-return aVal
+
+   return aVal
 
 static function hash_to_array04( hVal )
+
    local aVal := {}, cLine, c
+
    for each cLine in hVal
       for each c in cLine
          AAdd( aVal, Asc( c ) )
       next
    next
-return aVal
+
+   return aVal
 
 static function index_func16( cName, cNameInd, cNameConv, cMin, cMax, cBit )
-   local cResult
-
-   cResult := "static HB_USHORT " + cName + "( int n )" + hb_eol() + ;
-              "{" + hb_eol() + ;
-              "   n -= " + cMin + ";" + hb_eol() + ;
-              "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
-              "   {" + hb_eol() + ;
-              "      return " + cNameConv + "[ ( " + cNameInd + ;
-                     "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
-              Space( Len( cNameConv ) + 15 ) + ;
-                     "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
-              "   }" + hb_eol() + ;
-              "   return 0;" + hb_eol() + ;
-              "}" + hb_eol()
-
-return cResult
+   return ;
+      "static HB_USHORT " + cName + "( int n )" + hb_eol() + ;
+      "{" + hb_eol() + ;
+      "   n -= " + cMin + ";" + hb_eol() + ;
+      "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
+      "   {" + hb_eol() + ;
+      "      return " + cNameConv + "[ ( " + cNameInd + ;
+             "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
+      Space( Len( cNameConv ) + 15 ) + ;
+             "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
+      "   }" + hb_eol() + ;
+      "   return 0;" + hb_eol() + ;
+      "}" + hb_eol()
 
 static function index_func04( cName, cNameInd, cNameConv, cMin, cMax, cBit )
-   local cResult
-
-   cResult := "static int " + cName + "( int n )" + hb_eol() + ;
-              "{" + hb_eol() + ;
-              "   n -= " + cMin + ";" + hb_eol() + ;
-              "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
-              "   {" + hb_eol() + ;
-              "      HB_BYTE v;" + hb_eol() + ;
-              "      v = " + cNameConv + "[ ( " + cNameInd + ;
-                     "[ n >> " + cBit + " ] << ( " + cBit + " - 1 ) ) +" + hb_eol() + ;
-              Space( Len( cNameConv ) + 12 ) + ;
-                     "( ( n & ( ( 1 << " + cBit + " ) - 1 ) ) >> 1 ) ];" + hb_eol() + ;
-              "      return n & 1 ? v >> 4 : v & 0x0F;" + hb_eol() + ;
-              "   }" + hb_eol() + ;
-              "   return 0;" + hb_eol() + ;
-              "}" + hb_eol()
-
-return cResult
+   return ;
+      "static int " + cName + "( int n )" + hb_eol() + ;
+      "{" + hb_eol() + ;
+      "   n -= " + cMin + ";" + hb_eol() + ;
+      "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
+      "   {" + hb_eol() + ;
+      "      HB_BYTE v;" + hb_eol() + ;
+      "      v = " + cNameConv + "[ ( " + cNameInd + ;
+             "[ n >> " + cBit + " ] << ( " + cBit + " - 1 ) ) +" + hb_eol() + ;
+      Space( Len( cNameConv ) + 12 ) + ;
+             "( ( n & ( ( 1 << " + cBit + " ) - 1 ) ) >> 1 ) ];" + hb_eol() + ;
+      "      return n & 1 ? v >> 4 : v & 0x0F;" + hb_eol() + ;
+      "   }" + hb_eol() + ;
+      "   return 0;" + hb_eol() + ;
+      "}" + hb_eol()
 
 static function min_size16( aVal, nMin, nMax, nBit )
+
    local n, nM, nS, nSize, nMinX
+
    nSize := 0xFFFFFF
    nMinX := nMin
 #ifdef DO_START_OPT
@@ -335,9 +341,11 @@ static function min_size16( aVal, nMin, nMax, nBit )
       next
    next
    nMin := nMinX
-return nSize
+
+   return nSize
 
 static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ ( nBit + 1 ) )
@@ -369,10 +377,12 @@ static function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
       n += Len( c )
    next
 
-return n
+   return n
 
 static function min_size04( aVal, nMin, nMax, nBit )
+
    local n, nM, nS, nSize, nMinX
+
    nSize := 0xFFFFFF
    nMinX := nMin
 #ifdef DO_START_OPT
@@ -390,9 +400,11 @@ static function min_size04( aVal, nMin, nMax, nBit )
       next
    next
    nMin := nMinX
-return nSize
+
+   return nSize
 
 static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ ( nBit - 1 ) )
@@ -424,57 +436,71 @@ static function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
       n += Len( c )
    next
 
-return n
+   return n
 
 static function conv_get16( n, aInd, aVal, nMin, nMax, nBit )
+
    local nDiv
+
    if n >= nMin .and. n <= nMax
       nDiv := 2 ^ nBit
       n -= nMin
       return aVal[ aInd[ n / nDiv + 1 ] * nDiv + n % nDiv + 1 ]
    endif
-return 0
 
-static function check_conv16( aConv, aInd, aVal, nMin, nMax, nBit )
+   return 0
+
+static procedure check_conv16( aConv, aInd, aVal, nMin, nMax, nBit )
+
    local n, nVal
+
    for n := 1 to Len( aConv )
       nVal := conv_get16( n, aInd, aVal, nMin, nMax, nBit )
       if aConv[ n ] != nVal
          ? "Wrong decoding:", n, aConv[ n ], nVal, Len( aConv ), nMax //, hb_eol()
          break
-//         exit
+//       exit
       endif
    next
-return nil
+
+   return
 
 static function conv_get04( n, aInd, aVal, nMin, nMax, nBit )
+
    local nDiv, nByte, nInd
+
    if n >= nMin .and. n <= nMax
       nDiv := int( 2 ^ nBit )
       n -= nMin
-//      nInd := aInd[ n / nDiv + 1 ] * nDiv + n % nDiv
-//      nByte := aVal[ nInd / 2 + 1 ]
-//      return iif( n % 2 == 0, hb_bitAnd( nByte, 0x0F ), int( nByte / 16 ) )
+#if 0
+      nInd := aInd[ n / nDiv + 1 ] * nDiv + n % nDiv
+      nByte := aVal[ nInd / 2 + 1 ]
+      return iif( n % 2 == 0, hb_bitAnd( nByte, 0x0F ), int( nByte / 16 ) )
+#endif
 
       nInd := aInd[ n / nDiv + 1 ] * nDiv / 2 + ( n % nDiv ) / 2
       nByte := aVal[ nInd + 1 ]
       return iif( n % 2 == 1, int( nByte / 16 ), hb_bitAnd( nByte, 0x0F ) )
 
-//      v = s_ch_val[ ( s_ch_idx[ n >> HB_UCFL_BITS ] << ( HB_UCFL_BITS - 1 ) ) +
-//                    ( ( n & ( ( 1 << HB_UCFL_BITS ) - 1 ) ) >> 1 ) ];
-//      return n & 1 ? v >> 4 : v & 0x0F;
+//    v = s_ch_val[ ( s_ch_idx[ n >> HB_UCFL_BITS ] << ( HB_UCFL_BITS - 1 ) ) +
+//                  ( ( n & ( ( 1 << HB_UCFL_BITS ) - 1 ) ) >> 1 ) ];
+//    return n & 1 ? v >> 4 : v & 0x0F;
 
    endif
-return 0
 
-static function check_conv04( aConv, aInd, aVal, nMin, nMax, nBit )
+   return 0
+
+static procedure check_conv04( aConv, aInd, aVal, nMin, nMax, nBit )
+
    local n, nVal
+
    for n := 1 to Len( aConv )
       nVal := conv_get04( n, aInd, aVal, nMin, nMax, nBit )
       if aConv[ n ] != nVal
          ? "Wrong decoding:", n, aConv[ n ], nVal, Len( aConv ), nMax //, hb_eol()
-//         break
-//         exit
+//       break
+//       exit
       endif
    next
-return nil
+
+   return

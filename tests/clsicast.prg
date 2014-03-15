@@ -14,6 +14,7 @@
 #include "hbclass.ch"
 
 procedure main()
+
    local o := myclass4():new(), i, cbErr
 
    ? Date(), Time(), Version(), OS()

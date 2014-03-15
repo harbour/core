@@ -14,12 +14,12 @@
 #include "fileio.ch"
 
 procedure main( cdp, info, unicode )
+
    local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, cOrdMix, cMix, c, i, a
    local lWarn, lBin, lSort, lEqual, lMixed, lIsUp, lIsLo
 
    set alternate to cpinfo.txt additive
    set alternate on
-
 
 #ifdef __HARBOUR__
    /* for test */
@@ -266,9 +266,10 @@ procedure main( cdp, info, unicode )
                   genCP( cdp, info, unicode, lBin, lWarn, lMixed, cUp, cLo ) )
    endif
 
-return
+   return
 
 static function pad_letters( cUp, cLo, lBin )
+
    local lRet, cUp2, cLo2, cU, cL, i, j
 
    cUp2 := cLo2 := ""
@@ -304,27 +305,27 @@ static function pad_letters( cUp, cLo, lBin )
    lRet := !( cUp == cUp2 .and. cLo == cLo2 )
    cUp := cUp2
    cLo := cLo2
-return lRet
+
+   return lRet
 
 static function charval( c )
-return "'" + c + "' (" + LTrim( Str( Asc( c ) ) ) + ")"
+   return "'" + c + "' (" + LTrim( Str( Asc( c ) ) ) + ")"
 
 static function charis( c )
-return "'" + c + "' (" + LTrim( Str( Asc( c ) ) ) + ":" + ;
-       iif( IsAlpha( c ), "A", " " ) + ;
-       iif( IsUpper( c ), "U", " " ) + ;
-       iif( IsLower( c ), "L", " " ) + ;
-       iif( IsDigit( c ), "D", " " ) + ")"
+   return "'" + c + "' (" + LTrim( Str( Asc( c ) ) ) + ":" + ;
+      iif( IsAlpha( c ), "A", " " ) + ;
+      iif( IsUpper( c ), "U", " " ) + ;
+      iif( IsLower( c ), "L", " " ) + ;
+      iif( IsDigit( c ), "D", " " ) + ")"
 
 static function charinfo( c )
-   local cInfo
-   cInfo :=   "ISALPHA->" + iif( IsAlpha( c ), "Y", "N" )
-   cInfo += ", ISUPPER->" + iif( IsUpper( c ), "Y", "N" )
-   cInfo += ", ISLOWER->" + iif( IsLower( c ), "Y", "N" )
-   cInfo += ", ISDIGIT->" + iif( IsDigit( c ), "Y", "N" )
-   cInfo += ", UPPER->'" + Upper( c ) + "'"
-   cInfo += ", LOWER->'" + Lower( c ) + "'"
-return cInfo
+   return ;
+      "ISALPHA->" + iif( IsAlpha( c ), "Y", "N" ) + ;
+      ", ISUPPER->" + iif( IsUpper( c ), "Y", "N" ) + ;
+      ", ISLOWER->" + iif( IsLower( c ), "Y", "N" ) + ;
+      ", ISDIGIT->" + iif( IsDigit( c ), "Y", "N" ) + ;
+      ", UPPER->'" + Upper( c ) + "'" + ;
+      ", LOWER->'" + Lower( c ) + "'"
 
 
 #ifdef __HARBOUR__
@@ -341,6 +342,7 @@ return cInfo
 #define HB_CDP_UPPER    8
 
 static function write_file( cName, cBody )
+
    local lRet := .f.
    local hFile
 
@@ -349,9 +351,10 @@ static function write_file( cName, cBody )
       FClose( hFile )
    endif
 
-return lRet
+   return lRet
 
 static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
+
    local flags[ 256 ], upper[ 256 ], lower[ 256 ], sort[ 256 ], tmp[ 256 ]
    local i, c
 
@@ -409,6 +412,7 @@ static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
 
 static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
                            lBin, lWarn, lMixed, cUp, cLo )
+
    local cDef
 
    cDef := ;
@@ -472,11 +476,15 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    cDef := StrTran( cDef, "$1", id )
    cDef := StrTran( cDef, "$2", info )
    cDef := StrTran( cDef, "$3", unicode )
-return cDef
+
+   return cDef
 
 static function a2def( a )
+
    local i, cData := ""
+
    for i := 1 to Len( a )
       cData += iif( i == 1, "", "," ) + LTrim( Str( a[ i ] ) )
    next
-return cData
+
+   return cData

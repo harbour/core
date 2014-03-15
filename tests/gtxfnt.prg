@@ -9,19 +9,16 @@
 
 #include "hbgtinfo.ch"
 
-#if ! defined( __HBSCRIPT__HBSHELL )
-   #if defined( __PLATFORM__UNIX )
-      REQUEST HB_GT_XWC_DEFAULT
-   #endif
+#if ! defined( __HBSCRIPT__HBSHELL ) .and. defined( __PLATFORM__UNIX )
+   request HB_GT_XWC_DEFAULT
 #endif
 
 procedure main()
+
    local cChars, i, j, n
 
-#if defined( __HBSCRIPT__HBSHELL )
-   #if defined( __PLATFORM__UNIX )
-      hbshell_gtSelect( "GTXWC" )
-   #endif
+#if defined( __HBSCRIPT__HBSHELL ) .and. defined( __PLATFORM__UNIX )
+   hbshell_gtSelect( "GTXWC" )
 #endif
 
    cChars := ""
@@ -47,9 +44,13 @@ procedure main()
    enddo
    ? "current font:", hb_gtInfo( HB_GTI_FONTSEL )
    wait
+
    return
 
 static function xfontsel()
+
    local cStdOut
+
    hb_processRun( "xfontsel -print",, @cStdOut )
+
    return cStdOut

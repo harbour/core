@@ -13,15 +13,16 @@
 
 #ifdef __PLATFORM__WINDOWS
    #if ! defined( __HBSCRIPT__HBSHELL )
-      REQUEST HB_GT_WVT_DEFAULT
+      request HB_GT_WVT_DEFAULT
    #endif
    #define THREAD_GT "WVT"
 #else
-   REQUEST HB_GT_STD_DEFAULT
+   request HB_GT_STD_DEFAULT
    #define THREAD_GT "XWC"
 #endif
 
 procedure main()
+
    local pGT, pGT1, pGT2
 
 #if defined( __HBSCRIPT__HBSHELL )

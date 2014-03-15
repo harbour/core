@@ -9,6 +9,7 @@
  */
 
 procedure main()
+
    local cFile := "_tst"
 
    if ! hb_dbExists( cFile )
@@ -96,16 +97,22 @@ procedure main()
    wait
    dbCloseAll()
    hb_dbDrop( cFile )
+
    return
 
 static procedure setLock( n )
+
    ? "locking record:", hb_ntos( n ), "->", dbRLock( n )
+
    return
 
 static procedure dspLock()
+
    local n
+
    ? Alias(), "active locks:"
    for each n in dbRLockList()
       ?? "", hb_ntos( n )
    next
+
    return

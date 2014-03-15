@@ -14,6 +14,7 @@ request DBFCDX
 procedure main()
 
    field F1, F2, FX
+
    local nMaxScrRow, nMaxScrCol
    local cPath, cName, cExt, cDrive
    local i, j, k
@@ -74,7 +75,7 @@ procedure main()
    Browse()
 
    /* display all characters */
-   CLS
+   cls
    for i := 0 to 15
       for j := 0 to 15
          DispOut( " " + Chr( i * 16 + j ) )

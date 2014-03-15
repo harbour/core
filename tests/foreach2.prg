@@ -7,29 +7,29 @@
  *
  */
 
-
 #include "hbclass.ch"
 
 procedure main()
+
    local e, o
 
-   ? "FOR EACH e IN myclass1()"
+   ? "for each e in myclass1()"
    o := myclass1()
    for each e in o
       ? e:__enumIndex(), "=>", e
    next
-   ? "FOR EACH e IN myclass1() DESCEND"
+   ? "for each e in myclass1() descend"
    for each e in o descend
       ? e:__enumIndex(), "=>", e
    next
 
    ?
-   ? "FOR EACH e IN myclass2()"
+   ? "for each e in myclass2()"
    o := myclass2()
    for each e in o
       ? e:__enumIndex(), "=>", e
    next
-   ? "FOR EACH e IN myclass2() DESCEND"
+   ? "for each e in myclass2() descend"
    for each e in o descend
       ? e:__enumIndex(), "=>", e
    next
@@ -43,16 +43,17 @@ procedure main()
  * for ascending iteration it sets: { "A", "B", "C" }
  * and for descending: { 1, 2, 3 }
  */
-CREATE CLASS myclass1
-   METHOD __enumStart( enum, lDescend )
-END CLASS
+create class myclass1
+   method __enumStart( enum, lDescend )
+end class
 
-METHOD __enumStart( enum, lDescend ) CLASS myclass1
+method __enumStart( enum, lDescend ) class myclass1
    /* set base value for enumerator */
    /* important: the messages have to be send to the enumerator
     * reference (@enum) not directly to the enumerator enum
     */
    (@enum):__enumBase( iif( lDescend, { 1, 2, 3 }, { "A", "B", "C" } ) )
+
    return .T. /* .F. means stop iteration */
 
 
@@ -66,14 +67,15 @@ METHOD __enumStart( enum, lDescend ) CLASS myclass1
  * want to make them dynamically
  */
 
-CREATE CLASS myclass2
-   VAR    value
-   METHOD __enumStart( enum, lDescend )
-   METHOD __enumSkip( enum, lDescend )
-   METHOD __enumStop()
-END CLASS
+create class myclass2
+   var    value
+   method __enumStart( enum, lDescend )
+   method __enumSkip( enum, lDescend )
+   method __enumStop()
+end class
 
-METHOD __enumStart( enum, lDescend ) CLASS myclass2
+method __enumStart( enum, lDescend ) class myclass2
+
    /* Here we can have initialization code */
    ::value := 0.00
    /* set enumerator value */
@@ -82,9 +84,11 @@ METHOD __enumStart( enum, lDescend ) CLASS myclass2
     * iterations we will use negative indexes ;-)
     */
    (@enum):__enumIndex( iif( lDescend, -1, 1 ) )
+
    return .T. /* continue iteration */
 
-METHOD __enumSkip( enum, lDescend ) CLASS myclass2
+method __enumSkip( enum, lDescend ) class myclass2
+
    if lDescend
       ::value -= 3
    else
@@ -100,8 +104,9 @@ METHOD __enumSkip( enum, lDescend ) CLASS myclass2
     * indexes then here we can set it using (@enum):__enumIndex( nNeIndex )
     * message
     */
+
    return .T. /* continue iteration */
 
-METHOD PROCEDURE __enumStop() CLASS myclass2
+method procedure __enumStop() class myclass2
    /* Here we can have cleanup code */
    return

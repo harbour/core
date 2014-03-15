@@ -52,6 +52,7 @@ duplicated character has the following mapping in BIG5.TXT:
 //#define DO_START_OPT
 
 procedure main()
+
    local cLine, aVal, aVal2, aValU, aValU2, hVal, aInd, ;
          n, nn, nBG5, nU16, nMin, nMax, nUMin, nUMax, cResult, nBit
 
@@ -182,9 +183,11 @@ procedure main()
    check_conv( aValU, aInd, aValU2, nUMin, nUMax, nBit )
 
    hb_MemoWrit( "big5.c", cResult )
-return
+
+   return
 
 static function array_to_code( aVal, cName, nn )
+
    local cResult, l, n
 
    cResult := "static const " + ;
@@ -208,19 +211,25 @@ static function array_to_code( aVal, cName, nn )
    next
    cResult += hb_eol()
    cResult += "};" + hb_eol()
-return cResult;
+
+   return cResult
 
 static function hash_to_array( hVal )
+
    local aVal := {}, cLine, n
+
    for each cLine in hVal
       for n := 1 to Len( cLine ) step( 2 )
          AAdd( aVal, Bin2W( SubStr( cLine, n, 2 ) ) )
       next
    next
-return aVal
+
+   return aVal
 
 static function min_size( aVal, nMin, nMax, nBit )
+
    local n, nM, nS, nSize, nMinX
+
    nSize := 0xFFFFFF
    nMinX := nMin
 #ifdef DO_START_OPT
@@ -238,9 +247,11 @@ static function min_size( aVal, nMin, nMax, nBit )
       next
    next
    nMin := nMinX
-return nSize
+
+   return nSize
 
 static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
+
    local nLine, n, cLine, c
 
    nLine := int( 2 ^ nBit )
@@ -272,37 +283,39 @@ static function calc_size( aVal, nMin, nMax, nBit, hVal, aInd, nn )
       n += Len( c )
    next
 
-return n
+   return n
 
 static function index_func( cName, cNameInd, cNameConv, cMin, cMax, cBit )
-   local cResult
-
-   cResult := "static HB_USHORT " + cName + "( int n )" + hb_eol() + ;
-              "{" + hb_eol() + ;
-              "   n -= " + cMin + ";" + hb_eol() + ;
-              "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
-              "   {" + hb_eol() + ;
-              "      return " + cNameConv + "[ ( " + cNameInd + ;
-                     "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
-              Space( Len( cNameConv ) + 15 ) + ;
-                     "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
-              "   }" + hb_eol() + ;
-              "   return 0;" + hb_eol() + ;
-              "}" + hb_eol()
-
-return cResult
+   return ;
+      "static HB_USHORT " + cName + "( int n )" + hb_eol() + ;
+      "{" + hb_eol() + ;
+      "   n -= " + cMin + ";" + hb_eol() + ;
+      "   if( n >= 0 && n <= ( " + cMax + " - " + cMin + " ) )" + hb_eol() + ;
+      "   {" + hb_eol() + ;
+      "      return " + cNameConv + "[ ( " + cNameInd + ;
+             "[ n >> " + cBit + " ] << " + cBit + " ) +" + hb_eol() + ;
+      Space( Len( cNameConv ) + 15 ) + ;
+             "( n & ( ( 1 << " + cBit + " ) - 1 ) ) ];" + hb_eol() + ;
+      "   }" + hb_eol() + ;
+      "   return 0;" + hb_eol() + ;
+      "}" + hb_eol()
 
 static function conv_get( n, aInd, aVal2, nMin, nMax, nBit )
+
    local nDiv
+
    if n >= nMin .and. n <= nMax
       nDiv := 2 ^ nBit
       n -= nMin
       return aVal2[ aInd[ n / nDiv + 1 ] * nDiv + n % nDiv + 1 ]
    endif
-return 0
 
-static function check_conv( aVal, aInd, aVal2, nMin, nMax, nBit )
+   return 0
+
+static procedure check_conv( aVal, aInd, aVal2, nMin, nMax, nBit )
+
    local n, nVal
+
    for n := 1 to Len( aVal )
       nVal := conv_get( n, aInd, aVal2, nMin, nMax, nBit )
       if aVal[ n ] != nVal
@@ -310,4 +323,5 @@ static function check_conv( aVal, aInd, aVal2, nMin, nMax, nBit )
          break
       endif
    next
-return nil
+
+   return

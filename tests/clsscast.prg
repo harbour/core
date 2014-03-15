@@ -14,6 +14,7 @@
 #include "hbclass.ch"
 
 procedure main()
+
    local o := myclass4():new(), i, cbErr
 
    ? Date(), Time(), Version(), OS()
@@ -327,7 +328,6 @@ procedure main()
    ErrorBlock( cbErr )
    ? "myclass4 shared class vars:", Str( __cls_CntShrData( o:classH ), 3 ), "  => should be:   3"
    ?
-
 
    return
 

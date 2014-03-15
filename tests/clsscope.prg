@@ -156,8 +156,8 @@
             end sequence
 
 
-
 procedure main()
+
    local cbErr, self, o
 
    ? Date(), Time(), Version(), OS()
@@ -280,24 +280,24 @@ static procedure errHandler( oErr )
    ? "[ Error:", hb_ntos( oErr:gencode ), "/", hb_ntos( oErr:subcode ), ;
                  oErr:description, oErr:operation, "]"
    Break( oErr )
-   RETURN
+   return
 
 
-STATIC PROCEDURE EXTEVAL( cb, o )
+static procedure EXTEVAL( cb, o )
    EXTEVAL1( cb, o )
-   RETURN
+   return
 
-STATIC PROCEDURE EXTEVAL1( cb, o )
+static procedure EXTEVAL1( cb, o )
    EXTEVAL2( cb, o )
-   RETURN
+   return
 
-STATIC PROCEDURE EXTEVAL2( cb, o )
+static procedure EXTEVAL2( cb, o )
    EXTEVAL3( cb, o )
-   RETURN
+   return
 
-STATIC PROCEDURE EXTEVAL3( cb, o )
+static procedure EXTEVAL3( cb, o )
    Eval( cb, o )
-   RETURN
+   return
 
 
 
@@ -305,37 +305,37 @@ STATIC PROCEDURE EXTEVAL3( cb, o )
 
 CREATE CLASS CLSX
 EXPORTED:
-   METHOD   TESTX
-   METHOD   CBINTX
-   METHOD   CBEVALX
-   METHOD   CBXEVALX
+   method   TESTX
+   method   CBINTX
+   method   CBEVALX
+   method   CBXEVALX
 ENDCLASS
 
-METHOD TESTX( o )
+method TESTX( o )
    MAKE_TEST( o, "clsx" )
-   RETURN self
+   return self
 
-METHOD CBINTX( o )
+method CBINTX( o )
    MAKE_TESTBLOCK(eval,o,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVALX( cb, o )
+method CBEVALX( cb, o )
    Eval( cb, o )
-   RETURN self
+   return self
 
-METHOD CBXEVALX( cb, o )
+method CBXEVALX( cb, o )
    EXTEVAL( cb, o )
-   RETURN self
+   return self
 
 
 CREATE CLASS CLS0
 EXPORTED:
-   METHOD   TEST0
-   METHOD   CBINT0
-   METHOD   CBEVL0
-   METHOD   CBFEVL0
-   METHOD   CBEVAL0
-   METHOD   CBXEVAL0
+   method   TEST0
+   method   CBINT0
+   method   CBEVL0
+   method   CBFEVL0
+   method   CBEVAL0
+   method   CBXEVAL0
    MESSAGE  b0hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
    MESSAGE  b0hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
    MESSAGE  b0pVar   INLINE ::pVar  := ::classname()+":"+ProcName()
@@ -344,29 +344,29 @@ EXPORTED:
    MESSAGE  b0erVar  INLINE ::erVar := ::classname()+":"+ProcName()
 ENDCLASS
 
-METHOD TEST0
+method TEST0
    MAKE_TEST(self,"cls0")
-   RETURN self
+   return self
 
-METHOD CBINT0
+method CBINT0
    MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVL0()
+method CBEVL0()
    MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBFEVL0(o)
+method CBFEVL0(o)
    MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVAL0( cb, o )
+method CBEVAL0( cb, o )
    Eval( cb, o )
-   RETURN self
+   return self
 
-METHOD CBXEVAL0( cb, o )
+method CBXEVAL0( cb, o )
    EXTEVAL( cb, o )
-   RETURN self
+   return self
 
 
 
@@ -381,12 +381,12 @@ EXPORTED:
    VAR      eVar
    VAR      erVar READONLY
 
-   METHOD   TEST1
-   METHOD   CBINT1
-   METHOD   CBEVL1
-   METHOD   CBFEVL1
-   METHOD   CBEVAL1
-   METHOD   CBXEVAL1
+   method   TEST1
+   method   CBINT1
+   method   CBEVL1
+   method   CBFEVL1
+   method   CBEVAL1
+   method   CBXEVAL1
 
    MESSAGE  b1hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
    MESSAGE  b1hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
@@ -397,41 +397,41 @@ EXPORTED:
 ENDCLASS
 
 
-METHOD TEST1
+method TEST1
    MAKE_TEST(self,"cls1")
-   RETURN self
+   return self
 
-METHOD CBINT1
+method CBINT1
    MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVL1()
+method CBEVL1()
    MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBFEVL1(o)
+method CBFEVL1(o)
    MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVAL1( cb, o )
+method CBEVAL1( cb, o )
    Eval( cb, o )
-   RETURN self
+   return self
 
-METHOD CBXEVAL1( cb, o )
+method CBXEVAL1( cb, o )
    EXTEVAL( cb, o )
-   RETURN self
+   return self
 
 
 
 CREATE CLASS CLS2 FROM CLS1
 EXPORTED:
-   METHOD   TEST2
-   METHOD   TEST3
-   METHOD   CBINT2
-   METHOD   CBEVL2
-   METHOD   CBFEVL2
-   METHOD   CBEVAL2
-   METHOD   CBXEVAL2
+   method   TEST2
+   method   TEST3
+   method   CBINT2
+   method   CBEVL2
+   method   CBFEVL2
+   method   CBEVAL2
+   method   CBXEVAL2
 
    MESSAGE  b2hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
    MESSAGE  b2hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
@@ -441,34 +441,34 @@ EXPORTED:
    MESSAGE  b2erVar  INLINE ::erVar := ::classname()+":"+ProcName()
 ENDCLASS
 
-METHOD TEST2
+method TEST2
    MAKE_TEST(self,"cls2")
-   RETURN self
+   return self
 
-METHOD TEST3
+method TEST3
    LOCAL oSuper := self:super
    MAKE_TEST(oSuper,"supr")
-   RETURN self
+   return self
 
-METHOD CBINT2
+method CBINT2
    MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVL2()
+method CBEVL2()
    MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBFEVL2(o)
+method CBFEVL2(o)
    MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
-   RETURN self
+   return self
 
-METHOD CBEVAL2( cb, o )
+method CBEVAL2( cb, o )
    Eval( cb, o )
-   RETURN self
+   return self
 
-METHOD CBXEVAL2( cb, o )
+method CBXEVAL2( cb, o )
    EXTEVAL( cb, o )
-   RETURN self
+   return self
 
 
 
