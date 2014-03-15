@@ -13,7 +13,7 @@
 
 #include "fileio.ch"
 
-proc main( cdp, info, unicode )
+procedure main( cdp, info, unicode )
    local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, cOrdMix, cMix, c, i, a
    local lWarn, lBin, lSort, lEqual, lMixed, lIsUp, lIsLo
 
@@ -474,7 +474,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
    cDef := StrTran( cDef, "$3", unicode )
 return cDef
 
-static func a2def( a )
+static function a2def( a )
    local i, cData := ""
    for i := 1 to Len( a )
       cData += iif( i == 1, "", "," ) + LTrim( Str( a[ i ] ) )

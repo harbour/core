@@ -704,6 +704,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    LOCAL aForcedLF := { ;
       "*.sh" }
 
+   /* TOFIX: Harbour repo specific */
    LOCAL aNoProc := { ;
       "contrib/hbhpdf/tests/files/*" }
 

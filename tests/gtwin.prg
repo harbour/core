@@ -21,7 +21,7 @@
    #define THREAD_GT "XWC"
 #endif
 
-proc main()
+procedure main()
    local pGT, pGT1, pGT2
 
 #if defined( __HBSCRIPT__HBSHELL )

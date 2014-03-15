@@ -8,7 +8,7 @@
  *
  */
 
-proc main()
+procedure main()
    local getList := {}
    local cVar := Space( 20 )
 
@@ -29,7 +29,7 @@ proc main()
 
    return
 
-func thFunc()
+static function thFunc()
    local cTime
    while .T.
       cTime := DToC( Date() ) + " " + Time()

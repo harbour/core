@@ -15,7 +15,7 @@
    #command always           => finally
 #endif
 
-proc main()
+procedure main()
    local thID, i
    ? Version()
    ? "Main start"
@@ -38,7 +38,7 @@ proc main()
    ? "End of main"
    return
 
-proc thFunc( ... )
+static procedure thFunc( ... )
    local i
    ? "Thread begin"
    ? "Parameters:"
@@ -61,6 +61,6 @@ proc thFunc( ... )
    ?
    return
 
-exit proc p
+exit procedure p()
    ? "I'm EXIT procedure"
    return

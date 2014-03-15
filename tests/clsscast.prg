@@ -13,7 +13,7 @@
 
 #include "hbclass.ch"
 
-proc main()
+procedure main()
    local o := myclass4():new(), i, cbErr
 
    ? Date(), Time(), Version(), OS()

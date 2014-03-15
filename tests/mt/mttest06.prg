@@ -13,7 +13,7 @@
 
 memvar m_var
 
-proc main()
+procedure main()
    local aThreads := {}, i, nSum
 
    ? Version()
@@ -32,11 +32,11 @@ proc main()
       iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
    return
 
-static func thFunc()
+static function thFunc()
    private m_var := N_INIT - 10
    return Do()
 
-static func Do()
+static function Do()
    local i
    private m_var := m_var + 10
    for i := 1 to N_COUNT

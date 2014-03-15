@@ -1,4 +1,4 @@
-proc main3()
+procedure main3()
    ? "main3", ProcFile( "main3" ), ProcFile( @main3() )
    ? "alert", ProcFile( "alert" ), ProcFile( @Alert() ), Alert()
    ? "p0", ProcFile( "p0" ), ProcFile( @p0() ), ( @p0() ):exec(), p0(), t( "p0", @p0(), p0(), "t0.prg" )
@@ -11,8 +11,8 @@ proc main3()
    ? "p7", ProcFile( "p7" ), ProcFile( @p7() ), ( @p7() ):exec(), p7(), t( "p7", @p7(), p7(), "t1.prg" )
    return
 
-func p2(); return "P2:t2.prg"
-func p3(); return "P3:t2.prg"
-func p5(); return "P5:t2.prg"
-func p6(); return "P6:t2.prg"
-func p7(); return "P7:t2.prg"
+function p2(); return "P2:t2.prg"
+function p3(); return "P3:t2.prg"
+function p5(); return "P5:t2.prg"
+function p6(); return "P6:t2.prg"
+function p7(); return "P7:t2.prg"

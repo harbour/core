@@ -51,7 +51,7 @@ duplicated character has the following mapping in BIG5.TXT:
 
 //#define DO_START_OPT
 
-proc main()
+procedure main()
    local cLine, aVal, aVal2, aValU, aValU2, hVal, aInd, ;
          n, nn, nBG5, nU16, nMin, nMax, nUMin, nUMax, cResult, nBit
 

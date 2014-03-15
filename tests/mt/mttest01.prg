@@ -16,7 +16,7 @@
 
 static s_var
 
-proc main()
+procedure main()
    local xResult
    ? Version()
    ? "join:", hb_threadJoin( hb_threadStart( @thFunc() ), @xResult )
@@ -26,7 +26,7 @@ proc main()
    ? Eval( s_var )
    return
 
-func thFunc()
+static function thFunc()
    local i := 12345.678
    s_var := {|| i++ }
    return Replicate( "Hello World!!! ", 3 )

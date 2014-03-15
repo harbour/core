@@ -122,7 +122,7 @@
           [ EXIT <exit> ]                 ;
           [ INFO <info> ]                 ;
           CODE [ <testExp,...> ] =>       ;
-   func <testfunc> ;                      ;
+   function <testfunc> ;                  ;
       local time, i:=nil, x:=nil ;        ;
       [ local <locals> ; ]                ;
       [ static <statics> ; ]              ;
@@ -148,11 +148,11 @@ STATIC s_lStdOut := .F.
 #endif
 
 #ifdef __HARBOUR__
-proc main( ... )
+procedure main( ... )
    local aParams := hb_AParams()
 #else
-proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
-           _p11, _p12, _p13, _p14, _p15, _p16, _p17, _p18, _p19, _p20 )
+procedure main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
+                _p11, _p12, _p13, _p14, _p15, _p16, _p17, _p18, _p19, _p20 )
    local aParams := ;
       ASize( { _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
                _p11, _p12, _p13, _p14, _p15, _p16, _p17, _p18, _p19, _p20 }, ;
@@ -480,7 +480,7 @@ return nil
 #endif
 
 
-proc test( nMT, cExclude, lScale )
+procedure test( nMT, cExclude, lScale )
 local nLoopOverHead, nTimes, nSeconds, cNum, aThreads, aResults, ;
       mtxJobs, mtxResults, nTimeST, nTimeMT, nTimeTotST, nTimeTotMT, ;
       cTest, x, i, j
@@ -706,11 +706,11 @@ static function errorArray()
    return ErrorNew()
 #endif
 
-static func dsp_result( aResult, nLoopOverHead )
+static function dsp_result( aResult, nLoopOverHead )
    return PadR( "[ " + Left( aResult[ 1 ], 56 ) + " ]", 60, "." ) + ;
           StrTran( Str( Max( aResult[ 2 ] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
 
-static func dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
+static function dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
    if .f.
       nTimeST := Max( 0, nTimeST - nMT * nLoopOverHead )
       nTimeMT := Max( 0, nTimeMT - nMT * nLoopOverHead )
@@ -721,7 +721,7 @@ static func dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
 
 
 #define TMP_FILE "_tst_tmp.dbf"
-static proc create_db()
+static procedure create_db()
    remove_db()
    dbCreate( TMP_FILE, { {"F_C", "C", 10, 0},;
                          {"F_N", "N", 10, 2},;
@@ -734,15 +734,15 @@ static proc create_db()
    dbCloseArea()
 return
 
-static proc remove_db()
+static procedure remove_db()
    FErase( TMP_FILE )
 return
 
-static proc close_db()
+static procedure close_db()
    dbCloseArea()
 return
 
-static proc use_dbsh()
+static procedure use_dbsh()
    use TMP_FILE shared
 return
 
@@ -878,7 +878,7 @@ return
       endif
    return lFirstCall
 
-   init proc once_init()
+   init procedure once_init()
       /* set workareas local to thread */
       set workarea private
       /* initialize mutex in hb_threadOnce() */

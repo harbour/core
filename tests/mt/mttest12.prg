@@ -12,7 +12,7 @@ thread static t_var2 := { "A" => "qwe", "B" => "asd" }
 thread static t_var3 := 1235.567
 thread static t_var4 := "text"
 
-proc main()
+procedure main()
    testvar("initial main thread values")
    AAdd( t_var1, "X" )
    t_var2[ "X" ] := "zxc"
@@ -23,7 +23,7 @@ proc main()
    testvar("modified main thread values")
    return
 
-proc testvar( cMsg )
+static procedure testvar( cMsg )
    ? cMsg
    ? "t_var1:", hb_ValToExp( t_var1 )
    ? "t_var2:", hb_ValToExp( t_var2 )
@@ -33,7 +33,7 @@ proc testvar( cMsg )
    ?
    return
 
-proc thFunc()
+static procedure thFunc()
    testvar("initial child thread values")
    AAdd( t_var1, "Y" )
    t_var2[ "Y" ] := "abc"

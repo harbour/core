@@ -13,7 +13,7 @@
 
 thread static t_var := N_INIT
 
-proc main()
+procedure main()
    local aThreads := {}, i, nSum
    ? Version()
    t_var := N_INIT * 25
@@ -31,7 +31,7 @@ proc main()
       iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
    return
 
-func thFunc()
+static function thFunc()
    local i
    for i := 1 to N_COUNT
       ++t_var

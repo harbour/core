@@ -15,7 +15,7 @@
    #endif
 #endif
 
-proc main()
+procedure main()
    local cChars, i, j, n
 
 #if defined( __HBSCRIPT__HBSHELL )

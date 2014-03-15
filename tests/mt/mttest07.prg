@@ -16,7 +16,7 @@ static s_aCounters
 static s_mtxJobs
 static s_mtxResults
 
-proc main()
+procedure main()
    local aThreads, aResults, i, nDigit, nSum, nExpected
 
    ? Version()
@@ -77,7 +77,7 @@ proc main()
    ? "End of main"
    return
 
-proc thFunc()
+static procedure thFunc()
    local xJob, xResult
    while .T.
       hb_mutexSubscribe( s_mtxJobs,, @xJob )

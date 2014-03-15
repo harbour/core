@@ -11,7 +11,7 @@
 
 static s_mainThreadID
 
-proc main()
+procedure main()
    field F1
    local thID, bResult
 
@@ -42,7 +42,7 @@ proc main()
    dbDrop("_tst")
    return
 
-proc thFunc()
+static procedure thFunc()
    local bQuery, xResult
 
    if hb_dbRequest( , , @bQuery, .T. )
@@ -51,7 +51,7 @@ proc thFunc()
    endif
    return
 
-static func countRecords( bFor )
+static function countRecords( bFor )
    local nCount := 0
    dbGoTop()
    while ! Eof()

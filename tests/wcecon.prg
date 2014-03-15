@@ -11,7 +11,7 @@
 
 request DBFCDX
 
-proc main()
+procedure main()
 
    field F1, F2, FX
    local nMaxScrRow, nMaxScrCol

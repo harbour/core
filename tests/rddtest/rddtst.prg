@@ -62,7 +62,7 @@ static aBadRetFunc := { "DBSKIP", "DBGOTO", "DBDELETE", "DBRECALL", ;
 #ifdef _TEST_ADS_
 #include "ads.ch"
 REQUEST ADS
-init proc adstest_init()
+init procedure adstest_init()
    rddRegister( "ADS", 1 )
    AdsSetServerType( ADS_LOCAL_SERVER )
    // rddSetDefault( "ADS" )

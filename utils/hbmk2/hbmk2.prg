@@ -16487,7 +16487,6 @@ STATIC FUNCTION ProperCase( hAll, cName )
    RETURN iif( cName $ hAll, hb_HKeyAt( hAll, hb_HPos( hAll, cName ) ), cName )
 
 /* retains positions in file */
-/* similar to StripCComments() but gathers the comments in a new string */
 STATIC FUNCTION GetCComments( cFile )
 
    LOCAL nPos := 1
@@ -16526,10 +16525,9 @@ STATIC FUNCTION GetUILang()
 
    LOCAL cLNG
 
-   IF Empty( cLNG := GetEnv( "HB_LANG" ) )
-      IF Empty( cLNG := hb_UserLang() )
-         cLNG := "en"
-      ENDIF
+   IF Empty( cLNG := GetEnv( "HB_LANG" ) ) .AND. ;
+      Empty( cLNG := hb_UserLang() )
+      cLNG := "en"
    ENDIF
 
    RETURN StrTran( cLNG, "_", "-" )

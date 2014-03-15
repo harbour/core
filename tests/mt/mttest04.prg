@@ -23,7 +23,7 @@ static s_nVar2 := 0
 static s_aCounters
 static s_hMutex
 
-proc main()
+procedure main()
    local aThreads, i, lEnd, nSum
    ? Version()
    ? "Main start"
@@ -53,7 +53,7 @@ proc main()
    ? "End of main"
    return
 
-proc thFunc( nThread, lEnd )
+static procedure thFunc( nThread, lEnd )
    while ! lEnd
       s_nVar1++
       hb_mutexLock( s_hMutex )

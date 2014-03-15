@@ -18,7 +18,7 @@
    #define THREAD_GT "XWC"
 #endif
 
-proc main( cGT )
+procedure main( cGT )
    local i, aThreads
 
    if ! hb_mtvm()
@@ -52,7 +52,7 @@ proc main( cGT )
    enddo
    return
 
-proc thFunc( cGT )
+static procedure thFunc( cGT )
    /* allocate own GT driver */
    hb_gtReload( cGT )
    if ! dbExists( "test" ) .and. dbExists( "../test" )

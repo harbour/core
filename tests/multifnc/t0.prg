@@ -1,4 +1,4 @@
-proc main()
+procedure main()
    ? OS(), Version(), Date(), Time()
    ? hb_Compiler()
    __NoNoAlert()
@@ -16,14 +16,14 @@ proc main()
    main2()
    return
 
-func t( cFunc, sFunc, cResult, cModule )
+function t( cFunc, sFunc, cResult, cModule )
    if &( cFunc + "()" ) == cResult .and. sFunc:exec() == cResult .and. ;
       Upper( cModule ) == Upper( Right( cResult, Len( cModule ) ) )
       return "OK"
    endif
    return "ERR"
 
-func p0(); return "P0:t0.prg"
-func p1(); return "P1:t0.prg"
-func p3(); return "P3:t0.prg"
-func p6(); return "P6:t0.prg"
+function p0(); return "P0:t0.prg"
+function p1(); return "P1:t0.prg"
+function p3(); return "P3:t0.prg"
+function p6(); return "P6:t0.prg"

@@ -8,7 +8,7 @@
  *
  */
 
-proc main()
+procedure main()
    local cFile := "_tst"
 
    if ! hb_dbExists( cFile )
@@ -98,11 +98,11 @@ proc main()
    hb_dbDrop( cFile )
    return
 
-static proc setLock( n )
+static procedure setLock( n )
    ? "locking record:", hb_ntos( n ), "->", dbRLock( n )
    return
 
-static proc dspLock()
+static procedure dspLock()
    local n
    ? Alias(), "active locks:"
    for each n in dbRLockList()

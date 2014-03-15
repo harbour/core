@@ -157,7 +157,7 @@
 
 
 
-proc main()
+procedure main()
    local cbErr, self, o
 
    ? Date(), Time(), Version(), OS()

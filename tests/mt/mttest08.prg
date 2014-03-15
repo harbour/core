@@ -13,7 +13,7 @@
 memvar pub1, pub2
 memvar prv1, prv2
 
-proc main()
+procedure main()
 
    ? Version()
    ? "Main start"
@@ -99,28 +99,28 @@ proc main()
 
    return
 
-static proc initVars()
+static procedure initVars()
    pub1 := "main:public1"
    pub2 := "main:public2"
    prv1 := "main:private1"
    prv2 := "main:private2"
    return
 
-static proc testAllVars()
+static procedure testAllVars()
    test_var( "PUB1" )
    test_var( "PUB2" )
    test_var( "PRV1" )
    test_var( "PRV2" )
    return
 
-static proc test_var( cVarName )
+static procedure test_var( cVarName )
    ? "    " + cVarName + ":", Type( cVarName )
    if ! Type( cVarName ) == "U"
       ?? " ->", &cVarName
    endif
    return
 
-static proc thFunc()
+static procedure thFunc()
    ? "child thread:"
    testAllVars()
    ? "assign..."

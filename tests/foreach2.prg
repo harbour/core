@@ -10,7 +10,7 @@
 
 #include "hbclass.ch"
 
-proc main()
+procedure main()
    local e, o
 
    ? "FOR EACH e IN myclass1()"

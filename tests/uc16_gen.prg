@@ -17,7 +17,7 @@
 #define HB_CDP_LOWER    0x04
 #define HB_CDP_UPPER    0x08
 
-proc main()
+procedure main()
    local cLine, aLine
    local cGenCat
    local nCode, nUpper, nLower, nFlags

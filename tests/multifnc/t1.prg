@@ -1,4 +1,4 @@
-proc main2()
+procedure main2()
    ? "main2", ProcFile( "main2" ), ProcFile( @main2() )
    ? "alert", ProcFile( "alert" ), ProcFile( @Alert() ), Alert()
    ? "p0", ProcFile( "p0" ), ProcFile( @p0() ), ( @p0() ):exec(), p0(), t( "p0", @p0(), p0(), "t0.prg" )
@@ -13,12 +13,12 @@ proc main2()
    main3()
    return
 
-func p1(); return "P1:t1.prg"
-func p2(); return "P2:t1.prg"
-func p3(); return "P3:t1.prg"
-func p4(); return "P4:t1.prg"
+function p1(); return "P1:t1.prg"
+function p2(); return "P2:t1.prg"
+function p3(); return "P3:t1.prg"
+function p4(); return "P4:t1.prg"
 
-func Alert()
+function Alert()
    return "[ALERT]"
 
 #pragma begindump
