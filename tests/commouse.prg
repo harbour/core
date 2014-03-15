@@ -123,7 +123,6 @@ PROCEDURE Main( cParam )
             ENDIF
             cBuffer := hb_BSubStr( cBuffer, 5 )
          ENDIF
-
       ENDIF
    ENDDO
    hb_comClose( nPort )

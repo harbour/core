@@ -181,22 +181,22 @@ procedure main()
    self:TEST3()
    ?
    ? "Foreign Class Access:"
-   o:TESTX(self)
+   o:TESTX( self )
    ?
    ? "Extern Access:"
-   MAKE_TEST(self,"extr")
+   MAKE_TEST( self, "extr" )
    ?
 
    /***************************************************************/
    ?
    ? "Inline Class Access:"
-   MAKE_TESTINLINE1(self,b1)
+   MAKE_TESTINLINE1( self, b1 )
    ?
    ? "Inline Parent Class Access:"
-   MAKE_TESTINLINE0(self,b0)
+   MAKE_TESTINLINE0( self, b0 )
    ?
    ? "Inline Subclass Access:"
-   MAKE_TESTINLINE2(self,b2)
+   MAKE_TESTINLINE2( self, b2 )
    ?
 
    /***************************************************************/
@@ -215,7 +215,7 @@ procedure main()
    ?
    ? "Access from foreign class method by"
    ? "Eval() with block created in foreign class method:"
-   o:CBINTX(self)
+   o:CBINTX( self )
 
    /***************************************************************/
    ?
@@ -235,44 +235,44 @@ procedure main()
    ?
    ? "Access from foreign object method executed from class method by"
    ? "Eval() block created in class method:"
-   self:CBFEVL1(o)
+   self:CBFEVL1( o )
    ?
    ? "Access from foreign object method executed from subclass method by"
    ? "Eval() with block created in subclass method:"
-   self:CBFEVL2(o)
+   self:CBFEVL2( o )
    ?
    ? "Access from foreign object method executed from parent class method by"
    ? "Eval() with block created in parent class method:"
-   self:CBFEVL0(o)
+   self:CBFEVL0( o )
 
    /***************************************************************/
    ?
    ? "External block executed from class method"
-   MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
    ?
    ? "External block executed from subclass method"
-   MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval2, self, ::classname() + ":" + ProcName() )
    ?
    ? "External block executed from parent class method"
-   MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval0, self, ::classname() + ":" + ProcName() )
    ?
    ? "External block access"
-   MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
 
    /***************************************************************/
    ?
    ? "External block executed from function called from class method"
-   MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
    ?
    ? "External block executed from function called from subclass method"
-   MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval2, self, ::classname() + ":" + ProcName() )
    ?
    ? "External block executed from function called from parent class method"
-   MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( self:cbeval0, self, ::classname() + ":" + ProcName() )
    ?
    /***************************************************************/
 
-   ErrorBlock(cbErr)
+   ErrorBlock( cbErr )
    return
 
 
@@ -303,20 +303,20 @@ static procedure EXTEVAL3( cb, o )
 
 
 
-CREATE CLASS CLSX
-EXPORTED:
+create class CLSX
+exported:
    method   TESTX
    method   CBINTX
    method   CBEVALX
    method   CBXEVALX
-ENDCLASS
+endclass
 
 method TESTX( o )
    MAKE_TEST( o, "clsx" )
    return self
 
 method CBINTX( o )
-   MAKE_TESTBLOCK(eval,o,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( eval, o, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVALX( cb, o )
@@ -328,36 +328,36 @@ method CBXEVALX( cb, o )
    return self
 
 
-CREATE CLASS CLS0
-EXPORTED:
+create class CLS0
+exported:
    method   TEST0
    method   CBINT0
    method   CBEVL0
    method   CBFEVL0
    method   CBEVAL0
    method   CBXEVAL0
-   MESSAGE  b0hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
-   MESSAGE  b0hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
-   MESSAGE  b0pVar   INLINE ::pVar  := ::classname()+":"+ProcName()
-   MESSAGE  b0prVar  INLINE ::prVar := ::classname()+":"+ProcName()
-   MESSAGE  b0eVar   INLINE ::eVar  := ::classname()+":"+ProcName()
-   MESSAGE  b0erVar  INLINE ::erVar := ::classname()+":"+ProcName()
-ENDCLASS
+   message  b0hVar   inline ::hVar  := ::classname() + ":" + ProcName()
+   message  b0hrVar  inline ::hrVar := ::classname() + ":" + ProcName()
+   message  b0pVar   inline ::pVar  := ::classname() + ":" + ProcName()
+   message  b0prVar  inline ::prVar := ::classname() + ":" + ProcName()
+   message  b0eVar   inline ::eVar  := ::classname() + ":" + ProcName()
+   message  b0erVar  inline ::erVar := ::classname() + ":" + ProcName()
+endclass
 
 method TEST0
-   MAKE_TEST(self,"cls0")
+   MAKE_TEST( self, "cls0" )
    return self
 
 method CBINT0
-   MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVL0()
-   MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBFEVL0(o)
-   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVAL0( cb, o )
@@ -388,29 +388,29 @@ EXPORTED:
    method   CBEVAL1
    method   CBXEVAL1
 
-   MESSAGE  b1hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
-   MESSAGE  b1hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
-   MESSAGE  b1pVar   INLINE ::pVar  := ::classname()+":"+ProcName()
-   MESSAGE  b1prVar  INLINE ::prVar := ::classname()+":"+ProcName()
-   MESSAGE  b1eVar   INLINE ::eVar  := ::classname()+":"+ProcName()
-   MESSAGE  b1erVar  INLINE ::erVar := ::classname()+":"+ProcName()
+   MESSAGE  b1hVar   INLINE ::hVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1hrVar  INLINE ::hrVar := ::classname() + ":" + ProcName()
+   MESSAGE  b1pVar   INLINE ::pVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1prVar  INLINE ::prVar := ::classname() + ":" + ProcName()
+   MESSAGE  b1eVar   INLINE ::eVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1erVar  INLINE ::erVar := ::classname() + ":" + ProcName()
 ENDCLASS
 
 
 method TEST1
-   MAKE_TEST(self,"cls1")
+   MAKE_TEST( self, "cls1" )
    return self
 
 method CBINT1
-   MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVL1()
-   MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBFEVL1(o)
-   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVAL1( cb, o )
@@ -433,33 +433,33 @@ EXPORTED:
    method   CBEVAL2
    method   CBXEVAL2
 
-   MESSAGE  b2hVar   INLINE ::hVar  := ::classname()+":"+ProcName()
-   MESSAGE  b2hrVar  INLINE ::hrVar := ::classname()+":"+ProcName()
-   MESSAGE  b2pVar   INLINE ::pVar  := ::classname()+":"+ProcName()
-   MESSAGE  b2prVar  INLINE ::prVar := ::classname()+":"+ProcName()
-   MESSAGE  b2eVar   INLINE ::eVar  := ::classname()+":"+ProcName()
-   MESSAGE  b2erVar  INLINE ::erVar := ::classname()+":"+ProcName()
+   MESSAGE  b2hVar   INLINE ::hVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2hrVar  INLINE ::hrVar := ::classname() + ":" + ProcName()
+   MESSAGE  b2pVar   INLINE ::pVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2prVar  INLINE ::prVar := ::classname() + ":" + ProcName()
+   MESSAGE  b2eVar   INLINE ::eVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2erVar  INLINE ::erVar := ::classname() + ":" + ProcName()
 ENDCLASS
 
 method TEST2
-   MAKE_TEST(self,"cls2")
+   MAKE_TEST( self, "cls2" )
    return self
 
 method TEST3
    LOCAL oSuper := self:super
-   MAKE_TEST(oSuper,"supr")
+   MAKE_TEST( oSuper, "supr" )
    return self
 
 method CBINT2
-   MAKE_TESTBLOCK(eval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVL2()
-   MAKE_TESTBLOCK(exteval,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBFEVL2(o)
-   MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+ProcName())
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
    return self
 
 method CBEVAL2( cb, o )

@@ -123,7 +123,7 @@
           [ INFO <info> ]                 ;
           CODE [ <testExp,...> ] =>       ;
    function <testfunc> ;                  ;
-      local time, i:=nil, x:=nil ;        ;
+      local time, i := nil, x := nil ;    ;
       [ local <locals> ; ]                ;
       [ static <statics> ; ]              ;
       [ field <fields> ; ]                ;
@@ -137,9 +137,9 @@
       next ;                              ;
       time := hb_SecondsCPU() - time ;    ;
       [ <exit> ; ]                        ;
-   return { ProcName() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
+      return { ProcName() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
-STATIC s_lStdOut := .f.
+static s_lStdOut := .f.
 
 #ifdef __HARBOUR__
 #ifndef __XHARBOUR__
@@ -274,11 +274,11 @@ static function spd_logfile()
 
 TEST t000 INFO "empty loop overhead" CODE
 
-TEST t001 WITH L_C:=DToS(Date()) CODE x := L_C
+TEST t001 WITH L_C := DToS( Date() ) CODE x := L_C
 
-TEST t002 WITH L_N:=112345.67    CODE x := L_N
+TEST t002 WITH L_N := 112345.67      CODE x := L_N
 
-TEST t003 WITH L_D:=Date()       CODE x := L_D
+TEST t003 WITH L_D := Date()         CODE x := L_D
 
 TEST t004 STATIC s_once := NIL, S_C ;
           INIT hb_threadOnce( @s_once, {|| S_C := DToS( Date() ) } ) ;
@@ -336,7 +336,7 @@ TEST t015 FIELD F_D ;
 
 TEST t016 WITH o := ErrorNew() CODE x := o:Args
 
-TEST t017 WITH o := errorArray() CODE x := o[2]
+TEST t017 WITH o := errorArray() CODE x := o[ 2 ]
 
 TEST t018 CODE Round( i / 1000, 2 )
 
@@ -369,54 +369,54 @@ TEST t028 WITH bc := {| x | f1( x ) } ;
           CODE Eval( bc, i )
 
 TEST t029 WITH bc := mkBlock( "{| x | f1( x ) }" ) ;
-          INFO Eval( bc := &("{| x | f1( x ) }"), i ) ;
+          INFO Eval( bc := &( "{| x | f1( x ) }" ), i ) ;
           CODE Eval( bc, i )
 
-TEST t030 CODE x := &( 'f1(' + Str(i) + ')' )
+TEST t030 CODE x := &( 'f1(' + Str( i ) + ')' )
 
-TEST t031 WITH bc CODE bc := &( '{| x |f1(x)}' ), Eval( bc, i )
+TEST t031 WITH bc CODE bc := &( '{| x | f1( x ) }' ), Eval( bc, i )
 
-TEST t032 CODE x := ValType( x ) +  ValType( i )
+TEST t032 CODE x := ValType( x ) + ValType( i )
 
 TEST t033 WITH a := AFill( Array( ARR_LEN ), ;
                            Stuff( DToS( Date() ), 7, 0, "." ) ) ;
           CODE x := StrZero( i % 100, 2 ) $ a[ i % ARR_LEN + 1 ]
 
 TEST t034 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] == s
 
 TEST t035 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] = s  /* hb_LeftEq() */
 
 TEST t036 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] >= s
 
 TEST t037 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] <= s
 
 TEST t038 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] < s
 
 TEST t039 WITH a := Array( ARR_LEN ), s := DToS( Date() ) ;
-          INIT AEval( a, {| x, i | a[i] := Left( s + s, i ), x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := Left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] > s
 
 TEST t040 WITH a := Array( ARR_LEN ) ;
-          INIT AEval( a, {| x, i | a[i] := i, x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := i, x } ) ;
           CODE AScan( a, i % ARR_LEN )
 
 TEST t041 WITH a := Array( ARR_LEN ) ;
-          INIT AEval( a, {| x, i | a[i] := i, x } ) ;
+          INIT AEval( a, {| x, i | a[ i ] := i, x } ) ;
           CODE AScan( a, {| x | x == i % ARR_LEN } )
 
-TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
+TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1( x ) }, ;
                s := DToS( Date() ), s2 := "static text" ;
-          CODE iif( i%1000==0, a:={}, ) , AAdd(a,{i,1,.t.,s,s2,a2,bc})
+          CODE iif( i % 1000 == 0, a := {}, ), AAdd(a,{i,1,.t.,s,s2,a2,bc})
 
 TEST t043 WITH a := {} CODE x := a
 
@@ -442,7 +442,7 @@ TEST t050 WITH c := Replicate( DToS( Date() ), 5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
           CODE f2( @c ), c2 := c
 
-TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
+TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1( x ) }, ;
                s := DToS( Date() ), s2 := "static text", n := 1.23 ;
           CODE f3( a, a2, s, i, s2, bc, i, n, x )
 
@@ -452,7 +452,7 @@ TEST t053 CODE x := f4()
 
 TEST t054 CODE x := f5()
 
-TEST t055 CODE x := Space(16)
+TEST t055 CODE x := Space( 16 )
 
 TEST t056 WITH c := DToS( Date() ) CODE f_prv( c )
 

@@ -13,14 +13,9 @@ request DBFCDX
 
 procedure main()
 
-   field F1, F2, FX
-
    local nMaxScrRow, nMaxScrCol
    local cPath, cName, cExt, cDrive
    local i, j, k
-
-   /* set OEM font encoding for non unicode modes */
-   hb_gtInfo( HB_GTI_CODEPAGE, 255 )
 
    /* Set EN CP-437 encoding */
    hb_cdpSelect( "EN" )
@@ -54,21 +49,21 @@ procedure main()
 
    Alert( "Database path:;;" + cPath )
 
-   rddSetDefault("DBFCDX")
+   rddSetDefault( "DBFCDX" )
    if ! hb_DirExists( cPath )
       hb_DirCreate( cPath )
    endif
-   dbCreate( cPath + "mydata", { ;
+   dbCreate( cPath + "mydata.dbf", { ;
       { "F1", "C", 10, 0 }, ;
       { "F2", "=",  8, 0 }, ;
       { "FX", "M",  4, 0 } } )
-   use ( cPath + "mydata" )
-   index on F1 tag T1
-   index on F2 tag T2
+   use ( cPath + "mydata.dbf" )
+   index on field->F1 tag T1
+   index on field->F2 tag T2
    while LastRec() < 10
       dbAppend()
-      F1 := "rec:" + Str( RecNo(), 3 )
-      FX := "[rec:" + Str( RecNo(), 3 ) + "]"
+      field->F1 := "rec:" + Str( RecNo(), 3 )
+      field->FX := "[rec:" + Str( RecNo(), 3 ) + "]"
    enddo
    dbCommit()
    dbGoTop()
@@ -100,7 +95,7 @@ procedure main()
 
    dbCloseAll()
 
-   hb_dbDrop( cPath + "mydata" )
+   hb_dbDrop( cPath + "mydata.dbf" )
    DirRemove( cPath )
 
    return
